@@ -2,104 +2,113 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 438A7C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DA7C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A7282176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88531227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:59:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576688357;
+	bh=L22wapzFBIEZL7FfvunmE+UTD7Qk4x5ULjIEpAn7WuM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IDf7/Obih3HQ5WANjeP7C861FlTgoHbxzFUNFWJmWr9QC1eyxQlJ/C3fsgPsHJ7ZY
+	 DL/Zl4a5cED5ddin/8gmMMDDrifcXa5trSu5i+vWOzvz9nUXAXkJ6HsTa7DGtaTNUR
+	 nJRhAABxR1ZY4iwb+H4EnfF84zOxvYeYuntTS6vM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfLRQ6f (ORCPT
+        id S1727647AbfLRQ7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:58:35 -0500
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:33851 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727217AbfLRQ6e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:58:34 -0500
-X-Originating-IP: 90.65.102.129
-Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id A3939C000E;
-        Wed, 18 Dec 2019 16:58:31 +0000 (UTC)
-Date:   Wed, 18 Dec 2019 17:58:31 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Eugen.Hristev@microchip.com
-Cc:     jic23@kernel.org, robh+dt@kernel.org, Nicolas.Ferre@microchip.com,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org, a.zummo@towertech.it,
-        Ludovic.Desroches@microchip.com
-Subject: Re: [PATCH 04/10] rtc: at91rm9200: use of_platform_populate as
- return value
-Message-ID: <20191218165831.GO695889@piout.net>
-References: <1576686157-11939-1-git-send-email-eugen.hristev@microchip.com>
- <1576686157-11939-5-git-send-email-eugen.hristev@microchip.com>
- <20191218164348.GN695889@piout.net>
- <04264cb0-61a9-aba3-82ad-e7d12fd8441e@microchip.com>
+        Wed, 18 Dec 2019 11:59:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51770 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727192AbfLRQ7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 11:59:16 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C7E22176D;
+        Wed, 18 Dec 2019 16:59:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576688355;
+        bh=L22wapzFBIEZL7FfvunmE+UTD7Qk4x5ULjIEpAn7WuM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sWNhtArZY2n/ypf1VIbh14nUjXAZD7dn6yor/mDgQOqA5+KZFJJPOmBEwN4vvN6aW
+         cXIb+u5THLQtt5LTAEE5RgohzUSIm4sGE+DnISGusSqekmx/q359qo/YZUrhO8cRuO
+         xQCtL9xhougBueopYUIVAPyZ7XfrOpjCXyv8RPs4=
+Date:   Wed, 18 Dec 2019 16:59:11 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-media@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH RESEND RESEND] media: uvc: Avoid cyclic entity chains due
+ to malformed USB descriptors
+Message-ID: <20191218165910.GB18440@willie-the-truck>
+References: <20191108154838.21487-1-will@kernel.org>
+ <20191108155503.GB15731@pendragon.ideasonboard.com>
+ <20191216121651.GA12947@willie-the-truck>
+ <CAAeHK+xdVmEFtK78bWd2Odn0uBynqnt5UT9jZJFvqGL=_9NU2w@mail.gmail.com>
+ <20191218114137.GA15505@willie-the-truck>
+ <20191218122324.GB17086@kroah.com>
+ <CAAeHK+xyv-x6ejwcqNAn=5eKoBYPkJsN=SgJLHJ1ey=6v+YyyA@mail.gmail.com>
+ <20191218165153.GC17876@pendragon.ideasonboard.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <04264cb0-61a9-aba3-82ad-e7d12fd8441e@microchip.com>
+In-Reply-To: <20191218165153.GC17876@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/12/2019 16:52:21+0000, Eugen.Hristev@microchip.com wrote:
-> 
-> 
-> On 18.12.2019 18:43, Alexandre Belloni wrote:
-> 
-> > Hi,
+On Wed, Dec 18, 2019 at 06:51:53PM +0200, Laurent Pinchart wrote:
+> On Wed, Dec 18, 2019 at 01:46:00PM +0100, Andrey Konovalov wrote:
+> > On Wed, Dec 18, 2019 at 1:23 PM Greg Kroah-Hartman wrote:
+> > > On Wed, Dec 18, 2019 at 11:41:38AM +0000, Will Deacon wrote:
+> > >> On Mon, Dec 16, 2019 at 02:17:52PM +0100, Andrey Konovalov wrote:
+> > >>> On Mon, Dec 16, 2019 at 1:16 PM Will Deacon <will@kernel.org> wrote:
+> > >>>> On Fri, Nov 08, 2019 at 05:55:03PM +0200, Laurent Pinchart wrote:
+> > >>>>> Thank you for the patch.
+> > >>>>>
+> > >>>>> I'm sorry for the delay, and will have to ask you to be a bit more
+> > >>>>> patient I'm afraid. I will leave tomorrow for a week without computer
+> > >>>>> access and will only be able to go through my backlog when I will be
+> > >>>>> back on the 17th.
+> > >>>>
+> > >>>> Gentle reminder on this, now you've been back a month ;)
+> > >>>
+> > >>> I think we now have a reproducer for this issue that syzbot just reported:
+> > >>>
+> > >>> https://syzkaller.appspot.com/bug?extid=0a5c96772a9b26f2a876
+> > >>>
+> > >>> You can try you patch on it :)
+> > >>
+> > >> Oh wow, I *really* like the raw USB gadget thingy you have to reproduce
+> > >> these! I also really like that this patch fixes the issue. Logs below.
 > > 
-> > On 18/12/2019 16:24:00+0000, Eugen.Hristev@microchip.com wrote:
-> >> From: Eugen Hristev <eugen.hristev@microchip.com>
-> >>
-> >> This allows the RTC node to have child nodes in DT.
-> >> This allows subnodes to be probed.
-> >>
-> >> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> >> ---
-> >>   drivers/rtc/rtc-at91rm9200.c | 2 +-
-> >>   1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/rtc/rtc-at91rm9200.c b/drivers/rtc/rtc-at91rm9200.c
-> >> index 3b833e0..f1b5b3d 100644
-> >> --- a/drivers/rtc/rtc-at91rm9200.c
-> >> +++ b/drivers/rtc/rtc-at91rm9200.c
-> >> @@ -421,7 +421,7 @@ static int __init at91_rtc_probe(struct platform_device *pdev)
-> >>        at91_rtc_write_ier(AT91_RTC_SECEV);
-> >>
-> >>        dev_info(&pdev->dev, "AT91 Real Time Clock driver.\n");
-> >> -     return 0;
-> >> +     return of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
-> >>
+> > Thanks! An easier way to test the patch would be to issue a syz test
+> > command, but I'm glad you managed to set up raw gadget manually and it
+> > worked for you.
 > > 
-> > You can avoid the DT binding change and DT parsing by using
-> > platform_add_device here. I don't think there is any point describing
-> > the trigger as a child node (a watchdog functionality wouldn't be
-> > described for example).
+> > >
+> > > Ok, that's a good poke for me to go review that raw gadget code to see
+> > > if it can be merged upstream :)
 > > 
+> > Looking forward to it! =)
 > 
-> Hi,
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 > 
-> It's needed because the ADC needs a link to the trigger device. This is 
-> a hardware link inside the SoC, so I thought the best way is to describe 
-> this hardware is in the Device Tree.
-> Otherwise the ADC node is unaware of the RTC triggering possibility.
-> If we just assign the RTC trigger device to the ADC through the sysfs, 
-> the ADC cannot distinguish between the RTC trigger and other various 
-> triggers which can be attached.
-> 
+> and merged in my tree. I'm so sorry for the way too long delay.
 
-I'm not sure this links is required but I will let Jonathan review. Even
-if it is needed, you can still use the rtc node to describe that link.
+Thanks, Laurent.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Will
