@@ -2,107 +2,85 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB6BC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6B8C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 995F3222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:20:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T5FBaj0w"
+	by mail.kernel.org (Postfix) with ESMTP id 62A1621D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:21:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfLSLUs (ORCPT
+        id S1726759AbfLSLVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 06:20:48 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38725 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726652AbfLSLUs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 06:20:48 -0500
-Received: by mail-ot1-f68.google.com with SMTP id d7so2438985otf.5;
-        Thu, 19 Dec 2019 03:20:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=q86lzAwYlZJOZFsQXI59MTkZWLAWnklcw1QSoLucOeY=;
-        b=T5FBaj0wqy+SDbVZd8ND4FLNPYoKNJ2rFQ5QDaeV7hhQUgVfavoJdwSHnu9XGmGojv
-         NpUUHHOHH/O3r6Cz7oQXQ54VfgX1WnY1FaDbi0bwZTyoAeXOKawFByhVnABBdrOb3W51
-         apyHLw57/kbptO/jqi83ZZ0ALrjiFitzem5MgMjmSb+8ysaIki4/icFmhXeWcnQ3+17f
-         BgXbB2mat7BsXAjQgcqS76HJwguKQHm3LQ04iCt2Rwg1eG6AO7i8aEMwtfsC2Mtdl/vu
-         TuF+lU+bBcYZ3UW3+5emiF3CukuX3wGj0AuboTIQsB1sqOmPkLOLQm704o/9p4uuJdMK
-         KXCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=q86lzAwYlZJOZFsQXI59MTkZWLAWnklcw1QSoLucOeY=;
-        b=H8ff3wmXd/W7CCqS9BvAu8Cq+9Fu6YemkWMrPzBRCJySFuIWXnSPs00ogW4gKamHSj
-         HyPCS7WFG/FOBAoChsX6B0KPZIBvc5Me3fnEPZ3xafcWedVY4gmfcbaSak9liA6Uk2NO
-         oKtVQi3Qr7N92A8wm6Pp60KRYjU99xubRjRq+hl27H1ibzxngrAYvNtf8t4tohI83u+g
-         n1AqgbC/KFdvJ00r9Fuy6zWoyLg7ttR0umZykPUcuBoI4hNyg/9oFlZxrFCV+4/b1e8E
-         l7+Eos4lNZ6zZQTKi+7aUj1Y8O1gbaYa7A7c76C3zmLXHmuZLZ9OzUjV2sPCJGAb/d/b
-         5W4A==
-X-Gm-Message-State: APjAAAXrFtIHOg7xG2hstQm9VdYyp/mMKtesXFmKM6qrE3l/wK0AFYg5
-        jlXTNORnaHlym5nmqJ13fQ0DKH1C4EyiBJN1Tlc=
-X-Google-Smtp-Source: APXvYqywsQSCFq193tXJowtm7MgAXzeCgVZaTneF+QFvWsd6/7L+2PrwC8RZGp9Sjc0hNFrAOo6xigDwW3Yu24jOjb8=
-X-Received: by 2002:a05:6830:145:: with SMTP id j5mr7883934otp.242.1576754447447;
- Thu, 19 Dec 2019 03:20:47 -0800 (PST)
+        Thu, 19 Dec 2019 06:21:30 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8152 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726652AbfLSLVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 06:21:30 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5EE7D51507BCD5EC8564;
+        Thu, 19 Dec 2019 19:21:28 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 19 Dec 2019 19:21:21 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <benh@kernel.crashing.org>, <paulus@samba.org>,
+        <mpe@ellerman.id.au>
+CC:     <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        <chenzhou10@huawei.com>
+Subject: [PATCH V2] powerpc/setup_64: use DEFINE_DEBUGFS_ATTRIBUTE to define fops_rfi_flush
+Date:   Thu, 19 Dec 2019 19:18:12 +0800
+Message-ID: <20191219111812.180386-1-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Received: by 2002:a8a:87:0:0:0:0:0 with HTTP; Thu, 19 Dec 2019 03:20:46 -0800 (PST)
-In-Reply-To: <c0d9eed8-4cb6-54a5-95a0-a18aec8b70ee@redhat.com>
-References: <20191213055028.5574-2-namjae.jeon@samsung.com>
- <CGME20191216135033epcas5p3f2ec096506b1a48535ce0796fef23b9e@epcas5p3.samsung.com>
- <088a50ad-dc67-4ff6-624d-a1ac2008b420@web.de> <002401d5b46d$543f7ee0$fcbe7ca0$@samsung.com>
- <c6698d0c-d909-c9dc-5608-0b986d63a471@metux.net> <000701d5b537$5b196f80$114c4e80$@samsung.com>
- <c0d9eed8-4cb6-54a5-95a0-a18aec8b70ee@redhat.com>
-From:   Namjae Jeon <linkinjeon@gmail.com>
-Date:   Thu, 19 Dec 2019 20:20:46 +0900
-Message-ID: <CAKYAXd84p=rB6kF5RvXs2QvxmRYX280Mio8sPbDgJKiE6Eqo9w@mail.gmail.com>
-Subject: Re: [PATCH v7 01/13] exfat: add in-memory and on-disk structures and headers
-To:     Maurizio Lombardi <mlombard@redhat.com>
-Cc:     =?UTF-8?B?7KCE64Ko7J6sL1MvVyBQbGF0Zm9ybSBMYWIoVkQpL1N0YWZmIEVuZ2luZWVyL+yCvOyEseyghA==?=
-         =?UTF-8?B?7J6Q?= <namjae.jeon@samsung.com>,
-        "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        =?UTF-8?Q?Valdis_Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019-12-18 18:33 GMT+09:00, Maurizio Lombardi <mlombard@redhat.com>:
-> Hello,
->
-> Dne 18.12.2019 v 01:09 =EC=A0=84=EB=82=A8=EC=9E=AC/S/W Platform Lab(VD)/S=
-taff Engineer/=EC=82=BC=EC=84=B1=EC=A0=84=EC=9E=90
-> napsal(a):
->> Well, I think that there is currently no proper mkfs(format), fsck(repai=
-r)
->> tool for linux-exfat.
->> I am working on it and will announce it here as soon as possible.
->
-> Are you aware that on Debian and Fedora/RHEL distros a package named
-> exfat-utils is available?
-> It provides an mkfs and fsck implementation for exfat filesystems.
->
-> You can find the source code here: https://github.com/relan/exfat
-Yes, I know. They are part of fuse-exfat. I want to create an official tool
-for exfat in linux kernel.
-And fsck implementation in fuse-exfat is early development stage yet. In
-addition, This project seems to have stopped development.
+Use DEFINE_DEBUGFS_ATTRIBUTE rather than DEFINE_SIMPLE_ATTRIBUTE for
+debugfs files.
 
-Thanks!
->
-> Maurizio
->
->
+In order to protect against file removal races, debugfs files created via
+debugfs_create_file() are wrapped by a struct file_operations at their
+opening.
+
+If the original struct file_operations is known to be safe against removal
+races already, the proxy creation may be bypassed by creating the files
+using DEFINE_DEBUGFS_ATTRIBUTE() and debugfs_create_file_unsafe().
+
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+Changes since v1:
+- modify commit message.
+
+ arch/powerpc/kernel/setup_64.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/powerpc/kernel/setup_64.c b/arch/powerpc/kernel/setup_64.c
+index 6104917..4b9fbb2 100644
+--- a/arch/powerpc/kernel/setup_64.c
++++ b/arch/powerpc/kernel/setup_64.c
+@@ -956,11 +956,11 @@ static int rfi_flush_get(void *data, u64 *val)
+ 	return 0;
+ }
+ 
+-DEFINE_SIMPLE_ATTRIBUTE(fops_rfi_flush, rfi_flush_get, rfi_flush_set, "%llu\n");
++DEFINE_DEBUGFS_ATTRIBUTE(fops_rfi_flush, rfi_flush_get, rfi_flush_set, "%llu\n");
+ 
+ static __init int rfi_flush_debugfs_init(void)
+ {
+-	debugfs_create_file("rfi_flush", 0600, powerpc_debugfs_root, NULL, &fops_rfi_flush);
++	debugfs_create_file_unsafe("rfi_flush", 0600, powerpc_debugfs_root, NULL, &fops_rfi_flush);
+ 	return 0;
+ }
+ device_initcall(rfi_flush_debugfs_init);
+-- 
+2.7.4
+
