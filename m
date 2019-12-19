@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E89FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5520C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DF632467E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EACA24672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:09:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782576;
-	bh=gYixBj+Z0j6dKD9kAf7Nre3FIdd6/MyceRv3Vd1hygY=;
+	s=default; t=1576782584;
+	bh=UtmX9GiSmxXu/9EaoD1243Db0uC3Xo+gs5g7A8/UcsI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0NPP7QDUwtdvsUm5L5WHZcHfn3AWg3KUS/M7BdfIINrnAi57HQBORS/3R7+yKvwI5
-	 z+6XPx1cR0EVobviQGDG5K7NSRoTd0EHoAxHj/ss+MWB+v/B/vGMdlse/TRLfAGgjU
-	 wr7X4hfvmqCy/NqJK5ijsJ5Ae3PznLTG4QTqKGJg=
+	b=1Vti8QvKTpTIc08/VhwUBbQoOnAFuN4X1BsgwYFP1XIa0+zbfgad+8tWQK59U2g9N
+	 YLo1khpvJUH01cgyNRHcLC8M/nW9FEmcqZfv+Gy+qmPCgF2dCPY6ZVA9xEwSRobQfQ
+	 nfI26FGjnz3d40TrTPCdathCi2bUk/resFPNFmak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbfLSSkd (ORCPT
+        id S1728516AbfLSTJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:40:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59218 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 14:09:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728378AbfLSSk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:40:29 -0500
+        id S1728026AbfLSSkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:40:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D68724679;
-        Thu, 19 Dec 2019 18:40:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4D4124682;
+        Thu, 19 Dec 2019 18:40:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780828;
-        bh=gYixBj+Z0j6dKD9kAf7Nre3FIdd6/MyceRv3Vd1hygY=;
+        s=default; t=1576780819;
+        bh=UtmX9GiSmxXu/9EaoD1243Db0uC3Xo+gs5g7A8/UcsI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tga/j22fX4o8+YuSYRhNnxjVIc95WHwpZtoesFWa/piwXI2S3lROjWlPO5BTtFBPf
-         2W5S3FtsLwW1+bnXdgH+52bvOZg+2koy2fWxbkGjXbSh74U1VYZ4bcv0x9GfL2gws9
-         1eHVkGF4HJIm9sYC2yp2mrDVhIEPeoasJJw1fDy8=
+        b=vqncGjWuKi/fLpHIQS2be4zVK6Eb7WRA3U6dLVnhO0MKaxrN/n2rJq8Y+gT0UwH0E
+         q1BENUwo0V6UQlJ4zCeeD2jKV8z0x4vMKOF4WtfPZQ4IsSb4R2Fi+lMQPei+drkQtS
+         JCcZFV2O3yXz8YKl1zUYKqZPobhwgp05JZiGIDsg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 134/162] scsi: qla2xxx: Fix DMA unmap leak
-Date:   Thu, 19 Dec 2019 19:34:02 +0100
-Message-Id: <20191219183215.937277258@linuxfoundation.org>
+Subject: [PATCH 4.4 130/162] e100: Fix passing zero to PTR_ERR warning in e100_load_ucode_wait
+Date:   Thu, 19 Dec 2019 19:33:58 +0100
+Message-Id: <20191219183215.686862734@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -61,52 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Himanshu Madhani <hmadhani@marvell.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 5d328de64d89400dcf9911125844d8adc0db697f ]
+[ Upstream commit cd0d465bb697a9c7bf66a9fe940f7981232f1676 ]
 
-With debug kernel we see following wanings indicating memory leak.
+Fix a static code checker warning:
+drivers/net/ethernet/intel/e100.c:1349
+ e100_load_ucode_wait() warn: passing zero to 'PTR_ERR'
 
-[28809.523959] WARNING: CPU: 3 PID: 6790 at lib/dma-debug.c:978
-dma_debug_device_change+0x166/0x1d0
-[28809.523964] pci 0000:0c:00.6: DMA-API: device driver has pending DMA
-allocations while released from device [count=5]
-[28809.523964] One of leaked entries details: [device
-address=0x00000002aefe4000] [size=8208 bytes] [mapped with DMA_BIDIRECTIONAL]
-[mapped as coherent]
-
-Fix this by unmapping DMA memory.
-
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_bsg.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/intel/e100.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_bsg.c b/drivers/scsi/qla2xxx/qla_bsg.c
-index 2d5375d677367..df856a2895ae1 100644
---- a/drivers/scsi/qla2xxx/qla_bsg.c
-+++ b/drivers/scsi/qla2xxx/qla_bsg.c
-@@ -336,6 +336,8 @@ qla2x00_process_els(struct fc_bsg_job *bsg_job)
- 		dma_map_sg(&ha->pdev->dev, bsg_job->request_payload.sg_list,
- 		bsg_job->request_payload.sg_cnt, DMA_TO_DEVICE);
- 	if (!req_sg_cnt) {
-+		dma_unmap_sg(&ha->pdev->dev, bsg_job->request_payload.sg_list,
-+		    bsg_job->request_payload.sg_cnt, DMA_TO_DEVICE);
- 		rval = -ENOMEM;
- 		goto done_free_fcport;
- 	}
-@@ -343,6 +345,8 @@ qla2x00_process_els(struct fc_bsg_job *bsg_job)
- 	rsp_sg_cnt = dma_map_sg(&ha->pdev->dev, bsg_job->reply_payload.sg_list,
- 		bsg_job->reply_payload.sg_cnt, DMA_FROM_DEVICE);
-         if (!rsp_sg_cnt) {
-+		dma_unmap_sg(&ha->pdev->dev, bsg_job->reply_payload.sg_list,
-+		    bsg_job->reply_payload.sg_cnt, DMA_FROM_DEVICE);
- 		rval = -ENOMEM;
- 		goto done_free_fcport;
- 	}
+diff --git a/drivers/net/ethernet/intel/e100.c b/drivers/net/ethernet/intel/e100.c
+index 068789e694c9b..93c29094ceff9 100644
+--- a/drivers/net/ethernet/intel/e100.c
++++ b/drivers/net/ethernet/intel/e100.c
+@@ -1370,8 +1370,8 @@ static inline int e100_load_ucode_wait(struct nic *nic)
+ 
+ 	fw = e100_request_firmware(nic);
+ 	/* If it's NULL, then no ucode is required */
+-	if (!fw || IS_ERR(fw))
+-		return PTR_ERR(fw);
++	if (IS_ERR_OR_NULL(fw))
++		return PTR_ERR_OR_ZERO(fw);
+ 
+ 	if ((err = e100_exec_cb(nic, (void *)fw, e100_setup_ucode)))
+ 		netif_err(nic, probe, nic->netdev,
 -- 
 2.20.1
 
