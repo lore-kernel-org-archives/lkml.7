@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BFDC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 247B7C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED6624679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB1FA24680
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:40:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780839;
-	bh=VaQ9nI7pBUmnkT5opVuQ0RA0l/8/x2m3ctZAl47nWoo=;
+	s=default; t=1576780843;
+	bh=GZAOSJxg7DLokFhjvcyrOOPlApx65qOsbBZ1nhENxEg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C7VGRiVTgM1rgyrn9bH5ZLtMZB745S42NNa4B/BQnFFLY3hDy95i8/ZwCCtVa9bjK
-	 09cOj5Mvua0tIzHGn37IbFIvgSEv0webzdrpMd/C+hY5wnq9SsVMV0Aq/aST1J1EE/
-	 4azybc5xYalSJwcnIQ/Pottl0sIj+lbc5QUF+4YA=
+	b=DYUsOdyXZ0nc/zT8ZCzvIw2Whe1chMQtIxIPODdf/rruHr9myKTBdYfwVNkkF9vW9
+	 0omQptnFjFFBUwclxKOds4FmMtcYxjZ5Hl6QxAxuK+ScqOtt5McfXa6dlC6urOU6Dr
+	 fZXNtiD2zWXcfs6F6noU4x9PLRJyU9fmoD1E6PII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbfLSSki (ORCPT
+        id S1728414AbfLSSkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:40:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59358 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:40:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727363AbfLSSkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:40:36 -0500
+        id S1728399AbfLSSkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:40:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BB0F24679;
-        Thu, 19 Dec 2019 18:40:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12D0C222C2;
+        Thu, 19 Dec 2019 18:40:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780836;
-        bh=VaQ9nI7pBUmnkT5opVuQ0RA0l/8/x2m3ctZAl47nWoo=;
+        s=default; t=1576780838;
+        bh=GZAOSJxg7DLokFhjvcyrOOPlApx65qOsbBZ1nhENxEg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sgx8ddGvUy00BFi5Oarw3lMXrpm9VyjE1hlvvKZT7/ZefZPsEAGPIZbSwjdhK2Shk
-         Lsr1xZ0iTD5wL9K4IMh6PXeyLLKyaPLxvpIN9F0gP7VvbASwKFLuEnsaKUjqe2qvZG
-         69HFFuFiLqou0OV/9/Z1N3lLxvANEggwMEkfL9I4=
+        b=XlVJNjWrqo/coYJbcE8/wCBFksxEMykZZcACBhymualRyh8zStnXX32abEmYSQ2Gt
+         0I/8dxP20FHcQyj+NodF+Z/pYEt9/rGJ+6YHPnSAMw70KsB74rS3QQv+koz+nmoTlx
+         e7SVZUC5PpWCveGQRDcQsuWW8iLdI6xDBmcWe27g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 137/162] powerpc: Fix vDSO clock_getres()
-Date:   Thu, 19 Dec 2019 19:34:05 +0100
-Message-Id: <20191219183216.111689912@linuxfoundation.org>
+        stable@vger.kernel.org, Chen Jun <chenjun102@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>, Qian Cai <cai@lca.pw>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 138/162] mm/shmem.c: cast the type of unmap_start to u64
+Date:   Thu, 19 Dec 2019 19:34:06 +0100
+Message-Id: <20191219183216.165883210@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -63,126 +62,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+From: Chen Jun <chenjun102@huawei.com>
 
-[ Upstream commit 552263456215ada7ee8700ce022d12b0cffe4802 ]
+commit aa71ecd8d86500da6081a72da6b0b524007e0627 upstream.
 
-clock_getres in the vDSO library has to preserve the same behaviour
-of posix_get_hrtimer_res().
+In 64bit system. sb->s_maxbytes of shmem filesystem is MAX_LFS_FILESIZE,
+which equal LLONG_MAX.
 
-In particular, posix_get_hrtimer_res() does:
-    sec = 0;
-    ns = hrtimer_resolution;
-and hrtimer_resolution depends on the enablement of the high
-resolution timers that can happen either at compile or at run time.
+If offset > LLONG_MAX - PAGE_SIZE, offset + len < LLONG_MAX in
+shmem_fallocate, which will pass the checking in vfs_fallocate.
 
-Fix the powerpc vdso implementation of clock_getres keeping a copy of
-hrtimer_resolution in vdso data and using that directly.
+	/* Check for wrap through zero too */
+	if (((offset + len) > inode->i_sb->s_maxbytes) || ((offset + len) < 0))
+		return -EFBIG;
 
-Fixes: a7f290dad32e ("[PATCH] powerpc: Merge vdso's and add vdso support to 32 bits kernel")
-Cc: stable@vger.kernel.org
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
-[chleroy: changed CLOCK_REALTIME_RES to CLOCK_HRTIMER_RES]
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/a55eca3a5e85233838c2349783bcb5164dae1d09.1575273217.git.christophe.leroy@c-s.fr
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+loff_t unmap_start = round_up(offset, PAGE_SIZE) in shmem_fallocate
+causes a overflow.
+
+Syzkaller reports a overflow problem in mm/shmem:
+
+  UBSAN: Undefined behaviour in mm/shmem.c:2014:10
+  signed integer overflow: '9223372036854775807 + 1' cannot be represented in type 'long long int'
+  CPU: 0 PID:17076 Comm: syz-executor0 Not tainted 4.1.46+ #1
+  Hardware name: linux, dummy-virt (DT)
+  Call trace:
+     dump_backtrace+0x0/0x2c8 arch/arm64/kernel/traps.c:100
+     show_stack+0x20/0x30 arch/arm64/kernel/traps.c:238
+     __dump_stack lib/dump_stack.c:15 [inline]
+     ubsan_epilogue+0x18/0x70 lib/ubsan.c:164
+     handle_overflow+0x158/0x1b0 lib/ubsan.c:195
+     shmem_fallocate+0x6d0/0x820 mm/shmem.c:2104
+     vfs_fallocate+0x238/0x428 fs/open.c:312
+     SYSC_fallocate fs/open.c:335 [inline]
+     SyS_fallocate+0x54/0xc8 fs/open.c:239
+
+The highest bit of unmap_start will be appended with sign bit 1
+(overflow) when calculate shmem_falloc.start:
+
+    shmem_falloc.start = unmap_start >> PAGE_SHIFT.
+
+Fix it by casting the type of unmap_start to u64, when right shifted.
+
+This bug is found in LTS Linux 4.1.  It also seems to exist in mainline.
+
+Link: http://lkml.kernel.org/r/1573867464-5107-1-git-send-email-chenjun102@huawei.com
+Signed-off-by: Chen Jun <chenjun102@huawei.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/powerpc/include/asm/vdso_datapage.h  |    2 ++
- arch/powerpc/kernel/asm-offsets.c         |    2 +-
- arch/powerpc/kernel/time.c                |    1 +
- arch/powerpc/kernel/vdso32/gettimeofday.S |    7 +++++--
- arch/powerpc/kernel/vdso64/gettimeofday.S |    7 +++++--
- 5 files changed, 14 insertions(+), 5 deletions(-)
 
---- a/arch/powerpc/include/asm/vdso_datapage.h
-+++ b/arch/powerpc/include/asm/vdso_datapage.h
-@@ -86,6 +86,7 @@ struct vdso_data {
- 	__s32 wtom_clock_nsec;
- 	struct timespec stamp_xtime;	/* xtime as at tb_orig_stamp */
- 	__u32 stamp_sec_fraction;	/* fractional seconds of stamp_xtime */
-+	__u32 hrtimer_res;			/* hrtimer resolution */
-    	__u32 syscall_map_64[SYSCALL_MAP_SIZE]; /* map of syscalls  */
-    	__u32 syscall_map_32[SYSCALL_MAP_SIZE]; /* map of syscalls */
- };
-@@ -107,6 +108,7 @@ struct vdso_data {
- 	__s32 wtom_clock_nsec;
- 	struct timespec stamp_xtime;	/* xtime as at tb_orig_stamp */
- 	__u32 stamp_sec_fraction;	/* fractional seconds of stamp_xtime */
-+	__u32 hrtimer_res;		/* hrtimer resolution */
-    	__u32 syscall_map_32[SYSCALL_MAP_SIZE]; /* map of syscalls */
- 	__u32 dcache_block_size;	/* L1 d-cache block size     */
- 	__u32 icache_block_size;	/* L1 i-cache block size     */
---- a/arch/powerpc/kernel/asm-offsets.c
-+++ b/arch/powerpc/kernel/asm-offsets.c
-@@ -398,6 +398,7 @@ int main(void)
- 	DEFINE(WTOM_CLOCK_NSEC, offsetof(struct vdso_data, wtom_clock_nsec));
- 	DEFINE(STAMP_XTIME, offsetof(struct vdso_data, stamp_xtime));
- 	DEFINE(STAMP_SEC_FRAC, offsetof(struct vdso_data, stamp_sec_fraction));
-+	DEFINE(CLOCK_HRTIMER_RES, offsetof(struct vdso_data, hrtimer_res));
- 	DEFINE(CFG_ICACHE_BLOCKSZ, offsetof(struct vdso_data, icache_block_size));
- 	DEFINE(CFG_DCACHE_BLOCKSZ, offsetof(struct vdso_data, dcache_block_size));
- 	DEFINE(CFG_ICACHE_LOGBLOCKSZ, offsetof(struct vdso_data, icache_log_block_size));
-@@ -426,7 +427,6 @@ int main(void)
- 	DEFINE(CLOCK_REALTIME, CLOCK_REALTIME);
- 	DEFINE(CLOCK_MONOTONIC, CLOCK_MONOTONIC);
- 	DEFINE(NSEC_PER_SEC, NSEC_PER_SEC);
--	DEFINE(CLOCK_REALTIME_RES, MONOTONIC_RES_NSEC);
+---
+ mm/shmem.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2092,7 +2092,7 @@ static long shmem_fallocate(struct file
+ 		}
  
- #ifdef CONFIG_BUG
- 	DEFINE(BUG_ENTRY_SIZE, sizeof(struct bug_entry));
---- a/arch/powerpc/kernel/time.c
-+++ b/arch/powerpc/kernel/time.c
-@@ -829,6 +829,7 @@ void update_vsyscall_old(struct timespec
- 	vdso_data->wtom_clock_nsec = wtm->tv_nsec;
- 	vdso_data->stamp_xtime = *wall_time;
- 	vdso_data->stamp_sec_fraction = frac_sec;
-+	vdso_data->hrtimer_res = hrtimer_resolution;
- 	smp_wmb();
- 	++(vdso_data->tb_update_count);
- }
---- a/arch/powerpc/kernel/vdso32/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
-@@ -160,12 +160,15 @@ V_FUNCTION_BEGIN(__kernel_clock_getres)
- 	cror	cr0*4+eq,cr0*4+eq,cr1*4+eq
- 	bne	cr0,99f
- 
-+	mflr	r12
-+  .cfi_register lr,r12
-+	bl	__get_datapage@local	/* get data page */
-+	lwz	r5, CLOCK_HRTIMER_RES(r3)
-+	mtlr	r12
- 	li	r3,0
- 	cmpli	cr0,r4,0
- 	crclr	cr0*4+so
- 	beqlr
--	lis	r5,CLOCK_REALTIME_RES@h
--	ori	r5,r5,CLOCK_REALTIME_RES@l
- 	stw	r3,TSPC32_TV_SEC(r4)
- 	stw	r5,TSPC32_TV_NSEC(r4)
- 	blr
---- a/arch/powerpc/kernel/vdso64/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso64/gettimeofday.S
-@@ -145,12 +145,15 @@ V_FUNCTION_BEGIN(__kernel_clock_getres)
- 	cror	cr0*4+eq,cr0*4+eq,cr1*4+eq
- 	bne	cr0,99f
- 
-+	mflr	r12
-+  .cfi_register lr,r12
-+	bl	V_LOCAL_FUNC(__get_datapage)
-+	lwz	r5, CLOCK_HRTIMER_RES(r3)
-+	mtlr	r12
- 	li	r3,0
- 	cmpldi	cr0,r4,0
- 	crclr	cr0*4+so
- 	beqlr
--	lis	r5,CLOCK_REALTIME_RES@h
--	ori	r5,r5,CLOCK_REALTIME_RES@l
- 	std	r3,TSPC64_TV_SEC(r4)
- 	std	r5,TSPC64_TV_NSEC(r4)
- 	blr
+ 		shmem_falloc.waitq = &shmem_falloc_waitq;
+-		shmem_falloc.start = unmap_start >> PAGE_SHIFT;
++		shmem_falloc.start = (u64)unmap_start >> PAGE_SHIFT;
+ 		shmem_falloc.next = (unmap_end + 1) >> PAGE_SHIFT;
+ 		spin_lock(&inode->i_lock);
+ 		inode->i_private = &shmem_falloc;
 
 
