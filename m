@@ -2,106 +2,97 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25082C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17114C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 029EB24650
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF7D2146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:00:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbfLSQ6r (ORCPT
+        id S1726943AbfLSRA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 11:58:47 -0500
-Received: from mga02.intel.com ([134.134.136.20]:14807 "EHLO mga02.intel.com"
+        Thu, 19 Dec 2019 12:00:28 -0500
+Received: from ms.lwn.net ([45.79.88.28]:37334 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726760AbfLSQ6o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 11:58:44 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Dec 2019 08:58:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,332,1571727600"; 
-   d="scan'208";a="228308843"
-Received: from dpshah-mobl1.amr.corp.intel.com (HELO [10.254.191.243]) ([10.254.191.243])
-  by orsmga002.jf.intel.com with ESMTP; 19 Dec 2019 08:58:42 -0800
-Subject: Re: [alsa-devel] [PATCH v6 02/11] mfd: wcd934x: add support to
- wcd9340/wcd9341 codec
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org
-Cc:     robh@kernel.org, alsa-devel@alsa-project.org,
-        bgoswami@codeaurora.org, vinod.koul@linaro.org,
-        devicetree@vger.kernel.org, spapothi@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org>
- <20191219103153.14875-3-srinivas.kandagatla@linaro.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <af48cd71-fa1a-dbc5-0e88-e315ea13c28c@linux.intel.com>
-Date:   Thu, 19 Dec 2019 10:36:48 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1726760AbfLSRA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 12:00:27 -0500
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id F41BF2E5;
+        Thu, 19 Dec 2019 17:00:26 +0000 (UTC)
+Date:   Thu, 19 Dec 2019 10:00:25 -0700
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+Cc:     hirofumi@mail.parknet.co.jp, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH v2] Documentation: filesystems: convert vfat.txt to RST
+Message-ID: <20191219100025.255003e6@lwn.net>
+In-Reply-To: <20191121130605.29074-1-dwlsalmeida@gmail.com>
+References: <20191121130605.29074-1-dwlsalmeida@gmail.com>
+Organization: LWN.net
 MIME-Version: 1.0
-In-Reply-To: <20191219103153.14875-3-srinivas.kandagatla@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 21 Nov 2019 10:06:05 -0300
+"Daniel W. S. Almeida" <dwlsalmeida@gmail.com> wrote:
 
-> +static int wcd934x_slim_status(struct slim_device *sdev,
-> +			       enum slim_device_status status)
-> +{
-> +	switch (status) {
-> +	case SLIM_DEVICE_STATUS_UP:
-> +		return wcd934x_slim_status_up(sdev);
-> +	case SLIM_DEVICE_STATUS_DOWN:
-> +		mfd_remove_devices(&sdev->dev);
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
+> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+> 
+> Converts vfat.txt to the reStructuredText format, improving presentation
+> without changing the underlying content.
+> 
+> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+> -----------------------------------------------------------
+> Changes in v2:
+> Refactored long lines as pointed out by Jonathan
+> Copied the maintainer
+> Updated the reference in the MAINTAINERS file for vfat
+> 
+> I did not move this into admin-guide, waiting on what the 
+> maintainer has to say about this and also about old sections
+> in the text, if any.
+
+This one, too, could user a bit less markup, and more consistent markup.
+If you have to mark up literal text, for example, it should be ``literal``,
+not *emphasis*.  But please think about whether it needs marking up at all.
+
+I have one other thing here, that could use input from the vfat maintainer:
+
+[...]
+
+> +BUG REPORTS
+> +===========
+> +If you have trouble with the *VFAT* filesystem, mail bug reports to
+> +chaffee@bmrc.cs.berkeley.edu.
 > +
-> +	return 0;
-> +}
+> +Please specify the filename and the operation that gave you trouble.
 > +
+> +TEST SUITE
+> +==========
+> +If you plan to make any modifications to the vfat filesystem, please
+> +get the test suite that comes with the vfat distribution at
+> +
+> +`<http://web.archive.org/web/*/http://bmrc.berkeley.edu/people/chaffee/vfat.html>`_
+> +
+> +This tests quite a few parts of the vfat filesystem and additional
+> +tests for new features or untested features would be appreciated.
 
-this is interesting/surprising - I just noticed what looks like a 
-significant change in how probe/initialization are handled.
+What are the chances that the above email address works at all, especially
+given that the associated web page has to be dug out of the wayback
+machine?  We should really try to avoid perpetuating obviously wrong
+information when we can.  Hirofumi, do you have any thoughts on what might
+replace this section?
 
-It was my understanding that in SLIMbus the Linux devices are created at 
-probe time, and when the device reports present this 'device_status' 
-callback is used to notify the codec driver of a change. The rationale 
-for this was that the codec driver may control power switches/gpios that 
-are necessary for the device to appear on the bus.
+Thanks,
 
-This argument was used to require an change in the SoundWire 
-implementation, so we followed this model of creating devices at probe 
-time based on information reported by ACPI/DT, and used the 
-'update_status' callback when the device is present on the bus (which 
-may happen after a delay or controlled by an external power switch). 
-This approach can lead to 'ghost devices' described in firmware but not 
-populated in hardware, and power management opens on how long a bus 
-needs to remain active if no devices report present.
-
-What I understand from the code above is that the devices are actually 
-created when the SLIMbus device reports PRESENT, which seems a 180 
-degree change in directions?
-
-I actually prefer it this way, and all current discussions in MIPI 
-circles point to the fact that when the bus starts all devices on that 
-bus should already be powered and have the ability to report present 
-immediately (if the bus starts in a 'safe' mode and then later programs 
-different PHY parameters, a device can no longer join the bus)
-
-I would however not remove the devices when the status is down but only 
-on an explicit .remove.
-
-Feedback welcome.
--Pierre
-
+jon
