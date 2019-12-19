@@ -2,86 +2,118 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A0EC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D12E1C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4268121655
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 947B621655
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:41:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576798749;
-	bh=dS1E/5ZuzMsYJiHiU7ayF1z5MobU0fFtS9SV7hIB24w=;
+	s=default; t=1576798865;
+	bh=qU0AYjQ3Wt/z+EkJGVcRfZu2Rkl4zsRX9qrUSPHANUk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Vvg+8We17IZtosy4YLLueVLF5FiKkCSeSqhFp1frbEuhAahQGve1XjtnQLix9H6zR
-	 TdMKF4vAt6Xxb5sX34eV7ZuouEAdFQj0XtJBSXvRLB+kZkhaRyekPLBB4JQK0HVwPn
-	 0Lsf6hFqD2z/kF56dRGAdo/8mxbVkybwmt06yFv0=
+	b=GI6wNPU7nas5roYIWQohnBMp+TgX27Vy+YBYrGiAk91TjQMMxUav5yZ+kI4w/XTUh
+	 WMZRXMqSVjPgYSkYu4D4RoNF051jIJP+CeU9AOR9RUvcZwlasj89LaUfdjeLw/B0F0
+	 5l8ZXLGQY9mWE3s+7sDiWVejh/RLqq8pkK6n1nnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfLSXjI (ORCPT
+        id S1727135AbfLSXlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 18:39:08 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45957 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726967AbfLSXjI (ORCPT
+        Thu, 19 Dec 2019 18:41:04 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40577 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726967AbfLSXlE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 18:39:08 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 59so9314524otp.12;
-        Thu, 19 Dec 2019 15:39:07 -0800 (PST)
+        Thu, 19 Dec 2019 18:41:04 -0500
+Received: by mail-ot1-f67.google.com with SMTP id w21so1583502otj.7;
+        Thu, 19 Dec 2019 15:41:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=49NkEdPVUTrClJQG9wypO7j+KSvP2cMEHBxilTCm4Oo=;
-        b=RjUEkO+cKjVfqoGzr0G5WphvcZBMEx+n4wXH8DpnNwmt7fUpX0BuhS0P6CYrbOq6Vx
-         LzGAe6q4BpJY4LOePLzOTxidpvwDX7xIuzK4aSErraDbrCkLYxJP5tFTQBIPi6ig/IMz
-         nqjHNqzSwCflmt2JXYNzarJQCLmrE667BIwt/a8Xdw9nQpmwI22jf/jsdVoSI5AWRFEt
-         uF1+hQ1nP9LibNRf/GJIR83PbeP5GI6HPLIAKWhxSXxFGvrKb8uDVQXOxe8ZtmdiO+RY
-         ZnZ7wcuwSXnqjWLXvnTW12dx5gn2enTZpdBVc4Q9BiHo0I3hAh7zsP7kWnmr7TmBNEZ9
-         s1IA==
-X-Gm-Message-State: APjAAAXQ3S0LI/qf62jqqvcvuUGfaybwpaCnby32A+n1tX1sroIFG0VF
-        uOh4OTX0+rOmNxKTPG4KwK73i24=
-X-Google-Smtp-Source: APXvYqxzLHH4qXGeUb8cHj1eoRujkYAF2qvTXqb8zLYaI8LIyC64mQDJGqWuHCRdXoGlm/z+AQnO2w==
-X-Received: by 2002:a9d:8f1:: with SMTP id 104mr9303245otf.107.1576798747100;
-        Thu, 19 Dec 2019 15:39:07 -0800 (PST)
+        bh=3NfDG7avH+ujpcCBpbFffoQ4me1PnPp49OU9/9ftPuE=;
+        b=QNVJURKqy99mz8SlvQjSgapNbZc3lVtDbzBYq3sINJnpJICcBwEvKVBcy01mTzZEqu
+         fx52bbtwyQTEvfDq0yfOA1ATxGu+uwoooYBvhoAr9RYBsP8BHvFTzT+b6mwD6czx0SRC
+         341jziKyAXFilnNUCysIwg3ToPJpR8zvBat7ZNfAT643ekTB/qImuYlBAtn0Zj8ff1N1
+         80PUdMVMoW87Q22docLQjcwjV23iLURmtBY3hGd9a1Cy2rpeNab6wJEj5Fv9IqyS7sDK
+         0hk+EXnCqMFVb0hbByMdOao6auHaE/ym2UKUleJec79HRy0ajE5/qoQsLYf18G9br9KE
+         wYag==
+X-Gm-Message-State: APjAAAV8ws0Dy4CvU6I1rv8mEe8piHurOAoD1OlQXnFV2zTCctkgPpXi
+        ZRhIssg0bSD8sd0KwcOMAQ==
+X-Google-Smtp-Source: APXvYqzAQ3Wpwz3g5jix2Do+I3Pb2ucPQFPn2hVTxMKOwUBxxicCkn6k6qUaRkAyoO5pODcIC0pAJw==
+X-Received: by 2002:a9d:5c02:: with SMTP id o2mr2095128otk.176.1576798863533;
+        Thu, 19 Dec 2019 15:41:03 -0800 (PST)
 Received: from localhost (ip-184-205-174-147.ftwttx.spcsdns.net. [184.205.174.147])
-        by smtp.gmail.com with ESMTPSA id w192sm842206oiw.8.2019.12.19.15.39.05
+        by smtp.gmail.com with ESMTPSA id 4sm2767680otu.0.2019.12.19.15.41.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 15:39:06 -0800 (PST)
-Date:   Thu, 19 Dec 2019 17:39:04 -0600
+        Thu, 19 Dec 2019 15:41:02 -0800 (PST)
+Date:   Thu, 19 Dec 2019 17:41:00 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Guillaume La Roque <glaroque@baylibre.com>
-Cc:     narmstrong@baylibre.com, mchehab@kernel.org,
-        hverkuil-cisco@xs4all.nl, khilman@baylibre.com,
-        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] media: dt-bindings: media: meson-ao-cec: Add
- support of ao-sysctrl syscon
-Message-ID: <20191219233904.GA18354@bogus>
-References: <20191213132956.11074-1-glaroque@baylibre.com>
- <20191213132956.11074-2-glaroque@baylibre.com>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, peng.fan@nxp.com,
+        ping.bai@nxp.com, Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 2/7] soc: imx: gpcv2: Update imx8m-power.h to include
+ iMX8M Mini
+Message-ID: <20191219234100.GA19269@bogus>
+References: <20191213160542.15757-1-aford173@gmail.com>
+ <20191213160542.15757-3-aford173@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191213132956.11074-2-glaroque@baylibre.com>
+In-Reply-To: <20191213160542.15757-3-aford173@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Dec 2019 14:29:54 +0100, Guillaume La Roque wrote:
-> ao-sysctrl syscon phandle property is needed for CEC wakeup support.
-> This property is optional.
+On Fri, Dec 13, 2019 at 10:05:37AM -0600, Adam Ford wrote:
+> In preparation for i.MX8M Mini support in the GPC driver, the
+> include file used by both the device tree and the source needs to
+> have the appropriate references for it.
 > 
-> Tested-by: Kevin Hilman <khilman@baylibre.com>
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> Signed-off-by: Adam Ford <aford173@gmail.com>
 > ---
->  .../devicetree/bindings/media/amlogic,meson-gx-ao-cec.yaml    | 4 ++++
->  1 file changed, 4 insertions(+)
+> V2:  No Change
 > 
+>  include/dt-bindings/power/imx8m-power.h | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/include/dt-bindings/power/imx8m-power.h b/include/dt-bindings/power/imx8m-power.h
+> index 8a513bd9166e..0054bba744b8 100644
+> --- a/include/dt-bindings/power/imx8m-power.h
+> +++ b/include/dt-bindings/power/imx8m-power.h
+> @@ -18,4 +18,18 @@
+>  #define IMX8M_POWER_DOMAIN_MIPI_CSI2	9
+>  #define IMX8M_POWER_DOMAIN_PCIE2	10
+>  
+> +#define IMX8MM_POWER_DOMAIN_MIPI	0
+> +#define IMX8MM_POWER_DOMAIN_PCIE	1
+> +#define IMX8MM_POWER_DOMAIN_USB_OTG1	2
+> +#define IMX8MM_POWER_DOMAIN_USB_OTG2	3
+> +#define IMX8MM_POWER_DOMAIN_DDR1	4
+> +#define IMX8MM_POWER_DOMAIN_GPU2D	5
+> +#define IMX8MM_POWER_DOMAIN_GPU	6
+> +#define IMX8MM_POWER_DOMAIN_VPU	7
+> +#define IMX8MM_POWER_DOMAIN_GPU3D	8
+> +#define IMX8MM_POWER_DOMAIN_DISP	9
+> +#define IMX8MM_POWER_VPU_G1		10
+> +#define IMX8MM_POWER_VPU_G2		11
+> +#define IMX8MM_POWER_VPU_H1		12
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Why is _DOMAIN missing from the last 3?
+
+> +
+>  #endif
+> -- 
+> 2.20.1
+> 
