@@ -2,71 +2,81 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EFF2C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28189C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E48224682
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA7C222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:21:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="B1pvdwoL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfLSGS4 (ORCPT
+        id S1726591AbfLSGVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 01:18:56 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7717 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725987AbfLSGS4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 01:18:56 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C1985C7F47A75852466D;
-        Thu, 19 Dec 2019 14:18:53 +0800 (CST)
-Received: from linux-lmwb.huawei.com (10.175.103.112) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 19 Dec 2019 14:18:48 +0800
-From:   Ma Feng <mafeng.ma@huawei.com>
-To:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>
-CC:     <linux-arm-msm@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] remoteproc: qcom: Remove unneeded semicolon
-Date:   Thu, 19 Dec 2019 14:19:36 +0800
-Message-ID: <1576736376-114816-1-git-send-email-mafeng.ma@huawei.com>
-X-Mailer: git-send-email 2.6.2
+        Thu, 19 Dec 2019 01:21:24 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:59074 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725844AbfLSGVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 01:21:24 -0500
+Received: from zn.tnic (p200300EC2F0B1C00F1A577DA89A48CEF.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:1c00:f1a5:77da:89a4:8cef])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 12A111EC0591;
+        Thu, 19 Dec 2019 07:21:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1576736483;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=steoryErl3lLrePbu9jWvjYCeP3FpAY53rDyYMrb8r8=;
+        b=B1pvdwoLIo/ycXAo+zotyuEdABWv7Cyj8C1eOb62tARv8nZnZrRxzlXv94d3kt5KmRjgn/
+        VfhYxGP4bLYWe0j/uy7+CFTrQ1vdoB8Bbs0eQG3gD6ViLTOamhGs7kJyj5FHPCYBoxMqaa
+        hViiA1kbHG5UOB/hgA9TjOsRXrh1Zs4=
+Date:   Thu, 19 Dec 2019 07:21:22 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Ma Feng <mafeng.ma@huawei.com>
+Cc:     Stefan Schaeckeler <sschaeck@cisco.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>, linux-edac@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] EDAC/aspeed: Remove unneeded semicolon
+Message-ID: <20191219062122.GB32039@zn.tnic>
+References: <1576735835-114453-1-git-send-email-mafeng.ma@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.103.112]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1576735835-114453-1-git-send-email-mafeng.ma@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes coccicheck warning:
+On Thu, Dec 19, 2019 at 02:10:35PM +0800, Ma Feng wrote:
+> Fixes coccicheck warning:
+> 
+> drivers/edac/aspeed_edac.c:246:2-3: Unneeded semicolon
+> drivers/edac/aspeed_edac.c:255:2-3: Unneeded semicolon
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Ma Feng <mafeng.ma@huawei.com>
+> ---
+>  drivers/edac/aspeed_edac.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-drivers/remoteproc/qcom_sysmon.c:397:2-3: Unneeded semicolon
+https://lkml.kernel.org/r/1576648806-1114-1-git-send-email-vulab@iscas.ac.cn
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Ma Feng <mafeng.ma@huawei.com>
----
- drivers/remoteproc/qcom_sysmon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+-- 
+Regards/Gruss,
+    Boris.
 
-diff --git a/drivers/remoteproc/qcom_sysmon.c b/drivers/remoteproc/qcom_sysmon.c
-index c231314..faf3822 100644
---- a/drivers/remoteproc/qcom_sysmon.c
-+++ b/drivers/remoteproc/qcom_sysmon.c
-@@ -394,7 +394,7 @@ static int ssctl_new_server(struct qmi_handle *qmi, struct qmi_service *svc)
- 		break;
- 	default:
- 		return -EINVAL;
--	};
-+	}
-
- 	sysmon->ssctl_version = svc->version;
-
---
-2.6.2
-
+https://people.kernel.org/tglx/notes-about-netiquette
