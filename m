@@ -2,96 +2,132 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DB6C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 190BDC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 459BD24650
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:32:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576733567;
-	bh=3TqDyq33bDOA1DBAAdKO4OY8wnBgiYZgW9/buyRHLqc=;
-	h=In-Reply-To:References:Cc:Subject:From:To:Date:List-ID:From;
-	b=ojPL+gTw1swDEME3IhfQxM3TIL6eCyxLV9A5caqo8qoAKCzN4OMufo3LbbbJHpGAO
-	 uQdqwjBuSttJWgDcHktt6B+Pq893U058aj9Tw0OoQeaipR6e/zix4rK9qSg98BFj4R
-	 rlHLcqPxMDYVJkIqyUwIw2IQUikpVjB8h1D5sTGM=
+	by mail.kernel.org (Postfix) with ESMTP id D5956222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:33:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="N3ZfoC8+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbfLSFcq (ORCPT
+        id S1726880AbfLSFdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 00:32:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46078 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbfLSFcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 00:32:46 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88D3A222C2;
-        Thu, 19 Dec 2019 05:32:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576733564;
-        bh=3TqDyq33bDOA1DBAAdKO4OY8wnBgiYZgW9/buyRHLqc=;
-        h=In-Reply-To:References:Cc:Subject:From:To:Date:From;
-        b=PcpMTHNRau9NZL1ZlOqBXpdNprIkeT+kV7OT+iz0x+RJP2h9jWZkg8d/Ht+9GNZj+
-         UiO1w/+mRpxc2YSTdgWcO+6kWc8/wdbw+wjqaQlFhizz8oo1FVpNDlOM3twBK4b2cx
-         7z3B5lV256lAwcJJQ5d76sOQLf/9V/gCQhEsgZsY=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 19 Dec 2019 00:33:39 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:36452 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbfLSFdi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 00:33:38 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJ5XAMo090485;
+        Wed, 18 Dec 2019 23:33:10 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576733590;
+        bh=LOOY6W2Ku2R5ppLjFbe/RkqYjMl9lftew8PFB4joQIs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=N3ZfoC8+zHBNo+unnhOUoM5b//zS1vm0iE6RRaKDoli0tIVjMvE0s3DjrOe+SK6Yb
+         ZCa1CRV7PqFore/THw7HRmM2MYNLimmu3N3IA7EEWRymae76Tb2p65xyLOhapJNacj
+         XmWwX8VNPVQ227zYdY6HkPqpvWzYpbZLVO21MVvM=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBJ5XAu1122133
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 18 Dec 2019 23:33:10 -0600
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 18
+ Dec 2019 23:33:10 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 18 Dec 2019 23:33:10 -0600
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJ5X6wR055261;
+        Wed, 18 Dec 2019 23:33:07 -0600
+Subject: Re: [PATCH 1/2] dt-bindings: mtd: spi-nor: document new flag
+To:     Michael Walle <michael@walle.cc>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>
+CC:     <linux-mtd@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+References: <20191214191943.3679-1-michael@walle.cc>
+ <556fe468-0080-ad05-8228-5ff8f1b3dac6@ti.com>
+ <af3692dba69e85fa8136ab3d170bef39@walle.cc>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <2dfc30a7-3261-d783-8256-f72458a0141b@ti.com>
+Date:   Thu, 19 Dec 2019 11:03:33 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <0101016eab0a4e76-b8eb44c5-d076-46b9-a156-b80dc650ca31-000000@us-west-2.amazonses.com>
-References: <1573812304-24074-1-git-send-email-tdas@codeaurora.org> <1573812304-24074-4-git-send-email-tdas@codeaurora.org> <CAOCk7NqfHe6jRPmw6o650fyd6EyVfFObHhJ9=21ipuAqJo6oGA@mail.gmail.com> <20191126181154.275EA20727@mail.kernel.org> <0101016eab0a4e76-b8eb44c5-d076-46b9-a156-b80dc650ca31-000000@us-west-2.amazonses.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        MSM <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 3/8] dt-bindings: clock: Add YAML schemas for the QCOM GPUCC clock bindings
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Taniya Das <tdas@codeaurora.org>
-User-Agent: alot/0.8.1
-Date:   Wed, 18 Dec 2019 21:32:43 -0800
-Message-Id: <20191219053244.88D3A222C2@mail.kernel.org>
+In-Reply-To: <af3692dba69e85fa8136ab3d170bef39@walle.cc>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Taniya Das (2019-11-26 20:06:49)
->=20
->=20
-> On 11/26/2019 11:41 PM, Stephen Boyd wrote:
-> > Quoting Jeffrey Hugo (2019-11-15 07:11:01)
-> >> On Fri, Nov 15, 2019 at 3:07 AM Taniya Das <tdas@codeaurora.org> wrote:
-> >>> diff --git a/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml =
-b/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
-> >>> new file mode 100644
-> >>> index 0000000..c2d6243
-> >>> --- /dev/null
-> >>> +++ b/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
-> >>> +      - description: GPLL0 source from GCC
-> >>
-> >> This is not an accurate conversion.  GPLL0 was not valid for 845, and
-> >> is required for 8998.
-> >=20
-> > Thanks for checking Jeff.
-> >=20
-> > It looks like on 845 there are two gpll0 clocks going to gpucc. From
-> > gpu_cc_parent_map_0:
-> >=20
-> >       "gcc_gpu_gpll0_clk_src",
-> >       "gcc_gpu_gpll0_div_clk_src",
-> >=20
->=20
-> There are branches of GPLL0 which would be connected to most external=20
-> CCs. It is upto to the external CCs to either use them to source a=20
-> frequency or not.
+Hi Michael,
 
-Yes, they can decide to use them or not, but they really do go to the
-CCs so the DT should describe that.
+[...]
+>>> +- no-unlock : By default, linux unlocks the whole flash because there
+>>> +           are legacy flash devices which are locked by default
+>>> +           after reset. Set this flag if you don't want linux to
+>>> +           unlock the whole flash automatically. In this case you
+>>> +           can control the non-volatile bits by the
+>>> +           flash_lock/flash_unlock tools.
+>>>
+>>
+>> Current SPI NOR framework unconditionally unlocks entire flash which
+>> I agree is not the best thing to do, but I don't think we need
+>> new DT property here. MTD cmdline partitions and DT partitions already
+>> provide a way to specify that a partition should remain locked[1][2]
+> 
+> I know that the MTD layer has the same kind of unlocking. But that
+> unlocking is done on a per mtd partition basis. Eg. consider something
+> like the following
+> 
+>  mtd1 bootloader  (locked)
+>  mtd2 firmware    (locked)
+>  mtd3 kernel
+>  mtd4 environment
+> 
+> Further assume, that the end of mtd2 aligns with one of the possible
+> locking areas which are supported by the flash chip. Eg. the first quarter.
+> 
+> The mtd layer would do two (or four, if "lock" property is set) unlock()
+> calls, one for mtd1 and one for mtd2.
+> 
 
+
+> My point here is, that the mtd partitions doesn't always map to the
+> locking regions of the SPI flash (at least if the are not merged together).
+> 
+
+You are right! This will be an issue if existing partitions are not
+aligned to locking regions.
+
+I take my comments back... But I am not sure if a new DT property is the
+needed. This does not describe HW and is specific to Linux SPI NOR
+stack. How about a module parameter instead?
+Module parameter won't provide per flash granularity in controlling
+unlocking behavior. But I don't think that matters.
+
+Tudor,
+
+You had a patch doing something similar. Does module param sound good to
+you?
+
+
+-- 
+Regards
+Vignesh
