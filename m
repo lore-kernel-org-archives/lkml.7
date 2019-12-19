@@ -1,90 +1,111 @@
 Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,TVD_SUBJ_WIPE_DEBT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0397FC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79227C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3BB324672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:31:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576794676;
-	bh=JPhSXXuOi2gTNCsSXJs9wuR71QK3t/G7kKD1h+1npcM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=k+TMWnE5IkrRjo9kRayvRd3kW0en3nkn3Lx3mVdvJdaFOZJSAXz9OASoYb52LBFGo
-	 CZH3H4cQ8k+P8tf3UxHkk3E+g7aBLkZ1JjPEuC1p181nM6hCNL7CE1LGwTi8Fb3Sz4
-	 AtYHOykO4V3nJ9Hru1SJMxoM/+zBH9uE2Z3KaPQU=
+	by mail.kernel.org (Postfix) with ESMTP id 4748A206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:34:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v0Ee1Mgl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbfLSWbQ (ORCPT
+        id S1727110AbfLSWep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 17:31:16 -0500
-Received: from mail-oi1-f173.google.com ([209.85.167.173]:42924 "EHLO
-        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbfLSWbP (ORCPT
+        Thu, 19 Dec 2019 17:34:45 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:45753 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbfLSWep (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 17:31:15 -0500
-Received: by mail-oi1-f173.google.com with SMTP id 18so3114224oin.9;
-        Thu, 19 Dec 2019 14:31:15 -0800 (PST)
+        Thu, 19 Dec 2019 17:34:45 -0500
+Received: by mail-ua1-f67.google.com with SMTP id 59so2559119uap.12
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 14:34:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VpboOSsAlEGLRQwjGYSM66BWhiuHg2YpYtx8W6AcQ7c=;
+        b=v0Ee1MglQDxW/nV3ZAPV6ZkzzbCsYZIV0nkQgFwwyZqft+qKhyc3A1q60nRn2Z7v+v
+         +95B1KXIZF/2xtIBsQ1tOTE7GRzYr/4TrZfiBdXZ5zB8gy66p+tgSf+4XUKrOzgjH6v/
+         ooHr0OAn9QOrksN6K9LeN9e6zABJ2f9YqlzMemt6jRXPdZXZ+/p0PJMcPA8uZrsSf//G
+         xGxQ00uYLa5+95NU76wVLr/ur4etzWC8MW6URrtdk26vGqrykglS4mGoSpjJpf3Xwl+H
+         4IzyQzh27Z7ZUZI5K4msC5UqeOBLzLY56vfxIe5XMXM/tslMW5iRqK1vi+NlUnbfqAQL
+         Fzgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=D6/Lnp9SQxWtLanrpfRv/1y5LG5SQwcq+M2dD1VqhCc=;
-        b=UIlkLJTzkB58yH9MjpyIv+ZigyxIADyYVhnN/t5STXZFfSHiNrh42+UhXN1DSGaIdZ
-         bSbTGoiM7AecdCxSoax5xHmn81NqzzXWbsy37SV/XUov+1B6Qaz4PvdX1z4HfKO+fQgl
-         OXzQbS67SSyndWNeRyp1blks1EHuiGrn+tn9hezCZvTKhP2oCY/4dUvQFOlSrQrbcIZs
-         bgxLnvHeS8UxWqo7AycBKEGMGdPsrO54peWdRB/kCB3r1hIIVMKY0blcrwGuZKIDh1K1
-         yXP1uKDNcbvMNkQWFWa9sGM5bZl9vBsbjQL3+zC+7SB+YbB31frqC0VrIeQvj6gv54YY
-         qUQQ==
-X-Gm-Message-State: APjAAAWC3SQnXsusLrXgSDk8WConFShY2VxQN2udRLpK4HVu2d4rz/ra
-        hNRZmAEGnidr3qgNJrioUA==
-X-Google-Smtp-Source: APXvYqxP+AsL2ClzQz1/tTdWWz61H8T7A5vOVoIHbEWTGgA7cl+qlj/GpeLj2PAWGr+P+OTYVDHkww==
-X-Received: by 2002:aca:cf50:: with SMTP id f77mr3288551oig.60.1576794674782;
-        Thu, 19 Dec 2019 14:31:14 -0800 (PST)
-Received: from localhost (ip-184-205-0-249.ftwttx.spcsdns.net. [184.205.0.249])
-        by smtp.gmail.com with ESMTPSA id n22sm2636449otj.36.2019.12.19.14.31.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 14:31:14 -0800 (PST)
-Date:   Thu, 19 Dec 2019 16:31:08 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc:     linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        zypeng@titanmec.com, Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org
-Subject: Re: [RFC 05/25] dt-bindings: vendor-prefixes: Add Titan Micro
- Electronics
-Message-ID: <20191219223108.GA25174@bogus>
-References: <20191212033952.5967-1-afaerber@suse.de>
- <20191212033952.5967-6-afaerber@suse.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VpboOSsAlEGLRQwjGYSM66BWhiuHg2YpYtx8W6AcQ7c=;
+        b=dg64AFekvsN+kiu65T7y93v+RLypsWVIpr2Yk7nT9DUKMZv5do1C2hcW5PX8eEx7GY
+         zzmkHHTxuHvuVtNYqMU00Dlvwr/jSHXz/yxUZsrZuoEhYI1rxtt4BJ9xAwT5ogvKSBQD
+         kMP2tUhctS0jxHu7wqbF4qZnLnWLBC5nqeZJUzYxKxFC+dUNDsFFEyonTNNrXL/uGW5/
+         jtI7DbJjlzg7LckTl2vb8tV//A5hkw8kMOy/bpRHWmteh2sD3x7Pyv81y0DcwDwU0J0x
+         LSZe5kEj9dAcsgfvBOY9KKO2XCzRhX97stTsFNPkaMl6lnKdLv14Izlrb3LBtQaFZiAl
+         gOeg==
+X-Gm-Message-State: APjAAAVh2jzxNyxwRWSVwCZoMTImnv3jtM67ihP/Hob85FSyE5fN3zT/
+        VjPmw+BiRhQM6s8eX++7ddrBi1nUoluRkT8j4lhdOw==
+X-Google-Smtp-Source: APXvYqwK+EshQqhWAuEP+FIGWSdW4fSf4XVcb1H0wkkA0gtNccGHWZPwmpTELUU72DjKZh9h2rxmwDp4F1Myi6CEF/g=
+X-Received: by 2002:ab0:e16:: with SMTP id g22mr7016060uak.129.1576794884226;
+ Thu, 19 Dec 2019 14:34:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191212033952.5967-6-afaerber@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1576606020.git.hns@goldelico.com>
+In-Reply-To: <cover.1576606020.git.hns@goldelico.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 19 Dec 2019 23:34:08 +0100
+Message-ID: <CAPDyKFoRe1Nzu74BACNMCZDVoS4Dd3w0Bk3K-Mstw4WAvMtiLg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] wl1251: remove ti,power-gpio for sdio mode
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019 04:39:32 +0100, =?UTF-8?q?Andreas=20F=C3=A4rber?= wrote:
-> Assign vendor prefix "titanmec", matching their domain name.
-> 
-> Cc: zypeng@titanmec.com
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+On Tue, 17 Dec 2019 at 19:07, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>
+> * use just "wl1251: " as title prefix - by Kalle Valo <kvalo@codeaurora.org>
+> * fix error handling: we still have to check for wl->irq returning -EPROBE_DEFER
+>
+> PATCH V1 2019-11-24 11:35:48:
+> The driver has been updated to use the mmc/sdio core
+> which does full power control. So we do no longer need
+> the power control gipo.
+>
+> Note that it is still needed for the SPI based interface
+> (N900).
+>
+> Suggested by: Ulf Hansson <ulf.hansson@linaro.org>
+> Tested by: H. Nikolaus Schaller <hns@goldelico.com> # OpenPandora 600MHz
+>
+> H. Nikolaus Schaller (2):
+>   DTS: bindings: wl1251: mark ti,power-gpio as optional
+>   wl1251: remove ti,power-gpio for SDIO mode
+>
+>  .../bindings/net/wireless/ti,wl1251.txt       |  3 +-
+>  drivers/net/wireless/ti/wl1251/sdio.c         | 32 ++-----------------
+>  2 files changed, 4 insertions(+), 31 deletions(-)
+>
+> --
+> 2.23.0
+>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+
+Kind regards
+Uffe
