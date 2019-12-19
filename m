@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E00CC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61047C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7478224679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34300222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780702;
-	bh=GMdPGt8ElWlIoWM7NGMD1M1j3aJxaKrQidEZgFvOLC0=;
+	s=default; t=1576780706;
+	bh=1X556cXYPxEAIMO19u1jJy89/RHUKO0B66A4saMjNRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lfl5JBpTuKrfz9U2MfEugY1/7zToJmXll3Zx0ye4pnECblITI9gLfEnRV3eFqC/CC
-	 w9hUTy0XJDGMFQKmUsp8T6LMiDSFYzdZj8ZbocHERG8sdFyqRRHcfEZuan69b9YoiV
-	 CAKi2PfeN4FufDTuOVzsGo/QhofY8aHns2r9Jt7I=
+	b=2MDdWJiSTUQ7kg1/ZE63U4SLKrRu48BD/tpdBBD5cSV5obVIfto8h4DVmmY5bmiPH
+	 zl5l6G8z1Pu7y+TdXFIHsD+XhVKGRwOdvFiUXzKfcv+72tH/rgMSWhr2TwgEg/8M+m
+	 bRmoW8T/tmX7m9/YzH317z6EhKptn0CWUEdqouZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbfLSSiV (ORCPT
+        id S1728019AbfLSSiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:38:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56244 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:38:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728005AbfLSSiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:38:18 -0500
+        id S1728008AbfLSSiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:38:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 607992467F;
-        Thu, 19 Dec 2019 18:38:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF20F24683;
+        Thu, 19 Dec 2019 18:38:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780697;
-        bh=GMdPGt8ElWlIoWM7NGMD1M1j3aJxaKrQidEZgFvOLC0=;
+        s=default; t=1576780700;
+        bh=1X556cXYPxEAIMO19u1jJy89/RHUKO0B66A4saMjNRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m36So0AvL0J8iWTH2iMiEGYqaWPcCidOGi9rj3oaU0nU/52ddT6TVrsa/KiQ3lwDR
-         bjJtdXPDRKN3mM0KGKt65t/N99fjXHZMX9Qcu8Q/Q2kKWh34v6G74eo+iWcOqcofdO
-         0xKFNYP9szWy505hj9zfFD4eWyNLbfBrqTxi/1cQ=
+        b=ogwpIwLzw2hamHuzT5YBoaL8QS3ROmjt45fnYT6Q6vgsNljsJvkZmzW6zACr34QPm
+         gP9C4f3rxydvO1VsA1bZjT9ACvgJbRgpO6wz+DY3EZXy3JuW3CE05/u7TncnZhkI1W
+         b3+wo86j13mdaRFgdiO3VpA1ATpIUyZq2hAexN6I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Ogness <john.ogness@linutronix.de>,
-        Jan Luebbe <jlu@pengutronix.de>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "zhangyi (F)" <yi.zhang@huawei.com>
-Subject: [PATCH 4.4 081/162] fs/proc/array.c: allow reporting eip/esp for all coredumping threads
-Date:   Thu, 19 Dec 2019 19:33:09 +0100
-Message-Id: <20191219183212.732854666@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 4.4 082/162] usb: gadget: configfs: Fix missing spin_lock_init()
+Date:   Thu, 19 Dec 2019 19:33:10 +0100
+Message-Id: <20191219183212.791700716@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -64,49 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Ogness <john.ogness@linutronix.de>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-commit cb8f381f1613cafe3aec30809991cd56e7135d92 upstream.
+commit 093edc2baad2c258b1f55d1ab9c63c2b5ae67e42 upstream.
 
-0a1eb2d474ed ("fs/proc: Stop reporting eip and esp in /proc/PID/stat")
-stopped reporting eip/esp and fd7d56270b52 ("fs/proc: Report eip/esp in
-/prod/PID/stat for coredumping") reintroduced the feature to fix a
-regression with userspace core dump handlers (such as minicoredumper).
+The driver allocates the spinlock but not initialize it.
+Use spin_lock_init() on it to initialize it correctly.
 
-Because PF_DUMPCORE is only set for the primary thread, this didn't fix
-the original problem for secondary threads.  Allow reporting the eip/esp
-for all threads by checking for PF_EXITING as well.  This is set for all
-the other threads when they are killed.  coredump_wait() waits for all the
-tasks to become inactive before proceeding to invoke a core dumper.
+This is detected by Coccinelle semantic patch.
 
-Link: http://lkml.kernel.org/r/87y32p7i7a.fsf@linutronix.de
-Link: http://lkml.kernel.org/r/20190522161614.628-1-jlu@pengutronix.de
-Fixes: fd7d56270b526ca3 ("fs/proc: Report eip/esp in /prod/PID/stat for coredumping")
-Signed-off-by: John Ogness <john.ogness@linutronix.de>
-Reported-by: Jan Luebbe <jlu@pengutronix.de>
-Tested-by: Jan Luebbe <jlu@pengutronix.de>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Fixes: 1a1c851bbd70 ("usb: gadget: configfs: fix concurrent issue between composite APIs")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Cc: stable <stable@vger.kernel.org>
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Link: https://lore.kernel.org/r/20191030034046.188808-1-weiyongjun1@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/proc/array.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/gadget/configfs.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/proc/array.c
-+++ b/fs/proc/array.c
-@@ -434,7 +434,7 @@ static int do_task_stat(struct seq_file
- 		 * a program is not able to use ptrace(2) in that case. It is
- 		 * safe because the task has stopped executing permanently.
- 		 */
--		if (permitted && (task->flags & PF_DUMPCORE)) {
-+		if (permitted && (task->flags & (PF_EXITING|PF_DUMPCORE))) {
- 			if (try_get_task_stack(task)) {
- 				eip = KSTK_EIP(task);
- 				esp = KSTK_ESP(task);
+--- a/drivers/usb/gadget/configfs.c
++++ b/drivers/usb/gadget/configfs.c
+@@ -1542,6 +1542,7 @@ static struct config_group *gadgets_make
+ 	gi->composite.resume = NULL;
+ 	gi->composite.max_speed = USB_SPEED_SUPER;
+ 
++	spin_lock_init(&gi->spinlock);
+ 	mutex_init(&gi->lock);
+ 	INIT_LIST_HEAD(&gi->string_list);
+ 	INIT_LIST_HEAD(&gi->available_func);
 
 
