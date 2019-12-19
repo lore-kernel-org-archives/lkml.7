@@ -2,231 +2,233 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8428C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 07:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F832C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 07:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF4324650
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 07:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F84624650
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 07:12:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="u4I7h1uR"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HKuq9hGl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfLSHLy (ORCPT
+        id S1726701AbfLSHMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 02:11:54 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:16557 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726155AbfLSHLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 02:11:54 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47djjg3K1Sz9tyhW;
-        Thu, 19 Dec 2019 08:11:51 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=u4I7h1uR; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 7VZjfWAPfeb4; Thu, 19 Dec 2019 08:11:51 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47djjg1p3wz9twth;
-        Thu, 19 Dec 2019 08:11:51 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1576739511; bh=XwXA80UQsPc0SJUtGP/zhGnRhIf3dcllhjsBg4hphSA=;
-        h=From:Subject:To:Cc:Date:From;
-        b=u4I7h1uRH81OuECUC1gwnuaBdxB/LCiAWuTO+T1QumbXk/wnmwbYed+w94V129boY
-         ET+FXPUKl1tvnkmPzXpf7/z/hpDntYvCfLmLYE03qOAyL8XpmQsZ1IMhSI+Wkkoczo
-         DqgkVeawIn6MFShVyWuaJtmq4e7M5qR0/uVTUzG0=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 281D88B784;
-        Thu, 19 Dec 2019 08:11:52 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id S2CVWRUXIKtt; Thu, 19 Dec 2019 08:11:52 +0100 (CET)
-Received: from po16098vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D34258B756;
-        Thu, 19 Dec 2019 08:11:51 +0100 (CET)
-Received: by po16098vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 86D29637A1; Thu, 19 Dec 2019 07:11:51 +0000 (UTC)
-Message-Id: <1fd4faf553b154d7e7b73bfe33b527e4f3cbaf5a.1576739492.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v3] powerpc/32: add support of KASAN_VMALLOC
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, dja@axtens.net
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org
-Date:   Thu, 19 Dec 2019 07:11:51 +0000 (UTC)
+        Thu, 19 Dec 2019 02:12:30 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:22228 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726340AbfLSHMa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 02:12:30 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576739548; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=p6F+HJf9pwTVCYkBLIDwl50rIboYlyyDoCq2S3Q3fjA=;
+ b=HKuq9hGl1ty67HQS65483tahWgw9CSmJSvuxa4+O7YGoenkG86/IPDUb478b1Og/eWgNeJWE
+ BXwmgpsdLUfAg0bOke/PJkXOrob8FriC4lBuiQb3fPtp9SDPwWa8wVMjXlpeo59sO8l1Vj4T
+ lAjBQoSluy8dmuMsL8RzGrBGRxE=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5dfb22da.7f8ab5a5d458-smtp-out-n01;
+ Thu, 19 Dec 2019 07:12:26 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B099FC63C6C; Thu, 19 Dec 2019 07:12:26 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6AB2DC494BC;
+        Thu, 19 Dec 2019 07:12:25 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 19 Dec 2019 15:12:25 +0800
+From:   cang@codeaurora.org
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, asutoshd@codeaurora.org,
+        nguyenb@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, Mark Salyzyn <salyzyn@google.com>,
+        Andy Gross <agross@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 2/7] scsi: ufs-qcom: Add reset control support for host
+ controller
+In-Reply-To: <20191218041200.GP2536@vkoul-mobl>
+References: <20191216190415.GL2536@vkoul-mobl>
+ <CAOCk7NpAp+DHBp-owyKGgJFLRajfSQR6ff1XMmAj6A4nM3VnMQ@mail.gmail.com>
+ <091562cbe7d88ca1c30638bc10197074@codeaurora.org>
+ <20191217041342.GM2536@vkoul-mobl>
+ <763d7b30593b31646f3c198c2be99671@codeaurora.org>
+ <20191217092433.GN2536@vkoul-mobl>
+ <fc8952a0eee5c010fe14e5f107d89e64@codeaurora.org>
+ <20191217150852.GO2536@vkoul-mobl>
+ <CAOCk7Np691Hau1FdJqWs1UY6jvEvYfzA6NnG9U--ZcRsuV5=Zw@mail.gmail.com>
+ <75f7065d08f450c6cbb2b2662658ecaa@codeaurora.org>
+ <20191218041200.GP2536@vkoul-mobl>
+Message-ID: <983c21bb5ad2d38e11c074528d8898b9@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support of KASAN_VMALLOC on PPC32.
+On 2019-12-18 12:12, Vinod Koul wrote:
+> On 18-12-19, 02:44, cang@codeaurora.org wrote:
+> 
+>> Hi Vinod and Jeffrey,
+>> 
+>> Let me summary here, now the 1000000us timeout works for both 845 and 
+>> 8998.
+>> However, 8150 still fails.
+>> 
+>> > > The bigger question is why is the reset causing the timeout to be
+>> > > increased for sdm845 and not to work in case of sm8150! (Vinod)
+>> 
+>> I would not say this patch increases the timeout. With this patch,
+>> the PCS polling timeout, per my profiling, the PCS ready usually needs
+>> less than 5000us, which is the actual time needed for PCS bit to be 
+>> ready.
+>> 
+>> The reason why 1000us worked for you is because, w/o the patch, UFS 
+>> PHY
+>> registers are retained from pre-kernel stage (bootloader i.e.), the 
+>> PCS
+>> ready
+>> bit was set to 1 in pre-kernel stage, so when kernel driver reads it, 
+>> it
+>> returns
+>> 1, not even to be polled at all. It may seem "faster", but not the 
+>> right
+>> thing to do, because kernel stage may need different PHY settings than
+>> pre-kernel stage, keeping the settings configured in pre-kernel stage 
+>> is not
+>> always right, so this patch is needed. And increasing 1000us to 
+>> 1000000us
+>> is the right thing to do, but not a hack.
+>> 
+>> As reg for the phy initialization timeout on 8150, I found there is
+>> something
+>> wrong with its settings in /drivers/phy/qualcomm/phy-qcom-qmp.c
+>> 
+>> static const struct qmp_phy_init_tbl sm8150_ufsphy_serdes_tbl[] = {
+>> 	QMP_PHY_INIT_CFG(QPHY_POWER_DOWN_CONTROL, 0x01),
+>> 	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SYSCLK_EN_SEL, 0xd9),
+>> 
+>> "QMP_PHY_INIT_CFG(QPHY_POWER_DOWN_CONTROL, 0x01)" should NOT appear in 
+>> the
+>> serdes
+>> table! I haven't check who made this change, but please have a try 
+>> after
+>> remove
+>> this line from sm8150_ufsphy_serdes_tbl.
+> 
+> That is me :) Looks like I made an error while porting from downstream. 
+> I
+> did a quick check to remove this and it doesn't work yet, let me 
+> recheck
+> the settings again ...
+> 
+> Thanks for your help!
 
-To allow this, the early shadow covering the VMALLOC space
-need to be removed once high_memory var is set and before
-freeing memblock.
+Hi Vinod,
 
-And the VMALLOC area need to be aligned such that boundaries
-are covered by a full shadow page.
+Indeed, you need to tweak your settings. I spent some time help you
+figure this out. Try below change and please let me know if it can
+resolve your problem.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+I would not say this is a regression caused by my patch, it is just
+my patch reveals something incorrect in the settings.
 
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c 
+b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index 8e642a6..0cc9044 100755
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -66,7 +66,7 @@
+  /* QPHY_V3_PCS_MISC_CLAMP_ENABLE register bits */
+  #define CLAMP_EN                               BIT(0) /* enables i/o 
+clamp_n */
+
+-#define PHY_INIT_COMPLETE_TIMEOUT              1000
++#define PHY_INIT_COMPLETE_TIMEOUT              1000000
+  #define POWER_DOWN_DELAY_US_MIN                        10
+  #define POWER_DOWN_DELAY_US_MAX                        11
+
+@@ -166,6 +166,7 @@ static const unsigned int 
+sdm845_ufsphy_regs_layout[] = {
+  };
+
+  static const unsigned int sm8150_ufsphy_regs_layout[] = {
++       [QPHY_SW_RESET]                 = 0x08,
+         [QPHY_START_CTRL]               = 0x00,
+         [QPHY_PCS_READY_STATUS]         = 0x180,
+  };
+@@ -885,7 +886,6 @@ static const struct qmp_phy_init_tbl 
+msm8998_usb3_pcs_tbl[] = {
+  };
+
+  static const struct qmp_phy_init_tbl sm8150_ufsphy_serdes_tbl[] = {
+-       QMP_PHY_INIT_CFG(QPHY_POWER_DOWN_CONTROL, 0x01),
+         QMP_PHY_INIT_CFG(QSERDES_V4_COM_SYSCLK_EN_SEL, 0xd9),
+         QMP_PHY_INIT_CFG(QSERDES_V4_COM_HSCLK_SEL, 0x11),
+         QMP_PHY_INIT_CFG(QSERDES_V4_COM_HSCLK_HS_SWITCH_SEL, 0x00),
+@@ -1390,7 +1390,6 @@ static const struct qmp_phy_cfg sm8150_ufsphy_cfg 
+= {
+         .pwrdn_ctrl             = SW_PWRDN,
+
+         .is_dual_lane_phy       = true,
+-       .no_pcs_sw_reset        = true,
+  };
+
+  static void qcom_qmp_phy_configure(void __iomem *base,
 ---
-v3: added missing inclusion of asm/kasan.h needed when CONFIG_KASAN is not set.
 
-v2: rebased ; exclude specific module handling when CONFIG_KASAN_VMALLOC is set.
----
- arch/powerpc/Kconfig                         |  1 +
- arch/powerpc/include/asm/book3s/32/pgtable.h |  5 +++++
- arch/powerpc/include/asm/kasan.h             |  2 ++
- arch/powerpc/include/asm/nohash/32/pgtable.h |  5 +++++
- arch/powerpc/mm/kasan/kasan_init_32.c        | 33 +++++++++++++++++++++++++++-
- arch/powerpc/mm/mem.c                        |  4 ++++
- 6 files changed, 49 insertions(+), 1 deletion(-)
+Aside of the phy settings, your DT needs some modifications too,
+seems you copied most of them from sdm845.
+https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git/commit/?h=for-next&id=3834a2e92229ef26d30de28acb698b2b23d3e397
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 1ec34e16ed65..a247bbfb03d4 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -173,6 +173,7 @@ config PPC
- 	select HAVE_ARCH_HUGE_VMAP		if PPC_BOOK3S_64 && PPC_RADIX_MMU
- 	select HAVE_ARCH_JUMP_LABEL
- 	select HAVE_ARCH_KASAN			if PPC32
-+	select HAVE_ARCH_KASAN_VMALLOC		if PPC32
- 	select HAVE_ARCH_KGDB
- 	select HAVE_ARCH_MMAP_RND_BITS
- 	select HAVE_ARCH_MMAP_RND_COMPAT_BITS	if COMPAT
-diff --git a/arch/powerpc/include/asm/book3s/32/pgtable.h b/arch/powerpc/include/asm/book3s/32/pgtable.h
-index 0796533d37dd..5b39c11e884a 100644
---- a/arch/powerpc/include/asm/book3s/32/pgtable.h
-+++ b/arch/powerpc/include/asm/book3s/32/pgtable.h
-@@ -193,7 +193,12 @@ int map_kernel_page(unsigned long va, phys_addr_t pa, pgprot_t prot);
- #else
- #define VMALLOC_START ((((long)high_memory + VMALLOC_OFFSET) & ~(VMALLOC_OFFSET-1)))
- #endif
-+
-+#ifdef CONFIG_KASAN_VMALLOC
-+#define VMALLOC_END	_ALIGN_DOWN(ioremap_bot, PAGE_SIZE << KASAN_SHADOW_SCALE_SHIFT)
-+#else
- #define VMALLOC_END	ioremap_bot
-+#endif
- 
- #ifndef __ASSEMBLY__
- #include <linux/sched.h>
-diff --git a/arch/powerpc/include/asm/kasan.h b/arch/powerpc/include/asm/kasan.h
-index 296e51c2f066..fbff9ff9032e 100644
---- a/arch/powerpc/include/asm/kasan.h
-+++ b/arch/powerpc/include/asm/kasan.h
-@@ -31,9 +31,11 @@
- void kasan_early_init(void);
- void kasan_mmu_init(void);
- void kasan_init(void);
-+void kasan_late_init(void);
- #else
- static inline void kasan_init(void) { }
- static inline void kasan_mmu_init(void) { }
-+static inline void kasan_late_init(void) { }
- #endif
- 
- #endif /* __ASSEMBLY */
-diff --git a/arch/powerpc/include/asm/nohash/32/pgtable.h b/arch/powerpc/include/asm/nohash/32/pgtable.h
-index 552b96eef0c8..60c4d829152e 100644
---- a/arch/powerpc/include/asm/nohash/32/pgtable.h
-+++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
-@@ -114,7 +114,12 @@ int map_kernel_page(unsigned long va, phys_addr_t pa, pgprot_t prot);
- #else
- #define VMALLOC_START ((((long)high_memory + VMALLOC_OFFSET) & ~(VMALLOC_OFFSET-1)))
- #endif
-+
-+#ifdef CONFIG_KASAN_VMALLOC
-+#define VMALLOC_END	_ALIGN_DOWN(ioremap_bot, PAGE_SIZE << KASAN_SHADOW_SCALE_SHIFT)
-+#else
- #define VMALLOC_END	ioremap_bot
-+#endif
- 
- /*
-  * Bits in a linux-style PTE.  These match the bits in the
-diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
-index 0e6ed4413eea..88036fb88350 100644
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -129,6 +129,31 @@ static void __init kasan_remap_early_shadow_ro(void)
- 	flush_tlb_kernel_range(KASAN_SHADOW_START, KASAN_SHADOW_END);
- }
- 
-+static void __init kasan_unmap_early_shadow_vmalloc(void)
-+{
-+	unsigned long k_start = (unsigned long)kasan_mem_to_shadow((void *)VMALLOC_START);
-+	unsigned long k_end = (unsigned long)kasan_mem_to_shadow((void *)VMALLOC_END);
-+	unsigned long k_cur;
-+	phys_addr_t pa = __pa(kasan_early_shadow_page);
-+
-+	if (!early_mmu_has_feature(MMU_FTR_HPTE_TABLE)) {
-+		int ret = kasan_init_shadow_page_tables(k_start, k_end);
-+
-+		if (ret)
-+			panic("kasan: kasan_init_shadow_page_tables() failed");
-+	}
-+	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
-+		pmd_t *pmd = pmd_offset(pud_offset(pgd_offset_k(k_cur), k_cur), k_cur);
-+		pte_t *ptep = pte_offset_kernel(pmd, k_cur);
-+
-+		if ((pte_val(*ptep) & PTE_RPN_MASK) != pa)
-+			continue;
-+
-+		__set_pte_at(&init_mm, k_cur, ptep, __pte(0), 0);
-+	}
-+	flush_tlb_kernel_range(k_start, k_end);
-+}
-+
- void __init kasan_mmu_init(void)
- {
- 	int ret;
-@@ -165,7 +190,13 @@ void __init kasan_init(void)
- 	pr_info("KASAN init done\n");
- }
- 
--#ifdef CONFIG_MODULES
-+void __init kasan_late_init(void)
-+{
-+	if (IS_ENABLED(CONFIG_KASAN_VMALLOC))
-+		kasan_unmap_early_shadow_vmalloc();
-+}
-+
-+#if defined(CONFIG_MODULES) && !defined(CONFIG_KASAN_VMALLOC)
- void *module_alloc(unsigned long size)
- {
- 	void *base;
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index 9488b63dfc87..4995da1ea07a 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -49,6 +49,7 @@
- #include <asm/fixmap.h>
- #include <asm/swiotlb.h>
- #include <asm/rtas.h>
-+#include <asm/kasan.h>
- 
- #include <mm/mmu_decl.h>
- 
-@@ -294,6 +295,9 @@ void __init mem_init(void)
- 
- 	high_memory = (void *) __va(max_low_pfn * PAGE_SIZE);
- 	set_max_mapnr(max_pfn);
-+
-+	kasan_late_init();
-+
- 	memblock_free_all();
- 
- #ifdef CONFIG_HIGHMEM
--- 
-2.13.3
+<--snip-->
+> +		ufs_mem_phy: phy@1d87000 {
+> +			compatible = "qcom,sm8150-qmp-ufs-phy";
+> +			reg = <0 0x01d87000 0 0x18c>;
 
+The size 0x18c is wrong, in the code you are even accessing registers
+whose offsets are beyond 0x18c, see
+
+#define QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE1_MODE0	0x1ac
+#define QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE2_MODE0	0x1b0
+#define QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE1_MODE1	0x1b4
+#define QSERDES_V4_COM_BIN_VCOCAL_HSCLK_SEL		0x1bc
+#define QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE2_MODE1	0x1b8
+
+FYI, the total size of serdes registers is 0x1c0.
+
+<--snip-->
+> +			ufs_mem_phy_lanes: lanes@1d87400 {
+> +				reg = <0 0x01d87400 0 0x108>,
+> +				      <0 0x01d87600 0 0x1e0>,
+> +				      <0 0x01d87c00 0 0x1dc>,
+
+Same as above, see
+
+#define QPHY_V4_MULTI_LANE_CTRL1			0x1e0
+
+FYI, the total size of PCS registers is 0x200
+
+> +				      <0 0x01d87800 0 0x108>,
+> +				      <0 0x01d87a00 0 0x1e0>;
+> +				#phy-cells = <0>;
+> +			};
+<--snip-->
