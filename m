@@ -2,81 +2,109 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28189C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0EE0C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECA7C222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:21:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="B1pvdwoL"
+	by mail.kernel.org (Postfix) with ESMTP id 84207222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:23:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576736621;
+	bh=rKj8RMsJ8vQhtEuvJviwPymQ41yOc6F8ub3//9liH+4=;
+	h=In-Reply-To:References:Cc:Subject:From:To:Date:List-ID:From;
+	b=VkF853/gj0Mgox1HnUKkrGgo2EbWUusRa3OsijJqmyPZF8G+nA9jsI3KQC2leiprk
+	 EV8dsLu86Bc72J+FXfRTwajoT4BOREHUIMPSn4Gb2RBXqZxL7fiuSZGcELV7HaFdA0
+	 fKFESUUzX6dw+48CmSHpgCI57TzV65IrCWXkdzo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbfLSGVY (ORCPT
+        id S1726633AbfLSGXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 01:21:24 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:59074 "EHLO mail.skyhub.de"
+        Thu, 19 Dec 2019 01:23:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbfLSGVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 01:21:24 -0500
-Received: from zn.tnic (p200300EC2F0B1C00F1A577DA89A48CEF.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:1c00:f1a5:77da:89a4:8cef])
+        id S1725844AbfLSGXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 01:23:40 -0500
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 12A111EC0591;
-        Thu, 19 Dec 2019 07:21:23 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1576736483;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=steoryErl3lLrePbu9jWvjYCeP3FpAY53rDyYMrb8r8=;
-        b=B1pvdwoLIo/ycXAo+zotyuEdABWv7Cyj8C1eOb62tARv8nZnZrRxzlXv94d3kt5KmRjgn/
-        VfhYxGP4bLYWe0j/uy7+CFTrQ1vdoB8Bbs0eQG3gD6ViLTOamhGs7kJyj5FHPCYBoxMqaa
-        hViiA1kbHG5UOB/hgA9TjOsRXrh1Zs4=
-Date:   Thu, 19 Dec 2019 07:21:22 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Ma Feng <mafeng.ma@huawei.com>
-Cc:     Stefan Schaeckeler <sschaeck@cisco.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>, linux-edac@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] EDAC/aspeed: Remove unneeded semicolon
-Message-ID: <20191219062122.GB32039@zn.tnic>
-References: <1576735835-114453-1-git-send-email-mafeng.ma@huawei.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id DC0DE21582;
+        Thu, 19 Dec 2019 06:23:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576736620;
+        bh=rKj8RMsJ8vQhtEuvJviwPymQ41yOc6F8ub3//9liH+4=;
+        h=In-Reply-To:References:Cc:Subject:From:To:Date:From;
+        b=BF5dWQqvOaPrEQDIdsBR21PtRzBFZjQy+KDChjkSbf1XVJ+nqKjRY1XLJRYODqt1m
+         aHHxbYGhdC3+o5glOVfAsXMWMMytnOULk6J1hDtAIFneML4Abp9JBWUsVu81TlVK8C
+         BK+EVSOJal/H8Vg/4vgWhnxu/cnDfbTAc7iIrw2E=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1576735835-114453-1-git-send-email-mafeng.ma@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191125135910.679310-8-niklas.cassel@linaro.org>
+References: <20191125135910.679310-1-niklas.cassel@linaro.org> <20191125135910.679310-8-niklas.cassel@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 7/7] clk: qcom: apcs-msm8916: use clk_parent_data to specify the parent
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 18 Dec 2019 22:23:39 -0800
+Message-Id: <20191219062339.DC0DE21582@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 02:10:35PM +0800, Ma Feng wrote:
-> Fixes coccicheck warning:
-> 
-> drivers/edac/aspeed_edac.c:246:2-3: Unneeded semicolon
-> drivers/edac/aspeed_edac.c:255:2-3: Unneeded semicolon
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Ma Feng <mafeng.ma@huawei.com>
-> ---
->  drivers/edac/aspeed_edac.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+Quoting Niklas Cassel (2019-11-25 05:59:09)
+> diff --git a/drivers/clk/qcom/apcs-msm8916.c b/drivers/clk/qcom/apcs-msm8=
+916.c
+> index 46061b3d230e..bb91644edc00 100644
+> --- a/drivers/clk/qcom/apcs-msm8916.c
+> +++ b/drivers/clk/qcom/apcs-msm8916.c
+> @@ -51,6 +51,19 @@ static int qcom_apcs_msm8916_clk_probe(struct platform=
+_device *pdev)
+>         struct clk_init_data init =3D { };
+>         int ret =3D -ENODEV;
+> =20
+> +       /*
+> +        * This driver is defined by the devicetree binding
+> +        * Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-globa=
+l.txt,
+> +        * however, this driver is registered as a platform device by
+> +        * qcom-apcs-ipc-mailbox.c. Because of this, when this driver
+> +        * uses dev_get_regmap() and devm_clk_get(), it has to send the p=
+arent
+> +        * device as argument.
+> +        * When registering with the clock framework, we cannot use this =
+trick,
+> +        * since the clock framework always looks at dev->of_node when it=
+ tries
+> +        * to find parent clock names using clk_parent_data.
+> +        */
+> +       dev->of_node =3D parent->of_node;
 
-https://lkml.kernel.org/r/1576648806-1114-1-git-send-email-vulab@iscas.ac.cn
+This is odd. The clks could be registered with of_clk_hw_register() but
+then we lose the device provider information. Maybe we should search up
+one level to the parent node and if that has a DT node but the
+clk controller device doesn't we should use that instead?
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+----8<-----
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index b68e200829f2..c8745c415c04 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -3669,7 +3669,7 @@ __clk_register(struct device *dev, struct device_node=
+ *np, struct clk_hw *hw)
+ 	if (dev && pm_runtime_enabled(dev))
+ 		core->rpm_enabled =3D true;
+ 	core->dev =3D dev;
+-	core->of_node =3D np;
++	core->of_node =3D np ? : dev_of_node(dev->parent);
+ 	if (dev && dev->driver)
+ 		core->owner =3D dev->driver->owner;
+ 	core->hw =3D hw;
