@@ -2,52 +2,51 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D65C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70B3C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 606DD222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C71F222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:07:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782419;
-	bh=bi/8A1ieS2KJBVjW6wsQtCjcWkcfnIBmZ4CPqoDWohg=;
+	s=default; t=1576782429;
+	bh=/LUzzBf+Yofy0eimmBq0G62TXMndjXspkVTWifPx2yg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fGJeuPBs/ixiwAoid1vcYZN8nqW0tjjvG5ifLm306Dw4EyJLyJqmlzXqi4fxpajCC
-	 sohor7FVPyGRAvVlLQKiQ2pB6bcUNg8SvmFTzZ7nr09CFbi5Q6ToYTHutHKO2C76fJ
-	 5R7zeT0S1fCezGL2vl4pdXFRrGUGJp28iid4T8hI=
+	b=HNiS0x+oY8koDfBSy/gJt6tlOwNk8TZ0SAeK1/qvJTRcApw9MbBA5yyR9s2MihGuc
+	 vid6grqsR8BtK/i8YnUTvbgUW6jvgWbETER+jCfo/GA0hcbpMgnXkwwJz/kUialya6
+	 NfLHT3oB92lEs+ZjptUFVrGf4QLFQG7dhHUytNU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728893AbfLSSnq (ORCPT
+        id S1728850AbfLSSnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:43:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35350 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:43:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728865AbfLSSnj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:43:39 -0500
+        id S1728593AbfLSSnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:43:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DABAF24672;
-        Thu, 19 Dec 2019 18:43:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FC9A206D7;
+        Thu, 19 Dec 2019 18:43:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781019;
-        bh=bi/8A1ieS2KJBVjW6wsQtCjcWkcfnIBmZ4CPqoDWohg=;
+        s=default; t=1576781011;
+        bh=/LUzzBf+Yofy0eimmBq0G62TXMndjXspkVTWifPx2yg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SIt/PmXj1t8xZlj6vrFsjEu8ovb/4nG24HD6H6vRAHN/YqFQV16vqJ8TIoj+Mzdat
-         DbHQ43rsYqeA/6GQ+yWHcdsHksgkpO3oVYNB125ipm4oHOoCxILrRzvssMDRVsqct+
-         /a3uqxaFsu1UbJIn1a7k17LVanW1LIEYCxCY3WgI=
+        b=d7iy2VwC/Mabt/f4Rc7X9UhaKWZmo5mS98YYNbRbqn+KHSRzonRpDnx5CAFUPF/ys
+         CbVrhivYEDuecKnekVo5DWGYxbbcV6gyjgIEQgQ2dyuxAadKukyWD/83KdbRkaJ7ki
+         R9gYq5lQOViu97Z9sCdTQro8fqguy1jmj5TTd/Xw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Schiller <ms@dev.tdt.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 050/199] net/x25: fix called/calling length calculation in x25_parse_address_block
-Date:   Thu, 19 Dec 2019 19:32:12 +0100
-Message-Id: <20191219183217.725140750@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 4.9 039/199] dmaengine: coh901318: Remove unused variable
+Date:   Thu, 19 Dec 2019 19:32:01 +0100
+Message-Id: <20191219183217.081976972@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,35 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Schiller <ms@dev.tdt.de>
+From: Vinod Koul <vkoul@kernel.org>
 
-[ Upstream commit d449ba3d581ed29f751a59792fdc775572c66904 ]
+commit 35faaf0df42d285b40f8a6310afbe096720f7758 upstream.
 
-The length of the called and calling address was not calculated
-correctly (BCD encoding).
+Commit 627469e4445b ("dmaengine: coh901318: Fix a double-lock bug") left
+flags variable unused, so remove it to fix the warning.
 
-Signed-off-by: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+drivers/dma/coh901318.c: In function 'coh901318_config':
+drivers/dma/coh901318.c:1805:16: warning: unused variable 'flags' [-Wunused-variable]
+  unsigned long flags;
+                ^~~~~
+
+Fixes: 627469e4445b ("dmaengine: coh901318: Fix a double-lock bug")
+Reported-By: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/x25/af_x25.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/coh901318.c |    1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/net/x25/af_x25.c b/net/x25/af_x25.c
-index 770ababb8f928..ebd9c5f50a571 100644
---- a/net/x25/af_x25.c
-+++ b/net/x25/af_x25.c
-@@ -100,7 +100,7 @@ int x25_parse_address_block(struct sk_buff *skb,
- 	}
- 
- 	len = *skb->data;
--	needed = 1 + (len >> 4) + (len & 0x0f);
-+	needed = 1 + ((len >> 4) + (len & 0x0f) + 1) / 2;
- 
- 	if (!pskb_may_pull(skb, needed)) {
- 		/* packet is too short to hold the addresses it claims
--- 
-2.20.1
-
+--- a/drivers/dma/coh901318.c
++++ b/drivers/dma/coh901318.c
+@@ -1797,7 +1797,6 @@ static struct dma_chan *coh901318_xlate(
+ static int coh901318_config(struct coh901318_chan *cohc,
+ 			    struct coh901318_params *param)
+ {
+-	unsigned long flags;
+ 	const struct coh901318_params *p;
+ 	int channel = cohc->id;
+ 	void __iomem *virtbase = cohc->base->virtbase;
 
 
