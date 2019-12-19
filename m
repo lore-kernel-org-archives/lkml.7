@@ -2,53 +2,55 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E298FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D292C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7E4B24680
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F3842468E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781116;
-	bh=ffTe4d7s93MEfe2IPClkV/CGEEI3SDnmgDMPU/pkQz0=;
+	s=default; t=1576781119;
+	bh=ZR19IDXpPk3hAdCKhmbkx3xf7pwKHMAIoGz17JSoSRQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h3f6bMTbyIeSeNkMWbBcdpkiWyUbVtU+7YgLu9luOdAeebvirS0Y4pupAy+ASK1Oe
-	 nndFef9OEE+xQYFPdp2R6tcmxiAXfMVijtKA23FBCSpyUqbk4aVqzi1rJftvTgDsX5
-	 XtI7u7TV5oVUbqK7WbabWVMFYxidl3zk/aR6UecI=
+	b=GiG+G+hkxm0sBRy//OJZxQOM53MrtFXXsvWcUtH1nIYWHtcti393m8HkAPcWYpair
+	 YGciSYyGlztNj7YfXEvOpRAOdN4PHM3OxaDKFNxZsPwK2gnzYN2ztpUGW/sv88k5y+
+	 L48CL474ndvudWWGcLNQYlYedMct3baoOsgnoroE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbfLSSpP (ORCPT
+        id S1728886AbfLSSpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:45:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37396 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:45:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729114AbfLSSpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:45:10 -0500
+        id S1728304AbfLSSpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:45:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA6DA2465E;
-        Thu, 19 Dec 2019 18:45:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B351F222C2;
+        Thu, 19 Dec 2019 18:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781109;
-        bh=ffTe4d7s93MEfe2IPClkV/CGEEI3SDnmgDMPU/pkQz0=;
+        s=default; t=1576781114;
+        bh=ZR19IDXpPk3hAdCKhmbkx3xf7pwKHMAIoGz17JSoSRQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yc4XIGq/RZLvCMHpHE8pNB+TpUVrXH5EJwcvyVOPkChi0tverBo6kRxbL3V9aPgbo
-         d/vkliGlB3o41pLSWG6rvCTKjtcHGqTfkgpps8gSV+l10gudHwAr0TGkREdsX91JQZ
-         kLGKg4TbH2cYGrZfdbAyOX/7Eoq9tUWnKRszrJxo=
+        b=ZJW/7A3SYx92NoCgePiaOvje5P4e8dl8nqOJuG/lzgMuIEWV5VGyPsYIq0OBbbfSd
+         USpxad7Dzx1Xeblw/LZ5qVcIan/Miu2Jbu4cCy0uXTWGx1ksU49oBmOf6JQJjOTiTT
+         FivNZmQNhtlYwt76g8QRAyST8DRIGSFQ3xmFheKk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 047/199] ARM: debug: enable UART1 for socfpga Cyclone5
-Date:   Thu, 19 Dec 2019 19:32:09 +0100
-Message-Id: <20191219183217.548758301@linuxfoundation.org>
+        stable@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        David Miller <davem@davemloft.net>,
+        Oliver Hartkopp <socketcan@hartkopp.net>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Jouni Hogander <jouni.hogander@unikie.com>
+Subject: [PATCH 4.9 081/199] can: slcan: Fix use-after-free Read in slcan_open
+Date:   Thu, 19 Dec 2019 19:32:43 +0100
+Message-Id: <20191219183219.444180649@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -61,84 +63,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Clément Péron <peron.clem@gmail.com>
+From: Jouni Hogander <jouni.hogander@unikie.com>
 
-[ Upstream commit f6628486c8489e91c513b62608f89ccdb745600d ]
+commit 9ebd796e24008f33f06ebea5a5e6aceb68b51794 upstream.
 
-Cyclone5 and Arria10 doesn't have the same memory map for UART1.
+Slcan_open doesn't clean-up device which registration failed from the
+slcan_devs device list. On next open this list is iterated and freed
+device is accessed. Fix this by calling slc_free_netdev in error path.
 
-Split the SOCFPGA_UART1 into 2 options to allow debugging on UART1 for Cyclone5.
+Driver/net/can/slcan.c is derived from slip.c. Use-after-free error was
+identified in slip_open by syzboz. Same bug is in slcan.c. Here is the
+trace from the Syzbot slip report:
 
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+__dump_stack lib/dump_stack.c:77 [inline]
+dump_stack+0x197/0x210 lib/dump_stack.c:118
+print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+__kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+kasan_report+0x12/0x20 mm/kasan/common.c:634
+__asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+sl_sync drivers/net/slip/slip.c:725 [inline]
+slip_open+0xecd/0x11b7 drivers/net/slip/slip.c:801
+tty_ldisc_open.isra.0+0xa3/0x110 drivers/tty/tty_ldisc.c:469
+tty_set_ldisc+0x30e/0x6b0 drivers/tty/tty_ldisc.c:596
+tiocsetd drivers/tty/tty_io.c:2334 [inline]
+tty_ioctl+0xe8d/0x14f0 drivers/tty/tty_io.c:2594
+vfs_ioctl fs/ioctl.c:46 [inline]
+file_ioctl fs/ioctl.c:509 [inline]
+do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:696
+ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+__do_sys_ioctl fs/ioctl.c:720 [inline]
+__se_sys_ioctl fs/ioctl.c:718 [inline]
+__x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fixes: ed50e1600b44 ("slcan: Fix memory leak in error path")
+Cc: Wolfgang Grandegger <wg@grandegger.com>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: David Miller <davem@davemloft.net>
+Cc: Oliver Hartkopp <socketcan@hartkopp.net>
+Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
+Cc: linux-stable <stable@vger.kernel.org> # >= v5.4
+Acked-by: Oliver Hartkopp <socketcan@hartkopp.net>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm/Kconfig.debug | 23 ++++++++++++++++-------
- 1 file changed, 16 insertions(+), 7 deletions(-)
+ drivers/net/can/slcan.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index a5625430bef64..bb8f39fe3a225 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -987,14 +987,21 @@ choice
- 		  Say Y here if you want kernel low-level debugging support
- 		  on SOCFPGA(Cyclone 5 and Arria 5) based platforms.
+--- a/drivers/net/can/slcan.c
++++ b/drivers/net/can/slcan.c
+@@ -613,6 +613,7 @@ err_free_chan:
+ 	sl->tty = NULL;
+ 	tty->disc_data = NULL;
+ 	clear_bit(SLF_INUSE, &sl->flags);
++	slc_free_netdev(sl->dev);
+ 	free_netdev(sl->dev);
  
--	config DEBUG_SOCFPGA_UART1
-+	config DEBUG_SOCFPGA_ARRIA10_UART1
- 		depends on ARCH_SOCFPGA
--		bool "Use SOCFPGA UART1 for low-level debug"
-+		bool "Use SOCFPGA Arria10 UART1 for low-level debug"
- 		select DEBUG_UART_8250
- 		help
- 		  Say Y here if you want kernel low-level debugging support
- 		  on SOCFPGA(Arria 10) based platforms.
- 
-+	config DEBUG_SOCFPGA_CYCLONE5_UART1
-+		depends on ARCH_SOCFPGA
-+		bool "Use SOCFPGA Cyclone 5 UART1 for low-level debug"
-+		select DEBUG_UART_8250
-+		help
-+		  Say Y here if you want kernel low-level debugging support
-+		  on SOCFPGA(Cyclone 5 and Arria 5) based platforms.
- 
- 	config DEBUG_SUN9I_UART0
- 		bool "Kernel low-level debugging messages via sun9i UART0"
-@@ -1534,7 +1541,8 @@ config DEBUG_UART_PHYS
- 	default 0xfe800000 if ARCH_IOP32X
- 	default 0xff690000 if DEBUG_RK32_UART2
- 	default 0xffc02000 if DEBUG_SOCFPGA_UART0
--	default 0xffc02100 if DEBUG_SOCFPGA_UART1
-+	default 0xffc02100 if DEBUG_SOCFPGA_ARRIA10_UART1
-+	default 0xffc03000 if DEBUG_SOCFPGA_CYCLONE5_UART1
- 	default 0xffd82340 if ARCH_IOP13XX
- 	default 0xffe40000 if DEBUG_RCAR_GEN1_SCIF0
- 	default 0xffe42000 if DEBUG_RCAR_GEN1_SCIF2
-@@ -1624,7 +1632,8 @@ config DEBUG_UART_VIRT
- 	default 0xfeb30c00 if DEBUG_KEYSTONE_UART0
- 	default 0xfeb31000 if DEBUG_KEYSTONE_UART1
- 	default 0xfec02000 if DEBUG_SOCFPGA_UART0
--	default 0xfec02100 if DEBUG_SOCFPGA_UART1
-+	default 0xfec02100 if DEBUG_SOCFPGA_ARRIA10_UART1
-+	default 0xfec03000 if DEBUG_SOCFPGA_CYCLONE5_UART1
- 	default 0xfec12000 if (DEBUG_MVEBU_UART0 || DEBUG_MVEBU_UART0_ALTERNATE) && ARCH_MVEBU
- 	default 0xfec12100 if DEBUG_MVEBU_UART1_ALTERNATE
- 	default 0xfec10000 if DEBUG_SIRFATLAS7_UART0
-@@ -1672,9 +1681,9 @@ config DEBUG_UART_8250_WORD
- 	depends on DEBUG_LL_UART_8250 || DEBUG_UART_8250
- 	depends on DEBUG_UART_8250_SHIFT >= 2
- 	default y if DEBUG_PICOXCELL_UART || \
--		DEBUG_SOCFPGA_UART0 || DEBUG_SOCFPGA_UART1 || \
--		DEBUG_KEYSTONE_UART0 || DEBUG_KEYSTONE_UART1 || \
--		DEBUG_ALPINE_UART0 || \
-+		DEBUG_SOCFPGA_UART0 || DEBUG_SOCFPGA_ARRIA10_UART1 || \
-+		DEBUG_SOCFPGA_CYCLONE5_UART1 || DEBUG_KEYSTONE_UART0 || \
-+		DEBUG_KEYSTONE_UART1 || DEBUG_ALPINE_UART0 || \
- 		DEBUG_DAVINCI_DMx_UART0 || DEBUG_DAVINCI_DA8XX_UART1 || \
- 		DEBUG_DAVINCI_DA8XX_UART2 || \
- 		DEBUG_BCM_KONA_UART || DEBUG_RK32_UART2
--- 
-2.20.1
-
+ err_exit:
 
 
