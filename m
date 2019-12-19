@@ -7,55 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2BAC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A58C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73A5B24682
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C9E924686
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780785;
-	bh=50IYEcPXOfhe0jbnqeO8tgjp+YuTPtOxuPQAqlXtAkE=;
+	s=default; t=1576780788;
+	bh=7+IO5IoNu/pMLBYghFbd4C+cTy8Wk9Aywd1ymMe0B1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oKW1UTTVd+HjE3Uxfa12jY13rmfBr3fSo25atu98XLCOEXLagipPhhcR32ZmSKBBl
-	 9w/IKifGyu60M8nqt1wSCQytNZWfKM1pK85UpRaZrPZ48MYy2sx/+cLuiybEj6P+zs
-	 P7mtaWGOH6DoqZBwYG00/eKgrm6rC7u8SiEUN+HA=
+	b=L6Ru5ZFcgoT1OvlonsfcDSvW1OEUa6DRb/JnlA+3xpPkYlXDYFZs3OP8dVJ8gOR4e
+	 0MneLMWQ5b2fVdtSiyNiSSrJWyfcpDNd41+YEkqNtU1X+rPNmZZhrKs8FnBAg2FIU8
+	 x0+dioImE6+ufWTLkDltaSRgXKD59cXI5qWFejFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbfLSSjo (ORCPT
+        id S1728281AbfLSSjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:39:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58074 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:39:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728257AbfLSSjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:39:41 -0500
+        id S1728267AbfLSSjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:39:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE1A220716;
-        Thu, 19 Dec 2019 18:39:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3482224650;
+        Thu, 19 Dec 2019 18:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780780;
-        bh=50IYEcPXOfhe0jbnqeO8tgjp+YuTPtOxuPQAqlXtAkE=;
+        s=default; t=1576780782;
+        bh=7+IO5IoNu/pMLBYghFbd4C+cTy8Wk9Aywd1ymMe0B1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gJPmUYfojyK1pGgBeyKtojROp33fusteCNmTiLRUHUjfL4aqc39kPqoY6ebV4H69e
-         zwIHNIhlVdxOB+H5dlwmPINc8yKdzfqdu6bc6VTmzsTOcQIqgcM+4S8olGF0ZeMpyu
-         j5ui7hQOBZ94T08kDpIbCW7bgYPDWiC6sUYAb4xI=
+        b=dkp2i4M2WQrCiTzp1Luwc7st15TioRSy6PznXEtYlWbj0G8cr20KZ1k8T27W1lqjI
+         3JZIc1kmfvIlSmdAqvfRsyeC92nTqoRHGQu5Yf9YCBxVYkwKY2e+SHUiDT4dvpWST5
+         ioioWJjYGlOHcVOqj1EU+MVpECa6GM5caxTsJGeo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Brian Gerst <brgerst@gmail.com>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jann Horn <jann@thejh.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>, keescook@chromium.org,
+        linux-arch@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         "zhangyi (F)" <yi.zhang@huawei.com>
-Subject: [PATCH 4.4 076/162] sched/core: Add try_get_task_stack() and put_task_stack()
-Date:   Thu, 19 Dec 2019 19:33:04 +0100
-Message-Id: <20191219183212.424053540@linuxfoundation.org>
+Subject: [PATCH 4.4 077/162] sched/core, x86: Make struct thread_info arch specific again
+Date:   Thu, 19 Dec 2019 19:33:05 +0100
+Message-Id: <20191219183212.482196665@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -68,83 +66,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: Heiko Carstens <heiko.carstens@de.ibm.com>
 
-commit c6c314a613cd7d03fb97713e0d642b493de42e69 upstream.
+commit c8061485a0d7569a865a3cc3c63347b0f42b3765 upstream.
 
-There are a few places in the kernel that access stack memory
-belonging to a different task.  Before we can start freeing task
-stacks before the task_struct is freed, we need a way for those code
-paths to pin the stack.
+The following commit:
 
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Denys Vlasenko <dvlasenk@redhat.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Jann Horn <jann@thejh.net>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+  c65eacbe290b ("sched/core: Allow putting thread_info into task_struct")
+
+... made 'struct thread_info' a generic struct with only a
+single ::flags member, if CONFIG_THREAD_INFO_IN_TASK_STRUCT=y is
+selected.
+
+This change however seems to be quite x86 centric, since at least the
+generic preemption code (asm-generic/preempt.h) assumes that struct
+thread_info also has a preempt_count member, which apparently was not
+true for x86.
+
+We could add a bit more #ifdefs to solve this problem too, but it seems
+to be much simpler to make struct thread_info arch specific
+again. This also makes the conversion to THREAD_INFO_IN_TASK_STRUCT a
+bit easier for architectures that have a couple of arch specific stuff
+in their thread_info definition.
+
+The arch specific stuff _could_ be moved to thread_struct. However
+keeping them in thread_info makes it easier: accessing thread_info
+members is simple, since it is at the beginning of the task_struct,
+while the thread_struct is at the end. At least on s390 the offsets
+needed to access members of the thread_struct (with task_struct as
+base) are too large for various asm instructions.  This is not a
+problem when keeping these members within thread_info.
+
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/17a434f50ad3d77000104f21666575e10a9c1fbd.1474003868.git.luto@kernel.org
+Cc: keescook@chromium.org
+Cc: linux-arch@vger.kernel.org
+Link: http://lkml.kernel.org/r/1476901693-8492-2-git-send-email-mark.rutland@arm.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
+[ zhangyi: skip defination of INIT_THREAD_INFO and struct thread_info ]
 Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/sched.h |   16 ++++++++++++++++
- init/Kconfig          |    3 +++
- 2 files changed, 19 insertions(+)
+ include/linux/thread_info.h |   11 -----------
+ 1 file changed, 11 deletions(-)
 
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -2858,11 +2858,19 @@ static inline struct thread_info *task_t
- {
- 	return &task->thread_info;
- }
-+
-+/*
-+ * When accessing the stack of a non-current task that might exit, use
-+ * try_get_task_stack() instead.  task_stack_page will return a pointer
-+ * that could get freed out from under you.
-+ */
- static inline void *task_stack_page(const struct task_struct *task)
- {
- 	return task->stack;
- }
-+
- #define setup_thread_stack(new,old)	do { } while(0)
-+
- static inline unsigned long *end_of_stack(const struct task_struct *task)
- {
- 	return task->stack;
-@@ -2898,6 +2906,14 @@ static inline unsigned long *end_of_stac
- }
+--- a/include/linux/thread_info.h
++++ b/include/linux/thread_info.h
+@@ -14,17 +14,6 @@ struct timespec;
+ struct compat_timespec;
  
+ #ifdef CONFIG_THREAD_INFO_IN_TASK
+-struct thread_info {
+-	u32			flags;		/* low level flags */
+-};
+-
+-#define INIT_THREAD_INFO(tsk)			\
+-{						\
+-	.flags		= 0,			\
+-}
+-#endif
+-
+-#ifdef CONFIG_THREAD_INFO_IN_TASK
+ #define current_thread_info() ((struct thread_info *)current)
  #endif
-+
-+static inline void *try_get_task_stack(struct task_struct *tsk)
-+{
-+	return task_stack_page(tsk);
-+}
-+
-+static inline void put_task_stack(struct task_struct *tsk) {}
-+
- #define task_stack_end_corrupted(task) \
- 		(*(end_of_stack(task)) != STACK_END_MAGIC)
  
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -33,6 +33,9 @@ config THREAD_INFO_IN_TASK
- 	  make this work, an arch will need to remove all thread_info fields
- 	  except flags and fix any runtime bugs.
- 
-+	  One subtle change that will be needed is to use try_get_task_stack()
-+	  and put_task_stack() in save_thread_stack_tsk() and get_wchan().
-+
- menu "General setup"
- 
- config BROKEN
 
 
