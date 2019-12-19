@@ -2,100 +2,168 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B05DBC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E26FC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 850F4227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:39:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iZqCbtys"
+	by mail.kernel.org (Postfix) with ESMTP id 0CA6524672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:40:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576784405;
+	bh=NcHbeLYwBagVtumanxomeifIycWFT48TXD1+WojSLro=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xNSilxua3MIRaUnP9ONN/m2L4UJgOXpIcdEF/Svxt2vW59POXTx/PMMtIX5cMYShn
+	 XXIiM0mSYnjRv5md4vKqK4tFsXFbWzbJoZBdLXqBqhKk7r9O9spp4kaj8Zin/okVkL
+	 wDtmz16uf90MYOPbPi9CP/9njJDBRbOlya5ns5g0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727388AbfLSTji (ORCPT
+        id S1727426AbfLSTkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:39:38 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:41997 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727269AbfLSTji (ORCPT
+        Thu, 19 Dec 2019 14:40:04 -0500
+Received: from mail-ot1-f53.google.com ([209.85.210.53]:42791 "EHLO
+        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727269AbfLSTkE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 14:39:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576784376;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=prVadGfe425gEg8krjR8jjvWKpR2WFGHzNs5x3wZo7U=;
-        b=iZqCbtysBzGyEUiLUn24bdfzkZpVaG2pNR0u88O83h4VMMktmQCs4BwR92SsIyIDRnUbcF
-        ygbfxZpX+eTZr6u/krzjjUn2RhF4ePQy20ioCpN0K6vqjNDKwhQDS/cpVyK4zCPByPYZY+
-        3QtxTl/opb4S07VTQ031ScFt2W36J5w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-423-jCat3nvKPdKu8c4bFYo-KA-1; Thu, 19 Dec 2019 14:39:32 -0500
-X-MC-Unique: jCat3nvKPdKu8c4bFYo-KA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 944D8108594D;
-        Thu, 19 Dec 2019 19:39:29 +0000 (UTC)
-Received: from gondolin (ovpn-117-134.ams2.redhat.com [10.36.117.134])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 74E355D9E2;
-        Thu, 19 Dec 2019 19:39:20 +0000 (UTC)
-Date:   Thu, 19 Dec 2019 20:39:17 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kurz <groug@kaod.org>
-Subject: Re: [PATCH v2 25/45] KVM: s390: Move guts of kvm_arch_vcpu_init()
- into kvm_arch_vcpu_create()
-Message-ID: <20191219203917.79916aad.cohuck@redhat.com>
-In-Reply-To: <20191218215530.2280-26-sean.j.christopherson@intel.com>
-References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
-        <20191218215530.2280-26-sean.j.christopherson@intel.com>
-Organization: Red Hat GmbH
+        Thu, 19 Dec 2019 14:40:04 -0500
+Received: by mail-ot1-f53.google.com with SMTP id 66so8540457otd.9;
+        Thu, 19 Dec 2019 11:40:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4FD4E6VPRHSJlg1OMSyY98hDnZZOWMuHy6UnkVUj/RM=;
+        b=Ft/AdCzKPdyX3oHc5jvZBR4Kaqj4jpE7Q8XzPP0EYcT9xYnuC0/BZxUGrN8jhz8BIO
+         DE98t7yJ+SogBLg95Hag1kDnoZddyigaNdDCBg9H+8JXJ1NmLbAyr217y/9EW2qAT2+T
+         C/PGP32ENKQNE7zIEYfYF2Z3gkJLm8BJb1MFI3an9ZlgJ4XZWZ6MnsyZ+lk7q797Wn1a
+         ML8MbTnqxl8pF8QJltuJVaeCJCHrLn5hzyA1QdN411K43iqS1wBJd5WmRoon8HDDCXeg
+         HEMzuGB5YGI8ZfWMB+mGIvd0XvQjF9A2EnA2aoCYyMFYOUZ9euY4n0bii3QVIw94vISp
+         kqZg==
+X-Gm-Message-State: APjAAAV2kp/deZwL4eO5qNhs/fHla/MiadhUp5MHmhJLcesuzz/7Cr77
+        b+ZaVLwdQfCrfonGmJXNuw==
+X-Google-Smtp-Source: APXvYqxb3mN0ppbQoW8chdIbp9cEdwb9xhDSWxqJaXgyf3uzsInKjRVJLfT7puBtOC0JdkGYGP9ghg==
+X-Received: by 2002:a05:6830:124b:: with SMTP id s11mr10297161otp.333.1576784402776;
+        Thu, 19 Dec 2019 11:40:02 -0800 (PST)
+Received: from localhost ([2607:fb90:20de:fb54:3549:d84c:9720:edb4])
+        by smtp.gmail.com with ESMTPSA id s145sm2333734oie.44.2019.12.19.11.40.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 11:40:02 -0800 (PST)
+Date:   Thu, 19 Dec 2019 13:40:00 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     jassisinghbrar@gmail.com
+Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCHv1 1/2] dt-bindings: max3421-udc: add dt bindings for
+ MAX3420 UDC
+Message-ID: <20191219194000.GA23698@bogus>
+References: <20191210003124.32376-1-jassisinghbrar@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191210003124.32376-1-jassisinghbrar@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Dec 2019 13:55:10 -0800
-Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-
-> Move all of kvm_arch_vcpu_init(), which is invoked at the very end of
-> kvm_vcpu_init(), into kvm_arch_vcpu_create() in preparation of moving
-> the call to kvm_vcpu_init().  Moving kvm_vcpu_init() is itself a
-> preparatory step for moving allocation and initialization to common KVM
-> code.
+On Mon, Dec 09, 2019 at 06:31:24PM -0600, jassisinghbrar@gmail.com wrote:
+> From: Jassi Brar <jaswinder.singh@linaro.org>
 > 
-> No functional change inteded.
+> Add YAML dt bindings for Maxim MAX3420 UDC controller.
 > 
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
 > ---
->  arch/s390/kvm/kvm-s390.c | 62 ++++++++++++++++++++++------------------
->  1 file changed, 34 insertions(+), 28 deletions(-)
+>  .../bindings/usb/maxim,max3420-udc.yaml       | 60 +++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/maxim,max3420-udc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/maxim,max3420-udc.yaml b/Documentation/devicetree/bindings/usb/maxim,max3420-udc.yaml
+> new file mode 100644
+> index 000000000000..cf4eec8a618e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/maxim,max3420-udc.yaml
+> @@ -0,0 +1,60 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Dual license new bindings please:
 
+(GPL-2.0-only OR BSD-2-Clause)
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/usb/maxim,max3420-udc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MAXIM MAX3420/1 USB Peripheral Controller
+> +
+> +maintainers:
+> +  - Jassi Brar <jaswinder.singh@linaro.org>
+> +
+> +description: |
+> +  The controller provices USB2.0 compliant FullSpeed peripheral
+> +  implementation over the  SPI interface.
+
+space                        ^
+
+> +
+> +  Specifications about the part can be found at:
+> +    http://datasheets.maximintegrated.com/en/ds/MAX3420E.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - maxim,max3420-udc
+> +      - maxim,max3421-udc
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - const: udc
+> +      - const: vbus
+
+interrupts are integers, not strings. Should be interrupt-names?
+
+> +
+> +  spi-max-frequency:
+> +    maximum: 26000000
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-names
+
+Add:
+
+additionalProperties: false
+
+> +
+> +examples:
+> +  - |
+> +      #include <dt-bindings/gpio/gpio.h>
+> +      #include <dt-bindings/interrupt-controller/irq.h>
+> +      spi0 {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            udc@0 {
+> +                  compatible = "maxim,max3420-udc";
+> +                  reg = <0>;
+> +                  interrupt-parent = <&gpio>;
+> +                  interrupts = <0 IRQ_TYPE_EDGE_FALLING>, <10 IRQ_TYPE_EDGE_BOTH>;
+> +                  interrupt-names = "udc", "vbus";
+> +                  spi-max-frequency = <12500000>;
+> +            };
+> +      };
+> -- 
+> 2.20.1
+> 
