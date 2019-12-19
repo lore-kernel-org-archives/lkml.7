@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F57FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D05C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AFF324684
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B190224680
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:56:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781793;
-	bh=jk0VuUMvYHyoH4GIwFD9bkaY87rYKm6vgjLVmpGwtis=;
+	s=default; t=1576781796;
+	bh=eCAN5lqFooG7iWXUlQB9I8xMUnIagZG7ajlX2uuPR/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1WS5dsh9ZiQq6aQ0z2M1h1t0AV1TOEMJyWQIAwCslkfaxwa9XYQdmQGuf7ZgPa9up
-	 lNfwRLAG1YnabDgqMik6XxnzrxXqwiBTPMCGGbvCp8LDbbTWxFS+wr35WONvv4CFyg
-	 kit1EU1wYd8kxmgaauSA0U0tZ7a8X3pWL1wDF2OY=
+	b=u5N4za/QmVYU4rBiCVRkXH+GlWdQVlb15gZSiHvIyJ4qZ40kZSLo/Haw35F0ryszn
+	 7MtJdJsg41sqbXm2QcQrO62Umgkz5NIewuksUmfPpyAmKwfqsV/ZXu2YaoXFOaFP12
+	 ghk1zz7WOvFn0d8lBB4rc0RbByfKJVXbBpd21wsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730818AbfLSS4b (ORCPT
+        id S1730840AbfLSS4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:56:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52958 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:56:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730809AbfLSS4Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:56:24 -0500
+        id S1730810AbfLSS40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:56:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47575206EC;
-        Thu, 19 Dec 2019 18:56:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5EC0206EC;
+        Thu, 19 Dec 2019 18:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781783;
-        bh=jk0VuUMvYHyoH4GIwFD9bkaY87rYKm6vgjLVmpGwtis=;
+        s=default; t=1576781786;
+        bh=eCAN5lqFooG7iWXUlQB9I8xMUnIagZG7ajlX2uuPR/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=er5lXTOcIaL4Dwh3TAVqLwNPLN5dzdW0WLuTSnIZ9+b4Oc6H6n0YdmB/fgwcRpIWC
-         B/QNLvRY0nWUvykPJeFVQc2BPr0ZaaniP6XdDJp7roQo2UYw0NerwbOpJRUQ8dl/sF
-         TkUx6wQDvhMvWG9xXK9lFrguaQ175bDMd0vX4MtU=
+        b=VrRvLR4/C0E1HLhpe4FeYaQFYQ4FCmIFZaivb4DqtCcKlTlkHoB23Rdx/fDZfFsPx
+         t+IigafS2SOXmcw69S45Wg5khl9PJekVBvoLj5wVaeLHZdjoYEik4hYaWnv8gHAxny
+         uwbTseBLmfBDmcsO7qNILkdvDEhrhdQTfE7WYclk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: [PATCH 5.4 40/80] ARM: tegra: Fix FLOW_CTLR_HALT register clobbering by tegra_resume()
-Date:   Thu, 19 Dec 2019 19:34:32 +0100
-Message-Id: <20191219183108.704774605@linuxfoundation.org>
+        stable@vger.kernel.org, Jiang Yi <giangyi@amazon.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: [PATCH 5.4 41/80] vfio/pci: call irq_bypass_unregister_producer() before freeing irq
+Date:   Thu, 19 Dec 2019 19:34:33 +0100
+Message-Id: <20191219183109.190703228@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -61,44 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Jiang Yi <giangyi@amazon.com>
 
-commit d70f7d31a9e2088e8a507194354d41ea10062994 upstream.
+commit d567fb8819162099035e546b11a736e29c2af0ea upstream.
 
-There is an unfortunate typo in the code that results in writing to
-FLOW_CTLR_HALT instead of FLOW_CTLR_CSR.
+Since irq_bypass_register_producer() is called after request_irq(), we
+should do tear-down in reverse order: irq_bypass_unregister_producer()
+then free_irq().
 
-Cc: <stable@vger.kernel.org>
-Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Specifically free_irq() may release resources required by the
+irqbypass del_producer() callback.  Notably an example provided by
+Marc Zyngier on arm64 with GICv4 that he indicates has the potential
+to wedge the hardware:
+
+ free_irq(irq)
+   __free_irq(irq)
+     irq_domain_deactivate_irq(irq)
+       its_irq_domain_deactivate()
+         [unmap the VLPI from the ITS]
+
+ kvm_arch_irq_bypass_del_producer(cons, prod)
+   kvm_vgic_v4_unset_forwarding(kvm, irq, ...)
+     its_unmap_vlpi(irq)
+       [Unmap the VLPI from the ITS (again), remap the original LPI]
+
+Signed-off-by: Jiang Yi <giangyi@amazon.com>
+Cc: stable@vger.kernel.org # v4.4+
+Fixes: 6d7425f109d26 ("vfio: Register/unregister irq_bypass_producer")
+Link: https://lore.kernel.org/kvm/20191127164910.15888-1-giangyi@amazon.com
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+[aw: commit log]
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mach-tegra/reset-handler.S |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/vfio/pci/vfio_pci_intrs.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm/mach-tegra/reset-handler.S
-+++ b/arch/arm/mach-tegra/reset-handler.S
-@@ -44,16 +44,16 @@ ENTRY(tegra_resume)
- 	cmp	r6, #TEGRA20
- 	beq	1f				@ Yes
- 	/* Clear the flow controller flags for this CPU. */
--	cpu_to_csr_reg r1, r0
-+	cpu_to_csr_reg r3, r0
- 	mov32	r2, TEGRA_FLOW_CTRL_BASE
--	ldr	r1, [r2, r1]
-+	ldr	r1, [r2, r3]
- 	/* Clear event & intr flag */
- 	orr	r1, r1, \
- 		#FLOW_CTRL_CSR_INTR_FLAG | FLOW_CTRL_CSR_EVENT_FLAG
- 	movw	r0, #0x3FFD	@ enable, cluster_switch, immed, bitmaps
- 				@ & ext flags for CPU power mgnt
- 	bic	r1, r1, r0
--	str	r1, [r2]
-+	str	r1, [r2, r3]
- 1:
+--- a/drivers/vfio/pci/vfio_pci_intrs.c
++++ b/drivers/vfio/pci/vfio_pci_intrs.c
+@@ -294,8 +294,8 @@ static int vfio_msi_set_vector_signal(st
+ 	irq = pci_irq_vector(pdev, vector);
  
- 	mov32	r9, 0xc09
+ 	if (vdev->ctx[vector].trigger) {
+-		free_irq(irq, vdev->ctx[vector].trigger);
+ 		irq_bypass_unregister_producer(&vdev->ctx[vector].producer);
++		free_irq(irq, vdev->ctx[vector].trigger);
+ 		kfree(vdev->ctx[vector].name);
+ 		eventfd_ctx_put(vdev->ctx[vector].trigger);
+ 		vdev->ctx[vector].trigger = NULL;
 
 
