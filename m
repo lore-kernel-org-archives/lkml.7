@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCE1C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3481DC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1920824672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0045620716
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780663;
-	bh=LBTG3feU07jUCWJk/djKWQ81Emf0ojhhNGeixzVpyPY=;
+	s=default; t=1576780667;
+	bh=ukK3tZ03T2ojLubsfuqKbVnsJ0LNvG8yLEX+MReaYbk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aFblTHZW9GdEvJy/rqCAGCC5liTgP96WqxC9ZVWCc/YEAK9s2m7y1A7oR78TSH6iA
-	 9zrFRE6IidpNTu3DwMA4yNx/VCM4gyJr491PlaWfZF26eAaZkTzqu/9BDfleeQ2wxK
-	 /eQfCZNriF/Qxhkn2/exe3n0cD2bffdX4FITW1yE=
+	b=qkSHw2qB4zB4tst6mXOJnsjH3orv7ycnMLbbgX7TIIjVBeOlh7b8Zq61fHLQNT1ex
+	 MTMAgI/dEfWAFqhqRIDalbqZaKhZWZ7QRZKH85pJIMEW/3LII1/DKKKyZwDMY5NaNu
+	 xptfb5OJGO9SdTohc4NMtQJ31IXjeRJTbESJLqKA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbfLSShm (ORCPT
+        id S1727882AbfLSShp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:37:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55358 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:37:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727858AbfLSShh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:37:37 -0500
+        id S1727860AbfLSShj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:37:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 496C724679;
-        Thu, 19 Dec 2019 18:37:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC3B920716;
+        Thu, 19 Dec 2019 18:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780656;
-        bh=LBTG3feU07jUCWJk/djKWQ81Emf0ojhhNGeixzVpyPY=;
+        s=default; t=1576780659;
+        bh=ukK3tZ03T2ojLubsfuqKbVnsJ0LNvG8yLEX+MReaYbk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hSLPs753xUWrVIqs9uSL96p9XgQWz+cR9GPU4kmxVWSqOwCkjCttJvLYRtiM+REDZ
-         zXfK0IwYlVy+Z2Au5ZoI88/ySnITe6Fq03rHssxfi7tp9qDPZwDsGqBACdfzn+TsFx
-         CSUoRmDAMUgSfDfqBsDiguDWz3oZohcuVxjbtPjo=
+        b=kGbruHSQtIMlc7JtiwfrTbgPmJa8Iys90ng+KqAX914QZ0jKLiXozr5eqUCdFJ/ph
+         yT26IkkNPP1xJ4gl1BNK5nM5MeAYq0/RaYNTcs7ZshClF0oOoNE5p0sTQlgawo9rKu
+         AwQ2ICJYj9ufqy4SSJ9pt87Un9pumTECHO8pkkqw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.4 062/162] jbd2: Fix possible overflow in jbd2_log_space_left()
-Date:   Thu, 19 Dec 2019 19:32:50 +0100
-Message-Id: <20191219183211.626266736@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>
+Subject: [PATCH 4.4 063/162] drm/i810: Prevent underflow in ioctl
+Date:   Thu, 19 Dec 2019 19:32:51 +0100
+Message-Id: <20191219183211.688422226@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -59,49 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit add3efdd78b8a0478ce423bb9d4df6bd95e8b335 upstream.
+commit 4f69851fbaa26b155330be35ce8ac393e93e7442 upstream.
 
-When number of free space in the journal is very low, the arithmetic in
-jbd2_log_space_left() could underflow resulting in very high number of
-free blocks and thus triggering assertion failure in transaction commit
-code complaining there's not enough space in the journal:
+The "used" variables here come from the user in the ioctl and it can be
+negative.  It could result in an out of bounds write.
 
-J_ASSERT(journal->j_free > 1);
-
-Properly check for the low number of free blocks.
-
-CC: stable@vger.kernel.org
-Reviewed-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191105164437.32602-1-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191004102251.GC823@mwanda
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/jbd2.h |    4 ++--
+ drivers/gpu/drm/i810/i810_dma.c |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/include/linux/jbd2.h
-+++ b/include/linux/jbd2.h
-@@ -1440,7 +1440,7 @@ static inline int jbd2_space_needed(jour
- static inline unsigned long jbd2_log_space_left(journal_t *journal)
- {
- 	/* Allow for rounding errors */
--	unsigned long free = journal->j_free - 32;
-+	long free = journal->j_free - 32;
+--- a/drivers/gpu/drm/i810/i810_dma.c
++++ b/drivers/gpu/drm/i810/i810_dma.c
+@@ -723,7 +723,7 @@ static void i810_dma_dispatch_vertex(str
+ 	if (nbox > I810_NR_SAREA_CLIPRECTS)
+ 		nbox = I810_NR_SAREA_CLIPRECTS;
  
- 	if (journal->j_committing_transaction) {
- 		unsigned long committing = atomic_read(&journal->
-@@ -1449,7 +1449,7 @@ static inline unsigned long jbd2_log_spa
- 		/* Transaction + control blocks */
- 		free -= committing + (committing >> JBD2_CONTROL_BLOCKS_SHIFT);
- 	}
--	return free;
-+	return max_t(long, free, 0);
- }
+-	if (used > 4 * 1024)
++	if (used < 0 || used > 4 * 1024)
+ 		used = 0;
  
- /*
+ 	if (sarea_priv->dirty)
+@@ -1043,7 +1043,7 @@ static void i810_dma_dispatch_mc(struct
+ 	if (u != I810_BUF_CLIENT)
+ 		DRM_DEBUG("MC found buffer that isn't mine!\n");
+ 
+-	if (used > 4 * 1024)
++	if (used < 0 || used > 4 * 1024)
+ 		used = 0;
+ 
+ 	sarea_priv->dirty = 0x7f;
 
 
