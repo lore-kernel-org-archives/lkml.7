@@ -2,52 +2,51 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54361C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A43CC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25A98222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26481206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:03:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782214;
-	bh=1+1OGB3VdkIyWboiVeGZSZUACmrDWdP3BsfYbuhOQCw=;
+	s=default; t=1576782220;
+	bh=atv7YAxSoS79URw9rbDEbE0+hZXe8bkNhGKUBQKyMAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OI+hM2YpowNQpEPG8i2ZPN1Zp9L4qF4FJk0ov8/TWJjp1zY5JXKLOIOjVnHCPn9J8
-	 hQeyHX61y+YV3jQ9GADDnf/mXb5vI2w0SqhSocwVot+qpktbbBPX6A2UPTfw7KknGd
-	 WHPxyOWjsN1WStRcyObnQZuxKWfP+N+ru2OOl4Wk=
+	b=t4qKbwY3Zho3JulZR8B1k10WuHFb7mFxxsrq5Kn6Imzh65/xrsOfSTZVR+vFUAHBI
+	 l3HaA1rqg14Cs9+Zq0g/lNac5W+ZJS8Zts3okW2fSfM7TFyCa7LjHIX06t/vHKsBMk
+	 PZUVaI4PH8BHtH5kNYH4MERysNNRyn7SJgkWUqd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbfLSTDd (ORCPT
+        id S1729230AbfLSSsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:03:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41538 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:48:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729612AbfLSSsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:48:24 -0500
+        id S1729586AbfLSSsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:48:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 011122465E;
-        Thu, 19 Dec 2019 18:48:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CC6A24679;
+        Thu, 19 Dec 2019 18:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781303;
-        bh=1+1OGB3VdkIyWboiVeGZSZUACmrDWdP3BsfYbuhOQCw=;
+        s=default; t=1576781293;
+        bh=atv7YAxSoS79URw9rbDEbE0+hZXe8bkNhGKUBQKyMAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tdjYFUDnYp70dsh3xxT9O3AiV06iPd4Dw0tKtOJuFZX4UYDtJ9YR9kB76buP4rjyu
-         32zRfZxe/AIpDaV838dbe6zlTAlP8JPZmll2bOFMXYLvSTZ4JpCnUm+Sw+Wb5RomSn
-         TCWXBDec+HNaRPO2Ts3da0K/ZCVC8gXrVhMVxsjM=
+        b=WgM17XuFlZ6BCRRK6+wMwTVpbhdPcsfA8Oce9A/I4v0hxwUEg0Fj07aj62lgHw775
+         ZyMw5iWHfvuk40oEuD4jbsbdHJwHQmcrk8/wTWKtIKlyQR4pKYIRiO6zcBpXoXVZ/x
+         RNHqAZbKpr2a4bCc5V+Vdq7lKwEA992CQaL/wiIA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Marcin Pawlowski <mpawlowski@fb.com>,
-        "Williams, Gerald S" <gerald.s.williams@intel.com>
-Subject: [PATCH 4.9 125/199] workqueue: Fix spurious sanity check failures in destroy_workqueue()
-Date:   Thu, 19 Dec 2019 19:33:27 +0100
-Message-Id: <20191219183221.890901895@linuxfoundation.org>
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 160/199] pinctrl: samsung: Fix device node refcount leaks in S3C64xx wakeup controller init
+Date:   Thu, 19 Dec 2019 19:34:02 +0100
+Message-Id: <20191219183224.239754985@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,83 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-commit def98c84b6cdf2eeea19ec5736e90e316df5206b upstream.
+[ Upstream commit 7f028caadf6c37580d0f59c6c094ed09afc04062 ]
 
-Before actually destrying a workqueue, destroy_workqueue() checks
-whether it's actually idle.  If it isn't, it prints out a bunch of
-warning messages and leaves the workqueue dangling.  It unfortunately
-has a couple issues.
+In s3c64xx_eint_eint0_init() the for_each_child_of_node() loop is used
+with a break to find a matching child node.  Although each iteration of
+for_each_child_of_node puts the previous node, but early exit from loop
+misses it.  This leads to leak of device node.
 
-* Mayday list queueing increments pwq's refcnts which gets detected as
-  busy and fails the sanity checks.  However, because mayday list
-  queueing is asynchronous, this condition can happen without any
-  actual work items left in the workqueue.
-
-* Sanity check failure leaves the sysfs interface behind too which can
-  lead to init failure of newer instances of the workqueue.
-
-This patch fixes the above two by
-
-* If a workqueue has a rescuer, disable and kill the rescuer before
-  sanity checks.  Disabling and killing is guaranteed to flush the
-  existing mayday list.
-
-* Remove sysfs interface before sanity checks.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reported-by: Marcin Pawlowski <mpawlowski@fb.com>
-Reported-by: "Williams, Gerald S" <gerald.s.williams@intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: <stable@vger.kernel.org>
+Fixes: 61dd72613177 ("pinctrl: Add pinctrl-s3c64xx driver")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/workqueue.c |   24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+ drivers/pinctrl/samsung/pinctrl-s3c64xx.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -4031,9 +4031,28 @@ void destroy_workqueue(struct workqueue_
- 	struct pool_workqueue *pwq;
- 	int node;
+diff --git a/drivers/pinctrl/samsung/pinctrl-s3c64xx.c b/drivers/pinctrl/samsung/pinctrl-s3c64xx.c
+index 43407ab248f51..0cd9f3a7bb11a 100644
+--- a/drivers/pinctrl/samsung/pinctrl-s3c64xx.c
++++ b/drivers/pinctrl/samsung/pinctrl-s3c64xx.c
+@@ -713,6 +713,7 @@ static int s3c64xx_eint_eint0_init(struct samsung_pinctrl_drv_data *d)
+ 	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+ 	if (!data) {
+ 		dev_err(dev, "could not allocate memory for wkup eint data\n");
++		of_node_put(eint0_np);
+ 		return -ENOMEM;
+ 	}
+ 	data->drvdata = d;
+@@ -723,6 +724,7 @@ static int s3c64xx_eint_eint0_init(struct samsung_pinctrl_drv_data *d)
+ 		irq = irq_of_parse_and_map(eint0_np, i);
+ 		if (!irq) {
+ 			dev_err(dev, "failed to get wakeup EINT IRQ %d\n", i);
++			of_node_put(eint0_np);
+ 			return -ENXIO;
+ 		}
  
-+	/*
-+	 * Remove it from sysfs first so that sanity check failure doesn't
-+	 * lead to sysfs name conflicts.
-+	 */
-+	workqueue_sysfs_unregister(wq);
-+
- 	/* drain it before proceeding with destruction */
- 	drain_workqueue(wq);
+@@ -730,6 +732,7 @@ static int s3c64xx_eint_eint0_init(struct samsung_pinctrl_drv_data *d)
+ 						 s3c64xx_eint0_handlers[i],
+ 						 data);
+ 	}
++	of_node_put(eint0_np);
  
-+	/* kill rescuer, if sanity checks fail, leave it w/o rescuer */
-+	if (wq->rescuer) {
-+		struct worker *rescuer = wq->rescuer;
-+
-+		/* this prevents new queueing */
-+		spin_lock_irq(&wq_mayday_lock);
-+		wq->rescuer = NULL;
-+		spin_unlock_irq(&wq_mayday_lock);
-+
-+		/* rescuer will empty maydays list before exiting */
-+		kthread_stop(rescuer->task);
-+	}
-+
- 	/* sanity checks */
- 	mutex_lock(&wq->mutex);
- 	for_each_pwq(pwq, wq) {
-@@ -4063,11 +4082,6 @@ void destroy_workqueue(struct workqueue_
- 	list_del_rcu(&wq->list);
- 	mutex_unlock(&wq_pool_mutex);
- 
--	workqueue_sysfs_unregister(wq);
--
--	if (wq->rescuer)
--		kthread_stop(wq->rescuer->task);
--
- 	if (!(wq->flags & WQ_UNBOUND)) {
- 		/*
- 		 * The base ref is never dropped on per-cpu pwqs.  Directly
+ 	bank = d->pin_banks;
+ 	for (i = 0; i < d->nr_banks; ++i, ++bank) {
+-- 
+2.20.1
+
 
 
