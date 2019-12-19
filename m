@@ -2,152 +2,106 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B31D7C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 03:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A07C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 03:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9303F2467B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 03:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEBE221D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 03:19:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fUfP3frz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbfLSDSH (ORCPT
+        id S1727141AbfLSDTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 22:18:07 -0500
-Received: from mga05.intel.com ([192.55.52.43]:29385 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726875AbfLSDRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 22:17:43 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 19:17:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="222160406"
-Received: from allen-box.sh.intel.com ([10.239.159.136])
-  by fmsmga001.fm.intel.com with ESMTP; 18 Dec 2019 19:17:35 -0800
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-To:     Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-Cc:     ashok.raj@intel.com, sanjay.k.kumar@intel.com,
-        jacob.jun.pan@linux.intel.com, kevin.tian@intel.com,
-        yi.l.liu@intel.com, yi.y.sun@intel.com,
-        Peter Xu <peterx@redhat.com>, iommu@lists.linux-foundation.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Yi Sun <yi.y.sun@linux.intel.com>
-Subject: [PATCH v4 2/7] iommu/vt-d: Add set domain DOMAIN_ATTR_NESTING attr
-Date:   Thu, 19 Dec 2019 11:16:29 +0800
-Message-Id: <20191219031634.15168-3-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191219031634.15168-1-baolu.lu@linux.intel.com>
-References: <20191219031634.15168-1-baolu.lu@linux.intel.com>
+        Wed, 18 Dec 2019 22:19:11 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:49688 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726773AbfLSDTK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 22:19:10 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBJ39uYC068077;
+        Thu, 19 Dec 2019 03:18:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=oLFGR/WhIs5dA3HxvsHBFdeGRs+wvX0i1xh6f2MYyak=;
+ b=fUfP3frzqd+rvFOH7JcewpXXCeJ3/2sQfUXbVYzrcjnegAmXD+1cw+nkY6p1n8WC/jfq
+ 2T0ejE4lcRIcgqh3bPB9O/uE1jZWOAYo+JrI7UTtWdOFaI40Sv3aeUyzl12bXLyrk32G
+ FRjWhE79aO5nPaGPKHkX+WRqehzPNfVTQuPrb56Mu0rJi55OPzR/wsJAWebKD2ickLL4
+ oizKrdcRrkkBIYEMp7fSmKGq0A4IF0TUKCypatDE6Gtz3Z3jEG3vmlB4zXRgXTVPFHHe
+ lfgq4tZyurWkw0Yw8Hd7AwbZLL0VMV1yL4kpLx3A+3PGJ0ycjkZbx1sgz+vmqD6Cjr57 mA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2wvqpqhfwf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Dec 2019 03:18:49 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBJ39t0O038689;
+        Thu, 19 Dec 2019 03:18:49 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2wyut4nd60-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Dec 2019 03:18:49 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBJ3IX95010331;
+        Thu, 19 Dec 2019 03:18:33 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 18 Dec 2019 19:18:33 -0800
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        "open list\:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>
+Subject: Re: [GIT PULL v2 00/27] block, scsi: final compat_ioctl cleanup
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20191217221708.3730997-1-arnd@arndb.de>
+        <CAK8P3a3fsDRsZh--vn4SWA-NfeeSpzueqGDvjF5jDSZ91P9+Hw@mail.gmail.com>
+Date:   Wed, 18 Dec 2019 22:18:28 -0500
+In-Reply-To: <CAK8P3a3fsDRsZh--vn4SWA-NfeeSpzueqGDvjF5jDSZ91P9+Hw@mail.gmail.com>
+        (Arnd Bergmann's message of "Wed, 18 Dec 2019 18:24:32 +0100")
+Message-ID: <yq1sglhc8aj.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9475 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912190025
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9475 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912190025
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the Intel VT-d specific callback of setting
-DOMAIN_ATTR_NESTING domain attribution. It is necessary
-to let the VT-d driver know that the domain represents
-a virtual machine which requires the IOMMU hardware to
-support nested translation mode. Return success if the
-IOMMU hardware suports nested mode, otherwise failure.
 
-Signed-off-by: Yi Sun <yi.y.sun@linux.intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- drivers/iommu/intel-iommu.c | 56 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+Hi Arnd!
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index c93fe716e6b0..2b5a47584baf 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -315,6 +315,12 @@ static int hw_pass_through = 1;
-  */
- #define DOMAIN_FLAG_USE_FIRST_LEVEL		BIT(2)
- 
-+/*
-+ * Domain represents a virtual machine which demands iommu nested
-+ * translation mode support.
-+ */
-+#define DOMAIN_FLAG_NESTING_MODE		BIT(3)
-+
- #define for_each_domain_iommu(idx, domain)			\
- 	for (idx = 0; idx < g_num_of_iommus; idx++)		\
- 		if (domain->iommu_refcnt[idx])
-@@ -5635,6 +5641,24 @@ static inline bool iommu_pasid_support(void)
- 	return ret;
- }
- 
-+static inline bool nested_mode_support(void)
-+{
-+	struct dmar_drhd_unit *drhd;
-+	struct intel_iommu *iommu;
-+	bool ret = true;
-+
-+	rcu_read_lock();
-+	for_each_active_iommu(iommu, drhd) {
-+		if (!sm_supported(iommu) || !ecap_nest(iommu->ecap)) {
-+			ret = false;
-+			break;
-+		}
-+	}
-+	rcu_read_unlock();
-+
-+	return ret;
-+}
-+
- static bool intel_iommu_capable(enum iommu_cap cap)
- {
- 	if (cap == IOMMU_CAP_CACHE_COHERENCY)
-@@ -6013,10 +6037,42 @@ static bool intel_iommu_is_attach_deferred(struct iommu_domain *domain,
- 	return dev->archdata.iommu == DEFER_DEVICE_DOMAIN_INFO;
- }
- 
-+static int
-+intel_iommu_domain_set_attr(struct iommu_domain *domain,
-+			    enum iommu_attr attr, void *data)
-+{
-+	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
-+	unsigned long flags;
-+	int ret = 0;
-+
-+	if (domain->type != IOMMU_DOMAIN_UNMANAGED)
-+		return -EINVAL;
-+
-+	switch (attr) {
-+	case DOMAIN_ATTR_NESTING:
-+		spin_lock_irqsave(&device_domain_lock, flags);
-+		if (nested_mode_support() &&
-+		    list_empty(&dmar_domain->devices)) {
-+			dmar_domain->flags |= DOMAIN_FLAG_NESTING_MODE;
-+			dmar_domain->flags &= ~DOMAIN_FLAG_USE_FIRST_LEVEL;
-+		} else {
-+			ret = -ENODEV;
-+		}
-+		spin_unlock_irqrestore(&device_domain_lock, flags);
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
- const struct iommu_ops intel_iommu_ops = {
- 	.capable		= intel_iommu_capable,
- 	.domain_alloc		= intel_iommu_domain_alloc,
- 	.domain_free		= intel_iommu_domain_free,
-+	.domain_set_attr	= intel_iommu_domain_set_attr,
- 	.attach_dev		= intel_iommu_attach_device,
- 	.detach_dev		= intel_iommu_detach_device,
- 	.aux_attach_dev		= intel_iommu_aux_attach_device,
+> Any suggestion for how this should be merged?
+
+I'm pretty flexible. When you post v3 I'll try to set up a branch to get
+an idea what conflicts we might have to deal with. And then we can take
+it from there.
+
 -- 
-2.17.1
-
+Martin K. Petersen	Oracle Linux Engineering
