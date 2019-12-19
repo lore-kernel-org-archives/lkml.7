@@ -2,109 +2,352 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9538C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E19C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA219222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7AC8222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:43:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dLxef6dc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbfLSAm2 (ORCPT
+        id S1726759AbfLSAnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 19:42:28 -0500
-Received: from mga04.intel.com ([192.55.52.120]:27288 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbfLSAm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 19:42:28 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 16:42:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="228071463"
-Received: from jtreacy-mobl1.ger.corp.intel.com ([10.251.82.127])
-  by orsmga002.jf.intel.com with ESMTP; 18 Dec 2019 16:42:20 -0800
-Message-ID: <c956ba52a9f0b54cd8ab3ec034246662e792ac14.camel@linux.intel.com>
-Subject: Re: [PATCH v24 07/24] x86/cpu/intel: Detect SGX supprt
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        puiterwijk@redhat.com
-Date:   Thu, 19 Dec 2019 02:42:20 +0200
-In-Reply-To: <20191217151744.GG28788@zn.tnic>
-References: <20191129231326.18076-1-jarkko.sakkinen@linux.intel.com>
-         <20191129231326.18076-8-jarkko.sakkinen@linux.intel.com>
-         <20191217151744.GG28788@zn.tnic>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        Wed, 18 Dec 2019 19:43:31 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44005 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbfLSAna (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 19:43:30 -0500
+Received: by mail-lj1-f194.google.com with SMTP id a13so4204606ljm.10
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 16:43:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=onqicWxqhCYRXnes1QOmSOtJNPq7CuqRS7oJyFTkgKc=;
+        b=dLxef6dc8gv8aGWK/lMmakWKizcPikd8Nrh2bu3tj/OcQILCbF1drRvDol8LV2gDiF
+         nHYAzEpI2U/1L4NCTGZOtiTQhWXwip+DCdkHA1YF7+zInDfSXRbzafS0hhqodxkUTEJD
+         5xXO367L/YlfBHvyvznn0/HOrKRLSa8lgu00S5ZDhnySR/Uvm4X3ZtU95UOVmiaBlLD6
+         l2klv/oLqL3Exi+bMNqU8ZoLziPj7SKxJm75go+AnaEsWarofKBK3ueCBcVIbRJIMm9p
+         v1FKpoT+AZstNgCBoWTNtRStJ4uvmfyleOX9fiIxoYeim+tbdMFRTxsZ/hJa60WF+Jbk
+         z76g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=onqicWxqhCYRXnes1QOmSOtJNPq7CuqRS7oJyFTkgKc=;
+        b=As3dvrFJqePICNDlNxffZLWioJsgB3kQjcy+Rjd26ztooGVm/TQXPmfvioUg+rbf71
+         tUNgA7nICGmMFu2SXPMIJOsnkTdDCYQNTAErq1xbwI4WEi1pJPzIMmfd7kAPZlCUiGaB
+         iJbKDuTe1fzDqy44TZZOlLZdZfN1fYpvY1ISXXDLbALmdmMOlHA8RfIuZ/A3jOUYnvuN
+         A/uMxGPsdv3DBnxEoYnX2wxDmsFwCe1Np6c6aSOT5qpdP1osjS4SZvR3uutbyEHFqRat
+         hIFC08eo4EU2o76UOb0EYDrLcWjNZlys/XxrXtNxFqsZEUCd/azK9eiTgn72vL2TKROP
+         qvFA==
+X-Gm-Message-State: APjAAAXW+GSMGaW69FWI2Zm7csbf62WOuoUojeDnTpgD48feG/7OT5Bb
+        t1crrDwFb0MmijIthvrMK6NvcQ==
+X-Google-Smtp-Source: APXvYqwSHP+/NTHTM96GSP9iEjGjPEwU/jpNK4aD4opvKpeqPHPCWHHq8JjkHgpr5+8UK9AMMohI1g==
+X-Received: by 2002:a2e:9e55:: with SMTP id g21mr3818098ljk.245.1576716207794;
+        Wed, 18 Dec 2019 16:43:27 -0800 (PST)
+Received: from khorivan (57-201-94-178.pool.ukrtel.net. [178.94.201.57])
+        by smtp.gmail.com with ESMTPSA id l12sm1903742lji.52.2019.12.18.16.43.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 16:43:27 -0800 (PST)
+Date:   Thu, 19 Dec 2019 02:43:24 +0200
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Cc:     Po Liu <po.liu@nxp.com>,
+        Andre Guedes <andre.guedes@linux.intel.com>,
+        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "ayal@mellanox.com" <ayal@mellanox.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "hauke.mehrtens@intel.com" <hauke.mehrtens@intel.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "jiri@mellanox.com" <jiri@mellanox.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "pablo@netfilter.org" <pablo@netfilter.org>,
+        "saeedm@mellanox.com" <saeedm@mellanox.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        "simon.horman@netronome.com" <simon.horman@netronome.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
+Subject: Re: [EXT] Re: [v1,net-next, 1/2] ethtool: add setting frame
+ preemption of traffic classes
+Message-ID: <20191219004322.GA20146@khorivan>
+Mail-Followup-To: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Po Liu <po.liu@nxp.com>,
+        Andre Guedes <andre.guedes@linux.intel.com>,
+        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "ayal@mellanox.com" <ayal@mellanox.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "hauke.mehrtens@intel.com" <hauke.mehrtens@intel.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "jiri@mellanox.com" <jiri@mellanox.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "pablo@netfilter.org" <pablo@netfilter.org>,
+        "saeedm@mellanox.com" <saeedm@mellanox.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        "simon.horman@netronome.com" <simon.horman@netronome.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
+References: <20191127094517.6255-1-Po.Liu@nxp.com>
+ <157603276975.18462.4638422874481955289@pipeline>
+ <VE1PR04MB6496CEA449E9B844094E580492510@VE1PR04MB6496.eurprd04.prod.outlook.com>
+ <87eex43pzm.fsf@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87eex43pzm.fsf@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-12-17 at 16:17 +0100, Borislav Petkov wrote:
-> On Sat, Nov 30, 2019 at 01:13:09AM +0200, Jarkko Sakkinen wrote:
-> 
-> Typo in the subject:
-> 
-> Subject: Re: [PATCH v24 07/24] x86/cpu/intel: Detect SGX supprt
-> 							 ^^^^^^
-> > From: Sean Christopherson <sean.j.christopherson@intel.com>
-> > 
-> > When the CPU supports SGX, check that the BIOS has enabled SGX and SGX1
-> > opcodes are available. Otherwise, all the SGX related capabilities.
-> > 
-> > In addition, clear X86_FEATURE_SGX_LC also in the case when the launch
-> > enclave are read-only. This way the feature bit reflects the level that
-> > Linux supports the launch control.
-> > 
-> > The check is done for every CPU, not just BSP, in order to verify that
-> > MSR_IA32_FEATURE_CONTROL is correctly configured on all CPUs. The other
-> > parts of the kernel, like the enclave driver, expect the same
-> > configuration from all CPUs.
-> > 
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > Co-developed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > ---
-> >  arch/x86/kernel/cpu/intel.c | 41 +++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 41 insertions(+)
-> 
-> ...
-> 
-> > @@ -761,6 +797,11 @@ static void init_intel(struct cpuinfo_x86 *c)
-> >  	if (cpu_has(c, X86_FEATURE_TME))
-> >  		detect_tme(c);
-> >  
-> > +#ifdef CONFIG_INTEL_SGX
-> > +	if (cpu_has(c, X86_FEATURE_SGX))
-> > +		detect_sgx(c);
-> > +#endif
-> 
-> You can remove the ifdeffery here and put the ifdef around the function
-> body and drop the __maybe_unused tag:
+On Mon, Dec 16, 2019 at 01:44:13PM -0800, Vinicius Costa Gomes wrote:
+>Hi Po,
+>
+>Po Liu <po.liu@nxp.com> writes:
+>
+>> Hi Andre,
+>>
+>>
+>> Br,
+>> Po Liu
+>>
+>>> -----Original Message-----
+>>> From: Andre Guedes <andre.guedes@linux.intel.com>
+>>> Sent: 2019年12月11日 10:53
+>>> To: alexandru.ardelean@analog.com; allison@lohutok.net; andrew@lunn.ch;
+>>> ayal@mellanox.com; davem@davemloft.net; f.fainelli@gmail.com;
+>>> gregkh@linuxfoundation.org; hauke.mehrtens@intel.com;
+>>> hkallweit1@gmail.com; jiri@mellanox.com; linux-kernel@vger.kernel.org;
+>>> netdev@vger.kernel.org; pablo@netfilter.org; saeedm@mellanox.com;
+>>> tglx@linutronix.de; Po Liu <po.liu@nxp.com>
+>>> Cc: vinicius.gomes@intel.com; simon.horman@netronome.com; Claudiu Manoil
+>>> <claudiu.manoil@nxp.com>; Vladimir Oltean <vladimir.oltean@nxp.com>;
+>>> Alexandru Marginean <alexandru.marginean@nxp.com>; Xiaoliang Yang
+>>> <xiaoliang.yang_1@nxp.com>; Roy Zang <roy.zang@nxp.com>; Mingkai Hu
+>>> <mingkai.hu@nxp.com>; Jerry Huang <jerry.huang@nxp.com>; Leo Li
+>>> <leoyang.li@nxp.com>; Po Liu <po.liu@nxp.com>
+>>> Subject: [EXT] Re: [v1,net-next, 1/2] ethtool: add setting frame preemption of
+>>> traffic classes
+>>>
+>>> Caution: EXT Email
+>>>
+>>> Hi Po,
+>>>
+>>> Quoting Po Liu (2019-11-27 01:59:18)
+>>> > IEEE Std 802.1Qbu standard defined the frame preemption of port
+>>> > traffic classes. This patch introduce a method to set traffic classes
+>>> > preemption. Add a parameter 'preemption' in struct
+>>> > ethtool_link_settings. The value will be translated to a binary, each
+>>> > bit represent a traffic class. Bit "1" means preemptable traffic
+>>> > class. Bit "0" means express traffic class.  MSB represent high number
+>>> > traffic class.
+>>> >
+>>> > If hardware support the frame preemption, driver could set the
+>>> > ethernet device with hw_features and features with NETIF_F_PREEMPTION
+>>> > when initializing the port driver.
+>>> >
+>>> > User can check the feature 'tx-preemption' by command 'ethtool -k
+>>> > devname'. If hareware set preemption feature. The property would be a
+>>> > fixed value 'on' if hardware support the frame preemption.
+>>> > Feature would show a fixed value 'off' if hardware don't support the
+>>> > frame preemption.
+>
+>Having some knobs in ethtool to enable when/how Frame Preemption is
+>advertised on the wire makes sense. I also agree that it should be "on"
+>by default.
+>
+>>> >
+>>> > Command 'ethtool devname' and 'ethtool -s devname preemption N'
+>>> > would show/set which traffic classes are frame preemptable.
+>>> >
+>>> > Port driver would implement the frame preemption in the function
+>>> > get_link_ksettings() and set_link_ksettings() in the struct ethtool_ops.
+>>>
+>>> In an early RFC series [1], we proposed a way to support frame preemption. I'm
+>>> not sure if you have considered it before implementing this other proposal
+>>> based on ethtool interface so I thought it would be a good idea to bring that up
+>>> to your attention, just in case.
+>>
+>> Sorry, I didn't notice the RFC proposal. Using ethtool set the
+>> preemption just thinking about 8021Qbu as standalone. And not limit to
+>> the taprio if user won't set 802.1Qbv.
+>
+>I see your point of using frame-preemption "standalone", I have two
+>ideas:
+>
+> 1. add support in taprio to be configured without any schedule in the
+> "full offload" mode. In practice, allowing taprio to work somewhat
+> similar to (mqprio + frame-preemption), changes in the code should de
+> fairly small;
 
-OK, so I remember getting feedback on some unrelated to SGX stuff
-that I should use __maybe_unused in the past. That is why I used
-it here instead of ifdeffery.
++
 
-It is used in bunch of places in the kernel. I'm a bit confused
-when using it is a right thing and when it should be avoided.
+And if follow mqprio settings logic then preemption also can be enabled
+immediately while configuring taprio first time, and similarly new ADMIN
+can't change it and can be set w/o preemption option afterwards.
 
-/Jarkko
+So that following is correct:
 
+OPER
+$ tc qdisc add dev IFACE parent root handle 100 taprio \
+      base-time 10000000 \
+      num_tc 3 \
+      map 2 2 1 0 2 2 2 2 2 2 2 2 2 2 2 2 \
+      queues 1@0 1@1 2@2 \
+      preemption 0 1 1 1
+      flags 1
 
+then
+ADMIN
+$ tc qdisc add dev IFACE parent root handle 100 taprio \
+      base-time 12000000 \
+      num_tc 3 \
+      map 2 2 1 0 2 2 2 2 2 2 2 2 2 2 2 2 \
+      queues 1@0 1@1 2@2 \
+      preemption 0 1 1 1
+      sched-entry S 01 300000 \
+      sched-entry S 02 300000 \
+      flags 1
+
+then
+ADMIN
+$ tc qdisc add dev IFACE parent root handle 100 taprio \
+      base-time 13000000 \
+      sched-entry S 01 300000 \
+      sched-entry S 02 300000 \
+      flags 1
+
+BUT:
+
+1) The question is only should it be in this way? I mean preemption to be
+enabled immediately? Also should include other parameters like fragment size.
+
+2) What if I want to use frame preemption with another "transmission selection
+algorithm"? Say another one "time sensitive" - CBS? How is it going to be
+stacked?
+
+In this case ethtool looks better, allowing this "MAC level" feature, to be
+configured separately.
+
+>
+> 2. extend mqprio to support frame-preemption;
+>
+>>
+>> As some feedback  also want to set the MAC merge minimal fragment size
+>> and get some more information of 802.3br.
+>
+>The minimal fragment size, I guess, also makes sense to be kept in
+>ethtool. That is we have a sane default, and allow the user to change
+>this setting for special cases.
+>
+>>
+>>>
+>>> In that initial proposal, Frame Preemption feature is configured via taprio qdisc.
+>>> For example:
+>>>
+>>> $ tc qdisc add dev IFACE parent root handle 100 taprio \
+>>>       num_tc 3 \
+>>>       map 2 2 1 0 2 2 2 2 2 2 2 2 2 2 2 2 \
+>>>       queues 1@0 1@1 2@2 \
+>>>       preemption 0 1 1 1 \
+>>>       base-time 10000000 \
+>>>       sched-entry S 01 300000 \
+>>>       sched-entry S 02 300000 \
+>>>       sched-entry S 04 400000 \
+>>>       clockid CLOCK_TAI
+>>>
+>>> It also aligns with the gate control operations Set-And-Hold-MAC and Set-And-
+>>> Release-MAC that can be set via 'sched-entry' (see Table 8.7 from
+>>> 802.1Q-2018 for further details.
+>>
+>> I am curious about Set-And-Hold-Mac via 'sched-entry'. Actually, it
+>> could be understand as guardband by hardware preemption. MAC should
+>> auto calculate the nano seconds before  express entry slot start to
+>> break to two fragments. Set-And-Hold-MAC should minimal larger than
+>> the fragment-size oct times.
+>
+>Another interesting point. My first idea is that when the schedule is
+>offloaded to the driver and the driver detects that the "entry" width is
+>smaller than the fragment side, the driver could reject that schedule
+>with a nice error message.
+
+Looks ok, if entry command is RELEASE or SET only, but not HOLD, and
+only if it contains express queues. And if for entry is expectable to have
+interval shorter, the entry has to be marked as HOLD then.
+
+But not every offload is able to support mac/hold per sched (there is
+no HOLD/RELEASE commands in this case). For this case seems like here can
+be 2 cases:
+
+1) there is no “gate close” event for the preemptible traffic
+2) there is "gate close" event for the preemptable traffic
+
+And both can have the following impact, if assume the main reason to
+this guard check is to guarantee the express queue cannot be blocked while
+this "close to short" interval opening ofc:
+
+If a preemption fragment is started before "express" frame, then interval
+should allow to complete preemption fragment and has to have enough time
+to insert express frame. So here situation when maximum packet size per
+each queue can have place.
+
+In case of TI am65 this queue MTU is configurable per queue (for similar
+reasons and couple more (packet fill feature for instance)) and can be
+used for guard check also, but not clear where it should be. Seems like
+it should be done using ethtool also, but can be needed for taprio
+interface....
+
+>>
+>>>
+>>> Please share your thoughts on this.
+>>
+>> I am good to see there is frame preemption proposal. Each way is ok
+>> for me but ethtool is more flexible. I've seen the RFC the code. The
+>> hardware offload is in the mainline, but preemption is not yet, I
+>> don't know why. Could you post it again?
+>
+>It's not mainline because this kind of stuff will not be accepted
+>upstream without in-tree users. And you are the first one to propose
+>such a thing :-)
+>
+>It's just now that I have something that supports frame-preemption, the
+>code I have is approaching RFC-like quality. I will send another RFC
+>this week hopefully, and we can see how things look in practice.
+>
+>
+>Cheers,
+>--
+>Vinicius
+
+-- 
+Regards,
+Ivan Khoronzhuk
