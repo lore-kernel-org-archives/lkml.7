@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D24C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 125F8C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 057E824680
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D30C724672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780542;
-	bh=5xzyhKt3X7c9Ie1B/CSCz90n4dbVRd7Dcyq0csUI1S8=;
+	s=default; t=1576780545;
+	bh=qGW1AnRfHulQuoxOcJ1quQ3TEjBJS6JUQMxrNU41tGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fcS9u055yOFPFhP+4ysoSXzG48mLDCFjEGenuibnbHx0Wkrjmx4QEQ1vwPv4yVRLE
-	 Rvtmwfuz8pvkLj8lg/+cRMLnRj9d6zclRi4BZRpP964YRiSiElFmbpUSFd9Zo34MhK
-	 Lirl5b5K6hJuWZLc6ORXdeX5qwbRkJSvCvmL/pzs=
+	b=kMYtUwZUf5u6JsQfHu0gxjQzw4LbEpogYI5ibaPlsQxkaDnQUZsitqyCVYb4A1obU
+	 OMu4krZDelXdzCElmPa+62pYdk5jZQdybhILvUAo/tfDOVxCfIEvDuLPs7PA7cRIau
+	 qE0Op6K37tb5iIHtbBHNAzkNvDXY29/xMMQcToNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbfLSSfk (ORCPT
+        id S1727265AbfLSSfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:35:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52288 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:35:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727181AbfLSSfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:35:38 -0500
+        id S1726836AbfLSSfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:35:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E83BD222C2;
-        Thu, 19 Dec 2019 18:35:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2C9624679;
+        Thu, 19 Dec 2019 18:35:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780537;
-        bh=5xzyhKt3X7c9Ie1B/CSCz90n4dbVRd7Dcyq0csUI1S8=;
+        s=default; t=1576780542;
+        bh=qGW1AnRfHulQuoxOcJ1quQ3TEjBJS6JUQMxrNU41tGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YG9BkGep86sRTV+FBk34LCXc/uPrVDyhfhcw1O7cIM/J+x+TrX6vCV5FkexjQbeiG
-         e4ZTx+9HFRqRmjsgLItOePug9B6/v2ibBrbrJXDNJuNLLns0iPUUK/bpRolSXvF/GX
-         N0fFfMdRDszl7Y3XRaOIH96X439v8cL4eW4pih3M=
+        b=OcxQ0ZO4zYH7gE3YUn36QYBJbZXLmMtdbtam8IZ5DHFTakWFWdF7dPOJH+uq3IdKw
+         XwE2jgBThriX/5jU26+wxNF4N7j3HOSPV1g94Ke1VZc7AecJQX0IRIwAfc4r9vH3We
+         HOFlCwLr7AOWpjRs784fgviV1SFZhoHT4iUn/wGo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Finley Xiao <finley.xiao@rock-chips.com>,
+        Johan Jonker <jbx9999@hotmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 015/162] ARM: 8813/1: Make aligned 2-byte getuser()/putuser() atomic on ARMv6+
-Date:   Thu, 19 Dec 2019 19:32:03 +0100
-Message-Id: <20191219183206.404876224@linuxfoundation.org>
+Subject: [PATCH 4.4 017/162] clk: rockchip: fix rk3188 sclk_smc gate data
+Date:   Thu, 19 Dec 2019 19:32:05 +0100
+Message-Id: <20191219183207.397022772@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -61,170 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Whitchurch <vincent.whitchurch@axis.com>
+From: Finley Xiao <finley.xiao@rock-chips.com>
 
-[ Upstream commit 344eb5539abf3e0b6ce22568c03e86450073e097 ]
+[ Upstream commit a9f0c0e563717b9f63b3bb1c4a7c2df436a206d9 ]
 
-getuser() and putuser() (and there underscored variants) use two
-strb[t]/ldrb[t] instructions when they are asked to get/put 16-bits.
-This means that the read/write is not atomic even when performed to a
-16-bit-aligned address.
+Fix sclk_smc gate data.
+Change variable order, flags come before the register address.
 
-This leads to problems with vhost: vhost uses __getuser() to read the
-vring's 16-bit avail.index field, and if it happens to observe a partial
-update of the index, wrong descriptors will be used which will lead to a
-breakdown of the virtio communication.  A similar problem exists for
-__putuser() which is used to write to the vring's used.index field.
-
-The reason these functions use strb[t]/ldrb[t] is because strht/ldrht
-instructions did not exist until ARMv6T2/ARMv7.  So we should be easily
-able to fix this on ARMv7.  Also, since all ARMv6 processors also don't
-actually use the unprivileged instructions anymore for uaccess (since
-CONFIG_CPU_USE_DOMAINS is not used) we can easily fix them too.
-
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
+Signed-off-by: Johan Jonker <jbx9999@hotmail.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/include/asm/uaccess.h | 18 ++++++++++++++++++
- arch/arm/lib/getuser.S         | 11 +++++++++++
- arch/arm/lib/putuser.S         | 20 ++++++++++----------
- 3 files changed, 39 insertions(+), 10 deletions(-)
+ drivers/clk/rockchip/clk-rk3188.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/include/asm/uaccess.h b/arch/arm/include/asm/uaccess.h
-index 9ae610bf52348..61479ebb98693 100644
---- a/arch/arm/include/asm/uaccess.h
-+++ b/arch/arm/include/asm/uaccess.h
-@@ -387,6 +387,13 @@ do {									\
- #define __get_user_asm_byte(x, addr, err)			\
- 	__get_user_asm(x, addr, err, ldrb)
+diff --git a/drivers/clk/rockchip/clk-rk3188.c b/drivers/clk/rockchip/clk-rk3188.c
+index fe728f8dcbe43..986a558c361d6 100644
+--- a/drivers/clk/rockchip/clk-rk3188.c
++++ b/drivers/clk/rockchip/clk-rk3188.c
+@@ -360,8 +360,8 @@ static struct rockchip_clk_branch common_clk_branches[] __initdata = {
+ 	 * Clock-Architecture Diagram 4
+ 	 */
  
-+#if __LINUX_ARM_ARCH__ >= 6
-+
-+#define __get_user_asm_half(x, addr, err)			\
-+	__get_user_asm(x, addr, err, ldrh)
-+
-+#else
-+
- #ifndef __ARMEB__
- #define __get_user_asm_half(x, __gu_addr, err)			\
- ({								\
-@@ -405,6 +412,8 @@ do {									\
- })
- #endif
+-	GATE(SCLK_SMC, "sclk_smc", "hclk_peri",
+-			RK2928_CLKGATE_CON(2), 4, 0, GFLAGS),
++	GATE(SCLK_SMC, "sclk_smc", "hclk_peri", 0,
++			RK2928_CLKGATE_CON(2), 4, GFLAGS),
  
-+#endif /* __LINUX_ARM_ARCH__ >= 6 */
-+
- #define __get_user_asm_word(x, addr, err)			\
- 	__get_user_asm(x, addr, err, ldr)
- #endif
-@@ -480,6 +489,13 @@ do {									\
- #define __put_user_asm_byte(x, __pu_addr, err)			\
- 	__put_user_asm(x, __pu_addr, err, strb)
- 
-+#if __LINUX_ARM_ARCH__ >= 6
-+
-+#define __put_user_asm_half(x, __pu_addr, err)			\
-+	__put_user_asm(x, __pu_addr, err, strh)
-+
-+#else
-+
- #ifndef __ARMEB__
- #define __put_user_asm_half(x, __pu_addr, err)			\
- ({								\
-@@ -496,6 +512,8 @@ do {									\
- })
- #endif
- 
-+#endif /* __LINUX_ARM_ARCH__ >= 6 */
-+
- #define __put_user_asm_word(x, __pu_addr, err)			\
- 	__put_user_asm(x, __pu_addr, err, str)
- 
-diff --git a/arch/arm/lib/getuser.S b/arch/arm/lib/getuser.S
-index 746e7801dcdf7..b2e4bc3a635e2 100644
---- a/arch/arm/lib/getuser.S
-+++ b/arch/arm/lib/getuser.S
-@@ -42,6 +42,12 @@ _ASM_NOKPROBE(__get_user_1)
- 
- ENTRY(__get_user_2)
- 	check_uaccess r0, 2, r1, r2, __get_user_bad
-+#if __LINUX_ARM_ARCH__ >= 6
-+
-+2: TUSER(ldrh)	r2, [r0]
-+
-+#else
-+
- #ifdef CONFIG_CPU_USE_DOMAINS
- rb	.req	ip
- 2:	ldrbt	r2, [r0], #1
-@@ -56,6 +62,9 @@ rb	.req	r0
- #else
- 	orr	r2, rb, r2, lsl #8
- #endif
-+
-+#endif /* __LINUX_ARM_ARCH__ >= 6 */
-+
- 	mov	r0, #0
- 	ret	lr
- ENDPROC(__get_user_2)
-@@ -145,7 +154,9 @@ _ASM_NOKPROBE(__get_user_bad8)
- .pushsection __ex_table, "a"
- 	.long	1b, __get_user_bad
- 	.long	2b, __get_user_bad
-+#if __LINUX_ARM_ARCH__ < 6
- 	.long	3b, __get_user_bad
-+#endif
- 	.long	4b, __get_user_bad
- 	.long	5b, __get_user_bad8
- 	.long	6b, __get_user_bad8
-diff --git a/arch/arm/lib/putuser.S b/arch/arm/lib/putuser.S
-index 38d660d3705f4..515eeaa9975c6 100644
---- a/arch/arm/lib/putuser.S
-+++ b/arch/arm/lib/putuser.S
-@@ -41,16 +41,13 @@ ENDPROC(__put_user_1)
- 
- ENTRY(__put_user_2)
- 	check_uaccess r0, 2, r1, ip, __put_user_bad
--	mov	ip, r2, lsr #8
--#ifdef CONFIG_THUMB2_KERNEL
--#ifndef __ARMEB__
--2: TUSER(strb)	r2, [r0]
--3: TUSER(strb)	ip, [r0, #1]
-+#if __LINUX_ARM_ARCH__ >= 6
-+
-+2: TUSER(strh)	r2, [r0]
-+
- #else
--2: TUSER(strb)	ip, [r0]
--3: TUSER(strb)	r2, [r0, #1]
--#endif
--#else	/* !CONFIG_THUMB2_KERNEL */
-+
-+	mov	ip, r2, lsr #8
- #ifndef __ARMEB__
- 2: TUSER(strb)	r2, [r0], #1
- 3: TUSER(strb)	ip, [r0]
-@@ -58,7 +55,8 @@ ENTRY(__put_user_2)
- 2: TUSER(strb)	ip, [r0], #1
- 3: TUSER(strb)	r2, [r0]
- #endif
--#endif	/* CONFIG_THUMB2_KERNEL */
-+
-+#endif /* __LINUX_ARM_ARCH__ >= 6 */
- 	mov	r0, #0
- 	ret	lr
- ENDPROC(__put_user_2)
-@@ -91,7 +89,9 @@ ENDPROC(__put_user_bad)
- .pushsection __ex_table, "a"
- 	.long	1b, __put_user_bad
- 	.long	2b, __put_user_bad
-+#if __LINUX_ARM_ARCH__ < 6
- 	.long	3b, __put_user_bad
-+#endif
- 	.long	4b, __put_user_bad
- 	.long	5b, __put_user_bad
- 	.long	6b, __put_user_bad
+ 	COMPOSITE_NOMUX(SCLK_SPI0, "sclk_spi0", "pclk_peri", 0,
+ 			RK2928_CLKSEL_CON(25), 0, 7, DFLAGS,
 -- 
 2.20.1
 
