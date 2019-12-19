@@ -2,89 +2,134 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC08C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 632EEC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5B4C20716
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:09:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576757370;
-	bh=wWZX4ax7zSXCuIghA3GybWbTHXF34nTtC/jJv9LEOXg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DnTqLz29N8CFf+I1fR4ajIjfMJB7M3cvndbRkcDZ7LoxDfHT6cBa9/iunH+z8eDU0
-	 +fyddx5b5IOVCLEQV85Gm2vCb3qyuDBiMN4HM7qtFvZ3GDXNeJK4JwIZ/POrRWY2iD
-	 TivGMxLL71+zWTPW5LipvKLfxA8VRsJjHN2Bgig4=
+	by mail.kernel.org (Postfix) with ESMTP id 33FD820716
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:10:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GyQUlmhV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbfLSMJ3 (ORCPT
+        id S1726797AbfLSMK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 07:09:29 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40293 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbfLSMJ2 (ORCPT
+        Thu, 19 Dec 2019 07:10:58 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:55792 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726668AbfLSMK6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 07:09:28 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t14so5350727wmi.5;
-        Thu, 19 Dec 2019 04:09:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9nrUrPJJmMQbUtqCwZA0Mulwi+MvmTGPon6VGzHJdQU=;
-        b=fttJxGzGPT4g1tUMkB7BHa/Lk3/1X34AOEBggHngWyhREyc0qeXowAtctHMKriGOs4
-         twGMdFQU9FpJYntAlDmjGj7VRedFQIcPV4wlyiCWCvNwv+3qRVP3iBWBt6fNULJjdcu7
-         zkqzCOdFFp84Q4LhUOzqKLkNig0Ykds3sq8h0aZEVMwLkkho6Ic3SvYvdZ1KXR8a3qfW
-         OY//UA6TYB5Faz2xxF8JBbbvCbkrUHvluirknBAXs/wcOmkLxTe7mjUgdBedmgvw3VtH
-         o0AjHdGO+iXLpVasQ1/YCFfdArcb2TwJ8fd8hJ52fbglGUvy8WTM8Jo1LDUTEwRMtFKY
-         VQnw==
-X-Gm-Message-State: APjAAAXGacuwrC3yia9B/NhM1re9VfwEhvveA2zYhEHJoK+cA6tG28gB
-        fUikYcKvlBWasnkn09snJEI=
-X-Google-Smtp-Source: APXvYqwLEFQsLDtdaGgcIJLNUGUybcxU1S9YReJl9xQbTOdW6ovC30wl+rNvUJVesdErENs6wC+q+g==
-X-Received: by 2002:a1c:3dc3:: with SMTP id k186mr9321820wma.95.1576757366396;
-        Thu, 19 Dec 2019 04:09:26 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id f1sm6137802wru.6.2019.12.19.04.09.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 04:09:25 -0800 (PST)
-Date:   Thu, 19 Dec 2019 13:09:25 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     netdev@vger.kernel.org, lirongqing@baidu.com,
-        linyunsheng@huawei.com,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Saeed Mahameed <saeedm@mellanox.com>, peterz@infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [net-next v4 PATCH] page_pool: handle page recycle for
- NUMA_NO_NODE condition
-Message-ID: <20191219120925.GD26945@dhcp22.suse.cz>
-References: <20191218084437.6db92d32@carbon>
- <157665609556.170047.13435503155369210509.stgit@firesoul>
+        Thu, 19 Dec 2019 07:10:58 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJCAm6A100054;
+        Thu, 19 Dec 2019 06:10:48 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576757448;
+        bh=v7Np/OFkk20fqw6MV6RMIPQQKnOLNyFYGAZXUuSYuis=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=GyQUlmhVIxuCexAwcASlKaNdBf4wIzpZSBhv1Apxw/aaLiQRDVPrssznmXnsNX/eY
+         5okO5d8vuR3DuOJtiuAdGVdMHZ0gU5mTeJp1hpz+D6NghP5Cjzr38iyopE6FnuZXZv
+         a5+u5ytJzvZEpuRScDl0GmdeuUKn3g8nSko27ZZE=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJCAmkd026460;
+        Thu, 19 Dec 2019 06:10:48 -0600
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Dec 2019 06:10:48 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Dec 2019 06:10:47 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJCAiUg062952;
+        Thu, 19 Dec 2019 06:10:45 -0600
+Subject: Re: [PATCH 08/13] PCI: cadence: Use local management register to
+ configure Vendor ID
+To:     Andrew Murray <andrew.murray@arm.com>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, Tom Joseph <tjoseph@cadence.com>
+References: <20191209092147.22901-1-kishon@ti.com>
+ <20191209092147.22901-9-kishon@ti.com>
+ <20191217124238.GE24359@e119886-lin.cambridge.arm.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <cdb15479-6cc4-e00f-34a6-6cf191179bf7@ti.com>
+Date:   Thu, 19 Dec 2019 17:42:27 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <157665609556.170047.13435503155369210509.stgit@firesoul>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191217124238.GE24359@e119886-lin.cambridge.arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 18-12-19 09:01:35, Jesper Dangaard Brouer wrote:
-[...]
-> For the NUMA_NO_NODE case, when a NIC IRQ is moved to another NUMA
-> node, then ptr_ring will be emptied in 65 (PP_ALLOC_CACHE_REFILL+1)
-> chunks per allocation and allocation fall-through to the real
-> page-allocator with the new nid derived from numa_mem_id(). We accept
-> that transitioning the alloc cache doesn't happen immediately.
++Tom
 
-Could you explain what is the expected semantic of NUMA_NO_NODE in this
-case? Does it imply always the preferred locality? See my other email[1] to
-this matter.
+Hi,
 
-[1] http://lkml.kernel.org/r/20191219115338.GC26945@dhcp22.suse.cz
--- 
-Michal Hocko
-SUSE Labs
+On 17/12/19 6:12 pm, Andrew Murray wrote:
+> On Mon, Dec 09, 2019 at 02:51:42PM +0530, Kishon Vijay Abraham I wrote:
+>> PCI_VENDOR_ID in root port configuration space is read-only register
+>> and writing to it will have no effect. Use local management register to
+>> configure Vendor ID and Subsystem Vendor ID.
+> 
+> Is this a bug fix? Can you add a Fixes tag and make that clearer?
+
+I think this might have worked in Cadence platform? Tom?
+
+Thanks
+Kishon
+
+> 
+> Thanks,
+> 
+> Andrew Murray
+> 
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  drivers/pci/controller/cadence/pcie-cadence-host.c | 9 +++++++--
+>>  1 file changed, 7 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> index cf817be237af..afb2c96a6538 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> @@ -71,6 +71,7 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>>  {
+>>  	struct cdns_pcie *pcie = &rc->pcie;
+>>  	u32 value, ctrl;
+>> +	u32 id;
+>>  
+>>  	/*
+>>  	 * Set the root complex BAR configuration register:
+>> @@ -90,8 +91,12 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>>  	cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
+>>  
+>>  	/* Set root port configuration space */
+>> -	if (rc->vendor_id != 0xffff)
+>> -		cdns_pcie_rp_writew(pcie, PCI_VENDOR_ID, rc->vendor_id);
+>> +	if (rc->vendor_id != 0xffff) {
+>> +		id = CDNS_PCIE_LM_ID_VENDOR(rc->vendor_id) |
+>> +			CDNS_PCIE_LM_ID_SUBSYS(rc->vendor_id);
+>> +		cdns_pcie_writel(pcie, CDNS_PCIE_LM_ID, id);
+>> +	}
+>> +
+>>  	if (rc->device_id != 0xffff)
+>>  		cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, rc->device_id);
+>>  
+>> -- 
+>> 2.17.1
+>>
