@@ -2,149 +2,140 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3B8C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FC1C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E30524650
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:02:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576756939;
-	bh=4tSN8Ty0g9jbGMWwle8pw+lMUclGXrafZ3F/UVZPngM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=0exPtgYkbEeHVYPggE1jSjtsFWUJnLeps2Zh9gvhBGs6phBDpJLAeQOQbAp78JucG
-	 8FqqT40K9HctQQZSn8AhSvMMK96axUtgWRRwXkm1P1VQ2ANDuNZbb38qU5DRN81UMr
-	 TEdpAHhHKLMJjcupHZ9a3u5saiqtnkGuNQPDlrT8=
+	by mail.kernel.org (Postfix) with ESMTP id 30D76222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:02:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RFvRJCXO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfLSMCS (ORCPT
+        id S1726936AbfLSMCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 07:02:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34856 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726668AbfLSMCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 07:02:18 -0500
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82457222C2;
-        Thu, 19 Dec 2019 12:02:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576756937;
-        bh=4tSN8Ty0g9jbGMWwle8pw+lMUclGXrafZ3F/UVZPngM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=vFw2XExoEj0Ip/k2VkBkAdc26WWv6SqBqelcFAXwcnHAkDmFafozwzuP/k46Bl1yS
-         bDfIb2uoEW8VTWXutcdBjXnrqOl7jo1NrMZkskPGjFQ0BOufjeBvmtyN3ILermmoFP
-         y94WAjaVc9H1NkGRKGtat1m67EaWSNS9yNVrV6ws=
-From:   Will Deacon <will@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, kernel-team@android.com,
-        Will Deacon <will@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Hillf Danton <hdanton@sina.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com
-Subject: [PATCH] chardev: Avoid potential use-after-free in 'chrdev_open()'
-Date:   Thu, 19 Dec 2019 12:02:03 +0000
-Message-Id: <20191219120203.32691-1-will@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Thu, 19 Dec 2019 07:02:32 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50454 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726668AbfLSMCc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 07:02:32 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJC2I7s030349;
+        Thu, 19 Dec 2019 06:02:18 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576756938;
+        bh=SJ4hNptUJk4P4x4SOwGjpOGBMqMzUELoedaw1b+jwHI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=RFvRJCXO0HNrMEcTcs4Fcr3tvG2qzsk0ASlEc41wcAlIV1j1EOg9iX3ITF/TeAP62
+         pNUMfAKHW+v53YNoTRjTq67JrWwAQXmYAH5BVzcf8Y/dCQPYFQzZls5F6DrLZbYE4x
+         rJHv+WPgKFUV5JWWnd08mRG45SCctKuFBZZobeXk=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJC2H8k014202;
+        Thu, 19 Dec 2019 06:02:17 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Dec 2019 06:02:17 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Dec 2019 06:02:17 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJC2DRK102964;
+        Thu, 19 Dec 2019 06:02:14 -0600
+Subject: Re: [PATCH 07/13] PCI: cadence: Add new *ops* for CPU addr fixup
+To:     Andrew Murray <andrew.murray@arm.com>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>
+References: <20191209092147.22901-1-kishon@ti.com>
+ <20191209092147.22901-8-kishon@ti.com>
+ <20191217124050.GD24359@e119886-lin.cambridge.arm.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <936cd6d6-33fc-6432-6fec-2b5173cb9ca4@ti.com>
+Date:   Thu, 19 Dec 2019 17:33:56 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191217124050.GD24359@e119886-lin.cambridge.arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'chrdev_open()' calls 'cdev_get()' to obtain a reference to the
-'struct cdev *' stashed in the 'i_cdev' field of the target inode
-structure. If the pointer is NULL, then it is initialised lazily by
-looking up the kobject in the 'cdev_map' and so the whole procedure is
-protected by the 'cdev_lock' spinlock to serialise initialisation of
-the shared pointer.
+Hi,
 
-Unfortunately, it is possible for the initialising thread to fail *after*
-installing the new pointer, for example if the subsequent '->open()' call
-on the file fails. In this case, 'cdev_put()' is called, the reference
-count on the kobject is dropped and, if nobody else has taken a reference,
-the release function is called which finally clears 'inode->i_cdev' from
-'cdev_purge()' before potentially freeing the object. The problem here
-is that a racing thread can happily take the 'cdev_lock' and see the
-non-NULL pointer in the inode, which can result in a refcount increment
-from zero and a warning:
+On 17/12/19 6:10 pm, Andrew Murray wrote:
+> On Mon, Dec 09, 2019 at 02:51:41PM +0530, Kishon Vijay Abraham I wrote:
+>> Cadence driver uses "mem" memory resource to obtain the offset of
+>> configuration space address region, memory space address region and
+>> message space address region. The obtained offset is used to program
+>> the Address Translation Unit (ATU). However certain platforms like TI's
+>> J721E SoC require the absolute address to be programmed in the ATU and not
+>> just the offset.
+>>
+>> The same problem was solved in designware driver using a platform specific
+>> ops for CPU addr fixup in commit a660083eb06c5bb0 ("PCI: dwc: designware:
+> 
+> Thanks for this reference, though this doesn't need to be in the commit
+> log, please put such comments underneath a ---.
+> 
+>> Add new *ops* for CPU addr fixup"). Follow a similar mechanism in
+>> Cadence too instead of directly using "mem" memory resource in Cadence
+>> PCIe core.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  .../pci/controller/cadence/pcie-cadence-host.c    | 15 ++++-----------
+>>  drivers/pci/controller/cadence/pcie-cadence.c     |  8 ++++++--
+>>  drivers/pci/controller/cadence/pcie-cadence.h     |  1 +
+>>  3 files changed, 11 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> index 2efc33b1cade..cf817be237af 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> @@ -105,15 +105,14 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>>  static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+>>  {
+>>  	struct cdns_pcie *pcie = &rc->pcie;
+>> -	struct resource *mem_res = pcie->mem_res;
+>>  	struct resource *bus_range = rc->bus_range;
+>>  	struct resource *cfg_res = rc->cfg_res;
+>>  	struct device *dev = pcie->dev;
+>>  	struct device_node *np = dev->of_node;
+>>  	struct of_pci_range_parser parser;
+>> +	u64 cpu_addr = cfg_res->start;
+>>  	struct of_pci_range range;
+>>  	u32 addr0, addr1, desc1;
+>> -	u64 cpu_addr;
+>>  	int r, err;
+>>  
+>>  	/*
+>> @@ -126,7 +125,9 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+>>  	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_PCI_ADDR1(0), addr1);
+>>  	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC1(0), desc1);
+>>  
+>> -	cpu_addr = cfg_res->start - mem_res->start;
+>> +	if (pcie->ops->cpu_addr_fixup)
+>> +		cpu_addr = pcie->ops->cpu_addr_fixup(pcie, cpu_addr);
+>> +
+> 
+> Won't this patch cause a breakage for existing users that won't have defined a
+> cpu_addr_fixup? The offset isn't being calculated and so cpu_addr will be wrong?
 
-  |  ------------[ cut here ]------------
-  |  refcount_t: addition on 0; use-after-free.
-  |  WARNING: CPU: 2 PID: 6385 at lib/refcount.c:25 refcount_warn_saturate+0x6d/0xf0
-  |  Modules linked in:
-  |  CPU: 2 PID: 6385 Comm: repro Not tainted 5.5.0-rc2+ #22
-  |  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-  |  RIP: 0010:refcount_warn_saturate+0x6d/0xf0
-  |  Code: 05 55 9a 15 01 01 e8 9d aa c8 ff 0f 0b c3 80 3d 45 9a 15 01 00 75 ce 48 c7 c7 00 9c 62 b3 c6 08
-  |  RSP: 0018:ffffb524c1b9bc70 EFLAGS: 00010282
-  |  RAX: 0000000000000000 RBX: ffff9e9da1f71390 RCX: 0000000000000000
-  |  RDX: ffff9e9dbbd27618 RSI: ffff9e9dbbd18798 RDI: ffff9e9dbbd18798
-  |  RBP: 0000000000000000 R08: 000000000000095f R09: 0000000000000039
-  |  R10: 0000000000000000 R11: ffffb524c1b9bb20 R12: ffff9e9da1e8c700
-  |  R13: ffffffffb25ee8b0 R14: 0000000000000000 R15: ffff9e9da1e8c700
-  |  FS:  00007f3b87d26700(0000) GS:ffff9e9dbbd00000(0000) knlGS:0000000000000000
-  |  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  |  CR2: 00007fc16909c000 CR3: 000000012df9c000 CR4: 00000000000006e0
-  |  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  |  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  |  Call Trace:
-  |   kobject_get+0x5c/0x60
-  |   cdev_get+0x2b/0x60
-  |   chrdev_open+0x55/0x220
-  |   ? cdev_put.part.3+0x20/0x20
-  |   do_dentry_open+0x13a/0x390
-  |   path_openat+0x2c8/0x1470
-  |   do_filp_open+0x93/0x100
-  |   ? selinux_file_ioctl+0x17f/0x220
-  |   do_sys_open+0x186/0x220
-  |   do_syscall_64+0x48/0x150
-  |   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  |  RIP: 0033:0x7f3b87efcd0e
-  |  Code: 89 54 24 08 e8 a3 f4 ff ff 8b 74 24 0c 48 8b 3c 24 41 89 c0 44 8b 54 24 08 b8 01 01 00 00 89 f4
-  |  RSP: 002b:00007f3b87d259f0 EFLAGS: 00000293 ORIG_RAX: 0000000000000101
-  |  RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f3b87efcd0e
-  |  RDX: 0000000000000000 RSI: 00007f3b87d25a80 RDI: 00000000ffffff9c
-  |  RBP: 00007f3b87d25e90 R08: 0000000000000000 R09: 0000000000000000
-  |  R10: 0000000000000000 R11: 0000000000000293 R12: 00007ffe188f504e
-  |  R13: 00007ffe188f504f R14: 00007f3b87d26700 R15: 0000000000000000
-  |  ---[ end trace 24f53ca58db8180a ]---
+Correct, this will need an additional patch in pcie-cadence-plat.c.
 
-Since 'cdev_get()' can already fail to obtain a reference, simply move
-it over to use 'kobject_get_unless_zero()' instead of 'kobject_get()',
-which will cause the racing thread to return -ENXIO if the initialising
-thread fails unexpectedly.
-
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Hillf Danton <hdanton@sina.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Reported-by: syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com
-Signed-off-by: Will Deacon <will@kernel.org>
----
- fs/char_dev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/char_dev.c b/fs/char_dev.c
-index 00dfe17871ac..c5e6eff5a381 100644
---- a/fs/char_dev.c
-+++ b/fs/char_dev.c
-@@ -352,7 +352,7 @@ static struct kobject *cdev_get(struct cdev *p)
- 
- 	if (owner && !try_module_get(owner))
- 		return NULL;
--	kobj = kobject_get(&p->kobj);
-+	kobj = kobject_get_unless_zero(&p->kobj);
- 	if (!kobj)
- 		module_put(owner);
- 	return kobj;
--- 
-2.24.1.735.g03f4e72817-goog
-
+Thanks
+Kishon
