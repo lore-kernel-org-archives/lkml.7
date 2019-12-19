@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6384FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DAFC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29D24206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF8B8222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781999;
-	bh=smHb2yJslfRp7JzvVGL6X+y/C/ALUdM8xW4zzojIxAU=;
+	s=default; t=1576782005;
+	bh=Tl+cwKs1KEpr9E/rqXzA/XAl3ITKMtV/OSVEF0P9scs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wq85dYwaEmj/FBW1AmdygFO2PCn016kbxgKBqIHPk/ohqF1Dngpl1RFCpsfCIQiRq
-	 cqTcTuQjRezDxlCWClwM0tuexXwaOodruc6VbSbVorE5Kg3UCFAb20dU3Gz07nUuXK
-	 LUrXrXubLe10DeioiK3prEpc3AMTTjMAA3fsoMWI=
+	b=G7dnqlFCXldzdmk/mIoRhg9oOgXIml4N0mbSJ20sX4IY8kh1MFWM23T7tOtRQ+AHs
+	 NfwKJLWfjHH4fA+//Wt3hk0I8rSAbmYLD/jNs0uk6QH9pyXCSHwN/tgdKyRo9XJhpO
+	 a+3ndpyVt6W3R3rn8ULsTBoXMuXhtmDx2gvMZS8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730396AbfLSS75 (ORCPT
+        id S1729722AbfLSSwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:59:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47374 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:52:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730279AbfLSSwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:52:42 -0500
+        id S1729482AbfLSSwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:52:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 304EA227BF;
-        Thu, 19 Dec 2019 18:52:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EAD9222C2;
+        Thu, 19 Dec 2019 18:52:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781561;
-        bh=smHb2yJslfRp7JzvVGL6X+y/C/ALUdM8xW4zzojIxAU=;
+        s=default; t=1576781549;
+        bh=Tl+cwKs1KEpr9E/rqXzA/XAl3ITKMtV/OSVEF0P9scs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SWL4DoTEyr4qu7mJL72S6ltkdAS0MhVBnfvOWRsmRAsrhbGe8gknDvLKg3GKaeZn3
-         XeaZT8R6yIQtlijTz9M5lNCG+xxjD9pg3SldZf1UtUduagZc8V7xZx46JcCFdX+Wqp
-         r+2dLBPAexIHJtVvd5qH2RDOpTJ/s0QMJ/cYrTpw=
+        b=WqC5esDJbrsLQbPIVsd6rKedIhFxZ/DMcI20nkRUWyOpkPCIn8zLIeba1aXCKyjpe
+         02/6v8Bilwww3l7X9adVvm/Dh0soJ7/AyTRWeOq1UM7ja4Syybwre2HDbRT+FFGvD5
+         q3l2z8Plhdjako7f1YB6kF37txr2PUJk74oCbf2o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mian Yousaf Kaukab <ykaukab@suse.de>,
-        Andrew Lunn <andrew@lunn.ch>,
+        stable@vger.kernel.org,
+        syzbot+2add91c08eb181fea1bf@syzkaller.appspotmail.com,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 07/47] net: thunderx: start phy before starting autonegotiation
-Date:   Thu, 19 Dec 2019 19:34:21 +0100
-Message-Id: <20191219182902.771900337@linuxfoundation.org>
+Subject: [PATCH 4.19 03/47] net: bridge: deny dev_set_mac_address() when unregistering
+Date:   Thu, 19 Dec 2019 19:34:17 +0100
+Message-Id: <20191219182859.778509456@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182857.659088743@linuxfoundation.org>
 References: <20191219182857.659088743@linuxfoundation.org>
@@ -60,39 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mian Yousaf Kaukab <ykaukab@suse.de>
+From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-[ Upstream commit a350d2e7adbb57181d33e3aa6f0565632747feaa ]
+[ Upstream commit c4b4c421857dc7b1cf0dccbd738472360ff2cd70 ]
 
-Since commit 2b3e88ea6528 ("net: phy: improve phy state checking")
-phy_start_aneg() expects phy state to be >= PHY_UP. Call phy_start()
-before calling phy_start_aneg() during probe so that autonegotiation
-is initiated.
+We have an interesting memory leak in the bridge when it is being
+unregistered and is a slave to a master device which would change the
+mac of its slaves on unregister (e.g. bond, team). This is a very
+unusual setup but we do end up leaking 1 fdb entry because
+dev_set_mac_address() would cause the bridge to insert the new mac address
+into its table after all fdbs are flushed, i.e. after dellink() on the
+bridge has finished and we call NETDEV_UNREGISTER the bond/team would
+release it and will call dev_set_mac_address() to restore its original
+address and that in turn will add an fdb in the bridge.
+One fix is to check for the bridge dev's reg_state in its
+ndo_set_mac_address callback and return an error if the bridge is not in
+NETREG_REGISTERED.
 
-As phy_start() takes care of calling phy_start_aneg(), drop the explicit
-call to phy_start_aneg().
+Easy steps to reproduce:
+ 1. add bond in mode != A/B
+ 2. add any slave to the bond
+ 3. add bridge dev as a slave to the bond
+ 4. destroy the bridge device
 
-Network fails without this patch on Octeon TX.
+Trace:
+ unreferenced object 0xffff888035c4d080 (size 128):
+   comm "ip", pid 4068, jiffies 4296209429 (age 1413.753s)
+   hex dump (first 32 bytes):
+     41 1d c9 36 80 88 ff ff 00 00 00 00 00 00 00 00  A..6............
+     d2 19 c9 5e 3f d7 00 00 00 00 00 00 00 00 00 00  ...^?...........
+   backtrace:
+     [<00000000ddb525dc>] kmem_cache_alloc+0x155/0x26f
+     [<00000000633ff1e0>] fdb_create+0x21/0x486 [bridge]
+     [<0000000092b17e9c>] fdb_insert+0x91/0xdc [bridge]
+     [<00000000f2a0f0ff>] br_fdb_change_mac_address+0xb3/0x175 [bridge]
+     [<000000001de02dbd>] br_stp_change_bridge_id+0xf/0xff [bridge]
+     [<00000000ac0e32b1>] br_set_mac_address+0x76/0x99 [bridge]
+     [<000000006846a77f>] dev_set_mac_address+0x63/0x9b
+     [<00000000d30738fc>] __bond_release_one+0x3f6/0x455 [bonding]
+     [<00000000fc7ec01d>] bond_netdev_event+0x2f2/0x400 [bonding]
+     [<00000000305d7795>] notifier_call_chain+0x38/0x56
+     [<0000000028885d4a>] call_netdevice_notifiers+0x1e/0x23
+     [<000000008279477b>] rollback_registered_many+0x353/0x6a4
+     [<0000000018ef753a>] unregister_netdevice_many+0x17/0x6f
+     [<00000000ba854b7a>] rtnl_delete_link+0x3c/0x43
+     [<00000000adf8618d>] rtnl_dellink+0x1dc/0x20a
+     [<000000009b6395fd>] rtnetlink_rcv_msg+0x23d/0x268
 
-Fixes: 2b3e88ea6528 ("net: phy: improve phy state checking")
-Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Fixes: 43598813386f ("bridge: add local MAC address to forwarding table (v2)")
+Reported-by: syzbot+2add91c08eb181fea1bf@syzkaller.appspotmail.com
+Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/cavium/thunder/thunder_bgx.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/bridge/br_device.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-+++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-@@ -1118,7 +1118,7 @@ static int bgx_lmac_enable(struct bgx *b
- 				       phy_interface_mode(lmac->lmac_type)))
- 			return -ENODEV;
+--- a/net/bridge/br_device.c
++++ b/net/bridge/br_device.c
+@@ -246,6 +246,12 @@ static int br_set_mac_address(struct net
+ 	if (!is_valid_ether_addr(addr->sa_data))
+ 		return -EADDRNOTAVAIL;
  
--		phy_start_aneg(lmac->phydev);
-+		phy_start(lmac->phydev);
- 		return 0;
- 	}
- 
++	/* dev_set_mac_addr() can be called by a master device on bridge's
++	 * NETDEV_UNREGISTER, but since it's being destroyed do nothing
++	 */
++	if (dev->reg_state != NETREG_REGISTERED)
++		return -EBUSY;
++
+ 	spin_lock_bh(&br->lock);
+ 	if (!ether_addr_equal(dev->dev_addr, addr->sa_data)) {
+ 		/* Mac address will be changed in br_stp_change_bridge_id(). */
 
 
