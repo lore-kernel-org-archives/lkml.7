@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A21DFC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60246C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77E1624679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2463A227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781732;
-	bh=jHk6kFfOtSMEBZVCkTM11i7PAbqCtZUHn4B97YaqBsw=;
+	s=default; t=1576781735;
+	bh=pzxbQw8yXBhI/4CS0KyYK1idrVsZN5R/unWIoJKQVRw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Au1IBGyMgY6bYkV2ZF2tqkekWE54UnBCFKhATpA9mQhmVLX8LjnwSXZSHNFTSIzVh
-	 v65dvaNxc/8WIa05AErhppxyWGDCQleqkfjEoqLUr28CcC85tAJhvGjMM5HoTeuqtE
-	 S04NO0dNo/Ty79PGUlbzbJkxH3km9iAJ+cpfe0uU=
+	b=WnoiwPoqmBIvLk3nThKY5Vg7IBH4J1clN1Gg4vVj0ovYThw5rk7O5Rg8sd+ypKqo8
+	 /sZSFDq8Utg7p/S36gCGg8JLqypDXuyX2lxfi9jlyD4XWHB7l8NWBcru9TncQUMYyv
+	 ngAcwy13k8rvcE9gZvkVJzsQfLJN+G5ocJHLVcT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730469AbfLSSzb (ORCPT
+        id S1730681AbfLSSze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:55:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51498 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:55:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730671AbfLSSz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:55:29 -0500
+        id S1730675AbfLSSzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:55:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13419222C2;
-        Thu, 19 Dec 2019 18:55:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CEE1227BF;
+        Thu, 19 Dec 2019 18:55:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781728;
-        bh=jHk6kFfOtSMEBZVCkTM11i7PAbqCtZUHn4B97YaqBsw=;
+        s=default; t=1576781731;
+        bh=pzxbQw8yXBhI/4CS0KyYK1idrVsZN5R/unWIoJKQVRw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gZ9s72sdwjJ4Jlwo8B15ElMX/SdNkFSso68N3fyNB/zvG000dUEi14VWf8kFFl5p6
-         VIo2Abl0YsnLr8697XT/wKjGtP/6z8DXm1Lmc29esqSfWh7Vxpfd0YV2gQWQl1xdZ7
-         IuYqnv9UP9INgQ8unNgLVMH8TRSdMVFVleFoqBpI=
+        b=vEgi7RbTQFUrHDfIQr2Ywmr9AexxvoamDXo+SLCOcqvc1585v93N3zJFFfovhYPJE
+         DXGuG/dLytKk32P9oK6ZG9GjaywVY3gVKBZI9w7HxJIAP8N33D8XgtVlvX99n+TbbK
+         AtjTgUhhWtc+vFkq/mHtoyrXzBBbx8NBFZkSKSg8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Nikos Tsironis <ntsironis@arrikto.com>,
         Joe Thornber <ejt@redhat.com>,
         Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.4 56/80] dm thin metadata: Add support for a pre-commit callback
-Date:   Thu, 19 Dec 2019 19:34:48 +0100
-Message-Id: <20191219183130.074267108@linuxfoundation.org>
+Subject: [PATCH 5.4 57/80] dm thin: Flush data device before committing metadata
+Date:   Thu, 19 Dec 2019 19:34:49 +0100
+Message-Id: <20191219183130.904727172@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -62,13 +62,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nikos Tsironis <ntsironis@arrikto.com>
 
-commit ecda7c0280e6b3398459dc589b9a41c1adb45529 upstream.
+commit 694cfe7f31db36912725e63a38a5179c8628a496 upstream.
 
-Add support for one pre-commit callback which is run right before the
-metadata are committed.
+The thin provisioning target maintains per thin device mappings that map
+virtual blocks to data blocks in the data device.
 
-This allows the thin provisioning target to run a callback before the
-metadata are committed and is required by the next commit.
+When we write to a shared block, in case of internal snapshots, or
+provision a new block, in case of external snapshots, we copy the shared
+block to a new data block (COW), update the mapping for the relevant
+virtual block and then issue the write to the new data block.
+
+Suppose the data device has a volatile write-back cache and the
+following sequence of events occur:
+
+1. We write to a shared block
+2. A new data block is allocated
+3. We copy the shared block to the new data block using kcopyd (COW)
+4. We insert the new mapping for the virtual block in the btree for that
+   thin device.
+5. The commit timeout expires and we commit the metadata, that now
+   includes the new mapping from step (4).
+6. The system crashes and the data device's cache has not been flushed,
+   meaning that the COWed data are lost.
+
+The next time we read that virtual block of the thin device we read it
+from the data block allocated in step (2), since the metadata have been
+successfully committed. The data are lost due to the crash, so we read
+garbage instead of the old, shared data.
+
+This has the following implications:
+
+1. In case of writes to shared blocks, with size smaller than the pool's
+   block size (which means we first copy the whole block and then issue
+   the smaller write), we corrupt data that the user never touched.
+
+2. In case of writes to shared blocks, with size equal to the device's
+   logical block size, we fail to provide atomic sector writes. When the
+   system recovers the user will read garbage from that sector instead
+   of the old data or the new data.
+
+3. Even for writes to shared blocks, with size equal to the pool's block
+   size (overwrites), after the system recovers, the written sectors
+   will contain garbage instead of a random mix of sectors containing
+   either old data or new data, thus we fail again to provide atomic
+   sectors writes.
+
+4. Even when the user flushes the thin device, because we first commit
+   the metadata and then pass down the flush, the same risk for
+   corruption exists (if the system crashes after the metadata have been
+   committed but before the flush is passed down to the data device.)
+
+The only case which is unaffected is that of writes with size equal to
+the pool's block size and with the FUA flag set. But, because FUA writes
+trigger metadata commits, this case can trigger the corruption
+indirectly.
+
+Moreover, apart from internal and external snapshots, the same issue
+exists for newly provisioned blocks, when block zeroing is enabled.
+After the system recovers the provisioned blocks might contain garbage
+instead of zeroes.
+
+To solve this and avoid the potential data corruption we flush the
+pool's data device **before** committing its metadata.
+
+This ensures that the data blocks of any newly inserted mappings are
+properly written to non-volatile storage and won't be lost in case of a
+crash.
 
 Cc: stable@vger.kernel.org
 Signed-off-by: Nikos Tsironis <ntsironis@arrikto.com>
@@ -77,84 +136,94 @@ Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-thin-metadata.c |   29 +++++++++++++++++++++++++++++
- drivers/md/dm-thin-metadata.h |    7 +++++++
- 2 files changed, 36 insertions(+)
+ drivers/md/dm-thin.c |   42 ++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 40 insertions(+), 2 deletions(-)
 
---- a/drivers/md/dm-thin-metadata.c
-+++ b/drivers/md/dm-thin-metadata.c
-@@ -189,6 +189,15 @@ struct dm_pool_metadata {
- 	sector_t data_block_size;
+--- a/drivers/md/dm-thin.c
++++ b/drivers/md/dm-thin.c
+@@ -328,6 +328,7 @@ struct pool_c {
+ 	dm_block_t low_water_blocks;
+ 	struct pool_features requested_pf; /* Features requested during table load */
+ 	struct pool_features adjusted_pf;  /* Features used after adjusting for constituent devices */
++	struct bio flush_bio;
+ };
  
- 	/*
-+	 * Pre-commit callback.
-+	 *
-+	 * This allows the thin provisioning target to run a callback before
-+	 * the metadata are committed.
-+	 */
-+	dm_pool_pre_commit_fn pre_commit_fn;
-+	void *pre_commit_context;
-+
-+	/*
- 	 * We reserve a section of the metadata for commit overhead.
- 	 * All reported space does *not* include this.
- 	 */
-@@ -826,6 +835,14 @@ static int __commit_transaction(struct d
- 	if (unlikely(!pmd->in_service))
- 		return 0;
+ /*
+@@ -2392,8 +2393,16 @@ static void process_deferred_bios(struct
+ 	while ((bio = bio_list_pop(&bio_completions)))
+ 		bio_endio(bio);
  
-+	if (pmd->pre_commit_fn) {
-+		r = pmd->pre_commit_fn(pmd->pre_commit_context);
-+		if (r < 0) {
-+			DMERR("pre-commit callback failed");
-+			return r;
-+		}
+-	while ((bio = bio_list_pop(&bios)))
+-		generic_make_request(bio);
++	while ((bio = bio_list_pop(&bios))) {
++		/*
++		 * The data device was flushed as part of metadata commit,
++		 * so complete redundant flushes immediately.
++		 */
++		if (bio->bi_opf & REQ_PREFLUSH)
++			bio_endio(bio);
++		else
++			generic_make_request(bio);
 +	}
-+
- 	r = __write_changed_details(pmd);
- 	if (r < 0)
- 		return r;
-@@ -892,6 +909,8 @@ struct dm_pool_metadata *dm_pool_metadat
- 	pmd->in_service = false;
- 	pmd->bdev = bdev;
- 	pmd->data_block_size = data_block_size;
-+	pmd->pre_commit_fn = NULL;
-+	pmd->pre_commit_context = NULL;
- 
- 	r = __create_persistent_data_objects(pmd, format_device);
- 	if (r) {
-@@ -2044,6 +2063,16 @@ int dm_pool_register_metadata_threshold(
- 	return r;
  }
  
-+void dm_pool_register_pre_commit_callback(struct dm_pool_metadata *pmd,
-+					  dm_pool_pre_commit_fn fn,
-+					  void *context)
+ static void do_worker(struct work_struct *ws)
+@@ -3127,6 +3136,7 @@ static void pool_dtr(struct dm_target *t
+ 	__pool_dec(pt->pool);
+ 	dm_put_device(ti, pt->metadata_dev);
+ 	dm_put_device(ti, pt->data_dev);
++	bio_uninit(&pt->flush_bio);
+ 	kfree(pt);
+ 
+ 	mutex_unlock(&dm_thin_pool_table.mutex);
+@@ -3192,6 +3202,29 @@ static void metadata_low_callback(void *
+ 	dm_table_event(pool->ti->table);
+ }
+ 
++/*
++ * We need to flush the data device **before** committing the metadata.
++ *
++ * This ensures that the data blocks of any newly inserted mappings are
++ * properly written to non-volatile storage and won't be lost in case of a
++ * crash.
++ *
++ * Failure to do so can result in data corruption in the case of internal or
++ * external snapshots and in the case of newly provisioned blocks, when block
++ * zeroing is enabled.
++ */
++static int metadata_pre_commit_callback(void *context)
 +{
-+	pmd_write_lock_in_core(pmd);
-+	pmd->pre_commit_fn = fn;
-+	pmd->pre_commit_context = context;
-+	pmd_write_unlock(pmd);
++	struct pool_c *pt = context;
++	struct bio *flush_bio = &pt->flush_bio;
++
++	bio_reset(flush_bio);
++	bio_set_dev(flush_bio, pt->data_dev->bdev);
++	flush_bio->bi_opf = REQ_OP_WRITE | REQ_PREFLUSH;
++
++	return submit_bio_wait(flush_bio);
 +}
 +
- int dm_pool_metadata_set_needs_check(struct dm_pool_metadata *pmd)
+ static sector_t get_dev_size(struct block_device *bdev)
  {
- 	int r = -EINVAL;
---- a/drivers/md/dm-thin-metadata.h
-+++ b/drivers/md/dm-thin-metadata.h
-@@ -230,6 +230,13 @@ bool dm_pool_metadata_needs_check(struct
-  */
- void dm_pool_issue_prefetches(struct dm_pool_metadata *pmd);
+ 	return i_size_read(bdev->bd_inode) >> SECTOR_SHIFT;
+@@ -3360,6 +3393,7 @@ static int pool_ctr(struct dm_target *ti
+ 	pt->data_dev = data_dev;
+ 	pt->low_water_blocks = low_water_blocks;
+ 	pt->adjusted_pf = pt->requested_pf = pf;
++	bio_init(&pt->flush_bio, NULL, 0);
+ 	ti->num_flush_bios = 1;
  
-+/* Pre-commit callback */
-+typedef int (*dm_pool_pre_commit_fn)(void *context);
-+
-+void dm_pool_register_pre_commit_callback(struct dm_pool_metadata *pmd,
-+					  dm_pool_pre_commit_fn fn,
-+					  void *context);
-+
- /*----------------------------------------------------------------*/
+ 	/*
+@@ -3386,6 +3420,10 @@ static int pool_ctr(struct dm_target *ti
+ 	if (r)
+ 		goto out_flags_changed;
  
- #endif
++	dm_pool_register_pre_commit_callback(pt->pool->pmd,
++					     metadata_pre_commit_callback,
++					     pt);
++
+ 	pt->callbacks.congested_fn = pool_is_congested;
+ 	dm_table_add_target_callbacks(ti->table, &pt->callbacks);
+ 
 
 
