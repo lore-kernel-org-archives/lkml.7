@@ -2,172 +2,94 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1905C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B53FC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE2102053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EEC524672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:12:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576775532;
+	bh=gtRIXUIO8/7p8WMoeBwntSQJkt2SzKky6CLRodXmKco=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1ClAIyO5Qbn5fz45YB7NmIun4auIryiKl9IKzk3R6xA7o9ZM1p9BzWHxE0h9fD0Hu
+	 e9PHvdec7G1K2bE+GaO9AEVo7AqUCVyi6MUMqZ9tFqFECokgUzy140o7Ib9hDrJ7ob
+	 RdUZECc2u5aO2P/cGXHUmdf8Y17BuCtm7LJUiTwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfLSRHI (ORCPT
+        id S1726918AbfLSRML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 12:07:08 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:49494 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbfLSRHH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 12:07:07 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 53F6726016E
-Received: by earth.universe (Postfix, from userid 1000)
-        id 27B883C0C7B; Thu, 19 Dec 2019 18:07:03 +0100 (CET)
-Date:   Thu, 19 Dec 2019 18:07:03 +0100
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Ma Feng <mafeng.ma@huawei.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] power: supply: ab8500: Remove unneeded semicolon
-Message-ID: <20191219170703.ek57v3o6z6ivsxaz@earth.universe>
-References: <1576719991-109247-1-git-send-email-mafeng.ma@huawei.com>
+        Thu, 19 Dec 2019 12:12:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33892 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726760AbfLSRMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 12:12:10 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8EB124672;
+        Thu, 19 Dec 2019 17:12:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576775530;
+        bh=gtRIXUIO8/7p8WMoeBwntSQJkt2SzKky6CLRodXmKco=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SZ/oxQq5nLw+CSDUMlkxklbz3JHLaEkUHdpKHH7Q4vgtrdToI/9uAHR1RfS8fsYuR
+         PNPoPTNKD3o3voZrF/JEkSlbdtVqIPltcCDCBgs0+U+G1c/VT60vBuB1+OD09VyQEx
+         PXkisJoXixfwO3vNrNxiWnHA0oFmAdLBjFIWAovc=
+Date:   Thu, 19 Dec 2019 18:11:41 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     Bharath Vedartham <linux.bhar@gmail.com>,
+        Vandana BN <bnvandana@gmail.com>, kjlu@umn.edu,
+        linux-kernel@vger.kernel.org,
+        Madhumitha Prabakaran <madhumithabiw@gmail.com>,
+        Harsh Jain <harshjain32@gmail.com>,
+        Simon =?iso-8859-1?Q?Sandstr=F6m?= <simon@nikanor.nu>,
+        devel@driverdev.osuosl.org
+Subject: Re: [PATCH v2] staging: kpc2000: remove unnecessary assertion on priv
+Message-ID: <20191219171141.GA2068060@kroah.com>
+References: <20191217225830.4018-1-pakki001@umn.edu>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="keot7hlxufh2vqqy"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1576719991-109247-1-git-send-email-mafeng.ma@huawei.com>
+In-Reply-To: <20191217225830.4018-1-pakki001@umn.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---keot7hlxufh2vqqy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Thu, Dec 19, 2019 at 09:46:29AM +0800, Ma Feng wrote:
-> Fixes coccicheck warning:
->=20
-> drivers/power/supply/ab8500_fg.c:2224:5-6: Unneeded semicolon
-> drivers/power/supply/ab8500_fg.c:2227:4-5: Unneeded semicolon
-> drivers/power/supply/ab8500_fg.c:2334:3-4: Unneeded semicolon
-> drivers/power/supply/ab8500_fg.c:2342:3-4: Unneeded semicolon
-> drivers/power/supply/ab8500_fg.c:2350:3-4: Unneeded semicolon
-> drivers/power/supply/ab8500_fg.c:2358:3-4: Unneeded semicolon
-> drivers/power/supply/ab8500_fg.c:2366:3-4: Unneeded semicolon
->=20
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Ma Feng <mafeng.ma@huawei.com>
+On Tue, Dec 17, 2019 at 04:58:24PM -0600, Aditya Pakki wrote:
+> In kpc_dma_transfer(), the assertion that priv is NULL is never
+> satisfied. The two callers of the function, dereference the priv
+> pointer before the call is executed. This patch removes the
+> unnecessary BUG_ON call.
+> 
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 > ---
+> v1: Replace the recovery code by removing the assertion, as suggested
+> by Greg Kroah-Hartman.
+> ---
+>  drivers/staging/kpc2000/kpc_dma/fileops.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/staging/kpc2000/kpc_dma/fileops.c b/drivers/staging/kpc2000/kpc_dma/fileops.c
+> index cb52bd9a6d2f..61d762535823 100644
+> --- a/drivers/staging/kpc2000/kpc_dma/fileops.c
+> +++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
+> @@ -49,7 +49,6 @@ static int kpc_dma_transfer(struct dev_private_data *priv,
+>  	u64 dma_addr;
+>  	u64 user_ctl;
+>  
+> -	BUG_ON(priv == NULL);
+>  	ldev = priv->ldev;
+>  	BUG_ON(ldev == NULL);
 
-Thanks, I queued all 3 patches to power-supply's for-next branch.
+ldev is also obviously never NULL so you can remove that at the same
+time.
 
--- Sebastian
+thanks,
 
->  drivers/power/supply/ab8500_fg.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
->=20
-> diff --git a/drivers/power/supply/ab8500_fg.c b/drivers/power/supply/ab85=
-00_fg.c
-> index c3912ee..b96f90a 100644
-> --- a/drivers/power/supply/ab8500_fg.c
-> +++ b/drivers/power/supply/ab8500_fg.c
-> @@ -2221,10 +2221,10 @@ static int ab8500_fg_get_ext_psy_data(struct devi=
-ce *dev, void *data)
->  						ab8500_fg_update_cap_scalers(di);
->  					queue_work(di->fg_wq, &di->fg_work);
->  					break;
-> -				};
-> +				}
->  			default:
->  				break;
-> -			};
-> +			}
->  			break;
->  		case POWER_SUPPLY_PROP_TECHNOLOGY:
->  			switch (ext->desc->type) {
-> @@ -2331,7 +2331,7 @@ static int ab8500_fg_init_hw_registers(struct ab850=
-0_fg *di)
->  		if (ret) {
->  			dev_err(di->dev, "%s write failed AB8505_RTC_PCUT_MAX_TIME_REG\n", __=
-func__);
->  			goto out;
-> -		};
-> +		}
-> =20
->  		ret =3D abx500_set_register_interruptible(di->dev, AB8500_RTC,
->  			AB8505_RTC_PCUT_FLAG_TIME_REG, di->bm->fg_params->pcut_flag_time);
-> @@ -2339,7 +2339,7 @@ static int ab8500_fg_init_hw_registers(struct ab850=
-0_fg *di)
->  		if (ret) {
->  			dev_err(di->dev, "%s write failed AB8505_RTC_PCUT_FLAG_TIME_REG\n", _=
-_func__);
->  			goto out;
-> -		};
-> +		}
-> =20
->  		ret =3D abx500_set_register_interruptible(di->dev, AB8500_RTC,
->  			AB8505_RTC_PCUT_RESTART_REG, di->bm->fg_params->pcut_max_restart);
-> @@ -2347,7 +2347,7 @@ static int ab8500_fg_init_hw_registers(struct ab850=
-0_fg *di)
->  		if (ret) {
->  			dev_err(di->dev, "%s write failed AB8505_RTC_PCUT_RESTART_REG\n", __f=
-unc__);
->  			goto out;
-> -		};
-> +		}
-> =20
->  		ret =3D abx500_set_register_interruptible(di->dev, AB8500_RTC,
->  			AB8505_RTC_PCUT_DEBOUNCE_REG, di->bm->fg_params->pcut_debounce_time);
-> @@ -2355,7 +2355,7 @@ static int ab8500_fg_init_hw_registers(struct ab850=
-0_fg *di)
->  		if (ret) {
->  			dev_err(di->dev, "%s write failed AB8505_RTC_PCUT_DEBOUNCE_REG\n", __=
-func__);
->  			goto out;
-> -		};
-> +		}
-> =20
->  		ret =3D abx500_set_register_interruptible(di->dev, AB8500_RTC,
->  			AB8505_RTC_PCUT_CTL_STATUS_REG, di->bm->fg_params->pcut_enable);
-> @@ -2363,7 +2363,7 @@ static int ab8500_fg_init_hw_registers(struct ab850=
-0_fg *di)
->  		if (ret) {
->  			dev_err(di->dev, "%s write failed AB8505_RTC_PCUT_CTL_STATUS_REG\n", =
-__func__);
->  			goto out;
-> -		};
-> +		}
->  	}
->  out:
->  	return ret;
-> --=20
-> 2.6.2
->=20
-
---keot7hlxufh2vqqy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl37rjYACgkQ2O7X88g7
-+pon0Q/9GwN9ypvJIfPFYDZeydD3Hx4mkQ6j2A4tLvUNfcU5rduPBdoDZqeYJAif
-DyzT4JPhPjlVuAHCDFf1V9Y+57C8OYdWTyaRKW6LPOCI5yB+zerpgp1NQNlIYmrS
-9A4s2W6X5SIZA32d3AfmV9imKb9CDvNUQzlMgFPoKKGILnX52bULTk33IsY+Ojey
-JjtIX7hNBwRS6w0IxnbHIKosDIr5L8GTUOZ3Ydnr6VuLrdbefiUqqQHu6UVYcDjA
-KInMKkQDmgP10XiEmyilJNwGTQBN2lbt/COS3FMRU578XJjDTAxDWvm06/w340Fn
-5JS2N67qBMlfyinPhl5aKEglLrFRPDvWBm3Nq70Bj/H8CXwI/5VXIU9D42Tm4cX8
-WYWtXvqslZWAWVKIa/MLhm4pWIEEMA/pPiWUC1poKXjm5EKNl0kJCUg+G73bAQco
-0+gXxg7fyKBdpHCvZMIOzx0DVkc72yfrGEh1EQts+fguJTuemhqx3SV2qgh+WRGp
-EMTNcwDK3dFQqXlCoZJF3Pf1quUj+IGzjStqxuW556gA+2mte9TgSHHqblQV6372
-o+AT5z/VDzRNFMXzLlzn/7pdzuiui2dlIwJxkMTOtr9aziHQpT/W+TZQ+hi6eews
-C4rkgn9bbsCcg4GXn6jg2kfi0qvrN7xE0A31XDcJs+6RqDc3pXo=
-=7CSx
------END PGP SIGNATURE-----
-
---keot7hlxufh2vqqy--
+greg k-h
