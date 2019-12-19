@@ -2,79 +2,109 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 716E1C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A90DAC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 441BD2146E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 787F324672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:02:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rxe+ElQQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbfLSRBw (ORCPT
+        id S1727006AbfLSRCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 12:01:52 -0500
-Received: from imap2.colo.codethink.co.uk ([78.40.148.184]:58014 "EHLO
-        imap2.colo.codethink.co.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726760AbfLSRBv (ORCPT
+        Thu, 19 Dec 2019 12:02:05 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39463 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbfLSRCE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 12:01:51 -0500
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
-        id 1ihzBK-0001qH-NY; Thu, 19 Dec 2019 17:01:46 +0000
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.3)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1ihzBK-001OuC-Eb; Thu, 19 Dec 2019 17:01:46 +0000
-From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-To:     linux-kernel@lists.codethink.co.uk
-Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mailbox: make cmd_dma a __le64 to reduce warnings
-Date:   Thu, 19 Dec 2019 17:01:45 +0000
-Message-Id: <20191219170145.334021-1-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.24.0
+        Thu, 19 Dec 2019 12:02:04 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b137so3432298pga.6;
+        Thu, 19 Dec 2019 09:02:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=QmZHBv3VTqpxW/+akPp/0Up5TSxjNx51R37o6VFJo/8=;
+        b=Rxe+ElQQdLHhw9LCWF1MT+SEbUVbP6UBVHaNYlY8Y655lU5jeO2JXQ4vuSKHpar2Bx
+         evQIWX3uKVu1nLpE4Jpk4DbtISWARtGqBhJBxoQdPqsuP2KxYFNEhRiR0qcKOs4mXRjM
+         YESOA+egwGyNcxg9KwICjh6RlwcuqTtPs32YF4w529lg8+J1FsqORTNH0Crom2oKc2nO
+         2yWTE8Q54pbpzcrogjN7XTiM7UecKzIWaZttpMXY2M0c32z6CYiYTol+CkQNjEIx9wc1
+         +aEOGC8noMRzk9kkCrgW6dSsIJ4GCYMGwVvQc01ronCGari5RXeHqUw7o9VTlRs1PWtA
+         sv5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=QmZHBv3VTqpxW/+akPp/0Up5TSxjNx51R37o6VFJo/8=;
+        b=BxVoafVSWrxDH7drp6eYwN8zaMRgibT/17YhuvDMQhOJgyafTYQdGHHnGEZzpV12av
+         asbU+orKXLIQGD4tZARBSZyG9QZ5tzURRdIcUtMblbHSwKnpqT2m/w2/MtnurVQUMEZx
+         6ocVkSXC/S6rYll152lI54grt6cHSD13HkS/Vz8e+nabxz3CidYksBjFWe9cO4iJfId4
+         OyYAkS/19wtSJTX4VvvxTZ4iHAK3l+sVo5CmDZ/IDfoxOY4vd0/EHXOdKiquxg529R1h
+         5Qs+RmzE+72+PNGD5U7J+zWdYHtiMglq+u3Sq3uJyOHmsSfbbmkxguMp8zpa0BXOhFO6
+         BuYg==
+X-Gm-Message-State: APjAAAVQUajvqh0xmQSrku59UJnwpBh2jAufO6Gr8XgV8JNrVUX5J1Nc
+        WHwbfm+R0OglDEQTPAdNORqtFeXy5VM=
+X-Google-Smtp-Source: APXvYqyebZwOJg1dT7jXsy0er9lcMqa/aeNpp2VMPO3d+LC5lWQ7Ugfd7hJLcic/CSI7Ym+uGIn6Vg==
+X-Received: by 2002:a63:e042:: with SMTP id n2mr10338201pgj.308.1576774923465;
+        Thu, 19 Dec 2019 09:02:03 -0800 (PST)
+Received: from ?IPv6:2804:14d:72b1:8920:a2ce:f815:f14d:bfac? ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
+        by smtp.gmail.com with ESMTPSA id v4sm9038094pgo.63.2019.12.19.09.02.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Dec 2019 09:02:03 -0800 (PST)
+Subject: Re: [PATCH v2] Documentation: filesystems: convert fuse to RST
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     miklos@szeredi.hu, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-fsdevel@vger.kernel.org
+References: <20191120192655.33709-1-dwlsalmeida@gmail.com>
+ <20191219095356.4a3ad965@lwn.net>
+From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+Message-ID: <2eba770a-f566-d704-35b3-7c00995bbc76@gmail.com>
+Date:   Thu, 19 Dec 2019 14:01:58 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191219095356.4a3ad965@lwn.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cmd_dma of the brcm_sba_command is often set from the
-result of cpu_to_le64, which means it should really be an
-__le64 type to avoid warnings such as:
+Hey Jonathan! I hope you're doing fine.
 
-drivers/dma/bcm-sba-raid.c:583:25: warning: incorrect type in assignment (different base types)
-drivers/dma/bcm-sba-raid.c:583:25:    expected unsigned long long [usertype]
-drivers/dma/bcm-sba-raid.c:583:25:    got restricted __le64 [usertype]
 
-Note, this header dos not seem to be covered by the maintainers
-file, so just sending to the normal lists.
+> So I have to confess that I've lost track of where we stand with this.
+> Holidays and moving house will do that...apologies.  In any case, I have a
+> couple of additional comments.
 
-Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
----
-Cc: bcm-kernel-feedback-list@broadcom.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- include/linux/mailbox/brcm-message.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/mailbox/brcm-message.h b/include/linux/mailbox/brcm-message.h
-index 18da82115476..db49dc360a6b 100644
---- a/include/linux/mailbox/brcm-message.h
-+++ b/include/linux/mailbox/brcm-message.h
-@@ -21,7 +21,7 @@ enum brcm_message_type {
- 
- struct brcm_sba_command {
- 	u64 cmd;
--	u64 *cmd_dma;
-+	__le64 *cmd_dma;
- 	dma_addr_t cmd_dma_addr;
- #define BRCM_SBA_CMD_TYPE_A		BIT(0)
- #define BRCM_SBA_CMD_TYPE_B		BIT(1)
--- 
-2.24.0
+Actually Miklos replied. While he did not comment on the amount of 
+markup used, he had this to add:
+
+> Hmm, most of this document is*not*  an admin-guide at all.  The only
+> sections that really belong in that category are "What is FUSE?" and
+> "Control filesystem" and maybe some of the definitions as well.   The
+> mount options for fuse filesystem are not generally usable for
+> actually performing a mount, most of those are actually internal
+> details of the filesystem implementation.
+>
+> So I suggest leaving this file under Documentation/filesystems/ for
+> now and later work towards splitting out the admin-guide parts into a
+> separate document.
+
+Please let me know what you think? I can do another pass to clean this 
+up and remove more markup, no problem!
+
+
+-Daniel.
 
