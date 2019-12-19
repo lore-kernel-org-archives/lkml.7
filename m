@@ -2,133 +2,114 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8B2C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8756DC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BEF520674
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 568ED20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:29:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JHUvIbK/"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="mpjePlJ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727369AbfLSU3A (ORCPT
+        id S1727404AbfLSU33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 15:29:00 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:54738 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726869AbfLSU3A (ORCPT
+        Thu, 19 Dec 2019 15:29:29 -0500
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:36256 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726869AbfLSU32 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 15:29:00 -0500
-Received: by mail-pj1-f68.google.com with SMTP id ep17so3051662pjb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 12:29:00 -0800 (PST)
+        Thu, 19 Dec 2019 15:29:28 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 47f3Q01hBQz9vZ2N
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 20:29:28 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id M47UayY1okcF for <linux-kernel@vger.kernel.org>;
+        Thu, 19 Dec 2019 14:29:28 -0600 (CST)
+Received: from mail-yw1-f69.google.com (mail-yw1-f69.google.com [209.85.161.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 47f3Q00g9gz9vZ1d
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 14:29:28 -0600 (CST)
+Received: by mail-yw1-f69.google.com with SMTP id r189so4914413ywf.13
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 12:29:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RqzxT6mrWsbaIeSRURSlPRTTrfPOgvLrfU674s46ZS4=;
-        b=JHUvIbK/+L4HVr3NgelPDooqz+SUR0A7IPxyuLymVu6hr5drzLNV8lA9w0pOYwLWNi
-         H0TTlxwQ8fSdNCnE0CbI5VMqnbdkqD+QVBjfgnV71R7VExGpxulJ5tw18480KLsAf0oi
-         mxKY9ZaIzCFJ6hU8RdsVgILrAnQj8302qcORSx0Hr38OJI8QPIrOBmDUHJjzV5hyngrG
-         8ShC0xWu9tNeB+8hRRhE9PSAHl+qAcfkD0pv551fkPfsVyF1LpH+WHY5FQcj5V/YUQGN
-         9ozIhLywGfbbQvcqvrB3KigXXm6gCGySm0gG9R+5FUVmKqndjWbdFe7jhSlA0hBtZQ2e
-         BimA==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0ku3WkybWuYyol2wbhhnHdNuHA1Lkwj9hheWjbC7/44=;
+        b=mpjePlJ9nPLL6pMoZa3NMUzvBxSAij80+5mlgV8hUi54WoJWZLHaB1FG/vLn1EdBgz
+         OTQFltozEQxjVG/v/d+TIY4qH29YAaXEY0GdZ2Q4m5H8GdzRVH9Nn8cpJbJQ0qogLXwe
+         fRlU+87eCFwqfnjW5fD0j+z3TEeAPkk4uj8j5XOKPhm+A4NS/OFNixKQ9/vIVigktPov
+         GqCbDQtgf/KX+CaXiwU/2SxPjeuyl6JKhlV7VAufsEeGYAlMDiMuUVUGGzrMgCuHPMFr
+         cvLxMHOQElgXGKMUieRTJXPAD8XZ1CXyKvIrNR7SHpIKHTB8LrehERXROw5KIOlGtLpz
+         dcSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RqzxT6mrWsbaIeSRURSlPRTTrfPOgvLrfU674s46ZS4=;
-        b=ZHP0QKBTCo5Q7bMS6hL0LD/McPmZ11C35ETWPueBro81MOpwVIP8IlLE+SVNlws19e
-         57PB/aEC8Te562P7OnxqCrvC/mr+xix7uJVTtcJxeylNsQyAcpVAuBSNCBCSnn5EGSZw
-         NNl509qH39kWcFodaYIamnXNSWyBF+rVSJhn5XbADjs4UYBqHa/9HNGtaOkIttC7vElQ
-         SXLt7dv4JmHhoCdcoKrh60+acIxHhJse/RrYippE9NxJwvH1OGJQuIRkf3e72Kyddfmc
-         lgzQDHfy9/gIfGCKvk3BsvdEzufrc2n3NQwTKn1wRcAASL1wRy8yqaD+OCmISncvR8TW
-         +Bng==
-X-Gm-Message-State: APjAAAUSfwdBM5O+xGDbcHmnky4e1Bvv1ktRQ010N6X9A8+aM44XOJRc
-        uRqxE+GJBPlvKBfxXk5ZHveOMWsR8ySQYwDokO7ZoA==
-X-Google-Smtp-Source: APXvYqytjFvCj74dY3WNhU9s/+3nsvJRtaXXSEdscBye1JkLzXuFS79r+12e5mLtSovK2cogylBvVhUzYP+1cr1TSiY=
-X-Received: by 2002:a17:902:9f91:: with SMTP id g17mr10768022plq.179.1576787339454;
- Thu, 19 Dec 2019 12:28:59 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0ku3WkybWuYyol2wbhhnHdNuHA1Lkwj9hheWjbC7/44=;
+        b=auZgii8Y++5dFW+SDBO+N1ejCibylyUij4fvZmv1N9jKQ0W35UyjER2SGxZhWWU22x
+         i9f1VxSIFqbL4ZpWxcCh5KYLR1SPbTBHf0V0u/pxGwl6vH5Rppxm2qyvz+NQlw2jEZMv
+         sEUB9aH7JlFbSWcFxZIEmo5wxjj4W1+7eSWfwFuVg5F4W+4dJ2xX92y3dZ+D3EQfJTEW
+         iJfbV9gzk5y2zLEwSbdT0DVDwf0IpoBokI/vzNrrVGLQz7riTyiXe6ia1+QsexhjbjNl
+         19KoV8bV+DYo8qj2jmjx7uMtwFW0xLQRMlES1q5df7X8aeyBJi+KZqS+LHHcVAZ9oeik
+         Om8g==
+X-Gm-Message-State: APjAAAVY81DmeNkjwrGKKwoexo+4N7NBfI2GaYmWCjg6iYSPK5BxsgMW
+        /hhJVZBoYb0FkaTdVOTCztlX4O1GcB7hZAXrVE0+Zfw1ImMeZxMl9F4u82badNN98C82cVFVQmb
+        IiId2KMjh6Rq7QkRK7bUP0f2VwCFV
+X-Received: by 2002:a81:3a0b:: with SMTP id h11mr7820043ywa.217.1576787367604;
+        Thu, 19 Dec 2019 12:29:27 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz/xa8tB8qV6esn82AbEH4SgpvqcB9j6GjxQw3qqRE8q4mJtWFsv0+QkciV590Lu76NnF8KkA==
+X-Received: by 2002:a81:3a0b:: with SMTP id h11mr7820030ywa.217.1576787367403;
+        Thu, 19 Dec 2019 12:29:27 -0800 (PST)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id w128sm2827126ywf.72.2019.12.19.12.29.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 12:29:27 -0800 (PST)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: media/saa7146: fix incorrect assertion in saa7146_buffer_finish
+Date:   Thu, 19 Dec 2019 14:29:24 -0600
+Message-Id: <20191219202924.24194-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191218032932.37479-1-natechancellor@gmail.com>
-In-Reply-To: <20191218032932.37479-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 19 Dec 2019 12:28:48 -0800
-Message-ID: <CAKwvOdnJddjhijk4pyHuEKAGKFXiG200rvJg+Mk7EPw3oKcYwA@mail.gmail.com>
-Subject: Re: [PATCH] ipc/msg.c: Adjust indentation in ksys_msgctl
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Lu Shuaibing <shuaibinglu@126.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 7:30 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> Clang warns:
->
-> ../ipc/msg.c:621:4: warning: misleading indentation; statement is not
-> part of the previous 'if' [-Wmisleading-indentation]
->                  return msgctl_down(ns, msqid, cmd, &msqid64.msg_perm,
-> msqid64.msg_qbytes);
->                  ^
-> ../ipc/msg.c:619:3: note: previous statement is here
->                 if (copy_msqid_from_user(&msqid64, buf, version))
->                 ^
-> 1 warning generated.
->
-> This warning occurs because there is a space after the tab on this line.
-> Remove it so that the indentation is consistent with the Linux kernel
-> coding style and clang no longer warns.
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/829
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+In saa7146_buffer_finish, the code for q->curr to be NULL is
+already present and asserting for NULL is unnecessary. This patch
+elimiates such a check.
 
-Thanks for the patch!
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+ drivers/media/common/saa7146/saa7146_fops.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-> ---
->
-> I assume this will be squashed into the offending patch since it is
-> still in -next:
->
-> https://git.kernel.org/next/linux-next/c/658622e448a6e6a6a69471daeff7e95e98d34ed1
->
->  ipc/msg.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/ipc/msg.c b/ipc/msg.c
-> index 22ed09ded601..caca67368cb5 100644
-> --- a/ipc/msg.c
-> +++ b/ipc/msg.c
-> @@ -618,7 +618,8 @@ static long ksys_msgctl(int msqid, int cmd, struct msqid_ds __user *buf, int ver
->         case IPC_SET:
->                 if (copy_msqid_from_user(&msqid64, buf, version))
->                         return -EFAULT;
-> -                return msgctl_down(ns, msqid, cmd, &msqid64.msg_perm, msqid64.msg_qbytes);
-> +               return msgctl_down(ns, msqid, cmd, &msqid64.msg_perm,
-> +                                  msqid64.msg_qbytes);
->         case IPC_RMID:
->                 return msgctl_down(ns, msqid, cmd, NULL, 0);
->         default:
-> --
-> 2.24.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20191218032932.37479-1-natechancellor%40gmail.com.
-
-
-
+diff --git a/drivers/media/common/saa7146/saa7146_fops.c b/drivers/media/common/saa7146/saa7146_fops.c
+index aabb830e7468..d7e83b55ddca 100644
+--- a/drivers/media/common/saa7146/saa7146_fops.c
++++ b/drivers/media/common/saa7146/saa7146_fops.c
+@@ -97,8 +97,6 @@ void saa7146_buffer_finish(struct saa7146_dev *dev,
+ 	DEB_EE("dev:%p, dmaq:%p, state:%d\n", dev, q, state);
+ 	DEB_EE("q->curr:%p\n", q->curr);
+ 
+-	BUG_ON(!q->curr);
+-
+ 	/* finish current buffer */
+ 	if (NULL == q->curr) {
+ 		DEB_D("aiii. no current buffer\n");
 -- 
-Thanks,
-~Nick Desaulniers
+2.20.1
+
