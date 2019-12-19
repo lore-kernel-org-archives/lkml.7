@@ -2,116 +2,124 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBFDC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 600E9C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E037724650
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:20:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35138218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:33:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sD+yWKkJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfLSAUV (ORCPT
+        id S1726744AbfLSAdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 19:20:21 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:38974 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbfLSAUV (ORCPT
+        Wed, 18 Dec 2019 19:33:00 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39845 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbfLSAdA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 19:20:21 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id E29C3291E6E
-Received: by earth.universe (Postfix, from userid 1000)
-        id E98603C0C7B; Thu, 19 Dec 2019 01:20:17 +0100 (CET)
-Date:   Thu, 19 Dec 2019 01:20:17 +0100
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH] power: supply: max77650: add of_match table
-Message-ID: <20191219002017.4f4j3u6tghhjgf32@earth.universe>
-References: <20191210100855.11252-1-brgl@bgdev.pl>
+        Wed, 18 Dec 2019 19:33:00 -0500
+Received: by mail-pf1-f194.google.com with SMTP id q10so2154673pfs.6;
+        Wed, 18 Dec 2019 16:32:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=p0q8QxoTzBEMo9IJAgQ5mnM7oqp1lTPhY1a2DTeSNu0=;
+        b=sD+yWKkJaSLMn9+NH4JWR4Z0jpYCBDVtGUkIH10gaoa7OL7HVyppH63hIoT2oQe6pJ
+         lIHzlt8Uf1qSKtfuyFCSE+pO8KK9a+g+niJedeIWeNOMyx+8NxpLrbLGzQJURTtZ3a+T
+         bH6kLI3J0wDK6BjzTP2mvy6Ia6SKtpNYZZEoUREttZ3yXKf1JleHpjQ/PMQZEiZp4/zX
+         rB6ugqXcbdfFyDE3810WjOcxmZ+iNF7niJXmrCilZGtWYc9+pkAqXvj0DsjwnPeOix93
+         v4RXWOG52PjLGIjYf9SiW0Z1/Ai2Bt/EST23feB8ihwNkeK7QbmceuuheRWsJNKvRFcM
+         LsSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=p0q8QxoTzBEMo9IJAgQ5mnM7oqp1lTPhY1a2DTeSNu0=;
+        b=N49HwNz4dIsCn8yVG1hteSc5hZal1geekdn7/mUyFDSlWe4+bg4Y1ovKgyScu+QkH0
+         A7rFaVU7B3yzcDWMvZI32d10o53ff7N5LBzGREHLnnpG1IhXACaMUNzVx2izoGILG/3W
+         eTu5OQudbgRrNllVVWNSfKPBLeSbdoDoFb32YLDHL8PtQq1GbLcAqbBGyxkIW4GfvDmC
+         fOhMMTZSQ00DxFkzNo1zO1PxgJZI/PGyfVR7WNWGuPrZriUyTekGZaumivdBo+t2TLt3
+         PGByk9bdUd2Esx4VRKe0xSaVtwdYVTdPT+XAJEe08GcBHhdAuquz9bujX2i/EDRJubk8
+         1Fmg==
+X-Gm-Message-State: APjAAAW2vEe2VRBhFmDz2GBE7OBEq7c/BNTIuRF2L6I2kOhVa+pzIupJ
+        8MNIS6zLGKUrzoPqvfpwFVaXICNn
+X-Google-Smtp-Source: APXvYqypzKHQBv3aT4OD6iC5R4Mscfj9bYi5rG9iGuw5KdGufEgvY8n/CeRjJtyduSIT1Ue24HnQDw==
+X-Received: by 2002:a63:4d5e:: with SMTP id n30mr6072905pgl.275.1576715579176;
+        Wed, 18 Dec 2019 16:32:59 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g10sm4524960pgh.35.2019.12.18.16.32.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 18 Dec 2019 16:32:58 -0800 (PST)
+Date:   Wed, 18 Dec 2019 16:32:57 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
+        Chris Healy <cphealy@gmail.com>
+Subject: Re: [PATCH v2] hwmon: Driver for temperature sensors on SATA drives
+Message-ID: <20191219003256.GA28144@roeck-us.net>
+References: <20191215174509.1847-1-linux@roeck-us.net>
+ <20191215174509.1847-2-linux@roeck-us.net>
+ <yq1r211dvck.fsf@oracle.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="h27er267woat7low"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191210100855.11252-1-brgl@bgdev.pl>
+In-Reply-To: <yq1r211dvck.fsf@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Dec 18, 2019 at 07:15:07PM -0500, Martin K. Petersen wrote:
+> 
+> Guenter,
+> 
+> > This driver solves this problem by adding support for reading the
+> > temperature of SATA drives from the kernel using the hwmon API and
+> > by adding a temperature zone for each drive.
+> 
+> My working tree is available here:
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/mkp/linux.git/log/?h=5.6/drivetemp
+> 
+> A few notes:
+> 
+>  - Before applying your patch I did s/satatemp/drivetemp/
+> 
+>  - I get a crash in the driver core during probe if the drivetemp module
+>    is loaded prior to loading ahci or a SCSI HBA driver. This crash is
+>    unrelated to my changes. Haven't had time to debug.
+> 
+>  - I tweaked your ATA detection heuristics and now use the cached VPD
+>    page 0x89 instead of fetching one from the device.
+> 
+>  - I also added support for reading the temperature log page on SCSI
+>    drives.
+> 
+>  - Tested with a mixed bag of about 40 SCSI and SATA drives attached.
+> 
+>  - I still think sensor naming needs work. How and where are the
+>    "drivetemp-scsi-8-140" names generated?
+> 
+Quick one: In libsensors, outside the kernel. The naming is generic,
+along the line of <driver name>-<bus name>-<bus index>-<slot>.
 
---h27er267woat7low
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> I'll tinker some more but thought I'd share what I have for now.
+> 
+Thanks for sharing. I'll be out on vacation until January 1. I'll look
+at the code after I am back.
 
-Hi,
+Guenter
 
-On Tue, Dec 10, 2019 at 11:08:55AM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->=20
-> We need the of_match table if we want to use the compatible string in
-> the pmic's child node and get the charger driver loaded automatically.
->=20
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
-
-Thanks, queued to power-supply's for-next branch.
-
--- Sebastian
-
->  drivers/power/supply/max77650-charger.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->=20
-> diff --git a/drivers/power/supply/max77650-charger.c b/drivers/power/supp=
-ly/max77650-charger.c
-> index 5f9477c5cf5a..d913428bedc0 100644
-> --- a/drivers/power/supply/max77650-charger.c
-> +++ b/drivers/power/supply/max77650-charger.c
-> @@ -354,9 +354,16 @@ static int max77650_charger_remove(struct platform_d=
-evice *pdev)
->  	return max77650_charger_disable(chg);
->  }
-> =20
-> +static const struct of_device_id max77650_charger_of_match[] =3D {
-> +	{ .compatible =3D "maxim,max77650-charger" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, max77650_charger_of_match);
-> +
->  static struct platform_driver max77650_charger_driver =3D {
->  	.driver =3D {
->  		.name =3D "max77650-charger",
-> +		.of_match_table =3D max77650_charger_of_match,
->  	},
->  	.probe =3D max77650_charger_probe,
->  	.remove =3D max77650_charger_remove,
-> --=20
-> 2.23.0
->=20
-
---h27er267woat7low
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl36wkEACgkQ2O7X88g7
-+po83g/9E//H8/CqygBtibD+Mu7D7rKESNwpdCcLJjRmLIAQUpKGTJNRv0T9xZmk
-/ow/02Lv4SwHDYetIfqT0rJtM64TC5kGfIcC089ixFkkOgvnHxsp+H5AOUwWfOGe
-ozE55OK0LjJUUzIDDUSo4i+AMclfwstTtWdkeliOkBXARI1DIJ3O5XVQybwEjPjN
-WwyvIxWjxgcehJD15ax+mzfq9hi0x3cK5GA8dWitXaYthJzaOC8VZdchvh1H65gT
-UDhwjJfSWDGYdgvCRcvmCB3XGYH0MRZvLXOOBVnb40CVE3FiEhwEycXSXZ1zZ+x3
-rg2P2fqAk9htmOtw0ihNIrqePfnnrQJM2CLb7LGZ3SCYEf9QN+V1Ip0OU7WvbAsg
-JMtvQ7o4XDyl0L8U8dnsbQA4JOhpdKpnKGFcEN3d1BD97rRMTWmxkqaH2rzX/wWA
-FG7uN7+n3eXDwI6XnTPA7Kt9mDBveI3ceh78zxSjwJx4S6mWrCRzpYXvIjS4zQLI
-2rnsk1qKIqqfT863meIOanuq8zGMwqAFwIyeC345am7Qe48n9sYuQIHIbpCK+E7x
-hsS5s8aeq05r7zWISiuBv4bhyDgRWBUsUMWwtOq9tEPD1IZm38iYGHE96itYy4X5
-leDacI19zC/yIGhYoAyp704YWnJxcdKVS+A+sgKnhVtccsYyvx0=
-=Koja
------END PGP SIGNATURE-----
-
---h27er267woat7low--
+> -- 
+> Martin K. Petersen	Oracle Linux Engineering
