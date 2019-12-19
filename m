@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6769C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E16E2C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72FFE206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD0DE2465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:02:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782119;
-	bh=KUMq2bnslT2h33XymdmU23jdbu9sjJMHQecNtRrgTU8=;
+	s=default; t=1576782128;
+	bh=7PEIWwLDWxkjIs0y/4eDDC+vqmuU+o1OG8Hke4RCuLE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XpmzugxV68O7oBdZ3wrC49AaG5EnthT8Cw9Up5zPRw8N2a9LBahZJ0NXHmP5kxdv/
-	 eFa7VQVaezivt9tjzXTrnHXmfBAzhld6WoeVOyFLpjLBEs67PxxVA9lyEKYQnUuw4/
-	 1piWDZXkgiy2KnDs22LQHywLtd4pJOa+ezEff22U=
+	b=B2WBlBWL2ewYGcOHUKkqwzkMaA+QEHpZFUwyHlbRNiz4aeQyJEEPecRDTQTvOimEb
+	 yu6fFDznM1D8rVIHXzTnU4otfFdgdfIhQG5TS3T4IL+BrCbIxNLEsPD/HEbozitCRB
+	 RR3TiQ/pUl93iKlgPZ1wgXpDZ8SCVNJA9dqxmLd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729364AbfLSSuM (ORCPT
+        id S1729894AbfLSSt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:50:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43908 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:49:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729601AbfLSSuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:50:08 -0500
+        id S1729876AbfLSStx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:49:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE28A24689;
-        Thu, 19 Dec 2019 18:50:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6E1B2465E;
+        Thu, 19 Dec 2019 18:49:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781408;
-        bh=KUMq2bnslT2h33XymdmU23jdbu9sjJMHQecNtRrgTU8=;
+        s=default; t=1576781393;
+        bh=7PEIWwLDWxkjIs0y/4eDDC+vqmuU+o1OG8Hke4RCuLE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zf4lXDaHJZlBpYmcuQVBbx0yjkzzliWe9hgkwwL2FA8DYMbzave8iIdRJRtSsqj9a
-         3kt/0hOSw+V1irXGr7xAJpop7fpq3eAwRn9AM1gg5P1oHUxKjHuA4qONhOmUJDxuV6
-         zUV6I0bMGB2auYSBwvZxbr8anpKIumAqbfgunHfk=
+        b=wkh3407j19aOzSh8Yd2CsLuQZUPmUWigczE0Ck57zeQS7/+MTwZNUH44YgOesG8c3
+         oyCsmb89PlzEyqd8hPe0Eqxt1KQOhoTkvB27SDugelRxaextJmBMi+wHM6OxDd906h
+         PKekalv/Vy1/qgKSs8Cl3sVGaqm8hJ+oH0FlOTo0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 10/36] tcp: Protect accesses to .ts_recent_stamp with {READ,WRITE}_ONCE()
-Date:   Thu, 19 Dec 2019 19:34:27 +0100
-Message-Id: <20191219182856.768968365@linuxfoundation.org>
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Subject: [PATCH 4.9 170/199] blk-mq: make sure that line break can be printed
+Date:   Thu, 19 Dec 2019 19:34:12 +0100
+Message-Id: <20191219183224.907012895@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191219182848.708141124@linuxfoundation.org>
-References: <20191219182848.708141124@linuxfoundation.org>
+In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
+References: <20191219183214.629503389@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,50 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guillaume Nault <gnault@redhat.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit 721c8dafad26ccfa90ff659ee19755e3377b829d ]
+commit d2c9be89f8ebe7ebcc97676ac40f8dec1cf9b43a upstream.
 
-Syncookies borrow the ->rx_opt.ts_recent_stamp field to store the
-timestamp of the last synflood. Protect them with READ_ONCE() and
-WRITE_ONCE() since reads and writes aren't serialised.
+8962842ca5ab ("blk-mq: avoid sysfs buffer overflow with too many CPU cores")
+avoids sysfs buffer overflow, and reserves one character for line break.
+However, the last snprintf() doesn't get correct 'size' parameter passed
+in, so fixed it.
 
-Use of .rx_opt.ts_recent_stamp for storing the synflood timestamp was
-introduced by a0f82f64e269 ("syncookies: remove last_synq_overflow from
-struct tcp_sock"). But unprotected accesses were already there when
-timestamp was stored in .last_synq_overflow.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Guillaume Nault <gnault@redhat.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 8962842ca5ab ("blk-mq: avoid sysfs buffer overflow with too many CPU cores")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/net/tcp.h |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -500,17 +500,17 @@ struct sock *cookie_v4_check(struct sock
-  */
- static inline void tcp_synq_overflow(const struct sock *sk)
- {
--	unsigned long last_overflow = tcp_sk(sk)->rx_opt.ts_recent_stamp;
-+	unsigned long last_overflow = READ_ONCE(tcp_sk(sk)->rx_opt.ts_recent_stamp);
- 	unsigned long now = jiffies;
+---
+ block/blk-mq-sysfs.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/block/blk-mq-sysfs.c
++++ b/block/blk-mq-sysfs.c
+@@ -260,7 +260,7 @@ static ssize_t blk_mq_hw_sysfs_cpus_show
+ 		pos += ret;
+ 	}
  
- 	if (!time_between32(now, last_overflow, last_overflow + HZ))
--		tcp_sk(sk)->rx_opt.ts_recent_stamp = now;
-+		WRITE_ONCE(tcp_sk(sk)->rx_opt.ts_recent_stamp, now);
+-	ret = snprintf(pos + page, size - pos, "\n");
++	ret = snprintf(pos + page, size + 1 - pos, "\n");
+ 	return pos + ret;
  }
  
- /* syncookies: no recent synqueue overflow on this listening socket? */
- static inline bool tcp_synq_no_recent_overflow(const struct sock *sk)
- {
--	unsigned long last_overflow = tcp_sk(sk)->rx_opt.ts_recent_stamp;
-+	unsigned long last_overflow = READ_ONCE(tcp_sk(sk)->rx_opt.ts_recent_stamp);
- 
- 	/* If last_overflow <= jiffies <= last_overflow + TCP_SYNCOOKIE_VALID,
- 	 * then we're under synflood. However, we have to use
 
 
