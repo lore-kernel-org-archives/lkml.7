@@ -2,114 +2,76 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D58C7C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C74C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A533D222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:02:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782147;
-	bh=RkCqlMxkWpQHQAgkiX7rCYVVXYAeeMu3h4lelkadcqI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sFYxRkMAB0eHT9TBhfPKUt0vpBWKHnQWk+XBS8+wfXe7QzKxZbfGcttrUmMmKUWp7
-	 SvuON9thIM7h9RsgU8fi+YTAyFPZN9qTVpGZVhdHmHbDWWjyRQP/g8+KToFMC1HfxA
-	 wBd6hB4oggvjAb6SMODfmPoNNQiL0usXNogjOPM8=
+	by mail.kernel.org (Postfix) with ESMTP id 088E8222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:02:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CzwiUU2Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729794AbfLSSta (ORCPT
+        id S1729010AbfLSTCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:49:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42862 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729786AbfLSSt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:49:27 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 253832465E;
-        Thu, 19 Dec 2019 18:49:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781366;
-        bh=RkCqlMxkWpQHQAgkiX7rCYVVXYAeeMu3h4lelkadcqI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kj4tDzZ7L5ZEMBpRezyT90lsdQbUoaffDTxwZAt90FHFsVAFvyamTQGcT3oIm3xAT
-         EAkUTC/fsllvnzWtDVJrWTT5TXBlqloXzW3K4gV6O+K1ZkdtRGAv1eYB7tyD6yqwAF
-         7K7ErHty3ZfH+20prMyVOLVVUo0NWw/rkngD4mII=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiang Yi <giangyi@amazon.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Subject: [PATCH 4.9 192/199] vfio/pci: call irq_bypass_unregister_producer() before freeing irq
-Date:   Thu, 19 Dec 2019 19:34:34 +0100
-Message-Id: <20191219183226.382696816@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
-References: <20191219183214.629503389@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 19 Dec 2019 14:02:30 -0500
+Received: from mail-qk1-f202.google.com ([209.85.222.202]:43012 "EHLO
+        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729793AbfLSSt3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:49:29 -0500
+Received: by mail-qk1-f202.google.com with SMTP id f22so1196549qka.10
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 10:49:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=QvAStn8TBlGPLBczTd25Iv1mJFk80FYATk+vMJdp0y4=;
+        b=CzwiUU2ZMCKcLRSu8XQzid0mJM78vsAjP8tuqj0HQuCCmaASulyFwyNDJlWGoosroj
+         1fO4Wsaycbb3TicTzXWqFtSTqPoPoQOm26MamsOm4rg+esbFEOwyWlE6IV14U8O5Wg10
+         PQyGxDvrxQ1EbcJD21HPrL6wSCYqbpnFGOIv0SBuo2QZgvuD4KpgNKTdgUZ3SnQ8Wd8r
+         /gRd8R7oRg1ZmgfxBWtzuhIJJmWzYKEha1r6aJeZho6rnSfDBRoDGH/WzXFSalQ0XCho
+         mHFn2l3155HhsgpwCqyyxeSM852qC9D3IOYqQO9YE8ob5K78vAlpDct/eM67LDYDBjRu
+         pjCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=QvAStn8TBlGPLBczTd25Iv1mJFk80FYATk+vMJdp0y4=;
+        b=Zb2bytNiC1WY4w8HHLQQQu60gpfxWaNVww9/vXrXdDOGok0U+ShwQePZo+HZJs8Vif
+         utP64Mcl6ygCpMA3mXGW9IgriknPOWTDCUJ5p8chelV7PhS+K4kLkGK/kG0xQ7nEfbyu
+         uCr4tMlSLnFVohDJgQaN2IYa8wa3BdDd04wCiN+RHOj/tq0N9QF+1NFGaKY85FS9jdXy
+         +rD5Bcl70n2W80FQY/gCbNnLa2xMqLnV7NGv5WwLTDeksjJ2GSU42N+/28HiaK8XKJVQ
+         sEUE5ZpPNMhgxcOQDDxKX3U1RlZ7meA9cIMygWwEHxfqLW/Ax1AU8c2f3KxzCk16uVyd
+         oIQA==
+X-Gm-Message-State: APjAAAVmecLkhqyNVuXPgRS14uQLNvzJ/0U/WUQmiY6Tb7eY8on0vXHl
+        hQ52i5r/DfVXvKHd2KNPkn6TbnzFU4+x+Nr2Zz8=
+X-Google-Smtp-Source: APXvYqxBHQnZ8CGo+nTRD2vQCKeO9gRgt8lGBRpC+p78kO93i8LDJrJzcWT7w8MJOaC0ABK7FXngW9PNnyvbNdWs5Do=
+X-Received: by 2002:ae9:e304:: with SMTP id v4mr9534945qkf.399.1576781368073;
+ Thu, 19 Dec 2019 10:49:28 -0800 (PST)
+Date:   Thu, 19 Dec 2019 10:49:24 -0800
+In-Reply-To: <20190808123942.19592-1-dsterba@suse.com>
+Message-Id: <20191219184924.105306-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+References: <20190808123942.19592-1-dsterba@suse.com>
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+Subject: Re: [PATCH RESEND] fs: use UB-safe check for signed addition overflow
+ in remap_verify_area
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     dsterba@suse.com
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        viro@zeniv.linux.org.uk, natechancellor@gmail.com,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiang Yi <giangyi@amazon.com>
-
-commit d567fb8819162099035e546b11a736e29c2af0ea upstream.
-
-Since irq_bypass_register_producer() is called after request_irq(), we
-should do tear-down in reverse order: irq_bypass_unregister_producer()
-then free_irq().
-
-Specifically free_irq() may release resources required by the
-irqbypass del_producer() callback.  Notably an example provided by
-Marc Zyngier on arm64 with GICv4 that he indicates has the potential
-to wedge the hardware:
-
- free_irq(irq)
-   __free_irq(irq)
-     irq_domain_deactivate_irq(irq)
-       its_irq_domain_deactivate()
-         [unmap the VLPI from the ITS]
-
- kvm_arch_irq_bypass_del_producer(cons, prod)
-   kvm_vgic_v4_unset_forwarding(kvm, irq, ...)
-     its_unmap_vlpi(irq)
-       [Unmap the VLPI from the ITS (again), remap the original LPI]
-
-Signed-off-by: Jiang Yi <giangyi@amazon.com>
-Cc: stable@vger.kernel.org # v4.4+
-Fixes: 6d7425f109d26 ("vfio: Register/unregister irq_bypass_producer")
-Link: https://lore.kernel.org/kvm/20191127164910.15888-1-giangyi@amazon.com
-Reviewed-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-[aw: commit log]
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/vfio/pci/vfio_pci_intrs.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/vfio/pci/vfio_pci_intrs.c
-+++ b/drivers/vfio/pci/vfio_pci_intrs.c
-@@ -297,8 +297,8 @@ static int vfio_msi_set_vector_signal(st
- 	irq = pci_irq_vector(pdev, vector);
- 
- 	if (vdev->ctx[vector].trigger) {
--		free_irq(irq, vdev->ctx[vector].trigger);
- 		irq_bypass_unregister_producer(&vdev->ctx[vector].producer);
-+		free_irq(irq, vdev->ctx[vector].trigger);
- 		kfree(vdev->ctx[vector].name);
- 		eventfd_ctx_put(vdev->ctx[vector].trigger);
- 		vdev->ctx[vector].trigger = NULL;
-
-
+Yeah, looks like this kills two birds with one stone; both observed signed
+integer overflow and -Wmisleading-indentation.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
