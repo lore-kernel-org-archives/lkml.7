@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E5DC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C4FC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 883D224672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F36424672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780687;
-	bh=ioL19NGVy6hMx0RYu8e7DqjhRj5BQCCUBbouw/SxLH4=;
+	s=default; t=1576780690;
+	bh=o0097HBGczPpjO6uj/IUnUpcuRfOFsYqRgOdD/t3OHA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Us19jNKSsZhJFO40s7jyRxMHLfVvGMJz6sLFrAtFkZi8uF+z2NeDm1O+ZdcB2GUFp
-	 wuAbNasLbHEHA0U4KL3J/zToA5GEoaO4io/TURmGzYQf4zMZqbU98sjEjTPpKV4055
-	 Y+U7kX8bz49ihifD0/vMlA7BHZ2bXL5uJaOyM838=
+	b=Qwkms13KDCjSnGPG1fH0+WlYgOt/X8Sz1hEZGbIfcUbIwGjdTM9AxzBzW5G5GAiyD
+	 wmMzClyI6TSk2eDZcShJPMGlJ9Ttm2EFiPYxP+2oFe2tmSBY5jqmFBh8Ov3JPnCJZN
+	 B9//Pq9HvcLBmlFxNOY6fHvgrH3GyovR6ZVi8+lE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbfLSSiG (ORCPT
+        id S1727975AbfLSSiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:38:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55936 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:38:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727951AbfLSSiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:38:04 -0500
+        id S1727960AbfLSSiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:38:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 126EA20716;
-        Thu, 19 Dec 2019 18:38:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7566E222C2;
+        Thu, 19 Dec 2019 18:38:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780683;
-        bh=ioL19NGVy6hMx0RYu8e7DqjhRj5BQCCUBbouw/SxLH4=;
+        s=default; t=1576780685;
+        bh=o0097HBGczPpjO6uj/IUnUpcuRfOFsYqRgOdD/t3OHA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yw3w1I19TYiEI7IL6Ufc5yOSLOY2H1QbjzmfrotqxRQcg+SLeOE/nqMUHs9MEkzk5
-         UR5MooiwXrbC7wOIPQW0x2PRUAk/FIaR2o/UBXfqyCRjml5oeDhq75N5VjNObPZylI
-         WlfDmeYoFutm26v4ZFA/61RrBjHGT8cR72BPS2B4=
+        b=V/XTH/JsTsEgxiW+No+Mn07oe3QOI0Uc3uXQDCr0NE3WYbzW6nC+soglkErkClnui
+         5OUDRLieB2pq5WucA/JppJ7cwzSxl/zh0eWdX5xHLx+6FDI/VjgwfCXnCGzntv6E2A
+         vMfuY/Ao13BDHgspd3mGT0zX05yCW0fs6rTNntX0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Wolfram Sang <wsa@the-dreams.de>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        David Teigland <teigland@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 036/162] i2c: imx: dont print error message on probe defer
-Date:   Thu, 19 Dec 2019 19:32:24 +0100
-Message-Id: <20191219183210.026925099@linuxfoundation.org>
+Subject: [PATCH 4.4 037/162] dlm: NULL check before kmem_cache_destroy is not needed
+Date:   Thu, 19 Dec 2019 19:32:25 +0100
+Message-Id: <20191219183210.080196584@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -61,35 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit fece4978510e43f09c8cd386fee15210e8c68493 ]
+[ Upstream commit f31a89692830061bceba8469607e4e4b0f900159 ]
 
-Probe deferral is a normal operating condition in the probe function,
-so don't spam the log with an error in this case.
+kmem_cache_destroy(NULL) is safe, so removes NULL check before
+freeing the mem. This patch also fix ifnullfree.cocci warnings.
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Signed-off-by: David Teigland <teigland@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-imx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/dlm/memory.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
-index cf1b57a054d09..d121c5732d7db 100644
---- a/drivers/i2c/busses/i2c-imx.c
-+++ b/drivers/i2c/busses/i2c-imx.c
-@@ -1076,7 +1076,8 @@ static int i2c_imx_probe(struct platform_device *pdev)
- 	/* Get I2C clock */
- 	i2c_imx->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(i2c_imx->clk)) {
--		dev_err(&pdev->dev, "can't get I2C clock\n");
-+		if (PTR_ERR(i2c_imx->clk) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "can't get I2C clock\n");
- 		return PTR_ERR(i2c_imx->clk);
- 	}
+diff --git a/fs/dlm/memory.c b/fs/dlm/memory.c
+index 7cd24bccd4fe5..37be29f21d04d 100644
+--- a/fs/dlm/memory.c
++++ b/fs/dlm/memory.c
+@@ -38,10 +38,8 @@ int __init dlm_memory_init(void)
  
+ void dlm_memory_exit(void)
+ {
+-	if (lkb_cache)
+-		kmem_cache_destroy(lkb_cache);
+-	if (rsb_cache)
+-		kmem_cache_destroy(rsb_cache);
++	kmem_cache_destroy(lkb_cache);
++	kmem_cache_destroy(rsb_cache);
+ }
+ 
+ char *dlm_allocate_lvb(struct dlm_ls *ls)
+@@ -86,8 +84,7 @@ void dlm_free_lkb(struct dlm_lkb *lkb)
+ 		struct dlm_user_args *ua;
+ 		ua = lkb->lkb_ua;
+ 		if (ua) {
+-			if (ua->lksb.sb_lvbptr)
+-				kfree(ua->lksb.sb_lvbptr);
++			kfree(ua->lksb.sb_lvbptr);
+ 			kfree(ua);
+ 		}
+ 	}
 -- 
 2.20.1
 
