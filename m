@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9A5C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37277C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FF9C24676
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08E94227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:56:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781771;
-	bh=F/DzLy0Md+yRJaxTa2YpI3P8cDeNkEsaZq3s1CPzwF0=;
+	s=default; t=1576781774;
+	bh=/+jet7Gbsw9Dd08gHvUBpEqgl3/xuwlJcZxKhbSxFwQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ALCxI8ZbXuexgSuJU0BiGnYiVegu3b0I/Maf+vlGeUXYgQWqxjRrSNfTpls/sVQen
-	 DGvkVKyfqB9lVx24Hqx9X8qmViLeqOBVvNInlH6/nsmAkaQvJiJ1IjmVSCTj1zBiiq
-	 6UpUiXa2hd5/VlEe4sF0zO3a0kroDKqTe9iaEXA8=
+	b=xGTAxdrEUnE/4UoicVRhQGUE05K25WKAYDV3KcgvsVLr5XdgrHkWsM6NtWLH9O9HD
+	 vnTGUGWPI42FHkw7hwEZBWQRl58edGMDqrvNlSszIoAF8qxniYj0cdcuiOpSjwQhWx
+	 NwSl2o4nU0ixI8sfT/6iNBidC/eP3bhBW9dyICow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730777AbfLSS4K (ORCPT
+        id S1730431AbfLSS4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:56:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52474 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:56:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730762AbfLSS4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:56:05 -0500
+        id S1730770AbfLSS4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:56:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01953206EC;
-        Thu, 19 Dec 2019 18:56:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51FA024676;
+        Thu, 19 Dec 2019 18:56:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781764;
-        bh=F/DzLy0Md+yRJaxTa2YpI3P8cDeNkEsaZq3s1CPzwF0=;
+        s=default; t=1576781766;
+        bh=/+jet7Gbsw9Dd08gHvUBpEqgl3/xuwlJcZxKhbSxFwQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NWcuu++tBXl/frUdaGjzy3Vo3q4rgQLKiikeS8DZhQJc30lsb0jj6KIn74EgJADfj
-         S5pHswLRajGhBNkn4NqynkzdvbtM009hl/DybAu5A/0aKwDm4vLB1hzO/Ah91qXj6z
-         //nubFvBHJmL9rZk5LD1v+O+5ChIB62FivgC99cE=
+        b=0Hsx16eQz3gM/M0s2hY/qEb9Dliatr04b44SJeZ98IGI8kZc55ez3/Tw/5g7bKxd9
+         NLcUmbhMuudpUhwZ84RYOZ7hXiHBFXw3NO26aWHbUSrt4olrp4PldS0DRO+TSpjKTT
+         scXKcxRyJFcvuXdpRfSZPBFgjhcC89qcq8bZXQEw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Meelis Roos <mroos@linux.ee>,
-        =?UTF-8?q?Michel=20D=C3=A4nzer?= <mdaenzer@redhat.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.4 70/80] drm/radeon: fix r1xx/r2xx register checker for POT textures
-Date:   Thu, 19 Dec 2019 19:35:02 +0100
-Message-Id: <20191219183141.627747989@linuxfoundation.org>
+        stable@vger.kernel.org, Wayne Lin <Wayne.Lin@amd.com>,
+        Lyude Paul <lyude@redhat.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Juston Li <juston.li@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH 5.4 71/80] drm/dp_mst: Correct the bug in drm_dp_update_payload_part1()
+Date:   Thu, 19 Dec 2019 19:35:03 +0100
+Message-Id: <20191219183142.235583184@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -60,48 +66,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Wayne Lin <Wayne.Lin@amd.com>
 
-commit 008037d4d972c9c47b273e40e52ae34f9d9e33e7 upstream.
+commit e5a6ca27eb72c67533ddfc11c06df84beaa167fa upstream.
 
-Shift and mask were reversed.  Noticed by chance.
+[Why]
+If the payload_state is DP_PAYLOAD_DELETE_LOCAL in series, current
+code doesn't delete the payload at current index and just move the
+index to next one after shuffling payloads.
 
-Tested-by: Meelis Roos <mroos@linux.ee>
-Reviewed-by: Michel Dänzer <mdaenzer@redhat.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+[How]
+Drop the i++ increasing part in for loop head and decide whether
+to increase the index or not according to payload_state of current
+payload.
+
+Changes since v1:
+* Refine the code to have it easy reading
+* Amend the commit message to meet the way code is modified now.
+
+Signed-off-by: Wayne Lin <Wayne.Lin@amd.com>
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Fixes: 706246c761dd ("drm/dp_mst: Refactor drm_dp_update_payload_part1()")
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Juston Li <juston.li@intel.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Sean Paul <sean@poorly.run>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org
+Cc: <stable@vger.kernel.org> # v5.1+
+[Added cc for stable]
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191203042423.5961-1-Wayne.Lin@amd.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/radeon/r100.c |    4 ++--
- drivers/gpu/drm/radeon/r200.c |    4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/radeon/r100.c
-+++ b/drivers/gpu/drm/radeon/r100.c
-@@ -1826,8 +1826,8 @@ static int r100_packet0_check(struct rad
- 			track->textures[i].use_pitch = 1;
- 		} else {
- 			track->textures[i].use_pitch = 0;
--			track->textures[i].width = 1 << ((idx_value >> RADEON_TXFORMAT_WIDTH_SHIFT) & RADEON_TXFORMAT_WIDTH_MASK);
--			track->textures[i].height = 1 << ((idx_value >> RADEON_TXFORMAT_HEIGHT_SHIFT) & RADEON_TXFORMAT_HEIGHT_MASK);
-+			track->textures[i].width = 1 << ((idx_value & RADEON_TXFORMAT_WIDTH_MASK) >> RADEON_TXFORMAT_WIDTH_SHIFT);
-+			track->textures[i].height = 1 << ((idx_value & RADEON_TXFORMAT_HEIGHT_MASK) >> RADEON_TXFORMAT_HEIGHT_SHIFT);
- 		}
- 		if (idx_value & RADEON_TXFORMAT_CUBIC_MAP_ENABLE)
- 			track->textures[i].tex_coord_type = 2;
---- a/drivers/gpu/drm/radeon/r200.c
-+++ b/drivers/gpu/drm/radeon/r200.c
-@@ -476,8 +476,8 @@ int r200_packet0_check(struct radeon_cs_
- 			track->textures[i].use_pitch = 1;
- 		} else {
- 			track->textures[i].use_pitch = 0;
--			track->textures[i].width = 1 << ((idx_value >> RADEON_TXFORMAT_WIDTH_SHIFT) & RADEON_TXFORMAT_WIDTH_MASK);
--			track->textures[i].height = 1 << ((idx_value >> RADEON_TXFORMAT_HEIGHT_SHIFT) & RADEON_TXFORMAT_HEIGHT_MASK);
-+			track->textures[i].width = 1 << ((idx_value & RADEON_TXFORMAT_WIDTH_MASK) >> RADEON_TXFORMAT_WIDTH_SHIFT);
-+			track->textures[i].height = 1 << ((idx_value & RADEON_TXFORMAT_HEIGHT_MASK) >> RADEON_TXFORMAT_HEIGHT_SHIFT);
- 		}
- 		if (idx_value & R200_TXFORMAT_LOOKUP_DISABLE)
- 			track->textures[i].lookup_disable = true;
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -2465,9 +2465,11 @@ int drm_dp_update_payload_part1(struct d
+ 			drm_dp_mst_topology_put_port(port);
+ 	}
+ 
+-	for (i = 0; i < mgr->max_payloads; i++) {
+-		if (mgr->payloads[i].payload_state != DP_PAYLOAD_DELETE_LOCAL)
++	for (i = 0; i < mgr->max_payloads; /* do nothing */) {
++		if (mgr->payloads[i].payload_state != DP_PAYLOAD_DELETE_LOCAL) {
++			i++;
+ 			continue;
++		}
+ 
+ 		DRM_DEBUG_KMS("removing payload %d\n", i);
+ 		for (j = i; j < mgr->max_payloads - 1; j++) {
 
 
