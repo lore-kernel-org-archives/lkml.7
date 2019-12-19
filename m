@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD80EC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A80C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B296B2467E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6F4124679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782681;
-	bh=bbyVIkHRwuOoDYsoskA9G5lSfUm0lV/c3VlAa3ve6ZE=;
+	s=default; t=1576782687;
+	bh=+h9+Fs19oWm1bKe6eOPAtfg9Z/lsZkSSW92OUu3lXdk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BUWbIUWGHIZNrImkXWpYSpZAvvX0zt2d2xv+VyeQ/7n13PpHFvkL9ljfHYY5IO/uP
-	 mZQO8etTEezIABU9fPmqSHP+XRfh2CQeLMA7+/O/lA1/5JIxac85fcv0fBZ9tXkcxb
-	 1Vkn2/QShvNZ4irSU/Cp+Tue9HJI0CR7PLw8MuJE=
+	b=Sd0P6zQByLYC9pkGTzSmgy7dNQ9jR9OdYGuDKjrvjroxCABJ0gvd4QlhmRM4vXrhy
+	 ++wUqKjXLDv+Lalf5Vwt/dGTJpbFg9r9rntXoamAnNqeS1KHpKuppTQd2bMzc78NU6
+	 maL85b0tv74x4QxNb3duXY8nfTpfI1PmQ/7xQuw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbfLSSi1 (ORCPT
+        id S1728022AbfLSTL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:38:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56372 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 14:11:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728005AbfLSSiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:38:24 -0500
+        id S1727280AbfLSSiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:38:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55B0F222C2;
-        Thu, 19 Dec 2019 18:38:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0159B2467B;
+        Thu, 19 Dec 2019 18:38:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780702;
-        bh=bbyVIkHRwuOoDYsoskA9G5lSfUm0lV/c3VlAa3ve6ZE=;
+        s=default; t=1576780695;
+        bh=+h9+Fs19oWm1bKe6eOPAtfg9Z/lsZkSSW92OUu3lXdk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R9a30Q2yjwsvMS9oz1UkOGVSr4kuoZMYuuEDTCqAVDlaVt4yTf00qywACRnZ9QONz
-         q2aOe2BFmIt3nl8ORPyXKpOvOAWBcrp+P7cVh6AB8h6P7o+h7Lq/vRnQ1TbieZjYzj
-         90KMMfvPW7QB9Qv8+0w4FI0kgNx2vIOZh4iP4i7A=
+        b=SABjeKc6+KbVBUmNvuYc/opu0zOGK23xPoFpI0aWTmh4qdKP9LN+4h8oiQ+t2iqVs
+         1zRWxEeYCB0lrPIqVtaR0/UciGVsbsZ3MERUHu1VG+roa4XXsqbcVSEI4e6hebr46q
+         GfHP8CHMCPuguIMk7OTemL1hHoyShbl+UHawmqG8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Alan Stern <stern@rowland.harvard.edu>
-Subject: [PATCH 4.4 083/162] usb: Allow USB device to be warm reset in suspended state
-Date:   Thu, 19 Dec 2019 19:33:11 +0100
-Message-Id: <20191219183212.850879550@linuxfoundation.org>
+        stable@vger.kernel.org, Alexey Dobriyan <adobriyan@gmail.com>,
+        "Kohli, Gaurav" <gkohli@codeaurora.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@elte.hu>, Oleg Nesterov <oleg@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "zhangyi (F)" <yi.zhang@huawei.com>
+Subject: [PATCH 4.4 080/162] proc: fix coredump vs read /proc/*/stat race
+Date:   Thu, 19 Dec 2019 19:33:08 +0100
+Message-Id: <20191219183212.664539137@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -60,104 +65,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Alexey Dobriyan <adobriyan@gmail.com>
 
-commit e76b3bf7654c3c94554c24ba15a3d105f4006c80 upstream.
+commit 8bb2ee192e482c5d500df9f2b1b26a560bd3026f upstream.
 
-On Dell WD15 dock, sometimes USB ethernet cannot be detected after plugging
-cable to the ethernet port, the hub and roothub get runtime resumed and
-runtime suspended immediately:
-...
-[  433.315169] xhci_hcd 0000:3a:00.0: hcd_pci_runtime_resume: 0
-[  433.315204] usb usb4: usb auto-resume
-[  433.315226] hub 4-0:1.0: hub_resume
-[  433.315239] xhci_hcd 0000:3a:00.0: Get port status 4-1 read: 0x10202e2, return 0x10343
-[  433.315264] usb usb4-port1: status 0343 change 0001
-[  433.315279] xhci_hcd 0000:3a:00.0: clear port1 connect change, portsc: 0x10002e2
-[  433.315293] xhci_hcd 0000:3a:00.0: Get port status 4-2 read: 0x2a0, return 0x2a0
-[  433.317012] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
-[  433.422282] xhci_hcd 0000:3a:00.0: Get port status 4-1 read: 0x10002e2, return 0x343
-[  433.422307] usb usb4-port1: do warm reset
-[  433.422311] usb 4-1: device reset not allowed in state 8
-[  433.422339] hub 4-0:1.0: state 7 ports 2 chg 0002 evt 0000
-[  433.422346] xhci_hcd 0000:3a:00.0: Get port status 4-1 read: 0x10002e2, return 0x343
-[  433.422356] usb usb4-port1: do warm reset
-[  433.422358] usb 4-1: device reset not allowed in state 8
-[  433.422428] xhci_hcd 0000:3a:00.0: set port remote wake mask, actual port 0 status  = 0xf0002e2
-[  433.422455] xhci_hcd 0000:3a:00.0: set port remote wake mask, actual port 1 status  = 0xe0002a0
-[  433.422465] hub 4-0:1.0: hub_suspend
-[  433.422475] usb usb4: bus auto-suspend, wakeup 1
-[  433.426161] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
-[  433.466209] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.510204] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.554051] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.598235] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.642154] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.686204] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.730205] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.774203] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.818207] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.862040] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.862053] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
-[  433.862077] xhci_hcd 0000:3a:00.0: xhci_suspend: stopping port polling.
-[  433.862096] xhci_hcd 0000:3a:00.0: // Setting command ring address to 0x8578fc001
-[  433.862312] xhci_hcd 0000:3a:00.0: hcd_pci_runtime_suspend: 0
-[  433.862445] xhci_hcd 0000:3a:00.0: PME# enabled
-[  433.902376] xhci_hcd 0000:3a:00.0: restoring config space at offset 0xc (was 0x0, writing 0x20)
-[  433.902395] xhci_hcd 0000:3a:00.0: restoring config space at offset 0x4 (was 0x100000, writing 0x100403)
-[  433.902490] xhci_hcd 0000:3a:00.0: PME# disabled
-[  433.902504] xhci_hcd 0000:3a:00.0: enabling bus mastering
-[  433.902547] xhci_hcd 0000:3a:00.0: // Setting command ring address to 0x8578fc001
-[  433.902649] pcieport 0000:00:1b.0: PME: Spurious native interrupt!
-[  433.902839] xhci_hcd 0000:3a:00.0: Port change event, 4-1, id 3, portsc: 0xb0202e2
-[  433.902842] xhci_hcd 0000:3a:00.0: resume root hub
-[  433.902845] xhci_hcd 0000:3a:00.0: handle_port_status: starting port polling.
-[  433.902877] xhci_hcd 0000:3a:00.0: xhci_resume: starting port polling.
-[  433.902889] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
-[  433.902891] xhci_hcd 0000:3a:00.0: hcd_pci_runtime_resume: 0
-[  433.902919] usb usb4: usb wakeup-resume
-[  433.902942] usb usb4: usb auto-resume
-[  433.902966] hub 4-0:1.0: hub_resume
-...
+do_task_stat() accesses IP and SP of a task without bumping reference
+count of a stack (which became an entity with independent lifetime at
+some point).
 
-As Mathias pointed out, the hub enters Cold Attach Status state and
-requires a warm reset. However usb_reset_device() bails out early when
-the device is in suspended state, as its callers port_event() and
-hub_event() don't always resume the device.
+Steps to reproduce:
 
-Since there's nothing wrong to reset a suspended device, allow
-usb_reset_device() to do so to solve the issue.
+    #include <stdio.h>
+    #include <sys/types.h>
+    #include <sys/stat.h>
+    #include <fcntl.h>
+    #include <sys/time.h>
+    #include <sys/resource.h>
+    #include <unistd.h>
+    #include <sys/wait.h>
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191106062710.29880-1-kai.heng.feng@canonical.com
+    int main(void)
+    {
+    	setrlimit(RLIMIT_CORE, &(struct rlimit){});
+
+    	while (1) {
+    		char buf[64];
+    		char buf2[4096];
+    		pid_t pid;
+    		int fd;
+
+    		pid = fork();
+    		if (pid == 0) {
+    			*(volatile int *)0 = 0;
+    		}
+
+    		snprintf(buf, sizeof(buf), "/proc/%u/stat", pid);
+    		fd = open(buf, O_RDONLY);
+    		read(fd, buf2, sizeof(buf2));
+    		close(fd);
+
+    		waitpid(pid, NULL, 0);
+    	}
+    	return 0;
+    }
+
+    BUG: unable to handle kernel paging request at 0000000000003fd8
+    IP: do_task_stat+0x8b4/0xaf0
+    PGD 800000003d73e067 P4D 800000003d73e067 PUD 3d558067 PMD 0
+    Oops: 0000 [#1] PREEMPT SMP PTI
+    CPU: 0 PID: 1417 Comm: a.out Not tainted 4.15.0-rc8-dirty #2
+    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1.fc27 04/01/2014
+    RIP: 0010:do_task_stat+0x8b4/0xaf0
+    Call Trace:
+     proc_single_show+0x43/0x70
+     seq_read+0xe6/0x3b0
+     __vfs_read+0x1e/0x120
+     vfs_read+0x84/0x110
+     SyS_read+0x3d/0xa0
+     entry_SYSCALL_64_fastpath+0x13/0x6c
+    RIP: 0033:0x7f4d7928cba0
+    RSP: 002b:00007ffddb245158 EFLAGS: 00000246
+    Code: 03 b7 a0 01 00 00 4c 8b 4c 24 70 4c 8b 44 24 78 4c 89 74 24 18 e9 91 f9 ff ff f6 45 4d 02 0f 84 fd f7 ff ff 48 8b 45 40 48 89 ef <48> 8b 80 d8 3f 00 00 48 89 44 24 20 e8 9b 97 eb ff 48 89 44 24
+    RIP: do_task_stat+0x8b4/0xaf0 RSP: ffffc90000607cc8
+    CR2: 0000000000003fd8
+
+John Ogness said: for my tests I added an else case to verify that the
+race is hit and correctly mitigated.
+
+Link: http://lkml.kernel.org/r/20180116175054.GA11513@avx2
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+Reported-by: "Kohli, Gaurav" <gkohli@codeaurora.org>
+Tested-by: John Ogness <john.ogness@linutronix.de>
+Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc: Ingo Molnar <mingo@elte.hu>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/hub.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ fs/proc/array.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -5554,7 +5554,7 @@ re_enumerate_no_bos:
+--- a/fs/proc/array.c
++++ b/fs/proc/array.c
+@@ -435,8 +435,11 @@ static int do_task_stat(struct seq_file
+ 		 * safe because the task has stopped executing permanently.
+ 		 */
+ 		if (permitted && (task->flags & PF_DUMPCORE)) {
+-			eip = KSTK_EIP(task);
+-			esp = KSTK_ESP(task);
++			if (try_get_task_stack(task)) {
++				eip = KSTK_EIP(task);
++				esp = KSTK_ESP(task);
++				put_task_stack(task);
++			}
+ 		}
+ 	}
  
- /**
-  * usb_reset_device - warn interface drivers and perform a USB port reset
-- * @udev: device to reset (not in SUSPENDED or NOTATTACHED state)
-+ * @udev: device to reset (not in NOTATTACHED state)
-  *
-  * Warns all drivers bound to registered interfaces (using their pre_reset
-  * method), performs the port reset, and then lets the drivers know that
-@@ -5582,8 +5582,7 @@ int usb_reset_device(struct usb_device *
- 	struct usb_host_config *config = udev->actconfig;
- 	struct usb_hub *hub = usb_hub_to_struct_hub(udev->parent);
- 
--	if (udev->state == USB_STATE_NOTATTACHED ||
--			udev->state == USB_STATE_SUSPENDED) {
-+	if (udev->state == USB_STATE_NOTATTACHED) {
- 		dev_dbg(&udev->dev, "device reset not allowed in state %d\n",
- 				udev->state);
- 		return -EINVAL;
 
 
