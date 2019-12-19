@@ -2,304 +2,118 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FBC2C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D40C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10C95222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 256EC222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:39:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i+J7LrtZ"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="WZFzVAbw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbfLSRhf (ORCPT
+        id S1726963AbfLSRjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 12:37:35 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35054 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbfLSRhe (ORCPT
+        Thu, 19 Dec 2019 12:39:12 -0500
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:56812 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726866AbfLSRjM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 12:37:34 -0500
-Received: by mail-io1-f66.google.com with SMTP id v18so6621001iol.2
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 09:37:34 -0800 (PST)
+        Thu, 19 Dec 2019 12:39:12 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 47dzdW3BGVz9vbXk
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 17:39:11 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id S5REBf1zvEd9 for <linux-kernel@vger.kernel.org>;
+        Thu, 19 Dec 2019 11:39:11 -0600 (CST)
+Received: from mail-yb1-f199.google.com (mail-yb1-f199.google.com [209.85.219.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 47dzdW20SNz9vbY6
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 11:39:11 -0600 (CST)
+Received: by mail-yb1-f199.google.com with SMTP id a14so4630851ybh.14
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 09:39:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Sg873tJVHtFPa20xblyEhnNy6fpV6di2m2e7kXO2hB0=;
-        b=i+J7LrtZ4Hc3bvTQtAdT0Ze4Va6ZYgOu/VG0rXMPbSlzpdP3AbgpSnIXIPd8U8VEWq
-         EAHGjQKY6RDbzkVvsNY0xaS6ZAUnVy2R9PDOKcVr5qOoQUC2HHZnXKEKFpXlfTnxDip+
-         4bJ+cpvtTFhPOi5ryzBW45QwRaiCRqYgA31XoElEXqpvm1h+nebY/gAO1vmKvIpCoszk
-         ovJku0WsCvchQBWTCHgffKE2RgyHhaBJCRzD7QITeNWkdc4WqYXKjHpbBur0u1U2QnTw
-         Rt81uGh2afa9+cexTX2nYLdaeHDStek+AKBvSE8cXLx/qwBawoEuEO+5hSE52N2mK/fA
-         mlkw==
+        d=umn.edu; s=google;
+        h=subject:to:cc:references:in-reply-to:from:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=AzwXwPyqLdMgiqxoaURBqE7zGRBLFphXTk6J0tyQ+1Q=;
+        b=WZFzVAbwy+PD3mfPyPnG/lqPzt5jire3SR0Dmi4ESDMbYrL0YMqDXS/gnwFGLUOpJX
+         Aph8hlbuNcPcKp1ouVSPSXKSu3cYdI1TbqcG5bChV3gwEvctRuldGeFualjy82R6o9g4
+         itwTPUbaq0V5y5zcTp6RzoR8KklzaE7+9TwCIgaR5odfvBOPFtgZrIk2SJKQTlaS5mFX
+         HCyYhhPuNqm3lZQjg/w+e8k/ksVL+X0kVSQJlkSYxsoQ2cO9SQKhWCyr51NhBd4yXCpC
+         4Z/X7zfDYL0K3qYHVxReQo67gdRjwVE64kFRNu6kDtVAvaoQWhMQqyfKOuiusJ2tiBQv
+         DkMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Sg873tJVHtFPa20xblyEhnNy6fpV6di2m2e7kXO2hB0=;
-        b=l6jVFCUaijkmwbxB+W0sUVQ7VjnqlBjYaSNZTkavm8DAGJA9HwO7hip34fR+ciKfhK
-         Pri1+8zKzoyGFGJYS3Gm1Q2Euo93qrIlucmBRZLJSmXTBdX8y5rLLWLPoRh5mKk6CtIy
-         gvuc2K49zVT0Vr3KA3p7t9iBp9gsn6n5ObPgNCd1FYjKbzAZDKDsCfT6X43Vji+3nzAM
-         vNWm/Ae+NcLf5litMFAnr/h0ivC4ODrTxq9Mdr51ghGc8vBCLX/CqyvOOfY7rk36Y4xZ
-         3sBEShaLwFr59SVqeJAecA7gpJkUzL5gqNEEInzO78g4un/zfxVUHuw3cvvvSIC+O1pz
-         ENEQ==
-X-Gm-Message-State: APjAAAWQTyjIkAsSdGSk9Qbv+nSndjLHIOkGfXHt+FoitR465kHYC+aZ
-        wPISFmFSKaRboCUkUyd+G23k2XZrYssvd8S6vva9EQ==
-X-Google-Smtp-Source: APXvYqxvGM1kJx7DEGJubUnHvjRECgDEM11cJs+c9bMYWzIMEL8U10zqwOuQDQ/QTnDmz2Zeir7t5IcWG8JUZ4/N7t0=
-X-Received: by 2002:a6b:8f11:: with SMTP id r17mr6831161iod.50.1576777053504;
- Thu, 19 Dec 2019 09:37:33 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:in-reply-to:from
+         :message-id:date:user-agent:mime-version:content-language
+         :content-transfer-encoding;
+        bh=AzwXwPyqLdMgiqxoaURBqE7zGRBLFphXTk6J0tyQ+1Q=;
+        b=SAd4bT+W4wBOnabLQHKnr7DA3k4LcgA8M8Wy378ebK0sjUwz9MgOmUKIly34lVoZ7X
+         Jhi9jHbhQq7V+98IBt1n4hRzUf+0oLIITSuY8LQ8jAHzTEL+Io+bVay4WtBHAWc13XgF
+         HGkASbLB8hX+Aw1nr5/vYH8YvBs84KcYZHvAHJA17ZiUHb60LYJ5sCDm1AzoJIZ/4rDZ
+         8t3OWLdiTL5lvbolX6mpCbRk3JOGiZu4t+gYd3sVSVZkhKaT1tk7sCgP6ruoT1kJ0lho
+         /kZmKfNJK5A3xj59izbjZHRLXiMCSU9JeiT1VZQQX7kN0qgZSd5LTOCP5DRueSv8/p9j
+         m/7g==
+X-Gm-Message-State: APjAAAWJJRnfby++7h85qr+JFsSMhkHA4kLOyD8e77OZF+GGsigQtefH
+        arRfVvptOD5o23Y4zGANts+mCvkku+e2gwNq7jEcclicKvTTWy+ZMKM1YEBgXVjABjD10l7PUuY
+        K5Uh44RCPN2Bj37RcFtKssiqtVnBIJhWCIwie4oZv5BpkyzTrarFPRRyhhmUe+1ZaoZ7DeZrTwf
+        Tw
+X-Received: by 2002:a81:6707:: with SMTP id b7mr7101435ywc.36.1576777150521;
+        Thu, 19 Dec 2019 09:39:10 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzP14w1/YKStiE4g89ZmMAeIFFU+TvL1hgLMP0XOo/Xbf7zuSSnJT6rWdWDvw3RwIwm9Zx+oA==
+X-Received: by 2002:a81:6707:: with SMTP id b7mr7101408ywc.36.1576777150217;
+        Thu, 19 Dec 2019 09:39:10 -0800 (PST)
+Received: from [128.101.106.66] (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id q1sm2854283ywa.82.2019.12.19.09.39.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Dec 2019 09:39:09 -0800 (PST)
+Subject: Re: [PATCH] bpf: Replace BUG_ON when fp_old is NULL
+To:     Daniel Borkmann <daniel@iogearbox.net>, Yonghong Song <yhs@fb.com>
+Cc:     "kjlu@umn.edu" <kjlu@umn.edu>, Alexei Starovoitov <ast@kernel.org>,
+        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20191215154432.22399-1-pakki001@umn.edu>
+ <98c13b9c-a73a-6203-4ea1-6b1180d87d97@fb.com>
+ <566f206c-f133-6f68-c257-2c0b3ec462fa@iogearbox.net>
+In-Reply-To: <566f206c-f133-6f68-c257-2c0b3ec462fa@iogearbox.net>
+From:   Aditya Pakki <pakki001@umn.edu>
+Message-ID: <51dcca79-f819-8ebb-308e-210a0d76b1cc@umn.edu>
+Date:   Thu, 19 Dec 2019 11:39:08 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <20191213125537.11509-1-t-kristo@ti.com> <20191213125537.11509-5-t-kristo@ti.com>
- <20191218002257.GB16271@xps15> <021d0654-5e78-85cd-4737-c1eccc8c07ce@ti.com>
-In-Reply-To: <021d0654-5e78-85cd-4737-c1eccc8c07ce@ti.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Thu, 19 Dec 2019 10:37:22 -0700
-Message-ID: <CANLsYkxqA4jm3igF9hfppzPGx4fyvmc+5LTY8uMCYNvZBCJoSQ@mail.gmail.com>
-Subject: Re: [PATCHv3 04/15] remoteproc/omap: Add support to parse internal
- memories from DT
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-remoteproc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap@vger.kernel.org, Suman Anna <s-anna@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Dec 2019 at 05:31, Tero Kristo <t-kristo@ti.com> wrote:
->
-> On 18/12/2019 02:22, Mathieu Poirier wrote:
-> > On Fri, Dec 13, 2019 at 02:55:26PM +0200, Tero Kristo wrote:
-> >> From: Suman Anna <s-anna@ti.com>
-> >>
-> >> The OMAP remoteproc driver has been enhanced to parse and store
-> >> the kernel mappings for different internal RAM memories that may
-> >> be present within each remote processor IP subsystem. Different
-> >> devices have varying memories present on current SoCs. The current
-> >> support handles the L2RAM for all IPU devices on OMAP4+ SoCs. The
-> >> DSPs on OMAP4/OMAP5 only have Unicaches and do not have any L1 or
-> >> L2 RAM memories.
-> >>
-> >> IPUs are expected to have the L2RAM at a fixed device address of
-> >> 0x20000000, based on the current limitations on Attribute MMU
-> >> configurations.
-> >>
-> >> NOTE:
-> >> The current logic doesn't handle the parsing of memories for DRA7
-> >> remoteproc devices, and will be added alongside the DRA7 support.
-> >>
-> >> Signed-off-by: Suman Anna <s-anna@ti.com>
-> >> [t-kristo: converted to parse mem names / device addresses from pdata]
-> >> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> >> ---
-> >>   drivers/remoteproc/omap_remoteproc.c | 86 ++++++++++++++++++++++++++++
-> >>   1 file changed, 86 insertions(+)
-> >>
-> >> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
-> >> index d80f5d7b5931..844703507a74 100644
-> >> --- a/drivers/remoteproc/omap_remoteproc.c
-> >> +++ b/drivers/remoteproc/omap_remoteproc.c
-> >> @@ -39,11 +39,27 @@ struct omap_rproc_boot_data {
-> >>      unsigned int boot_reg;
-> >>   };
-> >>
-> >> +/*
-> >> + * struct omap_rproc_mem - internal memory structure
-> >> + * @cpu_addr: MPU virtual address of the memory region
-> >> + * @bus_addr: bus address used to access the memory region
-> >> + * @dev_addr: device address of the memory region from DSP view
-> >> + * @size: size of the memory region
-> >> + */
-> >> +struct omap_rproc_mem {
-> >> +    void __iomem *cpu_addr;
-> >> +    phys_addr_t bus_addr;
-> >> +    u32 dev_addr;
-> >> +    size_t size;
-> >> +};
-> >> +
-> >>   /**
-> >>    * struct omap_rproc - omap remote processor state
-> >>    * @mbox: mailbox channel handle
-> >>    * @client: mailbox client to request the mailbox channel
-> >>    * @boot_data: boot data structure for setting processor boot address
-> >> + * @mem: internal memory regions data
-> >> + * @num_mems: number of internal memory regions
-> >>    * @rproc: rproc handle
-> >>    * @reset: reset handle
-> >>    */
-> >> @@ -51,6 +67,8 @@ struct omap_rproc {
-> >>      struct mbox_chan *mbox;
-> >>      struct mbox_client client;
-> >>      struct omap_rproc_boot_data *boot_data;
-> >> +    struct omap_rproc_mem *mem;
-> >> +    int num_mems;
-> >>      struct rproc *rproc;
-> >>      struct reset_control *reset;
-> >>   };
-> >> @@ -59,10 +77,14 @@ struct omap_rproc {
-> >>    * struct omap_rproc_dev_data - device data for the omap remote processor
-> >>    * @device_name: device name of the remote processor
-> >>    * @has_bootreg: true if this remote processor has boot register
-> >> + * @mem_names: memory names for this remote processor
-> >> + * @dev_addrs: device addresses corresponding to the memory names
-> >>    */
-> >>   struct omap_rproc_dev_data {
-> >>      const char *device_name;
-> >>      bool has_bootreg;
-> >> +    const char * const *mem_names;
-> >> +    const u32 *dev_addrs;
-> >
-> > Bunching these two in a new structure like omap_rproc_mem_data would clean
-> > things up.  That way the two arrays in the next hunk get merged and there can't
-> > be a difference in sizes, somthing that will sturdy the main loop in
-> > omap_rproc_of_get_internal_memories() below.
->
-> Will fix this.
->
-> >
-> >>   };
-> >>
-> >>   /**
-> >> @@ -216,6 +238,14 @@ static const struct rproc_ops omap_rproc_ops = {
-> >>      .kick           = omap_rproc_kick,
-> >>   };
-> >>
-> >> +static const char * const ipu_mem_names[] = {
-> >> +    "l2ram", NULL
-> >> +};
-> >> +
-> >> +static const u32 ipu_dev_addrs[] = {
-> >> +    0x20000000,
-> >> +};
-> >> +
-> >>   static const struct omap_rproc_dev_data omap4_dsp_dev_data = {
-> >>      .device_name    = "dsp",
-> >>      .has_bootreg    = true,
-> >> @@ -223,6 +253,8 @@ static const struct omap_rproc_dev_data omap4_dsp_dev_data = {
-> >>
-> >>   static const struct omap_rproc_dev_data omap4_ipu_dev_data = {
-> >>      .device_name    = "ipu",
-> >> +    .mem_names      = ipu_mem_names,
-> >> +    .dev_addrs      = ipu_dev_addrs,
-> >>   };
-> >>
-> >>   static const struct omap_rproc_dev_data omap5_dsp_dev_data = {
-> >> @@ -232,6 +264,8 @@ static const struct omap_rproc_dev_data omap5_dsp_dev_data = {
-> >>
-> >>   static const struct omap_rproc_dev_data omap5_ipu_dev_data = {
-> >>      .device_name    = "ipu",
-> >> +    .mem_names      = ipu_mem_names,
-> >> +    .dev_addrs      = ipu_dev_addrs,
-> >>   };
-> >>
-> >>   static const struct of_device_id omap_rproc_of_match[] = {
-> >> @@ -311,6 +345,54 @@ static int omap_rproc_get_boot_data(struct platform_device *pdev,
-> >>      return 0;
-> >>   }
-> >>
-> >> +static int omap_rproc_of_get_internal_memories(struct platform_device *pdev,
-> >> +                                           struct rproc *rproc)
-> >> +{
-> >> +    struct omap_rproc *oproc = rproc->priv;
-> >> +    struct device *dev = &pdev->dev;
-> >> +    const struct omap_rproc_dev_data *data;
-> >> +    struct resource *res;
-> >> +    int num_mems;
-> >> +    int i;
-> >> +
-> >> +    data = of_device_get_match_data(&pdev->dev);
-> >> +    if (!data)
-> >> +            return -ENODEV;
-> >> +
-> >> +    if (!data->mem_names)
-> >> +            return 0;
-> >> +
-> >> +    for (num_mems = 0; data->mem_names[num_mems]; num_mems++)
-> >> +            ;
-> >
-> > Instead of doing this function of_property_count_elems_of_size() can be used on
-> > the "reg" property.
->
-> Hmm right, but the problem is then we don't know if someone left out one
-> of the memories in DT. We want to check the presence for all defined in
-> the platform data.
->
+On 12/16/19 5:17 AM, Daniel Borkmann wrote:
+> On 12/15/19 11:08 PM, Yonghong Song wrote:
+>> On 12/15/19 7:44 AM, Aditya Pakki wrote:
+>>> If fp_old is NULL in bpf_prog_realloc, the program does an assertion
+>>> and crashes. However, we can continue execution by returning NULL to
+>>> the upper callers. The patch fixes this issue.
+>>
+>> Could you share how to reproduce the assertion and crash? I would
+>> like to understand the problem first before making changes in the code.
+>> Thanks!
+> 
+> Fully agree, Aditya, please elaborate if you have seen a crash!
 
-In my opinion (and to go along what I advocated in a comment on
-another patch) everything should be dictated from the DT.  If an area
-of reserved memory is missing in the DT then the infrastructure should
-recognise it and refuse to move forward with initialisation.
+Thanks for your responses Alexei and Daniel. We identified this issue via static analysis
+and have not seen a crash. However, by looking at the callers of bpf_prog_realloc, I do 
+agree that fp_old is never NULL. 
 
-Thanks
-Mathieu
-
-> >
-> > In the loop below a check should be done to see if data->mem_data[i] (see above
-> > comment) is valid before calling platform_get_resource_byname().  If not then
-> > an error can be returned.
->
-> Will add a check to it.
->
-> -Tero
->
-> >
-> > I'm running out of time for today - I will continue reviewing the other patches
-> > tomorrow.
-> >
-> >> +
-> >> +    oproc->mem = devm_kcalloc(dev, num_mems, sizeof(*oproc->mem),
-> >> +                              GFP_KERNEL);
-> >> +    if (!oproc->mem)
-> >> +            return -ENOMEM;
-> >> +
-> >> +    for (i = 0; i < num_mems; i++) {
-> >> +            res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> >> +                                               data->mem_names[i]);
-> >> +            oproc->mem[i].cpu_addr = devm_ioremap_resource(dev, res);
-> >> +            if (IS_ERR(oproc->mem[i].cpu_addr)) {
-> >> +                    dev_err(dev, "failed to parse and map %s memory\n",
-> >> +                            data->mem_names[i]);
-> >> +                    return PTR_ERR(oproc->mem[i].cpu_addr);
-> >> +            }
-> >> +            oproc->mem[i].bus_addr = res->start;
-> >> +            oproc->mem[i].dev_addr = data->dev_addrs[i];
-> >> +            oproc->mem[i].size = resource_size(res);
-> >> +
-> >> +            dev_dbg(dev, "memory %8s: bus addr %pa size 0x%x va %p da 0x%x\n",
-> >> +                    data->mem_names[i], &oproc->mem[i].bus_addr,
-> >> +                    oproc->mem[i].size, oproc->mem[i].cpu_addr,
-> >> +                    oproc->mem[i].dev_addr);
-> >> +    }
-> >> +    oproc->num_mems = num_mems;
-> >> +
-> >> +    return 0;
-> >> +}
-> >> +
-> >>   static int omap_rproc_probe(struct platform_device *pdev)
-> >>   {
-> >>      struct device_node *np = pdev->dev.of_node;
-> >> @@ -350,6 +432,10 @@ static int omap_rproc_probe(struct platform_device *pdev)
-> >>      /* All existing OMAP IPU and DSP processors have an MMU */
-> >>      rproc->has_iommu = true;
-> >>
-> >> +    ret = omap_rproc_of_get_internal_memories(pdev, rproc);
-> >> +    if (ret)
-> >> +            goto free_rproc;
-> >> +
-> >>      ret = omap_rproc_get_boot_data(pdev, rproc);
-> >>      if (ret)
-> >>              goto free_rproc;
-> >> --
-> >> 2.17.1
-> >>
-> >> --
->
-> --
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Would you recommend removing the BUG_ON assertion altogether ?
