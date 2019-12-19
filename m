@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E99C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FE1C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA17C2467B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D043324683
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:36:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780564;
-	bh=NKIKF7A5zn42BO7JUEY9uTMY+4ubMBgIJXguLfS5Lgs=;
+	s=default; t=1576780566;
+	bh=k2Tugx47zeg+LMX++8o2J3UvSOhXZuufBvGIQnE3IIw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D6qZsTnG6StfT1bkuH6nM7hW7+/gM9iRIHCC9u6nV897hJPaGn5jmwQeiFJ99D2XZ
-	 +/bfzjmBUWZNcHeW1LI8gw7Uyjhn1Bo7NP7T7+7iZW0Lbs0aF0x7yPDpO6xGGZs/jV
-	 xLoLscguovR2jbymDTFTSZp3MWSoF5vIuY4UK79Y=
+	b=kpxAI2NaxFLAYBiwrQIflzXqVGbELDTeDNLpXOXnCzptWD6lc+QiNV3YqmYnuPEps
+	 un/3hgckmaCB6ZiseNh7+cfVyyyTSwcuZEw0uYTOPZsS37BdL4F+blMdzpNmsORtAp
+	 IpS4NL7sIVVwLs8fs9cNZQf3ixq8Ak7VeuIpn3Zk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfLSSgD (ORCPT
+        id S1727443AbfLSSgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:36:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52772 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:36:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727386AbfLSSf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:35:59 -0500
+        id S1727411AbfLSSgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:36:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCDED24686;
-        Thu, 19 Dec 2019 18:35:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 584202467B;
+        Thu, 19 Dec 2019 18:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780559;
-        bh=NKIKF7A5zn42BO7JUEY9uTMY+4ubMBgIJXguLfS5Lgs=;
+        s=default; t=1576780561;
+        bh=k2Tugx47zeg+LMX++8o2J3UvSOhXZuufBvGIQnE3IIw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ERfSHwxX7RFokTAzUEAWtubQg7fU/mfSR2tq1bmMmYGUZo5QcU65wvz9+XpDTAN38
-         v27YeEAlPllGLQDn3vr6hYQaNtOpEC8V2sljuYnAjLSO9aAoPw+sE60wS3HBxUW2CN
-         XOjZktiBtgY4rT2Y6LKlHxw7pLG5xRSyVnBAV3C0=
+        b=RJGyTSc+xIfqnbapY2y8sxnOHEteXropBRt91jV4dPwCWFHkrVyFwYCBQhfFN8GlC
+         ulQP6E4PbwZwZ1GBexsmOAipegWaDsy+IZra/qW5lP9bqIkK14gUt99wfAHk+S2kOd
+         UaQ6ZVvB/JB5kdjLs03WEaz2C1LamnZad08NYdas=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shreeya Patel <shreeya.patel23498@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, Cheng-Yi Chiang <cychiang@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 023/162] Staging: iio: adt7316: Fix i2c data reading, set the data field
-Date:   Thu, 19 Dec 2019 19:32:11 +0100
-Message-Id: <20191219183208.807901786@linuxfoundation.org>
+Subject: [PATCH 4.4 024/162] regulator: Fix return value of _set_load() stub
+Date:   Thu, 19 Dec 2019 19:32:12 +0100
+Message-Id: <20191219183208.988306001@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -61,37 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shreeya Patel <shreeya.patel23498@gmail.com>
+From: Mark Brown <broonie@kernel.org>
 
-[ Upstream commit 688cd642ba0c393344c802647848da5f0d925d0e ]
+[ Upstream commit f1abf67217de91f5cd3c757ae857632ca565099a ]
 
-adt7316_i2c_read function nowhere sets the data field.
-It is necessary to have an appropriate value for it.
-Hence, assign the value stored in 'ret' variable to data field.
+The stub implementation of _set_load() returns a mode value which is
+within the bounds of valid return codes for success (the documentation
+just says that failures are negative error codes) but not sensible or
+what the actual implementation does.  Fix it to just return 0.
 
-This is an ancient bug, and as no one seems to have noticed,
-probably no sense in applying it to stable.
-
-Signed-off-by: Shreeya Patel <shreeya.patel23498@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reported-by: Cheng-Yi Chiang <cychiang@chromium.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/iio/addac/adt7316-i2c.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/regulator/consumer.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/iio/addac/adt7316-i2c.c b/drivers/staging/iio/addac/adt7316-i2c.c
-index 78fe0b5572802..fa1ef25d7a9a3 100644
---- a/drivers/staging/iio/addac/adt7316-i2c.c
-+++ b/drivers/staging/iio/addac/adt7316-i2c.c
-@@ -35,6 +35,8 @@ static int adt7316_i2c_read(void *client, u8 reg, u8 *data)
- 		return ret;
- 	}
+diff --git a/include/linux/regulator/consumer.h b/include/linux/regulator/consumer.h
+index 9e0e76992be08..bf62713af290e 100644
+--- a/include/linux/regulator/consumer.h
++++ b/include/linux/regulator/consumer.h
+@@ -485,7 +485,7 @@ static inline unsigned int regulator_get_mode(struct regulator *regulator)
  
-+	*data = ret;
-+
- 	return 0;
+ static inline int regulator_set_load(struct regulator *regulator, int load_uA)
+ {
+-	return REGULATOR_MODE_NORMAL;
++	return 0;
  }
  
+ static inline int regulator_allow_bypass(struct regulator *regulator,
 -- 
 2.20.1
 
