@@ -2,351 +2,317 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E484C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A02D1C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5062A24679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4462468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:44:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbfLSJoO (ORCPT
+        id S1726744AbfLSJoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 04:44:14 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:43942 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726609AbfLSJoO (ORCPT
+        Thu, 19 Dec 2019 04:44:21 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46656 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726609AbfLSJoV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 04:44:14 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id AE60D292BB0
-Subject: Re: [PATCH v2] platform: chrome: Add cros-ec-pd-notify driver
-To:     Prashant Malani <pmalani@chromium.org>, groeck@chromium.org,
-        bleung@chromium.org, lee.jones@linaro.org
-Cc:     linux-kernel@vger.kernel.org, Jon Flatley <jflat@chromium.org>
-References: <20191218230701.59166-1-pmalani@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <d9aea1f0-1b5d-44bc-7fcc-eb0b8f9634fd@collabora.com>
-Date:   Thu, 19 Dec 2019 10:44:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 19 Dec 2019 04:44:21 -0500
+Received: by mail-lf1-f68.google.com with SMTP id f15so3836734lfl.13;
+        Thu, 19 Dec 2019 01:44:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Pigykuj3FqSHxhPUFlwgdyDtB15Fr1ua0h8Tg1lOV6k=;
+        b=Ak5SIDzl8M1jX3KST5jRRT3Gz2+3V3U1OqdYYfDrG+0xVUvvUOh/3B9UONKGXXyBLw
+         8U1c6y7NJQKg1el8kMvl9QVpr+d3BgLhMWY9qGqlGxUPtCB/cOVOJJfNyVfwCmqIeJaY
+         1enH7zBwfMlikSY5ZGU6P1bGQqf1c43Rt5hZFearzPloigYfOC2iGZrxHHyFVmjsmxua
+         6Xj09ccIMZLwPdNYSw2bGXSvYA5uRVT5QuLJyZwaruYieiR4UnQ5UMt1lfh93TVg5oEZ
+         jbr+e78EckW90MWsiONWV3HehOaCv5abTpazIJtTTcXGrOOS5pXmQOcbswhQuZrnHylJ
+         JUKw==
+X-Gm-Message-State: APjAAAU0bA4qONDrpbMhSF6v1CexqVEGHWmVRGhVEQoSuiS1JC78f0pc
+        1eQcVk2PtDbFWlv6fFi0hsQ=
+X-Google-Smtp-Source: APXvYqzIIe4rAc74TIGLKMOANeb804N8SGchp3yxrW0ivjcLgc1ro4jWZBdh5JTSbPhuTfVS4bi1Zg==
+X-Received: by 2002:a19:f519:: with SMTP id j25mr4778087lfb.41.1576748657291;
+        Thu, 19 Dec 2019 01:44:17 -0800 (PST)
+Received: from localhost.localdomain (dyt4gctb359myxd0pkwmt-4.rev.dnainternet.fi. [2001:14bb:430:5140:37cf:5409:8fcc:4495])
+        by smtp.gmail.com with ESMTPSA id e20sm2472778ljl.59.2019.12.19.01.44.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 01:44:16 -0800 (PST)
+Date:   Thu, 19 Dec 2019 11:44:08 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [PATCH v7 00/12] Support ROHM BD71828 PMIC
+Message-ID: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <20191218230701.59166-1-pmalani@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Prashant and Jon,
+Patch series introducing support for ROHM BD71828 PMIC
 
-Thank you for the patch.
+ROHM BD71828 is a power management IC containing 7 bucks and 7 LDOs. All
+regulators can be controlled individually via I2C. Bucks 1,2,6 and
+7 can also be assigned to a "regulator group" controlled by run-levels.
+Eg. Run level specific voltages and enable/disable statuses for each of
+these bucks can be set via register interface. The buck run-level group
+assignment (selection if buck is to be controlled individually or via
+run-levels) can be changed at run-time via I2C.
 
-On 19/12/19 0:07, Prashant Malani wrote:
-> From: Jon Flatley <jflat@chromium.org>
-> 
-> ChromiumOS uses ACPI device with HID "GOOG0003" for power delivery
-> related events. The existing cros-usbpd-charger driver relies on these
-> events without ever actually receiving them on ACPI platforms. This is
-> because in the ChromeOS kernel trees, the GOOG0003 device is owned by an
-> ACPI driver that offers firmware updates to USB-C chargers.
-> 
-> Introduce a new platform driver under cros-ec, the ChromeOS embedded
-> controller, that handles these PD events and dispatches them
-> appropriately over a notifier chain to all drivers that use them.
-> 
-> On non-ACPI platforms, the driver gets instantiated for ECs which
-> support the EC_FEATURE_USB_PD feature bit, and on such platforms, the
-> notification events will get delivered using the MKBP event handling
-> mechanism.
-> 
-> Signed-off-by: Jon Flatley <jflat@chromium.org>
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> ---
-> 
-> Changes in v2 (pmalani@chromium.org):
-> - Removed dependency on DT entry; instead, we will instantiate the
->   driver on detecting EC_FEATURE_USB_PD for non-ACPI platforms.
-> - Modified the cros-ec-pd-notify device to be an mfd_cell under
->   usbpdcharger for non-ACPI platforms. Altered the platform_probe() call
->   to derive the cros EC structs appropriately.
-> - Replaced "usbpd_notify" with "pd_notify" in functions and structures.
-> - Addressed comments from upstream maintainer.
-> 
->  drivers/mfd/cros_ec_dev.c                     |   3 +
+This patch series brings only the basic support for controlling
+regulators individually via I2C.
 
-Please use a different patch for this. That way Lee can pick this patch
-independently and I can pick the chrome/platform bits.
+In addition to the bucks and LDOs there are:
 
+- The usual clk gate
+- 4 IO pins (mostly usable as GPO or tied to specific purpose)
+- power button support
+- RTC
+- two LEDs
+- battery charger
+- HALL sensor input
 
->  drivers/platform/chrome/Kconfig               |   9 ++
->  drivers/platform/chrome/Makefile              |   1 +
->  drivers/platform/chrome/cros_ec_pd_notify.c   | 151 ++++++++++++++++++
->  .../linux/platform_data/cros_ec_pd_notify.h   |  17 ++
->  5 files changed, 181 insertions(+)
->  create mode 100644 drivers/platform/chrome/cros_ec_pd_notify.c
->  create mode 100644 include/linux/platform_data/cros_ec_pd_notify.h
-> 
-> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-> index c4b977a5dd966..cc6a6788cd5c2 100644
-> --- a/drivers/mfd/cros_ec_dev.c
-> +++ b/drivers/mfd/cros_ec_dev.c
-> @@ -85,6 +85,9 @@ static const struct mfd_cell cros_ec_sensorhub_cells[] = {
->  static const struct mfd_cell cros_usbpd_charger_cells[] = {
->  	{ .name = "cros-usbpd-charger", },
->  	{ .name = "cros-usbpd-logger", },
-> +#ifndef CONFIG_ACPI
-> +	{ .name = "cros-ec-pd-notify", },
+This patch series adds support to regulators, clk, RTC, GPIOs and LEDs.
 
-Could make sense name as cros-usbpd-notify to be coherent with the other drivers
-names?
+Power-supply driver for charger is not included in this series.
 
-> +#endif
->  };
->  
->  static const struct cros_feature_to_cells cros_subdevices[] = {
-> diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-> index 5f57282a28da0..972c129b7b7ba 100644
-> --- a/drivers/platform/chrome/Kconfig
-> +++ b/drivers/platform/chrome/Kconfig
-> @@ -131,6 +131,15 @@ config CROS_EC_LPC
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called cros_ec_lpcs.
->  
-> +config CROS_EC_PD_NOTIFY
+The series also adds LED DT-node lookup based on node name or given
+property name/value pair in LED core. It also adds generic default-state
+and default-trigger property handling to LED core. Follow-up patches
+simplifying few other LED drivers should follow.
 
-CROS_USBPD_NOTIFY ?
+Changelog v7:
+  - Rebased on top of v5.5-rc2
+  - Dropped already applied patches
+    - basic regulator support (in regulator tree now)
+    - regulator dt-bindings (in regulator tree now)
+    - gpio devm function documentation (in GPIO tree now)
+  - Dropped new devm-variant of gpio_array getting for MFD sub-devices who
+    have consumer information in parent DT node as gpio consumer was
+    dropped from the series
+  - removed extra line-breaks from MFD driver and Makefile
+  - fixed RTC patch subject line (added missing colon)
+  - included a patch which adds compatible for ROHM BD71850 PMIC
 
-> +	tristate "ChromeOS Type-C power delivery event notifier"
-> +	depends on CROS_EC
-> +	help
-> +	  If you say Y here, you get support for Type-C PD event notifications
-> +	  from the ChromeOS EC. On ACPI platorms this driver will bind to the
-> +	  GOOG0003 ACPI device, and on non-ACPI platforms this driver will get
-> +	  initialized on ECs which support the feature EC_FEATURE_USB_PD.
-> +
+Changelog v6:
+  Rebased on top of v5.5-rc1
+  LED core:
+    - Do new fw-node look-up only if the new match data is given. That
+      way behaviour for existing drivers is not changed
+    - Handle generic LED properties by core only if explisitly requested
+      in init-data. That way behaviour for existing drivers is not changed
+      until they are verified to work.
+  BD71828 LEDs:
+    - Fix module loading by adding "dummy" of_device_id table.
+  DT bindings:
+    All:
+    - Remove regulator run-level properties as run-level support was
+      dropped for now.
+    - Change SPDX to dual lisence
+    LED:
+    - added select: false
+    - replace oneOf + const by enum
+    Regulator:
+    - remove forgotten comments
+    - comment indenting
+    MFD:
+    - remove unnecessary descriptions
+  Regulators:
+    - Dropped patch 12 with run-level controls
+    - Dropped unnecessary ramp_delay_supported() - ram_delay ops were
+      already only filled for DVS bucks.
+  GPIO:
+    - rename internal function.
+  RTC:
+    - Added missing blank line
+  
+Changelog v5:
+  Only LED patch (patch 15) changed, rest as in v4.
+  LED:
+    - Fixed issues reported by Dan Carpenter and kbuild-bot static
+      analysis.
+Changelog v4 (first non RFC):
+  General:
+    - Changed subdevice loading and chip version identification to use
+      platform ID.
+    - License identifiers changed to GPL-2.0-only
+  MFD:
+    - Styling fixes mostly
+  DT-Bindings:
+    - a few more checks as suggested by Rob Herring.
+    - Order of DT patches changed.
+    - me as maintainer
+    - standard units to new properties (microvolts, ohms)
+    - runlevel values in an array
+  LED:
+    - BD71828 driver added (back)
+      - Added DT support
+    - Added LED DT node lookup in led framework when init_data is given
+      with DT node match information.
+    - Added common property parsing for default-state and
+      default-trigger.
+  Regulators:
+    - dropped sysfs interfaces
+    - fixed module unload/reload by binding gpio consumer information to
+      regulator device not to MFD.
+  GPIO:
+    - Added devm_gpiod_get_parent_array
+    - added few missing devm functions to documentation
 
-Add all this below CROS_USBPD_LOGGER
+Changelog v3:
+  DT-Bindings:
+    - yamlify
+    - add LED binding doc
+  CLK:
+    - Move clk register definitions from MFD headers to clk driver
+  GPIO:
+    - Add generic direction define and use it.
+  LED:
+    - Drop LED driver from the series (for now).
 
->  config CROS_EC_PROTO
->  	bool
->  	help
-> diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
-> index aacd5920d8a18..6070baa8320ca 100644
-> --- a/drivers/platform/chrome/Makefile
-> +++ b/drivers/platform/chrome/Makefile
-> @@ -22,5 +22,6 @@ obj-$(CONFIG_CROS_EC_DEBUGFS)		+= cros_ec_debugfs.o
->  obj-$(CONFIG_CROS_EC_SENSORHUB)		+= cros_ec_sensorhub.o
->  obj-$(CONFIG_CROS_EC_SYSFS)		+= cros_ec_sysfs.o
->  obj-$(CONFIG_CROS_USBPD_LOGGER)		+= cros_usbpd_logger.o
-> +obj-$(CONFIG_CROS_EC_PD_NOTIFY)		+= cros_ec_pd_notify.o
->  
->  obj-$(CONFIG_WILCO_EC)			+= wilco_ec/
-> diff --git a/drivers/platform/chrome/cros_ec_pd_notify.c b/drivers/platform/chrome/cros_ec_pd_notify.c
-> new file mode 100644
-> index 0000000000000..b1d98a171cff5
-> --- /dev/null
-> +++ b/drivers/platform/chrome/cros_ec_pd_notify.c
-> @@ -0,0 +1,151 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright 2019 Google LLC
-> + *
-> + * This driver serves as the receiver of cros_ec PD host events.
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/module.h>
-> +#include <linux/mfd/cros_ec.h>
+Changelog v2: Mainly RTC and GPIO fixes suggested by Alexandre and Bartosz
+  General:
+    -Patch ordering changed to provide dt binding documents right after the
+     MFD core.
+  DT-Bindings for regulators (Patch 3)
+    -Fix typo in PMIC model number
+  RTC (patch 11)
+    -Reverted renaming in order to reduce patch size.
+    -Reworded commit message
+  BD71828 regulator (patch 7)
+    -Add MODULE_ALIAS
+  GPIO (patch 12)
+    -Remove file-name from comment
+    -prefix IN and OUT defines with chip type
+    -improved documentation for the INPUT only pin.
+    -removed empty left-over function
+    -removed unnecessary #ifdef CONFIG_OF_GPIO
+    -removed unnecessary error print
+    -Add MODULE_ALIAS
 
-No need to worry about this for now, but just to let you know, this include will
-be unnecessary after https://lkml.org/lkml/2019/12/3/530
+Patch 1:
+        dt-bindings for LEDs on BD71828 PMIC
+Patch 2:
+	dt-bindings for BD71828 PMIC
+Patch 3:
+	Convert rohm PMICs with common sub-devices to use platform_
+	device_id to match MFD sub-devices
+Patch 4:
+	Add compatible for BD71850
+Patch 5:
+        BD71828 MFD core.
+Patch 6:
+	Power button support using GPIO keys.
+Patch 7:
+        CLK gate support using existing clk-bd718x7
+Patch 8:
+        Split existing bd718x7 regulator driver to generic ROHM dt
+        parsing portion (used by more than one ROHM drivers) and
+        bd718x8 specific parts
+Patch 9:
+        Support BD71828 RTC block using BD70528 RTC driver
+Patch 10:
+        Allow control of GP(I)O pins on BD71828 via GPIO subsystem
+Patch 11:
+	Add LED node lookup and common LED binding parsing support
+	to LED class/core
+Patch 12:
+        Support toggling the LEDs on BD71828.
 
-It is fine for now, I'll remove the include when I pick up the patch.
+This patch series is based on v5.5-rc2
 
-> +#include <linux/platform_data/cros_ec_commands.h>
-> +#include <linux/platform_data/cros_ec_pd_notify.h>
-> +#include <linux/platform_data/cros_ec_proto.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define DRV_NAME "cros-ec-pd-notify"
-> +#define ACPI_DRV_NAME "GOOG0003"
-> +
-> +static BLOCKING_NOTIFIER_HEAD(cros_ec_pd_notifier_list);
-> +
-> +/**
-> + * cros_ec_pd_register_notify - Register a notifier callback for PD events.
-> + * @nb: Notifier block pointer to register
-> + *
-> + * On ACPI platforms this corresponds to host events on the ECPD
-> + * "GOOG0003" ACPI device. On non-ACPI platforms this will filter mkbp events
-> + * for USB PD events.
-> + *
-> + * Return: 0 on success or negative error code.
-> + */
-> +int cros_ec_pd_register_notify(struct notifier_block *nb)
-> +{
-> +	return blocking_notifier_chain_register(
-> +			&cros_ec_pd_notifier_list, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(cros_ec_pd_register_notify);
-> +
-> +
-> +/**
-> + * cros_ec_pd_unregister_notify - Unregister notifier callback for PD events.
-> + * @nb: Notifier block pointer to unregister
-> + *
-> + * Unregister a notifier callback that was previously registered with
-> + * cros_ec_pd_register_notify().
-> + */
-> +void cros_ec_pd_unregister_notify(struct notifier_block *nb)
-> +{
-> +	blocking_notifier_chain_unregister(&cros_ec_pd_notifier_list, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(cros_ec_pd_unregister_notify);
-> +
-> +#ifdef CONFIG_ACPI
-> +
-> +static int cros_ec_pd_notify_add_acpi(struct acpi_device *adev)
-> +{
-> +	return 0;
-> +}
-> +
-> +static void cros_ec_pd_notify_acpi(struct acpi_device *adev, u32 event)
-> +{
-> +	blocking_notifier_call_chain(&cros_ec_pd_notifier_list, event, NULL);
-> +}
-> +
-> +static const struct acpi_device_id cros_ec_pd_acpi_device_ids[] = {
-> +	{ ACPI_DRV_NAME, 0 },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(acpi, cros_ec_pd_acpi_device_ids);
-> +
-> +static struct acpi_driver cros_ec_pd_notify_driver = {
-> +	.name = DRV_NAME,
-> +	.class = DRV_NAME,
-> +	.ids = cros_ec_pd_acpi_device_ids,
-> +	.ops = {
-> +		.add = cros_ec_pd_notify_add_acpi,
-> +		.notify = cros_ec_pd_notify_acpi,
-> +	},
-> +};
-> +module_acpi_driver(cros_ec_pd_notify_driver);
-> +
-> +#else /* CONFIG_ACPI */
-> +
-> +static int cros_ec_pd_notify_plat(struct notifier_block *nb,
-> +		unsigned long queued_during_suspend, void *data)
-> +{
-> +	struct cros_ec_device *ec_dev = (struct cros_ec_device *)data;
-> +	u32 host_event = cros_ec_get_host_event(ec_dev);
-> +
-> +	if (!host_event)
-> +		return NOTIFY_BAD;
-> +
-> +	if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_PD_MCU)) {
-> +		blocking_notifier_call_chain(&cros_ec_pd_notifier_list,
-> +				host_event, NULL);
-> +		return NOTIFY_OK;
-> +	}
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static int cros_ec_pd_notify_probe_plat(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct cros_ec_dev *ecdev = dev_get_drvdata(dev->parent);
-> +	struct notifier_block *nb;
-> +	int ret;
-> +
-> +	nb = devm_kzalloc(dev, sizeof(*nb), GFP_KERNEL);
-> +	if (!nb)
-> +		return -ENOMEM;
-> +
-> +	nb->notifier_call = cros_ec_pd_notify_plat;
-> +	dev_set_drvdata(dev, nb);
-> +
-> +	ret = blocking_notifier_chain_register(&ecdev->ec_dev->event_notifier,
-> +						nb);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to register notifier\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int cros_ec_pd_notify_remove_plat(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct cros_ec_dev *ecdev = dev_get_drvdata(dev->parent);
-> +	struct notifier_block *nb =
-> +		(struct notifier_block *)dev_get_drvdata(dev);
-> +
-> +	blocking_notifier_chain_unregister(&ecdev->ec_dev->event_notifier,
-> +			nb);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver cros_ec_pd_notify_driver = {
-> +	.driver = {
-> +		.name = DRV_NAME,
-> +	},
-> +	.probe = cros_ec_pd_notify_probe_plat,
-> +	.remove = cros_ec_pd_notify_remove_plat,
-> +};
-> +module_platform_driver(cros_ec_pd_notify_driver);
-> +
-> +#endif /* CONFIG_ACPI */
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("ChromeOS power delivery notifier device");
-> +MODULE_AUTHOR("Jon Flatley <jflat@chromium.org>");
-> +MODULE_ALIAS("platform:" DRV_NAME);
-> diff --git a/include/linux/platform_data/cros_ec_pd_notify.h b/include/linux/platform_data/cros_ec_pd_notify.h
-> new file mode 100644
-> index 0000000000000..907be5a130d60
-> --- /dev/null
-> +++ b/include/linux/platform_data/cros_ec_pd_notify.h
+---
 
-cros_usbpd_notify.h?
+Matti Vaittinen (12):
+  dt-bindings: leds: ROHM BD71282 PMIC LED driver
+  dt-bindings: mfd: Document ROHM BD71828 bindings
+  mfd: rohm PMICs - use platform_device_id to match MFD sub-devices
+  mfd: bd718x7: Add compatible for BD71850
+  mfd: bd71828: Support ROHM BD71828 PMIC - core
+  mfd: input: bd71828: Add power-key support
+  clk: bd718x7: Support ROHM BD71828 clk block
+  regulator: bd718x7: Split driver to common and bd718x7 specific parts
+  rtc: bd70528: add BD71828 support
+  gpio: bd71828: Initial support for ROHM BD71828 PMIC GPIOs
+  leds: Add common LED binding parsing support to LED class/core
+  led: bd71828: Support LED outputs on ROHM BD71828 PMIC
 
-> @@ -0,0 +1,17 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * ChromeOS EC Power Delivery Notifier Driver
-> + *
-> + * Copyright 2019 Google LLC
-> + */
-> +
-> +#ifndef __LINUX_PLATFORM_DATA_CROS_EC_PD_NOTIFY_H
-> +#define __LINUX_PLATFORM_DATA_CROS_EC_PD_NOTIFY_H
-> +
-> +#include <linux/notifier.h>
-> +
-> +int cros_ec_pd_register_notify(struct notifier_block *nb);
-> +
-> +void cros_ec_pd_unregister_notify(struct notifier_block *nb);
-> +
-> +#endif  /* __LINUX_PLATFORM_DATA_CROS_EC_PD_NOTIFY_H */
-> 
-
-The driver looks good to me, the only real complain is split the patch in two,
-one for the MFD subsystem and another one for chrome/platform. Also, my
-preference is rename cros_ec_pd_notify to cros_usbpd_notify to be coherent with
-previous related drivera, but is not a must.
-
-Thanks,
- Enric
+ .../bindings/leds/rohm,bd71828-leds.yaml      |  52 +++
+ .../bindings/mfd/rohm,bd71828-pmic.yaml       | 193 ++++++++
+ drivers/clk/Kconfig                           |   6 +-
+ drivers/clk/clk-bd718x7.c                     |  50 ++-
+ drivers/gpio/Kconfig                          |  12 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-bd71828.c                   | 159 +++++++
+ drivers/leds/Kconfig                          |  10 +
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/led-class.c                      |  99 +++-
+ drivers/leds/led-core.c                       | 258 +++++++++--
+ drivers/leds/leds-bd71828.c                   | 118 +++++
+ drivers/mfd/Kconfig                           |  15 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/rohm-bd70528.c                    |   3 +-
+ drivers/mfd/rohm-bd71828.c                    | 344 ++++++++++++++
+ drivers/mfd/rohm-bd718x7.c                    |  43 +-
+ drivers/regulator/Kconfig                     |   4 +
+ drivers/regulator/Makefile                    |   1 +
+ drivers/regulator/bd718x7-regulator.c         | 200 +++------
+ drivers/regulator/rohm-regulator.c            |  95 ++++
+ drivers/rtc/Kconfig                           |   3 +-
+ drivers/rtc/rtc-bd70528.c                     | 168 ++++++-
+ include/linux/leds.h                          |  94 +++-
+ include/linux/mfd/rohm-bd70528.h              |  19 +-
+ include/linux/mfd/rohm-bd71828.h              | 423 ++++++++++++++++++
+ include/linux/mfd/rohm-bd718x7.h              |   6 -
+ include/linux/mfd/rohm-generic.h              |  48 +-
+ include/linux/mfd/rohm-shared.h               |  27 ++
+ 29 files changed, 2190 insertions(+), 263 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/rohm,bd71828-leds.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
+ create mode 100644 drivers/gpio/gpio-bd71828.c
+ create mode 100644 drivers/leds/leds-bd71828.c
+ create mode 100644 drivers/mfd/rohm-bd71828.c
+ create mode 100644 drivers/regulator/rohm-regulator.c
+ create mode 100644 include/linux/mfd/rohm-bd71828.h
+ create mode 100644 include/linux/mfd/rohm-shared.h
 
 
+base-commit: d1eef1c619749b2a57e514a3fa67d9a516ffa919
+-- 
+2.21.0
 
 
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
