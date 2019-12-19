@@ -2,240 +2,128 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB493C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D149C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9441A206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:20:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fuKR1pjd"
+	by mail.kernel.org (Postfix) with ESMTP id D1BDF24650
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:21:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576765311;
+	bh=qPE9//mZgMQYau8o2brsaK7UTZVASfudmoR5jovYAu0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KsgYbAZzExvh6iB1a/TV7RpKp8DE6JzarjDRSVoDKqGY/XTBZ9lYG3u/yiEU35cgl
+	 N5bA95WW2SNONHhQ69MYu319/ULSOBzxuvvl0ahh1q9p8RkBK1FU7c3CQR4THeMCV3
+	 sgHbt0Hp0Vxobk4Le7WMdC03Q/Spy8LehL2nxyjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfLSOUr (ORCPT
+        id S1726903AbfLSOVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 09:20:47 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54107 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726786AbfLSOUp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 09:20:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576765243;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=o8w3RWEy911G0WmjBLZTINd5bgSpZvCXDWcEwYe3mVE=;
-        b=fuKR1pjdEfXnTw2EjeDT613Q86YdOv5ESxBRZbALLhiPK69R1HNUX8c0f/eLAUc8Rz4n5a
-        VwQq1CtOokLsiyCOy/oZ2QLlnrwLDAsnN+KEWP0/ThkEAsK+1Mw0RB3zqCDNmbFr6Xm1yI
-        Dy50nsHvl8z4uv+SWDH70N0HVUllSaw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-98-tXOr6pyjMQCFlVOxZbmoWw-1; Thu, 19 Dec 2019 09:20:40 -0500
-X-MC-Unique: tXOr6pyjMQCFlVOxZbmoWw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 19 Dec 2019 09:21:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726751AbfLSOVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 09:21:50 -0500
+Received: from localhost (unknown [122.178.234.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 612ED1005502;
-        Thu, 19 Dec 2019 14:20:38 +0000 (UTC)
-Received: from firesoul.localdomain (ovpn-200-28.brq.redhat.com [10.40.200.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C13017D934;
-        Thu, 19 Dec 2019 14:20:33 +0000 (UTC)
-Received: from [192.168.42.3] (localhost [IPv6:::1])
-        by firesoul.localdomain (Postfix) with ESMTP id 1E96A30736C73;
-        Thu, 19 Dec 2019 15:20:32 +0100 (CET)
-Subject: [net-next v5 PATCH] page_pool: handle page recycle for NUMA_NO_NODE
- condition
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     Jesper Dangaard Brouer <brouer@redhat.com>, lirongqing@baidu.com,
-        linyunsheng@huawei.com,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Saeed Mahameed <saeedm@mellanox.com>, mhocko@kernel.org,
-        peterz@infradead.org, linux-kernel@vger.kernel.org
-Date:   Thu, 19 Dec 2019 15:20:32 +0100
-Message-ID: <157676523108.200893.4571988797174399927.stgit@firesoul>
-In-Reply-To: <20191218084437.6db92d32@carbon>
-References: <20191218084437.6db92d32@carbon>
-User-Agent: StGit/0.19
+        by mail.kernel.org (Postfix) with ESMTPSA id 30C51222C2;
+        Thu, 19 Dec 2019 14:21:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576765310;
+        bh=qPE9//mZgMQYau8o2brsaK7UTZVASfudmoR5jovYAu0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oovSBiD9bsR9UznqfKVYt5Xn3KNRdTeZ1HLao554efYP9YrFjoExRf30GNnvCpjD0
+         i+HV8NpoIG/XhdiP0X111Qo8tjbv5hMUDr/r/Ejhh6QsAQx48gNu7hTFjub+yX5git
+         V8g/zGOlBMfxXlP/L2NX+RetD6d/qW7Tizue6bQ8=
+Date:   Thu, 19 Dec 2019 19:51:45 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     cang@codeaurora.org
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, asutoshd@codeaurora.org,
+        nguyenb@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, Mark Salyzyn <salyzyn@google.com>,
+        Andy Gross <agross@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 2/7] scsi: ufs-qcom: Add reset control support for
+ host controller
+Message-ID: <20191219142145.GV2536@vkoul-mobl>
+References: <091562cbe7d88ca1c30638bc10197074@codeaurora.org>
+ <20191217041342.GM2536@vkoul-mobl>
+ <763d7b30593b31646f3c198c2be99671@codeaurora.org>
+ <20191217092433.GN2536@vkoul-mobl>
+ <fc8952a0eee5c010fe14e5f107d89e64@codeaurora.org>
+ <20191217150852.GO2536@vkoul-mobl>
+ <CAOCk7Np691Hau1FdJqWs1UY6jvEvYfzA6NnG9U--ZcRsuV5=Zw@mail.gmail.com>
+ <75f7065d08f450c6cbb2b2662658ecaa@codeaurora.org>
+ <20191218041200.GP2536@vkoul-mobl>
+ <983c21bb5ad2d38e11c074528d8898b9@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <983c21bb5ad2d38e11c074528d8898b9@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The check in pool_page_reusable (page_to_nid(page) == pool->p.nid) is
-not valid if page_pool was configured with pool->p.nid = NUMA_NO_NODE.
+On 19-12-19, 15:12, cang@codeaurora.org wrote:
+> On 2019-12-18 12:12, Vinod Koul wrote:
+> > On 18-12-19, 02:44, cang@codeaurora.org wrote:
 
-The goal of the NUMA changes in commit d5394610b1ba ("page_pool: Don't
-recycle non-reusable pages"), were to have RX-pages that belongs to the
-same NUMA node as the CPU processing RX-packet during softirq/NAPI. As
-illustrated by the performance measurements.
+> 
+> Aside of the phy settings, your DT needs some modifications too,
+> seems you copied most of them from sdm845.
+> https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git/commit/?h=for-next&id=3834a2e92229ef26d30de28acb698b2b23d3e397
+> 
+> <--snip-->
+> > +		ufs_mem_phy: phy@1d87000 {
+> > +			compatible = "qcom,sm8150-qmp-ufs-phy";
+> > +			reg = <0 0x01d87000 0 0x18c>;
+> 
+> The size 0x18c is wrong, in the code you are even accessing registers
+> whose offsets are beyond 0x18c, see
+> 
+> #define QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE1_MODE0	0x1ac
+> #define QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE2_MODE0	0x1b0
+> #define QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE1_MODE1	0x1b4
+> #define QSERDES_V4_COM_BIN_VCOCAL_HSCLK_SEL		0x1bc
+> #define QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE2_MODE1	0x1b8
+> 
+> FYI, the total size of serdes registers is 0x1c0.
 
-This patch moves the NAPI checks out of fast-path, and at the same time
-solves the NUMA_NO_NODE issue.
+Yeah I will update it to 0x1c0
 
-First realize that alloc_pages_node() with pool->p.nid = NUMA_NO_NODE
-will lookup current CPU nid (Numa ID) via numa_mem_id(), which is used
-as the the preferred nid.  It is only in rare situations, where
-e.g. NUMA zone runs dry, that page gets doesn't get allocated from
-preferred nid.  The page_pool API allows drivers to control the nid
-themselves via controlling pool->p.nid.
+> 
+> <--snip-->
+> > +			ufs_mem_phy_lanes: lanes@1d87400 {
+> > +				reg = <0 0x01d87400 0 0x108>,
+> > +				      <0 0x01d87600 0 0x1e0>,
+> > +				      <0 0x01d87c00 0 0x1dc>,
+> 
+> Same as above, see
+> 
+> #define QPHY_V4_MULTI_LANE_CTRL1			0x1e0
+> 
+> FYI, the total size of PCS registers is 0x200
+> 
+> > +				      <0 0x01d87800 0 0x108>,
+> > +				      <0 0x01d87a00 0 0x1e0>;
+> > +				#phy-cells = <0>;
+> > +			};
+> <--snip-->
 
-This patch moves the NAPI check to when alloc cache is refilled, via
-dequeuing/consuming pages from the ptr_ring. Thus, we can allow placing
-pages from remote NUMA into the ptr_ring, as the dequeue/consume step
-will check the NUMA node. All current drivers using page_pool will
-alloc/refill RX-ring from same CPU running softirq/NAPI process.
+So I managed to fix it by configuring QPHY_SW_RESET in
+qcom_qmp_phy_com_init() before invoking the configuration. That makes it
+work for me. Will send patches shortly
 
-Drivers that control the nid explicitly, also use page_pool_update_nid
-when changing nid runtime.  To speed up transision to new nid the alloc
-cache is now flushed on nid changes.  This force pages to come from
-ptr_ring, which does the appropate nid check.
-
-For the NUMA_NO_NODE case, when a NIC IRQ is moved to another NUMA
-node, we accept that transitioning the alloc cache doesn't happen
-immediately. The preferred nid change runtime via consulting
-numa_mem_id() based on the CPU processing RX-packets.
-
-Notice, to avoid stressing the page buddy allocator and avoid doing too
-much work under softirq with preempt disabled, the NUMA check at
-ptr_ring dequeue will break the refill cycle, when detecting a NUMA
-mismatch. This will cause a slower transition, but its done on purpose.
-
-Fixes: d5394610b1ba ("page_pool: Don't recycle non-reusable pages")
-Reported-by: Li RongQing <lirongqing@baidu.com>
-Reported-by: Yunsheng Lin <linyunsheng@huawei.com>
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
----
- net/core/page_pool.c |   80 ++++++++++++++++++++++++++++++++++++++------------
- 1 file changed, 61 insertions(+), 19 deletions(-)
-
-diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-index a6aefe989043..748f0d36f4be 100644
---- a/net/core/page_pool.c
-+++ b/net/core/page_pool.c
-@@ -96,10 +96,60 @@ struct page_pool *page_pool_create(const struct page_pool_params *params)
- }
- EXPORT_SYMBOL(page_pool_create);
- 
-+static void __page_pool_return_page(struct page_pool *pool, struct page *page);
-+
-+noinline
-+static struct page *page_pool_refill_alloc_cache(struct page_pool *pool,
-+						 bool refill)
-+{
-+	struct ptr_ring *r = &pool->ring;
-+	struct page *page;
-+	int pref_nid; /* preferred NUMA node */
-+
-+	/* Quicker fallback, avoid locks when ring is empty */
-+	if (__ptr_ring_empty(r))
-+		return NULL;
-+
-+	/* Softirq guarantee CPU and thus NUMA node is stable. This,
-+	 * assumes CPU refilling driver RX-ring will also run RX-NAPI.
-+	 */
-+	pref_nid = (pool->p.nid == NUMA_NO_NODE) ? numa_mem_id() : pool->p.nid;
-+
-+	/* Slower-path: Get pages from locked ring queue */
-+	spin_lock(&r->consumer_lock);
-+
-+	/* Refill alloc array, but only if NUMA match */
-+	do {
-+		page = __ptr_ring_consume(r);
-+		if (unlikely(!page))
-+			break;
-+
-+		if (likely(page_to_nid(page) == pref_nid)) {
-+			pool->alloc.cache[pool->alloc.count++] = page;
-+		} else {
-+			/* NUMA mismatch;
-+			 * (1) release 1 page to page-allocator and
-+			 * (2) break out to fallthough to alloc_pages_node.
-+			 * This limit stress on page buddy alloactor.
-+			 */
-+			__page_pool_return_page(pool, page);
-+			page = NULL;
-+			break;
-+		}
-+	} while (pool->alloc.count < PP_ALLOC_CACHE_REFILL &&
-+		 refill);
-+
-+	/* Return last page */
-+	if (likely(pool->alloc.count > 0))
-+		page = pool->alloc.cache[--pool->alloc.count];
-+
-+	spin_unlock(&r->consumer_lock);
-+	return page;
-+}
-+
- /* fast path */
- static struct page *__page_pool_get_cached(struct page_pool *pool)
- {
--	struct ptr_ring *r = &pool->ring;
- 	bool refill = false;
- 	struct page *page;
- 
-@@ -113,20 +163,7 @@ static struct page *__page_pool_get_cached(struct page_pool *pool)
- 		refill = true;
- 	}
- 
--	/* Quicker fallback, avoid locks when ring is empty */
--	if (__ptr_ring_empty(r))
--		return NULL;
--
--	/* Slow-path: Get page from locked ring queue,
--	 * refill alloc array if requested.
--	 */
--	spin_lock(&r->consumer_lock);
--	page = __ptr_ring_consume(r);
--	if (refill)
--		pool->alloc.count = __ptr_ring_consume_batched(r,
--							pool->alloc.cache,
--							PP_ALLOC_CACHE_REFILL);
--	spin_unlock(&r->consumer_lock);
-+	page = page_pool_refill_alloc_cache(pool, refill);
- 	return page;
- }
- 
-@@ -311,13 +348,10 @@ static bool __page_pool_recycle_direct(struct page *page,
- 
- /* page is NOT reusable when:
-  * 1) allocated when system is under some pressure. (page_is_pfmemalloc)
-- * 2) belongs to a different NUMA node than pool->p.nid.
-- *
-- * To update pool->p.nid users must call page_pool_update_nid.
-  */
- static bool pool_page_reusable(struct page_pool *pool, struct page *page)
- {
--	return !page_is_pfmemalloc(page) && page_to_nid(page) == pool->p.nid;
-+	return !page_is_pfmemalloc(page);
- }
- 
- void __page_pool_put_page(struct page_pool *pool, struct page *page,
-@@ -484,7 +518,15 @@ EXPORT_SYMBOL(page_pool_destroy);
- /* Caller must provide appropriate safe context, e.g. NAPI. */
- void page_pool_update_nid(struct page_pool *pool, int new_nid)
- {
-+	struct page *page;
-+
- 	trace_page_pool_update_nid(pool, new_nid);
- 	pool->p.nid = new_nid;
-+
-+	/* Flush pool alloc cache, as refill will check NUMA node */
-+	while (pool->alloc.count) {
-+		page = pool->alloc.cache[--pool->alloc.count];
-+		__page_pool_return_page(pool, page);
-+	}
- }
- EXPORT_SYMBOL(page_pool_update_nid);
-
-
+-- 
+~Vinod
