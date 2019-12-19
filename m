@@ -4,48 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BEFC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D68C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A39724676
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CF2724676
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781247;
-	bh=nuHAsepJtngeuassJ0DTBPKJvjsLu9vQprBq1cI/L3M=;
+	s=default; t=1576781253;
+	bh=3K4N9OE0RaryNp4KTlU4FXDaW7UdwQ7b4wXkp9IHSQQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oSuj8Z9dP3YOpBjWqa5Hjk8A279DDVHIVkkKj69GN0pcPhhSGzDYfxVbewbe8qjG0
-	 dwBL0Uxxr7nULbUWVGAllIzx2BWyFsUSVfh1EZSD/MA6Hm8tcKNrVcxsPbbBlS2jBZ
-	 M9K47CwymUylJ9dxrGoFpYUOhBve3TIjIcP7NOOU=
+	b=DwMdeEx/S1CHmVc9ObHN1ksdmupfxC5ec1IJqKKxkc7BGXwzSDkCkblJKHl6ql5rK
+	 TkYZC6yijZ672KoDLGR7Qk8UABNbftkvbNWr7fLPncTZO1i/yVfU7kksLuywvAhcLj
+	 AGhVczTK4dr1QqiTMPE9iVvDbZ8hYRs+6tChGvic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729466AbfLSSr0 (ORCPT
+        id S1729485AbfLSSrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:47:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40254 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:47:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729229AbfLSSrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:47:23 -0500
+        id S1727897AbfLSSr2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:47:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A9E1206D7;
-        Thu, 19 Dec 2019 18:47:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 608B5206D7;
+        Thu, 19 Dec 2019 18:47:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781243;
-        bh=nuHAsepJtngeuassJ0DTBPKJvjsLu9vQprBq1cI/L3M=;
+        s=default; t=1576781247;
+        bh=3K4N9OE0RaryNp4KTlU4FXDaW7UdwQ7b4wXkp9IHSQQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YBcyH0zNZTphoEgz7OHafA+krKDksNRg3wiEhi/jIULlvwbShb5bzeiSe34Mgl4EB
-         Y0eFJHDsvOPP19KzMij5fY5FaW36STrb38RYvgM/6SUtU5b4RQVRNFEn4VC9uN+vQN
-         SfxdntyNSawSR1eZLFgP/MqiJ59jA9qlsqC/5UR8=
+        b=YzBqfSdLlQ7Anlqif0sYhL6I2rea6sCwEOd9TlhCbhZTr75YDTBdv7H24YNOKIqlH
+         4/pk2DyKxoW8g4VFbdADSq+dW/ecgOQFHs6OB96v+TEiJM3ZTvBASA7mxOU7yhwkCZ
+         tNp0c0R75rhf8dOL24GYM4nmlBMoArerKBvCuvcI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.9 141/199] ppdev: fix PPGETTIME/PPSETTIME ioctls
-Date:   Thu, 19 Dec 2019 19:33:43 +0100
-Message-Id: <20191219183222.973502841@linuxfoundation.org>
+        stable@vger.kernel.org, linux-media@vger.kernel.org,
+        Martin Bugge <marbugge@cisco.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Mauro Carvalho Chehab <mchehab@osg.samsung.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>
+Subject: [PATCH 4.9 143/199] video/hdmi: Fix AVI bar unpack
+Date:   Thu, 19 Dec 2019 19:33:45 +0100
+Message-Id: <20191219183223.107627157@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -58,76 +64,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Ville Syrjälä <ville.syrjala@linux.intel.com>
 
-commit 998174042da229e2cf5841f574aba4a743e69650 upstream.
+commit 6039f37dd6b76641198e290f26b31c475248f567 upstream.
 
-Going through the uses of timeval in the user space API,
-I noticed two bugs in ppdev that were introduced in the y2038
-conversion:
-
-* The range check was accidentally moved from ppsettime to
-  ppgettime
-
-* On sparc64, the microseconds are in the other half of the
-  64-bit word.
-
-Fix both, and mark the fix for stable backports.
+The bar values are little endian, not big endian. The pack
+function did it right but the unpack got it wrong. Fix it.
 
 Cc: stable@vger.kernel.org
-Fixes: 3b9ab374a1e6 ("ppdev: convert to y2038 safe")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20191108203435.112759-8-arnd@arndb.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-media@vger.kernel.org
+Cc: Martin Bugge <marbugge@cisco.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Thierry Reding <treding@nvidia.com>
+Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Fixes: 2c676f378edb ("[media] hdmi: added unpack and logging functions for InfoFrames")
+Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190919132853.30954-1-ville.syrjala@linux.intel.com
+Reviewed-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/ppdev.c |   16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/video/hdmi.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/char/ppdev.c
-+++ b/drivers/char/ppdev.c
-@@ -624,20 +624,27 @@ static int pp_do_ioctl(struct file *file
- 		if (copy_from_user(time32, argp, sizeof(time32)))
- 			return -EFAULT;
+--- a/drivers/video/hdmi.c
++++ b/drivers/video/hdmi.c
+@@ -1032,12 +1032,12 @@ static int hdmi_avi_infoframe_unpack(str
+ 	if (ptr[0] & 0x10)
+ 		frame->active_aspect = ptr[1] & 0xf;
+ 	if (ptr[0] & 0x8) {
+-		frame->top_bar = (ptr[5] << 8) + ptr[6];
+-		frame->bottom_bar = (ptr[7] << 8) + ptr[8];
++		frame->top_bar = (ptr[6] << 8) | ptr[5];
++		frame->bottom_bar = (ptr[8] << 8) | ptr[7];
+ 	}
+ 	if (ptr[0] & 0x4) {
+-		frame->left_bar = (ptr[9] << 8) + ptr[10];
+-		frame->right_bar = (ptr[11] << 8) + ptr[12];
++		frame->left_bar = (ptr[10] << 8) | ptr[9];
++		frame->right_bar = (ptr[12] << 8) | ptr[11];
+ 	}
+ 	frame->scan_mode = ptr[0] & 0x3;
  
-+		if ((time32[0] < 0) || (time32[1] < 0))
-+			return -EINVAL;
-+
- 		return pp_set_timeout(pp->pdev, time32[0], time32[1]);
- 
- 	case PPSETTIME64:
- 		if (copy_from_user(time64, argp, sizeof(time64)))
- 			return -EFAULT;
- 
-+		if ((time64[0] < 0) || (time64[1] < 0))
-+			return -EINVAL;
-+
-+		if (IS_ENABLED(CONFIG_SPARC64) && !in_compat_syscall())
-+			time64[1] >>= 32;
-+
- 		return pp_set_timeout(pp->pdev, time64[0], time64[1]);
- 
- 	case PPGETTIME32:
- 		jiffies_to_timespec64(pp->pdev->timeout, &ts);
- 		time32[0] = ts.tv_sec;
- 		time32[1] = ts.tv_nsec / NSEC_PER_USEC;
--		if ((time32[0] < 0) || (time32[1] < 0))
--			return -EINVAL;
- 
- 		if (copy_to_user(argp, time32, sizeof(time32)))
- 			return -EFAULT;
-@@ -648,8 +655,9 @@ static int pp_do_ioctl(struct file *file
- 		jiffies_to_timespec64(pp->pdev->timeout, &ts);
- 		time64[0] = ts.tv_sec;
- 		time64[1] = ts.tv_nsec / NSEC_PER_USEC;
--		if ((time64[0] < 0) || (time64[1] < 0))
--			return -EINVAL;
-+
-+		if (IS_ENABLED(CONFIG_SPARC64) && !in_compat_syscall())
-+			time64[1] <<= 32;
- 
- 		if (copy_to_user(argp, time64, sizeof(time64)))
- 			return -EFAULT;
 
 
