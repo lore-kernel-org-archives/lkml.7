@@ -2,352 +2,108 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E19C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5D7C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7AC8222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF0E222314
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:50:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dLxef6dc"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="H6d1b6QY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbfLSAnb (ORCPT
+        id S1726715AbfLSAuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 19:43:31 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44005 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbfLSAna (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 19:43:30 -0500
-Received: by mail-lj1-f194.google.com with SMTP id a13so4204606ljm.10
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 16:43:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=onqicWxqhCYRXnes1QOmSOtJNPq7CuqRS7oJyFTkgKc=;
-        b=dLxef6dc8gv8aGWK/lMmakWKizcPikd8Nrh2bu3tj/OcQILCbF1drRvDol8LV2gDiF
-         nHYAzEpI2U/1L4NCTGZOtiTQhWXwip+DCdkHA1YF7+zInDfSXRbzafS0hhqodxkUTEJD
-         5xXO367L/YlfBHvyvznn0/HOrKRLSa8lgu00S5ZDhnySR/Uvm4X3ZtU95UOVmiaBlLD6
-         l2klv/oLqL3Exi+bMNqU8ZoLziPj7SKxJm75go+AnaEsWarofKBK3ueCBcVIbRJIMm9p
-         v1FKpoT+AZstNgCBoWTNtRStJ4uvmfyleOX9fiIxoYeim+tbdMFRTxsZ/hJa60WF+Jbk
-         z76g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=onqicWxqhCYRXnes1QOmSOtJNPq7CuqRS7oJyFTkgKc=;
-        b=As3dvrFJqePICNDlNxffZLWioJsgB3kQjcy+Rjd26ztooGVm/TQXPmfvioUg+rbf71
-         tUNgA7nICGmMFu2SXPMIJOsnkTdDCYQNTAErq1xbwI4WEi1pJPzIMmfd7kAPZlCUiGaB
-         iJbKDuTe1fzDqy44TZZOlLZdZfN1fYpvY1ISXXDLbALmdmMOlHA8RfIuZ/A3jOUYnvuN
-         A/uMxGPsdv3DBnxEoYnX2wxDmsFwCe1Np6c6aSOT5qpdP1osjS4SZvR3uutbyEHFqRat
-         hIFC08eo4EU2o76UOb0EYDrLcWjNZlys/XxrXtNxFqsZEUCd/azK9eiTgn72vL2TKROP
-         qvFA==
-X-Gm-Message-State: APjAAAXW+GSMGaW69FWI2Zm7csbf62WOuoUojeDnTpgD48feG/7OT5Bb
-        t1crrDwFb0MmijIthvrMK6NvcQ==
-X-Google-Smtp-Source: APXvYqwSHP+/NTHTM96GSP9iEjGjPEwU/jpNK4aD4opvKpeqPHPCWHHq8JjkHgpr5+8UK9AMMohI1g==
-X-Received: by 2002:a2e:9e55:: with SMTP id g21mr3818098ljk.245.1576716207794;
-        Wed, 18 Dec 2019 16:43:27 -0800 (PST)
-Received: from khorivan (57-201-94-178.pool.ukrtel.net. [178.94.201.57])
-        by smtp.gmail.com with ESMTPSA id l12sm1903742lji.52.2019.12.18.16.43.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 16:43:27 -0800 (PST)
-Date:   Thu, 19 Dec 2019 02:43:24 +0200
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Cc:     Po Liu <po.liu@nxp.com>,
-        Andre Guedes <andre.guedes@linux.intel.com>,
-        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "ayal@mellanox.com" <ayal@mellanox.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "hauke.mehrtens@intel.com" <hauke.mehrtens@intel.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "jiri@mellanox.com" <jiri@mellanox.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "pablo@netfilter.org" <pablo@netfilter.org>,
-        "saeedm@mellanox.com" <saeedm@mellanox.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "simon.horman@netronome.com" <simon.horman@netronome.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
-Subject: Re: [EXT] Re: [v1,net-next, 1/2] ethtool: add setting frame
- preemption of traffic classes
-Message-ID: <20191219004322.GA20146@khorivan>
-Mail-Followup-To: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Po Liu <po.liu@nxp.com>,
-        Andre Guedes <andre.guedes@linux.intel.com>,
-        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "ayal@mellanox.com" <ayal@mellanox.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "hauke.mehrtens@intel.com" <hauke.mehrtens@intel.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "jiri@mellanox.com" <jiri@mellanox.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "pablo@netfilter.org" <pablo@netfilter.org>,
-        "saeedm@mellanox.com" <saeedm@mellanox.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "simon.horman@netronome.com" <simon.horman@netronome.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
-References: <20191127094517.6255-1-Po.Liu@nxp.com>
- <157603276975.18462.4638422874481955289@pipeline>
- <VE1PR04MB6496CEA449E9B844094E580492510@VE1PR04MB6496.eurprd04.prod.outlook.com>
- <87eex43pzm.fsf@linux.intel.com>
+        Wed, 18 Dec 2019 19:50:40 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:54259 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726518AbfLSAuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 19:50:39 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47dYFm4W5Fz9sPh;
+        Thu, 19 Dec 2019 11:50:36 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1576716637;
+        bh=LiWs2P61sq1shFi13EV55p92N+g4EB+CQsziU1YUEqg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=H6d1b6QYdDjoQcgmT2NP7LosK1H1vc+G6CWo9ufQtDXXPOWnM5G0S7xlMg/NlvhKH
+         ciccw+AfBJGSa5q+obIomp1LqitotWQhHTY13yfqMPKWMEXtOvZbmlM1eZx0ColbqO
+         TOfPZrxZ4FVqBLon1KEQfVaQ2XhFMWNxvglq1uthB44Cnoh5jO7hfa+GA4sL/1IAdi
+         ARY1f93LZn3Mtn8xgh0eP9Gbgm7xg7MwguxwGaG96JLV2MYqir3mU8DoPA/aVvHJkT
+         mUjOvbv4294L6IKfm2GAwVjrJ7jo1+M1oPprPw4dEMI+mhVXOOBgBkSGmeyDSyoZ8A
+         zrNnoRD4C+PCQ==
+Date:   Thu, 19 Dec 2019 11:50:35 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the rcu tree with the tip tree
+Message-ID: <20191219115036.4699721c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87eex43pzm.fsf@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/hoyOk7tUIKmoE0FIRDq0+Ne";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 01:44:13PM -0800, Vinicius Costa Gomes wrote:
->Hi Po,
->
->Po Liu <po.liu@nxp.com> writes:
->
->> Hi Andre,
->>
->>
->> Br,
->> Po Liu
->>
->>> -----Original Message-----
->>> From: Andre Guedes <andre.guedes@linux.intel.com>
->>> Sent: 2019年12月11日 10:53
->>> To: alexandru.ardelean@analog.com; allison@lohutok.net; andrew@lunn.ch;
->>> ayal@mellanox.com; davem@davemloft.net; f.fainelli@gmail.com;
->>> gregkh@linuxfoundation.org; hauke.mehrtens@intel.com;
->>> hkallweit1@gmail.com; jiri@mellanox.com; linux-kernel@vger.kernel.org;
->>> netdev@vger.kernel.org; pablo@netfilter.org; saeedm@mellanox.com;
->>> tglx@linutronix.de; Po Liu <po.liu@nxp.com>
->>> Cc: vinicius.gomes@intel.com; simon.horman@netronome.com; Claudiu Manoil
->>> <claudiu.manoil@nxp.com>; Vladimir Oltean <vladimir.oltean@nxp.com>;
->>> Alexandru Marginean <alexandru.marginean@nxp.com>; Xiaoliang Yang
->>> <xiaoliang.yang_1@nxp.com>; Roy Zang <roy.zang@nxp.com>; Mingkai Hu
->>> <mingkai.hu@nxp.com>; Jerry Huang <jerry.huang@nxp.com>; Leo Li
->>> <leoyang.li@nxp.com>; Po Liu <po.liu@nxp.com>
->>> Subject: [EXT] Re: [v1,net-next, 1/2] ethtool: add setting frame preemption of
->>> traffic classes
->>>
->>> Caution: EXT Email
->>>
->>> Hi Po,
->>>
->>> Quoting Po Liu (2019-11-27 01:59:18)
->>> > IEEE Std 802.1Qbu standard defined the frame preemption of port
->>> > traffic classes. This patch introduce a method to set traffic classes
->>> > preemption. Add a parameter 'preemption' in struct
->>> > ethtool_link_settings. The value will be translated to a binary, each
->>> > bit represent a traffic class. Bit "1" means preemptable traffic
->>> > class. Bit "0" means express traffic class.  MSB represent high number
->>> > traffic class.
->>> >
->>> > If hardware support the frame preemption, driver could set the
->>> > ethernet device with hw_features and features with NETIF_F_PREEMPTION
->>> > when initializing the port driver.
->>> >
->>> > User can check the feature 'tx-preemption' by command 'ethtool -k
->>> > devname'. If hareware set preemption feature. The property would be a
->>> > fixed value 'on' if hardware support the frame preemption.
->>> > Feature would show a fixed value 'off' if hardware don't support the
->>> > frame preemption.
->
->Having some knobs in ethtool to enable when/how Frame Preemption is
->advertised on the wire makes sense. I also agree that it should be "on"
->by default.
->
->>> >
->>> > Command 'ethtool devname' and 'ethtool -s devname preemption N'
->>> > would show/set which traffic classes are frame preemptable.
->>> >
->>> > Port driver would implement the frame preemption in the function
->>> > get_link_ksettings() and set_link_ksettings() in the struct ethtool_ops.
->>>
->>> In an early RFC series [1], we proposed a way to support frame preemption. I'm
->>> not sure if you have considered it before implementing this other proposal
->>> based on ethtool interface so I thought it would be a good idea to bring that up
->>> to your attention, just in case.
->>
->> Sorry, I didn't notice the RFC proposal. Using ethtool set the
->> preemption just thinking about 8021Qbu as standalone. And not limit to
->> the taprio if user won't set 802.1Qbv.
->
->I see your point of using frame-preemption "standalone", I have two
->ideas:
->
-> 1. add support in taprio to be configured without any schedule in the
-> "full offload" mode. In practice, allowing taprio to work somewhat
-> similar to (mqprio + frame-preemption), changes in the code should de
-> fairly small;
+--Sig_/hoyOk7tUIKmoE0FIRDq0+Ne
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-+
+Hi all,
 
-And if follow mqprio settings logic then preemption also can be enabled
-immediately while configuring taprio first time, and similarly new ADMIN
-can't change it and can be set w/o preemption option afterwards.
+Today's linux-next merge of the rcu tree got a conflict in:
 
-So that following is correct:
+  kernel/cpu.c
 
-OPER
-$ tc qdisc add dev IFACE parent root handle 100 taprio \
-      base-time 10000000 \
-      num_tc 3 \
-      map 2 2 1 0 2 2 2 2 2 2 2 2 2 2 2 2 \
-      queues 1@0 1@1 2@2 \
-      preemption 0 1 1 1
-      flags 1
+between commit:
 
-then
-ADMIN
-$ tc qdisc add dev IFACE parent root handle 100 taprio \
-      base-time 12000000 \
-      num_tc 3 \
-      map 2 2 1 0 2 2 2 2 2 2 2 2 2 2 2 2 \
-      queues 1@0 1@1 2@2 \
-      preemption 0 1 1 1
-      sched-entry S 01 300000 \
-      sched-entry S 02 300000 \
-      flags 1
+  45178ac0cea8 ("cpu/hotplug, stop_machine: Fix stop_machine vs hotplug ord=
+er")
 
-then
-ADMIN
-$ tc qdisc add dev IFACE parent root handle 100 taprio \
-      base-time 13000000 \
-      sched-entry S 01 300000 \
-      sched-entry S 02 300000 \
-      flags 1
+from the tip tree and commit:
 
-BUT:
+  d62c673f4cfc ("cpu/hotplug, stop_machine: Fix stop_machine vs hotplug ord=
+er")
 
-1) The question is only should it be in this way? I mean preemption to be
-enabled immediately? Also should include other parameters like fragment size.
+from the rcu tree.
 
-2) What if I want to use frame preemption with another "transmission selection
-algorithm"? Say another one "time sensitive" - CBS? How is it going to be
-stacked?
+I fixed it up (I just used the tip tree version) and can carry the fix
+as necessary. This is now fixed as far as linux-next is concerned, but
+any non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
 
-In this case ethtool looks better, allowing this "MAC level" feature, to be
-configured separately.
 
->
-> 2. extend mqprio to support frame-preemption;
->
->>
->> As some feedback  also want to set the MAC merge minimal fragment size
->> and get some more information of 802.3br.
->
->The minimal fragment size, I guess, also makes sense to be kept in
->ethtool. That is we have a sane default, and allow the user to change
->this setting for special cases.
->
->>
->>>
->>> In that initial proposal, Frame Preemption feature is configured via taprio qdisc.
->>> For example:
->>>
->>> $ tc qdisc add dev IFACE parent root handle 100 taprio \
->>>       num_tc 3 \
->>>       map 2 2 1 0 2 2 2 2 2 2 2 2 2 2 2 2 \
->>>       queues 1@0 1@1 2@2 \
->>>       preemption 0 1 1 1 \
->>>       base-time 10000000 \
->>>       sched-entry S 01 300000 \
->>>       sched-entry S 02 300000 \
->>>       sched-entry S 04 400000 \
->>>       clockid CLOCK_TAI
->>>
->>> It also aligns with the gate control operations Set-And-Hold-MAC and Set-And-
->>> Release-MAC that can be set via 'sched-entry' (see Table 8.7 from
->>> 802.1Q-2018 for further details.
->>
->> I am curious about Set-And-Hold-Mac via 'sched-entry'. Actually, it
->> could be understand as guardband by hardware preemption. MAC should
->> auto calculate the nano seconds before  express entry slot start to
->> break to two fragments. Set-And-Hold-MAC should minimal larger than
->> the fragment-size oct times.
->
->Another interesting point. My first idea is that when the schedule is
->offloaded to the driver and the driver detects that the "entry" width is
->smaller than the fragment side, the driver could reject that schedule
->with a nice error message.
 
-Looks ok, if entry command is RELEASE or SET only, but not HOLD, and
-only if it contains express queues. And if for entry is expectable to have
-interval shorter, the entry has to be marked as HOLD then.
+--=20
+Cheers,
+Stephen Rothwell
 
-But not every offload is able to support mac/hold per sched (there is
-no HOLD/RELEASE commands in this case). For this case seems like here can
-be 2 cases:
+--Sig_/hoyOk7tUIKmoE0FIRDq0+Ne
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-1) there is no “gate close” event for the preemptible traffic
-2) there is "gate close" event for the preemptable traffic
+-----BEGIN PGP SIGNATURE-----
 
-And both can have the following impact, if assume the main reason to
-this guard check is to guarantee the express queue cannot be blocked while
-this "close to short" interval opening ofc:
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl36yVwACgkQAVBC80lX
+0GyP0QgAi6Hh7BKQdxXSvalXiYH6/eh0KGlY6l+T9/WodwCFbhoHobzHxdICHmJ4
+btKDDak5+gyaXyDrqP7iJyYE1Beku8qAVMm8Lv59dnNzAR1U9ju97xtzkaOexo9j
+mGj0K1i4jRJPOXvfoVxldrAumlRMrIudPwLQ9wAHH5RLzC96pmDExTTL9hIYctTP
+z/HEsKhY6Hf12AWwuPxxLzClz1Rb/++cqdkBU3H/MuOnXNeUVWESU2uvPlGixf/d
+ktDxSAEE3BuD6bC3xtNHavpG+gHG9EyY0lfoaJ+G0EnGlk3Zi/cViYmeCY8igo8E
+kP2xo19zetHBHF3rQSkL5jIT0z/oQA==
+=aRB3
+-----END PGP SIGNATURE-----
 
-If a preemption fragment is started before "express" frame, then interval
-should allow to complete preemption fragment and has to have enough time
-to insert express frame. So here situation when maximum packet size per
-each queue can have place.
-
-In case of TI am65 this queue MTU is configurable per queue (for similar
-reasons and couple more (packet fill feature for instance)) and can be
-used for guard check also, but not clear where it should be. Seems like
-it should be done using ethtool also, but can be needed for taprio
-interface....
-
->>
->>>
->>> Please share your thoughts on this.
->>
->> I am good to see there is frame preemption proposal. Each way is ok
->> for me but ethtool is more flexible. I've seen the RFC the code. The
->> hardware offload is in the mainline, but preemption is not yet, I
->> don't know why. Could you post it again?
->
->It's not mainline because this kind of stuff will not be accepted
->upstream without in-tree users. And you are the first one to propose
->such a thing :-)
->
->It's just now that I have something that supports frame-preemption, the
->code I have is approaching RFC-like quality. I will send another RFC
->this week hopefully, and we can see how things look in practice.
->
->
->Cheers,
->--
->Vinicius
-
--- 
-Regards,
-Ivan Khoronzhuk
+--Sig_/hoyOk7tUIKmoE0FIRDq0+Ne--
