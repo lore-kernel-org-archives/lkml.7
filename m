@@ -2,66 +2,85 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D867C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E066AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18A56222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC77F222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:23:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbfLSOWi (ORCPT
+        id S1726855AbfLSOXh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 09:22:38 -0500
-Received: from mx2.suse.de ([195.135.220.15]:38992 "EHLO mx2.suse.de"
+        Thu, 19 Dec 2019 09:23:37 -0500
+Received: from foss.arm.com ([217.140.110.172]:39144 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726701AbfLSOWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 09:22:37 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 1F40DB13C;
-        Thu, 19 Dec 2019 14:22:36 +0000 (UTC)
-Date:   Thu, 19 Dec 2019 15:22:35 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] printk: fix exclusive_console replaying
-Message-ID: <20191219142235.4zpabzlyhav6d3cd@pathway.suse.cz>
-References: <20191219115322.31160-1-john.ogness@linutronix.de>
+        id S1726695AbfLSOXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 09:23:37 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E2A231B;
+        Thu, 19 Dec 2019 06:23:36 -0800 (PST)
+Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D5CA73F6CF;
+        Thu, 19 Dec 2019 06:23:34 -0800 (PST)
+Subject: Re: [PATCH] sched, fair: Allow a small degree of load imbalance
+ between SD_NUMA domains
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Mel Gorman <mgorman@techsingularity.net>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>, pauld@redhat.com,
+        srikar@linux.vnet.ibm.com, quentin.perret@arm.com,
+        dietmar.eggemann@arm.com, Morten.Rasmussen@arm.com,
+        hdanton@sina.com, parth@linux.ibm.com, riel@surriel.com,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20191218154402.GF3178@techsingularity.net>
+ <8f049805-3e97-09bb-2d32-0718be1dec9b@arm.com>
+ <20191219100232.GY2844@hirez.programming.kicks-ass.net>
+ <83a9363b-a044-845a-d37c-bf2ca7c8a09e@arm.com>
+Message-ID: <019ceada-998c-8e5e-74fa-9606c922e096@arm.com>
+Date:   Thu, 19 Dec 2019 14:23:33 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191219115322.31160-1-john.ogness@linutronix.de>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <83a9363b-a044-845a-d37c-bf2ca7c8a09e@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2019-12-19 12:59:22, John Ogness wrote:
-> Commit f92b070f2dc8 ("printk: Do not miss new messages when replaying
-> the log") introduced a new variable @exclusive_console_stop_seq to
-> store when an exclusive console should stop printing. It should be
-> set to the @console_seq value at registration. However, @console_seq
-> is previously set to @syslog_seq so that the exclusive console knows
-> where to begin. This results in the exclusive console immediately
-> reactivating all the other consoles and thus repeating the messages
-> for those consoles.
+On 19/12/2019 11:46, Valentin Schneider wrote:
+> As for picking values, right now we have
 > 
-> Set @console_seq after @exclusive_console_stop_seq has stored the
-> current @console_seq value.
+>   125 (default) / 117 (LLC domain) / 110 (SMT domain)
 > 
-> Fixes: f92b070f2dc8 ("printk: Do not miss new messages when replaying the log")
-> Signed-off-by: John Ogness <john.ogness@linutronix.de>
+> We could have
+> 
+>   >> 2 (25%), >> 3 (12.5%), >> 4 (6.25%).
+> 
 
-Grr, it was an ugly mistake. I am surprised that it has stayed there
-for more then one year without noticing. Thanks a lot for fixing.
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+Hmph, I see that task_numa_migrate() starts with a slightly different value
+(112), and does the same halving pattern as wake_affine_weight():
 
-Best Regards,
-Petr
+  x = 100 + (sd->imbalance_pct - 100) / 2;
+
+The 112 could use >> 3 (12.5%); the halving is just an extra shift with the
+suggested changes.
+
+> It's not strictly equivalent but IMO the whole imbalance_pct thing isn't
+> very precise anyway; just needs to be good enough on a sufficient number of
+> topologies.
+> 
+> 
+> 
+>>> +				env->imbalance = 0;
+>>> +
+>>>  		return;
+>>>  	}
+>>>  
