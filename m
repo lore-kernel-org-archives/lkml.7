@@ -2,206 +2,179 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7903C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE39C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8B5524676
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:58:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hclCZbX8"
+	by mail.kernel.org (Postfix) with ESMTP id 8962E24676
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:59:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbfLSL6g (ORCPT
+        id S1726830AbfLSL7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 06:58:36 -0500
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:40164 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbfLSL6g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 06:58:36 -0500
-Received: by mail-yb1-f195.google.com with SMTP id a2so2065464ybr.7
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 03:58:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=skzvEBKEgSRmkv36qzyh5QpOtx3Jh5DVz7BfkRa/+7E=;
-        b=hclCZbX8N7Cb9s2vfDIteDJO9VyRG0vcYoe6qmtr4KYdBPoT9z5MzW6yI49hr9UDhL
-         EPEBTXrQKh7UgYx4kDRo8NgyHYw8947lUcCFPOX11tOhX/TWXE7lZfdT6upUxk3eVjJh
-         C+RbTGaB0483N2c4sM/B6y22dYrKYtvPjg8Qv30uRBmtlbCVssdXt3aD2qMESr2Okt1w
-         OiRRsjQIAASJyyMn6LPTEBt5ACi/eEBlMV76pZUmxCmH3bEaC3wmp4WSafmNwC/mYkNn
-         cR0Tr1QA1Lh0yXJn2ySVPNmZZ+l3HbkRDv2FJXMcJwUhv4ezARQMJQBRoUYQPQLB6SbT
-         e98Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=skzvEBKEgSRmkv36qzyh5QpOtx3Jh5DVz7BfkRa/+7E=;
-        b=IcHZJ2oiX24MBqCfdMML8BLpDiCUEw/XzoUcS0rSL5Xr4PUwv3L0+IUqdB+PWElWmj
-         45fLerCIGD87FogTygS3j7+nEavdHBQaT2H/uqVLD5kxUrooXschYY3+B2UhE3WupKDQ
-         Rr4qr9ics/eZ7FQK0qCpPzSxz2Bv+NTIXWDdRj3seP3DquBJYShqY/v3QIDw5avNWCEh
-         ZKLl3IITZZD+m4alMoPvGp9g4198Deq8O8Q3v2t6aU9OYvljvQG3Pvv8ILxY8zxDMPrk
-         LWybGbWWbyPghntiSGaHSVSPNut22qkdn5bee3CWjJjKFqWJ38CoJMG/W95gO7JLXEWv
-         ygEA==
-X-Gm-Message-State: APjAAAWaWY42iS7wLI1N9ihgfromibFzYDvFWubIPMu4c4acfjivIW9W
-        QiJSQDZwSU0AGanmfOoIHg==
-X-Google-Smtp-Source: APXvYqyxpDlUsb/TnuTlCNggIrlfyjpxqQD1W8WPu/WOw0bY18HfSZ8vExZcmrMt2qntigbemddzAQ==
-X-Received: by 2002:a05:6902:506:: with SMTP id x6mr5711380ybs.456.1576756714617;
-        Thu, 19 Dec 2019 03:58:34 -0800 (PST)
-Received: from citadel.localdomain (174-084-153-250.res.spectrum.com. [174.84.153.250])
-        by smtp.gmail.com with ESMTPSA id 144sm2421451ywy.20.2019.12.19.03.58.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 03:58:34 -0800 (PST)
-From:   Brian Gerst <brgerst@gmail.com>
-To:     x86@kernel.org, linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Brian Gerst <brgerst@gmail.com>
-Subject: [PATCH] x86: Remove force_iret()
-Date:   Thu, 19 Dec 2019 06:58:12 -0500
-Message-Id: <20191219115812.102620-1-brgerst@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Thu, 19 Dec 2019 06:59:12 -0500
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2109 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726668AbfLSL7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 06:59:12 -0500
+Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 271993F2B861E22293DF;
+        Thu, 19 Dec 2019 19:59:08 +0800 (CST)
+Received: from dggeme755-chm.china.huawei.com (10.3.19.101) by
+ DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 19 Dec 2019 19:59:07 +0800
+Received: from [127.0.0.1] (10.173.221.248) by dggeme755-chm.china.huawei.com
+ (10.3.19.101) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 19
+ Dec 2019 19:59:06 +0800
+Subject: Re: [PATCH 2/5] KVM: arm64: Implement PV_LOCK_FEATURES call
+To:     Steven Price <steven.price@arm.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "maz@kernel.org" <maz@kernel.org>,
+        James Morse <James.Morse@arm.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        "julien.thierry.kdev@gmail.com" <julien.thierry.kdev@gmail.com>,
+        "Catalin Marinas" <Catalin.Marinas@arm.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>
+References: <20191217135549.3240-1-yezengruan@huawei.com>
+ <20191217135549.3240-3-yezengruan@huawei.com>
+ <20191217142848.GB38811@arm.com>
+From:   yezengruan <yezengruan@huawei.com>
+Message-ID: <21910175-c89a-7a14-66a9-7b53d72a4543@huawei.com>
+Date:   Thu, 19 Dec 2019 19:59:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191217142848.GB38811@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.221.248]
+X-ClientProxiedBy: dggeme712-chm.china.huawei.com (10.1.199.108) To
+ dggeme755-chm.china.huawei.com (10.3.19.101)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-force_iret() was originally intended to prevent the return to user mode with
-the SYSRET or SYSEXIT instructions, in cases where the register state could
-have been changed to be incompatible with those instructions.  The entry code
-has been significantly reworked since then, and register state is validated
-before SYSRET or SYSEXIT are used.  force_iret() no longer serves its original
-purpose and can be eliminated.
+Hi Steve,
 
-Signed-off-by: Brian Gerst <brgerst@gmail.com>
----
- arch/x86/ia32/ia32_signal.c        |  2 --
- arch/x86/include/asm/ptrace.h      | 16 ----------------
- arch/x86/include/asm/thread_info.h |  9 ---------
- arch/x86/kernel/process_32.c       |  1 -
- arch/x86/kernel/process_64.c       |  1 -
- arch/x86/kernel/signal.c           |  2 --
- arch/x86/kernel/vm86_32.c          |  1 -
- 7 files changed, 32 deletions(-)
+On 2019/12/17 22:28, Steven Price wrote:
+> On Tue, Dec 17, 2019 at 01:55:46PM +0000, yezengruan@huawei.com wrote:
+>> From: Zengruan Ye <yezengruan@huawei.com>
+>>
+>> This provides a mechanism for querying which paravirtualized lock
+>> features are available in this hypervisor.
+>>
+>> Also add the header file which defines the ABI for the paravirtualized
+>> lock features we're about to add.
+>>
+>> Signed-off-by: Zengruan Ye <yezengruan@huawei.com>
+>> ---
+>>  arch/arm64/include/asm/pvlock-abi.h | 16 ++++++++++++++++
+>>  include/linux/arm-smccc.h           | 13 +++++++++++++
+>>  virt/kvm/arm/hypercalls.c           |  3 +++
+>>  3 files changed, 32 insertions(+)
+>>  create mode 100644 arch/arm64/include/asm/pvlock-abi.h
+>>
+>> diff --git a/arch/arm64/include/asm/pvlock-abi.h b/arch/arm64/include/asm/pvlock-abi.h
+>> new file mode 100644
+>> index 000000000000..06e0c3d7710a
+>> --- /dev/null
+>> +++ b/arch/arm64/include/asm/pvlock-abi.h
+>> @@ -0,0 +1,16 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/*
+>> + * Copyright(c) 2019 Huawei Technologies Co., Ltd
+>> + * Author: Zengruan Ye <yezengruan@huawei.com>
+>> + */
+>> +
+>> +#ifndef __ASM_PVLOCK_ABI_H
+>> +#define __ASM_PVLOCK_ABI_H
+>> +
+>> +struct pvlock_vcpu_state {
+>> +	__le64 preempted;
+> 
+> Somewhere we need to document when 'preempted' is. It looks like it's a
+> 1-bit field from the later patches.
 
-diff --git a/arch/x86/ia32/ia32_signal.c b/arch/x86/ia32/ia32_signal.c
-index 30416d7f19d4..a3aefe9b9401 100644
---- a/arch/x86/ia32/ia32_signal.c
-+++ b/arch/x86/ia32/ia32_signal.c
-@@ -114,8 +114,6 @@ static int ia32_restore_sigcontext(struct pt_regs *regs,
- 
- 	err |= fpu__restore_sig(buf, 1);
- 
--	force_iret();
--
- 	return err;
- }
- 
-diff --git a/arch/x86/include/asm/ptrace.h b/arch/x86/include/asm/ptrace.h
-index 5057a8ed100b..78897a8da01f 100644
---- a/arch/x86/include/asm/ptrace.h
-+++ b/arch/x86/include/asm/ptrace.h
-@@ -339,22 +339,6 @@ static inline unsigned long regs_get_kernel_argument(struct pt_regs *regs,
- 
- #define ARCH_HAS_USER_SINGLE_STEP_REPORT
- 
--/*
-- * When hitting ptrace_stop(), we cannot return using SYSRET because
-- * that does not restore the full CPU state, only a minimal set.  The
-- * ptracer can change arbitrary register values, which is usually okay
-- * because the usual ptrace stops run off the signal delivery path which
-- * forces IRET; however, ptrace_event() stops happen in arbitrary places
-- * in the kernel and don't force IRET path.
-- *
-- * So force IRET path after a ptrace stop.
-- */
--#define arch_ptrace_stop_needed(code, info)				\
--({									\
--	force_iret();							\
--	false;								\
--})
--
- struct user_desc;
- extern int do_get_thread_area(struct task_struct *p, int idx,
- 			      struct user_desc __user *info);
-diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/thread_info.h
-index d779366ce3f8..cf4327986e98 100644
---- a/arch/x86/include/asm/thread_info.h
-+++ b/arch/x86/include/asm/thread_info.h
-@@ -239,15 +239,6 @@ static inline int arch_within_stack_frames(const void * const stack,
- 			   current_thread_info()->status & TS_COMPAT)
- #endif
- 
--/*
-- * Force syscall return via IRET by making it look as if there was
-- * some work pending. IRET is our most capable (but slowest) syscall
-- * return path, which is able to restore modified SS, CS and certain
-- * EFLAGS values that other (fast) syscall return instructions
-- * are not able to restore properly.
-- */
--#define force_iret() set_thread_flag(TIF_NOTIFY_RESUME)
--
- extern void arch_task_cache_init(void);
- extern int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src);
- extern void arch_release_task_struct(struct task_struct *tsk);
-diff --git a/arch/x86/kernel/process_32.c b/arch/x86/kernel/process_32.c
-index 323499f48858..5052ced43373 100644
---- a/arch/x86/kernel/process_32.c
-+++ b/arch/x86/kernel/process_32.c
-@@ -124,7 +124,6 @@ start_thread(struct pt_regs *regs, unsigned long new_ip, unsigned long new_sp)
- 	regs->ip		= new_ip;
- 	regs->sp		= new_sp;
- 	regs->flags		= X86_EFLAGS_IF;
--	force_iret();
- }
- EXPORT_SYMBOL_GPL(start_thread);
- 
-diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
-index 506d66830d4d..ffd497804dbc 100644
---- a/arch/x86/kernel/process_64.c
-+++ b/arch/x86/kernel/process_64.c
-@@ -394,7 +394,6 @@ start_thread_common(struct pt_regs *regs, unsigned long new_ip,
- 	regs->cs		= _cs;
- 	regs->ss		= _ss;
- 	regs->flags		= X86_EFLAGS_IF;
--	force_iret();
- }
- 
- void
-diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
-index 8eb7193e158d..8a29573851a3 100644
---- a/arch/x86/kernel/signal.c
-+++ b/arch/x86/kernel/signal.c
-@@ -151,8 +151,6 @@ static int restore_sigcontext(struct pt_regs *regs,
- 
- 	err |= fpu__restore_sig(buf, IS_ENABLED(CONFIG_X86_32));
- 
--	force_iret();
--
- 	return err;
- }
- 
-diff --git a/arch/x86/kernel/vm86_32.c b/arch/x86/kernel/vm86_32.c
-index a76c12b38e92..91d55454e702 100644
---- a/arch/x86/kernel/vm86_32.c
-+++ b/arch/x86/kernel/vm86_32.c
-@@ -381,7 +381,6 @@ static long do_sys_vm86(struct vm86plus_struct __user *user_vm86, bool plus)
- 		mark_screen_rdonly(tsk->mm);
- 
- 	memcpy((struct kernel_vm86_regs *)regs, &vm86regs, sizeof(vm86regs));
--	force_iret();
- 	return regs->ax;
- }
- 
--- 
-2.23.0
+Good point, I'll document this in the pvlock doc.
+
+> 
+>> +	/* Structure must be 64 byte aligned, pad to that size */
+>> +	u8 padding[56];
+>> +} __packed;
+>> +
+>> +#endif
+>> diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
+>> index 59494df0f55b..59e65a951959 100644
+>> --- a/include/linux/arm-smccc.h
+>> +++ b/include/linux/arm-smccc.h
+>> @@ -377,5 +377,18 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
+>>  			   ARM_SMCCC_OWNER_STANDARD_HYP,	\
+>>  			   0x21)
+>>  
+>> +/* Paravirtualised lock calls */
+>> +#define ARM_SMCCC_HV_PV_LOCK_FEATURES				\
+>> +	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,			\
+>> +			   ARM_SMCCC_SMC_64,			\
+>> +			   ARM_SMCCC_OWNER_STANDARD_HYP,	\
+>> +			   0x40)
+>> +
+>> +#define ARM_SMCCC_HV_PV_LOCK_PREEMPTED				\
+>> +	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,			\
+>> +			   ARM_SMCCC_SMC_64,			\
+>> +			   ARM_SMCCC_OWNER_STANDARD_HYP,	\
+>> +			   0x41)
+>> +
+>>  #endif /*__ASSEMBLY__*/
+>>  #endif /*__LINUX_ARM_SMCCC_H*/
+>> diff --git a/virt/kvm/arm/hypercalls.c b/virt/kvm/arm/hypercalls.c
+>> index 550dfa3e53cd..ff13871fd85a 100644
+>> --- a/virt/kvm/arm/hypercalls.c
+>> +++ b/virt/kvm/arm/hypercalls.c
+>> @@ -52,6 +52,9 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
+>>  		case ARM_SMCCC_HV_PV_TIME_FEATURES:
+>>  			val = SMCCC_RET_SUCCESS;
+>>  			break;
+>> +		case ARM_SMCCC_HV_PV_LOCK_FEATURES:
+>> +			val = SMCCC_RET_SUCCESS;
+>> +			break;
+> 
+> Ideally you wouldn't report that PV_LOCK_FEATURES exists until the
+> actual hypercalls are wired up to avoid breaking a bisect.
+
+Thanks for pointing it out to me! I'll update the code.
+
+> 
+> Steve
+> 
+>>  		}
+>>  		break;
+>>  	case ARM_SMCCC_HV_PV_TIME_FEATURES:
+>> -- 
+>> 2.19.1
+>>
+>>
+> 
+> .
+> 
+
+Thanks,
+
+Zengruan
+
 
