@@ -2,54 +2,57 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44293C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 963F0C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB42227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62DE224672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:08:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782499;
-	bh=KBWdRp1C0diqcB72JfhHtC2PPDRx4lRZjSBB2xMIzcg=;
+	s=default; t=1576782504;
+	bh=s8lFt2f6UFXAvxzI8p/aGzswDdvHAAy7eKpr0m3ZPdk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EIlhmUw/y7fY/b4+c+qEXDnsHIYso8GDoMJwMy6FBTSwedj0F/w9kBTROrNXaUM8E
-	 mnNoPC4pLFTsOYj3rNcBbaXCti3HpBUDxAhLP92GZReZlrtMAy3O+Bwt+sdK6GJHob
-	 S0oOIKnuptS7SSh1QAZOZu4pNPESVsGqrMBWghaw=
+	b=OolWtkdBdmDBaZf+Ogsp2KVLGtRVB8qH1cIZqtA10MtkZskzH79ySLWXflVYVcvYd
+	 vhsc/V+J76P0MoYxr7RSsnDUH41xTe5DWQLaZxeV9kJAvOhK9egQoYStykc5E8cn92
+	 jm8gtd0cskDmLfAHQJXkFWs/8x/nrEnbXS+fdsEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728619AbfLSSmF (ORCPT
+        id S1728697AbfLSTIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:42:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33076 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 14:08:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728612AbfLSSmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:42:02 -0500
+        id S1728350AbfLSSl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:41:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E4E2206D7;
-        Thu, 19 Dec 2019 18:42:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 694C0206D7;
+        Thu, 19 Dec 2019 18:41:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780921;
-        bh=KBWdRp1C0diqcB72JfhHtC2PPDRx4lRZjSBB2xMIzcg=;
+        s=default; t=1576780916;
+        bh=s8lFt2f6UFXAvxzI8p/aGzswDdvHAAy7eKpr0m3ZPdk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BSxhnRjqBFUZypjHa2LnstYMGIwOT3iBpauyyTJoNaGExgJXD2+MVPQEBIYhSCE1A
-         c0h6csqP56jpg/jDt9JiOlARM5eR8IHGvKz7nnSxjDSTqFpVwvFgP2MuWLuV0sAC6q
-         B+KWvx41cKm4kSEyqDMNRVHBqOXLvsBSf3mS7iHU=
+        b=BrLNWmNg+LIiVolbVpWKuhiUP2l8AwyIiSGM6kIf1oHB5AMGofKEVggFi7TXDblZq
+         JZeQzMQUE7b7Q5mv4YM4IyZeaqjpeFVGmAZdWvB5PrTzuS3Z1q9aC8D9woMUfsdhXa
+         GummEvNZN9hf9WPOoRRW/DY4YMdOc7ggzAb4qfJ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 010/199] exportfs_decode_fh(): negative pinned may become positive without the parent locked
-Date:   Thu, 19 Dec 2019 19:31:32 +0100
-Message-Id: <20191219183215.271141184@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Steffen Liebergeld <steffen.liebergeld@kernkonzept.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: [PATCH 4.4 151/162] PCI: Fix Intel ACS quirk UPDCR register address
+Date:   Thu, 19 Dec 2019 19:34:19 +0100
+Message-Id: <20191219183216.969438627@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
-References: <20191219183214.629503389@linuxfoundation.org>
+In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
+References: <20191219183150.477687052@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,68 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Steffen Liebergeld <steffen.liebergeld@kernkonzept.com>
 
-[ Upstream commit a2ece088882666e1dc7113744ac912eb161e3f87 ]
+commit d8558ac8c93d429d65d7490b512a3a67e559d0d4 upstream.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+According to documentation [0] the correct offset for the Upstream Peer
+Decode Configuration Register (UPDCR) is 0x1014.  It was previously defined
+as 0x1114.
+
+d99321b63b1f ("PCI: Enable quirks for PCIe ACS on Intel PCH root ports")
+intended to enforce isolation between PCI devices allowing them to be put
+into separate IOMMU groups.  Due to the wrong register offset the intended
+isolation was not fully enforced.  This is fixed with this patch.
+
+Please note that I did not test this patch because I have no hardware that
+implements this register.
+
+[0] https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/4th-gen-core-family-mobile-i-o-datasheet.pdf (page 325)
+Fixes: d99321b63b1f ("PCI: Enable quirks for PCIe ACS on Intel PCH root ports")
+Link: https://lore.kernel.org/r/7a3505df-79ba-8a28-464c-88b83eefffa6@kernkonzept.com
+Signed-off-by: Steffen Liebergeld <steffen.liebergeld@kernkonzept.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Acked-by: Ashok Raj <ashok.raj@intel.com>
+Cc: stable@vger.kernel.org	# v3.15+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/exportfs/expfs.c | 31 +++++++++++++++++++------------
- 1 file changed, 19 insertions(+), 12 deletions(-)
+ drivers/pci/quirks.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
-index 7a7bba7c23284..3706939e5dd5e 100644
---- a/fs/exportfs/expfs.c
-+++ b/fs/exportfs/expfs.c
-@@ -506,26 +506,33 @@ struct dentry *exportfs_decode_fh(struct vfsmount *mnt, struct fid *fid,
- 		 * inode is actually connected to the parent.
- 		 */
- 		err = exportfs_get_name(mnt, target_dir, nbuf, result);
--		if (!err) {
--			inode_lock(target_dir->d_inode);
--			nresult = lookup_one_len(nbuf, target_dir,
--						 strlen(nbuf));
--			inode_unlock(target_dir->d_inode);
--			if (!IS_ERR(nresult)) {
--				if (nresult->d_inode) {
--					dput(result);
--					result = nresult;
--				} else
--					dput(nresult);
--			}
-+		if (err) {
-+			dput(target_dir);
-+			goto err_result;
- 		}
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4038,7 +4038,7 @@ int pci_dev_specific_acs_enabled(struct
+ #define INTEL_BSPR_REG_BPPD  (1 << 9)
  
-+		inode_lock(target_dir->d_inode);
-+		nresult = lookup_one_len(nbuf, target_dir, strlen(nbuf));
-+		if (!IS_ERR(nresult)) {
-+			if (unlikely(nresult->d_inode != result->d_inode)) {
-+				dput(nresult);
-+				nresult = ERR_PTR(-ESTALE);
-+			}
-+		}
-+		inode_unlock(target_dir->d_inode);
- 		/*
- 		 * At this point we are done with the parent, but it's pinned
- 		 * by the child dentry anyway.
- 		 */
- 		dput(target_dir);
+ /* Upstream Peer Decode Configuration Register */
+-#define INTEL_UPDCR_REG 0x1114
++#define INTEL_UPDCR_REG 0x1014
+ /* 5:0 Peer Decode Enable bits */
+ #define INTEL_UPDCR_REG_MASK 0x3f
  
-+		if (IS_ERR(nresult)) {
-+			err = PTR_ERR(nresult);
-+			goto err_result;
-+		}
-+		dput(result);
-+		result = nresult;
-+
- 		/*
- 		 * And finally make sure the dentry is actually acceptable
- 		 * to NFSD.
--- 
-2.20.1
-
 
 
