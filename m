@@ -2,171 +2,163 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BEEC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1561AC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9B4624650
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1287206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:17:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="FwveSpNn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfLSOQD (ORCPT
+        id S1726869AbfLSORY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 09:16:03 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:45418 "EHLO huawei.com"
+        Thu, 19 Dec 2019 09:17:24 -0500
+Received: from mail-eopbgr750042.outbound.protection.outlook.com ([40.107.75.42]:62052
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726695AbfLSOQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 09:16:02 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id BCF9885A64E29DD256C9;
-        Thu, 19 Dec 2019 22:15:57 +0800 (CST)
-Received: from [127.0.0.1] (10.177.253.249) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Thu, 19 Dec 2019
- 22:15:56 +0800
-Subject: Re: [Ocfs2-devel] [PATCH v3] ocfs2: call journal flush to mark
- journal as empty after journal recovery when mount
-To:     Kai Li <li.kai4@h3c.com>, <mark@fasheh.com>, <jlbec@evilplan.org>,
-        <joseph.qi@linux.alibaba.com>, <chge@linux.alibaba.com>
-References: <20191217020140.2197-1-li.kai4@h3c.com>
-CC:     <linux-kernel@vger.kernel.org>, <ocfs2-devel@oss.oracle.com>
-From:   piaojun <piaojun@huawei.com>
-Message-ID: <5DFB860A.6020501@huawei.com>
-Date:   Thu, 19 Dec 2019 22:15:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.2.0
-MIME-Version: 1.0
-In-Reply-To: <20191217020140.2197-1-li.kai4@h3c.com>
-Content-Type: text/plain; charset="windows-1252"
+        id S1726695AbfLSORY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 09:17:24 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kqUIc7u/9vYarhKOjbAQISmMFQGtX9pGQUKq/YHyk+FK2sBg+25jiL4+PNFBzm9O7clNKBsyt3S9H4+2YYxynYqZu23LjJdQADL6vP39Q7SNmGw+2i8a5fm0fzvfUqonI+7LPFe/cowlEiIgzCByjFWlQa3c3HstZR4qrBvrwBB+GO/6YUxdptY67OL1ky2aufdSdblQ87duD7HTFiyp5+eDRlRr4OqjkmU2rehdLRslVdWj8EuDasvJSOFS7w/eNw8tKoqm+fxyZ2u6YhAtIBN8Y3a4Hg0XRcJRxvUxvtU9j4cei0XvjhoYrzGD567rfFtjdU3MqprJueWC7HM29Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rVd928QsRRQHp9MK/TD1iyFvIEsIK5ye0fOfeMcAgSA=;
+ b=dsxnAQVcPZch9GfCMN9gtIGu8ahZ/Uv5qpHL1EkhjTh4HOeQOp9SgjT5aIf3R/qnDXY2yobWFr2IvafUKa3sdewq/LQp7vIFJO7VfpzyyBMPERAd5ZmrphT8xheD+NcMRtjeYaKKYVVGigxYcRHfzNTgNALG9xrQGrQRLSQ3iyXdg8XVhQzJoPeJhGf10qUS+NEwQ7tMgAschLtVxSzd/WoyzzEwLMdm4+DPJcJDHCnahRKBE9pjFoMhCyl28Iyx9NITEZCXNsLxRORonDoD9zC+SS5wKrvvtPm+16u0VmVzdAUfm1g5Rq1FgRBQgo4w+K4UV7VuphcsstPQO9bPHw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rVd928QsRRQHp9MK/TD1iyFvIEsIK5ye0fOfeMcAgSA=;
+ b=FwveSpNnV0BvdCSBlETztV+D1ZWHMvOSzVWrtBZdI9ouObImtCN3ulR6DEG7ja7hlOg7MgLshZWj3Gq4L4AZMLbb1O22rx6tCOxAm1nKRjVjbxo5wMBV+6J6iToYaYJ0I9gZ/hStS7jLEq13SjQCkbQv/k4DA+hY36FEw8SURLY=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Harry.Wentland@amd.com; 
+Received: from CY4PR1201MB0230.namprd12.prod.outlook.com (10.172.79.7) by
+ CY4PR1201MB0024.namprd12.prod.outlook.com (10.172.77.135) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.14; Thu, 19 Dec 2019 14:17:21 +0000
+Received: from CY4PR1201MB0230.namprd12.prod.outlook.com
+ ([fe80::301e:b0c8:7af:d77d]) by CY4PR1201MB0230.namprd12.prod.outlook.com
+ ([fe80::301e:b0c8:7af:d77d%11]) with mapi id 15.20.2559.012; Thu, 19 Dec 2019
+ 14:17:20 +0000
+Subject: Re: [PATCH next] drm/amd/display: make non-global functions static
+To:     Chen Zhou <chenzhou10@huawei.com>, harry.wentland@amd.com,
+        sunpeng.li@amd.com, alexander.deucher@amd.com
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20191219115500.2047-1-chenzhou10@huawei.com>
+From:   Harry Wentland <hwentlan@amd.com>
+Autocrypt: addr=hwentlan@amd.com; keydata=
+ mQENBFhb4C8BCADhHHUNoBQ7K7LupCP0FsUb443Vuqq+dH0uo4A3lnPkMF6FJmGcJ9Sbx1C6
+ cd4PbVAaTFZUEmjqfpm+wCRBe11eF55hW3GJ273wvfH69Q/zmAxwO8yk+i5ZWWl8Hns5h69K
+ D9QURHLpXxrcwnfHFah0DwV23TrD1KGB7vowCZyJOw93U/GzAlXKESy0FM7ZOYIJH83X7qhh
+ Q9KX94iTEYTeH86Wy8hwHtqM6ySviwEz0g+UegpG8ebbz0w3b5QmdKCAg+eZTmBekP5o77YE
+ BKqR+Miiwo9+tzm2N5GiF9HDeI2pVe/egOLa5UcmsgdF4Y5FKoMnBbAHNaA6Fev8PHlNABEB
+ AAG0J0hhcnJ5IFdlbnRsYW5kIDxoYXJyeS53ZW50bGFuZEBhbWQuY29tPokBNwQTAQgAIQUC
+ WFvgLwIbAwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRAtWBXJjBS24xUlCAC9MqAlIbZO
+ /a37s41h+MQ+D20C6/hVErWO+RA06nA+jFDPUWrDJKYdn6EDQWdLY3ATeAq3X8GIeOTXGrPD
+ b2OXD6kOViW/RNvlXdrIsnIDacdr39aoAlY1b+bhTzZVz4pto4l+K1PZb5jlMgTk/ks9HesL
+ RfYVq5wOy3qIpocdjdlXnSUKn0WOkGBBd8Nv3o0OI18tiJ1S/QwLBBfZoVvfGinoB2p4j/wO
+ kJxpi3F9TaOtLGcdrgfghg31Fb48DP+6kodZ4ircerp4hyAp0U2iKtsrQ/sVWR4mbe3eTfcn
+ YjBxGd2JOVdNQZa2VTNf9GshIDMD8IIQK6jN0LfY8Py2uQENBFhb4C8BCAC/0KWY3pIbU2cy
+ i7GMj3gqB6h0jGqRuMpMRoSNDoAUIuSh17w+bawuOF6XZPdK3D4lC9cOXMwP3aP9tTJOori2
+ 8vMH8KW9jp9lAYnGWYhSqLdjzIACquMqi96EBtawJDct1e9pVgp+d4JXHlgIrl11ITJo8rCP
+ dEqjro2bCBWxijsIncdCzMjf57+nR7u86SBtGSFcXKapS7YJeWcvM6MzFYgIkxHxxBDvBBvm
+ U2/mAXiL72kwmlV1BNrabQxX2UnIb3xt3UovYJehrnDUMdYjxJgSPRBx27wQ/D05xAlhkmmL
+ FJ01ZYc412CRCC6gjgFPfUi2y7YJTrQHS79WSyANABEBAAGJAR8EGAEIAAkFAlhb4C8CGwwA
+ CgkQLVgVyYwUtuM72Qf+J6JOQ/27pWf5Ulde9GS0BigA1kV9CNfIq396TgvQzeyixHMvgPdq
+ Z36x89zZi0otjMZv6ypIdEg5co1Bvz0wFaKbCiNbTjpnA1VAbQVLSFjCZLQiu0vc+BZ1yKDV
+ T5ASJ97G4XvQNO+XXGY55MrmhoNqMaeIa/3Jas54fPVd5olcnUAyDty29/VWXNllUq38iBCX
+ /0tTF7oav1lzPGfeW2c6B700FFZMTR4YBVSGE8jPIzu2Fj0E8EkDmsgS+nibqSvWXfo1v231
+ 410h35CjbYDlYQO7Z1YD7asqbaOnF0As+rckyRMweQ9CxZn5+YBijtPJA3x5ldbCfQ9rWiTu XQ==
+Message-ID: <2535f4bd-298f-60aa-728b-facfb2baef07@amd.com>
+Date:   Thu, 19 Dec 2019 09:17:18 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+In-Reply-To: <20191219115500.2047-1-chenzhou10@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.253.249]
-X-CFilter-Loop: Reflected
+X-ClientProxiedBy: YTBPR01CA0017.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:14::30) To CY4PR1201MB0230.namprd12.prod.outlook.com
+ (2603:10b6:910:1e::7)
+MIME-Version: 1.0
+Received: from [10.4.33.74] (165.204.55.251) by YTBPR01CA0017.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:14::30) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Thu, 19 Dec 2019 14:17:19 +0000
+X-Originating-IP: [165.204.55.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 2d3d8aca-84d3-416f-b373-08d7848e28d8
+X-MS-TrafficTypeDiagnostic: CY4PR1201MB0024:|CY4PR1201MB0024:|CY4PR1201MB0024:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CY4PR1201MB0024E6DB6CF0B48FCBEAF8FF8C520@CY4PR1201MB0024.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:170;
+X-Forefront-PRVS: 0256C18696
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(39850400004)(136003)(346002)(376002)(199004)(189003)(478600001)(66556008)(31686004)(66476007)(16526019)(52116002)(66946007)(186003)(4326008)(26005)(2906002)(6486002)(53546011)(8936002)(316002)(36756003)(5660300002)(8676002)(31696002)(2616005)(81156014)(6636002)(956004)(4001150100001)(16576012)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1201MB0024;H:CY4PR1201MB0230.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jBPWbD36QUjqkc056sdKCsRCouKe+TEAkz3I1ui8Gh4UDpBavf0OGcbxYZPpdGee8fG2Jy0up2kBKWIJS1dwtJexWeGjou06y8RK9qNGK1wh+D/00OJ777wZhrxPKBho0eUaEEiL+NaPU43JwqQXWbHR6hTj1VrFiIBOadNrO+fii4U5Lo+dSg+kX+rK9vLPRiBzv9O9+4ZQhdmmcBDPxtqtsU/tS9TpVrbCble0N5Yq5d59hsrqlm2TRDeMGb30/lorMlee889Q74BvAIrZDEvcmkJAOr0wQyH2eBgWDiWyW6hhDit13xGEn4OvcvCPnKpA8XC1GJ2PV3RkbQuyFG8y+e8GbAnEto87WhpvvAo/DIC6pTh5eFracE5RT98geRTXMa3HW4qVJxD/Z2cuK6KdfZDjkMA6bqyaVR+AYH/vBmDhEVi0eDIv0OWnMbXO
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d3d8aca-84d3-416f-b373-08d7848e28d8
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Dec 2019 14:17:20.6455
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DMnQSllyPp1rCgVEDqpaaL2R7ozYrq8F0HGOyn95N8pgDVeK8mtGQrOAVSM+LmA1hW+tN7FtrPYydtAnGrc2aw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0024
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-12-19 6:55 a.m., Chen Zhou wrote:
+> Fix sparse warning:
+> 
+> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_resource.c:964:5:
+> 	warning: symbol 'shift_border_left_to_dst' was not declared. Should it be static?
+> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_resource.c:975:6:
+> 	warning: symbol 'restore_border_left_from_dst' was not declared. Should it be static?
+> 
+> Fixes: 89d07b662f5e (drm/amd/display: fix 270 degree rotation for mixed-SLS mode)
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 
+Reviewed-by: Harry Wentland <harry.wentland@amd.com>
 
-On 2019/12/17 10:01, Kai Li wrote:
-> If journal is dirty when mount, it will be replayed but jbd2 sb
-> log tail cannot be updated to mark a new start because
-> journal->j_flag has already been set with JBD2_ABORT first
-> in journal_init_common. When a new transaction is committed, it
-> will be recored in block 1 first(journal->j_tail is set to 1 in
-> journal_reset).If emergency restart happens again before journal
-> super block is updated unfortunately, the new recorded trans will
-> not be replayed in the next mount.
-> 
-> The following steps describe this procedure in detail.
-> 1. mount and touch some files
-> 2. these transactions are committed to journal area but not checkpointed
-> 3. emergency restart
-> 4. mount again and its journals are replayed
-> 5. journal super block's first s_start is 1, but its s_seq is not updated
-> 6. touch a new file and its trans is committed but not checkpointed
-> 7. emergency restart again
-> 8. mount and journal is dirty, but trans committed in 6 will not be
-> replayed.
-> 
-> This exception happens easily when this lun is used by only one node. If it
-> is used by multi-nodes, other node will replay its journal and its
-> journal super block will be updated after recovery like what this patch
-> does.
-> 
-> ocfs2_recover_node->ocfs2_replay_journal.
-> 
-> The following jbd2 journal can be generated by touching a new file after
-> journal is replayed, and seq 15 is the first valid commit, but first seq
-> is 13 in journal super block.
-> logdump:
-> Block 0: Journal Superblock
-> Seq: 0   Type: 4 (JBD2_SUPERBLOCK_V2)
-> Blocksize: 4096   Total Blocks: 32768   First Block: 1
-> First Commit ID: 13   Start Log Blknum: 1
-> Error: 0
-> Feature Compat: 0
-> Feature Incompat: 2 block64
-> Feature RO compat: 0
-> Journal UUID: 4ED3822C54294467A4F8E87D2BA4BC36
-> FS Share Cnt: 1   Dynamic Superblk Blknum: 0
-> Per Txn Block Limit    Journal: 0    Data: 0
-> 
-> Block 1: Journal Commit Block
-> Seq: 14   Type: 2 (JBD2_COMMIT_BLOCK)
-> 
-> Block 2: Journal Descriptor
-> Seq: 15   Type: 1 (JBD2_DESCRIPTOR_BLOCK)
-> No. Blocknum        Flags
->  0. 587             none
-> UUID: 00000000000000000000000000000000
->  1. 8257792         JBD2_FLAG_SAME_UUID
->  2. 619             JBD2_FLAG_SAME_UUID
->  3. 24772864        JBD2_FLAG_SAME_UUID
->  4. 8257802         JBD2_FLAG_SAME_UUID
->  5. 513             JBD2_FLAG_SAME_UUID JBD2_FLAG_LAST_TAG
-> ...
-> Block 7: Inode
-> Inode: 8257802   Mode: 0640   Generation: 57157641 (0x3682809)
-> FS Generation: 2839773110 (0xa9437fb6)
-> CRC32: 00000000   ECC: 0000
-> Type: Regular   Attr: 0x0   Flags: Valid
-> Dynamic Features: (0x1) InlineData
-> User: 0 (root)   Group: 0 (root)   Size: 7
-> Links: 1   Clusters: 0
-> ctime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
-> atime: 0x5de5d870 0x113181a1 -- Tue Dec  3 11:37:20.288457121 2019
-> mtime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
-> dtime: 0x0 -- Thu Jan  1 08:00:00 1970
-> ...
-> Block 9: Journal Commit Block
-> Seq: 15   Type: 2 (JBD2_COMMIT_BLOCK)
-> 
-> The following is jouranl recovery log when recovering the upper jbd2
-> journal when mount again.
-> syslog:
-> [ 2265.648622] ocfs2: File system on device (252,1) was not unmounted cleanly, recovering it.
-> [ 2265.649695] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 0
-> [ 2265.650407] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 1
-> [ 2265.650409] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 2
-> [ 2265.650410] fs/jbd2/recovery.c:(jbd2_journal_recover, 278): JBD2: recovery, exit status 0, recovered transactions 13 to 13
-> 
-> Due to first commit seq 13 recorded in journal super is not consistent
-> with the value recorded in block 1(seq is 14), journal recovery will be
-> terminated before seq 15 even though it is an unbroken commit, inode
-> 8257802 is a new file and it will be lost.
-> 
-> Signed-off-by: Kai Li <li.kai4@h3c.com>
+Harry
+
 > ---
->  fs/ocfs2/journal.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  drivers/gpu/drm/amd/display/dc/core/dc_resource.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
-> index 1afe57f425a0..68ba354cf361 100644
-> --- a/fs/ocfs2/journal.c
-> +++ b/fs/ocfs2/journal.c
-> @@ -1066,6 +1066,14 @@ int ocfs2_journal_load(struct ocfs2_journal *journal, int local, int replayed)
+> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
+> index 64a0e08f..5843c16 100644
+> --- a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
+> +++ b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
+> @@ -961,7 +961,7 @@ static void calculate_inits_and_adj_vp(struct pipe_ctx *pipe_ctx)
+>   * We also need to make sure pipe_ctx->plane_res.scl_data.h_active uses the
+>   * original h_border_left value in its calculation.
+>   */
+> -int shift_border_left_to_dst(struct pipe_ctx *pipe_ctx)
+> +static int shift_border_left_to_dst(struct pipe_ctx *pipe_ctx)
+>  {
+>  	int store_h_border_left = pipe_ctx->stream->timing.h_border_left;
 >  
->  	ocfs2_clear_journal_error(osb->sb, journal->j_journal, osb->slot_num);
+> @@ -972,7 +972,7 @@ int shift_border_left_to_dst(struct pipe_ctx *pipe_ctx)
+>  	return store_h_border_left;
+>  }
 >  
-> +	if (replayed) {
-> +		jbd2_journal_lock_updates(journal->j_journal);
-> +		status = jbd2_journal_flush(journal->j_journal);
-
-What if jbd2_journal_flush gets failed? The 's_sequence' and 's_start'
-won't be reset, and I wonder if the problem still remains.
-
-Thanks,
-Jun
-
-> +		jbd2_journal_unlock_updates(journal->j_journal);
-> +		if (status < 0)
-> +			mlog_errno(status);
-> +	}
-> +
->  	status = ocfs2_journal_toggle_dirty(osb, 1, replayed);
->  	if (status < 0) {
->  		mlog_errno(status);
+> -void restore_border_left_from_dst(struct pipe_ctx *pipe_ctx,
+> +static void restore_border_left_from_dst(struct pipe_ctx *pipe_ctx,
+>                                    int store_h_border_left)
+>  {
+>  	pipe_ctx->stream->dst.x -= store_h_border_left;
 > 
-
