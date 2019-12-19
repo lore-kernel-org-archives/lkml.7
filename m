@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3208C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A2BC2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EBF4222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AD23222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:00:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782012;
-	bh=YhMsg1iYzqKsOGy/17yoIbmWQ5/wgTOI3xyj9vtrgYI=;
+	s=default; t=1576782016;
+	bh=+QFZ0PqQXFrX1Li2tQ3mjalt/hJvFDccFtVHz/pMezo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dFM4ei6EiBNZxjuxGlqL8xaAQonkWwXWSeOXLcv6I1gF5CKY9OhJ+nHghSwukRcp4
-	 c/bcE1eZqv5ko9aMCNxiTX/anzBxoQwivTgDxY8rQJDIym2ZMeDR2oGA5VVu2TMoIQ
-	 UYmn0i4kDq79igcdPDBlMlmQWuPaf9dYL6/oAv7M=
+	b=zi8nebBUHsCZO783ao0x26qfaLlrK9dBi6p7BvisJImWUl2IFZhbZOZlELbGCNZcQ
+	 CRToUIhlMVlXAefXnibSKco4cU09Nc4cZcRIeWgZPO7Suqihz7Afru1yi1aO8/m/Gs
+	 2rWYRbK6QXJCmszsuA8l0VXCoaxGcU2LYdebzKBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728239AbfLSTAL (ORCPT
+        id S1729059AbfLSSw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:00:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47128 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:52:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728752AbfLSSwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:52:32 -0500
+        id S1730263AbfLSSwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:52:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DA02222C2;
-        Thu, 19 Dec 2019 18:52:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF7E3227BF;
+        Thu, 19 Dec 2019 18:52:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781552;
-        bh=YhMsg1iYzqKsOGy/17yoIbmWQ5/wgTOI3xyj9vtrgYI=;
+        s=default; t=1576781542;
+        bh=+QFZ0PqQXFrX1Li2tQ3mjalt/hJvFDccFtVHz/pMezo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dYEUJRQuYgfb6J90uhrUORPNsw93YGVK+ZQSal57vIUHioOI9nok+uAGuSxdLaWNI
-         a+tbdLNpaJ8/bShAlj1GNPh0RdJGG0pfeZ73fJZczUVgMmmTf0i6T4j+Ra1yYLnj5V
-         z3vjjI6o9H3/kh6baG1jeV9x2Kb9dkMhc4NwZhkw=
+        b=SAQaZNAkFCJAWucfa2tjGkDpA/GxtaaIUQA3nd0dXVINN3fRVDS+HVGJee6qhX0EQ
+         Cn57ikkqeWfFjbmOuNvZGtLPwwuiJNIMS8BhbtPw56sflRqAliYapqBf15ZHyEUv/d
+         rJdm6gL3awhG+w070wMymalECBlk7ABFiYhr6aLQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Lew <clew@codeaurora.org>,
+        stable@vger.kernel.org,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Chris Lew <clew@codeaurora.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 4.19 30/47] rpmsg: glink: Free pending deferred work on remove
-Date:   Thu, 19 Dec 2019 19:34:44 +0100
-Message-Id: <20191219182934.163082126@linuxfoundation.org>
+Subject: [PATCH 4.19 27/47] rpmsg: glink: Put an extra reference during cleanup
+Date:   Thu, 19 Dec 2019 19:34:41 +0100
+Message-Id: <20191219182932.332192007@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182857.659088743@linuxfoundation.org>
 References: <20191219182857.659088743@linuxfoundation.org>
@@ -60,53 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Chris Lew <clew@codeaurora.org>
 
-commit 278bcb7300f61785dba63840bd2a8cf79f14554c upstream.
+commit b646293e272816dd0719529dcebbd659de0722f7 upstream.
 
-By just cancelling the deferred rx worker during GLINK instance teardown
-any pending deferred commands are leaked, so free them.
+In a remote processor crash scenario, there is no guarantee the remote
+processor sent close requests before it went into a bad state. Remove
+the reference that is normally handled by the close command in the
+so channel resources can be released.
 
 Fixes: b4f8e52b89f6 ("rpmsg: Introduce Qualcomm RPM glink driver")
 Cc: stable@vger.kernel.org
-Acked-by: Chris Lew <clew@codeaurora.org>
 Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Chris Lew <clew@codeaurora.org>
+Reported-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/rpmsg/qcom_glink_native.c |   14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ drivers/rpmsg/qcom_glink_native.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
 --- a/drivers/rpmsg/qcom_glink_native.c
 +++ b/drivers/rpmsg/qcom_glink_native.c
-@@ -1565,6 +1565,18 @@ static void qcom_glink_work(struct work_
- 	}
- }
+@@ -1644,6 +1644,10 @@ void qcom_glink_native_remove(struct qco
+ 	idr_for_each_entry(&glink->lcids, channel, cid)
+ 		kref_put(&channel->refcount, qcom_glink_channel_release);
  
-+static void qcom_glink_cancel_rx_work(struct qcom_glink *glink)
-+{
-+	struct glink_defer_cmd *dcmd;
-+	struct glink_defer_cmd *tmp;
++	/* Release any defunct local channels, waiting for close-req */
++	idr_for_each_entry(&glink->rcids, channel, cid)
++		kref_put(&channel->refcount, qcom_glink_channel_release);
 +
-+	/* cancel any pending deferred rx_work */
-+	cancel_work_sync(&glink->rx_work);
-+
-+	list_for_each_entry_safe(dcmd, tmp, &glink->rx_queue, node)
-+		kfree(dcmd);
-+}
-+
- struct qcom_glink *qcom_glink_native_probe(struct device *dev,
- 					   unsigned long features,
- 					   struct qcom_glink_pipe *rx,
-@@ -1642,7 +1654,7 @@ void qcom_glink_native_remove(struct qco
- 	int ret;
- 
- 	disable_irq(glink->irq);
--	cancel_work_sync(&glink->rx_work);
-+	qcom_glink_cancel_rx_work(glink);
- 
- 	ret = device_for_each_child(glink->dev, NULL, qcom_glink_remove_device);
- 	if (ret)
+ 	idr_destroy(&glink->lcids);
+ 	idr_destroy(&glink->rcids);
+ 	spin_unlock_irqrestore(&glink->idr_lock, flags);
 
 
