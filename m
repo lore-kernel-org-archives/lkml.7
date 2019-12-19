@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92657C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC0BC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60DE624697
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A3AD24676
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781706;
-	bh=lxiLAwc3bq7yRsFDpS8Y/vXlzk3A1s79z7n/XxmpgZU=;
+	s=default; t=1576781708;
+	bh=I4FicGF1nduQhWKADf+S3DKjlXW9oqIQD8OotutLefg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PoZ6e9SJ6UqO9IuLSivyy40OfyKAHJgAgFgyiQnuiw1048Ylqb9gVIZAfmLK8kKoG
-	 p3kiHmCHcjxa0r123Sr7TNDihmvQwMDGqaMefhnY8obzucDDYpWdQN6MGLDp9orRLZ
-	 RpgMi1wG367WKQsBQg3WMFhwKie0guWn8v1VZMhw=
+	b=OKSN/S2agcg+xX93yvHwFEHKKMbO9jCdnPpAbkwbCk7lwYeQd0KXObwV90G+Ye7E4
+	 5rG/RarYiXGK/F8thfmmYvma8eBKGedB3lw9XpnqMvl5NKUXyTjy6MK9BxlXD/ZLEy
+	 3HOa+oehfPxphneI3ZYcVUhV3nI8DlB3bEixgejA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729710AbfLSSzF (ORCPT
+        id S1730624AbfLSSzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:55:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50716 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:55:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729849AbfLSSzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:55:03 -0500
+        id S1730613AbfLSSzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:55:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC2B1222C2;
-        Thu, 19 Dec 2019 18:55:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09F132465E;
+        Thu, 19 Dec 2019 18:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781702;
-        bh=lxiLAwc3bq7yRsFDpS8Y/vXlzk3A1s79z7n/XxmpgZU=;
+        s=default; t=1576781704;
+        bh=I4FicGF1nduQhWKADf+S3DKjlXW9oqIQD8OotutLefg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M04HltVi8w1WzySTFYCLneYGnfUjHaeOgfGU4jXb075J3ZmGFIkKipVVZuMFlMeqS
-         Shpd4BYLSo5gvTwCaJ1xSE008COi+3g+5EUt9+1KojMB0RTCADeWWJyr+YgLuzkRlv
-         BpEX40ap6iWS1dfdblQ4NdEdxvqHHpI7YjVhc6GA=
+        b=2wSHA+3p2yCqgBTvysPl5M0dF6auMbTECHKj4jiCODJQhPoLNDsEEssHaePUO6Kq/
+         pwflQ6I4+lH9SxZ6tinWN+0v32c78VVkOzGMP9m2vi7Zw9Zy+jg2ASLedryfFuyAER
+         Hc1er0BWoYyLOEPAIVh6kfHoMd02q/+oen/ZZ2lI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -51,15 +51,15 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Maxime Ripard <mripard@kernel.org>,
         David Airlie <airlied@linux.ie>,
         Sam Ravnborg <sam@ravnborg.org>,
-        Emil Velikov <emil.velikov@collabora.com>,
         "Y.C. Chen" <yc_chen@aspeedtech.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
         Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH 5.4 46/80] drm/mgag200: Extract device type from flags
-Date:   Thu, 19 Dec 2019 19:34:38 +0100
-Message-Id: <20191219183113.297293802@linuxfoundation.org>
+Subject: [PATCH 5.4 47/80] drm/mgag200: Store flags from PCI driver data in device structure
+Date:   Thu, 19 Dec 2019 19:34:39 +0100
+Message-Id: <20191219183114.978179449@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -74,15 +74,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Zimmermann <tzimmermann@suse.de>
 
-commit 3a8a5aba142a44eaeba0cb0ec1b4a8f177b5e59a upstream.
+commit d6d437d97d54c85a1a93967b2745e31dff03365a upstream.
 
-Adds a conversion function that extracts the device type from the
-PCI id-table flags. Allows for storing additional information in the
-other flag bits.
+The flags field in struct mga_device has been unused so far. We now
+use it to store flag bits from the PCI driver.
 
 Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-Fixes: 81da87f63a1e ("drm: Replace drm_gem_vram_push_to_system() with kunmap + unpin")
 Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Fixes: 81da87f63a1e ("drm: Replace drm_gem_vram_push_to_system() with kunmap + unpin")
 Cc: John Donnelly <john.p.donnelly@oracle.com>
 Cc: Gerd Hoffmann <kraxel@redhat.com>
 Cc: Dave Airlie <airlied@redhat.com>
@@ -90,54 +89,54 @@ Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
 Cc: Maxime Ripard <mripard@kernel.org>
 Cc: David Airlie <airlied@linux.ie>
 Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Emil Velikov <emil.velikov@collabora.com>
 Cc: "Y.C. Chen" <yc_chen@aspeedtech.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: "José Roberto de Souza" <jose.souza@intel.com>
 Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
 Cc: dri-devel@lists.freedesktop.org
 Cc: <stable@vger.kernel.org> # v5.3+
-Link: https://patchwork.freedesktop.org/patch/msgid/20191126101529.20356-2-tzimmermann@suse.de
+Link: https://patchwork.freedesktop.org/patch/msgid/20191126101529.20356-3-tzimmermann@suse.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/mgag200/mgag200_drv.h  |    7 +++++++
- drivers/gpu/drm/mgag200/mgag200_main.c |    2 +-
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/mgag200/mgag200_drv.h  |    8 ++++++++
+ drivers/gpu/drm/mgag200/mgag200_main.c |    1 +
+ 2 files changed, 9 insertions(+)
 
 --- a/drivers/gpu/drm/mgag200/mgag200_drv.h
 +++ b/drivers/gpu/drm/mgag200/mgag200_drv.h
-@@ -159,6 +159,8 @@ enum mga_type {
- 	G200_EW3,
+@@ -160,6 +160,7 @@ enum mga_type {
  };
  
-+#define MGAG200_TYPE_MASK	(0x000000ff)
-+
+ #define MGAG200_TYPE_MASK	(0x000000ff)
++#define MGAG200_FLAG_MASK	(0x00ffff00)
+ 
  #define IS_G200_SE(mdev) (mdev->type == G200_SE_A || mdev->type == G200_SE_B)
  
- struct mga_device {
-@@ -188,6 +190,11 @@ struct mga_device {
- 	u32 unique_rev_id;
- };
- 
-+static inline enum mga_type
-+mgag200_type_from_driver_data(kernel_ulong_t driver_data)
+@@ -195,6 +196,13 @@ mgag200_type_from_driver_data(kernel_ulo
+ {
+ 	return (enum mga_type)(driver_data & MGAG200_TYPE_MASK);
+ }
++
++static inline unsigned long
++mgag200_flags_from_driver_data(kernel_ulong_t driver_data)
 +{
-+	return (enum mga_type)(driver_data & MGAG200_TYPE_MASK);
++	return driver_data & MGAG200_FLAG_MASK;
 +}
++
  				/* mgag200_mode.c */
  int mgag200_modeset_init(struct mga_device *mdev);
  void mgag200_modeset_fini(struct mga_device *mdev);
 --- a/drivers/gpu/drm/mgag200/mgag200_main.c
 +++ b/drivers/gpu/drm/mgag200/mgag200_main.c
-@@ -94,7 +94,7 @@ static int mgag200_device_init(struct dr
+@@ -94,6 +94,7 @@ static int mgag200_device_init(struct dr
  	struct mga_device *mdev = dev->dev_private;
  	int ret, option;
  
--	mdev->type = flags;
-+	mdev->type = mgag200_type_from_driver_data(flags);
++	mdev->flags = mgag200_flags_from_driver_data(flags);
+ 	mdev->type = mgag200_type_from_driver_data(flags);
  
  	/* Hardcode the number of CRTCs to 1 */
- 	mdev->num_crtc = 1;
 
 
