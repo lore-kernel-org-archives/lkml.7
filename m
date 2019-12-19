@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35861C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F92C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C56524680
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6BF8222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780628;
-	bh=NzS+thb2zRhKzX02D+ejkXOi1iRJq/6D5XAXZ6VOCSc=;
+	s=default; t=1576780630;
+	bh=WQUBj7643v5jylzIosNbCTZXOGCNhDXR1gPNRvuH/qc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YueUYqluwNc8Cgk7NS4JoM1E4lYBMZNnvJi73OC+H7dVXggNaYS7GlJnCrE/XMWxu
-	 x2GqyvXPXTFE6snkl3t3r/O3PuYbIx2n0cdlpCl9nkbFR1mOFH32ZcuJKSAkNZEyl3
-	 fUR6ghqcL93BXnou1NWLkZcCGWfStsXUKeqQOyV8=
+	b=sfOHpoZY+DFeJA3sW/S0EsgNiuEqvG8PKwZY4THv0W7LIDNUm9oLrPHCBSRFsutAH
+	 kQFnjiRFiCVPnJNwJaM3eg03bYyOleM1bG3lKjqOhgj+4ZxfHILpTNlUoocFHPKPT8
+	 iRr9RkHFRZ5BSm2X8F7IUQ22AusLB5cVwK92Zu9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbfLSShG (ORCPT
+        id S1727774AbfLSShJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:37:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54372 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:37:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727125AbfLSShD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:37:03 -0500
+        id S1727750AbfLSShG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:37:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7150224679;
-        Thu, 19 Dec 2019 18:37:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D75F624684;
+        Thu, 19 Dec 2019 18:37:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780622;
-        bh=NzS+thb2zRhKzX02D+ejkXOi1iRJq/6D5XAXZ6VOCSc=;
+        s=default; t=1576780625;
+        bh=WQUBj7643v5jylzIosNbCTZXOGCNhDXR1gPNRvuH/qc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TaTOLYfwguwpzyO23FfEYcB8NNVow5JVjcP9hz1sin1TjVNfsUTM4F9gqYivVi/ao
-         KWWALJxqdaI7aQlnT2LFHs1giFGasB+l3eOq7D+TbXmWbnxcF6aHdAVxuxHJj3roGV
-         MEHwXR4pSQ5HivGXOMgm6s0cIhDSaYB2g5RBb640=
+        b=OhvfdmPdIQucCEfA9OgfFWaNi2H5GffronlztfK2OGhYJyltV+/m5tIWUxV3KvQ1U
+         lOXtAUWPKdYJ+28fpHiS2M/fy8jq2OL5P5vUPvvGzJuOOs7/2me2+Exb4tc89ib/l7
+         QBglnwsxJIHLnI+GgLF/LCS7AEhcvkz2OAM663RQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        stable@vger.kernel.org, zhengbin <zhengbin13@huawei.com>,
+        "J. Bruce Fields" <bfields@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 049/162] MIPS: OCTEON: cvmx_pko_mem_debug8: use oldest forward compatible definition
-Date:   Thu, 19 Dec 2019 19:32:37 +0100
-Message-Id: <20191219183210.878655332@linuxfoundation.org>
+Subject: [PATCH 4.4 050/162] nfsd: Return EPERM, not EACCES, in some SETATTR cases
+Date:   Thu, 19 Dec 2019 19:32:38 +0100
+Message-Id: <20191219183210.939485236@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -62,50 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
+From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit 1c6121c39677175bd372076020948e184bad4b6b ]
+[ Upstream commit 255fbca65137e25b12bced18ec9a014dc77ecda0 ]
 
-cn58xx is compatible with cn50xx, so use the latter.
+As the man(2) page for utime/utimes states, EPERM is returned when the
+second parameter of utime or utimes is not NULL, the caller's effective UID
+does not match the owner of the file, and the caller is not privileged.
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-[paul.burton@mips.com: s/cn52xx/cn50xx/ in commit message.]
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@vger.kernel.org
+However, in a NFS directory mounted from knfsd, it will return EACCES
+(from nfsd_setattr-> fh_verify->nfsd_permission).  This patch fixes
+that.
+
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/cavium-octeon/executive/cvmx-cmd-queue.c | 2 +-
- arch/mips/include/asm/octeon/cvmx-pko.h            | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ fs/nfsd/vfs.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/cavium-octeon/executive/cvmx-cmd-queue.c b/arch/mips/cavium-octeon/executive/cvmx-cmd-queue.c
-index 8241fc6aa17d8..3839feba68f20 100644
---- a/arch/mips/cavium-octeon/executive/cvmx-cmd-queue.c
-+++ b/arch/mips/cavium-octeon/executive/cvmx-cmd-queue.c
-@@ -266,7 +266,7 @@ int cvmx_cmd_queue_length(cvmx_cmd_queue_id_t queue_id)
- 		} else {
- 			union cvmx_pko_mem_debug8 debug8;
- 			debug8.u64 = cvmx_read_csr(CVMX_PKO_MEM_DEBUG8);
--			return debug8.cn58xx.doorbell;
-+			return debug8.cn50xx.doorbell;
- 		}
- 	case CVMX_CMD_QUEUE_ZIP:
- 	case CVMX_CMD_QUEUE_DFA:
-diff --git a/arch/mips/include/asm/octeon/cvmx-pko.h b/arch/mips/include/asm/octeon/cvmx-pko.h
-index 5f47f76ed510a..20eb9c46a75ab 100644
---- a/arch/mips/include/asm/octeon/cvmx-pko.h
-+++ b/arch/mips/include/asm/octeon/cvmx-pko.h
-@@ -611,7 +611,7 @@ static inline void cvmx_pko_get_port_status(uint64_t port_num, uint64_t clear,
- 		pko_reg_read_idx.s.index = cvmx_pko_get_base_queue(port_num);
- 		cvmx_write_csr(CVMX_PKO_REG_READ_IDX, pko_reg_read_idx.u64);
- 		debug8.u64 = cvmx_read_csr(CVMX_PKO_MEM_DEBUG8);
--		status->doorbell = debug8.cn58xx.doorbell;
-+		status->doorbell = debug8.cn50xx.doorbell;
- 	}
- }
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index 17138a97f306c..7745d0a9029c7 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -387,10 +387,23 @@ nfsd_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp, struct iattr *iap,
+ 	bool		get_write_count;
+ 	bool		size_change = (iap->ia_valid & ATTR_SIZE);
  
+-	if (iap->ia_valid & (ATTR_ATIME | ATTR_MTIME | ATTR_SIZE))
++	if (iap->ia_valid & ATTR_SIZE) {
+ 		accmode |= NFSD_MAY_WRITE|NFSD_MAY_OWNER_OVERRIDE;
+-	if (iap->ia_valid & ATTR_SIZE)
+ 		ftype = S_IFREG;
++	}
++
++	/*
++	 * If utimes(2) and friends are called with times not NULL, we should
++	 * not set NFSD_MAY_WRITE bit. Otherwise fh_verify->nfsd_permission
++	 * will return EACCESS, when the caller's effective UID does not match
++	 * the owner of the file, and the caller is not privileged. In this
++	 * situation, we should return EPERM(notify_change will return this).
++	 */
++	if (iap->ia_valid & (ATTR_ATIME | ATTR_MTIME)) {
++		accmode |= NFSD_MAY_OWNER_OVERRIDE;
++		if (!(iap->ia_valid & (ATTR_ATIME_SET | ATTR_MTIME_SET)))
++			accmode |= NFSD_MAY_WRITE;
++	}
+ 
+ 	/* Callers that do fh_verify should do the fh_want_write: */
+ 	get_write_count = !fhp->fh_dentry;
 -- 
 2.20.1
 
