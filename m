@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D61C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B9BC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F40CC227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03AE9227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781489;
-	bh=GqAFOTv0a9RtHQ56hi09qCi4T7GetSCA3QHzEhxSVjs=;
+	s=default; t=1576781492;
+	bh=0QL1Ak8h+NY9/TrgI6ww+xyNPWumj0sy+A/klAr8Tg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RgOoHVWKh6aJkHMfSZr/e5gU22vCszdpnfIMWdUfqvYd9UjiStSwlHFUUHnbd/To1
-	 V4nJjdxT13JovdiPmlf73q7sOhQQICCfmrrpGDwP6DUHlX8le/uuSe0/KOZ7lqYiY0
-	 ItvdHXzqsP926q13KqrkbmgxLBHUvagPs3HZ2n6k=
+	b=HVSqZZ87T3+5BQUlg8pPE9bM959bjNoQCZ6mmviE0jSnJkj8XEOwvkZx/BT1rE0Xz
+	 xyQmM76Gf8n1kNM5drMuftJNWSK4WVRbRnVmuvtb2vo8wizjk45Wbg/Yx0ZTSjXjo7
+	 5ZsZupswCqq0v/CQT8Ch40+0xVVduxdTp4IRxwbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730142AbfLSSv2 (ORCPT
+        id S1728123AbfLSSva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:51:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45622 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:51:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729205AbfLSSvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:51:22 -0500
+        id S1730128AbfLSSvT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:51:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 149E924679;
-        Thu, 19 Dec 2019 18:51:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AE902064B;
+        Thu, 19 Dec 2019 18:51:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781481;
-        bh=GqAFOTv0a9RtHQ56hi09qCi4T7GetSCA3QHzEhxSVjs=;
+        s=default; t=1576781479;
+        bh=0QL1Ak8h+NY9/TrgI6ww+xyNPWumj0sy+A/klAr8Tg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=alwhA33O6tlTR5kSyh0dzQGDcFisAlbtFahmnwavaU4yjzJBrIH6WiXEBmrkHXglc
-         89KeFxJSp/uOTnni1nqhG8hZpALSLbjNg1Bk9vL7jh+2XGC3VWzmnAq4ojjvcAwetp
-         CSmc+MQyjB4MfvzrJlidqKMeGj6sPPoUTyxgVB1s=
+        b=FvLTbYp282PFMKNU9Er0cDgyvgq6t0HxTLc1jU0L4Hu822k2HZHUqGGvrkvDWhn+Y
+         pbk51QtBhzhKem12rsgFBPVZc5Mj5Wq1u+m4vofl45a5iep5F/admGhO0p67cfztNr
+         KuVC+M0TwPtyTQR9qUuy0tBh8r6CQG8UPNWNkw28=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PATCH 4.14 18/36] xtensa: fix TLB sanity checker
-Date:   Thu, 19 Dec 2019 19:34:35 +0100
-Message-Id: <20191219182907.300079882@linuxfoundation.org>
+        stable@vger.kernel.org,
+        George Cherian <george.cherian@marvell.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Robert Richter <rrichter@marvell.com>
+Subject: [PATCH 4.14 17/36] PCI: Apply Cavium ACS quirk to ThunderX2 and ThunderX3
+Date:   Thu, 19 Dec 2019 19:34:34 +0100
+Message-Id: <20191219182902.884582321@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182848.708141124@linuxfoundation.org>
 References: <20191219182848.708141124@linuxfoundation.org>
@@ -58,47 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Filippov <jcmvbkbc@gmail.com>
+From: George Cherian <george.cherian@marvell.com>
 
-commit 36de10c4788efc6efe6ff9aa10d38cb7eea4c818 upstream.
+commit f338bb9f0179cb959977b74e8331b312264d720b upstream.
 
-Virtual and translated addresses retrieved by the xtensa TLB sanity
-checker must be consistent, i.e. correspond to the same state of the
-checked TLB entry. KASAN shadow memory is mapped dynamically using
-auto-refill TLB entries and thus may change TLB state between the
-virtual and translated address retrieval, resulting in false TLB
-insanity report.
-Move read_xtlb_translation close to read_xtlb_virtual to make sure that
-read values are consistent.
+Enhance the ACS quirk for Cavium Processors. Add the root port vendor IDs
+for ThunderX2 and ThunderX3 series of processors.
 
-Cc: stable@vger.kernel.org
-Fixes: a99e07ee5e88 ("xtensa: check TLB sanity on return to userspace")
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+[bhelgaas: add Fixes: and stable tag]
+Fixes: f2ddaf8dfd4a ("PCI: Apply Cavium ThunderX ACS quirk to more Root Ports")
+Link: https://lore.kernel.org/r/20191111024243.GA11408@dc5-eodlnx05.marvell.com
+Signed-off-by: George Cherian <george.cherian@marvell.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Robert Richter <rrichter@marvell.com>
+Cc: stable@vger.kernel.org	# v4.12+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/xtensa/mm/tlb.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/quirks.c |   20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
---- a/arch/xtensa/mm/tlb.c
-+++ b/arch/xtensa/mm/tlb.c
-@@ -218,6 +218,8 @@ static int check_tlb_entry(unsigned w, u
- 	unsigned tlbidx = w | (e << PAGE_SHIFT);
- 	unsigned r0 = dtlb ?
- 		read_dtlb_virtual(tlbidx) : read_itlb_virtual(tlbidx);
-+	unsigned r1 = dtlb ?
-+		read_dtlb_translation(tlbidx) : read_itlb_translation(tlbidx);
- 	unsigned vpn = (r0 & PAGE_MASK) | (e << PAGE_SHIFT);
- 	unsigned pte = get_pte_for_vaddr(vpn);
- 	unsigned mm_asid = (get_rasid_register() >> 8) & ASID_MASK;
-@@ -233,8 +235,6 @@ static int check_tlb_entry(unsigned w, u
- 	}
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4252,15 +4252,21 @@ static int pci_quirk_amd_sb_acs(struct p
  
- 	if (tlb_asid == mm_asid) {
--		unsigned r1 = dtlb ? read_dtlb_translation(tlbidx) :
--			read_itlb_translation(tlbidx);
- 		if ((pte ^ r1) & PAGE_MASK) {
- 			pr_err("%cTLB: way: %u, entry: %u, mapping: %08x->%08x, PTE: %08x\n",
- 					dtlb ? 'D' : 'I', w, e, r0, r1, pte);
+ static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
+ {
++	if (!pci_is_pcie(dev) || pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
++		return false;
++
++	switch (dev->device) {
+ 	/*
+-	 * Effectively selects all downstream ports for whole ThunderX 1
+-	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
+-	 * bits of device ID are used to indicate which subdevice is used
+-	 * within the SoC.
++	 * Effectively selects all downstream ports for whole ThunderX1
++	 * (which represents 8 SoCs).
+ 	 */
+-	return (pci_is_pcie(dev) &&
+-		(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) &&
+-		((dev->device & 0xf800) == 0xa000));
++	case 0xa000 ... 0xa7ff: /* ThunderX1 */
++	case 0xaf84:  /* ThunderX2 */
++	case 0xb884:  /* ThunderX3 */
++		return true;
++	default:
++		return false;
++	}
+ }
+ 
+ static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
 
 
