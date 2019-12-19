@@ -2,124 +2,141 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B8EC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7925C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D692C22314
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A82F6218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:53:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfLSAwz (ORCPT
+        id S1726751AbfLSAxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 19:52:55 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39258 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfLSAwy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 19:52:54 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 0C8972911A3
-Received: by earth.universe (Postfix, from userid 1000)
-        id BD5683C0C7B; Thu, 19 Dec 2019 01:52:50 +0100 (CET)
-Date:   Thu, 19 Dec 2019 01:52:50 +0100
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com,
-        lee.jones@linaro.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 0/5] power: supply: MAX17040: Add IRQ for low level
- and alert SOC changes
-Message-ID: <20191219005250.w3m7pbjisykxx7iz@earth.universe>
-References: <20191205154410.29462-1-matheus@castello.eng.br>
+        Wed, 18 Dec 2019 19:53:34 -0500
+Received: from mga17.intel.com ([192.55.52.151]:18689 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726463AbfLSAxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 19:53:34 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 16:53:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
+   d="scan'208";a="210280863"
+Received: from jtreacy-mobl1.ger.corp.intel.com ([10.251.82.127])
+  by orsmga008.jf.intel.com with ESMTP; 18 Dec 2019 16:53:25 -0800
+Message-ID: <5ba9e16a81d920c3a60b2486b98154590a0e0650.camel@linux.intel.com>
+Subject: Re: [PATCH v24 08/24] x86/sgx: Enumerate and track EPC sections
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
+        puiterwijk@redhat.com
+In-Reply-To: <20191218091856.GA24886@zn.tnic>
+References: <20191129231326.18076-1-jarkko.sakkinen@linux.intel.com>
+         <20191129231326.18076-9-jarkko.sakkinen@linux.intel.com>
+         <20191218091856.GA24886@zn.tnic>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160
+ Espoo
+Content-Type: text/plain; charset="UTF-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ugpk52tsjhp7lo2r"
-Content-Disposition: inline
-In-Reply-To: <20191205154410.29462-1-matheus@castello.eng.br>
+Date:   Thu, 19 Dec 2019 02:53:08 +0200
+User-Agent: Evolution 3.34.1-2 
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 2019-12-18 at 10:18 +0100, Borislav Petkov wrote:
+> On Sat, Nov 30, 2019 at 01:13:10AM +0200, Jarkko Sakkinen wrote:
+> > +static bool __init sgx_alloc_epc_section(u64 addr, u64 size,
+> > +					 unsigned long index,
+> > +					 struct sgx_epc_section *section)
+> > +{
+> > +	unsigned long nr_pages = size >> PAGE_SHIFT;
+> 
+> I'm assuming here that size which gets communicated through CPUID -
+> which is an interesting way to communicate SGX settings in itself :-) - is
+> in multiples of 4K? SDM doesn't say...
 
---ugpk52tsjhp7lo2r
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes.
 
-Hi,
+> And last time I asked:
+> 
+> "This size comes from CPUID but it might be prudent to sanity-check it
+> nevertheless, before doing the memremap()."
+> 
+> but it was left uncommented.
 
-On Thu, Dec 05, 2019 at 12:44:05PM -0300, Matheus Castello wrote:
-> This series add IRQ handler for low level SOC alert, define a devicetree
-> binding attribute to configure the alert level threshold and check for
-> changes in SOC and power supply status for send uevents.
->=20
-> Max17043/17044 have a pin for alert host about low level state of charge =
-and
-> this alert can be configured in a threshold from 1% up to 32% of SOC.
->=20
-> Thanks Krzysztof Kozlowski, Lee Jones, Rob Herring and Sebastian Reichel =
-for
-> your time reviewing it.
+I'm sorry about that. Not intended. I just forgot to deal with it or
+missed it.
 
-Thanks, I queued all but the MFD patch to power-supply's for-next
-branch.
+> > +/**
+> > + * A section metric is concatenated in a way that @low bits 12-31 define the
+> > + * bits 12-31 of the metric and @high bits 0-19 define the bits 32-51 of the
+> > + * metric.
+> > + */
+> > +static inline u64 __init sgx_calc_section_metric(u64 low, u64 high)
+> > +{
+> > +	return (low & GENMASK_ULL(31, 12)) +
+> > +	       ((high & GENMASK_ULL(19, 0)) << 32);
+> > +}
+> > +
+> > +static bool __init sgx_page_cache_init(void)
+> > +{
+> > +	u32 eax, ebx, ecx, edx, type;
+> > +	u64 pa, size;
+> > +	int i;
+> > +
+> > +	BUILD_BUG_ON(SGX_MAX_EPC_SECTIONS > (SGX_EPC_SECTION_MASK + 1));
+> > +
+> > +	for (i = 0; i < (SGX_MAX_EPC_SECTIONS + 1); i++) {
+> 
+> Those brackets are still here from the last time. You said:
+> 
+> "For nothing :-)
+> 
+> I'll change it as:
+> 
+>   for (i = 0; i <= SGX_MAX_EPC_SECTIONS; i++) {"
+> 
+> but probably forgot...
+> 
+> and looking at my review comments here:
+> 
+> https://lkml.kernel.org/r/20191005092627.GA25699@zn.tnic
+> 
+> and your reply:
+> 
+> https://lkml.kernel.org/r/20191007115850.GA20830@linux.intel.com
+> 
+> you clearly missed addressing some so I'm going to stop reviewing here.
+> 
+> Please have a look at those review comments again and check whether the
+> apply - and then do them - or they don't and they pls explain why they
+> don't.
+> 
+> And do that for the rest of the patchset, please, before you send it
+> again.
+> 
+> Thx.
 
--- Sebastian
+It is unintentional but I seriously do my best on keeping track of
+things.  Sometimes when you multitask with maintaining other subsystems
+and refactor huge patch set like this, it just happens, no matter how
+well you try to organize your work.
 
-> Changes since v7:
-> (Suggested by Sebastian Reichel)
-> - Fix unrelated change
-> - Use device_property_read_u32() and simplify the code
-> - Check the irq and of_device_is_compatible in the first patch
->=20
-> Changes since v6:
-> (Suggested by Lee Jones)
-> - Use relative paths in documentation
->=20
-> Matheus Castello (5):
->   power: supply: max17040: Add IRQ handler for low SOC alert
->   dt-bindings: power: supply: Max17040: Add DT bindings for max17040
->     fuel gauge
->   devicetree: mfd: max14577: Add reference to max14040_battery.txt
->     descriptions
->   power: supply: max17040: Config alert SOC low level threshold from FDT
->   power: supply: max17040: Send uevent in SOC and status change
->=20
->  .../devicetree/bindings/mfd/max14577.txt      |   2 +
->  .../power/supply/max17040_battery.txt         |  33 +++++
->  drivers/power/supply/max17040_battery.c       | 130 +++++++++++++++++-
->  3 files changed, 161 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/max170=
-40_battery.txt
->=20
-> --
-> 2.24.0.rc2
->=20
+I'll go through v23 comments with time before sending v25.
 
---ugpk52tsjhp7lo2r
-Content-Type: application/pgp-signature; name="signature.asc"
+/Jarkko
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl36ydQACgkQ2O7X88g7
-+pri/g/+Ncf5+pXnEljw4cOfiOwJYP3ql2z9N6VHTMixItWe1QQ/Mn5qKFj9O5AT
-ZM0Pexo7JBmu4oH9DtulNXULSathw25iSoQmJAGZakM/CcBYbkJBafbXWQF+ls2v
-6bZcKLgYMzOFWHyjLtnYkfV1pHjmiCG7A5Mqln056/WgJLzTuxT3cW5pczskddvL
-3DlFaRQHs113/aqFCXWg6NvMkzuf+XUM11SmAmezuwwjj0JTsGpf7Gz1//uXJ+Ml
-G/N2SKne4/tDB61ce6N8sxEofDjqqV1KIk3Wdz/O/Cqmq6+gORs3NF9KIdlE0RCZ
-U4pPCUfKWPyWr0+uP+XHwj/Ggv0bIlKYEVi/lvEb6NklZ3X4tZ+7K6j75YMQ0qRY
-wtUayqr45ZmcPUKLkrDOC6Bj2+37dLIBy2Sl7Ft24yXf3BfQHoMS/RM8h8mhwHQB
-kkvM2O1tm3zfciSxn2N5EL3BWyHAX6FJnU6vVayjvDvEMKPJSK85M8wyyc1gCZzV
-pTzCI/zViWnfiVfEG+Ai3UEZO4cjHxt5u4U8l7iygQK1BZBdZhxaVaQr3qcsvpSW
-XfVQjmcXPKBjzU4BUvrJUNrt/rNH4ytfWfZfaEUCCa01FT9WNqffCXtgni/W4VY+
-U8oR272gljb4hwr6SRyqpvc46eZa+nNjNwWtoXpk6UNMMyRNaUE=
-=Py50
------END PGP SIGNATURE-----
-
---ugpk52tsjhp7lo2r--
