@@ -2,103 +2,123 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E08C3C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BA0C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1B3622314
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:54:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QafT74dz"
+	by mail.kernel.org (Postfix) with ESMTP id 266B3222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:54:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfLSAyk (ORCPT
+        id S1726776AbfLSAyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 19:54:40 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:45463 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfLSAyk (ORCPT
+        Wed, 18 Dec 2019 19:54:45 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39278 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfLSAyn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 19:54:40 -0500
-Received: by mail-qt1-f196.google.com with SMTP id l12so3542480qtq.12;
-        Wed, 18 Dec 2019 16:54:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A1Urs4RsdGYBrM/Z6psT6VFuLwM10wg/j95CYysxehQ=;
-        b=QafT74dzFrnd5FdUc7ZzJZlaKDob9h1sLpE+XITJl54ZNHghpJtwWE7dcAkDiPKqhX
-         lbx2ass0Ebil/RJsJijTZP3Js7drMaUnjPbmxgFL73QBDCWFkHtn8OnDLO7T2pW41HaO
-         nPio5pHds+vJOAx6gQvrzuGJzL+qNvKkFbJWykiaU1K1mEuKaGQG3t4zi8vdh6XGuiH8
-         ypLnvN3hshsvmwhleq2fcjUpOqWlbaAbajNsGYxNtjdDW5RmWuUhZYXkTQHWs8eDVOTT
-         MGsQrBruQfvqqAkjtR3vXomeOsANkyO9SBKlLxmJq+BKIo4lj4y7nlZPQGHhrrLkQvtV
-         3yhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A1Urs4RsdGYBrM/Z6psT6VFuLwM10wg/j95CYysxehQ=;
-        b=oZItB2ygC0o5F3mWiVDgyWz6NPeCRL5UaBjJJQ9vuXKBm4qLLtpWFDkiSBuZpy+ls6
-         qGcpg4LsYNzArxP1WZAAI0hxEqcy5Ni8sG/8DVdRM7nax4hqM9A3DxsP1+3CGFNf3IvV
-         9os9N2OSHx0IseynNSnTve2eC9QmN/IPBVJYQ+WjXZ9HtM8ZiK/UpOoPRCLYidmDxeCS
-         i+Dl5VLY1e0C+UNUfTApaUgG0XZrletARbniOUOnDWrlSHu4VD/GXLQFxs/26wgzJdM2
-         KNPeV18mx4mgqyEEAVUNGZxySGvSSUIW/M42xOZhuN6L4MyA8Z6D1kBSUIxhssv7O76+
-         cbUw==
-X-Gm-Message-State: APjAAAWHNDtrueTMU6ZEgEFAq9nRow6hjQaCQ6RxOoEQguewxlVrlX/q
-        RcABIhZfkIbqKgCQgtwKEq/+Ob6sJOo9HIR2Atc=
-X-Google-Smtp-Source: APXvYqxYXKEfiJIR4aztDlh6AyQHzq1Z+GedyfsEKbjzdal3F7FXFiTAT4o0HbCkk48AOkhwhMPm+llnUg8iQhz4gJw=
-X-Received: by 2002:ac8:4050:: with SMTP id j16mr4757783qtl.171.1576716879274;
- Wed, 18 Dec 2019 16:54:39 -0800 (PST)
+        Wed, 18 Dec 2019 19:54:43 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id AFFC52911A3
+Received: by earth.universe (Postfix, from userid 1000)
+        id 759783C0C7B; Thu, 19 Dec 2019 01:54:39 +0100 (CET)
+Date:   Thu, 19 Dec 2019 01:54:39 +0100
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yuanjiang.yu@unisoc.com, baolin.wang@linaro.org,
+        zhang.lyra@gmail.com, orsonzhai@gmail.com
+Subject: Re: [PATCH v3 0/5] Improve the SC27XX fuel gauge controller
+Message-ID: <20191219005439.63nk4fpraveoeqyv@earth.universe>
+References: <cover.1575863274.git.baolin.wang7@gmail.com>
 MIME-Version: 1.0
-References: <20191211223344.165549-1-brianvv@google.com> <20191211223344.165549-9-brianvv@google.com>
-In-Reply-To: <20191211223344.165549-9-brianvv@google.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 18 Dec 2019 16:54:28 -0800
-Message-ID: <CAEf4BzaeLV8EkGunioqD=sn0Bin4EL0WMzp1T6GjdBajWaFQ+w@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next 08/11] libbpf: add libbpf support to batch ops
-To:     Brian Vazquez <brianvv@google.com>
-Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Yonghong Song <yhs@fb.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qluf4zgj5ugicewn"
+Content-Disposition: inline
+In-Reply-To: <cover.1575863274.git.baolin.wang7@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 2:35 PM Brian Vazquez <brianvv@google.com> wrote:
->
-> From: Yonghong Song <yhs@fb.com>
->
-> Added four libbpf API functions to support map batch operations:
->   . int bpf_map_delete_batch( ... )
->   . int bpf_map_lookup_batch( ... )
->   . int bpf_map_lookup_and_delete_batch( ... )
->   . int bpf_map_update_batch( ... )
->
-> Signed-off-by: Yonghong Song <yhs@fb.com>
-> ---
 
-These libbpf APIs should use _opts approach from the get go to make
-them extensible, but preserving backwards/forward compatibility.
-Please take a look at one of few that are already using them (or
-follow Andrey's bpf_prog_attach work, as he's adding opts-based one at
-the moment).
+--qluf4zgj5ugicewn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->  tools/lib/bpf/bpf.c      | 61 ++++++++++++++++++++++++++++++++++++++++
->  tools/lib/bpf/bpf.h      | 14 +++++++++
->  tools/lib/bpf/libbpf.map |  4 +++
->  3 files changed, 79 insertions(+)
->
+Hi,
 
-[...]
+On Mon, Dec 09, 2019 at 11:56:20AM +0800, Baolin Wang wrote:
+> This patch set adds one battery resistance-temperature table to optimize
+> the real battery internal resistance in different tempertures, and
+> calibrates the resistance of coulomb counter to improve the accuracy
+> of the coulomb counter.
+>=20
+> Any comments are welcome. Thanks.
+
+Thanks, queued to power-supply's for-next branch. I changed the
+comment for struct sc27xx_fgu_data, so that it states calib_resist
+being in uOhm instead of mOhm.
+
+-- Sebastian
+
+> Changes from v2:
+>  - Add reviewed tag from Rob.
+>  - Rebased.
+>=20
+> Changes from v1:
+>  - Fix the order of values in resistance-temp-table property's descriptio=
+n.
+>  - Add an unit suffix for FGU resistance property.
+>=20
+> Baolin Wang (4):
+>   dt-bindings: power: Introduce one property to describe the battery
+>     resistance with temperature changes
+>   power: supply: core: Add battery internal resistance temperature
+>     table support
+>   dt-bindings: power: sc27xx: Add a new property to describe the real
+>     resistance of coulomb counter chip
+>   power: supply: sc27xx: Calibrate the resistance of coulomb counter
+>=20
+> Yuanjiang Yu (1):
+>   power: supply: sc27xx: Optimize the battery resistance with measuring
+>     temperature
+>=20
+>  .../devicetree/bindings/power/supply/battery.txt   |    5 ++
+>  .../devicetree/bindings/power/supply/sc27xx-fg.txt |    3 +
+>  drivers/power/supply/power_supply_core.c           |   67 ++++++++++++++=
++++++-
+>  drivers/power/supply/sc27xx_fuel_gauge.c           |   49 +++++++++++++-
+>  include/linux/power_supply.h                       |   10 +++
+>  5 files changed, 130 insertions(+), 4 deletions(-)
+>=20
+> --=20
+> 1.7.9.5
+>=20
+
+--qluf4zgj5ugicewn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl36yk8ACgkQ2O7X88g7
++poFRA//ZbDQYkhRD6/Q/fzYBgBG46iBNRtyH3Tt6DDbLi5YmKjUfS27L2gXusg7
+bL44L/IGuDNLsVa8gMQrmYpznn8BjARgZD5JDcejaTl0Vxe/dPxTnjP1hlxss5rQ
+FYm4D9W7Fsy30B5QSz1C6ZjOaDE2HOGb/M9ctn/MPVJwWGIHzMtKjHqJ8gu/5K9P
+Afs5pRNaXtX7MUP45T2CODJG+gNqQy5/hdNyQMcCm9JJ2KuD56Qo5JHcuFY+Z3iz
+n+ycAYrfCp66Aeape0ZemWa0d/rtH6fZ6rpON15KZ/759a+gGDhribDTuqVtZEu0
+iolyC8pUm4MIh2YREsSbwZhr4hGnMcM1kZz4d+x4q2JeSKZXnMaXr4ZL3wjdqUYj
+eV1FHzTvQ623yks3/YGjlBx414T5mPGaswuMdqwssEjkCwojXykxiAfdWNXkPaHs
+0Pq4V/0SzuHro64JWeZVX7kBnymO/7XFTm1jdM6jcbEjmukPxY7PEC6xbaiUIjkQ
+lj8TzPR2vF+WDyIY1BKVyDdsgQaeIW2n+2ZTOZfGm0qZ7emN53z7NWWmx3VEYdKj
+LS6FvpQzDI1LOH7uO75SeksubEBqTt4xlJ5MwFD4Pk6s4zI+44bUDR1CCoJpedne
+RobZE/OVQ7VELZqWZOeXYF6KfyVEZj0qDVl8ByszqPLMVYeL74Q=
+=YEHq
+-----END PGP SIGNATURE-----
+
+--qluf4zgj5ugicewn--
