@@ -2,111 +2,99 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F6D1C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D188C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 061F320716
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:02:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jb8HzqW7"
+	by mail.kernel.org (Postfix) with ESMTP id 3AC4E227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:09:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727135AbfLSSCp (ORCPT
+        id S1726907AbfLSSJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:02:45 -0500
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:41631 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726858AbfLSSCp (ORCPT
+        Thu, 19 Dec 2019 13:09:10 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18700 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726797AbfLSSJJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:02:45 -0500
-Received: by mail-vs1-f66.google.com with SMTP id f8so4319322vsq.8;
-        Thu, 19 Dec 2019 10:02:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rAQovkcIWRg/uT7Wt4ZXLTChTNB0K/Ms05qPpBBigFs=;
-        b=jb8HzqW7FqnKB/KJV1E038aKgBLCAFaOmx4e/SEbN6zwqhp/4pDjpjQySFp8TMQe+b
-         s1Q5VciU5q0TLp+PaMVvflF2uN0Ld1bSbGS7/kTCUgCvCOXnNysbN3vyrtKA4ZgNQksb
-         kl1IDLtKgcTuqEOyGmf7dLRO2LU7sA8qvwPU+NsSSRyv1RyVbnKsNCQhKy1tCarRwlwx
-         +Aj3D4rHsjeVmZBOo7+oRXFyave6rptfxibTWUWGrasI7MCjPuiTGEnNcxhsVEg4oeaF
-         rh7u7NQZ4WLk4633f3zwoAsOy6HnIXQ1irfRVy5evSBsQSNpyaz1eWrqAur1ZfIpWl54
-         hJ2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rAQovkcIWRg/uT7Wt4ZXLTChTNB0K/Ms05qPpBBigFs=;
-        b=b4iFJ1UELrRrtc+9468nxJ5UYFuerNaTRJNBhB7vBL7sOf8s4/mHuL8Drc8Ng9pt9+
-         mKUcTs0Zc3rIwqrrcYsYOJ33BAqqT3ytMQKw9U0yNzOMJuV1UAhAmKJZKHh1X3c7Uiyt
-         SZtIehy6qiWjondBTlUcnnDZzy/XziEwnpPg7T3D+6AlUjxsBPgInFutXIbAwyi/0Nlc
-         zOufA4DQuRZPkyR6BywmEhmJaYgf5DQ5/ozTl2RTrQPWEd7qHyERpvCyPT6ni3pAr69x
-         8PXmqIAnCnhZrQgiXTPBWg3im64/ocCfacMfHxLP5Qr5JY4AKVSops/mGRra0fWXWmOa
-         2cWA==
-X-Gm-Message-State: APjAAAXMh4NG2N8lFZ1jeVNF4Tp45d44JPgO+JgQJDHixMPmnyNFYbz8
-        bWwsAWnOJJqUZVvZ9mu/0brXi0gWrOql6IKrs5k=
-X-Google-Smtp-Source: APXvYqypfDBo3AHuAtJUuEds0r/E977ET2q9PNpOVds2Jiih/A5bkuyjydb2YmL4ArPAlG9jOgW37FEugxym5qIbaAA=
-X-Received: by 2002:a67:e204:: with SMTP id g4mr4898254vsa.176.1576778563711;
- Thu, 19 Dec 2019 10:02:43 -0800 (PST)
+        Thu, 19 Dec 2019 13:09:09 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBJHsrYl144743;
+        Thu, 19 Dec 2019 13:09:08 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wyq5ru324-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Dec 2019 13:09:07 -0500
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xBJHsxhw145575;
+        Thu, 19 Dec 2019 13:09:07 -0500
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wyq5ru31e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Dec 2019 13:09:07 -0500
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBJI78pj006975;
+        Thu, 19 Dec 2019 18:09:06 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma04dal.us.ibm.com with ESMTP id 2wvqc7cpd3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Dec 2019 18:09:06 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBJI95OJ16580936
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Dec 2019 18:09:05 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0C4A6BE056;
+        Thu, 19 Dec 2019 18:09:05 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9C95BBE054;
+        Thu, 19 Dec 2019 18:09:04 +0000 (GMT)
+Received: from localhost (unknown [9.80.196.117])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 19 Dec 2019 18:09:04 +0000 (GMT)
+From:   Nathan Lynch <nathanl@linux.ibm.com>
+To:     Scott Cheloha <cheloha@linux.vnet.ibm.com>
+Cc:     ricklind@linux.vnet.ibm.com,
+        Scott Cheloha <cheloha@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v3] drivers/base/memory.c: cache blocks in radix tree to accelerate lookup
+In-Reply-To: <20191217193238.3098-1-cheloha@linux.vnet.ibm.com>
+References: <20191121195952.3728-1-cheloha@linux.vnet.ibm.com> <20191217193238.3098-1-cheloha@linux.vnet.ibm.com>
+Date:   Thu, 19 Dec 2019 12:09:03 -0600
+Message-ID: <87h81wjigw.fsf@linux.ibm.com>
 MIME-Version: 1.0
-References: <1576491432-631-1-git-send-email-sheebab@cadence.com>
-In-Reply-To: <1576491432-631-1-git-send-email-sheebab@cadence.com>
-From:   Alim Akhtar <alim.akhtar@gmail.com>
-Date:   Thu, 19 Dec 2019 23:32:07 +0530
-Message-ID: <CAGOxZ53eZupSFu+ugHuuNTZ+tJWa8Ex2YmDXe+uQ5YbAR8nsqA@mail.gmail.com>
-Subject: Re: [PATCH] scsi: ufs: Power off hook for Cadence UFS driver
-To:     Sheeba B <sheebab@cadence.com>
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        "Bean Huo (beanhuo)" <beanhuo@micron.com>, yuehaibing@huawei.com,
-        linux-scsi@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, rafalc@cadence.com,
-        mparab@cadence.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-19_06:2019-12-17,2019-12-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ adultscore=0 suspectscore=1 bulkscore=0 impostorscore=0 priorityscore=1501
+ lowpriorityscore=0 clxscore=1011 phishscore=0 mlxlogscore=999
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912190135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sheeba
+Scott Cheloha <cheloha@linux.vnet.ibm.com> writes:
 
-On Mon, Dec 16, 2019 at 4:55 PM Sheeba B <sheebab@cadence.com> wrote:
+> Searching for a particular memory block by id is slow because each block
+> device is kept in an unsorted linked list on the subsystem bus.
 >
-> Attach Power off hook on Cadence UFS driver
+> Lookup is much faster if we cache the blocks in a radix tree.  Memory
+> subsystem initialization and hotplug/hotunplug is at least a little faster
+> for any machine with more than ~100 blocks, and the speedup grows with
+> the block count.
 >
-> Signed-off-by: Sheeba B <sheebab@cadence.com>
+> Signed-off-by: Scott Cheloha <cheloha@linux.vnet.ibm.com>
+> Acked-by: David Hildenbrand <david@redhat.com>
 
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Acked-by: Nathan Lynch <nathanl@linux.ibm.com>
 
-> ---
->  drivers/scsi/ufs/cdns-pltfrm.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/scsi/ufs/cdns-pltfrm.c b/drivers/scsi/ufs/cdns-pltfrm.c
-> index 1c80f9633da6..56a6a1ed5ec2 100644
-> --- a/drivers/scsi/ufs/cdns-pltfrm.c
-> +++ b/drivers/scsi/ufs/cdns-pltfrm.c
-> @@ -325,6 +325,7 @@ static const struct dev_pm_ops cdns_ufs_dev_pm_ops = {
->  static struct platform_driver cdns_ufs_pltfrm_driver = {
->         .probe  = cdns_ufs_pltfrm_probe,
->         .remove = cdns_ufs_pltfrm_remove,
-> +       .shutdown = ufshcd_pltfrm_shutdown,
->         .driver = {
->                 .name   = "cdns-ufshcd",
->                 .pm     = &cdns_ufs_dev_pm_ops,
-> --
-> 2.17.1
->
-
-
--- 
-Regards,
-Alim
+Thanks Scott.
