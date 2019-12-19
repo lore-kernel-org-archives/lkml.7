@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52EDFC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87293C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B4342467B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 593A52467B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:16:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="rBzzEYfy"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="g6TRXLzQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbfLSRQJ (ORCPT
+        id S1727270AbfLSRQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 12:16:09 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40126 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727105AbfLSRPs (ORCPT
+        Thu, 19 Dec 2019 12:16:15 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42383 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727071AbfLSRPq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 12:15:48 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t14so6432751wmi.5
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 09:15:46 -0800 (PST)
+        Thu, 19 Dec 2019 12:15:46 -0500
+Received: by mail-wr1-f65.google.com with SMTP id q6so6750945wro.9
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 09:15:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uycbaS0g1vE0Cuob7CqLcnjNvgH80U0c2b2m+7/3Ktw=;
-        b=rBzzEYfyA1MtQaHuNuBZq+0ETt+FtIFBvw4RFKKOcpSVbBFxol0tf56M85YAhphsr5
-         a/HmMFRQKK/20smBrmLQA4rAUYEhkJKpwC1Sft2mP16nyeCkBG76iQr9pcTYfyTib+bY
-         LOhO5AWg6DkMc1VUTfA5F7UbE8rVtwLCnyPT7zK9+jP+9iv77TX1eRVoYYLi+Z4X0V/a
-         4TJ6xwHag5hCVsmXg0LdXyKCyzsU1aOVDB+eECTV35zGRLzWJjXJ95Xgtbh4Y8HONcEY
-         0wyoBWzcCOXk+7lYfiUqoX2Agfn+cFBFqqi4C+CmqCjJjGvZgDxaOHpKJOQlbUOruwOP
-         MQ+A==
+        bh=3GsK7s8K6DIS0JIxs6gZ15L0MgMAbrzcUa2gzsoGKiM=;
+        b=g6TRXLzQnGjOPWvH2HyZO/buusAWwoTEGg4ebhf8w94RAYzxtqUm6yVvhCIw8TKnTw
+         NIW3bDN4U3M9AHMZEeG7YVVEB8H58W7zaTbFpsPH3MVS8CAqyDOOYTLrKiEYom7AQQI8
+         DmfAxe6M0vOJClNDCjPu2QxNK1XF2xDVYE+fJv3uwKyHlB1ODq0Wdi/hQfsOwyRTpSwZ
+         sKS8UHmC+O+6E7BLZk2ze+aGJlb2VTxMMKifzz5mSt3y10yxnpSgUhIki9GhbmywIlDh
+         jL6sAwvJIxhQ0wgchhfdMoxucMlNFpPt/qryPKpRjRPVFSg+5sU2NZGVgT6RFaMH8nIc
+         WSVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uycbaS0g1vE0Cuob7CqLcnjNvgH80U0c2b2m+7/3Ktw=;
-        b=f6UB+jFAoVB9UNltWxnK73dcYRti9scdICM1zSIk8kF2Hha7wXi9fVCYqBs9sXL+hj
-         Xv/pCrt1JQuDZ89q2iYyUHw44jJbVuG7GdLBotc1ycOK0ISJMl9K2dZ7Os/cLzIuZnC+
-         qo0Xj/m4RV/ohZq/JCIBMEq2yCz1BxgcK3DTfEYDFvnlYfso1eQewAFfhHkimUzLZv/W
-         3tOoZ5LEsM+ArDZMjuLnFKS9b872XhM7+K1H0PFGZ8td+bpbLqvjECfbFf0VKJ0EiYiM
-         XRuEXyx1bEDFmrd5itYPAXUxN5vhhk+pR76WqX6vfv2a+Pkg2xCdrb8nB4274lEG4cM5
-         /1JQ==
-X-Gm-Message-State: APjAAAV9OWkjR59soZPmzXOtigOyxrMw6f2Z3AseUWO7YtRqNJlFBAYP
-        GMeP1qkeYco9sRt5nWp8Cpf1WCxn6yI=
-X-Google-Smtp-Source: APXvYqwsGU6Wo1uPHcriBaY8UhilFJcnLEteqy07AwUJ7zq340qlG3Ixhg1A+rJmWNmKh/4+fligKQ==
-X-Received: by 2002:a05:600c:108a:: with SMTP id e10mr10817499wmd.38.1576775746351;
-        Thu, 19 Dec 2019 09:15:46 -0800 (PST)
+        bh=3GsK7s8K6DIS0JIxs6gZ15L0MgMAbrzcUa2gzsoGKiM=;
+        b=PDAKaKR+VpH/H4LuhD/p5iWNTdRPxM8oEVwJmKaO5VbLJdnwjqF/wuVSog2bZDLm/O
+         5YdCvbUg7Flhb6nCcaO6EgjO2WU944XFxm1idF6New4xROV7g/HvGn2fPYZWyUCqleEY
+         sT7lBMxV/yfwh5fbfa+erHA+Vn90GS5ZFSmO7cKdo7NCvxOjYz/PNRA9drm/GCK4hJqY
+         sL3O0+FMRxwKfAh/8W5xlQOX+cqN8oYU8npuIE0q+AQjdUonHv7fGASvWTgvOkXdr4D7
+         NVNXWeevOUkZEbidVoZQqVUvBRrlB48y6pU7FVQRq7ddgtpOWygpOLY7eLJxs1KOY+CU
+         TsSQ==
+X-Gm-Message-State: APjAAAWMv2yJuaAalJZB/SqrQrwTA3ttMo/HqVwoM94ENQzgKzE8iDVl
+        WWb8rGybpOgtDT1tTAPg+kuUqw==
+X-Google-Smtp-Source: APXvYqxpvJtV3K+218KyMYeyCIIlGfxC5RkmAu0mSlC24RiXlLDUIaN7rxKG11+WOceIDd+3Gez3FQ==
+X-Received: by 2002:a5d:43c7:: with SMTP id v7mr9974423wrr.32.1576775744375;
+        Thu, 19 Dec 2019 09:15:44 -0800 (PST)
 Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id q6sm7401428wrx.72.2019.12.19.09.15.45
+        by smtp.gmail.com with ESMTPSA id q6sm7401428wrx.72.2019.12.19.09.15.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 09:15:45 -0800 (PST)
+        Thu, 19 Dec 2019 09:15:43 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -63,9 +63,9 @@ To:     Kent Gibson <warthog618@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v3 10/13] gpiolib: emit a debug message when adding events to a full kfifo
-Date:   Thu, 19 Dec 2019 18:15:25 +0100
-Message-Id: <20191219171528.6348-11-brgl@bgdev.pl>
+Subject: [PATCH v3 08/13] kfifo: provide kfifo_is_empty_spinlocked()
+Date:   Thu, 19 Dec 2019 18:15:23 +0100
+Message-Id: <20191219171528.6348-9-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191219171528.6348-1-brgl@bgdev.pl>
 References: <20191219171528.6348-1-brgl@bgdev.pl>
@@ -78,29 +78,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Currently if the line-event kfifo is full, we just silently drop any new
-events. Add a ratelimited debug message so that we at least have some
-trace in the kernel log of event overflow.
+Provide two spinlocked versions of kfifo_is_empty() to be used with
+spinlocked variants of kfifo_in() and kfifo_out().
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/gpio/gpiolib.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/kfifo.h | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 073bc75b3d45..e27cf2113fed 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -979,6 +979,9 @@ static irqreturn_t lineevent_irq_thread(int irq, void *p)
- 					    1, &le->wait.lock);
- 	if (ret)
- 		wake_up_poll(&le->wait, EPOLLIN);
-+	else
-+		pr_debug_ratelimited(
-+			"%s: event FIFO is full - event dropped\n", __func__);
+diff --git a/include/linux/kfifo.h b/include/linux/kfifo.h
+index 123c200ed7cb..86249476b57f 100644
+--- a/include/linux/kfifo.h
++++ b/include/linux/kfifo.h
+@@ -246,6 +246,37 @@ __kfifo_int_must_check_helper(int val)
+ 	__tmpq->kfifo.in == __tmpq->kfifo.out; \
+ })
  
- 	return IRQ_HANDLED;
- }
++/**
++ * kfifo_is_empty_spinlocked - returns true if the fifo is empty using
++ * a spinlock for locking
++ * @fifo: address of the fifo to be used
++ * @lock: spinlock to be used for locking
++ */
++#define kfifo_is_empty_spinlocked(fifo, lock) \
++({ \
++	unsigned long __flags; \
++	bool __ret; \
++	spin_lock_irqsave(lock, __flags); \
++	__ret = kfifo_is_empty(fifo); \
++	spin_unlock_irqrestore(lock, __flags); \
++	__ret; \
++})
++
++/**
++ * kfifo_is_empty_spinlocked_noirqsave  - returns true if the fifo is empty
++ * using a spinlock for locking, doesn't disable interrupts
++ * @fifo: address of the fifo to be used
++ * @lock: spinlock to be used for locking
++ */
++#define kfifo_is_empty_spinlocked_noirqsave(fifo, lock) \
++({ \
++	bool __ret; \
++	spin_lock(lock); \
++	__ret = kfifo_is_empty(fifo); \
++	spin_unlock(lock); \
++	__ret; \
++})
++
+ /**
+  * kfifo_is_full - returns true if the fifo is full
+  * @fifo: address of the fifo to be used
 -- 
 2.23.0
 
