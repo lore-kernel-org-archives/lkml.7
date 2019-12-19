@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D538C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 440EAC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DEC1222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:03:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1734D2465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782180;
-	bh=yYRGy6ghmv3t/ei2FP8SuSFVxrz8N7pQuxBrYEG6MNE=;
+	s=default; t=1576782190;
+	bh=vnlyVA6cwn8a4mK17bHZcZzqJtKoVj/dJH//7UygEPQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HV7KYc9Ui/ZCx1ND860VIfyRiuT7t7rC83oU5yAXWj7+aDNy5T4EcCE544zORQ7Cj
-	 Ei0lytru9RQkqcGhsLwwSJDZoITGMg4S8FumDfQaOSNwYbDLCztGeQpwH/nRjGonHo
-	 bpI4UE2eo1BQPcgjrtLEDD2J3gjEFpz/tXD3Cy6Y=
+	b=tP8pddKPbNwj3ujpibYDiVwIjV6Qax2b5TMgZmvLWivMA8RidS89YcCX2Mg3LsER3
+	 ucqSiALfzdsHC24C09KCzwn2OhuS/96gtIGt9dOH09W32txey+qoEyTDpVYWsbQJuD
+	 vUdiDq6FR+d/ASR5nR7mwnnd4+FTDHarPNns9eAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729516AbfLSTC7 (ORCPT
+        id S1729558AbfLSTDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:02:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42304 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 14:03:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727780AbfLSStA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:49:00 -0500
+        id S1729296AbfLSSsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:48:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5419624686;
-        Thu, 19 Dec 2019 18:48:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE49324679;
+        Thu, 19 Dec 2019 18:48:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781339;
-        bh=yYRGy6ghmv3t/ei2FP8SuSFVxrz8N7pQuxBrYEG6MNE=;
+        s=default; t=1576781325;
+        bh=vnlyVA6cwn8a4mK17bHZcZzqJtKoVj/dJH//7UygEPQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=05Fm9W+DuScakkNV+GSeA1JAWfCkNOJRS4OK0V0M5h2NaE30wsXdXX+6LeL8fLUVP
-         7v8dlOXV0mR293oiSHjNverwuYVXl99e7/BhB/5Z0qxtI3wPR3bAn48SC2r/w+L9D5
-         tKD+E9dH5cFCXJ+cCM2MZlITTkeFu3qk7L1u191E=
+        b=ub3+Xcp8m5jBE8Cq556akESvFBhsvKjzauTIjImPiFS+/D0nf6PIhagKHd4d8QjI8
+         NaIc6f7qRuVqSEMhR0IBODObCtyGjU3tDRmu0sjog10LxVPZ//cmxHQY81JDxS72eU
+         cDA6+/s7o+CJjixy184jITmnfVJFja5SrTs1dXHw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org,
+        syzbot+2add91c08eb181fea1bf@syzkaller.appspotmail.com,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 182/199] tcp: fix rejected syncookies due to stale timestamps
-Date:   Thu, 19 Dec 2019 19:34:24 +0100
-Message-Id: <20191219183225.716038281@linuxfoundation.org>
+Subject: [PATCH 4.9 176/199] net: bridge: deny dev_set_mac_address() when unregistering
+Date:   Thu, 19 Dec 2019 19:34:18 +0100
+Message-Id: <20191219183225.312964208@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,107 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guillaume Nault <gnault@redhat.com>
+From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-[ Upstream commit 04d26e7b159a396372646a480f4caa166d1b6720 ]
+[ Upstream commit c4b4c421857dc7b1cf0dccbd738472360ff2cd70 ]
 
-If no synflood happens for a long enough period of time, then the
-synflood timestamp isn't refreshed and jiffies can advance so much
-that time_after32() can't accurately compare them any more.
+We have an interesting memory leak in the bridge when it is being
+unregistered and is a slave to a master device which would change the
+mac of its slaves on unregister (e.g. bond, team). This is a very
+unusual setup but we do end up leaking 1 fdb entry because
+dev_set_mac_address() would cause the bridge to insert the new mac address
+into its table after all fdbs are flushed, i.e. after dellink() on the
+bridge has finished and we call NETDEV_UNREGISTER the bond/team would
+release it and will call dev_set_mac_address() to restore its original
+address and that in turn will add an fdb in the bridge.
+One fix is to check for the bridge dev's reg_state in its
+ndo_set_mac_address callback and return an error if the bridge is not in
+NETREG_REGISTERED.
 
-Therefore, we can end up in a situation where time_after32(now,
-last_overflow + HZ) returns false, just because these two values are
-too far apart. In that case, the synflood timestamp isn't updated as
-it should be, which can trick tcp_synq_no_recent_overflow() into
-rejecting valid syncookies.
+Easy steps to reproduce:
+ 1. add bond in mode != A/B
+ 2. add any slave to the bond
+ 3. add bridge dev as a slave to the bond
+ 4. destroy the bridge device
 
-For example, let's consider the following scenario on a system
-with HZ=1000:
+Trace:
+ unreferenced object 0xffff888035c4d080 (size 128):
+   comm "ip", pid 4068, jiffies 4296209429 (age 1413.753s)
+   hex dump (first 32 bytes):
+     41 1d c9 36 80 88 ff ff 00 00 00 00 00 00 00 00  A..6............
+     d2 19 c9 5e 3f d7 00 00 00 00 00 00 00 00 00 00  ...^?...........
+   backtrace:
+     [<00000000ddb525dc>] kmem_cache_alloc+0x155/0x26f
+     [<00000000633ff1e0>] fdb_create+0x21/0x486 [bridge]
+     [<0000000092b17e9c>] fdb_insert+0x91/0xdc [bridge]
+     [<00000000f2a0f0ff>] br_fdb_change_mac_address+0xb3/0x175 [bridge]
+     [<000000001de02dbd>] br_stp_change_bridge_id+0xf/0xff [bridge]
+     [<00000000ac0e32b1>] br_set_mac_address+0x76/0x99 [bridge]
+     [<000000006846a77f>] dev_set_mac_address+0x63/0x9b
+     [<00000000d30738fc>] __bond_release_one+0x3f6/0x455 [bonding]
+     [<00000000fc7ec01d>] bond_netdev_event+0x2f2/0x400 [bonding]
+     [<00000000305d7795>] notifier_call_chain+0x38/0x56
+     [<0000000028885d4a>] call_netdevice_notifiers+0x1e/0x23
+     [<000000008279477b>] rollback_registered_many+0x353/0x6a4
+     [<0000000018ef753a>] unregister_netdevice_many+0x17/0x6f
+     [<00000000ba854b7a>] rtnl_delete_link+0x3c/0x43
+     [<00000000adf8618d>] rtnl_dellink+0x1dc/0x20a
+     [<000000009b6395fd>] rtnetlink_rcv_msg+0x23d/0x268
 
-  * The synflood timestamp is 0, either because that's the timestamp
-    of the last synflood or, more commonly, because we're working with
-    a freshly created socket.
-
-  * We receive a new SYN, which triggers synflood protection. Let's say
-    that this happens when jiffies == 2147484649 (that is,
-    'synflood timestamp' + HZ + 2^31 + 1).
-
-  * Then tcp_synq_overflow() doesn't update the synflood timestamp,
-    because time_after32(2147484649, 1000) returns false.
-    With:
-      - 2147484649: the value of jiffies, aka. 'now'.
-      - 1000: the value of 'last_overflow' + HZ.
-
-  * A bit later, we receive the ACK completing the 3WHS. But
-    cookie_v[46]_check() rejects it because tcp_synq_no_recent_overflow()
-    says that we're not under synflood. That's because
-    time_after32(2147484649, 120000) returns false.
-    With:
-      - 2147484649: the value of jiffies, aka. 'now'.
-      - 120000: the value of 'last_overflow' + TCP_SYNCOOKIE_VALID.
-
-    Of course, in reality jiffies would have increased a bit, but this
-    condition will last for the next 119 seconds, which is far enough
-    to accommodate for jiffie's growth.
-
-Fix this by updating the overflow timestamp whenever jiffies isn't
-within the [last_overflow, last_overflow + HZ] range. That shouldn't
-have any performance impact since the update still happens at most once
-per second.
-
-Now we're guaranteed to have fresh timestamps while under synflood, so
-tcp_synq_no_recent_overflow() can safely use it with time_after32() in
-such situations.
-
-Stale timestamps can still make tcp_synq_no_recent_overflow() return
-the wrong verdict when not under synflood. This will be handled in the
-next patch.
-
-For 64 bits architectures, the problem was introduced with the
-conversion of ->tw_ts_recent_stamp to 32 bits integer by commit
-cca9bab1b72c ("tcp: use monotonic timestamps for PAWS").
-The problem has always been there on 32 bits architectures.
-
-Fixes: cca9bab1b72c ("tcp: use monotonic timestamps for PAWS")
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Guillaume Nault <gnault@redhat.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
+Fixes: 43598813386f ("bridge: add local MAC address to forwarding table (v2)")
+Reported-by: syzbot+2add91c08eb181fea1bf@syzkaller.appspotmail.com
+Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/time.h |   12 ++++++++++++
- include/net/tcp.h    |    2 +-
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ net/bridge/br_device.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/include/linux/time.h
-+++ b/include/linux/time.h
-@@ -275,4 +275,16 @@ static __always_inline void timespec_add
- 	a->tv_nsec = ns;
- }
+--- a/net/bridge/br_device.c
++++ b/net/bridge/br_device.c
+@@ -210,6 +210,12 @@ static int br_set_mac_address(struct net
+ 	if (!is_valid_ether_addr(addr->sa_data))
+ 		return -EADDRNOTAVAIL;
  
-+/**
-+ * time_between32 - check if a 32-bit timestamp is within a given time range
-+ * @t:	the time which may be within [l,h]
-+ * @l:	the lower bound of the range
-+ * @h:	the higher bound of the range
-+ *
-+ * time_before32(t, l, h) returns true if @l <= @t <= @h. All operands are
-+ * treated as 32-bit integers.
-+ *
-+ * Equivalent to !(time_before32(@t, @l) || time_after32(@t, @h)).
-+ */
-+#define time_between32(t, l, h) ((u32)(h) - (u32)(l) >= (u32)(t) - (u32)(l))
- #endif
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -497,7 +497,7 @@ static inline void tcp_synq_overflow(con
- 	unsigned long last_overflow = tcp_sk(sk)->rx_opt.ts_recent_stamp;
- 	unsigned long now = jiffies;
- 
--	if (time_after(now, last_overflow + HZ))
-+	if (!time_between32(now, last_overflow, last_overflow + HZ))
- 		tcp_sk(sk)->rx_opt.ts_recent_stamp = now;
- }
- 
++	/* dev_set_mac_addr() can be called by a master device on bridge's
++	 * NETDEV_UNREGISTER, but since it's being destroyed do nothing
++	 */
++	if (dev->reg_state != NETREG_REGISTERED)
++		return -EBUSY;
++
+ 	spin_lock_bh(&br->lock);
+ 	if (!ether_addr_equal(dev->dev_addr, addr->sa_data)) {
+ 		/* Mac address will be changed in br_stp_change_bridge_id(). */
 
 
