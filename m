@@ -2,90 +2,535 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62178C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 03:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14220C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 03:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3570A2072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 03:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7F1021582
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 03:51:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C7UCqqJz"
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cN24tuNQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbfLSDvc (ORCPT
+        id S1726952AbfLSDvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 22:51:32 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:47060 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726762AbfLSDvb (ORCPT
+        Wed, 18 Dec 2019 22:51:51 -0500
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:35971 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726771AbfLSDvv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 22:51:31 -0500
-Received: by mail-qk1-f194.google.com with SMTP id r14so3497898qke.13
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 19:51:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uAOzy6HGq+TFs1xtj7/74tezRjxUw60c5rVBr7oLwZ0=;
-        b=C7UCqqJzkPx1B9MwYq5LMFwPNwZyG+0Lu2c/yVQdV8kq5zN+wo1e0ltwHagA5u4va4
-         Z2Dj9d4LjBn5WuzmdYZAHL+yKhKZAJkCRvaQLFfiNOU+N3UqRrdkJMgyUMANVigeTFaC
-         dZb3Lcrvzgp9DkVgJEDfMwhF7RLdt6+uVAhHs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uAOzy6HGq+TFs1xtj7/74tezRjxUw60c5rVBr7oLwZ0=;
-        b=ucDnMfvgoXwbd/2Jn0IyBuw85U6LwIullK/7VZTE4XtoiCiknsPpsVS+1glgPVYwij
-         eRZ7iMhkiBiH1eroE9iQuG87iB6HDOLtTFGryR/yrPOnWNHQBHpkmCOrfT9JFOkzZX+F
-         fOQKkZ21lqv+S92jyEB58dYj2cDjBE+SpjjHUkh/yn58gE5H2c4VcunNhtvk3sENWQcp
-         nzxIk60kVf6P4MQi/sg2wmJVOQER73WuQKNztK07MrilEhFTB2o/qsfDecy6b48KHmbn
-         XQENVHmNeXeXs7Uks99UXrsgNIcO2J/Rs9v48tlhrysIJxiO5eup2X3Di+QmYqYZBkp5
-         iTkQ==
-X-Gm-Message-State: APjAAAUHqfIrJcQD9lyzwTyS5sOwbgNUDC9OuO8NGY7fq5kBFW+a/cK4
-        FeSSV0pyDOjA9bJ6Fz3e/m9Zh8c8P8MIiUtl6gmNMA==
-X-Google-Smtp-Source: APXvYqxVQR1zDsHVfDiovLQ82mdUU+RrdR4Ro/PJNLrRoTgjjNYA4g4hdU30loYBDdj3qwoVrHU40Q9ZvwTk5Kt3wBI=
-X-Received: by 2002:a37:4bc6:: with SMTP id y189mr6213311qka.18.1576727490722;
- Wed, 18 Dec 2019 19:51:30 -0800 (PST)
+        Wed, 18 Dec 2019 22:51:51 -0500
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id 180DC4B7;
+        Wed, 18 Dec 2019 22:51:49 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute7.internal (MEProxy); Wed, 18 Dec 2019 22:51:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=7U4uqi
+        6ABhC5qBj9R/ZcCBmK6z8OtzvS2PRjAzZxrcs=; b=cN24tuNQVpgDP0N9I9e1G6
+        rKGJKLSNZOhg1dKb/b6tcR9mw9TowqqYDgO7eD+nR1JFpexTe1ncG+bj4OtUH+TG
+        N9+QYqc2Z22NJJFZzAFZlPJPsyMjzaWTevGwq1EOP8Mb7wIgcD1vW/flaKW6bwfJ
+        trV9GTU5bWb2MpDvRySjPjCTxNnm8ZugnFlqcZ1lqAuidLOnxcdcTAkqFkiQUtLh
+        mdguC1P25vIAlN8inBOqRHGeFVk0bkAARDBrEFeqMmStNjf1gPiY1n5ONArcMs6m
+        DEH2qB+5wscGvGfLHkQ1V23KeEZKzT3dDDwB1maHmxrXF3f3NYh976u9zSuphBxw
+        ==
+X-ME-Sender: <xms:1PP6XdcvaXr3SRNiIoAiXSKYfOICIIiHf--aZRtQX-lshGTbOmdzGg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddutddgieduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttdejnecuhfhrohhmpeforghrvghk
+    ucforghrtgiihihkohifshhkihdqifpkrhgvtghkihcuoehmrghrmhgrrhgvkhesihhnvh
+    hishhisghlvghthhhinhhgshhlrggsrdgtohhmqeenucffohhmrghinhepmhgrrhhkmhgr
+    ihhlrdhorhhgpdhinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomhenucfkpheple
+    durdeihedrfeegrdeffeenucfrrghrrghmpehmrghilhhfrhhomhepmhgrrhhmrghrvghk
+    sehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomhenucevlhhushhtvghrufhiii
+    gvpedt
+X-ME-Proxy: <xmx:1PP6XXh1o-36POe9yRra2Wj3vLtkhFTGikWuIZQ2dJjUUKkJUaxW0g>
+    <xmx:1PP6XZTdwXPUtZyO3RM_Y8FTBMkzAX3k-b8Q3mpRY5V7rWY4D-bkRg>
+    <xmx:1PP6XYzvoeu6JfLEsVgwTSua7n2f8bcRhWr5EdM9massx8M8OPnMrw>
+    <xmx:1PP6XXXYZN8fBxH1kTnkGQeeC1UgINnyxwmNHKt_V8YY61uY7rNOeQ>
+Received: from mail-itl (ip5b412221.dynamic.kabel-deutschland.de [91.65.34.33])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5F40E306074E;
+        Wed, 18 Dec 2019 22:51:47 -0500 (EST)
+Date:   Thu, 19 Dec 2019 04:51:45 +0100
+From:   Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>
+To:     Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+Cc:     xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Simon Gaiser <simon@invisiblethingslab.com>,
+        Ross Lagerwall <ross.lagerwall@citrix.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Subject: Re: [Xen-devel] [PATCH v1] xen-pciback: optionally allow interrupt
+ enable flag writes
+Message-ID: <20191219035145.GC25022@mail-itl>
+References: <20191203054222.7966-1-marmarek@invisiblethingslab.com>
+ <20191203151733.GF980@Air-de-Roger>
 MIME-Version: 1.0
-References: <1576657848-14711-1-git-send-email-weiyi.lu@mediatek.com> <1576657848-14711-6-git-send-email-weiyi.lu@mediatek.com>
-In-Reply-To: <1576657848-14711-6-git-send-email-weiyi.lu@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Thu, 19 Dec 2019 11:51:19 +0800
-Message-ID: <CANMq1KAB9vTDY+d1ktmAtxCGMYqc_C9-SzLzOkLyBmgLz39KYQ@mail.gmail.com>
-Subject: Re: [PATCH v10 05/12] soc: mediatek: Add multiple step bus protection control
-To:     Weiyi Lu <weiyi.lu@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        Fan Chen <fan.chen@mediatek.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ZwgA9U+XZDXt4+m+"
+Content-Disposition: inline
+In-Reply-To: <20191203151733.GF980@Air-de-Roger>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 4:31 PM Weiyi Lu <weiyi.lu@mediatek.com> wrote:
->
-> Both MT8183 & MT6765 have more control steps of bus protection
-> than previous project. And there add more bus protection registers
-> reside at infracfg & smi-common. Also add new APIs for multiple
-> step bus protection control with more customized arguments.
->
-> Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
-...
-> diff --git a/include/linux/soc/mediatek/scpsys-ext.h b/include/linux/soc/mediatek/scpsys-ext.h
 
-Will this include file be used by anything other than
-drivers/soc/mediatek/scpsys*.c? If so I think you should keep it in
-drivers/soc/mediatek/ instead.
+--ZwgA9U+XZDXt4+m+
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [Xen-devel] [PATCH v1] xen-pciback: optionally allow interrupt
+ enable flag writes
 
-I also still had a comment in v9 about clr_mask, otherwise this looks ok.
+On Tue, Dec 03, 2019 at 04:17:33PM +0100, Roger Pau Monn=C3=A9 wrote:
+> On Tue, Dec 03, 2019 at 06:41:56AM +0100, Marek Marczykowski-G=C3=B3recki=
+ wrote:
+> > QEMU running in a stubdom needs to be able to set INTX_DISABLE, and the
+> > MSI(-X) enable flags in the PCI config space. This adds an attribute
+> > 'allow_interrupt_control' which when set for a PCI device allows writes
+> > to this flag(s). The toolstack will need to set this for stubdoms.
+> > When enabled, guest (stubdomain) will be allowed to set relevant enable
+> > flags, but only one at a time - i.e. it refuses to enable more than one
+> > of INTx, MSI, MSI-X at a time.
+> >=20
+> > This functionality is needed only for config space access done by device
+> > model (stubdomain) serving a HVM with the actual PCI device. It is not
+> > necessary and unsafe to enable direct access to those bits for PV domain
+> > with the device attached. For PV domains, there are separate protocol
+> > messages (XEN_PCI_OP_{enable,disable}_{msi,msix}) for this purpose.
+> > Those ops in addition to setting enable bits, also configure MSI(-X) in
+> > dom0 kernel - which is undesirable for PCI passthrough to HVM guests.
+> >=20
+> > This should not introduce any new security issues since a malicious
+> > guest (or stubdom) can already generate MSIs through other ways, see
+> > [1] page 8. Additionally, when qemu runs in dom0, it already have direct
+> > access to those bits.
+> >=20
+> > This is the second iteration of this feature. First was proposed as a
+> > direct Xen interface through a new hypercall, but ultimately it was
+> > rejected by the maintainer, because of mixing pciback and hypercalls for
+> > PCI config space access isn't a good design. Full discussion at [2].
+> >=20
+> > [1]: https://invisiblethingslab.com/resources/2011/Software%20Attacks%2=
+0on%20Intel%20VT-d.pdf
+> > [2]: https://xen.markmail.org/thread/smpgpws4umdzizze
+> >=20
+> > [part of the commit message and sysfs handling]
+> > Signed-off-by: Simon Gaiser <simon@invisiblethingslab.com>
+> > [the rest]
+> > Signed-off-by: Marek Marczykowski-G=C3=B3recki <marmarek@invisiblething=
+slab.com>
+> > ---
+> > I'm not very happy about code duplication regarding MSI/MSI-X/INTx
+> > exclusivity test, but I don't have better ideas how to structure it. Any
+> > suggestions?
+>=20
+> Can't you create a helper that returns the currently enabled interrupt
+> mode?
+>=20
+> I expect returning an enum (ie: NONE, INTX, MSI, MSIX) should be fine
+> since no two of those should be enabled at the same time.
+
+Done in v2 (plus ERR member).
+
+>=20
+> > ---
+> >  .../xen/xen-pciback/conf_space_capability.c   | 113 ++++++++++++++++++
+> >  drivers/xen/xen-pciback/conf_space_header.c   |  30 +++++
+> >  drivers/xen/xen-pciback/pci_stub.c            |  66 ++++++++++
+> >  drivers/xen/xen-pciback/pciback.h             |   1 +
+> >  4 files changed, 210 insertions(+)
+> >=20
+> > diff --git a/drivers/xen/xen-pciback/conf_space_capability.c b/drivers/=
+xen/xen-pciback/conf_space_capability.c
+> > index e5694133ebe5..c5a7c58ff3e3 100644
+> > --- a/drivers/xen/xen-pciback/conf_space_capability.c
+> > +++ b/drivers/xen/xen-pciback/conf_space_capability.c
+> > @@ -189,6 +189,109 @@ static const struct config_field caplist_pm[] =3D=
+ {
+> >  	{}
+> >  };
+> > =20
+> > +static struct msi_msix_field_config {
+> > +	u16 enable_bit;  /* bit for enabling MSI/MSI-X */
+> > +	int other_cap;  /* the other capability for exclusiveness check */
+>=20
+> Nit: just one space between the declaration and the comment IMO.
+>=20
+> Also capability ID is not a signed value, hence unsigned int would
+> feel more natural.
+
+Replaced with enum in v2.
+
+> > +} msi_field_config =3D {
+> > +	.enable_bit =3D PCI_MSI_FLAGS_ENABLE,
+> > +	.other_cap =3D PCI_CAP_ID_MSIX,
+> > +}, msix_field_config =3D {
+> > +	.enable_bit =3D PCI_MSIX_FLAGS_ENABLE,
+> > +	.other_cap =3D PCI_CAP_ID_MSI,
+> > +};
+>=20
+> I think it would be more helpful to store the current capability ID
+> rather the one you need to check against. Then if you had a helper
+> that returns the currently enabled interrupt mode you would have to
+> check that either it's NONE or matches the capability requested to be
+> enabled.
+
+Done in v2.
+
+> > +
+> > +static void *msi_field_init(struct pci_dev *dev, int offset)
+> > +{
+> > +	return &msi_field_config;
+> > +}
+> > +
+> > +static void *msix_field_init(struct pci_dev *dev, int offset)
+> > +{
+> > +	return &msix_field_config;
+> > +}
+> > +
+> > +static int msi_msix_flags_write(struct pci_dev *dev, int offset, u16 n=
+ew_value,
+> > +			 void *data)
+> > +{
+> > +	int err;
+> > +	u16 old_value;
+> > +	struct msi_msix_field_config *field_config =3D data;
+> > +	struct xen_pcibk_dev_data *dev_data =3D pci_get_drvdata(dev);
+>=20
+> const for both the above.
+
+Done in v2.
+
+> > +	int other_cap_offset;
+>=20
+> unsigned int
+
+Done in v2.
+
+> > +	u16 other_cap_enable_bit;
+> > +	u16 other_cap_value;
+> > +
+> > +	if (xen_pcibk_permissive || dev_data->permissive)
+> > +		goto write;
+> > +
+> > +	err =3D pci_read_config_word(dev, offset, &old_value);
+> > +	if (err)
+> > +		return err;
+> > +
+> > +	if (new_value =3D=3D old_value)
+> > +		return 0;
+> > +
+> > +	if (!dev_data->allow_interrupt_control ||
+> > +	    (new_value ^ old_value) & ~field_config->enable_bit)
+> > +		return PCIBIOS_SET_FAILED;
+> > +
+> > +	if (new_value & field_config->enable_bit) {
+> > +		/* don't allow enabling together with INTx */
+> > +		err =3D pci_read_config_word(dev, PCI_COMMAND, &other_cap_value);
+> > +		if (err)
+> > +			return err;
+> > +		if (!(other_cap_value & PCI_COMMAND_INTX_DISABLE))
+> > +			return PCIBIOS_SET_FAILED;
+> > +
+> > +		/* and the other MSI(-X) */
+> > +		switch (field_config->other_cap) {
+> > +		case PCI_CAP_ID_MSI:
+> > +			other_cap_offset =3D dev->msi_cap + PCI_MSI_FLAGS;
+> > +			other_cap_enable_bit =3D PCI_MSI_FLAGS_ENABLE;
+> > +			break;
+> > +		case PCI_CAP_ID_MSIX:
+> > +			other_cap_offset =3D dev->msix_cap + PCI_MSIX_FLAGS;
+> > +			other_cap_enable_bit =3D PCI_MSIX_FLAGS_ENABLE;
+> > +			break;
+>=20
+> I think you should check whether the other capability exists. I guess
+> msi{x}_cap will be 0 if not present?
+
+Done in v2 (and the code is moved into separate function).
+
+> > +		default:
+> > +			BUG_ON(1);
+>=20
+> Doesn't Linux have a plain BUG();?
+
+Not needed anymore.
+
+> > +		}
+> > +		err =3D pci_read_config_word(dev,
+> > +					   other_cap_offset,
+> > +					   &other_cap_value);
+> > +		if (err)
+> > +			return err;
+> > +
+> > +		if (other_cap_value & other_cap_enable_bit)
+> > +			return PCIBIOS_SET_FAILED;
+> > +	}
+> > +
+> > +write:
+> > +	return pci_write_config_word(dev, offset, new_value);
+> > +}
+> > +
+> > +static const struct config_field caplist_msix[] =3D {
+> > +	{
+> > +		.offset    =3D PCI_MSIX_FLAGS,
+> > +		.size      =3D 2,
+> > +		.init      =3D msix_field_init,
+> > +		.u.w.read  =3D xen_pcibk_read_config_word,
+> > +		.u.w.write =3D msi_msix_flags_write,
+> > +	},
+> > +	{}
+> > +};
+> > +
+> > +static const struct config_field caplist_msi[] =3D {
+> > +	{
+> > +		.offset    =3D PCI_MSI_FLAGS,
+> > +		.size      =3D 2,
+> > +		.init      =3D msi_field_init,
+> > +		.u.w.read  =3D xen_pcibk_read_config_word,
+> > +		.u.w.write =3D msi_msix_flags_write,
+> > +	},
+> > +	{}
+> > +};
+> > +
+> >  static struct xen_pcibk_config_capability xen_pcibk_config_capability_=
+pm =3D {
+> >  	.capability =3D PCI_CAP_ID_PM,
+> >  	.fields =3D caplist_pm,
+> > @@ -197,11 +300,21 @@ static struct xen_pcibk_config_capability xen_pci=
+bk_config_capability_vpd =3D {
+> >  	.capability =3D PCI_CAP_ID_VPD,
+> >  	.fields =3D caplist_vpd,
+> >  };
+> > +static struct xen_pcibk_config_capability xen_pcibk_config_capability_=
+msi =3D {
+> > +	.capability =3D PCI_CAP_ID_MSI,
+> > +	.fields =3D caplist_msi,
+> > +};
+> > +static struct xen_pcibk_config_capability xen_pcibk_config_capability_=
+msix =3D {
+> > +	.capability =3D PCI_CAP_ID_MSIX,
+> > +	.fields =3D caplist_msix,
+> > +};
+> > =20
+> >  int xen_pcibk_config_capability_init(void)
+> >  {
+> >  	register_capability(&xen_pcibk_config_capability_vpd);
+> >  	register_capability(&xen_pcibk_config_capability_pm);
+> > +	register_capability(&xen_pcibk_config_capability_msi);
+> > +	register_capability(&xen_pcibk_config_capability_msix);
+> > =20
+> >  	return 0;
+> >  }
+> > diff --git a/drivers/xen/xen-pciback/conf_space_header.c b/drivers/xen/=
+xen-pciback/conf_space_header.c
+> > index 10ae24b5a76e..1e0fff02e21b 100644
+> > --- a/drivers/xen/xen-pciback/conf_space_header.c
+> > +++ b/drivers/xen/xen-pciback/conf_space_header.c
+> > @@ -64,6 +64,7 @@ static int command_write(struct pci_dev *dev, int off=
+set, u16 value, void *data)
+> >  	int err;
+> >  	u16 val;
+> >  	struct pci_cmd_info *cmd =3D data;
+> > +	u16 cap_value;
+> > =20
+> >  	dev_data =3D pci_get_drvdata(dev);
+> >  	if (!pci_is_enabled(dev) && is_enable_cmd(value)) {
+> > @@ -117,6 +118,35 @@ static int command_write(struct pci_dev *dev, int =
+offset, u16 value, void *data)
+> >  		pci_clear_mwi(dev);
+> >  	}
+> > =20
+> > +	if (dev_data && dev_data->allow_interrupt_control) {
+> > +		if (!(cmd->val & PCI_COMMAND_INTX_DISABLE) &&
+> > +		    (value & PCI_COMMAND_INTX_DISABLE)) {
+> > +			pci_intx(dev, 0);
+> > +		} else if ((cmd->val & PCI_COMMAND_INTX_DISABLE) &&
+> > +		    !(value & PCI_COMMAND_INTX_DISABLE)) {
+> > +			/* Do not allow enabling INTx together with MSI or MSI-X. */
+> > +			/* Do not trust dev->msi(x)_enabled here, as enabling could be done
+> > +			 * bypassing the pci_*msi* functions, by the qemu.
+> > +			 */
+> > +			err =3D pci_read_config_word(dev,
+> > +						   dev->msi_cap + PCI_MSI_FLAGS,
+> > +						   &cap_value);
+> > +			if (!err && (cap_value & PCI_MSI_FLAGS_ENABLE))
+> > +				err =3D -EBUSY;
+> > +			if (!err)
+> > +				err =3D pci_read_config_word(dev,
+> > +							   dev->msix_cap + PCI_MSIX_FLAGS,
+> > +							   &cap_value);
+> > +			if (!err && (cap_value & PCI_MSIX_FLAGS_ENABLE))
+> > +				err =3D -EBUSY;
+>=20
+> Shouldn't this return PCI-style errors?
+>=20
+> I think PCIBIOS_SET_FAILED would be more appropriate here. Note sure
+> whether you should terminate the function here in that case, or else
+> the error is lost and not returned to the caller, yet the function
+> failed at least partially.
+
+Fixed in v2.
+
+> > +			if (err)
+> > +				pr_warn("%s: cannot enable INTx (%d)\n",
+>=20
+> This should be ratelimited since it's guest triggerable.
+
+Message removed in favor of not loosing error value.
+
+> > +					pci_name(dev), err);
+> > +			else
+> > +				pci_intx(dev, 1);
+> > +		}
+> > +	}
+> > +
+> >  	cmd->val =3D value;
+> > =20
+> >  	if (!xen_pcibk_permissive && (!dev_data || !dev_data->permissive))
+> > diff --git a/drivers/xen/xen-pciback/pci_stub.c b/drivers/xen/xen-pciba=
+ck/pci_stub.c
+> > index 097410a7cdb7..7af93d65ed51 100644
+> > --- a/drivers/xen/xen-pciback/pci_stub.c
+> > +++ b/drivers/xen/xen-pciback/pci_stub.c
+> > @@ -304,6 +304,8 @@ void pcistub_put_pci_dev(struct pci_dev *dev)
+> >  	xen_pcibk_config_reset_dev(dev);
+> >  	xen_pcibk_config_free_dyn_fields(dev);
+> > =20
+> > +	dev_data->allow_interrupt_control =3D 0;
+>=20
+> Why do you need to do this here? I don't see any other options being
+> cleared here (I would expect for example permissive to also be
+> cleared if required).
+
+To ensure the option isn't erroneously left enabled after switching the
+device from HVM domain (with stubdom) to PV one. This may happen when tools=
+tack only
+do write when enabling this option (HVM with stubdom case), but do
+not disable it in other cases.
+In fact exactly the same issue applies to permissive setting - if you
+first boot a guest with:
+
+    pci =3D [ '...,permisive=3D1' ]
+
+and then with:
+
+    pci =3D [ '...,permisive=3D0' ]
+
+the permissive mode will stay enabled. Unless you unbind the device from
+the driver in the meantime. The easiest method would be xl
+pci-assignable-remove && xl pci-assignable-add, but since XSA-302 that
+would re-introduce the very same security issue.
+
+> > +
+> >  	xen_unregister_device_domain_owner(dev);
+> > =20
+> >  	spin_lock_irqsave(&found_psdev->lock, flags);
+> > @@ -1431,6 +1433,65 @@ static ssize_t permissive_show(struct device_dri=
+ver *drv, char *buf)
+> >  }
+> >  static DRIVER_ATTR_RW(permissive);
+> > =20
+> > +static ssize_t allow_interrupt_control_store(struct device_driver *drv,
+> > +					     const char *buf, size_t count)
+> > +{
+> > +	int domain, bus, slot, func;
+> > +	int err;
+> > +	struct pcistub_device *psdev;
+> > +	struct xen_pcibk_dev_data *dev_data;
+> > +
+> > +	err =3D str_to_slot(buf, &domain, &bus, &slot, &func);
+> > +	if (err)
+> > +		goto out;
+> > +
+> > +	psdev =3D pcistub_device_find(domain, bus, slot, func);
+> > +	if (!psdev) {
+> > +		err =3D -ENODEV;
+> > +		goto out;
+> > +	}
+> > +
+> > +	dev_data =3D pci_get_drvdata(psdev->dev);
+> > +	/* the driver data for a device should never be null at this point */
+> > +	if (!dev_data) {
+> > +		err =3D -ENXIO;
+> > +		goto release;
+> > +	}
+> > +	dev_data->allow_interrupt_control =3D 1;
+> > +release:
+> > +	pcistub_device_put(psdev);
+> > +out:
+> > +	if (!err)
+> > +		err =3D count;
+> > +	return err;
+> > +}
+> > +
+> > +static ssize_t allow_interrupt_control_show(struct device_driver *drv,
+> > +					    char *buf)
+> > +{
+> > +	struct pcistub_device *psdev;
+> > +	struct xen_pcibk_dev_data *dev_data;
+> > +	size_t count =3D 0;
+> > +	unsigned long flags;
+> > +
+> > +	spin_lock_irqsave(&pcistub_devices_lock, flags);
+> > +	list_for_each_entry(psdev, &pcistub_devices, dev_list) {
+> > +		if (count >=3D PAGE_SIZE)
+> > +			break;
+> > +		if (!psdev->dev)
+> > +			continue;
+> > +		dev_data =3D pci_get_drvdata(psdev->dev);
+> > +		if (!dev_data || !dev_data->allow_interrupt_control)
+> > +			continue;
+> > +		count +=3D
+> > +		    scnprintf(buf + count, PAGE_SIZE - count, "%s\n",
+> > +			      pci_name(psdev->dev));
+> > +	}
+> > +	spin_unlock_irqrestore(&pcistub_devices_lock, flags);
+> > +	return count;
+> > +}
+> > +static DRIVER_ATTR_RW(allow_interrupt_control);
+>=20
+> This is mostly a clone of permissive_{store/show}, I wonder if those
+> functions could be generalized since it's just repeated boilerplate
+> code in order to fetch allow_interrupt_control or permissive. Anyway,
+> likely not part of this patch.
+
+That would be more significant change than just refactoring those
+functions. permissive and allow_interrupt_control are separate fields in
+a structure, so to generalize it I can't simply put it into a function
+parameter. It would need to be a macro, or use some callbacks. I don't
+like either. I may be missing something, but the best I can think of is
+to convert it into some flags field with separate bits for those values.
+But this means also changing every place using those values.
+
+--=20
+Best Regards,
+Marek Marczykowski-G=C3=B3recki
+Invisible Things Lab
+A: Because it messes up the order in which people normally read text.
+Q: Why is top-posting such a bad thing?
+
+--ZwgA9U+XZDXt4+m+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAl3689AACgkQ24/THMrX
+1yzFZwf/Rbsh/lf+YkoNXTtqelnS1f375fFmZc8wH3i/87JXMXZBmwamcln7FsSD
++Ph21vo9uWugZeXyuy+lC+Lb6N74buLlmFT4SDcpEaR/bac3uql/bLrWzpVfeWiY
+mHQbqFkuhsEkAmfEVM/3V+9Hv8M3xoFFtmnngUtjthc2P6VSAKGBivibYfveIkxB
+yWiU/Aay0FoHLvkJdDFVEAgap0ib26ZufBNvQe9vSKdfiyRUESWvgZmv9+LWSEd+
+MfWyhDgoNuO3bEYzYjEPYIk9vixksVl/BMXc+whtPWamSnvZylX5HZYaIdomCBcM
+LB81aiZG8VR+Rhb3dKaLB+iGYUtA3w==
+=aPKr
+-----END PGP SIGNATURE-----
+
+--ZwgA9U+XZDXt4+m+--
