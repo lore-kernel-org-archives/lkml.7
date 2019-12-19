@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 265A2C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B168C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFE1524672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D26C524683
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781363;
-	bh=GqAFOTv0a9RtHQ56hi09qCi4T7GetSCA3QHzEhxSVjs=;
+	s=default; t=1576781366;
+	bh=Jrwpqvl/NbwnQ3Y/vpkLFz7VYCol0WrRQ/VbLcu30NI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d4qcYpus9heJkWMqNAFMM2laINTvYha5vb8QmwSJWqFtpaukcifz+uyll+f/JtQjs
-	 46qyHAJ9D++DPB4CyIlMJ0GhqEgCTru5hqqRQkLleXRxQCckLZ6i9QRCG5p9Taay+2
-	 tPHR63Rawyy9dH3Iihe0OuraGF8oYixih3b8JzUw=
+	b=VWyMYqywqj45zSCgAXvZE8PYBUhLcBaSy2ouM1/XAsbK1S8nHRN9eeITqDFTg3nUa
+	 GxAlJT20fXct46NQ61/TvcKRqa1NiIsQSRexAgGhbjwdPA2qNgS1rt/q2/smbmPA9v
+	 gz8a65g6lm53vfkn3AIDh0Bv+5VznjuKM+pcVzGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729768AbfLSStV (ORCPT
+        id S1729785AbfLSStZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:49:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42708 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:49:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729760AbfLSStR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:49:17 -0500
+        id S1729769AbfLSStW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:49:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77E1924672;
-        Thu, 19 Dec 2019 18:49:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B1042465E;
+        Thu, 19 Dec 2019 18:49:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781357;
-        bh=GqAFOTv0a9RtHQ56hi09qCi4T7GetSCA3QHzEhxSVjs=;
+        s=default; t=1576781361;
+        bh=Jrwpqvl/NbwnQ3Y/vpkLFz7VYCol0WrRQ/VbLcu30NI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iWtcppm72CEJ/Nr48IACVPZoVjDWCvCXKaZ0Wy1CJ/34VFHOMzaOsxRqJxGkM1D6u
-         uHvKgCKqsNza9l7qEfL5+bGTyuzTOeYTn9QJqWVks7uwzrRX+D8Zc67Fbk4lDFNDWk
-         nZAK8VQXqD0hMeZ87z7PSFBi6Yq0zyO6u3BIs7Ug=
+        b=G3X/gQXvB4LcDHlh644pgnGBcWPFwTDC3NVbdSe2jG/FYL3EIfNmqCU6SGMOHa+Ok
+         hkb1i5FcL+PMxeyS6t5TGsRBAyQy8Yn4GO1JgVspqhFx6xG6V1TVSHLRwdr16Gz+q+
+         7S8F8NrwIageHzpG3FvJ2/YbyqkFuA7ROZs0b0jU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PATCH 4.9 188/199] xtensa: fix TLB sanity checker
-Date:   Thu, 19 Dec 2019 19:34:30 +0100
-Message-Id: <20191219183226.118463276@linuxfoundation.org>
+        stable@vger.kernel.org, Lihua Yao <ylhuajnu@outlook.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 4.9 190/199] ARM: dts: s3c64xx: Fix init order of clock providers
+Date:   Thu, 19 Dec 2019 19:34:32 +0100
+Message-Id: <20191219183226.251009553@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -58,47 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Filippov <jcmvbkbc@gmail.com>
+From: Lihua Yao <ylhuajnu@outlook.com>
 
-commit 36de10c4788efc6efe6ff9aa10d38cb7eea4c818 upstream.
+commit d60d0cff4ab01255b25375425745c3cff69558ad upstream.
 
-Virtual and translated addresses retrieved by the xtensa TLB sanity
-checker must be consistent, i.e. correspond to the same state of the
-checked TLB entry. KASAN shadow memory is mapped dynamically using
-auto-refill TLB entries and thus may change TLB state between the
-virtual and translated address retrieval, resulting in false TLB
-insanity report.
-Move read_xtlb_translation close to read_xtlb_virtual to make sure that
-read values are consistent.
+fin_pll is the parent of clock-controller@7e00f000, specify
+the dependency to ensure proper initialization order of clock
+providers.
 
-Cc: stable@vger.kernel.org
-Fixes: a99e07ee5e88 ("xtensa: check TLB sanity on return to userspace")
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+without this patch:
+[    0.000000] S3C6410 clocks: apll = 0, mpll = 0
+[    0.000000]  epll = 0, arm_clk = 0
+
+with this patch:
+[    0.000000] S3C6410 clocks: apll = 532000000, mpll = 532000000
+[    0.000000]  epll = 24000000, arm_clk = 532000000
+
+Cc: <stable@vger.kernel.org>
+Fixes: 3f6d439f2022 ("clk: reverse default clk provider initialization order in of_clk_init()")
+Signed-off-by: Lihua Yao <ylhuajnu@outlook.com>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/xtensa/mm/tlb.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/s3c6410-mini6410.dts |    4 ++++
+ arch/arm/boot/dts/s3c6410-smdk6410.dts |    4 ++++
+ 2 files changed, 8 insertions(+)
 
---- a/arch/xtensa/mm/tlb.c
-+++ b/arch/xtensa/mm/tlb.c
-@@ -218,6 +218,8 @@ static int check_tlb_entry(unsigned w, u
- 	unsigned tlbidx = w | (e << PAGE_SHIFT);
- 	unsigned r0 = dtlb ?
- 		read_dtlb_virtual(tlbidx) : read_itlb_virtual(tlbidx);
-+	unsigned r1 = dtlb ?
-+		read_dtlb_translation(tlbidx) : read_itlb_translation(tlbidx);
- 	unsigned vpn = (r0 & PAGE_MASK) | (e << PAGE_SHIFT);
- 	unsigned pte = get_pte_for_vaddr(vpn);
- 	unsigned mm_asid = (get_rasid_register() >> 8) & ASID_MASK;
-@@ -233,8 +235,6 @@ static int check_tlb_entry(unsigned w, u
- 	}
+--- a/arch/arm/boot/dts/s3c6410-mini6410.dts
++++ b/arch/arm/boot/dts/s3c6410-mini6410.dts
+@@ -167,6 +167,10 @@
+ 	};
+ };
  
- 	if (tlb_asid == mm_asid) {
--		unsigned r1 = dtlb ? read_dtlb_translation(tlbidx) :
--			read_itlb_translation(tlbidx);
- 		if ((pte ^ r1) & PAGE_MASK) {
- 			pr_err("%cTLB: way: %u, entry: %u, mapping: %08x->%08x, PTE: %08x\n",
- 					dtlb ? 'D' : 'I', w, e, r0, r1, pte);
++&clocks {
++	clocks = <&fin_pll>;
++};
++
+ &sdhci0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sd0_clk>, <&sd0_cmd>, <&sd0_cd>, <&sd0_bus4>;
+--- a/arch/arm/boot/dts/s3c6410-smdk6410.dts
++++ b/arch/arm/boot/dts/s3c6410-smdk6410.dts
+@@ -71,6 +71,10 @@
+ 	};
+ };
+ 
++&clocks {
++	clocks = <&fin_pll>;
++};
++
+ &sdhci0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sd0_clk>, <&sd0_cmd>, <&sd0_cd>, <&sd0_bus4>;
 
 
