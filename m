@@ -2,121 +2,179 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6E0C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A46C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3B9F227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74517227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:52:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="rjzblK2l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfLSIvp (ORCPT
+        id S1726712AbfLSIwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 03:51:45 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51196 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726591AbfLSIvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 03:51:45 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E1C6F1B3979B511D2B53;
-        Thu, 19 Dec 2019 16:51:42 +0800 (CST)
-Received: from [127.0.0.1] (10.184.52.56) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Thu, 19 Dec 2019
- 16:51:35 +0800
-Subject: Re: [PATCH v2] PCI: Add quirk for HiSilicon NP 5896 devices
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <bjorn@helgaas.com>, <andrew.murray@arm.com>,
-        <linux-pci@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        <wangkefeng.wang@huawei.com>, <huawei.libin@huawei.com>,
-        <guohanjun@huawei.com>
-References: <20191218142831.GA101587@google.com>
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Message-ID: <03ef3686-2cbb-8495-bf5a-f6927ad25179@huawei.com>
-Date:   Thu, 19 Dec 2019 16:51:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.6.0
+        Thu, 19 Dec 2019 03:52:36 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34616 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbfLSIwf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 03:52:35 -0500
+Received: by mail-wr1-f68.google.com with SMTP id t2so5117626wrr.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 00:52:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=b7sNkndET1NlEh2N0UyAthBbiI19S+B0pHi5JCbcHTQ=;
+        b=rjzblK2lsQlXxTRzNaOj3ogOuUoa358nX8gX31g2btuRgXWgyx7eaI9iCtbjKvkQ6x
+         MkFeC8yySpDDEPK1djgG5S9YTydbvqwfdgICptoYwY1wxpN6kz5WsLfbn7papPVPiPzX
+         bqqWs9ZxfADth97WGl59613v4p6dIC4j4Rwv4Ili3Q5NY0P1sOYJQW+oWz6xCEjt3OCn
+         MTcl/BEwf303itCnvirjIbU9sa0DOuKqWrgo/68MR8dGXmWLov3okSa2t8NahloGw3Ye
+         QhCDaIVD26SdQreUP2xjbwKjJX1F0KIBMDMkvf00ngH/PjzDLWGfZ9TcTMHFZFg0RegH
+         5qmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=b7sNkndET1NlEh2N0UyAthBbiI19S+B0pHi5JCbcHTQ=;
+        b=N5d3Z7dOZh5fbsbDHKPnI1npgjxt2wKchNK8+czxqztwqZkzQRVEaScAKbBb9QqRF+
+         sE02Qt23FAnDpTWtvobJWdwnxTyGOXf/OQKZLQGYwPhJFSrHYzhJIdVhx5D/tl5wsiF4
+         IkOLMDv2npk3X315Y0PPu5GOcDYYKIIwreXfBsy/R9/yGDuWV+OagpCPZzSY0whY4b7N
+         Z0sfQ057V3en31OqCB0e+aU4GFBv+vzOSjVN8hdY3PuAwvYvGFldampnYViAQyCjB6N7
+         1EP3XiIp0zgTHInydLQU3sexsNxsGpx8lcpgxKdU3mb7LkKKEV9tWTbjWGOJ8nfF9q6p
+         eyUg==
+X-Gm-Message-State: APjAAAW9o3hrwAvZyfhZn3fzEICLKoGhwen4QcPI90b9Tkf9qDmrmj1b
+        TPHXVBS75BqkANEejNa7OWmNAYDb7gySBg==
+X-Google-Smtp-Source: APXvYqzMVw+s/28TCYyOK81W6QcfsF+zSRsAYfWbnT96XMJhDwdHmpa2N6QdNfusyvcUukLYFMpbcw==
+X-Received: by 2002:a5d:4386:: with SMTP id i6mr8097611wrq.63.1576745552571;
+        Thu, 19 Dec 2019 00:52:32 -0800 (PST)
+Received: from [10.2.4.229] (lfbn-nic-1-505-157.w90-116.abo.wanadoo.fr. [90.116.92.157])
+        by smtp.gmail.com with ESMTPSA id m7sm5721709wrr.40.2019.12.19.00.52.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Dec 2019 00:52:31 -0800 (PST)
+Subject: Re: [PATCH v3 02/10] drm/bridge: dw-hdmi: add max bpc connector
+ property
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     a.hajda@samsung.com, jonas@kwiboo.se, jernej.skrabec@siol.net,
+        boris.brezillon@collabora.com, linux-amlogic@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20191218154637.17509-1-narmstrong@baylibre.com>
+ <20191218154637.17509-3-narmstrong@baylibre.com>
+ <20191218154942.GG4863@pendragon.ideasonboard.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ mQENBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAG0KE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT6JATsEEwEKACUC
+ GyMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheABQJXDO2CAhkBAAoJEBaat7Gkz/iubGIH/iyk
+ RqvgB62oKOFlgOTYCMkYpm2aAOZZLf6VKHKc7DoVwuUkjHfIRXdslbrxi4pk5VKU6ZP9AKsN
+ NtMZntB8WrBTtkAZfZbTF7850uwd3eU5cN/7N1Q6g0JQihE7w4GlIkEpQ8vwSg5W7hkx3yQ6
+ 2YzrUZh/b7QThXbNZ7xOeSEms014QXazx8+txR7jrGF3dYxBsCkotO/8DNtZ1R+aUvRfpKg5
+ ZgABTC0LmAQnuUUf2PHcKFAHZo5KrdO+tyfL+LgTUXIXkK+tenkLsAJ0cagz1EZ5gntuheLD
+ YJuzS4zN+1Asmb9kVKxhjSQOcIh6g2tw7vaYJgL/OzJtZi6JlIW5AQ0ETVkGzwEIALyKDN/O
+ GURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYpQTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXM
+ coJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hi
+ SvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY4yG6xI99NIPEVE9lNBXBKIlewIyVlkOa
+ YvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoMMtsyw18YoX9BqMFInxqYQQ3j/HpVgTSv
+ mo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUXoUk33HEAEQEAAYkBHwQYAQIACQUCTVkG
+ zwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfnM7IbRuiSZS1unlySUVYu3SD6YBYnNi3G
+ 5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa33eDIHu/zr1HMKErm+2SD6PO9umRef8V8
+ 2o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCSKmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+
+ RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJ
+ C3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTTQbM0WUIBIcGmq38+OgUsMYu4NzLu7uZF
+ Acmp6h8guQINBFYnf6QBEADQ+wBYa+X2n/xIQz/RUoGHf84Jm+yTqRT43t7sO48/cBW9vAn9
+ GNwnJ3HRJWKATW0ZXrCr40ES/JqM1fUTfiFDB3VMdWpEfwOAT1zXS+0rX8yljgsWR1UvqyEP
+ 3xN0M/40Zk+rdmZKaZS8VQaXbveaiWMEmY7sBV3QvgOzB7UF2It1HwoCon5Y+PvyE3CguhBd
+ 9iq5iEampkMIkbA3FFCpQFI5Ai3BywkLzbA3ZtnMXR8Qt9gFZtyXvFQrB+/6hDzEPnBGZOOx
+ zkd/iIX59SxBuS38LMlhPPycbFNmtauOC0DNpXCv9ACgC9tFw3exER/xQgSpDVc4vrL2Cacr
+ wmQp1k9E0W+9pk/l8S1jcHx03hgCxPtQLOIyEu9iIJb27TjcXNjiInd7Uea195NldIrndD+x
+ 58/yU3X70qVY+eWbqzpdlwF1KRm6uV0ZOQhEhbi0FfKKgsYFgBIBchGqSOBsCbL35f9hK/JC
+ 6LnGDtSHeJs+jd9/qJj4WqF3x8i0sncQ/gszSajdhnWrxraG3b7/9ldMLpKo/OoihfLaCxtv
+ xYmtw8TGhlMaiOxjDrohmY1z7f3rf6njskoIXUO0nabun1nPAiV1dpjleg60s3OmVQeEpr3a
+ K7gR1ljkemJzM9NUoRROPaT7nMlNYQL+IwuthJd6XQqwzp1jRTGG26J97wARAQABiQM+BBgB
+ AgAJBQJWJ3+kAhsCAikJEBaat7Gkz/iuwV0gBBkBAgAGBQJWJ3+kAAoJEHfc29rIyEnRk6MQ
+ AJDo0nxsadLpYB26FALZsWlN74rnFXth5dQVQ7SkipmyFWZhFL8fQ9OiIoxWhM6rSg9+C1w+
+ n45eByMg2b8H3mmQmyWztdI95OxSREKwbaXVapCcZnv52JRjlc3DoiiHqTZML5x1Z7lQ1T3F
+ 8o9sKrbFO1WQw1+Nc91+MU0MGN0jtfZ0Tvn/ouEZrSXCE4K3oDGtj3AdC764yZVq6CPigCgs
+ 6Ex80k6QlzCdVP3RKsnPO2xQXXPgyJPJlpD8bHHHW7OLfoR9DaBNympfcbQJeekQrTvyoASw
+ EOTPKE6CVWrcQIztUp0WFTdRGgMK0cZB3Xfe6sOp24PQTHAKGtjTHNP/THomkH24Fum9K3iM
+ /4Wh4V2eqGEgpdeSp5K+LdaNyNgaqzMOtt4HYk86LYLSHfFXywdlbGrY9+TqiJ+ZVW4trmui
+ NIJCOku8SYansq34QzYM0x3UFRwff+45zNBEVzctSnremg1mVgrzOfXU8rt+4N1b2MxorPF8
+ 619aCwVP7U16qNSBaqiAJr4e5SNEnoAq18+1Gp8QsFG0ARY8xp+qaKBByWES7lRi3QbqAKZf
+ yOHS6gmYo9gBmuAhc65/VtHMJtxwjpUeN4Bcs9HUpDMDVHdfeRa73wM+wY5potfQ5zkSp0Jp
+ bxnv/cRBH6+c43stTffprd//4Hgz+nJcCgZKtCYIAPkUxABC85ID2CidzbraErVACmRoizhT
+ KR2OiqSLW2x4xdmSiFNcIWkWJB6Qdri0Fzs2dHe8etD1HYaht1ZhZ810s7QOL7JwypO8dscN
+ KTEkyoTGn6cWj0CX+PeP4xp8AR8ot4d0BhtUY34UPzjE1/xyrQFAdnLd0PP4wXxdIUuRs0+n
+ WLY9Aou/vC1LAdlaGsoTVzJ2gX4fkKQIWhX0WVk41BSFeDKQ3RQ2pnuzwedLO94Bf6X0G48O
+ VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <401ecf72-fca2-28bc-9b72-b3e63b380865@baylibre.com>
+Date:   Thu, 19 Dec 2019 09:52:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191218142831.GA101587@google.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20191218154942.GG4863@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.184.52.56]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/12/18 22:28, Bjorn Helgaas wrote:
-> On Wed, Dec 18, 2019 at 05:16:03PM +0800, Xiongfeng Wang wrote:
->> On 2019/12/11 12:10, Bjorn Helgaas wrote:
->>> On Tue, Dec 10, 2019 at 9:28 PM Xiongfeng Wang
->>> <wangxiongfeng2@huawei.com> wrote:
->>>> On 2019/12/7 2:10, Bjorn Helgaas wrote:
->>>>> On Fri, Dec 06, 2019 at 03:01:45PM +0800, Xiongfeng Wang wrote:
->>>>>> HiSilicon PCI Network Processor 5896 devices misreport the
->>>>>> class type as 'NOT_DEFINED', but it is actually a network
->>>>>> device. Also the size of BAR3 is reported as 265T, but this BAR
->>>>>> is actually unused.  This patch modify the class type to
->>>>>> 'CLASS_NETWORK' and disable the unused BAR3.
+On 18/12/2019 16:49, Laurent Pinchart wrote:
+> Hi Neil and Jonas,
 > 
->>>>> The question is not whether the BAR is used by the driver; the
->>>>> question is whether the device responds to accesses to the
->>>>> region described by the BAR when PCI_COMMAND_MEMORY is turned
->>>>> on.
->>>>
->>>> I asked the hardware engineer. He said I can not write an address
->>>> into that BAR.
->>>
->>> If the BAR is not writable, I think sizing should fail, so I
->>> suspect some of the bits are actually writable.
+> Thank you for the patch.
+> 
+> On Wed, Dec 18, 2019 at 04:46:29PM +0100, Neil Armstrong wrote:
+>> From: Jonas Karlman <jonas@kwiboo.se>
 >>
->> Sorry for the delayed response. It's not so convenient for me to get
->> to the hardware guys.  BAR0 BAR1 BAR2 are 32-bit and can be used to
->> access the registers and memory within 5896 devices. These three
->> BARs can meet the need for most scenario.  BAR3 is 64-bit and can be
->> used to access all the registers and memory within 5896 devices.
->> (BAR3 is writable. Sorry for the non-confirmed information before.)
->> But BAR3 is not used by the driver and the size is very
->> large（larger than 100G, still didn't get the precise size）.  So I
->> think maybe we can disable this BAR for now, otherwise the
->> unassigned resource will cause 'pci_enable_device()' returning
->> failure.
+>> Add the max_bpc property to the dw-hdmi connector to prepare support
+>> for 10, 12 & 16bit output support.
+>>
+>> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>> index 6a0b4b3a6739..e7a0600f8cc5 100644
+>> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+>> @@ -2368,6 +2368,10 @@ static int dw_hdmi_bridge_attach(struct drm_bridge *bridge)
+>>  				    DRM_MODE_CONNECTOR_HDMIA,
+>>  				    hdmi->ddc);
+>>  
+>> +	drm_atomic_helper_connector_reset(connector);
+>> +
+>> +	drm_connector_attach_max_bpc_property(connector, 8, 16);
+>> +
 > 
-> Here's the problem: the proposed patch (below) clears the struct
-> resource corresponding to BAR 3, but that doesn't actually disable the
-> BAR.  It hides the BAR from Linux, so Linux will pretend it doesn't
-> exist, but it's still there in the hardware.
-> 
-> The hardware BAR 3 still contains some value (possibly zero), and if
-> PCI_COMMAND_MEMORY is set (which you need to do if you want to use
-> *any* memory BARs on the device), the device will respond to any
-> transactions in the BAR 3 range.  Depending on the topology and all
-> the other BAR and window assignments, this may cause address
-> conflicts.
+> I'm not asking you to rework this, but have you given any thought on how
+> we would be able to support this feature in a model where the bridge
+> wouldn't create a connector anymore (as done in the latest version of
+> the omapdrm series) ?
 
-Yes, there does exist this problem. I will check it with the hardware
-engineers. Thanks.
+Not yet, but the plan is to have this serie merged (it's on the list for more than 1y now),
+then we'll switch to a separate connector.
 
 > 
-> + * HiSilicon NP 5896 devices BAR3 size is reported as 256T and causes problem
-> + * when assigning the resources. But this BAR is actually unused by the driver,
-> + * so let's disable it.
-> + */
-> +static void quirk_hisi_fixup_np_bar(struct pci_dev *pdev)
-> +{
-> +       struct resource *r = &pdev->resource[3];
-> +
-> +       r->start = 0;
-> +       r->end = 0;
-> +       r->flags = 0;
-> +
-> +       pci_info(pdev, "Disabling invalid BAR 3\n");
-> 
-> .
+>>  	if (hdmi->version >= 0x200a && hdmi->plat_data->use_drm_infoframe)
+>>  		drm_object_attach_property(&connector->base,
+>>  			connector->dev->mode_config.hdr_output_metadata_property, 0);
 > 
 
+Neil
