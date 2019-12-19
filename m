@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3481DC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 803D2C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0045620716
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D6B720716
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780667;
-	bh=ukK3tZ03T2ojLubsfuqKbVnsJ0LNvG8yLEX+MReaYbk=;
+	s=default; t=1576780673;
+	bh=tqqSbL3wDs7vPZ25IGZn+gmqQoApZ1G5ZTIp/DzGsHo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qkSHw2qB4zB4tst6mXOJnsjH3orv7ycnMLbbgX7TIIjVBeOlh7b8Zq61fHLQNT1ex
-	 MTMAgI/dEfWAFqhqRIDalbqZaKhZWZ7QRZKH85pJIMEW/3LII1/DKKKyZwDMY5NaNu
-	 xptfb5OJGO9SdTohc4NMtQJ31IXjeRJTbESJLqKA=
+	b=ArXUa2FmGmLZVKEL/yR9rvQrvvcVbzCa4no8npyz93XSbbwH7wZ7H2spFMVU0evuZ
+	 UifLzMbIyYQk5Jgdw6qnU0MPTxNSjSzIwH7YZPvyH4j18t3bI3YR9ZAkVppvFmI86v
+	 FbVlj+f8Rq7efR2loUdz9Un0Vy85gEDYTNFVqGGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbfLSShp (ORCPT
+        id S1727917AbfLSShw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:37:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55414 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:37:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727860AbfLSShj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:37:39 -0500
+        id S1727881AbfLSShr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:37:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC3B920716;
-        Thu, 19 Dec 2019 18:37:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BAB824679;
+        Thu, 19 Dec 2019 18:37:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780659;
-        bh=ukK3tZ03T2ojLubsfuqKbVnsJ0LNvG8yLEX+MReaYbk=;
+        s=default; t=1576780666;
+        bh=tqqSbL3wDs7vPZ25IGZn+gmqQoApZ1G5ZTIp/DzGsHo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kGbruHSQtIMlc7JtiwfrTbgPmJa8Iys90ng+KqAX914QZ0jKLiXozr5eqUCdFJ/ph
-         yT26IkkNPP1xJ4gl1BNK5nM5MeAYq0/RaYNTcs7ZshClF0oOoNE5p0sTQlgawo9rKu
-         AwQ2ICJYj9ufqy4SSJ9pt87Un9pumTECHO8pkkqw=
+        b=cfIMW1SklfNyER7mMIrdFBl+V4FkXDeGjyF3LvQJyyYzDMnbeBfR+rVP/ex7JpgC+
+         tj8HVq3+b6jkDhn7eqfdH8GTBdtDgDuF6TuQT1jcblXLqKb3peSMO5Tko/5AjmtM7L
+         fDglW4vO0dNUTjWqxTM78gZqePaDcQe3wgCB6o+g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Subject: [PATCH 4.4 063/162] drm/i810: Prevent underflow in ioctl
-Date:   Thu, 19 Dec 2019 19:32:51 +0100
-Message-Id: <20191219183211.688422226@linuxfoundation.org>
+        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.4 066/162] crypto: crypto4xx - fix double-free in crypto4xx_destroy_sdr
+Date:   Thu, 19 Dec 2019 19:32:54 +0100
+Message-Id: <20191219183211.858183332@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -59,43 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Christian Lamparter <chunkeey@gmail.com>
 
-commit 4f69851fbaa26b155330be35ce8ac393e93e7442 upstream.
+commit 746c908c4d72e49068ab216c3926d2720d71a90d upstream.
 
-The "used" variables here come from the user in the ioctl and it can be
-negative.  It could result in an out of bounds write.
+This patch fixes a crash that can happen during probe
+when the available dma memory is not enough (this can
+happen if the crypto4xx is built as a module).
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191004102251.GC823@mwanda
-Cc: stable@vger.kernel.org
+The descriptor window mapping would end up being free'd
+twice, once in crypto4xx_build_pdr() and the second time
+in crypto4xx_destroy_sdr().
+
+Fixes: 5d59ad6eea82 ("crypto: crypto4xx - fix crypto4xx_build_pdr, crypto4xx_build_sdr leak")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i810/i810_dma.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/crypto/amcc/crypto4xx_core.c |    6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
---- a/drivers/gpu/drm/i810/i810_dma.c
-+++ b/drivers/gpu/drm/i810/i810_dma.c
-@@ -723,7 +723,7 @@ static void i810_dma_dispatch_vertex(str
- 	if (nbox > I810_NR_SAREA_CLIPRECTS)
- 		nbox = I810_NR_SAREA_CLIPRECTS;
+--- a/drivers/crypto/amcc/crypto4xx_core.c
++++ b/drivers/crypto/amcc/crypto4xx_core.c
+@@ -399,12 +399,8 @@ static u32 crypto4xx_build_sdr(struct cr
+ 		dma_alloc_coherent(dev->core_dev->device,
+ 			dev->scatter_buffer_size * PPC4XX_NUM_SD,
+ 			&dev->scatter_buffer_pa, GFP_ATOMIC);
+-	if (!dev->scatter_buffer_va) {
+-		dma_free_coherent(dev->core_dev->device,
+-				  sizeof(struct ce_sd) * PPC4XX_NUM_SD,
+-				  dev->sdr, dev->sdr_pa);
++	if (!dev->scatter_buffer_va)
+ 		return -ENOMEM;
+-	}
  
--	if (used > 4 * 1024)
-+	if (used < 0 || used > 4 * 1024)
- 		used = 0;
+ 	sd_array = dev->sdr;
  
- 	if (sarea_priv->dirty)
-@@ -1043,7 +1043,7 @@ static void i810_dma_dispatch_mc(struct
- 	if (u != I810_BUF_CLIENT)
- 		DRM_DEBUG("MC found buffer that isn't mine!\n");
- 
--	if (used > 4 * 1024)
-+	if (used < 0 || used > 4 * 1024)
- 		used = 0;
- 
- 	sarea_priv->dirty = 0x7f;
 
 
