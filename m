@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 462F3C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E938C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19DAE20716
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC05D2467F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780794;
-	bh=3TyHLECnAYyzfBaEV8UiIq2Z47lEaK7x3GlGm2MucmI=;
+	s=default; t=1576780797;
+	bh=3K4N9OE0RaryNp4KTlU4FXDaW7UdwQ7b4wXkp9IHSQQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=supi+A4lNV7d2dWOez8be3LpQOP28Bc9syDCFsONW8Q6SNieINTqdY9tbbXCqOwt3
-	 Zjs1olCVZeT4AVFYZQDku1UYQynfPWlX7H65ZTtRXLKahYINGdqi5zgtMN+bMb21yl
-	 uuJQO2Wa6F+IHC5dVv+MzXmOmOr+7mWS+/dHrN9I=
+	b=Wx9Oiu0eeGVib73rmQcdHTxSjNEEQCWUiSYn3IgnzKecx27hEce6Z1ScRkmziDxWs
+	 sBpQiq2Ggaf0ARlbU8Zt4oZrfOcweSw1HzeRXgySJ/Zauaied4OlJW+lYNl2jBJP7L
+	 yHeIL2hG7thfVmT1mqV32uleqftuz2YneY6bgrys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbfLSSjx (ORCPT
+        id S1728309AbfLSSj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:39:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58334 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:39:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728286AbfLSSju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:39:50 -0500
+        id S1728294AbfLSSjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:39:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4946224685;
-        Thu, 19 Dec 2019 18:39:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD3E424650;
+        Thu, 19 Dec 2019 18:39:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780789;
-        bh=3TyHLECnAYyzfBaEV8UiIq2Z47lEaK7x3GlGm2MucmI=;
+        s=default; t=1576780792;
+        bh=3K4N9OE0RaryNp4KTlU4FXDaW7UdwQ7b4wXkp9IHSQQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ysspoL83e6xS3JibSja+8v8hbui0+jHKDGFeGYqdjL2P+0hnD8qgnCN5iRqTFm1y/
-         JADWvhGIgJUcI6GPsPLnUwPLkMDCQOoQUOHK5iS4+zrANkYhdnsU6c97XywlGbGSLM
-         Us0CqsA4eaEHGMXs3G2pmsqOgxfpa+JXvWRDPZ0c=
+        b=NHq03vZOAKEsz8nKbxqwuOHc1IT7mUuBzXR3/VLaIvOR27K0iONojZd+z3TfgnURb
+         EVSz/EnMvhbVHKDNizuqjjUSflIhyZ9KAh7vY9Hg6YE++bJIgPHcvZD3HxSI5L8Vpp
+         +qGUrnr1G+Tbxwf5de1KVyjABATiZPHdNkwmCeME=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: [PATCH 4.4 111/162] media: bdisp: fix memleak on release
-Date:   Thu, 19 Dec 2019 19:33:39 +0100
-Message-Id: <20191219183214.500867406@linuxfoundation.org>
+        stable@vger.kernel.org, linux-media@vger.kernel.org,
+        Martin Bugge <marbugge@cisco.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Mauro Carvalho Chehab <mchehab@osg.samsung.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>
+Subject: [PATCH 4.4 120/162] video/hdmi: Fix AVI bar unpack
+Date:   Thu, 19 Dec 2019 19:33:48 +0100
+Message-Id: <20191219183215.056079256@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -61,40 +64,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Ville Syrjälä <ville.syrjala@linux.intel.com>
 
-commit 11609a7e21f8cea42630350aa57662928fa4dc63 upstream.
+commit 6039f37dd6b76641198e290f26b31c475248f567 upstream.
 
-If a process is interrupted while accessing the video device and the
-device lock is contended, release() could return early and fail to free
-related resources.
+The bar values are little endian, not big endian. The pack
+function did it right but the unpack got it wrong. Fix it.
 
-Note that the return value of the v4l2 release file operation is
-ignored.
-
-Fixes: 28ffeebbb7bd ("[media] bdisp: 2D blitter driver using v4l2 mem2mem framework")
-Cc: stable <stable@vger.kernel.org>     # 4.2
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Reviewed-by: Fabien Dessenne <fabien.dessenne@st.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: stable@vger.kernel.org
+Cc: linux-media@vger.kernel.org
+Cc: Martin Bugge <marbugge@cisco.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Thierry Reding <treding@nvidia.com>
+Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Fixes: 2c676f378edb ("[media] hdmi: added unpack and logging functions for InfoFrames")
+Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190919132853.30954-1-ville.syrjala@linux.intel.com
+Reviewed-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/platform/sti/bdisp/bdisp-v4l2.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/video/hdmi.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/media/platform/sti/bdisp/bdisp-v4l2.c
-+++ b/drivers/media/platform/sti/bdisp/bdisp-v4l2.c
-@@ -652,8 +652,7 @@ static int bdisp_release(struct file *fi
- 
- 	dev_dbg(bdisp->dev, "%s\n", __func__);
- 
--	if (mutex_lock_interruptible(&bdisp->lock))
--		return -ERESTARTSYS;
-+	mutex_lock(&bdisp->lock);
- 
- 	v4l2_m2m_ctx_release(ctx->fh.m2m_ctx);
+--- a/drivers/video/hdmi.c
++++ b/drivers/video/hdmi.c
+@@ -1032,12 +1032,12 @@ static int hdmi_avi_infoframe_unpack(str
+ 	if (ptr[0] & 0x10)
+ 		frame->active_aspect = ptr[1] & 0xf;
+ 	if (ptr[0] & 0x8) {
+-		frame->top_bar = (ptr[5] << 8) + ptr[6];
+-		frame->bottom_bar = (ptr[7] << 8) + ptr[8];
++		frame->top_bar = (ptr[6] << 8) | ptr[5];
++		frame->bottom_bar = (ptr[8] << 8) | ptr[7];
+ 	}
+ 	if (ptr[0] & 0x4) {
+-		frame->left_bar = (ptr[9] << 8) + ptr[10];
+-		frame->right_bar = (ptr[11] << 8) + ptr[12];
++		frame->left_bar = (ptr[10] << 8) | ptr[9];
++		frame->right_bar = (ptr[12] << 8) | ptr[11];
+ 	}
+ 	frame->scan_mode = ptr[0] & 0x3;
  
 
 
