@@ -2,290 +2,149 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EB7C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EFFC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 134D32467B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 166722467B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:38:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576791522;
-	bh=vNNXsSF1RT2PGfJOuKkiCAk2XmR2ntB3ApKZt0dfxhA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Mh0RQvVADQ8ZnSsls5LjXY1m2zL0A4Mmh3t/1pIzJ+VVIHsqE5johJT+CbjiC8HbA
-	 BTMvnobhEEWhjvaVtRWg3LrKZvUI3+dDo7zCcZtseZiy2Wuc8mqti0BA1evkoPq5IZ
-	 5l+ukA9/mipZCthn7EYsGf6BzpQJgL8xBjXBsHEk=
+	s=default; t=1576791532;
+	bh=oOst0TpWxhm5WEYkozLH7AQ99Nmcvz5QtmDfatMC2pA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wXD2n0Dwj+DlTn0CL7h1dagig7bQ7SqqtHDu6BB0/vHdkfYY/yrujTTbagLvzzDkP
+	 4YZv2+LiY0Arcim/fx0kSsvIOJUVMO4mEpWeTX60Fz6+i+t+vDc+t06PFsh50BG646
+	 j27jVlyd50qsj0KiusFTFgXJVTg92zfWldzgxeoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbfLSVil (ORCPT
+        id S1727440AbfLSViu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 16:38:41 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36190 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbfLSVik (ORCPT
+        Thu, 19 Dec 2019 16:38:50 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46364 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbfLSViu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 16:38:40 -0500
-Received: by mail-ot1-f66.google.com with SMTP id w1so8982798otg.3;
-        Thu, 19 Dec 2019 13:38:40 -0800 (PST)
+        Thu, 19 Dec 2019 16:38:50 -0500
+Received: by mail-pf1-f194.google.com with SMTP id y14so4005794pfm.13;
+        Thu, 19 Dec 2019 13:38:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FfeeNW3xmudQC/YFevQ3lQ5kCZ4yhVzFGlZeZB9E96Y=;
-        b=Ah0GDw8W2qjGBTk2I7oVK6i2oNgtuzGUpaAGtxWWLAaPYFkCp3A+oBvIuGIetPIpml
-         nlZtd7PpMDDVGs+IIbUVxHytPn7kFzjmmTILBQGBdcTFS+10RIJNGn6HdPc2e1EtnMrh
-         F2LnWxXqMeXQ8V2LCfnlY9odzOq6rnM6UsXLvsvfx6HahM2xDYQzPs3QclORcfLAv9Ua
-         jAsxOn3UGuPnMS8UnO8lfhWoyLqRkFC5sNIX1Mb7w763PHDDFg80i4UnD7pO/8z/Lr9c
-         7N8VxzLhcJCgWbGwJV6gQBUaJSk9hGzVRC1hH16rRrPmtmUeGhnx1slRXTAzCVC7Nw9O
-         uwrQ==
-X-Gm-Message-State: APjAAAV7C/WOgDvzIT50NSf/oyVv3iav2Nc8OZok5RUg7WvGP+T63emT
-        eF/l4HCVIRy+BeQ8MT/A090tvuOM5zL3FBhPyoQ=
-X-Google-Smtp-Source: APXvYqx1CsqYneLcCG4qS1okfo+QFG62HuZxc1DLLTS+LfqIoajjt3Gf/tUwLuikiL2JlnbHmr4P9ptMCWG//laxGT8=
-X-Received: by 2002:a9d:62c7:: with SMTP id z7mr5758606otk.189.1576791519567;
- Thu, 19 Dec 2019 13:38:39 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=A8qzfXgJqfz0JsylJ7w5yc0iwoDWilLcpVP41fGSaVY=;
+        b=sp6jN/DAYmh1enzLowAxt+CQNyzsEJFI4+AW3rDNa98uIQiqkHydnmsh4uBOi0hujT
+         hM+8ZT5cd1m5ZN7C10poqLosAYdj4Hi2i3bIaYJ3ksj/3Ibko6A/nJeCmwcMM58c3f4V
+         PHvHESWX3AQIOHxMkssH6KXSfZr1g1xwXk8AgBDtkkz2jvGkfe5l0yGqV0AYao8YuUdl
+         KDowwrZsS5ynK6XrZf+Dc/Bty4NpMwCVVxaBnbXXhb13V214oME/1nosB6bFQTrHrCBL
+         PAOl23apfnUVawQ72qrtdc74WHa5c1NmgC9V54FZjDIX2jwdfOXEN7GpZDO7QaeakdzI
+         DUYA==
+X-Gm-Message-State: APjAAAVd2O+lEC7uBWbOsslf5W9RabYx83PsGHK9Mtoi5hrHfWlWP1wf
+        ozyDDNbgp9th1RpaPEhrRw==
+X-Google-Smtp-Source: APXvYqxZh6usqcMuDpjIzx8tWU+6WwnJbiDYBNuEG9Di9Qzpk8aU8oFtnRSoasoMfjjZop8d7zm5Lw==
+X-Received: by 2002:a63:a707:: with SMTP id d7mr10954574pgf.93.1576791529663;
+        Thu, 19 Dec 2019 13:38:49 -0800 (PST)
+Received: from localhost ([172.58.27.162])
+        by smtp.gmail.com with ESMTPSA id p5sm8161313pgs.28.2019.12.19.13.38.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 13:38:48 -0800 (PST)
+Date:   Thu, 19 Dec 2019 13:38:45 -0800
+From:   Rob Herring <robh@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Peter Chen <peter.chen@nxp.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, od@zcrc.me,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] power/supply: Add generic USB charger driver
+Message-ID: <20191219213845.GA3481@bogus>
+References: <20191211155032.167032-1-paul@crapouillou.net>
+ <20191211155032.167032-3-paul@crapouillou.net>
+ <20191212091814.GA7035@b29397-desktop>
+ <1576270147.3.0@crapouillou.net>
+ <VI1PR04MB5327401FFD2D32E937548DD48B510@VI1PR04MB5327.eurprd04.prod.outlook.com>
+ <1576493525.3.0@crapouillou.net>
 MIME-Version: 1.0
-References: <20191213234840.9791-1-srinivas.pandruvada@linux.intel.com> <20191213234840.9791-3-srinivas.pandruvada@linux.intel.com>
-In-Reply-To: <20191213234840.9791-3-srinivas.pandruvada@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 19 Dec 2019 22:38:28 +0100
-Message-ID: <CAJZ5v0j7nQxLt55Q-+jqNwmW7RNvjGsQws5bUDSv7X3iojX6Dg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] ACPI / fan: Display fan performance state information
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Jonathan Corbet <corbet@lwn.net>, Len Brown <lenb@kernel.org>,
-        "Zhang, Rui" <rui.zhang@intel.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1576493525.3.0@crapouillou.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 14, 2019 at 12:48 AM Srinivas Pandruvada
-<srinivas.pandruvada@linux.intel.com> wrote:
->
-> When _FPS object indicates support of variable speed fan, thermal cooling
-> devices for fan shows max performance state count using attribute
-> "max_state" greater than or equal to 1.
->
-> But the thermal cooling device doesn't display properties of each
-> performance state. This is not enough for smart fan control user space
-> software, which also considers speed, power and noise level.
->
-> This change presents fan performance states attributes under acpi
-> device for the fan. This will be under:
-> /sys/bus/acpi/devices/devices/INT3404:00
-> or
-> /sys/bus/platform/devices/PNP0C0B:00.
->
-> For example:
-> $ ls /sys/bus/acpi/devices/INT3404\:00
-> description  path           state0   state11  state4  state7  status
-> hid          physical_node  state1   state2   state5  state8  subsystem
-> modalias     power          state10  state3   state6  state9  uevent
-> uid          wakeup
->
-> Here each state* attribute is representing a performance state.
->
-> Contents of state* attribute are formatted using:
-> control_percent:trip_point:speed_rpm:noise_level_mdb:power_mw
->
-> $ cat /sys/bus/acpi/devices/INT3404\:00/state10
-> 95:0:11600:47500:4500
->
-> For more information refer to:
-> Documentation/acpi/fan_performance_states.txt
->
-> While here, return correct error from acpi_fan_probe() when
-> acpi_fan_get_fps() or acpi_fan_get_fif() fails.
->
-> Suggested-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+On Mon, Dec 16, 2019 at 11:52:05AM +0100, Paul Cercueil wrote:
+> Hi Peter,
+> 
+> 
+> Le lun., déc. 16, 2019 at 01:24, Peter Chen <peter.chen@nxp.com> a écrit :
+> > 
+> > >  >>  +
+> > >  >>  +	desc = &charger->desc;
+> > >  >>  +	desc->name = "usb-charger";
+> > >  >>  +	desc->properties = usb_charger_properties;
+> > >  >>  +	desc->num_properties = ARRAY_SIZE(usb_charger_properties);
+> > >  >>  +	desc->get_property = usb_charger_get_property;
+> > >  >>  +	desc->type = POWER_SUPPLY_TYPE_USB;
+> > >  >
+> > >  > What's your further plan for this generic USB charger?
+> > >  > To support BC1.2, we need to know charger type, and how we could
+> > > get
+> > >  > it?
+> > >  >
+> > >  > Peter
+> > > 
+> > >  Well I don't really know. The USB role framework does not give any
+> > > info about
+> > >  what's plugged.
+> > > 
+> > 
+> > What's the use case for this patch set? How it be used?
+> 
+> My devicetree:
+> 
+> usb_otg: usb@13440000 {
+> 	compatible = "ingenic,jz4770-musb", "simple-mfd";
+> 	reg = <0x13440000 0x10000>;
+> 	[...]
+> 
+> 	usb-role-switch;
+> 
+> 	connector {
+> 		compatible = "gpio-usb-b-connector", "usb-b-connector";
+> 		label = "mini-USB";
+> 		type = "mini";
+> 
+> 		id-gpios = <&gpf 18 GPIO_ACTIVE_HIGH>;
+> 		vbus-gpios = <&gpb 5 GPIO_ACTIVE_HIGH>;
+> 		[...]
+> 	};
+> 
+> 	usb_charger: usb-charger {
+> 		compatible = "usb-charger";
 
-Folded the (rewritten) [1/2] into this one and queued it up for 5.6, thanks!
+What h/w device is this?
 
-> ---
->  drivers/acpi/fan.c | 96 ++++++++++++++++++++++++++++++++++++++++++----
->  1 file changed, 88 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/acpi/fan.c b/drivers/acpi/fan.c
-> index 816b0803f7fb..86d2417953b5 100644
-> --- a/drivers/acpi/fan.c
-> +++ b/drivers/acpi/fan.c
-> @@ -44,12 +44,16 @@ static const struct dev_pm_ops acpi_fan_pm = {
->  #define FAN_PM_OPS_PTR NULL
->  #endif
->
-> +#define ACPI_FPS_NAME_LEN      20
-> +
->  struct acpi_fan_fps {
->         u64 control;
->         u64 trip_point;
->         u64 speed;
->         u64 noise_level;
->         u64 power;
-> +       char name[ACPI_FPS_NAME_LEN];
-> +       struct device_attribute dev_attr;
->  };
->
->  struct acpi_fan_fif {
-> @@ -265,6 +269,39 @@ static int acpi_fan_speed_cmp(const void *a, const void *b)
->         return fps1->speed - fps2->speed;
->  }
->
-> +static ssize_t show_state(struct device *dev, struct device_attribute *attr, char *buf)
-> +{
-> +       struct acpi_fan_fps *fps = container_of(attr, struct acpi_fan_fps, dev_attr);
-> +       int count;
-> +
-> +       if (fps->control == 0xFFFFFFFF || fps->control > 100)
-> +               count = snprintf(buf, PAGE_SIZE, "not-defined:");
-> +       else
-> +               count = snprintf(buf, PAGE_SIZE, "%lld:", fps->control);
-> +
-> +       if (fps->trip_point == 0xFFFFFFFF || fps->trip_point > 9)
-> +               count += snprintf(&buf[count], PAGE_SIZE, "not-defined:");
-> +       else
-> +               count += snprintf(&buf[count], PAGE_SIZE, "%lld:", fps->trip_point);
-> +
-> +       if (fps->speed == 0xFFFFFFFF)
-> +               count += snprintf(&buf[count], PAGE_SIZE, "not-defined:");
-> +       else
-> +               count += snprintf(&buf[count], PAGE_SIZE, "%lld:", fps->speed);
-> +
-> +       if (fps->noise_level == 0xFFFFFFFF)
-> +               count += snprintf(&buf[count], PAGE_SIZE, "not-defined:");
-> +       else
-> +               count += snprintf(&buf[count], PAGE_SIZE, "%lld:", fps->noise_level * 100);
-> +
-> +       if (fps->power == 0xFFFFFFFF)
-> +               count += snprintf(&buf[count], PAGE_SIZE, "not-defined\n");
-> +       else
-> +               count += snprintf(&buf[count], PAGE_SIZE, "%lld\n", fps->power);
-> +
-> +       return count;
-> +}
-> +
->  static int acpi_fan_get_fps(struct acpi_device *device)
->  {
->         struct acpi_fan *fan = acpi_driver_data(device);
-> @@ -295,12 +332,13 @@ static int acpi_fan_get_fps(struct acpi_device *device)
->         }
->         for (i = 0; i < fan->fps_count; i++) {
->                 struct acpi_buffer format = { sizeof("NNNNN"), "NNNNN" };
-> -               struct acpi_buffer fps = { sizeof(fan->fps[i]), &fan->fps[i] };
-> +               struct acpi_buffer fps = { offsetof(struct acpi_fan_fps, name),
-> +                                               &fan->fps[i] };
->                 status = acpi_extract_package(&obj->package.elements[i + 1],
->                                               &format, &fps);
->                 if (ACPI_FAILURE(status)) {
->                         dev_err(&device->dev, "Invalid _FPS element\n");
-> -                       break;
-> +                       goto err;
->                 }
->         }
->
-> @@ -308,6 +346,24 @@ static int acpi_fan_get_fps(struct acpi_device *device)
->         sort(fan->fps, fan->fps_count, sizeof(*fan->fps),
->              acpi_fan_speed_cmp, NULL);
->
-> +       for (i = 0; i < fan->fps_count; ++i) {
-> +               struct acpi_fan_fps *fps = &fan->fps[i];
-> +
-> +               snprintf(fps->name, ACPI_FPS_NAME_LEN, "state%d", i);
-> +               fps->dev_attr.show = show_state;
-> +               fps->dev_attr.store = NULL;
-> +               fps->dev_attr.attr.name = fps->name;
-> +               fps->dev_attr.attr.mode = 0444;
-> +               status = sysfs_create_file(&device->dev.kobj, &fps->dev_attr.attr);
-> +               if (status) {
-> +                       int j;
-> +
-> +                       for (j = 0; j < i; ++j)
-> +                               sysfs_remove_file(&device->dev.kobj, &fan->fps[j].dev_attr.attr);
-> +                       break;
-> +               }
-> +       }
-> +
->  err:
->         kfree(obj);
->         return status;
-> @@ -330,14 +386,20 @@ static int acpi_fan_probe(struct platform_device *pdev)
->         platform_set_drvdata(pdev, fan);
->
->         if (acpi_fan_is_acpi4(device)) {
-> -               if (acpi_fan_get_fif(device) || acpi_fan_get_fps(device))
-> -                       goto end;
-> +               result = acpi_fan_get_fif(device);
-> +               if (result)
-> +                       return result;
-> +
-> +               result = acpi_fan_get_fps(device);
-> +               if (result)
-> +                       return result;
-> +
->                 fan->acpi4 = true;
->         } else {
->                 result = acpi_device_update_power(device, NULL);
->                 if (result) {
->                         dev_err(&device->dev, "Failed to set initial power state\n");
-> -                       goto end;
-> +                       goto err_end;
->                 }
->         }
->
-> @@ -350,7 +412,7 @@ static int acpi_fan_probe(struct platform_device *pdev)
->                                                 &fan_cooling_ops);
->         if (IS_ERR(cdev)) {
->                 result = PTR_ERR(cdev);
-> -               goto end;
-> +               goto err_end;
->         }
->
->         dev_dbg(&pdev->dev, "registered as cooling_device%d\n", cdev->id);
-> @@ -365,10 +427,21 @@ static int acpi_fan_probe(struct platform_device *pdev)
->         result = sysfs_create_link(&cdev->device.kobj,
->                                    &pdev->dev.kobj,
->                                    "device");
-> -       if (result)
-> +       if (result) {
->                 dev_err(&pdev->dev, "Failed to create sysfs link 'device'\n");
-> +               goto err_end;
-> +       }
-> +
-> +       return 0;
-> +
-> +err_end:
-> +       if (fan->acpi4) {
-> +               int i;
-> +
-> +               for (i = 0; i < fan->fps_count; ++i)
-> +                       sysfs_remove_file(&device->dev.kobj, &fan->fps[i].dev_attr.attr);
-> +       }
->
-> -end:
->         return result;
->  }
->
-> @@ -376,6 +449,13 @@ static int acpi_fan_remove(struct platform_device *pdev)
->  {
->         struct acpi_fan *fan = platform_get_drvdata(pdev);
->
-> +       if (fan->acpi4) {
-> +               struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
-> +               int i;
-> +
-> +               for (i = 0; i < fan->fps_count; ++i)
-> +                       sysfs_remove_file(&device->dev.kobj, &fan->fps[i].dev_attr.attr);
-> +       }
->         sysfs_remove_link(&pdev->dev.kobj, "thermal_cooling");
->         sysfs_remove_link(&fan->cdev->device.kobj, "device");
->         thermal_cooling_device_unregister(fan->cdev);
-> --
-> 2.17.2
->
+> 	};
+> };
+> 
+> The new gpio-usb-connector driver uses the ID/VBUS GPIOs to detect in which
+> state (device, host, unconnected) a OTG connector is. However, that means I
+> cannot use the standard gpio-charger driver to detect the presence of a
+> charger based on the state of the VBUS gpio, since it's already requested
+> here. So the point of this patchset is to provide an alternative to
+> gpio-charger that works with OTG controllers compatible with
+> 'usb-role-switch'.
+
+Why not fix gpio-charger or make whatever 'owns' vbus-gpios to register 
+a charger device?
+
+I guess you could have Vbus sensing with no charging capability, but 
+that sounds like a new property, not a node to me.
+
+Rob
