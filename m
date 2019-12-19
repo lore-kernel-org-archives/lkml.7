@@ -2,93 +2,158 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21546C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B26FC2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB59524679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C49F24676
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:26:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576797908;
-	bh=OpW/vFNf8yuCa8Ujk2w/8mdhZTESUxbg4sfNSMdxIHE=;
+	s=default; t=1576797980;
+	bh=dQPF53D9Euj/o6bAWSnEj7f8oGcRIsoF/Bnt019180s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SgZkrE/FKPBWuO3Fmf7pHS3pXhHBw+2wvStahnJ3/cWrSivkSXaOhMu7SMPL2oCY/
-	 Eg7S3PRD5t7CZYtInzOJXM3TxSo6VgTdWCV9IaKSt90+uw4i37q+lKhR5jVGHEIcDM
-	 rONzWy7IX8/C5eHJRkL7ngwTiQg+o//kf7w36Fqw=
+	b=CFPgsIirZl/vesmV4Q7dUZcTVMlhhmjzeE24irrg7a5N1m2s3OkUIWNlpT0aRf/NE
+	 GA0hdCqzJt3iSRcHKYP9sKYrH0MI5VuHLFtdABd+JmgMT5wa466+ieezj7e8H3JIGy
+	 JdMJdUcAfbDTDSk8wNRivA0VNN+V+1x7tiqw24Sc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbfLSXZH (ORCPT
+        id S1727119AbfLSX0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 18:25:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59838 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726880AbfLSXZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 18:25:06 -0500
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B45D24676;
-        Thu, 19 Dec 2019 23:25:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576797905;
-        bh=OpW/vFNf8yuCa8Ujk2w/8mdhZTESUxbg4sfNSMdxIHE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=M1mE44UBGUY1+ZZYHVyOH2bv1PtMbbuFI06lRR9E7DrnkqhLjcRo9IDKlO5eBwGm1
-         Qd7ximLPII8aePutZuDhgLhjbK2UiFqoYwZ/miTjJSKxDYo4AUcsEE679zgsFz6xfE
-         4MV4L1LITHTN3t1q4yfZwIpmaQgY2SVPukrUvuiI=
-Date:   Thu, 19 Dec 2019 18:25:04 -0500
-From:   Sasha Levin <sashal@kernel.org>
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Andrii Nakryiko <andriin@fb.com>,
-        Song Liu <songliubraving@fb.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, oss-drivers@netronome.com
-Subject: Re: [oss-drivers] [PATCH AUTOSEL 5.4 326/350] bpf: Switch bpf_map
- ref counter to atomic64_t so bpf_map_inc() never fails
-Message-ID: <20191219232504.GV17708@sasha-vm>
-References: <20191210210735.9077-1-sashal@kernel.org>
- <20191210210735.9077-287-sashal@kernel.org>
- <20191210132834.157d5fc5@cakuba.netronome.com>
- <20191212162513.GB1264@localhost.localdomain>
+        Thu, 19 Dec 2019 18:26:19 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34382 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbfLSX0S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 18:26:18 -0500
+Received: by mail-ot1-f68.google.com with SMTP id a15so9322401otf.1;
+        Thu, 19 Dec 2019 15:26:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nV+BwOwkoFNGnADPXtyiIrKryTMNdw3bUGpG/MrLtkc=;
+        b=BWE9IT6Y397pB20Fj1itKDs8et6taJPS1boI1gPxenJfwXq1EqBHok2h3EgDIOJ30X
+         PixF1a3q2qsL8PKytsko/Y1ZmS9xbmfhij9a4xeKnqbJZ1M3d8gY/oDZI7QJx1IYUs52
+         J8XSuhXw4B3k3AyQhVkmZ5JKFt1/Kml3UJBhXFK7nmAk02R9gJYDFBx+ycwAFRBULHaH
+         +99wQJV8/k3UiKFYtefZ8X8VK6/7SxtCrU0S4g0RHxUjglEc5zVr4V14fGagQjAL5NUy
+         owXSrZkSmSITxo628NIhH9DdqyeBeCjs8tj2eOcpch3X49nypruOEPs8DbRIyZCHHMHq
+         slJg==
+X-Gm-Message-State: APjAAAXrvBtdMuNcpXRTEBcIXSBI86hQX0U5lFLT78lGnfNZpFxZD+85
+        iNXwJnqwhXUjl3TkCAC1kA==
+X-Google-Smtp-Source: APXvYqyMhydbGXWleaUiT/A93Xl/Z8gTg2Yqzd9flb8AyBp7uQbaXRQClmqLEnXRycV5GvBQ1gQAAQ==
+X-Received: by 2002:a05:6830:9:: with SMTP id c9mr11785841otp.94.1576797977761;
+        Thu, 19 Dec 2019 15:26:17 -0800 (PST)
+Received: from localhost (ip-184-205-174-147.ftwttx.spcsdns.net. [184.205.174.147])
+        by smtp.gmail.com with ESMTPSA id 4sm2752337otu.0.2019.12.19.15.26.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 15:26:17 -0800 (PST)
+Date:   Thu, 19 Dec 2019 17:26:15 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: watchdog: Convert QCOM watchdog timer
+ bindings to YAML
+Message-ID: <20191219232615.GA22811@bogus>
+References: <cover.1576211720.git.saiprakash.ranjan@codeaurora.org>
+ <0b095b65496073a2ddf9de120f7809619b42cd1c.1576211720.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191212162513.GB1264@localhost.localdomain>
+In-Reply-To: <0b095b65496073a2ddf9de120f7809619b42cd1c.1576211720.git.saiprakash.ranjan@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 05:25:13PM +0100, Daniel Borkmann wrote:
->On Tue, Dec 10, 2019 at 01:28:34PM -0800, Jakub Kicinski wrote:
->> On Tue, 10 Dec 2019 16:07:11 -0500, Sasha Levin wrote:
->> > From: Andrii Nakryiko <andriin@fb.com>
->> >
->> > [ Upstream commit 1e0bd5a091e5d9e0f1d5b0e6329b87bb1792f784 ]
->> >
->> > 92117d8443bc ("bpf: fix refcnt overflow") turned refcounting of bpf_map into
->> > potentially failing operation, when refcount reaches BPF_MAX_REFCNT limit
->> > (32k). Due to using 32-bit counter, it's possible in practice to overflow
->> > refcounter and make it wrap around to 0, causing erroneous map free, while
->> > there are still references to it, causing use-after-free problems.
->>
->> I don't think this is a bug fix, the second sentence here is written
->> in a quite confusing way, but there is no bug.
->>
->> Could you drop? I don't think it's worth the backporting pain since it
->> changes bpf_map_inc().
->
->Agree, this is not a bug fix and should not go to stable. (Also agree that
->the changelog is super confusing here and should have been done differently
->to avoid exactly where we are here. I think I pointed that out in the
->original patch, but seems this slipped through the cracks :/)
+On Fri, Dec 13, 2019 at 10:23:18AM +0530, Sai Prakash Ranjan wrote:
+> Convert QCOM watchdog timer bindings to DT schema format using
+> json-schema.
+> 
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+>  .../devicetree/bindings/watchdog/qcom-wdt.txt | 28 -----------
+>  .../bindings/watchdog/qcom-wdt.yaml           | 47 +++++++++++++++++++
+>  2 files changed, 47 insertions(+), 28 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
 
-Sure, dropped, thanks!
 
--- 
-Thanks,
-Sasha
+> diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+> new file mode 100644
+> index 000000000000..4a42f4261322
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+> @@ -0,0 +1,47 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/watchdog/qcom-wdt.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm Krait Processor Sub-system (KPSS) Watchdog timer
+> +
+> +maintainers:
+> +  - Andy Gross <agross@kernel.org>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: qcom,kpss-timer
+> +      - const: qcom,kpss-wdt
+> +      - const: qcom,kpss-wdt-apq8064
+> +      - const: qcom,kpss-wdt-ipq4019
+> +      - const: qcom,kpss-wdt-ipq8064
+> +      - const: qcom,kpss-wdt-msm8960
+> +      - const: qcom,scss-timer
+
+An 'enum' is better than oneOf+const.
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  timeout-sec:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Contains the watchdog timeout in seconds. If unset, the
+> +      default timeout is 30 seconds.
+
+Include watchdog.yaml and don't redefine this.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +
+> +examples:
+> +  - |
+> +    watchdog@208a038 {
+> +      compatible = "qcom,kpss-wdt-ipq8064";
+> +      reg = <0x0208a038 0x40>;
+> +      clocks = <&sleep_clk>;
+> +      timeout-sec = <10>;
+> +    };
+> ---
+> 
+> I have added Andy as the maintainer here since the get_maintainer script
+> showed him. If he is not happy, then I can change it to Bjorn probably and
+> again if he is not happy ;-) then I will add myself or whoever they suggest.
+
+Add yourself.
+
+Rob
