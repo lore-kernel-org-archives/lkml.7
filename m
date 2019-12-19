@@ -2,180 +2,172 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F969C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E856CC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F2DB24650
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B754520716
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:15:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VYe/tjzP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfLSKM1 (ORCPT
+        id S1726741AbfLSKPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 05:12:27 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39056 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbfLSKM0 (ORCPT
+        Thu, 19 Dec 2019 05:15:40 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:42687 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726609AbfLSKPk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 05:12:26 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 77so6591239oty.6;
-        Thu, 19 Dec 2019 02:12:25 -0800 (PST)
+        Thu, 19 Dec 2019 05:15:40 -0500
+Received: by mail-lf1-f67.google.com with SMTP id y19so3923150lfl.9;
+        Thu, 19 Dec 2019 02:15:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=Rj2q3wD6aajz3PdA1FLrek6nU5zhW+vEBFUB4MYLIYs=;
+        b=VYe/tjzPHNpyq9kN24qr+0wfOwumba6bmciRVLa+9L5NEuwXAUQgygIBNEwsMvxx2A
+         5Sg/FAQKikTm1I6zgD3Pfq46QC69Fc4LaxF9XYMgsjj5m5DWD41kn7ShaJs9Hp/a0BfW
+         8+MYUQ9/VfDCVH6sY0bhMFCQPTPvGw8IrrwXoyYxUesoqKWMpmZh/ltZjqVVR2arkFwe
+         0yisTx5w/UZcNm/Zj4SWqhfR/xQVoWtjbLyBBi/iTAkAB5rxnbCp+QwSphWccc79DSi4
+         AMgYBzY/A3xL/PWG24tLgjNzZn2hBJPqCs3WfUMJ1XApJqo090kvepcXm2XyV0t9mqWB
+         r5MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7gVsavI/JT3S/B4hCPb68cU8nhyV5pL21wFcvH1mp4E=;
-        b=oHhTEgeNOr4aEuORnmTe/e4mLY8BQRzVBBQIGfPl1jlyPRubu0SXQudSynf+l18T9u
-         TVaObZZJflZee3w8mu7OVwGf8nkR6TfZFdcxXl3AnDmvMgNn4pp0DEu+R0YOjbcxFnsL
-         iuYe3FquV9NECADz0L4EwsblOVKSI1ip9Hzf6d308VEmhrgtHL1d94oVZG56nBOoR5UV
-         OyBbXT5Jd+6jy+oTKaJKDb6IElbMUN4eLSedUNdMUwWeHCvvOqmRFdTcyuVVijAYSqxE
-         WcWWcC/Q9kJEjwLlQAhjYZyDJad84W0FgHautPJWhdv+75ONimxm1JlfVxuEYFjDhLtL
-         /EIA==
-X-Gm-Message-State: APjAAAXz8PFjZGGRqwvzcTkB1CtYqqjss/1ExlgMRcWKOW2h6VltoSKX
-        ohomfYS2565f/MvTKg8sAS/TUV9scIaSrHSF2vc=
-X-Google-Smtp-Source: APXvYqzL4QPPo84YZ/GFL90PvSpMdwHUiM5jspEumQc5V+iVkrg1mIXqszRvm+fHeYjzejWdR21UlKMtjcO5l+BSoMM=
-X-Received: by 2002:a9d:7984:: with SMTP id h4mr8153285otm.297.1576750345417;
- Thu, 19 Dec 2019 02:12:25 -0800 (PST)
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=Rj2q3wD6aajz3PdA1FLrek6nU5zhW+vEBFUB4MYLIYs=;
+        b=POuZyLbRHk4Hu5hZesNlsNL9sys7iZCrhOdvF7cuSBlSNqwHJlyi9Q6aeS39Vyd4hw
+         k1+2DW2J8OmHLpQfx8nymj5pD/MWs9Xx3eYwgA0Svrudiwnu5bUmCsE2Sp9h8sw8lEKf
+         yCRrLvOlAPBqj45bK+djTD1N9pzL85VNhH9XEXeWbHhOGSO5FTg2iF09B7HOl1wveo1P
+         69oUsR8Rref3dQRC0C3Z+RR7J9ewrnw8/z9vpL8Cx9/KDxDO6lndVwpmHkPAmEwFMmr6
+         GiwUROFfN/WC4iRHpcOolsoHjqSLAZ/3WT/SXJBXTw9sG5b1lU5A5ik7xd1eJKqamaJz
+         +RFA==
+X-Gm-Message-State: APjAAAXZuztYZgI188mo1xSv0YvPaNqBcs9d854QOkkVJbzkKBF6+Ulv
+        da5MukE3q3d0pSpgM4IZdeNMBoQDqsyDgw==
+X-Google-Smtp-Source: APXvYqya/tgd7VQnmbu9lTExcsRK48yqlOicy53+7Ka2wVmIDOYpJUSfB1plClM8Ws9/ZUmRYzQX1A==
+X-Received: by 2002:ac2:4834:: with SMTP id 20mr4443150lft.166.1576750537756;
+        Thu, 19 Dec 2019 02:15:37 -0800 (PST)
+Received: from [192.168.43.60] ([176.227.99.155])
+        by smtp.gmail.com with ESMTPSA id g24sm2384473lfb.85.2019.12.19.02.15.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Dec 2019 02:15:36 -0800 (PST)
+Subject: Re: [PATCH] Revert "iwlwifi: mvm: fix scan config command size"
+From:   Mehmet Akif Tasova <makiftasova@gmail.com>
+To:     Roman Gilg <subdiff@gmail.com>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
+        Tova Mussai <tova.mussai@intel.com>,
+        Ayala Beker <ayala.beker@intel.com>,
+        Sara Sharon <sara.sharon@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191213203512.8250-1-makiftasova@gmail.com>
+ <CAJcyoyusgtw0++KsEHK-t=EFGx2v9GKv7+BSViUCaB3nyDr2Jw@mail.gmail.com>
+ <CAP=YcKGLDx_coFsY7ej6BkdBJT+FELGSOMM6YM_r7jgqEsvChw@mail.gmail.com>
+Message-ID: <8b895e5a-745b-a9f1-2bc8-8a1fac61129f@gmail.com>
+Date:   Thu, 19 Dec 2019 13:15:32 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <git-mailbomb-linux-master-8ffb055beae58574d3e77b4bf9d4d15eace1ca27@kernel.org>
-In-Reply-To: <git-mailbomb-linux-master-8ffb055beae58574d3e77b4bf9d4d15eace1ca27@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 19 Dec 2019 11:12:14 +0100
-Message-ID: <CAMuHMdVgF0PVmqXbaWqkrcML0O-hhWB3akj8UAn8Q_hN2evm+A@mail.gmail.com>
-Subject: refcount_warn_saturate WARNING (was: Re: cls_flower: Fix the behavior
- using port ranges with hw-offload)
-To:     Yoshiki Komachi <komachi.yoshiki@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Amritha Nambiar <amritha.nambiar@intel.com>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAP=YcKGLDx_coFsY7ej6BkdBJT+FELGSOMM6YM_r7jgqEsvChw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Komachi-san,
+Hello,
 
-On Sun, Dec 8, 2019 at 10:40 PM Linux Kernel Mailing List
-<linux-kernel@vger.kernel.org> wrote:
-> Commit:     8ffb055beae58574d3e77b4bf9d4d15eace1ca27
-> Parent:     2f23cd42e19c22c24ff0e221089b7b6123b117c5
-> Refname:    refs/heads/master
-> Web:        https://git.kernel.org/torvalds/c/8ffb055beae58574d3e77b4bf9d4d15eace1ca27
-> Author:     Yoshiki Komachi <komachi.yoshiki@gmail.com>
-> AuthorDate: Tue Dec 3 19:40:12 2019 +0900
-> Committer:  David S. Miller <davem@davemloft.net>
-> CommitDate: Tue Dec 3 11:55:46 2019 -0800
->
->     cls_flower: Fix the behavior using port ranges with hw-offload
->
->     The recent commit 5c72299fba9d ("net: sched: cls_flower: Classify
->     packets using port ranges") had added filtering based on port ranges
->     to tc flower. However the commit missed necessary changes in hw-offload
->     code, so the feature gave rise to generating incorrect offloaded flow
->     keys in NIC.
->
->     One more detailed example is below:
->
->     $ tc qdisc add dev eth0 ingress
->     $ tc filter add dev eth0 ingress protocol ip flower ip_proto tcp \
->       dst_port 100-200 action drop
->
->     With the setup above, an exact match filter with dst_port == 0 will be
->     installed in NIC by hw-offload. IOW, the NIC will have a rule which is
->     equivalent to the following one.
->
->     $ tc qdisc add dev eth0 ingress
->     $ tc filter add dev eth0 ingress protocol ip flower ip_proto tcp \
->       dst_port 0 action drop
->
->     The behavior was caused by the flow dissector which extracts packet
->     data into the flow key in the tc flower. More specifically, regardless
->     of exact match or specified port ranges, fl_init_dissector() set the
->     FLOW_DISSECTOR_KEY_PORTS flag in struct flow_dissector to extract port
->     numbers from skb in skb_flow_dissect() called by fl_classify(). Note
->     that device drivers received the same struct flow_dissector object as
->     used in skb_flow_dissect(). Thus, offloaded drivers could not identify
->     which of these is used because the FLOW_DISSECTOR_KEY_PORTS flag was
->     set to struct flow_dissector in either case.
->
->     This patch adds the new FLOW_DISSECTOR_KEY_PORTS_RANGE flag and the new
->     tp_range field in struct fl_flow_key to recognize which filters are applied
->     to offloaded drivers. At this point, when filters based on port ranges
->     passed to drivers, drivers return the EOPNOTSUPP error because they do
->     not support the feature (the newly created FLOW_DISSECTOR_KEY_PORTS_RANGE
->     flag).
->
->     Fixes: 5c72299fba9d ("net: sched: cls_flower: Classify packets using port ranges")
->     Signed-off-by: Yoshiki Komachi <komachi.yoshiki@gmail.com>
->     Signed-off-by: David S. Miller <davem@davemloft.net>
+Because I used gmail mobile app to response and the app decided that 
+always using HTML is a valid choice for every one, my previous mail 
+rejected by mailing lists.
 
-I still see the below warning on m68k/ARAnyM during boot with v5.5-rc2
-and next-20191219.
-Reverting commit 8ffb055beae58574 ("cls_flower: Fix the behavior using
-port ranges with hw-offload") fixes that.
+Because of that I am (re)sending this mail. You can find contents of my 
+previous mail below.
 
-As this is networking, perhaps this is seen on big-endian only?
-Or !CONFIG_SMP?
+Regards,
+Mehmet Akif.
 
-Do you have a clue?
-I'm especially worried as this commit is already being backported to stable.
-Thanks!
-
-EXT4-fs (sda1): re-mounted. Opts:
-EXT4-fs (sda1): re-mounted. Opts: errors=remount-ro
-ext3 filesystem being remounted at / supports timestamps until 2038 (0x7fffffff)
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 7 at lib/refcount.c:28 refcount_warn_saturate+0x54/0x100
-refcount_t: underflow; use-after-free.
-Modules linked in:
-CPU: 0 PID: 7 Comm: ksoftirqd/0 Not tainted 5.5.0-rc2-next-20191219-atari #246
-Stack from 00c31e88:
-        00c31e88 00387ebc 00023d96 0039b5b0 0000001c 00000009 00a6d680 00023dda
-        0039b5b0 0000001c 001a9658 00000009 00000000 00c31ed0 00000001 00000000
-        04208040 0000000a 0039b5eb 00c31ef0 00c30000 001a9658 0039b5b0 0000001c
-        00000009 0039b5eb 0027071c 00326d1c 00000003 00326cd8 00271840 00000001
-        00326d1c 00000000 00a6d680 0024339c 00a6d680 00000000 00000200 000ab5e6
-        00048632 00a6d680 0000000a 00400d78 003fbc00 002f88a6 00400d78 002f8b5e
-Call Trace: [<00023d96>] __warn+0xb2/0xb4
- [<00023dda>] warn_slowpath_fmt+0x42/0x64
- [<001a9658>] refcount_warn_saturate+0x54/0x100
- [<001a9658>] refcount_warn_saturate+0x54/0x100
- [<0027071c>] refcount_sub_and_test.constprop.77+0x38/0x3e
- [<00271840>] ipv4_dst_destroy+0x24/0x42
- [<0024339c>] dst_destroy+0x40/0xae
- [<000ab5e6>] kfree+0x0/0x3e
- [<00048632>] rcu_process_callbacks+0x9a/0x9c
- [<002f88a6>] __do_softirq+0x146/0x182
- [<002f8b5e>] schedule+0x0/0xb4
- [<00035f3e>] kthread_parkme+0x0/0x10
- [<00035a86>] __init_completion+0x0/0x20
- [<0003836c>] smpboot_thread_fn+0x0/0x100
- [<000360a2>] kthread_should_stop+0x0/0x12
- [<00036096>] kthread_should_park+0x0/0xc
- [<00025c28>] run_ksoftirqd+0x12/0x20
- [<00038466>] smpboot_thread_fn+0xfa/0x100
- [<00024914>] do_exit+0x0/0x6d4
- [<0003f620>] complete+0x0/0x34
- [<0003665c>] kthread+0xb2/0xbc
- [<00035a86>] __init_completion+0x0/0x20
- [<000365aa>] kthread+0x0/0xbc
- [<00002ab8>] ret_from_kernel_thread+0xc/0x14
----[ end trace cddc6a39eb5bb237 ]---
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> Hi Roman,
+>
+> Unfortunately I don't have XPS 13 and tested the patch on Dell Vostro 
+> 5481 and this patch is the result of bisection on Vostro.
+>
+> At first, the Archlinux bug report I shared looked similar thus that 
+> bug report contains lots of dmesg outputs from different users. But 
+> yes probably there is 2 distinct issue which should be solved separately.
+>
+> I will update commit message accordingly as soon as possible.
+>
+> Regards,
+> Mehmet Akif
+>
+>
+> On Wed, Dec 18, 2019, 22:12 Roman Gilg <subdiff@gmail.com 
+> <mailto:subdiff@gmail.com>> wrote:
+>
+>     On Fri, Dec 13, 2019 at 9:36 PM Mehmet Akif Tasova
+>     <makiftasova@gmail.com <mailto:makiftasova@gmail.com>> wrote:
+>     >
+>     > Since Linux 5.4.1 released, iwlwifi could not initialize
+>     Intel(R) Dual Band
+>     > Wireless AC 9462 firmware, failing with following error in dmesg:
+>     >
+>     > iwlwifi 0000:00:14.3: FW error in SYNC CMD SCAN_CFG_CMD
+>     >
+>     > whole dmesg output of error can be found at:
+>     > https://gist.github.com/makiftasova/354e46439338f4ab3fba0b77ad5c19ec
+>     >
+>     > also bug report from ArchLinux bug tracker (contains more info):
+>     > https://bugs.archlinux.org/task/64703
+>
+>     Since this bug report is about the Dell XPS 13 2-in1: I tested your
+>     revert with this device, but the issue persists at least on this
+>     device. So these might be two different issues, one for your device
+>     and another one for the XPS.
+>
+>     > Reverting commit 06eb547c4ae4 ("iwlwifi: mvm: fix scan config
+>     command
+>     > size") seems to fix this issue  until proper solution is found.
+>     >
+>     > This reverts commit 06eb547c4ae4382e70d556ba213d13c95ca1801b.
+>     >
+>     > Signed-off-by: Mehmet Akif Tasova <makiftasova@gmail.com
+>     <mailto:makiftasova@gmail.com>>
+>     > ---
+>     >  drivers/net/wireless/intel/iwlwifi/mvm/scan.c | 2 +-
+>     >  1 file changed, 1 insertion(+), 1 deletion(-)
+>     >
+>     > diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/scan.c
+>     b/drivers/net/wireless/intel/iwlwifi/mvm/scan.c
+>     > index a046ac9fa852..a5af8f4128b1 100644
+>     > --- a/drivers/net/wireless/intel/iwlwifi/mvm/scan.c
+>     > +++ b/drivers/net/wireless/intel/iwlwifi/mvm/scan.c
+>     > @@ -1213,7 +1213,7 @@ static int
+>     iwl_mvm_legacy_config_scan(struct iwl_mvm *mvm)
+>     >                 cmd_size = sizeof(struct iwl_scan_config_v2);
+>     >         else
+>     >                 cmd_size = sizeof(struct iwl_scan_config_v1);
+>     > -       cmd_size += num_channels;
+>     > +       cmd_size += mvm->fw->ucode_capa.n_scan_channels;
+>     >
+>     >         cfg = kzalloc(cmd_size, GFP_KERNEL);
+>     >         if (!cfg)
+>     > --
+>     > 2.24.1
+>     >
+>
