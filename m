@@ -2,97 +2,140 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B17C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6E7C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2F9A24672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:48:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576792099;
-	bh=Cv0MNt2IOuvBMaCX/dlyHghixnQ16OFdFhuDkVNXBvk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EOKsS9wXnAfUCtpjtbFoRalrwf5XnbHa9TPCyatM35Gg3geEdz+qyweTyatmhEz/5
-	 urdhVoywzh5UHuV2JG3CPLnptdt4TW1szHhUsivaDH7ZAqtH5dAmEcWWm6G/ugzqCY
-	 Aij42mzydEGvfnM1vd57+G2AL8ctpXmi6tU/5hUQ=
+	by mail.kernel.org (Postfix) with ESMTP id 2FBB8222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:52:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JGlM6dc1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbfLSVsR (ORCPT
+        id S1727231AbfLSVwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 16:48:17 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38382 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbfLSVsR (ORCPT
+        Thu, 19 Dec 2019 16:52:54 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40444 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbfLSVwx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 16:48:17 -0500
-Received: by mail-ot1-f67.google.com with SMTP id d7so4620492otf.5;
-        Thu, 19 Dec 2019 13:48:16 -0800 (PST)
+        Thu, 19 Dec 2019 16:52:53 -0500
+Received: by mail-pf1-f195.google.com with SMTP id q8so4035515pfh.7;
+        Thu, 19 Dec 2019 13:52:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s+Tt5VMdTutx8xcQfJ7Y2xqvWLv/N+ZnUyZuugHTRwo=;
+        b=JGlM6dc1L6WxY8/K3AC42tPsHQ1C/LFhRRUEUvtuGVHH+7mxz20r+D9gxjraIPwVCh
+         BpQtkKaxnm4f++OiHzjU3zUVaTd8nJxEP9PWQ1U/oI+sWlnhKPgdluW9qnotye3wITyW
+         HHOoHc1ms817No+t91gwVQ88DXbw9uidFXnSEfT9m2rsaRLNQKOWKxS2pycqCvbqvlcP
+         BfiEgJ2vlsIj7wNFZsIWlX7tEuAjN8MELaoAxl7RMNZ0OOYsAZEU85WqdhhBopeo7rfZ
+         f306+qgg9cdPOTeggqHaKKGYfcn6sspk30s3iG2wW82xw3VdQik80GFphvCnCqXKFuCv
+         4B4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=z8WpkfaBd9LcNOS1ekWzc3jrpBFEgAwL/QCFq5Jyeew=;
-        b=AvxU+4kJ3aXwhwlLJ0DtiRGeL0xFfCOo62CZzDc3v+uZ13VhgY74sGeEIkjDquwmlS
-         SJVHtJ8u5Vgl6nnXuTveknv8aWkxSWwcRVFxvER4oSMF9ZmA6N1OnID3FAhMJJkMBGs5
-         5DHmRR9P5nIAeZFguR+Ux+yorEwbQNSRx9WHU0n6ukmdCt7hWeqXQ3M2V6k4jAHvnoxt
-         l8PNZJoYEMyZRgjc89bHKatVvgm86t5OsCWJ2Msg0DTy98fQuWxp/02xzPNJBUAkZXaU
-         NrHrWs2+4GhPN7f6z0OsR7B6OadTvWIqvhx3PjIj1YqR6LYz06a1P0ORbS3iCWmeKYBw
-         UOeQ==
-X-Gm-Message-State: APjAAAV/S6uiMA2Hd8qHiREbSRXlqjmBvrXYOyVV//S+JqnTbaFimlcc
-        eWC7KYn6EM3ZrU/8rV4KzQ==
-X-Google-Smtp-Source: APXvYqyRMrFF8GIOCRwcLqbmo96aJh0GGtJtfkuQW1KREFiW1KO2DI9WZdU4KIzqYrCOJ1NQrGxQ6A==
-X-Received: by 2002:a05:6830:22e3:: with SMTP id t3mr10536060otc.193.1576792096066;
-        Thu, 19 Dec 2019 13:48:16 -0800 (PST)
-Received: from localhost ([2607:fb90:1cd2:8a0d:3549:d84c:9720:edb4])
-        by smtp.gmail.com with ESMTPSA id n17sm2572850otq.46.2019.12.19.13.48.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 13:48:15 -0800 (PST)
-Date:   Thu, 19 Dec 2019 15:48:06 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: media: renesas,ceu: Convert to yaml
-Message-ID: <20191219214806.GA32623@bogus>
-References: <20191211171300.87023-1-jacopo+renesas@jmondi.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s+Tt5VMdTutx8xcQfJ7Y2xqvWLv/N+ZnUyZuugHTRwo=;
+        b=ILqcMQJhTHMM5Pk3+WSCQIt+DAhoaj1yaZ/jr5NoTj/sh2QEr17kg1n2Tpmkvllusd
+         seowcXwEzBRtZOMGXHG4ruZ1/srxB5PgSBS/cXwCqdGGbya85ZKcDeaPZFSJG9SAhYcu
+         rTkhA8LwEx9MWnJn3OU+jwaJgTU2BI8OuSaLXP7E/AWVteGwSn7OHJeNJZY54ddN8v88
+         fN6N686IT40/ZCzAWjSxPYEUV9V8e9jj1Ov6AhawdDkLBCwSqoWFqV6wxaK20Dc3TBaM
+         oE1LoIUAsfeWvOOfALMZEGXAk5c1rB6oAfZyJEbM0bru4uWGF64vUKmZ4LN2FtnJdMhq
+         oK5Q==
+X-Gm-Message-State: APjAAAWiI+Xm0ZGt+Ur52hCJDFvxv675Gk3rYHzwqU0tbKJ0zpX+auSl
+        1F/0dI+uvlHDrNa0fv3CV+WX2NaYyGGyw/PKBUY=
+X-Google-Smtp-Source: APXvYqw4xgFsNDlDDI0rRlLaQbPBJJUNi398HQ5nmpO4SdibadeC5PvTVSOvH5Ohe8AJz6fUfTQNFcSkXaWOSCh88U4=
+X-Received: by 2002:aa7:98ca:: with SMTP id e10mr2249774pfm.24.1576792373160;
+ Thu, 19 Dec 2019 13:52:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211171300.87023-1-jacopo+renesas@jmondi.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <git-mailbomb-linux-master-8ffb055beae58574d3e77b4bf9d4d15eace1ca27@kernel.org>
+ <CAMuHMdVgF0PVmqXbaWqkrcML0O-hhWB3akj8UAn8Q_hN2evm+A@mail.gmail.com>
+ <CAM_iQpWOhXR=x10i0S88qXTfG2nv9EypONTp6_vpBzs=iOySRQ@mail.gmail.com> <CAMuHMdXL8kycJm5EG6Ubx4aYGVGJH9JuJzP-vSM55wZ6RtyT+w@mail.gmail.com>
+In-Reply-To: <CAMuHMdXL8kycJm5EG6Ubx4aYGVGJH9JuJzP-vSM55wZ6RtyT+w@mail.gmail.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Thu, 19 Dec 2019 13:52:41 -0800
+Message-ID: <CAM_iQpXJiiiFdEZ1XYf0v0CNEwT=fSmpxWPVJ_L2_tPSd8u+-w@mail.gmail.com>
+Subject: Re: refcount_warn_saturate WARNING (was: Re: cls_flower: Fix the
+ behavior using port ranges with hw-offload)
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Yoshiki Komachi <komachi.yoshiki@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="000000000000498f96059a15956e"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Dec 2019 18:13:00 +0100, Jacopo Mondi wrote:
-> Convert the Renesas CEU bindings description to yaml schema and remove
-> the existing textual bindings document.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> 
-> ---
-> v1 -> v2:
-> - Dual license as suggested by Rob
-> - Fix compatible string for r7s72100-ceu
-> - Add 'default' to bus-width endpoint property
-> 
-> Thanks
->    j
-> ---
->  .../devicetree/bindings/media/renesas,ceu.txt | 86 -------------------
->  .../bindings/media/renesas,ceu.yaml           | 78 +++++++++++++++++
->  MAINTAINERS                                   |  2 +-
->  3 files changed, 79 insertions(+), 87 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
->  create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.yaml
-> 
+--000000000000498f96059a15956e
+Content-Type: text/plain; charset="UTF-8"
 
-Applied, thanks.
+On Thu, Dec 19, 2019 at 1:01 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Cong,
+>
+> On Thu, Dec 19, 2019 at 9:50 PM Cong Wang <xiyou.wangcong@gmail.com> wrote:
+> > On Thu, Dec 19, 2019 at 2:12 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > I still see the below warning on m68k/ARAnyM during boot with v5.5-rc2
+> > > and next-20191219.
+> > > Reverting commit 8ffb055beae58574 ("cls_flower: Fix the behavior using
+> > > port ranges with hw-offload") fixes that.
+> > >
+> > > As this is networking, perhaps this is seen on big-endian only?
+> > > Or !CONFIG_SMP?
+> > >
+> > > Do you have a clue?
+> > > I'm especially worried as this commit is already being backported to stable.
+> > > Thanks!
+> >
+> > I did a quick look at the offending commit, I can't even connect it to
+> > any dst refcnt.
+> >
+> > Do you have any more information? Like what happened before the
+> > warning? Does your system use cls_flower filters at all? If so, please
+> > share your tc configurations.
+>
+> No, I don't use clf_flower filters.  This is just a normal old Debian boot,
+> where the root file system is being remounted, followed by the warning.
+>
+> To me, it also looks very strange.  But it's 100% reproducible for me.
+> Git bisect pointed to this commit, and reverting it fixes the issue.
 
-Rob
+Hmm, does the attached patch have any luck to fix it?
+
+Thanks.
+
+--000000000000498f96059a15956e
+Content-Type: application/octet-stream; name="flow_dissector.diff"
+Content-Disposition: attachment; filename="flow_dissector.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k4d9gbf50>
+X-Attachment-Id: f_k4d9gbf50
+
+ZGlmZiAtLWdpdCBhL25ldC9jb3JlL2Zsb3dfZGlzc2VjdG9yLmMgYi9uZXQvY29yZS9mbG93X2Rp
+c3NlY3Rvci5jCmluZGV4IGQ1MjRhNjkzZTAwZi4uMDg4NGY5ODdhY2QzIDEwMDY0NAotLS0gYS9u
+ZXQvY29yZS9mbG93X2Rpc3NlY3Rvci5jCisrKyBiL25ldC9jb3JlL2Zsb3dfZGlzc2VjdG9yLmMK
+QEAgLTE3NjYsNiArMTc2NiwxMCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGZsb3dfZGlzc2VjdG9y
+X2tleSBmbG93X2tleXNfZGlzc2VjdG9yX2tleXNbXSA9IHsKIAkJLmtleV9pZCA9IEZMT1dfRElT
+U0VDVE9SX0tFWV9QT1JUUywKIAkJLm9mZnNldCA9IG9mZnNldG9mKHN0cnVjdCBmbG93X2tleXMs
+IHBvcnRzKSwKIAl9LAorCXsKKwkJLmtleV9pZCA9IEZMT1dfRElTU0VDVE9SX0tFWV9QT1JUU19S
+QU5HRSwKKwkJLm9mZnNldCA9IG9mZnNldG9mKHN0cnVjdCBmbG93X2tleXMsIHBvcnRzKSwKKwl9
+LAogCXsKIAkJLmtleV9pZCA9IEZMT1dfRElTU0VDVE9SX0tFWV9WTEFOLAogCQkub2Zmc2V0ID0g
+b2Zmc2V0b2Yoc3RydWN0IGZsb3dfa2V5cywgdmxhbiksCkBAIC0xODAxLDYgKzE4MDUsMTAgQEAg
+c3RhdGljIGNvbnN0IHN0cnVjdCBmbG93X2Rpc3NlY3Rvcl9rZXkgZmxvd19rZXlzX2Rpc3NlY3Rv
+cl9zeW1tZXRyaWNfa2V5c1tdID0gewogCQkua2V5X2lkID0gRkxPV19ESVNTRUNUT1JfS0VZX1BP
+UlRTLAogCQkub2Zmc2V0ID0gb2Zmc2V0b2Yoc3RydWN0IGZsb3dfa2V5cywgcG9ydHMpLAogCX0s
+CisJeworCQkua2V5X2lkID0gRkxPV19ESVNTRUNUT1JfS0VZX1BPUlRTX1JBTkdFLAorCQkub2Zm
+c2V0ID0gb2Zmc2V0b2Yoc3RydWN0IGZsb3dfa2V5cywgcG9ydHMpLAorCX0sCiB9OwogCiBzdGF0
+aWMgY29uc3Qgc3RydWN0IGZsb3dfZGlzc2VjdG9yX2tleSBmbG93X2tleXNfYmFzaWNfZGlzc2Vj
+dG9yX2tleXNbXSA9IHsK
+--000000000000498f96059a15956e--
