@@ -2,109 +2,138 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A90DAC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE712C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 787F324672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:02:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rxe+ElQQ"
+	by mail.kernel.org (Postfix) with ESMTP id A3FB82146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:02:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576774936;
+	bh=Gf6fKzJZuUvXAHQkWvxm55YxdWNDzJNdosA6mUGKHjA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=K5aCpmFKihXjv794WQ8SpHH33B+1gclh9ZwvblLualm3rP4RMT7PXNMCzMknH3a3+
+	 PWX6dnW6lK0ADzYvUcrux/F960esntco9X3y5pIyK/l8Fp4QALLJfLPD1ncUjPDbEX
+	 jd0JbTDceP7WA18UjbOrfvc12Tm2m9DBzYveIoq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbfLSRCF (ORCPT
+        id S1727040AbfLSRCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 12:02:05 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39463 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbfLSRCE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 12:02:04 -0500
-Received: by mail-pg1-f193.google.com with SMTP id b137so3432298pga.6;
-        Thu, 19 Dec 2019 09:02:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=QmZHBv3VTqpxW/+akPp/0Up5TSxjNx51R37o6VFJo/8=;
-        b=Rxe+ElQQdLHhw9LCWF1MT+SEbUVbP6UBVHaNYlY8Y655lU5jeO2JXQ4vuSKHpar2Bx
-         evQIWX3uKVu1nLpE4Jpk4DbtISWARtGqBhJBxoQdPqsuP2KxYFNEhRiR0qcKOs4mXRjM
-         YESOA+egwGyNcxg9KwICjh6RlwcuqTtPs32YF4w529lg8+J1FsqORTNH0Crom2oKc2nO
-         2yWTE8Q54pbpzcrogjN7XTiM7UecKzIWaZttpMXY2M0c32z6CYiYTol+CkQNjEIx9wc1
-         +aEOGC8noMRzk9kkCrgW6dSsIJ4GCYMGwVvQc01ronCGari5RXeHqUw7o9VTlRs1PWtA
-         sv5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=QmZHBv3VTqpxW/+akPp/0Up5TSxjNx51R37o6VFJo/8=;
-        b=BxVoafVSWrxDH7drp6eYwN8zaMRgibT/17YhuvDMQhOJgyafTYQdGHHnGEZzpV12av
-         asbU+orKXLIQGD4tZARBSZyG9QZ5tzURRdIcUtMblbHSwKnpqT2m/w2/MtnurVQUMEZx
-         6ocVkSXC/S6rYll152lI54grt6cHSD13HkS/Vz8e+nabxz3CidYksBjFWe9cO4iJfId4
-         OyYAkS/19wtSJTX4VvvxTZ4iHAK3l+sVo5CmDZ/IDfoxOY4vd0/EHXOdKiquxg529R1h
-         5Qs+RmzE+72+PNGD5U7J+zWdYHtiMglq+u3Sq3uJyOHmsSfbbmkxguMp8zpa0BXOhFO6
-         BuYg==
-X-Gm-Message-State: APjAAAVQUajvqh0xmQSrku59UJnwpBh2jAufO6Gr8XgV8JNrVUX5J1Nc
-        WHwbfm+R0OglDEQTPAdNORqtFeXy5VM=
-X-Google-Smtp-Source: APXvYqyebZwOJg1dT7jXsy0er9lcMqa/aeNpp2VMPO3d+LC5lWQ7Ugfd7hJLcic/CSI7Ym+uGIn6Vg==
-X-Received: by 2002:a63:e042:: with SMTP id n2mr10338201pgj.308.1576774923465;
-        Thu, 19 Dec 2019 09:02:03 -0800 (PST)
-Received: from ?IPv6:2804:14d:72b1:8920:a2ce:f815:f14d:bfac? ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
-        by smtp.gmail.com with ESMTPSA id v4sm9038094pgo.63.2019.12.19.09.02.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Dec 2019 09:02:03 -0800 (PST)
-Subject: Re: [PATCH v2] Documentation: filesystems: convert fuse to RST
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     miklos@szeredi.hu, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-fsdevel@vger.kernel.org
-References: <20191120192655.33709-1-dwlsalmeida@gmail.com>
- <20191219095356.4a3ad965@lwn.net>
-From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-Message-ID: <2eba770a-f566-d704-35b3-7c00995bbc76@gmail.com>
-Date:   Thu, 19 Dec 2019 14:01:58 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 19 Dec 2019 12:02:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56858 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726760AbfLSRCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 12:02:15 -0500
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E449124672;
+        Thu, 19 Dec 2019 17:02:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576774934;
+        bh=Gf6fKzJZuUvXAHQkWvxm55YxdWNDzJNdosA6mUGKHjA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TQSEStuFgF7/JuT7Nq1X2HLaXZOiPmH15GI9c3S5NciCRZgcu5ua6eFxscAd1vxoY
+         EdgjxJzrKnIySNbcSpK0IFtvqkoc7XnQGZvin7Di/w1GBEQqrIhjtK4sBdUQnnIBtm
+         fR99zovTezoaed3BLXJsuvAzjSHYyOeL+svDUu2E=
+Received: by mail-qk1-f173.google.com with SMTP id x1so5181803qkl.12;
+        Thu, 19 Dec 2019 09:02:13 -0800 (PST)
+X-Gm-Message-State: APjAAAWvCHVTdrPKnNkbBKyObKgdmcF0A4i0Q8yTLIOF8hNHDYaXeV0y
+        S2l43uR9OZz4Y8jFSTl1h1BBgM6bglje+lHE0A==
+X-Google-Smtp-Source: APXvYqxfo/7e9wzlMy580Vd/102R/rWBP0PwZ//fNoQ8yxxiQhL+I/hOaEas3Y+kT2x51tzh7mSZJnDkNL/eoDWO7/0=
+X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr8421615qkl.119.1576774933015;
+ Thu, 19 Dec 2019 09:02:13 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191219095356.4a3ad965@lwn.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20191218114625.28438-1-frank-w@public-files.de>
+ <CAK7LNARWYE4-4Qp-YfTrrt1YCZ68b28FDoE45cDJkZTqUyXNUw@mail.gmail.com>
+ <CAL_Jsq+we-0c25Hn+eGDTsyTDwKEvs9LWV9QtLX1+8V3DmtFtg@mail.gmail.com> <trinity-76f78a91-fc1f-479c-bd38-a7b989b28234-1576757117258@3c-app-gmx-bap68>
+In-Reply-To: <trinity-76f78a91-fc1f-479c-bd38-a7b989b28234-1576757117258@3c-app-gmx-bap68>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 19 Dec 2019 11:02:01 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL9gZbVC5X3gwYWpYc9-Geb4FvUP0cED8NC_MCEGQCy3g@mail.gmail.com>
+Message-ID: <CAL_JsqL9gZbVC5X3gwYWpYc9-Geb4FvUP0cED8NC_MCEGQCy3g@mail.gmail.com>
+Subject: Re: Re: [PATCH] kbuild: Add DTC_CPP_FLAGS
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Jonathan! I hope you're doing fine.
-
-
-> So I have to confess that I've lost track of where we stand with this.
-> Holidays and moving house will do that...apologies.  In any case, I have a
-> couple of additional comments.
-
-
-Actually Miklos replied. While he did not comment on the amount of 
-markup used, he had this to add:
-
-> Hmm, most of this document is*not*  an admin-guide at all.  The only
-> sections that really belong in that category are "What is FUSE?" and
-> "Control filesystem" and maybe some of the definitions as well.   The
-> mount options for fuse filesystem are not generally usable for
-> actually performing a mount, most of those are actually internal
-> details of the filesystem implementation.
+On Thu, Dec 19, 2019 at 6:05 AM Frank Wunderlich
+<frank-w@public-files.de> wrote:
 >
-> So I suggest leaving this file under Documentation/filesystems/ for
-> now and later work towards splitting out the admin-guide parts into a
-> separate document.
+> Hi Rob,
+>
+> so the way you prefer is this one (use new file for additions and including the board dts):
 
-Please let me know what you think? I can do another pass to clean this 
-up and remove more markup, no problem!
+Yes, or you could use an overlay, but that will raise other issues
+(current lack of support building them in the kernel).
 
+> arch/arm64/boot/dts/mediatek/mt7622-bpi-r64-mt7531.dts (example for mt7531-phy)
+>
+> /*
+>  * Copyright (c) 2018 MediaTek Inc.
+>  * Author:
+>  *
+>  * SPDX-License-Identifier: (GPL-2.0 OR MIT)
+>  */
+>
+> /dts-v1/;
+>
+> #include "mt7622-bananapi-bpi-r64.dts"
+>
+> / {
+>         gsw: gsw@0 {
+>                 compatible = "mediatek,mt753x";
+>                 mediatek,ethsys = <&ethsys>;
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+>         };
+> };
+>
+> &gsw {
+>         mediatek,mdio = <&mdio>;
+>         mediatek,portmap = "wllll";
+>         mediatek,mdio_master_pinmux = <0>;
+>         reset-gpios = <&pio 54 0>;
+>         interrupt-parent = <&pio>;
+>         interrupts = <53 IRQ_TYPE_LEVEL_HIGH>;
+>         status = "okay";
+>
+>         port5: port@5 {
+>                 compatible = "mediatek,mt753x-port";
+>                 reg = <5>;
+>                 phy-mode = "rgmii";
+>                 fixed-link {
+>                         speed = <1000>;
+>                         full-duplex;
+>                 };
+>         };
+>
+>         port6: port@6 {
+>                 compatible = "mediatek,mt753x-port";
+>                 reg = <6>;
+>                 phy-mode = "2500base-x";
+>                 fixed-link {
+>                         speed = <2500>;
+>                         full-duplex;
+>                 };
+>         };
+> };
+>
+> at least it compiles and after decompile the new nodes are visible...
+>
+> is there any way to drop nodes (in case dsa-driver gets merged i don't need it in the other 2)? i can disable them, but they will be present.
 
--Daniel.
+Yes, use '/delete-node/'.
 
+Rob
