@@ -2,97 +2,83 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9807AC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E33FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D5C124650
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:33:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="lLeJypJQ"
+	by mail.kernel.org (Postfix) with ESMTP id 52F912467F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:37:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576737441;
+	bh=yRJjq73VrCXzrGKoNaP61mnvcp0MNycnYRKc7arf59I=;
+	h=In-Reply-To:References:Cc:Subject:From:To:Date:List-ID:From;
+	b=CeSpUDadslsCL681nmV6vrgbVheK4J1/qZ97a29liZdPn85rF5V2815SGLwo8QZCS
+	 XGNA8KkIVejYY28iCoAOoaWer2ilRiEqZW9c0rA8LCVzu8T2zo3Exc8QBO2cU4FrRY
+	 uApVyfnxbzr+wsJheXHx9HAd/4A2UZrD/i+t8CCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbfLSGdU (ORCPT
+        id S1726536AbfLSGhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 01:33:20 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:60700 "EHLO mail.skyhub.de"
+        Thu, 19 Dec 2019 01:37:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725843AbfLSGdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 01:33:20 -0500
-Received: from zn.tnic (p200300EC2F0B1C00F1A577DA89A48CEF.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:1c00:f1a5:77da:89a4:8cef])
+        id S1725844AbfLSGhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 01:37:20 -0500
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D82261EC0591;
-        Thu, 19 Dec 2019 07:33:17 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1576737198;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=A8v0UScqy+VRCDlp7lUVd1ltvewhL45ATvd1nYKuRsc=;
-        b=lLeJypJQfPDH+3H4SlQKaWlSj3Yy1nMu9DplKTE4kBJAHU8R7JpDa9qVC5XR6RTEEANawI
-        8JCxfRMwDm5EFjj4X0pt2yTnXGcADEDrD1t4oUpRrassvg7Toaqnyx4j/TGqpAfbYX+j23
-        dS56sEWwbyaidzW8tKAo9cKXBmvOAqo=
-Date:   Thu, 19 Dec 2019 07:33:12 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Xu Wang <vulab@iscas.ac.cn>
-Cc:     sschaeck@cisco.com, mchehab@kernel.org, tony.luck@intel.com,
-        james.morse@arm.com, rrichter@marvell.com, joel@jms.id.au,
-        andrew@aj.id.au, linux-edac@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] EDAC: aspeed: Remove unneeded semicolon
-Message-ID: <20191219063312.GC32039@zn.tnic>
-References: <1576648806-1114-1-git-send-email-vulab@iscas.ac.cn>
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AF942146E;
+        Thu, 19 Dec 2019 06:37:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576737439;
+        bh=yRJjq73VrCXzrGKoNaP61mnvcp0MNycnYRKc7arf59I=;
+        h=In-Reply-To:References:Cc:Subject:From:To:Date:From;
+        b=QRLP6y/MnrskiUUDf6VdJ4zAy8HOPx0j52OfP4d2uQa0H9wxL5USYs99wGHfnGy2H
+         Q6LOnfwNLt9SSFIcO0KOZOFgeplCnglH0Syx3J2zRzSUdW9j9IuwZu6SHwfzDk0mM5
+         tg2ITOBcdEwsLN9TraWBHGSq0VCD7QtL21+YQslk=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1576648806-1114-1-git-send-email-vulab@iscas.ac.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191207203603.2314424-2-bjorn.andersson@linaro.org>
+References: <20191207203603.2314424-1-bjorn.andersson@linaro.org> <20191207203603.2314424-2-bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Pisati <p.pisati@gmail.com>
+Subject: Re: [PATCH 1/2] clk: qcom: gcc-msm8996: Fix parent for CLKREF clocks
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 18 Dec 2019 22:37:18 -0800
+Message-Id: <20191219063719.5AF942146E@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 06:00:06AM +0000, Xu Wang wrote:
-> Remove unneeded semicolon reported by coccinelle.
-> 
-> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
-> ---
->  drivers/edac/aspeed_edac.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/edac/aspeed_edac.c b/drivers/edac/aspeed_edac.c
-> index 09a9e3d..b194658b 100644
-> --- a/drivers/edac/aspeed_edac.c
-> +++ b/drivers/edac/aspeed_edac.c
-> @@ -243,7 +243,7 @@ static int init_csrows(struct mem_ctl_info *mci)
->  	if (!np) {
->  		dev_err(mci->pdev, "dt: missing /memory node\n");
->  		return -ENODEV;
-> -	};
-> +	}
->  
->  	rc = of_address_to_resource(np, 0, &r);
->  
-> @@ -252,7 +252,7 @@ static int init_csrows(struct mem_ctl_info *mci)
->  	if (rc) {
->  		dev_err(mci->pdev, "dt: failed requesting resource for /memory node\n");
->  		return rc;
-> -	};
-> +	}
->  
->  	dev_dbg(mci->pdev, "dt: /memory node resources: first page r.start=0x%x, resource_size=0x%x, PAGE_SHIFT macro=0x%x\n",
->  		r.start, resource_size(&r), PAGE_SHIFT);
-> -- 
+Quoting Bjorn Andersson (2019-12-07 12:36:02)
+> The CLKREF clocks are all fed by the clock signal on the CXO2 pad on the
+> SoC. Update the definition of these clocks to allow this to be wired up
+> to the appropriate clock source.
+>=20
+> Retain "xo" as the global named parent to make the change a nop in the
+> event that DT doesn't carry the necessary clocks definition.
 
-Applied, thanks.
+Something seems wrong still.
 
--- 
-Regards/Gruss,
-    Boris.
+I wonder if we need to add the XO "active only" clk to the rpm clk
+driver(s) and mark it as CLK_IS_CRITICAL. In theory that is really the
+truth for most of the SoCs out there because it's the only crystal that
+needs to be on all the time when the CPU is active. The "normal" XO clk
+will then be on all the time unless deep idle is entered and nobody has
+turned that on via some clk_prepare() call. That's because we root all
+other clks through the "normal" XO clk that will be on in deep
+idle/suspend if someone needs it to be.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Did the downstream code explicitly enable this ln_bb_clk in the phy
+drivers? I think it may have?
+
