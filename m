@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BEE0C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DE0C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7A7D206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C032C2465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:01:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782072;
-	bh=QXdiI/ulzS+Uh0MfYsWtw0lyrQyJtkOT3X4Om3aBep4=;
+	s=default; t=1576782080;
+	bh=79g9pLY07WZmLFOzBXbMh+TNjI7ClABAga+/NDBVIk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OqYRRSJhLh7pGCtNbYo+edAAJEB4JT2nCdWKQ5M0veQ7ajv5v+WfQa6OP9OEcs6oV
-	 Qd13jsr4RjnDx6a/ntVPfrUyDHD3u3AEcTLWQRWI4FjCthIkqzYLY8y5HRPVaKoiuw
-	 UdGKDqJmVGaNlSsQHKG5pHQ44lkPbz9XrM4EcXms=
+	b=byLP3exwoxZt83/undvw3BtwzeXgApQy7khIyqO+hdVqWiovea9PMpKHgoY4sctwu
+	 dOQnum0rHzQXDTjQ+IBoHvqiNkApT9mO8EG/gTBrC9+svUc5XuxgKZ/FeJdjCungmA
+	 cojkj/pDIHvi0SUQR0g5uWOQVQkvv7vFIL4WcAAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730123AbfLSTBK (ORCPT
+        id S1730081AbfLSSvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:01:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45678 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:51:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729870AbfLSSvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:51:25 -0500
+        id S1729443AbfLSSu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:50:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 876962467F;
-        Thu, 19 Dec 2019 18:51:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A518024683;
+        Thu, 19 Dec 2019 18:50:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781484;
-        bh=QXdiI/ulzS+Uh0MfYsWtw0lyrQyJtkOT3X4Om3aBep4=;
+        s=default; t=1576781457;
+        bh=79g9pLY07WZmLFOzBXbMh+TNjI7ClABAga+/NDBVIk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bkNTku7Lyi9IIVonQRfKRnL9OgbWYP6x5bQXIlnVlmlcqqDYomm+wfSIZH2UdbOO9
-         WofPNJa+dXxMSbFOU+I2Hs5ctRKcLTS2hJOaQlgmpwOUzhr4iuXgGZlV8OObLvF2IN
-         kVH08buNGqejyqTCExiEaWSQsf0CAGlPJu9387so=
+        b=bDL1w2S9CftpMoecnb3zxkpio9/hAMwS0J9X0CCraLxsZ6847r8LQa5JoiC24cUHt
+         A7OJdGTlnW1uDuZg5CzAncj7xjX5N9pj86GE8pHq/qclShslKMtwKgH/YnMmZG/DvW
+         z7g/3iqik2NMeiFegjEwTQsr0JV/Fd45FGoUeBhM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Lew <clew@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 4.14 19/36] rpmsg: glink: Set tail pointer to 0 at end of FIFO
-Date:   Thu, 19 Dec 2019 19:34:36 +0100
-Message-Id: <20191219182908.061383143@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: [PATCH 4.14 30/36] dma-buf: Fix memory leak in sync_file_merge()
+Date:   Thu, 19 Dec 2019 19:34:47 +0100
+Message-Id: <20191219182923.110075074@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182848.708141124@linuxfoundation.org>
 References: <20191219182848.708141124@linuxfoundation.org>
@@ -59,33 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Lew <clew@codeaurora.org>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit 4623e8bf1de0b86e23a56cdb39a72f054e89c3bd upstream.
+commit 6645d42d79d33e8a9fe262660a75d5f4556bbea9 upstream.
 
-When wrapping around the FIFO, the remote expects the tail pointer to
-be reset to 0 on the edge case where the tail equals the FIFO length.
+In the implementation of sync_file_merge() the allocated sync_file is
+leaked if number of fences overflows. Release sync_file by goto err.
 
-Fixes: caf989c350e8 ("rpmsg: glink: Introduce glink smem based transport")
+Fixes: a02b9dc90d84 ("dma-buf/sync_file: refactor fence storage in struct sync_file")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Chris Lew <clew@codeaurora.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191122220957.30427-1-navid.emamdoost@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/rpmsg/qcom_glink_smem.c |    2 +-
+ drivers/dma-buf/sync_file.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/rpmsg/qcom_glink_smem.c
-+++ b/drivers/rpmsg/qcom_glink_smem.c
-@@ -119,7 +119,7 @@ static void glink_smem_rx_advance(struct
- 	tail = le32_to_cpu(*pipe->tail);
+--- a/drivers/dma-buf/sync_file.c
++++ b/drivers/dma-buf/sync_file.c
+@@ -230,7 +230,7 @@ static struct sync_file *sync_file_merge
+ 	a_fences = get_fences(a, &a_num_fences);
+ 	b_fences = get_fences(b, &b_num_fences);
+ 	if (a_num_fences > INT_MAX - b_num_fences)
+-		return NULL;
++		goto err;
  
- 	tail += count;
--	if (tail > pipe->native.length)
-+	if (tail >= pipe->native.length)
- 		tail -= pipe->native.length;
+ 	num_fences = a_num_fences + b_num_fences;
  
- 	*pipe->tail = cpu_to_le32(tail);
 
 
