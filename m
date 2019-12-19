@@ -2,100 +2,199 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D903C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F23FC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF9AF206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02493206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:11:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="edqJauAn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n5WKHtOj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbfLSOIK (ORCPT
+        id S1726695AbfLSOLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 09:08:10 -0500
-Received: from mail-wr1-f74.google.com ([209.85.221.74]:40899 "EHLO
-        mail-wr1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726712AbfLSOIK (ORCPT
+        Thu, 19 Dec 2019 09:11:15 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:45537 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726744AbfLSOLO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 09:08:10 -0500
-Received: by mail-wr1-f74.google.com with SMTP id r2so241450wrp.7
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 06:08:09 -0800 (PST)
+        Thu, 19 Dec 2019 09:11:14 -0500
+Received: by mail-ed1-f65.google.com with SMTP id v28so4980665edw.12
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 06:11:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:cc;
-        bh=rR0DY8YnbpCQ+AdSGxlAPQN0c1LYEmMe5uvVF0GxO7w=;
-        b=edqJauAnv9l2Db/OdW4Nzcy/PoIy6m7rq0UBbWvju2X6CFnWDoBeUl9K3E5nkW+o/p
-         y8VDw4SJQ7XWWHzIrbpNoCovNAkUagOHXNdORCAMPd6MHzvGXSIaE0bYdYwA/k+o1kLb
-         OthNTjppH0IyA+vS1d+ParF1KyYV7SCachTjWXEGBOPjgmWIyfRiC23O50DgLBtokTtu
-         EKpqTp/xb352x5Z7ZxQBtpYVPpWnbolYLFPkDficge+P6SYrRa7oUm3kTURQObFlan0d
-         oeDJ/ry3rk/OlCFfnJOYTzZqzL4q/H3qTD98eMJBo7wVKMBDduxEJyiPvIJV2Qw61Qva
-         WUWQ==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=clZzE5oWuHu58s8VOdHWBVy38e2LT2FNqa0IOiJ8Pno=;
+        b=n5WKHtOjKZAcEpXknaKrANkMjPc5I9UKtCBGQ78HA2khJ4nfDTYRJYEc2+fj3I1Fkn
+         ha25hcVjnIDI+wrc1oFeWcvd8eBNuapXSPBoqY0nKHI2V03hwHZ+Ay/jFSkkEO0kW0BY
+         NM4Ql8kso4wGnxO+V0PrRoGr9hO1a01H9GkjcfQT9QoLwVBLDtwQ3BuUjW6y9sAv8lfg
+         Syr9yRHqd5u7Kv6K8ZUFm1qm3zv1yySq8mPCo+epWPqtyIG/zDpvLIPKs6ntJSWfWhFI
+         fZiZASZTwE6EYJBxtv269hcaO52Mwo7k67Mkh1PtyRFg1Fdleszn9rB/L30T79sxc40C
+         cc1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:cc;
-        bh=rR0DY8YnbpCQ+AdSGxlAPQN0c1LYEmMe5uvVF0GxO7w=;
-        b=QEdgLe4Zp+i3IteHxQ7C/LPzm9fGC5zmXwJFjZafnGWpobucdiiuqVhsy8lG5uEXHe
-         6W28xGhESvTWmuVL23n3ENYRcWwWmy9P7RKMMMgGGI4XScy9kLlsiEkwDEDTgjafPItc
-         sjujufT9ZaJb3YMBmm24G+Rzgeew/9xdbCYVpoF+BnCKyUDuFce6ajCJFWMbMY5rYAo1
-         f6bwtZKtmqoHCeN4XelFhXp2EiuiBFDJrl9+SIchu4USrnWsIeu9Yr9k3l0DNVkQLvwL
-         /lvu7ZcVIQz4ynSI3ILhU+Xfw71f3KwvSiQt5tCgCGGCmGiEzXO1J06AVJMDIQZribxK
-         rLgg==
-X-Gm-Message-State: APjAAAU87/FX8IHBwCLBQ+43u8IoQM5roXaP3k0h0Dnc+LRqyGuks8Ck
-        9WWSFy9cAVGJAABJ6+Lr/RgV9rkkIfNABg==
-X-Google-Smtp-Source: APXvYqzQ1ljy0dFAUTLAmimiTU8+k3XguxQSkPO9FbsMtWJfxd2XpH7U3B6t3Eb9chW6NYvHc4xBCjjqUfjSlg==
-X-Received: by 2002:a5d:5267:: with SMTP id l7mr10383766wrc.84.1576764488183;
- Thu, 19 Dec 2019 06:08:08 -0800 (PST)
-Date:   Thu, 19 Dec 2019 15:08:03 +0100
-Message-Id: <20191219140803.135164-1-amessina@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-Subject: [PATCH] udp: fix integer overflow while computing available space in sk_rcvbuf
-From:   Antonio Messina <amessina@google.com>
-Cc:     amessina@google.com, "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-To:     unlisted-recipients:; (no To-header on input)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=clZzE5oWuHu58s8VOdHWBVy38e2LT2FNqa0IOiJ8Pno=;
+        b=RHPyzTKvtA3XyWaXnYbALpHqebU1G4jMYmCHSYT7L5JCPCogxAmayeernYszJxe22U
+         +bBdmdeENT+pu22vlU7oB4vs1KARuFqIN8+nytAR64e6ZUKEkuD79h6Ki4F+NhxqekGq
+         f+7vEugzTGxualgW6qLbkRbGuDac/Bgo1TvNGhxxxkmi+CtoD3y0aN6hDXsQN4iQm9Hu
+         Yb7vRIBzQRVyeasjM1qPgJ62Gn6vyX9ql+HO71xAVq3iD0CsAY1bduBUBRftAu+cV29b
+         BSLqT9NuWMzELe7XCXh1aPl2/3+mRq9USizQUd9fVwRdOL/b9xgUKkOAfoCEFKOD1p4O
+         Pcyw==
+X-Gm-Message-State: APjAAAV4b7P+ViTMIt9U+bEEbSE+P3d722+ADZ1IaGSUIz5lgrcdB2rr
+        PawmIK9TscCpwC/R8HSeKzMR4w==
+X-Google-Smtp-Source: APXvYqxl9SNHmQvO1V2+yKIouleHiF6c6w+NSNZDRU8V+Hpd4Y0zEbiUkVrTKUgdQk/MjFnTiDxYXQ==
+X-Received: by 2002:a05:6402:1251:: with SMTP id l17mr9406658edw.54.1576764672969;
+        Thu, 19 Dec 2019 06:11:12 -0800 (PST)
+Received: from [192.168.27.209] ([37.157.136.193])
+        by smtp.googlemail.com with ESMTPSA id i9sm418056edl.34.2019.12.19.06.11.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Dec 2019 06:11:11 -0800 (PST)
+Subject: Re: [PATCH v2 06/12] dt-bindings: media: venus: Convert msm8916 to DT
+ schema
+To:     Rob Herring <robh@kernel.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Vikash Garodia <vgarodia@codeaurora.org>,
+        dikshita@codeaurora.org
+References: <20191218132251.24161-1-stanimir.varbanov@linaro.org>
+ <20191218132251.24161-7-stanimir.varbanov@linaro.org>
+ <CAL_Jsq+1Z72J03tZa9T4DLzR7skFweV8Xe4vBd_QBUktVOekrA@mail.gmail.com>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <0d11ce8f-cd34-624f-e1be-0f533968adbd@linaro.org>
+Date:   Thu, 19 Dec 2019 16:11:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <CAL_Jsq+1Z72J03tZa9T4DLzR7skFweV8Xe4vBd_QBUktVOekrA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the size of the receive buffer for a socket is close to 2^31 when
-computing if we have enough space in the buffer to copy a packet from
-the queue to the buffer we might hit an integer overflow.
+Hi Rob,
 
-When an user set net.core.rmem_default to a value close to 2^31 UDP
-packets are dropped because of this overflow. This can be visible, for
-instance, with failure to resolve hostnames.
+Thanks for the review!
 
-This can be fixed by casting sk_rcvbuf (which is an int) to unsigned
-int, similarly to how it is done in TCP.
+On 12/19/19 12:51 AM, Rob Herring wrote:
+> On Wed, Dec 18, 2019 at 7:24 AM Stanimir Varbanov
+> <stanimir.varbanov@linaro.org> wrote:
+>>
+>> Convert qcom,msm8916-venus Venus binding to DT schema
+>>
+>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>> ---
+>>  .../bindings/media/qcom,venus-msm8916.yaml    | 115 ++++++++++++++++++
+>>  1 file changed, 115 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/media/qcom,venus-msm8916.yaml
+> 
+> Make the filename match the compatible.
+> 
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/qcom,venus-msm8916.yaml b/Documentation/devicetree/bindings/media/qcom,venus-msm8916.yaml
+>> new file mode 100644
+>> index 000000000000..f82a8d968202
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/qcom,venus-msm8916.yaml
+>> @@ -0,0 +1,115 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/media/qcom,venus-msm8916.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Qualcomm Venus video encode and decode accelerators
+>> +
+>> +maintainers:
+>> +  - Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>> +
+>> +description: |
+>> +  The Venus IP is a video encode and decode accelerator present
+>> +  on Qualcomm platforms
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - qcom,msm8916-venus
+> 
+> Not likely a 2nd compatible here?, so you can use 'const' instead.
 
-Signed-off-by: Antonio Messina <amessina@google.com>
----
- net/ipv4/udp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I don't expect more compatibles here. I split every compatible on
+separate .yaml file to make bindings clearer.
 
-diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
-index 4da5758cc718..93a355b6b092 100644
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -1475,7 +1475,7 @@ int __udp_enqueue_schedule_skb(struct sock *sk, struct sk_buff *skb)
- 	 * queue contains some other skb
- 	 */
- 	rmem = atomic_add_return(size, &sk->sk_rmem_alloc);
--	if (rmem > (size + sk->sk_rcvbuf))
-+	if (rmem > (size + (unsigned int)sk->sk_rcvbuf))
- 		goto uncharge_drop;
- 
- 	spin_lock(&list->lock);
+> 
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  power-domains:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 3
+>> +
+>> +  clock-names:
+>> +    maxItems: 3
+> 
+> Don't need this. Implied with the length of 'items'.
+> 
+>> +    items:
+>> +      - const: core
+>> +      - const: iface
+>> +      - const: bus
+>> +
+>> +  iommus:
+>> +    minItems: 1
+>> +    maxItems: 20
+>> +
+>> +  memory-region:
+>> +    maxItems: 1
+>> +
+>> +  video-decoder:
+>> +    type: object
+>> +
+>> +    properties:
+>> +      compatible:
+>> +        const: "venus-decoder"
+>> +
+>> +    required:
+>> +      - compatible
+> 
+>        additionalProperties: false
+> 
+>> +
+>> +  video-encoder:
+>> +    type: object
+>> +
+>> +    properties:
+>> +      compatible:
+>> +        const: "venus-encoder"
+>> +
+>> +    required:
+>> +      - compatible
+> 
+> Here too.
+
+I guess the above comments are valid for the the other DT schema
+conversions in this series? If so I'll correct them as well in next version.
+
 -- 
-2.24.1.735.g03f4e72817-goog
-
+regards,
+Stan
