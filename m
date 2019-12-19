@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADCBC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C95C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23BAA2465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EF71222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781138;
-	bh=35yKDkiE8KL4FQ6IGuKiSvQsrdEoHklWw7BgukhTtfY=;
+	s=default; t=1576781142;
+	bh=SLLA6soTRudvRmoUb9fkFaD2Y3fKHbuYA00w0PGg8UI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B7F0xBOiCkb5iBKkrEGKW8la9PiSdXoqvWlXi3Esg1uTqslgvC5BlU1dXFhpDIxoK
-	 XAf96jELQB2IoG0Y+mU+5l3u7ww/TSJ2VNLe5mts0Sw1S8ntffKC4sf2NdmRGqxIlx
-	 X4JTv3Kbm4g3swQSi9ke1ioau5/vcy51Pf66ek50=
+	b=J5k8Asht6OwbKSGYoBvwdXlmEjbRu4EwBSWclIIi9m8+8jRpPvhAykJhQ3MtKTh4F
+	 q3qeHk5OYsdYfh3aiz9UClfZSeJPAr569fntnZAj0Z2pdPDQbwu4imlkiR8dQemNzS
+	 itj0TRaAOX05rdTqaH5feonQ1vVnVd5pC+Ktq+7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729193AbfLSSph (ORCPT
+        id S1729213AbfLSSpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:45:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37984 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:45:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729185AbfLSSpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:45:34 -0500
+        id S1729188AbfLSSpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:45:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3692B24672;
-        Thu, 19 Dec 2019 18:45:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9978A206D7;
+        Thu, 19 Dec 2019 18:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781133;
-        bh=35yKDkiE8KL4FQ6IGuKiSvQsrdEoHklWw7BgukhTtfY=;
+        s=default; t=1576781136;
+        bh=SLLA6soTRudvRmoUb9fkFaD2Y3fKHbuYA00w0PGg8UI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p4WxtpYMiktqb/RyVadpcooYZNiqmw7IMYs84Aph7mDUaDG29wvBjw9RkpPgmlwfJ
-         p3zKBx5A1M/iL8OW19GRrxOzd+7RpZD2wiF3HP3tDthFB1TNpT+uvZh0ecj0pxv16F
-         2Q3rKkWoeVeQcFjgldN17bmALhQkhF1mv73YYEkY=
+        b=xoYqe/o1pKPFUS9isYjHcxXdYXx2b2/mW7xQt/uWctprhInzQEoOqRO3HhiaaFw5J
+         PI0kau7JRhjG0A2Xjd4uN72EeVHe+CoKxdOdux8wCoJe/VlyC+kSmmR4SGN5FebCIo
+         v26PixWVSikQtfjIyUlhcrhkoHLpFVoCLvC3ukhw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 4.9 097/199] USB: uas: honor flag to avoid CAPACITY16
-Date:   Thu, 19 Dec 2019 19:32:59 +0100
-Message-Id: <20191219183220.282932558@linuxfoundation.org>
+Subject: [PATCH 4.9 098/199] USB: uas: heed CAPACITY_HEURISTICS
+Date:   Thu, 19 Dec 2019 19:33:00 +0100
+Message-Id: <20191219183220.335219691@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,31 +60,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Oliver Neukum <oneukum@suse.com>
 
-commit bff000cae1eec750d62e265c4ba2db9af57b17e1 upstream.
+commit 335cbbd5762d5e5c67a8ddd6e6362c2aa42a328f upstream.
 
-Copy the support over from usb-storage to get feature parity
+There is no need to ignore this flag. We should be as close
+to storage in that regard as makes sense, so honor flags whose
+cost is tiny.
 
 Signed-off-by: Oliver Neukum <oneukum@suse.com>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191114112758.32747-2-oneukum@suse.com
+Link: https://lore.kernel.org/r/20191114112758.32747-3-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/storage/uas.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/usb/storage/uas.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
 --- a/drivers/usb/storage/uas.c
 +++ b/drivers/usb/storage/uas.c
-@@ -832,6 +832,10 @@ static int uas_slave_configure(struct sc
- 		sdev->wce_default_on = 1;
- 	}
+@@ -845,6 +845,12 @@ static int uas_slave_configure(struct sc
+ 		sdev->fix_capacity = 1;
  
-+	/* Some disks cannot handle READ_CAPACITY_16 */
-+	if (devinfo->flags & US_FL_NO_READ_CAPACITY_16)
-+		sdev->no_read_capacity_16 = 1;
-+
  	/*
- 	 * Some disks return the total number of blocks in response
- 	 * to READ CAPACITY rather than the highest block number.
++	 * in some cases we have to guess
++	 */
++	if (devinfo->flags & US_FL_CAPACITY_HEURISTICS)
++		sdev->guess_capacity = 1;
++
++	/*
+ 	 * Some devices don't like MODE SENSE with page=0x3f,
+ 	 * which is the command used for checking if a device
+ 	 * is write-protected.  Now that we tell the sd driver
 
 
