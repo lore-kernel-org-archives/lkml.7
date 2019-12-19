@@ -2,174 +2,139 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D8FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A15A7C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E097B24672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:35:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78B742053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:36:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576773369;
+	bh=xG7eJsmAZg4wSxUOdMks7A4AOxBSoLjaaUd4IsnGwg0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Au0AN2eO/pP2AjfOTk72FS/cCSR2cL3KX3AVQimpAzQXsK9USYXnguPzBNKQNqu5z
+	 aEOZPYSla3oO8WJ5ICvutR1/Z92OeUZIwiNOSvF78prHPmmQSBw48gQmYWh9zz7257
+	 R9GuPrvABQdNoIJAp7+zAZBlMfQ89ML/TlDrAjJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbfLSQfV (ORCPT
+        id S1726964AbfLSQgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 11:35:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44124 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726818AbfLSQfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 11:35:21 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2CB22053B;
-        Thu, 19 Dec 2019 16:35:18 +0000 (UTC)
-Date:   Thu, 19 Dec 2019 11:35:17 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com,
-        Mel Gorman <mgorman@suse.de>
-Subject: [PATCH] sched: Force the address order of each sched class
- descriptor
-Message-ID: <20191219113517.65617a7b@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 19 Dec 2019 11:36:08 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46971 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbfLSQgI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 11:36:08 -0500
+Received: by mail-lj1-f195.google.com with SMTP id m26so4491788ljc.13
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 08:36:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+0EPaeAm1h5et+pcE0Lw2TnBFxWaf1zou6EIoTCmP30=;
+        b=bZHWn0PsXhDbOK/Bql+EUdVYbHBqZFT+2Nbu2NKTbOPDpYJnxQ8/xUws763LXH9j3m
+         XvTn3+qa6G5xDrHkogar6bc8r1mWIiQFLSpH4PfDJaTYQjML3UPjF8ReFuAn4IPFe3wt
+         CsSw4N/hW8UkyP4cDs7xLRa2iwzcttIS4FCkc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+0EPaeAm1h5et+pcE0Lw2TnBFxWaf1zou6EIoTCmP30=;
+        b=fLD6SclczqgTxMqc83/PnM03yC46mYN7SgbMrpuWcceQgBO3izOnPZVWN3a6VBdcPb
+         SEHQSQNh/BGfB7L8LUXFCPa2IGoVPJ6BkCLwB17gWPSC5aUmylJU2Cheb9YWy3k2kIKf
+         sMY6lfHxx5UXEG1gcgz2MI8Wqu3Zoej86OG79zmiFxNByPd78mvZmaBaq7UH1l89W0ag
+         CsFDqBPal7Sqd57osdmt/nGO/Uq+1gOtugH1hdxGWG4ZbOdSjZhMy4QudpqItfAuNGmI
+         kPNKTQDQw67c16Zkg4WcbkUHoREkNRJJcrMIR31joj5po7XFnIVPbe9OeiCd6SlnWwNX
+         2gtA==
+X-Gm-Message-State: APjAAAWNvmSqqBaUBz1j6pafXGaF6o3oFouDAApRUxULVrTyTrDRRTDf
+        Bbgghy1X5oGZpW0AfpdGOEXFY1bVZdU=
+X-Google-Smtp-Source: APXvYqxXMYywtGonobgbmDVArwHxncOTzu6oeSFcCoSVbmi8DenMSfhA1pJfLhbmtQ4Tyohrheo4bQ==
+X-Received: by 2002:a2e:844e:: with SMTP id u14mr6753013ljh.183.1576773365064;
+        Thu, 19 Dec 2019 08:36:05 -0800 (PST)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id u9sm3103342lji.49.2019.12.19.08.36.03
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Dec 2019 08:36:04 -0800 (PST)
+Received: by mail-lj1-f174.google.com with SMTP id u17so6934692lja.4
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 08:36:03 -0800 (PST)
+X-Received: by 2002:a2e:9ad1:: with SMTP id p17mr6832409ljj.26.1576773363095;
+ Thu, 19 Dec 2019 08:36:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <157558502272.10278.8718685637610645781.stgit@warthog.procyon.org.uk>
+ <20191206135604.GB2734@twin.jikos.cz> <CAHk-=wiN_pWbcRaw5L-J2EFUyCn49Due0McwETKwmFFPp88K8Q@mail.gmail.com>
+ <CAHk-=wjvO1V912ya=1rdXwrm1OBTi6GqnqryH_E8OR69cZuVOg@mail.gmail.com>
+ <CAHk-=wizsHmCwUAyQKdU7hBPXHYQn-fOtJKBqMs-79br2pWxeQ@mail.gmail.com>
+ <CAHk-=wjeG0q1vgzu4iJhW5juPkTsjTYmiqiMUYAebWW+0bam6w@mail.gmail.com>
+ <b2ae78da-1c29-8ef7-d0bb-376c52af37c3@yandex-team.ru> <CAHk-=wgTisLQ9k-hsQeyrT5qBS0xuQPYsueFWNT3RxbkkVmbjw@mail.gmail.com>
+ <20191219000013.GB13065@localhost> <20191219001446.GA49812@localhost>
+ <CAHk-=wgMiTbRPp6Fx_A4YV+9xL7dc2j0Dj3NTFDPRfjsjLQTWw@mail.gmail.com> <935.1576742190@warthog.procyon.org.uk>
+In-Reply-To: <935.1576742190@warthog.procyon.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 19 Dec 2019 08:35:46 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wiQdy80352u4d39QD58yQKaNfeEz+k3eRwZw5faEYFsgw@mail.gmail.com>
+Message-ID: <CAHk-=wiQdy80352u4d39QD58yQKaNfeEz+k3eRwZw5faEYFsgw@mail.gmail.com>
+Subject: Re: [PATCH 0/2] pipe: Fixes [ver #2]
+To:     David Howells <dhowells@redhat.com>
+Cc:     Josh Triplett <josh@joshtriplett.org>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Akemi Yagi <toracat@elrepo.org>, DJ Delorie <dj@redhat.com>,
+        David Sterba <dsterba@suse.cz>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+On Wed, Dec 18, 2019 at 11:56 PM David Howells <dhowells@redhat.com> wrote:
+>
+> I looked at splitting the waitqueue in to two, but it makes poll tricky.
 
-[ Kirill, feel free to include this patch with yours ]
+No, it's actually trivial for poll.
 
-In order to make a micro optimization in pick_next_task(), the order of the
-sched class descriptor address must be in the same order as their priority
-to each other. That is:
+The thing is, poll can happily just add two wait-queues to the
+poll_table. In my conversion, I just did
 
- &idle_sched_class < &fair_sched_class < &rt_sched_class <
- &dl_sched_class < &stop_sched_class
+-       poll_wait(filp, &pipe->wait, wait);
++       if (filp->f_mode & FMODE_READ)
++               poll_wait(filp, &pipe->rd_wait, wait);
++       if (filp->f_mode & FMODE_WRITE)
++               poll_wait(filp, &pipe->wr_wait, wait);
 
-In order to guarantee this order of the sched class descriptors, add each
-one into their own data section and force the order in the linker script.
+which changes the unconditional "add one" to two conditional adds.
+They _could_ have been unconditional too, but why add unnecessary
+wakeups? So it only really does it twice on named pipes (if opened for
+reading and writing).
 
-Link: https://lore.kernel.org/r/157675913272.349305.8936736338884044103.stgit@localhost.localdomain
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- include/asm-generic/vmlinux.lds.h | 13 +++++++++++++
- kernel/sched/deadline.c           |  3 ++-
- kernel/sched/fair.c               |  3 ++-
- kernel/sched/idle.c               |  3 ++-
- kernel/sched/rt.c                 |  3 ++-
- kernel/sched/stop_task.c          |  3 ++-
- 6 files changed, 23 insertions(+), 5 deletions(-)
+It's _unusual_ to add two wait-queues for a single poll, but it's not
+wrong. The tty layer has always done it - exactly because it has
+separate wait queues for reading and writing. Some other drivers do
+too. Sometimes there's a separate wait queue for errors, sometimes
+there are multiple wait-queues because there are events from the
+"subsystem" and there are other events from the "device". I think
+sound does the latter, for example.
 
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index e00f41aa8ec4..7e8b02fdcf3f 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -108,6 +108,18 @@
- #define SBSS_MAIN .sbss
- #endif
- 
-+/*
-+ * The order of the sched class addresses are important, as they are
-+ * used to determine the order of the priority of each sched class in
-+ * relation to each other.
-+ */
-+#define SCHED_DATA				\
-+	*(__idle_sched_class)			\
-+	*(__fair_sched_class)			\
-+	*(__rt_sched_class)			\
-+	*(__dl_sched_class)			\
-+	*(__stop_sched_class)
-+
- /*
-  * Align to a 32 byte boundary equal to the
-  * alignment gcc 4.5 uses for a struct
-@@ -308,6 +320,7 @@
- #define DATA_DATA							\
- 	*(.xiptext)							\
- 	*(DATA_MAIN)							\
-+	SCHED_DATA							\
- 	*(.ref.data)							\
- 	*(.data..shared_aligned) /* percpu related */			\
- 	MEM_KEEP(init.data*)						\
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index 43323f875cb9..5abdbe569f93 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -2428,7 +2428,8 @@ static void prio_changed_dl(struct rq *rq, struct task_struct *p,
- 	}
- }
- 
--const struct sched_class dl_sched_class = {
-+const struct sched_class dl_sched_class
-+	__attribute__((section("__dl_sched_class"))) = {
- 	.next			= &rt_sched_class,
- 	.enqueue_task		= enqueue_task_dl,
- 	.dequeue_task		= dequeue_task_dl,
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 08a233e97a01..e745fe0e0cd3 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -10745,7 +10745,8 @@ static unsigned int get_rr_interval_fair(struct rq *rq, struct task_struct *task
- /*
-  * All the scheduling class methods:
-  */
--const struct sched_class fair_sched_class = {
-+const struct sched_class fair_sched_class
-+	__attribute__((section("__fair_sched_class"))) = {
- 	.next			= &idle_sched_class,
- 	.enqueue_task		= enqueue_task_fair,
- 	.dequeue_task		= dequeue_task_fair,
-diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-index ffa959e91227..700a9c826f0e 100644
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -454,7 +454,8 @@ static void update_curr_idle(struct rq *rq)
- /*
-  * Simple, special scheduling class for the per-CPU idle tasks:
-  */
--const struct sched_class idle_sched_class = {
-+const struct sched_class idle_sched_class
-+	__attribute__((section("__idle_sched_class"))) = {
- 	/* .next is NULL */
- 	/* no enqueue/yield_task for idle tasks */
- 
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index e591d40fd645..5d3f9bcddaeb 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -2354,7 +2354,8 @@ static unsigned int get_rr_interval_rt(struct rq *rq, struct task_struct *task)
- 		return 0;
- }
- 
--const struct sched_class rt_sched_class = {
-+const struct sched_class rt_sched_class
-+	__attribute__((section("__rt_sched_class"))) = {
- 	.next			= &fair_sched_class,
- 	.enqueue_task		= enqueue_task_rt,
- 	.dequeue_task		= dequeue_task_rt,
-diff --git a/kernel/sched/stop_task.c b/kernel/sched/stop_task.c
-index 4c9e9975684f..03bc7530ff75 100644
---- a/kernel/sched/stop_task.c
-+++ b/kernel/sched/stop_task.c
-@@ -115,7 +115,8 @@ static void update_curr_stop(struct rq *rq)
- /*
-  * Simple, special scheduling class for the per-CPU stop tasks:
-  */
--const struct sched_class stop_sched_class = {
-+const struct sched_class stop_sched_class
-+	__attribute__((section("__stop_sched_class"))) = {
- 	.next			= &dl_sched_class,
- 
- 	.enqueue_task		= enqueue_task_stop,
--- 
-2.20.1
+And no, I don't particularly like the FMODE_READ/WRITE testing above -
+it would be better to pass in the polling mask and ask "are we waiting
+for polling for reading or writing?" instead of asking whether the
+file descriptor was opened for read or write, but hey, it is what it
+is.
 
+Sadly, "poll()" doesn't really get passed the bitmask of what is being
+waited on (it's there in the poll_tabvle "_key" field, but I don't
+want to have the pipe code look into those kinds of details.
+
+So the named pipe case could be improved, but it's not like anybody
+really cares. Nobody uses named pipes any more (and few people ever
+did). So I didn't worry about it.
+
+            Linus
