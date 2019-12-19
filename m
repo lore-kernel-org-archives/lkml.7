@@ -2,192 +2,147 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6DDC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3956AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CA9F24672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F4A206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:39:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbfLSMjb (ORCPT
+        id S1726890AbfLSMju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 07:39:31 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7720 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726695AbfLSMjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 07:39:31 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 37A06C7F05F082D0DDA9;
-        Thu, 19 Dec 2019 20:39:28 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 19 Dec 2019 20:39:18 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>
-CC:     <yanaijie@huawei.com>, <chenxiang66@hisilicon.com>,
-        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH v2] scsi: libsas: Tidy SAS address print format
-Date:   Thu, 19 Dec 2019 20:35:57 +0800
-Message-ID: <1576758957-227350-1-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Thu, 19 Dec 2019 07:39:50 -0500
+Received: from relay.sw.ru ([185.231.240.75]:50550 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726695AbfLSMjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 07:39:49 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104] helo=localhost.localdomain)
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1ihv5G-0005qc-Ro; Thu, 19 Dec 2019 15:39:14 +0300
+Subject: [PATCH RFC] sched: Micro optimization in pick_next_task() and in
+ check_preempt_curr()
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        ktkhai@virtuozzo.com
+Cc:     linux-kernel@vger.kernel.org
+Date:   Thu, 19 Dec 2019 15:39:14 +0300
+Message-ID: <157675913272.349305.8936736338884044103.stgit@localhost.localdomain>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently we use a mixture of %016llx, %llx, and %16llx when printing a
-SAS address.
+In kernel/sched/Makefile files, describing different sched classes, already
+go in the order from the lowest priority class to the highest priority class:
 
-Since the most significant nibble of the SAS address is always 5 - as per
-standard - this formatting is not so important; but some fake SAS
-addresses for SATA devices may not be. And we have mangled/invalid
-address to consider also. And it's better to be consistent in the code, so
-use a fixed format.
+idle.o fair.o rt.o deadline.o stop_task.o
 
-The SAS address is a fixed size at 64b, so we want to 0 byte extend to 16
-nibbles, so use %016llx globally.
+The documentation of GNU linker says, that section appears in the order
+they are seen during link time (see [1]):
 
-Also make some prints to be explicitly hex, and tidy some whitespace issue.
+>Normally, the linker will place files and sections matched by wildcards
+>in the order in which they are seen during the link. You can change this
+>by using the SORT keyword, which appears before a wildcard pattern
+>in parentheses (e.g., SORT(.text*)).
 
-Signed-off-by: John Garry <john.garry@huawei.com>
---
-v2: reword commit message
+So, we may expect const variables from idle.o will go before ro variables
+from fair.o in RO_DATA section, while ro variables from fair.o will go
+before ro variables from rt.o, etc.
 
-diff --git a/drivers/scsi/libsas/sas_ata.c b/drivers/scsi/libsas/sas_ata.c
-index e9e00740f7ca..c5a828a041e0 100644
---- a/drivers/scsi/libsas/sas_ata.c
-+++ b/drivers/scsi/libsas/sas_ata.c
-@@ -137,7 +137,7 @@ static void sas_ata_task_done(struct sas_task *task)
- 	} else {
- 		ac = sas_to_ata_err(stat);
- 		if (ac) {
--			pr_warn("%s: SAS error %x\n", __func__, stat->stat);
-+			pr_warn("%s: SAS error 0x%x\n", __func__, stat->stat);
- 			/* We saw a SAS error. Send a vague error. */
- 			if (!link->sactive) {
- 				qc->err_mask = ac;
-diff --git a/drivers/scsi/libsas/sas_discover.c b/drivers/scsi/libsas/sas_discover.c
-index f47b4b281b14..fef58185a644 100644
---- a/drivers/scsi/libsas/sas_discover.c
-+++ b/drivers/scsi/libsas/sas_discover.c
-@@ -170,7 +170,7 @@ int sas_notify_lldd_dev_found(struct domain_device *dev)
+(Also, it looks like the linking order is already used in kernel, e.g.
+ in drivers/md/Makefile)
+
+Thus, we may introduce an optimization based on xxx_sched_class addresses
+in these two hot scheduler functions: pick_next_task() and check_preempt_curr().
+
+One more result of the patch is that size of object file becomes a little
+less (excluding added BUG_ON(), which goes in __init section):
+
+$size kernel/sched/core.o
+         text     data      bss	    dec	    hex	filename
+before:  66446    18957	    676	  86079	  1503f	kernel/sched/core.o
+after:   66398    18957	    676	  86031	  1500f	kernel/sched/core.o
+
+[1] https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/4/html/Using_ld_the_GNU_Linker/sections.html
+
+Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+---
+ kernel/sched/Makefile |    2 ++
+ kernel/sched/core.c   |   24 +++++++++---------------
+ 2 files changed, 11 insertions(+), 15 deletions(-)
+
+diff --git a/kernel/sched/Makefile b/kernel/sched/Makefile
+index 5fc9c9b70862..f78f177c660a 100644
+--- a/kernel/sched/Makefile
++++ b/kernel/sched/Makefile
+@@ -23,6 +23,8 @@ CFLAGS_core.o := $(PROFILING) -fno-omit-frame-pointer
+ endif
  
- 	res = i->dft->lldd_dev_found(dev);
- 	if (res) {
--		pr_warn("driver on host %s cannot handle device %llx, error:%d\n",
-+		pr_warn("driver on host %s cannot handle device %016llx, error:%d\n",
- 			dev_name(sas_ha->dev),
- 			SAS_ADDR(dev->sas_addr), res);
- 	}
-diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
-index 9fdb9c9fbda4..ab671cdd4cfb 100644
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -500,7 +500,7 @@ static int sas_ex_general(struct domain_device *dev)
- 		ex_assign_report_general(dev, rg_resp);
+ obj-y += core.o loadavg.o clock.o cputime.o
++# Order is significant: a more priority class xxx is described by variable
++# xxx_sched_class with a bigger address. See BUG_ON() in sched_init().
+ obj-y += idle.o fair.o rt.o deadline.o
+ obj-y += wait.o wait_bit.o swait.o completion.o
  
- 		if (dev->ex_dev.configuring) {
--			pr_debug("RG: ex %llx self-configuring...\n",
-+			pr_debug("RG: ex %016llx self-configuring...\n",
- 				 SAS_ADDR(dev->sas_addr));
- 			schedule_timeout_interruptible(5*HZ);
- 		} else
-@@ -881,7 +881,7 @@ static struct domain_device *sas_ex_discover_end_dev(
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 15508c202bf5..befdd7158b27 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1416,20 +1416,10 @@ static inline void check_class_changed(struct rq *rq, struct task_struct *p,
  
- 		res = sas_discover_end_dev(child);
- 		if (res) {
--			pr_notice("sas_discover_end_dev() for device %16llx at %016llx:%02d returned 0x%x\n",
-+			pr_notice("sas_discover_end_dev() for device %016llx at %016llx:%02d returned 0x%x\n",
- 				  SAS_ADDR(child->sas_addr),
- 				  SAS_ADDR(parent->sas_addr), phy_id, res);
- 			goto out_list_del;
-diff --git a/drivers/scsi/libsas/sas_internal.h b/drivers/scsi/libsas/sas_internal.h
-index 01f1738ce6df..1f1d01901978 100644
---- a/drivers/scsi/libsas/sas_internal.h
-+++ b/drivers/scsi/libsas/sas_internal.h
-@@ -107,7 +107,7 @@ static inline void sas_smp_host_handler(struct bsg_job *job,
- 
- static inline void sas_fail_probe(struct domain_device *dev, const char *func, int err)
+ void check_preempt_curr(struct rq *rq, struct task_struct *p, int flags)
  {
--	pr_warn("%s: for %s device %16llx returned %d\n",
-+	pr_warn("%s: for %s device %016llx returned %d\n",
- 		func, dev->parent ? "exp-attached" :
- 		"direct-attached",
- 		SAS_ADDR(dev->sas_addr), err);
-diff --git a/drivers/scsi/libsas/sas_port.c b/drivers/scsi/libsas/sas_port.c
-index 7c86fd248129..19cf418928fa 100644
---- a/drivers/scsi/libsas/sas_port.c
-+++ b/drivers/scsi/libsas/sas_port.c
-@@ -165,7 +165,7 @@ static void sas_form_port(struct asd_sas_phy *phy)
- 	}
- 	sas_port_add_phy(port->port, phy->phy);
+-	const struct sched_class *class;
+-
+-	if (p->sched_class == rq->curr->sched_class) {
++	if (p->sched_class == rq->curr->sched_class)
+ 		rq->curr->sched_class->check_preempt_curr(rq, p, flags);
+-	} else {
+-		for_each_class(class) {
+-			if (class == rq->curr->sched_class)
+-				break;
+-			if (class == p->sched_class) {
+-				resched_curr(rq);
+-				break;
+-			}
+-		}
+-	}
++	else if (p->sched_class > rq->curr->sched_class)
++		resched_curr(rq);
  
--	pr_debug("%s added to %s, phy_mask:0x%x (%16llx)\n",
-+	pr_debug("%s added to %s, phy_mask:0x%x (%016llx)\n",
- 		 dev_name(&phy->phy->dev), dev_name(&port->port->dev),
- 		 port->phy_mask,
- 		 SAS_ADDR(port->attached_sas_addr));
-diff --git a/drivers/scsi/libsas/sas_scsi_host.c b/drivers/scsi/libsas/sas_scsi_host.c
-index bec83eb8ab87..9e0975e55c27 100644
---- a/drivers/scsi/libsas/sas_scsi_host.c
-+++ b/drivers/scsi/libsas/sas_scsi_host.c
-@@ -330,7 +330,7 @@ static int sas_recover_lu(struct domain_device *dev, struct scsi_cmnd *cmd)
+ 	/*
+ 	 * A queue event has occurred, and we're going to schedule.  In
+@@ -3914,8 +3904,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ 	 * higher scheduling class, because otherwise those loose the
+ 	 * opportunity to pull in more work from other CPUs.
+ 	 */
+-	if (likely((prev->sched_class == &idle_sched_class ||
+-		    prev->sched_class == &fair_sched_class) &&
++	if (likely(prev->sched_class <= &fair_sched_class &&
+ 		   rq->nr_running == rq->cfs.h_nr_running)) {
  
- 	int_to_scsilun(cmd->device->lun, &lun);
+ 		p = pick_next_task_fair(rq, prev, rf);
+@@ -6569,6 +6558,11 @@ void __init sched_init(void)
+ 	unsigned long ptr = 0;
+ 	int i;
  
--	pr_notice("eh: device %llx LUN %llx has the task\n",
-+	pr_notice("eh: device %016llx LUN 0x%llx has the task\n",
- 		  SAS_ADDR(dev->sas_addr),
- 		  cmd->device->lun);
++	BUG_ON(&idle_sched_class > &fair_sched_class ||
++		&fair_sched_class > &rt_sched_class ||
++		&rt_sched_class > &dl_sched_class ||
++		&dl_sched_class > &stop_sched_class);
++
+ 	wait_bit_init();
  
-@@ -615,7 +615,7 @@ static void sas_eh_handle_sas_errors(struct Scsi_Host *shost, struct list_head *
-  reset:
- 			tmf_resp = sas_recover_lu(task->dev, cmd);
- 			if (tmf_resp == TMF_RESP_FUNC_COMPLETE) {
--				pr_notice("dev %016llx LU %llx is recovered\n",
-+				pr_notice("dev %016llx LU 0x%llx is recovered\n",
- 					  SAS_ADDR(task->dev),
- 					  cmd->device->lun);
- 				sas_eh_finish_cmd(cmd);
-@@ -666,7 +666,7 @@ static void sas_eh_handle_sas_errors(struct Scsi_Host *shost, struct list_head *
- 			 * of effort could recover from errors.  Quite
- 			 * possibly the HA just disappeared.
- 			 */
--			pr_err("error from  device %llx, LUN %llx couldn't be recovered in any way\n",
-+			pr_err("error from device %016llx, LUN 0x%llx couldn't be recovered in any way\n",
- 			       SAS_ADDR(task->dev->sas_addr),
- 			       cmd->device->lun);
- 
-@@ -851,7 +851,7 @@ int sas_slave_configure(struct scsi_device *scsi_dev)
- 	if (scsi_dev->tagged_supported) {
- 		scsi_change_queue_depth(scsi_dev, SAS_DEF_QD);
- 	} else {
--		pr_notice("device %llx, LUN %llx doesn't support TCQ\n",
-+		pr_notice("device %016llx, LUN 0x%llx doesn't support TCQ\n",
- 			  SAS_ADDR(dev->sas_addr), scsi_dev->lun);
- 		scsi_change_queue_depth(scsi_dev, 1);
- 	}
-diff --git a/drivers/scsi/libsas/sas_task.c b/drivers/scsi/libsas/sas_task.c
-index 1ded7d85027e..e2d42593ce52 100644
---- a/drivers/scsi/libsas/sas_task.c
-+++ b/drivers/scsi/libsas/sas_task.c
-@@ -27,7 +27,7 @@ void sas_ssp_task_response(struct device *dev, struct sas_task *task,
- 		memcpy(tstat->buf, iu->sense_data, tstat->buf_valid_size);
- 
- 		if (iu->status != SAM_STAT_CHECK_CONDITION)
--			dev_warn(dev, "dev %llx sent sense data, but stat(%x) is not CHECK CONDITION\n",
-+			dev_warn(dev, "dev %016llx sent sense data, but stat(0x%x) is not CHECK CONDITION\n",
- 				 SAS_ADDR(task->dev->sas_addr), iu->status);
- 	}
- 	else
--- 
-2.17.1
+ #ifdef CONFIG_FAIR_GROUP_SCHED
+
 
