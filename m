@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72290C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E5DC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A95720716
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 883D224672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:38:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780680;
-	bh=sdkColpjmtpftgne7Ad8WX3Q1lItJcv6eaE6k+9S5Jw=;
+	s=default; t=1576780687;
+	bh=ioL19NGVy6hMx0RYu8e7DqjhRj5BQCCUBbouw/SxLH4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bHMMXG6V7A/N8jO9Y7GNSNc9R36pQaKxfz268H6GO7pyLvDvHIwu7SrqI+5n9hXMw
-	 d5jxZu9/eUw8roO0S1poQxtRbqu4GvaP6r+XltsR6Zbr8uTIc0wacOrFMLuvKYSQhU
-	 Yu9ibjp1MkfwROVn2ulGIyXkqVsQi+l9WnAjVdFw=
+	b=Us19jNKSsZhJFO40s7jyRxMHLfVvGMJz6sLFrAtFkZi8uF+z2NeDm1O+ZdcB2GUFp
+	 wuAbNasLbHEHA0U4KL3J/zToA5GEoaO4io/TURmGzYQf4zMZqbU98sjEjTPpKV4055
+	 Y+U7kX8bz49ihifD0/vMlA7BHZ2bXL5uJaOyM838=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbfLSSh7 (ORCPT
+        id S1727963AbfLSSiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:37:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55754 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:38:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727260AbfLSSh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:37:56 -0500
+        id S1727951AbfLSSiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:38:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE8FC20716;
-        Thu, 19 Dec 2019 18:37:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 126EA20716;
+        Thu, 19 Dec 2019 18:38:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780676;
-        bh=sdkColpjmtpftgne7Ad8WX3Q1lItJcv6eaE6k+9S5Jw=;
+        s=default; t=1576780683;
+        bh=ioL19NGVy6hMx0RYu8e7DqjhRj5BQCCUBbouw/SxLH4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F0Q5iymF6fneMwCoxpPjr5ukwtgxhNaAH3PAMu7w0Gsl2o3F+wCficveMFNAqJxa8
-         MOAWSl0RUcf+xsC9JsnYJAf7HF/Da9AQGC/ck3ibr3EsoNvbNt6gHmT+tPs9TJ/nUI
-         b351Sq2Bgoq8EPp8KQmFQYxneLWnNA6Evc+HGNLU=
+        b=Yw3w1I19TYiEI7IL6Ufc5yOSLOY2H1QbjzmfrotqxRQcg+SLeOE/nqMUHs9MEkzk5
+         UR5MooiwXrbC7wOIPQW0x2PRUAk/FIaR2o/UBXfqyCRjml5oeDhq75N5VjNObPZylI
+         WlfDmeYoFutm26v4ZFA/61RrBjHGT8cR72BPS2B4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 033/162] dma-mapping: fix return type of dma_set_max_seg_size()
-Date:   Thu, 19 Dec 2019 19:32:21 +0100
-Message-Id: <20191219183209.774085454@linuxfoundation.org>
+        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 036/162] i2c: imx: dont print error message on probe defer
+Date:   Thu, 19 Dec 2019 19:32:24 +0100
+Message-Id: <20191219183210.026925099@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -62,36 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+From: Lucas Stach <l.stach@pengutronix.de>
 
-[ Upstream commit c9d76d0655c06b8c1f944e46c4fd9e9cf4b331c0 ]
+[ Upstream commit fece4978510e43f09c8cd386fee15210e8c68493 ]
 
-The function dma_set_max_seg_size() can return either 0 on success or
--EIO on error. Change its return type from unsigned int to int to
-capture this.
+Probe deferral is a normal operating condition in the probe function,
+so don't spam the log with an error in this case.
 
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/dma-mapping.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/i2c/busses/i2c-imx.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index 2e551e2d2d03a..62dd6676b7cc6 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -151,8 +151,7 @@ static inline unsigned int dma_get_max_seg_size(struct device *dev)
- 	return SZ_64K;
- }
+diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+index cf1b57a054d09..d121c5732d7db 100644
+--- a/drivers/i2c/busses/i2c-imx.c
++++ b/drivers/i2c/busses/i2c-imx.c
+@@ -1076,7 +1076,8 @@ static int i2c_imx_probe(struct platform_device *pdev)
+ 	/* Get I2C clock */
+ 	i2c_imx->clk = devm_clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(i2c_imx->clk)) {
+-		dev_err(&pdev->dev, "can't get I2C clock\n");
++		if (PTR_ERR(i2c_imx->clk) != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "can't get I2C clock\n");
+ 		return PTR_ERR(i2c_imx->clk);
+ 	}
  
--static inline unsigned int dma_set_max_seg_size(struct device *dev,
--						unsigned int size)
-+static inline int dma_set_max_seg_size(struct device *dev, unsigned int size)
- {
- 	if (dev->dma_parms) {
- 		dev->dma_parms->max_segment_size = size;
 -- 
 2.20.1
 
