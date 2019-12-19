@@ -2,148 +2,162 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E89C3C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1660C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9D22222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 975452467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:06:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="BUj3BqTB"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="unrgmKuz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfLSMFX (ORCPT
+        id S1726847AbfLSMGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 07:05:23 -0500
-Received: from mout.gmx.net ([212.227.17.20]:47773 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726744AbfLSMFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 07:05:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1576757117;
-        bh=oHbd8+naRUDak1t7HyPoUb8otyLjLJCOQAcfK+Mtclw=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=BUj3BqTBMoOpb5xvOJVATNemxDnFJpV9ikmWOi/eIwg5ozA/WbgDfSTVEqE1z2L6N
-         lj4Bhgi546G3avdCloexk27s3O+Qi2s6Vy+iqzDwTO7XxZ9gKB7KCb4U2v5fMnuL0/
-         aa78MZPQJWt1Fc6hEf8WayNG2Xq5sKm9SoE3Hz2U=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [185.76.99.135] ([185.76.99.135]) by web-mail.gmx.net
- (3c-app-gmx-bap68.server.lan [172.19.172.68]) (via HTTP); Thu, 19 Dec 2019
- 13:05:17 +0100
+        Thu, 19 Dec 2019 07:06:52 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:31927 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726712AbfLSMGw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 07:06:52 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576757211; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=IF4vMvqiy9Q7KLJ8/f0lHi+0oxVzVOrufU/ebDNywnM=; b=unrgmKuzVlP9erLClJBzHyllYxA6hLSyzyZvmJww8Gd5aAvAuPEXg6F0LMoEiLkUOr0sPRR3
+ KHMUxymObo0P5PSumyhYYnPRvg9vo8Xg+an/HUj7huOw/d65/+vpwA9kH9PwdgueNZVhxjmt
+ a84Mc6VQRenNNgp5CvkXwd3uNPE=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5dfb67d7.7f533b9aa148-smtp-out-n01;
+ Thu, 19 Dec 2019 12:06:47 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8DA9AC4479D; Thu, 19 Dec 2019 12:06:46 +0000 (UTC)
+Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3CB0CC433CB;
+        Thu, 19 Dec 2019 12:06:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3CB0CC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     bjorn.andersson@linaro.org
+Cc:     agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, amit.kucheria@linaro.org,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH] arm64: dts: qcom: sm8150: Add cpufreq HW device node
+Date:   Thu, 19 Dec 2019 17:36:33 +0530
+Message-Id: <20191219120633.20723-1-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
-Message-ID: <trinity-76f78a91-fc1f-479c-bd38-a7b989b28234-1576757117258@3c-app-gmx-bap68>
-From:   "Frank Wunderlich" <frank-w@public-files.de>
-To:     "Rob Herring" <robh+dt@kernel.org>
-Cc:     "Masahiro Yamada" <masahiroy@kernel.org>,
-        "Linux Kbuild mailing list" <linux-kbuild@vger.kernel.org>,
-        "Michal Marek" <michal.lkml@markovi.net>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        "Frank Rowand" <frowand.list@gmail.com>,
-        DTML <devicetree@vger.kernel.org>
-Subject: Aw: Re: [PATCH] kbuild: Add DTC_CPP_FLAGS
-Content-Type: text/plain; charset=UTF-8
-Date:   Thu, 19 Dec 2019 13:05:17 +0100
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <CAL_Jsq+we-0c25Hn+eGDTsyTDwKEvs9LWV9QtLX1+8V3DmtFtg@mail.gmail.com>
-References: <20191218114625.28438-1-frank-w@public-files.de>
- <CAK7LNARWYE4-4Qp-YfTrrt1YCZ68b28FDoE45cDJkZTqUyXNUw@mail.gmail.com>
- <CAL_Jsq+we-0c25Hn+eGDTsyTDwKEvs9LWV9QtLX1+8V3DmtFtg@mail.gmail.com>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:DinXypny3FYqi5CzziIi3ovA308cTpeTvs+7Oy2eWnoyOsphl0VSMhahYhaMGtihK1fXV
- vpN/wCa5IDmiyqUhmKUQQNDZ1vWBbirdvM0YPz5A1vG40flYbB4dFXBvRtFDbY7xcSdWEPl9wUVP
- SVq/Sk7qK+aHohKkYAYVtvJ1c1FblmjShV+5u/z5LFCY1N3xM7THpUCzExldJreEIWAetivgrst4
- twq6rizclVTQyWi5z2hQLR/y/euTJfVENSrqX8eBVuxL7ZbOdf5teOCQ3kuB/fyUVV1IBy7vKRvU
- 4U=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:mDqwi3hrEVw=:1T4JUV+00BktsWI/C2ulmh
- ZsMYnSjqf/cLm7gKHivmgzw3MUl33Qz8WAHPJgMq7luSL25eShs2KWVmPkGIOP1+3+3g5M1QF
- 0RRz3JNze9TJdOmEOlJSJpphwXRrUjrgAAyGp5So0sVZ3i2qRIJ72kwrWQspOWg71jsJ0Swvv
- k+EEoayHcf4mTCRBtkw56ZfBndtvxw4uznk4pVn4G+ET9DZHOsvJEQIoOTJ7lkODRfifiW1kp
- Xk96mPO/G3TBp2boZBYJjJxQ8Mjkb7qQwrjMfUD+ogvTPugMutXO0uJ5iascIeTBmaVwX+477
- +hrqL8MnzkNM1nE1b9rE78TJpsVmfZJXdYB9XQEwyX1rn0Oa/qT4+ctx7T5Nc4yzXxcTKXDwx
- fmEtTi4LTrvroKdlT94qhgxPkTvavtkZmSbf9hlEp6FZi0jw2iPq2oBjAgJUP84HTZaQ+JjP2
- NdQGH1vGlKtuUSncxNAGo+ozteS02X8QmR/073aOl16puqLT+JTqDeiBB9qvdbjfMFv+n3dNS
- XCo4bswfiN3edBY/zUDSNPGRKfl2Z5rRum5wz1r336hUCHaMCYnXuL257DAC1VpPeiXBBJgWV
- 7n4CgiR9pscLdWHu5yvYAZGzWnAV1FG48NMnU3uuRSX0r0hg/3Uo287r6RpZE5NpOfsD3ZQpS
- 9eWitBN15Ai7KKI3+3wKaO7HF5KR/n6g7QKFhK5f5y5+8i+7OETtS/sPnIJosEZe6KMg=
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+Add cpufreq HW device node to scale 4-Silver/3-Gold/1-Gold+ cores
+on SM8150 SoCs.
 
-so the way you prefer is this one (use new file for additions and includin=
-g the board dts):
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sm8150.dtsi | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-arch/arm64/boot/dts/mediatek/mt7622-bpi-r64-mt7531.dts (example for mt7531=
--phy)
-
-/*
- * Copyright (c) 2018 MediaTek Inc.
- * Author:
- *
- * SPDX-License-Identifier: (GPL-2.0 OR MIT)
- */
-
-/dts-v1/;
-
-#include "mt7622-bananapi-bpi-r64.dts"
-
-/ {
-        gsw: gsw@0 {
-                compatible =3D "mediatek,mt753x";
-                mediatek,ethsys =3D <&ethsys>;
-                #address-cells =3D <1>;
-                #size-cells =3D <0>;
-        };
-};
-
-&gsw {
-        mediatek,mdio =3D <&mdio>;
-        mediatek,portmap =3D "wllll";
-        mediatek,mdio_master_pinmux =3D <0>;
-        reset-gpios =3D <&pio 54 0>;
-        interrupt-parent =3D <&pio>;
-        interrupts =3D <53 IRQ_TYPE_LEVEL_HIGH>;
-        status =3D "okay";
-
-        port5: port@5 {
-                compatible =3D "mediatek,mt753x-port";
-                reg =3D <5>;
-                phy-mode =3D "rgmii";
-                fixed-link {
-                        speed =3D <1000>;
-                        full-duplex;
-                };
-        };
-
-        port6: port@6 {
-                compatible =3D "mediatek,mt753x-port";
-                reg =3D <6>;
-                phy-mode =3D "2500base-x";
-                fixed-link {
-                        speed =3D <2500>;
-                        full-duplex;
-                };
-        };
-};
-
-at least it compiles and after decompile the new nodes are visible...
-
-is there any way to drop nodes (in case dsa-driver gets merged i don't nee=
-d it in the other 2)? i can disable them, but they will be present.
-
-regards Frank
-
-
-> Gesendet: Mittwoch, 18. Dezember 2019 um 14:51 Uhr
-> Von: "Rob Herring" <robh+dt@kernel.org>
-> NAK. #ifdefs and complex macros in particular are features we don't
-> want in dts files.
->
-> Rob
+diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+index 694be3c001a68..bad77e539cb1d 100644
+--- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+@@ -45,6 +45,7 @@
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_0>;
++			qcom,freq-domain = <&cpufreq_hw 0>;
+ 			L2_0: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+@@ -60,6 +61,7 @@
+ 			reg = <0x0 0x100>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_100>;
++			qcom,freq-domain = <&cpufreq_hw 0>;
+ 			L2_100: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+@@ -73,6 +75,7 @@
+ 			reg = <0x0 0x200>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_200>;
++			qcom,freq-domain = <&cpufreq_hw 0>;
+ 			L2_200: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+@@ -85,6 +88,7 @@
+ 			reg = <0x0 0x300>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_300>;
++			qcom,freq-domain = <&cpufreq_hw 0>;
+ 			L2_300: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+@@ -97,6 +101,7 @@
+ 			reg = <0x0 0x400>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_400>;
++			qcom,freq-domain = <&cpufreq_hw 1>;
+ 			L2_400: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+@@ -109,6 +114,7 @@
+ 			reg = <0x0 0x500>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_500>;
++			qcom,freq-domain = <&cpufreq_hw 1>;
+ 			L2_500: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+@@ -121,6 +127,7 @@
+ 			reg = <0x0 0x600>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_600>;
++			qcom,freq-domain = <&cpufreq_hw 1>;
+ 			L2_600: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+@@ -133,6 +140,7 @@
+ 			reg = <0x0 0x700>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_700>;
++			qcom,freq-domain = <&cpufreq_hw 2>;
+ 			L2_700: l2-cache {
+ 				compatible = "cache";
+ 				next-level-cache = <&L3_0>;
+@@ -834,6 +842,19 @@
+ 				};
+ 			};
+ 		};
++
++		cpufreq_hw: cpufreq@18323000 {
++			compatible = "qcom,cpufreq-hw";
++			reg = <0 0x18323000 0 0x1400>, <0 0x18325800 0 0x1400>,
++			      <0 0x18327800 0 0x1400>;
++			reg-names = "freq-domain0", "freq-domain1",
++				    "freq-domain2";
++
++			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
++			clock-names = "xo", "alternate";
++
++			#freq-domain-cells = <1>;
++		};
+ 	};
+ 
+ 	timer {
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
