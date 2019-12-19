@@ -2,52 +2,51 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7CBC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B309C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DB9E24679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46D3D24679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781346;
-	bh=AymR5qxAwCK6CAvuXi2A7WqMJzdyKMalmH4cBmxL0W0=;
+	s=default; t=1576781349;
+	bh=V4W7W/f4wiWQT9IugME53mzZW3R0mWlSXE+ycXYBgdc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JD2qM6bVgbYE7qub/RG0X9ct+ldL0UAKcTs7Bw6YjquRHvsXvXt9WvIKoacpVkDvo
-	 mAy+mWwZ7itghxcG7qGk01yE1GM9f4MfYkbJDGIrozWuO6vmXRue4jcCEFbB5PqGFz
-	 2PELh/agy/QOjkYJK8Gs/4YAnAVjsiFLYMofWnCA=
+	b=AP7J9G4zmtQv4h8ZvrBWv6XroaYWl/i7NJUPFiM93/sAGf0blk8BBmQCVjSuhIwcX
+	 27qJ4EnxWtr3voKwTbh0NNMcIrpeBuJmB3np6lQB9xAVCCczTHVvEHZ2S/tF1/ipGc
+	 BzTMHL4+tYlZSGmjwakot2PJ03kOKgEgwOys67/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729726AbfLSStE (ORCPT
+        id S1729736AbfLSStI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:49:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42364 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:49:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728691AbfLSStD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:49:03 -0500
+        id S1728691AbfLSStF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:49:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6AAF24683;
-        Thu, 19 Dec 2019 18:49:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50BA12465E;
+        Thu, 19 Dec 2019 18:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781342;
-        bh=AymR5qxAwCK6CAvuXi2A7WqMJzdyKMalmH4cBmxL0W0=;
+        s=default; t=1576781344;
+        bh=V4W7W/f4wiWQT9IugME53mzZW3R0mWlSXE+ycXYBgdc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2EXe1ZHwkGlxbc9FII8hqTypEypDG3olnS5Tr+1Y2MXu+SkYI13iJddzxwJkWu5la
-         PKy4mHISK9K7B1aCxfA8RggYxNgsRz7p1WG9mSeNJvZYuS7ytLnNzWMGBJHcSn1f4M
-         wkuu138jGfYdJoFPQ4zllB+mje2sOyvOWyrkKd+Y=
+        b=rwou+Fp32s55EVzFQsUrGq4bYDKtDteHl44cWlMRTmaCc3olor8vOAUE4CqG1q0um
+         w3IktF5sQNvDEwrC4Gfde/it2XGv9bEHxhCXVaMCYZw+JYofHrjOqVuL9pIwgDvZ3i
+         AqGUN4LxX7NfR2z5UEmEuzkpL9CjfLmEBIZ1LmYQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 183/199] tcp: tighten acceptance of ACKs not matching a child socket
-Date:   Thu, 19 Dec 2019 19:34:25 +0100
-Message-Id: <20191219183225.783038211@linuxfoundation.org>
+        stable@vger.kernel.org, Jeff Mahoney <jeffm@suse.com>,
+        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 166/199] reiserfs: fix extended attributes on the root directory
+Date:   Thu, 19 Dec 2019 19:34:08 +0100
+Message-Id: <20191219183224.642619223@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,76 +59,211 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guillaume Nault <gnault@redhat.com>
+From: Jeff Mahoney <jeffm@suse.com>
 
-[ Upstream commit cb44a08f8647fd2e8db5cc9ac27cd8355fa392d8 ]
+[ Upstream commit 60e4cf67a582d64f07713eda5fcc8ccdaf7833e6 ]
 
-When no synflood occurs, the synflood timestamp isn't updated.
-Therefore it can be so old that time_after32() can consider it to be
-in the future.
+Since commit d0a5b995a308 (vfs: Add IOP_XATTR inode operations flag)
+extended attributes haven't worked on the root directory in reiserfs.
 
-That's a problem for tcp_synq_no_recent_overflow() as it may report
-that a recent overflow occurred while, in fact, it's just that jiffies
-has grown past 'last_overflow' + TCP_SYNCOOKIE_VALID + 2^31.
+This is due to reiserfs conditionally setting the sb->s_xattrs handler
+array depending on whether it located or create the internal privroot
+directory.  It necessarily does this after the root inode is already
+read in.  The IOP_XATTR flag is set during inode initialization, so
+it never gets set on the root directory.
 
-Spurious detection of recent overflows lead to extra syncookie
-verification in cookie_v[46]_check(). At that point, the verification
-should fail and the packet dropped. But we should have dropped the
-packet earlier as we didn't even send a syncookie.
+This commit unconditionally assigns sb->s_xattrs and clears IOP_XATTR on
+internal inodes.  The old return values due to the conditional assignment
+are handled via open_xa_root, which now returns EOPNOTSUPP as the VFS
+would have done.
 
-Let's refine tcp_synq_no_recent_overflow() to report a recent overflow
-only if jiffies is within the
-[last_overflow, last_overflow + TCP_SYNCOOKIE_VALID] interval. This
-way, no spurious recent overflow is reported when jiffies wraps and
-'last_overflow' becomes in the future from the point of view of
-time_after32().
-
-However, if jiffies wraps and enters the
-[last_overflow, last_overflow + TCP_SYNCOOKIE_VALID] interval (with
-'last_overflow' being a stale synflood timestamp), then
-tcp_synq_no_recent_overflow() still erroneously reports an
-overflow. In such cases, we have to rely on syncookie verification
-to drop the packet. We unfortunately have no way to differentiate
-between a fresh and a stale syncookie timestamp.
-
-In practice, using last_overflow as lower bound is problematic.
-If the synflood timestamp is concurrently updated between the time
-we read jiffies and the moment we store the timestamp in
-'last_overflow', then 'now' becomes smaller than 'last_overflow' and
-tcp_synq_no_recent_overflow() returns true, potentially dropping a
-valid syncookie.
-
-Reading jiffies after loading the timestamp could fix the problem,
-but that'd require a memory barrier. Let's just accommodate for
-potential timestamp growth instead and extend the interval using
-'last_overflow - HZ' as lower bound.
-
-Signed-off-by: Guillaume Nault <gnault@redhat.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20191024143127.17509-1-jeffm@suse.com
+CC: stable@vger.kernel.org
+Fixes: d0a5b995a308 ("vfs: Add IOP_XATTR inode operations flag")
+Signed-off-by: Jeff Mahoney <jeffm@suse.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/tcp.h |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ fs/reiserfs/inode.c     | 12 ++++++++++--
+ fs/reiserfs/namei.c     |  7 +++++--
+ fs/reiserfs/reiserfs.h  |  2 ++
+ fs/reiserfs/super.c     |  2 ++
+ fs/reiserfs/xattr.c     | 19 ++++++++++++-------
+ fs/reiserfs/xattr_acl.c |  4 +---
+ 6 files changed, 32 insertions(+), 14 deletions(-)
 
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -506,7 +506,15 @@ static inline bool tcp_synq_no_recent_ov
- {
- 	unsigned long last_overflow = tcp_sk(sk)->rx_opt.ts_recent_stamp;
+diff --git a/fs/reiserfs/inode.c b/fs/reiserfs/inode.c
+index bd4c727f4610b..9531b6c18ac7b 100644
+--- a/fs/reiserfs/inode.c
++++ b/fs/reiserfs/inode.c
+@@ -2102,6 +2102,15 @@ int reiserfs_new_inode(struct reiserfs_transaction_handle *th,
+ 		goto out_inserted_sd;
+ 	}
  
--	return time_after(jiffies, last_overflow + TCP_SYNCOOKIE_VALID);
-+	/* If last_overflow <= jiffies <= last_overflow + TCP_SYNCOOKIE_VALID,
-+	 * then we're under synflood. However, we have to use
-+	 * 'last_overflow - HZ' as lower bound. That's because a concurrent
-+	 * tcp_synq_overflow() could update .ts_recent_stamp after we read
-+	 * jiffies but before we store .ts_recent_stamp into last_overflow,
-+	 * which could lead to rejecting a valid syncookie.
++	/*
++	 * Mark it private if we're creating the privroot
++	 * or something under it.
 +	 */
-+	return !time_between32(jiffies, last_overflow - HZ,
-+			       last_overflow + TCP_SYNCOOKIE_VALID);
++	if (IS_PRIVATE(dir) || dentry == REISERFS_SB(sb)->priv_root) {
++		inode->i_flags |= S_PRIVATE;
++		inode->i_opflags &= ~IOP_XATTR;
++	}
++
+ 	if (reiserfs_posixacl(inode->i_sb)) {
+ 		reiserfs_write_unlock(inode->i_sb);
+ 		retval = reiserfs_inherit_default_acl(th, dir, dentry, inode);
+@@ -2116,8 +2125,7 @@ int reiserfs_new_inode(struct reiserfs_transaction_handle *th,
+ 		reiserfs_warning(inode->i_sb, "jdm-13090",
+ 				 "ACLs aren't enabled in the fs, "
+ 				 "but vfs thinks they are!");
+-	} else if (IS_PRIVATE(dir))
+-		inode->i_flags |= S_PRIVATE;
++	}
+ 
+ 	if (security->name) {
+ 		reiserfs_write_unlock(inode->i_sb);
+diff --git a/fs/reiserfs/namei.c b/fs/reiserfs/namei.c
+index 1ec728cf82d13..1c900f3220898 100644
+--- a/fs/reiserfs/namei.c
++++ b/fs/reiserfs/namei.c
+@@ -377,10 +377,13 @@ static struct dentry *reiserfs_lookup(struct inode *dir, struct dentry *dentry,
+ 
+ 		/*
+ 		 * Propagate the private flag so we know we're
+-		 * in the priv tree
++		 * in the priv tree.  Also clear IOP_XATTR
++		 * since we don't have xattrs on xattr files.
+ 		 */
+-		if (IS_PRIVATE(dir))
++		if (IS_PRIVATE(dir)) {
+ 			inode->i_flags |= S_PRIVATE;
++			inode->i_opflags &= ~IOP_XATTR;
++		}
+ 	}
+ 	reiserfs_write_unlock(dir->i_sb);
+ 	if (retval == IO_ERROR) {
+diff --git a/fs/reiserfs/reiserfs.h b/fs/reiserfs/reiserfs.h
+index d920a646b5784..3e78a394fdb84 100644
+--- a/fs/reiserfs/reiserfs.h
++++ b/fs/reiserfs/reiserfs.h
+@@ -1167,6 +1167,8 @@ static inline int bmap_would_wrap(unsigned bmap_nr)
+ 	return bmap_nr > ((1LL << 16) - 1);
  }
  
- static inline u32 tcp_cookie_time(void)
++extern const struct xattr_handler *reiserfs_xattr_handlers[];
++
+ /*
+  * this says about version of key of all items (but stat data) the
+  * object consists of
+diff --git a/fs/reiserfs/super.c b/fs/reiserfs/super.c
+index dec6c93044fa3..cd2d555b3a6dd 100644
+--- a/fs/reiserfs/super.c
++++ b/fs/reiserfs/super.c
+@@ -2026,6 +2026,8 @@ static int reiserfs_fill_super(struct super_block *s, void *data, int silent)
+ 	if (replay_only(s))
+ 		goto error_unlocked;
+ 
++	s->s_xattr = reiserfs_xattr_handlers;
++
+ 	if (bdev_read_only(s->s_bdev) && !(s->s_flags & MS_RDONLY)) {
+ 		SWARN(silent, s, "clm-7000",
+ 		      "Detected readonly device, marking FS readonly");
+diff --git a/fs/reiserfs/xattr.c b/fs/reiserfs/xattr.c
+index 9e313fc7fdc70..dbc2ada9884f1 100644
+--- a/fs/reiserfs/xattr.c
++++ b/fs/reiserfs/xattr.c
+@@ -121,13 +121,13 @@ static struct dentry *open_xa_root(struct super_block *sb, int flags)
+ 	struct dentry *xaroot;
+ 
+ 	if (d_really_is_negative(privroot))
+-		return ERR_PTR(-ENODATA);
++		return ERR_PTR(-EOPNOTSUPP);
+ 
+ 	inode_lock_nested(d_inode(privroot), I_MUTEX_XATTR);
+ 
+ 	xaroot = dget(REISERFS_SB(sb)->xattr_root);
+ 	if (!xaroot)
+-		xaroot = ERR_PTR(-ENODATA);
++		xaroot = ERR_PTR(-EOPNOTSUPP);
+ 	else if (d_really_is_negative(xaroot)) {
+ 		int err = -ENODATA;
+ 
+@@ -609,6 +609,10 @@ int reiserfs_xattr_set(struct inode *inode, const char *name,
+ 	int error, error2;
+ 	size_t jbegin_count = reiserfs_xattr_nblocks(inode, buffer_size);
+ 
++	/* Check before we start a transaction and then do nothing. */
++	if (!d_really_is_positive(REISERFS_SB(inode->i_sb)->priv_root))
++		return -EOPNOTSUPP;
++
+ 	if (!(flags & XATTR_REPLACE))
+ 		jbegin_count += reiserfs_xattr_jcreate_nblocks(inode);
+ 
+@@ -831,8 +835,7 @@ ssize_t reiserfs_listxattr(struct dentry * dentry, char *buffer, size_t size)
+ 	if (d_really_is_negative(dentry))
+ 		return -EINVAL;
+ 
+-	if (!dentry->d_sb->s_xattr ||
+-	    get_inode_sd_version(d_inode(dentry)) == STAT_DATA_V1)
++	if (get_inode_sd_version(d_inode(dentry)) == STAT_DATA_V1)
+ 		return -EOPNOTSUPP;
+ 
+ 	dir = open_xa_dir(d_inode(dentry), XATTR_REPLACE);
+@@ -872,6 +875,7 @@ static int create_privroot(struct dentry *dentry)
+ 	}
+ 
+ 	d_inode(dentry)->i_flags |= S_PRIVATE;
++	d_inode(dentry)->i_opflags &= ~IOP_XATTR;
+ 	reiserfs_info(dentry->d_sb, "Created %s - reserved for xattr "
+ 		      "storage.\n", PRIVROOT_NAME);
+ 
+@@ -885,7 +889,7 @@ static int create_privroot(struct dentry *dentry) { return 0; }
+ #endif
+ 
+ /* Actual operations that are exported to VFS-land */
+-static const struct xattr_handler *reiserfs_xattr_handlers[] = {
++const struct xattr_handler *reiserfs_xattr_handlers[] = {
+ #ifdef CONFIG_REISERFS_FS_XATTR
+ 	&reiserfs_xattr_user_handler,
+ 	&reiserfs_xattr_trusted_handler,
+@@ -956,8 +960,10 @@ int reiserfs_lookup_privroot(struct super_block *s)
+ 	if (!IS_ERR(dentry)) {
+ 		REISERFS_SB(s)->priv_root = dentry;
+ 		d_set_d_op(dentry, &xattr_lookup_poison_ops);
+-		if (d_really_is_positive(dentry))
++		if (d_really_is_positive(dentry)) {
+ 			d_inode(dentry)->i_flags |= S_PRIVATE;
++			d_inode(dentry)->i_opflags &= ~IOP_XATTR;
++		}
+ 	} else
+ 		err = PTR_ERR(dentry);
+ 	inode_unlock(d_inode(s->s_root));
+@@ -986,7 +992,6 @@ int reiserfs_xattr_init(struct super_block *s, int mount_flags)
+ 	}
+ 
+ 	if (d_really_is_positive(privroot)) {
+-		s->s_xattr = reiserfs_xattr_handlers;
+ 		inode_lock(d_inode(privroot));
+ 		if (!REISERFS_SB(s)->xattr_root) {
+ 			struct dentry *dentry;
+diff --git a/fs/reiserfs/xattr_acl.c b/fs/reiserfs/xattr_acl.c
+index d92a1dc6ee70f..1f1fdfd3bc5cc 100644
+--- a/fs/reiserfs/xattr_acl.c
++++ b/fs/reiserfs/xattr_acl.c
+@@ -316,10 +316,8 @@ reiserfs_inherit_default_acl(struct reiserfs_transaction_handle *th,
+ 	 * would be useless since permissions are ignored, and a pain because
+ 	 * it introduces locking cycles
+ 	 */
+-	if (IS_PRIVATE(dir)) {
+-		inode->i_flags |= S_PRIVATE;
++	if (IS_PRIVATE(inode))
+ 		goto apply_umask;
+-	}
+ 
+ 	err = posix_acl_create(dir, &inode->i_mode, &default_acl, &acl);
+ 	if (err)
+-- 
+2.20.1
+
 
 
