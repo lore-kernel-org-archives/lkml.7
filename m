@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAFBC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E83C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5269222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D572A222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782317;
-	bh=tXiHxWutDSqcxAY5guEkaYdDDjqecu9sBI3xxjh9P34=;
+	s=default; t=1576782319;
+	bh=Puht1xR8/7gVnpbjXRVBZ5m9qjEjEPNDVLUUmGNwvho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zj0XpdEFyJHdPUGv75EuVp0GTOibHgMSoqYXYrVNbzzrfY9ZDaEow1BhDvXtRAejZ
-	 xMlOKalqLKchLBzYg87MyPF/jyDndRz/5Hp+7bZT0cad2ImiUecUbQelvlx1PBZrwY
-	 mpCv978/kdR8ewg7egOp1lB3KwWmkllQvz52HUXk=
+	b=iqTT7K5xmLvpxoIook1E40fis/kwRkcUC3rETUqbexawBja9tsN/61neXdllujug1
+	 nhruzkOTHUcX6ZSNCiK+WHEQAxZvtilviBncb7xWfi1vH3XusQPKFrSJQqWE/uDwst
+	 y/7YHKpFa64SAGrAUXgWIAeU1uMCtcAdWzZVTYHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729269AbfLSSqA (ORCPT
+        id S1728525AbfLSTFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:46:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38512 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 14:05:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728640AbfLSSp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:45:58 -0500
+        id S1727691AbfLSSqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:46:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EDE3206D7;
-        Thu, 19 Dec 2019 18:45:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEEDB2465E;
+        Thu, 19 Dec 2019 18:45:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781157;
-        bh=tXiHxWutDSqcxAY5guEkaYdDDjqecu9sBI3xxjh9P34=;
+        s=default; t=1576781160;
+        bh=Puht1xR8/7gVnpbjXRVBZ5m9qjEjEPNDVLUUmGNwvho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nLbsqq7fNRO+aasNw04y22kUYxVT0emYBBT7GJi6Y4UBtXgalqVtf4uqgU5Z0P+aQ
-         oVBfwgh3lPLXz2+48214gMNziWOEGROMg6PQZ+ME8oiIKnxet9yV5duAAkK6bCN8ir
-         cpxBjJMREVwRE3Uo/9mgqhOFM7UDbLGmUkCbYq+k=
+        b=KUj0f5g0FkZTqdglL0jspry45hJpZ9yQORJxB0I2Ta2uMR2r/Jgz2qau/yk8ATwD7
+         1QlLGtoo+3r+mzm8jMIrxKbZIUhn8CbM4pO3U97vtNyKIXZT+p3fIPMDy4bjfMlMZB
+         ilDBHwfEnXVnK9DQsmPnMbWgsqSzkhymP7ywWujw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.9 106/199] ARM: dts: pandora-common: define wl1251 as child node of mmc3
-Date:   Thu, 19 Dec 2019 19:33:08 +0100
-Message-Id: <20191219183220.755085420@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Lesiak <chris.lesiak@licor.com>,
+        Matt Ranostay <matt.ranostay@konsulko.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.9 107/199] iio: humidity: hdc100x: fix IIO_HUMIDITYRELATIVE channel reporting
+Date:   Thu, 19 Dec 2019 19:33:09 +0100
+Message-Id: <20191219183220.807913765@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,81 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: H. Nikolaus Schaller <hns@goldelico.com>
+From: Chris Lesiak <chris.lesiak@licor.com>
 
-commit 4f9007d692017cef38baf2a9b82b7879d5b2407b upstream.
+commit 342a6928bd5017edbdae376042d8ad6af3d3b943 upstream.
 
-Since v4.7 the dma initialization requires that there is a
-device tree property for "rx" and "tx" channels which is
-not provided by the pdata-quirks initialization.
+The IIO_HUMIDITYRELATIVE channel was being incorrectly reported back
+as percent when it should have been milli percent. This is via an
+incorrect scale value being returned to userspace.
 
-By conversion of the mmc3 setup to device tree this will
-finally allows to remove the OpenPandora wlan specific omap3
-data-quirks.
-
-Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: <stable@vger.kernel.org> # v4.7+
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Chris Lesiak <chris.lesiak@licor.com>
+Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/omap3-pandora-common.dtsi |   36 ++++++++++++++++++++++++++--
- 1 file changed, 34 insertions(+), 2 deletions(-)
+ drivers/iio/humidity/hdc100x.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm/boot/dts/omap3-pandora-common.dtsi
-+++ b/arch/arm/boot/dts/omap3-pandora-common.dtsi
-@@ -221,6 +221,17 @@
- 		gpio = <&gpio6 4 GPIO_ACTIVE_HIGH>;	/* GPIO_164 */
- 	};
- 
-+	/* wl1251 wifi+bt module */
-+	wlan_en: fixed-regulator-wg7210_en {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vwlan";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		startup-delay-us = <50000>;
-+		enable-active-high;
-+		gpio = <&gpio1 23 GPIO_ACTIVE_HIGH>;
-+	};
-+
- 	/* wg7210 (wifi+bt module) 32k clock buffer */
- 	wg7210_32k: fixed-regulator-wg7210_32k {
- 		compatible = "regulator-fixed";
-@@ -514,9 +525,30 @@
- 	/*wp-gpios = <&gpio4 31 GPIO_ACTIVE_HIGH>;*/	/* GPIO_127 */
- };
- 
--/* mmc3 is probed using pdata-quirks to pass wl1251 card data */
- &mmc3 {
--	status = "disabled";
-+	vmmc-supply = <&wlan_en>;
-+
-+	bus-width = <4>;
-+	non-removable;
-+	ti,non-removable;
-+	cap-power-off-card;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc3_pins>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	wlan: wifi@1 {
-+		compatible = "ti,wl1251";
-+
-+		reg = <1>;
-+
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;	/* GPIO_21 */
-+
-+		ti,wl1251-has-eeprom;
-+	};
- };
- 
- /* bluetooth*/
+--- a/drivers/iio/humidity/hdc100x.c
++++ b/drivers/iio/humidity/hdc100x.c
+@@ -202,7 +202,7 @@ static int hdc100x_read_raw(struct iio_d
+ 			*val2 = 65536;
+ 			return IIO_VAL_FRACTIONAL;
+ 		} else {
+-			*val = 100;
++			*val = 100000;
+ 			*val2 = 65536;
+ 			return IIO_VAL_FRACTIONAL;
+ 		}
 
 
