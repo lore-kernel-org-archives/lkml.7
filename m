@@ -2,125 +2,81 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1720CC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D67A9C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0309222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAB54222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:20:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfLSTRD (ORCPT
+        id S1727148AbfLSTUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:17:03 -0500
-Received: from foss.arm.com ([217.140.110.172]:43338 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726964AbfLSTRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 14:17:03 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA0171FB;
-        Thu, 19 Dec 2019 11:17:02 -0800 (PST)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3D983F67D;
-        Thu, 19 Dec 2019 11:17:00 -0800 (PST)
-Subject: Re: [PATCH v5 2/2] EDAC: al-mc-edac: Introduce Amazon's Annapurna
- Labs Memory Controller EDAC
-To:     Talel Shenhar <talel@amazon.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de,
-        mchehab@kernel.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-edac@vger.kernel.org, dwmw@amazon.co.uk,
-        benh@kernel.crashing.org, hhhawa@amazon.com, ronenk@amazon.com,
-        jonnyc@amazon.com, hanochu@amazon.com, amirkl@amazon.com,
-        barakw@amazon.com
-References: <1571911407-29379-1-git-send-email-talel@amazon.com>
- <1571911407-29379-3-git-send-email-talel@amazon.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <411bd52f-a714-9b8d-c18c-2d7bcec3d850@arm.com>
-Date:   Thu, 19 Dec 2019 19:16:58 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <1571911407-29379-3-git-send-email-talel@amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Thu, 19 Dec 2019 14:20:18 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:50754 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726908AbfLSTUS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 14:20:18 -0500
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1ii1LL-0005W2-Fe; Thu, 19 Dec 2019 19:20:16 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH] PCI: Avoid ASMedia XHCI USB PME# from D0 defect
+Date:   Fri, 20 Dec 2019 03:20:06 +0800
+Message-Id: <20191219192006.16270-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Talel,
+The ASMedia USB XHCI Controller claims to support generating PME# while
+in D0:
 
-On 24/10/2019 11:03, Talel Shenhar wrote:
-> The Amazon's Annapurna Labs Memory Controller EDAC supports ECC capability
-> for error detection and correction (Single bit error correction, Double
-> detection). This driver introduces EDAC driver for that capability.
+01:00.0 USB controller: ASMedia Technology Inc. Device 2142 (prog-if 30 [XHCI])
+        Subsystem: SUNIX Co., Ltd. Device 312b
+        Capabilities: [78] Power Management version 3
+                Flags: PMEClk- DSI- D1- D2- AuxCurrent=55mA PME(D0+,D1-,D2-,D3hot-,D3cold-)
+                Status: D0 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
 
-> diff --git a/drivers/edac/al_mc_edac.c b/drivers/edac/al_mc_edac.c
-> new file mode 100644
-> index 00000000..b9ef7dd
-> --- /dev/null
-> +++ b/drivers/edac/al_mc_edac.c
-> @@ -0,0 +1,355 @@
+However PME# only gets asserted when plugging USB 2.0 or USB 1.1
+devices, but not for USB 3.0 devices.
 
-> +static void devm_al_mc_edac_del(void *data)
-> +{
-> +	edac_mc_del_mc(data);
-> +}
-> +
-> +static void devm_al_mc_edac_free(void *data)
-> +{
-> +	edac_mc_free(data);
-> +}
-> +
-> +static int al_mc_edac_probe(struct platform_device *pdev)
-> +{
-> +	void __iomem *mmio_base;
-> +	struct edac_mc_layer layers[1];
-> +	struct mem_ctl_info *mci;
-> +	struct al_mc_edac *al_mc;
-> +	int ret;
-> +
-> +	mmio_base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(mmio_base)) {
-> +		dev_err(&pdev->dev, "failed to ioremap memory (%ld)\n",
-> +			PTR_ERR(mmio_base));
-> +		return PTR_ERR(mmio_base);
-> +	}
-> +
-> +	layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
-> +	layers[0].size = 1;
-> +	layers[0].is_virt_csrow = false;
-> +	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
-> +			    sizeof(struct al_mc_edac));
-> +	if (!mci)
-> +		return -ENOMEM;
+So remove PCI_PM_CAP_PME_D0 to avoid using PME under D0.
 
-> +	ret = devm_add_action(&pdev->dev, devm_al_mc_edac_free, mci);
-> +	if (ret) {
-> +		edac_mc_free(mci);
-> +		return ret;
-> +	}
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205919
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/pci/quirks.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Cool. (edac_mc.c should probably provide a devm_edac_mc_alloc() that does this, but that
-can be future)
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 79379b4c9d7a..24c71555dc77 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5436,3 +5436,14 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
+ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
+ 			      PCI_CLASS_DISPLAY_VGA, 8,
+ 			      quirk_reset_lenovo_thinkpad_p50_nvgpu);
++
++/*
++ * Device [1b21:2142]
++ * When in D0, PME# doesn't get asserted when plugging USB 3.0 device.
++ */
++static void pci_fixup_no_d0_pme(struct pci_dev *dev)
++{
++	pci_info(dev, "PME# does not work under D0, disabling it\n");
++	dev->pme_support &= ~(PCI_PM_CAP_PME_D0 >> PCI_PM_CAP_PME_SHIFT);
++}
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x2142, pci_fixup_no_d0_pme);
+-- 
+2.17.1
 
-
-> +static struct platform_driver al_mc_edac_driver = {
-> +	.probe = al_mc_edac_probe,
-
-
-(Looks like you can still remove the module even though there is no .remove here.)
-
-
-Reviewed-by: James Morse <james.morse@arm.com>
-
-
-
-Thanks,
-
-James
