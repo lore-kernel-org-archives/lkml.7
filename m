@@ -2,91 +2,116 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFBFC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF6AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CF3D2465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:45:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576745117;
-	bh=ebmEwzDC7ZpLE1nCj3BibTOu5Z0b5CGmQ4BasrHpczc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iijb8RQOZraPilFRlwZoqwZcmTyHlxsbHmZiU+ypAB25Z1mx4JvoM6H7iUvfGkWct
-	 3Ppkfw1adqp815psEHP5dIn/hZmvM0fqI4F1fDrSlWhbMx852tPEaXY1Hsru0DT1m/
-	 w+M4DXV+3/U4LAKeIMphpLN+7Rr44wcfo5RisWf0=
+	by mail.kernel.org (Postfix) with ESMTP id 3B7302064B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:51:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WdMUMkTf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfLSIpQ (ORCPT
+        id S1726690AbfLSIvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 03:45:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48950 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726498AbfLSIpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 03:45:15 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 19 Dec 2019 03:51:17 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:35691 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726620AbfLSIvR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 03:51:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576745475;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=JXOA8NC/2sPcKXBC5NpS+YvRND3RBrMHfvXBPn3tTBA=;
+        b=WdMUMkTfVC2LYBoqjXuHLj+Gy4MFGkSHsIUOee7J5PRNhJZ7zbgvehlE9c795AnkMbRizH
+        UZCt0dM/EwRik42ThbM5oEDcBuS72osjBUymFxyJfQ+qAfJ2NK+Qmge1Lg7+ZM9dmJZyHG
+        q06UdbQF3zeZHxY0nusTjwbR5148j0I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-36-1KZxtNynO06HPcm10fKMIA-1; Thu, 19 Dec 2019 03:51:11 -0500
+X-MC-Unique: 1KZxtNynO06HPcm10fKMIA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA83424650;
-        Thu, 19 Dec 2019 08:45:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576745115;
-        bh=ebmEwzDC7ZpLE1nCj3BibTOu5Z0b5CGmQ4BasrHpczc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kRiZ/ka1in/I3VGhK5+b7ZzqS9CfKduRHGFBrC/7eB9UDBe18ZarWdqy9AbmUCEr6
-         6qG1NjAgGYGu99tbYV68om7c6LMy0DNI2sxUrT0CIx+PXAdeL/s4Y1KyOtXKyUyb5l
-         43RoVtLMq/biHW/o739ObSbEzpufh5/q+gccFTZw=
-Date:   Thu, 19 Dec 2019 09:45:13 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org, stable <stable@vger.kernel.org>,
-        Yoshiki Komachi <komachi.yoshiki@gmail.com>
-Subject: Re: [PATCH 5.4 00/37] 5.4.5-stable review
-Message-ID: <20191219084513.GB1027830@kroah.com>
-References: <20191217200721.741054904@linuxfoundation.org>
- <CAMuHMdU92QPEi9bYnzG4z_EVimstZ1u_gubuaWxwZVaDca+OGg@mail.gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 30FA81005512;
+        Thu, 19 Dec 2019 08:51:10 +0000 (UTC)
+Received: from krava (unknown [10.43.17.106])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D9A5F7D991;
+        Thu, 19 Dec 2019 08:51:08 +0000 (UTC)
+Date:   Thu, 19 Dec 2019 09:51:06 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     "fujita.yuya@fujitsu.com" <fujita.yuya@fujitsu.com>
+Cc:     'Peter Zijlstra' <peterz@infradead.org>,
+        'Ingo Molnar' <mingo@redhat.com>,
+        'Arnaldo Carvalho de Melo' <acme@kernel.org>,
+        'Jiri Olsa' <jolsa@kernel.org>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] perf tools: Fix variable name's inconsistency in
+ hists__for_each macro
+Message-ID: <20191219085106.GA8141@krava>
+References: <OSAPR01MB1588E1C47AC22043175DE1B2E8520@OSAPR01MB1588.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdU92QPEi9bYnzG4z_EVimstZ1u_gubuaWxwZVaDca+OGg@mail.gmail.com>
+In-Reply-To: <OSAPR01MB1588E1C47AC22043175DE1B2E8520@OSAPR01MB1588.jpnprd01.prod.outlook.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 10:02:53PM +0100, Geert Uytterhoeven wrote:
-> Hi Greg,
+On Thu, Dec 19, 2019 at 08:08:32AM +0000, fujita.yuya@fujitsu.com wrote:
+> From: Yuya Fujita <fujita.yuya@fujitsu.com>
 > 
-> On Tue, Dec 17, 2019 at 9:10 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> > This is the start of the stable review cycle for the 5.4.5 release.
-> > There are 37 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> 
-> > Yoshiki Komachi <komachi.yoshiki@gmail.com>
-> >     cls_flower: Fix the behavior using port ranges with hw-offload
-> 
-> Given I bisected a WARNING to this commit, it's probably safer to not
-> backport it to stable yet.
-> 
-> So far no response to my report
-> https://lore.kernel.org/lkml/CAMuHMdXKNMgAQHAE4f-0=srAZtDNUPB6Hmdm277XTgukrtiJ4Q@mail.gmail.com/
-> 
-> Given it's networking, it could be an endian issue, manifesting on big
-> endian systems only.
+> Variable names are inconsistent in hists__for_each macro.
+> Due to this inconsistency, the macro replaces its second argument with "fmt" 
+> regardless of its original name.
+> So far it works because only "fmt" is passed to the second argument.
 
-If this gets reverted in Linus's tree, let me know the commit and I'll
-do the same in the stable trees.
+hum, I think it works because all the instances that use these macros
+have 'fmt' variable passed in
+
+> However, this behavior is not expected and should be fixed.
+> 
+> Fixes: f0786af536bb ("perf hists: Introduce hists__for_each_format macro")
+> Fixes: aa6f50af822a ("perf hists: Introduce hists__for_each_sort_list macro")
+
+nice ;-)
+
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
 thanks,
+jirka
 
-greg k-h
+> Signed-off-by: Yuya Fujita <fujita.yuya@fujitsu.com>
+> ---
+>  tools/perf/util/hist.h |    4 ++--
+>  1 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+> index 4528690..0aa63ae 100644
+> --- a/tools/perf/util/hist.h
+> +++ b/tools/perf/util/hist.h
+> @@ -339,10 +339,10 @@ static inline void perf_hpp__prepend_sort_field(struct perf_hpp_fmt *format)
+>  	list_for_each_entry_safe(format, tmp, &(_list)->sorts, sort_list)
+>  
+>  #define hists__for_each_format(hists, format) \
+> -	perf_hpp_list__for_each_format((hists)->hpp_list, fmt)
+> +	perf_hpp_list__for_each_format((hists)->hpp_list, format)
+>  
+>  #define hists__for_each_sort_list(hists, format) \
+> -	perf_hpp_list__for_each_sort_list((hists)->hpp_list, fmt)
+> +	perf_hpp_list__for_each_sort_list((hists)->hpp_list, format)
+>  
+>  extern struct perf_hpp_fmt perf_hpp__format[];
+>  
+> -- 
+> 1.7.1
+> 
+
