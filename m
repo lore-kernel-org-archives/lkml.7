@@ -2,90 +2,136 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0
-	tests=BUG6152_INVALID_DATE_TZ_ABSURD,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22822C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2818CC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7C2F222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECD22222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:53:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576756424;
+	bh=SuU+24DpuXrx5211MYii93F6LCyY+XEqxcYIJhM8zSk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pbSKUO7g8hnL6m98NCIWB6GSn9yqYa7IRLCZVyhG8kjqqKs6wG0Z8/mDF6NRjTvhU
+	 NlBDEiMSh3dQwW1nubWImm9obDcJYDEXoEKsaxzQn14yeSBT6lKx9XBgARrq4F+s/r
+	 ycjWhG7xg0WiGOw0zl4ZNAky2Evlu5YhBi0jsZhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfLSLxf (ORCPT
+        id S1726847AbfLSLxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 06:53:35 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:59728 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbfLSLxe (ORCPT
+        Thu, 19 Dec 2019 06:53:43 -0500
+Received: from mail-wm1-f53.google.com ([209.85.128.53]:55873 "EHLO
+        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbfLSLxm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 06:53:34 -0500
-Received: from [5.158.153.53] (helo=g2noscherz.lab.linutronix.de.)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1ihuMx-0003XB-TG; Thu, 19 Dec 2019 12:53:28 +0100
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] printk: fix exclusive_console replaying
-Date:   Thu, 19 Dec 2019 12:59:22 +0106
-Message-Id: <20191219115322.31160-1-john.ogness@linutronix.de>
-X-Mailer: git-send-email 2.20.1
+        Thu, 19 Dec 2019 06:53:42 -0500
+Received: by mail-wm1-f53.google.com with SMTP id q9so5142495wmj.5;
+        Thu, 19 Dec 2019 03:53:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=37gQpcAQV0uGXWF2P6lDcl72vbYLnQ1on9sxAjdCGgo=;
+        b=aNAYg7aZM20rsnIN7TURKRv9DX6ydpxddfTgmAwI31VI5kYP538U9L2CEUyMTC3Zal
+         w/V3zNhk8yvxwACTBKwGgbo0Q59TRvcaF/L0C0xK+Z8gxtCCE4Yj+O3KnltUy+iQ5RHB
+         tyZxfkbW1xigfBBW4uy4rziNkk6YnyS/G6kKyERFwgFZFM8N0XMuGF1wN3xyY9xFBk87
+         4UtB02THYgnDEKKul81zUtw6r7HLUdBXPnGKiHuxoxOyMGM4StLJBeCLyhIUoNaI2C2A
+         Z3ycpXYsqmNZCG0G1KMf0qALLyfvoDAzEeUb5RpkOiY09EHjBwLdEeMjkLXqjkK07hd2
+         zfjw==
+X-Gm-Message-State: APjAAAW1hx2mahTaZL+0Je2RCyTAdEN7KK4pAYRT0NembDCsqiRZ7380
+        5mrZuJLmRvDfYnnl88wAVRc=
+X-Google-Smtp-Source: APXvYqwTLTJA64/+wydnYynZTE1/u09huIDMynf4a+WZKA6CpZpX8ZFLt9ZQDomwuOG39LFDdf/EaQ==
+X-Received: by 2002:a05:600c:210b:: with SMTP id u11mr9672502wml.43.1576756420927;
+        Thu, 19 Dec 2019 03:53:40 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id x17sm6041804wrt.74.2019.12.19.03.53.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 03:53:40 -0800 (PST)
+Date:   Thu, 19 Dec 2019 12:53:38 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yunsheng Lin <linyunsheng@huawei.com>
+Cc:     Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        "brouer@redhat.com" <brouer@redhat.com>,
+        "jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>,
+        Li Rongqing <lirongqing@baidu.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        peterz@infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        bhelgaas@google.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH][v2] page_pool: handle page recycle for NUMA_NO_NODE
+ condition
+Message-ID: <20191219115338.GC26945@dhcp22.suse.cz>
+References: <20191211194933.15b53c11@carbon>
+ <831ed886842c894f7b2ffe83fe34705180a86b3b.camel@mellanox.com>
+ <0a252066-fdc3-a81d-7a36-8f49d2babc01@huawei.com>
+ <20191216121557.GE30281@dhcp22.suse.cz>
+ <20191216123426.GA18663@apalos.home>
+ <20191216130845.GF30281@dhcp22.suse.cz>
+ <20191216132128.GA19355@apalos.home>
+ <9041ea7f-0ca6-d0fe-9942-8907222ead5e@huawei.com>
+ <20191217091131.GB31063@dhcp22.suse.cz>
+ <ff280412-bb31-5ffb-99f0-6d49bb470855@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ff280412-bb31-5ffb-99f0-6d49bb470855@huawei.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit f92b070f2dc8 ("printk: Do not miss new messages when replaying
-the log") introduced a new variable @exclusive_console_stop_seq to
-store when an exclusive console should stop printing. It should be
-set to the @console_seq value at registration. However, @console_seq
-is previously set to @syslog_seq so that the exclusive console knows
-where to begin. This results in the exclusive console immediately
-reactivating all the other consoles and thus repeating the messages
-for those consoles.
+On Thu 19-12-19 10:09:33, Yunsheng Lin wrote:
+[...]
+> > There is not real guarantee that NUMA_NO_NODE is going to imply local
+> > node and we do not want to grow any subtle dependency on that behavior.
+> 
+> Strictly speaking, using numa_mem_id() also does not have real guarantee
+> that it will allocate local memory when local memory is used up, right?
+> Because alloc_pages_node() is basically turning the node to numa_mem_id()
+> when it is NUMA_NO_NODE.
 
-Set @console_seq after @exclusive_console_stop_seq has stored the
-current @console_seq value.
+yes, both allocations are allowed to fallback to other nodes unless
+there is an explicit nodemask specified.
 
-Fixes: f92b070f2dc8 ("printk: Do not miss new messages when replaying the log")
-Signed-off-by: John Ogness <john.ogness@linutronix.de>
----
- kernel/printk/printk.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> Unless we do not allow passing NUMA_NO_NODE to alloc_pages_node(), otherwise
+> I can not see difference between NUMA_NO_NODE and numa_mem_id().
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 1ef6f75d92f1..fada22dc4ab6 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -2770,8 +2770,6 @@ void register_console(struct console *newcon)
- 		 * for us.
- 		 */
- 		logbuf_lock_irqsave(flags);
--		console_seq = syslog_seq;
--		console_idx = syslog_idx;
- 		/*
- 		 * We're about to replay the log buffer.  Only do this to the
- 		 * just-registered console to avoid excessive message spam to
-@@ -2783,6 +2781,8 @@ void register_console(struct console *newcon)
- 		 */
- 		exclusive_console = newcon;
- 		exclusive_console_stop_seq = console_seq;
-+		console_seq = syslog_seq;
-+		console_idx = syslog_idx;
- 		logbuf_unlock_irqrestore(flags);
- 	}
- 	console_unlock();
+The difference is in the presented intention. NUMA_NO_NODE means no node
+preference. We turn it into an implicit local node preference because
+this is the best assumption we can in general. If you provide numa_mem_id
+then you explicitly ask for the local node preference because you know
+that this is the best for your specific code. See the difference?
+
+The NUMA_NO_NODE -> local node is a heuristic which might change
+(albeit unlikely).
+ 
+> >> And for those drivers, locality is decided by rx interrupt affinity, not
+> >> dev_to_node(). So when rx interrupt affinity changes, the old page from old
+> >> node will not be recycled(by checking page_to_nid(page) == numa_mem_id()),
+> >> new pages will be allocated to replace the old pages and the new pages will
+> >> be recycled because allocation and recycling happens in the same context,
+> >> which means numa_mem_id() returns the same node of new page allocated, see
+> >> [2].
+> > 
+> > Well, but my understanding is that the generic page pool implementation
+> > has a clear means to change the affinity (namely page_pool_update_nid()).
+> > So my primary question is, why does NUMA_NO_NODE should be use as a
+> > bypass for that?
+> 
+> In that case, page_pool_update_nid() need to be called explicitly, which
+> may not be the reality, because for drivers using page pool now, mlx5 seems
+> to be the only one to call page_pool_update_nid(), which may lead to
+> copy & paste problem when not careful enough.
+
+The API is quite new AFAIU and I think it would be better to use it in
+the intended way. Relying on implicit and undocumented behavior is just
+going to bend that API in the future and it will impose an additional
+burden to any future changes.
 -- 
-2.20.1
-
+Michal Hocko
+SUSE Labs
