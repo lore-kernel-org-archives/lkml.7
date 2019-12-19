@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A89C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25ED8C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18267227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC361227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782492;
-	bh=vu3BNhVtu/OVi6DJ35glNw192nWK9hfAbzabOyJgl4w=;
+	s=default; t=1576782496;
+	bh=DcYvt+Q+aSnKyphRdP2dH3cuxBzZPVYxLv7NZ00iOGQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jTMD4EMjWdikFN8JEsmd9w7xWU4eNOVAI7KcxGD0ksqTVHNXv3kc4oetLszxkzPn5
-	 mr8GwFsLos4dc+jns0HkhYl5E4CJoQDQb/Sn7tfZszrNTPDIDnjyCiSZGllLH01VkX
-	 +uTPBcW8qV2b4nj2QDiSUKmJZ+83v8+Yy89xvnds=
+	b=Rzc6vPMH5HNPRQyWBqAWvObEQlWEx3qRdGa37/HAFRCp7xSZWCe4q6l5m5pxi9N+j
+	 tAqGJJCD9OTi7WiZRbTUFm+UmNLc7eRMY17TI7I6XZFVaGI0I/wmlsaXfDD/YLuyrO
+	 XukBp48+uoBCwj8HYl7tjH1vNOyP+/3c81TZkB50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728661AbfLSSmP (ORCPT
+        id S1728638AbfLSSmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:42:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33258 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:42:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728647AbfLSSmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:42:11 -0500
+        id S1728630AbfLSSmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:42:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB88E206D7;
-        Thu, 19 Dec 2019 18:42:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DD5E24672;
+        Thu, 19 Dec 2019 18:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780931;
-        bh=vu3BNhVtu/OVi6DJ35glNw192nWK9hfAbzabOyJgl4w=;
+        s=default; t=1576780926;
+        bh=DcYvt+Q+aSnKyphRdP2dH3cuxBzZPVYxLv7NZ00iOGQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PVp/clR4PjWlkU35IJZJI0a4GQsFfglwDLfMj215Vyolqlb8Vq+3Cb41F9bV/q1zh
-         Pt7xZCL8rh9Y5aAdOSbi6HW8ApoI51qa75vICso7WcBIfzBS8FF5BUrQn52yEuFPio
-         WnjuEsIUwpFV4f0eEfg+mUP+5O3jlt252/7+3Qao=
+        b=fB2Lxe4+ZJKEl2L4vf0ynsGLV2YGvBMeSMQZaNRgmwejfJXhM1sJ6p2Rbd0h5s3Xo
+         u1jkxs5ipcAyL/h3+jFQtdwEU0nTwCl1K0G8x33HfdcznVEQ7Cjv3s4ACqpuA3Ola4
+         BE5jBOYz8QHc4YMdDj5mmMKE87vAdleS2CMoJe7w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, paulhsia <paulhsia@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 014/199] ALSA: pcm: Fix stream lock usage in snd_pcm_period_elapsed()
-Date:   Thu, 19 Dec 2019 19:31:36 +0100
-Message-Id: <20191219183215.551455232@linuxfoundation.org>
+        stable@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 012/199] NFC: nxp-nci: Fix NULL pointer dereference after I2C communication error
+Date:   Thu, 19 Dec 2019 19:31:34 +0100
+Message-Id: <20191219183215.421369217@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -59,51 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: paulhsia <paulhsia@chromium.org>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit f5cdc9d4003a2f66ea57b3edd3e04acc2b1a4439 ]
+[ Upstream commit a71a29f50de1ef97ab55c151a1598eb12dde379d ]
 
-If the nullity check for `substream->runtime` is outside of the lock
-region, it is possible to have a null runtime in the critical section
-if snd_pcm_detach_substream is called right before the lock.
+I2C communication errors (-EREMOTEIO) during the IRQ handler of nxp-nci
+result in a NULL pointer dereference at the moment:
 
-Signed-off-by: paulhsia <paulhsia@chromium.org>
-Link: https://lore.kernel.org/r/20191112171715.128727-2-paulhsia@chromium.org
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+    BUG: kernel NULL pointer dereference, address: 0000000000000000
+    Oops: 0002 [#1] PREEMPT SMP NOPTI
+    CPU: 1 PID: 355 Comm: irq/137-nxp-nci Not tainted 5.4.0-rc6 #1
+    RIP: 0010:skb_queue_tail+0x25/0x50
+    Call Trace:
+     nci_recv_frame+0x36/0x90 [nci]
+     nxp_nci_i2c_irq_thread_fn+0xd1/0x285 [nxp_nci_i2c]
+     ? preempt_count_add+0x68/0xa0
+     ? irq_forced_thread_fn+0x80/0x80
+     irq_thread_fn+0x20/0x60
+     irq_thread+0xee/0x180
+     ? wake_threads_waitq+0x30/0x30
+     kthread+0xfb/0x130
+     ? irq_thread_check_affinity+0xd0/0xd0
+     ? kthread_park+0x90/0x90
+     ret_from_fork+0x1f/0x40
+
+Afterward the kernel must be rebooted to work properly again.
+
+This happens because it attempts to call nci_recv_frame() with skb == NULL.
+However, unlike nxp_nci_fw_recv_frame(), nci_recv_frame() does not have any
+NULL checks for skb, causing the NULL pointer dereference.
+
+Change the code to call only nxp_nci_fw_recv_frame() in case of an error.
+Make sure to log it so it is obvious that a communication error occurred.
+The error above then becomes:
+
+    nxp-nci_i2c i2c-NXP1001:00: NFC: Read failed with error -121
+    nci: __nci_request: wait_for_completion_interruptible_timeout failed 0
+    nxp-nci_i2c i2c-NXP1001:00: NFC: Read failed with error -121
+
+Fixes: 6be88670fc59 ("NFC: nxp-nci_i2c: Add I2C support to NXP NCI driver")
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/pcm_lib.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/nfc/nxp-nci/i2c.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/sound/core/pcm_lib.c b/sound/core/pcm_lib.c
-index 3acb373674c37..f09ae7efc6957 100644
---- a/sound/core/pcm_lib.c
-+++ b/sound/core/pcm_lib.c
-@@ -1877,11 +1877,14 @@ void snd_pcm_period_elapsed(struct snd_pcm_substream *substream)
- 	struct snd_pcm_runtime *runtime;
- 	unsigned long flags;
+diff --git a/drivers/nfc/nxp-nci/i2c.c b/drivers/nfc/nxp-nci/i2c.c
+index 06a157c63416a..7eab97585f22b 100644
+--- a/drivers/nfc/nxp-nci/i2c.c
++++ b/drivers/nfc/nxp-nci/i2c.c
+@@ -238,8 +238,10 @@ static irqreturn_t nxp_nci_i2c_irq_thread_fn(int irq, void *phy_id)
  
--	if (PCM_RUNTIME_CHECK(substream))
-+	if (snd_BUG_ON(!substream))
- 		return;
--	runtime = substream->runtime;
- 
- 	snd_pcm_stream_lock_irqsave(substream, flags);
-+	if (PCM_RUNTIME_CHECK(substream))
-+		goto _unlock;
-+	runtime = substream->runtime;
-+
- 	if (!snd_pcm_running(substream) ||
- 	    snd_pcm_update_hw_ptr0(substream, 1) < 0)
- 		goto _end;
-@@ -1892,6 +1895,7 @@ void snd_pcm_period_elapsed(struct snd_pcm_substream *substream)
- #endif
-  _end:
- 	kill_fasync(&runtime->fasync, SIGIO, POLL_IN);
-+ _unlock:
- 	snd_pcm_stream_unlock_irqrestore(substream, flags);
- }
- 
+ 	if (r == -EREMOTEIO) {
+ 		phy->hard_fault = r;
+-		skb = NULL;
+-	} else if (r < 0) {
++		if (info->mode == NXP_NCI_MODE_FW)
++			nxp_nci_fw_recv_frame(phy->ndev, NULL);
++	}
++	if (r < 0) {
+ 		nfc_err(&client->dev, "Read failed with error %d\n", r);
+ 		goto exit_irq_handled;
+ 	}
 -- 
 2.20.1
 
