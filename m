@@ -2,96 +2,127 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAF3C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4CBCC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54898222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:25:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72E08222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:26:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="V9nBP4cs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="njedkY2J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbfLSSZP (ORCPT
+        id S1726982AbfLSS0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:25:15 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:46199 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbfLSSZO (ORCPT
+        Thu, 19 Dec 2019 13:26:19 -0500
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:38833 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726797AbfLSS0T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:25:14 -0500
-Received: by mail-qt1-f194.google.com with SMTP id 38so5819255qtb.13
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 10:25:14 -0800 (PST)
+        Thu, 19 Dec 2019 13:26:19 -0500
+Received: by mail-vs1-f68.google.com with SMTP id v12so4374596vsv.5;
+        Thu, 19 Dec 2019 10:26:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1wbEmZyh69FxPHvZMGNLVUp72qy8Qf/muGKAoj7XDfg=;
-        b=V9nBP4csbVK/v9fr2ruWreq4kfAqbjElnswpw8VAmId7qRQciZLEv0HUTAcTIETfPm
-         TNQ+fd+c4E82jjfPv8enquk2LE2BPncsV+dkTs/VgzYPpVXujrzmT+TO+JtPG84PKe1n
-         iglq2DsPN5mSR4yA4F3sW664HfXWwXyZ76V6gxZmLT1bnZ3H57tvI1iG+1Pxybh8mFk3
-         KKWNfbnRw8VOwitEm60KWVQHu2Ip7j3a0VVRaKY8gS3vNN2ZcIPRW8T230RfBO8KfhU/
-         pXpF489I6+5CWj+6hfiai6ezhVSnH0ZlaKAz2XhPGPWInDMwWrlFRxdvPOHre7wntX8J
-         tuMA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rFab9TFuVyy0B0hidssVyx0Ip53fX/LaEkCJxLNWYBA=;
+        b=njedkY2JO/DXhybGjAgtuJQ3ELQtSyBbr4LtklvedJ40JfEyQUuq/88wWz760rpihi
+         +QPs+7JUh2ExfDnz5RJ3yVQD2clbnAeeCYgLgYcuhXKFx/trbXWgVvIHtzuyiEmHwh8U
+         umfPvRs60aCXka/6STVBQOfMateoMZaMcaQtstMCwwVW4Qyja8DM8evmAdjcWrmW/WlP
+         W1o0SpPgU/y0ughI3pA5oqlSyOSguwQzm/lfh9fgPHYF6ItaxFmzBhBvMX3OCu3Ka2kh
+         dDp42dc9BynBuc2KdnyZo+QZ8KUWSZpBqcdXmcy9G/UA52saC7UhjAhmdqSzAG1DVI8c
+         SVNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1wbEmZyh69FxPHvZMGNLVUp72qy8Qf/muGKAoj7XDfg=;
-        b=mS7FlmmjZlrZe3sUw8CacJnI37FhZV6SX/WEA9t7mguQgJjvQUtfM+ivfK0tbmZAI8
-         nXvy/MY5+pRy1deU72PUA/K+6SGyKANRHl/xhXbDIUz0yLwIW4yN8J3xUlgMZaftaZsE
-         aGZdd92IyWC81BuHPVkGXIvuU/LTkahNBDe6EkOyiT7BFy3PsR6/yIdk2YIp//TCO/YI
-         TANLSof40es1l941HU/IOgUXQ4/jF3xMoP0yh18uLuy+0u6lsq7MfxKr2f7y1kmXEkxT
-         eXciOzkvXa6qQvkyxHHvzH0+W7ImyIYV79DvIFx4hWwgowEvuesDSyemvm493599qdA5
-         btQQ==
-X-Gm-Message-State: APjAAAW6eceoiu0kDgNRTXlxLhQ1f8ID9O/PRJixQzoDsS3AOQNeIhVo
-        EyOr3EzzkcEsN00CnR6p4djd2g==
-X-Google-Smtp-Source: APXvYqx/szkVU3xnR6S7kaiRH8PbEblL2+ypiIKPes+go0u6FfiNrftcFSirfXeFVHDYuf+DexALbQ==
-X-Received: by 2002:ac8:7a70:: with SMTP id w16mr8268613qtt.154.1576779913587;
-        Thu, 19 Dec 2019 10:25:13 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id l19sm2098280qtq.48.2019.12.19.10.25.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 19 Dec 2019 10:25:12 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1ii0U3-0007Z2-SU; Thu, 19 Dec 2019 14:25:11 -0400
-Date:   Thu, 19 Dec 2019 14:25:11 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Rao Shoaib <rao.shoaib@oracle.com>
-Cc:     monis@mellanox.com, dledford@redhat.com, sean.hefty@intel.com,
-        hal.rosenstock@gmail.com, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] Introduce maximum WQE size to check limits
-Message-ID: <20191219182511.GI17227@ziepe.ca>
-References: <1574106879-19211-1-git-send-email-rao.shoaib@oracle.com>
- <1574106879-19211-2-git-send-email-rao.shoaib@oracle.com>
- <20191119203138.GA13145@ziepe.ca>
- <44d1242a-fc32-9918-dd53-cd27ebf61811@oracle.com>
- <20191119231334.GO4991@ziepe.ca>
- <dff3da9b-06a3-3904-e9eb-7feaa1ae9e01@oracle.com>
- <20191120000840.GQ4991@ziepe.ca>
- <ccceac68-db4f-77a3-500d-12f60a8a1354@oracle.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rFab9TFuVyy0B0hidssVyx0Ip53fX/LaEkCJxLNWYBA=;
+        b=LhQ3EWdp3eqGjaWae8O394wIcS+Ip6r6AaIm0DxOfye0j9+DflJHoDkDFsjIOiFKMo
+         mQ97JxPMQ+gODEllC8+qRtjgkqMypU1OzD2dy50E5/0474Y6gDcCJmi7PEQimv1UYxMz
+         h9cHh8BrcuO8x0HRXbzObVKhHCKy7Oq1778ursxgvzrmZsLSqwI9TU1NqklhPHCUmGI0
+         ZWJWrK3wbOZJg+5KSpDelm3ItWTmvo0TK7tx3dMWoOHnZaZ/fJazsNqJ4vB8oNzWTg1F
+         BEn4NNUnJkgVd53ukb3n77qk2ayRteJpjdHkMNUBOaGNwCDOMrOi2axHUiK99K6pdSCG
+         ySFg==
+X-Gm-Message-State: APjAAAX6hyckeg96UhsW654zRQxlBt+Z8usAKmPhLLn1065Q9BceEZnT
+        E00GI5ArFUsp/UHEiaQowbwExA9SJpw0SfFochhxNVS/OUg=
+X-Google-Smtp-Source: APXvYqyLPE/PUdXmbPKj8EMXclPSXyJgYJpxajEIC9HQ1RfZo8Iy2l7Mc313mPx7rnQ5LEzufff/eY7Ua8VC1PyZ+ag=
+X-Received: by 2002:a67:fb14:: with SMTP id d20mr5904491vsr.136.1576779977603;
+ Thu, 19 Dec 2019 10:26:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ccceac68-db4f-77a3-500d-12f60a8a1354@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1576224695-22657-1-git-send-email-stanley.chu@mediatek.com> <1576224695-22657-4-git-send-email-stanley.chu@mediatek.com>
+In-Reply-To: <1576224695-22657-4-git-send-email-stanley.chu@mediatek.com>
+From:   Alim Akhtar <alim.akhtar@gmail.com>
+Date:   Thu, 19 Dec 2019 23:55:41 +0530
+Message-ID: <CAGOxZ50orn8JYxvCv4S6ziMdnB6+BG0DSdkand=x9Vw3H-Dejw@mail.gmail.com>
+Subject: Re: [PATCH v1 3/4] scsi: ufs-mediatek: configure customized
+ auto-hibern8 timer
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     linux-scsi@vger.kernel.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        open list <linux-kernel@vger.kernel.org>,
+        "Bean Huo (beanhuo)" <beanhuo@micron.com>,
+        Kuohong Wang <kuohong.wang@mediatek.com>,
+        peter.wang@mediatek.com, chun-hung.wu@mediatek.com,
+        andy.teng@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 11:38:52AM -0800, Rao Shoaib wrote:
-> Any update on my patch?
-> 
-> If there is some change needed please let me know.
+On Fri, Dec 13, 2019 at 3:04 PM Stanley Chu <stanley.chu@mediatek.com> wrote:
+>
+> Configure customized auto-hibern8 timer in MediaTek Chipsets.
+>
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
 
-You need to repost it with the comments addressed
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+> ---
+>  drivers/scsi/ufs/ufs-mediatek.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/drivers/scsi/ufs/ufs-mediatek.c b/drivers/scsi/ufs/ufs-mediatek.c
+> index 690483c78212..71e2e0e4ea11 100644
+> --- a/drivers/scsi/ufs/ufs-mediatek.c
+> +++ b/drivers/scsi/ufs/ufs-mediatek.c
+> @@ -7,6 +7,7 @@
+>   */
+>
+>  #include <linux/arm-smccc.h>
+> +#include <linux/bitfield.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+>  #include <linux/phy/phy.h>
+> @@ -300,6 +301,13 @@ static int ufs_mtk_post_link(struct ufs_hba *hba)
+>         /* enable unipro clock gating feature */
+>         ufs_mtk_cfg_unipro_cg(hba, true);
+>
+> +       /* configure auto-hibern8 timer to 10ms */
+> +       if (ufshcd_is_auto_hibern8_supported(hba)) {
+> +               ufshcd_auto_hibern8_update(hba,
+> +                       FIELD_PREP(UFSHCI_AHIBERN8_TIMER_MASK, 10) |
+> +                       FIELD_PREP(UFSHCI_AHIBERN8_SCALE_MASK, 3));
+> +       }
+> +
+>         return 0;
+>  }
+>
+> --
+> 2.18.0
 
-https://patchwork.kernel.org/patch/11250179/
 
-Jason
 
+-- 
+Regards,
+Alim
