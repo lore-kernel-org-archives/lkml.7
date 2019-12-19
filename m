@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A6CC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05201C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E6A024672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCFE824672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:35:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780532;
-	bh=wJrUhHjk0rRXaMfnAyG5/ZYULXbzaf4QEAGrizRThD0=;
+	s=default; t=1576780535;
+	bh=otUWK49KyyBOMV/bSn9NkqTZ1N4WCHx+CSRaC3fXr8A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SJhwtFQ5kYHWwBWo5mBz6BgL1DqmAtxN/Gm+FdbilGeEDIWwR77Mu2OGz0FqmyNcv
-	 7RBHU7telg0gvhGHOu7WdKFGidmUlwOonf/tQeavhatGdPnpZhMYXAbD1az7byNz2W
-	 fDOtbqIm5TXi7EL8485bvJ4EZui9TBI5Ks81Rogc=
+	b=Sm8t/fFW7e+WOjIAGZebHfMuzcEA1CW9qqwvPWfh2O1rDOKf+o5NG56ohKd2DdcYV
+	 fQPTVFeW+P2qqmSDCCshKr90VUiJmmMna83/zrNg76n7HRTWr5005vBAF1yJw8E8p3
+	 DW6Cg2fObGvAeHg4eN/nY50OIrCWhNWbGhDkYbew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbfLSSfb (ORCPT
+        id S1727056AbfLSSfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:35:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52072 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:35:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727110AbfLSSf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:35:28 -0500
+        id S1727150AbfLSSfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:35:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 307D224672;
-        Thu, 19 Dec 2019 18:35:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96B1824672;
+        Thu, 19 Dec 2019 18:35:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780527;
-        bh=wJrUhHjk0rRXaMfnAyG5/ZYULXbzaf4QEAGrizRThD0=;
+        s=default; t=1576780530;
+        bh=otUWK49KyyBOMV/bSn9NkqTZ1N4WCHx+CSRaC3fXr8A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pjk74eSWzPT7IePckZ5Zv77Gf8ZL1glR+PHITryVtZXCyXMaIylDz1xH7J1U0TwNC
-         Emf6JZSnlL07PEY5vhh5fce1pEDqdRortmVbIN8lumHA5F7ce8LSo/uOtLHNUlensO
-         yNL1M7kg60+eWs6apjaeV6/4fopnMzEnOeQ+qptk=
+        b=hwAcqti/SgMOBtVLEiJUDcbLLQxqzTecy0WtvT8JoTFL5lu8w2vMDqGz+3SSN2r7b
+         b6xQgVtmQU39PnLxwQ8Iwy7y5U+NHsujr0mIqQNcSIbDpr1kkU9LsTA1Mt09yJ2jNP
+         USYAVzkAeHQoTLmhMLZKUtc9w/bzdpA/n6STnTWQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 011/162] rsxx: add missed destroy_workqueue calls in remove
-Date:   Thu, 19 Dec 2019 19:31:59 +0100
-Message-Id: <20191219183202.089427608@linuxfoundation.org>
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 012/162] net: ep93xx_eth: fix mismatch of request_mem_region in remove
+Date:   Thu, 19 Dec 2019 19:32:00 +0100
+Message-Id: <20191219183203.078403846@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -61,34 +62,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit dcb77e4b274b8f13ac6482dfb09160cd2fae9a40 ]
+[ Upstream commit 3df70afe8d33f4977d0e0891bdcfb639320b5257 ]
 
-The driver misses calling destroy_workqueue in remove like what is done
-when probe fails.
-Add the missed calls to fix it.
+The driver calls release_resource in remove to match request_mem_region
+in probe, which is incorrect.
+Fix it by using the right one, release_mem_region.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/rsxx/core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/cirrus/ep93xx_eth.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/rsxx/core.c b/drivers/block/rsxx/core.c
-index d8b2488aaade1..620a3a67cdd52 100644
---- a/drivers/block/rsxx/core.c
-+++ b/drivers/block/rsxx/core.c
-@@ -1028,8 +1028,10 @@ static void rsxx_pci_remove(struct pci_dev *dev)
+diff --git a/drivers/net/ethernet/cirrus/ep93xx_eth.c b/drivers/net/ethernet/cirrus/ep93xx_eth.c
+index de9f7c97d916d..796ee362ad70c 100644
+--- a/drivers/net/ethernet/cirrus/ep93xx_eth.c
++++ b/drivers/net/ethernet/cirrus/ep93xx_eth.c
+@@ -776,6 +776,7 @@ static int ep93xx_eth_remove(struct platform_device *pdev)
+ {
+ 	struct net_device *dev;
+ 	struct ep93xx_priv *ep;
++	struct resource *mem;
  
- 	cancel_work_sync(&card->event_work);
+ 	dev = platform_get_drvdata(pdev);
+ 	if (dev == NULL)
+@@ -791,8 +792,8 @@ static int ep93xx_eth_remove(struct platform_device *pdev)
+ 		iounmap(ep->base_addr);
  
-+	destroy_workqueue(card->event_wq);
- 	rsxx_destroy_dev(card);
- 	rsxx_dma_destroy(card);
-+	destroy_workqueue(card->creg_ctrl.creg_wq);
+ 	if (ep->res != NULL) {
+-		release_resource(ep->res);
+-		kfree(ep->res);
++		mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++		release_mem_region(mem->start, resource_size(mem));
+ 	}
  
- 	spin_lock_irqsave(&card->irq_lock, flags);
- 	rsxx_disable_ier_and_isr(card, CR_INTR_ALL);
+ 	free_netdev(dev);
 -- 
 2.20.1
 
