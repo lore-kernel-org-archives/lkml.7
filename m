@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E207C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B9CC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4516F24682
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3C7A2465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:56:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781760;
-	bh=7K7fB04p0JMzjWIQ0S0tHZBBYEMuF7Tj4YxhfcvKRbs=;
+	s=default; t=1576781763;
+	bh=l20x0N8iOE800no7wscCQ9zrDlT0O+piafAQgz+VTc4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D2iQSADhA3khzu3ZMetGJz3n4zCxjCUJpmv13pK3AdbdSGHV8HpT+nrZxI/LI3XIt
-	 2BU2RbW26iYiXUDXCJ8bvswkgHbkelL1hJhQP1/044cb04JB94KT9vDXwY4QTK4BG3
-	 ga1gtv931FbFM1THX9vMde6kd0ptF80B40y2H5Jk=
+	b=issWLMilQ8y5Kbl/blU2wuw8C889A1gBs7wOCBTJbaLaWCuHiwScqJwQ2Qw1idKII
+	 6ZupSQN6/rNPOeYY+QZzo1uPE/NE0SPctTKFAhrg7SSo28secwJ7jVNMfC6h3PAyqc
+	 mTp0RI9jV7U5Gw2LG8U60FYmoLrrRZEwVKozgo/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730748AbfLSSz6 (ORCPT
+        id S1730738AbfLSS4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:55:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52122 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:56:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730738AbfLSSzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:55:53 -0500
+        id S1730546AbfLSSz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:55:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BA8324689;
-        Thu, 19 Dec 2019 18:55:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB85D24676;
+        Thu, 19 Dec 2019 18:55:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781752;
-        bh=7K7fB04p0JMzjWIQ0S0tHZBBYEMuF7Tj4YxhfcvKRbs=;
+        s=default; t=1576781757;
+        bh=l20x0N8iOE800no7wscCQ9zrDlT0O+piafAQgz+VTc4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G9CS4O/NSR025t/twJqowYElezpq4MjyXTAhYb9wBdcEeB6a3hh+IPJCm4kBSn3Jy
-         7p6bsVhwkdTp9TgGJIUIi1KAzpuKk23hUHjKjWM0tjhQ6r0VSWmtAFRf+koZDIRaJP
-         8QM1s3oQplVo0UOKuOqyxUQHktyQSB+GWQV3JkP8=
+        b=qWxI4bTBWNpFTK7ZKxm0w/8mcR1FyMLsE8ZJs7TK7pCOf7bfB61AUKflYiR/d1ODn
+         x3uizOuBupqBz5yhMcWSZ2iceEJH41VCXomd113Iuh/zBP5uVLFH/39cPP7DeccFlR
+         2YcoKIw3DJ6IyEdHraCawPYH/hImPxgWXsdGuA/g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Hernandez <mhernandez@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.4 65/80] scsi: qla2xxx: Fix incorrect SFUB length used for Secure Flash Update MB Cmd
-Date:   Thu, 19 Dec 2019 19:34:57 +0100
-Message-Id: <20191219183137.458270274@linuxfoundation.org>
+        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        David Airlie <airlied@redhat.com>,
+        Jerry Zuo <Jerry.Zuo@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Juston Li <juston.li@intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: [PATCH 5.4 67/80] drm/nouveau/kms/nv50-: Store the bpc were using in nv50_head_atom
+Date:   Thu, 19 Dec 2019 19:34:59 +0100
+Message-Id: <20191219183138.336254526@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -60,34 +66,186 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Hernandez <mhernandez@marvell.com>
+From: Lyude Paul <lyude@redhat.com>
 
-commit c868907e1ac6a08a17f8fa9ce482c0a496896e9e upstream.
+commit ac2d9275f371346922b31a388bbaa6a54f1154a4 upstream.
 
-SFUB length should be in DWORDs when passed to FW.
+In order to be able to use bpc values that are different from what the
+connector reports, we want to be able to store the bpc value we decide
+on using for an atomic state in nv50_head_atom and refer to that instead
+of simply using the value that the connector reports throughout the
+whole atomic check phase and commit phase. This will let us (eventually)
+implement the max bpc connector property, and will also be needed for
+limiting the bpc we use on MST displays to 8 in the next commit.
 
-Fixes: 3f006ac342c03 ("scsi: qla2xxx: Secure flash update support for ISP28XX")
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191203223657.22109-4-hmadhani@marvell.com
-Signed-off-by: Michael Hernandez <mhernandez@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Fixes: 232c9eec417a ("drm/nouveau: Use atomic VCPI helpers for MST")
+Cc: Ben Skeggs <bskeggs@redhat.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: David Airlie <airlied@redhat.com>
+Cc: Jerry Zuo <Jerry.Zuo@amd.com>
+Cc: Harry Wentland <harry.wentland@amd.com>
+Cc: Juston Li <juston.li@intel.com>
+Cc: Sean Paul <seanpaul@chromium.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: <stable@vger.kernel.org> # v5.1+
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla2xxx/qla_sup.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/dispnv50/atom.h |    1 
+ drivers/gpu/drm/nouveau/dispnv50/disp.c |   57 ++++++++++++++++++--------------
+ drivers/gpu/drm/nouveau/dispnv50/head.c |    5 +-
+ 3 files changed, 36 insertions(+), 27 deletions(-)
 
---- a/drivers/scsi/qla2xxx/qla_sup.c
-+++ b/drivers/scsi/qla2xxx/qla_sup.c
-@@ -2897,7 +2897,7 @@ qla28xx_write_flash_data(scsi_qla_host_t
- 			    "Sending Secure Flash MB Cmd\n");
- 			rval = qla28xx_secure_flash_update(vha, 0, region.code,
- 				buf_size_without_sfub, sfub_dma,
--				sizeof(struct secure_flash_update_block));
-+				sizeof(struct secure_flash_update_block) >> 2);
- 			if (rval != QLA_SUCCESS) {
- 				ql_log(ql_log_warn, vha, 0xffff,
- 				    "Secure Flash MB Cmd failed %x.", rval);
+--- a/drivers/gpu/drm/nouveau/dispnv50/atom.h
++++ b/drivers/gpu/drm/nouveau/dispnv50/atom.h
+@@ -114,6 +114,7 @@ struct nv50_head_atom {
+ 		u8 nhsync:1;
+ 		u8 nvsync:1;
+ 		u8 depth:4;
++		u8 bpc;
+ 	} or;
+ 
+ 	/* Currently only used for MST */
+--- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+@@ -353,10 +353,20 @@ nv50_outp_atomic_check(struct drm_encode
+ 		       struct drm_crtc_state *crtc_state,
+ 		       struct drm_connector_state *conn_state)
+ {
+-	struct nouveau_connector *nv_connector =
+-		nouveau_connector(conn_state->connector);
+-	return nv50_outp_atomic_check_view(encoder, crtc_state, conn_state,
+-					   nv_connector->native_mode);
++	struct drm_connector *connector = conn_state->connector;
++	struct nouveau_connector *nv_connector = nouveau_connector(connector);
++	struct nv50_head_atom *asyh = nv50_head_atom(crtc_state);
++	int ret;
++
++	ret = nv50_outp_atomic_check_view(encoder, crtc_state, conn_state,
++					  nv_connector->native_mode);
++	if (ret)
++		return ret;
++
++	if (crtc_state->mode_changed || crtc_state->connectors_changed)
++		asyh->or.bpc = connector->display_info.bpc;
++
++	return 0;
+ }
+ 
+ /******************************************************************************
+@@ -786,10 +796,10 @@ nv50_msto_atomic_check(struct drm_encode
+ 	 * may have changed after the state was duplicated
+ 	 */
+ 	if (!state->duplicated) {
+-		const int bpp = connector->display_info.bpc * 3;
+ 		const int clock = crtc_state->adjusted_mode.clock;
+ 
+-		asyh->dp.pbn = drm_dp_calc_pbn_mode(clock, bpp);
++		asyh->or.bpc = connector->display_info.bpc;
++		asyh->dp.pbn = drm_dp_calc_pbn_mode(clock, asyh->or.bpc * 3);
+ 	}
+ 
+ 	slots = drm_dp_atomic_find_vcpi_slots(state, &mstm->mgr, mstc->port,
+@@ -802,6 +812,17 @@ nv50_msto_atomic_check(struct drm_encode
+ 	return 0;
+ }
+ 
++static u8
++nv50_dp_bpc_to_depth(unsigned int bpc)
++{
++	switch (bpc) {
++	case  6: return 0x2;
++	case  8: return 0x5;
++	case 10: /* fall-through */
++	default: return 0x6;
++	}
++}
++
+ static void
+ nv50_msto_enable(struct drm_encoder *encoder)
+ {
+@@ -812,7 +833,7 @@ nv50_msto_enable(struct drm_encoder *enc
+ 	struct nv50_mstm *mstm = NULL;
+ 	struct drm_connector *connector;
+ 	struct drm_connector_list_iter conn_iter;
+-	u8 proto, depth;
++	u8 proto;
+ 	bool r;
+ 
+ 	drm_connector_list_iter_begin(encoder->dev, &conn_iter);
+@@ -841,14 +862,8 @@ nv50_msto_enable(struct drm_encoder *enc
+ 	else
+ 		proto = 0x9;
+ 
+-	switch (mstc->connector.display_info.bpc) {
+-	case  6: depth = 0x2; break;
+-	case  8: depth = 0x5; break;
+-	case 10:
+-	default: depth = 0x6; break;
+-	}
+-
+-	mstm->outp->update(mstm->outp, head->base.index, armh, proto, depth);
++	mstm->outp->update(mstm->outp, head->base.index, armh, proto,
++			   nv50_dp_bpc_to_depth(armh->or.bpc));
+ 
+ 	msto->head = head;
+ 	msto->mstc = mstc;
+@@ -1502,20 +1517,14 @@ nv50_sor_enable(struct drm_encoder *enco
+ 					lvds.lvds.script |= 0x0200;
+ 			}
+ 
+-			if (nv_connector->base.display_info.bpc == 8)
++			if (asyh->or.bpc == 8)
+ 				lvds.lvds.script |= 0x0200;
+ 		}
+ 
+ 		nvif_mthd(&disp->disp->object, 0, &lvds, sizeof(lvds));
+ 		break;
+ 	case DCB_OUTPUT_DP:
+-		if (nv_connector->base.display_info.bpc == 6)
+-			depth = 0x2;
+-		else
+-		if (nv_connector->base.display_info.bpc == 8)
+-			depth = 0x5;
+-		else
+-			depth = 0x6;
++		depth = nv50_dp_bpc_to_depth(asyh->or.bpc);
+ 
+ 		if (nv_encoder->link & 1)
+ 			proto = 0x8;
+@@ -1666,7 +1675,7 @@ nv50_pior_enable(struct drm_encoder *enc
+ 	nv50_outp_acquire(nv_encoder);
+ 
+ 	nv_connector = nouveau_encoder_connector_get(nv_encoder);
+-	switch (nv_connector->base.display_info.bpc) {
++	switch (asyh->or.bpc) {
+ 	case 10: asyh->or.depth = 0x6; break;
+ 	case  8: asyh->or.depth = 0x5; break;
+ 	case  6: asyh->or.depth = 0x2; break;
+--- a/drivers/gpu/drm/nouveau/dispnv50/head.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/head.c
+@@ -81,18 +81,17 @@ nv50_head_atomic_check_dither(struct nv5
+ 			      struct nv50_head_atom *asyh,
+ 			      struct nouveau_conn_atom *asyc)
+ {
+-	struct drm_connector *connector = asyc->state.connector;
+ 	u32 mode = 0x00;
+ 
+ 	if (asyc->dither.mode == DITHERING_MODE_AUTO) {
+-		if (asyh->base.depth > connector->display_info.bpc * 3)
++		if (asyh->base.depth > asyh->or.bpc * 3)
+ 			mode = DITHERING_MODE_DYNAMIC2X2;
+ 	} else {
+ 		mode = asyc->dither.mode;
+ 	}
+ 
+ 	if (asyc->dither.depth == DITHERING_DEPTH_AUTO) {
+-		if (connector->display_info.bpc >= 8)
++		if (asyh->or.bpc >= 8)
+ 			mode |= DITHERING_DEPTH_8BPC;
+ 	} else {
+ 		mode |= asyc->dither.depth;
 
 
