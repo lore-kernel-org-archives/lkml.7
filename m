@@ -2,139 +2,445 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A15A7C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D7DC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78B742053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:36:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576773369;
-	bh=xG7eJsmAZg4wSxUOdMks7A4AOxBSoLjaaUd4IsnGwg0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Au0AN2eO/pP2AjfOTk72FS/cCSR2cL3KX3AVQimpAzQXsK9USYXnguPzBNKQNqu5z
-	 aEOZPYSla3oO8WJ5ICvutR1/Z92OeUZIwiNOSvF78prHPmmQSBw48gQmYWh9zz7257
-	 R9GuPrvABQdNoIJAp7+zAZBlMfQ89ML/TlDrAjJY=
+	by mail.kernel.org (Postfix) with ESMTP id 5CE1B227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:36:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eLZChjkz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfLSQgI (ORCPT
+        id S1726967AbfLSQgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 11:36:08 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:46971 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbfLSQgI (ORCPT
+        Thu, 19 Dec 2019 11:36:52 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59737 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726760AbfLSQgv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 11:36:08 -0500
-Received: by mail-lj1-f195.google.com with SMTP id m26so4491788ljc.13
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 08:36:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+0EPaeAm1h5et+pcE0Lw2TnBFxWaf1zou6EIoTCmP30=;
-        b=bZHWn0PsXhDbOK/Bql+EUdVYbHBqZFT+2Nbu2NKTbOPDpYJnxQ8/xUws763LXH9j3m
-         XvTn3+qa6G5xDrHkogar6bc8r1mWIiQFLSpH4PfDJaTYQjML3UPjF8ReFuAn4IPFe3wt
-         CsSw4N/hW8UkyP4cDs7xLRa2iwzcttIS4FCkc=
+        Thu, 19 Dec 2019 11:36:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576773410;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=m8PIA0404wAQIovctDET7HZRm2saAWrKDTl6yGSZt1k=;
+        b=eLZChjkzJ213EmJtHLH/iTCnPCs2ZXsl9Xs8CnjbVnMuqNPVkf3Dy8KgLG6S3ZnaWDZwKK
+        cHpFQQ1kgvvXIzf8NKs3qFmeO6sOXH+0Nwm0KuRA0rwHMyVU7atKZmogzCLjx9NkNVmRBM
+        N7fDw5iPbEQ+xOjyXGtvjpv3YMO9Xvs=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-111-yglCk46kN4ycFAauGsEpMQ-1; Thu, 19 Dec 2019 11:36:48 -0500
+X-MC-Unique: yglCk46kN4ycFAauGsEpMQ-1
+Received: by mail-lj1-f198.google.com with SMTP id g28so2097202lja.6
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 08:36:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+0EPaeAm1h5et+pcE0Lw2TnBFxWaf1zou6EIoTCmP30=;
-        b=fLD6SclczqgTxMqc83/PnM03yC46mYN7SgbMrpuWcceQgBO3izOnPZVWN3a6VBdcPb
-         SEHQSQNh/BGfB7L8LUXFCPa2IGoVPJ6BkCLwB17gWPSC5aUmylJU2Cheb9YWy3k2kIKf
-         sMY6lfHxx5UXEG1gcgz2MI8Wqu3Zoej86OG79zmiFxNByPd78mvZmaBaq7UH1l89W0ag
-         CsFDqBPal7Sqd57osdmt/nGO/Uq+1gOtugH1hdxGWG4ZbOdSjZhMy4QudpqItfAuNGmI
-         kPNKTQDQw67c16Zkg4WcbkUHoREkNRJJcrMIR31joj5po7XFnIVPbe9OeiCd6SlnWwNX
-         2gtA==
-X-Gm-Message-State: APjAAAWNvmSqqBaUBz1j6pafXGaF6o3oFouDAApRUxULVrTyTrDRRTDf
-        Bbgghy1X5oGZpW0AfpdGOEXFY1bVZdU=
-X-Google-Smtp-Source: APXvYqxXMYywtGonobgbmDVArwHxncOTzu6oeSFcCoSVbmi8DenMSfhA1pJfLhbmtQ4Tyohrheo4bQ==
-X-Received: by 2002:a2e:844e:: with SMTP id u14mr6753013ljh.183.1576773365064;
-        Thu, 19 Dec 2019 08:36:05 -0800 (PST)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id u9sm3103342lji.49.2019.12.19.08.36.03
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Dec 2019 08:36:04 -0800 (PST)
-Received: by mail-lj1-f174.google.com with SMTP id u17so6934692lja.4
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 08:36:03 -0800 (PST)
-X-Received: by 2002:a2e:9ad1:: with SMTP id p17mr6832409ljj.26.1576773363095;
- Thu, 19 Dec 2019 08:36:03 -0800 (PST)
+        bh=m8PIA0404wAQIovctDET7HZRm2saAWrKDTl6yGSZt1k=;
+        b=Zg9PpBxfu3viUyhDpkPxvbeQZqDteJEyM7bsu7PvQn5jAz/vEFMlApphY4TYBdOiKm
+         YT+eeqT+32sVJLZQAeN/W18u14w3rbTa4wjilVsDLo9HZtPtGgrJYnX/oZQnrkDdRJ37
+         mOPd9pwKOstA85EUydvWNCKVWl2GjHV/V+H51H6pf42lV/CU7B7QzXbYI3FitjXOF468
+         1yNyXPjE/4hpfPSOzbqXg4PLfcHQN/7JckAUJDDwKaMfmIs7E8J+voUZW3vdDPy87eBe
+         WTC41ODQgFqgW6OIMB3FJo1hnJiVFSTdJjsJpEQK91hwzOYFOTUD9y92KenIBWkI+7vT
+         7hvg==
+X-Gm-Message-State: APjAAAVQfFIhKzofktvesWmMXR6bjGzgWPpNRGk84jM9NnRub9QrFHX9
+        4GF/tC4J8R7mGsT70ANjLtMMhjtlsWXUSQzh0s53Xqbi2nbh4KtMjPuaCMeAtM2O8BiCMr7TTf5
+        6KVbknKrh7e8uidftRbiblaRcQdzZMv9YlNGEWSFg
+X-Received: by 2002:a2e:824a:: with SMTP id j10mr6774078ljh.209.1576773406679;
+        Thu, 19 Dec 2019 08:36:46 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzW0080fTohX1Ru7hKfaJnXkYMIHJYUiFmr8OhB9UHVrvESMVqIiORq/ySSQcBoU1dv9NdQksLzd0yMKGlE5TI=
+X-Received: by 2002:a2e:824a:: with SMTP id j10mr6774038ljh.209.1576773406236;
+ Thu, 19 Dec 2019 08:36:46 -0800 (PST)
 MIME-Version: 1.0
-References: <157558502272.10278.8718685637610645781.stgit@warthog.procyon.org.uk>
- <20191206135604.GB2734@twin.jikos.cz> <CAHk-=wiN_pWbcRaw5L-J2EFUyCn49Due0McwETKwmFFPp88K8Q@mail.gmail.com>
- <CAHk-=wjvO1V912ya=1rdXwrm1OBTi6GqnqryH_E8OR69cZuVOg@mail.gmail.com>
- <CAHk-=wizsHmCwUAyQKdU7hBPXHYQn-fOtJKBqMs-79br2pWxeQ@mail.gmail.com>
- <CAHk-=wjeG0q1vgzu4iJhW5juPkTsjTYmiqiMUYAebWW+0bam6w@mail.gmail.com>
- <b2ae78da-1c29-8ef7-d0bb-376c52af37c3@yandex-team.ru> <CAHk-=wgTisLQ9k-hsQeyrT5qBS0xuQPYsueFWNT3RxbkkVmbjw@mail.gmail.com>
- <20191219000013.GB13065@localhost> <20191219001446.GA49812@localhost>
- <CAHk-=wgMiTbRPp6Fx_A4YV+9xL7dc2j0Dj3NTFDPRfjsjLQTWw@mail.gmail.com> <935.1576742190@warthog.procyon.org.uk>
-In-Reply-To: <935.1576742190@warthog.procyon.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 19 Dec 2019 08:35:46 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiQdy80352u4d39QD58yQKaNfeEz+k3eRwZw5faEYFsgw@mail.gmail.com>
-Message-ID: <CAHk-=wiQdy80352u4d39QD58yQKaNfeEz+k3eRwZw5faEYFsgw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] pipe: Fixes [ver #2]
-To:     David Howells <dhowells@redhat.com>
-Cc:     Josh Triplett <josh@joshtriplett.org>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Akemi Yagi <toracat@elrepo.org>, DJ Delorie <dj@redhat.com>,
-        David Sterba <dsterba@suse.cz>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
+References: <20191217155102.46039-1-mcroce@redhat.com> <CAOrHB_BVf8mXuCUehMy0_Sbq=pgfg7Zu1ivPFT8Y9Zatdj1yPw@mail.gmail.com>
+In-Reply-To: <CAOrHB_BVf8mXuCUehMy0_Sbq=pgfg7Zu1ivPFT8Y9Zatdj1yPw@mail.gmail.com>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Thu, 19 Dec 2019 17:36:10 +0100
+Message-ID: <CAGnkfhyojPg9ZxrR=NcNdsndxZpdpjgArzO+HHsVWnCKTBg1Tg@mail.gmail.com>
+Subject: Re: [PATCH net-next v2] openvswitch: add TTL decrement action
+To:     Pravin Shelar <pshelar@ovn.org>
+Cc:     Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        ovs dev <dev@openvswitch.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bindiya Kurle <bindiyakurle@gmail.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        Ben Pfaff <blp@ovn.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 11:56 PM David Howells <dhowells@redhat.com> wrote:
+On Wed, Dec 18, 2019 at 4:06 AM Pravin Shelar <pshelar@ovn.org> wrote:
 >
-> I looked at splitting the waitqueue in to two, but it makes poll tricky.
+> On Tue, Dec 17, 2019 at 7:51 AM Matteo Croce <mcroce@redhat.com> wrote:
+> >
+> > New action to decrement TTL instead of setting it to a fixed value.
+> > This action will decrement the TTL and, in case of expired TTL, drop it
+> > or execute an action passed via a nested attribute.
+> > The default TTL expired action is to drop the packet.
+> >
+> > Supports both IPv4 and IPv6 via the ttl and hop_limit fields, respectively.
+> >
+> > Tested with a corresponding change in the userspace:
+> >
+> >     # ovs-dpctl dump-flows
+> >     in_port(2),eth(),eth_type(0x0800), packets:0, bytes:0, used:never, actions:dec_ttl{ttl<=1 action:(drop)},1,1
+> >     in_port(1),eth(),eth_type(0x0800), packets:0, bytes:0, used:never, actions:dec_ttl{ttl<=1 action:(drop)},1,2
+> >     in_port(1),eth(),eth_type(0x0806), packets:0, bytes:0, used:never, actions:2
+> >     in_port(2),eth(),eth_type(0x0806), packets:0, bytes:0, used:never, actions:1
+> >
+> >     # ping -c1 192.168.0.2 -t 42
+> >     IP (tos 0x0, ttl 41, id 61647, offset 0, flags [DF], proto ICMP (1), length 84)
+> >         192.168.0.1 > 192.168.0.2: ICMP echo request, id 386, seq 1, length 64
+> >     # ping -c1 192.168.0.2 -t 120
+> >     IP (tos 0x0, ttl 119, id 62070, offset 0, flags [DF], proto ICMP (1), length 84)
+> >         192.168.0.1 > 192.168.0.2: ICMP echo request, id 388, seq 1, length 64
+> >     # ping -c1 192.168.0.2 -t 1
+> >     #
+> >
+> > Co-authored-by: Bindiya Kurle <bindiyakurle@gmail.com>
+> > Signed-off-by: Bindiya Kurle <bindiyakurle@gmail.com>
+> > Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> > ---
+> >  include/uapi/linux/openvswitch.h |  22 +++++++
+> >  net/openvswitch/actions.c        |  71 +++++++++++++++++++++
+> >  net/openvswitch/flow_netlink.c   | 105 +++++++++++++++++++++++++++++++
+> >  3 files changed, 198 insertions(+)
+> >
+> > diff --git a/include/uapi/linux/openvswitch.h b/include/uapi/linux/openvswitch.h
+> > index a87b44cd5590..b6684bc04883 100644
+> > --- a/include/uapi/linux/openvswitch.h
+> > +++ b/include/uapi/linux/openvswitch.h
+> > @@ -927,6 +927,7 @@ enum ovs_action_attr {
+> >         OVS_ACTION_ATTR_METER,        /* u32 meter ID. */
+> >         OVS_ACTION_ATTR_CLONE,        /* Nested OVS_CLONE_ATTR_*.  */
+> >         OVS_ACTION_ATTR_CHECK_PKT_LEN, /* Nested OVS_CHECK_PKT_LEN_ATTR_*. */
+> > +       OVS_ACTION_ATTR_DEC_TTL,       /* Nested OVS_DEC_TTL_ATTR_*. */
+> >
+> >         __OVS_ACTION_ATTR_MAX,        /* Nothing past this will be accepted
+> >                                        * from userspace. */
+> > @@ -939,6 +940,23 @@ enum ovs_action_attr {
+> >  };
+> >
+> >  #define OVS_ACTION_ATTR_MAX (__OVS_ACTION_ATTR_MAX - 1)
+> > +enum ovs_dec_ttl_attr {
+> > +       OVS_DEC_TTL_ATTR_UNSPEC,
+> > +       OVS_DEC_TTL_ATTR_ACTION_TYPE,    /* Action Type u32 */
+> > +       OVS_DEC_TTL_ATTR_ACTION,         /* nested action */
+> > +       __OVS_DEC_TTL_ATTR_MAX,
+> > +#ifdef __KERNEL__
+> > +       OVS_DEC_TTL_ATTR_ARG          /* struct sample_arg  */
+> > +#endif
+> > +};
+> > +
+>
+> I do not see need for type or OVS_DEC_TTL_ACTION_DROP, if there are no
+> nested action the datapath can drop the packet.
+>
+> > +#ifdef __KERNEL__
+> > +struct dec_ttl_arg {
+> > +       u32 action_type;            /* dec_ttl action type.*/
+> > +};
+> > +#endif
+> > +
+> > +#define OVS_DEC_TTL_ATTR_MAX (__OVS_DEC_TTL_ATTR_MAX - 1)
+> >
+> >  /* Meters. */
+> >  #define OVS_METER_FAMILY  "ovs_meter"
+> > @@ -1009,6 +1027,10 @@ enum ovs_ct_limit_attr {
+> >         __OVS_CT_LIMIT_ATTR_MAX
+> >  };
+> >
+> > +enum ovs_dec_ttl_action {            /*Actions supported by dec_ttl */
+> > +       OVS_DEC_TTL_ACTION_DROP,
+> > +       OVS_DEC_TTL_ACTION_USER_SPACE
+> > +};
+> >  #define OVS_CT_LIMIT_ATTR_MAX (__OVS_CT_LIMIT_ATTR_MAX - 1)
+> >
+> >  #define OVS_ZONE_LIMIT_DEFAULT_ZONE -1
+> > diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
+> > index 4c8395462303..5329668732b1 100644
+> > --- a/net/openvswitch/actions.c
+> > +++ b/net/openvswitch/actions.c
+> > @@ -960,6 +960,31 @@ static int output_userspace(struct datapath *dp, struct sk_buff *skb,
+> >         return ovs_dp_upcall(dp, skb, key, &upcall, cutlen);
+> >  }
+> >
+> > +static int dec_ttl(struct datapath *dp, struct sk_buff *skb,
+> > +                  struct sw_flow_key *fk, const struct nlattr *attr, bool last)
+> > +{
+> > +       struct nlattr *actions;
+> > +       struct nlattr *dec_ttl_arg;
+> > +       int rem = nla_len(attr);
+> > +       const struct dec_ttl_arg *arg;
+> > +
+> > +       /* The first action is always OVS_DEC_TTL_ATTR_ARG. */
+> > +       dec_ttl_arg = nla_data(attr);
+> > +       arg = nla_data(dec_ttl_arg);
+> > +       actions = nla_next(dec_ttl_arg, &rem);
+> > +
+> > +       switch (arg->action_type) {
+> > +       case OVS_DEC_TTL_ACTION_DROP:
+> > +               consume_skb(skb);
+> > +               break;
+> > +
+> > +       case OVS_DEC_TTL_ACTION_USER_SPACE:
+> > +               return clone_execute(dp, skb, fk, 0, actions, rem, last, false);
+> > +       }
+> > +
+> > +       return 0;
+> > +}
+> > +
+> >  /* When 'last' is true, sample() should always consume the 'skb'.
+> >   * Otherwise, sample() should keep 'skb' intact regardless what
+> >   * actions are executed within sample().
+> > @@ -1176,6 +1201,44 @@ static int execute_check_pkt_len(struct datapath *dp, struct sk_buff *skb,
+> >                              nla_len(actions), last, clone_flow_key);
+> >  }
+> >
+> > +static int execute_dec_ttl(struct sk_buff *skb, struct sw_flow_key *key)
+> > +{
+> > +       int err;
+> > +
+> > +       if (skb->protocol == htons(ETH_P_IPV6)) {
+> > +               struct ipv6hdr *nh = ipv6_hdr(skb);
+> > +
+> > +               err = skb_ensure_writable(skb, skb_network_offset(skb) +
+> > +                                         sizeof(*nh));
+> There is no need to initialize 'nh', just use 'struct ipv6hdr' to get the size.
 
-No, it's actually trivial for poll.
+But I have to set it later to have nh->hop_limit.
+Do you mean to assign it before the skb_ensure_writable check?
+What differs sizeof(*nh) and sizeof(struct ipv6hdr)? The former will
+work also after a refactor.
 
-The thing is, poll can happily just add two wait-queues to the
-poll_table. In my conversion, I just did
+> > +               if (unlikely(err))
+> > +                       return err;
+> > +
+> > +               if (nh->hop_limit <= 1)
+> > +                       return -EHOSTUNREACH;
+> > +
+> > +               key->ip.ttl = --nh->hop_limit;
+> > +       } else {
+> > +               struct iphdr *nh = ip_hdr(skb);
+> > +               u8 old_ttl;
+> > +
+> > +               err = skb_ensure_writable(skb, skb_network_offset(skb) +
+> > +                                         sizeof(*nh));
+> same as above.
+> > +               if (unlikely(err))
+> > +                       return err;
+> > +
+> > +               nh = ip_hdr(skb);
+> > +               if (nh->ttl <= 1)
+> > +                       return -EHOSTUNREACH;
+> > +
+> > +               old_ttl = nh->ttl--;
+> > +               csum_replace2(&nh->check, htons(old_ttl << 8),
+> > +                             htons(nh->ttl << 8));
+> > +               key->ip.ttl = nh->ttl;
+> > +       }
+> > +
+> > +       return 0;
+> > +}
+> > +
+> >  /* Execute a list of actions against 'skb'. */
+> >  static int do_execute_actions(struct datapath *dp, struct sk_buff *skb,
+> >                               struct sw_flow_key *key,
+> > @@ -1347,6 +1410,14 @@ static int do_execute_actions(struct datapath *dp, struct sk_buff *skb,
+> >
+> >                         break;
+> >                 }
+> > +
+> > +               case OVS_ACTION_ATTR_DEC_TTL:
+> > +                       err = execute_dec_ttl(skb, key);
+> > +                       if (err == -EHOSTUNREACH) {
+> Can you use unlikely().
+>
 
--       poll_wait(filp, &pipe->wait, wait);
-+       if (filp->f_mode & FMODE_READ)
-+               poll_wait(filp, &pipe->rd_wait, wait);
-+       if (filp->f_mode & FMODE_WRITE)
-+               poll_wait(filp, &pipe->wr_wait, wait);
+sure
 
-which changes the unconditional "add one" to two conditional adds.
-They _could_ have been unconditional too, but why add unnecessary
-wakeups? So it only really does it twice on named pipes (if opened for
-reading and writing).
+> > +                               err = dec_ttl(dp, skb, key, a, true);
+> > +                               return err;
+> > +                       }
+> > +                       break;
+> >                 }
+> >
+> >                 if (unlikely(err)) {
+> > diff --git a/net/openvswitch/flow_netlink.c b/net/openvswitch/flow_netlink.c
+> > index 65c2e3458ff5..a9eea2ffb8b0 100644
+> > --- a/net/openvswitch/flow_netlink.c
+> > +++ b/net/openvswitch/flow_netlink.c
+> > @@ -61,6 +61,7 @@ static bool actions_may_change_flow(const struct nlattr *actions)
+> >                 case OVS_ACTION_ATTR_RECIRC:
+> >                 case OVS_ACTION_ATTR_TRUNC:
+> >                 case OVS_ACTION_ATTR_USERSPACE:
+> > +               case OVS_ACTION_ATTR_DEC_TTL:
+> >                         break;
+> >
+> >                 case OVS_ACTION_ATTR_CT:
+> > @@ -2494,6 +2495,59 @@ static int validate_and_copy_sample(struct net *net, const struct nlattr *attr,
+> >         return 0;
+> >  }
+> >
+> > +static int validate_and_copy_dec_ttl(struct net *net, const struct nlattr *attr,
+> > +                                    const struct sw_flow_key *key,
+> > +                                    struct sw_flow_actions **sfa,
+> > +                                    __be16 eth_type, __be16 vlan_tci,
+> > +                                    u32 mpls_label_count, bool log)
+> > +{
+> > +       struct nlattr *attrs[OVS_DEC_TTL_ATTR_MAX + 1] = { 0 };
+> > +       const struct nlattr *action_type, *action;
+> > +       struct nlattr *a;
+> > +       int rem, start, err;
+> > +       struct dec_ttl_arg arg;
+> > +
+> Here we need to validate if eth_type is IPv4 or IPv6.
+>
+>
 
-It's _unusual_ to add two wait-queues for a single poll, but it's not
-wrong. The tty layer has always done it - exactly because it has
-separate wait queues for reading and writing. Some other drivers do
-too. Sometimes there's a separate wait queue for errors, sometimes
-there are multiple wait-queues because there are events from the
-"subsystem" and there are other events from the "device". I think
-sound does the latter, for example.
+check for ETH_P_IP or ETH_P_IPV6 and return -EINVAL?
 
-And no, I don't particularly like the FMODE_READ/WRITE testing above -
-it would be better to pass in the polling mask and ask "are we waiting
-for polling for reading or writing?" instead of asking whether the
-file descriptor was opened for read or write, but hey, it is what it
-is.
 
-Sadly, "poll()" doesn't really get passed the bitmask of what is being
-waited on (it's there in the poll_tabvle "_key" field, but I don't
-want to have the pipe code look into those kinds of details.
+>
+> > +       nla_for_each_nested(a, attr, rem) {
+> > +               int type = nla_type(a);
+> > +
+> > +               if (!type || type > OVS_DEC_TTL_ATTR_MAX || attrs[type])
+> > +                       return -EINVAL;
+> > +
+> > +               attrs[type] = a;
+> > +       }
+> > +       if (rem)
+> > +               return -EINVAL;
+> > +
+> > +       action_type = attrs[OVS_DEC_TTL_ATTR_ACTION_TYPE];
+> > +       if (!action_type || nla_len(action_type) != sizeof(u32))
+> > +               return -EINVAL;
+> > +
+> > +       start = add_nested_action_start(sfa, OVS_ACTION_ATTR_DEC_TTL, log);
+> > +       if (start < 0)
+> > +               return start;
+> > +
+> > +       arg.action_type = nla_get_u32(action_type);
+> > +       err = ovs_nla_add_action(sfa, OVS_DEC_TTL_ATTR_ARG,
+> > +                                &arg, sizeof(arg), log);
+> > +       if (err)
+> > +               return err;
+> > +
+> > +       if (arg.action_type == OVS_DEC_TTL_ACTION_USER_SPACE) {
+> > +               action = attrs[OVS_DEC_TTL_ATTR_ACTION];
+> > +               if (!action || (nla_len(action) && nla_len(action) < NLA_HDRLEN))
+> > +                       return -EINVAL;
+> > +
+> > +               err = __ovs_nla_copy_actions(net, action, key, sfa, eth_type,
+> > +                                            vlan_tci, mpls_label_count, log);
+> > +               if (err)
+> > +                       return err;
+> > +       }
+> > +
+> > +       add_nested_action_end(*sfa, start);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> >  static int validate_and_copy_clone(struct net *net,
+> >                                    const struct nlattr *attr,
+> >                                    const struct sw_flow_key *key,
+> > @@ -3005,6 +3059,7 @@ static int __ovs_nla_copy_actions(struct net *net, const struct nlattr *attr,
+> >                         [OVS_ACTION_ATTR_METER] = sizeof(u32),
+> >                         [OVS_ACTION_ATTR_CLONE] = (u32)-1,
+> >                         [OVS_ACTION_ATTR_CHECK_PKT_LEN] = (u32)-1,
+> > +                       [OVS_ACTION_ATTR_DEC_TTL] = (u32)-1,
+> >                 };
+> >                 const struct ovs_action_push_vlan *vlan;
+> >                 int type = nla_type(a);
+> > @@ -3233,6 +3288,15 @@ static int __ovs_nla_copy_actions(struct net *net, const struct nlattr *attr,
+> >                         break;
+> >                 }
+> >
+> > +               case OVS_ACTION_ATTR_DEC_TTL:
+> > +                       err = validate_and_copy_dec_ttl(net, a, key, sfa,
+> > +                                                       eth_type, vlan_tci,
+> > +                                                       mpls_label_count, log);
+> > +                       if (err)
+> > +                               return err;
+> > +                       skip_copy = true;
+> > +                       break;
+> > +
+> >                 default:
+> >                         OVS_NLERR(log, "Unknown Action type %d", type);
+> >                         return -EINVAL;
+> > @@ -3404,6 +3468,41 @@ static int check_pkt_len_action_to_attr(const struct nlattr *attr,
+> >         return err;
+> >  }
+> >
+> > +static int dec_ttl_action_to_attr(const struct nlattr *att, struct sk_buff *skb)
+> > +{
+> > +       struct nlattr *start, *ac_start = NULL, *dec_ttl;
+> > +       int err = 0, rem = nla_len(att);
+> > +       const struct dec_ttl_arg *arg;
+> > +       struct nlattr *actions;
+> > +
+> > +       start = nla_nest_start_noflag(skb, OVS_ACTION_ATTR_DEC_TTL);
+> > +       if (!start)
+> > +               return -EMSGSIZE;
+> > +
+> > +       dec_ttl = nla_data(att);
+> > +       arg = nla_data(dec_ttl);
+> > +       actions = nla_next(dec_ttl, &rem);
+> > +
+> > +       if (nla_put_u32(skb, OVS_DEC_TTL_ATTR_ACTION_TYPE, arg->action_type)) {
+> > +               nla_nest_cancel(skb, start);
+> > +               return -EMSGSIZE;
+> > +       }
+> > +
+> > +       if (arg->action_type == OVS_DEC_TTL_ACTION_USER_SPACE) {
+> > +               ac_start = nla_nest_start_noflag(skb, OVS_DEC_TTL_ATTR_ACTION);
+> > +               if (!ac_start) {
+> > +                       nla_nest_cancel(skb, ac_start);
+> > +                       nla_nest_cancel(skb, start);
+> > +                       return -EMSGSIZE;
+> > +               }
+> > +               err = ovs_nla_put_actions(actions, rem, skb);
+> > +               nla_nest_end(skb, ac_start);
+> > +       }
+> > +       nla_nest_end(skb, start);
+> > +
+> > +       return err;
+> > +}
+> > +
+> >  static int set_action_to_attr(const struct nlattr *a, struct sk_buff *skb)
+> >  {
+> >         const struct nlattr *ovs_key = nla_data(a);
+> > @@ -3504,6 +3603,12 @@ int ovs_nla_put_actions(const struct nlattr *attr, int len, struct sk_buff *skb)
+> >                                 return err;
+> >                         break;
+> >
+> > +               case OVS_ACTION_ATTR_DEC_TTL:
+> > +                       err = dec_ttl_action_to_attr(a, skb);
+> > +                       if (err)
+> > +                               return err;
+> > +                       break;
+> > +
+> >                 default:
+> >                         if (nla_put(skb, type, nla_len(a), nla_data(a)))
+> >                                 return -EMSGSIZE;
+> > --
+> > 2.23.0
+> >
+>
 
-So the named pipe case could be improved, but it's not like anybody
-really cares. Nobody uses named pipes any more (and few people ever
-did). So I didn't worry about it.
 
-            Linus
+-- 
+Matteo Croce
+per aspera ad upstream
+
