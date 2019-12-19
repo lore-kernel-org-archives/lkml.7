@@ -6,89 +6,173 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1C3C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6515C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49A53222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:03:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97450222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:03:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbfLSMDs (ORCPT
+        id S1726949AbfLSMDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 07:03:48 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:55627 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbfLSMDs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 07:03:48 -0500
-Received: from mail-qv1-f53.google.com ([209.85.219.53]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MXH3Y-1iBNa345AU-00Yfyv; Thu, 19 Dec 2019 13:03:46 +0100
-Received: by mail-qv1-f53.google.com with SMTP id m14so2113644qvl.3;
-        Thu, 19 Dec 2019 04:03:45 -0800 (PST)
-X-Gm-Message-State: APjAAAXMlQFMB2P/264RYR8qG8bHAqtVvXZiWmueKgL7wxk/lTdZe/Nk
-        lOzae+eApQqXFmaZG3jgQSCd8S+cee5xbPRzixk=
-X-Google-Smtp-Source: APXvYqyRYAthWWOFbK4JwdbfUGnK3IkCerPrE6//l+bsXhqevvRLK6TVQiG7yBNWDpk0m44tuJY3intXaCEenSLn4+0=
-X-Received: by 2002:a0c:d788:: with SMTP id z8mr1183000qvi.211.1576757024622;
- Thu, 19 Dec 2019 04:03:44 -0800 (PST)
+        Thu, 19 Dec 2019 07:03:55 -0500
+Received: from mga11.intel.com ([192.55.52.93]:25457 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726668AbfLSMDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 07:03:55 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Dec 2019 04:03:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,331,1571727600"; 
+   d="scan'208";a="222273880"
+Received: from kuha.fi.intel.com ([10.237.72.53])
+  by fmsmga001.fm.intel.com with SMTP; 19 Dec 2019 04:03:51 -0800
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Thu, 19 Dec 2019 14:03:50 +0200
+Date:   Thu, 19 Dec 2019 14:03:50 +0200
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Mat King <mathewk@google.com>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Julius Werner <jwerner@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Samuel Holland <samuel@sholland.org>
+Subject: Re: [PATCH v3 1/2] firmware: google: Expose CBMEM over sysfs
+Message-ID: <20191219120350.GD22923@kuha.fi.intel.com>
+References: <20191128125100.14291-1-patrick.rudolph@9elements.com>
+ <20191128125100.14291-2-patrick.rudolph@9elements.com>
+ <CAODwPW8Koy1BvKGJU6PKexYx+PNE+WY7+m69gcxT689vBy+AoQ@mail.gmail.com>
+ <CAOxpaSXUgNXaZ40ScZKZQ+iDEQ=vqPytLgicBx==hxp5uL_+dA@mail.gmail.com>
+ <CAL_quvScPUuocogrghzH_vNb2uxyBupBKYikG0Bwf4OcfSRWsQ@mail.gmail.com>
+ <5df87d6e.1c69fb81.f0643.a6b6@mx.google.com>
+ <CAL_quvS_3o7UNmqP+QDCcHosw8JkQ03Kx5NjgUxFhO5FO=_-Mg@mail.gmail.com>
+ <20191218094729.GC22923@kuha.fi.intel.com>
+ <CAL_quvSKHwOTeatoju=nTmhyf6iTRGD3zY1Nxv=DcJrzQNV3sg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191209092147.22901-1-kishon@ti.com> <20191209092147.22901-6-kishon@ti.com>
- <20191216144932.GY24359@e119886-lin.cambridge.arm.com> <d1ee4579-a3da-6a73-3516-a6d264f80995@ti.com>
-In-Reply-To: <d1ee4579-a3da-6a73-3516-a6d264f80995@ti.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 19 Dec 2019 13:03:28 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a06XLSa-FHNGsN=b10JrddjbOKAvfU=iXdMa+0L43m5fA@mail.gmail.com>
-Message-ID: <CAK8P3a06XLSa-FHNGsN=b10JrddjbOKAvfU=iXdMa+0L43m5fA@mail.gmail.com>
-Subject: Re: [PATCH 05/13] PCI: cadence: Add read and write accessors to
- perform only 32-bit accesses
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:r6T3/CcYpNS86A2Hvx7bMZm1KM8FiNbjscHFDmZ+OK596/2FHQw
- 14vK4BjTgsPQWg4SSBHNWwqS6TU86YPVztPL/xXH5371kxHFXCsOvIde4HG5UNt1u8wGx55
- AWkOYni8+6x1/5B6p+HXnwF3lJ9Q0z5E62HCsdQbWJgy7ex2BMVj4+VbB231e4izNmOxWfJ
- 0wGPd+fGDcyCzLxj0dAUA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:XyO0F0+TXjA=:r/8VdwCanuBYUQ4DTNJuie
- QffNdRqHrA0PKHo66OByfUYaRxiUtIsPRrHvHxTt1zL5lT8EoXHNMPX2q+M8d9+lHMpd1aebu
- Gp/ebIp1FCuP/ZiTLo5vkO8coqiWo6Q9O6dVZhwx0agYKLAjnVdKgaJLpPV2l5YB1jJIi4ihQ
- t2QuYf8cAMoLsLQYJbniTt6Z19W5dGHv3BY3WR76XSOOtdvLKqPn0QLUVSj0zg/UMasDZHG7H
- kW1NCbJmxsUpak2z2DSRSJEGIlXHpCDvxbNTUjdFmjdMYClFdGSWo0kYQM903zK72v4JM5+nI
- 0lXxrbubQPRvxq2PQKoOWKD9nQGp4l6CG2QKsh2LQl3Qt3ymNIbPsLNPznGX3b/GNhUWt6tV6
- ijGGsDUWuVKFxgoKuAdjizL2ncUp4pyW1OJwsrLkRB3aeZ6K5ILBlBpOVtMf3yOau4ZeNdUQN
- 2ah/h3Zd02t85RB5YOuNQQRZPpMhPJaHWuRVdJWeqekgFmRqHH3DocCIlsP2cB0mnaf0nge0U
- Yt/PKaBs73aspwFTixChOQYD/y+RrY2IBtUJxWm3O6EAV0Tmu3lSsNUc0k1PKvp3+073euJAc
- Gna6Ai5KQoQpszqJIQKDSujU+4sIsk7SJkwAJ9eX4tKVwyXABq9NNxKiK/LMs4zbYewnrA/C7
- x06Jrh2YnaZ4urjdevC9gRfdxkhj5HNKgatjJIG49k9kG9VGsfRaz2Vbgv92VEy5mA08P1RJB
- 5YCK/X8cl+tTLVq8kAtzWiXT+OhcTwjeer2YmBM7fapkJhpyvTr0xr0h3yPZHxDEqHXlyXB2R
- TZ6ZmjQOy1aA+uJZkPRzqjjwTdVro8AvcUjbNjRlTZSnOpR78z8Pl/mpb5gQkGLlW+VxQ6JCZ
- QbqpeebYENhYnrghRqrQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_quvSKHwOTeatoju=nTmhyf6iTRGD3zY1Nxv=DcJrzQNV3sg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 12:54 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->
-> Hi Andrew,
->
-> On 16/12/19 8:19 pm, Andrew Murray wrote:
-> > On Mon, Dec 09, 2019 at 02:51:39PM +0530, Kishon Vijay Abraham I wrote:
-> >> Certain platforms like TI's J721E allow only 32-bit register accesses.
+On Wed, Dec 18, 2019 at 04:35:29PM -0700, Mat King wrote:
+> On Wed, Dec 18, 2019 at 2:47 AM Heikki Krogerus
+> <heikki.krogerus@linux.intel.com> wrote:
 > >
-> > When I first read this I thought you meant only 32-bit accesses are allowed
-> > and not other sizes (such as 64-bit). However the limitation you address
-> > here is that the J721E allows only 32-bit *aligned* register accesses.
->
-> It's both, it allows only 32-bit aligned accesses and the size should be
-> only 32 bits. That's why I always use "readl" in the APIs below.
+> > On Tue, Dec 17, 2019 at 01:16:33PM -0700, Mat King wrote:
+> > > On Tue, Dec 17, 2019 at 12:02 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > > >
+> > > > Quoting Mat King (2019-12-13 13:31:46)
+> > > > > On Mon, Dec 9, 2019 at 11:57 PM Julius Werner <jwerner@chromium.org> wrote:
+> > > > > > > +static int cbmem_probe(struct coreboot_device *cdev)
+> > > > > > > +{
+> > > > > > > +       struct device *dev = &cdev->dev;
+> > > > > > > +       struct cb_priv *priv;
+> > > > > > > +       int err;
+> > > > > > > +
+> > > > > > > +       priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+> > > > > > > +       if (!priv)
+> > > > > > > +               return -ENOMEM;
+> > > > > > > +
+> > > > > > > +       memcpy(&priv->entry, &cdev->cbmem_entry, sizeof(priv->entry));
+> > > > > > > +
+> > > > > > > +       priv->remap = memremap(priv->entry.address,
+> > > > > > > +                              priv->entry.entry_size, MEMREMAP_WB);
+> > > > > >
+> > > > > > We've just been discussing some problems with CBMEM areas and memory
+> > > > > > mapping types in Chrome OS. CBMEM is not guaranteed to be page-aligned
+> > > > > > (at least not the "small" entries), but the kernel can only assign
+> > > > > > memory attributes for a page at a time (and refuses to map the same
+> > > > > > area twice with two different memory types, for good reason). So if
+> > > > > > CBMEM entries sharing a page are mapped as writeback by one driver but
+> > > > > > uncached by the other, things break.
+> > > > > >
+> > > > > > There are some CBMEM entries that need to be mapped uncached (e.g. the
+> > > > > > ACPI UCSI table, which isn't even handled by anything using this CBMEM
+> > > > > > code) and others for which it would make more sense (e.g. the memory
+> > > > > > console, where firmware may add more lines at runtime), but I don't
+> > > > > > think there are any regions that really *need* to be writeback. None
+> > > > > > of the stuff accessing these areas should access them often enough
+> > > > > > that caching matters, and I think it's generally more common to map
+> > > > > > firmware memory areas as uncached anyway. So how about we standardize
+> > > > > > on mapping it all uncached to avoid any attribute clashes? (That would
+> > > > > > mean changing the existing VPD and memconsole drivers to use
+> > > > > > ioremap(), too.)
+> > > > >
+> > > > > I don't think that uncached would work here either because the acpi
+> > > > > driver will have already mapped some of these regions as write-back
+> > > > > before this driver is loaded so the mapping will fail.
+> > > >
+> > > > Presumably the ucsi driver is drivers/usb/typec/ucsi/ucsi_acpi.c? Is
+> > > > that right? And on ACPI based systems is this I/O memory or just some
+> > > > carved out memory region that is used to communicate something to the
+> > > > ACPI firmware? From looking at the ucsi driver it seems like it should
+> > > > be mapped with memremap() instead of ioremap() given that it's not
+> > > > actual I/O memory that has any sort of memory barrier or access width
+> > > > constraints. It looks more like some sort of memory region that is being
+> > > > copied into and out of while triggering some DSM. Can it at least be
+> > > > memremap()ed with MEMREMAP_WT?
+> > >
+> > > Yes this is the ucsi_acpi.c driver that has caused this issue to come
+> > > up. It does just use a region of memory carved in the BIOS out for the
+> > > purpose of this device. The kernel can write to this memory and call a
+> > > _DSM to push data to an EC or call the _DSM to pull from the EC into
+> > > this memory region. See
+> > > https://www.intel.com/content/dam/www/public/us/en/documents/white-papers/bios-implementation-of-ucsi.pdf
+> > > . The driver is very explicit about using uncached memory and I
+> > > suspect that is why memremap() was not used, but I am not sure why
+> > > uncahed memory is needed. The only consumers of this memory are the
+> > > driver itself and the ACPI asl code in the _DSM which as far as I know
+> > > is being exectued by the kernel directly. Are there any other reasons
+> > > to use uncached memory when dealing with ACPI asl code?
+> >
+> > The reason why I did not use memremap() was because I was convinced
+> > that there will soon be physical devices such as PD controllers that
+> > supply the interface, and with those the memory resource given to the
+> > driver would be real bus memory. But that was already years ago,
+> > and there still are no such devices that I know of, so if you guys
+> > want to change the driver so that it uses memremap() instead of
+> > ioremap(), I'm not going to be against it. But just be warned: We can
+> > not guarantee that there isn't going to be IO side effects in every
+> > case.
+> 
+> I am a little confused how this hypothetical PD controller would look
+> with regards to the ACPI table. Would it still have an OperationRegion
+> for the MMIO address of the controllers mailbox? Would the _CRS point
+> to the MMIO of the mailbox directly or would it still use physical
+> memory? If it is pointing to the MMIO mailbox is the _DSM essentially
+> a noop?
 
-In that case, can't you use the pci_generic_config_read32/write32
-functions with a cadence specific .map_bus() function?
+In this case I believe the idea is exactly like you said. The OpRegion
+would just be SystemIO OpRegion instead of SystemMemory OpRegion, and
+the _DSD may or may not do something.
 
-       Arnd
+The goal appears to be to be able to support the same UCSI device
+driver (in Windows) regardless of which component actually supplies
+the interface (USB PD controller, EC firmware...), and regardless how
+that component is attached to the SOC (I2C, PCI, mailbox...). The real
+hardware is meant to be hidden in AML. The problem with that is of
+course that UCSI now always depends on ACPI.
+
+I think the main problem is that the mailbox was never separated from
+the UCSI interface like it should have. If the ACPI mailbox was
+separated from the interface (or generalized) it could have been
+handled as a bus in the operating system, fake bus that looks like
+SMBus (or I2C). We would have needed a separate "fake I2C host
+adapter" driver for the mailbox, but now if a real USB PD controller
+I2C slave device supplies the UCSI interface (most of them are I2C
+slave devices), the same UCSI driver would still work without any
+changes needed.
+
+But I guess it's too late to change that now :-(.
+
+thanks,
+
+-- 
+heikki
