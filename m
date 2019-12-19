@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AE7C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BE9C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62481222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD225227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781725;
-	bh=O/z9uhVuclDXBFM2lZwSMCemty+2fbED2SNQ8D+l2/A=;
+	s=default; t=1576781727;
+	bh=CpXIL1R4lHqNtvthudV/rtjAZQJEG73Fl+AcFWBSIR4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yOWFjckQkJcADa4WZ89JGq6GVpwKcYLyFMglTBDNr8fjzRWMXeC81XYvsQx0ko6Vf
-	 IUUX/rsRUNhqK02+NprcmZzIZkQld7NHMUe/xdR7E58J7TYRESFeRTQ5XOyrmrk3Rb
-	 UvfA3EXQAe2Nw8lQfojJqLz3ks6+50fWAuF7Iqrc=
+	b=UFhEqFmgl60+aj8FB+/P/PsGSdOfrjxr/wsooK8210/5AVVB0mvhPaivOg8l6iY4C
+	 NB4NHve3ooUYb5P3zpw/bL+oRW4OMPqVCNLUJe55A411bHfRuOLKLxnFxBPEAFgPsu
+	 UGXJ4TQ7SJ86iNPNW/4z1S/khKfAJKzGxv+06WxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730444AbfLSSzY (ORCPT
+        id S1730662AbfLSSz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:55:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51316 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:55:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727125AbfLSSzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:55:22 -0500
+        id S1730310AbfLSSzY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:55:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8AA724679;
-        Thu, 19 Dec 2019 18:55:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 279CA206EC;
+        Thu, 19 Dec 2019 18:55:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781721;
-        bh=O/z9uhVuclDXBFM2lZwSMCemty+2fbED2SNQ8D+l2/A=;
+        s=default; t=1576781723;
+        bh=CpXIL1R4lHqNtvthudV/rtjAZQJEG73Fl+AcFWBSIR4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=07IqoApzklSek6m73nEnA16UqppL0EUi0jwIFmicVAAem0tYgN37NSrviB6b/JIsg
-         gSzb7kOYHSzaHf3Bqhq8KPeDLcqznE0KFDWZ11qJ0CQnJCTIzfrfazm/b5905TSloB
-         +Q9SF+LLmi51o1U00Iz+oJqrGs0r5H9YLrjtKg88=
+        b=ONlKmThufYwIePpC6+n1EaZko/5rdHbd72ECGBRvX2fvz5ZukxOVso3EkylHqmTO4
+         sQTjZCTFLJrOeAnbgAWRhE5LTrhnEm9DvSYoP2aNrCfUPk2yxpYd8baucSISHEYI7N
+         +a6S8mvq8Yt58nAIVsp8AyxoSmH+T93CRxvrrIcY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Nikos Tsironis <ntsironis@arrikto.com>,
         Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.4 53/80] dm clone metadata: Track exact changes per transaction
-Date:   Thu, 19 Dec 2019 19:34:45 +0100
-Message-Id: <20191219183124.248718718@linuxfoundation.org>
+Subject: [PATCH 5.4 54/80] dm clone metadata: Use a two phase commit
+Date:   Thu, 19 Dec 2019 19:34:46 +0100
+Message-Id: <20191219183127.945374000@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -61,15 +61,22 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nikos Tsironis <ntsironis@arrikto.com>
 
-commit e6a505f3f9fae572fb3ab3bc486e755ac9cef32c upstream.
+commit 8fdbfe8d1690e8a38d497d83a30607d0d90cc15a upstream.
 
-Extend struct dirty_map with a second bitmap which tracks the exact
-regions that were hydrated during the current metadata transaction.
+Split the metadata commit in two parts:
 
-Moreover, fix __flush_dmap() to only commit the metadata of the regions
-that were hydrated during the current transaction.
+1. dm_clone_metadata_pre_commit(): Prepare the current transaction for
+   committing. After this is called, all subsequent metadata updates,
+   done through either dm_clone_set_region_hydrated() or
+   dm_clone_cond_set_range(), will be part of the next transaction.
 
-This is required by the following commits to fix a data corruption bug.
+2. dm_clone_metadata_commit(): Actually commit the current transaction
+   to disk and start a new transaction.
+
+This is required by the following commit. It allows dm-clone to flush
+the destination device after step (1) to ensure that all freshly
+hydrated regions, for which we are updating the metadata, are properly
+written to non-volatile storage and won't be lost in case of a crash.
 
 Fixes: 7431b7835f55 ("dm: add clone target")
 Cc: stable@vger.kernel.org # v5.4+
@@ -78,185 +85,151 @@ Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-clone-metadata.c |   90 ++++++++++++++++++++++++++++-------------
- 1 file changed, 62 insertions(+), 28 deletions(-)
+ drivers/md/dm-clone-metadata.c |   46 ++++++++++++++++++++++++++++++++---------
+ drivers/md/dm-clone-metadata.h |   17 +++++++++++++++
+ drivers/md/dm-clone-target.c   |    7 +++++-
+ 3 files changed, 60 insertions(+), 10 deletions(-)
 
 --- a/drivers/md/dm-clone-metadata.c
 +++ b/drivers/md/dm-clone-metadata.c
-@@ -67,23 +67,34 @@ struct superblock_disk {
-  * To save constantly doing look ups on disk we keep an in core copy of the
-  * on-disk bitmap, the region_map.
-  *
-- * To further reduce metadata I/O overhead we use a second bitmap, the dmap
-- * (dirty bitmap), which tracks the dirty words, i.e. longs, of the region_map.
-+ * In order to track which regions are hydrated during a metadata transaction,
-+ * we use a second set of bitmaps, the dmap (dirty bitmap), which includes two
-+ * bitmaps, namely dirty_regions and dirty_words. The dirty_regions bitmap
-+ * tracks the regions that got hydrated during the current metadata
-+ * transaction. The dirty_words bitmap tracks the dirty words, i.e. longs, of
-+ * the dirty_regions bitmap.
-+ *
-+ * This allows us to precisely track the regions that were hydrated during the
-+ * current metadata transaction and update the metadata accordingly, when we
-+ * commit the current transaction. This is important because dm-clone should
-+ * only commit the metadata of regions that were properly flushed to the
-+ * destination device beforehand. Otherwise, in case of a crash, we could end
-+ * up with a corrupted dm-clone device.
-  *
-  * When a region finishes hydrating dm-clone calls
-  * dm_clone_set_region_hydrated(), or for discard requests
-  * dm_clone_cond_set_range(), which sets the corresponding bits in region_map
-  * and dmap.
-  *
-- * During a metadata commit we scan the dmap for dirty region_map words (longs)
-- * and update accordingly the on-disk metadata. Thus, we don't have to flush to
-- * disk the whole region_map. We can just flush the dirty region_map words.
-+ * During a metadata commit we scan dmap->dirty_words and dmap->dirty_regions
-+ * and update the on-disk metadata accordingly. Thus, we don't have to flush to
-+ * disk the whole region_map. We can just flush the dirty region_map bits.
-  *
-- * We use a dirty bitmap, which is smaller than the original region_map, to
-- * reduce the amount of memory accesses during a metadata commit. As dm-bitset
-- * accesses the on-disk bitmap in 64-bit word granularity, there is no
-- * significant benefit in tracking the dirty region_map bits with a smaller
-- * granularity.
-+ * We use the helper dmap->dirty_words bitmap, which is smaller than the
-+ * original region_map, to reduce the amount of memory accesses during a
-+ * metadata commit. Moreover, as dm-bitset also accesses the on-disk bitmap in
-+ * 64-bit word granularity, the dirty_words bitmap helps us avoid useless disk
-+ * accesses.
-  *
-  * We could update directly the on-disk bitmap, when dm-clone calls either
-  * dm_clone_set_region_hydrated() or dm_clone_cond_set_range(), buts this
-@@ -92,12 +103,13 @@ struct superblock_disk {
-  * e.g., in a hooked overwrite bio's completion routine, and further reduce the
-  * I/O completion latency.
-  *
-- * We maintain two dirty bitmaps. During a metadata commit we atomically swap
-- * the currently used dmap with the unused one. This allows the metadata update
-- * functions to run concurrently with an ongoing commit.
-+ * We maintain two dirty bitmap sets. During a metadata commit we atomically
-+ * swap the currently used dmap with the unused one. This allows the metadata
-+ * update functions to run concurrently with an ongoing commit.
-  */
- struct dirty_map {
- 	unsigned long *dirty_words;
-+	unsigned long *dirty_regions;
- 	unsigned int changed;
- };
+@@ -127,6 +127,9 @@ struct dm_clone_metadata {
+ 	struct dirty_map dmap[2];
+ 	struct dirty_map *current_dmap;
  
-@@ -461,22 +473,40 @@ static size_t bitmap_size(unsigned long
- 	return BITS_TO_LONGS(nr_bits) * sizeof(long);
- }
- 
--static int dirty_map_init(struct dm_clone_metadata *cmd)
-+static int __dirty_map_init(struct dirty_map *dmap, unsigned long nr_words,
-+			    unsigned long nr_regions)
- {
--	cmd->dmap[0].changed = 0;
--	cmd->dmap[0].dirty_words = kvzalloc(bitmap_size(cmd->nr_words), GFP_KERNEL);
-+	dmap->changed = 0;
- 
--	if (!cmd->dmap[0].dirty_words) {
--		DMERR("Failed to allocate dirty bitmap");
-+	dmap->dirty_words = kvzalloc(bitmap_size(nr_words), GFP_KERNEL);
-+	if (!dmap->dirty_words)
-+		return -ENOMEM;
++	/* Protected by lock */
++	struct dirty_map *committing_dmap;
 +
-+	dmap->dirty_regions = kvzalloc(bitmap_size(nr_regions), GFP_KERNEL);
-+	if (!dmap->dirty_regions) {
-+		kvfree(dmap->dirty_words);
- 		return -ENOMEM;
+ 	/*
+ 	 * In core copy of the on-disk bitmap to save constantly doing look ups
+ 	 * on disk.
+@@ -511,6 +514,7 @@ static int dirty_map_init(struct dm_clon
  	}
  
--	cmd->dmap[1].changed = 0;
--	cmd->dmap[1].dirty_words = kvzalloc(bitmap_size(cmd->nr_words), GFP_KERNEL);
-+	return 0;
-+}
+ 	cmd->current_dmap = &cmd->dmap[0];
++	cmd->committing_dmap = NULL;
  
--	if (!cmd->dmap[1].dirty_words) {
-+static void __dirty_map_exit(struct dirty_map *dmap)
-+{
-+	kvfree(dmap->dirty_words);
-+	kvfree(dmap->dirty_regions);
+ 	return 0;
+ }
+@@ -775,16 +779,18 @@ static int __flush_dmap(struct dm_clone_
+ 	return 0;
+ }
+ 
+-int dm_clone_metadata_commit(struct dm_clone_metadata *cmd)
++int dm_clone_metadata_pre_commit(struct dm_clone_metadata *cmd)
+ {
+-	int r = -EPERM;
++	int r = 0;
+ 	unsigned long flags;
+ 	struct dirty_map *dmap, *next_dmap;
+ 
+ 	down_write(&cmd->lock);
+ 
+-	if (cmd->fail_io || dm_bm_is_read_only(cmd->bm))
++	if (cmd->fail_io || dm_bm_is_read_only(cmd->bm)) {
++		r = -EPERM;
+ 		goto out;
++	}
+ 
+ 	/* Get current dirty bitmap */
+ 	dmap = cmd->current_dmap;
+@@ -796,7 +802,7 @@ int dm_clone_metadata_commit(struct dm_c
+ 	 * The last commit failed, so we don't have a clean dirty-bitmap to
+ 	 * use.
+ 	 */
+-	if (WARN_ON(next_dmap->changed)) {
++	if (WARN_ON(next_dmap->changed || cmd->committing_dmap)) {
+ 		r = -EINVAL;
+ 		goto out;
+ 	}
+@@ -806,11 +812,33 @@ int dm_clone_metadata_commit(struct dm_c
+ 	cmd->current_dmap = next_dmap;
+ 	spin_unlock_irqrestore(&cmd->bitmap_lock, flags);
+ 
+-	/*
+-	 * No one is accessing the old dirty bitmap anymore, so we can flush
+-	 * it.
+-	 */
+-	r = __flush_dmap(cmd, dmap);
++	/* Set old dirty bitmap as currently committing */
++	cmd->committing_dmap = dmap;
++out:
++	up_write(&cmd->lock);
++
++	return r;
 +}
 +
-+static int dirty_map_init(struct dm_clone_metadata *cmd)
++int dm_clone_metadata_commit(struct dm_clone_metadata *cmd)
 +{
-+	if (__dirty_map_init(&cmd->dmap[0], cmd->nr_words, cmd->nr_regions)) {
- 		DMERR("Failed to allocate dirty bitmap");
--		kvfree(cmd->dmap[0].dirty_words);
-+		return -ENOMEM;
++	int r = -EPERM;
++
++	down_write(&cmd->lock);
++
++	if (cmd->fail_io || dm_bm_is_read_only(cmd->bm))
++		goto out;
++
++	if (WARN_ON(!cmd->committing_dmap)) {
++		r = -EINVAL;
++		goto out;
 +	}
 +
-+	if (__dirty_map_init(&cmd->dmap[1], cmd->nr_words, cmd->nr_regions)) {
-+		DMERR("Failed to allocate dirty bitmap");
-+		__dirty_map_exit(&cmd->dmap[0]);
- 		return -ENOMEM;
++	r = __flush_dmap(cmd, cmd->committing_dmap);
++	if (!r) {
++		/* Clear committing dmap */
++		cmd->committing_dmap = NULL;
++	}
+ out:
+ 	up_write(&cmd->lock);
+ 
+--- a/drivers/md/dm-clone-metadata.h
++++ b/drivers/md/dm-clone-metadata.h
+@@ -73,7 +73,23 @@ void dm_clone_metadata_close(struct dm_c
+ 
+ /*
+  * Commit dm-clone metadata to disk.
++ *
++ * We use a two phase commit:
++ *
++ * 1. dm_clone_metadata_pre_commit(): Prepare the current transaction for
++ *    committing. After this is called, all subsequent metadata updates, done
++ *    through either dm_clone_set_region_hydrated() or
++ *    dm_clone_cond_set_range(), will be part of the **next** transaction.
++ *
++ * 2. dm_clone_metadata_commit(): Actually commit the current transaction to
++ *    disk and start a new transaction.
++ *
++ * This allows dm-clone to flush the destination device after step (1) to
++ * ensure that all freshly hydrated regions, for which we are updating the
++ * metadata, are properly written to non-volatile storage and won't be lost in
++ * case of a crash.
+  */
++int dm_clone_metadata_pre_commit(struct dm_clone_metadata *cmd);
+ int dm_clone_metadata_commit(struct dm_clone_metadata *cmd);
+ 
+ /*
+@@ -110,6 +126,7 @@ int dm_clone_metadata_abort(struct dm_cl
+  * Switches metadata to a read only mode. Once read-only mode has been entered
+  * the following functions will return -EPERM:
+  *
++ *   dm_clone_metadata_pre_commit()
+  *   dm_clone_metadata_commit()
+  *   dm_clone_set_region_hydrated()
+  *   dm_clone_cond_set_range()
+--- a/drivers/md/dm-clone-target.c
++++ b/drivers/md/dm-clone-target.c
+@@ -1120,8 +1120,13 @@ static int commit_metadata(struct clone
+ 		goto out;
  	}
  
-@@ -487,8 +517,8 @@ static int dirty_map_init(struct dm_clon
+-	r = dm_clone_metadata_commit(clone->cmd);
++	r = dm_clone_metadata_pre_commit(clone->cmd);
++	if (unlikely(r)) {
++		__metadata_operation_failed(clone, "dm_clone_metadata_pre_commit", r);
++		goto out;
++	}
  
- static void dirty_map_exit(struct dm_clone_metadata *cmd)
- {
--	kvfree(cmd->dmap[0].dirty_words);
--	kvfree(cmd->dmap[1].dirty_words);
-+	__dirty_map_exit(&cmd->dmap[0]);
-+	__dirty_map_exit(&cmd->dmap[1]);
- }
- 
- static int __load_bitset_in_core(struct dm_clone_metadata *cmd)
-@@ -633,21 +663,23 @@ unsigned long dm_clone_find_next_unhydra
- 	return find_next_zero_bit(cmd->region_map, cmd->nr_regions, start);
- }
- 
--static int __update_metadata_word(struct dm_clone_metadata *cmd, unsigned long word)
-+static int __update_metadata_word(struct dm_clone_metadata *cmd,
-+				  unsigned long *dirty_regions,
-+				  unsigned long word)
- {
- 	int r;
- 	unsigned long index = word * BITS_PER_LONG;
- 	unsigned long max_index = min(cmd->nr_regions, (word + 1) * BITS_PER_LONG);
- 
- 	while (index < max_index) {
--		if (test_bit(index, cmd->region_map)) {
-+		if (test_bit(index, dirty_regions)) {
- 			r = dm_bitset_set_bit(&cmd->bitset_info, cmd->bitset_root,
- 					      index, &cmd->bitset_root);
--
- 			if (r) {
- 				DMERR("dm_bitset_set_bit failed");
- 				return r;
- 			}
-+			__clear_bit(index, dirty_regions);
- 		}
- 		index++;
- 	}
-@@ -721,7 +753,7 @@ static int __flush_dmap(struct dm_clone_
- 		if (word == cmd->nr_words)
- 			break;
- 
--		r = __update_metadata_word(cmd, word);
-+		r = __update_metadata_word(cmd, dmap->dirty_regions, word);
- 
- 		if (r)
- 			return r;
-@@ -803,6 +835,7 @@ int dm_clone_set_region_hydrated(struct
- 	dmap = cmd->current_dmap;
- 
- 	__set_bit(word, dmap->dirty_words);
-+	__set_bit(region_nr, dmap->dirty_regions);
- 	__set_bit(region_nr, cmd->region_map);
- 	dmap->changed = 1;
- 
-@@ -831,6 +864,7 @@ int dm_clone_cond_set_range(struct dm_cl
- 		if (!test_bit(region_nr, cmd->region_map)) {
- 			word = region_nr / BITS_PER_LONG;
- 			__set_bit(word, dmap->dirty_words);
-+			__set_bit(region_nr, dmap->dirty_regions);
- 			__set_bit(region_nr, cmd->region_map);
- 			dmap->changed = 1;
- 		}
++	r = dm_clone_metadata_commit(clone->cmd);
+ 	if (unlikely(r)) {
+ 		__metadata_operation_failed(clone, "dm_clone_metadata_commit", r);
+ 		goto out;
 
 
