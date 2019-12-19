@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53645C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D58C7C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1910E222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A533D222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782144;
-	bh=i5XtLVMmI+2dJcN0KwB7A+BvEXbQvtvFuu2za7XVIY0=;
+	s=default; t=1576782147;
+	bh=RkCqlMxkWpQHQAgkiX7rCYVVXYAeeMu3h4lelkadcqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RhAtCtKYfMYuDUciglFTMQpd5qdjhp2rG9zq1E8ua+gOtuyoZgt8DtsgeqaFXm8Jn
-	 znyx5Dxd8V2STeQC8LhEcvOwk1nUbNi8MQlhPS0h5vFmXg6h7o5BsYYGfCVQ9laSbf
-	 iwVdU/xCwxC12lGRGa5clEuvXev3f7d7famQ591E=
+	b=sFYxRkMAB0eHT9TBhfPKUt0vpBWKHnQWk+XBS8+wfXe7QzKxZbfGcttrUmMmKUWp7
+	 SvuON9thIM7h9RsgU8fi+YTAyFPZN9qTVpGZVhdHmHbDWWjyRQP/g8+KToFMC1HfxA
+	 wBd6hB4oggvjAb6SMODfmPoNNQiL0usXNogjOPM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729821AbfLSSte (ORCPT
+        id S1729794AbfLSSta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:49:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43002 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:49:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729797AbfLSStc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:49:32 -0500
+        id S1729786AbfLSSt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:49:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B63C24684;
-        Thu, 19 Dec 2019 18:49:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 253832465E;
+        Thu, 19 Dec 2019 18:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781371;
-        bh=i5XtLVMmI+2dJcN0KwB7A+BvEXbQvtvFuu2za7XVIY0=;
+        s=default; t=1576781366;
+        bh=RkCqlMxkWpQHQAgkiX7rCYVVXYAeeMu3h4lelkadcqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VHoJmzx8qKJ6/9ni0BTvpw5SVKoABdRVu6uDiCBla2ZKjLHzPcuEgvVRim6wplzHy
-         Ei+xx21PXhPgGZ9sz+tRfJxiTUAWfl72/AZ4cQjIyTWxV/S+DqYjZ3O0JPwgoKSbmO
-         CRJM+VOdnf+y7CdviAT2+l9QXZY8Oy2hQizxUJqY=
+        b=kj4tDzZ7L5ZEMBpRezyT90lsdQbUoaffDTxwZAt90FHFsVAFvyamTQGcT3oIm3xAT
+         EAkUTC/fsllvnzWtDVJrWTT5TXBlqloXzW3K4gV6O+K1ZkdtRGAv1eYB7tyD6yqwAF
+         7K7ErHty3ZfH+20prMyVOLVVUo0NWw/rkngD4mII=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 4.9 167/199] firmware: qcom: scm: Ensure a0 status code is treated as signed
-Date:   Thu, 19 Dec 2019 19:34:09 +0100
-Message-Id: <20191219183224.710329574@linuxfoundation.org>
+        stable@vger.kernel.org, Jiang Yi <giangyi@amazon.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: [PATCH 4.9 192/199] vfio/pci: call irq_bypass_unregister_producer() before freeing irq
+Date:   Thu, 19 Dec 2019 19:34:34 +0100
+Message-Id: <20191219183226.382696816@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,34 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Jiang Yi <giangyi@amazon.com>
 
-commit ff34f3cce278a0982a7b66b1afaed6295141b1fc upstream.
+commit d567fb8819162099035e546b11a736e29c2af0ea upstream.
 
-The 'a0' member of 'struct arm_smccc_res' is declared as 'unsigned long',
-however the Qualcomm SCM firmware interface driver expects to receive
-negative error codes via this field, so ensure that it's cast to 'long'
-before comparing to see if it is less than 0.
+Since irq_bypass_register_producer() is called after request_irq(), we
+should do tear-down in reverse order: irq_bypass_unregister_producer()
+then free_irq().
 
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Will Deacon <will@kernel.org>
+Specifically free_irq() may release resources required by the
+irqbypass del_producer() callback.  Notably an example provided by
+Marc Zyngier on arm64 with GICv4 that he indicates has the potential
+to wedge the hardware:
+
+ free_irq(irq)
+   __free_irq(irq)
+     irq_domain_deactivate_irq(irq)
+       its_irq_domain_deactivate()
+         [unmap the VLPI from the ITS]
+
+ kvm_arch_irq_bypass_del_producer(cons, prod)
+   kvm_vgic_v4_unset_forwarding(kvm, irq, ...)
+     its_unmap_vlpi(irq)
+       [Unmap the VLPI from the ITS (again), remap the original LPI]
+
+Signed-off-by: Jiang Yi <giangyi@amazon.com>
+Cc: stable@vger.kernel.org # v4.4+
+Fixes: 6d7425f109d26 ("vfio: Register/unregister irq_bypass_producer")
+Link: https://lore.kernel.org/kvm/20191127164910.15888-1-giangyi@amazon.com
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+[aw: commit log]
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/firmware/qcom_scm-64.c |    2 +-
+ drivers/vfio/pci/vfio_pci_intrs.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/firmware/qcom_scm-64.c
-+++ b/drivers/firmware/qcom_scm-64.c
-@@ -158,7 +158,7 @@ static int qcom_scm_call(struct device *
- 		kfree(args_virt);
- 	}
+--- a/drivers/vfio/pci/vfio_pci_intrs.c
++++ b/drivers/vfio/pci/vfio_pci_intrs.c
+@@ -297,8 +297,8 @@ static int vfio_msi_set_vector_signal(st
+ 	irq = pci_irq_vector(pdev, vector);
  
--	if (res->a0 < 0)
-+	if ((long)res->a0 < 0)
- 		return qcom_scm_remap_error(res->a0);
- 
- 	return 0;
+ 	if (vdev->ctx[vector].trigger) {
+-		free_irq(irq, vdev->ctx[vector].trigger);
+ 		irq_bypass_unregister_producer(&vdev->ctx[vector].producer);
++		free_irq(irq, vdev->ctx[vector].trigger);
+ 		kfree(vdev->ctx[vector].name);
+ 		eventfd_ctx_put(vdev->ctx[vector].trigger);
+ 		vdev->ctx[vector].trigger = NULL;
 
 
