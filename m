@@ -2,34 +2,34 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DB4C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F6D8C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F14124679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08E7D24679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:46:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbfLSVqA (ORCPT
+        id S1727562AbfLSVqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 16:46:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35662 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 16:46:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726963AbfLSVqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727460AbfLSVqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Dec 2019 16:46:00 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8182C2467B;
-        Thu, 19 Dec 2019 21:45:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07B6B24687;
+        Thu, 19 Dec 2019 21:46:00 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92.3)
         (envelope-from <rostedt@goodmis.org>)
-        id 1ii3cM-000Uks-FM; Thu, 19 Dec 2019 16:45:58 -0500
-Message-Id: <20191219214451.340746474@goodmis.org>
+        id 1ii3cN-000Un0-56; Thu, 19 Dec 2019 16:45:59 -0500
+Message-Id: <20191219214559.014320534@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Thu, 19 Dec 2019 16:44:51 -0500
+Date:   Thu, 19 Dec 2019 16:44:55 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kirill Tkhai <tkhai@yandex.ru>,
@@ -43,48 +43,92 @@ Cc:     Kirill Tkhai <tkhai@yandex.ru>,
         "mgorman@suse.de" <mgorman@suse.de>,
         Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>
-Subject: [RFC][PATCH 0/4] sched: Optimizations to sched_class processing
+Subject: [RFC][PATCH 4/4] sched: Micro optimization in pick_next_task() and in
+ check_preempt_curr()
+References: <20191219214451.340746474@goodmis.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Kirill Tkhai <tkhai@yandex.ru>
 
-As Kirill made a micro-optimization to the processing of pick_next_task()
-that required the address locations of the sched_class descriptors to
-be that of their priority to one another. This required a linker
-script modification to guarantee that order.
+This introduces an optimization based on xxx_sched_class addresses
+in two hot scheduler functions: pick_next_task() and check_preempt_curr().
 
-After adding the forced order in the linker script, I realized that
-we no longer needed the 'next' field in the sched_class descriptor.
-Thus, I changed it to use the order of the linker script.
+It is possible to compare pointers to sched classes to check, which
+of them has a higher priority, instead of current iterations using
+for_each_class().
 
-Then decided that the sched_class_highest define could be moved
-to the linker script as well to keep the defines of the order to
-be in one location, and it be obvious what the highest sched_class is
-when SMP is not configured. (BTW, I have not tested this with
-!CONFIG_SMP yet, but who does ;-). As the removal of next was a bit
-more invasive than the highest sched class change, I moved that to
-be the second patch.
+One more result of the patch is that size of object file becomes a little
+less (excluding added BUG_ON(), which goes in __init section):
 
-Finally I added Kirill's patch at the end, (Which may not have made it
-to LKML due to trying to not get it mangled by Exchange).
+$size kernel/sched/core.o
+         text     data      bss	    dec	    hex	filename
+before:  66446    18957	    676	  86079	  1503f	kernel/sched/core.o
+after:   66398    18957	    676	  86031	  1500f	kernel/sched/core.o
 
-Kirill Tkhai (1):
-      sched: Micro optimization in pick_next_task() and in check_preempt_curr()
+Link: http://lkml.kernel.org/r/711a9c4b-ff32-1136-b848-17c622d548f3@yandex.ru
 
-Steven Rostedt (VMware) (3):
-      sched: Force the address order of each sched class descriptor
-      sched: Have sched_class_highest define by vmlinux.lds.h
-      sched: Remove struct sched_class next field
+Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ kernel/sched/core.c | 24 +++++++++---------------
+ 1 file changed, 9 insertions(+), 15 deletions(-)
 
-----
- include/asm-generic/vmlinux.lds.h | 29 +++++++++++++++++++++++++++++
- kernel/sched/core.c               | 24 +++++++++---------------
- kernel/sched/deadline.c           |  4 ++--
- kernel/sched/fair.c               |  4 ++--
- kernel/sched/idle.c               |  4 ++--
- kernel/sched/rt.c                 |  4 ++--
- kernel/sched/sched.h              | 13 +++++--------
- kernel/sched/stop_task.c          |  4 ++--
- 8 files changed, 53 insertions(+), 33 deletions(-)
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 90e4b00ace89..63401807fcf0 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1416,20 +1416,10 @@ static inline void check_class_changed(struct rq *rq, struct task_struct *p,
+ 
+ void check_preempt_curr(struct rq *rq, struct task_struct *p, int flags)
+ {
+-	const struct sched_class *class;
+-
+-	if (p->sched_class == rq->curr->sched_class) {
++	if (p->sched_class == rq->curr->sched_class)
+ 		rq->curr->sched_class->check_preempt_curr(rq, p, flags);
+-	} else {
+-		for_each_class(class) {
+-			if (class == rq->curr->sched_class)
+-				break;
+-			if (class == p->sched_class) {
+-				resched_curr(rq);
+-				break;
+-			}
+-		}
+-	}
++	else if (p->sched_class > rq->curr->sched_class)
++		resched_curr(rq);
+ 
+ 	/*
+ 	 * A queue event has occurred, and we're going to schedule.  In
+@@ -3914,8 +3904,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ 	 * higher scheduling class, because otherwise those loose the
+ 	 * opportunity to pull in more work from other CPUs.
+ 	 */
+-	if (likely((prev->sched_class == &idle_sched_class ||
+-		    prev->sched_class == &fair_sched_class) &&
++	if (likely(prev->sched_class <= &fair_sched_class &&
+ 		   rq->nr_running == rq->cfs.h_nr_running)) {
+ 
+ 		p = pick_next_task_fair(rq, prev, rf);
+@@ -6569,6 +6558,11 @@ void __init sched_init(void)
+ 	unsigned long ptr = 0;
+ 	int i;
+ 
++	BUG_ON(&idle_sched_class > &fair_sched_class ||
++		&fair_sched_class > &rt_sched_class ||
++		&rt_sched_class > &dl_sched_class ||
++		&dl_sched_class > &stop_sched_class);
++
+ 	wait_bit_init();
+ 
+ #ifdef CONFIG_FAIR_GROUP_SCHED
+-- 
+2.24.0
+
+
