@@ -2,113 +2,106 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 382CCC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 349D3C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE4321D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:03:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="QbO79ZKa"
+	by mail.kernel.org (Postfix) with ESMTP id 089A324685
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:05:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbfLSODc (ORCPT
+        id S1726818AbfLSOFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 09:03:32 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:45381 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726712AbfLSODc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 09:03:32 -0500
-Received: by mail-qv1-f65.google.com with SMTP id l14so2225144qvu.12
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 06:03:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/86+9PxURS1PQBnix3pheL2A04bXWYpuuyTROrqZ7Wc=;
-        b=QbO79ZKawoP8XAcJckmP0LG2hZT4q1FdnrMZLFoYOT3jZ/DXYoP7/cZ3zGjQITWXli
-         orBn76S7PlcbhEVk/utor6hoAwOi0RTW/Ug6UhTNdV4O63YzZwW02zwwGllgmGFPymnF
-         4C8QSWH/KrLPhpn3rVW2D6GB7IZ3+ewdd/OaibPjFprU5j+H+OXySl0D5qdQZLpQJPbD
-         e3ICOogCcrWEjrurnCP6xHtJFQ/UYv2WFoN56F//NDMh0n7gZIf8ntS+v/wYuZnpL5A3
-         gEiahV3+f94dHTk2BxKmmEdvnIFkSok9nP/Lz1uMepqtG7oH/auLXAvJY/LJBLujzxpT
-         Perg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/86+9PxURS1PQBnix3pheL2A04bXWYpuuyTROrqZ7Wc=;
-        b=GP2Mz0He/BpewNmkrltfENsqVcSO0WTsFhaR8s53Cwnv6VQM0nhzGbVjriSEjhcQEo
-         xeUQ42Mwyp7GSNTJzWYgK3BWEH29r7DLhufj5AP83+/C6/bfqSnaPiKmtLSISmTCI5Ew
-         QhvkiwEp+bGBfnU0ubOY6Tb9MkdgBY5QvVLONNp7I1gLRIRc5HSNnkdbWY+g9hfDxAmi
-         fjEfsr/m3jN+5VjbW5u7Sz9QaPmfyCgFZ+yEB0bwyozConENsV0tyqzKNCkfNCTWlgsu
-         MelgfVyAkhh7oFO0Ls5EwxinY1+m5Wx6Ff4oAHeIp3yPhdSrTvgCOZpXN2vgYL8Dupgd
-         +kKg==
-X-Gm-Message-State: APjAAAXAYdaltU3CLy+XC0HAxJpY/H7kgUnhQHD09I/tTN1hWZTnhy2q
-        yY9cv+O0ARAZ2IlyyJJR3+IrOw==
-X-Google-Smtp-Source: APXvYqxxpuJ8KQrE88lbK5/DSzWzoqcsbFTaFZ5CHKJarEqp0VJsgk1k3I6MXvD0MTSPlyBP4/mlDw==
-X-Received: by 2002:a0c:ffc8:: with SMTP id h8mr7807761qvv.146.1576764211430;
-        Thu, 19 Dec 2019 06:03:31 -0800 (PST)
-Received: from ovpn-122-120.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id c6sm1726585qka.111.2019.12.19.06.03.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 19 Dec 2019 06:03:30 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     peterz@infradead.org, mingo@redhat.com
-Cc:     juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, frederic@kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] sched/core: fix variable "delta" set but not used
-Date:   Thu, 19 Dec 2019 09:03:14 -0500
-Message-Id: <20191219140314.1252-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        Thu, 19 Dec 2019 09:05:00 -0500
+Received: from relay.sw.ru ([185.231.240.75]:53412 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726695AbfLSOFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 09:05:00 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1ihwQ6-0006RQ-DH; Thu, 19 Dec 2019 17:04:50 +0300
+Subject: [Q] ld: Does LTO reorder ro variables in two files?
+To:     Peter Zijlstra <peterz@infradead.org>, gcc-help@gcc.gnu.org
+Cc:     mingo@redhat.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org
+References: <157675913272.349305.8936736338884044103.stgit@localhost.localdomain>
+ <20191219131242.GK2827@hirez.programming.kicks-ass.net>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <3db1b1c8-0228-56e4-a04f-e8d24cd1dd51@virtuozzo.com>
+Date:   Thu, 19 Dec 2019 17:04:49 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191219131242.GK2827@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 5443a0be6121 ("sched: Use fair:prio_changed() instead of
-ad-hoc implementation") left behind an unused variable.
+CC: gcc-help@gcc.gnu.org
 
-kernel/sched/core.c: In function 'set_user_nice':
-kernel/sched/core.c:4507:16: warning: variable 'delta' set but not used
-[-Wunused-but-set-variable]
-  int old_prio, delta;
-                ^~~~~
+Hi, gcc guys,
 
-Fixes: 5443a0be6121 ("sched: Use fair:prio_changed() instead of ad-hoc implementation")
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- kernel/sched/core.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+this thread starts here: https://lkml.org/lkml/2019/12/19/403
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 15508c202bf5..1f6c094520e0 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4504,7 +4504,7 @@ static inline int rt_effective_prio(struct task_struct *p, int prio)
- void set_user_nice(struct task_struct *p, long nice)
- {
- 	bool queued, running;
--	int old_prio, delta;
-+	int old_prio;
- 	struct rq_flags rf;
- 	struct rq *rq;
- 
-@@ -4538,7 +4538,6 @@ void set_user_nice(struct task_struct *p, long nice)
- 	set_load_weight(p, true);
- 	old_prio = p->prio;
- 	p->prio = effective_prio(p);
--	delta = p->prio - old_prio;
- 
- 	if (queued)
- 		enqueue_task(rq, p, ENQUEUE_RESTORE | ENQUEUE_NOCLOCK);
--- 
-2.21.0 (Apple Git-122.2)
+There are two const variables:
+
+   struct sched_class idle_sched_class
+and
+   struct sched_class fair_sched_class,
+
+which are declared in two files idle.c and fair.c.
+
+1)In Makefile the order is: idle.o fair.o
+2)the variables go to the same ro section
+3)there is no SORT(.*) keyword in linker script.
+
+Is it always true, that after linkage &idle_sched_class < &fair_sched_class?
+
+Thanks!
+Kirill
+
+On 19.12.2019 16:12, Peter Zijlstra wrote:
+> On Thu, Dec 19, 2019 at 03:39:14PM +0300, Kirill Tkhai wrote:
+>> In kernel/sched/Makefile files, describing different sched classes, already
+>> go in the order from the lowest priority class to the highest priority class:
+>>
+>> idle.o fair.o rt.o deadline.o stop_task.o
+>>
+>> The documentation of GNU linker says, that section appears in the order
+>> they are seen during link time (see [1]):
+>>
+>>> Normally, the linker will place files and sections matched by wildcards
+>>> in the order in which they are seen during the link. You can change this
+>>> by using the SORT keyword, which appears before a wildcard pattern
+>>> in parentheses (e.g., SORT(.text*)).
+>>
+>> So, we may expect const variables from idle.o will go before ro variables
+>> from fair.o in RO_DATA section, while ro variables from fair.o will go
+>> before ro variables from rt.o, etc.
+>>
+>> (Also, it looks like the linking order is already used in kernel, e.g.
+>>  in drivers/md/Makefile)
+>>
+>> Thus, we may introduce an optimization based on xxx_sched_class addresses
+>> in these two hot scheduler functions: pick_next_task() and check_preempt_curr().
+>>
+>> One more result of the patch is that size of object file becomes a little
+>> less (excluding added BUG_ON(), which goes in __init section):
+>>
+>> $size kernel/sched/core.o
+>>          text     data      bss	    dec	    hex	filename
+>> before:  66446    18957	    676	  86079	  1503f	kernel/sched/core.o
+>> after:   66398    18957	    676	  86031	  1500f	kernel/sched/core.o
+> 
+> Does LTO preserve this behaviour? I've never quite dared do this exact
+> optimization.
 
