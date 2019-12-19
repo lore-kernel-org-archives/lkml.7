@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB19FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E935C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EC8324679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F9DB24679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780875;
-	bh=7LALMDMNMgLPEUzZXgd7rx0SFCt4eioDJc2LE3mDh6U=;
+	s=default; t=1576780879;
+	bh=2wwxcX9JNVn3hALx+KjwATnrP0ljQZEHAVh7JGVs7ZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yUEmmYeLODXO99szq01DRPb7UaFkxqhhbcoK0Cyf5CzH2XAaNN6Ukw6TuDHmokLR8
-	 2MzdHpYhiwHhyUCXERVs19DX7jGqQP+r+55E7GuPXY6PpVuPUiP75znhCRiL6snSjM
-	 3RAHtKZYOLM0nKIl5fXaiSj9KIp+NTLGw1BcIogE=
+	b=jvlodiJTYuhjfzfGlVxrNOHVO+B+6b3AUTY8bK76zWx4BS6pNPaQcJj7VZrOlq96D
+	 tuU6ggKiPMb29TxcL1+DJe02UdYW1vP2gjWPd8DOeh2f3GD7R39P0fb0ra+CQ1I7es
+	 z9On0Xvob+5YI+Wox8C/Fcsxim8xiTWhbSPwhJ/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728497AbfLSSlO (ORCPT
+        id S1728515AbfLSSlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:41:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60130 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:41:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728483AbfLSSlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:41:11 -0500
+        id S1727764AbfLSSlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:41:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2906A24679;
-        Thu, 19 Dec 2019 18:41:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B7CB206D7;
+        Thu, 19 Dec 2019 18:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780870;
-        bh=7LALMDMNMgLPEUzZXgd7rx0SFCt4eioDJc2LE3mDh6U=;
+        s=default; t=1576780875;
+        bh=2wwxcX9JNVn3hALx+KjwATnrP0ljQZEHAVh7JGVs7ZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NFCS8Ld4yddRZ8KEntMek8V8ZH6mqAo9ck+Bk6m5FLSx/iTJdNDWvMec1fdmlGJLl
-         pM5zGIKUTRSBGB/eaX9CrTE3OY6YBF6we2n8xcCQsqmZx9w2OZFhmHmhVolSRSg2/f
-         E5ZZsJu7ETopqCaO43y85mGDwjlfVLfONfKWroC8=
+        b=r/kocsN7/7JWyJSs4bl52KKjNfPDaj13fEysUz+9fH6n1PaUekKd0XguNO+YJ0pdv
+         WCJK5J+5W7HQLyqvjRxQG2Yfz/IIxhVmYkjduAWRBVRG5dBwryYYMMocDRnctxcv34
+         9Yo1O+v67TMYlu0qAW0jZEFc874rfhAshi1kkc7Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Francesco Ruggeri <fruggeri@arista.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
+        stable@vger.kernel.org,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.4 114/162] ACPI: OSL: only free map once in osl.c
-Date:   Thu, 19 Dec 2019 19:33:42 +0100
-Message-Id: <20191219183214.696967049@linuxfoundation.org>
+Subject: [PATCH 4.4 115/162] ACPI: bus: Fix NULL pointer check in acpi_bus_get_private_data()
+Date:   Thu, 19 Dec 2019 19:33:43 +0100
+Message-Id: <20191219183214.761567085@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -60,109 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Francesco Ruggeri <fruggeri@arista.com>
+From: Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
 
-commit 833a426cc471b6088011b3d67f1dc4e147614647 upstream.
+commit 627ead724eff33673597216f5020b72118827de4 upstream.
 
-acpi_os_map_cleanup checks map->refcount outside of acpi_ioremap_lock
-before freeing the map. This creates a race condition the can result
-in the map being freed more than once.
-A panic can be caused by running
+kmemleak reported backtrace:
+    [<bbee0454>] kmem_cache_alloc_trace+0x128/0x260
+    [<6677f215>] i2c_acpi_install_space_handler+0x4b/0xe0
+    [<1180f4fc>] i2c_register_adapter+0x186/0x400
+    [<6083baf7>] i2c_add_adapter+0x4e/0x70
+    [<a3ddf966>] intel_gmbus_setup+0x1a2/0x2c0 [i915]
+    [<84cb69ae>] i915_driver_probe+0x8d8/0x13a0 [i915]
+    [<81911d4b>] i915_pci_probe+0x48/0x160 [i915]
+    [<4b159af1>] pci_device_probe+0xdc/0x160
+    [<b3c64704>] really_probe+0x1ee/0x450
+    [<bc029f5a>] driver_probe_device+0x142/0x1b0
+    [<d8829d20>] device_driver_attach+0x49/0x50
+    [<de71f045>] __driver_attach+0xc9/0x150
+    [<df33ac83>] bus_for_each_dev+0x56/0xa0
+    [<80089bba>] driver_attach+0x19/0x20
+    [<cc73f583>] bus_add_driver+0x177/0x220
+    [<7b29d8c7>] driver_register+0x56/0xf0
 
-for ((i=0; i<10; i++))
-do
-        for ((j=0; j<100000; j++))
-        do
-                cat /sys/firmware/acpi/tables/data/BERT >/dev/null
-        done &
-done
+In i2c_acpi_remove_space_handler(), a leak occurs whenever the
+"data" parameter is initialized to 0 before being passed to
+acpi_bus_get_private_data().
 
-This patch makes sure that only the process that drops the reference
-to 0 does the freeing.
+This is because the NULL pointer check in acpi_bus_get_private_data()
+(condition->if(!*data)) returns EINVAL and, in consequence, memory is
+never freed in i2c_acpi_remove_space_handler().
 
-Fixes: b7c1fadd6c2e ("ACPI: Do not use krefs under a mutex in osl.c")
-Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
-Reviewed-by: Dmitry Safonov <0x7f454c46@gmail.com>
+Fix the NULL pointer check in acpi_bus_get_private_data() to follow
+the analogous check in acpi_get_data_full().
+
+Signed-off-by: Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
+[ rjw: Subject & changelog ]
 Cc: All applicable <stable@vger.kernel.org>
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/osl.c |   28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ drivers/acpi/bus.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/acpi/osl.c
-+++ b/drivers/acpi/osl.c
-@@ -424,24 +424,27 @@ acpi_os_map_memory(acpi_physical_address
- }
- EXPORT_SYMBOL_GPL(acpi_os_map_memory);
- 
--static void acpi_os_drop_map_ref(struct acpi_ioremap *map)
-+/* Must be called with mutex_lock(&acpi_ioremap_lock) */
-+static unsigned long acpi_os_drop_map_ref(struct acpi_ioremap *map)
+--- a/drivers/acpi/bus.c
++++ b/drivers/acpi/bus.c
+@@ -154,7 +154,7 @@ int acpi_bus_get_private_data(acpi_handl
  {
--	if (!--map->refcount)
-+	unsigned long refcount = --map->refcount;
-+
-+	if (!refcount)
- 		list_del_rcu(&map->list);
-+	return refcount;
- }
+ 	acpi_status status;
  
- static void acpi_os_map_cleanup(struct acpi_ioremap *map)
- {
--	if (!map->refcount) {
--		synchronize_rcu_expedited();
--		acpi_unmap(map->phys, map->virt);
--		kfree(map);
--	}
-+	synchronize_rcu_expedited();
-+	acpi_unmap(map->phys, map->virt);
-+	kfree(map);
- }
+-	if (!*data)
++	if (!data)
+ 		return -EINVAL;
  
- void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size)
- {
- 	struct acpi_ioremap *map;
-+	unsigned long refcount;
- 
- 	if (!acpi_gbl_permanent_mmap) {
- 		__acpi_unmap_table(virt, size);
-@@ -455,10 +458,11 @@ void __ref acpi_os_unmap_iomem(void __io
- 		WARN(true, PREFIX "%s: bad address %p\n", __func__, virt);
- 		return;
- 	}
--	acpi_os_drop_map_ref(map);
-+	refcount = acpi_os_drop_map_ref(map);
- 	mutex_unlock(&acpi_ioremap_lock);
- 
--	acpi_os_map_cleanup(map);
-+	if (!refcount)
-+		acpi_os_map_cleanup(map);
- }
- EXPORT_SYMBOL_GPL(acpi_os_unmap_iomem);
- 
-@@ -499,6 +503,7 @@ void acpi_os_unmap_generic_address(struc
- {
- 	u64 addr;
- 	struct acpi_ioremap *map;
-+	unsigned long refcount;
- 
- 	if (gas->space_id != ACPI_ADR_SPACE_SYSTEM_MEMORY)
- 		return;
-@@ -514,10 +519,11 @@ void acpi_os_unmap_generic_address(struc
- 		mutex_unlock(&acpi_ioremap_lock);
- 		return;
- 	}
--	acpi_os_drop_map_ref(map);
-+	refcount = acpi_os_drop_map_ref(map);
- 	mutex_unlock(&acpi_ioremap_lock);
- 
--	acpi_os_map_cleanup(map);
-+	if (!refcount)
-+		acpi_os_map_cleanup(map);
- }
- EXPORT_SYMBOL(acpi_os_unmap_generic_address);
- 
+ 	status = acpi_get_data(handle, acpi_bus_private_data_handler, data);
 
 
