@@ -2,141 +2,103 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7925C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E08C3C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A82F6218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B3622314
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:54:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QafT74dz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbfLSAxe (ORCPT
+        id S1726754AbfLSAyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 19:53:34 -0500
-Received: from mga17.intel.com ([192.55.52.151]:18689 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbfLSAxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 19:53:34 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 16:53:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="210280863"
-Received: from jtreacy-mobl1.ger.corp.intel.com ([10.251.82.127])
-  by orsmga008.jf.intel.com with ESMTP; 18 Dec 2019 16:53:25 -0800
-Message-ID: <5ba9e16a81d920c3a60b2486b98154590a0e0650.camel@linux.intel.com>
-Subject: Re: [PATCH v24 08/24] x86/sgx: Enumerate and track EPC sections
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        puiterwijk@redhat.com
-In-Reply-To: <20191218091856.GA24886@zn.tnic>
-References: <20191129231326.18076-1-jarkko.sakkinen@linux.intel.com>
-         <20191129231326.18076-9-jarkko.sakkinen@linux.intel.com>
-         <20191218091856.GA24886@zn.tnic>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160
- Espoo
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 18 Dec 2019 19:54:40 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:45463 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfLSAyk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 19:54:40 -0500
+Received: by mail-qt1-f196.google.com with SMTP id l12so3542480qtq.12;
+        Wed, 18 Dec 2019 16:54:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A1Urs4RsdGYBrM/Z6psT6VFuLwM10wg/j95CYysxehQ=;
+        b=QafT74dzFrnd5FdUc7ZzJZlaKDob9h1sLpE+XITJl54ZNHghpJtwWE7dcAkDiPKqhX
+         lbx2ass0Ebil/RJsJijTZP3Js7drMaUnjPbmxgFL73QBDCWFkHtn8OnDLO7T2pW41HaO
+         nPio5pHds+vJOAx6gQvrzuGJzL+qNvKkFbJWykiaU1K1mEuKaGQG3t4zi8vdh6XGuiH8
+         ypLnvN3hshsvmwhleq2fcjUpOqWlbaAbajNsGYxNtjdDW5RmWuUhZYXkTQHWs8eDVOTT
+         MGsQrBruQfvqqAkjtR3vXomeOsANkyO9SBKlLxmJq+BKIo4lj4y7nlZPQGHhrrLkQvtV
+         3yhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A1Urs4RsdGYBrM/Z6psT6VFuLwM10wg/j95CYysxehQ=;
+        b=oZItB2ygC0o5F3mWiVDgyWz6NPeCRL5UaBjJJQ9vuXKBm4qLLtpWFDkiSBuZpy+ls6
+         qGcpg4LsYNzArxP1WZAAI0hxEqcy5Ni8sG/8DVdRM7nax4hqM9A3DxsP1+3CGFNf3IvV
+         9os9N2OSHx0IseynNSnTve2eC9QmN/IPBVJYQ+WjXZ9HtM8ZiK/UpOoPRCLYidmDxeCS
+         i+Dl5VLY1e0C+UNUfTApaUgG0XZrletARbniOUOnDWrlSHu4VD/GXLQFxs/26wgzJdM2
+         KNPeV18mx4mgqyEEAVUNGZxySGvSSUIW/M42xOZhuN6L4MyA8Z6D1kBSUIxhssv7O76+
+         cbUw==
+X-Gm-Message-State: APjAAAWHNDtrueTMU6ZEgEFAq9nRow6hjQaCQ6RxOoEQguewxlVrlX/q
+        RcABIhZfkIbqKgCQgtwKEq/+Ob6sJOo9HIR2Atc=
+X-Google-Smtp-Source: APXvYqxYXKEfiJIR4aztDlh6AyQHzq1Z+GedyfsEKbjzdal3F7FXFiTAT4o0HbCkk48AOkhwhMPm+llnUg8iQhz4gJw=
+X-Received: by 2002:ac8:4050:: with SMTP id j16mr4757783qtl.171.1576716879274;
+ Wed, 18 Dec 2019 16:54:39 -0800 (PST)
 MIME-Version: 1.0
-Date:   Thu, 19 Dec 2019 02:53:08 +0200
-User-Agent: Evolution 3.34.1-2 
-Content-Transfer-Encoding: 7bit
+References: <20191211223344.165549-1-brianvv@google.com> <20191211223344.165549-9-brianvv@google.com>
+In-Reply-To: <20191211223344.165549-9-brianvv@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 18 Dec 2019 16:54:28 -0800
+Message-ID: <CAEf4BzaeLV8EkGunioqD=sn0Bin4EL0WMzp1T6GjdBajWaFQ+w@mail.gmail.com>
+Subject: Re: [PATCH v3 bpf-next 08/11] libbpf: add libbpf support to batch ops
+To:     Brian Vazquez <brianvv@google.com>
+Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Yonghong Song <yhs@fb.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-12-18 at 10:18 +0100, Borislav Petkov wrote:
-> On Sat, Nov 30, 2019 at 01:13:10AM +0200, Jarkko Sakkinen wrote:
-> > +static bool __init sgx_alloc_epc_section(u64 addr, u64 size,
-> > +					 unsigned long index,
-> > +					 struct sgx_epc_section *section)
-> > +{
-> > +	unsigned long nr_pages = size >> PAGE_SHIFT;
-> 
-> I'm assuming here that size which gets communicated through CPUID -
-> which is an interesting way to communicate SGX settings in itself :-) - is
-> in multiples of 4K? SDM doesn't say...
+On Wed, Dec 11, 2019 at 2:35 PM Brian Vazquez <brianvv@google.com> wrote:
+>
+> From: Yonghong Song <yhs@fb.com>
+>
+> Added four libbpf API functions to support map batch operations:
+>   . int bpf_map_delete_batch( ... )
+>   . int bpf_map_lookup_batch( ... )
+>   . int bpf_map_lookup_and_delete_batch( ... )
+>   . int bpf_map_update_batch( ... )
+>
+> Signed-off-by: Yonghong Song <yhs@fb.com>
+> ---
 
-Yes.
+These libbpf APIs should use _opts approach from the get go to make
+them extensible, but preserving backwards/forward compatibility.
+Please take a look at one of few that are already using them (or
+follow Andrey's bpf_prog_attach work, as he's adding opts-based one at
+the moment).
 
-> And last time I asked:
-> 
-> "This size comes from CPUID but it might be prudent to sanity-check it
-> nevertheless, before doing the memremap()."
-> 
-> but it was left uncommented.
+>  tools/lib/bpf/bpf.c      | 61 ++++++++++++++++++++++++++++++++++++++++
+>  tools/lib/bpf/bpf.h      | 14 +++++++++
+>  tools/lib/bpf/libbpf.map |  4 +++
+>  3 files changed, 79 insertions(+)
+>
 
-I'm sorry about that. Not intended. I just forgot to deal with it or
-missed it.
-
-> > +/**
-> > + * A section metric is concatenated in a way that @low bits 12-31 define the
-> > + * bits 12-31 of the metric and @high bits 0-19 define the bits 32-51 of the
-> > + * metric.
-> > + */
-> > +static inline u64 __init sgx_calc_section_metric(u64 low, u64 high)
-> > +{
-> > +	return (low & GENMASK_ULL(31, 12)) +
-> > +	       ((high & GENMASK_ULL(19, 0)) << 32);
-> > +}
-> > +
-> > +static bool __init sgx_page_cache_init(void)
-> > +{
-> > +	u32 eax, ebx, ecx, edx, type;
-> > +	u64 pa, size;
-> > +	int i;
-> > +
-> > +	BUILD_BUG_ON(SGX_MAX_EPC_SECTIONS > (SGX_EPC_SECTION_MASK + 1));
-> > +
-> > +	for (i = 0; i < (SGX_MAX_EPC_SECTIONS + 1); i++) {
-> 
-> Those brackets are still here from the last time. You said:
-> 
-> "For nothing :-)
-> 
-> I'll change it as:
-> 
->   for (i = 0; i <= SGX_MAX_EPC_SECTIONS; i++) {"
-> 
-> but probably forgot...
-> 
-> and looking at my review comments here:
-> 
-> https://lkml.kernel.org/r/20191005092627.GA25699@zn.tnic
-> 
-> and your reply:
-> 
-> https://lkml.kernel.org/r/20191007115850.GA20830@linux.intel.com
-> 
-> you clearly missed addressing some so I'm going to stop reviewing here.
-> 
-> Please have a look at those review comments again and check whether the
-> apply - and then do them - or they don't and they pls explain why they
-> don't.
-> 
-> And do that for the rest of the patchset, please, before you send it
-> again.
-> 
-> Thx.
-
-It is unintentional but I seriously do my best on keeping track of
-things.  Sometimes when you multitask with maintaining other subsystems
-and refactor huge patch set like this, it just happens, no matter how
-well you try to organize your work.
-
-I'll go through v23 comments with time before sending v25.
-
-/Jarkko
-
+[...]
