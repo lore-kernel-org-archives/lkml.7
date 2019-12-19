@@ -1,75 +1,115 @@
 Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: **
-X-Spam-Status: No, score=2.5 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2674C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 569AEC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84D7A206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29AF3227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:47:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="o68tTLPU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfLSMrP (ORCPT
+        id S1726846AbfLSMrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 07:47:15 -0500
-Received: from mx21.baidu.com ([220.181.3.85]:60898 "EHLO baidu.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726695AbfLSMrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 07:47:15 -0500
-Received: from BC-Mail-Ex29.internal.baidu.com (unknown [172.31.51.23])
-        by Forcepoint Email with ESMTPS id 5BDAC8ACC5F44746D941;
-        Thu, 19 Dec 2019 20:47:05 +0800 (CST)
-Received: from BJHW-Mail-Ex13.internal.baidu.com (10.127.64.36) by
- BC-Mail-Ex29.internal.baidu.com (172.31.51.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Thu, 19 Dec 2019 20:47:05 +0800
-Received: from BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) by
- BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) with mapi id
- 15.01.1713.004; Thu, 19 Dec 2019 20:47:05 +0800
-From:   "Li,Rongqing" <lirongqing@baidu.com>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linyunsheng@huawei.com" <linyunsheng@huawei.com>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: =?gb2312?B?tPC4tDogW25ldC1uZXh0IHY0IFBBVENIXSBwYWdlX3Bvb2w6IGhhbmRsZSBw?=
- =?gb2312?B?YWdlIHJlY3ljbGUgZm9yIE5VTUFfTk9fTk9ERSBjb25kaXRpb24=?=
-Thread-Topic: [net-next v4 PATCH] page_pool: handle page recycle for
- NUMA_NO_NODE condition
-Thread-Index: AQHVtXlmIvmGikvRt0uoQcyHJL+0JKe/8iWlgADkiYCAAJD7HQ==
-Date:   Thu, 19 Dec 2019 12:47:05 +0000
-Message-ID: <ce22066d9ca743bb875c5f0d6da84071@baidu.com>
-References: <20191218084437.6db92d32@carbon>
-        <157665609556.170047.13435503155369210509.stgit@firesoul>
-        <7d1d07c680b6411aada4840edaff3b12@baidu.com>,<20191219130013.7707683f@carbon>
-In-Reply-To: <20191219130013.7707683f@carbon>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.22.29.119]
-x-baidu-bdmsfe-datecheck: 1_BC-Mail-Ex29_2019-12-19 20:47:05:321
-x-baidu-bdmsfe-viruscheck: BC-Mail-Ex29_GRAY_Inside_WithoutAtta_2019-12-19
- 20:47:05:306
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Thu, 19 Dec 2019 07:47:35 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:59364 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726779AbfLSMre (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 07:47:34 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJClSwY112282;
+        Thu, 19 Dec 2019 06:47:28 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576759648;
+        bh=SogRC5gjBaf0iibZikKVZUfmnMdsVVFLcx/i8VXaKHw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=o68tTLPUKK9vljQTIfqHHwjgeK5n8xWdh+FmOUm/No6weITdPd+mzcs+ZsbkMwNnG
+         u4j5tf3djDQvaQSI/auJKsuOJCYslcYR0cVtmDx5rxKM5GFWq5ZB42Lrh5qhjtSeva
+         SNH1B3BHo56ATIdvWZNbc3ja5eEMLBKfZXWqqUyA=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJClS2V081213;
+        Thu, 19 Dec 2019 06:47:28 -0600
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Dec 2019 06:47:28 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Dec 2019 06:47:28 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJClOWn125168;
+        Thu, 19 Dec 2019 06:47:25 -0600
+Subject: Re: [PATCH 05/13] PCI: cadence: Add read and write accessors to
+ perform only 32-bit accesses
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Murray <andrew.murray@arm.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>
+References: <20191217233651.GA3930@google.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <bf31d43f-6a58-c94c-b7d4-8f0ae97e9602@ti.com>
+Date:   Thu, 19 Dec 2019 18:19:07 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <20191217233651.GA3930@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIFdlZCwgMTggRGVjIDIwMTkgMTQ6Mjc6MTMgKzAwMDANCiJMaSxSb25ncWluZyIgPGxp
-cm9uZ3FpbmdAYmFpZHUuY29tPiB3cm90ZToNCg0KPj4gc2VlbSBpdCBjYW4gbm90IGhhbmRsZSB0
-aGUgaW4tZmxpZ2h0IHBhZ2VzIGlmIHJlbW92ZSB0aGUgY2hlY2sgbm9kZQ0KPj4gaWQgZnJvbSBw
-b29sX3BhZ2VfcmV1c2FibGU/DQoNCj5JIGRvbid0IGZvbGxvdy4NCj5JIGRvIHRoaW5rIHRoaXMg
-cGF0Y2ggaGFuZGxlIGluLWZsaWdodCBwYWdlcywgYXMgdGhleSBoYXZlIHRvIHRyYXZlbA0KPmJh
-Y2stdGhyb3VnaCB0aGUgcHRyX3JpbmcuDQoNCg0KaW4tZmxpZ2h0IHBhZ2VzIG1heWJlIGxvb3Ag
-YmV0d2VlbiBwb29sLT4gYWxsb2MuY2FjaGUgYW5kIGluLWZsaWdodCwgYW5kIGRpZCBub3QgdHJh
-dmVsIHRvIHB0cl9yaW5nDQoNCg0KLUxpDQoNCg0KDQoNCg0KDQogICAg
+Hi Andrew,
+
+On 18/12/19 5:06 am, Bjorn Helgaas wrote:
+> On Mon, Dec 09, 2019 at 02:51:39PM +0530, Kishon Vijay Abraham I wrote:
+>> Certain platforms like TI's J721E allow only 32-bit register accesses.
+>> Add read and write accessors to perform only 32-bit accesses in order to
+>> support platfroms like TI's J721E.
+> 
+> s/platfroms/platforms/
+> 
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  drivers/pci/controller/cadence/pcie-cadence.c | 40 +++++++++++++++++++
+>>  drivers/pci/controller/cadence/pcie-cadence.h |  2 +
+>>  2 files changed, 42 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
+>> index cd795f6fc1e2..de5b3b06f2d0 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence.c
+>> @@ -7,6 +7,46 @@
+>>  
+>>  #include "pcie-cadence.h"
+>>  
+>> +u32 cdns_pcie_read32(void __iomem *addr, int size)
+>> +{
+>> +	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
+>> +	unsigned int offset = (unsigned long)addr & 0x3;
+>> +	u32 val = readl(aligned_addr);
+>> +
+>> +	if (!IS_ALIGNED((uintptr_t)addr, size)) {
+>> +		pr_err("Invalid Address in function:%s\n", __func__);
+> 
+> It might be nice to have a hint about *why* it's invalid, e.g., the
+> addr and size values.
+
+Sure.
+
+Thanks
+Kishon
