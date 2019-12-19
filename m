@@ -2,79 +2,81 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E7EC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EDEC2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2F5D24650
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:55:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576770905;
-	bh=XAe58tWkatLiv8U7yH0Pi/yFrHc9gUQ/cOhT6V93d/o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xppOvqHLGdPy4WGHA1NjudqMa8799sqpqcD8pmLg+vK1APn9Lnh3OOPkr+E9mwNbI
-	 hFF4KhCz1UINu+mSdJH6bEmBNKPlldu0JUwTkJ/5FqdsdmdJNtMbPIP8hQn0PQi5Km
-	 8WMDGrGxHJIAuzZrS6z3HFlU9QTs9dMbVKMh4dzA=
+	by mail.kernel.org (Postfix) with ESMTP id 9A603227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:56:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UnQYZufn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfLSPzD (ORCPT
+        id S1726836AbfLSP4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 10:55:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726760AbfLSPzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 10:55:03 -0500
-Received: from localhost (unknown [122.178.234.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 226FA2067C;
-        Thu, 19 Dec 2019 15:55:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576770902;
-        bh=XAe58tWkatLiv8U7yH0Pi/yFrHc9gUQ/cOhT6V93d/o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CgcM8KNJxpwGrcMVhDHuqC5MbtAT1hNmQzgTKdAfgY0e5JaaUW148Cx5JLbqEMFhs
-         WAACX1p3/uI99rrzjaMD4YAPnQyJHakW8rtvrOzwtOzDpNmJCCQk4rcUThtDUdnI5U
-         4+/DMZ5Q3yqKJpH+KXnptFP2LRP4KAyH9ufe68Js=
-Date:   Thu, 19 Dec 2019 21:24:58 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peng Ma <peng.ma@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [EXT] Re: [v5 1/3] dmaengine: fsl-edma: Add eDMA support for
- QorIQ LS1028A platform
-Message-ID: <20191219155458.GY2536@vkoul-mobl>
-References: <20191212033714.4090-1-peng.ma@nxp.com>
- <20191218062636.GS2536@vkoul-mobl>
- <VI1PR04MB44311BE955B863C73DF4CD4CED530@VI1PR04MB4431.eurprd04.prod.outlook.com>
+        Thu, 19 Dec 2019 10:56:34 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:50528 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbfLSP4e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 10:56:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=rjL7IN7Ds1hUfh0T2ILGQLcCmbkXt5wirx9kdENfl00=; b=UnQYZufnxzgPbRVfWvqiwp3VT
+        Gq/U5zKQJ6Zy8alLY8Y78xJdR3TDX8kPJFQY9TE044lcc0E9dRPWXDPkccrRDsKa/h+aWs1VfPhT/
+        Qe41rZNjF/hqqbFWRVgHS196s91l32U71Hmn6fHDzBKe5BccQbaP6Z1qTDm9zE8NA0hf5RQ0Rxsnd
+        HUyMAQuctOqu4Kw2/kJPURqH7NC2F7Ui144xi8J2EM5/dj7TlEfC0Qec4vFUW4ed+zf11uXhx8DV8
+        eQqDS1Fhg9A5IFLzuB5W51hRK3tZn4tZergh13JvOmOAs8h+vjYMmrfNgnYTgwROzCSdd5pKe1peo
+        lx9Btsyng==;
+Received: from [2601:1c0:6280:3f0::fee9]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ihyAD-0004jp-MR; Thu, 19 Dec 2019 15:56:33 +0000
+Subject: Re: linux-next: Tree for Dec 19 (f2fs)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+References: <20191219181125.273d62b3@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <5306838a-5f25-a2d3-6b2b-884f4287710a@infradead.org>
+Date:   Thu, 19 Dec 2019 07:56:32 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <VI1PR04MB44311BE955B863C73DF4CD4CED530@VI1PR04MB4431.eurprd04.prod.outlook.com>
+In-Reply-To: <20191219181125.273d62b3@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18-12-19, 08:08, Peng Ma wrote:
- >Btw pls send bindings as patch1 and driver changes as patch2.
-> [Peng Ma] I don't understand this sentence, Please give me more information.
-> As I know patch1 is driver changes, patch2 is dts changes, patch3 is binding changes.
-> You accepted patch1 and patch3, I am puzzled for patch2 and your comments.
+On 12/18/19 11:11 PM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> News: Tomorrow will be the last linux-next release until January 6
+> (unless I get very bored :-)).
+> 
+> Changes since 20191218:
+> 
 
-The order of patches should always be dt-bindings first, followerd by
-driver change and the dts changes as the last one in the series.
+on i386:
+
+when f2fs is a loadable module:
+ERROR: "__udivdi3" [fs/f2fs/f2fs.ko] undefined!
+
+or when builtin:
+ld: fs/f2fs/file.o: in function `f2fs_truncate_blocks':
+file.c:(.text+0x7bf7): undefined reference to `__udivdi3'
+
 
 -- 
-~Vinod
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
