@@ -2,122 +2,136 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7618BC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22853C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 535992064B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D08D32064B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:24:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KRYEj2Jz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfLSKXZ (ORCPT
+        id S1726801AbfLSKYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 05:23:25 -0500
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:50759 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbfLSKXZ (ORCPT
+        Thu, 19 Dec 2019 05:24:10 -0500
+Received: from mailout4.samsung.com ([203.254.224.34]:33917 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbfLSKYK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 05:23:25 -0500
-X-Originating-IP: 90.65.102.129
-Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id B198020010;
-        Thu, 19 Dec 2019 10:23:21 +0000 (UTC)
-Date:   Thu, 19 Dec 2019 11:23:21 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Eugen.Hristev@microchip.com
-Cc:     jic23@kernel.org, robh+dt@kernel.org, Nicolas.Ferre@microchip.com,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org, a.zummo@towertech.it,
-        Ludovic.Desroches@microchip.com
-Subject: Re: [PATCH 04/10] rtc: at91rm9200: use of_platform_populate as
- return value
-Message-ID: <20191219102321.GR695889@piout.net>
-References: <1576686157-11939-1-git-send-email-eugen.hristev@microchip.com>
- <1576686157-11939-5-git-send-email-eugen.hristev@microchip.com>
- <20191218164348.GN695889@piout.net>
- <04264cb0-61a9-aba3-82ad-e7d12fd8441e@microchip.com>
- <20191218165831.GO695889@piout.net>
- <91cc67e1-7e14-f7b9-da77-b16d9e158f20@microchip.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <91cc67e1-7e14-f7b9-da77-b16d9e158f20@microchip.com>
+        Thu, 19 Dec 2019 05:24:10 -0500
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191219102408epoutp04d688b98135eec12a83bb2ff4b2a46d96~hvrltk9iY0598205982epoutp04d
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 10:24:08 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191219102408epoutp04d688b98135eec12a83bb2ff4b2a46d96~hvrltk9iY0598205982epoutp04d
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1576751048;
+        bh=lNrhRejjZJSzCkKB4e9oz198En7AGkhdGjzwETzjwSA=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=KRYEj2JzULwya/Lqwzr7vEUGg8ieaFAf3rPegr29B0PVUF3SyMCsP9klN81Hb1v0F
+         ECc7o8e5so/QQv3UuwVcxFPji6Ab/CxyYfVztMOTNtOYbFxz8BKojI0vtLkS7M66Ta
+         3ZaPRb8yNlIUrnHGCUZ5g5Hn6i5XMQy/gom60bkg=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20191219102407epcas5p1b5c225f18bdc03ded34454fd31c43f6f~hvrlMFaTh0414504145epcas5p1y;
+        Thu, 19 Dec 2019 10:24:07 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        84.91.20197.7CF4BFD5; Thu, 19 Dec 2019 19:24:07 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191219102407epcas5p103b26e6fb191f7135d870a3449115c89~hvrktDiNf1266012660epcas5p1U;
+        Thu, 19 Dec 2019 10:24:07 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191219102407epsmtrp176085784dc461fe6da3d95f7ca863b62~hvrksUUAR2283122831epsmtrp1j;
+        Thu, 19 Dec 2019 10:24:07 +0000 (GMT)
+X-AuditID: b6c32a4a-781ff70000014ee5-d8-5dfb4fc75a10
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        41.F3.06569.6CF4BFD5; Thu, 19 Dec 2019 19:24:07 +0900 (KST)
+Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
+        [107.108.73.139]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191219102405epsmtip2fd5ad69fdeaf24c9021b65c50e814a81~hvri16nI00195201952epsmtip2W;
+        Thu, 19 Dec 2019 10:24:04 +0000 (GMT)
+From:   Padmanabhan Rajanbabu <p.rajanbabu@samsung.com>
+To:     netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        Jose.Abreu@synopsys.com, davem@davemloft.net,
+        stable@vger.kernel.org, jayati.sahu@samsung.com,
+        pankaj.dubey@samsung.com, rcsekar@samsung.com,
+        Padmanabhan Rajanbabu <p.rajanbabu@samsung.com>,
+        Sriram Dash <sriram.dash@samsung.com>
+Subject: [PATCH] net: stmmac: platform: Fix MDIO init for platforms without
+ PHY
+Date:   Thu, 19 Dec 2019 15:47:01 +0530
+Message-Id: <1576750621-78066-1-git-send-email-p.rajanbabu@samsung.com>
+X-Mailer: git-send-email 2.7.4
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpgleLIzCtJLcpLzFFi42LZdlhTS/e4/+9Yg6/PlC02PjnNaDHnfAuL
+        xZFTS5gs7v35wGqx6fE1VovLu+awWXRde8JqcWyBmMXRjcEWi7Z+Ybf4/3oro8WsCztYLW6s
+        Z7dYsPERowOfx5aVN5k8Ni+p9+jbsorR4+A+Q4+nP/Yye2zZ/5nR4/MmuQD2KC6blNSczLLU
+        In27BK6MVZMa2Qs2clb8n7+QrYGxjaOLkYNDQsBEYsqyoC5GLg4hgd2MEmd3/mOBcD4xSmxb
+        s5+1i5ETyPnGKLFnoQ2IDdIw6/htNoiivYwSSx5OYIJwWpgkbk1+ygxSxSZgKrFqTiMrSEJE
+        oItRYteBOWCjmAUWMkm82GcJYgsLBEp82dbNAmKzCKhKbHlwhhHE5hVwl/j7dx0rxDo5iZvn
+        Opkh7CNsEl9XaELYLhLvlz9ng7CFJV4d38IOYUtJvOxvg7LLJV5+Wgx2qoRAA6PEzInTGSES
+        9hIHrsxhAQUAs4CmxPpd+hC38Un0/n7CBAkXXomONiGIalWJ9cs3QXVKS+y7vhfK9pDoubqB
+        BRJCsRKT1xxhnsAoMwth6AJGxlWMkqkFxbnpqcWmBUZ5qeV6xYm5xaV56XrJ+bmbGMHpQstr
+        B+Oycz6HGAU4GJV4eH+4/ooVYk0sK67MPcQowcGsJMJ7u+NnrBBvSmJlVWpRfnxRaU5q8SFG
+        aQ4WJXHeSaxXY4QE0hNLUrNTUwtSi2CyTBycUg2MtgKXHZhlDwa5b13vK+t5rXEtX7X5Tr7X
+        ew7NszL866pvqH72wbIZvV6pLjp/Ze68S2SMO/nw+ax77G4F710djOwEn1/0tnF5sT8yfi9j
+        2IX+n1sWf2n97WqUfP33xaT8r2+W/q9/ZWM4PVXLN13UKDvgnulymb939sxRCtaffrOgpSe5
+        TNpAiaU4I9FQi7moOBEANvs2axMDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrGLMWRmVeSWpSXmKPExsWy7bCSvO5x/9+xBru6GS02PjnNaDHnfAuL
+        xZFTS5gs7v35wGqx6fE1VovLu+awWXRde8JqcWyBmMXRjcEWi7Z+Ybf4/3oro8WsCztYLW6s
+        Z7dYsPERowOfx5aVN5k8Ni+p9+jbsorR4+A+Q4+nP/Yye2zZ/5nR4/MmuQD2KC6blNSczLLU
+        In27BK6MVZMa2Qs2clb8n7+QrYGxjaOLkZNDQsBEYtbx22xdjFwcQgK7GSV+LpzNBpGQlpje
+        vwfKFpZY+e85O0RRE5NE98UtYAk2AVOJVXMaWUESIgJ9jBL/F/1hAnGYBVYzSexY08IEUiUs
+        4C9x//4LFhCbRUBVYsuDM4wgNq+Au8Tfv+tYIVbISdw818k8gZFnASPDKkbJ1ILi3PTcYsMC
+        o7zUcr3ixNzi0rx0veT83E2M4NDU0trBeOJE/CFGAQ5GJR7eH66/YoVYE8uKK3MPMUpwMCuJ
+        8N7u+BkrxJuSWFmVWpQfX1Sak1p8iFGag0VJnFc+/1ikkEB6YklqdmpqQWoRTJaJg1OqgXGZ
+        bP8snY0e68QWK7Kq80bprA/YcKM3K0EhI73gvVDxo8C5NWJ7Xtkm1P+t29F7+rRuwBYTFaPj
+        zofvSPscrcgI8dwmEMrtHr+kz/LLI93mvh1ft9x/+CxVhi9i3qPoRzd36q9hXf/z4d8zlZEp
+        Nz2X7hFOdXhuPm/yghOWrX9u/d+0Kt85+IASS3FGoqEWc1FxIgDJWKlXSQIAAA==
+X-CMS-MailID: 20191219102407epcas5p103b26e6fb191f7135d870a3449115c89
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20191219102407epcas5p103b26e6fb191f7135d870a3449115c89
+References: <CGME20191219102407epcas5p103b26e6fb191f7135d870a3449115c89@epcas5p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/12/2019 09:15:02+0000, Eugen.Hristev@microchip.com wrote:
-> 
-> 
-> On 18.12.2019 18:58, Alexandre Belloni wrote:
-> > On 18/12/2019 16:52:21+0000, Eugen.Hristev@microchip.com wrote:
-> >>
-> >>
-> >> On 18.12.2019 18:43, Alexandre Belloni wrote:
-> >>
-> >>> Hi,
-> >>>
-> >>> On 18/12/2019 16:24:00+0000, Eugen.Hristev@microchip.com wrote:
-> >>>> From: Eugen Hristev <eugen.hristev@microchip.com>
-> >>>>
-> >>>> This allows the RTC node to have child nodes in DT.
-> >>>> This allows subnodes to be probed.
-> >>>>
-> >>>> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> >>>> ---
-> >>>>    drivers/rtc/rtc-at91rm9200.c | 2 +-
-> >>>>    1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>>
-> >>>> diff --git a/drivers/rtc/rtc-at91rm9200.c b/drivers/rtc/rtc-at91rm9200.c
-> >>>> index 3b833e0..f1b5b3d 100644
-> >>>> --- a/drivers/rtc/rtc-at91rm9200.c
-> >>>> +++ b/drivers/rtc/rtc-at91rm9200.c
-> >>>> @@ -421,7 +421,7 @@ static int __init at91_rtc_probe(struct platform_device *pdev)
-> >>>>         at91_rtc_write_ier(AT91_RTC_SECEV);
-> >>>>
-> >>>>         dev_info(&pdev->dev, "AT91 Real Time Clock driver.\n");
-> >>>> -     return 0;
-> >>>> +     return of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
-> >>>>
-> >>>
-> >>> You can avoid the DT binding change and DT parsing by using
-> >>> platform_add_device here. I don't think there is any point describing
-> >>> the trigger as a child node (a watchdog functionality wouldn't be
-> >>> described for example).
-> >>>
-> >>
-> >> Hi,
-> >>
-> >> It's needed because the ADC needs a link to the trigger device. This is
-> >> a hardware link inside the SoC, so I thought the best way is to describe
-> >> this hardware is in the Device Tree.
-> >> Otherwise the ADC node is unaware of the RTC triggering possibility.
-> >> If we just assign the RTC trigger device to the ADC through the sysfs,
-> >> the ADC cannot distinguish between the RTC trigger and other various
-> >> triggers which can be attached.
-> >>
-> > 
-> > I'm not sure this links is required but I will let Jonathan review. Even
-> > if it is needed, you can still use the rtc node to describe that link.
-> 
-> Actually, the RTC node could potentially have two different ADC 
-> triggers. There is another OUT1 field that can do a second trigger for 
-> the ADC only for the last channel. Future development might add this 
-> trigger, so, with that in mind, I think it's best to link the exact 
-> trigger and not the RTC node.
+The current implementation of "stmmac_dt_phy" function initializes
+the MDIO platform bus data, even in the absence of PHY. This fix
+will skip MDIO initialization if there is no PHY present.
 
-Nothing prevents you from using an index with the phandle (and I would
-add a type in that case then). Having subnodes in the DT is not really a
-good idea. The IP is the RTC, it just happens to have some outputs.
-See what has been done for the PMC.
+Fixes: 7437127 ("net: stmmac: Convert to phylink and remove phylib logic")
+Acked-by: Jayati Sahu <jayati.sahu@samsung.com>
+Signed-off-by: Sriram Dash <sriram.dash@samsung.com>
+Signed-off-by: Padmanabhan Rajanbabu <p.rajanbabu@samsung.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+index bedaff0..cc8d7e7 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+@@ -320,7 +320,7 @@ static int stmmac_mtl_setup(struct platform_device *pdev,
+ static int stmmac_dt_phy(struct plat_stmmacenet_data *plat,
+ 			 struct device_node *np, struct device *dev)
+ {
+-	bool mdio = true;
++	bool mdio = false;
+ 	static const struct of_device_id need_mdio_ids[] = {
+ 		{ .compatible = "snps,dwc-qos-ethernet-4.10" },
+ 		{},
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.7.4
+
