@@ -2,118 +2,90 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,GAPPY_SUBJECT,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC1CC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22822C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5135222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:52:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576756344;
-	bh=LcrmCaN5uDXEpt4OoWn+E8iVhyr7DZdG10rCcpysVYs=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Eb+4zCRcOtltXc20S+OSP9MJF+e17RTxl2yxHT7zXd9NZc1CXdl3KId0WYHOFs0vu
-	 zBnU8GOXVd6ScfmxX1IPjbhYKOA9szQYX+vM9sVwHgr59cxE91HPOER49SnVXJvW1E
-	 976SjXz5KDr6ZRTehpcXnP1JbmRPczYMEhY1zrGw=
+	by mail.kernel.org (Postfix) with ESMTP id E7C2F222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:53:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbfLSLwX (ORCPT
+        id S1726776AbfLSLxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 06:52:23 -0500
-Received: from conuserg-07.nifty.com ([210.131.2.74]:53153 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726730AbfLSLwX (ORCPT
+        Thu, 19 Dec 2019 06:53:35 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:59728 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbfLSLxe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 06:52:23 -0500
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id xBJBpA5E025113;
-        Thu, 19 Dec 2019 20:51:10 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com xBJBpA5E025113
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1576756271;
-        bh=13lrGAJJ2x/6FuBvyBEwfGd2aNby5ZIL20FfDY8lhqI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=b7IHOHfY0A0wMqmrhiyzNrbSEJOen74MGyrMd7xy6fRQ1TpVOpyYLshSMpw8sRqAM
-         VKirQRVgkBjDthaeqrpOW5bc0D2Xeliw5wHcx7hRneRSfWyB3ovVIFwAbnz54hnvzn
-         CjJRFv7SCSy769UzDCXBQjBE3LWXAKc5B2owJsXtOvbyZKCEfz3wsCNaWY9eHJreFV
-         SyLATB43U+HCCA2k7cVrh7Q46BW8FTDmmyEUDa7SpyUOUC8tnnJvHXDskXOtjpbW3b
-         GHZLGy9ME2FniUai6YL0m30AksBpwv0PpmWh2FoRshDz96BpVZjpUrOvyRha7JNDkw
-         mPsg99rnxkWsQ==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Johan Hovold <johan@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: clarify the difference between obj-y and obj-m w.r.t. descending
-Date:   Thu, 19 Dec 2019 20:51:00 +0900
-Message-Id: <20191219115100.958-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Thu, 19 Dec 2019 06:53:34 -0500
+Received: from [5.158.153.53] (helo=g2noscherz.lab.linutronix.de.)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1ihuMx-0003XB-TG; Thu, 19 Dec 2019 12:53:28 +0100
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] printk: fix exclusive_console replaying
+Date:   Thu, 19 Dec 2019 12:59:22 +0106
+Message-Id: <20191219115322.31160-1-john.ogness@linutronix.de>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kbuild descends into a directory by either 'y' or 'm', but there is an
-important difference.
+Commit f92b070f2dc8 ("printk: Do not miss new messages when replaying
+the log") introduced a new variable @exclusive_console_stop_seq to
+store when an exclusive console should stop printing. It should be
+set to the @console_seq value at registration. However, @console_seq
+is previously set to @syslog_seq so that the exclusive console knows
+where to begin. This results in the exclusive console immediately
+reactivating all the other consoles and thus repeating the messages
+for those consoles.
 
-Kbuild combines the built-in objects into built-in.a in each directory.
-The built-in.a in the directory visited by obj-y is merged into the
-built-in.a in the parent directory. This merge happens recursively when
-Kbuild is ascending back towards the top directory, so built-in objects
-are linked into vmlinux eventually. This works properly only when the
-Makefile that specifies obj-y is reachable by the chain of obj-y.
+Set @console_seq after @exclusive_console_stop_seq has stored the
+current @console_seq value.
 
-On the other hand, Kbuild does not take built-in.a from the directory
-visited by obj-m. This it, all the objects in that directory are supposed
-to be modular. If Kbuild descends into a directory by obj-m, but the
-Makefile in the sub-directory specifies obj-y, those objects are just
-left orphan.
-
-The current statement "Kbuild only uses this information to decide that
-it needs to visit the directory" is misleading. Clarify the difference.
-
-Reported-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Fixes: f92b070f2dc8 ("printk: Do not miss new messages when replaying the log")
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
 ---
+ kernel/printk/printk.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- Documentation/kbuild/makefiles.rst | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
-index b9b50553bfc5..d7e6534a8505 100644
---- a/Documentation/kbuild/makefiles.rst
-+++ b/Documentation/kbuild/makefiles.rst
-@@ -297,9 +297,19 @@ more details, with real examples.
- 	If CONFIG_EXT2_FS is set to either 'y' (built-in) or 'm' (modular)
- 	the corresponding obj- variable will be set, and kbuild will descend
- 	down in the ext2 directory.
--	Kbuild only uses this information to decide that it needs to visit
--	the directory, it is the Makefile in the subdirectory that
--	specifies what is modular and what is built-in.
-+
-+	Kbuild uses this information not only to decide that it needs to visit
-+	the directory, but also to decide whether or not to link objects from
-+	the directory into vmlinux.
-+
-+	When Kbuild descends into the directory with 'y', all built-in objects
-+	from that directory are combined into the built-in.a, which will be
-+	eventually linked into vmlinux.
-+
-+	When Kbuild descends into the directory with 'm', in contrast, nothing
-+	from that directory will be linked into vmlinux. If the Makefile in
-+	that directory specifies obj-y, those objects will be left orphan.
-+	It is very likely a bug of the Makefile or of dependencies in Kconfig.
- 
- 	It is good practice to use a `CONFIG_` variable when assigning directory
- 	names. This allows kbuild to totally skip the directory if the
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 1ef6f75d92f1..fada22dc4ab6 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -2770,8 +2770,6 @@ void register_console(struct console *newcon)
+ 		 * for us.
+ 		 */
+ 		logbuf_lock_irqsave(flags);
+-		console_seq = syslog_seq;
+-		console_idx = syslog_idx;
+ 		/*
+ 		 * We're about to replay the log buffer.  Only do this to the
+ 		 * just-registered console to avoid excessive message spam to
+@@ -2783,6 +2781,8 @@ void register_console(struct console *newcon)
+ 		 */
+ 		exclusive_console = newcon;
+ 		exclusive_console_stop_seq = console_seq;
++		console_seq = syslog_seq;
++		console_idx = syslog_idx;
+ 		logbuf_unlock_irqrestore(flags);
+ 	}
+ 	console_unlock();
 -- 
-2.17.1
+2.20.1
 
