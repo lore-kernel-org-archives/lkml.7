@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A328AC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A47C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A4924684
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C532224687
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:41:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780887;
-	bh=AB+p3H+XIRVovI0BE08arTH7WbvtmV9U6TTbS0sF+04=;
+	s=default; t=1576780889;
+	bh=Z8anMrWmTZjHIUgn0N7JaWIaabcZ42ch5MZ7XopHJD4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uu5DffFJyGUDa2RrMZi/R/GtPvo9eeGBG1/utlh/Yg050HZudmcU4WFjYMjKbwBQR
-	 /gzc54G4jSIk78qB7lb3/1NdhUEBuNkLfq4UqEEHzjeIlZ9lIJUAtvA86OpuPiXixh
-	 P+IudsyrLxVCodWtYEfplEQRWT9nv4OWW39ZpEkY=
+	b=CY7ibnjEM5AhuRb7enCM/f/t1Qgmqb0wY8UHtIL+JWLLzPtEq4eUUhqAlvDhkT07T
+	 rde9y26soYSjhw0EPD1pKyr2a+1zhLmAKnmis/UiV9UI9x4tGOg/dmdO8KtU3c1vAo
+	 fIHvoeqKlF9FFHN3o3EFU/5/5fXkUDjtwpXqfmnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728540AbfLSSl0 (ORCPT
+        id S1728546AbfLSSl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:41:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60404 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:41:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728529AbfLSSlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:41:23 -0500
+        id S1728532AbfLSSlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:41:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 609E124680;
-        Thu, 19 Dec 2019 18:41:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6BEB206D7;
+        Thu, 19 Dec 2019 18:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780882;
-        bh=AB+p3H+XIRVovI0BE08arTH7WbvtmV9U6TTbS0sF+04=;
+        s=default; t=1576780885;
+        bh=Z8anMrWmTZjHIUgn0N7JaWIaabcZ42ch5MZ7XopHJD4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TixPVddIPiOwYZoak/4Dl1TQYoWmisHvX5PulLEueZZQpfj3rDl8cGbD/JcY6YPmX
-         fmQK0UQ59+hETK/vYSFXmxbUP4KvtujOb0KtMikA8HBP0sbsNyaj6ruh61k284oSqK
-         yaH08Z249uexi3Ck0F2U5JHqBVXLcidZzAnHIm4g=
+        b=n8RPrJq8eI2aFTaOZz5v73jMUmHOwLccD8rCm68dNF3ZX5Cr65ybPG+4MAecUzVbe
+         YkeeO8DgpCodrgx6Z+B/s0QLe7hXv/TkLRR/FrlLvEuR96eOrIp6jv9bR5L0XhXAP6
+         NvRb7sO3AyLbDyWoMlUCEPhxCBxZ8JZnA1S6pU28=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 4.4 118/162] pinctrl: samsung: Fix device node refcount leaks in init code
-Date:   Thu, 19 Dec 2019 19:33:46 +0100
-Message-Id: <20191219183214.932860984@linuxfoundation.org>
+        stable@vger.kernel.org, Alastair DSilva <alastair@d-silva.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.4 119/162] powerpc: Allow 64bit VDSO __kernel_sync_dicache to work across ranges >4GB
+Date:   Thu, 19 Dec 2019 19:33:47 +0100
+Message-Id: <20191219183214.990026277@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -58,58 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Alastair D'Silva <alastair@d-silva.org>
 
-commit a322b3377f4bac32aa25fb1acb9e7afbbbbd0137 upstream.
+commit f9ec11165301982585e5e5f606739b5bae5331f3 upstream.
 
-Several functions use for_each_child_of_node() loop with a break to find
-a matching child node.  Although each iteration of
-for_each_child_of_node puts the previous node, but early exit from loop
-misses it.  This leads to leak of device node.
+When calling __kernel_sync_dicache with a size >4GB, we were masking
+off the upper 32 bits, so we would incorrectly flush a range smaller
+than intended.
 
-Cc: <stable@vger.kernel.org>
-Fixes: 9a2c1c3b91aa ("pinctrl: samsung: Allow grouping multiple pinmux/pinconf nodes")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+This patch replaces the 32 bit shifts with 64 bit ones, so that
+the full size is accounted for.
+
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191104023305.9581-3-alastair@au1.ibm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pinctrl/samsung/pinctrl-samsung.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/vdso64/cacheflush.S |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/pinctrl/samsung/pinctrl-samsung.c
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
-@@ -286,6 +286,7 @@ static int samsung_dt_node_to_map(struct
- 						&reserved_maps, num_maps);
- 		if (ret < 0) {
- 			samsung_dt_free_map(pctldev, *map, *num_maps);
-+			of_node_put(np);
- 			return ret;
- 		}
- 	}
-@@ -753,8 +754,10 @@ static struct samsung_pmx_func *samsung_
- 		if (!of_get_child_count(cfg_np)) {
- 			ret = samsung_pinctrl_create_function(dev, drvdata,
- 							cfg_np, func);
--			if (ret < 0)
-+			if (ret < 0) {
-+				of_node_put(cfg_np);
- 				return ERR_PTR(ret);
-+			}
- 			if (ret > 0) {
- 				++func;
- 				++func_cnt;
-@@ -765,8 +768,11 @@ static struct samsung_pmx_func *samsung_
- 		for_each_child_of_node(cfg_np, func_np) {
- 			ret = samsung_pinctrl_create_function(dev, drvdata,
- 						func_np, func);
--			if (ret < 0)
-+			if (ret < 0) {
-+				of_node_put(func_np);
-+				of_node_put(cfg_np);
- 				return ERR_PTR(ret);
-+			}
- 			if (ret > 0) {
- 				++func;
- 				++func_cnt;
+--- a/arch/powerpc/kernel/vdso64/cacheflush.S
++++ b/arch/powerpc/kernel/vdso64/cacheflush.S
+@@ -39,7 +39,7 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
+ 	subf	r8,r6,r4		/* compute length */
+ 	add	r8,r8,r5		/* ensure we get enough */
+ 	lwz	r9,CFG_DCACHE_LOGBLOCKSZ(r10)
+-	srw.	r8,r8,r9		/* compute line count */
++	srd.	r8,r8,r9		/* compute line count */
+ 	crclr	cr0*4+so
+ 	beqlr				/* nothing to do? */
+ 	mtctr	r8
+@@ -56,7 +56,7 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
+ 	subf	r8,r6,r4		/* compute length */
+ 	add	r8,r8,r5
+ 	lwz	r9,CFG_ICACHE_LOGBLOCKSZ(r10)
+-	srw.	r8,r8,r9		/* compute line count */
++	srd.	r8,r8,r9		/* compute line count */
+ 	crclr	cr0*4+so
+ 	beqlr				/* nothing to do? */
+ 	mtctr	r8
 
 
