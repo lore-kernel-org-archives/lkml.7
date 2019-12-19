@@ -2,343 +2,274 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36243C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 390A8C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC46A222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05AB2227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:41:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jytmpAem"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qjIOKqdC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbfLSAlJ (ORCPT
+        id S1726793AbfLSAl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 19:41:09 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:5037 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbfLSAlI (ORCPT
+        Wed, 18 Dec 2019 19:41:27 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12803 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfLSAl0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 19:41:08 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dfac7190000>; Wed, 18 Dec 2019 16:40:57 -0800
+        Wed, 18 Dec 2019 19:41:26 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dfac6eb0000>; Wed, 18 Dec 2019 16:40:11 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 18 Dec 2019 16:41:07 -0800
+  Wed, 18 Dec 2019 16:40:40 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 18 Dec 2019 16:41:07 -0800
-Received: from [10.2.164.84] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Dec
- 2019 00:41:05 +0000
-Subject: Re: [PATCH v4 06/19] soc: tegra: Add Tegra PMC clock registrations
- into PMC driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <mperttunen@nvidia.com>,
-        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <spujar@nvidia.com>, <josephl@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1576613046-17159-1-git-send-email-skomatineni@nvidia.com>
- <1576613046-17159-7-git-send-email-skomatineni@nvidia.com>
- <87b2b266-e4a9-9a7a-2336-6ec57d7c4d1d@gmail.com>
- <55a56c3d-3fac-cc77-46ae-acf5de77d262@gmail.com>
- <e11d2ea9-20f1-6920-7efc-ba8a50312f75@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <c5bb3c25-1fae-3ca9-6bf3-c3d66be20e19@nvidia.com>
-Date:   Wed, 18 Dec 2019 16:41:04 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        by hqpgpgate101.nvidia.com on Wed, 18 Dec 2019 16:40:40 -0800
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Dec
+ 2019 00:40:40 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 19 Dec 2019 00:40:39 +0000
+Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dfac7070000>; Wed, 18 Dec 2019 16:40:39 -0800
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH v12] mm: devmap: refactor 1-based refcounting for ZONE_DEVICE pages
+Date:   Wed, 18 Dec 2019 16:40:37 -0800
+Message-ID: <20191219004037.1198078-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191218160420.gyt4c45e6zsnxqv6@box>
+References: <20191218160420.gyt4c45e6zsnxqv6@box>
 MIME-Version: 1.0
-In-Reply-To: <e11d2ea9-20f1-6920-7efc-ba8a50312f75@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+X-NVConfidentiality: public
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576716057; bh=FOmuU/3uHYuRnI+/RGSno7P4BhpLQ674aEV/2xhwncE=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=jytmpAem3/m9oewetwsDpI+M/UWc7vMrsg0ya1r20hq5gAlvyg49ury2pjidJ8onB
-         i1uImLCe4t3qxHF3V/V7psSkVfg7YNrvfhSvudIOLkw5ftVWzf7aaUbNyR8a5j+uF5
-         mHCnSE0KcImsCmXAGr4beMhMtyApfjPUqQGe/uxFtduN+R3dBeVkkLz1CPnEdp276g
-         ZmtOtDe2u4ejLNeAc8prRVrHsRWYq4wzInGD4S7E2yyMBkokPztk2p2Y2+nqLO7GSw
-         D6y+3f9b1x3CgdLpvG5kq3bO9SZLBgGB8xP3KL6johFQAOAqu9XajCtN2dmzT/X5cx
-         Dao94jHZHiUEQ==
+        t=1576716012; bh=meY7XSFZGFTm0ReBYolvDdqRBgCh/HSlArb5Zg3NFvk=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Type:Content-Transfer-Encoding;
+        b=qjIOKqdCUd7FwtXps/EX5rcy2jzX7ECH7d3gscZlvPWK+USZzY1q0dAG+H1A1e4bW
+         xIdpfAI5t4vavi9qpNMvGtiweIkR1awxL4TYXPZwaeONkFcFN1zXQbpW/68snevPNj
+         5QIP3HFe/KnwTQJ5t/CB3h4eLlluOox9FBIYdqA3HpeElohSY3KZjP+6dBkbINRhFa
+         ZYRgTzuq1d6+3U/JsKziS6j7uhAZMlje1/Nk/EI1s0RtNW9Xt5H7STM2pMGvX9z96O
+         6weRpZ4IdcHq5gWYu+R05VYD+Ro8D3XakiiYQK6azXLHolwxZWIhC6GYnIMG6nSLyM
+         S6aDYq/kU5kxg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+An upcoming patch changes and complicates the refcounting and
+especially the "put page" aspects of it. In order to keep
+everything clean, refactor the devmap page release routines:
 
-On 12/18/19 1:44 PM, Dmitry Osipenko wrote:
-> 18.12.2019 11:35, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> 18.12.2019 11:30, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> 17.12.2019 23:03, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> Tegra PMC has clk_out_1, clk_out_2, and clk_out_3 clocks and currently
->>>> these PMC clocks are registered by Tegra clock driver with each clock =
-as
->>>> separate mux and gate clocks using clk_register_mux and clk_register_g=
-ate
->>>> by passing PMC base address and register offsets and PMC programming f=
-or
->>>> these clocks happens through direct PMC access by the clock driver.
->>>>
->>>> With this, when PMC is in secure mode any direct PMC access from the
->>>> non-secure world does not go through and these clocks will not be
->>>> functional.
->>>>
->>>> This patch adds these PMC clocks registration to pmc driver with PMC a=
-s
->>>> a clock provider and registers each clock as single clock.
->>>>
->>>> clk_ops callback implementations for these clocks uses tegra_pmc_readl=
- and
->>>> tegra_pmc_writel which supports PMC programming in both secure mode an=
-d
->>>> non-secure mode.
->>>>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>> ---
->>>>   drivers/soc/tegra/pmc.c | 248 ++++++++++++++++++++++++++++++++++++++=
-++++++++++
->>>>   1 file changed, 248 insertions(+)
->>>>
->>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->>>> index ea0e11a09c12..6d65194a6e71 100644
->>>> --- a/drivers/soc/tegra/pmc.c
->>>> +++ b/drivers/soc/tegra/pmc.c
->>>> @@ -13,6 +13,9 @@
->>>>  =20
->>>>   #include <linux/arm-smccc.h>
->>>>   #include <linux/clk.h>
->>>> +#include <linux/clk-provider.h>
->>>> +#include <linux/clkdev.h>
->>>> +#include <linux/clk/clk-conf.h>
->>>>   #include <linux/clk/tegra.h>
->>>>   #include <linux/debugfs.h>
->>>>   #include <linux/delay.h>
->>>> @@ -48,6 +51,7 @@
->>>>   #include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
->>>>   #include <dt-bindings/gpio/tegra186-gpio.h>
->>>>   #include <dt-bindings/gpio/tegra194-gpio.h>
->>>> +#include <dt-bindings/soc/tegra-pmc.h>
->>>>  =20
->>>>   #define PMC_CNTRL			0x0
->>>>   #define  PMC_CNTRL_INTR_POLARITY	BIT(17) /* inverts INTR polarity */
->>>> @@ -100,6 +104,7 @@
->>>>   #define PMC_WAKE2_STATUS		0x168
->>>>   #define PMC_SW_WAKE2_STATUS		0x16c
->>>>  =20
->>>> +#define PMC_CLK_OUT_CNTRL		0x1a8
->>>>   #define PMC_SENSOR_CTRL			0x1b0
->>>>   #define  PMC_SENSOR_CTRL_SCRATCH_WRITE	BIT(2)
->>>>   #define  PMC_SENSOR_CTRL_ENABLE_RST	BIT(1)
->>>> @@ -155,6 +160,64 @@
->>>>   #define  TEGRA_SMC_PMC_READ	0xaa
->>>>   #define  TEGRA_SMC_PMC_WRITE	0xbb
->>>>  =20
->>>> +struct pmc_clk {
->>>> +	struct clk_hw	hw;
->>>> +	unsigned long	offs;
->>>> +	u32		mux_mask;
->>>> +	u32		mux_shift;
->>>> +	u32		gate_shift;
->>>> +};
->>>> +
->>>> +#define to_pmc_clk(_hw) container_of(_hw, struct pmc_clk, hw)
->>>> +
->>>> +struct pmc_clk_init_data {
->>>> +	char *name;
->>>> +	const char *const *parents;
->>>> +	int num_parents;
->>>> +	int clk_id;
->>>> +	u8 mux_shift;
->>>> +	u8 gate_shift;
->>>> +};
->>>> +
->>>> +static const char * const clk_out1_parents[] =3D { "osc", "osc_div2",
->>>> +	"osc_div4", "extern1",
->>>> +};
->>>> +
->>>> +static const char * const clk_out2_parents[] =3D { "osc", "osc_div2",
->>>> +	"osc_div4", "extern2",
->>>> +};
->>>> +
->>>> +static const char * const clk_out3_parents[] =3D { "osc", "osc_div2",
->>>> +	"osc_div4", "extern3",
->>>> +};
->>>> +
->>>> +static const struct pmc_clk_init_data tegra_pmc_clks_data[] =3D {
->>>> +	{
->>>> +		.name =3D "clk_out_1",
->>>> +		.parents =3D clk_out1_parents,
->>>> +		.num_parents =3D ARRAY_SIZE(clk_out1_parents),
->>>> +		.clk_id =3D TEGRA_PMC_CLK_OUT_1,
->>>> +		.mux_shift =3D 6,
->>>> +		.gate_shift =3D 2,
->>> I'd replace these with a single .shift, given that mux_shift =3D
->>> gate_shift + 4 for all clocks.
->>>
->>>> +	},
->>>> +	{
->>>> +		.name =3D "clk_out_2",
->>>> +		.parents =3D clk_out2_parents,
->>>> +		.num_parents =3D ARRAY_SIZE(clk_out2_parents),
->>>> +		.clk_id =3D TEGRA_PMC_CLK_OUT_2,
->>>> +		.mux_shift =3D 14,
->>>> +		.gate_shift =3D 10,
->>>> +	},
->>>> +	{
->>>> +		.name =3D "clk_out_3",
->>>> +		.parents =3D clk_out3_parents,
->>>> +		.num_parents =3D ARRAY_SIZE(clk_out3_parents),
->>>> +		.clk_id =3D TEGRA_PMC_CLK_OUT_3,
->>>> +		.mux_shift =3D 22,
->>>> +		.gate_shift =3D 18,
->>>> +	},
->>>> +};
->>>> +
->>>>   struct tegra_powergate {
->>>>   	struct generic_pm_domain genpd;
->>>>   	struct tegra_pmc *pmc;
->>>> @@ -254,6 +317,9 @@ struct tegra_pmc_soc {
->>>>   	 */
->>>>   	const struct tegra_wake_event *wake_events;
->>>>   	unsigned int num_wake_events;
->>>> +
->>>> +	const struct pmc_clk_init_data *pmc_clks_data;
->>>> +	unsigned int num_pmc_clks;
->>>>   };
->>>>  =20
->>>>   static const char * const tegra186_reset_sources[] =3D {
->>>> @@ -2163,6 +2229,173 @@ static int tegra_pmc_clk_notify_cb(struct noti=
-fier_block *nb,
->>>>   	return NOTIFY_OK;
->>>>   }
->>>>  =20
->>>> +static void pmc_clk_fence_udelay(u32 offset)
->>>> +{
->>>> +	tegra_pmc_readl(pmc, offset);
->>>> +	/* pmc clk propagation delay 2 us */
->>>> +	udelay(2);
->>>> +}
->>>> +
->>>> +static u8 pmc_clk_mux_get_parent(struct clk_hw *hw)
->>>> +{
->>>> +	struct pmc_clk *clk =3D to_pmc_clk(hw);
->>>> +	u32 val;
->>>> +
->>>> +	val =3D tegra_pmc_readl(pmc, clk->offs) >> clk->mux_shift;
->>>> +	val &=3D clk->mux_mask;
->>>> +
->>>> +	return val;
->>>> +}
->>>> +
->>>> +static int pmc_clk_mux_set_parent(struct clk_hw *hw, u8 index)
->>>> +{
->>>> +	struct pmc_clk *clk =3D to_pmc_clk(hw);
->>>> +	u32 val;
->>>> +
->>>> +	val =3D tegra_pmc_readl(pmc, clk->offs);
->>>> +	val &=3D ~(clk->mux_mask << clk->mux_shift);
->>>> +	val |=3D index << clk->mux_shift;
->>>> +	tegra_pmc_writel(pmc, val, clk->offs);
->>>> +	pmc_clk_fence_udelay(clk->offs);
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static int pmc_clk_is_enabled(struct clk_hw *hw)
->>>> +{
->>>> +	struct pmc_clk *clk =3D to_pmc_clk(hw);
->>>> +
->>>> +	return tegra_pmc_readl(pmc, clk->offs) & BIT(clk->gate_shift) ? 1 : =
-0;
->>>> +}
->>>> +
->>>> +static void pmc_clk_set_state(unsigned long offs, u32 shift, int stat=
-e)
->>>> +{
->>>> +	u32 val;
->>>> +
->>>> +	val =3D tegra_pmc_readl(pmc, offs);
->>>> +	val =3D state ? (val | BIT(shift)) : (val & ~BIT(shift));
->>>> +	tegra_pmc_writel(pmc, val, offs);
->>>> +	pmc_clk_fence_udelay(offs);
->>>> +}
->>>> +
->>>> +static int pmc_clk_enable(struct clk_hw *hw)
->>>> +{
->>>> +	struct pmc_clk *clk =3D to_pmc_clk(hw);
->>>> +
->>>> +	pmc_clk_set_state(clk->offs, clk->gate_shift, 1);
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static void pmc_clk_disable(struct clk_hw *hw)
->>>> +{
->>>> +	struct pmc_clk *clk =3D to_pmc_clk(hw);
->>>> +
->>>> +	pmc_clk_set_state(clk->offs, clk->gate_shift, 0);
->>>> +}
->>>> +
->>>> +static const struct clk_ops pmc_clk_ops =3D {
->>>> +	.get_parent =3D pmc_clk_mux_get_parent,
->>>> +	.set_parent =3D pmc_clk_mux_set_parent,
->>>> +	.determine_rate =3D __clk_mux_determine_rate,
->>>> +	.is_enabled =3D pmc_clk_is_enabled,
->>>> +	.enable =3D pmc_clk_enable,
->>>> +	.disable =3D pmc_clk_disable,
->>>> +};
->>>> +
->>>> +static struct clk *
->>>> +tegra_pmc_clk_out_register(const struct pmc_clk_init_data *data,
->>>> +			   unsigned long offset)
->>>> +{
->>>> +	struct clk_init_data init;
->>>> +	struct pmc_clk *pmc_clk;
->>>> +
->>>> +	pmc_clk =3D kzalloc(sizeof(*pmc_clk), GFP_KERNEL);
->>>> +	if (!pmc_clk)
->>>> +		return ERR_PTR(-ENOMEM);
->>>> +
->>>> +	init.name =3D data->name;
->>>> +	init.ops =3D &pmc_clk_ops;
->>>> +	init.parent_names =3D data->parents;
->>>> +	init.num_parents =3D data->num_parents;
->>>> +	init.flags =3D CLK_SET_RATE_NO_REPARENT | CLK_SET_RATE_PARENT |
->>>> +		     CLK_SET_PARENT_GATE;
->>>> +
->>>> +	pmc_clk->hw.init =3D &init;
->>>> +	pmc_clk->offs =3D offset;
->>>> +	pmc_clk->mux_mask =3D 3;
->>> If mux_mask is a constant value, perhaps will be better to replace the
->>> variable with a literal?
->>>
->>> #define PMC_CLK_OUT_MUX_MASK	GENMASK(1, 0)
->> Maybe even:
->>
->> #define PMC_CLK_OUT_MUX_MASK(c)	GENMASK(c->shift + 1, c->shift)
+* Rename put_devmap_managed_page() to page_is_devmap_managed(),
+  and limit the functionality to "read only": return a bool,
+  with no side effects.
 
-MUX Mask is used only here for PMC clock out and is same for all clk_out=20
-mux so will use
+* Add a new routine, put_devmap_managed_page(), to handle
+  decrementing the refcount for ZONE_DEVICE pages.
 
-#define PMC_CLK_OUT_MUX_MASK	GENMASK(1, 0)
+* Change callers (just release_pages() and put_page()) to check
+  page_is_devmap_managed() before calling the new
+  put_devmap_managed_page() routine. This is a performance
+  point: put_page() is a hot path, so we need to avoid non-
+  inline function calls where possible.
 
-> I want to point out that may be a separated gate/mux shifts is a fine
-> variant, you should try and see whether another variants produce more
-> concise result.
->
-> [snip]
+* Rename __put_devmap_managed_page() to free_devmap_managed_page(),
+  and limit the functionality to unconditionally freeing a devmap
+  page.
+
+This is originally based on a separate patch by Ira Weiny, which
+applied to an early version of the put_user_page() experiments.
+Since then, J=C3=A9r=C3=B4me Glisse suggested the refactoring described abo=
+ve.
+
+Cc: Christoph Hellwig <hch@lst.de>
+Suggested-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
+ include/linux/mm.h | 18 +++++++++++++-----
+ mm/memremap.c      | 16 ++--------------
+ mm/swap.c          | 27 ++++++++++++++++++++++++++-
+ 3 files changed, 41 insertions(+), 20 deletions(-)
+
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index c97ea3b694e6..87b54126e46d 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -952,9 +952,10 @@ static inline bool is_zone_device_page(const struct pa=
+ge *page)
+ #endif
+=20
+ #ifdef CONFIG_DEV_PAGEMAP_OPS
+-void __put_devmap_managed_page(struct page *page);
++void free_devmap_managed_page(struct page *page);
+ DECLARE_STATIC_KEY_FALSE(devmap_managed_key);
+-static inline bool put_devmap_managed_page(struct page *page)
++
++static inline bool page_is_devmap_managed(struct page *page)
+ {
+ 	if (!static_branch_unlikely(&devmap_managed_key))
+ 		return false;
+@@ -963,7 +964,6 @@ static inline bool put_devmap_managed_page(struct page =
+*page)
+ 	switch (page->pgmap->type) {
+ 	case MEMORY_DEVICE_PRIVATE:
+ 	case MEMORY_DEVICE_FS_DAX:
+-		__put_devmap_managed_page(page);
+ 		return true;
+ 	default:
+ 		break;
+@@ -971,11 +971,17 @@ static inline bool put_devmap_managed_page(struct pag=
+e *page)
+ 	return false;
+ }
+=20
++void put_devmap_managed_page(struct page *page);
++
+ #else /* CONFIG_DEV_PAGEMAP_OPS */
+-static inline bool put_devmap_managed_page(struct page *page)
++static inline bool page_is_devmap_managed(struct page *page)
+ {
+ 	return false;
+ }
++
++static inline void put_devmap_managed_page(struct page *page)
++{
++}
+ #endif /* CONFIG_DEV_PAGEMAP_OPS */
+=20
+ static inline bool is_device_private_page(const struct page *page)
+@@ -1028,8 +1034,10 @@ static inline void put_page(struct page *page)
+ 	 * need to inform the device driver through callback. See
+ 	 * include/linux/memremap.h and HMM for details.
+ 	 */
+-	if (put_devmap_managed_page(page))
++	if (page_is_devmap_managed(page)) {
++		put_devmap_managed_page(page);
+ 		return;
++	}
+=20
+ 	if (put_page_testzero(page))
+ 		__put_page(page);
+diff --git a/mm/memremap.c b/mm/memremap.c
+index e899fa876a62..2ba773859031 100644
+--- a/mm/memremap.c
++++ b/mm/memremap.c
+@@ -411,20 +411,8 @@ struct dev_pagemap *get_dev_pagemap(unsigned long pfn,
+ EXPORT_SYMBOL_GPL(get_dev_pagemap);
+=20
+ #ifdef CONFIG_DEV_PAGEMAP_OPS
+-void __put_devmap_managed_page(struct page *page)
++void free_devmap_managed_page(struct page *page)
+ {
+-	int count =3D page_ref_dec_return(page);
+-
+-	/* still busy */
+-	if (count > 1)
+-		return;
+-
+-	/* only triggered by the dev_pagemap shutdown path */
+-	if (count =3D=3D 0) {
+-		__put_page(page);
+-		return;
+-	}
+-
+ 	/* notify page idle for dax */
+ 	if (!is_device_private_page(page)) {
+ 		wake_up_var(&page->_refcount);
+@@ -461,5 +449,5 @@ void __put_devmap_managed_page(struct page *page)
+ 	page->mapping =3D NULL;
+ 	page->pgmap->ops->page_free(page);
+ }
+-EXPORT_SYMBOL(__put_devmap_managed_page);
++EXPORT_SYMBOL(free_devmap_managed_page);
+ #endif /* CONFIG_DEV_PAGEMAP_OPS */
+diff --git a/mm/swap.c b/mm/swap.c
+index 5341ae93861f..cf39d24ada2a 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -813,8 +813,10 @@ void release_pages(struct page **pages, int nr)
+ 			 * processing, and instead, expect a call to
+ 			 * put_page_testzero().
+ 			 */
+-			if (put_devmap_managed_page(page))
++			if (page_is_devmap_managed(page)) {
++				put_devmap_managed_page(page);
+ 				continue;
++			}
+ 		}
+=20
+ 		page =3D compound_head(page);
+@@ -1102,3 +1104,26 @@ void __init swap_setup(void)
+ 	 * _really_ don't want to cluster much more
+ 	 */
+ }
++
++#ifdef CONFIG_DEV_PAGEMAP_OPS
++void put_devmap_managed_page(struct page *page)
++{
++	int count;
++
++	if (WARN_ON_ONCE(!page_is_devmap_managed(page)))
++		return;
++
++	count =3D page_ref_dec_return(page);
++
++	/*
++	 * devmap page refcounts are 1-based, rather than 0-based: if
++	 * refcount is 1, then the page is free and the refcount is
++	 * stable because nobody holds a reference on the page.
++	 */
++	if (count =3D=3D 1)
++		free_devmap_managed_page(page);
++	else if (!count)
++		__put_page(page);
++}
++EXPORT_SYMBOL(put_devmap_managed_page);
++#endif
+--=20
+2.24.1
+
