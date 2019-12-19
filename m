@@ -2,128 +2,110 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB085C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4AFC2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1B1E24672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:44:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576759446;
-	bh=6JFwR0saeGyANg1nIHBFlGxnXWgDuEBwv3HadSj8sKA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RtDnJObwGf7jsfAHMOa4gwp4SUopeYMYRrexlhI+0Cr37c6P/JIxRZi1oRSbXinif
-	 45fuMoECOG9IntangH+Wv+PjgdXUL/cu2+WACVt61ypb3NZEiYKiWWSWapIQd4ZvTD
-	 fM83f8TcXpUHUT66tLDwSxXKvL4hL+aKj+ub1zIs=
+	by mail.kernel.org (Postfix) with ESMTP id D4411227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:45:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="RP155P0q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfLSMoF (ORCPT
+        id S1726757AbfLSMpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 07:44:05 -0500
-Received: from foss.arm.com ([217.140.110.172]:38402 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726701AbfLSMoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 07:44:05 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CD4831B;
-        Thu, 19 Dec 2019 04:44:04 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E6E7D3F719;
-        Thu, 19 Dec 2019 04:44:03 -0800 (PST)
-Date:   Thu, 19 Dec 2019 12:44:02 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        mripard@kernel.org, heiko@sntech.de, shawnguo@kernel.org,
-        laurent.pinchart@ideasonboard.com, icenowy@aosc.io,
-        mchehab+samsung@kernel.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 3/4] regulator: mpq7920: add mpq7920 regulator driver
-Message-ID: <20191219124402.GC5047@sirena.org.uk>
-References: <20191219103721.10935-1-sravanhome@gmail.com>
- <20191219103721.10935-4-sravanhome@gmail.com>
+        Thu, 19 Dec 2019 07:45:35 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:55160 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726696AbfLSMpf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 07:45:35 -0500
+Received: by mail-pj1-f65.google.com with SMTP id ep17so2470034pjb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 04:45:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Z/xYSl6zQKjABLBTONR1NAB8T0yFBm0l2LQ2eaQw2EE=;
+        b=RP155P0qGjBkRG3bhkvHndHmrwp9Llla3wDhunWiTYVqDWJ1dEbVLWz8ii9l25yKDv
+         MS4sgKHJcS78zL6L8R05uLrSHADSi8OeAcHnMn892flYwp8w8k817RwuHKfKyqWYzljU
+         ifZbRTmhZRxvPpZ/qGYBHAR61cmoo+tc1qFFHcUacUc7eYKZY7tvFaxhy5lbHCeXZ0PP
+         zy/FgjeBx3g9wUxuLFz7wtZKqvIctzSFR513epcayjAenYhJCg7gNhJXYH6WRzj1lKVH
+         nnvOymZxdX4KhPRioI/3lXC0NOyc/ehWDwI41Jm8wtnBdmYokvvi0yNO5kHaSyYmYlfU
+         6SdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Z/xYSl6zQKjABLBTONR1NAB8T0yFBm0l2LQ2eaQw2EE=;
+        b=sb/SFknf34+8c1uAdRHtrtnWQ2h3rgxDaGIMNHr4vRLg5SVL+neDQGJUV+l/DM9cyG
+         CTTByTV6FdVGi9q0aKM2H0jMWoKqi63MtKtT/Hn3rl5Wwk+qfy0SHtSZlvJVqKaf+5aV
+         H9/GEwY4bSPXu5bVO07p/XHE1zWqsFvUFnwF1ZXBLnJGR52zvhM9x7mniW1N3S/UV1ue
+         H5jGyIz5+b16UFOcwEjm2noaEqR3z68eDD5GaMQunjekcJYG+HJh2IANDg3MZrLrbFXG
+         mFy0Kt+f+AKD12wHM0J4eSDhYj8ufazHqVAFOT7VLZF9TYPASIYbKdy0N+iHETGehNnx
+         VHTA==
+X-Gm-Message-State: APjAAAWbsMxrFgXLYBBpf7iOwz2Trae4nz+zHRb4jFT+shGo8BF6/+BF
+        VtSX/wMF3nsO1NiITu9X+EErIBMW1XJZ3A==
+X-Google-Smtp-Source: APXvYqy6HTR64BHbjBbMtSNTgHsPQfIuOLG3t31OX3o/0XEEirytJKmtxMG+dB64dUKLh5yc1ScyOg==
+X-Received: by 2002:a17:90a:1ae9:: with SMTP id p96mr9640448pjp.8.1576759534340;
+        Thu, 19 Dec 2019 04:45:34 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id s15sm7451809pgq.4.2019.12.19.04.45.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Dec 2019 04:45:33 -0800 (PST)
+Subject: Re: [PATCH] block: fix memleak when __blk_rq_map_user_iov() is failed
+To:     Yang Yingliang <yangyingliang@huawei.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1576658644-88101-1-git-send-email-yangyingliang@huawei.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <4e2e03e4-b5ed-e16a-e7a0-0900afb23042@kernel.dk>
+Date:   Thu, 19 Dec 2019 05:45:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="69pVuxX8awAiJ7fD"
-Content-Disposition: inline
-In-Reply-To: <20191219103721.10935-4-sravanhome@gmail.com>
-X-Cookie: I smell a RANCID CORN DOG!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1576658644-88101-1-git-send-email-yangyingliang@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 12/18/19 1:44 AM, Yang Yingliang wrote:
+> When I doing fuzzy test, get the memleak report:
+> 
+> BUG: memory leak
+> unreferenced object 0xffff88837af80000 (size 4096):
+>   comm "memleak", pid 3557, jiffies 4294817681 (age 112.499s)
+>   hex dump (first 32 bytes):
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>     20 00 00 00 10 01 00 00 00 00 00 00 01 00 00 00   ...............
+>   backtrace:
+>     [<000000001c894df8>] bio_alloc_bioset+0x393/0x590
+>     [<000000008b139a3c>] bio_copy_user_iov+0x300/0xcd0
+>     [<00000000a998bd8c>] blk_rq_map_user_iov+0x2f1/0x5f0
+>     [<000000005ceb7f05>] blk_rq_map_user+0xf2/0x160
+>     [<000000006454da92>] sg_common_write.isra.21+0x1094/0x1870
+>     [<00000000064bb208>] sg_write.part.25+0x5d9/0x950
+>     [<000000004fc670f6>] sg_write+0x5f/0x8c
+>     [<00000000b0d05c7b>] __vfs_write+0x7c/0x100
+>     [<000000008e177714>] vfs_write+0x1c3/0x500
+>     [<0000000087d23f34>] ksys_write+0xf9/0x200
+>     [<000000002c8dbc9d>] do_syscall_64+0x9f/0x4f0
+>     [<00000000678d8e9a>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> If __blk_rq_map_user_iov() is failed in blk_rq_map_user_iov(),
+> the bio(s) which is allocated before this failing will leak. The
+> refcount of the bio(s) is init to 1 and increased to 2 by calling
+> bio_get(), but __blk_rq_unmap_user() only decrease it to 1, so
+> the bio cannot be freed. Fix it by calling blk_rq_unmap_user().
 
---69pVuxX8awAiJ7fD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Applied, thanks.
 
-On Thu, Dec 19, 2019 at 11:37:20AM +0100, Saravanan Sekar wrote:
+-- 
+Jens Axboe
 
-This looks pretty good, a few small issues below:
-
-> @@ -0,0 +1,376 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * mpq7920.c  -  mps mpq7920
-> + *
-> + * Copyright 2019 Monolithic Power Systems, Inc
-
-Please keep the entire comment a C++ one so things look more
-intentional.
-
-> +static int mpq7920_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
-> +{
-> +	unsigned int ramp_val = (ramp_delay <= 4000) ? 3 : 2;
-> +
-> +	return regmap_update_bits(rdev->regmap, MPQ7920_REG_CTL0,
-> +				  MPQ7920_MASK_DVS_SLEWRATE, ramp_val << 6);
-> +}
-
-This should validate the input.  Please also avoid abusing the ternery
-operator like this, just write normal logic statements to make the code
-more readable.
-
-> +	struct regulator_desc *rdesc;
-> +	struct regulator_ops *ops;
-> +
-> +	for (i = 0; i < MPQ7920_MAX_REGULATORS; i++) {
-> +		rdesc = &info->rdesc[i];
-> +		ops = rdesc->ops;
-> +		if (rdesc->curr_table) {
-> +			ops->get_current_limit =
-> +				regulator_get_current_limit_regmap;
-> +			ops->set_current_limit =
-> +				regulator_set_current_limit_regmap;
-> +		}
-
-It would be better to make these constant at build time rather than
-patching at runtime, that lets things like static checkers do their
-thing more easily.
-
-> +	ret = mpq7920_regulator_register(info, &config);
-> +	if (ret < 0)
-> +		dev_err(dev, "Failed to register regulator!\n");
-
-This function has one caller, just inline it.
-
---69pVuxX8awAiJ7fD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl37cJEACgkQJNaLcl1U
-h9COSQf9GWksfSDSmlysjJw328uMbqlUK49mwwu2bV7mGwykv739G6zQK0UilW9J
-4pxv5qLozLEyQKbF8JZRsE1geGiUqO3a6Svpdh5Uyfa/8xxWLDFlEPC6LMHulgLw
-X1VTS/S92lSCzANbm8EQLGJwz/t5llKlqInigyZqTTIVrI500xoCzFUkwW/wSreJ
-aIDttUebnyI2BvjFAP+ehG4/a2/2uK3oT18GieBpvGfIizybdu0P1wAQU/dbI+JN
-QEKl2dWLE/sUyFBllzdBh+Sd2O6C/g15y4R4FRU/m43CxFp5WXqzknPOUo+J+RA8
-JwaqnL6x9JKbK5P7S71QMGtHLDRMAQ==
-=jSsg
------END PGP SIGNATURE-----
-
---69pVuxX8awAiJ7fD--
