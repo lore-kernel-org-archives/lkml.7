@@ -2,83 +2,100 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79ADAC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C27AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44FC1206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D329F206D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782276;
-	bh=UognCO9PhPJNz6xOFitRmIm5rhlH3RIdFpJ0UCckXsk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=m71purTgq2bJSDuUaMfPHKvY+41i1x7t1Vx6eJ+Zgtlb9+HX75cq7WeRNoo8j7DRe
-	 tv7KCGi7jmcepsVmg5uuYDJ7ORK0x7hsLL17rdxiIaE2SyXXEFdNP9Hg9Me1Uz09y/
-	 2WwlAXh3NpuyqcX8kAtbIQTl4nuJXbv3Zp6j6msc=
+	s=default; t=1576782281;
+	bh=t4gPPwpKYB+p3CGg1LOOHBYsxOHEph6hE6VO8OEGwRU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0kvPM2JCmSH6d4/lXksroX10tW2qh9gCIPMVI0zU5Gfn/mkq2h/Lym68QxsLYU5gg
+	 9Xij3fgoj9O4t/GSG/5hVwPIGftQlAI5t17yYm+GNq8Wac2JEXWOaLy0WsYZ77PM0r
+	 OMbxyFeDVjQ/akIOXTovhs0nBhNG3+3GxaoHE8vg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729583AbfLSTEf (ORCPT
+        id S1728752AbfLSTEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:04:35 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45293 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727782AbfLSTEc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 14:04:32 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 59so8416380otp.12;
-        Thu, 19 Dec 2019 11:04:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3TwLMjIi0ztUcgqXnz6W6DiP3C/BFPmUt8EF/msCgyo=;
-        b=MtQALT4d2mqzgjFYhGUlBfrkM3EXSaAHHdxBTaPWuq1Q8r9TkJi057D/flwWhqRQI5
-         rL34sGT0RZ/7x95q4y4mX9aFuwG77bKLjSM5fJDx2Boapv5g3zPfsYVlDr1fGmEJdg17
-         vLDmg/0EL0QhoiKcn491q3prUDgsnCrhzOrM4/SbYiBSWdCuSLMfLmj7tI2tv67o7Dik
-         pb2iabObuA1UkfzOixDA96Ns4vaVD7aofN9Vm3SFKfBSPlDd+6z73hOj8gp6rCyCSu9Y
-         TCMC7N9pMCsBV5BM/vlPrxpPmJ5vh/QfEEhwxWltu54X6Lf06vVT0G104cSyM0OqvltV
-         KQOg==
-X-Gm-Message-State: APjAAAWU/tHcuUveANex3orAPqbC5j3HfWyT9WTOoo/khh3gtB7W7XYb
-        EuBq1DNPoVGFLVwqR0j+wSUks+frbg==
-X-Google-Smtp-Source: APXvYqzXMS+BPPjyZuUTUxZ0kvBQRUp13g/7NP8niTT5xFM1Uguo50OG2xZFpz1MwnDNbqhaPlAKEA==
-X-Received: by 2002:a05:6830:22e3:: with SMTP id t3mr9837378otc.193.1576782271973;
-        Thu, 19 Dec 2019 11:04:31 -0800 (PST)
-Received: from localhost ([2607:fb90:bdf:98e:3549:d84c:9720:edb4])
-        by smtp.gmail.com with ESMTPSA id n19sm2284468oig.57.2019.12.19.11.04.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 11:04:31 -0800 (PST)
-Date:   Thu, 19 Dec 2019 13:04:28 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jyri Sarha <jsarha@ti.com>
-Cc:     kishon@ti.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, tomi.valkeinen@ti.com, praneeth@ti.com,
-        yamonkar@cadence.com, sjakhade@cadence.com, rogerq@ti.com,
-        jsarha@ti.com
-Subject: Re: [PATCH 1/3] dt-bindings: phy: Add PHY_TYPE_DP definition
-Message-ID: <20191219190428.GA16167@bogus>
-References: <cover.1575906694.git.jsarha@ti.com>
- <89dfcd484bad19cb954ee4f74305d1aa172ea292.1575906694.git.jsarha@ti.com>
+        Thu, 19 Dec 2019 14:04:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39840 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729404AbfLSSq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:46:59 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 629FC24679;
+        Thu, 19 Dec 2019 18:46:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576781218;
+        bh=t4gPPwpKYB+p3CGg1LOOHBYsxOHEph6hE6VO8OEGwRU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=z0yyoTB/vbueu6F4GonsIw1gLjRc54csR3oCqekKen2lTFtLuioxlmlfem8m42BG/
+         xR6lImaa5ndB5u7zX4cccrjq1WfR+EF7hMdU2d7eCQqlIvob9RRCvQbA+2CI8PwE4m
+         37otWqsuzIv/YbKjTEI/BjIT+153KZ7osdzMM9i4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Matti Aaltonen <matti.j.aaltonen@nokia.com>,
+        Johan Hovold <johan@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: [PATCH 4.9 132/199] media: radio: wl1273: fix interrupt masking on release
+Date:   Thu, 19 Dec 2019 19:33:34 +0100
+Message-Id: <20191219183222.368499968@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
+References: <20191219183214.629503389@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <89dfcd484bad19cb954ee4f74305d1aa172ea292.1575906694.git.jsarha@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 9 Dec 2019 18:21:09 +0200, Jyri Sarha wrote:
-> Add definition for DisplayPort phy type.
-> 
-> Signed-off-by: Jyri Sarha <jsarha@ti.com>
-> Reviewed-by: Roger Quadros <rogerq@ti.com>
-> Reviewed-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  include/dt-bindings/phy/phy.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
+From: Johan Hovold <johan@kernel.org>
 
-Acked-by: Rob Herring <robh@kernel.org>
+commit 1091eb830627625dcf79958d99353c2391f41708 upstream.
+
+If a process is interrupted while accessing the radio device and the
+core lock is contended, release() could return early and fail to update
+the interrupt mask.
+
+Note that the return value of the v4l2 release file operation is
+ignored.
+
+Fixes: 87d1a50ce451 ("[media] V4L2: WL1273 FM Radio: TI WL1273 FM radio driver")
+Cc: stable <stable@vger.kernel.org>     # 2.6.38
+Cc: Matti Aaltonen <matti.j.aaltonen@nokia.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/media/radio/radio-wl1273.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+--- a/drivers/media/radio/radio-wl1273.c
++++ b/drivers/media/radio/radio-wl1273.c
+@@ -1149,8 +1149,7 @@ static int wl1273_fm_fops_release(struct
+ 	if (radio->rds_users > 0) {
+ 		radio->rds_users--;
+ 		if (radio->rds_users == 0) {
+-			if (mutex_lock_interruptible(&core->lock))
+-				return -EINTR;
++			mutex_lock(&core->lock);
+ 
+ 			radio->irq_flags &= ~WL1273_RDS_EVENT;
+ 
+
+
