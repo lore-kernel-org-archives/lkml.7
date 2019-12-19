@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CECBCC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C38C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98D87206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:56:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C0E6206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781780;
-	bh=ZbF9qzPSlqMpc1jdHpqItSS2h2jKECcFT8NG6HGE4zw=;
+	s=default; t=1576781785;
+	bh=BahGp/WcvJzSgRLqgRvYNiiQbWUBKF2w/g8tzngIBnw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nuHl9m/DryjdXX7mWVoDIil+7P5QLkTR3ZBZD4AH0Qe55DP3Xt4qKkJu6nrN2iiNf
-	 6kGrV7/D45X2dNHvU083iB1JvpjcUSTWCGNKZG4R1AF7wSAzq37161R43fSfsj9x6j
-	 wLVHSaP2RLoOmxTGC1MlJyCosbKgO9KHGrPMyDpk=
+	b=CltFanmUIHKWRfwmAJ8hyo0cLZs4pZ6+gqeKVlAxJKfNi6Q6eFnSSPy+nWIwEzETx
+	 rNsKKvPaW7VXtzU3CklKYNRe19jqaeqZ8M/AZ39ROtzfUbt5zzV8LDry/y+oSGjsE3
+	 vCfVDZJ5cHlTlpTEslpLYeKBpqt7LZ2fnmAYe3mA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730798AbfLSS4T (ORCPT
+        id S1730807AbfLSS4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:56:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52716 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:56:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730788AbfLSS4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:56:14 -0500
+        id S1730791AbfLSS4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:56:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99658222C2;
-        Thu, 19 Dec 2019 18:56:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FAE9206EC;
+        Thu, 19 Dec 2019 18:56:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781774;
-        bh=ZbF9qzPSlqMpc1jdHpqItSS2h2jKECcFT8NG6HGE4zw=;
+        s=default; t=1576781776;
+        bh=BahGp/WcvJzSgRLqgRvYNiiQbWUBKF2w/g8tzngIBnw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hXcdTeOCa26tqRBFMf8UsIwkSjIg6ilPbRwtTUCBwpD4dL02d3c3zkERLiHGeI/oV
-         z7PAgUt9WTMiTx3Ul1//07ph3sij9plYTlShpD4aFvBT+8FaFup1Ei4AClget9fUM5
-         SJnAKPWEUc+U4MRhJJxC7FXnqv2m1SdWo5Z8srLE=
+        b=NdFRQq3L+VZRXlbVAM++tUdiftVhk56eb4Ci1+FKYSLeI3OBEyXAN2Lwefmek0VvN
+         3bmh+AZzmj1dySJpzE0/Lgd4hBGHhBKCuQsUFaVxNcIUEsBHr5SdzlH5sHE65D8NJy
+         sgEezNPB4Y3gMyADgkecXivJTE2Y1LrqXg4GW1rE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.4 73/80] drm/amd/display: add default clocks if not able to fetch them
-Date:   Thu, 19 Dec 2019 19:35:05 +0100
-Message-Id: <20191219183143.575586568@linuxfoundation.org>
+        stable@vger.kernel.org, Frank Sorenson <sorenson@redhat.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 5.4 37/80] CIFS: Fix NULL pointer dereference in mid callback
+Date:   Thu, 19 Dec 2019 19:34:29 +0100
+Message-Id: <20191219183107.612439697@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -60,35 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Pavel Shilovsky <pshilov@microsoft.com>
 
-commit 946621691f9919c263b4679b77f81f06019d3636 upstream.
+commit 86a7964be7afaf3df6b64faaa10a7032d2444e51 upstream.
 
-dm_pp_get_clock_levels_by_type needs to add the default clocks
-to the powerplay case as well.  This was accidently dropped.
+There is a race between a system call processing thread
+and the demultiplex thread when mid->resp_buf becomes NULL
+and later is being accessed to get credits. It happens when
+the 1st thread wakes up before a mid callback is called in
+the 2nd one but the mid state has already been set to
+MID_RESPONSE_RECEIVED. This causes NULL pointer dereference
+in mid callback.
 
-Fixes: b3ea88fef321de ("drm/amd/powerplay: add get_clock_by_type interface for display")
-Bug: https://gitlab.freedesktop.org/drm/amd/issues/906
-Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Fix this by saving credits from the response before we
+update the mid state and then use this value in the mid
+callback rather then accessing a response buffer.
+
+Cc: Stable <stable@vger.kernel.org>
+Fixes: ee258d79159afed5 ("CIFS: Move credit processing to mid callbacks for SMB3")
+Tested-by: Frank Sorenson <sorenson@redhat.com>
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/cifs/cifsglob.h |    1 +
+ fs/cifs/connect.c  |   15 +++++++++++++++
+ fs/cifs/smb2ops.c  |    8 +-------
+ 3 files changed, 17 insertions(+), 7 deletions(-)
 
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
-@@ -342,7 +342,8 @@ bool dm_pp_get_clock_levels_by_type(
- 	if (adev->powerplay.pp_funcs && adev->powerplay.pp_funcs->get_clock_by_type) {
- 		if (adev->powerplay.pp_funcs->get_clock_by_type(pp_handle,
- 			dc_to_pp_clock_type(clk_type), &pp_clks)) {
--		/* Error in pplib. Provide default values. */
-+			/* Error in pplib. Provide default values. */
-+			get_default_clock_levels(clk_type, dc_clks);
- 			return true;
- 		}
- 	} else if (adev->smu.funcs && adev->smu.funcs->get_clock_by_type) {
+--- a/fs/cifs/cifsglob.h
++++ b/fs/cifs/cifsglob.h
+@@ -1524,6 +1524,7 @@ struct mid_q_entry {
+ 	struct TCP_Server_Info *server;	/* server corresponding to this mid */
+ 	__u64 mid;		/* multiplex id */
+ 	__u16 credits;		/* number of credits consumed by this mid */
++	__u16 credits_received;	/* number of credits from the response */
+ 	__u32 pid;		/* process id */
+ 	__u32 sequence_number;  /* for CIFS signing */
+ 	unsigned long when_alloc;  /* when mid was created */
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -905,6 +905,20 @@ dequeue_mid(struct mid_q_entry *mid, boo
+ 	spin_unlock(&GlobalMid_Lock);
+ }
+ 
++static unsigned int
++smb2_get_credits_from_hdr(char *buffer, struct TCP_Server_Info *server)
++{
++	struct smb2_sync_hdr *shdr = (struct smb2_sync_hdr *)buffer;
++
++	/*
++	 * SMB1 does not use credits.
++	 */
++	if (server->vals->header_preamble_size)
++		return 0;
++
++	return le16_to_cpu(shdr->CreditRequest);
++}
++
+ static void
+ handle_mid(struct mid_q_entry *mid, struct TCP_Server_Info *server,
+ 	   char *buf, int malformed)
+@@ -912,6 +926,7 @@ handle_mid(struct mid_q_entry *mid, stru
+ 	if (server->ops->check_trans2 &&
+ 	    server->ops->check_trans2(mid, server, buf, malformed))
+ 		return;
++	mid->credits_received = smb2_get_credits_from_hdr(buf, server);
+ 	mid->resp_buf = buf;
+ 	mid->large_buf = server->large_buf;
+ 	/* Was previous buf put in mpx struct for multi-rsp? */
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -151,13 +151,7 @@ smb2_get_credits_field(struct TCP_Server
+ static unsigned int
+ smb2_get_credits(struct mid_q_entry *mid)
+ {
+-	struct smb2_sync_hdr *shdr = (struct smb2_sync_hdr *)mid->resp_buf;
+-
+-	if (mid->mid_state == MID_RESPONSE_RECEIVED
+-	    || mid->mid_state == MID_RESPONSE_MALFORMED)
+-		return le16_to_cpu(shdr->CreditRequest);
+-
+-	return 0;
++	return mid->credits_received;
+ }
+ 
+ static int
 
 
