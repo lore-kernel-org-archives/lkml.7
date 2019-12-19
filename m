@@ -2,76 +2,116 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 574F3C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 04:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DCAC2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 04:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 334592082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 04:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35ADA2465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 04:46:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b2kXwGjF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfLSEbn (ORCPT
+        id S1726930AbfLSEqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 23:31:43 -0500
-Received: from sender4-op-o11.zoho.com ([136.143.188.11]:17172 "EHLO
-        sender4-op-o11.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726794AbfLSEbn (ORCPT
+        Wed, 18 Dec 2019 23:46:52 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41908 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbfLSEqw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 23:31:43 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1576729890; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=UyDCt+TvGViy7M6vv40aTV3DcycbcgMO2OWiTSG7NUeiehLJv9/JSAa5S1i40OK55uq2f/TsPjOVashtWPHxXdGQ0pztDaG3G84LharH21Cs1JbcT0vrWcZ2A3EO52cWlfp16OUl9WiJdZpqs7NkVAHH0yOno9KeDBLomEA9pvI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1576729890; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=QhLda09z8A4MXJoGFxR1p93Bzx5xIlPXXi0mEtq581o=; 
-        b=VvgYcZ9Ysy57NfRSLXhp44RHpDCdmm0X8XfU0xHoAK8FYI+0Coj6GEHY24+WESTt8p3FjMF8eYFCvMe4JJ/+GCOto/3jfmDw1tZnGa+vv2qhMXQZCnCxzK0A///PxTaDnJOPY2W/H/d4MN8b8804HbqkDMjvkJNDG7MKEMGClE4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=dlrobertson.com;
-        spf=pass  smtp.mailfrom=dan@dlrobertson.com;
-        dmarc=pass header.from=<dan@dlrobertson.com> header.from=<dan@dlrobertson.com>
-Received: from nessie (pool-173-73-58-202.washdc.fios.verizon.net [173.73.58.202]) by mx.zohomail.com
-        with SMTPS id 1576729888928382.37734837613027; Wed, 18 Dec 2019 20:31:28 -0800 (PST)
-Date:   Thu, 19 Dec 2019 04:15:58 +0000
-From:   Dan Robertson <dan@dlrobertson.com>
-To:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Joe Perches <joe@perches.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v7 2/3] iio: (bma400) add driver for the BMA400
-Message-ID: <20191219041558.GA23704@nessie>
-References: <20191219041039.23396-1-dan@dlrobertson.com>
- <20191219041039.23396-3-dan@dlrobertson.com>
+        Wed, 18 Dec 2019 23:46:52 -0500
+Received: by mail-wr1-f68.google.com with SMTP id c9so4561249wrw.8;
+        Wed, 18 Dec 2019 20:46:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RewqfyyXUZkV87uK4kzXKpumYayj1KfeiY2XdrXVvEk=;
+        b=b2kXwGjF/KZC5BAJK9E3w3S4vTSW8QqbTmD28QRCHDLL6jJjM5W9g1pAx2tJqGqhRR
+         i0DCFfZEOsPIGP2LFB0q8y6qo5i6+OH5O797VULZS7zQR2QSMMnHAnhUtMFgeSNJEkFu
+         Mm6ZJsSy+oAO9LnFYbVyIDaY64+C5XCApp1Pqn+jf11v2EMM6CMkWIWqoGome5bX8pml
+         lV9N84SDRP7/XgQP3ZaBxaDKkl9HYNwbeLEVm0P+JyVnGnXjj0R6rtTGk3gJ3S+CGOoR
+         i52HLQEPX8Tqq82QniHc9BejR2N0pV94jMk3qnZt0wckij2a3r6y7g7TAdEChSWKzrHY
+         MyzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RewqfyyXUZkV87uK4kzXKpumYayj1KfeiY2XdrXVvEk=;
+        b=bO0mgmjhaFjuF53oH1LhTtupvi4izfNRSIWvFNZdJD/6kYpx9G7klwDdODOnEJceRE
+         5IMvqJ52TtczEeKQ8hycfDft/tL/SJmjpb4VdYBkIGJZ7nphpP53n8LJmj0sasVX3/Qz
+         KY+bVNaGPd0TRUhm5f7AapWHvMhp8YUPsmWTQ94vQ14cx70Yq5FLn+OBHRIdvwnyYOm/
+         vUa0ZLBoHWZQsuYKYmucWaZ/JtppZluUQhHwFJ0qR6ncnPa8lEKzkFtKusJW2Y4g2Vwo
+         m3RVRKn8ls1HICepZx2038hvFS1XrkDMU2z2jfONnizpEd1wG2yPDNSYBsmT54O0feFa
+         WQsA==
+X-Gm-Message-State: APjAAAXo9g5QHvaopQ5iSFq3MQStQwcC4JDYWsKCbxNSjG5BlxdyjkE8
+        S+brsjrbPwYhbX2IOJ8EqprFgPCQuJEpjvZKNBcAEQ==
+X-Google-Smtp-Source: APXvYqyCxuxeVFw1b72FQxFm4sMDuoygQtpMel373KN75/FGpF7gKkbQCxJa2BmXRzAOoSqBKxXUIOnvzpMfdZHbfuU=
+X-Received: by 2002:a5d:4692:: with SMTP id u18mr3557822wrq.206.1576730809795;
+ Wed, 18 Dec 2019 20:46:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191219041039.23396-3-dan@dlrobertson.com>
-X-ZohoMailClient: External
+References: <20191219082557.16092126@canb.auug.org.au> <BYAPR12MB2806A8EBBB8B6F9AE29FBC00F1520@BYAPR12MB2806.namprd12.prod.outlook.com>
+In-Reply-To: <BYAPR12MB2806A8EBBB8B6F9AE29FBC00F1520@BYAPR12MB2806.namprd12.prod.outlook.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Wed, 18 Dec 2019 23:46:38 -0500
+Message-ID: <CADnq5_PTLEXHd3U8fkKVcckFjCDN_p3n9PoQWwLkzRODqDd71A@mail.gmail.com>
+Subject: Re: linux-next: Fixes tag needs some work in the amdgpu tree
+To:     "Chen, Guchun" <Guchun.Chen@amd.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 04:10:38AM +0000, Dan Robertson wrote:
-> ...
->  
-> +BOSCH SENSORTEC BMA400 ACCELEROMETER IIO DRIVER
-> +M:	Dan Robertson <dan@dlrobertson.com>
-> +L:	linux-iio@vger.kernel.org
-> +S:	Supported
-> +F:	drivers/iio/accel/bma400*
-> +F:	Documentation/devicetree/bindings/iio/accel/bosch,bma400.yaml
-> +
+On Wed, Dec 18, 2019 at 8:22 PM Chen, Guchun <Guchun.Chen@amd.com> wrote:
+>
+> [AMD Official Use Only - Internal Distribution Only]
+>
+> Hi Stephen,
+>
+> Sorry for the inconvenience. How I can fix this?
+>
 
-I mixed up the Status tag. This should be S: Maintained. Will fix in v8.
+Already fixed.
 
-Cheers,
+Alex
 
- - Dan
-
+> Regards,
+> Guchun
+>
+> -----Original Message-----
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Sent: Thursday, December 19, 2019 5:26 AM
+> To: Alex Deucher <alexdeucher@gmail.com>
+> Cc: Linux Next Mailing List <linux-next@vger.kernel.org>; Linux Kernel Mailing List <linux-kernel@vger.kernel.org>; Chen, Guchun <Guchun.Chen@amd.com>
+> Subject: linux-next: Fixes tag needs some work in the amdgpu tree
+>
+> Hi all,
+>
+> In commit
+>
+>   caa01659028a ("drm/amdgpu: move umc offset to one new header file for Arcturus")
+>
+> Fixes tag
+>
+>   Fixes: 9686563c4c42 drm/amdgpu: Added RAS UMC error query support for Arcturus
+>
+> has these problem(s):
+>
+>   - Target SHA1 does not exist
+>
+> Did you mean
+>
+> Fixes: 4cf781c24c3b ("drm/amdgpu: Added RAS UMC error query support for Arcturus")
+>
+> Also, please keep all the tags together at the end of the commit message.
+>
+> --
+> Cheers,
+> Stephen Rothwell
