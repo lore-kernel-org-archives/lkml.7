@@ -2,131 +2,79 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 902F8C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A85AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67631206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:31:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JvT9zp0E"
+	by mail.kernel.org (Postfix) with ESMTP id 6A644222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:31:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbfLSPbP (ORCPT
+        id S1727002AbfLSPbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 19 Dec 2019 10:31:17 -0500
+Received: from relay.sw.ru ([185.231.240.75]:56494 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726760AbfLSPbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Dec 2019 10:31:15 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:45245 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbfLSPbP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 10:31:15 -0500
-Received: by mail-il1-f193.google.com with SMTP id p8so5183246iln.12;
-        Thu, 19 Dec 2019 07:31:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DVVdjtKv58x1Uc55az3ApF8gHKz/ZX1W12cqDT6rODs=;
-        b=JvT9zp0EpA5eXF3hdg5MJ34MDzA+56QpVQBg2UKGdtLFpGPxwriFh2JNeb5+8GCUUR
-         3FVZmZYkoygMpEeVdWhi+LE5dH6aPhNfKjJiY7Ff48bUcuLSCYO7QA5CEItHQ9dNkhCa
-         iZfQiR9+gKBigCx3Lllt5e07K7eHwUm1mVswmm8osg75KEQU7ptlwDA8b7RxcFh14OYD
-         PjyWrLlMmI0Gcz0dbMBMk5AFiBnFhIokefAuuaiDe5kjeuc6f8nb8TTQW/PGGMPJfPo4
-         8jrLLZQ0eY+xcDrCFidMz7XSIDV95ytpBSwO9pAltXnBOlp7Hv+aGzF62gSGaRgSi9oM
-         0EQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DVVdjtKv58x1Uc55az3ApF8gHKz/ZX1W12cqDT6rODs=;
-        b=iCjC96KGf51HJM5X8vqi4xgPT5cEQFvgWqxrBLtcXXs5fHDKJGP8SlOkvRtvfsdYHr
-         h5aOuZ66lMm3SFezuuGCWlOtJlezaWzKWG/upFO3AjV7yvCMwhp8jCHMyuxDdpOP3fFF
-         HgA78KrqKQjly7jnstjlXOn/nvTmFa4Th36DL7ERnFDqnFqiiRYzfP8wG+FD2UEsgPtJ
-         WfsGvc1IK6AeQu5Od+IoXaBgBwuSge7lDR7Zc47rFpnNLj9gbJ0x3KO4bt16TRQ6dPJH
-         bVPbf1ZCQKr69p3zArfaGKnxjUnZZM4M1kGRB+O7tkCy8lJ5ZVzA4x4mEKg2sfspRhh7
-         BXig==
-X-Gm-Message-State: APjAAAXnyHY3UFo9thJjrrDZdb36BNZLhXryMXgYCBbsuPCVAZqnqQyz
-        OohfnhJcWFwoxVEeFzFup10aSEw8Xwe48ONR/U8=
-X-Google-Smtp-Source: APXvYqxu56w/oZweN1AJFZaIqxBT7mc8D28YjI4wjWxWnEhn6CrcFRtowiwHA4gjbAu7VV8Nywl4FO9TWrdap2lBJv8=
-X-Received: by 2002:a92:465c:: with SMTP id t89mr7929451ila.263.1576769474440;
- Thu, 19 Dec 2019 07:31:14 -0800 (PST)
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1ihxlV-00078I-67; Thu, 19 Dec 2019 18:31:01 +0300
+Subject: Re: [Q] ld: Does LTO reorder ro variables in two files?
+To:     law@redhat.com, Peter Zijlstra <peterz@infradead.org>,
+        gcc-help@gcc.gnu.org
+Cc:     mingo@redhat.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org
+References: <157675913272.349305.8936736338884044103.stgit@localhost.localdomain>
+ <20191219131242.GK2827@hirez.programming.kicks-ass.net>
+ <3db1b1c8-0228-56e4-a04f-e8d24cd1dd51@virtuozzo.com>
+ <db7acdee9a85ce5b74332b3869efa6c9e18bad9e.camel@redhat.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <15d40d09-3258-9b78-7120-bc708a429855@virtuozzo.com>
+Date:   Thu, 19 Dec 2019 18:30:56 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191219150433.2785427-1-vkoul@kernel.org> <20191219150433.2785427-4-vkoul@kernel.org>
-In-Reply-To: <20191219150433.2785427-4-vkoul@kernel.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Thu, 19 Dec 2019 08:31:03 -0700
-Message-ID: <CAOCk7NqUdxCMnK0ZsjN1u7RfaW=z3ZHpsZ8Vk7+JKpsrjBPJJw@mail.gmail.com>
-Subject: Re: [PATCH 3/4] phy: qcom-qmp: Add optional SW reset
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, Can Guo <cang@codeaurora.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <db7acdee9a85ce5b74332b3869efa6c9e18bad9e.camel@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 8:05 AM Vinod Koul <vkoul@kernel.org> wrote:
->
-> For V4 QMP UFS Phy, we need to assert reset bits, configure the phy and
-> then deassert it, so add optional has_sw_reset flag and use that to
-> configure the QPHY_SW_RESET register.
->
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+On 19.12.2019 18:21, Jeff Law wrote:
+> On Thu, 2019-12-19 at 17:04 +0300, Kirill Tkhai wrote:
+>> CC: gcc-help@gcc.gnu.org
+>>
+>> Hi, gcc guys,
+>>
+>> this thread starts here: https://lkml.org/lkml/2019/12/19/403
+>>
+>> There are two const variables:
+>>
+>>    struct sched_class idle_sched_class
+>> and
+>>    struct sched_class fair_sched_class,
+>>
+>> which are declared in two files idle.c and fair.c.
+>>
+>> 1)In Makefile the order is: idle.o fair.o
+>> 2)the variables go to the same ro section
+>> 3)there is no SORT(.*) keyword in linker script.
+>>
+>> Is it always true, that after linkage &idle_sched_class < &fair_sched_class?
+> I certainly wouldn't depend on it.   The first and most obvious problem
+> is symbol sorting by the linker.  Longer term I'd be worried about LTO
+> reordering things.
+> 
+> In the end I'm pretty sure it'd be well outside what I'd be comfortable
+> depending on.
 
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-
-> ---
->  drivers/phy/qualcomm/phy-qcom-qmp.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> index 06f971ca518e..80304b7cd895 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> @@ -1023,6 +1023,9 @@ struct qmp_phy_cfg {
->
->         /* true, if PCS block has no separate SW_RESET register */
->         bool no_pcs_sw_reset;
-> +
-> +       /* true if sw reset needs to be invoked */
-> +       bool has_sw_reset;
->  };
->
->  /**
-> @@ -1391,6 +1394,7 @@ static const struct qmp_phy_cfg sm8150_ufsphy_cfg = {
->
->         .is_dual_lane_phy       = true,
->         .no_pcs_sw_reset        = true,
-> +       .has_sw_reset           = true,
->  };
->
->  static void qcom_qmp_phy_configure(void __iomem *base,
-> @@ -1475,6 +1479,9 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
->                              SW_USB3PHY_RESET_MUX | SW_USB3PHY_RESET);
->         }
->
-> +       if (cfg->has_sw_reset)
-> +               qphy_setbits(serdes, cfg->regs[QPHY_SW_RESET], SW_RESET);
-> +
->         if (cfg->has_phy_com_ctrl)
->                 qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
->                              SW_PWRDN);
-> @@ -1651,6 +1658,9 @@ static int qcom_qmp_phy_enable(struct phy *phy)
->         if (cfg->has_phy_dp_com_ctrl)
->                 qphy_clrbits(dp_com, QPHY_V3_DP_COM_SW_RESET, SW_RESET);
->
-> +       if (cfg->has_sw_reset)
-> +               qphy_clrbits(pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
-> +
->         /* start SerDes and Phy-Coding-Sublayer */
->         qphy_setbits(pcs, cfg->regs[QPHY_START_CTRL], cfg->start_ctrl);
->
-> --
-> 2.23.0
->
+Ok, I'd be comfortable too :) Thanks for the clarification, Jeff.
