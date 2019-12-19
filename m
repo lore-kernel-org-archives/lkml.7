@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F09FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F654C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2435224679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1475B24679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:15:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="SWPQN6U5"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="bQmZEgC+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbfLSRPn (ORCPT
+        id S1727102AbfLSRPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 12:15:43 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40098 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726971AbfLSRPj (ORCPT
+        Thu, 19 Dec 2019 12:15:46 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52888 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727029AbfLSRPn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 12:15:39 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t14so6432148wmi.5
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 09:15:39 -0800 (PST)
+        Thu, 19 Dec 2019 12:15:43 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p9so6238169wmc.2
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 09:15:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XhiSom0iVO5AHRS5ZUjMyBcC2AAQ3b6I6WYo2HMzPrk=;
-        b=SWPQN6U52q64ZPmqFofySJ402F+H0ckaDHl99RXhe/e2LryuutBlW6t+dABXiDAhFe
-         QJPJx/w5IjIIhfP2oEGkB//h2+TWYEcLNBOcOUOU4Jz12ml54NanVvwcsNHLXITUzMSP
-         m049gzgohL4S579+RX136l3jd/9UwjBewrdlLOn/o+KbFwasTlukpH8xERZoXQPcuQ6+
-         +TU7TF53TVQ03wpSSJf08n0PkvV1p9/qUOddg4uvymTXTKis3AD256c5VBlKFD63KmHS
-         d8Qnhh5rWpQmmbT5rzyFfi4tC2eYLR5PbIosb+0q3JzVknLsdcU8WE9KlqxhhfWFkU0E
-         Pe5w==
+        bh=95Vj6BCj4He2jTRmy6pbRhSQcUrTJuyZcD7xpHhCyRw=;
+        b=bQmZEgC+HJNTCZAgnsFcEGPlB/Le6fAJuzEwDRF9QjXihH2f13xdRuCkGTdJGYRPE6
+         ZpAmEJ/VqDXobWYGUrfiJuR7DWTrX8RQ76QG+5uemZEHGLeT9VHlEiapqYJFFDxgp49n
+         RlgcE4N9ICvr8mt36oHhcQ6RcP7sVL+y8XGOB5KvwwRpaPRC6ovaNmx3ExbSDL/z43Gs
+         zp9XFVDRkimWHsurLky6fYG/lQTala6wTca83xAbbAe2BAjxX0s3cUDTWGqeSiEEB0Wv
+         fCJk39i2UMATx8p07LuL4NHP1BWwsamutqFcs59gop0KYcBx2jqWVMjOPQXtuWF46usp
+         0E6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XhiSom0iVO5AHRS5ZUjMyBcC2AAQ3b6I6WYo2HMzPrk=;
-        b=oY1NS7CiLa3LWlD47Ag/tEherw/MJJDlCs9ZFiWzBHCz8cLTZcExFJeclkcxOipSBs
-         GgxdCz6dtaQMXvp8Qms33hm96BMVsT/YV/JinT+gtUYdpxhIzKeLjUNiZLHgAnrQLIh3
-         Zat+G2RLNet7y8M+3o4PHdxBlz/uEW4cpIl2x3qmRJGb8ahm+YNat6fI4lHrCd6Fmalc
-         mJICQHmkmZnEWvQ35cwn3M2Lic0mIFV2bjqUL0JEpGROKGglptaSECWB3+2OF1H3eYDn
-         2SrkqvqgxdM11Lrp/I83BM+aHvRApQPd5Rx0awaUNVvdwbd2W99Kt/DojTGEgbL9VQpe
-         fVgw==
-X-Gm-Message-State: APjAAAX7wMnFwfM53/EKG0KnNjCtsXt8sb3Xl21Z+BSisL5VhYEBXiu3
-        VJGtoIInAObaGl8JCXNb6tMoYQ==
-X-Google-Smtp-Source: APXvYqwE6tJDR5YKpKGyKSmR7DJqhpeUc9tFwjGGXDRfmjIokbxHVco+zkNTNvsbYfDHAgfdyiDTwA==
-X-Received: by 2002:a05:600c:2218:: with SMTP id z24mr11302607wml.50.1576775738540;
-        Thu, 19 Dec 2019 09:15:38 -0800 (PST)
+        bh=95Vj6BCj4He2jTRmy6pbRhSQcUrTJuyZcD7xpHhCyRw=;
+        b=AuxnMdvXQXK3yWOLneFfPw0T+8MqMOxHH+0YIWHSIjab38Z9oMzJHQyKJ6XufMIa/g
+         Kwxhc7LL2IGT8Xgd6/mvzAV8xx8lsFdYFE7WWEQ27lCh+X8FkJSbIreGb1u4DBFNZvlQ
+         7JWHudw5iKL3GDzuUxowQ9QbSQ72gWfExFgOcKXIntkA7fvIw6HtWwmb7SOW678Y5jDq
+         YRwcVCgDk1WKHCKlCvJdA8O7Slvrdb9+BC7serMkjjKwLxOU8GguQlJoaN5xKmpMNbRb
+         pph3m9Irfat2pbet7TDfKZX1XuPtZBXeyL7khXnJsn12cMQRDZYdrs5RxfREgJTkFAZ6
+         iqNQ==
+X-Gm-Message-State: APjAAAVpIu0J47pUPnWK8I8hHHm3KSIfRg+cj8JZLjDVEmUm0/cXlmGE
+        JaQ+qZDanz01DkzDc3u0LWDMwA==
+X-Google-Smtp-Source: APXvYqxm0zvCVaIjH2Ioute5ihjTo1ftEw4hS33yLMQ+MkcoURrq1G3nOVBcP+SznGiIzIGVk5lvyg==
+X-Received: by 2002:a05:600c:290f:: with SMTP id i15mr11517982wmd.115.1576775742039;
+        Thu, 19 Dec 2019 09:15:42 -0800 (PST)
 Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id q6sm7401428wrx.72.2019.12.19.09.15.37
+        by smtp.gmail.com with ESMTPSA id q6sm7401428wrx.72.2019.12.19.09.15.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 09:15:38 -0800 (PST)
+        Thu, 19 Dec 2019 09:15:41 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -64,9 +64,9 @@ To:     Kent Gibson <warthog618@gmail.com>,
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v3 03/13] gpiolib: convert the type of hwnum to unsigned int in gpiochip_get_desc()
-Date:   Thu, 19 Dec 2019 18:15:18 +0100
-Message-Id: <20191219171528.6348-4-brgl@bgdev.pl>
+Subject: [PATCH v3 06/13] gpiolib: use gpiochip_get_desc() in gpio_ioctl()
+Date:   Thu, 19 Dec 2019 18:15:21 +0100
+Message-Id: <20191219171528.6348-7-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191219171528.6348-1-brgl@bgdev.pl>
 References: <20191219171528.6348-1-brgl@bgdev.pl>
@@ -79,74 +79,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-gpiochip_get_desc() takes a u16 hwnum, but it turns out most users don't
-respect that and usually pass an unsigned int. Since implicit casting to
-a smaller type is dangerous - let's change the type of hwnum to unsigned
-int in gpiochip_get_desc() and in gpiochip_request_own_desc() where the
-size of hwnum is not respected either and who's a user of the former.
-
-This is safe as we then check the hwnum against the number of lines
-before proceeding in gpiochip_get_desc().
+Unduplicate the offset check by simply calling gpiochip_get_desc() and
+checking its return value.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/gpio/gpiolib.c      | 5 +++--
- drivers/gpio/gpiolib.h      | 3 ++-
- include/linux/gpio/driver.h | 3 ++-
- 3 files changed, 7 insertions(+), 4 deletions(-)
+ drivers/gpio/gpiolib.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 72211407469f..b3ffb079e323 100644
+index 17796437d7be..b7043946c029 100644
 --- a/drivers/gpio/gpiolib.c
 +++ b/drivers/gpio/gpiolib.c
-@@ -140,7 +140,7 @@ EXPORT_SYMBOL_GPL(gpio_to_desc);
-  * in the given chip for the specified hardware number.
-  */
- struct gpio_desc *gpiochip_get_desc(struct gpio_chip *chip,
--				    u16 hwnum)
-+				    unsigned int hwnum)
- {
- 	struct gpio_device *gdev = chip->gpiodev;
+@@ -1175,10 +1175,11 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
  
-@@ -2990,7 +2990,8 @@ EXPORT_SYMBOL_GPL(gpiochip_is_requested);
-  * A pointer to the GPIO descriptor, or an ERR_PTR()-encoded negative error
-  * code on failure.
-  */
--struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *chip, u16 hwnum,
-+struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *chip,
-+					    unsigned int hwnum,
- 					    const char *label,
- 					    enum gpio_lookup_flags lflags,
- 					    enum gpiod_flags dflags)
-diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index ca9bc1e4803c..a1cbeabadc69 100644
---- a/drivers/gpio/gpiolib.h
-+++ b/drivers/gpio/gpiolib.h
-@@ -78,7 +78,8 @@ struct gpio_array {
- 	unsigned long		invert_mask[];
- };
+ 		if (copy_from_user(&lineinfo, ip, sizeof(lineinfo)))
+ 			return -EFAULT;
+-		if (lineinfo.line_offset >= gdev->ngpio)
+-			return -EINVAL;
  
--struct gpio_desc *gpiochip_get_desc(struct gpio_chip *chip, u16 hwnum);
-+struct gpio_desc *gpiochip_get_desc(struct gpio_chip *chip,
-+				    unsigned int hwnum);
- int gpiod_get_array_value_complex(bool raw, bool can_sleep,
- 				  unsigned int array_size,
- 				  struct gpio_desc **desc_array,
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index e2480ef94c55..4f032de10bae 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -715,7 +715,8 @@ gpiochip_remove_pin_ranges(struct gpio_chip *chip)
- 
- #endif /* CONFIG_PINCTRL */
- 
--struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *chip, u16 hwnum,
-+struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *chip,
-+					    unsigned int hwnum,
- 					    const char *label,
- 					    enum gpio_lookup_flags lflags,
- 					    enum gpiod_flags dflags);
+-		desc = &gdev->descs[lineinfo.line_offset];
++		desc = gpiochip_get_desc(chip, lineinfo.line_offset);
++		if (IS_ERR(desc))
++			return PTR_ERR(desc);
++
+ 		if (desc->name) {
+ 			strncpy(lineinfo.name, desc->name,
+ 				sizeof(lineinfo.name));
 -- 
 2.23.0
 
