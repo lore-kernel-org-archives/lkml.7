@@ -2,224 +2,137 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DC3C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E37FC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2871424672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:14:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576714452;
-	bh=FR2G/0jSqSDlqN/a0n8mSf4sGZYiy5OAKrUkXzJvh98=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GnqyYNS5x3xiYuoeJzpSKCcifgbQCrn88XIjQu1HaXtRNPIX5Ofci+qhx2jDaWELL
-	 iFB8629NZiFavBK3KEIaOGbRz1AwpBdasS32i+ghh2Vq+znbEo/PoFEfSQaYqZO1dT
-	 4LxJ8UKcBlfk3wQu7SIzrOWENf478pXqYmIW2kIw=
+	by mail.kernel.org (Postfix) with ESMTP id 2BAFC2176D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:14:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u1SOj+6Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbfLSAOL (ORCPT
+        id S1726722AbfLSAOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 19:14:11 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41055 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfLSAOL (ORCPT
+        Wed, 18 Dec 2019 19:14:21 -0500
+Received: from mail-pj1-f73.google.com ([209.85.216.73]:35354 "EHLO
+        mail-pj1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfLSAOV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 19:14:11 -0500
-Received: by mail-ot1-f66.google.com with SMTP id r27so4691161otc.8;
-        Wed, 18 Dec 2019 16:14:10 -0800 (PST)
+        Wed, 18 Dec 2019 19:14:21 -0500
+Received: by mail-pj1-f73.google.com with SMTP id l8so2174188pje.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 16:14:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=dtYJGhXvidGK6sDcgxIhyPPLb4WJNKOiIKfjLPl0mNY=;
+        b=u1SOj+6QXy3P3+I/a6pnKxQFl4cXlIVvppy9KcSbvMrci41+XkyOO9nhDVV3SfXH+2
+         F82sj9a0EAqRVy/qvV/wLyH5CIu0INQyIx4q83KGmNAlwdzBIV4Z8X+NcSGsdIfHDg68
+         WjGqWQz1Q+dF9AKR2seYRjCp1Rchj0kdKPTHJgYIGBrIaMWnUv9GIBG+eSn+CUEzxDkc
+         aiSFz8me8cD0M1Ryh5bAt/H8TjWG4UP+MNXhPuM/dU4SUCO/f7fgnBTgA8rCGV1HKtP6
+         XOOzJi6CIFzZYrZd45wAiSPQVOohNPBM8ejWrSuIafIgRilYXtQmF/Wiykx/2diSm+TH
+         fZ2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hkcbaA4/f4sNwpu+E7FWB3LQDsLo4/ub3EZsi/8F/q0=;
-        b=fQnpmOJihYpeo9SejO1lv8H9IUhBVOLwKRxIAIACqy+rSahQ6RS6Mr7iqakYZnfwbJ
-         5ypNPa71SbcCTDKrbIJN8RR3AHz++/YX8jT+jQSkbp/uXUMJndTUg3Vk9Z+rt+FiOy6m
-         KJV4BtECDB1cpQum1oGi/V7QHwFOOQ35xSFN7nwxwr5JQyc8mEytLaWhHe1fCkOpi20g
-         gdWHS8HCI/KACOyxCAtdfl4rYyKX7guTaq7ZC2GD2npMeIt9x2yiCW7SM2nmjpvpn67+
-         OVQ91bTgohuqtSHmpo0f2BuemBLbuu+0dJCHqDsVQMv4KAZ+KoC+kNFD38p/PMyij3Lb
-         4u5A==
-X-Gm-Message-State: APjAAAUffLRsl9RspeEjvSL7bzhjho9bij/nnpKQ7fWi8YCwz3AdtuCm
-        zOrbhYrj7j6OiEcITsMnqQ==
-X-Google-Smtp-Source: APXvYqx1gP3LaoAhtsvF8oP0EUuAl/b6xzjtOsHyXxSrhdHuHOS6hIDso3vLaExv3Alto/yaq5P6bw==
-X-Received: by 2002:a9d:ec1:: with SMTP id 59mr5300342otj.141.1576714450003;
-        Wed, 18 Dec 2019 16:14:10 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q1sm1494674otr.40.2019.12.18.16.14.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 16:14:09 -0800 (PST)
-Date:   Wed, 18 Dec 2019 18:14:08 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH 10/13] dt-bindings: PCI: Add EP mode dt-bindings for TI's
- J721E SoC
-Message-ID: <20191219001408.GA20303@bogus>
-References: <20191209092147.22901-1-kishon@ti.com>
- <20191209092147.22901-11-kishon@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191209092147.22901-11-kishon@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=dtYJGhXvidGK6sDcgxIhyPPLb4WJNKOiIKfjLPl0mNY=;
+        b=ll7XpSx0R8zUKQtAtTMTHLkxjBxqAo2xhca1uriG67+AKYSVjoJ4ZiPD0Wt6am6+Em
+         SYUc/osjTDs+N4fp2JgUKaE/vcL+/BoOSnv29um/oUperKP9TNrEdKOnYNjNciySvgOH
+         mIbif9W9i195eievh3DgDNZhMizVJLg6zeH1hBRTq4fK+tkW/6cU0nRIvBiqWs1cR6Ly
+         zAfpd4rzbSo7oV9tQ5G1PL+vezerHzj3KN24DKIUkHlknLhO9Fwtx9/49GQ5T15CtUAX
+         A6eylWWJ0Q1pFnL1G7zj5jHNRZcGTPa6VNU/a6si05X7GqKJ0iTZ7dtkYa9x8eL33a+z
+         aaPg==
+X-Gm-Message-State: APjAAAWU5XoqrQCFwgFdsH3rQPXF8xJD155CPgLrn2yUotc6AQU1yqxh
+        YnvJTm/wfqj8exH2SLLsHjooBFd57+aQ
+X-Google-Smtp-Source: APXvYqx5rnZyJOtyJD2Pdt6oOskd+lhDAHxj0O1q5IhECLwAirOICGf3R3TR8LXjPPAHvpZ7QzGyZj4fGksr
+X-Received: by 2002:a63:d848:: with SMTP id k8mr5011243pgj.114.1576714460207;
+ Wed, 18 Dec 2019 16:14:20 -0800 (PST)
+Date:   Wed, 18 Dec 2019 16:14:18 -0800
+In-Reply-To: <CABk29NvMS87uGnFRWoN3Ce0t+UQ--qnjRmQCPJCCEcSASs25uQ@mail.gmail.com>
+Message-Id: <20191219001418.234372-1-joshdon@google.com>
+Mime-Version: 1.0
+References: <CABk29NvMS87uGnFRWoN3Ce0t+UQ--qnjRmQCPJCCEcSASs25uQ@mail.gmail.com>
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+Subject: [PATCH v3] sched/fair: Do not set skip buddy up the sched hierarchy
+From:   Josh Don <joshdon@google.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org, Paul Turner <pjt@google.com>,
+        Josh Don <joshdon@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 02:51:44PM +0530, Kishon Vijay Abraham I wrote:
-> Add PCIe EP mode dt-bindings for TI's J721E SoC.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  .../bindings/pci/ti,j721e-pci-ep.yaml         | 113 ++++++++++++++++++
->  1 file changed, 113 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
-> new file mode 100644
-> index 000000000000..4e2af4733998
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
-> @@ -0,0 +1,113 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/pci/ti,j721e-pci-ep.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: TI J721E PCI EP (PCIe Wrapper)
-> +
-> +maintainers:
-> +  - Kishon Vijay Abraham I <kishon@ti.com>
-> +
-> +properties:
-> +  compatible:
-> +      enum:
-> +          - ti,j721e-pcie-ep
+From: Venkatesh Pallipadi <venki@google.com>
 
-Indentation.
+Setting the skip buddy up the hierarchy effectively means that a thread
+calling yield will also end up skipping the other tasks in its hierarchy
+as well. However, a yielding thread shouldn't end up causing this
+behavior on behalf of its entire hierarchy.
 
-> +
-> +  reg:
-> +    maxItems: 4
-> +
-> +  reg-names:
-> +    items:
-> +      - const: intd_cfg
-> +      - const: user_cfg
-> +      - const: reg
-> +      - const: mem
-> +
-> +  ti,syscon-pcie-ctrl:
-> +    description: Phandle to the SYSCON entry required for configuring PCIe mode
-> +                 and link speed.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +  max-link-speed:
-> +    minimum: 1
-> +    maximum: 3
-> +
-> +  num-lanes:
-> +    minimum: 1
-> +    maximum: 2
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description: clock-specifier to represent input to the PCIe
-> +
-> +  clock-names:
-> +    items:
-> +      - const: fck
-> +
-> +  cdns,max-outbound-regions:
-> +    description: As defined in
-> +                 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/int32
+For typical uses of yield, setting the skip buddy up the hierarchy is
+counter-productive, as that results in CPU being yielded to a task in
+some other cgroup.
 
-uint32
+So, limit the skip effect only to the task requesting it.
 
-> +      - enum: [16]
-> +
-> +  max-functions:
-> +    minimum: 1
-> +    maximum: 6
+Co-developed-by: Josh Don <joshdon@google.com>
+Signed-off-by: Josh Don <joshdon@google.com>
+---
+v2: Only clear skip buddy on the current cfs_rq
 
-Needs a type ref. Or a common definition.
+v3: Modify comment describing the justification for this change.
 
-> +
-> +  dma-coherent:
-> +    description: Indicates that the PCIe IP block can ensure the coherency
-> +
-> +  phys:
+ kernel/sched/fair.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-How many? Need to convert cdns,cdns-pcie-host.txt...
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 08a233e97a01..0056b57d52cb 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4051,13 +4051,10 @@ static void __clear_buddies_next(struct sched_entity *se)
+ 
+ static void __clear_buddies_skip(struct sched_entity *se)
+ {
+-	for_each_sched_entity(se) {
+-		struct cfs_rq *cfs_rq = cfs_rq_of(se);
+-		if (cfs_rq->skip != se)
+-			break;
++	struct cfs_rq *cfs_rq = cfs_rq_of(se);
+ 
++	if (cfs_rq->skip == se)
+ 		cfs_rq->skip = NULL;
+-	}
+ }
+ 
+ static void clear_buddies(struct cfs_rq *cfs_rq, struct sched_entity *se)
+@@ -6552,8 +6549,12 @@ static void set_next_buddy(struct sched_entity *se)
+ 
+ static void set_skip_buddy(struct sched_entity *se)
+ {
+-	for_each_sched_entity(se)
+-		cfs_rq_of(se)->skip = se;
++	/*
++	 * Only set the skip buddy for the task requesting it. Setting the skip
++	 * buddy up the hierarchy would result in skipping all other tasks in
++	 * the hierarchy as well.
++	 */
++	cfs_rq_of(se)->skip = se;
+ }
+ 
+ /*
+-- 
+2.24.1.735.g03f4e72817-goog
 
-> +    description: As defined in
-> +                 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-> +
-> +  phy-names:
-> +    description: As defined in
-> +                 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-
-For all the properties shared with host mode, it might make sense to 
-define a common schema with all those properties and then include it in 
-the host and endpoint schemas.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - ti,syscon-pcie-ctrl
-> +  - max-link-speed
-> +  - num-lanes
-> +  - power-domains
-> +  - clocks
-> +  - clock-names
-> +  - cdns,max-outbound-regions
-> +  - dma-coherent
-> +  - max-functions
-> +  - phys
-> +  - phy-names
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
-> +
-> +     pcie0_ep: pcie-ep@d000000 {
-> +            compatible = "ti,j721e-pcie-ep";
-> +            reg = <0x00 0x02900000 0x00 0x1000>,
-> +                  <0x00 0x02907000 0x00 0x400>,
-> +                  <0x00 0x0d000000 0x00 0x00800000>,
-> +                  <0x00 0x10000000 0x00 0x08000000>;
-> +            reg-names = "intd_cfg", "user_cfg", "reg", "mem";
-> +            ti,syscon-pcie-ctrl = <&pcie0_ctrl>;
-> +            max-link-speed = <3>;
-> +            num-lanes = <2>;
-> +            power-domains = <&k3_pds 239 TI_SCI_PD_EXCLUSIVE>;
-> +            clocks = <&k3_clks 239 1>;
-> +            clock-names = "fck";
-> +            cdns,max-outbound-regions = <16>;
-> +            max-functions = /bits/ 8 <6>;
-> +            dma-coherent;
-> +            phys = <&serdes0_pcie_link>;
-> +            phy-names = "pcie_phy";
-> +    };
-> -- 
-> 2.17.1
-> 
