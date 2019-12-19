@@ -2,103 +2,185 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E86FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F1CC2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2D18218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:57:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z+70zlfp"
+	by mail.kernel.org (Postfix) with ESMTP id 5748921D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:58:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576763916;
+	bh=JOfDuzbX5KhFQruw5/hk7NXJKA6KWbQ5U0uen+8uMe8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=iEqbBGEsqNpxXkAj7G8azCpeUCSL3cQTEXn2r2zxEY5n51euNuoQcRzDC4U6V4o5b
+	 2xyIMmlf9NMkCpZBFiV0TXon7ZGYRLuEeAY89unXf7IWFMydj09HnAJb9f4OLfiwaw
+	 jZsP0vU0mKLONYm67IeUmwXaXvbt4lnT3WRvJvIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbfLSN5e (ORCPT
+        id S1726879AbfLSN6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 08:57:34 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:33842 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726712AbfLSN5b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 08:57:31 -0500
-Received: by mail-yw1-f66.google.com with SMTP id b186so2188006ywc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 05:57:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1yn+mK/5xEg4fegs3phGOsQ7/Ct6TERF9p632E4MnVU=;
-        b=Z+70zlfpfDFUhG4zCZN0o7aK311Wb9wqmTfhJspMn390U/L7t8E4FJKmpey+FMMx+m
-         MTrrHYTduZesm6fol+ZJfFmbXUWIpqMnwaYzeIw4f74e8jT8uVqAV65Rga3P/rBzQz12
-         t3fhOs6j8YhRorlFhHq64M1oHtQQOHmkXE/UgtMGS/SQwbqOXSNKOW3/cr9q2XF8EoaT
-         S8zSoSXCT9OwRrk+rJUEubK+m3qxHSe5oZ1JUCTlhyjI8QrEfKD/sOXaX44xHEOlYR0P
-         QJU5pdTCLdk9Pu7p6orkgIjjgAjT/7ZDfZ4a49i0E9kzIhy8mQRWWEl8xV8Bzxfk+rQo
-         u7/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1yn+mK/5xEg4fegs3phGOsQ7/Ct6TERF9p632E4MnVU=;
-        b=s7cmLehoYqY4crKoN7zIOC68nfWeyWRN52e0LZ9Bh3m2FRqpnL6dM0onRfKLqHdgh9
-         /RnzWMvm+c55LcXvl0lju7TE0RgI1pxuz4LYaBsbHJoGxkA7xge4UrPcDOO1V8yfBlb/
-         blQ/H9GsnxWKtkEr963TGal1bbxm2TWXVzzutAoLjxD24clRxC2oFz4akvPEOQ9YkxKa
-         MzWRYSONf9SjCTkVFrhFFywKf3A1g+l6k1nMvdtUWLZHSve/dhYELt8Pu8w/2ErEQVKJ
-         ocVHUDIg5s4S8ibjYqt4U6cnS0UBScVjw35DxZ7dMF+AmSGh5lIbwOlzk3/8DAVseOkw
-         Xp9w==
-X-Gm-Message-State: APjAAAX45Wt0T0QKXbqgEiU2PSkEcAWZq3drT4Oanz1cy+IJZNOvzEHD
-        BfURhqwkUvGJ/jNIH257l+/vs+mU
-X-Google-Smtp-Source: APXvYqzt2fj6wCO6Qq71sZ4ncEG5/+MhnIwegBhkKw6OdwNjVrzB6Hc3UpyCUHpeYdoJPr2kN7LjZQ==
-X-Received: by 2002:a81:230c:: with SMTP id j12mr6064433ywj.501.1576763849564;
-        Thu, 19 Dec 2019 05:57:29 -0800 (PST)
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com. [209.85.219.182])
-        by smtp.gmail.com with ESMTPSA id d137sm375874ywd.86.2019.12.19.05.57.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Dec 2019 05:57:28 -0800 (PST)
-Received: by mail-yb1-f182.google.com with SMTP id f130so2192969ybb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 05:57:27 -0800 (PST)
-X-Received: by 2002:a5b:348:: with SMTP id q8mr6431302ybp.83.1576763847446;
- Thu, 19 Dec 2019 05:57:27 -0800 (PST)
+        Thu, 19 Dec 2019 08:58:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44810 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726712AbfLSN6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 08:58:35 -0500
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB73024680;
+        Thu, 19 Dec 2019 13:58:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576763914;
+        bh=JOfDuzbX5KhFQruw5/hk7NXJKA6KWbQ5U0uen+8uMe8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=W/fJRZXBUvYkHq3JlwObr/7TxhyVP73UtkCQDHeP+pZ0z2sFRgmyKrlQRpaf9uD8O
+         jR8ZeleXC8Rgbf8v2xJT4CPTvh/cUiNjKj1UhTWbOHHGBu4aEJQwJF8vImJN1phNY6
+         exOXosUCscOy4yKa7VEWdiEgSdYqzmkhIc/Z2TIc=
+Received: by mail-qk1-f174.google.com with SMTP id z76so5046023qka.2;
+        Thu, 19 Dec 2019 05:58:33 -0800 (PST)
+X-Gm-Message-State: APjAAAWmTcCt7Tfqb7Av36vibksl2RcpNQpmRWVsAE59ReCj363Q4BgC
+        5PQZMcqhDXOnbxePZZcCBJKeCc7+WW0zQYuUrg==
+X-Google-Smtp-Source: APXvYqxIEdSdLGQ1r7BdWufTzQ/ecvo0rjriE1A6fphicM+PwzjpRWbhhJbCCHPqP1QOATmIWvV31zWPninmnAf8LbY=
+X-Received: by 2002:a37:a70b:: with SMTP id q11mr8042276qke.393.1576763912999;
+ Thu, 19 Dec 2019 05:58:32 -0800 (PST)
 MIME-Version: 1.0
-References: <20191219013344.34603-1-maowenan@huawei.com>
-In-Reply-To: <20191219013344.34603-1-maowenan@huawei.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Thu, 19 Dec 2019 08:56:50 -0500
-X-Gmail-Original-Message-ID: <CA+FuTScgWi905_NhGNsRzpwaQ+OPwahj6NtKgPjLZRjuqJvhXQ@mail.gmail.com>
-Message-ID: <CA+FuTScgWi905_NhGNsRzpwaQ+OPwahj6NtKgPjLZRjuqJvhXQ@mail.gmail.com>
-Subject: Re: [PATCH net] af_packet: refactoring code for prb_calc_retire_blk_tmo
-To:     Mao Wenan <maowenan@huawei.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, maximmi@mellanox.com,
-        Paolo Abeni <pabeni@redhat.com>, yuehaibing@huawei.com,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
+References: <cover.1575529553.git.saiprakash.ranjan@codeaurora.org>
+ <0101016ed57a3259-eee09e9e-e99a-40f1-ab1c-63e58a42615c-000000@us-west-2.amazonses.com>
+ <20191218233714.GA30302@bogus> <7469b239edd4beed3e8fefdf02f10ada@codeaurora.org>
+In-Reply-To: <7469b239edd4beed3e8fefdf02f10ada@codeaurora.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 19 Dec 2019 07:58:21 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL-uBGy5ekHUZAJB4L1QYoCpnOw-4QPpZraXnsZ49wZ6w@mail.gmail.com>
+Message-ID: <CAL_JsqL-uBGy5ekHUZAJB4L1QYoCpnOw-4QPpZraXnsZ49wZ6w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: edac: Add DT bindings for Kryo EDAC
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Trilok Soni <tsoni@codeaurora.org>,
+        Prasad Sodagudi <psodagud@codeaurora.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 8:37 PM Mao Wenan <maowenan@huawei.com> wrote:
+On Thu, Dec 19, 2019 at 12:50 AM Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
 >
-> If __ethtool_get_link_ksettings() is failed and with
-> non-zero value, prb_calc_retire_blk_tmo() should return
-> DEFAULT_PRB_RETIRE_TOV firstly. Refactoring code and make
-> it more readable.
+> Hi Rob,
 >
-> Fixes: b43d1f9f7067 ("af_packet: set defaule value for tmo")
+> On 2019-12-19 05:07, Rob Herring wrote:
+> > On Thu, Dec 05, 2019 at 09:53:05AM +0000, Sai Prakash Ranjan wrote:
+> >> This adds DT bindings for Kryo EDAC implemented with RAS
+> >> extensions on KRYO{3,4}XX CPU cores for reporting of cache
+> >> errors.
+> >>
+> >> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> >> ---
+> >>  .../bindings/edac/qcom-kryo-edac.yaml         | 67
+> >> +++++++++++++++++++
+> >>  1 file changed, 67 insertions(+)
+> >>  create mode 100644
+> >> Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml
+> >>
+> >> diff --git
+> >> a/Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml
+> >> b/Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml
+> >> new file mode 100644
+> >> index 000000000000..1a39429a73b4
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml
+> >> @@ -0,0 +1,67 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/edac/qcom-kryo-edac.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Kryo Error Detection and Correction(EDAC)
+> >> +
+> >> +maintainers:
+> >> +  - Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> >> +
+> >> +description: |
+> >> +  Kryo EDAC is defined to describe on-chip error detection and
+> >> correction
+> >> +  for the Kryo CPU cores which implement RAS extensions. It will
+> >> report
+> >> +  all Single Bit Errors and Double Bit Errors found in L1/L2 caches
+> >> in
+> >> +  in two registers ERXSTATUS_EL1 and ERXMISC0_EL1. L3-SCU cache
+> >> errors
+> >> +  are reported in ERR1STATUS and ERR1MISC0 registers.
+> >> +    ERXSTATUS_EL1 - Selected Error Record Primary Status Register,
+> >> EL1
+> >> +    ERXMISC0_EL1 - Selected Error Record Miscellaneous Register 0,
+> >> EL1
+> >> +    ERR1STATUS - Error Record Primary Status Register
+> >> +    ERR1MISC0 - Error Record Miscellaneous Register 0
+> >> +  Current implementation of Kryo ECC(Error Correcting Code) mechanism
+> >> is
+> >> +  based on interrupts.
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    enum:
+> >> +      - qcom,kryo-edac
+> >> +
+> >> +  interrupts:
+> >> +    minItems: 1
+> >> +    maxItems: 4
+> >> +    items:
+> >> +      - description: l1-l2 cache faultirq interrupt
+> >> +      - description: l1-l2 cache errirq interrupt
+> >> +      - description: l3-scu cache errirq interrupt
+> >> +      - description: l3-scu cache faultirq interrupt
+> >> +
+> >> +  interrupt-names:
+> >> +    minItems: 1
+> >> +    maxItems: 4
+> >
+> > You are saying only these combinations are valid:
+> >
+> > l1-l2-faultirq
+> >
+> > l1-l2-faultirq
+> > l1-l2-errirq
+> >
+> > l1-l2-faultirq
+> > l1-l2-errirq
+> > l3-scu-errirq
+> >
+> > l1-l2-faultirq
+> > l1-l2-errirq
+> > l3-scu-errirq
+> > l3-scu-faultirq
+> >
+> > Is that your intent?
+> >
+>
+> No, I want any combination of interrupts to be valid with atleast one
+> interrupt as mandatory.
+> I thought specifying minItems as 1 and maxItems as 4 will take care of
+> this,  am I doing something wrong?
 
-This is a pure refactor, not a fix.
+Interrupts (really all properties) have a defined order in DT and an
+'items' list defines both the order and index. You'll need to use
+oneOf and list out the possibilities. Stick to ones you actually need.
 
-Code refactors make backporting fixes across releases harder, among
-other things. I think this code is better left as is. Either way, it
-would be a candidate for net-next, not net.
-
-> -       unsigned int mbits = 0, msec = 0, div = 0, tmo = 0;
-> +       unsigned int mbits = 0, msec = 1, div = 0, tmo = 0;
-
-Most of these do not need to be initialized here at all, really.
+Rob
