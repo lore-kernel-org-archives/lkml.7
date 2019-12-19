@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B27DFC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FC9C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8072E24672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE837206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:40:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780846;
-	bh=chLQgsXuHkoQm2h4ueJb1deFdiqcUC5TRor73eu385Q=;
+	s=default; t=1576780850;
+	bh=l/h8r2712rG5mlyOgtU7hkWL61xkjIonKVs5KNoRkQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IlsG/VBFmOr4rQpTbGx7g9bnKGeKC+0h2J31d0awfcqxVHxqtcIpjq4WH5HYrsyXq
-	 nDzrxFa3OxzMdt7GTfmafB1aO948GbHxrWTh7cnDTUgpKYNUlCCslvMp/g6EM9lSo2
-	 QUvUxl1jmpDQ66y9t7cSRmiEpfoPFsoH/PCsyhro=
+	b=LapA29GMagBMGFp9N/YKYxVmuHO3aFZA174DgCIFllJxAeqH8rNnngOeyBIraSh8N
+	 fMCFYuqieUk2NvZz7iFJph8nRDA5N+xit/++jcqFIhjQ7cCHMbMTdqpPkJw3zwLqe8
+	 RQwbp9g9n/Y2Gi7tjqTdud8zbZygFDMnaLRs27Vw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbfLSSkp (ORCPT
+        id S1728431AbfLSSks (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:40:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59494 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:40:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728408AbfLSSkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:40:41 -0500
+        id S1728415AbfLSSko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:40:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 900E724679;
-        Thu, 19 Dec 2019 18:40:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13D3124682;
+        Thu, 19 Dec 2019 18:40:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780841;
-        bh=chLQgsXuHkoQm2h4ueJb1deFdiqcUC5TRor73eu385Q=;
+        s=default; t=1576780843;
+        bh=l/h8r2712rG5mlyOgtU7hkWL61xkjIonKVs5KNoRkQY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qb0FUGYpyBu7cuee/009EDQt69lk55KQoFWKopImXYXTQAj0vSkfl+LqzPwXWKrHU
-         uwmDKo0+myDv8n6nY8q/azs7SUo4aqhIKAkjnc2ZAxX8JJNcrAQFciLi5HR6erna+5
-         jos7HciPKj81I8ww7CjvmjCsuDv7dEb+ePZP0qJM=
+        b=N73oI9xSThMN6aXK5Ps5c66/uxbj4cRQNeftNMRjhVZ0ipfCIHa280oc+Mp2WwR0q
+         +bzxZA0RoDd4+suohIAEZzRYp/mZDbsVkaGJiAb72qvFC2RL2Rn7GVuQkILM4nqYRo
+         LBz5ZednaP/VNK1EmEDgaGcSs4eryvIlJDgt7nSU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: [PATCH 4.4 139/162] blk-mq: make sure that line break can be printed
-Date:   Thu, 19 Dec 2019 19:34:07 +0100
-Message-Id: <20191219183216.228258091@linuxfoundation.org>
+        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.4 113/162] cpuidle: Do not unset the driver if it is there already
+Date:   Thu, 19 Dec 2019 19:33:41 +0100
+Message-Id: <20191219183214.621732667@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -60,35 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Zhenzhong Duan <zhenzhong.duan@oracle.com>
 
-commit d2c9be89f8ebe7ebcc97676ac40f8dec1cf9b43a upstream.
+commit 918c1fe9fbbe46fcf56837ff21f0ef96424e8b29 upstream.
 
-8962842ca5ab ("blk-mq: avoid sysfs buffer overflow with too many CPU cores")
-avoids sysfs buffer overflow, and reserves one character for line break.
-However, the last snprintf() doesn't get correct 'size' parameter passed
-in, so fixed it.
+Fix __cpuidle_set_driver() to check if any of the CPUs in the mask has
+a driver different from drv already and, if so, return -EBUSY before
+updating any cpuidle_drivers per-CPU pointers.
 
-Fixes: 8962842ca5ab ("blk-mq: avoid sysfs buffer overflow with too many CPU cores")
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Cc: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Fixes: 82467a5a885d ("cpuidle: simplify multiple driver support")
+Cc: 3.11+ <stable@vger.kernel.org> # 3.11+
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+[ rjw: Subject & changelog ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/blk-mq-sysfs.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/cpuidle/driver.c |   15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
---- a/block/blk-mq-sysfs.c
-+++ b/block/blk-mq-sysfs.c
-@@ -248,7 +248,7 @@ static ssize_t blk_mq_hw_sysfs_cpus_show
- 		pos += ret;
- 	}
+--- a/drivers/cpuidle/driver.c
++++ b/drivers/cpuidle/driver.c
+@@ -60,24 +60,23 @@ static inline void __cpuidle_unset_drive
+  * __cpuidle_set_driver - set per CPU driver variables for the given driver.
+  * @drv: a valid pointer to a struct cpuidle_driver
+  *
+- * For each CPU in the driver's cpumask, unset the registered driver per CPU
+- * to @drv.
+- *
+- * Returns 0 on success, -EBUSY if the CPUs have driver(s) already.
++ * Returns 0 on success, -EBUSY if any CPU in the cpumask have a driver
++ * different from drv already.
+  */
+ static inline int __cpuidle_set_driver(struct cpuidle_driver *drv)
+ {
+ 	int cpu;
  
--	ret = snprintf(pos + page, size - pos, "\n");
-+	ret = snprintf(pos + page, size + 1 - pos, "\n");
- 	return pos + ret;
+ 	for_each_cpu(cpu, drv->cpumask) {
++		struct cpuidle_driver *old_drv;
+ 
+-		if (__cpuidle_get_cpu_driver(cpu)) {
+-			__cpuidle_unset_driver(drv);
++		old_drv = __cpuidle_get_cpu_driver(cpu);
++		if (old_drv && old_drv != drv)
+ 			return -EBUSY;
+-		}
++	}
+ 
++	for_each_cpu(cpu, drv->cpumask)
+ 		per_cpu(cpuidle_drivers, cpu) = drv;
+-	}
+ 
+ 	return 0;
  }
- 
 
 
