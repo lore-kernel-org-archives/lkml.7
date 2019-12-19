@@ -2,71 +2,101 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D85C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DD2C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F60E227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EC0724672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:01:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbfLSUzf (ORCPT
+        id S1727201AbfLSVBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 15:55:35 -0500
-Received: from nbd.name ([46.4.11.11]:33062 "EHLO nbd.name"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726880AbfLSUzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 15:55:35 -0500
-Received: from pd95fd34f.dip0.t-ipconnect.de ([217.95.211.79] helo=[192.168.45.104])
-        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <john@phrozen.org>)
-        id 1ii2pY-0008De-UE; Thu, 19 Dec 2019 21:55:33 +0100
-Subject: Re: linux-next: Fixes tag needs some work in the wireless-drivers
- tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Wireless <linux-wireless@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>
-References: <20191220075337.789971fe@canb.auug.org.au>
-From:   John Crispin <john@phrozen.org>
-Message-ID: <739b70e9-6a77-9d4e-2331-16022325cd34@phrozen.org>
-Date:   Thu, 19 Dec 2019 21:55:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 19 Dec 2019 16:01:51 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:38674 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726981AbfLSVBv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 16:01:51 -0500
+Received: by mail-oi1-f195.google.com with SMTP id l9so972562oii.5;
+        Thu, 19 Dec 2019 13:01:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Rho6KjCVdHcPa3Pm2Hwz5ompKB2MxkmWTphxamICN90=;
+        b=M5+N8u8FaZK7fB6OwNaLikLBB06Y0ZSktbKgydW/Anfr4fdEQ4afgx645i9Q8LfnbL
+         6qQK1ub5YZTpS12B0tTU/xb2bXZ9VjrdmLzdXmKg+Zt7PT8kzEQ9q0OJ7+M+aQ6PKUsl
+         yC1jBBAJUdNmoU06wcbI135LVBDsoCTlGpC+3saYWZFRp8d6obtviMxiDZjD4hjmGAxF
+         tYHz4+x2+0PK/QspSZ/+1dSHJiYF2kPoDwUuGUxjL/FSHE0Ok0HcpuiLkDz0zm2i6F6Y
+         cPkoQ2FT//AI1H7S+/vlwaXZZzIy2klD3l5EAAqlxVAvMi3rweN4ElWAF4yCZRs8Qvkb
+         Z+eQ==
+X-Gm-Message-State: APjAAAUhY2tC/hHaGcAyh/XgSVLAYdG65d2XXCEta+doDM+6SvPCQrn8
+        JZgjrs0qaqRzFv1qhjKB5pv4RXZ2hl0EHZdFgXc=
+X-Google-Smtp-Source: APXvYqwvA2BdXJ663aG+aWaAPgh2yntk+PKY9MC7GuJ4Ik36+blLWmshsTxHv/oZTHyJy/hEoDKwfxQJ4yQDOuTxN9I=
+X-Received: by 2002:aca:36c5:: with SMTP id d188mr3157965oia.54.1576789310327;
+ Thu, 19 Dec 2019 13:01:50 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191220075337.789971fe@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <git-mailbomb-linux-master-8ffb055beae58574d3e77b4bf9d4d15eace1ca27@kernel.org>
+ <CAMuHMdVgF0PVmqXbaWqkrcML0O-hhWB3akj8UAn8Q_hN2evm+A@mail.gmail.com> <CAM_iQpWOhXR=x10i0S88qXTfG2nv9EypONTp6_vpBzs=iOySRQ@mail.gmail.com>
+In-Reply-To: <CAM_iQpWOhXR=x10i0S88qXTfG2nv9EypONTp6_vpBzs=iOySRQ@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 19 Dec 2019 22:01:39 +0100
+Message-ID: <CAMuHMdXL8kycJm5EG6Ubx4aYGVGJH9JuJzP-vSM55wZ6RtyT+w@mail.gmail.com>
+Subject: Re: refcount_warn_saturate WARNING (was: Re: cls_flower: Fix the
+ behavior using port ranges with hw-offload)
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     Yoshiki Komachi <komachi.yoshiki@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/12/2019 21:53, Stephen Rothwell wrote:
-> Hi all,
-> 
-> In commit
-> 
->    485add35771b ("ath11k: fix pdev when invoking ath11k_wmi_send_twt_enable_cmd()")
-> 
-> Fixes tag
-> 
->    Fixes: e65a616f4e74 ("ath11k: add TWT support")
-> 
-> has these problem(s):
-> 
->    - Target SHA1 does not exist
-> 
-> Did you mean
-> 
-> Fixes: 6d293d447670 ("ath11k: add TWT support")
-> 
+Hi Cong,
 
-My bad, sorry, I was sitting on an old tree apparently.
-	John
+On Thu, Dec 19, 2019 at 9:50 PM Cong Wang <xiyou.wangcong@gmail.com> wrote:
+> On Thu, Dec 19, 2019 at 2:12 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > I still see the below warning on m68k/ARAnyM during boot with v5.5-rc2
+> > and next-20191219.
+> > Reverting commit 8ffb055beae58574 ("cls_flower: Fix the behavior using
+> > port ranges with hw-offload") fixes that.
+> >
+> > As this is networking, perhaps this is seen on big-endian only?
+> > Or !CONFIG_SMP?
+> >
+> > Do you have a clue?
+> > I'm especially worried as this commit is already being backported to stable.
+> > Thanks!
+>
+> I did a quick look at the offending commit, I can't even connect it to
+> any dst refcnt.
+>
+> Do you have any more information? Like what happened before the
+> warning? Does your system use cls_flower filters at all? If so, please
+> share your tc configurations.
+
+No, I don't use clf_flower filters.  This is just a normal old Debian boot,
+where the root file system is being remounted, followed by the warning.
+
+To me, it also looks very strange.  But it's 100% reproducible for me.
+Git bisect pointed to this commit, and reverting it fixes the issue.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
