@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A72C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 417FCC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A77524684
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B4F424680
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781788;
-	bh=nUJQkdlrLbP8vid/uIYs8cG57aNUfqgBoXs6B9lMV8k=;
+	s=default; t=1576781791;
+	bh=p1Mnta1SqL0RwazWoE7/sborPswyjbp4DYjTcxwHCOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ck4NImoHQKsTXxiBvQZ5CztG4t4RHjO9k4XB76szL1CX/c4XwRyopOgmeZB7jAOj6
-	 tlyPyhwM9ZFbNn4CFkQ7f9Apo8gmE5BiIS+VNUUH2Uh9YB2+/eSoGt9OVG6zGXuJjc
-	 EQpX2ikuMJj/h8RpHQQy5MFdiYcCFAtj09fubbRE=
+	b=KmgOYVbXWj9Ll2Utxl54YyX3PxXi/UlrbvSxaLaLOX7Cq+0y9GL+VfAqAnQuVOJd2
+	 99W/2pc4uIpsP0v2n/esu5DOF3dj2vmlXEMuc9sA0LghTEfEZCRKIBcp9rg0bQTwml
+	 gUo59Y8jJ7Im86Ow4BsHbupNKx0xyzIApZp1UXME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730428AbfLSS41 (ORCPT
+        id S1730816AbfLSS43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:56:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52854 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:56:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730797AbfLSS4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:56:19 -0500
+        id S1730802AbfLSS4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:56:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78830227BF;
-        Thu, 19 Dec 2019 18:56:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E049524676;
+        Thu, 19 Dec 2019 18:56:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781778;
-        bh=nUJQkdlrLbP8vid/uIYs8cG57aNUfqgBoXs6B9lMV8k=;
+        s=default; t=1576781781;
+        bh=p1Mnta1SqL0RwazWoE7/sborPswyjbp4DYjTcxwHCOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rjXW3z8BWSTI+d/Pioz7F1ZuBgUobFjSlSG+aWgE1AES5UNgRVyw+sOrBoPO8KFfM
-         6BACPrEcoERdytH07gOc6rG0L+zURUiu3mVps+VCF5LWBZU09LrFoEOT4/EdWj5Tyl
-         NJHQ7mXN2/GRkp0JV36WSBjy/clGGymjzTr+Rc50=
+        b=0hafiWQeJe/yws2rz300zvm3aIeZcP4sjnOztur5Ys3qoTMS26sCw9fUHKDGkBq6n
+         oUPLmCLTc7t5l8D/qVeE7Y+0WM+GRQ81Ju0RG/kKAj8jncXP6BRGN8eAPijz7lk+8t
+         d7dsb36I2YFprRpVgTY7ic6FnRjhtGdx/Pa3jj1k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Paulo Alcantara (SUSE)" <pc@cjr.nz>,
-        Matthew Ruffell <matthew.ruffell@canonical.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.4 38/80] cifs: Fix retrieval of DFS referrals in cifs_mount()
-Date:   Thu, 19 Dec 2019 19:34:30 +0100
-Message-Id: <20191219183107.931508671@linuxfoundation.org>
+        stable@vger.kernel.org, Lihua Yao <ylhuajnu@outlook.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 5.4 39/80] ARM: dts: s3c64xx: Fix init order of clock providers
+Date:   Thu, 19 Dec 2019 19:34:31 +0100
+Message-Id: <20191219183108.168875047@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -60,80 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paulo Alcantara (SUSE) <pc@cjr.nz>
+From: Lihua Yao <ylhuajnu@outlook.com>
 
-commit 5bb30a4dd60e2a10a4de9932daff23e503f1dd2b upstream.
+commit d60d0cff4ab01255b25375425745c3cff69558ad upstream.
 
-Make sure that DFS referrals are sent to newly resolved root targets
-as in a multi tier DFS setup.
+fin_pll is the parent of clock-controller@7e00f000, specify
+the dependency to ensure proper initialization order of clock
+providers.
 
-Signed-off-by: Paulo Alcantara (SUSE) <pc@cjr.nz>
-Link: https://lkml.kernel.org/r/05aa2995-e85e-0ff4-d003-5bb08bd17a22@canonical.com
-Cc: stable@vger.kernel.org
-Tested-by: Matthew Ruffell <matthew.ruffell@canonical.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+without this patch:
+[    0.000000] S3C6410 clocks: apll = 0, mpll = 0
+[    0.000000]  epll = 0, arm_clk = 0
+
+with this patch:
+[    0.000000] S3C6410 clocks: apll = 532000000, mpll = 532000000
+[    0.000000]  epll = 24000000, arm_clk = 532000000
+
+Cc: <stable@vger.kernel.org>
+Fixes: 3f6d439f2022 ("clk: reverse default clk provider initialization order in of_clk_init()")
+Signed-off-by: Lihua Yao <ylhuajnu@outlook.com>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/connect.c |   32 ++++++++++++++++++++++----------
- 1 file changed, 22 insertions(+), 10 deletions(-)
+ arch/arm/boot/dts/s3c6410-mini6410.dts |    4 ++++
+ arch/arm/boot/dts/s3c6410-smdk6410.dts |    4 ++++
+ 2 files changed, 8 insertions(+)
 
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -4709,6 +4709,17 @@ static int is_path_remote(struct cifs_sb
- }
+--- a/arch/arm/boot/dts/s3c6410-mini6410.dts
++++ b/arch/arm/boot/dts/s3c6410-mini6410.dts
+@@ -165,6 +165,10 @@
+ 	};
+ };
  
- #ifdef CONFIG_CIFS_DFS_UPCALL
-+static inline void set_root_tcon(struct cifs_sb_info *cifs_sb,
-+				 struct cifs_tcon *tcon,
-+				 struct cifs_tcon **root)
-+{
-+	spin_lock(&cifs_tcp_ses_lock);
-+	tcon->tc_count++;
-+	tcon->remap = cifs_remap(cifs_sb);
-+	spin_unlock(&cifs_tcp_ses_lock);
-+	*root = tcon;
-+}
++&clocks {
++	clocks = <&fin_pll>;
++};
 +
- int cifs_mount(struct cifs_sb_info *cifs_sb, struct smb_vol *vol)
- {
- 	int rc = 0;
-@@ -4810,18 +4821,10 @@ int cifs_mount(struct cifs_sb_info *cifs
- 	/* Cache out resolved root server */
- 	(void)dfs_cache_find(xid, ses, cifs_sb->local_nls, cifs_remap(cifs_sb),
- 			     root_path + 1, NULL, NULL);
--	/*
--	 * Save root tcon for additional DFS requests to update or create a new
--	 * DFS cache entry, or even perform DFS failover.
--	 */
--	spin_lock(&cifs_tcp_ses_lock);
--	tcon->tc_count++;
--	tcon->dfs_path = root_path;
-+	kfree(root_path);
- 	root_path = NULL;
--	tcon->remap = cifs_remap(cifs_sb);
--	spin_unlock(&cifs_tcp_ses_lock);
+ &sdhci0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sd0_clk>, <&sd0_cmd>, <&sd0_cd>, <&sd0_bus4>;
+--- a/arch/arm/boot/dts/s3c6410-smdk6410.dts
++++ b/arch/arm/boot/dts/s3c6410-smdk6410.dts
+@@ -69,6 +69,10 @@
+ 	};
+ };
  
--	root_tcon = tcon;
-+	set_root_tcon(cifs_sb, tcon, &root_tcon);
- 
- 	for (count = 1; ;) {
- 		if (!rc && tcon) {
-@@ -4858,6 +4861,15 @@ int cifs_mount(struct cifs_sb_info *cifs
- 			mount_put_conns(cifs_sb, xid, server, ses, tcon);
- 			rc = mount_get_conns(vol, cifs_sb, &xid, &server, &ses,
- 					     &tcon);
-+			/*
-+			 * Ensure that DFS referrals go through new root server.
-+			 */
-+			if (!rc && tcon &&
-+			    (tcon->share_flags & (SHI1005_FLAGS_DFS |
-+						  SHI1005_FLAGS_DFS_ROOT))) {
-+				cifs_put_tcon(root_tcon);
-+				set_root_tcon(cifs_sb, tcon, &root_tcon);
-+			}
- 		}
- 		if (rc) {
- 			if (rc == -EACCES || rc == -EOPNOTSUPP)
++&clocks {
++	clocks = <&fin_pll>;
++};
++
+ &sdhci0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sd0_clk>, <&sd0_cmd>, <&sd0_cd>, <&sd0_bus4>;
 
 
