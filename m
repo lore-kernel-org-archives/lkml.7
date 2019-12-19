@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D53C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4751C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5CCA24672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A1A7222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:06:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782393;
-	bh=NzS+thb2zRhKzX02D+ejkXOi1iRJq/6D5XAXZ6VOCSc=;
+	s=default; t=1576782397;
+	bh=BWIHbqoK1PskVUkjpvloNNNkwKQs4P/4K8397k8psrE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ajgseAknKitRkiiGxKTlwd/rYVV5NKPvDLgucC1sqjRUUdrrz2pyChsvcgjZPqqwB
-	 y0s7SHAUb8khb5wqmsbNh4ZYQBSltm42T4KKERdkPPgGquL95u1oJRonCa/BWGAqxo
-	 cQIEcDk85CrrYhvZpt/NqDVzV9lkq+rTYNdmkGUI=
+	b=zosxoaePK78qJq0jlOuvblZS1WMvcZK6H8r6WKEOcW6BpKnIFHVkfLXf/djWGFydO
+	 SXulyL2yQp2TzN5HGGaFY4n+gCtQOfemRquNYusLF9WPzWj/+hBVqr0u8svBGN8Unp
+	 Awrh2P4mNDnLR8BP3DgsQQPjfeJLu7LXgKo76934=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbfLSSoY (ORCPT
+        id S1728965AbfLSSoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:44:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36246 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:44:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728966AbfLSSoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:44:19 -0500
+        id S1728956AbfLSSoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:44:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08FE124672;
-        Thu, 19 Dec 2019 18:44:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C507424672;
+        Thu, 19 Dec 2019 18:44:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781058;
-        bh=NzS+thb2zRhKzX02D+ejkXOi1iRJq/6D5XAXZ6VOCSc=;
+        s=default; t=1576781046;
+        bh=BWIHbqoK1PskVUkjpvloNNNkwKQs4P/4K8397k8psrE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0e566Pxn3cKxX5R9OJ1tIxkOaxiZTlsTHj2F4VsETZbcbz7JDqf65ihJADeaUq2vT
-         /zuIbM/ty4Tq5zkgFF8sy6ZItOipqvobIeYl3i+07kjmhZxfqQBuEOruyhnCakp9bk
-         n0RfXeu4KGqs9fPirl9sDYmXEumTKXIzSm5Y+k+g=
+        b=DDhvIqx1zmyIdAR6EUygRetuC5CINk3ONeoV0GPoon1wMpRQ+oOLcCzzUudbvBaup
+         URV3LVUMhx/UUOGdD8p+I9OtnsoOzHi23dKtqcjjNjL3da4Cqn8AP/IjYykLtrQ18m
+         yc3v6mZfHvMlHLySxnBMBzRPn32ggq3P/xU8sSP4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 065/199] MIPS: OCTEON: cvmx_pko_mem_debug8: use oldest forward compatible definition
-Date:   Thu, 19 Dec 2019 19:32:27 +0100
-Message-Id: <20191219183218.605427662@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 060/199] clk: sunxi-ng: h3/h5: Fix CSI_MCLK parent
+Date:   Thu, 19 Dec 2019 19:32:22 +0100
+Message-Id: <20191219183218.320186185@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -62,49 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit 1c6121c39677175bd372076020948e184bad4b6b ]
+[ Upstream commit 7bb7d29cffdd24bf419516d14b6768591e74069e ]
 
-cn58xx is compatible with cn50xx, so use the latter.
+The third parent of CSI_MCLK is PLL_PERIPH1, not PLL_PERIPH0.
+Fix it.
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-[paul.burton@mips.com: s/cn52xx/cn50xx/ in commit message.]
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@vger.kernel.org
+Fixes: 0577e4853bfb ("clk: sunxi-ng: Add H3 clocks")
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/cavium-octeon/executive/cvmx-cmd-queue.c | 2 +-
- arch/mips/include/asm/octeon/cvmx-pko.h            | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/clk/sunxi-ng/ccu-sun8i-h3.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/cavium-octeon/executive/cvmx-cmd-queue.c b/arch/mips/cavium-octeon/executive/cvmx-cmd-queue.c
-index 8241fc6aa17d8..3839feba68f20 100644
---- a/arch/mips/cavium-octeon/executive/cvmx-cmd-queue.c
-+++ b/arch/mips/cavium-octeon/executive/cvmx-cmd-queue.c
-@@ -266,7 +266,7 @@ int cvmx_cmd_queue_length(cvmx_cmd_queue_id_t queue_id)
- 		} else {
- 			union cvmx_pko_mem_debug8 debug8;
- 			debug8.u64 = cvmx_read_csr(CVMX_PKO_MEM_DEBUG8);
--			return debug8.cn58xx.doorbell;
-+			return debug8.cn50xx.doorbell;
- 		}
- 	case CVMX_CMD_QUEUE_ZIP:
- 	case CVMX_CMD_QUEUE_DFA:
-diff --git a/arch/mips/include/asm/octeon/cvmx-pko.h b/arch/mips/include/asm/octeon/cvmx-pko.h
-index 5f47f76ed510a..20eb9c46a75ab 100644
---- a/arch/mips/include/asm/octeon/cvmx-pko.h
-+++ b/arch/mips/include/asm/octeon/cvmx-pko.h
-@@ -611,7 +611,7 @@ static inline void cvmx_pko_get_port_status(uint64_t port_num, uint64_t clear,
- 		pko_reg_read_idx.s.index = cvmx_pko_get_base_queue(port_num);
- 		cvmx_write_csr(CVMX_PKO_REG_READ_IDX, pko_reg_read_idx.u64);
- 		debug8.u64 = cvmx_read_csr(CVMX_PKO_MEM_DEBUG8);
--		status->doorbell = debug8.cn58xx.doorbell;
-+		status->doorbell = debug8.cn50xx.doorbell;
- 	}
- }
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
+index a26c8a19fe93a..9dd6daaa13367 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
+@@ -458,7 +458,7 @@ static const char * const csi_sclk_parents[] = { "pll-periph0", "pll-periph1" };
+ static SUNXI_CCU_M_WITH_MUX_GATE(csi_sclk_clk, "csi-sclk", csi_sclk_parents,
+ 				 0x134, 16, 4, 24, 3, BIT(31), 0);
+ 
+-static const char * const csi_mclk_parents[] = { "osc24M", "pll-video", "pll-periph0" };
++static const char * const csi_mclk_parents[] = { "osc24M", "pll-video", "pll-periph1" };
+ static SUNXI_CCU_M_WITH_MUX_GATE(csi_mclk_clk, "csi-mclk", csi_mclk_parents,
+ 				 0x134, 0, 5, 8, 3, BIT(15), 0);
  
 -- 
 2.20.1
