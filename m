@@ -2,74 +2,121 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79588C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E37CC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED652465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E83172465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:25:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KmmJ8pQl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfLSJZH (ORCPT
+        id S1726741AbfLSJZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 04:25:07 -0500
-Received: from ns.iliad.fr ([212.27.33.1]:38030 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726599AbfLSJZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 04:25:07 -0500
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id ABD7D20404;
-        Thu, 19 Dec 2019 10:25:05 +0100 (CET)
-Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 966352040A;
-        Thu, 19 Dec 2019 10:25:05 +0100 (CET)
-Subject: Re: [PATCH 08/10] tty: serial: samsung_tty: use 'unsigned int' not
- 'unsigned'
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-serial <linux-serial@vger.kernel.org>,
-        Jiri Slaby <jslaby@suse.com>
-References: <20191210143706.3928480-1-gregkh@linuxfoundation.org>
- <20191210143706.3928480-8-gregkh@linuxfoundation.org>
- <eb3cf8f9-3606-c2d6-ad90-4388a52c320b@free.fr>
- <20191212110834.GB1490894@kroah.com> <20191212160949.GA10815@infradead.org>
- <20191212161234.GA1673430@kroah.com>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <9339baa1-4a4b-ad12-e7e5-ba7b80d18031@free.fr>
-Date:   Thu, 19 Dec 2019 10:25:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 19 Dec 2019 04:25:59 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:34042 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726599AbfLSJZ6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 04:25:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576747557;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=eEDs8eQd8uRes+0IeLvhB5G56cOxhAMQ/9+Hmh2c7S0=;
+        b=KmmJ8pQlubtlw+x8YasBO8qcDLqN4nlcW+0RNwiaJUmccEMG2MNMkhjIGx3D+dnLWWs9rU
+        rQuwN+0+4VPZ38Unv1QWqwMZ6kj9Gt/JIQKNbp4qVqZ7vsf3SwiR9y7A0lJuCPwL8emRcQ
+        CyQHpmhHVOCvu/OfuIEWrkFoq5Xe+Ho=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-78-fPsDoJjXNnqMMoT3nDIAyw-1; Thu, 19 Dec 2019 04:25:56 -0500
+X-MC-Unique: fPsDoJjXNnqMMoT3nDIAyw-1
+Received: by mail-qt1-f200.google.com with SMTP id m30so3293975qtb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 01:25:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eEDs8eQd8uRes+0IeLvhB5G56cOxhAMQ/9+Hmh2c7S0=;
+        b=IC8gpBfgNg9mPRHDgzFpOjOelDBxc+Ox6RsA+K3MDNOTVx7qjePo+3oxFExAx5pltx
+         sj6nSK8NN+XVdFd910HcJ4mq/1l3bzU5eluL6K64KiwFoCb3U6jc+tzfsSkXwZGs/JKE
+         GbtmONUpHF2umqSHTCqTwKJ5aQFNJHDhCnkNdwHlcyAYerwOj3BZu0DVSVATnUj4BGb8
+         1vhcub2Wa6EywhyYRWniX0Dp07hrVOmME/nJtjbIG3km7XhQ38HyDw7PrVoYsUTA2yVc
+         G95JaI7xNbIhZ5d3IS2zIrcPgRkofWWxWN6pr+i5eYp3Z4ZXEeMzbBXaPxzuGWHbG7bJ
+         PfTw==
+X-Gm-Message-State: APjAAAVaE5zkZ9sENCepMOR6JcbiWI1sOyD3g0TaA15Oubnh1fmEvTQh
+        WJTmNoWOmdyrlQrUPRLxXttwwQRywb55Md7S3mw6Qw/DvTkJLGsjh+7AAsiL5jNa8h98KjNeb5J
+        /iwPYc7B8qKi7tWAASczRNJGf+hUsSteU2PG4cRoP
+X-Received: by 2002:ac8:478a:: with SMTP id k10mr1966966qtq.260.1576747555618;
+        Thu, 19 Dec 2019 01:25:55 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyJYrXSGRz7JstDEcjgRqaZUSLIazJY+JiF8G18gr5bHMQWxIoMcAlFlkXz6/WAzi/yVn9xMmhtMDrndC9afAw=
+X-Received: by 2002:ac8:478a:: with SMTP id k10mr1966949qtq.260.1576747555413;
+ Thu, 19 Dec 2019 01:25:55 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191212161234.GA1673430@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Dec 19 10:25:05 2019 +0100 (CET)
+References: <1576723530-31381-1-git-send-email-zhangpan26@huawei.com>
+In-Reply-To: <1576723530-31381-1-git-send-email-zhangpan26@huawei.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Thu, 19 Dec 2019 10:25:44 +0100
+Message-ID: <CAO-hwJJNhinhOHff=q4aGCFxzSGZ6bHtd0HJHRxNWV7jw2C8Fw@mail.gmail.com>
+Subject: Re: [PATCH v2] drivers/hid/hid-multitouch.c: fix a possible null
+ pointer access.
+To:     Pan Zhang <zhangpan26@huawei.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Henrik Rydberg <rydberg@bitmath.org>, hushiyuan@huawei.com,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/2019 17:12, Greg Kroah-Hartman wrote:
-
-> On Thu, Dec 12, 2019 at 08:09:49AM -0800, Christoph Hellwig wrote:
+On Thu, Dec 19, 2019 at 3:46 AM Pan Zhang <zhangpan26@huawei.com> wrote:
 >
->> On Thu, Dec 12, 2019 at 12:08:34PM +0100, Greg Kroah-Hartman wrote:
->>
->>> Yes.  It's a long-time checkpatch warning, it's good to be explicit for
->>> this type of thing.
->>
->> There is literally no practical benefit going either way.  It is
->> just checkpatch forcing one personal opinion on people.
-> 
-> Fair enough, but, I was trying to align up the variables to be the same
-> type that was then used in a function call.  That's the only reason I
-> made this change.
+> 1002     if ((quirks & MT_QUIRK_IGNORE_DUPLICATES) && mt) {
+> 1003         struct input_mt_slot *i_slot = &mt->slots[slotnum];
+> 1004
+> 1005         if (input_mt_is_active(i_slot) &&
+> 1006             input_mt_is_used(mt, i_slot))
+> 1007             return -EAGAIN;
+> 1008     }
+>
+> We previously assumed 'mt' could be null (see line 1002).
+>
+> The following situation is similar, so add a judgement.
+>
+> Signed-off-by: Pan Zhang <zhangpan26@huawei.com>
+> ---
 
-Do you type 'long long unsigned int' for an ULL?
+Thanks a lot for the quick respin.
 
-Regards.
+Applied to for-5.5/upstream-fixes
+
+Cheers,
+Benjamin
+
+>  drivers/hid/hid-multitouch.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+> index 3cfeb16..368de81 100644
+> --- a/drivers/hid/hid-multitouch.c
+> +++ b/drivers/hid/hid-multitouch.c
+> @@ -1019,7 +1019,7 @@ static int mt_process_slot(struct mt_device *td, struct input_dev *input,
+>                 tool = MT_TOOL_DIAL;
+>         else if (unlikely(!confidence_state)) {
+>                 tool = MT_TOOL_PALM;
+> -               if (!active &&
+> +               if (!active && mt &&
+>                     input_mt_is_active(&mt->slots[slotnum])) {
+>                         /*
+>                          * The non-confidence was reported for
+> --
+> 2.7.4
+>
+
