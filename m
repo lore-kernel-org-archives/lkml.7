@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D5EC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE24C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0965324679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BA0E222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:41:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780914;
-	bh=Jrwpqvl/NbwnQ3Y/vpkLFz7VYCol0WrRQ/VbLcu30NI=;
+	s=default; t=1576780916;
+	bh=w3xchpWSaeEifrs1U1NvINkb8ay7YrSJsH15zMdBVQU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lmWgrBTqbq5QMrObHvQgKOybdnuV9irb6l6qIvWU3oeAW3o7U5uuqc8Eyupsl3XNZ
-	 c+ShIHIEML2ELNewzKeoEwuHQpApZ4aNKDzNOjxv5faZVvYEEi1v5LyIE1PzANrboZ
-	 0WABDf3aR5YPJnP8u+r112VkrNMNY4X8EDy0dJ1Q=
+	b=XnRP6tamKppwSX4UrEqmkBUNupmR6aK5L2HJ9LdhQXSVYF8zRtMIH1/ev5eYekN5Q
+	 wQe8QY96SNnKX92jcCxbohm3r1e1CaoAMcYY0Cf4+e9Nvo/zc2PdwTAoJNyoDsiBd3
+	 QC5DG+hXxLQL039UB6/8CUETt53c4Ldud3J9CgJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728596AbfLSSlv (ORCPT
+        id S1728602AbfLSSlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:41:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60858 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:41:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727815AbfLSSlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:41:42 -0500
+        id S1728587AbfLSSlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:41:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2FAF24672;
-        Thu, 19 Dec 2019 18:41:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B675F206D7;
+        Thu, 19 Dec 2019 18:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780902;
-        bh=Jrwpqvl/NbwnQ3Y/vpkLFz7VYCol0WrRQ/VbLcu30NI=;
+        s=default; t=1576780907;
+        bh=w3xchpWSaeEifrs1U1NvINkb8ay7YrSJsH15zMdBVQU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V67LpTJZ/YKKIMmfu8prbBEmJukchTorNRhaxbRZL8WXX6GoIZJZsy7qRnuoVY3Ka
-         HM1xE9dQs/CzxNaSQ7tVMXOmg8/g/yu5BbUaVe2xVd1fS+l8J7MLXy4MQrVA2ZyWfR
-         Do5Y8ODVF0C2mqlomF23a3VgaDGczpO1/FXw0+AE=
+        b=AJZzukD3wDS/4Qdji8A3ZzqmW5ZGrmUZiOf9akHlBthRJPJbh39XGriNbg2tN9BI9
+         AkRGi7BpcOAhOLuYvY5JYf4NSWzRPCSWmbjqPNqKqnLKuZfSMqpG/GYPdzCyD7CCIR
+         TcsL5tITg4KLoVzN9ZznFrZxzhYKrv50/BLNEXgc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lihua Yao <ylhuajnu@outlook.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 4.4 155/162] ARM: dts: s3c64xx: Fix init order of clock providers
-Date:   Thu, 19 Dec 2019 19:34:23 +0100
-Message-Id: <20191219183217.213774864@linuxfoundation.org>
+        stable@vger.kernel.org, Jiang Yi <giangyi@amazon.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: [PATCH 4.4 157/162] vfio/pci: call irq_bypass_unregister_producer() before freeing irq
+Date:   Thu, 19 Dec 2019 19:34:25 +0100
+Message-Id: <20191219183217.321443381@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -60,59 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lihua Yao <ylhuajnu@outlook.com>
+From: Jiang Yi <giangyi@amazon.com>
 
-commit d60d0cff4ab01255b25375425745c3cff69558ad upstream.
+commit d567fb8819162099035e546b11a736e29c2af0ea upstream.
 
-fin_pll is the parent of clock-controller@7e00f000, specify
-the dependency to ensure proper initialization order of clock
-providers.
+Since irq_bypass_register_producer() is called after request_irq(), we
+should do tear-down in reverse order: irq_bypass_unregister_producer()
+then free_irq().
 
-without this patch:
-[    0.000000] S3C6410 clocks: apll = 0, mpll = 0
-[    0.000000]  epll = 0, arm_clk = 0
+Specifically free_irq() may release resources required by the
+irqbypass del_producer() callback.  Notably an example provided by
+Marc Zyngier on arm64 with GICv4 that he indicates has the potential
+to wedge the hardware:
 
-with this patch:
-[    0.000000] S3C6410 clocks: apll = 532000000, mpll = 532000000
-[    0.000000]  epll = 24000000, arm_clk = 532000000
+ free_irq(irq)
+   __free_irq(irq)
+     irq_domain_deactivate_irq(irq)
+       its_irq_domain_deactivate()
+         [unmap the VLPI from the ITS]
 
-Cc: <stable@vger.kernel.org>
-Fixes: 3f6d439f2022 ("clk: reverse default clk provider initialization order in of_clk_init()")
-Signed-off-by: Lihua Yao <ylhuajnu@outlook.com>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+ kvm_arch_irq_bypass_del_producer(cons, prod)
+   kvm_vgic_v4_unset_forwarding(kvm, irq, ...)
+     its_unmap_vlpi(irq)
+       [Unmap the VLPI from the ITS (again), remap the original LPI]
+
+Signed-off-by: Jiang Yi <giangyi@amazon.com>
+Cc: stable@vger.kernel.org # v4.4+
+Fixes: 6d7425f109d26 ("vfio: Register/unregister irq_bypass_producer")
+Link: https://lore.kernel.org/kvm/20191127164910.15888-1-giangyi@amazon.com
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+[aw: commit log]
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/s3c6410-mini6410.dts |    4 ++++
- arch/arm/boot/dts/s3c6410-smdk6410.dts |    4 ++++
- 2 files changed, 8 insertions(+)
+ drivers/vfio/pci/vfio_pci_intrs.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm/boot/dts/s3c6410-mini6410.dts
-+++ b/arch/arm/boot/dts/s3c6410-mini6410.dts
-@@ -167,6 +167,10 @@
- 	};
- };
+--- a/drivers/vfio/pci/vfio_pci_intrs.c
++++ b/drivers/vfio/pci/vfio_pci_intrs.c
+@@ -318,8 +318,8 @@ static int vfio_msi_set_vector_signal(st
+ 		return -EINVAL;
  
-+&clocks {
-+	clocks = <&fin_pll>;
-+};
-+
- &sdhci0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sd0_clk>, <&sd0_cmd>, <&sd0_cd>, <&sd0_bus4>;
---- a/arch/arm/boot/dts/s3c6410-smdk6410.dts
-+++ b/arch/arm/boot/dts/s3c6410-smdk6410.dts
-@@ -71,6 +71,10 @@
- 	};
- };
- 
-+&clocks {
-+	clocks = <&fin_pll>;
-+};
-+
- &sdhci0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sd0_clk>, <&sd0_cmd>, <&sd0_cd>, <&sd0_bus4>;
+ 	if (vdev->ctx[vector].trigger) {
+-		free_irq(irq, vdev->ctx[vector].trigger);
+ 		irq_bypass_unregister_producer(&vdev->ctx[vector].producer);
++		free_irq(irq, vdev->ctx[vector].trigger);
+ 		kfree(vdev->ctx[vector].name);
+ 		eventfd_ctx_put(vdev->ctx[vector].trigger);
+ 		vdev->ctx[vector].trigger = NULL;
 
 
