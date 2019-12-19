@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DDDC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A1CC2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 473A2222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A48B227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:53:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781601;
-	bh=EW6J5XjbD9d1kp0L/vTsYtNqHpbuluOygMBpSmGnrHo=;
+	s=default; t=1576781604;
+	bh=p1Mnta1SqL0RwazWoE7/sborPswyjbp4DYjTcxwHCOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2cDUsNWC/46yg8z6ptFoN4sXQsQHnwOo6/o1CXQ6lCIvUWnENwAL5ctwLyYdJkl1m
-	 Ah1aRbtbS9PPCbDS7JylqqTk31uWXXhqGGHvVNnHo+mefeQx4tBNbskYyNmTEyltkk
-	 zbgNRThgP5r7I8xEZM8bNN9rzog6o6FxIQWy5ou8=
+	b=jPrAxCgEs9INT5GwG4lz14kfiZAGMMf9PAbmDLYfobiTTOFhzncSsIFRRhL/kDtxE
+	 hTNLn5bggckSdpap/31iY+WVt4PejymYRogzOJkaHIxuLB6a1BKbqK5L038Ac51jsB
+	 ZSlG3ZErlwciMDj6QX86bDSQE6S11NqnI5UMmJio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730363AbfLSSxU (ORCPT
+        id S1730376AbfLSSxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:53:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48232 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:53:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729583AbfLSSxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:53:16 -0500
+        id S1729583AbfLSSxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:53:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25A9E227BF;
-        Thu, 19 Dec 2019 18:53:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E956E227BF;
+        Thu, 19 Dec 2019 18:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781595;
-        bh=EW6J5XjbD9d1kp0L/vTsYtNqHpbuluOygMBpSmGnrHo=;
+        s=default; t=1576781600;
+        bh=p1Mnta1SqL0RwazWoE7/sborPswyjbp4DYjTcxwHCOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ug8twAULVub4Hhr/8t8hiIwhzrFKfRG1rQj6KFB3w7lTmk89AVXEJzaaeNAbOEabh
-         AZOtC3obCcFjRp3kvcWJqVcmgzqy0XtbIxE4dWxYZgYhP3ANeVO1jZoFsIWe2ND/oF
-         WYSyHdhYOTTPgtenkBsaOjjLIFIFn7bCEDGEv+3g=
+        b=z42pA+yzlqM9ma/DZqcx0DYreWjfT1TSQApx0DG4Deh4bpE+nzGjZdKQJMXyr+Wjg
+         ghHSbDasZ1UgwOsr6ZbOrhxT8unrYwcZUg4oiAYNYpeLe6n2pq+x+kDhOrW1kkzycO
+         bmEnjQ0Odza3gyrsnSkACbjd0ssSV2CTUKqZzVK4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 4.19 35/47] CIFS: Respect O_SYNC and O_DIRECT flags during reconnect
-Date:   Thu, 19 Dec 2019 19:34:49 +0100
-Message-Id: <20191219182937.410808219@linuxfoundation.org>
+        stable@vger.kernel.org, Lihua Yao <ylhuajnu@outlook.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 4.19 37/47] ARM: dts: s3c64xx: Fix init order of clock providers
+Date:   Thu, 19 Dec 2019 19:34:51 +0100
+Message-Id: <20191219182939.224882575@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182857.659088743@linuxfoundation.org>
 References: <20191219182857.659088743@linuxfoundation.org>
@@ -59,46 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Shilovsky <pshilov@microsoft.com>
+From: Lihua Yao <ylhuajnu@outlook.com>
 
-commit 44805b0e62f15e90d233485420e1847133716bdc upstream.
+commit d60d0cff4ab01255b25375425745c3cff69558ad upstream.
 
-Currently the client translates O_SYNC and O_DIRECT flags
-into corresponding SMB create options when openning a file.
-The problem is that on reconnect when the file is being
-re-opened the client doesn't set those flags and it causes
-a server to reject re-open requests because create options
-don't match. The latter means that any subsequent system
-call against that open file fail until a share is re-mounted.
+fin_pll is the parent of clock-controller@7e00f000, specify
+the dependency to ensure proper initialization order of clock
+providers.
 
-Fix this by properly setting SMB create options when
-re-openning files after reconnects.
+without this patch:
+[    0.000000] S3C6410 clocks: apll = 0, mpll = 0
+[    0.000000]  epll = 0, arm_clk = 0
 
-Fixes: 1013e760d10e6: ("SMB3: Don't ignore O_SYNC/O_DSYNC and O_DIRECT flags")
-Cc: Stable <stable@vger.kernel.org>
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+with this patch:
+[    0.000000] S3C6410 clocks: apll = 532000000, mpll = 532000000
+[    0.000000]  epll = 24000000, arm_clk = 532000000
+
+Cc: <stable@vger.kernel.org>
+Fixes: 3f6d439f2022 ("clk: reverse default clk provider initialization order in of_clk_init()")
+Signed-off-by: Lihua Yao <ylhuajnu@outlook.com>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/file.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/s3c6410-mini6410.dts |    4 ++++
+ arch/arm/boot/dts/s3c6410-smdk6410.dts |    4 ++++
+ 2 files changed, 8 insertions(+)
 
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -726,6 +726,13 @@ cifs_reopen_file(struct cifsFileInfo *cf
- 	if (backup_cred(cifs_sb))
- 		create_options |= CREATE_OPEN_BACKUP_INTENT;
+--- a/arch/arm/boot/dts/s3c6410-mini6410.dts
++++ b/arch/arm/boot/dts/s3c6410-mini6410.dts
+@@ -165,6 +165,10 @@
+ 	};
+ };
  
-+	/* O_SYNC also has bit for O_DSYNC so following check picks up either */
-+	if (cfile->f_flags & O_SYNC)
-+		create_options |= CREATE_WRITE_THROUGH;
++&clocks {
++	clocks = <&fin_pll>;
++};
 +
-+	if (cfile->f_flags & O_DIRECT)
-+		create_options |= CREATE_NO_BUFFER;
-+
- 	if (server->ops->get_lease_key)
- 		server->ops->get_lease_key(inode, &cfile->fid);
+ &sdhci0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sd0_clk>, <&sd0_cmd>, <&sd0_cd>, <&sd0_bus4>;
+--- a/arch/arm/boot/dts/s3c6410-smdk6410.dts
++++ b/arch/arm/boot/dts/s3c6410-smdk6410.dts
+@@ -69,6 +69,10 @@
+ 	};
+ };
  
++&clocks {
++	clocks = <&fin_pll>;
++};
++
+ &sdhci0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sd0_clk>, <&sd0_cmd>, <&sd0_cd>, <&sd0_bus4>;
 
 
