@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BF8C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F36C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0D824682
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BCF624682
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:53:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781585;
-	bh=ZDWjkucWnuNDUFia2/GxQNQEtlT4iZWmBPaU8zSh7vg=;
+	s=default; t=1576781587;
+	bh=6do8LPNwnSdk/SBo9CUNRHbKZZltgMohbw9SXzUd2FA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ppogs97VNbaCvxAUDLp8i7bZE0eBQLX1eO7ZjKeu6+Frrpk/3+CAFoHA1R38B/yfS
-	 IbT7/FlDxnspKGp1iCucGb4SweSjfDeTc8DBSIqjI0M8FVKAnH2aWJ4PbKrdskKidB
-	 w1qmbkPNo+Q5/a02aJ285eSNtD4voSgEvhmBW8mU=
+	b=0CLsa5qobE9LQtqi3+umrDizCL7Gr7g3WAB7CqYLtaq0uyQkbGxPk8WUJ4TIX+JGP
+	 R4QedMTw70gOrruJgxsSyDtUVp5JEKuzqXzx9oXiyeSCcyPntJDSQJemiiiddp4Tti
+	 IMwmvzR3hjxcF/EMe+xqkK2PENJpSRTIZDEV2NhI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730316AbfLSSxE (ORCPT
+        id S1730324AbfLSSxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:53:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47790 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:53:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730083AbfLSSw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:52:59 -0500
+        id S1728387AbfLSSxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:53:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CFFC222C2;
-        Thu, 19 Dec 2019 18:52:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16159222C2;
+        Thu, 19 Dec 2019 18:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781578;
-        bh=ZDWjkucWnuNDUFia2/GxQNQEtlT4iZWmBPaU8zSh7vg=;
+        s=default; t=1576781583;
+        bh=6do8LPNwnSdk/SBo9CUNRHbKZZltgMohbw9SXzUd2FA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0VJjrUMnlPsaD74VfHpAe7pgwmDiezSiPubMjy2Vx0UCemjtuWJIQjppEJ35xEELf
-         8hJUpSda2N4eeGgtXVrkaCIegsaw7AmLQDw+UZYXCBV+fH8OGoaz5ZzMiQwW/i/YVq
-         eyAsQWhdtONuae4E3Ie9yqsRhRDKc8caTx71JxjU=
+        b=QjGaHBaI/EcMnMhwazOZ5jgMyOKj0zSrZou4+LLWiQJwVhWD5JoPNF2Gr73ZJ9tKT
+         g8tYdJBIbINIbvwM2t52UYMVgFO8wu9n2iMCI0qTbAg7ys7fWOY0CtpLHf6Icjez8P
+         H3nselxG8cRooXXK67i0TPlGLz/9IryN6IwpZBiI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
-        Joe Thornber <ejt@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.19 43/47] dm btree: increase rebalance threshold in __rebalance2()
-Date:   Thu, 19 Dec 2019 19:34:57 +0100
-Message-Id: <20191219182950.995282050@linuxfoundation.org>
+        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Roman Bolshakov <r.bolshakov@yadro.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 45/47] scsi: qla2xxx: Change discovery state before PLOGI
+Date:   Thu, 19 Dec 2019 19:34:59 +0100
+Message-Id: <20191219182955.693851906@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182857.659088743@linuxfoundation.org>
 References: <20191219182857.659088743@linuxfoundation.org>
@@ -60,67 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Tao <houtao1@huawei.com>
+From: Roman Bolshakov <r.bolshakov@yadro.com>
 
-commit 474e559567fa631dea8fb8407ab1b6090c903755 upstream.
+commit 58e39a2ce4be08162c0368030cdc405f7fd849aa upstream.
 
-We got the following warnings from thin_check during thin-pool setup:
+When a port sends PLOGI, discovery state should be changed to login
+pending, otherwise RELOGIN_NEEDED bit is set in
+qla24xx_handle_plogi_done_event(). RELOGIN_NEEDED triggers another PLOGI,
+and it never goes out of the loop until login timer expires.
 
-  $ thin_check /dev/vdb
-  examining superblock
-  examining devices tree
-    missing devices: [1, 84]
-      too few entries in btree_node: 41, expected at least 42 (block 138, max_entries = 126)
-  examining mapping tree
-
-The phenomenon is the number of entries in one node of details_info tree is
-less than (max_entries / 3). And it can be easily reproduced by the following
-procedures:
-
-  $ new a thin pool
-  $ presume the max entries of details_info tree is 126
-  $ new 127 thin devices (e.g. 1~127) to make the root node being full
-    and then split
-  $ remove the first 43 (e.g. 1~43) thin devices to make the children
-    reblance repeatedly
-  $ stop the thin pool
-  $ thin_check
-
-The root cause is that the B-tree removal procedure in __rebalance2()
-doesn't guarantee the invariance: the minimal number of entries in
-non-root node should be >= (max_entries / 3).
-
-Simply fix the problem by increasing the rebalance threshold to
-make sure the number of entries in each child will be greater
-than or equal to (max_entries / 3 + 1), so no matter which
-child is used for removal, the number will still be valid.
-
+Fixes: 8777e4314d397 ("scsi: qla2xxx: Migrate NVME N2N handling into state machine")
+Fixes: 8b5292bcfcacf ("scsi: qla2xxx: Fix Relogin to prevent modifying scan_state flag")
+Cc: Quinn Tran <qutran@marvell.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Acked-by: Joe Thornber <ejt@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Link: https://lore.kernel.org/r/20191125165702.1013-6-r.bolshakov@yadro.com
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Tested-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/persistent-data/dm-btree-remove.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_init.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/md/persistent-data/dm-btree-remove.c
-+++ b/drivers/md/persistent-data/dm-btree-remove.c
-@@ -203,7 +203,13 @@ static void __rebalance2(struct dm_btree
- 	struct btree_node *right = r->n;
- 	uint32_t nr_left = le32_to_cpu(left->header.nr_entries);
- 	uint32_t nr_right = le32_to_cpu(right->header.nr_entries);
--	unsigned threshold = 2 * merge_threshold(left) + 1;
-+	/*
-+	 * Ensure the number of entries in each child will be greater
-+	 * than or equal to (max_entries / 3 + 1), so no matter which
-+	 * child is used for removal, the number will still be not
-+	 * less than (max_entries / 3).
-+	 */
-+	unsigned int threshold = 2 * (merge_threshold(left) + 1);
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -966,6 +966,7 @@ int qla24xx_post_gnl_work(struct scsi_ql
  
- 	if (nr_left + nr_right < threshold) {
- 		/*
+ 	e->u.fcport.fcport = fcport;
+ 	fcport->flags |= FCF_ASYNC_ACTIVE;
++	fcport->disc_state = DSC_LOGIN_PEND;
+ 	return qla2x00_post_work(vha, e);
+ }
+ 
 
 
