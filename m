@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E79CC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA1FC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3189D227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62B0224682
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:53:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781615;
-	bh=79g9pLY07WZmLFOzBXbMh+TNjI7ClABAga+/NDBVIk4=;
+	s=default; t=1576781617;
+	bh=EB2nvPfIkj8d84Tc6Qbg9G35n5LNc0PSNGRHzsUl68o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=slJTo4qla2Rm+t2lUxE8eNFk1BgT9V6mPcDCWl/rebxxvJ/6eFnL9w+JChkv3fZWz
-	 icgcjoiTrO71kpDm3TjnZ0MLYO0R039aqLIXf1h38bT7pfgAbZaBJg/TgTUX7sWSjO
-	 +jivrwxnwRe07UhNBQdrzTnBc1dMS44GQrVOLpc8=
+	b=xxSFEdChCMIS5Ry/Ks5OWBFAqUdtUOJ902HwyD8Atfy3vTtVqncfh78MAW6IWDeRl
+	 FSF/1d2GemwHNn+uNK3Wcq7cgRqNMnaV3SIhm4giNjc4uUhC8VtPptULaxwFncJDyb
+	 nmP9dzDCXBF1tWVh1eomptODQKy2xVe03roestX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728496AbfLSSxd (ORCPT
+        id S1730390AbfLSSxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:53:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48548 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:53:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730208AbfLSSx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:53:28 -0500
+        id S1730395AbfLSSxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:53:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E36D2468C;
-        Thu, 19 Dec 2019 18:53:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12707227BF;
+        Thu, 19 Dec 2019 18:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781607;
-        bh=79g9pLY07WZmLFOzBXbMh+TNjI7ClABAga+/NDBVIk4=;
+        s=default; t=1576781612;
+        bh=EB2nvPfIkj8d84Tc6Qbg9G35n5LNc0PSNGRHzsUl68o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0tc5plUpAmBSLhySkv0XDYYp/nbZ+M3mvDOCyArrnLKX1j//Yez0unkSRNWHunOb7
-         IPtkkuovodNW0WfuOASdyGyQOCP2sFJQyMVffQtmM5KAa537wBWZh2QG63TrxcmhMo
-         kpM1584S0h8ziU4gj32CjE/WMfExaqb3/5mmwBG4=
+        b=ClImys3Da6AEKWNkqXmigX9/SQO2dXBZKDdrV1eSmhSKP0Gvfum26PJ3yMwNiYmQ9
+         yLEsFCjIoYnJgTb8TEB+Dumdy1bhS9flCA/fgRyEml+DrvRb5bVqtS/z7QBMVojepV
+         O23igsbMRH8p4XHdoGmeRRXjOX5TFiWb7pe9He5s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: [PATCH 4.19 40/47] dma-buf: Fix memory leak in sync_file_merge()
-Date:   Thu, 19 Dec 2019 19:34:54 +0100
-Message-Id: <20191219182946.667518659@linuxfoundation.org>
+        stable@vger.kernel.org, Fredrik Noring <noring@nocrew.org>
+Subject: [PATCH 5.4 01/80] USB: Fix incorrect DMA allocations for local memory pool drivers
+Date:   Thu, 19 Dec 2019 19:33:53 +0100
+Message-Id: <20191219183032.004373296@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191219182857.659088743@linuxfoundation.org>
-References: <20191219182857.659088743@linuxfoundation.org>
+In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
+References: <20191219183031.278083125@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,34 +60,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Fredrik Noring <noring@nocrew.org>
 
-commit 6645d42d79d33e8a9fe262660a75d5f4556bbea9 upstream.
+commit f8c63edfd78905320e86b6b2be2b7a5ac768fa4e upstream.
 
-In the implementation of sync_file_merge() the allocated sync_file is
-leaked if number of fences overflows. Release sync_file by goto err.
+Fix commit 7b81cb6bddd2 ("usb: add a HCD_DMA flag instead of
+guestimating DMA capabilities") where local memory USB drivers
+erroneously allocate DMA memory instead of pool memory, causing
 
-Fixes: a02b9dc90d84 ("dma-buf/sync_file: refactor fence storage in struct sync_file")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191122220957.30427-1-navid.emamdoost@gmail.com
+	OHCI Unrecoverable Error, disabled
+	HC died; cleaning up
+
+The order between hcd_uses_dma() and hcd->localmem_pool is now
+arranged as in hcd_buffer_alloc() and hcd_buffer_free(), with the
+test for hcd->localmem_pool placed first.
+
+As an alternative, one might consider adjusting hcd_uses_dma() with
+
+ static inline bool hcd_uses_dma(struct usb_hcd *hcd)
+ {
+-	return IS_ENABLED(CONFIG_HAS_DMA) && (hcd->driver->flags & HCD_DMA);
++	return IS_ENABLED(CONFIG_HAS_DMA) &&
++		(hcd->driver->flags & HCD_DMA) &&
++		(hcd->localmem_pool == NULL);
+ }
+
+One can also consider unsetting HCD_DMA for local memory pool drivers.
+
+Fixes: 7b81cb6bddd2 ("usb: add a HCD_DMA flag instead of guestimating DMA capabilities")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Fredrik Noring <noring@nocrew.org>
+Link: https://lore.kernel.org/r/20191210172905.GA52526@sx9
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma-buf/sync_file.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/core/hcd.c         |   42 ++++++++++++++++++++---------------------
+ drivers/usb/storage/scsiglue.c |    3 +-
+ 2 files changed, 23 insertions(+), 22 deletions(-)
 
---- a/drivers/dma-buf/sync_file.c
-+++ b/drivers/dma-buf/sync_file.c
-@@ -230,7 +230,7 @@ static struct sync_file *sync_file_merge
- 	a_fences = get_fences(a, &a_num_fences);
- 	b_fences = get_fences(b, &b_num_fences);
- 	if (a_num_fences > INT_MAX - b_num_fences)
--		return NULL;
-+		goto err;
+--- a/drivers/usb/core/hcd.c
++++ b/drivers/usb/core/hcd.c
+@@ -1409,7 +1409,17 @@ int usb_hcd_map_urb_for_dma(struct usb_h
+ 	if (usb_endpoint_xfer_control(&urb->ep->desc)) {
+ 		if (hcd->self.uses_pio_for_control)
+ 			return ret;
+-		if (hcd_uses_dma(hcd)) {
++		if (hcd->localmem_pool) {
++			ret = hcd_alloc_coherent(
++					urb->dev->bus, mem_flags,
++					&urb->setup_dma,
++					(void **)&urb->setup_packet,
++					sizeof(struct usb_ctrlrequest),
++					DMA_TO_DEVICE);
++			if (ret)
++				return ret;
++			urb->transfer_flags |= URB_SETUP_MAP_LOCAL;
++		} else if (hcd_uses_dma(hcd)) {
+ 			if (is_vmalloc_addr(urb->setup_packet)) {
+ 				WARN_ONCE(1, "setup packet is not dma capable\n");
+ 				return -EAGAIN;
+@@ -1427,23 +1437,22 @@ int usb_hcd_map_urb_for_dma(struct usb_h
+ 						urb->setup_dma))
+ 				return -EAGAIN;
+ 			urb->transfer_flags |= URB_SETUP_MAP_SINGLE;
+-		} else if (hcd->localmem_pool) {
+-			ret = hcd_alloc_coherent(
+-					urb->dev->bus, mem_flags,
+-					&urb->setup_dma,
+-					(void **)&urb->setup_packet,
+-					sizeof(struct usb_ctrlrequest),
+-					DMA_TO_DEVICE);
+-			if (ret)
+-				return ret;
+-			urb->transfer_flags |= URB_SETUP_MAP_LOCAL;
+ 		}
+ 	}
  
- 	num_fences = a_num_fences + b_num_fences;
+ 	dir = usb_urb_dir_in(urb) ? DMA_FROM_DEVICE : DMA_TO_DEVICE;
+ 	if (urb->transfer_buffer_length != 0
+ 	    && !(urb->transfer_flags & URB_NO_TRANSFER_DMA_MAP)) {
+-		if (hcd_uses_dma(hcd)) {
++		if (hcd->localmem_pool) {
++			ret = hcd_alloc_coherent(
++					urb->dev->bus, mem_flags,
++					&urb->transfer_dma,
++					&urb->transfer_buffer,
++					urb->transfer_buffer_length,
++					dir);
++			if (ret == 0)
++				urb->transfer_flags |= URB_MAP_LOCAL;
++		} else if (hcd_uses_dma(hcd)) {
+ 			if (urb->num_sgs) {
+ 				int n;
  
+@@ -1497,15 +1506,6 @@ int usb_hcd_map_urb_for_dma(struct usb_h
+ 				else
+ 					urb->transfer_flags |= URB_DMA_MAP_SINGLE;
+ 			}
+-		} else if (hcd->localmem_pool) {
+-			ret = hcd_alloc_coherent(
+-					urb->dev->bus, mem_flags,
+-					&urb->transfer_dma,
+-					&urb->transfer_buffer,
+-					urb->transfer_buffer_length,
+-					dir);
+-			if (ret == 0)
+-				urb->transfer_flags |= URB_MAP_LOCAL;
+ 		}
+ 		if (ret && (urb->transfer_flags & (URB_SETUP_MAP_SINGLE |
+ 				URB_SETUP_MAP_LOCAL)))
+--- a/drivers/usb/storage/scsiglue.c
++++ b/drivers/usb/storage/scsiglue.c
+@@ -135,7 +135,8 @@ static int slave_configure(struct scsi_d
+ 	 * For such controllers we need to make sure the block layer sets
+ 	 * up bounce buffers in addressable memory.
+ 	 */
+-	if (!hcd_uses_dma(bus_to_hcd(us->pusb_dev->bus)))
++	if (!hcd_uses_dma(bus_to_hcd(us->pusb_dev->bus)) ||
++			(bus_to_hcd(us->pusb_dev->bus)->localmem_pool != NULL))
+ 		blk_queue_bounce_limit(sdev->request_queue, BLK_BOUNCE_HIGH);
+ 
+ 	/*
 
 
