@@ -2,95 +2,113 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C79C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92021C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B02D92064B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E7102064B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:25:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfLSKYb (ORCPT
+        id S1726878AbfLSKZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 05:24:31 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:39014 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726694AbfLSKY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 05:24:28 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9E6B11A0ABE;
-        Thu, 19 Dec 2019 11:24:26 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EDE541A0426;
-        Thu, 19 Dec 2019 11:24:20 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id BD466402DF;
-        Thu, 19 Dec 2019 18:24:13 +0800 (SGT)
-From:   Joakim Zhang <qiangqing.zhang@nxp.com>
-To:     tglx@linutronix.de, maz@kernel.org, jason@lakedaemon.net,
-        robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de
-Cc:     kernel@pengutronix.de, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, fugang.duan@nxp.com,
-        linux-arm-kernel@lists.infradead.org,
-        Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: [PATCH V2 1/2] dt-bindings/irq: add binding for NXP INTMUX interrupt multiplexer
-Date:   Thu, 19 Dec 2019 18:21:04 +0800
-Message-Id: <1576750865-14442-2-git-send-email-qiangqing.zhang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576750865-14442-1-git-send-email-qiangqing.zhang@nxp.com>
-References: <1576750865-14442-1-git-send-email-qiangqing.zhang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 19 Dec 2019 05:25:23 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34851 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726699AbfLSKZX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 05:25:23 -0500
+Received: by mail-ot1-f68.google.com with SMTP id k16so2064351otb.2;
+        Thu, 19 Dec 2019 02:25:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qXY/bekMxM74rBpabc0IortWdwZ5JIbPWlc66tqqZzg=;
+        b=FIAqo9lY19UD6opTdjw4fQ0qX+bhIhny2agEy6XvVcN7jWMG9AYO1U2hZcQMNQuriv
+         8n72zFSozAJPVnVUuAXLMbKEbiAXS3z22RcOAar37wU2VtUnaW6HiRF/2uhon9Ye54Ue
+         vI7vC2YJcNsLykdA38iWjGxgYoLGMRTociTfqxiHa1otuRWLcCyZJORiaj/mxHdUTp2G
+         +94HQywKG+FTW+49QnrMzTZQjy2Plw9sPAjcT7G2KOQ2U9zTQ8GgfytQIiBx9ZgPlWex
+         wvbBnkvTxiiwfpUKWrK8r586+BpDZj64teYyPNKoBeV68JZMGYpsXJV+Gj/WhPBz2yIT
+         wdnw==
+X-Gm-Message-State: APjAAAVqrHsLVd/UX7B4OyiIeli9gpuAzbsgSq1aKGKI4KWKnQuEaV6x
+        TTy2vt2W45r6VgBPEHfyHsYOUYpFyVQAIDFJFwg=
+X-Google-Smtp-Source: APXvYqyYLv7usVsn93H5qh2dCkD0JPqTwk1wDn60NmEe2dX2BaCHIZn8ydrShg0SGD5KCWpvEC03FH33JtVmWwwkDh0=
+X-Received: by 2002:a05:6830:2141:: with SMTP id r1mr7956333otd.39.1576751122361;
+ Thu, 19 Dec 2019 02:25:22 -0800 (PST)
+MIME-Version: 1.0
+References: <20191216062806.112361-1-yuchao0@huawei.com>
+In-Reply-To: <20191216062806.112361-1-yuchao0@huawei.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 19 Dec 2019 11:25:11 +0100
+Message-ID: <CAMuHMdUDURUQJjJU+2QQgY1hXN8ndJ6dwc-PF1CWc-HAio0sKA@mail.gmail.com>
+Subject: Re: [RFC PATCH v5] f2fs: support data compression
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chao Yu <chao@kernel.org>,
+        Linux-Next <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the DT bindings for the NXP INTMUX interrupt multiplexer
-found in the i.MX8 family SoCs.
+Hi,
 
-Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
----
- .../interrupt-controller/fsl,intmux.txt       | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.txt
+On Mon, Dec 16, 2019 at 7:29 AM Chao Yu <yuchao0@huawei.com> wrote:
+>
+> This patch tries to support compression in f2fs.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.txt
-new file mode 100644
-index 000000000000..a9a16b5046c5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.txt
-@@ -0,0 +1,28 @@
-+Freescale INTMUX interrupt multiplexer
-+
-+Required properties:
-+
-+- compatible: Should be:
-+	- "fsl,imx-intmux"
-+- reg: Physical base address and size of registers.
-+- interrupts: Should contain one parent interrupt line used to multiplex the
-+  input interrupt sources.
-+- clocks: Should contain one clock for entry in clock-names.
-+- clock-names:
-+   - "ipg": main logic clock
-+- interrupt-controller: Identifies the node as an interrupt controller.
-+- #interrupt-cells: Specifies the number of cells needed to encode an
-+  interrupt source. The value must be 1.
-+
-+Example:
-+
-+	intmux@37400000 {
-+		compatible = "fsl,imx-intmux";
-+		reg = <0x37400000 0x1000>;
-+		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&clk IMX8QM_CM40_IPG_CLK>;
-+		clock-names = "ipg";
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+	};
-+
--- 
-2.17.1
 
+
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+
+> @@ -667,6 +719,24 @@ int f2fs_truncate_blocks(struct inode *inode, u64 from, bool lock)
+>         return err;
+>  }
+>
+> +int f2fs_truncate_blocks(struct inode *inode, u64 from, bool lock)
+> +{
+> +       u64 free_from = from;
+> +
+> +       /*
+> +        * for compressed file, only support cluster size
+> +        * aligned truncation.
+> +        */
+> +       if (f2fs_compressed_file(inode)) {
+> +               size_t cluster_size = PAGE_SIZE <<
+> +                                       F2FS_I(inode)->i_log_cluster_size;
+> +
+> +               free_from = roundup(from, cluster_size);
+
+This is a 64-by-32 or 64-by-64 division, causing a link failure on
+32-bit platforms:
+
+    fs/f2fs/file.o: In function `f2fs_truncate_blocks':
+    file.c:(.text+0x1db4): undefined reference to `__udivdi3'
+
+Please use DIV_ROUND_UP_ULL() instead.
+
+Reported-by: <noreply@ellerman.id.au>
+
+> +       }
+> +
+> +       return do_truncate_blocks(inode, free_from, lock);
+> +}
+
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
