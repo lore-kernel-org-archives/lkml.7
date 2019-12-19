@@ -2,171 +2,121 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08546C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2F9C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D22CB2465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:56:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576745796;
-	bh=jdvxgfZjEZ7DGeX1r+G3xQtYHPzWmSFc/3R3a+8BrPA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DQRZChfz47Fi76YpLEmyGI32PjFN9N1FCFjoCRi5+zYudmeOlkyP/fxq9Vhdv882C
-	 TpVBq1fODzHQezBnKD6l/syOqzxVo8BsEhEWNvUUn0fqRkkTGbCa0AtwUMJyQl81xL
-	 1uUZgFOx/FwFa0uFsuslky1FfYwVk8WeENXDQMQ0=
+	by mail.kernel.org (Postfix) with ESMTP id 8E7192465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:57:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfLSI4g (ORCPT
+        id S1726712AbfLSI5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 03:56:36 -0500
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:52780 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbfLSI4g (ORCPT
+        Thu, 19 Dec 2019 03:57:37 -0500
+Received: from mo-csw1515.securemx.jp ([210.130.202.154]:42438 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbfLSI5h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 03:56:36 -0500
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id xBJ8uUge022688;
-        Thu, 19 Dec 2019 17:56:31 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com xBJ8uUge022688
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1576745791;
-        bh=CJ/qEVPIQdohGWcu6SkjfsxS+gNDz9h6ttMnMdGwntA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OtDoTR1DqKFuVMp3qoF6qbCDuSuK3JNRF3H0YexVm348F7DB+++QpJwJJhJso8kSG
-         CDcjhXFfqioXeQzOMgwuIkh0FmBJBDn6o26kQtcWSahAX4nx/HkTjO/VUKGT4dAU3e
-         LJ7+4D702S7FIBePlk0CiZ37DFx1cQFJ1ElgCtlvdkt2vumVwQLVYK47gqEoS7Cj+/
-         iTSMM21VTlEvExSL87Hbwh0lDkQ3cx3RLrycbVp+YZ2qHUSEVpqSfkUu1vvZKIIY3l
-         eAbroxN0CqpVlFUUCsFHGtdaXF3I9dNIqqTOysl9AfXP7tQ0dHFhSAWfJzXqDwnTLA
-         Cbo++AMRQ12bg==
-X-Nifty-SrcIP: [209.85.221.180]
-Received: by mail-vk1-f180.google.com with SMTP id u6so1410749vkn.13;
-        Thu, 19 Dec 2019 00:56:31 -0800 (PST)
-X-Gm-Message-State: APjAAAXBPZ8iUPWBw2q4VozsRrRTXlDJplNfG1v+nbqyJmd174nBJhuG
-        yGnmCX8BExCUXH9llt1q392iVBckgAp51sS0RLk=
-X-Google-Smtp-Source: APXvYqxy+SlvdRodh4m0LAxJVbvQg91yTJatS8sTBtk9ghoUj/z84Cf+wuatV/uFpgcKs0TY9RkuSY6U9zeXSuIslUM=
-X-Received: by 2002:a1f:8cd5:: with SMTP id o204mr4991451vkd.66.1576745790096;
- Thu, 19 Dec 2019 00:56:30 -0800 (PST)
-MIME-Version: 1.0
-References: <201912181000.82Z7czbN%lkp@intel.com> <20191218083842.14882-1-u.kleine-koenig@pengutronix.de>
- <20191218172353.GO22665@localhost> <CAK7LNATztV-a3maL+vqQhbVsLBD_dsy+wbOZQ5ofQfbZQGGuLA@mail.gmail.com>
- <20191219081814.GP22665@localhost>
-In-Reply-To: <20191219081814.GP22665@localhost>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 19 Dec 2019 17:55:54 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASHZ9HsYj+sncDqOBWRV+YoFNTciKOxfeYrA7MtBJ9T7A@mail.gmail.com>
-Message-ID: <CAK7LNASHZ9HsYj+sncDqOBWRV+YoFNTciKOxfeYrA7MtBJ9T7A@mail.gmail.com>
-Subject: Re: kbuild obj-m directory descend (was: Re: [PATCH] serdev: fix
- builds with CONFIG_SERIAL_DEV_BUS=m)
+        Thu, 19 Dec 2019 03:57:37 -0500
+Received: by mo-csw.securemx.jp (mx-mo-csw1515) id xBJ8vJro018437; Thu, 19 Dec 2019 17:57:19 +0900
+X-Iguazu-Qid: 34tKThYsqI7CuVd7ye
+X-Iguazu-QSIG: v=2; s=0; t=1576745839; q=34tKThYsqI7CuVd7ye; m=O3BnQ2bs5DsNfd7TZPZJZDHDPfXbewPgW32ALy13FeM=
+Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
+        by relay.securemx.jp (mx-mr1511) id xBJ8vHQN019037;
+        Thu, 19 Dec 2019 17:57:18 +0900
+Received: from enc02.toshiba.co.jp ([61.202.160.51])
+        by imx12.toshiba.co.jp  with ESMTP id xBJ8vHvf001484;
+        Thu, 19 Dec 2019 17:57:17 +0900 (JST)
+Received: from hop101.toshiba.co.jp ([133.199.85.107])
+        by enc02.toshiba.co.jp  with ESMTP id xBJ8vH2O017194;
+        Thu, 19 Dec 2019 17:57:17 +0900
+From:   Punit Agrawal <punit1.agrawal@toshiba.co.jp>
 To:     Johan Hovold <johan@kernel.org>
-Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Rob Herring <robh@kernel.org>,
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        <linux-serial@vger.kernel.org>,
+        "ACPI Devel Maling List" <linux-acpi@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        kbuild test robot <lkp@intel.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        <nobuhiro1.iwamatsu@toshiba.co.jp>, <shrirang.bagul@canonical.com>,
+        Stable <stable@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Hans de Goede" <hdegoede@redhat.com>
+Subject: Re: [PATCH] serdev: Don't claim unsupported serial devices
+References: <20191218065646.817493-1-punit1.agrawal@toshiba.co.jp>
+        <20191218085648.GI22665@localhost>
+        <CAJZ5v0h-bhg4+kwTci5_wZhn9rYN=YXoCbSTVs4vPRzRFOjU8A@mail.gmail.com>
+        <20191219085114.GQ22665@localhost>
+Date:   Thu, 19 Dec 2019 17:58:08 +0900
+In-Reply-To: <20191219085114.GQ22665@localhost> (Johan Hovold's message of
+        "Thu, 19 Dec 2019 09:51:14 +0100")
+X-TSB-HOP: ON
+Message-ID: <875zicofof.fsf@kokedama.swc.toshiba.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 5:18 PM Johan Hovold <johan@kernel.org> wrote:
+Johan Hovold <johan@kernel.org> writes:
+
+> On Thu, Dec 19, 2019 at 09:39:57AM +0100, Rafael J. Wysocki wrote:
+>> On Wed, Dec 18, 2019 at 9:56 AM Johan Hovold <johan@kernel.org> wrote:
+>> >
+>> > On Wed, Dec 18, 2019 at 03:56:46PM +0900, Punit Agrawal wrote:
+>> > > Serdev sub-system claims all serial devices that are not already
+>> > > enumerated. As a result, no device node is created for serial port on
+>> > > certain boards such as the Apollo Lake based UP2. This has the
+>> > > unintended consequence of not being able to raise the login prompt via
+>> > > serial connection.
+>> > >
+>> > > Introduce a blacklist to reject devices that should not be treated as
+>> > > a serdev device. Add the Intel HS UART peripheral ids to the blacklist
+>> > > to bring back serial port on SoCs carrying them.
+>> > >
+>> > > Cc: stable@vger.kernel.org
+>> > > Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+>> > > Cc: Rob Herring <robh@kernel.org>
+>> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> > > Cc: Johan Hovold <johan@kernel.org>
+>> > > Cc: Hans de Goede <hdegoede@redhat.com>
+>> > > ---
+>> > >
+>> > > Hi,
+>> > >
+>> > > The patch has been updated based on feedback recieved on the RFC[0].
+>> > >
+>> > > Please consider merging if there are no objections.
+>> >
+>> > Rafael, I vaguely remember you arguing for a white list when we
+>> > discussed this at some conference. Do you have any objections to the
+>> > blacklist approach taken here?
+>> 
+>> As a rule, I prefer whitelisting, because it only enables the feature
+>> for systems where it has been tested and confirmed to work.
+>> 
+>> However, if you are convinced that in this particular case the feature
+>> should work on the vast majority of systems with a few possible
+>> exceptions, blacklisting is fine too.
+>> 
+>> It all depends on what the majority is, at least in principle.
 >
-> On Thu, Dec 19, 2019 at 11:00:15AM +0900, Masahiro Yamada wrote:
-> > Hi.
-> >
-> > On Thu, Dec 19, 2019 at 2:23 AM Johan Hovold <johan@kernel.org> wrote:
+> Ok, thanks. I don't have a preference either way in this case simply
+> because I don't know the distribution you refer to.
 >
-> > > The offending patch is broken since it effectively makes
-> > > CONFIG_SERIAL_DEV_BUS bool (built-in or disabled), but for some reaso=
-n
-> > > those symbols do not end up in vmlinux (despite being compiled) when =
-you
-> > > add a built-in object goal under a directory that was entered using
-> > > obj-m.
-> > >
-> > > That seems like a bug to me and contradicts the kbuild documentation
-> > > (3.6):
-> > >
-> > >         Example:
-> > >
-> > >         #fs/Makefile
-> > >         obj-$(CONFIG_EXT2_FS) +=3D ext2/
-> > >
-> > >         If CONFIG_EXT2_FS is set to either =E2=80=98y=E2=80=99 (built=
--in) or =E2=80=98m=E2=80=99
-> > >         (modular) the corresponding obj- variable will be set, and
-> > >         kbuild will descend down in the ext2 directory. Kbuild only u=
-ses
-> > >         this information to decide that it needs to visit the directo=
-ry,
-> > >         it is the Makefile in the subdirectory that specifies what is
-> > >         modular and what is built-in.
-> > >
-> > > I tried adding other targets to obj-y directly and they are also are =
-not
-> > > included, seemingly since the directory was entered using obj-m.
-> > >
-> > > Masahiro or Michal, can you shed some light?
+> But if Hans thinks blacklisting is the way to go then let's do that. We
+> haven't had that many reports about this, but if that were to change
+> down the line, I guess we can always switch to whitelisting.
 >
-> > I saw similar questions in ML in the past.
-> > Yes, this is how Kbuild works;
-> > Kbuild only links objects in Makefiles visited by obj-y.
-> >
-> > If you use
-> >     obj-m +=3D serdev/
-> > all objects in serdev/ are considered as modular.
+> Punit, feel free to add my
 >
-> Well, any objects in serdev/ specified in obj-y would currently be built
-> but never included in either built-in.a or any module.
-
-Right.
-
+> Acked-by: Johan Hovold <johan@kernel.org>
 >
-> > I think it is better to make the document
-> > clarify this.
->
-> Yeah, I don't have a use case for this, but the documentation would need
-> to be updated to not have more people look into this.
->
-> And at least this behaviour allowed us to catch this bug, but only
-> because we had dependent modules that failed to build. I see now that
-> you posted a patch adding a general warning about obj-y under obj-m last
-> fall, but that was apparently never merged.
+> after addressing the review comments you've gotten so far.
 
-This one?
+Thanks Johan.
 
-https://lore.kernel.org/patchwork/patch/1126959/
-
-This patch detected several Makefile/Kconfig bugs,
-and it is good.
-
-But, it also turned out to cause false positive warnings
-on some architectures.
-I thought it was not so easy to fix it.
-So, I decided to postpone it.
-
-
-> But when was this behaviour changed? And was that done on purpose?
-
-No. Not changed at all.
-
-In my understanding, the current behavior has been kept
-from the beginning.
-
-
-
-> Johan
-
-
-
---=20
-Best Regards
-Masahiro Yamada
+I will post a new version with the updates and acks.
