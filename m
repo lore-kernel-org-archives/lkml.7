@@ -2,97 +2,92 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F779C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21546C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2586824679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB59524679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:25:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576797878;
-	bh=K3CvbaB8eN/Eb3ZiDlzpb2f2O7TIhZPxnGG8BvCApZA=;
+	s=default; t=1576797908;
+	bh=OpW/vFNf8yuCa8Ujk2w/8mdhZTESUxbg4sfNSMdxIHE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=03nhktAFpH05eDH/cTCWXOpVnlWogG2WUlHKFOLkcGL2AroIq519gF/5jQWYTJFKq
-	 NxLmnGOvMKsu+IUL3u6+n6PHLXM+HFQ94aqXRvysv35onbL3zuNFrTkW+/AwjJES8w
-	 6IbzlCsP4653jhR+cod/Ztn6BwdpzPhknHwgfH0I=
+	b=SgZkrE/FKPBWuO3Fmf7pHS3pXhHBw+2wvStahnJ3/cWrSivkSXaOhMu7SMPL2oCY/
+	 Eg7S3PRD5t7CZYtInzOJXM3TxSo6VgTdWCV9IaKSt90+uw4i37q+lKhR5jVGHEIcDM
+	 rONzWy7IX8/C5eHJRkL7ngwTiQg+o//kf7w36Fqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbfLSXYh (ORCPT
+        id S1727191AbfLSXZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 18:24:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59268 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 18:25:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726880AbfLSXYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 18:24:37 -0500
+        id S1726880AbfLSXZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 18:25:06 -0500
 Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20EC624676;
-        Thu, 19 Dec 2019 23:24:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B45D24676;
+        Thu, 19 Dec 2019 23:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576797876;
-        bh=K3CvbaB8eN/Eb3ZiDlzpb2f2O7TIhZPxnGG8BvCApZA=;
+        s=default; t=1576797905;
+        bh=OpW/vFNf8yuCa8Ujk2w/8mdhZTESUxbg4sfNSMdxIHE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XAspA5fA3wS6cyzuttDwywfqalB85K4DEU1gYdSGJKg97fof11phNpx85w8Z6Rwc+
-         mhpmUK7TrloulsZiMb/hnrx297BtyaM0DEwZVHp97YKu27zY2uQVJiHo/LLPws1Vay
-         ll3fTOlmTdBw9u4lL/Lwt9f+viCPxQWQgBa9LnXU=
-Date:   Thu, 19 Dec 2019 18:24:35 -0500
+        b=M1mE44UBGUY1+ZZYHVyOH2bv1PtMbbuFI06lRR9E7DrnkqhLjcRo9IDKlO5eBwGm1
+         Qd7ximLPII8aePutZuDhgLhjbK2UiFqoYwZ/miTjJSKxDYo4AUcsEE679zgsFz6xfE
+         4MV4L1LITHTN3t1q4yfZwIpmaQgY2SVPukrUvuiI=
+Date:   Thu, 19 Dec 2019 18:25:04 -0500
 From:   Sasha Levin <sashal@kernel.org>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-riscv@lists.infradead.org,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>
-Subject: Re: [PATCH AUTOSEL 5.4 316/350] int128: move __uint128_t compiler
- test to Kconfig
-Message-ID: <20191219232435.GU17708@sasha-vm>
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Andrii Nakryiko <andriin@fb.com>,
+        Song Liu <songliubraving@fb.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, oss-drivers@netronome.com
+Subject: Re: [oss-drivers] [PATCH AUTOSEL 5.4 326/350] bpf: Switch bpf_map
+ ref counter to atomic64_t so bpf_map_inc() never fails
+Message-ID: <20191219232504.GV17708@sasha-vm>
 References: <20191210210735.9077-1-sashal@kernel.org>
- <20191210210735.9077-277-sashal@kernel.org>
- <CAKv+Gu-KLGFUEP55iGFp-irspwoG1uc0ZVPW15YDFX9MtXQW2Q@mail.gmail.com>
+ <20191210210735.9077-287-sashal@kernel.org>
+ <20191210132834.157d5fc5@cakuba.netronome.com>
+ <20191212162513.GB1264@localhost.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <CAKv+Gu-KLGFUEP55iGFp-irspwoG1uc0ZVPW15YDFX9MtXQW2Q@mail.gmail.com>
+In-Reply-To: <20191212162513.GB1264@localhost.localdomain>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 10:07:54AM +0000, Ard Biesheuvel wrote:
->On Tue, 10 Dec 2019 at 22:13, Sasha Levin <sashal@kernel.org> wrote:
+On Thu, Dec 12, 2019 at 05:25:13PM +0100, Daniel Borkmann wrote:
+>On Tue, Dec 10, 2019 at 01:28:34PM -0800, Jakub Kicinski wrote:
+>> On Tue, 10 Dec 2019 16:07:11 -0500, Sasha Levin wrote:
+>> > From: Andrii Nakryiko <andriin@fb.com>
+>> >
+>> > [ Upstream commit 1e0bd5a091e5d9e0f1d5b0e6329b87bb1792f784 ]
+>> >
+>> > 92117d8443bc ("bpf: fix refcnt overflow") turned refcounting of bpf_map into
+>> > potentially failing operation, when refcount reaches BPF_MAX_REFCNT limit
+>> > (32k). Due to using 32-bit counter, it's possible in practice to overflow
+>> > refcounter and make it wrap around to 0, causing erroneous map free, while
+>> > there are still references to it, causing use-after-free problems.
 >>
->> From: Ard Biesheuvel <ardb@kernel.org>
+>> I don't think this is a bug fix, the second sentence here is written
+>> in a quite confusing way, but there is no bug.
 >>
->> [ Upstream commit c12d3362a74bf0cd9e1d488918d40607b62a3104 ]
->>
->> In order to use 128-bit integer arithmetic in C code, the architecture
->> needs to have declared support for it by setting ARCH_SUPPORTS_INT128,
->> and it requires a version of the toolchain that supports this at build
->> time. This is why all existing tests for ARCH_SUPPORTS_INT128 also test
->> whether __SIZEOF_INT128__ is defined, since this is only the case for
->> compilers that can support 128-bit integers.
->>
->> Let's fold this additional test into the Kconfig declaration of
->> ARCH_SUPPORTS_INT128 so that we can also use the symbol in Makefiles,
->> e.g., to decide whether a certain object needs to be included in the
->> first place.
->>
->> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
->> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
->> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> Could you drop? I don't think it's worth the backporting pain since it
+>> changes bpf_map_inc().
 >
->This does not fix a bug so no need to put it in -stable
+>Agree, this is not a bug fix and should not go to stable. (Also agree that
+>the changelog is super confusing here and should have been done differently
+>to avoid exactly where we are here. I think I pointed that out in the
+>original patch, but seems this slipped through the cracks :/)
 
-Dropped, thanks!
+Sure, dropped, thanks!
 
 -- 
 Thanks,
