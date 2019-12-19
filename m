@@ -2,147 +2,147 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A1CC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC51C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C95CE206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:15:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DDD5206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:16:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfLSPPJ (ORCPT
+        id S1726858AbfLSPQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 10:15:09 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:38303 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726757AbfLSPPJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 10:15:09 -0500
-Received: by mail-io1-f72.google.com with SMTP id f18so3567278iol.5
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 07:15:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=VjstBJC/J7dIYqK7+U4bFc27tLQDjJ0UFLhGs3+2y08=;
-        b=b3Z7G+pRqjCqwwCIajijiDYpdAe2J9X/if0ye8tv56d7So7vV+o/R4Xg2ABenNw9mD
-         vfRfs9+97GYtfpmxKtmSah6Iix5XEIfhoNlh4L4SZJ4F5qtS6kMoP+0QH0DzpgKes08A
-         7wv1d09Bc2bp2XC46J5aeNh7Wsp0M6k2kS/zWNBpnJ2JnVPjpd11XLNc+PyCUykMSSby
-         BMb4uuCa/j7C0do92pM5lzsLRn/I/ufORN+H/MUM8GulUPLh7ZOQ7DBFbKNL6pe6n7wY
-         8ocd0QR/SXuEUk5o/l/iBKyFy+sBBXDhq8THo1dM3l0n4jxMkBU5+mKfStMmeBzAQIIq
-         3fLg==
-X-Gm-Message-State: APjAAAVx+yzu2J1fXHYyZwWu5Ec/pjtKxQ+M8Ifo9cXBcgKXKh0waJvC
-        Yq0Tt9asdbZKzxTy9oW13Q4sGii5WBx5nTaNxTW+CqkrEb8s
-X-Google-Smtp-Source: APXvYqwynkGgK81TYmuCv4AYKxZFQshQr/rGLliweNYYSpYa56ie3B7daOP5Ncmx3XBGWlyFmVrPq9UiTjr6wM851PQKomtZFwmH
+        Thu, 19 Dec 2019 10:16:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:39878 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726757AbfLSPQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 10:16:30 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 95F761FB;
+        Thu, 19 Dec 2019 07:16:29 -0800 (PST)
+Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0E1B73F718;
+        Thu, 19 Dec 2019 07:16:27 -0800 (PST)
+Subject: Re: [PATCH] sched, fair: Allow a small degree of load imbalance
+ between SD_NUMA domains
+To:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Mel Gorman <mgorman@techsingularity.net>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, pauld@redhat.com,
+        srikar@linux.vnet.ibm.com, quentin.perret@arm.com,
+        dietmar.eggemann@arm.com, Morten.Rasmussen@arm.com,
+        hdanton@sina.com, parth@linux.ibm.com, riel@surriel.com,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20191218154402.GF3178@techsingularity.net>
+ <20191219144539.GA19614@linaro.org>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <29bf4c69-b961-0482-7582-d6f1e09e997a@arm.com>
+Date:   Thu, 19 Dec 2019 15:16:27 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Received: by 2002:a6b:bbc4:: with SMTP id l187mr6252569iof.234.1576768508627;
- Thu, 19 Dec 2019 07:15:08 -0800 (PST)
-Date:   Thu, 19 Dec 2019 07:15:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d99340059a100686@google.com>
-Subject: BUG: unable to handle kernel paging request in xfs_sb_quiet_read_verify
-From:   syzbot <syzbot+4722bf4c6393b73a792b@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, allison.henderson@oracle.com,
-        aryabinin@virtuozzo.com, bfoster@redhat.com,
-        darrick.wong@oracle.com, dchinner@redhat.com, dja@axtens.net,
-        dvyukov@google.com, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, sandeen@redhat.com,
-        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20191219144539.GA19614@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 19/12/2019 14:45, Vincent Guittot wrote:
+>> @@ -8680,7 +8676,7 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
+>>  			env->migration_type = migrate_task;
+>>  			lsub_positive(&nr_diff, local->sum_nr_running);
+>>  			env->imbalance = nr_diff >> 1;
+>> -			return;
+>> +			goto out_spare;
+> 
+> Why are you doing this only for prefer_sibling case ? That's probably the default case of most of numa system but you should also consider others case too.
+> 
 
-syzbot found the following crash on:
+I got confused by that as well but it's not just prefer_sibling actually;
+there are cases where we enter the group_has_spare but none of its
+nested if blocks, so we fall through to out_spare.
 
-HEAD commit:    2187f215 Merge tag 'for-5.5-rc2-tag' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11059951e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ab2ae0615387ef78
-dashboard link: https://syzkaller.appspot.com/bug?extid=4722bf4c6393b73a792b
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12727c71e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12ff5151e00000
+>> @@ -8690,6 +8686,38 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
+>>  		env->migration_type = migrate_task;
+>>  		env->imbalance = max_t(long, 0, (local->idle_cpus -
+>>  						 busiest->idle_cpus) >> 1);
+>> +
+>> +out_spare:
+>> +		/*
+>> +		 * Whether balancing the number of running tasks or the number
+>> +		 * of idle CPUs, consider allowing some degree of imbalance if
+>> +		 * migrating between NUMA domains.
+>> +		 */
+>> +		if (env->sd->flags & SD_NUMA) {
+>> +			unsigned int imbalance_adj, imbalance_max;
+>> +
+>> +			/*
+>> +			 * imbalance_adj is the allowable degree of imbalance
+>> +			 * to exist between two NUMA domains. It's calculated
+>> +			 * relative to imbalance_pct with a minimum of two
+>> +			 * tasks or idle CPUs.
+>> +			 */
+>> +			imbalance_adj = (busiest->group_weight *
+>> +				(env->sd->imbalance_pct - 100) / 100) >> 1;
+>> +			imbalance_adj = max(imbalance_adj, 2U);
+>> +
+>> +			/*
+>> +			 * Ignore imbalance unless busiest sd is close to 50%
+>> +			 * utilisation. At that point balancing for memory
+>> +			 * bandwidth and potentially avoiding unnecessary use
+>> +			 * of HT siblings is as relevant as memory locality.
+>> +			 */
+>> +			imbalance_max = (busiest->group_weight >> 1) - imbalance_adj;
+>> +			if (env->imbalance <= imbalance_adj &&
+>> +			    busiest->sum_nr_running < imbalance_max) {i
+> 
+> Shouldn't you consider the number of busiest->idle_cpus instead of the busiest->sum_nr_running ?
+> 
 
-The bug was bisected to:
+I think it's better to hinge the cutoff on the busiest->sum_nr_running than
+on busiest->idle_cpus. If you're balancing between big NUMA groups, you
+could end up with a busiest->group_type == group_has_spare despite having
+*some* of its CPUs overloaded (but still with
+sg->sum_nr_running > sg->group_weight; simply because there's tons of CPUs).
 
-commit 0609ae011deb41c9629b7f5fd626dfa1ac9d16b0
-Author: Daniel Axtens <dja@axtens.net>
-Date:   Sun Dec 1 01:55:00 2019 +0000
-
-     x86/kasan: support KASAN_VMALLOC
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=161240aee00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=151240aee00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=111240aee00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4722bf4c6393b73a792b@syzkaller.appspotmail.com
-Fixes: 0609ae011deb ("x86/kasan: support KASAN_VMALLOC")
-
-BUG: unable to handle page fault for address: fffff52000680000
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 21ffee067 P4D 21ffee067 PUD aa51c067 PMD a85e1067 PTE 0
-Oops: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 3088 Comm: kworker/1:2 Not tainted 5.5.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: xfs-buf/loop0 xfs_buf_ioend_work
-RIP: 0010:xfs_sb_quiet_read_verify+0x47/0xc0 fs/xfs/libxfs/xfs_sb.c:735
-Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 7f 49 8b 9c 24 30 01  
-00 00 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <0f> b6 04 02 84  
-c0 74 04 3c 03 7e 50 8b 1b bf 58 46 53 42 89 de e8
-RSP: 0018:ffffc90008187cc0 EFLAGS: 00010a06
-RAX: dffffc0000000000 RBX: ffffc90003400000 RCX: ffffffff82ad3c26
-RDX: 1ffff92000680000 RSI: ffffffff82aa0a0f RDI: ffff8880a2cdba70
-RBP: ffffc90008187cd0 R08: ffff88809eb6c500 R09: ffffed1015d2703d
-R10: ffffed1015d2703c R11: ffff8880ae9381e3 R12: ffff8880a2cdb940
-R13: ffff8880a2cdb95c R14: ffff8880a2cdbb74 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffff52000680000 CR3: 000000009f5ab000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  xfs_buf_ioend+0x3f9/0xde0 fs/xfs/xfs_buf.c:1162
-  xfs_buf_ioend_work+0x19/0x20 fs/xfs/xfs_buf.c:1183
-  process_one_work+0x9af/0x1740 kernel/workqueue.c:2264
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2410
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Modules linked in:
-CR2: fffff52000680000
----[ end trace 744ceb50d377bf94 ]---
-RIP: 0010:xfs_sb_quiet_read_verify+0x47/0xc0 fs/xfs/libxfs/xfs_sb.c:735
-Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 7f 49 8b 9c 24 30 01  
-00 00 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <0f> b6 04 02 84  
-c0 74 04 3c 03 7e 50 8b 1b bf 58 46 53 42 89 de e8
-RSP: 0018:ffffc90008187cc0 EFLAGS: 00010a06
-RAX: dffffc0000000000 RBX: ffffc90003400000 RCX: ffffffff82ad3c26
-RDX: 1ffff92000680000 RSI: ffffffff82aa0a0f RDI: ffff8880a2cdba70
-RBP: ffffc90008187cd0 R08: ffff88809eb6c500 R09: ffffed1015d2703d
-R10: ffffed1015d2703c R11: ffff8880ae9381e3 R12: ffff8880a2cdb940
-R13: ffff8880a2cdb95c R14: ffff8880a2cdbb74 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffff52000680000 CR3: 000000009f5ab000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+> and you could simplify by 
+> 
+> 
+> 	if ((env->sd->flags & SD_NUMA) &&
+> 		((100 * busiest->group_weight) <= (env->sd->imbalance_pct * (busiest->idle_cpus << 1)))) {
+> 			env->imbalance = 0;
+> 			return;
+> 	}
+> 
+> And otherwise it will continue with the current path
+> 
+> Also I'm a bit worry about using a 50% threshold that look a bit like a
+> heuristic which can change depending of platform and the UCs that run of the
+> system.
+> 
+> In fact i was hoping that we could use the numa_preferred_nid ? During the
+> detach of tasks, we don't detach the task if busiest has spare capacity and
+> preferred_nid of the task is busiest.
+> 
+> I'm going to run some tests to see the impact on my platform 
+> 
+> Regards,
+> Vincent
+> }
+> 
+> 
+>> +				env->imbalance = 0;
+>> +			}
+>> +		}
+>>  		return;
+>>  	}
+>>  
+>>
+>> -- 
+>> Mel Gorman
+>> SUSE Labs
