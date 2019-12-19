@@ -2,99 +2,143 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C827C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3ECC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 216F724650
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D03622465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:24:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IkiMFE+I"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OEHTT5qA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfLSJXf (ORCPT
+        id S1726719AbfLSJY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 04:23:35 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:44892 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbfLSJXe (ORCPT
+        Thu, 19 Dec 2019 04:24:28 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20919 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726599AbfLSJY2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 04:23:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=24GBdvgPOniGO/u5Izbxbzv5IyyCWf616Is9oo5bboE=; b=IkiMFE+IcFYckiwO+I/fcf1MJ
-        r6UTOjpgng6pF5rYTgTYW6LqO+2AuIP+72yCDVZn73fuJlkJXE+Z8hQzqr/12NibItH+SdwR/1WW1
-        I4wcDCWItTYlUOM3tMIc1Jh64if4MsvSu/aHkGQYztIf+dXOo8BoWyBMtKZVlFO42eaDS4qXJ1sBG
-        oymRrm1w76EZlnzrH5druTNPIWF5i6oCrYykaUKX9xruroRn1PDyXftHdj2y4rX0W0EtsOTAmxReL
-        YPWDMtK4iEfJ1qyq6chSQe33ZCpwIPrnRGclYpObEkKYbd5qoTT8v3PFakpC9E/j1V1WedcUnbX6f
-        aairSL9qw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ihs1h-0005cs-0B; Thu, 19 Dec 2019 09:23:21 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1EF64304D00;
-        Thu, 19 Dec 2019 10:21:56 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 949ED2B291C41; Thu, 19 Dec 2019 10:23:19 +0100 (CET)
-Date:   Thu, 19 Dec 2019 10:23:19 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Jens Axboe <axboe@kernel.dk>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        Long Li <longli@microsoft.com>, Ingo Molnar <mingo@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        John Garry <john.garry@huawei.com>,
-        Hannes Reinecke <hare@suse.com>
-Subject: Re: [RFC PATCH 2/3] softirq: implement interrupt flood detection
-Message-ID: <20191219092319.GX2844@hirez.programming.kicks-ass.net>
-References: <20191218071942.22336-1-ming.lei@redhat.com>
- <20191218071942.22336-3-ming.lei@redhat.com>
- <20191218104941.GR2844@hirez.programming.kicks-ass.net>
- <20191219015948.GB6080@ming.t460p>
+        Thu, 19 Dec 2019 04:24:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576747467;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yW871V/Rfnx6IVFLj4fHZJXpGz1yS41EFn/XzNPZO0Q=;
+        b=OEHTT5qAckaxnIC1CTExNTR15EGr6zrVtmzA9R8ZWx/T42H59v8S0qJ+ew/MSbS/ediKeS
+        gFoO6Kb5VSfUeyDoSR9qz/aTfSDDOurVoC7nOmHPpmtDMIyfzJp9oBfaXgzoT678hnXMkp
+        jwYDn/jTF5taKa1hybH9hwcVkYIWkUg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-6-WruUOAN6PM-ADN1fLbCZrQ-1; Thu, 19 Dec 2019 04:24:20 -0500
+X-MC-Unique: WruUOAN6PM-ADN1fLbCZrQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6E89D107ACC7;
+        Thu, 19 Dec 2019 09:24:19 +0000 (UTC)
+Received: from krava (unknown [10.43.17.106])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 35BB36888D;
+        Thu, 19 Dec 2019 09:24:17 +0000 (UTC)
+Date:   Thu, 19 Dec 2019 10:24:14 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH 12/12] perf maps: Set maps pointer in the kmap area for
+ kernel maps
+Message-ID: <20191219092414.GC8141@krava>
+References: <20191217144828.2460-1-acme@kernel.org>
+ <20191217144828.2460-13-acme@kernel.org>
+ <20191218090504.GE19062@krava>
+ <20191218182254.GA13282@kernel.org>
+ <20191218190120.GB13282@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191219015948.GB6080@ming.t460p>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191218190120.GB13282@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 09:59:48AM +0800, Ming Lei wrote:
-> > So pray tell, why did you not integrate this with IRQ_TIME_ACCOUNTING ?
-> > That already takes a timestamp and does most of what you need.
+On Wed, Dec 18, 2019 at 04:01:20PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Wed, Dec 18, 2019 at 03:22:54PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Wed, Dec 18, 2019 at 10:05:04AM +0100, Jiri Olsa escreveu:
+> > After looking at this some more, I retract this patch and instead the
+> > two-liner at the end of this message seems enough.
 > 
-> Yeah, that was the 1st approach I thought of, but IRQ_TIME_ACCOUNTING
-> may be disabled, and enabling it may cause observable effect on IO
-> performance.
-
-Is that an actual concern, are people disabling it?
-
-> > > @@ -356,6 +512,7 @@ void irq_enter(void)
-> > >  	}
-> > >  
-> > >  	__irq_enter();
-> > > +	irq_interval_update();
-> > >  }
-> > 
-> > Arggh.. you're going to make every single interrupt take at least 2
-> > extra cache misses for this gunk?!?
+> So here is the full cset, I have not made changes to the other patches,
 > 
-> Could you explain it a bit why two cache misses are involved?
+> - Arnaldo
 > 
-> I understand at most one miss is caused, which should only happen in
-> irq_interval_update(), and what is the other one?
+> commit 178427a192bcbe3ad93dd0637c3dceaa3ccef31e
+> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Date:   Wed Dec 18 15:23:14 2019 -0300
+> 
+>     perf map: Set kmap->kmaps backpointer for main kernel map chunks
+>     
+>     When a map is create to represent the main kernel area (vmlinux) with
+>     map__new2() we allocate an extra area to store a pointer to the 'struct
+>     maps' for the kernel maps, so that we can access that struct when
+>     loading ELF files or kallsyms, as we will need to split it in multiple
+>     maps, one per kernel module or ELF section (such as ".init.text").
+>     
+>     So when map->dso->kernel is non-zero, it is expected that
+>     map__kmap(map)->kmaps to be set to the tree of kernel maps (modules,
+>     chunks of the main kernel, bpf progs put in place via
+>     PERF_RECORD_KSYMBOL, the main kernel).
+>     
+>     This was not the case when we were splitting the main kernel into chunks
+>     for its ELF sections, which ended up making 'perf report --children'
+>     processing a perf.data file with callchains to trip on
+>     __map__is_kernel(), when we press ENTER to see the popup menu for main
+>     histogram entries that starts at a symbol in the ".init.text" ELF
+>     section, e.g.:
+>     
+>     -    8.83%     0.00%  swapper     [kernel.vmlinux].init.text  [k] start_kernel
+>          start_kernel
+>          cpu_startup_entry
+>          do_idle
+>          cpuidle_enter
+>          cpuidle_enter_state
+>          intel_idle
+>     
+>     Fix it.
+>     
+>     Cc: Adrian Hunter <adrian.hunter@intel.com>
+>     Cc: Jiri Olsa <jolsa@kernel.org>
+>     Cc: Namhyung Kim <namhyung@kernel.org>
+>     Link: https://lkml.kernel.org/n/tip-vcokue57w4goyzweg2rr5i80@git.kernel.org
+>     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> index 6658fbf196e6..1965aefccb02 100644
+> --- a/tools/perf/util/symbol-elf.c
+> +++ b/tools/perf/util/symbol-elf.c
+> @@ -920,6 +920,9 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+>  		if (curr_map == NULL)
+>  			return -1;
+>  
+> +		if (curr_dso->kernel)
+> +			map__kmap(curr_map)->kmaps = kmaps;
+> +
+>  		if (adjust_kernel_syms) {
+>  			curr_map->start  = shdr->sh_addr + ref_reloc(kmap);
+>  			curr_map->end	 = curr_map->start + shdr->sh_size;
+> 
 
-The rq clock thing IIRC.
+looks good ;-)
+
+jirka
 
