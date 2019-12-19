@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86077C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D50CDC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 583E6222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A97ED206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782258;
-	bh=6RpLG1w9cbjENnUVpGsfAHqGQ7HZEHT8ezMsQ7pwDXU=;
+	s=default; t=1576782260;
+	bh=PGBoSnLW4Rb1DhKStngull8p7dQLICcEIG8kZDgP+9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yyYGpizkdI0RNP2D82Qcr8yO0fdo0lAflhp5e4OkN1kWx+QC252+Z2WL+5mrGyN8z
-	 IgGJn2ldfYBUmwMQmLhvXfEasZ20qPirC5QISF1gkHlC/JrBkogjQJYlDttDn5pxep
-	 TiKdSCYj8yo+qHR83j3KwDj9f3oyGGM6XwAjx/mM=
+	b=RdzqHOI1dJT1v9e/7UVM/KbKILuYfWyiOHJZ4p42EAuEir63qbQ7hrRFdgYEIYI0S
+	 pbpXIgApcpzY6JbppY5muTcXTu2BqQ6Bf0KQ3BSrgx//2gChjGxtNIfiFHh2rNH502
+	 wfsEBX6OHxK9YMW50PMdzvCLGqOOA/8Tpm+nitds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729457AbfLSSrV (ORCPT
+        id S1729448AbfLSSrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:47:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40198 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:47:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727296AbfLSSrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:47:18 -0500
+        id S1728126AbfLSSrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:47:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE874206D7;
-        Thu, 19 Dec 2019 18:47:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A0CC24672;
+        Thu, 19 Dec 2019 18:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781238;
-        bh=6RpLG1w9cbjENnUVpGsfAHqGQ7HZEHT8ezMsQ7pwDXU=;
+        s=default; t=1576781235;
+        bh=PGBoSnLW4Rb1DhKStngull8p7dQLICcEIG8kZDgP+9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iqlmXqFLxBRhli5hGz5L+y+Nxsw8CqWawNINYx3Sjce8PFDmpZan/y4o8cv3OfaGs
-         ocUSCgOm6u87rjkCCDSfnHB8MpmVitGW+XE+2yID8pb9JVf2H2JiRRpG9G7tjn4Vth
-         ZIjfwM5fLqMskagzawkNMuSWvBrLE2ndJi5hUCqk=
+        b=RFNysEBEDBEQ2eD8NaouLei9WZZU+UvELzaRqtQtU6fX+FJ4orvOPaNkFPPfl9OCZ
+         +nLdR+gntLk6vMBb8pyqprz0GNEOLX/mhbMC5214oociR8VRDG2ukddmM7MCw3nS4M
+         QUAZN2No7mhxT2S/MEaar5TgJdt/K6Jbq2nA867U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.9 122/199] rtlwifi: rtl8192de: Fix missing enable interrupt flag
-Date:   Thu, 19 Dec 2019 19:33:24 +0100
-Message-Id: <20191219183221.695212263@linuxfoundation.org>
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 4.9 139/199] pinctrl: samsung: Fix device node refcount leaks in init code
+Date:   Thu, 19 Dec 2019 19:33:41 +0100
+Message-Id: <20191219183222.838135508@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -59,67 +58,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Larry Finger <Larry.Finger@lwfinger.net>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-commit 330bb7117101099c687e9c7f13d48068670b9c62 upstream.
+commit a322b3377f4bac32aa25fb1acb9e7afbbbbd0137 upstream.
 
-In commit 38506ecefab9 ("rtlwifi: rtl_pci: Start modification for
-new drivers"), the flag that indicates that interrupts are enabled was
-never set.
+Several functions use for_each_child_of_node() loop with a break to find
+a matching child node.  Although each iteration of
+for_each_child_of_node puts the previous node, but early exit from loop
+misses it.  This leads to leak of device node.
 
-In addition, there are several places when enable/disable interrupts
-were commented out are restored. A sychronize_interrupts() call is
-removed.
-
-Fixes: 38506ecefab9 ("rtlwifi: rtl_pci: Start modification for new drivers")
-Cc: Stable <stable@vger.kernel.org>	# v3.18+
-Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Cc: <stable@vger.kernel.org>
+Fixes: 9a2c1c3b91aa ("pinctrl: samsung: Allow grouping multiple pinmux/pinconf nodes")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/realtek/rtlwifi/rtl8192de/hw.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/pinctrl/samsung/pinctrl-samsung.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/hw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/hw.c
-@@ -1209,6 +1209,7 @@ void rtl92de_enable_interrupt(struct iee
- 
- 	rtl_write_dword(rtlpriv, REG_HIMR, rtlpci->irq_mask[0] & 0xFFFFFFFF);
- 	rtl_write_dword(rtlpriv, REG_HIMRE, rtlpci->irq_mask[1] & 0xFFFFFFFF);
-+	rtlpci->irq_enabled = true;
- }
- 
- void rtl92de_disable_interrupt(struct ieee80211_hw *hw)
-@@ -1218,7 +1219,7 @@ void rtl92de_disable_interrupt(struct ie
- 
- 	rtl_write_dword(rtlpriv, REG_HIMR, IMR8190_DISABLED);
- 	rtl_write_dword(rtlpriv, REG_HIMRE, IMR8190_DISABLED);
--	synchronize_irq(rtlpci->pdev->irq);
-+	rtlpci->irq_enabled = false;
- }
- 
- static void _rtl92de_poweroff_adapter(struct ieee80211_hw *hw)
-@@ -1389,7 +1390,7 @@ void rtl92de_set_beacon_related_register
- 
- 	bcn_interval = mac->beacon_interval;
- 	atim_window = 2;
--	/*rtl92de_disable_interrupt(hw);  */
-+	rtl92de_disable_interrupt(hw);
- 	rtl_write_word(rtlpriv, REG_ATIMWND, atim_window);
- 	rtl_write_word(rtlpriv, REG_BCN_INTERVAL, bcn_interval);
- 	rtl_write_word(rtlpriv, REG_BCNTCFG, 0x660f);
-@@ -1409,9 +1410,9 @@ void rtl92de_set_beacon_interval(struct
- 
- 	RT_TRACE(rtlpriv, COMP_BEACON, DBG_DMESG,
- 		 "beacon_interval:%d\n", bcn_interval);
--	/* rtl92de_disable_interrupt(hw); */
-+	rtl92de_disable_interrupt(hw);
- 	rtl_write_word(rtlpriv, REG_BCN_INTERVAL, bcn_interval);
--	/* rtl92de_enable_interrupt(hw); */
-+	rtl92de_enable_interrupt(hw);
- }
- 
- void rtl92de_update_interrupt_mask(struct ieee80211_hw *hw,
+--- a/drivers/pinctrl/samsung/pinctrl-samsung.c
++++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
+@@ -281,6 +281,7 @@ static int samsung_dt_node_to_map(struct
+ 						&reserved_maps, num_maps);
+ 		if (ret < 0) {
+ 			samsung_dt_free_map(pctldev, *map, *num_maps);
++			of_node_put(np);
+ 			return ret;
+ 		}
+ 	}
+@@ -770,8 +771,10 @@ static struct samsung_pmx_func *samsung_
+ 		if (!of_get_child_count(cfg_np)) {
+ 			ret = samsung_pinctrl_create_function(dev, drvdata,
+ 							cfg_np, func);
+-			if (ret < 0)
++			if (ret < 0) {
++				of_node_put(cfg_np);
+ 				return ERR_PTR(ret);
++			}
+ 			if (ret > 0) {
+ 				++func;
+ 				++func_cnt;
+@@ -782,8 +785,11 @@ static struct samsung_pmx_func *samsung_
+ 		for_each_child_of_node(cfg_np, func_np) {
+ 			ret = samsung_pinctrl_create_function(dev, drvdata,
+ 						func_np, func);
+-			if (ret < 0)
++			if (ret < 0) {
++				of_node_put(func_np);
++				of_node_put(cfg_np);
+ 				return ERR_PTR(ret);
++			}
+ 			if (ret > 0) {
+ 				++func;
+ 				++func_cnt;
 
 
