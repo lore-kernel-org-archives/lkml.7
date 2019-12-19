@@ -2,169 +2,244 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3D4C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2E6C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE359206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:32:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="BpYWgUdR"
+	by mail.kernel.org (Postfix) with ESMTP id D75DD2467F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:32:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576773147;
+	bh=rn47R6IvO6EmAAUhCrgRqhoSznMNBK9nhnALCSAkwoE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=p58TLMAkmOVgjYZ77jgimi6Cnr+RRRU8ziNcz8PXq7eH3VGZ5KGMhS1KbCcHk/dn2
+	 Zax5IC1Pdpvl1p/Qubuhh8qRrQuJw413lImaMCmmNm0fRy1VQsYu5R7efywXpDLiI5
+	 csPYYbikX+0lOUeGIMHEPLnct4IS1rkN55OAyT6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbfLSQcW (ORCPT
+        id S1727040AbfLSQc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 11:32:22 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37408 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726855AbfLSQcV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 11:32:21 -0500
-Received: by mail-wm1-f65.google.com with SMTP id f129so6289110wmf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 08:32:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CSJhDs+idA5i15qY0cV5g4g/iFY0uQiRgrR8CPqPVSM=;
-        b=BpYWgUdRl0eRXOIWAcU433Q43vwSWIlqGYUsv/yFhLn2mUs5YSJMn2aZXab2PwV3B4
-         OULs1AAdt70Nxb7nGXYifJWKKv/p/azTb3IiL/CIudz8e3poW4d9EEJnevapQHDrY+2g
-         60dqb97fKwdXYmh6+DoI/Z4/H+CMgNEZL8ZDo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CSJhDs+idA5i15qY0cV5g4g/iFY0uQiRgrR8CPqPVSM=;
-        b=eYnrQJK4XnOg+LMMk3eiVjIH5IYrP/VA/ge5QAM92sJRU8ofl948IdPezCx1N/Lggh
-         zaHwEaKH7sUGBHPA5MfBlyZ5Iw56pFNzE4c+KCE+3SO11eEH5C4tNF+f9475PVjfcTYB
-         ZN/617Q/TjG3IqV7ZXG5+aQOPZW1Dr+pJzns65U+m2M6DI6lI4U8FkNdvu/7RBKqQM63
-         VUegio+OmWLdBnIKq7V1aY2/1xG+UuXG2KxArngGZMo6ybaW4RJ1up4FXiaK7+POa8ey
-         EDxijY4KdD9LrzpfuisYP6W11RrXju9I+ODwA57TGvWuSyTvrfYk8R851dOkAo8Va+MR
-         ZQWw==
-X-Gm-Message-State: APjAAAUlgvOXxEvIWFLlQNar4aZdRyj+iqj9ygbFIWd4KC+7Aw1XY2BU
-        pwPlhnP3PcB23YoHewBnWl4tPTrd0du192Nmy+OwJfUF8Gg=
-X-Google-Smtp-Source: APXvYqwxWdg1BrVmDIVN4oLwnu28aYRPTQAChh10jcApQWJojYvRePOj7s8dQvmhClMuLhaFhTvv4w6m/euxO7vbkUQ=
-X-Received: by 2002:a7b:c00c:: with SMTP id c12mr10925795wmb.174.1576773139080;
- Thu, 19 Dec 2019 08:32:19 -0800 (PST)
+        Thu, 19 Dec 2019 11:32:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41380 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726855AbfLSQc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 11:32:26 -0500
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2BA324650;
+        Thu, 19 Dec 2019 16:32:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576773145;
+        bh=rn47R6IvO6EmAAUhCrgRqhoSznMNBK9nhnALCSAkwoE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TmCUZc8HC4MsZMytQqpP6YcX2OvrwtIdtdZ6YvP+pdbVGfUu12j+4TI5oBr+en0UT
+         m/aJbFqmFebwpo9kyvgy5coWrQWisx3CZz+QjTTgSZdYFahKknGcHO/eomevXqiCw4
+         mjN5tcZn7GUMZSZ3eeuKMm1iNWfsp2D4VKOEXeJI=
+Received: by mail-qt1-f170.google.com with SMTP id w47so5552286qtk.4;
+        Thu, 19 Dec 2019 08:32:25 -0800 (PST)
+X-Gm-Message-State: APjAAAVCRj5LYzaqIfyBAYUy2XxbdPdTMhHZt2qKOzvarlBf/U6VTAMz
+        6wut6gj4UikkayqCwQuzKV3qLsfOjMEdG928/w==
+X-Google-Smtp-Source: APXvYqwZYa0h1s/HCI711yjy0PxWMFYhBrYLpz14TQY1Z//PXZAz3O5cSE1pEV1yX1YSasjOZatClg+LA3n1RvqJ8fA=
+X-Received: by 2002:ac8:6747:: with SMTP id n7mr7762290qtp.224.1576773144784;
+ Thu, 19 Dec 2019 08:32:24 -0800 (PST)
 MIME-Version: 1.0
-References: <20191216161650.21844-1-lukasz.luba@arm.com> <20191218120900.GA28599@bogus>
- <7b59a2f1-0786-d24f-a653-76a60c15a8ae@broadcom.com>
-In-Reply-To: <7b59a2f1-0786-d24f-a653-76a60c15a8ae@broadcom.com>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Thu, 19 Dec 2019 11:32:07 -0500
-Message-ID: <CA+-6iNxn29WpUrbc9gL4EMTJfZj7FRCeO-_QaUqbjJYd1JAEKA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] include: trace: Add SCMI header with trace events
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     lukasz.luba@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, rostedt@goodmis.org
+References: <cover.1575860791.git.eswara.kota@linux.intel.com> <a276c1107d40917901a4265d4d8622dee060e4f5.1575860791.git.eswara.kota@linux.intel.com>
+In-Reply-To: <a276c1107d40917901a4265d4d8622dee060e4f5.1575860791.git.eswara.kota@linux.intel.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 19 Dec 2019 10:32:13 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJE=7P3z8AzWUfWu1PCV4EVC1PBJ+ZAu3vmAcq5G5D34g@mail.gmail.com>
+Message-ID: <CAL_JsqJE=7P3z8AzWUfWu1PCV4EVC1PBJ+ZAu3vmAcq5G5D34g@mail.gmail.com>
+Subject: Re: [PATCH v11 1/3] dt-bindings: PCI: intel: Add YAML schemas for the
+ PCIe RC controller
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I also see a stretch of over 100 (contiguous) of these
+On Sun, Dec 8, 2019 at 9:20 PM Dilip Kota <eswara.kota@linux.intel.com> wrote:
 >
-> ... scmi_rx_done: transfer_id=48321 msg_id=7 protocol_id=128 seq=0 msg_type=0
-> ... scmi_rx_done: transfer_id=48322 msg_id=8 protocol_id=128 seq=0 msg_type=0
-> ... scmi_rx_done: transfer_id=48323 msg_id=7 protocol_id=128 seq=0 msg_type=0
-> ... scmi_rx_done: transfer_id=48324 msg_id=8 protocol_id=128 seq=0 msg_type=0
+> Add YAML schemas for PCIe RC controller on Intel Gateway SoCs
+> which is Synopsys DesignWare based PCIe core.
 >
-> which I cannot explain -- perhaps ftrace doesn't work well in interrupt context?
+> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 138 +++++++++++++++++++++
+>  1 file changed, 138 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+> new file mode 100644
+> index 000000000000..db605d8a387d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+> @@ -0,0 +1,138 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/intel-gw-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: PCIe RC controller on Intel Gateway SoCs
+> +
+> +maintainers:
+> +  - Dilip Kota <eswara.kota@linux.intel.com>
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: intel,lgm-pcie
+> +      - const: snps,dw-pcie
+> +
+> +  device_type:
+> +    const: pci
+> +
+> +  "#address-cells":
+> +    const: 3
+> +
+> +  "#size-cells":
+> +    const: 2
+> +
+> +  reg:
+> +    items:
+> +      - description: Controller control and status registers.
+> +      - description: PCIe configuration registers.
+> +      - description: Controller application registers.
+> +
+> +  reg-names:
+> +    items:
+> +      - const: dbi
+> +      - const: config
+> +      - const: app
+> +
+> +  ranges:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  phys:
+> +    maxItems: 1
+> +
+> +  phy-names:
+> +    const: pcie
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +
+> +  linux,pci-domain: true
+> +
+> +  num-lanes:
+> +    maximum: 2
+> +    description: Number of lanes to use for this port.
+> +
+> +  '#interrupt-cells':
+> +    const: 1
+> +
+> +  interrupt-map-mask:
+> +    description: Standard PCI IRQ mapping properties.
+> +
+> +  interrupt-map:
+> +    description: Standard PCI IRQ mapping properties.
+> +
+> +  max-link-speed:
+> +    description: Specify PCI Gen for link capability.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum: [ 1, 2, 3, 4 ]
+> +      - default: 1
+> +
+> +  bus-range:
+> +    description: Range of bus numbers associated with this controller.
+> +
+> +  reset-assert-ms:
+> +    description: |
+> +      Delay after asserting reset to the PCIe device.
+> +    maximum: 500
+> +    default: 100
+> +
+> +required:
+> +  - compatible
+> +  - device_type
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - reg
+> +  - reg-names
+> +  - ranges
+> +  - resets
+> +  - clocks
+> +  - phys
+> +  - phy-names
+> +  - reset-gpios
+> +  - '#interrupt-cells'
+> +  - interrupt-map
+> +  - interrupt-map-mask
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/clock/intel,lgm-clk.h>
 
-Hello,
-Please ignore my previous results; I've switched to using 'nop' as the
-current_tracer and the above issue has cleared up.  I now get traces
-like below:
+I guess this is applied now as the example fails to build in
+linux-next as this header is missing.
 
-          <idle>-0     [000] d.h.   907.608763: scmi_rx_done:
-transfer_id=10599 msg_id=7 protocol_id=128 seq=2 msg_type=0
-       t1-sensor-1817  [003] ....   907.608879: scmi_xfer_begin:
-transfer_id=10601 msg_id=6 protocol_id=21 seq=1 poll=0
-         t0-brcm-1815  [000] d.h.   907.614133: scmi_rx_done:
-transfer_id=10600 msg_id=7 protocol_id=20 seq=0 msg_type=0
-         t0-brcm-1815  [000] ....   907.614189: scmi_xfer_end:
-transfer_id=10599 msg_id=7 protocol_id=128 seq=2 status=0
-         t0-brcm-1815  [000] ....   907.614215: scmi_xfer_begin:
-transfer_id=10602 msg_id=8 protocol_id=128 seq=2 poll=0
-          <idle>-0     [000] d.h.   907.616380: scmi_rx_done:
-transfer_id=10601 msg_id=6 protocol_id=21 seq=1 msg_type=0
-        t2-clock-1818  [003] ....   907.616418: scmi_xfer_end:
-transfer_id=10600 msg_id=7 protocol_id=20 seq=0 status=0
-        t2-clock-1818  [003] ....   907.616440: scmi_xfer_begin:
-transfer_id=10603 msg_id=7 protocol_id=20 seq=0 poll=0
-       t1-sensor-1817  [003] ....   907.616474: scmi_xfer_end:
-transfer_id=10601 msg_id=6 protocol_id=21 seq=1 status=0
-          <idle>-0     [000] d.h.   907.616478: scmi_rx_done:
-transfer_id=10602 msg_id=8 protocol_id=128 seq=2 msg_type=0
-         t0-brcm-1815  [000] d.h.   907.616526: scmi_rx_done:
-transfer_id=10603 msg_id=7 protocol_id=20 seq=0 msg_type=0
-         t0-brcm-1815  [000] ....   907.616559: scmi_xfer_end:
-transfer_id=10602 msg_id=8 protocol_id=128 seq=2 status=0
-         t0-brcm-1815  [000] .n..   907.616588: scmi_xfer_begin:
-transfer_id=10604 msg_id=7 protocol_id=128 seq=1 poll=0
-       t1-sensor-1817  [003] ....   907.616628: scmi_xfer_begin:
-transfer_id=10605 msg_id=6 protocol_id=21 seq=2 poll=0
-        t2-clock-1818  [003] ....   907.616660: scmi_xfer_end:
-transfer_id=10603 msg_id=7 protocol_id=20 seq=0 status=0
-          <idle>-0     [000] d.h.   907.616665: scmi_rx_done:
-transfer_id=10604 msg_id=7 protocol_id=128 seq=1 msg_type=0
-        t2-clock-1818  [003] ....   907.616673: scmi_xfer_begin:
-transfer_id=10606 msg_id=7 protocol_id=20 seq=0 poll=0
-         t0-brcm-1815  [000] d.h.   907.618782: scmi_rx_done:
-transfer_id=10605 msg_id=6 protocol_id=21 seq=2 msg_type=0
-       t1-sensor-1817  [003] ....   907.618829: scmi_xfer_end:
-transfer_id=10605 msg_id=6 protocol_id=21 seq=2 status=0
-         t0-brcm-1815  [000] dnH.   907.618834: scmi_rx_done:
-transfer_id=10606 msg_id=7 protocol_id=20 seq=0 msg_type=0
-         t0-brcm-1815  [000] .n..   907.618855: scmi_xfer_end:
-transfer_id=10604 msg_id=7 protocol_id=128 seq=1 status=0
-         t0-brcm-1815  [000] .n..   907.618873: scmi_xfer_begin:
-transfer_id=10607 msg_id=8 protocol_id=128 seq=1 poll=0
-        t2-clock-1818  [003] ....   907.618890: scmi_xfer_end:
-transfer_id=10606 msg_id=7 protocol_id=20 seq=0 status=0
-       rcu_sched-7     [000] d.h.   907.618898: scmi_rx_done:
-transfer_id=10607 msg_id=8 protocol_id=128 seq=1 msg_type=0
-         t0-brcm-1815  [000] ....   907.618934: scmi_xfer_end:
-transfer_id=10607 msg_id=8 protocol_id=128 seq=1 status=0
-         t3-brcm-1819  [003] ....   907.618958: scmi_xfer_begin:
-transfer_id=10608 msg_id=7 protocol_id=128 seq=0 poll=0
-          <idle>-0     [000] d.h.   907.618974: scmi_rx_done:
-transfer_id=10608 msg_id=7 protocol_id=128 seq=0 msg_type=0
-         t3-brcm-1819  [003] ....   907.619005: scmi_xfer_end:
-transfer_id=10608 msg_id=7 protocol_id=128 seq=0 status=0
-         t3-brcm-1819  [003] ....   907.619013: scmi_xfer_begin:
-transfer_id=10609 msg_id=8 protocol_id=128 seq=0 poll=0
+At this point I'd settle for just 'make dt_binding_check' passing on
+linux-next even though it should pass on maintainer trees too.
+However, it doesn't appear the clock driver with this header is close
+to being merged. The binding was sent on Aug 28 and not to the DT list
+so I hadn't seen it. Given that, I'd suggest a follow-up patch to
+remove the header dependency here. Just change LGM_GCLK_PCIE10 to the
+value.
 
-And with V2 having the added xfer id allows me to more easily post
-process the above with a script and highlight messages that took too
-long (round trip times > 3msec get a double asterisk):
-
-     10585      0.02 ms  proto=128  cmd=8  seq=0
-     10586      2.16 ms  proto= 21  cmd=6  seq=0
-     10587      0.87 ms  proto=128  cmd=7  seq=1
-     10588      0.02 ms  proto=128  cmd=8  seq=0
-     10589      0.05 ms  proto=128  cmd=7  seq=0
-     10590      2.15 ms  proto= 21  cmd=6  seq=1
-     10591      2.19 ms  proto=128  cmd=8  seq=0
-     10592      2.13 ms  proto= 21  cmd=6  seq=0
-     10593      0.03 ms  proto=128  cmd=7  seq=0
-     10594      0.02 ms  proto=128  cmd=8  seq=0
-     10595      0.02 ms  proto=128  cmd=7  seq=0
-     10596      0.02 ms  proto=128  cmd=8  seq=0
-     10597  **  7.16 ms  proto= 20  cmd=7  seq=0
-     10598  **  7.12 ms  proto= 21  cmd=6  seq=1
-     10599  ** 11.58 ms  proto=128  cmd=7  seq=2
-     10600  **  9.28 ms  proto= 20  cmd=7  seq=0
-     10601  **  7.60 ms  proto= 21  cmd=6  seq=1
-     10602      2.34 ms  proto=128  cmd=8  seq=2
-     10603      0.22 ms  proto= 20  cmd=7  seq=0
-     10604      2.27 ms  proto=128  cmd=7  seq=1
-     10605      2.20 ms  proto= 21  cmd=6  seq=2
-
-So I do find the extra msg id helpful as well as the extra traceprint.
-
-Regards,
-Jim Quinlan
+> +    pcie10: pcie@d0e00000 {
+> +      compatible = "intel,lgm-pcie", "snps,dw-pcie";
+> +      device_type = "pci";
+> +      #address-cells = <3>;
+> +      #size-cells = <2>;
+> +      reg = <0xd0e00000 0x1000>,
+> +            <0xd2000000 0x800000>,
+> +            <0xd0a41000 0x1000>;
+> +      reg-names = "dbi", "config", "app";
+> +      linux,pci-domain = <0>;
+> +      max-link-speed = <4>;
+> +      bus-range = <0x00 0x08>;
+> +      interrupt-parent = <&ioapic1>;
+> +      #interrupt-cells = <1>;
+> +      interrupt-map-mask = <0 0 0 0x7>;
+> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
+> +                      <0 0 0 2 &ioapic1 28 1>,
+> +                      <0 0 0 3 &ioapic1 29 1>,
+> +                      <0 0 0 4 &ioapic1 30 1>;
+> +      ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
+> +      resets = <&rcu0 0x50 0>;
+> +      clocks = <&cgu0 LGM_GCLK_PCIE10>;
+> +      phys = <&cb0phy0>;
+> +      phy-names = "pcie";
+> +      reset-assert-ms = <500>;
+> +      reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
+> +      num-lanes = <2>;
+> +    };
+> --
+> 2.11.0
+>
