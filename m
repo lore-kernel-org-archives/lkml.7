@@ -2,168 +2,260 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5DDC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4D8C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72372227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86D3A227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:18:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ULrs0SvP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tCS54bJd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfLSSRm (ORCPT
+        id S1726959AbfLSSSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:17:42 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42801 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726797AbfLSSRm (ORCPT
+        Thu, 19 Dec 2019 13:18:37 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:46018 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726797AbfLSSSg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:17:42 -0500
-Received: by mail-pl1-f193.google.com with SMTP id p9so2915105plk.9;
-        Thu, 19 Dec 2019 10:17:42 -0800 (PST)
+        Thu, 19 Dec 2019 13:18:36 -0500
+Received: by mail-vs1-f66.google.com with SMTP id b4so3902857vsa.12;
+        Thu, 19 Dec 2019 10:18:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9IKeSaeLtm7vPfFfV60fys8+o5Vf9VVG4sSrLcJnbLg=;
-        b=ULrs0SvPCsPJ5z5H89BVhXo7MrrDMFIkP63mnmmlS56bvmxK+d4QpMwoN2KuVUfUiM
-         FW46oiskYuu2Hul4HrnBnoGlYy61FUuBVHchaiXhiX+IElTcFgbYpMCBYBO77uh22FO5
-         P93uiGBePY/B8Ybui6ZqIMLmHuoqoow/+b4KW8hXPIZASLJXALkXw32xAJI9WFQcxqGP
-         tMRiY2o1C659lso2yKuKsQpvjSoZA7xaCjKy5sp75AkCvonnXBSl+U504BNP3pIzFW9n
-         KjTr+tB0wgTR6RxEY5F4UygnFjgbqeoGMBw1wbmjxQn7m4HZp7GM3UfmZtZAPG30Tfqm
-         Lsfg==
+        bh=hdfl3j3PUu29KvhFJr+t8q9A7l1fLtUS6dfELY8PVLE=;
+        b=tCS54bJd6f3428WApblIOzLQvg9gXUk1ry2iLEcNoz5mn+Ev/It5H2F9ixzC8H3L7O
+         gy0IKkXEef1q6L0ksBFGDnOsjR/d7EBCW93dzLdMYSzBycxQDu5ezgzhvuFSzH3C8Lm/
+         JlAmLHyjT024P+gfLHAh9AEPlaXfFD3YP4yLDycw9CpwqSePfClSIox4XVdEvj5Nr5Bn
+         FjVC6LL8OR3gYVOQ86fmVwGRCASN1MYtioAty36QxsKkpWaLkkDWk5onwgp+d+6B+dOw
+         +x6EdoeRB0BmdvaglW+aUzVAef6OztV1h6RgZVussRPpI7Udtcb9/edVA/g/XEvrPZnk
+         C5rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9IKeSaeLtm7vPfFfV60fys8+o5Vf9VVG4sSrLcJnbLg=;
-        b=Z5mWQhvu687rU9hbYuttKYT0ljfFe8z+aByl0aljCm3yMnXVlVvwTNva6n+mU/4Cnv
-         bU2tw133SICd4ebHrhCeXbVofePosw7r3F6jrTqqZbJa/3O7v1Hjg7AUmEm9XvbxGNMN
-         ZV19QKt1N9z5kMRkNpBF3lMdxz4SSw17xb1Mnp/9IKbZ3tkuxL7IRJ98iGhg1Pm4orXO
-         vNL64sBn63ciq91R7V/1t/w0aME9ORL1OhVVbcuoIakFi1Sxj0j+wxd+WgXHjjkJ0cqF
-         mg5vLRig0vFxsRYO3AqKpjdCRbFA6vbmiwe0BT6ybaPB8gZdExUPt2imynbLdhkPk2MV
-         ciyQ==
-X-Gm-Message-State: APjAAAWwzRPG5BEZ34yB/NQti6xrppkESaNPsctTXGgFT42RB0ALPKA8
-        dVKcyWQw0lv5g72SQXv/f8owieqF+X+qSTlbb2c=
-X-Google-Smtp-Source: APXvYqzcXkkqagyH0g8XYQkQ9Y2lDsGqL/gdoDGeJQzPxj6M0FYmIA9X7SN+kb2C52A9m6TauzrezHBi54ouUcHGkQw=
-X-Received: by 2002:a17:90b:3109:: with SMTP id gc9mr11076004pjb.30.1576779461595;
- Thu, 19 Dec 2019 10:17:41 -0800 (PST)
+        bh=hdfl3j3PUu29KvhFJr+t8q9A7l1fLtUS6dfELY8PVLE=;
+        b=aY7Ka4mrPmCTOs/GoLBItS/dODCuFKyS+2DQoHImWqRC0mOavV4ZooPBlRfCKX97ZY
+         LZqaV4nUMz1YGHZAZViyIAkvrM2m35TuJd4zrnj/kayC1QEZW0WYM/wZuBjsje5VkG1x
+         QOcrG+Ik0/m35kELUrtdDl4e15VyYDvRYdw6NnAY7bha7vAIq5PbybuGqJJMURl9OM0T
+         AbuU/Rgv3XSbTMUH6HRCRbHteXxbOeUg1i945sr593cudXiWEKVVEgtl+kkQhywILSL6
+         8LBvb5BWyxdSEkWlCzVOj5Pnh1SBphRHI+baoVtE9+wYqylPE3MZxFy/F3Ir8r3MhJlT
+         XTNQ==
+X-Gm-Message-State: APjAAAW7Hkt8wcmRBdq11MQ4Sf/X3TJ00z5XcoLBTMtJ/HukAEJpUBpS
+        PkkDRZRYU4mxedP5F51r3U0tle7YFDvhgzIehtdpe1SC
+X-Google-Smtp-Source: APXvYqx2+nDxq2ixPv2h29IpGt0iubjleAq9aMOGE+An5nayL0a+8XISERr+3e5yfQuKP1zTRewKys0Qg4k4OKGNcqU=
+X-Received: by 2002:a05:6102:204a:: with SMTP id q10mr6222578vsr.127.1576779515189;
+ Thu, 19 Dec 2019 10:18:35 -0800 (PST)
 MIME-Version: 1.0
-References: <20191219171528.6348-1-brgl@bgdev.pl> <20191219171528.6348-13-brgl@bgdev.pl>
-In-Reply-To: <20191219171528.6348-13-brgl@bgdev.pl>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 19 Dec 2019 20:17:30 +0200
-Message-ID: <CAHp75VeMEngXiFmvTrsW7UZMz0ppR-W-J4D1xU+qKGfLXkG3kg@mail.gmail.com>
-Subject: Re: [PATCH v3 12/13] gpiolib: add new ioctl() for monitoring changes
- in line info
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <1576224695-22657-1-git-send-email-stanley.chu@mediatek.com> <1576224695-22657-2-git-send-email-stanley.chu@mediatek.com>
+In-Reply-To: <1576224695-22657-2-git-send-email-stanley.chu@mediatek.com>
+From:   Alim Akhtar <alim.akhtar@gmail.com>
+Date:   Thu, 19 Dec 2019 23:47:59 +0530
+Message-ID: <CAGOxZ539Fr5Vxg8Zg=LpYhxTacwh81Ee+S9MWFybwbAPr5RgYQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/4] scsi: ufs-mediatek: introduce reference clock control
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     linux-scsi@vger.kernel.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        open list <linux-kernel@vger.kernel.org>,
+        "Bean Huo (beanhuo)" <beanhuo@micron.com>,
+        Kuohong Wang <kuohong.wang@mediatek.com>,
+        peter.wang@mediatek.com, chun-hung.wu@mediatek.com,
+        andy.teng@mediatek.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 7:17 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Fri, Dec 13, 2019 at 2:23 PM Stanley Chu <stanley.chu@mediatek.com> wrote:
 >
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Introduce reference clock control in MediaTek Chipset in order
+> to disable it if it is not necessary by UFS device to save system power.
 >
-> Currently there is no way for user-space to be informed about changes
-> in status of GPIO lines e.g. when someone else requests the line or its
-> config changes. We can only periodically re-read the line-info. This
-> is fine for simple one-off user-space tools, but any daemon that provides
-> a centralized access to GPIO chips would benefit hugely from an event
-> driven line info synchronization.
+> Currently reference clock can be disabled during system suspend, runtime
+> suspend and clock-gating after link enters hibernate state.
 >
-> This patch adds a new ioctl() that allows user-space processes to reuse
-> the file descriptor associated with the character device for watching
-> any changes in line properties. Every such event contains the updated
-> line information.
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+
+> ---
+>  drivers/scsi/ufs/ufs-mediatek.c | 64 ++++++++++++++++++++++++++++++---
+>  drivers/scsi/ufs/ufs-mediatek.h | 20 +++++++++--
+>  2 files changed, 78 insertions(+), 6 deletions(-)
 >
-> Currently the events are generated on three types of status changes: when
-> a line is requested, when it's released and when its config is changed.
-> The first two are self-explanatory. For the third one: this will only
-> happen when another user-space process calls the new SET_CONFIG ioctl()
-> as any changes that can happen from within the kernel (i.e.
-> set_transitory() or set_debounce()) are of no interest to user-space.
-
-> -       } else if (cmd == GPIO_GET_LINEINFO_IOCTL) {
-> +       } else if (cmd == GPIO_GET_LINEINFO_IOCTL ||
-> +                  cmd == GPIO_GET_LINEINFO_WATCH_IOCTL) {
-
-Wouldn't be better for maintenance to have them separated from the day 1?
-
-...
-
-> +       if (test_bit(desc_to_gpio(desc), priv->watched_lines)) {
-
-if (!test_bit(...))
-  return NOTIFY_DONE;
-
-?
-
-> +                       pr_debug_ratelimited(
-> +                               "%s: lineinfo event FIFO is full - event dropped\n",
-
-> +                               __func__);
-
-This is in 99.9% cases redundant in *_dbg() calls.
-
-> +               ret = NOTIFY_OK;
-> +       }
+> diff --git a/drivers/scsi/ufs/ufs-mediatek.c b/drivers/scsi/ufs/ufs-mediatek.c
+> index 6a3ec11b16db..690483c78212 100644
+> --- a/drivers/scsi/ufs/ufs-mediatek.c
+> +++ b/drivers/scsi/ufs/ufs-mediatek.c
+> @@ -18,6 +18,11 @@
+>  #include "unipro.h"
+>  #include "ufs-mediatek.h"
+>
+> +#define ufs_mtk_ref_clk_notify(on, res) \
+> +       arm_smccc_smc(MTK_SIP_UFS_CONTROL, \
+> +                     UFS_MTK_SIP_REF_CLK_NOTIFICATION, \
+> +                     on, 0, 0, 0, 0, 0, &(res))
 > +
-> +       return ret;
-
-return NOTIFY_OK;
-?
-
-> +}
-
-...
-
-> @@ -3111,6 +3285,7 @@ static int gpio_set_bias(struct gpio_chip *chip, struct gpio_desc *desc)
->                 if (ret != -ENOTSUPP)
->                         return ret;
->         }
-> +
->         return 0;
+>  static void ufs_mtk_cfg_unipro_cg(struct ufs_hba *hba, bool enable)
+>  {
+>         u32 tmp;
+> @@ -83,6 +88,49 @@ static int ufs_mtk_bind_mphy(struct ufs_hba *hba)
+>         return err;
 >  }
 >
-
-This hunk doesn't belong to this patch.
-
-...
-
-> +/**
-> + * struct gpioline_info_changed - Information about a change in status
-> + * of a GPIO line
-> + * @info: updated line information
-> + * @timestamp: estimate of time of status change occurrence, in nanoseconds
-> + * and GPIOLINE_CHANGED_CONFIG
-> + * @event_type: one of GPIOLINE_CHANGED_REQUESTED, GPIOLINE_CHANGED_RELEASED
+> +static int ufs_mtk_setup_ref_clk(struct ufs_hba *hba, bool on)
+> +{
+> +       struct ufs_mtk_host *host = ufshcd_get_variant(hba);
+> +       struct arm_smccc_res res;
+> +       unsigned long timeout;
+> +       u32 value;
+> +
+> +       if (host->ref_clk_enabled == on)
+> +               return 0;
+> +
+> +       if (on) {
+> +               ufs_mtk_ref_clk_notify(on, res);
+> +               ufshcd_writel(hba, REFCLK_REQUEST, REG_UFS_REFCLK_CTRL);
+> +       } else {
+> +               ufshcd_writel(hba, REFCLK_RELEASE, REG_UFS_REFCLK_CTRL);
+> +       }
+> +
+> +       /* Wait for ack */
+> +       timeout = jiffies + msecs_to_jiffies(REFCLK_REQ_TIMEOUT_MS);
+> +       do {
+> +               value = ufshcd_readl(hba, REG_UFS_REFCLK_CTRL);
+> +
+> +               /* Wait until ack bit equals to req bit */
+> +               if (((value & REFCLK_ACK) >> 1) == (value & REFCLK_REQUEST))
+> +                       goto out;
+> +
+> +               usleep_range(100, 200);
+> +       } while (time_before(jiffies, timeout));
+> +
+> +       dev_err(hba->dev, "missing ack of refclk req, reg: 0x%x\n", value);
+> +
+> +       ufs_mtk_ref_clk_notify(host->ref_clk_enabled, res);
+> +
+> +       return -ETIMEDOUT;
+> +
+> +out:
+> +       host->ref_clk_enabled = on;
+> +       if (!on)
+> +               ufs_mtk_ref_clk_notify(on, res);
+> +
+> +       return 0;
+> +}
+> +
+>  /**
+>   * ufs_mtk_setup_clocks - enables/disable clocks
+>   * @hba: host controller instance
+> @@ -107,12 +155,16 @@ static int ufs_mtk_setup_clocks(struct ufs_hba *hba, bool on,
+>
+>         switch (status) {
+>         case PRE_CHANGE:
+> -               if (!on)
+> +               if (!on) {
+> +                       ufs_mtk_setup_ref_clk(hba, on);
+>                         ret = phy_power_off(host->mphy);
+> +               }
+>                 break;
+>         case POST_CHANGE:
+> -               if (on)
+> +               if (on) {
+>                         ret = phy_power_on(host->mphy);
+> +                       ufs_mtk_setup_ref_clk(hba, on);
+> +               }
+>                 break;
+>         }
+>
+> @@ -299,8 +351,10 @@ static int ufs_mtk_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+>  {
+>         struct ufs_mtk_host *host = ufshcd_get_variant(hba);
+>
+> -       if (ufshcd_is_link_hibern8(hba))
+> +       if (ufshcd_is_link_hibern8(hba)) {
+>                 phy_power_off(host->mphy);
+> +               ufs_mtk_setup_ref_clk(hba, false);
+> +       }
+>
+>         return 0;
+>  }
+> @@ -309,8 +363,10 @@ static int ufs_mtk_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+>  {
+>         struct ufs_mtk_host *host = ufshcd_get_variant(hba);
+>
+> -       if (ufshcd_is_link_hibern8(hba))
+> +       if (ufshcd_is_link_hibern8(hba)) {
+> +               ufs_mtk_setup_ref_clk(hba, true);
+>                 phy_power_on(host->mphy);
+> +       }
+>
+>         return 0;
+>  }
+> diff --git a/drivers/scsi/ufs/ufs-mediatek.h b/drivers/scsi/ufs/ufs-mediatek.h
+> index b03f601d3a9e..14f8a8357c09 100644
+> --- a/drivers/scsi/ufs/ufs-mediatek.h
+> +++ b/drivers/scsi/ufs/ufs-mediatek.h
+> @@ -6,7 +6,21 @@
+>  #ifndef _UFS_MEDIATEK_H
+>  #define _UFS_MEDIATEK_H
+>
+> -#include <linux/bitops.h>
+> +/*
+> + * Vendor specific UFSHCI Registers
 > + */
-> +struct gpioline_info_changed {
+> +#define REG_UFS_REFCLK_CTRL         0x144
+> +
+> +/*
+> + * Ref-clk control
+> + *
+> + * Values for register REG_UFS_REFCLK_CTRL
+> + */
+> +#define REFCLK_RELEASE              0x0
+> +#define REFCLK_REQUEST              BIT(0)
+> +#define REFCLK_ACK                  BIT(1)
+> +
+> +#define REFCLK_REQ_TIMEOUT_MS       3
+>
+>  /*
+>   * Vendor specific pre-defined parameters
+> @@ -34,7 +48,8 @@
+>  /*
+>   * SiP commands
+>   */
+> -#define UFS_MTK_SIP_DEVICE_RESET    BIT(1)
+> +#define UFS_MTK_SIP_DEVICE_RESET          BIT(1)
+> +#define UFS_MTK_SIP_REF_CLK_NOTIFICATION  BIT(3)
+>
+>  /*
+>   * VS_DEBUGCLOCKENABLE
+> @@ -55,6 +70,7 @@ enum {
+>  struct ufs_mtk_host {
+>         struct ufs_hba *hba;
+>         struct phy *mphy;
+> +       bool ref_clk_enabled;
+>  };
+>
+>  #endif /* !_UFS_MEDIATEK_H */
+> --
+> 2.18.0
 
-> +       struct gpioline_info info;
 
-Is this guaranteed to be always 8 byte aligned?
-I'm expecting to see some comments there and / or here about it.
-
-> +       __u64 timestamp;
-> +       __u32 event_type;
-> +       __u32 padding[5]; /* for future use */
-> +};
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards,
+Alim
