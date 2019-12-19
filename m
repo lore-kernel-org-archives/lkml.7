@@ -2,135 +2,121 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E177C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6E0C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11E5324650
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:51:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576745484;
-	bh=kEpQx0hZnJhKfGcuFLOViqZgRSUWJJJ1jXDNHmfiBvs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Zg5CWP1+QS3aZ5k4WzJHw8hBRd34IJ/y//MXrD/VgNBrxRE6SO5Gy3Zjs6SHT/KoA
-	 NBJIe2CL7YYHemR6YONqnVCoiocFlIUUzkIhfqEi/kBJ9ka+gb0PqLWhV3khrXiJpy
-	 wRENbnkRzEL3mEzpl6eUbTalO3QfNTLBP5GNOFBI=
+	by mail.kernel.org (Postfix) with ESMTP id E3B9F227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:51:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbfLSIvW (ORCPT
+        id S1726734AbfLSIvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 03:51:22 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35934 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbfLSIvV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 03:51:21 -0500
-Received: by mail-lj1-f194.google.com with SMTP id r19so5318973ljg.3;
-        Thu, 19 Dec 2019 00:51:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ov9Gtfji50Xp++UcgIAzGw3Er9+a23OIgWl2d1OwrHg=;
-        b=EN20FP3epkeMNj6iDopIt+yMSykt8bC8MJph3L8u7SIclCG4FaeXFwONqUM7Kzt3Ha
-         jljqPpQk3pHj9xpUL1PIa8mgu5Sg0g7HNQv34e3PaCE4Y244RHtJhYvp+Ey+9jBQnDIA
-         quhgATpiBoh2MfY9vQgsiWQAKYOPBOhZVbA1Y900svD7Hs9vCSCzjlUkcxPX+Y25LktZ
-         xmI2oDIhDieEtHt//Gnd3sbFAq/TQDOSXCt2jHq1ehqcunJaAOAz3WpVJOgXUVbnHKPp
-         1REEjL0h8bQpAAmiSLCBG/yCmFa3xEfH663f3Z8gFTVLgNdgKPSwwVqsJA8HBf5QL16f
-         MSvA==
-X-Gm-Message-State: APjAAAVTe3khlWf7apHHDecYT32abbXrHwizOwYM2vu4P78YykzJ7gz+
-        WORhspyGhou7n7UAlWNRqeg=
-X-Google-Smtp-Source: APXvYqxMdEb4+JsricDkSeAKpBX8G567ClLGmRraQ9zO6RotnTVmTNGEB/wBJGrYpF8kjfk9YJWZNw==
-X-Received: by 2002:a2e:9013:: with SMTP id h19mr5180544ljg.223.1576745479035;
-        Thu, 19 Dec 2019 00:51:19 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id w19sm2244310lfl.55.2019.12.19.00.51.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 00:51:18 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1ihrWc-0003vT-J6; Thu, 19 Dec 2019 09:51:14 +0100
-Date:   Thu, 19 Dec 2019 09:51:14 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-serial@vger.kernel.org,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        nobuhiro1.iwamatsu@toshiba.co.jp, shrirang.bagul@canonical.com,
-        Stable <stable@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH] serdev: Don't claim unsupported serial devices
-Message-ID: <20191219085114.GQ22665@localhost>
-References: <20191218065646.817493-1-punit1.agrawal@toshiba.co.jp>
- <20191218085648.GI22665@localhost>
- <CAJZ5v0h-bhg4+kwTci5_wZhn9rYN=YXoCbSTVs4vPRzRFOjU8A@mail.gmail.com>
+        Thu, 19 Dec 2019 03:51:45 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:51196 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726591AbfLSIvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 03:51:45 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E1C6F1B3979B511D2B53;
+        Thu, 19 Dec 2019 16:51:42 +0800 (CST)
+Received: from [127.0.0.1] (10.184.52.56) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Thu, 19 Dec 2019
+ 16:51:35 +0800
+Subject: Re: [PATCH v2] PCI: Add quirk for HiSilicon NP 5896 devices
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <bjorn@helgaas.com>, <andrew.murray@arm.com>,
+        <linux-pci@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        <wangkefeng.wang@huawei.com>, <huawei.libin@huawei.com>,
+        <guohanjun@huawei.com>
+References: <20191218142831.GA101587@google.com>
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Message-ID: <03ef3686-2cbb-8495-bf5a-f6927ad25179@huawei.com>
+Date:   Thu, 19 Dec 2019 16:51:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0h-bhg4+kwTci5_wZhn9rYN=YXoCbSTVs4vPRzRFOjU8A@mail.gmail.com>
+In-Reply-To: <20191218142831.GA101587@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.184.52.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 09:39:57AM +0100, Rafael J. Wysocki wrote:
-> On Wed, Dec 18, 2019 at 9:56 AM Johan Hovold <johan@kernel.org> wrote:
-> >
-> > On Wed, Dec 18, 2019 at 03:56:46PM +0900, Punit Agrawal wrote:
-> > > Serdev sub-system claims all serial devices that are not already
-> > > enumerated. As a result, no device node is created for serial port on
-> > > certain boards such as the Apollo Lake based UP2. This has the
-> > > unintended consequence of not being able to raise the login prompt via
-> > > serial connection.
-> > >
-> > > Introduce a blacklist to reject devices that should not be treated as
-> > > a serdev device. Add the Intel HS UART peripheral ids to the blacklist
-> > > to bring back serial port on SoCs carrying them.
-> > >
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-> > > Cc: Rob Herring <robh@kernel.org>
-> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Cc: Johan Hovold <johan@kernel.org>
-> > > Cc: Hans de Goede <hdegoede@redhat.com>
-> > > ---
-> > >
-> > > Hi,
-> > >
-> > > The patch has been updated based on feedback recieved on the RFC[0].
-> > >
-> > > Please consider merging if there are no objections.
-> >
-> > Rafael, I vaguely remember you arguing for a white list when we
-> > discussed this at some conference. Do you have any objections to the
-> > blacklist approach taken here?
+
+
+On 2019/12/18 22:28, Bjorn Helgaas wrote:
+> On Wed, Dec 18, 2019 at 05:16:03PM +0800, Xiongfeng Wang wrote:
+>> On 2019/12/11 12:10, Bjorn Helgaas wrote:
+>>> On Tue, Dec 10, 2019 at 9:28 PM Xiongfeng Wang
+>>> <wangxiongfeng2@huawei.com> wrote:
+>>>> On 2019/12/7 2:10, Bjorn Helgaas wrote:
+>>>>> On Fri, Dec 06, 2019 at 03:01:45PM +0800, Xiongfeng Wang wrote:
+>>>>>> HiSilicon PCI Network Processor 5896 devices misreport the
+>>>>>> class type as 'NOT_DEFINED', but it is actually a network
+>>>>>> device. Also the size of BAR3 is reported as 265T, but this BAR
+>>>>>> is actually unused.  This patch modify the class type to
+>>>>>> 'CLASS_NETWORK' and disable the unused BAR3.
 > 
-> As a rule, I prefer whitelisting, because it only enables the feature
-> for systems where it has been tested and confirmed to work.
+>>>>> The question is not whether the BAR is used by the driver; the
+>>>>> question is whether the device responds to accesses to the
+>>>>> region described by the BAR when PCI_COMMAND_MEMORY is turned
+>>>>> on.
+>>>>
+>>>> I asked the hardware engineer. He said I can not write an address
+>>>> into that BAR.
+>>>
+>>> If the BAR is not writable, I think sizing should fail, so I
+>>> suspect some of the bits are actually writable.
+>>
+>> Sorry for the delayed response. It's not so convenient for me to get
+>> to the hardware guys.  BAR0 BAR1 BAR2 are 32-bit and can be used to
+>> access the registers and memory within 5896 devices. These three
+>> BARs can meet the need for most scenario.  BAR3 is 64-bit and can be
+>> used to access all the registers and memory within 5896 devices.
+>> (BAR3 is writable. Sorry for the non-confirmed information before.)
+>> But BAR3 is not used by the driver and the size is very
+>> large（larger than 100G, still didn't get the precise size）.  So I
+>> think maybe we can disable this BAR for now, otherwise the
+>> unassigned resource will cause 'pci_enable_device()' returning
+>> failure.
 > 
-> However, if you are convinced that in this particular case the feature
-> should work on the vast majority of systems with a few possible
-> exceptions, blacklisting is fine too.
+> Here's the problem: the proposed patch (below) clears the struct
+> resource corresponding to BAR 3, but that doesn't actually disable the
+> BAR.  It hides the BAR from Linux, so Linux will pretend it doesn't
+> exist, but it's still there in the hardware.
 > 
-> It all depends on what the majority is, at least in principle.
+> The hardware BAR 3 still contains some value (possibly zero), and if
+> PCI_COMMAND_MEMORY is set (which you need to do if you want to use
+> *any* memory BARs on the device), the device will respond to any
+> transactions in the BAR 3 range.  Depending on the topology and all
+> the other BAR and window assignments, this may cause address
+> conflicts.
 
-Ok, thanks. I don't have a preference either way in this case simply
-because I don't know the distribution you refer to.
+Yes, there does exist this problem. I will check it with the hardware
+engineers. Thanks.
 
-But if Hans thinks blacklisting is the way to go then let's do that. We
-haven't had that many reports about this, but if that were to change
-down the line, I guess we can always switch to whitelisting.
+> 
+> + * HiSilicon NP 5896 devices BAR3 size is reported as 256T and causes problem
+> + * when assigning the resources. But this BAR is actually unused by the driver,
+> + * so let's disable it.
+> + */
+> +static void quirk_hisi_fixup_np_bar(struct pci_dev *pdev)
+> +{
+> +       struct resource *r = &pdev->resource[3];
+> +
+> +       r->start = 0;
+> +       r->end = 0;
+> +       r->flags = 0;
+> +
+> +       pci_info(pdev, "Disabling invalid BAR 3\n");
+> 
+> .
+> 
 
-Punit, feel free to add my
-
-Acked-by: Johan Hovold <johan@kernel.org>
-
-after addressing the review comments you've gotten so far.
-
-Johan
