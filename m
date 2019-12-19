@@ -2,276 +2,167 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D146C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BF0C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A6A524650
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:22:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="Q2Nkm6fd"
+	by mail.kernel.org (Postfix) with ESMTP id 0A70F2467B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:29:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576758540;
+	bh=K/RLgM+SNDwhK160kOZ3ld2ozw8rv1ZoVmB6uRR2nAc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oJdrr0i+NZ5rGy/lNWOgu35gXZjJ+i7sI0kZBF2YkcHrpsoUE2/mQX5rOLdo+Dbwu
+	 /RSvsMeXMDvJ2nEdabzXbtsYaKZTz16QJkT0shgxK/X/6PFauz4ZAOART+GAEajsmu
+	 eB35RHfxGAIdssK267vWqzcq6LKD52tN27Hf32VI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfLSMWE (ORCPT
+        id S1726744AbfLSM25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 07:22:04 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:53291 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbfLSMWD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 07:22:03 -0500
-Received: by mail-pj1-f65.google.com with SMTP id n96so2442810pjc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 04:22:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=KUZMCzJDajvAWgOwIGaMCQmEpud/sI+HWwVZ5z66PfA=;
-        b=Q2Nkm6fdrRQpsyMzF0E8SO5CnpATIDAngezGXzkbVg5FM5gqp/USZdvjuLOyqxGhob
-         vUVMUdsruXOTvNCGsO9w+cBW7pumbWreW9u7bHeP80rb+z1Nq3yZJJbt7fsXy8VTPJaX
-         fqxmb822HcBIF6ENlq0AC91lSpDppRPi5JuRI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=KUZMCzJDajvAWgOwIGaMCQmEpud/sI+HWwVZ5z66PfA=;
-        b=H48xnrLTU4gVINPRPS001Qlz/Kv1PoO/Ysnjxlkz6DpDxgaLQhJLCa3U45bVeyE8bR
-         +I4c7/gU0s9ed7572D//MwnreGBcD6FJaql0i9cRvZqPOS8jWVbw6F3JSDfFE+QTvryF
-         ROQ1tBQ+I8Wd0Ovvsy417xSiwk20hqedUsWNdXnduZ/KbX22hn+4/oqcdS27BB9CdJe9
-         HZPbW9/4BlH9qWq3g9mdFbtEoMy0TtJ5tDmG1MNXgWsGH9eN6Qix7Nco6PXg4PrcF5Je
-         Tk80GE3YEp8L3Vgrhjj3C/O4SVhIhEZEtyoJKtGxOryHqHFndoHx2tcSw7Cos+HmQ/cK
-         kSyA==
-X-Gm-Message-State: APjAAAVwMfGExIJSwJT85TOWG4ANlBM2Odqv6vatJmZFT70OLagE60Ar
-        Hzg/T/0orf404AZayd48pTzYQQ==
-X-Google-Smtp-Source: APXvYqysLbNRk7kADvF4EGeP94sXjr/+8KOzk3Rc0H00Sz8ZwQESSep5znZgXFDiN+AamxRSsQtyGg==
-X-Received: by 2002:a17:90a:1992:: with SMTP id 18mr9506461pji.46.1576758122786;
-        Thu, 19 Dec 2019 04:22:02 -0800 (PST)
-Received: from localhost (2001-44b8-1113-6700-b05d-cbfe-b2ee-de17.static.ipv6.internode.on.net. [2001:44b8:1113:6700:b05d:cbfe:b2ee:de17])
-        by smtp.gmail.com with ESMTPSA id x4sm8347303pfx.68.2019.12.19.04.22.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 04:22:01 -0800 (PST)
-From:   Daniel Axtens <dja@axtens.net>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, kasan-dev@googlegroups.com,
-        aneesh.kumar@linux.ibm.com, bsingharora@gmail.com
-Cc:     Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v4 4/4] powerpc: Book3S 64-bit "heavyweight" KASAN support
-In-Reply-To: <4f2fffb3-5fb6-b5ea-a951-a7910f2439b8@c-s.fr>
-References: <20191219003630.31288-1-dja@axtens.net> <20191219003630.31288-5-dja@axtens.net> <c4d37067-829f-cd7d-7e94-0ec2223cce71@c-s.fr> <87bls4tzjn.fsf@dja-thinkpad.axtens.net> <4f2fffb3-5fb6-b5ea-a951-a7910f2439b8@c-s.fr>
-Date:   Thu, 19 Dec 2019 23:21:59 +1100
-Message-ID: <877e2stsig.fsf@dja-thinkpad.axtens.net>
+        Thu, 19 Dec 2019 07:28:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45430 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726668AbfLSM24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 07:28:56 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9786224650;
+        Thu, 19 Dec 2019 12:28:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576758535;
+        bh=K/RLgM+SNDwhK160kOZ3ld2ozw8rv1ZoVmB6uRR2nAc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GOK38LYhkDsLh91zwac08ED3eDHGiVQPYJE/D/q2TxhHZsMYw43GHgfiX7KO38CFt
+         Iyz4xXc7a08qXxU6Pz4/COYnpBsM2pa6vgVj9mNlCDY9XynjVpoNUmdwGpWvWSzhgN
+         Mfn+qZu7K55uApSKhkwUo6/dgaXOAwyAZeNnhvYU=
+Date:   Thu, 19 Dec 2019 12:28:50 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, kernel-team@android.com,
+        Hillf Danton <hdanton@sina.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com
+Subject: Re: [PATCH] chardev: Avoid potential use-after-free in
+ 'chrdev_open()'
+Message-ID: <20191219122849.GC32361@willie-the-truck>
+References: <20191219120203.32691-1-will@kernel.org>
+ <20191219121507.GA1493557@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191219121507.GA1493557@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@c-s.fr> writes:
+On Thu, Dec 19, 2019 at 01:15:07PM +0100, Greg KH wrote:
+> On Thu, Dec 19, 2019 at 12:02:03PM +0000, Will Deacon wrote:
+> > 'chrdev_open()' calls 'cdev_get()' to obtain a reference to the
+> > 'struct cdev *' stashed in the 'i_cdev' field of the target inode
+> > structure. If the pointer is NULL, then it is initialised lazily by
+> > looking up the kobject in the 'cdev_map' and so the whole procedure is
+> > protected by the 'cdev_lock' spinlock to serialise initialisation of
+> > the shared pointer.
+> > 
+> > Unfortunately, it is possible for the initialising thread to fail *after*
+> > installing the new pointer, for example if the subsequent '->open()' call
+> > on the file fails. In this case, 'cdev_put()' is called, the reference
+> > count on the kobject is dropped and, if nobody else has taken a reference,
+> > the release function is called which finally clears 'inode->i_cdev' from
+> > 'cdev_purge()' before potentially freeing the object. The problem here
+> > is that a racing thread can happily take the 'cdev_lock' and see the
+> > non-NULL pointer in the inode, which can result in a refcount increment
+> > from zero and a warning:
+> > 
+> >   |  ------------[ cut here ]------------
+> >   |  refcount_t: addition on 0; use-after-free.
+> >   |  WARNING: CPU: 2 PID: 6385 at lib/refcount.c:25 refcount_warn_saturate+0x6d/0xf0
+> >   |  Modules linked in:
+> >   |  CPU: 2 PID: 6385 Comm: repro Not tainted 5.5.0-rc2+ #22
+> >   |  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+> >   |  RIP: 0010:refcount_warn_saturate+0x6d/0xf0
+> >   |  Code: 05 55 9a 15 01 01 e8 9d aa c8 ff 0f 0b c3 80 3d 45 9a 15 01 00 75 ce 48 c7 c7 00 9c 62 b3 c6 08
+> >   |  RSP: 0018:ffffb524c1b9bc70 EFLAGS: 00010282
+> >   |  RAX: 0000000000000000 RBX: ffff9e9da1f71390 RCX: 0000000000000000
+> >   |  RDX: ffff9e9dbbd27618 RSI: ffff9e9dbbd18798 RDI: ffff9e9dbbd18798
+> >   |  RBP: 0000000000000000 R08: 000000000000095f R09: 0000000000000039
+> >   |  R10: 0000000000000000 R11: ffffb524c1b9bb20 R12: ffff9e9da1e8c700
+> >   |  R13: ffffffffb25ee8b0 R14: 0000000000000000 R15: ffff9e9da1e8c700
+> >   |  FS:  00007f3b87d26700(0000) GS:ffff9e9dbbd00000(0000) knlGS:0000000000000000
+> >   |  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >   |  CR2: 00007fc16909c000 CR3: 000000012df9c000 CR4: 00000000000006e0
+> >   |  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> >   |  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> >   |  Call Trace:
+> >   |   kobject_get+0x5c/0x60
+> >   |   cdev_get+0x2b/0x60
+> >   |   chrdev_open+0x55/0x220
+> >   |   ? cdev_put.part.3+0x20/0x20
+> >   |   do_dentry_open+0x13a/0x390
+> >   |   path_openat+0x2c8/0x1470
+> >   |   do_filp_open+0x93/0x100
+> >   |   ? selinux_file_ioctl+0x17f/0x220
+> >   |   do_sys_open+0x186/0x220
+> >   |   do_syscall_64+0x48/0x150
+> >   |   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >   |  RIP: 0033:0x7f3b87efcd0e
+> >   |  Code: 89 54 24 08 e8 a3 f4 ff ff 8b 74 24 0c 48 8b 3c 24 41 89 c0 44 8b 54 24 08 b8 01 01 00 00 89 f4
+> >   |  RSP: 002b:00007f3b87d259f0 EFLAGS: 00000293 ORIG_RAX: 0000000000000101
+> >   |  RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f3b87efcd0e
+> >   |  RDX: 0000000000000000 RSI: 00007f3b87d25a80 RDI: 00000000ffffff9c
+> >   |  RBP: 00007f3b87d25e90 R08: 0000000000000000 R09: 0000000000000000
+> >   |  R10: 0000000000000000 R11: 0000000000000293 R12: 00007ffe188f504e
+> >   |  R13: 00007ffe188f504f R14: 00007f3b87d26700 R15: 0000000000000000
+> >   |  ---[ end trace 24f53ca58db8180a ]---
+> > 
+> > Since 'cdev_get()' can already fail to obtain a reference, simply move
+> > it over to use 'kobject_get_unless_zero()' instead of 'kobject_get()',
+> > which will cause the racing thread to return -ENXIO if the initialising
+> > thread fails unexpectedly.
+> > 
+> > Cc: Greg KH <gregkh@linuxfoundation.org>
+> > Cc: Hillf Danton <hdanton@sina.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Al Viro <viro@zeniv.linux.org.uk>
+> > Reported-by: syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com
+> > Signed-off-by: Will Deacon <will@kernel.org>
+> > ---
+> >  fs/char_dev.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/fs/char_dev.c b/fs/char_dev.c
+> > index 00dfe17871ac..c5e6eff5a381 100644
+> > --- a/fs/char_dev.c
+> > +++ b/fs/char_dev.c
+> > @@ -352,7 +352,7 @@ static struct kobject *cdev_get(struct cdev *p)
+> >  
+> >  	if (owner && !try_module_get(owner))
+> >  		return NULL;
+> > -	kobj = kobject_get(&p->kobj);
+> > +	kobj = kobject_get_unless_zero(&p->kobj);
+> >  	if (!kobj)
+> >  		module_put(owner);
+> >  	return kobj;
+> > -- 
+> > 2.24.1.735.g03f4e72817-goog
+> > 
+> 
+> Ugh.
+> 
+> Due to the location of the lock, this looks like the only viable
+> solution.
+> 
+> Al, any objection for me taking this into my tree now to send to Linus?
+> Will, this did fix the syzbot reproducer, right?
 
-> Le 19/12/2019 =C3=A0 10:50, Daniel Axtens a =C3=A9crit=C2=A0:
->> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->>=20
->>> On 12/19/2019 12:36 AM, Daniel Axtens wrote:
->>>> KASAN support on Book3S is a bit tricky to get right:
->>>>
->>>>    - It would be good to support inline instrumentation so as to be ab=
-le to
->>>>      catch stack issues that cannot be caught with outline mode.
->>>>
->>>>    - Inline instrumentation requires a fixed offset.
->>>>
->>>>    - Book3S runs code in real mode after booting. Most notably a lot o=
-f KVM
->>>>      runs in real mode, and it would be good to be able to instrument =
-it.
->>>>
->>>>    - Because code runs in real mode after boot, the offset has to poin=
-t to
->>>>      valid memory both in and out of real mode.
->>>>
->>>>       [ppc64 mm note: The kernel installs a linear mapping at effective
->>>>       address c000... onward. This is a one-to-one mapping with physic=
-al
->>>>       memory from 0000... onward. Because of how memory accesses work =
-on
->>>>       powerpc 64-bit Book3S, a kernel pointer in the linear map access=
-es the
->>>>       same memory both with translations on (accessing as an 'effective
->>>>       address'), and with translations off (accessing as a 'real
->>>>       address'). This works in both guests and the hypervisor. For more
->>>>       details, see s5.7 of Book III of version 3 of the ISA, in partic=
-ular
->>>>       the Storage Control Overview, s5.7.3, and s5.7.5 - noting that t=
-his
->>>>       KASAN implementation currently only supports Radix.]
->>>>
->>>> One approach is just to give up on inline instrumentation. This way all
->>>> checks can be delayed until after everything set is up correctly, and =
-the
->>>> address-to-shadow calculations can be overridden. However, the feature=
-s and
->>>> speed boost provided by inline instrumentation are worth trying to do
->>>> better.
->>>>
->>>> If _at compile time_ it is known how much contiguous physical memory a
->>>> system has, the top 1/8th of the first block of physical memory can be=
- set
->>>> aside for the shadow. This is a big hammer and comes with 3 big
->>>> consequences:
->>>>
->>>>    - there's no nice way to handle physically discontiguous memory, so=
- only
->>>>      the first physical memory block can be used.
->>>>
->>>>    - kernels will simply fail to boot on machines with less memory than
->>>>      specified when compiling.
->>>>
->>>>    - kernels running on machines with more memory than specified when
->>>>      compiling will simply ignore the extra memory.
->>>>
->>>> Implement and document KASAN this way. The current implementation is R=
-adix
->>>> only.
->>>>
->>>> Despite the limitations, it can still find bugs,
->>>> e.g. http://patchwork.ozlabs.org/patch/1103775/
->>>>
->>>> At the moment, this physical memory limit must be set _even for outline
->>>> mode_. This may be changed in a later series - a different implementat=
-ion
->>>> could be added for outline mode that dynamically allocates shadow at a
->>>> fixed offset. For example, see https://patchwork.ozlabs.org/patch/7952=
-11/
->>>>
->>>> Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
->>>> Cc: Balbir Singh <bsingharora@gmail.com> # ppc64 out-of-line radix ver=
-sion
->>>> Cc: Christophe Leroy <christophe.leroy@c-s.fr> # ppc32 version
->>>> Signed-off-by: Daniel Axtens <dja@axtens.net>
->>>>
->>>> ---
->>>> Changes since v3:
->>>>    - Address further feedback from Christophe.
->>>>    - Drop changes to stack walking, it looks like the issue I observed=
- is
->>>>      related to that particular stack, not stack-walking generally.
->>>>
->>>> Changes since v2:
->>>>
->>>>    - Address feedback from Christophe around cleanups and docs.
->>>>    - Address feedback from Balbir: at this point I don't have a good s=
-olution
->>>>      for the issues you identify around the limitations of the inline =
-implementation
->>>>      but I think that it's worth trying to get the stack instrumentati=
-on support.
->>>>      I'm happy to have an alternative and more flexible outline mode -=
- I had
->>>>      envisoned this would be called 'lightweight' mode as it imposes f=
-ewer restrictions.
->>>>      I've linked to your implementation. I think it's best to add it i=
-n a follow-up series.
->>>>    - Made the default PHYS_MEM_SIZE_FOR_KASAN value 1024MB. I think mo=
-st people have
->>>>      guests with at least that much memory in the Radix 64s case so it=
-'s a much
->>>>      saner default - it means that if you just turn on KASAN without r=
-eading the
->>>>      docs you're much more likely to have a bootable kernel, which you=
- will never
->>>>      have if the value is set to zero! I'm happy to bikeshed the value=
- if we want.
->>>>
->>>> Changes since v1:
->>>>    - Landed kasan vmalloc support upstream
->>>>    - Lots of feedback from Christophe.
->>>>
->>>> Changes since the rfc:
->>>>
->>>>    - Boots real and virtual hardware, kvm works.
->>>>
->>>>    - disabled reporting when we're checking the stack for exception
->>>>      frames. The behaviour isn't wrong, just incompatible with KASAN.
->>>>
->>>>    - Documentation!
->>>>
->>>>    - Dropped old module stuff in favour of KASAN_VMALLOC.
->>>>
->>>> The bugs with ftrace and kuap were due to kernel bloat pushing
->>>> prom_init calls to be done via the plt. Because we did not have
->>>> a relocatable kernel, and they are done very early, this caused
->>>> everything to explode. Compile with CONFIG_RELOCATABLE!
->>>> ---
->>>>    Documentation/dev-tools/kasan.rst            |   8 +-
->>>>    Documentation/powerpc/kasan.txt              | 112 ++++++++++++++++=
-++-
->>>>    arch/powerpc/Kconfig                         |   2 +
->>>>    arch/powerpc/Kconfig.debug                   |  21 ++++
->>>>    arch/powerpc/Makefile                        |  11 ++
->>>>    arch/powerpc/include/asm/book3s/64/hash.h    |   4 +
->>>>    arch/powerpc/include/asm/book3s/64/pgtable.h |   7 ++
->>>>    arch/powerpc/include/asm/book3s/64/radix.h   |   5 +
->>>>    arch/powerpc/include/asm/kasan.h             |  21 +++-
->>>>    arch/powerpc/kernel/prom.c                   |  61 +++++++++-
->>>>    arch/powerpc/mm/kasan/Makefile               |   1 +
->>>>    arch/powerpc/mm/kasan/init_book3s_64.c       |  70 ++++++++++++
->>>>    arch/powerpc/platforms/Kconfig.cputype       |   1 +
->>>>    13 files changed, 316 insertions(+), 8 deletions(-)
->>>>    create mode 100644 arch/powerpc/mm/kasan/init_book3s_64.c
->>>>
->>>> diff --git a/arch/powerpc/include/asm/kasan.h b/arch/powerpc/include/a=
-sm/kasan.h
->>>> index 296e51c2f066..f18268cbdc33 100644
->>>> --- a/arch/powerpc/include/asm/kasan.h
->>>> +++ b/arch/powerpc/include/asm/kasan.h
->>>> @@ -2,6 +2,9 @@
->>>>    #ifndef __ASM_KASAN_H
->>>>    #define __ASM_KASAN_H
->>>>=20=20=20=20
->>>> +#include <asm/page.h>
->>>> +#include <asm/pgtable.h>
->>>
->>> What do you need asm/pgtable.h for ?
->>>
->>> Build failure due to circular inclusion of asm/pgtable.h:
->>=20
->> I see there's a lot of ppc32 stuff, I clearly need to bite the bullet
->> and get a ppc32 toolchain so I can squash these without chewing up any
->> more of your time. I'll sort that out and send a new spin.
->>=20
->
-> I'm using a powerpc64 toolchain to build both ppc32 and ppc64 kernels=20
-> (from https://mirrors.edge.kernel.org/pub/tools/crosstool/ )
+Yes, looks like it. It ran overnight without failing (even with my mdelay()
+hacks applied to make the race more likely).
 
-I am now using the distro toolchain that Ubuntu provides, and I've
-reproduced and fixed the 32bit issues you identifed.
-
-> Another thing, did you test PTDUMP stuff with KASAN ? It looks like=20
-> KASAN address markers don't depend on PPC32, but are only initialised by=
-=20
-> populate_markers() for PPC32.
-
-Hmm, OK. This is my last workday for the year, so I will look at this
-and the simplifications to kasan.h early next year.
-
-Thanks,
-Daniel
-
->
-> Regarding kasan.h, I think we should be able to end up with something=20
-> where the definition of KASAN_SHADOW_OFFSET should only depend on the=20
-> existence of CONFIG_KASAN_SHADOW_OFFSET, and where only=20
-> KASAN_SHADOW_SIZE should depend on the target (ie PPC32 or BOOK3S64)
-> Everything else should be common. KASAN_END should be START+SIZE.
->
-> It looks like what you have called KASAN_SHADOW_SIZE is not similar to=20
-> what is called KASAN_SHADOW_SIZE for PPC32, as yours only covers the=20
-> SHADOW_SIZE for linear mem while PPC32 one covers the full space.
->
-> Christophe
+Will
