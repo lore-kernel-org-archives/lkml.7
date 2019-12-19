@@ -2,124 +2,97 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FD5C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA518C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B3FC206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:26:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nsuYK9rV"
+	by mail.kernel.org (Postfix) with ESMTP id 779A721D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:27:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576769241;
+	bh=vS5IESszcyqi+uGDD+X1536i+izXz/NeBl5+PTLCpxo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hNAhakIpBs/DBuam6e618406AuAWXSd5kWNrs6aUyqYsNmKm61ac3Axzv6QSKZCnn
+	 zr5yeXhHRQU9fU1WpH4Z5iZ7OwubyZvkDb6vcOWV5oPuP9MzwtTYQROlaxzAMx9AYJ
+	 BBBkWCelTJszM+HQ8ZsChQ3CAk5sPmFwR5srFpFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfLSP0N (ORCPT
+        id S1726895AbfLSP1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 10:26:13 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:32898 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbfLSP0M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 10:26:12 -0500
-Received: by mail-lj1-f196.google.com with SMTP id p8so6716507ljg.0;
-        Thu, 19 Dec 2019 07:26:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EfMJAK6QdKFsh+fBVzyJUPJJh4olOvNdwOUocs3Xhps=;
-        b=nsuYK9rVKQACfeRu9Z8HMvUbUy2U3uac5KvqBY2uHv1G4NDmeVbxnMm99VdxvlyrjY
-         Ms5Paep/aqE1Qpugiti/UroiLXFPeLkDlymrD59PBm96RE2dGyxD/7btwCQucWGMVexF
-         EALSGO0JH++DxTRly89fl1pXYNs+sojGl3R074/v5B/zea69udGzrNZAuEJj1wYI8USd
-         CAsv8qQs/Vq/qd+d7kSbfA0QuJtJeEz0dkNKQqNsmcLLGLwGozQCtESJdrtFKbTDsg5Z
-         LGKIOVl9Y5jvj+BZnwfoNhuoE+wdwDG64FAavt9FajbRp6lnTFXx/3tQ+9QTJV850WA1
-         xJKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EfMJAK6QdKFsh+fBVzyJUPJJh4olOvNdwOUocs3Xhps=;
-        b=JxnU7cw64/RrOjlw1OVGRVkzHVumW4le03BB2fjSIzmQs/cvSg+SJ4Jx12vTME1+/6
-         xA6jEC6Xkv29Dw3Mob2gNfF1rYGFw7j+xMZ7c8RzcfoZmea19Hgp7twycLJCCXhuhMWE
-         Juml1+5xYVY5oNdbRla4Zs75OK/DQyTq1m/XwccUTF9uLQMwnhHGLIG9l8iqmdyZU4Fa
-         Xjs7tAd4OAI6KQ+CohB1zv7ZV45FsX+3TwYh8Rsuf80MV6TaQKfdj8fR4EqWKEhFfxYc
-         KpQJLZ+apqPJ6hxV4OymHOjVAtGBtoiv1a2sfq+CsY/NmMq0BFa5rJYqe+HRbx3Y4jZm
-         wrUA==
-X-Gm-Message-State: APjAAAVsZa7lFuZiOXR+YFZMym82HHo9thXWoiroAjhQ0AST3xnLghe3
-        TfJzh9I0tyOiogBdhcigwfBSEmcy
-X-Google-Smtp-Source: APXvYqyxpPlUqDrJrTTqoRBffG4scu7HrXDMd4IQ99CE0YQXdPBAVdVy6IGag/hmiTmUvSgTzs0DRg==
-X-Received: by 2002:a2e:93d5:: with SMTP id p21mr6652104ljh.50.1576769170048;
-        Thu, 19 Dec 2019 07:26:10 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id i16sm2728741lfo.87.2019.12.19.07.26.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Dec 2019 07:26:09 -0800 (PST)
-Subject: Re: [PATCH v1 0/3] Tegra GPIO: Minor code clean up
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-References: <20191215183047.9414-1-digetx@gmail.com>
- <20191219145341.GL1440537@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <aff1c503-f4da-275d-b867-ca14c86a00db@gmail.com>
-Date:   Thu, 19 Dec 2019 18:26:08 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 19 Dec 2019 10:27:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38388 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726760AbfLSP1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 10:27:20 -0500
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71101206EC;
+        Thu, 19 Dec 2019 15:27:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576769239;
+        bh=vS5IESszcyqi+uGDD+X1536i+izXz/NeBl5+PTLCpxo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=f/jrqqj4Ik571w7gVJTMsgTFnWBTXFo6IX5k6mfcFgdAgzIDVvfuUKzkPioiaHTYo
+         75H7sSeCgF1kXNoM6UQp9oYww5OlytjrUfez0cLiveWmhRN+69no9dumkZ0U/ig2At
+         emIuoioQMqpoKK3Fa+dYSntSSF0XMIMTNboZrtUs=
+Date:   Thu, 19 Dec 2019 10:27:18 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH AUTOSEL 5.4 025/350] objtool: add kunit_try_catch_throw
+ to the noreturn list
+Message-ID: <20191219152718.GL17708@sasha-vm>
+References: <20191210210402.8367-1-sashal@kernel.org>
+ <20191210210402.8367-25-sashal@kernel.org>
+ <CAFd5g45s-cGXp6at4kv+=8v3cuxfbXLPEOKGUfvJ6E+u1caHcA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191219145341.GL1440537@ulmo>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAFd5g45s-cGXp6at4kv+=8v3cuxfbXLPEOKGUfvJ6E+u1caHcA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-19.12.2019 17:53, Thierry Reding пишет:
-> On Sun, Dec 15, 2019 at 09:30:44PM +0300, Dmitry Osipenko wrote:
->> Hello,
+On Tue, Dec 10, 2019 at 01:25:54PM -0800, Brendan Higgins wrote:
+>On Tue, Dec 10, 2019 at 1:04 PM Sasha Levin <sashal@kernel.org> wrote:
 >>
->> I was investigating why CPU hangs during of GPIO driver suspend and in
->> the end it turned out that it is a Broadcom WiFi driver problem because
->> it keeps OOB wake-interrupt enabled while WLAN interface is DOWN and this
->> may cause a bit weird CPU hang on writing to INT_ENB register during of
->> GPIO driver suspend. Meanwhile I also noticed that a few things could be
->> improved in the driver, that's what this small series addresses.
+>> From: Brendan Higgins <brendanhiggins@google.com>
 >>
->> Dmitry Osipenko (3):
->>   gpio: tegra: Use generic readl_relaxed/writel_relaxed accessors
->>   gpio: tegra: Properly handle irq_set_irq_wake() error
->>   gpio: tegra: Use NOIRQ phase for suspend/resume
+>> [ Upstream commit 33adf80f5b52e3f7c55ad66ffcaaff93c6888aaa ]
 >>
->>  drivers/gpio/gpio-tegra.c | 21 ++++++++++-----------
->>  1 file changed, 10 insertions(+), 11 deletions(-)
-> 
-> Patches look good:
-> 
-> Reviewed-by: Thierry Reding <treding@nvidia.com>
-> 
-> I also applied this series on top of v5.5-rc1 and ran it through our
-> test system:
-> 
->     Test results:
->         13 builds:  13 pass, 0 fail
->         22 boots:   22 pass, 0 fail
->         34 tests:   34 pass, 0 fail
-> 
->     Linux version:  5.5.0-rc1-g3d0b4fced39e
->     Boards tested:  tegra124-jetson-tk1, tegra186-p2771-0000,
->                     tegra194-p2972-0000, tegra20-ventana,
->                     tegra210-p2371-2180, tegra30-cardhu-a04
-> 
-> All tests passing, so:
-> 
-> Tested-by: Thierry Reding <treding@nvidia.com>
-> 
+>> Fix the following warning seen on GCC 7.3:
+>>   kunit/test-test.o: warning: objtool: kunit_test_unsuccessful_try() falls through to next function kunit_test_catch()
+>>
+>> kunit_try_catch_throw is a function added in the following patch in this
+>> series; it allows KUnit, a unit testing framework for the kernel, to
+>> bail out of a broken test. As a consequence, it is a new __noreturn
+>> function that objtool thinks is broken (as seen above). So fix this
+>> warning by adding kunit_try_catch_throw to objtool's noreturn list.
+>>
+>> Reported-by: kbuild test robot <lkp@intel.com>
+>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+>> Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+>> Link: https://www.spinics.net/lists/linux-kbuild/msg21708.html
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>
+>I don't think this change should be backported. This patch is to
+>ignore an erroneous warning introduced by KUnit; it serves no purpose
+>prior to the KUnit patches being merged.
 
-Thank you very much!
+I'll drop it, thanks!
+
+-- 
+Thanks,
+Sasha
