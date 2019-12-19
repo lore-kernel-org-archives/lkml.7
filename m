@@ -2,130 +2,192 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D00BEC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F69C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6214218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B34120716
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:13:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WKhevbX3"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GK1cbM7H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbfLSNNB (ORCPT
+        id S1726944AbfLSNNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 08:13:01 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:32772 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbfLSNNB (ORCPT
+        Thu, 19 Dec 2019 08:13:17 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:56236 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbfLSNNR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 08:13:01 -0500
-Received: by mail-pf1-f196.google.com with SMTP id z16so3246930pfk.0;
-        Thu, 19 Dec 2019 05:13:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=1gRwWTLS967Ubmo9QBFf6oeS3GYO3y9qdE++OzuCjo8=;
-        b=WKhevbX3LE/LkS46gPKn0pKaWJ1UCYgcM/cOiNU2eJNXWeJsUyqiRs/NsDzOWFuXaG
-         DHUhnDLQgUmbEA7kPJjVcaXltfn1NdN4M5HO0EF1R37j0qMHWpWutAqHDPSrEckIZdYD
-         bJiT+XP8zeKlbNGUYT6XKe/IIPVN9OoNEHrEjv3xJLP10qsRU5EOLSIanlGodcna33c+
-         b07r47q5KK9YkOWTO5zhje/FAhCTL/rZ36ZN4WGxuN6s0jF+aGPOPE5zOzRYSAyDxaAa
-         FkviBuNB2o9n7tKLzHqojXxgwyfh4ASBE1HJmXL54iw4KBxUtqgGiiaqtBwCGB+V8eBx
-         3v9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=1gRwWTLS967Ubmo9QBFf6oeS3GYO3y9qdE++OzuCjo8=;
-        b=EBROHK4wnHw+Xx8L8+GP5zsHclvU2APBLAi3WxPXuakTKIn271yE43x/4vzp5NCIwf
-         S5RCnBXeZxuAQcbZfaJuESJiUsE6ArM5a89N4RjkuNUUBCLcE3BsAk0f4yhfHBGGQ+cX
-         BKNZPj7GOawCDDTxgrpNOQ06O4sPpeM5PbmCrvQnwFhMfFszGNqO31Ejon3DIkEAKPl7
-         Dnyntq2Ou1iXbi3SC+VH3VEl+aF2jq1GZ9ga4Burf5bGfeZDWGVnlUaxqZJdm2uIgG8B
-         UGqFdC6JIiVLtZ+HcLaZGoQaJ14VTEy+zo1TDiDfonVcZYI0qnwcfpsuVW/hx1vUNO+I
-         JoKg==
-X-Gm-Message-State: APjAAAW/bxxSNdEvjya+/keCF5j5sir8OnLshSZ0Lrrp6HK9LtAtlz0S
-        PPiR2Mcbp1UTmspQSfDqhw0=
-X-Google-Smtp-Source: APXvYqy0izi6mgWThqnu1MUAe9tocw6rn0MpkH29qND2aoM9yGkQdgIqZuH/xgG3IqQ6u4j/XtcGEQ==
-X-Received: by 2002:aa7:8007:: with SMTP id j7mr9721396pfi.73.1576761180732;
-        Thu, 19 Dec 2019 05:13:00 -0800 (PST)
-Received: from firefly (220-235-124-2.dyn.iinet.net.au. [220.235.124.2])
-        by smtp.gmail.com with ESMTPSA id w66sm8631924pfw.102.2019.12.19.05.12.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 05:13:00 -0800 (PST)
-Date:   Thu, 19 Dec 2019 13:12:49 +0000
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 10/11] gpiolib: add new ioctl() for monitoring changes
- in line info
-Message-ID: <20191219131249.GA12008@firefly>
-References: <20191204155941.17814-1-brgl@bgdev.pl>
- <CAHp75VdiAtHtdrUP2EmLULh86oO37ha8si10gFKYRavXCEwRRQ@mail.gmail.com>
- <CAMpxmJVXVVVMPA_hRbs3mUsFs=s_VtQK9SvvYK3Xc5X27NPTKw@mail.gmail.com>
- <CAHp75VfXc88Fa6=zs=9iToz27QdXHqRCDPQwBPs2P-rsBF8nHw@mail.gmail.com>
- <CAMRc=Me4xWsQggmr=BvJrA9-FnPkxFkOYsRTsSXCtyNwFnsHNw@mail.gmail.com>
- <CAHp75VfzP8-0wKmPTTKYe+fc6=r_4sVcJPyOsM8YTuH=i4rxmA@mail.gmail.com>
- <CAMRc=MfxteQDmeZn_Et0uFs2cPvLGpJ5BTeBOn37o=2Oo_eU=Q@mail.gmail.com>
- <CAHp75VfeEB5RudwMaoiMTMMY3zW-kz-h=rJ3Cu5_tyRL6ZuF1w@mail.gmail.com>
- <CAMRc=Mcy=Q+9Eb6mb5JEq+CCbxgBY1CfTDsYj1Rt9bcLXgeY=g@mail.gmail.com>
+        Thu, 19 Dec 2019 08:13:17 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJDD7UZ002286;
+        Thu, 19 Dec 2019 07:13:07 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576761188;
+        bh=KpH/tH+NsOsRovCmkYgi/0I9FOPMrHG3B7b6JVEqIBE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=GK1cbM7HGrsGlHyIwq3TvwgMootFKhnrfTJ6xdxhfI2jWttjRU+6bS7CvJJRMV6Ns
+         Fy1X2rit3h1sXjIBI1C0gsaOBHK8HIfj3LzDID3SnVFdV2L0SoCufpiVHa+d6XltYC
+         3ZxjXuWhR1bOHoPjfnpfAAvsJsISvV/xk8hyvqos=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBJDD7nb020647
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 19 Dec 2019 07:13:07 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Dec 2019 07:13:06 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Dec 2019 07:13:06 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJDD38D090087;
+        Thu, 19 Dec 2019 07:13:03 -0600
+Subject: Re: [PATCH 10/13] dt-bindings: PCI: Add EP mode dt-bindings for TI's
+ J721E SoC
+To:     Rob Herring <robh@kernel.org>, Tom Joseph <tjoseph@cadence.com>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Murray <andrew.murray@arm.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>
+References: <20191209092147.22901-1-kishon@ti.com>
+ <20191209092147.22901-11-kishon@ti.com> <20191219001408.GA20303@bogus>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <fb090674-abff-e2e1-492d-0585100980d0@ti.com>
+Date:   Thu, 19 Dec 2019 18:44:46 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mcy=Q+9Eb6mb5JEq+CCbxgBY1CfTDsYj1Rt9bcLXgeY=g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191219001408.GA20303@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 02:05:19PM +0100, Bartosz Golaszewski wrote:
-> wt., 10 gru 2019 o 18:00 Andy Shevchenko <andy.shevchenko@gmail.com> napisał(a):
-> >
-> > > On a different note: why would endianness be an issue here? 32-bit
-> > > variables with 64-bit alignment should still be in the same place in
-> > > memory, right?
-> >
-> > With explicit padding, yes.
-> >
-> > > Any reason not to use __packed for this structure and not deal with
-> > > this whole compat mess?
-> >
-> > Have been suggested that explicit padding is better approach.
-> > (See my answer to Kent)
-> >
-> > > I also noticed that my change will only allow user-space to read one
-> > > event at a time which seems to be a regression with regard to the
-> > > current implementation. I probably need to address this too.
-> >
-> > Yes, but we have to have ABI v2 in place.
++Tom
+
+On 19/12/19 5:44 am, Rob Herring wrote:
+> On Mon, Dec 09, 2019 at 02:51:44PM +0530, Kishon Vijay Abraham I wrote:
+>> Add PCIe EP mode dt-bindings for TI's J721E SoC.
+>>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  .../bindings/pci/ti,j721e-pci-ep.yaml         | 113 ++++++++++++++++++
+>>  1 file changed, 113 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+>> new file mode 100644
+>> index 000000000000..4e2af4733998
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+>> @@ -0,0 +1,113 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +# Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/pci/ti,j721e-pci-ep.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: TI J721E PCI EP (PCIe Wrapper)
+>> +
+>> +maintainers:
+>> +  - Kishon Vijay Abraham I <kishon@ti.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +      enum:
+>> +          - ti,j721e-pcie-ep
 > 
-> Hi Andy,
+> Indentation.
 > 
-> I was playing with some ideas for the new ABI and noticed that on
-> 64-bit architecture the size of struct gpiochip_info is reported to be
-> 68 bytes, not 72 as I would expect. Is implicit alignment padding not
-> applied to a struct if there's a non-64bit-aligned 32-bit field at the
-> end of it? Is there something I'm missing here?
+>> +
+>> +  reg:
+>> +    maxItems: 4
+>> +
+>> +  reg-names:
+>> +    items:
+>> +      - const: intd_cfg
+>> +      - const: user_cfg
+>> +      - const: reg
+>> +      - const: mem
+>> +
+>> +  ti,syscon-pcie-ctrl:
+>> +    description: Phandle to the SYSCON entry required for configuring PCIe mode
+>> +                 and link speed.
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/phandle
+>> +
+>> +  max-link-speed:
+>> +    minimum: 1
+>> +    maximum: 3
+>> +
+>> +  num-lanes:
+>> +    minimum: 1
+>> +    maximum: 2
+>> +
+>> +  power-domains:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +    description: clock-specifier to represent input to the PCIe
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: fck
+>> +
+>> +  cdns,max-outbound-regions:
+>> +    description: As defined in
+>> +                 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/int32
 > 
+> uint32
+> 
+>> +      - enum: [16]
+>> +
+>> +  max-functions:
+>> +    minimum: 1
+>> +    maximum: 6
+> 
+> Needs a type ref. Or a common definition.
+> 
+>> +
+>> +  dma-coherent:
+>> +    description: Indicates that the PCIe IP block can ensure the coherency
+>> +
+>> +  phys:
+> 
+> How many? Need to convert cdns,cdns-pcie-host.txt...
 
-Struct alignment is based on the size of the largest element.
-The largest element of struct gpiopchip_info is a __u32, so the struct
-gets 32-bit alignment, even on 64-bit.
 
-The structs with the problems all contain a __u64, and so get padded out
-to a 64-bit boundary.
+Tom, Can you convert cdns,cdns-pcie-host.txt to YAML binding?
+> 
+>> +    description: As defined in
+>> +                 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+>> +
+>> +  phy-names:
+>> +    description: As defined in
+>> +                 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+> 
+> For all the properties shared with host mode, it might make sense to 
+> define a common schema with all those properties and then include it in 
+> the host and endpoint schemas.
 
-Cheers,
-Kent.
+Sure.
 
+Thanks
+Kishon
