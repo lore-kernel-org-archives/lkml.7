@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 305B1C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C8DC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9D4224682
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:53:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAE5B20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781632;
-	bh=HmRvdImrrDSCZEqCQ4WawS6uqwqHMiPVGjo2/RsL9iE=;
+	s=default; t=1576781636;
+	bh=knusUoqwZQL1QLE28RvfgCLM2mj6K/kZIXYFkIBGjQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NtWXzBlamBDNzLxk5dkrnlCyq1vgWXGQyaMmcg4shLFaPAi1UJqAnM6Ydx7HOWLAu
-	 btfKuKEa988xT6k1AeTfkGrWvH4BHjUWmdhXfIw3wrhlSTgtD9aGkoelzXs0SHOTKW
-	 qtGE7tCpACVeowwNI1GcItpcA4jJrUkVzpjHp6jE=
+	b=pX2Zu058SW0zWtEA7JHp8yHG8cN5lHeuhyo8TSpO7944phmmub7t4NMcOS2+xufln
+	 9Sio2mkm/t6wERGdj8dvXO6IDdgE2AVrRRbKWgYnQsHOMPmZZyzGqW7t8RAbgYljYB
+	 j8bbYZTocYdi8UNoZshQB/ic36x5F7VbJ8c9t8lQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728863AbfLSSxv (ORCPT
+        id S1729548AbfLSSxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:53:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49058 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:53:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730418AbfLSSxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:53:47 -0500
+        id S1728377AbfLSSxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:53:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B13A9227BF;
-        Thu, 19 Dec 2019 18:53:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 959BA20674;
+        Thu, 19 Dec 2019 18:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781627;
-        bh=HmRvdImrrDSCZEqCQ4WawS6uqwqHMiPVGjo2/RsL9iE=;
+        s=default; t=1576781632;
+        bh=knusUoqwZQL1QLE28RvfgCLM2mj6K/kZIXYFkIBGjQk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OU2I8JUba8QSBlBNgOBrVER+khWuj3YFRG0HDbihic7gxOpzj8CU9zsxfpqVDo1pc
-         9oJlsJY6p+1oVBOhkMXIy1XuVEpyrg/XZMwIi/GMj86/xDg8qBXqy8f6ZlT9gm1TNP
-         S1Kqxo8M0+xDbnPol+Ajm9mFjdqQdpySrFXdpy24=
+        b=Zi+maUsdq1V9KEKUSpPKcTTtK8Io/EFKW1KFFkGnYmu3ZYZWC8kzDVuIf70ecFtSG
+         hVSRuLU3jVr/0PIsobAUpNMmN7BuOvr/MzX+MMBDIPxHOGaNoXgHtUUAPWWAKe3RLy
+         3GisbQO1O0X+IMK7Kx6XugcR8Y/lMXPzE0/l/AKk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 15/80] block: fix "check bi_size overflow before merge"
-Date:   Thu, 19 Dec 2019 19:34:07 +0100
-Message-Id: <20191219183052.303047719@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>
+Subject: [PATCH 5.4 17/80] gfs2: Multi-block allocations in gfs2_page_mkwrite
+Date:   Thu, 19 Dec 2019 19:34:09 +0100
+Message-Id: <20191219183054.444146240@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -62,41 +60,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andreas Gruenbacher <agruenba@redhat.com>
 
-commit cc90bc68422318eb8e75b15cd74bc8d538a7df29 upstream.
+commit f53056c43063257ae4159d83c425eaeb772bcd71 upstream.
 
-This partially reverts commit e3a5d8e386c3fb973fa75f2403622a8f3640ec06.
+In gfs2_page_mkwrite's gfs2_allocate_page_backing helper, try to
+allocate as many blocks at once as we need.  Pass in the size of the
+requested allocation.
 
-Commit e3a5d8e386c3 ("check bi_size overflow before merge") adds a bio_full
-check to __bio_try_merge_page.  This will cause __bio_try_merge_page to fail
-when the last bi_io_vec has been reached.  Instead, what we want here is only
-the bi_size overflow check.
-
-Fixes: e3a5d8e386c3 ("block: check bi_size overflow before merge")
-Cc: stable@vger.kernel.org # v5.4+
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Fixes: 35af80aef99b ("gfs2: don't use buffer_heads in gfs2_allocate_page_backing")
+Cc: stable@vger.kernel.org # v5.3+
 Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/bio.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/gfs2/file.c |   15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -751,10 +751,12 @@ bool __bio_try_merge_page(struct bio *bi
- 	if (WARN_ON_ONCE(bio_flagged(bio, BIO_CLONED)))
- 		return false;
+--- a/fs/gfs2/file.c
++++ b/fs/gfs2/file.c
+@@ -381,27 +381,28 @@ static void gfs2_size_hint(struct file *
+ /**
+  * gfs2_allocate_page_backing - Allocate blocks for a write fault
+  * @page: The (locked) page to allocate backing for
++ * @length: Size of the allocation
+  *
+  * We try to allocate all the blocks required for the page in one go.  This
+  * might fail for various reasons, so we keep trying until all the blocks to
+  * back this page are allocated.  If some of the blocks are already allocated,
+  * that is ok too.
+  */
+-static int gfs2_allocate_page_backing(struct page *page)
++static int gfs2_allocate_page_backing(struct page *page, unsigned int length)
+ {
+ 	u64 pos = page_offset(page);
+-	u64 size = PAGE_SIZE;
  
--	if (bio->bi_vcnt > 0 && !bio_full(bio, len)) {
-+	if (bio->bi_vcnt > 0) {
- 		struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
+ 	do {
+ 		struct iomap iomap = { };
  
- 		if (page_is_mergeable(bv, page, len, off, same_page)) {
-+			if (bio->bi_iter.bi_size > UINT_MAX - len)
-+				return false;
- 			bv->bv_len += len;
- 			bio->bi_iter.bi_size += len;
- 			return true;
+-		if (gfs2_iomap_get_alloc(page->mapping->host, pos, 1, &iomap))
++		if (gfs2_iomap_get_alloc(page->mapping->host, pos, length, &iomap))
+ 			return -EIO;
+ 
+-		iomap.length = min(iomap.length, size);
+-		size -= iomap.length;
++		if (length < iomap.length)
++			iomap.length = length;
++		length -= iomap.length;
+ 		pos += iomap.length;
+-	} while (size > 0);
++	} while (length > 0);
+ 
+ 	return 0;
+ }
+@@ -501,7 +502,7 @@ static vm_fault_t gfs2_page_mkwrite(stru
+ 	if (gfs2_is_stuffed(ip))
+ 		ret = gfs2_unstuff_dinode(ip, page);
+ 	if (ret == 0)
+-		ret = gfs2_allocate_page_backing(page);
++		ret = gfs2_allocate_page_backing(page, PAGE_SIZE);
+ 
+ out_trans_end:
+ 	if (ret)
 
 
