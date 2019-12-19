@@ -2,122 +2,103 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB94EC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 02:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A79DC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 02:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 847FE222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 02:56:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13A5F222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 02:58:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbfLSC4t (ORCPT
+        id S1726881AbfLSC6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 21:56:49 -0500
-Received: from mga09.intel.com ([134.134.136.24]:49607 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726751AbfLSC4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 21:56:49 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 18:56:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="416044730"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga005.fm.intel.com with ESMTP; 18 Dec 2019 18:56:46 -0800
-Date:   Thu, 19 Dec 2019 10:56:45 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, cai@lca.pw, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Patch v2] mm: remove dead code totalram_pages_set()
-Message-ID: <20191219025645.GA5741@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20191218005543.24146-1-richardw.yang@linux.intel.com>
- <20795dc0-8f6c-73cd-c98f-636f4ac59154@redhat.com>
+        Wed, 18 Dec 2019 21:58:23 -0500
+Received: from shelob.surriel.com ([96.67.55.147]:39546 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbfLSC6W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 21:58:22 -0500
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1ihm0p-0007dX-AP; Wed, 18 Dec 2019 21:58:03 -0500
+Message-ID: <37ec5587dbb4035b883e5a69b56da4cc67f0e5ff.camel@surriel.com>
+Subject: Re: [PATCH] sched, fair: Allow a small degree of load imbalance
+ between SD_NUMA domains
+From:   Rik van Riel <riel@surriel.com>
+To:     Mel Gorman <mgorman@techsingularity.net>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, pauld@redhat.com,
+        valentin.schneider@arm.com, srikar@linux.vnet.ibm.com,
+        quentin.perret@arm.com, dietmar.eggemann@arm.com,
+        Morten.Rasmussen@arm.com, hdanton@sina.com, parth@linux.ibm.com,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Wed, 18 Dec 2019 21:58:01 -0500
+In-Reply-To: <20191218154402.GF3178@techsingularity.net>
+References: <20191218154402.GF3178@techsingularity.net>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-4rPGTmvcJU+DU3UvKApY"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20795dc0-8f6c-73cd-c98f-636f4ac59154@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 09:46:58AM +0100, David Hildenbrand wrote:
->On 18.12.19 01:55, Wei Yang wrote:
->> No one uses totalram_pages_set(), just remove it.
->> 
->> Fixes: ca79b0c211af ("mm: convert totalram_pages and totalhigh_pages
->> variables to atomic")
->
->Hi Wei, thanks for the update.
->
->We should really avoid "Fixes" tags here. This is neither a bugfix nor a
->compile fix.
->
 
-Agree, when I pick up this tags, I am a little not sure whether this is
-correct.
+--=-4rPGTmvcJU+DU3UvKApY
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->@Andrew, can you fix that up to:
->"Last user was removed in commit ca79b0c211af ("mm: convert
->totalram_pages and totalhigh_pages variables to atomic")."
->
+On Wed, 2019-12-18 at 15:44 +0000, Mel Gorman wrote:
 
-Hmm... this one is not that exact. This function is introduced in commit
-ca79b0c211af and no one use it on its birth.
+> +			/*
+> +			 * Ignore imbalance unless busiest sd is close
+> to 50%
+> +			 * utilisation. At that point balancing for
+> memory
+> +			 * bandwidth and potentially avoiding
+> unnecessary use
+> +			 * of HT siblings is as relevant as memory
+> locality.
+> +			 */
+> +			imbalance_max =3D (busiest->group_weight >> 1) -
+> imbalance_adj;
+> +			if (env->imbalance <=3D imbalance_adj &&
+> +			    busiest->sum_nr_running < imbalance_max) {
+> +				env->imbalance =3D 0;
+> +			}
+> +		}
+>  		return;
+>  	}
 
-Maybe we need to change it to:
+I can see how the 50% point is often great for HT,
+but I wonder if that is also the case for SMT4 and
+SMT8 systems...
 
-    totalram_pages_set() is introduced in commit ca79b0c211af ("mm: convert
-    totalram_pages and totalhigh_pages variables to atomic"), but no one
-    use it.
+--=20
+All Rights Reversed.
 
-Thanks for your comments:-)
+--=-4rPGTmvcJU+DU3UvKApY
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
->Cheers!
->
->> 
->> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->> Reviewed-by: David Hildenbrand <david@redhat.com>
->> 
->> ---
->> v2: fix typo and points which commit introduce it.
->> ---
->>  include/linux/mm.h | 5 -----
->>  1 file changed, 5 deletions(-)
->> 
->> diff --git a/include/linux/mm.h b/include/linux/mm.h
->> index 74232b28949b..4cf023c4c6b3 100644
->> --- a/include/linux/mm.h
->> +++ b/include/linux/mm.h
->> @@ -70,11 +70,6 @@ static inline void totalram_pages_add(long count)
->>  	atomic_long_add(count, &_totalram_pages);
->>  }
->>  
->> -static inline void totalram_pages_set(long val)
->> -{
->> -	atomic_long_set(&_totalram_pages, val);
->> -}
->> -
->>  extern void * high_memory;
->>  extern int page_cluster;
->>  
->> 
->
->
->-- 
->Thanks,
->
->David / dhildenb
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Wei Yang
-Help you, Help me
+iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl365zkACgkQznnekoTE
+3oM92wgAsI4/q4OHfp1ABuRwhg8iu8LPAi4JOZC/AldUOdNwRZfcWw7kAGBKpeBP
+WRY8Boxo4Mig3D8W3qHTAWKrW+hxjuQsOBq6oGpqE9GG/TWjtV0kkeUH32ikLFxC
+TxUSVEMlPR5DLUe5nhksZlfnBWvhpUrPMqFPQeZDsU1EnboPajCczuOJw/j7UeI5
+9uspMvvZSPgBW5YFympWXbOmkG4QdPFq/UWLrrRsrkaJFBMTfF4dDlklBCjn5wBx
+xckJW3w2CQVqROt514APCN8/xd9ATidIdZ/ZhqRGu+NfVbYDdIk++zkSJuVvYVYk
+E/QvmfLwgSPPlcTWOwnWoDyV4iHvdQ==
+=FMp3
+-----END PGP SIGNATURE-----
+
+--=-4rPGTmvcJU+DU3UvKApY--
+
