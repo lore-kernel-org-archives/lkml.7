@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C6EC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB96C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97E8824679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 858252467F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780647;
-	bh=YOOKKu7KZKalCYc9fcrbvluf+Q6hWobR9h7/kUaryYI=;
+	s=default; t=1576780651;
+	bh=ScASG/VjKteCyDiSyPA9ri5oFWrggjTwuysKo02NQB0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bAPwabTuX4L40xshipuJaFhCpmqjwqq9PDENbzxzGg4qK3FWmpwBNpK8XCfJwcEgE
-	 ACC+EiQX0K2YtXIQDFvudIXZrCehFHJsa2RTarEwOMb8Vq1Y2cdv83tI47uwVcHEW/
-	 ogIHdCKkku21izQw85OkhOUcQacU1C5CiW0H7arQ=
+	b=rpixw8Kfev6irY221icQMlJ61O9voHh47YMZ724gUt+GZ6v30bzH68Cg0Qpe5Tf00
+	 ajcpOMdDsg2cd/FQgKMkvDrUveKYzHXYIi2yiO9KOzwRxMhhFyTR6JPWYwJ4qMdgQA
+	 aRDMSc8eAUEeaqWnKgJfkw7MH03A0tDEcQIUb/sk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbfLSSh0 (ORCPT
+        id S1727827AbfLSSha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:37:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54844 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:37:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727804AbfLSShU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:37:20 -0500
+        id S1727818AbfLSShZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:37:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4987820716;
-        Thu, 19 Dec 2019 18:37:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A21D2467F;
+        Thu, 19 Dec 2019 18:37:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780639;
-        bh=YOOKKu7KZKalCYc9fcrbvluf+Q6hWobR9h7/kUaryYI=;
+        s=default; t=1576780644;
+        bh=ScASG/VjKteCyDiSyPA9ri5oFWrggjTwuysKo02NQB0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0oEGS7Ya4T9iRkwf9u5sgJfroN6JEzrt/4OKyY1YI19q6e5oy3R7OYNBDKpuLbvRh
-         8AYBiY5/J2QJ2a8hmToTPpJ3yGdlEhXr5+0DLhbLTHQC6yRQQRxvOp+Yt3V9Z90IPz
-         PUyDnmQeTb3tn+MQnhbrmvCxXbpxixUsIiByDY4M=
+        b=NDqbVa2qaxiUwYX5KQoCrO0WB7kWL8KoseHcMJ9lRGgOuUJ8hKCejPafx/pkT0AyK
+         QrFHWxGWJMVgibKC80HHzARf024Rp73/Grok57Hzb+RqWHf1GkGVRtLWYaVK3ZWyNC
+         vjwC+hirqfI5g3dWQO7PMVtEUqjM/n9plOuF0rQ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+f153bde47a62e0b05f83@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 056/162] ALSA: pcm: oss: Avoid potential buffer overflows
-Date:   Thu, 19 Dec 2019 19:32:44 +0100
-Message-Id: <20191219183211.290219925@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 4.4 031/162] dmaengine: coh901318: Remove unused variable
+Date:   Thu, 19 Dec 2019 19:32:19 +0100
+Message-Id: <20191219183209.593181643@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -60,64 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Vinod Koul <vkoul@kernel.org>
 
-commit 4cc8d6505ab82db3357613d36e6c58a297f57f7c upstream.
+commit 35faaf0df42d285b40f8a6310afbe096720f7758 upstream.
 
-syzkaller reported an invalid access in PCM OSS read, and this seems
-to be an overflow of the internal buffer allocated for a plugin.
-Since the rate plugin adjusts its transfer size dynamically, the
-calculation for the chained plugin might be bigger than the given
-buffer size in some extreme cases, which lead to such an buffer
-overflow as caught by KASAN.
+Commit 627469e4445b ("dmaengine: coh901318: Fix a double-lock bug") left
+flags variable unused, so remove it to fix the warning.
 
-Fix it by limiting the max transfer size properly by checking against
-the destination size in each plugin transfer callback.
+drivers/dma/coh901318.c: In function 'coh901318_config':
+drivers/dma/coh901318.c:1805:16: warning: unused variable 'flags' [-Wunused-variable]
+  unsigned long flags;
+                ^~~~~
 
-Reported-by: syzbot+f153bde47a62e0b05f83@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191204144824.17801-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 627469e4445b ("dmaengine: coh901318: Fix a double-lock bug")
+Reported-By: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/oss/linear.c |    2 ++
- sound/core/oss/mulaw.c  |    2 ++
- sound/core/oss/route.c  |    2 ++
- 3 files changed, 6 insertions(+)
+ drivers/dma/coh901318.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/sound/core/oss/linear.c
-+++ b/sound/core/oss/linear.c
-@@ -107,6 +107,8 @@ static snd_pcm_sframes_t linear_transfer
- 		}
- 	}
- #endif
-+	if (frames > dst_channels[0].frames)
-+		frames = dst_channels[0].frames;
- 	convert(plugin, src_channels, dst_channels, frames);
- 	return frames;
- }
---- a/sound/core/oss/mulaw.c
-+++ b/sound/core/oss/mulaw.c
-@@ -269,6 +269,8 @@ static snd_pcm_sframes_t mulaw_transfer(
- 		}
- 	}
- #endif
-+	if (frames > dst_channels[0].frames)
-+		frames = dst_channels[0].frames;
- 	data = (struct mulaw_priv *)plugin->extra_data;
- 	data->func(plugin, src_channels, dst_channels, frames);
- 	return frames;
---- a/sound/core/oss/route.c
-+++ b/sound/core/oss/route.c
-@@ -57,6 +57,8 @@ static snd_pcm_sframes_t route_transfer(
- 		return -ENXIO;
- 	if (frames == 0)
- 		return 0;
-+	if (frames > dst_channels[0].frames)
-+		frames = dst_channels[0].frames;
- 
- 	nsrcs = plugin->src_format.channels;
- 	ndsts = plugin->dst_format.channels;
+--- a/drivers/dma/coh901318.c
++++ b/drivers/dma/coh901318.c
+@@ -1810,7 +1810,6 @@ static struct dma_chan *coh901318_xlate(
+ static int coh901318_config(struct coh901318_chan *cohc,
+ 			    struct coh901318_params *param)
+ {
+-	unsigned long flags;
+ 	const struct coh901318_params *p;
+ 	int channel = cohc->id;
+ 	void __iomem *virtbase = cohc->base->virtbase;
 
 
