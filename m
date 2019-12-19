@@ -2,95 +2,121 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A25C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F37AAC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E5102467E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:22:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576786949;
-	bh=2usS5KAg+sLWPldg9Hh1oSd8xcmAlqs8W/mIURXnf64=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TfJYb8kKcZoe9DWTzXGbXkxk3fupljpYgukxsDVSc5CxvO58Zq+5zfw6umTogpDyX
-	 XCKv4AN6RvYtpbcgepdaBNXHmLRhEfYgXj1XiWUh1cN0frQ3SSJZTsEDmJ87oFxqj6
-	 /6U+EgCbHqaXuh+rotqraQS1PGwFF6nJTxx/HT6Y=
+	by mail.kernel.org (Postfix) with ESMTP id C735124680
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:22:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cxx1pArM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbfLSUW2 (ORCPT
+        id S1727587AbfLSUWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 15:22:28 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:41483 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727552AbfLSUW0 (ORCPT
+        Thu, 19 Dec 2019 15:22:30 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38411 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727180AbfLSUWV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 15:22:26 -0500
-Received: by mail-ed1-f66.google.com with SMTP id c26so6139276eds.8;
-        Thu, 19 Dec 2019 12:22:24 -0800 (PST)
+        Thu, 19 Dec 2019 15:22:21 -0500
+Received: by mail-pg1-f195.google.com with SMTP id a33so3727653pgm.5
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 12:22:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PsW/j1Crrs313MkKDSnDNbKlrshzMf4od6PZBBKr95I=;
+        b=Cxx1pArMA1dCG+vdMqR0CO3SVpBUWxpFIs3cuP3P27CupTI87usG38HorhvjALmrX6
+         QyzgEyCgcDkramgZ7qIh+L+TKfuJPmdXxExRJpnjB7Zx0IP+0BOYdBXG2RJMUmTJD60v
+         OjtsQQ6z3UTnMwyQJCuCHoYO9lqbg3DtrWnSkYk1vicghmJwdbzV4dRZz1qvfOZvDHwN
+         zHHwcPJLSp9OU2JbBzjmbFZyY8iqt2XdlluHAPATqSBTWhu2J0HjuzAESm4mEfIT1lMp
+         JnWNWeyi2tI6mJcfcYkKvW2v5gCkYlwkxYqP/mBow6aJ3NByA/sJPaQjT/u7Vy0fFFC/
+         6sbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+XwXmMLYM0uNSnbJNWZYduJB3McxlK0rmyyXpOOOY+E=;
-        b=Q61p1QlHzlZXUxnnL3/GYWbDtQRd4v8Qz++Rh+adjdxI1kJGg/ID1V/rmWNMdgOctw
-         +AksTB8M/yI1I3kNIwkiepsWvbA9WK8PTjqharvualRUNDS/Q9dfQT06PYFvAH81mL4F
-         OmAF9/0wxyYEvWABJoN+yMkcTJvOjbNwZuMzH2ASmZnE59YL0pjX8V8sQ+fXJpw4DOdd
-         4jQVApDlNdE3243tZXvM9Lu4NPIyioeS9MUxB4ftESTgpbJT69Lf4tAOKtijvv8rO4/6
-         JpnbtKnnrRON2RRzsduvv9brlr26JJpQph+BHuy5/Q/0ZMDT62/ePJffmuE0Hu5EZzTp
-         KpEA==
-X-Gm-Message-State: APjAAAV/86KwEkcYWof+082ahooju/eslCxPLOz0+GJfJ9SkRpED5MI0
-        sSoOlgPhffUly9rA9H+Y6seQPfHw
-X-Google-Smtp-Source: APXvYqyvXs1b77JsdU/bIq/7bJEZPvD05zPHc+WyTqQxuAEMRrkLbVyqmxjhV8KF6k+gHok+ePJnvg==
-X-Received: by 2002:a17:907:20a8:: with SMTP id pw8mr11469298ejb.248.1576786944265;
-        Thu, 19 Dec 2019 12:22:24 -0800 (PST)
-Received: from kozik-lap ([194.230.155.234])
-        by smtp.googlemail.com with ESMTPSA id s15sm626909edc.22.2019.12.19.12.22.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 19 Dec 2019 12:22:23 -0800 (PST)
-Date:   Thu, 19 Dec 2019 21:22:20 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
-        leonard.crestez@nxp.com, lukasz.luba@arm.com, a.swigon@samsung.com,
-        m.szyprowski@samsung.com, kgene@kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 9/9] arm64: dts: exynos: Replace deprecated property for
- Exynos bus
-Message-ID: <20191219202220.GC21576@kozik-lap>
-References: <20191217055738.28445-1-cw00.choi@samsung.com>
- <CGME20191217055107epcas1p44d46bdea7b326b86689f326742f5444a@epcas1p4.samsung.com>
- <20191217055738.28445-10-cw00.choi@samsung.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PsW/j1Crrs313MkKDSnDNbKlrshzMf4od6PZBBKr95I=;
+        b=UuCczGEqEDQvQ3wwd5AeBVPlkPQq5LGStjT90YgBx7kbKKbDKtbg4Vb0j84T0aRVrn
+         KrMUyaO/iHl2d8sXGiEnJmViWM3hrRd2KrUzZFio25fbRbPYaMBtK2JKbAOUJy56oCLF
+         0yRaAAQZEQLSSE49+rQ2RRVGWqDM2s45uUlSxJrYdSYlDr0U2asdn5nQrcN2DFXmO7xg
+         G4qvbe26d+3yzHji+wrcG2sRq0KEbUmk/+Xv6kSfIyEXGtKC9SVPZTqQx9kdgn0ejSS/
+         w2nV1G2LH/XHP7scWrfOKG5jgN7xvygUWMHIr2eEEifvFms/hOMyy2nxpYBc7J9dznny
+         5DFQ==
+X-Gm-Message-State: APjAAAXRRZlDKqaGrD4UjiXl3ptE8mJ17LNyElcIvpMRMNqUPliMPVRc
+        y/W7QCw88zaY0US8zxS/qq7zD3UDNkVqw/HdHX/A/g==
+X-Google-Smtp-Source: APXvYqx7TULpvCuBBqKMKSSguT898fWlQzY/uebdX+PZW3Yo9Etjdi39QBGNAUnvO/GUVvsaElIAhNEYkDPFmQEqwbA=
+X-Received: by 2002:a63:d249:: with SMTP id t9mr11165747pgi.263.1576786940683;
+ Thu, 19 Dec 2019 12:22:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191217055738.28445-10-cw00.choi@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191218015252.20890-1-natechancellor@gmail.com>
+In-Reply-To: <20191218015252.20890-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 19 Dec 2019 12:22:09 -0800
+Message-ID: <CAKwvOdk_CqpdJdKLQ-a5AK8pci7yMic9pgJW5x-iFosYbk8CMw@mail.gmail.com>
+Subject: Re: [PATCH] scsi: qla4xxx: Adjust indentation in qla4xxx_mem_free
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     QLogic-Storage-Upstream@qlogic.com,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 02:57:38PM +0900, Chanwoo Choi wrote:
-> Replace the property related to devfreq and devfreq-event device
-> to remove the deprecated property name.
-> - Replace 'devfreq' with 'exynos,parent-bus' property
->   for getting the parent devfreq device of exynos-bus.
-> - Replace 'devfreq-events' with 'exynos,ppmu-device' property
->   for getting the devfreq-event device to monitor bus utilization.
-> 
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+On Tue, Dec 17, 2019 at 5:52 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Clang warns:
+>
+> ../drivers/scsi/qla4xxx/ql4_os.c:4148:3: warning: misleading
+> indentation; statement is not part of the previous 'if'
+> [-Wmisleading-indentation]
+>          if (ha->fw_dump)
+>          ^
+> ../drivers/scsi/qla4xxx/ql4_os.c:4144:2: note: previous statement is
+> here
+>         if (ha->queues)
+>         ^
+> 1 warning generated.
+>
+> This warning occurs because there is a space after the tab on this line.
+> Remove it so that the indentation is consistent with the Linux kernel
+> coding style and clang no longer warns.
+>
+> Fixes: 068237c87c64 ("[SCSI] qla4xxx: Capture minidump for ISP82XX on firmware failure")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/819
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+
+Thanks for the patch!
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
 > ---
->  .../dts/exynos/exynos5433-tm2-common.dtsi     | 20 +++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
+>  drivers/scsi/qla4xxx/ql4_os.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
+> index 2323432a0edb..5504ab11decc 100644
+> --- a/drivers/scsi/qla4xxx/ql4_os.c
+> +++ b/drivers/scsi/qla4xxx/ql4_os.c
+> @@ -4145,7 +4145,7 @@ static void qla4xxx_mem_free(struct scsi_qla_host *ha)
+>                 dma_free_coherent(&ha->pdev->dev, ha->queues_len, ha->queues,
+>                                   ha->queues_dma);
+>
+> -        if (ha->fw_dump)
+> +       if (ha->fw_dump)
+>                 vfree(ha->fw_dump);
+>
+>         ha->queues_len = 0;
+> --
 
-I'll pick it up the next cycle after driver get merged.
-
-Best regards,
-Krzysztof
-
+-- 
+Thanks,
+~Nick Desaulniers
