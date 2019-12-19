@@ -2,183 +2,126 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FD4C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F59C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47E8F24676
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:12:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576746767;
-	bh=ZbxHfG9y4vIMWKbc3+hFLIbewsQNOoX8QrADlrcLuWU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GYpFGmt+lQ6POEIqGbOt+gvvZ4qkp6LQdj8aYpn+cLC01VNGY3BZlA+bgVXroXPzi
-	 AmGsGVpIVGEOUqhzGknisv+KEDVwVF36nNkG3g0dek+bDZ8LG3T4O9BuKtzYp5H8rM
-	 BQ+SsD1TlI4IQC0JzrevqQtV9CflhEmnFPw1SAxU=
+	by mail.kernel.org (Postfix) with ESMTP id 2434621D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:14:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Y6NuE2Pf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfLSJMq (ORCPT
+        id S1726709AbfLSJOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 04:12:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37064 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726599AbfLSJMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 04:12:46 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82AEC21D7D;
-        Thu, 19 Dec 2019 09:12:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576746765;
-        bh=ZbxHfG9y4vIMWKbc3+hFLIbewsQNOoX8QrADlrcLuWU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=t2alWsEOvF8DCjRjimhRTAdpzJWLpz/GTNQyHJISxzvJfKdtGuDmaCglDwOgE1Lyf
-         XOnOercEVcK2Pu111Fo+Q42qArfYxIvHSt3BQTYvn0p6XEfrpnsG1PhyUTwDbGlrXV
-         kbtmCaSBCgmtTdaviJG/wPa3SO3LE2F5sTLB/YFc=
-Date:   Thu, 19 Dec 2019 10:12:42 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 2/7] dt-bindings: thermal: add YAML schema for
- sun8i-thermal driver bindings
-Message-ID: <20191219091242.a3etnhybf3sfrmf5@gilmour.lan>
-References: <20191218042121.1471954-1-anarsoul@gmail.com>
- <20191218042121.1471954-3-anarsoul@gmail.com>
- <20191218220037.4g6pzdvrhroaj4qu@gilmour.lan>
- <CA+E=qVdfV5LKBEar8eT286+ADrpygEkbe5OX1GVRw+khatrJhA@mail.gmail.com>
+        Thu, 19 Dec 2019 04:14:34 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:29318 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726599AbfLSJOd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 04:14:33 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBJ96eEa022726;
+        Thu, 19 Dec 2019 10:14:27 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=xS6uGwF2TUpF+zZAT7Jn9SOfXWgqUWrRbm+1dq7ZFXA=;
+ b=Y6NuE2Pfo5DUYEsLav71dVLq27xL0a1Q0/BgOW1oScUoAK8Tueu3GaKCHjvL5dAWADgK
+ t7r/YOsa8GSlkU1+2tSEFpWqYsDrhthI94jymkp9WGaw34HpvfY2ILoc2DMaz6pivR5E
+ vWIOedANfOI71csVlnQ9OJWIaSmSghbZI1gO4aPtGQokyJar63+mEWoai/yOd0C/usQJ
+ RYOEcMQtvWKqIdedzru10Cg78aGCR4HJ/9EHWUc6fnMmU325bCF1csDEiRJ0CZp78P10
+ JuoSCz99IYsmAzuxuYGNA2Z7U/z3PAyNstFJV6ZwJHWGVZvRsJ9XxnSSMCvfSGfnGqOj Og== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2wvpd1rmsy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Dec 2019 10:14:27 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6232D10002A;
+        Thu, 19 Dec 2019 10:14:23 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node1.st.com [10.75.127.13])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 568A721CA82;
+        Thu, 19 Dec 2019 10:14:23 +0100 (CET)
+Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG5NODE1.st.com
+ (10.75.127.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Dec
+ 2019 10:14:20 +0100
+Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
+ SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
+ 15.00.1473.003; Thu, 19 Dec 2019 10:14:20 +0100
+From:   Fabien DESSENNE <fabien.dessenne@st.com>
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>
+CC:     "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] media: sti: bdisp: fix a possible sleep-in-atomic-context
+ bug in bdisp_device_run()
+Thread-Topic: [PATCH] media: sti: bdisp: fix a possible
+ sleep-in-atomic-context bug in bdisp_device_run()
+Thread-Index: AQHVtaxEax7uyZMMgkib5/WTY24ilKfBGaKAgAADpgA=
+Date:   Thu, 19 Dec 2019 09:14:20 +0000
+Message-ID: <52df5013-3188-d27c-7ad7-e05cd4912a3d@st.com>
+References: <20191218140537.12193-1-baijiaju1990@gmail.com>
+ <705a5381-4edd-211e-9602-78a2b4b67ea9@st.com>
+In-Reply-To: <705a5381-4edd-211e-9602-78a2b4b67ea9@st.com>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.48]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D8369CDAE386174E95E4B4A6DA62FB00@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fd7bvdcala2bzv3x"
-Content-Disposition: inline
-In-Reply-To: <CA+E=qVdfV5LKBEar8eT286+ADrpygEkbe5OX1GVRw+khatrJhA@mail.gmail.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-19_01:2019-12-17,2019-12-19 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---fd7bvdcala2bzv3x
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Dec 18, 2019 at 02:27:00PM -0800, Vasily Khoruzhick wrote:
-> On Wed, Dec 18, 2019 at 2:00 PM Maxime Ripard <mripard@kernel.org> wrote:
-> > On Tue, Dec 17, 2019 at 08:21:16PM -0800, Vasily Khoruzhick wrote:
-> > > From: Yangtao Li <tiny.windzz@gmail.com>
-> > >
-> > > sun8i-thermal driver supports thermal sensor in wide range of Allwinner
-> > > SoCs. Add YAML schema for its bindings.
-> > >
-> > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> > > ---
-> > >  .../thermal/allwinner,sun8i-a83t-ths.yaml     | 146 ++++++++++++++++++
-> > >  1 file changed, 146 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-> > > new file mode 100644
-> > > index 000000000000..8768c2450633
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-> > > @@ -0,0 +1,146 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/thermal/allwinner,sun8i-a83t-ths.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Allwinner SUN8I Thermal Controller Device Tree Bindings
-> > > +
-> > > +maintainers:
-> > > +  - Yangtao Li <tiny.windzz@gmail.com>
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - allwinner,sun8i-a83t-ths
-> > > +      - allwinner,sun8i-h3-ths
-> > > +      - allwinner,sun8i-r40-ths
-> > > +      - allwinner,sun50i-a64-ths
-> > > +      - allwinner,sun50i-h5-ths
-> > > +      - allwinner,sun50i-h6-ths
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +
-> > > +  resets:
-> > > +    maxItems: 1
-> > > +
-> > > +  nvmem-cells:
-> > > +    maxItems: 1
-> > > +    description: Calibration data for thermal sensors
-> > > +
-> > > +  nvmem-cell-names:
-> > > +    const: calibration
-> > > +
-> > > +allOf:
-> > > +  - if:
-> > > +      properties:
-> > > +        compatible:
-> > > +          contains:
-> > > +            const: allwinner,sun50i-h6-ths
-> > > +
-> > > +    then:
-> > > +      properties:
-> > > +        clocks:
-> > > +          minItems: 1
-> > > +          maxItems: 1
-> >
-> > When minItems and maxItems are equal, you can only set one, the other
-> > will be filled automatically.
->
-> Is it documented anywhere? I have a feeling like I'm shooting in the
-> dark. So far I've read Documentation/devicetree/writing-schema.rst,
-> Documentation/devicetree/bindings/example-schema.yaml and few other
-> schemas for inspiration but yet I don't have solid understanding how
-> it's supposed to be written. Examples are pretty scarce and figuring
-> out why certain construction doesn't work is pretty tricky.
-
-It's somewhat documented with
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/example-schema.yaml#n80
-and
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/example-schema.yaml#n102
-
-But I guess it wasn't clear enough? Feel free to update it to
-something that would be better
-
-Maxime
-
---fd7bvdcala2bzv3x
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfs/CgAKCRDj7w1vZxhR
-xWnZAQDQjjz1zdDw2o0CKbXeWoqNzvCd9sNbulu3JkcPz9GjDAD/Z9Zm7vB9ZgYg
-ilf8Y1BHYMty/J1hDT69ZHP/Ayu9PgY=
-=KdAM
------END PGP SIGNATURE-----
-
---fd7bvdcala2bzv3x--
+QW5kIGNhbGxpbmcgcmVhZGxfcG9sbF90aW1lb3V0X2F0b21pYygpIHdvdWxkIHByb2JhYmx5IGJl
+IGJldHRlciA6KQ0KDQoNCk9uIDE5LzEyLzIwMTkgMTA6MDEgQU0sIEZhYmllbiBERVNTRU5ORSB3
+cm90ZToNCj4gSGkgSmlhX0p1LA0KPg0KPg0KPiBUaGlzIGlzIGEgZ29vZCBmaW5kaW5nLiBTZWUg
+bXkgcmVtYXJrcyBiZWxvdy4NCj4NCj4NCj4gT24gMTgvMTIvMjAxOSAzOjA1IFBNLCBKaWEtSnUg
+QmFpIHdyb3RlOg0KPj4gVGhlIGRyaXZlciBtYXkgc2xlZXAgd2hpbGUgaG9sZGluZyBhIHNwaW5s
+b2NrLg0KPj4gVGhlIGZ1bmN0aW9uIGNhbGwgcGF0aCAoZnJvbSBib3R0b20gdG8gdG9wKSBpbiBM
+aW51eCA0LjE5IGlzOg0KPj4NCj4+IGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vc3RpL2JkaXNwL2Jk
+aXNwLWh3LmMsIDM4NToNCj4+IMKgwqDCoMKgbXNsZWVwIGluIGJkaXNwX2h3X3Jlc2V0DQo+PiBk
+cml2ZXJzL21lZGlhL3BsYXRmb3JtL3N0aS9iZGlzcC9iZGlzcC12NGwyLmMsIDM0MToNCj4+IMKg
+wqDCoMKgYmRpc3BfaHdfcmVzZXQgaW4gYmRpc3BfZGV2aWNlX3J1bg0KPj4gZHJpdmVycy9tZWRp
+YS9wbGF0Zm9ybS9zdGkvYmRpc3AvYmRpc3AtdjRsMi5jLCAzMTc6DQo+PiDCoMKgwqDCoF9yYXdf
+c3Bpbl9sb2NrX2lycXNhdmUgaW4gYmRpc3BfZGV2aWNlX3J1bg0KPj4NCj4+IFRvIGZpeCB0aGlz
+IGJ1ZywgbXNsZWVwKCkgaXMgcmVwbGFjZWQgd2l0aCBtZGVsYXkoKS4NCj4+DQo+PiBUaGlzIGJ1
+ZyBpcyBmb3VuZCBieSBhIHN0YXRpYyBhbmFseXNpcyB0b29sIFNUQ2hlY2sgd3JpdHRlbiBieSBt
+eXNlbGYuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogSmlhLUp1IEJhaSA8YmFpamlhanUxOTkwQGdt
+YWlsLmNvbT4NCj4+IC0tLQ0KPj4gwqAgZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9zdGkvYmRpc3Av
+YmRpc3AtaHcuYyB8IDIgKy0NCj4+IMKgIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwg
+MSBkZWxldGlvbigtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlhL3BsYXRmb3Jt
+L3N0aS9iZGlzcC9iZGlzcC1ody5jIA0KPj4gYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL3N0aS9i
+ZGlzcC9iZGlzcC1ody5jDQo+PiBpbmRleCA0MzcyYWJiYjU5NTAuLjFhNTYzNDg4MDVhMiAxMDA2
+NDQNCj4+IC0tLSBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vc3RpL2JkaXNwL2JkaXNwLWh3LmMN
+Cj4+ICsrKyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vc3RpL2JkaXNwL2JkaXNwLWh3LmMNCj4+
+IEBAIC0zODIsNyArMzgyLDcgQEAgaW50IGJkaXNwX2h3X3Jlc2V0KHN0cnVjdCBiZGlzcF9kZXYg
+KmJkaXNwKQ0KPj4gwqDCoMKgwqDCoCBmb3IgKGkgPSAwOyBpIDwgUE9MTF9SU1RfTUFYOyBpKysp
+IHsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoCBpZiAocmVhZGwoYmRpc3AtPnJlZ3MgKyBCTFRfU1RB
+MSkgJiBCTFRfU1RBMV9JRExFKQ0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYnJlYWs7
+DQo+PiAtwqDCoMKgwqDCoMKgwqAgbXNsZWVwKFBPTExfUlNUX0RFTEFZX01TKTsNCj4+ICvCoMKg
+wqDCoMKgwqDCoCBtZGVsYXkoUE9MTF9SU1RfREVMQVlfTVMpOw0KPg0KPiBJbiBnZW5lcmFsLCB1
+c2Ugb2YgbWRlbGF5IGlzIGRpc2NvdXJhZ2VkLiBIZXJlIHdlIGNhbiB1c2UgdWRlbGF5IA0KPiBp
+bnN0ZWFkIG9mLCB3aXRoIGEgbWF4IHZhbHVlIG9mIE1BWF9VREVMQVlfTVMgd2hpY2ggaXMgMiBv
+biBBUk0uDQo+DQo+IFNvLCBpbnN0ZWFkIG9mIHJ1bm5pbmcgNTAgKFBPTExfUlNUX01BWCkgdGlt
+ZXMgYSAyMG1zIA0KPiAoUE9MTF9SU1RfREVMQVlfTVMpIGRlbGF5LCB3ZSBjYW4gcnVuIDUwMCB0
+aW1lcyBhIDJtcyAoMjAwMHVzKSBkZWxheS4NCj4NCj4gVGhlIGZvbGxvd2luZyBjaGFuZ2VzIHNo
+YWxsIGJlIGZpbmU6DQo+DQo+IMKgwqDCoCBQT0xMX1JTVF9NQVggNTAgLS0+IDUwMA0KPg0KPiDC
+oMKgwqAgUE9MTF9SU1RfREVMQVlfTVPCoCAyMCAtLT4gMg0KPg0KPiDCoMKgwqAgbWRlbGF5KFBP
+TExfUlNUX0RFTEFZX01TKSAtLT4gdWRlbGF5KFBPTExfUlNUX0RFTEFZX01TICogMTAwMCkNCj4N
+Cj4NCj4gQlINCj4NCj4gRmFiaWVuDQo+DQo+DQo+PiDCoMKgwqDCoMKgIH0NCj4+IMKgwqDCoMKg
+wqAgaWYgKGkgPT0gUE9MTF9SU1RfTUFYKQ0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgIGRldl9lcnIo
+YmRpc3AtPmRldiwgIlJlc2V0IHRpbWVvdXRcbiIpOw==
