@@ -2,330 +2,177 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B43C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC7EC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5981824679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EBFE24679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:49:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576748949;
+	bh=ZuO7pIOCOuQCVXxUl4L8fN0SHcd9e6Nqr8Tz7aB4zSU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1/GThfSL2FeVAAJxs3UG1OSC2+0gzbxIvNHw9CmQlXY93zh3YNkKl3JFFtKwzkOPW
+	 uASAfRSWdc6PEiqf+VEGkNxz8cpqyZ7OjfXGcniaXTTf9RKqDEAtvnmw8lDZwjjaxw
+	 3uJrgsTDQxk8PQBrZ4Ahp557ygz5cASxdnzZmJ2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfLSJqv (ORCPT
+        id S1726730AbfLSJtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 04:46:51 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44390 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbfLSJqv (ORCPT
+        Thu, 19 Dec 2019 04:49:08 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37602 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbfLSJtI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 04:46:51 -0500
-Received: by mail-lf1-f67.google.com with SMTP id v201so3846021lfa.11;
-        Thu, 19 Dec 2019 01:46:48 -0800 (PST)
+        Thu, 19 Dec 2019 04:49:08 -0500
+Received: by mail-lj1-f195.google.com with SMTP id u17so5502873lja.4;
+        Thu, 19 Dec 2019 01:49:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KCIurZNyCLNzhWqRV+qgCh1YDlQz1es+bh2U9/FnzhM=;
-        b=lTdlxEjbBxgejRPjNUl64XlU0893Akjf49dNp/iRI/XSbWydqwPH+pfYJKKhnSFf0p
-         QeNDwOIF01/3zRvk5NaGXjJqcWRsTDdCYn1Pcf0npoL4FSTIzZZH/eAxQxm8krKoVfhC
-         j2JW4up4XvSpRCk58V9SQMGtasW1fwuBGjG0EX1gxs7EHkiW7Q7tyEgWTT22GAH2XP7U
-         UBcFAg/Lf/YECYdL9Kc7AabWqCHt1qZZcr1LSKIW1VdWaT2L12PhULuT03h0/WAqmq9s
-         9gJyOmfn0t4hPB14C7hIL2JxSkErgMFTrMP9l2O9utT0mfb6wikaoi9b++/Okzyw9FDN
-         S3CA==
-X-Gm-Message-State: APjAAAWhmmngRk/DMzIeiZb35+okeVZDBY7Rp9L4QUEOjLTzGMtiRKcb
-        u/2ffZsKtm+ybOP1GiglO10=
-X-Google-Smtp-Source: APXvYqz1t9Hze1CAtwarkmcuijz3kDAPGXga7M5fxCx/UuJGqqzGRE2tbACnOxlMgNN+xqxWM0oALw==
-X-Received: by 2002:a19:ae04:: with SMTP id f4mr4810628lfc.64.1576748808072;
-        Thu, 19 Dec 2019 01:46:48 -0800 (PST)
-Received: from localhost.localdomain (dyt4gctb359myxd0pkwmt-4.rev.dnainternet.fi. [2001:14bb:430:5140:37cf:5409:8fcc:4495])
-        by smtp.gmail.com with ESMTPSA id l8sm2506963ljj.96.2019.12.19.01.46.46
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ZjgDeshjeiNQm7U2IpWlnWn/GpLHmcq5Ng4N0RI+hO8=;
+        b=udyjswlzrxiUIOp68/+yhqYl1HMspJgplTMw7wlV4tqSYpSUaNdO+DjXQoD0Lofpj1
+         GqIBUB1xfA7epXZCQM96pJ3pMDvNOxNS1GZeRymBXfKWg/J4XvZwJgsmxMKBPSqtj65V
+         rzFStUubgjlgPhIEjel/E2xWcS2Hx/DlVB4TId6c5gxasUr6Yb8nWSHjUrSThQZp0knj
+         SsI710IVReclOi8eG5JoQgAhZKvI2gfXH5O2X4Y+RgHv8pSvwfsrkPYITE5oeWLutaO+
+         Sq11ay4leBu3PUDfSBBE1L5FLs1AABaxiaqmQk+SgrLh+NS3Xn0lK7f+BY5KSbtPXmE7
+         AtCQ==
+X-Gm-Message-State: APjAAAVmmzhkNXEVIFlQ2ciMF8VoQQOBJYXGQpKkGyo1yIbuXnZLp4el
+        QG97SzC+zrf2umRVhhUiU1o=
+X-Google-Smtp-Source: APXvYqxLP93hcgwGaARbYpfHGfs84f8VXAhmPaqSxR5gy3xFKIp28pllD2Eav4/aLA4gQno70JWQfA==
+X-Received: by 2002:a2e:a361:: with SMTP id i1mr5053198ljn.29.1576748945700;
+        Thu, 19 Dec 2019 01:49:05 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id q27sm2423048ljm.25.2019.12.19.01.49.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 01:46:47 -0800 (PST)
-Date:   Thu, 19 Dec 2019 11:46:40 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [PATCH v7 03/12] mfd: rohm PMICs - use platform_device_id to match
- MFD sub-devices
-Message-ID: <9b532747ab61f00c943ca842ad9887691784a1ca.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+        Thu, 19 Dec 2019 01:49:04 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1ihsQX-00048r-9A; Thu, 19 Dec 2019 10:49:01 +0100
+Date:   Thu, 19 Dec 2019 10:49:01 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Rob Herring <robh@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        kbuild test robot <lkp@intel.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Subject: Re: kbuild obj-m directory descend (was: Re: [PATCH] serdev: fix
+ builds with CONFIG_SERIAL_DEV_BUS=m)
+Message-ID: <20191219094901.GR22665@localhost>
+References: <201912181000.82Z7czbN%lkp@intel.com>
+ <20191218083842.14882-1-u.kleine-koenig@pengutronix.de>
+ <20191218172353.GO22665@localhost>
+ <CAK7LNATztV-a3maL+vqQhbVsLBD_dsy+wbOZQ5ofQfbZQGGuLA@mail.gmail.com>
+ <20191219081814.GP22665@localhost>
+ <CAK7LNASHZ9HsYj+sncDqOBWRV+YoFNTciKOxfeYrA7MtBJ9T7A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK7LNASHZ9HsYj+sncDqOBWRV+YoFNTciKOxfeYrA7MtBJ9T7A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks to Stephen Boyd I today learned we can use platform_device_id
-to do device and module matching for MFD sub-devices!
+On Thu, Dec 19, 2019 at 05:55:54PM +0900, Masahiro Yamada wrote:
+> On Thu, Dec 19, 2019 at 5:18 PM Johan Hovold <johan@kernel.org> wrote:
+> >
+> > On Thu, Dec 19, 2019 at 11:00:15AM +0900, Masahiro Yamada wrote:
+> > > Hi.
+> > >
+> > > On Thu, Dec 19, 2019 at 2:23 AM Johan Hovold <johan@kernel.org> wrote:
+> >
+> > > > The offending patch is broken since it effectively makes
+> > > > CONFIG_SERIAL_DEV_BUS bool (built-in or disabled), but for some reason
+> > > > those symbols do not end up in vmlinux (despite being compiled) when you
+> > > > add a built-in object goal under a directory that was entered using
+> > > > obj-m.
+> > > >
+> > > > That seems like a bug to me and contradicts the kbuild documentation
+> > > > (3.6):
+> > > >
+> > > >         Example:
+> > > >
+> > > >         #fs/Makefile
+> > > >         obj-$(CONFIG_EXT2_FS) += ext2/
+> > > >
+> > > >         If CONFIG_EXT2_FS is set to either ‘y’ (built-in) or ‘m’
+> > > >         (modular) the corresponding obj- variable will be set, and
+> > > >         kbuild will descend down in the ext2 directory. Kbuild only uses
+> > > >         this information to decide that it needs to visit the directory,
+> > > >         it is the Makefile in the subdirectory that specifies what is
+> > > >         modular and what is built-in.
+> > > >
+> > > > I tried adding other targets to obj-y directly and they are also are not
+> > > > included, seemingly since the directory was entered using obj-m.
+> > > >
+> > > > Masahiro or Michal, can you shed some light?
+> >
+> > > I saw similar questions in ML in the past.
+> > > Yes, this is how Kbuild works;
+> > > Kbuild only links objects in Makefiles visited by obj-y.
+> > >
+> > > If you use
+> > >     obj-m += serdev/
+> > > all objects in serdev/ are considered as modular.
+> >
+> > Well, any objects in serdev/ specified in obj-y would currently be built
+> > but never included in either built-in.a or any module.
+> 
+> Right.
+> 
+> > > I think it is better to make the document
+> > > clarify this.
+> >
+> > Yeah, I don't have a use case for this, but the documentation would need
+> > to be updated to not have more people look into this.
+> >
+> > And at least this behaviour allowed us to catch this bug, but only
+> > because we had dependent modules that failed to build. I see now that
+> > you posted a patch adding a general warning about obj-y under obj-m last
+> > fall, but that was apparently never merged.
+> 
+> This one?
+> 
+> https://lore.kernel.org/patchwork/patch/1126959/
 
-Do device matching using the platform_device_id instead of using
-explicit module_aliases to load modules and custom parent-data field
-to do module loading and sub-device matching.
+Yep, that's the one I meant.
+ 
+> This patch detected several Makefile/Kconfig bugs,
+> and it is good.
+> 
+> But, it also turned out to cause false positive warnings
+> on some architectures.
+> I thought it was not so easy to fix it.
+> So, I decided to postpone it.
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
----
+Ok.
 
-No changes since v6
+> > But when was this behaviour changed? And was that done on purpose?
+> 
+> No. Not changed at all.
+> 
+> In my understanding, the current behavior has been kept
+> from the beginning.
 
- drivers/clk/clk-bd718x7.c             | 12 ++++++++-
- drivers/mfd/rohm-bd70528.c            |  3 +--
- drivers/mfd/rohm-bd718x7.c            | 39 ++++++++++++++++++++++-----
- drivers/regulator/bd718x7-regulator.c | 17 +++++++++---
- include/linux/mfd/rohm-generic.h      |  3 +--
- 5 files changed, 58 insertions(+), 16 deletions(-)
+Ok, thanks for confirming. The contradicting documentation I refer to
+above has been there since before git at least however.
 
-diff --git a/drivers/clk/clk-bd718x7.c b/drivers/clk/clk-bd718x7.c
-index 00926c587390..33699ee1bdf3 100644
---- a/drivers/clk/clk-bd718x7.c
-+++ b/drivers/clk/clk-bd718x7.c
-@@ -74,6 +74,7 @@ static int bd71837_clk_probe(struct platform_device *pdev)
- 		.name = "bd718xx-32k-out",
- 		.ops = &bd71837_clk_ops,
- 	};
-+	enum rohm_chip_type chip = platform_get_device_id(pdev)->driver_data;
- 
- 	c = devm_kzalloc(&pdev->dev, sizeof(*c), GFP_KERNEL);
- 	if (!c)
-@@ -87,7 +88,7 @@ static int bd71837_clk_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "No parent clk found\n");
- 		return -EINVAL;
- 	}
--	switch (mfd->chip_type) {
-+	switch (chip) {
- 	case ROHM_CHIP_TYPE_BD71837:
- 	case ROHM_CHIP_TYPE_BD71847:
- 		c->reg = BD718XX_REG_OUT32K;
-@@ -121,11 +122,20 @@ static int bd71837_clk_probe(struct platform_device *pdev)
- 	return rval;
- }
- 
-+static const struct platform_device_id bd718x7_clk_id[] = {
-+	{ "bd71837-clk", ROHM_CHIP_TYPE_BD71837 },
-+	{ "bd71847-clk", ROHM_CHIP_TYPE_BD71847 },
-+	{ "bd70528-clk", ROHM_CHIP_TYPE_BD70528 },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(platform, bd718x7_clk_id);
-+
- static struct platform_driver bd71837_clk = {
- 	.driver = {
- 		.name = "bd718xx-clk",
- 	},
- 	.probe = bd71837_clk_probe,
-+	.id_table = bd718x7_clk_id,
- };
- 
- module_platform_driver(bd71837_clk);
-diff --git a/drivers/mfd/rohm-bd70528.c b/drivers/mfd/rohm-bd70528.c
-index ef6786fd3b00..5c44d3b77b3e 100644
---- a/drivers/mfd/rohm-bd70528.c
-+++ b/drivers/mfd/rohm-bd70528.c
-@@ -48,7 +48,7 @@ static struct mfd_cell bd70528_mfd_cells[] = {
- 	 * We use BD71837 driver to drive the clock block. Only differences to
- 	 * BD70528 clock gate are the register address and mask.
- 	 */
--	{ .name = "bd718xx-clk", },
-+	{ .name = "bd70528-clk", },
- 	{ .name = "bd70528-wdt", },
- 	{
- 		.name = "bd70528-power",
-@@ -236,7 +236,6 @@ static int bd70528_i2c_probe(struct i2c_client *i2c,
- 
- 	dev_set_drvdata(&i2c->dev, &bd70528->chip);
- 
--	bd70528->chip.chip_type = ROHM_CHIP_TYPE_BD70528;
- 	bd70528->chip.regmap = devm_regmap_init_i2c(i2c, &bd70528_regmap);
- 	if (IS_ERR(bd70528->chip.regmap)) {
- 		dev_err(&i2c->dev, "Failed to initialize Regmap\n");
-diff --git a/drivers/mfd/rohm-bd718x7.c b/drivers/mfd/rohm-bd718x7.c
-index 85e7f5133365..bb86ec829079 100644
---- a/drivers/mfd/rohm-bd718x7.c
-+++ b/drivers/mfd/rohm-bd718x7.c
-@@ -30,14 +30,24 @@ static struct gpio_keys_platform_data bd718xx_powerkey_data = {
- 	.name = "bd718xx-pwrkey",
- };
- 
--static struct mfd_cell bd718xx_mfd_cells[] = {
-+static struct mfd_cell bd71837_mfd_cells[] = {
- 	{
- 		.name = "gpio-keys",
- 		.platform_data = &bd718xx_powerkey_data,
- 		.pdata_size = sizeof(bd718xx_powerkey_data),
- 	},
--	{ .name = "bd718xx-clk", },
--	{ .name = "bd718xx-pmic", },
-+	{ .name = "bd71837-clk", },
-+	{ .name = "bd71837-pmic", },
-+};
-+
-+static struct mfd_cell bd71847_mfd_cells[] = {
-+	{
-+		.name = "gpio-keys",
-+		.platform_data = &bd718xx_powerkey_data,
-+		.pdata_size = sizeof(bd718xx_powerkey_data),
-+	},
-+	{ .name = "bd71847-clk", },
-+	{ .name = "bd71847-pmic", },
- };
- 
- static const struct regmap_irq bd718xx_irqs[] = {
-@@ -124,6 +134,9 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
- {
- 	struct bd718xx *bd718xx;
- 	int ret;
-+	unsigned int chip_type;
-+	struct mfd_cell *mfd;
-+	int cells;
- 
- 	if (!i2c->irq) {
- 		dev_err(&i2c->dev, "No IRQ configured\n");
-@@ -136,8 +149,21 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
- 		return -ENOMEM;
- 
- 	bd718xx->chip_irq = i2c->irq;
--	bd718xx->chip.chip_type = (unsigned int)(uintptr_t)
--				of_device_get_match_data(&i2c->dev);
-+	chip_type = (unsigned int)(uintptr_t)
-+		    of_device_get_match_data(&i2c->dev);
-+	switch (chip_type) {
-+	case ROHM_CHIP_TYPE_BD71837:
-+		mfd = bd71837_mfd_cells;
-+		cells = ARRAY_SIZE(bd71837_mfd_cells);
-+		break;
-+	case ROHM_CHIP_TYPE_BD71847:
-+		mfd = bd71847_mfd_cells;
-+		cells = ARRAY_SIZE(bd71847_mfd_cells);
-+		break;
-+	default:
-+		dev_err(&i2c->dev, "Unknown device type");
-+		return -EINVAL;
-+	}
- 	bd718xx->chip.dev = &i2c->dev;
- 	dev_set_drvdata(&i2c->dev, bd718xx);
- 
-@@ -170,8 +196,7 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
- 	button.irq = ret;
- 
- 	ret = devm_mfd_add_devices(bd718xx->chip.dev, PLATFORM_DEVID_AUTO,
--				   bd718xx_mfd_cells,
--				   ARRAY_SIZE(bd718xx_mfd_cells), NULL, 0,
-+				   mfd, cells, NULL, 0,
- 				   regmap_irq_get_domain(bd718xx->irq_data));
- 	if (ret)
- 		dev_err(&i2c->dev, "Failed to create subdevices\n");
-diff --git a/drivers/regulator/bd718x7-regulator.c b/drivers/regulator/bd718x7-regulator.c
-index 13a43eee2e46..6beaf867d9cb 100644
---- a/drivers/regulator/bd718x7-regulator.c
-+++ b/drivers/regulator/bd718x7-regulator.c
-@@ -1164,6 +1164,7 @@ static int bd718xx_probe(struct platform_device *pdev)
- 
- 	int i, j, err;
- 	bool use_snvs;
-+	enum rohm_chip_type chip = platform_get_device_id(pdev)->driver_data;
- 
- 	mfd = dev_get_drvdata(pdev->dev.parent);
- 	if (!mfd) {
-@@ -1172,8 +1173,8 @@ static int bd718xx_probe(struct platform_device *pdev)
- 		goto err;
- 	}
- 
--	if (mfd->chip.chip_type >= ROHM_CHIP_TYPE_AMOUNT ||
--	    !pmic_regulators[mfd->chip.chip_type].r_datas) {
-+	if (chip >= ROHM_CHIP_TYPE_AMOUNT || chip < 0 ||
-+	    !pmic_regulators[chip].r_datas) {
- 		dev_err(&pdev->dev, "Unsupported chip type\n");
- 		err = -EINVAL;
- 		goto err;
-@@ -1215,13 +1216,13 @@ static int bd718xx_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	for (i = 0; i < pmic_regulators[mfd->chip.chip_type].r_amount; i++) {
-+	for (i = 0; i < pmic_regulators[chip].r_amount; i++) {
- 
- 		const struct regulator_desc *desc;
- 		struct regulator_dev *rdev;
- 		const struct bd718xx_regulator_data *r;
- 
--		r = &pmic_regulators[mfd->chip.chip_type].r_datas[i];
-+		r = &pmic_regulators[chip].r_datas[i];
- 		desc = &r->desc;
- 
- 		config.dev = pdev->dev.parent;
-@@ -1281,11 +1282,19 @@ static int bd718xx_probe(struct platform_device *pdev)
- 	return err;
- }
- 
-+static const struct platform_device_id bd718x7_pmic_id[] = {
-+	{ "bd71837-pmic", ROHM_CHIP_TYPE_BD71837 },
-+	{ "bd71847-pmic", ROHM_CHIP_TYPE_BD71847 },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(platform, bd718x7_pmic_id);
-+
- static struct platform_driver bd718xx_regulator = {
- 	.driver = {
- 		.name = "bd718xx-pmic",
- 	},
- 	.probe = bd718xx_probe,
-+	.id_table = bd718x7_pmic_id,
- };
- 
- module_platform_driver(bd718xx_regulator);
-diff --git a/include/linux/mfd/rohm-generic.h b/include/linux/mfd/rohm-generic.h
-index bff15ac26f2c..922f88008232 100644
---- a/include/linux/mfd/rohm-generic.h
-+++ b/include/linux/mfd/rohm-generic.h
-@@ -4,7 +4,7 @@
- #ifndef __LINUX_MFD_ROHM_H__
- #define __LINUX_MFD_ROHM_H__
- 
--enum {
-+enum rohm_chip_type {
- 	ROHM_CHIP_TYPE_BD71837 = 0,
- 	ROHM_CHIP_TYPE_BD71847,
- 	ROHM_CHIP_TYPE_BD70528,
-@@ -12,7 +12,6 @@ enum {
- };
- 
- struct rohm_regmap_dev {
--	unsigned int chip_type;
- 	struct device *dev;
- 	struct regmap *regmap;
- };
--- 
-2.21.0
+Here's a random example of someone being bit by this five years ago:
 
+	https://www.spinics.net/lists/linux-kbuild/msg10887.html
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+Would you mind taking a stab at updating the docs?
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+Johan
