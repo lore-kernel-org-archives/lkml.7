@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 507B2C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F6AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2381624682
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 906AA2465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781275;
-	bh=1AFF9kwPfekP1QBfjxNZheham9tBrHNABrkQP3k8dO8=;
+	s=default; t=1576781277;
+	bh=EexjbrWnS2zxrUD5rtbgHfHZ9fzzU2c7Wcnr9c0M9uw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SEfAYugiPSsvnrAxkxeLc8mGww9FptdRcRTGWu/wEyYonyK0rTWXzxCs2Dc50U6WD
-	 3K4w45mFiFeyoGtJj552Ulcvx9L5DowhohD7CqL2bW5zlU7zP9RWnbd8GcPS9uH9xQ
-	 qiWMel0PjlYPMkCNICDFkmM6gPD1vdb65X1VJZ14=
+	b=yzrFBi0aa0uUGY4bdlyX/LAA6BSTRnWxLljq81f6EwFsj7EugD7Xwxu9hvHhWgeTw
+	 Ar8A6gHAE/plSEWi1hxYggRo97GBlgmvJYC7+252uaGwLLo70rsrxsq4Bs4fe+3nOH
+	 jQzwN1+TRABtqdiUKbzxuFDna9tkMZqvorJUkpik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbfLSSry (ORCPT
+        id S1729306AbfLSSr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:47:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40804 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:47:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728946AbfLSSru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:47:50 -0500
+        id S1729534AbfLSSrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:47:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EC1E24672;
-        Thu, 19 Dec 2019 18:47:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF2BB24679;
+        Thu, 19 Dec 2019 18:47:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781269;
-        bh=1AFF9kwPfekP1QBfjxNZheham9tBrHNABrkQP3k8dO8=;
+        s=default; t=1576781272;
+        bh=EexjbrWnS2zxrUD5rtbgHfHZ9fzzU2c7Wcnr9c0M9uw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mCFwQlc02RkoYCTTghy8mmWkHo6KjXLmEJhmJX7XcqjrLU6qYjo2Kplzuwpg+ROP7
-         dErXNXpQAlby44bOQ7UTP4u8AsmNHfbfNb+WTcoFl7Zj2ap8rGCEZLRx+TgIXXI8F+
-         78DKY4YBuKBcpkB9eROhvWNPQYdgZmB25Cnz1+i0=
+        b=A7U9lMMIL9f01xmEHPz6aU6FuOTx2ZEju0yRyW8hnnlwKvSrrYNrktGqieMfY+6Dd
+         gBEIxQeTVE0yuI1elIonkgTscnpoghKxDsCWiphztLXx/ZzDNIVO2uvJImVNtjLdUn
+         4iKWwAIjDqWloVwySGP6Jez2zKcUpaF4kHr07iv4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 151/199] iio: adis16480: Add debugfs_reg_access entry
-Date:   Thu, 19 Dec 2019 19:33:53 +0100
-Message-Id: <20191219183223.638200006@linuxfoundation.org>
+Subject: [PATCH 4.9 152/199] Btrfs: fix negative subv_writers counter and data space leak after buffered write
+Date:   Thu, 19 Dec 2019 19:33:54 +0100
+Message-Id: <20191219183223.703970854@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -62,36 +61,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nuno Sá <nuno.sa@analog.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit 4c35b7a51e2f291471f7221d112c6a45c63e83bc ]
+[ Upstream commit a0e248bb502d5165b3314ac3819e888fdcdf7d9f ]
 
-The driver is defining debugfs entries by calling
-`adis16480_debugfs_init()`. However, those entries are attached to the
-iio_dev debugfs entry which won't exist if no debugfs_reg_access
-callback is provided.
+When doing a buffered write it's possible to leave the subv_writers
+counter of the root, used for synchronization between buffered nocow
+writers and snapshotting. This happens in an exceptional case like the
+following:
 
-Fixes: 2f3abe6cbb6c ("iio:imu: Add support for the ADIS16480 and similar IMUs")
-Signed-off-by: Nuno Sá <nuno.sa@analog.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+1) We fail to allocate data space for the write, since there's not
+   enough available data space nor enough unallocated space for allocating
+   a new data block group;
+
+2) Because of that failure, we try to go to NOCOW mode, which succeeds
+   and therefore we set the local variable 'only_release_metadata' to true
+   and set the root's sub_writers counter to 1 through the call to
+   btrfs_start_write_no_snapshotting() made by check_can_nocow();
+
+3) The call to btrfs_copy_from_user() returns zero, which is very unlikely
+   to happen but not impossible;
+
+4) No pages are copied because btrfs_copy_from_user() returned zero;
+
+5) We call btrfs_end_write_no_snapshotting() which decrements the root's
+   subv_writers counter to 0;
+
+6) We don't set 'only_release_metadata' back to 'false' because we do
+   it only if 'copied', the value returned by btrfs_copy_from_user(), is
+   greater than zero;
+
+7) On the next iteration of the while loop, which processes the same
+   page range, we are now able to allocate data space for the write (we
+   got enough data space released in the meanwhile);
+
+8) After this if we fail at btrfs_delalloc_reserve_metadata(), because
+   now there isn't enough free metadata space, or in some other place
+   further below (prepare_pages(), lock_and_cleanup_extent_if_need(),
+   btrfs_dirty_pages()), we break out of the while loop with
+   'only_release_metadata' having a value of 'true';
+
+9) Because 'only_release_metadata' is 'true' we end up decrementing the
+   root's subv_writers counter to -1 (through a call to
+   btrfs_end_write_no_snapshotting()), and we also end up not releasing the
+   data space previously reserved through btrfs_check_data_free_space().
+   As a consequence the mechanism for synchronizing NOCOW buffered writes
+   with snapshotting gets broken.
+
+Fix this by always setting 'only_release_metadata' to false at the start
+of each iteration.
+
+Fixes: 8257b2dc3c1a ("Btrfs: introduce btrfs_{start, end}_nocow_write() for each subvolume")
+Fixes: 7ee9e4405f26 ("Btrfs: check if we can nocow if we don't have data space")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/imu/adis16480.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/btrfs/file.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iio/imu/adis16480.c b/drivers/iio/imu/adis16480.c
-index 6f975538996cd..c950aa10d0ae0 100644
---- a/drivers/iio/imu/adis16480.c
-+++ b/drivers/iio/imu/adis16480.c
-@@ -724,6 +724,7 @@ static const struct iio_info adis16480_info = {
- 	.write_raw = &adis16480_write_raw,
- 	.update_scan_mode = adis_update_scan_mode,
- 	.driver_module = THIS_MODULE,
-+	.debugfs_reg_access = adis_debugfs_reg_access,
- };
+diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
+index 6cdf27325576b..03661b744eaf0 100644
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -1555,6 +1555,7 @@ static noinline ssize_t __btrfs_buffered_write(struct file *file,
+ 			break;
+ 		}
  
- static int adis16480_stop_device(struct iio_dev *indio_dev)
++		only_release_metadata = false;
+ 		sector_offset = pos & (root->sectorsize - 1);
+ 		reserve_bytes = round_up(write_bytes + sector_offset,
+ 				root->sectorsize);
+@@ -1704,7 +1705,6 @@ again:
+ 			set_extent_bit(&BTRFS_I(inode)->io_tree, lockstart,
+ 				       lockend, EXTENT_NORESERVE, NULL,
+ 				       NULL, GFP_NOFS);
+-			only_release_metadata = false;
+ 		}
+ 
+ 		btrfs_drop_pages(pages, num_pages);
 -- 
 2.20.1
 
