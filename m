@@ -2,127 +2,105 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B173C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B84C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1097F2465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:16:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="RDULRgwT"
+	by mail.kernel.org (Postfix) with ESMTP id D82772465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:16:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727166AbfLSUQW (ORCPT
+        id S1727277AbfLSUQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 15:16:22 -0500
-Received: from mail-eopbgr10131.outbound.protection.outlook.com ([40.107.1.131]:42400
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726869AbfLSUQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 15:16:21 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Pd+h2ZGeL8LhH3w87fGY7xdOFMSHcZa+mKb7hgv64O7/RC3sw/yCXOKzkdr0KJ0ei1VTf7Mwaier07sGc17mxAz7MGuvonYaNfTSaQzvANggEogzEEUzb+6HH8pwe6auYRAsxq9A2IdwQ1UvfH+8rCYuSvGKxoWqNLrD+X+qT+he+/X6TIWhDojBF7kSOfHwamGFhVzYIFmFXJSP/MMFp+iFp8yBGAnwu2u6SYCoudZVf6q7S43XjJW6BRGIRQbbi10gHqgf/I4TrB7J/lbrb9ZKeJgBL2yMovaWUhHjto/wzfjX63KVxjbaO/F5wiSw+uSEnKzJ6WmIaza6led8GA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L14ATJw1kXwXBN0OsjJY5e47wrbVHs4xnmGQ2CVEWh8=;
- b=J/jyvasLcsDlItUCPu9c9KjI+tQV08+KQ4HWapnRpaIv2bx8dx9jbq3lTBz7SwzjNnOVroY2d9r/Rxn+yds6nP/DwGfWlsCaga/il74gMLQ1RXe0zTazwp0YrD+NoPBNIA6vCnqfXnwAu/bZA5F9raDSkxG57y2wtg7nhZ8Pb/gQwOE5nbrJYV/v8RWusFLecKXIo9pGqDOr/TW3DZKbrCjIzv9QXzx5g6Qg6M5j1IwQj0AvBNmtOvuwt/g3Qh+towNl+ha5zCSOKPfvNJJFBS7pKUD0MeyDU5TAhqIJIa8tDdJFizj0TsmRPDZLaQdsIpaBzkAAuUdnNs0wGX6j9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
- header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L14ATJw1kXwXBN0OsjJY5e47wrbVHs4xnmGQ2CVEWh8=;
- b=RDULRgwTLmzX+iiGheAvRLul5BIya5/aJCoHFuslGxqv+a7I5i2dvpEJNU6eZhweIAEFmZo/tBpBSzpV64SB5giyUnpPVwyk3fJtTceROCD2i3JqLq/3NTCkdrDECLpTPRrD53bLWvhnYcpOcW2UpCUmkLKxKmKKNtDopFV0ftU=
-Received: from VI1PR08MB3472.eurprd08.prod.outlook.com (20.177.60.27) by
- VI1PR08MB3343.eurprd08.prod.outlook.com (52.133.15.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.14; Thu, 19 Dec 2019 20:16:17 +0000
-Received: from VI1PR08MB3472.eurprd08.prod.outlook.com
- ([fe80::a99c:2efb:3a9d:7ba3]) by VI1PR08MB3472.eurprd08.prod.outlook.com
- ([fe80::a99c:2efb:3a9d:7ba3%7]) with mapi id 15.20.2559.012; Thu, 19 Dec 2019
- 20:16:17 +0000
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-        "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
-        "bsegall@google.com" <bsegall@google.com>,
-        "mgorman@suse.de" <mgorman@suse.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] sched: Micro optimization in pick_next_task() and in
- check_preempt_curr()
-Thread-Topic: [PATCH v2] sched: Micro optimization in pick_next_task() and in
- check_preempt_curr()
-Thread-Index: AQHVtn/rEdaAkhwQzEOZQjeAvSuXP6fBmDoAgAA6DoD//9GqAIAAQU4A
-Date:   Thu, 19 Dec 2019 20:16:17 +0000
-Message-ID: <4a708948-7140-d8f3-a5ec-d242ae0737d4@virtuozzo.com>
-References: <157675913272.349305.8936736338884044103.stgit@localhost.localdomain>
- <20191219131242.GK2827@hirez.programming.kicks-ass.net>
- <20191219140252.GS2871@hirez.programming.kicks-ass.net>
- <bfaa72ca-8bc6-f93c-30d7-5d62f2600f53@virtuozzo.com>
- <20191219094330.0e44c748@gandalf.local.home>
- <11d755e9-e4f8-dd9e-30b0-45aebe260b2f@virtuozzo.com>
- <20191219095941.2eebed84@gandalf.local.home>
- <44c95c18-7593-f3e7-f710-a7d424af7442@virtuozzo.com>
- <20191219104018.5f8e50d2@gandalf.local.home>
- <af65cbaf-2f8e-0384-03e8-262d35e3790e@virtuozzo.com>
- <20191219112214.37f1f0af@gandalf.local.home>
-In-Reply-To: <20191219112214.37f1f0af@gandalf.local.home>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1P189CA0014.EURP189.PROD.OUTLOOK.COM (2603:10a6:7:53::27)
- To VI1PR08MB3472.eurprd08.prod.outlook.com (2603:10a6:803:80::27)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ktkhai@virtuozzo.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [176.14.212.145]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 50bb86e3-b96e-471e-44e4-08d784c04dff
-x-ms-traffictypediagnostic: VI1PR08MB3343:
-x-microsoft-antispam-prvs: <VI1PR08MB334340E62479EC04408B840ECD520@VI1PR08MB3343.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0256C18696
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(366004)(39840400004)(376002)(136003)(396003)(199004)(189003)(86362001)(6916009)(4326008)(2616005)(52116002)(6506007)(81156014)(8676002)(31696002)(8936002)(54906003)(5660300002)(71200400001)(81166006)(316002)(53546011)(478600001)(6486002)(186003)(26005)(6512007)(31686004)(2906002)(36756003)(4744005)(66946007)(66556008)(64756008)(66446008)(66476007);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR08MB3343;H:VI1PR08MB3472.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: virtuozzo.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: AXtl48gdGE/m0niJltQvjcVWwq6KzGn19sT1v5acJot+s/kuO1BgLjZryaNO//eizvPPV3wcLl0RziL5waCVq99w5f1wbJrMDdorIptF/6oYlSJDrjYbZQjjY0/SbuCXppMJ6EEw+vA61IYT3b94JVCmCc9o3kIcBZD2rZirjKE7LSkyHsBSJd4FmrdO2KeVnE1xGBVZRiQob0nJHTNdZJ/iSgf+F8KyrL7pZqqI6VZ5ozgxF4bYqUv/20AoK/BonQn6XU79+O7Vuqvr6eDqIySbeiRTmkLrF9Y0DeoUIheHuXvXilNh3PVo3ITJl0VX6n2wTmzYL6WHp1jOiaGY/6LvYGXvOgTnU8coEctI0nehik+zWlQuTMn1OauIw+axvdjM2cNJpu62USOgvtcUEa32IjusQ/71zlcWsHL8je8Tl1WdYQR7jpO2zWgI6Gjp
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DD8E7A41A2573D47A3045844E0416220@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 19 Dec 2019 15:16:49 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:40957 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726869AbfLSUQs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 15:16:48 -0500
+Received: from mail-qk1-f181.google.com ([209.85.222.181]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MdeSt-1i8QQO3hSb-00ZiSy; Thu, 19 Dec 2019 21:16:46 +0100
+Received: by mail-qk1-f181.google.com with SMTP id w127so5692441qkb.11;
+        Thu, 19 Dec 2019 12:16:45 -0800 (PST)
+X-Gm-Message-State: APjAAAVCBWOJvWlZtkw28DNSJs06TRbVIHoF6jld9B1uW+oaib0WpWba
+        A4IlWJLPMB2SRLa7A/gjzeKYiteZRLGHxKvgUQo=
+X-Google-Smtp-Source: APXvYqxXxzC0hmoU51YHNIOMNlYs2rxhRdB48aYkaWwyXmxmNUKJ8I9t0XWDc0Xh+upH6sOTUc/n5M9fOKJDVFAtE4c=
+X-Received: by 2002:a37:a8d4:: with SMTP id r203mr10148528qke.394.1576786604484;
+ Thu, 19 Dec 2019 12:16:44 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: virtuozzo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 50bb86e3-b96e-471e-44e4-08d784c04dff
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Dec 2019 20:16:17.5355
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Nb9ibDPkPggY3EHPM23IfE8lizzCE178vGFxjRBwUF2BI2uwNYkvvd8wQbnfSUkHXPCn7pPWnagafLg7qHGiDw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3343
+References: <20191209092147.22901-1-kishon@ti.com> <20191209092147.22901-6-kishon@ti.com>
+ <20191216144932.GY24359@e119886-lin.cambridge.arm.com> <d1ee4579-a3da-6a73-3516-a6d264f80995@ti.com>
+ <CAK8P3a06XLSa-FHNGsN=b10JrddjbOKAvfU=iXdMa+0L43m5fA@mail.gmail.com> <9b40e71a-c18c-a958-84fe-c5a126fe8272@ti.com>
+In-Reply-To: <9b40e71a-c18c-a958-84fe-c5a126fe8272@ti.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 19 Dec 2019 21:16:28 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1pGiUco9DcBSOWbck4_qLTUcO5awPe1+sM9Jun17xsOw@mail.gmail.com>
+Message-ID: <CAK8P3a1pGiUco9DcBSOWbck4_qLTUcO5awPe1+sM9Jun17xsOw@mail.gmail.com>
+Subject: Re: [PATCH 05/13] PCI: cadence: Add read and write accessors to
+ perform only 32-bit accesses
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:GIAkECSiaFGSI5aitAY0nGTi3sD4Yf2xuK1wqRbdEktsae1yNSY
+ rmxrTd/569KOel7SISKKcDVSvy0oyYExf5hfCKr5EL5R+7VQwX3hlqUMylke9vl0T5h3Hh4
+ /jtPr3nAlRrklfTDAy1coJ9HSjQdduqbxZk3O4V6tXX39+rDyo8UKWalhybe3hd7h/EUP0g
+ wxTxGuQMP/3RwJSxQjUHA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ceLdhuaFHOQ=:kxE9+xvSYkvzX26JRUrEcr
+ /j6iqFzhfGP+V7QuPHILK2D6GTNsOU7ELEPhT7SX082sWmcKzt83MN+Y9OmHR4JL0+J496P2o
+ KVXx3+SumCL2jfvx2eMOE7cOlPoTlTtaXE6v9PPNtpBgNG1K4vrATvbSR4pWOFsQHhUo0vkTK
+ bfcIeOYGYISV43EUfy/ijuZ51M8a44oCYhUHX0d9DgWlJqSyDasIdYANHy4vR5FhC2f2aeUmX
+ LW0KkwqXzNB8mziAbL9p01pYoDcyH9WtuMdH5rBcQ0uECmiC5/Mdj3YN7uBCwbdUoY1amXQq7
+ R+r++vSSyLILp5GKVdXVaE3I2zr4qwyuLLoOECnOkLUfJkI4lGyjLn7Bh2IZhVSXZ8+o6dlUi
+ DU46/fa02a58Qm/UGZcYuomd63/DNd4JIvAy0xFfGnhvpzu4Sr3NmHxWd5iNbOhMnWEUl1p0b
+ 8Za7sf0NM31ges/PJvFBCk8qA+kebQ/dAm5dSpSbLq+vqpHZzGKj+WffpJd+YKbIQ4cqqPVi4
+ 2utrnKQs+Cz3iAwmzofjOqq2nAxYvFL4xU0D9jQ/VotcB2PYie83YUr/RRhcNnoo2Q+oeeSvl
+ Jw2aMYXNn6PXXaPfk+RN8yCTqZkLJoqH+tdUjmR1T+syjCM/Pqaw9Qzi7Sm6/ZiP2IiZffL1/
+ rRwDaWY7tu1h9FYWfKhN8VN/rGMla95KTCXIdcLlq118H+3kNQDz5CsLAvEt04uTO/hlapkw8
+ j+Xin9eS6aW3eE0xLdpKVIaz7/36tmEyyzwNC63+PYB1K1XV1fEaZhghg0rfNotaX3OVEh/8S
+ fIN91vcIuSFQ8YzWzE8DSNRKvMcAxlXlcpvMPXQW09r9Kh8AOLaMfQaoLsQ2+ExTqb7aOwzuJ
+ Y2Q5jCCxhBwEGRAsPYIg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMTkuMTIuMjAxOSAxOToyMiwgU3RldmVuIFJvc3RlZHQgd3JvdGU6DQo+IE9uIFRodSwgMTkg
-RGVjIDIwMTkgMTk6MDg6MDUgKzAzMDANCj4gS2lyaWxsIFRraGFpIDxrdGtoYWlAdmlydHVvenpv
-LmNvbT4gd3JvdGU6DQo+IA0KPj4gU2hvdWxkIEkgcmVzZW5kIHRoaXMgYXMgdHdvIHBhdGNoZXMs
-IHdpdGggeW91ciBjaGFuZ2VzIGluIGEgc2VwYXJhdGU/DQo+IA0KPiBZb3UgZG9uJ3QgaGF2ZSB0
-bywgeW91IGNhbiBpbmNsdWRlIG11bHRpcGxlIFNPQnMgaWYgYSBwYXRjaCB3YXMgd3JpdHRlbg0K
-PiBieSB0d28gcGVvcGxlLg0KPiANCj4gQnV0IHBlcmhhcHMgaXQgd2lsbCBiZXR0ZXIgdG8gZG8g
-c28sIHRoYXQgd2F5IHBlb3BsZSB3aWxsIGtub3cgd2hvIHRvDQo+IGJsYW1lIHdoZW4gdGhlIGxp
-bmtlciBicmVha3MgOy0pDQo+IA0KPiBJJ2xsIHNlbmQgeW91IGEgcGF0Y2ggdGhhdCB5b3UgY2Fu
-IGFwcGx5IGp1c3QgYmVmb3JlIHlvdXIgY2hhbmdlLiBUaGF0DQo+IG1heSBiZSB0aGUgY2xlYW5l
-c3Qgd2F5Lg0KDQpUd28gc21hbGwgcGF0Y2hlcyBsb29rIGJldHRlciB0aGVuIG9uZSBodWdlLCBz
-byBJIHByZWZlciB0byBzZW5kIGEgcGF0Y2gNCm9uIHRvcCBvZiB5b3VycyA6KQ0K
+On Thu, Dec 19, 2019 at 2:17 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> On 19/12/19 5:33 pm, Arnd Bergmann wrote:
+> > On Thu, Dec 19, 2019 at 12:54 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> >>
+> >> Hi Andrew,
+> >>
+> >> On 16/12/19 8:19 pm, Andrew Murray wrote:
+> >>> On Mon, Dec 09, 2019 at 02:51:39PM +0530, Kishon Vijay Abraham I wrote:
+> >>>> Certain platforms like TI's J721E allow only 32-bit register accesses.
+> >>>
+> >>> When I first read this I thought you meant only 32-bit accesses are allowed
+> >>> and not other sizes (such as 64-bit). However the limitation you address
+> >>> here is that the J721E allows only 32-bit *aligned* register accesses.
+> >>
+> >> It's both, it allows only 32-bit aligned accesses and the size should be
+> >> only 32 bits. That's why I always use "readl" in the APIs below.
+> >
+> > In that case, can't you use the pci_generic_config_read32/write32
+> > functions with a cadence specific .map_bus() function?
+>
+> pci_generic_config_read32() is for reading configuration space registers
+> only. The accessors I added here are for the controller IP configuration.
+>
+> For the configuration space access I use
+> pci_generic_config_read32/write32()([PATCH 11/13] PCI: j721e: Add TI
+> J721E PCIe driver).
+
+Got it, thanks for the clarification.
+
+       Arnd
