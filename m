@@ -2,104 +2,106 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DDCC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD1CC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2DC624679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:51:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576785080;
-	bh=qGUAWCiwHb/STgpCLUeJ2WcyD+ToMHH/3Aco9pmj3mE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DwhctL9OblyBG7vqogkhMUpzi/mMZyIK7XgEydqZ424aSRYxkDuJGzdpgxtWWwHu5
-	 18qf23Rw2ncv2RILiX1+3c5CUHtBudtHf8PzShviNnZunTc++S3RXA1cteoQ0IrLT4
-	 uFu3QzVRv8/LurOUH2WuRCmZUwa9S5IDV2lDnqR4=
+	by mail.kernel.org (Postfix) with ESMTP id AE694222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:51:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TNm6MsJf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfLSTvU (ORCPT
+        id S1727211AbfLSTvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:51:20 -0500
-Received: from foss.arm.com ([217.140.110.172]:43628 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726840AbfLSTvT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 14:51:19 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF12B1FB;
-        Thu, 19 Dec 2019 11:51:18 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C61C3F67D;
-        Thu, 19 Dec 2019 11:51:18 -0800 (PST)
-Date:   Thu, 19 Dec 2019 19:51:16 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH AUTOSEL 5.4 177/350] regulator: fixed: add off-on-delay
-Message-ID: <20191219195116.GI5047@sirena.org.uk>
-References: <20191210210735.9077-1-sashal@kernel.org>
- <20191210210735.9077-138-sashal@kernel.org>
- <20191211105934.GB3870@sirena.org.uk>
- <20191219194012.GP17708@sasha-vm>
+        Thu, 19 Dec 2019 14:51:48 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46059 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726936AbfLSTvr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 14:51:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576785106;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LdgAOpOdKbBtqr3OQnzNVIAPVkSgqeU/JucweY0YpHE=;
+        b=TNm6MsJfxRJb5oiyQhjUgCPKbD603ugqcrTrQXtSgFOi/aQlKBvZ2KqhM+Md5c6a0Tr9lV
+        hTldD4fIvYEAYMM0uuvst3QzYRMMcncoYkJixXNVKcCYmTOhMgvZeNBGEnaymcQoFn8523
+        0nxYFwAJAX5swiddgtchCQIQNDbvJcE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-189-UITzEVvuN-WPr6RurqVhDA-1; Thu, 19 Dec 2019 14:51:45 -0500
+X-MC-Unique: UITzEVvuN-WPr6RurqVhDA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AD524800053;
+        Thu, 19 Dec 2019 19:51:42 +0000 (UTC)
+Received: from gondolin (ovpn-117-134.ams2.redhat.com [10.36.117.134])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D3D226E73;
+        Thu, 19 Dec 2019 19:51:35 +0000 (UTC)
+Date:   Thu, 19 Dec 2019 20:51:32 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kurz <groug@kaod.org>
+Subject: Re: [PATCH v2 29/45] KVM: Introduce kvm_vcpu_destroy()
+Message-ID: <20191219205132.32d401f6.cohuck@redhat.com>
+In-Reply-To: <20191218215530.2280-30-sean.j.christopherson@intel.com>
+References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
+        <20191218215530.2280-30-sean.j.christopherson@intel.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4BlIp4fARb6QCoOq"
-Content-Disposition: inline
-In-Reply-To: <20191219194012.GP17708@sasha-vm>
-X-Cookie: I smell a RANCID CORN DOG!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 18 Dec 2019 13:55:14 -0800
+Sean Christopherson <sean.j.christopherson@intel.com> wrote:
 
---4BlIp4fARb6QCoOq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Add kvm_vcpu_destroy() and wire up all architectures to call the common
+> function instead of their arch specific implementation.  The common
+> destruction function will be used by future patches to move allocation
+> and initialization of vCPUs to common KVM code, i.e. to free resources
+> that are allocated by arch agnostic code.
+> 
+> No functional change intended.
+> 
+> Acked-by: Christoffer Dall <christoffer.dall@arm.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/mips/kvm/mips.c       | 2 +-
+>  arch/powerpc/kvm/powerpc.c | 2 +-
+>  arch/s390/kvm/kvm-s390.c   | 2 +-
+>  arch/x86/kvm/x86.c         | 2 +-
+>  include/linux/kvm_host.h   | 1 +
+>  virt/kvm/arm/arm.c         | 2 +-
+>  virt/kvm/kvm_main.c        | 6 ++++++
+>  7 files changed, 12 insertions(+), 5 deletions(-)
 
-On Thu, Dec 19, 2019 at 02:40:12PM -0500, Sasha Levin wrote:
-> On Wed, Dec 11, 2019 at 10:59:34AM +0000, Mark Brown wrote:
-> > On Tue, Dec 10, 2019 at 04:04:42PM -0500, Sasha Levin wrote:
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
-> > > Depends on board design, the gpio controlling regulator may
-> > > connects with a big capacitance. When need off, it takes some time
-> > > to let the regulator to be truly off. If not add enough delay, the
-> > > regulator might have always been on, so introduce off-on-delay to
-> > > handle such case.
-
-> > This is clearly adding a new feature and doesn't include the matching DT
-> > binding addition for that new feature.
-
-> This new "feature" fixes a bug, no? Should we take the DT bindings as
-> well?
-
-This new feature enables support for new hardware which would not
-otherwise be supported if someone also updates the DT for the system.
-Most features are on some level a bugfix for the lack of whatever the
-feature is, this is on a similar level to adding a new device driver
-(some device drivers are about as complex!).  It's a good change but it
-doesn't seem to fit into what stable is supposed to be doing.
-
-If you are backporting features that need new DT bindings then yes, you
-should be backporting the bindings as well but that's a pretty good
-indication that it's adding a feature.
-
---4BlIp4fARb6QCoOq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl371LQACgkQJNaLcl1U
-h9AEUQf/Vb0ua5Fshs7qlXdH3zFMjMfcDEAUQm7UkfQk3AOKUbm//XKgVbpKeGGq
-jtXGr++AJOzIpioXiiqQvOW5nhfCuvM4t1YWWUCrVb5qR/Z63siauE3AZMtpXfxZ
-P9LcoGG2OIaP+HEmOXYfkqEvd46Ou6za5aI3lSKJd1qOBFIDoWyIxwriIxeuyGLA
-vmpzTUJNS6Z3YamfS/FonHuSYN79wlEbdOI7MRhoYEQIEsdmrRiFqppdFxhFSlCB
-zmUy8PjNJZCHaa6+J8jWnVYVe35JDUxkjRWmhsi42IIoO8uQVdC577ia0rN7mJ5G
-tuwpFhs+zt9d1ExXF4VNQUaA5LMcqg==
-=+GqG
------END PGP SIGNATURE-----
-
---4BlIp4fARb6QCoOq--
