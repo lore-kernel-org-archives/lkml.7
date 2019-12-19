@@ -2,179 +2,780 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A46C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E82C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74517227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 069802465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:56:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="rjzblK2l"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="iRhK/sw5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbfLSIwg (ORCPT
+        id S1726692AbfLSI4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 03:52:36 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34616 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbfLSIwf (ORCPT
+        Thu, 19 Dec 2019 03:56:18 -0500
+Received: from mailout2.samsung.com ([203.254.224.25]:16159 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbfLSI4R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 03:52:35 -0500
-Received: by mail-wr1-f68.google.com with SMTP id t2so5117626wrr.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 00:52:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=b7sNkndET1NlEh2N0UyAthBbiI19S+B0pHi5JCbcHTQ=;
-        b=rjzblK2lsQlXxTRzNaOj3ogOuUoa358nX8gX31g2btuRgXWgyx7eaI9iCtbjKvkQ6x
-         MkFeC8yySpDDEPK1djgG5S9YTydbvqwfdgICptoYwY1wxpN6kz5WsLfbn7papPVPiPzX
-         bqqWs9ZxfADth97WGl59613v4p6dIC4j4Rwv4Ili3Q5NY0P1sOYJQW+oWz6xCEjt3OCn
-         MTcl/BEwf303itCnvirjIbU9sa0DOuKqWrgo/68MR8dGXmWLov3okSa2t8NahloGw3Ye
-         QhCDaIVD26SdQreUP2xjbwKjJX1F0KIBMDMkvf00ngH/PjzDLWGfZ9TcTMHFZFg0RegH
-         5qmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=b7sNkndET1NlEh2N0UyAthBbiI19S+B0pHi5JCbcHTQ=;
-        b=N5d3Z7dOZh5fbsbDHKPnI1npgjxt2wKchNK8+czxqztwqZkzQRVEaScAKbBb9QqRF+
-         sE02Qt23FAnDpTWtvobJWdwnxTyGOXf/OQKZLQGYwPhJFSrHYzhJIdVhx5D/tl5wsiF4
-         IkOLMDv2npk3X315Y0PPu5GOcDYYKIIwreXfBsy/R9/yGDuWV+OagpCPZzSY0whY4b7N
-         Z0sfQ057V3en31OqCB0e+aU4GFBv+vzOSjVN8hdY3PuAwvYvGFldampnYViAQyCjB6N7
-         1EP3XiIp0zgTHInydLQU3sexsNxsGpx8lcpgxKdU3mb7LkKKEV9tWTbjWGOJ8nfF9q6p
-         eyUg==
-X-Gm-Message-State: APjAAAW9o3hrwAvZyfhZn3fzEICLKoGhwen4QcPI90b9Tkf9qDmrmj1b
-        TPHXVBS75BqkANEejNa7OWmNAYDb7gySBg==
-X-Google-Smtp-Source: APXvYqzMVw+s/28TCYyOK81W6QcfsF+zSRsAYfWbnT96XMJhDwdHmpa2N6QdNfusyvcUukLYFMpbcw==
-X-Received: by 2002:a5d:4386:: with SMTP id i6mr8097611wrq.63.1576745552571;
-        Thu, 19 Dec 2019 00:52:32 -0800 (PST)
-Received: from [10.2.4.229] (lfbn-nic-1-505-157.w90-116.abo.wanadoo.fr. [90.116.92.157])
-        by smtp.gmail.com with ESMTPSA id m7sm5721709wrr.40.2019.12.19.00.52.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 19 Dec 2019 00:52:31 -0800 (PST)
-Subject: Re: [PATCH v3 02/10] drm/bridge: dw-hdmi: add max bpc connector
- property
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     a.hajda@samsung.com, jonas@kwiboo.se, jernej.skrabec@siol.net,
-        boris.brezillon@collabora.com, linux-amlogic@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20191218154637.17509-1-narmstrong@baylibre.com>
- <20191218154637.17509-3-narmstrong@baylibre.com>
- <20191218154942.GG4863@pendragon.ideasonboard.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <401ecf72-fca2-28bc-9b72-b3e63b380865@baylibre.com>
-Date:   Thu, 19 Dec 2019 09:52:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 19 Dec 2019 03:56:17 -0500
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191219085612epoutp02eda34091fb02ba62f6a4164c2ca58bf0~hue0uXYip1672216722epoutp02D
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 08:56:12 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191219085612epoutp02eda34091fb02ba62f6a4164c2ca58bf0~hue0uXYip1672216722epoutp02D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1576745772;
+        bh=zlEn52rFg8t/FAFW3jpMwy2BIAbfeGV5RMc2+SZ6ODw=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=iRhK/sw5O1V6KcAtApB3Mtq1sDY8vX5hvvFK3ommoRC2CdbQ8Z0qqsxAfBXFdFZwa
+         V32SLk6X6BOit533bJLpzuFX+McEMr16eDEWqOGwH4m+28bttFvd7GXP7VLgGtz/2D
+         VUVw4mxsVQpq4mF6V/egHOafKjfvbCh9vwXTTk0s=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20191219085612epcas1p30f5194683c1e97dafcb2d4b9ed1ba85d~hue0jI05B0661006610epcas1p3U;
+        Thu, 19 Dec 2019 08:56:12 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.158]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 47dm210GMJzMqYm3; Thu, 19 Dec
+        2019 08:56:09 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B7.D0.51241.82B3BFD5; Thu, 19 Dec 2019 17:56:08 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191219085608epcas1p19d65ee459ccd5a4801be63d4297a4b81~huewtq8hz2000420004epcas1p1N;
+        Thu, 19 Dec 2019 08:56:08 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191219085608epsmtrp13dece5a58f26f2b756bcb27ff3929206~huewsspqf0913909139epsmtrp1m;
+        Thu, 19 Dec 2019 08:56:08 +0000 (GMT)
+X-AuditID: b6c32a39-14bff7000001c829-77-5dfb3b287d55
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F5.1C.06569.82B3BFD5; Thu, 19 Dec 2019 17:56:08 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191219085608epsmtip275ae095672c6bd6181c6fdf08d295817~huewZrxxE2793927939epsmtip26;
+        Thu, 19 Dec 2019 08:56:08 +0000 (GMT)
+Subject: Re: [PATCH 1/2] ARM: dts: exynos: Move bus related OPPs to the
+ boards DTS
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Kamil Konieczny <k.konieczny@samsung.com>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <13e06691-feed-de06-cf7a-af628e73df95@samsung.com>
+Date:   Thu, 19 Dec 2019 18:02:41 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-In-Reply-To: <20191218154942.GG4863@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191219082927.11898-2-m.szyprowski@samsung.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDJsWRmVeSWpSXmKPExsWy7bCmrq6G9e9Yg7n/rCw2zljParHg0wxW
+        i/PnN7BbXN41h83ic+8RRosZ5/cxWaw9cpfdgd1j06pONo++LasYPT5vkgtgjsq2yUhNTEkt
+        UkjNS85PycxLt1XyDo53jjc1MzDUNbS0MFdSyEvMTbVVcvEJ0HXLzAFarqRQlphTChQKSCwu
+        VtK3synKLy1JVcjILy6xVUotSMkpsCzQK07MLS7NS9dLzs+1MjQwMDIFKkzIzvi+YzFLweyq
+        igXzXjE3MPaFdzFyckgImEhc37eYuYuRi0NIYAejxO5j3xkhnE+MEgvPd0JlvjFKTJr1jBGm
+        Zd28RqiqvYwS+/pXQFW9Z5TYOe8NM0iVsECIxKJJP9lAbBGBPkaJX9cUQIqYBXoYJZYe+8gK
+        kmAT0JLY/+IGWBG/gKLE1R+PgcZycPAK2En8aCwDCbMIqEp82X+YBcQWFQiTOLmtBewKXgFB
+        iZMzn4DFOYHKP1xZBxZnFhCXuPVkPhOELS+x/e0csOMkBO6zSTzce5UN4gUXiZWLFjFD2MIS
+        r45vYYewpSRe9rdB2dUSK08eYYNo7mCU2LL/AitEwlhi/9LJTCCHMgtoSqzfpQ8RVpTY+Xsu
+        1BF8Eu++9rCClEgI8Ep0tAlBlChLXH5wlwnClpRY3N7JNoFRaRaSd2YheWEWkhdmISxbwMiy
+        ilEstaA4Nz212LDAFDm6NzGCU6aW5Q7GY+d8DjEKcDAq8fD+cP0VK8SaWFZcmXuIUYKDWUmE
+        93bHz1gh3pTEyqrUovz4otKc1OJDjKbA0J7ILCWanA9M53kl8YamRsbGxhYmhmamhoZK4rwc
+        Py7GCgmkJ5akZqemFqQWwfQxcXBKNTBO/ijSNLlXoyhsxty577/FnU8Ue/Xu/BcBwcAwmSa1
+        NGfFX7ucn81Z8u1cJYfiBcHTzhuDJ0jwnb22YMv2wJeiqW0PHirxpmzp/rB9Sfb26OrGugn3
+        NWa1FnWZ6Xv6V0f71Dh6WH1jCzfnvHlHxyCPPZal4KXmsninj0nmOxiy3qgdOLuuKVOJpTgj
+        0VCLuag4EQDMEFrLrwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplkeLIzCtJLcpLzFFi42LZdlhJXlfD+neswcfN0hYbZ6xntVjwaQar
+        xfnzG9gtLu+aw2bxufcIo8WM8/uYLNYeucvuwO6xaVUnm0ffllWMHp83yQUwR3HZpKTmZJal
+        FunbJXBlfN+xmKVgdlXFgnmvmBsY+8K7GDk5JARMJNbNa2TsYuTiEBLYzSgxed1cRoiEpMS0
+        i0eZuxg5gGxhicOHiyFq3jJKLJg0iw2kRlggROLygmNgtohAH6PE9VsBIDYziD3jJxNEw1FG
+        iTenZ4MVsQloSex/cQPM5hdQlLj64zEjyAJeATuJH41lIGEWAVWJL/sPs4DYogJhEjuXPGYC
+        sXkFBCVOznwCFucEKv9wZR0jxC51iT/zLjFD2OISt57MZ4Kw5SW2v53DPIFReBaS9llIWmYh
+        aZmFpGUBI8sqRsnUguLc9NxiwwKjvNRyveLE3OLSvHS95PzcTYzgyNHS2sF44kT8IUYBDkYl
+        Ht4frr9ihVgTy4orcw8xSnAwK4nw3u74GSvEm5JYWZValB9fVJqTWnyIUZqDRUmcVz7/WKSQ
+        QHpiSWp2ampBahFMlomDU6qB0dOm/JZL7PEMH1YlL8mQl6kd989+6A2YL+N3I89AO0Zn/ZOM
+        Tyu542Tc82aZasV58mn3Pct23djwpJG/2XrDvaqNk5YaXPt0tHSjzH/+7Xe55crM1kib/N4T
+        kR/IZzs14mOIceDr5PzCQycU2Kp29z789mlJXpPIXeGgkwWV7Sb33wq/+ZuuxFKckWioxVxU
+        nAgAmcSqvZgCAAA=
+X-CMS-MailID: 20191219085608epcas1p19d65ee459ccd5a4801be63d4297a4b81
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191219082939eucas1p248ca8b95ede6f2704b83515f461f6927
+References: <20191219082927.11898-1-m.szyprowski@samsung.com>
+        <CGME20191219082939eucas1p248ca8b95ede6f2704b83515f461f6927@eucas1p2.samsung.com>
+        <20191219082927.11898-2-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/12/2019 16:49, Laurent Pinchart wrote:
-> Hi Neil and Jonas,
-> 
-> Thank you for the patch.
-> 
-> On Wed, Dec 18, 2019 at 04:46:29PM +0100, Neil Armstrong wrote:
->> From: Jonas Karlman <jonas@kwiboo.se>
->>
->> Add the max_bpc property to the dw-hdmi connector to prepare support
->> for 10, 12 & 16bit output support.
->>
->> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
->> index 6a0b4b3a6739..e7a0600f8cc5 100644
->> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
->> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
->> @@ -2368,6 +2368,10 @@ static int dw_hdmi_bridge_attach(struct drm_bridge *bridge)
->>  				    DRM_MODE_CONNECTOR_HDMIA,
->>  				    hdmi->ddc);
->>  
->> +	drm_atomic_helper_connector_reset(connector);
->> +
->> +	drm_connector_attach_max_bpc_property(connector, 8, 16);
->> +
-> 
-> I'm not asking you to rework this, but have you given any thought on how
-> we would be able to support this feature in a model where the bridge
-> wouldn't create a connector anymore (as done in the latest version of
-> the omapdrm series) ?
+Hi Marek,
 
-Not yet, but the plan is to have this serie merged (it's on the list for more than 1y now),
-then we'll switch to a separate connector.
-
+On 12/19/19 5:29 PM, Marek Szyprowski wrote:
+> Currently the only Exynos5422-based boards that support bus frequency
+> scaling are Hardkernel's Odroid XU3/XU4/HC1. Move the bus related OPPs to
+> the boards DTS, because those OPPs heavily depend on the clock topology
+> and top PLL rates, which are being configured by the board's bootloader.
 > 
->>  	if (hdmi->version >= 0x200a && hdmi->plat_data->use_drm_infoframe)
->>  		drm_object_attach_property(&connector->base,
->>  			connector->dev->mode_config.hdr_output_metadata_property, 0);
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos5420.dtsi             | 259 -----------------
+>  arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 261 +++++++++++++++++-
+>  2 files changed, 260 insertions(+), 260 deletions(-)
 > 
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> index f95567bc10e3..f66a2d1b3428 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -1092,7 +1092,6 @@
+>  			compatible = "samsung,exynos-bus";
+>  			clocks = <&clock CLK_DOUT_ACLK400_WCORE>;
+>  			clock-names = "bus";
+> -			operating-points-v2 = <&bus_wcore_opp_table>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -1100,7 +1099,6 @@
+>  			compatible = "samsung,exynos-bus";
+>  			clocks = <&clock CLK_DOUT_ACLK100_NOC>;
+>  			clock-names = "bus";
+> -			operating-points-v2 = <&bus_noc_opp_table>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -1108,7 +1106,6 @@
+>  			compatible = "samsung,exynos-bus";
+>  			clocks = <&clock CLK_DOUT_PCLK200_FSYS>;
+>  			clock-names = "bus";
+> -			operating-points-v2 = <&bus_fsys_apb_opp_table>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -1116,7 +1113,6 @@
+>  			compatible = "samsung,exynos-bus";
+>  			clocks = <&clock CLK_DOUT_ACLK200_FSYS>;
+>  			clock-names = "bus";
+> -			operating-points-v2 = <&bus_fsys_apb_opp_table>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -1124,7 +1120,6 @@
+>  			compatible = "samsung,exynos-bus";
+>  			clocks = <&clock CLK_DOUT_ACLK200_FSYS2>;
+>  			clock-names = "bus";
+> -			operating-points-v2 = <&bus_fsys2_opp_table>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -1132,7 +1127,6 @@
+>  			compatible = "samsung,exynos-bus";
+>  			clocks = <&clock CLK_DOUT_ACLK333>;
+>  			clock-names = "bus";
+> -			operating-points-v2 = <&bus_mfc_opp_table>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -1140,7 +1134,6 @@
+>  			compatible = "samsung,exynos-bus";
+>  			clocks = <&clock CLK_DOUT_ACLK266>;
+>  			clock-names = "bus";
+> -			operating-points-v2 = <&bus_gen_opp_table>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -1148,7 +1141,6 @@
+>  			compatible = "samsung,exynos-bus";
+>  			clocks = <&clock CLK_DOUT_ACLK66>;
+>  			clock-names = "bus";
+> -			operating-points-v2 = <&bus_peri_opp_table>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -1156,7 +1148,6 @@
+>  			compatible = "samsung,exynos-bus";
+>  			clocks = <&clock CLK_DOUT_ACLK333_G2D>;
+>  			clock-names = "bus";
+> -			operating-points-v2 = <&bus_g2d_opp_table>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -1164,7 +1155,6 @@
+>  			compatible = "samsung,exynos-bus";
+>  			clocks = <&clock CLK_DOUT_ACLK266_G2D>;
+>  			clock-names = "bus";
+> -			operating-points-v2 = <&bus_g2d_acp_opp_table>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -1172,7 +1162,6 @@
+>  			compatible = "samsung,exynos-bus";
+>  			clocks = <&clock CLK_DOUT_ACLK300_JPEG>;
+>  			clock-names = "bus";
+> -			operating-points-v2 = <&bus_jpeg_opp_table>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -1180,7 +1169,6 @@
+>  			compatible = "samsung,exynos-bus";
+>  			clocks = <&clock CLK_DOUT_ACLK166>;
+>  			clock-names = "bus";
+> -			operating-points-v2 = <&bus_jpeg_apb_opp_table>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -1188,7 +1176,6 @@
+>  			compatible = "samsung,exynos-bus";
+>  			clocks = <&clock CLK_DOUT_ACLK300_DISP1>;
+>  			clock-names = "bus";
+> -			operating-points-v2 = <&bus_disp1_fimd_opp_table>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -1196,7 +1183,6 @@
+>  			compatible = "samsung,exynos-bus";
+>  			clocks = <&clock CLK_DOUT_ACLK400_DISP1>;
+>  			clock-names = "bus";
+> -			operating-points-v2 = <&bus_disp1_opp_table>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -1204,7 +1190,6 @@
+>  			compatible = "samsung,exynos-bus";
+>  			clocks = <&clock CLK_DOUT_ACLK300_GSCL>;
+>  			clock-names = "bus";
+> -			operating-points-v2 = <&bus_gscl_opp_table>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -1212,252 +1197,8 @@
+>  			compatible = "samsung,exynos-bus";
+>  			clocks = <&clock CLK_DOUT_ACLK400_MSCL>;
+>  			clock-names = "bus";
+> -			operating-points-v2 = <&bus_mscl_opp_table>;
+>  			status = "disabled";
+>  		};
+> -
+> -		bus_wcore_opp_table: opp_table2 {
+> -			compatible = "operating-points-v2";
+> -
+> -			opp00 {
+> -				opp-hz = /bits/ 64 <84000000>;
+> -				opp-microvolt = <925000 925000 1400000>;
+> -			};
+> -			opp01 {
+> -				opp-hz = /bits/ 64 <111000000>;
+> -				opp-microvolt = <950000 950000 1400000>;
+> -			};
+> -			opp02 {
+> -				opp-hz = /bits/ 64 <222000000>;
+> -				opp-microvolt = <950000 950000 1400000>;
+> -			};
+> -			opp03 {
+> -				opp-hz = /bits/ 64 <333000000>;
+> -				opp-microvolt = <950000 950000 1400000>;
+> -			};
+> -			opp04 {
+> -				opp-hz = /bits/ 64 <400000000>;
+> -				opp-microvolt = <987500 987500 1400000>;
+> -			};
+> -		};
+> -
+> -		bus_noc_opp_table: opp_table3 {
+> -			compatible = "operating-points-v2";
+> -
+> -			opp00 {
+> -				opp-hz = /bits/ 64 <67000000>;
+> -			};
+> -			opp01 {
+> -				opp-hz = /bits/ 64 <75000000>;
+> -			};
+> -			opp02 {
+> -				opp-hz = /bits/ 64 <86000000>;
+> -			};
+> -			opp03 {
+> -				opp-hz = /bits/ 64 <100000000>;
+> -			};
+> -		};
+> -
+> -		bus_fsys_apb_opp_table: opp_table4 {
+> -			compatible = "operating-points-v2";
+> -			opp-shared;
+> -
+> -			opp00 {
+> -				opp-hz = /bits/ 64 <100000000>;
+> -			};
+> -			opp01 {
+> -				opp-hz = /bits/ 64 <200000000>;
+> -			};
+> -		};
+> -
+> -		bus_fsys2_opp_table: opp_table5 {
+> -			compatible = "operating-points-v2";
+> -
+> -			opp00 {
+> -				opp-hz = /bits/ 64 <75000000>;
+> -			};
+> -			opp01 {
+> -				opp-hz = /bits/ 64 <100000000>;
+> -			};
+> -			opp02 {
+> -				opp-hz = /bits/ 64 <150000000>;
+> -			};
+> -		};
+> -
+> -		bus_mfc_opp_table: opp_table6 {
+> -			compatible = "operating-points-v2";
+> -
+> -			opp00 {
+> -				opp-hz = /bits/ 64 <96000000>;
+> -			};
+> -			opp01 {
+> -				opp-hz = /bits/ 64 <111000000>;
+> -			};
+> -			opp02 {
+> -				opp-hz = /bits/ 64 <167000000>;
+> -			};
+> -			opp03 {
+> -				opp-hz = /bits/ 64 <222000000>;
+> -			};
+> -			opp04 {
+> -				opp-hz = /bits/ 64 <333000000>;
+> -			};
+> -		};
+> -
+> -		bus_gen_opp_table: opp_table7 {
+> -			compatible = "operating-points-v2";
+> -
+> -			opp00 {
+> -				opp-hz = /bits/ 64 <89000000>;
+> -			};
+> -			opp01 {
+> -				opp-hz = /bits/ 64 <133000000>;
+> -			};
+> -			opp02 {
+> -				opp-hz = /bits/ 64 <178000000>;
+> -			};
+> -			opp03 {
+> -				opp-hz = /bits/ 64 <267000000>;
+> -			};
+> -		};
+> -
+> -		bus_peri_opp_table: opp_table8 {
+> -			compatible = "operating-points-v2";
+> -
+> -			opp00 {
+> -				opp-hz = /bits/ 64 <67000000>;
+> -			};
+> -		};
+> -
+> -		bus_g2d_opp_table: opp_table9 {
+> -			compatible = "operating-points-v2";
+> -
+> -			opp00 {
+> -				opp-hz = /bits/ 64 <84000000>;
+> -			};
+> -			opp01 {
+> -				opp-hz = /bits/ 64 <167000000>;
+> -			};
+> -			opp02 {
+> -				opp-hz = /bits/ 64 <222000000>;
+> -			};
+> -			opp03 {
+> -				opp-hz = /bits/ 64 <300000000>;
+> -			};
+> -			opp04 {
+> -				opp-hz = /bits/ 64 <333000000>;
+> -			};
+> -		};
+> -
+> -		bus_g2d_acp_opp_table: opp_table10 {
+> -			compatible = "operating-points-v2";
+> -
+> -			opp00 {
+> -				opp-hz = /bits/ 64 <67000000>;
+> -			};
+> -			opp01 {
+> -				opp-hz = /bits/ 64 <133000000>;
+> -			};
+> -			opp02 {
+> -				opp-hz = /bits/ 64 <178000000>;
+> -			};
+> -			opp03 {
+> -				opp-hz = /bits/ 64 <267000000>;
+> -			};
+> -		};
+> -
+> -		bus_jpeg_opp_table: opp_table11 {
+> -			compatible = "operating-points-v2";
+> -
+> -			opp00 {
+> -				opp-hz = /bits/ 64 <75000000>;
+> -			};
+> -			opp01 {
+> -				opp-hz = /bits/ 64 <150000000>;
+> -			};
+> -			opp02 {
+> -				opp-hz = /bits/ 64 <200000000>;
+> -			};
+> -			opp03 {
+> -				opp-hz = /bits/ 64 <300000000>;
+> -			};
+> -		};
+> -
+> -		bus_jpeg_apb_opp_table: opp_table12 {
+> -			compatible = "operating-points-v2";
+> -
+> -			opp00 {
+> -				opp-hz = /bits/ 64 <84000000>;
+> -			};
+> -			opp01 {
+> -				opp-hz = /bits/ 64 <111000000>;
+> -			};
+> -			opp02 {
+> -				opp-hz = /bits/ 64 <134000000>;
+> -			};
+> -			opp03 {
+> -				opp-hz = /bits/ 64 <167000000>;
+> -			};
+> -		};
+> -
+> -		bus_disp1_fimd_opp_table: opp_table13 {
+> -			compatible = "operating-points-v2";
+> -
+> -			opp00 {
+> -				opp-hz = /bits/ 64 <120000000>;
+> -			};
+> -			opp01 {
+> -				opp-hz = /bits/ 64 <200000000>;
+> -			};
+> -		};
+> -
+> -		bus_disp1_opp_table: opp_table14 {
+> -			compatible = "operating-points-v2";
+> -
+> -			opp00 {
+> -				opp-hz = /bits/ 64 <120000000>;
+> -			};
+> -			opp01 {
+> -				opp-hz = /bits/ 64 <200000000>;
+> -			};
+> -			opp02 {
+> -				opp-hz = /bits/ 64 <300000000>;
+> -			};
+> -		};
+> -
+> -		bus_gscl_opp_table: opp_table15 {
+> -			compatible = "operating-points-v2";
+> -
+> -			opp00 {
+> -				opp-hz = /bits/ 64 <150000000>;
+> -			};
+> -			opp01 {
+> -				opp-hz = /bits/ 64 <200000000>;
+> -			};
+> -			opp02 {
+> -				opp-hz = /bits/ 64 <300000000>;
+> -			};
+> -		};
+> -
+> -		bus_mscl_opp_table: opp_table16 {
+> -			compatible = "operating-points-v2";
+> -
+> -			opp00 {
+> -				opp-hz = /bits/ 64 <84000000>;
+> -			};
+> -			opp01 {
+> -				opp-hz = /bits/ 64 <167000000>;
+> -			};
+> -			opp02 {
+> -				opp-hz = /bits/ 64 <222000000>;
+> -			};
+> -			opp03 {
+> -				opp-hz = /bits/ 64 <333000000>;
+> -			};
+> -			opp04 {
+> -				opp-hz = /bits/ 64 <400000000>;
+> -			};
+> -		};
+>  	};
+>  
+>  	thermal-zones {
+> diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+> index 80b0acfec547..663a38d53c9e 100644
+> --- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+> +++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+> @@ -35,7 +35,250 @@
+>  		};
+>  	};
+>  
+> -	dmc_opp_table: opp_table2 {
+> +	bus_wcore_opp_table: opp_table2 {
+> +		compatible = "operating-points-v2";
+> +
+> +		opp00 {
+> +			opp-hz = /bits/ 64 <84000000>;
+> +			opp-microvolt = <925000 925000 1400000>;
+> +		};
+> +		opp01 {
+> +			opp-hz = /bits/ 64 <111000000>;
+> +			opp-microvolt = <950000 950000 1400000>;
+> +		};
+> +		opp02 {
+> +			opp-hz = /bits/ 64 <222000000>;
+> +			opp-microvolt = <950000 950000 1400000>;
+> +		};
+> +		opp03 {
+> +			opp-hz = /bits/ 64 <333000000>;
+> +			opp-microvolt = <950000 950000 1400000>;
+> +		};
+> +		opp04 {
+> +			opp-hz = /bits/ 64 <400000000>;
+> +			opp-microvolt = <987500 987500 1400000>;
+> +		};
+> +	};
+> +
+> +	bus_noc_opp_table: opp_table3 {
+> +		compatible = "operating-points-v2";
+> +
+> +		opp00 {
+> +			opp-hz = /bits/ 64 <67000000>;
+> +		};
+> +		opp01 {
+> +			opp-hz = /bits/ 64 <75000000>;
+> +		};
+> +		opp02 {
+> +			opp-hz = /bits/ 64 <86000000>;
+> +		};
+> +		opp03 {
+> +			opp-hz = /bits/ 64 <100000000>;
+> +		};
+> +	};
+> +
+> +	bus_fsys_apb_opp_table: opp_table4 {
+> +		compatible = "operating-points-v2";
+> +		opp-shared;
+> +
+> +		opp00 {
+> +			opp-hz = /bits/ 64 <100000000>;
+> +		};
+> +		opp01 {
+> +			opp-hz = /bits/ 64 <200000000>;
+> +		};
+> +	};
+> +
+> +	bus_fsys2_opp_table: opp_table5 {
+> +		compatible = "operating-points-v2";
+> +
+> +		opp00 {
+> +			opp-hz = /bits/ 64 <75000000>;
+> +		};
+> +		opp01 {
+> +			opp-hz = /bits/ 64 <100000000>;
+> +		};
+> +		opp02 {
+> +			opp-hz = /bits/ 64 <150000000>;
+> +		};
+> +	};
+> +
+> +	bus_mfc_opp_table: opp_table6 {
+> +		compatible = "operating-points-v2";
+> +
+> +		opp00 {
+> +			opp-hz = /bits/ 64 <96000000>;
+> +		};
+> +		opp01 {
+> +			opp-hz = /bits/ 64 <111000000>;
+> +		};
+> +		opp02 {
+> +			opp-hz = /bits/ 64 <167000000>;
+> +		};
+> +		opp03 {
+> +			opp-hz = /bits/ 64 <222000000>;
+> +		};
+> +		opp04 {
+> +			opp-hz = /bits/ 64 <333000000>;
+> +		};
+> +	};
+> +
+> +	bus_gen_opp_table: opp_table7 {
+> +		compatible = "operating-points-v2";
+> +
+> +		opp00 {
+> +			opp-hz = /bits/ 64 <89000000>;
+> +		};
+> +		opp01 {
+> +			opp-hz = /bits/ 64 <133000000>;
+> +		};
+> +		opp02 {
+> +			opp-hz = /bits/ 64 <178000000>;
+> +		};
+> +		opp03 {
+> +			opp-hz = /bits/ 64 <267000000>;
+> +		};
+> +	};
+> +
+> +	bus_peri_opp_table: opp_table8 {
+> +		compatible = "operating-points-v2";
+> +
+> +		opp00 {
+> +			opp-hz = /bits/ 64 <67000000>;
+> +		};
+> +	};
+> +
+> +	bus_g2d_opp_table: opp_table9 {
+> +		compatible = "operating-points-v2";
+> +
+> +		opp00 {
+> +			opp-hz = /bits/ 64 <84000000>;
+> +		};
+> +		opp01 {
+> +			opp-hz = /bits/ 64 <167000000>;
+> +		};
+> +		opp02 {
+> +			opp-hz = /bits/ 64 <222000000>;
+> +		};
+> +		opp03 {
+> +			opp-hz = /bits/ 64 <300000000>;
+> +		};
+> +		opp04 {
+> +			opp-hz = /bits/ 64 <333000000>;
+> +		};
+> +	};
+> +
+> +	bus_g2d_acp_opp_table: opp_table10 {
+> +		compatible = "operating-points-v2";
+> +
+> +		opp00 {
+> +			opp-hz = /bits/ 64 <67000000>;
+> +		};
+> +		opp01 {
+> +			opp-hz = /bits/ 64 <133000000>;
+> +		};
+> +		opp02 {
+> +			opp-hz = /bits/ 64 <178000000>;
+> +		};
+> +		opp03 {
+> +			opp-hz = /bits/ 64 <267000000>;
+> +		};
+> +	};
+> +
+> +	bus_jpeg_opp_table: opp_table11 {
+> +		compatible = "operating-points-v2";
+> +
+> +		opp00 {
+> +			opp-hz = /bits/ 64 <75000000>;
+> +		};
+> +		opp01 {
+> +			opp-hz = /bits/ 64 <150000000>;
+> +		};
+> +		opp02 {
+> +			opp-hz = /bits/ 64 <200000000>;
+> +		};
+> +		opp03 {
+> +			opp-hz = /bits/ 64 <300000000>;
+> +		};
+> +	};
+> +
+> +	bus_jpeg_apb_opp_table: opp_table12 {
+> +		compatible = "operating-points-v2";
+> +
+> +		opp00 {
+> +			opp-hz = /bits/ 64 <84000000>;
+> +		};
+> +		opp01 {
+> +			opp-hz = /bits/ 64 <111000000>;
+> +		};
+> +		opp02 {
+> +			opp-hz = /bits/ 64 <134000000>;
+> +		};
+> +		opp03 {
+> +			opp-hz = /bits/ 64 <167000000>;
+> +		};
+> +	};
+> +
+> +	bus_disp1_fimd_opp_table: opp_table13 {
+> +		compatible = "operating-points-v2";
+> +
+> +		opp00 {
+> +			opp-hz = /bits/ 64 <120000000>;
+> +		};
+> +		opp01 {
+> +			opp-hz = /bits/ 64 <200000000>;
+> +		};
+> +	};
+> +
+> +	bus_disp1_opp_table: opp_table14 {
+> +		compatible = "operating-points-v2";
+> +
+> +		opp00 {
+> +			opp-hz = /bits/ 64 <120000000>;
+> +		};
+> +		opp01 {
+> +			opp-hz = /bits/ 64 <200000000>;
+> +		};
+> +		opp02 {
+> +			opp-hz = /bits/ 64 <300000000>;
+> +		};
+> +	};
+> +
+> +	bus_gscl_opp_table: opp_table15 {
+> +		compatible = "operating-points-v2";
+> +
+> +		opp00 {
+> +			opp-hz = /bits/ 64 <150000000>;
+> +		};
+> +		opp01 {
+> +			opp-hz = /bits/ 64 <200000000>;
+> +		};
+> +		opp02 {
+> +			opp-hz = /bits/ 64 <300000000>;
+> +		};
+> +	};
+> +
+> +	bus_mscl_opp_table: opp_table16 {
+> +		compatible = "operating-points-v2";
+> +
+> +		opp00 {
+> +			opp-hz = /bits/ 64 <84000000>;
+> +		};
+> +		opp01 {
+> +			opp-hz = /bits/ 64 <167000000>;
+> +		};
+> +		opp02 {
+> +			opp-hz = /bits/ 64 <222000000>;
+> +		};
+> +		opp03 {
+> +			opp-hz = /bits/ 64 <333000000>;
+> +		};
+> +		opp04 {
+> +			opp-hz = /bits/ 64 <400000000>;
+> +		};
+> +	};
+> +
+> +	dmc_opp_table: opp_table18 {
 
-Neil
+opp_table18 -> opp_table17?
+
+(snip)
+
+Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
