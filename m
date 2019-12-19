@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 247B7C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B27DFC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB1FA24680
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8072E24672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:40:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780843;
-	bh=GZAOSJxg7DLokFhjvcyrOOPlApx65qOsbBZ1nhENxEg=;
+	s=default; t=1576780846;
+	bh=chLQgsXuHkoQm2h4ueJb1deFdiqcUC5TRor73eu385Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DYUsOdyXZ0nc/zT8ZCzvIw2Whe1chMQtIxIPODdf/rruHr9myKTBdYfwVNkkF9vW9
-	 0omQptnFjFFBUwclxKOds4FmMtcYxjZ5Hl6QxAxuK+ScqOtt5McfXa6dlC6urOU6Dr
-	 fZXNtiD2zWXcfs6F6noU4x9PLRJyU9fmoD1E6PII=
+	b=IlsG/VBFmOr4rQpTbGx7g9bnKGeKC+0h2J31d0awfcqxVHxqtcIpjq4WH5HYrsyXq
+	 nDzrxFa3OxzMdt7GTfmafB1aO948GbHxrWTh7cnDTUgpKYNUlCCslvMp/g6EM9lSo2
+	 QUvUxl1jmpDQ66y9t7cSRmiEpfoPFsoH/PCsyhro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbfLSSkl (ORCPT
+        id S1727938AbfLSSkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:40:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59424 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:40:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728399AbfLSSkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:40:39 -0500
+        id S1728408AbfLSSkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:40:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12D0C222C2;
-        Thu, 19 Dec 2019 18:40:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 900E724679;
+        Thu, 19 Dec 2019 18:40:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780838;
-        bh=GZAOSJxg7DLokFhjvcyrOOPlApx65qOsbBZ1nhENxEg=;
+        s=default; t=1576780841;
+        bh=chLQgsXuHkoQm2h4ueJb1deFdiqcUC5TRor73eu385Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XlVJNjWrqo/coYJbcE8/wCBFksxEMykZZcACBhymualRyh8zStnXX32abEmYSQ2Gt
-         0I/8dxP20FHcQyj+NodF+Z/pYEt9/rGJ+6YHPnSAMw70KsB74rS3QQv+koz+nmoTlx
-         e7SVZUC5PpWCveGQRDcQsuWW8iLdI6xDBmcWe27g=
+        b=Qb0FUGYpyBu7cuee/009EDQt69lk55KQoFWKopImXYXTQAj0vSkfl+LqzPwXWKrHU
+         uwmDKo0+myDv8n6nY8q/azs7SUo4aqhIKAkjnc2ZAxX8JJNcrAQFciLi5HR6erna+5
+         jos7HciPKj81I8ww7CjvmjCsuDv7dEb+ePZP0qJM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen Jun <chenjun102@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>, Qian Cai <cai@lca.pw>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 138/162] mm/shmem.c: cast the type of unmap_start to u64
-Date:   Thu, 19 Dec 2019 19:34:06 +0100
-Message-Id: <20191219183216.165883210@linuxfoundation.org>
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Subject: [PATCH 4.4 139/162] blk-mq: make sure that line break can be printed
+Date:   Thu, 19 Dec 2019 19:34:07 +0100
+Message-Id: <20191219183216.228258091@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -62,73 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Jun <chenjun102@huawei.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-commit aa71ecd8d86500da6081a72da6b0b524007e0627 upstream.
+commit d2c9be89f8ebe7ebcc97676ac40f8dec1cf9b43a upstream.
 
-In 64bit system. sb->s_maxbytes of shmem filesystem is MAX_LFS_FILESIZE,
-which equal LLONG_MAX.
+8962842ca5ab ("blk-mq: avoid sysfs buffer overflow with too many CPU cores")
+avoids sysfs buffer overflow, and reserves one character for line break.
+However, the last snprintf() doesn't get correct 'size' parameter passed
+in, so fixed it.
 
-If offset > LLONG_MAX - PAGE_SIZE, offset + len < LLONG_MAX in
-shmem_fallocate, which will pass the checking in vfs_fallocate.
-
-	/* Check for wrap through zero too */
-	if (((offset + len) > inode->i_sb->s_maxbytes) || ((offset + len) < 0))
-		return -EFBIG;
-
-loff_t unmap_start = round_up(offset, PAGE_SIZE) in shmem_fallocate
-causes a overflow.
-
-Syzkaller reports a overflow problem in mm/shmem:
-
-  UBSAN: Undefined behaviour in mm/shmem.c:2014:10
-  signed integer overflow: '9223372036854775807 + 1' cannot be represented in type 'long long int'
-  CPU: 0 PID:17076 Comm: syz-executor0 Not tainted 4.1.46+ #1
-  Hardware name: linux, dummy-virt (DT)
-  Call trace:
-     dump_backtrace+0x0/0x2c8 arch/arm64/kernel/traps.c:100
-     show_stack+0x20/0x30 arch/arm64/kernel/traps.c:238
-     __dump_stack lib/dump_stack.c:15 [inline]
-     ubsan_epilogue+0x18/0x70 lib/ubsan.c:164
-     handle_overflow+0x158/0x1b0 lib/ubsan.c:195
-     shmem_fallocate+0x6d0/0x820 mm/shmem.c:2104
-     vfs_fallocate+0x238/0x428 fs/open.c:312
-     SYSC_fallocate fs/open.c:335 [inline]
-     SyS_fallocate+0x54/0xc8 fs/open.c:239
-
-The highest bit of unmap_start will be appended with sign bit 1
-(overflow) when calculate shmem_falloc.start:
-
-    shmem_falloc.start = unmap_start >> PAGE_SHIFT.
-
-Fix it by casting the type of unmap_start to u64, when right shifted.
-
-This bug is found in LTS Linux 4.1.  It also seems to exist in mainline.
-
-Link: http://lkml.kernel.org/r/1573867464-5107-1-git-send-email-chenjun102@huawei.com
-Signed-off-by: Chen Jun <chenjun102@huawei.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 8962842ca5ab ("blk-mq: avoid sysfs buffer overflow with too many CPU cores")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/shmem.c |    2 +-
+ block/blk-mq-sysfs.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -2092,7 +2092,7 @@ static long shmem_fallocate(struct file
- 		}
+--- a/block/blk-mq-sysfs.c
++++ b/block/blk-mq-sysfs.c
+@@ -248,7 +248,7 @@ static ssize_t blk_mq_hw_sysfs_cpus_show
+ 		pos += ret;
+ 	}
  
- 		shmem_falloc.waitq = &shmem_falloc_waitq;
--		shmem_falloc.start = unmap_start >> PAGE_SHIFT;
-+		shmem_falloc.start = (u64)unmap_start >> PAGE_SHIFT;
- 		shmem_falloc.next = (unmap_end + 1) >> PAGE_SHIFT;
- 		spin_lock(&inode->i_lock);
- 		inode->i_private = &shmem_falloc;
+-	ret = snprintf(pos + page, size - pos, "\n");
++	ret = snprintf(pos + page, size + 1 - pos, "\n");
+ 	return pos + ret;
+ }
+ 
 
 
