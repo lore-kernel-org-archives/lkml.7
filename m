@@ -2,76 +2,103 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C74C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A432C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 088E8222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:02:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CzwiUU2Z"
+	by mail.kernel.org (Postfix) with ESMTP id 62DCA206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:02:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576782157;
+	bh=YZq17bvqHn0RDecNk9gGgHoIlYXiGXKbQkcatew4jYk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2ExeJCXV0p7Ux7TWvxb3e0UtpOmG7XUfjzz40f96V9vbCj4sPQkJUKrviBrJarmzD
+	 jzZtOkC8q2aJ1l+UQcQYtx6QRV/K4rdnCD+3ylrsSsAZmO6LIUXWXkFx6DttXfMpC+
+	 MM/hqLvFJRmnicFqzmqHyE8B2nqHMRJoQh/rDaJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729010AbfLSTCa (ORCPT
+        id S1729775AbfLSStX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:02:30 -0500
-Received: from mail-qk1-f202.google.com ([209.85.222.202]:43012 "EHLO
-        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729793AbfLSSt3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:49:29 -0500
-Received: by mail-qk1-f202.google.com with SMTP id f22so1196549qka.10
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 10:49:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=QvAStn8TBlGPLBczTd25Iv1mJFk80FYATk+vMJdp0y4=;
-        b=CzwiUU2ZMCKcLRSu8XQzid0mJM78vsAjP8tuqj0HQuCCmaASulyFwyNDJlWGoosroj
-         1fO4Wsaycbb3TicTzXWqFtSTqPoPoQOm26MamsOm4rg+esbFEOwyWlE6IV14U8O5Wg10
-         PQyGxDvrxQ1EbcJD21HPrL6wSCYqbpnFGOIv0SBuo2QZgvuD4KpgNKTdgUZ3SnQ8Wd8r
-         /gRd8R7oRg1ZmgfxBWtzuhIJJmWzYKEha1r6aJeZho6rnSfDBRoDGH/WzXFSalQ0XCho
-         mHFn2l3155HhsgpwCqyyxeSM852qC9D3IOYqQO9YE8ob5K78vAlpDct/eM67LDYDBjRu
-         pjCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=QvAStn8TBlGPLBczTd25Iv1mJFk80FYATk+vMJdp0y4=;
-        b=Zb2bytNiC1WY4w8HHLQQQu60gpfxWaNVww9/vXrXdDOGok0U+ShwQePZo+HZJs8Vif
-         utP64Mcl6ygCpMA3mXGW9IgriknPOWTDCUJ5p8chelV7PhS+K4kLkGK/kG0xQ7nEfbyu
-         uCr4tMlSLnFVohDJgQaN2IYa8wa3BdDd04wCiN+RHOj/tq0N9QF+1NFGaKY85FS9jdXy
-         +rD5Bcl70n2W80FQY/gCbNnLa2xMqLnV7NGv5WwLTDeksjJ2GSU42N+/28HiaK8XKJVQ
-         sEUE5ZpPNMhgxcOQDDxKX3U1RlZ7meA9cIMygWwEHxfqLW/Ax1AU8c2f3KxzCk16uVyd
-         oIQA==
-X-Gm-Message-State: APjAAAVmecLkhqyNVuXPgRS14uQLNvzJ/0U/WUQmiY6Tb7eY8on0vXHl
-        hQ52i5r/DfVXvKHd2KNPkn6TbnzFU4+x+Nr2Zz8=
-X-Google-Smtp-Source: APXvYqxBHQnZ8CGo+nTRD2vQCKeO9gRgt8lGBRpC+p78kO93i8LDJrJzcWT7w8MJOaC0ABK7FXngW9PNnyvbNdWs5Do=
-X-Received: by 2002:ae9:e304:: with SMTP id v4mr9534945qkf.399.1576781368073;
- Thu, 19 Dec 2019 10:49:28 -0800 (PST)
-Date:   Thu, 19 Dec 2019 10:49:24 -0800
-In-Reply-To: <20190808123942.19592-1-dsterba@suse.com>
-Message-Id: <20191219184924.105306-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-References: <20190808123942.19592-1-dsterba@suse.com>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-Subject: Re: [PATCH RESEND] fs: use UB-safe check for signed addition overflow
- in remap_verify_area
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     dsterba@suse.com
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        viro@zeniv.linux.org.uk, natechancellor@gmail.com,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 19 Dec 2019 13:49:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42730 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729763AbfLSStU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:49:20 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4F352465E;
+        Thu, 19 Dec 2019 18:49:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576781359;
+        bh=YZq17bvqHn0RDecNk9gGgHoIlYXiGXKbQkcatew4jYk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wkECLASr+dvr9WAJUbMK6RoiDLia7099fT2m7zRrs7gvFLc7PFAcmrKpUI2hTzFt9
+         BJIeEmzoQi7vd0z1k9fpAdBRwfGVxvTHdJ33I+hbfo7hpil2plcd9l5kjNyMce4UfK
+         MHUVvTLDdjfBsrpReE1Yj9p7DKhT7ogawZtF/HMo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 4.9 189/199] CIFS: Respect O_SYNC and O_DIRECT flags during reconnect
+Date:   Thu, 19 Dec 2019 19:34:31 +0100
+Message-Id: <20191219183226.185939265@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
+References: <20191219183214.629503389@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yeah, looks like this kills two birds with one stone; both observed signed
-integer overflow and -Wmisleading-indentation.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+From: Pavel Shilovsky <pshilov@microsoft.com>
+
+commit 44805b0e62f15e90d233485420e1847133716bdc upstream.
+
+Currently the client translates O_SYNC and O_DIRECT flags
+into corresponding SMB create options when openning a file.
+The problem is that on reconnect when the file is being
+re-opened the client doesn't set those flags and it causes
+a server to reject re-open requests because create options
+don't match. The latter means that any subsequent system
+call against that open file fail until a share is re-mounted.
+
+Fix this by properly setting SMB create options when
+re-openning files after reconnects.
+
+Fixes: 1013e760d10e6: ("SMB3: Don't ignore O_SYNC/O_DSYNC and O_DIRECT flags")
+Cc: Stable <stable@vger.kernel.org>
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/cifs/file.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
+
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -722,6 +722,13 @@ cifs_reopen_file(struct cifsFileInfo *cf
+ 	if (backup_cred(cifs_sb))
+ 		create_options |= CREATE_OPEN_BACKUP_INTENT;
+ 
++	/* O_SYNC also has bit for O_DSYNC so following check picks up either */
++	if (cfile->f_flags & O_SYNC)
++		create_options |= CREATE_WRITE_THROUGH;
++
++	if (cfile->f_flags & O_DIRECT)
++		create_options |= CREATE_NO_BUFFER;
++
+ 	if (server->ops->get_lease_key)
+ 		server->ops->get_lease_key(inode, &cfile->fid);
+ 
+
+
