@@ -2,308 +2,273 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 410FBC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AE1C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5ED9206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:54:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="dLEl3UPj"
+	by mail.kernel.org (Postfix) with ESMTP id DFD8424672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:54:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfLSJyo (ORCPT
+        id S1726935AbfLSJy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 04:54:44 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41925 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726742AbfLSJyn (ORCPT
+        Thu, 19 Dec 2019 04:54:56 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34888 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbfLSJyz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 04:54:43 -0500
-Received: by mail-ot1-f66.google.com with SMTP id r27so6530168otc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 01:54:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0WmVu4IgtlTUPIDTr6BuAgCj4OJ6/8JQ0XMLcherZ8w=;
-        b=dLEl3UPj/egc82qia3GmcXdXUheNN1g7oyA70vrPbp7ndmfYzCQB+6RYiMKjTjJsSV
-         GqXFiVh2m+XYYojPGs1qdmjVzRUHgW5KWKlUl0oMoSeazNFIJ7XhjFS2v5iBGMxD0Avl
-         wiAF16AyHND/6ugwQCXiI8izcVbAOGUNF8EC4=
+        Thu, 19 Dec 2019 04:54:55 -0500
+Received: by mail-lj1-f194.google.com with SMTP id j6so5525584lja.2;
+        Thu, 19 Dec 2019 01:54:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0WmVu4IgtlTUPIDTr6BuAgCj4OJ6/8JQ0XMLcherZ8w=;
-        b=M3Lut2V+QmPYBB4C3IW9kRHggQGcTLDCw+61gliIYv61T8YZp+82CX2dYvGKqIWKyL
-         e9eO+IekhG/HOSRwIp2IVlJvjKPKmL0AJePojTK4htyaDIG4xpUyi32Wp2IRR2wYgZ4t
-         +OYffJeTLXdDXDclgNj8jqj4rTYhOkPzzoKYPCZk847476en6WThFWr8MeENhBK4fqQA
-         TEeE+2Mxae07On/lnCEtzGXKiKSeSl4l4R4l2ZpTpsVIsnmFo4un/meI+e1JyRp0ds5Y
-         eZLPuvzRmKi0OZuIGPFVLQxM7X5FTMyiFpcxLj8vzrb/VmfW6J66azb4EfXo7cuLtRMt
-         K7xQ==
-X-Gm-Message-State: APjAAAUBiSuL1fbL4wST7JKKIiUC2fT4A+qJLHI2UCuTkL/0wEBfLa95
-        78x9aHID5hkzsRjVy3EoIhkK/RNdxB1PMpHKVaDlFA==
-X-Google-Smtp-Source: APXvYqwpF+JmqQuuWIu5qxZwkxKhECtZxRuDFYOTuRUJ1SYwpacyQ6Erxna5CodtXbxTmADy1SSXmN2K02DmVNgj5ko=
-X-Received: by 2002:a9d:7510:: with SMTP id r16mr7791826otk.303.1576749282374;
- Thu, 19 Dec 2019 01:54:42 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8nG82QgNA/iA8xDzN8GA+mmnvkdU+1Uef25gTrE9HvI=;
+        b=sjjwQ5PeVOqlt4bnS1yOHEYUzZp+PdBpbQ2Hq9c7SQRHnp0pZEYDlMrZhfJjN/PTtW
+         F3zqHrry5B7xjwhfs+cC97gipCATk9sFzGCGBtM9mDC4KXQwYpaH9AENP8B2A/5Jmhs+
+         VEkgh4hYsLb1aNtc3E6vmT1eFsGmK4fhXwLZREdlbWGXztxvplH1tYbm+7/EWvAYnvpR
+         du2Mpv0SVUd2rV3Dv6ZVvCsNR2smT8sy/CU/xIwJBXeB6J0SXTJsUg/VD4mpxd9AHuzq
+         AfEzell57oarQCjUTHpu5ZdgWfghv7B0Sv8Vkv0KFtAgkzNO52NhjHvf5ug/KAkB+/YZ
+         ZXng==
+X-Gm-Message-State: APjAAAXVzs0CMwxZgPdDR0VDbyEtIMhAIqnPqWMAVxdYMA8lxnFpjah4
+        MKu5STqUG8AEA6mAFCmbL68=
+X-Google-Smtp-Source: APXvYqwHQC+n6W9UYRnAO1Cnt7jKqNA3I9ZhYJIpamdmycW4OX7fhuXEjuF4VS2jiinJ6RfCshrzPQ==
+X-Received: by 2002:a2e:9a01:: with SMTP id o1mr5057447lji.247.1576749291661;
+        Thu, 19 Dec 2019 01:54:51 -0800 (PST)
+Received: from localhost.localdomain (dyt4gctb359myxd0pkwmt-4.rev.dnainternet.fi. [2001:14bb:430:5140:37cf:5409:8fcc:4495])
+        by smtp.gmail.com with ESMTPSA id i17sm728068ljd.34.2019.12.19.01.54.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 01:54:51 -0800 (PST)
+Date:   Thu, 19 Dec 2019 11:54:44 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [PATCH v7 12/12] led: bd71828: Support LED outputs on ROHM BD71828
+ PMIC
+Message-ID: <c95eb856c8e05a196551179c2416455c022eb3ea.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-References: <07899bd5-e9a5-cff0-395f-b4fb3f0f7f6c@huawei.com>
- <f867543cf5d0fc3fdd0534749326411bcfc5e363.camel@collabora.com>
- <c2e5f5a5-5839-42a9-2140-903e99e166db@huawei.com> <fde72f73-d678-2b77-3950-d465f0afe904@huawei.com>
-In-Reply-To: <fde72f73-d678-2b77-3950-d465f0afe904@huawei.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Thu, 19 Dec 2019 10:54:31 +0100
-Message-ID: <CAKMK7uFr03euoB6rY8z9zmRyznP41vwfdaKApZ_0HfYZT4Hq_w@mail.gmail.com>
-Subject: Re: Warnings in DRM code when removing/unbinding a driver
-To:     John Garry <john.garry@huawei.com>
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        "kongxinwei (A)" <kong.kongxinwei@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Linuxarm <linuxarm@huawei.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Gerd Hoffmann <kraxel@redhat.com>, dbueso@suse.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 7:08 PM John Garry <john.garry@huawei.com> wrote:
->
-> +
->
-> So the v5.4 kernel does not have this issue.
->
-> I have bisected the initial occurrence to:
->
-> commit 37a48adfba6cf6e87df9ba8b75ab85d514ed86d8
-> Author: Thomas Zimmermann <tzimmermann@suse.de>
-> Date:   Fri Sep 6 14:20:53 2019 +0200
->
->      drm/vram: Add kmap ref-counting to GEM VRAM objects
->
->      The kmap and kunmap operations of GEM VRAM buffers can now be called
->      in interleaving pairs. The first call to drm_gem_vram_kmap() maps the
->      buffer's memory to kernel address space and the final call to
->      drm_gem_vram_kunmap() unmaps the memory. Intermediate calls to these
->      functions increment or decrement a reference counter.
->
-> So this either exposes or creates the issue.
+ROHM BD71828 power management IC has two LED outputs for charge status
+and button pressing indications. The LED outputs can also be forced
+by SW so add driver allowing to use these LEDs for other indications
+as well.
 
-Yeah that's just shooting the messenger. Like I said, for most drivers
-you can pretty much assume that their unload sequence has been broken
-since forever. It's not often tested, and especially the hotunbind
-from a device (as opposed to driver unload) stuff wasn't even possible
-to get right until just recently.
--Daniel
+Leds are controlled by SW using 'Force ON' bits. Please note the
+constrains mentioned in data-sheet:
+    1. If one LED is forced ON - then also the other LED is forced.
+            => You can't use SW control to force ON one LED and allow HW
+               to control the other.
+    2. You can't force both LEDs OFF. If the FORCE bit for both LED's is
+       zero, then LEDs are controlled by HW and indicate button/charger
+       states as explained in data-sheet.
 
->
-> John
->
-> >> On Mon, 2019-12-16 at 17:23 +0000, John Garry wrote:
-> >>> Hi all,
-> >>>
-> >>> Enabling CONFIG_DEBUG_TEST_DRIVER_REMOVE causes many warns on a system
-> >>> with the HIBMC hw:
-> >>>
-> >>> [   27.788806] WARNING: CPU: 24 PID: 1 at
-> >>> drivers/gpu/drm/drm_gem_vram_helper.c:564
-> >>> bo_driver_move_notify+0x8c/0x98
-> >>
-> >> A total shot in the dark. This might make no sense,
-> >> but it's worth a try:
-> >
-> > Thanks for the suggestion, but still the same splat.
-> >
-> > I haven't had a chance to analyze the problem myself. But perhaps we
-> > should just change over the device-managed interface, as Daniel mentioned.
-> >
-> >>
-> >> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> >> b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> >> index 2fd4ca91a62d..69bb0e29da88 100644
-> >> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> >> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> >> @@ -247,9 +247,8 @@ static int hibmc_unload(struct drm_device *dev)
-> >>   {
-> >>          struct hibmc_drm_private *priv = dev->dev_private;
-> >> -       hibmc_fbdev_fini(priv);
-> >> -
-> >>          drm_atomic_helper_shutdown(dev);
-> >> +       hibmc_fbdev_fini(priv);
-> >>          if (dev->irq_enabled)
-> >>                  drm_irq_uninstall(dev);
-> >>
-> >> Hope it helps,
-> >> Ezequiel
-> >>
-> >
-> > Thanks,
-> > John
-> >
-> > [EOM]
-> >
-> >>> [   27.798969] Modules linked in:
-> >>> [   27.802018] CPU: 24 PID: 1 Comm: swapper/0 Tainted: G    B
-> >>>    5.5.0-rc1-dirty #565
-> >>> [   27.810358] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI
-> >>> RC0 - V1.16.01 03/15/2019
-> >>> [   27.818872] pstate: 20c00009 (nzCv daif +PAN +UAO)
-> >>> [   27.823654] pc : bo_driver_move_notify+0x8c/0x98
-> >>> [   27.828262] lr : bo_driver_move_notify+0x40/0x98
-> >>> [   27.832868] sp : ffff00236f0677e0
-> >>> [   27.836173] x29: ffff00236f0677e0 x28: ffffa0001454e5e0
-> >>> [   27.841476] x27: ffff002366e52128 x26: ffffa000149e67b0
-> >>> [   27.846779] x25: ffff002366e523e0 x24: ffff002336936120
-> >>> [   27.852082] x23: ffff0023346f4010 x22: ffff002336936128
-> >>> [   27.857385] x21: ffffa000149c15c0 x20: ffff0023369361f8
-> >>> [   27.862687] x19: ffff002336936000 x18: 0000000000001258
-> >>> [   27.867989] x17: 0000000000001190 x16: 00000000000011d0
-> >>> [   27.873292] x15: 0000000000001348 x14: ffffa00012d68190
-> >>> [   27.878595] x13: 0000000000000006 x12: 1ffff40003241f91
-> >>> [   27.883897] x11: ffff940003241f91 x10: dfffa00000000000
-> >>> [   27.889200] x9 : ffff940003241f92 x8 : 0000000000000001
-> >>> [   27.894502] x7 : ffffa0001920fc88 x6 : ffff940003241f92
-> >>> [   27.899804] x5 : ffff940003241f92 x4 : ffff0023369363a0
-> >>> [   27.905107] x3 : ffffa00010c104b8 x2 : dfffa00000000000
-> >>> [   27.910409] x1 : 0000000000000003 x0 : 0000000000000001
-> >>> [   27.915712] Call trace:
-> >>> [   27.918151]  bo_driver_move_notify+0x8c/0x98
-> >>> [   27.922412]  ttm_bo_cleanup_memtype_use+0x54/0x100
-> >>> [   27.927194]  ttm_bo_put+0x3a0/0x5d0
-> >>> [   27.930673]  drm_gem_vram_object_free+0xc/0x18
-> >>> [   27.935109]  drm_gem_object_free+0x34/0xd0
-> >>> [   27.939196]  drm_gem_object_put_unlocked+0xc8/0xf0
-> >>> [   27.943978]  hibmc_user_framebuffer_destroy+0x20/0x40
-> >>> [   27.949020]  drm_framebuffer_free+0x48/0x58
-> >>> [   27.953194]  drm_mode_object_put.part.1+0x90/0xe8
-> >>> [   27.957889]  drm_mode_object_put+0x28/0x38
-> >>> [   27.961976]  hibmc_fbdev_fini+0x54/0x78
-> >>> [   27.965802]  hibmc_unload+0x2c/0xd0
-> >>> [   27.969281]  hibmc_pci_remove+0x2c/0x40
-> >>> [   27.973109]  pci_device_remove+0x6c/0x140
-> >>> [   27.977110]  really_probe+0x174/0x548
-> >>> [   27.980763]  driver_probe_device+0x7c/0x148
-> >>> [   27.984936]  device_driver_attach+0x94/0xa0
-> >>> [   27.989109]  __driver_attach+0xa8/0x110
-> >>> [   27.992935]  bus_for_each_dev+0xe8/0x158
-> >>> [   27.996849]  driver_attach+0x30/0x40
-> >>> [   28.000415]  bus_add_driver+0x234/0x2f0
-> >>> [   28.004241]  driver_register+0xbc/0x1d0
-> >>> [   28.008067]  __pci_register_driver+0xbc/0xd0
-> >>> [   28.012329]  hibmc_pci_driver_init+0x20/0x28
-> >>> [   28.016590]  do_one_initcall+0xb4/0x254
-> >>> [   28.020417]  kernel_init_freeable+0x27c/0x328
-> >>> [   28.024765]  kernel_init+0x10/0x118
-> >>> [   28.028245]  ret_from_fork+0x10/0x18
-> >>> [   28.031813] ---[ end trace 35a83b71b657878d ]---
-> >>> [   28.036503] ------------[ cut here ]------------
-> >>> [   28.041115] WARNING: CPU: 24 PID: 1 at
-> >>> drivers/gpu/drm/drm_gem_vram_helper.c:40
-> >>> ttm_buffer_object_destroy+0x4c/0x80
-> >>> [   28.051537] Modules linked in:
-> >>> [   28.054585] CPU: 24 PID: 1 Comm: swapper/0 Tainted: G    B   W
-> >>>    5.5.0-rc1-dirty #565
-> >>> [   28.062924] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI
-> >>> RC0 - V1.16.01 03/15/2019
-> >>>
-> >>> [snip]
-> >>>
-> >>> Indeed, simply unbinding the device from the driver causes the same sort
-> >>> of issue:
-> >>>
-> >>> root@(none)$ cd ./bus/pci/drivers/hibmc-drm/
-> >>> root@(none)$ ls
-> >>> 0000:05:00.0  bind          new_id        remove_id     uevent
-> >>> unbind
-> >>> root@(none)$ echo 0000\:05\:00.0 > unbind
-> >>> [  116.074352] ------------[ cut here ]------------
-> >>> [  116.078978] WARNING: CPU: 17 PID: 1178 at
-> >>> drivers/gpu/drm/drm_gem_vram_helper.c:40
-> >>> ttm_buffer_object_destroy+0x4c/0x80
-> >>> [  116.089661] Modules linked in:
-> >>> [  116.092711] CPU: 17 PID: 1178 Comm: sh Tainted: G    B   W
-> >>> 5.5.0-rc1-dirty #565
-> >>> [  116.100704] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI
-> >>> RC0 - V1.16.01 03/15/2019
-> >>> [  116.109218] pstate: 20400009 (nzCv daif +PAN -UAO)
-> >>> [  116.114001] pc : ttm_buffer_object_destroy+0x4c/0x80
-> >>> [  116.118956] lr : ttm_buffer_object_destroy+0x18/0x80
-> >>> [  116.123910] sp : ffff0022e6cef8e0
-> >>> [  116.127215] x29: ffff0022e6cef8e0 x28: ffff00231b1fb000
-> >>> [  116.132519] x27: 0000000000000000 x26: ffff00231b1fb000
-> >>> [  116.137821] x25: ffff0022e6cefdc0 x24: 0000000000002480
-> >>> [  116.143124] x23: ffff0023682b6ab0 x22: ffff0023682b6800
-> >>> [  116.148427] x21: ffff0023682b6800 x20: 0000000000000000
-> >>> [  116.153730] x19: ffff0023682b6800 x18: 0000000000000000
-> >>> [  116.159032] x17: 000000000000000000000000001
-> >>> [  116.185545] x7 : ffff0023682b6b07 x6 : ffff80046d056d61
-> >>> [  116.190848] x5 : ffff80046d056d61 x4 : ffff0023682b6ba0
-> >>> [  116.196151] x3 : ffffa00010197338 x2 : dfffa00000000000
-> >>> [  116.201453] x1 : 0000000000000003 x0 : 0000000000000001
-> >>> [  116.206756] Call trace:
-> >>> [  116.209195]  ttm_buffer_object_destroy+0x4c/0x80
-> >>> [  116.213803]  ttm_bo_release_list+0x184/0x220
-> >>> [  116.218064]  ttm_bo_put+0x410/0x5d0
-> >>> [  116.221544]  drm_gem_vram_object_free+0xc/0x18
-> >>> [  116.225979]  drm_gem_object_free+0x34/0xd0
-> >>> [  116.230066]  drm_gem_object_put_unlocked+0xc8/0xf0
-> >>> [  116.234848]  hibmc_user_framebuffer_destroy+0x20/0x40
-> >>> [  116.239890]  drm_framebuffer_free+0x48/0x58
-> >>> [  116.244064]  drm_mode_object_put.part.1+0x90/0xe8
-> >>> [  116.248759]  drm_mode_object_put+0x28/0x38
-> >>> [  116.252846]  hibmc_fbdev_fini+0x54/0x78
-> >>> [  116.256672]  hibmc_unload+0x2c/0xd0
-> >>> [  116.260151]  hibmc_pci_remove+0x2c/0x40
-> >>> [  116.263979]  pci_device_remove+0x6c/0x140
-> >>> [  116.267980]  device_release_driver_internal+0x134/0x250
-> >>> [  116.273196]  device_driver_detach+0x28/0x38
-> >>> [  116.277369]  unbind_store+0xfc/0x150
-> >>> [  116.280934]  drv_attr_store+0x48/0x60
-> >>> [  116.284589]  sysfs_kf_write+0x80/0xb0
-> >>> [  116.288241]  kernfs_fop_write+0x1d4/0x320
-> >>> [  116.292243]  __vfs_write+0x54/0x98
-> >>> [  116.295635]  vfs_write+0xe8/0x270
-> >>> [  116.298940]  ksys_write+0xc8/0x180
-> >>> [  116.302333]  __arm64_sys_write+0x40/0x50
-> >>> [  116.306248]  el0_svc_common.constprop.0+0xa4/0x1f8
-> >>> [  116.311029]  el0_svc_handler+0x34/0xb0
-> >>> [  116.314770]  el0_sync_handler+0x10c/0x1c8
-> >>> [  116.318769]  el0_sync+0x140/0x180
-> >>> [  116.322074] ---[ end trace e60e43d0e316b5c8 ]---
-> >>> [  116.326868] ------------[ cut here ]------------
-> >>>
-> >>>
-> >>> dmesg and .config is here:
-> >>> https://pastebin.com/4P5yaZBS
-> >>>
-> >>> I'm not sure if this is a HIBMC driver issue or issue with the
-> >>> framework.
-> >>>
-> >>> john
-> >>>
-> >>>
-> >>> _______________________________________________
-> >>> dri-devel mailing list
-> >>> dri-devel@lists.freedesktop.org
-> >>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> >>
-> >>
-> >
-> > _______________________________________________
-> > Linuxarm mailing list
-> > Linuxarm@huawei.com
-> > http://hulk.huawei.com/mailman/listinfo/linuxarm
-> > .
->
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+
+No changes since v6
+
+ drivers/leds/Kconfig        |  10 +++
+ drivers/leds/Makefile       |   1 +
+ drivers/leds/leds-bd71828.c | 118 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 129 insertions(+)
+ create mode 100644 drivers/leds/leds-bd71828.c
+
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index 4b68520ac251..db408e03e296 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -545,6 +545,16 @@ config LEDS_BD2802
+ 	  This option enables support for BD2802GU RGB LED driver chips
+ 	  accessed via the I2C bus.
+ 
++config LEDS_BD71828
++	tristate "LED driver for LEDS on ROHM BD71828 PMIC"
++	depends on LEDS_CLASS
++	depends on MFD_ROHM_BD71828
++	help
++	  This option enables support for LED outputs located on ROHM
++	  BD71828 power management IC. ROHM BD71828 has two led output pins
++	  which can be left to indicate HW states or controlled by SW. Say
++	  yes here if you want to enable SW control for these LEDs.
++
+ config LEDS_INTEL_SS4200
+ 	tristate "LED driver for Intel NAS SS4200 series"
+ 	depends on LEDS_CLASS
+diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+index 2da39e896ce8..a5164acfaf51 100644
+--- a/drivers/leds/Makefile
++++ b/drivers/leds/Makefile
+@@ -15,6 +15,7 @@ obj-$(CONFIG_LEDS_AN30259A)		+= leds-an30259a.o
+ obj-$(CONFIG_LEDS_BCM6328)		+= leds-bcm6328.o
+ obj-$(CONFIG_LEDS_BCM6358)		+= leds-bcm6358.o
+ obj-$(CONFIG_LEDS_BD2802)		+= leds-bd2802.o
++obj-$(CONFIG_LEDS_BD71828)		+= leds-bd71828.o
+ obj-$(CONFIG_LEDS_CPCAP)		+= leds-cpcap.o
+ obj-$(CONFIG_LEDS_LOCOMO)		+= leds-locomo.o
+ obj-$(CONFIG_LEDS_LM3530)		+= leds-lm3530.o
+diff --git a/drivers/leds/leds-bd71828.c b/drivers/leds/leds-bd71828.c
+new file mode 100644
+index 000000000000..a02c2ac4a70b
+--- /dev/null
++++ b/drivers/leds/leds-bd71828.c
+@@ -0,0 +1,118 @@
++// SPDX-License-Identifier: GPL-2.0-only
++// Copyright (C) 2019 ROHM Semiconductors
++
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/kernel.h>
++#include <linux/leds.h>
++#include <linux/mfd/rohm-bd71828.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++
++#define BD71828_LED_TO_DATA(l) ((l)->id == ID_GREEN_LED ? \
++	container_of((l), struct bd71828_leds, green) : \
++	container_of((l), struct bd71828_leds, amber))
++
++/* Names for led identification - these match the data sheet names */
++enum {
++	ID_GREEN_LED,
++	ID_AMBER_LED,
++	ID_NMBR_OF,
++};
++
++struct bd71828_led {
++	struct led_init_data init_data;
++	int id;
++	struct led_classdev l;
++	u8 force_mask;
++};
++
++struct bd71828_leds {
++	struct rohm_regmap_dev *bd71828;
++	struct bd71828_led green;
++	struct bd71828_led amber;
++};
++
++static int bd71828_led_brightness_set(struct led_classdev *led_cdev,
++				      enum led_brightness value)
++{
++	struct bd71828_led *l = container_of(led_cdev, struct bd71828_led, l);
++	struct bd71828_leds *data;
++	unsigned int val = BD71828_LED_OFF;
++
++	data = BD71828_LED_TO_DATA(l);
++	if (value != LED_OFF)
++		val = BD71828_LED_ON;
++
++	return regmap_update_bits(data->bd71828->regmap, BD71828_REG_LED_CTRL,
++			    l->force_mask, val);
++}
++
++static int bd71828_led_probe(struct platform_device *pdev)
++{
++	struct rohm_regmap_dev *bd71828;
++	struct bd71828_leds *l;
++	struct bd71828_led *g, *a;
++	int ret;
++
++	bd71828 = dev_get_drvdata(pdev->dev.parent);
++	l = devm_kzalloc(&pdev->dev, sizeof(*l), GFP_KERNEL);
++	if (!l)
++		return -ENOMEM;
++	l->bd71828 = bd71828;
++	a = &l->amber;
++	g = &l->green;
++
++	/* Fill in details for 'AMBLED' */
++	a->init_data.match_property.name = "rohm,led-compatible";
++	a->init_data.match_property.raw_val = "bd71828-ambled";
++	a->init_data.match_property.size = strlen("bd71828-ambled");
++	a->id = ID_AMBER_LED;
++	a->force_mask = BD71828_MASK_LED_AMBER;
++
++	/* Fill in details for 'GRNLED' */
++	g->init_data.match_property.name = "rohm,led-compatible";
++	g->init_data.match_property.raw_val = "bd71828-grnled";
++	g->init_data.match_property.size = strlen("bd71828-grnled");
++	g->id = ID_GREEN_LED;
++	g->force_mask = BD71828_MASK_LED_GREEN;
++
++	a->l.brightness_set_blocking = bd71828_led_brightness_set;
++	g->l.brightness_set_blocking = bd71828_led_brightness_set;
++
++	ret = devm_led_classdev_register_ext(&pdev->dev, &g->l, &g->init_data);
++	if (ret)
++		return ret;
++
++	return devm_led_classdev_register_ext(&pdev->dev, &a->l, &a->init_data);
++}
++
++/*
++ * Device is instantiated through parent MFD device and device matching is done
++ * through platform_device_id.
++ *
++ * However, the *module* matching will be done trough DT aliases. This requires
++ * of_device_id table - but no .of_match_table as *device* matching is still
++ * done through platform_device_id.
++ */
++static const struct of_device_id bd71828_dt_match[] __used = {
++	{ .compatible = "rohm,bd71828-leds" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, bd71828_dt_match);
++
++static struct platform_driver bd71828_led_driver = {
++	.driver = {
++		.name  = "bd71828-led",
++	},
++	.probe  = bd71828_led_probe,
++};
++
++module_platform_driver(bd71828_led_driver);
++
++MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
++MODULE_DESCRIPTION("ROHM BD71828 LED driver");
++MODULE_LICENSE("GPL");
+-- 
+2.21.0
 
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
