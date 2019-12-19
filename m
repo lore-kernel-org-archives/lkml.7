@@ -2,232 +2,88 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D56FCC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B96C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A123A227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:19:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eGtwbQMZ"
+	by mail.kernel.org (Postfix) with ESMTP id 0AFFE2146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:21:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbfLSQTr (ORCPT
+        id S1726947AbfLSQVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 11:19:47 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:37432 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726801AbfLSQTq (ORCPT
+        Thu, 19 Dec 2019 11:21:00 -0500
+Received: from www62.your-server.de ([213.133.104.62]:56570 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbfLSQU7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 11:19:46 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBJGESd8126854;
-        Thu, 19 Dec 2019 16:18:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=K+A93ZAv9I878HBX82hzx7n9260RnjvxaGQwnMGdHIs=;
- b=eGtwbQMZ9K6Vne6Ty2zYFf54fGHhhOGCWl0xXvGPhiZNRFMn9JhnK4qqHaARnbBrsYD+
- ErYVr/4TaTUffBjsLzOP4YAhbIipPY3r/svsFEuOtRpIg6HxBCK8obLCS1lWIdVShB2x
- AyfnRZ8PfECPa067G9CXES/eZtCMXmkZgMDMr2bLuVEGevukTbvF2tNKouAqWwAR/uF7
- zEBM9mNDshsEvGmwC4rJZ4epQCSUxfpRsbJAoKGToGZGEwZZOICv3Cw+fezBElqpL7sa
- 3oPd6m5DnZ3x5JDX8nRriM1aA2CCD52U6iuMSPO+dRkmWbRIB4kwi6Z0GATOn2ONuVD3 eQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2x01knkupg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Dec 2019 16:18:21 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBJGEIHE114098;
-        Thu, 19 Dec 2019 16:18:21 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2x04mq61u2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Dec 2019 16:18:21 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBJGIJSZ011021;
-        Thu, 19 Dec 2019 16:18:19 GMT
-Received: from dhcp-10-175-212-35.vpn.oracle.com (/10.175.212.35)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 19 Dec 2019 08:18:19 -0800
-From:   Alan Maguire <alan.maguire@oracle.com>
-To:     brendanhiggins@google.com, linux-kselftest@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
-        keescook@chromium.org, yzaikin@google.com,
-        akpm@linux-foundation.org, yamada.masahiro@socionext.com,
-        catalin.marinas@arm.com, joe.lawrence@redhat.com,
-        penguin-kernel@i-love.sakura.ne.jp, urezki@gmail.com,
-        andriy.shevchenko@linux.intel.com, corbet@lwn.net,
-        davidgow@google.com, adilger.kernel@dilger.ca, tytso@mit.edu,
-        mcgrof@kernel.org, linux-doc@vger.kernel.org, rjw@rjwysocki.net,
-        pavel@ucw.cz, len.brown@intel.com, gregkh@linuxfoundation.org,
-        krzk@kernel.org, linux-pm@vger.kernel.org,
-        linux-ext4@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>,
-        Knut Omang <knut.omang@oracle.com>
-Subject: [PATCH v7 linux-kselftest-test 2/6] kunit: hide unexported try-catch interface in try-catch-impl.h
-Date:   Thu, 19 Dec 2019 16:17:35 +0000
-Message-Id: <1576772259-31382-3-git-send-email-alan.maguire@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1576772259-31382-1-git-send-email-alan.maguire@oracle.com>
-References: <1576772259-31382-1-git-send-email-alan.maguire@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9476 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912190135
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9476 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912190135
+        Thu, 19 Dec 2019 11:20:59 -0500
+Received: from [2001:1620:665:0:5795:5b0a:e5d5:5944] (helo=localhost)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1ihyXk-0003mT-CK; Thu, 19 Dec 2019 17:20:52 +0100
+Date:   Thu, 19 Dec 2019 17:20:51 +0100
+From:   Daniel Borkmann <daniel@iogearbox.net>
+To:     Alexander Lobakin <alobakin@dlink.ru>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        Aaron Tomlin <atomlin@redhat.com>,
+        Matteo Croce <mcroce@redhat.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Edward Cree <ecree@solarflare.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH net] net: core: sysctl: fix compiler warning when only
+ cBPF is present
+Message-ID: <20191219162051.GA11015@linux-9.fritz.box>
+References: <20191218091821.7080-1-alobakin@dlink.ru>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191218091821.7080-1-alobakin@dlink.ru>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25668/Thu Dec 19 10:55:58 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define function as static inline in try-catch-impl.h to allow it to
-be used in kunit itself and tests.  Also remove unused
-kunit_generic_try_catch
+On Wed, Dec 18, 2019 at 12:18:21PM +0300, Alexander Lobakin wrote:
+> proc_dointvec_minmax_bpf_restricted() has been firstly introduced
+> in commit 2e4a30983b0f ("bpf: restrict access to core bpf sysctls")
+> under CONFIG_HAVE_EBPF_JIT. Then, this ifdef has been removed in
+> ede95a63b5e8 ("bpf: add bpf_jit_limit knob to restrict unpriv
+> allocations"), because a new sysctl, bpf_jit_limit, made use of it.
+> Finally, this parameter has become long instead of integer with
+> fdadd04931c2 ("bpf: fix bpf_jit_limit knob for PAGE_SIZE >= 64K")
+> and thus, a new proc_dolongvec_minmax_bpf_restricted() has been
+> added.
+> With this last change, we got back to that
+> proc_dointvec_minmax_bpf_restricted() is used only under
+> CONFIG_HAVE_EBPF_JIT, but the corresponding ifdef has not been
+> brought back.
+> 
+> So, in configurations like CONFIG_BPF_JIT=y && CONFIG_HAVE_EBPF_JIT=n
+> since v4.20 we have:
+> 
+>   CC      net/core/sysctl_net_core.o
+> net/core/sysctl_net_core.c:292:1: warning: ‘proc_dointvec_minmax_bpf_restricted’ defined but not used [-Wunused-function]
+>   292 | proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
+>       | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Suppress this by guarding it with CONFIG_HAVE_EBPF_JIT again.
+> 
+> Fixes: fdadd04931c2 ("bpf: fix bpf_jit_limit knob for PAGE_SIZE >= 64K")
+> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
 
-Co-developed-by: Knut Omang <knut.omang@oracle.com>
-Signed-off-by: Knut Omang <knut.omang@oracle.com>
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-Tested-by: Brendan Higgins <brendanhiggins@google.com>
----
- include/kunit/try-catch.h  | 10 ----------
- lib/kunit/test-test.c      |  2 ++
- lib/kunit/test.c           |  2 +-
- lib/kunit/try-catch-impl.h | 27 +++++++++++++++++++++++++++
- lib/kunit/try-catch.c      | 13 ++-----------
- 5 files changed, 32 insertions(+), 22 deletions(-)
- create mode 100644 lib/kunit/try-catch-impl.h
-
-diff --git a/include/kunit/try-catch.h b/include/kunit/try-catch.h
-index 404f336..c507dd4 100644
---- a/include/kunit/try-catch.h
-+++ b/include/kunit/try-catch.h
-@@ -53,11 +53,6 @@ struct kunit_try_catch {
- 	void *context;
- };
- 
--void kunit_try_catch_init(struct kunit_try_catch *try_catch,
--			  struct kunit *test,
--			  kunit_try_catch_func_t try,
--			  kunit_try_catch_func_t catch);
--
- void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context);
- 
- void __noreturn kunit_try_catch_throw(struct kunit_try_catch *try_catch);
-@@ -67,9 +62,4 @@ static inline int kunit_try_catch_get_result(struct kunit_try_catch *try_catch)
- 	return try_catch->try_result;
- }
- 
--/*
-- * Exposed for testing only.
-- */
--void kunit_generic_try_catch_init(struct kunit_try_catch *try_catch);
--
- #endif /* _KUNIT_TRY_CATCH_H */
-diff --git a/lib/kunit/test-test.c b/lib/kunit/test-test.c
-index 5ebe059..5a6cc04 100644
---- a/lib/kunit/test-test.c
-+++ b/lib/kunit/test-test.c
-@@ -7,6 +7,8 @@
-  */
- #include <kunit/test.h>
- 
-+#include "try-catch-impl.h"
-+
- struct kunit_try_catch_test_context {
- 	struct kunit_try_catch *try_catch;
- 	bool function_called;
-diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-index 36ebf47..58a6227 100644
---- a/lib/kunit/test.c
-+++ b/lib/kunit/test.c
-@@ -7,11 +7,11 @@
-  */
- 
- #include <kunit/test.h>
--#include <kunit/try-catch.h>
- #include <linux/kernel.h>
- #include <linux/sched/debug.h>
- 
- #include "string-stream.h"
-+#include "try-catch-impl.h"
- 
- static void kunit_set_failure(struct kunit *test)
- {
-diff --git a/lib/kunit/try-catch-impl.h b/lib/kunit/try-catch-impl.h
-new file mode 100644
-index 0000000..203ba6a
---- /dev/null
-+++ b/lib/kunit/try-catch-impl.h
-@@ -0,0 +1,27 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Internal kunit try catch implementation to be shared with tests.
-+ *
-+ * Copyright (C) 2019, Google LLC.
-+ * Author: Brendan Higgins <brendanhiggins@google.com>
-+ */
-+
-+#ifndef _KUNIT_TRY_CATCH_IMPL_H
-+#define _KUNIT_TRY_CATCH_IMPL_H
-+
-+#include <kunit/try-catch.h>
-+#include <linux/types.h>
-+
-+struct kunit;
-+
-+static inline void kunit_try_catch_init(struct kunit_try_catch *try_catch,
-+					struct kunit *test,
-+					kunit_try_catch_func_t try,
-+					kunit_try_catch_func_t catch)
-+{
-+	try_catch->test = test;
-+	try_catch->try = try;
-+	try_catch->catch = catch;
-+}
-+
-+#endif /* _KUNIT_TRY_CATCH_IMPL_H */
-diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-index 55686839..4a66d16 100644
---- a/lib/kunit/try-catch.c
-+++ b/lib/kunit/try-catch.c
-@@ -8,12 +8,13 @@
-  */
- 
- #include <kunit/test.h>
--#include <kunit/try-catch.h>
- #include <linux/completion.h>
- #include <linux/kernel.h>
- #include <linux/kthread.h>
- #include <linux/sched/sysctl.h>
- 
-+#include "try-catch-impl.h"
-+
- void __noreturn kunit_try_catch_throw(struct kunit_try_catch *try_catch)
- {
- 	try_catch->try_result = -EFAULT;
-@@ -106,13 +107,3 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
- 
- 	try_catch->catch(try_catch->context);
- }
--
--void kunit_try_catch_init(struct kunit_try_catch *try_catch,
--			  struct kunit *test,
--			  kunit_try_catch_func_t try,
--			  kunit_try_catch_func_t catch)
--{
--	try_catch->test = test;
--	try_catch->try = try;
--	try_catch->catch = catch;
--}
--- 
-1.8.3.1
-
+Applied, thanks!
