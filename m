@@ -2,104 +2,108 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E58C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24635C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EB94222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA12B21D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:49:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W54SHQ5d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbfLSKsU (ORCPT
+        id S1726757AbfLSKth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 05:48:20 -0500
-Received: from foss.arm.com ([217.140.110.172]:36864 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726633AbfLSKsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 05:48:20 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D30B31B;
-        Thu, 19 Dec 2019 02:48:19 -0800 (PST)
-Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BA4C13F719;
-        Thu, 19 Dec 2019 02:48:16 -0800 (PST)
-Date:   Thu, 19 Dec 2019 10:48:14 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Doug Smythies <dsmythies@telus.net>
-Cc:     'Giovanni Gherdovich' <ggherdovich@suse.cz>, x86@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        'Mel Gorman' <mgorman@techsingularity.net>,
-        'Matt Fleming' <matt@codeblueprint.co.uk>,
-        'Viresh Kumar' <viresh.kumar@linaro.org>,
-        'Juri Lelli' <juri.lelli@redhat.com>,
-        'Paul Turner' <pjt@google.com>,
-        'Peter Zijlstra' <peterz@infradead.org>,
-        'Vincent Guittot' <vincent.guittot@linaro.org>,
-        'Quentin Perret' <qperret@qperret.net>,
-        'Dietmar Eggemann' <dietmar.eggemann@arm.com>,
-        'Srinivas Pandruvada' <srinivas.pandruvada@linux.intel.com>,
-        'Thomas Gleixner' <tglx@linutronix.de>,
-        'Ingo Molnar' <mingo@redhat.com>,
-        'Borislav Petkov' <bp@suse.de>, 'Len Brown' <lenb@kernel.org>,
-        "'Rafael J . Wysocki'" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v4 1/6] x86,sched: Add support for frequency invariance
-Message-ID: <20191219104813.6fr34qavpaplecoz@e107158-lin>
-References: <20191113124654.18122-1-ggherdovich@suse.cz>
- <20191113124654.18122-2-ggherdovich@suse.cz>
- <000001d5a29b$c944fd70$5bcef850$@net>
- <1574697961.16378.5.camel@suse.cz>
- <000801d5a41e$a7fce2c0$f7f6a840$@net>
- <1574781600.7677.2.camel@suse.cz>
- <001d01d5a4f4$d96b21b0$8c416510$@net>
- <003d01d5a63d$f6ab3950$e401abf0$@net>
+        Thu, 19 Dec 2019 05:49:37 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:38457 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbfLSKtg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 05:49:36 -0500
+Received: by mail-qk1-f194.google.com with SMTP id k6so4263817qki.5
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 02:49:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=deId2JVQ12jlGeQHYsi9LkbuFlqPgIP/ixlZ7XgRV7I=;
+        b=W54SHQ5dlTm6SThWjY6Bc5SCBNejl/zWftJRnsauXNSyNMSdUA2HX7Q9hbbKpOmyE6
+         lBPZXrRNUT0G5Dhea3G7dyDt5gVpYE4CknR0ofVlj+TBFuiqi5w/Ox2hX93OkAzwWewx
+         zlY1BmrW997a+ZNGk4lECZBdofKldism9dtxUfd3bOZfPKfLioHTJAQ26aCJMicC/4z5
+         ijuY7OAnvYvCoG/VgM39BURMYHeO1cPruRHJIOqPhXqbpsfGPv9rHQzMglUx/cAu+F4j
+         k6FFeRNotAB9W0Ae3zjq5eg6nvI1JwAFmxtBAsObUEtiYfu30ehBlm4FXWc/tOtMHfJp
+         CI7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=deId2JVQ12jlGeQHYsi9LkbuFlqPgIP/ixlZ7XgRV7I=;
+        b=YjAldQsEQ2CVS/mZHAuKrrw7JrC1fsKr7kpGSZxX06uQ6l+VEwPoSZl1s8K9slqLbz
+         qC/cApJF0lp/vrruSXIRDGHyYhur7Yt6Jntfb9BP5M9sCRx6JLvPMbpjsERg2K3pWV4J
+         wo8FzE/GeTQ3XzS41jAhSvPvN/Xj1zflTnHgkbGiLzKi5/OODyLDuyvF3c6gMXTeKwd+
+         fbJ0CoOU2VOF/TyWp3Eu3lUTGhO2/LYPwvt0vFZBqjQ+Mfqc69wAPR9ZZBBvS6kxfRMS
+         JzKo2EJshy6VUBxqJIWY+0+qE6/vTJzYLpz5UyACYJfVUt32hYs+MsfIB9gzN5kJNTCW
+         nxqQ==
+X-Gm-Message-State: APjAAAWiG22h8dvE8p4gwrlUE6XQ2sr5e1al/uypvcMbsuMM/wybhbin
+        7LP2sJavB4A7aj605Wp7vFRoSVBoHUfVoF0w/isJbg==
+X-Google-Smtp-Source: APXvYqzwhtA5yupYMnkUb/LMNdluvQ09zvtZWL+0pPgsXyWCWFF/OnGQd/gYwoadTMrw8erMOsfI9zjM4+SudhHRHf0=
+X-Received: by 2002:ae9:eb48:: with SMTP id b69mr7186389qkg.43.1576752574661;
+ Thu, 19 Dec 2019 02:49:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <003d01d5a63d$f6ab3950$e401abf0$@net>
-User-Agent: NeoMutt/20171215
+References: <20191208232734.225161-1-Jason@zx2c4.com> <CACT4Y+bsJVmgbD-WogwU=LfWiPN1JgjBrwx4s8Y14hDd7vqqhQ@mail.gmail.com>
+ <CAHmME9o0AparjaaOSoZD14RAW8_AJTfKfcx3Y2ndDAPFNC-MeQ@mail.gmail.com>
+ <CACT4Y+Zssd6OZ2-U4kjw18mNthQyzPWZV_gkH3uATnSv1SVDfA@mail.gmail.com>
+ <CAHmME9oM=YHMZyg23WEzmZAof=7iv-A01VazB3ihhR99f6X1cg@mail.gmail.com>
+ <CACT4Y+aCEZm_BA5mmVTnK2cR8CQUky5w1qvmb2KpSR4-Pzp4Ow@mail.gmail.com>
+ <CAHmME9rYstVLCBOgdMLqMeVDrX1V-f92vRKDqWsREROWdPbb6g@mail.gmail.com> <CAHmME9qUWr69o0r+Mtm8tRSeQq3P780DhWAhpJkNWBfZ+J5OYA@mail.gmail.com>
+In-Reply-To: <CAHmME9qUWr69o0r+Mtm8tRSeQq3P780DhWAhpJkNWBfZ+J5OYA@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 19 Dec 2019 11:49:23 +0100
+Message-ID: <CACT4Y+YfBDvQHdK24ybyyy5p07MXNMnLA7+gq9axq-EizN6jhA@mail.gmail.com>
+Subject: Re: [PATCH net-next v2] net: WireGuard secure network tunnel
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Doug
+On Thu, Dec 19, 2019 at 11:11 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+>
+> On Thu, Dec 19, 2019 at 11:07 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+> >
+> > On Thu, Dec 19, 2019 at 10:35 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+> > That's exciting about syzcaller having at it with WireGuard. Is there
+> > some place where I can "see" it fuzzing WireGuard, or do I just wait
+> > for the bug reports to come rolling in?
+>
+> Ahh, found it: https://storage.googleapis.com/syzkaller/cover/ci-upstream-net-kasan-gce.html
+> Looks like we're at 1% and counting. :)
 
-On 11/28/19 14:48, Doug Smythies wrote:
-> Summary: There never was an issue here.
-> 
-> Sorry for the noise of this thread, and the resulting waste of time.
-> 
-> On 2019.11.26 23:33 Doug Smythies wrote:
-> > On 2019.11.26 07:20 Giovanni Gherdovich wrote:
-> >> On Mon, 2019-11-25 at 21:59 -0800, Doug Smythies wrote:
-> >>> [...]
-> >>> The issue with the schedutil governor not working properly in the 5.4 RC series
-> >>> appears to be hardware dependant.
-> 
-> No it 's not.
-> 
-> Issues with my Sandy Bridge, i7-2600K, test computer and kernel 5.4
-> seem to be because it is running an older Ubuntu server version,
-> apparently somewhat dependant on cgroup V1 and their cgmanager package.
-> I am unable to remove the package to test further because I do use VMs
-> that seem to depend on it.
-> 
-> In the kernel configuration when CONFIG_UCLAMP_TASK_GROUP=y
-> the computer behaves as though the new parameter "cpu.uclamp.min"
-> is set to max rather than 0, but I can not prove it.
+Yes, that's it. But that's mostly stray coverage.
+wg_netdevice_notification I guess mostly because it tested _other_ device types.
+And a bit of netlink because it sends random garbage into netlink.
 
-I just noticed this. This option shouldn't cause any problem, if it does there
-might be a bug that we need to fix.
+For netlink part it would require something along these lines:
+https://github.com/google/syzkaller/blob/master/sys/linux/socket_netlink_generic_devlink.txt
+https://github.com/google/syzkaller/blob/master/sys/linux/socket_netlink_crypto.txt
+https://github.com/google/syzkaller/blob/master/sys/linux/socket_netlink_generic_fou.txt
+https://github.com/google/syzkaller/blob/master/sys/linux/socket_netlink_generic_seg6.txt
 
-So cpu.uclamp.min reads 0 but you think it's not taking effect, correct?
+And for device setup, harder to say. Either pre-create one here:
+https://github.com/google/syzkaller/blob/79b211f74b08737aeb4934c6ff69a263b3c38013/executor/common_linux.h#L668
+or teach it how to create them on the fly or both or something else.
 
-In the quotes above I see 5.4 RC, if you haven't tried this against the final
-5.4 release, do you mind trying to see if you can reproduce? Trying 5.5-rc2
-would be helpful too if 5.4 fails.
-
-Thanks
-
---
-Qais Yousef
+Probably some wire packet formats here:
+https://github.com/google/syzkaller/blob/79b211f74b08737aeb4934c6ff69a263b3c38013/sys/linux/vnet.txt
