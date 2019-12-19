@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B01C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB99C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD07520674
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFBD024683
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781499;
-	bh=t1GW1a7Ja0FWvmcjtLafhEm/7vEhnxmHnmKRej6gs3I=;
+	s=default; t=1576781505;
+	bh=uwbsH1ug9PaiCVZDYE78+LciTlu5HfsGYmkej1Wx1Zk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=apMa0RWYMUP3jlhshL2ezZoE8Xx/Ifa9G+X5LrKcyX7l1MuDkbBOlq0MTiKpmfCJf
-	 awRtfJTiF64+4C1G/6ZcE6LzQEU539G28kXC7LapPfHO1K7stpq+O4uQsupB/mDjQG
-	 1MzwiI8QbsDjdoa5nF2zd6iV/sqzjq6GR9/4UmkQ=
+	b=p3qIRz0CSLSQD1thT9/XEYvBHxzwGpmmUmZqHWMQPDBiKJzmBo0P9tmdIanqFefik
+	 eS5ogaF8cEn/5TU6DWlgdA5ZrrzSiAti0psuBfUBg5VIFKfKEyuV6VmIAVntght6hk
+	 2gbcLe9e46r+ilRcxP9Di49OXiuH0OIyk6bX+pbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729739AbfLSSvi (ORCPT
+        id S1730166AbfLSSvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:51:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45858 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:51:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730150AbfLSSvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:51:35 -0500
+        id S1729914AbfLSSvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:51:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 446282064B;
-        Thu, 19 Dec 2019 18:51:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D4B32064B;
+        Thu, 19 Dec 2019 18:51:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781493;
-        bh=t1GW1a7Ja0FWvmcjtLafhEm/7vEhnxmHnmKRej6gs3I=;
+        s=default; t=1576781498;
+        bh=uwbsH1ug9PaiCVZDYE78+LciTlu5HfsGYmkej1Wx1Zk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MNUJdMWgDPhMhg8HaKbW1cQkghtz1QHbUSUGA21hn5olv/0h7vua6oxrkeSyxvdsa
-         7Bn30yTyBdMwiEQfXNVqTBG5FtDy0PHZ+i2sG/s9vJRT7gaeBpoof+YrOymhQiotzw
-         oMvK4+/gI0VjH7/cY63vp+SVMQVlhN0GT1bWQoXA=
+        b=plBeNJsufgwkBoPcE76ReAkScWpQCuwdV80/R9rb+ZRk6emokqekvlZMiHdqoN9Jr
+         ru1gvTgyWU6KE8UTcFIqritIvlgx5oke20sqc47hi3c+zGsoRg55FI3zPMCloMo+zb
+         o6yxGqORDSIONb3ba0lwmgdKboMBYATlTaWVHpRM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Siddharth Kapoor <ksiddharth@google.com>,
-        Mark Brown <broonie@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.14 13/36] Revert "regulator: Defer init completion for a while after late_initcall"
-Date:   Thu, 19 Dec 2019 19:34:30 +0100
-Message-Id: <20191219182859.196871204@linuxfoundation.org>
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        Jon Maloy <jon.maloy@ericsson.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 10/47] tipc: fix ordering of tipc module init and exit routine
+Date:   Thu, 19 Dec 2019 19:34:24 +0100
+Message-Id: <20191219182907.255018607@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191219182848.708141124@linuxfoundation.org>
-References: <20191219182848.708141124@linuxfoundation.org>
+In-Reply-To: <20191219182857.659088743@linuxfoundation.org>
+References: <20191219182857.659088743@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,89 +60,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Taehee Yoo <ap420073@gmail.com>
 
-This reverts commit d7ce17fba6c8e316ca9a554a87edddce6f862435 which is
-commit 55576cf1853798e86f620766e23b604c9224c19c upstream.
+[ Upstream commit 9cf1cd8ee3ee09ef2859017df2058e2f53c5347f ]
 
-It's causing "odd" interactions with older kernels, so it probably isn't
-a good idea to cause timing changes there.  This has been reported to
-cause oopses on Pixel devices.
+In order to set/get/dump, the tipc uses the generic netlink
+infrastructure. So, when tipc module is inserted, init function
+calls genl_register_family().
+After genl_register_family(), set/get/dump commands are immediately
+allowed and these callbacks internally use the net_generic.
+net_generic is allocated by register_pernet_device() but this
+is called after genl_register_family() in the __init function.
+So, these callbacks would use un-initialized net_generic.
 
-Reported-by: Siddharth Kapoor <ksiddharth@google.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>
+Test commands:
+    #SHELL1
+    while :
+    do
+        modprobe tipc
+        modprobe -rv tipc
+    done
+
+    #SHELL2
+    while :
+    do
+        tipc link list
+    done
+
+Splat looks like:
+[   59.616322][ T2788] kasan: CONFIG_KASAN_INLINE enabled
+[   59.617234][ T2788] kasan: GPF could be caused by NULL-ptr deref or user memory access
+[   59.618398][ T2788] general protection fault: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
+[   59.619389][ T2788] CPU: 3 PID: 2788 Comm: tipc Not tainted 5.4.0+ #194
+[   59.620231][ T2788] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[   59.621428][ T2788] RIP: 0010:tipc_bcast_get_broadcast_mode+0x131/0x310 [tipc]
+[   59.622379][ T2788] Code: c7 c6 ef 8b 38 c0 65 ff 0d 84 83 c9 3f e8 d7 a5 f2 e3 48 8d bb 38 11 00 00 48 b8 00 00 00 00
+[   59.622550][ T2780] NET: Registered protocol family 30
+[   59.624627][ T2788] RSP: 0018:ffff88804b09f578 EFLAGS: 00010202
+[   59.624630][ T2788] RAX: dffffc0000000000 RBX: 0000000000000011 RCX: 000000008bc66907
+[   59.624631][ T2788] RDX: 0000000000000229 RSI: 000000004b3cf4cc RDI: 0000000000001149
+[   59.624633][ T2788] RBP: ffff88804b09f588 R08: 0000000000000003 R09: fffffbfff4fb3df1
+[   59.624635][ T2788] R10: fffffbfff50318f8 R11: ffff888066cadc18 R12: ffffffffa6cc2f40
+[   59.624637][ T2788] R13: 1ffff11009613eba R14: ffff8880662e9328 R15: ffff8880662e9328
+[   59.624639][ T2788] FS:  00007f57d8f7b740(0000) GS:ffff88806cc00000(0000) knlGS:0000000000000000
+[   59.624645][ T2788] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   59.625875][ T2780] tipc: Started in single node mode
+[   59.626128][ T2788] CR2: 00007f57d887a8c0 CR3: 000000004b140002 CR4: 00000000000606e0
+[   59.633991][ T2788] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   59.635195][ T2788] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   59.636478][ T2788] Call Trace:
+[   59.637025][ T2788]  tipc_nl_add_bc_link+0x179/0x1470 [tipc]
+[   59.638219][ T2788]  ? lock_downgrade+0x6e0/0x6e0
+[   59.638923][ T2788]  ? __tipc_nl_add_link+0xf90/0xf90 [tipc]
+[   59.639533][ T2788]  ? tipc_nl_node_dump_link+0x318/0xa50 [tipc]
+[   59.640160][ T2788]  ? mutex_lock_io_nested+0x1380/0x1380
+[   59.640746][ T2788]  tipc_nl_node_dump_link+0x4fd/0xa50 [tipc]
+[   59.641356][ T2788]  ? tipc_nl_node_reset_link_stats+0x340/0x340 [tipc]
+[   59.642088][ T2788]  ? __skb_ext_del+0x270/0x270
+[   59.642594][ T2788]  genl_lock_dumpit+0x85/0xb0
+[   59.643050][ T2788]  netlink_dump+0x49c/0xed0
+[   59.643529][ T2788]  ? __netlink_sendskb+0xc0/0xc0
+[   59.644044][ T2788]  ? __netlink_dump_start+0x190/0x800
+[   59.644617][ T2788]  ? __mutex_unlock_slowpath+0xd0/0x670
+[   59.645177][ T2788]  __netlink_dump_start+0x5a0/0x800
+[   59.645692][ T2788]  genl_rcv_msg+0xa75/0xe90
+[   59.646144][ T2788]  ? __lock_acquire+0xdfe/0x3de0
+[   59.646692][ T2788]  ? genl_family_rcv_msg_attrs_parse+0x320/0x320
+[   59.647340][ T2788]  ? genl_lock_dumpit+0xb0/0xb0
+[   59.647821][ T2788]  ? genl_unlock+0x20/0x20
+[   59.648290][ T2788]  ? genl_parallel_done+0xe0/0xe0
+[   59.648787][ T2788]  ? find_held_lock+0x39/0x1d0
+[   59.649276][ T2788]  ? genl_rcv+0x15/0x40
+[   59.649722][ T2788]  ? lock_contended+0xcd0/0xcd0
+[   59.650296][ T2788]  netlink_rcv_skb+0x121/0x350
+[   59.650828][ T2788]  ? genl_family_rcv_msg_attrs_parse+0x320/0x320
+[   59.651491][ T2788]  ? netlink_ack+0x940/0x940
+[   59.651953][ T2788]  ? lock_acquire+0x164/0x3b0
+[   59.652449][ T2788]  genl_rcv+0x24/0x40
+[   59.652841][ T2788]  netlink_unicast+0x421/0x600
+[ ... ]
+
+Fixes: 7e4369057806 ("tipc: fix a slab object leak")
+Fixes: a62fbccecd62 ("tipc: make subscriber server support net namespace")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Acked-by: Jon Maloy <jon.maloy@ericsson.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/regulator/core.c |   42 +++++++++++-------------------------------
- 1 file changed, 11 insertions(+), 31 deletions(-)
+ net/tipc/core.c |   29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
 
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -4503,7 +4503,7 @@ static int __init regulator_init(void)
- /* init early to allow our consumers to complete system booting */
- core_initcall(regulator_init);
+--- a/net/tipc/core.c
++++ b/net/tipc/core.c
+@@ -120,14 +120,6 @@ static int __init tipc_init(void)
+ 	sysctl_tipc_rmem[1] = RCVBUF_DEF;
+ 	sysctl_tipc_rmem[2] = RCVBUF_MAX;
  
--static int regulator_late_cleanup(struct device *dev, void *data)
-+static int __init regulator_late_cleanup(struct device *dev, void *data)
- {
- 	struct regulator_dev *rdev = dev_to_rdev(dev);
- 	const struct regulator_ops *ops = rdev->desc->ops;
-@@ -4552,9 +4552,18 @@ unlock:
- 	return 0;
- }
+-	err = tipc_netlink_start();
+-	if (err)
+-		goto out_netlink;
+-
+-	err = tipc_netlink_compat_start();
+-	if (err)
+-		goto out_netlink_compat;
+-
+ 	err = tipc_register_sysctl();
+ 	if (err)
+ 		goto out_sysctl;
+@@ -148,8 +140,21 @@ static int __init tipc_init(void)
+ 	if (err)
+ 		goto out_bearer;
  
--static void regulator_init_complete_work_function(struct work_struct *work)
-+static int __init regulator_init_complete(void)
- {
- 	/*
-+	 * Since DT doesn't provide an idiomatic mechanism for
-+	 * enabling full constraints and since it's much more natural
-+	 * with DT to provide them just assume that a DT enabled
-+	 * system has full constraints.
-+	 */
-+	if (of_have_populated_dt())
-+		has_full_constraints = true;
++	err = tipc_netlink_start();
++	if (err)
++		goto out_netlink;
 +
-+	/*
- 	 * Regulators may had failed to resolve their input supplies
- 	 * when were registered, either because the input supply was
- 	 * not registered yet or because its parent device was not
-@@ -4571,35 +4580,6 @@ static void regulator_init_complete_work
- 	 */
- 	class_for_each_device(&regulator_class, NULL, NULL,
- 			      regulator_late_cleanup);
--}
--
--static DECLARE_DELAYED_WORK(regulator_init_complete_work,
--			    regulator_init_complete_work_function);
--
--static int __init regulator_init_complete(void)
--{
--	/*
--	 * Since DT doesn't provide an idiomatic mechanism for
--	 * enabling full constraints and since it's much more natural
--	 * with DT to provide them just assume that a DT enabled
--	 * system has full constraints.
--	 */
--	if (of_have_populated_dt())
--		has_full_constraints = true;
--
--	/*
--	 * We punt completion for an arbitrary amount of time since
--	 * systems like distros will load many drivers from userspace
--	 * so consumers might not always be ready yet, this is
--	 * particularly an issue with laptops where this might bounce
--	 * the display off then on.  Ideally we'd get a notification
--	 * from userspace when this happens but we don't so just wait
--	 * a bit and hope we waited long enough.  It'd be better if
--	 * we'd only do this on systems that need it, and a kernel
--	 * command line option might be useful.
--	 */
--	schedule_delayed_work(&regulator_init_complete_work,
--			      msecs_to_jiffies(30000));
- 
++	err = tipc_netlink_compat_start();
++	if (err)
++		goto out_netlink_compat;
++
+ 	pr_info("Started in single node mode\n");
  	return 0;
++
++out_netlink_compat:
++	tipc_netlink_stop();
++out_netlink:
++	tipc_bearer_cleanup();
+ out_bearer:
+ 	unregister_pernet_device(&tipc_topsrv_net_ops);
+ out_pernet_topsrv:
+@@ -159,22 +164,18 @@ out_socket:
+ out_pernet:
+ 	tipc_unregister_sysctl();
+ out_sysctl:
+-	tipc_netlink_compat_stop();
+-out_netlink_compat:
+-	tipc_netlink_stop();
+-out_netlink:
+ 	pr_err("Unable to start in single node mode\n");
+ 	return err;
  }
+ 
+ static void __exit tipc_exit(void)
+ {
++	tipc_netlink_compat_stop();
++	tipc_netlink_stop();
+ 	tipc_bearer_cleanup();
+ 	unregister_pernet_device(&tipc_topsrv_net_ops);
+ 	tipc_socket_stop();
+ 	unregister_pernet_device(&tipc_net_ops);
+-	tipc_netlink_stop();
+-	tipc_netlink_compat_stop();
+ 	tipc_unregister_sysctl();
+ 
+ 	pr_info("Deactivated\n");
 
 
