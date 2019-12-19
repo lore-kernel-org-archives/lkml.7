@@ -2,138 +2,408 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0842EC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A872C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFDC121D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CA9521D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:29:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rFFo8hMS"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="P0MsuwDq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbfLSI3c (ORCPT
+        id S1726840AbfLSI3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 03:29:32 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:54724 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbfLSI3c (ORCPT
+        Thu, 19 Dec 2019 03:29:42 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:48522 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbfLSI3l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 03:29:32 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJ8TOcM038842;
-        Thu, 19 Dec 2019 02:29:24 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576744164;
-        bh=qHodQfVRoxRI6Q5T0UwFr5pC1wfIqkcyWERy28q6efM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=rFFo8hMSSugW3xBnanhPdce0vj4r2wn92etK1aDt7i4TSJMWFK6pylOxtFH49rT4V
-         elwE09sGfpgkdY5/VOCCo02Ah2TbXfRK+rvq9L+dx8B7zFYW4+9u3S9JtfBLmi+dAg
-         cnFSx3j0bzRviyHkJqSyCL1xrM3fSOgKyoqm4OVM=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBJ8TO6E124868
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Dec 2019 02:29:24 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
- Dec 2019 02:29:23 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 19 Dec 2019 02:29:24 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJ8TKFJ062210;
-        Thu, 19 Dec 2019 02:29:21 -0600
-Subject: Re: [PATCH 01/13] PCI: cadence: Remove stray "pm_runtime_put_sync()"
- in error path
-To:     Andrew Murray <andrew.murray@arm.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>
-References: <20191209092147.22901-1-kishon@ti.com>
- <20191209092147.22901-2-kishon@ti.com>
- <20191216134526.GW24359@e119886-lin.cambridge.arm.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <a1b70012-9cfc-0420-2717-8bdd9df1b4de@ti.com>
-Date:   Thu, 19 Dec 2019 14:01:03 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20191216134526.GW24359@e119886-lin.cambridge.arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Thu, 19 Dec 2019 03:29:41 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191219082940euoutp01381b476cefc144eeacf5db3808b4e61f~huHpkhZQE0209502095euoutp01F
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 08:29:40 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191219082940euoutp01381b476cefc144eeacf5db3808b4e61f~huHpkhZQE0209502095euoutp01F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1576744180;
+        bh=pj4zc0DjOjeyC5CrooTc2mCB0uhmCjiP4F+F6+fDoUw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=P0MsuwDqATzSvxE6pqUbC2LyVYN/4v4hGaahYTXz1R4h/7q7cTCttaXcIiaf1evuY
+         W2GRhMVRrV6TADCil7vClIiAbf+5iR78qf6afiL2FfHxaQcmzS6f2lWzlA0+0c9/OR
+         Wi3bK0iSvxQ4BqVHDLQx0By9ls2Rhc2zcJVE1XYY=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191219082939eucas1p12319bfbe2c7f3b9394bdc5f83921fd4d~huHpOWQCY1482914829eucas1p1r;
+        Thu, 19 Dec 2019 08:29:39 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id B1.EA.60679.3F43BFD5; Thu, 19
+        Dec 2019 08:29:39 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191219082939eucas1p2afc32535df1512dc21ca983daa012568~huHo7e5781682716827eucas1p29;
+        Thu, 19 Dec 2019 08:29:39 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191219082939eusmtrp14f7739da8e8a8b0e6a6ff7bb3f6ec017~huHo65I-k0048200482eusmtrp1w;
+        Thu, 19 Dec 2019 08:29:39 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-07-5dfb34f3a92f
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id BC.C8.07950.3F43BFD5; Thu, 19
+        Dec 2019 08:29:39 +0000 (GMT)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191219082939eusmtip1f57ad9d5c7a4ac29414aca2e6b601803~huHogu4TG0546305463eusmtip1c;
+        Thu, 19 Dec 2019 08:29:39 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Kamil Konieczny <k.konieczny@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH 2/2] ARM: dts: exynos: Adjust bus related OPPs to the values
+ correct for Odroids
+Date:   Thu, 19 Dec 2019 09:29:27 +0100
+Message-Id: <20191219082927.11898-3-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191219082927.11898-1-m.szyprowski@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrBIsWRmVeSWpSXmKPExsWy7djP87qfTX7HGjQstbTYOGM9q8X1L89Z
+        LRZ8msFqcf78BnaLy7vmsFl87j3CaDHj/D4mi7VH7rI7cHhsWtXJ5tG3ZRWjx+dNcgHMUVw2
+        Kak5mWWpRfp2CVwZq761Mhf02Vd87epgbWCcp9/FyMkhIWAi8ejLdmYQW0hgBaPE9YlZXYxc
+        QPYXRolfK2eyQjifGSU6li1nhOl4++IjM0RiOaNE+843bHAtP//fAqtiEzCU6HrbxQZiiwjE
+        Szzqv8sCUsQs8JhR4vi/U0wgCWGBJIklx++DFbEIqErs3XGeFcTmFbCV+HXpNgvEOnmJ1RsO
+        gB3IKWAn8W/DcrDVEgLP2STWP5gHdZOLxOF5LewQtrDEq+NboGwZidOTe1ggGpoZJR6eW8sO
+        4fQwSlxumgHVbS1x+PhFoNUcQPdpSqzfBQ0aR4kFd/+xgYQlBPgkbrwVBAkzA5mTtk1nhgjz
+        SnS0CUFUq0nMOr4Obu3BC5eYIWwPidlzWtkhITSRUeLl1xPsExjlZyEsW8DIuIpRPLW0ODc9
+        tdgoL7Vcrzgxt7g0L10vOT93EyMwPZz+d/zLDsZdf5IOMQpwMCrx8P5w/RUrxJpYVlyZe4hR
+        goNZSYT3dsfPWCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8xotexgoJpCeWpGanphakFsFkmTg4
+        pRoYmS/xHXgYffDntu6+rRfftu0JmPXva5f0QeagjBzLbmOne/p1q7vmvHDI1ZjVcnr+Zq4u
+        retHQ24GT32XsSD13rpUhwVlXw9eWxV39t2vZfrt1gHl915Z7DmRfnTu8+79FQbf39/3k39q
+        99vRR9cvZINa9aGT/z1mvTn5RrnF47Ns/a+4pR8UjiixFGckGmoxFxUnAgCnR1W2CwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJLMWRmVeSWpSXmKPExsVy+t/xu7qfTX7HGrS9U7XYOGM9q8X1L89Z
+        LRZ8msFqcf78BnaLy7vmsFl87j3CaDHj/D4mi7VH7rI7cHhsWtXJ5tG3ZRWjx+dNcgHMUXo2
+        RfmlJakKGfnFJbZK0YYWRnqGlhZ6RiaWeobG5rFWRqZK+nY2Kak5mWWpRfp2CXoZq761Mhf0
+        2Vd87epgbWCcp9/FyMkhIWAi8fbFR+YuRi4OIYGljBLtn9eyQiRkJE5Oa4CyhSX+XOtigyj6
+        xCjx5V4PWIJNwFCi6y1IgpNDRCBRYvbH2WBFzAJPGSVWrZkCViQskCCxqaeTEcRmEVCV2Lvj
+        PFicV8BW4tel2ywQG+QlVm84wAxicwrYSfzbsBzMFgKqWfb4EssERr4FjAyrGEVSS4tz03OL
+        jfSKE3OLS/PS9ZLzczcxAoN127GfW3Ywdr0LPsQowMGoxMMb4PErVog1say4MvcQowQHs5II
+        7+2On7FCvCmJlVWpRfnxRaU5qcWHGE2BjprILCWanA+MpLySeENTQ3MLS0NzY3NjMwslcd4O
+        gYMxQgLpiSWp2ampBalFMH1MHJxSDYy7UvkYd600u8tsF+Ffm/kxOVumbycnO094z659Uxa0
+        MskwL3X2/2IVrB0eGyd9yv5BZOvys+Gz399n+sT8cWmQUPOrs53vXi26mzcxL3HGd/cy4Ul3
+        Llg9ZF1XcyP5ZMlW+f2uB/q32rqZvlb3e/B5VUywLf9rVl/GSPZFqVwWySenr7/qL6HEUpyR
+        aKjFXFScCADZEWbubAIAAA==
+X-CMS-MailID: 20191219082939eucas1p2afc32535df1512dc21ca983daa012568
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191219082939eucas1p2afc32535df1512dc21ca983daa012568
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191219082939eucas1p2afc32535df1512dc21ca983daa012568
+References: <20191219082927.11898-1-m.szyprowski@samsung.com>
+        <CGME20191219082939eucas1p2afc32535df1512dc21ca983daa012568@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+Hardkernel's Odroid XU3/XU4/HC1 boards use bootloader, which configures top
+PLLs to the following values: MPLL: 532MHz, CPLL: 666MHz and DPLL: 600MHz.
 
-On 16/12/19 7:15 pm, Andrew Murray wrote:
-> On Mon, Dec 09, 2019 at 02:51:35PM +0530, Kishon Vijay Abraham I wrote:
->> commit bd22885aa188f135fd9 ("PCI: cadence: Refactor driver to use
->> as a core library") while refactoring the Cadence PCIe driver to be
->> used as library, removed pm_runtime_get_sync() from cdns_pcie_ep_setup()
->> and cdns_pcie_host_setup() but missed to remove the corresponding
->> pm_runtime_put_sync() in the error path. Fix it here.
->>
->> Fixes: commit bd22885aa188f135fd9 ("PCI: cadence: Refactor driver to use
-> 
-> As this is a fix, a commit subject starting with PCI: cadence: Fix ... may
-> be more obvious.
-> 
-> I'd suggest you use the shorter form of this, i.e. Fixes: %h (\"%s\"))
-> 
-> Fixes: bd22885aa188 ("PCI: cadence: Refactor driver to use as a core library")
-> 
->> as a core library")
+Adjust all bus related OPPs to the values that are possible to derive from
+the top PLL configured by the bootloader. Also add a comment for each bus
+describing which PLL is used for it.
 
-Okay.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>   drivers/pci/controller/cadence/pcie-cadence-ep.c   | 2 --
->>   drivers/pci/controller/cadence/pcie-cadence-host.c | 2 --
->>   2 files changed, 4 deletions(-)
->>
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
->> index 1c173dad67d1..560f22b4d165 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
->> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
->> @@ -473,7 +473,5 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
->>   	pci_epc_mem_exit(epc);
->>   
->>    err_init:
->> -	pm_runtime_put_sync(dev);
->> -
->>   	return ret;
->>   }
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> index 9b1c3966414b..ccf55e143e1d 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
->> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> @@ -275,7 +275,5 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>   	pci_free_resource_list(&resources);
->>   
->>    err_init:
->> -	pm_runtime_put_sync(dev);
->> -
-> 
-> There is probably more you can do here for both -host and -ep:
-> 
->   - Remove the possibly now unused <linux/pm_runtime.h> include
->   - Remove the err_init label and return directly from source.
+The most significant change is the highest rate for wcore bus. It has been
+increased to 532MHz as this is the value configured initially by the
+bootloader. Also the voltage for this OPP is changed to match the value
+set by the bootloader.
 
-Okay, will fix this up.
+This patch finally allows the buses to operate on the rates matching the
+values set for each OPP and fixes the following warnings observed on boot:
 
-Thanks
-Kishon
+exynos-bus: new bus device registered: soc:bus_wcore ( 84000 KHz ~ 400000 KHz)
+exynos-bus: new bus device registered: soc:bus_noc ( 67000 KHz ~ 100000 KHz)
+exynos-bus: new bus device registered: soc:bus_fsys_apb (100000 KHz ~ 200000 KHz)
+...
+exynos-bus soc:bus_wcore: dev_pm_opp_set_rate: failed to find current OPP for freq 532000000 (-34)
+exynos-bus soc:bus_noc: dev_pm_opp_set_rate: failed to find current OPP for freq 111000000 (-34)
+exynos-bus soc:bus_fsys_apb: dev_pm_opp_set_rate: failed to find current OPP for freq 222000000 (-34)
+
+The problem with setting incorrect (in some cases much lower) clock rate
+for the defined OPP were there from the beginning, but went unnoticed
+because the only way to observe it was to manually check the rate of the
+respective clocks. The commit 4294a779bd8d ("PM / devfreq: exynos-bus:
+Convert to use dev_pm_opp_set_rate()") finally revealed it, because it
+enabled use of the generic code from the OPP framework, which issues the
+above mentioned warnings.
+
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 75 +++++++++++--------
+ 1 file changed, 45 insertions(+), 30 deletions(-)
+
+diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+index 663a38d53c9e..b6d6022e8735 100644
+--- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
++++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+@@ -38,42 +38,44 @@
+ 	bus_wcore_opp_table: opp_table2 {
+ 		compatible = "operating-points-v2";
+ 
++		/* derived from 532MHz MPLL */
+ 		opp00 {
+-			opp-hz = /bits/ 64 <84000000>;
++			opp-hz = /bits/ 64 <88700000>;
+ 			opp-microvolt = <925000 925000 1400000>;
+ 		};
+ 		opp01 {
+-			opp-hz = /bits/ 64 <111000000>;
++			opp-hz = /bits/ 64 <133000000>;
+ 			opp-microvolt = <950000 950000 1400000>;
+ 		};
+ 		opp02 {
+-			opp-hz = /bits/ 64 <222000000>;
++			opp-hz = /bits/ 64 <177400000>;
+ 			opp-microvolt = <950000 950000 1400000>;
+ 		};
+ 		opp03 {
+-			opp-hz = /bits/ 64 <333000000>;
++			opp-hz = /bits/ 64 <266000000>;
+ 			opp-microvolt = <950000 950000 1400000>;
+ 		};
+ 		opp04 {
+-			opp-hz = /bits/ 64 <400000000>;
+-			opp-microvolt = <987500 987500 1400000>;
++			opp-hz = /bits/ 64 <532000000>;
++			opp-microvolt = <1000000 1000000 1400000>;
+ 		};
+ 	};
+ 
+ 	bus_noc_opp_table: opp_table3 {
+ 		compatible = "operating-points-v2";
+ 
++		/* derived from 666MHz CPLL */
+ 		opp00 {
+-			opp-hz = /bits/ 64 <67000000>;
++			opp-hz = /bits/ 64 <66600000>;
+ 		};
+ 		opp01 {
+-			opp-hz = /bits/ 64 <75000000>;
++			opp-hz = /bits/ 64 <74000000>;
+ 		};
+ 		opp02 {
+-			opp-hz = /bits/ 64 <86000000>;
++			opp-hz = /bits/ 64 <83250000>;
+ 		};
+ 		opp03 {
+-			opp-hz = /bits/ 64 <100000000>;
++			opp-hz = /bits/ 64 <111000000>;
+ 		};
+ 	};
+ 
+@@ -81,39 +83,42 @@
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
+ 
++		/* derived from 666MHz CPLL */
+ 		opp00 {
+-			opp-hz = /bits/ 64 <100000000>;
++			opp-hz = /bits/ 64 <111000000>;
+ 		};
+ 		opp01 {
+-			opp-hz = /bits/ 64 <200000000>;
++			opp-hz = /bits/ 64 <222000000>;
+ 		};
+ 	};
+ 
+ 	bus_fsys2_opp_table: opp_table5 {
+ 		compatible = "operating-points-v2";
+ 
++		/* derived from 600MHz DPLL */
+ 		opp00 {
+ 			opp-hz = /bits/ 64 <75000000>;
+ 		};
+ 		opp01 {
+-			opp-hz = /bits/ 64 <100000000>;
++			opp-hz = /bits/ 64 <120000000>;
+ 		};
+ 		opp02 {
+-			opp-hz = /bits/ 64 <150000000>;
++			opp-hz = /bits/ 64 <200000000>;
+ 		};
+ 	};
+ 
+ 	bus_mfc_opp_table: opp_table6 {
+ 		compatible = "operating-points-v2";
+ 
++		/* derived from 666MHz CPLL */
+ 		opp00 {
+-			opp-hz = /bits/ 64 <96000000>;
++			opp-hz = /bits/ 64 <83250000>;
+ 		};
+ 		opp01 {
+ 			opp-hz = /bits/ 64 <111000000>;
+ 		};
+ 		opp02 {
+-			opp-hz = /bits/ 64 <167000000>;
++			opp-hz = /bits/ 64 <166500000>;
+ 		};
+ 		opp03 {
+ 			opp-hz = /bits/ 64 <222000000>;
+@@ -126,8 +131,9 @@
+ 	bus_gen_opp_table: opp_table7 {
+ 		compatible = "operating-points-v2";
+ 
++		/* derived from 532MHz MPLL */
+ 		opp00 {
+-			opp-hz = /bits/ 64 <89000000>;
++			opp-hz = /bits/ 64 <88700000>;
+ 		};
+ 		opp01 {
+ 			opp-hz = /bits/ 64 <133000000>;
+@@ -136,32 +142,34 @@
+ 			opp-hz = /bits/ 64 <178000000>;
+ 		};
+ 		opp03 {
+-			opp-hz = /bits/ 64 <267000000>;
++			opp-hz = /bits/ 64 <266000000>;
+ 		};
+ 	};
+ 
+ 	bus_peri_opp_table: opp_table8 {
+ 		compatible = "operating-points-v2";
+ 
++		/* derived from 666MHz CPLL */
+ 		opp00 {
+-			opp-hz = /bits/ 64 <67000000>;
++			opp-hz = /bits/ 64 <66600000>;
+ 		};
+ 	};
+ 
+ 	bus_g2d_opp_table: opp_table9 {
+ 		compatible = "operating-points-v2";
+ 
++		/* derived from 666MHz CPLL */
+ 		opp00 {
+-			opp-hz = /bits/ 64 <84000000>;
++			opp-hz = /bits/ 64 <83250000>;
+ 		};
+ 		opp01 {
+-			opp-hz = /bits/ 64 <167000000>;
++			opp-hz = /bits/ 64 <111000000>;
+ 		};
+ 		opp02 {
+-			opp-hz = /bits/ 64 <222000000>;
++			opp-hz = /bits/ 64 <166500000>;
+ 		};
+ 		opp03 {
+-			opp-hz = /bits/ 64 <300000000>;
++			opp-hz = /bits/ 64 <222000000>;
+ 		};
+ 		opp04 {
+ 			opp-hz = /bits/ 64 <333000000>;
+@@ -171,8 +179,9 @@
+ 	bus_g2d_acp_opp_table: opp_table10 {
+ 		compatible = "operating-points-v2";
+ 
++		/* derived from 532MHz MPLL */
+ 		opp00 {
+-			opp-hz = /bits/ 64 <67000000>;
++			opp-hz = /bits/ 64 <66500000>;
+ 		};
+ 		opp01 {
+ 			opp-hz = /bits/ 64 <133000000>;
+@@ -181,13 +190,14 @@
+ 			opp-hz = /bits/ 64 <178000000>;
+ 		};
+ 		opp03 {
+-			opp-hz = /bits/ 64 <267000000>;
++			opp-hz = /bits/ 64 <266000000>;
+ 		};
+ 	};
+ 
+ 	bus_jpeg_opp_table: opp_table11 {
+ 		compatible = "operating-points-v2";
+ 
++		/* derived from 600MHz DPLL */
+ 		opp00 {
+ 			opp-hz = /bits/ 64 <75000000>;
+ 		};
+@@ -205,23 +215,25 @@
+ 	bus_jpeg_apb_opp_table: opp_table12 {
+ 		compatible = "operating-points-v2";
+ 
++		/* derived from 666MHz CPLL */
+ 		opp00 {
+-			opp-hz = /bits/ 64 <84000000>;
++			opp-hz = /bits/ 64 <83250000>;
+ 		};
+ 		opp01 {
+ 			opp-hz = /bits/ 64 <111000000>;
+ 		};
+ 		opp02 {
+-			opp-hz = /bits/ 64 <134000000>;
++			opp-hz = /bits/ 64 <133000000>;
+ 		};
+ 		opp03 {
+-			opp-hz = /bits/ 64 <167000000>;
++			opp-hz = /bits/ 64 <166500000>;
+ 		};
+ 	};
+ 
+ 	bus_disp1_fimd_opp_table: opp_table13 {
+ 		compatible = "operating-points-v2";
+ 
++		/* derived from 600MHz DPLL */
+ 		opp00 {
+ 			opp-hz = /bits/ 64 <120000000>;
+ 		};
+@@ -233,6 +245,7 @@
+ 	bus_disp1_opp_table: opp_table14 {
+ 		compatible = "operating-points-v2";
+ 
++		/* derived from 600MHz DPLL */
+ 		opp00 {
+ 			opp-hz = /bits/ 64 <120000000>;
+ 		};
+@@ -247,6 +260,7 @@
+ 	bus_gscl_opp_table: opp_table15 {
+ 		compatible = "operating-points-v2";
+ 
++		/* derived from 600MHz DPLL */
+ 		opp00 {
+ 			opp-hz = /bits/ 64 <150000000>;
+ 		};
+@@ -261,6 +275,7 @@
+ 	bus_mscl_opp_table: opp_table16 {
+ 		compatible = "operating-points-v2";
+ 
++		/* derived from 666MHz CPLL */
+ 		opp00 {
+ 			opp-hz = /bits/ 64 <84000000>;
+ 		};
+@@ -274,7 +289,7 @@
+ 			opp-hz = /bits/ 64 <333000000>;
+ 		};
+ 		opp04 {
+-			opp-hz = /bits/ 64 <400000000>;
++			opp-hz = /bits/ 64 <666000000>;
+ 		};
+ 	};
+ 
+@@ -398,7 +413,7 @@
+ };
+ 
+ &bus_fsys {
+-	operating-points-v2 = <&bus_fsys_apb_opp_table>;
++	operating-points-v2 = <&bus_fsys2_opp_table>;
+ 	devfreq = <&bus_wcore>;
+ 	status = "okay";
+ };
+-- 
+2.17.1
+
