@@ -2,140 +2,194 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B5AC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 03:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 424AAC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 03:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FD9D21D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 03:20:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ia8kEdT3"
+	by mail.kernel.org (Postfix) with ESMTP id 2408F22314
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 03:22:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbfLSDUe (ORCPT
+        id S1726933AbfLSDWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 22:20:34 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35407 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726813AbfLSDUe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 22:20:34 -0500
-Received: by mail-pf1-f193.google.com with SMTP id b19so2372431pfo.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 19:20:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=myMe1QwkZnF5nX58KJ75LAcGLicOPPY3P73wZ7ihcKg=;
-        b=ia8kEdT3w0AGu1TZUC9FRWhFeospX94hSxPi51J1YQoavCj9UmQpWXusCabigHGUs7
-         EYP6G8K6XhsexI3r7GaURDw9S6Dy3hmV3waThbzkXxN8Nnk9MDG0MzHz22cFguX3lMZD
-         sQ9pMH7hRWKtOJf6+d6816XdBDpluUNwLGLDYaibxHZ8b2iCrcuRtWork+kpe+sUucLu
-         HMCfkQGwd0hVOlfnuVK65CVQ7c2eOKP5FCdy/QMhURFGUVVUThfLOEN500bGYIA4IpIQ
-         fLak64i81D38a6frFcDdYj3mASruGQiOYLAcXPYM6pgGoJmmKjGu/awEinsBDCQWhIOy
-         AmYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=myMe1QwkZnF5nX58KJ75LAcGLicOPPY3P73wZ7ihcKg=;
-        b=WuVR+dBrTWGTzCS8xtNZsehWOLkoNlxPh9z7LAtV611mEWNc7OTIgykCH4a7q1p5Ro
-         ryXcxq6XrdnmWQWxhxYj5YG3Ppv2+aQtolOE0YoPzn4r5yG/Y4mQXRF0eEb7gU7MTO5l
-         HRWVPZcgY67Kur5uA7FeRhC7fR6J8vgOY2MVm2+UkksCJN16ssKWB6TIvSdinY/Ju655
-         QWNbeKdiFdTRe2bj+5/p1EWu9FOTwDCBIKT11a9+dd1M47eyXKr6pmZt6o76g7LGieLX
-         07XyZGoObgxDBGFLkui3MPIfh+LTWpNjlBoCUVwNrXX/vWI+uGIfSeTRFvnzjiGpCzFV
-         i2AA==
-X-Gm-Message-State: APjAAAVE+O55Q7GB9235ZM6sq4Ig633OlygECrz0fAdSLNT63sUY0C+6
-        mEb3oPMRhB9XuuM9e6GrqIW0tFxFVBtKEQ==
-X-Google-Smtp-Source: APXvYqxLCUfDqY2jqojMritJO5se/AtwS0zRhyNk8y17DL2VoewC8sku+NYR6qj3xiSrF9C8oUG5Cg==
-X-Received: by 2002:a63:d958:: with SMTP id e24mr6579422pgj.31.1576725633389;
-        Wed, 18 Dec 2019 19:20:33 -0800 (PST)
-Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
-        by smtp.gmail.com with ESMTPSA id c3sm2350517pfi.155.2019.12.18.19.20.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 19:20:32 -0800 (PST)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        linux@dominikbrodowski.net
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH v2] mtd: maps: pcmciamtd: fix possible sleep-in-atomic-context bugs in pcmciamtd_set_vpp()
-Date:   Thu, 19 Dec 2019 11:20:23 +0800
-Message-Id: <20191219032023.7177-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 18 Dec 2019 22:22:11 -0500
+Received: from mxout2.idt.com ([157.165.5.26]:56755 "EHLO mxout2.idt.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726762AbfLSDWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 22:22:10 -0500
+Received: from mail6.idt.com (localhost [127.0.0.1])
+        by mxout2.idt.com (8.14.4/8.14.4) with ESMTP id xBJ3Lw0X009611;
+        Wed, 18 Dec 2019 19:21:58 -0800
+Received: from corpml3.corp.idt.com (corpml3.corp.idt.com [157.165.140.25])
+        by mail6.idt.com (8.14.4/8.14.4) with ESMTP id xBJ3LwL6025860;
+        Wed, 18 Dec 2019 19:21:58 -0800
+Received: from vcheng-VirtualBox.localdomain (corpimss2.corp.idt.com [157.165.141.30])
+        by corpml3.corp.idt.com (8.11.7p1+Sun/8.11.7) with ESMTP id xBJ3LvW09319;
+        Wed, 18 Dec 2019 19:21:57 -0800 (PST)
+From:   vincent.cheng.xh@renesas.com
+To:     davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com,
+        richardcochran@gmail.com
+Cc:     devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Vincent Cheng <vincent.cheng.xh@renesas.com>
+Subject: [PATCH v2 net-next 1/1] ptp: clockmatrix: Rework clockmatrix version information.
+Date:   Wed, 18 Dec 2019 22:21:37 -0500
+Message-Id: <1576725697-11828-2-git-send-email-vincent.cheng.xh@renesas.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1576725697-11828-1-git-send-email-vincent.cheng.xh@renesas.com>
+References: <1576725697-11828-1-git-send-email-vincent.cheng.xh@renesas.com>
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+From: Vincent Cheng <vincent.cheng.xh@renesas.com>
 
-drivers/pcmcia/pcmcia_resource.c, 312:
-	mutex_lock in pcmcia_fixup_vpp
-drivers/mtd/maps/pcmciamtd.c, 309:
-	pcmcia_fixup_vpp in pcmciamtd_set_vpp
-drivers/mtd/maps/pcmciamtd.c, 306:
-	_raw_spin_lock_irqsave in pcmciamtd_set_vpp
+Remove pipeline id, bond id, csr id, and irq id.
+Changes source register for reading HW rev id.
+Add OTP config select.
 
-drivers/pcmcia/pcmcia_resource.c, 312:
-	mutex_lock in pcmcia_fixup_vpp
-drivers/mtd/maps/pcmciamtd.c, 312:
-	pcmcia_fixup_vpp in pcmciamtd_set_vpp
-drivers/mtd/maps/pcmciamtd.c, 306:
-	_raw_spin_lock_irqsave in pcmciamtd_set_vp
-
-mutex_lock() may sleep at runtime.
-
-To fix these bugs, the spinlock is replaced with a mutex.
-
-These bugs are found by a static analysis tool STCheck written by
-myself.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Vincent Cheng <vincent.cheng.xh@renesas.com>
 ---
-v2:
-* Change the spinlock to a mutex.
-  Thank Dominik for good advice.
+ drivers/ptp/idt8a340_reg.h    |  2 ++
+ drivers/ptp/ptp_clockmatrix.c | 77 ++++++++-----------------------------------
+ 2 files changed, 15 insertions(+), 64 deletions(-)
 
----
-
- drivers/mtd/maps/pcmciamtd.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/mtd/maps/pcmciamtd.c b/drivers/mtd/maps/pcmciamtd.c
-index 70bb403f69f7..2ac79e1cedd9 100644
---- a/drivers/mtd/maps/pcmciamtd.c
-+++ b/drivers/mtd/maps/pcmciamtd.c
-@@ -294,16 +294,15 @@ static void pcmcia_copy_to(struct map_info *map, unsigned long to, const void *f
- }
+diff --git a/drivers/ptp/idt8a340_reg.h b/drivers/ptp/idt8a340_reg.h
+index 9263bc3..69eedda 100644
+--- a/drivers/ptp/idt8a340_reg.h
++++ b/drivers/ptp/idt8a340_reg.h
+@@ -77,6 +77,8 @@
+ #define JTAG_DEVICE_ID                    0x001c
+ #define PRODUCT_ID                        0x001e
  
++#define OTP_SCSR_CONFIG_SELECT            0x0022
++
+ #define STATUS                            0xc03c
+ #define USER_GPIO0_TO_7_STATUS            0x008a
+ #define USER_GPIO8_TO_15_STATUS           0x008b
+diff --git a/drivers/ptp/ptp_clockmatrix.c b/drivers/ptp/ptp_clockmatrix.c
+index a5110b7..9b1a89d 100644
+--- a/drivers/ptp/ptp_clockmatrix.c
++++ b/drivers/ptp/ptp_clockmatrix.c
+@@ -405,6 +405,7 @@ static int _idtcm_set_dpll_tod(struct idtcm_channel *channel,
+ 	if (wr_trig == HW_TOD_WR_TRIG_SEL_MSB) {
  
--static DEFINE_SPINLOCK(pcmcia_vpp_lock);
-+static DEFINE_MUTEX(pcmcia_vpp_lock);
- static int pcmcia_vpp_refcnt;
- static void pcmciamtd_set_vpp(struct map_info *map, int on)
+ 		if (idtcm->calculate_overhead_flag) {
++			/* Assumption: I2C @ 400KHz */
+ 			total_overhead_ns =  ktime_to_ns(ktime_get_raw()
+ 							 - idtcm->start_time)
+ 					     + idtcm->tod_write_overhead_ns
+@@ -596,44 +597,7 @@ static int idtcm_state_machine_reset(struct idtcm *idtcm)
+ 
+ static int idtcm_read_hw_rev_id(struct idtcm *idtcm, u8 *hw_rev_id)
  {
- 	struct pcmciamtd_dev *dev = (struct pcmciamtd_dev *)map->map_priv_1;
- 	struct pcmcia_device *link = dev->p_dev;
--	unsigned long flags;
- 
- 	pr_debug("dev = %p on = %d vpp = %d\n\n", dev, on, dev->vpp);
--	spin_lock_irqsave(&pcmcia_vpp_lock, flags);
-+	mutex_lock(&pcmcia_vpp_lock);
- 	if (on) {
- 		if (++pcmcia_vpp_refcnt == 1)   /* first nested 'on' */
- 			pcmcia_fixup_vpp(link, dev->vpp);
-@@ -311,7 +310,7 @@ static void pcmciamtd_set_vpp(struct map_info *map, int on)
- 		if (--pcmcia_vpp_refcnt == 0)   /* last nested 'off' */
- 			pcmcia_fixup_vpp(link, 0);
- 	}
--	spin_unlock_irqrestore(&pcmcia_vpp_lock, flags);
-+	mutex_unlock(&pcmcia_vpp_lock);
+-	return idtcm_read(idtcm,
+-			  GENERAL_STATUS,
+-			  HW_REV_ID,
+-			  hw_rev_id,
+-			  sizeof(u8));
+-}
+-
+-static int idtcm_read_bond_id(struct idtcm *idtcm, u8 *bond_id)
+-{
+-	return idtcm_read(idtcm,
+-			  GENERAL_STATUS,
+-			  BOND_ID,
+-			  bond_id,
+-			  sizeof(u8));
+-}
+-
+-static int idtcm_read_hw_csr_id(struct idtcm *idtcm, u16 *hw_csr_id)
+-{
+-	int err;
+-	u8 buf[2] = {0};
+-
+-	err = idtcm_read(idtcm, GENERAL_STATUS, HW_CSR_ID, buf, sizeof(buf));
+-
+-	*hw_csr_id = (buf[1] << 8) | buf[0];
+-
+-	return err;
+-}
+-
+-static int idtcm_read_hw_irq_id(struct idtcm *idtcm, u16 *hw_irq_id)
+-{
+-	int err;
+-	u8 buf[2] = {0};
+-
+-	err = idtcm_read(idtcm, GENERAL_STATUS, HW_IRQ_ID, buf, sizeof(buf));
+-
+-	*hw_irq_id = (buf[1] << 8) | buf[0];
+-
+-	return err;
++	return idtcm_read(idtcm, HW_REVISION, REV_ID, hw_rev_id, sizeof(u8));
  }
  
+ static int idtcm_read_product_id(struct idtcm *idtcm, u16 *product_id)
+@@ -674,20 +638,11 @@ static int idtcm_read_hotfix_release(struct idtcm *idtcm, u8 *hotfix)
+ 			  sizeof(u8));
+ }
  
+-static int idtcm_read_pipeline(struct idtcm *idtcm, u32 *pipeline)
++static int idtcm_read_otp_scsr_config_select(struct idtcm *idtcm,
++					     u8 *config_select)
+ {
+-	int err;
+-	u8 buf[4] = {0};
+-
+-	err = idtcm_read(idtcm,
+-			 GENERAL_STATUS,
+-			 PIPELINE_ID,
+-			 &buf[0],
+-			 sizeof(buf));
+-
+-	*pipeline = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
+-
+-	return err;
++	return idtcm_read(idtcm, GENERAL_STATUS, OTP_SCSR_CONFIG_SELECT,
++			  config_select, sizeof(u8));
+ }
+ 
+ static int process_pll_mask(struct idtcm *idtcm, u32 addr, u8 val, u8 *mask)
+@@ -1078,28 +1033,22 @@ static void idtcm_display_version_info(struct idtcm *idtcm)
+ 	u8 major;
+ 	u8 minor;
+ 	u8 hotfix;
+-	u32 pipeline;
+ 	u16 product_id;
+-	u16 csr_id;
+-	u16 irq_id;
+ 	u8 hw_rev_id;
+-	u8 bond_id;
++	u8 config_select;
++	char *fmt = "%d.%d.%d, Id: 0x%04x  HW Rev: %d  OTP Config Select: %d\n";
+ 
+ 	idtcm_read_major_release(idtcm, &major);
+ 	idtcm_read_minor_release(idtcm, &minor);
+ 	idtcm_read_hotfix_release(idtcm, &hotfix);
+-	idtcm_read_pipeline(idtcm, &pipeline);
+ 
+ 	idtcm_read_product_id(idtcm, &product_id);
+ 	idtcm_read_hw_rev_id(idtcm, &hw_rev_id);
+-	idtcm_read_bond_id(idtcm, &bond_id);
+-	idtcm_read_hw_csr_id(idtcm, &csr_id);
+-	idtcm_read_hw_irq_id(idtcm, &irq_id);
+-
+-	dev_info(&idtcm->client->dev, "Version:  %d.%d.%d, Pipeline %u\t"
+-		 "0x%04x, Rev %d, Bond %d, CSR %d, IRQ %d\n",
+-		 major, minor, hotfix, pipeline,
+-		 product_id, hw_rev_id, bond_id, csr_id, irq_id);
++
++	idtcm_read_otp_scsr_config_select(idtcm, &config_select);
++
++	dev_info(&idtcm->client->dev, fmt, major, minor, hotfix,
++		 product_id, hw_rev_id, config_select);
+ }
+ 
+ static struct ptp_clock_info idtcm_caps = {
 -- 
-2.17.1
+2.7.4
 
