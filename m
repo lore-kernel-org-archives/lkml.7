@@ -2,126 +2,148 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 113E0C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E89C3C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3DFC222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:04:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576757097;
-	bh=ZWu/BRMh45ey2/+NOodYySlbK+BJsxdZgItFNtS2Vzs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mcct3nCfUlsGPV8kSMNd247blD8+iPzjQ/OwRW+YLT31PyP1w2rivCym74oI6iAyW
-	 4AZq8UjTn37JJiuJ5DK4sCqtZkkKu0YQP3CDyvlPfe2DiB3z5izEPtxacZN1TpV233
-	 YHsFsTHMMlE39VRR76iH8YBjjVBOilaKy1OAxRgU=
+	by mail.kernel.org (Postfix) with ESMTP id B9D22222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:05:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="BUj3BqTB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbfLSME5 (ORCPT
+        id S1726967AbfLSMFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 07:04:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36596 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 07:05:23 -0500
+Received: from mout.gmx.net ([212.227.17.20]:47773 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727126AbfLSMEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 07:04:36 -0500
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0272524684;
-        Thu, 19 Dec 2019 12:04:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576757075;
-        bh=ZWu/BRMh45ey2/+NOodYySlbK+BJsxdZgItFNtS2Vzs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z4buwxKD9N1mp2Bklv1roxu3ObpRgjzsbf0LGyVbNONyxjW7apNDAHSTSbQb4Ht3Z
-         HMkrmKiXWR56IInnoR70ShrQZkwW7+unCDsJCqcmBPIbaYB1tOEluqq9Ead3czW6k8
-         0s5Mg90QZqAtzJh8+m4nAJ42Egl4Uk8mrGPrzmwM=
-From:   Will Deacon <will@kernel.org>
-To:     linux-kernel@vger.kernel.org, iommu@lists.linuxfoundation.org
-Cc:     kernel-team@android.com, Will Deacon <will@kernel.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        John Garry <john.garry@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH v4 12/16] iommu/arm-smmu: Support SMMU module probing from the IORT
-Date:   Thu, 19 Dec 2019 12:03:48 +0000
-Message-Id: <20191219120352.382-13-will@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191219120352.382-1-will@kernel.org>
-References: <20191219120352.382-1-will@kernel.org>
+        id S1726744AbfLSMFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 07:05:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1576757117;
+        bh=oHbd8+naRUDak1t7HyPoUb8otyLjLJCOQAcfK+Mtclw=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=BUj3BqTBMoOpb5xvOJVATNemxDnFJpV9ikmWOi/eIwg5ozA/WbgDfSTVEqE1z2L6N
+         lj4Bhgi546G3avdCloexk27s3O+Qi2s6Vy+iqzDwTO7XxZ9gKB7KCb4U2v5fMnuL0/
+         aa78MZPQJWt1Fc6hEf8WayNG2Xq5sKm9SoE3Hz2U=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [185.76.99.135] ([185.76.99.135]) by web-mail.gmx.net
+ (3c-app-gmx-bap68.server.lan [172.19.172.68]) (via HTTP); Thu, 19 Dec 2019
+ 13:05:17 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <trinity-76f78a91-fc1f-479c-bd38-a7b989b28234-1576757117258@3c-app-gmx-bap68>
+From:   "Frank Wunderlich" <frank-w@public-files.de>
+To:     "Rob Herring" <robh+dt@kernel.org>
+Cc:     "Masahiro Yamada" <masahiroy@kernel.org>,
+        "Linux Kbuild mailing list" <linux-kbuild@vger.kernel.org>,
+        "Michal Marek" <michal.lkml@markovi.net>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        "Frank Rowand" <frowand.list@gmail.com>,
+        DTML <devicetree@vger.kernel.org>
+Subject: Aw: Re: [PATCH] kbuild: Add DTC_CPP_FLAGS
+Content-Type: text/plain; charset=UTF-8
+Date:   Thu, 19 Dec 2019 13:05:17 +0100
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <CAL_Jsq+we-0c25Hn+eGDTsyTDwKEvs9LWV9QtLX1+8V3DmtFtg@mail.gmail.com>
+References: <20191218114625.28438-1-frank-w@public-files.de>
+ <CAK7LNARWYE4-4Qp-YfTrrt1YCZ68b28FDoE45cDJkZTqUyXNUw@mail.gmail.com>
+ <CAL_Jsq+we-0c25Hn+eGDTsyTDwKEvs9LWV9QtLX1+8V3DmtFtg@mail.gmail.com>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:DinXypny3FYqi5CzziIi3ovA308cTpeTvs+7Oy2eWnoyOsphl0VSMhahYhaMGtihK1fXV
+ vpN/wCa5IDmiyqUhmKUQQNDZ1vWBbirdvM0YPz5A1vG40flYbB4dFXBvRtFDbY7xcSdWEPl9wUVP
+ SVq/Sk7qK+aHohKkYAYVtvJ1c1FblmjShV+5u/z5LFCY1N3xM7THpUCzExldJreEIWAetivgrst4
+ twq6rizclVTQyWi5z2hQLR/y/euTJfVENSrqX8eBVuxL7ZbOdf5teOCQ3kuB/fyUVV1IBy7vKRvU
+ 4U=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:mDqwi3hrEVw=:1T4JUV+00BktsWI/C2ulmh
+ ZsMYnSjqf/cLm7gKHivmgzw3MUl33Qz8WAHPJgMq7luSL25eShs2KWVmPkGIOP1+3+3g5M1QF
+ 0RRz3JNze9TJdOmEOlJSJpphwXRrUjrgAAyGp5So0sVZ3i2qRIJ72kwrWQspOWg71jsJ0Swvv
+ k+EEoayHcf4mTCRBtkw56ZfBndtvxw4uznk4pVn4G+ET9DZHOsvJEQIoOTJ7lkODRfifiW1kp
+ Xk96mPO/G3TBp2boZBYJjJxQ8Mjkb7qQwrjMfUD+ogvTPugMutXO0uJ5iascIeTBmaVwX+477
+ +hrqL8MnzkNM1nE1b9rE78TJpsVmfZJXdYB9XQEwyX1rn0Oa/qT4+ctx7T5Nc4yzXxcTKXDwx
+ fmEtTi4LTrvroKdlT94qhgxPkTvavtkZmSbf9hlEp6FZi0jw2iPq2oBjAgJUP84HTZaQ+JjP2
+ NdQGH1vGlKtuUSncxNAGo+ozteS02X8QmR/073aOl16puqLT+JTqDeiBB9qvdbjfMFv+n3dNS
+ XCo4bswfiN3edBY/zUDSNPGRKfl2Z5rRum5wz1r336hUCHaMCYnXuL257DAC1VpPeiXBBJgWV
+ 7n4CgiR9pscLdWHu5yvYAZGzWnAV1FG48NMnU3uuRSX0r0hg/3Uo287r6RpZE5NpOfsD3ZQpS
+ 9eWitBN15Ai7KKI3+3wKaO7HF5KR/n6g7QKFhK5f5y5+8i+7OETtS/sPnIJosEZe6KMg=
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+Hi Rob,
 
-Add support for SMMU drivers built as modules to the ACPI/IORT device
-probing path, by deferring the probe of the master if the SMMU driver is
-known to exist but has not been loaded yet. Given that the IORT code
-registers a platform device for each SMMU that it discovers, we can
-easily trigger the udev based autoloading of the SMMU drivers by making
-the platform device identifier part of the module alias.
+so the way you prefer is this one (use new file for additions and includin=
+g the board dts):
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Tested-by: John Garry <john.garry@huawei.com> # only manual smmu ko loading
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Will Deacon <will@kernel.org>
----
- drivers/acpi/arm64/iort.c   | 4 ++--
- drivers/iommu/arm-smmu-v3.c | 1 +
- drivers/iommu/arm-smmu.c    | 1 +
- 3 files changed, 4 insertions(+), 2 deletions(-)
+arch/arm64/boot/dts/mediatek/mt7622-bpi-r64-mt7531.dts (example for mt7531=
+-phy)
 
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index 33f71983e001..4a560fdf7386 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -850,9 +850,9 @@ static inline bool iort_iommu_driver_enabled(u8 type)
- {
- 	switch (type) {
- 	case ACPI_IORT_NODE_SMMU_V3:
--		return IS_BUILTIN(CONFIG_ARM_SMMU_V3);
-+		return IS_ENABLED(CONFIG_ARM_SMMU_V3);
- 	case ACPI_IORT_NODE_SMMU:
--		return IS_BUILTIN(CONFIG_ARM_SMMU);
-+		return IS_ENABLED(CONFIG_ARM_SMMU);
- 	default:
- 		pr_warn("IORT node type %u does not describe an SMMU\n", type);
- 		return false;
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 46160a2fec3e..da9474a02668 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -3734,4 +3734,5 @@ module_platform_driver(arm_smmu_driver);
- 
- MODULE_DESCRIPTION("IOMMU API for ARM architected SMMUv3 implementations");
- MODULE_AUTHOR("Will Deacon <will.deacon@arm.com>");
-+MODULE_ALIAS("platform:arm-smmu-v3");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 5cbee88a3b83..5d2f60bb9e50 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -2281,4 +2281,5 @@ module_platform_driver(arm_smmu_driver);
- 
- MODULE_DESCRIPTION("IOMMU API for ARM architected SMMU implementations");
- MODULE_AUTHOR("Will Deacon <will.deacon@arm.com>");
-+MODULE_ALIAS("platform:arm-smmu");
- MODULE_LICENSE("GPL v2");
--- 
-2.24.1.735.g03f4e72817-goog
+/*
+ * Copyright (c) 2018 MediaTek Inc.
+ * Author:
+ *
+ * SPDX-License-Identifier: (GPL-2.0 OR MIT)
+ */
 
+/dts-v1/;
+
+#include "mt7622-bananapi-bpi-r64.dts"
+
+/ {
+        gsw: gsw@0 {
+                compatible =3D "mediatek,mt753x";
+                mediatek,ethsys =3D <&ethsys>;
+                #address-cells =3D <1>;
+                #size-cells =3D <0>;
+        };
+};
+
+&gsw {
+        mediatek,mdio =3D <&mdio>;
+        mediatek,portmap =3D "wllll";
+        mediatek,mdio_master_pinmux =3D <0>;
+        reset-gpios =3D <&pio 54 0>;
+        interrupt-parent =3D <&pio>;
+        interrupts =3D <53 IRQ_TYPE_LEVEL_HIGH>;
+        status =3D "okay";
+
+        port5: port@5 {
+                compatible =3D "mediatek,mt753x-port";
+                reg =3D <5>;
+                phy-mode =3D "rgmii";
+                fixed-link {
+                        speed =3D <1000>;
+                        full-duplex;
+                };
+        };
+
+        port6: port@6 {
+                compatible =3D "mediatek,mt753x-port";
+                reg =3D <6>;
+                phy-mode =3D "2500base-x";
+                fixed-link {
+                        speed =3D <2500>;
+                        full-duplex;
+                };
+        };
+};
+
+at least it compiles and after decompile the new nodes are visible...
+
+is there any way to drop nodes (in case dsa-driver gets merged i don't nee=
+d it in the other 2)? i can disable them, but they will be present.
+
+regards Frank
+
+
+> Gesendet: Mittwoch, 18. Dezember 2019 um 14:51 Uhr
+> Von: "Rob Herring" <robh+dt@kernel.org>
+> NAK. #ifdefs and complex macros in particular are features we don't
+> want in dts files.
+>
+> Rob
