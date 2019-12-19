@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C21CC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B811C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7D124684
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3C952465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:54:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781656;
-	bh=5ELXbSbF1Du+eE8S1HGc9K2ygWD6qoJiSIfCoeAqHGk=;
+	s=default; t=1576781658;
+	bh=q1pcPo/Ma7GIQSnLrokYGmnJGAfNARn6hiRv5Gp4GJQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AEg3BdHX/A0hK4bsmwnOvBjrmuXW1iuWswBvk4qwtQY9WrMVA/vH06gquNSKRi54U
-	 ogQY950Pa22cQRuwsaSDw7OvJhA4nbxYmADfErHIpQKn3AwibCojFEOzcZpQKzsRPc
-	 h8tD6rtmmOTOGrzahP4SWCcwYM1B3jrqu7GVZXfw=
+	b=PaicO32aO3EkQDFdn5IDfYF8aK6QsvxuloMeiMXd6/wd7QZk2JV0kEhK9DMqeWyY2
+	 2NYjjqqzi84EswhGunNrOag6hM9al54rBTtEn/vNRMeqgTBqDKc+cbUjR9Wi8avdGv
+	 TtLpc/0Xt5MaeHMCSp5q9U6GPUOvPa8aAcx9QQBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730472AbfLSSyP (ORCPT
+        id S1730480AbfLSSyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:54:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49518 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:54:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730463AbfLSSyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:54:09 -0500
+        id S1730124AbfLSSyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:54:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 945BF222C2;
-        Thu, 19 Dec 2019 18:54:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63978222C2;
+        Thu, 19 Dec 2019 18:54:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781649;
-        bh=5ELXbSbF1Du+eE8S1HGc9K2ygWD6qoJiSIfCoeAqHGk=;
+        s=default; t=1576781653;
+        bh=q1pcPo/Ma7GIQSnLrokYGmnJGAfNARn6hiRv5Gp4GJQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pBNCfUONceOoSzevxp3qBoXAqyp6dAX83SL6MKZKf14lxbQFYrttJRCqgXtY2l5bQ
-         PRydYpzcXLO57Z0sMnOxCaET/1jcZgNIY86P0cZw8W8Od6VBfGzq1CCW0eTAuqzrC8
-         YJAAcI8Nmxa6Gg/fg+5LhtsDsXf3ijh8BY4zhFkk=
+        b=PVekG9E4bgRo+6hK7OpMrtizW2EwsC6Wa8kyc/wzA4bQC8cvM8bJSX5egT4opKMTT
+         q9ldbZA+Ipccb4Vtvb8bxsPpZHHXY0rQnLYKTFV/uatu1ekOsMFkK96eqX0gvsjfNp
+         XwDI/e87Vo3F1cCF28SWbrHT27skrEg4cNkeQJC8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Arun Kumar Neelakantam <aneela@codeaurora.org>,
+        Chris Lew <clew@codeaurora.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 5.4 23/80] rpmsg: glink: Fix use after free in open_ack TIMEOUT case
-Date:   Thu, 19 Dec 2019 19:34:15 +0100
-Message-Id: <20191219183101.776120362@linuxfoundation.org>
+Subject: [PATCH 5.4 25/80] rpmsg: glink: Fix rpmsg_register_device err handling
+Date:   Thu, 19 Dec 2019 19:34:17 +0100
+Message-Id: <20191219183102.424124451@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -61,44 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arun Kumar Neelakantam <aneela@codeaurora.org>
+From: Chris Lew <clew@codeaurora.org>
 
-commit ac74ea01860170699fb3b6ea80c0476774c8e94f upstream.
+commit f7e714988edaffe6ac578318e99501149b067ba0 upstream.
 
-Extra channel reference put when remote sending OPEN_ACK after timeout
-causes use-after-free while handling next remote CLOSE command.
-
-Remove extra reference put in timeout case to avoid use-after-free.
+The device release function is set before registering with rpmsg. If
+rpmsg registration fails, the framework will call device_put(), which
+invokes the release function. The channel create logic does not need to
+free rpdev if rpmsg_register_device() fails and release is called.
 
 Fixes: b4f8e52b89f6 ("rpmsg: Introduce Qualcomm RPM glink driver")
 Cc: stable@vger.kernel.org
 Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
+Signed-off-by: Chris Lew <clew@codeaurora.org>
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/rpmsg/qcom_glink_native.c |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/rpmsg/qcom_glink_native.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
 --- a/drivers/rpmsg/qcom_glink_native.c
 +++ b/drivers/rpmsg/qcom_glink_native.c
-@@ -1103,13 +1103,12 @@ static int qcom_glink_create_remote(stru
- close_link:
- 	/*
- 	 * Send a close request to "undo" our open-ack. The close-ack will
--	 * release the last reference.
-+	 * release qcom_glink_send_open_req() reference and the last reference
-+	 * will be relesed after receiving remote_close or transport unregister
-+	 * by calling qcom_glink_native_remove().
- 	 */
- 	qcom_glink_send_close_req(glink, channel);
+@@ -1423,15 +1423,13 @@ static int qcom_glink_rx_open(struct qco
  
--	/* Release qcom_glink_send_open_req() reference */
--	kref_put(&channel->refcount, qcom_glink_channel_release);
--
- 	return ret;
- }
+ 		ret = rpmsg_register_device(rpdev);
+ 		if (ret)
+-			goto free_rpdev;
++			goto rcid_remove;
  
+ 		channel->rpdev = rpdev;
+ 	}
+ 
+ 	return 0;
+ 
+-free_rpdev:
+-	kfree(rpdev);
+ rcid_remove:
+ 	spin_lock_irqsave(&glink->idr_lock, flags);
+ 	idr_remove(&glink->rcids, channel->rcid);
 
 
