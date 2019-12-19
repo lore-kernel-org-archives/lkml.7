@@ -2,93 +2,97 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F35F3C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE85C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDF7A21D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:01:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QyyH64gB"
+	by mail.kernel.org (Postfix) with ESMTP id 8E6AA21D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:03:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbfLSABt (ORCPT
+        id S1726712AbfLSADM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 19:01:49 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36489 "EHLO ozlabs.org"
+        Wed, 18 Dec 2019 19:03:12 -0500
+Received: from mga06.intel.com ([134.134.136.31]:30626 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbfLSABs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 19:01:48 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47dX9P6HLDz9sPK;
-        Thu, 19 Dec 2019 11:01:45 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1576713706;
-        bh=CBUu1TEhcIZSwqdjl+8GrOmBK0ixeFV5R+0Ppa2jFcc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=QyyH64gBLr3uCJZO69+ttq+w4LYcziDybU421A6541DKN59KLRLnyERAmPp3czft4
-         1+1z4hpXT+TpMa9WUkCYKti1+/LVs+sAfql7F8KtPMPZE6izAu5LZL1cC29JNbKTcR
-         8OyUNh1o8/NtGuSNeycKhO0w+un1he9BTu7dA0yyIH+qhxwmDIGk6bYq8S+SeyRnm2
-         basqzOKAVZ2g7jGNe+eFDjL7/aGBOvL5ZIxpUPlG/Ge743jzeaT57zv7KQxGZoSefO
-         hMv4uJP7ianQ/25z00gABS5jx88dH+xUPT8b/7K3E/tLl9zpmpncqXSyJyBwfsyCsK
-         cJeSw/6hspHHw==
-Date:   Thu, 19 Dec 2019 11:01:44 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Elliot Berman <eberman@codeaurora.org>
-Subject: linux-next: build failure after merge of the battery tree
-Message-ID: <20191219110144.0ccba0bf@canb.auug.org.au>
+        id S1726518AbfLSADM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 19:03:12 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 16:02:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
+   d="scan'208";a="248076103"
+Received: from jtreacy-mobl1.ger.corp.intel.com ([10.251.82.127])
+  by fmsmga002.fm.intel.com with ESMTP; 18 Dec 2019 16:02:56 -0800
+Message-ID: <17c3fc41ea6ff890c686489b9977c2d886295d6e.camel@linux.intel.com>
+Subject: Re: [PATCH] tpm/ppi: replace assertion code with recovery in
+ tpm_eval_dsm
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>, Aditya Pakki <pakki001@umn.edu>
+Cc:     kjlu@umn.edu, Peter Huewe <peterhuewe@gmx.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20191218134513.GE17227@ziepe.ca>
+References: <20191215182314.32208-1-pakki001@umn.edu>
+         <20191218134513.GE17227@ziepe.ca>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160
+ Espoo
+Content-Type: text/plain; charset="UTF-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/0IBJ0t3BNZwJcKT0YDq3uj2";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Date:   Thu, 19 Dec 2019 02:02:18 +0200
+User-Agent: Evolution 3.34.1-2 
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/0IBJ0t3BNZwJcKT0YDq3uj2
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, 2019-12-18 at 09:45 -0400, Jason Gunthorpe wrote:
+> On Sun, Dec 15, 2019 at 12:23:14PM -0600, Aditya Pakki wrote:
+> > In tpm_eval_dsm, BUG_ON on ppi_handle is used as an assertion.
+> > By returning NULL to the callers, instead of crashing, the error
+> > can be better handled.
+> > 
+> > Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> >  drivers/char/tpm/tpm_ppi.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/char/tpm/tpm_ppi.c b/drivers/char/tpm/tpm_ppi.c
+> > index b2dab941cb7f..4b6f6a9c0b48 100644
+> > +++ b/drivers/char/tpm/tpm_ppi.c
+> > @@ -42,7 +42,9 @@ static inline union acpi_object *
+> >  tpm_eval_dsm(acpi_handle ppi_handle, int func, acpi_object_type type,
+> >  	     union acpi_object *argv4, u64 rev)
+> >  {
+> > -	BUG_ON(!ppi_handle);
+> > +	if (!ppi_handle)
+> > +		return NULL;
+> 
+> If it can't happen the confusing if should either be omitted entirely
+> or written as 
+> 
+> if (WARN_ON(!ppi_handle))
+>        return NULL;
+> 
+> Leaving it as apparently operational code just creates confusion for
+> the reader that now has the task to figure out why ppi_handle can be
+> null.
+> 
+> I favour not including tests for impossible conditions. The kernel
+> will crash immediately if ppi_handle is null anyhow.
+> 
+> Jason
 
-Hi all,
+Absolutely should be changed WARN_ON() as it never should happen. I'll
+update the patch before sending PR to Linus since I have it already
+applied.
 
-After merging the battery tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+Thanks Jason for the remark!
 
-ERROR: "machine_restart" [drivers/power/reset/restart-poweroff.ko] undefine=
-d!
+/Jarkko
 
-Caused by commit
-
-  263ec7d0c497 ("power: reset: Enable tristate on restart power-off driver")
-
-I have used the bettery tree from next-20191218 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/0IBJ0t3BNZwJcKT0YDq3uj2
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl36vegACgkQAVBC80lX
-0Gy1MQf+KoqormuEigtJxYPMkYJ9r/p7Ov6V60zfWkGl9VzlF+Qd2weAmx8vrdxj
-wCOjSevQMWnT2UU+oBoUhsm8I84c8lmV5EQmP0YfyIIiMTUhe7l/n+BSV0KTBrkL
-0h2TM0KLuGFr863NTXKu5bjsjv0s71RSuI0ldamleeyqlkBNX7dYa2MK1kcgcoYf
-5n56tcriZV4ie/sr0EbW6zw6UlykLysrDQoiGVX3zpKh1Trn/pr2fys/bZR9VA/0
-DDTSWaSY+dLiKozZbA1N8+iuvewNNVyh/VNpPQVooIuiwPc66T1QYRGxSjrxiZ5t
-o9rZ5FYejaHrX+RVgXCDPBXUn1iXLA==
-=QZkr
------END PGP SIGNATURE-----
-
---Sig_/0IBJ0t3BNZwJcKT0YDq3uj2--
