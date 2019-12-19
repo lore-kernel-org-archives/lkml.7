@@ -2,122 +2,95 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E1EC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 07:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E29C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 07:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA11021582
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 07:08:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wpboA0WI"
+	by mail.kernel.org (Postfix) with ESMTP id 3026821582
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 07:08:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbfLSHIQ (ORCPT
+        id S1726713AbfLSHIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 02:08:16 -0500
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:40624 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726300AbfLSHIQ (ORCPT
+        Thu, 19 Dec 2019 02:08:48 -0500
+Received: from isilmar-4.linta.de ([136.243.71.142]:49774 "EHLO
+        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726294AbfLSHIr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 02:08:16 -0500
-Received: by mail-vk1-f194.google.com with SMTP id c129so1362725vkh.7
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 23:08:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vGBlqophzoYGkykGSFS2zrDNaAG67yYqFvYU9Sw2GbI=;
-        b=wpboA0WIU5cEpcnCJW90qtqO9U2oTF/aY8DgSOdQzxIQu3j8gMvbWz69ubRHlG+Jov
-         z+XtO22xgUzAUoC75+gKUo0wavOhvFyoqOdMmNMk3HAqanmMVY7s4UShBMZsj0sQLupI
-         sND6WI8q4ywCN646ldAnKR/NogeoIhljEv5PDtYR7FZ0PUFQuJzR0ZdvjvZDkVSgDerZ
-         qHtvF8V+ayWIzj8Ig5YhxN6VE2obmtCiqKKsMOZAnsUtYs8KgCC0yTUcP0BWJmlZPDRO
-         sgpOJGPAnietElGS79axL0uXcoItVfdGQF4UTOLYkofY0Uwj9Mwm+o1PshvIBf4FcEME
-         drZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vGBlqophzoYGkykGSFS2zrDNaAG67yYqFvYU9Sw2GbI=;
-        b=M0lrnoUZI8OjPvXzZYpBEFp3DXN5SFCS3tjTxuuVdTLAVvsUbBVHu7j+z2N23dU/VY
-         cEP2FZnJbmwtcjwXLAkZixekhi9QYFjCMkSN55qTT3U0nBjXr3GjkeFSXf/k7mHcrzuV
-         cOLMCwhOS1VUd9kE5QLGIEXc6Mwp4i7X7RfsaEtStmOc3yQ7S61Hf95mgGl1WTZxbOxk
-         AED0eQWnOLY9VLvF9bqVCrHgli3zTgZFc2YYAyBR3L35KcOpaPmrsDcczsy3sn9hZTcF
-         0palMkVYhPPy0V04xl293OoVNeUHrXLaCidkxL0PGUn+DsdKrj0oHpwjGrGXel/NGUF7
-         5YNQ==
-X-Gm-Message-State: APjAAAULGRAc9cMTboldvx4rQBTVspl1cG9yLfKEdo0WhCMDF67dSMHF
-        RgxgC1YaQAWnlUbcCKpK6F+Vm0ajw7amL7Uy42ixsg==
-X-Google-Smtp-Source: APXvYqyHm4R2GejiQBIrAcbUJQjzwIsnECCTodyLsbfwHOPecke/1j0HM2BFwIJvBaC8nAxBmzCpp8dZ7vFpZp1UrpY=
-X-Received: by 2002:a1f:4541:: with SMTP id s62mr4873296vka.59.1576739295314;
- Wed, 18 Dec 2019 23:08:15 -0800 (PST)
-MIME-Version: 1.0
-References: <CAPDyKFr8aVWVydT5U6mpuZr5_waH=bn6F8rjryfDJ15FDaAXUw@mail.gmail.com>
- <1576736889-4430-1-git-send-email-zhangpan26@huawei.com>
-In-Reply-To: <1576736889-4430-1-git-send-email-zhangpan26@huawei.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 19 Dec 2019 08:07:37 +0100
-Message-ID: <CAPDyKFpTZNi63XgBgp3z4svxNcEsnZxH5qg6mZ9uTLkUm_AQSg@mail.gmail.com>
-Subject: Re: Re: [PATCH] mmc: host: fix a possible null pointer access.
-To:     Pan Zhang <zhangpan26@huawei.com>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Jaehoon Chung <jh80.chung@samsung.com>, hushiyuan@huawei.com,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Thu, 19 Dec 2019 02:08:47 -0500
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
+        by isilmar-4.linta.de (Postfix) with ESMTPSA id 58C662009A2;
+        Thu, 19 Dec 2019 07:08:46 +0000 (UTC)
+Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
+        id 189DD20BB5; Thu, 19 Dec 2019 08:08:36 +0100 (CET)
+Date:   Thu, 19 Dec 2019 08:08:36 +0100
+From:   Dominik Brodowski <linux@dominikbrodowski.net>
+To:     youling 257 <youling257@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rafael Wysocki <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH 4/5] init: unify opening /dev/console as
+ stdin/stdout/stderr
+Message-ID: <20191219070836.GA496264@light.dominikbrodowski.net>
+References: <20191212181422.31033-1-linux@dominikbrodowski.net>
+ <20191217051751.7998-1-youling257@gmail.com>
+ <20191217064254.GB3247@light.dominikbrodowski.net>
+ <CAOzgRdZR0bO14fyOk5jLBUkWwgsf7fx41JMQr-Hr6nss1KSmLw@mail.gmail.com>
+ <CAHk-=whN00UTq76bDT-WXm72VhttLv8tcchqEkcUoGXt38XXRg@mail.gmail.com>
+ <CAOzgRdaRDnd3gi0QO-b_2Nm4RXf_+UJ+Ec1Ne0=cx00fKpZN8g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOzgRdaRDnd3gi0QO-b_2Nm4RXf_+UJ+Ec1Ne0=cx00fKpZN8g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Dec 2019 at 07:28, Pan Zhang <zhangpan26@huawei.com> wrote:
->
-> On Wed, 18 Dec 2019 at 7:52 p.m., Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> >>
-> >> 3419     if (host->slot &&
-> >> 3420         (mmc_can_gpio_cd(host->slot->mmc) ||
-> >> 3421          !mmc_card_is_removable(host->slot->mmc))) {
-> >> 3422         ret = clk_prepare_enable(host->biu_clk);
-> >> 3423         if (ret)
-> >> 3424             return ret;
-> >> 3425     }
-> >>
-> >> We previously assumed 'host->slot' could be null (see line 3419).
-> >>
-> >> The following situation is similar, so add a judgement.
-> >>
-> >> Signed-off-by: Pan Zhang <zhangpan26@huawei.com>
-> >> ---
-> >>  drivers/mmc/host/dw_mmc.c | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-> >> index fc9d4d0..8e27c52 100644
-> >> --- a/drivers/mmc/host/dw_mmc.c
-> >> +++ b/drivers/mmc/host/dw_mmc.c
-> >> @@ -3454,7 +3454,7 @@ int dw_mci_runtime_resume(struct device *dev)
-> >>         mci_writel(host, CTRL, SDMMC_CTRL_INT_ENABLE);
-> >>
-> >>
-> >> -       if (host->slot->mmc->pm_flags & MMC_PM_KEEP_POWER)
-> >> +       if (host->slot && (host->slot->mmc->pm_flags &
-> >> + MMC_PM_KEEP_POWER))
-> >>                 dw_mci_set_ios(host->slot->mmc,
-> >> &host->slot->mmc->ios);
->
-> >This shouldn't be a problem as the ->runtime_resume() callback can't be invoked, unless there is a slot.
->
-> >>
-> >>         /* Force setup bus to guarantee available clock output */
-> >> --
-> >> 2.7.4
-> >>
->
-> If so, there is no need to assume host->slot pointer previously(line 3419)?
->
+On Thu, Dec 19, 2019 at 05:50:19AM +0800, youling 257 wrote:
+> 2019-12-18 5:14 GMT+08:00, Linus Torvalds <torvalds@linux-foundation.org>:
+> > This should be fixed by 2d3145f8d280 ("early init: fix error handling
+> > when opening /dev/console")
+> 
+> this fix no help for me.
+> 
+> > I'm not sure what you did to trigger that bug, but it was a bug.
+> 
+> alt+f1, type bash command,
+> bash: cannot set terminal process group (-1): Inappropriate ioctl for device
+> bash: no job control in this shell
 
-Yeah, there is probably more cases that has unnecessary "protection".
+Could you test this patch, please? And if it does not work: What is the
+content of /proc/1/fd/ and /proc/1/fdinfo/* for the working and non-working
+case? That are the only changes visible to userspace...
 
-Kind regards
-Uffe
+Thanks,
+	Dominik
+
+diff --git a/init/main.c b/init/main.c
+index 1ecfd43ed464..8886530e9dec 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -1162,7 +1162,7 @@ void console_on_rootfs(void)
+ 	unsigned int i;
+ 
+ 	/* Open /dev/console in kernelspace, this should never fail */
+-	file = filp_open("/dev/console", O_RDWR, 0);
++	file = filp_open("/dev/console", force_o_largefile() ? O_LARGEFILE | O_RDWR : O_RDWR, 0);
+ 	if (IS_ERR(file))
+ 		goto err_out;
+ 
