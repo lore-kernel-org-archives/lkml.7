@@ -2,116 +2,135 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF6AC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E177C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B7302064B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:51:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WdMUMkTf"
+	by mail.kernel.org (Postfix) with ESMTP id 11E5324650
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:51:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576745484;
+	bh=kEpQx0hZnJhKfGcuFLOViqZgRSUWJJJ1jXDNHmfiBvs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Zg5CWP1+QS3aZ5k4WzJHw8hBRd34IJ/y//MXrD/VgNBrxRE6SO5Gy3Zjs6SHT/KoA
+	 NBJIe2CL7YYHemR6YONqnVCoiocFlIUUzkIhfqEi/kBJ9ka+gb0PqLWhV3khrXiJpy
+	 wRENbnkRzEL3mEzpl6eUbTalO3QfNTLBP5GNOFBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfLSIvR (ORCPT
+        id S1726715AbfLSIvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 03:51:17 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:35691 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726620AbfLSIvR (ORCPT
+        Thu, 19 Dec 2019 03:51:22 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35934 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfLSIvV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 03:51:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576745475;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JXOA8NC/2sPcKXBC5NpS+YvRND3RBrMHfvXBPn3tTBA=;
-        b=WdMUMkTfVC2LYBoqjXuHLj+Gy4MFGkSHsIUOee7J5PRNhJZ7zbgvehlE9c795AnkMbRizH
-        UZCt0dM/EwRik42ThbM5oEDcBuS72osjBUymFxyJfQ+qAfJ2NK+Qmge1Lg7+ZM9dmJZyHG
-        q06UdbQF3zeZHxY0nusTjwbR5148j0I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-36-1KZxtNynO06HPcm10fKMIA-1; Thu, 19 Dec 2019 03:51:11 -0500
-X-MC-Unique: 1KZxtNynO06HPcm10fKMIA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 30FA81005512;
-        Thu, 19 Dec 2019 08:51:10 +0000 (UTC)
-Received: from krava (unknown [10.43.17.106])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D9A5F7D991;
-        Thu, 19 Dec 2019 08:51:08 +0000 (UTC)
-Date:   Thu, 19 Dec 2019 09:51:06 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     "fujita.yuya@fujitsu.com" <fujita.yuya@fujitsu.com>
-Cc:     'Peter Zijlstra' <peterz@infradead.org>,
-        'Ingo Molnar' <mingo@redhat.com>,
-        'Arnaldo Carvalho de Melo' <acme@kernel.org>,
-        'Jiri Olsa' <jolsa@kernel.org>,
-        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] perf tools: Fix variable name's inconsistency in
- hists__for_each macro
-Message-ID: <20191219085106.GA8141@krava>
-References: <OSAPR01MB1588E1C47AC22043175DE1B2E8520@OSAPR01MB1588.jpnprd01.prod.outlook.com>
+        Thu, 19 Dec 2019 03:51:21 -0500
+Received: by mail-lj1-f194.google.com with SMTP id r19so5318973ljg.3;
+        Thu, 19 Dec 2019 00:51:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ov9Gtfji50Xp++UcgIAzGw3Er9+a23OIgWl2d1OwrHg=;
+        b=EN20FP3epkeMNj6iDopIt+yMSykt8bC8MJph3L8u7SIclCG4FaeXFwONqUM7Kzt3Ha
+         jljqPpQk3pHj9xpUL1PIa8mgu5Sg0g7HNQv34e3PaCE4Y244RHtJhYvp+Ey+9jBQnDIA
+         quhgATpiBoh2MfY9vQgsiWQAKYOPBOhZVbA1Y900svD7Hs9vCSCzjlUkcxPX+Y25LktZ
+         xmI2oDIhDieEtHt//Gnd3sbFAq/TQDOSXCt2jHq1ehqcunJaAOAz3WpVJOgXUVbnHKPp
+         1REEjL0h8bQpAAmiSLCBG/yCmFa3xEfH663f3Z8gFTVLgNdgKPSwwVqsJA8HBf5QL16f
+         MSvA==
+X-Gm-Message-State: APjAAAVTe3khlWf7apHHDecYT32abbXrHwizOwYM2vu4P78YykzJ7gz+
+        WORhspyGhou7n7UAlWNRqeg=
+X-Google-Smtp-Source: APXvYqxMdEb4+JsricDkSeAKpBX8G567ClLGmRraQ9zO6RotnTVmTNGEB/wBJGrYpF8kjfk9YJWZNw==
+X-Received: by 2002:a2e:9013:: with SMTP id h19mr5180544ljg.223.1576745479035;
+        Thu, 19 Dec 2019 00:51:19 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id w19sm2244310lfl.55.2019.12.19.00.51.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 00:51:18 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1ihrWc-0003vT-J6; Thu, 19 Dec 2019 09:51:14 +0100
+Date:   Thu, 19 Dec 2019 09:51:14 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-serial@vger.kernel.org,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        nobuhiro1.iwamatsu@toshiba.co.jp, shrirang.bagul@canonical.com,
+        Stable <stable@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH] serdev: Don't claim unsupported serial devices
+Message-ID: <20191219085114.GQ22665@localhost>
+References: <20191218065646.817493-1-punit1.agrawal@toshiba.co.jp>
+ <20191218085648.GI22665@localhost>
+ <CAJZ5v0h-bhg4+kwTci5_wZhn9rYN=YXoCbSTVs4vPRzRFOjU8A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <OSAPR01MB1588E1C47AC22043175DE1B2E8520@OSAPR01MB1588.jpnprd01.prod.outlook.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <CAJZ5v0h-bhg4+kwTci5_wZhn9rYN=YXoCbSTVs4vPRzRFOjU8A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 08:08:32AM +0000, fujita.yuya@fujitsu.com wrote:
-> From: Yuya Fujita <fujita.yuya@fujitsu.com>
+On Thu, Dec 19, 2019 at 09:39:57AM +0100, Rafael J. Wysocki wrote:
+> On Wed, Dec 18, 2019 at 9:56 AM Johan Hovold <johan@kernel.org> wrote:
+> >
+> > On Wed, Dec 18, 2019 at 03:56:46PM +0900, Punit Agrawal wrote:
+> > > Serdev sub-system claims all serial devices that are not already
+> > > enumerated. As a result, no device node is created for serial port on
+> > > certain boards such as the Apollo Lake based UP2. This has the
+> > > unintended consequence of not being able to raise the login prompt via
+> > > serial connection.
+> > >
+> > > Introduce a blacklist to reject devices that should not be treated as
+> > > a serdev device. Add the Intel HS UART peripheral ids to the blacklist
+> > > to bring back serial port on SoCs carrying them.
+> > >
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+> > > Cc: Rob Herring <robh@kernel.org>
+> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Cc: Johan Hovold <johan@kernel.org>
+> > > Cc: Hans de Goede <hdegoede@redhat.com>
+> > > ---
+> > >
+> > > Hi,
+> > >
+> > > The patch has been updated based on feedback recieved on the RFC[0].
+> > >
+> > > Please consider merging if there are no objections.
+> >
+> > Rafael, I vaguely remember you arguing for a white list when we
+> > discussed this at some conference. Do you have any objections to the
+> > blacklist approach taken here?
 > 
-> Variable names are inconsistent in hists__for_each macro.
-> Due to this inconsistency, the macro replaces its second argument with "fmt" 
-> regardless of its original name.
-> So far it works because only "fmt" is passed to the second argument.
-
-hum, I think it works because all the instances that use these macros
-have 'fmt' variable passed in
-
-> However, this behavior is not expected and should be fixed.
+> As a rule, I prefer whitelisting, because it only enables the feature
+> for systems where it has been tested and confirmed to work.
 > 
-> Fixes: f0786af536bb ("perf hists: Introduce hists__for_each_format macro")
-> Fixes: aa6f50af822a ("perf hists: Introduce hists__for_each_sort_list macro")
-
-nice ;-)
-
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-
-thanks,
-jirka
-
-> Signed-off-by: Yuya Fujita <fujita.yuya@fujitsu.com>
-> ---
->  tools/perf/util/hist.h |    4 ++--
->  1 files changed, 2 insertions(+), 2 deletions(-)
+> However, if you are convinced that in this particular case the feature
+> should work on the vast majority of systems with a few possible
+> exceptions, blacklisting is fine too.
 > 
-> diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-> index 4528690..0aa63ae 100644
-> --- a/tools/perf/util/hist.h
-> +++ b/tools/perf/util/hist.h
-> @@ -339,10 +339,10 @@ static inline void perf_hpp__prepend_sort_field(struct perf_hpp_fmt *format)
->  	list_for_each_entry_safe(format, tmp, &(_list)->sorts, sort_list)
->  
->  #define hists__for_each_format(hists, format) \
-> -	perf_hpp_list__for_each_format((hists)->hpp_list, fmt)
-> +	perf_hpp_list__for_each_format((hists)->hpp_list, format)
->  
->  #define hists__for_each_sort_list(hists, format) \
-> -	perf_hpp_list__for_each_sort_list((hists)->hpp_list, fmt)
-> +	perf_hpp_list__for_each_sort_list((hists)->hpp_list, format)
->  
->  extern struct perf_hpp_fmt perf_hpp__format[];
->  
-> -- 
-> 1.7.1
-> 
+> It all depends on what the majority is, at least in principle.
 
+Ok, thanks. I don't have a preference either way in this case simply
+because I don't know the distribution you refer to.
+
+But if Hans thinks blacklisting is the way to go then let's do that. We
+haven't had that many reports about this, but if that were to change
+down the line, I guess we can always switch to whitelisting.
+
+Punit, feel free to add my
+
+Acked-by: Johan Hovold <johan@kernel.org>
+
+after addressing the review comments you've gotten so far.
+
+Johan
