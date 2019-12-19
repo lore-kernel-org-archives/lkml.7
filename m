@@ -2,108 +2,301 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DAEBC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F10C7C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22E9224672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:05:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="L3/0EauO"
+	by mail.kernel.org (Postfix) with ESMTP id C70BC218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:06:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbfLSNFb (ORCPT
+        id S1726808AbfLSNGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 08:05:31 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46848 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbfLSNFb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 08:05:31 -0500
-Received: by mail-io1-f67.google.com with SMTP id t26so5630235ioi.13
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 05:05:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Q9IeE6+mers9j/OTuTOGvwYflrrqr9t/fsIYndVowUw=;
-        b=L3/0EauOaRXnR88vYq71/LZuB5X8fi8V4T9P7Y8BksHjUR1VmgUIyzH8N9otJVP39S
-         C5DKgTkmjx6iGzEMHfbR28APeKZRZdwISL6Q3QH80MHdTcGvOkaNERNMASgVWec4AndB
-         SrvMy+vxnIfJ+ByFZvfzYjNgcKIRR2PIk3IqwlOyDjXiZsHuqWHTZ4+g+eBdIEnEa/lt
-         YmbduU7AfrJoOjtx6HrfV5PemPZtGTKDNOdWrrnXo5jj4Jm1AIaWWXGDnhRGAnMCQo2h
-         voqeISJ0leERTeUR8Cvz+2Yo+kG/3ETbDq5dI3/vjcYZtGzG2sDr9/OY04+2JlEEyFR8
-         pdHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Q9IeE6+mers9j/OTuTOGvwYflrrqr9t/fsIYndVowUw=;
-        b=bGV59Mqr5g+wTlo0NIxTqrFv7mFGT/hOIs0zIP5EQ8dqnDL/YkbE3s4Wd6q4KmB5YZ
-         Id8IPJ5wyyCHYKvG9+EPHVMgTBFk0diTvfv/gWxlbarPCV36NePMhHCYRYzoG6lYL6UN
-         bHhNiviJD7NriRgmAPHXkY3qNQlq7N+4uW57QSqrO0fGNMvQEkxY2fk6Rt3hiefSULBL
-         KIQzN3DZpmByQNDdcYV2VG+vIp+BRbRFgorAsIunOs5fIoITnHO2gKQR6GNNUSEnlle3
-         D0c/fcwwobhO766s5QO9INlAo3CgBQrLJ9A2x7bSDQtUh53ZSQWVXof+Z1hiYseFnfBG
-         +yrQ==
-X-Gm-Message-State: APjAAAWMdOyukHakIuLG59lkfsoSrFz3cWgla04qVgV1tPP7/GW2cJGH
-        OWdFCThvPf7pMXWjIi5BJjeeKwtUaq6gjt26wMdsAw==
-X-Google-Smtp-Source: APXvYqy3xlLDr0/gRQDpMAxQavF9FnYrp/wUuQlcsVkS1ys9H2j774s8xBfPSlE5CcdpyDlWi8Wv2BNMMsJlu8yk57o=
-X-Received: by 2002:a6b:fc0c:: with SMTP id r12mr5436644ioh.189.1576760730506;
- Thu, 19 Dec 2019 05:05:30 -0800 (PST)
+        Thu, 19 Dec 2019 08:06:33 -0500
+Received: from mx2.suse.de ([195.135.220.15]:33094 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726701AbfLSNGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 08:06:33 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 139B1B371;
+        Thu, 19 Dec 2019 13:06:30 +0000 (UTC)
+From:   Vlastimil Babka <vbabka@suse.cz>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Vlastimil Babka <vbabka@suse.cz>, stable@vger.kernel.org,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>
+Subject: [PATCH] mm, debug_pagealloc: don't rely on static keys too early
+Date:   Thu, 19 Dec 2019 14:06:12 +0100
+Message-Id: <20191219130612.23171-1-vbabka@suse.cz>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20191204155941.17814-1-brgl@bgdev.pl> <CAHp75VdiAtHtdrUP2EmLULh86oO37ha8si10gFKYRavXCEwRRQ@mail.gmail.com>
- <CAMpxmJVXVVVMPA_hRbs3mUsFs=s_VtQK9SvvYK3Xc5X27NPTKw@mail.gmail.com>
- <CAHp75VfXc88Fa6=zs=9iToz27QdXHqRCDPQwBPs2P-rsBF8nHw@mail.gmail.com>
- <CAMRc=Me4xWsQggmr=BvJrA9-FnPkxFkOYsRTsSXCtyNwFnsHNw@mail.gmail.com>
- <CAHp75VfzP8-0wKmPTTKYe+fc6=r_4sVcJPyOsM8YTuH=i4rxmA@mail.gmail.com>
- <CAMRc=MfxteQDmeZn_Et0uFs2cPvLGpJ5BTeBOn37o=2Oo_eU=Q@mail.gmail.com> <CAHp75VfeEB5RudwMaoiMTMMY3zW-kz-h=rJ3Cu5_tyRL6ZuF1w@mail.gmail.com>
-In-Reply-To: <CAHp75VfeEB5RudwMaoiMTMMY3zW-kz-h=rJ3Cu5_tyRL6ZuF1w@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 19 Dec 2019 14:05:19 +0100
-Message-ID: <CAMRc=Mcy=Q+9Eb6mb5JEq+CCbxgBY1CfTDsYj1Rt9bcLXgeY=g@mail.gmail.com>
-Subject: Re: [PATCH v2 10/11] gpiolib: add new ioctl() for monitoring changes
- in line info
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 10 gru 2019 o 18:00 Andy Shevchenko <andy.shevchenko@gmail.com> napisa=
-=C5=82(a):
->
-> > On a different note: why would endianness be an issue here? 32-bit
-> > variables with 64-bit alignment should still be in the same place in
-> > memory, right?
->
-> With explicit padding, yes.
->
-> > Any reason not to use __packed for this structure and not deal with
-> > this whole compat mess?
->
-> Have been suggested that explicit padding is better approach.
-> (See my answer to Kent)
->
-> > I also noticed that my change will only allow user-space to read one
-> > event at a time which seems to be a regression with regard to the
-> > current implementation. I probably need to address this too.
->
-> Yes, but we have to have ABI v2 in place.
+Commit 96a2b03f281d ("mm, debug_pagelloc: use static keys to enable debugging")
+has introduced a static key to reduce overhead when debug_pagealloc is compiled
+in but not enabled. It relied on the assumption that jump_label_init() is
+called before parse_early_param() as in start_kernel(), so when the
+"debug_pagealloc=on" option is parsed, it is safe to enable the static key.
 
-Hi Andy,
+However, it turns out multiple architectures call parse_early_param() earlier
+from their setup_arch(). x86 also calls jump_label_init() even earlier, so no
+issue was found while testing the commit, but same is not true for e.g. ppc64
+and s390 where the kernel would not boot with debug_pagealloc=on as found by
+our QA.
 
-I was playing with some ideas for the new ABI and noticed that on
-64-bit architecture the size of struct gpiochip_info is reported to be
-68 bytes, not 72 as I would expect. Is implicit alignment padding not
-applied to a struct if there's a non-64bit-aligned 32-bit field at the
-end of it? Is there something I'm missing here?
+To fix this without tricky changes to init code of multiple architectures, this
+patch partially reverts the static key conversion from 96a2b03f281d. Init-time
+and non-fastpath calls (such as in arch code) of debug_pagealloc_enabled() will
+again test a simple bool variable. Fastpath mm code is converted to a new
+debug_pagealloc_enabled_static() variant that relies on the static key, which
+is enabled in a well-defined point in mm_init() where it's guaranteed that
+jump_label_init() has been called, regardless of architecture.
 
-Bart
+Fixes: 96a2b03f281d ("mm, debug_pagelloc: use static keys to enable debugging")
+Cc: <stable@vger.kernel.org>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+---
+ include/linux/mm.h | 18 +++++++++++++++---
+ init/main.c        |  1 +
+ mm/page_alloc.c    | 36 ++++++++++++------------------------
+ mm/slab.c          |  4 ++--
+ mm/slub.c          |  2 +-
+ mm/vmalloc.c       |  4 ++--
+ 6 files changed, 33 insertions(+), 32 deletions(-)
+
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index c97ea3b694e6..5cf260d5e248 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2655,13 +2655,25 @@ static inline bool want_init_on_free(void)
+ 	       !page_poisoning_enabled();
+ }
+ 
+-#ifdef CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT
+-DECLARE_STATIC_KEY_TRUE(_debug_pagealloc_enabled);
++#ifdef CONFIG_DEBUG_PAGEALLOC
++extern void init_debug_pagealloc(void);
+ #else
+-DECLARE_STATIC_KEY_FALSE(_debug_pagealloc_enabled);
++static inline void init_debug_pagealloc(void) {}
+ #endif
++extern bool _debug_pagealloc_enabled_early;
++DECLARE_STATIC_KEY_FALSE(_debug_pagealloc_enabled);
+ 
+ static inline bool debug_pagealloc_enabled(void)
++{
++	return IS_ENABLED(CONFIG_DEBUG_PAGEALLOC) &&
++		_debug_pagealloc_enabled_early;
++}
++
++/*
++ * For use in fast paths after init_debug_pagealloc() has run, or when a
++ * false negative result is not harmful when called too early.
++ */
++static inline bool debug_pagealloc_enabled_static(void)
+ {
+ 	if (!IS_ENABLED(CONFIG_DEBUG_PAGEALLOC))
+ 		return false;
+diff --git a/init/main.c b/init/main.c
+index ec3a1463ac69..c93b9cc201fa 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -554,6 +554,7 @@ static void __init mm_init(void)
+ 	 * bigger than MAX_ORDER unless SPARSEMEM.
+ 	 */
+ 	page_ext_init_flatmem();
++	init_debug_pagealloc();
+ 	report_meminit();
+ 	mem_init();
+ 	kmem_cache_init();
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 4785a8a2040e..5e3fe156ffb4 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -694,34 +694,26 @@ void prep_compound_page(struct page *page, unsigned int order)
+ #ifdef CONFIG_DEBUG_PAGEALLOC
+ unsigned int _debug_guardpage_minorder;
+ 
+-#ifdef CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT
+-DEFINE_STATIC_KEY_TRUE(_debug_pagealloc_enabled);
+-#else
++bool _debug_pagealloc_enabled_early __read_mostly
++			= IS_ENABLED(CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT);
+ DEFINE_STATIC_KEY_FALSE(_debug_pagealloc_enabled);
+-#endif
+ EXPORT_SYMBOL(_debug_pagealloc_enabled);
+ 
+ DEFINE_STATIC_KEY_FALSE(_debug_guardpage_enabled);
+ 
+ static int __init early_debug_pagealloc(char *buf)
+ {
+-	bool enable = false;
+-
+-	if (kstrtobool(buf, &enable))
+-		return -EINVAL;
+-
+-	if (enable)
+-		static_branch_enable(&_debug_pagealloc_enabled);
+-
+-	return 0;
++	return kstrtobool(buf, &_debug_pagealloc_enabled_early);
+ }
+ early_param("debug_pagealloc", early_debug_pagealloc);
+ 
+-static void init_debug_guardpage(void)
++void init_debug_pagealloc(void)
+ {
+ 	if (!debug_pagealloc_enabled())
+ 		return;
+ 
++	static_branch_enable(&_debug_pagealloc_enabled);
++
+ 	if (!debug_guardpage_minorder())
+ 		return;
+ 
+@@ -1186,7 +1178,7 @@ static __always_inline bool free_pages_prepare(struct page *page,
+ 	 */
+ 	arch_free_page(page, order);
+ 
+-	if (debug_pagealloc_enabled())
++	if (debug_pagealloc_enabled_static())
+ 		kernel_map_pages(page, 1 << order, 0);
+ 
+ 	kasan_free_nondeferred_pages(page, order);
+@@ -1207,7 +1199,7 @@ static bool free_pcp_prepare(struct page *page)
+ 
+ static bool bulkfree_pcp_prepare(struct page *page)
+ {
+-	if (debug_pagealloc_enabled())
++	if (debug_pagealloc_enabled_static())
+ 		return free_pages_check(page);
+ 	else
+ 		return false;
+@@ -1221,7 +1213,7 @@ static bool bulkfree_pcp_prepare(struct page *page)
+  */
+ static bool free_pcp_prepare(struct page *page)
+ {
+-	if (debug_pagealloc_enabled())
++	if (debug_pagealloc_enabled_static())
+ 		return free_pages_prepare(page, 0, true);
+ 	else
+ 		return free_pages_prepare(page, 0, false);
+@@ -1973,10 +1965,6 @@ void __init page_alloc_init_late(void)
+ 
+ 	for_each_populated_zone(zone)
+ 		set_zone_contiguous(zone);
+-
+-#ifdef CONFIG_DEBUG_PAGEALLOC
+-	init_debug_guardpage();
+-#endif
+ }
+ 
+ #ifdef CONFIG_CMA
+@@ -2106,7 +2094,7 @@ static inline bool free_pages_prezeroed(void)
+  */
+ static inline bool check_pcp_refill(struct page *page)
+ {
+-	if (debug_pagealloc_enabled())
++	if (debug_pagealloc_enabled_static())
+ 		return check_new_page(page);
+ 	else
+ 		return false;
+@@ -2128,7 +2116,7 @@ static inline bool check_pcp_refill(struct page *page)
+ }
+ static inline bool check_new_pcp(struct page *page)
+ {
+-	if (debug_pagealloc_enabled())
++	if (debug_pagealloc_enabled_static())
+ 		return check_new_page(page);
+ 	else
+ 		return false;
+@@ -2155,7 +2143,7 @@ inline void post_alloc_hook(struct page *page, unsigned int order,
+ 	set_page_refcounted(page);
+ 
+ 	arch_alloc_page(page, order);
+-	if (debug_pagealloc_enabled())
++	if (debug_pagealloc_enabled_static())
+ 		kernel_map_pages(page, 1 << order, 1);
+ 	kasan_alloc_pages(page, order);
+ 	kernel_poison_pages(page, 1 << order, 1);
+diff --git a/mm/slab.c b/mm/slab.c
+index f1e1840af533..a89633603b2d 100644
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -1416,7 +1416,7 @@ static void kmem_rcu_free(struct rcu_head *head)
+ #if DEBUG
+ static bool is_debug_pagealloc_cache(struct kmem_cache *cachep)
+ {
+-	if (debug_pagealloc_enabled() && OFF_SLAB(cachep) &&
++	if (debug_pagealloc_enabled_static() && OFF_SLAB(cachep) &&
+ 		(cachep->size % PAGE_SIZE) == 0)
+ 		return true;
+ 
+@@ -2008,7 +2008,7 @@ int __kmem_cache_create(struct kmem_cache *cachep, slab_flags_t flags)
+ 	 * to check size >= 256. It guarantees that all necessary small
+ 	 * sized slab is initialized in current slab initialization sequence.
+ 	 */
+-	if (debug_pagealloc_enabled() && (flags & SLAB_POISON) &&
++	if (debug_pagealloc_enabled_static() && (flags & SLAB_POISON) &&
+ 		size >= 256 && cachep->object_size > cache_line_size()) {
+ 		if (size < PAGE_SIZE || size % PAGE_SIZE == 0) {
+ 			size_t tmp_size = ALIGN(size, PAGE_SIZE);
+diff --git a/mm/slub.c b/mm/slub.c
+index d11389710b12..8eafccf75940 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -288,7 +288,7 @@ static inline void *get_freepointer_safe(struct kmem_cache *s, void *object)
+ 	unsigned long freepointer_addr;
+ 	void *p;
+ 
+-	if (!debug_pagealloc_enabled())
++	if (!debug_pagealloc_enabled_static())
+ 		return get_freepointer(s, object);
+ 
+ 	freepointer_addr = (unsigned long)object + s->offset;
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 4d3b3d60d893..544cc9a725cf 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1375,7 +1375,7 @@ static void free_unmap_vmap_area(struct vmap_area *va)
+ {
+ 	flush_cache_vunmap(va->va_start, va->va_end);
+ 	unmap_vmap_area(va);
+-	if (debug_pagealloc_enabled())
++	if (debug_pagealloc_enabled_static())
+ 		flush_tlb_kernel_range(va->va_start, va->va_end);
+ 
+ 	free_vmap_area_noflush(va);
+@@ -1673,7 +1673,7 @@ static void vb_free(const void *addr, unsigned long size)
+ 
+ 	vunmap_page_range((unsigned long)addr, (unsigned long)addr + size);
+ 
+-	if (debug_pagealloc_enabled())
++	if (debug_pagealloc_enabled_static())
+ 		flush_tlb_kernel_range((unsigned long)addr,
+ 					(unsigned long)addr + size);
+ 
+-- 
+2.24.0
+
