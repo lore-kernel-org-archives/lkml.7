@@ -2,89 +2,103 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F345C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8340AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E82CB21D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:34:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="naz3+STH"
+	by mail.kernel.org (Postfix) with ESMTP id 4D99D21D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:34:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576744465;
+	bh=nXBcbdavfQlBqussgPEqGhS57h0gmrMabpD9I0AI+Hs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=dmhzMm7F+viWn0stiSk6ntilF8RlHm+dKzuRZ1kEvkrPEESTJjojhw1VonrkTnoUI
+	 oSfrOtBXCBRAls6o5RVkAmdRkRSCCvOa3/JvGfIR1WyROEKQkA+/LsrMqryAvtvga4
+	 Xucoy6DPhQzdzPJfT7iygwHO3qG5SW3GYghgu+Nk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbfLSIeH (ORCPT
+        id S1726734AbfLSIeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 03:34:07 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:45536 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbfLSIeG (ORCPT
+        Thu, 19 Dec 2019 03:34:24 -0500
+Received: from conuserg-12.nifty.com ([210.131.2.79]:36429 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbfLSIeX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 03:34:06 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 203so3683801lfa.12
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 00:34:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=taX3HoxwkEVB7pXAcY+Ri+PyRxj8E80icnv90TNS3CU=;
-        b=naz3+STHjMphw1sGKzwtcsWblBGGkqnZUFM8Fo/D2ib3OFqybDV54Fgm6dF/A4RZ61
-         ZSAyiPStc2psl1X2tDaUJTBJFlxpb1MK3/OSvbpn19aqs+IQvraV4OLed+S70nCk/KYJ
-         c4r8b2UMw6p7TIIY0fnrjUzLX2LFt2boGQ9w+iySYhO4uxhXl2V6Ui0IqhiHofuMT+Il
-         v8Ul4LgIgycMb0tfiO0pJ5+dlByvuaLlP51UR0vGbMKPybivEqX7gnjCpHHMqqACaGmy
-         +xfxTXwSJTDtbXww2rAzwB2OelFHVXoLESuI8ALflrVgOsOEQPRq3htvpgCRPlYEGeIi
-         2kLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=taX3HoxwkEVB7pXAcY+Ri+PyRxj8E80icnv90TNS3CU=;
-        b=Zn4TNWpvX2gdlPLqJ28A7BbE7acyN2pCJWFzaG7SeiLFcvJc51rbH7zHl3o51AzRwy
-         IRxEobMgKDz7D72CSUVekG539UIX6lV544VdvS4KkwUCXsB/UKq/OUcFmGzOqy1kGHSW
-         bf/Q0T4OT0QOWm8xyLw3JPeQA5kg7f4W6GPY7mvzWsDO8/8o/6rh6qON/dBOOG6wj8Io
-         MyA0MmmfmCLdsj32JUk0vATOyGfiCKax9pAMb5Aff7vlLCthE/INvK3uwebxH4oln51S
-         9NpSQgJDS2G3dKf2u+K2azbx8cXTM2QhD13g6KtGiNnHUgV+A+G/T77yyybTNE+Dj/RI
-         +U6Q==
-X-Gm-Message-State: APjAAAXQkaVBVEhidMGJJvofoZ3YKOzSRh4Bhbk4idpZW+zTzNvD3t2L
-        yNH4XB9XNoJPQ5MtP1zOzSPGF2JL8iWR/zIiIbwB8w==
-X-Google-Smtp-Source: APXvYqyd9rjB5aj6i4ChpgDIEs1Yag+wZMWm8rCkrgw+wMRtis/I8Z20t1/Brk6ZFBE7LxJh4nTT76LiCUWT4HSvGW0=
-X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr4545920lfp.133.1576744444532;
- Thu, 19 Dec 2019 00:34:04 -0800 (PST)
-MIME-Version: 1.0
-References: <20191219041039.23396-1-dan@dlrobertson.com> <20191219041039.23396-3-dan@dlrobertson.com>
-In-Reply-To: <20191219041039.23396-3-dan@dlrobertson.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 19 Dec 2019 09:33:52 +0100
-Message-ID: <CACRpkdaO3ZYHXBn=Lsg9s=fxBzxH06LYKCnavN=TxFtCZYfT4w@mail.gmail.com>
-Subject: Re: [PATCH v7 2/3] iio: (bma400) add driver for the BMA400
-To:     Dan Robertson <dan@dlrobertson.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Joe Perches <joe@perches.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 19 Dec 2019 03:34:23 -0500
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id xBJ8XVeC026051;
+        Thu, 19 Dec 2019 17:33:32 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com xBJ8XVeC026051
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1576744413;
+        bh=WpNGRRL3ApeUZCXR7WsToJcw8YyXRXseP3cXmGw9qws=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sbrhxn9egqRanIe7sydf7vNaB/QOc6l3r/TWEuh+6O/0KF9+PbkLILeq3FW2mZp5r
+         jUIWodXtxjbD40N1N0byHL+BLSPvns5r6BULArr+4AUbOjlQjcvPFOaiXgcy/k4PFf
+         7U8Kw+Q3CxB+/nz8vO/ppsQKiar5vDL7VKWdz9Zbvh3/ygCWXdxjDr3L3FrZPnvAAl
+         p2BDZzld1yBfd0WPRE+lzvjDQvEvlM3EGkEpMXJsqp1pDEXtxEEAk7AT54IFHqhCYN
+         DFmzAh6VPgtZId/CEbzTX+kvW58y2QfHx3HVhggaAEMCqWLLQhXYxEqo/ugm6voapr
+         b11KyHgKGDNDg==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Jessica Yu <jeyu@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] kbuild: add stringify helper to quote a string passed to C files
+Date:   Thu, 19 Dec 2019 17:33:27 +0900
+Message-Id: <20191219083329.5926-2-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191219083329.5926-1-masahiroy@kernel.org>
+References: <20191219083329.5926-1-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 5:27 AM Dan Robertson <dan@dlrobertson.com> wrote:
+Make $(squote)$(quote)...$(quote)$(squote) a helper macro.
+I will reuse it in the next commit.
 
-> Add a IIO driver for the Bosch BMA400 3-axes ultra-low power accelerometer.
-> The driver supports reading from the acceleration and temperature
-> registers. The driver also supports reading and configuring the output data
-> rate, oversampling ratio, and scale.
->
-> Signed-off-by: Dan Robertson <dan@dlrobertson.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+ scripts/Kbuild.include | 4 ++++
+ scripts/Makefile.lib   | 2 +-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-Yours,
-Linus Walleij
+diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
+index bc5f25763c1b..88c144787e57 100644
+--- a/scripts/Kbuild.include
++++ b/scripts/Kbuild.include
+@@ -32,6 +32,10 @@ real-prereqs = $(filter-out $(PHONY), $^)
+ # Escape single quote for use in echo statements
+ escsq = $(subst $(squote),'\$(squote)',$1)
+ 
++###
++# Quote a string to pass it to C files. foo => '"foo"'
++stringify = $(squote)$(quote)$1$(quote)$(squote)
++
+ ###
+ # Easy method for doing a status message
+        kecho := :
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 3fa32f83b2d7..e4c47ad2899d 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -93,7 +93,7 @@ target-stem = $(basename $(patsubst $(obj)/%,%,$@))
+ # These flags are needed for modversions and compiling, so we define them here
+ # $(modname_flags) defines KBUILD_MODNAME as the name of the module it will
+ # end up in (or would, if it gets compiled in)
+-name-fix = $(squote)$(quote)$(subst $(comma),_,$(subst -,_,$1))$(quote)$(squote)
++name-fix = $(call stringify,$(subst $(comma),_,$(subst -,_,$1)))
+ basename_flags = -DKBUILD_BASENAME=$(call name-fix,$(basetarget))
+ modname_flags  = -DKBUILD_MODNAME=$(call name-fix,$(modname))
+ 
+-- 
+2.17.1
+
