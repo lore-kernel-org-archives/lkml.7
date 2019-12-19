@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E04C7C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E80C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8E6D2467F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6432824679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781479;
-	bh=Bax3R7hkMC/uxJlOV5qspCYPp6kqN89IfaAOVHkK7uc=;
+	s=default; t=1576781483;
+	bh=UjZxgWLJxI//Uh5TdQ0R8WVmBVBMlHZApL3S4cFDTUQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GSapEOCDJYMAVTN1mYPzNvYD4XOoDSF+BtcGlTsMylqu3LuqBTCKxY9UQcHdQsUog
-	 gSZZw1AApgR23ka44GZOf4epMAXifjjM0nDVWwMeGwX4lcPsDe6bdTRvPu+hbAbAN+
-	 8XLxl8ntPz0/xIeid/Zbu5D4eIYeqzK11dxZyHiQ=
+	b=qjXhULFz3eaKtIGgM6hg4Z9AdbXZbfzVLMEKFo3mQylUu1Az7yAuU9WQ8QJUTIJNI
+	 UBrwh081nDcpdI1sZTDqmFY6ZjwOGusQxDS3kyNBKC5AbwU/ZtN0AwLRoGa2TIxCbz
+	 gIOOmOhUYqMIabB9uGpQvdCgaEoK7iwRDgIZNUdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730127AbfLSSvT (ORCPT
+        id S1729869AbfLSSvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:51:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45406 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:51:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730118AbfLSSvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:51:13 -0500
+        id S1729843AbfLSSvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:51:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41A6F2064B;
-        Thu, 19 Dec 2019 18:51:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADA492064B;
+        Thu, 19 Dec 2019 18:51:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781471;
-        bh=Bax3R7hkMC/uxJlOV5qspCYPp6kqN89IfaAOVHkK7uc=;
+        s=default; t=1576781474;
+        bh=UjZxgWLJxI//Uh5TdQ0R8WVmBVBMlHZApL3S4cFDTUQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wbuuQX53uugBszOPgZhXXhFGioiwBXy+kxVwFzF22OQ8en+uFHanuK/BH03Hd8VXt
-         u0mET6e6c2f6iF2oQeE5axCvOXNi3HQwKKtgajWn0a80WWXHwM7QafMlQapDe4O+RV
-         Phfdz2YFGxs2G/IKDyJ3RcW0/7IvrbrGFKuTjGOc=
+        b=155omfXOw8sAtr+1quAgw9GtUUMF5IvNdR+eUeVGdzF61srfedZ7oIPEA5ZBatwmU
+         WLNbQAnivXya5Q8WxMsF/lco2Ea7hbEoiGJj+4COaBEwTnAknLYOpZpXCCE6ft67Tc
+         mi+t/Z1JMS6wP5DhqNcUWXw3zFnjHqcLKFqGW94U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@nokia.com>,
         "David S. Miller" <davem@davemloft.net>, Aviraj CJ <acj@cisco.com>
-Subject: [PATCH 4.14 35/36] net: stmmac: use correct DMA buffer size in the RX descriptor
-Date:   Thu, 19 Dec 2019 19:34:52 +0100
-Message-Id: <20191219182927.489041263@linuxfoundation.org>
+Subject: [PATCH 4.14 36/36] net: stmmac: dont stop NAPI processing when dropping a packet
+Date:   Thu, 19 Dec 2019 19:34:53 +0100
+Message-Id: <20191219182929.416563499@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182848.708141124@linuxfoundation.org>
 References: <20191219182848.708141124@linuxfoundation.org>
@@ -61,170 +61,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Aaro Koskinen <aaro.koskinen@nokia.com>
 
-commit 583e6361414903c5206258a30e5bd88cb03c0254 upstream.
+commit 07b3975352374c3f5ebb4a42ef0b253fe370542d upstream.
 
-We always program the maximum DMA buffer size into the receive descriptor,
-although the allocated size may be less. E.g. with the default MTU size
-we allocate only 1536 bytes. If somebody sends us a bigger frame, then
-memory may get corrupted.
+Currently, if we drop a packet, we exit from NAPI loop before the budget
+is consumed. In some situations this will make the RX processing stall
+e.g. when flood pinging the system with oversized packets, as the
+errorneous packets are not dropped efficiently.
 
-Fix by using exact buffer sizes.
+If we drop a packet, we should just continue to the next one as long as
+the budget allows.
 
 Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 [acj: backport v4.14 -stable
-- adjust context
-- skipped the section modifying non-existent functions in dwxgmac2_descs.c and
-hwif.h ]
+- adjust context]
 Signed-off-by: Aviraj CJ <acj@cisco.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/stmicro/stmmac/common.h       |    2 -
- drivers/net/ethernet/stmicro/stmmac/descs_com.h    |   22 +++++++++++++--------
- drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c |    2 -
- drivers/net/ethernet/stmicro/stmmac/enh_desc.c     |   10 ++++++---
- drivers/net/ethernet/stmicro/stmmac/norm_desc.c    |   10 ++++++---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |    8 ++++---
- 6 files changed, 35 insertions(+), 19 deletions(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -367,7 +367,7 @@ struct dma_features {
- struct stmmac_desc_ops {
- 	/* DMA RX descriptor ring initialization */
- 	void (*init_rx_desc) (struct dma_desc *p, int disable_rx_ic, int mode,
--			      int end);
-+			      int end, int bfsize);
- 	/* DMA TX descriptor ring initialization */
- 	void (*init_tx_desc) (struct dma_desc *p, int mode, int end);
- 
---- a/drivers/net/ethernet/stmicro/stmmac/descs_com.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/descs_com.h
-@@ -29,11 +29,13 @@
- /* Specific functions used for Ring mode */
- 
- /* Enhanced descriptors */
--static inline void ehn_desc_rx_set_on_ring(struct dma_desc *p, int end)
-+static inline void ehn_desc_rx_set_on_ring(struct dma_desc *p, int end,
-+					   int bfsize)
- {
--	p->des1 |= cpu_to_le32((BUF_SIZE_8KiB
--			<< ERDES1_BUFFER2_SIZE_SHIFT)
--		   & ERDES1_BUFFER2_SIZE_MASK);
-+	if (bfsize == BUF_SIZE_16KiB)
-+		p->des1 |= cpu_to_le32((BUF_SIZE_8KiB
-+				<< ERDES1_BUFFER2_SIZE_SHIFT)
-+			   & ERDES1_BUFFER2_SIZE_MASK);
- 
- 	if (end)
- 		p->des1 |= cpu_to_le32(ERDES1_END_RING);
-@@ -59,11 +61,15 @@ static inline void enh_set_tx_desc_len_o
- }
- 
- /* Normal descriptors */
--static inline void ndesc_rx_set_on_ring(struct dma_desc *p, int end)
-+static inline void ndesc_rx_set_on_ring(struct dma_desc *p, int end, int bfsize)
- {
--	p->des1 |= cpu_to_le32(((BUF_SIZE_2KiB - 1)
--				<< RDES1_BUFFER2_SIZE_SHIFT)
--		    & RDES1_BUFFER2_SIZE_MASK);
-+	if (bfsize >= BUF_SIZE_2KiB) {
-+		int bfsize2;
-+
-+		bfsize2 = min(bfsize - BUF_SIZE_2KiB + 1, BUF_SIZE_2KiB - 1);
-+		p->des1 |= cpu_to_le32((bfsize2 << RDES1_BUFFER2_SIZE_SHIFT)
-+			    & RDES1_BUFFER2_SIZE_MASK);
-+	}
- 
- 	if (end)
- 		p->des1 |= cpu_to_le32(RDES1_END_RING);
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c
-@@ -293,7 +293,7 @@ exit:
- }
- 
- static void dwmac4_rd_init_rx_desc(struct dma_desc *p, int disable_rx_ic,
--				   int mode, int end)
-+				   int mode, int end, int bfsize)
- {
- 	p->des3 = cpu_to_le32(RDES3_OWN | RDES3_BUFFER1_VALID_ADDR);
- 
---- a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
-@@ -265,15 +265,19 @@ static int enh_desc_get_rx_status(void *
- }
- 
- static void enh_desc_init_rx_desc(struct dma_desc *p, int disable_rx_ic,
--				  int mode, int end)
-+				  int mode, int end, int bfsize)
- {
-+	int bfsize1;
-+
- 	p->des0 |= cpu_to_le32(RDES0_OWN);
--	p->des1 |= cpu_to_le32(BUF_SIZE_8KiB & ERDES1_BUFFER1_SIZE_MASK);
-+
-+	bfsize1 = min(bfsize, BUF_SIZE_8KiB);
-+	p->des1 |= cpu_to_le32(bfsize1 & ERDES1_BUFFER1_SIZE_MASK);
- 
- 	if (mode == STMMAC_CHAIN_MODE)
- 		ehn_desc_rx_set_on_chain(p);
- 	else
--		ehn_desc_rx_set_on_ring(p, end);
-+		ehn_desc_rx_set_on_ring(p, end, bfsize);
- 
- 	if (disable_rx_ic)
- 		p->des1 |= cpu_to_le32(ERDES1_DISABLE_IC);
---- a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-@@ -133,15 +133,19 @@ static int ndesc_get_rx_status(void *dat
- }
- 
- static void ndesc_init_rx_desc(struct dma_desc *p, int disable_rx_ic, int mode,
--			       int end)
-+			       int end, int bfsize)
- {
-+	int bfsize1;
-+
- 	p->des0 |= cpu_to_le32(RDES0_OWN);
--	p->des1 |= cpu_to_le32((BUF_SIZE_2KiB - 1) & RDES1_BUFFER1_SIZE_MASK);
-+
-+	bfsize1 = min(bfsize, BUF_SIZE_2KiB - 1);
-+	p->des1 |= cpu_to_le32(bfsize1 & RDES1_BUFFER1_SIZE_MASK);
- 
- 	if (mode == STMMAC_CHAIN_MODE)
- 		ndesc_rx_set_on_chain(p, end);
- 	else
--		ndesc_rx_set_on_ring(p, end);
-+		ndesc_rx_set_on_ring(p, end, bfsize);
- 
- 	if (disable_rx_ic)
- 		p->des1 |= cpu_to_le32(RDES1_DISABLE_IC);
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
 --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -1072,11 +1072,13 @@ static void stmmac_clear_rx_descriptors(
+@@ -3323,9 +3323,8 @@ static inline void stmmac_rx_refill(stru
+ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ {
+ 	struct stmmac_rx_queue *rx_q = &priv->rx_queue[queue];
+-	unsigned int entry = rx_q->cur_rx;
+ 	int coe = priv->hw->rx_csum;
+-	unsigned int next_entry;
++	unsigned int next_entry = rx_q->cur_rx;
+ 	unsigned int count = 0;
+ 
+ 	if (netif_msg_rx_status(priv)) {
+@@ -3340,10 +3339,12 @@ static int stmmac_rx(struct stmmac_priv
+ 		priv->hw->desc->display_ring(rx_head, DMA_RX_SIZE, true);
+ 	}
+ 	while (count < limit) {
+-		int status;
++		int entry, status;
+ 		struct dma_desc *p;
+ 		struct dma_desc *np;
+ 
++		entry = next_entry;
++
  		if (priv->extend_desc)
- 			priv->hw->desc->init_rx_desc(&rx_q->dma_erx[i].basic,
- 						     priv->use_riwt, priv->mode,
--						     (i == DMA_RX_SIZE - 1));
-+						     (i == DMA_RX_SIZE - 1),
-+						     priv->dma_buf_sz);
+ 			p = (struct dma_desc *)(rx_q->dma_erx + entry);
  		else
- 			priv->hw->desc->init_rx_desc(&rx_q->dma_rx[i],
- 						     priv->use_riwt, priv->mode,
--						     (i == DMA_RX_SIZE - 1));
-+						     (i == DMA_RX_SIZE - 1),
-+						     priv->dma_buf_sz);
- }
+@@ -3410,7 +3411,7 @@ static int stmmac_rx(struct stmmac_priv
+ 						   "len %d larger than size (%d)\n",
+ 						   frame_len, priv->dma_buf_sz);
+ 				priv->dev->stats.rx_length_errors++;
+-				break;
++				continue;
+ 			}
  
- /**
-@@ -3299,7 +3301,7 @@ static inline void stmmac_rx_refill(stru
- 		dma_wmb();
+ 			/* ACS is set; GMAC core strips PAD/FCS for IEEE 802.3
+@@ -3446,7 +3447,7 @@ static int stmmac_rx(struct stmmac_priv
+ 						dev_warn(priv->device,
+ 							 "packet dropped\n");
+ 					priv->dev->stats.rx_dropped++;
+-					break;
++					continue;
+ 				}
  
- 		if (unlikely(priv->synopsys_id >= DWMAC_CORE_4_00))
--			priv->hw->desc->init_rx_desc(p, priv->use_riwt, 0, 0);
-+			priv->hw->desc->init_rx_desc(p, priv->use_riwt, 0, 0, priv->dma_buf_sz);
- 		else
- 			priv->hw->desc->set_rx_owner(p);
+ 				dma_sync_single_for_cpu(priv->device,
+@@ -3471,7 +3472,7 @@ static int stmmac_rx(struct stmmac_priv
+ 							   "%s: Inconsistent Rx chain\n",
+ 							   priv->dev->name);
+ 					priv->dev->stats.rx_dropped++;
+-					break;
++					continue;
+ 				}
+ 				prefetch(skb->data - NET_IP_ALIGN);
+ 				rx_q->rx_skbuff[entry] = NULL;
+@@ -3506,7 +3507,6 @@ static int stmmac_rx(struct stmmac_priv
+ 			priv->dev->stats.rx_packets++;
+ 			priv->dev->stats.rx_bytes += frame_len;
+ 		}
+-		entry = next_entry;
+ 	}
  
+ 	stmmac_rx_refill(priv, queue);
 
 
