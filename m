@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D960EC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE52C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF89524680
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:40:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D1EB24680
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780830;
-	bh=atv7YAxSoS79URw9rbDEbE0+hZXe8bkNhGKUBQKyMAM=;
+	s=default; t=1576780836;
+	bh=xwqRMSYhF+3uB4f+xo93ELvJ9m//orO39JRBOvmKUTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Bu5AYkIrUQPXyxfgy30KqwX5d6gt40T/BFKIm92JJFkpXucb1H7OIV3bSXD+FtCL
-	 AZW+67FKmZx1+WNkb4jc1CpfaMB3Sq1TXpWWIXkoMMwKf0vTsgV5rHiWJLbsMIMFJM
-	 syTqHo9KeLjxJygwKUbdIrDIMoWiviWHcL7w2tdM=
+	b=xsKsdshYRj6gwqHkVGlrFC/fuU0BSK7WNwUaMyI04nOvAdn/9GaSGoIzNQhpKJX2g
+	 GfrbAxxvY+ptEhm6nEslYVe6BQmbgZOPViKm+/csEAAJSBBBgCRd0lUxA+X+LzwN/w
+	 yWXnMK9QNoDG1+1/NNZtysARzJ8MhYDlxnMY5Ihs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbfLSSka (ORCPT
+        id S1728392AbfLSSkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:40:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59196 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:40:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728071AbfLSSk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:40:26 -0500
+        id S1727991AbfLSSke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:40:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C067624682;
-        Thu, 19 Dec 2019 18:40:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1231C222C2;
+        Thu, 19 Dec 2019 18:40:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780826;
-        bh=atv7YAxSoS79URw9rbDEbE0+hZXe8bkNhGKUBQKyMAM=;
+        s=default; t=1576780833;
+        bh=xwqRMSYhF+3uB4f+xo93ELvJ9m//orO39JRBOvmKUTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1FvHsVPvYKMTKEoM3bQXJRck159XKITVlQcpPJOzNSBOH5978ZP1OK4u32U5l+s77
-         0lGS5E+fcdV0FuBdNz+naYFvHz+QXwu6P6vNKAVCc9S8yLXCTZ+zxZBYJKC4nOvA4V
-         uwAkAU5jnkDgptuYJSbIapIuRDag8RtpiMi9/Pkw=
+        b=Bs8G0QwobmqUdWwwtsWxNMTJTGvox7NEiibpwji5QYNXjD1kMb27CYYU5ons9RUWA
+         S7q/h12tmInxLNy/q8epNFdtjMj2NDkzL8SLPKombpI+2H2RgshoEinZI9Qn0ZrDic
+         TJu5nN7kWmhXTdf+hUv3+QBxCs9NDudg1Q+aokpU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 133/162] pinctrl: samsung: Fix device node refcount leaks in S3C64xx wakeup controller init
-Date:   Thu, 19 Dec 2019 19:34:01 +0100
-Message-Id: <20191219183215.873963985@linuxfoundation.org>
+Subject: [PATCH 4.4 136/162] scsi: qla2xxx: Always check the qla2x00_wait_for_hba_online() return value
+Date:   Thu, 19 Dec 2019 19:34:04 +0100
+Message-Id: <20191219183216.056779195@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -59,51 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 7f028caadf6c37580d0f59c6c094ed09afc04062 ]
+[ Upstream commit e6803efae5acd109fad9f2f07dab674563441a53 ]
 
-In s3c64xx_eint_eint0_init() the for_each_child_of_node() loop is used
-with a break to find a matching child node.  Although each iteration of
-for_each_child_of_node puts the previous node, but early exit from loop
-misses it.  This leads to leak of device node.
+This patch fixes several Coverity complaints about not always checking
+the qla2x00_wait_for_hba_online() return value.
 
-Cc: <stable@vger.kernel.org>
-Fixes: 61dd72613177 ("pinctrl: Add pinctrl-s3c64xx driver")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Tested-by: Himanshu Madhani <hmadhani@marvell.com>
+Reviewed-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/samsung/pinctrl-s3c64xx.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/scsi/qla2xxx/qla_attr.c   | 3 ++-
+ drivers/scsi/qla2xxx/qla_target.c | 7 +++++--
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-s3c64xx.c b/drivers/pinctrl/samsung/pinctrl-s3c64xx.c
-index 43407ab248f51..0cd9f3a7bb11a 100644
---- a/drivers/pinctrl/samsung/pinctrl-s3c64xx.c
-+++ b/drivers/pinctrl/samsung/pinctrl-s3c64xx.c
-@@ -713,6 +713,7 @@ static int s3c64xx_eint_eint0_init(struct samsung_pinctrl_drv_data *d)
- 	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
- 	if (!data) {
- 		dev_err(dev, "could not allocate memory for wkup eint data\n");
-+		of_node_put(eint0_np);
- 		return -ENOMEM;
- 	}
- 	data->drvdata = d;
-@@ -723,6 +724,7 @@ static int s3c64xx_eint_eint0_init(struct samsung_pinctrl_drv_data *d)
- 		irq = irq_of_parse_and_map(eint0_np, i);
- 		if (!irq) {
- 			dev_err(dev, "failed to get wakeup EINT IRQ %d\n", i);
-+			of_node_put(eint0_np);
- 			return -ENXIO;
- 		}
+diff --git a/drivers/scsi/qla2xxx/qla_attr.c b/drivers/scsi/qla2xxx/qla_attr.c
+index 31c29a5d1f389..b8765c55906c9 100644
+--- a/drivers/scsi/qla2xxx/qla_attr.c
++++ b/drivers/scsi/qla2xxx/qla_attr.c
+@@ -760,7 +760,8 @@ qla2x00_sysfs_write_reset(struct file *filp, struct kobject *kobj,
+ 			break;
+ 		} else {
+ 			/* Make sure FC side is not in reset */
+-			qla2x00_wait_for_hba_online(vha);
++			WARN_ON_ONCE(qla2x00_wait_for_hba_online(vha) !=
++				     QLA_SUCCESS);
  
-@@ -730,6 +732,7 @@ static int s3c64xx_eint_eint0_init(struct samsung_pinctrl_drv_data *d)
- 						 s3c64xx_eint0_handlers[i],
- 						 data);
+ 			/* Issue MPI reset */
+ 			scsi_block_requests(vha->host);
+diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
+index 6c4f54aa60df6..1d9f19e5e0f81 100644
+--- a/drivers/scsi/qla2xxx/qla_target.c
++++ b/drivers/scsi/qla2xxx/qla_target.c
+@@ -6026,7 +6026,8 @@ qlt_enable_vha(struct scsi_qla_host *vha)
+ 	} else {
+ 		set_bit(ISP_ABORT_NEEDED, &base_vha->dpc_flags);
+ 		qla2xxx_wake_dpc(base_vha);
+-		qla2x00_wait_for_hba_online(base_vha);
++		WARN_ON_ONCE(qla2x00_wait_for_hba_online(base_vha) !=
++			     QLA_SUCCESS);
  	}
-+	of_node_put(eint0_np);
+ }
+ EXPORT_SYMBOL(qlt_enable_vha);
+@@ -6056,7 +6057,9 @@ static void qlt_disable_vha(struct scsi_qla_host *vha)
  
- 	bank = d->pin_banks;
- 	for (i = 0; i < d->nr_banks; ++i, ++bank) {
+ 	set_bit(ISP_ABORT_NEEDED, &vha->dpc_flags);
+ 	qla2xxx_wake_dpc(vha);
+-	qla2x00_wait_for_hba_online(vha);
++	if (qla2x00_wait_for_hba_online(vha) != QLA_SUCCESS)
++		ql_dbg(ql_dbg_tgt, vha, 0xe081,
++		       "qla2x00_wait_for_hba_online() failed\n");
+ }
+ 
+ /*
 -- 
 2.20.1
 
