@@ -2,121 +2,153 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E58C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5D1C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E37721D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:10:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SxuCoPGY"
+	by mail.kernel.org (Postfix) with ESMTP id A51E921D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:10:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbfLSJKa (ORCPT
+        id S1726712AbfLSJKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 04:10:30 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31403 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726599AbfLSJK3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 04:10:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576746628;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=RgxdERWusgCVoVX2TmS5fp7YoRXvnvTPjNGdBWD39mE=;
-        b=SxuCoPGYQvSHTFb9lChyJx0g2CcxXSJX6rTavGbjUjOn4mvCJA6V5Cudw1EA/2Uku5qc8y
-        8ggXPXdck/j/Ef3gyu8Az75vlFpc/SX5s5DWiMsOqRHaydDfnGERRfkK6Lvz0lqxa+nMux
-        26jkRvQKECcj15FnoVVYhZxniJIRnSg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-372-glZHnc3aNOeL0ogUdGryMA-1; Thu, 19 Dec 2019 04:10:17 -0500
-X-MC-Unique: glZHnc3aNOeL0ogUdGryMA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1BBD2DC55;
-        Thu, 19 Dec 2019 09:10:13 +0000 (UTC)
-Received: from krava (unknown [10.43.17.106])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1B6067C823;
-        Thu, 19 Dec 2019 09:10:10 +0000 (UTC)
-Date:   Thu, 19 Dec 2019 10:10:08 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v5 4/4] perf report: support hotkey to let user select
- any event for sorting
-Message-ID: <20191219091008.GB8141@krava>
-References: <20191219060929.3714-1-yao.jin@linux.intel.com>
- <20191219060929.3714-4-yao.jin@linux.intel.com>
+        Thu, 19 Dec 2019 04:10:41 -0500
+Received: from mga09.intel.com ([134.134.136.24]:19859 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726719AbfLSJKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 04:10:40 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Dec 2019 01:10:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,331,1571727600"; 
+   d="scan'208";a="212954494"
+Received: from bbartede-mobl2.ger.corp.intel.com (HELO [10.252.33.233]) ([10.252.33.233])
+  by fmsmga007.fm.intel.com with ESMTP; 19 Dec 2019 01:10:30 -0800
+Subject: Re: [PATCH v4 4/9] drm/i915/perf: open access for CAP_SYS_PERFMON
+ privileged process
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "james.bottomley@hansenpartnership.com" 
+        <james.bottomley@hansenpartnership.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Robert Richter <rric@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org, oprofile-list@lists.sf.net
+References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
+ <ea050255-a125-8831-ce91-ee23bd6ad08b@linux.intel.com>
+From:   Lionel Landwerlin <lionel.g.landwerlin@intel.com>
+Organization: Intel Corporation (UK) Ltd. - Co. Reg. #1134945 - Pipers Way,
+ Swindon SN3 1RJ
+Message-ID: <d5f908f3-b545-7953-8c72-ceb7177609d3@intel.com>
+Date:   Thu, 19 Dec 2019 11:10:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191219060929.3714-4-yao.jin@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <ea050255-a125-8831-ce91-ee23bd6ad08b@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 02:09:29PM +0800, Jin Yao wrote:
+On 18/12/2019 11:27, Alexey Budankov wrote:
+> Open access to i915_perf monitoring for CAP_SYS_PERFMON privileged
+> processes. For backward compatibility reasons access to i915_perf
+> subsystem remains open for CAP_SYS_ADMIN privileged processes but
+> CAP_SYS_ADMIN usage for secure i915_perf monitoring is discouraged
+> with respect to CAP_SYS_PERFMON capability.
+>
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 
-SNIP
+Acked-by: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
 
-> +		case '0' ... '9':
-> +			if (!symbol_conf.event_group ||
-> +			    evsel->core.nr_members < 2) {
-> +				snprintf(buf, sizeof(buf),
-> +					 "Sort by index only available with group events!");
-> +				helpline = buf;
-> +				continue;
-> +			}
-> +
-> +			symbol_conf.group_sort_idx = key - '0';
-> +
-> +			if (symbol_conf.group_sort_idx >= evsel->core.nr_members) {
-> +				snprintf(buf, sizeof(buf),
-> +					 "Max event group index to sort is %d (index from 0 to %d)",
-> +					 evsel->core.nr_members - 1,
-> +					 evsel->core.nr_members - 1);
-> +				helpline = buf;
-> +				continue;
-> +			}
-> +
-> +			key = K_RELOAD;
-> +			goto out_free_stack;
->  		case 'a':
->  			if (!hists__has(hists, sym)) {
->  				ui_browser__warning(&browser->b, delay_secs * 2,
-> -- 
-> 2.17.1
-> 
+> ---
+>   drivers/gpu/drm/i915/i915_perf.c | 13 ++++++-------
+>   1 file changed, 6 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/i915/i915_perf.c b/drivers/gpu/drm/i915/i915_perf.c
+> index e42b86827d6b..e2697f8d04de 100644
+> --- a/drivers/gpu/drm/i915/i915_perf.c
+> +++ b/drivers/gpu/drm/i915/i915_perf.c
+> @@ -2748,10 +2748,10 @@ i915_perf_open_ioctl_locked(struct drm_i915_private *dev_priv,
+>   	/* Similar to perf's kernel.perf_paranoid_cpu sysctl option
+>   	 * we check a dev.i915.perf_stream_paranoid sysctl option
+>   	 * to determine if it's ok to access system wide OA counters
+> -	 * without CAP_SYS_ADMIN privileges.
+> +	 * without CAP_SYS_PERFMON or CAP_SYS_ADMIN privileges.
+>   	 */
+>   	if (privileged_op &&
+> -	    i915_perf_stream_paranoid && !capable(CAP_SYS_ADMIN)) {
+> +	    i915_perf_stream_paranoid && !perfmon_capable()) {
+>   		DRM_DEBUG("Insufficient privileges to open system-wide i915 perf stream\n");
+>   		ret = -EACCES;
+>   		goto err_ctx;
+> @@ -2939,9 +2939,8 @@ static int read_properties_unlocked(struct drm_i915_private *dev_priv,
+>   			} else
+>   				oa_freq_hz = 0;
+>   
+> -			if (oa_freq_hz > i915_oa_max_sample_rate &&
+> -			    !capable(CAP_SYS_ADMIN)) {
+> -				DRM_DEBUG("OA exponent would exceed the max sampling frequency (sysctl dev.i915.oa_max_sample_rate) %uHz without root privileges\n",
+> +			if (oa_freq_hz > i915_oa_max_sample_rate && !perfmon_capable()) {
+> +				DRM_DEBUG("OA exponent would exceed the max sampling frequency (sysctl dev.i915.oa_max_sample_rate) %uHz without CAP_SYS_PERFMON or CAP_SYS_ADMIN privileges\n",
+>   					  i915_oa_max_sample_rate);
+>   				return -EACCES;
+>   			}
+> @@ -3328,7 +3327,7 @@ int i915_perf_add_config_ioctl(struct drm_device *dev, void *data,
+>   		return -EINVAL;
+>   	}
+>   
+> -	if (i915_perf_stream_paranoid && !capable(CAP_SYS_ADMIN)) {
+> +	if (i915_perf_stream_paranoid && !perfmon_capable()) {
+>   		DRM_DEBUG("Insufficient privileges to add i915 OA config\n");
+>   		return -EACCES;
+>   	}
+> @@ -3474,7 +3473,7 @@ int i915_perf_remove_config_ioctl(struct drm_device *dev, void *data,
+>   		return -ENOTSUPP;
+>   	}
+>   
+> -	if (i915_perf_stream_paranoid && !capable(CAP_SYS_ADMIN)) {
+> +	if (i915_perf_stream_paranoid && !perfmon_capable()) {
+>   		DRM_DEBUG("Insufficient privileges to remove i915 OA config\n");
+>   		return -EACCES;
+>   	}
 
-maybe also something like this to eliminate unneeded refresh?
-
-jirka
-
-
----
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 22e76bd1a2d9..9f5dd48500a2 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -2947,6 +2947,9 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
- 				continue;
- 			}
- 
-+			if (key - '0' == symbol_conf.group_sort_idx)
-+				continue;
-+
- 			symbol_conf.group_sort_idx = key - '0';
- 
- 			if (symbol_conf.group_sort_idx >= evsel->core.nr_members) {
 
