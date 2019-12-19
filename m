@@ -2,86 +2,69 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F98C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF90EC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6DA321D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:29:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QPlHRIHb"
+	by mail.kernel.org (Postfix) with ESMTP id 9057F222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:30:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576719004;
+	bh=s8shV4w2igNDmjITc4x6DKnVvwncODzNRqpehLZ7QT8=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=YX8wzuSLHD5u7v88YNPpgjWt0VxSsub7Lj2h1IkKOJixDqicnZ/m6/HmvGoodlKpm
+	 Ywp+TVpur3vg1huqVroHhSKi6V8XD1yMnDkc9XHs0RakKTro0ubFkS/hgcQo7Ym2Ge
+	 nhUTarN5/+CWGGFG8Ybs4TAxcVUx5KBIKXR/UAdc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfLSB3g (ORCPT
+        id S1726767AbfLSBaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 20:29:36 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57603 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726463AbfLSB3g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 20:29:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576718974;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=4LhO4qnJS45ZijWda0VRuzykvBdUDahmQTHCJMOmgGs=;
-        b=QPlHRIHbQjUaUS9DdNlALFjTRxw7T88lvqrmSDQeUxD3A/aQrxixAcRNLvXXqU38aAYhxZ
-        VDwEgELfl3OiPP9oPGTX5alRLv0T/n4w/X6FXAw/tIIa1hxQRw/sq+fiNfBzaNgcn237jP
-        dHNZOCU+PngC0PerSTEmKi/Z1+lefh8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-46-fS7bsj_0OvSazFPteXhE0Q-1; Wed, 18 Dec 2019 20:29:31 -0500
-X-MC-Unique: fS7bsj_0OvSazFPteXhE0Q-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DDB361854334;
-        Thu, 19 Dec 2019 01:29:28 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-22.pek2.redhat.com [10.72.8.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E894F5C28C;
-        Thu, 19 Dec 2019 01:29:19 +0000 (UTC)
-Date:   Thu, 19 Dec 2019 09:29:14 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Jens Axboe <axboe@kernel.dk>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        Long Li <longli@microsoft.com>, Ingo Molnar <mingo@redhat.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        John Garry <john.garry@huawei.com>,
-        Hannes Reinecke <hare@suse.com>
-Subject: Re: [RFC PATCH 1/3] sched/core: add API for exporting runqueue clock
-Message-ID: <20191219012914.GA6080@ming.t460p>
-References: <20191218071942.22336-1-ming.lei@redhat.com>
- <20191218071942.22336-2-ming.lei@redhat.com>
- <20191218095101.GQ2844@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191218095101.GQ2844@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        Wed, 18 Dec 2019 20:30:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48522 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726463AbfLSBaD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 20:30:03 -0500
+Subject: Re: [GIT PULL] tpmdd updates for Linux v5.5-rc3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576719002;
+        bh=s8shV4w2igNDmjITc4x6DKnVvwncODzNRqpehLZ7QT8=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=MjvEWmmGMzoNaOBvfT8+M5nnweh8c1zJ8KRQEfiDEVt48p94veuhHN13ylUb45a8f
+         zl9PnFAqWKZqmabzVv/sXlN0LrrY8x9JMNDAX2VduiIIrYsZtUqevLdASlkgSue3mk
+         pmvkj7NDxuqxlE582cg5dEw0vU3fX0BhQ/RF9gWc=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20191219010317.GA3086@linux.intel.com>
+References: <20191219010317.GA3086@linux.intel.com>
+X-PR-Tracked-List-Id: <linux-integrity.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191219010317.GA3086@linux.intel.com>
+X-PR-Tracked-Remote: git://git.infradead.org/users/jjs/linux-tpmdd.git
+ tpmdd-next-20191219
+X-PR-Tracked-Commit-Id: 1760eb689ed68c6746744aff2092bff57c78d907
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4a94c43323342f1522034d6566c5129a7386a0ab
+Message-Id: <157671900258.19837.15533650713180573474.pr-tracker-bot@kernel.org>
+Date:   Thu, 19 Dec 2019 01:30:02 +0000
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        jmorris@namei.org, dhowells@redhat.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 10:51:01AM +0100, Peter Zijlstra wrote:
-> On Wed, Dec 18, 2019 at 03:19:40PM +0800, Ming Lei wrote:
-> > Scheduler runqueue maintains its own software clock that is periodically
-> > synchronised with hardware. Export this clock so that it can be used
-> > by interrupt flood detection for saving the cost of reading from hardware.
-> 
-> But you don't have much, if any, guarantees the thing gets updated.
+The pull request you sent on Thu, 19 Dec 2019 03:03:17 +0200:
 
-Any software clock won't be guaranteed to be updated in time, however,
-they are still useful.
+> git://git.infradead.org/users/jjs/linux-tpmdd.git tpmdd-next-20191219
 
-Thanks,
-Ming
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4a94c43323342f1522034d6566c5129a7386a0ab
 
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
