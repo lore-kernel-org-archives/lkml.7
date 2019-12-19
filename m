@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC0BC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C21CC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2059D24682
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F7D124684
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781652;
-	bh=iGXz/x6xZIxMlB36RE7c/0DO5szquI6BsXtST0kPL2s=;
+	s=default; t=1576781656;
+	bh=5ELXbSbF1Du+eE8S1HGc9K2ygWD6qoJiSIfCoeAqHGk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k0LaxwCCnr51I0EKmfHv/7wt330JJUgsHsz3uCWerja76Q5NPXi0c2MFQlyQwZPrT
-	 mpi4LGtE/ZU5hCp+LxqEu6NxiirQAuWggODZNF0RtsVIaFFDj9Ll9iqF2kPDRr+EbC
-	 5zHNc377atFSM8mXT3FUT1R43x0AMaSXOaEI/rp0=
+	b=AEg3BdHX/A0hK4bsmwnOvBjrmuXW1iuWswBvk4qwtQY9WrMVA/vH06gquNSKRi54U
+	 ogQY950Pa22cQRuwsaSDw7OvJhA4nbxYmADfErHIpQKn3AwibCojFEOzcZpQKzsRPc
+	 h8tD6rtmmOTOGrzahP4SWCcwYM1B3jrqu7GVZXfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730467AbfLSSyK (ORCPT
+        id S1730472AbfLSSyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:54:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49430 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:54:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730445AbfLSSyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:54:04 -0500
+        id S1730463AbfLSSyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:54:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE8A2222C2;
-        Thu, 19 Dec 2019 18:54:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 945BF222C2;
+        Thu, 19 Dec 2019 18:54:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781644;
-        bh=iGXz/x6xZIxMlB36RE7c/0DO5szquI6BsXtST0kPL2s=;
+        s=default; t=1576781649;
+        bh=5ELXbSbF1Du+eE8S1HGc9K2ygWD6qoJiSIfCoeAqHGk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oQpucYABzKNuxORMhyoOv6x25SAayAEYsvDr8E8J0G+IY3oxOaq2iDTFqBgkH9ZA/
-         mliRUjCRKMFSrLXFhqfBK60diZNOyRnA98ri3RX2UzwyRMpP1w5u18f2cQmeCYCsHA
-         URBwQuk7IFe5Rjdhmx1Bl6n7IHSQMo5aXCOyJ7rQ=
+        b=pBNCfUONceOoSzevxp3qBoXAqyp6dAX83SL6MKZKf14lxbQFYrttJRCqgXtY2l5bQ
+         PRydYpzcXLO57Z0sMnOxCaET/1jcZgNIY86P0cZw8W8Od6VBfGzq1CCW0eTAuqzrC8
+         YJAAcI8Nmxa6Gg/fg+5LhtsDsXf3ijh8BY4zhFkk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Lew <clew@codeaurora.org>,
+        stable@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Arun Kumar Neelakantam <aneela@codeaurora.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 5.4 21/80] rpmsg: glink: Set tail pointer to 0 at end of FIFO
-Date:   Thu, 19 Dec 2019 19:34:13 +0100
-Message-Id: <20191219183101.268904080@linuxfoundation.org>
+Subject: [PATCH 5.4 23/80] rpmsg: glink: Fix use after free in open_ack TIMEOUT case
+Date:   Thu, 19 Dec 2019 19:34:15 +0100
+Message-Id: <20191219183101.776120362@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -59,33 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Lew <clew@codeaurora.org>
+From: Arun Kumar Neelakantam <aneela@codeaurora.org>
 
-commit 4623e8bf1de0b86e23a56cdb39a72f054e89c3bd upstream.
+commit ac74ea01860170699fb3b6ea80c0476774c8e94f upstream.
 
-When wrapping around the FIFO, the remote expects the tail pointer to
-be reset to 0 on the edge case where the tail equals the FIFO length.
+Extra channel reference put when remote sending OPEN_ACK after timeout
+causes use-after-free while handling next remote CLOSE command.
 
-Fixes: caf989c350e8 ("rpmsg: glink: Introduce glink smem based transport")
+Remove extra reference put in timeout case to avoid use-after-free.
+
+Fixes: b4f8e52b89f6 ("rpmsg: Introduce Qualcomm RPM glink driver")
 Cc: stable@vger.kernel.org
-Signed-off-by: Chris Lew <clew@codeaurora.org>
+Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/rpmsg/qcom_glink_smem.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/rpmsg/qcom_glink_native.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
---- a/drivers/rpmsg/qcom_glink_smem.c
-+++ b/drivers/rpmsg/qcom_glink_smem.c
-@@ -105,7 +105,7 @@ static void glink_smem_rx_advance(struct
- 	tail = le32_to_cpu(*pipe->tail);
+--- a/drivers/rpmsg/qcom_glink_native.c
++++ b/drivers/rpmsg/qcom_glink_native.c
+@@ -1103,13 +1103,12 @@ static int qcom_glink_create_remote(stru
+ close_link:
+ 	/*
+ 	 * Send a close request to "undo" our open-ack. The close-ack will
+-	 * release the last reference.
++	 * release qcom_glink_send_open_req() reference and the last reference
++	 * will be relesed after receiving remote_close or transport unregister
++	 * by calling qcom_glink_native_remove().
+ 	 */
+ 	qcom_glink_send_close_req(glink, channel);
  
- 	tail += count;
--	if (tail > pipe->native.length)
-+	if (tail >= pipe->native.length)
- 		tail -= pipe->native.length;
+-	/* Release qcom_glink_send_open_req() reference */
+-	kref_put(&channel->refcount, qcom_glink_channel_release);
+-
+ 	return ret;
+ }
  
- 	*pipe->tail = cpu_to_le32(tail);
 
 
