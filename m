@@ -2,135 +2,169 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD31C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AA9C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87D3024679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:04:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFF5A24679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:07:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="I0eeHPXE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfLSVE0 (ORCPT
+        id S1727282AbfLSVHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 16:04:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54802 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726880AbfLSVE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 16:04:26 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D608D24672;
-        Thu, 19 Dec 2019 21:04:23 +0000 (UTC)
-Date:   Thu, 19 Dec 2019 16:04:22 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     "mingo@redhat.com" <mingo@redhat.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-        "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
-        "bsegall@google.com" <bsegall@google.com>,
-        Mel Gorman <mgorman@suse.de>
-Subject: Re: [PATCH v3] sched: Micro optimization in pick_next_task() and in
- check_preempt_curr()
-Message-ID: <20191219160422.4eb28a2e@gandalf.local.home>
-In-Reply-To: <47a00e0e-69c0-2a2f-6ae1-1a8ec9b01ede@virtuozzo.com>
-References: <20191219113517.65617a7b@gandalf.local.home>
-        <47a00e0e-69c0-2a2f-6ae1-1a8ec9b01ede@virtuozzo.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 19 Dec 2019 16:07:47 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:44503 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727056AbfLSVHq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 16:07:46 -0500
+Received: by mail-qt1-f193.google.com with SMTP id t3so6239906qtr.11
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 13:07:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=b1m6ooTcPBF03IyS8tXbQFWmui5q38MZyl7sgcWDrVc=;
+        b=I0eeHPXEKyhR6F3+w0uZp8nZL74lZ+A5yJ1jcW4KB5MO7vY9ONwJPcIUEGlT8SbUeO
+         LH81YaW3GC7SMUuObdRRRlnGzTOYLS475Sg1mUPvLmi4JlCQaPrNqV+lDtlEr4ByHobI
+         ZOHWHIxyfXKwjF07HIG3BbuRvW3BGN4Y76jyGe62WEFR0v3gEx92h1yDdyRSLYhNDwBJ
+         tpCIZrQ8KxYH2/vN+ZSvjy5imMLbf+TFj3Y+cP0N+OLWwhHVLOxCMvkJX7OZ7EDojcBc
+         GAxbNt0FBcreyN8pFhlQHApx98BWQ2R7K6v8eS90taP+fCjutUcn9h1snaULI5tTj6Dz
+         Afvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=b1m6ooTcPBF03IyS8tXbQFWmui5q38MZyl7sgcWDrVc=;
+        b=j3zWDjN2eMgfSvqSZb8ArYU1l86ntQxa+L2YrXX8H6urb2rf7AqzTXZx3T0Eizq6Dw
+         3ueK7e1leu+XOEHEzLMKcvpq2qKrVNfIet2AJDL5dqGnh5RKHZCiauY/n0cXjg8Mq0Fb
+         RjcfTlmMXi0KmqOy1xQbzN6NJNN5PuusVuzYVasKt+QUK1wQq1LzNvKAeCIhCeyAKStf
+         UMMQPCVZ+jSK8RbWygw5hZp8I2U+Wz3X3gjXIo9PdM80QuXSwFVn8ClYBMLSsSJEzZJ9
+         etv7V/nkNK6mZAQbQeJJfp4nLGlsvsON2cMy6nHp+cywBL7eYfjwGG1i8mxqyP/l27Pg
+         gPKQ==
+X-Gm-Message-State: APjAAAXAOVMsEGShG3CIxKxvm61OjAD5RCraDvq1k1ic7Gs2xzNWRhcz
+        fyqqx2shq28RwDG2CVxTCR3kjQ==
+X-Google-Smtp-Source: APXvYqxVnwIXGsi0o/bO9dZGQ7XuTOfFwgCWi/4t790OZPxPymgdPJt3SfFmZqkv2903tXMsYUoGBQ==
+X-Received: by 2002:ac8:2d30:: with SMTP id n45mr8586782qta.203.1576789665577;
+        Thu, 19 Dec 2019 13:07:45 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id m20sm2085982qkk.15.2019.12.19.13.07.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 19 Dec 2019 13:07:44 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1ii31L-0007mU-Uf; Thu, 19 Dec 2019 17:07:43 -0400
+Date:   Thu, 19 Dec 2019 17:07:43 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
+        Maor Gottlieb <maorg@mellanox.com>
+Subject: Re: [PATCH v11 00/25] mm/gup: track dma-pinned pages: FOLL_PIN
+Message-ID: <20191219210743.GN17227@ziepe.ca>
+References: <20191216222537.491123-1-jhubbard@nvidia.com>
+ <20191219132607.GA410823@unreal>
+ <a4849322-8e17-119e-a664-80d9f95d850b@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a4849322-8e17-119e-a664-80d9f95d850b@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Dec 2019 20:12:15 +0000
-Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
-
-> This introduces an optimization based on xxx_sched_class addresses
-> in two hot scheduler functions: pick_next_task() and check_preempt_curr().
+On Thu, Dec 19, 2019 at 12:30:31PM -0800, John Hubbard wrote:
+> On 12/19/19 5:26 AM, Leon Romanovsky wrote:
+> > On Mon, Dec 16, 2019 at 02:25:12PM -0800, John Hubbard wrote:
+> > > Hi,
+> > > 
+> > > This implements an API naming change (put_user_page*() -->
+> > > unpin_user_page*()), and also implements tracking of FOLL_PIN pages. It
+> > > extends that tracking to a few select subsystems. More subsystems will
+> > > be added in follow up work.
+> > 
+> > Hi John,
+> > 
+> > The patchset generates kernel panics in our IB testing. In our tests, we
+> > allocated single memory block and registered multiple MRs using the single
+> > block.
+> > 
+> > The possible bad flow is:
+> >   ib_umem_geti() ->
+> >    pin_user_pages_fast(FOLL_WRITE) ->
+> >     internal_get_user_pages_fast(FOLL_WRITE) ->
+> >      gup_pgd_range() ->
+> >       gup_huge_pd() ->
+> >        gup_hugepte() ->
+> >         try_grab_compound_head() ->
 > 
-> It is possible to compare pointers to sched classes to check, which
-> of them has a higher priority, instead of current iterations using
-> for_each_class().
+> Hi Leon,
 > 
-> One more result of the patch is that size of object file becomes a little
-> less (excluding added BUG_ON(), which goes in __init section):
+> Thanks very much for the detailed report! So we're overflowing...
 > 
-> $size kernel/sched/core.o
->          text     data      bss	    dec	    hex	filename
-> before:  66446    18957	    676	  86079	  1503f	kernel/sched/core.o
-> after:   66398    18957	    676	  86031	  1500f	kernel/sched/core.o
+> At first look, this seems likely to be hitting a weak point in the
+> GUP_PIN_COUNTING_BIAS-based design, one that I believed could be deferred
+> (there's a writeup in Documentation/core-api/pin_user_page.rst, lines
+> 99-121). Basically it's pretty easy to overflow the page->_refcount
+> with huge pages if the pages have a *lot* of subpages.
 > 
-> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+> We can only do about 7 pins on 1GB huge pages that use 4KB subpages.
 
-Care to resend, not as a mime image?
+Considering that establishing these pins is entirely under user
+control, we can't have a limit here.
 
--- Steve
+If the number of allowed pins are exhausted then the
+pin_user_pages_fast() must fail back to the user.
 
+> 3. It would be nice if I could reproduce this. I have a two-node mlx5 Infiniband
+> test setup, but I have done only the tiniest bit of user space IB coding, so
+> if you have any test programs that aren't too hard to deal with that could
+> possibly hit this, or be tweaked to hit it, I'd be grateful. Keeping in mind
+> that I'm not an advanced IB programmer. At all. :)
 
-> Content-Type: text/plain; charset="utf-8"
-> Content-ID: <C1D028DDF0B4064595B78514E3E235C5@eurprd08.prod.outlook.com>
-> Content-Transfer-Encoding: base64
-> MIME-Version: 1.0
-> X-OriginatorOrg: virtuozzo.com
-> X-MS-Exchange-CrossTenant-Network-Message-Id: 63724e70-f5a2-4d04-bbaa-08d784bfbdf9
-> X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Dec 2019 20:12:16.0672
->  (UTC)
-> X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-> X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
-> X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-> X-MS-Exchange-CrossTenant-userprincipalname: wYML0eHmbgTBU2jD+X1IMNyAYqtN3rJ3EgoGfPJQcQ2Wqq2KJfyClc/7Q5BfozgXMC5ZM7OdiAJShPtJE7UvuA==
-> X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3343
-> 
-> VGhpcyBpbnRyb2R1Y2VzIGFuIG9wdGltaXphdGlvbiBiYXNlZCBvbiB4eHhfc2NoZWRfY2xhc3Mg
-> YWRkcmVzc2VzDQppbiB0d28gaG90IHNjaGVkdWxlciBmdW5jdGlvbnM6IHBpY2tfbmV4dF90YXNr
-> KCkgYW5kIGNoZWNrX3ByZWVtcHRfY3VycigpLg0KDQpJdCBpcyBwb3NzaWJsZSB0byBjb21wYXJl
-> IHBvaW50ZXJzIHRvIHNjaGVkIGNsYXNzZXMgdG8gY2hlY2ssIHdoaWNoDQpvZiB0aGVtIGhhcyBh
-> IGhpZ2hlciBwcmlvcml0eSwgaW5zdGVhZCBvZiBjdXJyZW50IGl0ZXJhdGlvbnMgdXNpbmcNCmZv
-> cl9lYWNoX2NsYXNzKCkuDQoNCk9uZSBtb3JlIHJlc3VsdCBvZiB0aGUgcGF0Y2ggaXMgdGhhdCBz
-> aXplIG9mIG9iamVjdCBmaWxlIGJlY29tZXMgYSBsaXR0bGUNCmxlc3MgKGV4Y2x1ZGluZyBhZGRl
-> ZCBCVUdfT04oKSwgd2hpY2ggZ29lcyBpbiBfX2luaXQgc2VjdGlvbik6DQoNCiRzaXplIGtlcm5l
-> bC9zY2hlZC9jb3JlLm8NCiAgICAgICAgIHRleHQgICAgIGRhdGEgICAgICBic3MJICAgIGRlYwkg
-> ICAgaGV4CWZpbGVuYW1lDQpiZWZvcmU6ICA2NjQ0NiAgICAxODk1NwkgICAgNjc2CSAgODYwNzkJ
-> ICAxNTAzZglrZXJuZWwvc2NoZWQvY29yZS5vDQphZnRlcjogICA2NjM5OCAgICAxODk1NwkgICAg
-> Njc2CSAgODYwMzEJICAxNTAwZglrZXJuZWwvc2NoZWQvY29yZS5vDQoNClNpZ25lZC1vZmYtYnk6
-> IEtpcmlsbCBUa2hhaSA8a3RraGFpQHZpcnR1b3p6by5jb20+DQotLS0NCiBrZXJuZWwvc2NoZWQv
-> Y29yZS5jIHwgICAyNCArKysrKysrKystLS0tLS0tLS0tLS0tLS0NCiAxIGZpbGUgY2hhbmdlZCwg
-> OSBpbnNlcnRpb25zKCspLCAxNSBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2tlcm5lbC9z
-> Y2hlZC9jb3JlLmMgYi9rZXJuZWwvc2NoZWQvY29yZS5jDQppbmRleCAxNTUwOGMyMDJiZjUuLmJl
-> ZmRkNzE1OGIyNyAxMDA2NDQNCi0tLSBhL2tlcm5lbC9zY2hlZC9jb3JlLmMNCisrKyBiL2tlcm5l
-> bC9zY2hlZC9jb3JlLmMNCkBAIC0xNDE2LDIwICsxNDE2LDEwIEBAIHN0YXRpYyBpbmxpbmUgdm9p
-> ZCBjaGVja19jbGFzc19jaGFuZ2VkKHN0cnVjdCBycSAqcnEsIHN0cnVjdCB0YXNrX3N0cnVjdCAq
-> cCwNCiANCiB2b2lkIGNoZWNrX3ByZWVtcHRfY3VycihzdHJ1Y3QgcnEgKnJxLCBzdHJ1Y3QgdGFz
-> a19zdHJ1Y3QgKnAsIGludCBmbGFncykNCiB7DQotCWNvbnN0IHN0cnVjdCBzY2hlZF9jbGFzcyAq
-> Y2xhc3M7DQotDQotCWlmIChwLT5zY2hlZF9jbGFzcyA9PSBycS0+Y3Vyci0+c2NoZWRfY2xhc3Mp
-> IHsNCisJaWYgKHAtPnNjaGVkX2NsYXNzID09IHJxLT5jdXJyLT5zY2hlZF9jbGFzcykNCiAJCXJx
-> LT5jdXJyLT5zY2hlZF9jbGFzcy0+Y2hlY2tfcHJlZW1wdF9jdXJyKHJxLCBwLCBmbGFncyk7DQot
-> CX0gZWxzZSB7DQotCQlmb3JfZWFjaF9jbGFzcyhjbGFzcykgew0KLQkJCWlmIChjbGFzcyA9PSBy
-> cS0+Y3Vyci0+c2NoZWRfY2xhc3MpDQotCQkJCWJyZWFrOw0KLQkJCWlmIChjbGFzcyA9PSBwLT5z
-> Y2hlZF9jbGFzcykgew0KLQkJCQlyZXNjaGVkX2N1cnIocnEpOw0KLQkJCQlicmVhazsNCi0JCQl9
-> DQotCQl9DQotCX0NCisJZWxzZSBpZiAocC0+c2NoZWRfY2xhc3MgPiBycS0+Y3Vyci0+c2NoZWRf
-> Y2xhc3MpDQorCQlyZXNjaGVkX2N1cnIocnEpOw0KIA0KIAkvKg0KIAkgKiBBIHF1ZXVlIGV2ZW50
-> IGhhcyBvY2N1cnJlZCwgYW5kIHdlJ3JlIGdvaW5nIHRvIHNjaGVkdWxlLiAgSW4NCkBAIC0zOTE0
-> LDggKzM5MDQsNyBAQCBwaWNrX25leHRfdGFzayhzdHJ1Y3QgcnEgKnJxLCBzdHJ1Y3QgdGFza19z
-> dHJ1Y3QgKnByZXYsIHN0cnVjdCBycV9mbGFncyAqcmYpDQogCSAqIGhpZ2hlciBzY2hlZHVsaW5n
-> IGNsYXNzLCBiZWNhdXNlIG90aGVyd2lzZSB0aG9zZSBsb29zZSB0aGUNCiAJICogb3Bwb3J0dW5p
-> dHkgdG8gcHVsbCBpbiBtb3JlIHdvcmsgZnJvbSBvdGhlciBDUFVzLg0KIAkgKi8NCi0JaWYgKGxp
-> a2VseSgocHJldi0+c2NoZWRfY2xhc3MgPT0gJmlkbGVfc2NoZWRfY2xhc3MgfHwNCi0JCSAgICBw
-> cmV2LT5zY2hlZF9jbGFzcyA9PSAmZmFpcl9zY2hlZF9jbGFzcykgJiYNCisJaWYgKGxpa2VseShw
-> cmV2LT5zY2hlZF9jbGFzcyA8PSAmZmFpcl9zY2hlZF9jbGFzcyAmJg0KIAkJICAgcnEtPm5yX3J1
-> bm5pbmcgPT0gcnEtPmNmcy5oX25yX3J1bm5pbmcpKSB7DQogDQogCQlwID0gcGlja19uZXh0X3Rh
-> c2tfZmFpcihycSwgcHJldiwgcmYpOw0KQEAgLTY1NjksNiArNjU1OCwxMSBAQCB2b2lkIF9faW5p
-> dCBzY2hlZF9pbml0KHZvaWQpDQogCXVuc2lnbmVkIGxvbmcgcHRyID0gMDsNCiAJaW50IGk7DQog
-> DQorCUJVR19PTigmaWRsZV9zY2hlZF9jbGFzcyA+ICZmYWlyX3NjaGVkX2NsYXNzIHx8DQorCQkm
-> ZmFpcl9zY2hlZF9jbGFzcyA+ICZydF9zY2hlZF9jbGFzcyB8fA0KKwkJJnJ0X3NjaGVkX2NsYXNz
-> ID4gJmRsX3NjaGVkX2NsYXNzIHx8DQorCQkmZGxfc2NoZWRfY2xhc3MgPiAmc3RvcF9zY2hlZF9j
-> bGFzcyk7DQorDQogCXdhaXRfYml0X2luaXQoKTsNCiANCiAjaWZkZWYgQ09ORklHX0ZBSVJfR1JP
-> VVBfU0NIRUQNCg0K
+Clone this:
+
+https://github.com/linux-rdma/rdma-core.git
+
+Install all the required deps to build it (notably cython), see the README.md
+
+$ ./build.sh
+$ build/bin/run_tests.py 
+
+If you get things that far I think Leon can get a reproduction for you
+
+Jason
