@@ -2,100 +2,88 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4ADAC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F76C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 902ED24684
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DEA124684
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781752;
-	bh=A6O7U4jUTSn2sMgO5pJsU6Gzns8Nq5coPBqaHcHZKoo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZVOOjXZRJ9qFXiZKn79Fl6hV4AuOApqbYC1gq/ZaIVXUnnhgBWVlt8eeAKxS5NxPq
-	 v1wyMZ/j3xuXloxHrzg8nldfLb1EBDHZCvRAOACLtHFp9wZl8qSkGgy6HLjtRqfALZ
-	 wOTGT3ocvd33h5Z7R4qxUDCdOFD8LTWPQBji/abg=
+	s=default; t=1576781755;
+	bh=t4n0UztFdm1fkxP5OHJMYqoE/U7uv+AHg36AIEHxns8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=f55pAbUScwre8WH53jK2FF5V3sjAK0eTah3GSDBXgUVVT4wtrUqiBxLQvhBELCC0p
+	 M0Dh0sw6apjyh8FLvHorpQRZA53t0LSAwz0msCN8+rS+jviQ4M/4q98J4rIdLG8N/R
+	 Ou0LC52GCnHELO0/fa2A6gqkpAMl8h3dKyGrhiHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730735AbfLSSzv (ORCPT
+        id S1730743AbfLSSzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 19 Dec 2019 13:55:54 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44840 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730734AbfLSSzv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Dec 2019 13:55:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52000 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729789AbfLSSzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:55:48 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F1DB24676;
-        Thu, 19 Dec 2019 18:55:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781747;
-        bh=A6O7U4jUTSn2sMgO5pJsU6Gzns8Nq5coPBqaHcHZKoo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mo1uVWO5mON+WKT40lDm+m1/aSg9Ne7ooOkHzaCwder+n03t/XrgLcQKqStSWR6PE
-         aaACRC2v84evgCw+TJ6pjgtiE/P3wL8coH0SPsi5dVgPgW04k/GjNGmEezLttBrlyq
-         374msNux1QLw2U3I3NZfdwHXLTynl4ksdHTfqlRQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Roman Bolshakov <r.bolshakov@yadro.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.4 63/80] scsi: qla2xxx: Change discovery state before PLOGI
-Date:   Thu, 19 Dec 2019 19:34:55 +0100
-Message-Id: <20191219183136.597686812@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
-References: <20191219183031.278083125@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: by mail-ot1-f65.google.com with SMTP id h9so5829048otj.11;
+        Thu, 19 Dec 2019 10:55:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wXgmx2Ya6ChzyKkm+w7jzvBT8XbvFcpO0BqUgNxYIdk=;
+        b=LsOlbLSl/Vnrx0vUjwoh2gQsGuS+XuvDkEspbSE0XcxVvQak+wWUa9WeFefkfDlX+o
+         2R6OwnuvafOZPRm7ee9T/TcpLt8N1SqmMyYUcn1crA0UPppZBNZxLQ6XqFVthE2nYKGi
+         fyZFCpYyp8ona297yoS4gKQyAaaD/Xm21YFI8PiDMDO50eh8/KwiVrWM1shTADl7EYfv
+         +u+Il0a1kAGL8V1DadtVfMSg2LIsebSNYboUcWN/mMNKlYSuCdcOpTScykJ7owdYMUJv
+         YlWWLjKEtXfOjtUaKXzBg9V9AcvX3ancAKXyRiYKhfc91M0t+T3FWqMwxrXUoNFJrNEL
+         ceuA==
+X-Gm-Message-State: APjAAAWZfqdXTpTYMdA1KOdm149cUZTSTEQOQkEAMChVS0txPNnXNJa8
+        R8Ybuo2Tq2Y3/po/EFXGVQ==
+X-Google-Smtp-Source: APXvYqxeB4DOtUVYcpXXJFu5X4OixvgM6U/N50o8s9FjCHRYhR58jeSq3kd209OlqlF1nvQCEA0K2A==
+X-Received: by 2002:a05:6830:1047:: with SMTP id b7mr10714492otp.77.1576781751311;
+        Thu, 19 Dec 2019 10:55:51 -0800 (PST)
+Received: from localhost ([2607:fb90:bdf:98e:3549:d84c:9720:edb4])
+        by smtp.gmail.com with ESMTPSA id e6sm2414722otl.12.2019.12.19.10.55.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 10:55:50 -0800 (PST)
+Date:   Thu, 19 Dec 2019 12:55:48 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Hanna Hawa <hhhawa@amazon.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, tsahee@annapurnalabs.com,
+        antoine.tenart@bootlin.com, hhhawa@amazon.com,
+        mchehab+samsung@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
+        tglx@linutronix.de, khilman@baylibre.com, chanho.min@lge.com,
+        heiko@sntech.de, nm@ti.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com,
+        talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com,
+        barakw@amazon.com
+Subject: Re: [PATCH v2 3/6] dt-bindings: arm: amazon: update maintainers of
+ amazon,al DT bindings
+Message-ID: <20191219185548.GA4637@bogus>
+References: <20191209161341.29607-1-hhhawa@amazon.com>
+ <20191209161341.29607-4-hhhawa@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191209161341.29607-4-hhhawa@amazon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Bolshakov <r.bolshakov@yadro.com>
+On Mon, 9 Dec 2019 16:13:38 +0000, Hanna Hawa wrote:
+> Update maintainers of amazon,al DT bindings.
+> 
+> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+> ---
+>  Documentation/devicetree/bindings/arm/amazon,al.yaml | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
 
-commit 58e39a2ce4be08162c0368030cdc405f7fd849aa upstream.
-
-When a port sends PLOGI, discovery state should be changed to login
-pending, otherwise RELOGIN_NEEDED bit is set in
-qla24xx_handle_plogi_done_event(). RELOGIN_NEEDED triggers another PLOGI,
-and it never goes out of the loop until login timer expires.
-
-Fixes: 8777e4314d397 ("scsi: qla2xxx: Migrate NVME N2N handling into state machine")
-Fixes: 8b5292bcfcacf ("scsi: qla2xxx: Fix Relogin to prevent modifying scan_state flag")
-Cc: Quinn Tran <qutran@marvell.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191125165702.1013-6-r.bolshakov@yadro.com
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Tested-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/scsi/qla2xxx/qla_init.c |    1 +
- 1 file changed, 1 insertion(+)
-
---- a/drivers/scsi/qla2xxx/qla_init.c
-+++ b/drivers/scsi/qla2xxx/qla_init.c
-@@ -534,6 +534,7 @@ static int qla_post_els_plogi_work(struc
- 
- 	e->u.fcport.fcport = fcport;
- 	fcport->flags |= FCF_ASYNC_ACTIVE;
-+	fcport->disc_state = DSC_LOGIN_PEND;
- 	return qla2x00_post_work(vha, e);
- }
- 
-
-
+Acked-by: Rob Herring <robh@kernel.org>
