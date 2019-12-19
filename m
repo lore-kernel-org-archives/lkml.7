@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C9AC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73CBC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF7FB206D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92E14222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:05:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782346;
-	bh=yTxjhlA0GOCxsjuGn4rKAiPTxp3UhagqMA/rASlPzQ8=;
+	s=default; t=1576782356;
+	bh=PV0xUFIbqSUM/QVO5CU1Hx7+eOyNGkb2FSCxaY8XQJY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K3CJKwuenWxafx1PheYkBG8CITkF34ZMA+YlhAg6OH2APZ6YdzxH9Uj/KXf5RgqrN
-	 a2IjNQjq7SAMfYEc+mqHT/mFpN0i5QlHY7j7nwnAIIkn5OLk49Tpj/xxpEc4pt5Zee
-	 dx0/T6V4Yvu55ZIRYjhoJLFZtd3OA4v1waLTBn9Y=
+	b=V/Ucn99d9LIq3GWf9K8RCo3/anEI9FLW15FW5ChPOCVm4a5hsMd2xQCYQO9tkInqf
+	 pL69b47/qeSqFwc9/phWDb/tHW/YfBpicJVUbquYtf/P0eMSTQ65hB3sQGFx/VOh3L
+	 dr7TNIeIAvN2wF9708vsplPjSAURtWBP3yWfap6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728832AbfLSTFo (ORCPT
+        id S1728413AbfLSSpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:05:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37904 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:45:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729162AbfLSSp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:45:29 -0500
+        id S1727647AbfLSSpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:45:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 598B9222C2;
-        Thu, 19 Dec 2019 18:45:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5138C222C2;
+        Thu, 19 Dec 2019 18:45:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781128;
-        bh=yTxjhlA0GOCxsjuGn4rKAiPTxp3UhagqMA/rASlPzQ8=;
+        s=default; t=1576781111;
+        bh=PV0xUFIbqSUM/QVO5CU1Hx7+eOyNGkb2FSCxaY8XQJY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q8HaGQAxycPM9htZmdvT7nCpPPUkW7ddjnSjgO+3Vfk2dfIHmPn1PmmBtF3eIVG9o
-         SV1tVGiks/axd8w0v+KfpsDQNb6IFKW9iEU8Lt/jm8AllZpyzg/F2kKqcYL8S+H0Ax
-         PL0SiVummb88yuYME0qr8tx5czfdJaEBtCLC5FQs=
+        b=uxoJRJz7TES6xgj3nv/YFcwXm/VHxHeYffzo8fs4juAQKhvN0IMEUOGZhrnaUedzg
+         oiqGnKq7Atm48P5YSYNfA43NSvmxYRDeJ57p1RvmKvkeDGUsrR0Dn6ayRWTnMKV34s
+         VAqOhbtsRNYmHUHvJJXZkPzNgEWVqLq7I4adihPs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 095/199] appletalk: Set error code if register_snap_client failed
-Date:   Thu, 19 Dec 2019 19:32:57 +0100
-Message-Id: <20191219183220.178908810@linuxfoundation.org>
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 038/199] dmaengine: coh901318: Fix a double-lock bug
+Date:   Thu, 19 Dec 2019 19:32:00 +0100
+Message-Id: <20191219183217.027211912@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -59,33 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-commit c93ad1337ad06a718890a89cdd85188ff9a5a5cc upstream.
+[ Upstream commit 627469e4445b9b12e0229b3bdf8564d5ce384dd7 ]
 
-If register_snap_client fails in atalk_init,
-error code should be set, otherwise it will
-triggers NULL pointer dereference while unloading
-module.
+The function coh901318_alloc_chan_resources() calls spin_lock_irqsave()
+before calling coh901318_config().
+But coh901318_config() calls spin_lock_irqsave() again in its
+definition, which may cause a double-lock bug.
 
-Fixes: 9804501fa122 ("appletalk: Fix potential NULL pointer dereference in unregister_snap_client")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Because coh901318_config() is only called by
+coh901318_alloc_chan_resources(), the bug fix is to remove the
+calls to spin-lock and -unlock functions in coh901318_config().
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/appletalk/ddp.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/dma/coh901318.c |    4 ----
+ 1 file changed, 4 deletions(-)
 
---- a/net/appletalk/ddp.c
-+++ b/net/appletalk/ddp.c
-@@ -1927,6 +1927,7 @@ static int __init atalk_init(void)
- 	ddp_dl = register_snap_client(ddp_snap_id, atalk_rcv);
- 	if (!ddp_dl) {
- 		pr_crit("Unable to register DDP with SNAP.\n");
-+		rc = -ENOMEM;
- 		goto out_sock;
- 	}
+--- a/drivers/dma/coh901318.c
++++ b/drivers/dma/coh901318.c
+@@ -1802,8 +1802,6 @@ static int coh901318_config(struct coh90
+ 	int channel = cohc->id;
+ 	void __iomem *virtbase = cohc->base->virtbase;
+ 
+-	spin_lock_irqsave(&cohc->lock, flags);
+-
+ 	if (param)
+ 		p = param;
+ 	else
+@@ -1823,8 +1821,6 @@ static int coh901318_config(struct coh90
+ 	coh901318_set_conf(cohc, p->config);
+ 	coh901318_set_ctrl(cohc, p->ctrl_lli_last);
+ 
+-	spin_unlock_irqrestore(&cohc->lock, flags);
+-
+ 	return 0;
+ }
  
 
 
