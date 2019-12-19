@@ -2,109 +2,137 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59502C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D7CC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B0BF24650
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92E0024650
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:53:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KEeUqQTW"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Qk2ztRNJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfLSKwg (ORCPT
+        id S1726873AbfLSKxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 05:52:36 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38597 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbfLSKwf (ORCPT
+        Thu, 19 Dec 2019 05:53:19 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:43330 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbfLSKxT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 05:52:35 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y17so5513049wrh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 02:52:34 -0800 (PST)
+        Thu, 19 Dec 2019 05:53:19 -0500
+Received: by mail-qt1-f195.google.com with SMTP id d18so1976459qtj.10
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 02:53:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZXDdUchGqcGrK25/fVfAQ7zC2o3YZYG/aF++t6v9I1o=;
-        b=KEeUqQTWTWspOZferDBKxJRiolK3KQa6C3ksapi9JX/FVu21dZ7XD8X5TJVpp/w9A1
-         22HyzJLAY49JncZXmY6QMzGvxiyeUsGDrquAiPYLUy2dcLmaI+LbkgG0DmZsQ93c54Oc
-         EmRuD9uAXvFn/+wbycCp0IHXKeSVmIh6hstFYADSGlJlyFd0DpXtb7P0IDGFrCZf1HlU
-         yMnGbIwB0HND4fdQbeNho6qdPER/kVyFafbemsVb1Rm0w7Mbu9Kud7ZygC9ViclMhpm5
-         XCS34S3AR3yjEzp93cSvgQopEKtG78XV9LLTzYA/Kjba3Sd3to47bXP+pZ1ejTPHNa0m
-         yaPQ==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=IIuROUmiihU5/B8NCkUBw/bfwJUgV5QA6aHceLRcSgo=;
+        b=Qk2ztRNJiaZYe5KTp+VkB2+m9oL1jp1wW7zAjyoHaFVvlYN4jQ/Q8FTRopN99xMIzT
+         yLpTyqX1NGepLy5dU2nsZkDtQ1JO1T6hj8OEk3OhpBSng97yDWt2qw5Iw6p1G/CG6HGo
+         xh4hHeGyQDl2bGMNMz1ZnpW+MBVcw6S59XqWaAEe2dnS0vc6W+t+WdTyiwndoNPOigNZ
+         SivAAoG6f/iTyDZ4D9kNRLSuZQ/4NWH94VKETaDOB4RVHSJUrU5gG4WD+OIvWzbVoBzy
+         g97zxEnhRIMjm7pj0RgqU+Et31Po9s3iE89+qZ7m9Ovgh223tZnrKZJpJkDAvq9y48Oz
+         cQhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZXDdUchGqcGrK25/fVfAQ7zC2o3YZYG/aF++t6v9I1o=;
-        b=CEFj+dXc1PqfO7jHEt7hNQr0BovZZDXwUqRZD3/rlbb3PIHg3b3Q0uvYgSH+yG1Er/
-         nzJjNp17BICttt/FY/NGM8dpn8N5gngSc2/tgeIdiLbvPyXsKSdSIkmTrvR6hPnKtInc
-         RXokwNNQnCbz12wWKcSTPCu/qTIhyHNQYDUbo9Z1s6yzPtGJ6kwk36JCkucx8nj59VeA
-         LwaNYi9gO3dqPxRxnP5zEwYx9yzXV6Uc7Rqf3aXIdS7HLXWzPDBqB6Er3SI2grCxQDVw
-         PCPuZ9L5fgL7rYMMPRPPzx/3rOHy90LAa4qhSuHTfJ1lcUbXcsXozfnlCJ+75KsDPWFG
-         vr5Q==
-X-Gm-Message-State: APjAAAX3JglGIIr/pl+Pqc1vuYiuDtJ0J6ZDUhMQXZJsRjHXHIJJ6qdL
-        0XeqvQ79cVvgoEIYmwXei9Nao0X5F3Y=
-X-Google-Smtp-Source: APXvYqx/n2fEHAE3TWeuYbC9ZW46dZ6bG8quYLjNLscGuEq4UrWNQvBDKkDiHTmT+TprLK72WtL+EQ==
-X-Received: by 2002:adf:e5ce:: with SMTP id a14mr8514280wrn.214.1576752753718;
-        Thu, 19 Dec 2019 02:52:33 -0800 (PST)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id k4sm5889509wmk.26.2019.12.19.02.52.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 19 Dec 2019 02:52:32 -0800 (PST)
-Subject: Re: [PATCH] nvmem: imx: scu: correct the fuse word index
-To:     Peng Fan <peng.fan@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Cc:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Andy Duan <fugang.duan@nxp.com>
-References: <1575438591-12409-1-git-send-email-peng.fan@nxp.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <1815fe19-4d0c-fbcd-7f44-010b010c00f7@linaro.org>
-Date:   Thu, 19 Dec 2019 10:52:32 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=IIuROUmiihU5/B8NCkUBw/bfwJUgV5QA6aHceLRcSgo=;
+        b=UpJyha+/w7uPeDTdAbJDmsDxZFfxswQmHUivXosh0Y/KdXMd8sCOHkbG6kPhGuSMOS
+         JeKEGzZ9HuEzO2SJaTCT9978yD+egCTOGzcFJZfPv2xXC2cZuO7Mpl+yHnIra70gbE3l
+         TgcGivollweXd94QaLm3Km4DDLMKlisPI+m2H20CmALZV8lREi1ck3K8wEtAvLrUHfWF
+         jR6sPoMGfneBAeRnWvQ7s+zGyiIPV3tMLWLt5p82Jxee5OPGYkrogJoafKRZJlBqJMB7
+         jf6ARzw5YCyz+BOG30yoDAB0DWVJ4+9bgQoJVqsvNqTl798S26ku4Agf74BsoGOwQ1uC
+         OfUA==
+X-Gm-Message-State: APjAAAXKZ8vOxWAGCUzp5IjsVW+epwMl6ciuLId4b7c1JN15vTqx338r
+        kQBe+xhSzDBfIZLpA6PZR0gjPmj0lkAbekkZsYA//A==
+X-Google-Smtp-Source: APXvYqwuOZ8jOwab1DPiMEfvgPdn8LVbmJvxmNOywr9VbwLO6NhzWQA0IvMtiPi6RS1ZunYqPuMm710wLMboY4QBOvk=
+X-Received: by 2002:ac8:704:: with SMTP id g4mr6314518qth.197.1576752798327;
+ Thu, 19 Dec 2019 02:53:18 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1575438591-12409-1-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191210154157.21930-1-ktouil@baylibre.com> <cd9f342c-5576-57f5-c62d-a78c5876a7fd@linaro.org>
+In-Reply-To: <cd9f342c-5576-57f5-c62d-a78c5876a7fd@linaro.org>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 19 Dec 2019 11:53:07 +0100
+Message-ID: <CAMpxmJUM2WWyJyU0MuOu9qObPFr2ghH5LHs8DXo_poMwtZqPNA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] at24: move write-protect pin handling to nvmem core
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Khouloud Touil <ktouil@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        baylibre-upstreaming@groups.io,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+czw., 19 gru 2019 o 11:51 Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> napisa=C5=82(a):
+>
+>
+>
+> On 10/12/2019 15:41, Khouloud Touil wrote:
+> > The write-protect pin handling looks like a standard property that
+> > could benefit other users if available in the core nvmem framework.
+> >
+> > Instead of modifying all the drivers to check this pin, make the
+> > nvmem subsystem check if the write-protect GPIO being passed
+> > through the nvmem_config or defined in the device tree and pull it
+> > low whenever writing to the memory.
+> >
+> > This patchset:
+> >
+> > - adds support for the write-protect pin split into two parts.
+> > The first patch modifies modifies the relevant binding document,
+> > while the second modifies the nvmem code to pull the write-protect
+> > GPIO low (if present) during write operations.
+> >
+> > - removes support for the write-protect pin split into two parts.
+> > The first patch modifies the relevant binding document to remove
+> > the wp-gpio, while the second removes the relevant code in the
+> > at24 driver.
+> >
+> > Changes since v1:
+> > -Add an explenation on how the wp-gpios works
+> > -keep reference to the wp-gpios in the at24 binding
+> >
+> > Khouloud Touil (4):
+> >    dt-bindings: nvmem: new optional property write-protect-gpios
+> >    nvmem: add support for the write-protect pin
+> >    dt-bindings: at24: remove the optional property write-protect-gpios
+> >    eeprom: at24: remove the write-protect pin support
+> >
+>
+> Thanks Khouloud for this patchset,
+>
+> I can take this via nvmem tree once we get an ack on dt bindings from DT
+> maintainers.
+>
 
+Hi Srinivas,
 
-On 04/12/2019 05:52, Peng Fan wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> i.MX8 fuse word row index represented as one 4-bytes word.
-> Exp:
-> - MAC0 address layout in fuse:
-> offset 708: MAC[3] MAC[2] MAC[1] MAC[0]
-> offset 709: XX     xx     MAC[5] MAC[4]
-> 
-> The original code takes row index * 4 as the offset, this
-> not exactly match i.MX8 fuse map documentation.
-> 
-> So update code the reflect the truth.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->   drivers/nvmem/imx-ocotp-scu.c | 10 +++++-----
->   1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-Applied Thanks,
-srini
+this will conflict with my at24 tree for this release - can you put
+those patches (once they're fine) into an immutable branch for me to
+merge in?
+
+Bart
+
+>
+> --srini
+> >   .../devicetree/bindings/eeprom/at24.yaml      |  6 +-----
+> >   .../devicetree/bindings/nvmem/nvmem.yaml      |  9 +++++++++
+> >   drivers/misc/eeprom/at24.c                    |  9 ---------
+> >   drivers/nvmem/core.c                          | 19 +++++++++++++++++-=
+-
+> >   drivers/nvmem/nvmem.h                         |  2 ++
+> >   include/linux/nvmem-provider.h                |  3 +++
+> >   6 files changed, 32 insertions(+), 16 deletions(-)
+> >
