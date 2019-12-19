@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90956C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C61C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6717024680
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A99F222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781033;
-	bh=VSBIhfZCukb3KkAC7X5bF+mpEdHCaVQdLhX+frrXC4s=;
+	s=default; t=1576781040;
+	bh=5c+/LOE4VJVhhZOOjd+xD/vKB1b/odbuOaqjEBdegP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=famER1lCUayHGstxKM6fTKWWkbbEh8ihBybt+3x0IFJEVv4bvCmUVZMKBD/uSAvTM
-	 Spti/a+/S+68FYJLQ56G6gTC0ZsRup0voWuIrsCaVy+VQxqQwtcFMRymG0iXPArhvr
-	 qeXZ6837cazJLlzahYcZiALOwtJ07lEgon7Jh9PI=
+	b=U6rVrok5+hsECQI59XGYbLjqfU2A4tuVkdubtLzczqiefz/Lyf8RuyWiVruh5/u9t
+	 zuYz1ZUfu+vKgMc3m9ZntAqE19f9SPNdBN1in/YUIvQCnpMigita6nbmkKS1RP128Z
+	 JBT9Zbu/vGtZeIe3qcm+MowX3X3fJJnghI5ROP7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728917AbfLSSnw (ORCPT
+        id S1728935AbfLSSn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:43:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35560 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:43:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728865AbfLSSnr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:43:47 -0500
+        id S1728923AbfLSSn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:43:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34C6D24672;
-        Thu, 19 Dec 2019 18:43:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2930C222C2;
+        Thu, 19 Dec 2019 18:43:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781026;
-        bh=VSBIhfZCukb3KkAC7X5bF+mpEdHCaVQdLhX+frrXC4s=;
+        s=default; t=1576781036;
+        bh=5c+/LOE4VJVhhZOOjd+xD/vKB1b/odbuOaqjEBdegP8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bC5pC1wMBS9hH3vdfadh96lQ9OhzpygtI8szRUGWRm/zgSKkmkC8tzg7s08va7/EZ
-         K9Q8Q9ROBTqbEtdCuB94hBh6vDy7r419QLqnb+FSZJC0RfH2rGomoeAl/L+m0kT+U+
-         8ErceuFzVs+BXPBHpZYTLKbzZx8hKZQBd+cKw3+w=
+        b=UxKl6SrnktfWnF9log1T/B+97jvRGwCSrcQhOKKtaT0uWHBW3DIpk++DegTnOa5/M
+         kdpZHBY6JqWuZS31bL/d00er/gqMdECS9sKyg3Nm9o6D8vD9z8ftwyGZ8GrhsDQRGi
+         jBjWgWcvzsB1c8uDf+IUpc1DDkIHgYFMjgHkq3ME=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>, Olof Johansson <olof@lixom.net>,
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 053/199] ARM: dts: realview-pbx: Fix duplicate regulator nodes
-Date:   Thu, 19 Dec 2019 19:32:15 +0100
-Message-Id: <20191219183217.894949173@linuxfoundation.org>
+Subject: [PATCH 4.9 057/199] kbuild: fix single target build for external module
+Date:   Thu, 19 Dec 2019 19:32:19 +0100
+Message-Id: <20191219183218.120498975@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,53 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit 7f4b001b7f6e0480b5bdab9cd8ce1711e43e5cb5 ]
+[ Upstream commit e07db28eea38ed4e332b3a89f3995c86b713cb5b ]
 
-There's a bug in dtc in checking for duplicate node names when there's
-another section (e.g. "/ { };"). In this case, skeleton.dtsi provides
-another section. Upon removal of skeleton.dtsi, the dtb fails to build
-due to a duplicate node 'fixedregulator@0'. As both nodes were pretty
-much the same 3.3V fixed regulator, it hasn't really mattered. Fix this
-by renaming the nodes to something unique. In the process, drop the
-unit-address which shouldn't be present wtihout reg property.
+Building a single target in an external module fails due to missing
+.tmp_versions directory.
 
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+For example,
+
+  $ make -C /lib/modules/$(uname -r)/build M=$PWD foo.o
+
+will fail in the following way:
+
+  CC [M]  /home/masahiro/foo/foo.o
+/bin/sh: 1: cannot create /home/masahiro/foo/.tmp_versions/foo.mod: Directory nonexistent
+
+This is because $(cmd_crmodverdir) is executed only before building
+/, %/, %.ko single targets of external modules. Create .tmp_versions
+in the 'prepare' target.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/arm-realview-pbx.dtsi | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ Makefile | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/boot/dts/arm-realview-pbx.dtsi b/arch/arm/boot/dts/arm-realview-pbx.dtsi
-index 2bf3958b2e6b9..068293254fbb8 100644
---- a/arch/arm/boot/dts/arm-realview-pbx.dtsi
-+++ b/arch/arm/boot/dts/arm-realview-pbx.dtsi
-@@ -43,7 +43,7 @@
- 	};
+diff --git a/Makefile b/Makefile
+index 55a91bc3d8f9c..6baf1e6324255 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1521,9 +1521,6 @@ else # KBUILD_EXTMOD
  
- 	/* The voltage to the MMC card is hardwired at 3.3V */
--	vmmc: fixedregulator@0 {
-+	vmmc: regulator-vmmc {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vmmc";
- 		regulator-min-microvolt = <3300000>;
-@@ -51,7 +51,7 @@
- 		regulator-boot-on;
-         };
+ # We are always building modules
+ KBUILD_MODULES := 1
+-PHONY += crmodverdir
+-crmodverdir:
+-	$(cmd_crmodverdir)
  
--	veth: fixedregulator@0 {
-+	veth: regulator-veth {
- 		compatible = "regulator-fixed";
- 		regulator-name = "veth";
- 		regulator-min-microvolt = <3300000>;
-@@ -539,4 +539,3 @@
- 		};
- 	};
- };
--
+ PHONY += $(objtree)/Module.symvers
+ $(objtree)/Module.symvers:
+@@ -1535,7 +1532,7 @@ $(objtree)/Module.symvers:
+ 
+ module-dirs := $(addprefix _module_,$(KBUILD_EXTMOD))
+ PHONY += $(module-dirs) modules
+-$(module-dirs): crmodverdir $(objtree)/Module.symvers
++$(module-dirs): prepare $(objtree)/Module.symvers
+ 	$(Q)$(MAKE) $(build)=$(patsubst _module_%,%,$@)
+ 
+ modules: $(module-dirs)
+@@ -1576,7 +1573,8 @@ help:
+ 
+ # Dummies...
+ PHONY += prepare scripts
+-prepare: ;
++prepare:
++	$(cmd_crmodverdir)
+ scripts: ;
+ endif # KBUILD_EXTMOD
+ 
+@@ -1701,17 +1699,14 @@ endif
+ 
+ # Modules
+ /: prepare scripts FORCE
+-	$(cmd_crmodverdir)
+ 	$(Q)$(MAKE) KBUILD_MODULES=$(if $(CONFIG_MODULES),1) \
+ 	$(build)=$(build-dir)
+ # Make sure the latest headers are built for Documentation
+ Documentation/ samples/: headers_install
+ %/: prepare scripts FORCE
+-	$(cmd_crmodverdir)
+ 	$(Q)$(MAKE) KBUILD_MODULES=$(if $(CONFIG_MODULES),1) \
+ 	$(build)=$(build-dir)
+ %.ko: prepare scripts FORCE
+-	$(cmd_crmodverdir)
+ 	$(Q)$(MAKE) KBUILD_MODULES=$(if $(CONFIG_MODULES),1)   \
+ 	$(build)=$(build-dir) $(@:.ko=.o)
+ 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
 -- 
 2.20.1
 
