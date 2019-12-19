@@ -2,124 +2,92 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 113C1C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3B2C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD27B24679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:07:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KkfDrhY3"
+	by mail.kernel.org (Postfix) with ESMTP id D9DED222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:08:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbfLSLH0 (ORCPT
+        id S1726817AbfLSLI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 06:07:26 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:20620 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726698AbfLSLHZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 06:07:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576753644;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IrcMrSSa7UYXErd11JQFtfowjebCnHuL7Bzv7dIUqcc=;
-        b=KkfDrhY3kJJr6AjwPv7M3rWF7TGaGWfPbYbd1QQUYXOrUBnxqlzbKino2aPGWSZuFjrh0b
-        VT2kHLBcgu9o74JvUCdV8B2Pb6Mb1WZsce0OSY1f5vXFVdTurselVmOkgKOL2+FDBajWzG
-        xZ6BSvkvokFhRVI2Kq2RxvUfB8zmoiY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-123-uwfumKeEMN-nvu4639YtGA-1; Thu, 19 Dec 2019 06:07:21 -0500
-X-MC-Unique: uwfumKeEMN-nvu4639YtGA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A2B771883522;
-        Thu, 19 Dec 2019 11:07:18 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (dhcp-192-227.str.redhat.com [10.33.192.227])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 705C960BC7;
-        Thu, 19 Dec 2019 11:07:14 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Shuah Khan <shuah@kernel.org>,
-        David Laight <david.laight@aculab.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        dev@opencontainers.org, containers@lists.linux-foundation.org,
-        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 1/2] uapi: split openat2(2) definitions from fcntl.h
-References: <20191219105533.12508-1-cyphar@cyphar.com>
-        <20191219105533.12508-2-cyphar@cyphar.com>
-Date:   Thu, 19 Dec 2019 12:07:13 +0100
-In-Reply-To: <20191219105533.12508-2-cyphar@cyphar.com> (Aleksa Sarai's
-        message of "Thu, 19 Dec 2019 21:55:29 +1100")
-Message-ID: <87a77oy3oe.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Thu, 19 Dec 2019 06:08:27 -0500
+Received: from relay.sw.ru ([185.231.240.75]:47626 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726694AbfLSLI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 06:08:26 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1ihteG-0005CI-NY; Thu, 19 Dec 2019 14:07:16 +0300
+Subject: Re: [PATCH RFC 1/3] block: Add support for REQ_OP_ASSIGN_RANGE
+ operation
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>, axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, tytso@mit.edu,
+        adilger.kernel@dilger.ca, ming.lei@redhat.com, osandov@fb.com,
+        jthumshirn@suse.de, minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
+        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
+        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
+        chaitanya.kulkarni@wdc.com, bvanassche@acm.org,
+        dhowells@redhat.com, asml.silence@gmail.com
+References: <157599668662.12112.10184894900037871860.stgit@localhost.localdomain>
+ <157599696813.12112.14140818972910110796.stgit@localhost.localdomain>
+ <yq1woatc8zd.fsf@oracle.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <3f2e341b-dea4-c5d0-8eb0-568b6ad2f17b@virtuozzo.com>
+Date:   Thu, 19 Dec 2019 14:07:16 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <yq1woatc8zd.fsf@oracle.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Aleksa Sarai:
+Hi, Martin!
 
-> diff --git a/include/uapi/linux/openat2.h b/include/uapi/linux/openat2.h
-> new file mode 100644
-> index 000000000000..19ef775e8e5e
-> --- /dev/null
-> +++ b/include/uapi/linux/openat2.h
-> @@ -0,0 +1,41 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +#ifndef _UAPI_LINUX_OPENAT2_H
-> +#define _UAPI_LINUX_OPENAT2_H
+On 19.12.2019 06:03, Martin K. Petersen wrote:
+> 
+> Hi Kirill!
+> 
+>> The patch adds a new blkdev_issue_assign_range() primitive, which is
+>> rather similar to existing blkdev_issue_{*} api.  Also, a new queue
+>> limit.max_assign_range_sectors is added.
+> 
+> I am not so keen on the assign_range name. What's wrong with "allocate"?
 
-I think you should include the relevant header for __align_u64
-etc. here.
+REQ_OP_ALLOCATE_RANGE seemed for me as looking very long for the reviewers.
+And I found that there is no an abbreviation of operations name in enum req_opf,
+so REQ_OP_ALLOC_RANGE won't look good. Thus, I found a replacement.
 
-[=E2=80=A6]
-> + * Arguments for how openat2(2) should open the target path. If @resolve=
- is
-> + * zero, then openat2(2) operates very similarly to openat(2).
-> + *
-> + * However, unlike openat(2), unknown bits in @flags result in -EINVAL r=
-ather
-> + * than being silently ignored. @mode must be zero unless one of {O_CREA=
-T,
-> + * O_TMPFILE} are set.
-> + *
-> + * @flags: O_* flags.
-> + * @mode: O_CREAT/O_TMPFILE file mode.
-> + * @resolve: RESOLVE_* flags.
-> + */
-> +struct open_how {
-> +	__aligned_u64 flags;
-> +	__u16 mode;
-> +	__u16 __padding[3]; /* must be zeroed */
-> +	__aligned_u64 resolve;
-> +};
-> +
-> +#define OPEN_HOW_SIZE_VER0	24 /* sizeof first published struct */
-> +#define OPEN_HOW_SIZE_LATEST	OPEN_HOW_SIZE_VER0
+But in case of REQ_OP_ALLOCATE_RANGE length is OK for people, there is no
+a problem to choose it.
 
-Are these really useful for the UAPI header?  Is there a situation where
-OPEN_HOW_SIZE_LATEST would be different from sizeof (struct open_how)?
+> But why introduce a completely new operation? Isn't this essentially a
+> write zeroes with BLKDEV_ZERO_NOUNMAP flag set?
+> 
+> If the zeroing aspect is perceived to be a problem we could add a
+> BLKDEV_ZERO_ALLOCATE flag (or BLKDEV_ZERO_ANCHOR since that's the
+> terminology used in SCSI).
 
-The header is not compatible with the assembler anyway, so the numeric
-constant does not seem useful.
+Hm. BLKDEV_ZERO_NOUNMAP is used in __blkdev_issue_write_zeroes() only.
+So, do I understand right that we should the below two?:
+
+1)Introduce a new flag BLKDEV_ZERO_ALLOCATE for blkdev_issue_write_zeroes().
+2)Introduce a new flag REQ_NOZERO in enum req_opf.
+
+Won't this confuse a reader that we have blkdev_issue_write_zeroes(),
+which does not write zeroes sometimes? Maybe we should rename
+blkdev_issue_write_zeroes() in some more generic name?
 
 Thanks,
-Florian
+Kirill
 
