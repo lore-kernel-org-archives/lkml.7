@@ -2,106 +2,91 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 349D3C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55ECEC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 089A324685
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3110624676
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:05:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfLSOFA (ORCPT
+        id S1726930AbfLSOFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 09:05:00 -0500
-Received: from relay.sw.ru ([185.231.240.75]:53412 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726695AbfLSOFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 09:05:00 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1ihwQ6-0006RQ-DH; Thu, 19 Dec 2019 17:04:50 +0300
-Subject: [Q] ld: Does LTO reorder ro variables in two files?
-To:     Peter Zijlstra <peterz@infradead.org>, gcc-help@gcc.gnu.org
-Cc:     mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org
-References: <157675913272.349305.8936736338884044103.stgit@localhost.localdomain>
- <20191219131242.GK2827@hirez.programming.kicks-ass.net>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <3db1b1c8-0228-56e4-a04f-e8d24cd1dd51@virtuozzo.com>
-Date:   Thu, 19 Dec 2019 17:04:49 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191219131242.GK2827@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
+        Thu, 19 Dec 2019 09:05:11 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:59075 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726695AbfLSOFK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 09:05:10 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-18-lkdE9QJxMPae3bT7pEoTqQ-1; Thu, 19 Dec 2019 14:05:05 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 19 Dec 2019 14:05:04 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 19 Dec 2019 14:05:04 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Aleksa Sarai' <cyphar@cyphar.com>,
+        Florian Weimer <fweimer@redhat.com>
+CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        "dev@opencontainers.org" <dev@opencontainers.org>,
+        "containers@lists.linux-foundation.org" 
+        <containers@lists.linux-foundation.org>,
+        "libc-alpha@sourceware.org" <libc-alpha@sourceware.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Subject: RE: [PATCH 1/2] uapi: split openat2(2) definitions from fcntl.h
+Thread-Topic: [PATCH 1/2] uapi: split openat2(2) definitions from fcntl.h
+Thread-Index: AQHVtnKfNpps3AEjjUOZljxYP1VvUqfBfNKA
+Date:   Thu, 19 Dec 2019 14:05:04 +0000
+Message-ID: <845fc9e8b55e4868bb4d20655e674b50@AcuMS.aculab.com>
+References: <20191219105533.12508-1-cyphar@cyphar.com>
+ <20191219105533.12508-2-cyphar@cyphar.com>
+ <87a77oy3oe.fsf@oldenburg2.str.redhat.com>
+ <20191219134525.mgzmjbsp4wo5b2bw@yavin.dot.cyphar.com>
+In-Reply-To: <20191219134525.mgzmjbsp4wo5b2bw@yavin.dot.cyphar.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: lkdE9QJxMPae3bT7pEoTqQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CC: gcc-help@gcc.gnu.org
-
-Hi, gcc guys,
-
-this thread starts here: https://lkml.org/lkml/2019/12/19/403
-
-There are two const variables:
-
-   struct sched_class idle_sched_class
-and
-   struct sched_class fair_sched_class,
-
-which are declared in two files idle.c and fair.c.
-
-1)In Makefile the order is: idle.o fair.o
-2)the variables go to the same ro section
-3)there is no SORT(.*) keyword in linker script.
-
-Is it always true, that after linkage &idle_sched_class < &fair_sched_class?
-
-Thanks!
-Kirill
-
-On 19.12.2019 16:12, Peter Zijlstra wrote:
-> On Thu, Dec 19, 2019 at 03:39:14PM +0300, Kirill Tkhai wrote:
->> In kernel/sched/Makefile files, describing different sched classes, already
->> go in the order from the lowest priority class to the highest priority class:
->>
->> idle.o fair.o rt.o deadline.o stop_task.o
->>
->> The documentation of GNU linker says, that section appears in the order
->> they are seen during link time (see [1]):
->>
->>> Normally, the linker will place files and sections matched by wildcards
->>> in the order in which they are seen during the link. You can change this
->>> by using the SORT keyword, which appears before a wildcard pattern
->>> in parentheses (e.g., SORT(.text*)).
->>
->> So, we may expect const variables from idle.o will go before ro variables
->> from fair.o in RO_DATA section, while ro variables from fair.o will go
->> before ro variables from rt.o, etc.
->>
->> (Also, it looks like the linking order is already used in kernel, e.g.
->>  in drivers/md/Makefile)
->>
->> Thus, we may introduce an optimization based on xxx_sched_class addresses
->> in these two hot scheduler functions: pick_next_task() and check_preempt_curr().
->>
->> One more result of the patch is that size of object file becomes a little
->> less (excluding added BUG_ON(), which goes in __init section):
->>
->> $size kernel/sched/core.o
->>          text     data      bss	    dec	    hex	filename
->> before:  66446    18957	    676	  86079	  1503f	kernel/sched/core.o
->> after:   66398    18957	    676	  86031	  1500f	kernel/sched/core.o
-> 
-> Does LTO preserve this behaviour? I've never quite dared do this exact
-> optimization.
+RnJvbTogQWxla3NhIFNhcmFpDQo+IFNlbnQ6IDE5IERlY2VtYmVyIDIwMTkgMTM6NDUNCj4gT24g
+MjAxOS0xMi0xOSwgRmxvcmlhbiBXZWltZXIgPGZ3ZWltZXJAcmVkaGF0LmNvbT4gd3JvdGU6DQo+
+ID4gKiBBbGVrc2EgU2FyYWk6DQo+ID4NCj4gPiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL3VhcGkv
+bGludXgvb3BlbmF0Mi5oIGIvaW5jbHVkZS91YXBpL2xpbnV4L29wZW5hdDIuaA0KPiA+ID4gbmV3
+IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uMTllZjc3NWU4ZTVl
+DQo+ID4gPiAtLS0gL2Rldi9udWxsDQo+ID4gPiArKysgYi9pbmNsdWRlL3VhcGkvbGludXgvb3Bl
+bmF0Mi5oDQo+ID4gPiBAQCAtMCwwICsxLDQxIEBADQo+ID4gPiArLyogU1BEWC1MaWNlbnNlLUlk
+ZW50aWZpZXI6IEdQTC0yLjAgV0lUSCBMaW51eC1zeXNjYWxsLW5vdGUgKi8NCj4gPiA+ICsjaWZu
+ZGVmIF9VQVBJX0xJTlVYX09QRU5BVDJfSA0KPiA+ID4gKyNkZWZpbmUgX1VBUElfTElOVVhfT1BF
+TkFUMl9IDQo+ID4NCj4gPiBJIHRoaW5rIHlvdSBzaG91bGQgaW5jbHVkZSB0aGUgcmVsZXZhbnQg
+aGVhZGVyIGZvciBfX2FsaWduX3U2NA0KPiA+IGV0Yy4gaGVyZS4NCj4gDQo+IFJpZ2h0IC0tIG5v
+IGlkZWEgd2h5IEkgZm9yZ290IHRvIGluY2x1ZGUgdGhlbS4NCg0KSSdtIGd1ZXNzaW5nIHRoYXQg
+aXMganVzdCA2NGJpdCBhbGlnbmVkIG9uIDMyYml0IGFyY2hzIGxpa2UgeDg2Pw0KDQpObyBuZWVk
+IHRvIGVuZm9yY2UgaXQgcHJvdmlkZWQgdGhlIHN0cnVjdHVyZSB3aWxsIGhhdmUgbm8gcGFkZGlu
+Zw0Kb24gYXJjaHMgd2hlcmUgdGhlIDY0Yml0IGZpZWxkcyBhcmUgNjRiaXQgYWxpZ25lZC4NCkEg
+cGxhaW4gX191NjQgc2hvdWxkIGJlIGZpbmUuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFk
+ZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywg
+TUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
