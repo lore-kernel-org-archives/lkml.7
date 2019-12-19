@@ -2,120 +2,188 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9EFC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0337CC2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ADDC222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC538222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:35:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fPLIxbkS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TiDuEW/n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfLSKeM (ORCPT
+        id S1726847AbfLSKfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 05:34:12 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34430 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbfLSKeM (ORCPT
+        Thu, 19 Dec 2019 05:35:10 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52038 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726712AbfLSKfK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 05:34:12 -0500
-Received: by mail-pf1-f195.google.com with SMTP id l127so2994913pfl.1;
-        Thu, 19 Dec 2019 02:34:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=BAIlE7DMaDGBVXpBNBOtzHm8RlaK5xCd8x7R/wAcGNI=;
-        b=fPLIxbkSfXYkwypUHxgrQoRCFHxrEKjirZPQC18UFlxp+lgXCi3e/Ce91ydWZlshwU
-         bmZnTU69j0FnT760dwJB/OI1Cfy4kgHn9m1cbcBN9G+3uGfyDFnfNFralhTltGDBnCIt
-         mEhAnUf9OJGEvRCED0gfO27fylMoTwysbsUOX06tjEim2jMAni8ohICfHJ45hglCpNGm
-         u3TXnLExef8+MjzV4Ga8FAZLUUgU0cqEoam1N7NfM9XWUO14n8L1pyjQrrLQ455XDjK0
-         cYo9d6KifrTTL2L04lwhNuUOGRTmk/q+r1HswwtAJm0Eb5jWpqIjjCmHfyCG1c/yMINL
-         GsDg==
+        Thu, 19 Dec 2019 05:35:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576751709;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=grytLlF1DJ8ixVXUMMRXrV+hvL2jNyAGRxO10pwO3Kk=;
+        b=TiDuEW/nYlQgwerJTQMl1wJjLLhp3aDKYQqdCI2w5KWGMTQu32czfia6Jr9sY5Xr16dBZH
+        yHtoEg4yjDi/5EXVYyjEHgB59Ik+uDr/uC/j/KIvMExtZxglcYht4ITrpuZL/2KmgvFVA9
+        Fs407KduwyDNRnhJi7D4xuD1gX1qdKE=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-241-CKlyLl6gN4yV7-RICvpvuQ-1; Thu, 19 Dec 2019 05:35:06 -0500
+X-MC-Unique: CKlyLl6gN4yV7-RICvpvuQ-1
+Received: by mail-wm1-f71.google.com with SMTP id p2so1206561wma.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 02:35:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=BAIlE7DMaDGBVXpBNBOtzHm8RlaK5xCd8x7R/wAcGNI=;
-        b=QCDhDL4oo6f86C5vShArxSMqIQbuZkR0I+oXOr1LqMZNjdgzoqkS11NqEFY/AuP0yU
-         ghJhofgTNA6zFbWUHu42TV/382ekOFBX2UYlJdIr+Y1hpa45q7uvpBAhQnzQu7u11E1V
-         G2l3Ilzt+wxKcwkcv+iqEwFki1ZKTYP1mr2Suw7MmIDEZ8lEcEaNB4gSLCY0JdTK8WgR
-         so27cXMTgDY1tYuttQhVZ+V8vgUPEQDoOU+U32FHHu/nAW2cdCK7kQu9SSGpQarhiBOL
-         XZKa62zUEoHteA1hfZFlrBzrWCxwrwtj8Nzl4hwq9ddMf9hIYx+9dINBS5Iq6IoSbfwS
-         BnAQ==
-X-Gm-Message-State: APjAAAXnNNomDZgbzsD0dExT90LQzoL05hG2Agr3ab1uCDfFQsBa+fRE
-        OsyYavAda8j4oPV7R7ZHz4Q=
-X-Google-Smtp-Source: APXvYqxaSmxfpFZxq4SV0bc4KGc9zAFwbYtPo3wGd6OBZqZduudwqsv5TLWgLCbp41LQIElLjdq7pg==
-X-Received: by 2002:a63:7705:: with SMTP id s5mr8134161pgc.379.1576751651603;
-        Thu, 19 Dec 2019 02:34:11 -0800 (PST)
-Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
-        by smtp.gmail.com with ESMTPSA id d26sm6596181pgv.66.2019.12.19.02.34.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 02:34:10 -0800 (PST)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     fabien.dessenne@st.com, mchehab@kernel.org
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH v2] media: sti: bdisp: fix a possible sleep-in-atomic-context bug in bdisp_device_run()
-Date:   Thu, 19 Dec 2019 18:34:01 +0800
-Message-Id: <20191219103401.13630-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=grytLlF1DJ8ixVXUMMRXrV+hvL2jNyAGRxO10pwO3Kk=;
+        b=d/5nrOM30X1UL/zNctZrWMXShTgq7qCJWios/9Zyh4FPYGDmB2Oi5mI2HToSylv5HQ
+         tTggPtE3vU/s1dCdctmv1bk/OXJZcuP6dOOrS+L3IdaE8w/12ol3nE/DAugZzCwsh+dL
+         kPGIU432F6G3/ADAigFj3vqUFHmWJ6cd/2/qoMg5FFkI5m8ZHHyDTfv2Uot/37e7DwKU
+         gocvfsJc0n8z4Ggto9v7a7dtM1RzXx3jPGkea1MU1lKqOGWT9elxaDUHKHlk3nZ4QheE
+         juRVz5jqOzOU9MZ1mVgeI+d1tUV+b3hNIGoB/x95rJ94HnqraYcSIe6YdB11EjbDKKH5
+         c7+g==
+X-Gm-Message-State: APjAAAWyzw/hoh3FNKQFwfBgmp0pb6FjwJ/QsqBGLZNOq/zDV9BU3LQH
+        QWPj03Vk7bkvV2Y1oitZVa4zPDTz01KJpLbFo5kXLushSv6hAkR/Q4aClsG4mMAchIRcl2Vsafi
+        OPckHPqxcY2iBEzIBRYf+TH8A
+X-Received: by 2002:a5d:690e:: with SMTP id t14mr8532967wru.65.1576751704392;
+        Thu, 19 Dec 2019 02:35:04 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyRIN6jrjB2zwl/YVEf01195wmi63mQXP7jnb1nOJ++QqxEfgXl6pGOygsE+eeyF7zb41K3zQ==
+X-Received: by 2002:a5d:690e:: with SMTP id t14mr8532922wru.65.1576751703925;
+        Thu, 19 Dec 2019 02:35:03 -0800 (PST)
+Received: from localhost.localdomain ([151.29.30.195])
+        by smtp.gmail.com with ESMTPSA id o7sm5513625wmh.11.2019.12.19.02.35.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 19 Dec 2019 02:35:03 -0800 (PST)
+Date:   Thu, 19 Dec 2019 11:35:00 +0100
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Claudio Scordino <c.scordino@evidence.eu.com>,
+        Luca Abeni <luca.abeni@santannapisa.it>,
+        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
+        Juri Lelli <juri.lelli@redhat.com>
+Subject: [ANNOUNCE][CFP] Power Management and Scheduling in the Linux Kernel
+ IV edition (OSPM-summit 2020)
+Message-ID: <20191219103500.GC13724@localhost.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+Power Management and Scheduling in the Linux Kernel (OSPM-summit) IV edition
 
-drivers/media/platform/sti/bdisp/bdisp-hw.c, 385:
-    msleep in bdisp_hw_reset
-drivers/media/platform/sti/bdisp/bdisp-v4l2.c, 341:
-    bdisp_hw_reset in bdisp_device_run
-drivers/media/platform/sti/bdisp/bdisp-v4l2.c, 317:
-    _raw_spin_lock_irqsave in bdisp_device_run
-
-To fix this bug, msleep() is replaced with udelay().
-
-This bug is found by a static analysis tool STCheck written by myself.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
-v2:
-* Use udelay() instead of mdelay().
-  Thank Fabien for good advice.
+May 11-13, 2019
+Scuola Superiore Sant'Anna
+Pisa, Italy
 
 ---
- drivers/media/platform/sti/bdisp/bdisp-hw.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/sti/bdisp/bdisp-hw.c b/drivers/media/platform/sti/bdisp/bdisp-hw.c
-index 4372abbb5950..a74e9fd65238 100644
---- a/drivers/media/platform/sti/bdisp/bdisp-hw.c
-+++ b/drivers/media/platform/sti/bdisp/bdisp-hw.c
-@@ -14,8 +14,8 @@
- #define MAX_SRC_WIDTH           2048
- 
- /* Reset & boot poll config */
--#define POLL_RST_MAX            50
--#define POLL_RST_DELAY_MS       20
-+#define POLL_RST_MAX            500
-+#define POLL_RST_DELAY_MS       2
- 
- enum bdisp_target_plan {
- 	BDISP_RGB,
-@@ -382,7 +382,7 @@ int bdisp_hw_reset(struct bdisp_dev *bdisp)
- 	for (i = 0; i < POLL_RST_MAX; i++) {
- 		if (readl(bdisp->regs + BLT_STA1) & BLT_STA1_IDLE)
- 			break;
--		msleep(POLL_RST_DELAY_MS);
-+		udelay(POLL_RST_DELAY_MS * 1000);
- 	}
- 	if (i == POLL_RST_MAX)
- 		dev_err(bdisp->dev, "Reset timeout\n");
--- 
-2.17.1
+.:: FOCUS
+
+The IV edition of the Power Management and Scheduling in the Linux
+Kernel (OSPM) summit aims at fostering discussions on power management
+and (real-time) scheduling techniques. Summit will be held in Pisa
+(Italy) on May 11-13, 2020.
+
+Although scheduler techniques for reducing energy consumption while
+meeting performance and latency requirements are the prime interest of
+the summit, we welcome anybody interested in having discussions on the
+broader scope of real-time systems, real-time and non-real-time
+scheduling, tooling, debugging and tracing.
+
+Feel free to have a look at what happened previous years:
+
+ I   edition - https://lwn.net/Articles/721573/
+ II  edition - https://lwn.net/Articles/754923/
+ III edition - https://lwn.net/Articles/793281/
+
+.:: FORMAT
+
+The summit is organized to cover three days of discussions and talks.
+
+The list of topics of interest includes (but it is not limited to):
+
+ * Power management techniques
+ * Real-time and non real-time scheduling techniques
+ * Energy consumption and CPU capacity aware scheduling
+ * Real-time virtualization
+ * Mobile/Server power management real-world use cases (successes and
+   failures)
+ * Power management and scheduling tooling (configuration, integration,
+   testing, etc.)
+ * Tracing
+ * Recap/lightning talks
+
+Presentations can cover recently developed technologies, ongoing work
+and new ideas. Please understand that this workshop is not intended for
+presenting sales and marketing pitches.
+
+.:: ATTENDING
+
+Attending the OSPM-summit is free of charge, but registration to the
+event is mandatory. The event can allow a maximum of 50 people (so, be
+sure to register early!). Registrations open on February 24th, 2020.
+
+To register fill in the registration form available at
+https://forms.gle/7LfFY8oNyRxV1wuQ7
+
+While it is not strictly required to submit a topic/presentation (see
+below), registrations with a topic/presentation proposal will take
+precedence.
+
+.:: SUBMIT A TOPIC/PRESENTATION
+
+To submit a topic/presentation add its details to this list:
+https://docs.google.com/spreadsheets/d/1pPU2ybHHoQjqicYLTaNanPz9H5fv6mQTtrzOqwP9uHs/edit?usp=sharing
+
+Or, if you prefer, simply reply (only to me, please :) to this email
+specifying:
+
+- name/surname
+- affiliation
+- short bio
+- email address
+- title
+- abstract
+- 30min or 50min slot
+
+Deadline for submitting topics/presentations is 10th of February 2019.
+Notifications for accepted topics/presentations will be sent out on 24th
+of February 2019.
+
+.:: VENUE
+
+The workshop will take place at ReTiS Lab*, Scuola Superiore Sant'Anna,
+Pisa, Italy. Pisa is a small town, walking distance from the city center
+to the venue is 20 minutes, walking distance from the airport to the
+city center is 30 minutes. More details are available from the summit
+web page: http://retis.sssup.it/ospm-summit/#site
+
+* https://goo.gl/maps/2pPXG2v7Lfp
+
+.:: ORGANIZERS (in alphabetical order)
+
+Luca Abeni (SSSA)
+Tommaso Cucinotta (SSSA)
+Dietmar Eggemann (Arm)
+Sudeep Holla (Arm)
+Juri Lelli (Red Hat)
+Lorenzo Pieralisi (Arm)
+Morten Rasmussen (Arm)
+Claudio Scordino (Evidence SRL)
 
