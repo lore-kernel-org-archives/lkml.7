@@ -2,53 +2,52 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F2AC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 742B3C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D020C2467F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:36:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A0572467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:36:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780572;
-	bh=YitMJak+QJ5u7f/nA4YofkormATrSvmkfaTtgbRZJzM=;
+	s=default; t=1576780576;
+	bh=OUnLvqpeW7buRbpimdUMUa3+KvpyBiKvmorsgjNCtPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1LX/7usiWD94mT5xG1sSsup2ghd43GOjm9/7BmMsYwK+Xlba2gSZFr9bHABv36Nup
-	 fRuA1Voaa/5BINdKEoDFpUxxORDs85OnErwD5AZ6KH+eFDMootTzcxTSV3AEF/42T4
-	 AVomxoMb+QNie9Po7w18w7x+Y2c1AfERIGguiizM=
+	b=l96J02JBEqXF7+fiZ6VpjzCk0mTsBsnBLXJsuQ3ml29xFZUoFOyi1y66c5uLK5VD6
+	 q5fsJ24f6bX+t+47ot8LcV1aDy7dZP5wQ+2h4RUGTQDCLveAfQvm0AxQkXyZ0MidRy
+	 OqwkLL+rri9hWNvan1AAfTLAqJrgKYSAzSIWfHYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbfLSSgL (ORCPT
+        id S1727510AbfLSSgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:36:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53056 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:36:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727414AbfLSSgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:36:09 -0500
+        id S1727414AbfLSSgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:36:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC4D324683;
-        Thu, 19 Dec 2019 18:36:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22B8124679;
+        Thu, 19 Dec 2019 18:36:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780569;
-        bh=YitMJak+QJ5u7f/nA4YofkormATrSvmkfaTtgbRZJzM=;
+        s=default; t=1576780571;
+        bh=OUnLvqpeW7buRbpimdUMUa3+KvpyBiKvmorsgjNCtPA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cT0YgLdIC8ybFg0VcSUwXX/2FHLqJIbCQ0x8M1WfhgFiPZCv2mSCYw2CAogZuZBEk
-         zh6zt2ESuSVREc5VNAeX/9kqW6NIfkcqP/IaNkYJGPQNHGy2lsx8FinJGmVWJ0NnxS
-         d1gmipfyKXANSOssYPUP2slSFFjnFanePsLUPKYo=
+        b=WI1Gn2CHnkWO0MsHdm/pfsW+cBQvUD5f8RIH0nlYoVssg93GrSjC6F9MaZNuL8zNj
+         1Qob+Mx6C7ocFZnBMPgki16lnn6baI1/yuEH5B5CesCXiv+E9rApZgNrwWScnXfRa9
+         29DY3c2iY0xu3mokpxoQHN/m+doRaxxiL56V0zNU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 027/162] rtc: max8997: Fix the returned value in case of error in max8997_rtc_read_alarm()
-Date:   Thu, 19 Dec 2019 19:32:15 +0100
-Message-Id: <20191219183209.223926798@linuxfoundation.org>
+        stable@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>
+Subject: [PATCH 4.4 003/162] tty: serial: msm_serial: Fix flow control
+Date:   Thu, 19 Dec 2019 19:31:51 +0100
+Message-Id: <20191219183154.899455796@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -61,36 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-[ Upstream commit 41ef3878203cd9218d92eaa07df4b85a2cb128fb ]
+commit b027ce258369cbfa88401a691c23dad01deb9f9b upstream.
 
-In case of error, we return 0.
-This is spurious and not consistent with the other functions of the driver.
-Propagate the error code instead.
+hci_qca interfaces to the wcn3990 via a uart_dm on the msm8998 mtp and
+Lenovo Miix 630 laptop.  As part of initializing the wcn3990, hci_qca
+disables flow, configures the uart baudrate, and then reenables flow - at
+which point an event is expected to be received over the uart from the
+wcn3990.  It is observed that this event comes after the baudrate change
+but before hci_qca re-enables flow. This is unexpected, and is a result of
+msm_reset() being broken.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+According to the uart_dm hardware documentation, it is recommended that
+automatic hardware flow control be enabled by setting RX_RDY_CTL.  Auto
+hw flow control will manage RFR based on the configured watermark.  When
+there is space to receive data, the hw will assert RFR.  When the watermark
+is hit, the hw will de-assert RFR.
+
+The hardware documentation indicates that RFR can me manually managed via
+CR when RX_RDY_CTL is not set.  SET_RFR asserts RFR, and RESET_RFR
+de-asserts RFR.
+
+msm_reset() is broken because after resetting the hardware, it
+unconditionally asserts RFR via SET_RFR.  This enables flow regardless of
+the current configuration, and would undo a previous flow disable
+operation.  It should instead de-assert RFR via RESET_RFR to block flow
+until the hardware is reconfigured.  msm_serial should rely on the client
+to specify that flow should be enabled, either via mctrl() or the termios
+structure, and only assert RFR in response to those triggers.
+
+Fixes: 04896a77a97b ("msm_serial: serial driver for MSM7K onboard serial peripheral.")
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: stable <stable@vger.kernel.org>
+Reviewed-by: Andy Gross <agross@kernel.org>
+Link: https://lore.kernel.org/r/20191021154616.25457-1-jeffrey.l.hugo@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/rtc/rtc-max8997.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/msm_serial.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/rtc-max8997.c b/drivers/rtc/rtc-max8997.c
-index db984d4bf9526..4cce5bd448f65 100644
---- a/drivers/rtc/rtc-max8997.c
-+++ b/drivers/rtc/rtc-max8997.c
-@@ -221,7 +221,7 @@ static int max8997_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
+--- a/drivers/tty/serial/msm_serial.c
++++ b/drivers/tty/serial/msm_serial.c
+@@ -823,6 +823,7 @@ static unsigned int msm_get_mctrl(struct
+ static void msm_reset(struct uart_port *port)
+ {
+ 	struct msm_port *msm_port = UART_TO_MSM(port);
++	unsigned int mr;
  
- out:
- 	mutex_unlock(&info->lock);
--	return 0;
-+	return ret;
- }
+ 	/* reset everything */
+ 	msm_write(port, UART_CR_CMD_RESET_RX, UART_CR);
+@@ -830,7 +831,10 @@ static void msm_reset(struct uart_port *
+ 	msm_write(port, UART_CR_CMD_RESET_ERR, UART_CR);
+ 	msm_write(port, UART_CR_CMD_RESET_BREAK_INT, UART_CR);
+ 	msm_write(port, UART_CR_CMD_RESET_CTS, UART_CR);
+-	msm_write(port, UART_CR_CMD_SET_RFR, UART_CR);
++	msm_write(port, UART_CR_CMD_RESET_RFR, UART_CR);
++	mr = msm_read(port, UART_MR1);
++	mr &= ~UART_MR1_RX_RDY_CTL;
++	msm_write(port, mr, UART_MR1);
  
- static int max8997_rtc_stop_alarm(struct max8997_rtc_info *info)
--- 
-2.20.1
-
+ 	/* Disable DM modes */
+ 	if (msm_port->is_uartdm)
 
 
