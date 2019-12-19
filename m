@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5443DC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E225BC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 248302465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B73D0206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781145;
-	bh=IzNdT/9xwp0qGFxu72g8aNt1brIix4kd4JLAcacDTXE=;
+	s=default; t=1576781147;
+	bh=y6rnEU77n16s4mST6pvUdKrdxHfmcibG65MT/rSN5tE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jKGGWxxnJnyLULkFq+3BY3+CFWtkx/d3ercTHNHyDwM8nGM48vlHWG415ukXkRtsu
-	 aPjVEvP2mG7ekHntrAGn991+/S5ccbfk6/bgoQ86jY1M7ElewyB6XJL1UnEv+fgqS/
-	 iP+0IrZuHhe/SKuJ9ghxd7g+ZYWmhXAtC+d2yC/A=
+	b=S9jqYBALbLJAucL7XI47YwGJ7RNsyNh8UeiI2KlSZWyY3GukW06L6KgjLtGPhFFXn
+	 wTQSfiCkhMazXmDT8MczaPJ4jpcOPwyFGCSuf6oc31x9nCkKD9SPBAhzbm727I7609
+	 WGL2i2EqW2s6teUT0YaEiAhozsoNtQM1xJ8gvh60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729222AbfLSSpn (ORCPT
+        id S1729233AbfLSSpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:45:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38128 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:45:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729210AbfLSSpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:45:41 -0500
+        id S1728797AbfLSSpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:45:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75317206D7;
-        Thu, 19 Dec 2019 18:45:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE1012465E;
+        Thu, 19 Dec 2019 18:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781140;
-        bh=IzNdT/9xwp0qGFxu72g8aNt1brIix4kd4JLAcacDTXE=;
+        s=default; t=1576781143;
+        bh=y6rnEU77n16s4mST6pvUdKrdxHfmcibG65MT/rSN5tE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1GzAGODn6nwLpbM2jRE3MjpRJI22UaqH3bTHxbS1bzoHbnaa3dqhm+E/YtKoZSOYE
-         jiQ9avfQA93uQwFpdlfRwUl2z3/n/hELshPngFhOs2UXeDIZtkKgXKhw0U4iYi4lXC
-         E9k8yIgjGtrt9fEGtSupk2s+QNj72Tdop/Ri27Wk=
+        b=wi1UrXoaqzwk0/f1l3cXZvZfP6wl478IsPtnwnj1a2sb6dal20IyOjZ2wI6zSs3i7
+         r6XFbH+sVOUinfVbQKZ9tlqyfSm5C9+/ecIdHtSRLNxAqCRIbIhQ5f+uCEfYm+Udhg
+         KQVvfwQnjQIcK+UnApi9WGBubx4eNpNdxIlMO7z0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.9 082/199] jbd2: Fix possible overflow in jbd2_log_space_left()
-Date:   Thu, 19 Dec 2019 19:32:44 +0100
-Message-Id: <20191219183219.496834979@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.9 100/199] staging: rtl8188eu: fix interface sanity check
+Date:   Thu, 19 Dec 2019 19:33:02 +0100
+Message-Id: <20191219183220.438131683@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -59,49 +58,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Johan Hovold <johan@kernel.org>
 
-commit add3efdd78b8a0478ce423bb9d4df6bd95e8b335 upstream.
+commit 74ca34118a0e05793935d804ccffcedd6eb56596 upstream.
 
-When number of free space in the journal is very low, the arithmetic in
-jbd2_log_space_left() could underflow resulting in very high number of
-free blocks and thus triggering assertion failure in transaction commit
-code complaining there's not enough space in the journal:
+Make sure to use the current alternate setting when verifying the
+interface descriptors to avoid binding to an invalid interface.
 
-J_ASSERT(journal->j_free > 1);
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-Properly check for the low number of free blocks.
-
-CC: stable@vger.kernel.org
-Reviewed-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191105164437.32602-1-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: c2478d39076b ("staging: r8188eu: Add files for new driver - part 20")
+Cc: stable <stable@vger.kernel.org>     # 3.12
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191210114751.5119-2-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/jbd2.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/rtl8188eu/os_dep/usb_intf.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/jbd2.h
-+++ b/include/linux/jbd2.h
-@@ -1560,7 +1560,7 @@ static inline int jbd2_space_needed(jour
- static inline unsigned long jbd2_log_space_left(journal_t *journal)
- {
- 	/* Allow for rounding errors */
--	unsigned long free = journal->j_free - 32;
-+	long free = journal->j_free - 32;
+--- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
++++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
+@@ -78,7 +78,7 @@ static struct dvobj_priv *usb_dvobj_init
+ 	phost_conf = pusbd->actconfig;
+ 	pconf_desc = &phost_conf->desc;
  
- 	if (journal->j_committing_transaction) {
- 		unsigned long committing = atomic_read(&journal->
-@@ -1569,7 +1569,7 @@ static inline unsigned long jbd2_log_spa
- 		/* Transaction + control blocks */
- 		free -= committing + (committing >> JBD2_CONTROL_BLOCKS_SHIFT);
- 	}
--	return free;
-+	return max_t(long, free, 0);
- }
+-	phost_iface = &usb_intf->altsetting[0];
++	phost_iface = usb_intf->cur_altsetting;
+ 	piface_desc = &phost_iface->desc;
  
- /*
+ 	pdvobjpriv->NumInterfaces = pconf_desc->bNumInterfaces;
 
 
