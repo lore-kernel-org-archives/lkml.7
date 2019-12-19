@@ -2,150 +2,149 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F5CC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3B8C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACDF724650
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:01:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RBr3umIP"
+	by mail.kernel.org (Postfix) with ESMTP id 4E30524650
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:02:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576756939;
+	bh=4tSN8Ty0g9jbGMWwle8pw+lMUclGXrafZ3F/UVZPngM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=0exPtgYkbEeHVYPggE1jSjtsFWUJnLeps2Zh9gvhBGs6phBDpJLAeQOQbAp78JucG
+	 8FqqT40K9HctQQZSn8AhSvMMK96axUtgWRRwXkm1P1VQ2ANDuNZbb38qU5DRN81UMr
+	 TEdpAHhHKLMJjcupHZ9a3u5saiqtnkGuNQPDlrT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfLSMBS (ORCPT
+        id S1726824AbfLSMCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 07:01:18 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:37964 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbfLSMBS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 07:01:18 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJC19aq067272;
-        Thu, 19 Dec 2019 06:01:09 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576756869;
-        bh=UE9chI9mah0RhDqtfW9UyM7cHrHG5JmXTXk/JRmKmUU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=RBr3umIPtIGbAZA44PEYUUII1Aj1fR/A7Yr+xSqCTYVJ+pDsy8gn7XJ7fzDv3/3v4
-         HE5Pi+VyhIfm1Jufg2koqiypZJH6SXUKbcgdZ36S6dd7h2RbLO5jOKeMuvS/odQHzT
-         G8jc1GfeOnFOLMnH5elgZJjtigM2evFq7tycs8pE=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBJC19J4051781
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Dec 2019 06:01:09 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
- Dec 2019 06:01:09 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 19 Dec 2019 06:01:08 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJC15YS047971;
-        Thu, 19 Dec 2019 06:01:06 -0600
-Subject: Re: [PATCH 06/13] PCI: cadence: Allow pci_host_bridge to have custom
- pci_ops
-To:     Andrew Murray <andrew.murray@arm.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>
-References: <20191209092147.22901-1-kishon@ti.com>
- <20191209092147.22901-7-kishon@ti.com>
- <20191217123243.GC24359@e119886-lin.cambridge.arm.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <0176543a-bc9b-0584-537e-ea407f5340c2@ti.com>
-Date:   Thu, 19 Dec 2019 17:32:48 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 19 Dec 2019 07:02:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34856 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726668AbfLSMCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 07:02:18 -0500
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82457222C2;
+        Thu, 19 Dec 2019 12:02:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576756937;
+        bh=4tSN8Ty0g9jbGMWwle8pw+lMUclGXrafZ3F/UVZPngM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=vFw2XExoEj0Ip/k2VkBkAdc26WWv6SqBqelcFAXwcnHAkDmFafozwzuP/k46Bl1yS
+         bDfIb2uoEW8VTWXutcdBjXnrqOl7jo1NrMZkskPGjFQ0BOufjeBvmtyN3ILermmoFP
+         y94WAjaVc9H1NkGRKGtat1m67EaWSNS9yNVrV6ws=
+From:   Will Deacon <will@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, kernel-team@android.com,
+        Will Deacon <will@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hillf Danton <hdanton@sina.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com
+Subject: [PATCH] chardev: Avoid potential use-after-free in 'chrdev_open()'
+Date:   Thu, 19 Dec 2019 12:02:03 +0000
+Message-Id: <20191219120203.32691-1-will@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191217123243.GC24359@e119886-lin.cambridge.arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+'chrdev_open()' calls 'cdev_get()' to obtain a reference to the
+'struct cdev *' stashed in the 'i_cdev' field of the target inode
+structure. If the pointer is NULL, then it is initialised lazily by
+looking up the kobject in the 'cdev_map' and so the whole procedure is
+protected by the 'cdev_lock' spinlock to serialise initialisation of
+the shared pointer.
 
-On 17/12/19 6:02 pm, Andrew Murray wrote:
-> On Mon, Dec 09, 2019 at 02:51:40PM +0530, Kishon Vijay Abraham I wrote:
->> Certain platforms like TI's J721E allows only 32-bit configuration
->> space access. In such cases pci_generic_config_read and
->> pci_generic_config_write cannot be used. Add support in Cadence core
->> to let pci_host_bridge have custom pci_ops.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  drivers/pci/controller/cadence/pcie-cadence-host.c | 7 ++++---
->>  drivers/pci/controller/cadence/pcie-cadence.h      | 8 ++++++++
->>  2 files changed, 12 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> index 0929554f5a81..2efc33b1cade 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
->> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> @@ -12,8 +12,8 @@
->>  
->>  #include "pcie-cadence.h"
->>  
->> -static void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
->> -				      int where)
->> +void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
->> +			       int where)
->>  {
->>  	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
->>  	struct cdns_pcie_rc *rc = pci_host_bridge_priv(bridge);
->> @@ -289,7 +289,8 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>  	list_splice_init(&resources, &bridge->windows);
->>  	bridge->dev.parent = dev;
->>  	bridge->busnr = pcie->bus;
->> -	bridge->ops = &cdns_pcie_host_ops;
->> +	if (!bridge->ops)
->> +		bridge->ops = &cdns_pcie_host_ops;
->>  	bridge->map_irq = of_irq_parse_and_map_pci;
->>  	bridge->swizzle_irq = pci_common_swizzle;
->>  
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
->> index 5171d0da37da..c879dd3d2893 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence.h
->> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
->> @@ -472,11 +472,19 @@ static inline bool cdns_pcie_is_link_up(struct cdns_pcie *pcie)
->>  
->>  #ifdef CONFIG_PCIE_CADENCE_HOST
->>  int cdns_pcie_host_setup(struct cdns_pcie_rc *rc);
->> +void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
->> +			       int where);
-> 
-> The commit message doesn't explain why this change in visibility is needed).
+Unfortunately, it is possible for the initialising thread to fail *after*
+installing the new pointer, for example if the subsequent '->open()' call
+on the file fails. In this case, 'cdev_put()' is called, the reference
+count on the kobject is dropped and, if nobody else has taken a reference,
+the release function is called which finally clears 'inode->i_cdev' from
+'cdev_purge()' before potentially freeing the object. The problem here
+is that a racing thread can happily take the 'cdev_lock' and see the
+non-NULL pointer in the inode, which can result in a refcount increment
+from zero and a warning:
 
-So that platform drivers can write custom read() and write() ops and
-re-use map_bus. Will add this info in commit message.
-> 
->>  #else
->>  static inline int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>  {
->>  	return 0;
->>  }
->> +
->> +static inline void __iomem *cdns_pci_map_bus(struct pci_bus *bus,
->> +					     unsigned int devfn,
->> +					     int where)
->> +{
-> 
-> This still needs to return something right?
+  |  ------------[ cut here ]------------
+  |  refcount_t: addition on 0; use-after-free.
+  |  WARNING: CPU: 2 PID: 6385 at lib/refcount.c:25 refcount_warn_saturate+0x6d/0xf0
+  |  Modules linked in:
+  |  CPU: 2 PID: 6385 Comm: repro Not tainted 5.5.0-rc2+ #22
+  |  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+  |  RIP: 0010:refcount_warn_saturate+0x6d/0xf0
+  |  Code: 05 55 9a 15 01 01 e8 9d aa c8 ff 0f 0b c3 80 3d 45 9a 15 01 00 75 ce 48 c7 c7 00 9c 62 b3 c6 08
+  |  RSP: 0018:ffffb524c1b9bc70 EFLAGS: 00010282
+  |  RAX: 0000000000000000 RBX: ffff9e9da1f71390 RCX: 0000000000000000
+  |  RDX: ffff9e9dbbd27618 RSI: ffff9e9dbbd18798 RDI: ffff9e9dbbd18798
+  |  RBP: 0000000000000000 R08: 000000000000095f R09: 0000000000000039
+  |  R10: 0000000000000000 R11: ffffb524c1b9bb20 R12: ffff9e9da1e8c700
+  |  R13: ffffffffb25ee8b0 R14: 0000000000000000 R15: ffff9e9da1e8c700
+  |  FS:  00007f3b87d26700(0000) GS:ffff9e9dbbd00000(0000) knlGS:0000000000000000
+  |  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  |  CR2: 00007fc16909c000 CR3: 000000012df9c000 CR4: 00000000000006e0
+  |  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  |  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  |  Call Trace:
+  |   kobject_get+0x5c/0x60
+  |   cdev_get+0x2b/0x60
+  |   chrdev_open+0x55/0x220
+  |   ? cdev_put.part.3+0x20/0x20
+  |   do_dentry_open+0x13a/0x390
+  |   path_openat+0x2c8/0x1470
+  |   do_filp_open+0x93/0x100
+  |   ? selinux_file_ioctl+0x17f/0x220
+  |   do_sys_open+0x186/0x220
+  |   do_syscall_64+0x48/0x150
+  |   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  |  RIP: 0033:0x7f3b87efcd0e
+  |  Code: 89 54 24 08 e8 a3 f4 ff ff 8b 74 24 0c 48 8b 3c 24 41 89 c0 44 8b 54 24 08 b8 01 01 00 00 89 f4
+  |  RSP: 002b:00007f3b87d259f0 EFLAGS: 00000293 ORIG_RAX: 0000000000000101
+  |  RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f3b87efcd0e
+  |  RDX: 0000000000000000 RSI: 00007f3b87d25a80 RDI: 00000000ffffff9c
+  |  RBP: 00007f3b87d25e90 R08: 0000000000000000 R09: 0000000000000000
+  |  R10: 0000000000000000 R11: 0000000000000293 R12: 00007ffe188f504e
+  |  R13: 00007ffe188f504f R14: 00007f3b87d26700 R15: 0000000000000000
+  |  ---[ end trace 24f53ca58db8180a ]---
 
-Right, thanks for spotting this.
+Since 'cdev_get()' can already fail to obtain a reference, simply move
+it over to use 'kobject_get_unless_zero()' instead of 'kobject_get()',
+which will cause the racing thread to return -ENXIO if the initialising
+thread fails unexpectedly.
 
-Thanks
-Kishon
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Hillf Danton <hdanton@sina.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Reported-by: syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com
+Signed-off-by: Will Deacon <will@kernel.org>
+---
+ fs/char_dev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/char_dev.c b/fs/char_dev.c
+index 00dfe17871ac..c5e6eff5a381 100644
+--- a/fs/char_dev.c
++++ b/fs/char_dev.c
+@@ -352,7 +352,7 @@ static struct kobject *cdev_get(struct cdev *p)
+ 
+ 	if (owner && !try_module_get(owner))
+ 		return NULL;
+-	kobj = kobject_get(&p->kobj);
++	kobj = kobject_get_unless_zero(&p->kobj);
+ 	if (!kobj)
+ 		module_put(owner);
+ 	return kobj;
+-- 
+2.24.1.735.g03f4e72817-goog
+
