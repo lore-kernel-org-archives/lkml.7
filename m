@@ -2,128 +2,436 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F30A2C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F7DC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C071A2064B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:00:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CE992064B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:00:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="ZFpxsYLE"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LiPE0ifs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbfLSI77 (ORCPT
+        id S1726777AbfLSJAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 03:59:59 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34158 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbfLSI77 (ORCPT
+        Thu, 19 Dec 2019 04:00:45 -0500
+Received: from mailout4.samsung.com ([203.254.224.34]:48929 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726709AbfLSJAo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 03:59:59 -0500
-Received: by mail-io1-f68.google.com with SMTP id z193so4969674iof.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 00:59:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=XhwcmI2wyfpsDhpGYM6tJ8TzKL8XHFXbjOnu1vJ//fU=;
-        b=ZFpxsYLEdNHLWO1qXcwglF2c1sIqcsPaMcMqWna2m2gb8lVRd2R41lf+oahElV4lgd
-         wmmU1ORgPQhvICUDw7qzZvfZjRwXpHNnwzixdBvnrHg0yIHvuF2JCFiPExZyoLx6fpFD
-         Gvvzp3NwqxX9+M79JnMYkbCLI84tKHnMmLmic7ET86e9+mLDm3diShEEg8B1LObCW5Di
-         AX+lBzctxpEMXkxR6iUJVJh5DLgtNcLs46fLGGMizcglrFSr6ZD0XoDmXiYZgVuwiYE8
-         Y117UqX9G3EF5/HdaUWc1r+21GYWDZ3MgPXdQzMx3+d67UbxqiAAj+JsYNcUtP9duKe5
-         nSjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XhwcmI2wyfpsDhpGYM6tJ8TzKL8XHFXbjOnu1vJ//fU=;
-        b=eop7cAeVYNnpP4D/4tkk38kr196LQF9NZVR0M2UrL8qtLiEZpJixzA1ICnCWq/qOx5
-         IajyX9A5kaA2Mdd6nSi6EaYSmS9CRXGo8KA5rOW+ZNsOUOPTKvGsVrpl1rwSGHTtbLky
-         yd+l7Hc4MmXSjcYpvAJgYm/KWWFygiyJpb3aZ9D6AkZUpviBfn5hLJA7yZ0jByWwuWs2
-         bW0iD017PIdHc7P2W1oQMcs8hwhglyLD/RB4VTllAfNuahc49H3M5AmYeCbWG+xFL+qA
-         O6aN6+e7WFbk4JHGVy/ICY2mZSJ7stb0HUljlnbhy9hR1qKONNT20YaZWApkNnEHVzes
-         qtlQ==
-X-Gm-Message-State: APjAAAUyQS1T9cGLswWkN5W5EBjrUQQnOFx69eDDURBIy3C4oXOdS5gu
-        XRcxhHHR22xhu7m1BtERrJeIYgAjt/zLQp7eL/VEMg==
-X-Google-Smtp-Source: APXvYqzPk4FlZdj7PEvti7vCUA4390Bw+OwFoETkThRyu8LG2KoaNO7bp9bbPYePbZmR/WPm2F7SiL45vQUpahKKX+M=
-X-Received: by 2002:a5d:9dd9:: with SMTP id 25mr5066557ioo.287.1576745998374;
- Thu, 19 Dec 2019 00:59:58 -0800 (PST)
+        Thu, 19 Dec 2019 04:00:44 -0500
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191219090040epoutp040e8f9085edf0331a2c8eb7f799efa274~huiuFs_a80148101481epoutp04I
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 09:00:40 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191219090040epoutp040e8f9085edf0331a2c8eb7f799efa274~huiuFs_a80148101481epoutp04I
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1576746040;
+        bh=qUe64HH6eQC1rH67+6iFAZoEBHMzxsVFkSdlibI2LcI=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=LiPE0ifsfRgLFjEULOZhgh6XbYZ0oUp+y5CPAEAgtfNsVuk30R8dZhwFW4r/mAJJN
+         NDjr1wUNYs8vTSv27jxzjjPKcF4ylOfZmrflb4qZqgOkWjYRDZVBF4aabLkKjB4BHp
+         shNyxAz90HpxYe5DYDG7AU64Kgv4jO/Fn3EKg9WU=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20191219090040epcas1p433ddb371b35a63400e480e828b506858~huityjSaq2604026040epcas1p4l;
+        Thu, 19 Dec 2019 09:00:40 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.157]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 47dm786G9KzMqYlx; Thu, 19 Dec
+        2019 09:00:36 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        92.C0.57028.43C3BFD5; Thu, 19 Dec 2019 18:00:36 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191219090036epcas1p18c57c13cc4ae50542a77e6c6b5c86c86~huiqAkkd61675816758epcas1p1I;
+        Thu, 19 Dec 2019 09:00:36 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191219090036epsmtrp19b344314116b1e8eac9076d1bac9f761~huip-8BXu1106211062epsmtrp1P;
+        Thu, 19 Dec 2019 09:00:36 +0000 (GMT)
+X-AuditID: b6c32a35-50bff7000001dec4-6f-5dfb3c3430b8
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C1.7C.06569.43C3BFD5; Thu, 19 Dec 2019 18:00:36 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191219090036epsmtip27fdd46901d2e942dc58bc482f472b3ad~huip2q47G2793827938epsmtip2b;
+        Thu, 19 Dec 2019 09:00:36 +0000 (GMT)
+Subject: Re: [PATCH 2/2] ARM: dts: exynos: Adjust bus related OPPs to the
+ values correct for Odroids
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Kamil Konieczny <k.konieczny@samsung.com>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <9ff5cf7a-1dea-4f35-c4d3-066c87fbe896@samsung.com>
+Date:   Thu, 19 Dec 2019 18:07:08 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-References: <20191213162453.15691-1-brgl@bgdev.pl> <20191213162453.15691-2-brgl@bgdev.pl>
- <51eb10e9-245e-7b3e-51ff-578e06e0759b@ti.com>
-In-Reply-To: <51eb10e9-245e-7b3e-51ff-578e06e0759b@ti.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 19 Dec 2019 09:59:47 +0100
-Message-ID: <CAMRc=MdBxko3PGK8MksiOYbm081oQf6gYxBp8xOwtyTJ5ruM5Q@mail.gmail.com>
-Subject: Re: [PATCH 1/3] clocksource: davinci: work around a clocksource
- problem on dm365 SoC
-To:     Sekhar Nori <nsekhar@ti.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        David Lechner <david@lechnology.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191219082927.11898-3-m.szyprowski@samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUhTURjGObvb3VVa3Va2N4laVwsazby61S1UgqyESgRBSJB10dMUt7ux
+        OyUzwiJsmdl32VITQqiFZbZKhTLMDPuYmSX2YUVJlGKSVvhVtO0u8r/fe3ie9+E551CEuoqM
+        pPIEJ3YIvIUhw+W37q+I0RsSprJiXaUG7nrlNQVXO1qp4Lq6GpRcT0sVyY0daUdcZdddGVff
+        3q9cr0xp9BwiUyq8HpQy1rg4jcjMT8jFfA52aLGQbcvJE8yJzJZ00waTcXUsq2fXcmsYrcBb
+        cSKTvDVNvynP4g9ntIW8pcB/lMaLIrMqKcFhK3Biba5NdCYy2J5jsa+1x4i8VSwQzDHZNus6
+        NjY2zugX7sjPney7orCPbdo1UHVYWYJOGcpQGAW0AWouXZWXoXBKTTchaPHeU0rDKILBoQek
+        NPxC8Lvfo/hnOfuoImS5g+Dx9J+QagSBr9wrD6jm0Tuht3mUCPB8ugLBZK82ICLocgR1Hd+D
+        q0haB61f+sgAz6GXwsvxTyjAKjoJzv78JguwnF4G3UfPBxdF0BnQeetASDMXOs8NBMPC/HrP
+        hC+oIWgNvB64IJN4CdweriICwUC/J2H46We/mfIPydDxg5PqzIPBh16lxJHw9WhpiIvhcmc7
+        KXldCLytz0L946G17qQssIegV8C1llXS8VJonqpGUu5s+PazXCFFqcBVqpYkUdDzoV8m8UK4
+        ePAQeQwx7hlt3DMauGc0cP8Pq0VyD1qA7aLVjEXWzs587kYU/Jk6YxM65dvahmgKMbNU4xsn
+        s9QKvlAssrYhoAhmvuqNayJLrcrhi3Zjh83kKLBgsQ0Z/Zd9nIiMyLb5/7ngNLHGuPj4eM7A
+        rjayLKNRUePdWWrazDtxPsZ27Pjnk1FhkSXo7oYb4y+WnHBtVpZE6DrqD190pX7cXrNIX6h5
+        NxxdtLzoZnr0rj1N5j5jY/Wn6qFmtal8G5n3cCTzTzJ+ixoqNQ1HdLMz9wqbo6bOp/p6O/VN
+        Q4aw8MEz+HnxK82zupO1GW5X2cv9Sb3dPe37puMmvmz0rVdVTK9pGXlyY6VcOF3MyMVcntUR
+        DpH/C7yTO4uvAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjkeLIzCtJLcpLzFFi42LZdlhJXtfE5neswbH3PBYbZ6xntVjwaQar
+        xfnzG9gtLu+aw2bxufcIo8WM8/uYLNYeucvuwO6xaVUnm0ffllWMHp83yQUwR3HZpKTmZJal
+        FunbJXBl/LqxmrXgs1vFkznd7A2MU0y6GDk5JARMJKaf6mPpYuTiEBLYzSixfP98ZoiEpMS0
+        i0eBbA4gW1ji8OFiiJq3jBKTX0xhAakRFkiTuLbzE1i9iEAfo8T1WwEgNjOIPeMnE0TDUUaJ
+        M91HGUESbAJaEvtf3GADsfkFFCWu/ngMFucVsJOY/vUdE4jNIqAqcbF/NthQUYEwiZ1LHjNB
+        1AhKnJz5BGwxJ1D9qp/nmCGWqUv8mXcJyhaXuPVkPhOELS+x/e0c5gmMwrOQtM9C0jILScss
+        JC0LGFlWMUqmFhTnpucWGxYY5aWW6xUn5haX5qXrJefnbmIEx46W1g7GEyfiDzEKcDAq8fD+
+        cP0VK8SaWFZcmXuIUYKDWUmE93bHz1gh3pTEyqrUovz4otKc1OJDjNIcLErivPL5xyKFBNIT
+        S1KzU1MLUotgskwcnFINjLKHzgVuKH52YW2Ols1546cd39Z/frc3fCl7YtDMpZu66threHqK
+        7+zcnqzn8OqHzB6H714CSXr5eQYB069tOfJk8v5PR3+as23cs+jOumcez9N8Kr/sPjFv55eb
+        q3kUpyeFTv2XkKJV84CjJ3/qeu8YU7t9Zz9VqKgGx1797VEebBF918Rc85USS3FGoqEWc1Fx
+        IgAdUFRmmQIAAA==
+X-CMS-MailID: 20191219090036epcas1p18c57c13cc4ae50542a77e6c6b5c86c86
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191219082939eucas1p2afc32535df1512dc21ca983daa012568
+References: <20191219082927.11898-1-m.szyprowski@samsung.com>
+        <CGME20191219082939eucas1p2afc32535df1512dc21ca983daa012568@eucas1p2.samsung.com>
+        <20191219082927.11898-3-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 18 gru 2019 o 10:28 Sekhar Nori <nsekhar@ti.com> napisa=C5=82(a):
->
-> Hi Bart,
->
-> On 13/12/19 9:54 PM, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > The DM365 platform has a strange quirk (only present when using ancient
-> > u-boot - mainline u-boot v2013.01 and later works fine) where if we
-> > enable the second half of the timer in periodic mode before we do its
-> > initialization - the time won't start flowing and we can't boot.
-> >
-> > When using more recent u-boot, we can enable the timer, then reinitiali=
-ze
-> > it and all works fine.
-> >
-> > I've been unable to figure out why that is, but a workaround for this
-> > is straightforward - just cache the enable bits for tim34.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Timer Global Control Register (TGCR) has bits to reset both halves of
-> timer. Does placing both halves in reset, waiting a bit (say 10ms) and
-> then taking them out of reset help solve the this problem?
->
+Hi Marek,
 
-No, it doesn't change anything. On u-boot present on my dm365-evm,
-tim34 is not in reset when we get to linux, while tim12 is in reset,
-but putting tim34 in reset in linux doesn't seem to change anything.
+On 12/19/19 5:29 PM, Marek Szyprowski wrote:
+> Hardkernel's Odroid XU3/XU4/HC1 boards use bootloader, which configures top
+> PLLs to the following values: MPLL: 532MHz, CPLL: 666MHz and DPLL: 600MHz.
+> 
+> Adjust all bus related OPPs to the values that are possible to derive from
+> the top PLL configured by the bootloader. Also add a comment for each bus
+> describing which PLL is used for it.
+> 
+> The most significant change is the highest rate for wcore bus. It has been
+> increased to 532MHz as this is the value configured initially by the
+> bootloader. Also the voltage for this OPP is changed to match the value
+> set by the bootloader.
+> 
+> This patch finally allows the buses to operate on the rates matching the
+> values set for each OPP and fixes the following warnings observed on boot:
+> 
+> exynos-bus: new bus device registered: soc:bus_wcore ( 84000 KHz ~ 400000 KHz)
+> exynos-bus: new bus device registered: soc:bus_noc ( 67000 KHz ~ 100000 KHz)
+> exynos-bus: new bus device registered: soc:bus_fsys_apb (100000 KHz ~ 200000 KHz)
+> ...
+> exynos-bus soc:bus_wcore: dev_pm_opp_set_rate: failed to find current OPP for freq 532000000 (-34)
+> exynos-bus soc:bus_noc: dev_pm_opp_set_rate: failed to find current OPP for freq 111000000 (-34)
+> exynos-bus soc:bus_fsys_apb: dev_pm_opp_set_rate: failed to find current OPP for freq 222000000 (-34)
+> 
+> The problem with setting incorrect (in some cases much lower) clock rate
+> for the defined OPP were there from the beginning, but went unnoticed
+> because the only way to observe it was to manually check the rate of the
+> respective clocks. The commit 4294a779bd8d ("PM / devfreq: exynos-bus:
+> Convert to use dev_pm_opp_set_rate()") finally revealed it, because it
+> enabled use of the generic code from the OPP framework, which issues the
+> above mentioned warnings.
+> 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 75 +++++++++++--------
+>  1 file changed, 45 insertions(+), 30 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+> index 663a38d53c9e..b6d6022e8735 100644
+> --- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+> +++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+> @@ -38,42 +38,44 @@
+>  	bus_wcore_opp_table: opp_table2 {
+>  		compatible = "operating-points-v2";
+>  
+> +		/* derived from 532MHz MPLL */
+>  		opp00 {
+> -			opp-hz = /bits/ 64 <84000000>;
+> +			opp-hz = /bits/ 64 <88700000>;
+>  			opp-microvolt = <925000 925000 1400000>;
+>  		};
+>  		opp01 {
+> -			opp-hz = /bits/ 64 <111000000>;
+> +			opp-hz = /bits/ 64 <133000000>;
+>  			opp-microvolt = <950000 950000 1400000>;
+>  		};
+>  		opp02 {
+> -			opp-hz = /bits/ 64 <222000000>;
+> +			opp-hz = /bits/ 64 <177400000>;
+>  			opp-microvolt = <950000 950000 1400000>;
+>  		};
+>  		opp03 {
+> -			opp-hz = /bits/ 64 <333000000>;
+> +			opp-hz = /bits/ 64 <266000000>;
+>  			opp-microvolt = <950000 950000 1400000>;
+>  		};
+>  		opp04 {
+> -			opp-hz = /bits/ 64 <400000000>;
+> -			opp-microvolt = <987500 987500 1400000>;
+> +			opp-hz = /bits/ 64 <532000000>;
+> +			opp-microvolt = <1000000 1000000 1400000>;
+>  		};
+>  	};
+>  
+>  	bus_noc_opp_table: opp_table3 {
+>  		compatible = "operating-points-v2";
+>  
+> +		/* derived from 666MHz CPLL */
+>  		opp00 {
+> -			opp-hz = /bits/ 64 <67000000>;
+> +			opp-hz = /bits/ 64 <66600000>;
+>  		};
+>  		opp01 {
+> -			opp-hz = /bits/ 64 <75000000>;
+> +			opp-hz = /bits/ 64 <74000000>;
+>  		};
+>  		opp02 {
+> -			opp-hz = /bits/ 64 <86000000>;
+> +			opp-hz = /bits/ 64 <83250000>;
+>  		};
+>  		opp03 {
+> -			opp-hz = /bits/ 64 <100000000>;
+> +			opp-hz = /bits/ 64 <111000000>;
+>  		};
+>  	};
+>  
+> @@ -81,39 +83,42 @@
+>  		compatible = "operating-points-v2";
+>  		opp-shared;
+>  
+> +		/* derived from 666MHz CPLL */
+>  		opp00 {
+> -			opp-hz = /bits/ 64 <100000000>;
+> +			opp-hz = /bits/ 64 <111000000>;
+>  		};
+>  		opp01 {
+> -			opp-hz = /bits/ 64 <200000000>;
+> +			opp-hz = /bits/ 64 <222000000>;
+>  		};
+>  	};
+>  
+>  	bus_fsys2_opp_table: opp_table5 {
+>  		compatible = "operating-points-v2";
+>  
+> +		/* derived from 600MHz DPLL */
+>  		opp00 {
+>  			opp-hz = /bits/ 64 <75000000>;
+>  		};
+>  		opp01 {
+> -			opp-hz = /bits/ 64 <100000000>;
+> +			opp-hz = /bits/ 64 <120000000>;
+>  		};
+>  		opp02 {
+> -			opp-hz = /bits/ 64 <150000000>;
+> +			opp-hz = /bits/ 64 <200000000>;
+>  		};
+>  	};
+>  
+>  	bus_mfc_opp_table: opp_table6 {
+>  		compatible = "operating-points-v2";
+>  
+> +		/* derived from 666MHz CPLL */
+>  		opp00 {
+> -			opp-hz = /bits/ 64 <96000000>;
+> +			opp-hz = /bits/ 64 <83250000>;
+>  		};
+>  		opp01 {
+>  			opp-hz = /bits/ 64 <111000000>;
+>  		};
+>  		opp02 {
+> -			opp-hz = /bits/ 64 <167000000>;
+> +			opp-hz = /bits/ 64 <166500000>;
+>  		};
+>  		opp03 {
+>  			opp-hz = /bits/ 64 <222000000>;
+> @@ -126,8 +131,9 @@
+>  	bus_gen_opp_table: opp_table7 {
+>  		compatible = "operating-points-v2";
+>  
+> +		/* derived from 532MHz MPLL */
+>  		opp00 {
+> -			opp-hz = /bits/ 64 <89000000>;
+> +			opp-hz = /bits/ 64 <88700000>;
+>  		};
+>  		opp01 {
+>  			opp-hz = /bits/ 64 <133000000>;
+> @@ -136,32 +142,34 @@
+>  			opp-hz = /bits/ 64 <178000000>;
+>  		};
+>  		opp03 {
+> -			opp-hz = /bits/ 64 <267000000>;
+> +			opp-hz = /bits/ 64 <266000000>;
+>  		};
+>  	};
+>  
+>  	bus_peri_opp_table: opp_table8 {
+>  		compatible = "operating-points-v2";
+>  
+> +		/* derived from 666MHz CPLL */
+>  		opp00 {
+> -			opp-hz = /bits/ 64 <67000000>;
+> +			opp-hz = /bits/ 64 <66600000>;
+>  		};
+>  	};
+>  
+>  	bus_g2d_opp_table: opp_table9 {
+>  		compatible = "operating-points-v2";
+>  
+> +		/* derived from 666MHz CPLL */
+>  		opp00 {
+> -			opp-hz = /bits/ 64 <84000000>;
+> +			opp-hz = /bits/ 64 <83250000>;
+>  		};
+>  		opp01 {
+> -			opp-hz = /bits/ 64 <167000000>;
+> +			opp-hz = /bits/ 64 <111000000>;
+>  		};
+>  		opp02 {
+> -			opp-hz = /bits/ 64 <222000000>;
+> +			opp-hz = /bits/ 64 <166500000>;
+>  		};
+>  		opp03 {
+> -			opp-hz = /bits/ 64 <300000000>;
+> +			opp-hz = /bits/ 64 <222000000>;
+>  		};
+>  		opp04 {
+>  			opp-hz = /bits/ 64 <333000000>;
+> @@ -171,8 +179,9 @@
+>  	bus_g2d_acp_opp_table: opp_table10 {
+>  		compatible = "operating-points-v2";
+>  
+> +		/* derived from 532MHz MPLL */
+>  		opp00 {
+> -			opp-hz = /bits/ 64 <67000000>;
+> +			opp-hz = /bits/ 64 <66500000>;
+>  		};
+>  		opp01 {
+>  			opp-hz = /bits/ 64 <133000000>;
+> @@ -181,13 +190,14 @@
+>  			opp-hz = /bits/ 64 <178000000>;
+>  		};
+>  		opp03 {
+> -			opp-hz = /bits/ 64 <267000000>;
+> +			opp-hz = /bits/ 64 <266000000>;
+>  		};
+>  	};
+>  
+>  	bus_jpeg_opp_table: opp_table11 {
+>  		compatible = "operating-points-v2";
+>  
+> +		/* derived from 600MHz DPLL */
+>  		opp00 {
+>  			opp-hz = /bits/ 64 <75000000>;
+>  		};
+> @@ -205,23 +215,25 @@
+>  	bus_jpeg_apb_opp_table: opp_table12 {
+>  		compatible = "operating-points-v2";
+>  
+> +		/* derived from 666MHz CPLL */
+>  		opp00 {
+> -			opp-hz = /bits/ 64 <84000000>;
+> +			opp-hz = /bits/ 64 <83250000>;
+>  		};
+>  		opp01 {
+>  			opp-hz = /bits/ 64 <111000000>;
+>  		};
+>  		opp02 {
+> -			opp-hz = /bits/ 64 <134000000>;
+> +			opp-hz = /bits/ 64 <133000000>;
+>  		};
+>  		opp03 {
+> -			opp-hz = /bits/ 64 <167000000>;
+> +			opp-hz = /bits/ 64 <166500000>;
+>  		};
+>  	};
+>  
+>  	bus_disp1_fimd_opp_table: opp_table13 {
+>  		compatible = "operating-points-v2";
+>  
+> +		/* derived from 600MHz DPLL */
+>  		opp00 {
+>  			opp-hz = /bits/ 64 <120000000>;
+>  		};
+> @@ -233,6 +245,7 @@
+>  	bus_disp1_opp_table: opp_table14 {
+>  		compatible = "operating-points-v2";
+>  
+> +		/* derived from 600MHz DPLL */
+>  		opp00 {
+>  			opp-hz = /bits/ 64 <120000000>;
+>  		};
+> @@ -247,6 +260,7 @@
+>  	bus_gscl_opp_table: opp_table15 {
+>  		compatible = "operating-points-v2";
+>  
+> +		/* derived from 600MHz DPLL */
+>  		opp00 {
+>  			opp-hz = /bits/ 64 <150000000>;
+>  		};
+> @@ -261,6 +275,7 @@
+>  	bus_mscl_opp_table: opp_table16 {
+>  		compatible = "operating-points-v2";
+>  
+> +		/* derived from 666MHz CPLL */
+>  		opp00 {
+>  			opp-hz = /bits/ 64 <84000000>;
+>  		};
+> @@ -274,7 +289,7 @@
+>  			opp-hz = /bits/ 64 <333000000>;
+>  		};
+>  		opp04 {
+> -			opp-hz = /bits/ 64 <400000000>;
+> +			opp-hz = /bits/ 64 <666000000>;
+>  		};
+>  	};
+>  
+> @@ -398,7 +413,7 @@
+>  };
+>  
+>  &bus_fsys {
+> -	operating-points-v2 = <&bus_fsys_apb_opp_table>;
+> +	operating-points-v2 = <&bus_fsys2_opp_table>;
 
-> Also, there are LPSCs controlling the timers. As an experiment, can you
-> see if using LPSC_STATE_SWRSTDISABLE instead of LPSC_STATE_DISABLE in
-> davinci_lpsc_clk_disable() and then doing a clk_disable() + clk_enable()
-> on timer can get the timer out of this bad state.
 
-I tried several combinations of this e.g. normal prepare_enable ->
-disable -> enable, disable -> enable, disable -> delay -> enable etc.
-and neither worked.
+Need to remove 'opp-shared' property in bus_fsys_apb_opp_table.
+And need to add 'opp-shared' property to bus_fsys2_opp_table.
 
->
-> We need some way for Linux to start on a clean state after bootloader is
-> done. And trying to reset the timer before use seems to be a better way
-> to accomplish it.
->
-> I assume the original code was just lucky in not hitting this case?
->
 
-I guess so. It used to re-read the registers instead of assuming
-certain values. When I did it too, there was no problem, it's only
-when we dropped re-reading that this must have appeared.
+>  	devfreq = <&bus_wcore>;
+>  	status = "okay";
+>  };
+> 
 
-Bart
+If you fix the things related to 'opp-shared', Looks good to me.
+Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
