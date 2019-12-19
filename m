@@ -2,126 +2,191 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4D5C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F71C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0735E24676
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:18:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576772303;
-	bh=1G7FsQcIs7vqbkyh2F1vAEGEbbdVT8Ma5gTl6fOBv5w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NYazmiOVmHjpHlp8HUgaJiVygev7kDxM0bt1EYXxuOHJD2GpxH/2nAh8FfpNVtMY6
-	 OrDgiivIocCSyGX/9G9+tKmSFFcG1xK5UW8AQiAaduQPU0jPu+lCUjj1hjrg096mS5
-	 9mL0LlF0nfLFruIzkZc1y+nmxV4yE7s+e/PtfDl4=
+	by mail.kernel.org (Postfix) with ESMTP id 41D0C2146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:18:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ry6oRZxA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbfLSQSW (ORCPT
+        id S1726960AbfLSQSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 11:18:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57964 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726776AbfLSQSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 11:18:21 -0500
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33F1E24680;
-        Thu, 19 Dec 2019 16:18:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576772300;
-        bh=1G7FsQcIs7vqbkyh2F1vAEGEbbdVT8Ma5gTl6fOBv5w=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=e7keS3P1LwF4ZT2yhL3hUCAcyVJrTsIR9UzKe57oNdsSAbK91huuUmxw4uj5fehea
-         NPASNTU1i78K0CrfxLQzQTqC8PFXyuK78gWLUe1LkPDzOG6vkj8LaNDRMqbIllRKcW
-         T4iQc286CEEUti1oEOpDrf0yM1+lENmw2XdKNYw4=
-Received: by mail-lj1-f182.google.com with SMTP id k8so6866223ljh.5;
-        Thu, 19 Dec 2019 08:18:20 -0800 (PST)
-X-Gm-Message-State: APjAAAU0x40zpci5J3G0cWwdsMzCLVSzYN6y7pKloPZCDf5nhEACZCB7
-        baMj4YqOZTyOiPxL9dzDIy/OiQkKK0nmjVYW/gs=
-X-Google-Smtp-Source: APXvYqzjT3A3BOaMem5ewvhYkhpvnQHmXadd3vZ1Bf2o2UnYr9PFiKmPucQrvExdBSOloWvbcQbzeuZa1+Z2P1vedZA=
-X-Received: by 2002:a2e:2d01:: with SMTP id t1mr1311467ljt.36.1576772298339;
- Thu, 19 Dec 2019 08:18:18 -0800 (PST)
-MIME-Version: 1.0
-References: <CGME20190724014230epcas5p371a5fdee330f91a646d619fbcc024acf@epcas5p3.samsung.com>
- <20190724014222.110767-1-saravanak@google.com> <cb0d4aad-81e4-0b8d-40f2-7f58ef1e38d9@samsung.com>
- <CAGETcx-tUtnX0T47YGdf7-cgp6e8K9Rgb34Mfe5Za9L4YMGS1g@mail.gmail.com> <754ec843-eb8f-5149-bf7f-ec4abf938821@samsung.com>
-In-Reply-To: <754ec843-eb8f-5149-bf7f-ec4abf938821@samsung.com>
-From:   Chanwoo Choi <chanwoo@kernel.org>
-Date:   Fri, 20 Dec 2019 01:17:41 +0900
-X-Gmail-Original-Message-ID: <CAGTfZH37ALwUHd8SpRRrBzZ6x1-++YtzS60_yRQvN-TN6rOzaA@mail.gmail.com>
-Message-ID: <CAGTfZH37ALwUHd8SpRRrBzZ6x1-++YtzS60_yRQvN-TN6rOzaA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/5] Add required-opps support to devfreq passive gov
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 19 Dec 2019 11:18:50 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:36296 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbfLSQSt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 11:18:49 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBJGEKAA126744;
+        Thu, 19 Dec 2019 16:18:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
+ bh=AN47JONeK8oCX+YPtCKA7vbhhvfwmEGZgeS7UlEbne0=;
+ b=Ry6oRZxA8O6KJNa7FVLJ0/tVgQJcGuP+b7sjlE0OiVdu+lsBPMskmozpdHCQdpYRtiNX
+ IOhmNUHZJF6bn/+MPudu8tgsa761/qKB9V4HoOQ2jGOzMC1uSys4l+dnzdcNpneaTYqA
+ v7Td5fX0set5RzK8jxyh9i/0Q+o5FMgSt84gv8fp4I6iG4QX6A4Mpdx+6VGOdfNCLO9E
+ wqp6I3wfXuGBrR4SAnJf/ufLjGy8x+2Ih/bp81i2elXwWOifXcStzLL80ByKoSAJTJNi
+ xZPNOPB9xel1RhXvohZVD3GBxVFoWccL0c/05j+iq4kNh2oMQIvUkpZ2FnhUg8lPH7w6 dw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2x01knkup2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Dec 2019 16:18:19 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBJGELEj035118;
+        Thu, 19 Dec 2019 16:18:18 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2wyxqhwy0a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Dec 2019 16:18:18 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBJGIFfh017466;
+        Thu, 19 Dec 2019 16:18:16 GMT
+Received: from dhcp-10-175-212-35.vpn.oracle.com (/10.175.212.35)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 19 Dec 2019 08:18:14 -0800
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     brendanhiggins@google.com, linux-kselftest@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
+        keescook@chromium.org, yzaikin@google.com,
+        akpm@linux-foundation.org, yamada.masahiro@socionext.com,
+        catalin.marinas@arm.com, joe.lawrence@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, urezki@gmail.com,
+        andriy.shevchenko@linux.intel.com, corbet@lwn.net,
+        davidgow@google.com, adilger.kernel@dilger.ca, tytso@mit.edu,
+        mcgrof@kernel.org, linux-doc@vger.kernel.org, rjw@rjwysocki.net,
+        pavel@ucw.cz, len.brown@intel.com, gregkh@linuxfoundation.org,
+        krzk@kernel.org, linux-pm@vger.kernel.org,
+        linux-ext4@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>,
+        Knut Omang <knut.omang@oracle.com>
+Subject: [PATCH v7 linux-kselftest-test 1/6] kunit: move string-stream.h to lib/kunit
+Date:   Thu, 19 Dec 2019 16:17:34 +0000
+Message-Id: <1576772259-31382-2-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1576772259-31382-1-git-send-email-alan.maguire@oracle.com>
+References: <1576772259-31382-1-git-send-email-alan.maguire@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9476 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912190135
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9476 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912190135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Saravana,
+string-stream interfaces are not intended for external use;
+move them from include/kunit to lib/kunit accordingly.
 
-2019=EB=85=84 11=EC=9B=94 14=EC=9D=BC (=EB=AA=A9) =EC=98=A4=ED=9B=84 5:36, =
-Chanwoo Choi <cw00.choi@samsung.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> Hi Saravana,
->
-> On 11/14/19 5:23 PM, Saravana Kannan wrote:
-> > On Wed, Nov 13, 2019 at 11:48 PM Chanwoo Choi <cw00.choi@samsung.com> w=
-rote:
-> >>
-> >> Dear Saravana,
-> >>
-> >> Any other progress of this series?
-> >
-> > Hi Chanwoo,
-> >
-> > Thanks for checking. I haven't abandoned this patch series. This patch
-> > series depends on "lazy linking" of required-opps to avoid a cyclic
-> > dependency between devfreq and OPP table population. But Viresh wasn't
-> > happy with my implementation of the lazy liking for reasonable
-> > reasons.
-> >
-> > I had a chat with Viresh during one of the several conferences that I
-> > met him at. To fix the lazy linking in the way he wanted it meant we
-> > had to fix other issues in the OPP framework that arise when OPP
-> > tables are shared in DT but not in memory. So he was kind enough to
-> > sign up to add lazy linking support to OPPs so that I won't have to do
-> > it. So, I'm waiting on that. So once that's added, I should be able to
-> > drop a few patches in this series, do some minor updates and then this
-> > will be good to go.
->
-> Thanks for the detailed explanation. I'll expect the your next version.
+Co-developed-by: Knut Omang <knut.omang@oracle.com>
+Signed-off-by: Knut Omang <knut.omang@oracle.com>
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Tested-by: Brendan Higgins <brendanhiggins@google.com>
+---
+ include/kunit/assert.h                 | 3 ++-
+ lib/kunit/assert.c                     | 2 ++
+ lib/kunit/string-stream-test.c         | 3 ++-
+ lib/kunit/string-stream.c              | 3 ++-
+ {include => lib}/kunit/string-stream.h | 0
+ lib/kunit/test.c                       | 2 ++
+ 6 files changed, 10 insertions(+), 3 deletions(-)
+ rename {include => lib}/kunit/string-stream.h (100%)
 
-As I know, the lazy linking issue was fixed by Viresh.
-If possible, I want to know your plan about 'required-opp' with
-passive governor.
-Because I think that the patch[1] is good for devfreq device.
+diff --git a/include/kunit/assert.h b/include/kunit/assert.h
+index db6a0fc..ad889b5 100644
+--- a/include/kunit/assert.h
++++ b/include/kunit/assert.h
+@@ -9,10 +9,11 @@
+ #ifndef _KUNIT_ASSERT_H
+ #define _KUNIT_ASSERT_H
+ 
+-#include <kunit/string-stream.h>
+ #include <linux/err.h>
++#include <linux/kernel.h>
+ 
+ struct kunit;
++struct string_stream;
+ 
+ /**
+  * enum kunit_assert_type - Type of expectation/assertion.
+diff --git a/lib/kunit/assert.c b/lib/kunit/assert.c
+index 86013d4..9aca71c 100644
+--- a/lib/kunit/assert.c
++++ b/lib/kunit/assert.c
+@@ -7,6 +7,8 @@
+  */
+ #include <kunit/assert.h>
+ 
++#include "string-stream.h"
++
+ void kunit_base_assert_format(const struct kunit_assert *assert,
+ 			      struct string_stream *stream)
+ {
+diff --git a/lib/kunit/string-stream-test.c b/lib/kunit/string-stream-test.c
+index 76cc05e..6c70dc8 100644
+--- a/lib/kunit/string-stream-test.c
++++ b/lib/kunit/string-stream-test.c
+@@ -6,10 +6,11 @@
+  * Author: Brendan Higgins <brendanhiggins@google.com>
+  */
+ 
+-#include <kunit/string-stream.h>
+ #include <kunit/test.h>
+ #include <linux/slab.h>
+ 
++#include "string-stream.h"
++
+ static void string_stream_test_empty_on_creation(struct kunit *test)
+ {
+ 	struct string_stream *stream = alloc_string_stream(test, GFP_KERNEL);
+diff --git a/lib/kunit/string-stream.c b/lib/kunit/string-stream.c
+index e6d17aa..3503920 100644
+--- a/lib/kunit/string-stream.c
++++ b/lib/kunit/string-stream.c
+@@ -6,11 +6,12 @@
+  * Author: Brendan Higgins <brendanhiggins@google.com>
+  */
+ 
+-#include <kunit/string-stream.h>
+ #include <kunit/test.h>
+ #include <linux/list.h>
+ #include <linux/slab.h>
+ 
++#include "string-stream.h"
++
+ struct string_stream_fragment_alloc_context {
+ 	struct kunit *test;
+ 	int len;
+diff --git a/include/kunit/string-stream.h b/lib/kunit/string-stream.h
+similarity index 100%
+rename from include/kunit/string-stream.h
+rename to lib/kunit/string-stream.h
+diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+index c83c0fa..36ebf47 100644
+--- a/lib/kunit/test.c
++++ b/lib/kunit/test.c
+@@ -11,6 +11,8 @@
+ #include <linux/kernel.h>
+ #include <linux/sched/debug.h>
+ 
++#include "string-stream.h"
++
+ static void kunit_set_failure(struct kunit *test)
+ {
+ 	WRITE_ONCE(test->success, false);
+-- 
+1.8.3.1
 
-As you mentioned, you have the other idea to implement the 'cpu based
-scaling support'
-to passive governor without cpu notifier. Actually, if there are no
-any other best solution,
-I prefer to use cpu notifier for 'cpu based scaling support to
-passive_governor'.
-
-[1] https://patchwork.kernel.org/patch/11046147/
-- [RFC,v2] PM / devfreq: Add cpu based scaling support to passive_governor
-
---=20
-Best Regards,
-Chanwoo Choi
