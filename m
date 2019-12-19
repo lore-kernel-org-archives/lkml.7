@@ -2,103 +2,124 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F24C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C69C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2836D24672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FACF21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:41:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="wCILxctC"
+	dkim=pass (1024-bit key) header.d=zv.io header.i=me@zv.io header.b="iuvrt6wT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfLSXl1 (ORCPT
+        id S1727252AbfLSXlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 18:41:27 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46158 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726992AbfLSXl0 (ORCPT
+        Thu, 19 Dec 2019 18:41:42 -0500
+Received: from sender4-of-o51.zoho.com ([136.143.188.51]:21170 "EHLO
+        sender4-of-o51.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726992AbfLSXlk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 18:41:26 -0500
-Received: by mail-pl1-f193.google.com with SMTP id y8so3267663pll.13
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 15:41:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=43LknG5z6bO6b1jirRWQ3OMn0IwVLrmac7Ek+kzqWi4=;
-        b=wCILxctCW8G9X5XBw2VwbNAppjxq6085IDCbS41g8TMKp3aEF9iVIOjWvFw4/szWZc
-         PuObOSY5Hog39wOrRTgQWeV2kk40S8PrDWF9rVhtsEFKRBgNMSGw3tMBXv1wr5XPBDe5
-         IktY3NwjfBIDkLj97i9kQkx7g1XKsnxJQ7XuNdWTadHZdY2otvWoIZKWJoLJI/7hXJZX
-         n+LElsBwh4mI4ao/EWjSYwRkIEJZr/iAiYUKtW9DYGvOTBfc4hPGu18kTxVgtuTXNXaY
-         gUygXqwN/uy1PiEHTQ71+7hNF1m6ZNC3SSS5tn4RfLSHmmDDCQWac2KWkTeuB2qO6yLZ
-         oLJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=43LknG5z6bO6b1jirRWQ3OMn0IwVLrmac7Ek+kzqWi4=;
-        b=eFaLj6Fg74E7HB3LYwG/5HB5Loc2XjgPL3MK1owTZT0CyRQa29PziI3E1iPIYHXsa1
-         90D+Fy2toU4Jr0dfrCP1JFn91YeqUkM8C9KDz74tFGhMUgaa2Rm7jKA3ReobdIqB3v2k
-         ylO7TlRuvUlZ8s6i6gfy45+k5vWsnNcQ29sxaEgdbWf5gT69yMAALJ6ET0p1gpa4AFhi
-         5OJdn2J3Upp7g9rvQgB9OZ4Ze5w1mb+li/6aV4Uh0/jHDsbmut9Q+uhFuqAI2hVIdSkC
-         2pRg2SijOTQ3/Lc9XePftzd46jzu6skQXaR2tr9Bp5a/GyqOLoNpOPop5bsns1fiiqTx
-         Dt0A==
-X-Gm-Message-State: APjAAAVCKCzJH3cB8c6z10qQC7FboZJzUgatRKU/6YwHM77jgK4zYkgl
-        pLmAPyjnGxdfcwtOqhaya9BXHg==
-X-Google-Smtp-Source: APXvYqxPqbKcXuZXeBirlhTjoQMKgjvHy1iW9+l9NjMaBzSnwIpy6e9a6vUUAEoz3F3tPyCgcvAi4g==
-X-Received: by 2002:a17:90a:1696:: with SMTP id o22mr12479837pja.78.1576798886222;
-        Thu, 19 Dec 2019 15:41:26 -0800 (PST)
-Received: from rip.lixom.net (99-152-116-91.lightspeed.sntcca.sbcglobal.net. [99.152.116.91])
-        by smtp.gmail.com with ESMTPSA id l15sm7979746pjl.24.2019.12.19.15.41.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 19 Dec 2019 15:41:25 -0800 (PST)
-From:   Olof Johansson <olof@lixom.net>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>
-Cc:     coreteam@netfilter.org, netfilter-devel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Olof Johansson <olof@lixom.net>
-Subject: [PATCH] netfilter: nf_flow_table: big endian fix for TCP flags
-Date:   Thu, 19 Dec 2019 15:40:47 -0800
-Message-Id: <20191219234047.97315-1-olof@lixom.net>
-X-Mailer: git-send-email 2.11.0
+        Thu, 19 Dec 2019 18:41:40 -0500
+X-Greylist: delayed 904 seconds by postgrey-1.27 at vger.kernel.org; Thu, 19 Dec 2019 18:41:40 EST
+ARC-Seal: i=1; a=rsa-sha256; t=1576797983; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=Inz6YHSYhC779548yK6cPFAYkj1L6vFEDExMEGkTZFEfNqb+yuiWIFLTSzj0lMF4ksjpiqRGr8D6utPqQyjLGPRg4EqSSOiSnGU0RHVzezzQ1sZbMiIWv0g6zChqPaUmGiKTDWjRJPce6gK08WgReO2UxM0z0NTs/r4SeY+RaDw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1576797983; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=YRwMCe3+7E5yL5rCzLP2abaTZ1SGUf1q183PkTOBBBU=; 
+        b=HeAPxRLUuUDKJnJaSXxWlZaKAsWPT3LweVlf9nBcuReGrhEpUhWwsJXo9xwZmh7E47q/J572kGQCsMVS8wXOGcp9SbW3fnEVkFObY+B4Q1ImlEfsOC/iTOIzkk4v3+BBk8svsvleWa+iDEQ9GYAuVIQdPtd1IloKngISI4DWwws=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zv.io;
+        spf=pass  smtp.mailfrom=me@zv.io;
+        dmarc=pass header.from=<me@zv.io> header.from=<me@zv.io>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1576797983;
+        s=zoho; d=zv.io; i=me@zv.io;
+        h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:Content-Type:Mime-Version:Content-Transfer-Encoding;
+        bh=YRwMCe3+7E5yL5rCzLP2abaTZ1SGUf1q183PkTOBBBU=;
+        b=iuvrt6wT4Yin5Ozj9gAnzkOUjr2JJrFPULCIr3ZIQdGTRqFP8cq/U+F+i/NhdGGH
+        zjxEsXKWm64CmkgpUa+KjTUNcMXDKeAI7aOdyoHpmLdHW87ZSPjQB6hxMhPrX0ik9Zm
+        mkw8KE905hUFEck5K37QbEAq5VBufSJAynk6iEkY=
+Received: from lighthouse (cpe-70-114-218-141.austin.res.rr.com [70.114.218.141]) by mx.zohomail.com
+        with SMTPS id 1576797982566959.8883413676132; Thu, 19 Dec 2019 15:26:22 -0800 (PST)
+Message-ID: <1576797980.31912.110.camel@zv.io>
+Subject: Re: [PATCH v5 6/8] media: v4l2-core: fix v4l2_buffer handling for
+ time64 ABI
+From:   Zach van Rijn <me@zv.io>
+To:     Arnd Bergmann <arnd@arndb.de>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Thu, 19 Dec 2019 17:26:20 -0600
+In-Reply-To: <CAK8P3a1-xLUn368Lajia1=2GEXa92srQ2s9wH--MrRHj+kSTtQ@mail.gmail.com>
+References: <20191126161824.337724-1-arnd@arndb.de>
+         <20191126161824.337724-7-arnd@arndb.de>
+         <09c664fd-87fb-4fac-f104-9afbe7d33aa2@xs4all.nl>
+         <CAK8P3a1TvFCJf8t9T1yOXjsp088s9dbEOKLVDPinfwJe2B-27g@mail.gmail.com>
+         <81bb5da1-6b84-8473-4ada-c174f43bbae2@xs4all.nl>
+         <0843718f-1391-3379-38be-41fa9558ea6d@xs4all.nl>
+         <CAK8P3a1-xLUn368Lajia1=2GEXa92srQ2s9wH--MrRHj+kSTtQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TCP_FLAG_* are 32-bit big endian constants, not 16-bit. So on big endian
-machines, you need to shift them down to fit the 16-bit tcp.mask here.
+On Sat, 2019-12-14 at 22:44 +0100, Arnd Bergmann wrote:
+> On Sat, Dec 14, 2019 at 12:27 PM Hans Verkuil <hverkuil@xs4all
+> .nl> wrote:
+> > 
+> > On 12/13/19 4:32 PM, Hans Verkuil wrote:
+> > > > > ...
+> > > > 
+> > > > I've heard good things about the prebuilt toolchains
+> > > > from http://musl.cc/.
+> > > > These seems to come with a libstdc++, but I have not
+> > > > tried that myself.
+> > > 
+> > > I'll see if I can give those a spin, but if I can't get it
+> > > to work quickly,
+> > > then I don't plan on spending much time on it.
+> > 
+> > I managed to build v4l2-ctl/compliance with those
+> > toolchains, but they seem to be
+> > still using a 32-bit time_t.
+> > 
+> > Do I need to get a specific version or do something special?
+> 
+> My mistake: only musl-1.2.0 and up have 64-bit time_t, but
+> this isn't released yet. According to https://wiki.musl-
+> libc.org/roadmap.html, the release was planned for last month,
+> no idea how long it will take.
+> 
+> It appears that a snapshot build at
+> http://more.musl.cc/7.5.0/x86_64-linux-musl/i686-linux-musl-
+> native.tgz is new enough to have 64-bit time_t (according to
+> include/bits/alltypes.h), but this is a month old as well, so
+> it may have known bugs.
+> 
+> Adding Zach to Cc here, maybe he already has plans for another
+> build with the latest version.
 
-This surfaced through ARM allmodconfig, which is big endian:
+Yes, that's correct. The current (as of 2019-12-19) GCC 9.2.1
+offering is based on musl 1.1.24, though the 7.5.0 release is
+using a more recent git tag only due to timing/availability.
 
-net/netfilter/nf_flow_table_offload.c: In function 'nf_flow_rule_match':
-net/netfilter/nf_flow_table_offload.c:91:21: warning: unsigned conversion from 'int' to '__be16' {aka 'short unsigned int'} changes value from '327680' to '0' [-Woverflow]
+Within reason, I'm happy to bump versions with justification.
+Rebuilding takes about a full day but no time on my end.
 
-Need to convert to/from host word order to keep LE/BE behaving the same.
+Rich sent out a message [1] just today suggesting there is still
+some time64 work to be done, so once he pushes those patches
+I'll build and release new toolchains for 9.2, 8.3, and 7.5.
 
-Fixes: c29f74e0df7a ("netfilter: nf_flow_table: hardware offload support")
-Signed-off-by: Olof Johansson <olof@lixom.net>
----
- net/netfilter/nf_flow_table_offload.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nf_flow_table_offload.c b/net/netfilter/nf_flow_table_offload.c
-index de7a0d1e15c88..e32ff796378c6 100644
---- a/net/netfilter/nf_flow_table_offload.c
-+++ b/net/netfilter/nf_flow_table_offload.c
-@@ -88,7 +88,7 @@ static int nf_flow_rule_match(struct nf_flow_match *match,
- 	switch (tuple->l4proto) {
- 	case IPPROTO_TCP:
- 		key->tcp.flags = 0;
--		mask->tcp.flags = TCP_FLAG_RST | TCP_FLAG_FIN;
-+		mask->tcp.flags = htons(ntohl(TCP_FLAG_RST | TCP_FLAG_FIN) >> 16);
- 		match->dissector.used_keys |= BIT(FLOW_DISSECTOR_KEY_TCP);
- 		break;
- 	case IPPROTO_UDP:
--- 
-2.11.0
+ZV
+
+[1]: https://www.openwall.com/lists/musl/2019/12/19/6
 
