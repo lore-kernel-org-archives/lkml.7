@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950AFC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01377C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5713D206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7EE3222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780928;
-	bh=tawO3EiEOzoXBA5escWcgSKwcPu0Xc1V1YBXwfOTuws=;
+	s=default; t=1576780933;
+	bh=fzyZL7VEQ5qaDDzeEpiTbbh7tVbsMNlgyyDqcnqWLYs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hqmUgAzsyyR/g1SCjYaaznTQx7cCz3OMSDh4ff46XAxr6Y5D/wy8ktfJm1oCYi5E7
-	 eDyTR4iBYsQ8jZeqOQa1selbz8LY4pBMYN3/Y+ZITcZr6HzEBRmStqZzQyeSweaCLm
-	 2DC4JCiG1A/+AIFbREan22hMsxMqykM7wQiDrnJU=
+	b=qk5RU8XYnLoRXnMAneCX4640CZ9kahK3e2wTyoK3IFsvy4PVwZ70+HSISgwvaD1bL
+	 /mCh6FX6ZgmGkhyuMYMKp1RHmMhmfiho36+xL9bHDot1O+LZs0Np/+e16AgQJqsNyk
+	 z84vy8sjb7rsXDnDnjxx6n9k7a3PNoVofx83BGaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbfLSSmG (ORCPT
+        id S1728648AbfLSSmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:42:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33132 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:42:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728616AbfLSSmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:42:04 -0500
+        id S1728633AbfLSSmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:42:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A60D3222C2;
-        Thu, 19 Dec 2019 18:42:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AE6424687;
+        Thu, 19 Dec 2019 18:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780924;
-        bh=tawO3EiEOzoXBA5escWcgSKwcPu0Xc1V1YBXwfOTuws=;
+        s=default; t=1576780929;
+        bh=fzyZL7VEQ5qaDDzeEpiTbbh7tVbsMNlgyyDqcnqWLYs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uYhz9vsoQxdqERoVQrrhcvNnUAVIiVeWzh6HJjgxsPSqPy4AuviJVtoywBZ+W3Tqd
-         hnBeD8K6Y9u/193ZguhOMBfkqgcR0DahflqFUQ85CEFHjbwSipaOMPQMgt/+j7ZJL2
-         4SKgB9regngPk+JJdm4kX+wY4nEN2MKB8Fwxzc5I=
+        b=deLzpRmwPhMR5kr1iwL48tX9HTChNiDJC9/52F0AyJ+SzqmoS1coUNzByyBEFhQHa
+         MJAdArOEQfRRTrFGdObSXJEFyqXiJfe8vLy9kWQWp53/qFBvjyzHk8MXDYOJgWaNAU
+         iVkzrMydjq+bOoHhfLSBfN8Kw+n6mctbU00CZo4I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 011/199] audit_get_nd(): dont unlock parent too early
-Date:   Thu, 19 Dec 2019 19:31:33 +0100
-Message-Id: <20191219183215.348027418@linuxfoundation.org>
+Subject: [PATCH 4.9 013/199] Input: cyttsp4_core - fix use after free bug
+Date:   Thu, 19 Dec 2019 19:31:35 +0100
+Message-Id: <20191219183215.485380672@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -59,38 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit 69924b89687a2923e88cc42144aea27868913d0e ]
+[ Upstream commit 79aae6acbef16f720a7949f8fc6ac69816c79d62 ]
 
-if the child has been negative and just went positive
-under us, we want coherent d_is_positive() and ->d_inode.
-Don't unlock the parent until we'd done that work...
+The device md->input is used after it is released. Setting the device
+data to NULL is unnecessary as the device is never used again. Instead,
+md->input should be assigned NULL to avoid accessing the freed memory
+accidently. Besides, checking md->si against NULL is superfluous as it
+points to a variable address, which cannot be NULL.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Link: https://lore.kernel.org/r/1572936379-6423-1-git-send-email-bianpan2016@163.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/audit_watch.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/touchscreen/cyttsp4_core.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/kernel/audit_watch.c b/kernel/audit_watch.c
-index f036b6ada6efc..712469a3103ac 100644
---- a/kernel/audit_watch.c
-+++ b/kernel/audit_watch.c
-@@ -365,12 +365,12 @@ static int audit_get_nd(struct audit_watch *watch, struct path *parent)
- 	struct dentry *d = kern_path_locked(watch->path, parent);
- 	if (IS_ERR(d))
- 		return PTR_ERR(d);
--	inode_unlock(d_backing_inode(parent->dentry));
- 	if (d_is_positive(d)) {
- 		/* update watch filter fields */
- 		watch->dev = d->d_sb->s_dev;
- 		watch->ino = d_backing_inode(d)->i_ino;
- 	}
-+	inode_unlock(d_backing_inode(parent->dentry));
- 	dput(d);
- 	return 0;
- }
+diff --git a/drivers/input/touchscreen/cyttsp4_core.c b/drivers/input/touchscreen/cyttsp4_core.c
+index 44deca88c5797..c1c29d7487bf3 100644
+--- a/drivers/input/touchscreen/cyttsp4_core.c
++++ b/drivers/input/touchscreen/cyttsp4_core.c
+@@ -1972,11 +1972,6 @@ static int cyttsp4_mt_probe(struct cyttsp4 *cd)
+ 
+ 	/* get sysinfo */
+ 	md->si = &cd->sysinfo;
+-	if (!md->si) {
+-		dev_err(dev, "%s: Fail get sysinfo pointer from core p=%p\n",
+-			__func__, md->si);
+-		goto error_get_sysinfo;
+-	}
+ 
+ 	rc = cyttsp4_setup_input_device(cd);
+ 	if (rc)
+@@ -1986,8 +1981,6 @@ static int cyttsp4_mt_probe(struct cyttsp4 *cd)
+ 
+ error_init_input:
+ 	input_free_device(md->input);
+-error_get_sysinfo:
+-	input_set_drvdata(md->input, NULL);
+ error_alloc_failed:
+ 	dev_err(dev, "%s failed.\n", __func__);
+ 	return rc;
 -- 
 2.20.1
 
