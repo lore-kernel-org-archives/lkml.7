@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4C5C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 845A7C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59B6024679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51C7E24683
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781329;
-	bh=letbtSQP/YSdE1Oeu6VrrL5GA1YWFBCC4BEfr7ppU5k=;
+	s=default; t=1576781332;
+	bh=Ph09qFfmaBHHIt4pNk55ghnUGqDVXfldIT3+1xaUYjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SwY4W/n3JDhj9xKZ9GopAuljkMwa2oMNlYsOsmBtsHPvK1y7GhNma0z85NAFzzSPw
-	 e/TUF865xBDl2jTqGE9j7gsO7iOFLFyad2Sw2/WbJfuXxHn7Yp2EMICE1wZ0vUtLmu
-	 e0DEYuBJetIHNXKVfbpO63IqT6Z6444Jv43KIjW4=
+	b=D+cKCHESroTrWfTARbs97kQOwNnD8Ko/Qezmwxb7V5JjVol9T02XwYTfNDiGKWUuj
+	 Co8HelFI/2wXemsQMqT/SDG5p7Ooo2hZztuzUutRnUOu0ElZ+RArVG4dIOK5ExERXb
+	 8eW1d6Hrm+LOBcZL9Ua6nyRkC81VUXCdZNoFcF98=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729444AbfLSSss (ORCPT
+        id S1729690AbfLSSsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:48:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41898 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:48:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729671AbfLSSsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:48:43 -0500
+        id S1729677AbfLSSss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:48:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A75A24682;
-        Thu, 19 Dec 2019 18:48:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D0FC24683;
+        Thu, 19 Dec 2019 18:48:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781323;
-        bh=letbtSQP/YSdE1Oeu6VrrL5GA1YWFBCC4BEfr7ppU5k=;
+        s=default; t=1576781327;
+        bh=Ph09qFfmaBHHIt4pNk55ghnUGqDVXfldIT3+1xaUYjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lhm7GvBetAkTCiIj0Ul2VaaT9b71pqTvj1mWcHMn4/KxwjUN82eeNVtFUe4XzlrP5
-         hdTcJdYSRhHMbj9+WfHReAa/t469WJxvPa6Yr+GiGkusTSKT7YvKauhhVoooV9TBhx
-         zVi7jLyWD3QYqWg//sLQdFbx/DYibSk0cG3ioy9o=
+        b=Q+CPpPa+dI0UrwLuQKDsyPpUlSsdYuCvsUtQ+BmJf0owYMTzPKBteEyxqZ+tXDUZT
+         2iLG/vrgIw2ZixfM353p4cgDBgJiAkKvgrlCk6pMDSemLcl68AWRX+c+uPwZuy8oPo
+         FxAmUyhwd2IzweT6SfdO0IN9Yqqo831R25z7s41Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ivan Bornyakov <brnkv.i1@gmail.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.9 175/199] nvme: host: core: fix precedence of ternary operator
-Date:   Thu, 19 Dec 2019 19:34:17 +0100
-Message-Id: <20191219183225.247358027@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 177/199] net: ethernet: ti: cpsw: fix extra rx interrupt
+Date:   Thu, 19 Dec 2019 19:34:19 +0100
+Message-Id: <20191219183225.379351583@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -61,42 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ivan Bornyakov <brnkv.i1@gmail.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-commit e9a9853c23c13a37546397b61b270999fd0fb759 upstream.
+[ Upstream commit 51302f77bedab8768b761ed1899c08f89af9e4e2 ]
 
-Ternary operator have lower precedence then bitwise or, so 'cdw10' was
-calculated wrong.
+Now RX interrupt is triggered twice every time, because in
+cpsw_rx_interrupt() it is asked first and then disabled. So there will be
+pending interrupt always, when RX interrupt is enabled again in NAPI
+handler.
 
-Signed-off-by: Ivan Bornyakov <brnkv.i1@gmail.com>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-Signed-off-by: Keith Busch <keith.busch@intel.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
+Fix it by first disabling IRQ and then do ask.
+
+Fixes: 870915feabdc ("drivers: net: cpsw: remove disable_irq/enable_irq as irq can be masked from cpsw itself")
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/nvme/host/core.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/ti/cpsw.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1043,7 +1043,7 @@ static int nvme_pr_reserve(struct block_
- static int nvme_pr_preempt(struct block_device *bdev, u64 old, u64 new,
- 		enum pr_type type, bool abort)
+--- a/drivers/net/ethernet/ti/cpsw.c
++++ b/drivers/net/ethernet/ti/cpsw.c
+@@ -773,8 +773,8 @@ static irqreturn_t cpsw_rx_interrupt(int
  {
--	u32 cdw10 = nvme_pr_type(type) << 8 | abort ? 2 : 1;
-+	u32 cdw10 = nvme_pr_type(type) << 8 | (abort ? 2 : 1);
- 	return nvme_pr_command(bdev, cdw10, old, new, nvme_cmd_resv_acquire);
- }
+ 	struct cpsw_common *cpsw = dev_id;
  
-@@ -1055,7 +1055,7 @@ static int nvme_pr_clear(struct block_de
+-	cpdma_ctlr_eoi(cpsw->dma, CPDMA_EOI_RX);
+ 	writel(0, &cpsw->wr_regs->rx_en);
++	cpdma_ctlr_eoi(cpsw->dma, CPDMA_EOI_RX);
  
- static int nvme_pr_release(struct block_device *bdev, u64 key, enum pr_type type)
- {
--	u32 cdw10 = nvme_pr_type(type) << 8 | key ? 1 << 3 : 0;
-+	u32 cdw10 = nvme_pr_type(type) << 8 | (key ? 1 << 3 : 0);
- 	return nvme_pr_command(bdev, cdw10, key, 0, nvme_cmd_resv_release);
- }
- 
+ 	if (cpsw->quirk_irq) {
+ 		disable_irq_nosync(cpsw->irqs_table[0]);
 
 
