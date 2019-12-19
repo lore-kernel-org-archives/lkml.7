@@ -2,137 +2,105 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D7CC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874F5C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92E0024650
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D54A227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:53:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Qk2ztRNJ"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="v3G0K+NY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbfLSKxT (ORCPT
+        id S1726936AbfLSKxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 05:53:19 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:43330 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbfLSKxT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 05:53:19 -0500
-Received: by mail-qt1-f195.google.com with SMTP id d18so1976459qtj.10
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 02:53:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=IIuROUmiihU5/B8NCkUBw/bfwJUgV5QA6aHceLRcSgo=;
-        b=Qk2ztRNJiaZYe5KTp+VkB2+m9oL1jp1wW7zAjyoHaFVvlYN4jQ/Q8FTRopN99xMIzT
-         yLpTyqX1NGepLy5dU2nsZkDtQ1JO1T6hj8OEk3OhpBSng97yDWt2qw5Iw6p1G/CG6HGo
-         xh4hHeGyQDl2bGMNMz1ZnpW+MBVcw6S59XqWaAEe2dnS0vc6W+t+WdTyiwndoNPOigNZ
-         SivAAoG6f/iTyDZ4D9kNRLSuZQ/4NWH94VKETaDOB4RVHSJUrU5gG4WD+OIvWzbVoBzy
-         g97zxEnhRIMjm7pj0RgqU+Et31Po9s3iE89+qZ7m9Ovgh223tZnrKZJpJkDAvq9y48Oz
-         cQhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=IIuROUmiihU5/B8NCkUBw/bfwJUgV5QA6aHceLRcSgo=;
-        b=UpJyha+/w7uPeDTdAbJDmsDxZFfxswQmHUivXosh0Y/KdXMd8sCOHkbG6kPhGuSMOS
-         JeKEGzZ9HuEzO2SJaTCT9978yD+egCTOGzcFJZfPv2xXC2cZuO7Mpl+yHnIra70gbE3l
-         TgcGivollweXd94QaLm3Km4DDLMKlisPI+m2H20CmALZV8lREi1ck3K8wEtAvLrUHfWF
-         jR6sPoMGfneBAeRnWvQ7s+zGyiIPV3tMLWLt5p82Jxee5OPGYkrogJoafKRZJlBqJMB7
-         jf6ARzw5YCyz+BOG30yoDAB0DWVJ4+9bgQoJVqsvNqTl798S26ku4Agf74BsoGOwQ1uC
-         OfUA==
-X-Gm-Message-State: APjAAAXKZ8vOxWAGCUzp5IjsVW+epwMl6ciuLId4b7c1JN15vTqx338r
-        kQBe+xhSzDBfIZLpA6PZR0gjPmj0lkAbekkZsYA//A==
-X-Google-Smtp-Source: APXvYqwuOZ8jOwab1DPiMEfvgPdn8LVbmJvxmNOywr9VbwLO6NhzWQA0IvMtiPi6RS1ZunYqPuMm710wLMboY4QBOvk=
-X-Received: by 2002:ac8:704:: with SMTP id g4mr6314518qth.197.1576752798327;
- Thu, 19 Dec 2019 02:53:18 -0800 (PST)
+        Thu, 19 Dec 2019 05:53:25 -0500
+Received: from frisell.zx2c4.com ([192.95.5.64]:40307 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726652AbfLSKxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 05:53:24 -0500
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id bb3776ae;
+        Thu, 19 Dec 2019 09:56:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=52wRWpsffBeasMC8RSpjNk06uTI=; b=v3G0K+
+        NYUVIM8e1/FXyi7JkyPgyMLc4qsXLDKqFztkc9+T6rleU39wrFEseiJOY1TJoQ0s
+        XNwF5rUOv9RcpbJOzeNk76oBNFmsmhnKXcgXvXjSZQMlYp6pqsSznYblxNP1+UXY
+        iZPNTOL8Qo9SRc62HZzYIWZE7suXExbaNjv8toALOfCdTMfMtKLyB5kjVkk8ggGE
+        D5j+BlghWdb8flRs7yiMFaWf2QSV6hx9RRgl36kTtbEfQiMLuQMfIkWm9sLnGCo4
+        73xlkHWbrxedfVMdRmUYL7KEMSk1t7MlV3JtfgfMB2Omt2o8n0OQOJU8dRq4PbAb
+        WAS4iBOeTW2b8QiQ==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 928a936d (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Thu, 19 Dec 2019 09:56:41 +0000 (UTC)
+Received: by mail-oi1-f181.google.com with SMTP id a67so2465792oib.6;
+        Thu, 19 Dec 2019 02:53:22 -0800 (PST)
+X-Gm-Message-State: APjAAAUrlkvnw2UvEEEAlS33fSie8XO57N214fuylnX688HONewOGzGq
+        JUvfwBxUmELw9BUMFJxnkfxryVd2gx4jJgcV0T8=
+X-Google-Smtp-Source: APXvYqzXNB9TOVozSiixjEhYFbGpVg8PPRAKr91Iku4NK9R6Hm0+Cm3RtF7N+wgCzvMUrkD1yBxh96o24g3uUL9uEhY=
+X-Received: by 2002:aca:2109:: with SMTP id 9mr1741139oiz.119.1576752801206;
+ Thu, 19 Dec 2019 02:53:21 -0800 (PST)
 MIME-Version: 1.0
-References: <20191210154157.21930-1-ktouil@baylibre.com> <cd9f342c-5576-57f5-c62d-a78c5876a7fd@linaro.org>
-In-Reply-To: <cd9f342c-5576-57f5-c62d-a78c5876a7fd@linaro.org>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 19 Dec 2019 11:53:07 +0100
-Message-ID: <CAMpxmJUM2WWyJyU0MuOu9qObPFr2ghH5LHs8DXo_poMwtZqPNA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] at24: move write-protect pin handling to nvmem core
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Khouloud Touil <ktouil@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        baylibre-upstreaming@groups.io,
+References: <20191208232734.225161-1-Jason@zx2c4.com> <CACT4Y+bsJVmgbD-WogwU=LfWiPN1JgjBrwx4s8Y14hDd7vqqhQ@mail.gmail.com>
+ <CAHmME9o0AparjaaOSoZD14RAW8_AJTfKfcx3Y2ndDAPFNC-MeQ@mail.gmail.com>
+ <CACT4Y+Zssd6OZ2-U4kjw18mNthQyzPWZV_gkH3uATnSv1SVDfA@mail.gmail.com>
+ <CAHmME9oM=YHMZyg23WEzmZAof=7iv-A01VazB3ihhR99f6X1cg@mail.gmail.com>
+ <CACT4Y+aCEZm_BA5mmVTnK2cR8CQUky5w1qvmb2KpSR4-Pzp4Ow@mail.gmail.com>
+ <CAHmME9rYstVLCBOgdMLqMeVDrX1V-f92vRKDqWsREROWdPbb6g@mail.gmail.com>
+ <CAHmME9qUWr69o0r+Mtm8tRSeQq3P780DhWAhpJkNWBfZ+J5OYA@mail.gmail.com> <CACT4Y+YfBDvQHdK24ybyyy5p07MXNMnLA7+gq9axq-EizN6jhA@mail.gmail.com>
+In-Reply-To: <CACT4Y+YfBDvQHdK24ybyyy5p07MXNMnLA7+gq9axq-EizN6jhA@mail.gmail.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Thu, 19 Dec 2019 11:53:10 +0100
+X-Gmail-Original-Message-ID: <CAHmME9qcv5izLz-_Z2fQefhgxDKwgVU=MkkJmAkAn3O_dXs5fA@mail.gmail.com>
+Message-ID: <CAHmME9qcv5izLz-_Z2fQefhgxDKwgVU=MkkJmAkAn3O_dXs5fA@mail.gmail.com>
+Subject: Re: [PATCH net-next v2] net: WireGuard secure network tunnel
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     netdev <netdev@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
+        David Miller <davem@davemloft.net>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 19 gru 2019 o 11:51 Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> napisa=C5=82(a):
+On Thu, Dec 19, 2019 at 11:49 AM Dmitry Vyukov <dvyukov@google.com> wrote:
 >
+> On Thu, Dec 19, 2019 at 11:11 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+> >
+> > On Thu, Dec 19, 2019 at 11:07 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+> > >
+> > > On Thu, Dec 19, 2019 at 10:35 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+> > > That's exciting about syzcaller having at it with WireGuard. Is there
+> > > some place where I can "see" it fuzzing WireGuard, or do I just wait
+> > > for the bug reports to come rolling in?
+> >
+> > Ahh, found it: https://storage.googleapis.com/syzkaller/cover/ci-upstream-net-kasan-gce.html
+> > Looks like we're at 1% and counting. :)
 >
+> Yes, that's it. But that's mostly stray coverage.
+> wg_netdevice_notification I guess mostly because it tested _other_ device types.
+> And a bit of netlink because it sends random garbage into netlink.
 >
-> On 10/12/2019 15:41, Khouloud Touil wrote:
-> > The write-protect pin handling looks like a standard property that
-> > could benefit other users if available in the core nvmem framework.
-> >
-> > Instead of modifying all the drivers to check this pin, make the
-> > nvmem subsystem check if the write-protect GPIO being passed
-> > through the nvmem_config or defined in the device tree and pull it
-> > low whenever writing to the memory.
-> >
-> > This patchset:
-> >
-> > - adds support for the write-protect pin split into two parts.
-> > The first patch modifies modifies the relevant binding document,
-> > while the second modifies the nvmem code to pull the write-protect
-> > GPIO low (if present) during write operations.
-> >
-> > - removes support for the write-protect pin split into two parts.
-> > The first patch modifies the relevant binding document to remove
-> > the wp-gpio, while the second removes the relevant code in the
-> > at24 driver.
-> >
-> > Changes since v1:
-> > -Add an explenation on how the wp-gpios works
-> > -keep reference to the wp-gpios in the at24 binding
-> >
-> > Khouloud Touil (4):
-> >    dt-bindings: nvmem: new optional property write-protect-gpios
-> >    nvmem: add support for the write-protect pin
-> >    dt-bindings: at24: remove the optional property write-protect-gpios
-> >    eeprom: at24: remove the write-protect pin support
-> >
+> For netlink part it would require something along these lines:
+> https://github.com/google/syzkaller/blob/master/sys/linux/socket_netlink_generic_devlink.txt
+> https://github.com/google/syzkaller/blob/master/sys/linux/socket_netlink_crypto.txt
+> https://github.com/google/syzkaller/blob/master/sys/linux/socket_netlink_generic_fou.txt
+> https://github.com/google/syzkaller/blob/master/sys/linux/socket_netlink_generic_seg6.txt
 >
-> Thanks Khouloud for this patchset,
+> And for device setup, harder to say. Either pre-create one here:
+> https://github.com/google/syzkaller/blob/79b211f74b08737aeb4934c6ff69a263b3c38013/executor/common_linux.h#L668
+> or teach it how to create them on the fly or both or something else.
 >
-> I can take this via nvmem tree once we get an ack on dt bindings from DT
-> maintainers.
->
+> Probably some wire packet formats here:
+> https://github.com/google/syzkaller/blob/79b211f74b08737aeb4934c6ff69a263b3c38013/sys/linux/vnet.txt
 
-Hi Srinivas,
-
-this will conflict with my at24 tree for this release - can you put
-those patches (once they're fine) into an immutable branch for me to
-merge in?
-
-Bart
-
->
-> --srini
-> >   .../devicetree/bindings/eeprom/at24.yaml      |  6 +-----
-> >   .../devicetree/bindings/nvmem/nvmem.yaml      |  9 +++++++++
-> >   drivers/misc/eeprom/at24.c                    |  9 ---------
-> >   drivers/nvmem/core.c                          | 19 +++++++++++++++++-=
--
-> >   drivers/nvmem/nvmem.h                         |  2 ++
-> >   include/linux/nvmem-provider.h                |  3 +++
-> >   6 files changed, 32 insertions(+), 16 deletions(-)
-> >
+Ahh, cool, okay. Netlink, device creation, and basic packet structure
+is a good start. What about the crypto, though?
