@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4680DC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 552E7C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12C3D227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FB75222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782270;
-	bh=fHrbUCUbox+/VKqWzedN0KhyVov7PkUo1FGuGQCnq2E=;
+	s=default; t=1576782272;
+	bh=thMYs7Pso3z3nCP5kKe2+F7DwqxhPwkfJ29Py85+nNg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IAnGghPpRZSWEgJdigY7Ub4Bz5rGzUc6yA34sPWcFSKG+SYtk888eGuUQv/JTRuEB
-	 b5KNEYbIRA3CFwGHFtoJL6s8Vy4aRKdhM2wT0T/oQ+8B0ZxtVG/2gDyC/1h3NZznMy
-	 yDdc7Hq0DK70QEoN5WqM9gA4cVyGrmZ0EtsaGOMM=
+	b=Fc3DiuecfQzlyulMw6Ant7E5Z485457LGAPJvOv7We32N94BJpOFZWjFBiPnpn09O
+	 BEMEB+XqX03lxVsvl70iSBoHlCTt+M5e32uJKuakekuoQ/PvT1exhj90BxC8yETRwD
+	 ZZPXRbE1+DncCndrmR5SSVIQbQFP52/iZ1vF85no=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729423AbfLSSrI (ORCPT
+        id S1729112AbfLSSrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:47:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39950 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:47:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729147AbfLSSrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:47:04 -0500
+        id S1729406AbfLSSrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:47:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3931F24676;
-        Thu, 19 Dec 2019 18:47:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF161222C2;
+        Thu, 19 Dec 2019 18:47:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781223;
-        bh=fHrbUCUbox+/VKqWzedN0KhyVov7PkUo1FGuGQCnq2E=;
+        s=default; t=1576781221;
+        bh=thMYs7Pso3z3nCP5kKe2+F7DwqxhPwkfJ29Py85+nNg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bn07AwvJVQTmGobn5c66dtrDkRqQIwzU0WSkKPauPwfDedc0VWxTdgiMIrvqc7Wgk
-         j7yb6Zn0gEAAgpFzxp/3ZOWrtJLcSMm2azvv3sMfQ5I/aaQKnbd7b53TPsGmijCKNj
-         naI393M5hWrfiTm+5eXkyBxE4edWJjOuDMYmc/pQ=
+        b=m+2rFN3j0fppUI7HKime6c7p6JXR5w+upInWM38A//xWK2mSYbdMVoNf+Bxw76odA
+         7ejoKwHbkHCAbFi9BGdKOOfuesiAcTReP8XO2iT7J34uF6GqDfDWCrJD61dEePF0Vy
+         CzQ6ixA/DJn8kWxFP2nEGCwrgu70JT1AWUe51vtw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH 4.9 134/199] PM / devfreq: Lock devfreq in trans_stat_show
-Date:   Thu, 19 Dec 2019 19:33:36 +0100
-Message-Id: <20191219183222.501723636@linuxfoundation.org>
+        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.9 133/199] cpuidle: Do not unset the driver if it is there already
+Date:   Thu, 19 Dec 2019 19:33:35 +0100
+Message-Id: <20191219183222.434745018@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,59 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Zhenzhong Duan <zhenzhong.duan@oracle.com>
 
-commit 2abb0d5268ae7b5ddf82099b1f8d5aa8414637d4 upstream.
+commit 918c1fe9fbbe46fcf56837ff21f0ef96424e8b29 upstream.
 
-There is no locking in this sysfs show function so stats printing can
-race with a devfreq_update_status called as part of freq switching or
-with initialization.
+Fix __cpuidle_set_driver() to check if any of the CPUs in the mask has
+a driver different from drv already and, if so, return -EBUSY before
+updating any cpuidle_drivers per-CPU pointers.
 
-Also add an assert in devfreq_update_status to make it clear that lock
-must be held by caller.
-
-Fixes: 39688ce6facd ("PM / devfreq: account suspend/resume for stats")
-Cc: stable@vger.kernel.org
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Fixes: 82467a5a885d ("cpuidle: simplify multiple driver support")
+Cc: 3.11+ <stable@vger.kernel.org> # 3.11+
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+[ rjw: Subject & changelog ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/devfreq/devfreq.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/cpuidle/driver.c |   15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -135,6 +135,7 @@ int devfreq_update_status(struct devfreq
- 	int lev, prev_lev, ret = 0;
- 	unsigned long cur_time;
+--- a/drivers/cpuidle/driver.c
++++ b/drivers/cpuidle/driver.c
+@@ -61,24 +61,23 @@ static inline void __cpuidle_unset_drive
+  * __cpuidle_set_driver - set per CPU driver variables for the given driver.
+  * @drv: a valid pointer to a struct cpuidle_driver
+  *
+- * For each CPU in the driver's cpumask, unset the registered driver per CPU
+- * to @drv.
+- *
+- * Returns 0 on success, -EBUSY if the CPUs have driver(s) already.
++ * Returns 0 on success, -EBUSY if any CPU in the cpumask have a driver
++ * different from drv already.
+  */
+ static inline int __cpuidle_set_driver(struct cpuidle_driver *drv)
+ {
+ 	int cpu;
  
-+	lockdep_assert_held(&devfreq->lock);
- 	cur_time = jiffies;
+ 	for_each_cpu(cpu, drv->cpumask) {
++		struct cpuidle_driver *old_drv;
  
- 	/* Immediately exit if previous_freq is not initialized yet. */
-@@ -1170,12 +1171,17 @@ static ssize_t trans_stat_show(struct de
- 	int i, j;
- 	unsigned int max_state = devfreq->profile->max_state;
- 
--	if (!devfreq->stop_polling &&
--			devfreq_update_status(devfreq, devfreq->previous_freq))
--		return 0;
- 	if (max_state == 0)
- 		return sprintf(buf, "Not Supported.\n");
- 
-+	mutex_lock(&devfreq->lock);
-+	if (!devfreq->stop_polling &&
-+			devfreq_update_status(devfreq, devfreq->previous_freq)) {
-+		mutex_unlock(&devfreq->lock);
-+		return 0;
+-		if (__cpuidle_get_cpu_driver(cpu)) {
+-			__cpuidle_unset_driver(drv);
++		old_drv = __cpuidle_get_cpu_driver(cpu);
++		if (old_drv && old_drv != drv)
+ 			return -EBUSY;
+-		}
 +	}
-+	mutex_unlock(&devfreq->lock);
-+
- 	len = sprintf(buf, "     From  :   To\n");
- 	len += sprintf(buf + len, "           :");
- 	for (i = 0; i < max_state; i++)
+ 
++	for_each_cpu(cpu, drv->cpumask)
+ 		per_cpu(cpuidle_drivers, cpu) = drv;
+-	}
+ 
+ 	return 0;
+ }
 
 
