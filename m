@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A220C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E182C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB6042064B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED0C227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:52:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781517;
-	bh=WqoT9R7AMcKrZqWQ5NRho4R7EQhp6LMuSpwpr0HGsDw=;
+	s=default; t=1576781525;
+	bh=L8btdrsIjfqpwMqVEQ6JHMwbbAwANIx7VRawtsqGllo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SBeqcQ/clTrdvQgZBFL9VZbo1I02ruhevgJRlb8R00QW8BdLnQE/DBE2nqwM8tiwk
-	 tVVsXd2LiqE6fto0rRlcB7tVuAhhWWnCKFRfbMz/1NLevqE8qs0AMb4YvFRhsxMn2L
-	 7jJqDm4juS6AUyRvEdaSj9w9NyQbH61mRGzIogNY=
+	b=AQtMSpaqR4YkcD+yG80GpP1KfnWkOInoptngTSAB1fQ4vz0015Cvo2hsmYloIMZI8
+	 +dT91W895yzYty/BL5VHxr2NKlBPAhzV1tN7DEjRMR+ZSA7E5gsGJ8vJHItM3x9hEp
+	 NDjK8PJ2aYNHaiAIo2yvSahCDCvzHRxW9nF/oMS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730191AbfLSSvz (ORCPT
+        id S1730210AbfLSSwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:51:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46262 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:52:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729989AbfLSSvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:51:51 -0500
+        id S1730192AbfLSSv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:51:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3414620674;
-        Thu, 19 Dec 2019 18:51:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B6A82064B;
+        Thu, 19 Dec 2019 18:51:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781510;
-        bh=WqoT9R7AMcKrZqWQ5NRho4R7EQhp6LMuSpwpr0HGsDw=;
+        s=default; t=1576781518;
+        bh=L8btdrsIjfqpwMqVEQ6JHMwbbAwANIx7VRawtsqGllo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vYR9Ci29l8pFIKJb2vPYiC1NTYX22MCFHwghYS8RQlnQ/ScAC2SlMYX2V+Y8bOe9f
-         lsD/NhC0kHyqYkYYVh+97QlAi/nQRc2BrGuL3kEKCOaGePbXuOXjJHv9ApyU/SpQR5
-         0BaitWhN3SsLNA6EAjS7AlLtxX8oqtMboLRTmrjw=
+        b=EuZEhwQUgWm0NFjlpHXlCZIK3FHsySMl+ydb6Gzi90wBitn2ed+LMhwdbCcnMd9T5
+         NqDAqdpa0ZUmzS27MuM0tI4XsLVYw8UOqN0ACyAkmxvmjnKopxo7U9xbupdV/YB8be
+         Zd5zzcKpgz1bGjPpuZgNQYDfG/3Jxut2NgdaKOXA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 15/47] Revert "arm64: preempt: Fix big-endian when checking preempt count in assembly"
-Date:   Thu, 19 Dec 2019 19:34:29 +0100
-Message-Id: <20191219182913.664954881@linuxfoundation.org>
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.19 18/47] PCI/PM: Always return devices to D0 when thawing
+Date:   Thu, 19 Dec 2019 19:34:32 +0100
+Message-Id: <20191219182918.637905168@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182857.659088743@linuxfoundation.org>
 References: <20191219182857.659088743@linuxfoundation.org>
@@ -62,56 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Dexuan Cui <decui@microsoft.com>
 
-This reverts commit 64694b276d74c653051637caa4bfa5e8c27b30ad which is
-commit 7faa313f05cad184e8b17750f0cbe5216ac6debb upstream.
+commit f2c33ccacb2d4bbeae2a255a7ca0cbfd03017b7c upstream.
 
-Turns out one of the pre-requsite patches wasn't in 4.19.y, so this
-patch didn't make sense.  So let's revert it.
+pci_pm_thaw_noirq() is supposed to return the device to D0 and restore its
+configuration registers, but previously it only did that for devices whose
+drivers implemented the new power management ops.
 
-Reported-by: Steven Rostedt <rostedt@goodmis.org>
-Reported-by: Will Deacon <will@kernel.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Kevin Hilman <khilman@baylibre.com>
-Cc: Sasha Levin <sashal@kernel.org>
+Hibernation, e.g., via "echo disk > /sys/power/state", involves freezing
+devices, creating a hibernation image, thawing devices, writing the image,
+and powering off.  The fact that thawing did not return devices with legacy
+power management to D0 caused errors, e.g., in this path:
+
+  pci_pm_thaw_noirq
+    if (pci_has_legacy_pm_support(pci_dev)) # true for Mellanox VF driver
+      return pci_legacy_resume_early(dev)   # ... legacy PM skips the rest
+    pci_set_power_state(pci_dev, PCI_D0)
+    pci_restore_state(pci_dev)
+  pci_pm_thaw
+    if (pci_has_legacy_pm_support(pci_dev))
+      pci_legacy_resume
+	drv->resume
+	  mlx4_resume
+	    ...
+	      pci_enable_msix_range
+	        ...
+		  if (dev->current_state != PCI_D0)  # <---
+		    return -EINVAL;
+
+which caused these warnings:
+
+  mlx4_core a6d1:00:02.0: INTx is not supported in multi-function mode, aborting
+  PM: dpm_run_callback(): pci_pm_thaw+0x0/0xd7 returns -95
+  PM: Device a6d1:00:02.0 failed to thaw: error -95
+
+Return devices to D0 and restore config registers for all devices, not just
+those whose drivers support new power management.
+
+[bhelgaas: also call pci_restore_state() before pci_legacy_resume_early(),
+update comment, add stable tag, commit log]
+Link: https://lore.kernel.org/r/KU1P153MB016637CAEAD346F0AA8E3801BFAD0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: stable@vger.kernel.org	# v4.13+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/arm64/include/asm/assembler.h |    8 +++++---
- arch/arm64/kernel/entry.S          |    6 ++++--
- 2 files changed, 9 insertions(+), 5 deletions(-)
 
---- a/arch/arm64/include/asm/assembler.h
-+++ b/arch/arm64/include/asm/assembler.h
-@@ -683,9 +683,11 @@ USER(\label, ic	ivau, \tmp2)			// invali
- 	.macro		if_will_cond_yield_neon
- #ifdef CONFIG_PREEMPT
- 	get_thread_info	x0
--	ldr		x0, [x0, #TSK_TI_PREEMPT]
--	sub		x0, x0, #PREEMPT_DISABLE_OFFSET
--	cbz		x0, .Lyield_\@
-+	ldr		w1, [x0, #TSK_TI_PREEMPT]
-+	ldr		x0, [x0, #TSK_TI_FLAGS]
-+	cmp		w1, #PREEMPT_DISABLE_OFFSET
-+	csel		x0, x0, xzr, eq
-+	tbnz		x0, #TIF_NEED_RESCHED, .Lyield_\@	// needs rescheduling?
- 	/* fall through to endif_yield_neon */
- 	.subsection	1
- .Lyield_\@ :
---- a/arch/arm64/kernel/entry.S
-+++ b/arch/arm64/kernel/entry.S
-@@ -622,8 +622,10 @@ el1_irq:
- 	irq_handler
+---
+ drivers/pci/pci-driver.c |   17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
+
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -1042,17 +1042,22 @@ static int pci_pm_thaw_noirq(struct devi
+ 			return error;
+ 	}
  
- #ifdef CONFIG_PREEMPT
--	ldr	x24, [tsk, #TSK_TI_PREEMPT]	// get preempt count
--	cbnz	x24, 1f				// preempt count != 0
-+	ldr	w24, [tsk, #TSK_TI_PREEMPT]	// get preempt count
-+	cbnz	w24, 1f				// preempt count != 0
-+	ldr	x0, [tsk, #TSK_TI_FLAGS]	// get flags
-+	tbz	x0, #TIF_NEED_RESCHED, 1f	// needs rescheduling?
- 	bl	el1_preempt
- 1:
- #endif
+-	if (pci_has_legacy_pm_support(pci_dev))
+-		return pci_legacy_resume_early(dev);
+-
+ 	/*
+-	 * pci_restore_state() requires the device to be in D0 (because of MSI
+-	 * restoration among other things), so force it into D0 in case the
+-	 * driver's "freeze" callbacks put it into a low-power state directly.
++	 * Both the legacy ->resume_early() and the new pm->thaw_noirq()
++	 * callbacks assume the device has been returned to D0 and its
++	 * config state has been restored.
++	 *
++	 * In addition, pci_restore_state() restores MSI-X state in MMIO
++	 * space, which requires the device to be in D0, so return it to D0
++	 * in case the driver's "freeze" callbacks put it into a low-power
++	 * state.
+ 	 */
+ 	pci_set_power_state(pci_dev, PCI_D0);
+ 	pci_restore_state(pci_dev);
+ 
++	if (pci_has_legacy_pm_support(pci_dev))
++		return pci_legacy_resume_early(dev);
++
+ 	if (drv && drv->pm && drv->pm->thaw_noirq)
+ 		error = drv->pm->thaw_noirq(dev);
+ 
 
 
