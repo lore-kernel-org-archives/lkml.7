@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A70C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0211C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5C9E24684
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 870F124684
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781404;
-	bh=iaX4qoWzrHJ87FANjOxQtE9U3qI0YIdir/spzdB2Z/E=;
+	s=default; t=1576781406;
+	bh=C63ypNwTA40y8aoGJ0EuopfgNS+M8vFsGiCfxu7LPi4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DpO0GSP3d8ZEuXka9mS04yO7kcB46EikiPvd4cGo8W+0cERf2VoFlAmsPbpU3XnYg
-	 EB4gjb83DrsNhZFgHa0VQYW7MpoBWy+CNSjrN+Z0T+PKnzjJwe5N/W/Dze0EKc1zAn
-	 GFnNYYOUL6lTfdkQMhhVDfH/cHbYFDljtXUm21cg=
+	b=rDpj6z3q+H6wTee/i9fb1sDqLf5UImjHXdbn4MeyKR3UKJVCTm0bMgBYyFmXFFQna
+	 TMS+5zeBE07P5paGPOKwJF9PJFhWnJ8Hvvl6aiEQbubDkQOez6BkY1Zzf+5uTErko8
+	 Y4LIerkbiUZ3vGQFuyk1UI9/1ul42/UGVCWi2MEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729912AbfLSSuD (ORCPT
+        id S1729921AbfLSSuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:50:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43666 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:50:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729893AbfLSSuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:50:01 -0500
+        id S1729911AbfLSSuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:50:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4383024672;
-        Thu, 19 Dec 2019 18:50:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C71112465E;
+        Thu, 19 Dec 2019 18:50:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781400;
-        bh=iaX4qoWzrHJ87FANjOxQtE9U3qI0YIdir/spzdB2Z/E=;
+        s=default; t=1576781403;
+        bh=C63ypNwTA40y8aoGJ0EuopfgNS+M8vFsGiCfxu7LPi4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r/6HTMUOFnO+GDUJsI4QLCGRXj1IGRljHDN/izlfBwvJD51OwsH7CvWHaMr/SF/hI
-         CW78nZuVRqYoAChq377dv1gZXMqSJaOIrW8xERofjQ0ZdR4seSLvh38lmzuFrtrO6y
-         2cRu5pUdaUUltFOKvAsV72u48oNuPLAN9ehQdTBk=
+        b=tn6kOHvp1QTy4at7uI/QXpRpFCQ3sQqgqNJdHwUtqmFdW4M0FWTeLZKJJD3jp6Xhh
+         ubZeg/LBKLNH8HbjyO8sM8w3TMOuolIh/5sMicbmf9Jyzj5Y5qrtqbbQKE5BnwDVa0
+         0ytikn1yU2QuAXYpcUEcBl31O7DjD4vraS1WcyTM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eran Ben Elisha <eranbe@mellanox.com>,
-        Aya Levin <ayal@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 173/199] net/mlx5e: Fix SFF 8472 eeprom length
-Date:   Thu, 19 Dec 2019 19:34:15 +0100
-Message-Id: <20191219183225.110570192@linuxfoundation.org>
+Subject: [PATCH 4.9 164/199] scsi: qla2xxx: Always check the qla2x00_wait_for_hba_online() return value
+Date:   Thu, 19 Dec 2019 19:34:06 +0100
+Message-Id: <20191219183224.507346963@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -61,35 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eran Ben Elisha <eranbe@mellanox.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit c431f8597863a91eea6024926e0c1b179cfa4852 ]
+[ Upstream commit e6803efae5acd109fad9f2f07dab674563441a53 ]
 
-SFF 8472 eeprom length is 512 bytes. Fix module info return value to
-support 512 bytes read.
+This patch fixes several Coverity complaints about not always checking
+the qla2x00_wait_for_hba_online() return value.
 
-Fixes: ace329f4ab3b ("net/mlx5e: ethtool, Remove unsupported SFP EEPROM high pages query")
-Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
-Reviewed-by: Aya Levin <ayal@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Tested-by: Himanshu Madhani <hmadhani@marvell.com>
+Reviewed-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_attr.c   | 3 ++-
+ drivers/scsi/qla2xxx/qla_target.c | 7 +++++--
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-index e42ece20cd0b1..e13a6cd5163f4 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-@@ -1368,7 +1368,7 @@ static int mlx5e_get_module_info(struct net_device *netdev,
- 		break;
- 	case MLX5_MODULE_ID_SFP:
- 		modinfo->type       = ETH_MODULE_SFF_8472;
--		modinfo->eeprom_len = MLX5_EEPROM_PAGE_LENGTH;
-+		modinfo->eeprom_len = ETH_MODULE_SFF_8472_LEN;
- 		break;
- 	default:
- 		netdev_err(priv->netdev, "%s: cable type not recognized:0x%x\n",
+diff --git a/drivers/scsi/qla2xxx/qla_attr.c b/drivers/scsi/qla2xxx/qla_attr.c
+index 5c3dfd92ea024..33f4181ba9f76 100644
+--- a/drivers/scsi/qla2xxx/qla_attr.c
++++ b/drivers/scsi/qla2xxx/qla_attr.c
+@@ -682,7 +682,8 @@ qla2x00_sysfs_write_reset(struct file *filp, struct kobject *kobj,
+ 			break;
+ 		} else {
+ 			/* Make sure FC side is not in reset */
+-			qla2x00_wait_for_hba_online(vha);
++			WARN_ON_ONCE(qla2x00_wait_for_hba_online(vha) !=
++				     QLA_SUCCESS);
+ 
+ 			/* Issue MPI reset */
+ 			scsi_block_requests(vha->host);
+diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
+index 3b20cf8b161e4..b889caa556a0b 100644
+--- a/drivers/scsi/qla2xxx/qla_target.c
++++ b/drivers/scsi/qla2xxx/qla_target.c
+@@ -6341,7 +6341,8 @@ qlt_enable_vha(struct scsi_qla_host *vha)
+ 
+ 		set_bit(ISP_ABORT_NEEDED, &base_vha->dpc_flags);
+ 		qla2xxx_wake_dpc(base_vha);
+-		qla2x00_wait_for_hba_online(base_vha);
++		WARN_ON_ONCE(qla2x00_wait_for_hba_online(base_vha) !=
++			     QLA_SUCCESS);
+ 	}
+ }
+ EXPORT_SYMBOL(qlt_enable_vha);
+@@ -6371,7 +6372,9 @@ static void qlt_disable_vha(struct scsi_qla_host *vha)
+ 
+ 	set_bit(ISP_ABORT_NEEDED, &vha->dpc_flags);
+ 	qla2xxx_wake_dpc(vha);
+-	qla2x00_wait_for_hba_online(vha);
++	if (qla2x00_wait_for_hba_online(vha) != QLA_SUCCESS)
++		ql_dbg(ql_dbg_tgt, vha, 0xe081,
++		       "qla2x00_wait_for_hba_online() failed\n");
+ }
+ 
+ /*
 -- 
 2.20.1
 
