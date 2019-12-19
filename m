@@ -2,90 +2,90 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DC8C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C9AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71136206D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF7FB206D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:05:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576782346;
+	bh=yTxjhlA0GOCxsjuGn4rKAiPTxp3UhagqMA/rASlPzQ8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=K3CJKwuenWxafx1PheYkBG8CITkF34ZMA+YlhAg6OH2APZ6YdzxH9Uj/KXf5RgqrN
+	 a2IjNQjq7SAMfYEc+mqHT/mFpN0i5QlHY7j7nwnAIIkn5OLk49Tpj/xxpEc4pt5Zee
+	 dx0/T6V4Yvu55ZIRYjhoJLFZtd3OA4v1waLTBn9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729167AbfLSSpa (ORCPT
+        id S1728832AbfLSTFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:45:30 -0500
-Received: from foss.arm.com ([217.140.110.172]:42266 "EHLO foss.arm.com"
+        Thu, 19 Dec 2019 14:05:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729148AbfLSSp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:45:28 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBE141FB;
-        Thu, 19 Dec 2019 10:45:27 -0800 (PST)
-Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D43C93F67D;
-        Thu, 19 Dec 2019 10:45:26 -0800 (PST)
-Subject: Re: [PATCH] tracing: Fix printing ptrs in preempt/irq enable/disable
- events
-To:     Antonio Borneo <antonio.borneo@st.com>,
-        Joel Fernandes <joel@joelfernandes.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com, ambroise.vincent@arm.com
-References: <20191127154428.191095-1-antonio.borneo@st.com>
- <20191204160407.GB17404@google.com>
- <6b5b74cede87a61d5f04f2a95bc4389830467fe9.camel@st.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <68b3b7db-d278-6cd2-f2b6-cbba05df6db4@arm.com>
-Date:   Thu, 19 Dec 2019 18:45:25 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1729162AbfLSSp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:45:29 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 598B9222C2;
+        Thu, 19 Dec 2019 18:45:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576781128;
+        bh=yTxjhlA0GOCxsjuGn4rKAiPTxp3UhagqMA/rASlPzQ8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=q8HaGQAxycPM9htZmdvT7nCpPPUkW7ddjnSjgO+3Vfk2dfIHmPn1PmmBtF3eIVG9o
+         SV1tVGiks/axd8w0v+KfpsDQNb6IFKW9iEU8Lt/jm8AllZpyzg/F2kKqcYL8S+H0Ax
+         PL0SiVummb88yuYME0qr8tx5czfdJaEBtCLC5FQs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 095/199] appletalk: Set error code if register_snap_client failed
+Date:   Thu, 19 Dec 2019 19:32:57 +0100
+Message-Id: <20191219183220.178908810@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
+References: <20191219183214.629503389@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <6b5b74cede87a61d5f04f2a95bc4389830467fe9.camel@st.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/12/2019 00:00, Antonio Borneo wrote:
-> At login:
-> trace-cmd record -e preemptirq:irq_enable sleep 1
-> trace-cmd report trace.dat | head
-> and I incorrectly get only the offsets to _stext:
-> cpus=1
->            sleep-197   [000]   280.378022: irq_enable:           caller=0x1afaS parent=0xc00091S
->            sleep-197   [000]   280.378026: irq_enable:           caller=0x54d34S parent=0x78e00000S
->            sleep-197   [000]   280.378029: irq_enable:           caller=0x1afaS parent=0xc00a84S
->            sleep-197   [000]   280.378032: irq_enable:           caller=0x263dS parent=0x78e00000S
-> ...
-> 
-> With this patch I get the expected/right result:
-> cpus=1
->            sleep-210   [000]   525.177583: irq_enable:           caller=trace_hardirqs_on_thunk parent=entry_SYSCALL_64_after_hwframe
->            sleep-210   [000]   525.177587: irq_enable:           caller=__do_page_fault parent=(nil)S
->            sleep-210   [000]   525.177590: irq_enable:           caller=trace_hardirqs_on_thunk parent=swapgs_restore_regs_and_return_to_usermode
->            sleep-210   [000]   525.177593: irq_enable:           caller=do_syscall_64 parent=(nil)S
-> ...
+From: YueHaibing <yuehaibing@huawei.com>
 
-FWIW Ambroise (in Cc) and I were staring at some irq enable/disable traces,
-and encountered exactly this on a Pixel3 running a mainline kernel. With
-Antonio's patch we got the expected result, so you can have:
+commit c93ad1337ad06a718890a89cdd85188ff9a5a5cc upstream.
 
-Tested-by: Valentin Schneider <valentin.schneider@arm.com>
+If register_snap_client fails in atalk_init,
+error code should be set, otherwise it will
+triggers NULL pointer dereference while unloading
+module.
 
->> I am not comfortable with this patch at the moment, mainly because it will
->> increase the size of this rather high frequency event. But I'm not saying
->> there isn't an issue on 32-bit. Let's discuss more.
->>
-> 
-> Sure, the pressure on the trace buffer will increase on a 64 bit system, but in general it also has more memory than an embedded 32 bit system.
-> The key point is, instead, can we feel safe with a 32 bit offset in a 64 bit system? Is there any guarantee a module is loaded within 32 bits offset from _stext?
-> 
+Fixes: 9804501fa122 ("appletalk: Fix potential NULL pointer dereference in unregister_snap_client")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-You're better placed than I to know if and when this is the case, but I
-wouldn't use this in a production environment. To me this is more of a
-debugging tool (and a really good one at that), so I am less concerned
-about the memory overhead.
+---
+ net/appletalk/ddp.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/net/appletalk/ddp.c
++++ b/net/appletalk/ddp.c
+@@ -1927,6 +1927,7 @@ static int __init atalk_init(void)
+ 	ddp_dl = register_snap_client(ddp_snap_id, atalk_rcv);
+ 	if (!ddp_dl) {
+ 		pr_crit("Unable to register DDP with SNAP.\n");
++		rc = -ENOMEM;
+ 		goto out_sock;
+ 	}
+ 
+
+
