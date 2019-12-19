@@ -2,260 +2,101 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4D8C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E9AC2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86D3A227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:18:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tCS54bJd"
+	by mail.kernel.org (Postfix) with ESMTP id 09ABD227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:20:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbfLSSSh (ORCPT
+        id S1726981AbfLSSUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:18:37 -0500
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:46018 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726797AbfLSSSg (ORCPT
+        Thu, 19 Dec 2019 13:20:03 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:49523 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726818AbfLSSUD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:18:36 -0500
-Received: by mail-vs1-f66.google.com with SMTP id b4so3902857vsa.12;
-        Thu, 19 Dec 2019 10:18:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hdfl3j3PUu29KvhFJr+t8q9A7l1fLtUS6dfELY8PVLE=;
-        b=tCS54bJd6f3428WApblIOzLQvg9gXUk1ry2iLEcNoz5mn+Ev/It5H2F9ixzC8H3L7O
-         gy0IKkXEef1q6L0ksBFGDnOsjR/d7EBCW93dzLdMYSzBycxQDu5ezgzhvuFSzH3C8Lm/
-         JlAmLHyjT024P+gfLHAh9AEPlaXfFD3YP4yLDycw9CpwqSePfClSIox4XVdEvj5Nr5Bn
-         FjVC6LL8OR3gYVOQ86fmVwGRCASN1MYtioAty36QxsKkpWaLkkDWk5onwgp+d+6B+dOw
-         +x6EdoeRB0BmdvaglW+aUzVAef6OztV1h6RgZVussRPpI7Udtcb9/edVA/g/XEvrPZnk
-         C5rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hdfl3j3PUu29KvhFJr+t8q9A7l1fLtUS6dfELY8PVLE=;
-        b=aY7Ka4mrPmCTOs/GoLBItS/dODCuFKyS+2DQoHImWqRC0mOavV4ZooPBlRfCKX97ZY
-         LZqaV4nUMz1YGHZAZViyIAkvrM2m35TuJd4zrnj/kayC1QEZW0WYM/wZuBjsje5VkG1x
-         QOcrG+Ik0/m35kELUrtdDl4e15VyYDvRYdw6NnAY7bha7vAIq5PbybuGqJJMURl9OM0T
-         AbuU/Rgv3XSbTMUH6HRCRbHteXxbOeUg1i945sr593cudXiWEKVVEgtl+kkQhywILSL6
-         8LBvb5BWyxdSEkWlCzVOj5Pnh1SBphRHI+baoVtE9+wYqylPE3MZxFy/F3Ir8r3MhJlT
-         XTNQ==
-X-Gm-Message-State: APjAAAW7Hkt8wcmRBdq11MQ4Sf/X3TJ00z5XcoLBTMtJ/HukAEJpUBpS
-        PkkDRZRYU4mxedP5F51r3U0tle7YFDvhgzIehtdpe1SC
-X-Google-Smtp-Source: APXvYqx2+nDxq2ixPv2h29IpGt0iubjleAq9aMOGE+An5nayL0a+8XISERr+3e5yfQuKP1zTRewKys0Qg4k4OKGNcqU=
-X-Received: by 2002:a05:6102:204a:: with SMTP id q10mr6222578vsr.127.1576779515189;
- Thu, 19 Dec 2019 10:18:35 -0800 (PST)
-MIME-Version: 1.0
-References: <1576224695-22657-1-git-send-email-stanley.chu@mediatek.com> <1576224695-22657-2-git-send-email-stanley.chu@mediatek.com>
-In-Reply-To: <1576224695-22657-2-git-send-email-stanley.chu@mediatek.com>
-From:   Alim Akhtar <alim.akhtar@gmail.com>
-Date:   Thu, 19 Dec 2019 23:47:59 +0530
-Message-ID: <CAGOxZ539Fr5Vxg8Zg=LpYhxTacwh81Ee+S9MWFybwbAPr5RgYQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/4] scsi: ufs-mediatek: introduce reference clock control
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     linux-scsi@vger.kernel.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        open list <linux-kernel@vger.kernel.org>,
-        "Bean Huo (beanhuo)" <beanhuo@micron.com>,
-        Kuohong Wang <kuohong.wang@mediatek.com>,
-        peter.wang@mediatek.com, chun-hung.wu@mediatek.com,
-        andy.teng@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 19 Dec 2019 13:20:03 -0500
+Received: from orion.localdomain ([77.9.67.183]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MfbwW-1i22sl1zi4-00g1kL; Thu, 19 Dec 2019 19:19:47 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, matthias.bgg@gmail.com,
+        linux-clk@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: [PATCH] drivers: clk: make gpio-gated clock support optional
+Date:   Thu, 19 Dec 2019 19:19:14 +0100
+Message-Id: <20191219181914.6015-1-info@metux.net>
+X-Mailer: git-send-email 2.11.0
+X-Provags-ID: V03:K1:jpHLwXNk9hOLka9uvW//uJQnzAGMKxKM6PXIdnWgi5UdfcFPP+1
+ qkK0BKGr8o0uMs0aLjei1OLw/VfwDVzrMMX8YdAgKDP0WTG6UAnGMSg5IgKoQv33epGyvmU
+ fmwygj1HeGDDsFI+mnsMGJYDe3g2Ad+7b1ZBSWFf1aXz8ugcDazSaGJTI75cUqF1AglVx8k
+ VNx7FW/KSmUFk1d4iDdcw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:sZrDCi3e6so=:SovrMjBvwFTmI8GTl4TqmU
+ srSdn+cnFcrzRx4RsShLdt4hxCM3koBsYCyWjP57HxiKQi+nITWLO1c1j1wAYVRDCcWDr2UJx
+ tSQyvXQJMLN6p7Kz5kAWBVDqtxrtPQ1T1V0byUtC/qDMqZIz1nTyI4bgs0484Zj3hSJUrYMAB
+ 9gCPyHZ+nI3rUN+5vaUfw7wqyJFEpDfI7PdYgtGK2da81sZNfdEDuesmQyRSGuh0WClTDMzXl
+ ugor+XYc9uVj5IKsb9VRGhoGCLc+kifuR+M2fw8nZkgefFJaxDablwdPy5XCDakR+4UvW1ODV
+ 1zy3ZeHhmmrynmMzPuQotPq0R6t1iAvpViyvu0QIuMRxjBAu+fzx75gFw/Qc+bBFiAFq9CTyq
+ mHEpXB20lFUpfKhc3pPNxZdkXtI/6JVOPiZxtR52RgDoet3oaBvUZ3fl6TRnQTV8e8J5xvuTf
+ yg6bel6FwI3cgJBrIzIUDHygS4PftZonnyAS5KBSYio2Z2P2Bn+vnn5su3FP6oSzO1a12u+Rk
+ LP5hRaX5t1uoob6PgJ2M+283T2UziMnqiwPTv9cu2YTAHgjad9M/H9VFzed7PqUqHmqr5tVjS
+ 7qGqtUIeWL0X7VGkqx2v9kYw4+jJVu474kHtb4trmJPDX26TQrS9bDi7a5td+6jUqy4SH2P5x
+ dium3iEh95GQ4OlIeBIsZviVWIxezaEHd3CZfp5Dv41S1wGFwM36EbhzjI1L/Lnaox22cfEQw
+ MZiTkeEANK8cKo9/kex7VxiASlW44PYO270FO2LMyW/3DLkZtM0jOog5Z1lSfC2PidlwveRoH
+ ZMjbooPVm+xA9xol4nQiEMNjWxzwcjQlImPE5tbm65VEjwStCkSQ/Z2uBUEp7jGEG16+qrrSd
+ 529HVRNCzLi0enpkZ1SQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 2:23 PM Stanley Chu <stanley.chu@mediatek.com> wrote:
->
-> Introduce reference clock control in MediaTek Chipset in order
-> to disable it if it is not necessary by UFS device to save system power.
->
-> Currently reference clock can be disabled during system suspend, runtime
-> suspend and clock-gating after link enters hibernate state.
->
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+The gpio-gate-clock / gpio-mux-clock driver isn't used much,
+just by a few ARM SoCs, so there's no need to always include
+it unconditionally.
 
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Thus make it optional, but keep it enabled by default.
 
-> ---
->  drivers/scsi/ufs/ufs-mediatek.c | 64 ++++++++++++++++++++++++++++++---
->  drivers/scsi/ufs/ufs-mediatek.h | 20 +++++++++--
->  2 files changed, 78 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/scsi/ufs/ufs-mediatek.c b/drivers/scsi/ufs/ufs-mediatek.c
-> index 6a3ec11b16db..690483c78212 100644
-> --- a/drivers/scsi/ufs/ufs-mediatek.c
-> +++ b/drivers/scsi/ufs/ufs-mediatek.c
-> @@ -18,6 +18,11 @@
->  #include "unipro.h"
->  #include "ufs-mediatek.h"
->
-> +#define ufs_mtk_ref_clk_notify(on, res) \
-> +       arm_smccc_smc(MTK_SIP_UFS_CONTROL, \
-> +                     UFS_MTK_SIP_REF_CLK_NOTIFICATION, \
-> +                     on, 0, 0, 0, 0, 0, &(res))
-> +
->  static void ufs_mtk_cfg_unipro_cg(struct ufs_hba *hba, bool enable)
->  {
->         u32 tmp;
-> @@ -83,6 +88,49 @@ static int ufs_mtk_bind_mphy(struct ufs_hba *hba)
->         return err;
->  }
->
-> +static int ufs_mtk_setup_ref_clk(struct ufs_hba *hba, bool on)
-> +{
-> +       struct ufs_mtk_host *host = ufshcd_get_variant(hba);
-> +       struct arm_smccc_res res;
-> +       unsigned long timeout;
-> +       u32 value;
-> +
-> +       if (host->ref_clk_enabled == on)
-> +               return 0;
-> +
-> +       if (on) {
-> +               ufs_mtk_ref_clk_notify(on, res);
-> +               ufshcd_writel(hba, REFCLK_REQUEST, REG_UFS_REFCLK_CTRL);
-> +       } else {
-> +               ufshcd_writel(hba, REFCLK_RELEASE, REG_UFS_REFCLK_CTRL);
-> +       }
-> +
-> +       /* Wait for ack */
-> +       timeout = jiffies + msecs_to_jiffies(REFCLK_REQ_TIMEOUT_MS);
-> +       do {
-> +               value = ufshcd_readl(hba, REG_UFS_REFCLK_CTRL);
-> +
-> +               /* Wait until ack bit equals to req bit */
-> +               if (((value & REFCLK_ACK) >> 1) == (value & REFCLK_REQUEST))
-> +                       goto out;
-> +
-> +               usleep_range(100, 200);
-> +       } while (time_before(jiffies, timeout));
-> +
-> +       dev_err(hba->dev, "missing ack of refclk req, reg: 0x%x\n", value);
-> +
-> +       ufs_mtk_ref_clk_notify(host->ref_clk_enabled, res);
-> +
-> +       return -ETIMEDOUT;
-> +
-> +out:
-> +       host->ref_clk_enabled = on;
-> +       if (!on)
-> +               ufs_mtk_ref_clk_notify(on, res);
-> +
-> +       return 0;
-> +}
-> +
->  /**
->   * ufs_mtk_setup_clocks - enables/disable clocks
->   * @hba: host controller instance
-> @@ -107,12 +155,16 @@ static int ufs_mtk_setup_clocks(struct ufs_hba *hba, bool on,
->
->         switch (status) {
->         case PRE_CHANGE:
-> -               if (!on)
-> +               if (!on) {
-> +                       ufs_mtk_setup_ref_clk(hba, on);
->                         ret = phy_power_off(host->mphy);
-> +               }
->                 break;
->         case POST_CHANGE:
-> -               if (on)
-> +               if (on) {
->                         ret = phy_power_on(host->mphy);
-> +                       ufs_mtk_setup_ref_clk(hba, on);
-> +               }
->                 break;
->         }
->
-> @@ -299,8 +351,10 @@ static int ufs_mtk_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
->  {
->         struct ufs_mtk_host *host = ufshcd_get_variant(hba);
->
-> -       if (ufshcd_is_link_hibern8(hba))
-> +       if (ufshcd_is_link_hibern8(hba)) {
->                 phy_power_off(host->mphy);
-> +               ufs_mtk_setup_ref_clk(hba, false);
-> +       }
->
->         return 0;
->  }
-> @@ -309,8 +363,10 @@ static int ufs_mtk_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
->  {
->         struct ufs_mtk_host *host = ufshcd_get_variant(hba);
->
-> -       if (ufshcd_is_link_hibern8(hba))
-> +       if (ufshcd_is_link_hibern8(hba)) {
-> +               ufs_mtk_setup_ref_clk(hba, true);
->                 phy_power_on(host->mphy);
-> +       }
->
->         return 0;
->  }
-> diff --git a/drivers/scsi/ufs/ufs-mediatek.h b/drivers/scsi/ufs/ufs-mediatek.h
-> index b03f601d3a9e..14f8a8357c09 100644
-> --- a/drivers/scsi/ufs/ufs-mediatek.h
-> +++ b/drivers/scsi/ufs/ufs-mediatek.h
-> @@ -6,7 +6,21 @@
->  #ifndef _UFS_MEDIATEK_H
->  #define _UFS_MEDIATEK_H
->
-> -#include <linux/bitops.h>
-> +/*
-> + * Vendor specific UFSHCI Registers
-> + */
-> +#define REG_UFS_REFCLK_CTRL         0x144
-> +
-> +/*
-> + * Ref-clk control
-> + *
-> + * Values for register REG_UFS_REFCLK_CTRL
-> + */
-> +#define REFCLK_RELEASE              0x0
-> +#define REFCLK_REQUEST              BIT(0)
-> +#define REFCLK_ACK                  BIT(1)
-> +
-> +#define REFCLK_REQ_TIMEOUT_MS       3
->
->  /*
->   * Vendor specific pre-defined parameters
-> @@ -34,7 +48,8 @@
->  /*
->   * SiP commands
->   */
-> -#define UFS_MTK_SIP_DEVICE_RESET    BIT(1)
-> +#define UFS_MTK_SIP_DEVICE_RESET          BIT(1)
-> +#define UFS_MTK_SIP_REF_CLK_NOTIFICATION  BIT(3)
->
->  /*
->   * VS_DEBUGCLOCKENABLE
-> @@ -55,6 +70,7 @@ enum {
->  struct ufs_mtk_host {
->         struct ufs_hba *hba;
->         struct phy *mphy;
-> +       bool ref_clk_enabled;
->  };
->
->  #endif /* !_UFS_MEDIATEK_H */
-> --
-> 2.18.0
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+---
+ drivers/clk/Kconfig  | 7 +++++++
+ drivers/clk/Makefile | 2 +-
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
-
-
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index 45653a0e6ecd..880f89c46f6f 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -23,6 +23,13 @@ config COMMON_CLK
+ menu "Common Clock Framework"
+ 	depends on COMMON_CLK
+ 
++config COMMON_CLK_GPIO
++	tristate "GPIO gated clock support"
++	default y
++	---help---
++	  Supports gpio gated clocks, which can be enabled/disabled via
++	  gpio output.
++
+ config COMMON_CLK_WM831X
+ 	tristate "Clock driver for WM831x/2x PMICs"
+ 	depends on MFD_WM831X
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index 0696a0c1ab58..2b614126672a 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -11,7 +11,7 @@ obj-$(CONFIG_COMMON_CLK)	+= clk-multiplier.o
+ obj-$(CONFIG_COMMON_CLK)	+= clk-mux.o
+ obj-$(CONFIG_COMMON_CLK)	+= clk-composite.o
+ obj-$(CONFIG_COMMON_CLK)	+= clk-fractional-divider.o
+-obj-$(CONFIG_COMMON_CLK)	+= clk-gpio.o
++obj-$(CONFIG_COMMON_CLK_GPIO)	+= clk-gpio.o
+ ifeq ($(CONFIG_OF), y)
+ obj-$(CONFIG_COMMON_CLK)	+= clk-conf.o
+ endif
 -- 
-Regards,
-Alim
+2.11.0
+
