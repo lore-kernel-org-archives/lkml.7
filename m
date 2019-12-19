@@ -2,57 +2,59 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0211C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA3DC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 870F124684
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D41EC24685
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781406;
-	bh=C63ypNwTA40y8aoGJ0EuopfgNS+M8vFsGiCfxu7LPi4=;
+	s=default; t=1576781410;
+	bh=v1c71537tIs86q8ejdam2YzLrWXtTFSDO3RrcChXHWE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rDpj6z3q+H6wTee/i9fb1sDqLf5UImjHXdbn4MeyKR3UKJVCTm0bMgBYyFmXFFQna
-	 TMS+5zeBE07P5paGPOKwJF9PJFhWnJ8Hvvl6aiEQbubDkQOez6BkY1Zzf+5uTErko8
-	 Y4LIerkbiUZ3vGQFuyk1UI9/1ul42/UGVCWi2MEE=
+	b=mMgvrfTqAIseNanbtvvhmSu+wd385l84J2vmZCchgcW4FjRjPTGxAMPP4GtEwW1fV
+	 0jJ2oD+tJ+A8eKtRO6JDEEDyN4BTXoAamslnXIvaFa+3yZH0kYkxJUyRnUCrFfKzV8
+	 k8n+rCV36n+btmXs4kkl1h+1f2HxFdB26poY8LmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729921AbfLSSuF (ORCPT
+        id S1729928AbfLSSuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:50:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43728 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:50:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729911AbfLSSuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:50:03 -0500
+        id S1729509AbfLSSuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:50:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C71112465E;
-        Thu, 19 Dec 2019 18:50:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56CCF24682;
+        Thu, 19 Dec 2019 18:50:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781403;
-        bh=C63ypNwTA40y8aoGJ0EuopfgNS+M8vFsGiCfxu7LPi4=;
+        s=default; t=1576781405;
+        bh=v1c71537tIs86q8ejdam2YzLrWXtTFSDO3RrcChXHWE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tn6kOHvp1QTy4at7uI/QXpRpFCQ3sQqgqNJdHwUtqmFdW4M0FWTeLZKJJD3jp6Xhh
-         ubZeg/LBKLNH8HbjyO8sM8w3TMOuolIh/5sMicbmf9Jyzj5Y5qrtqbbQKE5BnwDVa0
-         0ytikn1yU2QuAXYpcUEcBl31O7DjD4vraS1WcyTM=
+        b=p4TE5g4ehk+qGaPIzRE2NNzdiDvTt1PIPJ34f21rpoqpMXOi2vs08cRHboaZVt/SI
+         bsGhPq76Wsu8DWqcs+fb9T0XjWhQ3hPhx4Fbv3AAS2vpYnZynMC2DVW496Fb2vMpny
+         9CGHPKWzN1H5X5mq4o8TPmI7ZEca9DMgubKlm3ls=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 164/199] scsi: qla2xxx: Always check the qla2x00_wait_for_hba_online() return value
-Date:   Thu, 19 Dec 2019 19:34:06 +0100
-Message-Id: <20191219183224.507346963@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+2add91c08eb181fea1bf@syzkaller.appspotmail.com,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 01/36] net: bridge: deny dev_set_mac_address() when unregistering
+Date:   Thu, 19 Dec 2019 19:34:18 +0100
+Message-Id: <20191219182851.939266987@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
-References: <20191219183214.629503389@linuxfoundation.org>
+In-Reply-To: <20191219182848.708141124@linuxfoundation.org>
+References: <20191219182848.708141124@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,65 +63,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-[ Upstream commit e6803efae5acd109fad9f2f07dab674563441a53 ]
+[ Upstream commit c4b4c421857dc7b1cf0dccbd738472360ff2cd70 ]
 
-This patch fixes several Coverity complaints about not always checking
-the qla2x00_wait_for_hba_online() return value.
+We have an interesting memory leak in the bridge when it is being
+unregistered and is a slave to a master device which would change the
+mac of its slaves on unregister (e.g. bond, team). This is a very
+unusual setup but we do end up leaking 1 fdb entry because
+dev_set_mac_address() would cause the bridge to insert the new mac address
+into its table after all fdbs are flushed, i.e. after dellink() on the
+bridge has finished and we call NETDEV_UNREGISTER the bond/team would
+release it and will call dev_set_mac_address() to restore its original
+address and that in turn will add an fdb in the bridge.
+One fix is to check for the bridge dev's reg_state in its
+ndo_set_mac_address callback and return an error if the bridge is not in
+NETREG_REGISTERED.
 
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Tested-by: Himanshu Madhani <hmadhani@marvell.com>
-Reviewed-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Easy steps to reproduce:
+ 1. add bond in mode != A/B
+ 2. add any slave to the bond
+ 3. add bridge dev as a slave to the bond
+ 4. destroy the bridge device
+
+Trace:
+ unreferenced object 0xffff888035c4d080 (size 128):
+   comm "ip", pid 4068, jiffies 4296209429 (age 1413.753s)
+   hex dump (first 32 bytes):
+     41 1d c9 36 80 88 ff ff 00 00 00 00 00 00 00 00  A..6............
+     d2 19 c9 5e 3f d7 00 00 00 00 00 00 00 00 00 00  ...^?...........
+   backtrace:
+     [<00000000ddb525dc>] kmem_cache_alloc+0x155/0x26f
+     [<00000000633ff1e0>] fdb_create+0x21/0x486 [bridge]
+     [<0000000092b17e9c>] fdb_insert+0x91/0xdc [bridge]
+     [<00000000f2a0f0ff>] br_fdb_change_mac_address+0xb3/0x175 [bridge]
+     [<000000001de02dbd>] br_stp_change_bridge_id+0xf/0xff [bridge]
+     [<00000000ac0e32b1>] br_set_mac_address+0x76/0x99 [bridge]
+     [<000000006846a77f>] dev_set_mac_address+0x63/0x9b
+     [<00000000d30738fc>] __bond_release_one+0x3f6/0x455 [bonding]
+     [<00000000fc7ec01d>] bond_netdev_event+0x2f2/0x400 [bonding]
+     [<00000000305d7795>] notifier_call_chain+0x38/0x56
+     [<0000000028885d4a>] call_netdevice_notifiers+0x1e/0x23
+     [<000000008279477b>] rollback_registered_many+0x353/0x6a4
+     [<0000000018ef753a>] unregister_netdevice_many+0x17/0x6f
+     [<00000000ba854b7a>] rtnl_delete_link+0x3c/0x43
+     [<00000000adf8618d>] rtnl_dellink+0x1dc/0x20a
+     [<000000009b6395fd>] rtnetlink_rcv_msg+0x23d/0x268
+
+Fixes: 43598813386f ("bridge: add local MAC address to forwarding table (v2)")
+Reported-by: syzbot+2add91c08eb181fea1bf@syzkaller.appspotmail.com
+Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/scsi/qla2xxx/qla_attr.c   | 3 ++-
- drivers/scsi/qla2xxx/qla_target.c | 7 +++++--
- 2 files changed, 7 insertions(+), 3 deletions(-)
+ net/bridge/br_device.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/scsi/qla2xxx/qla_attr.c b/drivers/scsi/qla2xxx/qla_attr.c
-index 5c3dfd92ea024..33f4181ba9f76 100644
---- a/drivers/scsi/qla2xxx/qla_attr.c
-+++ b/drivers/scsi/qla2xxx/qla_attr.c
-@@ -682,7 +682,8 @@ qla2x00_sysfs_write_reset(struct file *filp, struct kobject *kobj,
- 			break;
- 		} else {
- 			/* Make sure FC side is not in reset */
--			qla2x00_wait_for_hba_online(vha);
-+			WARN_ON_ONCE(qla2x00_wait_for_hba_online(vha) !=
-+				     QLA_SUCCESS);
+--- a/net/bridge/br_device.c
++++ b/net/bridge/br_device.c
+@@ -217,6 +217,12 @@ static int br_set_mac_address(struct net
+ 	if (!is_valid_ether_addr(addr->sa_data))
+ 		return -EADDRNOTAVAIL;
  
- 			/* Issue MPI reset */
- 			scsi_block_requests(vha->host);
-diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
-index 3b20cf8b161e4..b889caa556a0b 100644
---- a/drivers/scsi/qla2xxx/qla_target.c
-+++ b/drivers/scsi/qla2xxx/qla_target.c
-@@ -6341,7 +6341,8 @@ qlt_enable_vha(struct scsi_qla_host *vha)
- 
- 		set_bit(ISP_ABORT_NEEDED, &base_vha->dpc_flags);
- 		qla2xxx_wake_dpc(base_vha);
--		qla2x00_wait_for_hba_online(base_vha);
-+		WARN_ON_ONCE(qla2x00_wait_for_hba_online(base_vha) !=
-+			     QLA_SUCCESS);
- 	}
- }
- EXPORT_SYMBOL(qlt_enable_vha);
-@@ -6371,7 +6372,9 @@ static void qlt_disable_vha(struct scsi_qla_host *vha)
- 
- 	set_bit(ISP_ABORT_NEEDED, &vha->dpc_flags);
- 	qla2xxx_wake_dpc(vha);
--	qla2x00_wait_for_hba_online(vha);
-+	if (qla2x00_wait_for_hba_online(vha) != QLA_SUCCESS)
-+		ql_dbg(ql_dbg_tgt, vha, 0xe081,
-+		       "qla2x00_wait_for_hba_online() failed\n");
- }
- 
- /*
--- 
-2.20.1
-
++	/* dev_set_mac_addr() can be called by a master device on bridge's
++	 * NETDEV_UNREGISTER, but since it's being destroyed do nothing
++	 */
++	if (dev->reg_state != NETREG_REGISTERED)
++		return -EBUSY;
++
+ 	spin_lock_bh(&br->lock);
+ 	if (!ether_addr_equal(dev->dev_addr, addr->sa_data)) {
+ 		/* Mac address will be changed in br_stp_change_bridge_id(). */
 
 
