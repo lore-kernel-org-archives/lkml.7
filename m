@@ -2,118 +2,144 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9864EC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C082C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BCAE24679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:24:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576787064;
-	bh=qMrE3emMTE5uR6NlY5rxlNYIYzbKZtlO1C+g0qnYQdw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rHv3/TMtgBPMt7k7OMVZOG+QiUdI13sxgtEWsOmkmPA2+sDQJk+QiWCg34otBgx1l
-	 bWz98ee7cKXY7GAy4nb/h+wZOVZVxkWNTWV4Vfc9vY1y65GNxLIs2g4JurKfLZDYDE
-	 MlmhEXHXSsnqU8nBGfs4xo1025MeYB8N1uI+9geg=
+	by mail.kernel.org (Postfix) with ESMTP id 79D07227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:26:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727400AbfLSUYX (ORCPT
+        id S1727233AbfLSU0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 15:24:23 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40941 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727252AbfLSUYX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 15:24:23 -0500
-Received: by mail-ed1-f68.google.com with SMTP id b8so6143512edx.7;
-        Thu, 19 Dec 2019 12:24:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=I2+p8NlKry3xnqQ7h3e1FsCdXuJneE8ptKtuMElAYWk=;
-        b=nMXMu1TGK0qXBcv/PnXfsxJUCvsvf38JRy20k3u6k7oGH1MgF78IBpe/qGao9srwGX
-         vM1DMFPpmLWWa7J81mRopHWtQ7UwY6MxVNd+md/VpgXN35IX/LBKQvBJX+veWH5FDQL4
-         5d4tfGHPXzWWtw5pqIdzIIpIgv9/o88t7ABgiJFKR68MASCb9xqKLrGyyp1TcGi0DpYa
-         DEawLULNekK/07sW2NlnDnLTPKFlac3pzXs167GipcO0wZjvqNMfItmS1pqqCeq4dTAr
-         3T3NEDq8kc/P4zUOlc1LPuJ1eDxsnKKgw8QUil+h3pTq/vq6e0cR9OjgM8QixgGcwMWX
-         soBw==
-X-Gm-Message-State: APjAAAXuKSzDVi319jT1oW6YjhfKB09UWAzMqd6vOZnBLSUze0VGiJcS
-        UdAaYo5gXIwR20e/F/kfp9yQbro+
-X-Google-Smtp-Source: APXvYqy4wHEYCmq60laSfl3Ysp1g1eN7aV16Sr1zaPlCXaAZmYXLUO9xup1nfJuWHZOjf/BRvn2+nw==
-X-Received: by 2002:a17:906:ce2e:: with SMTP id sd14mr11879029ejb.190.1576787060915;
-        Thu, 19 Dec 2019 12:24:20 -0800 (PST)
-Received: from kozik-lap ([194.230.155.234])
-        by smtp.googlemail.com with ESMTPSA id v2sm731841ejj.44.2019.12.19.12.24.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 19 Dec 2019 12:24:19 -0800 (PST)
-Date:   Thu, 19 Dec 2019 21:24:17 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Kamil Konieczny <k.konieczny@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v2 2/2] ARM: dts: exynos: Adjust bus related OPPs to the
- values correct for Odroids
-Message-ID: <20191219202417.GB22054@kozik-lap>
-References: <20191219105130.29394-1-m.szyprowski@samsung.com>
- <CGME20191219105136eucas1p1d57974e96a166308b4a692d1783936f8@eucas1p1.samsung.com>
- <20191219105130.29394-3-m.szyprowski@samsung.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191219105130.29394-3-m.szyprowski@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 19 Dec 2019 15:26:33 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49788 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726908AbfLSU0d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 15:26:33 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 4AEDDB3A2;
+        Thu, 19 Dec 2019 20:26:31 +0000 (UTC)
+Message-ID: <1576787539.8929.15.camel@suse.cz>
+Subject: Re: [PATCH v4 3/6] x86,sched: Add support for frequency invariance
+ on XEON_PHI_KNL/KNM
+From:   Giovanni Gherdovich <ggherdovich@suse.cz>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
+        Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>, x86@kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Paul Turner <pjt@google.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Quentin Perret <qperret@qperret.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Doug Smythies <dsmythies@telus.net>
+Date:   Thu, 19 Dec 2019 21:32:19 +0100
+In-Reply-To: <20191218202236.GJ11457@worktop.programming.kicks-ass.net>
+References: <20191113124654.18122-1-ggherdovich@suse.cz>
+         <20191113124654.18122-4-ggherdovich@suse.cz>
+         <20191218202236.GJ11457@worktop.programming.kicks-ass.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 11:51:30AM +0100, Marek Szyprowski wrote:
-> Hardkernel's Odroid XU3/XU4/HC1 boards use bootloader, which configures top
-> PLLs to the following values: MPLL: 532MHz, CPLL: 666MHz and DPLL: 600MHz.
+On Wed, 2019-12-18 at 21:22 +0100, Peter Zijlstra wrote:
+> On Wed, Nov 13, 2019 at 01:46:51PM +0100, Giovanni Gherdovich wrote:
+> > The scheduler needs the ratio freq_curr/freq_max for frequency-invariant
+> > accounting. On Xeon Phi CPUs set freq_max to the second-highest frequency
+> > reported by the CPU.
+> > 
+> > Xeon Phi CPUs such as Knights Landing and Knights Mill typically have either
+> > one or two turbo frequencies; in the former case that's 100 MHz above the base
+> > frequency, in the latter case the two levels are 100 MHz and 200 MHz above
+> > base frequency.
+> > 
+> > We set freq_max to the second-highest frequency reported by the CPU. This
+> > could be the base frequency (if only one turbo level is available) or the first
+> > turbo level (if two levels are available). The rationale is to compromise
+> > between power efficiency or performance -- going straight to max turbo would
+> > favor efficiency and blindly using base freq would favor performance.
+> > 
+> > For reference, this is how MSR_TURBO_RATIO_LIMIT must be parsed on a Xeon Phi
+> > to get the available frequencies (taken from a comment in turbostat's sources):
+> > 
+> >     [0] -- Reserved
+> >     [7:1] -- Base value of number of active cores of bucket 1.
+> >     [15:8] -- Base value of freq ratio of bucket 1.
+> >     [20:16] -- +ve delta of number of active cores of bucket 2.
+> >     i.e. active cores of bucket 2 =
+> >     active cores of bucket 1 + delta
+> >     [23:21] -- Negative delta of freq ratio of bucket 2.
+> >     i.e. freq ratio of bucket 2 =
+> >     freq ratio of bucket 1 - delta
+> >     [28:24]-- +ve delta of number of active cores of bucket 3.
+> >     [31:29]-- -ve delta of freq ratio of bucket 3.
+> >     [36:32]-- +ve delta of number of active cores of bucket 4.
+> >     [39:37]-- -ve delta of freq ratio of bucket 4.
+> >     [44:40]-- +ve delta of number of active cores of bucket 5.
+> >     [47:45]-- -ve delta of freq ratio of bucket 5.
+> >     [52:48]-- +ve delta of number of active cores of bucket 6.
+> >     [55:53]-- -ve delta of freq ratio of bucket 6.
+> >     [60:56]-- +ve delta of number of active cores of bucket 7.
+> >     [63:61]-- -ve delta of freq ratio of bucket 7.
 > 
-> Adjust all bus related OPPs to the values that are possible to derive from
-> the top PLL configured by the bootloader. Also add a comment for each bus
-> describing which PLL is used for it.
+> Does it make sense to write a complete decoder and pass a @size
+> parameter just like the skx/glm case?
 > 
-> The most significant change is the highest rate for wcore bus. It has been
-> increased to 532MHz as this is the value configured initially by the
-> bootloader. Also the voltage for this OPP is changed to match the value
-> set by the bootloader.
-> 
-> This patch finally allows the buses to operate on the rates matching the
-> values set for each OPP and fixes the following warnings observed on boot:
-> 
-> exynos-bus: new bus device registered: soc:bus_wcore ( 84000 KHz ~ 400000 KHz)
-> exynos-bus: new bus device registered: soc:bus_noc ( 67000 KHz ~ 100000 KHz)
-> exynos-bus: new bus device registered: soc:bus_fsys_apb (100000 KHz ~ 200000 KHz)
-> ...
-> exynos-bus soc:bus_wcore: dev_pm_opp_set_rate: failed to find current OPP for freq 532000000 (-34)
-> exynos-bus soc:bus_noc: dev_pm_opp_set_rate: failed to find current OPP for freq 111000000 (-34)
-> exynos-bus soc:bus_fsys_apb: dev_pm_opp_set_rate: failed to find current OPP for freq 222000000 (-34)
-> 
-> The problem with setting incorrect (in some cases much lower) clock rate
-> for the defined OPP were there from the beginning, but went unnoticed
-> because the only way to observe it was to manually check the rate of the
-> respective clocks. The commit 4294a779bd8d ("PM / devfreq: exynos-bus:
-> Convert to use dev_pm_opp_set_rate()") finally revealed it, because it
-> enabled use of the generic code from the OPP framework, which issues the
-> above mentioned warnings.
-> 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 76 +++++++++++--------
+> (I've no idea on the 4 I passed in, probably wants to be something else)
 
-Thanks, applied.
+I see your point: it's better to have a @size parameter so that if there is a
+better value, we can easily change the number in the future. It also uniforms
+to how the others are handled.
 
-Best regards,
-Krzysztof
+But from the little I've learned on Xeon Phi, the best parameter to
+characterize the choice is not the @size of the buckets, but the number of
+non-zero @delta's of freq ratio that you encounter while parsing the MSR.
 
+The number of those non-zero freq ratio @delta's corresponds to how many freq
+ratios you can have, and the documentation says this can be either 1 or 2. My
+"documentation" is actually the 4-pages leaflet at [1], but I breafly asked
+Len Brown and he said it made sense. So that's how I would parametrize the
+code.
+
+If I use your function, in order to extract the max_freq value I want from the
+Xeon Phi machine I have, @size should be a number between 31 and 68 cores (see
+example below). Not that there is anything wrong with 31 <= size <= 68, it's
+just that I can make an assumption on how many freq ratios there are and
+I'd like to do it.
+
+My Xeon Phi test machine:
+
+Xeon Phi CPU 7255 (Knights Mill)
+
+    Max Efficiency:   1000 MHz
+    Base Frequency:   1100 MHz
+    68 cores turbo:   1100 MHz
+    30 cores turbo:   1200 MHz
+
+You can see the above has only 1 non-zero delta freq ratio; the base freq is
+1100 MHz and max turbo is 1100+100 MHz.
+
+If I could at least check a Knights Landing (which I don't have) and confirm
+that 31 <= size gives me the second-highest freq ratio, I'd use your function,
+but at the moment using @delta as a parameter seems safer.
+
+[1] https://www.intel.com/content/dam/www/public/us/en/documents/product-briefs/xeon-phi-processor-product-brief.pdf
+---> footnote #3, last page:
+   "Frequency listed is nominal (non-AVX) TDP frequency. For all-tile turbo
+   frequency, add 100 MHz. For single-tile turbo frequency, add 200 MHz. For
+   high-AVX instruction frequency, subtract 200 MHz."
