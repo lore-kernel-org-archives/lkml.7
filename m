@@ -2,141 +2,402 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB68C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 401C8C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2024B24676
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2FA124672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:25:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GcIQFBxC"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="YUiCe7Ct"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfLSOZb (ORCPT
+        id S1726884AbfLSOZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 09:25:31 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:33496 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbfLSOZb (ORCPT
+        Thu, 19 Dec 2019 09:25:37 -0500
+Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:46578 "EHLO
+        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbfLSOZg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 09:25:31 -0500
-Received: by mail-io1-f67.google.com with SMTP id z8so5942570ioh.0;
-        Thu, 19 Dec 2019 06:25:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7XnF/uehLL84V1vkG+Snc8Ul1hkW/yuH+aVf155kbS4=;
-        b=GcIQFBxCUDQnZv4JORlyc6AJAPDoWIQkad1VCZEHwSk4CYCaxgaaELYyObtNudWhLu
-         DdqB1OgWOg7zyTGLuXc2wSMF/OnK6lRWfPoo8YIhk5RLr0PJBzNni0QC77pIzgniqzHp
-         kN5C71xyD/btbzMeAIjkFUB7RHSYr+0pZJrQmp/orAw2GP5W4b0vzx7ZasU4r/y6+ir8
-         LNOGignP3BcqPOW0+OpmSE4YL0IpMC4A51+QkOY5id+Em5nC/fUdSA9DP+Sy3mtygF4D
-         0qgUkjGjnAYr5d5+FWh8QG5K0zrTTFrqtx8Y4NDcb+nNyW9vEt1y0ivEleN3djCsMBNW
-         X57g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7XnF/uehLL84V1vkG+Snc8Ul1hkW/yuH+aVf155kbS4=;
-        b=Hjp6QmYJrrw2VRid1IgeVbX77gJUcRVtOdMScHnbv3LCjKHsfd3J+yR2NHIDkbqjxh
-         mVeSiIwLlnli/uJj1GEyZtiZNm2UM2XCSb71yjQ4i5JmuXmj7Kdb6P9/I/7VXvkcy5ug
-         XPGcjliKj+GwTvaDRG6x4wytZO7UgzFA6vqp0D0XGOX4QFAO82DTKdaFbMIkwnnyeA+I
-         LJAZ4hghtfghJ/Bws/uEu0ctZwo446RsSp2V2eVXAAMPoF2KL7vd1ODKCkEg/PqRIO2+
-         KBV3QHsy2ON6ZZC4d7e2QcUyDkbqnrl6tgxQoNsev2QGOjLZq9wCJnfXZPxl5HAFv5ru
-         DiFg==
-X-Gm-Message-State: APjAAAU9uaSeFdUj39jyYtV36G7nlP2RORt6fDg7vSza6Cxmem562oFY
-        WtJWVicjsVrvdoQyboFfs7ADRcV6emzV8uvQj9o=
-X-Google-Smtp-Source: APXvYqxV8p46grVHwtLDZow1CVwGexIWq2/WeOp2R1mxJR2VAMQLIcTNTaK0Otep4R6omcV1hDFNmaAuZfn2Fm9RcS0=
-X-Received: by 2002:a5d:9c4e:: with SMTP id 14mr6220184iof.166.1576765530409;
- Thu, 19 Dec 2019 06:25:30 -0800 (PST)
+        Thu, 19 Dec 2019 09:25:36 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id 0C9223F56D;
+        Thu, 19 Dec 2019 15:25:32 +0100 (CET)
+Authentication-Results: pio-pvt-msa3.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=YUiCe7Ct;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id I60xfnlLkZNV; Thu, 19 Dec 2019 15:25:31 +0100 (CET)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id 9E0F03F36C;
+        Thu, 19 Dec 2019 15:25:27 +0100 (CET)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id D35AF362181;
+        Thu, 19 Dec 2019 15:25:26 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1576765526; bh=niqHVsFvQhKbn8CvlqAU52ZE2QPl5ayylq2haagZqWQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=YUiCe7CtAFE0TCfp9djv5vGSGk9Sv+V5m4ERWopwwABT92Iwake6Va72jfLnHhpSG
+         OeZge/ApNXUPtlYHxfrIZput8szSqBNbF2/g4xeOwzx2LKUXL+l9ebhEBiRufQwHp7
+         t0SaW0eyHCTcNuHEfaefYbgp57g1/sdk8LbLeEig=
+Subject: Re: [PATCH v17 11/23] mm: pagewalk: Add p4d_entry() and pgd_entry()
+To:     Steven Price <steven.price@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+References: <20191218162402.45610-1-steven.price@arm.com>
+ <20191218162402.45610-12-steven.price@arm.com>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <9ea2f1a2-5ec0-c21c-e725-334b6bf2886d@shipmail.org>
+Date:   Thu, 19 Dec 2019 15:25:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <091562cbe7d88ca1c30638bc10197074@codeaurora.org>
- <20191217041342.GM2536@vkoul-mobl> <763d7b30593b31646f3c198c2be99671@codeaurora.org>
- <20191217092433.GN2536@vkoul-mobl> <fc8952a0eee5c010fe14e5f107d89e64@codeaurora.org>
- <20191217150852.GO2536@vkoul-mobl> <CAOCk7Np691Hau1FdJqWs1UY6jvEvYfzA6NnG9U--ZcRsuV5=Zw@mail.gmail.com>
- <75f7065d08f450c6cbb2b2662658ecaa@codeaurora.org> <20191218041200.GP2536@vkoul-mobl>
- <983c21bb5ad2d38e11c074528d8898b9@codeaurora.org> <20191219142145.GV2536@vkoul-mobl>
-In-Reply-To: <20191219142145.GV2536@vkoul-mobl>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Thu, 19 Dec 2019 07:25:19 -0700
-Message-ID: <CAOCk7NrKRXsTffNyQFt_tQmdNq7+SaH+kAJVk8AAPJWJjPxYYw@mail.gmail.com>
-Subject: Re: [PATCH v5 2/7] scsi: ufs-qcom: Add reset control support for host controller
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Can Guo <cang@codeaurora.org>, asutoshd@codeaurora.org,
-        nguyenb@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, Mark Salyzyn <salyzyn@google.com>,
-        Andy Gross <agross@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191218162402.45610-12-steven.price@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 7:21 AM Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 19-12-19, 15:12, cang@codeaurora.org wrote:
-> > On 2019-12-18 12:12, Vinod Koul wrote:
-> > > On 18-12-19, 02:44, cang@codeaurora.org wrote:
->
-> >
-> > Aside of the phy settings, your DT needs some modifications too,
-> > seems you copied most of them from sdm845.
-> > https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git/commit/?h=for-next&id=3834a2e92229ef26d30de28acb698b2b23d3e397
-> >
-> > <--snip-->
-> > > +           ufs_mem_phy: phy@1d87000 {
-> > > +                   compatible = "qcom,sm8150-qmp-ufs-phy";
-> > > +                   reg = <0 0x01d87000 0 0x18c>;
-> >
-> > The size 0x18c is wrong, in the code you are even accessing registers
-> > whose offsets are beyond 0x18c, see
-> >
-> > #define QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE1_MODE0     0x1ac
-> > #define QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE2_MODE0     0x1b0
-> > #define QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE1_MODE1     0x1b4
-> > #define QSERDES_V4_COM_BIN_VCOCAL_HSCLK_SEL           0x1bc
-> > #define QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE2_MODE1     0x1b8
-> >
-> > FYI, the total size of serdes registers is 0x1c0.
->
-> Yeah I will update it to 0x1c0
->
-> >
-> > <--snip-->
-> > > +                   ufs_mem_phy_lanes: lanes@1d87400 {
-> > > +                           reg = <0 0x01d87400 0 0x108>,
-> > > +                                 <0 0x01d87600 0 0x1e0>,
-> > > +                                 <0 0x01d87c00 0 0x1dc>,
-> >
-> > Same as above, see
-> >
-> > #define QPHY_V4_MULTI_LANE_CTRL1                      0x1e0
-> >
-> > FYI, the total size of PCS registers is 0x200
-> >
-> > > +                                 <0 0x01d87800 0 0x108>,
-> > > +                                 <0 0x01d87a00 0 0x1e0>;
-> > > +                           #phy-cells = <0>;
-> > > +                   };
-> > <--snip-->
->
-> So I managed to fix it by configuring QPHY_SW_RESET in
-> qcom_qmp_phy_com_init() before invoking the configuration. That makes it
-> work for me. Will send patches shortly
+Hi, Steven,
 
-So, you are going to send some fixes to make sm8150 work.  We also
-need the extended timeout for all platforms, yes?  Who is going to
-send up the patch for the timeout?  All of this should be -rc material
-since Can's change caused these issues to appear, and thus impact
-users, no?
+
+On 12/18/19 5:23 PM, Steven Price wrote:
+> pgd_entry() and pud_entry() were removed by commit 0b1fbfe50006c410
+> ("mm/pagewalk: remove pgd_entry() and pud_entry()") because there were
+> no users. We're about to add users so reintroduce them, along with
+> p4d_entry() as we now have 5 levels of tables.
+>
+> Note that commit a00cc7d9dd93d66a ("mm, x86: add support for
+> PUD-sized transparent hugepages") already re-added pud_entry() but with
+> different semantics to the other callbacks. This commit reverts the
+> semantics back to match the other callbacks.
+>
+> To support hmm.c which now uses the new semantics of pud_entry() a new
+> member ('action') of struct mm_walk is added which allows the callbacks
+> to either descend (ACTION_SUBTREE, the default), skip (ACTION_CONTINUE)
+> or repeat the callback (ACTION_AGAIN). hmm.c is then updated to call
+> pud_trans_huge_lock() itself and make use of the splitting/retry logic
+> of the core code.
+>
+> After this change pud_entry() is called for all entries, not just
+> transparent huge pages.
+>
+> Signed-off-by: Steven Price <steven.price@arm.com>
+
+I have a couple of comments that are actually mostly related to 
+pre-existing bugs, but that affect code that are touched by this patch.
+
+Perhaps this is most cleanly addressed by a follow-up patch. Up to you 
+to decide.
+
+Since these problems are pre-existing,
+
+Reviewed-by: Thomas Hellstrom <thellstrom@vmware.com>
+
+Thanks,
+
+Thomas
+
+
+> ---
+>   include/linux/pagewalk.h | 34 ++++++++++++++++++++-----
+>   mm/hmm.c                 | 55 ++++++++++++++++++++++------------------
+>   mm/pagewalk.c            | 50 +++++++++++++++++++++++++-----------
+>   3 files changed, 94 insertions(+), 45 deletions(-)
+>
+> diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
+> index 6ec82e92c87f..aa6a0b63964e 100644
+> --- a/include/linux/pagewalk.h
+> +++ b/include/linux/pagewalk.h
+> @@ -8,15 +8,15 @@ struct mm_walk;
+>   
+>   /**
+>    * mm_walk_ops - callbacks for walk_page_range
+> - * @pud_entry:		if set, called for each non-empty PUD (2nd-level) entry
+> - *			this handler should only handle pud_trans_huge() puds.
+> - *			the pmd_entry or pte_entry callbacks will be used for
+> - *			regular PUDs.
+> - * @pmd_entry:		if set, called for each non-empty PMD (3rd-level) entry
+> + * @pgd_entry:		if set, called for each non-empty PGD (top-level) entry
+> + * @p4d_entry:		if set, called for each non-empty P4D entry
+> + * @pud_entry:		if set, called for each non-empty PUD entry
+> + * @pmd_entry:		if set, called for each non-empty PMD entry
+>    *			this handler is required to be able to handle
+>    *			pmd_trans_huge() pmds.  They may simply choose to
+>    *			split_huge_page() instead of handling it explicitly.
+> - * @pte_entry:		if set, called for each non-empty PTE (4th-level) entry
+> + * @pte_entry:		if set, called for each non-empty PTE (lowest-level)
+> + *			entry
+>    * @pte_hole:		if set, called for each hole at all levels
+>    * @hugetlb_entry:	if set, called for each hugetlb entry
+>    * @test_walk:		caller specific callback function to determine whether
+> @@ -27,8 +27,15 @@ struct mm_walk;
+>    * @pre_vma:            if set, called before starting walk on a non-null vma.
+>    * @post_vma:           if set, called after a walk on a non-null vma, provided
+>    *                      that @pre_vma and the vma walk succeeded.
+> + *
+> + * p?d_entry callbacks are called even if those levels are folded on a
+> + * particular architecture/configuration.
+>    */
+>   struct mm_walk_ops {
+> +	int (*pgd_entry)(pgd_t *pgd, unsigned long addr,
+> +			 unsigned long next, struct mm_walk *walk);
+> +	int (*p4d_entry)(p4d_t *p4d, unsigned long addr,
+> +			 unsigned long next, struct mm_walk *walk);
+>   	int (*pud_entry)(pud_t *pud, unsigned long addr,
+>   			 unsigned long next, struct mm_walk *walk);
+>   	int (*pmd_entry)(pmd_t *pmd, unsigned long addr,
+> @@ -47,11 +54,25 @@ struct mm_walk_ops {
+>   	void (*post_vma)(struct mm_walk *walk);
+>   };
+>   
+> +/*
+> + * Action for pud_entry / pmd_entry callbacks.
+> + * ACTION_SUBTREE is the default
+> + */
+> +enum page_walk_action {
+> +	/* Descend to next level, splitting huge pages if needed and possible */
+> +	ACTION_SUBTREE = 0,
+> +	/* Continue to next entry at this level (ignoring any subtree) */
+> +	ACTION_CONTINUE = 1,
+> +	/* Call again for this entry */
+> +	ACTION_AGAIN = 2
+> +};
+> +
+>   /**
+>    * mm_walk - walk_page_range data
+>    * @ops:	operation to call during the walk
+>    * @mm:		mm_struct representing the target process of page table walk
+>    * @vma:	vma currently walked (NULL if walking outside vmas)
+> + * @action:	next action to perform (see enum page_walk_action)
+>    * @private:	private data for callbacks' usage
+>    *
+>    * (see the comment on walk_page_range() for more details)
+> @@ -60,6 +81,7 @@ struct mm_walk {
+>   	const struct mm_walk_ops *ops;
+>   	struct mm_struct *mm;
+>   	struct vm_area_struct *vma;
+> +	enum page_walk_action action;
+>   	void *private;
+>   };
+>   
+> diff --git a/mm/hmm.c b/mm/hmm.c
+> index d379cb6496ae..05241c82e05c 100644
+> --- a/mm/hmm.c
+> +++ b/mm/hmm.c
+> @@ -477,20 +477,30 @@ static int hmm_vma_walk_pud(pud_t *pudp, unsigned long start, unsigned long end,
+>   	unsigned long addr = start, next;
+>   	pmd_t *pmdp;
+>   	pud_t pud;
+> -	int ret;
+> +	int ret = 0;
+> +	spinlock_t *ptl = pud_trans_huge_lock(pudp, walk->vma);
+> +
+> +	if (!ptl)
+> +		return 0;
+
+Since if we didn't get the PTL here, the pud might be unstable in which 
+case we want to retry:
+
+if (!ptl) {
+	if (pud_trans_unstable(pudp))
+		walk->action = ACTION_AGAIN;
+	return 0;
+}
+
+
+> +
+> +	/* Normally we don't want to split the huge page */
+> +	walk->action = ACTION_CONTINUE;
+>   
+> -again:
+>   	pud = READ_ONCE(*pudp);
+
+We have the lock now, so READ_ONCE could probably be a simple dereference.
+
+> -	if (pud_none(pud))
+> -		return hmm_vma_walk_hole(start, end, walk);
+> +	if (pud_none(pud)) {
+> +		ret = hmm_vma_walk_hole(start, end, walk);
+> +		goto out_unlock;
+> +	}
+
+pud_trans_huge_lock() successful return means pud_none() is always false.
+
+
+>   
+>   	if (pud_huge(pud) && pud_devmap(pud)) {
+>   		unsigned long i, npages, pfn;
+>   		uint64_t *pfns, cpu_flags;
+>   		bool fault, write_fault;
+>   
+> -		if (!pud_present(pud))
+> -			return hmm_vma_walk_hole(start, end, walk);
+> +		if (!pud_present(pud)) {
+> +			ret = hmm_vma_walk_hole(start, end, walk);
+> +			goto out_unlock;
+> +		}
+
+Can't see !pud_present happening either after a succesful 
+pud_trans_huge_lock().
+
+>   
+>   		i = (addr - range->start) >> PAGE_SHIFT;
+>   		npages = (end - addr) >> PAGE_SHIFT;
+> @@ -499,16 +509,20 @@ static int hmm_vma_walk_pud(pud_t *pudp, unsigned long start, unsigned long end,
+>   		cpu_flags = pud_to_hmm_pfn_flags(range, pud);
+>   		hmm_range_need_fault(hmm_vma_walk, pfns, npages,
+>   				     cpu_flags, &fault, &write_fault);
+> -		if (fault || write_fault)
+> -			return hmm_vma_walk_hole_(addr, end, fault,
+> -						write_fault, walk);
+> +		if (fault || write_fault) {
+> +			ret = hmm_vma_walk_hole_(addr, end, fault,
+> +						 write_fault, walk);
+> +			goto out_unlock;
+> +		}
+>   
+>   		pfn = pud_pfn(pud) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
+>   		for (i = 0; i < npages; ++i, ++pfn) {
+>   			hmm_vma_walk->pgmap = get_dev_pagemap(pfn,
+>   					      hmm_vma_walk->pgmap);
+> -			if (unlikely(!hmm_vma_walk->pgmap))
+> -				return -EBUSY;
+> +			if (unlikely(!hmm_vma_walk->pgmap)) {
+> +				ret = -EBUSY;
+> +				goto out_unlock;
+> +			}
+>   			pfns[i] = hmm_device_entry_from_pfn(range, pfn) |
+>   				  cpu_flags;
+>   		}
+> @@ -517,22 +531,15 @@ static int hmm_vma_walk_pud(pud_t *pudp, unsigned long start, unsigned long end,
+>   			hmm_vma_walk->pgmap = NULL;
+>   		}
+>   		hmm_vma_walk->last = end;
+> -		return 0;
+> +		goto out_unlock;
+>   	}
+>   
+> -	split_huge_pud(walk->vma, pudp, addr);
+> -	if (pud_none(*pudp))
+> -		goto again;
+> +	/* Ask for the PUD to be split */
+> +	walk->action = ACTION_SUBTREE;
+>   
+> -	pmdp = pmd_offset(pudp, addr);
+> -	do {
+> -		next = pmd_addr_end(addr, end);
+> -		ret = hmm_vma_walk_pmd(pmdp, addr, next, walk);
+> -		if (ret)
+> -			return ret;
+> -	} while (pmdp++, addr = next, addr != end);
+> -
+> -	return 0;
+> +out_unlock:
+> +	spin_unlock(ptl);
+> +	return ret;
+>   }
+>   #else
+>   #define hmm_vma_walk_pud	NULL
+> diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+> index ea0b9e606ad1..690af44609e2 100644
+> --- a/mm/pagewalk.c
+> +++ b/mm/pagewalk.c
+> @@ -46,6 +46,9 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
+>   				break;
+>   			continue;
+>   		}
+> +
+> +		walk->action = ACTION_SUBTREE;
+> +
+>   		/*
+>   		 * This implies that each ->pmd_entry() handler
+>   		 * needs to know about pmd_trans_huge() pmds
+> @@ -55,16 +58,21 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
+>   		if (err)
+>   			break;
+>   
+> +		if (walk->action == ACTION_AGAIN)
+> +			goto again;
+> +
+>   		/*
+>   		 * Check this here so we only break down trans_huge
+>   		 * pages when we _need_ to
+>   		 */
+> -		if (!ops->pte_entry)
+> +		if (walk->action == ACTION_CONTINUE ||
+> +		    !(ops->pte_entry))
+>   			continue;
+>   
+>   		split_huge_pmd(walk->vma, pmd, addr);
+>   		if (pmd_trans_unstable(pmd))
+>   			goto again;
+> +
+>   		err = walk_pte_range(pmd, addr, next, walk);
+>   		if (err)
+>   			break;
+> @@ -93,24 +101,25 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
+>   			continue;
+>   		}
+>   
+> -		if (ops->pud_entry) {
+> -			spinlock_t *ptl = pud_trans_huge_lock(pud, walk->vma);
+> +		walk->action = ACTION_SUBTREE;
+>   
+> -			if (ptl) {
+> -				err = ops->pud_entry(pud, addr, next, walk);
+> -				spin_unlock(ptl);
+> -				if (err)
+> -					break;
+> -				continue;
+> -			}
+> -		}
+> +		if (ops->pud_entry)
+> +			err = ops->pud_entry(pud, addr, next, walk);
+> +		if (err)
+> +			break;
+> +
+> +		if (walk->action == ACTION_AGAIN)
+> +			goto again;
+> +
+> +		if (walk->action == ACTION_CONTINUE ||
+> +		    !(ops->pmd_entry || ops->pte_entry))
+> +			continue;
+>   
+>   		split_huge_pud(walk->vma, pud, addr);
+>   		if (pud_none(*pud))
+
+Here we should really have
+
+if (pud_trans_unstable(pud))
+
+Thanks,
+
+Thomas
+
+
