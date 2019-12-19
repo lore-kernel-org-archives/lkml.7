@@ -4,87 +4,121 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A95C1C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D273CC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F1A3206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5DE024687
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576796789;
-	bh=aCc4V1SetCaYPJhiek9ShfdR6T4K99gcjC0HqhEv1Sg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oEFk9KcQS4jNSFb0hiagfa9HbLg96MP0t7erqtWnbaTNSY6VCLxRTQgUTTqyFpidE
-	 IOuy37WHhfAyTl4qD8bGkOVPgLqqLza1xwz7QcbH6TbELAEPLzauY0QjsoVrgqqMMM
-	 Y69KbsYwELENMC6YmRqYi9+aM+o4OJTGrq+nyNFY=
+	s=default; t=1576796812;
+	bh=imXzRId1FfdZp3azJNBG+sfBPqv4ACjNC0Dv6iLe+38=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=s1ryVzDXppPQmYk9w/jbGoPYLHerh5I1SveKGMH2i5Qyi5AolhLX1JU74VdrGJCEK
+	 Wwn2lDMDakSJ0puBVX3S70Y+0eZnPyGMsOewRkvOxgwUvhnQSr4LmiutxojsahOs4z
+	 +sdgMtHuoJhMdEKVLL5jkwkYsgFCUEMUioXCuHs4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbfLSXG2 (ORCPT
+        id S1727192AbfLSXGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 18:06:28 -0500
-Received: from mail-oi1-f176.google.com ([209.85.167.176]:39059 "EHLO
-        mail-oi1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbfLSXG2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 18:06:28 -0500
-Received: by mail-oi1-f176.google.com with SMTP id a67so3867436oib.6;
-        Thu, 19 Dec 2019 15:06:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=1yZH8V3CdOmQjuS73Msz5ZyhW6PkWuP2FDRhP7F/Hfk=;
-        b=M22OEG23pCc0+BccflyxWyi2vEZ2XxqgB0Vk/dE61KnVg4elHxlmdBIshGCFjjEh91
-         wBGGfVSWTkQWIIStfYfX/AoeaEx6ez3xkfbSKKlpSesKSfJMlmhPDVcHsH9Q1//kZlcA
-         Oin+71n/nqOv0RkbnkyKjLLAKlzBw4W7ql8f58nki+6pwq9gVoK3P3dF6sI0/40Kn6vt
-         zDZD+N8kYMZTu4vHREkbsXjvkzt7WoipAp+gVK+PsWcfB9fTC0ZSTX8VN7z6WeuWRVEp
-         c8cqMlCrPOjXPPSZ1jipCRuOvu7WEWckwX6kuKZFRnhOkEiheNZWnNwtaIgUSyiyG21d
-         Ln+g==
-X-Gm-Message-State: APjAAAUMIwfWKSwCeK0LEXqWUnTFsJFxLye/ErbpHXBhTfgWvvXVVgjh
-        gfHgtvpDMdqfIcKCZguLEA==
-X-Google-Smtp-Source: APXvYqwSIAXcQUDg2gX98PBOc+oiM4Gom1haSyaRLuef1KLWXsxmd15JOd90nbJsIeaJwD3TBVTLrQ==
-X-Received: by 2002:aca:f445:: with SMTP id s66mr3072290oih.95.1576796787716;
-        Thu, 19 Dec 2019 15:06:27 -0800 (PST)
-Received: from localhost (ip-184-205-174-147.ftwttx.spcsdns.net. [184.205.174.147])
-        by smtp.gmail.com with ESMTPSA id m68sm2497501oig.50.2019.12.19.15.06.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 15:06:27 -0800 (PST)
-Date:   Thu, 19 Dec 2019 17:06:25 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc:     linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [RFC 16/25] dt-bindings: leds: tm1628: Add Fude Microelectronics
- AiP1618
-Message-ID: <20191219230625.GA7332@bogus>
-References: <20191212033952.5967-1-afaerber@suse.de>
- <20191212033952.5967-17-afaerber@suse.de>
+        Thu, 19 Dec 2019 18:06:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55602 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726818AbfLSXGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 18:06:51 -0500
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19523206EC;
+        Thu, 19 Dec 2019 23:06:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576796810;
+        bh=imXzRId1FfdZp3azJNBG+sfBPqv4ACjNC0Dv6iLe+38=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=0GFwryPKVyZuEI5v3GPvQaVSQhp51JLdZMxUwaEdCh3+TGIN7GXXygBvV0F0FOMaf
+         xUiHXrlAlUMJyui26/5fYqMmcYlxS+3Eu3m97B+XoyWMBd8wiqiTiE7XdLt6KdTEgO
+         RSerz+eFlcmA+c7oZxAt505giRxZdw31gLg8fyeo=
+Date:   Thu, 19 Dec 2019 18:06:49 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     dsterba@suse.cz, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.4 299/350] btrfs: don't prematurely free work
+ in end_workqueue_fn()
+Message-ID: <20191219230649.GT17708@sasha-vm>
+References: <20191210210735.9077-1-sashal@kernel.org>
+ <20191210210735.9077-260-sashal@kernel.org>
+ <20191212121103.GR3929@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191212033952.5967-17-afaerber@suse.de>
+In-Reply-To: <20191212121103.GR3929@suse.cz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019 04:39:43 +0100, =?UTF-8?q?Andreas=20F=C3=A4rber?= wrote:
-> Define a compatible string for AiP1618 chipset.
-> 
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
-> ---
->  @Rob: This one would conditionally need to further restrict reg ranges then.
->  
->  Documentation/devicetree/bindings/leds/titanmec,tm1628.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+On Thu, Dec 12, 2019 at 01:11:03PM +0100, David Sterba wrote:
+>On Tue, Dec 10, 2019 at 04:06:44PM -0500, Sasha Levin wrote:
+>> From: Omar Sandoval <osandov@fb.com>
+>>
+>> [ Upstream commit 9be490f1e15c34193b1aae17da58e14dd9f55a95 ]
+>>
+>> Currently, end_workqueue_fn() frees the end_io_wq entry (which embeds
+>> the work item) and then calls bio_endio(). This is another potential
+>> instance of the bug in "btrfs: don't prematurely free work in
+>> run_ordered_work()".
+>>
+>> In particular, the endio call may depend on other work items. For
+>> example, btrfs_end_dio_bio() can call btrfs_subio_endio_read() ->
+>> __btrfs_correct_data_nocsum() -> dio_read_error() ->
+>> submit_dio_repair_bio(), which submits a bio that is also completed
+>> through a end_workqueue_fn() work item. However,
+>> __btrfs_correct_data_nocsum() waits for the newly submitted bio to
+>> complete, thus it depends on another work item.
+>>
+>> This example currently usually works because we use different workqueue
+>> helper functions for BTRFS_WQ_ENDIO_DATA and BTRFS_WQ_ENDIO_DIO_REPAIR.
+>> However, it may deadlock with stacked filesystems and is fragile
+>> overall. The proper fix is to free the work item at the very end of the
+>> work function, so let's do that.
+>>
+>> Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+>> Signed-off-by: Omar Sandoval <osandov@fb.com>
+>> Reviewed-by: David Sterba <dsterba@suse.com>
+>> Signed-off-by: David Sterba <dsterba@suse.com>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>
+>The were more patches in the series, all contain "don't prematurely free
+>work in" and were part of a rework of async work processing. They're
+>fixing a very uncommon usecase, so if there's desire to backport them
+>the whole series needs to go in.
+>
+>In the autosel list, there are only 2 and without the important fix.
+>
+>c495dcd6fbe1 btrfs: don't prematurely free work in run_ordered_work()
+>9be490f1e15c btrfs: don't prematurely free work in end_workqueue_fn()
+>e732fe95e4ca btrfs: don't prematurely free work in reada_start_machine_worker()
+>57d4f0b86327 btrfs: don't prematurely free work in scrub_missing_raid56_worker()
 
-Acked-by: Rob Herring <robh@kernel.org>
+I've queued all 4, thanks!
+
+>a0cac0ec961f btrfs: get rid of unique workqueue helper functions
+>- this is only a cleanup that removes code obsoleted by the fixes above,
+>  probably out of scope of stable
+>
+>I have intentionally not tagged the patches for stable, the usecase is
+>is specific to one user (FB), the known reproducer is only their
+>workload and the fixes are in their kernel already.
+>
+>So if there's desire to add the patches to stable trees, then it has to
+>be the whole series, but I don't see a strong reason for it.
+
+If it's upstream and broken then it's relevant, it doesn't matter if its
+one user or a million users.
+
+-- 
+Thanks,
+Sasha
