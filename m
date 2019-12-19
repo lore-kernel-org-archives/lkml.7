@@ -2,96 +2,97 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F83C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE56C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98DA22465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBE882465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:50:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qOx+odyg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BGg9GWWF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbfLSUtK (ORCPT
+        id S1727269AbfLSUu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 15:49:10 -0500
-Received: from ozlabs.org ([203.11.71.1]:49389 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726908AbfLSUtK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 15:49:10 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47f3rg1Cbkz9sPT;
-        Fri, 20 Dec 2019 07:49:07 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1576788547;
-        bh=NcjTJwJC9GjtYt/2hokQNOc4AWT4U7JCnDH3TlJvTGs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=qOx+odygpMLwN08HcA6UKXq0hpUaKhPJAfFj3AKQudQdwm4kdZy+3fG9scMZNZFx2
-         TISs9EswiL5g8yiR+Gyrx9Avf7kseE385aNbo8K+lTlxiuyomhTltP6SnBPKqm7t5S
-         4YSML7dWDMaUnlN111kB9WIRFx7tZndCn1//6USpdKLp3/RTP7sZiUs5UCXQ2itRKf
-         EUZ5h6W56EbAUzYOCYmafPi/uWUcn7/W0+kpSGA402+IoJaJ0IBHenUnCjQManuCMT
-         Bs8VPkMALBcZZVg16r8Ar1SYyV0mzYL+prcoifL1ryo2ai2NZhNNzEFSl3PSsT9Dc0
-         6/uyCV2kGZJww==
-Date:   Fri, 20 Dec 2019 07:48:56 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brian Foster <bfoster@redhat.com>
-Subject: linux-next: Fixes tag needs some work in the xfs tree
-Message-ID: <20191220074856.434eba23@canb.auug.org.au>
+        Thu, 19 Dec 2019 15:50:27 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39264 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbfLSUu0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 15:50:26 -0500
+Received: by mail-pf1-f194.google.com with SMTP id q10so3954072pfs.6;
+        Thu, 19 Dec 2019 12:50:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5hHtLxBl/f/KnEapSkPu95KSvj6JTeXO1zosJzNLAX4=;
+        b=BGg9GWWFEXfp+7yFaa1ERgtN83b1thcWilPQs4ysQl0wuEEtolZ3kx+a1bO2BXB13f
+         92IVsJKDKKL1FZKQ9s6i3+aRM2tc+mX2DGX4bwwmfMLzfIXch3nIoHTOXy9iIV1pkJuo
+         estjdOXP0/3myvkLrNXZ6arc+e9T/7nY9TjDku0M1SuXA/rl5jBhgvzDxJOdq6tr1JUb
+         JNIvS8UmjHITtk3tItNmh/jjErBJiTRSKJBmygeC2hjBL/aedSQSX1uxb2LgCCYkgcg5
+         TmkuoMqZX6RaSKXZlZJSoOPLZGGQho9/gazWoSq5wUxsPtJpmOpTSG7XX/4FYyBAW2zZ
+         KL1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5hHtLxBl/f/KnEapSkPu95KSvj6JTeXO1zosJzNLAX4=;
+        b=FI0en9QCzWFuy+PJWA5/ywpS2GeA4++DNjcXteQBTZsWqoYWQ9DjwPUwNhzFBQG75L
+         C4K5Dt86DjZJiaenQEJqKkWUBAGrW5IRrGIdF0O+Xdp7nI5ilN2r5eRRyo00uf3g1pf2
+         qcjgv1UTWpEvO0MEpdeF3HAWoiPGV0ekY4T9XStYM+zafdmdg075Fw6fIRaVoYC3U+EM
+         p4O2HnvZX31UxKtB7aKfh447gsZLw4qllnAYjttLylH5c4F/cM9ts2dB1tbykGXFgIOp
+         cuq4gQBj9VnNIC1kdJMhxoj2aL9ADsaH4Q49V7vYur6QOCjMPGOEm6IQy1DHgu1L3tYd
+         txGw==
+X-Gm-Message-State: APjAAAVIbERfXWNsmwtg/Aj2VUiNp1cd90C6XJKxcAKDa+TTBZLkMRKv
+        QRrCtKvJ0IHs9susU2om3ZcXYSlBX13MJ0tpEC8=
+X-Google-Smtp-Source: APXvYqxVE7snj7/boXLc4VKXjR5n9umgqtVwrRs4lwMNg2JFniIYd6iyLQPDp9obQymytdQQzu5rTOj9caDZhbR9hKM=
+X-Received: by 2002:a63:4e0e:: with SMTP id c14mr10940202pgb.237.1576788625590;
+ Thu, 19 Dec 2019 12:50:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/74iFm+IlPAN20YC+Ky+K9+3";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <git-mailbomb-linux-master-8ffb055beae58574d3e77b4bf9d4d15eace1ca27@kernel.org>
+ <CAMuHMdVgF0PVmqXbaWqkrcML0O-hhWB3akj8UAn8Q_hN2evm+A@mail.gmail.com>
+In-Reply-To: <CAMuHMdVgF0PVmqXbaWqkrcML0O-hhWB3akj8UAn8Q_hN2evm+A@mail.gmail.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Thu, 19 Dec 2019 12:50:14 -0800
+Message-ID: <CAM_iQpWOhXR=x10i0S88qXTfG2nv9EypONTp6_vpBzs=iOySRQ@mail.gmail.com>
+Subject: Re: refcount_warn_saturate WARNING (was: Re: cls_flower: Fix the
+ behavior using port ranges with hw-offload)
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Yoshiki Komachi <komachi.yoshiki@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/74iFm+IlPAN20YC+Ky+K9+3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Dec 19, 2019 at 2:12 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> I still see the below warning on m68k/ARAnyM during boot with v5.5-rc2
+> and next-20191219.
+> Reverting commit 8ffb055beae58574 ("cls_flower: Fix the behavior using
+> port ranges with hw-offload") fixes that.
+>
+> As this is networking, perhaps this is seen on big-endian only?
+> Or !CONFIG_SMP?
+>
+> Do you have a clue?
+> I'm especially worried as this commit is already being backported to stable.
+> Thanks!
 
-Hi all,
+I did a quick look at the offending commit, I can't even connect it to
+any dst refcnt.
 
-In commit
+Do you have any more information? Like what happened before the
+warning? Does your system use cls_flower filters at all? If so, please
+share your tc configurations.
 
-  826f7e34130a ("xfs: use bitops interface for buf log item AIL flag check")
-
-Fixes tag
-
-  Fixes: 22525c17ed ("xfs: log item flags are racy")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/74iFm+IlPAN20YC+Ky+K9+3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl374jgACgkQAVBC80lX
-0GwbXQf/YkIxGihdWiJ/Zdzq97KNc27aBR8g0dcqetJ1BvaqsezQDR2qfOD03GEn
-/wUKmBnyUGEhKxzEJBgga1bs4uOIajX3Wg69vjmOGdXPuRs+jCZTqRoV4T6pHxaJ
-paLjWJXInIXOF0ZL7QrZwFBXq/xqHXf/Ea2P10yI3F7zB+5cG8EXVYgoSoxv3mxr
-k7Rbkpt9F3qVOFH6+WVAyJTKnVh2S3K8toht5VFQNHLas/7Whe+gbtCLHEviF1NR
-7wPif/fedugIh9I+6Qwlc2ja9sAzhkXDQqQorpru7UthiKkr5v0tN44dU6emUdlh
-XISc8e3L+IoyZDdn0jRinSnzw0SFPQ==
-=+z+V
------END PGP SIGNATURE-----
-
---Sig_/74iFm+IlPAN20YC+Ky+K9+3--
+Thanks.
