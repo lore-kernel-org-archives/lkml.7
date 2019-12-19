@@ -2,100 +2,130 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC43C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D00BEC2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFA2F218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6214218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:13:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Y4ndwh0t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WKhevbX3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbfLSNM4 (ORCPT
+        id S1726933AbfLSNNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 08:12:56 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:60714 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbfLSNMz (ORCPT
+        Thu, 19 Dec 2019 08:13:01 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:32772 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbfLSNNB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 08:12:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=X2rxmFp1nN4MsfxtIvmlE76kILeHh88dwPXVZiG/rcc=; b=Y4ndwh0tsVYEEvEZDSgCnUAwC
-        4F5CwU7Z9BQdZxHvnSoeKOxsw2z7wftTAWGMymZc+Ebc9UElG8eCiV7T/5lxavnWV09M/gZ2Sfbyl
-        Z9W6HvrZ2qxnOQXKV00FLEbny+/ONiB0RnzP/S4aG5gMQ8+LMn4ETV5mNnh9Yv8MWdYdUXiOSzJVD
-        e2RxNqZ9VzoMk4H9ZPSL5C78aaBAfPkDZwWl3WaltXVZcdmGtQPi3K8rMKjunV/jSYsmvrCnBwohm
-        esrMXcEJW7q13+NW3OfoRVzKt8eUYaULJmav+m55KdFekV+ypmu5DoWKpWoFM/6iwTvC7s0lmTlrl
-        pj3d+fB4Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ihvbg-0000Vn-9r; Thu, 19 Dec 2019 13:12:44 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 885BC3007F2;
-        Thu, 19 Dec 2019 14:11:18 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1B1782B3DB890; Thu, 19 Dec 2019 14:12:42 +0100 (CET)
-Date:   Thu, 19 Dec 2019 14:12:42 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC] sched: Micro optimization in pick_next_task() and in
- check_preempt_curr()
-Message-ID: <20191219131242.GK2827@hirez.programming.kicks-ass.net>
-References: <157675913272.349305.8936736338884044103.stgit@localhost.localdomain>
+        Thu, 19 Dec 2019 08:13:01 -0500
+Received: by mail-pf1-f196.google.com with SMTP id z16so3246930pfk.0;
+        Thu, 19 Dec 2019 05:13:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=1gRwWTLS967Ubmo9QBFf6oeS3GYO3y9qdE++OzuCjo8=;
+        b=WKhevbX3LE/LkS46gPKn0pKaWJ1UCYgcM/cOiNU2eJNXWeJsUyqiRs/NsDzOWFuXaG
+         DHUhnDLQgUmbEA7kPJjVcaXltfn1NdN4M5HO0EF1R37j0qMHWpWutAqHDPSrEckIZdYD
+         bJiT+XP8zeKlbNGUYT6XKe/IIPVN9OoNEHrEjv3xJLP10qsRU5EOLSIanlGodcna33c+
+         b07r47q5KK9YkOWTO5zhje/FAhCTL/rZ36ZN4WGxuN6s0jF+aGPOPE5zOzRYSAyDxaAa
+         FkviBuNB2o9n7tKLzHqojXxgwyfh4ASBE1HJmXL54iw4KBxUtqgGiiaqtBwCGB+V8eBx
+         3v9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=1gRwWTLS967Ubmo9QBFf6oeS3GYO3y9qdE++OzuCjo8=;
+        b=EBROHK4wnHw+Xx8L8+GP5zsHclvU2APBLAi3WxPXuakTKIn271yE43x/4vzp5NCIwf
+         S5RCnBXeZxuAQcbZfaJuESJiUsE6ArM5a89N4RjkuNUUBCLcE3BsAk0f4yhfHBGGQ+cX
+         BKNZPj7GOawCDDTxgrpNOQ06O4sPpeM5PbmCrvQnwFhMfFszGNqO31Ejon3DIkEAKPl7
+         Dnyntq2Ou1iXbi3SC+VH3VEl+aF2jq1GZ9ga4Burf5bGfeZDWGVnlUaxqZJdm2uIgG8B
+         UGqFdC6JIiVLtZ+HcLaZGoQaJ14VTEy+zo1TDiDfonVcZYI0qnwcfpsuVW/hx1vUNO+I
+         JoKg==
+X-Gm-Message-State: APjAAAW/bxxSNdEvjya+/keCF5j5sir8OnLshSZ0Lrrp6HK9LtAtlz0S
+        PPiR2Mcbp1UTmspQSfDqhw0=
+X-Google-Smtp-Source: APXvYqy0izi6mgWThqnu1MUAe9tocw6rn0MpkH29qND2aoM9yGkQdgIqZuH/xgG3IqQ6u4j/XtcGEQ==
+X-Received: by 2002:aa7:8007:: with SMTP id j7mr9721396pfi.73.1576761180732;
+        Thu, 19 Dec 2019 05:13:00 -0800 (PST)
+Received: from firefly (220-235-124-2.dyn.iinet.net.au. [220.235.124.2])
+        by smtp.gmail.com with ESMTPSA id w66sm8631924pfw.102.2019.12.19.05.12.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 05:13:00 -0800 (PST)
+Date:   Thu, 19 Dec 2019 13:12:49 +0000
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 10/11] gpiolib: add new ioctl() for monitoring changes
+ in line info
+Message-ID: <20191219131249.GA12008@firefly>
+References: <20191204155941.17814-1-brgl@bgdev.pl>
+ <CAHp75VdiAtHtdrUP2EmLULh86oO37ha8si10gFKYRavXCEwRRQ@mail.gmail.com>
+ <CAMpxmJVXVVVMPA_hRbs3mUsFs=s_VtQK9SvvYK3Xc5X27NPTKw@mail.gmail.com>
+ <CAHp75VfXc88Fa6=zs=9iToz27QdXHqRCDPQwBPs2P-rsBF8nHw@mail.gmail.com>
+ <CAMRc=Me4xWsQggmr=BvJrA9-FnPkxFkOYsRTsSXCtyNwFnsHNw@mail.gmail.com>
+ <CAHp75VfzP8-0wKmPTTKYe+fc6=r_4sVcJPyOsM8YTuH=i4rxmA@mail.gmail.com>
+ <CAMRc=MfxteQDmeZn_Et0uFs2cPvLGpJ5BTeBOn37o=2Oo_eU=Q@mail.gmail.com>
+ <CAHp75VfeEB5RudwMaoiMTMMY3zW-kz-h=rJ3Cu5_tyRL6ZuF1w@mail.gmail.com>
+ <CAMRc=Mcy=Q+9Eb6mb5JEq+CCbxgBY1CfTDsYj1Rt9bcLXgeY=g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <157675913272.349305.8936736338884044103.stgit@localhost.localdomain>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mcy=Q+9Eb6mb5JEq+CCbxgBY1CfTDsYj1Rt9bcLXgeY=g@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 03:39:14PM +0300, Kirill Tkhai wrote:
-> In kernel/sched/Makefile files, describing different sched classes, already
-> go in the order from the lowest priority class to the highest priority class:
+On Thu, Dec 19, 2019 at 02:05:19PM +0100, Bartosz Golaszewski wrote:
+> wt., 10 gru 2019 o 18:00 Andy Shevchenko <andy.shevchenko@gmail.com> napisał(a):
+> >
+> > > On a different note: why would endianness be an issue here? 32-bit
+> > > variables with 64-bit alignment should still be in the same place in
+> > > memory, right?
+> >
+> > With explicit padding, yes.
+> >
+> > > Any reason not to use __packed for this structure and not deal with
+> > > this whole compat mess?
+> >
+> > Have been suggested that explicit padding is better approach.
+> > (See my answer to Kent)
+> >
+> > > I also noticed that my change will only allow user-space to read one
+> > > event at a time which seems to be a regression with regard to the
+> > > current implementation. I probably need to address this too.
+> >
+> > Yes, but we have to have ABI v2 in place.
 > 
-> idle.o fair.o rt.o deadline.o stop_task.o
+> Hi Andy,
 > 
-> The documentation of GNU linker says, that section appears in the order
-> they are seen during link time (see [1]):
+> I was playing with some ideas for the new ABI and noticed that on
+> 64-bit architecture the size of struct gpiochip_info is reported to be
+> 68 bytes, not 72 as I would expect. Is implicit alignment padding not
+> applied to a struct if there's a non-64bit-aligned 32-bit field at the
+> end of it? Is there something I'm missing here?
 > 
-> >Normally, the linker will place files and sections matched by wildcards
-> >in the order in which they are seen during the link. You can change this
-> >by using the SORT keyword, which appears before a wildcard pattern
-> >in parentheses (e.g., SORT(.text*)).
-> 
-> So, we may expect const variables from idle.o will go before ro variables
-> from fair.o in RO_DATA section, while ro variables from fair.o will go
-> before ro variables from rt.o, etc.
-> 
-> (Also, it looks like the linking order is already used in kernel, e.g.
->  in drivers/md/Makefile)
-> 
-> Thus, we may introduce an optimization based on xxx_sched_class addresses
-> in these two hot scheduler functions: pick_next_task() and check_preempt_curr().
-> 
-> One more result of the patch is that size of object file becomes a little
-> less (excluding added BUG_ON(), which goes in __init section):
-> 
-> $size kernel/sched/core.o
->          text     data      bss	    dec	    hex	filename
-> before:  66446    18957	    676	  86079	  1503f	kernel/sched/core.o
-> after:   66398    18957	    676	  86031	  1500f	kernel/sched/core.o
 
-Does LTO preserve this behaviour? I've never quite dared do this exact
-optimization.
+Struct alignment is based on the size of the largest element.
+The largest element of struct gpiopchip_info is a __u32, so the struct
+gets 32-bit alignment, even on 64-bit.
+
+The structs with the problems all contain a __u64, and so get padded out
+to a 64-bit boundary.
+
+Cheers,
+Kent.
+
