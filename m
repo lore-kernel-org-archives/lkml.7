@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB9DC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DC2C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B819024683
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18A5624679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:48:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781288;
-	bh=UtmX9GiSmxXu/9EaoD1243Db0uC3Xo+gs5g7A8/UcsI=;
+	s=default; t=1576781295;
+	bh=cmcWFiZzHpKdX1J0WKpQnczKcygx6A3dIKo01I5DfWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xWtrJirmqVfv4dZSdAmDC/3U12nKaLKc6dXt/VBrJr1ljI+q1P6CECPLAyB5PoOBs
-	 SjrCo2BoLOdKlaMXxzUpmkp1f9xGf87JIN0FwjJNi89fWwkCMPFBfjEuNHNPiu545m
-	 2P733MpINfbWI0uW2RZ3OXwq6xFagXS8S9dj1flk=
+	b=GP8rPkvvg0/+tWa85P5saYrtkNrehROMBBWphgu7B6NnjxthF8tZYAw1KqUwDU5UV
+	 AbhfDtLLa8xDkl6R0G8tatOXMnP+QAa22IJAw2lWkMfw+5i0YJCtZDGfpytLCe5GbL
+	 Yhl80USvjz16lJA3gotNTwOeHI8spFA5a/WLL6MM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729574AbfLSSsH (ORCPT
+        id S1729585AbfLSSsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:48:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40998 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:48:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729548AbfLSSsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:48:00 -0500
+        id S1729565AbfLSSsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:48:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CC392465E;
-        Thu, 19 Dec 2019 18:47:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF7EE2465E;
+        Thu, 19 Dec 2019 18:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781279;
-        bh=UtmX9GiSmxXu/9EaoD1243Db0uC3Xo+gs5g7A8/UcsI=;
+        s=default; t=1576781286;
+        bh=cmcWFiZzHpKdX1J0WKpQnczKcygx6A3dIKo01I5DfWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uSoSiWcTMgblCk8eY/KmUtnAkx9vAvGkACraa8VY5/2oqfV25qM6hNqLodHeXWPkH
-         aYC/O4d/Zr4taeOdzO19mVfDp+8vs6pyRRKCinWQO5fO45M+xc9HyTED23OGQUcFD8
-         MXDLb+ZE46THKVT8GiZOy+34GU428D7WRqmpWS6g=
+        b=Fm55R9wD02DrBzbFicZAd05bKHOA6aQ86sJRIpgCD8N+3vFmaDKWPFwSU82wOkXEw
+         vcXmUdMEri40ruuTOHTksWp5rJIrGjGdJCBsDDE6fdhNGg+LQFt7jUqG/li7YVcy23
+         d5KM3CGj5N3LZGxHYL/eelai/iDYeaF6/cz50VCk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Miaoqing Pan <miaoqing@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 155/199] e100: Fix passing zero to PTR_ERR warning in e100_load_ucode_wait
-Date:   Thu, 19 Dec 2019 19:33:57 +0100
-Message-Id: <20191219183223.902557376@linuxfoundation.org>
+Subject: [PATCH 4.9 158/199] ath10k: fix fw crash by moving chip reset after napi disabled
+Date:   Thu, 19 Dec 2019 19:34:00 +0100
+Message-Id: <20191219183224.104553213@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -61,37 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Miaoqing Pan <miaoqing@codeaurora.org>
 
-[ Upstream commit cd0d465bb697a9c7bf66a9fe940f7981232f1676 ]
+[ Upstream commit 08d80e4cd27ba19f9bee9e5f788f9a9fc440a22f ]
 
-Fix a static code checker warning:
-drivers/net/ethernet/intel/e100.c:1349
- e100_load_ucode_wait() warn: passing zero to 'PTR_ERR'
+On SMP platform, when continuously running wifi up/down, the napi
+poll can be scheduled during chip reset, which will call
+ath10k_pci_has_fw_crashed() to check the fw status. But in the reset
+period, the value from FW_INDICATOR_ADDRESS register will return
+0xdeadbeef, which also be treated as fw crash. Fix the issue by
+moving chip reset after napi disabled.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+ath10k_pci 0000:01:00.0: firmware crashed! (guid 73b30611-5b1e-4bdd-90b4-64c81eb947b6)
+ath10k_pci 0000:01:00.0: qca9984/qca9994 hw1.0 target 0x01000000 chip_id 0x00000000 sub 168c:cafe
+ath10k_pci 0000:01:00.0: htt-ver 2.2 wmi-op 6 htt-op 4 cal otp max-sta 512 raw 0 hwcrypto 1
+ath10k_pci 0000:01:00.0: failed to get memcpy hi address for firmware address 4: -16
+ath10k_pci 0000:01:00.0: failed to read firmware dump area: -16
+ath10k_pci 0000:01:00.0: Copy Engine register dump:
+ath10k_pci 0000:01:00.0: [00]: 0x0004a000   0   0   0   0
+ath10k_pci 0000:01:00.0: [01]: 0x0004a400   0   0   0   0
+ath10k_pci 0000:01:00.0: [02]: 0x0004a800   0   0   0   0
+ath10k_pci 0000:01:00.0: [03]: 0x0004ac00   0   0   0   0
+ath10k_pci 0000:01:00.0: [04]: 0x0004b000   0   0   0   0
+ath10k_pci 0000:01:00.0: [05]: 0x0004b400   0   0   0   0
+ath10k_pci 0000:01:00.0: [06]: 0x0004b800   0   0   0   0
+ath10k_pci 0000:01:00.0: [07]: 0x0004bc00   1   0   1   0
+ath10k_pci 0000:01:00.0: [08]: 0x0004c000   0   0   0   0
+ath10k_pci 0000:01:00.0: [09]: 0x0004c400   0   0   0   0
+ath10k_pci 0000:01:00.0: [10]: 0x0004c800   0   0   0   0
+ath10k_pci 0000:01:00.0: [11]: 0x0004cc00   0   0   0   0
+
+Tested HW: QCA9984,QCA9887,WCN3990
+
+Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/e100.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/ath/ath10k/pci.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/e100.c b/drivers/net/ethernet/intel/e100.c
-index 068789e694c9b..93c29094ceff9 100644
---- a/drivers/net/ethernet/intel/e100.c
-+++ b/drivers/net/ethernet/intel/e100.c
-@@ -1370,8 +1370,8 @@ static inline int e100_load_ucode_wait(struct nic *nic)
+diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
+index d84a362a084ac..d96e062647fd9 100644
+--- a/drivers/net/wireless/ath/ath10k/pci.c
++++ b/drivers/net/wireless/ath/ath10k/pci.c
+@@ -1765,6 +1765,11 @@ static void ath10k_pci_hif_stop(struct ath10k *ar)
  
- 	fw = e100_request_firmware(nic);
- 	/* If it's NULL, then no ucode is required */
--	if (!fw || IS_ERR(fw))
--		return PTR_ERR(fw);
-+	if (IS_ERR_OR_NULL(fw))
-+		return PTR_ERR_OR_ZERO(fw);
+ 	ath10k_dbg(ar, ATH10K_DBG_BOOT, "boot hif stop\n");
  
- 	if ((err = e100_exec_cb(nic, (void *)fw, e100_setup_ucode)))
- 		netif_err(nic, probe, nic->netdev,
++	ath10k_pci_irq_disable(ar);
++	ath10k_pci_irq_sync(ar);
++	napi_synchronize(&ar->napi);
++	napi_disable(&ar->napi);
++
+ 	/* Most likely the device has HTT Rx ring configured. The only way to
+ 	 * prevent the device from accessing (and possible corrupting) host
+ 	 * memory is to reset the chip now.
+@@ -1778,10 +1783,6 @@ static void ath10k_pci_hif_stop(struct ath10k *ar)
+ 	 */
+ 	ath10k_pci_safe_chip_reset(ar);
+ 
+-	ath10k_pci_irq_disable(ar);
+-	ath10k_pci_irq_sync(ar);
+-	napi_synchronize(&ar->napi);
+-	napi_disable(&ar->napi);
+ 	ath10k_pci_flush(ar);
+ 
+ 	spin_lock_irqsave(&ar_pci->ps_lock, flags);
 -- 
 2.20.1
 
