@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 424B2C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 266E0C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 081C9222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA650222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:07:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782454;
-	bh=BTAqUAWQAmyPZQBX1BsGJul8pE5B7AMyGZlkjMmd0VI=;
+	s=default; t=1576782458;
+	bh=4xRt0p9sa+Ph6Il2jVKOkVrDa2bzHozBFcjjEmyrhmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o42sBMXr88N/eGo3bCqKlQaXQzK96/px5LrbqQHZUA/voTR5lSCuRN4LlGmiWpDbU
-	 +e4ucAcsd99IodbmH9VWJEsImY8ZE0rynA4qBsOmdoKEfOf45r1v7khZSLjRWGu3/J
-	 KP3SCNKQ3xULwXtEAVc0KYTANAcTColD7dgcjkzE=
+	b=JIv5MiLokbUpafuiUFEyrtXJa2gpSBPWiFpcdt0Jj2pye9cXCIV9Tep264pYUTuFe
+	 IngHU8hxli1UPXTmjRtuwSN41SjD3d/Eg2k1yqhdTbg53SGGhJqXBx9zNzfWNIjOwm
+	 Afud53yEKm3chl5vyN4NQeulEVBNIGiEgzs47D+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbfLSSnF (ORCPT
+        id S1728766AbfLSSmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:43:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34474 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:42:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728779AbfLSSnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:43:00 -0500
+        id S1728756AbfLSSmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:42:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D20C206D7;
-        Thu, 19 Dec 2019 18:42:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBE8024680;
+        Thu, 19 Dec 2019 18:42:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780980;
-        bh=BTAqUAWQAmyPZQBX1BsGJul8pE5B7AMyGZlkjMmd0VI=;
+        s=default; t=1576780970;
+        bh=4xRt0p9sa+Ph6Il2jVKOkVrDa2bzHozBFcjjEmyrhmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RPBydbtKvciW4xgvhjXd+s0X6Ho57XYsBe/CAUcgLFjBmwITx2MLyM35i7KkOXezd
-         hZGq3iSYjRzeYAdYBsb87jcHaJ5Em28FHtRpMzXxKj2TFmY20zNFon6o0Rr6qpb0LT
-         FST9v9b4wfz9EcCgi8b6FUQCeiKTwqY8zC+8zg8o=
+        b=2bkGa12+YczUpy4rPALEyYiG3zUMU4ioAM2sQL4pXP5ZiacHDFzcU+KU/hdECdg1g
+         UDePqBQ0jaly0Kqqu6Tq4OFD7S95Rvq0N7eStlb2dVNbGlgpPmXvhNDpyglU6NDMP9
+         eLH1zB+CopmUZDPu3CETT0iEk4MlJ0GxFnug5Kbs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@linux-mips.org,
+        stable@vger.kernel.org, Brian Masney <masneyb@onstation.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 032/199] MIPS: OCTEON: octeon-platform: fix typing
-Date:   Thu, 19 Dec 2019 19:31:54 +0100
-Message-Id: <20191219183216.666858316@linuxfoundation.org>
+Subject: [PATCH 4.9 029/199] pinctrl: qcom: ssbi-gpio: fix gpio-hog related boot issues
+Date:   Thu, 19 Dec 2019 19:31:51 +0100
+Message-Id: <20191219183216.485984063@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -62,36 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
+From: Brian Masney <masneyb@onstation.org>
 
-[ Upstream commit 2cf1c8933dd93088cfb5f8f58b3bb9bbdf1781b9 ]
+[ Upstream commit 7ed07855773814337b9814f1c3e866df52ebce68 ]
 
-Use correct type for fdt_property nameoff field.
+When attempting to setup up a gpio hog, device probing will repeatedly
+fail with -EPROBE_DEFERED errors. It is caused by a circular dependency
+between the gpio and pinctrl frameworks. If the gpio-ranges property is
+present in device tree, then the gpio framework will handle the gpio pin
+registration and eliminate the circular dependency.
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Patchwork: https://patchwork.linux-mips.org/patch/21204/
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@linux-mips.org
+See Christian Lamparter's commit a86caa9ba5d7 ("pinctrl: msm: fix
+gpio-hog related boot issues") for a detailed commit message that
+explains the issue in much more detail. The code comment in this commit
+came from Christian's commit.
+
+I did not test this change against any hardware supported by this
+particular driver, however I was able to validate this same fix works
+for pinctrl-spmi-gpio.c using a LG Nexus 5 (hammerhead) phone.
+
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/cavium-octeon/octeon-platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
-diff --git a/arch/mips/cavium-octeon/octeon-platform.c b/arch/mips/cavium-octeon/octeon-platform.c
-index 1ba6bcf985702..2ecc8d1b05395 100644
---- a/arch/mips/cavium-octeon/octeon-platform.c
-+++ b/arch/mips/cavium-octeon/octeon-platform.c
-@@ -502,7 +502,7 @@ static void __init octeon_fdt_set_phy(int eth, int phy_addr)
- 	if (phy_addr >= 256 && alt_phy > 0) {
- 		const struct fdt_property *phy_prop;
- 		struct fdt_property *alt_prop;
--		u32 phy_handle_name;
-+		fdt32_t phy_handle_name;
+diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+index e86c4de2f6db1..92855f45bc537 100644
+--- a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
++++ b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+@@ -762,12 +762,23 @@ static int pm8xxx_gpio_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
  
- 		/* Use the alt phy node instead.*/
- 		phy_prop = fdt_get_property(initial_boot_params, eth, "phy-handle", NULL);
+-	ret = gpiochip_add_pin_range(&pctrl->chip,
+-				     dev_name(pctrl->dev),
+-				     0, 0, pctrl->chip.ngpio);
+-	if (ret) {
+-		dev_err(pctrl->dev, "failed to add pin range\n");
+-		goto unregister_gpiochip;
++	/*
++	 * For DeviceTree-supported systems, the gpio core checks the
++	 * pinctrl's device node for the "gpio-ranges" property.
++	 * If it is present, it takes care of adding the pin ranges
++	 * for the driver. In this case the driver can skip ahead.
++	 *
++	 * In order to remain compatible with older, existing DeviceTree
++	 * files which don't set the "gpio-ranges" property or systems that
++	 * utilize ACPI the driver has to call gpiochip_add_pin_range().
++	 */
++	if (!of_property_read_bool(pctrl->dev->of_node, "gpio-ranges")) {
++		ret = gpiochip_add_pin_range(&pctrl->chip, dev_name(pctrl->dev),
++					     0, 0, pctrl->chip.ngpio);
++		if (ret) {
++			dev_err(pctrl->dev, "failed to add pin range\n");
++			goto unregister_gpiochip;
++		}
+ 	}
+ 
+ 	platform_set_drvdata(pdev, pctrl);
 -- 
 2.20.1
 
