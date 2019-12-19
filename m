@@ -2,81 +2,154 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB85C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B61A2C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DE9C2146E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B55E2146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:19:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QKDcqsJU"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mEXjeIfr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfLSQTB (ORCPT
+        id S1727162AbfLSQTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 11:19:01 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:44206 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727052AbfLSQS7 (ORCPT
+        Thu, 19 Dec 2019 11:19:09 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:36798 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726836AbfLSQTH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 11:18:59 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576772338; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=WWzgqMCs3OvjqZLCaMbpY7f3izcNFaVnzcUYiTYGFw0=;
- b=QKDcqsJUmv0QC04bIdfe9DasYOetxmG3koEfc6TVLUCLxfU0hbuoc/CAaBSqZtzB9aMC2g+D
- EeioPwiYrI6e8LgFd0L4vkJRfR+z7bBq6Z72JAxkVq1N0jpfXfCnE/HtQXylDas/1RBvB9ti
- JD6DdUUp3uZeSu7zZTGEHYN//rM=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5dfba2f1.7fb23f4df0a0-smtp-out-n03;
- Thu, 19 Dec 2019 16:18:57 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6FD8AC447AF; Thu, 19 Dec 2019 16:18:57 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0F4D8C43383;
-        Thu, 19 Dec 2019 16:18:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0F4D8C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] ath11k: Use sizeof_field() instead of FIELD_SIZEOF()
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <201912181657.CE7D3CE33@keescook>
-References: <201912181657.CE7D3CE33@keescook>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        ath11k@lists.infradead.org
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20191219161857.6FD8AC447AF@smtp.codeaurora.org>
-Date:   Thu, 19 Dec 2019 16:18:57 +0000 (UTC)
+        Thu, 19 Dec 2019 11:19:07 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBJGESuZ126871;
+        Thu, 19 Dec 2019 16:18:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
+ bh=FMTka2tq0Ww+f56DW10Z393U8mQlGGQbjP9PPcNcr+w=;
+ b=mEXjeIfrH2maUOwfgqL+jL0Ow/iWIHIKMrS+3Do8UoTktYhtOqtqf84sIhG7Xjx2xZQu
+ yaC61kZ5z+yT+0yRw3QISt3RLl5jgxBblU0N04uXQA5AFm17MEUPTZSCAoTorr/0E+Tr
+ pLgdHnt4j1JjrPbTe/TxujpgOT38rwCNhpZhZmaRXX0juAeW3/MwDQ9zRB82RP0rSBkw
+ uIWM2dfq/EMHMsbDpZu2/9tgUzOt6XBvFKao2GznaJ1/Fz93TBCfeC/AiBhziSNFhKrM
+ +hdzgVSB7sUxV1z2Gig1mfGxp2oTGqCOhqGHx/fNOgJpuIQosxMCnxxHDvBIjnJ/kpDb JQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2x01knkurt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Dec 2019 16:18:42 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBJGEMr3136447;
+        Thu, 19 Dec 2019 16:18:42 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2wyut5jjex-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Dec 2019 16:18:41 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBJGIcrE019862;
+        Thu, 19 Dec 2019 16:18:38 GMT
+Received: from dhcp-10-175-212-35.vpn.oracle.com (/10.175.212.35)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 19 Dec 2019 08:18:38 -0800
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     brendanhiggins@google.com, linux-kselftest@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
+        keescook@chromium.org, yzaikin@google.com,
+        akpm@linux-foundation.org, yamada.masahiro@socionext.com,
+        catalin.marinas@arm.com, joe.lawrence@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, urezki@gmail.com,
+        andriy.shevchenko@linux.intel.com, corbet@lwn.net,
+        davidgow@google.com, adilger.kernel@dilger.ca, tytso@mit.edu,
+        mcgrof@kernel.org, linux-doc@vger.kernel.org, rjw@rjwysocki.net,
+        pavel@ucw.cz, len.brown@intel.com, gregkh@linuxfoundation.org,
+        krzk@kernel.org, linux-pm@vger.kernel.org,
+        linux-ext4@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>,
+        Knut Omang <knut.omang@oracle.com>
+Subject: [PATCH v7 linux-kselftest-test 5/6] kunit: allow kunit to be loaded as a module
+Date:   Thu, 19 Dec 2019 16:17:38 +0000
+Message-Id: <1576772259-31382-6-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1576772259-31382-1-git-send-email-alan.maguire@oracle.com>
+References: <1576772259-31382-1-git-send-email-alan.maguire@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9476 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912190135
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9476 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912190135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> wrote:
+Making kunit itself buildable as a module allows for "always-on"
+kunit configuration; specifying CONFIG_KUNIT=m means the module
+is built but only used when loaded.  Kunit test modules will load
+kunit.ko as an implicit dependency, so simply running
+"modprobe my-kunit-tests" will load the tests along with the kunit
+module and run them.
 
-> The FIELD_SIZEOF() macro was redundant, and is being removed from the
-> kernel. Since commit c593642c8be0 ("treewide: Use sizeof_field() macro")
-> this is one of the last users of the old macro, so replace it.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Co-developed-by: Knut Omang <knut.omang@oracle.com>
+Signed-off-by: Knut Omang <knut.omang@oracle.com>
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+---
+ lib/kunit/Kconfig  |  2 +-
+ lib/kunit/Makefile |  4 +++-
+ lib/kunit/test.c   | 13 +++++++++++++
+ 3 files changed, 17 insertions(+), 2 deletions(-)
 
-Patch applied to ath-next branch of ath.git, thanks.
-
-ca0e477931c5 ath11k: Use sizeof_field() instead of FIELD_SIZEOF()
-
+diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
+index 9ebd5e6..065aa16 100644
+--- a/lib/kunit/Kconfig
++++ b/lib/kunit/Kconfig
+@@ -3,7 +3,7 @@
+ #
+ 
+ menuconfig KUNIT
+-	bool "KUnit - Enable support for unit tests"
++	tristate "KUnit - Enable support for unit tests"
+ 	help
+ 	  Enables support for kernel unit tests (KUnit), a lightweight unit
+ 	  testing and mocking framework for the Linux kernel. These tests are
+diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
+index bc6e5e54..fab5564 100644
+--- a/lib/kunit/Makefile
++++ b/lib/kunit/Makefile
+@@ -1,4 +1,6 @@
+-obj-$(CONFIG_KUNIT) +=			test.o \
++obj-$(CONFIG_KUNIT) +=			kunit.o
++
++kunit-objs +=				test.o \
+ 					string-stream.o \
+ 					assert.o \
+ 					try-catch.o
+diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+index 87b5cf1..9242f93 100644
+--- a/lib/kunit/test.c
++++ b/lib/kunit/test.c
+@@ -486,3 +486,16 @@ void kunit_cleanup(struct kunit *test)
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(kunit_cleanup);
++
++static int __init kunit_init(void)
++{
++	return 0;
++}
++late_initcall(kunit_init);
++
++static void __exit kunit_exit(void)
++{
++}
++module_exit(kunit_exit);
++
++MODULE_LICENSE("GPL v2");
 -- 
-https://patchwork.kernel.org/patch/11302533/
+1.8.3.1
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
