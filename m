@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB91EC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE85C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B119F24684
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50D532064B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781495;
-	bh=hpNl3CrnCYy6+Qyuz7APvyYY9eoRaIAh6KptlCv9zks=;
+	s=default; t=1576781497;
+	bh=rwsOWEu9rxz3FJIISfOWzxd38wpAApF+6l0CcPtX2qw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mFcgM6nXguxILp0FnIfCOqsNlLunAJG11DroQeEAwSir9+h8ChNp3umXenafC/nLz
-	 4XYxnlFmlhbLwUojueBusqgiHBfHo6iLblFA9+T5aCffUHSSlvXwAL0NaqNIDLcVuJ
-	 0KyIbsgW1Efqc+0I5df2OIjT7+FxIwPc8QRgzV3s=
+	b=eT4KNkl7SXY2NRfUvSncQaoNZY/mqRtXc9syDSi6pxJmqc3D1MLi3ce2xksK6sboR
+	 qCDdxj3uW1TxfMvoEYY3OuCMyCSmmsqt5pwImd/u7hWGkaIc0wp6n8wWNigYZjr9WF
+	 Yj8K6u0sd8E0zaCL4ksYaENe1FUZEDUR4Lzq6Yh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730153AbfLSSve (ORCPT
+        id S1728349AbfLSSvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:51:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45702 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:51:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730137AbfLSSv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:51:27 -0500
+        id S1729639AbfLSSvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:51:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3CCD2064B;
-        Thu, 19 Dec 2019 18:51:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3398F24679;
+        Thu, 19 Dec 2019 18:51:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781486;
-        bh=hpNl3CrnCYy6+Qyuz7APvyYY9eoRaIAh6KptlCv9zks=;
+        s=default; t=1576781476;
+        bh=rwsOWEu9rxz3FJIISfOWzxd38wpAApF+6l0CcPtX2qw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fCs5at8c8AgbYkUukiI8cH5sAVH51waN07IHsGRpjmOIh3I2jmFAt54P7RbZOxLXd
-         XEIRunYSpYp9Cvh0PHKG+yMfx0bjGZ0wMbs5R/vMx1UU1anWIf2Sy/P/cDhqNYIG5F
-         PHxkQ6HHQWV8GB79QU2/RZ6IyF2kp44XYT8bUwyQ=
+        b=T5G9lZE9Pc120olBko+Nxf+nDgCLhDoI+bfdKbG6AYvQsCbB4TcvG2om2/GrmxUVv
+         iuLoTitaLbQlVea8m+mYU1yjDn77eO0DOSygRU2i6qBhei8glH7yZZL8v5/47BE+Qr
+         ufCktLTlnf4+iVqzOABvwNy0BYjf85TCNZkCGqqU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Lew <clew@codeaurora.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Arun Kumar Neelakantam <aneela@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 4.14 20/36] rpmsg: glink: Fix reuse intents memory leak issue
-Date:   Thu, 19 Dec 2019 19:34:37 +0100
-Message-Id: <20191219182908.934128196@linuxfoundation.org>
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 4.14 16/36] PCI/MSI: Fix incorrect MSI-X masking on resume
+Date:   Thu, 19 Dec 2019 19:34:33 +0100
+Message-Id: <20191219182901.530881330@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182848.708141124@linuxfoundation.org>
 References: <20191219182848.708141124@linuxfoundation.org>
@@ -61,49 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arun Kumar Neelakantam <aneela@codeaurora.org>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-commit b85f6b601407347f5425c4c058d1b7871f5bf4f0 upstream.
+commit e045fa29e89383c717e308609edd19d2fd29e1be upstream.
 
-Memory allocated for re-usable intents are not freed during channel
-cleanup which causes memory leak in system.
+When a driver enables MSI-X, msix_program_entries() reads the MSI-X Vector
+Control register for each vector and saves it in desc->masked.  Each
+register is 32 bits and bit 0 is the actual Mask bit.
 
-Check and free all re-usable memory to avoid memory leak.
+When we restored these registers during resume, we previously set the Mask
+bit if *any* bit in desc->masked was set instead of when the Mask bit
+itself was set:
 
-Fixes: 933b45da5d1d ("rpmsg: glink: Add support for TX intents")
+  pci_restore_state
+    pci_restore_msi_state
+      __pci_restore_msix_state
+        for_each_pci_msi_entry
+          msix_mask_irq(entry, entry->masked)   <-- entire u32 word
+            __pci_msix_desc_mask_irq(desc, flag)
+              mask_bits = desc->masked & ~PCI_MSIX_ENTRY_CTRL_MASKBIT
+              if (flag)       <-- testing entire u32, not just bit 0
+                mask_bits |= PCI_MSIX_ENTRY_CTRL_MASKBIT
+              writel(mask_bits, desc_addr + PCI_MSIX_ENTRY_VECTOR_CTRL)
+
+This means that after resume, MSI-X vectors were masked when they shouldn't
+be, which leads to timeouts like this:
+
+  nvme nvme0: I/O 978 QID 3 timeout, completion polled
+
+On resume, set the Mask bit only when the saved Mask bit from suspend was
+set.
+
+This should remove the need for 19ea025e1d28 ("nvme: Add quirk for Kingston
+NVME SSD running FW E8FK11.T").
+
+[bhelgaas: commit log, move fix to __pci_msix_desc_mask_irq()]
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=204887
+Link: https://lore.kernel.org/r/20191008034238.2503-1-jian-hong@endlessm.com
+Fixes: f2440d9acbe8 ("PCI MSI: Refactor interrupt masking code")
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Cc: stable@vger.kernel.org
-Acked-By: Chris Lew <clew@codeaurora.org>
-Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
-Reported-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/rpmsg/qcom_glink_native.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/pci/msi.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/rpmsg/qcom_glink_native.c
-+++ b/drivers/rpmsg/qcom_glink_native.c
-@@ -243,10 +243,19 @@ static void qcom_glink_channel_release(s
- {
- 	struct glink_channel *channel = container_of(ref, struct glink_channel,
- 						     refcount);
-+	struct glink_core_rx_intent *tmp;
- 	unsigned long flags;
-+	int iid;
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -211,7 +211,7 @@ u32 __pci_msix_desc_mask_irq(struct msi_
+ 		return 0;
  
- 	spin_lock_irqsave(&channel->intent_lock, flags);
-+	idr_for_each_entry(&channel->liids, tmp, iid) {
-+		kfree(tmp->data);
-+		kfree(tmp);
-+	}
- 	idr_destroy(&channel->liids);
-+
-+	idr_for_each_entry(&channel->riids, tmp, iid)
-+		kfree(tmp);
- 	idr_destroy(&channel->riids);
- 	spin_unlock_irqrestore(&channel->intent_lock, flags);
+ 	mask_bits &= ~PCI_MSIX_ENTRY_CTRL_MASKBIT;
+-	if (flag)
++	if (flag & PCI_MSIX_ENTRY_CTRL_MASKBIT)
+ 		mask_bits |= PCI_MSIX_ENTRY_CTRL_MASKBIT;
+ 	writel(mask_bits, pci_msix_desc_addr(desc) + PCI_MSIX_ENTRY_VECTOR_CTRL);
  
 
 
