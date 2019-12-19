@@ -2,148 +2,167 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F02E6C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B08C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C292E24672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:59:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576756758;
-	bh=sNA/zIIMyWs0gUjqN3eQcOoJpsDRPdHySKA92c6MGHM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wDrtjXGnjX3f+LeL6HPOAr4jm88KlXVEgNsA76vmehpYR6FMscFAzTf3mEcjrnfls
-	 Sn17ZQqE+9xuNw0cuNz252kwvOVgOJp/El1rIQnodFfEjro4owv9KEllBuUL9MPzqy
-	 Alto6lFgKN5HbKu778L5GjIyq0UqkLcfEsjt7qic=
+	by mail.kernel.org (Postfix) with ESMTP id 9412124672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:59:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y4Y/y3I/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfLSL7R (ORCPT
+        id S1726928AbfLSL7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 06:59:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726834AbfLSL7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 06:59:16 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 124FC222C2;
-        Thu, 19 Dec 2019 11:59:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576756754;
-        bh=sNA/zIIMyWs0gUjqN3eQcOoJpsDRPdHySKA92c6MGHM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DR7ofkYyDAUVfj3X63e71Ot1+Q7iX3+hjVknWIKnvbCwe0xdIUKnfaBPYXW9OoS2a
-         y7mKJVNEKFZg07XJ4v9llRE1gfN0VYyJxoyGQ5h+baeZVUx8NNOb8qHM8RdePpBvNG
-         0qiIvuqOyVT8zTMDHhFQ/3/NLJZHOOO2DaoeCCus=
-Date:   Thu, 19 Dec 2019 11:59:09 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     syzbot <syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        hdanton@sina.com, akpm@linux-foundation.org
-Subject: Re: WARNING: refcount bug in cdev_get
-Message-ID: <20191219115909.GA32361@willie-the-truck>
-References: <000000000000bf410005909463ff@google.com>
- <20191204115055.GA24783@willie-the-truck>
- <20191204123148.GA3626092@kroah.com>
- <20191210114444.GA17673@willie-the-truck>
- <20191218170854.GC18440@willie-the-truck>
- <20191218182026.GB882018@kroah.com>
+        Thu, 19 Dec 2019 06:59:34 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50150 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbfLSL7e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 06:59:34 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJBxQv3029312;
+        Thu, 19 Dec 2019 05:59:26 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576756766;
+        bh=yxnvtS3Y6dPrnMhLpxgcSG/4NfRE2DXlNbtemhtrESM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Y4Y/y3I/vtDVqaru8Sb8k5lFOAcIPq6QsfYkosMiBcJ57TtTSq0dWCTol/3doRSMR
+         1PO38ehyG9OpRZ0hDg21crEDpPFOIoHy41N+aFPL1bOXRyKlKscZsNqtqYzt6ZeVK9
+         iJGeAuQBmOkiu8asV6Ges6w1RXfrjDIMh/PWicw4=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBJBxQJO118229
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 19 Dec 2019 05:59:26 -0600
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Dec 2019 05:59:24 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Dec 2019 05:59:25 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJBxLn4096682;
+        Thu, 19 Dec 2019 05:59:22 -0600
+Subject: Re: [PATCH 04/13] PCI: cadence: Add support to start link and verify
+ link status
+To:     Andrew Murray <andrew.murray@arm.com>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>
+References: <20191209092147.22901-1-kishon@ti.com>
+ <20191209092147.22901-5-kishon@ti.com>
+ <20191217115826.GA24359@e119886-lin.cambridge.arm.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <16ffe86d-9061-1a9a-d536-561e20ecbdd7@ti.com>
+Date:   Thu, 19 Dec 2019 17:31:04 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191218182026.GB882018@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191217115826.GA24359@e119886-lin.cambridge.arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 07:20:26PM +0100, Greg KH wrote:
-> On Wed, Dec 18, 2019 at 05:08:55PM +0000, Will Deacon wrote:
-> > On Tue, Dec 10, 2019 at 11:44:45AM +0000, Will Deacon wrote:
-> > > On Wed, Dec 04, 2019 at 01:31:48PM +0100, Greg KH wrote:
-> > > > This code hasn't changed in 15+ years, what suddenly changed that causes
-> > > > problems here?
-> > > 
-> > > I suppose one thing to consider is that the refcount code is relatively new,
-> > > so it could be that the actual use-after-free is extremely rare, but we're
-> > > now seeing that it's at least potentially an issue.
-> > > 
-> > > Thoughts?
-> > 
-> > FWIW, I added some mdelay()s to make this race more likely, and I can now
-> > trigger it reasonably reliably. See below.
-> > 
-> > --->8
-> > 
-> > [   89.512353] ------------[ cut here ]------------
-> > [   89.513350] refcount_t: addition on 0; use-after-free.
-> > [   89.513977] WARNING: CPU: 2 PID: 6385 at lib/refcount.c:25 refcount_warn_saturate+0x6d/0xf0
+Hi Andrew,
 
-[...]
+On 17/12/19 5:28 pm, Andrew Murray wrote:
+> On Mon, Dec 09, 2019 at 02:51:38PM +0530, Kishon Vijay Abraham I wrote:
+>> Add cdns_pcie_ops to start link and verify link status. The registers
+>> to start link and to check link status is in Platform specific PCIe
+>> wrapper. Add support for platform specific drivers to add callback
+>> functions for the PCIe Cadence core to start link and verify link status.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  .../pci/controller/cadence/pcie-cadence-ep.c  |  8 ++++++
+>>  .../controller/cadence/pcie-cadence-host.c    | 28 +++++++++++++++++++
+>>  drivers/pci/controller/cadence/pcie-cadence.h | 23 +++++++++++++++
+>>  3 files changed, 59 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+>> index 560f22b4d165..088394b6be04 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+>> @@ -355,8 +355,10 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
+>>  {
+>>  	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+>>  	struct cdns_pcie *pcie = &ep->pcie;
+>> +	struct device *dev = pcie->dev;
+>>  	struct pci_epf *epf;
+>>  	u32 cfg;
+>> +	int ret;
+>>  
+>>  	/*
+>>  	 * BIT(0) is hardwired to 1, hence function 0 is always enabled
+>> @@ -367,6 +369,12 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
+>>  		cfg |= BIT(epf->func_no);
+>>  	cdns_pcie_writel(pcie, CDNS_PCIE_LM_EP_FUNC_CFG, cfg);
+>>  
+>> +	ret = cdns_pcie_start_link(pcie, true);
+>> +	if (ret) {
+>> +		dev_err(dev, "Failed to start link\n");
+>> +		return ret;
+>> +	}
+>> +
+>>  	return 0;
+>>  }
+>>  
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> index ccf55e143e1d..0929554f5a81 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> @@ -3,6 +3,7 @@
+>>  // Cadence PCIe host controller driver.
+>>  // Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+>>  
+>> +#include <linux/delay.h>
+>>  #include <linux/kernel.h>
+>>  #include <linux/of_address.h>
+>>  #include <linux/of_pci.h>
+>> @@ -201,6 +202,23 @@ static int cdns_pcie_host_init(struct device *dev,
+>>  	return err;
+>>  }
+>>  
+>> +static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
+>> +{
+>> +	struct device *dev = pcie->dev;
+>> +	int retries;
+>> +
+>> +	/* Check if the link is up or not */
+>> +	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
+>> +		if (cdns_pcie_is_link_up(pcie)) {
+>> +			dev_info(dev, "Link up\n");
+>> +			return 0;
+>> +		}
+>> +		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
+>> +	}
+>> +
+>> +	return -ETIMEDOUT;
+>> +}
+> 
+> This patch looks fine, except this function (above) is identical to
+> dw_pcie_wait_for_link, advk_pcie_wait_for_link and nwl_wait_for_link. Even
+> the definitions of LINK_WAIT_USLEEP_xx are the same.
+> 
+> I don't see any justification to duplicating this again - can you consolidate
+> these functions to something that all controller drivers can use?
 
-> No hint as to _where_ you put the mdelay()?  :)
+This involves reading a register, so this in entirety cannot be in a
+generic layer. We could add "ops" for checking the link status (in
+pci_ops?), but I'm not sure if that's really required.
 
-I threw it in the release function to maximise the period where the refcount
-is 0 but the inode 'i_cdev' pointer is non-NULL. I also hacked chrdev_open()
-so that the fops->open() call appears to fail most of the time (I guess
-syzkaller uses error injection to do something similar). Nasty hack below.
-
-I'll send a patch, given that I've managed to "reproduce" this.
-
-Will
-
---->8
-
-diff --git a/fs/char_dev.c b/fs/char_dev.c
-index 00dfe17871ac..e2e48fcd0435 100644
---- a/fs/char_dev.c
-+++ b/fs/char_dev.c
-@@ -375,7 +375,7 @@ static int chrdev_open(struct inode *inode, struct file *filp)
- 	const struct file_operations *fops;
- 	struct cdev *p;
- 	struct cdev *new = NULL;
--	int ret = 0;
-+	int ret = 0, first = 0;
- 
- 	spin_lock(&cdev_lock);
- 	p = inode->i_cdev;
-@@ -395,6 +395,7 @@ static int chrdev_open(struct inode *inode, struct file *filp)
- 			inode->i_cdev = p = new;
- 			list_add(&inode->i_devices, &p->list);
- 			new = NULL;
-+			first = 1;
- 		} else if (!cdev_get(p))
- 			ret = -ENXIO;
- 	} else if (!cdev_get(p))
-@@ -411,6 +412,10 @@ static int chrdev_open(struct inode *inode, struct file *filp)
- 
- 	replace_fops(filp, fops);
- 	if (filp->f_op->open) {
-+		if (first && (get_cycles() & 0x3)) {
-+			ret = -EINTR;
-+			goto out_cdev_put;
-+		}
- 		ret = filp->f_op->open(inode, filp);
- 		if (ret)
- 			goto out_cdev_put;
-@@ -594,12 +599,14 @@ void cdev_del(struct cdev *p)
- 	kobject_put(&p->kobj);
- }
- 
-+#include <linux/delay.h>
- 
- static void cdev_default_release(struct kobject *kobj)
- {
- 	struct cdev *p = container_of(kobj, struct cdev, kobj);
- 	struct kobject *parent = kobj->parent;
- 
-+	mdelay(50);
- 	cdev_purge(p);
- 	kobject_put(parent);
- }
+Thanks
+Kishon
