@@ -2,274 +2,109 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 390A8C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9538C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05AB2227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:41:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qjIOKqdC"
+	by mail.kernel.org (Postfix) with ESMTP id AA219222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:42:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfLSAl1 (ORCPT
+        id S1726742AbfLSAm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 19:41:27 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12803 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfLSAl0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 19:41:26 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dfac6eb0000>; Wed, 18 Dec 2019 16:40:11 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 18 Dec 2019 16:40:40 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 18 Dec 2019 16:40:40 -0800
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Dec
- 2019 00:40:40 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 19 Dec 2019 00:40:39 +0000
-Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5dfac7070000>; Wed, 18 Dec 2019 16:40:39 -0800
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v12] mm: devmap: refactor 1-based refcounting for ZONE_DEVICE pages
-Date:   Wed, 18 Dec 2019 16:40:37 -0800
-Message-ID: <20191219004037.1198078-1-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191218160420.gyt4c45e6zsnxqv6@box>
-References: <20191218160420.gyt4c45e6zsnxqv6@box>
-MIME-Version: 1.0
-X-NVConfidentiality: public
+        Wed, 18 Dec 2019 19:42:28 -0500
+Received: from mga04.intel.com ([192.55.52.120]:27288 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726518AbfLSAm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 19:42:28 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 16:42:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
+   d="scan'208";a="228071463"
+Received: from jtreacy-mobl1.ger.corp.intel.com ([10.251.82.127])
+  by orsmga002.jf.intel.com with ESMTP; 18 Dec 2019 16:42:20 -0800
+Message-ID: <c956ba52a9f0b54cd8ab3ec034246662e792ac14.camel@linux.intel.com>
+Subject: Re: [PATCH v24 07/24] x86/cpu/intel: Detect SGX supprt
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
+        puiterwijk@redhat.com
+Date:   Thu, 19 Dec 2019 02:42:20 +0200
+In-Reply-To: <20191217151744.GG28788@zn.tnic>
+References: <20191129231326.18076-1-jarkko.sakkinen@linux.intel.com>
+         <20191129231326.18076-8-jarkko.sakkinen@linux.intel.com>
+         <20191217151744.GG28788@zn.tnic>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576716012; bh=meY7XSFZGFTm0ReBYolvDdqRBgCh/HSlArb5Zg3NFvk=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Type:Content-Transfer-Encoding;
-        b=qjIOKqdCUd7FwtXps/EX5rcy2jzX7ECH7d3gscZlvPWK+USZzY1q0dAG+H1A1e4bW
-         xIdpfAI5t4vavi9qpNMvGtiweIkR1awxL4TYXPZwaeONkFcFN1zXQbpW/68snevPNj
-         5QIP3HFe/KnwTQJ5t/CB3h4eLlluOox9FBIYdqA3HpeElohSY3KZjP+6dBkbINRhFa
-         ZYRgTzuq1d6+3U/JsKziS6j7uhAZMlje1/Nk/EI1s0RtNW9Xt5H7STM2pMGvX9z96O
-         6weRpZ4IdcHq5gWYu+R05VYD+Ro8D3XakiiYQK6azXLHolwxZWIhC6GYnIMG6nSLyM
-         S6aDYq/kU5kxg==
+User-Agent: Evolution 3.34.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An upcoming patch changes and complicates the refcounting and
-especially the "put page" aspects of it. In order to keep
-everything clean, refactor the devmap page release routines:
+On Tue, 2019-12-17 at 16:17 +0100, Borislav Petkov wrote:
+> On Sat, Nov 30, 2019 at 01:13:09AM +0200, Jarkko Sakkinen wrote:
+> 
+> Typo in the subject:
+> 
+> Subject: Re: [PATCH v24 07/24] x86/cpu/intel: Detect SGX supprt
+> 							 ^^^^^^
+> > From: Sean Christopherson <sean.j.christopherson@intel.com>
+> > 
+> > When the CPU supports SGX, check that the BIOS has enabled SGX and SGX1
+> > opcodes are available. Otherwise, all the SGX related capabilities.
+> > 
+> > In addition, clear X86_FEATURE_SGX_LC also in the case when the launch
+> > enclave are read-only. This way the feature bit reflects the level that
+> > Linux supports the launch control.
+> > 
+> > The check is done for every CPU, not just BSP, in order to verify that
+> > MSR_IA32_FEATURE_CONTROL is correctly configured on all CPUs. The other
+> > parts of the kernel, like the enclave driver, expect the same
+> > configuration from all CPUs.
+> > 
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > Co-developed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > ---
+> >  arch/x86/kernel/cpu/intel.c | 41 +++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 41 insertions(+)
+> 
+> ...
+> 
+> > @@ -761,6 +797,11 @@ static void init_intel(struct cpuinfo_x86 *c)
+> >  	if (cpu_has(c, X86_FEATURE_TME))
+> >  		detect_tme(c);
+> >  
+> > +#ifdef CONFIG_INTEL_SGX
+> > +	if (cpu_has(c, X86_FEATURE_SGX))
+> > +		detect_sgx(c);
+> > +#endif
+> 
+> You can remove the ifdeffery here and put the ifdef around the function
+> body and drop the __maybe_unused tag:
 
-* Rename put_devmap_managed_page() to page_is_devmap_managed(),
-  and limit the functionality to "read only": return a bool,
-  with no side effects.
+OK, so I remember getting feedback on some unrelated to SGX stuff
+that I should use __maybe_unused in the past. That is why I used
+it here instead of ifdeffery.
 
-* Add a new routine, put_devmap_managed_page(), to handle
-  decrementing the refcount for ZONE_DEVICE pages.
+It is used in bunch of places in the kernel. I'm a bit confused
+when using it is a right thing and when it should be avoided.
 
-* Change callers (just release_pages() and put_page()) to check
-  page_is_devmap_managed() before calling the new
-  put_devmap_managed_page() routine. This is a performance
-  point: put_page() is a hot path, so we need to avoid non-
-  inline function calls where possible.
+/Jarkko
 
-* Rename __put_devmap_managed_page() to free_devmap_managed_page(),
-  and limit the functionality to unconditionally freeing a devmap
-  page.
-
-This is originally based on a separate patch by Ira Weiny, which
-applied to an early version of the put_user_page() experiments.
-Since then, J=C3=A9r=C3=B4me Glisse suggested the refactoring described abo=
-ve.
-
-Cc: Christoph Hellwig <hch@lst.de>
-Suggested-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- include/linux/mm.h | 18 +++++++++++++-----
- mm/memremap.c      | 16 ++--------------
- mm/swap.c          | 27 ++++++++++++++++++++++++++-
- 3 files changed, 41 insertions(+), 20 deletions(-)
-
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index c97ea3b694e6..87b54126e46d 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -952,9 +952,10 @@ static inline bool is_zone_device_page(const struct pa=
-ge *page)
- #endif
-=20
- #ifdef CONFIG_DEV_PAGEMAP_OPS
--void __put_devmap_managed_page(struct page *page);
-+void free_devmap_managed_page(struct page *page);
- DECLARE_STATIC_KEY_FALSE(devmap_managed_key);
--static inline bool put_devmap_managed_page(struct page *page)
-+
-+static inline bool page_is_devmap_managed(struct page *page)
- {
- 	if (!static_branch_unlikely(&devmap_managed_key))
- 		return false;
-@@ -963,7 +964,6 @@ static inline bool put_devmap_managed_page(struct page =
-*page)
- 	switch (page->pgmap->type) {
- 	case MEMORY_DEVICE_PRIVATE:
- 	case MEMORY_DEVICE_FS_DAX:
--		__put_devmap_managed_page(page);
- 		return true;
- 	default:
- 		break;
-@@ -971,11 +971,17 @@ static inline bool put_devmap_managed_page(struct pag=
-e *page)
- 	return false;
- }
-=20
-+void put_devmap_managed_page(struct page *page);
-+
- #else /* CONFIG_DEV_PAGEMAP_OPS */
--static inline bool put_devmap_managed_page(struct page *page)
-+static inline bool page_is_devmap_managed(struct page *page)
- {
- 	return false;
- }
-+
-+static inline void put_devmap_managed_page(struct page *page)
-+{
-+}
- #endif /* CONFIG_DEV_PAGEMAP_OPS */
-=20
- static inline bool is_device_private_page(const struct page *page)
-@@ -1028,8 +1034,10 @@ static inline void put_page(struct page *page)
- 	 * need to inform the device driver through callback. See
- 	 * include/linux/memremap.h and HMM for details.
- 	 */
--	if (put_devmap_managed_page(page))
-+	if (page_is_devmap_managed(page)) {
-+		put_devmap_managed_page(page);
- 		return;
-+	}
-=20
- 	if (put_page_testzero(page))
- 		__put_page(page);
-diff --git a/mm/memremap.c b/mm/memremap.c
-index e899fa876a62..2ba773859031 100644
---- a/mm/memremap.c
-+++ b/mm/memremap.c
-@@ -411,20 +411,8 @@ struct dev_pagemap *get_dev_pagemap(unsigned long pfn,
- EXPORT_SYMBOL_GPL(get_dev_pagemap);
-=20
- #ifdef CONFIG_DEV_PAGEMAP_OPS
--void __put_devmap_managed_page(struct page *page)
-+void free_devmap_managed_page(struct page *page)
- {
--	int count =3D page_ref_dec_return(page);
--
--	/* still busy */
--	if (count > 1)
--		return;
--
--	/* only triggered by the dev_pagemap shutdown path */
--	if (count =3D=3D 0) {
--		__put_page(page);
--		return;
--	}
--
- 	/* notify page idle for dax */
- 	if (!is_device_private_page(page)) {
- 		wake_up_var(&page->_refcount);
-@@ -461,5 +449,5 @@ void __put_devmap_managed_page(struct page *page)
- 	page->mapping =3D NULL;
- 	page->pgmap->ops->page_free(page);
- }
--EXPORT_SYMBOL(__put_devmap_managed_page);
-+EXPORT_SYMBOL(free_devmap_managed_page);
- #endif /* CONFIG_DEV_PAGEMAP_OPS */
-diff --git a/mm/swap.c b/mm/swap.c
-index 5341ae93861f..cf39d24ada2a 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -813,8 +813,10 @@ void release_pages(struct page **pages, int nr)
- 			 * processing, and instead, expect a call to
- 			 * put_page_testzero().
- 			 */
--			if (put_devmap_managed_page(page))
-+			if (page_is_devmap_managed(page)) {
-+				put_devmap_managed_page(page);
- 				continue;
-+			}
- 		}
-=20
- 		page =3D compound_head(page);
-@@ -1102,3 +1104,26 @@ void __init swap_setup(void)
- 	 * _really_ don't want to cluster much more
- 	 */
- }
-+
-+#ifdef CONFIG_DEV_PAGEMAP_OPS
-+void put_devmap_managed_page(struct page *page)
-+{
-+	int count;
-+
-+	if (WARN_ON_ONCE(!page_is_devmap_managed(page)))
-+		return;
-+
-+	count =3D page_ref_dec_return(page);
-+
-+	/*
-+	 * devmap page refcounts are 1-based, rather than 0-based: if
-+	 * refcount is 1, then the page is free and the refcount is
-+	 * stable because nobody holds a reference on the page.
-+	 */
-+	if (count =3D=3D 1)
-+		free_devmap_managed_page(page);
-+	else if (!count)
-+		__put_page(page);
-+}
-+EXPORT_SYMBOL(put_devmap_managed_page);
-+#endif
---=20
-2.24.1
 
