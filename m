@@ -2,193 +2,118 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E123C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 04:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C85B6C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 04:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E0A42082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 04:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2FB7222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 04:31:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbfLSE2I convert rfc822-to-8bit (ORCPT
+        id S1726936AbfLSEbH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 23:28:08 -0500
-Received: from sender4-op-o11.zoho.com ([136.143.188.11]:17121 "EHLO
-        sender4-op-o11.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726192AbfLSE2H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 23:28:07 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1576729615; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=RwnpuCFesic3Li0hn+0cxAGihVSnu39yKU1ZyvL5DCqPscrlhXkpaPF//GQeZ+iknBcwf9G788nAEnuk6KUnHgqdK7baPDP3eHf5u46janRfqqY9Xl1u/WTurCdW700ueLx9obFwpS88yhbHELseV7HRjEiLJCrZ96R3X2whX04=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1576729615; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=mxrF6LKpQc4itYv2bwtRZBYVjJdn7+CfPSNURUcVeE0=; 
-        b=Vz7me6C0papve4WBalL31ZoaNTUN/lkM17awqL3ZkPn8Wv2jNMleyBVf+isLjkdG4Z208/iohs4wyqOCRruXJGcnLYMZDYvigYQUVD3AOp5XJDoRIm5Cqy6T8JsZsKQm3YYa+lqkAU9fzQkAbu0+F3hYCSbqpmpV22ybN+zTIpY=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=dlrobertson.com;
-        spf=pass  smtp.mailfrom=dan@dlrobertson.com;
-        dmarc=pass header.from=<dan@dlrobertson.com> header.from=<dan@dlrobertson.com>
-Received: from nessie.verizon.net (pool-173-73-58-202.washdc.fios.verizon.net [173.73.58.202]) by mx.zohomail.com
-        with SMTPS id 1576729614288559.068600152658; Wed, 18 Dec 2019 20:26:54 -0800 (PST)
-From:   Dan Robertson <dan@dlrobertson.com>
-To:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Joe Perches <joe@perches.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dan Robertson <dan@dlrobertson.com>
-Message-ID: <20191219041039.23396-4-dan@dlrobertson.com>
-Subject: [PATCH v7 3/3] iio: (bma400) basic regulator support
-Date:   Thu, 19 Dec 2019 04:10:39 +0000
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191219041039.23396-1-dan@dlrobertson.com>
-References: <20191219041039.23396-1-dan@dlrobertson.com>
+        Wed, 18 Dec 2019 23:31:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59892 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726813AbfLSEbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 23:31:07 -0500
+Received: from rorschach.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A11B2082E;
+        Thu, 19 Dec 2019 04:31:04 +0000 (UTC)
+Date:   Wed, 18 Dec 2019 23:31:01 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        clang-built-linux@googlegroups.com,
+        Alexei Starovoitov <ast@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: "ftrace: Rework event_create_dir()" triggers boot error
+ messages
+Message-ID: <20191218233101.73044ce3@rorschach.local.home>
+In-Reply-To: <0FA8C6E3-D9F5-416D-A1B0-5E4CD583A101@lca.pw>
+References: <0FA8C6E3-D9F5-416D-A1B0-5E4CD583A101@lca.pw>
+X-Mailer: Claws Mail 3.17.4git76 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
-X-ZohoMailClient: External
-Content-Type: text/plain; charset=utf8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the VDD and VDDIO regulators using the regulator
-framework.
+On Wed, 18 Dec 2019 22:58:23 -0500
+Qian Cai <cai@lca.pw> wrote:
 
-Signed-off-by: Dan Robertson <dan@dlrobertson.com>
----
- drivers/iio/accel/Kconfig       |  1 +
- drivers/iio/accel/bma400_core.c | 49 +++++++++++++++++++++++++++++----
- 2 files changed, 45 insertions(+), 5 deletions(-)
+> The linux-next commit "ftrace: Rework event_create_dir()” [1] triggers boot warnings
+> for Clang-build (Clang version 8.0.1) kernels (reproduced on both arm64 and powerpc).
+> Reverted it (with trivial conflict fixes) on the top of today’s linux-next fixed the issue.
+> 
+> configs:
+> https://raw.githubusercontent.com/cailca/linux-mm/master/arm64.config
+> https://raw.githubusercontent.com/cailca/linux-mm/master/powerpc.config
+> 
+> [1] https://lore.kernel.org/lkml/20191111132458.342979914@infradead.org/
+> 
+> [  115.799327][    T1] Registered efivars operations
+> [  115.849770][    T1] clocksource: Switched to clocksource arch_sys_counter
+> [  115.901145][    T1] Could not initialize trace point events/sys_enter_rt_sigreturn
+> [  115.908854][    T1] Could not create directory for event sys_enter_rt_sigreturn
+> [  115.998949][    T1] Could not initialize trace point events/sys_enter_restart_syscall
+> [  116.006802][    T1] Could not create directory for event sys_enter_restart_syscall
+> [  116.062702][    T1] Could not initialize trace point events/sys_enter_getpid
+> [  116.069828][    T1] Could not create directory for event sys_enter_getpid
+> [  116.078058][    T1] Could not initialize trace point events/sys_enter_gettid
+> [  116.085181][    T1] Could not create directory for event sys_enter_gettid
+> [  116.093405][    T1] Could not initialize trace point events/sys_enter_getppid
+> [  116.100612][    T1] Could not create directory for event sys_enter_getppid
+> [  116.108989][    T1] Could not initialize trace point events/sys_enter_getuid
+> [  116.116058][    T1] Could not create directory for event sys_enter_getuid
+> [  116.124250][    T1] Could not initialize trace point events/sys_enter_geteuid
+> [  116.131457][    T1] Could not create directory for event sys_enter_geteuid
+> [  116.139840][    T1] Could not initialize trace point events/sys_enter_getgid
+> [  116.146908][    T1] Could not create directory for event sys_enter_getgid
+> [  116.155163][    T1] Could not initialize trace point events/sys_enter_getegid
+> [  116.162370][    T1] Could not create directory for event sys_enter_getegid
+> [  116.178015][    T1] Could not initialize trace point events/sys_enter_setsid
+> [  116.185138][    T1] Could not create directory for event sys_enter_setsid
+> [  116.269307][    T1] Could not initialize trace point events/sys_enter_sched_yield
+> [  116.276811][    T1] Could not create directory for event sys_enter_sched_yield
+> [  116.527652][    T1] Could not initialize trace point events/sys_enter_munlockall
+> [  116.535126][    T1] Could not create directory for event sys_enter_munlockall
+> [  116.622096][    T1] Could not initialize trace point events/sys_enter_vhangup
+> [  116.629307][    T1] Could not create directory for event sys_enter_vhangup
+> [  116.783867][    T1] Could not initialize trace point events/sys_enter_sync
+> [  116.790819][    T1] Could not create directory for event sys_enter_sync
+> [  117.723402][    T1] pnp: PnP ACPI init
 
-diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
-index 670e60568033..9cfe9c790190 100644
---- a/drivers/iio/accel/Kconfig
-+++ b/drivers/iio/accel/Kconfig
-@@ -116,6 +116,7 @@ config BMA400
- 	tristate "Bosch BMA400 3-Axis Accelerometer Driver"
- 	select REGMAP
- 	select BMA400_I2C if I2C
-+	select REGULATOR
- 	help
- 	  Say Y here if you want to build a driver for the Bosch BMA400
- 	  triaxial acceleration sensor.
-diff --git a/drivers/iio/accel/bma400_core.c b/drivers/iio/accel/bma400_core.c
-index b97b8ea7fbb7..dd1edecc46f6 100644
---- a/drivers/iio/accel/bma400_core.c
-+++ b/drivers/iio/accel/bma400_core.c
-@@ -19,6 +19,7 @@
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
- 
- #include "bma400.h"
- 
-@@ -53,6 +54,8 @@ struct bma400_sample_freq {
- struct bma400_data {
- 	struct device *dev;
- 	struct regmap *regmap;
-+	struct regulator *vdd_supply;
-+	struct regulator *vddio_supply;
- 	struct mutex mutex; /* data register lock */
- 	struct iio_mount_matrix orientation;
- 	enum bma400_power_mode power_mode;
-@@ -574,17 +577,46 @@ static int bma400_init(struct bma400_data *data)
- 		goto out;
- 	}
- 
-+	data->vdd_supply = devm_regulator_get(data->dev, "vdd");
-+	if (IS_ERR(data->vdd_supply)) {
-+		ret = PTR_ERR(data->vdd_supply);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(data->dev, "Failed to get VDD regulator %d\n",
-+				ret);
-+		goto out;
-+	}
-+	ret = regulator_enable(data->vdd_supply);
-+	if (ret) {
-+		dev_err(data->dev, "Failed to enable VDD regulator: %d\n", ret);
-+		goto err_vdd;
-+	}
-+
-+	data->vddio_supply = devm_regulator_get(data->dev, "vddio");
-+	if (IS_ERR(data->vddio_supply)) {
-+		ret = PTR_ERR(data->vddio_supply);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(data->dev, "Failed to get VDDIO regulator %d\n",
-+				ret);
-+		goto err_vdd;
-+	}
-+	ret = regulator_enable(data->vddio_supply);
-+	if (ret) {
-+		dev_err(data->dev, "Failed to enable VDDIO regulator: %d\n",
-+			ret);
-+		goto err_vdd;
-+	}
-+
- 	ret = bma400_get_power_mode(data);
- 	if (ret < 0) {
- 		dev_err(data->dev, "Failed to get the initial power-mode\n");
--		goto out;
-+		goto err_vddio;
- 	}
- 
- 	if (data->power_mode != POWER_MODE_NORMAL) {
- 		ret = bma400_set_power_mode(data, POWER_MODE_NORMAL);
- 		if (ret < 0) {
- 			dev_err(data->dev, "Failed to wake up the device\n");
--			goto out;
-+			goto err_vddio;
- 		}
- 		/*
- 		 * TODO: The datasheet waits 1500us here in the example, but
-@@ -597,15 +629,15 @@ static int bma400_init(struct bma400_data *data)
- 
- 	ret = bma400_get_accel_output_data_rate(data);
- 	if (ret < 0)
--		goto out;
-+		goto err_vddio;
- 
- 	ret = bma400_get_accel_oversampling_ratio(data);
- 	if (ret < 0)
--		goto out;
-+		goto err_vddio;
- 
- 	ret = bma400_get_accel_scale(data);
- 	if (ret < 0)
--		goto out;
-+		goto err_vddio;
- 
- 	/*
- 	 * Once the interrupt engine is supported we might use the
-@@ -615,6 +647,10 @@ static int bma400_init(struct bma400_data *data)
- 	 */
- 	return regmap_write(data->regmap, BMA400_ACC_CONFIG2_REG, 0x00);
- 
-+err_vddio:
-+	regulator_disable(data->vddio_supply);
-+err_vdd:
-+	regulator_disable(data->vdd_supply);
- out:
- 	return ret;
- }
-@@ -810,6 +846,9 @@ int bma400_remove(struct device *dev)
- 	ret = bma400_set_power_mode(data, POWER_MODE_SLEEP);
- 	mutex_unlock(&data->mutex);
- 
-+	regulator_disable(data->vddio_supply);
-+	regulator_disable(data->vdd_supply);
-+
- 	iio_device_unregister(indio_dev);
- 
- 	return ret;
+I noticed that all of the above have zero parameters. Does the
+following patch fix it?
 
+(note, I prefer "ret" and "i" on different lines anyway)
 
+-- Steve
+
+diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
+index 53935259f701..abb70c71fe60 100644
+--- a/kernel/trace/trace_syscalls.c
++++ b/kernel/trace/trace_syscalls.c
+@@ -269,7 +269,8 @@ static int __init syscall_enter_define_fields(struct trace_event_call *call)
+ 	struct syscall_trace_enter trace;
+ 	struct syscall_metadata *meta = call->data;
+ 	int offset = offsetof(typeof(trace), args);
+-	int ret, i;
++	int ret = 0;
++	int i;
+ 
+ 	for (i = 0; i < meta->nb_args; i++) {
+ 		ret = trace_define_field(call, meta->types[i],
