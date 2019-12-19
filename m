@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A47C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47474C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C532224687
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F5D206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780889;
-	bh=Z8anMrWmTZjHIUgn0N7JaWIaabcZ42ch5MZ7XopHJD4=;
+	s=default; t=1576780895;
+	bh=tlchDs7TvajlhgCZ7OeyLriVnH9A9S73sL+PYnPpnpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CY7ibnjEM5AhuRb7enCM/f/t1Qgmqb0wY8UHtIL+JWLLzPtEq4eUUhqAlvDhkT07T
-	 rde9y26soYSjhw0EPD1pKyr2a+1zhLmAKnmis/UiV9UI9x4tGOg/dmdO8KtU3c1vAo
-	 fIHvoeqKlF9FFHN3o3EFU/5/5fXkUDjtwpXqfmnQ=
+	b=2A+QZm9qcgA1Ol51uNdQsrm8Kve4NC0r+hxvyVYzDngWFqDIFE62/Shsj8KTUgm1P
+	 itxy1/pOyGyJL6aEd6hECtWmKXDsBfT70fBp8oi69/vMEB3+ygZMo8z2SBU6AQEIFX
+	 jl/7jBJ/9m/tgsT8/yAoMkujygBp/O6DBiEsk2Xk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbfLSSl2 (ORCPT
+        id S1728558AbfLSSle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:41:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60454 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:41:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728532AbfLSSlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:41:25 -0500
+        id S1728090AbfLSSl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:41:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6BEB206D7;
-        Thu, 19 Dec 2019 18:41:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32EE224679;
+        Thu, 19 Dec 2019 18:41:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780885;
-        bh=Z8anMrWmTZjHIUgn0N7JaWIaabcZ42ch5MZ7XopHJD4=;
+        s=default; t=1576780887;
+        bh=tlchDs7TvajlhgCZ7OeyLriVnH9A9S73sL+PYnPpnpw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n8RPrJq8eI2aFTaOZz5v73jMUmHOwLccD8rCm68dNF3ZX5Cr65ybPG+4MAecUzVbe
-         YkeeO8DgpCodrgx6Z+B/s0QLe7hXv/TkLRR/FrlLvEuR96eOrIp6jv9bR5L0XhXAP6
-         NvRb7sO3AyLbDyWoMlUCEPhxCBxZ8JZnA1S6pU28=
+        b=ipiAnsx4BN1EOkmDTOs4T8OfT+YUTvpI467vAZgS5NkMll4vHuyPCM8SGCMoWPGEk
+         7llCZ5HoLi9jthHoI9NsU1h+AXlqziuL508o6GGxVMkI8ENp44K+tW4KsKRBytlBG+
+         4d6508l820x4q0dJTztvZHHmio4bgNX55wdsdTi4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alastair DSilva <alastair@d-silva.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.4 119/162] powerpc: Allow 64bit VDSO __kernel_sync_dicache to work across ranges >4GB
-Date:   Thu, 19 Dec 2019 19:33:47 +0100
-Message-Id: <20191219183214.990026277@linuxfoundation.org>
+        stable@vger.kernel.org, Pontus Fuchs <pontus.fuchs@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Denis Efremov <efremov@linux.com>
+Subject: [PATCH 4.4 110/162] ar5523: check NULL before memcpy() in ar5523_cmd()
+Date:   Thu, 19 Dec 2019 19:33:38 +0100
+Message-Id: <20191219183214.446066734@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -59,46 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alastair D'Silva <alastair@d-silva.org>
+From: Denis Efremov <efremov@linux.com>
 
-commit f9ec11165301982585e5e5f606739b5bae5331f3 upstream.
+commit 315cee426f87658a6799815845788fde965ddaad upstream.
 
-When calling __kernel_sync_dicache with a size >4GB, we were masking
-off the upper 32 bits, so we would incorrectly flush a range smaller
-than intended.
+memcpy() call with "idata == NULL && ilen == 0" results in undefined
+behavior in ar5523_cmd(). For example, NULL is passed in callchain
+"ar5523_stat_work() -> ar5523_cmd_write() -> ar5523_cmd()". This patch
+adds ilen check before memcpy() call in ar5523_cmd() to prevent an
+undefined behavior.
 
-This patch replaces the 32 bit shifts with 64 bit ones, so that
-the full size is accounted for.
-
-Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+Cc: Pontus Fuchs <pontus.fuchs@gmail.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: David Laight <David.Laight@ACULAB.COM>
 Cc: stable@vger.kernel.org
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191104023305.9581-3-alastair@au1.ibm.com
+Signed-off-by: Denis Efremov <efremov@linux.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/vdso64/cacheflush.S |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/ath/ar5523/ar5523.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/powerpc/kernel/vdso64/cacheflush.S
-+++ b/arch/powerpc/kernel/vdso64/cacheflush.S
-@@ -39,7 +39,7 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
- 	subf	r8,r6,r4		/* compute length */
- 	add	r8,r8,r5		/* ensure we get enough */
- 	lwz	r9,CFG_DCACHE_LOGBLOCKSZ(r10)
--	srw.	r8,r8,r9		/* compute line count */
-+	srd.	r8,r8,r9		/* compute line count */
- 	crclr	cr0*4+so
- 	beqlr				/* nothing to do? */
- 	mtctr	r8
-@@ -56,7 +56,7 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
- 	subf	r8,r6,r4		/* compute length */
- 	add	r8,r8,r5
- 	lwz	r9,CFG_ICACHE_LOGBLOCKSZ(r10)
--	srw.	r8,r8,r9		/* compute line count */
-+	srd.	r8,r8,r9		/* compute line count */
- 	crclr	cr0*4+so
- 	beqlr				/* nothing to do? */
- 	mtctr	r8
+--- a/drivers/net/wireless/ath/ar5523/ar5523.c
++++ b/drivers/net/wireless/ath/ar5523/ar5523.c
+@@ -255,7 +255,8 @@ static int ar5523_cmd(struct ar5523 *ar,
+ 
+ 	if (flags & AR5523_CMD_FLAG_MAGIC)
+ 		hdr->magic = cpu_to_be32(1 << 24);
+-	memcpy(hdr + 1, idata, ilen);
++	if (ilen)
++		memcpy(hdr + 1, idata, ilen);
+ 
+ 	cmd->odata = odata;
+ 	cmd->olen = olen;
 
 
