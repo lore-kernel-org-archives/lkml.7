@@ -2,95 +2,104 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 348C9C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C6FC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03B1121D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF72421D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:03:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="GGKi5DLB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LxJhXFNf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbfLSOCo (ORCPT
+        id S1726905AbfLSODG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 09:02:44 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:29174 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726744AbfLSOCm (ORCPT
+        Thu, 19 Dec 2019 09:03:06 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:44988 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726744AbfLSODG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 09:02:42 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBJDgbJo030197;
-        Thu, 19 Dec 2019 15:02:31 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=lmYBkuR7hu/iO85iNxJiScrX1QW68m2Wp1jYoIywx+U=;
- b=GGKi5DLB7NESlB2r6cTCXbIuYTJ0jr85Am2eS6uqGs+aci2NBMZq3aN55KXOanmI5H8q
- QIlnS9qMb18zfmyp3USNnCPnxL/nSIZZjDft96pV9B895xKT4N6zSFoDh513fA7poNPk
- TNx0cn9F8k6s6hNT9gfeR2L72PRSAQB6PWK/ayaTjb1LtHEOv9C32ub6WLh+MMO2goE3
- fnTynm/avWiw6UjfBp5G4vt4WHxaKg+4yVOGKdo/nsjRFd4cSUPcctwV50HtORjEmUIa
- 0gArsbFGuPPVzfVdmthjLe5l5Vn8prFMuFiqvW8AI7xibU/ueI7KxnMJa1wX55AQohFE HQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wvnret2vp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Dec 2019 15:02:31 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6A9AB10002A;
-        Thu, 19 Dec 2019 15:02:28 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 52C332C38BE;
-        Thu, 19 Dec 2019 15:02:28 +0100 (CET)
-Received: from localhost (10.75.127.47) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 19 Dec 2019 15:02:28
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <davem@davemloft.net>, <robh@kernel.org>, <mark.rutland@arm.com>,
-        <mripard@kernel.org>, <martin.blumenstingl@googlemail.com>,
-        <andrew@lunn.ch>, <narmstrong@baylibre.com>,
-        <alexandru.ardelean@analog.com>
-CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] dt-bindings: net: stmmac: add missing properties keyword
-Date:   Thu, 19 Dec 2019 15:02:26 +0100
-Message-ID: <20191219140226.16820-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Thu, 19 Dec 2019 09:03:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Xkx3Sb45pQu0H1ZFfnrJEoAGriM9SaStS1kzmfIEEew=; b=LxJhXFNfzxK8Tgd8JTMc8AYVv
+        5pwRjQEncNX1kxDlS7KWLQko12PMyfg5c3IpS1eICcEB951LjDwh5WRPM+X5K8+7gSndcV5pp0vD2
+        Mu8soGHmhPnFfYo7NaAKDdLj9JnSYirdkqNKST3hR08FTCRfZZXLmTxpKHNUMNkmZXVAzl7p13j0J
+        BfwpetPFI71AP/FohnxcZNwXLCHSvYZ2ARDoB32aIajyLMl/i68K4BrxIkzJICtkoPISGofR7dueY
+        x67/4483xDu1Ku6jJjgW55b78ZvH0eWlcnVIaC1vnFeJnXz5ZM1PYxFzD9gbCOHQv64GBMCn9XTAL
+        3ZFm71jeg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ihwOE-0000qy-JZ; Thu, 19 Dec 2019 14:02:54 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DB52C304C1B;
+        Thu, 19 Dec 2019 15:01:28 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4E6202B3E1685; Thu, 19 Dec 2019 15:02:52 +0100 (CET)
+Date:   Thu, 19 Dec 2019 15:02:52 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     mingo@redhat.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] sched: Micro optimization in pick_next_task() and in
+ check_preempt_curr()
+Message-ID: <20191219140252.GS2871@hirez.programming.kicks-ass.net>
+References: <157675913272.349305.8936736338884044103.stgit@localhost.localdomain>
+ <20191219131242.GK2827@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-19_01:2019-12-17,2019-12-19 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191219131242.GK2827@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing 'properties' keyword to be compliant with syntax requirements
+On Thu, Dec 19, 2019 at 02:12:42PM +0100, Peter Zijlstra wrote:
+> On Thu, Dec 19, 2019 at 03:39:14PM +0300, Kirill Tkhai wrote:
+> > In kernel/sched/Makefile files, describing different sched classes, already
+> > go in the order from the lowest priority class to the highest priority class:
+> > 
+> > idle.o fair.o rt.o deadline.o stop_task.o
+> > 
+> > The documentation of GNU linker says, that section appears in the order
+> > they are seen during link time (see [1]):
+> > 
+> > >Normally, the linker will place files and sections matched by wildcards
+> > >in the order in which they are seen during the link. You can change this
+> > >by using the SORT keyword, which appears before a wildcard pattern
+> > >in parentheses (e.g., SORT(.text*)).
+> > 
+> > So, we may expect const variables from idle.o will go before ro variables
+> > from fair.o in RO_DATA section, while ro variables from fair.o will go
+> > before ro variables from rt.o, etc.
+> > 
+> > (Also, it looks like the linking order is already used in kernel, e.g.
+> >  in drivers/md/Makefile)
+> > 
+> > Thus, we may introduce an optimization based on xxx_sched_class addresses
+> > in these two hot scheduler functions: pick_next_task() and check_preempt_curr().
+> > 
+> > One more result of the patch is that size of object file becomes a little
+> > less (excluding added BUG_ON(), which goes in __init section):
+> > 
+> > $size kernel/sched/core.o
+> >          text     data      bss	    dec	    hex	filename
+> > before:  66446    18957	    676	  86079	  1503f	kernel/sched/core.o
+> > after:   66398    18957	    676	  86031	  1500f	kernel/sched/core.o
+> 
+> Does LTO preserve this behaviour? I've never quite dared do this exact
+> optimization.
 
-Fixes: 7db3545aef5fa ("dt-bindings: net: stmmac: Convert the binding to a schemas")
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- Documentation/devicetree/bindings/net/snps,dwmac.yaml | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-index 4845e29411e4..e08cd4c4d568 100644
---- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-+++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-@@ -347,6 +347,7 @@ allOf:
-               - st,spear600-gmac
- 
-     then:
-+      properties:
-         snps,tso:
-           $ref: /schemas/types.yaml#definitions/flag
-           description:
--- 
-2.15.0
-
+Also, ld.lld seems a popular option.
