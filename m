@@ -2,106 +2,140 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A07C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 03:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B5AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 03:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEBE221D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 03:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FD9D21D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 03:20:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fUfP3frz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ia8kEdT3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfLSDTL (ORCPT
+        id S1726869AbfLSDUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 22:19:11 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:49688 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbfLSDTK (ORCPT
+        Wed, 18 Dec 2019 22:20:34 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35407 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726813AbfLSDUe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 22:19:10 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBJ39uYC068077;
-        Thu, 19 Dec 2019 03:18:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=oLFGR/WhIs5dA3HxvsHBFdeGRs+wvX0i1xh6f2MYyak=;
- b=fUfP3frzqd+rvFOH7JcewpXXCeJ3/2sQfUXbVYzrcjnegAmXD+1cw+nkY6p1n8WC/jfq
- 2T0ejE4lcRIcgqh3bPB9O/uE1jZWOAYo+JrI7UTtWdOFaI40Sv3aeUyzl12bXLyrk32G
- FRjWhE79aO5nPaGPKHkX+WRqehzPNfVTQuPrb56Mu0rJi55OPzR/wsJAWebKD2ickLL4
- oizKrdcRrkkBIYEMp7fSmKGq0A4IF0TUKCypatDE6Gtz3Z3jEG3vmlB4zXRgXTVPFHHe
- lfgq4tZyurWkw0Yw8Hd7AwbZLL0VMV1yL4kpLx3A+3PGJ0ycjkZbx1sgz+vmqD6Cjr57 mA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2wvqpqhfwf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Dec 2019 03:18:49 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBJ39t0O038689;
-        Thu, 19 Dec 2019 03:18:49 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2wyut4nd60-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Dec 2019 03:18:49 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBJ3IX95010331;
-        Thu, 19 Dec 2019 03:18:33 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 18 Dec 2019 19:18:33 -0800
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        "open list\:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>
-Subject: Re: [GIT PULL v2 00/27] block, scsi: final compat_ioctl cleanup
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20191217221708.3730997-1-arnd@arndb.de>
-        <CAK8P3a3fsDRsZh--vn4SWA-NfeeSpzueqGDvjF5jDSZ91P9+Hw@mail.gmail.com>
-Date:   Wed, 18 Dec 2019 22:18:28 -0500
-In-Reply-To: <CAK8P3a3fsDRsZh--vn4SWA-NfeeSpzueqGDvjF5jDSZ91P9+Hw@mail.gmail.com>
-        (Arnd Bergmann's message of "Wed, 18 Dec 2019 18:24:32 +0100")
-Message-ID: <yq1sglhc8aj.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9475 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912190025
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9475 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912190025
+        Wed, 18 Dec 2019 22:20:34 -0500
+Received: by mail-pf1-f193.google.com with SMTP id b19so2372431pfo.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 19:20:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=myMe1QwkZnF5nX58KJ75LAcGLicOPPY3P73wZ7ihcKg=;
+        b=ia8kEdT3w0AGu1TZUC9FRWhFeospX94hSxPi51J1YQoavCj9UmQpWXusCabigHGUs7
+         EYP6G8K6XhsexI3r7GaURDw9S6Dy3hmV3waThbzkXxN8Nnk9MDG0MzHz22cFguX3lMZD
+         sQ9pMH7hRWKtOJf6+d6816XdBDpluUNwLGLDYaibxHZ8b2iCrcuRtWork+kpe+sUucLu
+         HMCfkQGwd0hVOlfnuVK65CVQ7c2eOKP5FCdy/QMhURFGUVVUThfLOEN500bGYIA4IpIQ
+         fLak64i81D38a6frFcDdYj3mASruGQiOYLAcXPYM6pgGoJmmKjGu/awEinsBDCQWhIOy
+         AmYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=myMe1QwkZnF5nX58KJ75LAcGLicOPPY3P73wZ7ihcKg=;
+        b=WuVR+dBrTWGTzCS8xtNZsehWOLkoNlxPh9z7LAtV611mEWNc7OTIgykCH4a7q1p5Ro
+         ryXcxq6XrdnmWQWxhxYj5YG3Ppv2+aQtolOE0YoPzn4r5yG/Y4mQXRF0eEb7gU7MTO5l
+         HRWVPZcgY67Kur5uA7FeRhC7fR6J8vgOY2MVm2+UkksCJN16ssKWB6TIvSdinY/Ju655
+         QWNbeKdiFdTRe2bj+5/p1EWu9FOTwDCBIKT11a9+dd1M47eyXKr6pmZt6o76g7LGieLX
+         07XyZGoObgxDBGFLkui3MPIfh+LTWpNjlBoCUVwNrXX/vWI+uGIfSeTRFvnzjiGpCzFV
+         i2AA==
+X-Gm-Message-State: APjAAAVE+O55Q7GB9235ZM6sq4Ig633OlygECrz0fAdSLNT63sUY0C+6
+        mEb3oPMRhB9XuuM9e6GrqIW0tFxFVBtKEQ==
+X-Google-Smtp-Source: APXvYqxLCUfDqY2jqojMritJO5se/AtwS0zRhyNk8y17DL2VoewC8sku+NYR6qj3xiSrF9C8oUG5Cg==
+X-Received: by 2002:a63:d958:: with SMTP id e24mr6579422pgj.31.1576725633389;
+        Wed, 18 Dec 2019 19:20:33 -0800 (PST)
+Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
+        by smtp.gmail.com with ESMTPSA id c3sm2350517pfi.155.2019.12.18.19.20.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 19:20:32 -0800 (PST)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        linux@dominikbrodowski.net
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH v2] mtd: maps: pcmciamtd: fix possible sleep-in-atomic-context bugs in pcmciamtd_set_vpp()
+Date:   Thu, 19 Dec 2019 11:20:23 +0800
+Message-Id: <20191219032023.7177-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The driver may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-Hi Arnd!
+drivers/pcmcia/pcmcia_resource.c, 312:
+	mutex_lock in pcmcia_fixup_vpp
+drivers/mtd/maps/pcmciamtd.c, 309:
+	pcmcia_fixup_vpp in pcmciamtd_set_vpp
+drivers/mtd/maps/pcmciamtd.c, 306:
+	_raw_spin_lock_irqsave in pcmciamtd_set_vpp
 
-> Any suggestion for how this should be merged?
+drivers/pcmcia/pcmcia_resource.c, 312:
+	mutex_lock in pcmcia_fixup_vpp
+drivers/mtd/maps/pcmciamtd.c, 312:
+	pcmcia_fixup_vpp in pcmciamtd_set_vpp
+drivers/mtd/maps/pcmciamtd.c, 306:
+	_raw_spin_lock_irqsave in pcmciamtd_set_vp
 
-I'm pretty flexible. When you post v3 I'll try to set up a branch to get
-an idea what conflicts we might have to deal with. And then we can take
-it from there.
+mutex_lock() may sleep at runtime.
 
+To fix these bugs, the spinlock is replaced with a mutex.
+
+These bugs are found by a static analysis tool STCheck written by
+myself.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+v2:
+* Change the spinlock to a mutex.
+  Thank Dominik for good advice.
+
+---
+
+ drivers/mtd/maps/pcmciamtd.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/mtd/maps/pcmciamtd.c b/drivers/mtd/maps/pcmciamtd.c
+index 70bb403f69f7..2ac79e1cedd9 100644
+--- a/drivers/mtd/maps/pcmciamtd.c
++++ b/drivers/mtd/maps/pcmciamtd.c
+@@ -294,16 +294,15 @@ static void pcmcia_copy_to(struct map_info *map, unsigned long to, const void *f
+ }
+ 
+ 
+-static DEFINE_SPINLOCK(pcmcia_vpp_lock);
++static DEFINE_MUTEX(pcmcia_vpp_lock);
+ static int pcmcia_vpp_refcnt;
+ static void pcmciamtd_set_vpp(struct map_info *map, int on)
+ {
+ 	struct pcmciamtd_dev *dev = (struct pcmciamtd_dev *)map->map_priv_1;
+ 	struct pcmcia_device *link = dev->p_dev;
+-	unsigned long flags;
+ 
+ 	pr_debug("dev = %p on = %d vpp = %d\n\n", dev, on, dev->vpp);
+-	spin_lock_irqsave(&pcmcia_vpp_lock, flags);
++	mutex_lock(&pcmcia_vpp_lock);
+ 	if (on) {
+ 		if (++pcmcia_vpp_refcnt == 1)   /* first nested 'on' */
+ 			pcmcia_fixup_vpp(link, dev->vpp);
+@@ -311,7 +310,7 @@ static void pcmciamtd_set_vpp(struct map_info *map, int on)
+ 		if (--pcmcia_vpp_refcnt == 0)   /* last nested 'off' */
+ 			pcmcia_fixup_vpp(link, 0);
+ 	}
+-	spin_unlock_irqrestore(&pcmcia_vpp_lock, flags);
++	mutex_unlock(&pcmcia_vpp_lock);
+ }
+ 
+ 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.17.1
+
