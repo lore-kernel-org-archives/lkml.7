@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C77E2C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E298FC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DAA824680
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7E4B24680
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781110;
-	bh=o0097HBGczPpjO6uj/IUnUpcuRfOFsYqRgOdD/t3OHA=;
+	s=default; t=1576781116;
+	bh=ffTe4d7s93MEfe2IPClkV/CGEEI3SDnmgDMPU/pkQz0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hKmaysrbfGP3BZWN/1Ide/lonRAnPaSSdj0xeQ4+QBBzsPWUONbFCbEMfF6sxgV1N
-	 ZcYh9NdNM6fwWrSCJO5YjEwctb6uKiKXJf78Vl9v4cT2pqa3NvfsC6WStBzb+8Q330
-	 57AaR5BDXoj7q1nthXk2xhUMICYNN+eqdVLufVHE=
+	b=h3f6bMTbyIeSeNkMWbBcdpkiWyUbVtU+7YgLu9luOdAeebvirS0Y4pupAy+ASK1Oe
+	 nndFef9OEE+xQYFPdp2R6tcmxiAXfMVijtKA23FBCSpyUqbk4aVqzi1rJftvTgDsX5
+	 XtI7u7TV5oVUbqK7WbabWVMFYxidl3zk/aR6UecI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbfLSSpJ (ORCPT
+        id S1729121AbfLSSpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:45:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37338 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:45:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728413AbfLSSpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:45:07 -0500
+        id S1729114AbfLSSpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:45:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FA63222C2;
-        Thu, 19 Dec 2019 18:45:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA6DA2465E;
+        Thu, 19 Dec 2019 18:45:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781106;
-        bh=o0097HBGczPpjO6uj/IUnUpcuRfOFsYqRgOdD/t3OHA=;
+        s=default; t=1576781109;
+        bh=ffTe4d7s93MEfe2IPClkV/CGEEI3SDnmgDMPU/pkQz0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=COl3K0YM/czO9sJUC4sf+IckrwnzDZsinx2g3txz1KgDbzQrk3UcbILAosoyS4I49
-         Zi0FftifBTCbZ3oqnooqQVmBtAyFlRmewSVY1WP+IcgWUSGC8gIi3O1as4khrhGwM4
-         crgpyvUbg7g03Gwyv2tH8cKwRfy4A+vwsozzz2rI=
+        b=Yc4XIGq/RZLvCMHpHE8pNB+TpUVrXH5EJwcvyVOPkChi0tverBo6kRxbL3V9aPgbo
+         d/vkliGlB3o41pLSWG6rvCTKjtcHGqTfkgpps8gSV+l10gudHwAr0TGkREdsX91JQZ
+         kLGKg4TbH2cYGrZfdbAyOX/7Eoq9tUWnKRszrJxo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        David Teigland <teigland@redhat.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 046/199] dlm: NULL check before kmem_cache_destroy is not needed
-Date:   Thu, 19 Dec 2019 19:32:08 +0100
-Message-Id: <20191219183217.492770079@linuxfoundation.org>
+Subject: [PATCH 4.9 047/199] ARM: debug: enable UART1 for socfpga Cyclone5
+Date:   Thu, 19 Dec 2019 19:32:09 +0100
+Message-Id: <20191219183217.548758301@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,47 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Clément Péron <peron.clem@gmail.com>
 
-[ Upstream commit f31a89692830061bceba8469607e4e4b0f900159 ]
+[ Upstream commit f6628486c8489e91c513b62608f89ccdb745600d ]
 
-kmem_cache_destroy(NULL) is safe, so removes NULL check before
-freeing the mem. This patch also fix ifnullfree.cocci warnings.
+Cyclone5 and Arria10 doesn't have the same memory map for UART1.
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Signed-off-by: David Teigland <teigland@redhat.com>
+Split the SOCFPGA_UART1 into 2 options to allow debugging on UART1 for Cyclone5.
+
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/dlm/memory.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ arch/arm/Kconfig.debug | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
 
-diff --git a/fs/dlm/memory.c b/fs/dlm/memory.c
-index 7cd24bccd4fe5..37be29f21d04d 100644
---- a/fs/dlm/memory.c
-+++ b/fs/dlm/memory.c
-@@ -38,10 +38,8 @@ int __init dlm_memory_init(void)
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index a5625430bef64..bb8f39fe3a225 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -987,14 +987,21 @@ choice
+ 		  Say Y here if you want kernel low-level debugging support
+ 		  on SOCFPGA(Cyclone 5 and Arria 5) based platforms.
  
- void dlm_memory_exit(void)
- {
--	if (lkb_cache)
--		kmem_cache_destroy(lkb_cache);
--	if (rsb_cache)
--		kmem_cache_destroy(rsb_cache);
-+	kmem_cache_destroy(lkb_cache);
-+	kmem_cache_destroy(rsb_cache);
- }
+-	config DEBUG_SOCFPGA_UART1
++	config DEBUG_SOCFPGA_ARRIA10_UART1
+ 		depends on ARCH_SOCFPGA
+-		bool "Use SOCFPGA UART1 for low-level debug"
++		bool "Use SOCFPGA Arria10 UART1 for low-level debug"
+ 		select DEBUG_UART_8250
+ 		help
+ 		  Say Y here if you want kernel low-level debugging support
+ 		  on SOCFPGA(Arria 10) based platforms.
  
- char *dlm_allocate_lvb(struct dlm_ls *ls)
-@@ -86,8 +84,7 @@ void dlm_free_lkb(struct dlm_lkb *lkb)
- 		struct dlm_user_args *ua;
- 		ua = lkb->lkb_ua;
- 		if (ua) {
--			if (ua->lksb.sb_lvbptr)
--				kfree(ua->lksb.sb_lvbptr);
-+			kfree(ua->lksb.sb_lvbptr);
- 			kfree(ua);
- 		}
- 	}
++	config DEBUG_SOCFPGA_CYCLONE5_UART1
++		depends on ARCH_SOCFPGA
++		bool "Use SOCFPGA Cyclone 5 UART1 for low-level debug"
++		select DEBUG_UART_8250
++		help
++		  Say Y here if you want kernel low-level debugging support
++		  on SOCFPGA(Cyclone 5 and Arria 5) based platforms.
+ 
+ 	config DEBUG_SUN9I_UART0
+ 		bool "Kernel low-level debugging messages via sun9i UART0"
+@@ -1534,7 +1541,8 @@ config DEBUG_UART_PHYS
+ 	default 0xfe800000 if ARCH_IOP32X
+ 	default 0xff690000 if DEBUG_RK32_UART2
+ 	default 0xffc02000 if DEBUG_SOCFPGA_UART0
+-	default 0xffc02100 if DEBUG_SOCFPGA_UART1
++	default 0xffc02100 if DEBUG_SOCFPGA_ARRIA10_UART1
++	default 0xffc03000 if DEBUG_SOCFPGA_CYCLONE5_UART1
+ 	default 0xffd82340 if ARCH_IOP13XX
+ 	default 0xffe40000 if DEBUG_RCAR_GEN1_SCIF0
+ 	default 0xffe42000 if DEBUG_RCAR_GEN1_SCIF2
+@@ -1624,7 +1632,8 @@ config DEBUG_UART_VIRT
+ 	default 0xfeb30c00 if DEBUG_KEYSTONE_UART0
+ 	default 0xfeb31000 if DEBUG_KEYSTONE_UART1
+ 	default 0xfec02000 if DEBUG_SOCFPGA_UART0
+-	default 0xfec02100 if DEBUG_SOCFPGA_UART1
++	default 0xfec02100 if DEBUG_SOCFPGA_ARRIA10_UART1
++	default 0xfec03000 if DEBUG_SOCFPGA_CYCLONE5_UART1
+ 	default 0xfec12000 if (DEBUG_MVEBU_UART0 || DEBUG_MVEBU_UART0_ALTERNATE) && ARCH_MVEBU
+ 	default 0xfec12100 if DEBUG_MVEBU_UART1_ALTERNATE
+ 	default 0xfec10000 if DEBUG_SIRFATLAS7_UART0
+@@ -1672,9 +1681,9 @@ config DEBUG_UART_8250_WORD
+ 	depends on DEBUG_LL_UART_8250 || DEBUG_UART_8250
+ 	depends on DEBUG_UART_8250_SHIFT >= 2
+ 	default y if DEBUG_PICOXCELL_UART || \
+-		DEBUG_SOCFPGA_UART0 || DEBUG_SOCFPGA_UART1 || \
+-		DEBUG_KEYSTONE_UART0 || DEBUG_KEYSTONE_UART1 || \
+-		DEBUG_ALPINE_UART0 || \
++		DEBUG_SOCFPGA_UART0 || DEBUG_SOCFPGA_ARRIA10_UART1 || \
++		DEBUG_SOCFPGA_CYCLONE5_UART1 || DEBUG_KEYSTONE_UART0 || \
++		DEBUG_KEYSTONE_UART1 || DEBUG_ALPINE_UART0 || \
+ 		DEBUG_DAVINCI_DMx_UART0 || DEBUG_DAVINCI_DA8XX_UART1 || \
+ 		DEBUG_DAVINCI_DA8XX_UART2 || \
+ 		DEBUG_BCM_KONA_UART || DEBUG_RK32_UART2
 -- 
 2.20.1
 
