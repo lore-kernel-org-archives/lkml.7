@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5794C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD37EC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9D32206D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93CBA24684
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782386;
-	bh=1MPMx1l2YY6G49X7p5LPea+7hTic56kzUOXi0+eR7lU=;
+	s=default; t=1576782389;
+	bh=+pXstj1akIlpYdwN1UUXNtNGfKWRZp8HuK14W+SVRR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cuYdugsIho1PLTqyTmtYQmDkROJ3/DcvzI5lY6h4QsNpnus3JKlDRXmW9hwXLXZz1
-	 8ZfIvzvpjg9z7qPDF3gEFaKuL2qPF14G0pibBTUD+WPbrI7fDqf2cA2LXzaMfzsfuz
-	 RaYddGeer3Ou4YGoEo7OnNloUyUhmBi6dovN6YNA=
+	b=wi28o3A3gjDc+ydqzsKo2xdx/pBP+1QjGiPQegylnFNY/2dY0oIR1XitfpzjurqWV
+	 0ZlXPfHy63ygTMUmXNFTdyaiWIMNXI8sKZfC2zCrBmpL5Co6oEICxRmyQWwe3zg8nN
+	 hpuO/zoXLsvfgWhGRgF84EXH3k8ReeudmCwtdOzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728771AbfLSTGZ (ORCPT
+        id S1728002AbfLSSoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:06:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36540 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:44:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728985AbfLSSob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:44:31 -0500
+        id S1728985AbfLSSoY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:44:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4174F24679;
-        Thu, 19 Dec 2019 18:44:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9E7224686;
+        Thu, 19 Dec 2019 18:44:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781070;
-        bh=1MPMx1l2YY6G49X7p5LPea+7hTic56kzUOXi0+eR7lU=;
+        s=default; t=1576781063;
+        bh=+pXstj1akIlpYdwN1UUXNtNGfKWRZp8HuK14W+SVRR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t9PJ19ZD1cKrgPnIi3j6Swym6smRDGk/snD3mOthVy9DL/abq5ICOfw0fMhcZ6NaQ
-         hivmTJjEYgkpcW9WIaxBNwMLT41+CdxZaWrFTtge0FknR3KU9Su8XGvdlTjOQvvLZy
-         VDheeLatzw1IrUijKNeAHXJi0uykUvbNSKLRcnb8=
+        b=AwgIb/gl75HbP1fOLoS8OAxi0Vi/8RncidSWLBBpp+VyrL4OM8+OgoC3aqlautbua
+         YsbMrnn0ym2A3M2rTsSi0/dABJC69gf+5AjbV1OBvnIk1+0iu8lzND+s/Xbejys3Zl
+         dhK9lHge2vlUOoaOl/TF4tY5NobG7AJAxLDr4g5c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@gmx.us>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Dmitry Safonov <dima@arista.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 069/199] mlx4: Use snprintf instead of complicated strcpy
-Date:   Thu, 19 Dec 2019 19:32:31 +0100
-Message-Id: <20191219183218.814817462@linuxfoundation.org>
+Subject: [PATCH 4.9 067/199] tty: Dont block on IO when ldisc change is pending
+Date:   Thu, 19 Dec 2019 19:32:29 +0100
+Message-Id: <20191219183218.710721089@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -61,51 +61,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@gmx.us>
+From: Dmitry Safonov <dima@arista.com>
 
-[ Upstream commit 0fbc9b8b4ea3f688a5da141a64f97aa33ad02ae9 ]
+[ Upstream commit c96cf923a98d1b094df9f0cf97a83e118817e31b ]
 
-This fixes a compilation warning in sysfs.c
+There might be situations where tty_ldisc_lock() has blocked, but there
+is already IO on tty and it prevents line discipline changes.
+It might theoretically turn into dead-lock.
 
-drivers/infiniband/hw/mlx4/sysfs.c:360:2: warning: 'strncpy' output may be
-truncated copying 8 bytes from a string of length 31
-[-Wstringop-truncation]
+Basically, provide more priority to pending tty_ldisc_lock() than to
+servicing reads/writes over tty.
 
-By eliminating the temporary stack buffer.
+User-visible issue was reported by Mikulas where on pa-risc with
+Debian 5 reboot took either 80 seconds, 3 minutes or 3:25 after proper
+locking in tty_reopen().
 
-Signed-off-by: Qian Cai <cai@gmx.us>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Jiri Slaby <jslaby@suse.com>
+Reported-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Dmitry Safonov <dima@arista.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx4/sysfs.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ drivers/tty/n_hdlc.c    | 4 ++--
+ drivers/tty/n_r3964.c   | 2 +-
+ drivers/tty/n_tty.c     | 8 ++++----
+ drivers/tty/tty_ldisc.c | 7 +++++++
+ include/linux/tty.h     | 7 +++++++
+ 5 files changed, 21 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx4/sysfs.c b/drivers/infiniband/hw/mlx4/sysfs.c
-index 69fb5ba94d0f2..19caacd26f61a 100644
---- a/drivers/infiniband/hw/mlx4/sysfs.c
-+++ b/drivers/infiniband/hw/mlx4/sysfs.c
-@@ -352,16 +352,12 @@ err:
+diff --git a/drivers/tty/n_hdlc.c b/drivers/tty/n_hdlc.c
+index 8d6253903f24f..0c12dec110bc4 100644
+--- a/drivers/tty/n_hdlc.c
++++ b/drivers/tty/n_hdlc.c
+@@ -614,7 +614,7 @@ static ssize_t n_hdlc_tty_read(struct tty_struct *tty, struct file *file,
+ 		}
+ 			
+ 		/* no data */
+-		if (file->f_flags & O_NONBLOCK) {
++		if (tty_io_nonblock(tty, file)) {
+ 			ret = -EAGAIN;
+ 			break;
+ 		}
+@@ -681,7 +681,7 @@ static ssize_t n_hdlc_tty_write(struct tty_struct *tty, struct file *file,
+ 		if (tbuf)
+ 			break;
  
- static void get_name(struct mlx4_ib_dev *dev, char *name, int i, int max)
+-		if (file->f_flags & O_NONBLOCK) {
++		if (tty_io_nonblock(tty, file)) {
+ 			error = -EAGAIN;
+ 			break;
+ 		}
+diff --git a/drivers/tty/n_r3964.c b/drivers/tty/n_r3964.c
+index 345111467b850..ee0e07b4a13d0 100644
+--- a/drivers/tty/n_r3964.c
++++ b/drivers/tty/n_r3964.c
+@@ -1080,7 +1080,7 @@ static ssize_t r3964_read(struct tty_struct *tty, struct file *file,
+ 		pMsg = remove_msg(pInfo, pClient);
+ 		if (pMsg == NULL) {
+ 			/* no messages available. */
+-			if (file->f_flags & O_NONBLOCK) {
++			if (tty_io_nonblock(tty, file)) {
+ 				ret = -EAGAIN;
+ 				goto unlock;
+ 			}
+diff --git a/drivers/tty/n_tty.c b/drivers/tty/n_tty.c
+index 904fc9c37fdea..8214b0326b3a1 100644
+--- a/drivers/tty/n_tty.c
++++ b/drivers/tty/n_tty.c
+@@ -1704,7 +1704,7 @@ n_tty_receive_buf_common(struct tty_struct *tty, const unsigned char *cp,
+ 
+ 	down_read(&tty->termios_rwsem);
+ 
+-	while (1) {
++	do {
+ 		/*
+ 		 * When PARMRK is set, each input char may take up to 3 chars
+ 		 * in the read buf; reduce the buffer space avail by 3x
+@@ -1746,7 +1746,7 @@ n_tty_receive_buf_common(struct tty_struct *tty, const unsigned char *cp,
+ 			fp += n;
+ 		count -= n;
+ 		rcvd += n;
+-	}
++	} while (!test_bit(TTY_LDISC_CHANGING, &tty->flags));
+ 
+ 	tty->receive_room = room;
+ 
+@@ -2213,7 +2213,7 @@ static ssize_t n_tty_read(struct tty_struct *tty, struct file *file,
+ 					break;
+ 				if (!timeout)
+ 					break;
+-				if (file->f_flags & O_NONBLOCK) {
++				if (tty_io_nonblock(tty, file)) {
+ 					retval = -EAGAIN;
+ 					break;
+ 				}
+@@ -2367,7 +2367,7 @@ static ssize_t n_tty_write(struct tty_struct *tty, struct file *file,
+ 		}
+ 		if (!nr)
+ 			break;
+-		if (file->f_flags & O_NONBLOCK) {
++		if (tty_io_nonblock(tty, file)) {
+ 			retval = -EAGAIN;
+ 			break;
+ 		}
+diff --git a/drivers/tty/tty_ldisc.c b/drivers/tty/tty_ldisc.c
+index 3eb3f2a03bbb9..706faca834f27 100644
+--- a/drivers/tty/tty_ldisc.c
++++ b/drivers/tty/tty_ldisc.c
+@@ -348,6 +348,11 @@ int tty_ldisc_lock(struct tty_struct *tty, unsigned long timeout)
  {
--	char base_name[9];
--
--	/* pci_name format is: bus:dev:func -> xxxx:yy:zz.n */
--	strlcpy(name, pci_name(dev->dev->persist->pdev), max);
--	strncpy(base_name, name, 8); /*till xxxx:yy:*/
--	base_name[8] = '\0';
--	/* with no ARI only 3 last bits are used so when the fn is higher than 8
-+	/* pci_name format is: bus:dev:func -> xxxx:yy:zz.n
-+	 * with no ARI only 3 last bits are used so when the fn is higher than 8
- 	 * need to add it to the dev num, so count in the last number will be
- 	 * modulo 8 */
--	sprintf(name, "%s%.2d.%d", base_name, (i/8), (i%8));
-+	snprintf(name, max, "%.8s%.2d.%d", pci_name(dev->dev->persist->pdev),
-+		 i / 8, i % 8);
+ 	int ret;
+ 
++	/* Kindly asking blocked readers to release the read side */
++	set_bit(TTY_LDISC_CHANGING, &tty->flags);
++	wake_up_interruptible_all(&tty->read_wait);
++	wake_up_interruptible_all(&tty->write_wait);
++
+ 	ret = __tty_ldisc_lock(tty, timeout);
+ 	if (!ret)
+ 		return -EBUSY;
+@@ -358,6 +363,8 @@ int tty_ldisc_lock(struct tty_struct *tty, unsigned long timeout)
+ void tty_ldisc_unlock(struct tty_struct *tty)
+ {
+ 	clear_bit(TTY_LDISC_HALTED, &tty->flags);
++	/* Can be cleared here - ldisc_unlock will wake up writers firstly */
++	clear_bit(TTY_LDISC_CHANGING, &tty->flags);
+ 	__tty_ldisc_unlock(tty);
  }
  
- struct mlx4_port {
+diff --git a/include/linux/tty.h b/include/linux/tty.h
+index fe1b8623a3a1f..fe483976b1193 100644
+--- a/include/linux/tty.h
++++ b/include/linux/tty.h
+@@ -356,6 +356,7 @@ struct tty_file_private {
+ #define TTY_NO_WRITE_SPLIT 	17	/* Preserve write boundaries to driver */
+ #define TTY_HUPPED 		18	/* Post driver->hangup() */
+ #define TTY_HUPPING		19	/* Hangup in progress */
++#define TTY_LDISC_CHANGING	20	/* Change pending - non-block IO */
+ #define TTY_LDISC_HALTED	22	/* Line discipline is halted */
+ 
+ /* Values for tty->flow_change */
+@@ -373,6 +374,12 @@ static inline void tty_set_flow_change(struct tty_struct *tty, int val)
+ 	smp_mb();
+ }
+ 
++static inline bool tty_io_nonblock(struct tty_struct *tty, struct file *file)
++{
++	return file->f_flags & O_NONBLOCK ||
++		test_bit(TTY_LDISC_CHANGING, &tty->flags);
++}
++
+ static inline bool tty_io_error(struct tty_struct *tty)
+ {
+ 	return test_bit(TTY_IO_ERROR, &tty->flags);
 -- 
 2.20.1
 
