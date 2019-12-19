@@ -2,135 +2,235 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,GAPPY_SUBJECT,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C83CC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BCCC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D9E3227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:49:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576774163;
-	bh=mOTJam9jgr1MEbyK5aOP3Sc64MI0jRUY03zRp9MZzPk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HwCTRonnqxj2IGvn1lkhJPV+gt9m7q3iFJCsnTBAdpvEGOYNgMUCH8BC8vH7QC3Ru
-	 iNFbK1StnBCyuIixHdyEiEyah03VZMSF0iaOiFbYOWlv02kCsLX0mgrD16h667Wcmj
-	 Cq5cVjJbw2vKtlBmA8zh5HFKvN8R2NreQManKN+c=
+	by mail.kernel.org (Postfix) with ESMTP id B7B88227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:50:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbfLSQtW (ORCPT
+        id S1726903AbfLSQum convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 11:49:22 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44024 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbfLSQtV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 11:49:21 -0500
-Received: by mail-lf1-f65.google.com with SMTP id 9so4815002lfq.10;
-        Thu, 19 Dec 2019 08:49:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WE2WXEHobAtFaKSC5ahqXYcN8VdT1sBo35QYjIRF4RY=;
-        b=Tv85NBDZt8fQQohw0frLYLcVpjK/OatRq26QucOW7zksSQDTqV1xn4in2mOfkgsxJC
-         sDjpTrJ7bX3wfmeTu1mRPSD7Ujw99DPct46g1+cPMT+zI3H8HLD+8ZP/Ue+QA9R8cmIm
-         QZzEUzxJ1E7JLXNgETVBQnwtL5APcQKHhbHTu7yH49MdVD2lLIjYWHg/tbLdo4s5IRdo
-         vblkOfM8heEUUe1DaA9b55e3t2ne38Hv86VkkuvHCUm4EWdZ1CQNb9IoPc4EBkwVIcnj
-         x9MGnfRQOXzd521xjPyzcG/g1cNwODDGNu9dexzQY55fioX5gK4n+Xj4tg2Oe+vkH/fd
-         nzYw==
-X-Gm-Message-State: APjAAAVjno59fiTaOV1eFPYlKx38ulxXHOuy1SYtc9Ts2y0zl77FQXHg
-        IPSL2vppT6PacIYftzxcyeE=
-X-Google-Smtp-Source: APXvYqzp14RJ669Fg6GM0NVmqvVcjWt/Bm5wxrknP4frrRfuVYa/vzOF6bdMihkgowHLajytukdOFQ==
-X-Received: by 2002:ac2:43af:: with SMTP id t15mr6130492lfl.154.1576774159351;
-        Thu, 19 Dec 2019 08:49:19 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id r20sm2832384lfi.91.2019.12.19.08.49.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 08:49:18 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1ihyzD-0001vm-Kr; Thu, 19 Dec 2019 17:49:15 +0100
-Date:   Thu, 19 Dec 2019 17:49:15 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Johan Hovold <johan@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kbuild: clarify the difference between obj-y and obj-m
- w.r.t. descending
-Message-ID: <20191219164915.GS22665@localhost>
-References: <20191219115100.958-1-masahiroy@kernel.org>
+        Thu, 19 Dec 2019 11:50:42 -0500
+Received: from mga07.intel.com ([134.134.136.100]:58536 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726760AbfLSQum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 11:50:42 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Dec 2019 08:50:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,332,1571727600"; 
+   d="scan'208";a="267271483"
+Received: from irsmsx154.ger.corp.intel.com ([163.33.192.96])
+  by FMSMGA003.fm.intel.com with ESMTP; 19 Dec 2019 08:50:39 -0800
+Received: from irsmsx111.ger.corp.intel.com (10.108.20.4) by
+ IRSMSX154.ger.corp.intel.com (163.33.192.96) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 19 Dec 2019 16:50:38 +0000
+Received: from irsmsx106.ger.corp.intel.com ([169.254.8.26]) by
+ irsmsx111.ger.corp.intel.com ([169.254.2.126]) with mapi id 14.03.0439.000;
+ Thu, 19 Dec 2019 16:50:38 +0000
+From:   "Hunter, Adrian" <adrian.hunter@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/3] perf/x86: Add perf text poke event
+Thread-Topic: [PATCH 1/3] perf/x86: Add perf text poke event
+Thread-Index: AQHVta9Gfa1pWpXoq0mm3n/Xld+336fBb6cAgAAFmRA=
+Date:   Thu, 19 Dec 2019 16:50:37 +0000
+Message-ID: <363DA0ED52042842948283D2FC38E4649C66B7C0@IRSMSX106.ger.corp.intel.com>
+References: <20191218142618.19332-1-adrian.hunter@intel.com>
+ <20191218142618.19332-2-adrian.hunter@intel.com>
+ <20191219130914.GJ2827@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191219130914.GJ2827@hirez.programming.kicks-ass.net>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYmNiOGU0NDItZDYwYi00MTgyLWIxNmUtYjY4MWJjMGEyMGM1IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiNU82azFMRE0wSndHOWFrMDhReXA2MWE2OGNaT0RHUEFjM1wvV3VNckJ2OG9JYVdPdGo1T0pUNUF2aG04NGlGcEEifQ==
+x-originating-ip: [163.33.239.181]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191219115100.958-1-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 08:51:00PM +0900, Masahiro Yamada wrote:
-> Kbuild descends into a directory by either 'y' or 'm', but there is an
-> important difference.
+> -----Original Message-----
+> From: Peter Zijlstra <peterz@infradead.org>
+> Sent: Thursday, December 19, 2019 3:09 PM
+> To: Hunter, Adrian <adrian.hunter@intel.com>
+> Cc: Ingo Molnar <mingo@redhat.com>; Borislav Petkov <bp@alien8.de>; H .
+> Peter Anvin <hpa@zytor.com>; x86@kernel.org; Mark Rutland
+> <mark.rutland@arm.com>; Alexander Shishkin
+> <alexander.shishkin@linux.intel.com>; Mathieu Poirier
+> <mathieu.poirier@linaro.org>; Leo Yan <leo.yan@linaro.org>; Arnaldo
+> Carvalho de Melo <acme@kernel.org>; Jiri Olsa <jolsa@redhat.com>; linux-
+> kernel@vger.kernel.org
+> Subject: Re: [PATCH 1/3] perf/x86: Add perf text poke event
 > 
-> Kbuild combines the built-in objects into built-in.a in each directory.
-> The built-in.a in the directory visited by obj-y is merged into the
-> built-in.a in the parent directory. This merge happens recursively when
-> Kbuild is ascending back towards the top directory, so built-in objects
-> are linked into vmlinux eventually. This works properly only when the
-> Makefile that specifies obj-y is reachable by the chain of obj-y.
+> On Wed, Dec 18, 2019 at 04:26:16PM +0200, Adrian Hunter wrote:
+> > Record changes to kernel text (i.e. self-modifying code) in order to
+> > support tracers like Intel PT decoding through jump labels.
 > 
-> On the other hand, Kbuild does not take built-in.a from the directory
-> visited by obj-m. This it, all the objects in that directory are supposed
-> to be modular. If Kbuild descends into a directory by obj-m, but the
-> Makefile in the sub-directory specifies obj-y, those objects are just
-> left orphan.
-> 
-> The current statement "Kbuild only uses this information to decide that
-> it needs to visit the directory" is misleading. Clarify the difference.
-> 
-> Reported-by: Johan Hovold <johan@kernel.org>
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> I don't get the obsession with just jump-labels, we need a solution all
+> modifying code. The fentry site usage is increasing, and optprobes are also
+> fairly popular with a bunch of people.
 
-Looks good! Thanks for fixing this.
+Yes we need a solution for all modifying code.  Jump labels are just a good
+place to start because they are the biggest problem by far.
 
-Reviewed-by: Johan Hovold <johan@kernel.org>
+> 
+> > A copy of the running kernel code is needed as a reference point (e.g.
+> > from /proc/kcore). The text poke event records the old bytes and the
+> > new bytes so that the event can be processed forwards or backwards.
+> >
+> > In the case of Intel PT tracing, the executable code must be walked to
+> > reconstruct the control flow. For x86 a jump label text poke begins:
+> >   - write INT3 byte
+> >   - IPI-SYNC
+> >   - write instruction tail
+> > At this point the actual control flow will be through the INT3 and
+> > handler and not hit the old or new instruction. Intel PT outputs
+> > FUP/TIP packets for the INT3, so the flow can still be decoded.
+> Subsequently:
+> >   - emit RECORD_TEXT_POKE with the new instruction
+> >   - IPI-SYNC
+> >   - write first byte
+> >   - IPI-SYNC
+> > So before the text poke event timestamp, the decoder will see either
+> > the old instruction flow or FUP/TIP of INT3. After the text poke event
+> > timestamp, the decoder will see either the new instruction flow or
+> > FUP/TIP of INT3. Thus decoders can use the timestamp as the point at
+> > which to modify the executable code.
+> 
+> I feel a much better justification for the design can be found in the discussion
+> we've had around ARM-CS.
+> 
+> Basically SMP instruction coherency mandates something like this, it is just a
+> happy accident x86 already had all the bits in place.
+> 
+> How is something like:
+> 
+> "Record (single instruction) changes to the kernel text (i.e.
+> self-modifying code) in order to support tracers like Intel PT and ARM
+> CoreSight.
+> 
+> A copy of the running kernel code is needed as a reference point (e.g.
+> from /proc/kcore). The text poke event records the old bytes and the new
+> bytes so that the event can be processed forwards or backwards.
+> 
+> The basic problem is recording the modified instruction in an unambiguous
+> manner given SMP instruction cache (in)coherence. That is, when modifying
+> an instruction concurrently any solution with one or multiple timestamps is
+> not sufficient:
+> 
+> 	CPU0				CPU1
+>  0
+>  1	write insn A
+>  2					execute insn A
+>  3	sync-I$
+>  4
+> 
+> Due to I$, CPU1 might execute either the old or new A. No matter where we
+> record tracepoints on CPU0, one simply cannot tell what CPU1 will have
+> observed, except that at 0 it must be the old one and at 4 it must be the new
+> one.
+> 
+> To solve this, take inspiration from x86 text poking, which has to solve this
+> exact problem due to variable length instruction encoding and I-fetch
+> windows.
+> 
+>  1) overwrite the instruction with a breakpoint and sync I$
+> 
+> This guarantees that that code flow will never hit the target instruction
+> anymore, on any CPU (or rather, it will cause an exception).
+> 
+>  2) issue the TEXT_POKE event
+> 
+>  3) overwrite the breakpoint with the new instruction and sync I$
+> 
+> Now we know that any execution after the TEXT_POKE event will either
+> observe the breakpoint (and hit the exception) or the new instruction.
+> 
+> So by guarding the TEXT_POKE event with an exception on either side; we
+> can now tell, without doubt, which instruction another CPU will have
+> observed."
+> 
+> ?
 
-> ---
+Ok
+
 > 
->  Documentation/kbuild/makefiles.rst | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
+> > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> > ---
+> >  arch/x86/kernel/alternative.c   | 37 +++++++++++++-
 > 
-> diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
-> index b9b50553bfc5..d7e6534a8505 100644
-> --- a/Documentation/kbuild/makefiles.rst
-> +++ b/Documentation/kbuild/makefiles.rst
-> @@ -297,9 +297,19 @@ more details, with real examples.
->  	If CONFIG_EXT2_FS is set to either 'y' (built-in) or 'm' (modular)
->  	the corresponding obj- variable will be set, and kbuild will descend
->  	down in the ext2 directory.
-> -	Kbuild only uses this information to decide that it needs to visit
-> -	the directory, it is the Makefile in the subdirectory that
-> -	specifies what is modular and what is built-in.
-> +
-> +	Kbuild uses this information not only to decide that it needs to visit
-> +	the directory, but also to decide whether or not to link objects from
-> +	the directory into vmlinux.
-> +
-> +	When Kbuild descends into the directory with 'y', all built-in objects
-> +	from that directory are combined into the built-in.a, which will be
-> +	eventually linked into vmlinux.
-> +
-> +	When Kbuild descends into the directory with 'm', in contrast, nothing
-> +	from that directory will be linked into vmlinux. If the Makefile in
-> +	that directory specifies obj-y, those objects will be left orphan.
-> +	It is very likely a bug of the Makefile or of dependencies in Kconfig.
->  
->  	It is good practice to use a `CONFIG_` variable when assigning directory
->  	names. This allows kbuild to totally skip the directory if the
+> I'm thinking it might make sense to do this x86 part in a separate patch, and
+> just present the generic thing first:
+> 
+> >  include/linux/perf_event.h      |  6 +++
+> >  include/uapi/linux/perf_event.h | 19 ++++++-
+> >  kernel/events/core.c            | 87 ++++++++++++++++++++++++++++++++-
+> >  4 files changed, 146 insertions(+), 3 deletions(-)
+> >
+> 
+> > @@ -1006,6 +1007,22 @@ enum perf_event_type {
+> >  	 */
+> >  	PERF_RECORD_BPF_EVENT			= 18,
+> >
+> > +	/*
+> > +	 * Records changes to kernel text i.e. self-modified code.
+> > +	 * 'len' is the number of old bytes, which is the same as the number
+> > +	 * of new bytes. 'bytes' contains the old bytes followed immediately
+> > +	 * by the new bytes.
+> > +	 *
+> > +	 * struct {
+> > +	 *	struct perf_event_header	header;
+> > +	 *	u64				addr;
+> > +	 *	u16				len;
+> > +	 *	u8				bytes[];
+> 
+> Would it make sense to have something like:
+> 
+> 	 *	u16				old_len;
+> 	 *	u16				new_len;
+> 	 *	u8				old_bytes[old_len];
+> 	 *	u8				new_bytes[new_len];
+> 
+> That would allow using this for (short) trampolines (ftrace, optprobes etc..).
+> {old_len=0, new_len>0} would indicate a new trampoline, while {old_len>0,
+> new_len=0} would indicate the dissapearance of a trampoline.
+
+Yes that makes sense.
+
+> 
+> > +	 *	struct sample_id		sample_id;
+> > +	 * };
+> > +	 */
+> > +	PERF_RECORD_TEXT_POKE			= 19,
+> > +
+> >  	PERF_RECORD_MAX,			/* non-ABI */
+> >  };
+> 
+> Then the x86 patch, hooking up the event, can also cover kprobes and stuff.
+
+Ok
+
