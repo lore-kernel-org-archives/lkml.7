@@ -2,113 +2,163 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E8FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E9BC2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7577720716
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44BA4227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:15:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576757679;
-	bh=rOy4ek2mgV1L24thicn9UdoOkf1ZoHaqk5jMo3PJzgw=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=zm1aDI6l6vhxD2z0al4c4bfmhIXVSjJxXBeuSc9y7ObvdrxnXNqq/HB4EwuXwp76q
-	 FJFeoXsJ5UGONzSM5ujyoWixmzuyUCzdstv5dqPG3GnWGvB3PRXmsFN3gFRBAQKebU
-	 kGjBGBWj8PEGP4uiafKByLNKF6bvwziQKYLxFm80=
+	s=default; t=1576757712;
+	bh=xMH084/Z53/7s0mNpBhzlm5iprR/Pbk4nW08z/LJCM4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nZh+Sz6JUpxAImKc0cgotmIwCwMK7dn01M5NDelObp+oOlXMh+IRhcfupQk1ljH7h
+	 jkk8Wr7a6ZWHu2gi4SGxXEXNxUs40UHdjI2Ixn+8mVasnmmVluhncjZVRZX1AaTzWH
+	 +rVFmdufnbYZXDf38MwAFll6pskcwx8arduATLic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfLSMOi (ORCPT
+        id S1726768AbfLSMPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 07:14:38 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:39231 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726668AbfLSMOh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 07:14:37 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1ihuhJ-00076z-VD; Thu, 19 Dec 2019 13:14:29 +0100
-To:     Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: Re: [PATCH V2 0/2] irqchip: add NXP INTMUX interrupt controller
-X-PHP-Originating-Script: 0:main.inc
+        Thu, 19 Dec 2019 07:15:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40690 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726668AbfLSMPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 07:15:10 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAF6420716;
+        Thu, 19 Dec 2019 12:15:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576757709;
+        bh=xMH084/Z53/7s0mNpBhzlm5iprR/Pbk4nW08z/LJCM4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sy7mKBA9LW2YtkILvLwimkWHZBvKr4qhIixgSQtS4p0UKJJ4e4bv0VtAMsa+DGX7w
+         gYDLr4Qc8UTO/FOFUHplBFpsZKSBK8l7YjsRQvDsUJN30rNUT086blDVYXOUkzw9En
+         I2g0vamPKNLlcRtUPDgwNdPFnhwGo1bgUlODK5H8=
+Date:   Thu, 19 Dec 2019 13:15:07 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Will Deacon <will@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        kernel-team@android.com, Hillf Danton <hdanton@sina.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com
+Subject: Re: [PATCH] chardev: Avoid potential use-after-free in
+ 'chrdev_open()'
+Message-ID: <20191219121507.GA1493557@kroah.com>
+References: <20191219120203.32691-1-will@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 19 Dec 2019 12:14:29 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <tglx@linutronix.de>, <jason@lakedaemon.net>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <shawnguo@kernel.org>,
-        <s.hauer@pengutronix.de>, <kernel@pengutronix.de>,
-        <linux-imx@nxp.com>, <linux-kernel@vger.kernel.org>,
-        <fugang.duan@nxp.com>, <linux-arm-kernel@lists.infradead.org>
-In-Reply-To: <1576750865-14442-1-git-send-email-qiangqing.zhang@nxp.com>
-References: <1576750865-14442-1-git-send-email-qiangqing.zhang@nxp.com>
-Message-ID: <f80a236884aeba78dfa45596dcb20255@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: qiangqing.zhang@nxp.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, linux-imx@nxp.com, linux-kernel@vger.kernel.org, fugang.duan@nxp.com, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191219120203.32691-1-will@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-19 10:21, Joakim Zhang wrote:
-> Hi Marc,
->
->    Registering domain for each channel is indeed a bit unreasonable, 
-> I have
-> changed the driver to support only one channel (channel 0 by default) 
-> as
-> muti-channels is designed to route interrupt to different cores. The 
-> fixed
-> channel is enough for us.
+On Thu, Dec 19, 2019 at 12:02:03PM +0000, Will Deacon wrote:
+> 'chrdev_open()' calls 'cdev_get()' to obtain a reference to the
+> 'struct cdev *' stashed in the 'i_cdev' field of the target inode
+> structure. If the pointer is NULL, then it is initialised lazily by
+> looking up the kobject in the 'cdev_map' and so the whole procedure is
+> protected by the 'cdev_lock' spinlock to serialise initialisation of
+> the shared pointer.
+> 
+> Unfortunately, it is possible for the initialising thread to fail *after*
+> installing the new pointer, for example if the subsequent '->open()' call
+> on the file fails. In this case, 'cdev_put()' is called, the reference
+> count on the kobject is dropped and, if nobody else has taken a reference,
+> the release function is called which finally clears 'inode->i_cdev' from
+> 'cdev_purge()' before potentially freeing the object. The problem here
+> is that a racing thread can happily take the 'cdev_lock' and see the
+> non-NULL pointer in the inode, which can result in a refcount increment
+> from zero and a warning:
+> 
+>   |  ------------[ cut here ]------------
+>   |  refcount_t: addition on 0; use-after-free.
+>   |  WARNING: CPU: 2 PID: 6385 at lib/refcount.c:25 refcount_warn_saturate+0x6d/0xf0
+>   |  Modules linked in:
+>   |  CPU: 2 PID: 6385 Comm: repro Not tainted 5.5.0-rc2+ #22
+>   |  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+>   |  RIP: 0010:refcount_warn_saturate+0x6d/0xf0
+>   |  Code: 05 55 9a 15 01 01 e8 9d aa c8 ff 0f 0b c3 80 3d 45 9a 15 01 00 75 ce 48 c7 c7 00 9c 62 b3 c6 08
+>   |  RSP: 0018:ffffb524c1b9bc70 EFLAGS: 00010282
+>   |  RAX: 0000000000000000 RBX: ffff9e9da1f71390 RCX: 0000000000000000
+>   |  RDX: ffff9e9dbbd27618 RSI: ffff9e9dbbd18798 RDI: ffff9e9dbbd18798
+>   |  RBP: 0000000000000000 R08: 000000000000095f R09: 0000000000000039
+>   |  R10: 0000000000000000 R11: ffffb524c1b9bb20 R12: ffff9e9da1e8c700
+>   |  R13: ffffffffb25ee8b0 R14: 0000000000000000 R15: ffff9e9da1e8c700
+>   |  FS:  00007f3b87d26700(0000) GS:ffff9e9dbbd00000(0000) knlGS:0000000000000000
+>   |  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>   |  CR2: 00007fc16909c000 CR3: 000000012df9c000 CR4: 00000000000006e0
+>   |  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>   |  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>   |  Call Trace:
+>   |   kobject_get+0x5c/0x60
+>   |   cdev_get+0x2b/0x60
+>   |   chrdev_open+0x55/0x220
+>   |   ? cdev_put.part.3+0x20/0x20
+>   |   do_dentry_open+0x13a/0x390
+>   |   path_openat+0x2c8/0x1470
+>   |   do_filp_open+0x93/0x100
+>   |   ? selinux_file_ioctl+0x17f/0x220
+>   |   do_sys_open+0x186/0x220
+>   |   do_syscall_64+0x48/0x150
+>   |   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>   |  RIP: 0033:0x7f3b87efcd0e
+>   |  Code: 89 54 24 08 e8 a3 f4 ff ff 8b 74 24 0c 48 8b 3c 24 41 89 c0 44 8b 54 24 08 b8 01 01 00 00 89 f4
+>   |  RSP: 002b:00007f3b87d259f0 EFLAGS: 00000293 ORIG_RAX: 0000000000000101
+>   |  RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f3b87efcd0e
+>   |  RDX: 0000000000000000 RSI: 00007f3b87d25a80 RDI: 00000000ffffff9c
+>   |  RBP: 00007f3b87d25e90 R08: 0000000000000000 R09: 0000000000000000
+>   |  R10: 0000000000000000 R11: 0000000000000293 R12: 00007ffe188f504e
+>   |  R13: 00007ffe188f504f R14: 00007f3b87d26700 R15: 0000000000000000
+>   |  ---[ end trace 24f53ca58db8180a ]---
+> 
+> Since 'cdev_get()' can already fail to obtain a reference, simply move
+> it over to use 'kobject_get_unless_zero()' instead of 'kobject_get()',
+> which will cause the racing thread to return -ENXIO if the initialising
+> thread fails unexpectedly.
+> 
+> Cc: Greg KH <gregkh@linuxfoundation.org>
+> Cc: Hillf Danton <hdanton@sina.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Reported-by: syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com
+> Signed-off-by: Will Deacon <will@kernel.org>
+> ---
+>  fs/char_dev.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/char_dev.c b/fs/char_dev.c
+> index 00dfe17871ac..c5e6eff5a381 100644
+> --- a/fs/char_dev.c
+> +++ b/fs/char_dev.c
+> @@ -352,7 +352,7 @@ static struct kobject *cdev_get(struct cdev *p)
+>  
+>  	if (owner && !try_module_get(owner))
+>  		return NULL;
+> -	kobj = kobject_get(&p->kobj);
+> +	kobj = kobject_get_unless_zero(&p->kobj);
+>  	if (!kobj)
+>  		module_put(owner);
+>  	return kobj;
+> -- 
+> 2.24.1.735.g03f4e72817-goog
+> 
 
-But that's not what the HW does, right? Next time, you will post
-the patches that enabled multiple channels, and the interrupt specifier
-will have to change, which will impact all existing DTs.
+Ugh.
 
-So please do the right thing from the start. Add channel selection to
-the interrupt specifier. Pick the right irq domain with a .select()
-callback, and your driver will magically work.
+Due to the location of the lock, this looks like the only viable
+solution.
 
-Thanks,
+Al, any objection for me taking this into my tree now to send to Linus?
+Will, this did fix the syzbot reproducer, right?
 
-         M.
+thanks,
 
->   Thanks for your kindly review.
->
-> ChangeLog:
-> V1->V2:	*squash patches:
-> 		drivers/irqchip: enable INTMUX interrupt controller driver
->  		drivers/irqchip: add NXP INTMUX interrupt multiplexer support
-> 	*remove properity "fsl,intmux_chans", only support channel 0 by
-> 	default.
-> 	*delete two unused macros.
-> 	*align the various field in struct intmux_data.
-> 	*turn to spin lock _irqsave version.
-> 	*delete struct intmux_irqchip_data
-> 	*disable interrupt in probe stage and clear pending status in remove
-> 	stage
->
-> Joakim Zhang (2):
->   dt-bindings/irq: add binding for NXP INTMUX interrupt multiplexer
->   drivers/irqchip: add NXP INTMUX interrupt multiplexer support
->
->  .../interrupt-controller/fsl,intmux.txt       |  28 ++
->  drivers/irqchip/Kconfig                       |   6 +
->  drivers/irqchip/Makefile                      |   1 +
->  drivers/irqchip/irq-imx-intmux.c              | 240 
-> ++++++++++++++++++
->  4 files changed, 275 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.txt
->  create mode 100644 drivers/irqchip/irq-imx-intmux.c
-
--- 
-Jazz is not dead. It just smells funny...
+greg k-h
