@@ -2,84 +2,112 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60550C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF1CC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B09524672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:26:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D543E24672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:26:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576794369;
-	bh=ZfiNj/3IAqVOdV51Zj3XycsQakVvXcBEq/F55ivmFMA=;
+	s=default; t=1576794401;
+	bh=BdxQB7ZSwpAKwtK0q7O8WB6T9KEqcDWx9oV6YYKU1yE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j8lHgOCedWGS5D6FHX+Znb72cHdBXGziusuYNNt3Osg9YgxF0BNyqrl2S8TbUGU3C
-	 Uz1LD3JspTmtFIyAAujclltkw5nvMeRNo7CIbQdmBlu3Yv0jllhbCQYY6VI8uiW7ia
-	 8SW2gvr8tpexd6LmvSg6eKQ7FaqCYAaX9hd8uVS0=
+	b=1txAsp0zC/4QdTQBgGnPfcWdGKw+L05LBiRXv2uxXJac0HwbSKC5tKBA29CrT1k43
+	 I34+BLtaEnuNYh1jaNqKeOtG05xIcx8AAcKQPM9OCqPt7j/tP2xNHeKpBFo7b+SVH6
+	 sVJNGadXe3KVlOSaWo5Hr2iXZ4tML2nmhAu4c/4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfLSW0I (ORCPT
+        id S1727191AbfLSW0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 17:26:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48690 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 17:26:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726880AbfLSW0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 17:26:08 -0500
+        id S1726880AbfLSW0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 17:26:40 -0500
 Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59C692465E;
-        Thu, 19 Dec 2019 22:26:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E7812465E;
+        Thu, 19 Dec 2019 22:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576794367;
-        bh=ZfiNj/3IAqVOdV51Zj3XycsQakVvXcBEq/F55ivmFMA=;
+        s=default; t=1576794399;
+        bh=BdxQB7ZSwpAKwtK0q7O8WB6T9KEqcDWx9oV6YYKU1yE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UwXhJnqZ5QclM68Nly3TnFChOXuhZCL+9g7D+jYJVifYRePT0zeVznFzwAxNRDo8Y
-         NPfwpGX2+fYJ8dYgUTZR173f/UJELBUwBZIOk80p7gPkrfBAS1e6UFXbdmWxceemyU
-         DkvQpoN0VQlMURfkmSZjDIf+ZE2j272gHfJYging=
-Date:   Thu, 19 Dec 2019 17:26:06 -0500
+        b=xeKp3emR/vcXvAEBwMnM2kiL7cWKcDjM2mTeGnzAfzCB5mxZgB2q+exWBl6sLXkaV
+         MmAtLNeK9ggqD5nzAPd8Fi14TMgOdo4JAov0ycKif6Ru46LbAGh/XlMAwP5kzk5bwj
+         KnfhPJuEEXpk2S1I6Esw9VouM18G9PO9MZU1Un64=
+Date:   Thu, 19 Dec 2019 17:26:38 -0500
 From:   Sasha Levin <sashal@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Stefan Wahren <wahrenst@gmx.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.4 276/350] net: bcmgenet: Add RGMII_RXID support
-Message-ID: <20191219222606.GR17708@sasha-vm>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Guenter Roeck <groeck@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "# v4 . 10+" <stable@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Andrey Pronin <apronin@chromium.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Alexander Steffen <Alexander.Steffen@infineon.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-integrity@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.4 277/350] tpm: Add a flag to indicate TPM
+ power is managed by firmware
+Message-ID: <20191219222638.GS17708@sasha-vm>
 References: <20191210210735.9077-1-sashal@kernel.org>
- <20191210210735.9077-237-sashal@kernel.org>
- <d53a8fd0-c4a6-61eb-597c-b4cf094882d3@gmail.com>
+ <20191210210735.9077-238-sashal@kernel.org>
+ <CABXOdTdO16V4AtO1t=BwXW2=HAtT6CYoSddmrn5T2qZP9hs0eQ@mail.gmail.com>
+ <20191211175651.GK4516@linux.intel.com>
+ <CABXOdTcsnAVaPo-492tVPtjOYMbNtu2Zvz4GwSBGcDEHAMGw5Q@mail.gmail.com>
+ <20191213001654.GD7854@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <d53a8fd0-c4a6-61eb-597c-b4cf094882d3@gmail.com>
+In-Reply-To: <20191213001654.GD7854@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 01:49:30PM -0800, Florian Fainelli wrote:
->On 12/10/19 1:06 PM, Sasha Levin wrote:
->> From: Stefan Wahren <wahrenst@gmx.net>
+On Fri, Dec 13, 2019 at 02:17:31AM +0200, Jarkko Sakkinen wrote:
+>On Wed, Dec 11, 2019 at 10:05:52AM -0800, Guenter Roeck wrote:
+>> On Wed, Dec 11, 2019 at 9:57 AM Jarkko Sakkinen
+>> <jarkko.sakkinen@linux.intel.com> wrote:
+>> >
+>> > On Tue, Dec 10, 2019 at 01:32:15PM -0800, Guenter Roeck wrote:
+>> > > On Tue, Dec 10, 2019 at 1:12 PM Sasha Levin <sashal@kernel.org> wrote:
+>> > > >
+>> > > > From: Stephen Boyd <swboyd@chromium.org>
+>> > > >
+>> > > > [ Upstream commit 2e2ee5a2db06c4b81315514b01d06fe5644342e9 ]
+>> > > >
+>> > > > On some platforms, the TPM power is managed by firmware and therefore we
+>> > > > don't need to stop the TPM on suspend when going to a light version of
+>> > > > suspend such as S0ix ("freeze" suspend state). Add a chip flag,
+>> > > > TPM_CHIP_FLAG_FIRMWARE_POWER_MANAGED, to indicate this so that certain
+>> > > > platforms can probe for the usage of this light suspend and avoid
+>> > > > touching the TPM state across suspend/resume.
+>> > > >
+>> > >
+>> > > Are the patches needed to support CR50 (which need this patch) going
+>> > > to be applied to v5.4.y as well ? If not, what is the purpose of
+>> > > applying this patch to v5.4.y ?
+>> > >
+>> > > Thanks,
+>> > > Guenter
+>> >
+>> > Thanks Guenter. I think not.
+>> >
+>> Thought so. In that case this patch should be dropped.
 >>
->> [ Upstream commit da38802211cc3fd294211a642932edb09e3af632 ]
->>
->> This adds the missing support for the PHY mode RGMII_RXID.
->> It's necessary for the Raspberry Pi 4.
->>
->> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
->> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
->> Signed-off-by: David S. Miller <davem@davemloft.net>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> Guenter
 >
->There are more changes required to make the GENET controller on the Pi 4
->to work, how and why this was selected? Same comment applies to the 4.19
->automatic selection.
+>I fully agree with you.
 
-I'll just drop it then, thanks.
+I've dropped it, thanks!
 
 -- 
 Thanks,
