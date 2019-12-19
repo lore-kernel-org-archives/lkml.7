@@ -4,137 +4,130 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A7EC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC875C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7B9624679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B2D824672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:49:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="PA7ZtiPC"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ASTxwckP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbfLSTtP (ORCPT
+        id S1727167AbfLSTt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:49:15 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45032 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726836AbfLSTtP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 14:49:15 -0500
-Received: by mail-oi1-f193.google.com with SMTP id d62so3553132oia.11
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 11:49:14 -0800 (PST)
+        Thu, 19 Dec 2019 14:49:58 -0500
+Received: from mail-bn8nam11on2047.outbound.protection.outlook.com ([40.107.236.47]:14657
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726840AbfLSTt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 14:49:58 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JE6XeACfa8P6hc8ZMuZ3DSQ6mVh9Ejgle94Y8s3tqbns1gn/1H2i4+DOQe/XNX/spquAg7txotdpfiKa7X6uCJ2HsJa6HtEHXLy5ZFIcxxSaoTDo4scCFbqmZvLoQpWeYYZvnAPKKQ+IOO/2Nm+pEMrAJbNsNOHuB96bZAgTbOs3DIPuWSDaFamY1vXQsjYTjuzSomcsLWCrBgH4lmB3u7VQGm+hA0qzOT2ubAT/VdeMpZ7p6FSkyObfv/4eJckXL7LcnjjpGIMFmdbQKKGaypFIomImBMNiKBm5MMUwRLrdoftI/ncjYtGrj6rQYefdIIJaqRk/JHNQWDrZYi4aOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fCpz7GqwUgGd6g9PS8p3oOM7Bc3gp3y402tqVGFgOaU=;
+ b=iJlQQpX0cHZne9OQyGlESlNGqbH5NcmJKqOfjMwOkrXzg5wZ01nkkXj/kKBNsRdlAJlvCxcyQ/IRA2pLOEnbn7M9kDCpMzVD24eDtJZ+PPVdyS3yCsLwYXpH71WPAeq3i43eLIxIfFwYWRyibYN8/77xnpquibSsStVn2BhqNXv9FYjnr6vJ0TO9kJwNXCO2pl561Ye6N3bP/4d5tEsjIEYhjqe3Qn8/ZlmOWK+RAr3a4thYFh4h4l9tf2w7/BLHOXwnV2VVwhyQziPVKd/r/eDLgG/ukL38n/fsNQhtQBDO/DDODluBc4+mvvqs+PPQvCcAriM50rnnuOXqUvxLWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+WOYLYTznKDVctg0axb2JuhcSMnCkii9+HnV91/Ps1A=;
-        b=PA7ZtiPCdpmB5ckpKUTuP9UiI4iO7Jaul4a4yyubl/SlGQ0UaA0mGUoBnRKuK/seFi
-         m15W7cG674hpFWe3TsztGk6NA7feYoUmXiRZ3s4N6FNIntX5GCLlL8GKfFDplumUsVLY
-         KDZZy3Mi37qz+Dj/MMzF+N6D2A1THGyHNowICPiEq3WG14wXd0lpIIc9c63kkH26kA1c
-         m5W424gQGCjRKMyzabSnRk6pxYoX3++TEDpRU4r8Avl5rn/iDC7kIagD/xF2qvfIXM3j
-         hoSgRc+bvbLi9hXAil0kfLUFQHRmCar9D4iR/BGmHos+ZjwqkLBnqNylxyTGRoT1UZAN
-         PQvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+WOYLYTznKDVctg0axb2JuhcSMnCkii9+HnV91/Ps1A=;
-        b=i3hlucyHyvvBcCmd6zvaHnDuFeyiDq94hPZFhbvc3WIU+FTqsbPl8Y7yuL/gTrYMbn
-         8epqp37EB7lYVy5CXgMoINmJesXU2Zd0poQsoEXUac0OUS0/TyRNcpeLhrbjo6GyE4bg
-         Zj4sJSsCr3gP26J+z8LoA2s0YjKAfNuzcJAsgDNhKLKfEoC/QFdiZ9JQNhumsg0Zq3fv
-         BdR39lww1AXMubBRjRKNqExkANstWKsxRisvrZLmYKlbjThasWd/+eSUHd/1caKIL/9e
-         gAnfoJYnkRN31NjZYYVVb7w5FtEcpt8y0aXkhYnzZPnnV+VEDuN8hMTqEkc5/u/J2LWq
-         W82w==
-X-Gm-Message-State: APjAAAVOeZHIwyK2bFjq0/+EpxeG/MLY/+NZUD7t2FBn0aGEekL4gcXO
-        JonwebemJ8M2qraib1PzIX0B2MG8qqsWAPTksiIbV2db
-X-Google-Smtp-Source: APXvYqyeGcSqxrWUGJoSElD4q/mqzurMZs+tkiQMyf8vBF9MThN5eDra5Iy1ZhiGqtvXuFyzQyb8v4YxqVb1PMEzM8U=
-X-Received: by 2002:aca:4850:: with SMTP id v77mr2809560oia.70.1576784954413;
- Thu, 19 Dec 2019 11:49:14 -0800 (PST)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fCpz7GqwUgGd6g9PS8p3oOM7Bc3gp3y402tqVGFgOaU=;
+ b=ASTxwckP5g0aIGjztkGzciVRJ28edyafGAbT962MTs//7ChkwpUgJ6fMzBxcYBmQ0nZhTu51zJ+f9m6aBx9TrM7L43HOdguq+HxN3TF5ZIORbU9e22x2ukrdJvFykHDZUP6RG2ia4fQaQtuNQBe0M67+VYrL4SNaHkXvo8jWsls=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=John.Allen@amd.com; 
+Received: from DM5PR12MB2423.namprd12.prod.outlook.com (52.132.140.158) by
+ DM5PR12MB1596.namprd12.prod.outlook.com (10.172.38.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.15; Thu, 19 Dec 2019 19:49:54 +0000
+Received: from DM5PR12MB2423.namprd12.prod.outlook.com
+ ([fe80::84ad:4e59:7686:d79c]) by DM5PR12MB2423.namprd12.prod.outlook.com
+ ([fe80::84ad:4e59:7686:d79c%3]) with mapi id 15.20.2538.019; Thu, 19 Dec 2019
+ 19:49:54 +0000
+Date:   Thu, 19 Dec 2019 13:49:48 -0600
+From:   John Allen <john.allen@amd.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, rkrcmar@redhat.com
+Subject: Re: [PATCH] kvm/svm: PKU not currently supported
+Message-ID: <20191219194948.adug277luzjdu3qv@mojo.amd.com>
+References: <20191219152332.28857-1-john.allen@amd.com>
+ <87immc873u.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87immc873u.fsf@vitty.brq.redhat.com>
+X-ClientProxiedBy: SN4PR0501CA0101.namprd05.prod.outlook.com
+ (2603:10b6:803:42::18) To DM5PR12MB2423.namprd12.prod.outlook.com
+ (2603:10b6:4:b3::30)
 MIME-Version: 1.0
-References: <20191218123205.3fb9c793@canb.auug.org.au> <20191218124950.191d9df4@canb.auug.org.au>
-In-Reply-To: <20191218124950.191d9df4@canb.auug.org.au>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 19 Dec 2019 11:49:03 -0800
-Message-ID: <CAPcyv4jDozHaSCw26onPfmT1xefX2S2NB3RGL8pz1UWz=UDWWw@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the generic-ioremap tree with the
- nvdimm-fixes tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 9f531fd1-14e4-4bbf-62e3-08d784bc9e53
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1596:
+X-Microsoft-Antispam-PRVS: <DM5PR12MB15967D32CFF0BCF4802E1DDE9A520@DM5PR12MB1596.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0256C18696
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(136003)(346002)(39860400002)(376002)(189003)(199004)(66476007)(8936002)(81156014)(81166006)(8676002)(6506007)(66556008)(86362001)(66946007)(316002)(6512007)(52116002)(2906002)(44832011)(1076003)(26005)(186003)(4326008)(6916009)(5660300002)(478600001)(6666004)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1596;H:DM5PR12MB2423.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: qGjzNbAe4kMAZzz2NnArgPjAPhh10VYD8s6SuppqQIpo84ISO8sIF77xyCynvkfvcS3TYUu3nGMknSXplly/hFu59MOFIlPvMB9UIRe+/PWnt7wvNzrh/cJh9QWjhYrl0cT4UWmcvm62L+uebwyfTjKZXIqRiXpBl0Ca56xVsVMc9pPPIp60mvlw/2YS6jX3F+FeyuifYC/qTkEltoJc0B0v0rImQWSXc0bCs7YZ4Wi2yA2YQrmOM0L7VnnlweXFMOsslO2WT/ThgnHIJj8dSwUirfGbdHQVRYWejkdB3pG/cA4uE9OPBSPGRSNS9gcM3Nmdv4PnjIPYfQ9CUYVm+fe8lkx/3dzQNU3iO9l7HWJwYLM2dxEA0I5VpO/yCtbPyPJS31655WKjoLCc0x9RHtoE0K26f3nnyFnlddNA/jWFfkZOs0YfMUTNITo1KOX4
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9f531fd1-14e4-4bbf-62e3-08d784bc9e53
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Dec 2019 19:49:54.4955
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: x/sRurtDKoLeDJYn/WMxOgWclijHLqDNrG7sKAexzPPN0FBSYB/Xov350pjyxzOoSdZz1m2TimKqBxPIhcWSPQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1596
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 5:50 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> On Wed, 18 Dec 2019 12:32:05 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+On Thu, Dec 19, 2019 at 08:09:57PM +0100, Vitaly Kuznetsov wrote:
+> John Allen <john.allen@amd.com> writes:
+> 
+> > Current SVM implementation does not have support for handling PKU. Guests
+> > running on a host with future AMD cpus that support the feature will read
+> > garbage from the PKRU register and will hit segmentation faults on boot as
+> > memory is getting marked as protected that should not be. Ensure that cpuid
+> > from SVM does not advertise the feature.
 > >
-> > Today's linux-next merge of the generic-ioremap tree got a conflict in:
+> > Signed-off-by: John Allen <john.allen@amd.com>
+> > ---
+> >  arch/x86/kvm/svm.c | 2 ++
+> >  1 file changed, 2 insertions(+)
 > >
-> >   tools/testing/nvdimm/Kbuild
-> >
-> > between commit:
-> >
-> >   c14685547762 ("tools/testing/nvdimm: Fix mock support for ioremap")
-> >
-> > from the nvdimm-fixes tree and commit:
-> >
-> >   1188dd7d3fbd ("remove ioremap_nocache and devm_ioremap_nocache")
-> >
-> > from the generic-ioremap tree.
-> >
-> > I fixed it up (the latter is a superset of the former) and can carry the
-> > fix as necessary. This is now fixed as far as linux-next is concerned,
-> > but any non trivial conflicts should be mentioned to your upstream
-> > maintainer when your tree is submitted for merging.  You may also want
-> > to consider cooperating with the maintainer of the conflicting tree to
-> > minimise any particularly complex conflicts.
->
-> The merge also needed this fixup (since both trees logically added the
-> same small function):
->
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Wed, 18 Dec 2019 12:46:03 +1100
-> Subject: [PATCH] generic_ioremap: merge fix for "tools/testing/nvdimm: Fix
->  mock support for ioremap"
->
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> > index 122d4ce3b1ab..f911aa1b41c8 100644
+> > --- a/arch/x86/kvm/svm.c
+> > +++ b/arch/x86/kvm/svm.c
+> > @@ -5933,6 +5933,8 @@ static void svm_set_supported_cpuid(u32 func, struct kvm_cpuid_entry2 *entry)
+> >  		if (avic)
+> >  			entry->ecx &= ~bit(X86_FEATURE_X2APIC);
+> >  		break;
+> > +	case 0x7:
+> > +		entry->ecx &= ~bit(X86_FEATURE_PKU);
+> 
+> Would it make more sense to introduce kvm_x86_ops->pku_supported() (and
+> return false for SVM and boot_cpu_has(X86_FEATURE_PKU) for vmx) so we
+> don't set the bit in the first place?
 
-Hi Stephen,
+Yes, I think you're right. I had initially planned to do it that way so I
+already have a patch ready. I'll send it up pronto.
 
-Thanks for the heads up.
-
-Christoph are you going to submit that for v5.5 or is that v5.6 material?
-> ---
->  tools/testing/nvdimm/test/iomap.c | 6 ------
->  1 file changed, 6 deletions(-)
->
-> diff --git a/tools/testing/nvdimm/test/iomap.c b/tools/testing/nvdimm/test/iomap.c
-> index 27a9c5f3fcd0..03e40b3b0106 100644
-> --- a/tools/testing/nvdimm/test/iomap.c
-> +++ b/tools/testing/nvdimm/test/iomap.c
-> @@ -193,12 +193,6 @@ void __iomem *__wrap_ioremap(resource_size_t offset, unsigned long size)
->  }
->  EXPORT_SYMBOL(__wrap_ioremap);
->
-> -void __iomem *__wrap_ioremap(resource_size_t offset, unsigned long size)
-> -{
-> -       return __nfit_test_ioremap(offset, size, ioremap);
-> -}
-> -EXPORT_SYMBOL(__wrap_ioremap);
-> -
->  void __iomem *__wrap_ioremap_wc(resource_size_t offset, unsigned long size)
->  {
->         return __nfit_test_ioremap(offset, size, ioremap_wc);
-> --
-> 2.24.0
->
-> --
-> Cheers,
-> Stephen Rothwell
+> 
+> >  	case 0x80000001:
+> >  		if (nested)
+> >  			entry->ecx |= (1 << 2); /* Set SVM bit */
+> 
+> -- 
+> Vitaly
+> 
