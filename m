@@ -2,124 +2,321 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1BDC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD196C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D9D2206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1395222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:54:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbfLSJyF (ORCPT
+        id S1726879AbfLSJyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 19 Dec 2019 04:54:05 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34934 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbfLSJyF (ORCPT
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45514 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbfLSJyF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Dec 2019 04:54:05 -0500
-Received: by mail-oi1-f195.google.com with SMTP id k4so2413134oik.2
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 01:54:04 -0800 (PST)
+Received: by mail-lj1-f195.google.com with SMTP id j26so5492780ljc.12;
+        Thu, 19 Dec 2019 01:54:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZUKPu+3lzNZNRX0GPct7+0OF4dHxMBRWmyHMUXjgvFU=;
-        b=dM9Dri73SBvMSb0MX1ghwOP6xNEYF5EtDsbBpOmR1Lva+bOM7B8n9PHhi/okQdn0OP
-         +tAolcwYNoU3Mofv2EDgwS2h55JBQwctHSUCQ3WnL5FdDGauPJRFto0A3McVO7j3tuDq
-         AohhVrGgpKe8/Wa8bnun2nN5nUX9m0zT2fmnq+HFnXxWInBYrwSO0Fc7g4CEZz7A5CNx
-         8tq56bJwk0Bk7byPgvZaOKh4K2H1xJ34v9WFn8YcoZ5gMYZQgsW4pU3V8+gALe73Fvnb
-         n4YsjOVvXoDeClqqlJfIjpXXcr8q/6un5thtHcN8Oix/YTM3+0UGQbVdXmC9ofJr2QNl
-         YaTA==
-X-Gm-Message-State: APjAAAXk/Py5QLyIYaKUBRcRcJeBvTgGTRMQmLbga3R+C1oB6IoUE30c
-        A5EkxQDLgpUjc04jGDy8lPEhbQqBe/vc+3XenkA=
-X-Google-Smtp-Source: APXvYqxGRCQ+HGG1eHMEhsUuHEO4jMulwydAvw7vvY4zmIqXYi1z525a9XEwSsmQKa80af+gnHaisBN2rlN7G8IGYk0=
-X-Received: by 2002:a05:6808:8ec:: with SMTP id d12mr1679787oic.131.1576749244150;
- Thu, 19 Dec 2019 01:54:04 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8MRgRjdUo7TxZhFhpwUs1F4Xq7bP5CbQW3oy2437g+0=;
+        b=abGlU/towqUDfJXxsqooFjhhXxlmZkrB5QKtTzCoFPF0BHgVjsxFQ4MlTCz6k4mwh4
+         rAspbFRqOZnIRVtoCpeC+sJF4PEYlM32FG041zGoKVGxFRnv2xROow818OZrJ1ve5Q+B
+         9MzQOBjdVZ5pjNU3lboAUfA/zbDsXXvhDqF1XG+WZ5IGNk0Rjf5+IJWoOvZou84fk1Dg
+         Uo1Br9EX6UzjYbcSsfqPkMWerxtRyk0JdPngDKhHju7Kn4yFD2mmenuASr8D2TcPEW67
+         ibg3iVIDehf2im7brTJOijjEiwFr+EIhs5ZM9yFulr+Gd4fURcxLEURKdfadFA9RALGx
+         w+gA==
+X-Gm-Message-State: APjAAAWxBbNm30GvlbHtYwE3et2uFT1+wiq2muxGqW6cnPMG3nJmpKOm
+        nYbac76nyFyZj9tsp7HdZ+Q=
+X-Google-Smtp-Source: APXvYqwIEGdSQ0oJvIFz2XxjCDKbERJaQW/UjcF3cWdHrZu9BTGN8wM2OPJQKlUzIh2RJ+T6fbQukg==
+X-Received: by 2002:a2e:8646:: with SMTP id i6mr5277483ljj.122.1576749241229;
+        Thu, 19 Dec 2019 01:54:01 -0800 (PST)
+Received: from localhost.localdomain (dyt4gctb359myxd0pkwmt-4.rev.dnainternet.fi. [2001:14bb:430:5140:37cf:5409:8fcc:4495])
+        by smtp.gmail.com with ESMTPSA id w19sm2326219lfl.55.2019.12.19.01.53.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 01:54:00 -0800 (PST)
+Date:   Thu, 19 Dec 2019 11:53:53 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [PATCH v7 10/12] gpio: bd71828: Initial support for ROHM BD71828
+ PMIC GPIOs
+Message-ID: <6e025830ece2c16c02f0492f51f5705d21381264.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-References: <20191216062806.112361-1-yuchao0@huawei.com>
-In-Reply-To: <20191216062806.112361-1-yuchao0@huawei.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 19 Dec 2019 10:53:52 +0100
-Message-ID: <CAMuHMdVvqccd_iwdz8khxYKUjrD-pnBYggagVCYZyNmbZxB9Tw@mail.gmail.com>
-Subject: Re: [RFC PATCH v5] f2fs: support data compression
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chao Yu <chao@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 7:29 AM Chao Yu <yuchao0@huawei.com> wrote:
-> This patch tries to support compression in f2fs.
+ROHM BD71828 PMIC contains 4 pins which can be configured by OTP
+to be used for general purposes. First 3 can be used as outputs
+and 4.th pin can be used as input. Allow them to be controlled
+via GPIO framework.
 
-> +static int f2fs_write_raw_pages(struct compress_ctx *cc,
-> +                                       int *submitted,
-> +                                       struct writeback_control *wbc,
-> +                                       enum iostat_type io_type,
-> +                                       bool compressed)
-> +{
-> +       int i, _submitted;
-> +       int ret, err = 0;
-> +
-> +       for (i = 0; i < cc->cluster_size; i++) {
-> +               if (!cc->rpages[i])
-> +                       continue;
-> +retry_write:
-> +               BUG_ON(!PageLocked(cc->rpages[i]));
-> +
-> +               ret = f2fs_write_single_data_page(cc->rpages[i], &_submitted,
-> +                                               NULL, NULL, wbc, io_type);
-> +               if (ret) {
-> +                       if (ret == AOP_WRITEPAGE_ACTIVATE) {
-> +                               unlock_page(cc->rpages[i]);
-> +                               ret = 0;
-> +                       } else if (ret == -EAGAIN) {
-> +                               ret = 0;
-> +                               cond_resched();
-> +                               congestion_wait(BLK_RW_ASYNC, HZ/50);
+The driver assumes all of the pins are configured as GPIOs and
+trusts that the reserved pins in other OTP configurations are
+excluded from control using "gpio-reserved-ranges" device tree
+property (or left untouched by GPIO users).
 
-On some platforms, HZ can be less than 50.
-What happens if congestion_wait() is called with a zero timeout?
+Typical use for 4.th pin (input) is to use it as HALL sensor
+input so that this pin state is toggled when HALL sensor detects
+LID position change (from close to open or open to close). PMIC
+HW implements some extra logic which allows PMIC to power-up the
+system when this pin is toggled. Please see the data sheet for
+details of GPIO options which can be selected by OTP settings.
 
-> +                               lock_page(cc->rpages[i]);
-> +                               clear_page_dirty_for_io(cc->rpages[i]);
-> +                               goto retry_write;
-> +                       }
-> +                       err = ret;
-> +                       goto out_fail;
-> +               }
-> +
-> +               *submitted += _submitted;
-> +       }
-> +       return 0;
-> +
-> +out_fail:
-> +       /* TODO: revoke partially updated block addresses */
-> +       BUG_ON(compressed);
-> +
-> +       for (++i; i < cc->cluster_size; i++) {
-> +               if (!cc->rpages[i])
-> +                       continue;
-> +               redirty_page_for_writepage(wbc, cc->rpages[i]);
-> +               unlock_page(cc->rpages[i]);
-> +       }
-> +       return err;
-> +}
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+---
 
-Gr{oetje,eeting}s,
+No changes since v6
 
-                        Geert
+ drivers/gpio/Kconfig        |  12 +++
+ drivers/gpio/Makefile       |   1 +
+ drivers/gpio/gpio-bd71828.c | 159 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 172 insertions(+)
+ create mode 100644 drivers/gpio/gpio-bd71828.c
+
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 8adffd42f8cb..68adc1b94dda 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1021,6 +1021,18 @@ config GPIO_BD70528
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called gpio-bd70528.
+ 
++config GPIO_BD71828
++	tristate "ROHM BD71828 GPIO support"
++	depends on MFD_ROHM_BD71828
++	help
++	  Support for GPIOs on ROHM BD71828 PMIC. There are three GPIOs
++	  available on the ROHM PMIC in total. The GPIOs are limited to
++	  outputs only and pins must be configured to GPIO outputs by
++	  OTP. Enable this only if you want to use these pins as outputs.
++
++	  This driver can also be built as a module. If so, the module
++	  will be called gpio-bd71828.
++
+ config GPIO_BD9571MWV
+ 	tristate "ROHM BD9571 GPIO support"
+ 	depends on MFD_BD9571MWV
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 34eb8b2b12dd..8629b81b5c17 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -37,6 +37,7 @@ obj-$(CONFIG_GPIO_ATH79)		+= gpio-ath79.o
+ obj-$(CONFIG_GPIO_BCM_KONA)		+= gpio-bcm-kona.o
+ obj-$(CONFIG_GPIO_BCM_XGS_IPROC)	+= gpio-xgs-iproc.o
+ obj-$(CONFIG_GPIO_BD70528)		+= gpio-bd70528.o
++obj-$(CONFIG_GPIO_BD71828)		+= gpio-bd71828.o
+ obj-$(CONFIG_GPIO_BD9571MWV)		+= gpio-bd9571mwv.o
+ obj-$(CONFIG_GPIO_BRCMSTB)		+= gpio-brcmstb.o
+ obj-$(CONFIG_GPIO_BT8XX)		+= gpio-bt8xx.o
+diff --git a/drivers/gpio/gpio-bd71828.c b/drivers/gpio/gpio-bd71828.c
+new file mode 100644
+index 000000000000..04aade9e0a4d
+--- /dev/null
++++ b/drivers/gpio/gpio-bd71828.c
+@@ -0,0 +1,159 @@
++// SPDX-License-Identifier: GPL-2.0-only
++// Copyright (C) 2018 ROHM Semiconductors
++
++#include <linux/gpio/driver.h>
++#include <linux/mfd/rohm-bd71828.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++
++#define GPIO_OUT_REG(off) (BD71828_REG_GPIO_CTRL1 + (off))
++#define HALL_GPIO_OFFSET 3
++
++/*
++ * These defines can be removed when
++ * "gpio: Add definition for GPIO direction"
++ * (9208b1e77d6e8e9776f34f46ef4079ecac9c3c25 in GPIO tree) gets merged,
++ */
++#ifndef GPIO_LINE_DIRECTION_IN
++	#define GPIO_LINE_DIRECTION_IN 1
++	#define GPIO_LINE_DIRECTION_OUT 0
++#endif
++
++struct bd71828_gpio {
++	struct rohm_regmap_dev chip;
++	struct gpio_chip gpio;
++};
++
++static void bd71828_gpio_set(struct gpio_chip *chip, unsigned int offset,
++			     int value)
++{
++	int ret;
++	struct bd71828_gpio *bdgpio = gpiochip_get_data(chip);
++	u8 val = (value) ? BD71828_GPIO_OUT_HI : BD71828_GPIO_OUT_LO;
++
++	/*
++	 * The HALL input pin can only be used as input. If this is the pin
++	 * we are dealing with - then we are done
++	 */
++	if (offset == HALL_GPIO_OFFSET)
++		return;
++
++	ret = regmap_update_bits(bdgpio->chip.regmap, GPIO_OUT_REG(offset),
++				 BD71828_GPIO_OUT_MASK, val);
++	if (ret)
++		dev_err(bdgpio->chip.dev, "Could not set gpio to %d\n", value);
++}
++
++static int bd71828_gpio_get(struct gpio_chip *chip, unsigned int offset)
++{
++	int ret;
++	unsigned int val;
++	struct bd71828_gpio *bdgpio = gpiochip_get_data(chip);
++
++	if (offset == HALL_GPIO_OFFSET)
++		ret = regmap_read(bdgpio->chip.regmap, BD71828_REG_IO_STAT,
++				  &val);
++	else
++		ret = regmap_read(bdgpio->chip.regmap, GPIO_OUT_REG(offset),
++				  &val);
++	if (!ret)
++		ret = (val & BD71828_GPIO_OUT_MASK);
++
++	return ret;
++}
++
++static int bd71828_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
++				   unsigned long config)
++{
++	struct bd71828_gpio *bdgpio = gpiochip_get_data(chip);
++
++	if (offset == HALL_GPIO_OFFSET)
++		return -ENOTSUPP;
++
++	switch (pinconf_to_config_param(config)) {
++	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
++		return regmap_update_bits(bdgpio->chip.regmap,
++					  GPIO_OUT_REG(offset),
++					  BD71828_GPIO_DRIVE_MASK,
++					  BD71828_GPIO_OPEN_DRAIN);
++	case PIN_CONFIG_DRIVE_PUSH_PULL:
++		return regmap_update_bits(bdgpio->chip.regmap,
++					  GPIO_OUT_REG(offset),
++					  BD71828_GPIO_DRIVE_MASK,
++					  BD71828_GPIO_PUSH_PULL);
++	default:
++		break;
++	}
++	return -ENOTSUPP;
++}
++
++static int bd71828_get_direction(struct gpio_chip *chip, unsigned int offset)
++{
++	/*
++	 * Pin usage is selected by OTP data. We can't read it runtime. Hence
++	 * we trust that if the pin is not excluded by "gpio-reserved-ranges"
++	 * the OTP configuration is set to OUT. (Other pins but HALL input pin
++	 * on BD71828 can't really be used for general purpose input - input
++	 * states are used for specific cases like regulator control or
++	 * PMIC_ON_REQ.
++	 */
++	if (offset == HALL_GPIO_OFFSET)
++		return GPIO_LINE_DIRECTION_IN;
++
++	return GPIO_LINE_DIRECTION_OUT;
++}
++
++static int bd71828_probe(struct platform_device *pdev)
++{
++	struct bd71828_gpio *bdgpio;
++	struct rohm_regmap_dev *bd71828;
++
++	bd71828 = dev_get_drvdata(pdev->dev.parent);
++	if (!bd71828) {
++		dev_err(&pdev->dev, "No MFD driver data\n");
++		return -EINVAL;
++	}
++
++	bdgpio = devm_kzalloc(&pdev->dev, sizeof(*bdgpio),
++			      GFP_KERNEL);
++	if (!bdgpio)
++		return -ENOMEM;
++
++	bdgpio->chip.dev = &pdev->dev;
++	bdgpio->gpio.parent = pdev->dev.parent;
++	bdgpio->gpio.label = "bd71828-gpio";
++	bdgpio->gpio.owner = THIS_MODULE;
++	bdgpio->gpio.get_direction = bd71828_get_direction;
++	bdgpio->gpio.set_config = bd71828_gpio_set_config;
++	bdgpio->gpio.can_sleep = true;
++	bdgpio->gpio.get = bd71828_gpio_get;
++	bdgpio->gpio.set = bd71828_gpio_set;
++	bdgpio->gpio.base = -1;
++
++	/*
++	 * See if we need some implementation to mark some PINs as
++	 * not controllable based on DT info or if core can handle
++	 * "gpio-reserved-ranges" and exclude them from control
++	 */
++	bdgpio->gpio.ngpio = 4;
++	bdgpio->gpio.of_node = pdev->dev.parent->of_node;
++	bdgpio->chip.regmap = bd71828->regmap;
++
++	return devm_gpiochip_add_data(&pdev->dev, &bdgpio->gpio,
++				     bdgpio);
++}
++
++static struct platform_driver bd71828_gpio = {
++	.driver = {
++		.name = "bd71828-gpio"
++	},
++	.probe = bd71828_probe,
++};
++
++module_platform_driver(bd71828_gpio);
++
++MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
++MODULE_DESCRIPTION("BD71828 voltage regulator driver");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:bd71828-gpio");
+-- 
+2.21.0
+
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
