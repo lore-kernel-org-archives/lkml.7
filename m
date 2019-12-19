@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E16E2C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAFFC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD0DE2465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C248E227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:02:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782128;
-	bh=7PEIWwLDWxkjIs0y/4eDDC+vqmuU+o1OG8Hke4RCuLE=;
+	s=default; t=1576782133;
+	bh=o3ktvA+EiatetoIy9/RAgk8wlz/pnSPTx9v3FR2top8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B2WBlBWL2ewYGcOHUKkqwzkMaA+QEHpZFUwyHlbRNiz4aeQyJEEPecRDTQTvOimEb
-	 yu6fFDznM1D8rVIHXzTnU4otfFdgdfIhQG5TS3T4IL+BrCbIxNLEsPD/HEbozitCRB
-	 RR3TiQ/pUl93iKlgPZ1wgXpDZ8SCVNJA9dqxmLd0=
+	b=OMwoRD8ZkDoIPYjCfUbhXkrUrhMoKixsQ5tWiLHFP/2/jd3aqh/1oUgPr1vdsj+01
+	 jtcHPgwC4R81PM/4cEwZxTokfHDBXcJnd6vYvv9gGPPoUJKCJZY+6ypnoxORPOLJE1
+	 E4IjOFPRU/AdfhLBYWt2QVCb5+4nGmTqRs6QQfpo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729894AbfLSSt4 (ORCPT
+        id S1729441AbfLSStt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:49:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43522 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:49:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729876AbfLSStx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:49:53 -0500
+        id S1729850AbfLSStq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:49:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6E1B2465E;
-        Thu, 19 Dec 2019 18:49:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8217E24672;
+        Thu, 19 Dec 2019 18:49:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781393;
-        bh=7PEIWwLDWxkjIs0y/4eDDC+vqmuU+o1OG8Hke4RCuLE=;
+        s=default; t=1576781386;
+        bh=o3ktvA+EiatetoIy9/RAgk8wlz/pnSPTx9v3FR2top8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wkh3407j19aOzSh8Yd2CsLuQZUPmUWigczE0Ck57zeQS7/+MTwZNUH44YgOesG8c3
-         oyCsmb89PlzEyqd8hPe0Eqxt1KQOhoTkvB27SDugelRxaextJmBMi+wHM6OxDd906h
-         PKekalv/Vy1/qgKSs8Cl3sVGaqm8hJ+oH0FlOTo0=
+        b=GK0fU52NNHAPwU1+CdAW4uC+/PRMcldfMYCIdU50zY7nQomgDDjRHYIBfuYbsimhT
+         SL6kQ55LrMuuqlND/eiq0WPjHCGQ5W1cBMw9sBPe9BUJHfDoyDOav7ErOryypDSWLY
+         FeAjeGAT7AV46vB+hRGtbjh+b3FXCYlTiCOSAGdY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: [PATCH 4.9 170/199] blk-mq: make sure that line break can be printed
-Date:   Thu, 19 Dec 2019 19:34:12 +0100
-Message-Id: <20191219183224.907012895@linuxfoundation.org>
+        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@nokia.com>,
+        "David S. Miller" <davem@davemloft.net>, Aviraj CJ <acj@cisco.com>
+Subject: [PATCH 4.9 199/199] net: stmmac: dont stop NAPI processing when dropping a packet
+Date:   Thu, 19 Dec 2019 19:34:41 +0100
+Message-Id: <20191219183226.843312108@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,35 +59,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Aaro Koskinen <aaro.koskinen@nokia.com>
 
-commit d2c9be89f8ebe7ebcc97676ac40f8dec1cf9b43a upstream.
+commit 07b3975352374c3f5ebb4a42ef0b253fe370542d upstream.
 
-8962842ca5ab ("blk-mq: avoid sysfs buffer overflow with too many CPU cores")
-avoids sysfs buffer overflow, and reserves one character for line break.
-However, the last snprintf() doesn't get correct 'size' parameter passed
-in, so fixed it.
+Currently, if we drop a packet, we exit from NAPI loop before the budget
+is consumed. In some situations this will make the RX processing stall
+e.g. when flood pinging the system with oversized packets, as the
+errorneous packets are not dropped efficiently.
 
-Fixes: 8962842ca5ab ("blk-mq: avoid sysfs buffer overflow with too many CPU cores")
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Cc: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+If we drop a packet, we should just continue to the next one as long as
+the budget allows.
+
+Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[acj: backport v4.9 -stable
+-adjust context]
+Signed-off-by: Aviraj CJ <acj@cisco.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- block/blk-mq-sysfs.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/block/blk-mq-sysfs.c
-+++ b/block/blk-mq-sysfs.c
-@@ -260,7 +260,7 @@ static ssize_t blk_mq_hw_sysfs_cpus_show
- 		pos += ret;
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -2499,8 +2499,7 @@ static inline void stmmac_rx_refill(stru
+  */
+ static int stmmac_rx(struct stmmac_priv *priv, int limit)
+ {
+-	unsigned int entry = priv->cur_rx;
+-	unsigned int next_entry;
++	unsigned int next_entry = priv->cur_rx;
+ 	unsigned int count = 0;
+ 	int coe = priv->hw->rx_csum;
+ 
+@@ -2516,10 +2515,12 @@ static int stmmac_rx(struct stmmac_priv
+ 		priv->hw->desc->display_ring(rx_head, DMA_RX_SIZE, true);
+ 	}
+ 	while (count < limit) {
+-		int status;
++		int entry, status;
+ 		struct dma_desc *p;
+ 		struct dma_desc *np;
+ 
++		entry = next_entry;
++
+ 		if (priv->extend_desc)
+ 			p = (struct dma_desc *)(priv->dma_erx + entry);
+ 		else
+@@ -2584,7 +2585,7 @@ static int stmmac_rx(struct stmmac_priv
+ 				       priv->dev->name, frame_len,
+ 				       priv->dma_buf_sz);
+ 				priv->dev->stats.rx_length_errors++;
+-				break;
++				continue;
+ 			}
+ 
+ 			/* ACS is set; GMAC core strips PAD/FCS for IEEE 802.3
+@@ -2615,7 +2616,7 @@ static int stmmac_rx(struct stmmac_priv
+ 						dev_warn(priv->device,
+ 							 "packet dropped\n");
+ 					priv->dev->stats.rx_dropped++;
+-					break;
++					continue;
+ 				}
+ 
+ 				dma_sync_single_for_cpu(priv->device,
+@@ -2638,7 +2639,7 @@ static int stmmac_rx(struct stmmac_priv
+ 					pr_err("%s: Inconsistent Rx chain\n",
+ 					       priv->dev->name);
+ 					priv->dev->stats.rx_dropped++;
+-					break;
++					continue;
+ 				}
+ 				prefetch(skb->data - NET_IP_ALIGN);
+ 				priv->rx_skbuff[entry] = NULL;
+@@ -2672,7 +2673,6 @@ static int stmmac_rx(struct stmmac_priv
+ 			priv->dev->stats.rx_packets++;
+ 			priv->dev->stats.rx_bytes += frame_len;
+ 		}
+-		entry = next_entry;
  	}
  
--	ret = snprintf(pos + page, size - pos, "\n");
-+	ret = snprintf(pos + page, size + 1 - pos, "\n");
- 	return pos + ret;
- }
- 
+ 	stmmac_rx_refill(priv);
 
 
