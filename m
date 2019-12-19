@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 355E6C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E29C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3CBB222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E0BD222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781720;
-	bh=UB3CGPZLd0xN2deYoyv7WePnuiBmWN+ttNdJhj+RRmA=;
+	s=default; t=1576781722;
+	bh=ZDWjkucWnuNDUFia2/GxQNQEtlT4iZWmBPaU8zSh7vg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sF9LxSIcGDPEc0H1CwNxNJLcvFTkhIcVE7M+y3ADs/bG+vtFaNWTiVvYliAY/hsEE
-	 Sjn6aJf4GGCeNFRidw/hLP+4iKJ4v4jm1vpR5Mda7KPm9k51I2Ao9ESAjqHVC9lRQs
-	 3429V5DAUEqXXstK6KJTX3JICWFExOXa4/XsQ5us=
+	b=AIUWYnFgEJH469BC9hMC08XGkkjeodb++CDs+nDmGMISRN4OMgN92NpKDvkXTUXh4
+	 Wytit6uKTUZAG1AB+KhYs+SINmUutiK7hX3aGPgGf/mr2xQfpwjQOWXu2kTyI0Yg5i
+	 XOOxPMcMDU9pE77HAlccM9GQetXymZqROvTFFT2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbfLSSzT (ORCPT
+        id S1730657AbfLSSzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:55:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51204 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:55:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730650AbfLSSzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:55:16 -0500
+        id S1730655AbfLSSzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:55:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1A35222C2;
-        Thu, 19 Dec 2019 18:55:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 498DD206EC;
+        Thu, 19 Dec 2019 18:55:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781716;
-        bh=UB3CGPZLd0xN2deYoyv7WePnuiBmWN+ttNdJhj+RRmA=;
+        s=default; t=1576781718;
+        bh=ZDWjkucWnuNDUFia2/GxQNQEtlT4iZWmBPaU8zSh7vg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DlwzA3GlHbUG7V4UCWB7f1wjx/1VliiWF2Sr7q0Q31GTR/n0hpXf2SywTc+pcfZHK
-         KXpHyfTfAKcPmFivHTJAyoedkXIIc/QLBxtaOmtxUW8Q+AfSnmwOOpeHC/xsIM971J
-         xgZcYT1Iz+BP1qufKZfdUG47Kfjw5mJVcEc2gjC4=
+        b=hg1aRa7I6YhjV0MTHG7gzMNeP3inDofHYyCWvVbKiJKTTpazH/bJ5QCzo1PbVwOZd
+         590zdgEDghzXWG1LDoWqPX/Ydf6OuEUalSdNNRCdxkdYs6lpTb16qoiPuUGIooRRUW
+         BhcIsHwOAMKYNmaL4uVrI6+EZ/25ZPRYtAj0eqpw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.4 34/80] CIFS: Respect O_SYNC and O_DIRECT flags during reconnect
-Date:   Thu, 19 Dec 2019 19:34:26 +0100
-Message-Id: <20191219183106.565081059@linuxfoundation.org>
+        stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
+        Joe Thornber <ejt@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.4 52/80] dm btree: increase rebalance threshold in __rebalance2()
+Date:   Thu, 19 Dec 2019 19:34:44 +0100
+Message-Id: <20191219183122.909187724@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -59,46 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Shilovsky <pshilov@microsoft.com>
+From: Hou Tao <houtao1@huawei.com>
 
-commit 44805b0e62f15e90d233485420e1847133716bdc upstream.
+commit 474e559567fa631dea8fb8407ab1b6090c903755 upstream.
 
-Currently the client translates O_SYNC and O_DIRECT flags
-into corresponding SMB create options when openning a file.
-The problem is that on reconnect when the file is being
-re-opened the client doesn't set those flags and it causes
-a server to reject re-open requests because create options
-don't match. The latter means that any subsequent system
-call against that open file fail until a share is re-mounted.
+We got the following warnings from thin_check during thin-pool setup:
 
-Fix this by properly setting SMB create options when
-re-openning files after reconnects.
+  $ thin_check /dev/vdb
+  examining superblock
+  examining devices tree
+    missing devices: [1, 84]
+      too few entries in btree_node: 41, expected at least 42 (block 138, max_entries = 126)
+  examining mapping tree
 
-Fixes: 1013e760d10e6: ("SMB3: Don't ignore O_SYNC/O_DSYNC and O_DIRECT flags")
-Cc: Stable <stable@vger.kernel.org>
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+The phenomenon is the number of entries in one node of details_info tree is
+less than (max_entries / 3). And it can be easily reproduced by the following
+procedures:
+
+  $ new a thin pool
+  $ presume the max entries of details_info tree is 126
+  $ new 127 thin devices (e.g. 1~127) to make the root node being full
+    and then split
+  $ remove the first 43 (e.g. 1~43) thin devices to make the children
+    reblance repeatedly
+  $ stop the thin pool
+  $ thin_check
+
+The root cause is that the B-tree removal procedure in __rebalance2()
+doesn't guarantee the invariance: the minimal number of entries in
+non-root node should be >= (max_entries / 3).
+
+Simply fix the problem by increasing the rebalance threshold to
+make sure the number of entries in each child will be greater
+than or equal to (max_entries / 3 + 1), so no matter which
+child is used for removal, the number will still be valid.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+Acked-by: Joe Thornber <ejt@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/file.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/md/persistent-data/dm-btree-remove.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -729,6 +729,13 @@ cifs_reopen_file(struct cifsFileInfo *cf
- 	if (backup_cred(cifs_sb))
- 		create_options |= CREATE_OPEN_BACKUP_INTENT;
+--- a/drivers/md/persistent-data/dm-btree-remove.c
++++ b/drivers/md/persistent-data/dm-btree-remove.c
+@@ -203,7 +203,13 @@ static void __rebalance2(struct dm_btree
+ 	struct btree_node *right = r->n;
+ 	uint32_t nr_left = le32_to_cpu(left->header.nr_entries);
+ 	uint32_t nr_right = le32_to_cpu(right->header.nr_entries);
+-	unsigned threshold = 2 * merge_threshold(left) + 1;
++	/*
++	 * Ensure the number of entries in each child will be greater
++	 * than or equal to (max_entries / 3 + 1), so no matter which
++	 * child is used for removal, the number will still be not
++	 * less than (max_entries / 3).
++	 */
++	unsigned int threshold = 2 * (merge_threshold(left) + 1);
  
-+	/* O_SYNC also has bit for O_DSYNC so following check picks up either */
-+	if (cfile->f_flags & O_SYNC)
-+		create_options |= CREATE_WRITE_THROUGH;
-+
-+	if (cfile->f_flags & O_DIRECT)
-+		create_options |= CREATE_NO_BUFFER;
-+
- 	if (server->ops->get_lease_key)
- 		server->ops->get_lease_key(inode, &cfile->fid);
- 
+ 	if (nr_left + nr_right < threshold) {
+ 		/*
 
 
