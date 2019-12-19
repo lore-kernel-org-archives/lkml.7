@@ -2,123 +2,131 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A87C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F32C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0184218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC194222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:12:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576717977;
+	bh=EnDbUNs/vALEvcA8Z9IMx3LTjG39IibUT3Ww5yvhwFY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=f8f4nnaOCIbuG1AO9w3XrHvHY6L4UoWYKlCpC7GSDzuna25Du4PGBbB5+CUo1FQB7
+	 pvPxVfyZXezCYJFGMy92/CBzWbuv5GFXp+qWvt1eThD3MOfoQg2YSYGeIj+HlqNPfW
+	 EaUDFqXUN5Q7rRgpCqZgRzGWbianOXIVUv6X7p2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfLSBEx (ORCPT
+        id S1726744AbfLSBM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 20:04:53 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39384 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfLSBEx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 20:04:53 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 9073D2911A3
-Received: by earth.universe (Postfix, from userid 1000)
-        id 2F2903C0C7B; Thu, 19 Dec 2019 02:04:49 +0100 (CET)
-Date:   Thu, 19 Dec 2019 02:04:49 +0100
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2] power: reset: Fix Kconfig indentation
-Message-ID: <20191219010449.hqwpyconyywymrti@earth.universe>
-References: <1574306395-12906-1-git-send-email-krzk@kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6vs4cusmq2csjes2"
-Content-Disposition: inline
-In-Reply-To: <1574306395-12906-1-git-send-email-krzk@kernel.org>
+        Wed, 18 Dec 2019 20:12:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39382 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726536AbfLSBM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 20:12:56 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E2C52176D;
+        Thu, 19 Dec 2019 01:12:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576717975;
+        bh=EnDbUNs/vALEvcA8Z9IMx3LTjG39IibUT3Ww5yvhwFY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Vt7ZmhZL4/z+GEPYZsGwvLn9s0Enyv8//u9UmcZY0C7jMBx40N5FHa7TnUecE/lUS
+         3CkvMLNFZ7D13BfI9AeDbJK8xptCUiHyeApiQsLcjvk2ZKhKTmC6HdRP1msxv00ol5
+         /W+nVAbaoumyeUvxDFGy4GSPw4QXqEnoA7n2e90w=
+Date:   Wed, 18 Dec 2019 17:12:54 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Mina Almasry <almasrymina@google.com>
+Cc:     mike.kravetz@oracle.com, shuah@kernel.org, rientjes@google.com,
+        shakeelb@google.com, gthelen@google.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org,
+        aneesh.kumar@linux.vnet.ibm.com, mkoutny@suse.com,
+        Hillf Danton <hdanton@sina.com>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v9 1/8] hugetlb_cgroup: Add hugetlb_cgroup reservation
+ counter
+Message-Id: <20191218171254.79664a964c0c61e6054dff64@linux-foundation.org>
+In-Reply-To: <20191217231615.164161-1-almasrymina@google.com>
+References: <20191217231615.164161-1-almasrymina@google.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 17 Dec 2019 15:16:08 -0800 Mina Almasry <almasrymina@google.com> wrote:
 
---6vs4cusmq2csjes2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> These counters will track hugetlb reservations rather than hugetlb
+> memory faulted in. This patch only adds the counter, following patches
+> add the charging and uncharging of the counter.
+> 
+> This is patch 1 of an 8 patch series.
+> 
+> Problem:
+> Currently tasks attempting to allocate more hugetlb memory than is available get
+> a failure at mmap/shmget time. This is thanks to Hugetlbfs Reservations [1].
+> However, if a task attempts to allocate hugetlb memory only more than its
+> hugetlb_cgroup limit allows, the kernel will allow the mmap/shmget call,
+> but will SIGBUS the task when it attempts to fault the memory in.
+> 
+> We have developers interested in using hugetlb_cgroups, and they have expressed
+> dissatisfaction regarding this behavior. We'd like to improve this
+> behavior such that tasks violating the hugetlb_cgroup limits get an error on
+> mmap/shmget time, rather than getting SIGBUS'd when they try to fault
+> the excess memory in.
+> 
+> The underlying problem is that today's hugetlb_cgroup accounting happens
+> at hugetlb memory *fault* time, rather than at *reservation* time.
+> Thus, enforcing the hugetlb_cgroup limit only happens at fault time, and
+> the offending task gets SIGBUS'd.
+> 
+> Proposed Solution:
+> A new page counter named hugetlb.xMB.reservation_[limit|usage]_in_bytes. This
+> counter has slightly different semantics than
+> hugetlb.xMB.[limit|usage]_in_bytes:
+> 
+> - While usage_in_bytes tracks all *faulted* hugetlb memory,
+> reservation_usage_in_bytes tracks all *reserved* hugetlb memory and
+> hugetlb memory faulted in without a prior reservation.
+> 
+> - If a task attempts to reserve more memory than limit_in_bytes allows,
+> the kernel will allow it to do so. But if a task attempts to reserve
+> more memory than reservation_limit_in_bytes, the kernel will fail this
+> reservation.
+> 
+> This proposal is implemented in this patch series, with tests to verify
+> functionality and show the usage. We also added cgroup-v2 support to
+> hugetlb_cgroup so that the new use cases can be extended to v2.
 
-Hi,
+This would make
+http://lkml.kernel.org/r/20191216193831.540953-1-gscrivan@redhat.com
+obsolete?
 
-On Thu, Nov 21, 2019 at 04:19:55AM +0100, Krzysztof Kozlowski wrote:
-> Adjust indentation from spaces to tab (+optional two spaces) as in
-> coding style with command like:
-> 	$ sed -e 's/^        /\t/' -i */Kconfig
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->=20
-> ---
 
-Thanks, queued.
+> Alternatives considered:
+> 1. A new cgroup, instead of only a new page_counter attached to
+>    the existing hugetlb_cgroup. Adding a new cgroup seemed like a lot of code
+>    duplication with hugetlb_cgroup. Keeping hugetlb related page counters under
+>    hugetlb_cgroup seemed cleaner as well.
+> 
+> 2. Instead of adding a new counter, we considered adding a sysctl that modifies
+>    the behavior of hugetlb.xMB.[limit|usage]_in_bytes, to do accounting at
+>    reservation time rather than fault time. Adding a new page_counter seems
+>    better as userspace could, if it wants, choose to enforce different cgroups
+>    differently: one via limit_in_bytes, and another via
+>    reservation_limit_in_bytes. This could be very useful if you're
+>    transitioning how hugetlb memory is partitioned on your system one
+>    cgroup at a time, for example. Also, someone may find usage for both
+>    limit_in_bytes and reservation_limit_in_bytes concurrently, and this
+>    approach gives them the option to do so.
+> 
 
--- Sebastian
-
-> Changes since v1:
-> 1. Fix also 7-space and tab+1 space indentation issues.
-> ---
->  drivers/power/reset/Kconfig | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-> index c721939767eb..0498363203e8 100644
-> --- a/drivers/power/reset/Kconfig
-> +++ b/drivers/power/reset/Kconfig
-> @@ -141,14 +141,14 @@ config POWER_RESET_LTC2952
->  	  down via the LTC2952. Bindings are made in the device tree.
-> =20
->  config POWER_RESET_MT6323
-> -       bool "MediaTek MT6323 power-off driver"
-> -       depends on MFD_MT6397
-> -       help
-> -         The power-off driver is responsible for externally shutdown down
-> -         the power of a remote MediaTek SoC MT6323 is connected to throu=
-gh
-> -         controlling a tiny circuit BBPU inside MT6323 RTC.
-> -
-> -         Say Y if you have a board where MT6323 could be found.
-> +	bool "MediaTek MT6323 power-off driver"
-> +	depends on MFD_MT6397
-> +	help
-> +	  The power-off driver is responsible for externally shutdown down
-> +	  the power of a remote MediaTek SoC MT6323 is connected to through
-> +	  controlling a tiny circuit BBPU inside MT6323 RTC.
-> +
-> +	  Say Y if you have a board where MT6323 could be found.
-> =20
->  config POWER_RESET_QNAP
->  	bool "QNAP power-off driver"
-> --=20
-> 2.7.4
->=20
-
---6vs4cusmq2csjes2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl36zLEACgkQ2O7X88g7
-+pogZg//VdCdZ79V71shkba9VYra6IoHJseyBBTafueLgDSUgMz1ue4W7wTIiOpw
-jzUsaLuaV4jnXaL8fqzAJuCgylOfSLdpHDZkkzWW2YARB7hgshieOIwBrWzgfQAk
-E++BEbTdjXbcxna3CpuaSiwuWmh6jfb+YoMu+oSzY2KvbTg8EmiSbfNh8WvNgXBP
-XNSqEtNlLtdvfkbDvtX1HScGvcF7KlCvacax/2PXBOwywC5DEw7XTENd0Jpqyl96
-zD7c9rVZZhk9w9rYXD7fk//xvKrKAdSfG9Ub6BWW/AncpU1RGxPreBje7KMAtRp6
-cQ4cgoIlNitrD+tNheRRdii7fyDqyIl2YRwZ+Ckgj4LcwhoDMNDwOpLdZR1fOtxA
-+dgrmitmEv6KSwyrmNTDIN9rQFlKOSFkokxn9GCP0WfDj710tsShNBHn7NGtOZ9y
-c5i33dQNBcUPL+Ep8B+tb8nwLrPm3OrR2ptN7AJ82CYIBH9O+6cT1nl4Bjt+DU9N
-NVdhVrACsu4Feutx8gHzlqF5lJYx9HWg84ngEi1cYhSVK25kv2rOMufPxanK+ULC
-QEJiFWWlcyMmuVHdHglgzSZBFFnmPZkVoDo27/DchVIYUOnevTBzxxOIG6/MyP5p
-CUarJceGzYNSnf3qESDp6IAQ5debhOPi+B71MjkNfHirsXG9ZNg=
-=PQMd
------END PGP SIGNATURE-----
-
---6vs4cusmq2csjes2--
