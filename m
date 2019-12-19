@@ -2,99 +2,92 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D26C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DED1C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43938222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:31:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576719114;
-	bh=FUwPJOYHJ3OW+g+0iV37qhsarMV4/RI0u2+E1s9aMHY=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=wv6v22Ij8bKEnoDfgQUOikh/7Fqq56N+Y5HIJBUGJpOTH2rkOtEMwg9gaoXKzVOrA
-	 RBg2KV9qzGc8bapBgfoUn90ZrmDk2MehkNOLswOdWiJbX+91ED3nPnM7uwUxOus3Aa
-	 uWTEFoppXgzBu3gMKu+T8gvdJ34y3jDq1E9rA+Dw=
+	by mail.kernel.org (Postfix) with ESMTP id 739C621D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:34:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AoTnognS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfLSBbx (ORCPT
+        id S1726747AbfLSBeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 20:31:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55580 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbfLSBbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 20:31:53 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18D8321D7D;
-        Thu, 19 Dec 2019 01:31:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576719112;
-        bh=FUwPJOYHJ3OW+g+0iV37qhsarMV4/RI0u2+E1s9aMHY=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=nODoOUVQGeZHE6tBs8bLcmdl0O2kB6Y2oAZaGw67NaKbWGwpDbjfTJh699nk1sTI5
-         uHv+ggA14qkC7AFaAouiaRfggZa7xgFLr7A9/yDW8bu8EDGwn/3hrKch1rSca/O/Pm
-         jB7NiJe4z2xr/o8ioA75zOwgwAs+giv3rhAsa9XE=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id E23E13522771; Wed, 18 Dec 2019 17:31:51 -0800 (PST)
-Date:   Wed, 18 Dec 2019 17:31:51 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the rcu tree with the tip tree
-Message-ID: <20191219013151.GA21768@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191219115036.4699721c@canb.auug.org.au>
- <20191219012726.GY2889@paulmck-ThinkPad-P72>
+        Wed, 18 Dec 2019 20:34:20 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:41444 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbfLSBeU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 20:34:20 -0500
+Received: by mail-qk1-f193.google.com with SMTP id x129so3304039qke.8;
+        Wed, 18 Dec 2019 17:34:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BCSxFafqPE5ERz3UrkP5uxFwiwYg6nGJeQKlM4gvCAU=;
+        b=AoTnognSO/nELYlSs55Y0LZS7ZwnLR5p+y/QO74XN/A8K+7vHMvE/jiJ+Jq/Ul+2PG
+         5lVjCcDYkgFxpv5+gGYSmHBhcLXB/DndFqGxcOG/DzvMHX+eugQO7oKigvLAr1b2i2/H
+         GyYgJbImMczndYXzKJFqkkhF+a6/XZoXyH3T2ZCXFQrs5wg9uh+guHpnfIPQ+xHsUmpz
+         0uCXqlYH5+TfkA1fIxeJ31XpiNlGyjW9y5Vg+wAH4OGeedzEcgW/RYM5m2D2KfPDNYx0
+         r9YaHHczYY/cfgwyNEN2HSGZSynOtTFNrFiGqEzSYKqnvA15hd2wlery0iVYpYzO+eGL
+         R8fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BCSxFafqPE5ERz3UrkP5uxFwiwYg6nGJeQKlM4gvCAU=;
+        b=VKBx77XWRqOl+EkGxo8G5/rggbWC9jOfWT4UpgCviUxaGDgc+nnZacW4o9yPS8q2UN
+         AI+yYdSl9VYdRHF+ebWfMqWoARN2t+jYjxuWY4tk6WoQwQNBdIaVpnu3OBB4KA00FoA2
+         MzrJpqKLqhEXogrmhj56E8g9pLWlCtM3tDWrbvKO5jkblp6eWEQtHSzggeQcX380anrt
+         euIg/phGVaXkjbJAT6Pcm6u7KaOQTMhAm7kk5iMkkBZF4JJjuqtkgBX/c3yqRwufS16y
+         tYKPpha1+ThJ2nvUH725l37GZsRNwmpUVyanVf3LCKk/89iep4MXfWEFmcmJgXqtCSln
+         Ad8A==
+X-Gm-Message-State: APjAAAXVfGpBAAyAM9dVTSg2KunOCbAwW0u4K8G1x92eqnx+4X3AtWeQ
+        FyoF2naJnNO7pcQOwFJXrb9uOQbQLc6dftN6hbsq+tDg
+X-Google-Smtp-Source: APXvYqxaN0OeO3c7GsQVcs5292WIZw+d+djvRDMX1ntmlnFQbkJKQmSjBMrY06hv/6U6pVL+GUm82/OqYtsDB6kdL24=
+X-Received: by 2002:a37:8e03:: with SMTP id q3mr5803812qkd.395.1576719259097;
+ Wed, 18 Dec 2019 17:34:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191219012726.GY2889@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <cover.1575863274.git.baolin.wang7@gmail.com> <20191219005439.63nk4fpraveoeqyv@earth.universe>
+In-Reply-To: <20191219005439.63nk4fpraveoeqyv@earth.universe>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Thu, 19 Dec 2019 09:34:07 +0800
+Message-ID: <CADBw62oQ8FaoVXCe7w9rAYy7mR6j8vOAUoeM_K3u4XC0JwTe3g@mail.gmail.com>
+Subject: Re: [PATCH v3 0/5] Improve the SC27XX fuel gauge controller
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        yuanjiang.yu@unisoc.com, Baolin Wang <baolin.wang@linaro.org>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 05:27:26PM -0800, Paul E. McKenney wrote:
-> On Thu, Dec 19, 2019 at 11:50:35AM +1100, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Today's linux-next merge of the rcu tree got a conflict in:
-> > 
-> >   kernel/cpu.c
-> > 
-> > between commit:
-> > 
-> >   45178ac0cea8 ("cpu/hotplug, stop_machine: Fix stop_machine vs hotplug order")
-> > 
-> > from the tip tree and commit:
-> > 
-> >   d62c673f4cfc ("cpu/hotplug, stop_machine: Fix stop_machine vs hotplug order")
-> > 
-> > from the rcu tree.
-> > 
-> > I fixed it up (I just used the tip tree version) and can carry the fix
-> > as necessary. This is now fixed as far as linux-next is concerned, but
-> > any non trivial conflicts should be mentioned to your upstream maintainer
-> > when your tree is submitted for merging.  You may also want to consider
-> > cooperating with the maintainer of the conflicting tree to minimise any
-> > particularly complex conflicts.
-> 
-> I will pull this one out of the set that I mark for -next.  That way
-> I can test and you can avoid at least this one conflict.  ;-)
+Hi Sebastian,
 
-Heh.  And the reason that it conflicts is that I fixed at least one
-spelling error...  ;-)
+On Thu, Dec 19, 2019 at 8:54 AM Sebastian Reichel
+<sebastian.reichel@collabora.com> wrote:
+>
+> Hi,
+>
+> On Mon, Dec 09, 2019 at 11:56:20AM +0800, Baolin Wang wrote:
+> > This patch set adds one battery resistance-temperature table to optimize
+> > the real battery internal resistance in different tempertures, and
+> > calibrates the resistance of coulomb counter to improve the accuracy
+> > of the coulomb counter.
+> >
+> > Any comments are welcome. Thanks.
+>
+> Thanks, queued to power-supply's for-next branch. I changed the
+> comment for struct sc27xx_fgu_data, so that it states calib_resist
+> being in uOhm instead of mOhm.
 
-Still, the one in tip is the official one, so I will proceed as planned.
-
-							Thanx, Paul
+OK. Thanks.
