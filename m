@@ -2,167 +2,75 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B08C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B95C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9412124672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:59:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y4Y/y3I/"
+	by mail.kernel.org (Postfix) with ESMTP id CF8DE222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:00:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbfLSL7e (ORCPT
+        id S1726944AbfLSMAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 06:59:34 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50150 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbfLSL7e (ORCPT
+        Thu, 19 Dec 2019 07:00:04 -0500
+Received: from mail1.windriver.com ([147.11.146.13]:46517 "EHLO
+        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbfLSMAE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 06:59:34 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJBxQv3029312;
-        Thu, 19 Dec 2019 05:59:26 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576756766;
-        bh=yxnvtS3Y6dPrnMhLpxgcSG/4NfRE2DXlNbtemhtrESM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Y4Y/y3I/vtDVqaru8Sb8k5lFOAcIPq6QsfYkosMiBcJ57TtTSq0dWCTol/3doRSMR
-         1PO38ehyG9OpRZ0hDg21crEDpPFOIoHy41N+aFPL1bOXRyKlKscZsNqtqYzt6ZeVK9
-         iJGeAuQBmOkiu8asV6Ges6w1RXfrjDIMh/PWicw4=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBJBxQJO118229
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Dec 2019 05:59:26 -0600
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
- Dec 2019 05:59:24 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 19 Dec 2019 05:59:25 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJBxLn4096682;
-        Thu, 19 Dec 2019 05:59:22 -0600
-Subject: Re: [PATCH 04/13] PCI: cadence: Add support to start link and verify
- link status
-To:     Andrew Murray <andrew.murray@arm.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>
-References: <20191209092147.22901-1-kishon@ti.com>
- <20191209092147.22901-5-kishon@ti.com>
- <20191217115826.GA24359@e119886-lin.cambridge.arm.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <16ffe86d-9061-1a9a-d536-561e20ecbdd7@ti.com>
-Date:   Thu, 19 Dec 2019 17:31:04 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 19 Dec 2019 07:00:04 -0500
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id xBJ7vCh1015012
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
+        Wed, 18 Dec 2019 23:57:12 -0800 (PST)
+Received: from pek-jsun4-d1.corp.ad.wrs.com (147.11.105.121) by
+ ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
+ 14.3.468.0; Wed, 18 Dec 2019 23:57:11 -0800
+From:   Jiwei Sun <jiwei.sun@windriver.com>
+To:     <tudor.ambarus@microchip.com>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <jiwei.sun.bj@qq.com>, <jiwei.sun@windriver.com>
+Subject: [PATCH] mtd: spi-nor: make s25fl129p1 skip SFDP parsing
+Date:   Thu, 19 Dec 2019 15:57:08 +0800
+Message-ID: <20191219075708.15891-1-jiwei.sun@windriver.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191217115826.GA24359@e119886-lin.cambridge.arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+From: jsun4 <jiwei.sun@windriver.com>
 
-On 17/12/19 5:28 pm, Andrew Murray wrote:
-> On Mon, Dec 09, 2019 at 02:51:38PM +0530, Kishon Vijay Abraham I wrote:
->> Add cdns_pcie_ops to start link and verify link status. The registers
->> to start link and to check link status is in Platform specific PCIe
->> wrapper. Add support for platform specific drivers to add callback
->> functions for the PCIe Cadence core to start link and verify link status.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  .../pci/controller/cadence/pcie-cadence-ep.c  |  8 ++++++
->>  .../controller/cadence/pcie-cadence-host.c    | 28 +++++++++++++++++++
->>  drivers/pci/controller/cadence/pcie-cadence.h | 23 +++++++++++++++
->>  3 files changed, 59 insertions(+)
->>
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
->> index 560f22b4d165..088394b6be04 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
->> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
->> @@ -355,8 +355,10 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
->>  {
->>  	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
->>  	struct cdns_pcie *pcie = &ep->pcie;
->> +	struct device *dev = pcie->dev;
->>  	struct pci_epf *epf;
->>  	u32 cfg;
->> +	int ret;
->>  
->>  	/*
->>  	 * BIT(0) is hardwired to 1, hence function 0 is always enabled
->> @@ -367,6 +369,12 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
->>  		cfg |= BIT(epf->func_no);
->>  	cdns_pcie_writel(pcie, CDNS_PCIE_LM_EP_FUNC_CFG, cfg);
->>  
->> +	ret = cdns_pcie_start_link(pcie, true);
->> +	if (ret) {
->> +		dev_err(dev, "Failed to start link\n");
->> +		return ret;
->> +	}
->> +
->>  	return 0;
->>  }
->>  
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> index ccf55e143e1d..0929554f5a81 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
->> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> @@ -3,6 +3,7 @@
->>  // Cadence PCIe host controller driver.
->>  // Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
->>  
->> +#include <linux/delay.h>
->>  #include <linux/kernel.h>
->>  #include <linux/of_address.h>
->>  #include <linux/of_pci.h>
->> @@ -201,6 +202,23 @@ static int cdns_pcie_host_init(struct device *dev,
->>  	return err;
->>  }
->>  
->> +static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
->> +{
->> +	struct device *dev = pcie->dev;
->> +	int retries;
->> +
->> +	/* Check if the link is up or not */
->> +	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
->> +		if (cdns_pcie_is_link_up(pcie)) {
->> +			dev_info(dev, "Link up\n");
->> +			return 0;
->> +		}
->> +		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
->> +	}
->> +
->> +	return -ETIMEDOUT;
->> +}
-> 
-> This patch looks fine, except this function (above) is identical to
-> dw_pcie_wait_for_link, advk_pcie_wait_for_link and nwl_wait_for_link. Even
-> the definitions of LINK_WAIT_USLEEP_xx are the same.
-> 
-> I don't see any justification to duplicating this again - can you consolidate
-> these functions to something that all controller drivers can use?
+The right page size of S25FL129P has been gotten in the function
+spi_nor_info_init_params() before invoking spi_nor_parse_bfpt(),
+it is 256-bytes, but the size will be changed to 512 bytes in the
+following function spi_nor_parse_bfpt(). And there is no explanation of
+the SFDP according to the datasheet of S25FL129P. So we can skip
+SFDP parsing.
 
-This involves reading a register, so this in entirety cannot be in a
-generic layer. We could add "ops" for checking the link status (in
-pci_ops?), but I'm not sure if that's really required.
+Signed-off-by: Jiwei Sun <jiwei.sun@windriver.com>
+---
+ drivers/mtd/spi-nor/spi-nor.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks
-Kishon
+diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+index f4afe123e9dc..dcb4471c735c 100644
+--- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -2504,7 +2504,7 @@ static const struct flash_info spi_nor_ids[] = {
+ 	{ "s25sl12800", INFO(0x012018, 0x0300, 256 * 1024,  64, 0) },
+ 	{ "s25sl12801", INFO(0x012018, 0x0301,  64 * 1024, 256, 0) },
+ 	{ "s25fl129p0", INFO(0x012018, 0x4d00, 256 * 1024,  64, SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | USE_CLSR) },
+-	{ "s25fl129p1", INFO(0x012018, 0x4d01,  64 * 1024, 256, SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | USE_CLSR) },
++	{ "s25fl129p1", INFO(0x012018, 0x4d01,  64 * 1024, 256, SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | USE_CLSR | SPI_NOR_SKIP_SFDP) },
+ 	{ "s25sl004a",  INFO(0x010212,      0,  64 * 1024,   8, 0) },
+ 	{ "s25sl008a",  INFO(0x010213,      0,  64 * 1024,  16, 0) },
+ 	{ "s25sl016a",  INFO(0x010214,      0,  64 * 1024,  32, 0) },
+-- 
+2.20.1
+
