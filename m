@@ -2,100 +2,183 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5E4C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E60C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 922DA20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:58:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NwdTe8q2"
+	by mail.kernel.org (Postfix) with ESMTP id A2D0C222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:59:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbfLSO6z (ORCPT
+        id S1726878AbfLSO7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 09:58:55 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43406 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726701AbfLSO6y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 09:58:54 -0500
-Received: by mail-wr1-f65.google.com with SMTP id d16so6262862wre.10;
-        Thu, 19 Dec 2019 06:58:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=2fgPMrd9C+AKftleHVnn57a7bDx3FxZOsu1zeqIFgxc=;
-        b=NwdTe8q2pdyU/zYMroacZdwZE6vgTCjOSl2QT0WdYpudW0Lz6rSolLyAs+63audr8x
-         t387tewbV0LhJdqe0ekA1EGpv+q4nFCReTGv81arfQH/qRxAj/nv902BHZAfxQSFP5Ag
-         gdZGwrq7X7Tq2YH7d4y6k1HliLLz3kXcnwL74ec7RGddd1Q8/IajfFX162tg/lRj0pzA
-         zdvOirkCCuYf0hrxd19ZhXaBOOd/Lz2WrSkOiO+D9twBYD0fMJR1MwL5JYAvwa6LRZnl
-         nRqm5sNlgIFP2tCHDh42ECss17vc6LmSX/QvQGpkveYX3cwQEf1Jl8lRuMHh7s++tXRL
-         zd7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=2fgPMrd9C+AKftleHVnn57a7bDx3FxZOsu1zeqIFgxc=;
-        b=H2U2TfP0Hok4grpdzBEYw4DzhKDL21BdPh7/bRDuwtQtzWHv+AlcBUtST+KanT/BBz
-         yzliVaXO7kX944QEpoPSQcFzJd+x35dNkW2YIYH2v6OdVmPS12Umol2uu210W0s/SyV3
-         rY93bKMTNTzP7G/DK3sR2ylirI5Rmsi1RerVVLDb8KSwSgLIIE+j5dORfmtppyNmMlUH
-         8XcwNf6UE47ZdHQChr5VWpPUmlhUOdJO0TZcDABTtS7INF2msc2lJUX4y80jt3eFW/S8
-         JuxuLnOpI6WFQ0HBp7icctWkaCdqxN8tCz2tZDDeoWxdQ01ePughot6yQ74xV9bngA2E
-         et6A==
-X-Gm-Message-State: APjAAAW3sWQtVEuaN3cI8XJg1Bgwk4fbxTsA7wwl89EcNwZqPdzgCJ7A
-        xVM1XHE4Hk1rccAGm3wmoLc=
-X-Google-Smtp-Source: APXvYqwQG+ZpFPzQJF7IasX91H6w8GEyPcnxbOAAQ2nHd6IPilq17lB4KnK481iqBLiq5LMwx/cg1A==
-X-Received: by 2002:adf:ef92:: with SMTP id d18mr9652877wro.234.1576767531302;
-        Thu, 19 Dec 2019 06:58:51 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id t1sm6457866wma.43.2019.12.19.06.58.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 19 Dec 2019 06:58:50 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     ulf.hansson@linaro.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        Thu, 19 Dec 2019 09:59:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33402 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726701AbfLSO7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 09:59:44 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 314DD21655;
+        Thu, 19 Dec 2019 14:59:43 +0000 (UTC)
+Date:   Thu, 19 Dec 2019 09:59:41 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: mmc: clarify disable-wp text
-Date:   Thu, 19 Dec 2019 15:58:43 +0100
-Message-Id: <20191219145843.3823-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+Subject: Re: [PATCH RFC] sched: Micro optimization in pick_next_task() and
+ in check_preempt_curr()
+Message-ID: <20191219095941.2eebed84@gandalf.local.home>
+In-Reply-To: <11d755e9-e4f8-dd9e-30b0-45aebe260b2f@virtuozzo.com>
+References: <157675913272.349305.8936736338884044103.stgit@localhost.localdomain>
+        <20191219131242.GK2827@hirez.programming.kicks-ass.net>
+        <20191219140252.GS2871@hirez.programming.kicks-ass.net>
+        <bfaa72ca-8bc6-f93c-30d7-5d62f2600f53@virtuozzo.com>
+        <20191219094330.0e44c748@gandalf.local.home>
+        <11d755e9-e4f8-dd9e-30b0-45aebe260b2f@virtuozzo.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clarify disable-wp text.
-Clean up and add that "disable-wp" is not used in combination
-with eMMC or SDIO.
+On Thu, 19 Dec 2019 17:46:37 +0300
+Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- Documentation/devicetree/bindings/mmc/mmc-controller.yaml | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+> On 19.12.2019 17:43, Steven Rostedt wrote:
+> > On Thu, 19 Dec 2019 17:25:40 +0300
+> > Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+> >   
+> >> (17:19:25) nbjoerg: but it is not guarenteed behavior
+> >> (17:19:50) nbjoerg: if for some strange reason you really need to enforce relative orders of global objects, put them in consecutively named sections  
+> > 
+> > Which appears to work. I tried this patch on top of yours:
+> > 
+> > Not sure how this does with locality though.  
+> 
+> Hm, I'm not sure, but AFAIR some (all?) sections are aligned at 4K.
+> Will this bring holes (4K-sizeof(struct sched_class)) in address
+> space?
 
-diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-index b130450c3..3c0df4016 100644
---- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-+++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-@@ -96,11 +96,10 @@ properties:
-     description:
-       When set, no physical write-protect line is present. This
-       property should only be specified when the controller has a
--      dedicated write-protect detection logic. If a GPIO is always
--      used for the write-protect detection. If a GPIO is always used
-+      dedicated write-protect detection logic. If a GPIO is always used
-       for the write-protect detection logic, it is sufficient to not
-       specify the wp-gpios property in the absence of a write-protect
--      line.
-+      line. Not used in combination with eMMC or SDIO.
- 
-   wp-gpios:
-     description:
--- 
-2.11.0
+I believe only if you set the align attribute in the linker script.
+With this and your patch:
+
+# grep sched_class /proc/kallsyms
+ffffffff8e760900 D idle_sched_class
+ffffffff8e7609e0 D fair_sched_class
+ffffffff8e760ac0 D rt_sched_class
+ffffffff8e760ba0 D dl_sched_class
+ffffffff8e760c80 D stop_sched_class
+
+-- Steve
+
+> 
+> 
+> > -- Steve
+> > 
+> > diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+> > index e00f41aa8ec4..ff12a422ff19 100644
+> > --- a/include/asm-generic/vmlinux.lds.h
+> > +++ b/include/asm-generic/vmlinux.lds.h
+> > @@ -108,6 +108,13 @@
+> >  #define SBSS_MAIN .sbss
+> >  #endif
+> >  
+> > +#define SCHED_DATA				\
+> > +	*(__idle_sched_class)			\
+> > +	*(__fair_sched_class)			\
+> > +	*(__rt_sched_class)			\
+> > +	*(__dl_sched_class)			\
+> > +	*(__stop_sched_class)
+> > +
+> >  /*
+> >   * Align to a 32 byte boundary equal to the
+> >   * alignment gcc 4.5 uses for a struct
+> > @@ -308,6 +315,7 @@
+> >  #define DATA_DATA							\
+> >  	*(.xiptext)							\
+> >  	*(DATA_MAIN)							\
+> > +	SCHED_DATA							\
+> >  	*(.ref.data)							\
+> >  	*(.data..shared_aligned) /* percpu related */			\
+> >  	MEM_KEEP(init.data*)						\
+> > diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+> > index 43323f875cb9..5abdbe569f93 100644
+> > --- a/kernel/sched/deadline.c
+> > +++ b/kernel/sched/deadline.c
+> > @@ -2428,7 +2428,8 @@ static void prio_changed_dl(struct rq *rq, struct task_struct *p,
+> >  	}
+> >  }
+> >  
+> > -const struct sched_class dl_sched_class = {
+> > +const struct sched_class dl_sched_class
+> > +	__attribute__((section("__dl_sched_class"))) = {
+> >  	.next			= &rt_sched_class,
+> >  	.enqueue_task		= enqueue_task_dl,
+> >  	.dequeue_task		= dequeue_task_dl,
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index 08a233e97a01..e745fe0e0cd3 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -10745,7 +10745,8 @@ static unsigned int get_rr_interval_fair(struct rq *rq, struct task_struct *task
+> >  /*
+> >   * All the scheduling class methods:
+> >   */
+> > -const struct sched_class fair_sched_class = {
+> > +const struct sched_class fair_sched_class
+> > +	__attribute__((section("__fair_sched_class"))) = {
+> >  	.next			= &idle_sched_class,
+> >  	.enqueue_task		= enqueue_task_fair,
+> >  	.dequeue_task		= dequeue_task_fair,
+> > diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+> > index ffa959e91227..700a9c826f0e 100644
+> > --- a/kernel/sched/idle.c
+> > +++ b/kernel/sched/idle.c
+> > @@ -454,7 +454,8 @@ static void update_curr_idle(struct rq *rq)
+> >  /*
+> >   * Simple, special scheduling class for the per-CPU idle tasks:
+> >   */
+> > -const struct sched_class idle_sched_class = {
+> > +const struct sched_class idle_sched_class
+> > +	__attribute__((section("__idle_sched_class"))) = {
+> >  	/* .next is NULL */
+> >  	/* no enqueue/yield_task for idle tasks */
+> >  
+> > diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+> > index e591d40fd645..5d3f9bcddaeb 100644
+> > --- a/kernel/sched/rt.c
+> > +++ b/kernel/sched/rt.c
+> > @@ -2354,7 +2354,8 @@ static unsigned int get_rr_interval_rt(struct rq *rq, struct task_struct *task)
+> >  		return 0;
+> >  }
+> >  
+> > -const struct sched_class rt_sched_class = {
+> > +const struct sched_class rt_sched_class
+> > +	__attribute__((section("__rt_sched_class"))) = {
+> >  	.next			= &fair_sched_class,
+> >  	.enqueue_task		= enqueue_task_rt,
+> >  	.dequeue_task		= dequeue_task_rt,
+> > diff --git a/kernel/sched/stop_task.c b/kernel/sched/stop_task.c
+> > index 4c9e9975684f..03bc7530ff75 100644
+> > --- a/kernel/sched/stop_task.c
+> > +++ b/kernel/sched/stop_task.c
+> > @@ -115,7 +115,8 @@ static void update_curr_stop(struct rq *rq)
+> >  /*
+> >   * Simple, special scheduling class for the per-CPU stop tasks:
+> >   */
+> > -const struct sched_class stop_sched_class = {
+> > +const struct sched_class stop_sched_class
+> > +	__attribute__((section("__stop_sched_class"))) = {
+> >  	.next			= &dl_sched_class,
+> >  
+> >  	.enqueue_task		= enqueue_task_stop,
+> >   
 
