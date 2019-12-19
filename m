@@ -2,176 +2,199 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B1FC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D49CDC2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E17524672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:03:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hO/I+c65"
+	by mail.kernel.org (Postfix) with ESMTP id 9C8CB2467B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:04:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576796663;
+	bh=MIFpmnfyfdY7GEle7mYiWB1fFvXkbdrF6h+oVf8+Yls=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=umTvCFjjrdFXr9qk4AqbyZlR27fg0dQV02xJ18UN4VxzVm19ddsqhDdmgdFd9dVTR
+	 DsISjm0sF25MaU17rRDqQRMpQiIHimKgJLemvbEHxNBYZ3yxFMmi0acrLqnJ4G4YPf
+	 6IEf5qR/3H4lyKimV/LkA8+Mf9sVEOFMcKtnLnsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfLSXD4 (ORCPT
+        id S1727190AbfLSXEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 18:03:56 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:30402 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbfLSXD4 (ORCPT
+        Thu, 19 Dec 2019 18:04:23 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41234 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbfLSXEW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 18:03:56 -0500
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191219230353epoutp03f8d9a2618fcc535e6ba9843a7ff2e0da~h6C8d1Zk31982719827epoutp037
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 23:03:53 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191219230353epoutp03f8d9a2618fcc535e6ba9843a7ff2e0da~h6C8d1Zk31982719827epoutp037
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1576796633;
-        bh=ExdKVAXgbgQTjjhDCfChCkhQSmIxv86ZOAXt2nZx2is=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=hO/I+c65w7L+zgsJhxJd+gE79wgpVCefpjUugw4x9zMXdtYT08EQFAuDruESUh0N7
-         gKG8h0jQH469vgkWG+Pjj+NrRYtbJ6CqDbSFX7lsa4a8d3uTklvMpVaOT2WLBJ8vLq
-         OD6AdLAvs2B61Ubgdpo16mH++EqU6FTIsoGkbunU=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20191219230353epcas1p4d306ad44dc3d2f33852d2f99f834aac5~h6C8Cr3ZG2203822038epcas1p4k;
-        Thu, 19 Dec 2019 23:03:53 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.154]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 47f6r575kszMqYlp; Thu, 19 Dec
-        2019 23:03:49 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        CF.33.48498.5D10CFD5; Fri, 20 Dec 2019 08:03:49 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20191219230349epcas1p336ce638e09e2ed68852cce556dfb5429~h6C4w3CU91907919079epcas1p3B;
-        Thu, 19 Dec 2019 23:03:49 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191219230349epsmtrp21676f12cfea754e68c9b0ad7370dcfd3~h6C4wLFlW2882328823epsmtrp2J;
-        Thu, 19 Dec 2019 23:03:49 +0000 (GMT)
-X-AuditID: b6c32a36-a3dff7000001bd72-45-5dfc01d57dcf
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        75.F7.06569.5D10CFD5; Fri, 20 Dec 2019 08:03:49 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191219230349epsmtip1fe0a72851a116d14b7b4e97d9cbcef9e~h6C4kORpB1097610976epsmtip1h;
-        Thu, 19 Dec 2019 23:03:49 +0000 (GMT)
-Subject: Re: [v8 PATCH] PM / devfreq: Add dynamic scaling for imx8m ddr
- controller
-To:     linux-pm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        leonard.crestez@nxp.com, myungjoo.ham@samsung.com,
-        kyungmin.park@samsung.com
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <6c00b0d8-af71-b211-d5bb-87c48e5d5db5@samsung.com>
-Date:   Fri, 20 Dec 2019 08:10:21 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Thu, 19 Dec 2019 18:04:22 -0500
+Received: by mail-ot1-f67.google.com with SMTP id r27so9235471otc.8;
+        Thu, 19 Dec 2019 15:04:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=F7dFVXsBXe6V0IT3wFxkvgfpUWL9SwHOltmODSQxTMA=;
+        b=b/xY4LsYRSVUYUjbOrSWi5la84BIrcEnc4LNRB4S4TTQ0hZK3J6DmdlLKd2jiyBLSQ
+         s/uwRqilXZ/eRPFZGBvYgNNxCimZ+pckdr3sJ4tK25VJj9C41jVTMQnXiBf4ZKWB9YtX
+         IRoFOSfj/vlDxfi2vG2RpJwPELXyW5eu7Ll0voxJOm4PWubQ+4nvY5r3HTZMKerExqPv
+         zDtrHo0IJJhGumD/HFYs/JiiikNhFAy6GE8z+aLPESQUGGPSDFyk22SG26vUJ0hUCKqF
+         z5fj05NTKziPKMyD7G3QXLxmZWlmw0KrCqfNEAiPNFy1qUj8KQ74/wTqlpJwTITYLDWd
+         VORg==
+X-Gm-Message-State: APjAAAVzirvkod+c2EPs1od7vL8a1AL3II+MWoXe8ZW3sFrD4ATwnb+o
+        9zolXDxq/baXH5pKXKC/K9Iygx9bXA==
+X-Google-Smtp-Source: APXvYqy132pI7t/f3+X+sZU4Ko0GpazlmqI0elgfvDTZQ8i2aDSAFKJOgz5uZujIhEm+kDaj8cyaCA==
+X-Received: by 2002:a9d:d0b:: with SMTP id 11mr11694540oti.287.1576796661610;
+        Thu, 19 Dec 2019 15:04:21 -0800 (PST)
+Received: from localhost (ip-184-205-174-147.ftwttx.spcsdns.net. [184.205.174.147])
+        by smtp.gmail.com with ESMTPSA id b206sm2499978oif.30.2019.12.19.15.04.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 15:04:21 -0800 (PST)
+Date:   Thu, 19 Dec 2019 17:04:20 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc:     linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        zypeng@titanmec.com, Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [RFC 06/25] dt-bindings: leds: Add Titan Micro Electronics TM1628
+Message-ID: <20191219230335.GA25461@bogus>
+References: <20191212033952.5967-1-afaerber@suse.de>
+ <20191212033952.5967-7-afaerber@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <20191219230919.16037-1-cw00.choi@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKJsWRmVeSWpSXmKPExsWy7bCmge5Vxj+xBov3m1vMP3KO1eJs0xt2
-        ixV3P7JaXN41h83ic+8RRovbjSvYHNg8Nr7bweTRt2UVo8fnTXIBzFHZNhmpiSmpRQqpecn5
-        KZl56bZK3sHxzvGmZgaGuoaWFuZKCnmJuam2Si4+AbpumTlAe5UUyhJzSoFCAYnFxUr6djZF
-        +aUlqQoZ+cUltkqpBSk5BZYFesWJucWleel6yfm5VoYGBkamQIUJ2RknDhxhL1giULGkYzlj
-        A2MLdxcjB4eEgIlE23OBLkYuDiGBHYwSR1ftZ4ZwPjFKdMz5yALhfGOUOH/1PytMx5nVgRDx
-        vYwS9/80MEE47xklmpatAyri5BAWCJGYtOoTO4gtIiAjMfXKflaQImaBHkaJzd9+M4Mk2AS0
-        JPa/uMEGYvMLKEpc/fGYEcTmFbCT+NTVDWazCKhKTO9cD1YvKhAmcXJbC1SNoMTJmU9YQGxO
-        AWuJTxdPgsWZBcQlbj2ZzwRhy0tsfzsHrFdC4DabxIdbNhC2i0T3h0vsELawxKvjW6BsKYnP
-        7/ayQdjVEitPHmEDOVpCoINRYsv+C6wQCWOJ/UsnM4GCgllAU2L9Ln2IsKLEzt9zoW7gk3j3
-        tQcaWrwSHW1CECXKEpcf3GWCsCUlFrd3sk1gVJqF5JtZSD6YheSDWQjLFjCyrGIUSy0ozk1P
-        LTYsMEKO7E2M4CSpZbaDcdE5n0OMAhyMSjy8Dmm/Y4VYE8uKK3MPMUpwMCuJ8N7u+BkrxJuS
-        WFmVWpQfX1Sak1p8iNEUGNgTmaVEk/OBCTyvJN7Q1MjY2NjCxNDM1NBQSZyX48fFWCGB9MSS
-        1OzU1ILUIpg+Jg5OqQbGnu/7Tn375GuvbaAYdnH2srNXtzTM/qx5sqLD8u5th5dcD223LZ3Z
-        nPpm+e7Zl7QvzWu3Ualb8mTlMc9LP7u02uKiAmYdlPDyZLhXbHSm1Tk0buqDPDP+5eu+Op62
-        On7emu16wIuvWQejI3Kmc++weLC7xlPrm5f2kf1/e+JcBPUPh5a9vbjIXImlOCPRUIu5qDgR
-        AEo+HuKoAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpgkeLIzCtJLcpLzFFi42LZdlhJTvcq459Yg/6JKhbzj5xjtTjb9Ibd
-        YsXdj6wWl3fNYbP43HuE0eJ24wo2BzaPje92MHn0bVnF6PF5k1wAcxSXTUpqTmZZapG+XQJX
-        xokDR9gLlghULOlYztjA2MLdxcjBISFgInFmdWAXIxeHkMBuRok7F5azdjFyAsUlJaZdPMoM
-        USMscfhwMUTNW0aJ/2svsYDUCAuESExa9YkdxBYRkJGYemU/WC+zQA+jxM/r6hANjxgluje3
-        gBWxCWhJ7H9xgw3E5hdQlLj64zEjiM0rYCfxqasbzGYRUJWY3rmeGcQWFQiT2LnkMRNEjaDE
-        yZlPwBZzClhLfLp4khFimbrEn3mXmCFscYlbT+YzQdjyEtvfzmGewCg8C0n7LCQts5C0zELS
-        soCRZRWjZGpBcW56brFhgVFearlecWJucWleul5yfu4mRnC8aGntYDxxIv4QowAHoxIPr0Pa
-        71gh1sSy4srcQ4wSHMxKIry3O37GCvGmJFZWpRblxxeV5qQWH2KU5mBREueVzz8WKSSQnliS
-        mp2aWpBaBJNl4uCUamCcuHEWb61dr/KrO7y5K6ob/m7oKl+84+OP8sfql94I5y3cMfe72/fY
-        x+tklNYeDeldt/rsVtFfitUi9W8ufZ/Wb7KvXtT4raKw1MOfNk0L1NQ2dPyaaHNAQayJaWPd
-        h0i/R7kX720pcz1i8tj/oLSV2MsDb7tvsj5b9Phexzfuw87fYj51pjxoUmIpzkg01GIuKk4E
-        AMFr6fCTAgAA
-X-CMS-MailID: 20191219230349epcas1p336ce638e09e2ed68852cce556dfb5429
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191219230258epcas1p16ec64c3a06eafd9f0a3784d18541ce5c
-References: <c0b332b85560e39d7dbb5e88b99bbed1d1b32373.1574458460.git.leonard.crestez@nxp.com>
-        <CGME20191219230258epcas1p16ec64c3a06eafd9f0a3784d18541ce5c@epcas1p1.samsung.com>
-        <20191219230919.16037-1-cw00.choi@samsung.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191212033952.5967-7-afaerber@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/20/19 8:09 AM, Chanwoo Choi wrote:
-> From: Leonard Crestez <leonard.crestez@nxp.com>
+On Thu, Dec 12, 2019 at 04:39:33AM +0100, Andreas Färber wrote:
+> Add a YAML schema binding for TM1628 LED controller.
 > 
-> Add driver for dynamic scaling the DDR Controller on imx8m chips. Actual
-> frequency switching is implemented inside TF-A, this driver wraps the
-> SMC calls and synchronizes the clk tree.
-> 
-> The DRAM clocks on imx8m have the following structure (abridged):
-> 
->  +----------+       |\            +------+
->  | dram_pll |-------|M| dram_core |      |
->  +----------+       |U|---------->| D    |
->                  /--|X|           |  D   |
->    dram_alt_root |  |/            |   R  |
->                  |                |    C |
->             +---------+           |      |
->             |FIX DIV/4|           |      |
->             +---------+           |      |
->   composite:     |                |      |
->  +----------+    |                |      |
->  | dram_alt |----/                |      |
->  +----------+                     |      |
->  | dram_apb |-------------------->|      |
->  +----------+                     +------+
-> 
-> The dram_pll is used for higher rates and dram_alt is used for lower
-> rates. The dram_alt and dram_apb clocks are "imx composite" and their
-> parent can also be modified.
-> 
-> This driver will prepare/enable the new parents ahead of switching (so
-> that the expected roots are enabled) and afterwards it will call
-> clk_set_parent to ensure the parents in clock framework are up-to-date.
-> 
-> The driver relies on dram_pll dram_alt and dram_apb being marked with
-> CLK_GET_RATE_NOCACHE for rate updates.
-> 
-> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-> [cw00.choi: Edit the COMPILE_TEST module dependency in Kconfig]
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Cc: zypeng@titanmec.com
+> Signed-off-by: Andreas Färber <afaerber@suse.de>
 > ---
-> Changes from v7:
-> - Squash patch[1] to this patch
-> [1] https://patchwork.kernel.org/patch/11303869/
-> - [PATCH] PM / devfreq: imx8m-ddrc: Fix argument swap in error print
+>  @Rob: How could we express constraints on two-cell reg value ranges here?
 
-Applied it.
+It's encoded as a matrix, so something like this:
 
-(snip)
+reg:
+  items:
+    items:
+      - # constraints on 1st cell value
+      - # constraints on 2nd cell value
 
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+>        Should we also model constraints on reg range by #grids property?
+
+So the value of #grid defines the max values in reg? Unfortunately, 
+we can't yet for json-schema. There's been some proposals, but nothing 
+final I think.
+
+>  .../devicetree/bindings/leds/titanmec,tm1628.yaml  | 80 ++++++++++++++++++++++
+>  1 file changed, 80 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/titanmec,tm1628.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/titanmec,tm1628.yaml b/Documentation/devicetree/bindings/leds/titanmec,tm1628.yaml
+> new file mode 100644
+> index 000000000000..024875656e79
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/titanmec,tm1628.yaml
+> @@ -0,0 +1,80 @@
+> +# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/titanmec,tm1628.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Titan Micro Electronics TM1628 LED controller
+> +
+> +maintainers:
+> +  - Andreas Färber <afaerber@suse.de>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +    - titanmec,tm1628
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#grids":
+
+I'd be more a fan of using '#' prefix if we'd been better at using it 
+when appropriate, so I'd probably drop the '#'.
+
+> +    description: |
+> +      Number of GRID output lines to use.
+> +      This limits the number of available SEG output lines.
+> +    minimum: 4
+> +    maximum: 7
+> +
+> +  "#address-cells":
+> +    const: 2
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +patternProperties:
+> +  "^.*@[1-7],([1-9]|1[02-4])$":
+> +    type: object
+> +    description: |
+> +      Properties for a single LED.
+
+Please describe the unit-address format. I assume it's <grid>,<segment>.
+
+> +
+> +    properties:
+> +      reg:
+> +        description: |
+> +          1-based grid number, followed by 1-based segment number.
+> +        maxItems: 1
+> +
+> +      linux,default-trigger: true
+> +
+> +    required:
+> +      - reg
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/leds/common.h>
+> +
+> +    spi {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        led-controller@0 {
+> +            compatible = "titanmec,tm1628";
+> +            reg = <0>;
+> +            spi-3-wire;
+> +            spi-lsb-first;
+> +            spi-max-frequency = <500000>;
+> +            #grids = <7>;
+> +            #address-cells = <2>;
+> +            #size-cells = <0>;
+> +
+> +            colon@5,4 {
+> +                reg = <5 4>;
+> +                color = <LED_COLOR_ID_WHITE>;
+> +                function = LED_FUNCTION_INDICATOR;
+> +                linux,default-trigger = "heartbeat";
+> +            };
+> +        };
+> +    };
+> +...
+> -- 
+> 2.16.4
+> 
