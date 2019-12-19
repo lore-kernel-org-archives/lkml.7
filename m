@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01178C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AEFC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3884206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9AC324676
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782035;
-	bh=eADfKAFYLy7jXk/OAll9v4hG1prm7z8JxMYDEfBe/cE=;
+	s=default; t=1576782040;
+	bh=wzrWLkjW0uPzgoAymaZOMN7L1Rznj01UlrJbLeIfw4k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZPhG8eqIsAMsepci1pKhKKxvHvtNogpRbnRkwuwcgbWcMvl/s8SBqCYv8ek+TRa9o
-	 TCvYTFQr0V9ElLHSGa63kwCaRcWSVEYxnzmw56IMfW7x1O1YydfAMGp+zdASfVEXUU
-	 8RcwF2uJXT7RN3d3PGGP62TLYa5JWy0+o7k7Z33s=
+	b=kZnx1sY/2SCZCZXY9JU+vW0RvgyzXP0PrYedDjh4G56AqtV0flGW8Uldh4xsPVgWH
+	 DBLDEUWpIDswVu1geNr4n/gst/2S1lvqbO3KcRL2u+DlrabmmRkEbriXSeMZMDt1yN
+	 Hk0z92u+qNIRWhtRTTB+ErBHPj3XZu0cxgs6t3Oc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730270AbfLSTAe (ORCPT
+        id S1730196AbfLSSwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:00:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46472 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:52:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730187AbfLSSwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:52:01 -0500
+        id S1730186AbfLSSvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:51:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED0E3227BF;
-        Thu, 19 Dec 2019 18:51:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B00C92064B;
+        Thu, 19 Dec 2019 18:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781520;
-        bh=eADfKAFYLy7jXk/OAll9v4hG1prm7z8JxMYDEfBe/cE=;
+        s=default; t=1576781513;
+        bh=wzrWLkjW0uPzgoAymaZOMN7L1Rznj01UlrJbLeIfw4k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HT7JJAJe9SVSIjtkmF+ORsxdu0asSXLHwTdlOTGyzqx4odijPxN55jlsLrpds4JNH
-         c1Cmb4ew5K8I0MZl41Oxp7jylwLsC51AapdO60waNMK+PTnMSu/lV0w9ywUXptBhGt
-         tM5HY22aDqsQd/3z047Ft8xpsNv14wFqicrFz3FY=
+        b=kad6cY9KiLgFQExjhald6/JNGCLIE9I6U5a30oWUJ1OfLM/kAeGDoKExmuuHVKh11
+         VyPwMCVVaCTdGSSZXbQA19NoqrJ3kNfBv8nZ3XVV4ZP/iPBw/hwFtjipGdA+1qaTFi
+         s/ToQ0HCoJAgpGjKJyH92LQUFjujW9YMcFTYLe20=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Subject: [PATCH 4.19 19/47] PCI: pciehp: Avoid returning prematurely from sysfs requests
-Date:   Thu, 19 Dec 2019 19:34:33 +0100
-Message-Id: <20191219182920.151902087@linuxfoundation.org>
+        stable@vger.kernel.org, Chaotian Jing <chaotian.jing@mediatek.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.19 16/47] mmc: block: Make card_busy_detect() a bit more generic
+Date:   Thu, 19 Dec 2019 19:34:30 +0100
+Message-Id: <20191219182917.317219858@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182857.659088743@linuxfoundation.org>
 References: <20191219182857.659088743@linuxfoundation.org>
@@ -60,95 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Chaotian Jing <chaotian.jing@mediatek.com>
 
-commit 157c1062fcd86ade3c674503705033051fd3d401 upstream.
+commit 3869468e0c4800af52bfe1e0b72b338dcdae2cfc upstream.
 
-A sysfs request to enable or disable a PCIe hotplug slot should not
-return before it has been carried out.  That is sought to be achieved by
-waiting until the controller's "pending_events" have been cleared.
+To prepare for more users of card_busy_detect(), let's drop the struct
+request * as an in-parameter and convert to log the error message via
+dev_err() instead of pr_err().
 
-However the IRQ thread pciehp_ist() clears the "pending_events" before
-it acts on them.  If pciehp_sysfs_enable_slot() / _disable_slot() happen
-to check the "pending_events" after they have been cleared but while
-pciehp_ist() is still running, the functions may return prematurely
-with an incorrect return value.
-
-Fix by introducing an "ist_running" flag which must be false before a sysfs
-request is allowed to return.
-
-Fixes: 32a8cef274fe ("PCI: pciehp: Enable/disable exclusively from IRQ thread")
-Link: https://lore.kernel.org/linux-pci/1562226638-54134-1-git-send-email-wangxiongfeng2@huawei.com
-Link: https://lore.kernel.org/r/4174210466e27eb7e2243dd1d801d5f75baaffd8.1565345211.git.lukas@wunner.de
-Reported-and-tested-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: stable@vger.kernel.org # v4.19+
+Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/hotplug/pciehp.h      |    2 ++
- drivers/pci/hotplug/pciehp_ctrl.c |    6 ++++--
- drivers/pci/hotplug/pciehp_hpc.c  |    2 ++
- 3 files changed, 8 insertions(+), 2 deletions(-)
+ drivers/mmc/core/block.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
---- a/drivers/pci/hotplug/pciehp.h
-+++ b/drivers/pci/hotplug/pciehp.h
-@@ -106,6 +106,7 @@ struct slot {
-  *	that has not yet been cleared by the user
-  * @pending_events: used by the IRQ handler to save events retrieved from the
-  *	Slot Status register for later consumption by the IRQ thread
-+ * @ist_running: flag to keep user request waiting while IRQ thread is running
-  * @request_result: result of last user request submitted to the IRQ thread
-  * @requester: wait queue to wake up on completion of user request,
-  *	used for synchronous slot enable/disable request via sysfs
-@@ -125,6 +126,7 @@ struct controller {
- 	unsigned int notification_enabled:1;
- 	unsigned int power_fault_detected;
- 	atomic_t pending_events;
-+	unsigned int ist_running;
- 	int request_result;
- 	wait_queue_head_t requester;
- };
---- a/drivers/pci/hotplug/pciehp_ctrl.c
-+++ b/drivers/pci/hotplug/pciehp_ctrl.c
-@@ -383,7 +383,8 @@ int pciehp_sysfs_enable_slot(struct slot
- 		ctrl->request_result = -ENODEV;
- 		pciehp_request(ctrl, PCI_EXP_SLTSTA_PDC);
- 		wait_event(ctrl->requester,
--			   !atomic_read(&ctrl->pending_events));
-+			   !atomic_read(&ctrl->pending_events) &&
-+			   !ctrl->ist_running);
- 		return ctrl->request_result;
- 	case POWERON_STATE:
- 		ctrl_info(ctrl, "Slot(%s): Already in powering on state\n",
-@@ -416,7 +417,8 @@ int pciehp_sysfs_disable_slot(struct slo
- 		mutex_unlock(&p_slot->lock);
- 		pciehp_request(ctrl, DISABLE_SLOT);
- 		wait_event(ctrl->requester,
--			   !atomic_read(&ctrl->pending_events));
-+			   !atomic_read(&ctrl->pending_events) &&
-+			   !ctrl->ist_running);
- 		return ctrl->request_result;
- 	case POWEROFF_STATE:
- 		ctrl_info(ctrl, "Slot(%s): Already in powering off state\n",
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -620,6 +620,7 @@ static irqreturn_t pciehp_ist(int irq, v
- 	irqreturn_t ret;
- 	u32 events;
- 
-+	ctrl->ist_running = true;
- 	pci_config_pm_runtime_get(pdev);
- 
- 	/* rerun pciehp_isr() if the port was inaccessible on interrupt */
-@@ -666,6 +667,7 @@ static irqreturn_t pciehp_ist(int irq, v
- 	up_read(&ctrl->reset_lock);
- 
- 	pci_config_pm_runtime_put(pdev);
-+	ctrl->ist_running = false;
- 	wake_up(&ctrl->requester);
- 	return IRQ_HANDLED;
+--- a/drivers/mmc/core/block.c
++++ b/drivers/mmc/core/block.c
+@@ -982,7 +982,7 @@ static inline bool mmc_blk_in_tran_state
  }
+ 
+ static int card_busy_detect(struct mmc_card *card, unsigned int timeout_ms,
+-			    struct request *req, u32 *resp_errs)
++			    u32 *resp_errs)
+ {
+ 	unsigned long timeout = jiffies + msecs_to_jiffies(timeout_ms);
+ 	int err = 0;
+@@ -993,8 +993,8 @@ static int card_busy_detect(struct mmc_c
+ 
+ 		err = __mmc_send_status(card, &status, 5);
+ 		if (err) {
+-			pr_err("%s: error %d requesting status\n",
+-			       req->rq_disk->disk_name, err);
++			dev_err(mmc_dev(card->host),
++				"error %d requesting status\n", err);
+ 			return err;
+ 		}
+ 
+@@ -1007,9 +1007,9 @@ static int card_busy_detect(struct mmc_c
+ 		 * leaves the program state.
+ 		 */
+ 		if (done) {
+-			pr_err("%s: Card stuck in wrong state! %s %s status: %#x\n",
+-				mmc_hostname(card->host),
+-				req->rq_disk->disk_name, __func__, status);
++			dev_err(mmc_dev(card->host),
++				"Card stuck in wrong state! %s status: %#x\n",
++				 __func__, status);
+ 			return -ETIMEDOUT;
+ 		}
+ 
+@@ -1678,7 +1678,7 @@ static int mmc_blk_fix_state(struct mmc_
+ 
+ 	mmc_blk_send_stop(card, timeout);
+ 
+-	err = card_busy_detect(card, timeout, req, NULL);
++	err = card_busy_detect(card, timeout, NULL);
+ 
+ 	mmc_retune_release(card->host);
+ 
+@@ -1902,7 +1902,7 @@ static int mmc_blk_card_busy(struct mmc_
+ 	if (mmc_host_is_spi(card->host) || rq_data_dir(req) == READ)
+ 		return 0;
+ 
+-	err = card_busy_detect(card, MMC_BLK_TIMEOUT_MS, req, &status);
++	err = card_busy_detect(card, MMC_BLK_TIMEOUT_MS, &status);
+ 
+ 	/*
+ 	 * Do not assume data transferred correctly if there are any error bits
 
 
