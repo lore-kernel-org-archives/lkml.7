@@ -2,142 +2,101 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86309C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A410C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61D2C20716
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65736227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:18:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="lv3Rm7/Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbfLSMPY (ORCPT
+        id S1726734AbfLSMSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 07:15:24 -0500
-Received: from mout.kundenserver.de ([212.227.17.13]:49619 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbfLSMPW (ORCPT
+        Thu, 19 Dec 2019 07:18:51 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:20500 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726668AbfLSMSv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 07:15:22 -0500
-Received: from mail-qt1-f180.google.com ([209.85.160.180]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MirfG-1i5ZgJ30Vg-00exGF; Thu, 19 Dec 2019 13:15:19 +0100
-Received: by mail-qt1-f180.google.com with SMTP id q20so4865171qtp.3;
-        Thu, 19 Dec 2019 04:15:19 -0800 (PST)
-X-Gm-Message-State: APjAAAU2ozyKe1HKrRDr4/+bTdOo+BZBhvLR0n6tXjhJH6yTp66+ccmq
-        959YKNQhp8FJOjifitsupAIvhcWUxa37I12tWjs=
-X-Google-Smtp-Source: APXvYqzBJaTMUPYhRE1yI60oc1+7sq5M0T66IfZX2Nf0hnuyPkKbQDZSiXOuH7DY+joNcZzsJrZtnzD3uIY4JdbWGfE=
-X-Received: by 2002:ac8:47d3:: with SMTP id d19mr6556062qtr.142.1576757718254;
- Thu, 19 Dec 2019 04:15:18 -0800 (PST)
+        Thu, 19 Dec 2019 07:18:51 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBJCIa0u028198;
+        Thu, 19 Dec 2019 13:18:38 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=YKewLXKdy0X/pTBaXdqh9MV8IDUvEyr+N3muSF/2Jy4=;
+ b=lv3Rm7/QZzFR2Mast1jfLvQS90hX0m6bdp25R9wgdqbkNWCH9LUmMooKEmDgWysOELLu
+ uOY4/LSSl8IemCI3mlcJUO29+XKjDRZNhZlJsoa05srM9PSnRaONEe5Cx2jAW4lZhqux
+ WXDMFGCAM+2guMguIxvuM9lGqRmOs+j5kWx8XAXptIKyYIwxltIbBOFJ+SV0e7sEktIo
+ MCdNqyACEj8SuGQzqQXixf6Bya5dcVRoNEeR9gMj2UyHqYcnze6bXsavgyoCaW51adbf
+ YTXPJ3x7JtXYB2NzwNoxsmU4kUuAJseuIvb9WDYMsVZb4KD2EiZKEG9x5tzEk2TtR28d KQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2wvnresmds-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Dec 2019 13:18:38 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 007C410002A;
+        Thu, 19 Dec 2019 13:18:29 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7D2192BE249;
+        Thu, 19 Dec 2019 13:18:29 +0100 (CET)
+Received: from localhost (10.75.127.46) by SFHDAG3NODE1.st.com (10.75.127.7)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Dec 2019 13:18:29
+ +0100
+From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
+To:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: [PATCH v2] ARM: dts: stm32: update mlahb node according to the bindings
+Date:   Thu, 19 Dec 2019 13:18:15 +0100
+Message-ID: <20191219121815.22987-1-arnaud.pouliquen@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20191217221708.3730997-1-arnd@arndb.de> <20191217221708.3730997-22-arnd@arndb.de>
- <5826d31fcf2fcbe25bf2396e32df3df7d585dd99.camel@codethink.co.uk>
-In-Reply-To: <5826d31fcf2fcbe25bf2396e32df3df7d585dd99.camel@codethink.co.uk>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 19 Dec 2019 13:15:02 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3W+5RTa5jTunotZyV=hgXTxJaPqz_5kJnsdbvSZZPmjg@mail.gmail.com>
-Message-ID: <CAK8P3a3W+5RTa5jTunotZyV=hgXTxJaPqz_5kJnsdbvSZZPmjg@mail.gmail.com>
-Subject: Re: [PATCH v2 21/27] compat_ioctl: move cdrom commands into cdrom.c
-To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:TEDryguOcCH9gogHQGldrcRHNWTpgeIL8C4kJi51MAPgG/9mxVV
- Rk3wyzHd4pGTUXGPm2w/KXpFoRl43u8nPX2/oMroULIcXjY9TW1HJ8+ygH5Hena4Ea+klC/
- 9xXvZTGMjge1E86DPJTR5zSKBekB4VK7nHCTJ0fWNP93pB2DSfeoKhOfg4w80WRMn3lqAzp
- 4vNVezU7c3PLFXQ4F3ixw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WMG3D85XS7Y=:kQOXUFqRvWoxbmscz/tw+x
- 6VSej/2D+FLv45TGznZknJYXn8O5k9WJO9YTvnQF9TteweSfCHkRGCSbCWU8/Y9rAqKBgOz0J
- X8xlJ6Cp21no9Zr+4GoOrHlIzW4sMFuklW2xxXixLrMA4rTnCWOzaC0xwhkDA6NygdyuFLEpN
- 3lnEONQ3v3NTTsZEwt9u+Knpa9C/aFjfwCjnntsDtQpq13qzRSN5nzu1wRU27RArdlHnGhB4i
- 0y7jVtJBLN+WXK560KgN1PZR6LgPUh15HgEgvVtVxRUmVCEzkmCf/gRKt3ZvvkUiP3nhyc8W9
- gr2LMIYImwZgl7wNuiDBX2SvX2mJ8v7AKlMcnfnD84f8lET3kyk8PIBzzmHMQbLCOtB8nZlA+
- 9E9VyiSPQnUGbq7DJywUAAsSl6xrrTueXIysBtCgpcKAtHaAS30elfaodA19qKXrmhtBLw6HE
- Gs+hIwWWJB3WlfkYtM236Bfwg6JIcdSMUelzXzc5N91CeYUpJrp2I4/9x/xOPbax6++9YMvBF
- nGvOfYDDgo6Ee53pQ5++Y2fmbnQ9i00u4ADJhxaGdkl3JCSn36S6Ou6wZB6IDFIfTH4/KfT+o
- L6uXkkF0Vlf7UfbYQOVp1SEcgVftSRC9PthPNcFG2fD6QmfybeidkM8CaN8ZuPF1Ko3ZM/V9Y
- uLUzxJVynaZjQs7K6rKeEEQ4HE9Tl6QNOUypxmlmjI+tU9bwwh3DaPI8LDREoXJ63wV0Ob7sh
- RMq9+1xDIVSwqS2bTm2GgMbcWWQmHq1n0lxqmen+SO24j8xBjXOaTNISHwWmStR83PsxJyi2+
- k/unNOVE+XZ+5vhmJ55fYzAdp3wic/xZqYvy4fE/+K1vPyPdeRbfPA04kgA6LvszgkaZhA7Pz
- 2sbCKfQ8sZA9MhpOCuUg==
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-19_01:2019-12-17,2019-12-19 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 9:11 PM Ben Hutchings
-<ben.hutchings@codethink.co.uk> wrote:
->
-> On Tue, 2019-12-17 at 23:17 +0100, Arnd Bergmann wrote:
-> [...]
-> > @@ -1710,6 +1711,38 @@ static int idecd_ioctl(struct block_device *bdev, fmode_t mode,
-> >       return ret;
-> >  }
-> >
-> > +#ifdef CONFIG_COMPAT
-> > +static int idecd_locked_compat_ioctl(struct block_device *bdev, fmode_t mode,
-> > +                     unsigned int cmd, unsigned long arg)
-> > +{
-> > +     struct cdrom_info *info = ide_drv_g(bdev->bd_disk, cdrom_info);
-> > +     int err;
-> > +
-> > +     switch (cmd) {
-> > +     case CDROMSETSPINDOWN:
-> > +             return idecd_set_spindown(&info->devinfo, arg);
-> > +     case CDROMGETSPINDOWN:
-> > +             return idecd_get_spindown(&info->devinfo, arg);
->
-> compat_ptr() should also be applied to the argument for these two
-> commands, though I'm fairly sure IDE drivers have never been useful on
-> s390 so it doesn't matter in practice.
+Update of the mlahb node according to to DT bindings using json-schema
 
-Agreed on both, fixed by folding in this change:
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+---
+ arch/arm/boot/dts/stm32mp151.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/ide/ide-cd.c b/drivers/ide/ide-cd.c
-index 2de6e8ace957..e09b949a7c46 100644
---- a/drivers/ide/ide-cd.c
-+++ b/drivers/ide/ide-cd.c
-@@ -1716,19 +1716,20 @@ static int idecd_locked_compat_ioctl(struct
-block_device *bdev, fmode_t mode,
-                        unsigned int cmd, unsigned long arg)
- {
-        struct cdrom_info *info = ide_drv_g(bdev->bd_disk, cdrom_info);
-+       void __user *argp = compat_ptr(arg);
-        int err;
+diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
+index 3dd570b10181..047051c56ef7 100644
+--- a/arch/arm/boot/dts/stm32mp151.dtsi
++++ b/arch/arm/boot/dts/stm32mp151.dtsi
+@@ -1669,10 +1669,11 @@
+ 		};
+ 	};
+ 
+-	mlahb {
+-		compatible = "simple-bus";
++	mlahb: ahb {
++		compatible = "st,mlahb", "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
++		ranges;
+ 		dma-ranges = <0x00000000 0x38000000 0x10000>,
+ 			     <0x10000000 0x10000000 0x60000>,
+ 			     <0x30000000 0x30000000 0x60000>;
+-- 
+2.17.1
 
-        switch (cmd) {
-        case CDROMSETSPINDOWN:
--               return idecd_set_spindown(&info->devinfo, arg);
-+               return idecd_set_spindown(&info->devinfo, (unsigned long)argp);
-        case CDROMGETSPINDOWN:
--               return idecd_get_spindown(&info->devinfo, arg);
-+               return idecd_get_spindown(&info->devinfo, (unsigned long)argp);
-        default:
-                break;
-        }
-
-        return cdrom_ioctl(&info->devinfo, bdev, mode, cmd,
--                          (unsigned long)compat_ptr(arg));
-+                          (unsigned long)argp);
- }
-
-static int idecd_compat_ioctl(struct block_device *bdev, fmode_t mode,
-
-Unfortunately the generic_ide_ioctl() call still needs an unconverted arg,
-so I can't just use compat_ptr() to call the native idecd_locked_ioctl()
-for all commands.
-
-Thanks,
-
-       Arnd
