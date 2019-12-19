@@ -2,208 +2,127 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB21C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9DAC2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0642465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:18:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="LHNNmDUm"
+	by mail.kernel.org (Postfix) with ESMTP id CA3332465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:19:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576786764;
+	bh=3FSspEqjeV/r3JnSiuDrlylG7Wl9eHwnoKBtJftz4gk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e2TDGjGJLUYu9XfBUpDNax+mz+DgvamF/Evd3HSDZSm18rYBrvRi82mjLmjzrDaPq
+	 MK0bA2GkwxX2AE/xrOWMUV7YpEGMj0fGi4k2ixEX5stWF297c0PXVViTmjBOsDi7z+
+	 cvKQSBhYbSwjjOBg39JsDul+9TctlTJM+SrRufZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfLSUSP (ORCPT
+        id S1727174AbfLSUTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 15:18:15 -0500
-Received: from mail-bn7nam10on2083.outbound.protection.outlook.com ([40.107.92.83]:4216
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726884AbfLSUSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 15:18:15 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hT5havNwrHD1RDGlNWqFXyEQIkEtksFKpFFqS8n2s70TaQ8lkMalnNL50iw2wtsIvXkuwtQ77wLwi0K98DwnFUmrFD0kdrUXpDYr/CsjuKr5SECXARBwpbNcGb5ZReRnphDGYsypESx4uLzYABxIrJgOF3fFFcgMApYLiSVHHGU+a/dxi2JGj21XgRuczSLaa14wmx4y8U+u1IFyLV64866YShvCrFKwnCWwE6lp5rHnkSO+lgPK9hJETE7KINF6KjEtdCUX6xsbDNsSek3euOLU+wtIntxMZ7vwrpESLS+By6WxQ1riufvqHxzOJ1tXjXS3jKJCdwGzIIVRAm4SPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pwm/ZNYhK49hcRhzLjPeDVSBTZseA94Kn46DkUk/NRk=;
- b=nPkDlOSOuD5JxsxbKr8DG6AwhfIhdoeghAxilASRJBrTPsvSZsm5mO834YPd9YUYTYAkCGv5yebxcQBdVZhBJiVkGp8J8qxcfzGRgX9+lamYBRIZ2cxPBz3OL1UUjQB8jEfU2xkjCeXXx6y0TPKiAR4L6F2ivAKNNd3SP1jWMnCERVvUYIZSN5Nw93IikFHhBc2lMuc+A8rZM14POd3OYtIxQcvpMH/Y7G5IzEzKdzBd/6ky0sNFJo7XnSjnNflLWWvCLyPpBCWVsQVcubL78AXJ1MahVtxemoTp3ah1Lx3F+htIiJpsM2MutCwOs5hSAkfRpr7QZTCL7YQFXjj56w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pwm/ZNYhK49hcRhzLjPeDVSBTZseA94Kn46DkUk/NRk=;
- b=LHNNmDUm9b4sYeOKAhgwFyVpbApqmcISW27hebx1ZJPNkXt5CPxsYdHjU6WwCK5cWjaNMqgcL7Ixud4lK4lTiqZvKNwQ89PHRhbQEJa/2AjLqcxW6pGfBOPhDi/cMmV2dS2iyjA7+AA0rOiqjIWDpSf1LtPGVm36teSZzz+SF90=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=John.Allen@amd.com; 
-Received: from DM5PR12MB2423.namprd12.prod.outlook.com (52.132.140.158) by
- DM5PR12MB1834.namprd12.prod.outlook.com (10.175.87.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.19; Thu, 19 Dec 2019 20:18:10 +0000
-Received: from DM5PR12MB2423.namprd12.prod.outlook.com
- ([fe80::84ad:4e59:7686:d79c]) by DM5PR12MB2423.namprd12.prod.outlook.com
- ([fe80::84ad:4e59:7686:d79c%3]) with mapi id 15.20.2538.019; Thu, 19 Dec 2019
- 20:18:10 +0000
-From:   John Allen <john.allen@amd.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        rkrcmar@redhat.com, vkuznets@redhat.com,
-        John Allen <john.allen@amd.com>
-Subject: [PATCH v2] kvm/svm: PKU not currently supported
-Date:   Thu, 19 Dec 2019 14:17:59 -0600
-Message-Id: <20191219201759.21860-1-john.allen@amd.com>
-X-Mailer: git-send-email 2.24.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SN4PR0401CA0018.namprd04.prod.outlook.com
- (2603:10b6:803:21::28) To DM5PR12MB2423.namprd12.prod.outlook.com
- (2603:10b6:4:b3::30)
+        Thu, 19 Dec 2019 15:19:24 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39358 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbfLSUTX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 15:19:23 -0500
+Received: by mail-ed1-f65.google.com with SMTP id t17so6136013eds.6;
+        Thu, 19 Dec 2019 12:19:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1z6z1Ui8LL1nkwwIvcM2qSFeAknNPztf5Dw5KcO2dK8=;
+        b=sS8NsZJcXcY8TgpHCpIbqW9V5OzarWXytTpQ8I79KR+JDiVB1Q4w0df8fgVfLkZLsP
+         QppebyM5rQLw4qBSyvplYNDscsIFUI7WytzCjfgSNR28svfrltxPY4sMrHe/KtE+gqKc
+         7o2xqq82jbtzbPzYCjvTd1E7C7k8iCwJwG6DuZ6augRV4mTuVT5iOZibGaICkZIk4OVs
+         /duT5SKPDGxCtDrTGp2snC0E4I0dMSi4j/6yeVfQIYdnd3w8Z7pPU0r5PqKoOODUJgKF
+         mBLPBfSlIyvl1WKvxRvYrzo5yl3kK+LEThN94aDmshg+bpNWNRO3soKrVjqgyJ8f1vDK
+         1r7g==
+X-Gm-Message-State: APjAAAVwDJaEYLWKsuFyemHOkK1sW++kXNjjvM+nrEaE6BpHxfVUL5pR
+        1v3dDHwmBIMCvNc+yE31cKo=
+X-Google-Smtp-Source: APXvYqwwejroRBv27RRKI+KjHOuS4q02b2b9jWEyzsgC2C9l3pOef3KwtMfRZqXDwDfmgHuveS0ogQ==
+X-Received: by 2002:a17:906:5606:: with SMTP id f6mr11822819ejq.179.1576786761612;
+        Thu, 19 Dec 2019 12:19:21 -0800 (PST)
+Received: from kozik-lap ([194.230.155.234])
+        by smtp.googlemail.com with ESMTPSA id m2sm626166edp.85.2019.12.19.12.19.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 19 Dec 2019 12:19:20 -0800 (PST)
+Date:   Thu, 19 Dec 2019 21:19:17 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
+        leonard.crestez@nxp.com, lukasz.luba@arm.com, a.swigon@samsung.com,
+        m.szyprowski@samsung.com, kgene@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH 7/9] memory: samsung: exynos5422-dmc: Replace deprecated
+ 'devfreq-events' property
+Message-ID: <20191219201917.GA21576@kozik-lap>
+References: <20191217055738.28445-1-cw00.choi@samsung.com>
+ <CGME20191217055106epcas1p2c43a45e34983c1b3e60cc6fd842dd33e@epcas1p2.samsung.com>
+ <20191217055738.28445-8-cw00.choi@samsung.com>
 MIME-Version: 1.0
-X-Mailer: git-send-email 2.24.0
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: c8a936f5-ad6c-4e25-0f9f-08d784c0913a
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1834:|DM5PR12MB1834:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB1834BAE4AC326DC2B04F37A09A520@DM5PR12MB1834.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-Forefront-PRVS: 0256C18696
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39850400004)(396003)(366004)(376002)(346002)(199004)(189003)(4326008)(1076003)(316002)(6916009)(6666004)(6512007)(6506007)(86362001)(8936002)(26005)(186003)(36756003)(6486002)(478600001)(81166006)(44832011)(5660300002)(2616005)(66946007)(81156014)(8676002)(52116002)(66476007)(66556008)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1834;H:DM5PR12MB2423.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: IEdg5eAxfEtFDhfnSDCmtnBwudl0A1MHgbQf3kXLndo2Q2WVWwWDO7xdbCvenkcrnVud0j8DIPi+S78lSuzsDgs+nskvPaW4paDUlbl1zrMTx7DDdYhxa2sb8sO3uppwqZuU+lZH4gUyI9BKGD966L50PRirJFtF+n5U7D6iLSWLwBt6J0hPFpsvK51l1HsYME0LbWsoyysdkgd6hnfC7MBPGBvUheutHKW/SB0Tn+DXE+NVKk3qTXuQL5cl+Z9xnb0A9Kg/akf/2d7XhXsknCXgC3dEgvXhLw+rGXdLbAV0xZorMtMqy56ySar4EDvN4vbIh6tS2uyJCGAH//XAMNosjn0FVWtQ6bGRcCaWPERBBMrQD5DfCm9yEJU6pDr61pY8XSNoKR7am39J5vHevBmUiOFJF8doAsTtv1fN7fSTF6o0z54MQC0GbU1HAJmV
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c8a936f5-ad6c-4e25-0f9f-08d784c0913a
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Dec 2019 20:18:10.3172
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HfgKrOIaXHhMgVE8LT61ZhBddgpBLAPiG+MZ33EM7xa2OhH6r3DNqJ74KH8+Q44bqYJj3MaNZ5QUHboVjULW6Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1834
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191217055738.28445-8-cw00.choi@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current SVM implementation does not have support for handling PKU. Guests
-running on a host with future AMD cpus that support the feature will read
-garbage from the PKRU register and will hit segmentation faults on boot as
-memory is getting marked as protected that should not be. Ensure that cpuid
-from SVM does not advertise the feature.
+On Tue, Dec 17, 2019 at 02:57:36PM +0900, Chanwoo Choi wrote:
+> In order to remove the deprecated 'devfreq-events' property, replace with
+> new 'exynos,ppmu-device' property in order to get the devfreq-event device
+> in devicetree file instead of 'devfreq-events' property. But, to guarantee
+> the backward-compatibility, keep the support 'devfreq-events' property.
+> 
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>  .../memory-controllers/exynos5422-dmc.txt     |  6 ++--
+>  drivers/memory/samsung/exynos5422-dmc.c       | 29 +++++++++++++++----
+>  2 files changed, 26 insertions(+), 9 deletions(-)
 
-Signed-off-by: John Allen <john.allen@amd.com>
----
-v2:
-  -Introduce kvm_x86_ops->pku_supported()
----
- arch/x86/include/asm/kvm_host.h | 1 +
- arch/x86/kvm/cpuid.c            | 4 +++-
- arch/x86/kvm/svm.c              | 6 ++++++
- arch/x86/kvm/vmx/capabilities.h | 5 +++++
- arch/x86/kvm/vmx/vmx.c          | 1 +
- 5 files changed, 16 insertions(+), 1 deletion(-)
+In general looks good for me but I need an ack from Rob.  Patch should
+be also split and sent as one of first in the series (before code).
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index b79cd6aa4075..4a9d869465ad 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1145,6 +1145,7 @@ struct kvm_x86_ops {
- 	bool (*xsaves_supported)(void);
- 	bool (*umip_emulated)(void);
- 	bool (*pt_supported)(void);
-+	bool (*pku_supported)(void);
- 
- 	int (*check_nested_events)(struct kvm_vcpu *vcpu, bool external_intr);
- 	void (*request_immediate_exit)(struct kvm_vcpu *vcpu);
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index cfafa320a8cf..ace146d663db 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -352,6 +352,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
- 	unsigned f_umip = kvm_x86_ops->umip_emulated() ? F(UMIP) : 0;
- 	unsigned f_intel_pt = kvm_x86_ops->pt_supported() ? F(INTEL_PT) : 0;
- 	unsigned f_la57;
-+	unsigned f_pku = kvm_x86_ops->pku_supported() ? F(PKU) : 0;
- 
- 	/* cpuid 7.0.ebx */
- 	const u32 kvm_cpuid_7_0_ebx_x86_features =
-@@ -363,7 +364,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
- 
- 	/* cpuid 7.0.ecx*/
- 	const u32 kvm_cpuid_7_0_ecx_x86_features =
--		F(AVX512VBMI) | F(LA57) | F(PKU) | 0 /*OSPKE*/ | F(RDPID) |
-+		F(AVX512VBMI) | F(LA57) | 0 /*PKU*/ | 0 /*OSPKE*/ | F(RDPID) |
- 		F(AVX512_VPOPCNTDQ) | F(UMIP) | F(AVX512_VBMI2) | F(GFNI) |
- 		F(VAES) | F(VPCLMULQDQ) | F(AVX512_VNNI) | F(AVX512_BITALG) |
- 		F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | 0 /*WAITPKG*/;
-@@ -392,6 +393,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
- 		/* Set LA57 based on hardware capability. */
- 		entry->ecx |= f_la57;
- 		entry->ecx |= f_umip;
-+		entry->ecx |= f_pku;
- 		/* PKU is not yet implemented for shadow paging. */
- 		if (!tdp_enabled || !boot_cpu_has(X86_FEATURE_OSPKE))
- 			entry->ecx &= ~F(PKU);
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 122d4ce3b1ab..8b0620f3aed6 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -6001,6 +6001,11 @@ static bool svm_has_wbinvd_exit(void)
- 	return true;
- }
- 
-+static bool svm_pku_supported(void)
-+{
-+	return false;
-+}
-+
- #define PRE_EX(exit)  { .exit_code = (exit), \
- 			.stage = X86_ICPT_PRE_EXCEPT, }
- #define POST_EX(exit) { .exit_code = (exit), \
-@@ -7341,6 +7346,7 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
- 	.xsaves_supported = svm_xsaves_supported,
- 	.umip_emulated = svm_umip_emulated,
- 	.pt_supported = svm_pt_supported,
-+	.pku_supported = svm_pku_supported,
- 
- 	.set_supported_cpuid = svm_set_supported_cpuid,
- 
-diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
-index 7aa69716d516..283bdb7071af 100644
---- a/arch/x86/kvm/vmx/capabilities.h
-+++ b/arch/x86/kvm/vmx/capabilities.h
-@@ -145,6 +145,11 @@ static inline bool vmx_umip_emulated(void)
- 		SECONDARY_EXEC_DESC;
- }
- 
-+static inline bool vmx_pku_supported(void)
-+{
-+	return boot_cpu_has(X86_FEATURE_PKU);
-+}
-+
- static inline bool cpu_has_vmx_rdtscp(void)
- {
- 	return vmcs_config.cpu_based_2nd_exec_ctrl &
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index e3394c839dea..6ba72440b3e3 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7870,6 +7870,7 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
- 	.xsaves_supported = vmx_xsaves_supported,
- 	.umip_emulated = vmx_umip_emulated,
- 	.pt_supported = vmx_pt_supported,
-+	.pku_supported = vmx_pku_supported,
- 
- 	.request_immediate_exit = vmx_request_immediate_exit,
- 
--- 
-2.24.0
+> 
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> index 02e4a1f862f1..1e1b3702f045 100644
+> --- a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> @@ -17,14 +17,14 @@ Required properties for DMC device for Exynos5422:
+>  - clock-names : should include "fout_spll", "mout_sclk_spll", "ff_dout_spll2",
+>    "fout_bpll", "mout_bpll", "sclk_bpll", "mout_mx_mspll_ccore",
+>    "mout_mclk_cdrex"  entries
+> -- devfreq-events : phandles for PPMU devices connected to this DMC.
+> +- exynos,ppmu-device : phandles for PPMU devices connected to this DMC.
+>  - vdd-supply : phandle for voltage regulator which is connected.
+>  - reg : registers of two CDREX controllers.
+>  - operating-points-v2 : phandle for OPPs described in v2 definition.
+>  - device-handle : phandle of the connected DRAM memory device. For more
+>  	information please refer to documentation file:
+>  	Documentation/devicetree/bindings/ddr/lpddr3.txt
+> -- devfreq-events : phandles of the PPMU events used by the controller.
+> +- exynos,ppmu-device : phandles of the PPMU events used by the controller.
+>  - samsung,syscon-clk : phandle of the clock register set used by the controller,
+>  	these registers are used for enabling a 'pause' feature and are not
+>  	exposed by clock framework but they must be used in a safe way.
+> @@ -73,7 +73,7 @@ Example:
+>  			      "mout_mx_mspll_ccore",
+>  			      "mout_mclk_cdrex";
+>  		operating-points-v2 = <&dmc_opp_table>;
+> -		devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
+> +		exynos,ppmu-device = <&ppmu_event3_dmc0_0>, <&ppmu_event3_dmc0_1>,
+>  				 <&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
+
+Indentation is broken here.
+
+Best regards,
+Krzysztof
 
