@@ -2,252 +2,145 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E480EC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E128BC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8A5124679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4FFC24679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:15:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H4G/I2Wr"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="GFyPrTOc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfLSROS (ORCPT
+        id S1726930AbfLSRPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 12:14:18 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34104 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbfLSROS (ORCPT
+        Thu, 19 Dec 2019 12:15:37 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55618 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726801AbfLSRPh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 12:14:18 -0500
-Received: by mail-wr1-f67.google.com with SMTP id t2so6792336wrr.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 09:14:15 -0800 (PST)
+        Thu, 19 Dec 2019 12:15:37 -0500
+Received: by mail-wm1-f65.google.com with SMTP id q9so6241542wmj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 09:15:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HZ0EtI8SNKlfgm0DfEQvvRLmJ1Ih0hN8p888zZI0xD0=;
-        b=H4G/I2WrR1UhOCtp1/0yzqTouxps1FSmdWsBfOQTPXS+dwbHJG2wxEOPPq8f/a1fs+
-         6ZABq6etTBDIn7AzrrWkJUnW+k4YKWzA0nbrDfHGAhs8mXbeKtgTmfVFXL9MJxiWTh9Z
-         7N2GqMK0Z2fhKaB9Kyx5WpCCUx2YXElNEpEEVimjEO4B6vAeTOKXPnQrEkld9B+MNMkx
-         ZCb3JkmF4D+qs0XL0JDPusJNh8JSYgDwXigyZS5dA5ikNteDmdH8P8xwFF/nV90sjlYN
-         j5Uu0DzK+jpeFcnW/6ADPP0H0/r3Gr2HZE5IgMWScOkQ3Oo16H9hImySyw75UjPrftLU
-         BNtQ==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dJ1Hc86CtFp5JvVjtPPv0Qcnhc2K0tENotEeuRTee3Y=;
+        b=GFyPrTOcTMQoc+XjyuHIliQMC2pONC8rXCjLuJQmx5Z6xvg2pvI1EU8yVDzBfOlUSY
+         4lyDvkiQTQnb/XbSm/0eDzGLFSze8x22et4J83laORhVT+JZHsAMF91fZRGvjq4tX74d
+         0MZKbSziKCHqU1VDhI2tJgSVgFkJsuMrw+mUJGrjUW2EsjOOJADqUQ1JDWu6i1tR4nSW
+         sWosQVUfSUm43uYc7CEHCTULkh5nZzk7uGLjw0eSvgDIjt2H7uDJH5DQAnAhk5cmcKJk
+         Lbez6L9cWkguyox22iZWrlwKu7PzLy2nEeD2UK/5yZnYKmIRyWjBq24WJpQTNmP0dbFP
+         1L/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=HZ0EtI8SNKlfgm0DfEQvvRLmJ1Ih0hN8p888zZI0xD0=;
-        b=OmvcOeZ8mz34lZ3Wwh4loE8L176RAvJHvv5LYKA2Nv63WAomNgCSllX74bL+iItTia
-         A49Dlxb5mPkDBpWm7LiBgygUpSU3O2MUSmzRWI8seyFJ5yEwzQLh74Yv54KugqtGgTNP
-         wjmbU3mUv7lk3fB07Nq5/6CA9HCtDTnlrnH4iw5jr4zQlBIr0NBs+0XeQbNZiPfEJZXr
-         DPc0kyheBY7SIxmmn159WD+rUqUZ04EDxjDkh1kXwB8aGb+krdgfsAghQeuaeEQVTfkH
-         ejyU51TUXnNw6HLNs/EMQsSSofAQhO4tKodJdsDf7xOwVVolRPHlN0wej6s6cAtuqi5h
-         xpKw==
-X-Gm-Message-State: APjAAAWSsGvdGaXKyRaIAm1k/e4XtDKpoRvC4Xc6nN7lKtIqsteFwgjc
-        nZ52SacLJH5Jg3EDPaVBIpnoRN9UhhU=
-X-Google-Smtp-Source: APXvYqwA8FWwQCzaZcPxfmvA9yCyMILHVORxzfEwKmag9PvZ6iu+Z0fU6wuYiLUEqjwYA9xb9fI5kg==
-X-Received: by 2002:adf:fe43:: with SMTP id m3mr10904787wrs.213.1576775654849;
-        Thu, 19 Dec 2019 09:14:14 -0800 (PST)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id x132sm11088147wmg.0.2019.12.19.09.14.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 19 Dec 2019 09:14:14 -0800 (PST)
-Subject: Re: [alsa-devel] [PATCH v5 2/2] soundwire: qcom: add support for
- SoundWire controller
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        vkoul@kernel.org
-Cc:     robh@kernel.org, bgoswami@codeaurora.org, broonie@kernel.org,
-        lgirdwood@gmail.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, spapothi@codeaurora.org
-References: <20191219092842.10885-1-srinivas.kandagatla@linaro.org>
- <20191219092842.10885-3-srinivas.kandagatla@linaro.org>
- <c791e241-cd71-4c05-dac5-04e3ecaaf995@linux.intel.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <a5315861-d9b8-0852-8a3a-012f60cc3a44@linaro.org>
-Date:   Thu, 19 Dec 2019 17:14:13 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        bh=dJ1Hc86CtFp5JvVjtPPv0Qcnhc2K0tENotEeuRTee3Y=;
+        b=hG2v6QtGQN7E8FPJA93zzTLGe2Uxolyfav/AFCML8xp614bqO6Nsn2bML2Kjlf3klr
+         jDTFZOm2wvDgpGso54MYz3oY2U9K+dIWdzGkPzemPWQG+qC+IbZ/r3DbH8xQnQmsnNFJ
+         kJyoqIAiL/+nAPbvQFpEsyF/NPE3x86Dyq4ALCSIlf8A3aRCxWT2iGPM0I7FgYnypmoy
+         DTvg7Q/5xqcrIudUfBRMGwA/3gBryw8G25qfP+NkJRTbv8vwqDBYCPlvtORjWX8ILJFZ
+         Ie3lLYBs1mxAYck9t87e38qvtRMBec4xyF3sBzhz9XyZF6shMnSPav98zsiLKLGNSU89
+         4KYA==
+X-Gm-Message-State: APjAAAU1bUK2lfaVR2solBnO9hDS3fP+yHMvu5NqX0fPTLiQnq0bQmRf
+        V4/D0xEhL9UKVjghUPKlbTdHvw==
+X-Google-Smtp-Source: APXvYqwe/45hbe0F2G/DmPVoXCA3a+5VENdwJEwaaoGCb2fBYpOqVdDbSS76Jx1REhKdm6hLDRfuZg==
+X-Received: by 2002:a7b:c216:: with SMTP id x22mr10798319wmi.51.1576775734993;
+        Thu, 19 Dec 2019 09:15:34 -0800 (PST)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id q6sm7401428wrx.72.2019.12.19.09.15.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 09:15:34 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v3 00/13] gpiolib: add an ioctl() for monitoring line status changes
+Date:   Thu, 19 Dec 2019 18:15:15 +0100
+Message-Id: <20191219171528.6348-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <c791e241-cd71-4c05-dac5-04e3ecaaf995@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
+When discussing the recent user-space changes with Kent and while working
+on dbus API for libgpiod I noticed that we really don't have any way of
+keeping the line info synchronized between the kernel and user-space
+processes. We can of course periodically re-read the line information or
+even do it every time we want to read a property but this isn't optimal.
 
-On 19/12/2019 16:07, Pierre-Louis Bossart wrote:
-> 
-> 
-> On 12/19/19 3:28 AM, Srinivas Kandagatla wrote:
->> Qualcomm SoundWire Master controller is present in most Qualcomm SoCs
->> either integrated as part of WCD audio codecs via slimbus or
->> as part of SOC I/O.
->>
->> This patchset adds support to a very basic controller which has been
->> tested with WCD934x SoundWire controller connected to WSA881x smart
->> speaker amplifiers.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> 
-> This looks quite good, I only have a couple of nit-picks/questions below.
+This series adds a new ioctl() that allows user-space to set up a watch on
+the GPIO chardev file-descriptor which can then be polled for events
+emitted by the kernel when the line is requested, released or its status
+changed. This of course doesn't require the line to be requested. Multiple
+user-space processes can watch the same lines.
 
-Thanks for taking time to review this.
+This series also includes a variety of minor tweaks & fixes for problems
+discovered during development. For instance it addresses a race-condition
+in current line event fifo.
 
->> +static int qcom_swrm_abh_reg_read(struct qcom_swrm_ctrl *ctrl, int reg,
->> +                  u32 *val)
->> +{
->> +    struct regmap *wcd_regmap = ctrl->regmap;
->> +    int ret;
->> +
->> +    /* pg register + offset */
->> +    ret = regmap_bulk_write(wcd_regmap, SWRM_AHB_BRIDGE_RD_ADDR_0,
->> +              (u8 *)&reg, 4);
->> +    if (ret < 0)
->> +        return SDW_CMD_FAIL;
->> +
->> +    ret = regmap_bulk_read(wcd_regmap, SWRM_AHB_BRIDGE_RD_DATA_0,
->> +                   val, 4);
->> +    if (ret < 0)
->> +        return SDW_CMD_FAIL;
->> +
->> +    return SDW_CMD_OK;
->> +}
-> 
-> I think I asked the question before but don't remember the answer so you 
-> may want to add a comment explaining why SDW_CMD_IGNORED is not a 
-> possible return value?
-> 
-There is no way atleast in this version of the controller to know if the 
-command is ignored. Only error that can be detected atm is timeout 
-waiting for response. Hopefully new versions of this IP have that 
-ability to detect this.
+v1: https://lkml.org/lkml/2019/11/27/327
 
-> The BER is supposed to be very very low but there is a non-zero 
-> possibility of a device losing sync.
-> 
->> +
->> +static int qcom_swrm_cmd_fifo_wr_cmd(struct qcom_swrm_ctrl *ctrl, u8 
->> cmd_data,
->> +                     u8 dev_addr, u16 reg_addr)
->> +{
->> +    DECLARE_COMPLETION_ONSTACK(comp);
->> +    unsigned long flags;
->> +    u32 val;
->> +    int ret;
->> +
->> +    spin_lock_irqsave(&ctrl->comp_lock, flags);
->> +    ctrl->comp = &comp;
->> +    spin_unlock_irqrestore(&ctrl->comp_lock, flags);
->> +    val = SWRM_REG_VAL_PACK(cmd_data, dev_addr,
->> +                SWRM_SPECIAL_CMD_ID, reg_addr);
->> +    ret = ctrl->reg_write(ctrl, SWRM_CMD_FIFO_WR_CMD, val);
->> +    if (ret)
->> +        goto err;
-> 
-> the code is a bit inconsistent at the moment on how errors are handled.
-> In some cases you explicitly test for errors, but ...
+v1 -> v2:
+- rework the main patch of the series: re-use the existing file-descriptor
+  associated with an open character device
+- add a patch adding a debug message when the line event kfifo is full and
+  we're discarding another event
+- rework the locking mechanism for lineevent kfifo: reuse the spinlock
+  from the waitqueue structure
+- other minor changes
 
-I looked at our previous discussions and I think we decided not to do 
-error checking reading on controller registers.
+v2 -> v3:
+- added patches providing new implementation for some kfifo macros
+- fixed a regression in the patch reworking the line event fifo: reading
+  multiple events is now still possible
+- reworked the structure for new ioctl: it's now padded such that there
+  be no alignment issues if running a 64-bit kernel on 32-bit userspace
+- fixed a bug where one process could disable the status watch of another
+- use kstrtoul() instead of atoi() in gpio-watch for string validation
 
-"For the Intel stuff, we typically don't check the read/writes to 
-controller registers, but anything that goes out on the bus is checked. "
-> 
-> 
->> +
->> +    for (i = 0; i < len; i++) {
->> +        ctrl->reg_read(ctrl, SWRM_CMD_FIFO_RD_FIFO_ADDR, &val);
-> 
-> ... here you don't ...
-> 
->> +        rval[i] = val & 0xFF;
->> +    }
->> +
->> +err:
->> +    spin_lock_irqsave(&ctrl->comp_lock, flags);
->> +    ctrl->comp = NULL;
->> +    spin_unlock_irqrestore(&ctrl->comp_lock, flags);
->> +
->> +    return ret;
->> +}
->> +
->> +static void qcom_swrm_get_device_status(struct qcom_swrm_ctrl *ctrl)
->> +{
->> +    u32 val;
->> +    int i;
->> +
->> +    ctrl->reg_read(ctrl, SWRM_MCP_SLV_STATUS, &val);
-> 
-> ... and not here ...
-> 
->> +
->> +    for (i = 0; i < SDW_MAX_DEVICES; i++) {
->> +        u32 s;
->> +
->> +        s = (val >> (i * 2));
->> +        s &= SWRM_MCP_SLV_STATUS_MASK;
->> +        ctrl->status[i] = s;
->> +    }
->> +}
->> +
->> +static irqreturn_t qcom_swrm_irq_handler(int irq, void *dev_id)
->> +{
->> +    struct qcom_swrm_ctrl *ctrl = dev_id;
->> +    u32 sts, value;
->> +    unsigned long flags;
->> +
->> +    ctrl->reg_read(ctrl, SWRM_INTERRUPT_STATUS, &sts);
-> 
-> ... and here same the reg_read/writes are no longer tested for?
-> 
->> +
->> +    if (sts & SWRM_INTERRUPT_STATUS_CMD_ERROR) {
->> +        ctrl->reg_read(ctrl, SWRM_CMD_FIFO_STATUS, &value);
->> +        dev_err_ratelimited(ctrl->dev,
->> +                    "CMD error, fifo status 0x%x\n",
->> +                     value);
->> +        ctrl->reg_write(ctrl, SWRM_CMD_FIFO_CMD, 0x1);
->> +    }
->> +
->> +    if ((sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED) ||
->> +        sts & SWRM_INTERRUPT_STATUS_CHANGE_ENUM_SLAVE_STATUS)
->> +        schedule_work(&ctrl->slave_work);
->> +
->> +    ctrl->reg_write(ctrl, SWRM_INTERRUPT_CLEAR, sts);
-> 
-> is it intentional to clear the interrupts first, before doing additional 
-> checks?
-> 
+Bartosz Golaszewski (13):
+  gpiolib: use 'unsigned int' instead of 'unsigned' in gpio_set_config()
+  gpiolib: have a single place of calling set_config()
+  gpiolib: convert the type of hwnum to unsigned int in
+    gpiochip_get_desc()
+  gpiolib: use gpiochip_get_desc() in linehandle_create()
+  gpiolib: use gpiochip_get_desc() in lineevent_create()
+  gpiolib: use gpiochip_get_desc() in gpio_ioctl()
+  kfifo: provide noirqsave variants of spinlocked in and out helpers
+  kfifo: provide kfifo_is_empty_spinlocked()
+  gpiolib: rework the locking mechanism for lineevent kfifo
+  gpiolib: emit a debug message when adding events to a full kfifo
+  gpiolib: provide a dedicated function for setting lineinfo
+  gpiolib: add new ioctl() for monitoring changes in line info
+  tools: gpio: implement gpio-watch
 
-No, I can move it to right to the end!
+ drivers/gpio/gpiolib.c      | 402 +++++++++++++++++++++++++++---------
+ drivers/gpio/gpiolib.h      |   4 +-
+ include/linux/gpio/driver.h |   3 +-
+ include/linux/kfifo.h       |  73 +++++++
+ include/uapi/linux/gpio.h   |  24 +++
+ tools/gpio/.gitignore       |   1 +
+ tools/gpio/Build            |   1 +
+ tools/gpio/Makefile         |  11 +-
+ tools/gpio/gpio-watch       | Bin 0 -> 26528 bytes
+ tools/gpio/gpio-watch.c     |  99 +++++++++
+ 10 files changed, 514 insertions(+), 104 deletions(-)
+ create mode 100755 tools/gpio/gpio-watch
+ create mode 100644 tools/gpio/gpio-watch.c
 
-> Or could it be done immediately after reading the status. It's not clear 
-> to me if the position of this clear matters, and if yes you should 
-> probably add a comment?
+-- 
+2.23.0
 
-Am not 100% if it matters, but Ideally I would like clear the interrupt 
-source before clearing the interrupt.
-
-
-> 
->> +
->> +    if (sts & SWRM_INTERRUPT_STATUS_SPECIAL_CMD_ID_FINISHED) {
->> +        spin_lock_irqsave(&ctrl->comp_lock, flags);
->> +        if (ctrl->comp)
->> +            complete(ctrl->comp);
->> +        spin_unlock_irqrestore(&ctrl->comp_lock, flags);
->> +    }
->> +
->> +    return IRQ_HANDLED;
-> The rest looks fine. nice work.
-Thanks,
-srini
