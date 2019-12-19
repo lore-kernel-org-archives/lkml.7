@@ -2,116 +2,195 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD093C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34674C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1F4924650
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1A2224680
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:02:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="C0W0Svkg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cfkeeELX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbfLSLBx (ORCPT
+        id S1726793AbfLSLCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 06:01:53 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:46519 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726701AbfLSLBx (ORCPT
+        Thu, 19 Dec 2019 06:02:39 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:36994 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726708AbfLSLCi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 06:01:53 -0500
-Received: by mail-qk1-f195.google.com with SMTP id r14so4246041qke.13
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 03:01:52 -0800 (PST)
+        Thu, 19 Dec 2019 06:02:38 -0500
+Received: by mail-pj1-f66.google.com with SMTP id m13so2360246pjb.2;
+        Thu, 19 Dec 2019 03:02:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=r4FrNo5LLEspvU9m0EiGD3eytJBEaYUVyq8SH3ZcE3o=;
-        b=C0W0Svkg0Llp9ZQuiZFYuGlJcklhQKzim592wdhPRyuZfzvO6Sy8GmgRlXLBdYyg8M
-         CnrXmmjidsnz1OPlJ7lXISjmdDSwrtPul+4xso+ezWUJxWZKbQLz/mVUb+ZLF+eH9bTQ
-         u75sjyRdj/GEuKHBsLnLOh9VFM4yqIFq36tZDoF6mvyeqaatSfPS9TCEk4HMmDsOFcz0
-         WNHxhb1zWXDPywtVLafp3q4kuWplraaVjhNkKR/AiGQMnOon2GZ66zSaq0dyvqUj5U8D
-         WAhrOKJsCtgkz2d5eRKxlVtMQKHP0XMUdWi5RzJITjwMjKCCJmwKqBNgL0SfgwQBAczw
-         lsog==
+         :cc;
+        bh=O+r1HKCBriFzIoCX8L5uyYociaU+Sa1uGxae7TY0vSs=;
+        b=cfkeeELXTz7NjDjxtICyJ0BLK0YJLg+sxrMl9yJklc26hsc7dYlv3icbSsPy4Q+UQX
+         NSli7tEK1jcAVg3uuG281j8Eep439Go8DxsAhIPwr1F1eI7+5PsoLqOf4BT4dLlD8iXR
+         fFW2xvxBMIeNLVj6YMYufCUPgtNP3+lqIcostBYzT0vD3sLlDDd5NJG6Iszm/YM4BCtV
+         HSJqbQPg6iOpq4jiJHvG3GTvOQKGlBzz4W8aTaGW32bGjS1LrySk4Oukp2sqzOpt7gTO
+         yTUjIk7xV0VwCct5MtNZ+BlMjBJpkNYEcjXnUk7C+YyV3Sp4dEuMbG6tdYJIZB754PFl
+         Obdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=r4FrNo5LLEspvU9m0EiGD3eytJBEaYUVyq8SH3ZcE3o=;
-        b=HCVMYWHNGCH41rmp3BDqkaYQpzY+hoBssWk5EUFQ8UJUOaX/YQC/YCBBlvWQC2QyVk
-         0TypE/ODJML0xhrW6PiSEluUtE30YwpUCJpiR/5bw0G5rMcXkl2l0PbjbzicKWeKKVaN
-         2tLyhl8IzAiZfD/oIInAJQUP5lpjk2RONJnYBzpI77MLpU8qCdkl0JezRaoaQP9bYErb
-         ddOK81qiquo0VzKCe3VDL2QFm9H2Z1QEVfKOGWzhblhMV7zllKrQCLy52CvT7voSnOmN
-         EW7YolqnRlmic7xGbNqa3qq/5MJUkBN4FghapsfTv04nau5SP+r/Rnyxqrj/NhvWbqct
-         boCg==
-X-Gm-Message-State: APjAAAWrGi5pMfL7yQqBFfqSjqzOgM1d4FJtdVJ4zc0l+QF8hJ84wrxw
-        EXz5ZS3Udgxw3ubhyx3TzZefEERmFDHQ/DbiNMF5Og==
-X-Google-Smtp-Source: APXvYqy4PaZdM7lBnMAneYnTWwRA+ttNw2J5709a9anujnDKaPB/StYNQhpvIdo1lY7WcNj00iKtDkcKHWISHo02XbM=
-X-Received: by 2002:a37:6fc4:: with SMTP id k187mr7098160qkc.21.1576753312007;
- Thu, 19 Dec 2019 03:01:52 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=O+r1HKCBriFzIoCX8L5uyYociaU+Sa1uGxae7TY0vSs=;
+        b=qND02OEV8paEEXwNDHiioDFri67CdAuzFN+5xvSOjYou6D0egwomyjqA7AK8h8WwZs
+         ihT0lTky5EF/BBAb8I2flqI3T1OXeJ/fLNoXs6SQSXZKLY24UbyDTlCWXuYlzRYPvoTT
+         TjFEsdGsyMZ7cvk7qUDBCKzqip3K2+a/P9G/mkamoDW7isSeVGTunE7NnFGN7Szrat40
+         +KdWQamPqkhCD2ckkkrWA7tyHYiAHUXHyYkIA/q6/FAkleuO+oMlEdvLOTec26FdMbDu
+         fpsHgL/WBnYJZTxTgOh7O2Iuw1NSRhl5+P846QsX2+7xRHmDJFpuHVEoop1/rxf/MoZa
+         3qTg==
+X-Gm-Message-State: APjAAAXQfeeVdiFrhJZKqGjXvWW/FHpyuF8AQCJ8F4hNWsL4f9YjGqS/
+        bBOsoi4XJR0QCFOf9F+LPtcvlk1lcXqcQKuX0SUsEDMo
+X-Google-Smtp-Source: APXvYqwi37AaaH078CJ7lzNLxijRKJG1bQPJW/R2wE2MhZ/5nYbsXgrzlDrnrokA5SzRdncSVZ1pv8tigLwtPe9Xw9A=
+X-Received: by 2002:a17:902:6901:: with SMTP id j1mr8660446plk.18.1576753357972;
+ Thu, 19 Dec 2019 03:02:37 -0800 (PST)
 MIME-Version: 1.0
-References: <20191215183047.9414-1-digetx@gmail.com> <20191215183047.9414-2-digetx@gmail.com>
-In-Reply-To: <20191215183047.9414-2-digetx@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 19 Dec 2019 12:01:41 +0100
-Message-ID: <CAMpxmJUmLOZoKeeo4XMVEOWKRgwfS4O2szVboY-qTTYXg_aTVg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] gpio: tegra: Use generic readl_relaxed/writel_relaxed
- accessors
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20191219041039.23396-1-dan@dlrobertson.com> <20191219041039.23396-3-dan@dlrobertson.com>
+In-Reply-To: <20191219041039.23396-3-dan@dlrobertson.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 19 Dec 2019 13:02:28 +0200
+Message-ID: <CAHp75VdVmfAi5hSp23Gn8nm6LmX-Mr5Tnxcbus90DrRL+gVFRA@mail.gmail.com>
+Subject: Re: [PATCH v7 2/3] iio: (bma400) add driver for the BMA400
+To:     Dan Robertson <dan@dlrobertson.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        devicetree <devicetree@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Joe Perches <joe@perches.com>,
+        Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-niedz., 15 gru 2019 o 19:31 Dmitry Osipenko <digetx@gmail.com> napisa=C5=82=
-(a):
->
-> There is no point in using old-style raw accessors, the generic accessors
-> do the same thing and also take into account CPU endianness. Tegra SoCs d=
-o
-> not support big-endian mode in the upstream kernel, but let's switch away
-> from the outdated things anyway, just to keep code up-to-date.
->
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/gpio/gpio-tegra.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
-> index 6fdfe4c5303e..f6a382fbd12d 100644
-> --- a/drivers/gpio/gpio-tegra.c
-> +++ b/drivers/gpio/gpio-tegra.c
-> @@ -96,12 +96,12 @@ struct tegra_gpio_info {
->  static inline void tegra_gpio_writel(struct tegra_gpio_info *tgi,
->                                      u32 val, u32 reg)
->  {
-> -       __raw_writel(val, tgi->regs + reg);
-> +       writel_relaxed(val, tgi->regs + reg);
->  }
->
->  static inline u32 tegra_gpio_readl(struct tegra_gpio_info *tgi, u32 reg)
->  {
-> -       return __raw_readl(tgi->regs + reg);
-> +       return readl_relaxed(tgi->regs + reg);
->  }
->
->  static unsigned int tegra_gpio_compose(unsigned int bank, unsigned int p=
-ort,
-> --
-> 2.24.0
->
+On Thu, Dec 19, 2019 at 6:27 AM Dan Robertson <dan@dlrobertson.com> wrote:
+> Add a IIO driver for the Bosch BMA400 3-axes ultra-low power accelerometer.
+> The driver supports reading from the acceleration and temperature
+> registers. The driver also supports reading and configuring the output data
+> rate, oversampling ratio, and scale.
 
-The entire series looks good to me, but I'll wait for Thierry's acks
-just in case.
+...
 
-Bart
+> +static int bma400_set_accel_output_data_rate(struct bma400_data *data,
+> +                                            int hz, int uhz)
+> +{
+> +       unsigned int idx;
+> +       unsigned int odr;
+> +       unsigned int val;
+> +       int ret;
+> +
+> +       if (hz >= BMA400_ACC_ODR_MIN_WHOLE_HZ) {
+> +               if (uhz || hz % BMA400_ACC_ODR_MIN_WHOLE_HZ)
+> +                       return -EINVAL;
+> +
+> +               val = hz / BMA400_ACC_ODR_MIN_WHOLE_HZ;
+
+Again, AFAICS division may be avoided in both cases (% and / above)
+because of is_power_of_2() check below.
+Can you revisit this?
+
+> +               if (!is_power_of_2(val))
+> +                       return -EINVAL;
+> +
+> +               idx = __ffs(val) + BMA400_ACC_ODR_MIN_RAW + 1;
+> +       } else if (hz == BMA400_ACC_ODR_MIN_HZ && uhz == 500000) {
+> +               idx = BMA400_ACC_ODR_MIN_RAW;
+> +       } else {
+> +               return -EINVAL;
+> +       }
+> +
+> +       ret = regmap_read(data->regmap, BMA400_ACC_CONFIG1_REG, &val);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /* preserve the range and normal mode osr */
+
+> +       odr = idx | (~BMA400_ACC_ODR_MASK & val);
+
+Yoda style?
+
+> +
+> +       ret = regmap_write(data->regmap, BMA400_ACC_CONFIG1_REG, odr);
+> +       if (ret)
+> +               return ret;
+> +
+> +       bma400_output_data_rate_from_raw(idx, &data->sample_freq.hz,
+> +                                        &data->sample_freq.uhz);
+> +       return 0;
+> +}
+...
+
+> +int bma400_accel_scale_to_raw(struct bma400_data *data, unsigned int val)
+> +{
+> +       int scale = val / BMA400_SCALE_MIN;
+> +       int raw;
+> +
+> +       if (scale == 0)
+> +               return -EINVAL;
+> +
+> +       raw = __ffs(scale);
+> +
+> +       if (val % BMA400_SCALE_MIN || !is_power_of_2(scale))
+> +               return -EINVAL;
+
+Ditto.
+
+> +
+> +       return raw;
+> +}
+
+...
+
+> +out:
+
+Make a little sense. Why not return directly?
+
+> +       return ret;
+
+...
+
+> +       ret = bma400_init(data);
+> +       if (ret < 0)
+
+May it be positive value returned?
+
+> +               return ret;
+
+...
+
+> +static int bma400_i2c_probe(struct i2c_client *client,
+> +                           const struct i2c_device_id *id)
+> +{
+> +       struct regmap *regmap;
+> +
+> +       regmap = devm_regmap_init_i2c(client, &bma400_regmap_config);
+
+> +
+
+Redundant blank line.
+
+> +       if (IS_ERR(regmap)) {
+> +               dev_err(&client->dev, "failed to create regmap\n");
+> +               return PTR_ERR(regmap);
+> +       }
+> +
+> +       return bma400_probe(&client->dev, regmap, id->name);
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
