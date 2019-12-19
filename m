@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBC5C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7CDC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36E0224672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F71C24672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:10:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782634;
-	bh=yTxjhlA0GOCxsjuGn4rKAiPTxp3UhagqMA/rASlPzQ8=;
+	s=default; t=1576782637;
+	bh=nooujZ1DsWjnhi4o+/CzvbZ/9qJ5W2ZL6euaFzbSMVc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EEVShzCYCJYbyMpu4+R2vYkgc2VNlWQas/fATOqPqSE6MZUrFZdh9geFH8JAXTqfU
-	 5xw2n423kHbfVLgmowQaM/5XzOq0mG/vDQZ4ltXqEOyLqojIGfgza9U+vO8bfRQ8KB
-	 EkSbBwi8rHP8sSTIPfUgkCrYNiGoDK6eBv7fi74w=
+	b=dj9QieVDCy19iG5rhyu5E+fo/b4UR7jXPPx8/dblNU9EyR2CP5RBPTvGWnWwQYa+J
+	 xL63e2oS+LfA5BWbLGkwLdOXB/sD/PTU8B3gl1HLnan/H0pfgGtmzz+W4XK4e6dVSQ
+	 stOQh17FeRBXDgVKt4bT7Ag1sxsnZG7qDlZhMqos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728271AbfLSTKd (ORCPT
+        id S1728195AbfLSSjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:10:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57818 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:39:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728208AbfLSSjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:39:31 -0500
+        id S1727467AbfLSSjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:39:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77FFC24680;
-        Thu, 19 Dec 2019 18:39:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C704C24684;
+        Thu, 19 Dec 2019 18:39:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780771;
-        bh=yTxjhlA0GOCxsjuGn4rKAiPTxp3UhagqMA/rASlPzQ8=;
+        s=default; t=1576780756;
+        bh=nooujZ1DsWjnhi4o+/CzvbZ/9qJ5W2ZL6euaFzbSMVc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WrycaBp6CbcQrZdlV7zrsPoR/uaCosViPN3+xxOjBl2UAdJGYIcEQMIoC5w5kR7+K
-         vgyHsmIUkkrWcnXIHbmPO8pHnW5XYte+KUtmo5ht5GMsUrGQ09jHxi+7zQ4CR06DEF
-         sOWjudj+kYaAsf/wCxkTCdX3CkvFRuS/7I8zLUm0=
+        b=ZT978HC3MoLoyYqrAF8Q02qjUCvlSXGJ4VhmigcgkRlQDgSQ3VPtu1Lv85PMKPtCK
+         ZBZ9Xc0orYuuxbd9LAskLOvCgQ20oulJYVL8/3JDoi8h/7O2H6tZfykJGST/fB+GIU
+         xBJXpirgMd10gPhFF7LfIGVvnHWGgG0xQQnd9TpQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 073/162] appletalk: Set error code if register_snap_client failed
-Date:   Thu, 19 Dec 2019 19:33:01 +0100
-Message-Id: <20191219183212.250605627@linuxfoundation.org>
+        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.4 103/162] rtlwifi: rtl8192de: Fix missing enable interrupt flag
+Date:   Thu, 19 Dec 2019 19:33:31 +0100
+Message-Id: <20191219183214.037943358@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -59,33 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Larry Finger <Larry.Finger@lwfinger.net>
 
-commit c93ad1337ad06a718890a89cdd85188ff9a5a5cc upstream.
+commit 330bb7117101099c687e9c7f13d48068670b9c62 upstream.
 
-If register_snap_client fails in atalk_init,
-error code should be set, otherwise it will
-triggers NULL pointer dereference while unloading
-module.
+In commit 38506ecefab9 ("rtlwifi: rtl_pci: Start modification for
+new drivers"), the flag that indicates that interrupts are enabled was
+never set.
 
-Fixes: 9804501fa122 ("appletalk: Fix potential NULL pointer dereference in unregister_snap_client")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+In addition, there are several places when enable/disable interrupts
+were commented out are restored. A sychronize_interrupts() call is
+removed.
+
+Fixes: 38506ecefab9 ("rtlwifi: rtl_pci: Start modification for new drivers")
+Cc: Stable <stable@vger.kernel.org>	# v3.18+
+Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/appletalk/ddp.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/realtek/rtlwifi/rtl8192de/hw.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/net/appletalk/ddp.c
-+++ b/net/appletalk/ddp.c
-@@ -1927,6 +1927,7 @@ static int __init atalk_init(void)
- 	ddp_dl = register_snap_client(ddp_snap_id, atalk_rcv);
- 	if (!ddp_dl) {
- 		pr_crit("Unable to register DDP with SNAP.\n");
-+		rc = -ENOMEM;
- 		goto out_sock;
- 	}
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/hw.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/hw.c
+@@ -1206,6 +1206,7 @@ void rtl92de_enable_interrupt(struct iee
  
+ 	rtl_write_dword(rtlpriv, REG_HIMR, rtlpci->irq_mask[0] & 0xFFFFFFFF);
+ 	rtl_write_dword(rtlpriv, REG_HIMRE, rtlpci->irq_mask[1] & 0xFFFFFFFF);
++	rtlpci->irq_enabled = true;
+ }
+ 
+ void rtl92de_disable_interrupt(struct ieee80211_hw *hw)
+@@ -1215,7 +1216,7 @@ void rtl92de_disable_interrupt(struct ie
+ 
+ 	rtl_write_dword(rtlpriv, REG_HIMR, IMR8190_DISABLED);
+ 	rtl_write_dword(rtlpriv, REG_HIMRE, IMR8190_DISABLED);
+-	synchronize_irq(rtlpci->pdev->irq);
++	rtlpci->irq_enabled = false;
+ }
+ 
+ static void _rtl92de_poweroff_adapter(struct ieee80211_hw *hw)
+@@ -1386,7 +1387,7 @@ void rtl92de_set_beacon_related_register
+ 
+ 	bcn_interval = mac->beacon_interval;
+ 	atim_window = 2;
+-	/*rtl92de_disable_interrupt(hw);  */
++	rtl92de_disable_interrupt(hw);
+ 	rtl_write_word(rtlpriv, REG_ATIMWND, atim_window);
+ 	rtl_write_word(rtlpriv, REG_BCN_INTERVAL, bcn_interval);
+ 	rtl_write_word(rtlpriv, REG_BCNTCFG, 0x660f);
+@@ -1406,9 +1407,9 @@ void rtl92de_set_beacon_interval(struct
+ 
+ 	RT_TRACE(rtlpriv, COMP_BEACON, DBG_DMESG,
+ 		 "beacon_interval:%d\n", bcn_interval);
+-	/* rtl92de_disable_interrupt(hw); */
++	rtl92de_disable_interrupt(hw);
+ 	rtl_write_word(rtlpriv, REG_BCN_INTERVAL, bcn_interval);
+-	/* rtl92de_enable_interrupt(hw); */
++	rtl92de_enable_interrupt(hw);
+ }
+ 
+ void rtl92de_update_interrupt_mask(struct ieee80211_hw *hw,
 
 
