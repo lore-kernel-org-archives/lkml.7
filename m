@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C4AC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F014C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 747BD24672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5DCE2465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:49:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781377;
-	bh=ZDWjkucWnuNDUFia2/GxQNQEtlT4iZWmBPaU8zSh7vg=;
+	s=default; t=1576781381;
+	bh=q2vsRGHuVAtymaB6Cwpc03PuTwARGzkA48d54uKuf5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K6cQZ0HEpEZE4LmvPGH6kCD9mHy6ab4TzpVTbHRjrxtuqHalgKVJ4uEgqVe+Pw+QP
-	 W3HdBHrtfHiNZngtgJvSdwRuSlbQ6VRsHu9gJyZXZoBaRYozTccKRhhZl4c4rYLiWe
-	 h1FGP1/TxP029RDWIdxohkm+XcrSxaJqkGb54jik=
+	b=T+S8BSG+R6t7R8UwqDe/SQseB37vQ8/vhtGnJ4sCILYK+LkJnB/DMe60QSLOkQh7D
+	 7vyQPYUyuoJ/oZf4Yq/i6f395rD/oq00ioLtawh2fEZzJDEuo7HuX5eZ1wIB5CyfRh
+	 2nr1wQL3xugFcrZmF+OKsXPXMfJBJERvc++pZbTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729829AbfLSStg (ORCPT
+        id S1729830AbfLSStj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:49:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43070 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:49:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729814AbfLSSte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:49:34 -0500
+        id S1729541AbfLSSth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:49:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78AAD2064B;
-        Thu, 19 Dec 2019 18:49:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E067420674;
+        Thu, 19 Dec 2019 18:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781373;
-        bh=ZDWjkucWnuNDUFia2/GxQNQEtlT4iZWmBPaU8zSh7vg=;
+        s=default; t=1576781376;
+        bh=q2vsRGHuVAtymaB6Cwpc03PuTwARGzkA48d54uKuf5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ljLAPKdnBJZMqCBjvnvYoVyMyD+ttiZKu/micDpkBH/Da5WpwhSQxSazpVUtF5lQy
-         XUtwGvUjxxEB+vEVNi43HynE3AXfEa1P4v5lOxYG5aHYWeOFvwsp+RLnqaqcPXEjH6
-         0ImagnGhjS0Ou2M8OKg+eG//tgUKH2mhJ57KvZ28=
+        b=Zr4E42MTbbBAHw4ydDqNW6ObnnS+T9nLjPBKbmrB9Sx2Cd3j2ozO7Vb0BgiPMecZZ
+         Ecilc+X+ikAgWRVAogmUbzfnIE0XC8H9ugF1IKbT1fYtHgYPJdvYe/4tyHZt3h6+wx
+         4mUSD9mvVnPdiaFXc15enbvmLn1fK4tE+kSvfsvc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
-        Joe Thornber <ejt@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.9 194/199] dm btree: increase rebalance threshold in __rebalance2()
-Date:   Thu, 19 Dec 2019 19:34:36 +0100
-Message-Id: <20191219183226.514476773@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.9 195/199] scsi: iscsi: Fix a potential deadlock in the timeout handler
+Date:   Thu, 19 Dec 2019 19:34:37 +0100
+Message-Id: <20191219183226.581039964@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,67 +62,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Tao <houtao1@huawei.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-commit 474e559567fa631dea8fb8407ab1b6090c903755 upstream.
+commit 5480e299b5ae57956af01d4839c9fc88a465eeab upstream.
 
-We got the following warnings from thin_check during thin-pool setup:
+Some time ago the block layer was modified such that timeout handlers are
+called from thread context instead of interrupt context. Make it safe to
+run the iSCSI timeout handler in thread context. This patch fixes the
+following lockdep complaint:
 
-  $ thin_check /dev/vdb
-  examining superblock
-  examining devices tree
-    missing devices: [1, 84]
-      too few entries in btree_node: 41, expected at least 42 (block 138, max_entries = 126)
-  examining mapping tree
+================================
+WARNING: inconsistent lock state
+5.5.1-dbg+ #11 Not tainted
+--------------------------------
+inconsistent {IN-SOFTIRQ-W} -> {SOFTIRQ-ON-W} usage.
+kworker/7:1H/206 [HC0[0]:SC0[0]:HE1:SE1] takes:
+ffff88802d9827e8 (&(&session->frwd_lock)->rlock){+.?.}, at: iscsi_eh_cmd_timed_out+0xa6/0x6d0 [libiscsi]
+{IN-SOFTIRQ-W} state was registered at:
+  lock_acquire+0x106/0x240
+  _raw_spin_lock+0x38/0x50
+  iscsi_check_transport_timeouts+0x3e/0x210 [libiscsi]
+  call_timer_fn+0x132/0x470
+  __run_timers.part.0+0x39f/0x5b0
+  run_timer_softirq+0x63/0xc0
+  __do_softirq+0x12d/0x5fd
+  irq_exit+0xb3/0x110
+  smp_apic_timer_interrupt+0x131/0x3d0
+  apic_timer_interrupt+0xf/0x20
+  default_idle+0x31/0x230
+  arch_cpu_idle+0x13/0x20
+  default_idle_call+0x53/0x60
+  do_idle+0x38a/0x3f0
+  cpu_startup_entry+0x24/0x30
+  start_secondary+0x222/0x290
+  secondary_startup_64+0xa4/0xb0
+irq event stamp: 1383705
+hardirqs last  enabled at (1383705): [<ffffffff81aace5c>] _raw_spin_unlock_irq+0x2c/0x50
+hardirqs last disabled at (1383704): [<ffffffff81aacb98>] _raw_spin_lock_irq+0x18/0x50
+softirqs last  enabled at (1383690): [<ffffffffa0e2efea>] iscsi_queuecommand+0x76a/0xa20 [libiscsi]
+softirqs last disabled at (1383682): [<ffffffffa0e2e998>] iscsi_queuecommand+0x118/0xa20 [libiscsi]
 
-The phenomenon is the number of entries in one node of details_info tree is
-less than (max_entries / 3). And it can be easily reproduced by the following
-procedures:
+other info that might help us debug this:
+ Possible unsafe locking scenario:
 
-  $ new a thin pool
-  $ presume the max entries of details_info tree is 126
-  $ new 127 thin devices (e.g. 1~127) to make the root node being full
-    and then split
-  $ remove the first 43 (e.g. 1~43) thin devices to make the children
-    reblance repeatedly
-  $ stop the thin pool
-  $ thin_check
+       CPU0
+       ----
+  lock(&(&session->frwd_lock)->rlock);
+  <Interrupt>
+    lock(&(&session->frwd_lock)->rlock);
 
-The root cause is that the B-tree removal procedure in __rebalance2()
-doesn't guarantee the invariance: the minimal number of entries in
-non-root node should be >= (max_entries / 3).
+ *** DEADLOCK ***
 
-Simply fix the problem by increasing the rebalance threshold to
-make sure the number of entries in each child will be greater
-than or equal to (max_entries / 3 + 1), so no matter which
-child is used for removal, the number will still be valid.
+2 locks held by kworker/7:1H/206:
+ #0: ffff8880d57bf928 ((wq_completion)kblockd){+.+.}, at: process_one_work+0x472/0xab0
+ #1: ffff88802b9c7de8 ((work_completion)(&q->timeout_work)){+.+.}, at: process_one_work+0x476/0xab0
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Acked-by: Joe Thornber <ejt@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+stack backtrace:
+CPU: 7 PID: 206 Comm: kworker/7:1H Not tainted 5.5.1-dbg+ #11
+Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
+Workqueue: kblockd blk_mq_timeout_work
+Call Trace:
+ dump_stack+0xa5/0xe6
+ print_usage_bug.cold+0x232/0x23b
+ mark_lock+0x8dc/0xa70
+ __lock_acquire+0xcea/0x2af0
+ lock_acquire+0x106/0x240
+ _raw_spin_lock+0x38/0x50
+ iscsi_eh_cmd_timed_out+0xa6/0x6d0 [libiscsi]
+ scsi_times_out+0xf4/0x440 [scsi_mod]
+ scsi_timeout+0x1d/0x20 [scsi_mod]
+ blk_mq_check_expired+0x365/0x3a0
+ bt_iter+0xd6/0xf0
+ blk_mq_queue_tag_busy_iter+0x3de/0x650
+ blk_mq_timeout_work+0x1af/0x380
+ process_one_work+0x56d/0xab0
+ worker_thread+0x7a/0x5d0
+ kthread+0x1bc/0x210
+ ret_from_fork+0x24/0x30
+
+Fixes: 287922eb0b18 ("block: defer timeouts to a workqueue")
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: Lee Duncan <lduncan@suse.com>
+Cc: Chris Leech <cleech@redhat.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191209173457.187370-1-bvanassche@acm.org
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/persistent-data/dm-btree-remove.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/scsi/libiscsi.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/md/persistent-data/dm-btree-remove.c
-+++ b/drivers/md/persistent-data/dm-btree-remove.c
-@@ -203,7 +203,13 @@ static void __rebalance2(struct dm_btree
- 	struct btree_node *right = r->n;
- 	uint32_t nr_left = le32_to_cpu(left->header.nr_entries);
- 	uint32_t nr_right = le32_to_cpu(right->header.nr_entries);
--	unsigned threshold = 2 * merge_threshold(left) + 1;
-+	/*
-+	 * Ensure the number of entries in each child will be greater
-+	 * than or equal to (max_entries / 3 + 1), so no matter which
-+	 * child is used for removal, the number will still be not
-+	 * less than (max_entries / 3).
-+	 */
-+	unsigned int threshold = 2 * (merge_threshold(left) + 1);
+--- a/drivers/scsi/libiscsi.c
++++ b/drivers/scsi/libiscsi.c
+@@ -1982,7 +1982,7 @@ static enum blk_eh_timer_return iscsi_eh
  
- 	if (nr_left + nr_right < threshold) {
+ 	ISCSI_DBG_EH(session, "scsi cmd %p timedout\n", sc);
+ 
+-	spin_lock(&session->frwd_lock);
++	spin_lock_bh(&session->frwd_lock);
+ 	task = (struct iscsi_task *)sc->SCp.ptr;
+ 	if (!task) {
  		/*
+@@ -2109,7 +2109,7 @@ static enum blk_eh_timer_return iscsi_eh
+ done:
+ 	if (task)
+ 		task->last_timeout = jiffies;
+-	spin_unlock(&session->frwd_lock);
++	spin_unlock_bh(&session->frwd_lock);
+ 	ISCSI_DBG_EH(session, "return %s\n", rc == BLK_EH_RESET_TIMER ?
+ 		     "timer reset" : "shutdown or nh");
+ 	return rc;
 
 
