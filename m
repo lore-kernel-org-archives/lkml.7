@@ -2,103 +2,93 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A86C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6996BC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C778C206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E068218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:35:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FvMCEDW1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VMU3axBi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfLSNfv (ORCPT
+        id S1726867AbfLSNf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 08:35:51 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23775 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726744AbfLSNfu (ORCPT
+        Thu, 19 Dec 2019 08:35:58 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:46990 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726744AbfLSNf6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 08:35:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576762549;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dfDUZ+YWQDHdZQWx+qVgipwYQ5hX7WkURvwSh6ixxPs=;
-        b=FvMCEDW1VTNE3cl08+WvUFnXad1NhB184uegBV5s1yL4fSHZB0N2NgBnVumsO5nhiK1//p
-        9GyBPIlkuXhhQKD/W5Vv6RNf7oIRLYaWFQy1LZruHpsL8jgbPPVCWAEDIdol9Q5rWAIrqU
-        Ub4/InWvkS7v1NgFkK0slE1+E/H/HHc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-370-6sRbYs7nPuGEk8tKp59MsA-1; Thu, 19 Dec 2019 08:35:45 -0500
-X-MC-Unique: 6sRbYs7nPuGEk8tKp59MsA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4148E104ED28;
-        Thu, 19 Dec 2019 13:35:44 +0000 (UTC)
-Received: from carbon (ovpn-200-37.brq.redhat.com [10.40.200.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2DB1B5C1B0;
-        Thu, 19 Dec 2019 13:35:36 +0000 (UTC)
-Date:   Thu, 19 Dec 2019 14:35:35 +0100
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     netdev@vger.kernel.org, lirongqing@baidu.com,
-        linyunsheng@huawei.com,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Saeed Mahameed <saeedm@mellanox.com>, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, brouer@redhat.com
-Subject: Re: [net-next v4 PATCH] page_pool: handle page recycle for
- NUMA_NO_NODE condition
-Message-ID: <20191219143535.6c7bc880@carbon>
-In-Reply-To: <20191219120925.GD26945@dhcp22.suse.cz>
-References: <20191218084437.6db92d32@carbon>
-        <157665609556.170047.13435503155369210509.stgit@firesoul>
-        <20191219120925.GD26945@dhcp22.suse.cz>
+        Thu, 19 Dec 2019 08:35:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=YSWZcOq3c4tDpa7LmbcYDgqZaDKNh9WKgBSxITrGWH0=; b=VMU3axBiD4FRvBTUAvat9++sh
+        QduzMQrNMhpyhtVc5RAWKPuxaPWfFYkdKhazG/Ft7Rb2DcgDwcNM6GB1Y+LXthA2qM1qd2DA1S3Go
+        pBDLF+l0FeQ8QKOt6JpebPmTPqCHKQVdfGynuJOJRihcWND6FmluJqXwRRlAxAJXBJtDpV7B3vIIQ
+        HyjLGsUezYfLMMJT6ecEqBRXmLtrO3r6tw9kZGnggFfNCAPXD0vvnCbm/e2tWk2lwkSdLuHxAXKNC
+        MzM0SeXj8f6KIEsepVLCK4CRpfDa490tRRci4kujDYCTdi9wAoiKDa4FtyDHyFb1Au2y4UcUyqPt5
+        itF3fF1fw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ihvxC-0000aR-0J; Thu, 19 Dec 2019 13:34:58 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B60D3304D00;
+        Thu, 19 Dec 2019 14:33:28 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4501F2B3E168F; Thu, 19 Dec 2019 14:34:52 +0100 (CET)
+Date:   Thu, 19 Dec 2019 14:34:52 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Garnier <thgarnie@chromium.org>
+Cc:     kernel-hardening@lists.openwall.com, kristen@linux.intel.com,
+        keescook@chromium.org, Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Will Deacon <will@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v10 00/11] x86: PIE support to extend KASLR randomization
+Message-ID: <20191219133452.GM2827@hirez.programming.kicks-ass.net>
+References: <20191205000957.112719-1-thgarnie@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191205000957.112719-1-thgarnie@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Dec 2019 13:09:25 +0100
-Michal Hocko <mhocko@kernel.org> wrote:
+On Wed, Dec 04, 2019 at 04:09:37PM -0800, Thomas Garnier wrote:
+> Minor changes based on feedback and rebase from v9.
+> 
+> Splitting the previous serie in two. This part contains assembly code
+> changes required for PIE but without any direct dependencies with the
+> rest of the patchset.
 
-> On Wed 18-12-19 09:01:35, Jesper Dangaard Brouer wrote:
-> [...]
-> > For the NUMA_NO_NODE case, when a NIC IRQ is moved to another NUMA
-> > node, then ptr_ring will be emptied in 65 (PP_ALLOC_CACHE_REFILL+1)
-> > chunks per allocation and allocation fall-through to the real
-> > page-allocator with the new nid derived from numa_mem_id(). We accept
-> > that transitioning the alloc cache doesn't happen immediately.  
-
-Oh, I just realized that the drivers usually refill several RX
-packet-pages at once, this means that this is called N times, meaning
-during a NUMA change this will result in N * 65 pages returned.
-
-
-> Could you explain what is the expected semantic of NUMA_NO_NODE in this
-> case? Does it imply always the preferred locality? See my other email[1] to
-> this matter.
-
-I do think we want NUMA_NO_NODE to mean preferred locality. My code
-allow the page to come from a remote NUMA node, but once it is returned
-via the ptr_ring, we return pages not belonging to the local NUMA node
-(determined by the CPU processing RX packets from the drivers RX-ring).
-
-
-> [1] http://lkml.kernel.org/r/20191219115338.GC26945@dhcp22.suse.cz
-
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
-
+ISTR suggestion you add an objtool pass that verifies there are no
+absolute text references left. Otherwise we'll forever be chasing that
+last one..
