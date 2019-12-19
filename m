@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A16CFC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD02C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 758A2227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7435E24683
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:52:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781566;
-	bh=Oye+xFFwRaxXK6gVfuSxJKioNDCxjbFbXImXCOWqsj8=;
+	s=default; t=1576781569;
+	bh=1PxvcWMoJDi7qVwBIOeTcemwFDTFkq4tPGTvQHkT/QA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kX+nVXa1cQvtzxGVlGHAiG7QdQeIjNrx87B+BHPIJl0kZUZe5GlpDzfij1yv32cgi
-	 ZWDVe0F0zjZr1ZxD6C5VHW7ruC/4LwzLzXsnX40Bxymz3n/LRfsQRnsNt/NvNPG+qx
-	 LYN/kaO74pscxcapqXe6JR+J+YT4Bu5L7pSI8Gi0=
+	b=GUgP6axdbK8SVd4w1NqQ7UhD3WvYsKOgak2H/hHKUIt55wyoAbJSdP9SH9QaEQpot
+	 6cEAV9WI3Oo+NToUKXfFANRBE4EI+FCTAeHu9xZGz241elxqbcpt8MKACWm7XPwP4k
+	 xityG7ol7OPIGdRjWZHhe7Q4HIFBoGwvbP7SR618=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730286AbfLSSwo (ORCPT
+        id S1730293AbfLSSwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:52:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47286 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:52:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730270AbfLSSwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:52:39 -0500
+        id S1730283AbfLSSwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:52:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9E58222C2;
-        Thu, 19 Dec 2019 18:52:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B1482468A;
+        Thu, 19 Dec 2019 18:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781559;
-        bh=Oye+xFFwRaxXK6gVfuSxJKioNDCxjbFbXImXCOWqsj8=;
+        s=default; t=1576781564;
+        bh=1PxvcWMoJDi7qVwBIOeTcemwFDTFkq4tPGTvQHkT/QA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VcQbVcXZAjo0OkWHoTOAEpL24aBwPgjwAXX8LROboq8+UBhE+sFQHsVZ2YtDGO+FP
-         YeB6y6FmjDLuiY8X3Q2UdxgxHqUNztxfbXnpU2Uh70+/z9F1797+DAij7/eItD5/WN
-         cvguDHUhBP3wmlVIJLI04PjTURPbxd+XlS8KfQ7c=
+        b=giJxS7pkkUIe8Ag1ZmiFiGi/Id8B0GlhROR5lw3BZkYVywAYUf6jfCheAKtlpkhWg
+         FX7hclBTJ/QmbFxuwcxAi3pszGHzxO/myHmYb0MJ3Gc+hOVj7Aer1CD3c3VvGs7i8W
+         RlsxOpmYuA4HHaJi4xCsWPB8NGaYlls49/cB8/YA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dust Li <dust.li@linux.alibaba.com>,
-        Tony Lu <tonylu@linux.alibaba.com>,
+        stable@vger.kernel.org, Aaron Conole <aconole@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 06/47] net: sched: fix dump qlen for sch_mq/sch_mqprio with NOLOCK subqueues
-Date:   Thu, 19 Dec 2019 19:34:20 +0100
-Message-Id: <20191219182901.671560193@linuxfoundation.org>
+Subject: [PATCH 4.19 08/47] openvswitch: support asymmetric conntrack
+Date:   Thu, 19 Dec 2019 19:34:22 +0100
+Message-Id: <20191219182903.506958631@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182857.659088743@linuxfoundation.org>
 References: <20191219182857.659088743@linuxfoundation.org>
@@ -60,42 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dust Li <dust.li@linux.alibaba.com>
+From: Aaron Conole <aconole@redhat.com>
 
-[ Upstream commit 2f23cd42e19c22c24ff0e221089b7b6123b117c5 ]
+[ Upstream commit 5d50aa83e2c8e91ced2cca77c198b468ca9210f4 ]
 
-sch->q.len hasn't been set if the subqueue is a NOLOCK qdisc
- in mq_dump() and mqprio_dump().
+The openvswitch module shares a common conntrack and NAT infrastructure
+exposed via netfilter.  It's possible that a packet needs both SNAT and
+DNAT manipulation, due to e.g. tuple collision.  Netfilter can support
+this because it runs through the NAT table twice - once on ingress and
+again after egress.  The openvswitch module doesn't have such capability.
 
-Fixes: ce679e8df7ed ("net: sched: add support for TCQ_F_NOLOCK subqueues to sch_mqprio")
-Signed-off-by: Dust Li <dust.li@linux.alibaba.com>
-Signed-off-by: Tony Lu <tonylu@linux.alibaba.com>
+Like netfilter hook infrastructure, we should run through NAT twice to
+keep the symmetry.
+
+Fixes: 05752523e565 ("openvswitch: Interface with NAT.")
+Signed-off-by: Aaron Conole <aconole@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_mq.c     |    1 +
- net/sched/sch_mqprio.c |    1 +
- 2 files changed, 2 insertions(+)
+ net/openvswitch/conntrack.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/net/sched/sch_mq.c
-+++ b/net/sched/sch_mq.c
-@@ -158,6 +158,7 @@ static int mq_dump(struct Qdisc *sch, st
- 			__gnet_stats_copy_queue(&sch->qstats,
- 						qdisc->cpu_qstats,
- 						&qdisc->qstats, qlen);
-+			sch->q.qlen		+= qlen;
- 		} else {
- 			sch->q.qlen		+= qdisc->q.qlen;
- 			sch->bstats.bytes	+= qdisc->bstats.bytes;
---- a/net/sched/sch_mqprio.c
-+++ b/net/sched/sch_mqprio.c
-@@ -413,6 +413,7 @@ static int mqprio_dump(struct Qdisc *sch
- 			__gnet_stats_copy_queue(&sch->qstats,
- 						qdisc->cpu_qstats,
- 						&qdisc->qstats, qlen);
-+			sch->q.qlen		+= qlen;
- 		} else {
- 			sch->q.qlen		+= qdisc->q.qlen;
- 			sch->bstats.bytes	+= qdisc->bstats.bytes;
+--- a/net/openvswitch/conntrack.c
++++ b/net/openvswitch/conntrack.c
+@@ -897,6 +897,17 @@ static int ovs_ct_nat(struct net *net, s
+ 	}
+ 	err = ovs_ct_nat_execute(skb, ct, ctinfo, &info->range, maniptype);
+ 
++	if (err == NF_ACCEPT &&
++	    ct->status & IPS_SRC_NAT && ct->status & IPS_DST_NAT) {
++		if (maniptype == NF_NAT_MANIP_SRC)
++			maniptype = NF_NAT_MANIP_DST;
++		else
++			maniptype = NF_NAT_MANIP_SRC;
++
++		err = ovs_ct_nat_execute(skb, ct, ctinfo, &info->range,
++					 maniptype);
++	}
++
+ 	/* Mark NAT done if successful and update the flow key. */
+ 	if (err == NF_ACCEPT)
+ 		ovs_nat_update_key(key, skb, maniptype);
 
 
