@@ -2,119 +2,138 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2674C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A71AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 639DE227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F289724650
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:43:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="OG0zKHFb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zw9wxP6S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbfLSMmq (ORCPT
+        id S1726789AbfLSMnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 07:42:46 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45005 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbfLSMmq (ORCPT
+        Thu, 19 Dec 2019 07:43:31 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:58407 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726694AbfLSMnb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 07:42:46 -0500
-Received: by mail-ot1-f66.google.com with SMTP id h9so4511948otj.11
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 04:42:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bYF5D8OyCxsifRan1VNFDw31YCOJxCs5X35xN2Xsu9c=;
-        b=OG0zKHFbfaEQmlUoP8o3p3ZUiQjwQ5QzZJmv79u1eQfazk7ZeVXvgqICOzW9MLuciY
-         7ERjSOGUHu7XqWG87h9vXirzpuudaFMsQXZS7pMry7t/niao9X0WXqiUtlKOI46MVHRu
-         Dg/qVGrRrHeT/AXCXrwWDqgD9VtuvVkPSYiHs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bYF5D8OyCxsifRan1VNFDw31YCOJxCs5X35xN2Xsu9c=;
-        b=TeCeCd2sHmNwd/TMnjJ2nqgdsu6ONT/oNFgEP9kLL06cODShVnOnACrD0KYY4Qojy9
-         xujio3pl5CgGB1sGCTDDpPJNk3tTveOqNKzqllu7iSFNzyUaP6ocn49r2LkzrFRXt7Yk
-         OuQ0XHJ6T7CcRWSuq70jr8+a+KNP82DU5TjBIRvF1YMsNDiB+XM5zHJF6fFiUwmqjD+2
-         BCw3L8sZRy4qBiBW1P55r8ZpUEqHQ47dNlwTW3GDQvyL/nh7wkbZJsZcnBagByzZlCg5
-         g/xY+r5zL+iPnwHPq4rqIzpzj5aWlJ4r8/EKZ4NJYVbBQperSPqByeXQKg4py+2IP4Vd
-         97dg==
-X-Gm-Message-State: APjAAAXugtTbHgASZJ+G9VMYKHEux10LKHvZxM4sMa60QhcMT7NAA30h
-        7K2dIUnPSptDatZKAMWUhyknoQ/oQold95FxOBI0vA==
-X-Google-Smtp-Source: APXvYqwC4oTQJQT47ypqRnpTBZmyJTlKmHL17s0WvbC6jXR6ef19PMFuIxeZsGL9iHIGpAikF+RiJyv/heqQGtxVkBo=
-X-Received: by 2002:a9d:7f11:: with SMTP id j17mr8979147otq.281.1576759365177;
- Thu, 19 Dec 2019 04:42:45 -0800 (PST)
+        Thu, 19 Dec 2019 07:43:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576759409;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=gOZwCoYhA0ovno73Gb/H4aB3/N/RoYDfpKLGyNWS1+I=;
+        b=Zw9wxP6Shotk1QXekBvSBi4lRoUCD1vMEzYZpVHMAoOzCmc41xBwKDd6ebJ0s+YOFnMdm6
+        Ic/axY1E2CT99hBptvQKO7P5hMe6SPcD7ip9hirvs1IbKwJGPEec32J6lVCjRRZ58kBkbO
+        b41LCKItCWJ/sRcK59JxfErZWxxXBn8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-316-AhKXorT3PHOWwWn12zjKSw-1; Thu, 19 Dec 2019 07:43:26 -0500
+X-MC-Unique: AhKXorT3PHOWwWn12zjKSw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 039C0184BEC0;
+        Thu, 19 Dec 2019 12:43:25 +0000 (UTC)
+Received: from krava (unknown [10.43.17.106])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0C6DB19C58;
+        Thu, 19 Dec 2019 12:43:22 +0000 (UTC)
+Date:   Thu, 19 Dec 2019 13:43:20 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     "Jin, Yao" <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v5 4/4] perf report: support hotkey to let user select
+ any event for sorting
+Message-ID: <20191219124320.GA31264@krava>
+References: <20191219060929.3714-1-yao.jin@linux.intel.com>
+ <20191219060929.3714-4-yao.jin@linux.intel.com>
+ <20191219091008.GB8141@krava>
+ <c1f18601-41d5-451d-4278-b7adb08674c3@linux.intel.com>
 MIME-Version: 1.0
-References: <07899bd5-e9a5-cff0-395f-b4fb3f0f7f6c@huawei.com>
- <f867543cf5d0fc3fdd0534749326411bcfc5e363.camel@collabora.com>
- <c2e5f5a5-5839-42a9-2140-903e99e166db@huawei.com> <fde72f73-d678-2b77-3950-d465f0afe904@huawei.com>
- <CAKMK7uFr03euoB6rY8z9zmRyznP41vwfdaKApZ_0HfYZT4Hq_w@mail.gmail.com>
- <fcca5732-c7dc-6e1d-dcbe-bfd914a4295b@huawei.com> <CAKMK7uE+nfR2hv1ybfv1ZApZbGnnX7ZHfjFCv5K72ZaAmdtfug@mail.gmail.com>
- <20191219113151.sytkoi3m7rrxzps2@sirius.home.kraxel.org>
-In-Reply-To: <20191219113151.sytkoi3m7rrxzps2@sirius.home.kraxel.org>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Thu, 19 Dec 2019 13:42:33 +0100
-Message-ID: <CAKMK7uHEL3WzSHDM3XdLwOBtQUtygK6x-md8W1MVsAryDDgFog@mail.gmail.com>
-Subject: Re: Warnings in DRM code when removing/unbinding a driver
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     John Garry <john.garry@huawei.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        "kongxinwei (A)" <kong.kongxinwei@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Linuxarm <linuxarm@huawei.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dbueso@suse.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c1f18601-41d5-451d-4278-b7adb08674c3@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 12:32 PM Gerd Hoffmann <kraxel@redhat.com> wrote:
->
->   Hi,
->
-> > >   Like I said, for most drivers
-> > > > you can pretty much assume that their unload sequence has been broken
-> > > > since forever. It's not often tested, and especially the hotunbind
-> > > > from a device (as opposed to driver unload) stuff wasn't even possible
-> > > > to get right until just recently.
-> > >
-> > > Do you think it's worth trying to fix this for 5.5 and earlier, or just
-> > > switch to the device-managed interface for 5.6 and forget about 5.5 and
-> > > earlier?
-> >
-> > I suspect it's going to be quite some trickery to fix this properly
-> > and everywhere, even for just one driver. Lots of drm drivers
-> > unfortunately use anti-patterns with wrong lifetimes (e.g. you can't
-> > use devm_kmalloc for anything that hangs of a drm_device, like
-> > plane/crtc/connector). Except when it's for a real hotunpluggable
-> > device (usb) we've never bothered backporting these fixes. Too much
-> > broken stuff unfortunately.
->
-> While being at it:  How would a driver cleanup properly cleanup gem
-> objects created by userspace on hotunbind?  Specifically a gem object
-> pinned to vram?
+On Thu, Dec 19, 2019 at 08:38:39PM +0800, Jin, Yao wrote:
+> 
+> 
+> On 12/19/2019 5:10 PM, Jiri Olsa wrote:
+> > On Thu, Dec 19, 2019 at 02:09:29PM +0800, Jin Yao wrote:
+> > 
+> > SNIP
+> > 
+> > > +		case '0' ... '9':
+> > > +			if (!symbol_conf.event_group ||
+> > > +			    evsel->core.nr_members < 2) {
+> > > +				snprintf(buf, sizeof(buf),
+> > > +					 "Sort by index only available with group events!");
+> > > +				helpline = buf;
+> > > +				continue;
+> > > +			}
+> > > +
+> > > +			symbol_conf.group_sort_idx = key - '0';
+> > > +
+> > > +			if (symbol_conf.group_sort_idx >= evsel->core.nr_members) {
+> > > +				snprintf(buf, sizeof(buf),
+> > > +					 "Max event group index to sort is %d (index from 0 to %d)",
+> > > +					 evsel->core.nr_members - 1,
+> > > +					 evsel->core.nr_members - 1);
+> > > +				helpline = buf;
+> > > +				continue;
+> > > +			}
+> > > +
+> > > +			key = K_RELOAD;
+> > > +			goto out_free_stack;
+> > >   		case 'a':
+> > >   			if (!hists__has(hists, sym)) {
+> > >   				ui_browser__warning(&browser->b, delay_secs * 2,
+> > > -- 
+> > > 2.17.1
+> > > 
+> > 
+> > maybe also something like this to eliminate unneeded refresh?
+> > 
+> > jirka
+> > 
+> > 
+> > ---
+> > diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+> > index 22e76bd1a2d9..9f5dd48500a2 100644
+> > --- a/tools/perf/ui/browsers/hists.c
+> > +++ b/tools/perf/ui/browsers/hists.c
+> > @@ -2947,6 +2947,9 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
+> >   				continue;
+> >   			}
+> > +			if (key - '0' == symbol_conf.group_sort_idx)
+> > +				continue;
+> > +
+> >   			symbol_conf.group_sort_idx = key - '0';
+> >   			if (symbol_conf.group_sort_idx >= evsel->core.nr_members) {
+> > 
+> 
+> Hi Jiri,
+> 
+> Thanks, I think it's a good improvement. It can avoid the unnecessary
+> refresh.
+> 
+> If no more comments on this patch-set, I will add this improvement and then
+> post v6.
 
-Two things:
-- the mmap needs to be torn down and replaced by something which will
-sigbus. Probably should have that as a helper (plus vram fault code
-should use drm_dev_enter/exit to plug races).
-- otherwise all datastructures need to be properly refcounted.
-drm_device now is (if your driver isn't broken), but any dma_fence or
-dma_buf we create and export has an independent lifetime, and
-currently the refcounting for is still wobbly I think.
+sure, I don't have any more comments
 
-So some work to do, both in helpers/core code and in drivers to get updated.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+jirka
+
