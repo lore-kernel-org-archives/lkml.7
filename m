@@ -2,248 +2,145 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A92F0C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41AE1C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CCFB24679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C7F20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781442;
-	bh=Qv7E2OuioSDxlU0VReXiZmlP7tE7UmrfQyW9nm3JkpA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=osKgakf/yC6gdfhes8woBLQ2DQ0sRBbtZVbgbCa1NTHIsItwXLA3XLO0FagPkBPT7
-	 XVr3Et54FVKL/sJfMXpXQdchtvd21uxJztwYOw0PGvWSW3KZdCTCj2rBnuJKpKjqV0
-	 zjfOA0aMtG5QqKt99IT0oEPdvUS5Pw3EHJrXe3hA=
+	s=default; t=1576781446;
+	bh=Yi1rGX4IfomVzQeG42VPCGKaWMr9zg3TzAfQefDUa/0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=z1tUelYXe2rpAfDNlXADxEuANDFs254vohMS6x57L81n7kY9VMzm07Fi3BBEow64r
+	 hfHY1E14RafzYo2hlmoJQA5f5ZiKG4ThNR+7MFFxMZQNLezNHlM+QqL5bK97RbghIp
+	 j4j/gtysEuSoqBfi7xW0DG8jw722uQLAQTsBAvBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730032AbfLSSul (ORCPT
+        id S1730023AbfLSSul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 19 Dec 2019 13:50:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44510 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:44562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730008AbfLSSug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:50:36 -0500
+        id S1729722AbfLSSui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:50:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A628D2064B;
-        Thu, 19 Dec 2019 18:50:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32C0020674;
+        Thu, 19 Dec 2019 18:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781435;
-        bh=Qv7E2OuioSDxlU0VReXiZmlP7tE7UmrfQyW9nm3JkpA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=TiIdvOKrTb7Bvu+TvWOP7p8HdFnDBgiV08d5824kN++F6IEFQaJDWxdVcZM0PTY7g
-         zCR7r1qJO/2Sga4mJ/feig/efuKgrz4q8ig3XE0WpOGc3SIca4gPn1QJJR2a2YQqT9
-         jBaiiP5JLNKBzMBzSQdlBs/OTHOkdwJGceYoZsy0=
+        s=default; t=1576781437;
+        bh=Yi1rGX4IfomVzQeG42VPCGKaWMr9zg3TzAfQefDUa/0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=felxM4PVR4oZar1cIuQjtW8wbme47bWbI9RZTokrhldr8vGvNpEn4cZo1bqRRO270
+         KDG3NGDcIfK43lCQyR7Xn1VMsU/f74rEpaOrKirg+FlQs6TUaW0YTwzt/AM5Fsr0p/
+         ANjeT5VA28ZkLveP/Fw7Rhj6YahrZxmhReHSI8TM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.14 00/36] 4.14.160-stable review
-Date:   Thu, 19 Dec 2019 19:34:17 +0100
-Message-Id: <20191219182848.708141124@linuxfoundation.org>
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.14 14/36] PCI/PM: Always return devices to D0 when thawing
+Date:   Thu, 19 Dec 2019 19:34:31 +0100
+Message-Id: <20191219182859.416871263@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
+In-Reply-To: <20191219182848.708141124@linuxfoundation.org>
+References: <20191219182848.708141124@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.160-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.160-rc1
-X-KernelTest-Deadline: 2019-12-21T18:29+00:00
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.14.160 release.
-There are 36 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Dexuan Cui <decui@microsoft.com>
 
-Responses should be made by Sat, 21 Dec 2019 18:24:44 +0000.
-Anything received after that time might be too late.
+commit f2c33ccacb2d4bbeae2a255a7ca0cbfd03017b7c upstream.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.160-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-and the diffstat can be found below.
+pci_pm_thaw_noirq() is supposed to return the device to D0 and restore its
+configuration registers, but previously it only did that for devices whose
+drivers implemented the new power management ops.
 
-thanks,
+Hibernation, e.g., via "echo disk > /sys/power/state", involves freezing
+devices, creating a hibernation image, thawing devices, writing the image,
+and powering off.  The fact that thawing did not return devices with legacy
+power management to D0 caused errors, e.g., in this path:
 
-greg k-h
+  pci_pm_thaw_noirq
+    if (pci_has_legacy_pm_support(pci_dev)) # true for Mellanox VF driver
+      return pci_legacy_resume_early(dev)   # ... legacy PM skips the rest
+    pci_set_power_state(pci_dev, PCI_D0)
+    pci_restore_state(pci_dev)
+  pci_pm_thaw
+    if (pci_has_legacy_pm_support(pci_dev))
+      pci_legacy_resume
+	drv->resume
+	  mlx4_resume
+	    ...
+	      pci_enable_msix_range
+	        ...
+		  if (dev->current_state != PCI_D0)  # <---
+		    return -EINVAL;
 
--------------
-Pseudo-Shortlog of commits:
+which caused these warnings:
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.14.160-rc1
+  mlx4_core a6d1:00:02.0: INTx is not supported in multi-function mode, aborting
+  PM: dpm_run_callback(): pci_pm_thaw+0x0/0xd7 returns -95
+  PM: Device a6d1:00:02.0 failed to thaw: error -95
 
-Aaro Koskinen <aaro.koskinen@nokia.com>
-    net: stmmac: don't stop NAPI processing when dropping a packet
+Return devices to D0 and restore config registers for all devices, not just
+those whose drivers support new power management.
 
-Aaro Koskinen <aaro.koskinen@nokia.com>
-    net: stmmac: use correct DMA buffer size in the RX descriptor
+[bhelgaas: also call pci_restore_state() before pci_legacy_resume_early(),
+update comment, add stable tag, commit log]
+Link: https://lore.kernel.org/r/KU1P153MB016637CAEAD346F0AA8E3801BFAD0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: stable@vger.kernel.org	# v4.13+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Mathias Nyman <mathias.nyman@linux.intel.com>
-    xhci: fix USB3 device initiated resume race with roothub autosuspend
+---
+ drivers/pci/pci-driver.c |   17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-Alex Deucher <alexander.deucher@amd.com>
-    drm/radeon: fix r1xx/r2xx register checker for POT textures
-
-Bart Van Assche <bvanassche@acm.org>
-    scsi: iscsi: Fix a potential deadlock in the timeout handler
-
-Hou Tao <houtao1@huawei.com>
-    dm btree: increase rebalance threshold in __rebalance2()
-
-Navid Emamdoost <navid.emamdoost@gmail.com>
-    dma-buf: Fix memory leak in sync_file_merge()
-
-Jiang Yi <giangyi@amazon.com>
-    vfio/pci: call irq_bypass_unregister_producer() before freeing irq
-
-Dmitry Osipenko <digetx@gmail.com>
-    ARM: tegra: Fix FLOW_CTLR_HALT register clobbering by tegra_resume()
-
-Lihua Yao <ylhuajnu@outlook.com>
-    ARM: dts: s3c64xx: Fix init order of clock providers
-
-Pavel Shilovsky <pshilov@microsoft.com>
-    CIFS: Respect O_SYNC and O_DIRECT flags during reconnect
-
-Bjorn Andersson <bjorn.andersson@linaro.org>
-    rpmsg: glink: Free pending deferred work on remove
-
-Bjorn Andersson <bjorn.andersson@linaro.org>
-    rpmsg: glink: Don't send pending rx_done during remove
-
-Chris Lew <clew@codeaurora.org>
-    rpmsg: glink: Fix rpmsg_register_device err handling
-
-Chris Lew <clew@codeaurora.org>
-    rpmsg: glink: Put an extra reference during cleanup
-
-Arun Kumar Neelakantam <aneela@codeaurora.org>
-    rpmsg: glink: Fix use after free in open_ack TIMEOUT case
-
-Arun Kumar Neelakantam <aneela@codeaurora.org>
-    rpmsg: glink: Fix reuse intents memory leak issue
-
-Chris Lew <clew@codeaurora.org>
-    rpmsg: glink: Set tail pointer to 0 at end of FIFO
-
-Max Filippov <jcmvbkbc@gmail.com>
-    xtensa: fix TLB sanity checker
-
-George Cherian <george.cherian@marvell.com>
-    PCI: Apply Cavium ACS quirk to ThunderX2 and ThunderX3
-
-Jian-Hong Pan <jian-hong@endlessm.com>
-    PCI/MSI: Fix incorrect MSI-X masking on resume
-
-Steffen Liebergeld <steffen.liebergeld@kernkonzept.com>
-    PCI: Fix Intel ACS quirk UPDCR register address
-
-Dexuan Cui <decui@microsoft.com>
-    PCI/PM: Always return devices to D0 when thawing
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "regulator: Defer init completion for a while after late_initcall"
-
-Ivan Bornyakov <brnkv.i1@gmail.com>
-    nvme: host: core: fix precedence of ternary operator
-
-Eric Dumazet <edumazet@google.com>
-    inet: protect against too small mtu values.
-
-Guillaume Nault <gnault@redhat.com>
-    tcp: Protect accesses to .ts_recent_stamp with {READ,WRITE}_ONCE()
-
-Guillaume Nault <gnault@redhat.com>
-    tcp: tighten acceptance of ACKs not matching a child socket
-
-Guillaume Nault <gnault@redhat.com>
-    tcp: fix rejected syncookies due to stale timestamps
-
-Taehee Yoo <ap420073@gmail.com>
-    tipc: fix ordering of tipc module init and exit routine
-
-Eric Dumazet <edumazet@google.com>
-    tcp: md5: fix potential overestimation of TCP option space
-
-Aaron Conole <aconole@redhat.com>
-    openvswitch: support asymmetric conntrack
-
-Mian Yousaf Kaukab <ykaukab@suse.de>
-    net: thunderx: start phy before starting autonegotiation
-
-Grygorii Strashko <grygorii.strashko@ti.com>
-    net: ethernet: ti: cpsw: fix extra rx interrupt
-
-Alexander Lobakin <alobakin@dlink.ru>
-    net: dsa: fix flow dissection on Tx path
-
-Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-    net: bridge: deny dev_set_mac_address() when unregistering
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |  4 +-
- arch/arm/boot/dts/s3c6410-mini6410.dts             |  4 ++
- arch/arm/boot/dts/s3c6410-smdk6410.dts             |  4 ++
- arch/arm/mach-tegra/reset-handler.S                |  6 +--
- arch/xtensa/mm/tlb.c                               |  4 +-
- drivers/dma-buf/sync_file.c                        |  2 +-
- drivers/gpu/drm/radeon/r100.c                      |  4 +-
- drivers/gpu/drm/radeon/r200.c                      |  4 +-
- drivers/md/persistent-data/dm-btree-remove.c       |  8 +++-
- drivers/net/ethernet/cavium/thunder/thunder_bgx.c  |  2 +-
- drivers/net/ethernet/stmicro/stmmac/common.h       |  2 +-
- drivers/net/ethernet/stmicro/stmmac/descs_com.h    | 22 +++++----
- drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c |  2 +-
- drivers/net/ethernet/stmicro/stmmac/enh_desc.c     | 10 ++--
- drivers/net/ethernet/stmicro/stmmac/norm_desc.c    | 10 ++--
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 22 +++++----
- drivers/net/ethernet/ti/cpsw.c                     |  2 +-
- drivers/nvme/host/core.c                           |  4 +-
- drivers/pci/msi.c                                  |  2 +-
- drivers/pci/pci-driver.c                           | 17 ++++---
- drivers/pci/quirks.c                               | 22 +++++----
- drivers/regulator/core.c                           | 42 +++++------------
- drivers/rpmsg/qcom_glink_native.c                  | 53 +++++++++++++++++-----
- drivers/rpmsg/qcom_glink_smem.c                    |  2 +-
- drivers/scsi/libiscsi.c                            |  4 +-
- drivers/usb/host/xhci-hub.c                        |  8 ++++
- drivers/usb/host/xhci-ring.c                       |  6 +--
- drivers/vfio/pci/vfio_pci_intrs.c                  |  2 +-
- fs/cifs/file.c                                     |  7 +++
- include/linux/netdevice.h                          |  5 ++
- include/linux/time.h                               | 13 ++++++
- include/net/ip.h                                   |  5 ++
- include/net/tcp.h                                  | 18 ++++++--
- net/bridge/br_device.c                             |  6 +++
- net/core/dev.c                                     |  3 +-
- net/core/flow_dissector.c                          |  5 +-
- net/ipv4/devinet.c                                 |  5 --
- net/ipv4/ip_output.c                               | 14 ++++--
- net/ipv4/tcp_output.c                              |  5 +-
- net/openvswitch/conntrack.c                        | 11 +++++
- net/tipc/core.c                                    | 29 ++++++------
- 41 files changed, 257 insertions(+), 143 deletions(-)
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -967,17 +967,22 @@ static int pci_pm_thaw_noirq(struct devi
+ 			return error;
+ 	}
+ 
+-	if (pci_has_legacy_pm_support(pci_dev))
+-		return pci_legacy_resume_early(dev);
+-
+ 	/*
+-	 * pci_restore_state() requires the device to be in D0 (because of MSI
+-	 * restoration among other things), so force it into D0 in case the
+-	 * driver's "freeze" callbacks put it into a low-power state directly.
++	 * Both the legacy ->resume_early() and the new pm->thaw_noirq()
++	 * callbacks assume the device has been returned to D0 and its
++	 * config state has been restored.
++	 *
++	 * In addition, pci_restore_state() restores MSI-X state in MMIO
++	 * space, which requires the device to be in D0, so return it to D0
++	 * in case the driver's "freeze" callbacks put it into a low-power
++	 * state.
+ 	 */
+ 	pci_set_power_state(pci_dev, PCI_D0);
+ 	pci_restore_state(pci_dev);
+ 
++	if (pci_has_legacy_pm_support(pci_dev))
++		return pci_legacy_resume_early(dev);
++
+ 	if (drv && drv->pm && drv->pm->thaw_noirq)
+ 		error = drv->pm->thaw_noirq(dev);
+ 
 
 
