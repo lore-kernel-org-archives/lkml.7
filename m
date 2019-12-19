@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40076C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0BDC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13FCC206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C331D206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781001;
-	bh=g25e1xHdy/MeOTnEE7cpoWl22Q3NRivvoI6zZS202vM=;
+	s=default; t=1576781005;
+	bh=8yQUx1PwhMKvwpGgql5KB25h0ZDJ2z4u2crpcKj+UEI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j0irBuFkra3i4oUjrIVNqJGUSsev6Dyh3OiBCD0NNmv+N+BlRx0uSIaalxU3fiQtT
-	 0hqsDrggZ6UvvgZXLj8OdVS5IWwXK2RMwXqXq43bXEUg3WNoLjfgzfqhYT5DfgH1YJ
-	 ilEwmPqUnIGTZ1VzeV8x2My6yWfADdOtqMDyu+8M=
+	b=q+/LPbvLyeXQhTOWD09jCOLKLHyPxcr6S/Im4ffEKqvBCnNvccOhmz1q+/w/bVvno
+	 Ws1wh8+m50pyTJ0hDaKztYsvzVMLq3GAoXgv8az38rgdoKNgLm3TTbDsEeTa2Nqrog
+	 bAJkWDaUlV6VZTUMcg0sB9XgvLVLDwX52vX7x23M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbfLSSnU (ORCPT
+        id S1727861AbfLSSnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:43:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34798 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:43:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728028AbfLSSnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:43:15 -0500
+        id S1727810AbfLSSnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:43:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1276124680;
-        Thu, 19 Dec 2019 18:43:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 819B0206D7;
+        Thu, 19 Dec 2019 18:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780994;
-        bh=g25e1xHdy/MeOTnEE7cpoWl22Q3NRivvoI6zZS202vM=;
+        s=default; t=1576780997;
+        bh=8yQUx1PwhMKvwpGgql5KB25h0ZDJ2z4u2crpcKj+UEI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bib7i/60SbWst/gc9F62EQORLZvm7cK4VgJ96RWefSopijfbN+YOaJqVH+8NFFcFP
-         PodFxG9E702LdB4ZV09PgPzHC/DaQ+tdnmbovqMhtVcKW4ZIZA5/noxMDHWvoMyxyN
-         d6Xq3VW/evrU4YmMjBI4KmAhnyBZoqnQxFW4ibAw=
+        b=MOQW4k7rOIOO7LBFmg9GD7kTck2+iXdbrCe5bMdkT4zugX9bzeo41awQ7OXk9Xxnk
+         TlK2o2mIbfvXIWx6XQfBFMUqSe7h6435e4bLfUdM42VTP4FKkNiRjSPQsqhZtFza1n
+         n08rpiQpNdvPK5EIwtBFHAZ3Vwwg6fMovBVxq+hg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>
-Subject: [PATCH 4.9 004/199] tty: serial: msm_serial: Fix flow control
-Date:   Thu, 19 Dec 2019 19:31:26 +0100
-Message-Id: <20191219183214.893984553@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>
+Subject: [PATCH 4.9 005/199] serial: pl011: Fix DMA ->flush_buffer()
+Date:   Thu, 19 Dec 2019 19:31:27 +0100
+Message-Id: <20191219183214.948177057@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,69 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+From: Vincent Whitchurch <vincent.whitchurch@axis.com>
 
-commit b027ce258369cbfa88401a691c23dad01deb9f9b upstream.
+commit f6a196477184b99a31d16366a8e826558aa11f6d upstream.
 
-hci_qca interfaces to the wcn3990 via a uart_dm on the msm8998 mtp and
-Lenovo Miix 630 laptop.  As part of initializing the wcn3990, hci_qca
-disables flow, configures the uart baudrate, and then reenables flow - at
-which point an event is expected to be received over the uart from the
-wcn3990.  It is observed that this event comes after the baudrate change
-but before hci_qca re-enables flow. This is unexpected, and is a result of
-msm_reset() being broken.
+PL011's ->flush_buffer() implementation releases and reacquires the port
+lock.  Due to a race condition here, data can end up being added to the
+circular buffer but neither being discarded nor being sent out.  This
+leads to, for example, tcdrain(2) waiting indefinitely.
 
-According to the uart_dm hardware documentation, it is recommended that
-automatic hardware flow control be enabled by setting RX_RDY_CTL.  Auto
-hw flow control will manage RFR based on the configured watermark.  When
-there is space to receive data, the hw will assert RFR.  When the watermark
-is hit, the hw will de-assert RFR.
+Process A                       Process B
 
-The hardware documentation indicates that RFR can me manually managed via
-CR when RX_RDY_CTL is not set.  SET_RFR asserts RFR, and RESET_RFR
-de-asserts RFR.
+uart_flush_buffer()
+ - acquire lock
+ - circ_clear
+ - pl011_flush_buffer()
+ -- release lock
+ -- dmaengine_terminate_all()
 
-msm_reset() is broken because after resetting the hardware, it
-unconditionally asserts RFR via SET_RFR.  This enables flow regardless of
-the current configuration, and would undo a previous flow disable
-operation.  It should instead de-assert RFR via RESET_RFR to block flow
-until the hardware is reconfigured.  msm_serial should rely on the client
-to specify that flow should be enabled, either via mctrl() or the termios
-structure, and only assert RFR in response to those triggers.
+                                uart_write()
+                                - acquire lock
+                                - add chars to circ buffer
+                                - start_tx()
+                                -- start DMA
+                                - release lock
 
-Fixes: 04896a77a97b ("msm_serial: serial driver for MSM7K onboard serial peripheral.")
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+ -- acquire lock
+ -- turn off DMA
+ -- release lock
+
+                                // Data in circ buffer but DMA is off
+
+According to the comment in the code, the releasing of the lock around
+dmaengine_terminate_all() is to avoid a deadlock with the DMA engine
+callback.  However, since the time this code was written, the DMA engine
+API documentation seems to have been clarified to say that
+dmaengine_terminate_all() (in the identically implemented but
+differently named dmaengine_terminate_async() variant) does not wait for
+any running complete callback to be completed and can even be called
+from a complete callback.  So there is no possibility of deadlock if the
+DMA engine driver implements this API correctly.
+
+So we should be able to just remove this release and reacquire of the
+lock to prevent the aforementioned race condition.
+
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
 Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Andy Gross <agross@kernel.org>
-Link: https://lore.kernel.org/r/20191021154616.25457-1-jeffrey.l.hugo@gmail.com
+Link: https://lore.kernel.org/r/20191118092547.32135-1-vincent.whitchurch@axis.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/msm_serial.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/tty/serial/amba-pl011.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/drivers/tty/serial/msm_serial.c
-+++ b/drivers/tty/serial/msm_serial.c
-@@ -988,6 +988,7 @@ static unsigned int msm_get_mctrl(struct
- static void msm_reset(struct uart_port *port)
- {
- 	struct msm_port *msm_port = UART_TO_MSM(port);
-+	unsigned int mr;
+--- a/drivers/tty/serial/amba-pl011.c
++++ b/drivers/tty/serial/amba-pl011.c
+@@ -811,10 +811,8 @@ __acquires(&uap->port.lock)
+ 	if (!uap->using_tx_dma)
+ 		return;
  
- 	/* reset everything */
- 	msm_write(port, UART_CR_CMD_RESET_RX, UART_CR);
-@@ -995,7 +996,10 @@ static void msm_reset(struct uart_port *
- 	msm_write(port, UART_CR_CMD_RESET_ERR, UART_CR);
- 	msm_write(port, UART_CR_CMD_RESET_BREAK_INT, UART_CR);
- 	msm_write(port, UART_CR_CMD_RESET_CTS, UART_CR);
--	msm_write(port, UART_CR_CMD_SET_RFR, UART_CR);
-+	msm_write(port, UART_CR_CMD_RESET_RFR, UART_CR);
-+	mr = msm_read(port, UART_MR1);
-+	mr &= ~UART_MR1_RX_RDY_CTL;
-+	msm_write(port, mr, UART_MR1);
- 
- 	/* Disable DM modes */
- 	if (msm_port->is_uartdm)
+-	/* Avoid deadlock with the DMA engine callback */
+-	spin_unlock(&uap->port.lock);
+-	dmaengine_terminate_all(uap->dmatx.chan);
+-	spin_lock(&uap->port.lock);
++	dmaengine_terminate_async(uap->dmatx.chan);
++
+ 	if (uap->dmatx.queued) {
+ 		dma_unmap_sg(uap->dmatx.chan->device->dev, &uap->dmatx.sg, 1,
+ 			     DMA_TO_DEVICE);
 
 
