@@ -2,149 +2,121 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9312C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F26C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCAB7222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:54:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y7nKHasE"
+	by mail.kernel.org (Postfix) with ESMTP id 98A17222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:56:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfLSLyh (ORCPT
+        id S1726751AbfLSL4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 06:54:37 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:54060 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbfLSLyd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 06:54:33 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJBsQ7f094692;
-        Thu, 19 Dec 2019 05:54:26 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576756466;
-        bh=0wneAsr2dIRQgUOU8O6OrKktT1aM0VMh6k8EH1G2T9g=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Y7nKHasEJ0XxpznpaLYRknLdxcb/F01l1qO5LxRpjmiOVw6au+fi8WVMOUDtSJv9q
-         MJQPniruZNRrVnECnrhvByY91xGTWQwfx16eiu4iP1OTXQ5j03qJFV4H2GRna4sT2W
-         +r2J7HHMI2KErdjfWqrKaBMvFqB/jzCYK93oJoOE=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJBsQ4L001524;
-        Thu, 19 Dec 2019 05:54:26 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
- Dec 2019 05:54:25 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 19 Dec 2019 05:54:25 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJBsMcp080167;
-        Thu, 19 Dec 2019 05:54:23 -0600
-Subject: Re: [PATCH 05/13] PCI: cadence: Add read and write accessors to
- perform only 32-bit accesses
-To:     Andrew Murray <andrew.murray@arm.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>
-References: <20191209092147.22901-1-kishon@ti.com>
- <20191209092147.22901-6-kishon@ti.com>
- <20191216144932.GY24359@e119886-lin.cambridge.arm.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <d1ee4579-a3da-6a73-3516-a6d264f80995@ti.com>
-Date:   Thu, 19 Dec 2019 17:26:05 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 19 Dec 2019 06:56:12 -0500
+Received: from foss.arm.com ([217.140.110.172]:37512 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726668AbfLSL4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 06:56:12 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9924F31B;
+        Thu, 19 Dec 2019 03:56:11 -0800 (PST)
+Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 11EBB3F719;
+        Thu, 19 Dec 2019 03:56:09 -0800 (PST)
+Subject: Re: [PATCH] sched, fair: Allow a small degree of load imbalance
+ between SD_NUMA domains
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, pauld@redhat.com,
+        srikar@linux.vnet.ibm.com, quentin.perret@arm.com,
+        dietmar.eggemann@arm.com, Morten.Rasmussen@arm.com,
+        hdanton@sina.com, parth@linux.ibm.com, riel@surriel.com,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20191218154402.GF3178@techsingularity.net>
+ <8f049805-3e97-09bb-2d32-0718be1dec9b@arm.com>
+ <20191218225023.GG3178@techsingularity.net>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <383de0cc-ad84-4cc1-48d6-512e7d3ddaa8@arm.com>
+Date:   Thu, 19 Dec 2019 11:56:09 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191216144932.GY24359@e119886-lin.cambridge.arm.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20191218225023.GG3178@techsingularity.net>
+Content-Type: text/plain; charset=iso-8859-15
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+On 18/12/2019 22:50, Mel Gorman wrote:
+>> I'm quite sure you have reasons to have written it that way, but I was
+>> hoping we could squash it down to something like:
+> 
+> I wrote it that way to make it clear exactly what has changed, the
+> thinking behind the checks and to avoid 80-col limits to make review
+> easier overall. It's a force of habit and I'm happy to reformat it as
+> you suggest except....
+> 
 
-On 16/12/19 8:19 pm, Andrew Murray wrote:
-> On Mon, Dec 09, 2019 at 02:51:39PM +0530, Kishon Vijay Abraham I wrote:
->> Certain platforms like TI's J721E allow only 32-bit register accesses.
-> 
-> When I first read this I thought you meant only 32-bit accesses are allowed
-> and not other sizes (such as 64-bit). However the limitation you address
-> here is that the J721E allows only 32-bit *aligned* register accesses.
+I tend to disregard the 80 col limit, so I might not be the best example
+here :D
 
-It's both, it allows only 32-bit aligned accesses and the size should be
-only 32 bits. That's why I always use "readl" in the APIs below.
-> 
-> It would be helpful to make this clearer in the commit message.
-> 
-> You can also shorten the commit subject to 'PCI: cadence: Add read/write
-> accessors for 32-bit aligned accesses' or similar.
-> 
->> Add read and write accessors to perform only 32-bit accesses in order to
->> support platfroms like TI's J721E.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 >> ---
->>  drivers/pci/controller/cadence/pcie-cadence.c | 40 +++++++++++++++++++
->>  drivers/pci/controller/cadence/pcie-cadence.h |  2 +
->>  2 files changed, 42 insertions(+)
->>
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
->> index cd795f6fc1e2..de5b3b06f2d0 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence.c
->> +++ b/drivers/pci/controller/cadence/pcie-cadence.c
->> @@ -7,6 +7,46 @@
->>  
->>  #include "pcie-cadence.h"
->>  
->> +u32 cdns_pcie_read32(void __iomem *addr, int size)
-> 
-> Given there is already a cdns_pcie_readl in pcie-cadence.h it may help
-> to name this in a way that doesn't cause confusion. Here 32 is perhaps
-> being used to suggest the size of the actual read performed, the
-> maximum size of 'size' or the alignment.
-> 
-> 
->> +{
->> +	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
->> +	unsigned int offset = (unsigned long)addr & 0x3;
->> +	u32 val = readl(aligned_addr);
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index 08a233e97a01..f05d09a8452e 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -8680,16 +8680,27 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
+>>  			env->migration_type = migrate_task;
+>>  			lsub_positive(&nr_diff, local->sum_nr_running);
+>>  			env->imbalance = nr_diff >> 1;
+>> -			return;
+>> +		} else {
 >> +
->> +	if (!IS_ALIGNED((uintptr_t)addr, size)) {
->> +		pr_err("Invalid Address in function:%s\n", __func__);
+>> +			/*
+>> +			 * If there is no overload, we just want to even the number of
+>> +			 * idle cpus.
+>> +			 */
+>> +			env->migration_type = migrate_task;
+>> +			env->imbalance = max_t(long, 0, (local->idle_cpus -
+>> +							 busiest->idle_cpus) >> 1);
+>>  		}
+>>  
+>>  		/*
+>> -		 * If there is no overload, we just want to even the number of
+>> -		 * idle cpus.
+>> +		 * Allow for a small imbalance between NUMA groups; don't do any
+>> +		 * of it if there is at least half as many tasks / busy CPUs as
+>> +		 * there are available CPUs in the busiest group
+>>  		 */
+>> -		env->migration_type = migrate_task;
+>> -		env->imbalance = max_t(long, 0, (local->idle_cpus -
+>> -						 busiest->idle_cpus) >> 1);
+>> +		if (env->sd->flags & SD_NUMA &&
+>> +		    (busiest->sum_nr_running < busiest->group_weight >> 1) &&
 > 
-> Would this be better as a BUG? Without a BUG this error could get ignored
-> and yet the device may not behave as expected.
+> This last line is not exactly equivalent to what I wrote. It would need
+> to be
+> 
+> 	(busiest->sum_nr_running < (busiest->group_weight >> 1) - imbalance_adj) &&
+> 
 
-yeah.
-> 
-> 
->> +		return 0;
->> +	}
->> +
->> +	if (size > 2)
->> +		return val;
-> 
-> I think you make the assumption here that if size > 2 then it's 4. It could
-> be 3 (though unlikely) in which case you'd want to fall through to the next
-> line.
+Right, I was implicitly suggesting that maybe we could forgo the
+imbalance_adj computation and just roll with the imbalance_pct (with perhaps
+and extra shift here and there). IMO the important thing here is the 
+half-way cutoff.
 
-This assumption is used elsewhere too (e.g drivers/pci/access.c). I
-generally don't prefer adding handlers for non-occurring error
-scenarios, but If you insist I can fix that.
+> I can test as you suggest to see if it's roughly equivalent in terms of
+> performance. The intent was to have a cutoff just before we reached 50%
+> running tasks / busy CPUs.
+> 
 
-Thanks
-Kishon
+I think that cutoff makes sense; it's also important that it isn't purely
+busy CPU-based because we're not guaranteed to have 1 task per CPU (due to
+affinity or else), so I think the "half as many tasks as available CPUs"
+thing has some merit.
