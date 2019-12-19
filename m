@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E80C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D61C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6432824679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F40CC227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781483;
-	bh=UjZxgWLJxI//Uh5TdQ0R8WVmBVBMlHZApL3S4cFDTUQ=;
+	s=default; t=1576781489;
+	bh=GqAFOTv0a9RtHQ56hi09qCi4T7GetSCA3QHzEhxSVjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qjXhULFz3eaKtIGgM6hg4Z9AdbXZbfzVLMEKFo3mQylUu1Az7yAuU9WQ8QJUTIJNI
-	 UBrwh081nDcpdI1sZTDqmFY6ZjwOGusQxDS3kyNBKC5AbwU/ZtN0AwLRoGa2TIxCbz
-	 gIOOmOhUYqMIabB9uGpQvdCgaEoK7iwRDgIZNUdU=
+	b=RgOoHVWKh6aJkHMfSZr/e5gU22vCszdpnfIMWdUfqvYd9UjiStSwlHFUUHnbd/To1
+	 V4nJjdxT13JovdiPmlf73q7sOhQQICCfmrrpGDwP6DUHlX8le/uuSe0/KOZ7lqYiY0
+	 ItvdHXzqsP926q13KqrkbmgxLBHUvagPs3HZ2n6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729869AbfLSSvW (ORCPT
+        id S1730142AbfLSSv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:51:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45466 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:51:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729843AbfLSSvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:51:15 -0500
+        id S1729205AbfLSSvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:51:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADA492064B;
-        Thu, 19 Dec 2019 18:51:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 149E924679;
+        Thu, 19 Dec 2019 18:51:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781474;
-        bh=UjZxgWLJxI//Uh5TdQ0R8WVmBVBMlHZApL3S4cFDTUQ=;
+        s=default; t=1576781481;
+        bh=GqAFOTv0a9RtHQ56hi09qCi4T7GetSCA3QHzEhxSVjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=155omfXOw8sAtr+1quAgw9GtUUMF5IvNdR+eUeVGdzF61srfedZ7oIPEA5ZBatwmU
-         WLNbQAnivXya5Q8WxMsF/lco2Ea7hbEoiGJj+4COaBEwTnAknLYOpZpXCCE6ft67Tc
-         mi+t/Z1JMS6wP5DhqNcUWXw3zFnjHqcLKFqGW94U=
+        b=alwhA33O6tlTR5kSyh0dzQGDcFisAlbtFahmnwavaU4yjzJBrIH6WiXEBmrkHXglc
+         89KeFxJSp/uOTnni1nqhG8hZpALSLbjNg1Bk9vL7jh+2XGC3VWzmnAq4ojjvcAwetp
+         CSmc+MQyjB4MfvzrJlidqKMeGj6sPPoUTyxgVB1s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@nokia.com>,
-        "David S. Miller" <davem@davemloft.net>, Aviraj CJ <acj@cisco.com>
-Subject: [PATCH 4.14 36/36] net: stmmac: dont stop NAPI processing when dropping a packet
-Date:   Thu, 19 Dec 2019 19:34:53 +0100
-Message-Id: <20191219182929.416563499@linuxfoundation.org>
+        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>
+Subject: [PATCH 4.14 18/36] xtensa: fix TLB sanity checker
+Date:   Thu, 19 Dec 2019 19:34:35 +0100
+Message-Id: <20191219182907.300079882@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182848.708141124@linuxfoundation.org>
 References: <20191219182848.708141124@linuxfoundation.org>
@@ -59,90 +58,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaro Koskinen <aaro.koskinen@nokia.com>
+From: Max Filippov <jcmvbkbc@gmail.com>
 
-commit 07b3975352374c3f5ebb4a42ef0b253fe370542d upstream.
+commit 36de10c4788efc6efe6ff9aa10d38cb7eea4c818 upstream.
 
-Currently, if we drop a packet, we exit from NAPI loop before the budget
-is consumed. In some situations this will make the RX processing stall
-e.g. when flood pinging the system with oversized packets, as the
-errorneous packets are not dropped efficiently.
+Virtual and translated addresses retrieved by the xtensa TLB sanity
+checker must be consistent, i.e. correspond to the same state of the
+checked TLB entry. KASAN shadow memory is mapped dynamically using
+auto-refill TLB entries and thus may change TLB state between the
+virtual and translated address retrieval, resulting in false TLB
+insanity report.
+Move read_xtlb_translation close to read_xtlb_virtual to make sure that
+read values are consistent.
 
-If we drop a packet, we should just continue to the next one as long as
-the budget allows.
-
-Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[acj: backport v4.14 -stable
-- adjust context]
-Signed-off-by: Aviraj CJ <acj@cisco.com>
+Cc: stable@vger.kernel.org
+Fixes: a99e07ee5e88 ("xtensa: check TLB sanity on return to userspace")
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ arch/xtensa/mm/tlb.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3323,9 +3323,8 @@ static inline void stmmac_rx_refill(stru
- static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
- {
- 	struct stmmac_rx_queue *rx_q = &priv->rx_queue[queue];
--	unsigned int entry = rx_q->cur_rx;
- 	int coe = priv->hw->rx_csum;
--	unsigned int next_entry;
-+	unsigned int next_entry = rx_q->cur_rx;
- 	unsigned int count = 0;
- 
- 	if (netif_msg_rx_status(priv)) {
-@@ -3340,10 +3339,12 @@ static int stmmac_rx(struct stmmac_priv
- 		priv->hw->desc->display_ring(rx_head, DMA_RX_SIZE, true);
- 	}
- 	while (count < limit) {
--		int status;
-+		int entry, status;
- 		struct dma_desc *p;
- 		struct dma_desc *np;
- 
-+		entry = next_entry;
-+
- 		if (priv->extend_desc)
- 			p = (struct dma_desc *)(rx_q->dma_erx + entry);
- 		else
-@@ -3410,7 +3411,7 @@ static int stmmac_rx(struct stmmac_priv
- 						   "len %d larger than size (%d)\n",
- 						   frame_len, priv->dma_buf_sz);
- 				priv->dev->stats.rx_length_errors++;
--				break;
-+				continue;
- 			}
- 
- 			/* ACS is set; GMAC core strips PAD/FCS for IEEE 802.3
-@@ -3446,7 +3447,7 @@ static int stmmac_rx(struct stmmac_priv
- 						dev_warn(priv->device,
- 							 "packet dropped\n");
- 					priv->dev->stats.rx_dropped++;
--					break;
-+					continue;
- 				}
- 
- 				dma_sync_single_for_cpu(priv->device,
-@@ -3471,7 +3472,7 @@ static int stmmac_rx(struct stmmac_priv
- 							   "%s: Inconsistent Rx chain\n",
- 							   priv->dev->name);
- 					priv->dev->stats.rx_dropped++;
--					break;
-+					continue;
- 				}
- 				prefetch(skb->data - NET_IP_ALIGN);
- 				rx_q->rx_skbuff[entry] = NULL;
-@@ -3506,7 +3507,6 @@ static int stmmac_rx(struct stmmac_priv
- 			priv->dev->stats.rx_packets++;
- 			priv->dev->stats.rx_bytes += frame_len;
- 		}
--		entry = next_entry;
+--- a/arch/xtensa/mm/tlb.c
++++ b/arch/xtensa/mm/tlb.c
+@@ -218,6 +218,8 @@ static int check_tlb_entry(unsigned w, u
+ 	unsigned tlbidx = w | (e << PAGE_SHIFT);
+ 	unsigned r0 = dtlb ?
+ 		read_dtlb_virtual(tlbidx) : read_itlb_virtual(tlbidx);
++	unsigned r1 = dtlb ?
++		read_dtlb_translation(tlbidx) : read_itlb_translation(tlbidx);
+ 	unsigned vpn = (r0 & PAGE_MASK) | (e << PAGE_SHIFT);
+ 	unsigned pte = get_pte_for_vaddr(vpn);
+ 	unsigned mm_asid = (get_rasid_register() >> 8) & ASID_MASK;
+@@ -233,8 +235,6 @@ static int check_tlb_entry(unsigned w, u
  	}
  
- 	stmmac_rx_refill(priv, queue);
+ 	if (tlb_asid == mm_asid) {
+-		unsigned r1 = dtlb ? read_dtlb_translation(tlbidx) :
+-			read_itlb_translation(tlbidx);
+ 		if ((pte ^ r1) & PAGE_MASK) {
+ 			pr_err("%cTLB: way: %u, entry: %u, mapping: %08x->%08x, PTE: %08x\n",
+ 					dtlb ? 'D' : 'I', w, e, r0, r1, pte);
 
 
