@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84983C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B445C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E637222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D380222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782781;
-	bh=NgaDp8ria1OxDrw2K/1iYyfGnKeCvu5YH/rIDxYsvHY=;
+	s=default; t=1576782793;
+	bh=kwj7CVzdTtevCzRicG0v1JBr/E+P9SJwzpBPshbNoq4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vKRFo+hWYk/lk0WqxF7LvMs40gx7nm9aXZYVsTM+my/lkjRR5TjnQyFe3KFr5VlPL
-	 +0Z/OoZhXnvotrcSp3sW1gA/y+o/o8tsNnVLyBSdsXXoeBL8f7/xENB+7+WuGNlV6V
-	 D1SMlmYRfVqcz3K47PbFXyp97Rzr4XqJYLP6xAFk=
+	b=uWRDabFUpT3G2dceUO+GQOlnVj28DxW/mFQIOzNmqNb3XymgkORQiF1IdUVhmUQM7
+	 tA3BLmSQODlii7t/evRQjc0YqaPt9xXW+IUwr+hYfLABFT9GG7WdRPP8GO10ODnt8L
+	 KIunMQbX0LmVO3fMPrdOIhwJA//orgZ+kZlJM7ZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727757AbfLSTNA (ORCPT
+        id S1727216AbfLSSfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:13:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52898 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:35:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726984AbfLSSgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:36:04 -0500
+        id S1727110AbfLSSfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:35:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9E052467E;
-        Thu, 19 Dec 2019 18:36:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1276C222C2;
+        Thu, 19 Dec 2019 18:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780564;
-        bh=NgaDp8ria1OxDrw2K/1iYyfGnKeCvu5YH/rIDxYsvHY=;
+        s=default; t=1576780532;
+        bh=kwj7CVzdTtevCzRicG0v1JBr/E+P9SJwzpBPshbNoq4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qz6WLU/mEOukgAhCFkPIqWW+KYk/nxY9C1JG/aZ3zCCxVJ3rZNQyHyPvRvJWy/SKk
-         pbALWxxwtt2fG6GuQnzQPhlQEftnTRKfOza7v4Sc259dYxDIdcmyU3mT3rmb4o8fLs
-         fOKWuVKsWJ2PF/1/c6aiArRktfKJ3j+jHwVAZFQo=
+        b=OfnVy+9l1vzGwl2c9MV6VjdmqfAY7fqzgkK8wMIOcWsekvqoh95vI+iNJlO9WLAEy
+         ZIBqKEypBExMTcSOuUUDiKb/WxI8wqkGoRYGR71WT+iHmOtazVXeaoadrr+vWJy0ra
+         GQHRgkDzsTHiP+quzaJ3GJ6fZG4+s2Awm8dgEgtY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@linux-mips.org,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 025/162] MIPS: OCTEON: octeon-platform: fix typing
-Date:   Thu, 19 Dec 2019 19:32:13 +0100
-Message-Id: <20191219183209.053268444@linuxfoundation.org>
+Subject: [PATCH 4.4 013/162] serial: core: Allow processing sysrq at port unlock time
+Date:   Thu, 19 Dec 2019 19:32:01 +0100
+Message-Id: <20191219183203.927932035@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -62,36 +59,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
+From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit 2cf1c8933dd93088cfb5f8f58b3bb9bbdf1781b9 ]
+[ Upstream commit d6e1935819db0c91ce4a5af82466f3ab50d17346 ]
 
-Use correct type for fdt_property nameoff field.
+Right now serial drivers process sysrq keys deep in their character
+receiving code.  This means that they've already grabbed their
+port->lock spinlock.  This can end up getting in the way if we've go
+to do serial stuff (especially kgdb) in response to the sysrq.
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Patchwork: https://patchwork.linux-mips.org/patch/21204/
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@linux-mips.org
+Serial drivers have various hacks in them to handle this.  Looking at
+'8250_port.c' you can see that the console_write() skips locking if
+we're in the sysrq handler.  Looking at 'msm_serial.c' you can see
+that the port lock is dropped around uart_handle_sysrq_char().
+
+It turns out that these hacks aren't exactly perfect.  If you have
+lockdep turned on and use something like the 8250_port hack you'll get
+a splat that looks like:
+
+  WARNING: possible circular locking dependency detected
+  [...] is trying to acquire lock:
+  ... (console_owner){-.-.}, at: console_unlock+0x2e0/0x5e4
+
+  but task is already holding lock:
+  ... (&port_lock_key){-.-.}, at: serial8250_handle_irq+0x30/0xe4
+
+  which lock already depends on the new lock.
+
+  the existing dependency chain (in reverse order) is:
+
+  -> #1 (&port_lock_key){-.-.}:
+         _raw_spin_lock_irqsave+0x58/0x70
+         serial8250_console_write+0xa8/0x250
+         univ8250_console_write+0x40/0x4c
+         console_unlock+0x528/0x5e4
+         register_console+0x2c4/0x3b0
+         uart_add_one_port+0x350/0x478
+         serial8250_register_8250_port+0x350/0x3a8
+         dw8250_probe+0x67c/0x754
+         platform_drv_probe+0x58/0xa4
+         really_probe+0x150/0x294
+         driver_probe_device+0xac/0xe8
+         __driver_attach+0x98/0xd0
+         bus_for_each_dev+0x84/0xc8
+         driver_attach+0x2c/0x34
+         bus_add_driver+0xf0/0x1ec
+         driver_register+0xb4/0x100
+         __platform_driver_register+0x60/0x6c
+         dw8250_platform_driver_init+0x20/0x28
+	 ...
+
+  -> #0 (console_owner){-.-.}:
+         lock_acquire+0x1e8/0x214
+         console_unlock+0x35c/0x5e4
+         vprintk_emit+0x230/0x274
+         vprintk_default+0x7c/0x84
+         vprintk_func+0x190/0x1bc
+         printk+0x80/0xa0
+         __handle_sysrq+0x104/0x21c
+         handle_sysrq+0x30/0x3c
+         serial8250_read_char+0x15c/0x18c
+         serial8250_rx_chars+0x34/0x74
+         serial8250_handle_irq+0x9c/0xe4
+         dw8250_handle_irq+0x98/0xcc
+         serial8250_interrupt+0x50/0xe8
+         ...
+
+  other info that might help us debug this:
+
+   Possible unsafe locking scenario:
+
+         CPU0                    CPU1
+         ----                    ----
+    lock(&port_lock_key);
+                                 lock(console_owner);
+                                 lock(&port_lock_key);
+    lock(console_owner);
+
+   *** DEADLOCK ***
+
+The hack used in 'msm_serial.c' doesn't cause the above splats but it
+seems a bit ugly to unlock / lock our spinlock deep in our irq
+handler.
+
+It seems like we could defer processing the sysrq until the end of the
+interrupt handler right after we've unlocked the port.  With this
+scheme if a whole batch of sysrq characters comes in one irq then we
+won't handle them all, but that seems like it should be a fine
+compromise.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/cavium-octeon/octeon-platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/serial_core.h | 37 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 36 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/cavium-octeon/octeon-platform.c b/arch/mips/cavium-octeon/octeon-platform.c
-index 6df3a4ea77fc5..a56620cb7cad2 100644
---- a/arch/mips/cavium-octeon/octeon-platform.c
-+++ b/arch/mips/cavium-octeon/octeon-platform.c
-@@ -485,7 +485,7 @@ static void __init octeon_fdt_set_phy(int eth, int phy_addr)
- 	if (phy_addr >= 256 && alt_phy > 0) {
- 		const struct fdt_property *phy_prop;
- 		struct fdt_property *alt_prop;
--		u32 phy_handle_name;
-+		fdt32_t phy_handle_name;
+diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
+index 297d4fa1cfe51..b5b527efeea08 100644
+--- a/include/linux/serial_core.h
++++ b/include/linux/serial_core.h
+@@ -159,6 +159,7 @@ struct uart_port {
+ 	struct console		*cons;			/* struct console, if any */
+ #if defined(CONFIG_SERIAL_CORE_CONSOLE) || defined(SUPPORT_SYSRQ)
+ 	unsigned long		sysrq;			/* sysrq timeout */
++	unsigned int		sysrq_ch;		/* char for sysrq */
+ #endif
  
- 		/* Use the alt phy node instead.*/
- 		phy_prop = fdt_get_property(initial_boot_params, eth, "phy-handle", NULL);
+ 	/* flags must be updated while holding port mutex */
+@@ -440,8 +441,42 @@ uart_handle_sysrq_char(struct uart_port *port, unsigned int ch)
+ 	}
+ 	return 0;
+ }
++static inline int
++uart_prepare_sysrq_char(struct uart_port *port, unsigned int ch)
++{
++	if (port->sysrq) {
++		if (ch && time_before(jiffies, port->sysrq)) {
++			port->sysrq_ch = ch;
++			port->sysrq = 0;
++			return 1;
++		}
++		port->sysrq = 0;
++	}
++	return 0;
++}
++static inline void
++uart_unlock_and_check_sysrq(struct uart_port *port, unsigned long irqflags)
++{
++	int sysrq_ch;
++
++	sysrq_ch = port->sysrq_ch;
++	port->sysrq_ch = 0;
++
++	spin_unlock_irqrestore(&port->lock, irqflags);
++
++	if (sysrq_ch)
++		handle_sysrq(sysrq_ch);
++}
+ #else
+-#define uart_handle_sysrq_char(port,ch) ({ (void)port; 0; })
++static inline int
++uart_handle_sysrq_char(struct uart_port *port, unsigned int ch) { return 0; }
++static inline int
++uart_prepare_sysrq_char(struct uart_port *port, unsigned int ch) { return 0; }
++static inline void
++uart_unlock_and_check_sysrq(struct uart_port *port, unsigned long irqflags)
++{
++	spin_unlock_irqrestore(&port->lock, irqflags);
++}
+ #endif
+ 
+ /*
 -- 
 2.20.1
 
