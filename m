@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F92C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46066C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6BF8222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F9E724680
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780630;
-	bh=WQUBj7643v5jylzIosNbCTZXOGCNhDXR1gPNRvuH/qc=;
+	s=default; t=1576780637;
+	bh=1MPMx1l2YY6G49X7p5LPea+7hTic56kzUOXi0+eR7lU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sfOHpoZY+DFeJA3sW/S0EsgNiuEqvG8PKwZY4THv0W7LIDNUm9oLrPHCBSRFsutAH
-	 kQFnjiRFiCVPnJNwJaM3eg03bYyOleM1bG3lKjqOhgj+4ZxfHILpTNlUoocFHPKPT8
-	 iRr9RkHFRZ5BSm2X8F7IUQ22AusLB5cVwK92Zu9w=
+	b=V+pzqrMI8IYE3kPydKaqOv4HKpRzqcZvuyNIf7YkFNcVypcZfFOoGBERVda6JRgrD
+	 cIosQgSMILTQgQQni9Qzluvh8kbtAA9zycepXPkI5Xz9QSPcjlR8V0fSHq+Y7vfdHJ
+	 bAVeP8xtONFwqu6lduTWxPNP+PpAkXAxLQCK08yQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbfLSShJ (ORCPT
+        id S1727793AbfLSShP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:37:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54460 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:37:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727750AbfLSShG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:37:06 -0500
+        id S1727767AbfLSShI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:37:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D75F624684;
-        Thu, 19 Dec 2019 18:37:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4707520716;
+        Thu, 19 Dec 2019 18:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780625;
-        bh=WQUBj7643v5jylzIosNbCTZXOGCNhDXR1gPNRvuH/qc=;
+        s=default; t=1576780627;
+        bh=1MPMx1l2YY6G49X7p5LPea+7hTic56kzUOXi0+eR7lU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OhvfdmPdIQucCEfA9OgfFWaNi2H5GffronlztfK2OGhYJyltV+/m5tIWUxV3KvQ1U
-         lOXtAUWPKdYJ+28fpHiS2M/fy8jq2OL5P5vUPvvGzJuOOs7/2me2+Exb4tc89ib/l7
-         QBglnwsxJIHLnI+GgLF/LCS7AEhcvkz2OAM663RQ=
+        b=yPleDw31tqpgdWGt6em6T8Yy0wbZjfr1teCMbBcyg0Y2Czl9IXtebvYrxmp2j7tM7
+         4LvxabBUUyhv1OKyIJwDRODbHNyg5N7dyC2C8NtWaW0nV+AwCO/SDh/NXAiXqZLfb1
+         qeevOQseOujAYkMpvViWEdMMPaa/bILIT0MXOpCU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, zhengbin <zhengbin13@huawei.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
+        stable@vger.kernel.org, Qian Cai <cai@gmx.us>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 050/162] nfsd: Return EPERM, not EACCES, in some SETATTR cases
-Date:   Thu, 19 Dec 2019 19:32:38 +0100
-Message-Id: <20191219183210.939485236@linuxfoundation.org>
+Subject: [PATCH 4.4 051/162] mlx4: Use snprintf instead of complicated strcpy
+Date:   Thu, 19 Dec 2019 19:32:39 +0100
+Message-Id: <20191219183211.001544348@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -60,55 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: Qian Cai <cai@gmx.us>
 
-[ Upstream commit 255fbca65137e25b12bced18ec9a014dc77ecda0 ]
+[ Upstream commit 0fbc9b8b4ea3f688a5da141a64f97aa33ad02ae9 ]
 
-As the man(2) page for utime/utimes states, EPERM is returned when the
-second parameter of utime or utimes is not NULL, the caller's effective UID
-does not match the owner of the file, and the caller is not privileged.
+This fixes a compilation warning in sysfs.c
 
-However, in a NFS directory mounted from knfsd, it will return EACCES
-(from nfsd_setattr-> fh_verify->nfsd_permission).  This patch fixes
-that.
+drivers/infiniband/hw/mlx4/sysfs.c:360:2: warning: 'strncpy' output may be
+truncated copying 8 bytes from a string of length 31
+[-Wstringop-truncation]
 
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+By eliminating the temporary stack buffer.
+
+Signed-off-by: Qian Cai <cai@gmx.us>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/vfs.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/mlx4/sysfs.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 17138a97f306c..7745d0a9029c7 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -387,10 +387,23 @@ nfsd_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp, struct iattr *iap,
- 	bool		get_write_count;
- 	bool		size_change = (iap->ia_valid & ATTR_SIZE);
+diff --git a/drivers/infiniband/hw/mlx4/sysfs.c b/drivers/infiniband/hw/mlx4/sysfs.c
+index 69fb5ba94d0f2..19caacd26f61a 100644
+--- a/drivers/infiniband/hw/mlx4/sysfs.c
++++ b/drivers/infiniband/hw/mlx4/sysfs.c
+@@ -352,16 +352,12 @@ err:
  
--	if (iap->ia_valid & (ATTR_ATIME | ATTR_MTIME | ATTR_SIZE))
-+	if (iap->ia_valid & ATTR_SIZE) {
- 		accmode |= NFSD_MAY_WRITE|NFSD_MAY_OWNER_OVERRIDE;
--	if (iap->ia_valid & ATTR_SIZE)
- 		ftype = S_IFREG;
-+	}
-+
-+	/*
-+	 * If utimes(2) and friends are called with times not NULL, we should
-+	 * not set NFSD_MAY_WRITE bit. Otherwise fh_verify->nfsd_permission
-+	 * will return EACCESS, when the caller's effective UID does not match
-+	 * the owner of the file, and the caller is not privileged. In this
-+	 * situation, we should return EPERM(notify_change will return this).
-+	 */
-+	if (iap->ia_valid & (ATTR_ATIME | ATTR_MTIME)) {
-+		accmode |= NFSD_MAY_OWNER_OVERRIDE;
-+		if (!(iap->ia_valid & (ATTR_ATIME_SET | ATTR_MTIME_SET)))
-+			accmode |= NFSD_MAY_WRITE;
-+	}
+ static void get_name(struct mlx4_ib_dev *dev, char *name, int i, int max)
+ {
+-	char base_name[9];
+-
+-	/* pci_name format is: bus:dev:func -> xxxx:yy:zz.n */
+-	strlcpy(name, pci_name(dev->dev->persist->pdev), max);
+-	strncpy(base_name, name, 8); /*till xxxx:yy:*/
+-	base_name[8] = '\0';
+-	/* with no ARI only 3 last bits are used so when the fn is higher than 8
++	/* pci_name format is: bus:dev:func -> xxxx:yy:zz.n
++	 * with no ARI only 3 last bits are used so when the fn is higher than 8
+ 	 * need to add it to the dev num, so count in the last number will be
+ 	 * modulo 8 */
+-	sprintf(name, "%s%.2d.%d", base_name, (i/8), (i%8));
++	snprintf(name, max, "%.8s%.2d.%d", pci_name(dev->dev->persist->pdev),
++		 i / 8, i % 8);
+ }
  
- 	/* Callers that do fh_verify should do the fh_want_write: */
- 	get_write_count = !fhp->fh_dentry;
+ struct mlx4_port {
 -- 
 2.20.1
 
