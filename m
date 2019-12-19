@@ -2,72 +2,131 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A39C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 902F8C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6718206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67631206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:31:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JvT9zp0E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbfLSPap (ORCPT
+        id S1726981AbfLSPbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 10:30:45 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44600 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726776AbfLSPao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 10:30:44 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 86451B1AD;
-        Thu, 19 Dec 2019 15:30:42 +0000 (UTC)
-From:   Michal Suchanek <msuchanek@suse.de>
-To:     Jens Axboe <axboe@kernel.dk>, linux-scsi@vger.kernel.org,
-        linux-block@vger.kernel.org
-Cc:     Michal Suchanek <msuchanek@suse.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: add lists to cdrom driver
-Date:   Thu, 19 Dec 2019 16:30:34 +0100
-Message-Id: <20191219153034.22344-1-msuchanek@suse.de>
-X-Mailer: git-send-email 2.23.0
+        Thu, 19 Dec 2019 10:31:15 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:45245 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbfLSPbP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 10:31:15 -0500
+Received: by mail-il1-f193.google.com with SMTP id p8so5183246iln.12;
+        Thu, 19 Dec 2019 07:31:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DVVdjtKv58x1Uc55az3ApF8gHKz/ZX1W12cqDT6rODs=;
+        b=JvT9zp0EpA5eXF3hdg5MJ34MDzA+56QpVQBg2UKGdtLFpGPxwriFh2JNeb5+8GCUUR
+         3FVZmZYkoygMpEeVdWhi+LE5dH6aPhNfKjJiY7Ff48bUcuLSCYO7QA5CEItHQ9dNkhCa
+         iZfQiR9+gKBigCx3Lllt5e07K7eHwUm1mVswmm8osg75KEQU7ptlwDA8b7RxcFh14OYD
+         PjyWrLlMmI0Gcz0dbMBMk5AFiBnFhIokefAuuaiDe5kjeuc6f8nb8TTQW/PGGMPJfPo4
+         8jrLLZQ0eY+xcDrCFidMz7XSIDV95ytpBSwO9pAltXnBOlp7Hv+aGzF62gSGaRgSi9oM
+         0EQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DVVdjtKv58x1Uc55az3ApF8gHKz/ZX1W12cqDT6rODs=;
+        b=iCjC96KGf51HJM5X8vqi4xgPT5cEQFvgWqxrBLtcXXs5fHDKJGP8SlOkvRtvfsdYHr
+         h5aOuZ66lMm3SFezuuGCWlOtJlezaWzKWG/upFO3AjV7yvCMwhp8jCHMyuxDdpOP3fFF
+         HgA78KrqKQjly7jnstjlXOn/nvTmFa4Th36DL7ERnFDqnFqiiRYzfP8wG+FD2UEsgPtJ
+         WfsGvc1IK6AeQu5Od+IoXaBgBwuSge7lDR7Zc47rFpnNLj9gbJ0x3KO4bt16TRQ6dPJH
+         bVPbf1ZCQKr69p3zArfaGKnxjUnZZM4M1kGRB+O7tkCy8lJ5ZVzA4x4mEKg2sfspRhh7
+         BXig==
+X-Gm-Message-State: APjAAAXnyHY3UFo9thJjrrDZdb36BNZLhXryMXgYCBbsuPCVAZqnqQyz
+        OohfnhJcWFwoxVEeFzFup10aSEw8Xwe48ONR/U8=
+X-Google-Smtp-Source: APXvYqxu56w/oZweN1AJFZaIqxBT7mc8D28YjI4wjWxWnEhn6CrcFRtowiwHA4gjbAu7VV8Nywl4FO9TWrdap2lBJv8=
+X-Received: by 2002:a92:465c:: with SMTP id t89mr7929451ila.263.1576769474440;
+ Thu, 19 Dec 2019 07:31:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191219150433.2785427-1-vkoul@kernel.org> <20191219150433.2785427-4-vkoul@kernel.org>
+In-Reply-To: <20191219150433.2785427-4-vkoul@kernel.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Thu, 19 Dec 2019 08:31:03 -0700
+Message-ID: <CAOCk7NqUdxCMnK0ZsjN1u7RfaW=z3ZHpsZ8Vk7+JKpsrjBPJJw@mail.gmail.com>
+Subject: Re: [PATCH 3/4] phy: qcom-qmp: Add optional SW reset
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, Can Guo <cang@codeaurora.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kernel maintainers are wondering why people don't send cdrom patches to
-any lists they follow.
+On Thu, Dec 19, 2019 at 8:05 AM Vinod Koul <vkoul@kernel.org> wrote:
+>
+> For V4 QMP UFS Phy, we need to assert reset bits, configure the phy and
+> then deassert it, so add optional has_sw_reset flag and use that to
+> configure the QPHY_SW_RESET register.
+>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
 
-It is because they added no lists to the cdrom entry in MAINTAINERS,
-obviously.
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a049abccaa26..9e4eff21ef02 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16923,6 +16923,8 @@ F:	scripts/unifdef.c
- UNIFORM CDROM DRIVER
- M:	Jens Axboe <axboe@kernel.dk>
- W:	http://www.kernel.dk
-+L:	linux-scsi@vger.kernel.org
-+L:	linux-block@vger.kernel.org
- S:	Maintained
- F:	Documentation/cdrom/
- F:	drivers/cdrom/cdrom.c
--- 
-2.23.0
-
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qmp.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index 06f971ca518e..80304b7cd895 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> @@ -1023,6 +1023,9 @@ struct qmp_phy_cfg {
+>
+>         /* true, if PCS block has no separate SW_RESET register */
+>         bool no_pcs_sw_reset;
+> +
+> +       /* true if sw reset needs to be invoked */
+> +       bool has_sw_reset;
+>  };
+>
+>  /**
+> @@ -1391,6 +1394,7 @@ static const struct qmp_phy_cfg sm8150_ufsphy_cfg = {
+>
+>         .is_dual_lane_phy       = true,
+>         .no_pcs_sw_reset        = true,
+> +       .has_sw_reset           = true,
+>  };
+>
+>  static void qcom_qmp_phy_configure(void __iomem *base,
+> @@ -1475,6 +1479,9 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
+>                              SW_USB3PHY_RESET_MUX | SW_USB3PHY_RESET);
+>         }
+>
+> +       if (cfg->has_sw_reset)
+> +               qphy_setbits(serdes, cfg->regs[QPHY_SW_RESET], SW_RESET);
+> +
+>         if (cfg->has_phy_com_ctrl)
+>                 qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
+>                              SW_PWRDN);
+> @@ -1651,6 +1658,9 @@ static int qcom_qmp_phy_enable(struct phy *phy)
+>         if (cfg->has_phy_dp_com_ctrl)
+>                 qphy_clrbits(dp_com, QPHY_V3_DP_COM_SW_RESET, SW_RESET);
+>
+> +       if (cfg->has_sw_reset)
+> +               qphy_clrbits(pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
+> +
+>         /* start SerDes and Phy-Coding-Sublayer */
+>         qphy_setbits(pcs, cfg->regs[QPHY_START_CTRL], cfg->start_ctrl);
+>
+> --
+> 2.23.0
+>
