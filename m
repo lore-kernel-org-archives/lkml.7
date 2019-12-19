@@ -2,179 +2,168 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C95B6C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5DDC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C23D2465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:10:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72372227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:17:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metanate.com header.i=@metanate.com header.b="E/Hm2Yao"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ULrs0SvP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfLSSKo (ORCPT
+        id S1726908AbfLSSRm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:10:44 -0500
-Received: from dougal.metanate.com ([90.155.101.14]:34448 "EHLO metanate.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726797AbfLSSKo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:10:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/simple; d=metanate.com;
-         s=stronger; h=Content-Transfer-Encoding:Content-Type:MIME-Version:References
-        :In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=PevvDITatxiAlN3atocvLzTHAwrwFg9O4wZbwmFmYqM=; b=E/Hm2Yao8lWuw/TCl7/+S+k1to
-        YuS4SC/XK/1HKS3lA0Sqbxxm2MSaLZZLhmU1ncUqGwbzNyeHftAnAM3K9PYneO66ZNhj8BMh54H62
-        XXQwR8Y2+MLZJyHQFuySqj81deIZRs7CRKI/cOorJyl6qWgGgJ868r/THEsrTLCHPr7V3v5lNV9mi
-        F5Oqpup/wOp7RO36HDAN4Gp/GunOolZudl8OajSUWvomLncMiYx9U4inmb4bWZYvLzNCMFP236RlV
-        u3bHz6T1lzlCHPl0xJZaSofO18ikq9D0WRz1dtH3C2vfu3OyPsUWnEdfE7LtVn2bBaw/1SvH6s/pt
-        rI9XZwNg==;
-Received: from johnkeeping.plus.com ([81.174.171.191] helo=donbot)
-        by email.metanate.com with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <john@metanate.com>)
-        id 1ii0Fy-0004dr-JH; Thu, 19 Dec 2019 18:10:38 +0000
-Date:   Thu, 19 Dec 2019 18:10:36 +0000
-From:   John Keeping <john@metanate.com>
-To:     Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>
-Subject: Re: [PATCH 1/2] usb: dwc2: Fix IN FIFO allocation
-Message-ID: <20191219181036.1f3d9183.john@metanate.com>
-In-Reply-To: <69ae7364-391d-6075-27d8-7ed7c4aae2ff@synopsys.com>
-References: <20191219113432.1229852-1-john@metanate.com>
-        <69ae7364-391d-6075-27d8-7ed7c4aae2ff@synopsys.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 19 Dec 2019 13:17:42 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42801 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726797AbfLSSRm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:17:42 -0500
+Received: by mail-pl1-f193.google.com with SMTP id p9so2915105plk.9;
+        Thu, 19 Dec 2019 10:17:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9IKeSaeLtm7vPfFfV60fys8+o5Vf9VVG4sSrLcJnbLg=;
+        b=ULrs0SvPCsPJ5z5H89BVhXo7MrrDMFIkP63mnmmlS56bvmxK+d4QpMwoN2KuVUfUiM
+         FW46oiskYuu2Hul4HrnBnoGlYy61FUuBVHchaiXhiX+IElTcFgbYpMCBYBO77uh22FO5
+         P93uiGBePY/B8Ybui6ZqIMLmHuoqoow/+b4KW8hXPIZASLJXALkXw32xAJI9WFQcxqGP
+         tMRiY2o1C659lso2yKuKsQpvjSoZA7xaCjKy5sp75AkCvonnXBSl+U504BNP3pIzFW9n
+         KjTr+tB0wgTR6RxEY5F4UygnFjgbqeoGMBw1wbmjxQn7m4HZp7GM3UfmZtZAPG30Tfqm
+         Lsfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9IKeSaeLtm7vPfFfV60fys8+o5Vf9VVG4sSrLcJnbLg=;
+        b=Z5mWQhvu687rU9hbYuttKYT0ljfFe8z+aByl0aljCm3yMnXVlVvwTNva6n+mU/4Cnv
+         bU2tw133SICd4ebHrhCeXbVofePosw7r3F6jrTqqZbJa/3O7v1Hjg7AUmEm9XvbxGNMN
+         ZV19QKt1N9z5kMRkNpBF3lMdxz4SSw17xb1Mnp/9IKbZ3tkuxL7IRJ98iGhg1Pm4orXO
+         vNL64sBn63ciq91R7V/1t/w0aME9ORL1OhVVbcuoIakFi1Sxj0j+wxd+WgXHjjkJ0cqF
+         mg5vLRig0vFxsRYO3AqKpjdCRbFA6vbmiwe0BT6ybaPB8gZdExUPt2imynbLdhkPk2MV
+         ciyQ==
+X-Gm-Message-State: APjAAAWwzRPG5BEZ34yB/NQti6xrppkESaNPsctTXGgFT42RB0ALPKA8
+        dVKcyWQw0lv5g72SQXv/f8owieqF+X+qSTlbb2c=
+X-Google-Smtp-Source: APXvYqzcXkkqagyH0g8XYQkQ9Y2lDsGqL/gdoDGeJQzPxj6M0FYmIA9X7SN+kb2C52A9m6TauzrezHBi54ouUcHGkQw=
+X-Received: by 2002:a17:90b:3109:: with SMTP id gc9mr11076004pjb.30.1576779461595;
+ Thu, 19 Dec 2019 10:17:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Authenticated: YES
+References: <20191219171528.6348-1-brgl@bgdev.pl> <20191219171528.6348-13-brgl@bgdev.pl>
+In-Reply-To: <20191219171528.6348-13-brgl@bgdev.pl>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 19 Dec 2019 20:17:30 +0200
+Message-ID: <CAHp75VeMEngXiFmvTrsW7UZMz0ppR-W-J4D1xU+qKGfLXkG3kg@mail.gmail.com>
+Subject: Re: [PATCH v3 12/13] gpiolib: add new ioctl() for monitoring changes
+ in line info
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Minas,
-
-On Thu, 19 Dec 2019 12:34:59 +0000
-Minas Harutyunyan <Minas.Harutyunyan@synopsys.com> wrote:
-
-> On 12/19/2019 3:34 PM, John Keeping wrote:
-> > On chips with fewer FIFOs than endpoints (for example RK3288 which has 9
-> > endpoints, but only 6 which are cabable of input), the DPTXFSIZN
-> > registers above the FIFO count may return invalid values.
-> > 
-> 
-> RK3288 (rev.2.2 Mar.2017) databook says:
-> - Support up to 9 device mode endpoints in addition to control endpoint 0
-> - Support up to 6 device mode IN endpoints including control endpoint 0
-> - Endpoints 1/3/5/7 can be used only as data IN endpoint
-> - Endpoints 2/4/6 can be used only as data OUT endpoint
-> - Endpoints 8/9 can be used as data OUT and IN endpoint
+On Thu, Dec 19, 2019 at 7:17 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
-> 6 IN EP's (incl.EP0) mean that TxFIFO count should be 5. For EP0 using 
-> NPTXFIFO. On other hand 6 EP's 1/3/5/7/8/9 are IN endpoints.
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Currently there is no way for user-space to be informed about changes
+> in status of GPIO lines e.g. when someone else requests the line or its
+> config changes. We can only periodically re-read the line-info. This
+> is fine for simple one-off user-space tools, but any daemon that provides
+> a centralized access to GPIO chips would benefit hugely from an event
+> driven line info synchronization.
+>
+> This patch adds a new ioctl() that allows user-space processes to reuse
+> the file descriptor associated with the character device for watching
+> any changes in line properties. Every such event contains the updated
+> line information.
+>
+> Currently the events are generated on three types of status changes: when
+> a line is requested, when it's released and when its config is changed.
+> The first two are self-explanatory. For the third one: this will only
+> happen when another user-space process calls the new SET_CONFIG ioctl()
+> as any changes that can happen from within the kernel (i.e.
+> set_transitory() or set_debounce()) are of no interest to user-space.
 
-I think this is from the RK3288 Datasheet.  I also have the RK3288
-Technical Reference Manual Revision 2.0 Feb 2014, which is older, but
-says:
+> -       } else if (cmd == GPIO_GET_LINEINFO_IOCTL) {
+> +       } else if (cmd == GPIO_GET_LINEINFO_IOCTL ||
+> +                  cmd == GPIO_GET_LINEINFO_WATCH_IOCTL) {
 
-- 9 Device mode endpoints in addition to control endpoint 0, 4 in, 3 out
-  and 2 IN/OUT
+Wouldn't be better for maintenance to have them separated from the day 1?
 
-This matches what I'm seeing on the hardware.
+...
 
-> Something not clear to me. Could you please provide me your HSOTG core's 
-> GHWCFG1-4 registers values.
+> +       if (test_bit(desc_to_gpio(desc), priv->watched_lines)) {
 
-Here are the configuration registers:
+if (!test_bit(...))
+  return NOTIFY_DONE;
 
-GHWCFG1 = 0x00006664
-GHWCFG2 = 0x228e2450
-GHWCFG3 = 0x03cc90e8
-GHWCFG4 = 0xdbf04030
+?
 
-> One more stuff. You didn't send patch series cover letter ([PATCH 0/2]) 
-> or I didn't received it?
+> +                       pr_debug_ratelimited(
+> +                               "%s: lineinfo event FIFO is full - event dropped\n",
 
-I didn't send a cover letter, it would mostly have repeated the commit
-message from this patch.
+> +                               __func__);
 
+This is in 99.9% cases redundant in *_dbg() calls.
 
-Regards,
-John
+> +               ret = NOTIFY_OK;
+> +       }
+> +
+> +       return ret;
 
-> > With logging added on startup, I see:
-> > 
-> > 	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=1 sz=256
-> > 	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=2 sz=128
-> > 	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=3 sz=128
-> > 	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=4 sz=64
-> > 	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=5 sz=64
-> > 	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=6 sz=32
-> > 	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=7 sz=0
-> > 	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=8 sz=0
-> > 	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=9 sz=0
-> > 	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=10 sz=0
-> > 	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=11 sz=0
-> > 	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=12 sz=0
-> > 	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=13 sz=0
-> > 	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=14 sz=0
-> > 	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=15 sz=0
-> > 
-> > but:
-> > 
-> > 	# cat /sys/kernel/debug/ff580000.usb/fifo
-> > 	Non-periodic FIFOs:
-> > 	RXFIFO: Size 275
-> > 	NPTXFIFO: Size 16, Start 0x00000113
-> > 
-> > 	Periodic TXFIFOs:
-> > 		DPTXFIFO 1: Size 256, Start 0x00000123
-> > 		DPTXFIFO 2: Size 128, Start 0x00000223
-> > 		DPTXFIFO 3: Size 128, Start 0x000002a3
-> > 		DPTXFIFO 4: Size 64, Start 0x00000323
-> > 		DPTXFIFO 5: Size 64, Start 0x00000363
-> > 		DPTXFIFO 6: Size 32, Start 0x000003a3
-> > 		DPTXFIFO 7: Size 0, Start 0x000003e3
-> > 		DPTXFIFO 8: Size 0, Start 0x000003a3
-> > 		DPTXFIFO 9: Size 256, Start 0x00000123
-> > 
-> > so it seems that FIFO 9 is mirroring FIFO 1.
-> > 
-> > Fix the allocation by using the FIFO count instead of the endpoint count
-> > when selecting a FIFO for an endpoint.
-> > 
-> > Signed-off-by: John Keeping <john@metanate.com>
-> > ---
-> >   drivers/usb/dwc2/gadget.c | 3 ++-
-> >   1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
-> > index 92e8de9cb45c..911b950ef25e 100644
-> > --- a/drivers/usb/dwc2/gadget.c
-> > +++ b/drivers/usb/dwc2/gadget.c
-> > @@ -4059,11 +4059,12 @@ static int dwc2_hsotg_ep_enable(struct usb_ep *ep,
-> >   	 * a unique tx-fifo even if it is non-periodic.
-> >   	 */
-> >   	if (dir_in && hsotg->dedicated_fifos) {
-> > +		unsigned fifo_count = dwc2_hsotg_tx_fifo_count(hsotg);
-> >   		u32 fifo_index = 0;
-> >   		u32 fifo_size = UINT_MAX;
-> >   
-> >   		size = hs_ep->ep.maxpacket * hs_ep->mc;
-> > -		for (i = 1; i < hsotg->num_of_eps; ++i) {
-> > +		for (i = 1; i <= fifo_count; ++i) {
-> >   			if (hsotg->fifo_map & (1 << i))
-> >   				continue;
-> >   			val = dwc2_readl(hsotg, DPTXFSIZN(i));
-> > 
+return NOTIFY_OK;
+?
 
+> +}
+
+...
+
+> @@ -3111,6 +3285,7 @@ static int gpio_set_bias(struct gpio_chip *chip, struct gpio_desc *desc)
+>                 if (ret != -ENOTSUPP)
+>                         return ret;
+>         }
+> +
+>         return 0;
+>  }
+>
+
+This hunk doesn't belong to this patch.
+
+...
+
+> +/**
+> + * struct gpioline_info_changed - Information about a change in status
+> + * of a GPIO line
+> + * @info: updated line information
+> + * @timestamp: estimate of time of status change occurrence, in nanoseconds
+> + * and GPIOLINE_CHANGED_CONFIG
+> + * @event_type: one of GPIOLINE_CHANGED_REQUESTED, GPIOLINE_CHANGED_RELEASED
+> + */
+> +struct gpioline_info_changed {
+
+> +       struct gpioline_info info;
+
+Is this guaranteed to be always 8 byte aligned?
+I'm expecting to see some comments there and / or here about it.
+
+> +       __u64 timestamp;
+> +       __u32 event_type;
+> +       __u32 padding[5]; /* for future use */
+> +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
