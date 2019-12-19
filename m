@@ -2,98 +2,132 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D034BC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3BCC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5FB9218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:58:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nx7gphMj"
+	by mail.kernel.org (Postfix) with ESMTP id 6CCEB227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:00:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbfLSA6F (ORCPT
+        id S1726716AbfLSBAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 19:58:05 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44467 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbfLSA6F (ORCPT
+        Wed, 18 Dec 2019 20:00:19 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39350 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfLSBAT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 19:58:05 -0500
-Received: by mail-pg1-f195.google.com with SMTP id x7so2174943pgl.11
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 16:58:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=yOH7ELVRGRHpc5yc+mhaOVn02IC0gb5hZs9FIFXbe9M=;
-        b=nx7gphMj/8rKg9wjNACwYtnulIZ6Z8xrg7ko+Bj8Q4Goa9SMGAoBSjEbCjgcisRPZz
-         94RNOJQzTVei6D1ksrt+NFqvHYe6qpB7kXp5ddvzZmtYECJDiqIz/mLjmbL5pJopdi/8
-         YpYDwZcEXU8rsPmhRDAYFBKDYrIKY7rBgBZkI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=yOH7ELVRGRHpc5yc+mhaOVn02IC0gb5hZs9FIFXbe9M=;
-        b=gLucYdlgqKbAk8bNdAnEHosroHGNR2oZsXQA+VJTQPPBTMDtl26lVlmeZy5sU2FMyo
-         I2jUyQUTojE+eVck8SnM4bOIeVYwrHuKvIAKsH8IjdHnZCo5N9ko0Nj100/berl6U+MY
-         7bhjqJDcnU5dIKvVG1RQPjRX3eSZCCbfXmCnoGpyGXbUBamgzS0IIFHVz3MWE+kIqG5K
-         1+WhjbvyYOHnqmfy2kzKB0gvedbdoxuomk8HXVbgI3hUxNGBu9sT0ROZF3zkag6MIRte
-         u5WKOA6JnrurEe9ANHnxGkCqFQ0PoXGVll+uQgDRPTHanHKMGRS9GJT7qz4Legjm2VzT
-         a8ig==
-X-Gm-Message-State: APjAAAVpyL62ROtqvHlJECv12rcyRgactvrcDUIMc69BGvxwBB39v4Ii
-        f0+VUw+/1fo7mxNUbTd63bUTSQ==
-X-Google-Smtp-Source: APXvYqyEyAYA+swFuBfwD7jDeGcbH7mn+r/8mhydPwx0i9i1OR3DvHQExZunnygp3gx8B2+525aKYg==
-X-Received: by 2002:a63:234f:: with SMTP id u15mr6106045pgm.88.1576717084567;
-        Wed, 18 Dec 2019 16:58:04 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z130sm4704185pgz.6.2019.12.18.16.58.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 16:58:03 -0800 (PST)
-Date:   Wed, 18 Dec 2019 16:58:02 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        ath11k@lists.infradead.org
-Subject: [PATCH] ath11k: Use sizeof_field() instead of FIELD_SIZEOF()
-Message-ID: <201912181657.CE7D3CE33@keescook>
+        Wed, 18 Dec 2019 20:00:19 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 86E7F2911A3
+Received: by earth.universe (Postfix, from userid 1000)
+        id 7F8683C0C7B; Thu, 19 Dec 2019 02:00:15 +0100 (CET)
+Date:   Thu, 19 Dec 2019 02:00:15 +0100
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        groeck@chromium.org, bleung@chromium.org, dtor@chromium.org,
+        fparent@baylibre.com, linux-pm@vger.kernel.org
+Subject: Re: [PATCH] power: supply: cros_usbpd: Remove dev_err() getting the
+ number of ports
+Message-ID: <20191219010015.kpz4jmlhtmcqpx2j@earth.universe>
+References: <20191129215916.17105-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tc5xmfdszhykl2al"
 Content-Disposition: inline
+In-Reply-To: <20191129215916.17105-1-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The FIELD_SIZEOF() macro was redundant, and is being removed from the
-kernel. Since commit c593642c8be0 ("treewide: Use sizeof_field() macro")
-this is one of the last users of the old macro, so replace it.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-resend: https://lore.kernel.org/lkml/87d0cl8q46.fsf@kamboji.qca.qualcomm.com
----
- drivers/net/wireless/ath/ath11k/wmi.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--tc5xmfdszhykl2al
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/net/wireless/ath/ath11k/wmi.h b/drivers/net/wireless/ath/ath11k/wmi.h
-index 4a518d406bc5..fd7cb07a9940 100644
---- a/drivers/net/wireless/ath/ath11k/wmi.h
-+++ b/drivers/net/wireless/ath/ath11k/wmi.h
-@@ -44,7 +44,7 @@ struct wmi_tlv {
- 
- #define WMI_TLV_LEN	GENMASK(15, 0)
- #define WMI_TLV_TAG	GENMASK(31, 16)
--#define TLV_HDR_SIZE	FIELD_SIZEOF(struct wmi_tlv, header)
-+#define TLV_HDR_SIZE	sizeof_field(struct wmi_tlv, header)
- 
- #define WMI_CMD_HDR_CMD_ID      GENMASK(23, 0)
- #define WMI_MAX_MEM_REQS        32
--- 
-2.17.1
+Hi,
 
+On Fri, Nov 29, 2019 at 10:59:16PM +0100, Enric Balletbo i Serra wrote:
+> When a device has no support to get the charger number of ports, it
+> doesn't have to result in a dev_err(), print saying "Could not get
+> charger port count" using a dev_info() would suffice. In such case,
+> the dev_info() message is already printed but the dev_err() is annoying,
+> specially, on those devices that doesn't support the command. So remove
+> the dev_err().
+>=20
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
 
--- 
-Kees Cook
+Thanks, queued to power-supply's for-next branch.
+
+-- Sebastian
+
+>=20
+>  drivers/power/supply/cros_usbpd-charger.c | 10 ++--------
+>  1 file changed, 2 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/power/supply/cros_usbpd-charger.c b/drivers/power/su=
+pply/cros_usbpd-charger.c
+> index 6cc7c3910e09..ffad9ee03a68 100644
+> --- a/drivers/power/supply/cros_usbpd-charger.c
+> +++ b/drivers/power/supply/cros_usbpd-charger.c
+> @@ -132,11 +132,8 @@ static int cros_usbpd_charger_get_num_ports(struct c=
+harger_data *charger)
+>  	ret =3D cros_usbpd_charger_ec_command(charger, 0,
+>  					    EC_CMD_CHARGE_PORT_COUNT,
+>  					    NULL, 0, &resp, sizeof(resp));
+> -	if (ret < 0) {
+> -		dev_err(charger->dev,
+> -			"Unable to get the number of ports (err:0x%x)\n", ret);
+> +	if (ret < 0)
+>  		return ret;
+> -	}
+> =20
+>  	return resp.port_count;
+>  }
+> @@ -148,11 +145,8 @@ static int cros_usbpd_charger_get_usbpd_num_ports(st=
+ruct charger_data *charger)
+> =20
+>  	ret =3D cros_usbpd_charger_ec_command(charger, 0, EC_CMD_USB_PD_PORTS,
+>  					    NULL, 0, &resp, sizeof(resp));
+> -	if (ret < 0) {
+> -		dev_err(charger->dev,
+> -			"Unable to get the number or ports (err:0x%x)\n", ret);
+> +	if (ret < 0)
+>  		return ret;
+> -	}
+> =20
+>  	return resp.num_ports;
+>  }
+> --=20
+> 2.20.1
+>=20
+
+--tc5xmfdszhykl2al
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl36y58ACgkQ2O7X88g7
++prLww/7Bf169HA2U2qHk4iijeWqbV5ZJQY5aaMdl/vLHAEh6jD6m1i738TqbCNf
+uWgjUNLJZDm2zqk2PbeH0nRNBzw8ev5TlAU12MPkALPP3gIiRUMxs5kCpsAR7e4l
++61t3+nN52kbB+m43GvAe0pFk8kBjN0HeLaCiiuEeQ5C5+uBsurewjl4cX1hKEXx
+WyElL98dKK+dnXJaVhtkBdk3vwJOn5/fjh8gUxeqSYfdVlzn1Prh9Abd7/RtEAq6
+B4BsKBizyjt8B1tNvifdZ3h5xuykAzPrjxqR1jToscATNZq/krj/Ql7G/n5FC86H
+OAkhZ+fNfmYYlML2SMABTlZF0hILL0w6X1s8h6UJsr/Gg2oPNx4GtzYd3RXE2VxK
+7O89jXJ8TYtKuT5axlZSlBmi+qSSeVqWjup0EJnAjgtUffff3ggod6KGkB2pYe6T
+4RIHkzpDQVWDgBRVraduoTIOQzn/xtwbzQCsamvsGPKv0qzNJVkajnuVpGsqLq5D
+C4SNA7H3zJPXX7sQNCSQxJ/hfd+twO0G/r1aLnr25s4Hr+uv/EHwnCVGBLD+WJdl
+Zz+6UVXHNkKlZLa9eLN7yc8xptJZWmONqyJjf6SQP0VfqR5XqvG4GZZO4tfCCXCR
+h2uubx7V9TJtumqhGxxg/BwPfJC87UXUiam0j9AmrNDIPiH23XY=
+=lTtG
+-----END PGP SIGNATURE-----
+
+--tc5xmfdszhykl2al--
