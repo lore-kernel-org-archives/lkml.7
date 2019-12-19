@@ -2,75 +2,118 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E181C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B633C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D948624650
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:43:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576773824;
-	bh=pcJ4a6QvxXMKk4Na2Uivr/fvL4Gj3iHEUcovlk9Ojxo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bv88g8P49PPfr+u9fPl/FDQJ8Ylgup96ebJ3Egbv6vYpSucank5NcLa6rjmCX1jn8
-	 EfdnPcPs7pVIk4MYC8DoU//QP8XaSL085vs9hvpSzYNqPZqvFGZhiyYtv8xhZgCdke
-	 F/QF1s9zF1K/Z5dbregPprZNQp5JrSX79JUVztpA=
+	by mail.kernel.org (Postfix) with ESMTP id E219024672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:43:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XYNY/1ju"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfLSQno (ORCPT
+        id S1726947AbfLSQn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 11:43:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726760AbfLSQnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 11:43:43 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B21FD227BF;
-        Thu, 19 Dec 2019 16:43:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576773823;
-        bh=pcJ4a6QvxXMKk4Na2Uivr/fvL4Gj3iHEUcovlk9Ojxo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EYWkOokTPIzUhevzN6FaJ0QrViq1XnC7SQHq8pUg0CUMg2AmWTnHfAPIPcGRWjAVp
-         uQ+AEhljFKWwdq00bQ/+SjmdJ8O2Wp5oC00CGrNkgECXolI3GNA6USOKF0jA1UmRNO
-         nvhsGDUD3JSiLnxp2Z0HKhhN+ukpz9sPXAJFBIvQ=
-Date:   Thu, 19 Dec 2019 17:43:40 +0100
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "jslaby@suse.com" <jslaby@suse.com>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>, Alice Guo <alice.guo@nxp.com>
-Subject: Re: [PATCH 2/3] tty: serial: lpuart: support UPIO_MEM32 for lpuart32
-Message-ID: <20191219164340.GA2032929@kroah.com>
-References: <1576637626-19317-1-git-send-email-peng.fan@nxp.com>
- <1576637626-19317-4-git-send-email-peng.fan@nxp.com>
- <AM0PR04MB4481D6C5CD27F410359F53A788530@AM0PR04MB4481.eurprd04.prod.outlook.com>
+        Thu, 19 Dec 2019 11:43:56 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:41995 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbfLSQn4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 11:43:56 -0500
+Received: by mail-ed1-f68.google.com with SMTP id e10so5519106edv.9
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 08:43:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q6MJKY5kaJhdcPD2Yij+K4j3QBznO/FzqxPRwZHg2tA=;
+        b=XYNY/1juioQpuXWDwItjvluLKzqTb1s+LUDJh70eT+FynV6pmhNjrfR8rKpTN0Y4Vq
+         95LNMIm35iIung4zroafpJpZMFHIQW6gyl0nMe0sXzlo0Usj/osB8dJgXFazZDihbiKk
+         TXHN/eqPdNOFXyC7+ATLgVoMdiY/9k9+NozPc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q6MJKY5kaJhdcPD2Yij+K4j3QBznO/FzqxPRwZHg2tA=;
+        b=RFac+VBdIxQ77VWJL+zqZNERIv4Q4sHGYaq1coQuPEU9NqDbx/jJIIS2v4LInmGvgZ
+         b6W8BvZCJLFngG10ZLBcYpE66TPKSKS90sDpQyMUAruE8kNS8Bg+jh2SuGY7nHo+5HbW
+         plXaLWtqNaA2T9eyESkJgzwU7ZHYj8SK2MD+c25mf8wYpYBgYDbtist0aAsvLqVJXHV7
+         KTNUPnxP5V6RRYZOJLRsSVumbQcHZ3GnYyfqguFvMu5ED3zpdn/0FGxazG1q2ADVBUgs
+         LaXj9U3H1wj2vqgrXvsKCwxhO1WrJdOZRBEtlGJypHDamudBX9Jjftd2tFo6nE2xzqEd
+         zIBA==
+X-Gm-Message-State: APjAAAXKojZS9zjYtJpFesqokHWn4bvZHr+WUvAPLMtdBZYf7QEcLW9i
+        RUS1yMMo2zXSzr6XX/XRnWQFrtwziwI=
+X-Google-Smtp-Source: APXvYqzJrnDhyqXry2Juez68Ic0FZffsvBz9pdNakQx5OknlAgsdfpA3d5HGd3d/OE3zijzIjYZueg==
+X-Received: by 2002:a05:6402:2042:: with SMTP id bc2mr10139724edb.300.1576773834324;
+        Thu, 19 Dec 2019 08:43:54 -0800 (PST)
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com. [209.85.221.41])
+        by smtp.gmail.com with ESMTPSA id by2sm597353ejb.45.2019.12.19.08.43.53
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Dec 2019 08:43:54 -0800 (PST)
+Received: by mail-wr1-f41.google.com with SMTP id b6so6704466wrq.0
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 08:43:53 -0800 (PST)
+X-Received: by 2002:adf:ee92:: with SMTP id b18mr10865736wro.281.1576773336863;
+ Thu, 19 Dec 2019 08:35:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM0PR04MB4481D6C5CD27F410359F53A788530@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <20191205000957.112719-1-thgarnie@chromium.org> <20191219133452.GM2827@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191219133452.GM2827@hirez.programming.kicks-ass.net>
+From:   Thomas Garnier <thgarnie@chromium.org>
+Date:   Thu, 19 Dec 2019 08:35:25 -0800
+X-Gmail-Original-Message-ID: <CAJcbSZEubkFN0BLugoBm8fsPrNWxfFCDytC3nYUepr74dQFS=w@mail.gmail.com>
+Message-ID: <CAJcbSZEubkFN0BLugoBm8fsPrNWxfFCDytC3nYUepr74dQFS=w@mail.gmail.com>
+Subject: Re: [PATCH v10 00/11] x86: PIE support to extend KASLR randomization
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Will Deacon <will@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 12:26:09PM +0000, Peng Fan wrote:
-> Hi Greg,
-> 
-> > Subject: [PATCH 2/3] tty: serial: lpuart: support UPIO_MEM32 for lpuart32
-> 
-> This patch was sent out wrongly. Not affect the other three patches which
-> belongs the whole patch set described in cover-letter.
-> 
-> Should I sent out v2? Or you are fine if the other 3 patches are ok?
+On Thu, Dec 19, 2019 at 5:35 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Wed, Dec 04, 2019 at 04:09:37PM -0800, Thomas Garnier wrote:
+> > Minor changes based on feedback and rebase from v9.
+> >
+> > Splitting the previous serie in two. This part contains assembly code
+> > changes required for PIE but without any direct dependencies with the
+> > rest of the patchset.
+>
+> ISTR suggestion you add an objtool pass that verifies there are no
+> absolute text references left. Otherwise we'll forever be chasing that
+> last one..
 
-Please send out a whole new v2 series.
-
-thanks,
-
-greg k-h
+Correct, I have a reference in the changelog saying I will tackle in
+the next patchset because we still have non-pie references in other
+places but the fix is a bit more complex (for exemple per-cpu) and not
+included in this phase. I will add a better explanation in the next
+message for patch v11.
