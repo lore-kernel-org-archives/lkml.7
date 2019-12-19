@@ -2,169 +2,140 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AA9C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E20C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFF5A24679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:07:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C048224679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:10:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="I0eeHPXE"
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="vHqzFFVg";
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="vHqzFFVg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727282AbfLSVHr (ORCPT
+        id S1727395AbfLSVKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 16:07:47 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:44503 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727056AbfLSVHq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 16:07:46 -0500
-Received: by mail-qt1-f193.google.com with SMTP id t3so6239906qtr.11
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 13:07:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=b1m6ooTcPBF03IyS8tXbQFWmui5q38MZyl7sgcWDrVc=;
-        b=I0eeHPXEKyhR6F3+w0uZp8nZL74lZ+A5yJ1jcW4KB5MO7vY9ONwJPcIUEGlT8SbUeO
-         LH81YaW3GC7SMUuObdRRRlnGzTOYLS475Sg1mUPvLmi4JlCQaPrNqV+lDtlEr4ByHobI
-         ZOHWHIxyfXKwjF07HIG3BbuRvW3BGN4Y76jyGe62WEFR0v3gEx92h1yDdyRSLYhNDwBJ
-         tpCIZrQ8KxYH2/vN+ZSvjy5imMLbf+TFj3Y+cP0N+OLWwhHVLOxCMvkJX7OZ7EDojcBc
-         GAxbNt0FBcreyN8pFhlQHApx98BWQ2R7K6v8eS90taP+fCjutUcn9h1snaULI5tTj6Dz
-         Afvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=b1m6ooTcPBF03IyS8tXbQFWmui5q38MZyl7sgcWDrVc=;
-        b=j3zWDjN2eMgfSvqSZb8ArYU1l86ntQxa+L2YrXX8H6urb2rf7AqzTXZx3T0Eizq6Dw
-         3ueK7e1leu+XOEHEzLMKcvpq2qKrVNfIet2AJDL5dqGnh5RKHZCiauY/n0cXjg8Mq0Fb
-         RjcfTlmMXi0KmqOy1xQbzN6NJNN5PuusVuzYVasKt+QUK1wQq1LzNvKAeCIhCeyAKStf
-         UMMQPCVZ+jSK8RbWygw5hZp8I2U+Wz3X3gjXIo9PdM80QuXSwFVn8ClYBMLSsSJEzZJ9
-         etv7V/nkNK6mZAQbQeJJfp4nLGlsvsON2cMy6nHp+cywBL7eYfjwGG1i8mxqyP/l27Pg
-         gPKQ==
-X-Gm-Message-State: APjAAAXAOVMsEGShG3CIxKxvm61OjAD5RCraDvq1k1ic7Gs2xzNWRhcz
-        fyqqx2shq28RwDG2CVxTCR3kjQ==
-X-Google-Smtp-Source: APXvYqxVnwIXGsi0o/bO9dZGQ7XuTOfFwgCWi/4t790OZPxPymgdPJt3SfFmZqkv2903tXMsYUoGBQ==
-X-Received: by 2002:ac8:2d30:: with SMTP id n45mr8586782qta.203.1576789665577;
-        Thu, 19 Dec 2019 13:07:45 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id m20sm2085982qkk.15.2019.12.19.13.07.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 19 Dec 2019 13:07:44 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1ii31L-0007mU-Uf; Thu, 19 Dec 2019 17:07:43 -0400
-Date:   Thu, 19 Dec 2019 17:07:43 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
-        Maor Gottlieb <maorg@mellanox.com>
-Subject: Re: [PATCH v11 00/25] mm/gup: track dma-pinned pages: FOLL_PIN
-Message-ID: <20191219210743.GN17227@ziepe.ca>
-References: <20191216222537.491123-1-jhubbard@nvidia.com>
- <20191219132607.GA410823@unreal>
- <a4849322-8e17-119e-a664-80d9f95d850b@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a4849322-8e17-119e-a664-80d9f95d850b@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 19 Dec 2019 16:10:02 -0500
+Received: from node.akkea.ca ([192.155.83.177]:35432 "EHLO node.akkea.ca"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726967AbfLSVKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 16:10:02 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by node.akkea.ca (Postfix) with ESMTP id C4BF14E201A;
+        Thu, 19 Dec 2019 21:10:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1576789801; bh=1wXn8lv1uClqi6KXMpwZnhaewdTksRHk6Y3gosxM1y8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=vHqzFFVgOsxYE2DQaiBgt3T73EttQNuqETQSqE+ldYNB3ULjJ4Xi31sG56t5Mc/tL
+         1PqkIHJBiYHzqvSdYwoGsiDsBY1QXXDiw8nmzOabNDOWCAr9xmIxPk+156HPgTZq2n
+         1e2KmUZjdkfp1u8DmY5DGz1EgJ7sl2Jm4/VELe+A=
+X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
+Received: from node.akkea.ca ([127.0.0.1])
+        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id vH5YhjpaPgKf; Thu, 19 Dec 2019 21:10:01 +0000 (UTC)
+Received: from midas.localdomain (S0106788a2041785e.gv.shawcable.net [70.66.86.75])
+        by node.akkea.ca (Postfix) with ESMTPSA id 3AD404E2006;
+        Thu, 19 Dec 2019 21:10:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1576789801; bh=1wXn8lv1uClqi6KXMpwZnhaewdTksRHk6Y3gosxM1y8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=vHqzFFVgOsxYE2DQaiBgt3T73EttQNuqETQSqE+ldYNB3ULjJ4Xi31sG56t5Mc/tL
+         1PqkIHJBiYHzqvSdYwoGsiDsBY1QXXDiw8nmzOabNDOWCAr9xmIxPk+156HPgTZq2n
+         1e2KmUZjdkfp1u8DmY5DGz1EgJ7sl2Jm4/VELe+A=
+From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
+To:     broonie@kernel.org
+Cc:     kernel@puri.sm, Liam Girdwood <lgirdwood@gmail.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>
+Subject: [PATCH v3 1/2] ASoC: gtm601: add Broadmobi bm818 sound profile
+Date:   Thu, 19 Dec 2019 13:09:43 -0800
+Message-Id: <20191219210944.18256-2-angus@akkea.ca>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191219210944.18256-1-angus@akkea.ca>
+References: <20191219210944.18256-1-angus@akkea.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 12:30:31PM -0800, John Hubbard wrote:
-> On 12/19/19 5:26 AM, Leon Romanovsky wrote:
-> > On Mon, Dec 16, 2019 at 02:25:12PM -0800, John Hubbard wrote:
-> > > Hi,
-> > > 
-> > > This implements an API naming change (put_user_page*() -->
-> > > unpin_user_page*()), and also implements tracking of FOLL_PIN pages. It
-> > > extends that tracking to a few select subsystems. More subsystems will
-> > > be added in follow up work.
-> > 
-> > Hi John,
-> > 
-> > The patchset generates kernel panics in our IB testing. In our tests, we
-> > allocated single memory block and registered multiple MRs using the single
-> > block.
-> > 
-> > The possible bad flow is:
-> >   ib_umem_geti() ->
-> >    pin_user_pages_fast(FOLL_WRITE) ->
-> >     internal_get_user_pages_fast(FOLL_WRITE) ->
-> >      gup_pgd_range() ->
-> >       gup_huge_pd() ->
-> >        gup_hugepte() ->
-> >         try_grab_compound_head() ->
-> 
-> Hi Leon,
-> 
-> Thanks very much for the detailed report! So we're overflowing...
-> 
-> At first look, this seems likely to be hitting a weak point in the
-> GUP_PIN_COUNTING_BIAS-based design, one that I believed could be deferred
-> (there's a writeup in Documentation/core-api/pin_user_page.rst, lines
-> 99-121). Basically it's pretty easy to overflow the page->_refcount
-> with huge pages if the pages have a *lot* of subpages.
-> 
-> We can only do about 7 pins on 1GB huge pages that use 4KB subpages.
+The Broadmobi bm818 uses stereo sound at 48Khz sample rate
 
-Considering that establishing these pins is entirely under user
-control, we can't have a limit here.
+Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+---
+ sound/soc/codecs/gtm601.c | 31 +++++++++++++++++++++++++++----
+ 1 file changed, 27 insertions(+), 4 deletions(-)
 
-If the number of allowed pins are exhausted then the
-pin_user_pages_fast() must fail back to the user.
+diff --git a/sound/soc/codecs/gtm601.c b/sound/soc/codecs/gtm601.c
+index d454294c8d06..3374362741a6 100644
+--- a/sound/soc/codecs/gtm601.c
++++ b/sound/soc/codecs/gtm601.c
+@@ -13,7 +13,7 @@
+ #include <linux/slab.h>
+ #include <linux/module.h>
+ #include <linux/kernel.h>
+-#include <linux/device.h>
++#include <linux/of_device.h>
+ #include <sound/core.h>
+ #include <sound/pcm.h>
+ #include <sound/initval.h>
+@@ -37,7 +37,7 @@ static struct snd_soc_dai_driver gtm601_dai = {
+ 		.channels_max = 1,
+ 		.rates = SNDRV_PCM_RATE_8000,
+ 		.formats = SNDRV_PCM_FMTBIT_S16_LE,
+-		},
++	},
+ 	.capture = {
+ 		.stream_name = "Capture",
+ 		.channels_min = 1,
+@@ -47,6 +47,24 @@ static struct snd_soc_dai_driver gtm601_dai = {
+ 	},
+ };
+ 
++static struct snd_soc_dai_driver bm818_dai = {
++	.name = "bm818",
++	.playback = {
++		.stream_name = "Playback",
++		.channels_min = 2,
++		.channels_max = 2,
++		.rates = SNDRV_PCM_RATE_48000,
++		.formats = SNDRV_PCM_FMTBIT_S16_LE,
++	},
++	.capture = {
++		.stream_name = "Capture",
++		.channels_min = 2,
++		.channels_max = 2,
++		.rates = SNDRV_PCM_RATE_48000,
++		.formats = SNDRV_PCM_FMTBIT_S16_LE,
++	},
++};
++
+ static const struct snd_soc_component_driver soc_component_dev_gtm601 = {
+ 	.dapm_widgets		= gtm601_dapm_widgets,
+ 	.num_dapm_widgets	= ARRAY_SIZE(gtm601_dapm_widgets),
+@@ -60,13 +78,18 @@ static const struct snd_soc_component_driver soc_component_dev_gtm601 = {
+ 
+ static int gtm601_platform_probe(struct platform_device *pdev)
+ {
++	struct snd_soc_dai_driver *dai_driver;
++
++	dai_driver = of_device_get_match_data(&pdev->dev);
++
+ 	return devm_snd_soc_register_component(&pdev->dev,
+-			&soc_component_dev_gtm601, &gtm601_dai, 1);
++			&soc_component_dev_gtm601, dai_driver, 1);
+ }
+ 
+ #if defined(CONFIG_OF)
+ static const struct of_device_id gtm601_codec_of_match[] = {
+-	{ .compatible = "option,gtm601", },
++	{ .compatible = "option,gtm601", .data = (void *)&gtm601_dai },
++	{ .compatible = "broadmobi,bm818", .data = (void *)&bm818_dai },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, gtm601_codec_of_match);
+-- 
+2.17.1
 
-> 3. It would be nice if I could reproduce this. I have a two-node mlx5 Infiniband
-> test setup, but I have done only the tiniest bit of user space IB coding, so
-> if you have any test programs that aren't too hard to deal with that could
-> possibly hit this, or be tweaked to hit it, I'd be grateful. Keeping in mind
-> that I'm not an advanced IB programmer. At all. :)
-
-Clone this:
-
-https://github.com/linux-rdma/rdma-core.git
-
-Install all the required deps to build it (notably cython), see the README.md
-
-$ ./build.sh
-$ build/bin/run_tests.py 
-
-If you get things that far I think Leon can get a reproduction for you
-
-Jason
