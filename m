@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE07C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A31C7C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ABCB2468E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7677824682
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781469;
-	bh=sKj9dKNPh7LtuldzJsMWW7xOyu3jdMpa/F+Jy+biODo=;
+	s=default; t=1576781473;
+	bh=DZTffMPfrJQtkLV5eRy2s0drgVzLds0tyJMKlwS9wv4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PF/9KGbPmHi/I4eDa311yBuo5iwtKllQ8oSa4Gpj9xDxrLaLWvO6Tg1eT78juaj14
-	 5OOGN13bNe3pI76njnv7M1jP0+dEpMODuOpS2ASyILOtg97SbtyUwY2xa1iF32AEjQ
-	 DKVteN65Bic3tcAv0RU2wyv56rrmWkDPWki8IKPw=
+	b=l0L16SgweB+pINx+4FF0w3vnGSL+zWoTFjGfcf1VS3PfLUbB0FNG3duPTZe0SuClH
+	 9gCnclklqPmkCP8gYRKkh5rYuyTWXNFJB74cYPor3nMKDt8iBQEnw55qRXtCMNgiJ7
+	 nEfMQOZULb1xvsQxohiRmpRP07lsnFUljuzS/NME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730111AbfLSSvI (ORCPT
+        id S1730117AbfLSSvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:51:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45224 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:51:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730087AbfLSSvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:51:05 -0500
+        id S1730108AbfLSSvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:51:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E313224685;
-        Thu, 19 Dec 2019 18:51:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 666B12064B;
+        Thu, 19 Dec 2019 18:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781464;
-        bh=sKj9dKNPh7LtuldzJsMWW7xOyu3jdMpa/F+Jy+biODo=;
+        s=default; t=1576781466;
+        bh=DZTffMPfrJQtkLV5eRy2s0drgVzLds0tyJMKlwS9wv4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MomtK3COdNt4MPxHf+7rNAm52Q8X/zpPcrxmad5dr9Ekoj3CdbIBkPmdt7fn1wzzu
-         KwRz4UT8HpbvWt1rmfLgIIYCCoIagoZsj8Iwx9X3o4rBQvohwk3Pzxr4WCPXCCHZkn
-         CdEu9fcN6FAL037G72GQ3iQOnZh1iORBzE/GKygc=
+        b=Anh/3iLbFExaEmgCvc9NHiTNALWDeBnnM+kjwA2jtOWqX54eEcVgLwbv9WPSR6lnv
+         iCvfVCDRSWso+TgKLrjhu8we6TrbeNQWGVIKqp9aYf0UJjFrsdDc37uC+IWcotdLw6
+         81DZpHK/1I602lILM8udWQVqkmmarpXBgVMykwPU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Steffen Liebergeld <steffen.liebergeld@kernkonzept.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: [PATCH 4.14 15/36] PCI: Fix Intel ACS quirk UPDCR register address
-Date:   Thu, 19 Dec 2019 19:34:32 +0100
-Message-Id: <20191219182900.407406273@linuxfoundation.org>
+        stable@vger.kernel.org, Meelis Roos <mroos@linux.ee>,
+        =?UTF-8?q?Michel=20D=C3=A4nzer?= <mdaenzer@redhat.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 4.14 33/36] drm/radeon: fix r1xx/r2xx register checker for POT textures
+Date:   Thu, 19 Dec 2019 19:34:50 +0100
+Message-Id: <20191219182924.857212474@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182848.708141124@linuxfoundation.org>
 References: <20191219182848.708141124@linuxfoundation.org>
@@ -62,46 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steffen Liebergeld <steffen.liebergeld@kernkonzept.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-commit d8558ac8c93d429d65d7490b512a3a67e559d0d4 upstream.
+commit 008037d4d972c9c47b273e40e52ae34f9d9e33e7 upstream.
 
-According to documentation [0] the correct offset for the Upstream Peer
-Decode Configuration Register (UPDCR) is 0x1014.  It was previously defined
-as 0x1114.
+Shift and mask were reversed.  Noticed by chance.
 
-d99321b63b1f ("PCI: Enable quirks for PCIe ACS on Intel PCH root ports")
-intended to enforce isolation between PCI devices allowing them to be put
-into separate IOMMU groups.  Due to the wrong register offset the intended
-isolation was not fully enforced.  This is fixed with this patch.
-
-Please note that I did not test this patch because I have no hardware that
-implements this register.
-
-[0] https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/4th-gen-core-family-mobile-i-o-datasheet.pdf (page 325)
-Fixes: d99321b63b1f ("PCI: Enable quirks for PCIe ACS on Intel PCH root ports")
-Link: https://lore.kernel.org/r/7a3505df-79ba-8a28-464c-88b83eefffa6@kernkonzept.com
-Signed-off-by: Steffen Liebergeld <steffen.liebergeld@kernkonzept.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Acked-by: Ashok Raj <ashok.raj@intel.com>
-Cc: stable@vger.kernel.org	# v3.15+
+Tested-by: Meelis Roos <mroos@linux.ee>
+Reviewed-by: Michel Dänzer <mdaenzer@redhat.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/quirks.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/radeon/r100.c |    4 ++--
+ drivers/gpu/drm/radeon/r200.c |    4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4600,7 +4600,7 @@ int pci_dev_specific_acs_enabled(struct
- #define INTEL_BSPR_REG_BPPD  (1 << 9)
- 
- /* Upstream Peer Decode Configuration Register */
--#define INTEL_UPDCR_REG 0x1114
-+#define INTEL_UPDCR_REG 0x1014
- /* 5:0 Peer Decode Enable bits */
- #define INTEL_UPDCR_REG_MASK 0x3f
- 
+--- a/drivers/gpu/drm/radeon/r100.c
++++ b/drivers/gpu/drm/radeon/r100.c
+@@ -1820,8 +1820,8 @@ static int r100_packet0_check(struct rad
+ 			track->textures[i].use_pitch = 1;
+ 		} else {
+ 			track->textures[i].use_pitch = 0;
+-			track->textures[i].width = 1 << ((idx_value >> RADEON_TXFORMAT_WIDTH_SHIFT) & RADEON_TXFORMAT_WIDTH_MASK);
+-			track->textures[i].height = 1 << ((idx_value >> RADEON_TXFORMAT_HEIGHT_SHIFT) & RADEON_TXFORMAT_HEIGHT_MASK);
++			track->textures[i].width = 1 << ((idx_value & RADEON_TXFORMAT_WIDTH_MASK) >> RADEON_TXFORMAT_WIDTH_SHIFT);
++			track->textures[i].height = 1 << ((idx_value & RADEON_TXFORMAT_HEIGHT_MASK) >> RADEON_TXFORMAT_HEIGHT_SHIFT);
+ 		}
+ 		if (idx_value & RADEON_TXFORMAT_CUBIC_MAP_ENABLE)
+ 			track->textures[i].tex_coord_type = 2;
+--- a/drivers/gpu/drm/radeon/r200.c
++++ b/drivers/gpu/drm/radeon/r200.c
+@@ -476,8 +476,8 @@ int r200_packet0_check(struct radeon_cs_
+ 			track->textures[i].use_pitch = 1;
+ 		} else {
+ 			track->textures[i].use_pitch = 0;
+-			track->textures[i].width = 1 << ((idx_value >> RADEON_TXFORMAT_WIDTH_SHIFT) & RADEON_TXFORMAT_WIDTH_MASK);
+-			track->textures[i].height = 1 << ((idx_value >> RADEON_TXFORMAT_HEIGHT_SHIFT) & RADEON_TXFORMAT_HEIGHT_MASK);
++			track->textures[i].width = 1 << ((idx_value & RADEON_TXFORMAT_WIDTH_MASK) >> RADEON_TXFORMAT_WIDTH_SHIFT);
++			track->textures[i].height = 1 << ((idx_value & RADEON_TXFORMAT_HEIGHT_MASK) >> RADEON_TXFORMAT_HEIGHT_SHIFT);
+ 		}
+ 		if (idx_value & R200_TXFORMAT_LOOKUP_DISABLE)
+ 			track->textures[i].lookup_disable = true;
 
 
