@@ -2,53 +2,53 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39844C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67AE7C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ADCA222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D0A2222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:10:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782597;
-	bh=5YqInx0aKveKicVgm5QX2Q8FUyLiPskq8FO3r48P7os=;
+	s=default; t=1576782602;
+	bh=BiT/mqY3cYPx4Ex65wi0uSHH0MprkirSenCtSPsYEGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T4y351+cQZtl/1duEf4GxThXOVCulYHHiHntc1DnxBm+iuUZorr1OMRQO6ZnA4cUh
-	 IDPJI3VghNGgiNh3DlFr9rs6CECixKPSvgWj+oL1EMDaLb8leQqdhEEyTbBoE68z7u
-	 pypUGeaJDHOLiiI8WDLAWZR7Eng7bQjqUTftARmo=
+	b=EGQThdvuTfzYjlFAsygm5H4Yfwi4eH+u9po9pHg+Pciac7iWT4qJk8PdaQaVlXnRD
+	 Pe1ClIQIa9/KZODrl2KPdniPIufoGzu7WkRZyAstSsviAxyAOCHgcKou2PeHfS6Pam
+	 7Omw2I6GESDEjARRfIWQyICTiZQ+JxBzZxFIcoxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728416AbfLSTJ4 (ORCPT
+        id S1727002AbfLSSj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:09:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58688 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:39:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728330AbfLSSkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:40:05 -0500
+        id S1727833AbfLSSj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:39:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03F84222C2;
-        Thu, 19 Dec 2019 18:40:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A86EA206D7;
+        Thu, 19 Dec 2019 18:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780804;
-        bh=5YqInx0aKveKicVgm5QX2Q8FUyLiPskq8FO3r48P7os=;
+        s=default; t=1576780797;
+        bh=BiT/mqY3cYPx4Ex65wi0uSHH0MprkirSenCtSPsYEGE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SSuMfdz2GAR8y40NM7mMcnOjAMESK/20ADMRAVkmhQoiWSNrh0aMeVCc7Y74cRm5w
-         3+91q/G3tK7qSz09+3fybqVdGdvHImZzSpVQtc30dcWqDLKMcHrmlQLVmjJmJpc+dP
-         t4d6l/PL1GvjlRiwYM+W+SA8zBfbhPEcJGbH5DVI=
+        b=bHFuEOdU+qn6lnX+yQCRIpvJUFWnDJM27+8w/xaD7JBS8cNX0vY+4hOVfWic84RPF
+         iDkrpj5tTqCX8zgqutwmPPeuwhFn3ePO0ACDFTRW602uAU8v5f2mLxQDYgBTuNjCUs
+         03vtqyLM/u0GdJMUbzuhK2PXRzGeKr4MGOwfi0MM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 125/162] xhci: Fix memory leak in xhci_add_in_port()
-Date:   Thu, 19 Dec 2019 19:33:53 +0100
-Message-Id: <20191219183215.375350082@linuxfoundation.org>
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH 4.4 122/162] quota: fix livelock in dquot_writeback_dquots
+Date:   Thu, 19 Dec 2019 19:33:50 +0100
+Message-Id: <20191219183215.195885197@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -61,88 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
 
-[ Upstream commit ce91f1a43b37463f517155bdfbd525eb43adbd1a ]
+commit 6ff33d99fc5c96797103b48b7b0902c296f09c05 upstream.
 
-When xHCI is part of Alpine or Titan Ridge Thunderbolt controller and
-the xHCI device is hot-removed as a result of unplugging a dock for
-example, the driver leaks memory it allocates for xhci->usb3_rhub.psi
-and xhci->usb2_rhub.psi in xhci_add_in_port() as reported by kmemleak:
+Write only quotas which are dirty at entry.
 
-unreferenced object 0xffff922c24ef42f0 (size 16):
-  comm "kworker/u16:2", pid 178, jiffies 4294711640 (age 956.620s)
-  hex dump (first 16 bytes):
-    21 00 0c 00 12 00 dc 05 23 00 e0 01 00 00 00 00  !.......#.......
-  backtrace:
-    [<000000007ac80914>] xhci_mem_init+0xcf8/0xeb7
-    [<0000000001b6d775>] xhci_init+0x7c/0x160
-    [<00000000db443fe3>] xhci_gen_setup+0x214/0x340
-    [<00000000fdffd320>] xhci_pci_setup+0x48/0x110
-    [<00000000541e1e03>] usb_add_hcd.cold+0x265/0x747
-    [<00000000ca47a56b>] usb_hcd_pci_probe+0x219/0x3b4
-    [<0000000021043861>] xhci_pci_probe+0x24/0x1c0
-    [<00000000b9231f25>] local_pci_probe+0x3d/0x70
-    [<000000006385c9d7>] pci_device_probe+0xd0/0x150
-    [<0000000070241068>] really_probe+0xf5/0x3c0
-    [<0000000061f35c0a>] driver_probe_device+0x58/0x100
-    [<000000009da11198>] bus_for_each_drv+0x79/0xc0
-    [<000000009ce45f69>] __device_attach+0xda/0x160
-    [<00000000df201aaf>] pci_bus_add_device+0x46/0x70
-    [<0000000088a1bc48>] pci_bus_add_devices+0x27/0x60
-    [<00000000ad9ee708>] pci_bus_add_devices+0x52/0x60
-unreferenced object 0xffff922c24ef3318 (size 8):
-  comm "kworker/u16:2", pid 178, jiffies 4294711640 (age 956.620s)
-  hex dump (first 8 bytes):
-    34 01 05 00 35 41 0a 00                          4...5A..
-  backtrace:
-    [<000000007ac80914>] xhci_mem_init+0xcf8/0xeb7
-    [<0000000001b6d775>] xhci_init+0x7c/0x160
-    [<00000000db443fe3>] xhci_gen_setup+0x214/0x340
-    [<00000000fdffd320>] xhci_pci_setup+0x48/0x110
-    [<00000000541e1e03>] usb_add_hcd.cold+0x265/0x747
-    [<00000000ca47a56b>] usb_hcd_pci_probe+0x219/0x3b4
-    [<0000000021043861>] xhci_pci_probe+0x24/0x1c0
-    [<00000000b9231f25>] local_pci_probe+0x3d/0x70
-    [<000000006385c9d7>] pci_device_probe+0xd0/0x150
-    [<0000000070241068>] really_probe+0xf5/0x3c0
-    [<0000000061f35c0a>] driver_probe_device+0x58/0x100
-    [<000000009da11198>] bus_for_each_drv+0x79/0xc0
-    [<000000009ce45f69>] __device_attach+0xda/0x160
-    [<00000000df201aaf>] pci_bus_add_device+0x46/0x70
-    [<0000000088a1bc48>] pci_bus_add_devices+0x27/0x60
-    [<00000000ad9ee708>] pci_bus_add_devices+0x52/0x60
+XFSTEST: https://github.com/dmonakhov/xfstests/commit/b10ad23566a5bf75832a6f500e1236084083cddc
 
-Fix this by calling kfree() for the both psi objects in
-xhci_mem_cleanup().
-
-Cc: <stable@vger.kernel.org> # 4.4+
-Fixes: 47189098f8be ("xhci: parse xhci protocol speed ID list for usb 3.1 usage")
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20191211142007.8847-2-mathias.nyman@linux.intel.com
+Link: https://lore.kernel.org/r/20191031103920.3919-1-dmonakhov@openvz.org
+CC: stable@vger.kernel.org
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/host/xhci-mem.c |    4 ++++
- 1 file changed, 4 insertions(+)
 
---- a/drivers/usb/host/xhci-mem.c
-+++ b/drivers/usb/host/xhci-mem.c
-@@ -1928,10 +1928,14 @@ no_bw:
- 	kfree(xhci->port_array);
- 	kfree(xhci->rh_bw);
- 	kfree(xhci->ext_caps);
-+	kfree(xhci->usb2_rhub.psi);
-+	kfree(xhci->usb3_rhub.psi);
- 
- 	xhci->usb2_ports = NULL;
- 	xhci->usb3_ports = NULL;
- 	xhci->port_array = NULL;
-+	xhci->usb2_rhub.psi = NULL;
-+	xhci->usb3_rhub.psi = NULL;
- 	xhci->rh_bw = NULL;
- 	xhci->ext_caps = NULL;
- 
+---
+ fs/quota/dquot.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+--- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -604,7 +604,7 @@ EXPORT_SYMBOL(dquot_scan_active);
+ /* Write all dquot structures to quota files */
+ int dquot_writeback_dquots(struct super_block *sb, int type)
+ {
+-	struct list_head *dirty;
++	struct list_head dirty;
+ 	struct dquot *dquot;
+ 	struct quota_info *dqopt = sb_dqopt(sb);
+ 	int cnt;
+@@ -617,9 +617,10 @@ int dquot_writeback_dquots(struct super_
+ 		if (!sb_has_quota_active(sb, cnt))
+ 			continue;
+ 		spin_lock(&dq_list_lock);
+-		dirty = &dqopt->info[cnt].dqi_dirty_list;
+-		while (!list_empty(dirty)) {
+-			dquot = list_first_entry(dirty, struct dquot,
++		/* Move list away to avoid livelock. */
++		list_replace_init(&dqopt->info[cnt].dqi_dirty_list, &dirty);
++		while (!list_empty(&dirty)) {
++			dquot = list_first_entry(&dirty, struct dquot,
+ 						 dq_dirty);
+ 			/* Dirty and inactive can be only bad dquot... */
+ 			if (!test_bit(DQ_ACTIVE_B, &dquot->dq_flags)) {
 
 
