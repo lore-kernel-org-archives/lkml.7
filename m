@@ -2,95 +2,111 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E057AC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A367C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A931F24679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:30:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576798258;
-	bh=S5VBe2V6XP9JXlwOSx/7XHsQVvqLUe9FX070QiGd6qk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AB9GMFeaMrdblJeVE69De5Xqv7mY8RByJcJm1HpcLIAS/bETkPcqWFhfhvVn1xEOB
-	 3aN1QkDju+wjTi9cW+sqEcbnbXZqH3AOapalKJfh52rR2JEcgztOpDoHGe2/sHNh3S
-	 z3VYetO/Hzd0Ll0wzuWZJ4tgpy++L6OJV3tdol8s=
+	by mail.kernel.org (Postfix) with ESMTP id 4088724676
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:31:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gNErIB7X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbfLSXa5 (ORCPT
+        id S1727165AbfLSXbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 18:30:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726963AbfLSXa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 18:30:57 -0500
-Received: from localhost (unknown [104.132.0.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7BAC24676;
-        Thu, 19 Dec 2019 23:30:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576798256;
-        bh=S5VBe2V6XP9JXlwOSx/7XHsQVvqLUe9FX070QiGd6qk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jouYPEszKYtzl/CocDFcQQYTx62Jl0JUpge2h6STkcmp2WiwygnpEuC9YmaHBhSZC
-         bnW4VuvICgNarPIfvbd4jLyXqVOVigNx4/gjcWLCpOukr9aTNwwCt70ztR5wUpt8/7
-         vT3pohVtwoZZQJvAiAi2CmH2nyK4j6F+Ea0WNNoI=
-Date:   Thu, 19 Dec 2019 15:30:56 -0800
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     axboe@kernel.dk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-Subject: Re: kernel BUG at fs/buffer.c:LINE!
-Message-ID: <20191219233056.GA81515@jaegeuk-macbookpro.roam.corp.google.com>
-References: <0000000000009716290599fcd496@google.com>
- <31033055-c245-4eda-2814-3fd8b0d59cb9@acm.org>
+        Thu, 19 Dec 2019 18:31:25 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:41022 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbfLSXbY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 18:31:24 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBJNTXOg073864;
+        Thu, 19 Dec 2019 23:31:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=XM5vEgks4cb5sO1+swRp9MqjfBI14nr9sYPl3TxMAqY=;
+ b=gNErIB7XnekOcNUEIqxZj9UdMaBZoMIaI5fbujuKglUTC1yc/PrkbpcpcYn9FMkGeX4E
+ uuK/RY6c8Yd3RegXjPFElXXBxZDP0pE4tulQqo5tR8O07HlAPDn2kluY47ugfWZK+WUK
+ FWtZQ4No1keyQLwf4+BBZ5cwdu4+lpBqx65Bkae/CSRQS5p7r1FK/G8qFOTAydgpOGA/
+ 9WHer9hWKOYvMTR80DjD5uHvMOlf9iNIUR8eFslewEunlEPxHm+p2l9qcxX4ncpkm+/w
+ jPQUn0vqPyANcTFWzK04TkltQMhc/0XngLtXCKdeiErYkHq8K0TwxxSgXEDCrCEAGDoo Vw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2x0ag12v5r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Dec 2019 23:31:17 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBJNNDTq162361;
+        Thu, 19 Dec 2019 23:31:16 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2x04ms5u1r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Dec 2019 23:31:16 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBJNVElb017175;
+        Thu, 19 Dec 2019 23:31:15 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 19 Dec 2019 15:31:14 -0800
+To:     Michal =?utf-8?Q?Such=C3=A1nek?= <msuchanek@suse.de>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH] scsi: blacklist: add VMware ESXi cdrom - broken tray emulation
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20191217180840.9414-1-msuchanek@suse.de>
+        <yq1bls6h9ir.fsf@oracle.com> <20191219143422.GJ4113@kitsune.suse.cz>
+Date:   Thu, 19 Dec 2019 18:31:12 -0500
+In-Reply-To: <20191219143422.GJ4113@kitsune.suse.cz> ("Michal =?utf-8?Q?Su?=
+ =?utf-8?Q?ch=C3=A1nek=22's?=
+        message of "Thu, 19 Dec 2019 15:34:22 +0100")
+Message-ID: <yq1pngjc2pr.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <31033055-c245-4eda-2814-3fd8b0d59cb9@acm.org>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9476 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912190172
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9476 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912190173
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/18, Bart Van Assche wrote:
-> On 2019-12-18 08:21, syzbot wrote:
-> > syzbot has bisected this bug to:
-> > 
-> > commit 5db470e229e22b7eda6e23b5566e532c96fb5bc3
-> > Author: Jaegeuk Kim <jaegeuk@kernel.org>
-> > Date:   Thu Jan 10 03:17:14 2019 +0000
-> > 
-> >     loop: drop caches if offset or block_size are changed
-> > 
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13f3ca8ee00000
-> > start commit:   2187f215 Merge tag 'for-5.5-rc2-tag' of
-> > git://git.kernel.o..
-> > git tree:       upstream
-> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=100bca8ee00000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=17f3ca8ee00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=dcf10bf83926432a
-> > dashboard link:
-> > https://syzkaller.appspot.com/bug?extid=cfed5b56649bddf80d6e
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1171ba8ee00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=107440aee00000
-> 
-> Hi Jaegeuk,
-> 
-> Since syzbot has identified a reproducer I think that it's easy to test
-> whether your new patch fixes what syzbot discovered. Have you already
-> had the chance to test this?
-> 
 
-I can't reproduce it with C reproducer. Hmmm...
+Michal,
 
-> Thanks,
-> 
-> Bart.
+>> Please don't introduce a blist flag to work around deficiencies in the
+>> matching interface. I suggest you tweak the matching functions so they
+>> handle a NULL vendor string correctly.
+>
+> I don't think that will work with the interface for dynamically adding
+> entries through sysfs.
+
+Please make it work :)
+
+There's nothing conceptually wrong with being able to do:
+
+        echo ":Model:Flags" > /proc/scsi/device_info
+
+We keep running into issues where the same device needs to be listed
+many times because it gets branded by different vendors.
+
+Brownie points for making all this less clunky. The libata globbing
+blacklist works much better, fwiw.
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
