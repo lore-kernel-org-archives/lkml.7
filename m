@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C67C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 305B1C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5544A24685
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9D4224682
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781629;
-	bh=Uj9E8kuIcuJcaFvwCz3724I4GeY3wXgkV4YygOur5hA=;
+	s=default; t=1576781632;
+	bh=HmRvdImrrDSCZEqCQ4WawS6uqwqHMiPVGjo2/RsL9iE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bXLV66j95oh9bfzYbdjPrcCPIeRsCMn3WTSFSl9OgrGK1v877XVOE/U4EuhLp1VS2
-	 jxfT2OwPHOMRg1qDx/bjDqGT6TTa184DucW3xUXQN3oCeTupQd6AkY4miiOtklGala
-	 z7LdKpUUsldr/fJ2zFTvnbYNy8TdN2yF7nS8Xikk=
+	b=NtWXzBlamBDNzLxk5dkrnlCyq1vgWXGQyaMmcg4shLFaPAi1UJqAnM6Ydx7HOWLAu
+	 btfKuKEa988xT6k1AeTfkGrWvH4BHjUWmdhXfIw3wrhlSTgtD9aGkoelzXs0SHOTKW
+	 qtGE7tCpACVeowwNI1GcItpcA4jJrUkVzpjHp6jE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730415AbfLSSxs (ORCPT
+        id S1728863AbfLSSxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:53:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48850 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:53:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730243AbfLSSxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:53:41 -0500
+        id S1730418AbfLSSxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:53:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B54A20674;
-        Thu, 19 Dec 2019 18:53:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B13A9227BF;
+        Thu, 19 Dec 2019 18:53:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781619;
-        bh=Uj9E8kuIcuJcaFvwCz3724I4GeY3wXgkV4YygOur5hA=;
+        s=default; t=1576781627;
+        bh=HmRvdImrrDSCZEqCQ4WawS6uqwqHMiPVGjo2/RsL9iE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NtXcLJLaNKN576itynnB9PuaeoJ+5m9mdL01gix3LUk1fvjX2GZQliGs6WxIKxWKF
-         xqKBIZ2lQXTXIh+P6k2E6U6zU3IEaHyWZs3un5YnxxlcgVyeqLqcYS/Hg1uurJz93x
-         khohwbJQKhn8BavZeAjqqhgUENw3s9A3ti/vaDCc=
+        b=OU2I8JUba8QSBlBNgOBrVER+khWuj3YFRG0HDbihic7gxOpzj8CU9zsxfpqVDo1pc
+         9oJlsJY6p+1oVBOhkMXIy1XuVEpyrg/XZMwIi/GMj86/xDg8qBXqy8f6ZlT9gm1TNP
+         S1Kqxo8M0+xDbnPol+Ajm9mFjdqQdpySrFXdpy24=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 5.4 12/80] PCI: rcar: Fix missing MACCTLR register setting in initialization sequence
-Date:   Thu, 19 Dec 2019 19:34:04 +0100
-Message-Id: <20191219183048.378988598@linuxfoundation.org>
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.4 15/80] block: fix "check bi_size overflow before merge"
+Date:   Thu, 19 Dec 2019 19:34:07 +0100
+Message-Id: <20191219183052.303047719@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -61,73 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Andreas Gruenbacher <agruenba@redhat.com>
 
-commit 7c7e53e1c93df14690bd12c1f84730fef927a6f1 upstream.
+commit cc90bc68422318eb8e75b15cd74bc8d538a7df29 upstream.
 
-The R-Car Gen2/3 manual - available at:
+This partially reverts commit e3a5d8e386c3fb973fa75f2403622a8f3640ec06.
 
-https://www.renesas.com/eu/en/products/microcontrollers-microprocessors/rz/rzg/rzg1m.html#documents
+Commit e3a5d8e386c3 ("check bi_size overflow before merge") adds a bio_full
+check to __bio_try_merge_page.  This will cause __bio_try_merge_page to fail
+when the last bi_io_vec has been reached.  Instead, what we want here is only
+the bi_size overflow check.
 
-"RZ/G Series User's Manual: Hardware" section
-
-strictly enforces the MACCTLR inizialization value - 39.3.1 - "Initial
-Setting of PCI Express":
-
-"Be sure to write the initial value (= H'80FF 0000) to MACCTLR before
-enabling PCIETCTLR.CFINIT".
-
-To avoid unexpected behavior and to match the SW initialization sequence
-guidelines, this patch programs the MACCTLR with the correct value.
-
-Note that the MACCTLR.SPCHG bit in the MACCTLR register description
-reports that "Only writing 1 is valid and writing 0 is invalid" but this
-"invalid" has to be interpreted as a write-ignore aka "ignored", not
-"prohibited".
-
-Reported-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Fixes: c25da4778803 ("PCI: rcar: Add Renesas R-Car PCIe driver")
-Fixes: be20bbcb0a8c ("PCI: rcar: Add the initialization of PCIe link in resume_noirq()")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: <stable@vger.kernel.org> # v5.2+
+Fixes: e3a5d8e386c3 ("block: check bi_size overflow before merge")
+Cc: stable@vger.kernel.org # v5.4+
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/controller/pcie-rcar.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ block/bio.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/pci/controller/pcie-rcar.c
-+++ b/drivers/pci/controller/pcie-rcar.c
-@@ -93,8 +93,11 @@
- #define  LINK_SPEED_2_5GTS	(1 << 16)
- #define  LINK_SPEED_5_0GTS	(2 << 16)
- #define MACCTLR			0x011058
-+#define  MACCTLR_NFTS_MASK	GENMASK(23, 16)	/* The name is from SH7786 */
- #define  SPEED_CHANGE		BIT(24)
- #define  SCRAMBLE_DISABLE	BIT(27)
-+#define  LTSMDIS		BIT(31)
-+#define  MACCTLR_INIT_VAL	(LTSMDIS | MACCTLR_NFTS_MASK)
- #define PMSR			0x01105c
- #define MACS2R			0x011078
- #define MACCGSPSETR		0x011084
-@@ -615,6 +618,8 @@ static int rcar_pcie_hw_init(struct rcar
- 	if (IS_ENABLED(CONFIG_PCI_MSI))
- 		rcar_pci_write_reg(pcie, 0x801f0000, PCIEMSITXR);
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -751,10 +751,12 @@ bool __bio_try_merge_page(struct bio *bi
+ 	if (WARN_ON_ONCE(bio_flagged(bio, BIO_CLONED)))
+ 		return false;
  
-+	rcar_pci_write_reg(pcie, MACCTLR_INIT_VAL, MACCTLR);
-+
- 	/* Finish initialization - establish a PCI Express link */
- 	rcar_pci_write_reg(pcie, CFINIT, PCIETCTLR);
+-	if (bio->bi_vcnt > 0 && !bio_full(bio, len)) {
++	if (bio->bi_vcnt > 0) {
+ 		struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
  
-@@ -1237,6 +1242,7 @@ static int rcar_pcie_resume_noirq(struct
- 		return 0;
- 
- 	/* Re-establish the PCIe link */
-+	rcar_pci_write_reg(pcie, MACCTLR_INIT_VAL, MACCTLR);
- 	rcar_pci_write_reg(pcie, CFINIT, PCIETCTLR);
- 	return rcar_pcie_wait_for_dl(pcie);
- }
+ 		if (page_is_mergeable(bv, page, len, off, same_page)) {
++			if (bio->bi_iter.bi_size > UINT_MAX - len)
++				return false;
+ 			bv->bv_len += len;
+ 			bio->bi_iter.bi_size += len;
+ 			return true;
 
 
