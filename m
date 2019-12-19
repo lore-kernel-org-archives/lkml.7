@@ -2,111 +2,130 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF0AC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A07EEC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 852DE222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:12:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nP0dp7dl"
+	by mail.kernel.org (Postfix) with ESMTP id 72410227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:12:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576782724;
+	bh=NEpL2CzNtWa8pl2T6jNiFSD8t5+OTKp74Cn9n98fZfI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Krzq8s1qbrlaamX0PyYp57FG8mbMApeCqAFVR7pXHnkZqATAHxyd3iIqmymuGczBk
+	 pygsYo4V0S3naBxQiFUH0dX56z5EoFdu6w6P8U2lu3jXwna7ILW2b82ebBmWpOA2u4
+	 o98pwBxT/PMOCdUjUD7u7rtZiFv0x9pqtgJJ/QqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfLSTL7 (ORCPT
+        id S1728174AbfLSTMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:11:59 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:60540 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727419AbfLSSh3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:37:29 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBJIRKut040429;
-        Thu, 19 Dec 2019 18:37:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=6VMYi03ucpKRxaK+aRiAulrKES+92kJ5vwbETKnXJTg=;
- b=nP0dp7dl8t4EUJQ7Fi36v526PnHIr5hBJ1CC4MzOPmHOjnffyiYdVCZ5CP3OGWfYn6IZ
- XRwFksgGgXkNjofQI2nKX+5hAmif8v5PQx1v8WFHFlR+B5f22yQbc7S+1Hp/CDtHJNJD
- rW4+zELA/c+zkuO0QwUXNcG5/R4YGqzk5YGqMwL0AI+rsvDiyJk2DAmMb4EfU6LXWUSB
- AH2O5oMrzYSOSJTrQVVoNFYoiT47iHdhq13u6HFghFj6h7D9TYCJUrhnzbFr/Qn/Q4sD
- NQPrX1MBqADjqBFDvzjTVYG3TBM1p23/zJT2wkDqi2W9FCCji9nClagDdctNA38M3/50 ag== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2x0ag11p43-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Dec 2019 18:37:18 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBJGEKcj035094;
-        Thu, 19 Dec 2019 18:37:18 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2wyxqj3x8h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Dec 2019 18:37:17 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBJIbGuk032674;
-        Thu, 19 Dec 2019 18:37:16 GMT
-Received: from [192.168.1.2] (/98.210.179.99)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 19 Dec 2019 10:37:16 -0800
-Subject: Re: [PATCH v2 1/2] Introduce maximum WQE size to check limits
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     monis@mellanox.com, dledford@redhat.com, sean.hefty@intel.com,
-        hal.rosenstock@gmail.com, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1574106879-19211-1-git-send-email-rao.shoaib@oracle.com>
- <1574106879-19211-2-git-send-email-rao.shoaib@oracle.com>
- <20191119203138.GA13145@ziepe.ca>
- <44d1242a-fc32-9918-dd53-cd27ebf61811@oracle.com>
- <20191119231334.GO4991@ziepe.ca>
- <dff3da9b-06a3-3904-e9eb-7feaa1ae9e01@oracle.com>
- <20191120000840.GQ4991@ziepe.ca>
- <ccceac68-db4f-77a3-500d-12f60a8a1354@oracle.com>
- <20191219182511.GI17227@ziepe.ca>
-From:   Rao Shoaib <rao.shoaib@oracle.com>
-Message-ID: <91987df4-8853-a087-97a0-a2f09f906340@oracle.com>
-Date:   Thu, 19 Dec 2019 10:37:15 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 19 Dec 2019 14:12:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55100 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727384AbfLSSh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:37:27 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 908C820716;
+        Thu, 19 Dec 2019 18:37:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576780647;
+        bh=NEpL2CzNtWa8pl2T6jNiFSD8t5+OTKp74Cn9n98fZfI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Crz+OkuJno1y/BXpP1vu6s5b3lU5Q+0Y/+em1H8v5y+3cDkFNb+SyNlG1ZmEOKp/7
+         UYTfp8OUq80tWp5WqkRyrNqWPnKuAmLj5FShc9cdLjbih9aBgWmC0a1qSu2sWo0H+x
+         /EU14kSuuw1XT0sUQASb6y8Qd7HFbyEwoKHaEqkM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
+        Aurelien Aptel <aaptel@suse.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 4.4 058/162] CIFS: Fix NULL-pointer dereference in smb2_push_mandatory_locks
+Date:   Thu, 19 Dec 2019 19:32:46 +0100
+Message-Id: <20191219183211.406082600@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
+References: <20191219183150.477687052@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20191219182511.GI17227@ziepe.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9476 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=707
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912190135
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9476 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=746 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912190135
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason,
+From: Pavel Shilovsky <pshilov@microsoft.com>
 
-I thought I had addressed the comments and literally did what you 
-suggested. Sorry if I missed something, can you please point it out.
+commit 6f582b273ec23332074d970a7fb25bef835df71f upstream.
 
-Shoaib
+Currently when the client creates a cifsFileInfo structure for
+a newly opened file, it allocates a list of byte-range locks
+with a pointer to the new cfile and attaches this list to the
+inode's lock list. The latter happens before initializing all
+other fields, e.g. cfile->tlink. Thus a partially initialized
+cifsFileInfo structure becomes available to other threads that
+walk through the inode's lock list. One example of such a thread
+may be an oplock break worker thread that tries to push all
+cached byte-range locks. This causes NULL-pointer dereference
+in smb2_push_mandatory_locks() when accessing cfile->tlink:
 
-On 12/19/19 10:25 AM, Jason Gunthorpe wrote:
-> On Tue, Dec 17, 2019 at 11:38:52AM -0800, Rao Shoaib wrote:
->> Any update on my patch?
->>
->> If there is some change needed please let me know.
-> You need to repost it with the comments addressed
->
-> https://patchwork.kernel.org/patch/11250179/
->
-> Jason
->
+[598428.945633] BUG: kernel NULL pointer dereference, address: 0000000000000038
+...
+[598428.945749] Workqueue: cifsoplockd cifs_oplock_break [cifs]
+[598428.945793] RIP: 0010:smb2_push_mandatory_locks+0xd6/0x5a0 [cifs]
+...
+[598428.945834] Call Trace:
+[598428.945870]  ? cifs_revalidate_mapping+0x45/0x90 [cifs]
+[598428.945901]  cifs_oplock_break+0x13d/0x450 [cifs]
+[598428.945909]  process_one_work+0x1db/0x380
+[598428.945914]  worker_thread+0x4d/0x400
+[598428.945921]  kthread+0x104/0x140
+[598428.945925]  ? process_one_work+0x380/0x380
+[598428.945931]  ? kthread_park+0x80/0x80
+[598428.945937]  ret_from_fork+0x35/0x40
+
+Fix this by reordering initialization steps of the cifsFileInfo
+structure: initialize all the fields first and then add the new
+byte-range lock list to the inode's lock list.
+
+Cc: Stable <stable@vger.kernel.org>
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Reviewed-by: Aurelien Aptel <aaptel@suse.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/cifs/file.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -312,9 +312,6 @@ cifs_new_fileinfo(struct cifs_fid *fid,
+ 	INIT_LIST_HEAD(&fdlocks->locks);
+ 	fdlocks->cfile = cfile;
+ 	cfile->llist = fdlocks;
+-	cifs_down_write(&cinode->lock_sem);
+-	list_add(&fdlocks->llist, &cinode->llist);
+-	up_write(&cinode->lock_sem);
+ 
+ 	cfile->count = 1;
+ 	cfile->pid = current->tgid;
+@@ -338,6 +335,10 @@ cifs_new_fileinfo(struct cifs_fid *fid,
+ 		oplock = 0;
+ 	}
+ 
++	cifs_down_write(&cinode->lock_sem);
++	list_add(&fdlocks->llist, &cinode->llist);
++	up_write(&cinode->lock_sem);
++
+ 	spin_lock(&tcon->open_file_lock);
+ 	if (fid->pending_open->oplock != CIFS_OPLOCK_NO_CHANGE && oplock)
+ 		oplock = fid->pending_open->oplock;
+
+
