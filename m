@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFE9C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B33CC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8064624679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71D5224680
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781029;
-	bh=WDAv1/Hs3vgVMKQa4Q1D+5K3JxAHNBT6LqJMOQRfuIU=;
+	s=default; t=1576781031;
+	bh=wPJ8Eff7+YJjxgaQlzD1lfkJRng/4VLIGf6uMqVMwxY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hjcz1rEBuxFJAsz7C6Rs1xwiGGU0V8GVg6r2+XO5HFjtf+hMGrOeHx6ATfts0cExm
-	 tUajlavmbpsUsybWs9HiPPvhnjWQ9hwK+CN+qQ+B2aRZmIlF4+MvNRGZWl57xSEaZf
-	 50xb338y1nIOP/Lr+MEywR8Vk5BaQdpsI6NOVcng=
+	b=uYZl5AfuL5QPPCPkQj+yHMYxiUb4Ynj6y6rsA0ygJ9TBDKKKQ2PmNSrPhzwHmQZr+
+	 0z6at+n+g3BbVIEKD9vgH6pLAX5SgJ3VqfU5s/qIDDU8q1Bb7C8UZMlvg87PUxxm2h
+	 Uo5bePx2+bbddj/b9j2FK8MGy66mOnI/oH/Zo5fA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbfLSSns (ORCPT
+        id S1727879AbfLSSnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:43:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35422 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:43:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728105AbfLSSnm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:43:42 -0500
+        id S1728882AbfLSSno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:43:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57F2024679;
-        Thu, 19 Dec 2019 18:43:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8E4524682;
+        Thu, 19 Dec 2019 18:43:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781021;
-        bh=WDAv1/Hs3vgVMKQa4Q1D+5K3JxAHNBT6LqJMOQRfuIU=;
+        s=default; t=1576781024;
+        bh=wPJ8Eff7+YJjxgaQlzD1lfkJRng/4VLIGf6uMqVMwxY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Q9qADI8a1r+w9tFqiHf/szKt2gi7pU1lQpHQsrbHKsjDHPcoauvnAvRw4J49xWiV
-         Ow8vdU2F0epbNmM4qjkkB4L1PYJ7zt9jnOUIaI/1ftjci832hr8vhn7jZzqyDMF4vI
-         SIZ1zfi71boXhhAfj7cM6YsR1AaG9fDsz7gTDum4=
+        b=ue2aIlPESh0REYUC/S8OyJfZeoU9CgdpYGRbKeGaiUjLjgRU5mAliqaLt3WWFcdRZ
+         I2cBUyJl6bhQYwyZ0WLIL+8C28Q8wgZy3H2oLIRkQlhmKB55XCRvC4SPPFlHuvdNDF
+         BfNKsV09SYSVGMtH3oSCrw/OM1xTiFh5qMTLmR5M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Schiller <ms@dev.tdt.de>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
+        Pavel Machek <pavel@ucw.cz>, Olof Johansson <olof@lixom.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 051/199] net/x25: fix null_x25_address handling
-Date:   Thu, 19 Dec 2019 19:32:13 +0100
-Message-Id: <20191219183217.788248478@linuxfoundation.org>
+Subject: [PATCH 4.9 052/199] ARM: dts: mmp2: fix the gpio interrupt cell number
+Date:   Thu, 19 Dec 2019 19:32:14 +0100
+Message-Id: <20191219183217.841617797@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,57 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Schiller <ms@dev.tdt.de>
+From: Lubomir Rintel <lkundrak@v3.sk>
 
-[ Upstream commit 06137619f061f498c2924f6543fa45b7d39f0501 ]
+[ Upstream commit 400583983f8a8e95ec02c9c9e2b50188753a87fb ]
 
-o x25_find_listener(): the compare for the null_x25_address was wrong.
-   We have to check the x25_addr of the listener socket instead of the
-   x25_addr of the incomming call.
+gpio-pxa uses two cell to encode the interrupt source: the pin number
+and the trigger type. Adjust the device node accordingly.
 
- o x25_bind(): it was not possible to bind a socket to null_x25_address
-
-Signed-off-by: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/x25/af_x25.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/mmp2.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/x25/af_x25.c b/net/x25/af_x25.c
-index ebd9c5f50a571..6c2560f3f95bd 100644
---- a/net/x25/af_x25.c
-+++ b/net/x25/af_x25.c
-@@ -288,7 +288,7 @@ static struct sock *x25_find_listener(struct x25_address *addr,
- 	sk_for_each(s, &x25_list)
- 		if ((!strcmp(addr->x25_addr,
- 			x25_sk(s)->source_addr.x25_addr) ||
--				!strcmp(addr->x25_addr,
-+				!strcmp(x25_sk(s)->source_addr.x25_addr,
- 					null_x25_address.x25_addr)) &&
- 					s->sk_state == TCP_LISTEN) {
- 			/*
-@@ -684,11 +684,15 @@ static int x25_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
- 		goto out;
- 	}
+diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
+index 47e5b63339d18..e95deed6a7973 100644
+--- a/arch/arm/boot/dts/mmp2.dtsi
++++ b/arch/arm/boot/dts/mmp2.dtsi
+@@ -180,7 +180,7 @@
+ 				clocks = <&soc_clocks MMP2_CLK_GPIO>;
+ 				resets = <&soc_clocks MMP2_CLK_GPIO>;
+ 				interrupt-controller;
+-				#interrupt-cells = <1>;
++				#interrupt-cells = <2>;
+ 				ranges;
  
--	len = strlen(addr->sx25_addr.x25_addr);
--	for (i = 0; i < len; i++) {
--		if (!isdigit(addr->sx25_addr.x25_addr[i])) {
--			rc = -EINVAL;
--			goto out;
-+	/* check for the null_x25_address */
-+	if (strcmp(addr->sx25_addr.x25_addr, null_x25_address.x25_addr)) {
-+
-+		len = strlen(addr->sx25_addr.x25_addr);
-+		for (i = 0; i < len; i++) {
-+			if (!isdigit(addr->sx25_addr.x25_addr[i])) {
-+				rc = -EINVAL;
-+				goto out;
-+			}
- 		}
- 	}
- 
+ 				gcb0: gpio@d4019000 {
 -- 
 2.20.1
 
