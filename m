@@ -2,167 +2,139 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 557B4C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B5CC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3554224672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03A4124672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:46:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbfLSLqB (ORCPT
+        id S1726789AbfLSLqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 06:46:01 -0500
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2108 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726668AbfLSLqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 06:46:01 -0500
-Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 0245EC08727047931738;
-        Thu, 19 Dec 2019 19:45:58 +0800 (CST)
-Received: from dggeme755-chm.china.huawei.com (10.3.19.101) by
- DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 19 Dec 2019 19:45:57 +0800
-Received: from [127.0.0.1] (10.173.221.248) by dggeme755-chm.china.huawei.com
- (10.3.19.101) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 19
- Dec 2019 19:45:56 +0800
-Subject: Re: [PATCH 1/5] KVM: arm64: Document PV-lock interface
-To:     Steven Price <steven.price@arm.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "maz@kernel.org" <maz@kernel.org>,
-        James Morse <James.Morse@arm.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        "julien.thierry.kdev@gmail.com" <julien.thierry.kdev@gmail.com>,
-        "Catalin Marinas" <Catalin.Marinas@arm.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>
-References: <20191217135549.3240-1-yezengruan@huawei.com>
- <20191217135549.3240-2-yezengruan@huawei.com>
- <20191217142138.GA38811@arm.com>
-From:   yezengruan <yezengruan@huawei.com>
-Message-ID: <49120a3c-405d-d2e3-2a88-ba590feccbcc@huawei.com>
-Date:   Thu, 19 Dec 2019 19:45:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 19 Dec 2019 06:46:13 -0500
+Received: from foss.arm.com ([217.140.110.172]:37406 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726668AbfLSLqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 06:46:12 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E60F131B;
+        Thu, 19 Dec 2019 03:46:11 -0800 (PST)
+Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 940973F719;
+        Thu, 19 Dec 2019 03:46:08 -0800 (PST)
+Subject: Re: [PATCH] sched, fair: Allow a small degree of load imbalance
+ between SD_NUMA domains
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Mel Gorman <mgorman@techsingularity.net>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>, pauld@redhat.com,
+        srikar@linux.vnet.ibm.com, quentin.perret@arm.com,
+        dietmar.eggemann@arm.com, Morten.Rasmussen@arm.com,
+        hdanton@sina.com, parth@linux.ibm.com, riel@surriel.com,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20191218154402.GF3178@techsingularity.net>
+ <8f049805-3e97-09bb-2d32-0718be1dec9b@arm.com>
+ <20191219100232.GY2844@hirez.programming.kicks-ass.net>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <83a9363b-a044-845a-d37c-bf2ca7c8a09e@arm.com>
+Date:   Thu, 19 Dec 2019 11:46:03 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191217142138.GA38811@arm.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20191219100232.GY2844@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.221.248]
-X-ClientProxiedBy: dggeme707-chm.china.huawei.com (10.1.199.103) To
- dggeme755-chm.china.huawei.com (10.3.19.101)
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
-
-On 2019/12/17 22:21, Steven Price wrote:
-> On Tue, Dec 17, 2019 at 01:55:45PM +0000, yezengruan@huawei.com wrote:
->> From: Zengruan Ye <yezengruan@huawei.com>
->>
->> Introduce a paravirtualization interface for KVM/arm64 to obtain the vcpu
->> is currently running or not.
->>
->> A hypercall interface is provided for the guest to interrogate the
->> hypervisor's support for this interface and the location of the shared
->> memory structures.
->>
->> Signed-off-by: Zengruan Ye <yezengruan@huawei.com>
+On 19/12/2019 10:02, Peter Zijlstra wrote:
+> On Wed, Dec 18, 2019 at 06:50:52PM +0000, Valentin Schneider wrote:
+>> I'm quite sure you have reasons to have written it that way, but I was
+>> hoping we could squash it down to something like:
 >> ---
->>  Documentation/virt/kvm/arm/pvlock.rst | 31 +++++++++++++++++++++++++++
->>  1 file changed, 31 insertions(+)
->>  create mode 100644 Documentation/virt/kvm/arm/pvlock.rst
->>
->> diff --git a/Documentation/virt/kvm/arm/pvlock.rst b/Documentation/virt/kvm/arm/pvlock.rst
->> new file mode 100644
->> index 000000000000..eec0c36edf17
->> --- /dev/null
->> +++ b/Documentation/virt/kvm/arm/pvlock.rst
->> @@ -0,0 +1,31 @@
->> +.. SPDX-License-Identifier: GPL-2.0
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index 08a233e97a01..f05d09a8452e 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -8680,16 +8680,27 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
+>>  			env->migration_type = migrate_task;
+>>  			lsub_positive(&nr_diff, local->sum_nr_running);
+>>  			env->imbalance = nr_diff >> 1;
+>> -			return;
+>> +		} else {
 >> +
->> +Paravirtualized lock support for arm64
->> +======================================
->> +
->> +KVM/arm64 provids some hypervisor service calls to support a paravirtualized
->> +guest obtaining the vcpu is currently running or not.
->> +
->> +Two new SMCCC compatible hypercalls are defined:
->> +
->> +* PV_LOCK_FEATURES:   0xC5000040
->> +* PV_LOCK_PREEMPTED:  0xC5000041
+>> +			/*
+>> +			 * If there is no overload, we just want to even the number of
+>> +			 * idle cpus.
+>> +			 */
+>> +			env->migration_type = migrate_task;
+>> +			env->imbalance = max_t(long, 0, (local->idle_cpus -
+>> +							 busiest->idle_cpus) >> 1);
+>>  		}
+>>  
+>>  		/*
+>> -		 * If there is no overload, we just want to even the number of
+>> -		 * idle cpus.
+>> +		 * Allow for a small imbalance between NUMA groups; don't do any
+>> +		 * of it if there is at least half as many tasks / busy CPUs as
+>> +		 * there are available CPUs in the busiest group
+>>  		 */
+>> -		env->migration_type = migrate_task;
+>> -		env->imbalance = max_t(long, 0, (local->idle_cpus -
+>> -						 busiest->idle_cpus) >> 1);
+>> +		if (env->sd->flags & SD_NUMA &&
+>> +		    (busiest->sum_nr_running < busiest->group_weight >> 1) &&
+>> +		    (env->imbalance < busiest->group_weight * (env->sd->imbalance_pct - 100) / 100))
 > 
-> These values are in the "Standard Hypervisor Service Calls" section of
-> SMCCC - so is there a document that describes this features such that
-> other OSes or hypervisors can implement it? I'm also not entirely sure
-> of the process of ensuring that the IDs picked are non-conflicting.
-> 
-> Otherwise if this is a KVM specific interface this should probably
-> belong within the "Vendor Specific Hypervisor Service Calls" section
-> along with some probing that the hypervisor is actually KVM. Although I
-> don't see anything KVM specific.
-
-Thanks for pointing it out to me! Actually, I also don't see any documents
-or KVM specific that describes this features. The values in the "Vendor
-Specific Hypervisor Service Calls" section may be more appropriate, such as
-the following
-
-* PV_LOCK_FEATURES:   0xC6000020
-* PV_LOCK_PREEMPTED:  0xC6000021
-
-Please let me know if you have any suggestions.
-
-> 
->> +
->> +The existence of the PV_LOCK hypercall should be probed using the SMCCC 1.1
->> +ARCH_FEATURES mechanism before calling it.
->> +
->> +PV_LOCK_FEATURES
->> +    ============= ========    ==========
->> +    Function ID:  (uint32)    0xC5000040
->> +    PV_call_id:   (uint32)    The function to query for support.
->> +    Return value: (int64)     NOT_SUPPORTED (-1) or SUCCESS (0) if the relevant
->> +                              PV-lock feature is supported by the hypervisor.
->> +    ============= ========    ==========
->> +
->> +PV_LOCK_PREEMPTED
->> +    ============= ========    ==========
->> +    Function ID:  (uint32)    0xC5000041
->> +    Return value: (int64)     NOT_SUPPORTED (-1) or SUCCESS (0) if the IPA of
->> +                              this vcpu's pv data structure is configured by
->> +                              the hypervisor.
->> +    ============= ========    ==========
-> 
->>From the code it looks like there's another argument for this SMC - the
-> physical address (or IPA) of a struct pvlock_vcpu_state. This structure
-> also needs to be described as it is part of the ABI.
-
-Will update.
-
-> 
-> Steve
-> 
-> .
+> Note that this form allows avoiding the division. Every time I see that
+> /100 I'm thinking we should rename and make imbalance_pct a base-2
+> thing.
 > 
 
-Thanks,
+Right, I kept the original form but we can turn that into
 
-Zengruan
+  env->imbalance * 100 < busiest->group_weight * (env->sd->imbalance_pct - 100)
 
 
+
+As for the base-2 imbalance; I think you've mentioned that in the past.
+Looking at check_cpu_capacity() as a lambda imbalance_pct user, we could
+turn that from:
+
+  rq->cpu_capacity * sd->imbalance_pct < rq->cpu_capacity_orig * 100
+
+to:
+
+  rq->cpu_capacity_orig - rq->cpu_capacity < rq->cpu_capacity_orig >> sd->imbalance_shift
+
+
+And here we could just go with
+
+  env->imbalance < busiest->group_weight >> sd->imbalance_shift
+
+
+As for picking values, right now we have
+
+  125 (default) / 117 (LLC domain) / 110 (SMT domain)
+
+We could have
+
+  >> 2 (25%), >> 3 (12.5%), >> 4 (6.25%).
+
+It's not strictly equivalent but IMO the whole imbalance_pct thing isn't
+very precise anyway; just needs to be good enough on a sufficient number of
+topologies.
+
+
+
+>> +				env->imbalance = 0;
+>> +
+>>  		return;
+>>  	}
+>>  
