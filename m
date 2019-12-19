@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC5CC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD41C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD7A224682
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DF5F227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:53:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781593;
-	bh=WQenRLrZDkwW+vI+f6c2c5mZGuhSMwWB2m9IQwuTozk=;
+	s=default; t=1576781597;
+	bh=Zg5KqcZ26rTjP1tK1brjKZIEG7HDAAKzdkuGMhpZMaU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S8tkAhNmEKTVNvTlU1PQvVaZQ4Q/rhMdcoFfcEa2Nv/s9Ju7lgws0CcoKo5GsMccs
-	 CSPZKMA+ZCga3fCV00wEi/n0KHCnXnHYkxD2kDpXGJhKw621v3t1izwxx3JYFH4Gyb
-	 GhbzVX3mVtX+14SS1cWrVPSy3p9+j7Yb64EMa0hs=
+	b=aLxbR02pIcZIkAEtUDGiM4ahhj13RKrV0dhEEe+fJkaZU6TobtyX06TJHEjbagBgz
+	 HvdElsCz/GgT2gGKgdAkloS6CK5NLokEHMwAXEC2P7NL8f6rOFxrlKQKa65IQrY9Gs
+	 jtS5LuBn81w0VeWAravtnzFmGfipM0QFTM6vuui0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729889AbfLSSxN (ORCPT
+        id S1730341AbfLSSxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:53:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48118 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730338AbfLSSxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Dec 2019 13:53:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48050 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730330AbfLSSxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:53:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57E9624682;
-        Thu, 19 Dec 2019 18:53:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E789D222C2;
+        Thu, 19 Dec 2019 18:53:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781590;
-        bh=WQenRLrZDkwW+vI+f6c2c5mZGuhSMwWB2m9IQwuTozk=;
+        s=default; t=1576781588;
+        bh=Zg5KqcZ26rTjP1tK1brjKZIEG7HDAAKzdkuGMhpZMaU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oJl51gfVAv/QOyrjrtJLJOZn6JwvLPd17NxZbbF7Ihr6eaNPXyFHfDO6170yeeufd
-         SQaIWXJ1X7luFqYQot4mUkD6qfAZ6ASo6z2owSh9m3xWoeKqVQlFgMgKAKES2Gwqs2
-         0qt1mVIttBmyR1vPmbIx6mgrBjHiM/BY9cJ86VPY=
+        b=FUDSqdIhn+nNBeHL50Q70gJ1GwTTiUV2R891VCfdlWd0kbpejfdZCZi1qoPEjVTZz
+         Bi4IEMN2zO8KEzCWot0+gfDIsH2Oj7JV2nNHy+/oeXgEWyp8fR+ZSo0r51zCAmdSZx
+         aTOLwPl4uiue6Hm5wb8fcaO7+vseibkQ5yQpo70I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Long Li <longli@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 4.19 33/47] cifs: smbd: Return -EINVAL when the number of iovs exceeds SMBDIRECT_MAX_SGE
-Date:   Thu, 19 Dec 2019 19:34:47 +0100
-Message-Id: <20191219182935.476928876@linuxfoundation.org>
+        stable@vger.kernel.org, "Lee, Hou-hsun" <hou-hsun.lee@intel.com>,
+        "Lee, Chiasheng" <chiasheng.lee@intel.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Lee@vger.kernel.org
+Subject: [PATCH 4.19 47/47] xhci: fix USB3 device initiated resume race with roothub autosuspend
+Date:   Thu, 19 Dec 2019 19:35:01 +0100
+Message-Id: <20191219182957.735319195@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182857.659088743@linuxfoundation.org>
 References: <20191219182857.659088743@linuxfoundation.org>
@@ -59,33 +61,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-commit 37941ea17d3f8eb2f5ac2f59346fab9e8439271a upstream.
+commit 057d476fff778f1d3b9f861fdb5437ea1a3cfc99 upstream.
 
-While it's not friendly to fail user processes that issue more iovs
-than we support, at least we should return the correct error code so the
-user process gets a chance to retry with smaller number of iovs.
+A race in xhci USB3 remote wake handling may force device back to suspend
+after it initiated resume siganaling, causing a missed resume event or warm
+reset of device.
 
-Signed-off-by: Long Li <longli@microsoft.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Steve French <stfrench@microsoft.com>
+When a USB3 link completes resume signaling and goes to enabled (UO)
+state a interrupt is issued and the interrupt handler will clear the
+bus_state->port_remote_wakeup resume flag, allowing bus suspend.
+
+If the USB3 roothub thread just finished reading port status before
+the interrupt, finding ports still in suspended (U3) state, but hasn't
+yet started suspending the hub, then the xhci interrupt handler will clear
+the flag that prevented roothub suspend and allow bus to suspend, forcing
+all port links back to suspended (U3) state.
+
+Example case:
+usb_runtime_suspend() # because all ports still show suspended U3
+  usb_suspend_both()
+    hub_suspend();   # successful as hub->wakeup_bits not set yet
+==> INTERRUPT
+xhci_irq()
+  handle_port_status()
+    clear bus_state->port_remote_wakeup
+    usb_wakeup_notification()
+      sets hub->wakeup_bits;
+        kick_hub_wq()
+<== END INTERRUPT
+      hcd_bus_suspend()
+        xhci_bus_suspend() # success as port_remote_wakeup bits cleared
+
+Fix this by increasing roothub usage count during port resume to prevent
+roothub autosuspend, and by making sure bus_state->port_remote_wakeup
+flag is only cleared after resume completion is visible, i.e.
+after xhci roothub returned U0 or other non-U3 link state link on a
+get port status request.
+
+Issue rootcaused by Chiasheng Lee
+
+Cc: <stable@vger.kernel.org>
+Cc: Lee, Hou-hsun <hou-hsun.lee@intel.com>
+Reported-by: Lee, Chiasheng <chiasheng.lee@intel.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20191211142007.8847-3-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smbdirect.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/host/xhci-hub.c  |    8 ++++++++
+ drivers/usb/host/xhci-ring.c |    3 +--
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
---- a/fs/cifs/smbdirect.c
-+++ b/fs/cifs/smbdirect.c
-@@ -1164,7 +1164,7 @@ static int smbd_post_send_data(
- 
- 	if (n_vec > SMBDIRECT_MAX_SGE) {
- 		cifs_dbg(VFS, "Can't fit data to SGL, n_vec=%d\n", n_vec);
--		return -ENOMEM;
-+		return -EINVAL;
+--- a/drivers/usb/host/xhci-hub.c
++++ b/drivers/usb/host/xhci-hub.c
+@@ -868,6 +868,14 @@ static u32 xhci_get_port_status(struct u
+ 			status |= USB_PORT_STAT_C_BH_RESET << 16;
+ 		if ((raw_port_status & PORT_CEC))
+ 			status |= USB_PORT_STAT_C_CONFIG_ERROR << 16;
++
++		/* USB3 remote wake resume signaling completed */
++		if (bus_state->port_remote_wakeup & (1 << wIndex) &&
++		    (raw_port_status & PORT_PLS_MASK) != XDEV_RESUME &&
++		    (raw_port_status & PORT_PLS_MASK) != XDEV_RECOVERY) {
++			bus_state->port_remote_wakeup &= ~(1 << wIndex);
++			usb_hcd_end_port_resume(&hcd->self, wIndex);
++		}
  	}
  
- 	sg_init_table(sgl, n_vec);
+ 	if (hcd->speed < HCD_USB3) {
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -1609,7 +1609,6 @@ static void handle_port_status(struct xh
+ 		slot_id = xhci_find_slot_id_by_port(hcd, xhci, hcd_portnum + 1);
+ 		if (slot_id && xhci->devs[slot_id])
+ 			xhci->devs[slot_id]->flags |= VDEV_PORT_ERROR;
+-		bus_state->port_remote_wakeup &= ~(1 << hcd_portnum);
+ 	}
+ 
+ 	if ((portsc & PORT_PLC) && (portsc & PORT_PLS_MASK) == XDEV_RESUME) {
+@@ -1630,6 +1629,7 @@ static void handle_port_status(struct xh
+ 			bus_state->port_remote_wakeup |= 1 << hcd_portnum;
+ 			xhci_test_and_clear_bit(xhci, port, PORT_PLC);
+ 			xhci_set_link_state(xhci, port, XDEV_U0);
++			usb_hcd_start_port_resume(&hcd->self, hcd_portnum);
+ 			/* Need to wait until the next link state change
+ 			 * indicates the device is actually in U0.
+ 			 */
+@@ -1669,7 +1669,6 @@ static void handle_port_status(struct xh
+ 		if (slot_id && xhci->devs[slot_id])
+ 			xhci_ring_device(xhci, slot_id);
+ 		if (bus_state->port_remote_wakeup & (1 << hcd_portnum)) {
+-			bus_state->port_remote_wakeup &= ~(1 << hcd_portnum);
+ 			xhci_test_and_clear_bit(xhci, port, PORT_PLC);
+ 			usb_wakeup_notification(hcd->self.root_hub,
+ 					hcd_portnum + 1);
 
 
