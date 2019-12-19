@@ -2,2753 +2,435 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4533FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DBFC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D16F72465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62FD421D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:09:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="P6wAsjad";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uvQepipq"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ABgcV1DZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbfLSJH0 (ORCPT
+        id S1726701AbfLSJJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 04:07:26 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:58637 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726617AbfLSJHW (ORCPT
+        Thu, 19 Dec 2019 04:09:42 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:36157 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbfLSJJm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 04:07:22 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id D09106CD3;
-        Thu, 19 Dec 2019 04:07:17 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Thu, 19 Dec 2019 04:07:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm1; bh=jnzkI0T5PxXqCmW9opN7jiRRmL
-        H6tMElaFDP+8+WDQU=; b=P6wAsjadVACto19HICzcHtXXZW4fGN2nrqlC2ILdRB
-        uLGi25CqxaOVT4ab835kQiDElOnJLpMzO9x7/iaKJFD8LDgXMJIHlDf27/Z7z7gh
-        N5Kx9yQF9bM7cBbi3djg9HIRYDKbNZdzOe3oulnc5O8pdE6xSAJFyWgjUpoXS9yE
-        MUNiLLWGn6VsTMw9m2KrCvpnPfma0BYb7Kpwa3ykDJj2emABnMSYP4aQaRqB+ftU
-        2scw/UwNg+Y0Y1oUWqb6Y+gR9KdeScY6ksMm5/1kc4dmgzHl+DOL3R6FkewTgR1v
-        n3ebqEl4RQXrA7Mud/Go4C3CtO5whLDhajAAVktu+pxw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=jnzkI0T5PxXqCmW9o
-        pN7jiRRmLH6tMElaFDP+8+WDQU=; b=uvQepipqFDN2+I9RiLI0FTk1k6pl410zB
-        22m3gD9usKY6D7h+kqN/FjUjnpxNnAiDbAIDwtX9qnECmbXjuasaw4YGSpBP2JqO
-        3EiKnNVDVHyuKIZ/VJlx9oi6ey8C77YzBAm35wbGTeTV7CEogyJAOMpzn18NCaL8
-        iB7S1LvSQh1zoGqPTdA0zOA0/6Kpwc40xFuSjwnoQmFNtWdJz/ANSmq3eqVg5BIf
-        4v7NDbJdsDX8bENxQO3PJ18PHVEZnb1UsQHVPUed5MJY2B0Se8Bnt7PfPoKoaK4Q
-        gVhjdhiTThhabTuhev/KVw5SEdEElPZsfSb5SlY40yzPcnwkhFejw==
-X-ME-Sender: <xms:wz37XdZq41ywE6Gb2l3G_rh-LeIZsw0092ngU6n5TpSkVQsVH2qJZA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdduudcutefuodetggdotefrodftvfcurf
-    hrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucftihhp
-    rghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinhepuggvvh
-    hitggvthhrvggvrdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecurfgrrhgrmhep
-    mhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghhnecuvehluhhsthgvrh
-    fuihiivgeptd
-X-ME-Proxy: <xmx:wz37XcA50Oc7G3Ws9_ftRNIykpcdlHq5XplP7IYqXVRPrSvM-EyRjw>
-    <xmx:wz37XQIeVJqYNfQUNOpddw813oWCEJWrZ8B0auRcMyJoE_KUBMYbJA>
-    <xmx:wz37XTp4YBU7rep3AMqReJ2rnomvAS5Gcp-Fbokdv4DeZQ2E8HDfcw>
-    <xmx:xT37XRQB2FCU2tbVItKZ837Dev0Z8FtNljLcODRGquF4J0NoCXGJZg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1AF7A8005A;
-        Thu, 19 Dec 2019 04:07:15 -0500 (EST)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     p.zabel@pengutronix.de, Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@codeaurora.org>, lee.jones@linaro.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH 1/3] dt-bindings: clocks: Convert Allwinner legacy clocks to schemas
-Date:   Thu, 19 Dec 2019 10:07:10 +0100
-Message-Id: <20191219090712.947490-1-maxime@cerno.tech>
-X-Mailer: git-send-email 2.23.0
+        Thu, 19 Dec 2019 04:09:42 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191219090938euoutp0105a4417b976552f023e3e071ac90afc4~huqjS82NU0405704057euoutp01J
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 09:09:38 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191219090938euoutp0105a4417b976552f023e3e071ac90afc4~huqjS82NU0405704057euoutp01J
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1576746578;
+        bh=dd5PCXyucktEopzkBqVfaSjM09FbRZTvN//xnjiw5WE=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=ABgcV1DZdIV5L0+usvmmAUr9hOTr/cXSjLjWl8sysreO+DX8hoZhsQ3dLWoDh3yzW
+         GoV89fgRmLWgnPnQQE90OQE3pjp5DW95kF0g68xzzHqwAIglwpzWQ7gxtUzliALJW7
+         KaD+rFavkh7+p6FpwZ7wc9nNcF7hsU1oxpDdKWN8=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191219090938eucas1p2639d41917117a80c276e0a48a1ea4567~huqjGvtm91206012060eucas1p2U;
+        Thu, 19 Dec 2019 09:09:38 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 61.21.60679.25E3BFD5; Thu, 19
+        Dec 2019 09:09:38 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191219090937eucas1p1bcbb1db2a9d2c1ec3c2b75e6ef7e4d93~huqiZu-em0048200482eucas1p1e;
+        Thu, 19 Dec 2019 09:09:37 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191219090937eusmtrp29e4579dc1164fa5ef478e89ba6fb5d4a~huqiZKZwL1213812138eusmtrp2J;
+        Thu, 19 Dec 2019 09:09:37 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-d4-5dfb3e52a431
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id CA.8E.07950.15E3BFD5; Thu, 19
+        Dec 2019 09:09:37 +0000 (GMT)
+Received: from [106.120.51.15] (unknown [106.120.51.15]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191219090937eusmtip13478b6cd157c9617fb5b1810355be2d9~huqiCmYM80351503515eusmtip1Q;
+        Thu, 19 Dec 2019 09:09:37 +0000 (GMT)
+Subject: Re: [PATCH 2/2] ARM: dts: exynos: Adjust bus related OPPs to the
+ values correct for Odroids
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Kamil Konieczny <k.konieczny@samsung.com>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <2113afca-4f8b-ec06-ee1d-b84776b5b70d@samsung.com>
+Date:   Thu, 19 Dec 2019 10:09:37 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <9ff5cf7a-1dea-4f35-c4d3-066c87fbe896@samsung.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEKsWRmVeSWpSXmKPExsWy7djP87pBdr9jDS69UrLYOGM9q8X1L89Z
+        LRZ8msFqcf78BnaLy7vmsFl87j3CaDHj/D4mB3aPTas62Tz6tqxi9Pi8SS6AOYrLJiU1J7Ms
+        tUjfLoEr48GVyywFX30qZjXtZmtg3G7RxcjJISFgIvFq2jnmLkYuDiGBFYwSU9c/YoVwvjBK
+        nGz7ywjhfGaUOPBzMytMy7rrE6ESyxklbrcdYINw3jJKLGvuA6sSFkiTuLbzE9hgEYFWRonO
+        l9/AWpgFehgllh77CFbFJmAo0fW2iw3E5hWwk3jyaCKYzSKgKrHw+UeWLkYODlGBWImO5RkQ
+        JYISJ2c+YQGxOQXsJT43zgErZxaQl9j+dg4zhC0ucevJfCaQXRICi9glbhxoYQOZIyHgInGr
+        KRjiBWGJV8e3sEPYMhL/d8LUNzNKPDy3lh3CATr0ctMMRogqa4nDxy+yggxiFtCUWL9LHyLs
+        KLHg7j+o+XwSN94KQtzAJzFp23RmiDCvREebEES1msSs4+vg1h68cIl5AqPSLCSfzULyzSwk
+        38xC2LuAkWUVo3hqaXFuemqxUV5quV5xYm5xaV66XnJ+7iZGYMo5/e/4lx2Mu/4kHWIU4GBU
+        4uH94forVog1say4MvcQowQHs5II7+2On7FCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeY0XvYwV
+        EkhPLEnNTk0tSC2CyTJxcEo1MMrtDt8z49zTg5cnr7x+S+lN06yfLN8fvowpzZ5ypSnvQqe3
+        uJisj2/klTZPq4m+dxTr33hvUn32+D6Ho+bSW7INqpdsN0uX/jl3pTy2JirN5V+4h8afiwb3
+        PiQlt0lFROX9Kdr649DmjhxfrqwOtj2+K3fY9irITc+QkPxmfNxnp41z033jbiWW4oxEQy3m
+        ouJEADnXajg1AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKIsWRmVeSWpSXmKPExsVy+t/xu7qBdr9jDa6cNLDYOGM9q8X1L89Z
+        LRZ8msFqcf78BnaLy7vmsFl87j3CaDHj/D4mB3aPTas62Tz6tqxi9Pi8SS6AOUrPpii/tCRV
+        ISO/uMRWKdrQwkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjfLkEv48GVyywFX30qZjXt
+        Zmtg3G7RxcjJISFgIrHu+kTGLkYuDiGBpYwS8+buZINIyEicnNbACmELS/y51sUGUfSaUeLy
+        vxPMIAlhgTSJazs/MYMkRARaGSXatt1gAUkwC/QxSsz4yQTR8YtRoundDLAONgFDia63XWAr
+        eAXsJJ48mghmswioSix8/hGsWVQgVuL7yk+MEDWCEidnPgGLcwrYS3xunMMGscBMYt7mh8wQ
+        trzE9rdzoGxxiVtP5jNNYBSahaR9FpKWWUhaZiFpWcDIsopRJLW0ODc9t9hIrzgxt7g0L10v
+        OT93EyMwyrYd+7llB2PXu+BDjAIcjEo8vAEev2KFWBPLiitzDzFKcDArifDe7vgZK8SbklhZ
+        lVqUH19UmpNafIjRFOi5icxSosn5wASQVxJvaGpobmFpaG5sbmxmoSTO2yFwMEZIID2xJDU7
+        NbUgtQimj4mDU6qB0V9uomDPlqrPc/6vuN70XEIlM0jFcemRs33tH61jD/sbL9rWKs++MuN6
+        6tmKF/rGQpM1wxf7LbTattrkwBLR+mbZmM4yS5FP2bsNL55qeF+uMdPFNnKzV9g/jUjBjzcu
+        h8y7eS7U1+RbXqYQS54F//7Lr/dGhPlNPBiT9uLpwVIXlmt1CQ+XKLEUZyQaajEXFScCALQn
+        wIrIAgAA
+X-CMS-MailID: 20191219090937eucas1p1bcbb1db2a9d2c1ec3c2b75e6ef7e4d93
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191219082939eucas1p2afc32535df1512dc21ca983daa012568
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191219082939eucas1p2afc32535df1512dc21ca983daa012568
+References: <20191219082927.11898-1-m.szyprowski@samsung.com>
+        <CGME20191219082939eucas1p2afc32535df1512dc21ca983daa012568@eucas1p2.samsung.com>
+        <20191219082927.11898-3-m.szyprowski@samsung.com>
+        <9ff5cf7a-1dea-4f35-c4d3-066c87fbe896@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Allwinner SoCs have a legacy set of bindings (and a framework to
-support it in Linux) for their clock controllers.
+Hi Chanwoo,
 
-Now that we have the DT validation in place, let's split into separate file
-and convert the device tree bindings for those clocks to schemas, and mark
-them all as deprecated.
+On 19.12.2019 10:07, Chanwoo Choi wrote:
+> On 12/19/19 5:29 PM, Marek Szyprowski wrote:
+>> Hardkernel's Odroid XU3/XU4/HC1 boards use bootloader, which configures top
+>> PLLs to the following values: MPLL: 532MHz, CPLL: 666MHz and DPLL: 600MHz.
+>>
+>> Adjust all bus related OPPs to the values that are possible to derive from
+>> the top PLL configured by the bootloader. Also add a comment for each bus
+>> describing which PLL is used for it.
+>>
+>> The most significant change is the highest rate for wcore bus. It has been
+>> increased to 532MHz as this is the value configured initially by the
+>> bootloader. Also the voltage for this OPP is changed to match the value
+>> set by the bootloader.
+>>
+>> This patch finally allows the buses to operate on the rates matching the
+>> values set for each OPP and fixes the following warnings observed on boot:
+>>
+>> exynos-bus: new bus device registered: soc:bus_wcore ( 84000 KHz ~ 400000 KHz)
+>> exynos-bus: new bus device registered: soc:bus_noc ( 67000 KHz ~ 100000 KHz)
+>> exynos-bus: new bus device registered: soc:bus_fsys_apb (100000 KHz ~ 200000 KHz)
+>> ...
+>> exynos-bus soc:bus_wcore: dev_pm_opp_set_rate: failed to find current OPP for freq 532000000 (-34)
+>> exynos-bus soc:bus_noc: dev_pm_opp_set_rate: failed to find current OPP for freq 111000000 (-34)
+>> exynos-bus soc:bus_fsys_apb: dev_pm_opp_set_rate: failed to find current OPP for freq 222000000 (-34)
+>>
+>> The problem with setting incorrect (in some cases much lower) clock rate
+>> for the defined OPP were there from the beginning, but went unnoticed
+>> because the only way to observe it was to manually check the rate of the
+>> respective clocks. The commit 4294a779bd8d ("PM / devfreq: exynos-bus:
+>> Convert to use dev_pm_opp_set_rate()") finally revealed it, because it
+>> enabled use of the generic code from the OPP framework, which issues the
+>> above mentioned warnings.
+>>
+>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>> ---
+>>   arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 75 +++++++++++--------
+>>   1 file changed, 45 insertions(+), 30 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+>> index 663a38d53c9e..b6d6022e8735 100644
+>> --- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+>> @@ -38,42 +38,44 @@
+>>   	bus_wcore_opp_table: opp_table2 {
+>>   		compatible = "operating-points-v2";
+>>   
+>> +		/* derived from 532MHz MPLL */
+>>   		opp00 {
+>> -			opp-hz = /bits/ 64 <84000000>;
+>> +			opp-hz = /bits/ 64 <88700000>;
+>>   			opp-microvolt = <925000 925000 1400000>;
+>>   		};
+>>   		opp01 {
+>> -			opp-hz = /bits/ 64 <111000000>;
+>> +			opp-hz = /bits/ 64 <133000000>;
+>>   			opp-microvolt = <950000 950000 1400000>;
+>>   		};
+>>   		opp02 {
+>> -			opp-hz = /bits/ 64 <222000000>;
+>> +			opp-hz = /bits/ 64 <177400000>;
+>>   			opp-microvolt = <950000 950000 1400000>;
+>>   		};
+>>   		opp03 {
+>> -			opp-hz = /bits/ 64 <333000000>;
+>> +			opp-hz = /bits/ 64 <266000000>;
+>>   			opp-microvolt = <950000 950000 1400000>;
+>>   		};
+>>   		opp04 {
+>> -			opp-hz = /bits/ 64 <400000000>;
+>> -			opp-microvolt = <987500 987500 1400000>;
+>> +			opp-hz = /bits/ 64 <532000000>;
+>> +			opp-microvolt = <1000000 1000000 1400000>;
+>>   		};
+>>   	};
+>>   
+>>   	bus_noc_opp_table: opp_table3 {
+>>   		compatible = "operating-points-v2";
+>>   
+>> +		/* derived from 666MHz CPLL */
+>>   		opp00 {
+>> -			opp-hz = /bits/ 64 <67000000>;
+>> +			opp-hz = /bits/ 64 <66600000>;
+>>   		};
+>>   		opp01 {
+>> -			opp-hz = /bits/ 64 <75000000>;
+>> +			opp-hz = /bits/ 64 <74000000>;
+>>   		};
+>>   		opp02 {
+>> -			opp-hz = /bits/ 64 <86000000>;
+>> +			opp-hz = /bits/ 64 <83250000>;
+>>   		};
+>>   		opp03 {
+>> -			opp-hz = /bits/ 64 <100000000>;
+>> +			opp-hz = /bits/ 64 <111000000>;
+>>   		};
+>>   	};
+>>   
+>> @@ -81,39 +83,42 @@
+>>   		compatible = "operating-points-v2";
+>>   		opp-shared;
+>>   
+>> +		/* derived from 666MHz CPLL */
+>>   		opp00 {
+>> -			opp-hz = /bits/ 64 <100000000>;
+>> +			opp-hz = /bits/ 64 <111000000>;
+>>   		};
+>>   		opp01 {
+>> -			opp-hz = /bits/ 64 <200000000>;
+>> +			opp-hz = /bits/ 64 <222000000>;
+>>   		};
+>>   	};
+>>   
+>>   	bus_fsys2_opp_table: opp_table5 {
+>>   		compatible = "operating-points-v2";
+>>   
+>> +		/* derived from 600MHz DPLL */
+>>   		opp00 {
+>>   			opp-hz = /bits/ 64 <75000000>;
+>>   		};
+>>   		opp01 {
+>> -			opp-hz = /bits/ 64 <100000000>;
+>> +			opp-hz = /bits/ 64 <120000000>;
+>>   		};
+>>   		opp02 {
+>> -			opp-hz = /bits/ 64 <150000000>;
+>> +			opp-hz = /bits/ 64 <200000000>;
+>>   		};
+>>   	};
+>>   
+>>   	bus_mfc_opp_table: opp_table6 {
+>>   		compatible = "operating-points-v2";
+>>   
+>> +		/* derived from 666MHz CPLL */
+>>   		opp00 {
+>> -			opp-hz = /bits/ 64 <96000000>;
+>> +			opp-hz = /bits/ 64 <83250000>;
+>>   		};
+>>   		opp01 {
+>>   			opp-hz = /bits/ 64 <111000000>;
+>>   		};
+>>   		opp02 {
+>> -			opp-hz = /bits/ 64 <167000000>;
+>> +			opp-hz = /bits/ 64 <166500000>;
+>>   		};
+>>   		opp03 {
+>>   			opp-hz = /bits/ 64 <222000000>;
+>> @@ -126,8 +131,9 @@
+>>   	bus_gen_opp_table: opp_table7 {
+>>   		compatible = "operating-points-v2";
+>>   
+>> +		/* derived from 532MHz MPLL */
+>>   		opp00 {
+>> -			opp-hz = /bits/ 64 <89000000>;
+>> +			opp-hz = /bits/ 64 <88700000>;
+>>   		};
+>>   		opp01 {
+>>   			opp-hz = /bits/ 64 <133000000>;
+>> @@ -136,32 +142,34 @@
+>>   			opp-hz = /bits/ 64 <178000000>;
+>>   		};
+>>   		opp03 {
+>> -			opp-hz = /bits/ 64 <267000000>;
+>> +			opp-hz = /bits/ 64 <266000000>;
+>>   		};
+>>   	};
+>>   
+>>   	bus_peri_opp_table: opp_table8 {
+>>   		compatible = "operating-points-v2";
+>>   
+>> +		/* derived from 666MHz CPLL */
+>>   		opp00 {
+>> -			opp-hz = /bits/ 64 <67000000>;
+>> +			opp-hz = /bits/ 64 <66600000>;
+>>   		};
+>>   	};
+>>   
+>>   	bus_g2d_opp_table: opp_table9 {
+>>   		compatible = "operating-points-v2";
+>>   
+>> +		/* derived from 666MHz CPLL */
+>>   		opp00 {
+>> -			opp-hz = /bits/ 64 <84000000>;
+>> +			opp-hz = /bits/ 64 <83250000>;
+>>   		};
+>>   		opp01 {
+>> -			opp-hz = /bits/ 64 <167000000>;
+>> +			opp-hz = /bits/ 64 <111000000>;
+>>   		};
+>>   		opp02 {
+>> -			opp-hz = /bits/ 64 <222000000>;
+>> +			opp-hz = /bits/ 64 <166500000>;
+>>   		};
+>>   		opp03 {
+>> -			opp-hz = /bits/ 64 <300000000>;
+>> +			opp-hz = /bits/ 64 <222000000>;
+>>   		};
+>>   		opp04 {
+>>   			opp-hz = /bits/ 64 <333000000>;
+>> @@ -171,8 +179,9 @@
+>>   	bus_g2d_acp_opp_table: opp_table10 {
+>>   		compatible = "operating-points-v2";
+>>   
+>> +		/* derived from 532MHz MPLL */
+>>   		opp00 {
+>> -			opp-hz = /bits/ 64 <67000000>;
+>> +			opp-hz = /bits/ 64 <66500000>;
+>>   		};
+>>   		opp01 {
+>>   			opp-hz = /bits/ 64 <133000000>;
+>> @@ -181,13 +190,14 @@
+>>   			opp-hz = /bits/ 64 <178000000>;
+>>   		};
+>>   		opp03 {
+>> -			opp-hz = /bits/ 64 <267000000>;
+>> +			opp-hz = /bits/ 64 <266000000>;
+>>   		};
+>>   	};
+>>   
+>>   	bus_jpeg_opp_table: opp_table11 {
+>>   		compatible = "operating-points-v2";
+>>   
+>> +		/* derived from 600MHz DPLL */
+>>   		opp00 {
+>>   			opp-hz = /bits/ 64 <75000000>;
+>>   		};
+>> @@ -205,23 +215,25 @@
+>>   	bus_jpeg_apb_opp_table: opp_table12 {
+>>   		compatible = "operating-points-v2";
+>>   
+>> +		/* derived from 666MHz CPLL */
+>>   		opp00 {
+>> -			opp-hz = /bits/ 64 <84000000>;
+>> +			opp-hz = /bits/ 64 <83250000>;
+>>   		};
+>>   		opp01 {
+>>   			opp-hz = /bits/ 64 <111000000>;
+>>   		};
+>>   		opp02 {
+>> -			opp-hz = /bits/ 64 <134000000>;
+>> +			opp-hz = /bits/ 64 <133000000>;
+>>   		};
+>>   		opp03 {
+>> -			opp-hz = /bits/ 64 <167000000>;
+>> +			opp-hz = /bits/ 64 <166500000>;
+>>   		};
+>>   	};
+>>   
+>>   	bus_disp1_fimd_opp_table: opp_table13 {
+>>   		compatible = "operating-points-v2";
+>>   
+>> +		/* derived from 600MHz DPLL */
+>>   		opp00 {
+>>   			opp-hz = /bits/ 64 <120000000>;
+>>   		};
+>> @@ -233,6 +245,7 @@
+>>   	bus_disp1_opp_table: opp_table14 {
+>>   		compatible = "operating-points-v2";
+>>   
+>> +		/* derived from 600MHz DPLL */
+>>   		opp00 {
+>>   			opp-hz = /bits/ 64 <120000000>;
+>>   		};
+>> @@ -247,6 +260,7 @@
+>>   	bus_gscl_opp_table: opp_table15 {
+>>   		compatible = "operating-points-v2";
+>>   
+>> +		/* derived from 600MHz DPLL */
+>>   		opp00 {
+>>   			opp-hz = /bits/ 64 <150000000>;
+>>   		};
+>> @@ -261,6 +275,7 @@
+>>   	bus_mscl_opp_table: opp_table16 {
+>>   		compatible = "operating-points-v2";
+>>   
+>> +		/* derived from 666MHz CPLL */
+>>   		opp00 {
+>>   			opp-hz = /bits/ 64 <84000000>;
+>>   		};
+>> @@ -274,7 +289,7 @@
+>>   			opp-hz = /bits/ 64 <333000000>;
+>>   		};
+>>   		opp04 {
+>> -			opp-hz = /bits/ 64 <400000000>;
+>> +			opp-hz = /bits/ 64 <666000000>;
+>>   		};
+>>   	};
+>>   
+>> @@ -398,7 +413,7 @@
+>>   };
+>>   
+>>   &bus_fsys {
+>> -	operating-points-v2 = <&bus_fsys_apb_opp_table>;
+>> +	operating-points-v2 = <&bus_fsys2_opp_table>;
+>
+> Need to remove 'opp-shared' property in bus_fsys_apb_opp_table.
+> And need to add 'opp-shared' property to bus_fsys2_opp_table.
 
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
----
- .../clock/allwinner,sun4i-a10-ahb-clk.yaml    | 108 +++++++++
- .../clock/allwinner,sun4i-a10-apb0-clk.yaml   |  50 ++++
- .../clock/allwinner,sun4i-a10-apb1-clk.yaml   |  52 ++++
- .../clock/allwinner,sun4i-a10-axi-clk.yaml    |  61 +++++
- .../clock/allwinner,sun4i-a10-cpu-clk.yaml    |  52 ++++
- .../allwinner,sun4i-a10-display-clk.yaml      |  57 +++++
- .../clock/allwinner,sun4i-a10-gates-clk.yaml  | 152 ++++++++++++
- .../clock/allwinner,sun4i-a10-mbus-clk.yaml   |  63 +++++
- .../clock/allwinner,sun4i-a10-mmc-clk.yaml    |  87 +++++++
- .../clock/allwinner,sun4i-a10-mod0-clk.yaml   |  80 +++++++
- .../clock/allwinner,sun4i-a10-mod1-clk.yaml   |  57 +++++
- .../clock/allwinner,sun4i-a10-osc-clk.yaml    |  51 ++++
- .../clock/allwinner,sun4i-a10-pll1-clk.yaml   |  71 ++++++
- .../clock/allwinner,sun4i-a10-pll3-clk.yaml   |  50 ++++
- .../clock/allwinner,sun4i-a10-pll5-clk.yaml   |  53 +++++
- .../clock/allwinner,sun4i-a10-pll6-clk.yaml   |  53 +++++
- .../allwinner,sun4i-a10-tcon-ch0-clk.yaml     |  77 ++++++
- .../clock/allwinner,sun4i-a10-usb-clk.yaml    | 166 +++++++++++++
- .../clock/allwinner,sun4i-a10-ve-clk.yaml     |  55 +++++
- .../clock/allwinner,sun5i-a13-ahb-clk.yaml    |  52 ++++
- .../clock/allwinner,sun6i-a31-pll6-clk.yaml   |  53 +++++
- .../clock/allwinner,sun7i-a20-gmac-clk.yaml   |  51 ++++
- .../clock/allwinner,sun7i-a20-out-clk.yaml    |  52 ++++
- .../allwinner,sun8i-h3-bus-gates-clk.yaml     | 103 ++++++++
- .../clock/allwinner,sun9i-a80-ahb-clk.yaml    |  52 ++++
- .../clock/allwinner,sun9i-a80-apb0-clk.yaml   |  63 +++++
- .../clock/allwinner,sun9i-a80-cpus-clk.yaml   |  52 ++++
- .../clock/allwinner,sun9i-a80-gt-clk.yaml     |  52 ++++
- .../allwinner,sun9i-a80-mmc-config-clk.yaml   |  68 ++++++
- .../clock/allwinner,sun9i-a80-pll4-clk.yaml   |  50 ++++
- .../allwinner,sun9i-a80-usb-mod-clk.yaml      |  60 +++++
- .../allwinner,sun9i-a80-usb-phy-clk.yaml      |  60 +++++
- .../devicetree/bindings/clock/sunxi.txt       | 225 ------------------
- 33 files changed, 2163 insertions(+), 225 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ahb-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-apb0-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-apb1-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-axi-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-cpu-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-display-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-gates-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mbus-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mmc-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mod0-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mod1-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-osc-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll1-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll3-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll5-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll6-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-tcon-ch0-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-usb-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ve-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun5i-a13-ahb-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun6i-a31-pll6-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun7i-a20-gmac-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun7i-a20-out-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun8i-h3-bus-gates-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-ahb-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-apb0-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-cpus-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-gt-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-mmc-config-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-pll4-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-usb-mod-clk.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-usb-phy-clk.yaml
- delete mode 100644 Documentation/devicetree/bindings/clock/sunxi.txt
+I've checked the dt bindings and I think that opp-shared property has to 
+be removed at all. Clocks between fsys and fsys2 buses are not related 
+and regulator is currently already handled by in a different way by the 
+passive governor.
 
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ahb-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ahb-clk.yaml
-new file mode 100644
-index 000000000000..558db4b6ed17
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ahb-clk.yaml
-@@ -0,0 +1,108 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun4i-a10-ahb-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 AHB Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 0
-+
-+  compatible:
-+    enum:
-+      - allwinner,sun4i-a10-ahb-clk
-+      - allwinner,sun6i-a31-ahb1-clk
-+      - allwinner,sun8i-h3-ahb2-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 4
-+    description: >
-+      The parent order must match the hardware programming order.
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: allwinner,sun4i-a10-ahb-clk
-+
-+    then:
-+      properties:
-+        clocks:
-+          maxItems: 1
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: allwinner,sun6i-a31-ahb1-clk
-+
-+    then:
-+      properties:
-+        clocks:
-+          maxItems: 4
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: allwinner,sun8i-h3-ahb2-clk
-+
-+    then:
-+      properties:
-+        clocks:
-+          maxItems: 2
-+
-+examples:
-+  - |
-+    ahb@1c20054 {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun4i-a10-ahb-clk";
-+        reg = <0x01c20054 0x4>;
-+        clocks = <&axi>;
-+        clock-output-names = "ahb";
-+    };
-+
-+  - |
-+    ahb1@1c20054 {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun6i-a31-ahb1-clk";
-+        reg = <0x01c20054 0x4>;
-+        clocks = <&osc32k>, <&osc24M>, <&axi>, <&pll6 0>;
-+        clock-output-names = "ahb1";
-+    };
-+
-+  - |
-+    ahb2_clk@1c2005c {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun8i-h3-ahb2-clk";
-+        reg = <0x01c2005c 0x4>;
-+        clocks = <&ahb1>, <&pll6d2>;
-+        clock-output-names = "ahb2";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-apb0-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-apb0-clk.yaml
-new file mode 100644
-index 000000000000..b1e3d739beb2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-apb0-clk.yaml
-@@ -0,0 +1,50 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun4i-a10-apb0-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 APB0 Bus Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 0
-+
-+  compatible:
-+    const: allwinner,sun4i-a10-apb0-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    apb0@1c20054 {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun4i-a10-apb0-clk";
-+        reg = <0x01c20054 0x4>;
-+        clocks = <&ahb>;
-+        clock-output-names = "apb0";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-apb1-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-apb1-clk.yaml
-new file mode 100644
-index 000000000000..51b7a6d4ea54
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-apb1-clk.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun4i-a10-apb1-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 APB1 Bus Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 0
-+
-+  compatible:
-+    const: allwinner,sun4i-a10-apb1-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 3
-+    description: >
-+      The parent order must match the hardware programming order.
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clk@1c20058 {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun4i-a10-apb1-clk";
-+        reg = <0x01c20058 0x4>;
-+        clocks = <&osc24M>, <&pll6 1>, <&osc32k>;
-+        clock-output-names = "apb1";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-axi-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-axi-clk.yaml
-new file mode 100644
-index 000000000000..d801158e15de
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-axi-clk.yaml
-@@ -0,0 +1,61 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun4i-a10-axi-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 AXI Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 0
-+
-+  compatible:
-+    enum:
-+      - allwinner,sun4i-a10-axi-clk
-+      - allwinner,sun8i-a23-axi-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    axi@1c20054 {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun4i-a10-axi-clk";
-+        reg = <0x01c20054 0x4>;
-+        clocks = <&cpu>;
-+        clock-output-names = "axi";
-+    };
-+
-+  - |
-+    axi_clk@1c20050 {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun8i-a23-axi-clk";
-+        reg = <0x01c20050 0x4>;
-+        clocks = <&cpu>;
-+        clock-output-names = "axi";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-cpu-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-cpu-clk.yaml
-new file mode 100644
-index 000000000000..0dfafba1a168
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-cpu-clk.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun4i-a10-cpu-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 CPU Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 0
-+
-+  compatible:
-+    const: allwinner,sun4i-a10-cpu-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 4
-+    description: >
-+      The parent order must match the hardware programming order.
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    cpu@1c20054 {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun4i-a10-cpu-clk";
-+        reg = <0x01c20054 0x4>;
-+        clocks = <&osc32k>, <&osc24M>, <&pll1>, <&dummy>;
-+        clock-output-names = "cpu";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-display-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-display-clk.yaml
-new file mode 100644
-index 000000000000..7484a7ab7dea
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-display-clk.yaml
-@@ -0,0 +1,57 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun4i-a10-display-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 Display Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 0
-+
-+  "#reset-cells":
-+    const: 0
-+
-+  compatible:
-+    const: allwinner,sun4i-a10-display-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 3
-+    description: >
-+      The parent order must match the hardware programming order.
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - "#reset-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clk@1c20104 {
-+        #clock-cells = <0>;
-+        #reset-cells = <0>;
-+        compatible = "allwinner,sun4i-a10-display-clk";
-+        reg = <0x01c20104 0x4>;
-+        clocks = <&pll3>, <&pll7>, <&pll5 1>;
-+        clock-output-names = "de-be";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-gates-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-gates-clk.yaml
-new file mode 100644
-index 000000000000..ed1b2126a81b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-gates-clk.yaml
-@@ -0,0 +1,152 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun4i-a10-gates-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 Bus Gates Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 1
-+    description: >
-+      This additional argument passed to that clock is the offset of
-+      the bit controlling this particular gate in the register.
-+
-+  compatible:
-+    oneOf:
-+      - const: allwinner,sun4i-a10-gates-clk
-+      - const: allwinner,sun4i-a10-axi-gates-clk
-+      - const: allwinner,sun4i-a10-ahb-gates-clk
-+      - const: allwinner,sun5i-a10s-ahb-gates-clk
-+      - const: allwinner,sun5i-a13-ahb-gates-clk
-+      - const: allwinner,sun7i-a20-ahb-gates-clk
-+      - const: allwinner,sun6i-a31-ahb1-gates-clk
-+      - const: allwinner,sun8i-a23-ahb1-gates-clk
-+      - const: allwinner,sun9i-a80-ahb0-gates-clk
-+      - const: allwinner,sun9i-a80-ahb1-gates-clk
-+      - const: allwinner,sun9i-a80-ahb2-gates-clk
-+      - const: allwinner,sun4i-a10-apb0-gates-clk
-+      - const: allwinner,sun5i-a10s-apb0-gates-clk
-+      - const: allwinner,sun5i-a13-apb0-gates-clk
-+      - const: allwinner,sun7i-a20-apb0-gates-clk
-+      - const: allwinner,sun9i-a80-apb0-gates-clk
-+      - const: allwinner,sun8i-a83t-apb0-gates-clk
-+      - const: allwinner,sun4i-a10-apb1-gates-clk
-+      - const: allwinner,sun5i-a13-apb1-gates-clk
-+      - const: allwinner,sun5i-a10s-apb1-gates-clk
-+      - const: allwinner,sun6i-a31-apb1-gates-clk
-+      - const: allwinner,sun7i-a20-apb1-gates-clk
-+      - const: allwinner,sun8i-a23-apb1-gates-clk
-+      - const: allwinner,sun9i-a80-apb1-gates-clk
-+      - const: allwinner,sun6i-a31-apb2-gates-clk
-+      - const: allwinner,sun8i-a23-apb2-gates-clk
-+      - const: allwinner,sun8i-a83t-bus-gates-clk
-+      - const: allwinner,sun9i-a80-apbs-gates-clk
-+      - const: allwinner,sun4i-a10-dram-gates-clk
-+
-+      - items:
-+        - const: allwinner,sun5i-a13-dram-gates-clk
-+        - const: allwinner,sun4i-a10-gates-clk
-+
-+      - items:
-+        - const: allwinner,sun8i-h3-apb0-gates-clk
-+        - const: allwinner,sun4i-a10-gates-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-indices:
-+    minItems: 1
-+    maxItems: 64
-+
-+  clock-output-names:
-+    minItems: 1
-+    maxItems: 64
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-indices
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clk@1c2005c {
-+        #clock-cells = <1>;
-+        compatible = "allwinner,sun4i-a10-axi-gates-clk";
-+        reg = <0x01c2005c 0x4>;
-+        clocks = <&axi>;
-+        clock-indices = <0>;
-+        clock-output-names = "axi_dram";
-+    };
-+
-+  - |
-+    clk@1c20060 {
-+        #clock-cells = <1>;
-+        compatible = "allwinner,sun4i-a10-ahb-gates-clk";
-+        reg = <0x01c20060 0x8>;
-+        clocks = <&ahb>;
-+        clock-indices = <0>, <1>,
-+                        <2>, <3>,
-+                        <4>, <5>, <6>,
-+                        <7>, <8>, <9>,
-+                        <10>, <11>, <12>,
-+                        <13>, <14>, <16>,
-+                        <17>, <18>, <20>,
-+                        <21>, <22>, <23>,
-+                        <24>, <25>, <26>,
-+                        <32>, <33>, <34>,
-+                        <35>, <36>, <37>,
-+                        <40>, <41>, <43>,
-+                        <44>, <45>,
-+                        <46>, <47>,
-+                        <50>, <52>;
-+        clock-output-names = "ahb_usb0", "ahb_ehci0",
-+                             "ahb_ohci0", "ahb_ehci1",
-+                             "ahb_ohci1", "ahb_ss", "ahb_dma",
-+                             "ahb_bist", "ahb_mmc0", "ahb_mmc1",
-+                             "ahb_mmc2", "ahb_mmc3", "ahb_ms",
-+                             "ahb_nand", "ahb_sdram", "ahb_ace",
-+                             "ahb_emac", "ahb_ts", "ahb_spi0",
-+                             "ahb_spi1", "ahb_spi2", "ahb_spi3",
-+                             "ahb_pata", "ahb_sata", "ahb_gps",
-+                             "ahb_ve", "ahb_tvd", "ahb_tve0",
-+                             "ahb_tve1", "ahb_lcd0", "ahb_lcd1",
-+                             "ahb_csi0", "ahb_csi1", "ahb_hdmi",
-+                             "ahb_de_be0", "ahb_de_be1",
-+                             "ahb_de_fe0", "ahb_de_fe1",
-+                             "ahb_mp", "ahb_mali400";
-+    };
-+
-+
-+  - |
-+    clk@1c20068 {
-+        #clock-cells = <1>;
-+        compatible = "allwinner,sun4i-a10-apb0-gates-clk";
-+        reg = <0x01c20068 0x4>;
-+        clocks = <&apb0>;
-+        clock-indices = <0>, <1>,
-+                        <2>, <3>,
-+                        <5>, <6>,
-+                        <7>, <10>;
-+        clock-output-names = "apb0_codec", "apb0_spdif",
-+                             "apb0_ac97", "apb0_iis",
-+                             "apb0_pio", "apb0_ir0",
-+                             "apb0_ir1", "apb0_keypad";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mbus-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mbus-clk.yaml
-new file mode 100644
-index 000000000000..18f131e262b4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mbus-clk.yaml
-@@ -0,0 +1,63 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun4i-a10-mbus-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 MBUS Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 0
-+
-+  compatible:
-+    enum:
-+      - allwinner,sun5i-a13-mbus-clk
-+      - allwinner,sun8i-a23-mbus-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 3
-+    description: >
-+      The parent order must match the hardware programming order.
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clk@1c2015c {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun5i-a13-mbus-clk";
-+        reg = <0x01c2015c 0x4>;
-+        clocks = <&osc24M>, <&pll6 1>, <&pll5 1>;
-+        clock-output-names = "mbus";
-+    };
-+
-+  - |
-+    clk@1c2015c {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun8i-a23-mbus-clk";
-+        reg = <0x01c2015c 0x4>;
-+        clocks = <&osc24M>, <&pll6 1>, <&pll5>;
-+        clock-output-names = "mbus";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mmc-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mmc-clk.yaml
-new file mode 100644
-index 000000000000..5199285a661a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mmc-clk.yaml
-@@ -0,0 +1,87 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun4i-a10-mmc-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 Module 1 Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 1
-+    description: >
-+      There is three different outputs: the main clock, with the ID 0,
-+      and the output and sample clocks, with the IDs 1 and 2,
-+      respectively.
-+
-+  compatible:
-+    enum:
-+      - allwinner,sun4i-a10-mmc-clk
-+      - allwinner,sun9i-a80-mmc-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 2
-+    maxItems: 3
-+    description: >
-+      The parent order must match the hardware programming order.
-+
-+  clock-output-names:
-+    maxItems: 3
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        const: allwinner,sun4i-a10-mmc-clk
-+
-+then:
-+  properties:
-+    clocks:
-+      maxItems: 3
-+
-+else:
-+  properties:
-+    clocks:
-+      maxItems: 2
-+
-+examples:
-+  - |
-+    clk@1c20088 {
-+        #clock-cells = <1>;
-+        compatible = "allwinner,sun4i-a10-mmc-clk";
-+        reg = <0x01c20088 0x4>;
-+        clocks = <&osc24M>, <&pll6 1>, <&pll5 1>;
-+        clock-output-names = "mmc0",
-+                             "mmc0_output",
-+                             "mmc0_sample";
-+    };
-+
-+  - |
-+    clk@6000410 {
-+        #clock-cells = <1>;
-+        compatible = "allwinner,sun9i-a80-mmc-clk";
-+        reg = <0x06000410 0x4>;
-+        clocks = <&osc24M>, <&pll4>;
-+        clock-output-names = "mmc0", "mmc0_output",
-+                             "mmc0_sample";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mod0-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mod0-clk.yaml
-new file mode 100644
-index 000000000000..3e2abe3e67c1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mod0-clk.yaml
-@@ -0,0 +1,80 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun4i-a10-mod0-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 Module 0 Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+select:
-+  properties:
-+    compatible:
-+      contains:
-+        enum:
-+          - allwinner,sun4i-a10-mod0-clk
-+          - allwinner,sun9i-a80-mod0-clk
-+
-+  # The PRCM on the A31 and A23 will have the reg property missing,
-+  # since it's set at the upper level node, and will be validated by
-+  # PRCM's schema. Make sure we only validate standalone nodes.
-+  required:
-+    - compatible
-+    - reg
-+
-+properties:
-+  "#clock-cells":
-+    const: 0
-+
-+  compatible:
-+    enum:
-+      - allwinner,sun4i-a10-mod0-clk
-+      - allwinner,sun9i-a80-mod0-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    # On the A80, the PRCM mod0 clocks have 2 parents.
-+    minItems: 2
-+    maxItems: 3
-+    description: >
-+      The parent order must match the hardware programming order.
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clk@1c20080 {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun4i-a10-mod0-clk";
-+        reg = <0x01c20080 0x4>;
-+        clocks = <&osc24M>, <&pll6 1>, <&pll5 1>;
-+        clock-output-names = "nand";
-+    };
-+
-+  - |
-+    clk@8001454 {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun4i-a10-mod0-clk";
-+        reg = <0x08001454 0x4>;
-+        clocks = <&osc32k>, <&osc24M>;
-+        clock-output-names = "r_ir";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mod1-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mod1-clk.yaml
-new file mode 100644
-index 000000000000..7ddb55c75cff
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mod1-clk.yaml
-@@ -0,0 +1,57 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun4i-a10-mod1-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 Module 1 Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 0
-+
-+  compatible:
-+    const: allwinner,sun4i-a10-mod1-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 4
-+    description: >
-+      The parent order must match the hardware programming order.
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/sun4i-a10-pll2.h>
-+
-+    clk@1c200c0 {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun4i-a10-mod1-clk";
-+        reg = <0x01c200c0 0x4>;
-+        clocks = <&pll2 SUN4I_A10_PLL2_8X>,
-+                 <&pll2 SUN4I_A10_PLL2_4X>,
-+                 <&pll2 SUN4I_A10_PLL2_2X>,
-+                 <&pll2 SUN4I_A10_PLL2_1X>;
-+        clock-output-names = "spdif";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-osc-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-osc-clk.yaml
-new file mode 100644
-index 000000000000..69cfa4a3d562
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-osc-clk.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun4i-a10-osc-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 Gatable Oscillator Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 0
-+
-+  compatible:
-+    const: allwinner,sun4i-a10-osc-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clock-frequency:
-+    description: >
-+      Frequency of the main oscillator.
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clock-frequency
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    osc24M: clk@01c20050 {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun4i-a10-osc-clk";
-+        reg = <0x01c20050 0x4>;
-+        clock-frequency = <24000000>;
-+        clock-output-names = "osc24M";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll1-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll1-clk.yaml
-new file mode 100644
-index 000000000000..e9c4cf834aa7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll1-clk.yaml
-@@ -0,0 +1,71 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun4i-a10-pll1-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 CPU PLL Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 0
-+
-+  compatible:
-+    enum:
-+      - allwinner,sun4i-a10-pll1-clk
-+      - allwinner,sun6i-a31-pll1-clk
-+      - allwinner,sun8i-a23-pll1-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clk@1c20000 {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun4i-a10-pll1";
-+        reg = <0x01c20000 0x4>;
-+        clocks = <&osc24M>;
-+        clock-output-names = "osc24M";
-+    };
-+
-+  - |
-+    clk@1c20000 {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun6i-a31-pll1-clk";
-+        reg = <0x01c20000 0x4>;
-+        clocks = <&osc24M>;
-+        clock-output-names = "pll1";
-+    };
-+
-+  - |
-+    clk@1c20000 {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun8i-a23-pll1-clk";
-+        reg = <0x01c20000 0x4>;
-+        clocks = <&osc24M>;
-+        clock-output-names = "pll1";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll3-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll3-clk.yaml
-new file mode 100644
-index 000000000000..4b80a42fb3da
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll3-clk.yaml
-@@ -0,0 +1,50 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun4i-a10-pll3-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 Video PLL Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 0
-+
-+  compatible:
-+    const: allwinner,sun4i-a10-pll3-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clk@1c20010 {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun4i-a10-pll3-clk";
-+        reg = <0x01c20010 0x4>;
-+        clocks = <&osc3M>;
-+        clock-output-names = "pll3";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll5-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll5-clk.yaml
-new file mode 100644
-index 000000000000..415bd77de53d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll5-clk.yaml
-@@ -0,0 +1,53 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun4i-a10-pll5-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 DRAM PLL Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 1
-+    description: >
-+      The first output is the DRAM clock output, the second is meant
-+      for peripherals on the SoC.
-+
-+  compatible:
-+    const: allwinner,sun4i-a10-pll5-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-output-names:
-+    maxItems: 2
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clk@1c20020 {
-+        #clock-cells = <1>;
-+        compatible = "allwinner,sun4i-a10-pll5-clk";
-+        reg = <0x01c20020 0x4>;
-+        clocks = <&osc24M>;
-+        clock-output-names = "pll5_ddr", "pll5_other";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll6-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll6-clk.yaml
-new file mode 100644
-index 000000000000..ec5652f76027
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll6-clk.yaml
-@@ -0,0 +1,53 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun4i-a10-pll6-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 Peripheral PLL Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 1
-+    description: >
-+      The first output is the SATA clock output, the second is the
-+      regular PLL output, the third is a PLL output at twice the rate.
-+
-+  compatible:
-+    const: allwinner,sun4i-a10-pll6-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-output-names:
-+    maxItems: 3
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clk@1c20028 {
-+        #clock-cells = <1>;
-+        compatible = "allwinner,sun4i-a10-pll6-clk";
-+        reg = <0x01c20028 0x4>;
-+        clocks = <&osc24M>;
-+        clock-output-names = "pll6_sata", "pll6_other", "pll6";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-tcon-ch0-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-tcon-ch0-clk.yaml
-new file mode 100644
-index 000000000000..0a335c615efd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-tcon-ch0-clk.yaml
-@@ -0,0 +1,77 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun4i-a10-tcon-ch0-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 TCON Channel 0 Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 0
-+
-+  "#reset-cells":
-+    const: 1
-+
-+  compatible:
-+    enum:
-+      - allwinner,sun4i-a10-tcon-ch0-clk
-+      - allwinner,sun4i-a10-tcon-ch1-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 4
-+    description: >
-+      The parent order must match the hardware programming order.
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        const: allwinner,sun4i-a10-tcon-ch0-clk
-+
-+then:
-+  required:
-+    - "#reset-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clk@1c20118 {
-+        #clock-cells = <0>;
-+        #reset-cells = <1>;
-+        compatible = "allwinner,sun4i-a10-tcon-ch0-clk";
-+        reg = <0x01c20118 0x4>;
-+        clocks = <&pll3>, <&pll7>, <&pll3x2>, <&pll7x2>;
-+        clock-output-names = "tcon-ch0-sclk";
-+    };
-+
-+  - |
-+    clk@1c2012c {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun4i-a10-tcon-ch1-clk";
-+        reg = <0x01c2012c 0x4>;
-+        clocks = <&pll3>, <&pll7>, <&pll3x2>, <&pll7x2>;
-+        clock-output-names = "tcon-ch1-sclk";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-usb-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-usb-clk.yaml
-new file mode 100644
-index 000000000000..cd95d25bfe7c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-usb-clk.yaml
-@@ -0,0 +1,166 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun4i-a10-usb-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 USB Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 1
-+    description: >
-+      The additional ID argument passed to the clock shall refer to
-+      the index of the output.
-+
-+  "#reset-cells":
-+    const: 1
-+
-+  compatible:
-+    enum:
-+      - allwinner,sun4i-a10-usb-clk
-+      - allwinner,sun5i-a13-usb-clk
-+      - allwinner,sun6i-a31-usb-clk
-+      - allwinner,sun8i-a23-usb-clk
-+      - allwinner,sun8i-h3-usb-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-output-names:
-+    minItems: 2
-+    maxItems: 8
-+
-+required:
-+  - "#clock-cells"
-+  - "#reset-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: allwinner,sun4i-a10-usb-clk
-+
-+    then:
-+      properties:
-+        clock-output-names:
-+          maxItems: 3
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: allwinner,sun5i-a13-usb-clk
-+
-+    then:
-+      properties:
-+        clock-output-names:
-+          maxItems: 2
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: allwinner,sun6i-a31-usb-clk
-+
-+    then:
-+      properties:
-+        clock-output-names:
-+          maxItems: 6
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: allwinner,sun8i-a23-usb-clk
-+
-+    then:
-+      properties:
-+        clock-output-names:
-+          maxItems: 5
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: allwinner,sun8i-h3-usb-clk
-+
-+    then:
-+      properties:
-+        clock-output-names:
-+          maxItems: 8
-+
-+examples:
-+  - |
-+    clk@1c200cc {
-+        #clock-cells = <1>;
-+        #reset-cells = <1>;
-+        compatible = "allwinner,sun4i-a10-usb-clk";
-+        reg = <0x01c200cc 0x4>;
-+        clocks = <&pll6 1>;
-+        clock-output-names = "usb_ohci0", "usb_ohci1", "usb_phy";
-+    };
-+
-+  - |
-+    clk@1c200cc {
-+        #clock-cells = <1>;
-+        #reset-cells = <1>;
-+        compatible = "allwinner,sun5i-a13-usb-clk";
-+        reg = <0x01c200cc 0x4>;
-+        clocks = <&pll6 1>;
-+        clock-output-names = "usb_ohci0", "usb_phy";
-+    };
-+
-+  - |
-+    clk@1c200cc {
-+        #clock-cells = <1>;
-+        #reset-cells = <1>;
-+        compatible = "allwinner,sun6i-a31-usb-clk";
-+        reg = <0x01c200cc 0x4>;
-+        clocks = <&osc24M>;
-+        clock-output-names = "usb_phy0", "usb_phy1", "usb_phy2",
-+                             "usb_ohci0", "usb_ohci1",
-+                             "usb_ohci2";
-+    };
-+
-+  - |
-+    clk@1c200cc {
-+        #clock-cells = <1>;
-+        #reset-cells = <1>;
-+        compatible = "allwinner,sun8i-a23-usb-clk";
-+        reg = <0x01c200cc 0x4>;
-+        clocks = <&osc24M>;
-+        clock-output-names = "usb_phy0", "usb_phy1", "usb_hsic",
-+                             "usb_hsic_12M", "usb_ohci0";
-+    };
-+
-+  - |
-+    clk@1c200cc {
-+        #clock-cells = <1>;
-+        #reset-cells = <1>;
-+        compatible = "allwinner,sun8i-h3-usb-clk";
-+        reg = <0x01c200cc 0x4>;
-+        clocks = <&osc24M>;
-+        clock-output-names = "usb_phy0", "usb_phy1",
-+                             "usb_phy2", "usb_phy3",
-+                             "usb_ohci0", "usb_ohci1",
-+                             "usb_ohci2", "usb_ohci3";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ve-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ve-clk.yaml
-new file mode 100644
-index 000000000000..5dfd0c1c27b4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ve-clk.yaml
-@@ -0,0 +1,55 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun4i-a10-ve-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 Video Engine Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 0
-+
-+  "#reset-cells":
-+    const: 0
-+
-+  compatible:
-+    const: allwinner,sun4i-a10-ve-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - "#reset-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clk@1c2013c {
-+        #clock-cells = <0>;
-+        #reset-cells = <0>;
-+        compatible = "allwinner,sun4i-a10-ve-clk";
-+        reg = <0x01c2013c 0x4>;
-+        clocks = <&pll4>;
-+        clock-output-names = "ve";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun5i-a13-ahb-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun5i-a13-ahb-clk.yaml
-new file mode 100644
-index 000000000000..99add7991c48
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun5i-a13-ahb-clk.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun5i-a13-ahb-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A13 AHB Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 0
-+
-+  compatible:
-+    const: allwinner,sun5i-a13-ahb-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 3
-+    description: >
-+      The parent order must match the hardware programming order.
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    ahb@1c20054 {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun5i-a13-ahb-clk";
-+        reg = <0x01c20054 0x4>;
-+        clocks = <&axi>, <&cpu>, <&pll6 1>;
-+        clock-output-names = "ahb";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun6i-a31-pll6-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun6i-a31-pll6-clk.yaml
-new file mode 100644
-index 000000000000..5f377205af71
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun6i-a31-pll6-clk.yaml
-@@ -0,0 +1,53 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun6i-a31-pll6-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A31 Peripheral PLL Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 1
-+    description: >
-+      The first output is the regular PLL output, the second is a PLL
-+      output at twice the rate.
-+
-+  compatible:
-+    const: allwinner,sun6i-a31-pll6-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-output-names:
-+    maxItems: 2
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clk@1c20028 {
-+        #clock-cells = <1>;
-+        compatible = "allwinner,sun6i-a31-pll6-clk";
-+        reg = <0x01c20028 0x4>;
-+        clocks = <&osc24M>;
-+        clock-output-names = "pll6", "pll6x2";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun7i-a20-gmac-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun7i-a20-gmac-clk.yaml
-new file mode 100644
-index 000000000000..59e5dce1b65a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun7i-a20-gmac-clk.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun7i-a20-gmac-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A20 GMAC TX Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+properties:
-+  "#clock-cells":
-+    const: 0
-+
-+  compatible:
-+    const: allwinner,sun7i-a20-gmac-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 2
-+    description: >
-+      The parent clocks shall be fixed rate dummy clocks at 25 MHz and
-+      125 MHz, respectively.
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clk@1c20164 {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun7i-a20-gmac-clk";
-+        reg = <0x01c20164 0x4>;
-+        clocks = <&mii_phy_tx_clk>, <&gmac_int_tx_clk>;
-+        clock-output-names = "gmac_tx";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun7i-a20-out-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun7i-a20-out-clk.yaml
-new file mode 100644
-index 000000000000..c745733bcf04
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun7i-a20-out-clk.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun7i-a20-out-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A20 Output Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 0
-+
-+  compatible:
-+    const: allwinner,sun7i-a20-out-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 3
-+    description: >
-+      The parent order must match the hardware programming order.
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clk@1c201f0 {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun7i-a20-out-clk";
-+        reg = <0x01c201f0 0x4>;
-+        clocks = <&osc24M_32k>, <&osc32k>, <&osc24M>;
-+        clock-output-names = "clk_out_a";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun8i-h3-bus-gates-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun8i-h3-bus-gates-clk.yaml
-new file mode 100644
-index 000000000000..3eb2bf65b230
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun8i-h3-bus-gates-clk.yaml
-@@ -0,0 +1,103 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun8i-h3-bus-gates-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 Bus Gates Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 1
-+    description: >
-+      This additional argument passed to that clock is the offset of
-+      the bit controlling this particular gate in the register.
-+
-+  compatible:
-+    const: allwinner,sun8i-h3-bus-gates-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 4
-+
-+  clock-names:
-+    maxItems: 4
-+    description: >
-+      The parent order must match the hardware programming order.
-+
-+  clock-indices:
-+    minItems: 1
-+    maxItems: 64
-+
-+  clock-output-names:
-+    minItems: 1
-+    maxItems: 64
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-indices
-+  - clock-names
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clk@1c20060 {
-+        #clock-cells = <1>;
-+        compatible = "allwinner,sun8i-h3-bus-gates-clk";
-+        reg = <0x01c20060 0x14>;
-+        clocks = <&ahb1>, <&ahb2>, <&apb1>, <&apb2>;
-+        clock-names = "ahb1", "ahb2", "apb1", "apb2";
-+        clock-indices = <5>, <6>, <8>,
-+                        <9>, <10>, <13>,
-+                        <14>, <17>, <18>,
-+                        <19>, <20>,
-+                        <21>, <23>,
-+                        <24>, <25>,
-+                        <26>, <27>,
-+                        <28>, <29>,
-+                        <30>, <31>, <32>,
-+                        <35>, <36>, <37>,
-+                        <40>, <41>, <43>,
-+                        <44>, <52>, <53>,
-+                        <54>, <64>,
-+                        <65>, <69>, <72>,
-+                        <76>, <77>, <78>,
-+                        <96>, <97>, <98>,
-+                        <112>, <113>,
-+                        <114>, <115>,
-+                        <116>, <128>, <135>;
-+        clock-output-names = "bus_ce", "bus_dma", "bus_mmc0",
-+                             "bus_mmc1", "bus_mmc2", "bus_nand",
-+                             "bus_sdram", "bus_gmac", "bus_ts",
-+                             "bus_hstimer", "bus_spi0",
-+                             "bus_spi1", "bus_otg",
-+                             "bus_otg_ehci0", "bus_ehci1",
-+                             "bus_ehci2", "bus_ehci3",
-+                             "bus_otg_ohci0", "bus_ohci1",
-+                             "bus_ohci2", "bus_ohci3", "bus_ve",
-+                             "bus_lcd0", "bus_lcd1", "bus_deint",
-+                             "bus_csi", "bus_tve", "bus_hdmi",
-+                             "bus_de", "bus_gpu", "bus_msgbox",
-+                             "bus_spinlock", "bus_codec",
-+                             "bus_spdif", "bus_pio", "bus_ths",
-+                             "bus_i2s0", "bus_i2s1", "bus_i2s2",
-+                             "bus_i2c0", "bus_i2c1", "bus_i2c2",
-+                             "bus_uart0", "bus_uart1",
-+                             "bus_uart2", "bus_uart3",
-+                             "bus_scr", "bus_ephy", "bus_dbg";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-ahb-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-ahb-clk.yaml
-new file mode 100644
-index 000000000000..d178da90aaec
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-ahb-clk.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun9i-a80-ahb-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A80 AHB Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 0
-+
-+  compatible:
-+    const: allwinner,sun9i-a80-ahb-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 4
-+    description: >
-+      The parent order must match the hardware programming order.
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clk@6000060 {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun9i-a80-ahb-clk";
-+        reg = <0x06000060 0x4>;
-+        clocks = <&gt_clk>, <&pll4>, <&pll12>, <&pll12>;
-+        clock-output-names = "ahb0";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-apb0-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-apb0-clk.yaml
-new file mode 100644
-index 000000000000..0351c79bd221
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-apb0-clk.yaml
-@@ -0,0 +1,63 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun9i-a80-apb0-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A80 APB0 Bus Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 0
-+
-+  compatible:
-+    enum:
-+      - allwinner,sun9i-a80-apb0-clk
-+      - allwinner,sun9i-a80-apb1-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 2
-+    description: >
-+      The parent order must match the hardware programming order.
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clk@6000070 {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun9i-a80-apb0-clk";
-+        reg = <0x06000070 0x4>;
-+        clocks = <&osc24M>, <&pll4>;
-+        clock-output-names = "apb0";
-+    };
-+
-+  - |
-+    clk@6000074 {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun9i-a80-apb1-clk";
-+        reg = <0x06000074 0x4>;
-+        clocks = <&osc24M>, <&pll4>;
-+        clock-output-names = "apb1";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-cpus-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-cpus-clk.yaml
-new file mode 100644
-index 000000000000..24d5b2f1a314
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-cpus-clk.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun9i-a80-cpus-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A80 CPUS Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 0
-+
-+  compatible:
-+    const: allwinner,sun9i-a80-cpus-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 4
-+    description: >
-+      The parent order must match the hardware programming order.
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clk@8001410 {
-+        compatible = "allwinner,sun9i-a80-cpus-clk";
-+        reg = <0x08001410 0x4>;
-+        #clock-cells = <0>;
-+        clocks = <&osc32k>, <&osc24M>, <&pll4>, <&pll3>;
-+        clock-output-names = "cpus";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-gt-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-gt-clk.yaml
-new file mode 100644
-index 000000000000..07f38def7dc3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-gt-clk.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun9i-a80-gt-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A80 GT Bus Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 0
-+
-+  compatible:
-+    const: allwinner,sun9i-a80-gt-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 4
-+    description: >
-+      The parent order must match the hardware programming order.
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clk@0600005c {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun9i-a80-gt-clk";
-+        reg = <0x0600005c 0x4>;
-+        clocks = <&osc24M>, <&pll4>, <&pll12>, <&pll12>;
-+        clock-output-names = "gt";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-mmc-config-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-mmc-config-clk.yaml
-new file mode 100644
-index 000000000000..20dc115fa211
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-mmc-config-clk.yaml
-@@ -0,0 +1,68 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun9i-a80-mmc-config-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A80 MMC Configuration Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+description: >
-+  There is one clock/reset output per mmc controller. The number of
-+  outputs is determined by the size of the address block, which is
-+  related to the overall mmc block.
-+
-+properties:
-+  "#clock-cells":
-+    const: 1
-+    description: >
-+      The additional ID argument passed to the clock shall refer to
-+      the index of the output.
-+
-+  "#reset-cells":
-+    const: 1
-+
-+  compatible:
-+    const: allwinner,sun9i-a80-mmc-config-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  clock-output-names:
-+    maxItems: 4
-+
-+required:
-+  - "#clock-cells"
-+  - "#reset-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clk@1c13000 {
-+        #clock-cells = <1>;
-+        #reset-cells = <1>;
-+        compatible = "allwinner,sun9i-a80-mmc-config-clk";
-+        reg = <0x01c13000 0x10>;
-+        clocks = <&ahb0_gates 8>;
-+        resets = <&ahb0_resets 8>;
-+        clock-output-names = "mmc0_config", "mmc1_config",
-+                             "mmc2_config", "mmc3_config";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-pll4-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-pll4-clk.yaml
-new file mode 100644
-index 000000000000..b76bab6a30e9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-pll4-clk.yaml
-@@ -0,0 +1,50 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun9i-a80-pll4-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A80 Peripheral PLL Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 0
-+
-+  compatible:
-+    const: allwinner,sun9i-a80-pll4-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clk@600000c {
-+        #clock-cells = <0>;
-+        compatible = "allwinner,sun9i-a80-pll4-clk";
-+        reg = <0x0600000c 0x4>;
-+        clocks = <&osc24M>;
-+        clock-output-names = "pll4";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-usb-mod-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-usb-mod-clk.yaml
-new file mode 100644
-index 000000000000..15218d10e78e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-usb-mod-clk.yaml
-@@ -0,0 +1,60 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun9i-a80-usb-mod-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A80 USB Module Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 1
-+    description: >
-+      The additional ID argument passed to the clock shall refer to
-+      the index of the output.
-+
-+  "#reset-cells":
-+    const: 1
-+
-+  compatible:
-+    const: allwinner,sun9i-a80-usb-mod-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-output-names:
-+    maxItems: 6
-+
-+required:
-+  - "#clock-cells"
-+  - "#reset-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clk@a08000 {
-+        #clock-cells = <1>;
-+        #reset-cells = <1>;
-+        compatible = "allwinner,sun9i-a80-usb-mod-clk";
-+        reg = <0x00a08000 0x4>;
-+        clocks = <&ahb1_gates 1>;
-+        clock-output-names = "usb0_ahb", "usb_ohci0",
-+                             "usb1_ahb", "usb_ohci1",
-+                             "usb2_ahb", "usb_ohci2";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-usb-phy-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-usb-phy-clk.yaml
-new file mode 100644
-index 000000000000..2569041684e6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-usb-phy-clk.yaml
-@@ -0,0 +1,60 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/allwinner,sun9i-a80-usb-phy-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A80 USB PHY Clock Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+deprecated: true
-+
-+properties:
-+  "#clock-cells":
-+    const: 1
-+    description: >
-+      The additional ID argument passed to the clock shall refer to
-+      the index of the output.
-+
-+  "#reset-cells":
-+    const: 1
-+
-+  compatible:
-+    const: allwinner,sun9i-a80-usb-phy-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-output-names:
-+    maxItems: 6
-+
-+required:
-+  - "#clock-cells"
-+  - "#reset-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-output-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clk@a08004 {
-+        #clock-cells = <1>;
-+        #reset-cells = <1>;
-+        compatible = "allwinner,sun9i-a80-usb-phy-clk";
-+        reg = <0x00a08004 0x4>;
-+        clocks = <&ahb1_gates 1>;
-+        clock-output-names = "usb_phy0", "usb_hsic1_480M",
-+                             "usb_phy1", "usb_hsic2_480M",
-+                             "usb_phy2", "usb_hsic_12M";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-deleted file mode 100644
-index 1a042e20b115..000000000000
---- a/Documentation/devicetree/bindings/clock/sunxi.txt
-+++ /dev/null
-@@ -1,225 +0,0 @@
--Device Tree Clock bindings for arch-sunxi
--
--This binding uses the common clock binding[1].
--
--[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
--
--Required properties:
--- compatible : shall be one of the following:
--	"allwinner,sun4i-a10-osc-clk" - for a gatable oscillator
--	"allwinner,sun4i-a10-pll1-clk" - for the main PLL clock and PLL4
--	"allwinner,sun6i-a31-pll1-clk" - for the main PLL clock on A31
--	"allwinner,sun8i-a23-pll1-clk" - for the main PLL clock on A23
--	"allwinner,sun4i-a10-pll3-clk" - for the video PLL clock on A10
--	"allwinner,sun9i-a80-pll4-clk" - for the peripheral PLLs on A80
--	"allwinner,sun4i-a10-pll5-clk" - for the PLL5 clock
--	"allwinner,sun4i-a10-pll6-clk" - for the PLL6 clock
--	"allwinner,sun6i-a31-pll6-clk" - for the PLL6 clock on A31
--	"allwinner,sun9i-a80-gt-clk" - for the GT bus clock on A80
--	"allwinner,sun4i-a10-cpu-clk" - for the CPU multiplexer clock
--	"allwinner,sun4i-a10-axi-clk" - for the AXI clock
--	"allwinner,sun8i-a23-axi-clk" - for the AXI clock on A23
--	"allwinner,sun4i-a10-gates-clk" - for generic gates on all compatible SoCs
--	"allwinner,sun4i-a10-axi-gates-clk" - for the AXI gates
--	"allwinner,sun4i-a10-ahb-clk" - for the AHB clock
--	"allwinner,sun5i-a13-ahb-clk" - for the AHB clock on A13
--	"allwinner,sun9i-a80-ahb-clk" - for the AHB bus clocks on A80
--	"allwinner,sun4i-a10-ahb-gates-clk" - for the AHB gates on A10
--	"allwinner,sun5i-a13-ahb-gates-clk" - for the AHB gates on A13
--	"allwinner,sun5i-a10s-ahb-gates-clk" - for the AHB gates on A10s
--	"allwinner,sun7i-a20-ahb-gates-clk" - for the AHB gates on A20
--	"allwinner,sun6i-a31-ar100-clk" - for the AR100 on A31
--	"allwinner,sun9i-a80-cpus-clk" - for the CPUS on A80
--	"allwinner,sun6i-a31-ahb1-clk" - for the AHB1 clock on A31
--	"allwinner,sun8i-h3-ahb2-clk" - for the AHB2 clock on H3
--	"allwinner,sun6i-a31-ahb1-gates-clk" - for the AHB1 gates on A31
--	"allwinner,sun8i-a23-ahb1-gates-clk" - for the AHB1 gates on A23
--	"allwinner,sun9i-a80-ahb0-gates-clk" - for the AHB0 gates on A80
--	"allwinner,sun9i-a80-ahb1-gates-clk" - for the AHB1 gates on A80
--	"allwinner,sun9i-a80-ahb2-gates-clk" - for the AHB2 gates on A80
--	"allwinner,sun4i-a10-apb0-clk" - for the APB0 clock
--	"allwinner,sun6i-a31-apb0-clk" - for the APB0 clock on A31
--	"allwinner,sun8i-a23-apb0-clk" - for the APB0 clock on A23
--	"allwinner,sun9i-a80-apb0-clk" - for the APB0 bus clock on A80
--	"allwinner,sun8i-a83t-apb0-gates-clk" - for the APB0 gates on A83T
--	"allwinner,sun4i-a10-apb0-gates-clk" - for the APB0 gates on A10
--	"allwinner,sun5i-a13-apb0-gates-clk" - for the APB0 gates on A13
--	"allwinner,sun5i-a10s-apb0-gates-clk" - for the APB0 gates on A10s
--	"allwinner,sun6i-a31-apb0-gates-clk" - for the APB0 gates on A31
--	"allwinner,sun7i-a20-apb0-gates-clk" - for the APB0 gates on A20
--	"allwinner,sun8i-a23-apb0-gates-clk" - for the APB0 gates on A23
--	"allwinner,sun8i-h3-apb0-gates-clk" - for the APB0 gates on H3
--	"allwinner,sun9i-a80-apb0-gates-clk" - for the APB0 gates on A80
--	"allwinner,sun4i-a10-apb1-clk" - for the APB1 clock
--	"allwinner,sun9i-a80-apb1-clk" - for the APB1 bus clock on A80
--	"allwinner,sun4i-a10-apb1-gates-clk" - for the APB1 gates on A10
--	"allwinner,sun5i-a13-apb1-gates-clk" - for the APB1 gates on A13
--	"allwinner,sun5i-a10s-apb1-gates-clk" - for the APB1 gates on A10s
--	"allwinner,sun6i-a31-apb1-gates-clk" - for the APB1 gates on A31
--	"allwinner,sun7i-a20-apb1-gates-clk" - for the APB1 gates on A20
--	"allwinner,sun8i-a23-apb1-gates-clk" - for the APB1 gates on A23
--	"allwinner,sun9i-a80-apb1-gates-clk" - for the APB1 gates on A80
--	"allwinner,sun6i-a31-apb2-gates-clk" - for the APB2 gates on A31
--	"allwinner,sun8i-a23-apb2-gates-clk" - for the APB2 gates on A23
--	"allwinner,sun8i-a83t-bus-gates-clk" - for the bus gates on A83T
--	"allwinner,sun8i-h3-bus-gates-clk" - for the bus gates on H3
--	"allwinner,sun9i-a80-apbs-gates-clk" - for the APBS gates on A80
--	"allwinner,sun4i-a10-display-clk" - for the display clocks on the A10
--	"allwinner,sun4i-a10-dram-gates-clk" - for the DRAM gates on A10
--	"allwinner,sun5i-a13-dram-gates-clk" - for the DRAM gates on A13
--	"allwinner,sun5i-a13-mbus-clk" - for the MBUS clock on A13
--	"allwinner,sun4i-a10-mmc-clk" - for the MMC clock
--	"allwinner,sun9i-a80-mmc-clk" - for mmc module clocks on A80
--	"allwinner,sun9i-a80-mmc-config-clk" - for mmc gates + resets on A80
--	"allwinner,sun4i-a10-mod0-clk" - for the module 0 family of clocks
--	"allwinner,sun9i-a80-mod0-clk" - for module 0 (storage) clocks on A80
--	"allwinner,sun8i-a23-mbus-clk" - for the MBUS clock on A23
--	"allwinner,sun7i-a20-out-clk" - for the external output clocks
--	"allwinner,sun7i-a20-gmac-clk" - for the GMAC clock module on A20/A31
--	"allwinner,sun4i-a10-tcon-ch0-clk" - for the TCON channel 0 clock on the A10
--	"allwinner,sun4i-a10-tcon-ch1-clk" - for the TCON channel 1 clock on the A10
--	"allwinner,sun4i-a10-usb-clk" - for usb gates + resets on A10 / A20
--	"allwinner,sun5i-a13-usb-clk" - for usb gates + resets on A13
--	"allwinner,sun6i-a31-usb-clk" - for usb gates + resets on A31
--	"allwinner,sun8i-a23-usb-clk" - for usb gates + resets on A23
--	"allwinner,sun8i-h3-usb-clk" - for usb gates + resets on H3
--	"allwinner,sun9i-a80-usb-mod-clk" - for usb gates + resets on A80
--	"allwinner,sun9i-a80-usb-phy-clk" - for usb phy gates + resets on A80
--	"allwinner,sun4i-a10-ve-clk" - for the Video Engine clock
--	"allwinner,sun6i-a31-display-clk" - for the display clocks
--
--Required properties for all clocks:
--- reg : shall be the control register address for the clock.
--- clocks : shall be the input parent clock(s) phandle for the clock. For
--	multiplexed clocks, the list order must match the hardware
--	programming order.
--- #clock-cells : from common clock binding; shall be set to 0 except for
--	the following compatibles where it shall be set to 1:
--	"allwinner,*-gates-clk", "allwinner,sun4i-pll5-clk",
--	"allwinner,sun4i-pll6-clk", "allwinner,sun6i-a31-pll6-clk",
--	"allwinner,*-usb-clk", "allwinner,*-mmc-clk",
--	"allwinner,*-mmc-config-clk"
--- clock-output-names : shall be the corresponding names of the outputs.
--	If the clock module only has one output, the name shall be the
--	module name.
--
--And "allwinner,*-usb-clk" clocks also require:
--- reset-cells : shall be set to 1
--
--The "allwinner,sun4i-a10-ve-clk" clock also requires:
--- reset-cells : shall be set to 0
--
--The "allwinner,sun9i-a80-mmc-config-clk" clock also requires:
--- #reset-cells : shall be set to 1
--- resets : shall be the reset control phandle for the mmc block.
--
--For "allwinner,sun7i-a20-gmac-clk", the parent clocks shall be fixed rate
--dummy clocks at 25 MHz and 125 MHz, respectively. See example.
--
--Clock consumers should specify the desired clocks they use with a
--"clocks" phandle cell. Consumers that are using a gated clock should
--provide an additional ID in their clock property. This ID is the
--offset of the bit controlling this particular gate in the register.
--For the other clocks with "#clock-cells" = 1, the additional ID shall
--refer to the index of the output.
--
--For "allwinner,sun6i-a31-pll6-clk", there are 2 outputs. The first output
--is the normal PLL6 output, or "pll6". The second output is rate doubled
--PLL6, or "pll6x2".
--
--The "allwinner,*-mmc-clk" clocks have three different outputs: the
--main clock, with the ID 0, and the output and sample clocks, with the
--IDs 1 and 2, respectively.
--
--The "allwinner,sun9i-a80-mmc-config-clk" clock has one clock/reset output
--per mmc controller. The number of outputs is determined by the size of
--the address block, which is related to the overall mmc block.
--
--For example:
--
--osc24M: clk@1c20050 {
--	#clock-cells = <0>;
--	compatible = "allwinner,sun4i-a10-osc-clk";
--	reg = <0x01c20050 0x4>;
--	clocks = <&osc24M_fixed>;
--	clock-output-names = "osc24M";
--};
--
--pll1: clk@1c20000 {
--	#clock-cells = <0>;
--	compatible = "allwinner,sun4i-a10-pll1-clk";
--	reg = <0x01c20000 0x4>;
--	clocks = <&osc24M>;
--	clock-output-names = "pll1";
--};
--
--pll5: clk@1c20020 {
--	#clock-cells = <1>;
--	compatible = "allwinner,sun4i-pll5-clk";
--	reg = <0x01c20020 0x4>;
--	clocks = <&osc24M>;
--	clock-output-names = "pll5_ddr", "pll5_other";
--};
--
--pll6: clk@1c20028 {
--	#clock-cells = <1>;
--	compatible = "allwinner,sun6i-a31-pll6-clk";
--	reg = <0x01c20028 0x4>;
--	clocks = <&osc24M>;
--	clock-output-names = "pll6", "pll6x2";
--};
--
--cpu: cpu@1c20054 {
--	#clock-cells = <0>;
--	compatible = "allwinner,sun4i-a10-cpu-clk";
--	reg = <0x01c20054 0x4>;
--	clocks = <&osc32k>, <&osc24M>, <&pll1>;
--	clock-output-names = "cpu";
--};
--
--mmc0_clk: clk@1c20088 {
--	#clock-cells = <1>;
--	compatible = "allwinner,sun4i-a10-mmc-clk";
--	reg = <0x01c20088 0x4>;
--	clocks = <&osc24M>, <&pll6 1>, <&pll5 1>;
--	clock-output-names = "mmc0", "mmc0_output", "mmc0_sample";
--};
--
--mii_phy_tx_clk: clk@2 {
--	#clock-cells = <0>;
--	compatible = "fixed-clock";
--	clock-frequency = <25000000>;
--	clock-output-names = "mii_phy_tx";
--};
--
--gmac_int_tx_clk: clk@3 {
--	#clock-cells = <0>;
--	compatible = "fixed-clock";
--	clock-frequency = <125000000>;
--	clock-output-names = "gmac_int_tx";
--};
--
--gmac_clk: clk@1c20164 {
--	#clock-cells = <0>;
--	compatible = "allwinner,sun7i-a20-gmac-clk";
--	reg = <0x01c20164 0x4>;
--	/*
--	 * The first clock must be fixed at 25MHz;
--	 * the second clock must be fixed at 125MHz
--	 */
--	clocks = <&mii_phy_tx_clk>, <&gmac_int_tx_clk>;
--	clock-output-names = "gmac";
--};
--
--mmc_config_clk: clk@1c13000 {
--	compatible = "allwinner,sun9i-a80-mmc-config-clk";
--	reg = <0x01c13000 0x10>;
--	clocks = <&ahb0_gates 8>;
--	clock-names = "ahb";
--	resets = <&ahb0_resets 8>;
--	reset-names = "ahb";
--	#clock-cells = <1>;
--	#reset-cells = <1>;
--	clock-output-names = "mmc0_config", "mmc1_config",
--			     "mmc2_config", "mmc3_config";
--};
+>>   	devfreq = <&bus_wcore>;
+>>   	status = "okay";
+>>   };
+>>
+> If you fix the things related to 'opp-shared', Looks good to me.
+> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+>
+Best regards
 -- 
-2.23.0
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
