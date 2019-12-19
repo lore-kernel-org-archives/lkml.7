@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F54C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376D8C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26AAF24672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EB3524679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781023;
-	bh=pO4lacVKq57i/HeIY8f9aUj1nN3FE2OYzqeHQmrqVrs=;
+	s=default; t=1576781026;
+	bh=HWfVOk9ffR+9BCLe8fI2YOt95dbyHc8Er0MDZ8RP7I8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uUQSg98U8e9BU1CxU8wkPEJ4zCW7ex54psXtwpwUMEacMghrUjDvM9W1sv/7WFl4r
-	 FQaD7GDbl+Jno+lCLgIDWUvbuldhGAKRZxnyZZRh4OlQQtE5x5/519Ec889168ty1J
-	 bOj2jGlOO334ZeiGxcC5fJXXz0ocHKDjANlKyuy8=
+	b=nVdGpjx/zoAolipInCDyRXVMyORuwy+JeTUpjBl9EeIo8c81fGk/V5Tr5Oit9DVbC
+	 q9ecahV2WKd57vMIVygDihlhCmF319LDStePVSbb59AiHdqItKZtSrqu073va0GB/v
+	 rRlM9rGZ+10yK98PmsQS1zXPK/gEdFnJ+G1AUa+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728876AbfLSSnl (ORCPT
+        id S1728881AbfLSSno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:43:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35266 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:43:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727551AbfLSSnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:43:35 -0500
+        id S1728649AbfLSSnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:43:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E952424672;
-        Thu, 19 Dec 2019 18:43:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ADAE206D7;
+        Thu, 19 Dec 2019 18:43:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781014;
-        bh=pO4lacVKq57i/HeIY8f9aUj1nN3FE2OYzqeHQmrqVrs=;
+        s=default; t=1576781016;
+        bh=HWfVOk9ffR+9BCLe8fI2YOt95dbyHc8Er0MDZ8RP7I8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UF12j+qu6PLj9y5k6rXGNyPb16DKW93kvH6Kko5o7kWnex8LngrsmHtdHIA0g16tU
-         iBH7b01HasOUmvjw8cfOkUo5+XtbJPsBLTeyLlUPERW3gXiKXVF2qmfm5HXlZQWDRw
-         ZyLvD/SbC+kXNgkj7havtE40B7V7K+1q5xL8QsKg=
+        b=Y6F5QAttFB53Lcgo1Pv/oN+RDWgCIvwDj+iGwdOAeq7PmF+z6tYTYPA6W7Uxdq4xn
+         ACV/LLzITk/JnEk6uWwD4CdSRSxUzwQREQ6AjrJ41Cu8TeYkdvTmKfgo8ncwcJCUw6
+         Naemm4RmF89A4u1LsP9Rp2KmvVQxC6RPRfVemMNU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Scott Mayhew <smayhew@redhat.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
+        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 048/199] nfsd: fix a warning in __cld_pipe_upcall()
-Date:   Thu, 19 Dec 2019 19:32:10 +0100
-Message-Id: <20191219183217.615536127@linuxfoundation.org>
+Subject: [PATCH 4.9 049/199] ARM: OMAP1/2: fix SoC name printing
+Date:   Thu, 19 Dec 2019 19:32:11 +0100
+Message-Id: <20191219183217.669837002@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,87 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Mayhew <smayhew@redhat.com>
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
 
-[ Upstream commit b493fd31c0b89d9453917e977002de58bebc3802 ]
+[ Upstream commit 04a92358b3964988c78dfe370a559ae550383886 ]
 
-__cld_pipe_upcall() emits a "do not call blocking ops when
-!TASK_RUNNING" warning due to the dput() call in rpc_queue_upcall().
-Fix it by using a completion instead of hand coding the wait.
+Currently we get extra newlines on OMAP1/2 when the SoC name is printed:
 
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+[    0.000000] OMAP1510
+[    0.000000]  revision 2 handled as 15xx id: bc058c9b93111a16
+
+[    0.000000] OMAP2420
+[    0.000000]
+
+Fix by using pr_cont.
+
+Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4recover.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+ arch/arm/mach-omap1/id.c | 6 +++---
+ arch/arm/mach-omap2/id.c | 4 ++--
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
-index 66eaeb1e8c2ce..dc9586feab317 100644
---- a/fs/nfsd/nfs4recover.c
-+++ b/fs/nfsd/nfs4recover.c
-@@ -661,7 +661,7 @@ struct cld_net {
- struct cld_upcall {
- 	struct list_head	 cu_list;
- 	struct cld_net		*cu_net;
--	struct task_struct	*cu_task;
-+	struct completion	 cu_done;
- 	struct cld_msg		 cu_msg;
- };
- 
-@@ -670,23 +670,18 @@ __cld_pipe_upcall(struct rpc_pipe *pipe, struct cld_msg *cmsg)
- {
- 	int ret;
- 	struct rpc_pipe_msg msg;
-+	struct cld_upcall *cup = container_of(cmsg, struct cld_upcall, cu_msg);
- 
- 	memset(&msg, 0, sizeof(msg));
- 	msg.data = cmsg;
- 	msg.len = sizeof(*cmsg);
- 
--	/*
--	 * Set task state before we queue the upcall. That prevents
--	 * wake_up_process in the downcall from racing with schedule.
--	 */
--	set_current_state(TASK_UNINTERRUPTIBLE);
- 	ret = rpc_queue_upcall(pipe, &msg);
- 	if (ret < 0) {
--		set_current_state(TASK_RUNNING);
- 		goto out;
+diff --git a/arch/arm/mach-omap1/id.c b/arch/arm/mach-omap1/id.c
+index 52de382fc8047..7e49dfda3d2f4 100644
+--- a/arch/arm/mach-omap1/id.c
++++ b/arch/arm/mach-omap1/id.c
+@@ -200,10 +200,10 @@ void __init omap_check_revision(void)
+ 		printk(KERN_INFO "Unknown OMAP cpu type: 0x%02x\n", cpu_type);
  	}
  
--	schedule();
-+	wait_for_completion(&cup->cu_done);
+-	printk(KERN_INFO "OMAP%04x", omap_revision >> 16);
++	pr_info("OMAP%04x", omap_revision >> 16);
+ 	if ((omap_revision >> 8) & 0xff)
+-		printk(KERN_INFO "%x", (omap_revision >> 8) & 0xff);
+-	printk(KERN_INFO " revision %i handled as %02xxx id: %08x%08x\n",
++		pr_cont("%x", (omap_revision >> 8) & 0xff);
++	pr_cont(" revision %i handled as %02xxx id: %08x%08x\n",
+ 	       die_rev, omap_revision & 0xff, system_serial_low,
+ 	       system_serial_high);
+ }
+diff --git a/arch/arm/mach-omap2/id.c b/arch/arm/mach-omap2/id.c
+index cc6d9fa609242..9d942f022f2f6 100644
+--- a/arch/arm/mach-omap2/id.c
++++ b/arch/arm/mach-omap2/id.c
+@@ -199,8 +199,8 @@ void __init omap2xxx_check_revision(void)
  
- 	if (msg.errno < 0)
- 		ret = msg.errno;
-@@ -753,7 +748,7 @@ cld_pipe_downcall(struct file *filp, const char __user *src, size_t mlen)
- 	if (copy_from_user(&cup->cu_msg, src, mlen) != 0)
- 		return -EFAULT;
- 
--	wake_up_process(cup->cu_task);
-+	complete(&cup->cu_done);
- 	return mlen;
+ 	pr_info("%s", soc_name);
+ 	if ((omap_rev() >> 8) & 0x0f)
+-		pr_info("%s", soc_rev);
+-	pr_info("\n");
++		pr_cont("%s", soc_rev);
++	pr_cont("\n");
  }
  
-@@ -768,7 +763,7 @@ cld_pipe_destroy_msg(struct rpc_pipe_msg *msg)
- 	if (msg->errno >= 0)
- 		return;
- 
--	wake_up_process(cup->cu_task);
-+	complete(&cup->cu_done);
- }
- 
- static const struct rpc_pipe_ops cld_upcall_ops = {
-@@ -899,7 +894,7 @@ restart_search:
- 			goto restart_search;
- 		}
- 	}
--	new->cu_task = current;
-+	init_completion(&new->cu_done);
- 	new->cu_msg.cm_vers = CLD_UPCALL_VERSION;
- 	put_unaligned(cn->cn_xid++, &new->cu_msg.cm_xid);
- 	new->cu_net = cn;
+ #define OMAP3_SHOW_FEATURE(feat)		\
 -- 
 2.20.1
 
