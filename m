@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16666C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9476C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC79C227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A63EE222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:57:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781850;
-	bh=HaRorocpD35JNXQ/vtSF4X4qwl0NGYvERY6bEGeqHVs=;
+	s=default; t=1576781858;
+	bh=DgQmfFODGhLO7JQvXewluc2BUtibznHL8k9J2ESLWmg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EoQz2h7v8H21Sy20dVUBL3RJflsCuaj1alHs7UeA/yFk70PBY2Xy+ReHLj2BH+8Mw
-	 BrGFdPumYmFz4k5F1ks4dXNJwLeqoOPMF353kPu9bKmx9nS03M0zzXzYQjK5q9rzF4
-	 jo0qpPbvwDeBa6VUceS/5AhNodVjqeV7Idq3PAio=
+	b=r6w1avWmYypWhIGV0FxLDIKeUH/1VkOgLGtFa9sT8iVa3lg3/NWEsmJru6mlgEvfl
+	 4elF6BL0Y3uPY4Ks17pRzUX4MKbbNMGvjr+c7X/cs8i4HrieYOBQx+CIYJnfV1lWcs
+	 3VHgjKWMvBKMLnWWi8AKYiCtv1Y+xsdj8efRvgbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730601AbfLSS52 (ORCPT
+        id S1729839AbfLSS5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:57:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52626 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:57:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730775AbfLSS4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:56:10 -0500
+        id S1730744AbfLSSzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:55:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B776F24679;
-        Thu, 19 Dec 2019 18:56:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 880EC2468C;
+        Thu, 19 Dec 2019 18:55:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781769;
-        bh=HaRorocpD35JNXQ/vtSF4X4qwl0NGYvERY6bEGeqHVs=;
+        s=default; t=1576781755;
+        bh=DgQmfFODGhLO7JQvXewluc2BUtibznHL8k9J2ESLWmg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TD5F8RFoN95vSPgv6M0uRgeuSRfRBghfHcIF5PgjIm63lt42N/yxmR4dTYYfPy9nA
-         /PrKK6aqjuRlOAZEvXdjJJEXuyQ1n0AxBD3C2h10lTyH+X5O9oGScKm3uDppLhHb7w
-         jzrVVXIKDqTKTwTJ14VdSrC00Ka11zrIi6tenVNg=
+        b=nYOeoM1+F8Bi0gJ6fhDlWi/6b2hjXuqhEQkYlo9CG7Bujdwjq4V4bCv3eEOvE3opG
+         Ck0zSzn5o9/1Kyykg/Z6lx3fnbeUN1tTE9KQGAlrIpttg1IZ29BwppzAss4XwfBaQN
+         fGt3aAyK1C/7dbLboe9MOW450RHwOj20cWXq5cXc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Frank Sorenson <sorenson@redhat.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.4 36/80] CIFS: Do not miss cancelled OPEN responses
-Date:   Thu, 19 Dec 2019 19:34:28 +0100
-Message-Id: <20191219183107.361460846@linuxfoundation.org>
+        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        David Airlie <airlied@redhat.com>,
+        Jerry Zuo <Jerry.Zuo@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Juston Li <juston.li@intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: [PATCH 5.4 66/80] drm/nouveau/kms/nv50-: Call outp_atomic_check_view() before handling PBN
+Date:   Thu, 19 Dec 2019 19:34:58 +0100
+Message-Id: <20191219183137.703692301@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -61,76 +66,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Shilovsky <pshilov@microsoft.com>
+From: Lyude Paul <lyude@redhat.com>
 
-commit 7b71843fa7028475b052107664cbe120156a2cfc upstream.
+commit 310d35771ee9040f5744109fc277206ad96ba253 upstream.
 
-When an OPEN command is cancelled we mark a mid as
-cancelled and let the demultiplex thread process it
-by closing an open handle. The problem is there is
-a race between a system call thread and the demultiplex
-thread and there may be a situation when the mid has
-been already processed before it is set as cancelled.
+Since nv50_outp_atomic_check_view() can set crtc_state->mode_changed, we
+probably should be calling it before handling any PBN changes. Just a
+precaution.
 
-Fix this by processing cancelled requests when mids
-are being destroyed which means that there is only
-one thread referencing a particular mid. Also set
-mids as cancelled unconditionally on their state.
-
-Cc: Stable <stable@vger.kernel.org>
-Tested-by: Frank Sorenson <sorenson@redhat.com>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Fixes: 232c9eec417a ("drm/nouveau: Use atomic VCPI helpers for MST")
+Cc: Ben Skeggs <bskeggs@redhat.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: David Airlie <airlied@redhat.com>
+Cc: Jerry Zuo <Jerry.Zuo@amd.com>
+Cc: Harry Wentland <harry.wentland@amd.com>
+Cc: Juston Li <juston.li@intel.com>
+Cc: Sean Paul <seanpaul@chromium.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: <stable@vger.kernel.org> # v5.1+
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/connect.c   |    6 ------
- fs/cifs/transport.c |   10 ++++++++--
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/nouveau/dispnv50/disp.c |   48 +++++++++++++++++---------------
+ 1 file changed, 26 insertions(+), 22 deletions(-)
 
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -1222,12 +1222,6 @@ next_pdu:
- 		for (i = 0; i < num_mids; i++) {
- 			if (mids[i] != NULL) {
- 				mids[i]->resp_buf_size = server->pdu_size;
--				if ((mids[i]->mid_flags & MID_WAIT_CANCELLED) &&
--				    mids[i]->mid_state == MID_RESPONSE_RECEIVED &&
--				    server->ops->handle_cancelled_mid)
--					server->ops->handle_cancelled_mid(
--							mids[i]->resp_buf,
--							server);
+--- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+@@ -770,32 +770,36 @@ nv50_msto_atomic_check(struct drm_encode
+ 	struct nv50_mstm *mstm = mstc->mstm;
+ 	struct nv50_head_atom *asyh = nv50_head_atom(crtc_state);
+ 	int slots;
++	int ret;
  
- 				if (!mids[i]->multiRsp || mids[i]->multiEnd)
- 					mids[i]->callback(mids[i]);
---- a/fs/cifs/transport.c
-+++ b/fs/cifs/transport.c
-@@ -93,8 +93,14 @@ static void _cifs_mid_q_entry_release(st
- 	__u16 smb_cmd = le16_to_cpu(midEntry->command);
- 	unsigned long now;
- 	unsigned long roundtrip_time;
--	struct TCP_Server_Info *server = midEntry->server;
- #endif
-+	struct TCP_Server_Info *server = midEntry->server;
+-	if (crtc_state->mode_changed || crtc_state->connectors_changed) {
+-		/*
+-		 * When restoring duplicated states, we need to make sure that
+-		 * the bw remains the same and avoid recalculating it, as the
+-		 * connector's bpc may have changed after the state was
+-		 * duplicated
+-		 */
+-		if (!state->duplicated) {
+-			const int bpp = connector->display_info.bpc * 3;
+-			const int clock = crtc_state->adjusted_mode.clock;
+-
+-			asyh->dp.pbn = drm_dp_calc_pbn_mode(clock, bpp);
+-		}
+-
+-		slots = drm_dp_atomic_find_vcpi_slots(state, &mstm->mgr,
+-						      mstc->port,
+-						      asyh->dp.pbn);
+-		if (slots < 0)
+-			return slots;
++	ret = nv50_outp_atomic_check_view(encoder, crtc_state, conn_state,
++					  mstc->native);
++	if (ret)
++		return ret;
 +
-+	if (midEntry->resp_buf && (midEntry->mid_flags & MID_WAIT_CANCELLED) &&
-+	    midEntry->mid_state == MID_RESPONSE_RECEIVED &&
-+	    server->ops->handle_cancelled_mid)
-+		server->ops->handle_cancelled_mid(midEntry->resp_buf, server);
++	if (!crtc_state->mode_changed && !crtc_state->connectors_changed)
++		return 0;
 +
- 	midEntry->mid_state = MID_FREE;
- 	atomic_dec(&midCount);
- 	if (midEntry->large_buf)
-@@ -1122,8 +1128,8 @@ compound_send_recv(const unsigned int xi
- 				 midQ[i]->mid, le16_to_cpu(midQ[i]->command));
- 			send_cancel(server, &rqst[i], midQ[i]);
- 			spin_lock(&GlobalMid_Lock);
-+			midQ[i]->mid_flags |= MID_WAIT_CANCELLED;
- 			if (midQ[i]->mid_state == MID_REQUEST_SUBMITTED) {
--				midQ[i]->mid_flags |= MID_WAIT_CANCELLED;
- 				midQ[i]->callback = cifs_cancelled_callback;
- 				cancelled_mid[i] = true;
- 				credits[i].value = 0;
++	/*
++	 * When restoring duplicated states, we need to make sure that the bw
++	 * remains the same and avoid recalculating it, as the connector's bpc
++	 * may have changed after the state was duplicated
++	 */
++	if (!state->duplicated) {
++		const int bpp = connector->display_info.bpc * 3;
++		const int clock = crtc_state->adjusted_mode.clock;
+ 
+-		asyh->dp.tu = slots;
++		asyh->dp.pbn = drm_dp_calc_pbn_mode(clock, bpp);
+ 	}
+ 
+-	return nv50_outp_atomic_check_view(encoder, crtc_state, conn_state,
+-					   mstc->native);
++	slots = drm_dp_atomic_find_vcpi_slots(state, &mstm->mgr, mstc->port,
++					      asyh->dp.pbn);
++	if (slots < 0)
++		return slots;
++
++	asyh->dp.tu = slots;
++
++	return 0;
+ }
+ 
+ static void
 
 
