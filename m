@@ -2,70 +2,236 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 900EFC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1B3C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53851227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:27:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576733234;
-	bh=MVB1B2T5HuwB3I7OzNlyQPpwCKH8XYnJes9y4BOyA7I=;
-	h=In-Reply-To:References:Cc:Subject:From:To:Date:List-ID:From;
-	b=CfOy7yILDiiRbbfYcMZwrskjpqBnIVrjIABN8RbmaUnarxE1U06nBd58J8N/8Bk44
-	 tM5ROiNV0Om0F+9lehggGSwVlvTBFk/5EKVgF2pIHaOVqmTvN+k6LM2ZG5giBQdwmF
-	 3Lya3mSVvcuDIsnpp9lfxC8UkuceRsl2CdAVsycI=
+	by mail.kernel.org (Postfix) with ESMTP id 4672724679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:27:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="dqorifJ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfLSF1N (ORCPT
+        id S1726960AbfLSF14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 00:27:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44500 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbfLSF1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 00:27:13 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04995222C2;
-        Thu, 19 Dec 2019 05:27:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576733232;
-        bh=MVB1B2T5HuwB3I7OzNlyQPpwCKH8XYnJes9y4BOyA7I=;
-        h=In-Reply-To:References:Cc:Subject:From:To:Date:From;
-        b=j+vabZFjMOvHH8oBjeJI7x2YnFynh4Bh/ntugnuzJOqNumrb0iDu5n2rbRS+n8VOu
-         u7KLKKxpiXzSDrrYuuwmvzno0y8pZlYYR9P5fZu+kSIGrMXahU2MNYXsrX1eqJm0k3
-         v4J7Z/a/dwbE+r94y5OQow29iCVz4R7Ihgdi3amU=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 19 Dec 2019 00:27:56 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39125 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726903AbfLSF1z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 00:27:55 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 77so5611924oty.6
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 21:27:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=YiNT2OwN1PC5xiClJXvmIxtU8FKdWcajydHQPOKowMQ=;
+        b=dqorifJ4f+v2Gylbu8oAiFDcKa1F8skIpz6V3IgWOqRB33n7U59EJyePbqvuTj6Vy4
+         uOPeG7Kob1GhJUtITzia2N5iO6b+FgQt0PfBLv1SShdXtnPTkzPXC4wv8NlfHewxSVCr
+         BWaS5xgO+C3htMgxe5c7ubvEmgYEe4TsZt+Zn5XRlxBQhxFahwlW/Mo0S+TgOXqQ/47k
+         mtfOMZwImte59GAX6ig1VEn2mK8lUBxmhPPLTpVmIFFbH4EVvah9nw+1Oh0aFp9cBJiW
+         sz8ohgGLCmoNne0NYqks6igeYI3pnrq7++p4oBryH4HFQcsawtXKY12nyEVckq37Q8q+
+         63BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=YiNT2OwN1PC5xiClJXvmIxtU8FKdWcajydHQPOKowMQ=;
+        b=FqOnaIAEkZ/kY5f4eN/7KeTW/w8aem/jItN31bvePDlyYv0NHmX/5Ixgju6NcmHPMz
+         upJ83A1LhAOzzajT1IN6snZhFkiMxYec5PtBxS/TGe1vszvVF62+1TTSut/2iKVTRXhh
+         CiDPZtlBb8zuM2eUStmGYyMmDgA1m29RNBOoesZXwzuAgs/hPAah9L+JrDEpc7tvi5ex
+         Lw2GITMxbPkEQJnHjjBPTzkb2dkDi/0ho5CUd7010+umIld8l+lX6d+nH3rRI5PYNONZ
+         FXc37+k4Ym0KKKWrmlTHtCZ9Iz0X3i4JVd+td8bCOGL1YlGLtmFEReckEyALDUyLhUBT
+         Mtbg==
+X-Gm-Message-State: APjAAAVuJtaEUYPMitHBO1BnfVGRblu/lDknriPAO8bkaxPTLd3FTbiO
+        UXx56rK9yYhuxPokFZcqgXzmcNRGgiNXBQcwjQhljw==
+X-Google-Smtp-Source: APXvYqzIho60C4tgIgH4FPSEG3bP2Gra7VUCaG88r8S6eX3efYPsOK7esN+4WGhr8L+TiHfEgJwBcHps0ms7QGyGe6Y=
+X-Received: by 2002:a05:6830:1744:: with SMTP id 4mr6583360otz.71.1576733274234;
+ Wed, 18 Dec 2019 21:27:54 -0800 (PST)
 MIME-Version: 1.0
+References: <20191216222537.491123-1-jhubbard@nvidia.com> <20191216222537.491123-5-jhubbard@nvidia.com>
+In-Reply-To: <20191216222537.491123-5-jhubbard@nvidia.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 18 Dec 2019 21:27:43 -0800
+Message-ID: <CAPcyv4hQBMxYMurxG=Vwh0=FKWoT3z-Kf=dqES1-icRV5bLwKg@mail.gmail.com>
+Subject: Re: [PATCH v11 04/25] mm: devmap: refactor 1-based refcounting for
+ ZONE_DEVICE pages
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, KVM list <kvm@vger.kernel.org>,
+        linux-block@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Netdev <netdev@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190731182713.8123-3-tdas@codeaurora.org>
-References: <20190731182713.8123-1-tdas@codeaurora.org> <20190731182713.8123-3-tdas@codeaurora.org>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v3 2/2] clk: qcom : dispcc: Add support for display port clocks
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>
-User-Agent: alot/0.8.1
-Date:   Wed, 18 Dec 2019 21:27:11 -0800
-Message-Id: <20191219052712.04995222C2@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Taniya Das (2019-07-31 11:27:13)
-> SDM845 dispcc supports RCG and CBCRs for display port, so add support for
-> the same.
->=20
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+On Mon, Dec 16, 2019 at 2:26 PM John Hubbard <jhubbard@nvidia.com> wrote:
+>
+> An upcoming patch changes and complicates the refcounting and
+> especially the "put page" aspects of it. In order to keep
+> everything clean, refactor the devmap page release routines:
+>
+> * Rename put_devmap_managed_page() to page_is_devmap_managed(),
+>   and limit the functionality to "read only": return a bool,
+>   with no side effects.
+>
+> * Add a new routine, put_devmap_managed_page(), to handle checking
+>   what kind of page it is, and what kind of refcount handling it
+>   requires.
+>
+> * Rename __put_devmap_managed_page() to free_devmap_managed_page(),
+>   and limit the functionality to unconditionally freeing a devmap
+>   page.
+>
+> This is originally based on a separate patch by Ira Weiny, which
+> applied to an early version of the put_user_page() experiments.
+> Since then, J=C3=A9r=C3=B4me Glisse suggested the refactoring described a=
+bove.
+>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Suggested-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 > ---
+>  include/linux/mm.h | 17 +++++++++++++----
+>  mm/memremap.c      | 16 ++--------------
+>  mm/swap.c          | 24 ++++++++++++++++++++++++
+>  3 files changed, 39 insertions(+), 18 deletions(-)
+>
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index c97ea3b694e6..77a4df06c8a7 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -952,9 +952,10 @@ static inline bool is_zone_device_page(const struct =
+page *page)
+>  #endif
+>
+>  #ifdef CONFIG_DEV_PAGEMAP_OPS
+> -void __put_devmap_managed_page(struct page *page);
+> +void free_devmap_managed_page(struct page *page);
+>  DECLARE_STATIC_KEY_FALSE(devmap_managed_key);
+> -static inline bool put_devmap_managed_page(struct page *page)
+> +
+> +static inline bool page_is_devmap_managed(struct page *page)
+>  {
+>         if (!static_branch_unlikely(&devmap_managed_key))
+>                 return false;
+> @@ -963,7 +964,6 @@ static inline bool put_devmap_managed_page(struct pag=
+e *page)
+>         switch (page->pgmap->type) {
+>         case MEMORY_DEVICE_PRIVATE:
+>         case MEMORY_DEVICE_FS_DAX:
+> -               __put_devmap_managed_page(page);
+>                 return true;
+>         default:
+>                 break;
+> @@ -971,7 +971,14 @@ static inline bool put_devmap_managed_page(struct pa=
+ge *page)
+>         return false;
+>  }
+>
+> +bool put_devmap_managed_page(struct page *page);
+> +
+>  #else /* CONFIG_DEV_PAGEMAP_OPS */
+> +static inline bool page_is_devmap_managed(struct page *page)
+> +{
+> +       return false;
+> +}
+> +
+>  static inline bool put_devmap_managed_page(struct page *page)
+>  {
+>         return false;
+> @@ -1028,8 +1035,10 @@ static inline void put_page(struct page *page)
+>          * need to inform the device driver through callback. See
+>          * include/linux/memremap.h and HMM for details.
+>          */
+> -       if (put_devmap_managed_page(page))
+> +       if (page_is_devmap_managed(page)) {
+> +               put_devmap_managed_page(page);
+>                 return;
+> +       }
+>
+>         if (put_page_testzero(page))
+>                 __put_page(page);
+> diff --git a/mm/memremap.c b/mm/memremap.c
+> index e899fa876a62..2ba773859031 100644
+> --- a/mm/memremap.c
+> +++ b/mm/memremap.c
+> @@ -411,20 +411,8 @@ struct dev_pagemap *get_dev_pagemap(unsigned long pf=
+n,
+>  EXPORT_SYMBOL_GPL(get_dev_pagemap);
+>
+>  #ifdef CONFIG_DEV_PAGEMAP_OPS
+> -void __put_devmap_managed_page(struct page *page)
+> +void free_devmap_managed_page(struct page *page)
+>  {
+> -       int count =3D page_ref_dec_return(page);
+> -
+> -       /* still busy */
+> -       if (count > 1)
+> -               return;
+> -
+> -       /* only triggered by the dev_pagemap shutdown path */
+> -       if (count =3D=3D 0) {
+> -               __put_page(page);
+> -               return;
+> -       }
+> -
+>         /* notify page idle for dax */
+>         if (!is_device_private_page(page)) {
+>                 wake_up_var(&page->_refcount);
+> @@ -461,5 +449,5 @@ void __put_devmap_managed_page(struct page *page)
+>         page->mapping =3D NULL;
+>         page->pgmap->ops->page_free(page);
+>  }
+> -EXPORT_SYMBOL(__put_devmap_managed_page);
+> +EXPORT_SYMBOL(free_devmap_managed_page);
 
-Applied to clk-next
+This patch does not have a module consumer for
+free_devmap_managed_page(), so the export should move to the patch
+that needs the new export.
 
+Also the only reason that put_devmap_managed_page() is EXPORT_SYMBOL
+instead of EXPORT_SYMBOL_GPL is that there was no practical way to
+hide the devmap details from evey module in the kernel that did
+put_page(). I would expect free_devmap_managed_page() to
+EXPORT_SYMBOL_GPL if it is not inlined into an existing exported
+static inline api.
