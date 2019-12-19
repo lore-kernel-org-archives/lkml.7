@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CACAAC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01178C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A05DB227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3884206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782031;
-	bh=IebOsnRruRJT2wt0+t9bs4S3ty5GthByZG1FKzkWW0Q=;
+	s=default; t=1576782035;
+	bh=eADfKAFYLy7jXk/OAll9v4hG1prm7z8JxMYDEfBe/cE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s+z8TuucW0m/cuEUu0gL/Ce2j11eaBgvbu9ckW7d1wbh4f/+H9BseDYfQxPkCfpXg
-	 IvF83MDt8Xynbc++eF1mspa+q+ZFw9vcQe/Gzx/B6mTRKZiUKpnRQHBwOQp15+qClr
-	 k8VMGPX+oHEJFXWeHMg5Kegd74wNLn0jlzkVaGqo=
+	b=ZPhG8eqIsAMsepci1pKhKKxvHvtNogpRbnRkwuwcgbWcMvl/s8SBqCYv8ek+TRa9o
+	 TCvYTFQr0V9ElLHSGa63kwCaRcWSVEYxnzmw56IMfW7x1O1YydfAMGp+zdASfVEXUU
+	 8RcwF2uJXT7RN3d3PGGP62TLYa5JWy0+o7k7Z33s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730202AbfLSSwC (ORCPT
+        id S1730270AbfLSTAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:52:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46360 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 14:00:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729966AbfLSSv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:51:57 -0500
+        id S1730187AbfLSSwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:52:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2526C227BF;
-        Thu, 19 Dec 2019 18:51:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED0E3227BF;
+        Thu, 19 Dec 2019 18:51:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781515;
-        bh=IebOsnRruRJT2wt0+t9bs4S3ty5GthByZG1FKzkWW0Q=;
+        s=default; t=1576781520;
+        bh=eADfKAFYLy7jXk/OAll9v4hG1prm7z8JxMYDEfBe/cE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OpEjLrJmJzp9p8k1fXlJEbZhldLwoMXBo45U4uiPrm5tNg22qZtkBoClhurbtSZ5p
-         D7j+3RdtH7SvZIUH0Hwudy6xbJRwGmZD8P6OykAJxJqwr8nEd0XRNa23VTU7Joq+bM
-         pJfb+yxWtk6tjVj4P1SBSj7DJ2EwL3srxxEfQoC0=
+        b=HT7JJAJe9SVSIjtkmF+ORsxdu0asSXLHwTdlOTGyzqx4odijPxN55jlsLrpds4JNH
+         c1Cmb4ew5K8I0MZl41Oxp7jylwLsC51AapdO60waNMK+PTnMSu/lV0w9ywUXptBhGt
+         tM5HY22aDqsQd/3z047Ft8xpsNv14wFqicrFz3FY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chaotian Jing <chaotian.jing@mediatek.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.19 17/47] mmc: block: Add CMD13 polling for MMC IOCTLS with R1B response
-Date:   Thu, 19 Dec 2019 19:34:31 +0100
-Message-Id: <20191219182917.716278574@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Subject: [PATCH 4.19 19/47] PCI: pciehp: Avoid returning prematurely from sysfs requests
+Date:   Thu, 19 Dec 2019 19:34:33 +0100
+Message-Id: <20191219182920.151902087@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182857.659088743@linuxfoundation.org>
 References: <20191219182857.659088743@linuxfoundation.org>
@@ -60,211 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chaotian Jing <chaotian.jing@mediatek.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-commit a0d4c7eb71dd08a89ad631177bb0cbbabd598f84 upstream.
+commit 157c1062fcd86ade3c674503705033051fd3d401 upstream.
 
-MMC IOCTLS with R1B responses may cause the card to enter the busy state,
-which means it's not ready to receive a new request. To prevent new
-requests from being sent to the card, use a CMD13 polling loop to verify
-that the card returns to the transfer state, before completing the request.
+A sysfs request to enable or disable a PCIe hotplug slot should not
+return before it has been carried out.  That is sought to be achieved by
+waiting until the controller's "pending_events" have been cleared.
 
-Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+However the IRQ thread pciehp_ist() clears the "pending_events" before
+it acts on them.  If pciehp_sysfs_enable_slot() / _disable_slot() happen
+to check the "pending_events" after they have been cleared but while
+pciehp_ist() is still running, the functions may return prematurely
+with an incorrect return value.
+
+Fix by introducing an "ist_running" flag which must be false before a sysfs
+request is allowed to return.
+
+Fixes: 32a8cef274fe ("PCI: pciehp: Enable/disable exclusively from IRQ thread")
+Link: https://lore.kernel.org/linux-pci/1562226638-54134-1-git-send-email-wangxiongfeng2@huawei.com
+Link: https://lore.kernel.org/r/4174210466e27eb7e2243dd1d801d5f75baaffd8.1565345211.git.lukas@wunner.de
+Reported-and-tested-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: stable@vger.kernel.org # v4.19+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/core/block.c |  147 +++++++++++++++++------------------------------
- 1 file changed, 55 insertions(+), 92 deletions(-)
+ drivers/pci/hotplug/pciehp.h      |    2 ++
+ drivers/pci/hotplug/pciehp_ctrl.c |    6 ++++--
+ drivers/pci/hotplug/pciehp_hpc.c  |    2 ++
+ 3 files changed, 8 insertions(+), 2 deletions(-)
 
---- a/drivers/mmc/core/block.c
-+++ b/drivers/mmc/core/block.c
-@@ -409,38 +409,6 @@ static int mmc_blk_ioctl_copy_to_user(st
- 	return 0;
+--- a/drivers/pci/hotplug/pciehp.h
++++ b/drivers/pci/hotplug/pciehp.h
+@@ -106,6 +106,7 @@ struct slot {
+  *	that has not yet been cleared by the user
+  * @pending_events: used by the IRQ handler to save events retrieved from the
+  *	Slot Status register for later consumption by the IRQ thread
++ * @ist_running: flag to keep user request waiting while IRQ thread is running
+  * @request_result: result of last user request submitted to the IRQ thread
+  * @requester: wait queue to wake up on completion of user request,
+  *	used for synchronous slot enable/disable request via sysfs
+@@ -125,6 +126,7 @@ struct controller {
+ 	unsigned int notification_enabled:1;
+ 	unsigned int power_fault_detected;
+ 	atomic_t pending_events;
++	unsigned int ist_running;
+ 	int request_result;
+ 	wait_queue_head_t requester;
+ };
+--- a/drivers/pci/hotplug/pciehp_ctrl.c
++++ b/drivers/pci/hotplug/pciehp_ctrl.c
+@@ -383,7 +383,8 @@ int pciehp_sysfs_enable_slot(struct slot
+ 		ctrl->request_result = -ENODEV;
+ 		pciehp_request(ctrl, PCI_EXP_SLTSTA_PDC);
+ 		wait_event(ctrl->requester,
+-			   !atomic_read(&ctrl->pending_events));
++			   !atomic_read(&ctrl->pending_events) &&
++			   !ctrl->ist_running);
+ 		return ctrl->request_result;
+ 	case POWERON_STATE:
+ 		ctrl_info(ctrl, "Slot(%s): Already in powering on state\n",
+@@ -416,7 +417,8 @@ int pciehp_sysfs_disable_slot(struct slo
+ 		mutex_unlock(&p_slot->lock);
+ 		pciehp_request(ctrl, DISABLE_SLOT);
+ 		wait_event(ctrl->requester,
+-			   !atomic_read(&ctrl->pending_events));
++			   !atomic_read(&ctrl->pending_events) &&
++			   !ctrl->ist_running);
+ 		return ctrl->request_result;
+ 	case POWEROFF_STATE:
+ 		ctrl_info(ctrl, "Slot(%s): Already in powering off state\n",
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -620,6 +620,7 @@ static irqreturn_t pciehp_ist(int irq, v
+ 	irqreturn_t ret;
+ 	u32 events;
+ 
++	ctrl->ist_running = true;
+ 	pci_config_pm_runtime_get(pdev);
+ 
+ 	/* rerun pciehp_isr() if the port was inaccessible on interrupt */
+@@ -666,6 +667,7 @@ static irqreturn_t pciehp_ist(int irq, v
+ 	up_read(&ctrl->reset_lock);
+ 
+ 	pci_config_pm_runtime_put(pdev);
++	ctrl->ist_running = false;
+ 	wake_up(&ctrl->requester);
+ 	return IRQ_HANDLED;
  }
- 
--static int ioctl_rpmb_card_status_poll(struct mmc_card *card, u32 *status,
--				       u32 retries_max)
--{
--	int err;
--	u32 retry_count = 0;
--
--	if (!status || !retries_max)
--		return -EINVAL;
--
--	do {
--		err = __mmc_send_status(card, status, 5);
--		if (err)
--			break;
--
--		if (!R1_STATUS(*status) &&
--				(R1_CURRENT_STATE(*status) != R1_STATE_PRG))
--			break; /* RPMB programming operation complete */
--
--		/*
--		 * Rechedule to give the MMC device a chance to continue
--		 * processing the previous command without being polled too
--		 * frequently.
--		 */
--		usleep_range(1000, 5000);
--	} while (++retry_count < retries_max);
--
--	if (retry_count == retries_max)
--		err = -EPERM;
--
--	return err;
--}
--
- static int ioctl_do_sanitize(struct mmc_card *card)
- {
- 	int err;
-@@ -469,6 +437,58 @@ out:
- 	return err;
- }
- 
-+static inline bool mmc_blk_in_tran_state(u32 status)
-+{
-+	/*
-+	 * Some cards mishandle the status bits, so make sure to check both the
-+	 * busy indication and the card state.
-+	 */
-+	return status & R1_READY_FOR_DATA &&
-+	       (R1_CURRENT_STATE(status) == R1_STATE_TRAN);
-+}
-+
-+static int card_busy_detect(struct mmc_card *card, unsigned int timeout_ms,
-+			    u32 *resp_errs)
-+{
-+	unsigned long timeout = jiffies + msecs_to_jiffies(timeout_ms);
-+	int err = 0;
-+	u32 status;
-+
-+	do {
-+		bool done = time_after(jiffies, timeout);
-+
-+		err = __mmc_send_status(card, &status, 5);
-+		if (err) {
-+			dev_err(mmc_dev(card->host),
-+				"error %d requesting status\n", err);
-+			return err;
-+		}
-+
-+		/* Accumulate any response error bits seen */
-+		if (resp_errs)
-+			*resp_errs |= status;
-+
-+		/*
-+		 * Timeout if the device never becomes ready for data and never
-+		 * leaves the program state.
-+		 */
-+		if (done) {
-+			dev_err(mmc_dev(card->host),
-+				"Card stuck in wrong state! %s status: %#x\n",
-+				 __func__, status);
-+			return -ETIMEDOUT;
-+		}
-+
-+		/*
-+		 * Some cards mishandle the status bits,
-+		 * so make sure to check both the busy
-+		 * indication and the card state.
-+		 */
-+	} while (!mmc_blk_in_tran_state(status));
-+
-+	return err;
-+}
-+
- static int __mmc_blk_ioctl_cmd(struct mmc_card *card, struct mmc_blk_data *md,
- 			       struct mmc_blk_ioc_data *idata)
- {
-@@ -478,7 +498,6 @@ static int __mmc_blk_ioctl_cmd(struct mm
- 	struct scatterlist sg;
- 	int err;
- 	unsigned int target_part;
--	u32 status = 0;
- 
- 	if (!card || !md || !idata)
- 		return -EINVAL;
-@@ -612,16 +631,12 @@ static int __mmc_blk_ioctl_cmd(struct mm
- 
- 	memcpy(&(idata->ic.response), cmd.resp, sizeof(cmd.resp));
- 
--	if (idata->rpmb) {
-+	if (idata->rpmb || (cmd.flags & MMC_RSP_R1B)) {
- 		/*
--		 * Ensure RPMB command has completed by polling CMD13
-+		 * Ensure RPMB/R1B command has completed by polling CMD13
- 		 * "Send Status".
- 		 */
--		err = ioctl_rpmb_card_status_poll(card, &status, 5);
--		if (err)
--			dev_err(mmc_dev(card->host),
--					"%s: Card Status=0x%08X, error %d\n",
--					__func__, status, err);
-+		err = card_busy_detect(card, MMC_BLK_TIMEOUT_MS, NULL);
- 	}
- 
- 	return err;
-@@ -971,58 +986,6 @@ static unsigned int mmc_blk_data_timeout
- 	return ms;
- }
- 
--static inline bool mmc_blk_in_tran_state(u32 status)
--{
--	/*
--	 * Some cards mishandle the status bits, so make sure to check both the
--	 * busy indication and the card state.
--	 */
--	return status & R1_READY_FOR_DATA &&
--	       (R1_CURRENT_STATE(status) == R1_STATE_TRAN);
--}
--
--static int card_busy_detect(struct mmc_card *card, unsigned int timeout_ms,
--			    u32 *resp_errs)
--{
--	unsigned long timeout = jiffies + msecs_to_jiffies(timeout_ms);
--	int err = 0;
--	u32 status;
--
--	do {
--		bool done = time_after(jiffies, timeout);
--
--		err = __mmc_send_status(card, &status, 5);
--		if (err) {
--			dev_err(mmc_dev(card->host),
--				"error %d requesting status\n", err);
--			return err;
--		}
--
--		/* Accumulate any response error bits seen */
--		if (resp_errs)
--			*resp_errs |= status;
--
--		/*
--		 * Timeout if the device never becomes ready for data and never
--		 * leaves the program state.
--		 */
--		if (done) {
--			dev_err(mmc_dev(card->host),
--				"Card stuck in wrong state! %s status: %#x\n",
--				 __func__, status);
--			return -ETIMEDOUT;
--		}
--
--		/*
--		 * Some cards mishandle the status bits,
--		 * so make sure to check both the busy
--		 * indication and the card state.
--		 */
--	} while (!mmc_blk_in_tran_state(status));
--
--	return err;
--}
--
- static int mmc_blk_reset(struct mmc_blk_data *md, struct mmc_host *host,
- 			 int type)
- {
 
 
