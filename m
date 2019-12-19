@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F824C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3208C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D12DD222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EBF4222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:00:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782008;
-	bh=jsqRNr+nBO4O6L99PWysluidD0j+SGeRfT7rFs8TGZ4=;
+	s=default; t=1576782012;
+	bh=YhMsg1iYzqKsOGy/17yoIbmWQ5/wgTOI3xyj9vtrgYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HVRkfvKBfN8luYtay9ESTPh45MwCiUjxTTGDA+reM5+FIz6sRFRRA13wKE0CKYi7b
-	 NPkWMTuZxAEvjS9+RpqfjlkbzDD5G31IXCmii28U1RiULR/BTUss1rdVN2n8gqoAbZ
-	 E8vuaYi0Zxz3zlx2lYZSn8c+0jPAgtZ2CXX/X82g=
+	b=dFM4ei6EiBNZxjuxGlqL8xaAQonkWwXWSeOXLcv6I1gF5CKY9OhJ+nHghSwukRcp4
+	 c/bcE1eZqv5ko9aMCNxiTX/anzBxoQwivTgDxY8rQJDIym2ZMeDR2oGA5VVu2TMoIQ
+	 UYmn0i4kDq79igcdPDBlMlmQWuPaf9dYL6/oAv7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730461AbfLSTAH (ORCPT
+        id S1728239AbfLSTAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:00:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47200 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 14:00:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729010AbfLSSwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:52:35 -0500
+        id S1728752AbfLSSwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:52:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDE50227BF;
-        Thu, 19 Dec 2019 18:52:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DA02222C2;
+        Thu, 19 Dec 2019 18:52:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781554;
-        bh=jsqRNr+nBO4O6L99PWysluidD0j+SGeRfT7rFs8TGZ4=;
+        s=default; t=1576781552;
+        bh=YhMsg1iYzqKsOGy/17yoIbmWQ5/wgTOI3xyj9vtrgYI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H71FkbnLr95j+WGp25gDwUj96cJJdVI97m/N1Cmt4t6IluwxtQ4EdmrHoo3JSt/WM
-         ffPJM10KlhsPf97P7k5w+tljwRlfcXEwPhQ9ojCWUpzkqwc/HXKxKJWNGzMtEiQlfw
-         fe1RFec9QGtU4pR1RzVJQqVJd2xXQlYgxx/1/nZg=
+        b=dYEUJRQuYgfb6J90uhrUORPNsw93YGVK+ZQSal57vIUHioOI9nok+uAGuSxdLaWNI
+         a+tbdLNpaJ8/bShAlj1GNPh0RdJGG0pfeZ73fJZczUVgMmmTf0i6T4j+Ra1yYLnj5V
+         z3vjjI6o9H3/kh6baG1jeV9x2Kb9dkMhc4NwZhkw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Lobakin <alobakin@dlink.ru>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 04/47] net: dsa: fix flow dissection on Tx path
-Date:   Thu, 19 Dec 2019 19:34:18 +0100
-Message-Id: <20191219182900.428437738@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Lew <clew@codeaurora.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 4.19 30/47] rpmsg: glink: Free pending deferred work on remove
+Date:   Thu, 19 Dec 2019 19:34:44 +0100
+Message-Id: <20191219182934.163082126@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182857.659088743@linuxfoundation.org>
 References: <20191219182857.659088743@linuxfoundation.org>
@@ -60,114 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@dlink.ru>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-[ Upstream commit 8bef0af09a5415df761b04fa487a6c34acae74bc ]
+commit 278bcb7300f61785dba63840bd2a8cf79f14554c upstream.
 
-Commit 43e665287f93 ("net-next: dsa: fix flow dissection") added an
-ability to override protocol and network offset during flow dissection
-for DSA-enabled devices (i.e. controllers shipped as switch CPU ports)
-in order to fix skb hashing for RPS on Rx path.
+By just cancelling the deferred rx worker during GLINK instance teardown
+any pending deferred commands are leaked, so free them.
 
-However, skb_hash() and added part of code can be invoked not only on
-Rx, but also on Tx path if we have a multi-queued device and:
- - kernel is running on UP system or
- - XPS is not configured.
-
-The call stack in this two cases will be like: dev_queue_xmit() ->
-__dev_queue_xmit() -> netdev_core_pick_tx() -> netdev_pick_tx() ->
-skb_tx_hash() -> skb_get_hash().
-
-The problem is that skbs queued for Tx have both network offset and
-correct protocol already set up even after inserting a CPU tag by DSA
-tagger, so calling tag_ops->flow_dissect() on this path actually only
-breaks flow dissection and hashing.
-
-This can be observed by adding debug prints just before and right after
-tag_ops->flow_dissect() call to the related block of code:
-
-Before the patch:
-
-Rx path (RPS):
-
-[   19.240001] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
-[   19.244271] tag_ops->flow_dissect()
-[   19.247811] Rx: proto: 0x0800, nhoff: 8	/* ETH_P_IP */
-
-[   19.215435] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
-[   19.219746] tag_ops->flow_dissect()
-[   19.223241] Rx: proto: 0x0806, nhoff: 8	/* ETH_P_ARP */
-
-[   18.654057] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
-[   18.658332] tag_ops->flow_dissect()
-[   18.661826] Rx: proto: 0x8100, nhoff: 8	/* ETH_P_8021Q */
-
-Tx path (UP system):
-
-[   18.759560] Tx: proto: 0x0800, nhoff: 26	/* ETH_P_IP */
-[   18.763933] tag_ops->flow_dissect()
-[   18.767485] Tx: proto: 0x920b, nhoff: 34	/* junk */
-
-[   22.800020] Tx: proto: 0x0806, nhoff: 26	/* ETH_P_ARP */
-[   22.804392] tag_ops->flow_dissect()
-[   22.807921] Tx: proto: 0x920b, nhoff: 34	/* junk */
-
-[   16.898342] Tx: proto: 0x86dd, nhoff: 26	/* ETH_P_IPV6 */
-[   16.902705] tag_ops->flow_dissect()
-[   16.906227] Tx: proto: 0x920b, nhoff: 34	/* junk */
-
-After:
-
-Rx path (RPS):
-
-[   16.520993] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
-[   16.525260] tag_ops->flow_dissect()
-[   16.528808] Rx: proto: 0x0800, nhoff: 8	/* ETH_P_IP */
-
-[   15.484807] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
-[   15.490417] tag_ops->flow_dissect()
-[   15.495223] Rx: proto: 0x0806, nhoff: 8	/* ETH_P_ARP */
-
-[   17.134621] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
-[   17.138895] tag_ops->flow_dissect()
-[   17.142388] Rx: proto: 0x8100, nhoff: 8	/* ETH_P_8021Q */
-
-Tx path (UP system):
-
-[   15.499558] Tx: proto: 0x0800, nhoff: 26	/* ETH_P_IP */
-
-[   20.664689] Tx: proto: 0x0806, nhoff: 26	/* ETH_P_ARP */
-
-[   18.565782] Tx: proto: 0x86dd, nhoff: 26	/* ETH_P_IPV6 */
-
-In order to fix that we can add the check 'proto == htons(ETH_P_XDSA)'
-to prevent code from calling tag_ops->flow_dissect() on Tx.
-I also decided to initialize 'offset' variable so tagger callbacks can
-now safely leave it untouched without provoking a chaos.
-
-Fixes: 43e665287f93 ("net-next: dsa: fix flow dissection")
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: b4f8e52b89f6 ("rpmsg: Introduce Qualcomm RPM glink driver")
+Cc: stable@vger.kernel.org
+Acked-by: Chris Lew <clew@codeaurora.org>
+Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/flow_dissector.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/net/core/flow_dissector.c
-+++ b/net/core/flow_dissector.c
-@@ -630,9 +630,10 @@ bool __skb_flow_dissect(const struct sk_
- 		nhoff = skb_network_offset(skb);
- 		hlen = skb_headlen(skb);
- #if IS_ENABLED(CONFIG_NET_DSA)
--		if (unlikely(skb->dev && netdev_uses_dsa(skb->dev))) {
-+		if (unlikely(skb->dev && netdev_uses_dsa(skb->dev) &&
-+			     proto == htons(ETH_P_XDSA))) {
- 			const struct dsa_device_ops *ops;
--			int offset;
-+			int offset = 0;
+---
+ drivers/rpmsg/qcom_glink_native.c |   14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+--- a/drivers/rpmsg/qcom_glink_native.c
++++ b/drivers/rpmsg/qcom_glink_native.c
+@@ -1565,6 +1565,18 @@ static void qcom_glink_work(struct work_
+ 	}
+ }
  
- 			ops = skb->dev->dsa_ptr->tag_ops;
- 			if (ops->flow_dissect &&
++static void qcom_glink_cancel_rx_work(struct qcom_glink *glink)
++{
++	struct glink_defer_cmd *dcmd;
++	struct glink_defer_cmd *tmp;
++
++	/* cancel any pending deferred rx_work */
++	cancel_work_sync(&glink->rx_work);
++
++	list_for_each_entry_safe(dcmd, tmp, &glink->rx_queue, node)
++		kfree(dcmd);
++}
++
+ struct qcom_glink *qcom_glink_native_probe(struct device *dev,
+ 					   unsigned long features,
+ 					   struct qcom_glink_pipe *rx,
+@@ -1642,7 +1654,7 @@ void qcom_glink_native_remove(struct qco
+ 	int ret;
+ 
+ 	disable_irq(glink->irq);
+-	cancel_work_sync(&glink->rx_work);
++	qcom_glink_cancel_rx_work(glink);
+ 
+ 	ret = device_for_each_child(glink->dev, NULL, qcom_glink_remove_device);
+ 	if (ret)
 
 
