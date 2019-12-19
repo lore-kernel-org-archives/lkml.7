@@ -7,53 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DABC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF45C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F8EB2465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40E0E2465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:22:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OBYavYa3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FLDJjxsE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727370AbfLSWWJ (ORCPT
+        id S1727395AbfLSWWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 17:22:09 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35920 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727197AbfLSWWJ (ORCPT
+        Thu, 19 Dec 2019 17:22:13 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33045 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727327AbfLSWWK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 17:22:09 -0500
-Received: by mail-wm1-f66.google.com with SMTP id p17so7291160wma.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 14:22:07 -0800 (PST)
+        Thu, 19 Dec 2019 17:22:10 -0500
+Received: by mail-wm1-f65.google.com with SMTP id d139so8061547wmd.0
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 14:22:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=+EdJlshrU/x9lwXaiDsMcX871Y/B3IPP2mzwerHvxc0=;
-        b=OBYavYa3Os4P3wLJqYc7ViOZC9UtFFSArzXrXdPXO3u/P6Fp+c/tZWkJ+54mrV5+Ql
-         PPVp8YdxWqA59qeUMnStPysx3l+AICJR1TLM3NIVcUzMV+FaC6ciUwqpvmNt6AfUCwxW
-         aqGQKQiwTUKWxaSGkfsLgiFxZfgmx5LMAd+Lz9dha6Z8sHPIQ5P8wg6ByWQid7SW+lWd
-         romJPspM/EhgfAVanxijAsqNdPmyOlb15lVhMRxRIVi84XVf52/y7lS7RHyxN+Il3xsh
-         9c3EqCphIVONRXpK69tJ316L7xSYrE2gXEMpR3WCKHlHVu6sWl0oQzvjwRH7mq1atxw0
-         rJ5w==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=I3Bk5DzXh21LjzbbFrLuxqc/f6SASou8FRBI3bqnTBA=;
+        b=FLDJjxsEJG/wiTxMggZDT57y8zuOsasoO92JVnZnwWfr/G6LW7JICsrf9WSJtkfaTa
+         OW0dfm6aPcCiFoCMDiRypVa+urEjemUEv4DoeeWLt/c6FdGb6FPZCVr/MtAYABVMI8p5
+         B3kT/1uFHr5fhtMbjAzq/f7DO8bFMw6R0DrgrG1h0LaG5C77lQh8Ov9UZUVJUF/yLPIQ
+         Tgkl21Nw8hNdAADDCX0GaH9cgc+wBucdPnMkcRNyPdQOXvg/pd65vIVtmOjN/e++ZN0q
+         GXChjAXFKsf6y87HxmQgVASAZqEfGA7XWIe9RvYFXF4iZ1wqe2CdEKGElxen2uM9B51/
+         0Z1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=+EdJlshrU/x9lwXaiDsMcX871Y/B3IPP2mzwerHvxc0=;
-        b=DaSm8b/XWXl9Ko/8Kdk86MzQCUjGb9TLtlqrW/WRyn8kYVPkTAaX8iXLWzkVJQzMLC
-         lZ2z55osaoT9KnqQf7KImo5N6eKjSNe349th5PrdZIP5iGEO3nT0wsY2EpRzACalieLn
-         Lr0DrWFHPpRNoo/qa/2XMnbuQ8+rb7UvEOtTGbYYGGApjVIJyNXVJOLw/PY37UybGcFx
-         uaJQxVTV7+IAc6cU/RzqJRVYwPkfgk6jDoH9/RGnv7Vtvhc2LYPVB5Mi99+xqOy2a+hA
-         Lw+pNQlI7bWWWcobwoqvEkohXCw4a5WZK7/+08Yw2+13iCf3z1e2SAGmvyon8NL8sSOd
-         llbQ==
-X-Gm-Message-State: APjAAAWVK7d88xEV+WP7IXQtRJ3ry+qYrTVlSd+lcwHPtaWzLfYSagBa
-        LdjTTyAz3qTawJr6wYx5vC160w==
-X-Google-Smtp-Source: APXvYqxIwrQqO/WUQCmlhV0J4pjiUCYJdYEful8OM0YCNQMEt1xhhWrR6SBU+q4pjINCvhcrEuKT2w==
-X-Received: by 2002:a7b:c19a:: with SMTP id y26mr12429961wmi.152.1576794126696;
-        Thu, 19 Dec 2019 14:22:06 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=I3Bk5DzXh21LjzbbFrLuxqc/f6SASou8FRBI3bqnTBA=;
+        b=L6VtAcsmSAn+9OJHoWDgMLklXLuDPESHJLEoivfIxVEm4iV/062sk41NYM6k5cpiDu
+         18ZhxHcBZjLs/gubCyTVO80jjDLklclBhBtf5DWq2y3hbjU1/7Fr2rRTUKZYMRDcjafp
+         B4bLq3hh8tdZ0wDbabzHoXYlDcPbBkec2tXjVMvWnG4Wn5YvShtuhburUnkcFfcVXHQ/
+         03XNt6xfCWyHVMj88p912SqvwyMgQYpPB6DEpUfl/CCMW4LCRcjsnI+jf97nXO6FUmu3
+         umeh2C0H1sab+9VYy93fxhhpFqH2aEaO5OvIl50cErykD/R0ils4LKVkHaMANw6b1+tC
+         PD1g==
+X-Gm-Message-State: APjAAAX6lX3SmpZ09joZ1NV+U3aIxV7LOEB0L52Lp7pAgu+q/Ws0lvOr
+        wDLQlZ3hMSnvY97kbB/2JXbgh7/b4ys=
+X-Google-Smtp-Source: APXvYqy8mmcX1je9IxY9DT1Y7bJ6fGzucgqMBmuqlo1zlJQsYhmpzsKJSU4AFCBWodxEGZYN+OnHrA==
+X-Received: by 2002:a7b:c183:: with SMTP id y3mr12245737wmi.45.1576794127988;
+        Thu, 19 Dec 2019 14:22:07 -0800 (PST)
 Received: from localhost.localdomain ([2a01:e34:ed2f:f020:58d:4e9b:2833:86c3])
-        by smtp.gmail.com with ESMTPSA id q68sm8942295wme.14.2019.12.19.14.22.05
+        by smtp.gmail.com with ESMTPSA id q68sm8942295wme.14.2019.12.19.14.22.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 14:22:06 -0800 (PST)
+        Thu, 19 Dec 2019 14:22:07 -0800 (PST)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     daniel.lezcano@linaro.org
 Cc:     Zhang Rui <rui.zhang@intel.com>,
@@ -61,124 +62,40 @@ Cc:     Zhang Rui <rui.zhang@intel.com>,
         Amit Kucheria <amit.kucheria@verdurent.com>,
         linux-pm@vger.kernel.org (open list:THERMAL),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 1/2] thermal/drivers/of-thermal: Make of_thermal_destroy_zones static
-Date:   Thu, 19 Dec 2019 23:21:52 +0100
-Message-Id: <20191219222154.16100-1-daniel.lezcano@linaro.org>
+Subject: [PATCH 2/2] thermal/drivers/of-thermal: Move the of_thermal_free_zone() to the init section
+Date:   Thu, 19 Dec 2019 23:21:53 +0100
+Message-Id: <20191219222154.16100-2-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191219222154.16100-1-daniel.lezcano@linaro.org>
+References: <20191219222154.16100-1-daniel.lezcano@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function of_thermal_destroy_zones() is only used internally by the
-of_parse_thermal_zones() for rollbacking in case of error.
+The function of_thermal_free_zone() is only used the initialization
+function which all belonging to the init section.
 
-Make it static and tag it as an __init function.
+Move it also to the __init section.
 
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- drivers/thermal/of-thermal.c   | 64 +++++++++++++++++-----------------
- drivers/thermal/thermal_core.h |  2 --
- 2 files changed, 32 insertions(+), 34 deletions(-)
+ drivers/thermal/of-thermal.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
-index dc5093be553e..4333cd5f1073 100644
+index 4333cd5f1073..27d5b85eb2ca 100644
 --- a/drivers/thermal/of-thermal.c
 +++ b/drivers/thermal/of-thermal.c
-@@ -998,6 +998,38 @@ static inline void of_thermal_free_zone(struct __thermal_zone *tz)
- 	kfree(tz);
+@@ -977,7 +977,7 @@ __init *thermal_of_build_thermal_zone(struct device_node *np)
+ 	return ERR_PTR(ret);
  }
  
-+/**
-+ * of_thermal_destroy_zones - remove all zones parsed and allocated resources
-+ *
-+ * Finds all zones parsed and added to the thermal framework and remove them
-+ * from the system, together with their resources.
-+ *
-+ */
-+static __init void of_thermal_destroy_zones(void)
-+{
-+	struct device_node *np, *child;
-+
-+	np = of_find_node_by_name(NULL, "thermal-zones");
-+	if (!np) {
-+		pr_debug("unable to find thermal zones\n");
-+		return;
-+	}
-+
-+	for_each_available_child_of_node(np, child) {
-+		struct thermal_zone_device *zone;
-+
-+		zone = thermal_zone_get_zone_by_name(child->name);
-+		if (IS_ERR(zone))
-+			continue;
-+
-+		thermal_zone_device_unregister(zone);
-+		kfree(zone->tzp);
-+		kfree(zone->ops);
-+		of_thermal_free_zone(zone->devdata);
-+	}
-+	of_node_put(np);
-+}
-+
- /**
-  * of_parse_thermal_zones - parse device tree thermal data
-  *
-@@ -1087,35 +1119,3 @@ int __init of_parse_thermal_zones(void)
- 
- 	return -ENOMEM;
- }
--
--/**
-- * of_thermal_destroy_zones - remove all zones parsed and allocated resources
-- *
-- * Finds all zones parsed and added to the thermal framework and remove them
-- * from the system, together with their resources.
-- *
-- */
--void of_thermal_destroy_zones(void)
--{
--	struct device_node *np, *child;
--
--	np = of_find_node_by_name(NULL, "thermal-zones");
--	if (!np) {
--		pr_debug("unable to find thermal zones\n");
--		return;
--	}
--
--	for_each_available_child_of_node(np, child) {
--		struct thermal_zone_device *zone;
--
--		zone = thermal_zone_get_zone_by_name(child->name);
--		if (IS_ERR(zone))
--			continue;
--
--		thermal_zone_device_unregister(zone);
--		kfree(zone->tzp);
--		kfree(zone->ops);
--		of_thermal_free_zone(zone->devdata);
--	}
--	of_node_put(np);
--}
-diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
-index 207b0cda70da..a9bf00e91d64 100644
---- a/drivers/thermal/thermal_core.h
-+++ b/drivers/thermal/thermal_core.h
-@@ -92,14 +92,12 @@ thermal_cooling_device_stats_update(struct thermal_cooling_device *cdev,
- /* device tree support */
- #ifdef CONFIG_THERMAL_OF
- int of_parse_thermal_zones(void);
--void of_thermal_destroy_zones(void);
- int of_thermal_get_ntrips(struct thermal_zone_device *);
- bool of_thermal_is_trip_valid(struct thermal_zone_device *, int);
- const struct thermal_trip *
- of_thermal_get_trip_points(struct thermal_zone_device *);
- #else
- static inline int of_parse_thermal_zones(void) { return 0; }
--static inline void of_thermal_destroy_zones(void) { }
- static inline int of_thermal_get_ntrips(struct thermal_zone_device *tz)
+-static inline void of_thermal_free_zone(struct __thermal_zone *tz)
++static __init void of_thermal_free_zone(struct __thermal_zone *tz)
  {
- 	return 0;
+ 	struct __thermal_bind_params *tbp;
+ 	int i, j;
 -- 
 2.17.1
 
