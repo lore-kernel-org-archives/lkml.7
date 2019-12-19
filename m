@@ -2,232 +2,102 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D04C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3EC9C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 284A6206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:21:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB2D2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:22:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fK/vdp83"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfLSPVU (ORCPT
+        id S1726992AbfLSPWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 10:21:20 -0500
-Received: from relay.sw.ru ([185.231.240.75]:56214 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726801AbfLSPVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 10:21:19 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1ihxbn-000749-4U; Thu, 19 Dec 2019 18:20:59 +0300
-Subject: [PATCH v2] sched: Micro optimization in pick_next_task() and in
- check_preempt_curr()
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>
+        Thu, 19 Dec 2019 10:22:10 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37158 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726760AbfLSPWK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 10:22:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576768929;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Sv2ROrXh7f8SaxkMKHELvqrWudHsHniNHJkfBfNFQXA=;
+        b=fK/vdp83V+2Fgns1vbJC1OF0HPSLIbd8JXgUplO8iwbURD4HWM7xX1erVOgxcPcqCgsrKn
+        M3rM2PHyfTXKpytsVLRKq1uj52sG34E8+y7x3Uwcv7b/p8c5YJ7DfBkNFOityuiBqI42Hz
+        lnhpg6TtXRRSTMkz2vXDJC2dRyGQ+Zc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-351-8_7f2AwAPiuM5uHeqvDK8g-1; Thu, 19 Dec 2019 10:22:05 -0500
+X-MC-Unique: 8_7f2AwAPiuM5uHeqvDK8g-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 187E58D8A40;
+        Thu, 19 Dec 2019 15:22:03 +0000 (UTC)
+Received: from ovpn-112-19.phx2.redhat.com (ovpn-112-19.phx2.redhat.com [10.3.112.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 25EE369414;
+        Thu, 19 Dec 2019 15:21:59 +0000 (UTC)
+Message-ID: <db7acdee9a85ce5b74332b3869efa6c9e18bad9e.camel@redhat.com>
+Subject: Re: [Q] ld: Does LTO reorder ro variables in two files?
+From:   Jeff Law <law@redhat.com>
+Reply-To: law@redhat.com
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Peter Zijlstra <peterz@infradead.org>, gcc-help@gcc.gnu.org
 Cc:     mingo@redhat.com, juri.lelli@redhat.com,
         vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, linux-kernel@vger.kernel.org
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 19 Dec 2019 08:21:58 -0700
+In-Reply-To: <3db1b1c8-0228-56e4-a04f-e8d24cd1dd51@virtuozzo.com>
 References: <157675913272.349305.8936736338884044103.stgit@localhost.localdomain>
- <20191219131242.GK2827@hirez.programming.kicks-ass.net>
- <20191219140252.GS2871@hirez.programming.kicks-ass.net>
- <bfaa72ca-8bc6-f93c-30d7-5d62f2600f53@virtuozzo.com>
- <20191219094330.0e44c748@gandalf.local.home>
- <11d755e9-e4f8-dd9e-30b0-45aebe260b2f@virtuozzo.com>
- <20191219095941.2eebed84@gandalf.local.home>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <44c95c18-7593-f3e7-f710-a7d424af7442@virtuozzo.com>
-Date:   Thu, 19 Dec 2019 18:20:58 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+         <20191219131242.GK2827@hirez.programming.kicks-ass.net>
+         <3db1b1c8-0228-56e4-a04f-e8d24cd1dd51@virtuozzo.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <20191219095941.2eebed84@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kirill Tkhai <ktkhai@virtuozzo.com>
+On Thu, 2019-12-19 at 17:04 +0300, Kirill Tkhai wrote:
+> CC: gcc-help@gcc.gnu.org
+> 
+> Hi, gcc guys,
+> 
+> this thread starts here: https://lkml.org/lkml/2019/12/19/403
+> 
+> There are two const variables:
+> 
+>    struct sched_class idle_sched_class
+> and
+>    struct sched_class fair_sched_class,
+> 
+> which are declared in two files idle.c and fair.c.
+> 
+> 1)In Makefile the order is: idle.o fair.o
+> 2)the variables go to the same ro section
+> 3)there is no SORT(.*) keyword in linker script.
+> 
+> Is it always true, that after linkage &idle_sched_class < &fair_sched_class?
+I certainly wouldn't depend on it.   The first and most obvious problem
+is symbol sorting by the linker.  Longer term I'd be worried about LTO
+reordering things.
 
-This introduces an optimization based on xxx_sched_class addresses
-in two hot scheduler functions: pick_next_task() and check_preempt_curr().
+In the end I'm pretty sure it'd be well outside what I'd be comfortable
+depending on.
 
-After this patch, it will be possible to compare pointers to sched classes
-to check, which of them has a higher priority, instead of current iterations
-using for_each_class().
+jeff
+> 
 
-One more result of the patch is that size of object file becomes a little
-less (excluding added BUG_ON(), which goes in __init section):
-
-$size kernel/sched/core.o
-         text     data      bss	    dec	    hex	filename
-before:  66446    18957	    676	  86079	  1503f	kernel/sched/core.o
-after:   66398    18957	    676	  86031	  1500f	kernel/sched/core.o
-
-SCHED_DATA improvements guaranteeing order of sched classes are made
-by Steven Rostedt <rostedt@goodmis.org>
-
-Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-
-v2: Steven's data sections ordering. Hunk with comment in Makefile is removed.
----
- include/asm-generic/vmlinux.lds.h |    8 ++++++++
- kernel/sched/core.c               |   24 +++++++++---------------
- kernel/sched/deadline.c           |    3 ++-
- kernel/sched/fair.c               |    3 ++-
- kernel/sched/idle.c               |    3 ++-
- kernel/sched/rt.c                 |    3 ++-
- kernel/sched/stop_task.c          |    3 ++-
- 7 files changed, 27 insertions(+), 20 deletions(-)
-
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index e00f41aa8ec4..ff12a422ff19 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -108,6 +108,13 @@
- #define SBSS_MAIN .sbss
- #endif
- 
-+#define SCHED_DATA				\
-+	*(__idle_sched_class)			\
-+	*(__fair_sched_class)			\
-+	*(__rt_sched_class)			\
-+	*(__dl_sched_class)			\
-+	*(__stop_sched_class)
-+
- /*
-  * Align to a 32 byte boundary equal to the
-  * alignment gcc 4.5 uses for a struct
-@@ -308,6 +315,7 @@
- #define DATA_DATA							\
- 	*(.xiptext)							\
- 	*(DATA_MAIN)							\
-+	SCHED_DATA							\
- 	*(.ref.data)							\
- 	*(.data..shared_aligned) /* percpu related */			\
- 	MEM_KEEP(init.data*)						\
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 15508c202bf5..befdd7158b27 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1416,20 +1416,10 @@ static inline void check_class_changed(struct rq *rq, struct task_struct *p,
- 
- void check_preempt_curr(struct rq *rq, struct task_struct *p, int flags)
- {
--	const struct sched_class *class;
--
--	if (p->sched_class == rq->curr->sched_class) {
-+	if (p->sched_class == rq->curr->sched_class)
- 		rq->curr->sched_class->check_preempt_curr(rq, p, flags);
--	} else {
--		for_each_class(class) {
--			if (class == rq->curr->sched_class)
--				break;
--			if (class == p->sched_class) {
--				resched_curr(rq);
--				break;
--			}
--		}
--	}
-+	else if (p->sched_class > rq->curr->sched_class)
-+		resched_curr(rq);
- 
- 	/*
- 	 * A queue event has occurred, and we're going to schedule.  In
-@@ -3914,8 +3904,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 	 * higher scheduling class, because otherwise those loose the
- 	 * opportunity to pull in more work from other CPUs.
- 	 */
--	if (likely((prev->sched_class == &idle_sched_class ||
--		    prev->sched_class == &fair_sched_class) &&
-+	if (likely(prev->sched_class <= &fair_sched_class &&
- 		   rq->nr_running == rq->cfs.h_nr_running)) {
- 
- 		p = pick_next_task_fair(rq, prev, rf);
-@@ -6569,6 +6558,11 @@ void __init sched_init(void)
- 	unsigned long ptr = 0;
- 	int i;
- 
-+	BUG_ON(&idle_sched_class > &fair_sched_class ||
-+		&fair_sched_class > &rt_sched_class ||
-+		&rt_sched_class > &dl_sched_class ||
-+		&dl_sched_class > &stop_sched_class);
-+
- 	wait_bit_init();
- 
- #ifdef CONFIG_FAIR_GROUP_SCHED
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index 43323f875cb9..5abdbe569f93 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -2428,7 +2428,8 @@ static void prio_changed_dl(struct rq *rq, struct task_struct *p,
- 	}
- }
- 
--const struct sched_class dl_sched_class = {
-+const struct sched_class dl_sched_class
-+	__attribute__((section("__dl_sched_class"))) = {
- 	.next			= &rt_sched_class,
- 	.enqueue_task		= enqueue_task_dl,
- 	.dequeue_task		= dequeue_task_dl,
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 8da0222924cf..9379b3804582 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -10760,7 +10760,8 @@ static unsigned int get_rr_interval_fair(struct rq *rq, struct task_struct *task
- /*
-  * All the scheduling class methods:
-  */
--const struct sched_class fair_sched_class = {
-+const struct sched_class fair_sched_class
-+	__attribute__((section("__fair_sched_class"))) = {
- 	.next			= &idle_sched_class,
- 	.enqueue_task		= enqueue_task_fair,
- 	.dequeue_task		= dequeue_task_fair,
-diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-index ffa959e91227..700a9c826f0e 100644
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -454,7 +454,8 @@ static void update_curr_idle(struct rq *rq)
- /*
-  * Simple, special scheduling class for the per-CPU idle tasks:
-  */
--const struct sched_class idle_sched_class = {
-+const struct sched_class idle_sched_class
-+	__attribute__((section("__idle_sched_class"))) = {
- 	/* .next is NULL */
- 	/* no enqueue/yield_task for idle tasks */
- 
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index e591d40fd645..5d3f9bcddaeb 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -2354,7 +2354,8 @@ static unsigned int get_rr_interval_rt(struct rq *rq, struct task_struct *task)
- 		return 0;
- }
- 
--const struct sched_class rt_sched_class = {
-+const struct sched_class rt_sched_class
-+	__attribute__((section("__rt_sched_class"))) = {
- 	.next			= &fair_sched_class,
- 	.enqueue_task		= enqueue_task_rt,
- 	.dequeue_task		= dequeue_task_rt,
-diff --git a/kernel/sched/stop_task.c b/kernel/sched/stop_task.c
-index 4c9e9975684f..03bc7530ff75 100644
---- a/kernel/sched/stop_task.c
-+++ b/kernel/sched/stop_task.c
-@@ -115,7 +115,8 @@ static void update_curr_stop(struct rq *rq)
- /*
-  * Simple, special scheduling class for the per-CPU stop tasks:
-  */
--const struct sched_class stop_sched_class = {
-+const struct sched_class stop_sched_class
-+	__attribute__((section("__stop_sched_class"))) = {
- 	.next			= &dl_sched_class,
- 
- 	.enqueue_task		= enqueue_task_stop,
