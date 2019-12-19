@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5D7C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6769C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74D2C206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72FFE206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:01:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782109;
-	bh=ZuWPDLYkW8D6jxmnXjG+7dPj38Xobul41Vvyg5T5/Ao=;
+	s=default; t=1576782119;
+	bh=KUMq2bnslT2h33XymdmU23jdbu9sjJMHQecNtRrgTU8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nMT1Cl3jBVP7yLEWYU/RkCAG6ckDMyJEEw+5gaRgzZpHQb6HGgbychtB4/xWk8jY2
-	 W9exf3ac7N68wb/6PcpIex8ktgZwolHw62GJ9S4PSvXQVTHbTZASgfhkM7dnr24PDu
-	 v9vFJcC5LEGepFbm6Lu9IrdakO5dXLSyhwARkH+4=
+	b=XpmzugxV68O7oBdZ3wrC49AaG5EnthT8Cw9Up5zPRw8N2a9LBahZJ0NXHmP5kxdv/
+	 eFa7VQVaezivt9tjzXTrnHXmfBAzhld6WoeVOyFLpjLBEs67PxxVA9lyEKYQnUuw4/
+	 1piWDZXkgiy2KnDs22LQHywLtd4pJOa+ezEff22U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbfLSSuW (ORCPT
+        id S1729364AbfLSSuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:50:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44142 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:50:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729955AbfLSSuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:50:18 -0500
+        id S1729601AbfLSSuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:50:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9026724679;
-        Thu, 19 Dec 2019 18:50:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE28A24689;
+        Thu, 19 Dec 2019 18:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781418;
-        bh=ZuWPDLYkW8D6jxmnXjG+7dPj38Xobul41Vvyg5T5/Ao=;
+        s=default; t=1576781408;
+        bh=KUMq2bnslT2h33XymdmU23jdbu9sjJMHQecNtRrgTU8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oyUhkJDCz0AARijSY8p7mhOOg8xDvUnnyWCagij2Hm3sBHbz8q1R0oOb4tXYhtoXf
-         4Hl9xQutefXZNoWCeT017PwCin+7L1HsxQ7CBh4JTsmJL6+MiNSeLvCwHGmQUvdllq
-         r+rhWSLv7n3bge2MO3B35XxhOc3iEnPJ+pLCyJ3g=
+        b=Zf4lXDaHJZlBpYmcuQVBbx0yjkzzliWe9hgkwwL2FA8DYMbzave8iIdRJRtSsqj9a
+         3kt/0hOSw+V1irXGr7xAJpop7fpq3eAwRn9AM1gg5P1oHUxKjHuA4qONhOmUJDxuV6
+         zUV6I0bMGB2auYSBwvZxbr8anpKIumAqbfgunHfk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
+        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 03/36] net: ethernet: ti: cpsw: fix extra rx interrupt
-Date:   Thu, 19 Dec 2019 19:34:20 +0100
-Message-Id: <20191219182853.432368154@linuxfoundation.org>
+Subject: [PATCH 4.14 10/36] tcp: Protect accesses to .ts_recent_stamp with {READ,WRITE}_ONCE()
+Date:   Thu, 19 Dec 2019 19:34:27 +0100
+Message-Id: <20191219182856.768968365@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182848.708141124@linuxfoundation.org>
 References: <20191219182848.708141124@linuxfoundation.org>
@@ -60,36 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Guillaume Nault <gnault@redhat.com>
 
-[ Upstream commit 51302f77bedab8768b761ed1899c08f89af9e4e2 ]
+[ Upstream commit 721c8dafad26ccfa90ff659ee19755e3377b829d ]
 
-Now RX interrupt is triggered twice every time, because in
-cpsw_rx_interrupt() it is asked first and then disabled. So there will be
-pending interrupt always, when RX interrupt is enabled again in NAPI
-handler.
+Syncookies borrow the ->rx_opt.ts_recent_stamp field to store the
+timestamp of the last synflood. Protect them with READ_ONCE() and
+WRITE_ONCE() since reads and writes aren't serialised.
 
-Fix it by first disabling IRQ and then do ask.
+Use of .rx_opt.ts_recent_stamp for storing the synflood timestamp was
+introduced by a0f82f64e269 ("syncookies: remove last_synq_overflow from
+struct tcp_sock"). But unprotected accesses were already there when
+timestamp was stored in .last_synq_overflow.
 
-Fixes: 870915feabdc ("drivers: net: cpsw: remove disable_irq/enable_irq as irq can be masked from cpsw itself")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Guillaume Nault <gnault@redhat.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/ti/cpsw.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/tcp.h |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -862,8 +862,8 @@ static irqreturn_t cpsw_rx_interrupt(int
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -500,17 +500,17 @@ struct sock *cookie_v4_check(struct sock
+  */
+ static inline void tcp_synq_overflow(const struct sock *sk)
  {
- 	struct cpsw_common *cpsw = dev_id;
+-	unsigned long last_overflow = tcp_sk(sk)->rx_opt.ts_recent_stamp;
++	unsigned long last_overflow = READ_ONCE(tcp_sk(sk)->rx_opt.ts_recent_stamp);
+ 	unsigned long now = jiffies;
  
--	cpdma_ctlr_eoi(cpsw->dma, CPDMA_EOI_RX);
- 	writel(0, &cpsw->wr_regs->rx_en);
-+	cpdma_ctlr_eoi(cpsw->dma, CPDMA_EOI_RX);
+ 	if (!time_between32(now, last_overflow, last_overflow + HZ))
+-		tcp_sk(sk)->rx_opt.ts_recent_stamp = now;
++		WRITE_ONCE(tcp_sk(sk)->rx_opt.ts_recent_stamp, now);
+ }
  
- 	if (cpsw->quirk_irq) {
- 		disable_irq_nosync(cpsw->irqs_table[0]);
+ /* syncookies: no recent synqueue overflow on this listening socket? */
+ static inline bool tcp_synq_no_recent_overflow(const struct sock *sk)
+ {
+-	unsigned long last_overflow = tcp_sk(sk)->rx_opt.ts_recent_stamp;
++	unsigned long last_overflow = READ_ONCE(tcp_sk(sk)->rx_opt.ts_recent_stamp);
+ 
+ 	/* If last_overflow <= jiffies <= last_overflow + TCP_SYNCOOKIE_VALID,
+ 	 * then we're under synflood. However, we have to use
 
 
