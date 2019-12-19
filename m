@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE60C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D21FCC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3885A2465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85D262465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:54:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781643;
-	bh=RQyUUDlMhra9YJ2uHOjLojmvdH6zxmXIcsWihEGODXk=;
+	s=default; t=1576781646;
+	bh=uQRwI7gEVVVBcBGcIcDIIKDHTSgrdvlBCgzwcILLCxE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SCxPdeqYoZCkC+uRXLOITiGlMCGBkNlfcQ/w30uDDgHrGXkoXM87khjvD818luVTS
-	 j+AoOp+u1l1vnTv9auidHMKw51swpOp4xRvm5wWo/dct9PCI9aJQCeyxGffA5nuTPS
-	 9nOWDIUk21MmGXllZ+ugJASOlCaWcDP9Z648l7eY=
+	b=2GYUXhnX/NuSoPHkEOtyULvJnTMtbNzfbv9U9OIJV1Q0PESNe8Mjvmf5YeUn0Fmgg
+	 Rrt3Bhy7WtwC9WgEmxxw/RHBQaV4C6b2mk358tqP+XlF63Dk9cvtRJMvkP7aZ+nEiY
+	 ozSdcFLmesJf7Fdwz+6uHkEG+spuZ+wMLtKmc+rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730441AbfLSSyC (ORCPT
+        id S1730450AbfLSSyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:54:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49328 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:54:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730434AbfLSSyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:54:00 -0500
+        id S1729824AbfLSSyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:54:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E49DE222C2;
-        Thu, 19 Dec 2019 18:53:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59FD42465E;
+        Thu, 19 Dec 2019 18:54:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781639;
-        bh=RQyUUDlMhra9YJ2uHOjLojmvdH6zxmXIcsWihEGODXk=;
+        s=default; t=1576781641;
+        bh=uQRwI7gEVVVBcBGcIcDIIKDHTSgrdvlBCgzwcILLCxE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QdpoMMRYjombr9Xq14htD1PuSPm+LlRLoB0ccVwi3XpUQWP1wfu2ZmlLVYsLTmgdt
-         hJhBMibb+FgT8HQREmPgywOxn0u4QYXjxwgQWfhWDrCJ4eXkWjixtsScBvZD+qnPSH
-         fdFTC5Z7Jsjpx4GKPXRoSchoqvkF6+YqoBKdrv3M=
+        b=SDVarrlPOdYKbXBfcQWzYauxhDlTwisTP7G7ahvsYK2jvvKEOCKnJ5C9CgmNkrROS
+         jOVPyv69M2CkTbZDDvT6QVJNUDMi2+2UbS2FPleLl4yX6wmq9rmoYKNfmN2lZXAewk
+         a4s3TtpIQb/60YfCkgwYoCBV12R+E7J7bskN+EYY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chaotian Jing <chaotian.jing@mediatek.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.4 02/80] mmc: block: Make card_busy_detect() a bit more generic
-Date:   Thu, 19 Dec 2019 19:33:54 +0100
-Message-Id: <20191219183032.988998208@linuxfoundation.org>
+        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>
+Subject: [PATCH 5.4 20/80] xtensa: fix syscall_set_return_value
+Date:   Thu, 19 Dec 2019 19:34:12 +0100
+Message-Id: <20191219183100.383232228@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -60,76 +58,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chaotian Jing <chaotian.jing@mediatek.com>
+From: Max Filippov <jcmvbkbc@gmail.com>
 
-commit 3869468e0c4800af52bfe1e0b72b338dcdae2cfc upstream.
+commit c2d9aa3b6e56de56c7f1ed9026ca6ec7cfbeef19 upstream.
 
-To prepare for more users of card_busy_detect(), let's drop the struct
-request * as an in-parameter and convert to log the error message via
-dev_err() instead of pr_err().
+syscall return value is in the register a2, not a0.
 
-Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: stable@vger.kernel.org # v5.0+
+Fixes: 9f24f3c1067c ("xtensa: implement tracehook functions and enable HAVE_ARCH_TRACEHOOK")
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/core/block.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ arch/xtensa/include/asm/syscall.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/mmc/core/block.c
-+++ b/drivers/mmc/core/block.c
-@@ -981,7 +981,7 @@ static inline bool mmc_blk_in_tran_state
+--- a/arch/xtensa/include/asm/syscall.h
++++ b/arch/xtensa/include/asm/syscall.h
+@@ -51,7 +51,7 @@ static inline void syscall_set_return_va
+ 					    struct pt_regs *regs,
+ 					    int error, long val)
+ {
+-	regs->areg[0] = (long) error ? error : val;
++	regs->areg[2] = (long) error ? error : val;
  }
  
- static int card_busy_detect(struct mmc_card *card, unsigned int timeout_ms,
--			    struct request *req, u32 *resp_errs)
-+			    u32 *resp_errs)
- {
- 	unsigned long timeout = jiffies + msecs_to_jiffies(timeout_ms);
- 	int err = 0;
-@@ -992,8 +992,8 @@ static int card_busy_detect(struct mmc_c
- 
- 		err = __mmc_send_status(card, &status, 5);
- 		if (err) {
--			pr_err("%s: error %d requesting status\n",
--			       req->rq_disk->disk_name, err);
-+			dev_err(mmc_dev(card->host),
-+				"error %d requesting status\n", err);
- 			return err;
- 		}
- 
-@@ -1006,9 +1006,9 @@ static int card_busy_detect(struct mmc_c
- 		 * leaves the program state.
- 		 */
- 		if (done) {
--			pr_err("%s: Card stuck in wrong state! %s %s status: %#x\n",
--				mmc_hostname(card->host),
--				req->rq_disk->disk_name, __func__, status);
-+			dev_err(mmc_dev(card->host),
-+				"Card stuck in wrong state! %s status: %#x\n",
-+				 __func__, status);
- 			return -ETIMEDOUT;
- 		}
- 
-@@ -1671,7 +1671,7 @@ static int mmc_blk_fix_state(struct mmc_
- 
- 	mmc_blk_send_stop(card, timeout);
- 
--	err = card_busy_detect(card, timeout, req, NULL);
-+	err = card_busy_detect(card, timeout, NULL);
- 
- 	mmc_retune_release(card->host);
- 
-@@ -1895,7 +1895,7 @@ static int mmc_blk_card_busy(struct mmc_
- 	if (mmc_host_is_spi(card->host) || rq_data_dir(req) == READ)
- 		return 0;
- 
--	err = card_busy_detect(card, MMC_BLK_TIMEOUT_MS, req, &status);
-+	err = card_busy_detect(card, MMC_BLK_TIMEOUT_MS, &status);
- 
- 	/*
- 	 * Do not assume data transferred correctly if there are any error bits
+ #define SYSCALL_MAX_ARGS 6
 
 
