@@ -2,51 +2,51 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0BDC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4BAC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C331D206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8763206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781005;
-	bh=8yQUx1PwhMKvwpGgql5KB25h0ZDJ2z4u2crpcKj+UEI=;
+	s=default; t=1576781008;
+	bh=vB7fiRaxZIeNzfklFngFBYkZnjceJ4G8m0vP6KQ8yF8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q+/LPbvLyeXQhTOWD09jCOLKLHyPxcr6S/Im4ffEKqvBCnNvccOhmz1q+/w/bVvno
-	 Ws1wh8+m50pyTJ0hDaKztYsvzVMLq3GAoXgv8az38rgdoKNgLm3TTbDsEeTa2Nqrog
-	 bAJkWDaUlV6VZTUMcg0sB9XgvLVLDwX52vX7x23M=
+	b=D4qRjuyALkJoGSPk99soQvAhuezO6H0EhKLN2anbscC/A9JawuHCALQ96GfEV4cjL
+	 qwAWjQaT4H4H1gy6AeuhYask3HosruzyjFyyA8/5Jax+k0Og7VLvZcHuho+GRL8xlT
+	 RBCRlzbhraoURAfV/83sOhG6HDcLYjjlwa1KPUMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727861AbfLSSnZ (ORCPT
+        id S1728835AbfLSSn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:43:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34854 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:43:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727810AbfLSSnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:43:17 -0500
+        id S1728433AbfLSSnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:43:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 819B0206D7;
-        Thu, 19 Dec 2019 18:43:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E971324672;
+        Thu, 19 Dec 2019 18:43:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780997;
-        bh=8yQUx1PwhMKvwpGgql5KB25h0ZDJ2z4u2crpcKj+UEI=;
+        s=default; t=1576781004;
+        bh=vB7fiRaxZIeNzfklFngFBYkZnjceJ4G8m0vP6KQ8yF8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MOQW4k7rOIOO7LBFmg9GD7kTck2+iXdbrCe5bMdkT4zugX9bzeo41awQ7OXk9Xxnk
-         TlK2o2mIbfvXIWx6XQfBFMUqSe7h6435e4bLfUdM42VTP4FKkNiRjSPQsqhZtFza1n
-         n08rpiQpNdvPK5EIwtBFHAZ3Vwwg6fMovBVxq+hg=
+        b=EVjP31HcaCioOUDhJ1IcRNolPtdG2jeaz4rSVKVFbGwE+RWPPyldD9Ezf8FsdBTug
+         vV5KDFA2qNhygchHriYAow7gKlS+oTpb8mHLYLsvbx9ehCRmVvbUv6VZu+N+xTTGIQ
+         VMqFd9kDEPa0KYGTPLoDLCUweipFAYY1p1VjhqkA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>
-Subject: [PATCH 4.9 005/199] serial: pl011: Fix DMA ->flush_buffer()
-Date:   Thu, 19 Dec 2019 19:31:27 +0100
-Message-Id: <20191219183214.948177057@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 008/199] autofs: fix a leak in autofs_expire_indirect()
+Date:   Thu, 19 Dec 2019 19:31:30 +0100
+Message-Id: <20191219183215.136584672@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -59,73 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Whitchurch <vincent.whitchurch@axis.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit f6a196477184b99a31d16366a8e826558aa11f6d upstream.
+[ Upstream commit 03ad0d703df75c43f78bd72e16124b5b94a95188 ]
 
-PL011's ->flush_buffer() implementation releases and reacquires the port
-lock.  Due to a race condition here, data can end up being added to the
-circular buffer but neither being discarded nor being sent out.  This
-leads to, for example, tcdrain(2) waiting indefinitely.
+if the second call of should_expire() in there ends up
+grabbing and returning a new reference to dentry, we need
+to drop it before continuing.
 
-Process A                       Process B
-
-uart_flush_buffer()
- - acquire lock
- - circ_clear
- - pl011_flush_buffer()
- -- release lock
- -- dmaengine_terminate_all()
-
-                                uart_write()
-                                - acquire lock
-                                - add chars to circ buffer
-                                - start_tx()
-                                -- start DMA
-                                - release lock
-
- -- acquire lock
- -- turn off DMA
- -- release lock
-
-                                // Data in circ buffer but DMA is off
-
-According to the comment in the code, the releasing of the lock around
-dmaengine_terminate_all() is to avoid a deadlock with the DMA engine
-callback.  However, since the time this code was written, the DMA engine
-API documentation seems to have been clarified to say that
-dmaengine_terminate_all() (in the identically implemented but
-differently named dmaengine_terminate_async() variant) does not wait for
-any running complete callback to be completed and can even be called
-from a complete callback.  So there is no possibility of deadlock if the
-DMA engine driver implements this API correctly.
-
-So we should be able to just remove this release and reacquire of the
-lock to prevent the aforementioned race condition.
-
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191118092547.32135-1-vincent.whitchurch@axis.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/amba-pl011.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ fs/autofs4/expire.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -811,10 +811,8 @@ __acquires(&uap->port.lock)
- 	if (!uap->using_tx_dma)
- 		return;
+diff --git a/fs/autofs4/expire.c b/fs/autofs4/expire.c
+index 2e1f50e467f15..02f0d373adbf7 100644
+--- a/fs/autofs4/expire.c
++++ b/fs/autofs4/expire.c
+@@ -469,9 +469,10 @@ struct dentry *autofs4_expire_indirect(struct super_block *sb,
+ 		 */
+ 		flags &= ~AUTOFS_EXP_LEAVES;
+ 		found = should_expire(expired, mnt, timeout, how);
+-		if (!found || found != expired)
+-			/* Something has changed, continue */
++		if (found != expired) { // something has changed, continue
++			dput(found);
+ 			goto next;
++		}
  
--	/* Avoid deadlock with the DMA engine callback */
--	spin_unlock(&uap->port.lock);
--	dmaengine_terminate_all(uap->dmatx.chan);
--	spin_lock(&uap->port.lock);
-+	dmaengine_terminate_async(uap->dmatx.chan);
-+
- 	if (uap->dmatx.queued) {
- 		dma_unmap_sg(uap->dmatx.chan->device->dev, &uap->dmatx.sg, 1,
- 			     DMA_TO_DEVICE);
+ 		if (expired != dentry)
+ 			dput(dentry);
+-- 
+2.20.1
+
 
 
