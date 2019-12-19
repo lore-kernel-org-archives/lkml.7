@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A43CC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCF0C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26481206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 296A5206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:03:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782220;
-	bh=atv7YAxSoS79URw9rbDEbE0+hZXe8bkNhGKUBQKyMAM=;
+	s=default; t=1576782228;
+	bh=KunmRHYVd7NTxlf9m6OM9s34ezRZxez81ev+5ss5gYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t4qKbwY3Zho3JulZR8B1k10WuHFb7mFxxsrq5Kn6Imzh65/xrsOfSTZVR+vFUAHBI
-	 l3HaA1rqg14Cs9+Zq0g/lNac5W+ZJS8Zts3okW2fSfM7TFyCa7LjHIX06t/vHKsBMk
-	 PZUVaI4PH8BHtH5kNYH4MERysNNRyn7SJgkWUqd0=
+	b=wO5nESoC01Mq8WuD3a0PWBn2MOWFLpuAHJ9kVawk4q+6FfEwcYncNPS+3PUmp/Yrw
+	 NwIyYdkcRca0yEwtjFowXe0QgFSupDV9FMYeq509U8osu6yJBUOR5/IXJj8VE1pIrF
+	 aXgC0Mo45Ua75TDkT0VEdiR3gH0rKcLq3Rhv6bpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729230AbfLSSsV (ORCPT
+        id S1729084AbfLSSsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:48:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41340 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:48:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729586AbfLSSsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:48:14 -0500
+        id S1728761AbfLSSsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:48:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CC6A24679;
-        Thu, 19 Dec 2019 18:48:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EA5C24679;
+        Thu, 19 Dec 2019 18:48:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781293;
-        bh=atv7YAxSoS79URw9rbDEbE0+hZXe8bkNhGKUBQKyMAM=;
+        s=default; t=1576781281;
+        bh=KunmRHYVd7NTxlf9m6OM9s34ezRZxez81ev+5ss5gYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WgM17XuFlZ6BCRRK6+wMwTVpbhdPcsfA8Oce9A/I4v0hxwUEg0Fj07aj62lgHw775
-         ZyMw5iWHfvuk40oEuD4jbsbdHJwHQmcrk8/wTWKtIKlyQR4pKYIRiO6zcBpXoXVZ/x
-         RNHqAZbKpr2a4bCc5V+Vdq7lKwEA992CQaL/wiIA=
+        b=Yl1JBswqN2eafEYxWjRbC0GVdozbD48TJ+Ju5fmF7jUoBsfNZ/ndSdWSiaUHdZhYp
+         N99YJj9RtDCFvImpHr3ymEwppex2WzhpuAu4NXuLwdtByXzwuWRf2xhkaSg3jWxvbO
+         7OviVueOkRbd8VolbHgO4dtbY1lU+kbmQUXH68Cs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 160/199] pinctrl: samsung: Fix device node refcount leaks in S3C64xx wakeup controller init
-Date:   Thu, 19 Dec 2019 19:34:02 +0100
-Message-Id: <20191219183224.239754985@linuxfoundation.org>
+        stable@vger.kernel.org, Shirish S <shirish.s@amd.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 156/199] x86/MCE/AMD: Turn off MC4_MISC thresholding on all family 0x15 models
+Date:   Thu, 19 Dec 2019 19:33:58 +0100
+Message-Id: <20191219183223.968354314@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -59,51 +64,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Shirish S <Shirish.S@amd.com>
 
-[ Upstream commit 7f028caadf6c37580d0f59c6c094ed09afc04062 ]
+[ Upstream commit c95b323dcd3598dd7ef5005d6723c1ba3b801093 ]
 
-In s3c64xx_eint_eint0_init() the for_each_child_of_node() loop is used
-with a break to find a matching child node.  Although each iteration of
-for_each_child_of_node puts the previous node, but early exit from loop
-misses it.  This leads to leak of device node.
+MC4_MISC thresholding is not supported on all family 0x15 processors,
+hence skip the x86_model check when applying the quirk.
 
-Cc: <stable@vger.kernel.org>
-Fixes: 61dd72613177 ("pinctrl: Add pinctrl-s3c64xx driver")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+ [ bp: massage commit message. ]
+
+Signed-off-by: Shirish S <shirish.s@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/1547106849-3476-2-git-send-email-shirish.s@amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/samsung/pinctrl-s3c64xx.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/kernel/cpu/mcheck/mce.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-s3c64xx.c b/drivers/pinctrl/samsung/pinctrl-s3c64xx.c
-index 43407ab248f51..0cd9f3a7bb11a 100644
---- a/drivers/pinctrl/samsung/pinctrl-s3c64xx.c
-+++ b/drivers/pinctrl/samsung/pinctrl-s3c64xx.c
-@@ -713,6 +713,7 @@ static int s3c64xx_eint_eint0_init(struct samsung_pinctrl_drv_data *d)
- 	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
- 	if (!data) {
- 		dev_err(dev, "could not allocate memory for wkup eint data\n");
-+		of_node_put(eint0_np);
- 		return -ENOMEM;
- 	}
- 	data->drvdata = d;
-@@ -723,6 +724,7 @@ static int s3c64xx_eint_eint0_init(struct samsung_pinctrl_drv_data *d)
- 		irq = irq_of_parse_and_map(eint0_np, i);
- 		if (!irq) {
- 			dev_err(dev, "failed to get wakeup EINT IRQ %d\n", i);
-+			of_node_put(eint0_np);
- 			return -ENXIO;
- 		}
+diff --git a/arch/x86/kernel/cpu/mcheck/mce.c b/arch/x86/kernel/cpu/mcheck/mce.c
+index e348bee411e35..2664c3df85a60 100644
+--- a/arch/x86/kernel/cpu/mcheck/mce.c
++++ b/arch/x86/kernel/cpu/mcheck/mce.c
+@@ -1649,11 +1649,10 @@ static int __mcheck_cpu_apply_quirks(struct cpuinfo_x86 *c)
+ 			mce_flags.overflow_recov = 1;
  
-@@ -730,6 +732,7 @@ static int s3c64xx_eint_eint0_init(struct samsung_pinctrl_drv_data *d)
- 						 s3c64xx_eint0_handlers[i],
- 						 data);
- 	}
-+	of_node_put(eint0_np);
- 
- 	bank = d->pin_banks;
- 	for (i = 0; i < d->nr_banks; ++i, ++bank) {
+ 		/*
+-		 * Turn off MC4_MISC thresholding banks on those models since
++		 * Turn off MC4_MISC thresholding banks on all models since
+ 		 * they're not supported there.
+ 		 */
+-		if (c->x86 == 0x15 &&
+-		    (c->x86_model >= 0x10 && c->x86_model <= 0x1f)) {
++		if (c->x86 == 0x15) {
+ 			int i;
+ 			u64 hwcr;
+ 			bool need_toggle;
 -- 
 2.20.1
 
