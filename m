@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D4AC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D54C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37B9724684
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AA16227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:54:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781667;
-	bh=NDHlV/5kiS7r+Hm2Cfj1Jf69PpoWZ1Y7BukYPq+qrKU=;
+	s=default; t=1576781670;
+	bh=Rakh7aKAatwab82LT84/GcbyiGBhDIINLMhmkt54iRI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MueHGLo+C6JetCxDF0NZz2S6mgHLKYYY6vhXli2NLR1SDkR2uNB9rP1DgUel6rlRg
-	 z4k6wnqAAh07yr/ehM0TQ4PQ4KZooI0QuUsm4kqKJHehSePAcxXrmktTiuBubm42pi
-	 Z1/lNbYzCEtXJ4aSV0g9TERvndlGC5T7pwSWtBkw=
+	b=BD6i12qEi+6lIPBHzfvzYWCkSXFmjGnUVAn3wDvf+4DeexFNUjEMDB2nI2s5sYuAn
+	 CgniKaJ5ad4EHp7Xy1Nkl1iO0h5YwomHGSaG65np89fvi6K0sP2nd2m987NeFKojxd
+	 9zHZ75Xc49ep66FkIxT0HyTAtm+BjnnDazXfIAPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730505AbfLSSy0 (ORCPT
+        id S1730513AbfLSSy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:54:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49846 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:54:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730209AbfLSSyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:54:24 -0500
+        id S1730503AbfLSSy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:54:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FF89227BF;
-        Thu, 19 Dec 2019 18:54:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BB1624682;
+        Thu, 19 Dec 2019 18:54:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781663;
-        bh=NDHlV/5kiS7r+Hm2Cfj1Jf69PpoWZ1Y7BukYPq+qrKU=;
+        s=default; t=1576781665;
+        bh=Rakh7aKAatwab82LT84/GcbyiGBhDIINLMhmkt54iRI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RTwbj+t/UDqO7k+ta/pAT1Ko8RLFSm3rV1Guu00beu/9pUR269hST4b62wT9f18lS
-         4MeYE2XbuPXPCwZeZZZRtAif2LZdESavXthcPwKS/YgPE6Ht7nS5tRHQu+4KEALDEK
-         OMYllSk7hEzgAznxk7avT+6sWke22QhvBaEe2j1s=
+        b=AF2I035Q1OHMcePRsXkmd5Mf/tIStdQ0PWeZuOCNMPK2JgGS58dxogovqC1vLEAC5
+         6zrJb9j0HlVZHtGu0sgGTDKrvj2/KJoCWDsNYECvtDBa4wB1vvpktTUEZ7yqRg/rLy
+         I5HBPleS3aR3gWUFl6EyxmSHdn/dCmzB2plpLJNU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Long Li <longli@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.4 29/80] cifs: smbd: Only queue work for error recovery on memory registration
-Date:   Thu, 19 Dec 2019 19:34:21 +0100
-Message-Id: <20191219183103.776965717@linuxfoundation.org>
+        stable@vger.kernel.org, Chaotian Jing <chaotian.jing@mediatek.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.4 03/80] mmc: block: Add CMD13 polling for MMC IOCTLS with R1B response
+Date:   Thu, 19 Dec 2019 19:33:55 +0100
+Message-Id: <20191219183033.198791681@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -59,65 +60,211 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
+From: Chaotian Jing <chaotian.jing@mediatek.com>
 
-commit c21ce58eab1eda4c66507897207e20c82e62a5ac upstream.
+commit a0d4c7eb71dd08a89ad631177bb0cbbabd598f84 upstream.
 
-It's not necessary to queue invalidated memory registration to work queue, as
-all we need to do is to unmap the SG and make it usable again. This can save
-CPU cycles in normal data paths as memory registration errors are rare and
-normally only happens during reconnection.
+MMC IOCTLS with R1B responses may cause the card to enter the busy state,
+which means it's not ready to receive a new request. To prevent new
+requests from being sent to the card, use a CMD13 polling loop to verify
+that the card returns to the transfer state, before completing the request.
 
-Signed-off-by: Long Li <longli@microsoft.com>
+Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smbdirect.c |   26 +++++++++++++++-----------
- 1 file changed, 15 insertions(+), 11 deletions(-)
+ drivers/mmc/core/block.c |  147 +++++++++++++++++------------------------------
+ 1 file changed, 55 insertions(+), 92 deletions(-)
 
---- a/fs/cifs/smbdirect.c
-+++ b/fs/cifs/smbdirect.c
-@@ -2269,12 +2269,7 @@ static void smbd_mr_recovery_work(struct
- 	int rc;
+--- a/drivers/mmc/core/block.c
++++ b/drivers/mmc/core/block.c
+@@ -408,38 +408,6 @@ static int mmc_blk_ioctl_copy_to_user(st
+ 	return 0;
+ }
  
- 	list_for_each_entry(smbdirect_mr, &info->mr_list, list) {
--		if (smbdirect_mr->state == MR_INVALIDATED)
--			ib_dma_unmap_sg(
--				info->id->device, smbdirect_mr->sgl,
--				smbdirect_mr->sgl_count,
--				smbdirect_mr->dir);
--		else if (smbdirect_mr->state == MR_ERROR) {
-+		if (smbdirect_mr->state == MR_ERROR) {
+-static int ioctl_rpmb_card_status_poll(struct mmc_card *card, u32 *status,
+-				       u32 retries_max)
+-{
+-	int err;
+-	u32 retry_count = 0;
+-
+-	if (!status || !retries_max)
+-		return -EINVAL;
+-
+-	do {
+-		err = __mmc_send_status(card, status, 5);
+-		if (err)
+-			break;
+-
+-		if (!R1_STATUS(*status) &&
+-				(R1_CURRENT_STATE(*status) != R1_STATE_PRG))
+-			break; /* RPMB programming operation complete */
+-
+-		/*
+-		 * Rechedule to give the MMC device a chance to continue
+-		 * processing the previous command without being polled too
+-		 * frequently.
+-		 */
+-		usleep_range(1000, 5000);
+-	} while (++retry_count < retries_max);
+-
+-	if (retry_count == retries_max)
+-		err = -EPERM;
+-
+-	return err;
+-}
+-
+ static int ioctl_do_sanitize(struct mmc_card *card)
+ {
+ 	int err;
+@@ -468,6 +436,58 @@ out:
+ 	return err;
+ }
  
- 			/* recover this MR entry */
- 			rc = ib_dereg_mr(smbdirect_mr->mr);
-@@ -2602,11 +2597,20 @@ int smbd_deregister_mr(struct smbd_mr *s
- 		 */
- 		smbdirect_mr->state = MR_INVALIDATED;
- 
--	/*
--	 * Schedule the work to do MR recovery for future I/Os
--	 * MR recovery is slow and we don't want it to block the current I/O
--	 */
--	queue_work(info->workqueue, &info->mr_recovery_work);
-+	if (smbdirect_mr->state == MR_INVALIDATED) {
-+		ib_dma_unmap_sg(
-+			info->id->device, smbdirect_mr->sgl,
-+			smbdirect_mr->sgl_count,
-+			smbdirect_mr->dir);
-+		smbdirect_mr->state = MR_READY;
-+		if (atomic_inc_return(&info->mr_ready_count) == 1)
-+			wake_up_interruptible(&info->wait_mr);
-+	} else
++static inline bool mmc_blk_in_tran_state(u32 status)
++{
++	/*
++	 * Some cards mishandle the status bits, so make sure to check both the
++	 * busy indication and the card state.
++	 */
++	return status & R1_READY_FOR_DATA &&
++	       (R1_CURRENT_STATE(status) == R1_STATE_TRAN);
++}
++
++static int card_busy_detect(struct mmc_card *card, unsigned int timeout_ms,
++			    u32 *resp_errs)
++{
++	unsigned long timeout = jiffies + msecs_to_jiffies(timeout_ms);
++	int err = 0;
++	u32 status;
++
++	do {
++		bool done = time_after(jiffies, timeout);
++
++		err = __mmc_send_status(card, &status, 5);
++		if (err) {
++			dev_err(mmc_dev(card->host),
++				"error %d requesting status\n", err);
++			return err;
++		}
++
++		/* Accumulate any response error bits seen */
++		if (resp_errs)
++			*resp_errs |= status;
++
 +		/*
-+		 * Schedule the work to do MR recovery for future I/Os MR
-+		 * recovery is slow and don't want it to block current I/O
++		 * Timeout if the device never becomes ready for data and never
++		 * leaves the program state.
 +		 */
-+		queue_work(info->workqueue, &info->mr_recovery_work);
++		if (done) {
++			dev_err(mmc_dev(card->host),
++				"Card stuck in wrong state! %s status: %#x\n",
++				 __func__, status);
++			return -ETIMEDOUT;
++		}
++
++		/*
++		 * Some cards mishandle the status bits,
++		 * so make sure to check both the busy
++		 * indication and the card state.
++		 */
++	} while (!mmc_blk_in_tran_state(status));
++
++	return err;
++}
++
+ static int __mmc_blk_ioctl_cmd(struct mmc_card *card, struct mmc_blk_data *md,
+ 			       struct mmc_blk_ioc_data *idata)
+ {
+@@ -477,7 +497,6 @@ static int __mmc_blk_ioctl_cmd(struct mm
+ 	struct scatterlist sg;
+ 	int err;
+ 	unsigned int target_part;
+-	u32 status = 0;
  
- done:
- 	if (atomic_dec_and_test(&info->mr_used_count))
+ 	if (!card || !md || !idata)
+ 		return -EINVAL;
+@@ -611,16 +630,12 @@ static int __mmc_blk_ioctl_cmd(struct mm
+ 
+ 	memcpy(&(idata->ic.response), cmd.resp, sizeof(cmd.resp));
+ 
+-	if (idata->rpmb) {
++	if (idata->rpmb || (cmd.flags & MMC_RSP_R1B)) {
+ 		/*
+-		 * Ensure RPMB command has completed by polling CMD13
++		 * Ensure RPMB/R1B command has completed by polling CMD13
+ 		 * "Send Status".
+ 		 */
+-		err = ioctl_rpmb_card_status_poll(card, &status, 5);
+-		if (err)
+-			dev_err(mmc_dev(card->host),
+-					"%s: Card Status=0x%08X, error %d\n",
+-					__func__, status, err);
++		err = card_busy_detect(card, MMC_BLK_TIMEOUT_MS, NULL);
+ 	}
+ 
+ 	return err;
+@@ -970,58 +985,6 @@ static unsigned int mmc_blk_data_timeout
+ 	return ms;
+ }
+ 
+-static inline bool mmc_blk_in_tran_state(u32 status)
+-{
+-	/*
+-	 * Some cards mishandle the status bits, so make sure to check both the
+-	 * busy indication and the card state.
+-	 */
+-	return status & R1_READY_FOR_DATA &&
+-	       (R1_CURRENT_STATE(status) == R1_STATE_TRAN);
+-}
+-
+-static int card_busy_detect(struct mmc_card *card, unsigned int timeout_ms,
+-			    u32 *resp_errs)
+-{
+-	unsigned long timeout = jiffies + msecs_to_jiffies(timeout_ms);
+-	int err = 0;
+-	u32 status;
+-
+-	do {
+-		bool done = time_after(jiffies, timeout);
+-
+-		err = __mmc_send_status(card, &status, 5);
+-		if (err) {
+-			dev_err(mmc_dev(card->host),
+-				"error %d requesting status\n", err);
+-			return err;
+-		}
+-
+-		/* Accumulate any response error bits seen */
+-		if (resp_errs)
+-			*resp_errs |= status;
+-
+-		/*
+-		 * Timeout if the device never becomes ready for data and never
+-		 * leaves the program state.
+-		 */
+-		if (done) {
+-			dev_err(mmc_dev(card->host),
+-				"Card stuck in wrong state! %s status: %#x\n",
+-				 __func__, status);
+-			return -ETIMEDOUT;
+-		}
+-
+-		/*
+-		 * Some cards mishandle the status bits,
+-		 * so make sure to check both the busy
+-		 * indication and the card state.
+-		 */
+-	} while (!mmc_blk_in_tran_state(status));
+-
+-	return err;
+-}
+-
+ static int mmc_blk_reset(struct mmc_blk_data *md, struct mmc_host *host,
+ 			 int type)
+ {
 
 
