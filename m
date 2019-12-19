@@ -2,137 +2,363 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E37FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B038C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BAFC2176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:14:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u1SOj+6Q"
+	by mail.kernel.org (Postfix) with ESMTP id 4370A222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:15:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfLSAOV (ORCPT
+        id S1726744AbfLSAO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 19:14:21 -0500
-Received: from mail-pj1-f73.google.com ([209.85.216.73]:35354 "EHLO
-        mail-pj1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfLSAOV (ORCPT
+        Wed, 18 Dec 2019 19:14:59 -0500
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:48031 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfLSAO6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 19:14:21 -0500
-Received: by mail-pj1-f73.google.com with SMTP id l8so2174188pje.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 16:14:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=dtYJGhXvidGK6sDcgxIhyPPLb4WJNKOiIKfjLPl0mNY=;
-        b=u1SOj+6QXy3P3+I/a6pnKxQFl4cXlIVvppy9KcSbvMrci41+XkyOO9nhDVV3SfXH+2
-         F82sj9a0EAqRVy/qvV/wLyH5CIu0INQyIx4q83KGmNAlwdzBIV4Z8X+NcSGsdIfHDg68
-         WjGqWQz1Q+dF9AKR2seYRjCp1Rchj0kdKPTHJgYIGBrIaMWnUv9GIBG+eSn+CUEzxDkc
-         aiSFz8me8cD0M1Ryh5bAt/H8TjWG4UP+MNXhPuM/dU4SUCO/f7fgnBTgA8rCGV1HKtP6
-         XOOzJi6CIFzZYrZd45wAiSPQVOohNPBM8ejWrSuIafIgRilYXtQmF/Wiykx/2diSm+TH
-         fZ2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=dtYJGhXvidGK6sDcgxIhyPPLb4WJNKOiIKfjLPl0mNY=;
-        b=ll7XpSx0R8zUKQtAtTMTHLkxjBxqAo2xhca1uriG67+AKYSVjoJ4ZiPD0Wt6am6+Em
-         SYUc/osjTDs+N4fp2JgUKaE/vcL+/BoOSnv29um/oUperKP9TNrEdKOnYNjNciySvgOH
-         mIbif9W9i195eievh3DgDNZhMizVJLg6zeH1hBRTq4fK+tkW/6cU0nRIvBiqWs1cR6Ly
-         zAfpd4rzbSo7oV9tQ5G1PL+vezerHzj3KN24DKIUkHlknLhO9Fwtx9/49GQ5T15CtUAX
-         A6eylWWJ0Q1pFnL1G7zj5jHNRZcGTPa6VNU/a6si05X7GqKJ0iTZ7dtkYa9x8eL33a+z
-         aaPg==
-X-Gm-Message-State: APjAAAWU5XoqrQCFwgFdsH3rQPXF8xJD155CPgLrn2yUotc6AQU1yqxh
-        YnvJTm/wfqj8exH2SLLsHjooBFd57+aQ
-X-Google-Smtp-Source: APXvYqx5rnZyJOtyJD2Pdt6oOskd+lhDAHxj0O1q5IhECLwAirOICGf3R3TR8LXjPPAHvpZ7QzGyZj4fGksr
-X-Received: by 2002:a63:d848:: with SMTP id k8mr5011243pgj.114.1576714460207;
- Wed, 18 Dec 2019 16:14:20 -0800 (PST)
-Date:   Wed, 18 Dec 2019 16:14:18 -0800
-In-Reply-To: <CABk29NvMS87uGnFRWoN3Ce0t+UQ--qnjRmQCPJCCEcSASs25uQ@mail.gmail.com>
-Message-Id: <20191219001418.234372-1-joshdon@google.com>
-Mime-Version: 1.0
-References: <CABk29NvMS87uGnFRWoN3Ce0t+UQ--qnjRmQCPJCCEcSASs25uQ@mail.gmail.com>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-Subject: [PATCH v3] sched/fair: Do not set skip buddy up the sched hierarchy
-From:   Josh Don <joshdon@google.com>
-To:     Ingo Molnar <mingo@redhat.com>,
+        Wed, 18 Dec 2019 19:14:58 -0500
+X-Originating-IP: 50.39.173.182
+Received: from localhost (50-39-173-182.bvtn.or.frontiernet.net [50.39.173.182])
+        (Authenticated sender: josh@joshtriplett.org)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 2E9A5FF805;
+        Thu, 19 Dec 2019 00:14:48 +0000 (UTC)
+Date:   Wed, 18 Dec 2019 16:14:46 -0800
+From:   Josh Triplett <josh@joshtriplett.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Akemi Yagi <toracat@elrepo.org>, DJ Delorie <dj@redhat.com>,
+        David Sterba <dsterba@suse.cz>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
         Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org, Paul Turner <pjt@google.com>,
-        Josh Don <joshdon@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH 0/2] pipe: Fixes [ver #2]
+Message-ID: <20191219001446.GA49812@localhost>
+References: <157558502272.10278.8718685637610645781.stgit@warthog.procyon.org.uk>
+ <20191206135604.GB2734@twin.jikos.cz>
+ <CAHk-=wiN_pWbcRaw5L-J2EFUyCn49Due0McwETKwmFFPp88K8Q@mail.gmail.com>
+ <CAHk-=wjvO1V912ya=1rdXwrm1OBTi6GqnqryH_E8OR69cZuVOg@mail.gmail.com>
+ <CAHk-=wizsHmCwUAyQKdU7hBPXHYQn-fOtJKBqMs-79br2pWxeQ@mail.gmail.com>
+ <CAHk-=wjeG0q1vgzu4iJhW5juPkTsjTYmiqiMUYAebWW+0bam6w@mail.gmail.com>
+ <b2ae78da-1c29-8ef7-d0bb-376c52af37c3@yandex-team.ru>
+ <CAHk-=wgTisLQ9k-hsQeyrT5qBS0xuQPYsueFWNT3RxbkkVmbjw@mail.gmail.com>
+ <20191219000013.GB13065@localhost>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="Dxnq1zWXvFF0Q93v"
+Content-Disposition: inline
+In-Reply-To: <20191219000013.GB13065@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Venkatesh Pallipadi <venki@google.com>
 
-Setting the skip buddy up the hierarchy effectively means that a thread
-calling yield will also end up skipping the other tasks in its hierarchy
-as well. However, a yielding thread shouldn't end up causing this
-behavior on behalf of its entire hierarchy.
+--Dxnq1zWXvFF0Q93v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-For typical uses of yield, setting the skip buddy up the hierarchy is
-counter-productive, as that results in CPU being yielded to a task in
-some other cgroup.
+On Wed, Dec 18, 2019 at 04:03:18PM -0800, Josh Triplett wrote:
+> On Wed, Dec 18, 2019 at 02:51:27PM -0800, Linus Torvalds wrote:
+> > That's my latest version, but you'll have to tweak it a tiny bit
+> > because of d1c6a2aa02af ("pipe: simplify signal handling in
+> > pipe_read() and add comments") which I did after that patch.
+> 
+> That's what I encountered, and I ended up manually fixing it up,
+> resulting in the attached patch. Does that look reasonable?
 
-So, limit the skip effect only to the task requesting it.
+Er, wrong file. That's the original patch; the attached patch is the
+right one.
 
-Co-developed-by: Josh Don <joshdon@google.com>
-Signed-off-by: Josh Don <joshdon@google.com>
----
-v2: Only clear skip buddy on the current cfs_rq
+--Dxnq1zWXvFF0Q93v
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment; filename="linux-pipe-fix.patch"
 
-v3: Modify comment describing the justification for this change.
-
- kernel/sched/fair.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 08a233e97a01..0056b57d52cb 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4051,13 +4051,10 @@ static void __clear_buddies_next(struct sched_entity *se)
+diff --git a/fs/coredump.c b/fs/coredump.c
+index b1ea7dfbd149..f8296a82d01d 100644
+--- a/fs/coredump.c
++++ b/fs/coredump.c
+@@ -517,7 +517,7 @@ static void wait_for_dump_helpers(struct file *file)
+ 	pipe_lock(pipe);
+ 	pipe->readers++;
+ 	pipe->writers--;
+-	wake_up_interruptible_sync(&pipe->wait);
++	wake_up_interruptible_sync(&pipe->rd_wait);
+ 	kill_fasync(&pipe->fasync_readers, SIGIO, POLL_IN);
+ 	pipe_unlock(pipe);
  
- static void __clear_buddies_skip(struct sched_entity *se)
+@@ -525,7 +525,7 @@ static void wait_for_dump_helpers(struct file *file)
+ 	 * We actually want wait_event_freezable() but then we need
+ 	 * to clear TIF_SIGPENDING and improve dump_interrupted().
+ 	 */
+-	wait_event_interruptible(pipe->wait, pipe->readers == 1);
++	wait_event_interruptible(pipe->rd_wait, pipe->readers == 1);
+ 
+ 	pipe_lock(pipe);
+ 	pipe->readers--;
+diff --git a/fs/pipe.c b/fs/pipe.c
+index 04d004ee2e8c..5ca6446ca2b1 100644
+--- a/fs/pipe.c
++++ b/fs/pipe.c
+@@ -108,16 +108,19 @@ void pipe_double_lock(struct pipe_inode_info *pipe1,
+ /* Drop the inode semaphore and wait for a pipe event, atomically */
+ void pipe_wait(struct pipe_inode_info *pipe)
  {
--	for_each_sched_entity(se) {
--		struct cfs_rq *cfs_rq = cfs_rq_of(se);
--		if (cfs_rq->skip != se)
--			break;
-+	struct cfs_rq *cfs_rq = cfs_rq_of(se);
+-	DEFINE_WAIT(wait);
++	DEFINE_WAIT(rdwait);
++	DEFINE_WAIT(wrwait);
  
-+	if (cfs_rq->skip == se)
- 		cfs_rq->skip = NULL;
--	}
+ 	/*
+ 	 * Pipes are system-local resources, so sleeping on them
+ 	 * is considered a noninteractive wait:
+ 	 */
+-	prepare_to_wait(&pipe->wait, &wait, TASK_INTERRUPTIBLE);
++	prepare_to_wait(&pipe->rd_wait, &rdwait, TASK_INTERRUPTIBLE);
++	prepare_to_wait(&pipe->wr_wait, &wrwait, TASK_INTERRUPTIBLE);
+ 	pipe_unlock(pipe);
+ 	schedule();
+-	finish_wait(&pipe->wait, &wait);
++	finish_wait(&pipe->rd_wait, &rdwait);
++	finish_wait(&pipe->wr_wait, &wrwait);
+ 	pipe_lock(pipe);
  }
  
- static void clear_buddies(struct cfs_rq *cfs_rq, struct sched_entity *se)
-@@ -6552,8 +6549,12 @@ static void set_next_buddy(struct sched_entity *se)
+@@ -286,7 +289,7 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
+ 	size_t total_len = iov_iter_count(to);
+ 	struct file *filp = iocb->ki_filp;
+ 	struct pipe_inode_info *pipe = filp->private_data;
+-	bool was_full;
++	bool was_full, wake_next_reader = false;
+ 	ssize_t ret;
  
- static void set_skip_buddy(struct sched_entity *se)
+ 	/* Null read succeeds. */
+@@ -344,10 +347,10 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
+ 
+ 			if (!buf->len) {
+ 				pipe_buf_release(pipe, buf);
+-				spin_lock_irq(&pipe->wait.lock);
++				spin_lock_irq(&pipe->rd_wait.lock);
+ 				tail++;
+ 				pipe->tail = tail;
+-				spin_unlock_irq(&pipe->wait.lock);
++				spin_unlock_irq(&pipe->rd_wait.lock);
+ 			}
+ 			total_len -= chars;
+ 			if (!total_len)
+@@ -384,7 +387,7 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
+ 		 * no data.
+ 		 */
+ 		if (unlikely(was_full)) {
+-			wake_up_interruptible_sync_poll(&pipe->wait, EPOLLOUT | EPOLLWRNORM);
++			wake_up_interruptible_sync_poll(&pipe->wr_wait, EPOLLOUT | EPOLLWRNORM);
+ 			kill_fasync(&pipe->fasync_writers, SIGIO, POLL_OUT);
+ 		}
+ 
+@@ -394,18 +397,23 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
+ 		 * since we've done any required wakeups and there's no need
+ 		 * to mark anything accessed. And we've dropped the lock.
+ 		 */
+-		if (wait_event_interruptible(pipe->wait, pipe_readable(pipe)) < 0)
++		if (wait_event_interruptible_exclusive(pipe->rd_wait, pipe_readable(pipe)) < 0)
+ 			return -ERESTARTSYS;
+ 
+ 		__pipe_lock(pipe);
+ 		was_full = pipe_full(pipe->head, pipe->tail, pipe->max_usage);
++		wake_next_reader = true;
+ 	}
++	if (pipe_empty(pipe->head, pipe->tail))
++		wake_next_reader = false;
+ 	__pipe_unlock(pipe);
+ 
+ 	if (was_full) {
+-		wake_up_interruptible_sync_poll(&pipe->wait, EPOLLOUT | EPOLLWRNORM);
++		wake_up_interruptible_sync_poll(&pipe->wr_wait, EPOLLOUT | EPOLLWRNORM);
+ 		kill_fasync(&pipe->fasync_writers, SIGIO, POLL_OUT);
+ 	}
++	if (wake_next_reader)
++		wake_up_interruptible_sync_poll(&pipe->rd_wait, EPOLLIN | EPOLLRDNORM);
+ 	if (ret > 0)
+ 		file_accessed(filp);
+ 	return ret;
+@@ -437,6 +445,7 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
+ 	size_t total_len = iov_iter_count(from);
+ 	ssize_t chars;
+ 	bool was_empty = false;
++	bool wake_next_writer = false;
+ 
+ 	/* Null write succeeds. */
+ 	if (unlikely(total_len == 0))
+@@ -515,16 +524,16 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
+ 			 * it, either the reader will consume it or it'll still
+ 			 * be there for the next write.
+ 			 */
+-			spin_lock_irq(&pipe->wait.lock);
++			spin_lock_irq(&pipe->rd_wait.lock);
+ 
+ 			head = pipe->head;
+ 			if (pipe_full(head, pipe->tail, pipe->max_usage)) {
+-				spin_unlock_irq(&pipe->wait.lock);
++				spin_unlock_irq(&pipe->rd_wait.lock);
+ 				continue;
+ 			}
+ 
+ 			pipe->head = head + 1;
+-			spin_unlock_irq(&pipe->wait.lock);
++			spin_unlock_irq(&pipe->rd_wait.lock);
+ 
+ 			/* Insert it into the buffer array */
+ 			buf = &pipe->bufs[head & mask];
+@@ -576,14 +585,17 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
+ 		 */
+ 		__pipe_unlock(pipe);
+ 		if (was_empty) {
+-			wake_up_interruptible_sync_poll(&pipe->wait, EPOLLIN | EPOLLRDNORM);
++			wake_up_interruptible_sync_poll(&pipe->rd_wait, EPOLLIN | EPOLLRDNORM);
+ 			kill_fasync(&pipe->fasync_readers, SIGIO, POLL_IN);
+ 		}
+-		wait_event_interruptible(pipe->wait, pipe_writable(pipe));
++		wait_event_interruptible_exclusive(pipe->wr_wait, pipe_writable(pipe));
+ 		__pipe_lock(pipe);
+ 		was_empty = pipe_empty(head, pipe->tail);
++		wake_next_writer = true;
+ 	}
+ out:
++	if (pipe_full(pipe->head, pipe->tail, pipe->max_usage))
++		wake_next_writer = false;
+ 	__pipe_unlock(pipe);
+ 
+ 	/*
+@@ -596,9 +608,11 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
+ 	 * wake up pending jobs
+ 	 */
+ 	if (was_empty) {
+-		wake_up_interruptible_sync_poll(&pipe->wait, EPOLLIN | EPOLLRDNORM);
++		wake_up_interruptible_sync_poll(&pipe->rd_wait, EPOLLIN | EPOLLRDNORM);
+ 		kill_fasync(&pipe->fasync_readers, SIGIO, POLL_IN);
+ 	}
++	if (wake_next_writer)
++		wake_up_interruptible_sync_poll(&pipe->wr_wait, EPOLLOUT | EPOLLWRNORM);
+ 	if (ret > 0 && sb_start_write_trylock(file_inode(filp)->i_sb)) {
+ 		int err = file_update_time(filp);
+ 		if (err)
+@@ -642,12 +656,15 @@ pipe_poll(struct file *filp, poll_table *wait)
+ 	unsigned int head, tail;
+ 
+ 	/*
+-	 * Reading only -- no need for acquiring the semaphore.
++	 * Reading pipe state only -- no need for acquiring the semaphore.
+ 	 *
+ 	 * But because this is racy, the code has to add the
+ 	 * entry to the poll table _first_ ..
+ 	 */
+-	poll_wait(filp, &pipe->wait, wait);
++	if (filp->f_mode & FMODE_READ)
++		poll_wait(filp, &pipe->rd_wait, wait);
++	if (filp->f_mode & FMODE_WRITE)
++		poll_wait(filp, &pipe->wr_wait, wait);
+ 
+ 	/*
+ 	 * .. and only then can you do the racy tests. That way,
+@@ -706,7 +723,8 @@ pipe_release(struct inode *inode, struct file *file)
+ 		pipe->writers--;
+ 
+ 	if (pipe->readers || pipe->writers) {
+-		wake_up_interruptible_sync_poll(&pipe->wait, EPOLLIN | EPOLLOUT | EPOLLRDNORM | EPOLLWRNORM | EPOLLERR | EPOLLHUP);
++		wake_up_interruptible_sync_poll(&pipe->rd_wait, EPOLLIN | EPOLLRDNORM | EPOLLERR | EPOLLHUP);
++		wake_up_interruptible_sync_poll(&pipe->wr_wait, EPOLLOUT | EPOLLWRNORM | EPOLLERR | EPOLLHUP);
+ 		kill_fasync(&pipe->fasync_readers, SIGIO, POLL_IN);
+ 		kill_fasync(&pipe->fasync_writers, SIGIO, POLL_OUT);
+ 	}
+@@ -789,7 +807,8 @@ struct pipe_inode_info *alloc_pipe_info(void)
+ 			     GFP_KERNEL_ACCOUNT);
+ 
+ 	if (pipe->bufs) {
+-		init_waitqueue_head(&pipe->wait);
++		init_waitqueue_head(&pipe->rd_wait);
++		init_waitqueue_head(&pipe->wr_wait);
+ 		pipe->r_counter = pipe->w_counter = 1;
+ 		pipe->max_usage = pipe_bufs;
+ 		pipe->ring_size = pipe_bufs;
+@@ -1007,7 +1026,8 @@ static int wait_for_partner(struct pipe_inode_info *pipe, unsigned int *cnt)
+ 
+ static void wake_up_partner(struct pipe_inode_info *pipe)
  {
--	for_each_sched_entity(se)
--		cfs_rq_of(se)->skip = se;
-+	/*
-+	 * Only set the skip buddy for the task requesting it. Setting the skip
-+	 * buddy up the hierarchy would result in skipping all other tasks in
-+	 * the hierarchy as well.
-+	 */
-+	cfs_rq_of(se)->skip = se;
+-	wake_up_interruptible(&pipe->wait);
++	wake_up_interruptible(&pipe->rd_wait);
++	wake_up_interruptible(&pipe->wr_wait);
  }
  
- /*
--- 
-2.24.1.735.g03f4e72817-goog
+ static int fifo_open(struct inode *inode, struct file *filp)
+@@ -1118,13 +1138,13 @@ static int fifo_open(struct inode *inode, struct file *filp)
+ 
+ err_rd:
+ 	if (!--pipe->readers)
+-		wake_up_interruptible(&pipe->wait);
++		wake_up_interruptible(&pipe->wr_wait);
+ 	ret = -ERESTARTSYS;
+ 	goto err;
+ 
+ err_wr:
+ 	if (!--pipe->writers)
+-		wake_up_interruptible(&pipe->wait);
++		wake_up_interruptible(&pipe->rd_wait);
+ 	ret = -ERESTARTSYS;
+ 	goto err;
+ 
+@@ -1251,7 +1271,8 @@ static long pipe_set_size(struct pipe_inode_info *pipe, unsigned long arg)
+ 	pipe->max_usage = nr_slots;
+ 	pipe->tail = tail;
+ 	pipe->head = head;
+-	wake_up_interruptible_all(&pipe->wait);
++	wake_up_interruptible_all(&pipe->rd_wait);
++	wake_up_interruptible_all(&pipe->wr_wait);
+ 	return pipe->max_usage * PAGE_SIZE;
+ 
+ out_revert_acct:
+diff --git a/fs/splice.c b/fs/splice.c
+index 3009652a41c8..d671936d0aad 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -165,8 +165,8 @@ static const struct pipe_buf_operations user_page_pipe_buf_ops = {
+ static void wakeup_pipe_readers(struct pipe_inode_info *pipe)
+ {
+ 	smp_mb();
+-	if (waitqueue_active(&pipe->wait))
+-		wake_up_interruptible(&pipe->wait);
++	if (waitqueue_active(&pipe->rd_wait))
++		wake_up_interruptible(&pipe->rd_wait);
+ 	kill_fasync(&pipe->fasync_readers, SIGIO, POLL_IN);
+ }
+ 
+@@ -462,8 +462,8 @@ static int pipe_to_sendpage(struct pipe_inode_info *pipe,
+ static void wakeup_pipe_writers(struct pipe_inode_info *pipe)
+ {
+ 	smp_mb();
+-	if (waitqueue_active(&pipe->wait))
+-		wake_up_interruptible(&pipe->wait);
++	if (waitqueue_active(&pipe->wr_wait))
++		wake_up_interruptible(&pipe->wr_wait);
+ 	kill_fasync(&pipe->fasync_writers, SIGIO, POLL_OUT);
+ }
+ 
+diff --git a/include/linux/pipe_fs_i.h b/include/linux/pipe_fs_i.h
+index dbcfa6892384..d5765039652a 100644
+--- a/include/linux/pipe_fs_i.h
++++ b/include/linux/pipe_fs_i.h
+@@ -47,7 +47,7 @@ struct pipe_buffer {
+  **/
+ struct pipe_inode_info {
+ 	struct mutex mutex;
+-	wait_queue_head_t wait;
++	wait_queue_head_t rd_wait, wr_wait;
+ 	unsigned int head;
+ 	unsigned int tail;
+ 	unsigned int max_usage;
 
+--Dxnq1zWXvFF0Q93v--
