@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D64CC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09705C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:46:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7135124683
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6B3C24676
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:46:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781205;
-	bh=iJSZqTbyRA+cNrTUI1i9sJNbprEpHV78xyk1cGnBK9c=;
+	s=default; t=1576781209;
+	bh=XQ8ixBV1OwmvAx4bXVDtEJXlvNN41KaE6IvDZ7Ew5Rc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DBY28jW16JxirGTBFgg9yC/h9v4Pf4Gz2RS5wv02YbSbW473mqqXRKOxD3uDzBPQp
-	 7qSA1pqhxdevAOGO6ZYIt6R+UPoRk/n7HFAtQ4vLScGVgvAHYHM4tOSRIe8hiW1Fpr
-	 ziMu9X97wiJS2c22yR5L/NcMpQZHXyr7IQj2hmdk=
+	b=0GhfjZjZekmIS8cE3GQG4qhUJgoJ8mgDgw3vsYrkCalauFOeyB/PDfksgGhnYmNGR
+	 jXzMnuC9xhiO6Ro/ZyL6LV9qPVm/CTot/59sx3wMiBAiGcLjjG07Ia5OB22+G7P10o
+	 aK6IQXKVWto17qMnQmagUiEdfvqnWhl0KscYCrD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbfLSSqo (ORCPT
+        id S1729103AbfLSSqs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:46:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39360 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:46:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729095AbfLSSqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:46:37 -0500
+        id S1729371AbfLSSqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:46:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90A92222C2;
-        Thu, 19 Dec 2019 18:46:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0109222C2;
+        Thu, 19 Dec 2019 18:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781197;
-        bh=iJSZqTbyRA+cNrTUI1i9sJNbprEpHV78xyk1cGnBK9c=;
+        s=default; t=1576781204;
+        bh=XQ8ixBV1OwmvAx4bXVDtEJXlvNN41KaE6IvDZ7Ew5Rc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xtwmm7uOpX6AfTf7Zj/qPKf9yBt11Z/eL54jc/0usoWLvAbDmvqTWw5t0jiWYMS5l
-         ma7/Jd0UWHfGy3Ysx+nlgvl8YIN1agGcc6lI3YenaiisRBGWaQiFkIzb3+uu6EWiIf
-         vIF7OQek2vb//wAiM2XpMntADrKi+1jjwx94AvWs=
+        b=GnQ/pz/jCCC/BvTST1tkD1+hcfm+4cbio+3OhvDq478i2Pvhr6hk/DpNNWMltVAWZ
+         umuAdqwBlg4T3p6yT/UpqKsMyU4wKsOa2R6yXL+6G2qbeR9kZW5gfDqv61xu9Mr1KI
+         JfydZ6pM3qEzuVxgt7DNgHnIZvJuKJNTsJW6VpLY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.9 085/199] KVM: x86: fix presentation of TSX feature in ARCH_CAPABILITIES
-Date:   Thu, 19 Dec 2019 19:32:47 +0100
-Message-Id: <20191219183219.652680024@linuxfoundation.org>
+        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.9 088/199] crypto: ecdh - fix big endian bug in ECC library
+Date:   Thu, 19 Dec 2019 19:32:50 +0100
+Message-Id: <20191219183219.809163370@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -59,44 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-commit cbbaa2727aa3ae9e0a844803da7cef7fd3b94f2b upstream.
+commit f398243e9fd6a3a059c1ea7b380c40628dbf0c61 upstream.
 
-KVM does not implement MSR_IA32_TSX_CTRL, so it must not be presented
-to the guests.  It is also confusing to have !ARCH_CAP_TSX_CTRL_MSR &&
-!RTM && ARCH_CAP_TAA_NO: lack of MSR_IA32_TSX_CTRL suggests TSX was not
-hidden (it actually was), yet the value says that TSX is not vulnerable
-to microarchitectural data sampling.  Fix both.
+The elliptic curve arithmetic library used by the EC-DH KPP implementation
+assumes big endian byte order, and unconditionally reverses the byte
+and word order of multi-limb quantities. On big endian systems, the byte
+reordering is not necessary, while the word ordering needs to be retained.
 
-Cc: stable@vger.kernel.org
-Tested-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+So replace the __swab64() invocation with a call to be64_to_cpu() which
+should do the right thing for both little and big endian builds.
+
+Fixes: 3c4b23901a0c ("crypto: ecdh - Add ECDH software support")
+Cc: <stable@vger.kernel.org> # v4.9+
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ crypto/ecc.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1075,10 +1075,15 @@ u64 kvm_get_arch_capabilities(void)
- 	 * If TSX is disabled on the system, guests are also mitigated against
- 	 * TAA and clear CPU buffer mitigation is not required for guests.
- 	 */
--	if (boot_cpu_has_bug(X86_BUG_TAA) && boot_cpu_has(X86_FEATURE_RTM) &&
--	    (data & ARCH_CAP_TSX_CTRL_MSR))
-+	if (!boot_cpu_has(X86_FEATURE_RTM))
-+		data &= ~ARCH_CAP_TAA_NO;
-+	else if (!boot_cpu_has_bug(X86_BUG_TAA))
-+		data |= ARCH_CAP_TAA_NO;
-+	else if (data & ARCH_CAP_TSX_CTRL_MSR)
- 		data &= ~ARCH_CAP_MDS_NO;
+--- a/crypto/ecc.c
++++ b/crypto/ecc.c
+@@ -897,10 +897,11 @@ static void ecc_point_mult(struct ecc_po
+ static inline void ecc_swap_digits(const u64 *in, u64 *out,
+ 				   unsigned int ndigits)
+ {
++	const __be64 *src = (__force __be64 *)in;
+ 	int i;
  
-+	/* KVM does not emulate MSR_IA32_TSX_CTRL.  */
-+	data &= ~ARCH_CAP_TSX_CTRL_MSR;
- 	return data;
+ 	for (i = 0; i < ndigits; i++)
+-		out[i] = __swab64(in[ndigits - 1 - i]);
++		out[i] = be64_to_cpu(src[ndigits - 1 - i]);
  }
  
+ int ecc_is_key_valid(unsigned int curve_id, unsigned int ndigits,
 
 
