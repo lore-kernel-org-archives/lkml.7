@@ -2,133 +2,76 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C599C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C6CC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D336F24650
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B888624672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:12:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbfLSID3 (ORCPT
+        id S1726652AbfLSIMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 03:03:29 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:53755 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbfLSID3 (ORCPT
+        Thu, 19 Dec 2019 03:12:49 -0500
+Received: from mail1.windriver.com ([147.11.146.13]:38401 "EHLO
+        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726498AbfLSIMt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 03:03:29 -0500
-Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M6lUk-1ibnpx1XRO-008KmM; Thu, 19 Dec 2019 09:03:27 +0100
-Received: by mail-qk1-f174.google.com with SMTP id z14so2675913qkg.9;
-        Thu, 19 Dec 2019 00:03:26 -0800 (PST)
-X-Gm-Message-State: APjAAAV49yOs3eUl8ZUzbvhQ7rduRPS6YNXnz/QjcYdF2zy63nd1XpP1
-        sUFjPcjrlMZnKPJLYtcRYp+y0fmax9CmfWLSdjQ=
-X-Google-Smtp-Source: APXvYqxXQF6sR2skniit5JgCT5kH+gYfBPMf8t/20i/mEzMIIkYTsPQO26NNE6VO7z/gvWUC1MyADsYJWrkMuIMYl9A=
-X-Received: by 2002:a37:a8d4:: with SMTP id r203mr6933223qke.394.1576742606043;
- Thu, 19 Dec 2019 00:03:26 -0800 (PST)
+        Thu, 19 Dec 2019 03:12:49 -0500
+X-Greylist: delayed 901 seconds by postgrey-1.27 at vger.kernel.org; Thu, 19 Dec 2019 03:12:44 EST
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id xBJ8CGdF015226
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
+        Thu, 19 Dec 2019 00:12:16 -0800 (PST)
+Received: from pek-jsun4-d1.corp.ad.wrs.com (128.224.155.112) by
+ ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
+ 14.3.468.0; Thu, 19 Dec 2019 00:12:15 -0800
+From:   Jiwei Sun <jiwei.sun@windriver.com>
+To:     <tudor.ambarus@microchip.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mtd@lists.infradead.org>
+CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <jiwei.sun.bj@qq.com>, <jiwei.sun@windriver.com>
+Subject: [PATCH] mtd: spi-nor: make s25fl129p1 skip SFDP parsing
+Date:   Thu, 19 Dec 2019 16:12:12 +0800
+Message-ID: <20191219081212.16927-1-jiwei.sun@windriver.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191218235459.GA17271@ircssh-2.c.rugged-nimbus-611.internal>
-In-Reply-To: <20191218235459.GA17271@ircssh-2.c.rugged-nimbus-611.internal>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 19 Dec 2019 09:03:09 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2eT=bHkUamyp-P3Y2adNq1KBk7UknCYBY5_aR4zJmYaQ@mail.gmail.com>
-Message-ID: <CAK8P3a2eT=bHkUamyp-P3Y2adNq1KBk7UknCYBY5_aR4zJmYaQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/5] pid: Add PIDFD_IOCTL_GETFD to fetch file
- descriptors from processes
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Al Viro <viro@zeniv.linux.org.uk>, gpascutto@mozilla.com,
-        ealvarez@mozilla.com, Florian Weimer <fweimer@redhat.com>,
-        jld@mozilla.com
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:IiokMjtel7Ht/qXKLtr7vWPyiJm5ObDabfNBLD0croeK4+f9DuZ
- R4eTY4HQL06tF0ng7Ld5H++ri/uZgzWaJ+EmX5gMrtOQAjul7+vqHo0mIj1uuk/OYHV0LBh
- +7qV0XseDO18FgfrNaWZXF43LUBacU3SUqB3SfBKzpjQMNIOlg6flwUcPCkaK9DvkNHgnH4
- ijGS8Hl9D4poXlab8qnDQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/bWUbbeESK4=:K3P5dPIBMosadcWX12v0Wf
- yecallTrqRqcbthXQiUfh7uxcJtfno+hmx6KezWAQGmF8UcFy0IAK/b7FHOTu5cajmdNdRKlS
- iwEVHS4nIze351xxRhP++RS4dtYTZAwdRFjLG8j1fZaTmyyEQu5J0Us43xbI0zC74lRdhjIZx
- EyG2A6HykJ5TH7ndEG9qVU6hcOzSsHzAMd7Ji78Qmu43GytKjbNrUAVTF/Nhvn349u+RTf79F
- DF+NTIWscDSXjxd0/T4F31m9rkB5JzBnrQgM1XCQ4+r86liyV+L5nSQos3uIl+m3GcOvJ00rf
- PqJatkAoxsDUDftTPLWXt/AOywxVAMv6dHftP1K1wHm5FM19EIHhLpFw9IJ1KwsOr8ZOG9o+B
- YLu6LHgEYSlqrujH7xGvC+5AXenIQ9KAb+9eIa/Lr4uATB/JxZz1xl/hYUKXQ+NShRlwrA1GY
- ggvS65TgSSGq5ro8jhI5zIQI+80WexLwul4jFG0mnoKXNic2I9IcNyPJjuQkOBZnfAKegP+fo
- UFpOrNGeGDuDC1SJUIkce6np4967tD05UkpunImNv5uWVIlN9dD5vnJhUj5HcBHgUGCo6RYKY
- mWqApzVcw8L0RVxeZ0CF0CV+X+HNRVEyEESSmh7pvapslmU49KgKKDjtClwOdCxYnimmZbRqG
- YDVkKWkJ5M3z5+8BH73PIERQNWfQLCsK+RkZO5gyWicPwF9D7AFA7vhFi4RLJBbh2C4yTjmxi
- jl76bxcloBA1gp1QQqGdApvLD723BVFyPAViT3vdMaDbvS3aYZ21ZVsVrkJKA3BiU3MwDQIok
- 1wiQmDC0HAQGypikE+76GnqlVbWf/IXXFxQcfH4XjC8qarX1OoS1nOwiF+XYHgXSde22cbQ/n
- xfKAz6ePdJcbSD6VPc+g==
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 12:55 AM Sargun Dhillon <sargun@sargun.me> wrote:
+From: jsun4 <jiwei.sun@windriver.com>
 
-> +#define PIDFD_IOCTL_GETFD      _IOWR('p', 0xb0, __u32)
+The right page size of S25FL129P has been gotten in the function
+spi_nor_info_init_params() before invoking spi_nor_parse_bfpt(),
+it is 256-bytes, but the size will be changed to 512 bytes in the
+following function spi_nor_parse_bfpt(). And there is no explanation of
+the SFDP according to the datasheet of S25FL129P. So we can skip
+SFDP parsing.
 
-This describes an ioctl command that reads and writes a __u32 variable
-using a pointer passed as the argument, which doesn't match the
-implementation:
+Signed-off-by: Jiwei Sun <jiwei.sun@windriver.com>
+---
+ drivers/mtd/spi-nor/spi-nor.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +static long pidfd_getfd(struct pid *pid, u32 fd)
-> +{
-...
-> +       return retfd;
+diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+index f4afe123e9dc..dcb4471c735c 100644
+--- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -2504,7 +2504,7 @@ static const struct flash_info spi_nor_ids[] = {
+ 	{ "s25sl12800", INFO(0x012018, 0x0300, 256 * 1024,  64, 0) },
+ 	{ "s25sl12801", INFO(0x012018, 0x0301,  64 * 1024, 256, 0) },
+ 	{ "s25fl129p0", INFO(0x012018, 0x4d00, 256 * 1024,  64, SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | USE_CLSR) },
+-	{ "s25fl129p1", INFO(0x012018, 0x4d01,  64 * 1024, 256, SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | USE_CLSR) },
++	{ "s25fl129p1", INFO(0x012018, 0x4d01,  64 * 1024, 256, SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | USE_CLSR | SPI_NOR_SKIP_SFDP) },
+ 	{ "s25sl004a",  INFO(0x010212,      0,  64 * 1024,   8, 0) },
+ 	{ "s25sl008a",  INFO(0x010213,      0,  64 * 1024,  16, 0) },
+ 	{ "s25sl016a",  INFO(0x010214,      0,  64 * 1024,  32, 0) },
+-- 
+2.20.1
 
-This function passes an fd as the argument and returns a new
-fd, so the command number would be
-
-#define PIDFD_IOCTL_GETFD      _IO('p', 0xb0)
-
-While this implementation looks easy enough, and it is roughly what
-I would do in case of a system call, I would recommend for an ioctl
-implementation to use the __u32 pointer instead:
-
-static long pidfd_getfd_ioctl(struct pid *pid, u32 __user *arg)
-{
-         int their_fd, new_fd;
-         int ret;
-
-         ret = get_user(their_fd, arg);
-         if (ret)
-              return ret;
-
-        new_fd = pidfd_getfd(pid, their_fd);
-        if (new_fd < 0)
-                return new_fd;
-
-         return put_user(new_fd, arg);
-}
-
-Direct argument passing in ioctls may confuse readers because it
-is fairly unusual, and it doesn't work with this:
-
->  const struct file_operations pidfd_fops = {
->         .release = pidfd_release,
->         .poll = pidfd_poll,
-> +       .unlocked_ioctl = pidfd_ioctl,
-> +       .compat_ioctl = compat_ptr_ioctl,
-
-compat_ptr_ioctl() only works if the argument is a pointer, as it
-mangles the argument to turn it from a 32-bit pointer value into
-a 64-bit pointer value. These are almost always the same
-(arch/s390 being the sole exception), but you should not rely
-on it. For now it would be find to do '.compat_ioctl = pidfd_ioctl',
-but that in turn is wrong if you ever add another ioctl command
-that does pass a pointer.
-
-       Arnd
