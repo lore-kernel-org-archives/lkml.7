@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E46C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1325C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA044222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC3D8222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782703;
-	bh=1HKDtvWYNVyMJcPdD5ufXrP3BQadBttkknjlLK6HduI=;
+	s=default; t=1576782705;
+	bh=BLYYGhasJUgseKVq2KbMLgRmg3y+QLplYPJMrvf+rFQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YptjmSXcZYxdzDUkznnO3D2MDVbGa7zaoJv3wsRQ7hmpQDDV0hOHpr9maHGrsgO4b
-	 G/w/+NBV20wlJ9zjf27RERshzv4IsLqja2mk1/zp8obH2mTC3YhlOIU6OCZsVw0EKt
-	 jPD5SAdl/aNKDULey0N3YfP8Zj7mM5MMDPhm144Y=
+	b=reQfMp5sC0xgEIEM6PxCIRp5M5epSnj0q6X/DbmlwEU2A+yDOyyPZ5Q0VOc39qizY
+	 mDaTC42fFdSIq04gv5CXgdYpbu1PNSpxHD3HrBCdgLnWqKVy8sPiRnG3Pf1fLkSDR5
+	 01Dwpdot91A4vQGOrHf7DYnF5mHALCgUm18vgeI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbfLSTLm (ORCPT
+        id S1727904AbfLSShu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:11:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55720 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:37:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727454AbfLSShy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:37:54 -0500
+        id S1727874AbfLSShp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:37:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5000A222C2;
-        Thu, 19 Dec 2019 18:37:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B1F924672;
+        Thu, 19 Dec 2019 18:37:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780673;
-        bh=1HKDtvWYNVyMJcPdD5ufXrP3BQadBttkknjlLK6HduI=;
+        s=default; t=1576780664;
+        bh=BLYYGhasJUgseKVq2KbMLgRmg3y+QLplYPJMrvf+rFQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l5fALnarnEv6Pyb3Ei8YVEyV5oYH2nJ1U1SKbvJs5E0l+z2qV9pfqyTkU3CmWWWfN
-         tQ6WtroHqxnCNL4oo71wGUgImVlPSrtTd1MZ0vQTuG8WZfa1XVBLj4ISGJuD+huvUx
-         NGZpSV5771FaGJa5k0VW1xN3zkU33+y7jjy6Eeio=
+        b=W1Oq6ENkn+l0yBm+TV24zhfq5B2+XspiGVUmL7k7cYqDkVD08oJkozQSrOOb8Drki
+         WKqnjg0SITTxs02cD1wftAKNicD22JbWBvDem2+JK0gwjuDaXIJJ9VMZl72pX7zpFp
+         q5fY3CaHLu2dWA7qQfx+3e2NhnuxZa7U8vBLZT50=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.4 068/162] spi: atmel: Fix CS high support
-Date:   Thu, 19 Dec 2019 19:32:56 +0100
-Message-Id: <20191219183211.968120548@linuxfoundation.org>
+        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.4 065/162] KVM: x86: fix presentation of TSX feature in ARCH_CAPABILITIES
+Date:   Thu, 19 Dec 2019 19:32:53 +0100
+Message-Id: <20191219183211.803963252@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -60,50 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit 7cbb16b2122c09f2ae393a1542fed628505b9da6 upstream.
+commit cbbaa2727aa3ae9e0a844803da7cef7fd3b94f2b upstream.
 
-Until a few years ago, this driver was only used with CS GPIO. The
-only exception is CS0 on AT91RM9200 which has to use internal CS. A
-limitation of the internal CS is that they don't support CS High.
+KVM does not implement MSR_IA32_TSX_CTRL, so it must not be presented
+to the guests.  It is also confusing to have !ARCH_CAP_TSX_CTRL_MSR &&
+!RTM && ARCH_CAP_TAA_NO: lack of MSR_IA32_TSX_CTRL suggests TSX was not
+hidden (it actually was), yet the value says that TSX is not vulnerable
+to microarchitectural data sampling.  Fix both.
 
-So by using the CS GPIO the CS high configuration was available except
-for the particular case CS0 on RM9200.
-
-When the support for the internal chip-select was added, the check of
-the CS high support was not updated. Due to this the driver accepts
-this configuration for all the SPI controller v2 (used by all SoCs
-excepting the AT91RM9200) whereas the hardware doesn't support it for
-infernal CS.
-
-This patch fixes the test to match the hardware capabilities.
-
-Fixes: 4820303480a1 ("spi: atmel: add support for the internal chip-select of the spi controller")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20191017141846.7523-3-gregory.clement@bootlin.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org
+Tested-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/spi/spi-atmel.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/x86/kvm/x86.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/drivers/spi/spi-atmel.c
-+++ b/drivers/spi/spi-atmel.c
-@@ -1209,10 +1209,8 @@ static int atmel_spi_setup(struct spi_de
- 	as = spi_master_get_devdata(spi->master);
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1024,10 +1024,15 @@ u64 kvm_get_arch_capabilities(void)
+ 	 * If TSX is disabled on the system, guests are also mitigated against
+ 	 * TAA and clear CPU buffer mitigation is not required for guests.
+ 	 */
+-	if (boot_cpu_has_bug(X86_BUG_TAA) && boot_cpu_has(X86_FEATURE_RTM) &&
+-	    (data & ARCH_CAP_TSX_CTRL_MSR))
++	if (!boot_cpu_has(X86_FEATURE_RTM))
++		data &= ~ARCH_CAP_TAA_NO;
++	else if (!boot_cpu_has_bug(X86_BUG_TAA))
++		data |= ARCH_CAP_TAA_NO;
++	else if (data & ARCH_CAP_TSX_CTRL_MSR)
+ 		data &= ~ARCH_CAP_MDS_NO;
  
- 	/* see notes above re chipselect */
--	if (!atmel_spi_is_v2(as)
--			&& spi->chip_select == 0
--			&& (spi->mode & SPI_CS_HIGH)) {
--		dev_dbg(&spi->dev, "setup: can't be active-high\n");
-+	if (!as->use_cs_gpios && (spi->mode & SPI_CS_HIGH)) {
-+		dev_warn(&spi->dev, "setup: non GPIO CS can't be active-high\n");
- 		return -EINVAL;
- 	}
++	/* KVM does not emulate MSR_IA32_TSX_CTRL.  */
++	data &= ~ARCH_CAP_TSX_CTRL_MSR;
+ 	return data;
+ }
  
 
 
