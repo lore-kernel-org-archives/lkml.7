@@ -4,80 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EC3C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DD5C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5305206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:07:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B191824679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576796869;
-	bh=1UwGQnsKsSVL/Sjr7ExtByNFEaes7NdRMbEJNsn3Jok=;
+	s=default; t=1576797464;
+	bh=O2Mqx1MONqlIajw7ENsFpYOnD9DmlZDszdpHlaIymrg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VVTisT7wMZqAKgGB5NKeIfkmKX1kz0NJ+PWx84eWtdZ1v5LWm8XRnbTmPWf3A2KMk
-	 ns+vjajV1il5wEOVHHINtfAV92jZUXkR1ulEvn1ST4jefG0ns4RLkqOLFs4RLR+htp
-	 IDO7eRFd0igSmh7luovuR/5ruEC8+hrgOEpA/5Ak=
+	b=dUVbL+8IWwi9YQem1PkZ0MY8KDTmXt9aEawvSb1b3pqvV4natrjF2VHWxLEWgGOy6
+	 5hyjQdZCMOVBJTGMJS+xp4Mj01WrmGTMpQHyJXy7O6PiggrxXT4tLuwXjSP+4sLWKP
+	 k4zo+CyI2f0GCrQTkK0nlzd6Syygl7XZn/b2iAag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbfLSXHt (ORCPT
+        id S1727002AbfLSXRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 18:07:49 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35978 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbfLSXHs (ORCPT
+        Thu, 19 Dec 2019 18:17:44 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39818 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726818AbfLSXRn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 18:07:48 -0500
-Received: by mail-ot1-f67.google.com with SMTP id w1so9261060otg.3;
-        Thu, 19 Dec 2019 15:07:48 -0800 (PST)
+        Thu, 19 Dec 2019 18:17:43 -0500
+Received: by mail-oi1-f194.google.com with SMTP id a67so3885533oib.6;
+        Thu, 19 Dec 2019 15:17:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DgX0NKioz1rOLIBSrzLogpmefAWeE3WIM8ZkXd4rq84=;
-        b=WvTmuBodTGIZtY1oFNFfJL0P6LAVRUMz2RXFVwdEzb3k0zNZprzumrcfEJLVlUj8yp
-         eJhAOgQANtKA3NE6nlsUmEB+npmJFyCodJNpc/aCoHP5CRqSW5jRiy8+GhR33bhqklxi
-         61NCAL6XVIiQqYPKPf2RnEut8DlioGfjSrrmaS+dNLvjjKGlwfz4+gkvhWQ31vlK4y83
-         53cDWoztNiU0D0wxq9unRi9FyVVG2u9EaknyiNb3IPBZQlwy5IxtLtScoijx6bilLBLV
-         6bVQbr2MsZiwDMCVNnXzPHc8RMGyUgzBa/zyCf39b5q5oKuqZYFC51o5UPQdn5kb8B1D
-         ocVQ==
-X-Gm-Message-State: APjAAAUHTprp+HyYz1W3FNwXBIrgXuCSt1GQbApXkedTvuLLYbbuo2Or
-        rJNMMu6QE0gaCLdcBdK7eg==
-X-Google-Smtp-Source: APXvYqwB9T3HzArMlvLUll2SoZeItk08mg/8cUPV/SIjXWZaF7FfZ7O50gyaF8wV0hnYcqYD0TrjJA==
-X-Received: by 2002:a9d:7c97:: with SMTP id q23mr11280615otn.253.1576796867866;
-        Thu, 19 Dec 2019 15:07:47 -0800 (PST)
+        bh=RQAQf0fYNzNJ7qgqm77j2QW7mptfPU6+CVPjrrL7+UU=;
+        b=uaklA5Kq70HLPyZCcoCq8ngMxJZee86ke4bNmTzoxQrWexMyF8tXoh5Ms3ISgEflTv
+         OzFskmCJShouviJ04FiLKdZR9dGf5tZ1ahMc4zLckIAFo+/Smc3QRM5ZzD3ZlrLQQWBI
+         uskQrhkIJbhNCK0DAPDcFE1EJzNogtnrQWyoygspkE7ehvodG5bNQ3FlM8+pHfky00/+
+         EcL3kbaGsvTRwBIGd/bb8cNKlgkyv20km2qF4UFEZeaARfGBMt1IrFAqO4zydPp1St6f
+         eRVIbaFc+PJrYvrff+VSFTgd7QHmGMvavERvxvXG6gwyGiIlWTz6FqmJmnz1s8FujgLL
+         Kczw==
+X-Gm-Message-State: APjAAAV+BKmLn3nVe5BNHaO7iA3R2Klf1r0j7eDyG083CLGH50zCOfyn
+        oiROYzS6xs3DAyAndNuacQ==
+X-Google-Smtp-Source: APXvYqwdiHEZLaKWjnUr8EgDy4jpIOZl30e1VqbwbFDPJ0w07okseYF9J6RsuWNMLHc59v+4eznyPg==
+X-Received: by 2002:a05:6808:b13:: with SMTP id s19mr3049156oij.119.1576797462857;
+        Thu, 19 Dec 2019 15:17:42 -0800 (PST)
 Received: from localhost (ip-184-205-174-147.ftwttx.spcsdns.net. [184.205.174.147])
-        by smtp.gmail.com with ESMTPSA id n25sm2528516oic.6.2019.12.19.15.07.46
+        by smtp.gmail.com with ESMTPSA id m89sm1338610otc.41.2019.12.19.15.17.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 15:07:47 -0800 (PST)
-Date:   Thu, 19 Dec 2019 17:07:45 -0600
+        Thu, 19 Dec 2019 15:17:41 -0800 (PST)
+Date:   Thu, 19 Dec 2019 17:17:40 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Rocky Liao <rjliao@codeaurora.org>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org,
-        johan.hedberg@gmail.com, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bgodavar@codeaurora.org, Rocky Liao <rjliao@codeaurora.org>
-Subject: Re: [PATCH v1 2/2] dt-bindings: net: bluetooth: Add device tree
- bindings for QCA6390
-Message-ID: <20191219230745.GA9366@bogus>
-References: <0101016ef8b923cf-ef36a521-9c4b-4360-842d-d641e0eaaf0e-000000@us-west-2.amazonses.com>
+To:     Dave Gerlach <d-gerlach@ti.com>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        Dave Gerlach <d-gerlach@ti.com>
+Subject: Re: [PATCH 1/5] dt-bindings: arm: cpu: Add TI AM335x and AM437x
+ enable method
+Message-ID: <20191219231740.GA22285@bogus>
+References: <20191213030755.16096-1-d-gerlach@ti.com>
+ <20191213030755.16096-2-d-gerlach@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0101016ef8b923cf-ef36a521-9c4b-4360-842d-d641e0eaaf0e-000000@us-west-2.amazonses.com>
+In-Reply-To: <20191213030755.16096-2-d-gerlach@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019 06:08:33 +0000, Rocky Liao wrote:
-> Add compatible string for the Qualcomm QCA6390 Bluetooth controller
+On Thu, 12 Dec 2019 21:07:51 -0600, Dave Gerlach wrote:
+> Add enable-method binding for "ti,am3352" and "ti,am4372".
 > 
-> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
 > ---
->  Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 1 +
->  1 file changed, 1 insertion(+)
+> CC: Rob Herring <robh+dt@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
