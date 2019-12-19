@@ -2,191 +2,111 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 907F5C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEE0C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AC082467E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C268C2465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:10:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wcs2hFZc"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wtvPaOr2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbfLSUKP (ORCPT
+        id S1727177AbfLSUKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 15:10:15 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:33459 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726869AbfLSUKP (ORCPT
+        Thu, 19 Dec 2019 15:10:46 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:44066 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726906AbfLSUKq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 15:10:15 -0500
-Received: by mail-qv1-f67.google.com with SMTP id z3so2752139qvn.0
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 12:10:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UMFhKuHlOVhgEaaeCe2yyMwI6vpRch0/oXdENcz2O5U=;
-        b=Wcs2hFZcDJhVBXcnmKTUyc83ImGBQao9vo8CZUDsadAsXO0S8Ahfr05knkzAHe8ZPb
-         W95fUn4szixbsV5avaZTSELPexgv/dpnjnnJrXQDrp0UMluB0rnKAawBVHx/feqK8eu2
-         hFc0Vtw44tgNwgobI3Ke5K7pjqeIkz1dUAmcM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UMFhKuHlOVhgEaaeCe2yyMwI6vpRch0/oXdENcz2O5U=;
-        b=cGG4YAY/g/tFrsmSRT+mZV8/XOXLWATzFTBxCBZO+11MA9IFX3SQyinSfXo4AmsuiM
-         9+8HKOaPA93dAyg6BwmumcILDyvU82FOY1v9oYGUK9OiiMud+8EdonRI410IY2vGCNx+
-         9W+/yJF39eoPa4pXBfR3WaPxzwJOiDhCt6oj9rvk/qFcW+cECtcuC5R2i0u6d5m1WVeK
-         aeWdfM4erYdPsu/6R0XdG0/srXuHeAs4pA2V2Kouag9TuuUV6gGuNuJJRaU91+pcGVP7
-         AapEjdjgdRyFcwvrFpBjFw/hcXmMvFULYn7IDTtQxP6LT0A4jwTQYdTmhDqCY3hx3l9a
-         fm6A==
-X-Gm-Message-State: APjAAAWQE1szbvQfWg/TxA1te8UlLD06lWunGyAqH7ciFMP/G5o4egHC
-        g+U7paSpgpRCk9zXMTteQcUVcWVxUyeA+iEJgMKLSw==
-X-Google-Smtp-Source: APXvYqwXA3vmU63ZnZrNZ0f6HM3eWgDN4WzmuAGz1j+NO1xeyQU2USX42aJLl6HnTcxpwEBJYgctCUWeRewiXjqyDS8=
-X-Received: by 2002:a05:6214:192f:: with SMTP id es15mr9152336qvb.219.1576786213896;
- Thu, 19 Dec 2019 12:10:13 -0800 (PST)
+        Thu, 19 Dec 2019 15:10:46 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576786245; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: To: From: Date: Sender;
+ bh=/5veci3IX8iV9Lr7OinmX1GSclV5/3Uya8rEs4CH8nA=; b=wtvPaOr2BZbEoJhvPSB+Ku5EK2t5bx2U1rTs7jINojbbbWMaaYJ6btR1cjS+SynOmH+9hHT0
+ +R4I9rPys9+ygWDCvhlPKKsjWzyOBmPZ56wgQSQRUXdEkRI90YWaomKHAoH/L0mDXqtmxIno
+ ns0dh+3Xez+M8U18/eQ8giHk8OQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5dfbd944.7f6b5df85c38-smtp-out-n03;
+ Thu, 19 Dec 2019 20:10:44 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BE1E6C447A5; Thu, 19 Dec 2019 20:10:44 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5878AC447A0;
+        Thu, 19 Dec 2019 20:10:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5878AC447A0
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Thu, 19 Dec 2019 13:10:41 -0700
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Sharat Masetty <smasetty@codeaurora.org>,
+        freedreno@lists.freedesktop.org, dri-devel@freedesktop.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, robin.murphy@arm.com, joro@8bytes.org,
+        iommu@lists.linux-foundation.org, saiprakash.ranjan@codeaurora.org
+Subject: Re: [PATCH 5/5] drm/msm/a6xx: Add support for using system cache(LLC)
+Message-ID: <20191219201041.GB23673@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Sharat Masetty <smasetty@codeaurora.org>,
+        freedreno@lists.freedesktop.org, dri-devel@freedesktop.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, robin.murphy@arm.com, joro@8bytes.org,
+        iommu@lists.linux-foundation.org, saiprakash.ranjan@codeaurora.org
+References: <1576761286-20451-1-git-send-email-smasetty@codeaurora.org>
+ <1576761286-20451-6-git-send-email-smasetty@codeaurora.org>
+ <20191219195814.GA23673@jcrouse1-lnx.qualcomm.com>
 MIME-Version: 1.0
-References: <20191218230701.59166-1-pmalani@chromium.org> <d9aea1f0-1b5d-44bc-7fcc-eb0b8f9634fd@collabora.com>
-In-Reply-To: <d9aea1f0-1b5d-44bc-7fcc-eb0b8f9634fd@collabora.com>
-From:   Prashant Malani <pmalani@chromium.org>
-Date:   Thu, 19 Dec 2019 12:10:03 -0800
-Message-ID: <CACeCKacA=w+D8W4uPwX6cf+2M7N=CfENR5B0d_=vtBxdJv8jnQ@mail.gmail.com>
-Subject: Re: [PATCH v2] platform: chrome: Add cros-ec-pd-notify driver
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jon Flatley <jflat@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191219195814.GA23673@jcrouse1-lnx.qualcomm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for your review Enric. I've noted the addressed comments inline
-(my apologies if I've trimmed the quoted text too aggressively).
+On Thu, Dec 19, 2019 at 12:58:15PM -0700, Jordan Crouse wrote:
+> On Thu, Dec 19, 2019 at 06:44:46PM +0530, Sharat Masetty wrote:
 
-On Thu, Dec 19, 2019 at 1:44 AM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> Hello Prashant and Jon,
->
-> Thank you for the patch.
->
-> On 19/12/19 0:07, Prashant Malani wrote:
-> > From: Jon Flatley <jflat@chromium.org>
-> >
-> > ChromiumOS uses ACPI device with HID "GOOG0003" for power delivery
-> > related events. The existing cros-usbpd-charger driver relies on these
-> > events without ever actually receiving them on ACPI platforms. This is
-> > because in the ChromeOS kernel trees, the GOOG0003 device is owned by an
-> > ACPI driver that offers firmware updates to USB-C chargers.
-> >
-> > +++ b/drivers/mfd/cros_ec_dev.c
-> > @@ -85,6 +85,9 @@ static const struct mfd_cell cros_ec_sensorhub_cells[] = {
-> >  static const struct mfd_cell cros_usbpd_charger_cells[] = {
-> >       { .name = "cros-usbpd-charger", },
-> >       { .name = "cros-usbpd-logger", },
-> > +#ifndef CONFIG_ACPI
-> > +     { .name = "cros-ec-pd-notify", },
->
-> Could make sense name as cros-usbpd-notify to be coherent with the other drivers
-> names?
-Done.
->
-> > +#endif
-> >  };
-> >
-> >  static const struct cros_feature_to_cells cros_subdevices[] = {
-> > diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-> > index 5f57282a28da0..972c129b7b7ba 100644
-> > --- a/drivers/platform/chrome/Kconfig
-> > +++ b/drivers/platform/chrome/Kconfig
-> > @@ -131,6 +131,15 @@ config CROS_EC_LPC
-> >         To compile this driver as a module, choose M here: the
-> >         module will be called cros_ec_lpcs.
-> >
-> > +config CROS_EC_PD_NOTIFY
->
-> CROS_USBPD_NOTIFY ?
-Done
->
-> > +     tristate "ChromeOS Type-C power delivery event notifier"
-> > +     depends on CROS_EC
-> > +     help
-> > +       If you say Y here, you get support for Type-C PD event notifications
-> > +       from the ChromeOS EC. On ACPI platorms this driver will bind to the
-> > +       GOOG0003 ACPI device, and on non-ACPI platforms this driver will get
-> > +       initialized on ECs which support the feature EC_FEATURE_USB_PD.
-> > +
->
-> Add all this below CROS_USBPD_LOGGER
-Done
->
-> >  config CROS_EC_PROTO
-> >       bool
-> >       help
-> > diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
-> > index aacd5920d8a18..6070baa8320ca 100644
-> > --- a/drivers/platform/chrome/Makefile
-> > +++ b/drivers/platform/chrome/Makefile
+
+<snip>
 
 > > +
-> > +#include <linux/acpi.h>
-> > +#include <linux/module.h>
-> > +#include <linux/mfd/cros_ec.h>
->
-> No need to worry about this for now, but just to let you know, this include will
-> be unnecessary after https://lkml.org/lkml/2019/12/3/530
->
-> It is fine for now, I'll remove the include when I pick up the patch.
->
-Ack.
-> > diff --git a/include/linux/platform_data/cros_ec_pd_notify.h b/include/linux/platform_data/cros_ec_pd_notify.h
-> > new file mode 100644
-> > index 0000000000000..907be5a130d60
-> > --- /dev/null
-> > +++ b/include/linux/platform_data/cros_ec_pd_notify.h
->
-> cros_usbpd_notify.h?
-Done.
->
-> > @@ -0,0 +1,17 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * ChromeOS EC Power Delivery Notifier Driver
-> > + *
-> > + * Copyright 2019 Google LLC
-> > + */
+> > +	/*
+> > +	 * CNTL1 is used to specify SCID for (CP, TP, VFD, CCU and UBWC
+> > +	 * FLAG cache) GPU blocks. This value will be passed along with
+> > +	 * the address for any memory transaction from GPU to identify
+> > +	 * the sub-cache for that transaction.
+> > +	 */
+> > +	if (!IS_ERR(llc->gpu_llc_slice)) {
+> > +		u32 gpu_scid = llcc_get_slice_id(llc->gpu_llc_slice);
+> > +		int i;
 > > +
-> > +#ifndef __LINUX_PLATFORM_DATA_CROS_EC_PD_NOTIFY_H
-> > +#define __LINUX_PLATFORM_DATA_CROS_EC_PD_NOTIFY_H
-> > +
-> > +#include <linux/notifier.h>
-> > +
-> > +int cros_ec_pd_register_notify(struct notifier_block *nb);
-> > +
-> > +void cros_ec_pd_unregister_notify(struct notifier_block *nb);
-> > +
-> > +#endif  /* __LINUX_PLATFORM_DATA_CROS_EC_PD_NOTIFY_H */
-> >
->
-> The driver looks good to me, the only real complain is split the patch in two,
-> one for the MFD subsystem and another one for chrome/platform.
-Done. WIll split into two patches.
+> > +		for (i = 0; i < A6XX_LLC_NUM_GPU_SCIDS; i++)
+> > +			llc->cntl1_regval |=
+> > +				gpu_scid << (A6XX_GPU_LLC_SCID_NUM_BITS * i);
+> 
+> As above, i'm not sure a loop is better than just:
+> 
+> gpu_scid &= 0x1f;
+> 
+> llc->cntl1_regval = (gpu_scid << 0) || (gpu_scid << 5) | (gpu_scid << 10)
+>  | (gpu_scid << 15) | (gpu_scid << 20);
+> 
+> And I'm not even sure we need do this math here in the first place.
 
->Also, my
-> preference is rename cros_ec_pd_notify to cros_usbpd_notify to be coherent with
-> previous related drivera, but is not a must.
->
-> Thanks,
->  Enric
->
->
->
->
+One more question - can you get a valid slice id before activation?
+
+<snip>
+
+Jordan
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
