@@ -2,109 +2,108 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29887C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4B3C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05E322176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9135D2176D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:59:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OvFqvh8Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbfLSByS (ORCPT
+        id S1726768AbfLSB7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 20:54:18 -0500
-Received: from mga12.intel.com ([192.55.52.136]:57625 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726776AbfLSByS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 20:54:18 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 17:54:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="228087471"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga002.jf.intel.com with ESMTP; 18 Dec 2019 17:54:15 -0800
-Cc:     baolu.lu@linux.intel.com,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        iommu@lists.linux-foundation.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 4/5] iommu: intel: Use generic_iommu_put_resv_regions()
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <20191218134205.1271740-1-thierry.reding@gmail.com>
- <20191218134205.1271740-5-thierry.reding@gmail.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <2b3020a1-221c-f86b-6440-e9ef65f0c12e@linux.intel.com>
-Date:   Thu, 19 Dec 2019 09:53:22 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 18 Dec 2019 20:59:31 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41160 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726721AbfLSB7b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 20:59:31 -0500
+Received: by mail-ot1-f65.google.com with SMTP id r27so5000828otc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 17:59:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TQOUWeuTEyIUZEEQ2jTpgmNLbvpJOv+XxTa7wYSNX3g=;
+        b=OvFqvh8YdAzV55/KDAESLZTnpZ9T/+xm2NNdL3mtyu1mL1Ber7NA3Ncg6I6b7iipv/
+         87+tC1A2QDAE4hEaupil/r5OgnOAU0+LIexdh4XDQlJ5PBsHVM39PSrtZl+WeVzBuZny
+         6kGu+jbsvpGz8aZPi8Ne1veypupNUpV2ZlQG9SlklJQRVHIPyapP0sLjfUYrK1yPN9g8
+         XAWgXdrzAfdnGfaUrLVhKsvUO0epe+i4E2S+uTxfmEQWjHer1Cua9iTKw82qgNrlfn7X
+         ito3480sINFyoXjWIBRX75+wF64wksHkV3bEmsaHR9fp9gjzkFdjPPjPQ3k35CqUyLDa
+         ABrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TQOUWeuTEyIUZEEQ2jTpgmNLbvpJOv+XxTa7wYSNX3g=;
+        b=IdkSkUGtfjqFkH+CpVG8FYyzncktWFA32YcTjj+RduXuNNxQd/w7J/+zJ/8qofbNyK
+         sUzzv8ltbRymJpFVmla2pLeWhWUlv5n6YoyfXOYUh3sHPVwVkzFClWzI2GCc5lw2PzG0
+         tmYDiZFb++BBIr22RhlX8dGu8YaWcqk6hWlBLUCUJ78A7PlvQ9j6ya6L1hyC8TRxrp4q
+         YeCSLC/XqWMfJmmAp0xMxfhBsHqf4r9hYghqMpTKU+NSdUfEP37I+YDmHcukohvEM2b5
+         9T/fnfMN43GQ5gvo1tasH4eWhBAQDsLvTXxP55XW7iTGFP00Lh8JaKYEVI/kJ4bLtA5/
+         0kpQ==
+X-Gm-Message-State: APjAAAUDVNSpxdbUKPiTuH8lUiwvYNaEHHAVtwPm0KQDUuVbj05+Esrr
+        1yk+hH0c3L/fcsDXoTMGqzlH7Z2YP2KFMNgbS8jsvA==
+X-Google-Smtp-Source: APXvYqz1ha9qc+r4oDyIBgGQt/Isc2y55K20/dwEtbJTlEEWs6r5FLMbK9py0Kzjg45819sYbwm3CtqEmDDBcaTRo3Q=
+X-Received: by 2002:a9d:2028:: with SMTP id n37mr6290845ota.127.1576720768716;
+ Wed, 18 Dec 2019 17:59:28 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191218134205.1271740-5-thierry.reding@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191217231615.164161-1-almasrymina@google.com>
+ <20191218171254.79664a964c0c61e6054dff64@linux-foundation.org> <4d11fb25-5036-6c78-5328-10a0c14e8edc@oracle.com>
+In-Reply-To: <4d11fb25-5036-6c78-5328-10a0c14e8edc@oracle.com>
+From:   Mina Almasry <almasrymina@google.com>
+Date:   Wed, 18 Dec 2019 17:59:17 -0800
+Message-ID: <CAHS8izMSjyMGTCH-tffiPam_yG9=10v+O617E2cpxWx8SETt3w@mail.gmail.com>
+Subject: Re: [PATCH v9 1/8] hugetlb_cgroup: Add hugetlb_cgroup reservation counter
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org,
+        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>,
+        =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Tejun Heo <tj@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please tweak the title to
+On Wed, Dec 18, 2019 at 5:37 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+>
+> On 12/18/19 5:12 PM, Andrew Morton wrote:
+> > On Tue, 17 Dec 2019 15:16:08 -0800 Mina Almasry <almasrymina@google.com> wrote:
+> <snip>
+> >> This proposal is implemented in this patch series, with tests to verify
+> >> functionality and show the usage. We also added cgroup-v2 support to
+> >> hugetlb_cgroup so that the new use cases can be extended to v2.
+> >
+> > This would make
+> > http://lkml.kernel.org/r/20191216193831.540953-1-gscrivan@redhat.com
+> > obsolete?
+>
+> I haven't started looking at this series yet.  However, since Mina was
+> involved in the discussion of that patch (hugetlb controller for cgroups v2)
+> my assumption is that this patch would simply build on that v2 support?
+> Seems like the above patch would be a prereq for this series.
+>
+> Mina, are those assumptions correct and perhaps this is an old/obsolete
+> comment?  Does this series apply 'on top' of the above patch?  That patch
+> is already in Andrew's tree.
 
-"iommu/vt-d: Use generic_iommu_put_resv_regions()"
+Gah, I just forgot to update this commit message. This patch series is
+indeed on top of Giuseppe's v2 support and doesn't conflict or
+duplicate that functionality. Sorry for the confusion. I'll fix the
+commit message in the next iteration.
 
-then,
-
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-
-Best regards,
-baolu
-
-On 12/18/19 9:42 PM, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> Use the new standard function instead of open-coding it.
-> 
-> Cc: David Woodhouse <dwmw2@infradead.org>
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
->   drivers/iommu/intel-iommu.c | 11 +----------
->   1 file changed, 1 insertion(+), 10 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 42966611a192..a6d5b7cf9183 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -5744,15 +5744,6 @@ static void intel_iommu_get_resv_regions(struct device *device,
->   	list_add_tail(&reg->list, head);
->   }
->   
-> -static void intel_iommu_put_resv_regions(struct device *dev,
-> -					 struct list_head *head)
-> -{
-> -	struct iommu_resv_region *entry, *next;
-> -
-> -	list_for_each_entry_safe(entry, next, head, list)
-> -		kfree(entry);
-> -}
-> -
->   int intel_iommu_enable_pasid(struct intel_iommu *iommu, struct device *dev)
->   {
->   	struct device_domain_info *info;
-> @@ -5987,7 +5978,7 @@ const struct iommu_ops intel_iommu_ops = {
->   	.add_device		= intel_iommu_add_device,
->   	.remove_device		= intel_iommu_remove_device,
->   	.get_resv_regions	= intel_iommu_get_resv_regions,
-> -	.put_resv_regions	= intel_iommu_put_resv_regions,
-> +	.put_resv_regions	= generic_iommu_put_resv_regions,
->   	.apply_resv_region	= intel_iommu_apply_resv_region,
->   	.device_group		= pci_device_group,
->   	.dev_has_feat		= intel_iommu_dev_has_feat,
-> 
+> --
+> Mike Kravetz
