@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1DDC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAFBC2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FC32222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5269222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:05:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782310;
-	bh=EvYG8J8rrt1Rby5sE8y2ueLkHNm3ED/KbOuIQmmIz5k=;
+	s=default; t=1576782317;
+	bh=tXiHxWutDSqcxAY5guEkaYdDDjqecu9sBI3xxjh9P34=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kw7AHLHKlnMMeUFg4qRdxLqz7CQ3q386nKwEX386CnYXusAlUVtS7zgLqugDEtjjN
-	 mnYf8RSmKNSTJY1Je8/WU99//svay6nESNNpC0tkE0JsHKAQdtuFvjCeIVbdiLmVAJ
-	 ndEbcqQ7WVN1i+Wr0zD69Glr0OqCQ3cuaey12JdE=
+	b=Zj0XpdEFyJHdPUGv75EuVp0GTOibHgMSoqYXYrVNbzzrfY9ZDaEow1BhDvXtRAejZ
+	 xMlOKalqLKchLBzYg87MyPF/jyDndRz/5Hp+7bZT0cad2ImiUecUbQelvlx1PBZrwY
+	 mpCv978/kdR8ewg7egOp1lB3KwWmkllQvz52HUXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729692AbfLSTFJ (ORCPT
+        id S1729269AbfLSSqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:05:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38980 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:46:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729055AbfLSSqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:46:20 -0500
+        id S1728640AbfLSSp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:45:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91B4B222C2;
-        Thu, 19 Dec 2019 18:46:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EDE3206D7;
+        Thu, 19 Dec 2019 18:45:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781180;
-        bh=EvYG8J8rrt1Rby5sE8y2ueLkHNm3ED/KbOuIQmmIz5k=;
+        s=default; t=1576781157;
+        bh=tXiHxWutDSqcxAY5guEkaYdDDjqecu9sBI3xxjh9P34=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XzuH488Tmnfe3j1LFj7NX5pq47aibwDntUKqIBUiJipPd2cSSXrXn6jWz2OaQXZZB
-         Ax8+jc8f9yBlnl2pxrKPcP07fELeS3dMrr23LOMum3YslViQrXbT5aNYulBoA66ty2
-         6ZW2BeM7A4x6nB1VQaZ1cyPUy6EfLEO55CRF9eBA=
+        b=nLbsqq7fNRO+aasNw04y22kUYxVT0emYBBT7GJi6Y4UBtXgalqVtf4uqgU5Z0P+aQ
+         oVBfwgh3lPLXz2+48214gMNziWOEGROMg6PQZ+ME8oiIKnxet9yV5duAAkK6bCN8ir
+         cpxBjJMREVwRE3Uo/9mgqhOFM7UDbLGmUkCbYq+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 4.9 114/199] mtd: spear_smi: Fix Write Burst mode
-Date:   Thu, 19 Dec 2019 19:33:16 +0100
-Message-Id: <20191219183221.188287176@linuxfoundation.org>
+        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.9 106/199] ARM: dts: pandora-common: define wl1251 as child node of mmc3
+Date:   Thu, 19 Dec 2019 19:33:08 +0100
+Message-Id: <20191219183220.755085420@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -61,107 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: H. Nikolaus Schaller <hns@goldelico.com>
 
-commit 69c7f4618c16b4678f8a4949b6bb5ace259c0033 upstream.
+commit 4f9007d692017cef38baf2a9b82b7879d5b2407b upstream.
 
-Any write with either dd or flashcp to a device driven by the
-spear_smi.c driver will pass through the spear_smi_cpy_toio()
-function. This function will get called for chunks of up to 256 bytes.
-If the amount of data is smaller, we may have a problem if the data
-length is not 4-byte aligned. In this situation, the kernel panics
-during the memcpy:
+Since v4.7 the dma initialization requires that there is a
+device tree property for "rx" and "tx" channels which is
+not provided by the pdata-quirks initialization.
 
-    # dd if=/dev/urandom bs=1001 count=1 of=/dev/mtd6
-    spear_smi_cpy_toio [620] dest c9070000, src c7be8800, len 256
-    spear_smi_cpy_toio [620] dest c9070100, src c7be8900, len 256
-    spear_smi_cpy_toio [620] dest c9070200, src c7be8a00, len 256
-    spear_smi_cpy_toio [620] dest c9070300, src c7be8b00, len 233
-    Unhandled fault: external abort on non-linefetch (0x808) at 0xc90703e8
-    [...]
-    PC is at memcpy+0xcc/0x330
+By conversion of the mmc3 setup to device tree this will
+finally allows to remove the OpenPandora wlan specific omap3
+data-quirks.
 
-The above error occurs because the implementation of memcpy_toio()
-tries to optimize the number of I/O by writing 4 bytes at a time as
-much as possible, until there are less than 4 bytes left and then
-switches to word or byte writes.
-
-Unfortunately, the specification states about the Write Burst mode:
-
-        "the next AHB Write request should point to the next
-	incremented address and should have the same size (byte,
-	half-word or word)"
-
-This means ARM architecture implementation of memcpy_toio() cannot
-reliably be used blindly here. Workaround this situation by update the
-write path to stick to byte access when the burst length is not
-multiple of 4.
-
-Fixes: f18dbbb1bfe0 ("mtd: ST SPEAr: Add SMI driver for serial NOR flash")
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Boris Brezillon <boris.brezillon@collabora.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Reviewed-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Cc: <stable@vger.kernel.org> # v4.7+
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/devices/spear_smi.c |   38 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 37 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/omap3-pandora-common.dtsi |   36 ++++++++++++++++++++++++++--
+ 1 file changed, 34 insertions(+), 2 deletions(-)
 
---- a/drivers/mtd/devices/spear_smi.c
-+++ b/drivers/mtd/devices/spear_smi.c
-@@ -595,6 +595,26 @@ static int spear_mtd_read(struct mtd_inf
- 	return 0;
- }
+--- a/arch/arm/boot/dts/omap3-pandora-common.dtsi
++++ b/arch/arm/boot/dts/omap3-pandora-common.dtsi
+@@ -221,6 +221,17 @@
+ 		gpio = <&gpio6 4 GPIO_ACTIVE_HIGH>;	/* GPIO_164 */
+ 	};
  
-+/*
-+ * The purpose of this function is to ensure a memcpy_toio() with byte writes
-+ * only. Its structure is inspired from the ARM implementation of _memcpy_toio()
-+ * which also does single byte writes but cannot be used here as this is just an
-+ * implementation detail and not part of the API. Not mentioning the comment
-+ * stating that _memcpy_toio() should be optimized.
-+ */
-+static void spear_smi_memcpy_toio_b(volatile void __iomem *dest,
-+				    const void *src, size_t len)
-+{
-+	const unsigned char *from = src;
++	/* wl1251 wifi+bt module */
++	wlan_en: fixed-regulator-wg7210_en {
++		compatible = "regulator-fixed";
++		regulator-name = "vwlan";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		startup-delay-us = <50000>;
++		enable-active-high;
++		gpio = <&gpio1 23 GPIO_ACTIVE_HIGH>;
++	};
 +
-+	while (len) {
-+		len--;
-+		writeb(*from, dest);
-+		from++;
-+		dest++;
-+	}
-+}
+ 	/* wg7210 (wifi+bt module) 32k clock buffer */
+ 	wg7210_32k: fixed-regulator-wg7210_32k {
+ 		compatible = "regulator-fixed";
+@@ -514,9 +525,30 @@
+ 	/*wp-gpios = <&gpio4 31 GPIO_ACTIVE_HIGH>;*/	/* GPIO_127 */
+ };
+ 
+-/* mmc3 is probed using pdata-quirks to pass wl1251 card data */
+ &mmc3 {
+-	status = "disabled";
++	vmmc-supply = <&wlan_en>;
 +
- static inline int spear_smi_cpy_toio(struct spear_smi *dev, u32 bank,
- 		void __iomem *dest, const void *src, size_t len)
- {
-@@ -617,7 +637,23 @@ static inline int spear_smi_cpy_toio(str
- 	ctrlreg1 = readl(dev->io_base + SMI_CR1);
- 	writel((ctrlreg1 | WB_MODE) & ~SW_MODE, dev->io_base + SMI_CR1);
++	bus-width = <4>;
++	non-removable;
++	ti,non-removable;
++	cap-power-off-card;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc3_pins>;
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	wlan: wifi@1 {
++		compatible = "ti,wl1251";
++
++		reg = <1>;
++
++		interrupt-parent = <&gpio1>;
++		interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;	/* GPIO_21 */
++
++		ti,wl1251-has-eeprom;
++	};
+ };
  
--	memcpy_toio(dest, src, len);
-+	/*
-+	 * In Write Burst mode (WB_MODE), the specs states that writes must be:
-+	 * - incremental
-+	 * - of the same size
-+	 * The ARM implementation of memcpy_toio() will optimize the number of
-+	 * I/O by using as much 4-byte writes as possible, surrounded by
-+	 * 2-byte/1-byte access if:
-+	 * - the destination is not 4-byte aligned
-+	 * - the length is not a multiple of 4-byte.
-+	 * Avoid this alternance of write access size by using our own 'byte
-+	 * access' helper if at least one of the two conditions above is true.
-+	 */
-+	if (IS_ALIGNED(len, sizeof(u32)) &&
-+	    IS_ALIGNED((uintptr_t)dest, sizeof(u32)))
-+		memcpy_toio(dest, src, len);
-+	else
-+		spear_smi_memcpy_toio_b(dest, src, len);
- 
- 	writel(ctrlreg1, dev->io_base + SMI_CR1);
- 
+ /* bluetooth*/
 
 
