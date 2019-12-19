@@ -2,104 +2,86 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7A2C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABA1C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D784D2465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:42:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2HwKIgOq"
+	by mail.kernel.org (Postfix) with ESMTP id DB7392465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:44:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576745072;
+	bh=UX6kGOjM03rADOWcCLSrdOGNZ7etcKRLSdYrfQGuKI8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sVryUzEIMqsFvoE7vytUROieyiDmw9lY+chdNM4BEa9I7nx79qiaaTTank2TDG6FJ
+	 mqtibGz/Duyl3iQ2OtJvfYvFuKgml+Z0BE+as8WW9McVxLqsEFdioY1wcgBJYetyn9
+	 InYkj09hjQ+0NPwrQ+sGqMy+0nVgquY7TKg++s/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfLSImQ (ORCPT
+        id S1726694AbfLSIob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 03:42:16 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:44562 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfLSImP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 03:42:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8wm7887+6a0DJKHssyZYmao6o0ghgf2EN09A1ImkASw=; b=2HwKIgOqT8V+mqHMyRR/2uqUf
-        iiAYAwTtiY7fhdaRn65UTUCYk39cz1Cz+P+6QMMRh0dVFNBtBhYjCb6LJon8EGODnNy3fTxPZHiiW
-        /OPX5FNFNkwkgHpZPchJl+u+89RsbXj55CDoanfxUW0X8lXapJsWTQWXTA+uQGXZyasBIIASADOYE
-        8cbKkT9tIjDhaW4tTNfbpsEI3OPqEYfY5ZvlF8JyyXWIl+/3eaO4nldeS9F/MEtSKqnDywdU5XPx2
-        rifKScmsO6wrnWwelgmkrsgR3UOulq3ZMGO9orseIpeEn2NQXR6HyNUA1Ivm6cg1hA85fuMigRD4O
-        L+Zvs4+dA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ihrNe-00050W-Qy; Thu, 19 Dec 2019 08:42:02 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Thu, 19 Dec 2019 03:44:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47998 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726582AbfLSIoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 03:44:30 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 772C6304D0D;
-        Thu, 19 Dec 2019 09:40:32 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8E81F2B291C48; Thu, 19 Dec 2019 09:41:55 +0100 (CET)
-Date:   Thu, 19 Dec 2019 09:41:55 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the rcu tree with the tip tree
-Message-ID: <20191219084155.GU2844@hirez.programming.kicks-ass.net>
-References: <20191219115036.4699721c@canb.auug.org.au>
- <20191219012726.GY2889@paulmck-ThinkPad-P72>
- <20191219013151.GA21768@paulmck-ThinkPad-P72>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03A8B24650;
+        Thu, 19 Dec 2019 08:44:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576745070;
+        bh=UX6kGOjM03rADOWcCLSrdOGNZ7etcKRLSdYrfQGuKI8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=M4qIsSHf8SoqLufVcTas2dcJnhLGNiZixs92UUDvGlWxl6aRRHd0NXkuefcW3aGyg
+         dqYFwnSS3hqrXJgt4oMPYtHfWEY2LxBsmkSz9ujlG9W+NxUqU/l97hBDdqqhpk7BEI
+         ZQYQCxBzPn/uQNEYyXcOFlig6nKbnIEYi7weyDw4=
+Date:   Thu, 19 Dec 2019 09:44:28 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     shuah <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.4 00/37] 5.4.5-stable review
+Message-ID: <20191219084428.GA1027830@kroah.com>
+References: <20191217200721.741054904@linuxfoundation.org>
+ <6cec4c6c-ff54-0cf9-3cbc-1581c24d7d97@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191219013151.GA21768@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <6cec4c6c-ff54-0cf9-3cbc-1581c24d7d97@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 05:31:51PM -0800, Paul E. McKenney wrote:
-> On Wed, Dec 18, 2019 at 05:27:26PM -0800, Paul E. McKenney wrote:
-> > On Thu, Dec 19, 2019 at 11:50:35AM +1100, Stephen Rothwell wrote:
-> > > Hi all,
-> > > 
-> > > Today's linux-next merge of the rcu tree got a conflict in:
-> > > 
-> > >   kernel/cpu.c
-> > > 
-> > > between commit:
-> > > 
-> > >   45178ac0cea8 ("cpu/hotplug, stop_machine: Fix stop_machine vs hotplug order")
-> > > 
-> > > from the tip tree and commit:
-> > > 
-> > >   d62c673f4cfc ("cpu/hotplug, stop_machine: Fix stop_machine vs hotplug order")
-> > > 
-> > > from the rcu tree.
-> > > 
-> > > I fixed it up (I just used the tip tree version) and can carry the fix
-> > > as necessary. This is now fixed as far as linux-next is concerned, but
-> > > any non trivial conflicts should be mentioned to your upstream maintainer
-> > > when your tree is submitted for merging.  You may also want to consider
-> > > cooperating with the maintainer of the conflicting tree to minimise any
-> > > particularly complex conflicts.
+On Wed, Dec 18, 2019 at 01:59:31PM -0700, shuah wrote:
+> On 12/17/19 1:09 PM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.4.5 release.
+> > There are 37 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
 > > 
-> > I will pull this one out of the set that I mark for -next.  That way
-> > I can test and you can avoid at least this one conflict.  ;-)
+> > Responses should be made by Thu, 19 Dec 2019 20:06:21 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.5-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
 > 
-> Heh.  And the reason that it conflicts is that I fixed at least one
-> spelling error...  ;-)
-> 
-> Still, the one in tip is the official one, so I will proceed as planned.
+> Compiled and booted on my test system. No dmesg regressions.
 
-Argh, my bad. I'd forgotten you'd already queued it, and I was holding
-onto it to make sure it didn't get lost. Now we haz it twice.
+Thanks for testing both of these and letting me know.
+
+greg k-h
