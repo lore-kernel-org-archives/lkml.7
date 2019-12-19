@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D52ECC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DD9C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAFBA222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FFA32465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781125;
-	bh=wXgQ+EZwRPzcPxdGDKn0T7ZsU1ZsWUw4oshqN7DO+jk=;
+	s=default; t=1576781128;
+	bh=mN6YQ+PzkcvOkuHpK70M6xy2RAC+WMY5QHxUamRj06U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TcIB1WrSaEnPW5vJ99bxi4SFkyrTWPXmjsWm3Mm0W1kDy3aMxmsr2ezITSqZy0Ors
-	 8NWKLJItBmfDUodXJ3b08vxfXy3Ulwg8xtAQFXXKtqVrnq9LoTv04Jhz045hawWvud
-	 Pz9nSzEMLl3Vg0Oqi4kxWgOAZxHJjR7JVi9m6w5o=
+	b=SRzg/q07Rq9+qeRScedWwojbP7ErEQKndGzLnjMxSlCnMYUPrtRLOqdrgag05k7ho
+	 aYV0HDysd1OLT/KldsknPrTiRBsT2Y23k9ZeZsbbdmHslSmXU+s+sySPYH0zTb81+7
+	 fspR6U5A/EugE5YKKyWCDlDHUgJs+lNL/Faz6Y/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbfLSSpY (ORCPT
+        id S1729157AbfLSSp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:45:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37704 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:45:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729141AbfLSSpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:45:22 -0500
+        id S1729148AbfLSSpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:45:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15EFE222C2;
-        Thu, 19 Dec 2019 18:45:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79D452465E;
+        Thu, 19 Dec 2019 18:45:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781121;
-        bh=wXgQ+EZwRPzcPxdGDKn0T7ZsU1ZsWUw4oshqN7DO+jk=;
+        s=default; t=1576781123;
+        bh=mN6YQ+PzkcvOkuHpK70M6xy2RAC+WMY5QHxUamRj06U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2M3PXD2lfSYCgOwtPbnFCwRVpKVj7swdYub7p4hz6XW3Sp8oT/gR6udjdKhuORQas
-         IGpR/9hprljobtTdzxTj11hqpW0/8OB+5WJmFdTdSVF2q/eMCmyL/KpvS9+fNc6fkY
-         1Rwo40CeepBY18Zm683KzGrXKFehN8SPTmRxYMio=
+        b=U/6O/YqeF8/LeeSFZtjRcTyjF0/UOriqrODmlAS96QuKx/ZoYKWdhzjp6T+dSbcVb
+         Q1ktx57NDq5MIyBE6jPJXlFWUvQxhgyvNZCgfadZi1vMpGt28c1VbnpZEPdExXQN+u
+         hGVPHZV2Sh9PCzvxrMqtu+ewDx/Lo1AUphikEYeI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Wang <wvw@google.com>,
-        Zhang Rui <rui.zhang@intel.com>
-Subject: [PATCH 4.9 092/199] thermal: Fix deadlock in thermal thermal_zone_device_check
-Date:   Thu, 19 Dec 2019 19:32:54 +0100
-Message-Id: <20191219183220.021281963@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+e3f4897236c4eeb8af4f@syzkaller.appspotmail.com,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.9 093/199] KVM: x86: fix out-of-bounds write in KVM_GET_EMULATED_CPUID (CVE-2019-19332)
+Date:   Thu, 19 Dec 2019 19:32:55 +0100
+Message-Id: <20191219183220.072569008@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -59,96 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Wang <wvw@google.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit 163b00cde7cf2206e248789d2780121ad5e6a70b upstream.
+commit 433f4ba1904100da65a311033f17a9bf586b287e upstream.
 
-1851799e1d29 ("thermal: Fix use-after-free when unregistering thermal zone
-device") changed cancel_delayed_work to cancel_delayed_work_sync to avoid
-a use-after-free issue. However, cancel_delayed_work_sync could be called
-insides the WQ causing deadlock.
+The bounds check was present in KVM_GET_SUPPORTED_CPUID but not
+KVM_GET_EMULATED_CPUID.
 
-[54109.642398] c0   1162 kworker/u17:1   D    0 11030      2 0x00000000
-[54109.642437] c0   1162 Workqueue: thermal_passive_wq thermal_zone_device_check
-[54109.642447] c0   1162 Call trace:
-[54109.642456] c0   1162  __switch_to+0x138/0x158
-[54109.642467] c0   1162  __schedule+0xba4/0x1434
-[54109.642480] c0   1162  schedule_timeout+0xa0/0xb28
-[54109.642492] c0   1162  wait_for_common+0x138/0x2e8
-[54109.642511] c0   1162  flush_work+0x348/0x40c
-[54109.642522] c0   1162  __cancel_work_timer+0x180/0x218
-[54109.642544] c0   1162  handle_thermal_trip+0x2c4/0x5a4
-[54109.642553] c0   1162  thermal_zone_device_update+0x1b4/0x25c
-[54109.642563] c0   1162  thermal_zone_device_check+0x18/0x24
-[54109.642574] c0   1162  process_one_work+0x3cc/0x69c
-[54109.642583] c0   1162  worker_thread+0x49c/0x7c0
-[54109.642593] c0   1162  kthread+0x17c/0x1b0
-[54109.642602] c0   1162  ret_from_fork+0x10/0x18
-[54109.643051] c0   1162 kworker/u17:2   D    0 16245      2 0x00000000
-[54109.643067] c0   1162 Workqueue: thermal_passive_wq thermal_zone_device_check
-[54109.643077] c0   1162 Call trace:
-[54109.643085] c0   1162  __switch_to+0x138/0x158
-[54109.643095] c0   1162  __schedule+0xba4/0x1434
-[54109.643104] c0   1162  schedule_timeout+0xa0/0xb28
-[54109.643114] c0   1162  wait_for_common+0x138/0x2e8
-[54109.643122] c0   1162  flush_work+0x348/0x40c
-[54109.643131] c0   1162  __cancel_work_timer+0x180/0x218
-[54109.643141] c0   1162  handle_thermal_trip+0x2c4/0x5a4
-[54109.643150] c0   1162  thermal_zone_device_update+0x1b4/0x25c
-[54109.643159] c0   1162  thermal_zone_device_check+0x18/0x24
-[54109.643167] c0   1162  process_one_work+0x3cc/0x69c
-[54109.643177] c0   1162  worker_thread+0x49c/0x7c0
-[54109.643186] c0   1162  kthread+0x17c/0x1b0
-[54109.643195] c0   1162  ret_from_fork+0x10/0x18
-[54109.644500] c0   1162 cat             D    0  7766      1 0x00000001
-[54109.644515] c0   1162 Call trace:
-[54109.644524] c0   1162  __switch_to+0x138/0x158
-[54109.644536] c0   1162  __schedule+0xba4/0x1434
-[54109.644546] c0   1162  schedule_preempt_disabled+0x80/0xb0
-[54109.644555] c0   1162  __mutex_lock+0x3a8/0x7f0
-[54109.644563] c0   1162  __mutex_lock_slowpath+0x14/0x20
-[54109.644575] c0   1162  thermal_zone_get_temp+0x84/0x360
-[54109.644586] c0   1162  temp_show+0x30/0x78
-[54109.644609] c0   1162  dev_attr_show+0x5c/0xf0
-[54109.644628] c0   1162  sysfs_kf_seq_show+0xcc/0x1a4
-[54109.644636] c0   1162  kernfs_seq_show+0x48/0x88
-[54109.644656] c0   1162  seq_read+0x1f4/0x73c
-[54109.644664] c0   1162  kernfs_fop_read+0x84/0x318
-[54109.644683] c0   1162  __vfs_read+0x50/0x1bc
-[54109.644692] c0   1162  vfs_read+0xa4/0x140
-[54109.644701] c0   1162  SyS_read+0xbc/0x144
-[54109.644708] c0   1162  el0_svc_naked+0x34/0x38
-[54109.845800] c0   1162 D 720.000s 1->7766->7766 cat [panic]
-
-Fixes: 1851799e1d29 ("thermal: Fix use-after-free when unregistering thermal zone device")
-Cc: stable@vger.kernel.org
-Signed-off-by: Wei Wang <wvw@google.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Reported-by: syzbot+e3f4897236c4eeb8af4f@syzkaller.appspotmail.com
+Fixes: 84cffe499b94 ("kvm: Emulate MOVBE", 2013-10-29)
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/thermal/thermal_core.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kvm/cpuid.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -402,7 +402,7 @@ static void thermal_zone_device_set_poll
- 		mod_delayed_work(system_freezable_wq, &tz->poll_queue,
- 				 msecs_to_jiffies(delay));
- 	else
--		cancel_delayed_work_sync(&tz->poll_queue);
-+		cancel_delayed_work(&tz->poll_queue);
- }
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -389,7 +389,7 @@ static inline int __do_cpuid_ent(struct
  
- static void monitor_thermal_zone(struct thermal_zone_device *tz)
-@@ -2073,7 +2073,7 @@ void thermal_zone_device_unregister(stru
+ 	r = -E2BIG;
  
- 	mutex_unlock(&thermal_list_lock);
+-	if (*nent >= maxnent)
++	if (WARN_ON(*nent >= maxnent))
+ 		goto out;
  
--	thermal_zone_device_set_polling(tz, 0);
-+	cancel_delayed_work_sync(&tz->poll_queue);
+ 	do_cpuid_1_ent(entry, function, index);
+@@ -691,6 +691,9 @@ out:
+ static int do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 func,
+ 			u32 idx, int *nent, int maxnent, unsigned int type)
+ {
++	if (*nent >= maxnent)
++		return -E2BIG;
++
+ 	if (type == KVM_GET_EMULATED_CPUID)
+ 		return __do_cpuid_ent_emulated(entry, func, idx, nent, maxnent);
  
- 	if (tz->type[0])
- 		device_remove_file(&tz->device, &dev_attr_type);
 
 
