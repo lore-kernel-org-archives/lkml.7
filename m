@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 672ADC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 940E9C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 356BA24672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61B92222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780920;
-	bh=YAaiHFebq0MAtlX9h1+d1UMOmTcd0OM9rUvU91wapyU=;
+	s=default; t=1576780923;
+	bh=8I5fwb2nZAbo+LT/WCV04+5WxecpMjAsFL6TQ/oV2P8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O9xzyO5Z0swzRMLPamja/FJJono++SyvUg2Djzf5veTFeDysvKemVjgaf4TKYCunV
-	 CCVKqV/leNbllA77zqOXjBYG/Rm1xKhMjUNKxvOeCxOu2aSVSBdA0uxH5sO1V5UO/h
-	 31Za1UUvMt5n2dP9ywTymq2oi5KBjAGvFJn42c0k=
+	b=ZGzCqLSWES6kxgWswQH/GzxkuSdjlpTbfxyWtt81Vvs0DcImsAmLBOPJT9m27DG5G
+	 vh1M+qbFUMwheEcLM7WAViJD60ca+QBK+Qq6Cfme5yac3hoeuDiiegXQbIz02H5VqN
+	 oP7tpyFgW8zgQYf78Mh/AMcJiAaNAvm30VbVjH5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728608AbfLSSl6 (ORCPT
+        id S1728614AbfLSSmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:41:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32920 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:42:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727711AbfLSSlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:41:55 -0500
+        id S1727711AbfLSSl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:41:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F003324672;
-        Thu, 19 Dec 2019 18:41:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBFA7222C2;
+        Thu, 19 Dec 2019 18:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780914;
-        bh=YAaiHFebq0MAtlX9h1+d1UMOmTcd0OM9rUvU91wapyU=;
+        s=default; t=1576780919;
+        bh=8I5fwb2nZAbo+LT/WCV04+5WxecpMjAsFL6TQ/oV2P8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qkQQFpwFMQ8ie93kY+kNjIqrc2tPSoB3bdhQrJrJeERECHmmS4O0f9uKIQs3s7mvf
-         ZzfxXcvrZJrEj5U6IFHJ44KXalFxTYjt6RIadoS5vIA1hvq7wEqU2GU395aJiC4r80
-         wu2ny9wUvsXity/Ewy1XaIa0fMK8gIjztqg/Ff9w=
+        b=BuSCYFCY+1X0pk/72kO17pHtDUPPOFdWPjrKnha2dPFhdpJX/ZulChObuSn55GDbz
+         GcN6iFWGVDdAjNMUVQUkfk/uz090Wh78ZzGXhkY6Tzv4aHJIsnsd3ZIDALTKc33kH0
+         /m0oVzz6ORvkj3ExK2rwivdlxVa4v7mbY7qwuFpc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Lee, Hou-hsun" <hou-hsun.lee@intel.com>,
-        "Lee, Chiasheng" <chiasheng.lee@intel.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Lee@vger.kernel.org
-Subject: [PATCH 4.4 160/162] xhci: fix USB3 device initiated resume race with roothub autosuspend
-Date:   Thu, 19 Dec 2019 19:34:28 +0100
-Message-Id: <20191219183217.505075467@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 4.9 001/199] arm64: tegra: Fix active-low warning for Jetson TX1 regulator
+Date:   Thu, 19 Dec 2019 19:31:23 +0100
+Message-Id: <20191219183214.727870934@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
-References: <20191219183150.477687052@linuxfoundation.org>
+In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
+References: <20191219183214.629503389@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,116 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Jon Hunter <jonathanh@nvidia.com>
 
-commit 057d476fff778f1d3b9f861fdb5437ea1a3cfc99 upstream.
+commit 1e5e929c009559bd7e898ac8e17a5d01037cb057 upstream.
 
-A race in xhci USB3 remote wake handling may force device back to suspend
-after it initiated resume siganaling, causing a missed resume event or warm
-reset of device.
+Commit 34993594181d ("arm64: tegra: Enable HDMI on Jetson TX1")
+added a regulator for HDMI on the Jetson TX1 platform. This regulator
+has an active high enable, but the GPIO specifier for enabling the
+regulator incorrectly defines it as active-low. This causes the
+following warning to occur on boot ...
 
-When a USB3 link completes resume signaling and goes to enabled (UO)
-state a interrupt is issued and the interrupt handler will clear the
-bus_state->port_remote_wakeup resume flag, allowing bus suspend.
+ WARNING KERN regulator@10 GPIO handle specifies active low - ignored
 
-If the USB3 roothub thread just finished reading port status before
-the interrupt, finding ports still in suspended (U3) state, but hasn't
-yet started suspending the hub, then the xhci interrupt handler will clear
-the flag that prevented roothub suspend and allow bus to suspend, forcing
-all port links back to suspended (U3) state.
+The fixed-regulator binding does not use the active-low flag from the
+gpio specifier and purely relies of the presence of the
+'enable-active-high' property to determine if it is active high or low
+(if this property is omitted). Fix this warning by setting the GPIO
+to active-high in the GPIO specifier which aligns with the presense of
+the 'enable-active-high' property.
 
-Example case:
-usb_runtime_suspend() # because all ports still show suspended U3
-  usb_suspend_both()
-    hub_suspend();   # successful as hub->wakeup_bits not set yet
-==> INTERRUPT
-xhci_irq()
-  handle_port_status()
-    clear bus_state->port_remote_wakeup
-    usb_wakeup_notification()
-      sets hub->wakeup_bits;
-        kick_hub_wq()
-<== END INTERRUPT
-      hcd_bus_suspend()
-        xhci_bus_suspend() # success as port_remote_wakeup bits cleared
-
-Fix this by increasing roothub usage count during port resume to prevent
-roothub autosuspend, and by making sure bus_state->port_remote_wakeup
-flag is only cleared after resume completion is visible, i.e.
-after xhci roothub returned U0 or other non-U3 link state link on a
-get port status request.
-
-Issue rootcaused by Chiasheng Lee
-
-Cc: <stable@vger.kernel.org>
-Cc: Lee, Hou-hsun <hou-hsun.lee@intel.com>
-Reported-by: Lee, Chiasheng <chiasheng.lee@intel.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20191211142007.8847-3-mathias.nyman@linux.intel.com
+Fixes: 34993594181d ("arm64: tegra: Enable HDMI on Jetson TX1")
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- drivers/usb/host/xhci-hub.c  |    8 ++++++++
- drivers/usb/host/xhci-ring.c |    6 +-----
- drivers/usb/host/xhci.h      |    1 +
- 3 files changed, 10 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/host/xhci-hub.c
-+++ b/drivers/usb/host/xhci-hub.c
-@@ -736,6 +736,14 @@ static u32 xhci_get_port_status(struct u
- 			status |= USB_PORT_STAT_C_BH_RESET << 16;
- 		if ((raw_port_status & PORT_CEC))
- 			status |= USB_PORT_STAT_C_CONFIG_ERROR << 16;
-+
-+		/* USB3 remote wake resume signaling completed */
-+		if (bus_state->port_remote_wakeup & (1 << wIndex) &&
-+		    (raw_port_status & PORT_PLS_MASK) != XDEV_RESUME &&
-+		    (raw_port_status & PORT_PLS_MASK) != XDEV_RECOVERY) {
-+			bus_state->port_remote_wakeup &= ~(1 << wIndex);
-+			usb_hcd_end_port_resume(&hcd->self, wIndex);
-+		}
- 	}
- 
- 	if (hcd->speed < HCD_USB3) {
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -1602,9 +1602,6 @@ static void handle_port_status(struct xh
- 		usb_hcd_resume_root_hub(hcd);
- 	}
- 
--	if (hcd->speed >= HCD_USB3 && (temp & PORT_PLS_MASK) == XDEV_INACTIVE)
--		bus_state->port_remote_wakeup &= ~(1 << faked_port_index);
--
- 	if ((temp & PORT_PLC) && (temp & PORT_PLS_MASK) == XDEV_RESUME) {
- 		xhci_dbg(xhci, "port resume event for port %d\n", port_id);
- 
-@@ -1623,6 +1620,7 @@ static void handle_port_status(struct xh
- 			bus_state->port_remote_wakeup |= 1 << faked_port_index;
- 			xhci_test_and_clear_bit(xhci, port_array,
- 					faked_port_index, PORT_PLC);
-+			usb_hcd_start_port_resume(&hcd->self, faked_port_index);
- 			xhci_set_link_state(xhci, port_array, faked_port_index,
- 						XDEV_U0);
- 			/* Need to wait until the next link state change
-@@ -1660,8 +1658,6 @@ static void handle_port_status(struct xh
- 		if (slot_id && xhci->devs[slot_id])
- 			xhci_ring_device(xhci, slot_id);
- 		if (bus_state->port_remote_wakeup & (1 << faked_port_index)) {
--			bus_state->port_remote_wakeup &=
--				~(1 << faked_port_index);
- 			xhci_test_and_clear_bit(xhci, port_array,
- 					faked_port_index, PORT_PLC);
- 			usb_wakeup_notification(hcd->self.root_hub,
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -314,6 +314,7 @@ struct xhci_op_regs {
- #define XDEV_U3		(0x3 << 5)
- #define XDEV_INACTIVE	(0x6 << 5)
- #define XDEV_POLLING	(0x7 << 5)
-+#define XDEV_RECOVERY	(0x8 << 5)
- #define XDEV_COMP_MODE  (0xa << 5)
- #define XDEV_RESUME	(0xf << 5)
- /* true: port has power (see HCC_PPC) */
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+@@ -1583,7 +1583,7 @@
+ 			regulator-name = "VDD_HDMI_5V0";
+ 			regulator-min-microvolt = <5000000>;
+ 			regulator-max-microvolt = <5000000>;
+-			gpio = <&exp1 12 GPIO_ACTIVE_LOW>;
++			gpio = <&exp1 12 GPIO_ACTIVE_HIGH>;
+ 			enable-active-high;
+ 			vin-supply = <&vdd_5v0_sys>;
+ 		};
 
 
