@@ -7,46 +7,59 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74211C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A99FC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 480AB24683
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 704F924680
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:38:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780695;
-	bh=3ZyAPUm1rma+krZZR9nHCMrR33Sf/hOUqdACeRulWU8=;
+	s=default; t=1576780699;
+	bh=5IK6K/5emsZlqCtcxohp7khTC0xD+HkYdcob0eXt/4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n6rsSPf4XDYG1mEe1IE+5XKgx4Xir1wqvGuYQXM3HEVhV+VyxGBredbhXpsrd5L7U
-	 HpgIVZvVVETe7s5jDx80oqPIwBeBaoICrDO/UW2Lsvb81dVIKycRPybfn2Qb3tFqB8
-	 rKzrMKfqnsH57cJlrIb9tWV1hzs6RnP6S2yYgTOk=
+	b=Y/5qbZ3SSZ/oS5ukS7R3YBqbnJFXjppuADupHMoxTwbZTbCvW4dG1/6sVvq/cMt2u
+	 HHj7RkB8/Cl3MwxkxSgklCMNt+sAIzVY/+4hZeDiP4jKCVRGqIpZqYOW6Rra5gahvE
+	 wHb73Hq/juXvbGj1ePIavxjUpGeLLv7SBxNsBT6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbfLSSiO (ORCPT
+        id S1727644AbfLSSiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:38:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56092 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:38:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727982AbfLSSiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:38:11 -0500
+        id S1727991AbfLSSiO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:38:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D7182467B;
-        Thu, 19 Dec 2019 18:38:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6192222C2;
+        Thu, 19 Dec 2019 18:38:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780690;
-        bh=3ZyAPUm1rma+krZZR9nHCMrR33Sf/hOUqdACeRulWU8=;
+        s=default; t=1576780693;
+        bh=5IK6K/5emsZlqCtcxohp7khTC0xD+HkYdcob0eXt/4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B12UgAR3Cwp4oZu7aJckRtCsU98n+9BeMTMApU+dUIA+Q9mV5hTyu5invl3/Q6uT/
-         tyEkKmdbc37JtMgEhO4uUtLea9cMRrlNv/xDaCH+O4upPPiVKZWbQu0diMhopEikFU
-         SZWCxxPE/EZqX2O61IvZe0S8YAlZwzL5viu6bJA4=
+        b=RPDN67OCntBaZC84JsFfBKaucG6OJFGWAs8C/St2iN4vRNYWQRtOLVh4qXo8rb9WX
+         U0WObGYYu/MGnlZdIC2v1IEKY8oLRR7iZUCchr5LDXBd9U4CR9xo2icuLsaxhG0i3w
+         JVYHFYBNgC+Hj4+iLyJhMRX5zP6cHMX5gJ+DpDrY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Wang <wvw@google.com>,
-        Zhang Rui <rui.zhang@intel.com>
-Subject: [PATCH 4.4 070/162] thermal: Fix deadlock in thermal thermal_zone_device_check
-Date:   Thu, 19 Dec 2019 19:32:58 +0100
-Message-Id: <20191219183212.081144679@linuxfoundation.org>
+        stable@vger.kernel.org, Marco Felsch <marco.felsch@preh.de>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Tycho Andersen <tycho.andersen@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Borislav Petkov <bp@alien8.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux API <linux-api@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "zhangyi (F)" <yi.zhang@huawei.com>
+Subject: [PATCH 4.4 079/162] fs/proc: Report eip/esp in /prod/PID/stat for coredumping
+Date:   Thu, 19 Dec 2019 19:33:07 +0100
+Message-Id: <20191219183212.607563852@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -59,96 +72,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Wang <wvw@google.com>
+From: John Ogness <john.ogness@linutronix.de>
 
-commit 163b00cde7cf2206e248789d2780121ad5e6a70b upstream.
+commit fd7d56270b526ca3ed0c224362e3c64a0f86687a upstream.
 
-1851799e1d29 ("thermal: Fix use-after-free when unregistering thermal zone
-device") changed cancel_delayed_work to cancel_delayed_work_sync to avoid
-a use-after-free issue. However, cancel_delayed_work_sync could be called
-insides the WQ causing deadlock.
+Commit 0a1eb2d474ed ("fs/proc: Stop reporting eip and esp in
+/proc/PID/stat") stopped reporting eip/esp because it is
+racy and dangerous for executing tasks. The comment adds:
 
-[54109.642398] c0   1162 kworker/u17:1   D    0 11030      2 0x00000000
-[54109.642437] c0   1162 Workqueue: thermal_passive_wq thermal_zone_device_check
-[54109.642447] c0   1162 Call trace:
-[54109.642456] c0   1162  __switch_to+0x138/0x158
-[54109.642467] c0   1162  __schedule+0xba4/0x1434
-[54109.642480] c0   1162  schedule_timeout+0xa0/0xb28
-[54109.642492] c0   1162  wait_for_common+0x138/0x2e8
-[54109.642511] c0   1162  flush_work+0x348/0x40c
-[54109.642522] c0   1162  __cancel_work_timer+0x180/0x218
-[54109.642544] c0   1162  handle_thermal_trip+0x2c4/0x5a4
-[54109.642553] c0   1162  thermal_zone_device_update+0x1b4/0x25c
-[54109.642563] c0   1162  thermal_zone_device_check+0x18/0x24
-[54109.642574] c0   1162  process_one_work+0x3cc/0x69c
-[54109.642583] c0   1162  worker_thread+0x49c/0x7c0
-[54109.642593] c0   1162  kthread+0x17c/0x1b0
-[54109.642602] c0   1162  ret_from_fork+0x10/0x18
-[54109.643051] c0   1162 kworker/u17:2   D    0 16245      2 0x00000000
-[54109.643067] c0   1162 Workqueue: thermal_passive_wq thermal_zone_device_check
-[54109.643077] c0   1162 Call trace:
-[54109.643085] c0   1162  __switch_to+0x138/0x158
-[54109.643095] c0   1162  __schedule+0xba4/0x1434
-[54109.643104] c0   1162  schedule_timeout+0xa0/0xb28
-[54109.643114] c0   1162  wait_for_common+0x138/0x2e8
-[54109.643122] c0   1162  flush_work+0x348/0x40c
-[54109.643131] c0   1162  __cancel_work_timer+0x180/0x218
-[54109.643141] c0   1162  handle_thermal_trip+0x2c4/0x5a4
-[54109.643150] c0   1162  thermal_zone_device_update+0x1b4/0x25c
-[54109.643159] c0   1162  thermal_zone_device_check+0x18/0x24
-[54109.643167] c0   1162  process_one_work+0x3cc/0x69c
-[54109.643177] c0   1162  worker_thread+0x49c/0x7c0
-[54109.643186] c0   1162  kthread+0x17c/0x1b0
-[54109.643195] c0   1162  ret_from_fork+0x10/0x18
-[54109.644500] c0   1162 cat             D    0  7766      1 0x00000001
-[54109.644515] c0   1162 Call trace:
-[54109.644524] c0   1162  __switch_to+0x138/0x158
-[54109.644536] c0   1162  __schedule+0xba4/0x1434
-[54109.644546] c0   1162  schedule_preempt_disabled+0x80/0xb0
-[54109.644555] c0   1162  __mutex_lock+0x3a8/0x7f0
-[54109.644563] c0   1162  __mutex_lock_slowpath+0x14/0x20
-[54109.644575] c0   1162  thermal_zone_get_temp+0x84/0x360
-[54109.644586] c0   1162  temp_show+0x30/0x78
-[54109.644609] c0   1162  dev_attr_show+0x5c/0xf0
-[54109.644628] c0   1162  sysfs_kf_seq_show+0xcc/0x1a4
-[54109.644636] c0   1162  kernfs_seq_show+0x48/0x88
-[54109.644656] c0   1162  seq_read+0x1f4/0x73c
-[54109.644664] c0   1162  kernfs_fop_read+0x84/0x318
-[54109.644683] c0   1162  __vfs_read+0x50/0x1bc
-[54109.644692] c0   1162  vfs_read+0xa4/0x140
-[54109.644701] c0   1162  SyS_read+0xbc/0x144
-[54109.644708] c0   1162  el0_svc_naked+0x34/0x38
-[54109.845800] c0   1162 D 720.000s 1->7766->7766 cat [panic]
+    As far as I know, there are no use programs that make any
+    material use of these fields, so just get rid of them.
 
-Fixes: 1851799e1d29 ("thermal: Fix use-after-free when unregistering thermal zone device")
+However, existing userspace core-dump-handler applications (for
+example, minicoredumper) are using these fields since they
+provide an excellent cross-platform interface to these valuable
+pointers. So that commit introduced a user space visible
+regression.
+
+Partially revert the change and make the readout possible for
+tasks with the proper permissions and only if the target task
+has the PF_DUMPCORE flag set.
+
+Fixes: 0a1eb2d474ed ("fs/proc: Stop reporting eip and esp in> /proc/PID/stat")
+Reported-by: Marco Felsch <marco.felsch@preh.de>
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Reviewed-by: Andy Lutomirski <luto@kernel.org>
+Cc: Tycho Andersen <tycho.andersen@canonical.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Brian Gerst <brgerst@gmail.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Wei Wang <wvw@google.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Cc: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Linux API <linux-api@vger.kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: http://lkml.kernel.org/r/87poatfwg6.fsf@linutronix.de
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+[ zhangyi: 68db0cf10678 does not merged, skip the task_stack.h for 4.4]
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/thermal/thermal_core.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/proc/array.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -402,7 +402,7 @@ static void thermal_zone_device_set_poll
- 		mod_delayed_work(system_freezable_wq, &tz->poll_queue,
- 				 msecs_to_jiffies(delay));
- 	else
--		cancel_delayed_work_sync(&tz->poll_queue);
-+		cancel_delayed_work(&tz->poll_queue);
- }
+--- a/fs/proc/array.c
++++ b/fs/proc/array.c
+@@ -429,7 +429,15 @@ static int do_task_stat(struct seq_file
+ 		 * esp and eip are intentionally zeroed out.  There is no
+ 		 * non-racy way to read them without freezing the task.
+ 		 * Programs that need reliable values can use ptrace(2).
++		 *
++		 * The only exception is if the task is core dumping because
++		 * a program is not able to use ptrace(2) in that case. It is
++		 * safe because the task has stopped executing permanently.
+ 		 */
++		if (permitted && (task->flags & PF_DUMPCORE)) {
++			eip = KSTK_EIP(task);
++			esp = KSTK_ESP(task);
++		}
+ 	}
  
- static void monitor_thermal_zone(struct thermal_zone_device *tz)
-@@ -2002,7 +2002,7 @@ void thermal_zone_device_unregister(stru
- 
- 	mutex_unlock(&thermal_list_lock);
- 
--	thermal_zone_device_set_polling(tz, 0);
-+	cancel_delayed_work_sync(&tz->poll_queue);
- 
- 	if (tz->type[0])
- 		device_remove_file(&tz->device, &dev_attr_type);
+ 	get_task_comm(tcomm, task);
 
 
