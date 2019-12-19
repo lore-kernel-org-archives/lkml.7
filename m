@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B15C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A1EC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C712465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DCCF206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:46:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781193;
-	bh=or8v/UXHFUBX4szwDVoaJgBK6VW0CiG9OD1TtrN+Oi8=;
+	s=default; t=1576781196;
+	bh=3meat4GAxA5yeKcb9u/aD+NUxNzTC+2FO4R5XzIejTY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B+JFNufT1V7vEZ4dpp/jmuZqfN80JsHK7YQvsGRhdFPll2NeToy5WMl8vmCMOinmn
-	 K/DOmJ+5nqzm56hANI4LeSjaBz7j2LpD7Eg/bE4oFpSLQSSI01KbqBB7SPIscQwOSw
-	 iPjh43uGuPBUobRaXliX+YERmiT7Yk/b9k7Vn/vY=
+	b=NkN/4SEOp926wV6lIbG3XzR5mPyNwx48vb91/LjHVEqU8OBtZMrVSVHW7ILuGO3FK
+	 kVwrfzS0xN2gfvcZabIRQt7MrFwAVK4XWpz6EMnRRhmUKgM0TwW5/U+uf2qj6+fN3A
+	 4LB6LbetbuPQo5SKgnnvfTJj4P25i9y8TVZvvaiA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728923AbfLSSqb (ORCPT
+        id S1728931AbfLSSqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:46:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39076 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:46:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728955AbfLSSqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:46:25 -0500
+        id S1728945AbfLSSqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:46:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EE3E222C2;
-        Thu, 19 Dec 2019 18:46:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 485AC206D7;
+        Thu, 19 Dec 2019 18:46:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781185;
-        bh=or8v/UXHFUBX4szwDVoaJgBK6VW0CiG9OD1TtrN+Oi8=;
+        s=default; t=1576781189;
+        bh=3meat4GAxA5yeKcb9u/aD+NUxNzTC+2FO4R5XzIejTY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dcD4MSMwQ8RIX3bUbWpjRZqusF+5vkAmUpag9Q+q3v4TsezD1PUW+AYs6nlvwv1fl
-         yAOpyX/diZBefKlORuV+W4OaAygBQZAdhzrE4jq4qPf5L1igM7vmnlz095iR78gghV
-         5Q3pc1IjH/jQnTsyyYgF5A7c2AQs3+4j3vRPlZUQ=
+        b=PTHzhHkplQi4CtOrzh5enI2wndtsB+x3x+/U/uWmacnRmeRy9SE3UN4w0GLLj37qF
+         IdLJG49UwlDbF5yzHjYNS/W3e32A9GNFUg/fantUMEQvCQKj5mnk3YBm3Se8ihkgpk
+         /DFvvlDwnHMbP0ZpbNF3JsZE4xmo8cg1hc5tv+Vw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
+        stable@vger.kernel.org, Atemu <atemu.main@gmail.com>,
+        Qu Wenruo <wqu@suse.com>, Filipe Manana <fdmanana@suse.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.9 116/199] btrfs: check page->mapping when loading free space cache
-Date:   Thu, 19 Dec 2019 19:33:18 +0100
-Message-Id: <20191219183221.309968898@linuxfoundation.org>
+Subject: [PATCH 4.9 118/199] Btrfs: send, skip backreference walking for extents with many references
+Date:   Thu, 19 Dec 2019 19:33:20 +0100
+Message-Id: <20191219183221.434717247@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -61,76 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 3797136b626ad4b6582223660c041efdea8f26b2 upstream.
+commit fd0ddbe2509568b00df364156f47561e9f469f15 upstream.
 
-While testing 5.2 we ran into the following panic
+Backreference walking, which is used by send to figure if it can issue
+clone operations instead of write operations, can be very slow and use
+too much memory when extents have many references. This change simply
+skips backreference walking when an extent has more than 64 references,
+in which case we fallback to a write operation instead of a clone
+operation. This limit is conservative and in practice I observed no
+signicant slowdown with up to 100 references and still low memory usage
+up to that limit.
 
-[52238.017028] BUG: kernel NULL pointer dereference, address: 0000000000000001
-[52238.105608] RIP: 0010:drop_buffers+0x3d/0x150
-[52238.304051] Call Trace:
-[52238.308958]  try_to_free_buffers+0x15b/0x1b0
-[52238.317503]  shrink_page_list+0x1164/0x1780
-[52238.325877]  shrink_inactive_list+0x18f/0x3b0
-[52238.334596]  shrink_node_memcg+0x23e/0x7d0
-[52238.342790]  ? do_shrink_slab+0x4f/0x290
-[52238.350648]  shrink_node+0xce/0x4a0
-[52238.357628]  balance_pgdat+0x2c7/0x510
-[52238.365135]  kswapd+0x216/0x3e0
-[52238.371425]  ? wait_woken+0x80/0x80
-[52238.378412]  ? balance_pgdat+0x510/0x510
-[52238.386265]  kthread+0x111/0x130
-[52238.392727]  ? kthread_create_on_node+0x60/0x60
-[52238.401782]  ret_from_fork+0x1f/0x30
+This is a temporary workaround until there are speedups in the backref
+walking code, and as such it does not attempt to add extra interfaces or
+knobs to tweak the threshold.
 
-The page we were trying to drop had a page->private, but had no
-page->mapping and so called drop_buffers, assuming that we had a
-buffer_head on the page, and then panic'ed trying to deref 1, which is
-our page->private for data pages.
-
-This is happening because we're truncating the free space cache while
-we're trying to load the free space cache.  This isn't supposed to
-happen, and I'll fix that in a followup patch.  However we still
-shouldn't allow those sort of mistakes to result in messing with pages
-that do not belong to us.  So add the page->mapping check to verify that
-we still own this page after dropping and re-acquiring the page lock.
-
-This page being unlocked as:
-btrfs_readpage
-  extent_read_full_page
-    __extent_read_full_page
-      __do_readpage
-        if (!nr)
-	   unlock_page  <-- nr can be 0 only if submit_extent_page
-			    returns an error
-
+Reported-by: Atemu <atemu.main@gmail.com>
+Link: https://lore.kernel.org/linux-btrfs/CAE4GHgkvqVADtS4AzcQJxo0Q1jKQgKaW3JGp3SGdoinVo=C9eQ@mail.gmail.com/T/#me55dc0987f9cc2acaa54372ce0492c65782be3fa
 CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-[ add callchain ]
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/free-space-cache.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/btrfs/send.c |   25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/free-space-cache.c
-+++ b/fs/btrfs/free-space-cache.c
-@@ -391,6 +391,12 @@ static int io_ctl_prepare_pages(struct b
- 		if (uptodate && !PageUptodate(page)) {
- 			btrfs_readpage(NULL, page);
- 			lock_page(page);
-+			if (page->mapping != inode->i_mapping) {
-+				btrfs_err(BTRFS_I(inode)->root->fs_info,
-+					  "free space cache page truncated");
-+				io_ctl_drop_pages(io_ctl);
-+				return -EIO;
-+			}
- 			if (!PageUptodate(page)) {
- 				btrfs_err(BTRFS_I(inode)->root->fs_info,
- 					   "error reading free space cache");
+--- a/fs/btrfs/send.c
++++ b/fs/btrfs/send.c
+@@ -37,6 +37,14 @@
+ #include "compression.h"
+ 
+ /*
++ * Maximum number of references an extent can have in order for us to attempt to
++ * issue clone operations instead of write operations. This currently exists to
++ * avoid hitting limitations of the backreference walking code (taking a lot of
++ * time and using too much memory for extents with large number of references).
++ */
++#define SEND_MAX_EXTENT_REFS	64
++
++/*
+  * A fs_path is a helper to dynamically build path names with unknown size.
+  * It reallocates the internal buffer on demand.
+  * It allows fast adding of path elements on the right side (normal path) and
+@@ -1327,6 +1335,7 @@ static int find_extent_clone(struct send
+ 	struct clone_root *cur_clone_root;
+ 	struct btrfs_key found_key;
+ 	struct btrfs_path *tmp_path;
++	struct btrfs_extent_item *ei;
+ 	int compressed;
+ 	u32 i;
+ 
+@@ -1376,7 +1385,6 @@ static int find_extent_clone(struct send
+ 	ret = extent_from_logical(fs_info, disk_byte, tmp_path,
+ 				  &found_key, &flags);
+ 	up_read(&fs_info->commit_root_sem);
+-	btrfs_release_path(tmp_path);
+ 
+ 	if (ret < 0)
+ 		goto out;
+@@ -1385,6 +1393,21 @@ static int find_extent_clone(struct send
+ 		goto out;
+ 	}
+ 
++	ei = btrfs_item_ptr(tmp_path->nodes[0], tmp_path->slots[0],
++			    struct btrfs_extent_item);
++	/*
++	 * Backreference walking (iterate_extent_inodes() below) is currently
++	 * too expensive when an extent has a large number of references, both
++	 * in time spent and used memory. So for now just fallback to write
++	 * operations instead of clone operations when an extent has more than
++	 * a certain amount of references.
++	 */
++	if (btrfs_extent_refs(tmp_path->nodes[0], ei) > SEND_MAX_EXTENT_REFS) {
++		ret = -ENOENT;
++		goto out;
++	}
++	btrfs_release_path(tmp_path);
++
+ 	/*
+ 	 * Setup the clone roots.
+ 	 */
 
 
