@@ -2,99 +2,107 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A29C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C8DDC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3816F24679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E681C24676
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:24:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="o2ocV9ky"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="i4QWQ8qg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfLSXRx (ORCPT
+        id S1727029AbfLSXYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 18:17:53 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:36208 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbfLSXRw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 18:17:52 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBJN9Vlg083950;
-        Thu, 19 Dec 2019 23:17:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=2X+MJZzOp6dCuDeJ0KornCko/xUA3DPD/Ld+FI4IMB4=;
- b=o2ocV9kyQUB5ennM4SOPbMvLAQTJulmlksNIKiCsKqjDX7D9/8FtGhio+oWlnSnOEoKb
- z8oNsFrRE9TsRnf315+mH/Bwz0DUFN+fhe1bsdpyhII3mqiijNUmwbMNVQaqGGr9OOVS
- yEiL45AQ1lyvs6xMHbulUms9o/Y0qc1/fO7KLqjGWYbhuxnHNKB1l1a811OBG87fLUyu
- efrW5z5LGbPw57bqyz8jJeNiJTpL5J9GLMAvYbp//2y6sT6uMteQk4p5yCzbJOhVpUUz
- iEbTMIkLFRTh0aMX/xTt6NuzWOT+Q29IVm7WDuNDWDW4WrTn6m6GbPIbQ6sCy2snW4L4 Mw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2x01jadsm4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Dec 2019 23:17:39 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBJNAaxi032210;
-        Thu, 19 Dec 2019 23:17:39 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2x0bgmkg25-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Dec 2019 23:17:38 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBJNHabU021720;
-        Thu, 19 Dec 2019 23:17:37 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 19 Dec 2019 15:17:36 -0800
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <pedrom.sousa@synopsys.com>, <jejb@linux.ibm.com>,
-        <matthias.bgg@gmail.com>, <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <beanhuo@micron.com>,
-        <kuohong.wang@mediatek.com>, <peter.wang@mediatek.com>,
-        <chun-hung.wu@mediatek.com>, <andy.teng@mediatek.com>
-Subject: Re: [PATCH v1 0/4] scsi: ufs-mediatek: provide power management
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <1576224695-22657-1-git-send-email-stanley.chu@mediatek.com>
-Date:   Thu, 19 Dec 2019 18:17:33 -0500
-In-Reply-To: <1576224695-22657-1-git-send-email-stanley.chu@mediatek.com>
-        (Stanley Chu's message of "Fri, 13 Dec 2019 16:11:31 +0800")
-Message-ID: <yq1tv5vc3ci.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Thu, 19 Dec 2019 18:24:04 -0500
+Received: from ozlabs.org ([203.11.71.1]:56215 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726880AbfLSXYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 18:24:03 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47f7HN3nqBz9sPL;
+        Fri, 20 Dec 2019 10:24:00 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1576797841;
+        bh=L3pydL2Ngv3G7U0NNXz1d30ilpikZOS17+/Vd+VSnpc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=i4QWQ8qgnEEP/T5LXRMzEq1e7MuUgZPSrPKMKz90RrM2LOY2BMvGaCvV+PP/0Rkaa
+         rSyC4XSbpbzLibyDVDxpB1Mb1+aK1v7F8hJZXGDWf8WWoe6HO8l3btTPY9ip2ooLwv
+         Uu9dB61n+ZQ1GgC3q3ydjWUQsJiU50tRNz6nxolCifKfUp7v2JlhEb24ILZZa8Lvic
+         4QAG3xxPZq4i8953R+GmxMxilDkdierCUZ+scRVznND6y0zAr6fONMo4jFpfWBlEX/
+         WpA0hBK8MAjnYymlQLyElQTdSc2mJqYxtSCZZufYOo347GhMO3tavMiayoQ3y9SAyw
+         Nt8bwf8HaZUPg==
+Date:   Fri, 20 Dec 2019 10:23:54 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        David Miller <davem@davemloft.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Chaignon <paul.chaignon@orange.com>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
+Subject: linux-next: manual merge of the bpf-next tree with the net tree
+Message-ID: <20191220102354.1b1cb3fd@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9476 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=958
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912190170
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9476 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912190170
+Content-Type: multipart/signed; boundary="Sig_/_z6.GrJ=MVBvH_br755K9vj";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/_z6.GrJ=MVBvH_br755K9vj
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Stanley,
+Hi all,
 
-> The patch set provides power management on MediaTek Chipsets by
+Today's linux-next merge of the bpf-next tree got a conflict in:
 
-Had to apply this by hand. Please make sure you prepare patch
-submissions against my "queue" branch.
+  arch/riscv/net/bpf_jit_comp.c
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+between commit:
+
+  96bc4432f5ad ("bpf, riscv: Limit to 33 tail calls")
+
+from the net tree and commit:
+
+  29d92edd9ee8 ("riscv, bpf: Add support for far branching when emitting ta=
+il call")
+
+from the bpf-next tree.
+
+I fixed it up (I just used the bpf-next tree version) and can carry the
+fix as necessary. This is now fixed as far as linux-next is concerned,
+but any non trivial conflicts should be mentioned to your upstream
+maintainer when your tree is submitted for merging.  You may also want
+to consider cooperating with the maintainer of the conflicting tree to
+minimise any particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/_z6.GrJ=MVBvH_br755K9vj
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl38BooACgkQAVBC80lX
+0GxWzggAmAYGyGJ6MoKba2FdA3OJ1OawhcaCQZ+3X8LuuPIuMYL7zyYkOQ0e1dge
+796us+S/9p+/aHGtwQ3xtOS2/Rrwo2OiEHnv3aVjdwoNRcCIrYwQDDaYidrCcDFE
+nunUe7FepTP9OHGfoO87awgQfzn25eIULuRrdhbyI8Hrod0D46zf2F1Gx0yUmoZI
+gtUHW8aiUI+PzZXJAA2ScXGI8Ed2Jk9X5OtZRFP+tGQRsi1z0DUWAKgGU4LUSS/S
+J7iDO1/21SlS5JPITGFsStx9TCRpxoHQXYlwg3oslIJUgdMyib7kkOElPDBrK6Kh
+N5gSEA5kxD8t6W7zqLePEPSWLO39ig==
+=U515
+-----END PGP SIGNATURE-----
+
+--Sig_/_z6.GrJ=MVBvH_br755K9vj--
