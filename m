@@ -6,105 +6,66 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FABCC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80549C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27E9B222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55845222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:20:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbfLSLT6 (ORCPT
+        id S1726890AbfLSLUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 06:19:58 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40026 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726696AbfLSLT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 06:19:58 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 45C48AB91;
-        Thu, 19 Dec 2019 11:19:56 +0000 (UTC)
-Subject: Re: [PATCH v2] xen-pciback: optionally allow interrupt enable flag
- writes
-To:     =?UTF-8?Q?Marek_Marczykowski-G=c3=b3recki?= 
-        <marmarek@invisiblethingslab.com>
-Cc:     xen-devel@lists.xenproject.org,
-        =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Simon Gaiser <simon@invisiblethingslab.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191219034941.19141-1-marmarek@invisiblethingslab.com>
-From:   Jan Beulich <jbeulich@suse.com>
-Message-ID: <c0e27fbe-e2f7-22ca-c3f4-bafb252c7bcc@suse.com>
-Date:   Thu, 19 Dec 2019 12:20:24 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Thu, 19 Dec 2019 06:20:02 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:38646 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726719AbfLSLUB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 06:20:01 -0500
+Received: from [79.140.121.60] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1ihtqR-0003c3-2B; Thu, 19 Dec 2019 11:19:51 +0000
+Date:   Thu, 19 Dec 2019 12:19:50 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        David Laight <david.laight@aculab.com>, dev@opencontainers.org,
+        containers@lists.linux-foundation.org, libc-alpha@sourceware.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 0/2] openat2: minor uapi cleanups
+Message-ID: <20191219111949.auriw6biphxxvdng@wittgenstein>
+References: <20191219105533.12508-1-cyphar@cyphar.com>
 MIME-Version: 1.0
-In-Reply-To: <20191219034941.19141-1-marmarek@invisiblethingslab.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <20191219105533.12508-1-cyphar@cyphar.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19.12.2019 04:49, Marek Marczykowski-Górecki  wrote:
-> +enum interrupt_type xen_pcibk_get_interrupt_type(struct pci_dev *dev)
-> +{
-> +	int err;
-> +	u16 val;
-> +
-> +	err = pci_read_config_word(dev, PCI_COMMAND, &val);
-> +	if (err)
-> +		return INTERRUPT_TYPE_ERR;
-> +	if (!(val & PCI_COMMAND_INTX_DISABLE))
-> +		return INTERRUPT_TYPE_INTX;
-> +
-> +	/* Do not trust dev->msi(x)_enabled here, as enabling could be done
-> +	 * bypassing the pci_*msi* functions, by the qemu.
-> +	 */
+On Thu, Dec 19, 2019 at 09:55:28PM +1100, Aleksa Sarai wrote:
+> While openat2(2) is still not yet in Linus's tree, we can take this
+> opportunity to iron out some small warts that weren't noticed earlier:
+> 
+>   * A fix was suggested by Florian Weimer, to separate the openat2
+>     definitions so glibc can use the header directly. I've put the
+>     maintainership under VFS but let me know if you'd prefer it belong
+>     ot the fcntl folks.
+> 
+>   * Having heterogenous field sizes in an extensible struct results in
+>     "padding hole" problems when adding new fields (in addition the
+>     correct error to use for non-zero padding isn't entirely clear ).
+>     The simplest solution is to just copy clone(3)'s model -- always use
+>     u64s. It will waste a little more space in the struct, but it
+>     removes a possible future headache.
 
-Judging from this comment, how can you assume only one of the
-three variants is actually enabled? It's against the spec, yes,
-but it's not at all impossible afaict. I think you want the
-return value here to be
-- negative errno values (no need to discard the actual error
-  codes) or
-- a non-negative bitmap indicating which of the interrupt types
-  is/are currently enabled.
-That way ...
+Am I imagining things or did I get the same patch series twice?
 
-> +static int msi_msix_flags_write(struct pci_dev *dev, int offset, u16 new_value,
-> +				void *data)
-> +{
-> +	int err;
-> +	u16 old_value;
-> +	const struct msi_msix_field_config *field_config = data;
-> +	const struct xen_pcibk_dev_data *dev_data = pci_get_drvdata(dev);
-> +
-> +	if (xen_pcibk_permissive || dev_data->permissive)
-> +		goto write;
-> +
-> +	err = pci_read_config_word(dev, offset, &old_value);
-> +	if (err)
-> +		return err;
-> +
-> +	if (new_value == old_value)
-> +		return 0;
-> +
-> +	if (!dev_data->allow_interrupt_control ||
-> +	    (new_value ^ old_value) & ~field_config->enable_bit)
-> +		return PCIBIOS_SET_FAILED;
-> +
-> +	if (new_value & field_config->enable_bit) {
-> +		/* don't allow enabling together with other interrupt types */
-> +		const enum interrupt_type int_type = xen_pcibk_get_interrupt_type(dev);
-> +		if (int_type == INTERRUPT_TYPE_NONE ||
-> +		    int_type == field_config->int_type)
-
-... equality comparisons like this one will actually become safe.
-
-Jan
+Christian
