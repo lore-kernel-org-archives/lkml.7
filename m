@@ -6,35 +6,43 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 727ACC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A05C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53137206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68AAE206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:29:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfLSQ04 (ORCPT
+        id S1726925AbfLSQ3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 11:26:56 -0500
-Received: from ms.lwn.net ([45.79.88.28]:37104 "EHLO ms.lwn.net"
+        Thu, 19 Dec 2019 11:29:17 -0500
+Received: from ms.lwn.net ([45.79.88.28]:37118 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726760AbfLSQ04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 11:26:56 -0500
+        id S1726760AbfLSQ3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 11:29:15 -0500
 Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 9DBF1382;
-        Thu, 19 Dec 2019 16:26:55 +0000 (UTC)
-Date:   Thu, 19 Dec 2019 09:26:54 -0700
+        by ms.lwn.net (Postfix) with ESMTPSA id C81922E5;
+        Thu, 19 Dec 2019 16:29:14 +0000 (UTC)
+Date:   Thu, 19 Dec 2019 09:29:13 -0700
 From:   Jonathan Corbet <corbet@lwn.net>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Derek Kiernan <derek.kiernan@xilinx.com>,
-        Dragan Cvetic <dragan.cvetic@xilinx.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Documentation: fix Sphinx warning in xilinx_sdfec.rst
-Message-ID: <20191219092654.3e7af300@lwn.net>
-In-Reply-To: <8d644cf1-fa7b-ec62-84cf-9b41d7c30eed@infradead.org>
-References: <8d644cf1-fa7b-ec62-84cf-9b41d7c30eed@infradead.org>
+To:     Amol Grover <frextrite@gmail.com>
+Cc:     "Paul E . McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+Subject: Re: [PATCH v2] doc: listRCU: Add some more listRCU patterns in the
+ kernel
+Message-ID: <20191219092913.76ca933e@lwn.net>
+In-Reply-To: <20191206080750.21745-1-frextrite@gmail.com>
+References: <20191203063941.6981-1-frextrite@gmail.com>
+        <20191206080750.21745-1-frextrite@gmail.com>
 Organization: LWN.net
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -44,33 +52,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 8 Dec 2019 20:16:40 -0800
-Randy Dunlap <rdunlap@infradead.org> wrote:
+On Fri,  6 Dec 2019 13:37:51 +0530
+Amol Grover <frextrite@gmail.com> wrote:
 
-> From: Randy Dunlap <rdunlap@infradead.org>
+> - Add more information about listRCU patterns taking examples
+> from audit subsystem in the linux kernel.
 > 
-> Fix Sphinx format warning by adding a blank line.
+> - The initially written audit examples are kept, even though they are
+> slightly different in the kernel.
 > 
-> Documentation/misc-devices/xilinx_sdfec.rst:2: WARNING: Explicit markup ends without a blank line; unexpected unindent.
+> - Modify inline text for better passage quality.
 > 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Derek Kiernan <derek.kiernan@xilinx.com>
-> Cc: Dragan Cvetic <dragan.cvetic@xilinx.com>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-doc@vger.kernel.org
-> ---
->  Documentation/misc-devices/xilinx_sdfec.rst |    1 +
->  1 file changed, 1 insertion(+)
+> - Fix typo in code-blocks and improve code comments.
 > 
-> --- linux-next-20191209.orig/Documentation/misc-devices/xilinx_sdfec.rst
-> +++ linux-next-20191209/Documentation/misc-devices/xilinx_sdfec.rst
-> @@ -1,4 +1,5 @@
->  .. SPDX-License-Identifier: GPL-2.0+
-> +
->  ====================
->  Xilinx SD-FEC Driver
->  ====================
+> - Add text formatting (italics, bold and code) for better emphasis.
+> 
+> Patch originally submitted at
+> https://lore.kernel.org/patchwork/patch/1082804/
+> 
+> Co-developed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> Signed-off-by: Amol Grover <frextrite@gmail.com>
 
-Applied, thanks.
+Paul, what's your wish regarding this one?  Do you want to pick it up, or
+should I ... ?
 
 jon
