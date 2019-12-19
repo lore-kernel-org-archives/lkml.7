@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4BAC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C809C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BCA4227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71D2C20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:52:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781536;
-	bh=DGLDLv+d3n/O9WVynloj1PVnNCkOjp5CdHLJ8EgL49k=;
+	s=default; t=1576781538;
+	bh=iGXz/x6xZIxMlB36RE7c/0DO5szquI6BsXtST0kPL2s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z9frkBTw0ko/FzmueJdw99lNPnZxlnL6LzEl1o/OJ7w43dr5gU1kN79EOeqKMV+Dk
-	 0IIeAegCA7nQ43+pgnrRq2dzJ8KupdIYrRcsPHj5Cr+2bI8Gjt4cFVpQt+Sesl/km/
-	 R+RqERNmDykMKK6wQxRM4dWcOOD8rg0Z1FT4wx/M=
+	b=m06+LHEUd5YY1gO3S0J1WN1afJ2IvZb488rYqFFzgl+dTpsWO7aTO2dXzws2OoCGe
+	 +dZ7qd2Ica23iF9RGQkfhLR3f7CAmcic2RW5gK4j0U/3C1gxAWOSS2s+JuUyCcmWJg
+	 HOoPVaFzqQC3eM+tH4IIw5exb9N8AqhNzrHHVEzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730024AbfLSSwP (ORCPT
+        id S1730012AbfLSSwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:52:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46654 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:52:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729824AbfLSSwK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:52:10 -0500
+        id S1730246AbfLSSwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:52:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94130222C2;
-        Thu, 19 Dec 2019 18:52:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74F07227BF;
+        Thu, 19 Dec 2019 18:52:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781530;
-        bh=DGLDLv+d3n/O9WVynloj1PVnNCkOjp5CdHLJ8EgL49k=;
+        s=default; t=1576781534;
+        bh=iGXz/x6xZIxMlB36RE7c/0DO5szquI6BsXtST0kPL2s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cql1eLErDsAodsU+P8Hnofbby40zsbWJ/hopkZVqf7jp0MnSTRYnl/BLqSGuUIyg4
-         l0T7hKh5sSA5OYHOBmRVVyQtJqSIJxKhLmDUH9L0uN2T3pL/dX3JZjNCukiNNoSpTB
-         kP9+vUyE7TUFMExydNdWtxaX40FGwgGNGTAdOPpI=
+        b=tcRFFGi1FLQ2fBT7LBCxX2VCjAxXFCV+sX3osWWVKuUzmbHQNP2Egnk4oJMgNEyRH
+         PCdTZkPZsFcd3oH6DQpLXCdTfF2IbJxXja2gDkn0WvDnr5dljpcaYBdyCzgG7tLwBD
+         FVQR9SK/jPD4LPtfAU7tt4nN2+u50i+dKmMjWXks=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        George Cherian <george.cherian@marvell.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Robert Richter <rrichter@marvell.com>
-Subject: [PATCH 4.19 22/47] PCI: Apply Cavium ACS quirk to ThunderX2 and ThunderX3
-Date:   Thu, 19 Dec 2019 19:34:36 +0100
-Message-Id: <20191219182924.729980116@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Lew <clew@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 4.19 24/47] rpmsg: glink: Set tail pointer to 0 at end of FIFO
+Date:   Thu, 19 Dec 2019 19:34:38 +0100
+Message-Id: <20191219182929.172042662@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182857.659088743@linuxfoundation.org>
 References: <20191219182857.659088743@linuxfoundation.org>
@@ -61,56 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: George Cherian <george.cherian@marvell.com>
+From: Chris Lew <clew@codeaurora.org>
 
-commit f338bb9f0179cb959977b74e8331b312264d720b upstream.
+commit 4623e8bf1de0b86e23a56cdb39a72f054e89c3bd upstream.
 
-Enhance the ACS quirk for Cavium Processors. Add the root port vendor IDs
-for ThunderX2 and ThunderX3 series of processors.
+When wrapping around the FIFO, the remote expects the tail pointer to
+be reset to 0 on the edge case where the tail equals the FIFO length.
 
-[bhelgaas: add Fixes: and stable tag]
-Fixes: f2ddaf8dfd4a ("PCI: Apply Cavium ThunderX ACS quirk to more Root Ports")
-Link: https://lore.kernel.org/r/20191111024243.GA11408@dc5-eodlnx05.marvell.com
-Signed-off-by: George Cherian <george.cherian@marvell.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Robert Richter <rrichter@marvell.com>
-Cc: stable@vger.kernel.org	# v4.12+
+Fixes: caf989c350e8 ("rpmsg: glink: Introduce glink smem based transport")
+Cc: stable@vger.kernel.org
+Signed-off-by: Chris Lew <clew@codeaurora.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/quirks.c |   20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+ drivers/rpmsg/qcom_glink_smem.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4219,15 +4219,21 @@ static int pci_quirk_amd_sb_acs(struct p
+--- a/drivers/rpmsg/qcom_glink_smem.c
++++ b/drivers/rpmsg/qcom_glink_smem.c
+@@ -105,7 +105,7 @@ static void glink_smem_rx_advance(struct
+ 	tail = le32_to_cpu(*pipe->tail);
  
- static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
- {
-+	if (!pci_is_pcie(dev) || pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
-+		return false;
-+
-+	switch (dev->device) {
- 	/*
--	 * Effectively selects all downstream ports for whole ThunderX 1
--	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
--	 * bits of device ID are used to indicate which subdevice is used
--	 * within the SoC.
-+	 * Effectively selects all downstream ports for whole ThunderX1
-+	 * (which represents 8 SoCs).
- 	 */
--	return (pci_is_pcie(dev) &&
--		(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) &&
--		((dev->device & 0xf800) == 0xa000));
-+	case 0xa000 ... 0xa7ff: /* ThunderX1 */
-+	case 0xaf84:  /* ThunderX2 */
-+	case 0xb884:  /* ThunderX3 */
-+		return true;
-+	default:
-+		return false;
-+	}
- }
+ 	tail += count;
+-	if (tail > pipe->native.length)
++	if (tail >= pipe->native.length)
+ 		tail -= pipe->native.length;
  
- static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
+ 	*pipe->tail = cpu_to_le32(tail);
 
 
