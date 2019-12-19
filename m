@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4643EC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A21DFC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D71C227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77E1624679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781730;
-	bh=lUqApjf+6hAiusOv9XTNAd7bgdeXjYng9q51mOsCGOo=;
+	s=default; t=1576781732;
+	bh=jHk6kFfOtSMEBZVCkTM11i7PAbqCtZUHn4B97YaqBsw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rFHLS5PgQJwA7tm8U+4U0Fy6t/I22zS3R8kLRGSwZh4Eng27XOBjf1z0bSsI/pofQ
-	 fY9DIT8jUQFS+s5E5D4TH7vmJtGmnwit4bKT1DEyH3aomtYj4WTP9MEOHKhxeab5dQ
-	 7UbBYWyCjyNHYUZw30ATbmb3sgqb8L87Q8CMsXSU=
+	b=Au1IBGyMgY6bYkV2ZF2tqkekWE54UnBCFKhATpA9mQhmVLX8LjnwSXZSHNFTSIzVh
+	 v65dvaNxc/8WIa05AErhppxyWGDCQleqkfjEoqLUr28CcC85tAJhvGjMM5HoTeuqtE
+	 S04NO0dNo/Ty79PGUlbzbJkxH3km9iAJ+cpfe0uU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbfLSSz2 (ORCPT
+        id S1730469AbfLSSzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:55:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51444 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:55:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730659AbfLSSz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:55:27 -0500
+        id S1730671AbfLSSz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:55:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9757524682;
-        Thu, 19 Dec 2019 18:55:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13419222C2;
+        Thu, 19 Dec 2019 18:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781726;
-        bh=lUqApjf+6hAiusOv9XTNAd7bgdeXjYng9q51mOsCGOo=;
+        s=default; t=1576781728;
+        bh=jHk6kFfOtSMEBZVCkTM11i7PAbqCtZUHn4B97YaqBsw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mLEvlbR6gmMP0QP3gh7ogW8BFSGVWalDwQRamWNA0OgOKAAAeGjY7Tl9XIzqYonTa
-         UMykVLBrYFAZpBqiXUhzg67pbjveeWTr/3sc24yoRGl2Rg4bQS5RJPmwJ1QLrdb58c
-         zh89mzebFVYchQ3aQ9sMl0tNitHzVeeWh1RGy/00=
+        b=gZ9s72sdwjJ4Jlwo8B15ElMX/SdNkFSso68N3fyNB/zvG000dUEi14VWf8kFFl5p6
+         VIo2Abl0YsnLr8697XT/wKjGtP/6z8DXm1Lmc29esqSfWh7Vxpfd0YV2gQWQl1xdZ7
+         IuYqnv9UP9INgQ8unNgLVMH8TRSdMVFVleFoqBpI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Nikos Tsironis <ntsironis@arrikto.com>,
+        Joe Thornber <ejt@redhat.com>,
         Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.4 55/80] dm clone: Flush destination device before committing metadata
-Date:   Thu, 19 Dec 2019 19:34:47 +0100
-Message-Id: <20191219183129.010437125@linuxfoundation.org>
+Subject: [PATCH 5.4 56/80] dm thin metadata: Add support for a pre-commit callback
+Date:   Thu, 19 Dec 2019 19:34:48 +0100
+Message-Id: <20191219183130.074267108@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -61,197 +62,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nikos Tsironis <ntsironis@arrikto.com>
 
-commit 8b3fd1f53af3591d5624ab9df718369b14d09ed1 upstream.
+commit ecda7c0280e6b3398459dc589b9a41c1adb45529 upstream.
 
-dm-clone maintains an on-disk bitmap which records which regions are
-valid in the destination device, i.e., which regions have already been
-hydrated, or have been written to directly, via user I/O.
+Add support for one pre-commit callback which is run right before the
+metadata are committed.
 
-Setting a bit in the on-disk bitmap meas the corresponding region is
-valid in the destination device and we redirect all I/O regarding it to
-the destination device.
+This allows the thin provisioning target to run a callback before the
+metadata are committed and is required by the next commit.
 
-Suppose the destination device has a volatile write-back cache and the
-following sequence of events occur:
-
-1. A region gets hydrated, either through the background hydration or
-   because it was written to directly, via user I/O.
-
-2. The commit timeout expires and we commit the metadata, marking that
-   region as valid in the destination device.
-
-3. The system crashes and the destination device's cache has not been
-   flushed, meaning the region's data are lost.
-
-The next time we read that region we read it from the destination
-device, since the metadata have been successfully committed, but the
-data are lost due to the crash, so we read garbage instead of the old
-data.
-
-This has several implications:
-
-1. In case of background hydration or of writes with size smaller than
-   the region size (which means we first copy the whole region and then
-   issue the smaller write), we corrupt data that the user never
-   touched.
-
-2. In case of writes with size equal to the device's logical block size,
-   we fail to provide atomic sector writes. When the system recovers the
-   user will read garbage from the sector instead of the old data or the
-   new data.
-
-3. In case of writes without the FUA flag set, after the system
-   recovers, the written sectors will contain garbage instead of a
-   random mix of sectors containing either old data or new data, thus we
-   fail again to provide atomic sector writes.
-
-4. Even when the user flushes the dm-clone device, because we first
-   commit the metadata and then pass down the flush, the same risk for
-   corruption exists (if the system crashes after the metadata have been
-   committed but before the flush is passed down).
-
-The only case which is unaffected is that of writes with size equal to
-the region size and with the FUA flag set. But, because FUA writes
-trigger metadata commits, this case can trigger the corruption
-indirectly.
-
-To solve this and avoid the potential data corruption we flush the
-destination device **before** committing the metadata.
-
-This ensures that any freshly hydrated regions, for which we commit the
-metadata, are properly written to non-volatile storage and won't be lost
-in case of a crash.
-
-Fixes: 7431b7835f55 ("dm: add clone target")
-Cc: stable@vger.kernel.org # v5.4+
+Cc: stable@vger.kernel.org
 Signed-off-by: Nikos Tsironis <ntsironis@arrikto.com>
+Acked-by: Joe Thornber <ejt@redhat.com>
 Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-clone-target.c |   46 +++++++++++++++++++++++++++++++++++++------
- 1 file changed, 40 insertions(+), 6 deletions(-)
+ drivers/md/dm-thin-metadata.c |   29 +++++++++++++++++++++++++++++
+ drivers/md/dm-thin-metadata.h |    7 +++++++
+ 2 files changed, 36 insertions(+)
 
---- a/drivers/md/dm-clone-target.c
-+++ b/drivers/md/dm-clone-target.c
-@@ -86,6 +86,12 @@ struct clone {
+--- a/drivers/md/dm-thin-metadata.c
++++ b/drivers/md/dm-thin-metadata.c
+@@ -189,6 +189,15 @@ struct dm_pool_metadata {
+ 	sector_t data_block_size;
  
- 	struct dm_clone_metadata *cmd;
- 
-+	/*
-+	 * bio used to flush the destination device, before committing the
-+	 * metadata.
+ 	/*
++	 * Pre-commit callback.
++	 *
++	 * This allows the thin provisioning target to run a callback before
++	 * the metadata are committed.
 +	 */
-+	struct bio flush_bio;
++	dm_pool_pre_commit_fn pre_commit_fn;
++	void *pre_commit_context;
 +
- 	/* Region hydration hash table */
- 	struct hash_table_bucket *ht;
++	/*
+ 	 * We reserve a section of the metadata for commit overhead.
+ 	 * All reported space does *not* include this.
+ 	 */
+@@ -826,6 +835,14 @@ static int __commit_transaction(struct d
+ 	if (unlikely(!pmd->in_service))
+ 		return 0;
  
-@@ -1106,10 +1112,13 @@ static bool need_commit_due_to_time(stru
- /*
-  * A non-zero return indicates read-only or fail mode.
-  */
--static int commit_metadata(struct clone *clone)
-+static int commit_metadata(struct clone *clone, bool *dest_dev_flushed)
- {
- 	int r = 0;
- 
-+	if (dest_dev_flushed)
-+		*dest_dev_flushed = false;
-+
- 	mutex_lock(&clone->commit_lock);
- 
- 	if (!dm_clone_changed_this_transaction(clone->cmd))
-@@ -1126,6 +1135,19 @@ static int commit_metadata(struct clone
- 		goto out;
- 	}
- 
-+	bio_reset(&clone->flush_bio);
-+	bio_set_dev(&clone->flush_bio, clone->dest_dev->bdev);
-+	clone->flush_bio.bi_opf = REQ_OP_WRITE | REQ_PREFLUSH;
-+
-+	r = submit_bio_wait(&clone->flush_bio);
-+	if (unlikely(r)) {
-+		__metadata_operation_failed(clone, "flush destination device", r);
-+		goto out;
-+	}
-+
-+	if (dest_dev_flushed)
-+		*dest_dev_flushed = true;
-+
- 	r = dm_clone_metadata_commit(clone->cmd);
- 	if (unlikely(r)) {
- 		__metadata_operation_failed(clone, "dm_clone_metadata_commit", r);
-@@ -1199,6 +1221,7 @@ static void process_deferred_flush_bios(
- {
- 	struct bio *bio;
- 	unsigned long flags;
-+	bool dest_dev_flushed;
- 	struct bio_list bios = BIO_EMPTY_LIST;
- 	struct bio_list bio_completions = BIO_EMPTY_LIST;
- 
-@@ -1218,7 +1241,7 @@ static void process_deferred_flush_bios(
- 	    !(dm_clone_changed_this_transaction(clone->cmd) && need_commit_due_to_time(clone)))
- 		return;
- 
--	if (commit_metadata(clone)) {
-+	if (commit_metadata(clone, &dest_dev_flushed)) {
- 		bio_list_merge(&bios, &bio_completions);
- 
- 		while ((bio = bio_list_pop(&bios)))
-@@ -1232,8 +1255,17 @@ static void process_deferred_flush_bios(
- 	while ((bio = bio_list_pop(&bio_completions)))
- 		bio_endio(bio);
- 
--	while ((bio = bio_list_pop(&bios)))
--		generic_make_request(bio);
-+	while ((bio = bio_list_pop(&bios))) {
-+		if ((bio->bi_opf & REQ_PREFLUSH) && dest_dev_flushed) {
-+			/* We just flushed the destination device as part of
-+			 * the metadata commit, so there is no reason to send
-+			 * another flush.
-+			 */
-+			bio_endio(bio);
-+		} else {
-+			generic_make_request(bio);
++	if (pmd->pre_commit_fn) {
++		r = pmd->pre_commit_fn(pmd->pre_commit_context);
++		if (r < 0) {
++			DMERR("pre-commit callback failed");
++			return r;
 +		}
 +	}
++
+ 	r = __write_changed_details(pmd);
+ 	if (r < 0)
+ 		return r;
+@@ -892,6 +909,8 @@ struct dm_pool_metadata *dm_pool_metadat
+ 	pmd->in_service = false;
+ 	pmd->bdev = bdev;
+ 	pmd->data_block_size = data_block_size;
++	pmd->pre_commit_fn = NULL;
++	pmd->pre_commit_context = NULL;
+ 
+ 	r = __create_persistent_data_objects(pmd, format_device);
+ 	if (r) {
+@@ -2044,6 +2063,16 @@ int dm_pool_register_metadata_threshold(
+ 	return r;
  }
  
- static void do_worker(struct work_struct *work)
-@@ -1405,7 +1437,7 @@ static void clone_status(struct dm_targe
++void dm_pool_register_pre_commit_callback(struct dm_pool_metadata *pmd,
++					  dm_pool_pre_commit_fn fn,
++					  void *context)
++{
++	pmd_write_lock_in_core(pmd);
++	pmd->pre_commit_fn = fn;
++	pmd->pre_commit_context = context;
++	pmd_write_unlock(pmd);
++}
++
+ int dm_pool_metadata_set_needs_check(struct dm_pool_metadata *pmd)
+ {
+ 	int r = -EINVAL;
+--- a/drivers/md/dm-thin-metadata.h
++++ b/drivers/md/dm-thin-metadata.h
+@@ -230,6 +230,13 @@ bool dm_pool_metadata_needs_check(struct
+  */
+ void dm_pool_issue_prefetches(struct dm_pool_metadata *pmd);
  
- 		/* Commit to ensure statistics aren't out-of-date */
- 		if (!(status_flags & DM_STATUS_NOFLUSH_FLAG) && !dm_suspended(ti))
--			(void) commit_metadata(clone);
-+			(void) commit_metadata(clone, NULL);
++/* Pre-commit callback */
++typedef int (*dm_pool_pre_commit_fn)(void *context);
++
++void dm_pool_register_pre_commit_callback(struct dm_pool_metadata *pmd,
++					  dm_pool_pre_commit_fn fn,
++					  void *context);
++
+ /*----------------------------------------------------------------*/
  
- 		r = dm_clone_get_free_metadata_block_count(clone->cmd, &nr_free_metadata_blocks);
- 
-@@ -1839,6 +1871,7 @@ static int clone_ctr(struct dm_target *t
- 	bio_list_init(&clone->deferred_flush_completions);
- 	clone->hydration_offset = 0;
- 	atomic_set(&clone->hydrations_in_flight, 0);
-+	bio_init(&clone->flush_bio, NULL, 0);
- 
- 	clone->wq = alloc_workqueue("dm-" DM_MSG_PREFIX, WQ_MEM_RECLAIM, 0);
- 	if (!clone->wq) {
-@@ -1912,6 +1945,7 @@ static void clone_dtr(struct dm_target *
- 	struct clone *clone = ti->private;
- 
- 	mutex_destroy(&clone->commit_lock);
-+	bio_uninit(&clone->flush_bio);
- 
- 	for (i = 0; i < clone->nr_ctr_args; i++)
- 		kfree(clone->ctr_args[i]);
-@@ -1966,7 +2000,7 @@ static void clone_postsuspend(struct dm_
- 	wait_event(clone->hydration_stopped, !atomic_read(&clone->hydrations_in_flight));
- 	flush_workqueue(clone->wq);
- 
--	(void) commit_metadata(clone);
-+	(void) commit_metadata(clone, NULL);
- }
- 
- static void clone_resume(struct dm_target *ti)
+ #endif
 
 
