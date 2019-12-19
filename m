@@ -2,109 +2,133 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA9FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 07:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C599C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2839124690
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 07:57:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NLK+2FLn"
+	by mail.kernel.org (Postfix) with ESMTP id D336F24650
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:03:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfLSH5k (ORCPT
+        id S1726648AbfLSID3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 02:57:40 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44432 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726439AbfLSH5j (ORCPT
+        Thu, 19 Dec 2019 03:03:29 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:53755 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbfLSID3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 02:57:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576742258;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PYvhhfdfRXcH4jO+EP53VpwP3E/K4rAyanO/djc7fbc=;
-        b=NLK+2FLnx6EcnNM1kSfE2NzbPJG+sSIplXoWdFFKvB8kHe07AfLWKn47EAeG+CCru2QaKS
-        cld2L5fnVWHKX4ua8I0ZL616YzgpVL/qENW8lWvIDY1CeAUmTwjP5JvA1l6hjtmyGZ9x4Y
-        RhEATXSbaiviHhS7xLL2RNNf5zAIVig=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-287-UkhMKIxTMPm8eSJTniRGqw-1; Thu, 19 Dec 2019 02:57:32 -0500
-X-MC-Unique: UkhMKIxTMPm8eSJTniRGqw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DDB2A107ACE3;
-        Thu, 19 Dec 2019 07:57:28 +0000 (UTC)
-Received: from carbon (ovpn-200-37.brq.redhat.com [10.40.200.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4B0861000330;
-        Thu, 19 Dec 2019 07:57:24 +0000 (UTC)
-Date:   Thu, 19 Dec 2019 08:57:22 +0100
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Marek Majkowski' <marek@cloudflare.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        network dev <netdev@vger.kernel.org>,
-        kernel-team <kernel-team@cloudflare.com>,
-        Paolo Abeni <pabeni@redhat.com>, brouer@redhat.com
-Subject: Re: epoll_wait() performance
-Message-ID: <20191219085722.23e39028@carbon>
-In-Reply-To: <b71441bb2fa14bc7b583de643a1ccf8b@AcuMS.aculab.com>
-References: <bc84e68c0980466096b0d2f6aec95747@AcuMS.aculab.com>
-        <CAJPywTJYDxGQtDWLferh8ObjGp3JsvOn1om1dCiTOtY6S3qyVg@mail.gmail.com>
-        <5f4028c48a1a4673bd3b38728e8ade07@AcuMS.aculab.com>
-        <20191127164821.1c41deff@carbon>
-        <5eecf41c7e124d7dbc0ab363d94b7d13@AcuMS.aculab.com>
-        <20191128121205.65c8dea1@carbon>
-        <b71441bb2fa14bc7b583de643a1ccf8b@AcuMS.aculab.com>
+        Thu, 19 Dec 2019 03:03:29 -0500
+Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M6lUk-1ibnpx1XRO-008KmM; Thu, 19 Dec 2019 09:03:27 +0100
+Received: by mail-qk1-f174.google.com with SMTP id z14so2675913qkg.9;
+        Thu, 19 Dec 2019 00:03:26 -0800 (PST)
+X-Gm-Message-State: APjAAAV49yOs3eUl8ZUzbvhQ7rduRPS6YNXnz/QjcYdF2zy63nd1XpP1
+        sUFjPcjrlMZnKPJLYtcRYp+y0fmax9CmfWLSdjQ=
+X-Google-Smtp-Source: APXvYqxXQF6sR2skniit5JgCT5kH+gYfBPMf8t/20i/mEzMIIkYTsPQO26NNE6VO7z/gvWUC1MyADsYJWrkMuIMYl9A=
+X-Received: by 2002:a37:a8d4:: with SMTP id r203mr6933223qke.394.1576742606043;
+ Thu, 19 Dec 2019 00:03:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <20191218235459.GA17271@ircssh-2.c.rugged-nimbus-611.internal>
+In-Reply-To: <20191218235459.GA17271@ircssh-2.c.rugged-nimbus-611.internal>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 19 Dec 2019 09:03:09 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2eT=bHkUamyp-P3Y2adNq1KBk7UknCYBY5_aR4zJmYaQ@mail.gmail.com>
+Message-ID: <CAK8P3a2eT=bHkUamyp-P3Y2adNq1KBk7UknCYBY5_aR4zJmYaQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/5] pid: Add PIDFD_IOCTL_GETFD to fetch file
+ descriptors from processes
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Al Viro <viro@zeniv.linux.org.uk>, gpascutto@mozilla.com,
+        ealvarez@mozilla.com, Florian Weimer <fweimer@redhat.com>,
+        jld@mozilla.com
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:IiokMjtel7Ht/qXKLtr7vWPyiJm5ObDabfNBLD0croeK4+f9DuZ
+ R4eTY4HQL06tF0ng7Ld5H++ri/uZgzWaJ+EmX5gMrtOQAjul7+vqHo0mIj1uuk/OYHV0LBh
+ +7qV0XseDO18FgfrNaWZXF43LUBacU3SUqB3SfBKzpjQMNIOlg6flwUcPCkaK9DvkNHgnH4
+ ijGS8Hl9D4poXlab8qnDQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/bWUbbeESK4=:K3P5dPIBMosadcWX12v0Wf
+ yecallTrqRqcbthXQiUfh7uxcJtfno+hmx6KezWAQGmF8UcFy0IAK/b7FHOTu5cajmdNdRKlS
+ iwEVHS4nIze351xxRhP++RS4dtYTZAwdRFjLG8j1fZaTmyyEQu5J0Us43xbI0zC74lRdhjIZx
+ EyG2A6HykJ5TH7ndEG9qVU6hcOzSsHzAMd7Ji78Qmu43GytKjbNrUAVTF/Nhvn349u+RTf79F
+ DF+NTIWscDSXjxd0/T4F31m9rkB5JzBnrQgM1XCQ4+r86liyV+L5nSQos3uIl+m3GcOvJ00rf
+ PqJatkAoxsDUDftTPLWXt/AOywxVAMv6dHftP1K1wHm5FM19EIHhLpFw9IJ1KwsOr8ZOG9o+B
+ YLu6LHgEYSlqrujH7xGvC+5AXenIQ9KAb+9eIa/Lr4uATB/JxZz1xl/hYUKXQ+NShRlwrA1GY
+ ggvS65TgSSGq5ro8jhI5zIQI+80WexLwul4jFG0mnoKXNic2I9IcNyPJjuQkOBZnfAKegP+fo
+ UFpOrNGeGDuDC1SJUIkce6np4967tD05UkpunImNv5uWVIlN9dD5vnJhUj5HcBHgUGCo6RYKY
+ mWqApzVcw8L0RVxeZ0CF0CV+X+HNRVEyEESSmh7pvapslmU49KgKKDjtClwOdCxYnimmZbRqG
+ YDVkKWkJ5M3z5+8BH73PIERQNWfQLCsK+RkZO5gyWicPwF9D7AFA7vhFi4RLJBbh2C4yTjmxi
+ jl76bxcloBA1gp1QQqGdApvLD723BVFyPAViT3vdMaDbvS3aYZ21ZVsVrkJKA3BiU3MwDQIok
+ 1wiQmDC0HAQGypikE+76GnqlVbWf/IXXFxQcfH4XjC8qarX1OoS1nOwiF+XYHgXSde22cbQ/n
+ xfKAz6ePdJcbSD6VPc+g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Nov 2019 16:37:01 +0000
-David Laight <David.Laight@ACULAB.COM> wrote:
+On Thu, Dec 19, 2019 at 12:55 AM Sargun Dhillon <sargun@sargun.me> wrote:
 
-> From: Jesper Dangaard Brouer
-> > Sent: 28 November 2019 11:12  
-> ...
-> > > Can you test recv() as well?  
-> > 
-> > Sure: https://github.com/netoptimizer/network-testing/commit/9e3c8b86a2d662
-> > 
-> > $ sudo taskset -c 1 ./udp_sink --port 9  --count $((10**6*2))
-> >           	run      count   	ns/pkt	pps		cycles	payload
-> > recvMmsg/32  	run:  0	 2000000	653.29	1530704.29	2351	18	 demux:1
-> > recvmsg   	run:  0	 2000000	631.01	1584760.06	2271	18	 demux:1
-> > read      	run:  0	 2000000	582.24	1717518.16	2096	18	 demux:1
-> > recvfrom  	run:  0	 2000000	547.26	1827269.12	1970	18	 demux:1
-> > recv      	run:  0	 2000000	547.37	1826930.39	1970	18	 demux:1
-> >   
-> > > I think it might be faster than read().  
-> > 
-> > Slightly, but same speed as recvfrom.  
-> 
-> I notice that you recvfrom() code doesn't request the source address.
-> So is probably identical to recv().
+> +#define PIDFD_IOCTL_GETFD      _IOWR('p', 0xb0, __u32)
 
-Created a GitHub issue/bug on this:
- https://github.com/netoptimizer/network-testing/issues/5
+This describes an ioctl command that reads and writes a __u32 variable
+using a pointer passed as the argument, which doesn't match the
+implementation:
 
-Feel free to fix this and send a patch/PR.
+> +static long pidfd_getfd(struct pid *pid, u32 fd)
+> +{
+...
+> +       return retfd;
 
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+This function passes an fd as the argument and returns a new
+fd, so the command number would be
 
+#define PIDFD_IOCTL_GETFD      _IO('p', 0xb0)
+
+While this implementation looks easy enough, and it is roughly what
+I would do in case of a system call, I would recommend for an ioctl
+implementation to use the __u32 pointer instead:
+
+static long pidfd_getfd_ioctl(struct pid *pid, u32 __user *arg)
+{
+         int their_fd, new_fd;
+         int ret;
+
+         ret = get_user(their_fd, arg);
+         if (ret)
+              return ret;
+
+        new_fd = pidfd_getfd(pid, their_fd);
+        if (new_fd < 0)
+                return new_fd;
+
+         return put_user(new_fd, arg);
+}
+
+Direct argument passing in ioctls may confuse readers because it
+is fairly unusual, and it doesn't work with this:
+
+>  const struct file_operations pidfd_fops = {
+>         .release = pidfd_release,
+>         .poll = pidfd_poll,
+> +       .unlocked_ioctl = pidfd_ioctl,
+> +       .compat_ioctl = compat_ptr_ioctl,
+
+compat_ptr_ioctl() only works if the argument is a pointer, as it
+mangles the argument to turn it from a 32-bit pointer value into
+a 64-bit pointer value. These are almost always the same
+(arch/s390 being the sole exception), but you should not rely
+on it. For now it would be find to do '.compat_ioctl = pidfd_ioctl',
+but that in turn is wrong if you ever add another ioctl command
+that does pass a pointer.
+
+       Arnd
