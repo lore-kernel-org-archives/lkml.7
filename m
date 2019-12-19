@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 783B8C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EFCFC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E93524676
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36E7E24672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:47:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781215;
-	bh=wg6xEPyzN+QW9rUxBPw/45Bdi9Xh4+pcfjxZdhhjDe4=;
+	s=default; t=1576781220;
+	bh=tlchDs7TvajlhgCZ7OeyLriVnH9A9S73sL+PYnPpnpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o1hpf9j3oXCrEkgGk5ICWa7MYwEkq0oRmsaXtvBv2EZp3iJzrhWlphf/deAUU01ij
-	 8puFIB71gdWbP6DVMzDTgViio3kcOE2QFQHdwLNBhG/88ZWPsd08U0wZv1qy6EUn5N
-	 984HnKu1AorQSQnf3DCJ7QmJ69LIALOdKYOr30Lk=
+	b=lVxHmgz2iNOrblds2GHInnN+w0l2VMiOlRkq6SiejdIgIGjlIguOui54c83Jzv2xN
+	 CMsmpZtwMTygaAudlMdzXxWcORND1QkznHN27XOCvYN+RPoOZqOL7ZztxovZYcIMHE
+	 P6JCX3i8dnyAToqC3Fmwpcro16aSmnNtAj774uWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729393AbfLSSqy (ORCPT
+        id S1729079AbfLSSq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:46:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39552 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:46:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729068AbfLSSqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:46:47 -0500
+        id S1729395AbfLSSqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:46:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EBF4222C2;
-        Thu, 19 Dec 2019 18:46:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8294E24672;
+        Thu, 19 Dec 2019 18:46:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781206;
-        bh=wg6xEPyzN+QW9rUxBPw/45Bdi9Xh4+pcfjxZdhhjDe4=;
+        s=default; t=1576781214;
+        bh=tlchDs7TvajlhgCZ7OeyLriVnH9A9S73sL+PYnPpnpw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sPZCwpO+hrej151AKIAJGJ7Y2a+rkU9KrAFVYzzLL3koiVxol/Due/oEtgBceTqs7
-         Cba9wSUmFKBQxgz0bgoW6BBA8D6PP+3vqRFMnytRNeZ9eThrSHd6M6/PcDI+Be+Z2a
-         OfhQI7Rfz/6WGXYEqowAMVxOYbEtEDm3LuwqeM3U=
+        b=ppqVDrJnx82hN0OfHtvGOZ8BVj9DY/TZXRCy0NolxfsedJJpZ2mzi8VXno7XtelAq
+         +ogganEQwCWm+AiN9RZCUOuDkvtU/qo5/qAarh1Hw6FP+OG3b4ERHoTPoLITTSrVdU
+         fcjlSiw+f67OVDudG7b1OoOMpxow6mDNXVHyslWs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.9 089/199] crypto: user - fix memory leak in crypto_report
-Date:   Thu, 19 Dec 2019 19:32:51 +0100
-Message-Id: <20191219183219.861072954@linuxfoundation.org>
+        stable@vger.kernel.org, Pontus Fuchs <pontus.fuchs@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Denis Efremov <efremov@linux.com>
+Subject: [PATCH 4.9 130/199] ar5523: check NULL before memcpy() in ar5523_cmd()
+Date:   Thu, 19 Dec 2019 19:33:32 +0100
+Message-Id: <20191219183222.231631189@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,36 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Denis Efremov <efremov@linux.com>
 
-commit ffdde5932042600c6807d46c1550b28b0db6a3bc upstream.
+commit 315cee426f87658a6799815845788fde965ddaad upstream.
 
-In crypto_report, a new skb is created via nlmsg_new(). This skb should
-be released if crypto_report_alg() fails.
+memcpy() call with "idata == NULL && ilen == 0" results in undefined
+behavior in ar5523_cmd(). For example, NULL is passed in callchain
+"ar5523_stat_work() -> ar5523_cmd_write() -> ar5523_cmd()". This patch
+adds ilen check before memcpy() call in ar5523_cmd() to prevent an
+undefined behavior.
 
-Fixes: a38f7907b926 ("crypto: Add userspace configuration API")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Pontus Fuchs <pontus.fuchs@gmail.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: David Laight <David.Laight@ACULAB.COM>
+Cc: stable@vger.kernel.org
+Signed-off-by: Denis Efremov <efremov@linux.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/crypto_user.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ar5523/ar5523.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/crypto/crypto_user.c
-+++ b/crypto/crypto_user.c
-@@ -269,8 +269,10 @@ static int crypto_report(struct sk_buff
- drop_alg:
- 	crypto_mod_put(alg);
+--- a/drivers/net/wireless/ath/ar5523/ar5523.c
++++ b/drivers/net/wireless/ath/ar5523/ar5523.c
+@@ -255,7 +255,8 @@ static int ar5523_cmd(struct ar5523 *ar,
  
--	if (err)
-+	if (err) {
-+		kfree_skb(skb);
- 		return err;
-+	}
+ 	if (flags & AR5523_CMD_FLAG_MAGIC)
+ 		hdr->magic = cpu_to_be32(1 << 24);
+-	memcpy(hdr + 1, idata, ilen);
++	if (ilen)
++		memcpy(hdr + 1, idata, ilen);
  
- 	return nlmsg_unicast(crypto_nlsk, skb, NETLINK_CB(in_skb).portid);
- }
+ 	cmd->odata = odata;
+ 	cmd->olen = olen;
 
 
