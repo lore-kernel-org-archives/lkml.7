@@ -2,190 +2,606 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B968C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A72FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4DB22064B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FADE2465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:07:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VqL6EbkG"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="A8TtDM/H";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vnsH5DgP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbfLSJFp (ORCPT
+        id S1726696AbfLSJHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 04:05:45 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:39638 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbfLSJFo (ORCPT
+        Thu, 19 Dec 2019 04:07:20 -0500
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:33345 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726599AbfLSJHT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 04:05:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+qkZEpX4RcdcWfgYWQS2CHSq7WS8Coalk20C2OpEt/I=; b=VqL6EbkGsbsATRxBAmx11ZLS6
-        SU6hRkYX5RjiP3lvI0KR7QWYFYoqaLQQovwCpA41IxihQQKxoU50zuqROcMXByJMDqihmD0U3lQIM
-        PwjcVTe33M5+zBkLuBhTizOsZyVyVb0TWhgYU1Ut5KHGP+XDYROqi5KnLbZmlTjn483liwffp5inA
-        hh71HCfjqAQw4qmwqZNprrT1mcSkd+Cq4vJadTUusa8Ooxr+NXUtKqcP/gzuc15GJOJJHdx8iNedI
-        PIi0KFdUfn2jgmQDx7wgRmpBhx0rKBEqzkejME/3j3vIo5B96Ysctzde41UHxODx5VwZKf6uCNAnf
-        qH/LxaRZQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ihrkX-0001Bm-UA; Thu, 19 Dec 2019 09:05:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CDE8A304C1B;
-        Thu, 19 Dec 2019 10:04:11 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 48D762B0D9745; Thu, 19 Dec 2019 10:05:35 +0100 (CET)
-Date:   Thu, 19 Dec 2019 10:05:35 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     David Howells <dhowells@redhat.com>, linux-afs@lists.infradead.org,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] rxrpc: struct mutex cannot be used for
- rxrpc_call::user_mutex
-Message-ID: <20191219090535.GV2844@hirez.programming.kicks-ass.net>
-References: <157659672074.19580.11641288666811539040.stgit@warthog.procyon.org.uk>
- <20191218135047.GS2844@hirez.programming.kicks-ass.net>
- <20191218190833.ufpxjrvin5jvp3m5@linux-p48b>
- <20191218202801.wokf6hcvbafmjnkd@linux-p48b>
+        Thu, 19 Dec 2019 04:07:19 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id CAB5F50AE;
+        Thu, 19 Dec 2019 04:07:17 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Thu, 19 Dec 2019 04:07:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm1; bh=SOOfmKLvxRcz+
+        8DUPnEW0vu/SfvtTEApShPAFQzhiUI=; b=A8TtDM/HFeGK33biCSEdsI2BMEFxb
+        2rdCei4PzuXUM6h6PP9IZGq4a2TYHR3SRIknVc36xNcKYML5FTFgWIO4s369EI0a
+        pf4NLtN87TDX0v4KSdtE3ZeE8OA9vLw6n0tzMWwJakFzwEmzof8UqIups3KcvTt5
+        Wk7z23y/so1Gss9iv19x1sVBFreVFill6dGZ0UbHqpkNCK5gy/KCoYdr/ghNHBmG
+        64KTc/Yl2mYgcPXjSm9RrWvzn39ik+PawiOxCHoyxy+1i3sU1YSAxcXcv8oOW1zH
+        52idMSEFWrulH0+nbQvVdFKEGSw/+EO0wxaN/nYDzYn4NSyiqzEqmftWw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm1; bh=SOOfmKLvxRcz+8DUPnEW0vu/SfvtTEApShPAFQzhiUI=; b=vnsH5DgP
+        56uIOrRXSF8JcKUIf2k3z6QHt7fyx97RpPsa6NNQ9gakBaK6vA0+2QinysrrMZZi
+        X6Dw2HKiaqxMvmtDUKlY4nXkQzJDhmtgwnw/iJrkTWHFElLttE6CY/Z5v+c7gIai
+        6ZCQUEJEikRBKHDj6T/R9hZ7/0sEHJ+T8ep9Lbi3OS+aCVotIBhmWTqDk+ufH+9b
+        rY0L/0WKRPe0CAZCfwGs7/WAacdsjz4LZINcv8aqvfiIa8/HjCBhgX6DMOhARu+o
+        Dohv8NOzs8JnCcWHeIafxjT/FJUkhBk8dVASE9XFGHKvLDgs0F0Ya21OENXBlO4A
+        3DbOSWTeBG1IdQ==
+X-ME-Sender: <xms:xT37Xf0a54LdFmKACk07P-2xLHjlFjxjFyhCj2MLlzuRP72jeajAeg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdduudcutefuodetggdotefrodftvfcurf
+    hrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenogevoh
+    grshhtrghlqdfhgeduvddqtddvucdludehtddmnecujfgurhephffvufffkffojghfggfg
+    sedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgihimh
+    gvsegtvghrnhhordhtvggthheqnecuffhomhgrihhnpeguvghvihgtvghtrhgvvgdrohhr
+    ghenucfkphepledtrdekledrieekrdejieenucfrrghrrghmpehmrghilhhfrhhomhepmh
+    grgihimhgvsegtvghrnhhordhtvggthhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:xT37XSttEBsK-N3jc7pkO3gaEkbxh9kLbWffVHGohBsjzp311scsAQ>
+    <xmx:xT37XYC0R_GQ1MOipiQmU4vieAm7ZumYsu7fpj0r6FB1DaPZWFwoGg>
+    <xmx:xT37Xe_oj-G_xWUDMFe7eZ2PCUdUtFDHMYo82LgVcoXK4Hctchflpw>
+    <xmx:xT37Xb6pNp59xLWGbkYkpzjKYmTaOwbpCZ6dNMwv2u5faDI8F0Ia-A>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0EFAC30609DC;
+        Thu, 19 Dec 2019 04:07:16 -0500 (EST)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     p.zabel@pengutronix.de, Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@codeaurora.org>, lee.jones@linaro.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH 2/3] dt-bindings: mfd: Convert Allwinner legacy PRCM bindings to schemas
+Date:   Thu, 19 Dec 2019 10:07:11 +0100
+Message-Id: <20191219090712.947490-2-maxime@cerno.tech>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191219090712.947490-1-maxime@cerno.tech>
+References: <20191219090712.947490-1-maxime@cerno.tech>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191218202801.wokf6hcvbafmjnkd@linux-p48b>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 12:28:01PM -0800, Davidlohr Bueso wrote:
-> Hmm so fyi __crash_kexec() is another one, but can be called in hard-irq, and
-> it's extremely obvious that the trylock+unlock occurs in the same context.
+The Allwinner SoCs have a legacy set of bindings (and a drivers to
+support it in Linux) to support the PRCM unit found in most recent SoCs.
 
-Hurmph, that unlock 'never' happens if I read it right :-) Still,
-something like the below ought to cure it I suppose.
+Now that we have the DT validation in place, let's split into separate file
+and convert the device tree bindings for those controllers to schemas, and
+mark them all as deprecated.
 
-> It would be nice to automate this...
-
-Automate what exactly? We'll stick your WARN back in on the next round.
-
-
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 15d70a90b50d..2faf2ec33032 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -47,6 +47,26 @@
- 
- DEFINE_MUTEX(kexec_mutex);
- 
-+static void kexec_lock(void)
-+{
-+	/*
-+	 * LOCK kexec_mutex		cmpxchg(&panic_cpu, INVALID, cpu)
-+	 *   MB				  MB
-+	 * panic_cpu == INVALID		kexec_mutex == LOCKED
-+	 *
-+	 * Ensures either we observe the cmpxchg, or crash_kernel() observes
-+	 * our lock acquisition.
-+	 */
-+	mutex_lock(&kexec_mutex);
-+	smp_mb();
-+	atomic_cond_load_acquire(&panic_cpu, VAL == PANIC_CPU_INVALID);
-+}
+ .../mfd/allwinner,sun6i-a31-prcm.yaml         | 219 ++++++++++++++++++
+ .../mfd/allwinner,sun8i-a23-prcm.yaml         | 200 ++++++++++++++++
+ .../devicetree/bindings/mfd/sun6i-prcm.txt    |  59 -----
+ 3 files changed, 419 insertions(+), 59 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/allwinner,sun6i-a31-prcm.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/allwinner,sun8i-a23-prcm.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mfd/sun6i-prcm.txt
+
+diff --git a/Documentation/devicetree/bindings/mfd/allwinner,sun6i-a31-prcm.yaml b/Documentation/devicetree/bindings/mfd/allwinner,sun6i-a31-prcm.yaml
+new file mode 100644
+index 000000000000..d131759ccaf3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/allwinner,sun6i-a31-prcm.yaml
+@@ -0,0 +1,219 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/allwinner,sun6i-a31-prcm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+static void kexec_unlock(void)
-+{
-+	mutex_unlock(&kexec_mutex);
-+}
++title: Allwinner A31 PRCM Device Tree Bindings
 +
- /* Per cpu memory for storing cpu states in case of system crash. */
- note_buf_t __percpu *crash_notes;
- 
-@@ -937,24 +957,13 @@ int kexec_load_disabled;
-  */
- void __noclone __crash_kexec(struct pt_regs *regs)
- {
--	/* Take the kexec_mutex here to prevent sys_kexec_load
--	 * running on one cpu from replacing the crash kernel
--	 * we are using after a panic on a different cpu.
--	 *
--	 * If the crash kernel was not located in a fixed area
--	 * of memory the xchg(&kexec_crash_image) would be
--	 * sufficient.  But since I reuse the memory...
--	 */
--	if (mutex_trylock(&kexec_mutex)) {
--		if (kexec_crash_image) {
--			struct pt_regs fixed_regs;
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <mripard@kernel.org>
++
++deprecated: true
++
++properties:
++  compatible:
++    const: allwinner,sun6i-a31-prcm
++
++  reg:
++    maxItems: 1
++
++patternProperties:
++  "^.*_(clk|rst)$":
++    type: object
++
++    properties:
++      compatible:
++        enum:
++          - allwinner,sun4i-a10-mod0-clk
++          - allwinner,sun6i-a31-apb0-clk
++          - allwinner,sun6i-a31-apb0-gates-clk
++          - allwinner,sun6i-a31-ar100-clk
++          - allwinner,sun6i-a31-clock-reset
++          - fixed-factor-clock
++
++    allOf:
++      - if:
++          properties:
++            compatible:
++              contains:
++                const: allwinner,sun6i-a31-apb0-clk
++
++        then:
++          properties:
++            "#clock-cells":
++              const: 0
++
++            # Already checked in the main schema
++            compatible: true
++
++            clocks:
++              maxItems: 1
++
++            clock-output-names:
++              maxItems: 1
++
++            phandle: true
++
++          required:
++            - "#clock-cells"
++            - compatible
++            - clocks
++            - clock-output-names
++
++          additionalProperties: false
++
++      - if:
++          properties:
++            compatible:
++              contains:
++                const: allwinner,sun6i-a31-apb0-gates-clk
++
++        then:
++          properties:
++            "#clock-cells":
++              const: 1
++              description: >
++                This additional argument passed to that clock is the
++                offset of the bit controlling this particular gate in
++                the register.
++
++            # Already checked in the main schema
++            compatible: true
++
++            clocks:
++              maxItems: 1
++
++            clock-output-names:
++              minItems: 1
++              maxItems: 32
++
++            phandle: true
++
++          required:
++            - "#clock-cells"
++            - compatible
++            - clocks
++            - clock-output-names
++
++          additionalProperties: false
++
++      - if:
++          properties:
++            compatible:
++              contains:
++                const: allwinner,sun6i-a31-ar100-clk
++
++        then:
++          properties:
++            "#clock-cells":
++              const: 0
++
++            # Already checked in the main schema
++            compatible: true
++
++            clocks:
++              maxItems: 4
++              description: >
++                The parent order must match the hardware programming
++                order.
++
++            clock-output-names:
++              maxItems: 1
++
++            phandle: true
++
++          required:
++            - "#clock-cells"
++            - compatible
++            - clocks
++            - clock-output-names
++
++          additionalProperties: false
++
++      - if:
++          properties:
++            compatible:
++              contains:
++                const: allwinner,sun6i-a31-clock-reset
++
++        then:
++          properties:
++            "#reset-cells":
++              const: 1
++
++            # Already checked in the main schema
++            compatible: true
++
++            phandle: true
++
++          required:
++            - "#reset-cells"
++            - compatible
++
++          additionalProperties: false
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/sun6i-a31-ccu.h>
++
++    prcm@1f01400 {
++        compatible = "allwinner,sun6i-a31-prcm";
++        reg = <0x01f01400 0x200>;
++
++        ar100: ar100_clk {
++            compatible = "allwinner,sun6i-a31-ar100-clk";
++            #clock-cells = <0>;
++            clocks = <&rtc 0>, <&osc24M>,
++                     <&ccu CLK_PLL_PERIPH>,
++                     <&ccu CLK_PLL_PERIPH>;
++            clock-output-names = "ar100";
++        };
++
++        ahb0: ahb0_clk {
++            compatible = "fixed-factor-clock";
++            #clock-cells = <0>;
++            clock-div = <1>;
++            clock-mult = <1>;
++            clocks = <&ar100>;
++            clock-output-names = "ahb0";
++        };
++
++        apb0: apb0_clk {
++            compatible = "allwinner,sun6i-a31-apb0-clk";
++            #clock-cells = <0>;
++            clocks = <&ahb0>;
++            clock-output-names = "apb0";
++        };
++
++        apb0_gates: apb0_gates_clk {
++            compatible = "allwinner,sun6i-a31-apb0-gates-clk";
++            #clock-cells = <1>;
++            clocks = <&apb0>;
++            clock-output-names = "apb0_pio", "apb0_ir",
++                                 "apb0_timer", "apb0_p2wi",
++                                 "apb0_uart", "apb0_1wire",
++                                 "apb0_i2c";
++        };
++
++        ir_clk: ir_clk {
++            #clock-cells = <0>;
++            compatible = "allwinner,sun4i-a10-mod0-clk";
++            clocks = <&rtc 0>, <&osc24M>;
++            clock-output-names = "ir";
++        };
++
++        apb0_rst: apb0_rst {
++            compatible = "allwinner,sun6i-a31-clock-reset";
++            #reset-cells = <1>;
++        };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/mfd/allwinner,sun8i-a23-prcm.yaml b/Documentation/devicetree/bindings/mfd/allwinner,sun8i-a23-prcm.yaml
+new file mode 100644
+index 000000000000..aa5e683b236c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/allwinner,sun8i-a23-prcm.yaml
+@@ -0,0 +1,200 @@
++# SPDX-License-Identifier: GPL-2.0+
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/allwinner,sun8i-a23-prcm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner A23 PRCM Device Tree Bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <mripard@kernel.org>
++
++deprecated: true
++
++properties:
++  compatible:
++    const: allwinner,sun8i-a23-prcm
++
++  reg:
++    maxItems: 1
++
++patternProperties:
++  "^.*(clk|rst|codec).*$":
++    type: object
++
++    properties:
++      compatible:
++        enum:
++          - fixed-factor-clock
++          - allwinner,sun8i-a23-apb0-clk
++          - allwinner,sun8i-a23-apb0-gates-clk
++          - allwinner,sun6i-a31-clock-reset
++          - allwinner,sun8i-a23-codec-analog
++
++    required:
++      - compatible
++
++    allOf:
++      - if:
++          properties:
++            compatible:
++              contains:
++                const: allwinner,sun8i-a23-apb0-clk
++
++        then:
++          properties:
++            "#clock-cells":
++              const: 0
++
++            # Already checked in the main schema
++            compatible: true
++
++            clocks:
++              maxItems: 1
++
++            clock-output-names:
++              maxItems: 1
++
++            phandle: true
++
++          required:
++            - "#clock-cells"
++            - compatible
++            - clocks
++            - clock-output-names
++
++          additionalProperties: false
++
++      - if:
++          properties:
++            compatible:
++              contains:
++                const: allwinner,sun8i-a23-apb0-gates-clk
++
++        then:
++          properties:
++            "#clock-cells":
++              const: 1
++              description: >
++                This additional argument passed to that clock is the
++                offset of the bit controlling this particular gate in
++                the register.
++
++            # Already checked in the main schema
++            compatible: true
++
++            clocks:
++              maxItems: 1
++
++            clock-output-names:
++              minItems: 1
++              maxItems: 32
++
++            phandle: true
++
++          required:
++            - "#clock-cells"
++            - compatible
++            - clocks
++            - clock-output-names
++
++          additionalProperties: false
++
++      - if:
++          properties:
++            compatible:
++              contains:
++                const: allwinner,sun6i-a31-clock-reset
++
++        then:
++          properties:
++            "#reset-cells":
++              const: 1
++
++            # Already checked in the main schema
++            compatible: true
++
++            phandle: true
++
++          required:
++            - "#reset-cells"
++            - compatible
++
++          additionalProperties: false
++
++      - if:
++          properties:
++            compatible:
++              contains:
++                const: allwinner,sun8i-a23-codec-analog
++
++        then:
++          properties:
++            # Already checked in the main schema
++            compatible: true
++
++            phandle: true
++
++          required:
++            - compatible
++
++          additionalProperties: false
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    prcm@1f01400 {
++        compatible = "allwinner,sun8i-a23-prcm";
++        reg = <0x01f01400 0x200>;
++
++        ar100: ar100_clk {
++            compatible = "fixed-factor-clock";
++            #clock-cells = <0>;
++            clock-div = <1>;
++            clock-mult = <1>;
++            clocks = <&osc24M>;
++            clock-output-names = "ar100";
++        };
++
++        ahb0: ahb0_clk {
++            compatible = "fixed-factor-clock";
++            #clock-cells = <0>;
++            clock-div = <1>;
++            clock-mult = <1>;
++            clocks = <&ar100>;
++            clock-output-names = "ahb0";
++        };
++
++        apb0: apb0_clk {
++            compatible = "allwinner,sun8i-a23-apb0-clk";
++            #clock-cells = <0>;
++            clocks = <&ahb0>;
++            clock-output-names = "apb0";
++        };
++
++        apb0_gates: apb0_gates_clk {
++            compatible = "allwinner,sun8i-a23-apb0-gates-clk";
++            #clock-cells = <1>;
++            clocks = <&apb0>;
++            clock-output-names = "apb0_pio", "apb0_timer",
++                                 "apb0_rsb", "apb0_uart",
++                                 "apb0_i2c";
++        };
++
++        apb0_rst: apb0_rst {
++            compatible = "allwinner,sun6i-a31-clock-reset";
++            #reset-cells = <1>;
++        };
++
++        codec_analog: codec-analog {
++            compatible = "allwinner,sun8i-a23-codec-analog";
++        };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/mfd/sun6i-prcm.txt b/Documentation/devicetree/bindings/mfd/sun6i-prcm.txt
+deleted file mode 100644
+index daa091c2e67b..000000000000
+--- a/Documentation/devicetree/bindings/mfd/sun6i-prcm.txt
++++ /dev/null
+@@ -1,59 +0,0 @@
+-* Allwinner PRCM (Power/Reset/Clock Management) Multi-Functional Device
 -
--			crash_setup_regs(&fixed_regs, regs);
--			crash_save_vmcoreinfo();
--			machine_crash_shutdown(&fixed_regs);
--			machine_kexec(kexec_crash_image);
--		}
--		mutex_unlock(&kexec_mutex);
-+	if (kexec_crash_image) {
-+		struct pt_regs fixed_regs;
-+
-+		crash_setup_regs(&fixed_regs, regs);
-+		crash_save_vmcoreinfo();
-+		machine_crash_shutdown(&fixed_regs);
-+		machine_kexec(kexec_crash_image);
- 	}
- }
- STACK_FRAME_NON_STANDARD(__crash_kexec);
-@@ -973,7 +982,11 @@ void crash_kexec(struct pt_regs *regs)
- 	if (old_cpu == PANIC_CPU_INVALID) {
- 		/* This is the 1st CPU which comes here, so go ahead. */
- 		printk_safe_flush_on_panic();
--		__crash_kexec(regs);
-+		/*
-+		 * Orders against kexec_lock(), see the comment there.
-+		 */
-+		if (!mutex_is_locked(&kexec_mutex))
-+			__crash_kexec(regs);
- 
- 		/*
- 		 * Reset panic_cpu to allow another panic()/crash_kexec()
-@@ -987,10 +1000,10 @@ size_t crash_get_memory_size(void)
- {
- 	size_t size = 0;
- 
--	mutex_lock(&kexec_mutex);
-+	kexec_lock();
- 	if (crashk_res.end != crashk_res.start)
- 		size = resource_size(&crashk_res);
--	mutex_unlock(&kexec_mutex);
-+	kexec_unlock();
- 	return size;
- }
- 
-@@ -1010,7 +1023,7 @@ int crash_shrink_memory(unsigned long new_size)
- 	unsigned long old_size;
- 	struct resource *ram_res;
- 
--	mutex_lock(&kexec_mutex);
-+	kexec_lock();
- 
- 	if (kexec_crash_image) {
- 		ret = -ENOENT;
-@@ -1048,7 +1061,7 @@ int crash_shrink_memory(unsigned long new_size)
- 	insert_resource(&iomem_resource, ram_res);
- 
- unlock:
--	mutex_unlock(&kexec_mutex);
-+	kexec_unlock();
- 	return ret;
- }
- 
+-PRCM is an MFD device exposing several Power Management related devices
+-(like clks and reset controllers).
+-
+-Required properties:
+- - compatible: "allwinner,sun6i-a31-prcm" or "allwinner,sun8i-a23-prcm"
+- - reg: The PRCM registers range
+-
+-The prcm node may contain several subdevices definitions:
+- - see Documentation/devicetree/bindings/clock/sunxi.txt for clock devices
+- - see Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt for reset
+-   controller devices
+-
+-
+-Example:
+-
+-	prcm: prcm@1f01400 {
+-		compatible = "allwinner,sun6i-a31-prcm";
+-		reg = <0x01f01400 0x200>;
+-
+-		/* Put subdevices here */
+-		ar100: ar100_clk {
+-			compatible = "allwinner,sun6i-a31-ar100-clk";
+-			#clock-cells = <0>;
+-			clocks = <&osc32k>, <&osc24M>, <&pll6>, <&pll6>;
+-		};
+-
+-		ahb0: ahb0_clk {
+-			compatible = "fixed-factor-clock";
+-			#clock-cells = <0>;
+-			clock-div = <1>;
+-			clock-mult = <1>;
+-			clocks = <&ar100_div>;
+-			clock-output-names = "ahb0";
+-		};
+-
+-		apb0: apb0_clk {
+-			compatible = "allwinner,sun6i-a31-apb0-clk";
+-			#clock-cells = <0>;
+-			clocks = <&ahb0>;
+-			clock-output-names = "apb0";
+-		};
+-
+-		apb0_gates: apb0_gates_clk {
+-			compatible = "allwinner,sun6i-a31-apb0-gates-clk";
+-			#clock-cells = <1>;
+-			clocks = <&apb0>;
+-			clock-output-names = "apb0_pio", "apb0_ir",
+-					"apb0_timer01", "apb0_p2wi",
+-					"apb0_uart", "apb0_1wire",
+-					"apb0_i2c";
+-		};
+-
+-		apb0_rst: apb0_rst {
+-			compatible = "allwinner,sun6i-a31-clock-reset";
+-			#reset-cells = <1>;
+-		};
+-	};
+-- 
+2.23.0
+
