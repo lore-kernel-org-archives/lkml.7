@@ -2,119 +2,149 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F891C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A64C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23B802064B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:01:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="GYVZ0l9U"
+	by mail.kernel.org (Postfix) with ESMTP id 1D53E2064B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:04:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576746259;
+	bh=ap9R8pvcN3Gd1BRzbITxniEraKx6Dm8RTP4YZer6XBk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IrV/7klwBViOsdpBH1oui9WCutrD+nBbhJaXd69vlC+zjWLlc5htrlW1k5TNjmfP0
+	 KSHGAEgw27KBFxbnn/Qkt4sJeALDyA+ajvS5nifKBvfS3tYi+iovzukc2Bqx/7cEKP
+	 /f+RY6h0bMg9iX1o2iMcjJVeeyXlYevR7rdEylUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfLSJB0 (ORCPT
+        id S1726690AbfLSJES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 04:01:26 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:40300 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726620AbfLSJB0 (ORCPT
+        Thu, 19 Dec 2019 04:04:18 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36985 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbfLSJER (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 04:01:26 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBJ8sFHe010665;
-        Thu, 19 Dec 2019 10:01:20 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=TEeByFJ0CY0UkpT28k/1zNZXZNmAfuYl1OecILg9r/w=;
- b=GYVZ0l9UQAE9O2RYrUCbhuq888RdQ92uzp7iwz48zy94d1zqC0ND0l7BVscx77dgrexm
- wtAN32f9FLo9lDTzVqKM9Pe7vvso08s5UC0uSTqn1+Mskl6gz4pd8EGLd9HVA6ACizDd
- luifAI4Or7xeES3wbQutdutIjRdlTkt7lfm5hkYRJ7IOdTo/Uu3zjg79q0977u86yBwQ
- b6hcC/6mUGXhnhyYUqJqHf2imhGuiYoi6pepArZfbnau+fratBitcIxM/RIKeYfGWhs6
- QsYcqKftFieN1/mUqeEhMxeUHhyoZzU+0X3i3oBkTevD3VS0O3dfkBHo5zTVkq3hZ1dT TA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wvqgq0bk4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Dec 2019 10:01:20 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E74BC10002A;
-        Thu, 19 Dec 2019 10:01:17 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DAD602A7C94;
-        Thu, 19 Dec 2019 10:01:17 +0100 (CET)
-Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG5NODE2.st.com
- (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Dec
- 2019 10:01:17 +0100
-Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
- SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
- 15.00.1473.003; Thu, 19 Dec 2019 10:01:17 +0100
-From:   Fabien DESSENNE <fabien.dessenne@st.com>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>
-CC:     "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] media: sti: bdisp: fix a possible sleep-in-atomic-context
- bug in bdisp_device_run()
-Thread-Topic: [PATCH] media: sti: bdisp: fix a possible
- sleep-in-atomic-context bug in bdisp_device_run()
-Thread-Index: AQHVtaxEax7uyZMMgkib5/WTY24ilKfBGaKA
-Date:   Thu, 19 Dec 2019 09:01:17 +0000
-Message-ID: <705a5381-4edd-211e-9602-78a2b4b67ea9@st.com>
-References: <20191218140537.12193-1-baijiaju1990@gmail.com>
-In-Reply-To: <20191218140537.12193-1-baijiaju1990@gmail.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.44]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D86BCCFDAB86684C9BEAEEB52316D4CD@st.com>
-Content-Transfer-Encoding: base64
+        Thu, 19 Dec 2019 04:04:17 -0500
+Received: by mail-ot1-f68.google.com with SMTP id k14so6357845otn.4;
+        Thu, 19 Dec 2019 01:04:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D6QwxL5ClmQL4963/vA00A1Z54S2MxdwBMrb2WwDQJM=;
+        b=lUGzeUYMhQYRQ1hwnz1wkac/WdshW3PxupG3ojWF8FTpofqW50HGoBg66jUhYwL7Av
+         kYWAfsO/tGMqu9pvTx8DWaQ30dFNQ960qrkOBYslWqo5gK8mJf2RONfPFS/i7z8iixAY
+         4e349JkE1rpdrObKEs14n6vTP3tnJ+1h5Ijzyx8DQoHysGsqdpSJrrAHxlRcK9EIPKMt
+         CR/BLGfsgDXI5SNl18mdzvm6bfzTCHeI/mbDtEkMr38e5om+2X2anZ3c+8iT4Wqq/Y5t
+         Zkoe21EItNY5cmD+VZ2C+IYxdVgp59Q4IsgHnShn0BZ9A9fy3OiyA0MDJdCSpY9DF3JQ
+         v6sg==
+X-Gm-Message-State: APjAAAXn8DkhekqLs2GSdEL6gSKlVlaPQ8ybMrnGOlZQSkPF1i5LgiJZ
+        H3VHWovUi3+l7tVW6A1lKG45BgrP5KN0aHPQEGk=
+X-Google-Smtp-Source: APXvYqxvtmzZrthi55RZESVFF79UCbetBABF1q44daYEavcKPrTABMYDhSDR84TWl4LOGpRuihuWcoxcT7mLKXxlFqU=
+X-Received: by 2002:a05:6830:4b9:: with SMTP id l25mr7909990otd.266.1576746256795;
+ Thu, 19 Dec 2019 01:04:16 -0800 (PST)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-18_08:2019-12-17,2019-12-18 signatures=0
+References: <20191217143834.19797-1-huntbag@linux.vnet.ibm.com>
+ <CAJZ5v0jmMwRGDY70EV3sqpw7uJ4R+VomoWtJ9rWzNTVuV3AUxQ@mail.gmail.com> <CAOSf1CF9F1iViKCCoJXOPmkbj+kLXnJJz5b5B7xLgrLpCZoB3w@mail.gmail.com>
+In-Reply-To: <CAOSf1CF9F1iViKCCoJXOPmkbj+kLXnJJz5b5B7xLgrLpCZoB3w@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 19 Dec 2019 10:04:05 +0100
+Message-ID: <CAJZ5v0iMutsf1UK+01dsZa1WDZAVK_fvOZJ-2FgiYXwWDqdnig@mail.gmail.com>
+Subject: Re: [RFC] cpuidle : Add debugfs support for cpuidle core
+To:     "Oliver O'Halloran" <oohall@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Abhishek Goel <huntbag@linux.vnet.ibm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSmlhX0p1LA0KDQoNClRoaXMgaXMgYSBnb29kIGZpbmRpbmcuIFNlZSBteSByZW1hcmtzIGJl
-bG93Lg0KDQoNCk9uIDE4LzEyLzIwMTkgMzowNSBQTSwgSmlhLUp1IEJhaSB3cm90ZToNCj4gVGhl
-IGRyaXZlciBtYXkgc2xlZXAgd2hpbGUgaG9sZGluZyBhIHNwaW5sb2NrLg0KPiBUaGUgZnVuY3Rp
-b24gY2FsbCBwYXRoIChmcm9tIGJvdHRvbSB0byB0b3ApIGluIExpbnV4IDQuMTkgaXM6DQo+DQo+
-IGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vc3RpL2JkaXNwL2JkaXNwLWh3LmMsIDM4NToNCj4gCW1z
-bGVlcCBpbiBiZGlzcF9od19yZXNldA0KPiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL3N0aS9iZGlz
-cC9iZGlzcC12NGwyLmMsIDM0MToNCj4gCWJkaXNwX2h3X3Jlc2V0IGluIGJkaXNwX2RldmljZV9y
-dW4NCj4gZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9zdGkvYmRpc3AvYmRpc3AtdjRsMi5jLCAzMTc6
-DQo+IAlfcmF3X3NwaW5fbG9ja19pcnFzYXZlIGluIGJkaXNwX2RldmljZV9ydW4NCj4NCj4gVG8g
-Zml4IHRoaXMgYnVnLCBtc2xlZXAoKSBpcyByZXBsYWNlZCB3aXRoIG1kZWxheSgpLg0KPg0KPiBU
-aGlzIGJ1ZyBpcyBmb3VuZCBieSBhIHN0YXRpYyBhbmFseXNpcyB0b29sIFNUQ2hlY2sgd3JpdHRl
-biBieSBteXNlbGYuDQo+DQo+IFNpZ25lZC1vZmYtYnk6IEppYS1KdSBCYWkgPGJhaWppYWp1MTk5
-MEBnbWFpbC5jb20+DQo+IC0tLQ0KPiAgIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vc3RpL2JkaXNw
-L2JkaXNwLWh3LmMgfCAyICstDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAx
-IGRlbGV0aW9uKC0pDQo+DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL3N0
-aS9iZGlzcC9iZGlzcC1ody5jIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9zdGkvYmRpc3AvYmRp
-c3AtaHcuYw0KPiBpbmRleCA0MzcyYWJiYjU5NTAuLjFhNTYzNDg4MDVhMiAxMDA2NDQNCj4gLS0t
-IGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9zdGkvYmRpc3AvYmRpc3AtaHcuYw0KPiArKysgYi9k
-cml2ZXJzL21lZGlhL3BsYXRmb3JtL3N0aS9iZGlzcC9iZGlzcC1ody5jDQo+IEBAIC0zODIsNyAr
-MzgyLDcgQEAgaW50IGJkaXNwX2h3X3Jlc2V0KHN0cnVjdCBiZGlzcF9kZXYgKmJkaXNwKQ0KPiAg
-IAlmb3IgKGkgPSAwOyBpIDwgUE9MTF9SU1RfTUFYOyBpKyspIHsNCj4gICAJCWlmIChyZWFkbChi
-ZGlzcC0+cmVncyArIEJMVF9TVEExKSAmIEJMVF9TVEExX0lETEUpDQo+ICAgCQkJYnJlYWs7DQo+
-IC0JCW1zbGVlcChQT0xMX1JTVF9ERUxBWV9NUyk7DQo+ICsJCW1kZWxheShQT0xMX1JTVF9ERUxB
-WV9NUyk7DQoNCkluIGdlbmVyYWwsIHVzZSBvZiBtZGVsYXkgaXMgZGlzY291cmFnZWQuIEhlcmUg
-d2UgY2FuIHVzZSB1ZGVsYXkgaW5zdGVhZCANCm9mLCB3aXRoIGEgbWF4IHZhbHVlIG9mIE1BWF9V
-REVMQVlfTVMgd2hpY2ggaXMgMiBvbiBBUk0uDQoNClNvLCBpbnN0ZWFkIG9mIHJ1bm5pbmcgNTAg
-KFBPTExfUlNUX01BWCkgdGltZXMgYSAyMG1zIA0KKFBPTExfUlNUX0RFTEFZX01TKSBkZWxheSwg
-d2UgY2FuIHJ1biA1MDAgdGltZXMgYSAybXMgKDIwMDB1cykgZGVsYXkuDQoNClRoZSBmb2xsb3dp
-bmcgY2hhbmdlcyBzaGFsbCBiZSBmaW5lOg0KDQogwqDCoMKgIFBPTExfUlNUX01BWCA1MCAtLT4g
-NTAwDQoNCiDCoMKgwqAgUE9MTF9SU1RfREVMQVlfTVPCoCAyMCAtLT4gMg0KDQogwqDCoMKgIG1k
-ZWxheShQT0xMX1JTVF9ERUxBWV9NUykgLS0+IHVkZWxheShQT0xMX1JTVF9ERUxBWV9NUyAqIDEw
-MDApDQoNCg0KQlINCg0KRmFiaWVuDQoNCg0KPiAgIAl9DQo+ICAgCWlmIChpID09IFBPTExfUlNU
-X01BWCkNCj4gICAJCWRldl9lcnIoYmRpc3AtPmRldiwgIlJlc2V0IHRpbWVvdXRcbiIpOw==
+On Wed, Dec 18, 2019 at 3:26 PM Oliver O'Halloran <oohall@gmail.com> wrote:
+>
+> On Wed, Dec 18, 2019 at 3:51 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > On Tue, Dec 17, 2019 at 3:42 PM Abhishek Goel
+> > <huntbag@linux.vnet.ibm.com> wrote:
+> > >
+> > > Up until now, we did not have a way to tune cpuidle attribute like
+> > > residency in kernel. This patch adds support for debugfs in cpuidle core.
+> > > Thereby providing support for tuning cpuidle attributes like residency in
+> > > kernel at runtime.
+> >
+> > This is not a good idea in my view, for a couple of reasons.
+> >
+> > First off, if the target residency of an idle state is changed, it
+> > effectively becomes a different one and all of the statistics
+> > regarding it become outdated at that point.  Synchronizing that would
+> > be a pain.
+> >
+> > Next, governors may get confused if idle state parameters are changed
+> > on the fly.  In particular, the statistics collected by the teo
+> > governor depend on the target residencies of idle states, so if one of
+> > them changes, the governor needs to be reloaded.
+> >
+> > Next, idle states are expected to be ordered by the target residency
+> > (and by the exit latency), so their parameters cannot be allowed to
+> > change freely anyway.
+> >
+> > Finally, the idle state parameters are expected to reflect the
+> > properties of the hardware, which wouldn't hold any more if they were
+> > allowed to change at any time.
+>
+> Certainly does sound like a headache.
+>
+> > > For example: Tuning residency at runtime can be used to quantify governors
+> > > decision making as governor uses residency as one of the parameter to
+> > > take decision about the state that needs to be entered while idling.
+> >
+> > IMO it would be better to introduce a testing cpuidle driver with an
+> > artificial set of idle states (or even such that the set of idle
+> > states to be used by it can be defined by the user e.g. via module
+> > parameters) for this purpose.
+>
+> The motivation for this patch isn't really a desire to test / tune the
+> governor. It's intended to allow working around a performance problem
+> caused by using high-latency idle states on some interrupt heavy GPU
+> workload. The interrupts occur around ~30ms apart which is long enough
+> for the governor to put the CPU into the deeper states and over the
+> course of long job the additional wakeup latency adds up. The initial
+> fix someone came up with was cooking the residency values so the
+> high-latency states had a residency of +50ms to prevent the govenor
+> from using them. However, that fix is supposed to go into a bit of
+> firmware I maintain and I'm not terribly happy with the idea. I'm
+> fairly sure that ~30ms value is workload dependent and personally I
+> don't think firmware should be making up numbers to trick specific
+> kernel versions into doing specific things.
+>
+> My impression is the right solution is to have the GPU driver set a PM
+> QoS constraint on the CPUs receiving interrupts while a job is
+> on-going.
+
+Yes, that would address the GPU problem.
+
+> However, interrupt latency sensitivity isn't something
+> that's unique to GPUs so I'm wondering it it makes sense to have the
+> governor factor in interrupt traffic when deciding what state to use.
+> Is that something that's been tried before?
+
+Yes, that is in the works.
+
+The existing governors should take interrupts into account too in the
+form of the expected idle duration corrections, but that may not be
+particularly precise.  If the governor currently in use (I guess menu)
+doesn't to that, you may try an alternative one (e.g. teo).
+
+That said, work is in progress on taking the actual interrupt
+frequency into account in idle duration prediction.
+
+Thanks!
