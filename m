@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 348C7C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C66C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07AE924685
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7479324683
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780556;
-	bh=wCr4oXlxYFh5iatZpY7G7s/BwOUP0VA8+9jnlrIjENg=;
+	s=default; t=1576780561;
+	bh=gI9ePgusSsFa9b87u0tWBwlUXgH8iTKtcqzc0ElY/y4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2F5RWY9noH915L2PFNqoGS9s72INmWR3c9Mu4yENisSg0pcgAMceby62Ja30k+Rtz
-	 +SVbEsRGR68buKcuYzY3n98Lf+MIaTy/pBmkQtotUbyiigJEfvYTNxpWSlC9j69BAq
-	 Fi0ieofMGKaKGYr/wBufpwyW2KlBangv+2rLX9i0=
+	b=c1EEdfgrEY9CnmfVzcjwjHz+gjSd/a3MNOIJrxPJp7P4AcdwWrrywVIToJ4m3llEe
+	 /O6rCg2gZrUlX1ZttP3eYNrUu1uR9dOOzOVysYpQGqn7yyDh3+saD/kBeWnwltxHVm
+	 35AszKpdCErhphSuZHQKC0xh1wp1ye0isyODghYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727360AbfLSSfz (ORCPT
+        id S1727394AbfLSSgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:35:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52618 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:36:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727333AbfLSSfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:35:52 -0500
+        id S1727354AbfLSSfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:35:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88EAD24683;
-        Thu, 19 Dec 2019 18:35:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0754124684;
+        Thu, 19 Dec 2019 18:35:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780552;
-        bh=wCr4oXlxYFh5iatZpY7G7s/BwOUP0VA8+9jnlrIjENg=;
+        s=default; t=1576780554;
+        bh=gI9ePgusSsFa9b87u0tWBwlUXgH8iTKtcqzc0ElY/y4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lDXZdpDHDmhGEFu41ftcQVUoauHytDAoNjEIYGm7QEewDxN50rNp1QM5OthVlLlCU
-         eFdN43uUsY2/tdJcpZ3SpfV12681nDWxEs7/H6ElLe4znqZFAoIePV07Wkvcsrpj7Y
-         4vUySayIXz8hTbc/KlP7ucM8cDHzwtHiJPVGrRM8=
+        b=HdUuh00pyOYykgRn7OpEXIvUe3IuaigdN52tBTJakXVq8vKuZPlLm9/nMdK6FaoAo
+         FJ6XcaR0qqRU0UNO4HaaEAw0YW7Qn07q6Ba0ZKOtuxWhvdpDgBAX0psQmP0ZqYb6xq
+         e69gKRLct5PIlFVofQFbZBmz+4EVy/qgvgfFUw6M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org,
+        stable@vger.kernel.org, Steffen Maier <maier@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 020/162] MIPS: SiByte: Enable ZONE_DMA32 for LittleSur
-Date:   Thu, 19 Dec 2019 19:32:08 +0100
-Message-Id: <20191219183208.127758298@linuxfoundation.org>
+Subject: [PATCH 4.4 021/162] scsi: zfcp: drop default switch case which might paper over missing case
+Date:   Thu, 19 Dec 2019 19:32:09 +0100
+Message-Id: <20191219183208.204028251@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -62,50 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maciej W. Rozycki <macro@linux-mips.org>
+From: Steffen Maier <maier@linux.ibm.com>
 
-[ Upstream commit 756d6d836dbfb04a5a486bc2ec89397aa4533737 ]
+[ Upstream commit 0c902936e55cff9335b27ed632fc45e7115ced75 ]
 
-The LittleSur board is marked for high memory support and therefore
-clearly must provide a way to have enough memory installed for some to
-be present outside the low 4GiB physical address range.  With the memory
-map of the BCM1250 SOC it has been built around it means over 1GiB of
-actual DRAM, as only the first 1GiB is mapped in the low 4GiB physical
-address range[1].
+This was introduced with v4.18 commit 8c3d20aada70 ("scsi: zfcp: fix
+missing REC trigger trace for all objects in ERP_FAILED") but would now
+suppress helpful -Wswitch compiler warnings when building with W=1 such as
+the following forced example:
 
-Complement commit cce335ae47e2 ("[MIPS] 64-bit Sibyte kernels need
-DMA32.") then and also enable ZONE_DMA32 for LittleSur.
+drivers/s390/scsi/zfcp_erp.c: In function 'zfcp_erp_handle_failed':
+drivers/s390/scsi/zfcp_erp.c:126:2: warning: enumeration value 'ZFCP_ERP_ACTION_REOPEN_PORT_FORCED' not handled in switch [-Wswitch]
+  switch (want) {
+  ^~~~~~
 
+But then again, only with W=1 we would notice unhandled enum cases.
+Without the default cases and a missed unhandled enum case, the code might
+perform unforeseen things we might not want...
 
-[1] "BCM1250/BCM1125/BCM1125H User Manual", Revision 1250_1125-UM100-R,
-    Broadcom Corporation, 21 Oct 2002, Section 3: "System Overview",
-    "Memory Map", pp. 34-38
+As of today, we never run through the removed default case, so removing it
+is no functional change.  In the future, we never should run through a
+default case but introduce the necessary specific case(s) to handle new
+functionality.
 
-Signed-off-by: Maciej W. Rozycki <macro@linux-mips.org>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Patchwork: https://patchwork.linux-mips.org/patch/21107/
-Fixes: cce335ae47e2 ("[MIPS] 64-bit Sibyte kernels need DMA32.")
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-mips@linux-mips.org
-Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/s390/scsi/zfcp_erp.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 422624ca01329..596cbda9cb3d3 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -773,6 +773,7 @@ config SIBYTE_LITTLESUR
- 	select SYS_SUPPORTS_BIG_ENDIAN
- 	select SYS_SUPPORTS_HIGHMEM
- 	select SYS_SUPPORTS_LITTLE_ENDIAN
-+	select ZONE_DMA32 if 64BIT
+diff --git a/drivers/s390/scsi/zfcp_erp.c b/drivers/s390/scsi/zfcp_erp.c
+index cc62d8cc8cfdd..d5214c4eb9ddb 100644
+--- a/drivers/s390/scsi/zfcp_erp.c
++++ b/drivers/s390/scsi/zfcp_erp.c
+@@ -178,9 +178,6 @@ static int zfcp_erp_handle_failed(int want, struct zfcp_adapter *adapter,
+ 				adapter, ZFCP_STATUS_COMMON_ERP_FAILED);
+ 		}
+ 		break;
+-	default:
+-		need = 0;
+-		break;
+ 	}
  
- config SIBYTE_SENTOSA
- 	bool "Sibyte BCM91250E-Sentosa"
+ 	return need;
 -- 
 2.20.1
 
