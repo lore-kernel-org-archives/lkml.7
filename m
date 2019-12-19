@@ -2,119 +2,75 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C14D5C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBE7C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9758624672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:13:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pBgP9BeT"
+	by mail.kernel.org (Postfix) with ESMTP id DA06D2465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:14:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576732480;
+	bh=zutbo+tkyWAeoZo0maixsENGTToLoAmt9MwqGd10Gvk=;
+	h=In-Reply-To:References:Cc:Subject:From:To:Date:List-ID:From;
+	b=knNLsWKDCzyUQuwzwuUg/F1zkm6msf9iIQxLbEDCMXBdel7RlrcyOMzJ2au+W5xoN
+	 YXgaVD2cGtNpeKPZF7BidGqM0PXM8PIK08MVul/j+vPI5oLwAgtqu8t+Otq/Lde7iK
+	 Jo7xjhjQIe6H0LiwiANS8anUWoLtz962zW4f9FlY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfLSFNw (ORCPT
+        id S1726869AbfLSFOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 00:13:52 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:6125 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbfLSFNw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 00:13:52 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dfb06f20000>; Wed, 18 Dec 2019 21:13:22 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 18 Dec 2019 21:13:51 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 18 Dec 2019 21:13:51 -0800
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Dec
- 2019 05:13:51 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 19 Dec 2019 05:13:50 +0000
-Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5dfb070e0001>; Wed, 18 Dec 2019 21:13:50 -0800
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Michael Kerrisk <mtk.manpages@gmail.com>
-CC:     <linux-man@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christopher Lameter <cl@linux.com>,
-        <linux-api@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        <linux-mm@kvack.org>, John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Brice Goglin <Brice.Goglin@inria.fr>,
-        Yang Shi <yang.shi@linux.alibaba.com>
-Subject: [PATCH] move_pages.2: remove ENOENT from the list of possible return values
-Date:   Wed, 18 Dec 2019 21:13:47 -0800
-Message-ID: <20191219051347.1278026-1-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.24.1
+        Thu, 19 Dec 2019 00:14:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725821AbfLSFOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 00:14:39 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2B842146E;
+        Thu, 19 Dec 2019 05:14:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576732478;
+        bh=zutbo+tkyWAeoZo0maixsENGTToLoAmt9MwqGd10Gvk=;
+        h=In-Reply-To:References:Cc:Subject:From:To:Date:From;
+        b=SvdIWTueB22fAa/EqIDmetplXA/yHVHTxROAlv9nALYp6XEVxf+PZ13hSd6ZP7zUq
+         aTg2Gj1IuqzblN2opxfhhQGK69ycvcncMQcLaTtpyasdIk7oDDXmNz1FnV+R7GK84H
+         +SADY9DR+IEd06Bjcm6lnOiXp6BUonTRz8RoxwAc=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-NVConfidentiality: public
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576732402; bh=9R3otvYjxL+EhzYozx6MHy5SVGQPaMnj791NKARfzDo=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-         Content-Type;
-        b=pBgP9BeT11sBQ7OaVQILvcGGl6CzWgDqvsaSTzwyqM78gphzm/5LVdioLZNllm+4H
-         y6wt61DriVzx0s62ZtjPFf3KC+wFnjSh3kGMguMxUL1d44VBwbHUGgeCDBiP08YtpT
-         b9t8ZDktVlUsUpS0KJzf41g9Rhcl/MkhwPlXemDu9Tv2PGPGBRomInr51RJD8ql1MA
-         6gb07qWLhsSYuU88apCj3O/0T+Xk9aLsWBut91BSM5NUWvKdbrMCtGQco2elQ4RGJs
-         ZKw+tcWS33OtldT6pfMjEhBw2L2PYBGGbGy5KD/qQL8/HGc21CNe0PcZRNvG4tpun8
-         3Iscb9A7XifEA==
+In-Reply-To: <20191218190454.420358-3-lkundrak@v3.sk>
+References: <20191218190454.420358-1-lkundrak@v3.sk> <20191218190454.420358-3-lkundrak@v3.sk>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Michael Turquette <mturquette@baylibre.com>, soc@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: Re: [PATCH 2/2] clk: mmp2: Fix the order of timer mux parents
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>, Olof Johansson <olof@lixom.net>
+User-Agent: alot/0.8.1
+Date:   Wed, 18 Dec 2019 21:14:37 -0800
+Message-Id: <20191219051438.C2B842146E@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linux kernel commit e78bbfa82624 ("mm: stop returning -ENOENT from
-sys_move_pages() if nothing got migrated") had the effect of *never*
-returning -ENOENT, in any situation. So we need to update the man page
-to reflect that ENOENT is not a possible return value.
+Quoting Lubomir Rintel (2019-12-18 11:04:54)
+> Determined empirically, no documentation is available.
+>=20
+> The OLPC XO-1.75 laptop used parent 1, that one being VCTCXO/4 (65MHz), b=
+ut
+> thought it's a VCTCXO/2 (130MHz). The mmp2 timer driver, not knowing
+> what is going on, ended up just dividing the rate as of
+> commit f36797ee4380 ("ARM: mmp/mmp2: dt: enable the clock")'
+>=20
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
 
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Brice Goglin <Brice.Goglin@inria.fr>
-Cc: Yang Shi <yang.shi@linux.alibaba.com>
-Cc: Christoph Lameter <cl@linux.com>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
+Any Fixes: tag?
 
-Hi,
-
-This fix for the man page was ACK'd by Michal, here:
-
-https://lore.kernel.org/r/20191218101711.GB21485@dhcp22.suse.cz
-
-thanks,
-John Hubbard
-NVIDIA
-
- man2/move_pages.2 | 6 ------
- 1 file changed, 6 deletions(-)
-
-diff --git a/man2/move_pages.2 b/man2/move_pages.2
-index 2d96468fa..1bf1053f2 100644
---- a/man2/move_pages.2
-+++ b/man2/move_pages.2
-@@ -191,12 +191,6 @@ was specified or an attempt was made to migrate pages =
-of a kernel thread.
- .B ENODEV
- One of the target nodes is not online.
- .TP
--.B ENOENT
--No pages were found that require moving.
--All pages are either already
--on the target node, not present, had an invalid address or could not be
--moved because they were mapped by multiple processes.
--.TP
- .B EPERM
- The caller specified
- .B MPOL_MF_MOVE_ALL
---=20
-2.24.1
+Acked-by: Stephen Boyd <sboyd@kernel.org>
 
