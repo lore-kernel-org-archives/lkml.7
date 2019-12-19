@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE4FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 265A2C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B019024672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFE1524672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:49:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781359;
-	bh=C9BrmtGghdc7FbMcmTiQCbLFEyNo9iA+8rqPmY1HC2c=;
+	s=default; t=1576781363;
+	bh=GqAFOTv0a9RtHQ56hi09qCi4T7GetSCA3QHzEhxSVjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PgDoDjeW6l491JGDbEmqN7yY9cM7cBXmNuPEdYocsb232nBcseb5bT0IOiFxRLgG2
-	 /94HDlp/AdbXAZRYGRi/qXPSHFpMz95MzEtDiES4cq89zN+Sed69Xu7RfduwONK9SA
-	 6F7/2uocyG79XJ75U28Wg7W4P5W8UcxK/w2YtTf4=
+	b=d4qcYpus9heJkWMqNAFMM2laINTvYha5vb8QmwSJWqFtpaukcifz+uyll+f/JtQjs
+	 46qyHAJ9D++DPB4CyIlMJ0GhqEgCTru5hqqRQkLleXRxQCckLZ6i9QRCG5p9Taay+2
+	 tPHR63Rawyy9dH3Iihe0OuraGF8oYixih3b8JzUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbfLSStS (ORCPT
+        id S1729768AbfLSStV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:49:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42646 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:49:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729747AbfLSStP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:49:15 -0500
+        id S1729760AbfLSStR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:49:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EB0C2465E;
-        Thu, 19 Dec 2019 18:49:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77E1924672;
+        Thu, 19 Dec 2019 18:49:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781354;
-        bh=C9BrmtGghdc7FbMcmTiQCbLFEyNo9iA+8rqPmY1HC2c=;
+        s=default; t=1576781357;
+        bh=GqAFOTv0a9RtHQ56hi09qCi4T7GetSCA3QHzEhxSVjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gCeNN1kcgnvwf0NFtEgikekGUaKvtjer5zZBE8CLj+EEH8AoEMsMNzFSalPQL9hXE
-         KbQHI6xqeSwYFYc7cvS56tJK+939xFT10AbsikmNh+o5v8tTyvvaKOhuw1UEFDhpWm
-         zHIKbb0Xc9X2m2Yt1PPbltWr/PRJWPvgBS2vLYO4=
+        b=iWtcppm72CEJ/Nr48IACVPZoVjDWCvCXKaZ0Wy1CJ/34VFHOMzaOsxRqJxGkM1D6u
+         uHvKgCKqsNza9l7qEfL5+bGTyuzTOeYTn9QJqWVks7uwzrRX+D8Zc67Fbk4lDFNDWk
+         nZAK8VQXqD0hMeZ87z7PSFBi6Yq0zyO6u3BIs7Ug=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4.9 187/199] PCI/MSI: Fix incorrect MSI-X masking on resume
-Date:   Thu, 19 Dec 2019 19:34:29 +0100
-Message-Id: <20191219183226.050091693@linuxfoundation.org>
+        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>
+Subject: [PATCH 4.9 188/199] xtensa: fix TLB sanity checker
+Date:   Thu, 19 Dec 2019 19:34:30 +0100
+Message-Id: <20191219183226.118463276@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -59,63 +58,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian-Hong Pan <jian-hong@endlessm.com>
+From: Max Filippov <jcmvbkbc@gmail.com>
 
-commit e045fa29e89383c717e308609edd19d2fd29e1be upstream.
+commit 36de10c4788efc6efe6ff9aa10d38cb7eea4c818 upstream.
 
-When a driver enables MSI-X, msix_program_entries() reads the MSI-X Vector
-Control register for each vector and saves it in desc->masked.  Each
-register is 32 bits and bit 0 is the actual Mask bit.
+Virtual and translated addresses retrieved by the xtensa TLB sanity
+checker must be consistent, i.e. correspond to the same state of the
+checked TLB entry. KASAN shadow memory is mapped dynamically using
+auto-refill TLB entries and thus may change TLB state between the
+virtual and translated address retrieval, resulting in false TLB
+insanity report.
+Move read_xtlb_translation close to read_xtlb_virtual to make sure that
+read values are consistent.
 
-When we restored these registers during resume, we previously set the Mask
-bit if *any* bit in desc->masked was set instead of when the Mask bit
-itself was set:
-
-  pci_restore_state
-    pci_restore_msi_state
-      __pci_restore_msix_state
-        for_each_pci_msi_entry
-          msix_mask_irq(entry, entry->masked)   <-- entire u32 word
-            __pci_msix_desc_mask_irq(desc, flag)
-              mask_bits = desc->masked & ~PCI_MSIX_ENTRY_CTRL_MASKBIT
-              if (flag)       <-- testing entire u32, not just bit 0
-                mask_bits |= PCI_MSIX_ENTRY_CTRL_MASKBIT
-              writel(mask_bits, desc_addr + PCI_MSIX_ENTRY_VECTOR_CTRL)
-
-This means that after resume, MSI-X vectors were masked when they shouldn't
-be, which leads to timeouts like this:
-
-  nvme nvme0: I/O 978 QID 3 timeout, completion polled
-
-On resume, set the Mask bit only when the saved Mask bit from suspend was
-set.
-
-This should remove the need for 19ea025e1d28 ("nvme: Add quirk for Kingston
-NVME SSD running FW E8FK11.T").
-
-[bhelgaas: commit log, move fix to __pci_msix_desc_mask_irq()]
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=204887
-Link: https://lore.kernel.org/r/20191008034238.2503-1-jian-hong@endlessm.com
-Fixes: f2440d9acbe8 ("PCI MSI: Refactor interrupt masking code")
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Cc: stable@vger.kernel.org
+Fixes: a99e07ee5e88 ("xtensa: check TLB sanity on return to userspace")
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/msi.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/xtensa/mm/tlb.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -230,7 +230,7 @@ u32 __pci_msix_desc_mask_irq(struct msi_
- 		return 0;
+--- a/arch/xtensa/mm/tlb.c
++++ b/arch/xtensa/mm/tlb.c
+@@ -218,6 +218,8 @@ static int check_tlb_entry(unsigned w, u
+ 	unsigned tlbidx = w | (e << PAGE_SHIFT);
+ 	unsigned r0 = dtlb ?
+ 		read_dtlb_virtual(tlbidx) : read_itlb_virtual(tlbidx);
++	unsigned r1 = dtlb ?
++		read_dtlb_translation(tlbidx) : read_itlb_translation(tlbidx);
+ 	unsigned vpn = (r0 & PAGE_MASK) | (e << PAGE_SHIFT);
+ 	unsigned pte = get_pte_for_vaddr(vpn);
+ 	unsigned mm_asid = (get_rasid_register() >> 8) & ASID_MASK;
+@@ -233,8 +235,6 @@ static int check_tlb_entry(unsigned w, u
+ 	}
  
- 	mask_bits &= ~PCI_MSIX_ENTRY_CTRL_MASKBIT;
--	if (flag)
-+	if (flag & PCI_MSIX_ENTRY_CTRL_MASKBIT)
- 		mask_bits |= PCI_MSIX_ENTRY_CTRL_MASKBIT;
- 	writel(mask_bits, pci_msix_desc_addr(desc) + PCI_MSIX_ENTRY_VECTOR_CTRL);
- 
+ 	if (tlb_asid == mm_asid) {
+-		unsigned r1 = dtlb ? read_dtlb_translation(tlbidx) :
+-			read_itlb_translation(tlbidx);
+ 		if ((pte ^ r1) & PAGE_MASK) {
+ 			pr_err("%cTLB: way: %u, entry: %u, mapping: %08x->%08x, PTE: %08x\n",
+ 					dtlb ? 'D' : 'I', w, e, r0, r1, pte);
 
 
