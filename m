@@ -1,111 +1,98 @@
 Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,TVD_SUBJ_WIPE_DEBT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79227C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 173BBC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4748A206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD56824676
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:38:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v0Ee1Mgl"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="idHt01tO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfLSWep (ORCPT
+        id S1726986AbfLSWit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 17:34:45 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:45753 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726911AbfLSWep (ORCPT
+        Thu, 19 Dec 2019 17:38:49 -0500
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:45176 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726818AbfLSWis (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 17:34:45 -0500
-Received: by mail-ua1-f67.google.com with SMTP id 59so2559119uap.12
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 14:34:44 -0800 (PST)
+        Thu, 19 Dec 2019 17:38:48 -0500
+Received: by mail-pg1-f202.google.com with SMTP id q1so4007445pge.12
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 14:38:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VpboOSsAlEGLRQwjGYSM66BWhiuHg2YpYtx8W6AcQ7c=;
-        b=v0Ee1MglQDxW/nV3ZAPV6ZkzzbCsYZIV0nkQgFwwyZqft+qKhyc3A1q60nRn2Z7v+v
-         +95B1KXIZF/2xtIBsQ1tOTE7GRzYr/4TrZfiBdXZ5zB8gy66p+tgSf+4XUKrOzgjH6v/
-         ooHr0OAn9QOrksN6K9LeN9e6zABJ2f9YqlzMemt6jRXPdZXZ+/p0PJMcPA8uZrsSf//G
-         xGxQ00uYLa5+95NU76wVLr/ur4etzWC8MW6URrtdk26vGqrykglS4mGoSpjJpf3Xwl+H
-         4IzyQzh27Z7ZUZI5K4msC5UqeOBLzLY56vfxIe5XMXM/tslMW5iRqK1vi+NlUnbfqAQL
-         Fzgw==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=nvazpb4jw88w4OfNslVwqIeFJNyWKvTS2T+KBCPseG4=;
+        b=idHt01tOF7Z0+B6Qj4OinGDSJXQwVD7PlZs4aFq7eEzyBWrf9/QRVy/nnYHGAHpUur
+         4EtlT7ahOScHmQ6EjiMChgE0mq2hWPKcoZahe0iCqQhByskVDPd4VLlWmay+ENvuowok
+         WP8VdOVxBYaLILyVJRb347znk2/mRIOQafVvfJhWvU6M9+Oaf2XBBMSbeU4MF2uNqX3g
+         izSqxIAJrprkN7TH3Dt8Fu+hyOHhDVsBkfkB4H1C0JvN+bJ2zJ7YSKeqzTamFTasHOdB
+         ipcXQmB/m+G0fS4fCDIbqMV5un6odeaeTMQfO23ZX1FTscdYWF726ffVGiEp86AGgs4A
+         eFQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VpboOSsAlEGLRQwjGYSM66BWhiuHg2YpYtx8W6AcQ7c=;
-        b=dg64AFekvsN+kiu65T7y93v+RLypsWVIpr2Yk7nT9DUKMZv5do1C2hcW5PX8eEx7GY
-         zzmkHHTxuHvuVtNYqMU00Dlvwr/jSHXz/yxUZsrZuoEhYI1rxtt4BJ9xAwT5ogvKSBQD
-         kMP2tUhctS0jxHu7wqbF4qZnLnWLBC5nqeZJUzYxKxFC+dUNDsFFEyonTNNrXL/uGW5/
-         jtI7DbJjlzg7LckTl2vb8tV//A5hkw8kMOy/bpRHWmteh2sD3x7Pyv81y0DcwDwU0J0x
-         LSZe5kEj9dAcsgfvBOY9KKO2XCzRhX97stTsFNPkaMl6lnKdLv14Izlrb3LBtQaFZiAl
-         gOeg==
-X-Gm-Message-State: APjAAAVh2jzxNyxwRWSVwCZoMTImnv3jtM67ihP/Hob85FSyE5fN3zT/
-        VjPmw+BiRhQM6s8eX++7ddrBi1nUoluRkT8j4lhdOw==
-X-Google-Smtp-Source: APXvYqwK+EshQqhWAuEP+FIGWSdW4fSf4XVcb1H0wkkA0gtNccGHWZPwmpTELUU72DjKZh9h2rxmwDp4F1Myi6CEF/g=
-X-Received: by 2002:ab0:e16:: with SMTP id g22mr7016060uak.129.1576794884226;
- Thu, 19 Dec 2019 14:34:44 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1576606020.git.hns@goldelico.com>
-In-Reply-To: <cover.1576606020.git.hns@goldelico.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 19 Dec 2019 23:34:08 +0100
-Message-ID: <CAPDyKFoRe1Nzu74BACNMCZDVoS4Dd3w0Bk3K-Mstw4WAvMtiLg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] wl1251: remove ti,power-gpio for sdio mode
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=nvazpb4jw88w4OfNslVwqIeFJNyWKvTS2T+KBCPseG4=;
+        b=HGdYmSLWTzbqr5kg+sRtZ1L5lRgAg1MH77687Vv13PaO+DWXMwB4mkm/hAyWXz5eiZ
+         v3Ad0vhkxgX6pbxP4G9kZKW5x6UfoGdFuv28XBbv5pt/V4HoH339yeir6ymxORVCtIZH
+         AN1Sq0yyZ9gRsRqOi5NLPZFbjub0kQSv0o3V83rsI4ngeDHy0V3QcW1YzdF5kaU4AP/E
+         QymRAl5U+9xc5+H47Xd7S787lnLQq7dl7Nd7JQ9NYhPNHkiqWgUjIo3jNCUJ/sZMDZ8G
+         ttHBDz6aD77V79by+cypQaktmnyBs7Z2M9rOEdZ0LDnG+5fp4PFCKOlVp5ktPTBePUIA
+         JHHw==
+X-Gm-Message-State: APjAAAUrLm0JiGKnrrQ/CrdOvA0TIeev61hT5LFS70cH+nddZRUAnJuj
+        mleK1YeU4Vfb6yrE5Wwz9m7GtLHK46VnFw==
+X-Google-Smtp-Source: APXvYqwmr9epiNS49aYJQZzVdjz/ElCZmA3BGuKBLDqfCNVSZQqtj/yLnY2HtgAPLHyqpTa/pvzZIHtUhW+SaA==
+X-Received: by 2002:a63:7311:: with SMTP id o17mr10902166pgc.29.1576795127866;
+ Thu, 19 Dec 2019 14:38:47 -0800 (PST)
+Date:   Thu, 19 Dec 2019 14:38:34 -0800
+Message-Id: <20191219223834.233692-1-shakeelb@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+Subject: [PATCH] x86/resctrl: Fix potential memory leak
+From:   Shakeel Butt <shakeelb@google.com>
+To:     Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Dec 2019 at 19:07, H. Nikolaus Schaller <hns@goldelico.com> wrote:
->
-> * use just "wl1251: " as title prefix - by Kalle Valo <kvalo@codeaurora.org>
-> * fix error handling: we still have to check for wl->irq returning -EPROBE_DEFER
->
-> PATCH V1 2019-11-24 11:35:48:
-> The driver has been updated to use the mmc/sdio core
-> which does full power control. So we do no longer need
-> the power control gipo.
->
-> Note that it is still needed for the SPI based interface
-> (N900).
->
-> Suggested by: Ulf Hansson <ulf.hansson@linaro.org>
-> Tested by: H. Nikolaus Schaller <hns@goldelico.com> # OpenPandora 600MHz
->
-> H. Nikolaus Schaller (2):
->   DTS: bindings: wl1251: mark ti,power-gpio as optional
->   wl1251: remove ti,power-gpio for SDIO mode
->
->  .../bindings/net/wireless/ti,wl1251.txt       |  3 +-
->  drivers/net/wireless/ti/wl1251/sdio.c         | 32 ++-----------------
->  2 files changed, 4 insertions(+), 31 deletions(-)
->
-> --
-> 2.23.0
->
+The set_cache_qos_cfg() is leaking memory when the given level is not
+RDT_RESOURCE_L3 or RDT_RESOURCE_L2. Fix that.
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: 99adde9b370de ("x86/intel_rdt: Enable L2 CDP in MSR IA32_L2_QOS_CFG")
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+---
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Kind regards
-Uffe
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 2e3b06d6bbc6..a0c279c7f4b9 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -1748,8 +1748,10 @@ static int set_cache_qos_cfg(int level, bool enable)
+ 		update = l3_qos_cfg_update;
+ 	else if (level == RDT_RESOURCE_L2)
+ 		update = l2_qos_cfg_update;
+-	else
++	else {
++		free_cpumask_var(cpu_mask);
+ 		return -EINVAL;
++	}
+ 
+ 	r_l = &rdt_resources_all[level];
+ 	list_for_each_entry(d, &r_l->domains, list) {
+-- 
+2.24.1.735.g03f4e72817-goog
+
