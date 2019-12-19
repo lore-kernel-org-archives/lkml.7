@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1285C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C4AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6955A2465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 747BD24672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781372;
-	bh=tBE4vl7OXzkNVp8t5xjxldR3LN+ffg1MDf1XTpuRigs=;
+	s=default; t=1576781377;
+	bh=ZDWjkucWnuNDUFia2/GxQNQEtlT4iZWmBPaU8zSh7vg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vh5HF3lspWYipfkJvzn8FYbG8gT9rjWdH4MbkOUhu0islBfrxyGLZBXgpa9ecnAud
-	 WyZuKqaGAHJPhXERgkA9yfnqVdpoSr2gvtZ8t0u5t7tn9cnliNYt+hKEMuPLSogQKW
-	 NarLNMbTM2Al2wYrT/mzBCWndPa/GWQZATXvzEa8=
+	b=K6cQZ0HEpEZE4LmvPGH6kCD9mHy6ab4TzpVTbHRjrxtuqHalgKVJ4uEgqVe+Pw+QP
+	 W3HdBHrtfHiNZngtgJvSdwRuSlbQ6VRsHu9gJyZXZoBaRYozTccKRhhZl4c4rYLiWe
+	 h1FGP1/TxP029RDWIdxohkm+XcrSxaJqkGb54jik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbfLSStb (ORCPT
+        id S1729829AbfLSStg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:49:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42960 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:49:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729797AbfLSSt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:49:29 -0500
+        id S1729814AbfLSSte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:49:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94B6B24683;
-        Thu, 19 Dec 2019 18:49:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78AAD2064B;
+        Thu, 19 Dec 2019 18:49:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781369;
-        bh=tBE4vl7OXzkNVp8t5xjxldR3LN+ffg1MDf1XTpuRigs=;
+        s=default; t=1576781373;
+        bh=ZDWjkucWnuNDUFia2/GxQNQEtlT4iZWmBPaU8zSh7vg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C3n3NmD55n3SvKWcCpCBsSekbxQKftBYRosF+LCORG/c4dRXI8MzlJRcSkU2aE4x8
-         1W1ujBQrP2ZGFlCuyx8Xu0DXrdgE+llt/f8HuR7/TbWxXCgFvwejK81yrJj7nFH4yl
-         gjAZYuAWFicBlkqN+tfSTShe/UBsJyE/0IlmgFvU=
+        b=ljLAPKdnBJZMqCBjvnvYoVyMyD+ttiZKu/micDpkBH/Da5WpwhSQxSazpVUtF5lQy
+         XUtwGvUjxxEB+vEVNi43HynE3AXfEa1P4v5lOxYG5aHYWeOFvwsp+RLnqaqcPXEjH6
+         0ImagnGhjS0Ou2M8OKg+eG//tgUKH2mhJ57KvZ28=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: [PATCH 4.9 193/199] dma-buf: Fix memory leak in sync_file_merge()
-Date:   Thu, 19 Dec 2019 19:34:35 +0100
-Message-Id: <20191219183226.448734201@linuxfoundation.org>
+        stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
+        Joe Thornber <ejt@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.9 194/199] dm btree: increase rebalance threshold in __rebalance2()
+Date:   Thu, 19 Dec 2019 19:34:36 +0100
+Message-Id: <20191219183226.514476773@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,34 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Hou Tao <houtao1@huawei.com>
 
-commit 6645d42d79d33e8a9fe262660a75d5f4556bbea9 upstream.
+commit 474e559567fa631dea8fb8407ab1b6090c903755 upstream.
 
-In the implementation of sync_file_merge() the allocated sync_file is
-leaked if number of fences overflows. Release sync_file by goto err.
+We got the following warnings from thin_check during thin-pool setup:
 
-Fixes: a02b9dc90d84 ("dma-buf/sync_file: refactor fence storage in struct sync_file")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+  $ thin_check /dev/vdb
+  examining superblock
+  examining devices tree
+    missing devices: [1, 84]
+      too few entries in btree_node: 41, expected at least 42 (block 138, max_entries = 126)
+  examining mapping tree
+
+The phenomenon is the number of entries in one node of details_info tree is
+less than (max_entries / 3). And it can be easily reproduced by the following
+procedures:
+
+  $ new a thin pool
+  $ presume the max entries of details_info tree is 126
+  $ new 127 thin devices (e.g. 1~127) to make the root node being full
+    and then split
+  $ remove the first 43 (e.g. 1~43) thin devices to make the children
+    reblance repeatedly
+  $ stop the thin pool
+  $ thin_check
+
+The root cause is that the B-tree removal procedure in __rebalance2()
+doesn't guarantee the invariance: the minimal number of entries in
+non-root node should be >= (max_entries / 3).
+
+Simply fix the problem by increasing the rebalance threshold to
+make sure the number of entries in each child will be greater
+than or equal to (max_entries / 3 + 1), so no matter which
+child is used for removal, the number will still be valid.
+
 Cc: stable@vger.kernel.org
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191122220957.30427-1-navid.emamdoost@gmail.com
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+Acked-by: Joe Thornber <ejt@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma-buf/sync_file.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/persistent-data/dm-btree-remove.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/drivers/dma-buf/sync_file.c
-+++ b/drivers/dma-buf/sync_file.c
-@@ -204,7 +204,7 @@ static struct sync_file *sync_file_merge
- 	a_fences = get_fences(a, &a_num_fences);
- 	b_fences = get_fences(b, &b_num_fences);
- 	if (a_num_fences > INT_MAX - b_num_fences)
--		return NULL;
-+		goto err;
+--- a/drivers/md/persistent-data/dm-btree-remove.c
++++ b/drivers/md/persistent-data/dm-btree-remove.c
+@@ -203,7 +203,13 @@ static void __rebalance2(struct dm_btree
+ 	struct btree_node *right = r->n;
+ 	uint32_t nr_left = le32_to_cpu(left->header.nr_entries);
+ 	uint32_t nr_right = le32_to_cpu(right->header.nr_entries);
+-	unsigned threshold = 2 * merge_threshold(left) + 1;
++	/*
++	 * Ensure the number of entries in each child will be greater
++	 * than or equal to (max_entries / 3 + 1), so no matter which
++	 * child is used for removal, the number will still be not
++	 * less than (max_entries / 3).
++	 */
++	unsigned int threshold = 2 * (merge_threshold(left) + 1);
  
- 	num_fences = a_num_fences + b_num_fences;
- 
+ 	if (nr_left + nr_right < threshold) {
+ 		/*
 
 
