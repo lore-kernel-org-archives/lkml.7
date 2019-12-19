@@ -2,109 +2,174 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEC2C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D8FC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C335124650
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:34:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fYwP12aO"
+	by mail.kernel.org (Postfix) with ESMTP id E097B24672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:35:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbfLSQeH (ORCPT
+        id S1726935AbfLSQfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 11:34:07 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35393 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726855AbfLSQeG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 11:34:06 -0500
-Received: by mail-lj1-f194.google.com with SMTP id j6so6931150lja.2;
-        Thu, 19 Dec 2019 08:34:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NbGUxJZschh5pU5eBUWoyfxmgLY0Jtie4Fq87j9uajM=;
-        b=fYwP12aOi9NdXLIYBDuMsIPSrXPApDqz1POx12Skp5WX/xXXSTSsF/HVtd7Wf+G4AW
-         A/0iKnvcDCBdN1udrsefmIgBSgvsHGMPH+bPozR/f2ZCXuR22TgnzCUey7Z3WTX4S+o1
-         53PkDayjk238dAMSO1Ha21+HUiLGYI1RCrorqWH8TyP0jAgeriBPEypujR22PRj9mTb6
-         dKJEZew4DEO3wEQQ9ncPmtx0a1F39/sVZt2iqF6ZYsO4uNPDxohorTYg/IGT/nF6AZTC
-         w7sq1iAHf9La7k5GuZnXwUr6wJk1wAjJyWRjx/nvLWwE4oUBQC7s093m1MEvX26GuXFj
-         /9jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NbGUxJZschh5pU5eBUWoyfxmgLY0Jtie4Fq87j9uajM=;
-        b=SYGwakmBD1qRWQWXX7dtnP+oQztbo7PtVWajWnaobPwRNXkAoLkyh1KDPZEdTCUDnm
-         EYOpppi9T3vOXATh/fOk7WsyNcdtzKNgKwdqvJ6ghHr9MPzT9YbBlX2JjCSMWJFhB8di
-         iTmxJELugFxZ+JNd2YC7mF45WTExSPPyZG83QJ1nXoI9B34gqTaSV9J+72gSEapYeamP
-         ZK5X5AdVf873Oj6j1+MDnFpxhlTx6ZTaziqks8etHBnJk7O/xsDZe51FMUCHgJB2xgnK
-         qaarNE7LyvNsgFdwsAoovs8l5b8djjr4Vd0LfKKqnYrreAcE01xrh9mwBemCRIqy8JmM
-         M8Eg==
-X-Gm-Message-State: APjAAAXUNT2WFrL83/gbt0MaQ2eYU25rGGcqahfaVVC7y2VpPN3NVelw
-        pvQJShpOLS8endQHvv4Di/M0xYw/
-X-Google-Smtp-Source: APXvYqytljIvdSb9uKAA4Z5f9O3C9KOePxedpYlxO/c853cn0BV5XGhgglOiAUNSRF8Vr2L4UbB00A==
-X-Received: by 2002:a2e:91cb:: with SMTP id u11mr6801694ljg.82.1576773243568;
-        Thu, 19 Dec 2019 08:34:03 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id g85sm2824824lfd.66.2019.12.19.08.34.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Dec 2019 08:34:02 -0800 (PST)
-Subject: Re: [PATCH v1 1/3] gpio: tegra: Use generic
- readl_relaxed/writel_relaxed accessors
-To:     Ben Dooks <ben.dooks@codethink.co.uk>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191215183047.9414-1-digetx@gmail.com>
- <20191215183047.9414-2-digetx@gmail.com>
- <CAMpxmJUmLOZoKeeo4XMVEOWKRgwfS4O2szVboY-qTTYXg_aTVg@mail.gmail.com>
- <b38cd167-4a61-4903-cf44-910dcb66f751@codethink.co.uk>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <e6a67fa4-977d-bac9-f7c0-51d5cea526e5@gmail.com>
-Date:   Thu, 19 Dec 2019 19:34:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 19 Dec 2019 11:35:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44124 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726818AbfLSQfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 11:35:21 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2CB22053B;
+        Thu, 19 Dec 2019 16:35:18 +0000 (UTC)
+Date:   Thu, 19 Dec 2019 11:35:17 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com,
+        Mel Gorman <mgorman@suse.de>
+Subject: [PATCH] sched: Force the address order of each sched class
+ descriptor
+Message-ID: <20191219113517.65617a7b@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <b38cd167-4a61-4903-cf44-910dcb66f751@codethink.co.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-19.12.2019 18:57, Ben Dooks пишет:
-> On 19/12/2019 11:01, Bartosz Golaszewski wrote:
->> niedz., 15 gru 2019 o 19:31 Dmitry Osipenko <digetx@gmail.com>
->> napisał(a):
->>>
->>> There is no point in using old-style raw accessors, the generic
->>> accessors
->>> do the same thing and also take into account CPU endianness. Tegra
->>> SoCs do
->>> not support big-endian mode in the upstream kernel, but let's switch
->>> away
->>> from the outdated things anyway, just to keep code up-to-date.
-> 
-> Good idea, I think I got most of the way to booting a tegra jetson board
-> with a big endian image a few years ago, but never got time to finish
-> the work.
-> 
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-Thanks, I remember yours effort in regards to the upstreaming big endian
-support for Jetson :) You were pretty close back then, but Thierry had a
-different opinion in regards to maintaining that support in terms of
-having extra testing burden.
+[ Kirill, feel free to include this patch with yours ]
+
+In order to make a micro optimization in pick_next_task(), the order of the
+sched class descriptor address must be in the same order as their priority
+to each other. That is:
+
+ &idle_sched_class < &fair_sched_class < &rt_sched_class <
+ &dl_sched_class < &stop_sched_class
+
+In order to guarantee this order of the sched class descriptors, add each
+one into their own data section and force the order in the linker script.
+
+Link: https://lore.kernel.org/r/157675913272.349305.8936736338884044103.stgit@localhost.localdomain
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ include/asm-generic/vmlinux.lds.h | 13 +++++++++++++
+ kernel/sched/deadline.c           |  3 ++-
+ kernel/sched/fair.c               |  3 ++-
+ kernel/sched/idle.c               |  3 ++-
+ kernel/sched/rt.c                 |  3 ++-
+ kernel/sched/stop_task.c          |  3 ++-
+ 6 files changed, 23 insertions(+), 5 deletions(-)
+
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index e00f41aa8ec4..7e8b02fdcf3f 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -108,6 +108,18 @@
+ #define SBSS_MAIN .sbss
+ #endif
+ 
++/*
++ * The order of the sched class addresses are important, as they are
++ * used to determine the order of the priority of each sched class in
++ * relation to each other.
++ */
++#define SCHED_DATA				\
++	*(__idle_sched_class)			\
++	*(__fair_sched_class)			\
++	*(__rt_sched_class)			\
++	*(__dl_sched_class)			\
++	*(__stop_sched_class)
++
+ /*
+  * Align to a 32 byte boundary equal to the
+  * alignment gcc 4.5 uses for a struct
+@@ -308,6 +320,7 @@
+ #define DATA_DATA							\
+ 	*(.xiptext)							\
+ 	*(DATA_MAIN)							\
++	SCHED_DATA							\
+ 	*(.ref.data)							\
+ 	*(.data..shared_aligned) /* percpu related */			\
+ 	MEM_KEEP(init.data*)						\
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index 43323f875cb9..5abdbe569f93 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -2428,7 +2428,8 @@ static void prio_changed_dl(struct rq *rq, struct task_struct *p,
+ 	}
+ }
+ 
+-const struct sched_class dl_sched_class = {
++const struct sched_class dl_sched_class
++	__attribute__((section("__dl_sched_class"))) = {
+ 	.next			= &rt_sched_class,
+ 	.enqueue_task		= enqueue_task_dl,
+ 	.dequeue_task		= dequeue_task_dl,
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 08a233e97a01..e745fe0e0cd3 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -10745,7 +10745,8 @@ static unsigned int get_rr_interval_fair(struct rq *rq, struct task_struct *task
+ /*
+  * All the scheduling class methods:
+  */
+-const struct sched_class fair_sched_class = {
++const struct sched_class fair_sched_class
++	__attribute__((section("__fair_sched_class"))) = {
+ 	.next			= &idle_sched_class,
+ 	.enqueue_task		= enqueue_task_fair,
+ 	.dequeue_task		= dequeue_task_fair,
+diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+index ffa959e91227..700a9c826f0e 100644
+--- a/kernel/sched/idle.c
++++ b/kernel/sched/idle.c
+@@ -454,7 +454,8 @@ static void update_curr_idle(struct rq *rq)
+ /*
+  * Simple, special scheduling class for the per-CPU idle tasks:
+  */
+-const struct sched_class idle_sched_class = {
++const struct sched_class idle_sched_class
++	__attribute__((section("__idle_sched_class"))) = {
+ 	/* .next is NULL */
+ 	/* no enqueue/yield_task for idle tasks */
+ 
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index e591d40fd645..5d3f9bcddaeb 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -2354,7 +2354,8 @@ static unsigned int get_rr_interval_rt(struct rq *rq, struct task_struct *task)
+ 		return 0;
+ }
+ 
+-const struct sched_class rt_sched_class = {
++const struct sched_class rt_sched_class
++	__attribute__((section("__rt_sched_class"))) = {
+ 	.next			= &fair_sched_class,
+ 	.enqueue_task		= enqueue_task_rt,
+ 	.dequeue_task		= dequeue_task_rt,
+diff --git a/kernel/sched/stop_task.c b/kernel/sched/stop_task.c
+index 4c9e9975684f..03bc7530ff75 100644
+--- a/kernel/sched/stop_task.c
++++ b/kernel/sched/stop_task.c
+@@ -115,7 +115,8 @@ static void update_curr_stop(struct rq *rq)
+ /*
+  * Simple, special scheduling class for the per-CPU stop tasks:
+  */
+-const struct sched_class stop_sched_class = {
++const struct sched_class stop_sched_class
++	__attribute__((section("__stop_sched_class"))) = {
+ 	.next			= &dl_sched_class,
+ 
+ 	.enqueue_task		= enqueue_task_stop,
+-- 
+2.20.1
+
