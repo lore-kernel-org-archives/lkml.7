@@ -2,99 +2,125 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8359C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1720CC2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AEC6227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:15:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782959;
-	bh=Ovk4S9XdooZpwds9kvkFV5q6xWu8VVrE8ivZlClNVEA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=igvuxaKmCZpaqmln6nHvNgpZ4GhbOiGWYDo0A6vry2/D+ltBLhqhx7Bi69UOVVO3I
-	 mrH/eFyKGQT+5+bbRmtCLryRBM/NmkoZxFtswrrDtfem7m9Jac8e96vOBu9/J7Igmx
-	 RFYiMvhEmTqlKfQSEr2edRm7yo1yj0m3VHqHC3m4=
+	by mail.kernel.org (Postfix) with ESMTP id E0309222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:17:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbfLSTP6 (ORCPT
+        id S1727225AbfLSTRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:15:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39962 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 14:17:03 -0500
+Received: from foss.arm.com ([217.140.110.172]:43338 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726907AbfLSTP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 14:15:58 -0500
-Received: from localhost (unknown [104.132.0.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 911C9222C2;
-        Thu, 19 Dec 2019 19:15:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576782957;
-        bh=Ovk4S9XdooZpwds9kvkFV5q6xWu8VVrE8ivZlClNVEA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1w1k5/RiIq/QdWAdD/kR8UvWFkV1peeJXQpVDE52VGTfgi4TtTeIjsbgc7aC7ekg1
-         zg0fvuYWg3+roF3GB77lC/xK29yKQEhizE3yGhuvdyMhn4C6va/TKx29blMGU/A9+l
-         TL+d96/GHfII3P1hSP+V+PYw+lTYSrUyuGHG1Pnk=
-Date:   Thu, 19 Dec 2019 11:15:56 -0800
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     axboe@kernel.dk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-Subject: Re: kernel BUG at fs/buffer.c:LINE!
-Message-ID: <20191219191556.GA68282@jaegeuk-macbookpro.roam.corp.google.com>
-References: <0000000000009716290599fcd496@google.com>
- <31033055-c245-4eda-2814-3fd8b0d59cb9@acm.org>
+        id S1726964AbfLSTRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 14:17:03 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA0171FB;
+        Thu, 19 Dec 2019 11:17:02 -0800 (PST)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3D983F67D;
+        Thu, 19 Dec 2019 11:17:00 -0800 (PST)
+Subject: Re: [PATCH v5 2/2] EDAC: al-mc-edac: Introduce Amazon's Annapurna
+ Labs Memory Controller EDAC
+To:     Talel Shenhar <talel@amazon.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de,
+        mchehab@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-edac@vger.kernel.org, dwmw@amazon.co.uk,
+        benh@kernel.crashing.org, hhhawa@amazon.com, ronenk@amazon.com,
+        jonnyc@amazon.com, hanochu@amazon.com, amirkl@amazon.com,
+        barakw@amazon.com
+References: <1571911407-29379-1-git-send-email-talel@amazon.com>
+ <1571911407-29379-3-git-send-email-talel@amazon.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <411bd52f-a714-9b8d-c18c-2d7bcec3d850@arm.com>
+Date:   Thu, 19 Dec 2019 19:16:58 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <31033055-c245-4eda-2814-3fd8b0d59cb9@acm.org>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+In-Reply-To: <1571911407-29379-3-git-send-email-talel@amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/18, Bart Van Assche wrote:
-> On 2019-12-18 08:21, syzbot wrote:
-> > syzbot has bisected this bug to:
-> > 
-> > commit 5db470e229e22b7eda6e23b5566e532c96fb5bc3
-> > Author: Jaegeuk Kim <jaegeuk@kernel.org>
-> > Date:   Thu Jan 10 03:17:14 2019 +0000
-> > 
-> >     loop: drop caches if offset or block_size are changed
-> > 
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13f3ca8ee00000
-> > start commit:   2187f215 Merge tag 'for-5.5-rc2-tag' of
-> > git://git.kernel.o..
-> > git tree:       upstream
-> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=100bca8ee00000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=17f3ca8ee00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=dcf10bf83926432a
-> > dashboard link:
-> > https://syzkaller.appspot.com/bug?extid=cfed5b56649bddf80d6e
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1171ba8ee00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=107440aee00000
-> 
-> Hi Jaegeuk,
-> 
-> Since syzbot has identified a reproducer I think that it's easy to test
-> whether your new patch fixes what syzbot discovered. Have you already
-> had the chance to test this?
+Hi Talel,
 
-Hi Bart,
+On 24/10/2019 11:03, Talel Shenhar wrote:
+> The Amazon's Annapurna Labs Memory Controller EDAC supports ECC capability
+> for error detection and correction (Single bit error correction, Double
+> detection). This driver introduces EDAC driver for that capability.
 
-Let me try to reproduce this.
+> diff --git a/drivers/edac/al_mc_edac.c b/drivers/edac/al_mc_edac.c
+> new file mode 100644
+> index 00000000..b9ef7dd
+> --- /dev/null
+> +++ b/drivers/edac/al_mc_edac.c
+> @@ -0,0 +1,355 @@
+
+> +static void devm_al_mc_edac_del(void *data)
+> +{
+> +	edac_mc_del_mc(data);
+> +}
+> +
+> +static void devm_al_mc_edac_free(void *data)
+> +{
+> +	edac_mc_free(data);
+> +}
+> +
+> +static int al_mc_edac_probe(struct platform_device *pdev)
+> +{
+> +	void __iomem *mmio_base;
+> +	struct edac_mc_layer layers[1];
+> +	struct mem_ctl_info *mci;
+> +	struct al_mc_edac *al_mc;
+> +	int ret;
+> +
+> +	mmio_base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(mmio_base)) {
+> +		dev_err(&pdev->dev, "failed to ioremap memory (%ld)\n",
+> +			PTR_ERR(mmio_base));
+> +		return PTR_ERR(mmio_base);
+> +	}
+> +
+> +	layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
+> +	layers[0].size = 1;
+> +	layers[0].is_virt_csrow = false;
+> +	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
+> +			    sizeof(struct al_mc_edac));
+> +	if (!mci)
+> +		return -ENOMEM;
+
+> +	ret = devm_add_action(&pdev->dev, devm_al_mc_edac_free, mci);
+> +	if (ret) {
+> +		edac_mc_free(mci);
+> +		return ret;
+> +	}
+
+Cool. (edac_mc.c should probably provide a devm_edac_mc_alloc() that does this, but that
+can be future)
+
+
+> +static struct platform_driver al_mc_edac_driver = {
+> +	.probe = al_mc_edac_probe,
+
+
+(Looks like you can still remove the module even though there is no .remove here.)
+
+
+Reviewed-by: James Morse <james.morse@arm.com>
+
+
 
 Thanks,
 
-> 
-> Thanks,
-> 
-> Bart.
+James
