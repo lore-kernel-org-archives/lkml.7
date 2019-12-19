@@ -2,81 +2,70 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EDEC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C88C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A603227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:56:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UnQYZufn"
+	by mail.kernel.org (Postfix) with ESMTP id D510324676
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:57:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfLSP4e (ORCPT
+        id S1726911AbfLSP5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 10:56:34 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:50528 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbfLSP4e (ORCPT
+        Thu, 19 Dec 2019 10:57:13 -0500
+Received: from imap2.colo.codethink.co.uk ([78.40.148.184]:54632 "EHLO
+        imap2.colo.codethink.co.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726818AbfLSP5M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 10:56:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=rjL7IN7Ds1hUfh0T2ILGQLcCmbkXt5wirx9kdENfl00=; b=UnQYZufnxzgPbRVfWvqiwp3VT
-        Gq/U5zKQJ6Zy8alLY8Y78xJdR3TDX8kPJFQY9TE044lcc0E9dRPWXDPkccrRDsKa/h+aWs1VfPhT/
-        Qe41rZNjF/hqqbFWRVgHS196s91l32U71Hmn6fHDzBKe5BccQbaP6Z1qTDm9zE8NA0hf5RQ0Rxsnd
-        HUyMAQuctOqu4Kw2/kJPURqH7NC2F7Ui144xi8J2EM5/dj7TlEfC0Qec4vFUW4ed+zf11uXhx8DV8
-        eQqDS1Fhg9A5IFLzuB5W51hRK3tZn4tZergh13JvOmOAs8h+vjYMmrfNgnYTgwROzCSdd5pKe1peo
-        lx9Btsyng==;
-Received: from [2601:1c0:6280:3f0::fee9]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ihyAD-0004jp-MR; Thu, 19 Dec 2019 15:56:33 +0000
-Subject: Re: linux-next: Tree for Dec 19 (f2fs)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-References: <20191219181125.273d62b3@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <5306838a-5f25-a2d3-6b2b-884f4287710a@infradead.org>
-Date:   Thu, 19 Dec 2019 07:56:32 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 19 Dec 2019 10:57:12 -0500
+Received: from [167.98.27.226] (helo=[10.35.5.173])
+        by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
+        id 1ihyAn-0008Km-JD; Thu, 19 Dec 2019 15:57:09 +0000
+Subject: Re: [PATCH v1 1/3] gpio: tegra: Use generic
+ readl_relaxed/writel_relaxed accessors
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20191215183047.9414-1-digetx@gmail.com>
+ <20191215183047.9414-2-digetx@gmail.com>
+ <CAMpxmJUmLOZoKeeo4XMVEOWKRgwfS4O2szVboY-qTTYXg_aTVg@mail.gmail.com>
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+Organization: Codethink Limited.
+Message-ID: <b38cd167-4a61-4903-cf44-910dcb66f751@codethink.co.uk>
+Date:   Thu, 19 Dec 2019 15:57:09 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191219181125.273d62b3@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CAMpxmJUmLOZoKeeo4XMVEOWKRgwfS4O2szVboY-qTTYXg_aTVg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/18/19 11:11 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> News: Tomorrow will be the last linux-next release until January 6
-> (unless I get very bored :-)).
-> 
-> Changes since 20191218:
-> 
+On 19/12/2019 11:01, Bartosz Golaszewski wrote:
+> niedz., 15 gru 2019 o 19:31 Dmitry Osipenko <digetx@gmail.com> napisał(a):
+>>
+>> There is no point in using old-style raw accessors, the generic accessors
+>> do the same thing and also take into account CPU endianness. Tegra SoCs do
+>> not support big-endian mode in the upstream kernel, but let's switch away
+>> from the outdated things anyway, just to keep code up-to-date.
 
-on i386:
-
-when f2fs is a loadable module:
-ERROR: "__udivdi3" [fs/f2fs/f2fs.ko] undefined!
-
-or when builtin:
-ld: fs/f2fs/file.o: in function `f2fs_truncate_blocks':
-file.c:(.text+0x7bf7): undefined reference to `__udivdi3'
-
+Good idea, I think I got most of the way to booting a tegra jetson board
+with a big endian image a few years ago, but never got time to finish
+the work.
 
 -- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
+
+https://www.codethink.co.uk/privacy.html
