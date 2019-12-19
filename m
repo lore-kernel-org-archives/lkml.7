@@ -2,111 +2,136 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A367C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCE3C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4088724676
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:31:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gNErIB7X"
+	by mail.kernel.org (Postfix) with ESMTP id 75EE824676
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:31:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576798294;
+	bh=hF7FeZOLBAbbbuxHjCzaeZODUTMfWk4z9rlsOrwRQik=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ata9sN+0RKiMDwT+FAa0jfMceF2/OgXBg85+C4IU5YenseUtBA/pNCUlOhyMUTB6Z
+	 pZXPHXc8VmWO3rw5VAxAezRGZUS0KzhnQslyOfT1P8BmXmdknNz/cErZ2NlFDAjQXJ
+	 OneVnD7uUjTfew34aEogOPsi7XV46qwUd9wckx90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbfLSXbZ (ORCPT
+        id S1727191AbfLSXbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 18:31:25 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:41022 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbfLSXbY (ORCPT
+        Thu, 19 Dec 2019 18:31:33 -0500
+Received: from mail-ot1-f41.google.com ([209.85.210.41]:40302 "EHLO
+        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbfLSXbd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 18:31:24 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBJNTXOg073864;
-        Thu, 19 Dec 2019 23:31:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=XM5vEgks4cb5sO1+swRp9MqjfBI14nr9sYPl3TxMAqY=;
- b=gNErIB7XnekOcNUEIqxZj9UdMaBZoMIaI5fbujuKglUTC1yc/PrkbpcpcYn9FMkGeX4E
- uuK/RY6c8Yd3RegXjPFElXXBxZDP0pE4tulQqo5tR8O07HlAPDn2kluY47ugfWZK+WUK
- FWtZQ4No1keyQLwf4+BBZ5cwdu4+lpBqx65Bkae/CSRQS5p7r1FK/G8qFOTAydgpOGA/
- 9WHer9hWKOYvMTR80DjD5uHvMOlf9iNIUR8eFslewEunlEPxHm+p2l9qcxX4ncpkm+/w
- jPQUn0vqPyANcTFWzK04TkltQMhc/0XngLtXCKdeiErYkHq8K0TwxxSgXEDCrCEAGDoo Vw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2x0ag12v5r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Dec 2019 23:31:17 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBJNNDTq162361;
-        Thu, 19 Dec 2019 23:31:16 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2x04ms5u1r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Dec 2019 23:31:16 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBJNVElb017175;
-        Thu, 19 Dec 2019 23:31:15 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 19 Dec 2019 15:31:14 -0800
-To:     Michal =?utf-8?Q?Such=C3=A1nek?= <msuchanek@suse.de>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH] scsi: blacklist: add VMware ESXi cdrom - broken tray emulation
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20191217180840.9414-1-msuchanek@suse.de>
-        <yq1bls6h9ir.fsf@oracle.com> <20191219143422.GJ4113@kitsune.suse.cz>
-Date:   Thu, 19 Dec 2019 18:31:12 -0500
-In-Reply-To: <20191219143422.GJ4113@kitsune.suse.cz> ("Michal =?utf-8?Q?Su?=
- =?utf-8?Q?ch=C3=A1nek=22's?=
-        message of "Thu, 19 Dec 2019 15:34:22 +0100")
-Message-ID: <yq1pngjc2pr.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Thu, 19 Dec 2019 18:31:33 -0500
+Received: by mail-ot1-f41.google.com with SMTP id w21so1557869otj.7;
+        Thu, 19 Dec 2019 15:31:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cHN0yTmRtblTpyKmg4iRlUo8Qwlh54zEqesHcqtc4tw=;
+        b=d+jLduKnzyv9knYWRuHHTI8kuyrwaRtTGAzk003ScdHmpph+m0EfL+OAilo7LrwZ/w
+         ZyVvW0kqXeOoG7WqKWWbi4tBY/KDVpPDaaQX2MYATCNp754CVHtxKv4K4O4a2Vfvlw95
+         XDnRaufSupT1rKdqUyaXW1B2ZUTAAfNzva1D3vb6onhrI+Pprok6Kzo6pKsTX+5u9LZ9
+         eGUd0gnOYCqAHpM0jOffJ7Y2z897VF3putvc15Oo3EgZh+Pq4afvnG6lK46BEUNpWWg8
+         TWAJ6LL4E8CWje/6jXWqcgSKHzq+a9WKUqefl0eqGvHfzY6EPX/HKVvceHNPJm5gCJXo
+         4y1A==
+X-Gm-Message-State: APjAAAWOx8ClZHYGOPcUv9aPSTs0OMpZe7HcaZOll+RH8ghmZdZ8iMIy
+        OV3Z511TbOSQIl/EA1Ab0Q==
+X-Google-Smtp-Source: APXvYqyjZvh03uk/NUEQwvqjY4ru5OS3ZB9R5H2+OfsQFZsDDFfjxfktkVMWSrQ5ILJVZfDTUO1a6Q==
+X-Received: by 2002:a9d:1e4:: with SMTP id e91mr5962233ote.324.1576798292085;
+        Thu, 19 Dec 2019 15:31:32 -0800 (PST)
+Received: from localhost (ip-184-205-174-147.ftwttx.spcsdns.net. [184.205.174.147])
+        by smtp.gmail.com with ESMTPSA id n7sm2524611oij.14.2019.12.19.15.31.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 15:31:31 -0800 (PST)
+Date:   Thu, 19 Dec 2019 17:31:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Simon Horman <horms@verge.net.au>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [v2 3/6] of: address: add support to parse PCI outbound-ranges
+Message-ID: <20191219233129.GA5484@bogus>
+References: <20191213084748.11210-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20191213084748.11210-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAL_JsqLSYroDZGWksJJ=E+01X=3Tji4+GmK8s3i+d2BJphqiLQ@mail.gmail.com>
+ <CA+V-a8uKBuVUQvkoJ9pJYX97Qy3JazTyLCy-2T35gOX77AP8vg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9476 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912190172
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9476 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912190173
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+V-a8uKBuVUQvkoJ9pJYX97Qy3JazTyLCy-2T35gOX77AP8vg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Dec 16, 2019 at 08:49:23AM +0000, Lad, Prabhakar wrote:
+> Hi Rob,
+> 
+> Thank you for the review.
+> 
+> On Fri, Dec 13, 2019 at 8:37 PM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Fri, Dec 13, 2019 at 2:48 AM Lad Prabhakar
+> > <prabhakar.csengg@gmail.com> wrote:
+> > >
+> > > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > >
+> > > this patch adds support to parse PCI outbound-ranges, the
+> > > outbound-regions are similar to pci ranges except it doesn't
+> > > have pci address, below is the format for bar-ranges:
+> > >
+> > > outbound-ranges = <flags upper32_cpuaddr lower32_cpuaddr
+> > >                    upper32_size lower32_size>;
+> >
+> > You can't just make up a new ranges property. Especially one that
+> > doesn't follow how 'ranges' works. We already have 'dma-ranges' to
+> > translate device to memory addresses.
+> >
+> > Explain the problem or feature you need, not the solution you came up
+> > with. Why do you need this and other endpoint bindings haven't?
+> >
+> rcar SoC's supports multiple outbound region for mapping the PCI address
+> locally to the system. This lead to discussion where there exist controllers
+> which support regions for high/low priority transfer and similarly regions
+> for large/small memory allocations, as a result a new ranges property was
+> added, where we can specify the flags which would indicate how the outbound
+> region can be used during requests.
 
-Michal,
+What are the flags?
 
->> Please don't introduce a blist flag to work around deficiencies in the
->> matching interface. I suggest you tweak the matching functions so they
->> handle a NULL vendor string correctly.
->
-> I don't think that will work with the interface for dynamically adding
-> entries through sysfs.
-
-Please make it work :)
-
-There's nothing conceptually wrong with being able to do:
-
-        echo ":Model:Flags" > /proc/scsi/device_info
-
-We keep running into issues where the same device needs to be listed
-many times because it gets branded by different vendors.
-
-Brownie points for making all this less clunky. The libata globbing
-blacklist works much better, fwiw.
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Rob
