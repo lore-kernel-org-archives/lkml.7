@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9F7C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 265B9C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C2D724680
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD6C524684
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780991;
-	bh=YitMJak+QJ5u7f/nA4YofkormATrSvmkfaTtgbRZJzM=;
+	s=default; t=1576780995;
+	bh=zDW9b2/pZe+ctZdj3Mjiww5eCHoqpYII5WQley0EyZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R9hB4X/p+hLu8jiJIrOoxKObzG8fOUxVY1HvPLYScu9m0F0dTGNlYi9+0KCrcXteH
-	 J9sqkXIu+0PoSqZgATljiYq4UMcuNrtSpZNm3rKiatbflFhq4qqW0aiiGeJpxkD2f/
-	 za87qucWy/nuQGiaSSzo7U0htZyzAsTCgWexjHI0=
+	b=xvWnytV3rVndJvvwLvQaFBSiinKBos05eGE985oZygF+fOJKwgQo8vjhzAezkyq/P
+	 CG4nSByyUGbFV2JPRh30SyhbAxz7ay4ueEtR/d3SwhnQQQiw7aVfR4NJoUDghpA0gI
+	 zvL1EPGed2WjveP9XjgMBX9iSCczzbsn8/ySXqmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728810AbfLSSnK (ORCPT
+        id S1728818AbfLSSnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:43:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34590 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:43:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728789AbfLSSnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:43:05 -0500
+        id S1728002AbfLSSnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:43:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5593424672;
-        Thu, 19 Dec 2019 18:43:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B08124672;
+        Thu, 19 Dec 2019 18:43:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780984;
-        bh=YitMJak+QJ5u7f/nA4YofkormATrSvmkfaTtgbRZJzM=;
+        s=default; t=1576780989;
+        bh=zDW9b2/pZe+ctZdj3Mjiww5eCHoqpYII5WQley0EyZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MFlLftY5L4Zu1kmeTat91RME+tx5kkJrs+HfsITJu++qm6LedavhbimGex6CSUsdk
-         FpDilJOc2dmSvWpagTNoey+Qi1DRKEi1jwRAX5UGu4MNZYeyipGV/ru3KHdgWMmCo8
-         JC1Qha9Nl2XYuVtVAmHfhBz4cZsC1yezFYJKMm98=
+        b=CiRn4LMcTOCXX7MqhSmsLC8ihV1TqTX4qEHUdgoO1troleZt+8Lw+ckxvgX0EMjVy
+         ILLMtYpG3nfvjbEVa2ZGnskMMmNA/hO84vivE32OQ2aIkaeOgBF7b0qd6ss/xcDioV
+         eZCQOM93tNE7ZwUMPexDaKV/l90mKVfWp5BM1eDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 034/199] rtc: max8997: Fix the returned value in case of error in max8997_rtc_read_alarm()
-Date:   Thu, 19 Dec 2019 19:31:56 +0100
-Message-Id: <20191219183216.791262015@linuxfoundation.org>
+Subject: [PATCH 4.9 036/199] ARM: dts: exynos: Use Samsung SoC specific compatible for DWC2 module
+Date:   Thu, 19 Dec 2019 19:31:58 +0100
+Message-Id: <20191219183216.911380403@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -61,34 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 41ef3878203cd9218d92eaa07df4b85a2cb128fb ]
+[ Upstream commit 6035cbcceb069f87296b3cd0bc4736ad5618bf47 ]
 
-In case of error, we return 0.
-This is spurious and not consistent with the other functions of the driver.
-Propagate the error code instead.
+DWC2 hardware module integrated in Samsung SoCs requires some quirks to
+operate properly, so use Samsung SoC specific compatible to notify driver
+to apply respective fixes.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-max8997.c | 2 +-
+ arch/arm/boot/dts/exynos3250.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/rtc-max8997.c b/drivers/rtc/rtc-max8997.c
-index db984d4bf9526..4cce5bd448f65 100644
---- a/drivers/rtc/rtc-max8997.c
-+++ b/drivers/rtc/rtc-max8997.c
-@@ -221,7 +221,7 @@ static int max8997_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
+diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+index 51dbd8cb91cb5..99b3d23319719 100644
+--- a/arch/arm/boot/dts/exynos3250.dtsi
++++ b/arch/arm/boot/dts/exynos3250.dtsi
+@@ -345,7 +345,7 @@
+ 		};
  
- out:
- 	mutex_unlock(&info->lock);
--	return 0;
-+	return ret;
- }
- 
- static int max8997_rtc_stop_alarm(struct max8997_rtc_info *info)
+ 		hsotg: hsotg@12480000 {
+-			compatible = "snps,dwc2";
++			compatible = "samsung,s3c6400-hsotg", "snps,dwc2";
+ 			reg = <0x12480000 0x20000>;
+ 			interrupts = <0 141 0>;
+ 			clocks = <&cmu CLK_USBOTG>;
 -- 
 2.20.1
 
