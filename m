@@ -2,68 +2,68 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FFEAC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75223C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45D4724682
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:40:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576773612;
-	bh=kVZO1y7O7/FeMWl1i0VTlzIBrjOvi3NOrNm0YAIByyk=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=l4BqWWMnhwlvmtmj9WQRJS6zQ+Jora+pdVf8oksOtSSzTSmaVvFiUfhg9f3eTYJFm
-	 K73bKyboGckSslycIx1/EPyQc7ysQzpGux0JOpdGj0af2DPjZzwD5VkxeAUxe+gBjc
-	 WtUDKNqIJrYeAnuBZGNS4QVFbx6pqGhPOsxFlR0A=
+	by mail.kernel.org (Postfix) with ESMTP id 4E67724650
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:41:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfLSQkL (ORCPT
+        id S1726965AbfLSQlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 11:40:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46922 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 11:41:16 -0500
+Received: from ms.lwn.net ([45.79.88.28]:37202 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726801AbfLSQkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 11:40:11 -0500
-Subject: Re: [GIT PULL] Power management fix for v5.5-rc2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576773610;
-        bh=kVZO1y7O7/FeMWl1i0VTlzIBrjOvi3NOrNm0YAIByyk=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=kprPBqkGFsL/3lQQGPTSf25JKXQ8jud2aVvzaTdAJUDNIN4gvnupJAhCXVxxIs7aB
-         /GW+DIpi5U/j9c+BLztfbZeP1ZSyMcTyWxkOS8EJ0RAoQ0p0qo6SMPPux5AiIBHCz1
-         xMIhz2yYgcSR7LkUK6TFFq1EP5wZvqwSrODwTN4o=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAJZ5v0hm1D5CJq81Ew9YjGc_ik8nw9Q_-w0a+7iMdarwPmsH7A@mail.gmail.com>
-References: <CAJZ5v0hm1D5CJq81Ew9YjGc_ik8nw9Q_-w0a+7iMdarwPmsH7A@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJZ5v0hm1D5CJq81Ew9YjGc_ik8nw9Q_-w0a+7iMdarwPmsH7A@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.5-rc3
-X-PR-Tracked-Commit-Id: 505b308b6944a91fa8437a3fd9f2dab29b5c3c88
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5f096c0ecd53263a94124bdfa516a29f154e44ed
-Message-Id: <157677361077.29970.17745239851738773392.pr-tracker-bot@kernel.org>
-Date:   Thu, 19 Dec 2019 16:40:10 +0000
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        id S1726801AbfLSQlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 11:41:16 -0500
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id BCC852E5;
+        Thu, 19 Dec 2019 16:41:15 +0000 (UTC)
+Date:   Thu, 19 Dec 2019 09:41:14 -0700
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     SeongJae Park <sj38.park@gmail.com>
+Cc:     paulmck@kernel.org, will@kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, SeongJae Park <sjpark@amazon.de>
+Subject: Re: [PATCH] docs/memory-barriers.txt.kokr: Minor wordsmith
+Message-ID: <20191219094114.6380a69f@lwn.net>
+In-Reply-To: <20191129182823.8710-1-sjpark@amazon.de>
+References: <20191127142707.GB2889@paulmck-ThinkPad-P72>
+        <20191129182823.8710-1-sjpark@amazon.de>
+Organization: LWN.net
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 19 Dec 2019 16:35:29 +0100:
+On Fri, 29 Nov 2019 19:28:23 +0100
+SeongJae Park <sj38.park@gmail.com> wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.5-rc3
+> As suggested by Paul, I got a review from another Korean hacker Yunjae.
+>  From the review, I got not only 'Reviewed-by:' tags, but also found a
+> few minor nits.  So I made a second version of the patchset but just
+> realized that the first version has already sent to Linus.  I therefore
+> send only the nit fixes as another patch.
+> 
+> ----------------------------- >8 ----------------------------------------  
+> docs/memory-barriers.txt.kokr: Minor wordsmith
+> 
+> This commit fixes a couple of minor nits in the Korean translation of
+> 'memory-barriers.txt'.
+> 
+> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> Reviewed-by: Yunjae Lee <lyj7694@gmail.com>
+> ---
+>  Documentation/translations/ko_KR/memory-barriers.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5f096c0ecd53263a94124bdfa516a29f154e44ed
+I've applied this; thanks and apologies for the delay,
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+jon
