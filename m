@@ -2,148 +2,159 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
+	USER_AGENT_GIT,WEIRD_QUOTING autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DDDC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0227C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BC45222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86F75222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:34:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FkJK2kMX"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="VGZLUlUK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfLSSdo (ORCPT
+        id S1727071AbfLSSd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:33:44 -0500
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:37962 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726858AbfLSSdo (ORCPT
+        Thu, 19 Dec 2019 13:33:59 -0500
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:48078 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726858AbfLSSd7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:33:44 -0500
-Received: by mail-vk1-f194.google.com with SMTP id d17so1907638vke.5;
-        Thu, 19 Dec 2019 10:33:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ml4mAJAjd+UzALjuvInIbq2ljDjbxyxCZlmTfZ9UxCk=;
-        b=FkJK2kMXU/9fnYvBIr1pmuDBc/Q4Sb9TKnfUaJQ1oGe4RNu9T/nhYd4+rUNAmtJyvv
-         8Q2KMCV8W5KOW3EqmHVLyLsU2HGFdKykwecFg/lDk4PIhR+U0jWK61TeH0Fh5w4S+UTl
-         vZcLbPi306O1yUfb/1DudDZsFoHN7K9Ad6Jivgm5IjuxpJNLGsMUokzNv2e1gNtmORX3
-         w1HfECY+fFGnurtud2eXIApj668AfEunCX9Ulm/vVb59FhI5uYFQnvtn+5fgZrJNICwP
-         104Vfo66LHfLmpTygUCT0XLGtVbGeds4qm27YjzLyEA41/YL2LrmwuctfqITBeB7jRWK
-         U9pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ml4mAJAjd+UzALjuvInIbq2ljDjbxyxCZlmTfZ9UxCk=;
-        b=d8XhkVTrHBZjcRu5JUmAo/edBE6t9PGwoJB3qvXOui63GUAfVYqzxipFEu9ru8YfwP
-         Db4ftfIHdXMUIfILzpT//Ime2LL1qxDLpV+Ie0R7iIj+SCyQ95SkMnQBv5yOfMhW0LHN
-         gt4MaWbpqCXsmjbb/v6s6jIIUmUKNVlpi0JfnFoq0WAA279dpPG5TAwMAHze0HkoDzYh
-         P799FwkC2uNJFZIkvKypskzZ4oitPTTm4XL0eX4QxqIcsABbFo8So+BWbjYih33CGfK8
-         xZn6shqlVAqqy/I6RpRnq+7UtH8yQTwyys01TET/1fV4lDlvF24OHQPARoCRb7NKxuNC
-         F+4g==
-X-Gm-Message-State: APjAAAWfXAolkweTnz6hLTjROsBPCzueR3bYmqIiw8UM98APcL7u38vZ
-        MijCe6dXtEVpo7sRzLhjwZ31yayqsyxS2tfoXW4=
-X-Google-Smtp-Source: APXvYqzIKnrV2MFDOoxVD8lAQN7aW5bueKopZBhGbsA12grhFVgxAF32grZKsQMBuFY1Kl4E16Tfj31nxPSxsQzBbPE=
-X-Received: by 2002:a1f:db81:: with SMTP id s123mr7008579vkg.45.1576780423321;
- Thu, 19 Dec 2019 10:33:43 -0800 (PST)
+        Thu, 19 Dec 2019 13:33:59 -0500
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id xBJIOl9n028495
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 10:33:57 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=3JRBFKRpQH94huaiHVUb2DXHVLx5xpYAZyUWzz+kx7c=;
+ b=VGZLUlUKoCM0oSy8t96sgj6bgrn5cq4RdC1w6+VJWVjuzahszuSbtiDMOnmJd9g9Psnz
+ jvox/YsjtpFWsOMqhGe4hJ4Ouwl2s/iHevPD69FHGVwGFpoh4XgWBphZ5t/fSKaW9A8T
+ /Zqe6B7rlB+USs2TBdrkL+fr67SB4TpDz2c= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by m0001303.ppops.net with ESMTP id 2x063cjgeq-6
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 10:33:57 -0800
+Received: from intmgw004.06.prn3.facebook.com (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::128) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Thu, 19 Dec 2019 10:33:44 -0800
+Received: by devvm4117.prn2.facebook.com (Postfix, from userid 167582)
+        id 7964818A1DBBE; Thu, 19 Dec 2019 10:33:42 -0800 (PST)
+Smtp-Origin-Hostprefix: devvm
+From:   Vijay Khemka <vijaykhemka@fb.com>
+Smtp-Origin-Hostname: devvm4117.prn2.facebook.com
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+CC:     <vijaykhemka@fb.com>, <sdasari@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH] ARM: dts: aspeed: tiogapass: Add gpio line names
+Date:   Thu, 19 Dec 2019 10:33:30 -0800
+Message-ID: <20191219183330.2860724-1-vijaykhemka@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-References: <1576224695-22657-1-git-send-email-stanley.chu@mediatek.com> <1576224695-22657-5-git-send-email-stanley.chu@mediatek.com>
-In-Reply-To: <1576224695-22657-5-git-send-email-stanley.chu@mediatek.com>
-From:   Alim Akhtar <alim.akhtar@gmail.com>
-Date:   Fri, 20 Dec 2019 00:03:07 +0530
-Message-ID: <CAGOxZ524P=fDR3Y7+EH381xex8RHWT0Qgw3GvVaAMJsdJZFtgQ@mail.gmail.com>
-Subject: Re: [PATCH v1 4/4] scsi: ufs-mediatek: configure and enable clk-gating
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     linux-scsi@vger.kernel.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        open list <linux-kernel@vger.kernel.org>,
-        "Bean Huo (beanhuo)" <beanhuo@micron.com>,
-        Kuohong Wang <kuohong.wang@mediatek.com>,
-        peter.wang@mediatek.com, chun-hung.wu@mediatek.com,
-        andy.teng@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-19_06:2019-12-17,2019-12-19 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0
+ priorityscore=1501 spamscore=0 suspectscore=0 phishscore=0 clxscore=1015
+ mlxlogscore=999 malwarescore=0 impostorscore=0 lowpriorityscore=0
+ mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912190135
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 2:42 PM Stanley Chu <stanley.chu@mediatek.com> wrote:
->
-> Enable clk-gating with customized delayed timer value in
-> MediaTek Chipsets.
->
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Added GPIO line names for all gpio used in tiogapass platform,
+these line names will be used by libgpiod to control GPIOs
 
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+---
+ .../dts/aspeed-bmc-facebook-tiogapass.dts     | 63 +++++++++++++++++++
+ 1 file changed, 63 insertions(+)
 
-> ---
->  drivers/scsi/ufs/ufs-mediatek.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->
-> diff --git a/drivers/scsi/ufs/ufs-mediatek.c b/drivers/scsi/ufs/ufs-mediatek.c
-> index 71e2e0e4ea11..282ad06ec846 100644
-> --- a/drivers/scsi/ufs/ufs-mediatek.c
-> +++ b/drivers/scsi/ufs/ufs-mediatek.c
-> @@ -205,6 +205,9 @@ static int ufs_mtk_init(struct ufs_hba *hba)
->         /* Enable runtime autosuspend */
->         hba->caps |= UFSHCD_CAP_RPM_AUTOSUSPEND;
->
-> +       /* Enable clock-gating */
-> +       hba->caps |= UFSHCD_CAP_CLK_GATING;
-> +
->         /*
->          * ufshcd_vops_init() is invoked after
->          * ufshcd_setup_clock(true) in ufshcd_hba_init() thus
-> @@ -293,6 +296,23 @@ static int ufs_mtk_pre_link(struct ufs_hba *hba)
->         return ret;
->  }
->
-> +static void ufs_mtk_setup_clk_gating(struct ufs_hba *hba)
-> +{
-> +       unsigned long flags;
-> +       u32 ah_ms;
-> +
-> +       if (ufshcd_is_clkgating_allowed(hba)) {
-> +               if (ufshcd_is_auto_hibern8_supported(hba) && hba->ahit)
-> +                       ah_ms = FIELD_GET(UFSHCI_AHIBERN8_TIMER_MASK,
-> +                                         hba->ahit);
-> +               else
-> +                       ah_ms = 10;
-> +               spin_lock_irqsave(hba->host->host_lock, flags);
-> +               hba->clk_gating.delay_ms = ah_ms + 5;
-> +               spin_unlock_irqrestore(hba->host->host_lock, flags);
-> +       }
-> +}
-> +
->  static int ufs_mtk_post_link(struct ufs_hba *hba)
->  {
->         /* disable device LCC */
-> @@ -308,6 +328,8 @@ static int ufs_mtk_post_link(struct ufs_hba *hba)
->                         FIELD_PREP(UFSHCI_AHIBERN8_SCALE_MASK, 3));
->         }
->
-> +       ufs_mtk_setup_clk_gating(hba);
-> +
->         return 0;
->  }
->
-> --
-> 2.18.0
-
-
-
+diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+index 682f729ea25e..28c3a69437b1 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+@@ -121,6 +121,69 @@
+ 	kcs_addr = <0xca2>;
+ };
+ 
++&gpio {
++	status = "okay";
++	gpio-line-names =
++	/*A0-A7*/	"BMC_CPLD_FPGA_SEL","","","","","","","",
++	/*B0-B7*/	"","BMC_DEBUG_EN","","","","BMC_PPIN","PS_PWROK",
++			"IRQ_PVDDQ_GHJ_VRHOT_LVT3",
++	/*C0-C7*/	"","","","","","","","",
++	/*D0-D7*/	"BIOS_MRC_DEBUG_MSG_DIS","BOARD_REV_ID0","",
++			"BOARD_REV_ID1","IRQ_DIMM_SAVE_LVT3","BOARD_REV_ID2",
++			"CPU_ERR0_LVT3_BMC","CPU_ERR1_LVT3_BMC",
++	/*E0-E7*/	"RESET_BUTTON","RESET_OUT","POWER_BUTTON",
++			"POWER_OUT","NMI_BUTTON","","CPU0_PROCHOT_LVT3_ BMC",
++			"CPU1_PROCHOT_LVT3_ BMC",
++	/*F0-F7*/	"IRQ_PVDDQ_ABC_VRHOT_LVT3","",
++			"IRQ_PVCCIN_CPU0_VRHOT_LVC3",
++			"IRQ_PVCCIN_CPU1_VRHOT_LVC3",
++			"IRQ_PVDDQ_KLM_VRHOT_LVT3","","P3VBAT_BRIDGE_EN","",
++	/*G0-G7*/	"CPU_ERR2_LVT3","CPU_CATERR_LVT3","PCH_BMC_THERMTRIP",
++			"CPU0_SKTOCC_LVT3","","","","BIOS_SMI_ACTIVE",
++	/*H0-H7*/	"LED_POST_CODE_0","LED_POST_CODE_1","LED_POST_CODE_2",
++			"LED_POST_CODE_3","LED_POST_CODE_4","LED_POST_CODE_5",
++			"LED_POST_CODE_6","LED_POST_CODE_7",
++	/*I0-I7*/	"CPU0_FIVR_FAULT_LVT3","CPU1_FIVR_FAULT_LVT3",
++			"FORCE_ADR","UV_ADR_TRIGGER_EN","","","","",
++	/*J0-J7*/	"","","","","","","","",
++	/*K0-K7*/	"","","","","","","","",
++	/*L0-L7*/	"IRQ_UV_DETECT","IRQ_OC_DETECT","HSC_TIMER_EXP","",
++			"MEM_THERM_EVENT_PCH","PMBUS_ALERT_BUF_EN","","",
++	/*M0-M7*/	"CPU0_RC_ERROR","CPU1_RC_ERROR","","OC_DETECT_EN",
++			"CPU0_THERMTRIP_LATCH_LVT3",
++			"CPU1_THERMTRIP_LATCH_LVT3","","",
++	/*N0-N7*/	"","","","CPU_MSMI_LVT3","","","","",
++	/*O0-O7*/	"","","","","","","","",
++	/*P0-P7*/	"BOARD_SKU_ID0","BOARD_SKU_ID1","BOARD_SKU_ID2",
++			"BOARD_SKU_ID3","BOARD_SKU_ID4","BMC_PREQ",
++			"BMC_PWR_DEBUG","RST_RSMRST",
++	/*Q0-Q7*/	"","","","","UARTSW_LSB","UARTSW_MSB",
++			"POST_CARD_PRES_BMC","PE_BMC_WAKE",
++	/*R0-R7*/	"","","BMC_TCK_MUX_SEL","BMC_PRDY",
++			"BMC_XDP_PRSNT_IN","RST_BMC_PLTRST_BUF","SLT_CFG0",
++			"SLT_CFG1",
++	/*S0-S7*/	"THROTTLE","BMC_READY","","HSC_SMBUS_SWITCH_EN","",
++			"","","",
++	/*T0-T7*/	"","","","","","","","",
++	/*U0-U7*/	"","","","","","BMC_FAULT","","",
++	/*V0-V7*/	"","","","FAST_PROCHOT_EN","","","","",
++	/*W0-W7*/	"","","","","","","","",
++	/*X0-X7*/	"","","","GLOBAL_RST_WARN",
++			"CPU0_MEMABC_MEMHOT_LVT3_BMC",
++			"CPU0_MEMDEF_MEMHOT_LVT3_BMC",
++			"CPU1_MEMGHJ_MEMHOT_LVT3_BMC",
++			"CPU1_MEMKLM_MEMHOT_LVT3_BMC",
++	/*Y0-Y7*/	"SIO_S3","SIO_S5","BMC_JTAG_SEL","SIO_ONCONTROL","",
++			"","","",
++	/*Z0-Z7*/	"","SIO_POWER_GOOD","IRQ_PVDDQ_DEF_VRHOT_LVT3","",
++			"","","","",
++	/*AA0-AA7*/	"CPU1_SKTOCC_LVT3","IRQ_SML1_PMBUS_ALERT",
++			"SERVER_POWER_LED","","PECI_MUX_SELECT","UV_HIGH_SET",
++			"","POST_COMPLETE",
++	/*AB0-AB7*/	"IRQ_HSC_FAULT","OCP_MEZZA_PRES","","","","","","",
++	/*AC0-AC7*/	"","","","","","","","";
++};
++
+ &mac0 {
+ 	status = "okay";
+ 
 -- 
-Regards,
-Alim
+2.17.1
+
