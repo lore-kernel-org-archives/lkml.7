@@ -2,199 +2,171 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F23FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BEEC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02493206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:11:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n5WKHtOj"
+	by mail.kernel.org (Postfix) with ESMTP id E9B4624650
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:16:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfLSOLP (ORCPT
+        id S1726797AbfLSOQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 09:11:15 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45537 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726744AbfLSOLO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 09:11:14 -0500
-Received: by mail-ed1-f65.google.com with SMTP id v28so4980665edw.12
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 06:11:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=clZzE5oWuHu58s8VOdHWBVy38e2LT2FNqa0IOiJ8Pno=;
-        b=n5WKHtOjKZAcEpXknaKrANkMjPc5I9UKtCBGQ78HA2khJ4nfDTYRJYEc2+fj3I1Fkn
-         ha25hcVjnIDI+wrc1oFeWcvd8eBNuapXSPBoqY0nKHI2V03hwHZ+Ay/jFSkkEO0kW0BY
-         NM4Ql8kso4wGnxO+V0PrRoGr9hO1a01H9GkjcfQT9QoLwVBLDtwQ3BuUjW6y9sAv8lfg
-         Syr9yRHqd5u7Kv6K8ZUFm1qm3zv1yySq8mPCo+epWPqtyIG/zDpvLIPKs6ntJSWfWhFI
-         fZiZASZTwE6EYJBxtv269hcaO52Mwo7k67Mkh1PtyRFg1Fdleszn9rB/L30T79sxc40C
-         cc1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=clZzE5oWuHu58s8VOdHWBVy38e2LT2FNqa0IOiJ8Pno=;
-        b=RHPyzTKvtA3XyWaXnYbALpHqebU1G4jMYmCHSYT7L5JCPCogxAmayeernYszJxe22U
-         +bBdmdeENT+pu22vlU7oB4vs1KARuFqIN8+nytAR64e6ZUKEkuD79h6Ki4F+NhxqekGq
-         f+7vEugzTGxualgW6qLbkRbGuDac/Bgo1TvNGhxxxkmi+CtoD3y0aN6hDXsQN4iQm9Hu
-         Yb7vRIBzQRVyeasjM1qPgJ62Gn6vyX9ql+HO71xAVq3iD0CsAY1bduBUBRftAu+cV29b
-         BSLqT9NuWMzELe7XCXh1aPl2/3+mRq9USizQUd9fVwRdOL/b9xgUKkOAfoCEFKOD1p4O
-         Pcyw==
-X-Gm-Message-State: APjAAAV4b7P+ViTMIt9U+bEEbSE+P3d722+ADZ1IaGSUIz5lgrcdB2rr
-        PawmIK9TscCpwC/R8HSeKzMR4w==
-X-Google-Smtp-Source: APXvYqxl9SNHmQvO1V2+yKIouleHiF6c6w+NSNZDRU8V+Hpd4Y0zEbiUkVrTKUgdQk/MjFnTiDxYXQ==
-X-Received: by 2002:a05:6402:1251:: with SMTP id l17mr9406658edw.54.1576764672969;
-        Thu, 19 Dec 2019 06:11:12 -0800 (PST)
-Received: from [192.168.27.209] ([37.157.136.193])
-        by smtp.googlemail.com with ESMTPSA id i9sm418056edl.34.2019.12.19.06.11.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Dec 2019 06:11:11 -0800 (PST)
-Subject: Re: [PATCH v2 06/12] dt-bindings: media: venus: Convert msm8916 to DT
- schema
-To:     Rob Herring <robh@kernel.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Vikash Garodia <vgarodia@codeaurora.org>,
-        dikshita@codeaurora.org
-References: <20191218132251.24161-1-stanimir.varbanov@linaro.org>
- <20191218132251.24161-7-stanimir.varbanov@linaro.org>
- <CAL_Jsq+1Z72J03tZa9T4DLzR7skFweV8Xe4vBd_QBUktVOekrA@mail.gmail.com>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <0d11ce8f-cd34-624f-e1be-0f533968adbd@linaro.org>
-Date:   Thu, 19 Dec 2019 16:11:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 19 Dec 2019 09:16:03 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:45418 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726695AbfLSOQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 09:16:02 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id BCF9885A64E29DD256C9;
+        Thu, 19 Dec 2019 22:15:57 +0800 (CST)
+Received: from [127.0.0.1] (10.177.253.249) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Thu, 19 Dec 2019
+ 22:15:56 +0800
+Subject: Re: [Ocfs2-devel] [PATCH v3] ocfs2: call journal flush to mark
+ journal as empty after journal recovery when mount
+To:     Kai Li <li.kai4@h3c.com>, <mark@fasheh.com>, <jlbec@evilplan.org>,
+        <joseph.qi@linux.alibaba.com>, <chge@linux.alibaba.com>
+References: <20191217020140.2197-1-li.kai4@h3c.com>
+CC:     <linux-kernel@vger.kernel.org>, <ocfs2-devel@oss.oracle.com>
+From:   piaojun <piaojun@huawei.com>
+Message-ID: <5DFB860A.6020501@huawei.com>
+Date:   Thu, 19 Dec 2019 22:15:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.2.0
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+1Z72J03tZa9T4DLzR7skFweV8Xe4vBd_QBUktVOekrA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20191217020140.2197-1-li.kai4@h3c.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.253.249]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
 
-Thanks for the review!
 
-On 12/19/19 12:51 AM, Rob Herring wrote:
-> On Wed, Dec 18, 2019 at 7:24 AM Stanimir Varbanov
-> <stanimir.varbanov@linaro.org> wrote:
->>
->> Convert qcom,msm8916-venus Venus binding to DT schema
->>
->> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
->> ---
->>  .../bindings/media/qcom,venus-msm8916.yaml    | 115 ++++++++++++++++++
->>  1 file changed, 115 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/qcom,venus-msm8916.yaml
+On 2019/12/17 10:01, Kai Li wrote:
+> If journal is dirty when mount, it will be replayed but jbd2 sb
+> log tail cannot be updated to mark a new start because
+> journal->j_flag has already been set with JBD2_ABORT first
+> in journal_init_common. When a new transaction is committed, it
+> will be recored in block 1 first(journal->j_tail is set to 1 in
+> journal_reset).If emergency restart happens again before journal
+> super block is updated unfortunately, the new recorded trans will
+> not be replayed in the next mount.
 > 
-> Make the filename match the compatible.
+> The following steps describe this procedure in detail.
+> 1. mount and touch some files
+> 2. these transactions are committed to journal area but not checkpointed
+> 3. emergency restart
+> 4. mount again and its journals are replayed
+> 5. journal super block's first s_start is 1, but its s_seq is not updated
+> 6. touch a new file and its trans is committed but not checkpointed
+> 7. emergency restart again
+> 8. mount and journal is dirty, but trans committed in 6 will not be
+> replayed.
 > 
->>
->> diff --git a/Documentation/devicetree/bindings/media/qcom,venus-msm8916.yaml b/Documentation/devicetree/bindings/media/qcom,venus-msm8916.yaml
->> new file mode 100644
->> index 000000000000..f82a8d968202
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/qcom,venus-msm8916.yaml
->> @@ -0,0 +1,115 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/media/qcom,venus-msm8916.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: Qualcomm Venus video encode and decode accelerators
->> +
->> +maintainers:
->> +  - Stanimir Varbanov <stanimir.varbanov@linaro.org>
->> +
->> +description: |
->> +  The Venus IP is a video encode and decode accelerator present
->> +  on Qualcomm platforms
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - qcom,msm8916-venus
+> This exception happens easily when this lun is used by only one node. If it
+> is used by multi-nodes, other node will replay its journal and its
+> journal super block will be updated after recovery like what this patch
+> does.
 > 
-> Not likely a 2nd compatible here?, so you can use 'const' instead.
+> ocfs2_recover_node->ocfs2_replay_journal.
+> 
+> The following jbd2 journal can be generated by touching a new file after
+> journal is replayed, and seq 15 is the first valid commit, but first seq
+> is 13 in journal super block.
+> logdump:
+> Block 0: Journal Superblock
+> Seq: 0   Type: 4 (JBD2_SUPERBLOCK_V2)
+> Blocksize: 4096   Total Blocks: 32768   First Block: 1
+> First Commit ID: 13   Start Log Blknum: 1
+> Error: 0
+> Feature Compat: 0
+> Feature Incompat: 2 block64
+> Feature RO compat: 0
+> Journal UUID: 4ED3822C54294467A4F8E87D2BA4BC36
+> FS Share Cnt: 1   Dynamic Superblk Blknum: 0
+> Per Txn Block Limit    Journal: 0    Data: 0
+> 
+> Block 1: Journal Commit Block
+> Seq: 14   Type: 2 (JBD2_COMMIT_BLOCK)
+> 
+> Block 2: Journal Descriptor
+> Seq: 15   Type: 1 (JBD2_DESCRIPTOR_BLOCK)
+> No. Blocknum        Flags
+>  0. 587             none
+> UUID: 00000000000000000000000000000000
+>  1. 8257792         JBD2_FLAG_SAME_UUID
+>  2. 619             JBD2_FLAG_SAME_UUID
+>  3. 24772864        JBD2_FLAG_SAME_UUID
+>  4. 8257802         JBD2_FLAG_SAME_UUID
+>  5. 513             JBD2_FLAG_SAME_UUID JBD2_FLAG_LAST_TAG
+> ...
+> Block 7: Inode
+> Inode: 8257802   Mode: 0640   Generation: 57157641 (0x3682809)
+> FS Generation: 2839773110 (0xa9437fb6)
+> CRC32: 00000000   ECC: 0000
+> Type: Regular   Attr: 0x0   Flags: Valid
+> Dynamic Features: (0x1) InlineData
+> User: 0 (root)   Group: 0 (root)   Size: 7
+> Links: 1   Clusters: 0
+> ctime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
+> atime: 0x5de5d870 0x113181a1 -- Tue Dec  3 11:37:20.288457121 2019
+> mtime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
+> dtime: 0x0 -- Thu Jan  1 08:00:00 1970
+> ...
+> Block 9: Journal Commit Block
+> Seq: 15   Type: 2 (JBD2_COMMIT_BLOCK)
+> 
+> The following is jouranl recovery log when recovering the upper jbd2
+> journal when mount again.
+> syslog:
+> [ 2265.648622] ocfs2: File system on device (252,1) was not unmounted cleanly, recovering it.
+> [ 2265.649695] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 0
+> [ 2265.650407] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 1
+> [ 2265.650409] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 2
+> [ 2265.650410] fs/jbd2/recovery.c:(jbd2_journal_recover, 278): JBD2: recovery, exit status 0, recovered transactions 13 to 13
+> 
+> Due to first commit seq 13 recorded in journal super is not consistent
+> with the value recorded in block 1(seq is 14), journal recovery will be
+> terminated before seq 15 even though it is an unbroken commit, inode
+> 8257802 is a new file and it will be lost.
+> 
+> Signed-off-by: Kai Li <li.kai4@h3c.com>
+> ---
+>  fs/ocfs2/journal.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
+> index 1afe57f425a0..68ba354cf361 100644
+> --- a/fs/ocfs2/journal.c
+> +++ b/fs/ocfs2/journal.c
+> @@ -1066,6 +1066,14 @@ int ocfs2_journal_load(struct ocfs2_journal *journal, int local, int replayed)
+>  
+>  	ocfs2_clear_journal_error(osb->sb, journal->j_journal, osb->slot_num);
+>  
+> +	if (replayed) {
+> +		jbd2_journal_lock_updates(journal->j_journal);
+> +		status = jbd2_journal_flush(journal->j_journal);
 
-I don't expect more compatibles here. I split every compatible on
-separate .yaml file to make bindings clearer.
+What if jbd2_journal_flush gets failed? The 's_sequence' and 's_start'
+won't be reset, and I wonder if the problem still remains.
 
-> 
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +
->> +  power-domains:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 3
->> +
->> +  clock-names:
->> +    maxItems: 3
-> 
-> Don't need this. Implied with the length of 'items'.
-> 
->> +    items:
->> +      - const: core
->> +      - const: iface
->> +      - const: bus
->> +
->> +  iommus:
->> +    minItems: 1
->> +    maxItems: 20
->> +
->> +  memory-region:
->> +    maxItems: 1
->> +
->> +  video-decoder:
->> +    type: object
->> +
->> +    properties:
->> +      compatible:
->> +        const: "venus-decoder"
->> +
->> +    required:
->> +      - compatible
-> 
->        additionalProperties: false
-> 
->> +
->> +  video-encoder:
->> +    type: object
->> +
->> +    properties:
->> +      compatible:
->> +        const: "venus-encoder"
->> +
->> +    required:
->> +      - compatible
-> 
-> Here too.
+Thanks,
+Jun
 
-I guess the above comments are valid for the the other DT schema
-conversions in this series? If so I'll correct them as well in next version.
+> +		jbd2_journal_unlock_updates(journal->j_journal);
+> +		if (status < 0)
+> +			mlog_errno(status);
+> +	}
+> +
+>  	status = ocfs2_journal_toggle_dirty(osb, 1, replayed);
+>  	if (status < 0) {
+>  		mlog_errno(status);
+> 
 
--- 
-regards,
-Stan
