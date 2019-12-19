@@ -2,108 +2,103 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB78C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01769C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E920E24650
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576744811;
-	bh=zIXZalq04LBeurRmUsXDwQBqFcS1M0HasBcmmTmIlxQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=P9pecdz4z/ckva2ZmhyIvmKKiZLx/SuPkLIHpcd2TRbPxyxSvvNno/pN8z2RNos0t
-	 fhlb4YU4BGZqcXE+VYNu/DrrWbZYrhXI5yQ81cLO0RBVsBk2oiFy9HleWK5lY2znX9
-	 ZSenUkWfMVTfsvMKCh300aPjD4tgGyE5HqYnUaLI=
+	by mail.kernel.org (Postfix) with ESMTP id D039524650
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:41:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfLSIkK (ORCPT
+        id S1726692AbfLSIlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 03:40:10 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34500 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfLSIkK (ORCPT
+        Thu, 19 Dec 2019 03:41:39 -0500
+Received: from outbound-smtp22.blacknight.com ([81.17.249.190]:51182 "EHLO
+        outbound-smtp22.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726463AbfLSIlj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 03:40:10 -0500
-Received: by mail-ot1-f66.google.com with SMTP id a15so6291165otf.1;
-        Thu, 19 Dec 2019 00:40:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zIXZalq04LBeurRmUsXDwQBqFcS1M0HasBcmmTmIlxQ=;
-        b=MMoXC+a6rAJRb0xeQlxM3FIUAxOEQY5J1w3H1qEDQcqZZH87keFEQR3PAnkGRDfc+2
-         JWRqLKKWoG4mhuFkzS+ns8pFBHzVGSr3wQjwU5+odK2HMAwO26GIk+aiScXxDzbMYaUN
-         EJM+xIDYu7dTsognQY6gu8+NVRA2Q+2KCYBlzk/XDwBgJ05wZEOlfn5lu5kY1Tp1giiT
-         ysvn65LYMn85Nb0NP2IG5klGipiquu5jnjim1cYnscL/uueEMkAzCpIHK2Btax1SPu/9
-         qQOBZrmkyqDJ83wrS7oY8p/Y3Q5yeoSsoLR41LYfnjAT7ufqZBQVl+atStVZ/4bXmylZ
-         Tu8A==
-X-Gm-Message-State: APjAAAXPnULjKio5TZ9bVH77G6DwOw9h2oHBFKsLD3FH6GL4+lyZyW4Z
-        ZUnQ0snXwjTrEAifB8bH/XDVAAy8BVcGsjrvTd4=
-X-Google-Smtp-Source: APXvYqwJxYZRBNs7Xidhl6mJ9YLQXeaJFwuyh/2N/hfG893lDh3Q3LEHxkyFazwfj4VXO/+aY/lj44v8g5vhcDIQKzc=
-X-Received: by 2002:a9d:62c7:: with SMTP id z7mr2393332otk.189.1576744808992;
- Thu, 19 Dec 2019 00:40:08 -0800 (PST)
+        Thu, 19 Dec 2019 03:41:39 -0500
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+        by outbound-smtp22.blacknight.com (Postfix) with ESMTPS id 48434B86FE
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 08:41:37 +0000 (GMT)
+Received: (qmail 3991 invoked from network); 19 Dec 2019 08:41:37 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 19 Dec 2019 08:41:37 -0000
+Date:   Thu, 19 Dec 2019 08:41:34 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Rik van Riel <riel@surriel.com>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, pauld@redhat.com,
+        valentin.schneider@arm.com, srikar@linux.vnet.ibm.com,
+        quentin.perret@arm.com, dietmar.eggemann@arm.com,
+        Morten.Rasmussen@arm.com, hdanton@sina.com, parth@linux.ibm.com,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sched, fair: Allow a small degree of load imbalance
+ between SD_NUMA domains
+Message-ID: <20191219084134.GH3178@techsingularity.net>
+References: <20191218154402.GF3178@techsingularity.net>
+ <37ec5587dbb4035b883e5a69b56da4cc67f0e5ff.camel@surriel.com>
 MIME-Version: 1.0
-References: <20191218065646.817493-1-punit1.agrawal@toshiba.co.jp> <20191218085648.GI22665@localhost>
-In-Reply-To: <20191218085648.GI22665@localhost>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 19 Dec 2019 09:39:57 +0100
-Message-ID: <CAJZ5v0h-bhg4+kwTci5_wZhn9rYN=YXoCbSTVs4vPRzRFOjU8A@mail.gmail.com>
-Subject: Re: [PATCH] serdev: Don't claim unsupported serial devices
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-serial@vger.kernel.org,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        nobuhiro1.iwamatsu@toshiba.co.jp, shrirang.bagul@canonical.com,
-        Stable <stable@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <37ec5587dbb4035b883e5a69b56da4cc67f0e5ff.camel@surriel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 9:56 AM Johan Hovold <johan@kernel.org> wrote:
->
-> On Wed, Dec 18, 2019 at 03:56:46PM +0900, Punit Agrawal wrote:
-> > Serdev sub-system claims all serial devices that are not already
-> > enumerated. As a result, no device node is created for serial port on
-> > certain boards such as the Apollo Lake based UP2. This has the
-> > unintended consequence of not being able to raise the login prompt via
-> > serial connection.
-> >
-> > Introduce a blacklist to reject devices that should not be treated as
-> > a serdev device. Add the Intel HS UART peripheral ids to the blacklist
-> > to bring back serial port on SoCs carrying them.
-> >
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-> > Cc: Rob Herring <robh@kernel.org>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Johan Hovold <johan@kernel.org>
-> > Cc: Hans de Goede <hdegoede@redhat.com>
-> > ---
-> >
-> > Hi,
-> >
-> > The patch has been updated based on feedback recieved on the RFC[0].
-> >
-> > Please consider merging if there are no objections.
->
-> Rafael, I vaguely remember you arguing for a white list when we
-> discussed this at some conference. Do you have any objections to the
-> blacklist approach taken here?
+On Wed, Dec 18, 2019 at 09:58:01PM -0500, Rik van Riel wrote:
+> On Wed, 2019-12-18 at 15:44 +0000, Mel Gorman wrote:
+> 
+> > +			/*
+> > +			 * Ignore imbalance unless busiest sd is close
+> > to 50%
+> > +			 * utilisation. At that point balancing for
+> > memory
+> > +			 * bandwidth and potentially avoiding
+> > unnecessary use
+> > +			 * of HT siblings is as relevant as memory
+> > locality.
+> > +			 */
+> > +			imbalance_max = (busiest->group_weight >> 1) -
+> > imbalance_adj;
+> > +			if (env->imbalance <= imbalance_adj &&
+> > +			    busiest->sum_nr_running < imbalance_max) {
+> > +				env->imbalance = 0;
+> > +			}
+> > +		}
+> >  		return;
+> >  	}
+> 
+> I can see how the 50% point is often great for HT,
+> but I wonder if that is also the case for SMT4 and
+> SMT8 systems...
+> 
 
-As a rule, I prefer whitelisting, because it only enables the feature
-for systems where it has been tested and confirmed to work.
+Maybe, maybe not but it's not the most important concern. The highlight
+in the comment was about memory bandwidth and HT was simply an additional
+concern. Ideally memory bandwidth and consumption would be taken into
+account but we know nothing about either. Even if peak memory bandwidth
+was known, the reference pattern matters a *lot* which can be readily
+illustrated by using STREAM and observing the different bandwidths for
+different reference patterns. Similarly, while we might know pages that
+were referenced, we do not know the bandwidth consumption without taking
+additional overhead with a PMU. Hence, it makes sense to at least hope
+that the active tasks have similar memory bandwidth requirements and load
+balance as normal when we are near the 50% active tasks/busy CPUs. If
+SMT4 or SMT8 have different requirements or it matters for memory
+bandwidth then it would need to be carefully examined by someone with
+access to such hardware to determine an arch-specific and maybe even a
+per-CPU-family cutoff.
 
-However, if you are convinced that in this particular case the feature
-should work on the vast majority of systems with a few possible
-exceptions, blacklisting is fine too.
+In the context of this patch, it unconditionally makes sense that the
+basic case of two communicating tasks are not migrating cross-node on
+wakeup and then again on load balance.
 
-It all depends on what the majority is, at least in principle.
+-- 
+Mel Gorman
+SUSE Labs
