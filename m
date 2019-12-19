@@ -2,123 +2,105 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BA0C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4EAFC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 266B3222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:54:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A94F8218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:55:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576716915;
+	bh=mgki2qfqszAmVYVkJa0WoZ+P8xvCtD0/uXX+vIVnvgk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=oiygytvNkx9SxRNANoXYr9EpHljO+Gyu1MuXfbGXcZLC7fUfPiLM5uFzzFbzQb+Lt
+	 vO6/efu5CqfwK7t7E12gsKlLtWOMuLGGXeXRwsqUfVWCusTB683z/NzREdbI/dOPm1
+	 aas3BCqyy7GFyG4U3L1c7uJDqukyCYF/jQ6oUkeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfLSAyp (ORCPT
+        id S1726777AbfLSAzO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 19:54:45 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39278 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfLSAyn (ORCPT
+        Wed, 18 Dec 2019 19:55:14 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36904 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfLSAzO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 19:54:43 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id AFFC52911A3
-Received: by earth.universe (Postfix, from userid 1000)
-        id 759783C0C7B; Thu, 19 Dec 2019 01:54:39 +0100 (CET)
-Date:   Thu, 19 Dec 2019 01:54:39 +0100
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yuanjiang.yu@unisoc.com, baolin.wang@linaro.org,
-        zhang.lyra@gmail.com, orsonzhai@gmail.com
-Subject: Re: [PATCH v3 0/5] Improve the SC27XX fuel gauge controller
-Message-ID: <20191219005439.63nk4fpraveoeqyv@earth.universe>
-References: <cover.1575863274.git.baolin.wang7@gmail.com>
+        Wed, 18 Dec 2019 19:55:14 -0500
+Received: by mail-lf1-f65.google.com with SMTP id b15so3067734lfc.4
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 16:55:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8DZn9Pjgw5bCednPFYW/Dq3Fv9354h2FlZV84shXnIU=;
+        b=Sf947xK3wUhl8A/UOSP4SwhxldixBoovxe4GHZek8oc9rSS3pPSToJwLOg07+ouRPY
+         Gnnd/uRKTlq/qOHtpQ6qQSsHvXqv9Zu47/Ge2nIdH6ZCKkSd4H0b/pFs6kydi+1zJDWe
+         MW4E5CTwi6wJsOdS4pI0C/IrpR3hNJLrV0jms=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8DZn9Pjgw5bCednPFYW/Dq3Fv9354h2FlZV84shXnIU=;
+        b=tn3CNFuZ4XFiTghrwdoYWvv5ssPhT/wRdBd1uJbpwVRRq4uages9P/F/GSGZ+1t9hn
+         JgFZ7Jqq1FFIrCoU6rgfr4Xw0tCKFLUeJOM1/27hGv9Iu24HdrIJfGmX3Gts9/z1GvPt
+         cUT9rPERAFJalJRlGD7gxVQ85mjmpAg8qsoTemf6CuLymbTWfnEmhIkFVqWQf+KPgUJz
+         cel2rQWMtERqLJ8V0emmSrHjcfhT2E88n04Y/UBgBv0l8cc4cmx2+w+wPCSHIOKGi1d5
+         B+SJkUJxaCYq1PZgnLdLTTKCSRVyfttof/GPGbMqC7sIzMczm4pUhY2YFvE7zboH7JQk
+         x/QQ==
+X-Gm-Message-State: APjAAAUywZch8rkvMovldv4I9NrgzoR3sRfkSwjq7GJWQO1TZv+kDxaZ
+        Hn/6+HWWdDZ4QIT7EkNgkXocq+r3j6g=
+X-Google-Smtp-Source: APXvYqwo4+3IwjRwd+6KQwDzIoWvMachR+8Gx3WuuoCLs9pxPu9ZK6CWzoAzh1fapIb6Or2NTOXWoA==
+X-Received: by 2002:a19:8842:: with SMTP id k63mr3563174lfd.90.1576716911356;
+        Wed, 18 Dec 2019 16:55:11 -0800 (PST)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id v2sm1907715ljv.70.2019.12.18.16.55.10
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Dec 2019 16:55:10 -0800 (PST)
+Received: by mail-lj1-f171.google.com with SMTP id r19so4250969ljg.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 16:55:10 -0800 (PST)
+X-Received: by 2002:a2e:86c4:: with SMTP id n4mr3858125ljj.97.1576716909873;
+ Wed, 18 Dec 2019 16:55:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qluf4zgj5ugicewn"
-Content-Disposition: inline
-In-Reply-To: <cover.1575863274.git.baolin.wang7@gmail.com>
+References: <157558502272.10278.8718685637610645781.stgit@warthog.procyon.org.uk>
+ <20191206135604.GB2734@twin.jikos.cz> <CAHk-=wiN_pWbcRaw5L-J2EFUyCn49Due0McwETKwmFFPp88K8Q@mail.gmail.com>
+ <CAHk-=wjvO1V912ya=1rdXwrm1OBTi6GqnqryH_E8OR69cZuVOg@mail.gmail.com>
+ <CAHk-=wizsHmCwUAyQKdU7hBPXHYQn-fOtJKBqMs-79br2pWxeQ@mail.gmail.com>
+ <CAHk-=wjeG0q1vgzu4iJhW5juPkTsjTYmiqiMUYAebWW+0bam6w@mail.gmail.com>
+ <b2ae78da-1c29-8ef7-d0bb-376c52af37c3@yandex-team.ru> <CAHk-=wgTisLQ9k-hsQeyrT5qBS0xuQPYsueFWNT3RxbkkVmbjw@mail.gmail.com>
+ <20191219000013.GB13065@localhost> <20191219001446.GA49812@localhost> <CAHk-=wgMiTbRPp6Fx_A4YV+9xL7dc2j0Dj3NTFDPRfjsjLQTWw@mail.gmail.com>
+In-Reply-To: <CAHk-=wgMiTbRPp6Fx_A4YV+9xL7dc2j0Dj3NTFDPRfjsjLQTWw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 18 Dec 2019 16:54:53 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjv7ntiCpdTg+fvfbP8EoxT4d9QmMp0FRtvm+cU3viCPQ@mail.gmail.com>
+Message-ID: <CAHk-=wjv7ntiCpdTg+fvfbP8EoxT4d9QmMp0FRtvm+cU3viCPQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] pipe: Fixes [ver #2]
+To:     Josh Triplett <josh@joshtriplett.org>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Akemi Yagi <toracat@elrepo.org>, DJ Delorie <dj@redhat.com>,
+        David Sterba <dsterba@suse.cz>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Dec 18, 2019 at 4:51 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> This looks correct to me.
 
---qluf4zgj5ugicewn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Note the "looks". I checked that it applied on current -git, and I
+read through the patch, and checked that it almost matched my
+original, but I didn't _test_ it in any way.  Caveat emptor.
 
-Hi,
-
-On Mon, Dec 09, 2019 at 11:56:20AM +0800, Baolin Wang wrote:
-> This patch set adds one battery resistance-temperature table to optimize
-> the real battery internal resistance in different tempertures, and
-> calibrates the resistance of coulomb counter to improve the accuracy
-> of the coulomb counter.
->=20
-> Any comments are welcome. Thanks.
-
-Thanks, queued to power-supply's for-next branch. I changed the
-comment for struct sc27xx_fgu_data, so that it states calib_resist
-being in uOhm instead of mOhm.
-
--- Sebastian
-
-> Changes from v2:
->  - Add reviewed tag from Rob.
->  - Rebased.
->=20
-> Changes from v1:
->  - Fix the order of values in resistance-temp-table property's descriptio=
-n.
->  - Add an unit suffix for FGU resistance property.
->=20
-> Baolin Wang (4):
->   dt-bindings: power: Introduce one property to describe the battery
->     resistance with temperature changes
->   power: supply: core: Add battery internal resistance temperature
->     table support
->   dt-bindings: power: sc27xx: Add a new property to describe the real
->     resistance of coulomb counter chip
->   power: supply: sc27xx: Calibrate the resistance of coulomb counter
->=20
-> Yuanjiang Yu (1):
->   power: supply: sc27xx: Optimize the battery resistance with measuring
->     temperature
->=20
->  .../devicetree/bindings/power/supply/battery.txt   |    5 ++
->  .../devicetree/bindings/power/supply/sc27xx-fg.txt |    3 +
->  drivers/power/supply/power_supply_core.c           |   67 ++++++++++++++=
-+++++-
->  drivers/power/supply/sc27xx_fuel_gauge.c           |   49 +++++++++++++-
->  include/linux/power_supply.h                       |   10 +++
->  5 files changed, 130 insertions(+), 4 deletions(-)
->=20
-> --=20
-> 1.7.9.5
->=20
-
---qluf4zgj5ugicewn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl36yk8ACgkQ2O7X88g7
-+poFRA//ZbDQYkhRD6/Q/fzYBgBG46iBNRtyH3Tt6DDbLi5YmKjUfS27L2gXusg7
-bL44L/IGuDNLsVa8gMQrmYpznn8BjARgZD5JDcejaTl0Vxe/dPxTnjP1hlxss5rQ
-FYm4D9W7Fsy30B5QSz1C6ZjOaDE2HOGb/M9ctn/MPVJwWGIHzMtKjHqJ8gu/5K9P
-Afs5pRNaXtX7MUP45T2CODJG+gNqQy5/hdNyQMcCm9JJ2KuD56Qo5JHcuFY+Z3iz
-n+ycAYrfCp66Aeape0ZemWa0d/rtH6fZ6rpON15KZ/759a+gGDhribDTuqVtZEu0
-iolyC8pUm4MIh2YREsSbwZhr4hGnMcM1kZz4d+x4q2JeSKZXnMaXr4ZL3wjdqUYj
-eV1FHzTvQ623yks3/YGjlBx414T5mPGaswuMdqwssEjkCwojXykxiAfdWNXkPaHs
-0Pq4V/0SzuHro64JWeZVX7kBnymO/7XFTm1jdM6jcbEjmukPxY7PEC6xbaiUIjkQ
-lj8TzPR2vF+WDyIY1BKVyDdsgQaeIW2n+2ZTOZfGm0qZ7emN53z7NWWmx3VEYdKj
-LS6FvpQzDI1LOH7uO75SeksubEBqTt4xlJ5MwFD4Pk6s4zI+44bUDR1CCoJpedne
-RobZE/OVQ7VELZqWZOeXYF6KfyVEZj0qDVl8ByszqPLMVYeL74Q=
-=YEHq
------END PGP SIGNATURE-----
-
---qluf4zgj5ugicewn--
+            Linus
