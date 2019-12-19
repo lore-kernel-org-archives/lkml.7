@@ -2,50 +2,53 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA367C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA99C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1E48222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:42:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D29024680
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780979;
-	bh=9VgY9uAw+B4n+nnd8eSFFEsf1v/B0bH+Lg+Anl+pMB0=;
+	s=default; t=1576780982;
+	bh=7qZGJelULVxUzXvNCcQGpWBoKxbjnvtdeG82dKQgVT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wScUUWetgg5q2abjdwxvszuPnFnwSxrx57qahEmDRd/8O75M6X2afzzZ+vqOZs5X9
-	 978YJThGB0rg/9dx6T5QfQqUB/lDVgYhWKu8o8pWzAcxHuhYry5K1cXUnfUGi0MZ2v
-	 uBBUrlX8zi0paYwo+Mhe6cbcYV+ZZWMv/vSbtZNM=
+	b=ctaJ/yXHnhx3dtWNALrzCy3zK9QS2GQIKyxb+LbAPFz+5QtXmHsfu4sBLGdw5XcVB
+	 mSwsVST2dM5xEd5mN0fycaam8Sres6IDRVlcaWwYejNX/cS78nKNlKaQ6TbJDxmvco
+	 /FKWPCOeS4EEcEZQPPWnYwSconA+JV2umggpoCao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbfLSSm6 (ORCPT
+        id S1728225AbfLSSnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:42:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34316 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:43:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728465AbfLSSmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:42:53 -0500
+        id S1728773AbfLSSm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:42:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F3EB24672;
-        Thu, 19 Dec 2019 18:42:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1790B222C2;
+        Thu, 19 Dec 2019 18:42:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780972;
-        bh=9VgY9uAw+B4n+nnd8eSFFEsf1v/B0bH+Lg+Anl+pMB0=;
+        s=default; t=1576780977;
+        bh=7qZGJelULVxUzXvNCcQGpWBoKxbjnvtdeG82dKQgVT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i0HnRasWh2dy+at2zaIcYJ6xPB3GJjnpys/mVTNBuo6box07x1XNNdfyWP6KzNXqs
-         5uTS/IJmI9sP8DlEWEtbTnkWjtWuEIbxeM7PWeBj70zeNV4HQNBquMgrS89WedrBYq
-         2WDCcdMuUMFa2DQ3tPDZlovpqX0HRpxao48+uQJA=
+        b=Wo+2xaPF1zes/pqfAeCF7oMfEGrKuFZBQTssrwB7QWtsHg7TtWd/WkxkSty+bizSw
+         nGXX2o6EdnaRKh2LahAuergEt9QRDKGqjb6doJVeMcplGhSz+Tbk/c7PwSO8mXl90H
+         sb9D9HfsbOs+GmNM9k8LGl0Fg2iIa+zam28LljEA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH 4.9 003/199] tty: serial: fsl_lpuart: use the sg count from dma_map_sg
-Date:   Thu, 19 Dec 2019 19:31:25 +0100
-Message-Id: <20191219183214.838507230@linuxfoundation.org>
+        stable@vger.kernel.org, Cheng-Yi Chiang <cychiang@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 031/199] regulator: Fix return value of _set_load() stub
+Date:   Thu, 19 Dec 2019 19:31:53 +0100
+Message-Id: <20191219183216.600647207@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -58,39 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+From: Mark Brown <broonie@kernel.org>
 
-commit 487ee861de176090b055eba5b252b56a3b9973d6 upstream.
+[ Upstream commit f1abf67217de91f5cd3c757ae857632ca565099a ]
 
-The dmaengine_prep_slave_sg needs to use sg count returned
-by dma_map_sg, not use sport->dma_tx_nents, because the return
-value of dma_map_sg is not always same with "nents".
+The stub implementation of _set_load() returns a mode value which is
+within the bounds of valid return codes for success (the documentation
+just says that failures are negative error codes) but not sensible or
+what the actual implementation does.  Fix it to just return 0.
 
-When enabling iommu for lpuart + edma, iommu framework may concatenate
-two sgs into one.
-
-Fixes: 6250cc30c4c4e ("tty: serial: fsl_lpuart: Use scatter/gather DMA for Tx")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Link: https://lore.kernel.org/r/1572932977-17866-1-git-send-email-peng.fan@nxp.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Cheng-Yi Chiang <cychiang@chromium.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/fsl_lpuart.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/regulator/consumer.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/tty/serial/fsl_lpuart.c
-+++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -346,8 +346,8 @@ static void lpuart_dma_tx(struct lpuart_
- 	}
+diff --git a/include/linux/regulator/consumer.h b/include/linux/regulator/consumer.h
+index 692108222271a..bab9236e43675 100644
+--- a/include/linux/regulator/consumer.h
++++ b/include/linux/regulator/consumer.h
+@@ -479,7 +479,7 @@ static inline unsigned int regulator_get_mode(struct regulator *regulator)
  
- 	sport->dma_tx_desc = dmaengine_prep_slave_sg(sport->dma_tx_chan, sgl,
--					sport->dma_tx_nents,
--					DMA_MEM_TO_DEV, DMA_PREP_INTERRUPT);
-+					ret, DMA_MEM_TO_DEV,
-+					DMA_PREP_INTERRUPT);
- 	if (!sport->dma_tx_desc) {
- 		dma_unmap_sg(dev, sgl, sport->dma_tx_nents, DMA_TO_DEVICE);
- 		dev_err(dev, "Cannot prepare TX slave DMA!\n");
+ static inline int regulator_set_load(struct regulator *regulator, int load_uA)
+ {
+-	return REGULATOR_MODE_NORMAL;
++	return 0;
+ }
+ 
+ static inline int regulator_allow_bypass(struct regulator *regulator,
+-- 
+2.20.1
+
 
 
