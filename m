@@ -2,91 +2,115 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DEFAC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 621A2C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 014EC2467B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:44:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576791851;
-	bh=7OR/fxBKk3LqkbTxLOE2Rib4himomDe17dwvM+k1/EY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fK9b/n3/TFJotUp9uMoxn9Em8dQLUR2npiSGU66kckMBlRJYQnxcxsnkE1/bHZNec
-	 HKdvX6x5wAu8sfkY3RWiIU87r9qTEYy4BwWMCjCHyPtSAjrOdN/chDUpWjIDoYPiXq
-	 /gHWYF5SesASwNQAENVyVWW7lchkmwiYz2iiFVk0=
+	by mail.kernel.org (Postfix) with ESMTP id 324192067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:44:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ENtro1j+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbfLSVoK (ORCPT
+        id S1727414AbfLSVoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 16:44:10 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:40152 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbfLSVoK (ORCPT
+        Thu, 19 Dec 2019 16:44:39 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29237 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727105AbfLSVoj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 16:44:10 -0500
-Received: by mail-oi1-f196.google.com with SMTP id c77so3325476oib.7;
-        Thu, 19 Dec 2019 13:44:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=FMElxYGUaSvjFXl0P6MMWBQdNOBXnhJem0sijB1jNlQ=;
-        b=YeOBMyFfZwHVBwJpyWwJSSjB8OGUcHXt1F1L427P37yvA1YaRfuTTW6Bv9hxV+2UJd
-         nR9FMSU9plfaIJrO8jk3j97y/53PDyHDQJtqXOvR53EVaF84by2VEL1mfAiW33HspL5n
-         kh8kPnDt5TfD8+pptuGEOymTzFzVNFYiGKOBBfE33cbYf7vH+CkwbZU+k4UvgAMu+Ur2
-         UToV6iuKHi0B07a1U2oNf74DcLEf1fj2ie2iL8qVpke+U2+I1kp7ay0DV7spxcmusy+W
-         mkbSEAIQI1VWqPgdH2Dx+l07lJ4kf+6ogLlxsMs4E2nrgXlnUCLhcuIEATn91mgiz0lq
-         kRRg==
-X-Gm-Message-State: APjAAAWgsaywsUlyuQYisDbQGmm0ltXUSE614P7Nld5+VxAQurzN2Pql
-        SU0w4vNTtI5Vf0txeM3Kdg==
-X-Google-Smtp-Source: APXvYqxt7sKze7DVN1FPvYYBCO0UXzM6SctbxwLjFwHk62Irq/zGTuZRo/iDgFuvxqEUzX864s353g==
-X-Received: by 2002:aca:b1d4:: with SMTP id a203mr3084869oif.150.1576791848821;
-        Thu, 19 Dec 2019 13:44:08 -0800 (PST)
-Received: from localhost ([2607:fb90:1cd2:8a0d:3549:d84c:9720:edb4])
-        by smtp.gmail.com with ESMTPSA id p24sm2563558oth.28.2019.12.19.13.44.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 13:44:08 -0800 (PST)
-Date:   Thu, 19 Dec 2019 13:43:59 -0800
-From:   Rob Herring <robh@kernel.org>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        James Chen <james.chen@emc.com.tw>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>,
-        Scott Liu <scott.liu@emc.com.tw>
-Subject: Re: [PATCH v2 9/9] dt-bindings: input: elants-i2c: Document eKTF3624
-Message-ID: <20191219214254.GA25646@bogus>
-References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
- <882916345a8aa2dc545a1bd2ca150cf913371d1a.1576079249.git.mirq-linux@rere.qmqm.pl>
+        Thu, 19 Dec 2019 16:44:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576791877;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Jb+1TKkOTFzUUbC+u4I7+JV/0cWuAZT7ftqKW8glD68=;
+        b=ENtro1j+NpNo742tlcZUz6gPJtNjSOjjcduwmpTXF+6QZnnKRUrorV0x7N4n9HmRQhGsUD
+        XqvpdTxk0yi0i7WFBBV1MEhkSiLeoFTkrK9JSrKX96SwMUCFXju6MRyTNoERiPBsrKq/xe
+        7Zh9nf8ajoul/XtXDspKV2dlvRPcEpI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-289-FIegl3ayOfayCSpwsdyYbQ-1; Thu, 19 Dec 2019 16:44:34 -0500
+X-MC-Unique: FIegl3ayOfayCSpwsdyYbQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0B611100550E;
+        Thu, 19 Dec 2019 21:44:32 +0000 (UTC)
+Received: from krava (ovpn-204-20.brq.redhat.com [10.40.204.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 470ED6940B;
+        Thu, 19 Dec 2019 21:44:27 +0000 (UTC)
+Date:   Thu, 19 Dec 2019 22:44:24 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 07/12] perf hists browser: Allow passing an initial hotkey
+Message-ID: <20191219214424.GB27481@krava>
+References: <20191217144828.2460-1-acme@kernel.org>
+ <20191217144828.2460-8-acme@kernel.org>
+ <20191218080818.GD19062@krava>
+ <20191218140831.GC13395@kernel.org>
+ <20191218142321.GB15571@krava>
+ <20191219172642.GB13699@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <882916345a8aa2dc545a1bd2ca150cf913371d1a.1576079249.git.mirq-linux@rere.qmqm.pl>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191219172642.GB13699@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Dec 2019 17:03:26 +0100, =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= wrote:
-> From: Dmitry Osipenko <digetx@gmail.com>
+On Thu, Dec 19, 2019 at 02:26:42PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Wed, Dec 18, 2019 at 03:23:21PM +0100, Jiri Olsa escreveu:
+> > On Wed, Dec 18, 2019 at 11:08:31AM -0300, Arnaldo Carvalho de Melo wrote:
+> > > Em Wed, Dec 18, 2019 at 09:08:18AM +0100, Jiri Olsa escreveu:
+> > > > On Tue, Dec 17, 2019 at 11:48:23AM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > > +	if (key)
+> > > > > +		goto do_hotkey;
+> > > > > +
+> > > > >  	while (1) {
+> > > > >  		key = ui_browser__run(&browser->b, delay_secs);
+> > > > > -
+> > > > > +do_hotkey:
 > 
-> The eKTF3624 hardware is similar to eKTH3500.
+> > > > or we could switch the 'swtich' and ui_browser__run, and get rid of the goto, like:
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> ---
->  Documentation/devicetree/bindings/input/elants_i2c.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 	while (1) {
+> > > >   		switch (key) {
+> > > > 		...
+> > > > 		}
+> > > > 
+> > > > 		key = ui_browser__run(&browser->b, delay_secs);
+> > > > 	}
 > 
+> > > I think those are equivalent and having the test like I did is more
+> > > clear, i.e. "has this key been provided" instead of going to the switch
+> > > just to hit the default case for the zero in key and call
+> > > ui_browser__run().
+> 
+> > sure, I just don't like goto other than for error handling,
+> > looks too hacky to me ;-) but of course it's your call
+> 
+> How about the one below?
 
-Acked-by: Rob Herring <robh@kernel.org>
+looks good, thanks
+
+jirka
+
