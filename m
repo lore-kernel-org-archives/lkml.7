@@ -7,62 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F1ADC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0BDC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2519A222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CF7924679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781714;
-	bh=f2Ph5aXxyhp+Ah/9djnzuyxceakXuLb4xX3/ZkgYiU4=;
+	s=default; t=1576781717;
+	bh=OqFCLd4WftZqa6i+YaD9py48siWJszgq0jImbq5JZ8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DkC63m3ICUBI5PWrdTaMs+NklbMcyzIpwIFgS2SvhYcUqShtN2BLyFI3SnoRXb2XT
-	 VfAyBGbcjHVEZYnYaRY7ZOBHruzRnKaXjzYB/Oudeu3BzpTc0wekHiUZLoTPaQaRwT
-	 Q4HaCKkeLDqJ7OBXASr3neVHhQ0zi0UUJ3GEZx7Q=
+	b=X6Xcf2rcMwxS5A2kgxkIjc20mihszIava2aYGHh9Wq3Kv/5/SKCg22mOCSQctkwAZ
+	 rJzvgTmlAPbsdIT/s/sBKun+NZ0Slwg3fP4P4ZXQe+QBhoBDCmhgHRu4pcaHK0BNk4
+	 sf7MesxUohHmXo9agjDnxIPXXefrE4yMFD3MRlfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730639AbfLSSzN (ORCPT
+        id S1730638AbfLSSzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:55:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50974 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:55:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730628AbfLSSzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:55:09 -0500
+        id S1730396AbfLSSzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:55:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E73B24680;
-        Thu, 19 Dec 2019 18:55:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F12F124679;
+        Thu, 19 Dec 2019 18:55:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781709;
-        bh=f2Ph5aXxyhp+Ah/9djnzuyxceakXuLb4xX3/ZkgYiU4=;
+        s=default; t=1576781711;
+        bh=OqFCLd4WftZqa6i+YaD9py48siWJszgq0jImbq5JZ8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kM4EG8g2FSl2k9NAR3sLJpGQJL4t08+AsSJldX6LNjNxnsOGjV+F2lO0Q6IRSXVhy
-         X2J78h3cXNP6xgpS3Fieq7yZcAW9Hl5ASLAI1E9EkDghB+NOGPmCkaKqxrz3bTbhuW
-         tbcK8Sc3RBeoY9O6Juje0Au8XQdCE48qLz1LunSg=
+        b=Mr5OhWRIrVq16HotMv1lAAhs8N2qNRc6maThsDsahTd7UwkWJj49f0gLZJrgham3z
+         2KZFf/oS8sK74/c7ChnvknRU0eOEc86x4Tv23U++kybS6h6g4484fukzG+xuDzgrDR
+         AZOjh3ipxo6bY9fVsRsTvuKf9rT38zBeH8AdVO+c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Zimmermann <tzimmermann@suse.de>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        John Donnelly <john.p.donnelly@oracle.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Dave Airlie <airlied@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "Y.C. Chen" <yc_chen@aspeedtech.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        dri-devel@lists.freedesktop.org,
-        Allison Randal <allison@lohutok.net>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>
-Subject: [PATCH 5.4 49/80] drm/mgag200: Flag all G200 SE A machines as broken wrt <startadd>
-Date:   Thu, 19 Dec 2019 19:34:41 +0100
-Message-Id: <20191219183119.492063990@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 5.4 50/80] drm: meson: venc: cvbs: fix CVBS mode matching
+Date:   Thu, 19 Dec 2019 19:34:42 +0100
+Message-Id: <20191219183121.752291356@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -75,58 +60,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Zimmermann <tzimmermann@suse.de>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-commit 4adf0b49eea926a55fd956ef7d86750f771435ff upstream.
+commit 43cb86799ff03e9819c07f37f72f80f8246ad7ed upstream.
 
-Several MGA G200 SE machines don't respect the value of the startadd
-register field. After more feedback on affected machines, neither PCI
-subvendor ID nor the internal ID seem to hint towards the bug. All
-affected machines have a PCI ID of 0x0522 (i.e., G200 SE A). It was
-decided to flag all G200 SE A machines as broken.
+With commit 222ec1618c3ace ("drm: Add aspect ratio parsing in DRM
+layer") the drm core started honoring the picture_aspect_ratio field
+when comparing two drm_display_modes. Prior to that it was ignored.
+When the CVBS encoder driver was initially submitted there was no aspect
+ratio check.
 
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-Acked-by: Gerd Hoffmann <kraxel@redhat.com>
-Fixes: 1591fadf857c ("drm/mgag200: Add workaround for HW that does not support 'startadd'")
-Cc: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: John Donnelly <john.p.donnelly@oracle.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Gerd Hoffmann <kraxel@redhat.com>
-Cc: Dave Airlie <airlied@redhat.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: "Y.C. Chen" <yc_chen@aspeedtech.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: "José Roberto de Souza" <jose.souza@intel.com>
-Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: <stable@vger.kernel.org> # v5.3+
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Allison Randal <allison@lohutok.net>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: "Noralf Trønnes" <noralf@tronnes.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191206081901.9938-1-tzimmermann@suse.de
+Switch from drm_mode_equal() to drm_mode_match() without
+DRM_MODE_MATCH_ASPECT_RATIO to fix "kmscube" and X.org output using the
+CVBS connector. When (for example) kmscube sets the output mode when
+using the CVBS connector it passes HDMI_PICTURE_ASPECT_NONE, making the
+drm_mode_equal() fail as it include the aspect ratio.
+
+Prior to this patch kmscube reported:
+  failed to set mode: Invalid argument
+
+The CVBS mode checking in the sun4i (drivers/gpu/drm/sun4i/sun4i_tv.c
+sun4i_tv_mode_to_drm_mode) and ZTE (drivers/gpu/drm/zte/zx_tvenc.c
+tvenc_mode_{pal,ntsc}) drivers don't set the "picture_aspect_ratio" at
+all. The Meson VPU driver does not rely on the aspect ratio for the CVBS
+output so we can safely decouple it from the hdmi_picture_aspect
+setting.
+
+Cc: <stable@vger.kernel.org>
+Fixes: 222ec1618c3ace ("drm: Add aspect ratio parsing in DRM layer")
+Fixes: bbbe775ec5b5da ("drm: Add support for Amlogic Meson Graphic Controller")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+[narmstrong: squashed with drm: meson: venc: cvbs: deduplicate the meson_cvbs_mode lookup code]
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191208171832.1064772-3-martin.blumenstingl@googlemail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/mgag200/mgag200_drv.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/meson/meson_venc_cvbs.c |   48 ++++++++++++++++++--------------
+ 1 file changed, 27 insertions(+), 21 deletions(-)
 
---- a/drivers/gpu/drm/mgag200/mgag200_drv.c
-+++ b/drivers/gpu/drm/mgag200/mgag200_drv.c
-@@ -30,9 +30,8 @@ module_param_named(modeset, mgag200_mode
- static struct drm_driver driver;
+--- a/drivers/gpu/drm/meson/meson_venc_cvbs.c
++++ b/drivers/gpu/drm/meson/meson_venc_cvbs.c
+@@ -64,6 +64,25 @@ struct meson_cvbs_mode meson_cvbs_modes[
+ 	},
+ };
  
- static const struct pci_device_id pciidlist[] = {
--	{ PCI_VENDOR_ID_MATROX, 0x522, PCI_VENDOR_ID_SUN, 0x4852, 0, 0,
-+	{ PCI_VENDOR_ID_MATROX, 0x522, PCI_ANY_ID, PCI_ANY_ID, 0, 0,
- 		G200_SE_A | MGAG200_FLAG_HW_BUG_NO_STARTADD},
--	{ PCI_VENDOR_ID_MATROX, 0x522, PCI_ANY_ID, PCI_ANY_ID, 0, 0, G200_SE_A },
- 	{ PCI_VENDOR_ID_MATROX, 0x524, PCI_ANY_ID, PCI_ANY_ID, 0, 0, G200_SE_B },
- 	{ PCI_VENDOR_ID_MATROX, 0x530, PCI_ANY_ID, PCI_ANY_ID, 0, 0, G200_EV },
- 	{ PCI_VENDOR_ID_MATROX, 0x532, PCI_ANY_ID, PCI_ANY_ID, 0, 0, G200_WB },
++static const struct meson_cvbs_mode *
++meson_cvbs_get_mode(const struct drm_display_mode *req_mode)
++{
++	int i;
++
++	for (i = 0; i < MESON_CVBS_MODES_COUNT; ++i) {
++		struct meson_cvbs_mode *meson_mode = &meson_cvbs_modes[i];
++
++		if (drm_mode_match(req_mode, &meson_mode->mode,
++				   DRM_MODE_MATCH_TIMINGS |
++				   DRM_MODE_MATCH_CLOCK |
++				   DRM_MODE_MATCH_FLAGS |
++				   DRM_MODE_MATCH_3D_FLAGS))
++			return meson_mode;
++	}
++
++	return NULL;
++}
++
+ /* Connector */
+ 
+ static void meson_cvbs_connector_destroy(struct drm_connector *connector)
+@@ -136,14 +155,8 @@ static int meson_venc_cvbs_encoder_atomi
+ 					struct drm_crtc_state *crtc_state,
+ 					struct drm_connector_state *conn_state)
+ {
+-	int i;
+-
+-	for (i = 0; i < MESON_CVBS_MODES_COUNT; ++i) {
+-		struct meson_cvbs_mode *meson_mode = &meson_cvbs_modes[i];
+-
+-		if (drm_mode_equal(&crtc_state->mode, &meson_mode->mode))
+-			return 0;
+-	}
++	if (meson_cvbs_get_mode(&crtc_state->mode))
++		return 0;
+ 
+ 	return -EINVAL;
+ }
+@@ -191,24 +204,17 @@ static void meson_venc_cvbs_encoder_mode
+ 				   struct drm_display_mode *mode,
+ 				   struct drm_display_mode *adjusted_mode)
+ {
++	const struct meson_cvbs_mode *meson_mode = meson_cvbs_get_mode(mode);
+ 	struct meson_venc_cvbs *meson_venc_cvbs =
+ 					encoder_to_meson_venc_cvbs(encoder);
+ 	struct meson_drm *priv = meson_venc_cvbs->priv;
+-	int i;
+ 
+-	for (i = 0; i < MESON_CVBS_MODES_COUNT; ++i) {
+-		struct meson_cvbs_mode *meson_mode = &meson_cvbs_modes[i];
++	if (meson_mode) {
++		meson_venci_cvbs_mode_set(priv, meson_mode->enci);
+ 
+-		if (drm_mode_equal(mode, &meson_mode->mode)) {
+-			meson_venci_cvbs_mode_set(priv,
+-						  meson_mode->enci);
+-
+-			/* Setup 27MHz vclk2 for ENCI and VDAC */
+-			meson_vclk_setup(priv, MESON_VCLK_TARGET_CVBS,
+-					 MESON_VCLK_CVBS, MESON_VCLK_CVBS,
+-					 MESON_VCLK_CVBS, true);
+-			break;
+-		}
++		/* Setup 27MHz vclk2 for ENCI and VDAC */
++		meson_vclk_setup(priv, MESON_VCLK_TARGET_CVBS, MESON_VCLK_CVBS,
++				 MESON_VCLK_CVBS, MESON_VCLK_CVBS, true);
+ 	}
+ }
+ 
 
 
