@@ -2,91 +2,100 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55ECEC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D903C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3110624676
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF9AF206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:08:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="edqJauAn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfLSOFL (ORCPT
+        id S1726817AbfLSOIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 09:05:11 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:59075 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726695AbfLSOFK (ORCPT
+        Thu, 19 Dec 2019 09:08:10 -0500
+Received: from mail-wr1-f74.google.com ([209.85.221.74]:40899 "EHLO
+        mail-wr1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726712AbfLSOIK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 09:05:10 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-18-lkdE9QJxMPae3bT7pEoTqQ-1; Thu, 19 Dec 2019 14:05:05 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 19 Dec 2019 14:05:04 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 19 Dec 2019 14:05:04 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Aleksa Sarai' <cyphar@cyphar.com>,
-        Florian Weimer <fweimer@redhat.com>
-CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        "dev@opencontainers.org" <dev@opencontainers.org>,
-        "containers@lists.linux-foundation.org" 
-        <containers@lists.linux-foundation.org>,
-        "libc-alpha@sourceware.org" <libc-alpha@sourceware.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-Subject: RE: [PATCH 1/2] uapi: split openat2(2) definitions from fcntl.h
-Thread-Topic: [PATCH 1/2] uapi: split openat2(2) definitions from fcntl.h
-Thread-Index: AQHVtnKfNpps3AEjjUOZljxYP1VvUqfBfNKA
-Date:   Thu, 19 Dec 2019 14:05:04 +0000
-Message-ID: <845fc9e8b55e4868bb4d20655e674b50@AcuMS.aculab.com>
-References: <20191219105533.12508-1-cyphar@cyphar.com>
- <20191219105533.12508-2-cyphar@cyphar.com>
- <87a77oy3oe.fsf@oldenburg2.str.redhat.com>
- <20191219134525.mgzmjbsp4wo5b2bw@yavin.dot.cyphar.com>
-In-Reply-To: <20191219134525.mgzmjbsp4wo5b2bw@yavin.dot.cyphar.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
-MIME-Version: 1.0
-X-MC-Unique: lkdE9QJxMPae3bT7pEoTqQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+        Thu, 19 Dec 2019 09:08:10 -0500
+Received: by mail-wr1-f74.google.com with SMTP id r2so241450wrp.7
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 06:08:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:cc;
+        bh=rR0DY8YnbpCQ+AdSGxlAPQN0c1LYEmMe5uvVF0GxO7w=;
+        b=edqJauAnv9l2Db/OdW4Nzcy/PoIy6m7rq0UBbWvju2X6CFnWDoBeUl9K3E5nkW+o/p
+         y8VDw4SJQ7XWWHzIrbpNoCovNAkUagOHXNdORCAMPd6MHzvGXSIaE0bYdYwA/k+o1kLb
+         OthNTjppH0IyA+vS1d+ParF1KyYV7SCachTjWXEGBOPjgmWIyfRiC23O50DgLBtokTtu
+         EKpqTp/xb352x5Z7ZxQBtpYVPpWnbolYLFPkDficge+P6SYrRa7oUm3kTURQObFlan0d
+         oeDJ/ry3rk/OlCFfnJOYTzZqzL4q/H3qTD98eMJBo7wVKMBDduxEJyiPvIJV2Qw61Qva
+         WUWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:cc;
+        bh=rR0DY8YnbpCQ+AdSGxlAPQN0c1LYEmMe5uvVF0GxO7w=;
+        b=QEdgLe4Zp+i3IteHxQ7C/LPzm9fGC5zmXwJFjZafnGWpobucdiiuqVhsy8lG5uEXHe
+         6W28xGhESvTWmuVL23n3ENYRcWwWmy9P7RKMMMgGGI4XScy9kLlsiEkwDEDTgjafPItc
+         sjujufT9ZaJb3YMBmm24G+Rzgeew/9xdbCYVpoF+BnCKyUDuFce6ajCJFWMbMY5rYAo1
+         f6bwtZKtmqoHCeN4XelFhXp2EiuiBFDJrl9+SIchu4USrnWsIeu9Yr9k3l0DNVkQLvwL
+         /lvu7ZcVIQz4ynSI3ILhU+Xfw71f3KwvSiQt5tCgCGGCmGiEzXO1J06AVJMDIQZribxK
+         rLgg==
+X-Gm-Message-State: APjAAAU87/FX8IHBwCLBQ+43u8IoQM5roXaP3k0h0Dnc+LRqyGuks8Ck
+        9WWSFy9cAVGJAABJ6+Lr/RgV9rkkIfNABg==
+X-Google-Smtp-Source: APXvYqzQ1ljy0dFAUTLAmimiTU8+k3XguxQSkPO9FbsMtWJfxd2XpH7U3B6t3Eb9chW6NYvHc4xBCjjqUfjSlg==
+X-Received: by 2002:a5d:5267:: with SMTP id l7mr10383766wrc.84.1576764488183;
+ Thu, 19 Dec 2019 06:08:08 -0800 (PST)
+Date:   Thu, 19 Dec 2019 15:08:03 +0100
+Message-Id: <20191219140803.135164-1-amessina@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+Subject: [PATCH] udp: fix integer overflow while computing available space in sk_rcvbuf
+From:   Antonio Messina <amessina@google.com>
+Cc:     amessina@google.com, "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQWxla3NhIFNhcmFpDQo+IFNlbnQ6IDE5IERlY2VtYmVyIDIwMTkgMTM6NDUNCj4gT24g
-MjAxOS0xMi0xOSwgRmxvcmlhbiBXZWltZXIgPGZ3ZWltZXJAcmVkaGF0LmNvbT4gd3JvdGU6DQo+
-ID4gKiBBbGVrc2EgU2FyYWk6DQo+ID4NCj4gPiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL3VhcGkv
-bGludXgvb3BlbmF0Mi5oIGIvaW5jbHVkZS91YXBpL2xpbnV4L29wZW5hdDIuaA0KPiA+ID4gbmV3
-IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uMTllZjc3NWU4ZTVl
-DQo+ID4gPiAtLS0gL2Rldi9udWxsDQo+ID4gPiArKysgYi9pbmNsdWRlL3VhcGkvbGludXgvb3Bl
-bmF0Mi5oDQo+ID4gPiBAQCAtMCwwICsxLDQxIEBADQo+ID4gPiArLyogU1BEWC1MaWNlbnNlLUlk
-ZW50aWZpZXI6IEdQTC0yLjAgV0lUSCBMaW51eC1zeXNjYWxsLW5vdGUgKi8NCj4gPiA+ICsjaWZu
-ZGVmIF9VQVBJX0xJTlVYX09QRU5BVDJfSA0KPiA+ID4gKyNkZWZpbmUgX1VBUElfTElOVVhfT1BF
-TkFUMl9IDQo+ID4NCj4gPiBJIHRoaW5rIHlvdSBzaG91bGQgaW5jbHVkZSB0aGUgcmVsZXZhbnQg
-aGVhZGVyIGZvciBfX2FsaWduX3U2NA0KPiA+IGV0Yy4gaGVyZS4NCj4gDQo+IFJpZ2h0IC0tIG5v
-IGlkZWEgd2h5IEkgZm9yZ290IHRvIGluY2x1ZGUgdGhlbS4NCg0KSSdtIGd1ZXNzaW5nIHRoYXQg
-aXMganVzdCA2NGJpdCBhbGlnbmVkIG9uIDMyYml0IGFyY2hzIGxpa2UgeDg2Pw0KDQpObyBuZWVk
-IHRvIGVuZm9yY2UgaXQgcHJvdmlkZWQgdGhlIHN0cnVjdHVyZSB3aWxsIGhhdmUgbm8gcGFkZGlu
-Zw0Kb24gYXJjaHMgd2hlcmUgdGhlIDY0Yml0IGZpZWxkcyBhcmUgNjRiaXQgYWxpZ25lZC4NCkEg
-cGxhaW4gX191NjQgc2hvdWxkIGJlIGZpbmUuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFk
-ZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywg
-TUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+When the size of the receive buffer for a socket is close to 2^31 when
+computing if we have enough space in the buffer to copy a packet from
+the queue to the buffer we might hit an integer overflow.
+
+When an user set net.core.rmem_default to a value close to 2^31 UDP
+packets are dropped because of this overflow. This can be visible, for
+instance, with failure to resolve hostnames.
+
+This can be fixed by casting sk_rcvbuf (which is an int) to unsigned
+int, similarly to how it is done in TCP.
+
+Signed-off-by: Antonio Messina <amessina@google.com>
+---
+ net/ipv4/udp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
+index 4da5758cc718..93a355b6b092 100644
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -1475,7 +1475,7 @@ int __udp_enqueue_schedule_skb(struct sock *sk, struct sk_buff *skb)
+ 	 * queue contains some other skb
+ 	 */
+ 	rmem = atomic_add_return(size, &sk->sk_rmem_alloc);
+-	if (rmem > (size + sk->sk_rcvbuf))
++	if (rmem > (size + (unsigned int)sk->sk_rcvbuf))
+ 		goto uncharge_drop;
+ 
+ 	spin_lock(&list->lock);
+-- 
+2.24.1.735.g03f4e72817-goog
 
