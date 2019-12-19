@@ -2,84 +2,147 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,TVD_SUBJ_WIPE_DEBT,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E1DC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A1CC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDF6B2146E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:05:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576767913;
-	bh=p80ASa2e+ERmBUt4/2lrbwFwRHc3FZsVGsG89n2xFRI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0CQ1hwmf6hjUaIwkyPwQklp72ezgwPoezTL+wFAOMWR+hCYoRNSTIERi/BHQBZfN8
-	 cDzIZkv6C8s11zFESYjDlEAURnXQmlLRT4cA1a+YEqnTGAVRoBHFRsTMj+cBllXdb0
-	 zyAk5sVLkG8on+LNdyi18XuP8hnlOKq7SMw/T2Zs=
+	by mail.kernel.org (Postfix) with ESMTP id C95CE206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:15:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfLSPFL (ORCPT
+        id S1726830AbfLSPPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 10:05:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34354 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726751AbfLSPFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 10:05:09 -0500
-Received: from localhost.localdomain (unknown [122.178.234.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09EA824672;
-        Thu, 19 Dec 2019 15:05:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576767908;
-        bh=p80ASa2e+ERmBUt4/2lrbwFwRHc3FZsVGsG89n2xFRI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VYxcHDDB7QXpMzgECtUDyu9s3nmp4cwHUCukVUhPwthi52qMM5l7Pdvp0ZIOOlHxU
-         W5yEiCYGb+O1PifZMJacf8Bu1lVzfBe3TPqeXRIV8mcM+fGpx6ym1R5dhPiuDSJoxv
-         7E8WLVOZDky85i2qWroG2BzSIAigwJqadWt4H0Ck=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
-        Can Guo <cang@codeaurora.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] phy: qcom-qmp: remove duplicate powerdown write
-Date:   Thu, 19 Dec 2019 20:34:33 +0530
-Message-Id: <20191219150433.2785427-5-vkoul@kernel.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191219150433.2785427-1-vkoul@kernel.org>
-References: <20191219150433.2785427-1-vkoul@kernel.org>
+        Thu, 19 Dec 2019 10:15:09 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:38303 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726757AbfLSPPJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 10:15:09 -0500
+Received: by mail-io1-f72.google.com with SMTP id f18so3567278iol.5
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 07:15:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=VjstBJC/J7dIYqK7+U4bFc27tLQDjJ0UFLhGs3+2y08=;
+        b=b3Z7G+pRqjCqwwCIajijiDYpdAe2J9X/if0ye8tv56d7So7vV+o/R4Xg2ABenNw9mD
+         vfRfs9+97GYtfpmxKtmSah6Iix5XEIfhoNlh4L4SZJ4F5qtS6kMoP+0QH0DzpgKes08A
+         7wv1d09Bc2bp2XC46J5aeNh7Wsp0M6k2kS/zWNBpnJ2JnVPjpd11XLNc+PyCUykMSSby
+         BMb4uuCa/j7C0do92pM5lzsLRn/I/ufORN+H/MUM8GulUPLh7ZOQ7DBFbKNL6pe6n7wY
+         8ocd0QR/SXuEUk5o/l/iBKyFy+sBBXDhq8THo1dM3l0n4jxMkBU5+mKfStMmeBzAQIIq
+         3fLg==
+X-Gm-Message-State: APjAAAVx+yzu2J1fXHYyZwWu5Ec/pjtKxQ+M8Ifo9cXBcgKXKh0waJvC
+        Yq0Tt9asdbZKzxTy9oW13Q4sGii5WBx5nTaNxTW+CqkrEb8s
+X-Google-Smtp-Source: APXvYqwynkGgK81TYmuCv4AYKxZFQshQr/rGLliweNYYSpYa56ie3B7daOP5Ncmx3XBGWlyFmVrPq9UiTjr6wM851PQKomtZFwmH
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a6b:bbc4:: with SMTP id l187mr6252569iof.234.1576768508627;
+ Thu, 19 Dec 2019 07:15:08 -0800 (PST)
+Date:   Thu, 19 Dec 2019 07:15:08 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d99340059a100686@google.com>
+Subject: BUG: unable to handle kernel paging request in xfs_sb_quiet_read_verify
+From:   syzbot <syzbot+4722bf4c6393b73a792b@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, allison.henderson@oracle.com,
+        aryabinin@virtuozzo.com, bfoster@redhat.com,
+        darrick.wong@oracle.com, dchinner@redhat.com, dja@axtens.net,
+        dvyukov@google.com, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, sandeen@redhat.com,
+        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We already write to QPHY_POWER_DOWN_CONTROL in qcom_qmp_phy_com_init()
-before invoking qcom_qmp_phy_configure() so remove the duplicate write.
+Hello,
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+syzbot found the following crash on:
+
+HEAD commit:    2187f215 Merge tag 'for-5.5-rc2-tag' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11059951e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ab2ae0615387ef78
+dashboard link: https://syzkaller.appspot.com/bug?extid=4722bf4c6393b73a792b
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12727c71e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12ff5151e00000
+
+The bug was bisected to:
+
+commit 0609ae011deb41c9629b7f5fd626dfa1ac9d16b0
+Author: Daniel Axtens <dja@axtens.net>
+Date:   Sun Dec 1 01:55:00 2019 +0000
+
+     x86/kasan: support KASAN_VMALLOC
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=161240aee00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=151240aee00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=111240aee00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+4722bf4c6393b73a792b@syzkaller.appspotmail.com
+Fixes: 0609ae011deb ("x86/kasan: support KASAN_VMALLOC")
+
+BUG: unable to handle page fault for address: fffff52000680000
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 21ffee067 P4D 21ffee067 PUD aa51c067 PMD a85e1067 PTE 0
+Oops: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 3088 Comm: kworker/1:2 Not tainted 5.5.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: xfs-buf/loop0 xfs_buf_ioend_work
+RIP: 0010:xfs_sb_quiet_read_verify+0x47/0xc0 fs/xfs/libxfs/xfs_sb.c:735
+Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 7f 49 8b 9c 24 30 01  
+00 00 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <0f> b6 04 02 84  
+c0 74 04 3c 03 7e 50 8b 1b bf 58 46 53 42 89 de e8
+RSP: 0018:ffffc90008187cc0 EFLAGS: 00010a06
+RAX: dffffc0000000000 RBX: ffffc90003400000 RCX: ffffffff82ad3c26
+RDX: 1ffff92000680000 RSI: ffffffff82aa0a0f RDI: ffff8880a2cdba70
+RBP: ffffc90008187cd0 R08: ffff88809eb6c500 R09: ffffed1015d2703d
+R10: ffffed1015d2703c R11: ffff8880ae9381e3 R12: ffff8880a2cdb940
+R13: ffff8880a2cdb95c R14: ffff8880a2cdbb74 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffff52000680000 CR3: 000000009f5ab000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  xfs_buf_ioend+0x3f9/0xde0 fs/xfs/xfs_buf.c:1162
+  xfs_buf_ioend_work+0x19/0x20 fs/xfs/xfs_buf.c:1183
+  process_one_work+0x9af/0x1740 kernel/workqueue.c:2264
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2410
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Modules linked in:
+CR2: fffff52000680000
+---[ end trace 744ceb50d377bf94 ]---
+RIP: 0010:xfs_sb_quiet_read_verify+0x47/0xc0 fs/xfs/libxfs/xfs_sb.c:735
+Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 7f 49 8b 9c 24 30 01  
+00 00 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <0f> b6 04 02 84  
+c0 74 04 3c 03 7e 50 8b 1b bf 58 46 53 42 89 de e8
+RSP: 0018:ffffc90008187cc0 EFLAGS: 00010a06
+RAX: dffffc0000000000 RBX: ffffc90003400000 RCX: ffffffff82ad3c26
+RDX: 1ffff92000680000 RSI: ffffffff82aa0a0f RDI: ffff8880a2cdba70
+RBP: ffffc90008187cd0 R08: ffff88809eb6c500 R09: ffffed1015d2703d
+R10: ffffed1015d2703c R11: ffff8880ae9381e3 R12: ffff8880a2cdb940
+R13: ffff8880a2cdb95c R14: ffff8880a2cdbb74 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffff52000680000 CR3: 000000009f5ab000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
- drivers/phy/qualcomm/phy-qcom-qmp.c | 1 -
- 1 file changed, 1 deletion(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 80304b7cd895..309ef15e46b0 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -885,7 +885,6 @@ static const struct qmp_phy_init_tbl msm8998_usb3_pcs_tbl[] = {
- };
- 
- static const struct qmp_phy_init_tbl sm8150_ufsphy_serdes_tbl[] = {
--	QMP_PHY_INIT_CFG(QPHY_POWER_DOWN_CONTROL, 0x01),
- 	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SYSCLK_EN_SEL, 0xd9),
- 	QMP_PHY_INIT_CFG(QSERDES_V4_COM_HSCLK_SEL, 0x11),
- 	QMP_PHY_INIT_CFG(QSERDES_V4_COM_HSCLK_HS_SWITCH_SEL, 0x00),
--- 
-2.23.0
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
