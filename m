@@ -2,145 +2,124 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC055C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B8EC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2011218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:51:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576716708;
-	bh=0EX9r4Usr/Xz41P8DxKtQMFRDEhnKssPtubblGO6yFc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BTJsXkee5TABlPPJ+VztzgKEOhopQK/m+zhprMFUURYl8SATpdB9bmAn7M2vZD4uD
-	 hNxcNCgEHCNPydrjiXxBr3fjI7+VeZQB9+x2wUKIZOfJFsth9GK3ci36wEDowD9eIo
-	 a49Ar4M4PbYfnZUjdsdk2h9E75Jyp4BQrbjEj44s=
+	by mail.kernel.org (Postfix) with ESMTP id D692C22314
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:52:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfLSAvr (ORCPT
+        id S1726736AbfLSAwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 19:51:47 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37742 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbfLSAvr (ORCPT
+        Wed, 18 Dec 2019 19:52:55 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39258 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfLSAwy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 19:51:47 -0500
-Received: by mail-lf1-f68.google.com with SMTP id b15so3063248lfc.4
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 16:51:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XwJOrPvdC/OUnIx0D6OjuNWpdSOqNbwus7db7UF6FVU=;
-        b=Nl5szeDVZvUT71nMP156KqkEP8YHndvFSlJCEiPDHzbV5vK5/s3HiS6NiImDS5R5cN
-         Iy+cr0WDd6qL9kXmukbM0acwscQlGDkRF0HR0pWYJBQ0rljJpxJvxat9H5+HxFR0Ib9C
-         jge2AHNXRjmluquEn00EdhqyX1BwD/AfPX6vs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XwJOrPvdC/OUnIx0D6OjuNWpdSOqNbwus7db7UF6FVU=;
-        b=Yf1dJjFdsW5FW15HalMj9EnXtwj4PQObNmpKhx8v8cvjji/JIEbA7g1S5HU97CvZoz
-         sdqFF+qnr/lbbDKFhh2A+vRRYR68OlDnISgVRiooY7ybU3BwwQRcRczPnzICpg7XsIs5
-         s155QD5DAGB4AYQvQXndCa3RtsCArunanS7wjSAzrp05pGkqwT2MJU2Z5gTcbw/2e8Ub
-         01hPbETtF/VTk/c9emJM5Q5zs6PsIkR/M0B2ZwfXr5szDySoO2oyqJ6xPesGGOWEChJ3
-         vrs5TqeiD6xLARWHL4TAXf+zZWImJrPKeIajA5KjjypebfqSDbCxJ5i8e0j2TdCGxVh1
-         47VQ==
-X-Gm-Message-State: APjAAAW8kTYyMtj/St2uvoDld4uuYLzfXz17B8qinUugrEmMAtVevaP0
-        zcepVBPcoRY4B0kAi8VqEx+l0/fSYjo=
-X-Google-Smtp-Source: APXvYqxs5ijWRFSb/y+0krizjV1UNyNyJe+quwO0rZtdUHuDum1Y6LAqtQS0DanYNcYMAFGgEff3wA==
-X-Received: by 2002:ac2:5310:: with SMTP id c16mr3599169lfh.102.1576716705149;
-        Wed, 18 Dec 2019 16:51:45 -0800 (PST)
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
-        by smtp.gmail.com with ESMTPSA id i2sm1819642lfl.20.2019.12.18.16.51.43
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Dec 2019 16:51:44 -0800 (PST)
-Received: by mail-lj1-f175.google.com with SMTP id p8so4261420ljg.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 16:51:43 -0800 (PST)
-X-Received: by 2002:a2e:91cb:: with SMTP id u11mr3975797ljg.82.1576716703501;
- Wed, 18 Dec 2019 16:51:43 -0800 (PST)
+        Wed, 18 Dec 2019 19:52:54 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 0C8972911A3
+Received: by earth.universe (Postfix, from userid 1000)
+        id BD5683C0C7B; Thu, 19 Dec 2019 01:52:50 +0100 (CET)
+Date:   Thu, 19 Dec 2019 01:52:50 +0100
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Matheus Castello <matheus@castello.eng.br>
+Cc:     krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        cw00.choi@samsung.com, b.zolnierkie@samsung.com,
+        lee.jones@linaro.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 0/5] power: supply: MAX17040: Add IRQ for low level
+ and alert SOC changes
+Message-ID: <20191219005250.w3m7pbjisykxx7iz@earth.universe>
+References: <20191205154410.29462-1-matheus@castello.eng.br>
 MIME-Version: 1.0
-References: <157558502272.10278.8718685637610645781.stgit@warthog.procyon.org.uk>
- <20191206135604.GB2734@twin.jikos.cz> <CAHk-=wiN_pWbcRaw5L-J2EFUyCn49Due0McwETKwmFFPp88K8Q@mail.gmail.com>
- <CAHk-=wjvO1V912ya=1rdXwrm1OBTi6GqnqryH_E8OR69cZuVOg@mail.gmail.com>
- <CAHk-=wizsHmCwUAyQKdU7hBPXHYQn-fOtJKBqMs-79br2pWxeQ@mail.gmail.com>
- <CAHk-=wjeG0q1vgzu4iJhW5juPkTsjTYmiqiMUYAebWW+0bam6w@mail.gmail.com>
- <b2ae78da-1c29-8ef7-d0bb-376c52af37c3@yandex-team.ru> <CAHk-=wgTisLQ9k-hsQeyrT5qBS0xuQPYsueFWNT3RxbkkVmbjw@mail.gmail.com>
- <20191219000013.GB13065@localhost> <20191219001446.GA49812@localhost>
-In-Reply-To: <20191219001446.GA49812@localhost>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 18 Dec 2019 16:51:27 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgMiTbRPp6Fx_A4YV+9xL7dc2j0Dj3NTFDPRfjsjLQTWw@mail.gmail.com>
-Message-ID: <CAHk-=wgMiTbRPp6Fx_A4YV+9xL7dc2j0Dj3NTFDPRfjsjLQTWw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] pipe: Fixes [ver #2]
-To:     Josh Triplett <josh@joshtriplett.org>
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Akemi Yagi <toracat@elrepo.org>, DJ Delorie <dj@redhat.com>,
-        David Sterba <dsterba@suse.cz>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ugpk52tsjhp7lo2r"
+Content-Disposition: inline
+In-Reply-To: <20191205154410.29462-1-matheus@castello.eng.br>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 4:14 PM Josh Triplett <josh@joshtriplett.org> wrote:
->
-> Er, wrong file. That's the original patch; the attached patch is the
-> right one.
 
-This looks correct to me.
+--ugpk52tsjhp7lo2r
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If I were to actually commit it, the "split into two waitqueues" would
-be a separate patch from the "use wait_event_interruptible_exclusive()
-and add "wake_next_reader/writer logic", but for testing purposes the
-unified patch was simpler, and your forward port looks good to me.
+Hi,
 
-I ran the original patch for a couple of days, and didn't see any
-other issues than the 'make' thing in F30. It was all good with my
-self-build make.
+On Thu, Dec 05, 2019 at 12:44:05PM -0300, Matheus Castello wrote:
+> This series add IRQ handler for low level SOC alert, define a devicetree
+> binding attribute to configure the alert level threshold and check for
+> changes in SOC and power supply status for send uevents.
+>=20
+> Max17043/17044 have a pin for alert host about low level state of charge =
+and
+> this alert can be configured in a threshold from 1% up to 32% of SOC.
+>=20
+> Thanks Krzysztof Kozlowski, Lee Jones, Rob Herring and Sebastian Reichel =
+for
+> your time reviewing it.
 
-But that "ran for a couple of days" wasn't all that stress-full. I did
-do the "verify that the thundering herd is gone" test - including that
-silly test-case here again:
+Thanks, I queued all but the MFD patch to power-supply's for-next
+branch.
 
-    #include <unistd.h>
+-- Sebastian
 
-    int main(int argc, char **argv)
-    {
-        int fd[2], counters[2];
+> Changes since v7:
+> (Suggested by Sebastian Reichel)
+> - Fix unrelated change
+> - Use device_property_read_u32() and simplify the code
+> - Check the irq and of_device_is_compatible in the first patch
+>=20
+> Changes since v6:
+> (Suggested by Lee Jones)
+> - Use relative paths in documentation
+>=20
+> Matheus Castello (5):
+>   power: supply: max17040: Add IRQ handler for low SOC alert
+>   dt-bindings: power: supply: Max17040: Add DT bindings for max17040
+>     fuel gauge
+>   devicetree: mfd: max14577: Add reference to max14040_battery.txt
+>     descriptions
+>   power: supply: max17040: Config alert SOC low level threshold from FDT
+>   power: supply: max17040: Send uevent in SOC and status change
+>=20
+>  .../devicetree/bindings/mfd/max14577.txt      |   2 +
+>  .../power/supply/max17040_battery.txt         |  33 +++++
+>  drivers/power/supply/max17040_battery.c       | 130 +++++++++++++++++-
+>  3 files changed, 161 insertions(+), 4 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/max170=
+40_battery.txt
+>=20
+> --
+> 2.24.0.rc2
+>=20
 
-        pipe(fd);
-        counters[0] = 0;
-        counters[1] = -1;
-        write(fd[1], counters, sizeof(counters));
+--ugpk52tsjhp7lo2r
+Content-Type: application/pgp-signature; name="signature.asc"
 
-        /* 64 processes */
-        fork(); fork(); fork(); fork(); fork(); fork();
+-----BEGIN PGP SIGNATURE-----
 
-        do {
-                int i;
-                read(fd[0], &i, sizeof(i));
-                if (i < 0)
-                        continue;
-                counters[0] = i+1;
-                write(fd[1], counters, (1+(i & 1)) *sizeof(int));
-        } while (counters[0] < 1000000);
-        return 0;
-    }
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl36ydQACgkQ2O7X88g7
++pri/g/+Ncf5+pXnEljw4cOfiOwJYP3ql2z9N6VHTMixItWe1QQ/Mn5qKFj9O5AT
+ZM0Pexo7JBmu4oH9DtulNXULSathw25iSoQmJAGZakM/CcBYbkJBafbXWQF+ls2v
+6bZcKLgYMzOFWHyjLtnYkfV1pHjmiCG7A5Mqln056/WgJLzTuxT3cW5pczskddvL
+3DlFaRQHs113/aqFCXWg6NvMkzuf+XUM11SmAmezuwwjj0JTsGpf7Gz1//uXJ+Ml
+G/N2SKne4/tDB61ce6N8sxEofDjqqV1KIk3Wdz/O/Cqmq6+gORs3NF9KIdlE0RCZ
+U4pPCUfKWPyWr0+uP+XHwj/Ggv0bIlKYEVi/lvEb6NklZ3X4tZ+7K6j75YMQ0qRY
+wtUayqr45ZmcPUKLkrDOC6Bj2+37dLIBy2Sl7Ft24yXf3BfQHoMS/RM8h8mhwHQB
+kkvM2O1tm3zfciSxn2N5EL3BWyHAX6FJnU6vVayjvDvEMKPJSK85M8wyyc1gCZzV
+pTzCI/zViWnfiVfEG+Ai3UEZO4cjHxt5u4U8l7iygQK1BZBdZhxaVaQr3qcsvpSW
+XfVQjmcXPKBjzU4BUvrJUNrt/rNH4ytfWfZfaEUCCa01FT9WNqffCXtgni/W4VY+
+U8oR272gljb4hwr6SRyqpvc46eZa+nNjNwWtoXpk6UNMMyRNaUE=
+=Py50
+-----END PGP SIGNATURE-----
 
-where you can tweak the numbers - add another fork() or two to create
-even more pipe waiters, and maybe change the final count exit value to
-match whatever hw performance you have.
-
-         Linus
+--ugpk52tsjhp7lo2r--
