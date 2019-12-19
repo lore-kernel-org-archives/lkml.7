@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABFDC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 886EDC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F84A222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C7D3222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:11:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782707;
-	bh=61R/NdHf82RLsqLQhBJmvUPZm4nSs/T2wCwYyyd8fuU=;
+	s=default; t=1576782710;
+	bh=G9x/cT2JjTm+p7FmxQ0buJMWxHTzHgniG95TVrwOgtk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wa7AyQbQTVggu/P4ISqEx8mR7+wfRPuYG73yOnN5EcjN1jYDh4MzDoFRbSBYxt4C9
-	 7/I6sNd0FxmVtfMpGwnf25T4/I8I+XAt/LDkongJ1Fzgpvm2sIvIt/Y857edywc0GZ
-	 5p1l5D40ya0F0IdUxwZ3gEX7X4xKXmsbOIqXsrwU=
+	b=Ji0Pz39eB5gDTgQjhEpLBGGSRDQcFH4T8sB71wXOSkJnbCYBUrMu/fLz7rm5EEwk1
+	 BJ0qwDBGns7hHsFTVpK9fDuYsyCUpJyDHckRz9lSSydfxY0Be2fFw/FA3v8Ykp4+AR
+	 bu7yVsPA4pnp4sWeXPqjHgrQriipD/q8ItphNP8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbfLSSht (ORCPT
+        id S1728145AbfLSTLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:37:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55462 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 14:11:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727535AbfLSShm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:37:42 -0500
+        id S1727894AbfLSSht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:37:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CD61222C2;
-        Thu, 19 Dec 2019 18:37:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82DAA20716;
+        Thu, 19 Dec 2019 18:37:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780661;
-        bh=61R/NdHf82RLsqLQhBJmvUPZm4nSs/T2wCwYyyd8fuU=;
+        s=default; t=1576780669;
+        bh=G9x/cT2JjTm+p7FmxQ0buJMWxHTzHgniG95TVrwOgtk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jrXElFJJBFl4tDtUoXKqhSaMUhYwQ2T3Z6dKLM/m7JyJM4ohYPUXRubg4qey4oCrO
-         GnZ56PhwOfLe8GC3oaiGH/Tycsir6nooOw73A24K9cBMtvGui/itLMfeh9CuH2KB/S
-         tQd7IYTAJwdi0O1G+k7eVb7yDxxCPaZ/dGYhD3Q0=
+        b=PUxU0nn440vMg7jiWn60A6sxB/aUv3aiSHKvyJfiWBIxYKcfMxCv3YU7+mFgXuoJv
+         oS46vTyeqyBY41UkDhi8zvI/aNuitE1SOMa40iF2bLyO6yHTmzq8jMMbwfY1YJhnD3
+         tzjOjcLDXz2vKntRbrUPo9LNV+2ubelVhO67TnmU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.4 064/162] KVM: x86: do not modify masked bits of shared MSRs
-Date:   Thu, 19 Dec 2019 19:32:52 +0100
-Message-Id: <20191219183211.746261732@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.4 067/162] crypto: user - fix memory leak in crypto_report
+Date:   Thu, 19 Dec 2019 19:32:55 +0100
+Message-Id: <20191219183211.914078182@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -59,51 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit de1fca5d6e0105c9d33924e1247e2f386efc3ece upstream.
+commit ffdde5932042600c6807d46c1550b28b0db6a3bc upstream.
 
-"Shared MSRs" are guest MSRs that are written to the host MSRs but
-keep their value until the next return to userspace.  They support
-a mask, so that some bits keep the host value, but this mask is
-only used to skip an unnecessary MSR write and the value written
-to the MSR is always the guest MSR.
+In crypto_report, a new skb is created via nlmsg_new(). This skb should
+be released if crypto_report_alg() fails.
 
-Fix this and, while at it, do not update smsr->values[slot].curr if
-for whatever reason the wrmsr fails.  This should only happen due to
-reserved bits, so the value written to smsr->values[slot].curr
-will not match when the user-return notifier and the host value will
-always be restored.  However, it is untidy and in rare cases this
-can actually avoid spurious WRMSRs on return to userspace.
-
-Cc: stable@vger.kernel.org
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Tested-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: a38f7907b926 ("crypto: Add userspace configuration API")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ crypto/crypto_user.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -260,13 +260,14 @@ int kvm_set_shared_msr(unsigned slot, u6
- 	struct kvm_shared_msrs *smsr = per_cpu_ptr(shared_msrs, cpu);
- 	int err;
+--- a/crypto/crypto_user.c
++++ b/crypto/crypto_user.c
+@@ -249,8 +249,10 @@ static int crypto_report(struct sk_buff
+ drop_alg:
+ 	crypto_mod_put(alg);
  
--	if (((value ^ smsr->values[slot].curr) & mask) == 0)
-+	value = (value & mask) | (smsr->values[slot].host & ~mask);
-+	if (value == smsr->values[slot].curr)
- 		return 0;
--	smsr->values[slot].curr = value;
- 	err = wrmsrl_safe(shared_msrs_global.msrs[slot], value);
- 	if (err)
- 		return 1;
+-	if (err)
++	if (err) {
++		kfree_skb(skb);
+ 		return err;
++	}
  
-+	smsr->values[slot].curr = value;
- 	if (!smsr->registered) {
- 		smsr->urn.on_user_return = kvm_on_user_return;
- 		user_return_notifier_register(&smsr->urn);
+ 	return nlmsg_unicast(crypto_nlsk, skb, NETLINK_CB(in_skb).portid);
+ }
 
 
