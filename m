@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 093F5C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C6BC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C21B324685
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A50124682
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781162;
-	bh=iwLbsWypgZl4xzaCdEQ+h+XMFgQWaBlIq5yNWyhAXF0=;
+	s=default; t=1576781166;
+	bh=OqlRxJ+gCG0jNsJDOzcwV1OoSPzgSFE98BB7xYlWdpM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QH2CuH8/F4Zd9JTYmcuYZZSKQUEHbwQI0e9BWq0pacVRLYa4kQ8wINQTxMbXfQHyn
-	 lVPAQDBzWfZYdtTA6L+Ivwf8zoh35wU//A59YfWBHBvkUePY6I5Lhp06nAs5JdjwrS
-	 ROtbv/cKFxhA/6uUnYQcX2Gq1JzQWNGzfgG/htkU=
+	b=AtNzzSrj283s2QwM56T7ATQBDKJaWhx6TSmI9LAXtRH1kbvXlIG50ZfKc7GhZN1d7
+	 nbOxTpCWJGhYzS1onRJrlVKpkaA0YseAFAYQst38sHGgl97lUVowVTqpxExSum5d0k
+	 rBnvbFDCs7UUQOe6hKqEF+OsqegLKqZLklwQHZsM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729276AbfLSSqC (ORCPT
+        id S1729282AbfLSSqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:46:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38440 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:46:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727991AbfLSSp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:45:56 -0500
+        id S1728708AbfLSSqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:46:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0070F206D7;
-        Thu, 19 Dec 2019 18:45:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57FCF24679;
+        Thu, 19 Dec 2019 18:46:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781155;
-        bh=iwLbsWypgZl4xzaCdEQ+h+XMFgQWaBlIq5yNWyhAXF0=;
+        s=default; t=1576781162;
+        bh=OqlRxJ+gCG0jNsJDOzcwV1OoSPzgSFE98BB7xYlWdpM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hM+aH6IbMIp95WYPaAC4d9I56c8FV99bAya0VEcpRfiKHt+OFZb6m/kSKQ+WqFBvO
-         IWGYf8Ege9xaICMegig1o7kj//zKytWk5P19bgm/CysKLntnpS6D5rFjhFOLge6wwx
-         KURoU2wJTmM7Mdn2SdpxclHWtC2aa4IJu3zliLyQ=
+        b=c+K8LEoh8SDI6jmFdTycUte+ZEuukuSbj3jKQ4is5yyso502aHaywtjB/V94/JBEP
+         wOB9bnw2UK5TWGlQIbY3LJL0kxB5GkWMgdmWkVIVpOfgAWuh/5FpwJwsFQnJo85FSQ
+         p4iGRbUko1jV2/B/stJ6UjcE6w7PWY8nD7C4vGU4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.9 105/199] xhci: Increase STS_HALT timeout in xhci_suspend()
-Date:   Thu, 19 Dec 2019 19:33:07 +0100
-Message-Id: <20191219183220.703085660@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.9 108/199] USB: atm: ueagle-atm: add missing endpoint check
+Date:   Thu, 19 Dec 2019 19:33:10 +0100
+Message-Id: <20191219183220.859425820@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,43 +58,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 7c67cf6658cec70d8a43229f2ce74ca1443dc95e upstream.
+commit 09068c1ad53fb077bdac288869dec2435420bdc4 upstream.
 
-I've recently observed failed xHCI suspend attempt on AMD Raven Ridge
-system:
-kernel: xhci_hcd 0000:04:00.4: WARN: xHC CMD_RUN timeout
-kernel: PM: suspend_common(): xhci_pci_suspend+0x0/0xd0 returns -110
-kernel: PM: pci_pm_suspend(): hcd_pci_suspend+0x0/0x30 returns -110
-kernel: PM: dpm_run_callback(): pci_pm_suspend+0x0/0x150 returns -110
-kernel: PM: Device 0000:04:00.4 failed to suspend async: error -110
+Make sure that the interrupt interface has an endpoint before trying to
+access its endpoint descriptors to avoid dereferencing a NULL pointer.
 
-Similar to commit ac343366846a ("xhci: Increase STS_SAVE timeout in
-xhci_suspend()") we also need to increase the HALT timeout to make it be
-able to suspend again.
+The driver binds to the interrupt interface with interface number 0, but
+must not assume that this interface or its current alternate setting are
+the first entries in the corresponding configuration arrays.
 
-Cc: <stable@vger.kernel.org> # 5.2+
-Fixes: f7fac17ca925 ("xhci: Convert xhci_handshake() to use readl_poll_timeout_atomic()")
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20191211142007.8847-5-mathias.nyman@linux.intel.com
+Fixes: b72458a80c75 ("[PATCH] USB: Eagle and ADI 930 usb adsl modem driver")
+Cc: stable <stable@vger.kernel.org>     # 2.6.16
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191210112601.3561-2-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/atm/ueagle-atm.c |   18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -933,7 +933,7 @@ static bool xhci_pending_portevent(struc
- int xhci_suspend(struct xhci_hcd *xhci, bool do_wakeup)
+--- a/drivers/usb/atm/ueagle-atm.c
++++ b/drivers/usb/atm/ueagle-atm.c
+@@ -2167,10 +2167,11 @@ resubmit:
+ /*
+  * Start the modem : init the data and start kernel thread
+  */
+-static int uea_boot(struct uea_softc *sc)
++static int uea_boot(struct uea_softc *sc, struct usb_interface *intf)
  {
- 	int			rc = 0;
--	unsigned int		delay = XHCI_MAX_HALT_USEC;
-+	unsigned int		delay = XHCI_MAX_HALT_USEC * 2;
- 	struct usb_hcd		*hcd = xhci_to_hcd(xhci);
- 	u32			command;
+-	int ret, size;
+ 	struct intr_pkt *intr;
++	int ret = -ENOMEM;
++	int size;
+ 
+ 	uea_enters(INS_TO_USBDEV(sc));
+ 
+@@ -2195,6 +2196,11 @@ static int uea_boot(struct uea_softc *sc
+ 	if (UEA_CHIP_VERSION(sc) == ADI930)
+ 		load_XILINX_firmware(sc);
+ 
++	if (intf->cur_altsetting->desc.bNumEndpoints < 1) {
++		ret = -ENODEV;
++		goto err0;
++	}
++
+ 	intr = kmalloc(size, GFP_KERNEL);
+ 	if (!intr)
+ 		goto err0;
+@@ -2206,8 +2212,7 @@ static int uea_boot(struct uea_softc *sc
+ 	usb_fill_int_urb(sc->urb_int, sc->usb_dev,
+ 			 usb_rcvintpipe(sc->usb_dev, UEA_INTR_PIPE),
+ 			 intr, size, uea_intr, sc,
+-			 sc->usb_dev->actconfig->interface[0]->altsetting[0].
+-			 endpoint[0].desc.bInterval);
++			 intf->cur_altsetting->endpoint[0].desc.bInterval);
+ 
+ 	ret = usb_submit_urb(sc->urb_int, GFP_KERNEL);
+ 	if (ret < 0) {
+@@ -2222,6 +2227,7 @@ static int uea_boot(struct uea_softc *sc
+ 	sc->kthread = kthread_create(uea_kthread, sc, "ueagle-atm");
+ 	if (IS_ERR(sc->kthread)) {
+ 		uea_err(INS_TO_USBDEV(sc), "failed to create thread\n");
++		ret = PTR_ERR(sc->kthread);
+ 		goto err2;
+ 	}
+ 
+@@ -2236,7 +2242,7 @@ err1:
+ 	kfree(intr);
+ err0:
+ 	uea_leaves(INS_TO_USBDEV(sc));
+-	return -ENOMEM;
++	return ret;
+ }
+ 
+ /*
+@@ -2597,7 +2603,7 @@ static int uea_bind(struct usbatm_data *
+ 	if (ret < 0)
+ 		goto error;
+ 
+-	ret = uea_boot(sc);
++	ret = uea_boot(sc, intf);
+ 	if (ret < 0)
+ 		goto error_rm_grp;
  
 
 
