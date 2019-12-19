@@ -2,50 +2,53 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA24C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD06C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CB3A2467B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 524662467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:36:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780585;
-	bh=DEKBXRB7nsaAebTFX9q8Bi8Dx7ghdIEtxFRSQFrfSRA=;
+	s=default; t=1576780588;
+	bh=yVAtf20W+rwO58WwpQInAJNSQ9cE/71x+A3AkJr37BE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TTQb82EkQ/hKdibzlfuT9SG7BQRgQNndL844qyYTgkAWTlh02lZvQ4SmnEiYtojG6
-	 7W7wEIGgzNuj02MAYI8qd5RTKfS5z8Pb80axD49cvOGLp65CRPu+fUf7lEvTU6U0Yz
-	 m+1Dz+lk57zD5hitmEl45idmlcv1GINIEPEe40Vc=
+	b=EYEttIR69r4+VLzHNtyMxqzzkYygB6qb868BnlQWJAVAKf4FPecn2KPy/oH6lai30
+	 XAhhpE5i/c7I5Vl+glITWugjqhTkfu0OKLfIpYF8lXyEIazKDO7r6GMqggYAg0rkeK
+	 N5ufyBPmk+5maK54YuGK0ZxNaSnFis/l7P4zytrA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbfLSSgX (ORCPT
+        id S1727593AbfLSSg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:36:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53226 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:36:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727531AbfLSSgT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:36:19 -0500
+        id S1727531AbfLSSgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:36:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F54224679;
-        Thu, 19 Dec 2019 18:36:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56BD124679;
+        Thu, 19 Dec 2019 18:36:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780578;
-        bh=DEKBXRB7nsaAebTFX9q8Bi8Dx7ghdIEtxFRSQFrfSRA=;
+        s=default; t=1576780583;
+        bh=yVAtf20W+rwO58WwpQInAJNSQ9cE/71x+A3AkJr37BE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l9qYV6m/XPgyN7iniDRNlFPo4MvX02R8QD722+To3fhfPXqoHVCzX05SL++O4mgV+
-         +n1NcpOVzuLaK4Fs230JMQ5SMiD+EnF2fBoMADUErk0fHW4xQ8fc7Jty+Xx3tMyyNa
-         XYiyCr6mvdIwl9u3tObFNpK/l7dGQBjVTUWU+6sg=
+        b=gma4rZOfTv/vVRO0dLrItbYDruLj3oIwBr/1zQ4KBJ7mx7uNzNmRsERma3S12KREl
+         MMAFvwmWaZ3UmXu+j8Iud58+Urt8CPIcoYCb3xsN1uOYWdBndacEMhytJ2xlVSLrPW
+         ySZKLYRpZ/pE7v7mD4GFSsDLKBb3V2sxwh4oEINQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH 4.4 006/162] serial: ifx6x60: add missed pm_runtime_disable
-Date:   Thu, 19 Dec 2019 19:31:54 +0100
-Message-Id: <20191219183157.631482908@linuxfoundation.org>
+        stable@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 008/162] NFC: nxp-nci: Fix NULL pointer dereference after I2C communication error
+Date:   Thu, 19 Dec 2019 19:31:56 +0100
+Message-Id: <20191219183159.605318033@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -58,33 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-commit 50b2b571c5f3df721fc81bf9a12c521dfbe019ba upstream.
+[ Upstream commit a71a29f50de1ef97ab55c151a1598eb12dde379d ]
 
-The driver forgets to call pm_runtime_disable in remove.
-Add the missed calls to fix it.
+I2C communication errors (-EREMOTEIO) during the IRQ handler of nxp-nci
+result in a NULL pointer dereference at the moment:
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191118024833.21587-1-hslester96@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    BUG: kernel NULL pointer dereference, address: 0000000000000000
+    Oops: 0002 [#1] PREEMPT SMP NOPTI
+    CPU: 1 PID: 355 Comm: irq/137-nxp-nci Not tainted 5.4.0-rc6 #1
+    RIP: 0010:skb_queue_tail+0x25/0x50
+    Call Trace:
+     nci_recv_frame+0x36/0x90 [nci]
+     nxp_nci_i2c_irq_thread_fn+0xd1/0x285 [nxp_nci_i2c]
+     ? preempt_count_add+0x68/0xa0
+     ? irq_forced_thread_fn+0x80/0x80
+     irq_thread_fn+0x20/0x60
+     irq_thread+0xee/0x180
+     ? wake_threads_waitq+0x30/0x30
+     kthread+0xfb/0x130
+     ? irq_thread_check_affinity+0xd0/0xd0
+     ? kthread_park+0x90/0x90
+     ret_from_fork+0x1f/0x40
 
+Afterward the kernel must be rebooted to work properly again.
+
+This happens because it attempts to call nci_recv_frame() with skb == NULL.
+However, unlike nxp_nci_fw_recv_frame(), nci_recv_frame() does not have any
+NULL checks for skb, causing the NULL pointer dereference.
+
+Change the code to call only nxp_nci_fw_recv_frame() in case of an error.
+Make sure to log it so it is obvious that a communication error occurred.
+The error above then becomes:
+
+    nxp-nci_i2c i2c-NXP1001:00: NFC: Read failed with error -121
+    nci: __nci_request: wait_for_completion_interruptible_timeout failed 0
+    nxp-nci_i2c i2c-NXP1001:00: NFC: Read failed with error -121
+
+Fixes: 6be88670fc59 ("NFC: nxp-nci_i2c: Add I2C support to NXP NCI driver")
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/ifx6x60.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/nfc/nxp-nci/i2c.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/tty/serial/ifx6x60.c
-+++ b/drivers/tty/serial/ifx6x60.c
-@@ -1241,6 +1241,9 @@ static int ifx_spi_spi_remove(struct spi
- 	struct ifx_spi_device *ifx_dev = spi_get_drvdata(spi);
- 	/* stop activity */
- 	tasklet_kill(&ifx_dev->io_work_tasklet);
-+
-+	pm_runtime_disable(&spi->dev);
-+
- 	/* free irq */
- 	free_irq(gpio_to_irq(ifx_dev->gpio.reset_out), ifx_dev);
- 	free_irq(gpio_to_irq(ifx_dev->gpio.srdy), ifx_dev);
+diff --git a/drivers/nfc/nxp-nci/i2c.c b/drivers/nfc/nxp-nci/i2c.c
+index 0b1122cb5d0c8..b505a6e135b75 100644
+--- a/drivers/nfc/nxp-nci/i2c.c
++++ b/drivers/nfc/nxp-nci/i2c.c
+@@ -239,8 +239,10 @@ static irqreturn_t nxp_nci_i2c_irq_thread_fn(int irq, void *phy_id)
+ 
+ 	if (r == -EREMOTEIO) {
+ 		phy->hard_fault = r;
+-		skb = NULL;
+-	} else if (r < 0) {
++		if (info->mode == NXP_NCI_MODE_FW)
++			nxp_nci_fw_recv_frame(phy->ndev, NULL);
++	}
++	if (r < 0) {
+ 		nfc_err(&client->dev, "Read failed with error %d\n", r);
+ 		goto exit_irq_handled;
+ 	}
+-- 
+2.20.1
+
 
 
