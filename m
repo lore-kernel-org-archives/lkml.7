@@ -2,242 +2,276 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59698C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D146C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B7A724672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A6A524650
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:22:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="Q2Nkm6fd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbfLSMUQ (ORCPT
+        id S1726757AbfLSMWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 07:20:16 -0500
-Received: from foss.arm.com ([217.140.110.172]:37866 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726869AbfLSMTe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 07:19:34 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D84F31B;
-        Thu, 19 Dec 2019 04:19:34 -0800 (PST)
-Received: from e120937-lin.cambridge.arm.com (e120937-lin.cambridge.arm.com [10.1.197.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B2FBD3F719;
-        Thu, 19 Dec 2019 04:19:31 -0800 (PST)
-From:   Cristian Marussi <cristian.marussi@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-arch@vger.kernel.org, mark.rutland@arm.com,
-        peterz@infradead.org, catalin.marinas@arm.com,
-        takahiro.akashi@linaro.org, james.morse@arm.com,
-        hidehiro.kawai.ez@hitachi.com, tglx@linutronix.de, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, mingo@redhat.com,
-        x86@kernel.org, dzickus@redhat.com, ehabkost@redhat.com,
-        linux@armlinux.org.uk, davem@davemloft.net,
-        sparclinux@vger.kernel.org, hch@infradead.org
-Subject: [RFC PATCH v3 04/12] smp: address races of starting CPUs while stopping
-Date:   Thu, 19 Dec 2019 12:18:57 +0000
-Message-Id: <20191219121905.26905-5-cristian.marussi@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191219121905.26905-1-cristian.marussi@arm.com>
-References: <20191219121905.26905-1-cristian.marussi@arm.com>
+        Thu, 19 Dec 2019 07:22:04 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:53291 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbfLSMWD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 07:22:03 -0500
+Received: by mail-pj1-f65.google.com with SMTP id n96so2442810pjc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 04:22:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=KUZMCzJDajvAWgOwIGaMCQmEpud/sI+HWwVZ5z66PfA=;
+        b=Q2Nkm6fdrRQpsyMzF0E8SO5CnpATIDAngezGXzkbVg5FM5gqp/USZdvjuLOyqxGhob
+         vUVMUdsruXOTvNCGsO9w+cBW7pumbWreW9u7bHeP80rb+z1Nq3yZJJbt7fsXy8VTPJaX
+         fqxmb822HcBIF6ENlq0AC91lSpDppRPi5JuRI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=KUZMCzJDajvAWgOwIGaMCQmEpud/sI+HWwVZ5z66PfA=;
+        b=H48xnrLTU4gVINPRPS001Qlz/Kv1PoO/Ysnjxlkz6DpDxgaLQhJLCa3U45bVeyE8bR
+         +I4c7/gU0s9ed7572D//MwnreGBcD6FJaql0i9cRvZqPOS8jWVbw6F3JSDfFE+QTvryF
+         ROQ1tBQ+I8Wd0Ovvsy417xSiwk20hqedUsWNdXnduZ/KbX22hn+4/oqcdS27BB9CdJe9
+         HZPbW9/4BlH9qWq3g9mdFbtEoMy0TtJ5tDmG1MNXgWsGH9eN6Qix7Nco6PXg4PrcF5Je
+         Tk80GE3YEp8L3Vgrhjj3C/O4SVhIhEZEtyoJKtGxOryHqHFndoHx2tcSw7Cos+HmQ/cK
+         kSyA==
+X-Gm-Message-State: APjAAAVwMfGExIJSwJT85TOWG4ANlBM2Odqv6vatJmZFT70OLagE60Ar
+        Hzg/T/0orf404AZayd48pTzYQQ==
+X-Google-Smtp-Source: APXvYqysLbNRk7kADvF4EGeP94sXjr/+8KOzk3Rc0H00Sz8ZwQESSep5znZgXFDiN+AamxRSsQtyGg==
+X-Received: by 2002:a17:90a:1992:: with SMTP id 18mr9506461pji.46.1576758122786;
+        Thu, 19 Dec 2019 04:22:02 -0800 (PST)
+Received: from localhost (2001-44b8-1113-6700-b05d-cbfe-b2ee-de17.static.ipv6.internode.on.net. [2001:44b8:1113:6700:b05d:cbfe:b2ee:de17])
+        by smtp.gmail.com with ESMTPSA id x4sm8347303pfx.68.2019.12.19.04.22.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 04:22:01 -0800 (PST)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, kasan-dev@googlegroups.com,
+        aneesh.kumar@linux.ibm.com, bsingharora@gmail.com
+Cc:     Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH v4 4/4] powerpc: Book3S 64-bit "heavyweight" KASAN support
+In-Reply-To: <4f2fffb3-5fb6-b5ea-a951-a7910f2439b8@c-s.fr>
+References: <20191219003630.31288-1-dja@axtens.net> <20191219003630.31288-5-dja@axtens.net> <c4d37067-829f-cd7d-7e94-0ec2223cce71@c-s.fr> <87bls4tzjn.fsf@dja-thinkpad.axtens.net> <4f2fffb3-5fb6-b5ea-a951-a7910f2439b8@c-s.fr>
+Date:   Thu, 19 Dec 2019 23:21:59 +1100
+Message-ID: <877e2stsig.fsf@dja-thinkpad.axtens.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add to SMP stop common code a best-effort retry logic, re-issuing a stop
-request when any CPU is detected to be still online after the first
-stop request cycle has completed.
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
 
-While retrying provide to architectures' helpers an 'attempt' argument
-so that, after a possible first failed attempt, they can autonomously
-decide to adopt different approaches in subsequent retries.
+> Le 19/12/2019 =C3=A0 10:50, Daniel Axtens a =C3=A9crit=C2=A0:
+>> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>>=20
+>>> On 12/19/2019 12:36 AM, Daniel Axtens wrote:
+>>>> KASAN support on Book3S is a bit tricky to get right:
+>>>>
+>>>>    - It would be good to support inline instrumentation so as to be ab=
+le to
+>>>>      catch stack issues that cannot be caught with outline mode.
+>>>>
+>>>>    - Inline instrumentation requires a fixed offset.
+>>>>
+>>>>    - Book3S runs code in real mode after booting. Most notably a lot o=
+f KVM
+>>>>      runs in real mode, and it would be good to be able to instrument =
+it.
+>>>>
+>>>>    - Because code runs in real mode after boot, the offset has to poin=
+t to
+>>>>      valid memory both in and out of real mode.
+>>>>
+>>>>       [ppc64 mm note: The kernel installs a linear mapping at effective
+>>>>       address c000... onward. This is a one-to-one mapping with physic=
+al
+>>>>       memory from 0000... onward. Because of how memory accesses work =
+on
+>>>>       powerpc 64-bit Book3S, a kernel pointer in the linear map access=
+es the
+>>>>       same memory both with translations on (accessing as an 'effective
+>>>>       address'), and with translations off (accessing as a 'real
+>>>>       address'). This works in both guests and the hypervisor. For more
+>>>>       details, see s5.7 of Book III of version 3 of the ISA, in partic=
+ular
+>>>>       the Storage Control Overview, s5.7.3, and s5.7.5 - noting that t=
+his
+>>>>       KASAN implementation currently only supports Radix.]
+>>>>
+>>>> One approach is just to give up on inline instrumentation. This way all
+>>>> checks can be delayed until after everything set is up correctly, and =
+the
+>>>> address-to-shadow calculations can be overridden. However, the feature=
+s and
+>>>> speed boost provided by inline instrumentation are worth trying to do
+>>>> better.
+>>>>
+>>>> If _at compile time_ it is known how much contiguous physical memory a
+>>>> system has, the top 1/8th of the first block of physical memory can be=
+ set
+>>>> aside for the shadow. This is a big hammer and comes with 3 big
+>>>> consequences:
+>>>>
+>>>>    - there's no nice way to handle physically discontiguous memory, so=
+ only
+>>>>      the first physical memory block can be used.
+>>>>
+>>>>    - kernels will simply fail to boot on machines with less memory than
+>>>>      specified when compiling.
+>>>>
+>>>>    - kernels running on machines with more memory than specified when
+>>>>      compiling will simply ignore the extra memory.
+>>>>
+>>>> Implement and document KASAN this way. The current implementation is R=
+adix
+>>>> only.
+>>>>
+>>>> Despite the limitations, it can still find bugs,
+>>>> e.g. http://patchwork.ozlabs.org/patch/1103775/
+>>>>
+>>>> At the moment, this physical memory limit must be set _even for outline
+>>>> mode_. This may be changed in a later series - a different implementat=
+ion
+>>>> could be added for outline mode that dynamically allocates shadow at a
+>>>> fixed offset. For example, see https://patchwork.ozlabs.org/patch/7952=
+11/
+>>>>
+>>>> Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
+>>>> Cc: Balbir Singh <bsingharora@gmail.com> # ppc64 out-of-line radix ver=
+sion
+>>>> Cc: Christophe Leroy <christophe.leroy@c-s.fr> # ppc32 version
+>>>> Signed-off-by: Daniel Axtens <dja@axtens.net>
+>>>>
+>>>> ---
+>>>> Changes since v3:
+>>>>    - Address further feedback from Christophe.
+>>>>    - Drop changes to stack walking, it looks like the issue I observed=
+ is
+>>>>      related to that particular stack, not stack-walking generally.
+>>>>
+>>>> Changes since v2:
+>>>>
+>>>>    - Address feedback from Christophe around cleanups and docs.
+>>>>    - Address feedback from Balbir: at this point I don't have a good s=
+olution
+>>>>      for the issues you identify around the limitations of the inline =
+implementation
+>>>>      but I think that it's worth trying to get the stack instrumentati=
+on support.
+>>>>      I'm happy to have an alternative and more flexible outline mode -=
+ I had
+>>>>      envisoned this would be called 'lightweight' mode as it imposes f=
+ewer restrictions.
+>>>>      I've linked to your implementation. I think it's best to add it i=
+n a follow-up series.
+>>>>    - Made the default PHYS_MEM_SIZE_FOR_KASAN value 1024MB. I think mo=
+st people have
+>>>>      guests with at least that much memory in the Radix 64s case so it=
+'s a much
+>>>>      saner default - it means that if you just turn on KASAN without r=
+eading the
+>>>>      docs you're much more likely to have a bootable kernel, which you=
+ will never
+>>>>      have if the value is set to zero! I'm happy to bikeshed the value=
+ if we want.
+>>>>
+>>>> Changes since v1:
+>>>>    - Landed kasan vmalloc support upstream
+>>>>    - Lots of feedback from Christophe.
+>>>>
+>>>> Changes since the rfc:
+>>>>
+>>>>    - Boots real and virtual hardware, kvm works.
+>>>>
+>>>>    - disabled reporting when we're checking the stack for exception
+>>>>      frames. The behaviour isn't wrong, just incompatible with KASAN.
+>>>>
+>>>>    - Documentation!
+>>>>
+>>>>    - Dropped old module stuff in favour of KASAN_VMALLOC.
+>>>>
+>>>> The bugs with ftrace and kuap were due to kernel bloat pushing
+>>>> prom_init calls to be done via the plt. Because we did not have
+>>>> a relocatable kernel, and they are done very early, this caused
+>>>> everything to explode. Compile with CONFIG_RELOCATABLE!
+>>>> ---
+>>>>    Documentation/dev-tools/kasan.rst            |   8 +-
+>>>>    Documentation/powerpc/kasan.txt              | 112 ++++++++++++++++=
+++-
+>>>>    arch/powerpc/Kconfig                         |   2 +
+>>>>    arch/powerpc/Kconfig.debug                   |  21 ++++
+>>>>    arch/powerpc/Makefile                        |  11 ++
+>>>>    arch/powerpc/include/asm/book3s/64/hash.h    |   4 +
+>>>>    arch/powerpc/include/asm/book3s/64/pgtable.h |   7 ++
+>>>>    arch/powerpc/include/asm/book3s/64/radix.h   |   5 +
+>>>>    arch/powerpc/include/asm/kasan.h             |  21 +++-
+>>>>    arch/powerpc/kernel/prom.c                   |  61 +++++++++-
+>>>>    arch/powerpc/mm/kasan/Makefile               |   1 +
+>>>>    arch/powerpc/mm/kasan/init_book3s_64.c       |  70 ++++++++++++
+>>>>    arch/powerpc/platforms/Kconfig.cputype       |   1 +
+>>>>    13 files changed, 316 insertions(+), 8 deletions(-)
+>>>>    create mode 100644 arch/powerpc/mm/kasan/init_book3s_64.c
+>>>>
+>>>> diff --git a/arch/powerpc/include/asm/kasan.h b/arch/powerpc/include/a=
+sm/kasan.h
+>>>> index 296e51c2f066..f18268cbdc33 100644
+>>>> --- a/arch/powerpc/include/asm/kasan.h
+>>>> +++ b/arch/powerpc/include/asm/kasan.h
+>>>> @@ -2,6 +2,9 @@
+>>>>    #ifndef __ASM_KASAN_H
+>>>>    #define __ASM_KASAN_H
+>>>>=20=20=20=20
+>>>> +#include <asm/page.h>
+>>>> +#include <asm/pgtable.h>
+>>>
+>>> What do you need asm/pgtable.h for ?
+>>>
+>>> Build failure due to circular inclusion of asm/pgtable.h:
+>>=20
+>> I see there's a lot of ppc32 stuff, I clearly need to bite the bullet
+>> and get a ppc32 toolchain so I can squash these without chewing up any
+>> more of your time. I'll sort that out and send a new spin.
+>>=20
+>
+> I'm using a powerpc64 toolchain to build both ppc32 and ppc64 kernels=20
+> (from https://mirrors.edge.kernel.org/pub/tools/crosstool/ )
 
-Address the case in which some CPUs could still be starting up when the
-stop process is initiated, remaining so undetected and coming fully online
-only after the SMP stop procedure was already started: such officially
-still offline CPUs would be missed by an ongoing stop procedure.
+I am now using the distro toolchain that Ubuntu provides, and I've
+reproduced and fixed the 32bit issues you identifed.
 
-Being a best effort approach, though, it is not always guaranteed to be
-able to stop any CPU that happened to finally come online after the whole
-SMP stop retry cycle has completed.
-(i.e. the race-window is reduced but not eliminated)
+> Another thing, did you test PTDUMP stuff with KASAN ? It looks like=20
+> KASAN address markers don't depend on PPC32, but are only initialised by=
+=20
+> populate_markers() for PPC32.
 
-Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
----
-v2 --> v3
-- reviewed max_retries get/set helpers to avoid header global static
-v1 --> v2
-- added attempt_num param to arch helpers, to let arch implementation
-  know if a retry is ongoing because some CPU failed to stop.
-  (some arch like x86 attempts the retry with different means like NMI)
-- added some helpers to let archs decide on the number of retries
+Hmm, OK. This is my last workday for the year, so I will look at this
+and the simplifications to kasan.h early next year.
 
----
-A more deterministic approach has been also attempted in order to catch
-any concurrently starting CPUs at the very last moment and make them
-kill themselves by:
+Thanks,
+Daniel
 
-- adding a new set_cpus_stopping() in cpumask.h used to set a
-  __cpus_stopping atomic internal flag
-
-- modifying set_cpu_online() to check on __cpus_stopping only when
-  coming online, and force the offending CPU to kill itself in that case
-
-Anyway it has proved tricky and complex (beside faulty) to implement the
-above 'kill-myself' phase in a reliable way while remaining architecture
-agnostic and still distingushing properly regular stops from crash kexec.
-
-So given that the main idea underlying this patch series was instead of
-simplifying and unifying code and the residual races not caught by the
-best-effort logic seemed not very likely, this more deterministic approach
-has been dropped in favour of the best effort retry logic.
-
-Moreover, the current retry logic will be anyway needed to support some
-architectures, like x86, that prefer to use different CPU's stopping
-methods in subsequent retries.
----
- include/linux/smp.h | 11 +++++++++--
- kernel/smp.c        | 34 +++++++++++++++++++++++++++-------
- 2 files changed, 36 insertions(+), 9 deletions(-)
-
-diff --git a/include/linux/smp.h b/include/linux/smp.h
-index 42be03ac1c0c..247c78434a3d 100644
---- a/include/linux/smp.h
-+++ b/include/linux/smp.h
-@@ -78,6 +78,7 @@ int smp_call_function_single_async(int cpu, call_single_data_t *csd);
- extern void smp_send_stop(void);
- 
- #ifdef CONFIG_USE_COMMON_SMP_STOP
-+
- /*
-  * An Architecture can optionally use this helper to change the default
-  * waiting behaviour of common STOP logic.
-@@ -101,12 +102,18 @@ void smp_stop_set_wait_timeout_us(unsigned long timeout);
-  */
- bool smp_stop_get_wait_settings(unsigned long *timeout);
- 
-+/* Change common SMP STOP logic maximum retries */
-+void smp_stop_set_max_retries(unsigned int max_retries);
-+
-+/* Get currently set maximum retries attempt */
-+unsigned int smp_stop_get_max_retries(void);
-+
- /*
-  * Any Architecture willing to use STOP common logic implementation
-  * MUST at least provide the arch_smp_stop_call() helper which implements
-  * the arch-specific CPU-stop mechanism.
-  */
--extern void arch_smp_stop_call(cpumask_t *cpus);
-+extern void arch_smp_stop_call(cpumask_t *cpus, unsigned int attempt_num);
- 
- /*
-  * An Architecture CAN also provide the arch_smp_cpus_stop_complete()
-@@ -132,7 +139,7 @@ void arch_smp_cpus_crash_complete(void);
-  * when not provided the crash dump procedure will fallback to behave like
-  * a normal stop. (no saved regs, no arch-specific features disabled)
-  */
--extern void arch_smp_crash_call(cpumask_t *cpus);
-+extern void arch_smp_crash_call(cpumask_t *cpus, unsigned int attempt_num);
- 
- /* Helper to query the outcome of an ongoing crash_stop operation */
- bool smp_crash_stop_failed(void);
-diff --git a/kernel/smp.c b/kernel/smp.c
-index 29eb6eff2063..46a307d2351e 100644
---- a/kernel/smp.c
-+++ b/kernel/smp.c
-@@ -823,6 +823,9 @@ EXPORT_SYMBOL_GPL(smp_call_on_cpu);
- static atomic_t smp_stop_wait_forever;
- static atomic_t smp_stop_wait_timeout = ATOMIC_INIT(USEC_PER_SEC);
- 
-+#define	DEFAULT_MAX_STOP_RETRIES	2
-+static atomic_t max_stop_retries = ATOMIC_INIT(DEFAULT_MAX_STOP_RETRIES);
-+
- void smp_stop_set_wait_forever(bool wait_forever)
- {
- 	atomic_set(&smp_stop_wait_forever, wait_forever);
-@@ -844,6 +847,18 @@ bool smp_stop_get_wait_settings(unsigned long *timeout)
- 	return atomic_read(&smp_stop_wait_forever);
- }
- 
-+void smp_stop_set_max_retries(unsigned int max_retries)
-+{
-+	atomic_set(&max_stop_retries, max_retries);
-+	/* ensure retries atomics are visible */
-+	smp_mb__after_atomic();
-+}
-+
-+unsigned int smp_stop_get_max_retries(void)
-+{
-+	return atomic_read(&max_stop_retries);
-+}
-+
- void __weak arch_smp_cpu_park(void)
- {
- 	while (1)
-@@ -866,10 +881,10 @@ static inline bool any_other_cpus_online(cpumask_t *mask,
- 	return !cpumask_empty(mask);
- }
- 
--void __weak arch_smp_crash_call(cpumask_t *cpus)
-+void __weak arch_smp_crash_call(cpumask_t *cpus, unsigned int attempt_num)
- {
- 	pr_debug("SMP: Using generic %s() as SMP crash call.\n", __func__);
--	arch_smp_stop_call(cpus);
-+	arch_smp_stop_call(cpus, attempt_num);
- }
- 
- #define	REASON_STOP	1
-@@ -888,10 +903,10 @@ void __weak arch_smp_crash_call(cpumask_t *cpus)
-  */
- static void __smp_send_stop_all(bool crash)
- {
--	unsigned int this_cpu_id;
- 	cpumask_t mask;
- 	static atomic_t stopping;
- 	int was_stopping;
-+	unsigned int this_cpu_id, max_retries, attempt = 0;
- 
- 	this_cpu_id = smp_processor_id();
- 	/* make sure that concurrent stop requests are handled properly */
-@@ -922,7 +937,9 @@ static void __smp_send_stop_all(bool crash)
- 			arch_smp_cpu_park();
- 		}
- 	}
--	if (any_other_cpus_online(&mask, this_cpu_id)) {
-+	max_retries = smp_stop_get_max_retries();
-+	while (++attempt <= max_retries &&
-+	       any_other_cpus_online(&mask, this_cpu_id)) {
- 		bool wait_forever;
- 		unsigned long timeout;
- 		unsigned int this_cpu_online = cpu_online(this_cpu_id);
-@@ -931,9 +948,9 @@ static void __smp_send_stop_all(bool crash)
- 			pr_crit("stopping secondary CPUs\n");
- 		/* smp and crash arch-backends helpers are kept distinct */
- 		if (!crash)
--			arch_smp_stop_call(&mask);
-+			arch_smp_stop_call(&mask, attempt);
- 		else
--			arch_smp_crash_call(&mask);
-+			arch_smp_crash_call(&mask, attempt);
- 		/*
- 		 * Defaults to wait up to one second for other CPUs to stop;
- 		 * architectures can modify the default timeout or request
-@@ -953,9 +970,12 @@ static void __smp_send_stop_all(bool crash)
- 			udelay(1);
- 		/* ensure any stopping-CPUs memory access is made visible */
- 		smp_rmb();
--		if (num_online_cpus() > this_cpu_online)
-+		if (num_online_cpus() > this_cpu_online) {
- 			pr_warn("failed to stop secondary CPUs %*pbl\n",
- 				cpumask_pr_args(cpu_online_mask));
-+			if (attempt < max_retries)
-+				pr_warn("Retrying SMP stop call...\n");
-+		}
- 	}
- 	/* Perform final (possibly arch-specific) work on this CPU */
- 	if (!crash)
--- 
-2.17.1
-
+>
+> Regarding kasan.h, I think we should be able to end up with something=20
+> where the definition of KASAN_SHADOW_OFFSET should only depend on the=20
+> existence of CONFIG_KASAN_SHADOW_OFFSET, and where only=20
+> KASAN_SHADOW_SIZE should depend on the target (ie PPC32 or BOOK3S64)
+> Everything else should be common. KASAN_END should be START+SIZE.
+>
+> It looks like what you have called KASAN_SHADOW_SIZE is not similar to=20
+> what is called KASAN_SHADOW_SIZE for PPC32, as yours only covers the=20
+> SHADOW_SIZE for linear mem while PPC32 one covers the full space.
+>
+> Christophe
