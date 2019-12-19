@@ -2,115 +2,146 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C34EC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA69C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 723E224676
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F622227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:42:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CdY8KbsC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FWGpE+/t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfLSKmu (ORCPT
+        id S1726855AbfLSKmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 05:42:50 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:17942 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726736AbfLSKmt (ORCPT
+        Thu, 19 Dec 2019 05:42:54 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:43131 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726769AbfLSKmw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 05:42:49 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576752169; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-Id: Date: Subject: To: From: Sender;
- bh=T9NsD/M02vdnbyOUnwhyyGvAMjZyJMRP82J5Usiy73c=; b=CdY8KbsCXeYckDzZkNXPemqIfV88LaWDMWyf44xvVZGKC4oxBWhX51InQipvzaKUEFwe6npw
- eK03FhD4/ql0+hla+KX9RV36qZLpnbp5Krg9khCUAyqsQ0JO9GE8v8imlPdfXKSDFgURZTJ3
- XDT652bBYRCvf65eIxuPKOTjRz8=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5dfb5426.7fc03d6f2ca8-smtp-out-n01;
- Thu, 19 Dec 2019 10:42:46 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A3D07C447BB; Thu, 19 Dec 2019 10:42:46 +0000 (UTC)
-Received: from srichara-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sricharan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 33C73C4479C;
-        Thu, 19 Dec 2019 10:42:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 33C73C4479C
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
-From:   Sricharan R <sricharan@codeaurora.org>
-To:     sricharan@codeaurora.org, agross@kernel.org,
-        devicetree@vger.kernel.org, linus.walleij@linaro.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-soc@vger.kernel.org, robh+dt@kernel.org, sboyd@kernel.org,
-        sivaprak@codeaurora.org
-Subject: [PATCH V2 0/7] Add minimal boot support for IPQ6018
-Date:   Thu, 19 Dec 2019 16:11:42 +0530
-Message-Id: <1576752109-24497-1-git-send-email-sricharan@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Thu, 19 Dec 2019 05:42:52 -0500
+Received: by mail-qk1-f195.google.com with SMTP id t129so4219117qke.10
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 02:42:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TIJoAL5csx0AH4gB66J6qIB3eLqxZFfBPv363NryzWs=;
+        b=FWGpE+/tATqsqoZhk4l/cJS3y5dgDzxaD16oz9r2KsraAID77vrBQFp6MJiPSLPaL0
+         oY3Fq6R3LDIldJq3TnQw+39pNsIiso1cNmOVoa3KemvXixxLbUW49wIOg/KMNs+9JGk4
+         pe6QEFUgk4NnxTrBnRn8dTGRjsooqDrSwV7PoHtc4Y3svj0PbGCLd1d33hlFTAdsgX0e
+         LSOh2AuJi5YpV9/4clDFF/7uKx5CbBfXX2sQyOJ88zWpYv+d+KNeoDsqWRys+kJB0x6F
+         Zu4PgJtbfcYZbslfN5r12sYdh/cXod2sGvBl2N0wTnsMZ+cNa97wd9ZmKcgCKGr3fD6/
+         0d6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TIJoAL5csx0AH4gB66J6qIB3eLqxZFfBPv363NryzWs=;
+        b=pI4TcGCAzTMEIaNqjWokHbBZqKK2UW4eDHZpFhzKaQkWY8nCPTnq92tvsXNMvTSsIv
+         mG8+cOOuZ8OOGk22BWPo0LfQcdPs40gyPA2l4nwI8l2wvu/oU8tQdqA5YVDoKRsJ3Idr
+         ispHPwVtNuULDP4o9mKVewNod5MpqS19+pJwyL9Ie5lueSrZsagSYLLNHnYQBiLBGOk5
+         9RQjodXwjHE7PPGO+sOmAkJBLVUIbuA5LkQ7jnrjTzOupWZ9GNPJgMlyhZb8oy5eylgI
+         BDMog+Iq45ibRwYdwKX8rHySjFYHlPy6u89tszVP+hKhk33lxTXDXZy3g25UwT5GEyhI
+         XsJw==
+X-Gm-Message-State: APjAAAXjzBgK932uuZhzcjrKqn2vLKvqVwpdRUIX9Z8r6fPIsu0Nsqx7
+        Als96GSqdnTOZJqXpV4lGOBU1iFCs5tAOfGhT4Jj7Q==
+X-Google-Smtp-Source: APXvYqw/yNawVnJ0g/UoZK4sjZJEHIQt2stccVEGiGHGtRLqhjXr4s7hTjInKYxTRBRNf6xwo9D1pmq14OCcP13kjqk=
+X-Received: by 2002:ae9:e50c:: with SMTP id w12mr6739925qkf.407.1576752170800;
+ Thu, 19 Dec 2019 02:42:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20191208232734.225161-1-Jason@zx2c4.com> <CACT4Y+bsJVmgbD-WogwU=LfWiPN1JgjBrwx4s8Y14hDd7vqqhQ@mail.gmail.com>
+ <CAHmME9o0AparjaaOSoZD14RAW8_AJTfKfcx3Y2ndDAPFNC-MeQ@mail.gmail.com>
+ <CACT4Y+Zssd6OZ2-U4kjw18mNthQyzPWZV_gkH3uATnSv1SVDfA@mail.gmail.com>
+ <CAHmME9oM=YHMZyg23WEzmZAof=7iv-A01VazB3ihhR99f6X1cg@mail.gmail.com>
+ <CACT4Y+aCEZm_BA5mmVTnK2cR8CQUky5w1qvmb2KpSR4-Pzp4Ow@mail.gmail.com> <CAHmME9rYstVLCBOgdMLqMeVDrX1V-f92vRKDqWsREROWdPbb6g@mail.gmail.com>
+In-Reply-To: <CAHmME9rYstVLCBOgdMLqMeVDrX1V-f92vRKDqWsREROWdPbb6g@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 19 Dec 2019 11:42:39 +0100
+Message-ID: <CACT4Y+Zs=SQwYS8yx3ds7HBhr1RHkDwRe_av2XjJty-5wMTFEA@mail.gmail.com>
+Subject: Re: [PATCH net-next v2] net: WireGuard secure network tunnel
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The IPQ6018 is Qualcomm’s 802.11ax SoC for Routers,
-Gateways and Access Points.
+On Thu, Dec 19, 2019 at 11:07 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+>
+> On Thu, Dec 19, 2019 at 10:35 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+> > > Is this precise enough for race
+> > > condition bugs?
+> >
+> > It's finding lots of race conditions provoked bugs (I would say it's
+> > the most common cause of kernel bugs).
+>
+> I meant -- are the reproducers it makes precise enough to retrigger
+> network-level race conditions?
 
-This series adds minimal board boot support for ipq6018-cp01 board.
+We provide a simple invariant: if it claims a reproducer, it was able
+to provide the exact reported crash using that exact program on a
+freshly booted kernel.
+However, the crash may be reproducible on the first iteration, or may
+require running it for a few seconds/minutes. And obviously for race
+conditions the rate on your machine may be different (in both
+directions) from the rate on the syzbot machine.
+Reproducers don't try to fix the exact execution (generally not
+feasible), instead they are just threaded stress tests with some
+amount of natural randomness is execution. But as I notes, it was able
+to trigger that exact crash using that exact program.
 
-[v2]
- * Splitted dt bindings  and driver into different patches. Added missing bindings
-   and some style changes.
- * Added ipq6018 schema
- * Addressed review comments for gcc clock bindings.
- * Removed all clk critical flags, removed 1/1 factor clocks, moved to new
-   way of specifying clk parents, and addressed other review comments.
- * Sorted nodes based on address, name, label. Removed unused clock nodes,
-   Addressed other review comments.
+A shorter version: it's good enough to tr-trigger lots of race conditions.
 
-Sricharan R (7):
-  dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl bindings
-  pinctrl: qcom: Add ipq6018 pinctrl driver
-  dt-bindings: qcom: Add ipq6018 bindings
-  clk: qcom: Add DT bindings for ipq6018 gcc clock controller
-  clk: qcom: Add ipq6018 Global Clock Controller support
-  arm64: dts: Add ipq6018 SoC and CP01 board support
-  arm64: defconfig: Enable qcom ipq6018 clock and pinctrl
 
- Documentation/devicetree/bindings/arm/qcom.yaml    |    7 +
- .../devicetree/bindings/clock/qcom,gcc.yaml        |    3 +-
- .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml     |  172 +
- arch/arm64/boot/dts/qcom/Makefile                  |    1 +
- arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts       |   41 +
- arch/arm64/boot/dts/qcom/ipq6018.dtsi              |  215 +
- arch/arm64/configs/defconfig                       |    3 +
- drivers/clk/qcom/Kconfig                           |    8 +
- drivers/clk/qcom/Makefile                          |    1 +
- drivers/clk/qcom/gcc-ipq6018.c                     | 4674 ++++++++++++++++++++
- drivers/pinctrl/qcom/Kconfig                       |   10 +
- drivers/pinctrl/qcom/Makefile                      |    1 +
- drivers/pinctrl/qcom/pinctrl-ipq6018.c             | 1161 +++++
- include/dt-bindings/clock/qcom,gcc-ipq6018.h       |  262 ++
- include/dt-bindings/reset/qcom,gcc-ipq6018.h       |  157 +
- 15 files changed, 6715 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
- create mode 100644 arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
- create mode 100644 arch/arm64/boot/dts/qcom/ipq6018.dtsi
- create mode 100644 drivers/clk/qcom/gcc-ipq6018.c
- create mode 100644 drivers/pinctrl/qcom/pinctrl-ipq6018.c
- create mode 100644 include/dt-bindings/clock/qcom,gcc-ipq6018.h
- create mode 100644 include/dt-bindings/reset/qcom,gcc-ipq6018.h
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> > Well, you are missing that wireguard is not the only subsystem
+> > syzkaller tests (in fact, it does not test it at all) and there are
+> > 3000 other subsystems :)
+>
+> Oooo! Everything is tested at the same time. I understand now; that
+> makes a lot more sense.
+
+Yes, it's generally whole kernel. Partitioning it into 3000 separate
+instances is lots of problems on multiple fronts and in the end it's
+not really possible to draw strict boundaries, in end whole kernel is
+tied via mm/fs/pipes/splice/vmslice/etc. E.g. what if you vmsplice
+some device-mapped memory into wireguard using io_uring and setup some
+bpf filter somewhere and ptrace it at the same time while sending a
+signal? :)
+
+
+> I'll look into splitting out the option, as you've asked. Note,
+> though, that there are currently only three spots that have the "extra
+> checks" at the moment, and one of them can be optimized out by the
+> compiler with aggressive enough inlining added everywhere. The other
+> two will result in an immediately corrupted stack frame that should be
+> caught immediately by other things. So for now, I think you can get
+> away with turning the debug option off, and you won't be missing much
+> from the "extra checks", at least until we add more.
+
+I see. Maybe something to keep in mind for future.
+
+> That's exciting about syzcaller having at it with WireGuard. Is there
+> some place where I can "see" it fuzzing WireGuard, or do I just wait
+> for the bug reports to come rolling in?
+
+Well, unfortunately it does not test wireguard at the moment. I've
+enabled the config as I saw it appeared in linux-next:
+https://github.com/google/syzkaller/commit/240ba66ba8a0a99f27e1aac01f376331051a65c2
+but that's it for now.
+There are 3000 subsystems, are you ready to describe precise interface
+for all of them with all the necessary setup and prerequisites? Nobody
+can do it for all subsystems. Developer of a particular subsystem is
+the best candidate for also describing what it takes to test it ;)
