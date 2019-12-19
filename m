@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3946BC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C8C9C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B19D222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F8EC206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:57:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781866;
-	bh=LJLJvnGwCXDsIA9Ln7CmQsEqfN6rhQf1x7joY2IBQYg=;
+	s=default; t=1576781869;
+	bh=/5VkuBAMF0hcicJrt4OEqJzPZcmo+aSf0A05sH6ht1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hRhnNH2p3TmsvD0bVdHHCcR0W60gI5tLoWPkHoaQxQFzbpl4L3ILJncA9vQ1bDeMq
-	 b8ip557dcH3t8c7yyGXmo8/0ymo4Id6gSk+lE2Z7EIlMafpflzy1m/Y5jjbgStLbiy
-	 TYla22Zj/Hs1Prfj7WOi2jwELY+Uf+S7O86nPGcQ=
+	b=Js36f+Uzrumu9fGuIjQaUrh12xK52X7C/jnkfwLtrJTgGc+18BMV1CnO5WI9fx0Uv
+	 UAurqdLV+uhoCS3QkTFhS/c4Zk4T/tNUHX17XZu/JDOD2A+G01IHBoG6xQy+4XuFtM
+	 MXh6umWb9p7VgX/phuJ3RrdzbJYRac1ONghpJkL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729913AbfLSS5p (ORCPT
+        id S1730727AbfLSSzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:57:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52060 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:55:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728993AbfLSSzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:55:50 -0500
+        id S1729871AbfLSSzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:55:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD53124682;
-        Thu, 19 Dec 2019 18:55:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB27024685;
+        Thu, 19 Dec 2019 18:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781750;
-        bh=LJLJvnGwCXDsIA9Ln7CmQsEqfN6rhQf1x7joY2IBQYg=;
+        s=default; t=1576781745;
+        bh=/5VkuBAMF0hcicJrt4OEqJzPZcmo+aSf0A05sH6ht1E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XPaQDSoXjg1R181WLFRHm7fLQiax2D9S+uSexyBNM0IRG3dNeLklcb6ZfbDjHLV6o
-         HKhR4sblSDkEy2UMecyc6rWIp+WvX2K9uabD35IDbl2YYlBiiw7wCtPxu+X3B4xuKu
-         32qBvWM7NFv1vlJiUGV6tGOqy9nYuLcOyi8PITw8=
+        b=jtd1qMFiyR+5OAXS9+M1bweSIjiB62oeWW0gcEYOZ2d7k63nJSzV+yBc2HUOLuA1I
+         V8LW0gl5qPaRx7txfxr/p6aoHmXrboDdl1n8nLjA/RRtb4taxRZUDh8JFr7XqHLQwF
+         lSsoiAnJoENUUmgoVliAGoTCCIXnZH5A5D9LiIkk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Michael Hernandez <mhernandez@marvell.com>,
         Himanshu Madhani <hmadhani@marvell.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.4 64/80] scsi: qla2xxx: Correctly retrieve and interpret active flash region
-Date:   Thu, 19 Dec 2019 19:34:56 +0100
-Message-Id: <20191219183137.117790260@linuxfoundation.org>
+Subject: [PATCH 5.4 62/80] scsi: qla2xxx: Added support for MPI and PEP regions for ISP28XX
+Date:   Thu, 19 Dec 2019 19:34:54 +0100
+Message-Id: <20191219183135.337522801@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -60,71 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Himanshu Madhani <hmadhani@marvell.com>
+From: Michael Hernandez <mhernandez@marvell.com>
 
-commit 4e71dcae0c4cd1e9d19b8b3d80214a4bcdca5a42 upstream.
+commit a530bf691f0e4691214562c165e6c8889dc51e57 upstream.
 
-ISP27XX/28XX supports multiple flash regions. This patch fixes issue where
-active flash region was not interpreted correctly during secure flash
-update process.
+This patch adds support for MPI/PEP region updates which is required with
+secure flash updates for ISP28XX.
 
-[mkp: typo]
-
-Fixes: 5fa8774c7f38c ("scsi: qla2xxx: Add 28xx flash primary/secondary status/image mechanism")
+Fixes: 3f006ac342c0 ("scsi: qla2xxx: Secure flash update support for ISP28XX")
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191203223657.22109-2-hmadhani@marvell.com
+Link: https://lore.kernel.org/r/20191203223657.22109-3-hmadhani@marvell.com
 Signed-off-by: Michael Hernandez <mhernandez@marvell.com>
 Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla2xxx/qla_attr.c |    1 +
- drivers/scsi/qla2xxx/qla_bsg.c  |    2 +-
- drivers/scsi/qla2xxx/qla_sup.c  |    6 +++---
- 3 files changed, 5 insertions(+), 4 deletions(-)
+ drivers/scsi/qla2xxx/qla_fw.h  |    4 ++++
+ drivers/scsi/qla2xxx/qla_sup.c |   27 ++++++++++++++++++++++-----
+ 2 files changed, 26 insertions(+), 5 deletions(-)
 
---- a/drivers/scsi/qla2xxx/qla_attr.c
-+++ b/drivers/scsi/qla2xxx/qla_attr.c
-@@ -176,6 +176,7 @@ qla2x00_sysfs_read_nvram(struct file *fi
+--- a/drivers/scsi/qla2xxx/qla_fw.h
++++ b/drivers/scsi/qla2xxx/qla_fw.h
+@@ -1523,6 +1523,10 @@ struct qla_flt_header {
+ #define FLT_REG_NVRAM_SEC_28XX_1	0x10F
+ #define FLT_REG_NVRAM_SEC_28XX_2	0x111
+ #define FLT_REG_NVRAM_SEC_28XX_3	0x113
++#define FLT_REG_MPI_PRI_28XX		0xD3
++#define FLT_REG_MPI_SEC_28XX		0xF0
++#define FLT_REG_PEP_PRI_28XX		0xD1
++#define FLT_REG_PEP_SEC_28XX		0xF1
  
- 	faddr = ha->flt_region_nvram;
- 	if (IS_QLA28XX(ha)) {
-+		qla28xx_get_aux_images(vha, &active_regions);
- 		if (active_regions.aux.vpd_nvram == QLA27XX_SECONDARY_IMAGE)
- 			faddr = ha->flt_region_nvram_sec;
- 	}
---- a/drivers/scsi/qla2xxx/qla_bsg.c
-+++ b/drivers/scsi/qla2xxx/qla_bsg.c
-@@ -2399,7 +2399,7 @@ qla2x00_get_flash_image_status(struct bs
- 	struct qla_active_regions regions = { };
- 	struct active_regions active_regions = { };
- 
--	qla28xx_get_aux_images(vha, &active_regions);
-+	qla27xx_get_active_image(vha, &active_regions);
- 	regions.global_image = active_regions.global;
- 
- 	if (IS_QLA28XX(ha)) {
+ struct qla_flt_region {
+ 	uint16_t code;
 --- a/drivers/scsi/qla2xxx/qla_sup.c
 +++ b/drivers/scsi/qla2xxx/qla_sup.c
-@@ -847,15 +847,15 @@ qla2xxx_get_flt_info(scsi_qla_host_t *vh
- 				ha->flt_region_img_status_pri = start;
- 			break;
- 		case FLT_REG_IMG_SEC_27XX:
--			if (IS_QLA27XX(ha) && !IS_QLA28XX(ha))
-+			if (IS_QLA27XX(ha) || IS_QLA28XX(ha))
- 				ha->flt_region_img_status_sec = start;
- 			break;
- 		case FLT_REG_FW_SEC_27XX:
--			if (IS_QLA27XX(ha) && !IS_QLA28XX(ha))
-+			if (IS_QLA27XX(ha) || IS_QLA28XX(ha))
- 				ha->flt_region_fw_sec = start;
- 			break;
- 		case FLT_REG_BOOTLOAD_SEC_27XX:
--			if (IS_QLA27XX(ha) && !IS_QLA28XX(ha))
-+			if (IS_QLA27XX(ha) || IS_QLA28XX(ha))
- 				ha->flt_region_boot_sec = start;
- 			break;
- 		case FLT_REG_AUX_IMG_PRI_28XX:
+@@ -2725,8 +2725,11 @@ qla28xx_write_flash_data(scsi_qla_host_t
+ 		ql_log(ql_log_warn + ql_dbg_verbose, vha, 0xffff,
+ 		    "Region %x is secure\n", region.code);
+ 
+-		if (region.code == FLT_REG_FW ||
+-		    region.code == FLT_REG_FW_SEC_27XX) {
++		switch (region.code) {
++		case FLT_REG_FW:
++		case FLT_REG_FW_SEC_27XX:
++		case FLT_REG_MPI_PRI_28XX:
++		case FLT_REG_MPI_SEC_28XX:
+ 			fw_array = dwptr;
+ 
+ 			/* 1st fw array */
+@@ -2757,9 +2760,23 @@ qla28xx_write_flash_data(scsi_qla_host_t
+ 				buf_size_without_sfub += risc_size;
+ 				fw_array += risc_size;
+ 			}
+-		} else {
+-			ql_log(ql_log_warn + ql_dbg_verbose, vha, 0xffff,
+-			    "Secure region %x not supported\n",
++			break;
++
++		case FLT_REG_PEP_PRI_28XX:
++		case FLT_REG_PEP_SEC_28XX:
++			fw_array = dwptr;
++
++			/* 1st fw array */
++			risc_size = be32_to_cpu(fw_array[3]);
++			risc_attr = be32_to_cpu(fw_array[9]);
++
++			buf_size_without_sfub = risc_size;
++			fw_array += risc_size;
++			break;
++
++		default:
++			ql_log(ql_log_warn + ql_dbg_verbose, vha,
++			    0xffff, "Secure region %x not supported\n",
+ 			    region.code);
+ 			rval = QLA_COMMAND_ERROR;
+ 			goto done;
 
 
