@@ -2,75 +2,110 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBE7C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BADEC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA06D2465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:14:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576732480;
-	bh=zutbo+tkyWAeoZo0maixsENGTToLoAmt9MwqGd10Gvk=;
-	h=In-Reply-To:References:Cc:Subject:From:To:Date:List-ID:From;
-	b=knNLsWKDCzyUQuwzwuUg/F1zkm6msf9iIQxLbEDCMXBdel7RlrcyOMzJ2au+W5xoN
-	 YXgaVD2cGtNpeKPZF7BidGqM0PXM8PIK08MVul/j+vPI5oLwAgtqu8t+Otq/Lde7iK
-	 Jo7xjhjQIe6H0LiwiANS8anUWoLtz962zW4f9FlY=
+	by mail.kernel.org (Postfix) with ESMTP id 3ACF62146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:19:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="k0e84dPH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbfLSFOj (ORCPT
+        id S1726393AbfLSFTh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 00:14:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41832 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbfLSFOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 00:14:39 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2B842146E;
-        Thu, 19 Dec 2019 05:14:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576732478;
-        bh=zutbo+tkyWAeoZo0maixsENGTToLoAmt9MwqGd10Gvk=;
-        h=In-Reply-To:References:Cc:Subject:From:To:Date:From;
-        b=SvdIWTueB22fAa/EqIDmetplXA/yHVHTxROAlv9nALYp6XEVxf+PZ13hSd6ZP7zUq
-         aTg2Gj1IuqzblN2opxfhhQGK69ycvcncMQcLaTtpyasdIk7oDDXmNz1FnV+R7GK84H
-         +SADY9DR+IEd06Bjcm6lnOiXp6BUonTRz8RoxwAc=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 19 Dec 2019 00:19:37 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:47020 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725908AbfLSFTh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 00:19:37 -0500
+Received: by mail-ot1-f65.google.com with SMTP id c22so5560824otj.13
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 21:19:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ebFIMmIFcRXMNWKUGHUPVzk5pgnyLGBQyisFaU/FwbA=;
+        b=k0e84dPH4htoykVcj9saaY4VEZM4fFiDoj23iKL7NDpna4Dyr28UklvE4Qm1hEnppc
+         4EbUbfCTOn/b8lUfCNu2jNxUj1froCEK5Z8ZrX+n4cNMtHyy3HHVdQ4F0Dnz6W644vIS
+         CoypM4ri8MnlsjoxJl6sNO2YIoAd65qi9vuKkshigdqdkOxib4j6DAXomkzWIUoKIo8T
+         SMzh8t1qvWHtMDnhP1avLg6zE5zGJQFkYt3QsG1u0q3paSZqxZo4s2JqOmXvs03sYzR8
+         qqPl9RGItEiN72UPcuWzspy7AXHNrvdYBRk7bebD4oCBZa+e0MhCf52+QgTmd1tU/laL
+         8nww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ebFIMmIFcRXMNWKUGHUPVzk5pgnyLGBQyisFaU/FwbA=;
+        b=k+j2kAdNGWtAQ96JxasSHfEk6Ad9vfCeBzBnOqCScKXyeb5peinVwkDv6W7Bo2iXeM
+         akYcgfTdnE8yzmOF/0BAcEOuQu1pmgWRIiAC57Jta0UxMevkfWkAHms2zKPzFHNOgCvy
+         RzEYgVJ7OyZ0WHCQUeP5i+VFTxV/P8/d/wVgijecL1ypczFrPFS9YwUVyuMweRzX0YJT
+         CxY2ivftieXg99HEXjIUg/jX3xr5Ah7MZWaXqmxkx+hH1oSln8qkLObDKgMp7zIVtdRY
+         sY15P59Hcri+PoCSwnIUyytE1B5QwkqUekNjJRbdfLkjwxV9mXrcKdS5697nmfQE0gjr
+         DvHg==
+X-Gm-Message-State: APjAAAXAZzLx62z8HMWE7Yq0cFX1zy5R2oCvWpbxz8HsqknfjMHbAfn3
+        TdjfJEtpmwqP+k/V4wg1ELOwKGypt4x6VUkPyGvmWHEC
+X-Google-Smtp-Source: APXvYqxhpUIvpLGge5tDFBoL23b9F+f851RUtQ3m9EXuu4PlCjXNQWpf9BjSiCVPHeeUOCcme8JMICpJQ2zNNvAoUtY=
+X-Received: by 2002:a05:6830:1744:: with SMTP id 4mr6553170otz.71.1576732776609;
+ Wed, 18 Dec 2019 21:19:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191218190454.420358-3-lkundrak@v3.sk>
-References: <20191218190454.420358-1-lkundrak@v3.sk> <20191218190454.420358-3-lkundrak@v3.sk>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Michael Turquette <mturquette@baylibre.com>, soc@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH 2/2] clk: mmp2: Fix the order of timer mux parents
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>, Olof Johansson <olof@lixom.net>
-User-Agent: alot/0.8.1
-Date:   Wed, 18 Dec 2019 21:14:37 -0800
-Message-Id: <20191219051438.C2B842146E@mail.kernel.org>
+References: <1576728650-13867-1-git-send-email-anshuman.khandual@arm.com>
+In-Reply-To: <1576728650-13867-1-git-send-email-anshuman.khandual@arm.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 18 Dec 2019 21:19:25 -0800
+Message-ID: <CAPcyv4gCqt1cfEb4KFWW+J+FcQj8ZnYEFz-ggLzgR2Zs+Wg13w@mail.gmail.com>
+Subject: Re: [PATCH] mm: Drop elements 'hw' and 'phys_callback' from struct memory_block
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Lubomir Rintel (2019-12-18 11:04:54)
-> Determined empirically, no documentation is available.
->=20
-> The OLPC XO-1.75 laptop used parent 1, that one being VCTCXO/4 (65MHz), b=
-ut
-> thought it's a VCTCXO/2 (130MHz). The mmp2 timer driver, not knowing
-> what is going on, ended up just dividing the rate as of
-> commit f36797ee4380 ("ARM: mmp/mmp2: dt: enable the clock")'
->=20
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+On Wed, Dec 18, 2019 at 8:10 PM Anshuman Khandual
+<anshuman.khandual@arm.com> wrote:
+>
+> memory_block structure elements 'hw' and 'phys_callback' are not getting
+> used. This was originally added with commit 3947be1969a9 ("[PATCH] memory
+> hotplug: sysfs and add/remove functions") but never seem to have been used.
+> Just drop them now.
+>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 > ---
+>  include/linux/memory.h | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/include/linux/memory.h b/include/linux/memory.h
+> index 0ebb105eb261..4e95a9eb8061 100644
+> --- a/include/linux/memory.h
+> +++ b/include/linux/memory.h
+> @@ -29,8 +29,6 @@ struct memory_block {
+>         int section_count;              /* serialized by mem_sysfs_mutex */
+>         int online_type;                /* for passing data to online routine */
+>         int phys_device;                /* to which fru does this belong? */
+> -       void *hw;                       /* optional pointer to fw/hw data */
+> -       int (*phys_callback)(struct memory_block *);
+>         struct device dev;
+>         int nid;                        /* NID for this memory block */
+>  };
+> --
+> 2.20.1
 
-Any Fixes: tag?
+Looks good.
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
-
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
