@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C61C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FDBC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A99F222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D570E24672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:44:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781040;
-	bh=5c+/LOE4VJVhhZOOjd+xD/vKB1b/odbuOaqjEBdegP8=;
+	s=default; t=1576781042;
+	bh=HlbDyFNZHpb3vx0ma2PmyfGDo+ZMxWe2ORxYgPZBxWw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U6rVrok5+hsECQI59XGYbLjqfU2A4tuVkdubtLzczqiefz/Lyf8RuyWiVruh5/u9t
-	 zuYz1ZUfu+vKgMc3m9ZntAqE19f9SPNdBN1in/YUIvQCnpMigita6nbmkKS1RP128Z
-	 JBT9Zbu/vGtZeIe3qcm+MowX3X3fJJnghI5ROP7o=
+	b=AtXuqkU9HZWmqpIhvmTX1FvNt6/5TcSAv93yaaczzR2otFHJOUf50B3yXdTTsRyl+
+	 0ZNjPVbK/hrDWqm6Rcqwm/Rl7nbe8YhAdro2MKUjUzAI70MLUEm1YaTQP/FOd6vulK
+	 bYW2c5wOKo/ch7CkGnBewpG6i1R709XuyEBERd8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728935AbfLSSn7 (ORCPT
+        id S1728940AbfLSSoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:43:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35792 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:44:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728923AbfLSSn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:43:56 -0500
+        id S1728934AbfLSSn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:43:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2930C222C2;
-        Thu, 19 Dec 2019 18:43:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64D7324680;
+        Thu, 19 Dec 2019 18:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781036;
-        bh=5c+/LOE4VJVhhZOOjd+xD/vKB1b/odbuOaqjEBdegP8=;
+        s=default; t=1576781038;
+        bh=HlbDyFNZHpb3vx0ma2PmyfGDo+ZMxWe2ORxYgPZBxWw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UxKl6SrnktfWnF9log1T/B+97jvRGwCSrcQhOKKtaT0uWHBW3DIpk++DegTnOa5/M
-         kdpZHBY6JqWuZS31bL/d00er/gqMdECS9sKyg3Nm9o6D8vD9z8ftwyGZ8GrhsDQRGi
-         jBjWgWcvzsB1c8uDf+IUpc1DDkIHgYFMjgHkq3ME=
+        b=JhpQCK1yfumoqa1TOks9rFyHCPULqEzeTSHenDi9TpbUA1blNBgBm/S8mMiCk8moR
+         8YreRh/9jKnyhjEgpPhpD003qajG/i/HGAHtyD7nrIkZ9EPus2Ox0TkAZKTffhBvAl
+         cPmMXWFfqmcdGdUNHz4Xjta9GVGUqK37WryY5jlk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 057/199] kbuild: fix single target build for external module
-Date:   Thu, 19 Dec 2019 19:32:19 +0100
-Message-Id: <20191219183218.120498975@linuxfoundation.org>
+Subject: [PATCH 4.9 040/199] usb: dwc3: dont log probe deferrals; but do log other error codes
+Date:   Thu, 19 Dec 2019 19:32:02 +0100
+Message-Id: <20191219183217.148335286@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,83 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Brian Norris <briannorris@chromium.org>
 
-[ Upstream commit e07db28eea38ed4e332b3a89f3995c86b713cb5b ]
+[ Upstream commit 408d3ba006af57380fa48858b39f72fde6405031 ]
 
-Building a single target in an external module fails due to missing
-.tmp_versions directory.
+It's not very useful to repeat a bunch of probe deferral errors. And
+it's also not very useful to log "failed" without telling the error
+code.
 
-For example,
-
-  $ make -C /lib/modules/$(uname -r)/build M=$PWD foo.o
-
-will fail in the following way:
-
-  CC [M]  /home/masahiro/foo/foo.o
-/bin/sh: 1: cannot create /home/masahiro/foo/.tmp_versions/foo.mod: Directory nonexistent
-
-This is because $(cmd_crmodverdir) is executed only before building
-/, %/, %.ko single targets of external modules. Create .tmp_versions
-in the 'prepare' target.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ drivers/usb/dwc3/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index 55a91bc3d8f9c..6baf1e6324255 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1521,9 +1521,6 @@ else # KBUILD_EXTMOD
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index 7154a93f01143..30bc5996a2f23 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -1102,7 +1102,8 @@ static int dwc3_probe(struct platform_device *pdev)
  
- # We are always building modules
- KBUILD_MODULES := 1
--PHONY += crmodverdir
--crmodverdir:
--	$(cmd_crmodverdir)
+ 	ret = dwc3_core_init(dwc);
+ 	if (ret) {
+-		dev_err(dev, "failed to initialize core\n");
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "failed to initialize core: %d\n", ret);
+ 		goto err4;
+ 	}
  
- PHONY += $(objtree)/Module.symvers
- $(objtree)/Module.symvers:
-@@ -1535,7 +1532,7 @@ $(objtree)/Module.symvers:
- 
- module-dirs := $(addprefix _module_,$(KBUILD_EXTMOD))
- PHONY += $(module-dirs) modules
--$(module-dirs): crmodverdir $(objtree)/Module.symvers
-+$(module-dirs): prepare $(objtree)/Module.symvers
- 	$(Q)$(MAKE) $(build)=$(patsubst _module_%,%,$@)
- 
- modules: $(module-dirs)
-@@ -1576,7 +1573,8 @@ help:
- 
- # Dummies...
- PHONY += prepare scripts
--prepare: ;
-+prepare:
-+	$(cmd_crmodverdir)
- scripts: ;
- endif # KBUILD_EXTMOD
- 
-@@ -1701,17 +1699,14 @@ endif
- 
- # Modules
- /: prepare scripts FORCE
--	$(cmd_crmodverdir)
- 	$(Q)$(MAKE) KBUILD_MODULES=$(if $(CONFIG_MODULES),1) \
- 	$(build)=$(build-dir)
- # Make sure the latest headers are built for Documentation
- Documentation/ samples/: headers_install
- %/: prepare scripts FORCE
--	$(cmd_crmodverdir)
- 	$(Q)$(MAKE) KBUILD_MODULES=$(if $(CONFIG_MODULES),1) \
- 	$(build)=$(build-dir)
- %.ko: prepare scripts FORCE
--	$(cmd_crmodverdir)
- 	$(Q)$(MAKE) KBUILD_MODULES=$(if $(CONFIG_MODULES),1)   \
- 	$(build)=$(build-dir) $(@:.ko=.o)
- 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
 -- 
 2.20.1
 
