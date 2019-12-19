@@ -2,167 +2,292 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BF0C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F695C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A70F2467B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:29:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576758540;
-	bh=K/RLgM+SNDwhK160kOZ3ld2ozw8rv1ZoVmB6uRR2nAc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oJdrr0i+NZ5rGy/lNWOgu35gXZjJ+i7sI0kZBF2YkcHrpsoUE2/mQX5rOLdo+Dbwu
-	 /RSvsMeXMDvJ2nEdabzXbtsYaKZTz16QJkT0shgxK/X/6PFauz4ZAOART+GAEajsmu
-	 eB35RHfxGAIdssK267vWqzcq6LKD52tN27Hf32VI=
+	by mail.kernel.org (Postfix) with ESMTP id 9F673218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:31:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kd+giAJS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfLSM25 (ORCPT
+        id S1726752AbfLSMb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 07:28:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45430 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726668AbfLSM24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 07:28:56 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9786224650;
-        Thu, 19 Dec 2019 12:28:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576758535;
-        bh=K/RLgM+SNDwhK160kOZ3ld2ozw8rv1ZoVmB6uRR2nAc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GOK38LYhkDsLh91zwac08ED3eDHGiVQPYJE/D/q2TxhHZsMYw43GHgfiX7KO38CFt
-         Iyz4xXc7a08qXxU6Pz4/COYnpBsM2pa6vgVj9mNlCDY9XynjVpoNUmdwGpWvWSzhgN
-         Mfn+qZu7K55uApSKhkwUo6/dgaXOAwyAZeNnhvYU=
-Date:   Thu, 19 Dec 2019 12:28:50 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, kernel-team@android.com,
-        Hillf Danton <hdanton@sina.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com
-Subject: Re: [PATCH] chardev: Avoid potential use-after-free in
- 'chrdev_open()'
-Message-ID: <20191219122849.GC32361@willie-the-truck>
-References: <20191219120203.32691-1-will@kernel.org>
- <20191219121507.GA1493557@kroah.com>
+        Thu, 19 Dec 2019 07:31:56 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:53366 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726668AbfLSMb4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 07:31:56 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJCVs7D040194;
+        Thu, 19 Dec 2019 06:31:54 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576758714;
+        bh=Pv1mJYF6L0EcMQKuEnZ7/ITcNqi4Vjrbht7VTdB5o1k=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=kd+giAJSEM1/h1weIiBiwYp/RD22EU5WxGmEWhQooj8zJcNZUBl3W5ffFxk6f4wDn
+         ziAgwGxNJXvzkKnYm1741HL4yrLBJfJ24Mkh3sIEaXTRdOlBZ5A6ZZ6hDQt118HDac
+         QXYJjxS6hSeauKvDwT20MbzYN0WgG3M3eYB6pP98=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBJCVsmn067784
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 19 Dec 2019 06:31:54 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Dec 2019 06:31:54 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Dec 2019 06:31:54 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJCVp9k097056;
+        Thu, 19 Dec 2019 06:31:52 -0600
+Subject: Re: [PATCHv3 04/15] remoteproc/omap: Add support to parse internal
+ memories from DT
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, Suman Anna <s-anna@ti.com>
+References: <20191213125537.11509-1-t-kristo@ti.com>
+ <20191213125537.11509-5-t-kristo@ti.com> <20191218002257.GB16271@xps15>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <021d0654-5e78-85cd-4737-c1eccc8c07ce@ti.com>
+Date:   Thu, 19 Dec 2019 14:31:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191219121507.GA1493557@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191218002257.GB16271@xps15>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 01:15:07PM +0100, Greg KH wrote:
-> On Thu, Dec 19, 2019 at 12:02:03PM +0000, Will Deacon wrote:
-> > 'chrdev_open()' calls 'cdev_get()' to obtain a reference to the
-> > 'struct cdev *' stashed in the 'i_cdev' field of the target inode
-> > structure. If the pointer is NULL, then it is initialised lazily by
-> > looking up the kobject in the 'cdev_map' and so the whole procedure is
-> > protected by the 'cdev_lock' spinlock to serialise initialisation of
-> > the shared pointer.
-> > 
-> > Unfortunately, it is possible for the initialising thread to fail *after*
-> > installing the new pointer, for example if the subsequent '->open()' call
-> > on the file fails. In this case, 'cdev_put()' is called, the reference
-> > count on the kobject is dropped and, if nobody else has taken a reference,
-> > the release function is called which finally clears 'inode->i_cdev' from
-> > 'cdev_purge()' before potentially freeing the object. The problem here
-> > is that a racing thread can happily take the 'cdev_lock' and see the
-> > non-NULL pointer in the inode, which can result in a refcount increment
-> > from zero and a warning:
-> > 
-> >   |  ------------[ cut here ]------------
-> >   |  refcount_t: addition on 0; use-after-free.
-> >   |  WARNING: CPU: 2 PID: 6385 at lib/refcount.c:25 refcount_warn_saturate+0x6d/0xf0
-> >   |  Modules linked in:
-> >   |  CPU: 2 PID: 6385 Comm: repro Not tainted 5.5.0-rc2+ #22
-> >   |  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-> >   |  RIP: 0010:refcount_warn_saturate+0x6d/0xf0
-> >   |  Code: 05 55 9a 15 01 01 e8 9d aa c8 ff 0f 0b c3 80 3d 45 9a 15 01 00 75 ce 48 c7 c7 00 9c 62 b3 c6 08
-> >   |  RSP: 0018:ffffb524c1b9bc70 EFLAGS: 00010282
-> >   |  RAX: 0000000000000000 RBX: ffff9e9da1f71390 RCX: 0000000000000000
-> >   |  RDX: ffff9e9dbbd27618 RSI: ffff9e9dbbd18798 RDI: ffff9e9dbbd18798
-> >   |  RBP: 0000000000000000 R08: 000000000000095f R09: 0000000000000039
-> >   |  R10: 0000000000000000 R11: ffffb524c1b9bb20 R12: ffff9e9da1e8c700
-> >   |  R13: ffffffffb25ee8b0 R14: 0000000000000000 R15: ffff9e9da1e8c700
-> >   |  FS:  00007f3b87d26700(0000) GS:ffff9e9dbbd00000(0000) knlGS:0000000000000000
-> >   |  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >   |  CR2: 00007fc16909c000 CR3: 000000012df9c000 CR4: 00000000000006e0
-> >   |  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> >   |  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> >   |  Call Trace:
-> >   |   kobject_get+0x5c/0x60
-> >   |   cdev_get+0x2b/0x60
-> >   |   chrdev_open+0x55/0x220
-> >   |   ? cdev_put.part.3+0x20/0x20
-> >   |   do_dentry_open+0x13a/0x390
-> >   |   path_openat+0x2c8/0x1470
-> >   |   do_filp_open+0x93/0x100
-> >   |   ? selinux_file_ioctl+0x17f/0x220
-> >   |   do_sys_open+0x186/0x220
-> >   |   do_syscall_64+0x48/0x150
-> >   |   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >   |  RIP: 0033:0x7f3b87efcd0e
-> >   |  Code: 89 54 24 08 e8 a3 f4 ff ff 8b 74 24 0c 48 8b 3c 24 41 89 c0 44 8b 54 24 08 b8 01 01 00 00 89 f4
-> >   |  RSP: 002b:00007f3b87d259f0 EFLAGS: 00000293 ORIG_RAX: 0000000000000101
-> >   |  RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f3b87efcd0e
-> >   |  RDX: 0000000000000000 RSI: 00007f3b87d25a80 RDI: 00000000ffffff9c
-> >   |  RBP: 00007f3b87d25e90 R08: 0000000000000000 R09: 0000000000000000
-> >   |  R10: 0000000000000000 R11: 0000000000000293 R12: 00007ffe188f504e
-> >   |  R13: 00007ffe188f504f R14: 00007f3b87d26700 R15: 0000000000000000
-> >   |  ---[ end trace 24f53ca58db8180a ]---
-> > 
-> > Since 'cdev_get()' can already fail to obtain a reference, simply move
-> > it over to use 'kobject_get_unless_zero()' instead of 'kobject_get()',
-> > which will cause the racing thread to return -ENXIO if the initialising
-> > thread fails unexpectedly.
-> > 
-> > Cc: Greg KH <gregkh@linuxfoundation.org>
-> > Cc: Hillf Danton <hdanton@sina.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Al Viro <viro@zeniv.linux.org.uk>
-> > Reported-by: syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com
-> > Signed-off-by: Will Deacon <will@kernel.org>
-> > ---
-> >  fs/char_dev.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/char_dev.c b/fs/char_dev.c
-> > index 00dfe17871ac..c5e6eff5a381 100644
-> > --- a/fs/char_dev.c
-> > +++ b/fs/char_dev.c
-> > @@ -352,7 +352,7 @@ static struct kobject *cdev_get(struct cdev *p)
-> >  
-> >  	if (owner && !try_module_get(owner))
-> >  		return NULL;
-> > -	kobj = kobject_get(&p->kobj);
-> > +	kobj = kobject_get_unless_zero(&p->kobj);
-> >  	if (!kobj)
-> >  		module_put(owner);
-> >  	return kobj;
-> > -- 
-> > 2.24.1.735.g03f4e72817-goog
-> > 
+On 18/12/2019 02:22, Mathieu Poirier wrote:
+> On Fri, Dec 13, 2019 at 02:55:26PM +0200, Tero Kristo wrote:
+>> From: Suman Anna <s-anna@ti.com>
+>>
+>> The OMAP remoteproc driver has been enhanced to parse and store
+>> the kernel mappings for different internal RAM memories that may
+>> be present within each remote processor IP subsystem. Different
+>> devices have varying memories present on current SoCs. The current
+>> support handles the L2RAM for all IPU devices on OMAP4+ SoCs. The
+>> DSPs on OMAP4/OMAP5 only have Unicaches and do not have any L1 or
+>> L2 RAM memories.
+>>
+>> IPUs are expected to have the L2RAM at a fixed device address of
+>> 0x20000000, based on the current limitations on Attribute MMU
+>> configurations.
+>>
+>> NOTE:
+>> The current logic doesn't handle the parsing of memories for DRA7
+>> remoteproc devices, and will be added alongside the DRA7 support.
+>>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> [t-kristo: converted to parse mem names / device addresses from pdata]
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> ---
+>>   drivers/remoteproc/omap_remoteproc.c | 86 ++++++++++++++++++++++++++++
+>>   1 file changed, 86 insertions(+)
+>>
+>> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+>> index d80f5d7b5931..844703507a74 100644
+>> --- a/drivers/remoteproc/omap_remoteproc.c
+>> +++ b/drivers/remoteproc/omap_remoteproc.c
+>> @@ -39,11 +39,27 @@ struct omap_rproc_boot_data {
+>>   	unsigned int boot_reg;
+>>   };
+>>   
+>> +/*
+>> + * struct omap_rproc_mem - internal memory structure
+>> + * @cpu_addr: MPU virtual address of the memory region
+>> + * @bus_addr: bus address used to access the memory region
+>> + * @dev_addr: device address of the memory region from DSP view
+>> + * @size: size of the memory region
+>> + */
+>> +struct omap_rproc_mem {
+>> +	void __iomem *cpu_addr;
+>> +	phys_addr_t bus_addr;
+>> +	u32 dev_addr;
+>> +	size_t size;
+>> +};
+>> +
+>>   /**
+>>    * struct omap_rproc - omap remote processor state
+>>    * @mbox: mailbox channel handle
+>>    * @client: mailbox client to request the mailbox channel
+>>    * @boot_data: boot data structure for setting processor boot address
+>> + * @mem: internal memory regions data
+>> + * @num_mems: number of internal memory regions
+>>    * @rproc: rproc handle
+>>    * @reset: reset handle
+>>    */
+>> @@ -51,6 +67,8 @@ struct omap_rproc {
+>>   	struct mbox_chan *mbox;
+>>   	struct mbox_client client;
+>>   	struct omap_rproc_boot_data *boot_data;
+>> +	struct omap_rproc_mem *mem;
+>> +	int num_mems;
+>>   	struct rproc *rproc;
+>>   	struct reset_control *reset;
+>>   };
+>> @@ -59,10 +77,14 @@ struct omap_rproc {
+>>    * struct omap_rproc_dev_data - device data for the omap remote processor
+>>    * @device_name: device name of the remote processor
+>>    * @has_bootreg: true if this remote processor has boot register
+>> + * @mem_names: memory names for this remote processor
+>> + * @dev_addrs: device addresses corresponding to the memory names
+>>    */
+>>   struct omap_rproc_dev_data {
+>>   	const char *device_name;
+>>   	bool has_bootreg;
+>> +	const char * const *mem_names;
+>> +	const u32 *dev_addrs;
 > 
-> Ugh.
-> 
-> Due to the location of the lock, this looks like the only viable
-> solution.
-> 
-> Al, any objection for me taking this into my tree now to send to Linus?
-> Will, this did fix the syzbot reproducer, right?
+> Bunching these two in a new structure like omap_rproc_mem_data would clean
+> things up.  That way the two arrays in the next hunk get merged and there can't
+> be a difference in sizes, somthing that will sturdy the main loop in
+> omap_rproc_of_get_internal_memories() below.
 
-Yes, looks like it. It ran overnight without failing (even with my mdelay()
-hacks applied to make the race more likely).
+Will fix this.
 
-Will
+> 
+>>   };
+>>   
+>>   /**
+>> @@ -216,6 +238,14 @@ static const struct rproc_ops omap_rproc_ops = {
+>>   	.kick		= omap_rproc_kick,
+>>   };
+>>   
+>> +static const char * const ipu_mem_names[] = {
+>> +	"l2ram", NULL
+>> +};
+>> +
+>> +static const u32 ipu_dev_addrs[] = {
+>> +	0x20000000,
+>> +};
+>> +
+>>   static const struct omap_rproc_dev_data omap4_dsp_dev_data = {
+>>   	.device_name	= "dsp",
+>>   	.has_bootreg	= true,
+>> @@ -223,6 +253,8 @@ static const struct omap_rproc_dev_data omap4_dsp_dev_data = {
+>>   
+>>   static const struct omap_rproc_dev_data omap4_ipu_dev_data = {
+>>   	.device_name	= "ipu",
+>> +	.mem_names	= ipu_mem_names,
+>> +	.dev_addrs	= ipu_dev_addrs,
+>>   };
+>>   
+>>   static const struct omap_rproc_dev_data omap5_dsp_dev_data = {
+>> @@ -232,6 +264,8 @@ static const struct omap_rproc_dev_data omap5_dsp_dev_data = {
+>>   
+>>   static const struct omap_rproc_dev_data omap5_ipu_dev_data = {
+>>   	.device_name	= "ipu",
+>> +	.mem_names	= ipu_mem_names,
+>> +	.dev_addrs	= ipu_dev_addrs,
+>>   };
+>>   
+>>   static const struct of_device_id omap_rproc_of_match[] = {
+>> @@ -311,6 +345,54 @@ static int omap_rproc_get_boot_data(struct platform_device *pdev,
+>>   	return 0;
+>>   }
+>>   
+>> +static int omap_rproc_of_get_internal_memories(struct platform_device *pdev,
+>> +					       struct rproc *rproc)
+>> +{
+>> +	struct omap_rproc *oproc = rproc->priv;
+>> +	struct device *dev = &pdev->dev;
+>> +	const struct omap_rproc_dev_data *data;
+>> +	struct resource *res;
+>> +	int num_mems;
+>> +	int i;
+>> +
+>> +	data = of_device_get_match_data(&pdev->dev);
+>> +	if (!data)
+>> +		return -ENODEV;
+>> +
+>> +	if (!data->mem_names)
+>> +		return 0;
+>> +
+>> +	for (num_mems = 0; data->mem_names[num_mems]; num_mems++)
+>> +		;
+> 
+> Instead of doing this function of_property_count_elems_of_size() can be used on
+> the "reg" property.
+
+Hmm right, but the problem is then we don't know if someone left out one 
+of the memories in DT. We want to check the presence for all defined in 
+the platform data.
+
+> 
+> In the loop below a check should be done to see if data->mem_data[i] (see above
+> comment) is valid before calling platform_get_resource_byname().  If not then
+> an error can be returned.
+
+Will add a check to it.
+
+-Tero
+
+> 
+> I'm running out of time for today - I will continue reviewing the other patches
+> tomorrow.
+> 
+>> +
+>> +	oproc->mem = devm_kcalloc(dev, num_mems, sizeof(*oproc->mem),
+>> +				  GFP_KERNEL);
+>> +	if (!oproc->mem)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i = 0; i < num_mems; i++) {
+>> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>> +						   data->mem_names[i]);
+>> +		oproc->mem[i].cpu_addr = devm_ioremap_resource(dev, res);
+>> +		if (IS_ERR(oproc->mem[i].cpu_addr)) {
+>> +			dev_err(dev, "failed to parse and map %s memory\n",
+>> +				data->mem_names[i]);
+>> +			return PTR_ERR(oproc->mem[i].cpu_addr);
+>> +		}
+>> +		oproc->mem[i].bus_addr = res->start;
+>> +		oproc->mem[i].dev_addr = data->dev_addrs[i];
+>> +		oproc->mem[i].size = resource_size(res);
+>> +
+>> +		dev_dbg(dev, "memory %8s: bus addr %pa size 0x%x va %p da 0x%x\n",
+>> +			data->mem_names[i], &oproc->mem[i].bus_addr,
+>> +			oproc->mem[i].size, oproc->mem[i].cpu_addr,
+>> +			oproc->mem[i].dev_addr);
+>> +	}
+>> +	oproc->num_mems = num_mems;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static int omap_rproc_probe(struct platform_device *pdev)
+>>   {
+>>   	struct device_node *np = pdev->dev.of_node;
+>> @@ -350,6 +432,10 @@ static int omap_rproc_probe(struct platform_device *pdev)
+>>   	/* All existing OMAP IPU and DSP processors have an MMU */
+>>   	rproc->has_iommu = true;
+>>   
+>> +	ret = omap_rproc_of_get_internal_memories(pdev, rproc);
+>> +	if (ret)
+>> +		goto free_rproc;
+>> +
+>>   	ret = omap_rproc_get_boot_data(pdev, rproc);
+>>   	if (ret)
+>>   		goto free_rproc;
+>> -- 
+>> 2.17.1
+>>
+>> --
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
