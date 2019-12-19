@@ -2,110 +2,128 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09083C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E6FC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD9AD2467B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16987206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:21:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="HcVWnhPG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbfLSRTO (ORCPT
+        id S1726911AbfLSRVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 12:19:14 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:49576 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726797AbfLSRTN (ORCPT
+        Thu, 19 Dec 2019 12:21:24 -0500
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:45910 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726797AbfLSRVX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 12:19:13 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 2CDC528E9F9
-Received: by earth.universe (Postfix, from userid 1000)
-        id 1B6663C0C7B; Thu, 19 Dec 2019 18:19:10 +0100 (CET)
-Date:   Thu, 19 Dec 2019 18:19:10 +0100
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] power_supply: Add additional health properties to
- the header
-Message-ID: <20191219171910.wbx4ry6hgip6g4fm@earth.universe>
-References: <20191029200201.24483-1-dmurphy@ti.com>
+        Thu, 19 Dec 2019 12:21:23 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 47dzDz05z8z9vhYt
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 17:21:23 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id kQC3kW0Rk04H for <linux-kernel@vger.kernel.org>;
+        Thu, 19 Dec 2019 11:21:22 -0600 (CST)
+Received: from mail-yw1-f69.google.com (mail-yw1-f69.google.com [209.85.161.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 47dzDy5ld6z9vhYj
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 11:21:22 -0600 (CST)
+Received: by mail-yw1-f69.google.com with SMTP id 16so4496467ywz.5
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 09:21:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dZet5/8oAF/RkVe8aOI8XLGZBrvCqMDHvpE19fg8kTA=;
+        b=HcVWnhPGj57k0g+tWAn2Av/8Bukx9CzCkdb+BN1itEFxQINnpef0Jd1yXfwSC9aAf8
+         yRH9lEj8qOgs0MS/Ta7ppmyMwGgn282Rzvq5DVm9Lux3/EH3ZoJlGvY4lSlea+Wtya3a
+         eCGR/9Zc0H7rlQv6d4wZcHU8IVBL81eHfL8Ufs7hlLEXTiXKOCy+LXM9KTGMRuVnRj27
+         jx/kYJa6ik9/UtMZu/8QArDjcLD0l6Nze95zhbHxHnFvMz1aMHKbDa0IXSwURWskQUCW
+         +Sormf5EHb8z/RnLAbFmnEaqY5/v1/Z6oM0CYQbX16+D/5HceDtXt955S5lv9F89VoFG
+         PDCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dZet5/8oAF/RkVe8aOI8XLGZBrvCqMDHvpE19fg8kTA=;
+        b=bFH/Dop4qk//i4kxdqoDKAm9G+G4K8f7VTMdLI8poLBzOjeM9/e1h30FuTxiaPVNwS
+         E3BezaI+QasA+XBriRmvhHoX8mUwvIiVNqyyVByfqsrzkQjJFNyv8xl4t87KOyqUjxf5
+         GQUR/17cHXiVQef6dg1oEROqQeABO9GhoS5pbu2PMmF2p/KOlf9SacjIWk8w1RmCYpyp
+         QBTWCoR7qRL36NjhfhM8GthZrnlbzeOOP+HBWPgFZ6yZy73EPhqVzRROcsTVTFDlO6MP
+         niWxsKnH1grJUXu+hK3RQZX4fJA5hCwYe69qXqx2CRfWksJn8EjMziyec0TG/ijzdgxW
+         j5mw==
+X-Gm-Message-State: APjAAAVbYAdVvN8HePFskey+IufOSmnJI0aKUqIuPphOayySD2BSFek0
+        eq3/xnJFceDv52oJtfVc2wyjJf4/KrpRrkWx6PXpXE7H/Pj4t7rkh9ypdQwJ+9UjonWpWhtxx5w
+        QLQJZOlcve5GtRoln0f48HXp2G+IU
+X-Received: by 2002:a81:8451:: with SMTP id u78mr6848979ywf.127.1576776082215;
+        Thu, 19 Dec 2019 09:21:22 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxm6MhF/Zip53QgVRHuvPGYfTUuzQeQ5ipzeYUp0KU1vA33iZSd8Cc0ZwbsC2mIH4Cj9Bl8HA==
+X-Received: by 2002:a81:8451:: with SMTP id u78mr6848962ywf.127.1576776081989;
+        Thu, 19 Dec 2019 09:21:21 -0800 (PST)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id h68sm2696217ywe.21.2019.12.19.09.21.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 09:21:21 -0800 (PST)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vandana BN <bnvandana@gmail.com>,
+        =?UTF-8?q?Simon=20Sandstr=C3=B6m?= <simon@nikanor.nu>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Madhumitha Prabakaran <madhumithabiw@gmail.com>,
+        Matt Sickler <Matt.Sickler@daktronics.com>,
+        Jeremy Sowden <jeremy@azazel.net>, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] staging: kpc2000: remove unnecessary assertions in kpc_dma_transfer
+Date:   Thu, 19 Dec 2019 11:21:11 -0600
+Message-Id: <20191219172118.17456-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rfodonbtdmwl44qm"
-Content-Disposition: inline
-In-Reply-To: <20191029200201.24483-1-dmurphy@ti.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In kpc_dma_transfer(), the assertion that priv is NULL and priv->ldev
+is NULL, are never satisfied. The two callers of the function,
+dereference the fields before the function is called. This patch
+removes the two BUG_ON calls.
 
---rfodonbtdmwl44qm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+v2: Also remove BUG_ON call for ldev, suggested by Greg.
 
-Hi Dan,
+v1: Replace the recovery code by removing the assertion, as suggested
+by Greg Kroah-Hartman.
+---
+ drivers/staging/kpc2000/kpc_dma/fileops.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-On Tue, Oct 29, 2019 at 03:01:59PM -0500, Dan Murphy wrote:
-> Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
->=20
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
+diff --git a/drivers/staging/kpc2000/kpc_dma/fileops.c b/drivers/staging/kpc2000/kpc_dma/fileops.c
+index cb52bd9a6d2f..40525540dde6 100644
+--- a/drivers/staging/kpc2000/kpc_dma/fileops.c
++++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
+@@ -49,9 +49,7 @@ static int kpc_dma_transfer(struct dev_private_data *priv,
+ 	u64 dma_addr;
+ 	u64 user_ctl;
+ 
+-	BUG_ON(priv == NULL);
+ 	ldev = priv->ldev;
+-	BUG_ON(ldev == NULL);
+ 
+ 	acd = kzalloc(sizeof(*acd), GFP_KERNEL);
+ 	if (!acd) {
+-- 
+2.20.1
 
-This needs to update /sys/class/power_supply/<supply_name>/health
-entry in Documentation/ABI/testing/sysfs-class-power. Also it needs
-to update power_supply_health_text in drivers/power/supply/power_supply_sys=
-fs.c.
-
--- Sebastian
-
->=20
-> v2 - No changes
->=20
->  include/linux/power_supply.h | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> index 28413f737e7d..bd0d3225f245 100644
-> --- a/include/linux/power_supply.h
-> +++ b/include/linux/power_supply.h
-> @@ -61,6 +61,9 @@ enum {
->  	POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE,
->  	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
->  	POWER_SUPPLY_HEALTH_OVERCURRENT,
-> +	POWER_SUPPLY_HEALTH_WARM,
-> +	POWER_SUPPLY_HEALTH_COOL,
-> +	POWER_SUPPLY_HEALTH_HOT,
->  };
-> =20
->  enum {
-> --=20
-> 2.22.0.214.g8dca754b1e
->=20
-
---rfodonbtdmwl44qm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl37sQ0ACgkQ2O7X88g7
-+po14xAAmDxEnXqbxBAs2CMJUrQnAZA00F70xGwzaZ0QDJPRm2fa5ug0GIWlnN8G
-DVRucn9lsg/PfWcWSXV0lLqh1zIHYMKuyeRzxeQs4Q3cY6ZTf4nwDzlVGBZfVmKD
-zCrJF64eoaYKXmdaB7AB/AJFE52hHDdceu781UB+4OTI8uukXYxy0iFgYBsD5w2o
-y4oLQ668ZnQHIY0Yi6aqpT3ym60SrAUQsdQdt0jMv1k5PkfkLcHBq0YxxHTPxIRO
-d7aY8Nkj9LzET1//SBONnigJA8hgl3LJmc8aIlQFK2uQeTyMVLmcc2CwaInXjWvP
-0zJ/TGua4qOMwD6Cb4g50Zhy4IxJlnnfwQ4Ur1jSDhMU/Ljrx0vgRQqyFwY/0S7C
-TNYY4VB9lWq+LlovKiNiw2uhIM13YLFxB2sRfmjJGDZd9xF6jl/I0Oij1PVpNQ6C
-1fU6wmJm7ybvEheX2mbTOCqCKaKCwVVvY5HYauS74FfFGaLxONDqTz/Ccy+WrVSM
-el+bRnS4M1o7guL+ZjApUTmBguMPnbcNprvGcEYmMDliUXUpeeKJNoh137iS1RPA
-3VnmtgkxOmLVHh2CSsvC2fEPeB9JIIWWykZ7YX6W7y2To3SPVV2Ol4tx2DzxnqHW
-bckeQ5UYGRTo2PFVEsRtcqWBXILOeo2wQnEaCAdXe0YuKuzMY0s=
-=J1KW
------END PGP SIGNATURE-----
-
---rfodonbtdmwl44qm--
