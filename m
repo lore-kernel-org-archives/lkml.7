@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DFDC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F365C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB771222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 456A32465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781120;
-	bh=1HKDtvWYNVyMJcPdD5ufXrP3BQadBttkknjlLK6HduI=;
+	s=default; t=1576781123;
+	bh=bMEM8CgX/6uIErmN9B5ttGlNi4wBwVVcAmuXfFf4Z8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kAkFMrDC8d8H5Tein1VlTA77sBjnmLH2DqPv9+4rFFgWZT4VqJke/cLm3QJ6xAoly
-	 VG5IXIZFkaANod/kjNlXBUcjY8NwV13wpbfsIsWoHzb/sPqbxZYeDLSSyymbqWDPFy
-	 jK40bDUOxp3snKVygHTLtkIsWD7VuYQZg+XtQWmE=
+	b=IKQgT1WLeW11Qgqz9beNz6ftNQ+gJWb9S/3Filpr/rEFYWD1m7xrtGYIYfbygS5oH
+	 lx7ie6HLWnWs26ncwFG1mXYCoyITb8wkgf8zDLqg/8h3HJ9R+bfNAZ88AoEC0aWL1+
+	 8gnz/s/F6bVJUaIOnaWPQEeH6+KxQ00e/y6EhvU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728888AbfLSSpT (ORCPT
+        id S1727539AbfLSSpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:45:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37550 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:45:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729126AbfLSSpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:45:17 -0500
+        id S1729126AbfLSSpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:45:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C4ED2465E;
-        Thu, 19 Dec 2019 18:45:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAB092465E;
+        Thu, 19 Dec 2019 18:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781116;
-        bh=1HKDtvWYNVyMJcPdD5ufXrP3BQadBttkknjlLK6HduI=;
+        s=default; t=1576781119;
+        bh=bMEM8CgX/6uIErmN9B5ttGlNi4wBwVVcAmuXfFf4Z8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1xUgC7arZ80sLZEx4Mk1cVcLS99Q4wYqrteCA2Tb36qXJj7cxbpCyXxX2ThfzLBLV
-         nscZAl91pGZxpQMbuhFcjRzvDCUQ8/DGdohgkS0vh88snmKaqoxkBOBy8s3AOCRunh
-         BCFUwdspR0ApUNCPHxiha0VDDeXURra8JoM0WDlc=
+        b=TKSn5/3Gvvs34FQg7SwvJAsJ8DqL4PFxWAKjBzHYnzC1Pj6Q0ToyW6UD2v9D0soVN
+         B9fHGx6eIF8Fka3Cx6QFRFfmN6XtAFUX2vQi1sg6SHv9mtZ1ee6vHDXOGLJSMuw+/J
+         j366lPkpMYlw729KRwLUqJ9EsdKDbyPQPuh8AnV8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.9 090/199] spi: atmel: Fix CS high support
-Date:   Thu, 19 Dec 2019 19:32:52 +0100
-Message-Id: <20191219183219.913710934@linuxfoundation.org>
+        stable@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 091/199] RDMA/qib: Validate ->show()/store() callbacks before calling them
+Date:   Thu, 19 Dec 2019 19:32:53 +0100
+Message-Id: <20191219183219.965713070@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,50 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-commit 7cbb16b2122c09f2ae393a1542fed628505b9da6 upstream.
+commit 7ee23491b39259ae83899dd93b2a29ef0f22f0a7 upstream.
 
-Until a few years ago, this driver was only used with CS GPIO. The
-only exception is CS0 on AT91RM9200 which has to use internal CS. A
-limitation of the internal CS is that they don't support CS High.
+The permissions of the read-only or write-only sysfs files can be
+changed (as root) and the user can then try to read a write-only file or
+write to a read-only file which will lead to kernel crash here.
 
-So by using the CS GPIO the CS high configuration was available except
-for the particular case CS0 on RM9200.
+Protect against that by always validating the show/store callbacks.
 
-When the support for the internal chip-select was added, the check of
-the CS high support was not updated. Due to this the driver accepts
-this configuration for all the SPI controller v2 (used by all SoCs
-excepting the AT91RM9200) whereas the hardware doesn't support it for
-infernal CS.
-
-This patch fixes the test to match the hardware capabilities.
-
-Fixes: 4820303480a1 ("spi: atmel: add support for the internal chip-select of the spi controller")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20191017141846.7523-3-gregory.clement@bootlin.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Link: https://lore.kernel.org/r/d45cc26361a174ae12dbb86c994ef334d257924b.1573096807.git.viresh.kumar@linaro.org
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/spi/spi-atmel.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/infiniband/hw/qib/qib_sysfs.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/spi/spi-atmel.c
-+++ b/drivers/spi/spi-atmel.c
-@@ -1209,10 +1209,8 @@ static int atmel_spi_setup(struct spi_de
- 	as = spi_master_get_devdata(spi->master);
+--- a/drivers/infiniband/hw/qib/qib_sysfs.c
++++ b/drivers/infiniband/hw/qib/qib_sysfs.c
+@@ -301,6 +301,9 @@ static ssize_t qib_portattr_show(struct
+ 	struct qib_pportdata *ppd =
+ 		container_of(kobj, struct qib_pportdata, pport_kobj);
  
- 	/* see notes above re chipselect */
--	if (!atmel_spi_is_v2(as)
--			&& spi->chip_select == 0
--			&& (spi->mode & SPI_CS_HIGH)) {
--		dev_dbg(&spi->dev, "setup: can't be active-high\n");
-+	if (!as->use_cs_gpios && (spi->mode & SPI_CS_HIGH)) {
-+		dev_warn(&spi->dev, "setup: non GPIO CS can't be active-high\n");
- 		return -EINVAL;
- 	}
++	if (!pattr->show)
++		return -EIO;
++
+ 	return pattr->show(ppd, buf);
+ }
+ 
+@@ -312,6 +315,9 @@ static ssize_t qib_portattr_store(struct
+ 	struct qib_pportdata *ppd =
+ 		container_of(kobj, struct qib_pportdata, pport_kobj);
+ 
++	if (!pattr->store)
++		return -EIO;
++
+ 	return pattr->store(ppd, buf, len);
+ }
  
 
 
