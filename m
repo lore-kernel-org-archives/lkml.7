@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5520C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCD9C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EACA24672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FF3E222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782584;
-	bh=UtmX9GiSmxXu/9EaoD1243Db0uC3Xo+gs5g7A8/UcsI=;
+	s=default; t=1576782594;
+	bh=Oumn+Gt3hM6JkMsZl4AjSWEZE4hwvtsd2P3a1SY+M2w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Vti8QvKTpTIc08/VhwUBbQoOnAFuN4X1BsgwYFP1XIa0+zbfgad+8tWQK59U2g9N
-	 YLo1khpvJUH01cgyNRHcLC8M/nW9FEmcqZfv+Gy+qmPCgF2dCPY6ZVA9xEwSRobQfQ
-	 nfI26FGjnz3d40TrTPCdathCi2bUk/resFPNFmak=
+	b=mXoInei6JKZvLLdlwmVrLmdaz7jP/g96XwITzPualAW6WeXGhK9edGsa7/m1gQ52T
+	 eBSqOhX2kg5bdYWvvSg9JaRs+USaDfbAQYHibujX7WU7to5kYRhfj4lSRrI22eqWEs
+	 iDFzm9Dd8Nf1ZEwjKKJg3NSiKd7TfxUAPxZvFu0U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbfLSTJn (ORCPT
+        id S1728332AbfLSSkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:09:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59020 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:40:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728026AbfLSSkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:40:19 -0500
+        id S1727016AbfLSSkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:40:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4D4124682;
-        Thu, 19 Dec 2019 18:40:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 228DF20716;
+        Thu, 19 Dec 2019 18:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780819;
-        bh=UtmX9GiSmxXu/9EaoD1243Db0uC3Xo+gs5g7A8/UcsI=;
+        s=default; t=1576780799;
+        bh=Oumn+Gt3hM6JkMsZl4AjSWEZE4hwvtsd2P3a1SY+M2w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vqncGjWuKi/fLpHIQS2be4zVK6Eb7WRA3U6dLVnhO0MKaxrN/n2rJq8Y+gT0UwH0E
-         q1BENUwo0V6UQlJ4zCeeD2jKV8z0x4vMKOF4WtfPZQ4IsSb4R2Fi+lMQPei+drkQtS
-         JCcZFV2O3yXz8YKl1zUYKqZPobhwgp05JZiGIDsg=
+        b=SIf9MIVHCl7up2haaMyDxZ3bo7kzKDlt7nFmnQ9hv7WQIfXNgJV27qcvoQygicEnm
+         IZZef3d1fNnUAp1kSK4GIxZLbkdOIgn+LycVg2mlby/YeV1opkS0Yy9ioR5iRySqqu
+         xZ63QXC6LZq6ngz1GvBdJi25GCVPNka3Xypjq1/M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Benjamin Block <bblock@linux.ibm.com>,
+        Steffen Maier <maier@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 130/162] e100: Fix passing zero to PTR_ERR warning in e100_load_ucode_wait
-Date:   Thu, 19 Dec 2019 19:33:58 +0100
-Message-Id: <20191219183215.686862734@linuxfoundation.org>
+Subject: [PATCH 4.4 123/162] scsi: zfcp: trace channel log even for FCP command responses
+Date:   Thu, 19 Dec 2019 19:33:51 +0100
+Message-Id: <20191219183215.251422659@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -61,37 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Steffen Maier <maier@linux.ibm.com>
 
-[ Upstream commit cd0d465bb697a9c7bf66a9fe940f7981232f1676 ]
+[ Upstream commit 100843f176109af94600e500da0428e21030ca7f ]
 
-Fix a static code checker warning:
-drivers/net/ethernet/intel/e100.c:1349
- e100_load_ucode_wait() warn: passing zero to 'PTR_ERR'
+While v2.6.26 commit b75db73159cc ("[SCSI] zfcp: Add qtcb dump to hba debug
+trace") is right that we don't want to flood the (payload) trace ring
+buffer, we don't trace successful FCP command responses by default.  So we
+can include the channel log for problem determination with failed responses
+of any FSF request type.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: b75db73159cc ("[SCSI] zfcp: Add qtcb dump to hba debug trace")
+Fixes: a54ca0f62f95 ("[SCSI] zfcp: Redesign of the debug tracing for HBA records.")
+Cc: <stable@vger.kernel.org> #2.6.38+
+Link: https://lore.kernel.org/r/e37597b5c4ae123aaa85fd86c23a9f71e994e4a9.1572018132.git.bblock@linux.ibm.com
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/e100.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/s390/scsi/zfcp_dbf.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/e100.c b/drivers/net/ethernet/intel/e100.c
-index 068789e694c9b..93c29094ceff9 100644
---- a/drivers/net/ethernet/intel/e100.c
-+++ b/drivers/net/ethernet/intel/e100.c
-@@ -1370,8 +1370,8 @@ static inline int e100_load_ucode_wait(struct nic *nic)
+diff --git a/drivers/s390/scsi/zfcp_dbf.c b/drivers/s390/scsi/zfcp_dbf.c
+index b6caad0fee24c..c53ea0ac5f460 100644
+--- a/drivers/s390/scsi/zfcp_dbf.c
++++ b/drivers/s390/scsi/zfcp_dbf.c
+@@ -93,11 +93,9 @@ void zfcp_dbf_hba_fsf_res(char *tag, int level, struct zfcp_fsf_req *req)
+ 	memcpy(rec->u.res.fsf_status_qual, &q_head->fsf_status_qual,
+ 	       FSF_STATUS_QUALIFIER_SIZE);
  
- 	fw = e100_request_firmware(nic);
- 	/* If it's NULL, then no ucode is required */
--	if (!fw || IS_ERR(fw))
--		return PTR_ERR(fw);
-+	if (IS_ERR_OR_NULL(fw))
-+		return PTR_ERR_OR_ZERO(fw);
+-	if (req->fsf_command != FSF_QTCB_FCP_CMND) {
+-		rec->pl_len = q_head->log_length;
+-		zfcp_dbf_pl_write(dbf, (char *)q_pref + q_head->log_start,
+-				  rec->pl_len, "fsf_res", req->req_id);
+-	}
++	rec->pl_len = q_head->log_length;
++	zfcp_dbf_pl_write(dbf, (char *)q_pref + q_head->log_start,
++			  rec->pl_len, "fsf_res", req->req_id);
  
- 	if ((err = e100_exec_cb(nic, (void *)fw, e100_setup_ucode)))
- 		netif_err(nic, probe, nic->netdev,
+ 	debug_event(dbf->hba, level, rec, sizeof(*rec));
+ 	spin_unlock_irqrestore(&dbf->hba_lock, flags);
 -- 
 2.20.1
 
