@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B06DC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86077C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00B03222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 583E6222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782255;
-	bh=Z8anMrWmTZjHIUgn0N7JaWIaabcZ42ch5MZ7XopHJD4=;
+	s=default; t=1576782258;
+	bh=6RpLG1w9cbjENnUVpGsfAHqGQ7HZEHT8ezMsQ7pwDXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qhP24u+B4sNRtyf2mfDcWn3uXyeWz9Y5HUWpW8Op3i5/0bvXmfFqBeL7xc3R7kAcH
-	 dfVgU4xCo4iMV1yVdYiYLJudQ3V+PXlDaZNSHshN3NF9KRRYt+se2jliSxa5Mu4gZd
-	 1QmZlLOwecvGEwYjaNd3pNRpaH1obpGYXvfEw5Go=
+	b=yyYGpizkdI0RNP2D82Qcr8yO0fdo0lAflhp5e4OkN1kWx+QC252+Z2WL+5mrGyN8z
+	 IgGJn2ldfYBUmwMQmLhvXfEasZ20qPirC5QISF1gkHlC/JrBkogjQJYlDttDn5pxep
+	 TiKdSCYj8yo+qHR83j3KwDj9f3oyGGM6XwAjx/mM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729476AbfLSSr3 (ORCPT
+        id S1729457AbfLSSrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:47:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40310 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:47:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728808AbfLSSr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:47:26 -0500
+        id S1727296AbfLSSrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:47:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8B8524672;
-        Thu, 19 Dec 2019 18:47:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE874206D7;
+        Thu, 19 Dec 2019 18:47:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781245;
-        bh=Z8anMrWmTZjHIUgn0N7JaWIaabcZ42ch5MZ7XopHJD4=;
+        s=default; t=1576781238;
+        bh=6RpLG1w9cbjENnUVpGsfAHqGQ7HZEHT8ezMsQ7pwDXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X1d9ZBNkrIf1pKlBjR6Uo2StBKreSR9TgyMI+ZMpxf7wUaS+XaXv1LBR8UpjfFlEW
-         dSRguVnsK0cmVsp/r6erjydOolX2JmsD8W8KlGnwr6JY2COXQEZacROlpDAYlefYi7
-         MhUNlf/JpBBPMqIcYhoatQ9P3+qGvzkb3xOCKcvQ=
+        b=iqlmXqFLxBRhli5hGz5L+y+Nxsw8CqWawNINYx3Sjce8PFDmpZan/y4o8cv3OfaGs
+         ocUSCgOm6u87rjkCCDSfnHB8MpmVitGW+XE+2yID8pb9JVf2H2JiRRpG9G7tjn4Vth
+         ZIjfwM5fLqMskagzawkNMuSWvBrLE2ndJi5hUCqk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alastair DSilva <alastair@d-silva.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.9 142/199] powerpc: Allow 64bit VDSO __kernel_sync_dicache to work across ranges >4GB
-Date:   Thu, 19 Dec 2019 19:33:44 +0100
-Message-Id: <20191219183223.040531662@linuxfoundation.org>
+        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.9 122/199] rtlwifi: rtl8192de: Fix missing enable interrupt flag
+Date:   Thu, 19 Dec 2019 19:33:24 +0100
+Message-Id: <20191219183221.695212263@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -59,46 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alastair D'Silva <alastair@d-silva.org>
+From: Larry Finger <Larry.Finger@lwfinger.net>
 
-commit f9ec11165301982585e5e5f606739b5bae5331f3 upstream.
+commit 330bb7117101099c687e9c7f13d48068670b9c62 upstream.
 
-When calling __kernel_sync_dicache with a size >4GB, we were masking
-off the upper 32 bits, so we would incorrectly flush a range smaller
-than intended.
+In commit 38506ecefab9 ("rtlwifi: rtl_pci: Start modification for
+new drivers"), the flag that indicates that interrupts are enabled was
+never set.
 
-This patch replaces the 32 bit shifts with 64 bit ones, so that
-the full size is accounted for.
+In addition, there are several places when enable/disable interrupts
+were commented out are restored. A sychronize_interrupts() call is
+removed.
 
-Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191104023305.9581-3-alastair@au1.ibm.com
+Fixes: 38506ecefab9 ("rtlwifi: rtl_pci: Start modification for new drivers")
+Cc: Stable <stable@vger.kernel.org>	# v3.18+
+Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/vdso64/cacheflush.S |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/realtek/rtlwifi/rtl8192de/hw.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/arch/powerpc/kernel/vdso64/cacheflush.S
-+++ b/arch/powerpc/kernel/vdso64/cacheflush.S
-@@ -39,7 +39,7 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
- 	subf	r8,r6,r4		/* compute length */
- 	add	r8,r8,r5		/* ensure we get enough */
- 	lwz	r9,CFG_DCACHE_LOGBLOCKSZ(r10)
--	srw.	r8,r8,r9		/* compute line count */
-+	srd.	r8,r8,r9		/* compute line count */
- 	crclr	cr0*4+so
- 	beqlr				/* nothing to do? */
- 	mtctr	r8
-@@ -56,7 +56,7 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
- 	subf	r8,r6,r4		/* compute length */
- 	add	r8,r8,r5
- 	lwz	r9,CFG_ICACHE_LOGBLOCKSZ(r10)
--	srw.	r8,r8,r9		/* compute line count */
-+	srd.	r8,r8,r9		/* compute line count */
- 	crclr	cr0*4+so
- 	beqlr				/* nothing to do? */
- 	mtctr	r8
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/hw.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/hw.c
+@@ -1209,6 +1209,7 @@ void rtl92de_enable_interrupt(struct iee
+ 
+ 	rtl_write_dword(rtlpriv, REG_HIMR, rtlpci->irq_mask[0] & 0xFFFFFFFF);
+ 	rtl_write_dword(rtlpriv, REG_HIMRE, rtlpci->irq_mask[1] & 0xFFFFFFFF);
++	rtlpci->irq_enabled = true;
+ }
+ 
+ void rtl92de_disable_interrupt(struct ieee80211_hw *hw)
+@@ -1218,7 +1219,7 @@ void rtl92de_disable_interrupt(struct ie
+ 
+ 	rtl_write_dword(rtlpriv, REG_HIMR, IMR8190_DISABLED);
+ 	rtl_write_dword(rtlpriv, REG_HIMRE, IMR8190_DISABLED);
+-	synchronize_irq(rtlpci->pdev->irq);
++	rtlpci->irq_enabled = false;
+ }
+ 
+ static void _rtl92de_poweroff_adapter(struct ieee80211_hw *hw)
+@@ -1389,7 +1390,7 @@ void rtl92de_set_beacon_related_register
+ 
+ 	bcn_interval = mac->beacon_interval;
+ 	atim_window = 2;
+-	/*rtl92de_disable_interrupt(hw);  */
++	rtl92de_disable_interrupt(hw);
+ 	rtl_write_word(rtlpriv, REG_ATIMWND, atim_window);
+ 	rtl_write_word(rtlpriv, REG_BCN_INTERVAL, bcn_interval);
+ 	rtl_write_word(rtlpriv, REG_BCNTCFG, 0x660f);
+@@ -1409,9 +1410,9 @@ void rtl92de_set_beacon_interval(struct
+ 
+ 	RT_TRACE(rtlpriv, COMP_BEACON, DBG_DMESG,
+ 		 "beacon_interval:%d\n", bcn_interval);
+-	/* rtl92de_disable_interrupt(hw); */
++	rtl92de_disable_interrupt(hw);
+ 	rtl_write_word(rtlpriv, REG_BCN_INTERVAL, bcn_interval);
+-	/* rtl92de_enable_interrupt(hw); */
++	rtl92de_enable_interrupt(hw);
+ }
+ 
+ void rtl92de_update_interrupt_mask(struct ieee80211_hw *hw,
 
 
