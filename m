@@ -2,124 +2,92 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C69C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 468EBC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FACF21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:41:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zv.io header.i=me@zv.io header.b="iuvrt6wT"
+	by mail.kernel.org (Postfix) with ESMTP id 1D17721655
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:41:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576798906;
+	bh=WDbZFckNEvJPr6jCEP4QNOUNi+4mtA5nNZFKyzu2/jE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FU/LmKncvjI+m9k2K2WV8HnxC8PYrjobh8745HNyPEUmtKizgFSZhL57yHfwvAhUN
+	 dUqBaf6kRFs/TgLX1U/3Qcod4opyZy36o6ZW3lMN24pDSy3F+Crr7I2pfuOCNQVSOT
+	 gOfIxZTuty+8aWVWTz1CP85dUxxzqlUplQG0rYcg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727252AbfLSXlm (ORCPT
+        id S1727211AbfLSXll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 18:41:42 -0500
-Received: from sender4-of-o51.zoho.com ([136.143.188.51]:21170 "EHLO
-        sender4-of-o51.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726992AbfLSXlk (ORCPT
+        Thu, 19 Dec 2019 18:41:41 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33716 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727191AbfLSXlk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Dec 2019 18:41:40 -0500
-X-Greylist: delayed 904 seconds by postgrey-1.27 at vger.kernel.org; Thu, 19 Dec 2019 18:41:40 EST
-ARC-Seal: i=1; a=rsa-sha256; t=1576797983; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=Inz6YHSYhC779548yK6cPFAYkj1L6vFEDExMEGkTZFEfNqb+yuiWIFLTSzj0lMF4ksjpiqRGr8D6utPqQyjLGPRg4EqSSOiSnGU0RHVzezzQ1sZbMiIWv0g6zChqPaUmGiKTDWjRJPce6gK08WgReO2UxM0z0NTs/r4SeY+RaDw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1576797983; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=YRwMCe3+7E5yL5rCzLP2abaTZ1SGUf1q183PkTOBBBU=; 
-        b=HeAPxRLUuUDKJnJaSXxWlZaKAsWPT3LweVlf9nBcuReGrhEpUhWwsJXo9xwZmh7E47q/J572kGQCsMVS8wXOGcp9SbW3fnEVkFObY+B4Q1ImlEfsOC/iTOIzkk4v3+BBk8svsvleWa+iDEQ9GYAuVIQdPtd1IloKngISI4DWwws=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zv.io;
-        spf=pass  smtp.mailfrom=me@zv.io;
-        dmarc=pass header.from=<me@zv.io> header.from=<me@zv.io>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1576797983;
-        s=zoho; d=zv.io; i=me@zv.io;
-        h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:Content-Type:Mime-Version:Content-Transfer-Encoding;
-        bh=YRwMCe3+7E5yL5rCzLP2abaTZ1SGUf1q183PkTOBBBU=;
-        b=iuvrt6wT4Yin5Ozj9gAnzkOUjr2JJrFPULCIr3ZIQdGTRqFP8cq/U+F+i/NhdGGH
-        zjxEsXKWm64CmkgpUa+KjTUNcMXDKeAI7aOdyoHpmLdHW87ZSPjQB6hxMhPrX0ik9Zm
-        mkw8KE905hUFEck5K37QbEAq5VBufSJAynk6iEkY=
-Received: from lighthouse (cpe-70-114-218-141.austin.res.rr.com [70.114.218.141]) by mx.zohomail.com
-        with SMTPS id 1576797982566959.8883413676132; Thu, 19 Dec 2019 15:26:22 -0800 (PST)
-Message-ID: <1576797980.31912.110.camel@zv.io>
-Subject: Re: [PATCH v5 6/8] media: v4l2-core: fix v4l2_buffer handling for
- time64 ABI
-From:   Zach van Rijn <me@zv.io>
-To:     Arnd Bergmann <arnd@arndb.de>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Thu, 19 Dec 2019 17:26:20 -0600
-In-Reply-To: <CAK8P3a1-xLUn368Lajia1=2GEXa92srQ2s9wH--MrRHj+kSTtQ@mail.gmail.com>
-References: <20191126161824.337724-1-arnd@arndb.de>
-         <20191126161824.337724-7-arnd@arndb.de>
-         <09c664fd-87fb-4fac-f104-9afbe7d33aa2@xs4all.nl>
-         <CAK8P3a1TvFCJf8t9T1yOXjsp088s9dbEOKLVDPinfwJe2B-27g@mail.gmail.com>
-         <81bb5da1-6b84-8473-4ada-c174f43bbae2@xs4all.nl>
-         <0843718f-1391-3379-38be-41fa9558ea6d@xs4all.nl>
-         <CAK8P3a1-xLUn368Lajia1=2GEXa92srQ2s9wH--MrRHj+kSTtQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Received: by mail-ot1-f68.google.com with SMTP id b18so9369742otp.0;
+        Thu, 19 Dec 2019 15:41:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tuBWf96skjWrgBgsVs1eiTg/OmTbAgb7ulePOSz2Qnw=;
+        b=t7Pn1zrF/O+rbi8qdRYBTy6nROYC1ohU+dua5kLpjcqbqhJ3UygqVr0RdSSMiuJyFp
+         OlVKJrJur/PpSs5UlSkHXxzFsUmQT0OJrYdj2Vv8ODgMWJN2JrfDjLo69ctuu1sqiS2d
+         qEB+5qwRxqjuPmBcTQwWaif9j3c6dX6RjUWQykV1vlKbwq1PD/KQ8Fi7nY67fegzdid5
+         ceyqfWJpXsgYd1fYROz2ZVlSzKDARUL+6yErHWu7taEyUS8gmRu3eusY4FKFHo9z1v8J
+         gEy1gb7tOnzBGv6dHTQspDDLLaePEW19fxKo7fXfvYwHnI2AGiFdboR8WdGf8lcIZ4t+
+         w78Q==
+X-Gm-Message-State: APjAAAXImPdAPFQePoRcFE9XzmFv8kQidx93utwiXovr1/Jxd/Dz/qCg
+        MCvxW9uN9SxEKmjZiyFYBg==
+X-Google-Smtp-Source: APXvYqx+c5pPnClOFiso3xv+CWXNZAeT4mHx+To+J+sLUZ0f72ogS0fPdQJKxDJGcfYcgfzf04IN3A==
+X-Received: by 2002:a05:6830:1608:: with SMTP id g8mr11056854otr.169.1576798899680;
+        Thu, 19 Dec 2019 15:41:39 -0800 (PST)
+Received: from localhost (ip-184-205-174-147.ftwttx.spcsdns.net. [184.205.174.147])
+        by smtp.gmail.com with ESMTPSA id c12sm2555901oic.27.2019.12.19.15.41.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 15:41:39 -0800 (PST)
+Date:   Thu, 19 Dec 2019 17:41:36 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, peng.fan@nxp.com,
+        ping.bai@nxp.com, Adam Ford <aford173@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 4/7] dt-bindings: imx-gpcv2: Update bindings to
+ support i.MX8M Mini
+Message-ID: <20191219234136.GA21689@bogus>
+References: <20191213160542.15757-1-aford173@gmail.com>
+ <20191213160542.15757-5-aford173@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191213160542.15757-5-aford173@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-12-14 at 22:44 +0100, Arnd Bergmann wrote:
-> On Sat, Dec 14, 2019 at 12:27 PM Hans Verkuil <hverkuil@xs4all
-> .nl> wrote:
-> > 
-> > On 12/13/19 4:32 PM, Hans Verkuil wrote:
-> > > > > ...
-> > > > 
-> > > > I've heard good things about the prebuilt toolchains
-> > > > from http://musl.cc/.
-> > > > These seems to come with a libstdc++, but I have not
-> > > > tried that myself.
-> > > 
-> > > I'll see if I can give those a spin, but if I can't get it
-> > > to work quickly,
-> > > then I don't plan on spending much time on it.
-> > 
-> > I managed to build v4l2-ctl/compliance with those
-> > toolchains, but they seem to be
-> > still using a 32-bit time_t.
-> > 
-> > Do I need to get a specific version or do something special?
+On Fri, 13 Dec 2019 10:05:39 -0600, Adam Ford wrote:
+> The with the recent additions to the driver, the GPCv2 driver can
+> support the i.MX8M Mini, but it needs updated 'compatible' entry
+> to use the proper table.
 > 
-> My mistake: only musl-1.2.0 and up have 64-bit time_t, but
-> this isn't released yet. According to https://wiki.musl-
-> libc.org/roadmap.html, the release was planned for last month,
-> no idea how long it will take.
+> This patch adds the i.MX8MM to the compatible list of devices.
 > 
-> It appears that a snapshot build at
-> http://more.musl.cc/7.5.0/x86_64-linux-musl/i686-linux-musl-
-> native.tgz is new enough to have 64-bit time_t (according to
-> include/bits/alltypes.h), but this is a month old as well, so
-> it may have known bugs.
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+> ---
+> V2:  No Change
 > 
-> Adding Zach to Cc here, maybe he already has plans for another
-> build with the latest version.
+>  Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
 
-Yes, that's correct. The current (as of 2019-12-19) GCC 9.2.1
-offering is based on musl 1.1.24, though the 7.5.0 release is
-using a more recent git tag only due to timing/availability.
-
-Within reason, I'm happy to bump versions with justification.
-Rebuilding takes about a full day but no time on my end.
-
-Rich sent out a message [1] just today suggesting there is still
-some time64 work to be done, so once he pushes those patches
-I'll build and release new toolchains for 9.2, 8.3, and 7.5.
-
-
-ZV
-
-[1]: https://www.openwall.com/lists/musl/2019/12/19/6
-
+Acked-by: Rob Herring <robh@kernel.org>
