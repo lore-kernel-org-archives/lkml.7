@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A47BC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1E3C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4025A24672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:40:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8DF024679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780858;
-	bh=+xd6pYjnSecTjDFvofcUQa92EYOyYD0/l1uNlxbq71s=;
+	s=default; t=1576780862;
+	bh=bf/3d6uS+5f02VCacqGyDuHjI7m2Js6mnRbSpfCnVjw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1VWE8jBJDXNofZ1SSzm5SKEF9SY0cMRmrqoosTuL4kLkMgqGp/D/Y2WVnNMgVKiVj
-	 fzK6NG98Y40xSUjFyo9YrEsXnIGJMSSPjo5js4ybHCEG2T4GCxC1ZMsV6ZDr5NmLi2
-	 duwyzqEYqS7opClcR+tvZsHkQFBvOrHFbKskOwDk=
+	b=R46fFZx+GpERek6Eh+ZRB0+Ll/Ofm3t8fnMzrCPVlu5yGDXctCtPL6tEiTupiSLRW
+	 Df1wPAQ2ZzjjxUChHpPTz2lC0QJ9+bHekMJXi0QTAtgJDn22plFQz202nt0yHf7RoV
+	 CBWq9Oac/sjEuoie1xzm34cVQKHvySNEzx+GnnC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbfLSSk5 (ORCPT
+        id S1728464AbfLSSlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:40:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59750 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:41:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728446AbfLSSky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:40:54 -0500
+        id S1727791AbfLSSk4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:40:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3DDE222C2;
-        Thu, 19 Dec 2019 18:40:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 677F8222C2;
+        Thu, 19 Dec 2019 18:40:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780853;
-        bh=+xd6pYjnSecTjDFvofcUQa92EYOyYD0/l1uNlxbq71s=;
+        s=default; t=1576780855;
+        bh=bf/3d6uS+5f02VCacqGyDuHjI7m2Js6mnRbSpfCnVjw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uWuMhxyO7rHcN3qIMaVF2KpiownWihQ0gzxi2dvYQxGuqFNx/Deb+EUTKYnkB0EP4
-         ANNJRZg58TH9FNjYibN9YhdNO+F1mHsclkA8324O3ulpO/xNPOCXtwK+tIPWo36feK
-         AZiF3XVO4U/5neprOzTgSd3WDhViEn7nEtHHFync=
+        b=QPWIV3BOa1mVESIPDsLFQMsXbNE8WvmygYdd1m+L2Kb1eHH50EcjRbxq0kz8oWtwV
+         vkl145vdXFTd/xg/+u13e/aqJ8vdlMrMCacbhN0WVU/BmypLNhmFOKA4F5LSoY5GGF
+         jZC2W8r176bjr2IAbFOm86nypiMxr9RjjksZ35/Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+2add91c08eb181fea1bf@syzkaller.appspotmail.com,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 143/162] net: bridge: deny dev_set_mac_address() when unregistering
-Date:   Thu, 19 Dec 2019 19:34:11 +0100
-Message-Id: <20191219183216.477715430@linuxfoundation.org>
+Subject: [PATCH 4.4 144/162] tcp: md5: fix potential overestimation of TCP option space
+Date:   Thu, 19 Dec 2019 19:34:12 +0100
+Message-Id: <20191219183216.532731687@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -61,76 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit c4b4c421857dc7b1cf0dccbd738472360ff2cd70 ]
+[ Upstream commit 9424e2e7ad93ffffa88f882c9bc5023570904b55 ]
 
-We have an interesting memory leak in the bridge when it is being
-unregistered and is a slave to a master device which would change the
-mac of its slaves on unregister (e.g. bond, team). This is a very
-unusual setup but we do end up leaking 1 fdb entry because
-dev_set_mac_address() would cause the bridge to insert the new mac address
-into its table after all fdbs are flushed, i.e. after dellink() on the
-bridge has finished and we call NETDEV_UNREGISTER the bond/team would
-release it and will call dev_set_mac_address() to restore its original
-address and that in turn will add an fdb in the bridge.
-One fix is to check for the bridge dev's reg_state in its
-ndo_set_mac_address callback and return an error if the bridge is not in
-NETREG_REGISTERED.
+Back in 2008, Adam Langley fixed the corner case of packets for flows
+having all of the following options : MD5 TS SACK
 
-Easy steps to reproduce:
- 1. add bond in mode != A/B
- 2. add any slave to the bond
- 3. add bridge dev as a slave to the bond
- 4. destroy the bridge device
+Since MD5 needs 20 bytes, and TS needs 12 bytes, no sack block
+can be cooked from the remaining 8 bytes.
 
-Trace:
- unreferenced object 0xffff888035c4d080 (size 128):
-   comm "ip", pid 4068, jiffies 4296209429 (age 1413.753s)
-   hex dump (first 32 bytes):
-     41 1d c9 36 80 88 ff ff 00 00 00 00 00 00 00 00  A..6............
-     d2 19 c9 5e 3f d7 00 00 00 00 00 00 00 00 00 00  ...^?...........
-   backtrace:
-     [<00000000ddb525dc>] kmem_cache_alloc+0x155/0x26f
-     [<00000000633ff1e0>] fdb_create+0x21/0x486 [bridge]
-     [<0000000092b17e9c>] fdb_insert+0x91/0xdc [bridge]
-     [<00000000f2a0f0ff>] br_fdb_change_mac_address+0xb3/0x175 [bridge]
-     [<000000001de02dbd>] br_stp_change_bridge_id+0xf/0xff [bridge]
-     [<00000000ac0e32b1>] br_set_mac_address+0x76/0x99 [bridge]
-     [<000000006846a77f>] dev_set_mac_address+0x63/0x9b
-     [<00000000d30738fc>] __bond_release_one+0x3f6/0x455 [bonding]
-     [<00000000fc7ec01d>] bond_netdev_event+0x2f2/0x400 [bonding]
-     [<00000000305d7795>] notifier_call_chain+0x38/0x56
-     [<0000000028885d4a>] call_netdevice_notifiers+0x1e/0x23
-     [<000000008279477b>] rollback_registered_many+0x353/0x6a4
-     [<0000000018ef753a>] unregister_netdevice_many+0x17/0x6f
-     [<00000000ba854b7a>] rtnl_delete_link+0x3c/0x43
-     [<00000000adf8618d>] rtnl_dellink+0x1dc/0x20a
-     [<000000009b6395fd>] rtnetlink_rcv_msg+0x23d/0x268
+tcp_established_options() correctly sets opts->num_sack_blocks
+to zero, but returns 36 instead of 32.
 
-Fixes: 43598813386f ("bridge: add local MAC address to forwarding table (v2)")
-Reported-by: syzbot+2add91c08eb181fea1bf@syzkaller.appspotmail.com
-Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+This means TCP cooks packets with 4 extra bytes at the end
+of options, containing unitialized bytes.
+
+Fixes: 33ad798c924b ("tcp: options clean up")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/bridge/br_device.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ net/ipv4/tcp_output.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/net/bridge/br_device.c
-+++ b/net/bridge/br_device.c
-@@ -199,6 +199,12 @@ static int br_set_mac_address(struct net
- 	if (!is_valid_ether_addr(addr->sa_data))
- 		return -EADDRNOTAVAIL;
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -710,8 +710,9 @@ static unsigned int tcp_established_opti
+ 			min_t(unsigned int, eff_sacks,
+ 			      (remaining - TCPOLEN_SACK_BASE_ALIGNED) /
+ 			      TCPOLEN_SACK_PERBLOCK);
+-		size += TCPOLEN_SACK_BASE_ALIGNED +
+-			opts->num_sack_blocks * TCPOLEN_SACK_PERBLOCK;
++		if (likely(opts->num_sack_blocks))
++			size += TCPOLEN_SACK_BASE_ALIGNED +
++				opts->num_sack_blocks * TCPOLEN_SACK_PERBLOCK;
+ 	}
  
-+	/* dev_set_mac_addr() can be called by a master device on bridge's
-+	 * NETDEV_UNREGISTER, but since it's being destroyed do nothing
-+	 */
-+	if (dev->reg_state != NETREG_REGISTERED)
-+		return -EBUSY;
-+
- 	spin_lock_bh(&br->lock);
- 	if (!ether_addr_equal(dev->dev_addr, addr->sa_data)) {
- 		/* Mac address will be changed in br_stp_change_bridge_id(). */
+ 	return size;
 
 
