@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FDBC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2AEC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D570E24672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D26EE24683
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:44:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781042;
-	bh=HlbDyFNZHpb3vx0ma2PmyfGDo+ZMxWe2ORxYgPZBxWw=;
+	s=default; t=1576781045;
+	bh=y+nQxC6lag84zSjjpeCKCucJBQKq2nK/mD3DhW0tzUQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AtXuqkU9HZWmqpIhvmTX1FvNt6/5TcSAv93yaaczzR2otFHJOUf50B3yXdTTsRyl+
-	 0ZNjPVbK/hrDWqm6Rcqwm/Rl7nbe8YhAdro2MKUjUzAI70MLUEm1YaTQP/FOd6vulK
-	 bYW2c5wOKo/ch7CkGnBewpG6i1R709XuyEBERd8o=
+	b=yeA7FRkbJSW6ff1BFfJbd3WmBElpapCWdLQqibXs/X9ftl4y/t7+Wvf8U+OjCJ8I1
+	 L4RaPWXvyRqNjzQrxvBYycSKeK83SFIGQ/oD0Hxk7c7ky/Wzo6KnZMdQcTC7E8Z9UZ
+	 3XenLzV/gMWNSgrYXb1CGRDWU7riXUUh39WiOPmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbfLSSoC (ORCPT
+        id S1728950AbfLSSoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:44:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35828 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:44:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728934AbfLSSn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:43:59 -0500
+        id S1728937AbfLSSoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:44:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64D7324680;
-        Thu, 19 Dec 2019 18:43:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D749B24679;
+        Thu, 19 Dec 2019 18:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781038;
-        bh=HlbDyFNZHpb3vx0ma2PmyfGDo+ZMxWe2ORxYgPZBxWw=;
+        s=default; t=1576781041;
+        bh=y+nQxC6lag84zSjjpeCKCucJBQKq2nK/mD3DhW0tzUQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JhpQCK1yfumoqa1TOks9rFyHCPULqEzeTSHenDi9TpbUA1blNBgBm/S8mMiCk8moR
-         8YreRh/9jKnyhjEgpPhpD003qajG/i/HGAHtyD7nrIkZ9EPus2Ox0TkAZKTffhBvAl
-         cPmMXWFfqmcdGdUNHz4Xjta9GVGUqK37WryY5jlk=
+        b=Dp4GshD2/Nhrl96CbVifs2gG/FakKdukLyULg1Z5O9xtrSZRR6khZWeJAhSuYETgc
+         bES6dIhzfn82YHssvsKczc27aBRZry/MkaaA6NGtnyO7otlok/VPmZmpu4WJGKUC2a
+         6xvPXgGiV2DE1Vwh7LOtVxKoZvg19agoZE8W949c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
+        Boris Brezillon <boris.brezillon@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 040/199] usb: dwc3: dont log probe deferrals; but do log other error codes
-Date:   Thu, 19 Dec 2019 19:32:02 +0100
-Message-Id: <20191219183217.148335286@linuxfoundation.org>
+Subject: [PATCH 4.9 058/199] mtd: fix mtd_oobavail() incoherent returned value
+Date:   Thu, 19 Dec 2019 19:32:20 +0100
+Message-Id: <20191219183218.172518536@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,35 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-[ Upstream commit 408d3ba006af57380fa48858b39f72fde6405031 ]
+[ Upstream commit 4348433d8c0234f44adb6e12112e69343f50f0c5 ]
 
-It's not very useful to repeat a bunch of probe deferral errors. And
-it's also not very useful to log "failed" without telling the error
-code.
+mtd_oobavail() returns either mtd->oovabail or mtd->oobsize. Both
+values are unsigned 32-bit entities, so there is no reason to pretend
+returning a signed one.
 
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/linux/mtd/mtd.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 7154a93f01143..30bc5996a2f23 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -1102,7 +1102,8 @@ static int dwc3_probe(struct platform_device *pdev)
+diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
+index 13f8052b9ff92..13ddba5e531d3 100644
+--- a/include/linux/mtd/mtd.h
++++ b/include/linux/mtd/mtd.h
+@@ -392,7 +392,7 @@ static inline struct device_node *mtd_get_of_node(struct mtd_info *mtd)
+ 	return mtd->dev.of_node;
+ }
  
- 	ret = dwc3_core_init(dwc);
- 	if (ret) {
--		dev_err(dev, "failed to initialize core\n");
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to initialize core: %d\n", ret);
- 		goto err4;
- 	}
- 
+-static inline int mtd_oobavail(struct mtd_info *mtd, struct mtd_oob_ops *ops)
++static inline u32 mtd_oobavail(struct mtd_info *mtd, struct mtd_oob_ops *ops)
+ {
+ 	return ops->mode == MTD_OPS_AUTO_OOB ? mtd->oobavail : mtd->oobsize;
+ }
 -- 
 2.20.1
 
