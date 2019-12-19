@@ -2,165 +2,119 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24BC9C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF54C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8B78222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D937E2067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:14:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L5jwgvu8"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="assYaglF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbfLSLLa (ORCPT
+        id S1726742AbfLSLOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 06:11:30 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40124 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbfLSLL3 (ORCPT
+        Thu, 19 Dec 2019 06:14:34 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:9356 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726652AbfLSLOd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 06:11:29 -0500
-Received: by mail-wm1-f66.google.com with SMTP id t14so5165136wmi.5;
-        Thu, 19 Dec 2019 03:11:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YrnybgUoheTzv0oO8IdIe7ptyQE6UeKhluLQtlHkiL4=;
-        b=L5jwgvu8SJyXaL7/gM2ue6Gliiu5B28abgkn3MBXlepIvB/3e6eiEFI/xoJx0DWQFm
-         Czc1EeAnKsiRfSDoEORA5nGYqKCBTs7YKYQVkJkUdqtpiNBo+35g+6gH2ym8BKM16kRi
-         futwiDg6xervRZyvvWdf5vW4X/jRSkUxOl6tWZ0PlvJMSyyqIuIZpg1WEnCb7WQDcOvM
-         HtqvwZ47j4yCHXIc3/f8UiWo+bqmUBbsPfkK44q6AjnkcpLwpDmNQV+WYVne+FhJHJ1m
-         5W2BQJpVAdLCzCZDZNSuXJqOqDf/LtsZi6CLCgYCkCPzY30fBRFyxyyzwMEpyiwBtrF1
-         271A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YrnybgUoheTzv0oO8IdIe7ptyQE6UeKhluLQtlHkiL4=;
-        b=Wq5QHylnpilkbnjrOSUiwTl+XOPZS3KUe7XgqmLrW+Tt6sn8BiUjv1rYsG+WyOB6T6
-         t1C8o+g4iOhK03hugoOa07F0H3+B8PchxaAwRUNbGUWjufnZWH92v4PREVy4H6YE4901
-         zJlvryixjJaUmGf6J98a0KzmQpoexPV0DVyahtOP/f1KxvkG0AnR625pHhfzS5XBergD
-         kBKDLfRMXdT/30vvPsXNyWDFdigozvTZ3ILTCXRPd9fufKd4Tuu2hTB5COfdT5xHGHIR
-         L7EFypn3plzICl1KOggVDRgK/eUE824lcH0f7E/VrtrlX+vKab9MRp1Vd4VPzkK4BJAS
-         Hoag==
-X-Gm-Message-State: APjAAAWUAntl8vxx4BOFT2J7hgXmvQRsHwN6qB2BUEWLv+71XaZLkM44
-        k4xub5IAOUFhitbFpuv0saI=
-X-Google-Smtp-Source: APXvYqzUvVcY3kHWc63gcuoVbKWoG+jj5xTx9pH8lTTdeQpbORs22WGWlPob0aZnv9F0VQt7Oxzvkw==
-X-Received: by 2002:a1c:16:: with SMTP id 22mr9647105wma.8.1576753887091;
-        Thu, 19 Dec 2019 03:11:27 -0800 (PST)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id p17sm5975871wmk.30.2019.12.19.03.11.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 03:11:25 -0800 (PST)
-Date:   Thu, 19 Dec 2019 11:11:24 +0000
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     davem@davemloft.net, kvm@vger.kernel.org, netdev@vger.kernel.org,
-        Dexuan Cui <decui@microsoft.com>, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Jorgen Hansen <jhansen@vmware.com>
-Subject: Re: [PATCH net-next v3 00/11] VSOCK: add vsock_test test suite
-Message-ID: <20191219111124.GA1624084@stefanha-x1.localdomain>
-References: <20191218180708.120337-1-sgarzare@redhat.com>
+        Thu, 19 Dec 2019 06:14:33 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBJBCcnw019682;
+        Thu, 19 Dec 2019 12:14:28 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=4DH0Y238d7Wa37JIqOQTzV4EkbII3MUe3/621B6vq5M=;
+ b=assYaglFheKroe0eamwOjLzwZ0X8/lelbETKKlDNBVzDTPrj6RVZmE0IJazNBy5BjUf9
+ gHu2JpPsLAsgKWAsWLIqd/tEWi5XywAFODSrqI4SWVXQTIiZI74WJbBVPNIUI2hoIyde
+ hSyhnAswsCANd7Nhqu8qfjqKMECP1kHaBVpl4WyBVJ+KXAgSF+pY0/ENrOQusLvHccfL
+ U327LcISTqzAZrKFbMw58MLdmbcF1gn9Fh07A8bNJjSGqMaUvb3RoW5jMBGFaTjjri5N
+ +PyazmxYq/KmJ0NOJMvVupza0vHJCERSsXvpGBaP9dDGkCKLgI3gRX2yFApQrGULMN6/ 8Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2wvnresbhj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Dec 2019 12:14:28 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1EBDD10002A;
+        Thu, 19 Dec 2019 12:14:27 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node1.st.com [10.75.127.13])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 13B892B7CF1;
+        Thu, 19 Dec 2019 12:14:27 +0100 (CET)
+Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG5NODE1.st.com
+ (10.75.127.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Dec
+ 2019 12:14:26 +0100
+Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
+ SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
+ 15.00.1473.003; Thu, 19 Dec 2019 12:14:26 +0100
+From:   Fabien DESSENNE <fabien.dessenne@st.com>
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>
+CC:     "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] media: sti: bdisp: fix a possible
+ sleep-in-atomic-context bug in bdisp_device_run()
+Thread-Topic: [PATCH v2] media: sti: bdisp: fix a possible
+ sleep-in-atomic-context bug in bdisp_device_run()
+Thread-Index: AQHVtlfrPw2yzNMArUeBusJIxHDM7afBPX8A
+Date:   Thu, 19 Dec 2019 11:14:26 +0000
+Message-ID: <b4be57d4-4f9a-ff4a-6fce-35b5f48570cb@st.com>
+References: <20191219103401.13630-1-baijiaju1990@gmail.com>
+In-Reply-To: <20191219103401.13630-1-baijiaju1990@gmail.com>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.50]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FEAD2AD213634348AE8513782E079167@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
-Content-Disposition: inline
-In-Reply-To: <20191218180708.120337-1-sgarzare@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-19_01:2019-12-17,2019-12-19 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---UugvWAfsgieZRqgk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Dec 18, 2019 at 07:06:57PM +0100, Stefano Garzarella wrote:
-> The vsock_diag.ko module already has a test suite but the core AF_VSOCK
-> functionality has no tests. This patch series adds several test cases that
-> exercise AF_VSOCK SOCK_STREAM socket semantics (send/recv, connect/accept,
-> half-closed connections, simultaneous connections).
->=20
-> The v1 of this series was originally sent by Stefan.
->=20
-> v3:
-> - Patch 6:
->   * check the byte received in the recv_byte()
->   * use send(2)/recv(2) instead of write(2)/read(2) to test also flags
->     (e.g. MSG_PEEK)
-> - Patch 8:
->   * removed unnecessary control_expectln("CLOSED") [Stefan].
-> - removed patches 9,10,11 added in the v2
-> - new Patch 9 add parameters to list and skip tests (e.g. useful for vmci
->   that doesn't support half-closed socket in the host)
-> - new Patch 10 prints a list of options in the help
-> - new Patch 11 tests MSG_PEEK flags of recv(2)
->=20
-> v2: https://patchwork.ozlabs.org/cover/1140538/
-> v1: https://patchwork.ozlabs.org/cover/847998/
->=20
-> Stefan Hajnoczi (7):
->   VSOCK: fix header include in vsock_diag_test
->   VSOCK: add SPDX identifiers to vsock tests
->   VSOCK: extract utility functions from vsock_diag_test.c
->   VSOCK: extract connect/accept functions from vsock_diag_test.c
->   VSOCK: add full barrier between test cases
->   VSOCK: add send_byte()/recv_byte() test utilities
->   VSOCK: add AF_VSOCK test cases
->=20
-> Stefano Garzarella (4):
->   vsock_test: wait for the remote to close the connection
->   testing/vsock: add parameters to list and skip tests
->   testing/vsock: print list of options and description
->   vsock_test: add SOCK_STREAM MSG_PEEK test
->=20
->  tools/testing/vsock/.gitignore        |   1 +
->  tools/testing/vsock/Makefile          |   9 +-
->  tools/testing/vsock/README            |   3 +-
->  tools/testing/vsock/control.c         |  15 +-
->  tools/testing/vsock/control.h         |   2 +
->  tools/testing/vsock/timeout.h         |   1 +
->  tools/testing/vsock/util.c            | 376 +++++++++++++++++++++++++
->  tools/testing/vsock/util.h            |  49 ++++
->  tools/testing/vsock/vsock_diag_test.c | 202 ++++----------
->  tools/testing/vsock/vsock_test.c      | 379 ++++++++++++++++++++++++++
->  10 files changed, 883 insertions(+), 154 deletions(-)
->  create mode 100644 tools/testing/vsock/util.c
->  create mode 100644 tools/testing/vsock/util.h
->  create mode 100644 tools/testing/vsock/vsock_test.c
->=20
-> --=20
-> 2.24.1
->=20
-> _______________________________________________
-> Virtualization mailing list
-> Virtualization@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/virtualization
-
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-
---UugvWAfsgieZRqgk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl37WtwACgkQnKSrs4Gr
-c8ghowf8CLQjydPRjm3F7iQ8iS7EhFcrctrj96QbH/gFGwkxcSiXqC0mwtLprUzL
-sbzvy6lfKd7nfmXz2O4fJkyKa3qF8/xm3j04fg+6m5WbLNtKMHGE9nyH0NUttTiH
-chth84d78ZFP1m+KV0spdJQBoHFi3pHh3eZWdzNaEEkCdEU0sTI37W4CsJjBw1AF
-PeJFTmO/sGi8c8f8lvBTb8TipXM7THMhr0O+ypUYXFBG6IuNXsKkXcPOjzd9qKFd
-DGr/Ecd6BMIHdNjGgJ707hxsmOooJv9DT4MZQ58KcEzGR9fmtM+E4hnugMt40upL
-3ysZQApGZuQOWqxa7oYNLe86Az04uw==
-=JzCU
------END PGP SIGNATURE-----
-
---UugvWAfsgieZRqgk--
+VGhhbmsgeW91IQ0KDQoNCk9uIDE5LzEyLzIwMTkgMTE6MzQgQU0sIEppYS1KdSBCYWkgd3JvdGU6
+DQo+IFRoZSBkcml2ZXIgbWF5IHNsZWVwIHdoaWxlIGhvbGRpbmcgYSBzcGlubG9jay4NCj4gVGhl
+IGZ1bmN0aW9uIGNhbGwgcGF0aCAoZnJvbSBib3R0b20gdG8gdG9wKSBpbiBMaW51eCA0LjE5IGlz
+Og0KPg0KPiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL3N0aS9iZGlzcC9iZGlzcC1ody5jLCAzODU6
+DQo+ICAgICAgbXNsZWVwIGluIGJkaXNwX2h3X3Jlc2V0DQo+IGRyaXZlcnMvbWVkaWEvcGxhdGZv
+cm0vc3RpL2JkaXNwL2JkaXNwLXY0bDIuYywgMzQxOg0KPiAgICAgIGJkaXNwX2h3X3Jlc2V0IGlu
+IGJkaXNwX2RldmljZV9ydW4NCj4gZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9zdGkvYmRpc3AvYmRp
+c3AtdjRsMi5jLCAzMTc6DQo+ICAgICAgX3Jhd19zcGluX2xvY2tfaXJxc2F2ZSBpbiBiZGlzcF9k
+ZXZpY2VfcnVuDQo+DQo+IFRvIGZpeCB0aGlzIGJ1ZywgbXNsZWVwKCkgaXMgcmVwbGFjZWQgd2l0
+aCB1ZGVsYXkoKS4NCj4NCj4gVGhpcyBidWcgaXMgZm91bmQgYnkgYSBzdGF0aWMgYW5hbHlzaXMg
+dG9vbCBTVENoZWNrIHdyaXR0ZW4gYnkgbXlzZWxmLg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBKaWEt
+SnUgQmFpIDxiYWlqaWFqdTE5OTBAZ21haWwuY29tPg0KDQoNClJldmlld2VkLWJ5OiBGYWJpZW4g
+RGVzc2VubmUgPGZhYmllbi5kZXNzZW5uZUBzdC5jb20+DQoNCg0KPiAtLS0NCj4gdjI6DQo+ICog
+VXNlIHVkZWxheSgpIGluc3RlYWQgb2YgbWRlbGF5KCkuDQo+ICAgIFRoYW5rIEZhYmllbiBmb3Ig
+Z29vZCBhZHZpY2UuDQo+DQo+IC0tLQ0KPiAgIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vc3RpL2Jk
+aXNwL2JkaXNwLWh3LmMgfCA2ICsrKy0tLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlv
+bnMoKyksIDMgZGVsZXRpb25zKC0pDQo+DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlhL3Bs
+YXRmb3JtL3N0aS9iZGlzcC9iZGlzcC1ody5jIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9zdGkv
+YmRpc3AvYmRpc3AtaHcuYw0KPiBpbmRleCA0MzcyYWJiYjU5NTAuLmE3NGU5ZmQ2NTIzOCAxMDA2
+NDQNCj4gLS0tIGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9zdGkvYmRpc3AvYmRpc3AtaHcuYw0K
+PiArKysgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL3N0aS9iZGlzcC9iZGlzcC1ody5jDQo+IEBA
+IC0xNCw4ICsxNCw4IEBADQo+ICAgI2RlZmluZSBNQVhfU1JDX1dJRFRIICAgICAgICAgICAyMDQ4
+DQo+ICAgDQo+ICAgLyogUmVzZXQgJiBib290IHBvbGwgY29uZmlnICovDQo+IC0jZGVmaW5lIFBP
+TExfUlNUX01BWCAgICAgICAgICAgIDUwDQo+IC0jZGVmaW5lIFBPTExfUlNUX0RFTEFZX01TICAg
+ICAgIDIwDQo+ICsjZGVmaW5lIFBPTExfUlNUX01BWCAgICAgICAgICAgIDUwMA0KPiArI2RlZmlu
+ZSBQT0xMX1JTVF9ERUxBWV9NUyAgICAgICAyDQo+ICAgDQo+ICAgZW51bSBiZGlzcF90YXJnZXRf
+cGxhbiB7DQo+ICAgCUJESVNQX1JHQiwNCj4gQEAgLTM4Miw3ICszODIsNyBAQCBpbnQgYmRpc3Bf
+aHdfcmVzZXQoc3RydWN0IGJkaXNwX2RldiAqYmRpc3ApDQo+ICAgCWZvciAoaSA9IDA7IGkgPCBQ
+T0xMX1JTVF9NQVg7IGkrKykgew0KPiAgIAkJaWYgKHJlYWRsKGJkaXNwLT5yZWdzICsgQkxUX1NU
+QTEpICYgQkxUX1NUQTFfSURMRSkNCj4gICAJCQlicmVhazsNCj4gLQkJbXNsZWVwKFBPTExfUlNU
+X0RFTEFZX01TKTsNCj4gKwkJdWRlbGF5KFBPTExfUlNUX0RFTEFZX01TICogMTAwMCk7DQo+ICAg
+CX0NCj4gICAJaWYgKGkgPT0gUE9MTF9SU1RfTUFYKQ0KPiAgIAkJZGV2X2VycihiZGlzcC0+ZGV2
+LCAiUmVzZXQgdGltZW91dFxuIik7
