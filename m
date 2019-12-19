@@ -2,118 +2,135 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,GAPPY_SUBJECT,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B633C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C83CC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E219024672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:43:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XYNY/1ju"
+	by mail.kernel.org (Postfix) with ESMTP id 3D9E3227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:49:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576774163;
+	bh=mOTJam9jgr1MEbyK5aOP3Sc64MI0jRUY03zRp9MZzPk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HwCTRonnqxj2IGvn1lkhJPV+gt9m7q3iFJCsnTBAdpvEGOYNgMUCH8BC8vH7QC3Ru
+	 iNFbK1StnBCyuIixHdyEiEyah03VZMSF0iaOiFbYOWlv02kCsLX0mgrD16h667Wcmj
+	 Cq5cVjJbw2vKtlBmA8zh5HFKvN8R2NreQManKN+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfLSQn4 (ORCPT
+        id S1726928AbfLSQtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 11:43:56 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:41995 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbfLSQn4 (ORCPT
+        Thu, 19 Dec 2019 11:49:22 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:44024 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbfLSQtV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 11:43:56 -0500
-Received: by mail-ed1-f68.google.com with SMTP id e10so5519106edv.9
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 08:43:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q6MJKY5kaJhdcPD2Yij+K4j3QBznO/FzqxPRwZHg2tA=;
-        b=XYNY/1juioQpuXWDwItjvluLKzqTb1s+LUDJh70eT+FynV6pmhNjrfR8rKpTN0Y4Vq
-         95LNMIm35iIung4zroafpJpZMFHIQW6gyl0nMe0sXzlo0Usj/osB8dJgXFazZDihbiKk
-         TXHN/eqPdNOFXyC7+ATLgVoMdiY/9k9+NozPc=
+        Thu, 19 Dec 2019 11:49:21 -0500
+Received: by mail-lf1-f65.google.com with SMTP id 9so4815002lfq.10;
+        Thu, 19 Dec 2019 08:49:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q6MJKY5kaJhdcPD2Yij+K4j3QBznO/FzqxPRwZHg2tA=;
-        b=RFac+VBdIxQ77VWJL+zqZNERIv4Q4sHGYaq1coQuPEU9NqDbx/jJIIS2v4LInmGvgZ
-         b6W8BvZCJLFngG10ZLBcYpE66TPKSKS90sDpQyMUAruE8kNS8Bg+jh2SuGY7nHo+5HbW
-         plXaLWtqNaA2T9eyESkJgzwU7ZHYj8SK2MD+c25mf8wYpYBgYDbtist0aAsvLqVJXHV7
-         KTNUPnxP5V6RRYZOJLRsSVumbQcHZ3GnYyfqguFvMu5ED3zpdn/0FGxazG1q2ADVBUgs
-         LaXj9U3H1wj2vqgrXvsKCwxhO1WrJdOZRBEtlGJypHDamudBX9Jjftd2tFo6nE2xzqEd
-         zIBA==
-X-Gm-Message-State: APjAAAXKojZS9zjYtJpFesqokHWn4bvZHr+WUvAPLMtdBZYf7QEcLW9i
-        RUS1yMMo2zXSzr6XX/XRnWQFrtwziwI=
-X-Google-Smtp-Source: APXvYqzJrnDhyqXry2Juez68Ic0FZffsvBz9pdNakQx5OknlAgsdfpA3d5HGd3d/OE3zijzIjYZueg==
-X-Received: by 2002:a05:6402:2042:: with SMTP id bc2mr10139724edb.300.1576773834324;
-        Thu, 19 Dec 2019 08:43:54 -0800 (PST)
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com. [209.85.221.41])
-        by smtp.gmail.com with ESMTPSA id by2sm597353ejb.45.2019.12.19.08.43.53
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Dec 2019 08:43:54 -0800 (PST)
-Received: by mail-wr1-f41.google.com with SMTP id b6so6704466wrq.0
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 08:43:53 -0800 (PST)
-X-Received: by 2002:adf:ee92:: with SMTP id b18mr10865736wro.281.1576773336863;
- Thu, 19 Dec 2019 08:35:36 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WE2WXEHobAtFaKSC5ahqXYcN8VdT1sBo35QYjIRF4RY=;
+        b=Tv85NBDZt8fQQohw0frLYLcVpjK/OatRq26QucOW7zksSQDTqV1xn4in2mOfkgsxJC
+         sDjpTrJ7bX3wfmeTu1mRPSD7Ujw99DPct46g1+cPMT+zI3H8HLD+8ZP/Ue+QA9R8cmIm
+         QZzEUzxJ1E7JLXNgETVBQnwtL5APcQKHhbHTu7yH49MdVD2lLIjYWHg/tbLdo4s5IRdo
+         vblkOfM8heEUUe1DaA9b55e3t2ne38Hv86VkkuvHCUm4EWdZ1CQNb9IoPc4EBkwVIcnj
+         x9MGnfRQOXzd521xjPyzcG/g1cNwODDGNu9dexzQY55fioX5gK4n+Xj4tg2Oe+vkH/fd
+         nzYw==
+X-Gm-Message-State: APjAAAVjno59fiTaOV1eFPYlKx38ulxXHOuy1SYtc9Ts2y0zl77FQXHg
+        IPSL2vppT6PacIYftzxcyeE=
+X-Google-Smtp-Source: APXvYqzp14RJ669Fg6GM0NVmqvVcjWt/Bm5wxrknP4frrRfuVYa/vzOF6bdMihkgowHLajytukdOFQ==
+X-Received: by 2002:ac2:43af:: with SMTP id t15mr6130492lfl.154.1576774159351;
+        Thu, 19 Dec 2019 08:49:19 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id r20sm2832384lfi.91.2019.12.19.08.49.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 08:49:18 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1ihyzD-0001vm-Kr; Thu, 19 Dec 2019 17:49:15 +0100
+Date:   Thu, 19 Dec 2019 17:49:15 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Johan Hovold <johan@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kbuild: clarify the difference between obj-y and obj-m
+ w.r.t. descending
+Message-ID: <20191219164915.GS22665@localhost>
+References: <20191219115100.958-1-masahiroy@kernel.org>
 MIME-Version: 1.0
-References: <20191205000957.112719-1-thgarnie@chromium.org> <20191219133452.GM2827@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191219133452.GM2827@hirez.programming.kicks-ass.net>
-From:   Thomas Garnier <thgarnie@chromium.org>
-Date:   Thu, 19 Dec 2019 08:35:25 -0800
-X-Gmail-Original-Message-ID: <CAJcbSZEubkFN0BLugoBm8fsPrNWxfFCDytC3nYUepr74dQFS=w@mail.gmail.com>
-Message-ID: <CAJcbSZEubkFN0BLugoBm8fsPrNWxfFCDytC3nYUepr74dQFS=w@mail.gmail.com>
-Subject: Re: [PATCH v10 00/11] x86: PIE support to extend KASLR randomization
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Will Deacon <will@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191219115100.958-1-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 5:35 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Wed, Dec 04, 2019 at 04:09:37PM -0800, Thomas Garnier wrote:
-> > Minor changes based on feedback and rebase from v9.
-> >
-> > Splitting the previous serie in two. This part contains assembly code
-> > changes required for PIE but without any direct dependencies with the
-> > rest of the patchset.
->
-> ISTR suggestion you add an objtool pass that verifies there are no
-> absolute text references left. Otherwise we'll forever be chasing that
-> last one..
+On Thu, Dec 19, 2019 at 08:51:00PM +0900, Masahiro Yamada wrote:
+> Kbuild descends into a directory by either 'y' or 'm', but there is an
+> important difference.
+> 
+> Kbuild combines the built-in objects into built-in.a in each directory.
+> The built-in.a in the directory visited by obj-y is merged into the
+> built-in.a in the parent directory. This merge happens recursively when
+> Kbuild is ascending back towards the top directory, so built-in objects
+> are linked into vmlinux eventually. This works properly only when the
+> Makefile that specifies obj-y is reachable by the chain of obj-y.
+> 
+> On the other hand, Kbuild does not take built-in.a from the directory
+> visited by obj-m. This it, all the objects in that directory are supposed
+> to be modular. If Kbuild descends into a directory by obj-m, but the
+> Makefile in the sub-directory specifies obj-y, those objects are just
+> left orphan.
+> 
+> The current statement "Kbuild only uses this information to decide that
+> it needs to visit the directory" is misleading. Clarify the difference.
+> 
+> Reported-by: Johan Hovold <johan@kernel.org>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-Correct, I have a reference in the changelog saying I will tackle in
-the next patchset because we still have non-pie references in other
-places but the fix is a bit more complex (for exemple per-cpu) and not
-included in this phase. I will add a better explanation in the next
-message for patch v11.
+Looks good! Thanks for fixing this.
+
+Reviewed-by: Johan Hovold <johan@kernel.org>
+
+> ---
+> 
+>  Documentation/kbuild/makefiles.rst | 16 +++++++++++++---
+>  1 file changed, 13 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
+> index b9b50553bfc5..d7e6534a8505 100644
+> --- a/Documentation/kbuild/makefiles.rst
+> +++ b/Documentation/kbuild/makefiles.rst
+> @@ -297,9 +297,19 @@ more details, with real examples.
+>  	If CONFIG_EXT2_FS is set to either 'y' (built-in) or 'm' (modular)
+>  	the corresponding obj- variable will be set, and kbuild will descend
+>  	down in the ext2 directory.
+> -	Kbuild only uses this information to decide that it needs to visit
+> -	the directory, it is the Makefile in the subdirectory that
+> -	specifies what is modular and what is built-in.
+> +
+> +	Kbuild uses this information not only to decide that it needs to visit
+> +	the directory, but also to decide whether or not to link objects from
+> +	the directory into vmlinux.
+> +
+> +	When Kbuild descends into the directory with 'y', all built-in objects
+> +	from that directory are combined into the built-in.a, which will be
+> +	eventually linked into vmlinux.
+> +
+> +	When Kbuild descends into the directory with 'm', in contrast, nothing
+> +	from that directory will be linked into vmlinux. If the Makefile in
+> +	that directory specifies obj-y, those objects will be left orphan.
+> +	It is very likely a bug of the Makefile or of dependencies in Kconfig.
+>  
+>  	It is good practice to use a `CONFIG_` variable when assigning directory
+>  	names. This allows kbuild to totally skip the directory if the
