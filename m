@@ -2,163 +2,311 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E9BC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7359C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44BA4227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:15:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576757712;
-	bh=xMH084/Z53/7s0mNpBhzlm5iprR/Pbk4nW08z/LJCM4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nZh+Sz6JUpxAImKc0cgotmIwCwMK7dn01M5NDelObp+oOlXMh+IRhcfupQk1ljH7h
-	 jkk8Wr7a6ZWHu2gi4SGxXEXNxUs40UHdjI2Ixn+8mVasnmmVluhncjZVRZX1AaTzWH
-	 +rVFmdufnbYZXDf38MwAFll6pskcwx8arduATLic=
+	by mail.kernel.org (Postfix) with ESMTP id 7484F20716
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:15:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K111hXBF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbfLSMPL (ORCPT
+        id S1726830AbfLSMPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 07:15:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40690 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726668AbfLSMPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 07:15:10 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 19 Dec 2019 07:15:18 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:60699 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726708AbfLSMPS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 07:15:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576757716;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bwteTCqO+mZi96HO2yiYUl6ee0bLkbJPNd/nB67orPw=;
+        b=K111hXBFikRJE6ADum7dj+3Be5/5vJLAe1VTr7xesAmCBqcSujx26LLbqoeIH0Xoyp9Nyi
+        U4gwzYS/HRUbwMsBya6ij/BZsmgcpN2PZAwmlsS+y1SZ3hGa/ZFHotPm6isG8Al+kATK0H
+        dPFUjEZRt+zPfL14VqQ560y25dhwFYQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-143-zpb069LyMcKDp20xgdC-mA-1; Thu, 19 Dec 2019 07:15:10 -0500
+X-MC-Unique: zpb069LyMcKDp20xgdC-mA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAF6420716;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 79A75800EB8;
         Thu, 19 Dec 2019 12:15:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576757709;
-        bh=xMH084/Z53/7s0mNpBhzlm5iprR/Pbk4nW08z/LJCM4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sy7mKBA9LW2YtkILvLwimkWHZBvKr4qhIixgSQtS4p0UKJJ4e4bv0VtAMsa+DGX7w
-         gYDLr4Qc8UTO/FOFUHplBFpsZKSBK8l7YjsRQvDsUJN30rNUT086blDVYXOUkzw9En
-         I2g0vamPKNLlcRtUPDgwNdPFnhwGo1bgUlODK5H8=
-Date:   Thu, 19 Dec 2019 13:15:07 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Will Deacon <will@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kernel-team@android.com, Hillf Danton <hdanton@sina.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com
-Subject: Re: [PATCH] chardev: Avoid potential use-after-free in
- 'chrdev_open()'
-Message-ID: <20191219121507.GA1493557@kroah.com>
-References: <20191219120203.32691-1-will@kernel.org>
+Received: from carbon (ovpn-200-37.brq.redhat.com [10.40.200.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7F4731001281;
+        Thu, 19 Dec 2019 12:15:02 +0000 (UTC)
+Date:   Thu, 19 Dec 2019 13:15:00 +0100
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Yunsheng Lin <linyunsheng@huawei.com>
+Cc:     <netdev@vger.kernel.org>, <lirongqing@baidu.com>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Saeed Mahameed <saeedm@mellanox.com>, <mhocko@kernel.org>,
+        <peterz@infradead.org>, <linux-kernel@vger.kernel.org>,
+        brouer@redhat.com
+Subject: Re: [net-next v4 PATCH] page_pool: handle page recycle for
+ NUMA_NO_NODE condition
+Message-ID: <20191219131500.47970427@carbon>
+In-Reply-To: <40fb6aff-beec-f186-2bc0-187ad370cf0b@huawei.com>
+References: <20191218084437.6db92d32@carbon>
+        <157665609556.170047.13435503155369210509.stgit@firesoul>
+        <40fb6aff-beec-f186-2bc0-187ad370cf0b@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191219120203.32691-1-will@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 12:02:03PM +0000, Will Deacon wrote:
-> 'chrdev_open()' calls 'cdev_get()' to obtain a reference to the
-> 'struct cdev *' stashed in the 'i_cdev' field of the target inode
-> structure. If the pointer is NULL, then it is initialised lazily by
-> looking up the kobject in the 'cdev_map' and so the whole procedure is
-> protected by the 'cdev_lock' spinlock to serialise initialisation of
-> the shared pointer.
-> 
-> Unfortunately, it is possible for the initialising thread to fail *after*
-> installing the new pointer, for example if the subsequent '->open()' call
-> on the file fails. In this case, 'cdev_put()' is called, the reference
-> count on the kobject is dropped and, if nobody else has taken a reference,
-> the release function is called which finally clears 'inode->i_cdev' from
-> 'cdev_purge()' before potentially freeing the object. The problem here
-> is that a racing thread can happily take the 'cdev_lock' and see the
-> non-NULL pointer in the inode, which can result in a refcount increment
-> from zero and a warning:
-> 
->   |  ------------[ cut here ]------------
->   |  refcount_t: addition on 0; use-after-free.
->   |  WARNING: CPU: 2 PID: 6385 at lib/refcount.c:25 refcount_warn_saturate+0x6d/0xf0
->   |  Modules linked in:
->   |  CPU: 2 PID: 6385 Comm: repro Not tainted 5.5.0-rc2+ #22
->   |  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
->   |  RIP: 0010:refcount_warn_saturate+0x6d/0xf0
->   |  Code: 05 55 9a 15 01 01 e8 9d aa c8 ff 0f 0b c3 80 3d 45 9a 15 01 00 75 ce 48 c7 c7 00 9c 62 b3 c6 08
->   |  RSP: 0018:ffffb524c1b9bc70 EFLAGS: 00010282
->   |  RAX: 0000000000000000 RBX: ffff9e9da1f71390 RCX: 0000000000000000
->   |  RDX: ffff9e9dbbd27618 RSI: ffff9e9dbbd18798 RDI: ffff9e9dbbd18798
->   |  RBP: 0000000000000000 R08: 000000000000095f R09: 0000000000000039
->   |  R10: 0000000000000000 R11: ffffb524c1b9bb20 R12: ffff9e9da1e8c700
->   |  R13: ffffffffb25ee8b0 R14: 0000000000000000 R15: ffff9e9da1e8c700
->   |  FS:  00007f3b87d26700(0000) GS:ffff9e9dbbd00000(0000) knlGS:0000000000000000
->   |  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->   |  CR2: 00007fc16909c000 CR3: 000000012df9c000 CR4: 00000000000006e0
->   |  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->   |  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->   |  Call Trace:
->   |   kobject_get+0x5c/0x60
->   |   cdev_get+0x2b/0x60
->   |   chrdev_open+0x55/0x220
->   |   ? cdev_put.part.3+0x20/0x20
->   |   do_dentry_open+0x13a/0x390
->   |   path_openat+0x2c8/0x1470
->   |   do_filp_open+0x93/0x100
->   |   ? selinux_file_ioctl+0x17f/0x220
->   |   do_sys_open+0x186/0x220
->   |   do_syscall_64+0x48/0x150
->   |   entry_SYSCALL_64_after_hwframe+0x44/0xa9
->   |  RIP: 0033:0x7f3b87efcd0e
->   |  Code: 89 54 24 08 e8 a3 f4 ff ff 8b 74 24 0c 48 8b 3c 24 41 89 c0 44 8b 54 24 08 b8 01 01 00 00 89 f4
->   |  RSP: 002b:00007f3b87d259f0 EFLAGS: 00000293 ORIG_RAX: 0000000000000101
->   |  RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f3b87efcd0e
->   |  RDX: 0000000000000000 RSI: 00007f3b87d25a80 RDI: 00000000ffffff9c
->   |  RBP: 00007f3b87d25e90 R08: 0000000000000000 R09: 0000000000000000
->   |  R10: 0000000000000000 R11: 0000000000000293 R12: 00007ffe188f504e
->   |  R13: 00007ffe188f504f R14: 00007f3b87d26700 R15: 0000000000000000
->   |  ---[ end trace 24f53ca58db8180a ]---
-> 
-> Since 'cdev_get()' can already fail to obtain a reference, simply move
-> it over to use 'kobject_get_unless_zero()' instead of 'kobject_get()',
-> which will cause the racing thread to return -ENXIO if the initialising
-> thread fails unexpectedly.
-> 
-> Cc: Greg KH <gregkh@linuxfoundation.org>
-> Cc: Hillf Danton <hdanton@sina.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Reported-by: syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com
-> Signed-off-by: Will Deacon <will@kernel.org>
-> ---
->  fs/char_dev.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/char_dev.c b/fs/char_dev.c
-> index 00dfe17871ac..c5e6eff5a381 100644
-> --- a/fs/char_dev.c
-> +++ b/fs/char_dev.c
-> @@ -352,7 +352,7 @@ static struct kobject *cdev_get(struct cdev *p)
->  
->  	if (owner && !try_module_get(owner))
->  		return NULL;
-> -	kobj = kobject_get(&p->kobj);
-> +	kobj = kobject_get_unless_zero(&p->kobj);
->  	if (!kobj)
->  		module_put(owner);
->  	return kobj;
-> -- 
-> 2.24.1.735.g03f4e72817-goog
-> 
+On Thu, 19 Dec 2019 09:52:14 +0800
+Yunsheng Lin <linyunsheng@huawei.com> wrote:
 
-Ugh.
+> On 2019/12/18 16:01, Jesper Dangaard Brouer wrote:
+> > The check in pool_page_reusable (page_to_nid(page) == pool->p.nid) is
+> > not valid if page_pool was configured with pool->p.nid = NUMA_NO_NODE.
+> > 
+> > The goal of the NUMA changes in commit d5394610b1ba ("page_pool: Don't
+> > recycle non-reusable pages"), were to have RX-pages that belongs to the
+> > same NUMA node as the CPU processing RX-packet during softirq/NAPI. As
+> > illustrated by the performance measurements.
+> > 
+> > This patch moves the NAPI checks out of fast-path, and at the same time
+> > solves the NUMA_NO_NODE issue.
+> > 
+> > First realize that alloc_pages_node() with pool->p.nid = NUMA_NO_NODE
+> > will lookup current CPU nid (Numa ID) via numa_mem_id(), which is used
+> > as the the preferred nid.  It is only in rare situations, where
+> > e.g. NUMA zone runs dry, that page gets doesn't get allocated from
+> > preferred nid.  The page_pool API allows drivers to control the nid
+> > themselves via controlling pool->p.nid.
+> > 
+> > This patch moves the NAPI check to when alloc cache is refilled, via
+> > dequeuing/consuming pages from the ptr_ring. Thus, we can allow placing
+> > pages from remote NUMA into the ptr_ring, as the dequeue/consume step
+> > will check the NUMA node. All current drivers using page_pool will
+> > alloc/refill RX-ring from same CPU running softirq/NAPI process.
+> > 
+> > Drivers that control the nid explicitly, also use page_pool_update_nid
+> > when changing nid runtime.  To speed up transision to new nid the alloc
+> > cache is now flushed on nid changes.  This force pages to come from
+> > ptr_ring, which does the appropate nid check.
+> > 
+> > For the NUMA_NO_NODE case, when a NIC IRQ is moved to another NUMA
+> > node, then ptr_ring will be emptied in 65 (PP_ALLOC_CACHE_REFILL+1)
+> > chunks per allocation and allocation fall-through to the real
+> > page-allocator with the new nid derived from numa_mem_id(). We accept
+> > that transitioning the alloc cache doesn't happen immediately.
+> > 
+> > Fixes: d5394610b1ba ("page_pool: Don't recycle non-reusable pages")
+> > Reported-by: Li RongQing <lirongqing@baidu.com>
+> > Reported-by: Yunsheng Lin <linyunsheng@huawei.com>
+> > Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+> > ---
+> >  net/core/page_pool.c |   82 ++++++++++++++++++++++++++++++++++++++------------
+> >  1 file changed, 63 insertions(+), 19 deletions(-)
+> > 
+> > diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+> > index a6aefe989043..bd4f8b2c46b6 100644
+> > --- a/net/core/page_pool.c
+> > +++ b/net/core/page_pool.c
+> > @@ -96,10 +96,61 @@ struct page_pool *page_pool_create(const struct page_pool_params *params)
+> >  }
+> >  EXPORT_SYMBOL(page_pool_create);
+> >  
+> > +static void __page_pool_return_page(struct page_pool *pool, struct page *page);  
+> 
+> It is possible to avoid forword-declare it by move the __page_pool_return_page()?
+> Maybe it is ok since this patch is targetting net-next?
+> 
+> > +
+> > +noinline
+> > +static struct page *page_pool_refill_alloc_cache(struct page_pool *pool,
+> > +						 bool refill)
+> > +{
+> > +	struct ptr_ring *r = &pool->ring;
+> > +	struct page *first_page, *page;
+> > +	int i, curr_nid;
+> > +
+> > +	/* Quicker fallback, avoid locks when ring is empty */
+> > +	if (__ptr_ring_empty(r))
+> > +		return NULL;
+> > +
+> > +	/* Softirq guarantee CPU and thus NUMA node is stable. This,
+> > +	 * assumes CPU refilling driver RX-ring will also run RX-NAPI.
+> > +	 */
+> > +	curr_nid = numa_mem_id();
+> > +
+> > +	/* Slower-path: Get pages from locked ring queue */
+> > +	spin_lock(&r->consumer_lock);
+> > +	first_page = __ptr_ring_consume(r);
+> > +
+> > +	/* Fallback to page-allocator if NUMA node doesn't match */
+> > +	if (first_page && unlikely(!(page_to_nid(first_page) == curr_nid))) {
+> > +		__page_pool_return_page(pool, first_page);
+> > +		first_page = NULL;
+> > +	}
+> > +
+> > +	if (unlikely(!refill))
+> > +		goto out;
+> > +
+> > +	/* Refill alloc array, but only if NUMA node match */
+> > +	for (i = 0; i < PP_ALLOC_CACHE_REFILL; i++) {
+> > +		page = __ptr_ring_consume(r);
+> > +		if (unlikely(!page))
+> > +			break;
+> > +
+> > +		if (likely(page_to_nid(page) == curr_nid)) {
+> > +			pool->alloc.cache[pool->alloc.count++] = page;
+> > +		} else {
+> > +			/* Release page to page-allocator, assume
+> > +			 * refcnt == 1 invariant of cached pages
+> > +			 */
+> > +			__page_pool_return_page(pool, page);
+> > +		}
+> > +	}  
+> 
+> The above code seems to not clear all the pages in the ptr_ring that
+> is not in the local node in some case?
+> 
+> I am not so familiar with asm, but does below code make sense and
+> generate better asm code?
 
-Due to the location of the lock, this looks like the only viable
-solution.
+I'm not too concerned with ASM-level optimization for this function
+call, as it only happens once every 64 packets.
 
-Al, any objection for me taking this into my tree now to send to Linus?
-Will, this did fix the syzbot reproducer, right?
 
-thanks,
+> 	struct page *page = NULL;
+> 
+> 	while (pool->alloc.count < PP_ALLOC_CACHE_REFILL || !refill) {
+> 		page = __ptr_ring_consume(r);
+> 
+> 		if (unlikely(!page || !refill))
+> 			break;
+> 
+> 		if (likely(page_to_nid(page) == curr_nid)) {
+> 			pool->alloc.cache[pool->alloc.count++] = page;
+> 		} else {
+> 			/* Release page to page-allocator, assume
+> 			 * refcnt == 1 invariant of cached pages
+> 			 */
+> 			__page_pool_return_page(pool, page);
+> 		}
+> 	}
+> 
+> out:
+> 	if (likely(refill && pool->alloc.count > 0))
+> 		page = pool->alloc.cache[--pool->alloc.count];
+> 
+> 	spin_unlock(&r->consumer_lock);
+> 	
+> 	return page;
+>
+> 
+> "The above code does not compile or test yet".
+> 
+> the above will clear all the pages in the ptr_ring that is not in the
+> local node and treat the refill and !refill case consistently.
 
-greg k-h
+I don't want to empty the entire ptr_ring in one go.  That is
+problematic, because we are running in Softirq with bh + preemption
+disabled.  Returning 1024 pages will undoubtedly trigger some page
+buddy coalescing work.  That is why I choose to max return 65 pages (I
+felt this detail was important enought to mention it in the description
+above).
+
+I do acknowledge that the code can be improved.  What I don't like with
+my own code, is that I handle the 'first_page' as a special case.  You
+code did solve that case, so I'll try to improve my code and send V5.
+
+
+> 
+> But for the refill case, the pool->alloc.count may be PP_ALLOC_CACHE_REFILL - 1
+> after page_pool_refill_alloc_cache() returns.
+> 
+> 
+> > +out:
+> > +	spin_unlock(&r->consumer_lock);
+> > +	return first_page;
+> > +}
+> > +
+> >  /* fast path */
+> >  static struct page *__page_pool_get_cached(struct page_pool *pool)
+> >  {
+> > -	struct ptr_ring *r = &pool->ring;
+> >  	bool refill = false;
+> >  	struct page *page;
+> >  
+> > @@ -113,20 +164,7 @@ static struct page *__page_pool_get_cached(struct page_pool *pool)
+> >  		refill = true;
+> >  	}
+> >  
+> > -	/* Quicker fallback, avoid locks when ring is empty */
+> > -	if (__ptr_ring_empty(r))
+> > -		return NULL;
+> > -
+> > -	/* Slow-path: Get page from locked ring queue,
+> > -	 * refill alloc array if requested.
+> > -	 */
+> > -	spin_lock(&r->consumer_lock);
+> > -	page = __ptr_ring_consume(r);
+> > -	if (refill)
+> > -		pool->alloc.count = __ptr_ring_consume_batched(r,
+> > -							pool->alloc.cache,
+> > -							PP_ALLOC_CACHE_REFILL);
+> > -	spin_unlock(&r->consumer_lock);
+> > +	page = page_pool_refill_alloc_cache(pool, refill);
+> >  	return page;
+> >  }
+> >  
+> > @@ -311,13 +349,10 @@ static bool __page_pool_recycle_direct(struct page *page,
+> >  
+> >  /* page is NOT reusable when:
+> >   * 1) allocated when system is under some pressure. (page_is_pfmemalloc)
+> > - * 2) belongs to a different NUMA node than pool->p.nid.
+> > - *
+> > - * To update pool->p.nid users must call page_pool_update_nid.
+> >   */
+> >  static bool pool_page_reusable(struct page_pool *pool, struct page *page)
+> >  {
+> > -	return !page_is_pfmemalloc(page) && page_to_nid(page) == pool->p.nid;
+> > +	return !page_is_pfmemalloc(page);
+> >  }
+> >  
+> >  void __page_pool_put_page(struct page_pool *pool, struct page *page,
+> > @@ -484,7 +519,16 @@ EXPORT_SYMBOL(page_pool_destroy);
+> >  /* Caller must provide appropriate safe context, e.g. NAPI. */
+> >  void page_pool_update_nid(struct page_pool *pool, int new_nid)
+> >  {
+> > +	struct page *page;
+> > +
+> > +	WARN_ON(!in_serving_softirq());
+> >  	trace_page_pool_update_nid(pool, new_nid);
+> >  	pool->p.nid = new_nid;
+> > +
+> > +	/* Flush pool alloc cache, as refill will check NUMA node */
+> > +	while (pool->alloc.count) {
+> > +		page = pool->alloc.cache[--pool->alloc.count];
+> > +		__page_pool_return_page(pool, page);
+> > +	}
+> >  }
+> >  EXPORT_SYMBOL(page_pool_update_nid);
+> > 
+
+
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
+
