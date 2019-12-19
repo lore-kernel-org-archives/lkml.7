@@ -2,153 +2,182 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E3AC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 794C4C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAD20222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D0C0222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:07:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782432;
-	bh=EgbNXCKO32bDznwIxG/zUcXXSse1WyN1wD/XW0tsgKs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PpxFW47T9ZQgTbseAKRiuU+2H7lLdq934KW72cSp3y3Icg4wzinrBVo23lUJtzpY6
-	 lJrO2GkfO52giDLFEYNF/4ondY6ffJCPepuFvrc7LibS9mb4ldiEbTE1u7xxOSnoGp
-	 7Pxu7O40jwkqqrWyorvE7caauUUfYNErcFwnDUhA=
+	s=default; t=1576782440;
+	bh=kZsIXc7qd815VK8xJHuv+w3El9/y7Fu/2yASHZtpfTE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sATC9M7uoeVNTjzarqJiwRlps5LnK/yS9NtI73rx9r2VIWjSZl10SWXz9JbRh35aP
+	 auqnI61WdKa80MZbcZJhQG4Wk+GX2BaYyI2QVPpWDF1TC3mjSfokJIrVdKINAiUWLq
+	 v9apLOLGlTaM0g7i+TitVuNt5uznmSyiDtlz9nAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728889AbfLSTHL (ORCPT
+        id S1729217AbfLSTHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:07:11 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41860 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728137AbfLSSnX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:43:23 -0500
-Received: by mail-ot1-f66.google.com with SMTP id r27so8339997otc.8;
-        Thu, 19 Dec 2019 10:43:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ATCr26B2OQVBaMy930gvC8+YwzqQLoxjbV1kq1l7KCk=;
-        b=CjcHXC7bZXk5AsbMcdwa+6cfASsiCGVz+wR56vMtBUcxd5jDPbYMhnK4oYaexzOTug
-         u4tPYpYd/NxUejUhl6V7DD2j/rnc9CjQfNcFAWc4DBZdm9V3DWI+h0I3aHq1myFSFS+Q
-         8ybcBFLJBnTCDB+UTlzxm7b+10RKjTQ1PgQnXPLnPITiKn2/zZkuYp1hnOOVWKzCah2B
-         ssY7r1rMqo+YB98MYw6hQF8ir91mb6C92kPJbgAwLQ8LkUtqYirtdsiJVI8v97ZB2Cny
-         OdpTnwj6ZdsRbOc19lj+G07GCvVQ711SdE7AjTqev9emjZquJkqr6Q5ZVug8Hxeogqma
-         sUoA==
-X-Gm-Message-State: APjAAAXB2965kvh0ogAd3ywbMTXMzOc2chjy2Dto3hLAktctn5Mx8Cop
-        ycUUAzUva8gjldq+f1tmWbD5vYRMlQ==
-X-Google-Smtp-Source: APXvYqzHVHy4Y8bxjQIOFjcCok4NiCDbPD19EFZ7LpJjtchr7wNNUALhEQj3m9Oz59bjfHKnScEnxw==
-X-Received: by 2002:a9d:6d06:: with SMTP id o6mr10381223otp.239.1576781002486;
-        Thu, 19 Dec 2019 10:43:22 -0800 (PST)
-Received: from localhost ([2607:fb90:bdf:98e:3549:d84c:9720:edb4])
-        by smtp.gmail.com with ESMTPSA id r205sm2279361oih.54.2019.12.19.10.43.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 10:43:21 -0800 (PST)
-Date:   Thu, 19 Dec 2019 12:43:18 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     shubhrajyoti.datta@gmail.com
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        michal.simek@xilinx.com, gregkh@linuxfoundation.org,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Subject: Re: [PATCH v2 2/2] devicetree: bindings: Add the binding doc for
- xilinx APM
-Message-ID: <20191219184318.GA13328@bogus>
-References: <1575901405-3084-1-git-send-email-shubhrajyoti.datta@gmail.com>
- <1575901405-3084-2-git-send-email-shubhrajyoti.datta@gmail.com>
+        Thu, 19 Dec 2019 14:07:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34918 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728435AbfLSSnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:43:21 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01A9A24679;
+        Thu, 19 Dec 2019 18:43:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576780999;
+        bh=kZsIXc7qd815VK8xJHuv+w3El9/y7Fu/2yASHZtpfTE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HNN4REQMRmd/F0PyNgCmcuLB+ejSi5QoaU7ldChrefAaAyA9oZhQmxY4b3y4KISwd
+         OgcvZyXZLjIpyb0R0bef9k1TUOb8eiEF+WqTnR9AKrkFk9GpFsN1EAUA+jfNVmV+fr
+         VBJPhmdiplR2HB2JVfnj43mv3ZxETCnJtJV0Z4JQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Subject: [PATCH 4.9 006/199] serial: serial_core: Perform NULL checks for break_ctl ops
+Date:   Thu, 19 Dec 2019 19:31:28 +0100
+Message-Id: <20191219183215.010587010@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
+References: <20191219183214.629503389@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1575901405-3084-2-git-send-email-shubhrajyoti.datta@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 07:53:25PM +0530, shubhrajyoti.datta@gmail.com wrote:
-> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> 
-> Add the devicetree binding for xilinx APM.
-> 
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> ---
-> v2:
-> patch added
-> 
->  .../devicetree/bindings/perf/xilinx_apm.txt        | 44 ++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/perf/xilinx_apm.txt
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 
-As Michal said, DT schema please.
-> 
-> diff --git a/Documentation/devicetree/bindings/perf/xilinx_apm.txt b/Documentation/devicetree/bindings/perf/xilinx_apm.txt
-> new file mode 100644
-> index 0000000..a11c82e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/perf/xilinx_apm.txt
-> @@ -0,0 +1,44 @@
-> +* Xilinx AXI Performance monitor IP
-> +
-> +Required properties:
-> +- compatible: "xlnx,axi-perf-monitor"
+commit 7d73170e1c282576419f8b50a771f1fcd2b81a94 upstream.
 
-Version?
+Doing fuzz test on sbsa uart device, causes a kernel crash
+due to NULL pointer dereference:
 
-> +- interrupts: Should contain APM interrupts.
-> +- interrupt-parent: Must be core interrupt controller.
+------------[ cut here ]------------
+Unable to handle kernel paging request at virtual address fffffffffffffffc
+pgd = ffffffe331723000
+[fffffffffffffffc] *pgd=0000002333595003, *pud=0000002333595003, *pmd=00000
+Internal error: Oops: 96000005 [#1] PREEMPT SMP
+Modules linked in: ping(O) jffs2 rtos_snapshot(O) pramdisk(O) hisi_sfc(O)
+Drv_Nandc_K(O) Drv_SysCtl_K(O) Drv_SysClk_K(O) bsp_reg(O) hns3(O)
+hns3_uio_enet(O) hclgevf(O) hclge(O) hnae3(O) mdio_factory(O)
+mdio_registry(O) mdio_dev(O) mdio(O) hns3_info(O) rtos_kbox_panic(O)
+uart_suspend(O) rsm(O) stp llc tunnel4 xt_tcpudp ipt_REJECT nf_reject_ipv4
+iptable_filter ip_tables x_tables sd_mod xhci_plat_hcd xhci_pci xhci_hcd
+usbmon usbhid usb_storage ohci_platform ohci_pci ohci_hcd hid_generic hid
+ehci_platform ehci_pci ehci_hcd vfat fat usbcore usb_common scsi_mod
+yaffs2multi(O) ext4 jbd2 ext2 mbcache ofpart i2c_dev i2c_core uio ubi nand
+nand_ecc nand_ids cfi_cmdset_0002 cfi_cmdset_0001 cfi_probe gen_probe
+cmdlinepart chipreg mtdblock mtd_blkdevs mtd nfsd auth_rpcgss oid_registry
+nfsv3 nfs nfs_acl lockd sunrpc grace autofs4
+CPU: 2 PID: 2385 Comm: tty_fuzz_test Tainted: G           O    4.4.193 #1
+task: ffffffe32b23f110 task.stack: ffffffe32bda4000
+PC is at uart_break_ctl+0x44/0x84
+LR is at uart_break_ctl+0x34/0x84
+pc : [<ffffff8393196098>] lr : [<ffffff8393196088>] pstate: 80000005
+sp : ffffffe32bda7cc0
+x29: ffffffe32bda7cc0 x28: ffffffe32b23f110
+x27: ffffff8393402000 x26: 0000000000000000
+x25: ffffffe32b233f40 x24: ffffffc07a8ec680
+x23: 0000000000005425 x22: 00000000ffffffff
+x21: ffffffe33ed73c98 x20: 0000000000000000
+x19: ffffffe33ed94168 x18: 0000000000000004
+x17: 0000007f92ae9d30 x16: ffffff8392fa6064
+x15: 0000000000000010 x14: 0000000000000000
+x13: 0000000000000000 x12: 0000000000000000
+x11: 0000000000000020 x10: 0000007ffdac1708
+x9 : 0000000000000078 x8 : 000000000000001d
+x7 : 0000000052a64887 x6 : ffffffe32bda7e08
+x5 : ffffffe32b23c000 x4 : 0000005fbc5b0000
+x3 : ffffff83938d5018 x2 : 0000000000000080
+x1 : ffffffe32b23c040 x0 : ffffff83934428f8
+virtual start addr offset is 38ac00000
+module base offset is 2cd4cf1000
+linear region base offset is : 0
+Process tty_fuzz_test (pid: 2385, stack limit = 0xffffffe32bda4000)
+Stack: (0xffffffe32bda7cc0 to 0xffffffe32bda8000)
+7cc0: ffffffe32bda7cf0 ffffff8393177718 ffffffc07a8ec680 ffffff8393196054
+7ce0: 000000001739f2e0 0000007ffdac1978 ffffffe32bda7d20 ffffff8393179a1c
+7d00: 0000000000000000 ffffff8393c0a000 ffffffc07a8ec680 cb88537fdc8ba600
+7d20: ffffffe32bda7df0 ffffff8392fa5a40 ffffff8393c0a000 0000000000005425
+7d40: 0000007ffdac1978 ffffffe32b233f40 ffffff8393178dcc 0000000000000003
+7d60: 000000000000011d 000000000000001d ffffffe32b23f110 000000000000029e
+7d80: ffffffe34fe8d5d0 0000000000000000 ffffffe32bda7e14 cb88537fdc8ba600
+7da0: ffffffe32bda7e30 ffffff8393042cfc ffffff8393c41720 ffffff8393c46410
+7dc0: ffffff839304fa68 ffffffe32b233f40 0000000000005425 0000007ffdac1978
+7de0: 000000000000011d cb88537fdc8ba600 ffffffe32bda7e70 ffffff8392fa60cc
+7e00: 0000000000000000 ffffffe32b233f40 ffffffe32b233f40 0000000000000003
+7e20: 0000000000005425 0000007ffdac1978 ffffffe32bda7e70 ffffff8392fa60b0
+7e40: 0000000000000280 ffffffe32b233f40 ffffffe32b233f40 0000000000000003
+7e60: 0000000000005425 cb88537fdc8ba600 0000000000000000 ffffff8392e02e78
+7e80: 0000000000000280 0000005fbc5b0000 ffffffffffffffff 0000007f92ae9d3c
+7ea0: 0000000060000000 0000000000000015 0000000000000003 0000000000005425
+7ec0: 0000007ffdac1978 0000000000000000 00000000a54c910e 0000007f92b95014
+7ee0: 0000007f92b95090 0000000052a64887 000000000000001d 0000000000000078
+7f00: 0000007ffdac1708 0000000000000020 0000000000000000 0000000000000000
+7f20: 0000000000000000 0000000000000010 000000556acf0090 0000007f92ae9d30
+7f40: 0000000000000004 000000556acdef10 0000000000000000 000000556acdebd0
+7f60: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+7f80: 0000000000000000 0000000000000000 0000000000000000 0000007ffdac1840
+7fa0: 000000556acdedcc 0000007ffdac1840 0000007f92ae9d3c 0000000060000000
+7fc0: 0000000000000000 0000000000000000 0000000000000003 000000000000001d
+7fe0: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+Call trace:
+Exception stack(0xffffffe32bda7ab0 to 0xffffffe32bda7bf0)
+7aa0:                                   0000000000001000 0000007fffffffff
+7ac0: ffffffe32bda7cc0 ffffff8393196098 0000000080000005 0000000000000025
+7ae0: ffffffe32b233f40 ffffff83930d777c ffffffe32bda7b30 ffffff83930d777c
+7b00: ffffffe32bda7be0 ffffff83938d5000 ffffffe32bda7be0 ffffffe32bda7c20
+7b20: ffffffe32bda7b60 ffffff83930d777c ffffffe32bda7c10 ffffff83938d5000
+7b40: ffffffe32bda7c10 ffffffe32bda7c50 ffffff8393c0a000 ffffffe32b23f110
+7b60: ffffffe32bda7b70 ffffff8392e09df4 ffffffe32bda7bb0 cb88537fdc8ba600
+7b80: ffffff83934428f8 ffffffe32b23c040 0000000000000080 ffffff83938d5018
+7ba0: 0000005fbc5b0000 ffffffe32b23c000 ffffffe32bda7e08 0000000052a64887
+7bc0: 000000000000001d 0000000000000078 0000007ffdac1708 0000000000000020
+7be0: 0000000000000000 0000000000000000
+[<ffffff8393196098>] uart_break_ctl+0x44/0x84
+[<ffffff8393177718>] send_break+0xa0/0x114
+[<ffffff8393179a1c>] tty_ioctl+0xc50/0xe84
+[<ffffff8392fa5a40>] do_vfs_ioctl+0xc4/0x6e8
+[<ffffff8392fa60cc>] SyS_ioctl+0x68/0x9c
+[<ffffff8392e02e78>] __sys_trace_return+0x0/0x4
+Code: b9410ea0 34000160 f9408aa0 f9402814 (b85fc280)
+---[ end trace 8606094f1960c5e0 ]---
+Kernel panic - not syncing: Fatal exception
 
-Drop this.
+Fix this problem by adding NULL checks prior to calling break_ctl ops.
 
-> +- reg: Should contain APM registers location and length.
-> +- xlnx,enable-profile: Enables the profile mode.
-> +- xlnx,enable-trace: Enables trace mode.
-> +- xlnx,num-monitor-slots: Maximum number of slots in APM.
-> +- xlnx,enable-event-count: Enable event count.
-> +- xlnx,enable-event-log: Enable event logging.
-> +- xlnx,have-sampled-metric-cnt:Sampled metric counters enabled in APM.
-> +- xlnx,num-of-counters: Number of counters in APM
-> +- xlnx,metric-count-width: Metric Counter width (32/64)
-> +- xlnx,metrics-sample-count-width: Sampled metric counter width
-> +- xlnx,global-count-width: Global Clock counter width
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1574263133-28259-1-git-send-email-xiaojiangfeng@huawei.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-All these synthesis time config and not discoverable?
+---
+ drivers/tty/serial/serial_core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Tell h/w designers to add feature registers so all this is 
-discoverable. </rant>
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -1106,7 +1106,7 @@ static int uart_break_ctl(struct tty_str
+ 	if (!uport)
+ 		goto out;
+ 
+-	if (uport->type != PORT_UNKNOWN)
++	if (uport->type != PORT_UNKNOWN && uport->ops->break_ctl)
+ 		uport->ops->break_ctl(uport, break_state);
+ 	ret = 0;
+ out:
 
-> +- clocks: Input clock specifier.
-> +
-> +Optional properties:
-> +- xlnx,id-filter-32bit: APM is in 32-bit mode
-> +
-> +Example:
-> +++++++++
-> +
-> +apm: apm@44a00000 {
-> +    compatible = "xlnx,axi-perf-monitor";
-> +    interrupt-parent = <&axi_intc_1>;
-> +    interrupts = <1 2>;
-> +    reg = <0x44a00000 0x1000>;
-> +    clocks = <&clkc 15>;
-> +    xlnx,enable-profile = <0>;
-> +    xlnx,enable-trace = <0>;
-> +    xlnx,num-monitor-slots = <4>;
-> +    xlnx,enable-event-count = <1>;
-> +    xlnx,enable-event-log = <1>;
-> +    xlnx,have-sampled-metric-cnt = <1>;
-> +    xlnx,num-of-counters = <8>;
-> +    xlnx,metric-count-width = <32>;
-> +    xlnx,metrics-sample-count-width = <32>;
-> +    xlnx,global-count-width = <32>;
-> +    xlnx,metric-count-scale = <1>;
-> +    xlnx,id-filter-32bit;
-> +};
-> -- 
-> 2.1.1
-> 
+
