@@ -2,75 +2,211 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C732C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C037EC2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E6362467E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83E1824692
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:12:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576786374;
+	bh=M8QEBQy4eliOtdMGgHLbGzJ/Zrco4EZ0Uy+9WFtCGxQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hLA87Inyxrsnc3hUM3Ctbh/sairreLt7j7Z62nLdt63pL+BG8PegF/smq8vyvydzZ
+	 Y6/cql3kM/UpZ26VMpZQApgqrYuy0lpErA84hTQedxUIQU9iKtSbI4PTwyJOZYMhXR
+	 j3oYlrW1fbPRcHVQuiizkhzoTaliakLzLRdbshAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbfLSULX (ORCPT
+        id S1727016AbfLSUMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 15:11:23 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:41480 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726884AbfLSULX (ORCPT
+        Thu, 19 Dec 2019 15:12:53 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33148 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726884AbfLSUMx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 15:11:23 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id D3EA1153A024B;
-        Thu, 19 Dec 2019 12:11:19 -0800 (PST)
-Date:   Thu, 19 Dec 2019 12:11:17 -0800 (PST)
-Message-Id: <20191219.121117.1826219046339114907.davem@davemloft.net>
-To:     antoine.tenart@bootlin.com
-Cc:     sd@queasysnail.net, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-        alexandre.belloni@bootlin.com, allan.nielsen@microchip.com,
-        camelia.groza@nxp.com, Simon.Edelhaus@aquantia.com,
-        Igor.Russkikh@aquantia.com, jakub.kicinski@netronome.com
-Subject: Re: [PATCH net-next v4 08/15] net: phy: mscc: macsec initialization
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191219105515.78400-9-antoine.tenart@bootlin.com>
-References: <20191219105515.78400-1-antoine.tenart@bootlin.com>
-        <20191219105515.78400-9-antoine.tenart@bootlin.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 19 Dec 2019 12:11:20 -0800 (PST)
+        Thu, 19 Dec 2019 15:12:53 -0500
+Received: by mail-ot1-f66.google.com with SMTP id b18so8699376otp.0;
+        Thu, 19 Dec 2019 12:12:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yEsnOS+OJlfdn2ya+oI/IM/M4B/BUkejIrhzJ5Fn3Yg=;
+        b=RaVPzQmymmdRu+3fMeli7rbHS0Z/Z708JQJuGFVpxqY0AIWrEfuChc+rImIox3aV0z
+         ioveUd4Wte/Ki4Gg+UFeAqjPIzc1EknXtmg7e24uJTA3DfeglsT5VaNswvdYvRM9UUGb
+         Rf6JGgTJ4yEZtOMW+muS+WM1Z9WH8LNHm8YAuw536A6KInf/Dxro6682qU7gFyWNrZbk
+         2rjkMQSOEfIRYrvXDfKNpwyEi77EZpJB+Wp2mMrlzcUNmaJzRG/Mok2Bdgl3IhnjOvNf
+         0iiNQT5z47UQn5P2hiMCp8Vk8XptYAt3m+Lp11VfWMrxt/DQ4nkwwl30b4sfyzFQYQeq
+         jR4Q==
+X-Gm-Message-State: APjAAAUDLqpdSX7h64kcAJrHxG7shSr4i5EhwYuIoPPPJhIusvPUD6iS
+        eLeO1UcZQMwjIrFLHkkTLQ==
+X-Google-Smtp-Source: APXvYqwNJK+Rd61vCyU7qwkUD4jByn2n3KevwwFyhFxb//LMNfrlX3KQoeago107d1SmGHaGQBaatA==
+X-Received: by 2002:a05:6830:1e5c:: with SMTP id e28mr10927417otj.293.1576786372073;
+        Thu, 19 Dec 2019 12:12:52 -0800 (PST)
+Received: from localhost (ip-184-205-110-29.ftwttx.spcsdns.net. [184.205.110.29])
+        by smtp.gmail.com with ESMTPSA id f1sm2501751otq.4.2019.12.19.12.12.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 12:12:51 -0800 (PST)
+Date:   Thu, 19 Dec 2019 14:12:49 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        mark.rutland@arm.com, orsonzhai@gmail.com, baolin.wang@linaro.org,
+        freeman.liu@unisoc.com, zhang.lyra@gmail.com,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: thermal: sprd: Add the Spreadtrum
+ thermal documentation
+Message-ID: <20191219201248.GA5109@bogus>
+References: <8d5358a67746b2aff5f6995cabd11d0d7c9e579e.1575978484.git.baolin.wang7@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8d5358a67746b2aff5f6995cabd11d0d7c9e579e.1575978484.git.baolin.wang7@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antoine Tenart <antoine.tenart@bootlin.com>
-Date: Thu, 19 Dec 2019 11:55:08 +0100
-
-> +static u32 __vsc8584_macsec_phy_read(struct phy_device *phydev,
-> +				     enum macsec_bank bank, u32 reg, bool init)
-> +{
-> +	u32 val, val_l = 0, val_h = 0;
-> +	unsigned long deadline;
-> +	int rc;
+On Tue, Dec 10, 2019 at 08:07:17PM +0800, Baolin Wang wrote:
+> From: Baolin Wang <baolin.wang@unisoc.com>
+> 
+> Add the Spreadtrum thermal documentation.
+> 
+> Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
+> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> ---
+> Changes from v1:
+>  - Change to yaml format.
+> ---
+>  .../devicetree/bindings/thermal/sprd-thermal.yaml  |   97 ++++++++++++++++++++
+>  1 file changed, 97 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml b/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
+> new file mode 100644
+> index 0000000..92d208a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
+> @@ -0,0 +1,97 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/sprd-thermal.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +	if (!init) {
-> +		rc = phy_select_page(phydev, MSCC_PHY_PAGE_MACSEC);
-> +		if (rc < 0)
-> +			goto failed;
-> +	} else {
-> +		__phy_write_page(phydev, MSCC_PHY_PAGE_MACSEC);
-> +	}
+> +title: Spreadtrum thermal sensor controller bindings
+> +
+> +maintainers:
+> +  - Orson Zhai <orsonzhai@gmail.com>
+> +  - Baolin Wang <baolin.wang7@gmail.com>
+> +  - Chunyan Zhang <zhang.lyra@gmail.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: sprd,ums512-thermal
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: enable
+> +
+> +  nvmem-cells:
+> +    maxItems: 2
+> +    description:
+> +      Reference to nvmem nodes for the calibration data.
+> +
+> +  nvmem-cells-names:
+> +    maxItems: 2
+> +    items:
+> +      - const: thm_sign_cal
+> +      - const: thm_ratio_cal
+> +
+> +  "#thermal-sensor-cells":
+> +    const: 1
+> +
+> +  child-node:
 
-Having to export __phy_write_page() in the previous patch looked like
-a huge red flag to me, and indeed on top of it you're using it to do
-conditional locking here.
+You need actual child node names. It can be a pattern with 
+patternProperties.
 
-I'm going to unfortunately have to push back on this, please sanitize
-the locking here so that you can use the existing exports properly.
+Make sure 'make dt_binding_check' passes.
+
+> +    description: Represent one thermal sensor.
+> +
+> +    properties:
+> +      reg:
+> +        description: Specify the sensor id.
+> +        maxItems: 1
+> +
+> +      nvmem-cells:
+> +        maxItems: 1
+> +        description:
+> +          Reference to an nvmem node for the calibration data.
+> +
+> +      nvmem-cells-names:
+> +        maxItems: 1
+> +        items:
+> +          - const: sen_delta_cal
+
+Can be simplified to
+
+nvmem-cells-names:
+  const: sen_delta_cal
+
+> +
+> +    required:
+> +      - reg
+> +      - nvmem-cells
+> +      - nvmem-cells-names
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - nvmem-cells
+> +  - nvmem-cells-names
+> +  - "#thermal-sensor-cells"
+> +
+> +examples:
+> +  - |
+> +        ap_thm0: thermal@32200000 {
+> +                compatible = "sprd,ums512-thermal";
+> +                reg = <0 0x32200000 0 0x10000>;
+> +                clock-names = "enable";
+> +                clocks = <&aonapb_gate 32>;
+> +                #thermal-sensor-cells = <1>;
+> +                nvmem-cells = <&thm0_sign>, <&thm0_ratio>;
+> +                nvmem-cell-names = "thm_sign_cal", "thm_ratio_cal";
+> +
+> +                prometheus0-sensor@0 {
+> +                        reg = <0>;
+
+This should fail to build. You need #size-cells and #address-cells in 
+the parent.
+
+> +                        nvmem-cells = <&thm0_sen0>;
+> +                        nvmem-cell-names = "sen_delta_cal";
+> +                };
+> +
+> +                ank1-sensor@1 {
+> +                        reg = <1>;
+> +                        nvmem-cells = <&thm0_sen1>;
+> +                        nvmem-cell-names = "sen_delta_cal";
+> +                };
+> +        };
+> +...
+> -- 
+> 1.7.9.5
+> 
