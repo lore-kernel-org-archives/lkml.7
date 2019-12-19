@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FB4C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D447C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A1B924683
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8EB924684
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781455;
-	bh=Jrwpqvl/NbwnQ3Y/vpkLFz7VYCol0WrRQ/VbLcu30NI=;
+	s=default; t=1576781459;
+	bh=FjQfHrnMKBL/HTRi+36OsxA3RH7s2kM7QEmwxUvZLGg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iKOD9tL2vs7vocbo7xMf+ZJyrXCHx7MovSPJs+bwJgCZFYG1ytSZ3HNkiYZE07Lbx
-	 3eG6GtiDobKWn/UhNCZwjDzXpgL6lh90CoB1eL07QE+ej7VYyOggpmXEHYny7hX3hW
-	 L6T0jzBt6dzY01k7xvsrE7y3MOGqsX0jTiY7AeOQ=
+	b=LaocXwkZG750Yd+oIfvHD4KjhoHe1HYgdfdO08p4hwmLcItV6TAliwGL9mh10N+oR
+	 emv7/22jJV/PeLEqv5Hj58YUFj3mrJMutC9ZuMX7QMVSTu1iWPo73xsZNuzhKkX3LC
+	 Lmq9OD2adkK0wD1bYRJR1rI24qwo/SXvf6rLFcrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729721AbfLSSuy (ORCPT
+        id S1729792AbfLSSu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:50:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44824 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:50:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730045AbfLSSuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:50:50 -0500
+        id S1730058AbfLSSuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:50:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F62A20674;
-        Thu, 19 Dec 2019 18:50:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C335724684;
+        Thu, 19 Dec 2019 18:50:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781449;
-        bh=Jrwpqvl/NbwnQ3Y/vpkLFz7VYCol0WrRQ/VbLcu30NI=;
+        s=default; t=1576781452;
+        bh=FjQfHrnMKBL/HTRi+36OsxA3RH7s2kM7QEmwxUvZLGg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ruB9mpo2TsfXwVp2oXp4H6lnNlJEaPOK4TKRy5l54U8tAm9tQyRerbix8MQuhVxYu
-         WrTRSxhCIpwr9QqGTS5gGd+/KPFFeGgKLH3KRwDddFzyWjaoT2I60kqK7mOq7wKKqx
-         XlF/pCyL8iqyGpIXsDk4cVE4hagePV4VTgwYF/ms=
+        b=2iz2HEBJYh1yGMWlITEpoplgnGJCzjFpD66js79qPm+Ds61XJarGAXu1xY8aJG6Os
+         +6z0dfyT8aJT3DC8Wq23wpVx33FwHz9Z+Fo7vu+qXo8JZ8B4muJyyLO6k6rXPP0BNd
+         SytOl9qhv8ro2MDBxFSNSxUzE0hcDT5M6Q9Mo/EU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lihua Yao <ylhuajnu@outlook.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 4.14 27/36] ARM: dts: s3c64xx: Fix init order of clock providers
-Date:   Thu, 19 Dec 2019 19:34:44 +0100
-Message-Id: <20191219182918.731649550@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 4.14 28/36] ARM: tegra: Fix FLOW_CTLR_HALT register clobbering by tegra_resume()
+Date:   Thu, 19 Dec 2019 19:34:45 +0100
+Message-Id: <20191219182919.989741666@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182848.708141124@linuxfoundation.org>
 References: <20191219182848.708141124@linuxfoundation.org>
@@ -60,59 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lihua Yao <ylhuajnu@outlook.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-commit d60d0cff4ab01255b25375425745c3cff69558ad upstream.
+commit d70f7d31a9e2088e8a507194354d41ea10062994 upstream.
 
-fin_pll is the parent of clock-controller@7e00f000, specify
-the dependency to ensure proper initialization order of clock
-providers.
-
-without this patch:
-[    0.000000] S3C6410 clocks: apll = 0, mpll = 0
-[    0.000000]  epll = 0, arm_clk = 0
-
-with this patch:
-[    0.000000] S3C6410 clocks: apll = 532000000, mpll = 532000000
-[    0.000000]  epll = 24000000, arm_clk = 532000000
+There is an unfortunate typo in the code that results in writing to
+FLOW_CTLR_HALT instead of FLOW_CTLR_CSR.
 
 Cc: <stable@vger.kernel.org>
-Fixes: 3f6d439f2022 ("clk: reverse default clk provider initialization order in of_clk_init()")
-Signed-off-by: Lihua Yao <ylhuajnu@outlook.com>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/s3c6410-mini6410.dts |    4 ++++
- arch/arm/boot/dts/s3c6410-smdk6410.dts |    4 ++++
- 2 files changed, 8 insertions(+)
+ arch/arm/mach-tegra/reset-handler.S |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/arch/arm/boot/dts/s3c6410-mini6410.dts
-+++ b/arch/arm/boot/dts/s3c6410-mini6410.dts
-@@ -167,6 +167,10 @@
- 	};
- };
+--- a/arch/arm/mach-tegra/reset-handler.S
++++ b/arch/arm/mach-tegra/reset-handler.S
+@@ -56,16 +56,16 @@ ENTRY(tegra_resume)
+ 	cmp	r6, #TEGRA20
+ 	beq	1f				@ Yes
+ 	/* Clear the flow controller flags for this CPU. */
+-	cpu_to_csr_reg r1, r0
++	cpu_to_csr_reg r3, r0
+ 	mov32	r2, TEGRA_FLOW_CTRL_BASE
+-	ldr	r1, [r2, r1]
++	ldr	r1, [r2, r3]
+ 	/* Clear event & intr flag */
+ 	orr	r1, r1, \
+ 		#FLOW_CTRL_CSR_INTR_FLAG | FLOW_CTRL_CSR_EVENT_FLAG
+ 	movw	r0, #0x3FFD	@ enable, cluster_switch, immed, bitmaps
+ 				@ & ext flags for CPU power mgnt
+ 	bic	r1, r1, r0
+-	str	r1, [r2]
++	str	r1, [r2, r3]
+ 1:
  
-+&clocks {
-+	clocks = <&fin_pll>;
-+};
-+
- &sdhci0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sd0_clk>, <&sd0_cmd>, <&sd0_cd>, <&sd0_bus4>;
---- a/arch/arm/boot/dts/s3c6410-smdk6410.dts
-+++ b/arch/arm/boot/dts/s3c6410-smdk6410.dts
-@@ -71,6 +71,10 @@
- 	};
- };
- 
-+&clocks {
-+	clocks = <&fin_pll>;
-+};
-+
- &sdhci0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sd0_clk>, <&sd0_cmd>, <&sd0_cd>, <&sd0_bus4>;
+ 	mov32	r9, 0xc09
 
 
