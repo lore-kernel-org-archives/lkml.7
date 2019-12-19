@@ -2,82 +2,105 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3841C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B21C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9368F2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2961C218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:32:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="hER6opfX"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DGn7gneB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbfLSNaq (ORCPT
+        id S1726824AbfLSNcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 08:30:46 -0500
-Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:48014 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726695AbfLSNaq (ORCPT
+        Thu, 19 Dec 2019 08:32:06 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:33678 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726695AbfLSNcG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 08:30:46 -0500
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Thu, 19 Dec 2019 08:32:06 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576762325; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=41W5xZgEpVmLUelbR692YUsa8fLldV9N+l6CsEx5uLU=; b=DGn7gneBD9mYrV+abDMlshXQLj+PMWCeW/sU05txHLmTgpWZNJMe+JRpheNOijITPSSejkgx
+ g46FMYcz1dRHHGxNhbHXNXTvMPyHCUyyUGO0kexsijkflv6S7JH/EMR+9DT9aW8pn8ql9epj
+ QKNhEgzQPU2ZwiyHj7oovtesVJ0=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5dfb7bd3.7fb3768398f0-smtp-out-n03;
+ Thu, 19 Dec 2019 13:32:03 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C2FBCC4479F; Thu, 19 Dec 2019 13:32:03 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 5DB70405D4;
-        Thu, 19 Dec 2019 13:30:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1576762245; bh=CwpIHUsLSwWgfRfilgxCCE00b6aVv9KpT49ou2/oTLI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=hER6opfXJxcbx+tkUxHY5+je+3Okwntz9LcihPHUs+oD9kfAF9Rruw7T4LK1V1r6s
-         z81OPiVRoFUeKDDabUygcXzeNPRKFiV5+H47dn5L0VgOB9lm9YUV2lrJEgLtcwu+aT
-         5XWq7wIUE1HV+6itz8ybsuCq2S/ZkpEHjbzW1ujVpplY8L3NI/e+ep4aexKQ4CbS95
-         i6TpM3rk+mi2n9NgjoDTEs8MkaGiVJRE74anC3fhknrtmSeCK3VR2iyS2+F6LcHz8N
-         mjVzNTjkJ6LX+QL8cEzX2NUmZFwdl0qvrbl9l+LWLQrOdeTn1vMhUMiA1QOV028Ukh
-         5A3SY9K8FVzJw==
-Received: from paltsev-e7480.internal.synopsys.com (paltsev-e7480.internal.synopsys.com [10.121.3.76])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 18ED4A0066;
-        Thu, 19 Dec 2019 13:30:42 +0000 (UTC)
-From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-To:     linux-snps-arc@lists.infradead.org,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH] ARC: asm-offsets: remove duplicate entry
-Date:   Thu, 19 Dec 2019 16:30:40 +0300
-Message-Id: <20191219133040.12736-1-Eugeniy.Paltsev@synopsys.com>
-X-Mailer: git-send-email 2.21.0
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 84FA8C433A2;
+        Thu, 19 Dec 2019 13:32:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 84FA8C433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-wireless@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        ath11k@lists.infradead.org
+Subject: Re: [PATCH] ath11k: Remove unnecessary enum scan_priority
+References: <20191211192252.35024-1-natechancellor@gmail.com>
+        <CAKwvOdmQp+Rjgh49kbTp1ocLCjv4SUACEO4+tX5vz4stX-pPpg@mail.gmail.com>
+Date:   Thu, 19 Dec 2019 15:31:59 +0200
+In-Reply-To: <CAKwvOdmQp+Rjgh49kbTp1ocLCjv4SUACEO4+tX5vz4stX-pPpg@mail.gmail.com>
+        (Nick Desaulniers's message of "Thu, 12 Dec 2019 11:34:42 -0800")
+Message-ID: <87a77o786o.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We define 'PT_user_r25' twice in asm-offsets.c
-It's not a big issue as we define it to the same value, however
-let's fix it.
+Nick Desaulniers <ndesaulniers@google.com> writes:
 
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
----
- arch/arc/kernel/asm-offsets.c | 1 -
- 1 file changed, 1 deletion(-)
+> On Wed, Dec 11, 2019 at 11:23 AM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+>>
+>> Clang warns:
+>>
+>> drivers/net/wireless/ath/ath11k/wmi.c:1827:23: warning: implicit
+>> conversion from enumeration type 'enum wmi_scan_priority' to different
+>> enumeration type 'enum scan_priority' [-Wenum-conversion]
+>>         arg->scan_priority = WMI_SCAN_PRIORITY_LOW;
+>>                            ~ ^~~~~~~~~~~~~~~~~~~~~
+>> 1 warning generated.
+>>
+>> wmi_scan_priority and scan_priority have the same values but the wmi one
+>> has WMI prefixed to the names. Since that enum is already being used,
+>> get rid of scan_priority and switch its one use to wmi_scan_priority to
+>> fix this warning.
+>>
+>> Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
+>> Link: https://github.com/ClangBuiltLinux/linux/issues/808
+>> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+>
+> Further, it looks like the member `scan_priority` in `struct
+> wmi_start_scan_arg` and `struct wmi_start_scan_cmd` should probably
+> use `enum wmi_scan_priority`, rather than `u32`.
 
-diff --git a/arch/arc/kernel/asm-offsets.c b/arch/arc/kernel/asm-offsets.c
-index 1f621e416521..631ebb5d3458 100644
---- a/arch/arc/kernel/asm-offsets.c
-+++ b/arch/arc/kernel/asm-offsets.c
-@@ -66,7 +66,6 @@ int main(void)
- 
- 	DEFINE(SZ_CALLEE_REGS, sizeof(struct callee_regs));
- 	DEFINE(SZ_PT_REGS, sizeof(struct pt_regs));
--	DEFINE(PT_user_r25, offsetof(struct pt_regs, user_r25));
- 
- 	return 0;
- }
+struct wmi_start_scan_cmd is sent to firmware and that's why it has u32
+to make sure that the size is exactly 32 bits.
+
+> Also, I don't know if the more concisely named enum is preferable?
+
+I didn't get this comment.
+
 -- 
-2.21.0
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
