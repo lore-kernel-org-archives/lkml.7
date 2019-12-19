@@ -2,52 +2,53 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3043BC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92096C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 062D8206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59A14206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782237;
-	bh=dzjhsd4HD5RJSwDFnYLAi5QD2ZG6TARO/PGXcTkFSCU=;
+	s=default; t=1576782241;
+	bh=7o+5IgHJs/NzrUR6SmPzn5+OzS688lDaby8Qs6fz98Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SPXNeFwOnZXgagL7+5q9YQJ0WudlOU+2gn5n27YuSOI+uFyXza5ZTdk5opn67XccJ
-	 8RGgDFdjA1N8PXsUtlg6QO+0CZspEqsS05io/3kxMg1/O8mSBP5kPsmw50j1J07VVt
-	 kNd2XIFuOH0YAU0SfhmTsbyozkvlUT1rXtIfSl90=
+	b=H80HmlqWfM5oM+7Rd7+UJv1msmsQNMi/Mger3eSjlw5g8OiVjhtlCVvjjbzZK912e
+	 uakZpFXsQnw8muEc4aCNaD0PGjj7xaqYfsbD4m+9+0hn8uPrF2Hk1o7n/98PhOvrwS
+	 5Gva8FJZ0exQ0JyQaPg2c+OBps8G1ozK2hs30Hjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729536AbfLSSrw (ORCPT
+        id S1729507AbfLSSrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:47:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40754 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:47:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728733AbfLSSrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:47:47 -0500
+        id S1729493AbfLSSrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:47:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C13B524672;
-        Thu, 19 Dec 2019 18:47:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A93F224676;
+        Thu, 19 Dec 2019 18:47:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781267;
-        bh=dzjhsd4HD5RJSwDFnYLAi5QD2ZG6TARO/PGXcTkFSCU=;
+        s=default; t=1576781255;
+        bh=7o+5IgHJs/NzrUR6SmPzn5+OzS688lDaby8Qs6fz98Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SiiEFWnQncpYU4MPEAjnvJeY0lP7sd7YJidMvmGVSj5SWFwPp4i3ra+2uYI/OKNNt
-         wI0ek5Dx7R9TY3bjcGZwdUg13b7rIkbGzm//oXs6fZr9NLX3WVBwbC/CVcGhnxdok6
-         adRqRz4JMZLJW6+mRj0Y7C1V0hvdiMmZIwkngsOQ=
+        b=2R/gHUIS1tEbGpDlppLr3gEfUAyXgRN8u8Bm9Fy0J5835fBw7hu5AifvCbKX6NmMs
+         e8ZeBwvlFmFzMSXqlt1xk+h/vtap9LzqmUK9shV0ZOpi8X//3DlaUwTik10nnApry7
+         00VCYkaVevvZITkyRZ/kile/aBWTPt1UYL/KbnvE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 150/199] xhci: make sure interrupts are restored to correct state
-Date:   Thu, 19 Dec 2019 19:33:52 +0100
-Message-Id: <20191219183223.571399248@linuxfoundation.org>
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH 4.9 146/199] quota: fix livelock in dquot_writeback_dquots
+Date:   Thu, 19 Dec 2019 19:33:48 +0100
+Message-Id: <20191219183223.303556132@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,69 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
 
-[ Upstream commit bd82873f23c9a6ad834348f8b83f3b6a5bca2c65 ]
+commit 6ff33d99fc5c96797103b48b7b0902c296f09c05 upstream.
 
-spin_unlock_irqrestore() might be called with stale flags after
-reading port status, possibly restoring interrupts to a incorrect
-state.
+Write only quotas which are dirty at entry.
 
-If a usb2 port just finished resuming while the port status is read
-the spin lock will be temporary released and re-acquired in a separate
-function. The flags parameter is passed as value instead of a pointer,
-not updating flags properly before the final spin_unlock_irqrestore()
-is called.
+XFSTEST: https://github.com/dmonakhov/xfstests/commit/b10ad23566a5bf75832a6f500e1236084083cddc
 
-Cc: <stable@vger.kernel.org> # v3.12+
-Fixes: 8b3d45705e54 ("usb: Fix xHCI host issues on remote wakeup.")
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20191211142007.8847-7-mathias.nyman@linux.intel.com
+Link: https://lore.kernel.org/r/20191031103920.3919-1-dmonakhov@openvz.org
+CC: stable@vger.kernel.org
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+
 ---
- drivers/usb/host/xhci-hub.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/quota/dquot.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
-index 39e2d32710355..6777a81fb372b 100644
---- a/drivers/usb/host/xhci-hub.c
-+++ b/drivers/usb/host/xhci-hub.c
-@@ -728,7 +728,7 @@ static u32 xhci_get_port_status(struct usb_hcd *hcd,
- 		struct xhci_bus_state *bus_state,
- 		__le32 __iomem **port_array,
- 		u16 wIndex, u32 raw_port_status,
--		unsigned long flags)
-+		unsigned long *flags)
- 	__releases(&xhci->lock)
- 	__acquires(&xhci->lock)
+--- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -611,7 +611,7 @@ EXPORT_SYMBOL(dquot_scan_active);
+ /* Write all dquot structures to quota files */
+ int dquot_writeback_dquots(struct super_block *sb, int type)
  {
-@@ -810,12 +810,12 @@ static u32 xhci_get_port_status(struct usb_hcd *hcd,
- 			xhci_set_link_state(xhci, port_array, wIndex,
- 					XDEV_U0);
- 
--			spin_unlock_irqrestore(&xhci->lock, flags);
-+			spin_unlock_irqrestore(&xhci->lock, *flags);
- 			time_left = wait_for_completion_timeout(
- 					&bus_state->rexit_done[wIndex],
- 					msecs_to_jiffies(
- 						XHCI_MAX_REXIT_TIMEOUT_MS));
--			spin_lock_irqsave(&xhci->lock, flags);
-+			spin_lock_irqsave(&xhci->lock, *flags);
- 
- 			if (time_left) {
- 				slot_id = xhci_find_slot_id_by_port(hcd,
-@@ -961,7 +961,7 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
- 			break;
- 		}
- 		status = xhci_get_port_status(hcd, bus_state, port_array,
--				wIndex, temp, flags);
-+				wIndex, temp, &flags);
- 		if (status == 0xffffffff)
- 			goto error;
- 
--- 
-2.20.1
-
+-	struct list_head *dirty;
++	struct list_head dirty;
+ 	struct dquot *dquot;
+ 	struct quota_info *dqopt = sb_dqopt(sb);
+ 	int cnt;
+@@ -624,9 +624,10 @@ int dquot_writeback_dquots(struct super_
+ 		if (!sb_has_quota_active(sb, cnt))
+ 			continue;
+ 		spin_lock(&dq_list_lock);
+-		dirty = &dqopt->info[cnt].dqi_dirty_list;
+-		while (!list_empty(dirty)) {
+-			dquot = list_first_entry(dirty, struct dquot,
++		/* Move list away to avoid livelock. */
++		list_replace_init(&dqopt->info[cnt].dqi_dirty_list, &dirty);
++		while (!list_empty(&dirty)) {
++			dquot = list_first_entry(&dirty, struct dquot,
+ 						 dq_dirty);
+ 			/* Dirty and inactive can be only bad dquot... */
+ 			if (!test_bit(DQ_ACTIVE_B, &dquot->dq_flags)) {
 
 
