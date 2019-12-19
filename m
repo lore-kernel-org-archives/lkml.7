@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B80DAC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D65C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81BBC222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 606DD222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782413;
-	bh=DVLRCuw/kCiZMLvrAGMJZSgzkirhhQfxlDgNJghG6zg=;
+	s=default; t=1576782419;
+	bh=bi/8A1ieS2KJBVjW6wsQtCjcWkcfnIBmZ4CPqoDWohg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FxojP2Bgi3eXV+yFl7HSeZjWZ2sbT8Rw6CaedsQyluZDCrO1a5cJL5CG/MgOmMAu4
-	 a4RwBrDTPG2GJuPZC3P+Y0cX+9VjaN03RHTZSwQHRUjyB4QFS2AXj/L/MPbEfSiHR+
-	 z1rBBlCYldkAJFVlpFKgkPWs829CojpKgcRPFNjc=
+	b=fGJeuPBs/ixiwAoid1vcYZN8nqW0tjjvG5ifLm306Dw4EyJLyJqmlzXqi4fxpajCC
+	 sohor7FVPyGRAvVlLQKiQ2pB6bcUNg8SvmFTzZ7nr09CFbi5Q6ToYTHutHKO2C76fJ
+	 5R7zeT0S1fCezGL2vl4pdXFRrGUGJp28iid4T8hI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729175AbfLSTGw (ORCPT
+        id S1728893AbfLSSnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:06:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35590 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:43:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728078AbfLSSnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:43:49 -0500
+        id S1728865AbfLSSnj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:43:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A830524672;
-        Thu, 19 Dec 2019 18:43:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DABAF24672;
+        Thu, 19 Dec 2019 18:43:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781029;
-        bh=DVLRCuw/kCiZMLvrAGMJZSgzkirhhQfxlDgNJghG6zg=;
+        s=default; t=1576781019;
+        bh=bi/8A1ieS2KJBVjW6wsQtCjcWkcfnIBmZ4CPqoDWohg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=acnYl95+rRRbVDkDb7eT+FSTv7LWoOJwinkftjojeqi0ID4ssJaZmwOo/+9x7vWRU
-         nfiJpxbYJsuzsDBimMWr2eQMV+HPRbJXpMUaI4XG7kQvnbHhwOhnP4tIlRfb7aLFHl
-         GlhuVinH1dC6UkcixsQZ/D9/QvjDo6yWIi/AgTYw=
+        b=SIt/PmXj1t8xZlj6vrFsjEu8ovb/4nG24HD6H6vRAHN/YqFQV16vqJ8TIoj+Mzdat
+         DbHQ43rsYqeA/6GQ+yWHcdsHksgkpO3oVYNB125ipm4oHOoCxILrRzvssMDRVsqct+
+         /a3uqxaFsu1UbJIn1a7k17LVanW1LIEYCxCY3WgI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yuchung Cheng <ycheng@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Neal Cardwell <ncardwell@google.com>,
+        stable@vger.kernel.org, Martin Schiller <ms@dev.tdt.de>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 054/199] tcp: fix off-by-one bug on aborting window-probing socket
-Date:   Thu, 19 Dec 2019 19:32:16 +0100
-Message-Id: <20191219183217.949954774@linuxfoundation.org>
+Subject: [PATCH 4.9 050/199] net/x25: fix called/calling length calculation in x25_parse_address_block
+Date:   Thu, 19 Dec 2019 19:32:12 +0100
+Message-Id: <20191219183217.725140750@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -62,36 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuchung Cheng <ycheng@google.com>
+From: Martin Schiller <ms@dev.tdt.de>
 
-[ Upstream commit 3976535af0cb9fe34a55f2ffb8d7e6b39a2f8188 ]
+[ Upstream commit d449ba3d581ed29f751a59792fdc775572c66904 ]
 
-Previously there is an off-by-one bug on determining when to abort
-a stalled window-probing socket. This patch fixes that so it is
-consistent with tcp_write_timeout().
+The length of the called and calling address was not calculated
+correctly (BCD encoding).
 
-Signed-off-by: Yuchung Cheng <ycheng@google.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Neal Cardwell <ncardwell@google.com>
+Signed-off-by: Martin Schiller <ms@dev.tdt.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/tcp_timer.c | 2 +-
+ net/x25/af_x25.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/ipv4/tcp_timer.c b/net/ipv4/tcp_timer.c
-index d9e364c4863af..ad0083f7b5dd3 100644
---- a/net/ipv4/tcp_timer.c
-+++ b/net/ipv4/tcp_timer.c
-@@ -372,7 +372,7 @@ static void tcp_probe_timer(struct sock *sk)
- 			return;
+diff --git a/net/x25/af_x25.c b/net/x25/af_x25.c
+index 770ababb8f928..ebd9c5f50a571 100644
+--- a/net/x25/af_x25.c
++++ b/net/x25/af_x25.c
+@@ -100,7 +100,7 @@ int x25_parse_address_block(struct sk_buff *skb,
  	}
  
--	if (icsk->icsk_probes_out > max_probes) {
-+	if (icsk->icsk_probes_out >= max_probes) {
- abort:		tcp_write_err(sk);
- 	} else {
- 		/* Only send another probe if we didn't close things up. */
+ 	len = *skb->data;
+-	needed = 1 + (len >> 4) + (len & 0x0f);
++	needed = 1 + ((len >> 4) + (len & 0x0f) + 1) / 2;
+ 
+ 	if (!pskb_may_pull(skb, needed)) {
+ 		/* packet is too short to hold the addresses it claims
 -- 
 2.20.1
 
