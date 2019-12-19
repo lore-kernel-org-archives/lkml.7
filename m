@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC08CC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA57C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B57E12467E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB5622468A
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:21:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="jZ6Z38o2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="LbkackB7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbfLSUVq (ORCPT
+        id S1727417AbfLSUVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 15:21:46 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:12600 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbfLSUVn (ORCPT
+        Thu, 19 Dec 2019 15:21:50 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:12573 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727368AbfLSUVr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 15:21:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1576786900;
+        Thu, 19 Dec 2019 15:21:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1576786904;
         s=strato-dkim-0002; d=gerhold.net;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=Ctz9sULW//zeldx1653eIVZ0o4EECVJHJLMqzED7g8o=;
-        b=jZ6Z38o2r5GhorQv3Zc9juhucbhF5PX37DJ9l9lyrhwpmU35Zu2ilTahtSO1Z8tGYl
-        IBnnvQLY/rsEDm4F5WgRLAEsSlHRh/MXrwyzfh7U7nSi1eUkicbzTpSIEq8z+IyvRGot
-        883ZPKMCQRDovCOd8yfgUvS7OghH9bhziRnuSwwovO63s1sqHl9HH4QCIKY3UM6CrZsk
-        mnFPTG3pZdAKBV8e+WkcugGYfK4fOQKEoj4j4KqdrU7154z71kap9Y9jySxgQz/dhBLr
-        REKOrZ5hoq4Bc4jqsuMO+EJLNbfJypGoTgOLVlJGYrmdZ2epHtM8NYN1mb6vHVHwy5U9
-        vfZw==
+        bh=rEINu6VIPz1umRHUtN27XG8o9rq4b1mNQMa+TYAiVMU=;
+        b=LbkackB7D8pcXF6qYqrHX4YWmOoZbSKDaHB4GME+7n9/q42nKDA++8zxAUHZRcomFS
+        CgX3rYARb0KpifmbmsOC26B2QXXUrtetLhv5OHX+P7SUViW8DQxhMF/oxzxewYDa3+9k
+        FotsDWQlEJsan6PbEDJ9dXmzP+PG/5bOT+rpgmoXeHFVAPSuxU5Az7QByySn9SsaEdGf
+        zHcAO3Cu5DRtE1AT+lNOzBQk2UphmYkwZiz9OD3o0XDpTsKahnspeRq4Vf+PFYr2HPR8
+        lzr6AosGIjHo5Nj4Nmi34zqnQRYmA/aIbbA2VNgH6DfVKDgAZHQqKMp4ZFrZiM6VxmTo
+        AEBg==
 X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQrEOHTIXtszvsxM1"
 X-RZG-CLASS-ID: mo00
 Received: from localhost.localdomain
         by smtp.strato.de (RZmta 46.1.1 AUTH)
-        with ESMTPSA id f021e2vBJKLc3Z8
+        with ESMTPSA id f021e2vBJKLh3ZC
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Thu, 19 Dec 2019 21:21:38 +0100 (CET)
+        Thu, 19 Dec 2019 21:21:43 +0100 (CET)
 From:   Stephan Gerhold <stephan@gerhold.net>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-arm-kernel@lists.infradead.org,
@@ -49,9 +49,9 @@ Cc:     linux-arm-kernel@lists.infradead.org,
         Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH 1/9] ARM: dts: ux500: Remove unused ste-href-ab8505.dtsi
-Date:   Thu, 19 Dec 2019 21:20:44 +0100
-Message-Id: <20191219202052.19039-2-stephan@gerhold.net>
+Subject: [PATCH 5/9] ARM: dts: ux500: samsung-golden: Add IMU (accelerometer + gyroscope)
+Date:   Thu, 19 Dec 2019 21:20:48 +0100
+Message-Id: <20191219202052.19039-6-stephan@gerhold.net>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219202052.19039-1-stephan@gerhold.net>
 References: <20191219202052.19039-1-stephan@gerhold.net>
@@ -62,264 +62,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pin configuration for HREF boards with AB8505 was added in
-commit 77ad9dfc2c7e ("ARM: ux500: move last AB8505 set-up to DT").
-As the commit message notes, it was unused back then and it has
-remained so even today, especially considering AB8505 did not have
-proper device tree support until recently.
-
-We are now preparing to add support for some Samsung smartphones
-that are using AB8505. However, they use different pin configs
-because using ste-href-ab8505.dtsi is known to break UART.
-There were not many HREFs with AB8505, so at this point it seems
-unlikely that we will ever make use of this include. Remove it.
+samsung-golden has a InvenSense MPU-6051M IMU that provides an
+accelerometer and gyroscope. It seems to be functionally compatible
+with MPU-6050 so we can easily enable it by adding the necessary
+device tree nodes.
 
 Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 ---
- arch/arm/boot/dts/ste-href-ab8505.dtsi | 234 -------------------------
- 1 file changed, 234 deletions(-)
- delete mode 100644 arch/arm/boot/dts/ste-href-ab8505.dtsi
+ .../arm/boot/dts/ste-ux500-samsung-golden.dts | 37 +++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-diff --git a/arch/arm/boot/dts/ste-href-ab8505.dtsi b/arch/arm/boot/dts/ste-href-ab8505.dtsi
-deleted file mode 100644
-index 95cf38a008e9..000000000000
---- a/arch/arm/boot/dts/ste-href-ab8505.dtsi
-+++ /dev/null
-@@ -1,234 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--/*
-- * Copyright 2014 Linaro Ltd.
-- */
--
--/ {
--	soc {
--		prcmu@80157000 {
--			ab8505 {
--				ab8505-gpio {
--					/* Hog a few default settings */
--					pinctrl-names = "default";
--					pinctrl-0 = <&gpio2_default_mode>,
--						    <&gpio10_default_mode>,
--						    <&gpio11_default_mode>,
--						    <&gpio13_default_mode>,
--						    <&gpio34_default_mode>,
--						    <&gpio50_default_mode>,
--						    <&pwm_default_mode>,
--						    <&adi2_default_mode>,
--						    <&modsclsda_default_mode>,
--						    <&resethw_default_mode>,
--						    <&service_default_mode>;
--
--					/*
--					 * Pins 2, 10, 11, 13, 34 and 50
--					 * are muxed in as GPIO, and configured as INPUT PULL DOWN
--					 */
--					gpio2 {
--						gpio2_default_mode: gpio2_default {
--							default_mux {
--								function = "gpio";
--								groups = "gpio2_a_1";
--							};
--							default_cfg {
--								pins = "GPIO2_R5";
--								input-enable;
--								bias-pull-down;
--							};
--						};
--					};
--					gpio10 {
--						gpio10_default_mode: gpio10_default {
--							default_mux {
--								function = "gpio";
--								groups = "gpio10_d_1";
--							};
--							default_cfg {
--								pins = "GPIO10_B16";
--								input-enable;
--								bias-pull-down;
--							};
--						};
--					};
--					gpio11 {
--						gpio11_default_mode: gpio11_default {
--							default_mux {
--								function = "gpio";
--								groups = "gpio11_d_1";
--							};
--							default_cfg {
--								pins = "GPIO11_B17";
--								input-enable;
--								bias-pull-down;
--							};
--						};
--					};
--					gpio13 {
--						gpio13_default_mode: gpio13_default {
--							default_mux {
--								function = "gpio";
--								groups = "gpio13_d_1";
--							};
--							default_cfg {
--								pins = "GPIO13_D17";
--								input-enable;
--								bias-disable;
--							};
--						};
--					};
--					gpio34 {
--						gpio34_default_mode: gpio34_default {
--							default_mux {
--								function = "gpio";
--								groups = "gpio34_a_1";
--							};
--							default_cfg {
--								pins = "GPIO34_H14";
--								input-enable;
--								bias-pull-down;
--							};
--						};
--					};
--					gpio50 {
--						gpio50_default_mode: gpio50_default {
--							default_mux {
--								function = "gpio";
--								groups = "gpio50_d_1";
--							};
--							default_cfg {
--								pins = "GPIO50_L4";
--								input-enable;
--								bias-disable;
--							};
--						};
--					};
--					/* This sets up the PWM pin 14 */
--					pwm {
--						pwm_default_mode: pwm_default {
--							default_mux {
--								function = "pwmout";
--								groups = "pwmout1_d_1";
--							};
--							default_cfg {
--								pins = "GPIO14_C16";
--								input-enable;
--								bias-pull-down;
--							};
--						};
--					};
--					/* This sets up audio interface 2 */
--					adi2 {
--						adi2_default_mode: adi2_default {
--							default_mux {
--								function = "adi2";
--								groups = "adi2_d_1";
--							};
--							default_cfg {
--								pins = "GPIO17_P2",
--									 "GPIO18_N3",
--									 "GPIO19_T1",
--									 "GPIO20_P3";
--								input-enable;
--								bias-pull-down;
--							};
--						};
--					};
--					/* Modem I2C setup (SCL and SDA pins) */
--					modsclsda {
--						modsclsda_default_mode: modsclsda_default {
--							default_mux {
--								function = "modsclsda";
--								groups = "modsclsda_d_1";
--							};
--							default_cfg {
--								pins = "GPIO40_J15",
--									"GPIO41_J14";
--								input-enable;
--								bias-pull-down;
--							};
--						};
--					};
--					resethw {
--						resethw_default_mode: resethw_default {
--							default_mux {
--								function = "resethw";
--								groups = "resethw_d_1";
--							};
--							default_cfg {
--								pins = "GPIO52_D16";
--								input-enable;
--								bias-pull-down;
--							};
--						};
--					};
--					service {
--						service_default_mode: service_default {
--							default_mux {
--								function = "service";
--								groups = "service_d_1";
--							};
--							default_cfg {
--								pins = "GPIO53_D15";
--								input-enable;
--								bias-pull-down;
--							};
--						};
--					};
--					/*
--					 * Clock output pins associated with regulators.
--					 */
--					sysclkreq2 {
--						sysclkreq2_default_mode: sysclkreq2_default {
--							default_mux {
--								function = "sysclkreq";
--								groups = "sysclkreq2_d_1";
--							};
--							default_cfg {
--								pins = "GPIO1_N4";
--								input-enable;
--								bias-disable;
--							};
--						};
--						sysclkreq2_sleep_mode: sysclkreq2_sleep {
--							default_mux {
--								function = "gpio";
--								groups = "gpio1_a_1";
--							};
--							default_cfg {
--								pins = "GPIO1_N4";
--								input-enable;
--								bias-pull-down;
--							};
--						};
--					};
--					sysclkreq4 {
--						sysclkreq4_default_mode: sysclkreq4_default {
--							default_mux {
--								function = "sysclkreq";
--								groups = "sysclkreq4_d_1";
--							};
--							default_cfg {
--								pins = "GPIO3_P5";
--								input-enable;
--								bias-disable;
--							};
--						};
--						sysclkreq4_sleep_mode: sysclkreq4_sleep {
--							default_mux {
--								function = "gpio";
--								groups = "gpio3_a_1";
--							};
--							default_cfg {
--								pins = "GPIO3_P5";
--								input-enable;
--								bias-pull-down;
--							};
--						};
--					};
--				};
--			};
--		};
--	};
--};
+diff --git a/arch/arm/boot/dts/ste-ux500-samsung-golden.dts b/arch/arm/boot/dts/ste-ux500-samsung-golden.dts
+index 51f2afe42c1c..14a084e1846b 100644
+--- a/arch/arm/boot/dts/ste-ux500-samsung-golden.dts
++++ b/arch/arm/boot/dts/ste-ux500-samsung-golden.dts
+@@ -6,6 +6,7 @@
+ #include "ste-dbx5x0-pinctrl.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
++#include <dt-bindings/interrupt-controller/irq.h>
+ 
+ /*
+  * Note: This device tree cannot be booted directly with the Samsung bootloader.
+@@ -114,6 +115,33 @@ uart@80007000 {
+ 			pinctrl-1 = <&u2rxtx_c_1_sleep>;
+ 		};
+ 
++		i2c@80128000 {
++			status = "okay";
++
++			pinctrl-names = "default", "sleep";
++			pinctrl-0 = <&i2c2_b_2_default>;
++			pinctrl-1 = <&i2c2_b_2_sleep>;
++
++			imu@68 {
++				compatible = "invensense,mpu6050";
++				reg = <0x68>;
++
++				/* GPIO206 (ACC_INT) */
++				interrupt-parent = <&gpio6>;
++				interrupts = <14 IRQ_TYPE_EDGE_RISING>;
++
++				mount-matrix = "0", "1", "0",
++					      "-1", "0", "0",
++					       "0", "0", "1";
++
++				vdd-supply = <&ab8500_ldo_aux1_reg>;
++				vddio-supply = <&ab8500_ldo_aux8_reg>;
++
++				pinctrl-names = "default";
++				pinctrl-0 = <&imu_default>;
++			};
++		};
++
+ 		prcmu@80157000 {
+ 			ab8505 {
+ 				ab8500_usb {
+@@ -272,6 +300,15 @@ golden_cfg1 {
+ 		};
+ 	};
+ 
++	imu {
++		imu_default: imu_default {
++			golden_cfg1 {
++				pins = "GPIO206_AG24";	/* ACC_INT */
++				ste,config = <&gpio_in_pd>;
++			};
++		};
++	};
++
+ 	vibrator {
+ 		vibrator_default: vibrator_default {
+ 			golden_cfg1 {
 -- 
 2.24.1
 
