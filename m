@@ -2,87 +2,128 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F093C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D68C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0888B21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:35:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576776908;
-	bh=s5oaspOL57PeyHvJJ2IZujrmMyDV5G1RgW/jNsRFpcI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T7+XAnIxLAq4mlpYQWdaznPHJ40FT4y6v/CqjGRxEJZa/sd0jOcnY2EDAgXrXbDOM
-	 AHlxURNz5/keiM8GzZ8LzzXNJzhNigohNnFfZVotf5DKYqnKHo4RP27OnQxc0VdH5O
-	 hkBcqMNXglBL5XLyNgxSr9V+lLfxeS+oe4ISJpQI=
+	by mail.kernel.org (Postfix) with ESMTP id DC3E42465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:37:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c9rrtlIt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbfLSRfH (ORCPT
+        id S1726933AbfLSRhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 12:35:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53952 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726928AbfLSRfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 12:35:06 -0500
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 492B6227BF;
-        Thu, 19 Dec 2019 17:35:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576776905;
-        bh=s5oaspOL57PeyHvJJ2IZujrmMyDV5G1RgW/jNsRFpcI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aeu9sc1zY3qe/XYURcfyADyDRQSTY4m2jgc72uJjDA9qYqsqBUeapVh15uArYh1Pz
-         /j2mksn7HnCACdYISyc8+X3B8RSXfCmgNGfo6CFlQdR8YvP+RNFi4eBFnFfrcL5c0b
-         brTHvQUO3hWECeyPuRkD51cWKHNHIIaUCg9yeyjY=
-Date:   Thu, 19 Dec 2019 12:35:04 -0500
-From:   Sasha Levin <sashal@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.4 128/350] spi: pxa2xx: Set
- controller->max_transfer_size in dma mode
-Message-ID: <20191219173504.GN17708@sasha-vm>
-References: <20191210210735.9077-1-sashal@kernel.org>
- <20191210210735.9077-89-sashal@kernel.org>
- <20191211104738.GA3870@sirena.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191211104738.GA3870@sirena.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 19 Dec 2019 12:37:00 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:38670 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726836AbfLSRg7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 12:36:59 -0500
+Received: by mail-pj1-f67.google.com with SMTP id l35so2863727pje.3;
+        Thu, 19 Dec 2019 09:36:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:date:message-id:subject;
+        bh=0EhzHVZdAL4+SJpaxhiYiXdYM3Q3vCDbLj5SL6A2gjY=;
+        b=c9rrtlItDq/jeA9Ppe5rtjYGxk85yhBY7lO4X5XkdswvSBdn7uDbubD31sJhTyPrG7
+         C8Z4sbSVw1ElSvl9xdtKyRnXrAe63Ah7dKPMKWNUb/a+l33QzGf9sqqCi14uoHK9lFLQ
+         QGr9yr9Rs9yOoshHCP2LnWGKaFpXuOPJRedIBcPExnJPSYFeweVhjjeaJ4Dd9IPuHnTu
+         yoiQPtw1ewUV5HxxQzWYKhfmvnx+mKvMxZAE8VHdMLnqyy+Sls/LU51EKUjsrjpHBpDS
+         435syYFi64MI82PEEyVPwJepOTx+VQ8ZvUH1ob6ufAPGj6Fw3lUfeAfnzbvuqEvKM9oW
+         DuEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:date:message-id:subject;
+        bh=0EhzHVZdAL4+SJpaxhiYiXdYM3Q3vCDbLj5SL6A2gjY=;
+        b=XD0CpMR7wLCkC92bqpilZEDbhWK7CeEWzAXom4W8djCOoGW820rcNUexvpM6QD3qjS
+         FhD8CnKzLBeaoO8dLfk2d5gTiYsiO8wIA7GOpaAxU8HS34Uzlcy5imSS1Al2jIcrszxw
+         Xe+g+U+8oxuGPimdvZVDhucEscjfcK4/+ZS6OjryeqPfFIL3/eTKIymMogda3GgPMwQa
+         MusTJrBd9pPNoQmVE4j/weeFyEVY2jx3YvFxwXcyf2+1weJ+wkdQYdGSokOceE+xHhmV
+         PBwqB1JAa20qqpIGY4mwiamwL7ecynpRYPa/8AR6uB33R+JvJe1Oww/vOZ0PGk+jJ7eW
+         RqXA==
+X-Gm-Message-State: APjAAAVJdGxDGSsV8T3iz1ZB2yZs0Vm/yC7eET/nsbTlwQJkXK8xR6D7
+        H9Yy9SYdiaQrSF2poyZ8XwE=
+X-Google-Smtp-Source: APXvYqwL8DuMhAF3UoshaIoQuGD+dwRvjy6k3dfszvghFEOXP7YEa4UcdBt9lJqxVeqcabd1ZBLBfA==
+X-Received: by 2002:a17:90a:2203:: with SMTP id c3mr10632927pje.68.1576777018823;
+        Thu, 19 Dec 2019 09:36:58 -0800 (PST)
+Received: from [127.0.0.1] (s214090.ppp.asahi-net.or.jp. [220.157.214.90])
+        by smtp.gmail.com with ESMTPSA id 3sm8523185pfi.13.2019.12.19.09.36.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Dec 2019 09:36:57 -0800 (PST)
+From:   Magnus Damm <magnus.damm@gmail.com>
+To:     valentina.manea.m@gmail.com
+Cc:     Magnus Damm <magnus.damm@gmail.com>, linux-usb@vger.kernel.org,
+        shuah@kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 20 Dec 2019 02:35:25 +0900
+Message-Id: <157677692518.684.15385402529285904844.sendpatchset@octo>
+Subject: [PATCH] tools: usb: usbip: Get rid of driver name printout in README
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 10:47:38AM +0000, Mark Brown wrote:
->On Tue, Dec 10, 2019 at 04:03:53PM -0500, Sasha Levin wrote:
->> From: Daniel Vetter <daniel.vetter@ffwll.ch>
->>
->> [ Upstream commit b2662a164f9dc48da8822e56600686d639056282 ]
->>
->> In DMA mode we have a maximum transfer size, past that the driver
->> falls back to PIO (see the check at the top of pxa2xx_spi_transfer_one).
->> Falling back to PIO for big transfers defeats the point of a dma engine,
->> hence set the max transfer size to inform spi clients that they need
->> to do something smarter.
->
->This won't fix anything by itself, this asks other code to change how it
->behaves which may or may not work in older kernels.
+From: Magnus Damm <damm+renesas@opensource.se>
 
-I'll drop it then, thanks!
+Driver name is no longer printed out so update the README
+examples to avoid confusion.
 
--- 
-Thanks,
-Sasha
+Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+---
+
+ tools/usb/usbip/README |   22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
+
+--- 0001/tools/usb/usbip/README
++++ work/tools/usb/usbip/README	2019-12-04 16:40:54.999822223 +0900
+@@ -138,28 +138,28 @@ attached to this host.
+     Local USB devices
+     =================
+      - busid 1-1 (05a9:a511)
+-	     1-1:1.0 -> ov511
++	     1-1:1.0
+ 
+      - busid 3-2 (0711:0902)
+-	     3-2:1.0 -> none
++	     3-2:1.0
+ 
+      - busid 3-3.1 (08bb:2702)
+-	     3-3.1:1.0 -> snd-usb-audio
+-	     3-3.1:1.1 -> snd-usb-audio
++	     3-3.1:1.0
++	     3-3.1:1.1
+ 
+      - busid 3-3.2 (04bb:0206)
+-	     3-3.2:1.0 -> usb-storage
++	     3-3.2:1.0
+ 
+      - busid 3-3 (0409:0058)
+-	     3-3:1.0 -> hub
++	     3-3:1.0
+ 
+      - busid 4-1 (046d:08b2)
+-	     4-1:1.0 -> none
+-	     4-1:1.1 -> none
+-	     4-1:1.2 -> none
++	     4-1:1.0
++	     4-1:1.1
++	     4-1:1.2
+ 
+      - busid 5-2 (058f:9254)
+-	     5-2:1.0 -> hub
++	     5-2:1.0
+ 
+ A USB storage device of busid 3-3.2 is now bound to the usb-storage
+ driver. To export this device, we first mark the device as
+@@ -180,7 +180,7 @@ Mark the device of busid 3-3.2 as export
+     ...
+ 
+      - busid 3-3.2 (04bb:0206)
+-	     3-3.2:1.0 -> usbip-host
++	     3-3.2:1.0
+     ...
+ 
+ ---------------------------
