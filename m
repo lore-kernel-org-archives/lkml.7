@@ -2,177 +2,95 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08135C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0898FC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF084218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2434218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:21:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="feY/JA5g"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M8ZLEXNh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbfLSNTB (ORCPT
+        id S1726818AbfLSNVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 08:19:01 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:34290 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbfLSNTA (ORCPT
+        Thu, 19 Dec 2019 08:21:13 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:37777 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726751AbfLSNVL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 08:19:00 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJDIwD4121919;
-        Thu, 19 Dec 2019 07:18:58 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576761538;
-        bh=hKqAOCo/ma8q7kF4B46wVaSESSJX9CpZN2QLfa+H56g=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=feY/JA5gY4Kcli+l+ebZ97/xvgSYqZR0o6XVAGjSNwKRy0seyHf0tS/jc37VSO/Kf
-         NdvWMOc4SWO9ZsDwIr3Uer+PniTBY37VuYix+cQX/Ckfjr4GtRbwU0NevKGk2qVWAF
-         76UhW/cOWCT3y5ljF0u+PiQAME2yaIsVVYw/n9MM=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBJDIwuO097965
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Dec 2019 07:18:58 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
- Dec 2019 07:18:57 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 19 Dec 2019 07:18:57 -0600
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJDIt1Y106703;
-        Thu, 19 Dec 2019 07:18:55 -0600
-Subject: Re: [PATCHv3 05/15] remoteproc/omap: Add the rproc ops .da_to_va()
- implementation
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, Suman Anna <s-anna@ti.com>
-References: <20191213125537.11509-1-t-kristo@ti.com>
- <20191213125537.11509-6-t-kristo@ti.com> <20191218003815.GC16271@xps15>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <5869498f-086c-cea4-edcf-1b75fb22cf22@ti.com>
-Date:   Thu, 19 Dec 2019 15:18:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 19 Dec 2019 08:21:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576761670;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=f9QuhHETPe7h5O5S9p4/hJNro5uBVjObNxSM6kbHGs0=;
+        b=M8ZLEXNh6zU+k+ikTgrVxJSdXd42PZcPDOw0npbcP9BJnn51YSeUxHqNQA3zQ5H+x29gPg
+        T4qewjDA/Cs0YZZMSyqO57JJ9yC6hrMM3XPCA4QtRlRxiWJzf0hauTiaXGuN45D10SsN3z
+        J14a/gQ94XA56ua32+OAWuWQyWqAV78=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-244-i39QrJVSM0WZBiS5wMbNLA-1; Thu, 19 Dec 2019 08:21:08 -0500
+X-MC-Unique: i39QrJVSM0WZBiS5wMbNLA-1
+Received: by mail-wr1-f69.google.com with SMTP id j13so2344239wrr.20
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 05:21:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=f9QuhHETPe7h5O5S9p4/hJNro5uBVjObNxSM6kbHGs0=;
+        b=L3ipoASX9eiFnzLBrLF3MIl64uuC1FNL3roWcNPyDppHWw1g+XMmjlENfCxlbEnfBk
+         R1A17oS6IDqH1OcQ1/aferB5kdb2lWwXbpotJX/yCt2sDdIApCGOzjlxJ+RYGcojHw7R
+         8mwOQKzJWpVkv/vWOe17unY3PdHs/0p2rfTm18NS0aneiwPByuzVGubxJZBfWAEOu+eq
+         t5vO3r5wecVEb3R6umhSeIC6GN7hYhrr2CQZQEINnY/XuxxEnoeT3zLtgxEZ4Zpnwz/n
+         woWPi56w5D04D7T0Z/nIZcW7EY6ZQajfTAkqz62TvfC+dJ1oCWNeMTjfygkhSPnHvsQW
+         BPdQ==
+X-Gm-Message-State: APjAAAUYoOX3T3WaZVzBP9hH2IZemJ1wsX2HDwT6ZN8vFqFwVYNpJ5Ty
+        PpFwp7AIv+ZKrf5aJWN/9f6mRlcY3b2a4wvFJfpYHcYM3qgwS9lVnhdnKFSJ7xf+o5zX+RQ51JR
+        qcM+ao6h9/tRdmPUKdbf1sA2O
+X-Received: by 2002:a5d:6551:: with SMTP id z17mr9922284wrv.269.1576761667269;
+        Thu, 19 Dec 2019 05:21:07 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyYsmkicq1CgpePFwwJNc2lMQupRm5P+aon/r1P4LvdWHpza4ghagzA9OygT/h18nUeOHn+jg==
+X-Received: by 2002:a5d:6551:: with SMTP id z17mr9922266wrv.269.1576761667016;
+        Thu, 19 Dec 2019 05:21:07 -0800 (PST)
+Received: from localhost.localdomain ([151.29.30.195])
+        by smtp.gmail.com with ESMTPSA id 188sm6488919wmd.1.2019.12.19.05.21.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 19 Dec 2019 05:21:05 -0800 (PST)
+Date:   Thu, 19 Dec 2019 14:21:03 +0100
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Claudio Scordino <c.scordino@evidence.eu.com>,
+        Luca Abeni <luca.abeni@santannapisa.it>,
+        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
+Subject: Re: [ANNOUNCE][CFP] Power Management and Scheduling in the Linux
+ Kernel IV edition (OSPM-summit 2020)
+Message-ID: <20191219132103.GD13724@localhost.localdomain>
+References: <20191219103500.GC13724@localhost.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <20191218003815.GC16271@xps15>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191219103500.GC13724@localhost.localdomain>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/12/2019 02:38, Mathieu Poirier wrote:
-> On Fri, Dec 13, 2019 at 02:55:27PM +0200, Tero Kristo wrote:
->> From: Suman Anna <s-anna@ti.com>
->>
->> An implementation for the rproc ops .da_to_va() has been added
->> that provides the address translation between device addresses
->> to kernel virtual addresses for internal RAMs present on that
->> particular remote processor device. The implementation provides
->> the translations based on the addresses parsed and stored during
->> the probe.
->>
->> This ops gets invoked by the exported rproc_da_to_va() function
->> and allows the remoteproc core's ELF loader to be able to load
->> program data directly into the internal memories.
->>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->> ---
->>   drivers/remoteproc/omap_remoteproc.c | 39 ++++++++++++++++++++++++++++
->>   1 file changed, 39 insertions(+)
->>
->> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
->> index 844703507a74..28f14e24b389 100644
->> --- a/drivers/remoteproc/omap_remoteproc.c
->> +++ b/drivers/remoteproc/omap_remoteproc.c
->> @@ -232,10 +232,49 @@ static int omap_rproc_stop(struct rproc *rproc)
->>   	return 0;
->>   }
->>   
->> +/**
->> + * omap_rproc_da_to_va() - internal memory translation helper
->> + * @rproc: remote processor to apply the address translation for
->> + * @da: device address to translate
->> + * @len: length of the memory buffer
->> + *
->> + * Custom function implementing the rproc .da_to_va ops to provide address
->> + * translation (device address to kernel virtual address) for internal RAMs
->> + * present in a DSP or IPU device). The translated addresses can be used
->> + * either by the remoteproc core for loading, or by any rpmsg bus drivers.
->> + * Returns the translated virtual address in kernel memory space, or NULL
->> + * in failure.
->> + */
->> +static void *omap_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
->> +{
->> +	struct omap_rproc *oproc = rproc->priv;
->> +	int i;
->> +	u32 offset;
->> +
->> +	if (len <= 0)
->> +		return NULL;
->> +
->> +	if (!oproc->num_mems)
->> +		return NULL;
->> +
->> +	for (i = 0; i < oproc->num_mems; i++) {
->> +		if (da >= oproc->mem[i].dev_addr && da + len <=
+On 19/12/19 11:35, Juri Lelli wrote:
+> Power Management and Scheduling in the Linux Kernel (OSPM-summit) IV edition
 > 
-> Shouldn't this be '<' rather than '<=' ?
+> May 11-13, 2019
 
-No, I think <= is correct. You need to consider the initial byte in the 
-range also. Consider a simple case where you provide the exact da + len 
-corresponding to a specific memory range.
+Argh! s/2019/2020/g of course. :-/
 
-> 
->> +		    oproc->mem[i].dev_addr +  oproc->mem[i].size) {
-> 
-> One space too many after the '+' .
-
-True, I wonder why checkpatch did not catch this.
-
-> 
->> +			offset = da -  oproc->mem[i].dev_addr;
-> 
-> One space too many after then '-' .
-
-Same, will fix these two.
-
--Tero
-
-> 
->> +			/* __force to make sparse happy with type conversion */
->> +			return (__force void *)(oproc->mem[i].cpu_addr +
->> +						offset);
->> +		}
->> +	}
->> +
->> +	return NULL;
->> +}
->> +
->>   static const struct rproc_ops omap_rproc_ops = {
->>   	.start		= omap_rproc_start,
->>   	.stop		= omap_rproc_stop,
->>   	.kick		= omap_rproc_kick,
->> +	.da_to_va	= omap_rproc_da_to_va,
->>   };
->>   
->>   static const char * const ipu_mem_names[] = {
->> -- 
->> 2.17.1
->>
->> --
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
