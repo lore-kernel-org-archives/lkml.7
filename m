@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97731C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBB8C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F61120716
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 403DB20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:39:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780770;
-	bh=uvsaijxYpRjyoi0SSPDf3V+k4x8A1Zu1hj/7bXUk2MQ=;
+	s=default; t=1576780773;
+	bh=WYGse47zJqmu8OPDrDIr4HqPeHb5eVkPhECgC2ioHUE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h5ynDJSRvlT0LdO880f6x4RciJvRfgQHfLVSO6RWvkGtoSdJh6JVrcQ0leNKbod49
-	 IQ2zEVkaoqUqn0OQe92NvyNf/kO73k2WpcE2rH6nDs41mT0BaN1fdEh+4YGJlTUeCD
-	 h5odYq8NfnjGuEqrkaArg/C1OnOJz9hQWeWK3oCw=
+	b=tx5GL1Qqr2HPGMQ5fxAng7SG3tj7BQIm3dqSobAep0TMDYlKrtRKvy1OoOw2ovSS9
+	 NCZXT2vpS6TSv+s4gx/EazkA0aStUGSOpL5wMe+prh++s/zsUwWm4lpwtqyL5nBw5h
+	 j/57BmT3xwLXhGej305XzoXu4YJD19zmwpW0HxM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbfLSSj3 (ORCPT
+        id S1728229AbfLSSjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:39:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57638 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:39:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728208AbfLSSjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:39:24 -0500
+        id S1727939AbfLSSj3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:39:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BEA524680;
-        Thu, 19 Dec 2019 18:39:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05BF82467F;
+        Thu, 19 Dec 2019 18:39:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780763;
-        bh=uvsaijxYpRjyoi0SSPDf3V+k4x8A1Zu1hj/7bXUk2MQ=;
+        s=default; t=1576780768;
+        bh=WYGse47zJqmu8OPDrDIr4HqPeHb5eVkPhECgC2ioHUE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ut3DddeGrTH3oGLvXklTrRgMIYzMenvv7c7PmapRzuoQWu5xhptS6f7OMqGUz0FGC
-         Kmejrgy4HURuR8yI0yovZY4jewi4uim1/4c1Bn6nKAGhe0BV2QAlzOSkGFMbxeRop4
-         6I60isxVK055xntMFtkmSbzn3Ukelq6Ie+XW1EsA=
+        b=ryuJhnhD6Yl7626RWCVqDn8jnLNqP5pNDPCcBgIOey6FZrszo4OqYILHE3lE2SmqY
+         k7IBtk1MxbriUo5WSfSS4ARvcsU4Ux3INe27asjz4WERkt7s7/E6EniiHruPXcvFo3
+         UAjScHBjnGYxWChGC2V/sflhg3Hcqrw9CbuHqB6w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        "Williams, Gerald S" <gerald.s.williams@intel.com>,
-        NeilBrown <neilb@suse.de>
-Subject: [PATCH 4.4 106/162] workqueue: Fix pwq ref leak in rescuer_thread()
-Date:   Thu, 19 Dec 2019 19:33:34 +0100
-Message-Id: <20191219183214.208412906@linuxfoundation.org>
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.4 108/162] blk-mq: avoid sysfs buffer overflow with too many CPU cores
+Date:   Thu, 19 Dec 2019 19:33:36 +0100
+Message-Id: <20191219183214.334211170@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -60,60 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Ming Lei <ming.lei@redhat.com>
 
-commit e66b39af00f426b3356b96433d620cb3367ba1ff upstream.
+commit 8962842ca5abdcf98e22ab3b2b45a103f0408b95 upstream.
 
-008847f66c3 ("workqueue: allow rescuer thread to do more work.") made
-the rescuer worker requeue the pwq immediately if there may be more
-work items which need rescuing instead of waiting for the next mayday
-timer expiration.  Unfortunately, it doesn't check whether the pwq is
-already on the mayday list and unconditionally gets the ref and moves
-it onto the list.  This doesn't corrupt the list but creates an
-additional reference to the pwq.  It got queued twice but will only be
-removed once.
+It is reported that sysfs buffer overflow can be triggered if the system
+has too many CPU cores(>841 on 4K PAGE_SIZE) when showing CPUs of
+hctx via /sys/block/$DEV/mq/$N/cpu_list.
 
-This leak later can trigger pwq refcnt warning on workqueue
-destruction and prevent freeing of the workqueue.
+Use snprintf to avoid the potential buffer overflow.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: "Williams, Gerald S" <gerald.s.williams@intel.com>
-Cc: NeilBrown <neilb@suse.de>
-Cc: stable@vger.kernel.org # v3.19+
+This version doesn't change the attribute format, and simply stops
+showing CPU numbers if the buffer is going to overflow.
+
+Cc: stable@vger.kernel.org
+Fixes: 676141e48af7("blk-mq: don't dump CPU -> hw queue map on driver load")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/workqueue.c |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ block/blk-mq-sysfs.c |   15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -2308,8 +2308,14 @@ repeat:
- 			 */
- 			if (need_to_create_worker(pool)) {
- 				spin_lock(&wq_mayday_lock);
--				get_pwq(pwq);
--				list_move_tail(&pwq->mayday_node, &wq->maydays);
-+				/*
-+				 * Queue iff we aren't racing destruction
-+				 * and somebody else hasn't queued it already.
-+				 */
-+				if (wq->rescuer && list_empty(&pwq->mayday_node)) {
-+					get_pwq(pwq);
-+					list_add_tail(&pwq->mayday_node, &wq->maydays);
-+				}
- 				spin_unlock(&wq_mayday_lock);
- 			}
- 		}
-@@ -4276,7 +4282,8 @@ static void show_pwq(struct pool_workque
- 	pr_info("  pwq %d:", pool->id);
- 	pr_cont_pool_info(pool);
+--- a/block/blk-mq-sysfs.c
++++ b/block/blk-mq-sysfs.c
+@@ -231,20 +231,25 @@ static ssize_t blk_mq_hw_sysfs_active_sh
  
--	pr_cont(" active=%d/%d%s\n", pwq->nr_active, pwq->max_active,
-+	pr_cont(" active=%d/%d refcnt=%d%s\n",
-+		pwq->nr_active, pwq->max_active, pwq->refcnt,
- 		!list_empty(&pwq->mayday_node) ? " MAYDAY" : "");
+ static ssize_t blk_mq_hw_sysfs_cpus_show(struct blk_mq_hw_ctx *hctx, char *page)
+ {
++	const size_t size = PAGE_SIZE - 1;
+ 	unsigned int i, first = 1;
+-	ssize_t ret = 0;
++	int ret = 0, pos = 0;
  
- 	hash_for_each(pool->busy_hash, bkt, worker, hentry) {
+ 	for_each_cpu(i, hctx->cpumask) {
+ 		if (first)
+-			ret += sprintf(ret + page, "%u", i);
++			ret = snprintf(pos + page, size - pos, "%u", i);
+ 		else
+-			ret += sprintf(ret + page, ", %u", i);
++			ret = snprintf(pos + page, size - pos, ", %u", i);
++
++		if (ret >= size - pos)
++			break;
+ 
+ 		first = 0;
++		pos += ret;
+ 	}
+ 
+-	ret += sprintf(ret + page, "\n");
+-	return ret;
++	ret = snprintf(pos + page, size - pos, "\n");
++	return pos + ret;
+ }
+ 
+ static struct blk_mq_ctx_sysfs_entry blk_mq_sysfs_dispatched = {
 
 
