@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1325C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABFDC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC3D8222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F84A222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:11:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782705;
-	bh=BLYYGhasJUgseKVq2KbMLgRmg3y+QLplYPJMrvf+rFQ=;
+	s=default; t=1576782707;
+	bh=61R/NdHf82RLsqLQhBJmvUPZm4nSs/T2wCwYyyd8fuU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=reQfMp5sC0xgEIEM6PxCIRp5M5epSnj0q6X/DbmlwEU2A+yDOyyPZ5Q0VOc39qizY
-	 mDaTC42fFdSIq04gv5CXgdYpbu1PNSpxHD3HrBCdgLnWqKVy8sPiRnG3Pf1fLkSDR5
-	 01Dwpdot91A4vQGOrHf7DYnF5mHALCgUm18vgeI8=
+	b=wa7AyQbQTVggu/P4ISqEx8mR7+wfRPuYG73yOnN5EcjN1jYDh4MzDoFRbSBYxt4C9
+	 7/I6sNd0FxmVtfMpGwnf25T4/I8I+XAt/LDkongJ1Fzgpvm2sIvIt/Y857edywc0GZ
+	 5p1l5D40ya0F0IdUxwZ3gEX7X4xKXmsbOIqXsrwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbfLSShu (ORCPT
+        id S1727895AbfLSSht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:37:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55512 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:37:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727874AbfLSShp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:37:45 -0500
+        id S1727535AbfLSShm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:37:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B1F924672;
-        Thu, 19 Dec 2019 18:37:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CD61222C2;
+        Thu, 19 Dec 2019 18:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780664;
-        bh=BLYYGhasJUgseKVq2KbMLgRmg3y+QLplYPJMrvf+rFQ=;
+        s=default; t=1576780661;
+        bh=61R/NdHf82RLsqLQhBJmvUPZm4nSs/T2wCwYyyd8fuU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W1Oq6ENkn+l0yBm+TV24zhfq5B2+XspiGVUmL7k7cYqDkVD08oJkozQSrOOb8Drki
-         WKqnjg0SITTxs02cD1wftAKNicD22JbWBvDem2+JK0gwjuDaXIJJ9VMZl72pX7zpFp
-         q5fY3CaHLu2dWA7qQfx+3e2NhnuxZa7U8vBLZT50=
+        b=jrXElFJJBFl4tDtUoXKqhSaMUhYwQ2T3Z6dKLM/m7JyJM4ohYPUXRubg4qey4oCrO
+         GnZ56PhwOfLe8GC3oaiGH/Tycsir6nooOw73A24K9cBMtvGui/itLMfeh9CuH2KB/S
+         tQd7IYTAJwdi0O1G+k7eVb7yDxxCPaZ/dGYhD3Q0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.4 065/162] KVM: x86: fix presentation of TSX feature in ARCH_CAPABILITIES
-Date:   Thu, 19 Dec 2019 19:32:53 +0100
-Message-Id: <20191219183211.803963252@linuxfoundation.org>
+Subject: [PATCH 4.4 064/162] KVM: x86: do not modify masked bits of shared MSRs
+Date:   Thu, 19 Dec 2019 19:32:52 +0100
+Message-Id: <20191219183211.746261732@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -61,42 +61,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit cbbaa2727aa3ae9e0a844803da7cef7fd3b94f2b upstream.
+commit de1fca5d6e0105c9d33924e1247e2f386efc3ece upstream.
 
-KVM does not implement MSR_IA32_TSX_CTRL, so it must not be presented
-to the guests.  It is also confusing to have !ARCH_CAP_TSX_CTRL_MSR &&
-!RTM && ARCH_CAP_TAA_NO: lack of MSR_IA32_TSX_CTRL suggests TSX was not
-hidden (it actually was), yet the value says that TSX is not vulnerable
-to microarchitectural data sampling.  Fix both.
+"Shared MSRs" are guest MSRs that are written to the host MSRs but
+keep their value until the next return to userspace.  They support
+a mask, so that some bits keep the host value, but this mask is
+only used to skip an unnecessary MSR write and the value written
+to the MSR is always the guest MSR.
+
+Fix this and, while at it, do not update smsr->values[slot].curr if
+for whatever reason the wrmsr fails.  This should only happen due to
+reserved bits, so the value written to smsr->values[slot].curr
+will not match when the user-return notifier and the host value will
+always be restored.  However, it is untidy and in rare cases this
+can actually avoid spurious WRMSRs on return to userspace.
 
 Cc: stable@vger.kernel.org
+Reviewed-by: Jim Mattson <jmattson@google.com>
 Tested-by: Jim Mattson <jmattson@google.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ arch/x86/kvm/x86.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -1024,10 +1024,15 @@ u64 kvm_get_arch_capabilities(void)
- 	 * If TSX is disabled on the system, guests are also mitigated against
- 	 * TAA and clear CPU buffer mitigation is not required for guests.
- 	 */
--	if (boot_cpu_has_bug(X86_BUG_TAA) && boot_cpu_has(X86_FEATURE_RTM) &&
--	    (data & ARCH_CAP_TSX_CTRL_MSR))
-+	if (!boot_cpu_has(X86_FEATURE_RTM))
-+		data &= ~ARCH_CAP_TAA_NO;
-+	else if (!boot_cpu_has_bug(X86_BUG_TAA))
-+		data |= ARCH_CAP_TAA_NO;
-+	else if (data & ARCH_CAP_TSX_CTRL_MSR)
- 		data &= ~ARCH_CAP_MDS_NO;
+@@ -260,13 +260,14 @@ int kvm_set_shared_msr(unsigned slot, u6
+ 	struct kvm_shared_msrs *smsr = per_cpu_ptr(shared_msrs, cpu);
+ 	int err;
  
-+	/* KVM does not emulate MSR_IA32_TSX_CTRL.  */
-+	data &= ~ARCH_CAP_TSX_CTRL_MSR;
- 	return data;
- }
+-	if (((value ^ smsr->values[slot].curr) & mask) == 0)
++	value = (value & mask) | (smsr->values[slot].host & ~mask);
++	if (value == smsr->values[slot].curr)
+ 		return 0;
+-	smsr->values[slot].curr = value;
+ 	err = wrmsrl_safe(shared_msrs_global.msrs[slot], value);
+ 	if (err)
+ 		return 1;
  
++	smsr->values[slot].curr = value;
+ 	if (!smsr->registered) {
+ 		smsr->urn.on_user_return = kvm_on_user_return;
+ 		user_return_notifier_register(&smsr->urn);
 
 
