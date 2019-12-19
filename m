@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0BDC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 355E6C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CF7924679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3CBB222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781717;
-	bh=OqFCLd4WftZqa6i+YaD9py48siWJszgq0jImbq5JZ8M=;
+	s=default; t=1576781720;
+	bh=UB3CGPZLd0xN2deYoyv7WePnuiBmWN+ttNdJhj+RRmA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X6Xcf2rcMwxS5A2kgxkIjc20mihszIava2aYGHh9Wq3Kv/5/SKCg22mOCSQctkwAZ
-	 rJzvgTmlAPbsdIT/s/sBKun+NZ0Slwg3fP4P4ZXQe+QBhoBDCmhgHRu4pcaHK0BNk4
-	 sf7MesxUohHmXo9agjDnxIPXXefrE4yMFD3MRlfE=
+	b=sF9LxSIcGDPEc0H1CwNxNJLcvFTkhIcVE7M+y3ADs/bG+vtFaNWTiVvYliAY/hsEE
+	 Sjn6aJf4GGCeNFRidw/hLP+4iKJ4v4jm1vpR5Mda7KPm9k51I2Ao9ESAjqHVC9lRQs
+	 3429V5DAUEqXXstK6KJTX3JICWFExOXa4/XsQ5us=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730638AbfLSSzQ (ORCPT
+        id S1727513AbfLSSzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:55:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51078 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:55:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730396AbfLSSzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:55:12 -0500
+        id S1730650AbfLSSzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:55:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F12F124679;
-        Thu, 19 Dec 2019 18:55:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1A35222C2;
+        Thu, 19 Dec 2019 18:55:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781711;
-        bh=OqFCLd4WftZqa6i+YaD9py48siWJszgq0jImbq5JZ8M=;
+        s=default; t=1576781716;
+        bh=UB3CGPZLd0xN2deYoyv7WePnuiBmWN+ttNdJhj+RRmA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mr5OhWRIrVq16HotMv1lAAhs8N2qNRc6maThsDsahTd7UwkWJj49f0gLZJrgham3z
-         2KZFf/oS8sK74/c7ChnvknRU0eOEc86x4Tv23U++kybS6h6g4484fukzG+xuDzgrDR
-         AZOjh3ipxo6bY9fVsRsTvuKf9rT38zBeH8AdVO+c=
+        b=DlwzA3GlHbUG7V4UCWB7f1wjx/1VliiWF2Sr7q0Q31GTR/n0hpXf2SywTc+pcfZHK
+         KXpHyfTfAKcPmFivHTJAyoedkXIIc/QLBxtaOmtxUW8Q+AfSnmwOOpeHC/xsIM971J
+         xgZcYT1Iz+BP1qufKZfdUG47Kfjw5mJVcEc2gjC4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 5.4 50/80] drm: meson: venc: cvbs: fix CVBS mode matching
-Date:   Thu, 19 Dec 2019 19:34:42 +0100
-Message-Id: <20191219183121.752291356@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 5.4 34/80] CIFS: Respect O_SYNC and O_DIRECT flags during reconnect
+Date:   Thu, 19 Dec 2019 19:34:26 +0100
+Message-Id: <20191219183106.565081059@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -60,121 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Pavel Shilovsky <pshilov@microsoft.com>
 
-commit 43cb86799ff03e9819c07f37f72f80f8246ad7ed upstream.
+commit 44805b0e62f15e90d233485420e1847133716bdc upstream.
 
-With commit 222ec1618c3ace ("drm: Add aspect ratio parsing in DRM
-layer") the drm core started honoring the picture_aspect_ratio field
-when comparing two drm_display_modes. Prior to that it was ignored.
-When the CVBS encoder driver was initially submitted there was no aspect
-ratio check.
+Currently the client translates O_SYNC and O_DIRECT flags
+into corresponding SMB create options when openning a file.
+The problem is that on reconnect when the file is being
+re-opened the client doesn't set those flags and it causes
+a server to reject re-open requests because create options
+don't match. The latter means that any subsequent system
+call against that open file fail until a share is re-mounted.
 
-Switch from drm_mode_equal() to drm_mode_match() without
-DRM_MODE_MATCH_ASPECT_RATIO to fix "kmscube" and X.org output using the
-CVBS connector. When (for example) kmscube sets the output mode when
-using the CVBS connector it passes HDMI_PICTURE_ASPECT_NONE, making the
-drm_mode_equal() fail as it include the aspect ratio.
+Fix this by properly setting SMB create options when
+re-openning files after reconnects.
 
-Prior to this patch kmscube reported:
-  failed to set mode: Invalid argument
-
-The CVBS mode checking in the sun4i (drivers/gpu/drm/sun4i/sun4i_tv.c
-sun4i_tv_mode_to_drm_mode) and ZTE (drivers/gpu/drm/zte/zx_tvenc.c
-tvenc_mode_{pal,ntsc}) drivers don't set the "picture_aspect_ratio" at
-all. The Meson VPU driver does not rely on the aspect ratio for the CVBS
-output so we can safely decouple it from the hdmi_picture_aspect
-setting.
-
-Cc: <stable@vger.kernel.org>
-Fixes: 222ec1618c3ace ("drm: Add aspect ratio parsing in DRM layer")
-Fixes: bbbe775ec5b5da ("drm: Add support for Amlogic Meson Graphic Controller")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
-[narmstrong: squashed with drm: meson: venc: cvbs: deduplicate the meson_cvbs_mode lookup code]
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191208171832.1064772-3-martin.blumenstingl@googlemail.com
+Fixes: 1013e760d10e6: ("SMB3: Don't ignore O_SYNC/O_DSYNC and O_DIRECT flags")
+Cc: Stable <stable@vger.kernel.org>
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/meson/meson_venc_cvbs.c |   48 ++++++++++++++++++--------------
- 1 file changed, 27 insertions(+), 21 deletions(-)
+ fs/cifs/file.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/gpu/drm/meson/meson_venc_cvbs.c
-+++ b/drivers/gpu/drm/meson/meson_venc_cvbs.c
-@@ -64,6 +64,25 @@ struct meson_cvbs_mode meson_cvbs_modes[
- 	},
- };
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -729,6 +729,13 @@ cifs_reopen_file(struct cifsFileInfo *cf
+ 	if (backup_cred(cifs_sb))
+ 		create_options |= CREATE_OPEN_BACKUP_INTENT;
  
-+static const struct meson_cvbs_mode *
-+meson_cvbs_get_mode(const struct drm_display_mode *req_mode)
-+{
-+	int i;
++	/* O_SYNC also has bit for O_DSYNC so following check picks up either */
++	if (cfile->f_flags & O_SYNC)
++		create_options |= CREATE_WRITE_THROUGH;
 +
-+	for (i = 0; i < MESON_CVBS_MODES_COUNT; ++i) {
-+		struct meson_cvbs_mode *meson_mode = &meson_cvbs_modes[i];
++	if (cfile->f_flags & O_DIRECT)
++		create_options |= CREATE_NO_BUFFER;
 +
-+		if (drm_mode_match(req_mode, &meson_mode->mode,
-+				   DRM_MODE_MATCH_TIMINGS |
-+				   DRM_MODE_MATCH_CLOCK |
-+				   DRM_MODE_MATCH_FLAGS |
-+				   DRM_MODE_MATCH_3D_FLAGS))
-+			return meson_mode;
-+	}
-+
-+	return NULL;
-+}
-+
- /* Connector */
- 
- static void meson_cvbs_connector_destroy(struct drm_connector *connector)
-@@ -136,14 +155,8 @@ static int meson_venc_cvbs_encoder_atomi
- 					struct drm_crtc_state *crtc_state,
- 					struct drm_connector_state *conn_state)
- {
--	int i;
--
--	for (i = 0; i < MESON_CVBS_MODES_COUNT; ++i) {
--		struct meson_cvbs_mode *meson_mode = &meson_cvbs_modes[i];
--
--		if (drm_mode_equal(&crtc_state->mode, &meson_mode->mode))
--			return 0;
--	}
-+	if (meson_cvbs_get_mode(&crtc_state->mode))
-+		return 0;
- 
- 	return -EINVAL;
- }
-@@ -191,24 +204,17 @@ static void meson_venc_cvbs_encoder_mode
- 				   struct drm_display_mode *mode,
- 				   struct drm_display_mode *adjusted_mode)
- {
-+	const struct meson_cvbs_mode *meson_mode = meson_cvbs_get_mode(mode);
- 	struct meson_venc_cvbs *meson_venc_cvbs =
- 					encoder_to_meson_venc_cvbs(encoder);
- 	struct meson_drm *priv = meson_venc_cvbs->priv;
--	int i;
- 
--	for (i = 0; i < MESON_CVBS_MODES_COUNT; ++i) {
--		struct meson_cvbs_mode *meson_mode = &meson_cvbs_modes[i];
-+	if (meson_mode) {
-+		meson_venci_cvbs_mode_set(priv, meson_mode->enci);
- 
--		if (drm_mode_equal(mode, &meson_mode->mode)) {
--			meson_venci_cvbs_mode_set(priv,
--						  meson_mode->enci);
--
--			/* Setup 27MHz vclk2 for ENCI and VDAC */
--			meson_vclk_setup(priv, MESON_VCLK_TARGET_CVBS,
--					 MESON_VCLK_CVBS, MESON_VCLK_CVBS,
--					 MESON_VCLK_CVBS, true);
--			break;
--		}
-+		/* Setup 27MHz vclk2 for ENCI and VDAC */
-+		meson_vclk_setup(priv, MESON_VCLK_TARGET_CVBS, MESON_VCLK_CVBS,
-+				 MESON_VCLK_CVBS, MESON_VCLK_CVBS, true);
- 	}
- }
+ 	if (server->ops->get_lease_key)
+ 		server->ops->get_lease_key(inode, &cfile->fid);
  
 
 
