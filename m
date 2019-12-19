@@ -2,53 +2,53 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E53A6C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B202FC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAEF224672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BC8124672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:42:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780956;
-	bh=cSlenA/DYxgvVgNsMAOxx3slHl0GY/6TqEJ5iBF+G/c=;
+	s=default; t=1576780959;
+	bh=SQ+63E8dRGVFKoxnKVDyx3YwGbAdRpIHTG3O4filuZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gwynl2AzvgafN+u4TTw3VeHQH1qNkWpw9v+rUaPoTLlgjVuHrP10iOdtfYbILsk56
-	 T9KstF0BcWRWDP0GtM01hT3xch34Ujd9QEZYF4+DGWxTpLltWaegZ643MGmTnGpPqt
-	 M7YoEMaYkghbIXXoXbeT+6yBy9o0q5cCkNZHvmgo=
+	b=Kja/Mmt4h2vz50SoXbdv0oHZ7t1RnLz5bP5ijKr242XnWMYB4JlUI+FvnuaW5n4DP
+	 NbGENRDbdQTjgtGmjfoXsegoCBli1HO+1VkjQIJ+RkQHeCKwva6S2dWx8PXBpUuq46
+	 V2eHj0eqI5B+yMxtaqWnmDiiQMMP+3r/Yuzg8P3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbfLSSmf (ORCPT
+        id S1728723AbfLSSmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:42:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33628 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:42:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728428AbfLSSm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:42:26 -0500
+        id S1728695AbfLSSmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:42:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9592124672;
-        Thu, 19 Dec 2019 18:42:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFB0024672;
+        Thu, 19 Dec 2019 18:42:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780946;
-        bh=cSlenA/DYxgvVgNsMAOxx3slHl0GY/6TqEJ5iBF+G/c=;
+        s=default; t=1576780953;
+        bh=SQ+63E8dRGVFKoxnKVDyx3YwGbAdRpIHTG3O4filuZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0hrq18/jyB64kgGWtxdZtMzpF8rmCM7f6KBlafhaK+Ho5OZzFoq5g1DyLEzRJ6Mc/
-         cWjlW08DIsmr60mWvVbYlnwIeHlNRNFfLmF1z8qhUq4lKCMbAZ300QQR1X++QdP4yu
-         O3rOBDJLZByY4xvmNPCLTWCdo0n5lwXNsr5IfcNg=
+        b=kyvfdWcSrs9jmHX9/aB7OatsyAwCZ9beiJjWMRmkZcV6gr+NUes6zyEfM9asQOFtR
+         yGjmuc2/fIyFXwa2+ZU3r6o5vm0d0YFGdHOElGe8VgvHVQc3PdWi+OJeUiJJJCNZq1
+         FQIRP2a7DCOIrfgVkX9GADSK4OFnuZHLLxjSu60Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Ladislav Michl <ladis@linux-mips.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [PATCH 4.9 002/199] usb: gadget: u_serial: add missing port entry locking
-Date:   Thu, 19 Dec 2019 19:31:24 +0100
-Message-Id: <20191219183214.782106713@linuxfoundation.org>
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 022/199] extcon: max8997: Fix lack of path setting in USB device mode
+Date:   Thu, 19 Dec 2019 19:31:44 +0100
+Message-Id: <20191219183216.039083350@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -61,36 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-commit daf82bd24e308c5a83758047aff1bd81edda4f11 upstream.
+[ Upstream commit a2dc50914744eea9f83a70a5db0486be625e5dc0 ]
 
-gserial_alloc_line() misses locking (for a release barrier) while
-resetting port entry on TTY allocation failure. Fix this.
+MAX8997 driver disables automatic path selection from MicroUSB connector
+and manually sets path to either UART or USB lines. However the code for
+setting USB path worked only for USB host mode (when ID pin is set
+to ground). When standard USB cable (USB device mode) is connected, path
+registers are not touched. This means that once the non-USB accessory is
+connected to MAX8997-operated micro USB port, the path is no longer set
+to USB and USB device mode doesn't work. This patch fixes it by setting
+USB path both for USB and USB host modes.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Tested-by: Ladislav Michl <ladis@linux-mips.org>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/u_serial.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/extcon/extcon-max8997.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
---- a/drivers/usb/gadget/function/u_serial.c
-+++ b/drivers/usb/gadget/function/u_serial.c
-@@ -1391,8 +1391,10 @@ int gserial_alloc_line(unsigned char *li
- 				__func__, port_num, PTR_ERR(tty_dev));
+diff --git a/drivers/extcon/extcon-max8997.c b/drivers/extcon/extcon-max8997.c
+index 4a0612fb9c070..b9b48d45a6dc4 100644
+--- a/drivers/extcon/extcon-max8997.c
++++ b/drivers/extcon/extcon-max8997.c
+@@ -321,12 +321,10 @@ static int max8997_muic_handle_usb(struct max8997_muic_info *info,
+ {
+ 	int ret = 0;
  
- 		ret = PTR_ERR(tty_dev);
-+		mutex_lock(&ports[port_num].lock);
- 		port = ports[port_num].port;
- 		ports[port_num].port = NULL;
-+		mutex_unlock(&ports[port_num].lock);
- 		gserial_free_port(port);
- 		goto err;
+-	if (usb_type == MAX8997_USB_HOST) {
+-		ret = max8997_muic_set_path(info, info->path_usb, attached);
+-		if (ret < 0) {
+-			dev_err(info->dev, "failed to update muic register\n");
+-			return ret;
+-		}
++	ret = max8997_muic_set_path(info, info->path_usb, attached);
++	if (ret < 0) {
++		dev_err(info->dev, "failed to update muic register\n");
++		return ret;
  	}
+ 
+ 	switch (usb_type) {
+-- 
+2.20.1
+
 
 
