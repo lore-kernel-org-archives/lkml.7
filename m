@@ -2,102 +2,72 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD61C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A39C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA0621D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:30:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Txbkg19C"
+	by mail.kernel.org (Postfix) with ESMTP id E6718206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 15:30:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbfLSPam (ORCPT
+        id S1726961AbfLSPap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 10:30:42 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46404 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbfLSPal (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 10:30:41 -0500
-Received: by mail-io1-f66.google.com with SMTP id t26so6135955ioi.13;
-        Thu, 19 Dec 2019 07:30:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mnfjP6k4EYMPSQAd8FQyr4dc1GxOomoZ3pw4HDzkqDg=;
-        b=Txbkg19Ce5BeNxVZFztGK/4ET8IbGyS+UbPTU8taEIdc/CRlU16H2EPH71w+CS+0Sm
-         Cb+PANTxHoE1p27OGVzdm/7l8UjDPCb+p4pUekDybL+x4+zsd24heZwKaVIRQ4wJ5Mv+
-         EKa/yOgQTDAWxDTxAdOaALMNlnPna9HmnB0ahL+kWSuGd7NN2A4OpH8xPnPGrDKvk2tN
-         MSQ2R5vKVhFbzZ83P7pGZZDXws8S5Zaql8/6gAptRpjnayMpEeOtTLhowuebu6jqKmHq
-         8cjBJDcYN8p7Gh6/FxsDy3doDswZ2CxxBIDxFDoIiE6RmrALJoD66dx7NF0kme51xYVL
-         nTqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mnfjP6k4EYMPSQAd8FQyr4dc1GxOomoZ3pw4HDzkqDg=;
-        b=aOq1rKrBr1zQ6t/te/qUy/HRNpayrePA7OJ0vLYMkcvtwVcpjBod7xU1daGJAHP/P6
-         0IMJmT0l9HdjzC67SUjHk/M0CVGquj6vJn0yiWPcB0k5Wg1hQ/IZB5dpCkkyg5ejmIsp
-         cOGd5618F0Fhq14UqV/9M3XyF7H9CDNJWsDmgVd6jfTMugnbXUzod8E3qBe13HXJKgTm
-         Gc8T+1vBchg7icNmlrjNxhUGx7i1/lElYhUm+XdvRx8lEMoxAmtXP+8r3B9IT7hjLRSa
-         vwuMqrRS5GltDnhNpRcMlxRSs2/Rtn/1qpS4ltLA1ahw7foJLwtgZ2mTvvnUrY2Rwn3Q
-         NCkQ==
-X-Gm-Message-State: APjAAAUo0t3yi8dueGRqLlcvDfzYXEp0FrvCrxFVZbYastmnyd3RUYHU
-        GqYRP0ERshtaDfv2LSBpaX/i5iiPCMb+R0Crq3A=
-X-Google-Smtp-Source: APXvYqzuOn/RWWJmJndV9x0qaiIi7+kFNHe86r3uuXMkWZoPUsk3G+1eXDsB5XvmzQJy4hHidKDW2M3bcsT7tER4HNs=
-X-Received: by 2002:a02:cd9c:: with SMTP id l28mr7698626jap.46.1576769441162;
- Thu, 19 Dec 2019 07:30:41 -0800 (PST)
+        Thu, 19 Dec 2019 10:30:45 -0500
+Received: from mx2.suse.de ([195.135.220.15]:44600 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726776AbfLSPao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 10:30:44 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 86451B1AD;
+        Thu, 19 Dec 2019 15:30:42 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     Jens Axboe <axboe@kernel.dk>, linux-scsi@vger.kernel.org,
+        linux-block@vger.kernel.org
+Cc:     Michal Suchanek <msuchanek@suse.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: add lists to cdrom driver
+Date:   Thu, 19 Dec 2019 16:30:34 +0100
+Message-Id: <20191219153034.22344-1-msuchanek@suse.de>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20191219150433.2785427-1-vkoul@kernel.org> <20191219150433.2785427-3-vkoul@kernel.org>
-In-Reply-To: <20191219150433.2785427-3-vkoul@kernel.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Thu, 19 Dec 2019 08:30:30 -0700
-Message-ID: <CAOCk7NqeC3vm3FFWwuPLEWBJBvCbLHJNFP0PY6VZB17WxB9fdg@mail.gmail.com>
-Subject: Re: [PATCH 2/4] phy: qcom-qmp: Use register defines
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, Can Guo <cang@codeaurora.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 8:05 AM Vinod Koul <vkoul@kernel.org> wrote:
->
-> We already define register offsets so use them in register layout.
->
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Kernel maintainers are wondering why people don't send cdrom patches to
+any lists they follow.
 
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+It is because they added no lists to the cdrom entry in MAINTAINERS,
+obviously.
 
-> ---
->  drivers/phy/qualcomm/phy-qcom-qmp.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> index c2e800a3825a..06f971ca518e 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> @@ -166,8 +166,8 @@ static const unsigned int sdm845_ufsphy_regs_layout[] = {
->  };
->
->  static const unsigned int sm8150_ufsphy_regs_layout[] = {
-> -       [QPHY_START_CTRL]               = 0x00,
-> -       [QPHY_PCS_READY_STATUS]         = 0x180,
-> +       [QPHY_START_CTRL]               = QPHY_V4_PHY_START,
-> +       [QPHY_SW_RESET]                 = QPHY_V4_SW_RESET,
->  };
->
->  static const struct qmp_phy_init_tbl msm8996_pcie_serdes_tbl[] = {
-> --
-> 2.23.0
->
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+---
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a049abccaa26..9e4eff21ef02 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16923,6 +16923,8 @@ F:	scripts/unifdef.c
+ UNIFORM CDROM DRIVER
+ M:	Jens Axboe <axboe@kernel.dk>
+ W:	http://www.kernel.dk
++L:	linux-scsi@vger.kernel.org
++L:	linux-block@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/cdrom/
+ F:	drivers/cdrom/cdrom.c
+-- 
+2.23.0
+
