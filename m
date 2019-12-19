@@ -2,162 +2,95 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1660C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CCDC2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 975452467E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:06:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="unrgmKuz"
+	by mail.kernel.org (Postfix) with ESMTP id 208D720716
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:06:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfLSMGw (ORCPT
+        id S1726897AbfLSMG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 07:06:52 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:31927 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726712AbfLSMGw (ORCPT
+        Thu, 19 Dec 2019 07:06:57 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:59145 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726712AbfLSMGz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 07:06:52 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576757211; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=IF4vMvqiy9Q7KLJ8/f0lHi+0oxVzVOrufU/ebDNywnM=; b=unrgmKuzVlP9erLClJBzHyllYxA6hLSyzyZvmJww8Gd5aAvAuPEXg6F0LMoEiLkUOr0sPRR3
- KHMUxymObo0P5PSumyhYYnPRvg9vo8Xg+an/HUj7huOw/d65/+vpwA9kH9PwdgueNZVhxjmt
- a84Mc6VQRenNNgp5CvkXwd3uNPE=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5dfb67d7.7f533b9aa148-smtp-out-n01;
- Thu, 19 Dec 2019 12:06:47 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8DA9AC4479D; Thu, 19 Dec 2019 12:06:46 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3CB0CC433CB;
-        Thu, 19 Dec 2019 12:06:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3CB0CC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org
-Cc:     agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, amit.kucheria@linaro.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH] arm64: dts: qcom: sm8150: Add cpufreq HW device node
-Date:   Thu, 19 Dec 2019 17:36:33 +0530
-Message-Id: <20191219120633.20723-1-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.22.1
+        Thu, 19 Dec 2019 07:06:55 -0500
+Received: from mail-qt1-f175.google.com ([209.85.160.175]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N7hrw-1hdPlH2kDa-014iUw; Thu, 19 Dec 2019 13:06:53 +0100
+Received: by mail-qt1-f175.google.com with SMTP id w47so4841476qtk.4;
+        Thu, 19 Dec 2019 04:06:53 -0800 (PST)
+X-Gm-Message-State: APjAAAXBpysAqOUpd6hdW7AkYF9anE8ixycq5E/EWty85GW+sE3rZNOY
+        s/JBA+Uin0p/9kV6COCGCBcXnf6gBe/GEzuE3qs=
+X-Google-Smtp-Source: APXvYqxGQKByw2kvN17TFz5IHkyanI0u18EN6ad0C5VbYexL/eZvygPOcm6Qo3HJ+QnsJhFv9L477EgsjzRCAopMqgw=
+X-Received: by 2002:ac8:768d:: with SMTP id g13mr6613343qtr.7.1576757212184;
+ Thu, 19 Dec 2019 04:06:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191217221708.3730997-1-arnd@arndb.de> <20191217221708.3730997-19-arnd@arndb.de>
+ <f9fd39116713f17e55091868326a419190220559.camel@codethink.co.uk>
+In-Reply-To: <f9fd39116713f17e55091868326a419190220559.camel@codethink.co.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 19 Dec 2019 13:06:36 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0oNYMoyLbpPqNaXSWV3j7dXhKZ5GLq1EEGA=ansVxvsA@mail.gmail.com>
+Message-ID: <CAK8P3a0oNYMoyLbpPqNaXSWV3j7dXhKZ5GLq1EEGA=ansVxvsA@mail.gmail.com>
+Subject: Re: [PATCH v2 18/27] compat_ioctl: scsi: move ioctl handling into drivers
+To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:+fWi9PxG9cjEwLcZlRIq6OeQDH2hEZ4pw5hpJkGpVtEeWAlAivF
+ CbPr0NC3QuKQvm6kKLoHJbAxJuZKqLJyDWcHTQoJ16eaRPEQvoCC1bXU6pKK9i/0/7yUFrB
+ /TRpJyIWpD4oNYm1hCje7EqIkSxyFtmj5zAED48WVkQqJX39CCVvpG/jui6MqUa5Mk0gIYN
+ Y1uy1exUFBIIvcQMWzNMg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:fuV12pAVl+Q=:JNkmuxB1GGiZ2oSKG3N9l2
+ PecDtonxNza7r+VU1FQI2gXKy4eOwxT1z5eRg+T9pZaWPrLcxj72yCAuGMH1cPW0O7V/T8v39
+ RhsZ4b5yA9jSeKcdlSw6k/srmunKQmq/f56xFwH/QxTN7aJFcdvmLcx4bcEAFzlJU7pPf2903
+ aykxVDbdwsvWCfCTFojlHC7stwSemNAuIS+jfBxNDOrqZ1cmgPscmsCpIBMQtUZcyLbw2Ha65
+ dSLuuHOtD49UvgeLeLCwjisAhAphYMVSM/gYJAnRg1Qui6fMkCbjV0UMdKK3nndXzxZKALi0t
+ MlCjXoSbVqpLzEgwxeWcy/h7EmrR1pS93py40sGTq4RX77Cmap1qQkQK0cvADoH4lJjedY3C8
+ jzHG1cw44oFuy3/M4PoMuxiFS8WZPa6T5nCMPdhY2V1NrswNFN3HYGggMfpIE80WrDiC7GAxz
+ saPlqhJs6CzRCVELk1NIcGESwXBjGkFyoPBrrni/oVKUaQs8R55UIluhnywy6SdLw4+f0hdW8
+ 5O0u2sL/oyPoswBakGI9Ppr3A35o0XF3RMABoaJmvbaAHBvSblSt2KXUp64iAkDCkx35R9sp9
+ +atIRp86CaJDxiaULDJ9NWYEL9LSwD3Eumw/LqNzm4bJvOn2e2YsP2SUZa4D5rKxX3JVcHSqT
+ Kvlzg2O6KMb8B0r/Rqm4tZryip31E6BhzJyYos/0YHRhbioA6UbYwCbGHuVJfsCEpobZUz4QE
+ ddlEKJzsI6UvRYWxHfSkMi3kD//JzyuunBqE+/vfsvHy8YNxDMb/CxHmwAnprNII66M82Yngg
+ F5/ZjI7kY5rQCt2DR2G54kWOPp4LmWRDIt8v0U20UFpSMU2DolvDzNENy9atgl3rnn5wE/CJU
+ 5kC0Mp8mNra9q7mBhwew==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add cpufreq HW device node to scale 4-Silver/3-Gold/1-Gold+ cores
-on SM8150 SoCs.
+On Wed, Dec 18, 2019 at 8:57 PM Ben Hutchings
+<ben.hutchings@codethink.co.uk> wrote:
+>
+> On Tue, 2019-12-17 at 23:16 +0100, Arnd Bergmann wrote:
+> > +
+> > +     /*
+> > +      * CDROM ioctls are handled in the block layer, but
+> > +      * do the scsi blk ioctls here.
+> > +      */
+> > +     ret = scsi_cmd_blk_ioctl(bdev, mode, cmd, argp);
+> > +     if (ret != -ENOTTY)
+> > +             return ret;
+>
+> This needs to be be "goto put;"
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sm8150.dtsi | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Fixed now, thanks!
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index 694be3c001a68..bad77e539cb1d 100644
---- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -45,6 +45,7 @@
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_0>;
-+			qcom,freq-domain = <&cpufreq_hw 0>;
- 			L2_0: l2-cache {
- 				compatible = "cache";
- 				next-level-cache = <&L3_0>;
-@@ -60,6 +61,7 @@
- 			reg = <0x0 0x100>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_100>;
-+			qcom,freq-domain = <&cpufreq_hw 0>;
- 			L2_100: l2-cache {
- 				compatible = "cache";
- 				next-level-cache = <&L3_0>;
-@@ -73,6 +75,7 @@
- 			reg = <0x0 0x200>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_200>;
-+			qcom,freq-domain = <&cpufreq_hw 0>;
- 			L2_200: l2-cache {
- 				compatible = "cache";
- 				next-level-cache = <&L3_0>;
-@@ -85,6 +88,7 @@
- 			reg = <0x0 0x300>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_300>;
-+			qcom,freq-domain = <&cpufreq_hw 0>;
- 			L2_300: l2-cache {
- 				compatible = "cache";
- 				next-level-cache = <&L3_0>;
-@@ -97,6 +101,7 @@
- 			reg = <0x0 0x400>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_400>;
-+			qcom,freq-domain = <&cpufreq_hw 1>;
- 			L2_400: l2-cache {
- 				compatible = "cache";
- 				next-level-cache = <&L3_0>;
-@@ -109,6 +114,7 @@
- 			reg = <0x0 0x500>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_500>;
-+			qcom,freq-domain = <&cpufreq_hw 1>;
- 			L2_500: l2-cache {
- 				compatible = "cache";
- 				next-level-cache = <&L3_0>;
-@@ -121,6 +127,7 @@
- 			reg = <0x0 0x600>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_600>;
-+			qcom,freq-domain = <&cpufreq_hw 1>;
- 			L2_600: l2-cache {
- 				compatible = "cache";
- 				next-level-cache = <&L3_0>;
-@@ -133,6 +140,7 @@
- 			reg = <0x0 0x700>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_700>;
-+			qcom,freq-domain = <&cpufreq_hw 2>;
- 			L2_700: l2-cache {
- 				compatible = "cache";
- 				next-level-cache = <&L3_0>;
-@@ -834,6 +842,19 @@
- 				};
- 			};
- 		};
-+
-+		cpufreq_hw: cpufreq@18323000 {
-+			compatible = "qcom,cpufreq-hw";
-+			reg = <0 0x18323000 0 0x1400>, <0 0x18325800 0 0x1400>,
-+			      <0 0x18327800 0 0x1400>;
-+			reg-names = "freq-domain0", "freq-domain1",
-+				    "freq-domain2";
-+
-+			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
-+			clock-names = "xo", "alternate";
-+
-+			#freq-domain-cells = <1>;
-+		};
- 	};
- 
- 	timer {
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+       Arnd
