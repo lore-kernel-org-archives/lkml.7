@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FDEC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB19FC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D75DA222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EC8324679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780872;
-	bh=tCw8QJg3B9DlB75EFu+E5iiZzdj56AWbnDGLFoiTRXA=;
+	s=default; t=1576780875;
+	bh=7LALMDMNMgLPEUzZXgd7rx0SFCt4eioDJc2LE3mDh6U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SKVBLgaIO+eIZ4zBEp9jAFqTgjukpCecheO6Wgz79kekuZyl6A7x6S8851IAYZMvt
-	 aOA2PDzD4oyr/7Mg+2fUIsZpNvpNhDGDAA4KLGxfZ2qiVPkvrkZPJ3vnsog/UsMwWl
-	 aeYdg+jv90gK6D6VzGuk9QjDyTx0QcqynxwQA+Yg=
+	b=yUEmmYeLODXO99szq01DRPb7UaFkxqhhbcoK0Cyf5CzH2XAaNN6Ukw6TuDHmokLR8
+	 2MzdHpYhiwHhyUCXERVs19DX7jGqQP+r+55E7GuPXY6PpVuPUiP75znhCRiL6snSjM
+	 3RAHtKZYOLM0nKIl5fXaiSj9KIp+NTLGw1BcIogE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbfLSSlL (ORCPT
+        id S1728497AbfLSSlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:41:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60076 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:41:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727465AbfLSSlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:41:08 -0500
+        id S1728483AbfLSSlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:41:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACBA0222C2;
-        Thu, 19 Dec 2019 18:41:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2906A24679;
+        Thu, 19 Dec 2019 18:41:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780868;
-        bh=tCw8QJg3B9DlB75EFu+E5iiZzdj56AWbnDGLFoiTRXA=;
+        s=default; t=1576780870;
+        bh=7LALMDMNMgLPEUzZXgd7rx0SFCt4eioDJc2LE3mDh6U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PQEAk6K55K/PEPpwGbdwTe2hWVr2J0QHtZLXbMEu1W1ysQCSz8rMnQpYNnoWBDmE9
-         VZ7G1fR7O26X5KVO/BbQ2U4z7BiQDsoy/pNJmoN+Gy5QxPiPFbcMgUdmMzHfgry6NW
-         8YdVGZYS+YM/ZwmGyzC2tuFARx1x2qyWCXmA+TEY=
+        b=NFCS8Ld4yddRZ8KEntMek8V8ZH6mqAo9ck+Bk6m5FLSx/iTJdNDWvMec1fdmlGJLl
+         pM5zGIKUTRSBGB/eaX9CrTE3OY6YBF6we2n8xcCQsqmZx9w2OZFhmHmhVolSRSg2/f
+         E5ZZsJu7ETopqCaO43y85mGDwjlfVLfONfKWroC8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 149/162] tcp: Protect accesses to .ts_recent_stamp with {READ,WRITE}_ONCE()
-Date:   Thu, 19 Dec 2019 19:34:17 +0100
-Message-Id: <20191219183216.839942258@linuxfoundation.org>
+        stable@vger.kernel.org, Francesco Ruggeri <fruggeri@arista.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.4 114/162] ACPI: OSL: only free map once in osl.c
+Date:   Thu, 19 Dec 2019 19:33:42 +0100
+Message-Id: <20191219183214.696967049@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -60,50 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guillaume Nault <gnault@redhat.com>
+From: Francesco Ruggeri <fruggeri@arista.com>
 
-[ Upstream commit 721c8dafad26ccfa90ff659ee19755e3377b829d ]
+commit 833a426cc471b6088011b3d67f1dc4e147614647 upstream.
 
-Syncookies borrow the ->rx_opt.ts_recent_stamp field to store the
-timestamp of the last synflood. Protect them with READ_ONCE() and
-WRITE_ONCE() since reads and writes aren't serialised.
+acpi_os_map_cleanup checks map->refcount outside of acpi_ioremap_lock
+before freeing the map. This creates a race condition the can result
+in the map being freed more than once.
+A panic can be caused by running
 
-Use of .rx_opt.ts_recent_stamp for storing the synflood timestamp was
-introduced by a0f82f64e269 ("syncookies: remove last_synq_overflow from
-struct tcp_sock"). But unprotected accesses were already there when
-timestamp was stored in .last_synq_overflow.
+for ((i=0; i<10; i++))
+do
+        for ((j=0; j<100000; j++))
+        do
+                cat /sys/firmware/acpi/tables/data/BERT >/dev/null
+        done &
+done
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Guillaume Nault <gnault@redhat.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This patch makes sure that only the process that drops the reference
+to 0 does the freeing.
+
+Fixes: b7c1fadd6c2e ("ACPI: Do not use krefs under a mutex in osl.c")
+Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
+Reviewed-by: Dmitry Safonov <0x7f454c46@gmail.com>
+Cc: All applicable <stable@vger.kernel.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/net/tcp.h |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -502,17 +502,17 @@ struct sock *cookie_v4_check(struct sock
-  */
- static inline void tcp_synq_overflow(const struct sock *sk)
- {
--	unsigned long last_overflow = tcp_sk(sk)->rx_opt.ts_recent_stamp;
-+	unsigned long last_overflow = READ_ONCE(tcp_sk(sk)->rx_opt.ts_recent_stamp);
- 	unsigned long now = jiffies;
+---
+ drivers/acpi/osl.c |   28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
+
+--- a/drivers/acpi/osl.c
++++ b/drivers/acpi/osl.c
+@@ -424,24 +424,27 @@ acpi_os_map_memory(acpi_physical_address
+ }
+ EXPORT_SYMBOL_GPL(acpi_os_map_memory);
  
- 	if (!time_between32(now, last_overflow, last_overflow + HZ))
--		tcp_sk(sk)->rx_opt.ts_recent_stamp = now;
-+		WRITE_ONCE(tcp_sk(sk)->rx_opt.ts_recent_stamp, now);
+-static void acpi_os_drop_map_ref(struct acpi_ioremap *map)
++/* Must be called with mutex_lock(&acpi_ioremap_lock) */
++static unsigned long acpi_os_drop_map_ref(struct acpi_ioremap *map)
+ {
+-	if (!--map->refcount)
++	unsigned long refcount = --map->refcount;
++
++	if (!refcount)
+ 		list_del_rcu(&map->list);
++	return refcount;
  }
  
- /* syncookies: no recent synqueue overflow on this listening socket? */
- static inline bool tcp_synq_no_recent_overflow(const struct sock *sk)
+ static void acpi_os_map_cleanup(struct acpi_ioremap *map)
  {
--	unsigned long last_overflow = tcp_sk(sk)->rx_opt.ts_recent_stamp;
-+	unsigned long last_overflow = READ_ONCE(tcp_sk(sk)->rx_opt.ts_recent_stamp);
+-	if (!map->refcount) {
+-		synchronize_rcu_expedited();
+-		acpi_unmap(map->phys, map->virt);
+-		kfree(map);
+-	}
++	synchronize_rcu_expedited();
++	acpi_unmap(map->phys, map->virt);
++	kfree(map);
+ }
  
- 	/* If last_overflow <= jiffies <= last_overflow + TCP_SYNCOOKIE_VALID,
- 	 * then we're under synflood. However, we have to use
+ void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size)
+ {
+ 	struct acpi_ioremap *map;
++	unsigned long refcount;
+ 
+ 	if (!acpi_gbl_permanent_mmap) {
+ 		__acpi_unmap_table(virt, size);
+@@ -455,10 +458,11 @@ void __ref acpi_os_unmap_iomem(void __io
+ 		WARN(true, PREFIX "%s: bad address %p\n", __func__, virt);
+ 		return;
+ 	}
+-	acpi_os_drop_map_ref(map);
++	refcount = acpi_os_drop_map_ref(map);
+ 	mutex_unlock(&acpi_ioremap_lock);
+ 
+-	acpi_os_map_cleanup(map);
++	if (!refcount)
++		acpi_os_map_cleanup(map);
+ }
+ EXPORT_SYMBOL_GPL(acpi_os_unmap_iomem);
+ 
+@@ -499,6 +503,7 @@ void acpi_os_unmap_generic_address(struc
+ {
+ 	u64 addr;
+ 	struct acpi_ioremap *map;
++	unsigned long refcount;
+ 
+ 	if (gas->space_id != ACPI_ADR_SPACE_SYSTEM_MEMORY)
+ 		return;
+@@ -514,10 +519,11 @@ void acpi_os_unmap_generic_address(struc
+ 		mutex_unlock(&acpi_ioremap_lock);
+ 		return;
+ 	}
+-	acpi_os_drop_map_ref(map);
++	refcount = acpi_os_drop_map_ref(map);
+ 	mutex_unlock(&acpi_ioremap_lock);
+ 
+-	acpi_os_map_cleanup(map);
++	if (!refcount)
++		acpi_os_map_cleanup(map);
+ }
+ EXPORT_SYMBOL(acpi_os_unmap_generic_address);
+ 
 
 
