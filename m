@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC0BC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA59C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A3AD24676
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E88A8222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781708;
-	bh=I4FicGF1nduQhWKADf+S3DKjlXW9oqIQD8OotutLefg=;
+	s=default; t=1576781711;
+	bh=8lf+bvqxmeTkyo+Jri7kTp9DHiOIK0LeB435rMQ/SCM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OKSN/S2agcg+xX93yvHwFEHKKMbO9jCdnPpAbkwbCk7lwYeQd0KXObwV90G+Ye7E4
-	 5rG/RarYiXGK/F8thfmmYvma8eBKGedB3lw9XpnqMvl5NKUXyTjy6MK9BxlXD/ZLEy
-	 3HOa+oehfPxphneI3ZYcVUhV3nI8DlB3bEixgejA=
+	b=NKTFHDS9YWSIFd0co3sd0QQpxQVe4OwhVObe95+xF9GDVlMe7NJGr/z2rUrFGnV+V
+	 zlJO3/lzt2XE+dhmmYVnm/YJ0MPU716VIs1GHnAK+dANXBXF9JByNgIAdOwN4qbIV/
+	 OzMXpkPHt6I/+m0lA9AbiRTkv09KrLYfiO2/OvPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730624AbfLSSzH (ORCPT
+        id S1730394AbfLSSzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:55:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50804 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:55:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730613AbfLSSzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:55:05 -0500
+        id S1730622AbfLSSzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:55:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09F132465E;
-        Thu, 19 Dec 2019 18:55:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EC6024686;
+        Thu, 19 Dec 2019 18:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781704;
-        bh=I4FicGF1nduQhWKADf+S3DKjlXW9oqIQD8OotutLefg=;
+        s=default; t=1576781706;
+        bh=8lf+bvqxmeTkyo+Jri7kTp9DHiOIK0LeB435rMQ/SCM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2wSHA+3p2yCqgBTvysPl5M0dF6auMbTECHKj4jiCODJQhPoLNDsEEssHaePUO6Kq/
-         pwflQ6I4+lH9SxZ6tinWN+0v32c78VVkOzGMP9m2vi7Zw9Zy+jg2ASLedryfFuyAER
-         Hc1er0BWoYyLOEPAIVh6kfHoMd02q/+oen/ZZ2lI=
+        b=Wb1RnXllbyM5VgeCu+ctzG02hLIzQdXxPg/TFVB/Qqsnj+Ei+XTP2CwPydHp/CX6h
+         OfmoYbqKK+26EofVWBqeVjH4aVUFALCvBZZbhmwqvqzbwUd/08ErziIEM0UaD0y86y
+         5Ou7LVIP2TyHwAr7j+35EWrE1rczQKn75EXU/c+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Thomas Zimmermann <tzimmermann@suse.de>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
         John Donnelly <john.p.donnelly@oracle.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
         Gerd Hoffmann <kraxel@redhat.com>,
         Dave Airlie <airlied@redhat.com>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
@@ -57,9 +57,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
         Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH 5.4 47/80] drm/mgag200: Store flags from PCI driver data in device structure
-Date:   Thu, 19 Dec 2019 19:34:39 +0100
-Message-Id: <20191219183114.978179449@linuxfoundation.org>
+Subject: [PATCH 5.4 48/80] drm/mgag200: Add workaround for HW that does not support startadd
+Date:   Thu, 19 Dec 2019 19:34:40 +0100
+Message-Id: <20191219183116.739455056@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -74,15 +74,18 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Zimmermann <tzimmermann@suse.de>
 
-commit d6d437d97d54c85a1a93967b2745e31dff03365a upstream.
+commit 1591fadf857cdbaf2baa55e421af99a61354713c upstream.
 
-The flags field in struct mga_device has been unused so far. We now
-use it to store flag bits from the PCI driver.
+There's at least one system that does not interpret the value of
+the device's 'startadd' field correctly, which leads to incorrectly
+displayed scanout buffers. Always placing the active scanout buffer
+at offset 0 works around the problem.
 
 Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+Reported-by: John Donnelly <john.p.donnelly@oracle.com>
+Tested-by: John Donnelly <john.p.donnelly@oracle.com>
 Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 Fixes: 81da87f63a1e ("drm: Replace drm_gem_vram_push_to_system() with kunmap + unpin")
-Cc: John Donnelly <john.p.donnelly@oracle.com>
 Cc: Gerd Hoffmann <kraxel@redhat.com>
 Cc: Dave Airlie <airlied@redhat.com>
 Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
@@ -96,47 +99,85 @@ Cc: "José Roberto de Souza" <jose.souza@intel.com>
 Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
 Cc: dri-devel@lists.freedesktop.org
 Cc: <stable@vger.kernel.org> # v5.3+
-Link: https://patchwork.freedesktop.org/patch/msgid/20191126101529.20356-3-tzimmermann@suse.de
+Link: https://gitlab.freedesktop.org/drm/misc/issues/7
+Link: https://patchwork.freedesktop.org/patch/msgid/20191126101529.20356-4-tzimmermann@suse.de
+[drop debugfs_init callback - gregkh]
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/mgag200/mgag200_drv.h  |    8 ++++++++
- drivers/gpu/drm/mgag200/mgag200_main.c |    1 +
- 2 files changed, 9 insertions(+)
+ drivers/gpu/drm/mgag200/mgag200_drv.c |   35 +++++++++++++++++++++++++++++++++-
+ drivers/gpu/drm/mgag200/mgag200_drv.h |    3 ++
+ 2 files changed, 37 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/mgag200/mgag200_drv.h
-+++ b/drivers/gpu/drm/mgag200/mgag200_drv.h
-@@ -160,6 +160,7 @@ enum mga_type {
+--- a/drivers/gpu/drm/mgag200/mgag200_drv.c
++++ b/drivers/gpu/drm/mgag200/mgag200_drv.c
+@@ -30,6 +30,8 @@ module_param_named(modeset, mgag200_mode
+ static struct drm_driver driver;
+ 
+ static const struct pci_device_id pciidlist[] = {
++	{ PCI_VENDOR_ID_MATROX, 0x522, PCI_VENDOR_ID_SUN, 0x4852, 0, 0,
++		G200_SE_A | MGAG200_FLAG_HW_BUG_NO_STARTADD},
+ 	{ PCI_VENDOR_ID_MATROX, 0x522, PCI_ANY_ID, PCI_ANY_ID, 0, 0, G200_SE_A },
+ 	{ PCI_VENDOR_ID_MATROX, 0x524, PCI_ANY_ID, PCI_ANY_ID, 0, 0, G200_SE_B },
+ 	{ PCI_VENDOR_ID_MATROX, 0x530, PCI_ANY_ID, PCI_ANY_ID, 0, 0, G200_EV },
+@@ -63,6 +65,35 @@ static const struct file_operations mgag
+ 	DRM_VRAM_MM_FILE_OPERATIONS
  };
  
- #define MGAG200_TYPE_MASK	(0x000000ff)
-+#define MGAG200_FLAG_MASK	(0x00ffff00)
- 
- #define IS_G200_SE(mdev) (mdev->type == G200_SE_A || mdev->type == G200_SE_B)
- 
-@@ -195,6 +196,13 @@ mgag200_type_from_driver_data(kernel_ulo
- {
- 	return (enum mga_type)(driver_data & MGAG200_TYPE_MASK);
- }
-+
-+static inline unsigned long
-+mgag200_flags_from_driver_data(kernel_ulong_t driver_data)
++static bool mgag200_pin_bo_at_0(const struct mga_device *mdev)
 +{
-+	return driver_data & MGAG200_FLAG_MASK;
++	return mdev->flags & MGAG200_FLAG_HW_BUG_NO_STARTADD;
 +}
 +
- 				/* mgag200_mode.c */
- int mgag200_modeset_init(struct mga_device *mdev);
- void mgag200_modeset_fini(struct mga_device *mdev);
---- a/drivers/gpu/drm/mgag200/mgag200_main.c
-+++ b/drivers/gpu/drm/mgag200/mgag200_main.c
-@@ -94,6 +94,7 @@ static int mgag200_device_init(struct dr
- 	struct mga_device *mdev = dev->dev_private;
- 	int ret, option;
++int mgag200_driver_dumb_create(struct drm_file *file,
++			       struct drm_device *dev,
++			       struct drm_mode_create_dumb *args)
++{
++	struct mga_device *mdev = dev->dev_private;
++	unsigned long pg_align;
++
++	if (WARN_ONCE(!dev->vram_mm, "VRAM MM not initialized"))
++		return -EINVAL;
++
++	pg_align = 0ul;
++
++	/*
++	 * Aligning scanout buffers to the size of the video ram forces
++	 * placement at offset 0. Works around a bug where HW does not
++	 * respect 'startadd' field.
++	 */
++	if (mgag200_pin_bo_at_0(mdev))
++		pg_align = PFN_UP(mdev->mc.vram_size);
++
++	return drm_gem_vram_fill_create_dumb(file, dev, &dev->vram_mm->bdev,
++					     pg_align, false, args);
++}
++
+ static struct drm_driver driver = {
+ 	.driver_features = DRIVER_GEM | DRIVER_MODESET,
+ 	.load = mgag200_driver_load,
+@@ -74,7 +105,9 @@ static struct drm_driver driver = {
+ 	.major = DRIVER_MAJOR,
+ 	.minor = DRIVER_MINOR,
+ 	.patchlevel = DRIVER_PATCHLEVEL,
+-	DRM_GEM_VRAM_DRIVER
++	.dumb_create = mgag200_driver_dumb_create,
++	.dumb_map_offset = drm_gem_vram_driver_dumb_mmap_offset,
++	.gem_prime_mmap = drm_gem_prime_mmap,
+ };
  
-+	mdev->flags = mgag200_flags_from_driver_data(flags);
- 	mdev->type = mgag200_type_from_driver_data(flags);
+ static struct pci_driver mgag200_pci_driver = {
+--- a/drivers/gpu/drm/mgag200/mgag200_drv.h
++++ b/drivers/gpu/drm/mgag200/mgag200_drv.h
+@@ -159,6 +159,9 @@ enum mga_type {
+ 	G200_EW3,
+ };
  
- 	/* Hardcode the number of CRTCs to 1 */
++/* HW does not handle 'startadd' field correct. */
++#define MGAG200_FLAG_HW_BUG_NO_STARTADD	(1ul << 8)
++
+ #define MGAG200_TYPE_MASK	(0x000000ff)
+ #define MGAG200_FLAG_MASK	(0x00ffff00)
+ 
 
 
