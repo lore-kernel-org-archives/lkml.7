@@ -2,119 +2,279 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF54C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C70E4C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D937E2067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:14:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="assYaglF"
+	by mail.kernel.org (Postfix) with ESMTP id 8DB3E222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:18:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576754296;
+	bh=uCfcUnxh33PvYAWYuAPadawClgv248lIzEeHpmP7iA8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N0kQtCInU5LzicnpMJiKQuk2rZbaw8H6wWzDuIZ8ZpW9YYEg00+rmKew6iJhD0cC2
+	 gkYRzd4k1FzYypB+TLpSJkskdbx24t8iwhMO1GV3MfuHOvhLrmK+MbPlX5h4YF9X8B
+	 c0UTyeDIA3SNxcZsYDY6qFqRjVp9OwZ8dhVpATe8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbfLSLOe (ORCPT
+        id S1726713AbfLSLSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 06:14:34 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:9356 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726652AbfLSLOd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 06:14:33 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBJBCcnw019682;
-        Thu, 19 Dec 2019 12:14:28 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=4DH0Y238d7Wa37JIqOQTzV4EkbII3MUe3/621B6vq5M=;
- b=assYaglFheKroe0eamwOjLzwZ0X8/lelbETKKlDNBVzDTPrj6RVZmE0IJazNBy5BjUf9
- gHu2JpPsLAsgKWAsWLIqd/tEWi5XywAFODSrqI4SWVXQTIiZI74WJbBVPNIUI2hoIyde
- hSyhnAswsCANd7Nhqu8qfjqKMECP1kHaBVpl4WyBVJ+KXAgSF+pY0/ENrOQusLvHccfL
- U327LcISTqzAZrKFbMw58MLdmbcF1gn9Fh07A8bNJjSGqMaUvb3RoW5jMBGFaTjjri5N
- +PyazmxYq/KmJ0NOJMvVupza0vHJCERSsXvpGBaP9dDGkCKLgI3gRX2yFApQrGULMN6/ 8Q== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wvnresbhj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Dec 2019 12:14:28 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1EBDD10002A;
-        Thu, 19 Dec 2019 12:14:27 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node1.st.com [10.75.127.13])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 13B892B7CF1;
-        Thu, 19 Dec 2019 12:14:27 +0100 (CET)
-Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG5NODE1.st.com
- (10.75.127.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Dec
- 2019 12:14:26 +0100
-Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
- SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
- 15.00.1473.003; Thu, 19 Dec 2019 12:14:26 +0100
-From:   Fabien DESSENNE <fabien.dessenne@st.com>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>
-CC:     "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] media: sti: bdisp: fix a possible
- sleep-in-atomic-context bug in bdisp_device_run()
-Thread-Topic: [PATCH v2] media: sti: bdisp: fix a possible
- sleep-in-atomic-context bug in bdisp_device_run()
-Thread-Index: AQHVtlfrPw2yzNMArUeBusJIxHDM7afBPX8A
-Date:   Thu, 19 Dec 2019 11:14:26 +0000
-Message-ID: <b4be57d4-4f9a-ff4a-6fce-35b5f48570cb@st.com>
-References: <20191219103401.13630-1-baijiaju1990@gmail.com>
-In-Reply-To: <20191219103401.13630-1-baijiaju1990@gmail.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.50]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FEAD2AD213634348AE8513782E079167@st.com>
-Content-Transfer-Encoding: base64
+        Thu, 19 Dec 2019 06:18:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38442 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726656AbfLSLSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 06:18:15 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1A5C218AC;
+        Thu, 19 Dec 2019 11:18:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576754294;
+        bh=uCfcUnxh33PvYAWYuAPadawClgv248lIzEeHpmP7iA8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=n/6si3b5D2Gkeyp7E+0HbQ+19rW6och0NnRFRcGxeQSjZwyNY1cODUWopKOvIt4Sd
+         X0KJmA3d8ftdMASedreqirI+aEJZ9FVHwWDjWbzEGFOYbyJny3OZJpQDyHiol/bv5e
+         G4msj0Y8B3xiaQjDmSJTC6u28WZG5UGv9eViUczA=
+Date:   Thu, 19 Dec 2019 12:18:11 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, heiko@sntech.de, shawnguo@kernel.org,
+        laurent.pinchart@ideasonboard.com, icenowy@aosc.io,
+        mchehab+samsung@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/4] dt-bindings: regulator: add document bindings for
+ mpq7920
+Message-ID: <20191219111811.6e3m3qvuijfi6ew6@gilmour.lan>
+References: <20191219103721.10935-1-sravanhome@gmail.com>
+ <20191219103721.10935-3-sravanhome@gmail.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-19_01:2019-12-17,2019-12-19 signatures=0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yqt63ee6xqsyxvu7"
+Content-Disposition: inline
+In-Reply-To: <20191219103721.10935-3-sravanhome@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhhbmsgeW91IQ0KDQoNCk9uIDE5LzEyLzIwMTkgMTE6MzQgQU0sIEppYS1KdSBCYWkgd3JvdGU6
-DQo+IFRoZSBkcml2ZXIgbWF5IHNsZWVwIHdoaWxlIGhvbGRpbmcgYSBzcGlubG9jay4NCj4gVGhl
-IGZ1bmN0aW9uIGNhbGwgcGF0aCAoZnJvbSBib3R0b20gdG8gdG9wKSBpbiBMaW51eCA0LjE5IGlz
-Og0KPg0KPiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL3N0aS9iZGlzcC9iZGlzcC1ody5jLCAzODU6
-DQo+ICAgICAgbXNsZWVwIGluIGJkaXNwX2h3X3Jlc2V0DQo+IGRyaXZlcnMvbWVkaWEvcGxhdGZv
-cm0vc3RpL2JkaXNwL2JkaXNwLXY0bDIuYywgMzQxOg0KPiAgICAgIGJkaXNwX2h3X3Jlc2V0IGlu
-IGJkaXNwX2RldmljZV9ydW4NCj4gZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9zdGkvYmRpc3AvYmRp
-c3AtdjRsMi5jLCAzMTc6DQo+ICAgICAgX3Jhd19zcGluX2xvY2tfaXJxc2F2ZSBpbiBiZGlzcF9k
-ZXZpY2VfcnVuDQo+DQo+IFRvIGZpeCB0aGlzIGJ1ZywgbXNsZWVwKCkgaXMgcmVwbGFjZWQgd2l0
-aCB1ZGVsYXkoKS4NCj4NCj4gVGhpcyBidWcgaXMgZm91bmQgYnkgYSBzdGF0aWMgYW5hbHlzaXMg
-dG9vbCBTVENoZWNrIHdyaXR0ZW4gYnkgbXlzZWxmLg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBKaWEt
-SnUgQmFpIDxiYWlqaWFqdTE5OTBAZ21haWwuY29tPg0KDQoNClJldmlld2VkLWJ5OiBGYWJpZW4g
-RGVzc2VubmUgPGZhYmllbi5kZXNzZW5uZUBzdC5jb20+DQoNCg0KPiAtLS0NCj4gdjI6DQo+ICog
-VXNlIHVkZWxheSgpIGluc3RlYWQgb2YgbWRlbGF5KCkuDQo+ICAgIFRoYW5rIEZhYmllbiBmb3Ig
-Z29vZCBhZHZpY2UuDQo+DQo+IC0tLQ0KPiAgIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vc3RpL2Jk
-aXNwL2JkaXNwLWh3LmMgfCA2ICsrKy0tLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlv
-bnMoKyksIDMgZGVsZXRpb25zKC0pDQo+DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlhL3Bs
-YXRmb3JtL3N0aS9iZGlzcC9iZGlzcC1ody5jIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9zdGkv
-YmRpc3AvYmRpc3AtaHcuYw0KPiBpbmRleCA0MzcyYWJiYjU5NTAuLmE3NGU5ZmQ2NTIzOCAxMDA2
-NDQNCj4gLS0tIGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9zdGkvYmRpc3AvYmRpc3AtaHcuYw0K
-PiArKysgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL3N0aS9iZGlzcC9iZGlzcC1ody5jDQo+IEBA
-IC0xNCw4ICsxNCw4IEBADQo+ICAgI2RlZmluZSBNQVhfU1JDX1dJRFRIICAgICAgICAgICAyMDQ4
-DQo+ICAgDQo+ICAgLyogUmVzZXQgJiBib290IHBvbGwgY29uZmlnICovDQo+IC0jZGVmaW5lIFBP
-TExfUlNUX01BWCAgICAgICAgICAgIDUwDQo+IC0jZGVmaW5lIFBPTExfUlNUX0RFTEFZX01TICAg
-ICAgIDIwDQo+ICsjZGVmaW5lIFBPTExfUlNUX01BWCAgICAgICAgICAgIDUwMA0KPiArI2RlZmlu
-ZSBQT0xMX1JTVF9ERUxBWV9NUyAgICAgICAyDQo+ICAgDQo+ICAgZW51bSBiZGlzcF90YXJnZXRf
-cGxhbiB7DQo+ICAgCUJESVNQX1JHQiwNCj4gQEAgLTM4Miw3ICszODIsNyBAQCBpbnQgYmRpc3Bf
-aHdfcmVzZXQoc3RydWN0IGJkaXNwX2RldiAqYmRpc3ApDQo+ICAgCWZvciAoaSA9IDA7IGkgPCBQ
-T0xMX1JTVF9NQVg7IGkrKykgew0KPiAgIAkJaWYgKHJlYWRsKGJkaXNwLT5yZWdzICsgQkxUX1NU
-QTEpICYgQkxUX1NUQTFfSURMRSkNCj4gICAJCQlicmVhazsNCj4gLQkJbXNsZWVwKFBPTExfUlNU
-X0RFTEFZX01TKTsNCj4gKwkJdWRlbGF5KFBPTExfUlNUX0RFTEFZX01TICogMTAwMCk7DQo+ICAg
-CX0NCj4gICAJaWYgKGkgPT0gUE9MTF9SU1RfTUFYKQ0KPiAgIAkJZGV2X2VycihiZGlzcC0+ZGV2
-LCAiUmVzZXQgdGltZW91dFxuIik7
+
+--yqt63ee6xqsyxvu7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi,
+
+On Thu, Dec 19, 2019 at 11:37:19AM +0100, Saravanan Sekar wrote:
+> Add device tree binding information for mpq7920 regulator driver.
+> Example bindings for mpq7920 are added.
+>
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> ---
+>  .../bindings/regulator/mpq7920.yaml           | 149 ++++++++++++++++++
+>  1 file changed, 149 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/mpq7920.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/regulator/mpq7920.yaml b/Documentation/devicetree/bindings/regulator/mpq7920.yaml
+> new file mode 100644
+> index 000000000000..79000b745cfd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/mpq7920.yaml
+> @@ -0,0 +1,149 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/regulator/mpq7920.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Monolithic Power System MPQ7920 PMIC
+> +
+> +maintainers:
+> +  - Saravanan Sekar <sravanhome@gmail.com>
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "mpq@[0-9a-f]{1,2}"
+
+The node name is supposed to be the class of the device, so pmic or
+regulator seems more suited here.
+
+> +  compatible:
+> +    enum:
+> +	- mps,mpq7920
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  regulators:
+> +    type: string
+> +    description: |
+> +      list of regulators provided by this controller, must be named
+> +      after their hardware counterparts BUCK[1-4], one LDORTC, and LDO[2-5]
+> +      The valid names for regulators are
+> +      buck1, buck2, buck3, buck4, ldortc, ldo2, ldo3, ldo4, ldo5
+
+This should be an enum with the valid values
+
+> +
+> +    properties:
+> +       mps,time-slot:
+
+I'm not sure what this is supposed to be doing?
+
+Is that another property in the regulator node, or regulators is
+supposed to be a node?
+
+> +         - $ref: "/schemas/types.yaml#/definitions/uint8-array"
+> +       description: |
+> +         power on/off sequence time slot/interval must be one of following values
+> +         With:
+> +          * 0: 0.5ms
+> +          * 1: 2ms
+> +          * 2: 8ms
+> +          * 3: 16ms
+> +          Defaults to 0.5ms if not specified.
+
+So it's not an array, but just a single value?
+
+Either wai, the valid values should be an enum, and the default
+specified using the default keyword.
+
+> +
+> +    properties:
+> +       mps,fixed-on-time:
+
+You don't need to set properties all the time.
+
+> +          - $ref: "/schemas/types.yaml#/definitions/boolean"
+> +       description: |
+> +           select power on sequence with fixed time interval mentioned in
+> +           time-slot reg for all the regulators.
+
+Can't you just derive that from the fact that time-slot is present?
+
+> +    properties:
+> +       mps,fixed-off-time:
+> +          - $ref: "/schemas/types.yaml#/definitions/boolean"
+> +       description: |
+> +          select power off sequence with fixed time interval mentioned in
+> +          time-slot reg for all the regulators.
+
+Same thing here
+
+> +    properties:
+> +       mps,inc-off-time:
+> +          - $ref: "/schemas/types.yaml#/definitions/uint8-array"
+> +       description: |
+> +          An array of 8, linearly increase power off sequence time
+> +          slot/interval for each regulator must be one of following values
+> +         * 0 to 15
+
+This should be an enum, or a combination of minimum/maximum. And the
+size of the array should be fixed too.
+
+> +    properties:
+> +       mps,inc-on-time:
+> +          - $ref: "/schemas/types.yaml#/definitions/uint8-array"
+> +       description: |
+> +          An array of 8, linearly increase power on sequence time
+> +          slot/interval for each regulator must be one of following values
+> +          * 0 to 15
+
+Ditto,
+
+> +    properties:
+> +       mps,switch-freq:
+> +          - $ref: "/schemas/types.yaml#/definitions/uint8"
+> +       description: |
+> +          switching frequency must be one of following values
+> +          * 0 : 1.1MHz
+> +          * 1 : 1.65MHz
+> +          * 2 : 2.2MHz
+> +          * 3 : 2.75MHz
+> +          Defaults to 2.2 MHz if not specified.
+
+enum and default
+
+> +    properties:
+> +       mps,buck-softstart:
+> +          - $ref: "/schemas/types.yaml#/definitions/uint8-array"
+> +       description: |
+> +          An array of 4 contains soft start time of each buck, must be one of
+> +          following values
+> +          * 0 : 150us
+> +          * 1 : 300us
+> +          * 2 : 610us
+> +          * 3 : 920us
+> +          Defaults to 300us if not specified.
+
+Same story than mps,inc-off-time
+
+> +    properties:
+> +       mps,buck-ovp:
+> +          - $ref: "/schemas/types.yaml#/definitions/uint8-array"
+> +       description: |
+> +           An array of 4 contains over voltage protection of each buck, must be
+> +           one of following values
+> +           * 0 : disabled
+> +           * 1 : enabled
+> +           Defaults is enabled if not specified.
+
+Ditto
+
+> +    properties:
+> +        mps,buck-phase-delay:
+> +          - $ref: "/schemas/types.yaml#/definitions/uint8-array"
+> +       description: |
+> +           An array of 4 contains each buck phase delay must be one of following
+> +           values
+> +           * 0: 0deg
+> +           * 1: 90deg
+> +           * 2: 180deg
+> +           * 3: 270deg
+> +           Defaults to 0deg for buck1 & buck2, 90deg for buck3 & buck4 if not
+> +           specified.
+
+ditto
+
+> +examples:
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        mpq7920@69 {
+> +	  compatible = "mps,mpq7920";
+> +          reg = <0x69>;
+> +
+> +          mps,switch-freq = <1>;
+> +          mps,buck-softstart = /bits/ 8 <1 2 1 3>;
+> +          mps,buck-ovp = /bits/ 8 <1 0 1 1>;
+> +
+> +          regulators {
+> +            buck1 {
+
+So regulators isn't a string after all?
+
+If it's supposed to be a node, it should be type: object
+
+and you can check that the node has a valid value using propertyNames
+
+Maxime
+
+--yqt63ee6xqsyxvu7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXftccwAKCRDj7w1vZxhR
+xU4wAP9CjzOBCIts5MjFAsKirU/odMTpDcippKeKU9HZ77MYzgD/WHz9CiRGB65G
+Rv6j2CQuzQV1YsVR9XBHZnZJro+J/Ag=
+=awE3
+-----END PGP SIGNATURE-----
+
+--yqt63ee6xqsyxvu7--
