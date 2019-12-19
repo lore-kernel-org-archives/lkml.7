@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5465C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 093F5C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C43C2465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C21B324685
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:46:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781158;
-	bh=Q6IPlbKphm9Ek82Zr/DSnj+WRQWNrsOn12LL6QQn+jg=;
+	s=default; t=1576781162;
+	bh=iwLbsWypgZl4xzaCdEQ+h+XMFgQWaBlIq5yNWyhAXF0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fYB93VFVUdL/z6pN3R6LZDHX2NWMgq6KWati0Y8bVxa7i7DF9aWxZatkZJLqAxc7B
-	 EHzWgakHT3zeRN1TCk+EhircUqt2ZjPLSWTRCG0CvgF3tAV7pY2MUm+pBc3foyA4Td
-	 GIKt9m883d1pzE9oEVu/4HKQGmfZ+1BQKNekeD2k=
+	b=QH2CuH8/F4Zd9JTYmcuYZZSKQUEHbwQI0e9BWq0pacVRLYa4kQ8wINQTxMbXfQHyn
+	 lVPAQDBzWfZYdtTA6L+Ivwf8zoh35wU//A59YfWBHBvkUePY6I5Lhp06nAs5JdjwrS
+	 ROtbv/cKFxhA/6uUnYQcX2Gq1JzQWNGzfgG/htkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729262AbfLSSp5 (ORCPT
+        id S1729276AbfLSSqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:45:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38414 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:46:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728736AbfLSSpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:45:53 -0500
+        id S1727991AbfLSSp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:45:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9058824679;
-        Thu, 19 Dec 2019 18:45:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0070F206D7;
+        Thu, 19 Dec 2019 18:45:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781153;
-        bh=Q6IPlbKphm9Ek82Zr/DSnj+WRQWNrsOn12LL6QQn+jg=;
+        s=default; t=1576781155;
+        bh=iwLbsWypgZl4xzaCdEQ+h+XMFgQWaBlIq5yNWyhAXF0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d23EYSXK5qxfTHU/HdGT7hJNH+PEKLYOe4xrnajc+tZennVXWwB1Ffa0m4zcbhzzS
-         nQwkbKe89SSvZnuwu8ekuyxpbuhu0R32Z2Eq3VItqfXARGeBPcbe2J+WhA/IBIdyKu
-         VT1v2Wu8LFE0t84XeXUieXkfbxHSvR8krv1U7VKU=
+        b=hM+aH6IbMIp95WYPaAC4d9I56c8FV99bAya0VEcpRfiKHt+OFZb6m/kSKQ+WqFBvO
+         IWGYf8Ege9xaICMegig1o7kj//zKytWk5P19bgm/CysKLntnpS6D5rFjhFOLge6wwx
+         KURoU2wJTmM7Mdn2SdpxclHWtC2aa4IJu3zliLyQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 104/199] staging: gigaset: add endpoint-type sanity check
-Date:   Thu, 19 Dec 2019 19:33:06 +0100
-Message-Id: <20191219183220.650160944@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 4.9 105/199] xhci: Increase STS_HALT timeout in xhci_suspend()
+Date:   Thu, 19 Dec 2019 19:33:07 +0100
+Message-Id: <20191219183220.703085660@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -58,51 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit ed9ed5a89acba51b82bdff61144d4e4a4245ec8a upstream.
+commit 7c67cf6658cec70d8a43229f2ce74ca1443dc95e upstream.
 
-Add missing endpoint-type sanity checks to probe.
+I've recently observed failed xHCI suspend attempt on AMD Raven Ridge
+system:
+kernel: xhci_hcd 0000:04:00.4: WARN: xHC CMD_RUN timeout
+kernel: PM: suspend_common(): xhci_pci_suspend+0x0/0xd0 returns -110
+kernel: PM: pci_pm_suspend(): hcd_pci_suspend+0x0/0x30 returns -110
+kernel: PM: dpm_run_callback(): pci_pm_suspend+0x0/0x150 returns -110
+kernel: PM: Device 0000:04:00.4 failed to suspend async: error -110
 
-This specifically prevents a warning in USB core on URB submission when
-fuzzing USB descriptors.
+Similar to commit ac343366846a ("xhci: Increase STS_SAVE timeout in
+xhci_suspend()") we also need to increase the HALT timeout to make it be
+able to suspend again.
 
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191202085610.12719-4-johan@kernel.org
+Cc: <stable@vger.kernel.org> # 5.2+
+Fixes: f7fac17ca925 ("xhci: Convert xhci_handshake() to use readl_poll_timeout_atomic()")
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20191211142007.8847-5-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/isdn/gigaset/usb-gigaset.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/usb/host/xhci.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/isdn/gigaset/usb-gigaset.c
-+++ b/drivers/isdn/gigaset/usb-gigaset.c
-@@ -708,6 +708,12 @@ static int gigaset_probe(struct usb_inte
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -933,7 +933,7 @@ static bool xhci_pending_portevent(struc
+ int xhci_suspend(struct xhci_hcd *xhci, bool do_wakeup)
+ {
+ 	int			rc = 0;
+-	unsigned int		delay = XHCI_MAX_HALT_USEC;
++	unsigned int		delay = XHCI_MAX_HALT_USEC * 2;
+ 	struct usb_hcd		*hcd = xhci_to_hcd(xhci);
+ 	u32			command;
  
- 	endpoint = &hostif->endpoint[0].desc;
- 
-+	if (!usb_endpoint_is_bulk_out(endpoint)) {
-+		dev_err(&interface->dev, "missing bulk-out endpoint\n");
-+		retval = -ENODEV;
-+		goto error;
-+	}
-+
- 	buffer_size = le16_to_cpu(endpoint->wMaxPacketSize);
- 	ucs->bulk_out_size = buffer_size;
- 	ucs->bulk_out_epnum = usb_endpoint_num(endpoint);
-@@ -727,6 +733,12 @@ static int gigaset_probe(struct usb_inte
- 
- 	endpoint = &hostif->endpoint[1].desc;
- 
-+	if (!usb_endpoint_is_int_in(endpoint)) {
-+		dev_err(&interface->dev, "missing int-in endpoint\n");
-+		retval = -ENODEV;
-+		goto error;
-+	}
-+
- 	ucs->busy = 0;
- 
- 	ucs->read_urb = usb_alloc_urb(0, GFP_KERNEL);
 
 
