@@ -2,114 +2,128 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3CCC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD9CC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 639E1218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:15:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576761359;
-	bh=CGCK8tPGWo3RPd8P0lKHD12drtId7fkVYKCVvR1NaDY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PsQPRgzhIkz47nQjSelXdpWJ5I0Cff/e696KsV85QUiuMnWljm9dwJ+9ive992EXK
-	 b1vC7EqQ8YrH0FZnHr+kPVLXW3YQPNyXypxEKfeJdSjE8it9zSJ2JpRi6UXm/EZPFm
-	 XG6CDrgymfJoX+v0UOkiyMeh89gQgbRDHlofHYfc=
+	by mail.kernel.org (Postfix) with ESMTP id 117BD218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:16:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i1fphoqZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfLSNP6 (ORCPT
+        id S1727015AbfLSNP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 19 Dec 2019 08:15:59 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:54589 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726961AbfLSNP6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Dec 2019 08:15:58 -0500
-Received: from foss.arm.com ([217.140.110.172]:38664 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726751AbfLSNP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 08:15:58 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A9FC5328;
+Received: by mail-pj1-f65.google.com with SMTP id ep17so2506308pjb.4;
+        Thu, 19 Dec 2019 05:15:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=EVebG2mxl2pFbRKmtKvplGDYfctGq6ipwixunLpsjMo=;
+        b=i1fphoqZCkW4TfNecoJIQUs7pOzb64NjVceblA4niuUzc3lN9qr7fCDirz8Qtly2pU
+         7mats1aY7LeNSFoqLpabz+qUtMSf5S4LBHNu2d0EAdu/Pxy/7ufPxtANYZbYsF/SdZ5V
+         iq7rO/HUELq6aJ82b3X35Pov1K1hzLY0ATZbM8fSMFF4dkn1/2k6AA+EjFwBT1BpkBlS
+         I6nDHwepj2UKBWwMNO33djHVHeNHUf7fXOKf3RZtyhcZHHjaVBaXDS50+g0845Km4l50
+         VFcVZRytMHgnq1qyS7JfeySpMOjUewwcXZJNmoS4ORL2Uk+A6oq3sho7e8ODrMqrCrLj
+         ew2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=EVebG2mxl2pFbRKmtKvplGDYfctGq6ipwixunLpsjMo=;
+        b=IrzQoKjFOiXxfPs64PyFMqAVGZtj/4IoNLMoe3O2faLxaEaVJPTdEqhKhRySCn4wiQ
+         DL7QL7Sro8Viu/BQZa6jQSTLo06r5fkgiD1pmiFHsXpRVyfPny38liyT8bKM+SY4R1FT
+         600Usz+1kHDbcHQmLufENtvNlLXlEFC42mfRH/5Zmv8LYqMHHKRzwm6s4XvcG1kTTgUL
+         MPscaG+Xpmxh+/cbEOXgeXmkYvgHO1KT2liaDkilKjlbBGabt7XT+qDfWl2d5RQXoibH
+         h0Q5SSguVbmH3k2k7c0X2rrjDnAPpLXkYXmG+OVseThTbQI7gs5VBq/W6cMI8BZ1LW9c
+         RT0w==
+X-Gm-Message-State: APjAAAVbi+6KXbMwUW2R5IPjJr9xhP7CkTDdBqxXH5hQcpqwCSf4wZQG
+        WnqStRGa6f3/qX4wnGmKwgM=
+X-Google-Smtp-Source: APXvYqx0fVJulRJtPx/+jJSN0Soric4f4PecZWngEHjcQePZUFaRW9bCzm5WXlZtsWup7o1/aBb8QQ==
+X-Received: by 2002:a17:90a:d145:: with SMTP id t5mr9755894pjw.57.1576761357616;
         Thu, 19 Dec 2019 05:15:57 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D56373F67D;
+Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
+        by smtp.gmail.com with ESMTPSA id d22sm8079229pfo.187.2019.12.19.05.15.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 19 Dec 2019 05:15:56 -0800 (PST)
-Date:   Thu, 19 Dec 2019 13:15:54 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     vishnu <vravulap@amd.com>
-Cc:     Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>, Alexander.Deucher@amd.com,
-        djkurtz@google.com, pierre-louis.bossart@linux.intel.com,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "Tabian, Reza" <Reza.Tabian@amd.com>
-Subject: Re: [PATCH v14 7/7] ASoC: amd MMAP_INTERLEAVED Support
-Message-ID: <20191219131554.GF5047@sirena.org.uk>
-References: <1575553053-18344-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
- <1575553053-18344-8-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
- <3688990f-0ac3-08bf-20b8-93a4ab17441e@amd.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="sDKAb4OeUBrWWL6P"
-Content-Disposition: inline
-In-Reply-To: <3688990f-0ac3-08bf-20b8-93a4ab17441e@amd.com>
-X-Cookie: I smell a RANCID CORN DOG!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH 1/2 v2] gpio: gpio-grgpio: fix possible sleep-in-atomic-context bugs in grgpio_remove()
+Date:   Thu, 19 Dec 2019 21:14:59 +0800
+Message-Id: <20191219131459.18640-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+drivers/gpio/gpiolib-sysfs.c, 796:
+	mutex_lock in gpiochip_sysfs_unregister
+drivers/gpio/gpiolib.c, 1455:
+	gpiochip_sysfs_unregister in gpiochip_remove
+drivers/gpio/gpio-grgpio.c, 460:
+	gpiochip_remove in grgpio_remove
+drivers/gpio/gpio-grgpio.c, 449:
+	_raw_spin_lock_irqsave in grgpio_remove
 
---sDKAb4OeUBrWWL6P
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+kernel/irq/irqdomain.c, 243:
+	mutex_lock in irq_domain_remove
+drivers/gpio/gpio-grgpio.c, 463:
+	irq_domain_remove in grgpio_remove
+drivers/gpio/gpio-grgpio.c, 449:
+	_raw_spin_lock_irqsave in grgpio_remove
 
-On Wed, Dec 18, 2019 at 11:59:56AM +0530, vishnu wrote:
-> Hi Mark,
->=20
-> Patches have been reviewed by Dan and pierre-louis.bossart@linux.intel.com
+mutex_lock() can sleep at runtime.
 
-I see no reviewed-by tags on most of this.
+To fix these bugs, the lock is dropped in grgpio_remove(), because there
+is no need for locking in remove() callbacks.
 
-> Please can you upstream these please.
+These bugs are found by a static analysis tool STCheck written by
+myself.
 
-No, I will review them first.  Given the problems that have been seen on
-previous reviews I don't intend to rush that.
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+v2:
+* Drop the lock instead of moving the calls to lock functions.
+  Thank Bartosz for good advice.
 
-Please don't send content free pings and please allow a reasonable time
-for review.  People get busy, go on holiday, attend conferences and so=20
-on so unless there is some reason for urgency (like critical bug fixes)
-please allow at least a couple of weeks for review.  If there have been
-review comments then people may be waiting for those to be addressed.
+---
+ drivers/gpio/gpio-grgpio.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-Sending content free pings adds to the mail volume (if they are seen at
-all) which is often the problem and since they can't be reviewed
-directly if something has gone wrong you'll have to resend the patches
-anyway, so sending again is generally a better approach though there are
-some other maintainers who like them - if in doubt look at how patches
-for the subsystem are normally handled.
+diff --git a/drivers/gpio/gpio-grgpio.c b/drivers/gpio/gpio-grgpio.c
+index 08234e64993a..a49f0711ca94 100644
+--- a/drivers/gpio/gpio-grgpio.c
++++ b/drivers/gpio/gpio-grgpio.c
+@@ -437,8 +437,6 @@ static int grgpio_remove(struct platform_device *ofdev)
+ 	int i;
+ 	int ret = 0;
+ 
+-	spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
+-
+ 	if (priv->domain) {
+ 		for (i = 0; i < GRGPIO_MAX_NGPIO; i++) {
+ 			if (priv->uirqs[i].refcnt != 0) {
+@@ -454,8 +452,6 @@ static int grgpio_remove(struct platform_device *ofdev)
+ 		irq_domain_remove(priv->domain);
+ 
+ out:
+-	spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
+-
+ 	return ret;
+ }
+ 
+-- 
+2.17.1
 
---sDKAb4OeUBrWWL6P
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl37eAkACgkQJNaLcl1U
-h9CVpAf+K32nHGUcXJWEpJjWpcGVQiWjEjbsF9z+jhCBspPCGKsl08RI1cXbo87P
-/OjYMebtkwJqflBz5c947lIF2SA9ofMD6uu4y+C5/JfaSDkz2XtRElnRNQq568rz
-CsuEikfk3MDeZ8atNXGeh/U/qT5QnJT/9pjUSTiQv0E1dn/fnke715mrjuMLuGGa
-WSfl5qgHp7mOF5rGb63PcI4pWK0vo+fs8X+pbOOrR1+IluSE6qSU1aqdggo/4mTA
-rzGDIb2FyaMSmhL5muM4atXu02VHkosSZ4Ae9nqY8rWQta9a2tkKyzF+rqJmJTjd
-CfpApBIsMtlhkNb4gQ/rAPtXJBkrAQ==
-=XtBZ
------END PGP SIGNATURE-----
-
---sDKAb4OeUBrWWL6P--
