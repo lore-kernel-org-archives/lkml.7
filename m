@@ -2,127 +2,71 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9DAC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4BBC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA3332465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:19:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576786764;
-	bh=3FSspEqjeV/r3JnSiuDrlylG7Wl9eHwnoKBtJftz4gk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e2TDGjGJLUYu9XfBUpDNax+mz+DgvamF/Evd3HSDZSm18rYBrvRi82mjLmjzrDaPq
-	 MK0bA2GkwxX2AE/xrOWMUV7YpEGMj0fGi4k2ixEX5stWF297c0PXVViTmjBOsDi7z+
-	 cvKQSBhYbSwjjOBg39JsDul+9TctlTJM+SrRufZU=
+	by mail.kernel.org (Postfix) with ESMTP id 0868C2467F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:21:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727174AbfLSUTY (ORCPT
+        id S1727020AbfLSUU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 15:19:24 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:39358 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbfLSUTX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 15:19:23 -0500
-Received: by mail-ed1-f65.google.com with SMTP id t17so6136013eds.6;
-        Thu, 19 Dec 2019 12:19:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1z6z1Ui8LL1nkwwIvcM2qSFeAknNPztf5Dw5KcO2dK8=;
-        b=sS8NsZJcXcY8TgpHCpIbqW9V5OzarWXytTpQ8I79KR+JDiVB1Q4w0df8fgVfLkZLsP
-         QppebyM5rQLw4qBSyvplYNDscsIFUI7WytzCjfgSNR28svfrltxPY4sMrHe/KtE+gqKc
-         7o2xqq82jbtzbPzYCjvTd1E7C7k8iCwJwG6DuZ6augRV4mTuVT5iOZibGaICkZIk4OVs
-         /duT5SKPDGxCtDrTGp2snC0E4I0dMSi4j/6yeVfQIYdnd3w8Z7pPU0r5PqKoOODUJgKF
-         mBLPBfSlIyvl1WKvxRvYrzo5yl3kK+LEThN94aDmshg+bpNWNRO3soKrVjqgyJ8f1vDK
-         1r7g==
-X-Gm-Message-State: APjAAAVwDJaEYLWKsuFyemHOkK1sW++kXNjjvM+nrEaE6BpHxfVUL5pR
-        1v3dDHwmBIMCvNc+yE31cKo=
-X-Google-Smtp-Source: APXvYqwwejroRBv27RRKI+KjHOuS4q02b2b9jWEyzsgC2C9l3pOef3KwtMfRZqXDwDfmgHuveS0ogQ==
-X-Received: by 2002:a17:906:5606:: with SMTP id f6mr11822819ejq.179.1576786761612;
-        Thu, 19 Dec 2019 12:19:21 -0800 (PST)
-Received: from kozik-lap ([194.230.155.234])
-        by smtp.googlemail.com with ESMTPSA id m2sm626166edp.85.2019.12.19.12.19.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 19 Dec 2019 12:19:20 -0800 (PST)
-Date:   Thu, 19 Dec 2019 21:19:17 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
-        leonard.crestez@nxp.com, lukasz.luba@arm.com, a.swigon@samsung.com,
-        m.szyprowski@samsung.com, kgene@kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 7/9] memory: samsung: exynos5422-dmc: Replace deprecated
- 'devfreq-events' property
-Message-ID: <20191219201917.GA21576@kozik-lap>
-References: <20191217055738.28445-1-cw00.choi@samsung.com>
- <CGME20191217055106epcas1p2c43a45e34983c1b3e60cc6fd842dd33e@epcas1p2.samsung.com>
- <20191217055738.28445-8-cw00.choi@samsung.com>
+        Thu, 19 Dec 2019 15:20:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38790 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726880AbfLSUU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 15:20:58 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 777E22465E;
+        Thu, 19 Dec 2019 20:20:57 +0000 (UTC)
+Date:   Thu, 19 Dec 2019 15:20:55 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+        "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
+        "bsegall@google.com" <bsegall@google.com>,
+        "mgorman@suse.de" <mgorman@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] sched: Micro optimization in pick_next_task() and in
+ check_preempt_curr()
+Message-ID: <20191219152055.4f7b1168@gandalf.local.home>
+In-Reply-To: <4a708948-7140-d8f3-a5ec-d242ae0737d4@virtuozzo.com>
+References: <157675913272.349305.8936736338884044103.stgit@localhost.localdomain>
+        <20191219131242.GK2827@hirez.programming.kicks-ass.net>
+        <20191219140252.GS2871@hirez.programming.kicks-ass.net>
+        <bfaa72ca-8bc6-f93c-30d7-5d62f2600f53@virtuozzo.com>
+        <20191219094330.0e44c748@gandalf.local.home>
+        <11d755e9-e4f8-dd9e-30b0-45aebe260b2f@virtuozzo.com>
+        <20191219095941.2eebed84@gandalf.local.home>
+        <44c95c18-7593-f3e7-f710-a7d424af7442@virtuozzo.com>
+        <20191219104018.5f8e50d2@gandalf.local.home>
+        <af65cbaf-2f8e-0384-03e8-262d35e3790e@virtuozzo.com>
+        <20191219112214.37f1f0af@gandalf.local.home>
+        <4a708948-7140-d8f3-a5ec-d242ae0737d4@virtuozzo.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191217055738.28445-8-cw00.choi@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 02:57:36PM +0900, Chanwoo Choi wrote:
-> In order to remove the deprecated 'devfreq-events' property, replace with
-> new 'exynos,ppmu-device' property in order to get the devfreq-event device
-> in devicetree file instead of 'devfreq-events' property. But, to guarantee
-> the backward-compatibility, keep the support 'devfreq-events' property.
-> 
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> ---
->  .../memory-controllers/exynos5422-dmc.txt     |  6 ++--
->  drivers/memory/samsung/exynos5422-dmc.c       | 29 +++++++++++++++----
->  2 files changed, 26 insertions(+), 9 deletions(-)
+On Thu, 19 Dec 2019 20:16:17 +0000
+Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
 
-In general looks good for me but I need an ack from Rob.  Patch should
-be also split and sent as one of first in the series (before code).
+> Two small patches look better then one huge, so I prefer to send a patch
+> on top of yours :)
 
-> 
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> index 02e4a1f862f1..1e1b3702f045 100644
-> --- a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> @@ -17,14 +17,14 @@ Required properties for DMC device for Exynos5422:
->  - clock-names : should include "fout_spll", "mout_sclk_spll", "ff_dout_spll2",
->    "fout_bpll", "mout_bpll", "sclk_bpll", "mout_mx_mspll_ccore",
->    "mout_mclk_cdrex"  entries
-> -- devfreq-events : phandles for PPMU devices connected to this DMC.
-> +- exynos,ppmu-device : phandles for PPMU devices connected to this DMC.
->  - vdd-supply : phandle for voltage regulator which is connected.
->  - reg : registers of two CDREX controllers.
->  - operating-points-v2 : phandle for OPPs described in v2 definition.
->  - device-handle : phandle of the connected DRAM memory device. For more
->  	information please refer to documentation file:
->  	Documentation/devicetree/bindings/ddr/lpddr3.txt
-> -- devfreq-events : phandles of the PPMU events used by the controller.
-> +- exynos,ppmu-device : phandles of the PPMU events used by the controller.
->  - samsung,syscon-clk : phandle of the clock register set used by the controller,
->  	these registers are used for enabling a 'pause' feature and are not
->  	exposed by clock framework but they must be used in a safe way.
-> @@ -73,7 +73,7 @@ Example:
->  			      "mout_mx_mspll_ccore",
->  			      "mout_mclk_cdrex";
->  		operating-points-v2 = <&dmc_opp_table>;
-> -		devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
-> +		exynos,ppmu-device = <&ppmu_event3_dmc0_0>, <&ppmu_event3_dmc0_1>,
->  				 <&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
+My one patch has turned into 3 patches. Having the sorted structs gave
+me some more crazy ideas. I'll post the series shortly ;-)
 
-Indentation is broken here.
-
-Best regards,
-Krzysztof
-
+-- Steve
