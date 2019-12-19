@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCD8C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72290C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20D2F24679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A95720716
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:38:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780677;
-	bh=5iE0gUff8uiKAoyBOvSGE815pKxZqfHAZqQo7ujxFS8=;
+	s=default; t=1576780680;
+	bh=sdkColpjmtpftgne7Ad8WX3Q1lItJcv6eaE6k+9S5Jw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OORZf137XrmQ8qBBqwdD+kJDjDGqZSHZAWeBR7f2Re4CRihgRtYBj88xV9EsSoDhB
-	 RLOBjCeGdIPpCPLU/cAblxipwLUZk2NCNwllYooVkHuOmgrYmOmOdafhrnNHU2qw+Q
-	 /GhE02A5oXHUZkyJsLfhJfdSQMS2ZGq7iDi+Viu4=
+	b=bHMMXG6V7A/N8jO9Y7GNSNc9R36pQaKxfz268H6GO7pyLvDvHIwu7SrqI+5n9hXMw
+	 d5jxZu9/eUw8roO0S1poQxtRbqu4GvaP6r+XltsR6Zbr8uTIc0wacOrFMLuvKYSQhU
+	 Yu9ibjp1MkfwROVn2ulGIyXkqVsQi+l9WnAjVdFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbfLSShz (ORCPT
+        id S1727933AbfLSSh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:37:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55670 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:37:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727909AbfLSShv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:37:51 -0500
+        id S1727260AbfLSSh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:37:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1C9B20716;
-        Thu, 19 Dec 2019 18:37:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE8FC20716;
+        Thu, 19 Dec 2019 18:37:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780671;
-        bh=5iE0gUff8uiKAoyBOvSGE815pKxZqfHAZqQo7ujxFS8=;
+        s=default; t=1576780676;
+        bh=sdkColpjmtpftgne7Ad8WX3Q1lItJcv6eaE6k+9S5Jw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D0UOmzShlnrMNAq5jrUo0JtMJz9NP/+ewoiBo553O82is6UztmpKilDRy7reMJNlX
-         +a/0by3Lh23Bklw5apE7dU+/XY6zry6pE+6SiPCcxkkUF7Vz+g/RFctK/zdKmppU8t
-         4HxyxXBJfs5TycZZOaamjCIX83xRc+LOeObEJO7o=
+        b=F0Q5iymF6fneMwCoxpPjr5ukwtgxhNaAH3PAMu7w0Gsl2o3F+wCficveMFNAqJxa8
+         MOAWSl0RUcf+xsC9JsnYJAf7HF/Da9AQGC/ck3ibr3EsoNvbNt6gHmT+tPs9TJ/nUI
+         b351Sq2Bgoq8EPp8KQmFQYxneLWnNA6Evc+HGNLU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Dobriyan <adobriyan@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 032/162] ACPI: fix acpi_find_child_device() invocation in acpi_preset_companion()
-Date:   Thu, 19 Dec 2019 19:32:20 +0100
-Message-Id: <20191219183209.704129766@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 033/162] dma-mapping: fix return type of dma_set_max_seg_size()
+Date:   Thu, 19 Dec 2019 19:32:21 +0100
+Message-Id: <20191219183209.774085454@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -60,33 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Dobriyan <adobriyan@gmail.com>
+From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-[ Upstream commit f8c6d1402b89f22a3647705d63cbd171aa19a77e ]
+[ Upstream commit c9d76d0655c06b8c1f944e46c4fd9e9cf4b331c0 ]
 
-acpi_find_child_device() accepts boolean not pointer as last argument.
+The function dma_set_max_seg_size() can return either 0 on success or
+-EIO on error. Change its return type from unsigned int to int to
+capture this.
 
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
-[ rjw: Subject ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/acpi.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/dma-mapping.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 6a30f1e03aa9e..0bd0a9ad54556 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -75,7 +75,7 @@ static inline bool has_acpi_companion(struct device *dev)
- static inline void acpi_preset_companion(struct device *dev,
- 					 struct acpi_device *parent, u64 addr)
- {
--	ACPI_COMPANION_SET(dev, acpi_find_child_device(parent, addr, NULL));
-+	ACPI_COMPANION_SET(dev, acpi_find_child_device(parent, addr, false));
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index 2e551e2d2d03a..62dd6676b7cc6 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -151,8 +151,7 @@ static inline unsigned int dma_get_max_seg_size(struct device *dev)
+ 	return SZ_64K;
  }
  
- static inline const char *acpi_dev_name(struct acpi_device *adev)
+-static inline unsigned int dma_set_max_seg_size(struct device *dev,
+-						unsigned int size)
++static inline int dma_set_max_seg_size(struct device *dev, unsigned int size)
+ {
+ 	if (dev->dma_parms) {
+ 		dev->dma_parms->max_segment_size = size;
 -- 
 2.20.1
 
