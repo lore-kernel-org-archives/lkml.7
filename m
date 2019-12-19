@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DA2C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95809C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7852724679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 628A32465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781235;
-	bh=wIOxz9h/1fpnplrRfLmE8p8swLUE7URyYaiVcoUWFug=;
+	s=default; t=1576781244;
+	bh=64ZZJeR2s2qii8d/CY/DMkDaMWeNxmQ7TB4xWPBQefc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nkifx2PspjMJlhVVSNSraHXcmaxDOJ5APwtyasI8NdYtwHPcrhYuKqyNibK5fisQ8
-	 94TqEPFV9aNRI8YzUsxQECOjkv+QFXMrrotMJHZWj20GdaFebI0sJi0yI6avykReTC
-	 vVi3Afa3sOIfrnrxuUeF+PqOUN6h/zwmiP6ULA98=
+	b=dJRROJPC27y1XhA+EtrxbFuca55T2YfLEJ8UHKNrW8g5/7N5AP+sHQtrGkHjMtt9K
+	 niZL4tPFPAXEFvdde9PbDWxpPLUqhkiIQa8FF/HXPgvEia09EHyzbyravf9s8t1tuR
+	 G5Hnot9ohoqeN7VteqBUW5FoM3oB7Yw+v7LLWwqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729092AbfLSSrK (ORCPT
+        id S1729462AbfLSSrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:47:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39996 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:47:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727462AbfLSSrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:47:07 -0500
+        id S1729453AbfLSSrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:47:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D4C024672;
-        Thu, 19 Dec 2019 18:47:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A7742465E;
+        Thu, 19 Dec 2019 18:47:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781226;
-        bh=wIOxz9h/1fpnplrRfLmE8p8swLUE7URyYaiVcoUWFug=;
+        s=default; t=1576781240;
+        bh=64ZZJeR2s2qii8d/CY/DMkDaMWeNxmQ7TB4xWPBQefc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uI2ZbCX+U6XsXVDktR8AR/w/aABLYlDg2T9lSP27g+hbKqj0zOXMqdhun59YICzbt
-         PM6JBR/SwDKaaCJ5i1BP0HACyWDiyTdvlTVda1mpHvJcnOLZQvvMJgcJ5/EHmrs+JK
-         n4x2kh07TiUKJcVhoI8d1imxQysm83VfzaJcEOyA=
+        b=hpyh9QYGKWI8KxekHlZEznWAye5AT42lFqTkIIN3AIfLyT/3v7GVYqUlpccrCY0Rg
+         y1bVtcBhPTJXIrIV4/YqW3nouUI1vfsKA0b1/Y4U9q5sUps8DpurPIrGyQ4zfRdL57
+         bQ13JQj3M+InCKc504K7Vbey9B6M/K9fyN3KCRlQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Francesco Ruggeri <fruggeri@arista.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.9 135/199] ACPI: OSL: only free map once in osl.c
-Date:   Thu, 19 Dec 2019 19:33:37 +0100
-Message-Id: <20191219183222.569036787@linuxfoundation.org>
+        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.9 140/199] mmc: host: omap_hsmmc: add code for special init of wl1251 to get rid of pandora_wl1251_init_card
+Date:   Thu, 19 Dec 2019 19:33:42 +0100
+Message-Id: <20191219183222.905360029@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,111 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Francesco Ruggeri <fruggeri@arista.com>
+From: H. Nikolaus Schaller <hns@goldelico.com>
 
-commit 833a426cc471b6088011b3d67f1dc4e147614647 upstream.
+commit f6498b922e57aecbe3b7fa30a308d9d586c0c369 upstream.
 
-acpi_os_map_cleanup checks map->refcount outside of acpi_ioremap_lock
-before freeing the map. This creates a race condition the can result
-in the map being freed more than once.
-A panic can be caused by running
+Pandora_wl1251_init_card was used to do special pdata based
+setup of the sdio mmc interface. This does no longer work with
+v4.7 and later. A fix requires a device tree based mmc3 setup.
 
-for ((i=0; i<10; i++))
-do
-        for ((j=0; j<100000; j++))
-        do
-                cat /sys/firmware/acpi/tables/data/BERT >/dev/null
-        done &
-done
+Therefore we move the special setup to omap_hsmmc.c instead
+of calling some pdata supplied init_card function.
 
-This patch makes sure that only the process that drops the reference
-to 0 does the freeing.
+The new code checks for a DT child node compatible to wl1251
+so it will not affect other MMC3 use cases.
 
-Fixes: b7c1fadd6c2e ("ACPI: Do not use krefs under a mutex in osl.c")
-Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
-Reviewed-by: Dmitry Safonov <0x7f454c46@gmail.com>
-Cc: All applicable <stable@vger.kernel.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Generally, this code was and still is a hack and should be
+moved to mmc core to e.g. read such properties from optional
+DT child nodes.
+
+Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Cc: <stable@vger.kernel.org> # v4.7+
+[Ulf: Fixed up some checkpatch complaints]
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/osl.c |   28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ drivers/mmc/host/omap_hsmmc.c |   30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
---- a/drivers/acpi/osl.c
-+++ b/drivers/acpi/osl.c
-@@ -375,19 +375,21 @@ void *__ref acpi_os_map_memory(acpi_phys
- }
- EXPORT_SYMBOL_GPL(acpi_os_map_memory);
+--- a/drivers/mmc/host/omap_hsmmc.c
++++ b/drivers/mmc/host/omap_hsmmc.c
+@@ -1700,6 +1700,36 @@ static void omap_hsmmc_init_card(struct
  
--static void acpi_os_drop_map_ref(struct acpi_ioremap *map)
-+/* Must be called with mutex_lock(&acpi_ioremap_lock) */
-+static unsigned long acpi_os_drop_map_ref(struct acpi_ioremap *map)
- {
--	if (!--map->refcount)
-+	unsigned long refcount = --map->refcount;
+ 	if (mmc_pdata(host)->init_card)
+ 		mmc_pdata(host)->init_card(card);
++	else if (card->type == MMC_TYPE_SDIO ||
++		 card->type == MMC_TYPE_SD_COMBO) {
++		struct device_node *np = mmc_dev(mmc)->of_node;
 +
-+	if (!refcount)
- 		list_del_rcu(&map->list);
-+	return refcount;
++		/*
++		 * REVISIT: should be moved to sdio core and made more
++		 * general e.g. by expanding the DT bindings of child nodes
++		 * to provide a mechanism to provide this information:
++		 * Documentation/devicetree/bindings/mmc/mmc-card.txt
++		 */
++
++		np = of_get_compatible_child(np, "ti,wl1251");
++		if (np) {
++			/*
++			 * We have TI wl1251 attached to MMC3. Pass this
++			 * information to the SDIO core because it can't be
++			 * probed by normal methods.
++			 */
++
++			dev_info(host->dev, "found wl1251\n");
++			card->quirks |= MMC_QUIRK_NONSTD_SDIO;
++			card->cccr.wide_bus = 1;
++			card->cis.vendor = 0x104c;
++			card->cis.device = 0x9066;
++			card->cis.blksize = 512;
++			card->cis.max_dtr = 24000000;
++			card->ocr = 0x80;
++			of_node_put(np);
++		}
++	}
  }
  
- static void acpi_os_map_cleanup(struct acpi_ioremap *map)
- {
--	if (!map->refcount) {
--		synchronize_rcu_expedited();
--		acpi_unmap(map->phys, map->virt);
--		kfree(map);
--	}
-+	synchronize_rcu_expedited();
-+	acpi_unmap(map->phys, map->virt);
-+	kfree(map);
- }
- 
- /**
-@@ -407,6 +409,7 @@ static void acpi_os_map_cleanup(struct a
- void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size)
- {
- 	struct acpi_ioremap *map;
-+	unsigned long refcount;
- 
- 	if (!acpi_gbl_permanent_mmap) {
- 		__acpi_unmap_table(virt, size);
-@@ -420,10 +423,11 @@ void __ref acpi_os_unmap_iomem(void __io
- 		WARN(true, PREFIX "%s: bad address %p\n", __func__, virt);
- 		return;
- 	}
--	acpi_os_drop_map_ref(map);
-+	refcount = acpi_os_drop_map_ref(map);
- 	mutex_unlock(&acpi_ioremap_lock);
- 
--	acpi_os_map_cleanup(map);
-+	if (!refcount)
-+		acpi_os_map_cleanup(map);
- }
- EXPORT_SYMBOL_GPL(acpi_os_unmap_iomem);
- 
-@@ -464,6 +468,7 @@ void acpi_os_unmap_generic_address(struc
- {
- 	u64 addr;
- 	struct acpi_ioremap *map;
-+	unsigned long refcount;
- 
- 	if (gas->space_id != ACPI_ADR_SPACE_SYSTEM_MEMORY)
- 		return;
-@@ -479,10 +484,11 @@ void acpi_os_unmap_generic_address(struc
- 		mutex_unlock(&acpi_ioremap_lock);
- 		return;
- 	}
--	acpi_os_drop_map_ref(map);
-+	refcount = acpi_os_drop_map_ref(map);
- 	mutex_unlock(&acpi_ioremap_lock);
- 
--	acpi_os_map_cleanup(map);
-+	if (!refcount)
-+		acpi_os_map_cleanup(map);
- }
- EXPORT_SYMBOL(acpi_os_unmap_generic_address);
- 
+ static void omap_hsmmc_enable_sdio_irq(struct mmc_host *mmc, int enable)
 
 
