@@ -2,113 +2,96 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B31E5C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DB6C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA2A222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:28:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qiLztxrZ"
+	by mail.kernel.org (Postfix) with ESMTP id 459BD24650
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:32:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576733567;
+	bh=3TqDyq33bDOA1DBAAdKO4OY8wnBgiYZgW9/buyRHLqc=;
+	h=In-Reply-To:References:Cc:Subject:From:To:Date:List-ID:From;
+	b=ojPL+gTw1swDEME3IhfQxM3TIL6eCyxLV9A5caqo8qoAKCzN4OMufo3LbbbJHpGAO
+	 uQdqwjBuSttJWgDcHktt6B+Pq893U058aj9Tw0OoQeaipR6e/zix4rK9qSg98BFj4R
+	 rlHLcqPxMDYVJkIqyUwIw2IQUikpVjB8h1D5sTGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfLSF2t (ORCPT
+        id S1726840AbfLSFcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 00:28:49 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38241 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbfLSF2s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 00:28:48 -0500
-Received: by mail-pf1-f193.google.com with SMTP id x185so2531853pfc.5;
-        Wed, 18 Dec 2019 21:28:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lWOehvqpXv6OawJrlmRDByhBUZ+tWPDIeTBZc/6GCfQ=;
-        b=qiLztxrZMsI9XLuisxdv0QIs5ojPlPFLlGH1KBeFxij5Kvfk4r+LDXcJyOGzUBRoVT
-         3cuS3GoP+j5+kgQM6jobGYKl3lRufCq+2VL1ovUkBtyT7To001eRSD7hefvVj8oNeeGB
-         KlqK/eEl0iFN2yOPedfqa3F/1ADCzfk09o0D5YizkuQGGlRDePgcSDcNDKNSosYqtQp1
-         L3vu4zpg2JAZ6XNRoIhdX0Fg41SFkyc2/p/FGGTcPeDDoXzGwxqg0qGGCl67RASYsDdU
-         8Z80zMOXxg50eYj5c4jgjkqFS0N/vJoFl019Zyty40mSp33FZrqKO+/+2ewYG8WnxlA8
-         B7xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lWOehvqpXv6OawJrlmRDByhBUZ+tWPDIeTBZc/6GCfQ=;
-        b=uPdebBpKAt88SXTa0wlPznQ7LFN5i0cMZXQtZbSLvcDNDcHHXmCYWmYFTY6tOQDJ3G
-         1SYDBUVTGowgiXnc23SNYMzt7RjPUnOsEpHXhKr7YkFCTLDjJn0beaS8rO89ZVd8Hrko
-         Ics8fsRm+ckGwdSAWQA8MKeSo6dZ1Kbxd7PEJVaQBR06g49ANJ8vzMJ5hTxyj00NILxO
-         tfeejyx+gkLj4V6uC3ribFnhAaZ0+Yg5/MjOwf+QscifZKkUv9BRb9HuxrKb9Yi8ePB2
-         9BPIsFE93vArD1Smd/XdAw856/BG25L6qcMwoIkLIL6ihP89NxrfVtqp/fa8+YU/nY4q
-         r1sw==
-X-Gm-Message-State: APjAAAXsIviISXrCcZrX1QF4MHdzgCpjJurvEglWeSVi/TS1qkeXUkpx
-        /8MOF2/50ipQrf6eolBDQ2o+eIbgtPU=
-X-Google-Smtp-Source: APXvYqzGeo5jRRDBKjCYPgpdsBTeYU9wvWq7UqMVJVQnl/d5yhSP0a36sKDjfd5cEC5gGaYgT9Nquw==
-X-Received: by 2002:a63:5950:: with SMTP id j16mr7441814pgm.314.1576733327995;
-        Wed, 18 Dec 2019 21:28:47 -0800 (PST)
-Received: from vipul.mgc.mentorg.com (nat-sch.mentorg.com. [139.181.36.34])
-        by smtp.googlemail.com with ESMTPSA id j22sm4818129pji.16.2019.12.18.21.28.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 21:28:47 -0800 (PST)
-From:   Vipul Kumar <vipulk0511@gmail.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Stable <stable@vger.kernel.org>,
-        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
-        Vipul Kumar <vipul_kumar@mentor.com>,
-        Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>,
-        Vipul Kumar <vipulk0511@gmail.com>
-Subject: [V2] x86/tsc: Unset TSC_KNOWN_FREQ and TSC_RELIABLE flags on Intel Bay Trail SoC
-Date:   Thu, 19 Dec 2019 10:58:25 +0530
-Message-Id: <20191219052825.4146-1-vipulk0511@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 19 Dec 2019 00:32:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725821AbfLSFcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 00:32:46 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88D3A222C2;
+        Thu, 19 Dec 2019 05:32:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576733564;
+        bh=3TqDyq33bDOA1DBAAdKO4OY8wnBgiYZgW9/buyRHLqc=;
+        h=In-Reply-To:References:Cc:Subject:From:To:Date:From;
+        b=PcpMTHNRau9NZL1ZlOqBXpdNprIkeT+kV7OT+iz0x+RJP2h9jWZkg8d/Ht+9GNZj+
+         UiO1w/+mRpxc2YSTdgWcO+6kWc8/wdbw+wjqaQlFhizz8oo1FVpNDlOM3twBK4b2cx
+         7z3B5lV256lAwcJJQ5d76sOQLf/9V/gCQhEsgZsY=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <0101016eab0a4e76-b8eb44c5-d076-46b9-a156-b80dc650ca31-000000@us-west-2.amazonses.com>
+References: <1573812304-24074-1-git-send-email-tdas@codeaurora.org> <1573812304-24074-4-git-send-email-tdas@codeaurora.org> <CAOCk7NqfHe6jRPmw6o650fyd6EyVfFObHhJ9=21ipuAqJo6oGA@mail.gmail.com> <20191126181154.275EA20727@mail.kernel.org> <0101016eab0a4e76-b8eb44c5-d076-46b9-a156-b80dc650ca31-000000@us-west-2.amazonses.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        MSM <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 3/8] dt-bindings: clock: Add YAML schemas for the QCOM GPUCC clock bindings
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Taniya Das <tdas@codeaurora.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 18 Dec 2019 21:32:43 -0800
+Message-Id: <20191219053244.88D3A222C2@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vipul Kumar <vipul_kumar@mentor.com>
+Quoting Taniya Das (2019-11-26 20:06:49)
+>=20
+>=20
+> On 11/26/2019 11:41 PM, Stephen Boyd wrote:
+> > Quoting Jeffrey Hugo (2019-11-15 07:11:01)
+> >> On Fri, Nov 15, 2019 at 3:07 AM Taniya Das <tdas@codeaurora.org> wrote:
+> >>> diff --git a/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml =
+b/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
+> >>> new file mode 100644
+> >>> index 0000000..c2d6243
+> >>> --- /dev/null
+> >>> +++ b/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
+> >>> +      - description: GPLL0 source from GCC
+> >>
+> >> This is not an accurate conversion.  GPLL0 was not valid for 845, and
+> >> is required for 8998.
+> >=20
+> > Thanks for checking Jeff.
+> >=20
+> > It looks like on 845 there are two gpll0 clocks going to gpucc. From
+> > gpu_cc_parent_map_0:
+> >=20
+> >       "gcc_gpu_gpll0_clk_src",
+> >       "gcc_gpu_gpll0_div_clk_src",
+> >=20
+>=20
+> There are branches of GPLL0 which would be connected to most external=20
+> CCs. It is upto to the external CCs to either use them to source a=20
+> frequency or not.
 
-'commit f3a02ecebed7 ("x86/tsc: Set TSC_KNOWN_FREQ and TSC_RELIABLE
-flags on Intel Atom SoCs")', causing time drift for Bay trail SoC.
-These flags are set for SoCs having cpuid_level 0x15 or more.
-Bay trail is having cpuid_level 0xb.
-
-So, unset both flags to make sure the clocksource calibration can
-be done.
-
-Signed-off-by: Vipul Kumar <vipul_kumar@mentor.com>
-Cc: <stable@vger.kernel.org> # 4.14+
----
-- Changes in v2:
-- Added linux-stable along with kernel version in CC
----
- arch/x86/kernel/tsc_msr.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/x86/kernel/tsc_msr.c b/arch/x86/kernel/tsc_msr.c
-index e0cbe4f2af49..1ca27c28db98 100644
---- a/arch/x86/kernel/tsc_msr.c
-+++ b/arch/x86/kernel/tsc_msr.c
-@@ -112,6 +112,9 @@ unsigned long cpu_khz_from_msr(void)
- 	lapic_timer_period = (freq * 1000) / HZ;
- #endif
- 
-+	if (boot_cpu_data.cpuid_level < 0x15)
-+		return res;
-+
- 	/*
- 	 * TSC frequency determined by MSR is always considered "known"
- 	 * because it is reported by HW.
--- 
-2.20.1
+Yes, they can decide to use them or not, but they really do go to the
+CCs so the DT should describe that.
 
