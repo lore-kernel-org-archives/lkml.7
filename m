@@ -2,52 +2,53 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 051A3C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8D6C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1CC7227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7933227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:12:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782728;
-	bh=zNdlusR2Sv4avD7h8Dyy/P2eJzLsf8rNV+gSpzi0RJ4=;
+	s=default; t=1576782732;
+	bh=qyRQK2XNFhzNTl1dttZTfXeag5fD1ibX+yF6N58wdvU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DHVsDN0gcQdug+omQlBSqHm0zZnih4xE6Jxm5pjuIYR2BQmFQ14VcFY6QtGR2CiUQ
-	 YQ9cae7fYlEkrZ82dzwLm3ajBrIhETr7akvwvvJp3rM4gKyub6uFt1SAT5c67h2y5L
-	 DgcPRL5cS7roQYPVsaU9JpnaWD2Z3FNBNzzDWKTk=
+	b=Xn5Fjy3DAAwGHzfI175iDsNLgxS10aHcFzZ5uSjaCmdiqlTxVa14jFjJGb/P6gcO+
+	 BRmwzEKDYsaNx4g2gxZO6yn4E3i0ovtD/I7YxKmtn0tVTjD3KZQewG4HOOIGgqTcSA
+	 SbSFCvVoWO/OrATQqzMFnaYZQhi99ajV3ZamwHpo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbfLSTMH (ORCPT
+        id S1727298AbfLSShN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:12:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54918 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:37:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727803AbfLSShW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:37:22 -0500
+        id S1727750AbfLSShK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:37:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B274E24679;
-        Thu, 19 Dec 2019 18:37:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A99DA2467F;
+        Thu, 19 Dec 2019 18:37:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780642;
-        bh=zNdlusR2Sv4avD7h8Dyy/P2eJzLsf8rNV+gSpzi0RJ4=;
+        s=default; t=1576780630;
+        bh=qyRQK2XNFhzNTl1dttZTfXeag5fD1ibX+yF6N58wdvU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ikpc+S8woOAom0rPWmvXpIH38wu2TV1oJidmRlpv+tvDuam93NXAdiJcfYb9OD3i5
-         lH0VtIb2lnxY2Wui0I+WHz83Hp4tLehthwPYVQrGC0tmPKHFnAI77Z07qhiZarAC+j
-         JZdnyBEc1qcZpazmpl70d2Zy6Sl6vyCO6EwAVgNE=
+        b=Njj56N4+tp4l7oN0hL46LGbxammfIuNV+yeeYdy+yM62JO/LromhUncKEgXU1vyXF
+         0L/P+A0koVGn/EH+WfFlAzzTf93doC8M8zY6LwM3oO1lMaLm1zwgJrMyouLV8WtQCS
+         7IbC67ML7KAG8je0Dn+Nd57NnOatsnZ1e7ZJPzII=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.4 057/162] Input: goodix - add upside-down quirk for Teclast X89 tablet
-Date:   Thu, 19 Dec 2019 19:32:45 +0100
-Message-Id: <20191219183211.343179482@linuxfoundation.org>
+        stable@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 052/162] ARM: dts: sunxi: Fix PMU compatible strings
+Date:   Thu, 19 Dec 2019 19:32:40 +0100
+Message-Id: <20191219183211.060566900@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -60,43 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Rob Herring <robh@kernel.org>
 
-commit df5b5e555b356662a5e4a23c6774fdfce8547d54 upstream.
+[ Upstream commit 5719ac19fc32d892434939c1756c2f9a8322e6ef ]
 
-The touchscreen on the Teclast X89 is mounted upside down in relation to
-the display orientation (the touchscreen itself is mounted upright, but the
-display is mounted upside-down). Add a quirk for this so that we send
-coordinates which match the display orientation.
+"arm,cortex-a15-pmu" is not a valid fallback compatible string for an
+Cortex-A7 PMU, so drop it.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Bastien Nocera <hadess@hadess.net>
-Link: https://lore.kernel.org/r/20191202085636.6650-1-hdegoede@redhat.com
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Acked-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/touchscreen/goodix.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/sun6i-a31.dtsi | 2 +-
+ arch/arm/boot/dts/sun7i-a20.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/input/touchscreen/goodix.c
-+++ b/drivers/input/touchscreen/goodix.c
-@@ -69,6 +69,15 @@ static const unsigned long goodix_irq_fl
- static const struct dmi_system_id rotated_screen[] = {
- #if defined(CONFIG_DMI) && defined(CONFIG_X86)
- 	{
-+		.ident = "Teclast X89",
-+		.matches = {
-+			/* tPAD is too generic, also match on bios date */
-+			DMI_MATCH(DMI_BOARD_VENDOR, "TECLAST"),
-+			DMI_MATCH(DMI_BOARD_NAME, "tPAD"),
-+			DMI_MATCH(DMI_BIOS_DATE, "12/19/2014"),
-+		},
-+	},
-+	{
- 		.ident = "WinBook TW100",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "WinBook"),
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+index b6ad7850fac69..698970d0281f3 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -167,7 +167,7 @@
+ 	};
+ 
+ 	pmu {
+-		compatible = "arm,cortex-a7-pmu", "arm,cortex-a15-pmu";
++		compatible = "arm,cortex-a7-pmu";
+ 		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index e02eb720c4fc1..a7b4dbda1a878 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -167,7 +167,7 @@
+ 	};
+ 
+ 	pmu {
+-		compatible = "arm,cortex-a7-pmu", "arm,cortex-a15-pmu";
++		compatible = "arm,cortex-a7-pmu";
+ 		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
+ 	};
+-- 
+2.20.1
+
 
 
