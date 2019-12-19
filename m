@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 935C8C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7C5C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AE3124676
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2C6924679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781310;
-	bh=YU3DxByc+F69niV6pf6clyyEWdlANzDaTxDs6Yqk0Ts=;
+	s=default; t=1576781313;
+	bh=2W/pubB/NGofUWGdwzpKRkBMf3PPruaJEe5OyHSlTYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V1DsTRC3yXQ35f67BMoMzktwXB9qORZxOOB4VlzhKA6VmsN3h8mb1cKIL8UfLUrtp
-	 7t46v9IGAKTwAcKnKVaWev2l39eoi7hBwRRiIz0XW6Lw6TXrXB/NBgl3isBxIP4Utn
-	 ezaNQzOQCcutIXEzAbDMZ5UhkXzTkIotTtW4xyj8=
+	b=CdX8d5KIrmAlMw0J/7QHSYzdja57Hm+9DORN2IAaaWaqHaxXxy4hDoyKEK1wbWXn9
+	 tVXi3BFQPtrQ2uqd9pmIRLp7MEI3df22XjJihZP7A/k6+XcBmaNy6+8C0BsbmADwIb
+	 gzwDDJJkJM8YA66TC1kW37luKBK3ww05G4CO8Aqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729637AbfLSSs3 (ORCPT
+        id S1729647AbfLSSsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:48:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41562 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:48:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729630AbfLSSs0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:48:26 -0500
+        id S1729032AbfLSSs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:48:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71C5E2465E;
-        Thu, 19 Dec 2019 18:48:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF36524672;
+        Thu, 19 Dec 2019 18:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781305;
-        bh=YU3DxByc+F69niV6pf6clyyEWdlANzDaTxDs6Yqk0Ts=;
+        s=default; t=1576781308;
+        bh=2W/pubB/NGofUWGdwzpKRkBMf3PPruaJEe5OyHSlTYM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PpHRFZAaFcPRC9nnxTKv+h0DgjUDStFm1We4z47dw9/Ums07NDMeuXNi9hdwvfLq4
-         VEfKqIVgf78I0kG0OA8QI8LFUUMZgyRpTFK5t8KqZSorUVTESTvUwCjhQwlvsYp4gb
-         M/ayCYHvTLkhva7MBXfiHsQhGuodAk93shAgej9c=
+        b=2lMqCNGcHvHivLeecvUTUi3I0fnDzZNpezyt1egh3YtZ3GKtKlQN7vR3HDmYjDRGE
+         3mUDwLE8GUC1kFtm94Z1M64pyEypo154Pzkrcr5Qd8RZvUthewqeUGgx/JBktr/MID
+         z0fDY6C3j4q42kuU6740TrvPEERUIXpL6xhTwVqs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        "Williams, Gerald S" <gerald.s.williams@intel.com>,
-        NeilBrown <neilb@suse.de>
-Subject: [PATCH 4.9 126/199] workqueue: Fix pwq ref leak in rescuer_thread()
-Date:   Thu, 19 Dec 2019 19:33:28 +0100
-Message-Id: <20191219183221.957027353@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Pawel Harlozinski <pawel.harlozinski@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.9 127/199] ASoC: Jack: Fix NULL pointer dereference in snd_soc_jack_report
+Date:   Thu, 19 Dec 2019 19:33:29 +0100
+Message-Id: <20191219183222.025663297@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,60 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Pawel Harlozinski <pawel.harlozinski@linux.intel.com>
 
-commit e66b39af00f426b3356b96433d620cb3367ba1ff upstream.
+commit 8f157d4ff039e03e2ed4cb602eeed2fd4687a58f upstream.
 
-008847f66c3 ("workqueue: allow rescuer thread to do more work.") made
-the rescuer worker requeue the pwq immediately if there may be more
-work items which need rescuing instead of waiting for the next mayday
-timer expiration.  Unfortunately, it doesn't check whether the pwq is
-already on the mayday list and unconditionally gets the ref and moves
-it onto the list.  This doesn't corrupt the list but creates an
-additional reference to the pwq.  It got queued twice but will only be
-removed once.
+Check for existance of jack before tracing.
+NULL pointer dereference has been reported by KASAN while unloading
+machine driver (snd_soc_cnl_rt274).
 
-This leak later can trigger pwq refcnt warning on workqueue
-destruction and prevent freeing of the workqueue.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: "Williams, Gerald S" <gerald.s.williams@intel.com>
-Cc: NeilBrown <neilb@suse.de>
-Cc: stable@vger.kernel.org # v3.19+
+Signed-off-by: Pawel Harlozinski <pawel.harlozinski@linux.intel.com>
+Link: https://lore.kernel.org/r/20191112130237.10141-1-pawel.harlozinski@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/workqueue.c |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ sound/soc/soc-jack.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -2344,8 +2344,14 @@ repeat:
- 			 */
- 			if (need_to_create_worker(pool)) {
- 				spin_lock(&wq_mayday_lock);
--				get_pwq(pwq);
--				list_move_tail(&pwq->mayday_node, &wq->maydays);
-+				/*
-+				 * Queue iff we aren't racing destruction
-+				 * and somebody else hasn't queued it already.
-+				 */
-+				if (wq->rescuer && list_empty(&pwq->mayday_node)) {
-+					get_pwq(pwq);
-+					list_add_tail(&pwq->mayday_node, &wq->maydays);
-+				}
- 				spin_unlock(&wq_mayday_lock);
- 			}
- 		}
-@@ -4358,7 +4364,8 @@ static void show_pwq(struct pool_workque
- 	pr_info("  pwq %d:", pool->id);
- 	pr_cont_pool_info(pool);
+--- a/sound/soc/soc-jack.c
++++ b/sound/soc/soc-jack.c
+@@ -80,10 +80,9 @@ void snd_soc_jack_report(struct snd_soc_
+ 	unsigned int sync = 0;
+ 	int enable;
  
--	pr_cont(" active=%d/%d%s\n", pwq->nr_active, pwq->max_active,
-+	pr_cont(" active=%d/%d refcnt=%d%s\n",
-+		pwq->nr_active, pwq->max_active, pwq->refcnt,
- 		!list_empty(&pwq->mayday_node) ? " MAYDAY" : "");
+-	trace_snd_soc_jack_report(jack, mask, status);
+-
+ 	if (!jack)
+ 		return;
++	trace_snd_soc_jack_report(jack, mask, status);
  
- 	hash_for_each(pool->busy_hash, bkt, worker, hentry) {
+ 	dapm = &jack->card->dapm;
+ 
 
 
