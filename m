@@ -2,160 +2,77 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43789C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCADC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14201206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:24:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576772671;
-	bh=zprs3MsAhkDCm5qTo4PhpgYdUo3cuMPRfp7uXJupRLM=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=NHG5JlyNri9q1XA3krh4ohlK1eXjddvTQQUImfgJCK04Qdn67/h4MxP2Z71tReIo9
-	 dt9dTh17gn9vf8IuT0ei4djvZC+cY49pBY+KjnIBwPUyPLtTATNb7e3xHu79JmlTO6
-	 H1ShFpg6ZszmEJWmrY0PtEzuNmumW9cCCBwUn6kE=
+	by mail.kernel.org (Postfix) with ESMTP id 497A924672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:26:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfLSQYa (ORCPT
+        id S1726905AbfLSQ0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 11:24:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34850 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 11:26:01 -0500
+Received: from ms.lwn.net ([45.79.88.28]:37082 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726776AbfLSQY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 11:24:29 -0500
-Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        id S1726760AbfLSQ0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 11:26:01 -0500
+Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E39C24672;
-        Thu, 19 Dec 2019 16:24:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576772668;
-        bh=zprs3MsAhkDCm5qTo4PhpgYdUo3cuMPRfp7uXJupRLM=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=atTfri11fYJdO91jCcT6CUbiMO8EKdsSgtwqqEEkXhCc1uN0O3rTFLvlMfxUw6pQv
-         sxAPwfScfi39cHweBXY8XvLVcfthorSp68/hPYoial11ukIQ89UQsSNtL0k0rP0Ya3
-         NBECl2oSN9dxlliqyg9nidLM5OJZneSp5vE8tlh0=
-Message-ID: <1576772667.2236.17.camel@kernel.org>
-Subject: Re: [PATCH 0/7] tracing: Add support for in-kernel synthetic event
- API
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     rostedt@goodmis.org, artem.bityutskiy@linux.intel.com,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Date:   Thu, 19 Dec 2019 10:24:27 -0600
-In-Reply-To: <20191219234511.bb499b3d1590059506db6982@kernel.org>
-References: <cover.1576679206.git.zanussi@kernel.org>
-         <20191219234511.bb499b3d1590059506db6982@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        by ms.lwn.net (Postfix) with ESMTPSA id 44658382;
+        Thu, 19 Dec 2019 16:26:00 +0000 (UTC)
+Date:   Thu, 19 Dec 2019 09:25:59 -0700
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [PATCH] Documentation: x86: fix boot.rst warning and format
+Message-ID: <20191219092559.5260d151@lwn.net>
+In-Reply-To: <c6fbf592-0aca-69d9-e903-e869221a041a@infradead.org>
+References: <c6fbf592-0aca-69d9-e903-e869221a041a@infradead.org>
+Organization: LWN.net
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masami,
+On Sun, 8 Dec 2019 20:25:10 -0800
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-On Thu, 2019-12-19 at 23:45 +0900, Masami Hiramatsu wrote:
-> Hello Tom,
+> Fix a Sphinx documentation format warning by breaking a long line
+> into 2 lines.
 > 
-> On Wed, 18 Dec 2019 09:27:36 -0600
-> Tom Zanussi <zanussi@kernel.org> wrote:
+> Also drop the ':' usage after the Protocol version numbers since
+> other Protocol versions don't use colons.
 > 
-> > Hi,
-> > 
-> > I've recently had several requests and suggestions from users to
-> > add
-> > support for the creation and generation of synthetic events from
-> > kernel code such as modules, and not just from the available
-> > command
-> > line commands.
+> Documentation/x86/boot.rst:72: WARNING: Malformed table.
+> Text in column margin in table line 57.
 > 
-> This reminds me my recent series of patches.
-> 
-> Could you use synth_event_run_command() for this purpose as I did
-> in boot-time tracing series?
-> 
-> https://lkml.kernel.org/r/157528179955.22451.16317363776831311868.stg
-> it@devnote2
-> 
-> Above example uses a command string as same as command string, but I
-> think
-> we can introduce some macros to construct the command string for
-> easier
-> definition.
-> 
-> Or maybe it is possible to pass the const char *args[] array to that
-> API,
-> instead of single char *cmd. (for dynamic event definiton)
-> 
-> Maybe we should consider more generic APIs for modules to
-> create/delete
-> dynamic-event including synthetic and probes, and those might reuse
-> existing command parsers.
-> 
+> Fixes: 2c33c27fd603 ("x86/boot: Introduce kernel_info")
+> Fixes: 00cd1c154d56 ("x86/boot: Introduce kernel_info.setup_type_max")
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: linux-doc@vger.kernel.org
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: x86@kernel.org
+> Cc: Daniel Kiper <daniel.kiper@oracle.com>
+> ---
+>  Documentation/x86/boot.rst |    5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 
-I'll have to look at your patches more closely, but I think it should
-be possible to generate the command string synth_event_run_command()
-needs, or the equivalent const char *args[] array you mentioned, from
-the higher-level event definition in my patches.
+Applied, thanks.
 
-So the two ways of defining an event in my patches is 1) from a static
-array known at build-time defined like this:
-
-  static struct synth_field_desc synthtest_fields[] = {
-       { .type = "pid_t",              .name = "next_pid_field" },
-       { .type = "char[16]",           .name = "next_comm_field" },
-       { .type = "u64",                .name = "ts_ns" },
-       { .type = "u64",                .name = "ts_ms" },
-       { .type = "unsigned int",       .name = "cpu" },
-       { .type = "char[64]",           .name = "my_string_field" },
-       { .type = "int",                .name = "my_int_field" },
-  };
-
-which is then passed to create_synth_event(&synthtest_fields)
-
-or 2) at run-time by adding fields individually as they become known:
-
-  add_synth_field("type", "name")
-
-which requires some sort of start/end("event name").
-
-I think that should all be possible using your patches, and maybe
-generalizable to not just synth events by removing _synth_ from
-everything?  Let me know what you think.  If that's correct, I can go
-and rewrite the event creation part on top of your patches.
-
-> > This patchset adds support for that.  The first three patches add
-> > some
-> > minor preliminary setup, followed by the two main patches that add
-> > the
-> > ability to create and generate synthetic events from the
-> > kernel.  The
-> > next patch adds a test module that demonstrates actual use of the
-> > API
-> > and verifies that it works as intended, followed by Documentation.
-> 
-> Could you also check the locks are correctly acquired? It seems that
-> your APIs doesn't lock it.
-> 
-
-I did notice that I said that trace_types_lock and event_mutex should
-be held for trace_array_find() but it should only be trace_types_lock,
-and then I missed doing that in get_event_file() in one place.  And I
-also don't really need the nolock versions, so will simplify and remove
-them.  I think elsewhere event_mutex is taken where needed.  But if
-talking about something else, please let me know.
-
-Thanks,
-
-Tom
-
-> 
-> Thank you,
-> 
-> 
+jon
