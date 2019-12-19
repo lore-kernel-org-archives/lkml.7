@@ -2,311 +2,142 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7359C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86309C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7484F20716
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:15:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K111hXBF"
+	by mail.kernel.org (Postfix) with ESMTP id 61D2C20716
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:15:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfLSMPS (ORCPT
+        id S1726882AbfLSMPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 07:15:18 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:60699 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726708AbfLSMPS (ORCPT
+        Thu, 19 Dec 2019 07:15:24 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:49619 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726668AbfLSMPW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 07:15:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576757716;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bwteTCqO+mZi96HO2yiYUl6ee0bLkbJPNd/nB67orPw=;
-        b=K111hXBFikRJE6ADum7dj+3Be5/5vJLAe1VTr7xesAmCBqcSujx26LLbqoeIH0Xoyp9Nyi
-        U4gwzYS/HRUbwMsBya6ij/BZsmgcpN2PZAwmlsS+y1SZ3hGa/ZFHotPm6isG8Al+kATK0H
-        dPFUjEZRt+zPfL14VqQ560y25dhwFYQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-143-zpb069LyMcKDp20xgdC-mA-1; Thu, 19 Dec 2019 07:15:10 -0500
-X-MC-Unique: zpb069LyMcKDp20xgdC-mA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 79A75800EB8;
-        Thu, 19 Dec 2019 12:15:08 +0000 (UTC)
-Received: from carbon (ovpn-200-37.brq.redhat.com [10.40.200.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7F4731001281;
-        Thu, 19 Dec 2019 12:15:02 +0000 (UTC)
-Date:   Thu, 19 Dec 2019 13:15:00 +0100
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Yunsheng Lin <linyunsheng@huawei.com>
-Cc:     <netdev@vger.kernel.org>, <lirongqing@baidu.com>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Saeed Mahameed <saeedm@mellanox.com>, <mhocko@kernel.org>,
-        <peterz@infradead.org>, <linux-kernel@vger.kernel.org>,
-        brouer@redhat.com
-Subject: Re: [net-next v4 PATCH] page_pool: handle page recycle for
- NUMA_NO_NODE condition
-Message-ID: <20191219131500.47970427@carbon>
-In-Reply-To: <40fb6aff-beec-f186-2bc0-187ad370cf0b@huawei.com>
-References: <20191218084437.6db92d32@carbon>
-        <157665609556.170047.13435503155369210509.stgit@firesoul>
-        <40fb6aff-beec-f186-2bc0-187ad370cf0b@huawei.com>
+        Thu, 19 Dec 2019 07:15:22 -0500
+Received: from mail-qt1-f180.google.com ([209.85.160.180]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MirfG-1i5ZgJ30Vg-00exGF; Thu, 19 Dec 2019 13:15:19 +0100
+Received: by mail-qt1-f180.google.com with SMTP id q20so4865171qtp.3;
+        Thu, 19 Dec 2019 04:15:19 -0800 (PST)
+X-Gm-Message-State: APjAAAU2ozyKe1HKrRDr4/+bTdOo+BZBhvLR0n6tXjhJH6yTp66+ccmq
+        959YKNQhp8FJOjifitsupAIvhcWUxa37I12tWjs=
+X-Google-Smtp-Source: APXvYqzBJaTMUPYhRE1yI60oc1+7sq5M0T66IfZX2Nf0hnuyPkKbQDZSiXOuH7DY+joNcZzsJrZtnzD3uIY4JdbWGfE=
+X-Received: by 2002:ac8:47d3:: with SMTP id d19mr6556062qtr.142.1576757718254;
+ Thu, 19 Dec 2019 04:15:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <20191217221708.3730997-1-arnd@arndb.de> <20191217221708.3730997-22-arnd@arndb.de>
+ <5826d31fcf2fcbe25bf2396e32df3df7d585dd99.camel@codethink.co.uk>
+In-Reply-To: <5826d31fcf2fcbe25bf2396e32df3df7d585dd99.camel@codethink.co.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 19 Dec 2019 13:15:02 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a3W+5RTa5jTunotZyV=hgXTxJaPqz_5kJnsdbvSZZPmjg@mail.gmail.com>
+Message-ID: <CAK8P3a3W+5RTa5jTunotZyV=hgXTxJaPqz_5kJnsdbvSZZPmjg@mail.gmail.com>
+Subject: Re: [PATCH v2 21/27] compat_ioctl: move cdrom commands into cdrom.c
+To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:TEDryguOcCH9gogHQGldrcRHNWTpgeIL8C4kJi51MAPgG/9mxVV
+ Rk3wyzHd4pGTUXGPm2w/KXpFoRl43u8nPX2/oMroULIcXjY9TW1HJ8+ygH5Hena4Ea+klC/
+ 9xXvZTGMjge1E86DPJTR5zSKBekB4VK7nHCTJ0fWNP93pB2DSfeoKhOfg4w80WRMn3lqAzp
+ 4vNVezU7c3PLFXQ4F3ixw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:WMG3D85XS7Y=:kQOXUFqRvWoxbmscz/tw+x
+ 6VSej/2D+FLv45TGznZknJYXn8O5k9WJO9YTvnQF9TteweSfCHkRGCSbCWU8/Y9rAqKBgOz0J
+ X8xlJ6Cp21no9Zr+4GoOrHlIzW4sMFuklW2xxXixLrMA4rTnCWOzaC0xwhkDA6NygdyuFLEpN
+ 3lnEONQ3v3NTTsZEwt9u+Knpa9C/aFjfwCjnntsDtQpq13qzRSN5nzu1wRU27RArdlHnGhB4i
+ 0y7jVtJBLN+WXK560KgN1PZR6LgPUh15HgEgvVtVxRUmVCEzkmCf/gRKt3ZvvkUiP3nhyc8W9
+ gr2LMIYImwZgl7wNuiDBX2SvX2mJ8v7AKlMcnfnD84f8lET3kyk8PIBzzmHMQbLCOtB8nZlA+
+ 9E9VyiSPQnUGbq7DJywUAAsSl6xrrTueXIysBtCgpcKAtHaAS30elfaodA19qKXrmhtBLw6HE
+ Gs+hIwWWJB3WlfkYtM236Bfwg6JIcdSMUelzXzc5N91CeYUpJrp2I4/9x/xOPbax6++9YMvBF
+ nGvOfYDDgo6Ee53pQ5++Y2fmbnQ9i00u4ADJhxaGdkl3JCSn36S6Ou6wZB6IDFIfTH4/KfT+o
+ L6uXkkF0Vlf7UfbYQOVp1SEcgVftSRC9PthPNcFG2fD6QmfybeidkM8CaN8ZuPF1Ko3ZM/V9Y
+ uLUzxJVynaZjQs7K6rKeEEQ4HE9Tl6QNOUypxmlmjI+tU9bwwh3DaPI8LDREoXJ63wV0Ob7sh
+ RMq9+1xDIVSwqS2bTm2GgMbcWWQmHq1n0lxqmen+SO24j8xBjXOaTNISHwWmStR83PsxJyi2+
+ k/unNOVE+XZ+5vhmJ55fYzAdp3wic/xZqYvy4fE/+K1vPyPdeRbfPA04kgA6LvszgkaZhA7Pz
+ 2sbCKfQ8sZA9MhpOCuUg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Dec 2019 09:52:14 +0800
-Yunsheng Lin <linyunsheng@huawei.com> wrote:
-
-> On 2019/12/18 16:01, Jesper Dangaard Brouer wrote:
-> > The check in pool_page_reusable (page_to_nid(page) == pool->p.nid) is
-> > not valid if page_pool was configured with pool->p.nid = NUMA_NO_NODE.
-> > 
-> > The goal of the NUMA changes in commit d5394610b1ba ("page_pool: Don't
-> > recycle non-reusable pages"), were to have RX-pages that belongs to the
-> > same NUMA node as the CPU processing RX-packet during softirq/NAPI. As
-> > illustrated by the performance measurements.
-> > 
-> > This patch moves the NAPI checks out of fast-path, and at the same time
-> > solves the NUMA_NO_NODE issue.
-> > 
-> > First realize that alloc_pages_node() with pool->p.nid = NUMA_NO_NODE
-> > will lookup current CPU nid (Numa ID) via numa_mem_id(), which is used
-> > as the the preferred nid.  It is only in rare situations, where
-> > e.g. NUMA zone runs dry, that page gets doesn't get allocated from
-> > preferred nid.  The page_pool API allows drivers to control the nid
-> > themselves via controlling pool->p.nid.
-> > 
-> > This patch moves the NAPI check to when alloc cache is refilled, via
-> > dequeuing/consuming pages from the ptr_ring. Thus, we can allow placing
-> > pages from remote NUMA into the ptr_ring, as the dequeue/consume step
-> > will check the NUMA node. All current drivers using page_pool will
-> > alloc/refill RX-ring from same CPU running softirq/NAPI process.
-> > 
-> > Drivers that control the nid explicitly, also use page_pool_update_nid
-> > when changing nid runtime.  To speed up transision to new nid the alloc
-> > cache is now flushed on nid changes.  This force pages to come from
-> > ptr_ring, which does the appropate nid check.
-> > 
-> > For the NUMA_NO_NODE case, when a NIC IRQ is moved to another NUMA
-> > node, then ptr_ring will be emptied in 65 (PP_ALLOC_CACHE_REFILL+1)
-> > chunks per allocation and allocation fall-through to the real
-> > page-allocator with the new nid derived from numa_mem_id(). We accept
-> > that transitioning the alloc cache doesn't happen immediately.
-> > 
-> > Fixes: d5394610b1ba ("page_pool: Don't recycle non-reusable pages")
-> > Reported-by: Li RongQing <lirongqing@baidu.com>
-> > Reported-by: Yunsheng Lin <linyunsheng@huawei.com>
-> > Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-> > ---
-> >  net/core/page_pool.c |   82 ++++++++++++++++++++++++++++++++++++++------------
-> >  1 file changed, 63 insertions(+), 19 deletions(-)
-> > 
-> > diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-> > index a6aefe989043..bd4f8b2c46b6 100644
-> > --- a/net/core/page_pool.c
-> > +++ b/net/core/page_pool.c
-> > @@ -96,10 +96,61 @@ struct page_pool *page_pool_create(const struct page_pool_params *params)
-> >  }
-> >  EXPORT_SYMBOL(page_pool_create);
-> >  
-> > +static void __page_pool_return_page(struct page_pool *pool, struct page *page);  
-> 
-> It is possible to avoid forword-declare it by move the __page_pool_return_page()?
-> Maybe it is ok since this patch is targetting net-next?
-> 
-> > +
-> > +noinline
-> > +static struct page *page_pool_refill_alloc_cache(struct page_pool *pool,
-> > +						 bool refill)
-> > +{
-> > +	struct ptr_ring *r = &pool->ring;
-> > +	struct page *first_page, *page;
-> > +	int i, curr_nid;
-> > +
-> > +	/* Quicker fallback, avoid locks when ring is empty */
-> > +	if (__ptr_ring_empty(r))
-> > +		return NULL;
-> > +
-> > +	/* Softirq guarantee CPU and thus NUMA node is stable. This,
-> > +	 * assumes CPU refilling driver RX-ring will also run RX-NAPI.
-> > +	 */
-> > +	curr_nid = numa_mem_id();
-> > +
-> > +	/* Slower-path: Get pages from locked ring queue */
-> > +	spin_lock(&r->consumer_lock);
-> > +	first_page = __ptr_ring_consume(r);
-> > +
-> > +	/* Fallback to page-allocator if NUMA node doesn't match */
-> > +	if (first_page && unlikely(!(page_to_nid(first_page) == curr_nid))) {
-> > +		__page_pool_return_page(pool, first_page);
-> > +		first_page = NULL;
-> > +	}
-> > +
-> > +	if (unlikely(!refill))
-> > +		goto out;
-> > +
-> > +	/* Refill alloc array, but only if NUMA node match */
-> > +	for (i = 0; i < PP_ALLOC_CACHE_REFILL; i++) {
-> > +		page = __ptr_ring_consume(r);
-> > +		if (unlikely(!page))
-> > +			break;
-> > +
-> > +		if (likely(page_to_nid(page) == curr_nid)) {
-> > +			pool->alloc.cache[pool->alloc.count++] = page;
-> > +		} else {
-> > +			/* Release page to page-allocator, assume
-> > +			 * refcnt == 1 invariant of cached pages
-> > +			 */
-> > +			__page_pool_return_page(pool, page);
-> > +		}
-> > +	}  
-> 
-> The above code seems to not clear all the pages in the ptr_ring that
-> is not in the local node in some case?
-> 
-> I am not so familiar with asm, but does below code make sense and
-> generate better asm code?
-
-I'm not too concerned with ASM-level optimization for this function
-call, as it only happens once every 64 packets.
-
-
-> 	struct page *page = NULL;
-> 
-> 	while (pool->alloc.count < PP_ALLOC_CACHE_REFILL || !refill) {
-> 		page = __ptr_ring_consume(r);
-> 
-> 		if (unlikely(!page || !refill))
-> 			break;
-> 
-> 		if (likely(page_to_nid(page) == curr_nid)) {
-> 			pool->alloc.cache[pool->alloc.count++] = page;
-> 		} else {
-> 			/* Release page to page-allocator, assume
-> 			 * refcnt == 1 invariant of cached pages
-> 			 */
-> 			__page_pool_return_page(pool, page);
-> 		}
-> 	}
-> 
-> out:
-> 	if (likely(refill && pool->alloc.count > 0))
-> 		page = pool->alloc.cache[--pool->alloc.count];
-> 
-> 	spin_unlock(&r->consumer_lock);
-> 	
-> 	return page;
+On Wed, Dec 18, 2019 at 9:11 PM Ben Hutchings
+<ben.hutchings@codethink.co.uk> wrote:
 >
-> 
-> "The above code does not compile or test yet".
-> 
-> the above will clear all the pages in the ptr_ring that is not in the
-> local node and treat the refill and !refill case consistently.
-
-I don't want to empty the entire ptr_ring in one go.  That is
-problematic, because we are running in Softirq with bh + preemption
-disabled.  Returning 1024 pages will undoubtedly trigger some page
-buddy coalescing work.  That is why I choose to max return 65 pages (I
-felt this detail was important enought to mention it in the description
-above).
-
-I do acknowledge that the code can be improved.  What I don't like with
-my own code, is that I handle the 'first_page' as a special case.  You
-code did solve that case, so I'll try to improve my code and send V5.
-
-
-> 
-> But for the refill case, the pool->alloc.count may be PP_ALLOC_CACHE_REFILL - 1
-> after page_pool_refill_alloc_cache() returns.
-> 
-> 
-> > +out:
-> > +	spin_unlock(&r->consumer_lock);
-> > +	return first_page;
-> > +}
-> > +
-> >  /* fast path */
-> >  static struct page *__page_pool_get_cached(struct page_pool *pool)
-> >  {
-> > -	struct ptr_ring *r = &pool->ring;
-> >  	bool refill = false;
-> >  	struct page *page;
-> >  
-> > @@ -113,20 +164,7 @@ static struct page *__page_pool_get_cached(struct page_pool *pool)
-> >  		refill = true;
-> >  	}
-> >  
-> > -	/* Quicker fallback, avoid locks when ring is empty */
-> > -	if (__ptr_ring_empty(r))
-> > -		return NULL;
-> > -
-> > -	/* Slow-path: Get page from locked ring queue,
-> > -	 * refill alloc array if requested.
-> > -	 */
-> > -	spin_lock(&r->consumer_lock);
-> > -	page = __ptr_ring_consume(r);
-> > -	if (refill)
-> > -		pool->alloc.count = __ptr_ring_consume_batched(r,
-> > -							pool->alloc.cache,
-> > -							PP_ALLOC_CACHE_REFILL);
-> > -	spin_unlock(&r->consumer_lock);
-> > +	page = page_pool_refill_alloc_cache(pool, refill);
-> >  	return page;
+> On Tue, 2019-12-17 at 23:17 +0100, Arnd Bergmann wrote:
+> [...]
+> > @@ -1710,6 +1711,38 @@ static int idecd_ioctl(struct block_device *bdev, fmode_t mode,
+> >       return ret;
 > >  }
-> >  
-> > @@ -311,13 +349,10 @@ static bool __page_pool_recycle_direct(struct page *page,
-> >  
-> >  /* page is NOT reusable when:
-> >   * 1) allocated when system is under some pressure. (page_is_pfmemalloc)
-> > - * 2) belongs to a different NUMA node than pool->p.nid.
-> > - *
-> > - * To update pool->p.nid users must call page_pool_update_nid.
-> >   */
-> >  static bool pool_page_reusable(struct page_pool *pool, struct page *page)
-> >  {
-> > -	return !page_is_pfmemalloc(page) && page_to_nid(page) == pool->p.nid;
-> > +	return !page_is_pfmemalloc(page);
-> >  }
-> >  
-> >  void __page_pool_put_page(struct page_pool *pool, struct page *page,
-> > @@ -484,7 +519,16 @@ EXPORT_SYMBOL(page_pool_destroy);
-> >  /* Caller must provide appropriate safe context, e.g. NAPI. */
-> >  void page_pool_update_nid(struct page_pool *pool, int new_nid)
-> >  {
-> > +	struct page *page;
+> >
+> > +#ifdef CONFIG_COMPAT
+> > +static int idecd_locked_compat_ioctl(struct block_device *bdev, fmode_t mode,
+> > +                     unsigned int cmd, unsigned long arg)
+> > +{
+> > +     struct cdrom_info *info = ide_drv_g(bdev->bd_disk, cdrom_info);
+> > +     int err;
 > > +
-> > +	WARN_ON(!in_serving_softirq());
-> >  	trace_page_pool_update_nid(pool, new_nid);
-> >  	pool->p.nid = new_nid;
-> > +
-> > +	/* Flush pool alloc cache, as refill will check NUMA node */
-> > +	while (pool->alloc.count) {
-> > +		page = pool->alloc.cache[--pool->alloc.count];
-> > +		__page_pool_return_page(pool, page);
-> > +	}
-> >  }
-> >  EXPORT_SYMBOL(page_pool_update_nid);
-> > 
+> > +     switch (cmd) {
+> > +     case CDROMSETSPINDOWN:
+> > +             return idecd_set_spindown(&info->devinfo, arg);
+> > +     case CDROMGETSPINDOWN:
+> > +             return idecd_get_spindown(&info->devinfo, arg);
+>
+> compat_ptr() should also be applied to the argument for these two
+> commands, though I'm fairly sure IDE drivers have never been useful on
+> s390 so it doesn't matter in practice.
 
+Agreed on both, fixed by folding in this change:
 
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+diff --git a/drivers/ide/ide-cd.c b/drivers/ide/ide-cd.c
+index 2de6e8ace957..e09b949a7c46 100644
+--- a/drivers/ide/ide-cd.c
++++ b/drivers/ide/ide-cd.c
+@@ -1716,19 +1716,20 @@ static int idecd_locked_compat_ioctl(struct
+block_device *bdev, fmode_t mode,
+                        unsigned int cmd, unsigned long arg)
+ {
+        struct cdrom_info *info = ide_drv_g(bdev->bd_disk, cdrom_info);
++       void __user *argp = compat_ptr(arg);
+        int err;
 
+        switch (cmd) {
+        case CDROMSETSPINDOWN:
+-               return idecd_set_spindown(&info->devinfo, arg);
++               return idecd_set_spindown(&info->devinfo, (unsigned long)argp);
+        case CDROMGETSPINDOWN:
+-               return idecd_get_spindown(&info->devinfo, arg);
++               return idecd_get_spindown(&info->devinfo, (unsigned long)argp);
+        default:
+                break;
+        }
+
+        return cdrom_ioctl(&info->devinfo, bdev, mode, cmd,
+-                          (unsigned long)compat_ptr(arg));
++                          (unsigned long)argp);
+ }
+
+static int idecd_compat_ioctl(struct block_device *bdev, fmode_t mode,
+
+Unfortunately the generic_ide_ioctl() call still needs an unconverted arg,
+so I can't just use compat_ptr() to call the native idecd_locked_ioctl()
+for all commands.
+
+Thanks,
+
+       Arnd
