@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 209D3C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE480C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E59FE222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A51C9222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782460;
-	bh=H7OrN3fircRbyHT0svbhUX+q3gK2QHvXaCLjgmGLcBA=;
+	s=default; t=1576782467;
+	bh=HHMyBuTa596p6Sb1eikGdY4XlfLLThk8M3XdKWyRGqU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LNas2sDSfLZwHkcrZgZRxmaKLflw5Jo6DlYnR4bEPgI9dirc/ZQnz4W/HtbfP0LVB
-	 1NwusgYnTTcv4mnCem5bPssNvC+YHWn3fF2GxhZxztXNVc4gI8jgfa2v7HgIGdbvGD
-	 l0LilHn+8o2LF098yO5JeUSWtM/YzNkd7HzS8dCA=
+	b=x0xt1+JfTTjs2fSxzotpmg+WTCnJ+aaw82KjfQ2zo8CBhtzRfN67FFMYTpk7QgvX9
+	 m6CFTmWfRbkyYMxVBNb84QPsjgL5K4cO1fqojWhbLQyT8kQVRNTribfHYSYG1qtfuR
+	 qqE0dOFSpmfWPWkFDEeqWgCFp/KFWP6j1y1QEFtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfLSTHi (ORCPT
+        id S1729134AbfLSTHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:07:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34386 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 14:07:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728765AbfLSSmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:42:55 -0500
+        id S1728742AbfLSSmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:42:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A343824680;
-        Thu, 19 Dec 2019 18:42:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBF54206D7;
+        Thu, 19 Dec 2019 18:42:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780975;
-        bh=H7OrN3fircRbyHT0svbhUX+q3gK2QHvXaCLjgmGLcBA=;
+        s=default; t=1576780965;
+        bh=HHMyBuTa596p6Sb1eikGdY4XlfLLThk8M3XdKWyRGqU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pWp4LHv3gBzrKXzDFkV8k9izmc9KcK85zAWCoMXfICc7KLD4JpdcBTGF/GoUCtXo9
-         jceXpcmh8BI4g0EB8M9AO0LZ703OmtIMnkZ/XKU7msWfupD/W31SW8YOKmQwBWA4W5
-         AQFB+RkKYAjXBgTzWLRfOw1Uf9IpTlBE9RzL1MzA=
+        b=CRMy9piPj/FKB7LYmOHBNaSebmndxiW3WoliJmW0KaUttsWIeHGgrj1lCsiIy/ti0
+         6BETBIBfQCQgaQgVYUzadvjPTwtJIWTfbOlOWxwZdg14Zil6JppW43bHef3MEk3xNc
+         9X0HE057H1vHgslnRcLYuljzF8Jlq93TF/JfRdGM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shreeya Patel <shreeya.patel23498@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 030/199] Staging: iio: adt7316: Fix i2c data reading, set the data field
-Date:   Thu, 19 Dec 2019 19:31:52 +0100
-Message-Id: <20191219183216.539676397@linuxfoundation.org>
+Subject: [PATCH 4.9 027/199] MIPS: SiByte: Enable ZONE_DMA32 for LittleSur
+Date:   Thu, 19 Dec 2019 19:31:49 +0100
+Message-Id: <20191219183216.351424583@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -61,37 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shreeya Patel <shreeya.patel23498@gmail.com>
+From: Maciej W. Rozycki <macro@linux-mips.org>
 
-[ Upstream commit 688cd642ba0c393344c802647848da5f0d925d0e ]
+[ Upstream commit 756d6d836dbfb04a5a486bc2ec89397aa4533737 ]
 
-adt7316_i2c_read function nowhere sets the data field.
-It is necessary to have an appropriate value for it.
-Hence, assign the value stored in 'ret' variable to data field.
+The LittleSur board is marked for high memory support and therefore
+clearly must provide a way to have enough memory installed for some to
+be present outside the low 4GiB physical address range.  With the memory
+map of the BCM1250 SOC it has been built around it means over 1GiB of
+actual DRAM, as only the first 1GiB is mapped in the low 4GiB physical
+address range[1].
 
-This is an ancient bug, and as no one seems to have noticed,
-probably no sense in applying it to stable.
+Complement commit cce335ae47e2 ("[MIPS] 64-bit Sibyte kernels need
+DMA32.") then and also enable ZONE_DMA32 for LittleSur.
 
-Signed-off-by: Shreeya Patel <shreeya.patel23498@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+[1] "BCM1250/BCM1125/BCM1125H User Manual", Revision 1250_1125-UM100-R,
+    Broadcom Corporation, 21 Oct 2002, Section 3: "System Overview",
+    "Memory Map", pp. 34-38
+
+Signed-off-by: Maciej W. Rozycki <macro@linux-mips.org>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Patchwork: https://patchwork.linux-mips.org/patch/21107/
+Fixes: cce335ae47e2 ("[MIPS] 64-bit Sibyte kernels need DMA32.")
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-mips@linux-mips.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/iio/addac/adt7316-i2c.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/mips/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/staging/iio/addac/adt7316-i2c.c b/drivers/staging/iio/addac/adt7316-i2c.c
-index 0ccf192b9a032..5950225e45d15 100644
---- a/drivers/staging/iio/addac/adt7316-i2c.c
-+++ b/drivers/staging/iio/addac/adt7316-i2c.c
-@@ -35,6 +35,8 @@ static int adt7316_i2c_read(void *client, u8 reg, u8 *data)
- 		return ret;
- 	}
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 92bcde046b6b4..f8a529c852795 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -804,6 +804,7 @@ config SIBYTE_LITTLESUR
+ 	select SYS_SUPPORTS_BIG_ENDIAN
+ 	select SYS_SUPPORTS_HIGHMEM
+ 	select SYS_SUPPORTS_LITTLE_ENDIAN
++	select ZONE_DMA32 if 64BIT
  
-+	*data = ret;
-+
- 	return 0;
- }
- 
+ config SIBYTE_SENTOSA
+ 	bool "Sibyte BCM91250E-Sentosa"
 -- 
 2.20.1
 
