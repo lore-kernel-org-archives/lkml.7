@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F164C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0397FC2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05B4E2465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3BB324672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:31:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576794516;
-	bh=nXs5VMoziIIdH9/cjD+SWUhE23QYJ3gHE7RQw4b9g2k=;
+	s=default; t=1576794676;
+	bh=JPhSXXuOi2gTNCsSXJs9wuR71QK3t/G7kKD1h+1npcM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UvriuYETJBt2onrksepkrk9TaPBFWMhV+Mec31bQEc+rJrl8iN0LffXvjx+vGXnHn
-	 ke+tHpmFQH7GS+7g/yLi8aWVZpItGNOPqPsuLXMBNRRJYaLwRp6aLw5p4dmEtVz+si
-	 ukguZMYhME7tAhPpYDFB2JvUZ/hOYbsYzgJK0UWQ=
+	b=k+TMWnE5IkrRjo9kRayvRd3kW0en3nkn3Lx3mVdvJdaFOZJSAXz9OASoYb52LBFGo
+	 CZH3H4cQ8k+P8tf3UxHkk3E+g7aBLkZ1JjPEuC1p181nM6hCNL7CE1LGwTi8Fb3Sz4
+	 AtYHOykO4V3nJ9Hru1SJMxoM/+zBH9uE2Z3KaPQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbfLSW2f (ORCPT
+        id S1727129AbfLSWbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 17:28:35 -0500
-Received: from mail-oi1-f174.google.com ([209.85.167.174]:47031 "EHLO
-        mail-oi1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbfLSW2e (ORCPT
+        Thu, 19 Dec 2019 17:31:16 -0500
+Received: from mail-oi1-f173.google.com ([209.85.167.173]:42924 "EHLO
+        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726818AbfLSWbP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 17:28:34 -0500
-Received: by mail-oi1-f174.google.com with SMTP id p67so3800776oib.13;
-        Thu, 19 Dec 2019 14:28:34 -0800 (PST)
+        Thu, 19 Dec 2019 17:31:15 -0500
+Received: by mail-oi1-f173.google.com with SMTP id 18so3114224oin.9;
+        Thu, 19 Dec 2019 14:31:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=CG1TQExIKa6xTwkbkBBNEpCtxTDKQQZLa+V9hmrricU=;
-        b=JPpQ3ttnv6Lj6ciAHxPCAiS16C16Y6JXZgz3k8UoljQayQlr+FQm9ZL8i80Oh4dnR4
-         6f0Pq9voBY2ELbBN6iktwlyc9dY6NkgrHQXixdliYKDKUhT453xYBzNypCE+62YJklTV
-         9yOC+6pRYCgzmxnzVWsyyXm4TkjzzwIjjgjhX8pTfDmM6xRHP/Bl8+ZK2KKh4ewX5V/n
-         RuvxdbMK2RkxseVxCrXoYvZVhyNd8RNmHUWf4zwocUQprdk/3M5jYShcT2u22Fb8zmHV
-         wqXirdeAB8xUsAsACkNwtlSQKrmPqhxMQUvQk4J0QVEXXDzfuI21VvPwQ+3a9Tz+p/gd
-         0p3A==
-X-Gm-Message-State: APjAAAUHvhNHUcqJb41R9GpXCVLIe0eRQqIk7aSr0xagSKBxPdekE70l
-        eIKsTkBdM0alRto2trPzhXk8tFpPaw==
-X-Google-Smtp-Source: APXvYqwF9Y5Ucq1Gi42m6K9hm0SFCab7SapBwLG3M8U7fm6ikNNcp1DajiIpmtkkgkM8oUnW12ocAQ==
-X-Received: by 2002:aca:48d6:: with SMTP id v205mr3003921oia.10.1576794513723;
-        Thu, 19 Dec 2019 14:28:33 -0800 (PST)
+        bh=D6/Lnp9SQxWtLanrpfRv/1y5LG5SQwcq+M2dD1VqhCc=;
+        b=UIlkLJTzkB58yH9MjpyIv+ZigyxIADyYVhnN/t5STXZFfSHiNrh42+UhXN1DSGaIdZ
+         bSbTGoiM7AecdCxSoax5xHmn81NqzzXWbsy37SV/XUov+1B6Qaz4PvdX1z4HfKO+fQgl
+         OXzQbS67SSyndWNeRyp1blks1EHuiGrn+tn9hezCZvTKhP2oCY/4dUvQFOlSrQrbcIZs
+         bgxLnvHeS8UxWqo7AycBKEGMGdPsrO54peWdRB/kCB3r1hIIVMKY0blcrwGuZKIDh1K1
+         yXP1uKDNcbvMNkQWFWa9sGM5bZl9vBsbjQL3+zC+7SB+YbB31frqC0VrIeQvj6gv54YY
+         qUQQ==
+X-Gm-Message-State: APjAAAWC3SQnXsusLrXgSDk8WConFShY2VxQN2udRLpK4HVu2d4rz/ra
+        hNRZmAEGnidr3qgNJrioUA==
+X-Google-Smtp-Source: APXvYqxP+AsL2ClzQz1/tTdWWz61H8T7A5vOVoIHbEWTGgA7cl+qlj/GpeLj2PAWGr+P+OTYVDHkww==
+X-Received: by 2002:aca:cf50:: with SMTP id f77mr3288551oig.60.1576794674782;
+        Thu, 19 Dec 2019 14:31:14 -0800 (PST)
 Received: from localhost (ip-184-205-0-249.ftwttx.spcsdns.net. [184.205.0.249])
-        by smtp.gmail.com with ESMTPSA id t9sm2592913otm.76.2019.12.19.14.28.32
+        by smtp.gmail.com with ESMTPSA id n22sm2636449otj.36.2019.12.19.14.31.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 14:28:33 -0800 (PST)
-Date:   Thu, 19 Dec 2019 16:27:26 -0600
+        Thu, 19 Dec 2019 14:31:14 -0800 (PST)
+Date:   Thu, 19 Dec 2019 16:31:08 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
 Cc:     linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org,
@@ -59,29 +59,32 @@ Cc:     linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org,
         Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [RFC 02/25] dt-bindings: arm: realtek: Add Xnano X5
-Message-ID: <20191219222726.GA20255@bogus>
+        zypeng@titanmec.com, Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [RFC 05/25] dt-bindings: vendor-prefixes: Add Titan Micro
+ Electronics
+Message-ID: <20191219223108.GA25174@bogus>
 References: <20191212033952.5967-1-afaerber@suse.de>
- <20191212033952.5967-3-afaerber@suse.de>
+ <20191212033952.5967-6-afaerber@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191212033952.5967-3-afaerber@suse.de>
+In-Reply-To: <20191212033952.5967-6-afaerber@suse.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019 04:39:29 +0100, =?UTF-8?q?Andreas=20F=C3=A4rber?= wrote:
-> Define a compatible string for Xnano X5 OTT TV Box.
+On Thu, 12 Dec 2019 04:39:32 +0100, =?UTF-8?q?Andreas=20F=C3=A4rber?= wrote:
+> Assign vendor prefix "titanmec", matching their domain name.
 > 
+> Cc: zypeng@titanmec.com
 > Signed-off-by: Andreas Färber <afaerber@suse.de>
 > ---
->  Documentation/devicetree/bindings/arm/realtek.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
