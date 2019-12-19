@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 941C3C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 03:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B31D7C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 03:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73B3C21D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 03:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9303F2467B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 03:18:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbfLSDRo (ORCPT
+        id S1727125AbfLSDSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 22:17:44 -0500
-Received: from mga11.intel.com ([192.55.52.93]:60212 "EHLO mga11.intel.com"
+        Wed, 18 Dec 2019 22:18:07 -0500
+Received: from mga05.intel.com ([192.55.52.43]:29385 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbfLSDRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726875AbfLSDRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 18 Dec 2019 22:17:43 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 19:17:42 -0800
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 19:17:37 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="222160419"
+   d="scan'208";a="222160406"
 Received: from allen-box.sh.intel.com ([10.239.159.136])
-  by fmsmga001.fm.intel.com with ESMTP; 18 Dec 2019 19:17:40 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 18 Dec 2019 19:17:35 -0800
 From:   Lu Baolu <baolu.lu@linux.intel.com>
 To:     Joerg Roedel <joro@8bytes.org>,
         David Woodhouse <dwmw2@infradead.org>,
@@ -37,10 +37,11 @@ Cc:     ashok.raj@intel.com, sanjay.k.kumar@intel.com,
         yi.l.liu@intel.com, yi.y.sun@intel.com,
         Peter Xu <peterx@redhat.com>, iommu@lists.linux-foundation.org,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH v4 4/7] iommu/vt-d: Setup pasid entries for iova over first level
-Date:   Thu, 19 Dec 2019 11:16:31 +0800
-Message-Id: <20191219031634.15168-5-baolu.lu@linux.intel.com>
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Yi Sun <yi.y.sun@linux.intel.com>
+Subject: [PATCH v4 2/7] iommu/vt-d: Add set domain DOMAIN_ATTR_NESTING attr
+Date:   Thu, 19 Dec 2019 11:16:29 +0800
+Message-Id: <20191219031634.15168-3-baolu.lu@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191219031634.15168-1-baolu.lu@linux.intel.com>
 References: <20191219031634.15168-1-baolu.lu@linux.intel.com>
@@ -49,141 +50,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Intel VT-d in scalable mode supports two types of page tables for
-IOVA translation: first level and second level. The IOMMU driver
-can choose one from both for IOVA translation according to the use
-case. This sets up the pasid entry if a domain is selected to use
-the first-level page table for iova translation.
+This adds the Intel VT-d specific callback of setting
+DOMAIN_ATTR_NESTING domain attribution. It is necessary
+to let the VT-d driver know that the domain represents
+a virtual machine which requires the IOMMU hardware to
+support nested translation mode. Return success if the
+IOMMU hardware suports nested mode, otherwise failure.
 
+Signed-off-by: Yi Sun <yi.y.sun@linux.intel.com>
 Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
 ---
- drivers/iommu/intel-iommu.c | 48 +++++++++++++++++++++++++++++++++++--
- include/linux/intel-iommu.h | 16 ++++++++-----
- 2 files changed, 56 insertions(+), 8 deletions(-)
+ drivers/iommu/intel-iommu.c | 56 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
 diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 2b5a47584baf..f0813997dea2 100644
+index c93fe716e6b0..2b5a47584baf 100644
 --- a/drivers/iommu/intel-iommu.c
 +++ b/drivers/iommu/intel-iommu.c
-@@ -571,6 +571,11 @@ static inline int domain_type_is_si(struct dmar_domain *domain)
- 	return domain->flags & DOMAIN_FLAG_STATIC_IDENTITY;
+@@ -315,6 +315,12 @@ static int hw_pass_through = 1;
+  */
+ #define DOMAIN_FLAG_USE_FIRST_LEVEL		BIT(2)
+ 
++/*
++ * Domain represents a virtual machine which demands iommu nested
++ * translation mode support.
++ */
++#define DOMAIN_FLAG_NESTING_MODE		BIT(3)
++
+ #define for_each_domain_iommu(idx, domain)			\
+ 	for (idx = 0; idx < g_num_of_iommus; idx++)		\
+ 		if (domain->iommu_refcnt[idx])
+@@ -5635,6 +5641,24 @@ static inline bool iommu_pasid_support(void)
+ 	return ret;
  }
  
-+static inline bool domain_use_first_level(struct dmar_domain *domain)
++static inline bool nested_mode_support(void)
 +{
-+	return domain->flags & DOMAIN_FLAG_USE_FIRST_LEVEL;
++	struct dmar_drhd_unit *drhd;
++	struct intel_iommu *iommu;
++	bool ret = true;
++
++	rcu_read_lock();
++	for_each_active_iommu(iommu, drhd) {
++		if (!sm_supported(iommu) || !ecap_nest(iommu->ecap)) {
++			ret = false;
++			break;
++		}
++	}
++	rcu_read_unlock();
++
++	return ret;
 +}
 +
- static inline int domain_pfn_supported(struct dmar_domain *domain,
- 				       unsigned long pfn)
+ static bool intel_iommu_capable(enum iommu_cap cap)
  {
-@@ -2288,6 +2293,8 @@ static int __domain_mapping(struct dmar_domain *domain, unsigned long iov_pfn,
- 		return -EINVAL;
- 
- 	prot &= DMA_PTE_READ | DMA_PTE_WRITE | DMA_PTE_SNP;
-+	if (domain_use_first_level(domain))
-+		prot |= DMA_FL_PTE_PRESENT | DMA_FL_PTE_XD;
- 
- 	if (!sg) {
- 		sg_res = nr_pages;
-@@ -2515,6 +2522,36 @@ dmar_search_domain_by_dev_info(int segment, int bus, int devfn)
- 	return NULL;
+ 	if (cap == IOMMU_CAP_CACHE_COHERENCY)
+@@ -6013,10 +6037,42 @@ static bool intel_iommu_is_attach_deferred(struct iommu_domain *domain,
+ 	return dev->archdata.iommu == DEFER_DEVICE_DOMAIN_INFO;
  }
  
-+static int domain_setup_first_level(struct intel_iommu *iommu,
-+				    struct dmar_domain *domain,
-+				    struct device *dev,
-+				    int pasid)
++static int
++intel_iommu_domain_set_attr(struct iommu_domain *domain,
++			    enum iommu_attr attr, void *data)
 +{
-+	int flags = PASID_FLAG_SUPERVISOR_MODE;
-+	struct dma_pte *pgd = domain->pgd;
-+	int agaw, level;
++	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
++	unsigned long flags;
++	int ret = 0;
 +
-+	/*
-+	 * Skip top levels of page tables for iommu which has
-+	 * less agaw than default. Unnecessary for PT mode.
-+	 */
-+	for (agaw = domain->agaw; agaw > iommu->agaw; agaw--) {
-+		pgd = phys_to_virt(dma_pte_addr(pgd));
-+		if (!dma_pte_present(pgd))
-+			return -ENOMEM;
-+	}
-+
-+	level = agaw_to_level(agaw);
-+	if (level != 4 && level != 5)
++	if (domain->type != IOMMU_DOMAIN_UNMANAGED)
 +		return -EINVAL;
 +
-+	flags |= (level == 5) ? PASID_FLAG_FL5LP : 0;
++	switch (attr) {
++	case DOMAIN_ATTR_NESTING:
++		spin_lock_irqsave(&device_domain_lock, flags);
++		if (nested_mode_support() &&
++		    list_empty(&dmar_domain->devices)) {
++			dmar_domain->flags |= DOMAIN_FLAG_NESTING_MODE;
++			dmar_domain->flags &= ~DOMAIN_FLAG_USE_FIRST_LEVEL;
++		} else {
++			ret = -ENODEV;
++		}
++		spin_unlock_irqrestore(&device_domain_lock, flags);
++		break;
++	default:
++		ret = -EINVAL;
++		break;
++	}
 +
-+	return intel_pasid_setup_first_level(iommu, dev, (pgd_t *)pgd, pasid,
-+					     domain->iommu_did[iommu->seq_id],
-+					     flags);
++	return ret;
 +}
 +
- static struct dmar_domain *dmar_insert_one_dev_info(struct intel_iommu *iommu,
- 						    int bus, int devfn,
- 						    struct device *dev,
-@@ -2614,6 +2651,9 @@ static struct dmar_domain *dmar_insert_one_dev_info(struct intel_iommu *iommu,
- 		if (hw_pass_through && domain_type_is_si(domain))
- 			ret = intel_pasid_setup_pass_through(iommu, domain,
- 					dev, PASID_RID2PASID);
-+		else if (domain_use_first_level(domain))
-+			ret = domain_setup_first_level(iommu, domain, dev,
-+					PASID_RID2PASID);
- 		else
- 			ret = intel_pasid_setup_second_level(iommu, domain,
- 					dev, PASID_RID2PASID);
-@@ -5369,8 +5409,12 @@ static int aux_domain_add_dev(struct dmar_domain *domain,
- 		goto attach_failed;
- 
- 	/* Setup the PASID entry for mediated devices: */
--	ret = intel_pasid_setup_second_level(iommu, domain, dev,
--					     domain->default_pasid);
-+	if (domain_use_first_level(domain))
-+		ret = domain_setup_first_level(iommu, domain, dev,
-+					       domain->default_pasid);
-+	else
-+		ret = intel_pasid_setup_second_level(iommu, domain, dev,
-+						     domain->default_pasid);
- 	if (ret)
- 		goto table_failed;
- 	spin_unlock(&iommu->lock);
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index aaece25c055f..454c69712131 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -34,10 +34,13 @@
- #define VTD_STRIDE_SHIFT        (9)
- #define VTD_STRIDE_MASK         (((u64)-1) << VTD_STRIDE_SHIFT)
- 
--#define DMA_PTE_READ (1)
--#define DMA_PTE_WRITE (2)
--#define DMA_PTE_LARGE_PAGE (1 << 7)
--#define DMA_PTE_SNP (1 << 11)
-+#define DMA_PTE_READ		BIT_ULL(0)
-+#define DMA_PTE_WRITE		BIT_ULL(1)
-+#define DMA_PTE_LARGE_PAGE	BIT_ULL(7)
-+#define DMA_PTE_SNP		BIT_ULL(11)
-+
-+#define DMA_FL_PTE_PRESENT	BIT_ULL(0)
-+#define DMA_FL_PTE_XD		BIT_ULL(63)
- 
- #define CONTEXT_TT_MULTI_LEVEL	0
- #define CONTEXT_TT_DEV_IOTLB	1
-@@ -610,10 +613,11 @@ static inline void dma_clear_pte(struct dma_pte *pte)
- static inline u64 dma_pte_addr(struct dma_pte *pte)
- {
- #ifdef CONFIG_64BIT
--	return pte->val & VTD_PAGE_MASK;
-+	return pte->val & VTD_PAGE_MASK & (~DMA_FL_PTE_XD);
- #else
- 	/* Must have a full atomic 64-bit read */
--	return  __cmpxchg64(&pte->val, 0ULL, 0ULL) & VTD_PAGE_MASK;
-+	return  __cmpxchg64(&pte->val, 0ULL, 0ULL) &
-+			VTD_PAGE_MASK & (~DMA_FL_PTE_XD);
- #endif
- }
- 
+ const struct iommu_ops intel_iommu_ops = {
+ 	.capable		= intel_iommu_capable,
+ 	.domain_alloc		= intel_iommu_domain_alloc,
+ 	.domain_free		= intel_iommu_domain_free,
++	.domain_set_attr	= intel_iommu_domain_set_attr,
+ 	.attach_dev		= intel_iommu_attach_device,
+ 	.detach_dev		= intel_iommu_detach_device,
+ 	.aux_attach_dev		= intel_iommu_aux_attach_device,
 -- 
 2.17.1
 
