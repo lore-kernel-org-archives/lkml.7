@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AEFC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB67C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9AC324676
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 523DF24679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:00:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782040;
-	bh=wzrWLkjW0uPzgoAymaZOMN7L1Rznj01UlrJbLeIfw4k=;
+	s=default; t=1576782047;
+	bh=DZJ1+5zyITuuq1C8r02iDkyg4E+zE+4C5zXfwDYQ2IQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kZnx1sY/2SCZCZXY9JU+vW0RvgyzXP0PrYedDjh4G56AqtV0flGW8Uldh4xsPVgWH
-	 DBLDEUWpIDswVu1geNr4n/gst/2S1lvqbO3KcRL2u+DlrabmmRkEbriXSeMZMDt1yN
-	 Hk0z92u+qNIRWhtRTTB+ErBHPj3XZu0cxgs6t3Oc=
+	b=NoyhoWVtdwgz/gxwSoqx/zRBiCkyD7O1thS2kp3f6VZLqUJMJUexTyqMpDoG9bXan
+	 WXYY71m8QsO14swu57jma3OfFMEqIlQingtL4vgUXU9FdCumBsGTboz6UbePv4S7hY
+	 cwACoL2TgP4VSPZsV7DFqZNcir5QvxNdQh5Yz5bQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730196AbfLSSwA (ORCPT
+        id S1730177AbfLSSvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:52:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46310 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:51:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730186AbfLSSvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:51:53 -0500
+        id S1730164AbfLSSvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:51:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B00C92064B;
-        Thu, 19 Dec 2019 18:51:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2D3F2064B;
+        Thu, 19 Dec 2019 18:51:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781513;
-        bh=wzrWLkjW0uPzgoAymaZOMN7L1Rznj01UlrJbLeIfw4k=;
+        s=default; t=1576781503;
+        bh=DZJ1+5zyITuuq1C8r02iDkyg4E+zE+4C5zXfwDYQ2IQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kad6cY9KiLgFQExjhald6/JNGCLIE9I6U5a30oWUJ1OfLM/kAeGDoKExmuuHVKh11
-         VyPwMCVVaCTdGSSZXbQA19NoqrJ3kNfBv8nZ3XVV4ZP/iPBw/hwFtjipGdA+1qaTFi
-         s/ToQ0HCoJAgpGjKJyH92LQUFjujW9YMcFTYLe20=
+        b=sHgkj7VxPHMk19qVQ6W8Ph4mFNM6xfPAw1tnL/hYaM5pe/r8s+PnL5GM0Nf4cSRfv
+         CBzXu2V8lXoaMzpJFUozGeQicFQwJNREQko1qdcZdcG318tKnEsqGW3cefgt2s6X5y
+         KTRU7e45bf9U/K/FVDfo97HuijFHc+bJ2wGDQyqc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chaotian Jing <chaotian.jing@mediatek.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.19 16/47] mmc: block: Make card_busy_detect() a bit more generic
-Date:   Thu, 19 Dec 2019 19:34:30 +0100
-Message-Id: <20191219182917.317219858@linuxfoundation.org>
+        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 12/47] tcp: fix rejected syncookies due to stale timestamps
+Date:   Thu, 19 Dec 2019 19:34:26 +0100
+Message-Id: <20191219182909.020019049@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182857.659088743@linuxfoundation.org>
 References: <20191219182857.659088743@linuxfoundation.org>
@@ -60,76 +60,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chaotian Jing <chaotian.jing@mediatek.com>
+From: Guillaume Nault <gnault@redhat.com>
 
-commit 3869468e0c4800af52bfe1e0b72b338dcdae2cfc upstream.
+[ Upstream commit 04d26e7b159a396372646a480f4caa166d1b6720 ]
 
-To prepare for more users of card_busy_detect(), let's drop the struct
-request * as an in-parameter and convert to log the error message via
-dev_err() instead of pr_err().
+If no synflood happens for a long enough period of time, then the
+synflood timestamp isn't refreshed and jiffies can advance so much
+that time_after32() can't accurately compare them any more.
 
-Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Therefore, we can end up in a situation where time_after32(now,
+last_overflow + HZ) returns false, just because these two values are
+too far apart. In that case, the synflood timestamp isn't updated as
+it should be, which can trick tcp_synq_no_recent_overflow() into
+rejecting valid syncookies.
+
+For example, let's consider the following scenario on a system
+with HZ=1000:
+
+  * The synflood timestamp is 0, either because that's the timestamp
+    of the last synflood or, more commonly, because we're working with
+    a freshly created socket.
+
+  * We receive a new SYN, which triggers synflood protection. Let's say
+    that this happens when jiffies == 2147484649 (that is,
+    'synflood timestamp' + HZ + 2^31 + 1).
+
+  * Then tcp_synq_overflow() doesn't update the synflood timestamp,
+    because time_after32(2147484649, 1000) returns false.
+    With:
+      - 2147484649: the value of jiffies, aka. 'now'.
+      - 1000: the value of 'last_overflow' + HZ.
+
+  * A bit later, we receive the ACK completing the 3WHS. But
+    cookie_v[46]_check() rejects it because tcp_synq_no_recent_overflow()
+    says that we're not under synflood. That's because
+    time_after32(2147484649, 120000) returns false.
+    With:
+      - 2147484649: the value of jiffies, aka. 'now'.
+      - 120000: the value of 'last_overflow' + TCP_SYNCOOKIE_VALID.
+
+    Of course, in reality jiffies would have increased a bit, but this
+    condition will last for the next 119 seconds, which is far enough
+    to accommodate for jiffie's growth.
+
+Fix this by updating the overflow timestamp whenever jiffies isn't
+within the [last_overflow, last_overflow + HZ] range. That shouldn't
+have any performance impact since the update still happens at most once
+per second.
+
+Now we're guaranteed to have fresh timestamps while under synflood, so
+tcp_synq_no_recent_overflow() can safely use it with time_after32() in
+such situations.
+
+Stale timestamps can still make tcp_synq_no_recent_overflow() return
+the wrong verdict when not under synflood. This will be handled in the
+next patch.
+
+For 64 bits architectures, the problem was introduced with the
+conversion of ->tw_ts_recent_stamp to 32 bits integer by commit
+cca9bab1b72c ("tcp: use monotonic timestamps for PAWS").
+The problem has always been there on 32 bits architectures.
+
+Fixes: cca9bab1b72c ("tcp: use monotonic timestamps for PAWS")
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Guillaume Nault <gnault@redhat.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/mmc/core/block.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ include/linux/time.h |   13 +++++++++++++
+ include/net/tcp.h    |    5 +++--
+ 2 files changed, 16 insertions(+), 2 deletions(-)
 
---- a/drivers/mmc/core/block.c
-+++ b/drivers/mmc/core/block.c
-@@ -982,7 +982,7 @@ static inline bool mmc_blk_in_tran_state
+--- a/include/linux/time.h
++++ b/include/linux/time.h
+@@ -96,4 +96,17 @@ static inline bool itimerspec64_valid(co
+  */
+ #define time_after32(a, b)	((s32)((u32)(b) - (u32)(a)) < 0)
+ #define time_before32(b, a)	time_after32(a, b)
++
++/**
++ * time_between32 - check if a 32-bit timestamp is within a given time range
++ * @t:	the time which may be within [l,h]
++ * @l:	the lower bound of the range
++ * @h:	the higher bound of the range
++ *
++ * time_before32(t, l, h) returns true if @l <= @t <= @h. All operands are
++ * treated as 32-bit integers.
++ *
++ * Equivalent to !(time_before32(@t, @l) || time_after32(@t, @h)).
++ */
++#define time_between32(t, l, h) ((u32)(h) - (u32)(l) >= (u32)(t) - (u32)(l))
+ #endif
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -485,14 +485,15 @@ static inline void tcp_synq_overflow(con
+ 		reuse = rcu_dereference(sk->sk_reuseport_cb);
+ 		if (likely(reuse)) {
+ 			last_overflow = READ_ONCE(reuse->synq_overflow_ts);
+-			if (time_after32(now, last_overflow + HZ))
++			if (!time_between32(now, last_overflow,
++					    last_overflow + HZ))
+ 				WRITE_ONCE(reuse->synq_overflow_ts, now);
+ 			return;
+ 		}
+ 	}
+ 
+ 	last_overflow = tcp_sk(sk)->rx_opt.ts_recent_stamp;
+-	if (time_after32(now, last_overflow + HZ))
++	if (!time_between32(now, last_overflow, last_overflow + HZ))
+ 		tcp_sk(sk)->rx_opt.ts_recent_stamp = now;
  }
  
- static int card_busy_detect(struct mmc_card *card, unsigned int timeout_ms,
--			    struct request *req, u32 *resp_errs)
-+			    u32 *resp_errs)
- {
- 	unsigned long timeout = jiffies + msecs_to_jiffies(timeout_ms);
- 	int err = 0;
-@@ -993,8 +993,8 @@ static int card_busy_detect(struct mmc_c
- 
- 		err = __mmc_send_status(card, &status, 5);
- 		if (err) {
--			pr_err("%s: error %d requesting status\n",
--			       req->rq_disk->disk_name, err);
-+			dev_err(mmc_dev(card->host),
-+				"error %d requesting status\n", err);
- 			return err;
- 		}
- 
-@@ -1007,9 +1007,9 @@ static int card_busy_detect(struct mmc_c
- 		 * leaves the program state.
- 		 */
- 		if (done) {
--			pr_err("%s: Card stuck in wrong state! %s %s status: %#x\n",
--				mmc_hostname(card->host),
--				req->rq_disk->disk_name, __func__, status);
-+			dev_err(mmc_dev(card->host),
-+				"Card stuck in wrong state! %s status: %#x\n",
-+				 __func__, status);
- 			return -ETIMEDOUT;
- 		}
- 
-@@ -1678,7 +1678,7 @@ static int mmc_blk_fix_state(struct mmc_
- 
- 	mmc_blk_send_stop(card, timeout);
- 
--	err = card_busy_detect(card, timeout, req, NULL);
-+	err = card_busy_detect(card, timeout, NULL);
- 
- 	mmc_retune_release(card->host);
- 
-@@ -1902,7 +1902,7 @@ static int mmc_blk_card_busy(struct mmc_
- 	if (mmc_host_is_spi(card->host) || rq_data_dir(req) == READ)
- 		return 0;
- 
--	err = card_busy_detect(card, MMC_BLK_TIMEOUT_MS, req, &status);
-+	err = card_busy_detect(card, MMC_BLK_TIMEOUT_MS, &status);
- 
- 	/*
- 	 * Do not assume data transferred correctly if there are any error bits
 
 
