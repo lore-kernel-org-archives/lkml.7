@@ -2,103 +2,138 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E51EC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0842EC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCA6A21D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFDC121D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 08:29:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MJZ/DNtF"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rFFo8hMS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfLSI25 (ORCPT
+        id S1726779AbfLSI3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 03:28:57 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37517 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbfLSI24 (ORCPT
+        Thu, 19 Dec 2019 03:29:32 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:54724 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbfLSI3c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 03:28:56 -0500
-Received: by mail-lf1-f66.google.com with SMTP id b15so3711792lfc.4
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 00:28:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EYVpTAvfKwHHKmlAPuGRsZ3iezpd785NjyR9OVcUj6E=;
-        b=MJZ/DNtFXAxxKUZKDxH+hao28YTyE5NOXtuQ0Z3/ibWy8zpn9idcT5fZSA3qlJswY1
-         Yijm5VvGd/xFqGL1v6NZGRxBXBKHV016m5JvvGWQlY0M4LINXT2A+VMv/c7K+z0FglYN
-         FkcONe7Byj4YXGeofGkBJBC9L9BYhWz0U/7T5uj+m7cWbGsUIxhMxvZYjxq9RmDbTAeo
-         5FOeLkOvfmFeFbQ9FneVOLbyy+1qTeqa2lenupHqbbfkraaI8ywbs0EUp3VJNPMnGg4z
-         8lysTRj1vQ/4vBUWcuSX068OiI8cXcTJLEVHZYJzOCkkKrvNMEEtnJ4J5TdoqJk3xzfJ
-         RFyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EYVpTAvfKwHHKmlAPuGRsZ3iezpd785NjyR9OVcUj6E=;
-        b=nRRDtS2AeYDjAwLUKgK6VH3OjLCXyYParph6pcltZQk8gotV3VQdFyI5U7E8B22Cpc
-         Cpg3y5/OmPku/eZmhjSnzGTyOysjmqWjJpM9hCOuKZjLLyS6qhc+IO+fOK/IOGIst/ZX
-         0asEMLE0DLvVibLFyi97kS/HlLUSpNsTwGmR8IKstolOxEJnQGT9yN9GZkbwm2DYw4G0
-         Yw5yvdLwsfR9kIQrlKKc0HgC8CMfTSdPQh6wXoWvhQ8Ww/3XlXhvuDIvkAVVFZH8SenV
-         XdUEJepwJh296Q2nj7Iu9r07JNqhRzYdTb53ZiCydf7Ht9L83q7hK7QZeeI0rk4zcbFi
-         6Dxw==
-X-Gm-Message-State: APjAAAVvshUC6i2hmPxNDTMI9sDnIS1TyCyetuAd05beOdGFfLniE9iv
-        2mmG4uQy+OEMEICd6IcIWCyoZgSXgO95XipB03BnaA==
-X-Google-Smtp-Source: APXvYqynTJm9GoZtkT/ox5Ee2KtmtUCBm2Ol3fEci7a1RBI4FjyF3QqGMde1dsSwXQ7lWCCv/YG69H6YPlbklmRCDWQ=
-X-Received: by 2002:a19:8a41:: with SMTP id m62mr4543898lfd.5.1576744133697;
- Thu, 19 Dec 2019 00:28:53 -0800 (PST)
+        Thu, 19 Dec 2019 03:29:32 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJ8TOcM038842;
+        Thu, 19 Dec 2019 02:29:24 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576744164;
+        bh=qHodQfVRoxRI6Q5T0UwFr5pC1wfIqkcyWERy28q6efM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=rFFo8hMSSugW3xBnanhPdce0vj4r2wn92etK1aDt7i4TSJMWFK6pylOxtFH49rT4V
+         elwE09sGfpgkdY5/VOCCo02Ah2TbXfRK+rvq9L+dx8B7zFYW4+9u3S9JtfBLmi+dAg
+         cnFSx3j0bzRviyHkJqSyCL1xrM3fSOgKyoqm4OVM=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBJ8TO6E124868
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 19 Dec 2019 02:29:24 -0600
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Dec 2019 02:29:23 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Dec 2019 02:29:24 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJ8TKFJ062210;
+        Thu, 19 Dec 2019 02:29:21 -0600
+Subject: Re: [PATCH 01/13] PCI: cadence: Remove stray "pm_runtime_put_sync()"
+ in error path
+To:     Andrew Murray <andrew.murray@arm.com>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>
+References: <20191209092147.22901-1-kishon@ti.com>
+ <20191209092147.22901-2-kishon@ti.com>
+ <20191216134526.GW24359@e119886-lin.cambridge.arm.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <a1b70012-9cfc-0420-2717-8bdd9df1b4de@ti.com>
+Date:   Thu, 19 Dec 2019 14:01:03 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20191213124221.25775-1-tbogendoerfer@suse.de> <20191213124221.25775-3-tbogendoerfer@suse.de>
-In-Reply-To: <20191213124221.25775-3-tbogendoerfer@suse.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 19 Dec 2019 09:28:42 +0100
-Message-ID: <CACRpkdY+2Z90n6zNZbQpmGCWYAH4PzEOv8puOkwbrcxCk_Eq2A@mail.gmail.com>
-Subject: Re: [PATCH v11 net-next 2/2] mfd: ioc3: Add driver for SGI IOC3 chip
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-mips@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>, linux-rtc@vger.kernel.org,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191216134526.GW24359@e119886-lin.cambridge.arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 1:43 PM Thomas Bogendoerfer
-<tbogendoerfer@suse.de> wrote:
+Hi Andrew,
 
-> SGI IOC3 chip has integrated ethernet, keyboard and mouse interface.
-> It also supports connecting a SuperIO chip for serial and parallel
-> interfaces. IOC3 is used inside various SGI systemboards and add-on
-> cards with different equipped external interfaces.
->
-> Support for ethernet and serial interfaces were implemented inside
-> the network driver. This patchset moves out the not network related
-> parts to a new MFD driver, which takes care of card detection,
-> setup of platform devices and interrupt distribution for the subdevices.
->
-> Serial portion: Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
->
-> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+On 16/12/19 7:15 pm, Andrew Murray wrote:
+> On Mon, Dec 09, 2019 at 02:51:35PM +0530, Kishon Vijay Abraham I wrote:
+>> commit bd22885aa188f135fd9 ("PCI: cadence: Refactor driver to use
+>> as a core library") while refactoring the Cadence PCIe driver to be
+>> used as library, removed pm_runtime_get_sync() from cdns_pcie_ep_setup()
+>> and cdns_pcie_host_setup() but missed to remove the corresponding
+>> pm_runtime_put_sync() in the error path. Fix it here.
+>>
+>> Fixes: commit bd22885aa188f135fd9 ("PCI: cadence: Refactor driver to use
+> 
+> As this is a fix, a commit subject starting with PCI: cadence: Fix ... may
+> be more obvious.
+> 
+> I'd suggest you use the shorter form of this, i.e. Fixes: %h (\"%s\"))
+> 
+> Fixes: bd22885aa188 ("PCI: cadence: Refactor driver to use as a core library")
+> 
+>> as a core library")
 
-This makes the kernel a better place:
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Okay.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>   drivers/pci/controller/cadence/pcie-cadence-ep.c   | 2 --
+>>   drivers/pci/controller/cadence/pcie-cadence-host.c | 2 --
+>>   2 files changed, 4 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+>> index 1c173dad67d1..560f22b4d165 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+>> @@ -473,7 +473,5 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
+>>   	pci_epc_mem_exit(epc);
+>>   
+>>    err_init:
+>> -	pm_runtime_put_sync(dev);
+>> -
+>>   	return ret;
+>>   }
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> index 9b1c3966414b..ccf55e143e1d 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> @@ -275,7 +275,5 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>>   	pci_free_resource_list(&resources);
+>>   
+>>    err_init:
+>> -	pm_runtime_put_sync(dev);
+>> -
+> 
+> There is probably more you can do here for both -host and -ep:
+> 
+>   - Remove the possibly now unused <linux/pm_runtime.h> include
+>   - Remove the err_init label and return directly from source.
 
-Will there be a GPIO driver arriving later?
+Okay, will fix this up.
 
-Yours,
-Linus Walleij
+Thanks
+Kishon
