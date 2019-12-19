@@ -2,96 +2,88 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF0BC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4182C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5347620716
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:30:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TS12gv9G"
+	by mail.kernel.org (Postfix) with ESMTP id 8EDDC20716
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:32:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfLSLag (ORCPT
+        id S1726752AbfLSLcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 06:30:36 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:45977 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726692AbfLSLag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 06:30:36 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47dqS80dMlz9sPJ;
-        Thu, 19 Dec 2019 22:30:31 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1576755033;
-        bh=6lBsCkHyaN0GoUoK5YulVgcI4GDTGjPtr5Z7BZ10PVA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=TS12gv9GC0kxPJAMxsqZrOVOVNgj39/e/bSIOmXMqC+lDLVUK/qR91R/n7P+9r1T8
-         Bj9OZvyeEVAnWGaKYGCVIabn4YsK7nCJ1GBwZ2kEq41hQaiP5AKw3gT7QR6NFE4wa6
-         sdUZx8An50ewUOpOFjmtsfglzGdwv6yU60QlCno2OdPFT9zyTAwTdkCb2gqzxMU/jQ
-         lWtvLnPiz06dph5B6g09oJJrgoXLb2g+ijzBGZFybpFRSZvnK/tAqiTuCYVRcxqjbx
-         ulXDUgvtVaA95aOVpld9JqtT7vUv5fMGOh6m8Hg+2hJ/LpMZyAby8MCiapzx8i2zgC
-         0PUlgcTVC3j8w==
-Date:   Thu, 19 Dec 2019 22:30:30 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commits in the
- drm-intel-fixes tree
-Message-ID: <20191219223030.1747f04b@canb.auug.org.au>
+        Thu, 19 Dec 2019 06:32:00 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:34675 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726656AbfLSLcA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 06:32:00 -0500
+Received: from mail-qv1-f45.google.com ([209.85.219.45]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MK3BO-1iOZQe2HL4-00LTop; Thu, 19 Dec 2019 12:31:58 +0100
+Received: by mail-qv1-f45.google.com with SMTP id x1so2070576qvr.8;
+        Thu, 19 Dec 2019 03:31:58 -0800 (PST)
+X-Gm-Message-State: APjAAAXB5bwFEkVsoGBTjHpj+xzg5RPxUdiP5nla6zzs0fjuekGPlV9G
+        hai2CntJU9zh2fwtGQvG2nBWH+7UCkSxmNe6Gck=
+X-Google-Smtp-Source: APXvYqwq+q6D8rTIMB8KZItwAsS83uuBG4XEsHVi6nS5xeM4CNJDakxFmkQBf2UtMAyO+u9DeejJYNgUAsO8AvEmpn0=
+X-Received: by 2002:a0c:bd20:: with SMTP id m32mr7059944qvg.197.1576755117281;
+ Thu, 19 Dec 2019 03:31:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/PVy.JeA=7gTRi=texyQFMjh";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20191218235459.GA17271@ircssh-2.c.rugged-nimbus-611.internal>
+ <CAK8P3a2eT=bHkUamyp-P3Y2adNq1KBk7UknCYBY5_aR4zJmYaQ@mail.gmail.com> <20191219103525.yqb5f4pbd2dvztkb@wittgenstein>
+In-Reply-To: <20191219103525.yqb5f4pbd2dvztkb@wittgenstein>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 19 Dec 2019 12:31:41 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1-hsnidMzQJghRGE-1voP4WHDoOLRZHe9P-UmTpea+Qg@mail.gmail.com>
+Message-ID: <CAK8P3a1-hsnidMzQJghRGE-1voP4WHDoOLRZHe9P-UmTpea+Qg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/5] pid: Add PIDFD_IOCTL_GETFD to fetch file
+ descriptors from processes
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Al Viro <viro@zeniv.linux.org.uk>, gpascutto@mozilla.com,
+        ealvarez@mozilla.com, jld@mozilla.com
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:8D0/OjmjTCtC8NYK8+U1DBLyqoIMcYVm1PArq4gO/MH79DtzZ2f
+ 8lA7RWNhBh2TTbnK8V9H52IEsDqwKhUO9CUtFT3Cu7upEswQKB1R6/WiVYFe5DKqrUAoJKo
+ F8FAMmMhTm0yAMr0RYnPlMi9qe+Pkakroh/wDwcdMwBv6828oSiT9LkwvMK2J34m+BU8ysL
+ cu3FCoePnDNANfBDHshHw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:WBP7hzHAu34=:Xs+OM7mXb052e96l6KaNgz
+ 25gweXJYia1SqK5F1/aDSmux6qaCtxiw11HSujr5oudtUlCSo6rVqjDXdubzZ/WgxA9eMq4Sl
+ NbWouEhaDbyzZ8xbMAL2MOi6HKPfUZ5BspkNMZbqQesVS90z/PqUw5oY8eY5IJASYaJHz3KMS
+ 2hnjXXKEgjjSaQ8qnyvjxkuZF7ZbxEgJawCB30moOhKoG1WB4Xj6UvM6nzQ5TPNnhcnP7w3UY
+ 2C+N7FsSfom3if7hArKwrI6KwkYWdQf6U7CJnYxkVcyGWnXQYJCOtjcGv+BZvvx6OHssXYB2E
+ PaLnO0ExGYwWeN1F+fTWB01l+lTZYrWNNoPpQ8Hi3atiYTdO5NlAtoZINkebPd7zbouuNA0L8
+ ohhDjO9yI0hn/MYDNgl873pEnTj+AAch4CVU1nXQndlkkyWTSJUdZ110YLpHBAYaTQm9E7Lo0
+ NZJDK2CxrQ1T+AF1S1hmkeEUt7gbpmgazcFSPU1HNEXoS2kOhYpMJCT5Nt2ldA7wCTfPvf1wM
+ Qt50EJEfSdwqxXNcMdf5Ws0fAnA8IZ4vImVOOkRZZJ2+4ciexgw4Skx9lTh9zxE1+vfh3Wise
+ k9JgahkzDw47+bwDtzZWGMVVGhtM/5kw9U1FNwlVS+KVigCh5u8LyAlmYlHqtNWWofzfNbY/o
+ XIlm4FGmxev6Dwtaz4KkevEbp1uBsLv8YBMCazOOVulnFuEoqZngmEHSMjfRbfJB/I0rbQu7o
+ KTIdXZ1D9ftkgQG2CSiyuASJp0toJ6Go/oIlaUiU2eDMWlKF0PEVpthCkmA997kSN/znRQw6C
+ yQbcpL+tP3aeG4UzPMiB/xchZuTlNaRd3dr9+HJ5hci0HKxLhECEuwhcIrybrg1dI+ZwwX218
+ dXE5VNfOpiXmkMVOoLhw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/PVy.JeA=7gTRi=texyQFMjh
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Dec 19, 2019 at 11:35 AM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
+> On Thu, Dec 19, 2019 at 09:03:09AM +0100, Arnd Bergmann wrote:
+> > On Thu, Dec 19, 2019 at 12:55 AM Sargun Dhillon <sargun@sargun.me> wrote:
 
-Hi all,
+> What does everyone else think? Arnd, still in favor of a syscall I take it.
 
-Commits
+Yes, but I would not object the ioctl if others prefer that.
 
-  987e379d7500 ("Revert "devtmpfs: use do_mount() instead of ksys_mount()"")
-  9bd5ba4fe25a ("Revert "initrd: use do_mount() instead of ksys_mount()"")
-  fa31001c96ad ("Revert "init: use do_mount() instead of ksys_mount()"")
-
-are missing a Signed-off-by from their author and committer.
-
-Reverts are commits too and should have reasonable commit messages.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/PVy.JeA=7gTRi=texyQFMjh
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl37X1YACgkQAVBC80lX
-0GxWlgf/bAhMqppXRsR38Gc3y9hw0JI708FL964r+7yrzRrkj7VqrGPnXQDnUyZY
-jCWlrmN1n/FFcQ5WLN56Ly0ZRIx7naaVYKNN2Yg9fAP4fcPX36WnvYOd/lF+XORZ
-yF5LwD72vMISD07Vq4s8C+oqryZQESJzQPjb4hwS0Bd6/vzv+lnis8ECPO/pSMrE
-5x58r4NcN/YcB83+NxxdakBI1Q1hxRX9b2vRwXFmHWzuD4OtxfcnFb0AiFV903G9
-dCRVEAAy0Mx14hQq7cOEB9yzJka0YJYoLUwld/u9WIB1t6wWGRgkinz90OOrWL2e
-iRUhZtFzNOBNJdbe9XJDxIfYlBY5XA==
-=96zL
------END PGP SIGNATURE-----
-
---Sig_/PVy.JeA=7gTRi=texyQFMjh--
+      Arnd
