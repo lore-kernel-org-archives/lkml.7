@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C38C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A72C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C0E6206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A77524684
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:56:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781785;
-	bh=BahGp/WcvJzSgRLqgRvYNiiQbWUBKF2w/g8tzngIBnw=;
+	s=default; t=1576781788;
+	bh=nUJQkdlrLbP8vid/uIYs8cG57aNUfqgBoXs6B9lMV8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CltFanmUIHKWRfwmAJ8hyo0cLZs4pZ6+gqeKVlAxJKfNi6Q6eFnSSPy+nWIwEzETx
-	 rNsKKvPaW7VXtzU3CklKYNRe19jqaeqZ8M/AZ39ROtzfUbt5zzV8LDry/y+oSGjsE3
-	 vCfVDZJ5cHlTlpTEslpLYeKBpqt7LZ2fnmAYe3mA=
+	b=Ck4NImoHQKsTXxiBvQZ5CztG4t4RHjO9k4XB76szL1CX/c4XwRyopOgmeZB7jAOj6
+	 tlyPyhwM9ZFbNn4CFkQ7f9Apo8gmE5BiIS+VNUUH2Uh9YB2+/eSoGt9OVG6zGXuJjc
+	 EQpX2ikuMJj/h8RpHQQy5MFdiYcCFAtj09fubbRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730807AbfLSS4X (ORCPT
+        id S1730428AbfLSS41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:56:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52784 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:56:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730791AbfLSS4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:56:17 -0500
+        id S1730797AbfLSS4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:56:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FAE9206EC;
-        Thu, 19 Dec 2019 18:56:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78830227BF;
+        Thu, 19 Dec 2019 18:56:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781776;
-        bh=BahGp/WcvJzSgRLqgRvYNiiQbWUBKF2w/g8tzngIBnw=;
+        s=default; t=1576781778;
+        bh=nUJQkdlrLbP8vid/uIYs8cG57aNUfqgBoXs6B9lMV8k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NdFRQq3L+VZRXlbVAM++tUdiftVhk56eb4Ci1+FKYSLeI3OBEyXAN2Lwefmek0VvN
-         3bmh+AZzmj1dySJpzE0/Lgd4hBGHhBKCuQsUFaVxNcIUEsBHr5SdzlH5sHE65D8NJy
-         sgEezNPB4Y3gMyADgkecXivJTE2Y1LrqXg4GW1rE=
+        b=rjXW3z8BWSTI+d/Pioz7F1ZuBgUobFjSlSG+aWgE1AES5UNgRVyw+sOrBoPO8KFfM
+         6BACPrEcoERdytH07gOc6rG0L+zURUiu3mVps+VCF5LWBZU09LrFoEOT4/EdWj5Tyl
+         NJHQ7mXN2/GRkp0JV36WSBjy/clGGymjzTr+Rc50=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Frank Sorenson <sorenson@redhat.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
+        stable@vger.kernel.org, "Paulo Alcantara (SUSE)" <pc@cjr.nz>,
+        Matthew Ruffell <matthew.ruffell@canonical.com>,
         Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.4 37/80] CIFS: Fix NULL pointer dereference in mid callback
-Date:   Thu, 19 Dec 2019 19:34:29 +0100
-Message-Id: <20191219183107.612439697@linuxfoundation.org>
+Subject: [PATCH 5.4 38/80] cifs: Fix retrieval of DFS referrals in cifs_mount()
+Date:   Thu, 19 Dec 2019 19:34:30 +0100
+Message-Id: <20191219183107.931508671@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -61,93 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Shilovsky <pshilov@microsoft.com>
+From: Paulo Alcantara (SUSE) <pc@cjr.nz>
 
-commit 86a7964be7afaf3df6b64faaa10a7032d2444e51 upstream.
+commit 5bb30a4dd60e2a10a4de9932daff23e503f1dd2b upstream.
 
-There is a race between a system call processing thread
-and the demultiplex thread when mid->resp_buf becomes NULL
-and later is being accessed to get credits. It happens when
-the 1st thread wakes up before a mid callback is called in
-the 2nd one but the mid state has already been set to
-MID_RESPONSE_RECEIVED. This causes NULL pointer dereference
-in mid callback.
+Make sure that DFS referrals are sent to newly resolved root targets
+as in a multi tier DFS setup.
 
-Fix this by saving credits from the response before we
-update the mid state and then use this value in the mid
-callback rather then accessing a response buffer.
-
-Cc: Stable <stable@vger.kernel.org>
-Fixes: ee258d79159afed5 ("CIFS: Move credit processing to mid callbacks for SMB3")
-Tested-by: Frank Sorenson <sorenson@redhat.com>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Paulo Alcantara (SUSE) <pc@cjr.nz>
+Link: https://lkml.kernel.org/r/05aa2995-e85e-0ff4-d003-5bb08bd17a22@canonical.com
+Cc: stable@vger.kernel.org
+Tested-by: Matthew Ruffell <matthew.ruffell@canonical.com>
 Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/cifsglob.h |    1 +
- fs/cifs/connect.c  |   15 +++++++++++++++
- fs/cifs/smb2ops.c  |    8 +-------
- 3 files changed, 17 insertions(+), 7 deletions(-)
+ fs/cifs/connect.c |   32 ++++++++++++++++++++++----------
+ 1 file changed, 22 insertions(+), 10 deletions(-)
 
---- a/fs/cifs/cifsglob.h
-+++ b/fs/cifs/cifsglob.h
-@@ -1524,6 +1524,7 @@ struct mid_q_entry {
- 	struct TCP_Server_Info *server;	/* server corresponding to this mid */
- 	__u64 mid;		/* multiplex id */
- 	__u16 credits;		/* number of credits consumed by this mid */
-+	__u16 credits_received;	/* number of credits from the response */
- 	__u32 pid;		/* process id */
- 	__u32 sequence_number;  /* for CIFS signing */
- 	unsigned long when_alloc;  /* when mid was created */
 --- a/fs/cifs/connect.c
 +++ b/fs/cifs/connect.c
-@@ -905,6 +905,20 @@ dequeue_mid(struct mid_q_entry *mid, boo
- 	spin_unlock(&GlobalMid_Lock);
+@@ -4709,6 +4709,17 @@ static int is_path_remote(struct cifs_sb
  }
  
-+static unsigned int
-+smb2_get_credits_from_hdr(char *buffer, struct TCP_Server_Info *server)
+ #ifdef CONFIG_CIFS_DFS_UPCALL
++static inline void set_root_tcon(struct cifs_sb_info *cifs_sb,
++				 struct cifs_tcon *tcon,
++				 struct cifs_tcon **root)
 +{
-+	struct smb2_sync_hdr *shdr = (struct smb2_sync_hdr *)buffer;
-+
-+	/*
-+	 * SMB1 does not use credits.
-+	 */
-+	if (server->vals->header_preamble_size)
-+		return 0;
-+
-+	return le16_to_cpu(shdr->CreditRequest);
++	spin_lock(&cifs_tcp_ses_lock);
++	tcon->tc_count++;
++	tcon->remap = cifs_remap(cifs_sb);
++	spin_unlock(&cifs_tcp_ses_lock);
++	*root = tcon;
 +}
 +
- static void
- handle_mid(struct mid_q_entry *mid, struct TCP_Server_Info *server,
- 	   char *buf, int malformed)
-@@ -912,6 +926,7 @@ handle_mid(struct mid_q_entry *mid, stru
- 	if (server->ops->check_trans2 &&
- 	    server->ops->check_trans2(mid, server, buf, malformed))
- 		return;
-+	mid->credits_received = smb2_get_credits_from_hdr(buf, server);
- 	mid->resp_buf = buf;
- 	mid->large_buf = server->large_buf;
- 	/* Was previous buf put in mpx struct for multi-rsp? */
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -151,13 +151,7 @@ smb2_get_credits_field(struct TCP_Server
- static unsigned int
- smb2_get_credits(struct mid_q_entry *mid)
+ int cifs_mount(struct cifs_sb_info *cifs_sb, struct smb_vol *vol)
  {
--	struct smb2_sync_hdr *shdr = (struct smb2_sync_hdr *)mid->resp_buf;
--
--	if (mid->mid_state == MID_RESPONSE_RECEIVED
--	    || mid->mid_state == MID_RESPONSE_MALFORMED)
--		return le16_to_cpu(shdr->CreditRequest);
--
--	return 0;
-+	return mid->credits_received;
- }
+ 	int rc = 0;
+@@ -4810,18 +4821,10 @@ int cifs_mount(struct cifs_sb_info *cifs
+ 	/* Cache out resolved root server */
+ 	(void)dfs_cache_find(xid, ses, cifs_sb->local_nls, cifs_remap(cifs_sb),
+ 			     root_path + 1, NULL, NULL);
+-	/*
+-	 * Save root tcon for additional DFS requests to update or create a new
+-	 * DFS cache entry, or even perform DFS failover.
+-	 */
+-	spin_lock(&cifs_tcp_ses_lock);
+-	tcon->tc_count++;
+-	tcon->dfs_path = root_path;
++	kfree(root_path);
+ 	root_path = NULL;
+-	tcon->remap = cifs_remap(cifs_sb);
+-	spin_unlock(&cifs_tcp_ses_lock);
  
- static int
+-	root_tcon = tcon;
++	set_root_tcon(cifs_sb, tcon, &root_tcon);
+ 
+ 	for (count = 1; ;) {
+ 		if (!rc && tcon) {
+@@ -4858,6 +4861,15 @@ int cifs_mount(struct cifs_sb_info *cifs
+ 			mount_put_conns(cifs_sb, xid, server, ses, tcon);
+ 			rc = mount_get_conns(vol, cifs_sb, &xid, &server, &ses,
+ 					     &tcon);
++			/*
++			 * Ensure that DFS referrals go through new root server.
++			 */
++			if (!rc && tcon &&
++			    (tcon->share_flags & (SHI1005_FLAGS_DFS |
++						  SHI1005_FLAGS_DFS_ROOT))) {
++				cifs_put_tcon(root_tcon);
++				set_root_tcon(cifs_sb, tcon, &root_tcon);
++			}
+ 		}
+ 		if (rc) {
+ 			if (rc == -EACCES || rc == -EOPNOTSUPP)
 
 
