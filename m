@@ -2,502 +2,100 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4DFC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 607CEC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99E8524650
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:50:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="l8B3RJ6q"
+	by mail.kernel.org (Postfix) with ESMTP id 397702064B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:50:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbfLSJuM (ORCPT
+        id S1726725AbfLSJun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 04:50:12 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:34734 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbfLSJuM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 04:50:12 -0500
-Received: by mail-pj1-f65.google.com with SMTP id s94so2386902pjc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 01:50:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=GmXHzb4IYsQ4wd2xtEbWgG3tocbmsvFI//hZNYMvjBM=;
-        b=l8B3RJ6qlu4evU4FLqdLp3WXLTdFzkWlmBwbKqfYlyViB7h3DyqWhJj8EKBD3/Vpf4
-         sYQTKSo6IoPzdHDLBUoVjvTg9kxA/wnHwlwOCym2NJwWdx3m0OFDhLGLZPs+eNASUN8k
-         0CwfifduYjXXtygEvztkVac4eDHX1qbTYOE/I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=GmXHzb4IYsQ4wd2xtEbWgG3tocbmsvFI//hZNYMvjBM=;
-        b=mhokJcDPyApRTPjjt30+dM1WpTaoNg0VgGbcyuFE/KsI4I8zW/kjhn0X/9HSQXABSj
-         b82n9kK/qu6WP/g01BCzY9qkusMmfuNv+qYpKkFD/yPh7Wagbb4vtkpZbHZEfboORVj4
-         w+OvQLnIyAe6MyeWmCkmvIDH8mA56KvqdHljgrP9RNpNkCUp3rRmNodQtAj09Oh79zbn
-         S6LfFiqH+GRD5RXlq2VKguEzyRNMGFkbst6j8+XJqgI0kYdSgUkZstHCqOM/SfN/wriR
-         WUWwMo2hiFVq+k1Hv0CByZdoCGmU1fFl7zwDiesS6BcapNFjCeSsP9BWOYtefNfluuEu
-         n34w==
-X-Gm-Message-State: APjAAAU7pE5Po+i1snn12MTJaStJAPSh4+o0roOUaXsUkPvwv0oV1fjq
-        2TsKSeGIvEgbsaz1+ThFL8QEQA==
-X-Google-Smtp-Source: APXvYqx7YHJps6Dh4dmDFEE7cmaT6vGGR4zT/ZMKpJdTjRYukxsStIp/7mt2aMJ3KlDE9HwVqSakSA==
-X-Received: by 2002:a17:90a:fb87:: with SMTP id cp7mr8690446pjb.56.1576749009677;
-        Thu, 19 Dec 2019 01:50:09 -0800 (PST)
-Received: from localhost (2001-44b8-1113-6700-b05d-cbfe-b2ee-de17.static.ipv6.internode.on.net. [2001:44b8:1113:6700:b05d:cbfe:b2ee:de17])
-        by smtp.gmail.com with ESMTPSA id r6sm7431424pfh.91.2019.12.19.01.50.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 01:50:08 -0800 (PST)
-From:   Daniel Axtens <dja@axtens.net>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, kasan-dev@googlegroups.com,
-        aneesh.kumar@linux.ibm.com, bsingharora@gmail.com
-Cc:     Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v4 4/4] powerpc: Book3S 64-bit "heavyweight" KASAN support
-In-Reply-To: <c4d37067-829f-cd7d-7e94-0ec2223cce71@c-s.fr>
-References: <20191219003630.31288-1-dja@axtens.net> <20191219003630.31288-5-dja@axtens.net> <c4d37067-829f-cd7d-7e94-0ec2223cce71@c-s.fr>
-Date:   Thu, 19 Dec 2019 20:50:04 +1100
-Message-ID: <87bls4tzjn.fsf@dja-thinkpad.axtens.net>
+        Thu, 19 Dec 2019 04:50:43 -0500
+Received: from mx2.suse.de ([195.135.220.15]:45708 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726599AbfLSJum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 04:50:42 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D7831AF41;
+        Thu, 19 Dec 2019 09:50:40 +0000 (UTC)
+Date:   Thu, 19 Dec 2019 10:50:38 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        AlekseyMakarov <aleksey.makarov@linaro.org>
+Subject: Re: [RFC/PATCH] printk: Fix preferred console selection with
+ multiple matches
+Message-ID: <20191219095038.hplirl7sxlpreo4w@pathway.suse.cz>
+References: <b8131bf32a5572352561ec7f2457eb61cc811390.camel@kernel.crashing.org>
+ <20191210091502.qoq55fdjad6aixab@pathway.suse.cz>
+ <50d2c44a15960760c6a9d24442a93fa4b31b7594.camel@kernel.crashing.org>
+ <20191211091740.p6bgjy7sy75maenw@pathway.suse.cz>
+ <0511b917d8ebcf594480349b79fcb9f14aa882f9.camel@kernel.crashing.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0511b917d8ebcf594480349b79fcb9f14aa882f9.camel@kernel.crashing.org>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@c-s.fr> writes:
+On Mon 2019-12-16 11:09:33, Benjamin Herrenschmidt wrote:
+> On Wed, 2019-12-11 at 10:17 +0100, Petr Mladek wrote:
+> > The reverse search of list of console does not work for ttySX
+> > consoles because the number is omitted when matching. And the messages
+> > will appear only on the first matched serial console. There is
+> > a paragraph about this in the commit message of my patch.
+> 
+> About that specific issue...
+> 
+> I see indeed that 8250_core.c registers a "generic" console with index
+> -1 which will match whetever we hit first in the array.
+> 
+> This is actually wrong isn't it ? Without any change such as what we've
+> been proposing, it means that an arch doing add_preferred_console of
+> any ttyS* will override anything on the command line, and it also means
+> that a command line with multiple ttyS entries will stop at the first
+> one, not the last one.
+> 
+> IE. In both case the code will select a console that isn't
+> preferred_console... or am I missing something subtle ?
+> 
+> So yes, fixing that will "regress" in the sense that it will change the
+> behaviour, but to make it match what's documented... am I wrong ?
+> 
+> The question then becomes what's the most broken ? Changing the
+> behaviour that might have become expected or leaving the (alledgedly)
+> broken behaviour in place ?
 
-> On 12/19/2019 12:36 AM, Daniel Axtens wrote:
->> KASAN support on Book3S is a bit tricky to get right:
->> 
->>   - It would be good to support inline instrumentation so as to be able to
->>     catch stack issues that cannot be caught with outline mode.
->> 
->>   - Inline instrumentation requires a fixed offset.
->> 
->>   - Book3S runs code in real mode after booting. Most notably a lot of KVM
->>     runs in real mode, and it would be good to be able to instrument it.
->> 
->>   - Because code runs in real mode after boot, the offset has to point to
->>     valid memory both in and out of real mode.
->> 
->>      [ppc64 mm note: The kernel installs a linear mapping at effective
->>      address c000... onward. This is a one-to-one mapping with physical
->>      memory from 0000... onward. Because of how memory accesses work on
->>      powerpc 64-bit Book3S, a kernel pointer in the linear map accesses the
->>      same memory both with translations on (accessing as an 'effective
->>      address'), and with translations off (accessing as a 'real
->>      address'). This works in both guests and the hypervisor. For more
->>      details, see s5.7 of Book III of version 3 of the ISA, in particular
->>      the Storage Control Overview, s5.7.3, and s5.7.5 - noting that this
->>      KASAN implementation currently only supports Radix.]
->> 
->> One approach is just to give up on inline instrumentation. This way all
->> checks can be delayed until after everything set is up correctly, and the
->> address-to-shadow calculations can be overridden. However, the features and
->> speed boost provided by inline instrumentation are worth trying to do
->> better.
->> 
->> If _at compile time_ it is known how much contiguous physical memory a
->> system has, the top 1/8th of the first block of physical memory can be set
->> aside for the shadow. This is a big hammer and comes with 3 big
->> consequences:
->> 
->>   - there's no nice way to handle physically discontiguous memory, so only
->>     the first physical memory block can be used.
->> 
->>   - kernels will simply fail to boot on machines with less memory than
->>     specified when compiling.
->> 
->>   - kernels running on machines with more memory than specified when
->>     compiling will simply ignore the extra memory.
->> 
->> Implement and document KASAN this way. The current implementation is Radix
->> only.
->> 
->> Despite the limitations, it can still find bugs,
->> e.g. http://patchwork.ozlabs.org/patch/1103775/
->> 
->> At the moment, this physical memory limit must be set _even for outline
->> mode_. This may be changed in a later series - a different implementation
->> could be added for outline mode that dynamically allocates shadow at a
->> fixed offset. For example, see https://patchwork.ozlabs.org/patch/795211/
->> 
->> Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
->> Cc: Balbir Singh <bsingharora@gmail.com> # ppc64 out-of-line radix version
->> Cc: Christophe Leroy <christophe.leroy@c-s.fr> # ppc32 version
->> Signed-off-by: Daniel Axtens <dja@axtens.net>
->> 
->> ---
->> Changes since v3:
->>   - Address further feedback from Christophe.
->>   - Drop changes to stack walking, it looks like the issue I observed is
->>     related to that particular stack, not stack-walking generally.
->> 
->> Changes since v2:
->> 
->>   - Address feedback from Christophe around cleanups and docs.
->>   - Address feedback from Balbir: at this point I don't have a good solution
->>     for the issues you identify around the limitations of the inline implementation
->>     but I think that it's worth trying to get the stack instrumentation support.
->>     I'm happy to have an alternative and more flexible outline mode - I had
->>     envisoned this would be called 'lightweight' mode as it imposes fewer restrictions.
->>     I've linked to your implementation. I think it's best to add it in a follow-up series.
->>   - Made the default PHYS_MEM_SIZE_FOR_KASAN value 1024MB. I think most people have
->>     guests with at least that much memory in the Radix 64s case so it's a much
->>     saner default - it means that if you just turn on KASAN without reading the
->>     docs you're much more likely to have a bootable kernel, which you will never
->>     have if the value is set to zero! I'm happy to bikeshed the value if we want.
->> 
->> Changes since v1:
->>   - Landed kasan vmalloc support upstream
->>   - Lots of feedback from Christophe.
->> 
->> Changes since the rfc:
->> 
->>   - Boots real and virtual hardware, kvm works.
->> 
->>   - disabled reporting when we're checking the stack for exception
->>     frames. The behaviour isn't wrong, just incompatible with KASAN.
->> 
->>   - Documentation!
->> 
->>   - Dropped old module stuff in favour of KASAN_VMALLOC.
->> 
->> The bugs with ftrace and kuap were due to kernel bloat pushing
->> prom_init calls to be done via the plt. Because we did not have
->> a relocatable kernel, and they are done very early, this caused
->> everything to explode. Compile with CONFIG_RELOCATABLE!
->> ---
->>   Documentation/dev-tools/kasan.rst            |   8 +-
->>   Documentation/powerpc/kasan.txt              | 112 ++++++++++++++++++-
->>   arch/powerpc/Kconfig                         |   2 +
->>   arch/powerpc/Kconfig.debug                   |  21 ++++
->>   arch/powerpc/Makefile                        |  11 ++
->>   arch/powerpc/include/asm/book3s/64/hash.h    |   4 +
->>   arch/powerpc/include/asm/book3s/64/pgtable.h |   7 ++
->>   arch/powerpc/include/asm/book3s/64/radix.h   |   5 +
->>   arch/powerpc/include/asm/kasan.h             |  21 +++-
->>   arch/powerpc/kernel/prom.c                   |  61 +++++++++-
->>   arch/powerpc/mm/kasan/Makefile               |   1 +
->>   arch/powerpc/mm/kasan/init_book3s_64.c       |  70 ++++++++++++
->>   arch/powerpc/platforms/Kconfig.cputype       |   1 +
->>   13 files changed, 316 insertions(+), 8 deletions(-)
->>   create mode 100644 arch/powerpc/mm/kasan/init_book3s_64.c
->> 
->> diff --git a/arch/powerpc/include/asm/kasan.h b/arch/powerpc/include/asm/kasan.h
->> index 296e51c2f066..f18268cbdc33 100644
->> --- a/arch/powerpc/include/asm/kasan.h
->> +++ b/arch/powerpc/include/asm/kasan.h
->> @@ -2,6 +2,9 @@
->>   #ifndef __ASM_KASAN_H
->>   #define __ASM_KASAN_H
->>   
->> +#include <asm/page.h>
->> +#include <asm/pgtable.h>
->
-> What do you need asm/pgtable.h for ?
->
-> Build failure due to circular inclusion of asm/pgtable.h:
+I though the same. But then I found the following in
+Documentation/admin-guide/serial-console.rst
 
-I see there's a lot of ppc32 stuff, I clearly need to bite the bullet
-and get a ppc32 toolchain so I can squash these without chewing up any
-more of your time. I'll sort that out and send a new spin.
+  "If no console device is specified, the first device found capable of
+  acting as a system console will be used. At this time, the system
+  first looks for a VGA card and then for a serial port. So if you don't
+  have a VGA card in your system the first serial port will automatically
+  become the console."
 
-Regards,
-Daniel
 
->
->    CC      arch/powerpc/kernel/asm-offsets.s
-> In file included from ./arch/powerpc/include/asm/nohash/32/pgtable.h:77:0,
->                   from ./arch/powerpc/include/asm/nohash/pgtable.h:8,
->                   from ./arch/powerpc/include/asm/pgtable.h:20,
->                   from ./arch/powerpc/include/asm/kasan.h:6,
->                   from ./include/linux/kasan.h:14,
->                   from ./include/linux/slab.h:136,
->                   from ./include/linux/crypto.h:19,
->                   from ./include/crypto/hash.h:11,
->                   from ./include/linux/uio.h:10,
->                   from ./include/linux/socket.h:8,
->                   from ./include/linux/compat.h:15,
->                   from arch/powerpc/kernel/asm-offsets.c:14:
-> ./include/asm-generic/fixmap.h: In function 'fix_to_virt':
-> ./arch/powerpc/include/asm/fixmap.h:28:22: error: 'KASAN_SHADOW_START' 
-> undeclared (first use in this function)
->   #define FIXADDR_TOP (KASAN_SHADOW_START - PAGE_SIZE)
->                        ^
-> ./include/asm-generic/fixmap.h:21:27: note: in expansion of macro 
-> 'FIXADDR_TOP'
->   #define __fix_to_virt(x) (FIXADDR_TOP - ((x) << PAGE_SHIFT))
->                             ^
-> ./include/asm-generic/fixmap.h:33:9: note: in expansion of macro 
-> '__fix_to_virt'
->    return __fix_to_virt(idx);
->           ^
-> ./arch/powerpc/include/asm/fixmap.h:28:22: note: each undeclared 
-> identifier is reported only once for each function it appears in
->   #define FIXADDR_TOP (KASAN_SHADOW_START - PAGE_SIZE)
->                        ^
-> ./include/asm-generic/fixmap.h:21:27: note: in expansion of macro 
-> 'FIXADDR_TOP'
->   #define __fix_to_virt(x) (FIXADDR_TOP - ((x) << PAGE_SHIFT))
->                             ^
-> ./include/asm-generic/fixmap.h:33:9: note: in expansion of macro 
-> '__fix_to_virt'
->    return __fix_to_virt(idx);
->           ^
-> In file included from ./include/linux/bug.h:5:0,
->                   from ./include/linux/thread_info.h:12,
->                   from ./include/asm-generic/preempt.h:5,
->                   from ./arch/powerpc/include/generated/asm/preempt.h:1,
->                   from ./include/linux/preempt.h:78,
->                   from ./include/linux/spinlock.h:51,
->                   from ./include/linux/seqlock.h:36,
->                   from ./include/linux/time.h:6,
->                   from ./include/linux/compat.h:10,
->                   from arch/powerpc/kernel/asm-offsets.c:14:
-> ./include/asm-generic/fixmap.h: In function 'virt_to_fix':
-> ./arch/powerpc/include/asm/fixmap.h:28:22: error: 'KASAN_SHADOW_START' 
-> undeclared (first use in this function)
->   #define FIXADDR_TOP (KASAN_SHADOW_START - PAGE_SIZE)
->                        ^
-> ./arch/powerpc/include/asm/bug.h:73:27: note: in definition of macro 
-> 'BUG_ON'
->    if (__builtin_constant_p(x)) {    \
->                             ^
-> ./include/asm-generic/fixmap.h:38:18: note: in expansion of macro 
-> 'FIXADDR_TOP'
->    BUG_ON(vaddr >= FIXADDR_TOP || vaddr < FIXADDR_START);
->                    ^
-> In file included from ./arch/powerpc/include/asm/nohash/32/pgtable.h:77:0,
->                   from ./arch/powerpc/include/asm/nohash/pgtable.h:8,
->                   from ./arch/powerpc/include/asm/pgtable.h:20,
->                   from ./arch/powerpc/include/asm/kasan.h:6,
->                   from ./include/linux/kasan.h:14,
->                   from ./include/linux/slab.h:136,
->                   from ./include/linux/crypto.h:19,
->                   from ./include/crypto/hash.h:11,
->                   from ./include/linux/uio.h:10,
->                   from ./include/linux/socket.h:8,
->                   from ./include/linux/compat.h:15,
->                   from arch/powerpc/kernel/asm-offsets.c:14:
-> ./arch/powerpc/include/asm/fixmap.h: In function '__set_fixmap':
-> ./arch/powerpc/include/asm/fixmap.h:28:22: error: 'KASAN_SHADOW_START' 
-> undeclared (first use in this function)
->   #define FIXADDR_TOP (KASAN_SHADOW_START - PAGE_SIZE)
->                        ^
-> ./include/asm-generic/fixmap.h:21:27: note: in expansion of macro 
-> 'FIXADDR_TOP'
->   #define __fix_to_virt(x) (FIXADDR_TOP - ((x) << PAGE_SHIFT))
->                             ^
-> ./arch/powerpc/include/asm/fixmap.h:102:18: note: in expansion of macro 
-> '__fix_to_virt'
->    map_kernel_page(__fix_to_virt(idx), phys, flags);
->                    ^
-> make[2]: *** [arch/powerpc/kernel/asm-offsets.s] Error 1
-> make[1]: *** [prepare0] Error 2
-> make: *** [sub-make] Error 2
->
->
->
->> +
->>   #ifdef CONFIG_KASAN
->>   #define _GLOBAL_KASAN(fn)	_GLOBAL(__##fn)
->>   #define _GLOBAL_TOC_KASAN(fn)	_GLOBAL_TOC(__##fn)
->> @@ -14,13 +17,19 @@
->>   
->>   #ifndef __ASSEMBLY__
->>   
->> -#include <asm/page.h>
->> +#ifdef CONFIG_KASAN
->> +void kasan_init(void);
->> +#else
->> +static inline void kasan_init(void) { }
->> +#endif
->
-> I don't think it is worth moving this. Just keep everything out of the 
-> #ifdef CONFIG_PPC32. Having undefined/unused functions there shouldn't 
-> matter.
->
->>   
->>   #define KASAN_SHADOW_SCALE_SHIFT	3
->>   
->>   #define KASAN_SHADOW_START	(KASAN_SHADOW_OFFSET + \
->>   				 (PAGE_OFFSET >> KASAN_SHADOW_SCALE_SHIFT))
->>   
->> +#ifdef CONFIG_PPC32
->> +
->>   #define KASAN_SHADOW_OFFSET	ASM_CONST(CONFIG_KASAN_SHADOW_OFFSET)
->>   
->>   #define KASAN_SHADOW_END	0UL
->> @@ -30,11 +39,17 @@
->
-> Keep the block below out of the CONFIG_PPC32 ifdef, don't need to move 
-> kasan_init()
->
->>   #ifdef CONFIG_KASAN
->>   void kasan_early_init(void);
->>   void kasan_mmu_init(void);
->> -void kasan_init(void);
->>   #else
->> -static inline void kasan_init(void) { }
->>   static inline void kasan_mmu_init(void) { }
->>   #endif
->> +#endif
->> +
->> +#ifdef CONFIG_PPC_BOOK3S_64
->> +
->> +#define KASAN_SHADOW_SIZE ((u64)CONFIG_PHYS_MEM_SIZE_FOR_KASAN * \
->> +				1024 * 1024 * 1 / 8)
->
-> What about:
->
-> (ASM_CONST(CONFIG_PHYS_MEM_SIZE_FOR_KASAN) * SZ_1G) >> 
-> KASAN_SHADOW_SCALE_SHIFT
->
->> +
->> +#endif /* CONFIG_PPC_BOOK3S_64 */
->>   
->>   #endif /* __ASSEMBLY */
->>   #endif
->> diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
->> index 6620f37abe73..f8ef0074b320 100644
->> --- a/arch/powerpc/kernel/prom.c
->> +++ b/arch/powerpc/kernel/prom.c
->> @@ -72,6 +72,7 @@ unsigned long tce_alloc_start, tce_alloc_end;
->>   u64 ppc64_rma_size;
->>   #endif
->>   static phys_addr_t first_memblock_size;
->> +static phys_addr_t top_phys_addr;
->>   static int __initdata boot_cpu_count;
->>   
->>   static int __init early_parse_mem(char *p)
->> @@ -449,6 +450,26 @@ static bool validate_mem_limit(u64 base, u64 *size)
->>   {
->>   	u64 max_mem = 1UL << (MAX_PHYSMEM_BITS);
->>   
->> +	/*
->> +	 * To handle the NUMA/discontiguous memory case, don't allow a block
->> +	 * to be added if it falls completely beyond the configured physical
->> +	 * memory. Print an informational message.
->> +	 *
->> +	 * Frustratingly we also see this with qemu - it seems to split the
->> +	 * specified memory into a number of smaller blocks. If this happens
->> +	 * under qemu, it probably represents misconfiguration. So we want
->> +	 * the message to be noticeable, but not shouty.
->> +	 *
->> +	 * See Documentation/powerpc/kasan.txt
->> +	 */
->> +	if (IS_ENABLED(CONFIG_KASAN) &&
->> +	    (base >= ((u64)CONFIG_PHYS_MEM_SIZE_FOR_KASAN << 20))) {
->> +		pr_warn("KASAN: not adding memory block at %llx (size %llx)\n"
->> +			"This could be due to discontiguous memory or kernel misconfiguration.",
->> +			base, *size);
->> +		return false;
->> +	}
->> +
->>   	if (base >= max_mem)
->>   		return false;
->>   	if ((base + *size) > max_mem)
->> @@ -572,8 +593,10 @@ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
->>   
->>   	/* Add the chunk to the MEMBLOCK list */
->>   	if (add_mem_to_memblock) {
->> -		if (validate_mem_limit(base, &size))
->> +		if (validate_mem_limit(base, &size)) {
->>   			memblock_add(base, size);
->> +			top_phys_addr = max(top_phys_addr, base + size);
->
-> Build failure, you have to cast (base + size) to (phys_addr_t) as 
-> phys_addr_t is not always u64.
->
->    CC      arch/powerpc/kernel/asm-offsets.s
->    CALL    scripts/checksyscalls.sh
->    CALL    scripts/atomic/check-atomics.sh
->    CC      arch/powerpc/kernel/prom.o
-> In file included from arch/powerpc/kernel/prom.c:15:0:
-> arch/powerpc/kernel/prom.c: In function 'early_init_dt_add_memory_arch':
-> ./include/linux/kernel.h:844:29: error: comparison of distinct pointer 
-> types lacks a cast [-Werror]
->     (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
->                               ^
-> ./include/linux/kernel.h:858:4: note: in expansion of macro '__typecheck'
->     (__typecheck(x, y) && __no_side_effects(x, y))
->      ^
-> ./include/linux/kernel.h:868:24: note: in expansion of macro '__safe_cmp'
->    __builtin_choose_expr(__safe_cmp(x, y), \
->                          ^
-> ./include/linux/kernel.h:884:19: note: in expansion of macro '__careful_cmp'
->   #define max(x, y) __careful_cmp(x, y, >)
->                     ^
-> arch/powerpc/kernel/prom.c:598:20: note: in expansion of macro 'max'
->      top_phys_addr = max(top_phys_addr, base + size);
->                      ^
-> cc1: all warnings being treated as errors
-> make[3]: *** [arch/powerpc/kernel/prom.o] Error 1
-> make[2]: *** [arch/powerpc/kernel] Error 2
-> make[1]: *** [arch/powerpc] Error 2
-> make: *** [sub-make] Error 2
->
->> +		}
->>   	}
->>   }
->>   
->> @@ -613,6 +636,8 @@ static void __init early_reserve_mem_dt(void)
->>   static void __init early_reserve_mem(void)
->>   {
->>   	__be64 *reserve_map;
->> +	phys_addr_t kasan_shadow_start;
->> +	phys_addr_t kasan_memory_size;
->>   
->>   	reserve_map = (__be64 *)(((unsigned long)initial_boot_params) +
->>   			fdt_off_mem_rsvmap(initial_boot_params));
->> @@ -651,6 +676,40 @@ static void __init early_reserve_mem(void)
->>   		return;
->>   	}
->>   #endif
->> +
->> +	if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_PPC_BOOK3S_64)) {
->> +		kasan_memory_size =
->> +			((phys_addr_t)CONFIG_PHYS_MEM_SIZE_FOR_KASAN << 20);
->> +
->> +		if (top_phys_addr < kasan_memory_size) {
->> +			/*
->> +			 * We are doomed. We shouldn't even be able to get this
->> +			 * far, but we do in qemu. If we continue and turn
->> +			 * relocations on, we'll take fatal page faults for
->> +			 * memory that's not physically present. Instead,
->> +			 * panic() here: it will be saved to __log_buf even if
->> +			 * it doesn't get printed to the console.
->> +			 */
->> +			panic("Tried to boot a KASAN kernel configured for %u MB with only %llu MB! Aborting.",
->> +			      CONFIG_PHYS_MEM_SIZE_FOR_KASAN,
->> +			      (u64)(top_phys_addr >> 20));
->> +		} else if (top_phys_addr > kasan_memory_size) {
->> +			/* print a biiiig warning in hopes people notice */
->> +			pr_err("===========================================\n"
->> +				"Physical memory exceeds compiled-in maximum!\n"
->> +				"This kernel was compiled for KASAN with %u MB physical memory.\n"
->> +				"The physical memory detected is at least %llu MB.\n"
->> +				"Memory above the compiled limit will not be used!\n"
->> +				"===========================================\n",
->> +				CONFIG_PHYS_MEM_SIZE_FOR_KASAN,
->> +				(u64)(top_phys_addr >> 20));
->> +		}
->> +
->> +		kasan_shadow_start = _ALIGN_DOWN(kasan_memory_size * 7 / 8, PAGE_SIZE);
->> +		DBG("reserving %llx -> %llx for KASAN",
->> +		    kasan_shadow_start, top_phys_addr);
->> +		memblock_reserve(kasan_shadow_start, top_phys_addr - kasan_shadow_start);
->> +	}
->>   }
->>   
->>   #ifdef CONFIG_PPC_TRANSACTIONAL_MEM
->
-> Christophe
+In addition, there is the "documentation" how systemd handles serial
+console and login prompts, see
+http://0pointer.de/blog/projects/serial-console.html
+
+
+I agree that the current behavior is wrong. I really would like
+to change it. But the result would be that some users will not
+get login prompt after a kernel update. I am afraid that we are
+blocked by the "do not break userspace" rule.
+
+Best Regards,
+Petr
