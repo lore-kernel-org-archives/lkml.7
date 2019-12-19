@@ -2,151 +2,135 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CEEC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65234C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9310B24672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:28:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38FDF24679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:28:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WOuUCuqO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfLSO2M (ORCPT
+        id S1726965AbfLSO2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 09:28:12 -0500
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:55167 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726744AbfLSO2K (ORCPT
+        Thu, 19 Dec 2019 09:28:51 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:54820 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726846AbfLSO2v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 09:28:10 -0500
-Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 716QACWpHXQhHFc1YhI9RUu0gEWCGiBtXPRH9c8qaISRAtJPpVGX79XyHMkJx7ZwCT9ItZUAx9
- Ka6jvRJnmNnJH5be3tEO6B0xj/o9FOtHREMRj99j2gCeNN3n1zLGjPduKcwhtlpE+TfvozjyHW
- Kuf/ul5qeO7B1wPwkx3FV7g/gXNdaTOXJ327q3No2os8XrdnCOMIzMDzlMDkuFV/rpESkJBJJj
- tnQb4GyAbg+uDz4C/rqoRSb+cSFsiZl+iL7iddYOcJPmrPm0KD68btGpBeE79grcx074z1tnL+
- udA=
-X-IronPort-AV: E=Sophos;i="5.69,332,1571727600"; 
-   d="scan'208";a="60355288"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 Dec 2019 07:28:10 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 19 Dec 2019 07:28:09 -0700
-Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Thu, 19 Dec 2019 07:28:11 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <nicolas.ferre@microchip.com>, <sre@kernel.org>,
-        <alexandre.belloni@bootlin.com>
-CC:     <linux-pm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH 2/2] power: reset: at91-sama5d2_shdwc: use proper master clock register offset
-Date:   Thu, 19 Dec 2019 16:27:54 +0200
-Message-ID: <1576765674-22070-3-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576765674-22070-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1576765674-22070-1-git-send-email-claudiu.beznea@microchip.com>
+        Thu, 19 Dec 2019 09:28:51 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBJEOrPF027558;
+        Thu, 19 Dec 2019 14:28:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=r7RfnXTuFfkY8vAtoiGIPwJLtZb07TPTTRS00Yuw7GU=;
+ b=WOuUCuqOxgq5uMy1B8X37DDbK0cVBzRdtnsQdmWVK/yPyfUOIwx723kE74s+VuCeyFoT
+ TklDY6dgFxqgMOP5mX9p4q3iWBm7BspeELYBXC0Q01zq8TzGjadQEWN+y2MVIZlm5OUN
+ XR1JstRgX2oKXcmfS9zijwPahATlWSqb0B5pTN+j3BwmwdP0yQQ+Zth3ViqJhSBdRqjE
+ BRiofkBHK+gFoJwmF/D6KXp8vIlrPE1vb/35F1KCxrgKpKvVWPwShMln0oq/C7/+uggj
+ oLatMa9nASQEcsGlxq3p0Rjc0Y8VpjQriQ+SBbrN8/aNhM6wQ9riqG36wWyuF6kgFFBc gQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2x01knk5e7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Dec 2019 14:28:21 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBJEOrcp115690;
+        Thu, 19 Dec 2019 14:28:20 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2wyxqhs15s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Dec 2019 14:28:20 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBJESCh6024551;
+        Thu, 19 Dec 2019 14:28:12 GMT
+Received: from dhcp-10-175-218-218.vpn.oracle.com (/10.175.218.218)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 19 Dec 2019 06:28:12 -0800
+Date:   Thu, 19 Dec 2019 14:28:00 +0000 (GMT)
+From:   Alan Maguire <alan.maguire@oracle.com>
+X-X-Sender: alan@dhcp-10-175-218-218.vpn.oracle.com
+To:     kbuild test robot <lkp@intel.com>
+cc:     Alan Maguire <alan.maguire@oracle.com>, kbuild-all@lists.01.org,
+        brendanhiggins@google.com, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
+        keescook@chromium.org, yzaikin@google.com,
+        akpm@linux-foundation.org, yamada.masahiro@socionext.com,
+        catalin.marinas@arm.com, joe.lawrence@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, urezki@gmail.com,
+        andriy.shevchenko@linux.intel.com, corbet@lwn.net,
+        davidgow@google.com, adilger.kernel@dilger.ca, tytso@mit.edu,
+        mcgrof@kernel.org, linux-doc@vger.kernel.org,
+        Knut Omang <knut.omang@oracle.com>
+Subject: Re: [PATCH v6 linux-kselftest-test 3/6] kunit: allow kunit tests to
+ be loaded as a module
+In-Reply-To: <201912190658.JKOfMs2i%lkp@intel.com>
+Message-ID: <alpine.LRH.2.20.1912191424440.27984@dhcp-10-175-218-218.vpn.oracle.com>
+References: <1575473234-5443-4-git-send-email-alan.maguire@oracle.com> <201912190658.JKOfMs2i%lkp@intel.com>
+User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9475 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912190122
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9475 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912190122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SAM9X60's PMC uses different offset for master clock register.
-Add a member of type struct pmc_reg_config in struct reg_config,
-fill it correspondingly for SAMA5D2 and SAM9X60 and use it in
-poweroff() function.
+On Thu, 19 Dec 2019, kbuild test robot wrote:
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- drivers/power/reset/at91-sama5d2_shdwc.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+> Hi Alan,
+> 
+> Thank you for the patch! Yet something to improve:
+> 
+> [auto build test ERROR on linus/master]
+> [also build test ERROR on linux/master v5.5-rc2 next-20191218]
+> [cannot apply to ext4/dev]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Alan-Maguire/kunit-support-building-core-tests-as-modules/20191207-021244
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git b0d4beaa5a4b7d31070c41c2e50740304a3f1138
+> config: x86_64-randconfig-e002-20191218 (attached as .config)
+> compiler: gcc-7 (Debian 7.5.0-1) 7.5.0
+> reproduce:
+>         # save the attached .config to linux build tree
+>         make ARCH=x86_64 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    drivers/base/power/qos-test.c:117:1: warning: data definition has no type or storage class
+>     kunit_test_suite(pm_qos_test_module);
+>     ^~~~~~~~~~~~~~~~
 
-diff --git a/drivers/power/reset/at91-sama5d2_shdwc.c b/drivers/power/reset/at91-sama5d2_shdwc.c
-index 836957f17169..7ad89c0dd164 100644
---- a/drivers/power/reset/at91-sama5d2_shdwc.c
-+++ b/drivers/power/reset/at91-sama5d2_shdwc.c
-@@ -74,8 +74,13 @@ struct shdwc_reg_config {
- 	u8 sr_rttwk_shift;
- };
- 
-+struct pmc_reg_config {
-+	u8 mckr;
-+};
-+
- struct reg_config {
- 	struct shdwc_reg_config shdwc;
-+	struct pmc_reg_config pmc;
- };
- 
- struct shdwc {
-@@ -136,9 +141,10 @@ static void at91_poweroff(void)
- 		"	str	%1, [%0, #" __stringify(AT91_DDRSDRC_LPR) "]\n\t"
- 
- 		/* Switch the master clock source to slow clock. */
--		"1:	ldr	r6, [%4, #" __stringify(AT91_PMC_MCKR) "]\n\t"
-+		"1:	add	r5, %4, %5\n\t"
-+		"	ldr	r6, [r5]\n\t"
- 		"	bic	r6, r6,  #" __stringify(AT91_PMC_CSS) "\n\t"
--		"	str	r6, [%4, #" __stringify(AT91_PMC_MCKR) "]\n\t"
-+		"	str	r6, [r5]\n\t"
- 		/* Wait for clock switch. */
- 		"2:	ldr	r6, [%4, #" __stringify(AT91_PMC_SR) "]\n\t"
- 		"	tst	r6, #"	    __stringify(AT91_PMC_MCKRDY) "\n\t"
-@@ -153,8 +159,9 @@ static void at91_poweroff(void)
- 		  "r" cpu_to_le32(AT91_DDRSDRC_LPDDR2_PWOFF),
- 		  "r" (at91_shdwc->shdwc_base),
- 		  "r" cpu_to_le32(AT91_SHDW_KEY | AT91_SHDW_SHDW),
--		  "r" (at91_shdwc->pmc_base)
--		: "r6");
-+		  "r" (at91_shdwc->pmc_base),
-+		  "r" (at91_shdwc->rcfg->pmc.mckr)
-+		: "r5", "r6");
- }
- 
- static u32 at91_shdwc_debouncer_value(struct platform_device *pdev,
-@@ -253,6 +260,9 @@ static const struct reg_config sama5d2_reg_config = {
- 		.sr_rtcwk_shift = 5,
- 		.sr_rttwk_shift = SHDW_CFG_NOT_USED,
- 	},
-+	.pmc = {
-+		.mckr		= 0x30,
-+	},
- };
- 
- static const struct reg_config sam9x60_reg_config = {
-@@ -263,6 +273,9 @@ static const struct reg_config sam9x60_reg_config = {
- 		.sr_rtcwk_shift = 5,
- 		.sr_rttwk_shift = 4,
- 	},
-+	.pmc = {
-+		.mckr		= 0x28,
-+	},
- };
- 
- static const struct of_device_id at91_shdwc_of_match[] = {
--- 
-2.7.4
+I hadn't thought about the possibility that other trees
+would have added kunit tests in the interim; it probably
+makes most sense to not retire the kunit_test_suite()
+definition (it can be trivially defined via kunit_test_suites().
+Converting the test suite isn't an option as it's not in
+the kselftest-test tree.
 
+I'll spin up a v7 patchset with that 1-line change to patch 3
+as I don't _think_ these changes have been pulled in yet.
+
+Apologies for the noise!
+
+Alan
