@@ -2,58 +2,90 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5161FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B08C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AD8C24679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07F892465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:32:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbfLSV02 (ORCPT
+        id S1727185AbfLSVc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 16:26:28 -0500
-Received: from www62.your-server.de ([213.133.104.62]:60496 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbfLSV02 (ORCPT
+        Thu, 19 Dec 2019 16:32:56 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:53176 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbfLSVcz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 16:26:28 -0500
-Received: from 31.249.197.178.dynamic.dsl-lte-bonding.lssmb00p-msn.res.cust.swisscom.ch ([178.197.249.31] helo=localhost)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1ii3JS-0005a8-Jf; Thu, 19 Dec 2019 22:26:26 +0100
-Date:   Thu, 19 Dec 2019 22:26:26 +0100
-From:   Daniel Borkmann <daniel@iogearbox.net>
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     kjlu@umn.edu, Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] bpf: Remove unnecessary assertion on fp_old
-Message-ID: <20191219212626.GA19344@pc-9.home>
-References: <20191219175735.19231-1-pakki001@umn.edu>
+        Thu, 19 Dec 2019 16:32:55 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1ii3Pb-0003YV-O2; Thu, 19 Dec 2019 21:32:48 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
+Cc:     kernel-janitors@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] clocksource/drivers/bcm2835_timer: fix memory leak of timer
+Date:   Thu, 19 Dec 2019 21:32:46 +0000
+Message-Id: <20191219213246.34437-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191219175735.19231-1-pakki001@umn.edu>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25668/Thu Dec 19 10:55:58 2019)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 11:57:35AM -0600, Aditya Pakki wrote:
-> The two callers of bpf_prog_realloc - bpf_patch_insn_single and
-> bpf_migrate_filter dereference the struct fp_old, before passing
-> it to the function. Thus assertion to check fp_old is unnecessary
-> and can be removed.
-> 
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+From: Colin Ian King <colin.king@canonical.com>
 
-Applied, thanks!
+Currently when setup_irq fails the error exit path will leak the
+recently allocated timer structure.  Originally the code would
+throw a panic but a later commit changed the behaviour to return
+via the err_iounmap path and hence we now have a memory leak. Fix
+this by adding a err_timer_free error path that kfree's timer.
+
+Addresses-Coverity: ("Resource Leak")
+Fixes: 524a7f08983d ("clocksource/drivers/bcm2835_timer: Convert init function to return error")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/clocksource/bcm2835_timer.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/clocksource/bcm2835_timer.c b/drivers/clocksource/bcm2835_timer.c
+index 2b196cbfadb6..b235f446ee50 100644
+--- a/drivers/clocksource/bcm2835_timer.c
++++ b/drivers/clocksource/bcm2835_timer.c
+@@ -121,7 +121,7 @@ static int __init bcm2835_timer_init(struct device_node *node)
+ 	ret = setup_irq(irq, &timer->act);
+ 	if (ret) {
+ 		pr_err("Can't set up timer IRQ\n");
+-		goto err_iounmap;
++		goto err_timer_free;
+ 	}
+ 
+ 	clockevents_config_and_register(&timer->evt, freq, 0xf, 0xffffffff);
+@@ -130,6 +130,9 @@ static int __init bcm2835_timer_init(struct device_node *node)
+ 
+ 	return 0;
+ 
++err_timer_free:
++	kfree(timer);
++
+ err_iounmap:
+ 	iounmap(base);
+ 	return ret;
+-- 
+2.24.0
+
