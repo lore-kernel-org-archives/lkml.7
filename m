@@ -2,133 +2,97 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F6D8C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B17C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08E7D24679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2F9A24672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:48:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576792099;
+	bh=Cv0MNt2IOuvBMaCX/dlyHghixnQ16OFdFhuDkVNXBvk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EOKsS9wXnAfUCtpjtbFoRalrwf5XnbHa9TPCyatM35Gg3geEdz+qyweTyatmhEz/5
+	 urdhVoywzh5UHuV2JG3CPLnptdt4TW1szHhUsivaDH7ZAqtH5dAmEcWWm6G/ugzqCY
+	 Aij42mzydEGvfnM1vd57+G2AL8ctpXmi6tU/5hUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727562AbfLSVqQ (ORCPT
+        id S1727229AbfLSVsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 16:46:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35764 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727460AbfLSVqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 16:46:00 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07B6B24687;
-        Thu, 19 Dec 2019 21:46:00 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.92.3)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1ii3cN-000Un0-56; Thu, 19 Dec 2019 16:45:59 -0500
-Message-Id: <20191219214559.014320534@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Thu, 19 Dec 2019 16:44:55 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Kirill Tkhai <tkhai@yandex.ru>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-        "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
-        "bsegall@google.com" <bsegall@google.com>,
-        "mgorman@suse.de" <mgorman@suse.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [RFC][PATCH 4/4] sched: Micro optimization in pick_next_task() and in
- check_preempt_curr()
-References: <20191219214451.340746474@goodmis.org>
+        Thu, 19 Dec 2019 16:48:17 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38382 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbfLSVsR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 16:48:17 -0500
+Received: by mail-ot1-f67.google.com with SMTP id d7so4620492otf.5;
+        Thu, 19 Dec 2019 13:48:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=z8WpkfaBd9LcNOS1ekWzc3jrpBFEgAwL/QCFq5Jyeew=;
+        b=AvxU+4kJ3aXwhwlLJ0DtiRGeL0xFfCOo62CZzDc3v+uZ13VhgY74sGeEIkjDquwmlS
+         SJVHtJ8u5Vgl6nnXuTveknv8aWkxSWwcRVFxvER4oSMF9ZmA6N1OnID3FAhMJJkMBGs5
+         5DHmRR9P5nIAeZFguR+Ux+yorEwbQNSRx9WHU0n6ukmdCt7hWeqXQ3M2V6k4jAHvnoxt
+         l8PNZJoYEMyZRgjc89bHKatVvgm86t5OsCWJ2Msg0DTy98fQuWxp/02xzPNJBUAkZXaU
+         NrHrWs2+4GhPN7f6z0OsR7B6OadTvWIqvhx3PjIj1YqR6LYz06a1P0ORbS3iCWmeKYBw
+         UOeQ==
+X-Gm-Message-State: APjAAAV/S6uiMA2Hd8qHiREbSRXlqjmBvrXYOyVV//S+JqnTbaFimlcc
+        eWC7KYn6EM3ZrU/8rV4KzQ==
+X-Google-Smtp-Source: APXvYqyRMrFF8GIOCRwcLqbmo96aJh0GGtJtfkuQW1KREFiW1KO2DI9WZdU4KIzqYrCOJ1NQrGxQ6A==
+X-Received: by 2002:a05:6830:22e3:: with SMTP id t3mr10536060otc.193.1576792096066;
+        Thu, 19 Dec 2019 13:48:16 -0800 (PST)
+Received: from localhost ([2607:fb90:1cd2:8a0d:3549:d84c:9720:edb4])
+        by smtp.gmail.com with ESMTPSA id n17sm2572850otq.46.2019.12.19.13.48.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 13:48:15 -0800 (PST)
+Date:   Thu, 19 Dec 2019 15:48:06 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: media: renesas,ceu: Convert to yaml
+Message-ID: <20191219214806.GA32623@bogus>
+References: <20191211171300.87023-1-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211171300.87023-1-jacopo+renesas@jmondi.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kirill Tkhai <tkhai@yandex.ru>
+On Wed, 11 Dec 2019 18:13:00 +0100, Jacopo Mondi wrote:
+> Convert the Renesas CEU bindings description to yaml schema and remove
+> the existing textual bindings document.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> 
+> ---
+> v1 -> v2:
+> - Dual license as suggested by Rob
+> - Fix compatible string for r7s72100-ceu
+> - Add 'default' to bus-width endpoint property
+> 
+> Thanks
+>    j
+> ---
+>  .../devicetree/bindings/media/renesas,ceu.txt | 86 -------------------
+>  .../bindings/media/renesas,ceu.yaml           | 78 +++++++++++++++++
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 79 insertions(+), 87 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.yaml
+> 
 
-This introduces an optimization based on xxx_sched_class addresses
-in two hot scheduler functions: pick_next_task() and check_preempt_curr().
+Applied, thanks.
 
-It is possible to compare pointers to sched classes to check, which
-of them has a higher priority, instead of current iterations using
-for_each_class().
-
-One more result of the patch is that size of object file becomes a little
-less (excluding added BUG_ON(), which goes in __init section):
-
-$size kernel/sched/core.o
-         text     data      bss	    dec	    hex	filename
-before:  66446    18957	    676	  86079	  1503f	kernel/sched/core.o
-after:   66398    18957	    676	  86031	  1500f	kernel/sched/core.o
-
-Link: http://lkml.kernel.org/r/711a9c4b-ff32-1136-b848-17c622d548f3@yandex.ru
-
-Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- kernel/sched/core.c | 24 +++++++++---------------
- 1 file changed, 9 insertions(+), 15 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 90e4b00ace89..63401807fcf0 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1416,20 +1416,10 @@ static inline void check_class_changed(struct rq *rq, struct task_struct *p,
- 
- void check_preempt_curr(struct rq *rq, struct task_struct *p, int flags)
- {
--	const struct sched_class *class;
--
--	if (p->sched_class == rq->curr->sched_class) {
-+	if (p->sched_class == rq->curr->sched_class)
- 		rq->curr->sched_class->check_preempt_curr(rq, p, flags);
--	} else {
--		for_each_class(class) {
--			if (class == rq->curr->sched_class)
--				break;
--			if (class == p->sched_class) {
--				resched_curr(rq);
--				break;
--			}
--		}
--	}
-+	else if (p->sched_class > rq->curr->sched_class)
-+		resched_curr(rq);
- 
- 	/*
- 	 * A queue event has occurred, and we're going to schedule.  In
-@@ -3914,8 +3904,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 	 * higher scheduling class, because otherwise those loose the
- 	 * opportunity to pull in more work from other CPUs.
- 	 */
--	if (likely((prev->sched_class == &idle_sched_class ||
--		    prev->sched_class == &fair_sched_class) &&
-+	if (likely(prev->sched_class <= &fair_sched_class &&
- 		   rq->nr_running == rq->cfs.h_nr_running)) {
- 
- 		p = pick_next_task_fair(rq, prev, rf);
-@@ -6569,6 +6558,11 @@ void __init sched_init(void)
- 	unsigned long ptr = 0;
- 	int i;
- 
-+	BUG_ON(&idle_sched_class > &fair_sched_class ||
-+		&fair_sched_class > &rt_sched_class ||
-+		&rt_sched_class > &dl_sched_class ||
-+		&dl_sched_class > &stop_sched_class);
-+
- 	wait_bit_init();
- 
- #ifdef CONFIG_FAIR_GROUP_SCHED
--- 
-2.24.0
-
-
+Rob
