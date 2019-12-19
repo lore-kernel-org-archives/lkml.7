@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E29C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AE7C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E0BD222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62481222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781722;
-	bh=ZDWjkucWnuNDUFia2/GxQNQEtlT4iZWmBPaU8zSh7vg=;
+	s=default; t=1576781725;
+	bh=O/z9uhVuclDXBFM2lZwSMCemty+2fbED2SNQ8D+l2/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AIUWYnFgEJH469BC9hMC08XGkkjeodb++CDs+nDmGMISRN4OMgN92NpKDvkXTUXh4
-	 Wytit6uKTUZAG1AB+KhYs+SINmUutiK7hX3aGPgGf/mr2xQfpwjQOWXu2kTyI0Yg5i
-	 XOOxPMcMDU9pE77HAlccM9GQetXymZqROvTFFT2k=
+	b=yOWFjckQkJcADa4WZ89JGq6GVpwKcYLyFMglTBDNr8fjzRWMXeC81XYvsQx0ko6Vf
+	 IUUX/rsRUNhqK02+NprcmZzIZkQld7NHMUe/xdR7E58J7TYRESFeRTQ5XOyrmrk3Rb
+	 UvfA3EXQAe2Nw8lQfojJqLz3ks6+50fWAuF7Iqrc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730657AbfLSSzU (ORCPT
+        id S1730444AbfLSSzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:55:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51256 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:55:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730655AbfLSSzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:55:19 -0500
+        id S1727125AbfLSSzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:55:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 498DD206EC;
-        Thu, 19 Dec 2019 18:55:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8AA724679;
+        Thu, 19 Dec 2019 18:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781718;
-        bh=ZDWjkucWnuNDUFia2/GxQNQEtlT4iZWmBPaU8zSh7vg=;
+        s=default; t=1576781721;
+        bh=O/z9uhVuclDXBFM2lZwSMCemty+2fbED2SNQ8D+l2/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hg1aRa7I6YhjV0MTHG7gzMNeP3inDofHYyCWvVbKiJKTTpazH/bJ5QCzo1PbVwOZd
-         590zdgEDghzXWG1LDoWqPX/Ydf6OuEUalSdNNRCdxkdYs6lpTb16qoiPuUGIooRRUW
-         BhcIsHwOAMKYNmaL4uVrI6+EZ/25ZPRYtAj0eqpw=
+        b=07IqoApzklSek6m73nEnA16UqppL0EUi0jwIFmicVAAem0tYgN37NSrviB6b/JIsg
+         gSzb7kOYHSzaHf3Bqhq8KPeDLcqznE0KFDWZ11qJ0CQnJCTIzfrfazm/b5905TSloB
+         +Q9SF+LLmi51o1U00Iz+oJqrGs0r5H9YLrjtKg88=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
-        Joe Thornber <ejt@redhat.com>,
+        stable@vger.kernel.org, Nikos Tsironis <ntsironis@arrikto.com>,
         Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.4 52/80] dm btree: increase rebalance threshold in __rebalance2()
-Date:   Thu, 19 Dec 2019 19:34:44 +0100
-Message-Id: <20191219183122.909187724@linuxfoundation.org>
+Subject: [PATCH 5.4 53/80] dm clone metadata: Track exact changes per transaction
+Date:   Thu, 19 Dec 2019 19:34:45 +0100
+Message-Id: <20191219183124.248718718@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -60,67 +59,204 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Tao <houtao1@huawei.com>
+From: Nikos Tsironis <ntsironis@arrikto.com>
 
-commit 474e559567fa631dea8fb8407ab1b6090c903755 upstream.
+commit e6a505f3f9fae572fb3ab3bc486e755ac9cef32c upstream.
 
-We got the following warnings from thin_check during thin-pool setup:
+Extend struct dirty_map with a second bitmap which tracks the exact
+regions that were hydrated during the current metadata transaction.
 
-  $ thin_check /dev/vdb
-  examining superblock
-  examining devices tree
-    missing devices: [1, 84]
-      too few entries in btree_node: 41, expected at least 42 (block 138, max_entries = 126)
-  examining mapping tree
+Moreover, fix __flush_dmap() to only commit the metadata of the regions
+that were hydrated during the current transaction.
 
-The phenomenon is the number of entries in one node of details_info tree is
-less than (max_entries / 3). And it can be easily reproduced by the following
-procedures:
+This is required by the following commits to fix a data corruption bug.
 
-  $ new a thin pool
-  $ presume the max entries of details_info tree is 126
-  $ new 127 thin devices (e.g. 1~127) to make the root node being full
-    and then split
-  $ remove the first 43 (e.g. 1~43) thin devices to make the children
-    reblance repeatedly
-  $ stop the thin pool
-  $ thin_check
-
-The root cause is that the B-tree removal procedure in __rebalance2()
-doesn't guarantee the invariance: the minimal number of entries in
-non-root node should be >= (max_entries / 3).
-
-Simply fix the problem by increasing the rebalance threshold to
-make sure the number of entries in each child will be greater
-than or equal to (max_entries / 3 + 1), so no matter which
-child is used for removal, the number will still be valid.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Acked-by: Joe Thornber <ejt@redhat.com>
+Fixes: 7431b7835f55 ("dm: add clone target")
+Cc: stable@vger.kernel.org # v5.4+
+Signed-off-by: Nikos Tsironis <ntsironis@arrikto.com>
 Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/persistent-data/dm-btree-remove.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/md/dm-clone-metadata.c |   90 ++++++++++++++++++++++++++++-------------
+ 1 file changed, 62 insertions(+), 28 deletions(-)
 
---- a/drivers/md/persistent-data/dm-btree-remove.c
-+++ b/drivers/md/persistent-data/dm-btree-remove.c
-@@ -203,7 +203,13 @@ static void __rebalance2(struct dm_btree
- 	struct btree_node *right = r->n;
- 	uint32_t nr_left = le32_to_cpu(left->header.nr_entries);
- 	uint32_t nr_right = le32_to_cpu(right->header.nr_entries);
--	unsigned threshold = 2 * merge_threshold(left) + 1;
-+	/*
-+	 * Ensure the number of entries in each child will be greater
-+	 * than or equal to (max_entries / 3 + 1), so no matter which
-+	 * child is used for removal, the number will still be not
-+	 * less than (max_entries / 3).
-+	 */
-+	unsigned int threshold = 2 * (merge_threshold(left) + 1);
+--- a/drivers/md/dm-clone-metadata.c
++++ b/drivers/md/dm-clone-metadata.c
+@@ -67,23 +67,34 @@ struct superblock_disk {
+  * To save constantly doing look ups on disk we keep an in core copy of the
+  * on-disk bitmap, the region_map.
+  *
+- * To further reduce metadata I/O overhead we use a second bitmap, the dmap
+- * (dirty bitmap), which tracks the dirty words, i.e. longs, of the region_map.
++ * In order to track which regions are hydrated during a metadata transaction,
++ * we use a second set of bitmaps, the dmap (dirty bitmap), which includes two
++ * bitmaps, namely dirty_regions and dirty_words. The dirty_regions bitmap
++ * tracks the regions that got hydrated during the current metadata
++ * transaction. The dirty_words bitmap tracks the dirty words, i.e. longs, of
++ * the dirty_regions bitmap.
++ *
++ * This allows us to precisely track the regions that were hydrated during the
++ * current metadata transaction and update the metadata accordingly, when we
++ * commit the current transaction. This is important because dm-clone should
++ * only commit the metadata of regions that were properly flushed to the
++ * destination device beforehand. Otherwise, in case of a crash, we could end
++ * up with a corrupted dm-clone device.
+  *
+  * When a region finishes hydrating dm-clone calls
+  * dm_clone_set_region_hydrated(), or for discard requests
+  * dm_clone_cond_set_range(), which sets the corresponding bits in region_map
+  * and dmap.
+  *
+- * During a metadata commit we scan the dmap for dirty region_map words (longs)
+- * and update accordingly the on-disk metadata. Thus, we don't have to flush to
+- * disk the whole region_map. We can just flush the dirty region_map words.
++ * During a metadata commit we scan dmap->dirty_words and dmap->dirty_regions
++ * and update the on-disk metadata accordingly. Thus, we don't have to flush to
++ * disk the whole region_map. We can just flush the dirty region_map bits.
+  *
+- * We use a dirty bitmap, which is smaller than the original region_map, to
+- * reduce the amount of memory accesses during a metadata commit. As dm-bitset
+- * accesses the on-disk bitmap in 64-bit word granularity, there is no
+- * significant benefit in tracking the dirty region_map bits with a smaller
+- * granularity.
++ * We use the helper dmap->dirty_words bitmap, which is smaller than the
++ * original region_map, to reduce the amount of memory accesses during a
++ * metadata commit. Moreover, as dm-bitset also accesses the on-disk bitmap in
++ * 64-bit word granularity, the dirty_words bitmap helps us avoid useless disk
++ * accesses.
+  *
+  * We could update directly the on-disk bitmap, when dm-clone calls either
+  * dm_clone_set_region_hydrated() or dm_clone_cond_set_range(), buts this
+@@ -92,12 +103,13 @@ struct superblock_disk {
+  * e.g., in a hooked overwrite bio's completion routine, and further reduce the
+  * I/O completion latency.
+  *
+- * We maintain two dirty bitmaps. During a metadata commit we atomically swap
+- * the currently used dmap with the unused one. This allows the metadata update
+- * functions to run concurrently with an ongoing commit.
++ * We maintain two dirty bitmap sets. During a metadata commit we atomically
++ * swap the currently used dmap with the unused one. This allows the metadata
++ * update functions to run concurrently with an ongoing commit.
+  */
+ struct dirty_map {
+ 	unsigned long *dirty_words;
++	unsigned long *dirty_regions;
+ 	unsigned int changed;
+ };
  
- 	if (nr_left + nr_right < threshold) {
- 		/*
+@@ -461,22 +473,40 @@ static size_t bitmap_size(unsigned long
+ 	return BITS_TO_LONGS(nr_bits) * sizeof(long);
+ }
+ 
+-static int dirty_map_init(struct dm_clone_metadata *cmd)
++static int __dirty_map_init(struct dirty_map *dmap, unsigned long nr_words,
++			    unsigned long nr_regions)
+ {
+-	cmd->dmap[0].changed = 0;
+-	cmd->dmap[0].dirty_words = kvzalloc(bitmap_size(cmd->nr_words), GFP_KERNEL);
++	dmap->changed = 0;
+ 
+-	if (!cmd->dmap[0].dirty_words) {
+-		DMERR("Failed to allocate dirty bitmap");
++	dmap->dirty_words = kvzalloc(bitmap_size(nr_words), GFP_KERNEL);
++	if (!dmap->dirty_words)
++		return -ENOMEM;
++
++	dmap->dirty_regions = kvzalloc(bitmap_size(nr_regions), GFP_KERNEL);
++	if (!dmap->dirty_regions) {
++		kvfree(dmap->dirty_words);
+ 		return -ENOMEM;
+ 	}
+ 
+-	cmd->dmap[1].changed = 0;
+-	cmd->dmap[1].dirty_words = kvzalloc(bitmap_size(cmd->nr_words), GFP_KERNEL);
++	return 0;
++}
+ 
+-	if (!cmd->dmap[1].dirty_words) {
++static void __dirty_map_exit(struct dirty_map *dmap)
++{
++	kvfree(dmap->dirty_words);
++	kvfree(dmap->dirty_regions);
++}
++
++static int dirty_map_init(struct dm_clone_metadata *cmd)
++{
++	if (__dirty_map_init(&cmd->dmap[0], cmd->nr_words, cmd->nr_regions)) {
+ 		DMERR("Failed to allocate dirty bitmap");
+-		kvfree(cmd->dmap[0].dirty_words);
++		return -ENOMEM;
++	}
++
++	if (__dirty_map_init(&cmd->dmap[1], cmd->nr_words, cmd->nr_regions)) {
++		DMERR("Failed to allocate dirty bitmap");
++		__dirty_map_exit(&cmd->dmap[0]);
+ 		return -ENOMEM;
+ 	}
+ 
+@@ -487,8 +517,8 @@ static int dirty_map_init(struct dm_clon
+ 
+ static void dirty_map_exit(struct dm_clone_metadata *cmd)
+ {
+-	kvfree(cmd->dmap[0].dirty_words);
+-	kvfree(cmd->dmap[1].dirty_words);
++	__dirty_map_exit(&cmd->dmap[0]);
++	__dirty_map_exit(&cmd->dmap[1]);
+ }
+ 
+ static int __load_bitset_in_core(struct dm_clone_metadata *cmd)
+@@ -633,21 +663,23 @@ unsigned long dm_clone_find_next_unhydra
+ 	return find_next_zero_bit(cmd->region_map, cmd->nr_regions, start);
+ }
+ 
+-static int __update_metadata_word(struct dm_clone_metadata *cmd, unsigned long word)
++static int __update_metadata_word(struct dm_clone_metadata *cmd,
++				  unsigned long *dirty_regions,
++				  unsigned long word)
+ {
+ 	int r;
+ 	unsigned long index = word * BITS_PER_LONG;
+ 	unsigned long max_index = min(cmd->nr_regions, (word + 1) * BITS_PER_LONG);
+ 
+ 	while (index < max_index) {
+-		if (test_bit(index, cmd->region_map)) {
++		if (test_bit(index, dirty_regions)) {
+ 			r = dm_bitset_set_bit(&cmd->bitset_info, cmd->bitset_root,
+ 					      index, &cmd->bitset_root);
+-
+ 			if (r) {
+ 				DMERR("dm_bitset_set_bit failed");
+ 				return r;
+ 			}
++			__clear_bit(index, dirty_regions);
+ 		}
+ 		index++;
+ 	}
+@@ -721,7 +753,7 @@ static int __flush_dmap(struct dm_clone_
+ 		if (word == cmd->nr_words)
+ 			break;
+ 
+-		r = __update_metadata_word(cmd, word);
++		r = __update_metadata_word(cmd, dmap->dirty_regions, word);
+ 
+ 		if (r)
+ 			return r;
+@@ -803,6 +835,7 @@ int dm_clone_set_region_hydrated(struct
+ 	dmap = cmd->current_dmap;
+ 
+ 	__set_bit(word, dmap->dirty_words);
++	__set_bit(region_nr, dmap->dirty_regions);
+ 	__set_bit(region_nr, cmd->region_map);
+ 	dmap->changed = 1;
+ 
+@@ -831,6 +864,7 @@ int dm_clone_cond_set_range(struct dm_cl
+ 		if (!test_bit(region_nr, cmd->region_map)) {
+ 			word = region_nr / BITS_PER_LONG;
+ 			__set_bit(word, dmap->dirty_words);
++			__set_bit(region_nr, dmap->dirty_regions);
+ 			__set_bit(region_nr, cmd->region_map);
+ 			dmap->changed = 1;
+ 		}
 
 
