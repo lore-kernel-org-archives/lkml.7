@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B381C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A743AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00E6724672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C25E227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:06:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782372;
-	bh=3BwTWGjxhlM+7IXHBbQUzuwGMSs/asfI+qO2+qbHne4=;
+	s=default; t=1576782377;
+	bh=YOOKKu7KZKalCYc9fcrbvluf+Q6hWobR9h7/kUaryYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C6iPi6r/53/q64knNIno/b+tOus1X6gc614jH4+h4r7MAQRNuORBeNzbMGjEpPyvA
-	 8y7Qc5Ut2fdT36CGpcPERoQKpeBzIeuR3doWbmudj8NqPMgY80ZByiMmtaJYnUASEV
-	 ZZ3HQ2U4Gsr5fzVp1Cd2ffkWI8ndnvR+pwN0alXo=
+	b=RIaDdT9/IAuGUpJ5SiGGFWsMHMK/bKTlmf6HRelCfLIE6UrtrUkVb2VgHVRzWlW8X
+	 Zxf3WN0a355HeHU8Q79CZ7UYLXurwPMBNWzUPARBERxvkQju/zFcVXcXlWvCytKnMk
+	 cIs7YeaD07q8K9m/0WvlEY8WDQ3V4gkWXls0+3zM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbfLSTGL (ORCPT
+        id S1729089AbfLSTGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:06:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36966 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 14:06:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727939AbfLSSou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:44:50 -0500
+        id S1729040AbfLSSon (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:44:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6383C2465E;
-        Thu, 19 Dec 2019 18:44:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31D9D24672;
+        Thu, 19 Dec 2019 18:44:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781089;
-        bh=3BwTWGjxhlM+7IXHBbQUzuwGMSs/asfI+qO2+qbHne4=;
+        s=default; t=1576781082;
+        bh=YOOKKu7KZKalCYc9fcrbvluf+Q6hWobR9h7/kUaryYI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZctImFSWUBt5mq0UtWaMf9GPDfd3Nl2FauHjrsKixh5QMaVzK9DtHLQD+yJ1oD4aD
-         17rKEvKGts24udK4SSr9LatN083IkEnQ+v2kVASIK7tIVHwuCTdsJj4nn0K/YhpZWZ
-         dfSW8paveiHdVCLQ2Aq1i6P1rROKgSjS5sUKx1+g=
+        b=0NGuWEa2+NK/AP/ACPc2Uud8u0m+5FOzwnGKa+F9Y4RuKEOZNsoc6Eiq/vHrZZ57n
+         zGRkQw5xlsq4VeeDzCpioT21rn4CRwC4OU3wI5bd+CA/Z+VvOXZ0VC1MIHmJMFaJBw
+         g0jL+J79lcJOcH3Vc9y0zCft8CIN/PZYQVTg6rUQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4.9 077/199] x86/PCI: Avoid AMD FCH XHCI USB PME# from D0 defect
-Date:   Thu, 19 Dec 2019 19:32:39 +0100
-Message-Id: <20191219183219.237025916@linuxfoundation.org>
+        syzbot+f153bde47a62e0b05f83@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 074/199] ALSA: pcm: oss: Avoid potential buffer overflows
+Date:   Thu, 19 Dec 2019 19:32:36 +0100
+Message-Id: <20191219183219.079341521@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,53 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 7e8ce0e2b036dbc6617184317983aea4f2c52099 upstream.
+commit 4cc8d6505ab82db3357613d36e6c58a297f57f7c upstream.
 
-The AMD FCH USB XHCI Controller advertises support for generating PME#
-while in D0.  When in D0, it does signal PME# for USB 3.0 connect events,
-but not for USB 2.0 or USB 1.1 connect events, which means the controller
-doesn't wake correctly for those events.
+syzkaller reported an invalid access in PCM OSS read, and this seems
+to be an overflow of the internal buffer allocated for a plugin.
+Since the rate plugin adjusts its transfer size dynamically, the
+calculation for the chained plugin might be bigger than the given
+buffer size in some extreme cases, which lead to such an buffer
+overflow as caught by KASAN.
 
-  00:10.0 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] FCH USB XHCI Controller [1022:7914] (rev 20) (prog-if 30 [XHCI])
-        Subsystem: Dell FCH USB XHCI Controller [1028:087e]
-        Capabilities: [50] Power Management version 3
-                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+Fix it by limiting the max transfer size properly by checking against
+the destination size in each plugin transfer callback.
 
-Clear PCI_PM_CAP_PME_D0 in dev->pme_support to indicate the device will not
-assert PME# from D0 so we don't rely on it.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203673
-Link: https://lore.kernel.org/r/20190902145252.32111-1-kai.heng.feng@canonical.com
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: stable@vger.kernel.org
+Reported-by: syzbot+f153bde47a62e0b05f83@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191204144824.17801-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/pci/fixup.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ sound/core/oss/linear.c |    2 ++
+ sound/core/oss/mulaw.c  |    2 ++
+ sound/core/oss/route.c  |    2 ++
+ 3 files changed, 6 insertions(+)
 
---- a/arch/x86/pci/fixup.c
-+++ b/arch/x86/pci/fixup.c
-@@ -573,6 +573,17 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_IN
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fc0, pci_invalid_bar);
+--- a/sound/core/oss/linear.c
++++ b/sound/core/oss/linear.c
+@@ -107,6 +107,8 @@ static snd_pcm_sframes_t linear_transfer
+ 		}
+ 	}
+ #endif
++	if (frames > dst_channels[0].frames)
++		frames = dst_channels[0].frames;
+ 	convert(plugin, src_channels, dst_channels, frames);
+ 	return frames;
+ }
+--- a/sound/core/oss/mulaw.c
++++ b/sound/core/oss/mulaw.c
+@@ -269,6 +269,8 @@ static snd_pcm_sframes_t mulaw_transfer(
+ 		}
+ 	}
+ #endif
++	if (frames > dst_channels[0].frames)
++		frames = dst_channels[0].frames;
+ 	data = (struct mulaw_priv *)plugin->extra_data;
+ 	data->func(plugin, src_channels, dst_channels, frames);
+ 	return frames;
+--- a/sound/core/oss/route.c
++++ b/sound/core/oss/route.c
+@@ -57,6 +57,8 @@ static snd_pcm_sframes_t route_transfer(
+ 		return -ENXIO;
+ 	if (frames == 0)
+ 		return 0;
++	if (frames > dst_channels[0].frames)
++		frames = dst_channels[0].frames;
  
- /*
-+ * Device [1022:7914]
-+ * When in D0, PME# doesn't get asserted when plugging USB 2.0 device.
-+ */
-+static void pci_fixup_amd_fch_xhci_pme(struct pci_dev *dev)
-+{
-+	dev_info(&dev->dev, "PME# does not work under D0, disabling it\n");
-+	dev->pme_support &= ~(PCI_PM_CAP_PME_D0 >> PCI_PM_CAP_PME_SHIFT);
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x7914, pci_fixup_amd_fch_xhci_pme);
-+
-+/*
-  * Apple MacBook Pro: Avoid [mem 0x7fa00000-0x7fbfffff]
-  *
-  * Using the [mem 0x7fa00000-0x7fbfffff] region, e.g., by assigning it to
+ 	nsrcs = plugin->src_format.channels;
+ 	ndsts = plugin->dst_format.channels;
 
 
