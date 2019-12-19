@@ -2,115 +2,83 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 552E7C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79ADAC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FB75222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44FC1206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782272;
-	bh=thMYs7Pso3z3nCP5kKe2+F7DwqxhPwkfJ29Py85+nNg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fc3DiuecfQzlyulMw6Ant7E5Z485457LGAPJvOv7We32N94BJpOFZWjFBiPnpn09O
-	 BEMEB+XqX03lxVsvl70iSBoHlCTt+M5e32uJKuakekuoQ/PvT1exhj90BxC8yETRwD
-	 ZZPXRbE1+DncCndrmR5SSVIQbQFP52/iZ1vF85no=
+	s=default; t=1576782276;
+	bh=UognCO9PhPJNz6xOFitRmIm5rhlH3RIdFpJ0UCckXsk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=m71purTgq2bJSDuUaMfPHKvY+41i1x7t1Vx6eJ+Zgtlb9+HX75cq7WeRNoo8j7DRe
+	 tv7KCGi7jmcepsVmg5uuYDJ7ORK0x7hsLL17rdxiIaE2SyXXEFdNP9Hg9Me1Uz09y/
+	 2WwlAXh3NpuyqcX8kAtbIQTl4nuJXbv3Zp6j6msc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbfLSSrF (ORCPT
+        id S1729583AbfLSTEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:47:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39898 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729406AbfLSSrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:47:01 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF161222C2;
-        Thu, 19 Dec 2019 18:47:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781221;
-        bh=thMYs7Pso3z3nCP5kKe2+F7DwqxhPwkfJ29Py85+nNg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m+2rFN3j0fppUI7HKime6c7p6JXR5w+upInWM38A//xWK2mSYbdMVoNf+Bxw76odA
-         7ejoKwHbkHCAbFi9BGdKOOfuesiAcTReP8XO2iT7J34uF6GqDfDWCrJD61dEePF0Vy
-         CzQ6ixA/DJn8kWxFP2nEGCwrgu70JT1AWUe51vtw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.9 133/199] cpuidle: Do not unset the driver if it is there already
-Date:   Thu, 19 Dec 2019 19:33:35 +0100
-Message-Id: <20191219183222.434745018@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
-References: <20191219183214.629503389@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 19 Dec 2019 14:04:35 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45293 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727782AbfLSTEc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 14:04:32 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 59so8416380otp.12;
+        Thu, 19 Dec 2019 11:04:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3TwLMjIi0ztUcgqXnz6W6DiP3C/BFPmUt8EF/msCgyo=;
+        b=MtQALT4d2mqzgjFYhGUlBfrkM3EXSaAHHdxBTaPWuq1Q8r9TkJi057D/flwWhqRQI5
+         rL34sGT0RZ/7x95q4y4mX9aFuwG77bKLjSM5fJDx2Boapv5g3zPfsYVlDr1fGmEJdg17
+         vLDmg/0EL0QhoiKcn491q3prUDgsnCrhzOrM4/SbYiBSWdCuSLMfLmj7tI2tv67o7Dik
+         pb2iabObuA1UkfzOixDA96Ns4vaVD7aofN9Vm3SFKfBSPlDd+6z73hOj8gp6rCyCSu9Y
+         TCMC7N9pMCsBV5BM/vlPrxpPmJ5vh/QfEEhwxWltu54X6Lf06vVT0G104cSyM0OqvltV
+         KQOg==
+X-Gm-Message-State: APjAAAWU/tHcuUveANex3orAPqbC5j3HfWyT9WTOoo/khh3gtB7W7XYb
+        EuBq1DNPoVGFLVwqR0j+wSUks+frbg==
+X-Google-Smtp-Source: APXvYqzXMS+BPPjyZuUTUxZ0kvBQRUp13g/7NP8niTT5xFM1Uguo50OG2xZFpz1MwnDNbqhaPlAKEA==
+X-Received: by 2002:a05:6830:22e3:: with SMTP id t3mr9837378otc.193.1576782271973;
+        Thu, 19 Dec 2019 11:04:31 -0800 (PST)
+Received: from localhost ([2607:fb90:bdf:98e:3549:d84c:9720:edb4])
+        by smtp.gmail.com with ESMTPSA id n19sm2284468oig.57.2019.12.19.11.04.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 11:04:31 -0800 (PST)
+Date:   Thu, 19 Dec 2019 13:04:28 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jyri Sarha <jsarha@ti.com>
+Cc:     kishon@ti.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, tomi.valkeinen@ti.com, praneeth@ti.com,
+        yamonkar@cadence.com, sjakhade@cadence.com, rogerq@ti.com,
+        jsarha@ti.com
+Subject: Re: [PATCH 1/3] dt-bindings: phy: Add PHY_TYPE_DP definition
+Message-ID: <20191219190428.GA16167@bogus>
+References: <cover.1575906694.git.jsarha@ti.com>
+ <89dfcd484bad19cb954ee4f74305d1aa172ea292.1575906694.git.jsarha@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <89dfcd484bad19cb954ee4f74305d1aa172ea292.1575906694.git.jsarha@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+On Mon, 9 Dec 2019 18:21:09 +0200, Jyri Sarha wrote:
+> Add definition for DisplayPort phy type.
+> 
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> Reviewed-by: Roger Quadros <rogerq@ti.com>
+> Reviewed-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  include/dt-bindings/phy/phy.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-commit 918c1fe9fbbe46fcf56837ff21f0ef96424e8b29 upstream.
-
-Fix __cpuidle_set_driver() to check if any of the CPUs in the mask has
-a driver different from drv already and, if so, return -EBUSY before
-updating any cpuidle_drivers per-CPU pointers.
-
-Fixes: 82467a5a885d ("cpuidle: simplify multiple driver support")
-Cc: 3.11+ <stable@vger.kernel.org> # 3.11+
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-[ rjw: Subject & changelog ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/cpuidle/driver.c |   15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
-
---- a/drivers/cpuidle/driver.c
-+++ b/drivers/cpuidle/driver.c
-@@ -61,24 +61,23 @@ static inline void __cpuidle_unset_drive
-  * __cpuidle_set_driver - set per CPU driver variables for the given driver.
-  * @drv: a valid pointer to a struct cpuidle_driver
-  *
-- * For each CPU in the driver's cpumask, unset the registered driver per CPU
-- * to @drv.
-- *
-- * Returns 0 on success, -EBUSY if the CPUs have driver(s) already.
-+ * Returns 0 on success, -EBUSY if any CPU in the cpumask have a driver
-+ * different from drv already.
-  */
- static inline int __cpuidle_set_driver(struct cpuidle_driver *drv)
- {
- 	int cpu;
- 
- 	for_each_cpu(cpu, drv->cpumask) {
-+		struct cpuidle_driver *old_drv;
- 
--		if (__cpuidle_get_cpu_driver(cpu)) {
--			__cpuidle_unset_driver(drv);
-+		old_drv = __cpuidle_get_cpu_driver(cpu);
-+		if (old_drv && old_drv != drv)
- 			return -EBUSY;
--		}
-+	}
- 
-+	for_each_cpu(cpu, drv->cpumask)
- 		per_cpu(cpuidle_drivers, cpu) = drv;
--	}
- 
- 	return 0;
- }
-
-
+Acked-by: Rob Herring <robh@kernel.org>
