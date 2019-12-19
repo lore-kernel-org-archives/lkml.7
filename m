@@ -2,145 +2,112 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0C7C2D0D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1063C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA525227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A09D2222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:54:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="SiBKFSWb"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="YDfSnniH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfLSGws (ORCPT
+        id S1726599AbfLSGyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 01:52:48 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:32945 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbfLSGwq (ORCPT
+        Thu, 19 Dec 2019 01:54:51 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35296 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbfLSGyv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 01:52:46 -0500
-Received: by mail-ot1-f68.google.com with SMTP id b18so5907160otp.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 22:52:46 -0800 (PST)
+        Thu, 19 Dec 2019 01:54:51 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p17so4431839wmb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 22:54:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=dhLbadWhXkT8uLUvoIQHEOPXZo986OHkQZmNW5JELSg=;
-        b=SiBKFSWbGZ/DlTuqAeJWCQJfko4CpkONzPTdXHk5ITfn6wjNPKckEYMfWXVa2KjE/9
-         EnvKM5uCkbPNuMcmnnmOIL13PX8cysvho7VLWXbG/qQdn+K7/fzi8Ww4DNnz531U3iaT
-         ek1DixOnTmNKqPks25kBzv6fRlRYJb99R8rIhogy+n5/aKHmuRVk2bVwwFWgffjz3noA
-         ZerH0bwQzplUBLkBL/JrHxP9P4K0mBWvBTnlliMpof9I4Sttm4IJTOIKoWl16jE3wTmG
-         IAzt5ZvdYfPhwgyAVURwEUcOXBJqNdhdpF54lEQXTrtdeMxzkaBCmBvpJo6eizOwHL7A
-         6gAQ==
+        bh=2ZYEST654EPj+GcWTNQOV1oMctV/osDgh0tGsFOxh10=;
+        b=YDfSnniHMo1ze5p//Ojnq6p+aH51B2xTum5mra74NQ7gI1fYwq8c8SbumlhaxTc5FP
+         Hxul15bxq5xJrl4Nz4AXI3oIoZJ3i+E+QWBbcjPCVcFyf0CLhyswHOONKFQIDtNXlm3p
+         XHonHMoygIaQj8ugJNmIJVYNIopO11p2TUJS/kx0DGzbSyiTpexkWyWMmhr65dtM+Z1Y
+         C5kiwkyCP9WCyr2zvybPcTyVynRLUFTAFzlwjrWglx1CmUzvMxOSzbN2zNFdm1SEZhMf
+         RFSs2lpQQ9HnSaAST5m9WXIbDq5XnV77+N3asSWnXc7RRIaBJdOy7jf2TPpf96G1XELc
+         zg8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dhLbadWhXkT8uLUvoIQHEOPXZo986OHkQZmNW5JELSg=;
-        b=qVqEJ0iQI58Pn9qpPZrFJ3ZD3NmmZ1Yds2kisTJgIpfLV3i5360CaYkBRu1WO3ycGB
-         t3ncCBFx1MTz6BE+kmh4qbyMbok2O5l/yIj5sEhev9hgK6vXTZrhTVN7LECuC8Z7YIil
-         VK+nm60lyMxiW5ngxE3hEZjlvyc6vn+LIC5cTRQpm5UJY/q0kx8iJMHtmdzxfQ3x4k1b
-         fWSGcxyG3V7MLnVpHYpw7LPCg51p8slYlxa9Ft1jw04E/9DKDxxkbgj8lkmnXw+1c7vh
-         KC8jsS5EztrQh+zC+V5HpT5zVudJnwRe5+TGN+pjpjknC/npjRIkeo1FoJzE1mWPcARg
-         SNjg==
-X-Gm-Message-State: APjAAAXdSAWWCi8z1KNBWmPnIb5hCU7xK+xS7dUNDiEgN4VKRbDocYsb
-        LK9FCaJW7syL1Yvp9rwMJonYztYrBEqnvbl9G+YYSQ==
-X-Google-Smtp-Source: APXvYqx2SQBCxtdPGsjOU3QNzNDjKuhpt1dAk9YJbVoUKqLIltD16iivCU1omckA5/EjvPPrP0sP5CVaNkhukyqv6+8=
-X-Received: by 2002:a9d:6f11:: with SMTP id n17mr7085591otq.126.1576738365531;
- Wed, 18 Dec 2019 22:52:45 -0800 (PST)
+        bh=2ZYEST654EPj+GcWTNQOV1oMctV/osDgh0tGsFOxh10=;
+        b=Mff7g+jNJGR7Ya4TtP90wIU45/6/JFeR8jp+33UcQyyBHwfOlPxvstDUVeOvxMktNB
+         p+Zd2A6NoqKTfGH1Wl+OaxkXr8uGgs92iDzAo9dbmWETRCiayyDfGZNQ0bDihrsvTxbF
+         TqSmQSqDfoB2hs0RxsQpZUXHqYREq/gSkx9fmhLmJVF6QlaI5FBudunsGjeV/XJuyCXu
+         TpbnAn5mFDrxkFyrvB3h1md9U0YmnSGOITbWhkUsldJ/szllEYjYeAEkf0DNZM848mlr
+         dv/oEjhBJSEBpZsGdQOJdF88X7V0J6YO/oXPVLy802jWiZDVwXyYJGFluQt8McXxbSoy
+         KmNQ==
+X-Gm-Message-State: APjAAAVysEiedTHHE/QSZR4TNkjEFJWcAlw4/jl63flN246KB0GRu9uJ
+        HmrrLSTB+FNIF02jlIhK697bQulYtTN8unBT0hqAnw==
+X-Google-Smtp-Source: APXvYqx9Izz/vOq2IgwO77jkGILqeBjq3n3wK6m4tpwlJ37kHRwFBLZQo1SDNzyxJjWHNS7oSufxMny7B41SHpvCSMk=
+X-Received: by 2002:a1c:66d5:: with SMTP id a204mr7793295wmc.64.1576738488999;
+ Wed, 18 Dec 2019 22:54:48 -0800 (PST)
 MIME-Version: 1.0
-References: <20191216222537.491123-1-jhubbard@nvidia.com> <20191216222537.491123-5-jhubbard@nvidia.com>
- <CAPcyv4hQBMxYMurxG=Vwh0=FKWoT3z-Kf=dqES1-icRV5bLwKg@mail.gmail.com> <d0a99e75-0175-0f31-f176-8c37c18a4108@nvidia.com>
-In-Reply-To: <d0a99e75-0175-0f31-f176-8c37c18a4108@nvidia.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 18 Dec 2019 22:52:34 -0800
-Message-ID: <CAPcyv4j+Zgom17UZ-6Njkij1R0UQ=vUQdnaEZj9qDezEUJSZGg@mail.gmail.com>
-Subject: Re: [PATCH v11 04/25] mm: devmap: refactor 1-based refcounting for
- ZONE_DEVICE pages
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, KVM list <kvm@vger.kernel.org>,
-        linux-block@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Netdev <netdev@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
+References: <20191219064459.20790-1-greentime.hu@sifive.com>
+In-Reply-To: <20191219064459.20790-1-greentime.hu@sifive.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Thu, 19 Dec 2019 12:24:37 +0530
+Message-ID: <CAAhSdy0mxfA=VbDF0E29sVgHd4cdAvq3G0jeMRCbViaVWpnPsg@mail.gmail.com>
+Subject: Re: [PATCH] riscv: fix scratch register clearing in M-mode.
+To:     Greentime Hu <greentime.hu@sifive.com>
+Cc:     Greentime Hu <green.hu@gmail.com>, greentime@kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 9:51 PM John Hubbard <jhubbard@nvidia.com> wrote:
+On Thu, Dec 19, 2019 at 12:15 PM Greentime Hu <greentime.hu@sifive.com> wrote:
 >
-> On 12/18/19 9:27 PM, Dan Williams wrote:
-> ...
-> >> @@ -461,5 +449,5 @@ void __put_devmap_managed_page(struct page *page)
-> >>          page->mapping = NULL;
-> >>          page->pgmap->ops->page_free(page);
-> >>   }
-> >> -EXPORT_SYMBOL(__put_devmap_managed_page);
-> >> +EXPORT_SYMBOL(free_devmap_managed_page);
-> >
-> > This patch does not have a module consumer for
-> > free_devmap_managed_page(), so the export should move to the patch
-> > that needs the new export.
+> This patch fixes that the sscratch register clearing in M-mode. It cleared
+> sscratch register in M-mode, but it should clear mscratch register. That will
+> cause kernel trap if the CPU core doesn't support S-mode when trying to access
+> sscratch.
 >
-> Hi Dan,
->
-> OK, I know that's a policy--although it seems quite pointless here given
-> that this is definitely going to need an EXPORT.
->
-> At the moment, the series doesn't use it in any module at all, so I'll just
-> delete the EXPORT for now.
->
-> >
-> > Also the only reason that put_devmap_managed_page() is EXPORT_SYMBOL
-> > instead of EXPORT_SYMBOL_GPL is that there was no practical way to
-> > hide the devmap details from evey module in the kernel that did
-> > put_page(). I would expect free_devmap_managed_page() to
-> > EXPORT_SYMBOL_GPL if it is not inlined into an existing exported
-> > static inline api.
-> >
->
-> Sure, I'll change it to EXPORT_SYMBOL_GPL when the time comes. We do have
-> to be careful that we don't shut out normal put_page() types of callers,
-> but...glancing through the current callers, that doesn't look to be a problem.
-> Good. So it should be OK to do EXPORT_SYMBOL_GPL here.
->
-> Are you *sure* you don't want to just pre-emptively EXPORT now, and save
-> looking at it again?
+> Fixes: 9e80635619b5 ("riscv: clear the instruction cache and all registers when booting")
+> Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
 
-I'm positive. There is enough history for "trust me the consumer is
-coming" turning out not to be true to justify the hassle in my mind. I
-do trust you, but things happen.
+In any case, we should always prefer accessing CSRs using CSR_xyz defines.
+
+Looks good to me.
+
+Reviewed-by: Anup Patel <anup@brainfault.org>
+
+Regards,
+Anup
+
+> ---
+>  arch/riscv/kernel/head.S | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+> index 84a6f0a4b120..797802c73dee 100644
+> --- a/arch/riscv/kernel/head.S
+> +++ b/arch/riscv/kernel/head.S
+> @@ -246,7 +246,7 @@ ENTRY(reset_regs)
+>         li      t4, 0
+>         li      t5, 0
+>         li      t6, 0
+> -       csrw    sscratch, 0
+> +       csrw    CSR_SCRATCH, 0
+>
+>  #ifdef CONFIG_FPU
+>         csrr    t0, CSR_MISA
+> --
+> 2.17.1
+>
+>
