@@ -2,53 +2,54 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C459C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD14FC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3D6E24689
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FBDB24684
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780819;
-	bh=Aw3CkJJExJrh3zGVGpAmpviVL7MrJSZAcQX0oKlGy0U=;
+	s=default; t=1576780821;
+	bh=t4gPPwpKYB+p3CGg1LOOHBYsxOHEph6hE6VO8OEGwRU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z3ea4+kKBPYcPJCwueduXYpsppr8Pm2Rb7zL8Wg52LrokgtdXNLfgt5wA8ELqNRD3
-	 OBtkn/+QNaJQs5Ow5Eo2P6xl34IpuB+UbCEnnUX6ar8E8PLr/zGavm1Nc2HIn/mLln
-	 ungSkJ+3snw1cLPHJep4uIj84ypInmx1tWusWlbU=
+	b=LaMjYFjLllNziV0oS7xjzFsq4eiYeHdD53USxruOKPcEJW2ZDaxpGkazPNd9tGbdE
+	 IpF2OdqfWdT0gkxDVGT6Onds0Wi8kP6Oq8I+kBaEriKcmVSyDNHnkqzKiEKkBaJUkG
+	 8Xg3rVprqtGUkYyLLf8tlT96utYutorqcjpEncws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbfLSSkR (ORCPT
+        id S1728354AbfLSSkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:40:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58894 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:40:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727576AbfLSSkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:40:15 -0500
+        id S1728345AbfLSSkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:40:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4A49222C2;
-        Thu, 19 Dec 2019 18:40:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44F91222C2;
+        Thu, 19 Dec 2019 18:40:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780814;
-        bh=Aw3CkJJExJrh3zGVGpAmpviVL7MrJSZAcQX0oKlGy0U=;
+        s=default; t=1576780816;
+        bh=t4gPPwpKYB+p3CGg1LOOHBYsxOHEph6hE6VO8OEGwRU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n6bEjO62/I5pr9HoNpFNYLyIPr0UcpKdmAbYU1/tE86YiRRKycTa3ho0Ep9apOeTy
-         5Yc28SDfuTBSoNolffPM9nr0XB4htXZT9xiuIKUCBo/1uBPOClw6VvRhNqvvCLY5jy
-         XT6TUJ6ybyPqxcGIZmXX43zfXDU3bj/fgN9bdYqE=
+        b=CYcNx15aziSDBby7kq6ZqFo5dfMle3ygSX3vDB/fPlzCaRjdtANOUEROXu8NNwxCk
+         PkEOqDKGSmzg8ykxJbZMzyI0IFnCUpAN1LIefH38wF0dzPRFehgMwk2FpF6Wpe1YO5
+         oTOaBAlKhWMXOLytX47IJ23sR9Ghs/jbVsG6nG2M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 129/162] scsi: lpfc: Cap NPIV vports to 256
-Date:   Thu, 19 Dec 2019 19:33:57 +0100
-Message-Id: <20191219183215.626603701@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Matti Aaltonen <matti.j.aaltonen@nokia.com>,
+        Johan Hovold <johan@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: [PATCH 4.4 112/162] media: radio: wl1273: fix interrupt masking on release
+Date:   Thu, 19 Dec 2019 19:33:40 +0100
+Message-Id: <20191219183214.558751502@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -61,87 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 8b47ae69e049ae0b3373859d901f0334322f9fe9 ]
+commit 1091eb830627625dcf79958d99353c2391f41708 upstream.
 
-Depending on the chipset, the number of NPIV vports may vary and be in
-excess of what most switches support (256). To avoid confusion with the
-users, limit the reported NPIV vports to 256.
+If a process is interrupted while accessing the radio device and the
+core lock is contended, release() could return early and fail to update
+the interrupt mask.
 
-Additionally correct the 16G adapter which is reporting a bogus NPIV vport
-number if the link is down.
+Note that the return value of the v4l2 release file operation is
+ignored.
 
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 87d1a50ce451 ("[media] V4L2: WL1273 FM Radio: TI WL1273 FM radio driver")
+Cc: stable <stable@vger.kernel.org>     # 2.6.38
+Cc: Matti Aaltonen <matti.j.aaltonen@nokia.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/lpfc/lpfc.h      |  3 ++-
- drivers/scsi/lpfc/lpfc_attr.c | 12 ++++++++++--
- drivers/scsi/lpfc/lpfc_init.c |  3 +++
- 3 files changed, 15 insertions(+), 3 deletions(-)
+ drivers/media/radio/radio-wl1273.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc.h b/drivers/scsi/lpfc/lpfc.h
-index ceee9a3fd9e52..a1a9cb952414c 100644
---- a/drivers/scsi/lpfc/lpfc.h
-+++ b/drivers/scsi/lpfc/lpfc.h
-@@ -867,7 +867,8 @@ struct lpfc_hba {
- 	struct list_head port_list;
- 	struct lpfc_vport *pport;	/* physical lpfc_vport pointer */
- 	uint16_t max_vpi;		/* Maximum virtual nports */
--#define LPFC_MAX_VPI 0xFFFF		/* Max number of VPI supported */
-+#define LPFC_MAX_VPI	0xFF		/* Max number VPI supported 0 - 0xff */
-+#define LPFC_MAX_VPORTS	0x100		/* Max vports per port, with pport */
- 	uint16_t max_vports;            /*
- 					 * For IOV HBAs max_vpi can change
- 					 * after a reset. max_vports is max
-diff --git a/drivers/scsi/lpfc/lpfc_attr.c b/drivers/scsi/lpfc/lpfc_attr.c
-index f096766150bc9..93092dfba2937 100644
---- a/drivers/scsi/lpfc/lpfc_attr.c
-+++ b/drivers/scsi/lpfc/lpfc_attr.c
-@@ -1213,6 +1213,9 @@ lpfc_get_hba_info(struct lpfc_hba *phba,
- 		max_vpi = (bf_get(lpfc_mbx_rd_conf_vpi_count, rd_config) > 0) ?
- 			(bf_get(lpfc_mbx_rd_conf_vpi_count, rd_config) - 1) : 0;
+--- a/drivers/media/radio/radio-wl1273.c
++++ b/drivers/media/radio/radio-wl1273.c
+@@ -1149,8 +1149,7 @@ static int wl1273_fm_fops_release(struct
+ 	if (radio->rds_users > 0) {
+ 		radio->rds_users--;
+ 		if (radio->rds_users == 0) {
+-			if (mutex_lock_interruptible(&core->lock))
+-				return -EINTR;
++			mutex_lock(&core->lock);
  
-+		/* Limit the max we support */
-+		if (max_vpi > LPFC_MAX_VPI)
-+			max_vpi = LPFC_MAX_VPI;
- 		if (mvpi)
- 			*mvpi = max_vpi;
- 		if (avpi)
-@@ -1228,8 +1231,13 @@ lpfc_get_hba_info(struct lpfc_hba *phba,
- 			*axri = pmb->un.varRdConfig.avail_xri;
- 		if (mvpi)
- 			*mvpi = pmb->un.varRdConfig.max_vpi;
--		if (avpi)
--			*avpi = pmb->un.varRdConfig.avail_vpi;
-+		if (avpi) {
-+			/* avail_vpi is only valid if link is up and ready */
-+			if (phba->link_state == LPFC_HBA_READY)
-+				*avpi = pmb->un.varRdConfig.avail_vpi;
-+			else
-+				*avpi = pmb->un.varRdConfig.max_vpi;
-+		}
- 	}
+ 			radio->irq_flags &= ~WL1273_RDS_EVENT;
  
- 	mempool_free(pmboxq, phba->mbox_mem_pool);
-diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
-index 7e06fd6127ccb..1a7ac17534d6b 100644
---- a/drivers/scsi/lpfc/lpfc_init.c
-+++ b/drivers/scsi/lpfc/lpfc_init.c
-@@ -6890,6 +6890,9 @@ lpfc_sli4_read_config(struct lpfc_hba *phba)
- 			bf_get(lpfc_mbx_rd_conf_xri_base, rd_config);
- 		phba->sli4_hba.max_cfg_param.max_vpi =
- 			bf_get(lpfc_mbx_rd_conf_vpi_count, rd_config);
-+		/* Limit the max we support */
-+		if (phba->sli4_hba.max_cfg_param.max_vpi > LPFC_MAX_VPORTS)
-+			phba->sli4_hba.max_cfg_param.max_vpi = LPFC_MAX_VPORTS;
- 		phba->sli4_hba.max_cfg_param.vpi_base =
- 			bf_get(lpfc_mbx_rd_conf_vpi_base, rd_config);
- 		phba->sli4_hba.max_cfg_param.max_rpi =
--- 
-2.20.1
-
 
 
