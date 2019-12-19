@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95809C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BEFC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 628A32465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A39724676
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:47:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781244;
-	bh=64ZZJeR2s2qii8d/CY/DMkDaMWeNxmQ7TB4xWPBQefc=;
+	s=default; t=1576781247;
+	bh=nuHAsepJtngeuassJ0DTBPKJvjsLu9vQprBq1cI/L3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dJRROJPC27y1XhA+EtrxbFuca55T2YfLEJ8UHKNrW8g5/7N5AP+sHQtrGkHjMtt9K
-	 niZL4tPFPAXEFvdde9PbDWxpPLUqhkiIQa8FF/HXPgvEia09EHyzbyravf9s8t1tuR
-	 G5Hnot9ohoqeN7VteqBUW5FoM3oB7Yw+v7LLWwqU=
+	b=oSuj8Z9dP3YOpBjWqa5Hjk8A279DDVHIVkkKj69GN0pcPhhSGzDYfxVbewbe8qjG0
+	 dwBL0Uxxr7nULbUWVGAllIzx2BWyFsUSVfh1EZSD/MA6Hm8tcKNrVcxsPbbBlS2jBZ
+	 M9K47CwymUylJ9dxrGoFpYUOhBve3TIjIcP7NOOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729462AbfLSSrX (ORCPT
+        id S1729466AbfLSSr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:47:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40232 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:47:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729453AbfLSSrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:47:21 -0500
+        id S1729229AbfLSSrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:47:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A7742465E;
-        Thu, 19 Dec 2019 18:47:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A9E1206D7;
+        Thu, 19 Dec 2019 18:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781240;
-        bh=64ZZJeR2s2qii8d/CY/DMkDaMWeNxmQ7TB4xWPBQefc=;
+        s=default; t=1576781243;
+        bh=nuHAsepJtngeuassJ0DTBPKJvjsLu9vQprBq1cI/L3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hpyh9QYGKWI8KxekHlZEznWAye5AT42lFqTkIIN3AIfLyT/3v7GVYqUlpccrCY0Rg
-         y1bVtcBhPTJXIrIV4/YqW3nouUI1vfsKA0b1/Y4U9q5sUps8DpurPIrGyQ4zfRdL57
-         bQ13JQj3M+InCKc504K7Vbey9B6M/K9fyN3KCRlQ=
+        b=YBcyH0zNZTphoEgz7OHafA+krKDksNRg3wiEhi/jIULlvwbShb5bzeiSe34Mgl4EB
+         Y0eFJHDsvOPP19KzMij5fY5FaW36STrb38RYvgM/6SUtU5b4RQVRNFEn4VC9uN+vQN
+         SfxdntyNSawSR1eZLFgP/MqiJ59jA9qlsqC/5UR8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.9 140/199] mmc: host: omap_hsmmc: add code for special init of wl1251 to get rid of pandora_wl1251_init_card
-Date:   Thu, 19 Dec 2019 19:33:42 +0100
-Message-Id: <20191219183222.905360029@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.9 141/199] ppdev: fix PPGETTIME/PPSETTIME ioctls
+Date:   Thu, 19 Dec 2019 19:33:43 +0100
+Message-Id: <20191219183222.973502841@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -59,73 +58,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: H. Nikolaus Schaller <hns@goldelico.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit f6498b922e57aecbe3b7fa30a308d9d586c0c369 upstream.
+commit 998174042da229e2cf5841f574aba4a743e69650 upstream.
 
-Pandora_wl1251_init_card was used to do special pdata based
-setup of the sdio mmc interface. This does no longer work with
-v4.7 and later. A fix requires a device tree based mmc3 setup.
+Going through the uses of timeval in the user space API,
+I noticed two bugs in ppdev that were introduced in the y2038
+conversion:
 
-Therefore we move the special setup to omap_hsmmc.c instead
-of calling some pdata supplied init_card function.
+* The range check was accidentally moved from ppsettime to
+  ppgettime
 
-The new code checks for a DT child node compatible to wl1251
-so it will not affect other MMC3 use cases.
+* On sparc64, the microseconds are in the other half of the
+  64-bit word.
 
-Generally, this code was and still is a hack and should be
-moved to mmc core to e.g. read such properties from optional
-DT child nodes.
+Fix both, and mark the fix for stable backports.
 
-Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: <stable@vger.kernel.org> # v4.7+
-[Ulf: Fixed up some checkpatch complaints]
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: stable@vger.kernel.org
+Fixes: 3b9ab374a1e6 ("ppdev: convert to y2038 safe")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20191108203435.112759-8-arnd@arndb.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/omap_hsmmc.c |   30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ drivers/char/ppdev.c |   16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
---- a/drivers/mmc/host/omap_hsmmc.c
-+++ b/drivers/mmc/host/omap_hsmmc.c
-@@ -1700,6 +1700,36 @@ static void omap_hsmmc_init_card(struct
+--- a/drivers/char/ppdev.c
++++ b/drivers/char/ppdev.c
+@@ -624,20 +624,27 @@ static int pp_do_ioctl(struct file *file
+ 		if (copy_from_user(time32, argp, sizeof(time32)))
+ 			return -EFAULT;
  
- 	if (mmc_pdata(host)->init_card)
- 		mmc_pdata(host)->init_card(card);
-+	else if (card->type == MMC_TYPE_SDIO ||
-+		 card->type == MMC_TYPE_SD_COMBO) {
-+		struct device_node *np = mmc_dev(mmc)->of_node;
++		if ((time32[0] < 0) || (time32[1] < 0))
++			return -EINVAL;
 +
-+		/*
-+		 * REVISIT: should be moved to sdio core and made more
-+		 * general e.g. by expanding the DT bindings of child nodes
-+		 * to provide a mechanism to provide this information:
-+		 * Documentation/devicetree/bindings/mmc/mmc-card.txt
-+		 */
-+
-+		np = of_get_compatible_child(np, "ti,wl1251");
-+		if (np) {
-+			/*
-+			 * We have TI wl1251 attached to MMC3. Pass this
-+			 * information to the SDIO core because it can't be
-+			 * probed by normal methods.
-+			 */
-+
-+			dev_info(host->dev, "found wl1251\n");
-+			card->quirks |= MMC_QUIRK_NONSTD_SDIO;
-+			card->cccr.wide_bus = 1;
-+			card->cis.vendor = 0x104c;
-+			card->cis.device = 0x9066;
-+			card->cis.blksize = 512;
-+			card->cis.max_dtr = 24000000;
-+			card->ocr = 0x80;
-+			of_node_put(np);
-+		}
-+	}
- }
+ 		return pp_set_timeout(pp->pdev, time32[0], time32[1]);
  
- static void omap_hsmmc_enable_sdio_irq(struct mmc_host *mmc, int enable)
+ 	case PPSETTIME64:
+ 		if (copy_from_user(time64, argp, sizeof(time64)))
+ 			return -EFAULT;
+ 
++		if ((time64[0] < 0) || (time64[1] < 0))
++			return -EINVAL;
++
++		if (IS_ENABLED(CONFIG_SPARC64) && !in_compat_syscall())
++			time64[1] >>= 32;
++
+ 		return pp_set_timeout(pp->pdev, time64[0], time64[1]);
+ 
+ 	case PPGETTIME32:
+ 		jiffies_to_timespec64(pp->pdev->timeout, &ts);
+ 		time32[0] = ts.tv_sec;
+ 		time32[1] = ts.tv_nsec / NSEC_PER_USEC;
+-		if ((time32[0] < 0) || (time32[1] < 0))
+-			return -EINVAL;
+ 
+ 		if (copy_to_user(argp, time32, sizeof(time32)))
+ 			return -EFAULT;
+@@ -648,8 +655,9 @@ static int pp_do_ioctl(struct file *file
+ 		jiffies_to_timespec64(pp->pdev->timeout, &ts);
+ 		time64[0] = ts.tv_sec;
+ 		time64[1] = ts.tv_nsec / NSEC_PER_USEC;
+-		if ((time64[0] < 0) || (time64[1] < 0))
+-			return -EINVAL;
++
++		if (IS_ENABLED(CONFIG_SPARC64) && !in_compat_syscall())
++			time64[1] <<= 32;
+ 
+ 		if (copy_to_user(argp, time64, sizeof(time64)))
+ 			return -EFAULT;
 
 
