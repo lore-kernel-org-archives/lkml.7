@@ -2,139 +2,152 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLACK autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E241C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BA2C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E35F2465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 464B724650
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:18:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbfLSASA (ORCPT
+        id S1726742AbfLSASi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 19:18:00 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:38946 "EHLO
+        Wed, 18 Dec 2019 19:18:38 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:38958 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfLSASA (ORCPT
+        with ESMTP id S1726463AbfLSASi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 19:18:00 -0500
+        Wed, 18 Dec 2019 19:18:38 -0500
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: sre)
-        with ESMTPSA id D427A291E6E
+        with ESMTPSA id 7A04D291E6E
 Received: by earth.universe (Postfix, from userid 1000)
-        id 61A363C0C7B; Thu, 19 Dec 2019 01:17:56 +0100 (CET)
-Date:   Thu, 19 Dec 2019 01:17:56 +0100
+        id CB20B3C0C7B; Thu, 19 Dec 2019 01:18:33 +0100 (CET)
+Date:   Thu, 19 Dec 2019 01:18:33 +0100
 From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Paul Cercueil <paul@crapouillou.net>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, od@zcrc.me, stable@vger.kernel.org
-Subject: Re: [PATCH v3] power/supply: ingenic-battery: Don't change scale if
- there's only one
-Message-ID: <20191219001756.vuvmrepmbrd7zjix@earth.universe>
-References: <20191116135619.9545-1-paul@crapouillou.net>
- <d5d13a62c1652ce109136dcb3b2e1e51@artur-rojek.eu>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH] power: supply: Fix Kconfig indentation
+Message-ID: <20191219001833.fvfj2xgibkxwiu57@earth.universe>
+References: <20191120133959.14109-1-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qvszxbgcfqgngyks"
+        protocol="application/pgp-signature"; boundary="dhhibu4vnoabxivd"
 Content-Disposition: inline
-In-Reply-To: <d5d13a62c1652ce109136dcb3b2e1e51@artur-rojek.eu>
+In-Reply-To: <20191120133959.14109-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---qvszxbgcfqgngyks
+--dhhibu4vnoabxivd
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Sat, Nov 16, 2019 at 03:08:46PM +0100, Artur Rojek wrote:
-> On 2019-11-16 14:56, Paul Cercueil wrote:
-> > The ADC in the JZ4740 can work either in high-precision mode with a 2.5V
-> > range, or in low-precision mode with a 7.5V range. The code in place in
-> > this driver will select the proper scale according to the maximum
-> > voltage of the battery.
-> >=20
-> > The JZ4770 however only has one mode, with a 6.6V range. If only one
-> > scale is available, there's no need to change it (and nothing to change
-> > it to), and trying to do so will fail with -EINVAL.
-> >=20
-> > Fixes: fb24ccfbe1e0 ("power: supply: add Ingenic JZ47xx battery
-> > driver.")
-> >=20
-> > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> > Cc: stable@vger.kernel.org
+On Wed, Nov 20, 2019 at 09:39:59PM +0800, Krzysztof Kozlowski wrote:
+> Adjust indentation from spaces to tab (+optional two spaces) as in
+> coding style with command like:
+> 	$ sed -e 's/^        /\t/' -i */Kconfig
 >=20
-> Looks good to me!
->=20
-> Acked-by: Artur Rojek <contact@artur-rojek.eu>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
 
 Thanks, queued to power-supply's for-next branch.
 
 -- Sebastian
 
-> > ---
-> >=20
-> > Notes:
-> >     v2: Rebased on v5.4-rc7
-> >     v3: Move code after check for max scale voltage
-> >=20
-> >  drivers/power/supply/ingenic-battery.c | 15 +++++++++++----
-> >  1 file changed, 11 insertions(+), 4 deletions(-)
-> >=20
-> > diff --git a/drivers/power/supply/ingenic-battery.c
-> > b/drivers/power/supply/ingenic-battery.c
-> > index 35816d4b3012..2748715c4c75 100644
-> > --- a/drivers/power/supply/ingenic-battery.c
-> > +++ b/drivers/power/supply/ingenic-battery.c
-> > @@ -100,10 +100,17 @@ static int ingenic_battery_set_scale(struct
-> > ingenic_battery *bat)
-> >  		return -EINVAL;
-> >  	}
-> >=20
-> > -	return iio_write_channel_attribute(bat->channel,
-> > -					   scale_raw[best_idx],
-> > -					   scale_raw[best_idx + 1],
-> > -					   IIO_CHAN_INFO_SCALE);
-> > +	/* Only set scale if there is more than one (fractional) entry */
-> > +	if (scale_len > 2) {
-> > +		ret =3D iio_write_channel_attribute(bat->channel,
-> > +						  scale_raw[best_idx],
-> > +						  scale_raw[best_idx + 1],
-> > +						  IIO_CHAN_INFO_SCALE);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> > +	return 0;
-> >  }
-> >=20
-> >  static enum power_supply_property ingenic_battery_properties[] =3D {
+>  drivers/power/supply/Kconfig | 30 +++++++++++++++---------------
+>  1 file changed, 15 insertions(+), 15 deletions(-)
+>=20
+> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+> index 27164a1d3c7c..9a5591ab90d0 100644
+> --- a/drivers/power/supply/Kconfig
+> +++ b/drivers/power/supply/Kconfig
+> @@ -73,10 +73,10 @@ config WM831X_POWER
+>  	  provided by Wolfson Microelectronics WM831x PMICs.
+> =20
+>  config WM8350_POWER
+> -        tristate "WM8350 PMU support"
+> -        depends on MFD_WM8350
+> -        help
+> -          Say Y here to enable support for the power management unit
+> +	tristate "WM8350 PMU support"
+> +	depends on MFD_WM8350
+> +	help
+> +	  Say Y here to enable support for the power management unit
+>  	  provided by the Wolfson Microelectronics WM8350 PMIC.
+> =20
+>  config TEST_POWER
+> @@ -209,16 +209,16 @@ config BATTERY_WM97XX
+>  	  Say Y to enable support for battery measured by WM97xx aux port.
+> =20
+>  config BATTERY_SBS
+> -        tristate "SBS Compliant gas gauge"
+> -        depends on I2C
+> -        help
+> +	tristate "SBS Compliant gas gauge"
+> +	depends on I2C
+> +	help
+>  	  Say Y to include support for SBS battery driver for SBS-compliant
+>  	  gas gauges.
+> =20
+>  config CHARGER_SBS
+> -        tristate "SBS Compliant charger"
+> -        depends on I2C
+> -        help
+> +	tristate "SBS Compliant charger"
+> +	depends on I2C
+> +	help
+>  	  Say Y to include support for SBS compliant battery chargers.
+> =20
+>  config MANAGER_SBS
+> @@ -484,11 +484,11 @@ config CHARGER_MANAGER
+>  	depends on REGULATOR
+>  	select EXTCON
+>  	help
+> -          Say Y to enable charger-manager support, which allows multiple
+> -          chargers attached to a battery and multiple batteries attached=
+ to a
+> -          system. The charger-manager also can monitor charging status in
+> -          runtime and in suspend-to-RAM by waking up the system periodic=
+ally
+> -          with help of suspend_again support.
+> +	  Say Y to enable charger-manager support, which allows multiple
+> +	  chargers attached to a battery and multiple batteries attached to a
+> +	  system. The charger-manager also can monitor charging status in
+> +	  runtime and in suspend-to-RAM by waking up the system periodically
+> +	  with help of suspend_again support.
+> =20
+>  config CHARGER_LT3651
+>  	tristate "Analog Devices LT3651 charger"
+> --=20
+> 2.17.1
+>=20
 
---qvszxbgcfqgngyks
+--dhhibu4vnoabxivd
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl36wbQACgkQ2O7X88g7
-+prTHg/8DFNUybhomQ90wJsZPhq1g25jJsiwcHMP/q3IcK6OXrEGVGbE6+1x4qRB
-+xH5cbOBgDuDdDdZAYj/Iu0L6QSZu/UZ0KTrMforsKCPmktsL32+5R0/ib4nPIAd
-gucIo8VEt83wE/meSqFBsRaJ1YZk8UuIjgnl4iylK5E8jQdkbbVaM26SxaZim5qw
-8WgJ6evF2OMeG9az6cVVxDhTDFOh9+HNTzrELeXrGtKbOJAUYFOIFTIDvLJFw+gk
-91FnchNd6m//5bXcnz5m84G/vtfRiLMTlVKorsxoExG50shH6DuR4i2p8cI9orbx
-OG8zZKePdc26ePN/vGdUpfrUbWoFC69T1hCGzsAvDg3QlOG3lUD2ngP9cOwJr1ln
-drFprmhpylvb84+Fjb60aAsig0rIBLC4uUJwgJSpIaG+9NM5i2TzPWppwVMGmyRj
-H3WcciftA1osgQnkMjVuHQZEIztgAAnzi/KdiBPe3iWoRPS5NFzztGv+nimzHh+6
-ks+qHtQCIG6Elo9UVD71IwvowrAu4aHJs9nDmHwVRQtAth18E3kCE8Xxj7550NQn
-uywIoFLkdftq9WIE/liiIbWyvg1B5Wqad7ukjS2LTW0Yy/ySSRuclQ4HGle9pByK
-1W5BTTTxCk029b8MGBJuTJA/IcjIUTi3iqMaFVXLMneQjZPDFHI=
-=WUfr
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl36wdkACgkQ2O7X88g7
++prglg/6AuQjzRWz0WzOc8yuV4MVLbFjxBnAMr6Kk3Z4e1xmbr0ThqVUplbBgnHi
+XhYg75C4LCJ34K5Fmm9vQKf1vSwLOkSCpttpYaVrD/BEhgMu9tDUhmHAiDJPvEd1
+89cmKjL/sH0+yfLzZH6Td2grBGM3NP68SdS6ER4MoP2bbS5EsWhaAvag3VIwxFH9
+YqQ9xvVd+ooJU7AJLLS68yqLoHJq52+rpFXmuiKnpcIRAuPynm7/ECKwb4AEmqVG
+uPd8b5OFKdyToONbiw/lNLtcr1mWTDySehDeG7me5/AAfGGV+z9930qRucA5+59z
+I+zEQ37LslKXIFAhWGxKN3T+EjeyL4fUZwmFcsnSU6ohf/wnt1oKpiUxL6FjoKsD
+YWQJnDQk4a+Vc0jNTpTpUXGxiZtBGkxi1aO55iGxxvh0Xx4R1IKE5k4Gu+pjh+yr
+hbmwaweU1ZHWyAJ5r/L3fm+qHWeiLjDV5aHkhaFJLZDNfpnZQIFreRRfRaxQIu21
+dXMuRIW22WC+kjJ7z2vxiELAYMZKJjZQM+xsHscyQkB2lbPQo4RB/4z/+jCe7NOn
++n/SkrwesGdHtuqIr4qzYK6ufLS25LYOIL7ZFXa7gampVBPJSGJl8BxQ9hE297rA
+5YvecmUhv9FAD+N1meofGEr5d0FtdAcZ39yLricIG/MHiIDOTDw=
+=BuYn
 -----END PGP SIGNATURE-----
 
---qvszxbgcfqgngyks--
+--dhhibu4vnoabxivd--
