@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE609C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FB4C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE10C20674
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A1B924683
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781452;
-	bh=kYqNubHyQokemBhQ/7OuH7fwMiQPADTBVzdD2Cob9+A=;
+	s=default; t=1576781455;
+	bh=Jrwpqvl/NbwnQ3Y/vpkLFz7VYCol0WrRQ/VbLcu30NI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v1F1b4bQD+um4s99bDOIUkXJK6NkOtMFUaBReTAOS0fIoa0hGe7eECdeklqRNpVT+
-	 713ECNT6BJ2hb4d10MhTdXu8e93DFqMJxjA22EVM4Q+JYGp9ezFyOfWX4QJFzqTOiH
-	 EzhBH48Lon+C4gt8jxfIYDwdp5DJWn5nT3f+6t0k=
+	b=iKOD9tL2vs7vocbo7xMf+ZJyrXCHx7MovSPJs+bwJgCZFYG1ytSZ3HNkiYZE07Lbx
+	 3eG6GtiDobKWn/UhNCZwjDzXpgL6lh90CoB1eL07QE+ej7VYyOggpmXEHYny7hX3hW
+	 L6T0jzBt6dzY01k7xvsrE7y3MOGqsX0jTiY7AeOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730057AbfLSSuv (ORCPT
+        id S1729721AbfLSSuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:50:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44712 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:50:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729759AbfLSSup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:50:45 -0500
+        id S1730045AbfLSSuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:50:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F6512467F;
-        Thu, 19 Dec 2019 18:50:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F62A20674;
+        Thu, 19 Dec 2019 18:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781445;
-        bh=kYqNubHyQokemBhQ/7OuH7fwMiQPADTBVzdD2Cob9+A=;
+        s=default; t=1576781449;
+        bh=Jrwpqvl/NbwnQ3Y/vpkLFz7VYCol0WrRQ/VbLcu30NI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xe1LJ0UGNOFb08MXi88YCXW4xHExMsdU6ypDlaVQ1ps/HzfKyvnOgH68mvqUgV6Ip
-         uUcpH5EcdPW00vDuXyaEGbUULkaU15wpwFfy9Lm7NuETRpn5aLU9X2DtLvwvvsXPdD
-         ijL0pASKioLIYIxxhT9mSsjw9OdIz7+dy0NQPHws=
+        b=ruB9mpo2TsfXwVp2oXp4H6lnNlJEaPOK4TKRy5l54U8tAm9tQyRerbix8MQuhVxYu
+         WrTRSxhCIpwr9QqGTS5gGd+/KPFFeGgKLH3KRwDddFzyWjaoT2I60kqK7mOq7wKKqx
+         XlF/pCyL8iqyGpIXsDk4cVE4hagePV4VTgwYF/ms=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Lew <clew@codeaurora.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 4.14 25/36] rpmsg: glink: Free pending deferred work on remove
-Date:   Thu, 19 Dec 2019 19:34:42 +0100
-Message-Id: <20191219182917.324506203@linuxfoundation.org>
+        stable@vger.kernel.org, Lihua Yao <ylhuajnu@outlook.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 4.14 27/36] ARM: dts: s3c64xx: Fix init order of clock providers
+Date:   Thu, 19 Dec 2019 19:34:44 +0100
+Message-Id: <20191219182918.731649550@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182848.708141124@linuxfoundation.org>
 References: <20191219182848.708141124@linuxfoundation.org>
@@ -60,53 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Lihua Yao <ylhuajnu@outlook.com>
 
-commit 278bcb7300f61785dba63840bd2a8cf79f14554c upstream.
+commit d60d0cff4ab01255b25375425745c3cff69558ad upstream.
 
-By just cancelling the deferred rx worker during GLINK instance teardown
-any pending deferred commands are leaked, so free them.
+fin_pll is the parent of clock-controller@7e00f000, specify
+the dependency to ensure proper initialization order of clock
+providers.
 
-Fixes: b4f8e52b89f6 ("rpmsg: Introduce Qualcomm RPM glink driver")
-Cc: stable@vger.kernel.org
-Acked-by: Chris Lew <clew@codeaurora.org>
-Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+without this patch:
+[    0.000000] S3C6410 clocks: apll = 0, mpll = 0
+[    0.000000]  epll = 0, arm_clk = 0
+
+with this patch:
+[    0.000000] S3C6410 clocks: apll = 532000000, mpll = 532000000
+[    0.000000]  epll = 24000000, arm_clk = 532000000
+
+Cc: <stable@vger.kernel.org>
+Fixes: 3f6d439f2022 ("clk: reverse default clk provider initialization order in of_clk_init()")
+Signed-off-by: Lihua Yao <ylhuajnu@outlook.com>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/rpmsg/qcom_glink_native.c |   14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/s3c6410-mini6410.dts |    4 ++++
+ arch/arm/boot/dts/s3c6410-smdk6410.dts |    4 ++++
+ 2 files changed, 8 insertions(+)
 
---- a/drivers/rpmsg/qcom_glink_native.c
-+++ b/drivers/rpmsg/qcom_glink_native.c
-@@ -1539,6 +1539,18 @@ static void qcom_glink_work(struct work_
- 	}
- }
+--- a/arch/arm/boot/dts/s3c6410-mini6410.dts
++++ b/arch/arm/boot/dts/s3c6410-mini6410.dts
+@@ -167,6 +167,10 @@
+ 	};
+ };
  
-+static void qcom_glink_cancel_rx_work(struct qcom_glink *glink)
-+{
-+	struct glink_defer_cmd *dcmd;
-+	struct glink_defer_cmd *tmp;
++&clocks {
++	clocks = <&fin_pll>;
++};
 +
-+	/* cancel any pending deferred rx_work */
-+	cancel_work_sync(&glink->rx_work);
-+
-+	list_for_each_entry_safe(dcmd, tmp, &glink->rx_queue, node)
-+		kfree(dcmd);
-+}
-+
- struct qcom_glink *qcom_glink_native_probe(struct device *dev,
- 					   unsigned long features,
- 					   struct qcom_glink_pipe *rx,
-@@ -1611,7 +1623,7 @@ void qcom_glink_native_remove(struct qco
- 	int ret;
+ &sdhci0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sd0_clk>, <&sd0_cmd>, <&sd0_cd>, <&sd0_bus4>;
+--- a/arch/arm/boot/dts/s3c6410-smdk6410.dts
++++ b/arch/arm/boot/dts/s3c6410-smdk6410.dts
+@@ -71,6 +71,10 @@
+ 	};
+ };
  
- 	disable_irq(glink->irq);
--	cancel_work_sync(&glink->rx_work);
-+	qcom_glink_cancel_rx_work(glink);
- 
- 	ret = device_for_each_child(glink->dev, NULL, qcom_glink_remove_device);
- 	if (ret)
++&clocks {
++	clocks = <&fin_pll>;
++};
++
+ &sdhci0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sd0_clk>, <&sd0_cmd>, <&sd0_cd>, <&sd0_bus4>;
 
 
