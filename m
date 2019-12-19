@@ -2,179 +2,148 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE39C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F02E6C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8962E24676
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C292E24672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:59:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576756758;
+	bh=sNA/zIIMyWs0gUjqN3eQcOoJpsDRPdHySKA92c6MGHM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wDrtjXGnjX3f+LeL6HPOAr4jm88KlXVEgNsA76vmehpYR6FMscFAzTf3mEcjrnfls
+	 Sn17ZQqE+9xuNw0cuNz252kwvOVgOJp/El1rIQnodFfEjro4owv9KEllBuUL9MPzqy
+	 Alto6lFgKN5HbKu778L5GjIyq0UqkLcfEsjt7qic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfLSL7M (ORCPT
+        id S1726887AbfLSL7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 06:59:12 -0500
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2109 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726668AbfLSL7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 06:59:12 -0500
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 271993F2B861E22293DF;
-        Thu, 19 Dec 2019 19:59:08 +0800 (CST)
-Received: from dggeme755-chm.china.huawei.com (10.3.19.101) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 19 Dec 2019 19:59:07 +0800
-Received: from [127.0.0.1] (10.173.221.248) by dggeme755-chm.china.huawei.com
- (10.3.19.101) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 19
- Dec 2019 19:59:06 +0800
-Subject: Re: [PATCH 2/5] KVM: arm64: Implement PV_LOCK_FEATURES call
-To:     Steven Price <steven.price@arm.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "maz@kernel.org" <maz@kernel.org>,
-        James Morse <James.Morse@arm.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        "julien.thierry.kdev@gmail.com" <julien.thierry.kdev@gmail.com>,
-        "Catalin Marinas" <Catalin.Marinas@arm.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>
-References: <20191217135549.3240-1-yezengruan@huawei.com>
- <20191217135549.3240-3-yezengruan@huawei.com>
- <20191217142848.GB38811@arm.com>
-From:   yezengruan <yezengruan@huawei.com>
-Message-ID: <21910175-c89a-7a14-66a9-7b53d72a4543@huawei.com>
-Date:   Thu, 19 Dec 2019 19:59:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 19 Dec 2019 06:59:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726834AbfLSL7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 06:59:16 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 124FC222C2;
+        Thu, 19 Dec 2019 11:59:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576756754;
+        bh=sNA/zIIMyWs0gUjqN3eQcOoJpsDRPdHySKA92c6MGHM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DR7ofkYyDAUVfj3X63e71Ot1+Q7iX3+hjVknWIKnvbCwe0xdIUKnfaBPYXW9OoS2a
+         y7mKJVNEKFZg07XJ4v9llRE1gfN0VYyJxoyGQ5h+baeZVUx8NNOb8qHM8RdePpBvNG
+         0qiIvuqOyVT8zTMDHhFQ/3/NLJZHOOO2DaoeCCus=
+Date:   Thu, 19 Dec 2019 11:59:09 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     syzbot <syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        hdanton@sina.com, akpm@linux-foundation.org
+Subject: Re: WARNING: refcount bug in cdev_get
+Message-ID: <20191219115909.GA32361@willie-the-truck>
+References: <000000000000bf410005909463ff@google.com>
+ <20191204115055.GA24783@willie-the-truck>
+ <20191204123148.GA3626092@kroah.com>
+ <20191210114444.GA17673@willie-the-truck>
+ <20191218170854.GC18440@willie-the-truck>
+ <20191218182026.GB882018@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20191217142848.GB38811@arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.221.248]
-X-ClientProxiedBy: dggeme712-chm.china.huawei.com (10.1.199.108) To
- dggeme755-chm.china.huawei.com (10.3.19.101)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218182026.GB882018@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
+On Wed, Dec 18, 2019 at 07:20:26PM +0100, Greg KH wrote:
+> On Wed, Dec 18, 2019 at 05:08:55PM +0000, Will Deacon wrote:
+> > On Tue, Dec 10, 2019 at 11:44:45AM +0000, Will Deacon wrote:
+> > > On Wed, Dec 04, 2019 at 01:31:48PM +0100, Greg KH wrote:
+> > > > This code hasn't changed in 15+ years, what suddenly changed that causes
+> > > > problems here?
+> > > 
+> > > I suppose one thing to consider is that the refcount code is relatively new,
+> > > so it could be that the actual use-after-free is extremely rare, but we're
+> > > now seeing that it's at least potentially an issue.
+> > > 
+> > > Thoughts?
+> > 
+> > FWIW, I added some mdelay()s to make this race more likely, and I can now
+> > trigger it reasonably reliably. See below.
+> > 
+> > --->8
+> > 
+> > [   89.512353] ------------[ cut here ]------------
+> > [   89.513350] refcount_t: addition on 0; use-after-free.
+> > [   89.513977] WARNING: CPU: 2 PID: 6385 at lib/refcount.c:25 refcount_warn_saturate+0x6d/0xf0
 
-On 2019/12/17 22:28, Steven Price wrote:
-> On Tue, Dec 17, 2019 at 01:55:46PM +0000, yezengruan@huawei.com wrote:
->> From: Zengruan Ye <yezengruan@huawei.com>
->>
->> This provides a mechanism for querying which paravirtualized lock
->> features are available in this hypervisor.
->>
->> Also add the header file which defines the ABI for the paravirtualized
->> lock features we're about to add.
->>
->> Signed-off-by: Zengruan Ye <yezengruan@huawei.com>
->> ---
->>  arch/arm64/include/asm/pvlock-abi.h | 16 ++++++++++++++++
->>  include/linux/arm-smccc.h           | 13 +++++++++++++
->>  virt/kvm/arm/hypercalls.c           |  3 +++
->>  3 files changed, 32 insertions(+)
->>  create mode 100644 arch/arm64/include/asm/pvlock-abi.h
->>
->> diff --git a/arch/arm64/include/asm/pvlock-abi.h b/arch/arm64/include/asm/pvlock-abi.h
->> new file mode 100644
->> index 000000000000..06e0c3d7710a
->> --- /dev/null
->> +++ b/arch/arm64/include/asm/pvlock-abi.h
->> @@ -0,0 +1,16 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * Copyright(c) 2019 Huawei Technologies Co., Ltd
->> + * Author: Zengruan Ye <yezengruan@huawei.com>
->> + */
->> +
->> +#ifndef __ASM_PVLOCK_ABI_H
->> +#define __ASM_PVLOCK_ABI_H
->> +
->> +struct pvlock_vcpu_state {
->> +	__le64 preempted;
-> 
-> Somewhere we need to document when 'preempted' is. It looks like it's a
-> 1-bit field from the later patches.
+[...]
 
-Good point, I'll document this in the pvlock doc.
+> No hint as to _where_ you put the mdelay()?  :)
 
-> 
->> +	/* Structure must be 64 byte aligned, pad to that size */
->> +	u8 padding[56];
->> +} __packed;
->> +
->> +#endif
->> diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
->> index 59494df0f55b..59e65a951959 100644
->> --- a/include/linux/arm-smccc.h
->> +++ b/include/linux/arm-smccc.h
->> @@ -377,5 +377,18 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
->>  			   ARM_SMCCC_OWNER_STANDARD_HYP,	\
->>  			   0x21)
->>  
->> +/* Paravirtualised lock calls */
->> +#define ARM_SMCCC_HV_PV_LOCK_FEATURES				\
->> +	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,			\
->> +			   ARM_SMCCC_SMC_64,			\
->> +			   ARM_SMCCC_OWNER_STANDARD_HYP,	\
->> +			   0x40)
->> +
->> +#define ARM_SMCCC_HV_PV_LOCK_PREEMPTED				\
->> +	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,			\
->> +			   ARM_SMCCC_SMC_64,			\
->> +			   ARM_SMCCC_OWNER_STANDARD_HYP,	\
->> +			   0x41)
->> +
->>  #endif /*__ASSEMBLY__*/
->>  #endif /*__LINUX_ARM_SMCCC_H*/
->> diff --git a/virt/kvm/arm/hypercalls.c b/virt/kvm/arm/hypercalls.c
->> index 550dfa3e53cd..ff13871fd85a 100644
->> --- a/virt/kvm/arm/hypercalls.c
->> +++ b/virt/kvm/arm/hypercalls.c
->> @@ -52,6 +52,9 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
->>  		case ARM_SMCCC_HV_PV_TIME_FEATURES:
->>  			val = SMCCC_RET_SUCCESS;
->>  			break;
->> +		case ARM_SMCCC_HV_PV_LOCK_FEATURES:
->> +			val = SMCCC_RET_SUCCESS;
->> +			break;
-> 
-> Ideally you wouldn't report that PV_LOCK_FEATURES exists until the
-> actual hypercalls are wired up to avoid breaking a bisect.
+I threw it in the release function to maximise the period where the refcount
+is 0 but the inode 'i_cdev' pointer is non-NULL. I also hacked chrdev_open()
+so that the fops->open() call appears to fail most of the time (I guess
+syzkaller uses error injection to do something similar). Nasty hack below.
 
-Thanks for pointing it out to me! I'll update the code.
+I'll send a patch, given that I've managed to "reproduce" this.
 
-> 
-> Steve
-> 
->>  		}
->>  		break;
->>  	case ARM_SMCCC_HV_PV_TIME_FEATURES:
->> -- 
->> 2.19.1
->>
->>
-> 
-> .
-> 
+Will
 
-Thanks,
+--->8
 
-Zengruan
-
-
+diff --git a/fs/char_dev.c b/fs/char_dev.c
+index 00dfe17871ac..e2e48fcd0435 100644
+--- a/fs/char_dev.c
++++ b/fs/char_dev.c
+@@ -375,7 +375,7 @@ static int chrdev_open(struct inode *inode, struct file *filp)
+ 	const struct file_operations *fops;
+ 	struct cdev *p;
+ 	struct cdev *new = NULL;
+-	int ret = 0;
++	int ret = 0, first = 0;
+ 
+ 	spin_lock(&cdev_lock);
+ 	p = inode->i_cdev;
+@@ -395,6 +395,7 @@ static int chrdev_open(struct inode *inode, struct file *filp)
+ 			inode->i_cdev = p = new;
+ 			list_add(&inode->i_devices, &p->list);
+ 			new = NULL;
++			first = 1;
+ 		} else if (!cdev_get(p))
+ 			ret = -ENXIO;
+ 	} else if (!cdev_get(p))
+@@ -411,6 +412,10 @@ static int chrdev_open(struct inode *inode, struct file *filp)
+ 
+ 	replace_fops(filp, fops);
+ 	if (filp->f_op->open) {
++		if (first && (get_cycles() & 0x3)) {
++			ret = -EINTR;
++			goto out_cdev_put;
++		}
+ 		ret = filp->f_op->open(inode, filp);
+ 		if (ret)
+ 			goto out_cdev_put;
+@@ -594,12 +599,14 @@ void cdev_del(struct cdev *p)
+ 	kobject_put(&p->kobj);
+ }
+ 
++#include <linux/delay.h>
+ 
+ static void cdev_default_release(struct kobject *kobj)
+ {
+ 	struct cdev *p = container_of(kobj, struct cdev, kobj);
+ 	struct kobject *parent = kobj->parent;
+ 
++	mdelay(50);
+ 	cdev_purge(p);
+ 	kobject_put(parent);
+ }
