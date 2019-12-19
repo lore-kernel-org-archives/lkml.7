@@ -2,97 +2,69 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0713CC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C09B8C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6E1E227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8519C227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:27:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576733231;
+	bh=XfApUyXzV/e0yM51NT790SN9nE5vGwbfLWxVxLCGNVM=;
+	h=In-Reply-To:References:Cc:Subject:From:To:Date:List-ID:From;
+	b=uawKrs9OhEEDPPMiXV65icMeAuX8372vt27yjJcxB84L8jiU4LyWR4uyFWzrq8+5C
+	 BWkeyReN7+Y/RM2EcgUzfK+Z702U/Ekvt7MA/1wna8meJOEb/jBvwCC2fiQtk5Cd6J
+	 y8GgL/NQ1UqRmiC+vq8l9ULSsVQlv8a3txexopmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbfLSFT5 (ORCPT
+        id S1726789AbfLSF1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 00:19:57 -0500
-Received: from mga02.intel.com ([134.134.136.20]:30641 "EHLO mga02.intel.com"
+        Thu, 19 Dec 2019 00:27:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726439AbfLSFTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 00:19:54 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 21:19:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="213131740"
-Received: from allen-box.sh.intel.com ([10.239.159.136])
-  by fmsmga008.fm.intel.com with ESMTP; 18 Dec 2019 21:19:52 -0800
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     David Woodhouse <dwmw2@infradead.org>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, kevin.tian@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH 2/2] iommu/vt-d: Loose requirement for flush queue initializaton
-Date:   Thu, 19 Dec 2019 13:18:51 +0800
-Message-Id: <20191219051851.25159-2-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191219051851.25159-1-baolu.lu@linux.intel.com>
-References: <20191219051851.25159-1-baolu.lu@linux.intel.com>
+        id S1725821AbfLSF1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 00:27:08 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60728222C2;
+        Thu, 19 Dec 2019 05:27:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576733227;
+        bh=XfApUyXzV/e0yM51NT790SN9nE5vGwbfLWxVxLCGNVM=;
+        h=In-Reply-To:References:Cc:Subject:From:To:Date:From;
+        b=e/Iod/JpW+fahQnJ0gJngxtfinR5+T8mMxvjnR5Jib+8G4P9mMm+c/dK3L5CAV8iw
+         /+kheWE+FE7f37MkR/2K/BGQlqBrANcgczSZa7vKw7zdv2BLvk9luNcSPkLFmCcfvl
+         b55YVBnQ5iPHggqSsgKaPluejhbiTzxuQgUA62fM=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190731182713.8123-2-tdas@codeaurora.org>
+References: <20190731182713.8123-1-tdas@codeaurora.org> <20190731182713.8123-2-tdas@codeaurora.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v3 1/2] clk: qcom: rcg2: Add support for display port clock ops
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 18 Dec 2019 21:27:06 -0800
+Message-Id: <20191219052707.60728222C2@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently if flush queue initialization fails, we return error
-or enforce the system-wide strict mode. These are unnecessary
-because we always check the existence of a flush queue before
-queuing any iova's for lazy flushing. Printing a informational
-message is enough.
+Quoting Taniya Das (2019-07-31 11:27:12)
+> New display port clock ops supported for display port clocks.
+>=20
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
 
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- drivers/iommu/intel-iommu.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 93e1d7c3ac7c..65eee8cf6d59 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -1854,15 +1854,15 @@ static int domain_init(struct dmar_domain *domain, struct intel_iommu *iommu,
- {
- 	int adjust_width, agaw;
- 	unsigned long sagaw;
--	int err;
-+	int ret;
- 
- 	init_iova_domain(&domain->iovad, VTD_PAGE_SIZE, IOVA_START_PFN);
- 
- 	if (!intel_iommu_strict) {
--		err = init_iova_flush_queue(&domain->iovad,
-+		ret = init_iova_flush_queue(&domain->iovad,
- 					    iommu_flush_iova, iova_entry_free);
--		if (err)
--			return err;
-+		if (ret)
-+			pr_info("iova flush queue initialization failed\n");
- 	}
- 
- 	domain_reserve_special_ranges(domain);
-@@ -5222,10 +5222,8 @@ static struct iommu_domain *intel_iommu_domain_alloc(unsigned type)
- 			ret = init_iova_flush_queue(&dmar_domain->iovad,
- 						    iommu_flush_iova,
- 						    iova_entry_free);
--			if (ret) {
--				pr_warn("iova flush queue initialization failed\n");
--				intel_iommu_strict = 1;
--			}
-+			if (ret)
-+				pr_info("iova flush queue initialization failed\n");
- 		}
- 
- 		domain_update_iommu_cap(dmar_domain);
--- 
-2.17.1
+Applied to clk-next
 
