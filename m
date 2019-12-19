@@ -2,149 +2,92 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EFFC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 836EFC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 166722467B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58E102467B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:39:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576791532;
-	bh=oOst0TpWxhm5WEYkozLH7AQ99Nmcvz5QtmDfatMC2pA=;
+	s=default; t=1576791591;
+	bh=D0yRbMGY+j2Iw4E/WvP+rfJTbEk+yS0KTSGRDvpQ9C0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wXD2n0Dwj+DlTn0CL7h1dagig7bQ7SqqtHDu6BB0/vHdkfYY/yrujTTbagLvzzDkP
-	 4YZv2+LiY0Arcim/fx0kSsvIOJUVMO4mEpWeTX60Fz6+i+t+vDc+t06PFsh50BG646
-	 j27jVlyd50qsj0KiusFTFgXJVTg92zfWldzgxeoQ=
+	b=fENpR+aIE0BKFmQ5cDEBO5hb5LWYYLDSDAewyVGvGk7RiTxr7pDctTygds7+N5HjX
+	 mkFBvAhsovEihDFQGUdU1mm+cmjhOR1U3bD9NIZqUuB9hMuQcGio9TbtSaFJD1vPuu
+	 d0km5Jjgr2T6yKenSz4ZmhyLAo8aS98z+M9SvmQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbfLSViu (ORCPT
+        id S1727345AbfLSVjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 16:38:50 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46364 "EHLO
+        Thu, 19 Dec 2019 16:39:49 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41999 "EHLO
         mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbfLSViu (ORCPT
+        with ESMTP id S1727002AbfLSVjt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 16:38:50 -0500
-Received: by mail-pf1-f194.google.com with SMTP id y14so4005794pfm.13;
-        Thu, 19 Dec 2019 13:38:50 -0800 (PST)
+        Thu, 19 Dec 2019 16:39:49 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 4so4014430pfz.9;
+        Thu, 19 Dec 2019 13:39:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=A8qzfXgJqfz0JsylJ7w5yc0iwoDWilLcpVP41fGSaVY=;
-        b=sp6jN/DAYmh1enzLowAxt+CQNyzsEJFI4+AW3rDNa98uIQiqkHydnmsh4uBOi0hujT
-         hM+8ZT5cd1m5ZN7C10poqLosAYdj4Hi2i3bIaYJ3ksj/3Ibko6A/nJeCmwcMM58c3f4V
-         PHvHESWX3AQIOHxMkssH6KXSfZr1g1xwXk8AgBDtkkz2jvGkfe5l0yGqV0AYao8YuUdl
-         KDowwrZsS5ynK6XrZf+Dc/Bty4NpMwCVVxaBnbXXhb13V214oME/1nosB6bFQTrHrCBL
-         PAOl23apfnUVawQ72qrtdc74WHa5c1NmgC9V54FZjDIX2jwdfOXEN7GpZDO7QaeakdzI
-         DUYA==
-X-Gm-Message-State: APjAAAVd2O+lEC7uBWbOsslf5W9RabYx83PsGHK9Mtoi5hrHfWlWP1wf
-        ozyDDNbgp9th1RpaPEhrRw==
-X-Google-Smtp-Source: APXvYqxZh6usqcMuDpjIzx8tWU+6WwnJbiDYBNuEG9Di9Qzpk8aU8oFtnRSoasoMfjjZop8d7zm5Lw==
-X-Received: by 2002:a63:a707:: with SMTP id d7mr10954574pgf.93.1576791529663;
-        Thu, 19 Dec 2019 13:38:49 -0800 (PST)
+        bh=EuIV5z2o0n05Q9RgPuXojkh3xFdd9Wka6GyEt+XAvNE=;
+        b=C8XXFdqHWbT8DupYoaiBHiVlPT0stZDPCLrk7fWefOu+LRtWN6bR27zr/xaWG1TkhG
+         avBIiejIkhIwibj+DHOGHvFeBnNB4k6DAZZEoMwL7xiCOgLPJbUPFGEs1752zjhvXrCe
+         rXSHyJX9nTc0joyvrxpKp051gm6sRLZppTJqxWmItcXTmi0siCSLG5iTOrbhDOqR1VEU
+         HWixwOj6lemFeiXsthKRlLaoA36OqCuZHGmUYvX3qX3Z2Om16V7hWTcXCBatzpJouk9Q
+         tCUpa//rY3DvBrMg2Z9h4hXxz5gUN+8kHIsOWMiFqXwU++ts4m98u0dkR58xY87kJrcR
+         K+fw==
+X-Gm-Message-State: APjAAAVg/Gp8jRF4x8jKsNhSL7477xTjtBRyTUvmRHxFHwcr+QFxgJE+
+        mE/KH7wVb5pc/1vFR4KG4w==
+X-Google-Smtp-Source: APXvYqxxAOxABEc802Ph0wmapPf5umgK1GdjemojL9KJ6nHuC1DTkhwFw5J9trVzvp8gHkLcl67EVw==
+X-Received: by 2002:a63:484b:: with SMTP id x11mr11438297pgk.148.1576791588519;
+        Thu, 19 Dec 2019 13:39:48 -0800 (PST)
 Received: from localhost ([172.58.27.162])
-        by smtp.gmail.com with ESMTPSA id p5sm8161313pgs.28.2019.12.19.13.38.48
+        by smtp.gmail.com with ESMTPSA id o134sm3871743pfg.137.2019.12.19.13.39.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 13:38:48 -0800 (PST)
-Date:   Thu, 19 Dec 2019 13:38:45 -0800
+        Thu, 19 Dec 2019 13:39:48 -0800 (PST)
+Date:   Thu, 19 Dec 2019 13:39:44 -0800
 From:   Rob Herring <robh@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Peter Chen <peter.chen@nxp.com>,
-        Sebastian Reichel <sre@kernel.org>,
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, od@zcrc.me,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] power/supply: Add generic USB charger driver
-Message-ID: <20191219213845.GA3481@bogus>
-References: <20191211155032.167032-1-paul@crapouillou.net>
- <20191211155032.167032-3-paul@crapouillou.net>
- <20191212091814.GA7035@b29397-desktop>
- <1576270147.3.0@crapouillou.net>
- <VI1PR04MB5327401FFD2D32E937548DD48B510@VI1PR04MB5327.eurprd04.prod.outlook.com>
- <1576493525.3.0@crapouillou.net>
+        linux-kernel@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Scott Liu <scott.liu@emc.com.tw>
+Subject: Re: [PATCH v2 8/9] dt-bindings: input: elants-i2c: Document common
+  touchscreen properties
+Message-ID: <20191219213944.GA21390@bogus>
+References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
+ <ecacdd9b1baea0cf332c30f3c7e01d5e734957be.1576079249.git.mirq-linux@rere.qmqm.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1576493525.3.0@crapouillou.net>
+In-Reply-To: <ecacdd9b1baea0cf332c30f3c7e01d5e734957be.1576079249.git.mirq-linux@rere.qmqm.pl>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 11:52:05AM +0100, Paul Cercueil wrote:
-> Hi Peter,
+On Wed, 11 Dec 2019 17:03:25 +0100, =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= wrote:
+> From: Dmitry Osipenko <digetx@gmail.com>
 > 
+> Document support of the common touchscreen properties.
 > 
-> Le lun., dÈc. 16, 2019 at 01:24, Peter Chen <peter.chen@nxp.com> a Ècrit :
-> > 
-> > >  >>  +
-> > >  >>  +	desc = &charger->desc;
-> > >  >>  +	desc->name = "usb-charger";
-> > >  >>  +	desc->properties = usb_charger_properties;
-> > >  >>  +	desc->num_properties = ARRAY_SIZE(usb_charger_properties);
-> > >  >>  +	desc->get_property = usb_charger_get_property;
-> > >  >>  +	desc->type = POWER_SUPPLY_TYPE_USB;
-> > >  >
-> > >  > What's your further plan for this generic USB charger?
-> > >  > To support BC1.2, we need to know charger type, and how we could
-> > > get
-> > >  > it?
-> > >  >
-> > >  > Peter
-> > > 
-> > >  Well I don't really know. The USB role framework does not give any
-> > > info about
-> > >  what's plugged.
-> > > 
-> > 
-> > What's the use case for this patch set? How it be used?
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> Signed-off-by: Micha≈Ç Miros≈Çaw <mirq-linux@rere.qmqm.pl>
+> ---
+>  Documentation/devicetree/bindings/input/elants_i2c.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> My devicetree:
-> 
-> usb_otg: usb@13440000 {
-> 	compatible = "ingenic,jz4770-musb", "simple-mfd";
-> 	reg = <0x13440000 0x10000>;
-> 	[...]
-> 
-> 	usb-role-switch;
-> 
-> 	connector {
-> 		compatible = "gpio-usb-b-connector", "usb-b-connector";
-> 		label = "mini-USB";
-> 		type = "mini";
-> 
-> 		id-gpios = <&gpf 18 GPIO_ACTIVE_HIGH>;
-> 		vbus-gpios = <&gpb 5 GPIO_ACTIVE_HIGH>;
-> 		[...]
-> 	};
-> 
-> 	usb_charger: usb-charger {
-> 		compatible = "usb-charger";
 
-What h/w device is this?
-
-> 	};
-> };
-> 
-> The new gpio-usb-connector driver uses the ID/VBUS GPIOs to detect in which
-> state (device, host, unconnected) a OTG connector is. However, that means I
-> cannot use the standard gpio-charger driver to detect the presence of a
-> charger based on the state of the VBUS gpio, since it's already requested
-> here. So the point of this patchset is to provide an alternative to
-> gpio-charger that works with OTG controllers compatible with
-> 'usb-role-switch'.
-
-Why not fix gpio-charger or make whatever 'owns' vbus-gpios to register 
-a charger device?
-
-I guess you could have Vbus sensing with no charging capability, but 
-that sounds like a new property, not a node to me.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
