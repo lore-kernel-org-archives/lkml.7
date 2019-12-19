@@ -2,177 +2,123 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC7EC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10ACDC2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EBFE24679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:49:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576748949;
-	bh=ZuO7pIOCOuQCVXxUl4L8fN0SHcd9e6Nqr8Tz7aB4zSU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1/GThfSL2FeVAAJxs3UG1OSC2+0gzbxIvNHw9CmQlXY93zh3YNkKl3JFFtKwzkOPW
-	 uASAfRSWdc6PEiqf+VEGkNxz8cpqyZ7OjfXGcniaXTTf9RKqDEAtvnmw8lDZwjjaxw
-	 3uJrgsTDQxk8PQBrZ4Ahp557ygz5cASxdnzZmJ2I=
+	by mail.kernel.org (Postfix) with ESMTP id E46C02064B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:50:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfLSJtI (ORCPT
+        id S1726758AbfLSJuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 04:49:08 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37602 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbfLSJtI (ORCPT
+        Thu, 19 Dec 2019 04:50:06 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40148 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbfLSJuF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 04:49:08 -0500
-Received: by mail-lj1-f195.google.com with SMTP id u17so5502873lja.4;
-        Thu, 19 Dec 2019 01:49:06 -0800 (PST)
+        Thu, 19 Dec 2019 04:50:05 -0500
+Received: by mail-lj1-f194.google.com with SMTP id u1so5488915ljk.7;
+        Thu, 19 Dec 2019 01:50:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ZjgDeshjeiNQm7U2IpWlnWn/GpLHmcq5Ng4N0RI+hO8=;
-        b=udyjswlzrxiUIOp68/+yhqYl1HMspJgplTMw7wlV4tqSYpSUaNdO+DjXQoD0Lofpj1
-         GqIBUB1xfA7epXZCQM96pJ3pMDvNOxNS1GZeRymBXfKWg/J4XvZwJgsmxMKBPSqtj65V
-         rzFStUubgjlgPhIEjel/E2xWcS2Hx/DlVB4TId6c5gxasUr6Yb8nWSHjUrSThQZp0knj
-         SsI710IVReclOi8eG5JoQgAhZKvI2gfXH5O2X4Y+RgHv8pSvwfsrkPYITE5oeWLutaO+
-         Sq11ay4leBu3PUDfSBBE1L5FLs1AABaxiaqmQk+SgrLh+NS3Xn0lK7f+BY5KSbtPXmE7
-         AtCQ==
-X-Gm-Message-State: APjAAAVmmzhkNXEVIFlQ2ciMF8VoQQOBJYXGQpKkGyo1yIbuXnZLp4el
-        QG97SzC+zrf2umRVhhUiU1o=
-X-Google-Smtp-Source: APXvYqxLP93hcgwGaARbYpfHGfs84f8VXAhmPaqSxR5gy3xFKIp28pllD2Eav4/aLA4gQno70JWQfA==
-X-Received: by 2002:a2e:a361:: with SMTP id i1mr5053198ljn.29.1576748945700;
-        Thu, 19 Dec 2019 01:49:05 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id q27sm2423048ljm.25.2019.12.19.01.49.04
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=99AhJaSdW15gDZwBJyXN+zdCrikCpz2d/muq40fL6cQ=;
+        b=IP5gPRKZFU44y8nYGugV6PVyOjQqiQSqPdV+IEWQ5dZDSPU52jZcfVte3VN78f6yzf
+         bNbev02o5ol5dtGyCl4ZjgGKPamr54mmTD4I3n66ycQ6zJAICv1S43mHfLP7+/h7TNMt
+         aq5vCQlJsCAhvAtZTlmEQc0xpPpZj9ybgvW9C8nFRcSomtyS6GKzL9IsvZK/OZmeP27P
+         YZcTH0Hp0de6BbAwgDZN+I/74pISjveqIkp9UOLC4NGB1a1z4h4WFiC0K9UYvM1FZRqb
+         v/X22DBM8Y+c4JXYRuOg0v6HXFaNp9yYICuOklix8GSsJsoTtliIp3/UO782aSy5hxz7
+         uRdA==
+X-Gm-Message-State: APjAAAVoRXzt1BCIjYZJ4jd/4xnJFza6UaWaxHhKV7/KLG5Kc+i1SHtu
+        DBKEHlWEwmb6j8K4ApcHOH0=
+X-Google-Smtp-Source: APXvYqzwW6neyqJcKN5pKaaVZYwUT2/1wsIUTIA6aP5VHadsgVlR2lDrpoAO0STDtMsL14PxpdlNRQ==
+X-Received: by 2002:a2e:9a11:: with SMTP id o17mr5291094lji.256.1576749002348;
+        Thu, 19 Dec 2019 01:50:02 -0800 (PST)
+Received: from localhost.localdomain (dyt4gctb359myxd0pkwmt-4.rev.dnainternet.fi. [2001:14bb:430:5140:37cf:5409:8fcc:4495])
+        by smtp.gmail.com with ESMTPSA id l21sm2369334lfh.74.2019.12.19.01.50.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 01:49:04 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1ihsQX-00048r-9A; Thu, 19 Dec 2019 10:49:01 +0100
-Date:   Thu, 19 Dec 2019 10:49:01 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Rob Herring <robh@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        kbuild test robot <lkp@intel.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Subject: Re: kbuild obj-m directory descend (was: Re: [PATCH] serdev: fix
- builds with CONFIG_SERIAL_DEV_BUS=m)
-Message-ID: <20191219094901.GR22665@localhost>
-References: <201912181000.82Z7czbN%lkp@intel.com>
- <20191218083842.14882-1-u.kleine-koenig@pengutronix.de>
- <20191218172353.GO22665@localhost>
- <CAK7LNATztV-a3maL+vqQhbVsLBD_dsy+wbOZQ5ofQfbZQGGuLA@mail.gmail.com>
- <20191219081814.GP22665@localhost>
- <CAK7LNASHZ9HsYj+sncDqOBWRV+YoFNTciKOxfeYrA7MtBJ9T7A@mail.gmail.com>
+        Thu, 19 Dec 2019 01:50:01 -0800 (PST)
+Date:   Thu, 19 Dec 2019 11:49:54 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [PATCH v7 04/12] mfd: bd718x7: Add compatible for BD71850
+Message-ID: <6e6295c62cea1093970d2812c842871b37d32c46.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK7LNASHZ9HsYj+sncDqOBWRV+YoFNTciKOxfeYrA7MtBJ9T7A@mail.gmail.com>
+In-Reply-To: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 05:55:54PM +0900, Masahiro Yamada wrote:
-> On Thu, Dec 19, 2019 at 5:18 PM Johan Hovold <johan@kernel.org> wrote:
-> >
-> > On Thu, Dec 19, 2019 at 11:00:15AM +0900, Masahiro Yamada wrote:
-> > > Hi.
-> > >
-> > > On Thu, Dec 19, 2019 at 2:23 AM Johan Hovold <johan@kernel.org> wrote:
-> >
-> > > > The offending patch is broken since it effectively makes
-> > > > CONFIG_SERIAL_DEV_BUS bool (built-in or disabled), but for some reason
-> > > > those symbols do not end up in vmlinux (despite being compiled) when you
-> > > > add a built-in object goal under a directory that was entered using
-> > > > obj-m.
-> > > >
-> > > > That seems like a bug to me and contradicts the kbuild documentation
-> > > > (3.6):
-> > > >
-> > > >         Example:
-> > > >
-> > > >         #fs/Makefile
-> > > >         obj-$(CONFIG_EXT2_FS) += ext2/
-> > > >
-> > > >         If CONFIG_EXT2_FS is set to either ‘y’ (built-in) or ‘m’
-> > > >         (modular) the corresponding obj- variable will be set, and
-> > > >         kbuild will descend down in the ext2 directory. Kbuild only uses
-> > > >         this information to decide that it needs to visit the directory,
-> > > >         it is the Makefile in the subdirectory that specifies what is
-> > > >         modular and what is built-in.
-> > > >
-> > > > I tried adding other targets to obj-y directly and they are also are not
-> > > > included, seemingly since the directory was entered using obj-m.
-> > > >
-> > > > Masahiro or Michal, can you shed some light?
-> >
-> > > I saw similar questions in ML in the past.
-> > > Yes, this is how Kbuild works;
-> > > Kbuild only links objects in Makefiles visited by obj-y.
-> > >
-> > > If you use
-> > >     obj-m += serdev/
-> > > all objects in serdev/ are considered as modular.
-> >
-> > Well, any objects in serdev/ specified in obj-y would currently be built
-> > but never included in either built-in.a or any module.
-> 
-> Right.
-> 
-> > > I think it is better to make the document
-> > > clarify this.
-> >
-> > Yeah, I don't have a use case for this, but the documentation would need
-> > to be updated to not have more people look into this.
-> >
-> > And at least this behaviour allowed us to catch this bug, but only
-> > because we had dependent modules that failed to build. I see now that
-> > you posted a patch adding a general warning about obj-y under obj-m last
-> > fall, but that was apparently never merged.
-> 
-> This one?
-> 
-> https://lore.kernel.org/patchwork/patch/1126959/
+ROHM BD71850 PMIC is almost identical to BD71847. Main difference is some
+initial voltage values for regulators. The BD71850 can be handled by
+BD71847 driver but adding own compatible makes it clearer for one who
+creates the DT for board containing this PMIC and allows SW to be
+differentiating PMICs if needed.
 
-Yep, that's the one I meant.
- 
-> This patch detected several Makefile/Kconfig bugs,
-> and it is good.
-> 
-> But, it also turned out to cause false positive warnings
-> on some architectures.
-> I thought it was not so easy to fix it.
-> So, I decided to postpone it.
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
 
-Ok.
+This is a new patch and added to this series only to avoid conflicts
+with other bd718x7 changes introduced in this series. Please drop this
+patch if it is not Ok to apply it in this series. DT binding doc for
+this new compatible was sent in:
+https://lore.kernel.org/lkml/20191217084824.GA26539@localhost.localdomain/
 
-> > But when was this behaviour changed? And was that done on purpose?
-> 
-> No. Not changed at all.
-> 
-> In my understanding, the current behavior has been kept
-> from the beginning.
+ drivers/mfd/rohm-bd718x7.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Ok, thanks for confirming. The contradicting documentation I refer to
-above has been there since before git at least however.
+diff --git a/drivers/mfd/rohm-bd718x7.c b/drivers/mfd/rohm-bd718x7.c
+index bb86ec829079..c32c1b6c98fa 100644
+--- a/drivers/mfd/rohm-bd718x7.c
++++ b/drivers/mfd/rohm-bd718x7.c
+@@ -213,6 +213,10 @@ static const struct of_device_id bd718xx_of_match[] = {
+ 		.compatible = "rohm,bd71847",
+ 		.data = (void *)ROHM_CHIP_TYPE_BD71847,
+ 	},
++	{
++		.compatible = "rohm,bd71850",
++		.data = (void *)ROHM_CHIP_TYPE_BD71847,
++	},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, bd718xx_of_match);
+-- 
+2.21.0
 
-Here's a random example of someone being bit by this five years ago:
 
-	https://www.spinics.net/lists/linux-kbuild/msg10887.html
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
-Would you mind taking a stab at updating the docs?
-
-Johan
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
