@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA1BC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67FB0C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58426222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45381227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:58:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfLSG6G (ORCPT
+        id S1726908AbfLSG6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 01:58:06 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51226 "EHLO huawei.com"
+        Thu, 19 Dec 2019 01:58:04 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:51222 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726754AbfLSG5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726536AbfLSG5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Dec 2019 01:57:50 -0500
 Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id ED6C5DD63AB7E1A3E850;
+        by Forcepoint Email with ESMTP id E8E414080D346588586C;
         Thu, 19 Dec 2019 14:57:46 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 19 Dec 2019 14:57:38 +0800
+ 14.3.439.0; Thu, 19 Dec 2019 14:57:39 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -32,9 +32,9 @@ CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
         Yunsheng Lin <linyunsheng@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 1/8] net: hns3: check FE bit before calling hns3_add_frag()
-Date:   Thu, 19 Dec 2019 14:57:40 +0800
-Message-ID: <1576738667-37960-2-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 5/8] net: hns3: implement ndo_features_check ops for hns3 driver
+Date:   Thu, 19 Dec 2019 14:57:44 +0800
+Message-ID: <1576738667-37960-6-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1576738667-37960-1-git-send-email-tanhuazhong@huawei.com>
 References: <1576738667-37960-1-git-send-email-tanhuazhong@huawei.com>
@@ -49,117 +49,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yunsheng Lin <linyunsheng@huawei.com>
 
-A BD with FE bit means that it is the last BD of a packet,
-currently the FE bit is checked before calling hns3_add_frag(),
-which is unnecessary because the FE bit may have been checked
-in some case.
+The function netif_skb_features() will disable the TSO feature
+by using dflt_features_check() if the driver does not implement
+ndo_features_check ops, which may cause performance degradation
+problem when hns3 hardware can do multiple tagged TSO.
 
-This patch checks the FE bit before calling hns3_add_frag()
-after processing the first BD of a SKB and adjust the location
-of memcpy() to reduce duplication.
+Also, the HNS3 hardware only supports checksum on the SKB with
+a max header len of 480 bytes, so remove the checksum and TSO
+related features when the header len is over 480 bytes.
 
 Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 46 +++++++------------------
- 1 file changed, 13 insertions(+), 33 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 32 +++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index b113b89..5679a0c 100644
+index 5679a0c..840a1fb 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -2788,7 +2788,6 @@ static bool hns3_parse_vlan_tag(struct hns3_enet_ring *ring,
- static int hns3_alloc_skb(struct hns3_enet_ring *ring, unsigned int length,
- 			  unsigned char *va)
- {
--#define HNS3_NEED_ADD_FRAG	1
- 	struct hns3_desc_cb *desc_cb = &ring->desc_cb[ring->next_to_clean];
- 	struct net_device *netdev = ring_to_netdev(ring);
- 	struct sk_buff *skb;
-@@ -2832,33 +2831,19 @@ static int hns3_alloc_skb(struct hns3_enet_ring *ring, unsigned int length,
- 			    desc_cb);
- 	ring_ptr_move_fw(ring, next_to_clean);
- 
--	return HNS3_NEED_ADD_FRAG;
-+	return 0;
- }
- 
--static int hns3_add_frag(struct hns3_enet_ring *ring, struct hns3_desc *desc,
--			 bool pending)
-+static int hns3_add_frag(struct hns3_enet_ring *ring)
- {
- 	struct sk_buff *skb = ring->skb;
- 	struct sk_buff *head_skb = skb;
- 	struct sk_buff *new_skb;
- 	struct hns3_desc_cb *desc_cb;
--	struct hns3_desc *pre_desc;
-+	struct hns3_desc *desc;
- 	u32 bd_base_info;
--	int pre_bd;
--
--	/* if there is pending bd, the SW param next_to_clean has moved
--	 * to next and the next is NULL
--	 */
--	if (pending) {
--		pre_bd = (ring->next_to_clean - 1 + ring->desc_num) %
--			 ring->desc_num;
--		pre_desc = &ring->desc[pre_bd];
--		bd_base_info = le32_to_cpu(pre_desc->rx.bd_base_info);
--	} else {
--		bd_base_info = le32_to_cpu(desc->rx.bd_base_info);
--	}
- 
--	while (!(bd_base_info & BIT(HNS3_RXD_FE_B))) {
-+	do {
- 		desc = &ring->desc[ring->next_to_clean];
- 		desc_cb = &ring->desc_cb[ring->next_to_clean];
- 		bd_base_info = le32_to_cpu(desc->rx.bd_base_info);
-@@ -2895,7 +2880,7 @@ static int hns3_add_frag(struct hns3_enet_ring *ring, struct hns3_desc *desc,
- 		hns3_nic_reuse_page(skb, ring->frag_num++, ring, 0, desc_cb);
- 		ring_ptr_move_fw(ring, next_to_clean);
- 		ring->pending_buf++;
--	}
-+	} while (!(bd_base_info & BIT(HNS3_RXD_FE_B)));
- 
+@@ -1556,6 +1556,37 @@ static int hns3_nic_set_features(struct net_device *netdev,
  	return 0;
  }
-@@ -3063,28 +3048,23 @@ static int hns3_handle_rx_bd(struct hns3_enet_ring *ring)
  
- 		if (ret < 0) /* alloc buffer fail */
- 			return ret;
--		if (ret > 0) { /* need add frag */
--			ret = hns3_add_frag(ring, desc, false);
-+		if (!(bd_base_info & BIT(HNS3_RXD_FE_B))) { /* need add frag */
-+			ret = hns3_add_frag(ring);
- 			if (ret)
- 				return ret;
--
--			/* As the head data may be changed when GRO enable, copy
--			 * the head data in after other data rx completed
--			 */
--			memcpy(skb->data, ring->va,
--			       ALIGN(ring->pull_len, sizeof(long)));
- 		}
- 	} else {
--		ret = hns3_add_frag(ring, desc, true);
-+		ret = hns3_add_frag(ring);
- 		if (ret)
- 			return ret;
-+	}
- 
--		/* As the head data may be changed when GRO enable, copy
--		 * the head data in after other data rx completed
--		 */
-+	/* As the head data may be changed when GRO enable, copy
-+	 * the head data in after other data rx completed
++static netdev_features_t hns3_features_check(struct sk_buff *skb,
++					     struct net_device *dev,
++					     netdev_features_t features)
++{
++#define HNS3_MAX_HDR_LEN	480U
++#define HNS3_MAX_L4_HDR_LEN	60U
++
++	size_t len;
++
++	if (skb->ip_summed != CHECKSUM_PARTIAL)
++		return features;
++
++	if (skb->encapsulation)
++		len = skb_inner_transport_header(skb) - skb->data;
++	else
++		len = skb_transport_header(skb) - skb->data;
++
++	/* Assume L4 is 60 byte as TCP is the only protocol with a
++	 * a flexible value, and it's max len is 60 bytes.
 +	 */
-+	if (skb->len > HNS3_RX_HEAD_SIZE)
- 		memcpy(skb->data, ring->va,
- 		       ALIGN(ring->pull_len, sizeof(long)));
--	}
- 
- 	ret = hns3_handle_bdinfo(ring, skb);
- 	if (unlikely(ret)) {
++	len += HNS3_MAX_L4_HDR_LEN;
++
++	/* Hardware only supports checksum on the skb with a max header
++	 * len of 480 bytes.
++	 */
++	if (len > HNS3_MAX_HDR_LEN)
++		features &= ~(NETIF_F_CSUM_MASK | NETIF_F_GSO_MASK);
++
++	return features;
++}
++
+ static void hns3_nic_get_stats64(struct net_device *netdev,
+ 				 struct rtnl_link_stats64 *stats)
+ {
+@@ -1970,6 +2001,7 @@ static const struct net_device_ops hns3_nic_netdev_ops = {
+ 	.ndo_do_ioctl		= hns3_nic_do_ioctl,
+ 	.ndo_change_mtu		= hns3_nic_change_mtu,
+ 	.ndo_set_features	= hns3_nic_set_features,
++	.ndo_features_check	= hns3_features_check,
+ 	.ndo_get_stats64	= hns3_nic_get_stats64,
+ 	.ndo_setup_tc		= hns3_nic_setup_tc,
+ 	.ndo_set_rx_mode	= hns3_nic_set_rx_mode,
 -- 
 2.7.4
 
