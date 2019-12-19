@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 053AEC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF21C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C14E924650
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B45BC24650
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:52:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="cYJEm41L"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="LypOjrsb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfLSLwE (ORCPT
+        id S1726906AbfLSLwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 06:52:04 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52024 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbfLSLwB (ORCPT
+        Thu, 19 Dec 2019 06:52:07 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:32935 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbfLSLwD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 06:52:01 -0500
-Received: by mail-wm1-f68.google.com with SMTP id d73so5144038wmd.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 03:52:00 -0800 (PST)
+        Thu, 19 Dec 2019 06:52:03 -0500
+Received: by mail-wm1-f66.google.com with SMTP id d139so6872196wmd.0
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 03:52:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=inWqr0b7IGQSzA+ufbRqSvKpmxVDxis6ow/O4l0fxAk=;
-        b=cYJEm41L8jWpObSqVzKD+h4cAiqqjoBDu2rDMB+uofSR9yWLyQSN10iRib9bzE/ABn
-         JYfn3p39+zc5bMk+s5neeREjbGH+ySUc+zrKHX2IyjfewHNNodKFnCdeiCnH/ewQC72R
-         VBwXLDmQ6oKNpR0i6HsfMSw/2sPCfRL0bgsjYtJeg/sCayKz4JKYX5bke5fNh9Z0Cnxc
-         iDG0rnFTxdhKVpqdU++pr7Kb90oF3g9YCSzJQStm5pyQCUMPvT8HHgfuLdzcL05Ot2YD
-         S9WbHaEYgxlXPQeIpTii25CgdSH+u/efYHCYu+YdkARSt2GucHWjY6iX2oA2WlC3erY2
-         sHyw==
+        bh=hbXoP0vp+PirYvwWUgyHBe1Esfy/aJnIgbBAojigrF0=;
+        b=LypOjrsbEXY8+p1H8QsI/d/4m54NfYisDoA50iSu2jHPNY17JWdPP4URvvQYB/snb/
+         8N2iUUNJE3Kzz+1mV9d8kMdxrtf0ubHPujowM1L7/OjXuL9N5zjfbD3O2qicLjryXY7L
+         clvFUz7v7TbdUsvHTpd6eepalzO5ha+3NlfBp7UHBYEpEVpR8K1A/IUHWWaWBEICXf9x
+         F+4E5i8E7EWg0mxZHSiP1qHyiy8XbH1hcauTdW9yrxRbCWWLFbO+765obtH5l4NC0N/p
+         UzTve8Kgp6Uifmbvg8qgI1o/LoC6uEKR8ph40LqX5cXQ7CTL/Q5PpQLGnqPxPifw4hJR
+         BMpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=inWqr0b7IGQSzA+ufbRqSvKpmxVDxis6ow/O4l0fxAk=;
-        b=rGhr72zKUwCzphdxbDVoxm4MirjKuIU6+oH67HfOTizB2BiABF1gSw157ToMwhU9F/
-         /LZechWEZMFMuIgwFXR9IvRuy0wqrSFo7WV8qow7pvWkU9KCEbol61Jk0q08+e+G4sY0
-         D+oQBFpdBvsD9kVqoB5sb9+qCD4YeQpF52762wpcSUjuq5Y5tmrB8m/qH6kvcwQH8LZL
-         uIVSrZzucZYiss9U3FfENqRiwVo9AYGj5rxu40Mq72OmQj7lRU5dfR05n8zSkZb5KlkL
-         vn4f6kOu/kUispwXidFbGIPACZrBcBGzO9upZgL54Hc3SJyzSPUo+h+836pfCpG3u+wj
-         taTg==
-X-Gm-Message-State: APjAAAVZ5RFU6davIGQa7VXs2DP+u2h20MnNQMeJjR/y0qgm1ybrZSKl
-        oRxCO8HvL4OB+Ce7sjJyVH2Yiw==
-X-Google-Smtp-Source: APXvYqypHgDVKt7NGvXddF3Ni8naK7o8HHLN3RAsHXuzpnZpfjixTZ0P+45pRR5StmGQS8ZjrSmSdw==
-X-Received: by 2002:a7b:c957:: with SMTP id i23mr9601630wml.49.1576756319784;
-        Thu, 19 Dec 2019 03:51:59 -0800 (PST)
+        bh=hbXoP0vp+PirYvwWUgyHBe1Esfy/aJnIgbBAojigrF0=;
+        b=VlK+djyyUS8kncfhtc+sQ+V68milBvAGsKQVkFfSLxJASj1k5IgbIZ+s7XOVj1cFkx
+         hTh5u5nEyDk9rcNQkrtEMnbMvvtz9c515iO1K7AkSFGBaGoyjXD1ENVFr9FEW8XTHDPH
+         zpZpJYYJ7jH1Dhm/132xOHd7vCFZ4tiJesbzDbecv0MKYhIqxrF0CVIalgXacEtqEdeV
+         AXpSNgj7vQSWkkf7v8hjUz2UD0PQQgRWCQ6aF4s7AJDEK7oEAa9o2VujYp30jyTTGUmX
+         2GuehnoOHiVkgdHUXP4DXPKKS3V8Iy0KwfHoEsTOh+hMPnxoKIY5LRBWP/MxjsovnVM+
+         dwGQ==
+X-Gm-Message-State: APjAAAWvWNyDoV8JDywt4XY/O811ImfmQWl89DXh1VaQEGvBk9YK/eDz
+        OhMHCaNyYQRYC8dqFRfn8YN3ag==
+X-Google-Smtp-Source: APXvYqxZ/oEM+nqoc8/gYEZ994ql7c784S/DiPIFRUFGg4yIpfxl7xtlNfGudIoaveyihp9K+F/28g==
+X-Received: by 2002:a7b:cf12:: with SMTP id l18mr10187082wmg.66.1576756321641;
+        Thu, 19 Dec 2019 03:52:01 -0800 (PST)
 Received: from localhost.localdomain (i16-les01-ntr-213-44-229-207.sfr.lns.abo.bbox.fr. [213.44.229.207])
-        by smtp.googlemail.com with ESMTPSA id k16sm6489660wru.0.2019.12.19.03.51.58
+        by smtp.googlemail.com with ESMTPSA id k16sm6489660wru.0.2019.12.19.03.52.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 03:51:59 -0800 (PST)
+        Thu, 19 Dec 2019 03:52:01 -0800 (PST)
 From:   Khouloud Touil <ktouil@baylibre.com>
 To:     bgolaszewski@baylibre.com, robh+dt@kernel.org,
         mark.rutland@arm.com, srinivas.kandagatla@linaro.org,
@@ -62,9 +62,9 @@ To:     bgolaszewski@baylibre.com, robh+dt@kernel.org,
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-i2c@vger.kernel.org, linus.walleij@linaro.org,
         Khouloud Touil <ktouil@baylibre.com>
-Subject: [PATCH v3 2/4] nvmem: add support for the write-protect pin
-Date:   Thu, 19 Dec 2019 12:51:39 +0100
-Message-Id: <20191219115141.24653-3-ktouil@baylibre.com>
+Subject: [PATCH v3 4/4] eeprom: at24: remove the write-protect pin support
+Date:   Thu, 19 Dec 2019 12:51:41 +0100
+Message-Id: <20191219115141.24653-5-ktouil@baylibre.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191219115141.24653-1-ktouil@baylibre.com>
 References: <20191219115141.24653-1-ktouil@baylibre.com>
@@ -73,121 +73,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The write-protect pin handling looks like a standard property that
-could benefit other users if available in the core nvmem framework.
+NVMEM framework is an interface for the at24 EEPROMs as well as for
+other drivers, instead of passing the wp-gpios over the different
+drivers each time, it would be better to pass it over the NVMEM
+subsystem once and for all.
 
-Instead of modifying all the memory drivers to check this pin, make
-the NVMEM subsystem check if the write-protect GPIO being passed
-through the nvmem_config or defined in the device tree and pull it
-low whenever writing to the memory.
-
-There was a suggestion for introducing the gpiodesc from pdata, but
-as pdata is already removed it could be replaced by adding it to
-nvmem_config.
-
-Reference: https://lists.96boards.org/pipermail/dev/2018-August/001056.html
+Removing the support for the write-protect pin after adding it to the
+NVMEM subsystem.
 
 Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/nvmem/core.c           | 19 +++++++++++++++++--
- drivers/nvmem/nvmem.h          |  2 ++
- include/linux/nvmem-provider.h |  3 +++
- 3 files changed, 22 insertions(+), 2 deletions(-)
+ drivers/misc/eeprom/at24.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index 9f1ee9c766ec..3e1c94c4eee8 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -15,6 +15,7 @@
- #include <linux/module.h>
- #include <linux/nvmem-consumer.h>
+diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+index 0681d5fdd538..8fce49a6d9cd 100644
+--- a/drivers/misc/eeprom/at24.c
++++ b/drivers/misc/eeprom/at24.c
+@@ -22,7 +22,6 @@
  #include <linux/nvmem-provider.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/of.h>
- #include <linux/slab.h>
- #include "nvmem.h"
-@@ -54,8 +55,14 @@ static int nvmem_reg_read(struct nvmem_device *nvmem, unsigned int offset,
- static int nvmem_reg_write(struct nvmem_device *nvmem, unsigned int offset,
- 			   void *val, size_t bytes)
- {
--	if (nvmem->reg_write)
--		return nvmem->reg_write(nvmem->priv, offset, val, bytes);
-+	int ret;
-+
-+	if (nvmem->reg_write) {
-+		gpiod_set_value_cansleep(nvmem->wp_gpio, 0);
-+		ret = nvmem->reg_write(nvmem->priv, offset, val, bytes);
-+		gpiod_set_value_cansleep(nvmem->wp_gpio, 1);
-+		return ret;
-+	}
+ #include <linux/regmap.h>
+ #include <linux/pm_runtime.h>
+-#include <linux/gpio/consumer.h>
  
- 	return -EINVAL;
- }
-@@ -338,6 +345,14 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
- 		kfree(nvmem);
- 		return ERR_PTR(rval);
+ /* Address pointer is 16 bit. */
+ #define AT24_FLAG_ADDR16	BIT(7)
+@@ -89,8 +88,6 @@ struct at24_data {
+ 
+ 	struct nvmem_device *nvmem;
+ 
+-	struct gpio_desc *wp_gpio;
+-
+ 	/*
+ 	 * Some chips tie up multiple I2C addresses; dummy devices reserve
+ 	 * them for us, and we'll use them with SMBus calls.
+@@ -457,12 +454,10 @@ static int at24_write(void *priv, unsigned int off, void *val, size_t count)
+ 	 * from this host, but not from other I2C masters.
+ 	 */
+ 	mutex_lock(&at24->lock);
+-	gpiod_set_value_cansleep(at24->wp_gpio, 0);
+ 
+ 	while (count) {
+ 		ret = at24_regmap_write(at24, buf, off, count);
+ 		if (ret < 0) {
+-			gpiod_set_value_cansleep(at24->wp_gpio, 1);
+ 			mutex_unlock(&at24->lock);
+ 			pm_runtime_put(dev);
+ 			return ret;
+@@ -472,7 +467,6 @@ static int at24_write(void *priv, unsigned int off, void *val, size_t count)
+ 		count -= ret;
  	}
-+	if (config->wp_gpio)
-+		nvmem->wp_gpio = config->wp_gpio;
-+	else
-+		nvmem->wp_gpio = gpiod_get_optional(config->dev, "wp",
-+						    GPIOD_OUT_HIGH);
-+	if (IS_ERR(nvmem->wp_gpio))
-+		return PTR_ERR(nvmem->wp_gpio);
-+
  
- 	kref_init(&nvmem->refcnt);
- 	INIT_LIST_HEAD(&nvmem->cells);
-diff --git a/drivers/nvmem/nvmem.h b/drivers/nvmem/nvmem.h
-index eb8ed7121fa3..be0d66d75c8a 100644
---- a/drivers/nvmem/nvmem.h
-+++ b/drivers/nvmem/nvmem.h
-@@ -9,6 +9,7 @@
- #include <linux/list.h>
- #include <linux/nvmem-consumer.h>
- #include <linux/nvmem-provider.h>
-+#include <linux/gpio/consumer.h>
+-	gpiod_set_value_cansleep(at24->wp_gpio, 1);
+ 	mutex_unlock(&at24->lock);
  
- struct nvmem_device {
- 	struct module		*owner;
-@@ -26,6 +27,7 @@ struct nvmem_device {
- 	struct list_head	cells;
- 	nvmem_reg_read_t	reg_read;
- 	nvmem_reg_write_t	reg_write;
-+	struct gpio_desc	*wp_gpio;
- 	void *priv;
- };
+ 	pm_runtime_put(dev);
+@@ -662,9 +656,6 @@ static int at24_probe(struct i2c_client *client)
+ 	at24->client[0].client = client;
+ 	at24->client[0].regmap = regmap;
  
-diff --git a/include/linux/nvmem-provider.h b/include/linux/nvmem-provider.h
-index fe051323be0a..6d6f8e5d24c9 100644
---- a/include/linux/nvmem-provider.h
-+++ b/include/linux/nvmem-provider.h
-@@ -11,6 +11,7 @@
+-	at24->wp_gpio = devm_gpiod_get_optional(dev, "wp", GPIOD_OUT_HIGH);
+-	if (IS_ERR(at24->wp_gpio))
+-		return PTR_ERR(at24->wp_gpio);
  
- #include <linux/err.h>
- #include <linux/errno.h>
-+#include <linux/gpio/consumer.h>
- 
- struct nvmem_device;
- struct nvmem_cell_info;
-@@ -45,6 +46,7 @@ enum nvmem_type {
-  * @word_size:	Minimum read/write access granularity.
-  * @stride:	Minimum read/write access stride.
-  * @priv:	User context passed to read/write callbacks.
-+ * @wp-gpio:   Write protect pin
-  *
-  * Note: A default "nvmem<id>" name will be assigned to the device if
-  * no name is specified in its configuration. In such case "<id>" is
-@@ -58,6 +60,7 @@ struct nvmem_config {
- 	const char		*name;
- 	int			id;
- 	struct module		*owner;
-+	struct gpio_desc	*wp_gpio;
- 	const struct nvmem_cell_info	*cells;
- 	int			ncells;
- 	enum nvmem_type		type;
+ 	writable = !(flags & AT24_FLAG_READONLY);
+ 	if (writable) {
 -- 
 2.17.1
 
