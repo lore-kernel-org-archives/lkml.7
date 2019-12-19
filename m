@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C17C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D538C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6BD4206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DEC1222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:03:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782175;
-	bh=pLdYNkVQumSrYcoJkwEPWpM8YP95RC5fAS0Ict/uXys=;
+	s=default; t=1576782180;
+	bh=yYRGy6ghmv3t/ei2FP8SuSFVxrz8N7pQuxBrYEG6MNE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FcoB4w3tXwApeJGZKUzKS35OFpbD1UNktX8CO6MoqF5eMp1lFOIOXm1u7BkWYIGO8
-	 JwGhpl4q3k74UuRTBjQcOS5X3UNq+psyUbECcHDXiHb1vkA5KJ8a5RX6KATNaMWFX3
-	 pcVW1kyUy7U1G3uOb0fMgEY5AXQUS+JMeBJprRic=
+	b=HV7KYc9Ui/ZCx1ND860VIfyRiuT7t7rC83oU5yAXWj7+aDNy5T4EcCE544zORQ7Cj
+	 Ei0lytru9RQkqcGhsLwwSJDZoITGMg4S8FumDfQaOSNwYbDLCztGeQpwH/nRjGonHo
+	 bpI4UE2eo1BQPcgjrtLEDD2J3gjEFpz/tXD3Cy6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729718AbfLSStD (ORCPT
+        id S1729516AbfLSTC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:49:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42240 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 14:02:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729463AbfLSSs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:48:58 -0500
+        id S1727780AbfLSStA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:49:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4E9E24679;
-        Thu, 19 Dec 2019 18:48:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5419624686;
+        Thu, 19 Dec 2019 18:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781337;
-        bh=pLdYNkVQumSrYcoJkwEPWpM8YP95RC5fAS0Ict/uXys=;
+        s=default; t=1576781339;
+        bh=yYRGy6ghmv3t/ei2FP8SuSFVxrz8N7pQuxBrYEG6MNE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aFYD4+8+txdI2HIYU2irRpvTwtqzzJ4pxZx2NKGIHPSk0Rfh/Ok4KH5BcJqXl0UAi
-         /4YX65Lchahz6e5LjjnaN0DmFDh89x5orl2f7o0XfKbRawp5yXfo78VAGEBiWJuza7
-         ImsO/QSXt3wza5+MmP0nQmczUudpwAahOg51zyrA=
+        b=05Fm9W+DuScakkNV+GSeA1JAWfCkNOJRS4OK0V0M5h2NaE30wsXdXX+6LeL8fLUVP
+         7v8dlOXV0mR293oiSHjNverwuYVXl99e7/BhB/5Z0qxtI3wPR3bAn48SC2r/w+L9D5
+         tKD+E9dH5cFCXJ+cCM2MZlITTkeFu3qk7L1u191E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 181/199] inet: protect against too small mtu values.
-Date:   Thu, 19 Dec 2019 19:34:23 +0100
-Message-Id: <20191219183225.648601831@linuxfoundation.org>
+Subject: [PATCH 4.9 182/199] tcp: fix rejected syncookies due to stale timestamps
+Date:   Thu, 19 Dec 2019 19:34:24 +0100
+Message-Id: <20191219183225.716038281@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,176 +60,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Guillaume Nault <gnault@redhat.com>
 
-[ Upstream commit 501a90c945103e8627406763dac418f20f3837b2 ]
+[ Upstream commit 04d26e7b159a396372646a480f4caa166d1b6720 ]
 
-syzbot was once again able to crash a host by setting a very small mtu
-on loopback device.
+If no synflood happens for a long enough period of time, then the
+synflood timestamp isn't refreshed and jiffies can advance so much
+that time_after32() can't accurately compare them any more.
 
-Let's make inetdev_valid_mtu() available in include/net/ip.h,
-and use it in ip_setup_cork(), so that we protect both ip_append_page()
-and __ip_append_data()
+Therefore, we can end up in a situation where time_after32(now,
+last_overflow + HZ) returns false, just because these two values are
+too far apart. In that case, the synflood timestamp isn't updated as
+it should be, which can trick tcp_synq_no_recent_overflow() into
+rejecting valid syncookies.
 
-Also add a READ_ONCE() when the device mtu is read.
+For example, let's consider the following scenario on a system
+with HZ=1000:
 
-Pairs this lockless read with one WRITE_ONCE() in __dev_set_mtu(),
-even if other code paths might write over this field.
+  * The synflood timestamp is 0, either because that's the timestamp
+    of the last synflood or, more commonly, because we're working with
+    a freshly created socket.
 
-Add a big comment in include/linux/netdevice.h about dev->mtu
-needing READ_ONCE()/WRITE_ONCE() annotations.
+  * We receive a new SYN, which triggers synflood protection. Let's say
+    that this happens when jiffies == 2147484649 (that is,
+    'synflood timestamp' + HZ + 2^31 + 1).
 
-Hopefully we will add the missing ones in followup patches.
+  * Then tcp_synq_overflow() doesn't update the synflood timestamp,
+    because time_after32(2147484649, 1000) returns false.
+    With:
+      - 2147484649: the value of jiffies, aka. 'now'.
+      - 1000: the value of 'last_overflow' + HZ.
 
-[1]
+  * A bit later, we receive the ACK completing the 3WHS. But
+    cookie_v[46]_check() rejects it because tcp_synq_no_recent_overflow()
+    says that we're not under synflood. That's because
+    time_after32(2147484649, 120000) returns false.
+    With:
+      - 2147484649: the value of jiffies, aka. 'now'.
+      - 120000: the value of 'last_overflow' + TCP_SYNCOOKIE_VALID.
 
-refcount_t: saturated; leaking memory.
-WARNING: CPU: 0 PID: 9464 at lib/refcount.c:22 refcount_warn_saturate+0x138/0x1f0 lib/refcount.c:22
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 9464 Comm: syz-executor850 Not tainted 5.4.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- __warn.cold+0x2f/0x3e kernel/panic.c:582
- report_bug+0x289/0x300 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- fixup_bug arch/x86/kernel/traps.c:169 [inline]
- do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
- do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:refcount_warn_saturate+0x138/0x1f0 lib/refcount.c:22
-Code: 06 31 ff 89 de e8 c8 f5 e6 fd 84 db 0f 85 6f ff ff ff e8 7b f4 e6 fd 48 c7 c7 e0 71 4f 88 c6 05 56 a6 a4 06 01 e8 c7 a8 b7 fd <0f> 0b e9 50 ff ff ff e8 5c f4 e6 fd 0f b6 1d 3d a6 a4 06 31 ff 89
-RSP: 0018:ffff88809689f550 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815e4336 RDI: ffffed1012d13e9c
-RBP: ffff88809689f560 R08: ffff88809c50a3c0 R09: fffffbfff15d31b1
-R10: fffffbfff15d31b0 R11: ffffffff8ae98d87 R12: 0000000000000001
-R13: 0000000000040100 R14: ffff888099041104 R15: ffff888218d96e40
- refcount_add include/linux/refcount.h:193 [inline]
- skb_set_owner_w+0x2b6/0x410 net/core/sock.c:1999
- sock_wmalloc+0xf1/0x120 net/core/sock.c:2096
- ip_append_page+0x7ef/0x1190 net/ipv4/ip_output.c:1383
- udp_sendpage+0x1c7/0x480 net/ipv4/udp.c:1276
- inet_sendpage+0xdb/0x150 net/ipv4/af_inet.c:821
- kernel_sendpage+0x92/0xf0 net/socket.c:3794
- sock_sendpage+0x8b/0xc0 net/socket.c:936
- pipe_to_sendpage+0x2da/0x3c0 fs/splice.c:458
- splice_from_pipe_feed fs/splice.c:512 [inline]
- __splice_from_pipe+0x3ee/0x7c0 fs/splice.c:636
- splice_from_pipe+0x108/0x170 fs/splice.c:671
- generic_splice_sendpage+0x3c/0x50 fs/splice.c:842
- do_splice_from fs/splice.c:861 [inline]
- direct_splice_actor+0x123/0x190 fs/splice.c:1035
- splice_direct_to_actor+0x3b4/0xa30 fs/splice.c:990
- do_splice_direct+0x1da/0x2a0 fs/splice.c:1078
- do_sendfile+0x597/0xd00 fs/read_write.c:1464
- __do_sys_sendfile64 fs/read_write.c:1525 [inline]
- __se_sys_sendfile64 fs/read_write.c:1511 [inline]
- __x64_sys_sendfile64+0x1dd/0x220 fs/read_write.c:1511
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x441409
-Code: e8 ac e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 eb 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fffb64c4f78 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441409
-RDX: 0000000000000000 RSI: 0000000000000006 RDI: 0000000000000005
-RBP: 0000000000073b8a R08: 0000000000000010 R09: 0000000000000010
-R10: 0000000000010001 R11: 0000000000000246 R12: 0000000000402180
-R13: 0000000000402210 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+    Of course, in reality jiffies would have increased a bit, but this
+    condition will last for the next 119 seconds, which is far enough
+    to accommodate for jiffie's growth.
 
-Fixes: 1470ddf7f8ce ("inet: Remove explicit write references to sk/inet in ip_append_data")
+Fix this by updating the overflow timestamp whenever jiffies isn't
+within the [last_overflow, last_overflow + HZ] range. That shouldn't
+have any performance impact since the update still happens at most once
+per second.
+
+Now we're guaranteed to have fresh timestamps while under synflood, so
+tcp_synq_no_recent_overflow() can safely use it with time_after32() in
+such situations.
+
+Stale timestamps can still make tcp_synq_no_recent_overflow() return
+the wrong verdict when not under synflood. This will be handled in the
+next patch.
+
+For 64 bits architectures, the problem was introduced with the
+conversion of ->tw_ts_recent_stamp to 32 bits integer by commit
+cca9bab1b72c ("tcp: use monotonic timestamps for PAWS").
+The problem has always been there on 32 bits architectures.
+
+Fixes: cca9bab1b72c ("tcp: use monotonic timestamps for PAWS")
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Guillaume Nault <gnault@redhat.com>
 Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/netdevice.h |    5 +++++
- include/net/ip.h          |    5 +++++
- net/core/dev.c            |    3 ++-
- net/ipv4/devinet.c        |    5 -----
- net/ipv4/ip_output.c      |   14 +++++++++-----
- 5 files changed, 21 insertions(+), 11 deletions(-)
+ include/linux/time.h |   12 ++++++++++++
+ include/net/tcp.h    |    2 +-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -1730,6 +1730,11 @@ struct net_device {
- 	unsigned char		if_port;
- 	unsigned char		dma;
+--- a/include/linux/time.h
++++ b/include/linux/time.h
+@@ -275,4 +275,16 @@ static __always_inline void timespec_add
+ 	a->tv_nsec = ns;
+ }
  
-+	/* Note : dev->mtu is often read without holding a lock.
-+	 * Writers usually hold RTNL.
-+	 * It is recommended to use READ_ONCE() to annotate the reads,
-+	 * and to use WRITE_ONCE() to annotate the writes.
-+	 */
- 	unsigned int		mtu;
- 	unsigned short		type;
- 	unsigned short		hard_header_len;
---- a/include/net/ip.h
-+++ b/include/net/ip.h
-@@ -620,4 +620,9 @@ extern int sysctl_icmp_msgs_burst;
- int ip_misc_proc_init(void);
++/**
++ * time_between32 - check if a 32-bit timestamp is within a given time range
++ * @t:	the time which may be within [l,h]
++ * @l:	the lower bound of the range
++ * @h:	the higher bound of the range
++ *
++ * time_before32(t, l, h) returns true if @l <= @t <= @h. All operands are
++ * treated as 32-bit integers.
++ *
++ * Equivalent to !(time_before32(@t, @l) || time_after32(@t, @h)).
++ */
++#define time_between32(t, l, h) ((u32)(h) - (u32)(l) >= (u32)(t) - (u32)(l))
  #endif
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -497,7 +497,7 @@ static inline void tcp_synq_overflow(con
+ 	unsigned long last_overflow = tcp_sk(sk)->rx_opt.ts_recent_stamp;
+ 	unsigned long now = jiffies;
  
-+static inline bool inetdev_valid_mtu(unsigned int mtu)
-+{
-+	return likely(mtu >= IPV4_MIN_MTU);
-+}
-+
- #endif	/* _IP_H */
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -6584,7 +6584,8 @@ static int __dev_set_mtu(struct net_devi
- 	if (ops->ndo_change_mtu)
- 		return ops->ndo_change_mtu(dev, new_mtu);
- 
--	dev->mtu = new_mtu;
-+	/* Pairs with all the lockless reads of dev->mtu in the stack */
-+	WRITE_ONCE(dev->mtu, new_mtu);
- 	return 0;
+-	if (time_after(now, last_overflow + HZ))
++	if (!time_between32(now, last_overflow, last_overflow + HZ))
+ 		tcp_sk(sk)->rx_opt.ts_recent_stamp = now;
  }
  
---- a/net/ipv4/devinet.c
-+++ b/net/ipv4/devinet.c
-@@ -1386,11 +1386,6 @@ skip:
- 	}
- }
- 
--static bool inetdev_valid_mtu(unsigned int mtu)
--{
--	return mtu >= IPV4_MIN_MTU;
--}
--
- static void inetdev_send_gratuitous_arp(struct net_device *dev,
- 					struct in_device *in_dev)
- 
---- a/net/ipv4/ip_output.c
-+++ b/net/ipv4/ip_output.c
-@@ -1159,13 +1159,17 @@ static int ip_setup_cork(struct sock *sk
- 	rt = *rtp;
- 	if (unlikely(!rt))
- 		return -EFAULT;
--	/*
--	 * We steal reference to this route, caller should not release it
--	 */
--	*rtp = NULL;
-+
- 	cork->fragsize = ip_sk_use_pmtu(sk) ?
--			 dst_mtu(&rt->dst) : rt->dst.dev->mtu;
-+			 dst_mtu(&rt->dst) : READ_ONCE(rt->dst.dev->mtu);
-+
-+	if (!inetdev_valid_mtu(cork->fragsize))
-+		return -ENETUNREACH;
-+
- 	cork->dst = &rt->dst;
-+	/* We stole this route, caller should not release it. */
-+	*rtp = NULL;
-+
- 	cork->length = 0;
- 	cork->ttl = ipc->ttl;
- 	cork->tos = ipc->tos;
 
 
