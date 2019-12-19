@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB8DC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CDFC2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AAC924672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F416724676
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:28:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wsf3R1uM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WaaqDZqK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfLSR2i (ORCPT
+        id S1727083AbfLSR2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 12:28:38 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42986 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726869AbfLSR2g (ORCPT
+        Thu, 19 Dec 2019 12:28:42 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35243 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726869AbfLSR2j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 12:28:36 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 4so3637388pfz.9;
-        Thu, 19 Dec 2019 09:28:36 -0800 (PST)
+        Thu, 19 Dec 2019 12:28:39 -0500
+Received: by mail-pf1-f196.google.com with SMTP id b19so3651715pfo.2;
+        Thu, 19 Dec 2019 09:28:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=e3InGdrhpW/KFEKCJevkSkCg0s1j2OL38jx4frb9szs=;
-        b=Wsf3R1uMAUach3XE6iWhG1D9/GXB8M5kwET7ibyp1tCrm4L2T1qCT1UPf734SZ8DDU
-         10YDrdEqsyY1+tGrGdaKNbz08QM6DUCA1mZCje9ybR70fP9gsK22ESwZlN7pRVm7j4Bk
-         L1AnQ7RJBXCX0wxTynFTSpz5eJUAfo/MySgs52o3gmmjaM45btwVVOsN0ngQ1DWn1Hrq
-         DaamtOSR6QO5RAaY1mtYALbdAn4HCtZkcHMIzTnc1Gb67JWf50DMjsZIrtYl0Bu3UOAw
-         7U3XYtedIpXqAdl1q2vU9O0q08ZEknQ/3FV67pfuUVFVdNRg1X9Nn+rUQT24zNi1dyV9
-         Tj3A==
+        bh=5JoZyySS78BiNU1aODtc8vpSYvJMQn2ITDVR9fgmYmY=;
+        b=WaaqDZqK//XLc6TXiRxt1Qqke4VgaCivw/JuTOr5sVzH2UIKthSS2zBh4NZCnAFUpG
+         kMec0K2/0GBElO2NfKNj8V/XJXihE4NGyoYF/Y805KrJ2Wh+yXcYZR3UMrris97TFeei
+         ktmy934BelNmAqIw8L9aTu8U7ukdKpCqsFBQmezt8YT+hm/ykwUQqFuJWM3AZI3mfLhR
+         KVvmVz1/jhLUWxtdzGorniiACkGqgkj89ev9294DUYfMGvxMDtEDbTiZNTE29YKZSmbB
+         yMSMpYyKyvpLC4IOUpnEOyXdB/KlKqKabiKaKjtNTgaLpFcrdVntBSuqLtdz6ojbVl9D
+         5Tnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=e3InGdrhpW/KFEKCJevkSkCg0s1j2OL38jx4frb9szs=;
-        b=Nq1TWghvzj1S4JRv8Y8KmIQAz1SuPnP5rUq+HaertUIa65iEFufeCWqJ96+uml96pc
-         TpOMqKkI69bx1gtJoJRJVbjnZlvpEZ53IjkouHmuTo62UL56WBEioI9YsX4M6FJ9K0h3
-         /Atf3ocTA62y7QGM1DunAadSTfFilC65DByHxOYKVJzgfazuWRQ2wr5kHDIhCuQL0nMW
-         W/OdgIf5EmBPRZeCD8fZFACwIvKII0/4As2VqHeYC9BfOw+gXMIatDIH4FxuOnq+YCmN
-         PlmKm0na8ZF2mcjUKB2UnLM3kCsDZpoBeZGE1IqvxE1qwPZhbDwLaSiJPvyGMlxFFCzn
-         ohwQ==
-X-Gm-Message-State: APjAAAWFWTaWjzrSHoDMipiZ4prcgxbcY1rKR2emG61Zbks53+Etb7ZY
-        kqGc/SxFqm5rXE48/koz6M8=
-X-Google-Smtp-Source: APXvYqzwDCblQ9076CWYrCAih5FSrXhjVCXbFNvklN6EzJLQsKc5svJnBA87rZmDJlPqP80g6g/zSw==
-X-Received: by 2002:a62:446:: with SMTP id 67mr10455562pfe.109.1576776515822;
-        Thu, 19 Dec 2019 09:28:35 -0800 (PST)
+        bh=5JoZyySS78BiNU1aODtc8vpSYvJMQn2ITDVR9fgmYmY=;
+        b=hXL7i3P9l1mxbogliEHq/nzbk/KcdkOy6nAuCylog3H6vUx3+z9A077JacVt+rd5Ef
+         5jmE9wvAysqYMNesqf0Fsu4/YI2Jqqv4QUE0yeVj5xMCIw9RQeYHxHn5xGEhizeYVJOa
+         2DRChKA1b0Sn9hORRVHIETdGwyLROKXEAq5YwJg+QLlOw7wGsy3grNrY++ZqMiAtdaOm
+         TDMhwLOLwBu9POnFy3c6YBgoSqfS24Ohd/1D5N+Eb3snxsL9VU+buLeXB2aq3DZIq/Tx
+         GBmCfnjUAjY8LYBNkqPgjtuCJUAlPQjpDUpD5ANXDUlzCqq0b5+8ZdoYLI9PAJHuszq4
+         QCPg==
+X-Gm-Message-State: APjAAAW803nCiYWkwo15NJe3zuQ6vvE+xfSs/pXx1R+2LULGHDNWb1P2
+        iMbH+FU0+XTmyCbug9sfffo=
+X-Google-Smtp-Source: APXvYqztENyahsDISGwV/gwDlv84foPdppuLiWeUuJmuF3CZO4dD6xdLyJPlIgJCUz5oG+jKbC+yMA==
+X-Received: by 2002:aa7:870c:: with SMTP id b12mr11025712pfo.82.1576776518627;
+        Thu, 19 Dec 2019 09:28:38 -0800 (PST)
 Received: from anarsoul-thinkpad.lan (216-71-213-236.dyn.novuscom.net. [216.71.213.236])
-        by smtp.gmail.com with ESMTPSA id v143sm536209pfc.71.2019.12.19.09.28.34
+        by smtp.gmail.com with ESMTPSA id v143sm536209pfc.71.2019.12.19.09.28.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 09:28:34 -0800 (PST)
+        Thu, 19 Dec 2019 09:28:38 -0800 (PST)
 From:   Vasily Khoruzhick <anarsoul@gmail.com>
 To:     Yangtao Li <tiny.windzz@gmail.com>,
         Zhang Rui <rui.zhang@intel.com>,
@@ -74,9 +74,9 @@ To:     Yangtao Li <tiny.windzz@gmail.com>,
         =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megous@megous.com>,
         linux-kernel@vger.kernel.org
 Cc:     Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH v8 2/7] dt-bindings: thermal: add YAML schema for sun8i-thermal driver bindings
-Date:   Thu, 19 Dec 2019 09:28:18 -0800
-Message-Id: <20191219172823.1652600-3-anarsoul@gmail.com>
+Subject: [PATCH v8 5/7] arm64: dts: allwinner: h5: Add thermal sensor and thermal zones
+Date:   Thu, 19 Dec 2019 09:28:21 -0800
+Message-Id: <20191219172823.1652600-6-anarsoul@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219172823.1652600-1-anarsoul@gmail.com>
 References: <20191219172823.1652600-1-anarsoul@gmail.com>
@@ -87,184 +87,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yangtao Li <tiny.windzz@gmail.com>
+From: Ondrej Jirman <megous@megous.com>
 
-sun8i-thermal driver supports thermal sensor in wide range of Allwinner
-SoCs. Add YAML schema for its bindings.
+There are two sensors, one for CPU, one for GPU.
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Signed-off-by: Ondrej Jirman <megous@megous.com>
 Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
 ---
- .../thermal/allwinner,sun8i-a83t-ths.yaml     | 160 ++++++++++++++++++
- 1 file changed, 160 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 26 ++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-new file mode 100644
-index 000000000000..87369264feb9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-@@ -0,0 +1,160 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/allwinner,sun8i-a83t-ths.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+index e92c4de5bf3b..f9df95b2d542 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+@@ -176,6 +176,32 @@ mali: gpu@1e80000 {
+ 			assigned-clocks = <&ccu CLK_GPU>;
+ 			assigned-clock-rates = <384000000>;
+ 		};
 +
-+title: Allwinner SUN8I Thermal Controller Device Tree Bindings
++		ths: thermal-sensor@1c25000 {
++			compatible = "allwinner,sun50i-h5-ths";
++			reg = <0x01c25000 0x400>;
++			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
++			resets = <&ccu RST_BUS_THS>;
++			clocks = <&ccu CLK_BUS_THS>, <&ccu CLK_THS>;
++			clock-names = "bus", "mod";
++			nvmem-cells = <&ths_calibration>;
++			nvmem-cell-names = "calibration";
++			#thermal-sensor-cells = <1>;
++		};
++	};
 +
-+maintainers:
-+  - Vasily Khoruzhick <anarsoul@gmail.com>
-+  - Yangtao Li <tiny.windzz@gmail.com>
++	thermal-zones {
++		cpu_thermal: cpu-thermal {
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
++			thermal-sensors = <&ths 0>;
++		};
 +
-+properties:
-+  compatible:
-+    enum:
-+      - allwinner,sun8i-a83t-ths
-+      - allwinner,sun8i-h3-ths
-+      - allwinner,sun8i-r40-ths
-+      - allwinner,sun50i-a64-ths
-+      - allwinner,sun50i-h5-ths
-+      - allwinner,sun50i-h6-ths
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - description: Bus Clock
-+      - description: Module Clock
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: bus
-+      - const: mod
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  nvmem-cells:
-+    maxItems: 1
-+    description: Calibration data for thermal sensors
-+
-+  nvmem-cell-names:
-+    const: calibration
-+
-+  # See ./thermal.txt for details
-+  "#thermal-sensor-cells":
-+    enum:
-+      - 0
-+      - 1
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: allwinner,sun50i-h6-ths
-+
-+    then:
-+      properties:
-+        clocks:
-+          maxItems: 1
-+
-+        clock-names:
-+          maxItems: 1
-+
-+    else:
-+      properties:
-+        clocks:
-+          minItems: 2
-+
-+        clock-names:
-+          minItems: 2
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: allwinner,sun8i-h3-ths
-+
-+    then:
-+      properties:
-+        "#thermal-sensor-cells":
-+          const: 0
-+
-+    else:
-+      properties:
-+        "#thermal-sensor-cells":
-+          const: 1
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - const: allwinner,sun8i-h3-ths
-+              - const: allwinner,sun8i-r40-ths
-+              - const: allwinner,sun50i-a64-ths
-+              - const: allwinner,sun50i-h5-ths
-+              - const: allwinner,sun50i-h6-ths
-+
-+    then:
-+      required:
-+        - clocks
-+        - clock-names
-+        - resets
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - '#thermal-sensor-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    thermal-sensor@1f04000 {
-+         compatible = "allwinner,sun8i-a83t-ths";
-+         reg = <0x01f04000 0x100>;
-+         interrupts = <0 31 0>;
-+         nvmem-cells = <&ths_calibration>;
-+         nvmem-cell-names = "calibration";
-+         #thermal-sensor-cells = <1>;
-+    };
-+
-+  - |
-+    thermal-sensor@1c25000 {
-+         compatible = "allwinner,sun8i-h3-ths";
-+         reg = <0x01c25000 0x400>;
-+         clocks = <&ccu 0>, <&ccu 1>;
-+         clock-names = "bus", "mod";
-+         resets = <&ccu 2>;
-+         interrupts = <0 31 0>;
-+         nvmem-cells = <&ths_calibration>;
-+         nvmem-cell-names = "calibration";
-+         #thermal-sensor-cells = <0>;
-+    };
-+
-+  - |
-+    thermal-sensor@5070400 {
-+         compatible = "allwinner,sun50i-h6-ths";
-+         reg = <0x05070400 0x100>;
-+         clocks = <&ccu 0>;
-+         clock-names = "bus";
-+         resets = <&ccu 2>;
-+         interrupts = <0 15 0>;
-+         nvmem-cells = <&ths_calibration>;
-+         nvmem-cell-names = "calibration";
-+         #thermal-sensor-cells = <1>;
-+    };
-+
-+...
++		gpu_thermal {
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
++			thermal-sensors = <&ths 1>;
++		};
+ 	};
+ };
+ 
 -- 
 2.24.1
 
