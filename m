@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 638A1C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF2EC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 310DC206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77C54227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781944;
-	bh=8cJPzHB9UBMtrpOt681rBiJ2VXcfE/kr+hGaYCA90oc=;
+	s=default; t=1576781950;
+	bh=cV8BtaBdwTKnozME35vtYwxR3ObGSo3brVmHIXTUxiY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NaY07WIjYY4JiRk2SwU/6dmHnXy1waI+Uv6ChZNcVkoWBMY6/boh4JILkiW/91CWu
-	 wuKGyT9cASpNHbUgSdMKsEdY6THQQOiHpZrXSgEmaMxEqbF1v4eMtCgapOmc96Oqhq
-	 WK9I5/BME7UQC0G26faaNno9u4HxfvQezqJWEJG4=
+	b=yxjNI2Y6Dg2OTFmxn4ahUa15uBxvkMkmty4qOa6QlIPwLA8snLOLPmR23pRLL4k1O
+	 b11g8s4fHXdKjS90jfSrt080lgXm3tEM5JUd9HRGa4pBmhbkI1XvZ3HIvLQYU7vX6k
+	 gJBfcEhTF2qFc8onNC/esLiyKtnik1ZTMZlCBQsk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbfLSSx6 (ORCPT
+        id S1730358AbfLSS7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:53:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49238 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:59:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728239AbfLSSxz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:53:55 -0500
+        id S1729339AbfLSSxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:53:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C0F824679;
-        Thu, 19 Dec 2019 18:53:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23DC520674;
+        Thu, 19 Dec 2019 18:53:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781634;
-        bh=8cJPzHB9UBMtrpOt681rBiJ2VXcfE/kr+hGaYCA90oc=;
+        s=default; t=1576781629;
+        bh=cV8BtaBdwTKnozME35vtYwxR3ObGSo3brVmHIXTUxiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=koEV3Kk1NIRcWNXUk9XiDCchovTW6c1dVOdZnjIY1zy02GTpRjJ69FoG+aWXfQmHM
-         pprE63J/u36hjyWZwVle95Pix/OQfYFN8hdyQg+dxH7cwvTXH36MOqOuv3VAxRA/oF
-         lDXwSCkauzRFyWwFYJVI8V81OsPwEc164x3Ah95E=
+        b=0ievnbt7fnlbToY4noqcNkATIKltdZvAgGOQh5/tblOYvOh5J5QF5PEBC4ftNz5mq
+         kXbY3VK5SFjPXn9X9YrQyt/9as2KEYrBQ+EkZkWOrc+UHahcsGUa7QUggAXeXPttDK
+         V8OSxMvSobJSq/gYaK97odUgF/biGC2U5ugAMszs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>
-Subject: [PATCH 5.4 18/80] gfs2: fix glock reference problem in gfs2_trans_remove_revoke
-Date:   Thu, 19 Dec 2019 19:34:10 +0100
-Message-Id: <20191219183056.023477756@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        Max Filippov <jcmvbkbc@gmail.com>
+Subject: [PATCH 5.4 16/80] xtensa: use MEMBLOCK_ALLOC_ANYWHERE for KASAN shadow map
+Date:   Thu, 19 Dec 2019 19:34:08 +0100
+Message-Id: <20191219183053.711885287@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -59,83 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Max Filippov <jcmvbkbc@gmail.com>
 
-commit fe5e7ba11fcf1d75af8173836309e8562aefedef upstream.
+commit e64681b487c897ec871465083bf0874087d47b66 upstream.
 
-Commit 9287c6452d2b fixed a situation in which gfs2 could use a glock
-after it had been freed. To do that, it temporarily added a new glock
-reference by calling gfs2_glock_hold in function gfs2_add_revoke.
-However, if the bd element was removed by gfs2_trans_remove_revoke, it
-failed to drop the additional reference.
+KASAN shadow map doesn't need to be accessible through the linear kernel
+mapping, allocate its pages with MEMBLOCK_ALLOC_ANYWHERE so that high
+memory can be used. This frees up to ~100MB of low memory on xtensa
+configurations with KASAN and high memory.
 
-This patch adds logic to gfs2_trans_remove_revoke to properly drop the
-additional glock reference.
-
-Fixes: 9287c6452d2b ("gfs2: Fix occasional glock use-after-free")
-Cc: stable@vger.kernel.org # v5.2+
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Cc: stable@vger.kernel.org # v5.1+
+Fixes: f240ec09bb8a ("memblock: replace memblock_alloc_base(ANYWHERE) with memblock_phys_alloc")
+Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/gfs2/log.c   |    8 ++++++++
- fs/gfs2/log.h   |    1 +
- fs/gfs2/lops.c  |    5 +----
- fs/gfs2/trans.c |    2 ++
- 4 files changed, 12 insertions(+), 4 deletions(-)
+ arch/xtensa/mm/kasan_init.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/fs/gfs2/log.c
-+++ b/fs/gfs2/log.c
-@@ -609,6 +609,14 @@ void gfs2_add_revoke(struct gfs2_sbd *sd
- 	list_add(&bd->bd_list, &sdp->sd_log_revokes);
- }
+--- a/arch/xtensa/mm/kasan_init.c
++++ b/arch/xtensa/mm/kasan_init.c
+@@ -56,7 +56,9 @@ static void __init populate(void *start,
  
-+void gfs2_glock_remove_revoke(struct gfs2_glock *gl)
-+{
-+	if (atomic_dec_return(&gl->gl_revokes) == 0) {
-+		clear_bit(GLF_LFLUSH, &gl->gl_flags);
-+		gfs2_glock_queue_put(gl);
-+	}
-+}
-+
- void gfs2_write_revokes(struct gfs2_sbd *sdp)
- {
- 	struct gfs2_trans *tr;
---- a/fs/gfs2/log.h
-+++ b/fs/gfs2/log.h
-@@ -77,6 +77,7 @@ extern void gfs2_ail1_flush(struct gfs2_
- extern void gfs2_log_shutdown(struct gfs2_sbd *sdp);
- extern int gfs2_logd(void *data);
- extern void gfs2_add_revoke(struct gfs2_sbd *sdp, struct gfs2_bufdata *bd);
-+extern void gfs2_glock_remove_revoke(struct gfs2_glock *gl);
- extern void gfs2_write_revokes(struct gfs2_sbd *sdp);
+ 		for (k = 0; k < PTRS_PER_PTE; ++k, ++j) {
+ 			phys_addr_t phys =
+-				memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
++				memblock_phys_alloc_range(PAGE_SIZE, PAGE_SIZE,
++							  0,
++							  MEMBLOCK_ALLOC_ANYWHERE);
  
- #endif /* __LOG_DOT_H__ */
---- a/fs/gfs2/lops.c
-+++ b/fs/gfs2/lops.c
-@@ -882,10 +882,7 @@ static void revoke_lo_after_commit(struc
- 		bd = list_entry(head->next, struct gfs2_bufdata, bd_list);
- 		list_del_init(&bd->bd_list);
- 		gl = bd->bd_gl;
--		if (atomic_dec_return(&gl->gl_revokes) == 0) {
--			clear_bit(GLF_LFLUSH, &gl->gl_flags);
--			gfs2_glock_queue_put(gl);
--		}
-+		gfs2_glock_remove_revoke(gl);
- 		kmem_cache_free(gfs2_bufdata_cachep, bd);
- 	}
- }
---- a/fs/gfs2/trans.c
-+++ b/fs/gfs2/trans.c
-@@ -262,6 +262,8 @@ void gfs2_trans_remove_revoke(struct gfs
- 			list_del_init(&bd->bd_list);
- 			gfs2_assert_withdraw(sdp, sdp->sd_log_num_revoke);
- 			sdp->sd_log_num_revoke--;
-+			if (bd->bd_gl)
-+				gfs2_glock_remove_revoke(bd->bd_gl);
- 			kmem_cache_free(gfs2_bufdata_cachep, bd);
- 			tr->tr_num_revoke--;
- 			if (--n == 0)
+ 			if (!phys)
+ 				panic("Failed to allocate page table page\n");
 
 
