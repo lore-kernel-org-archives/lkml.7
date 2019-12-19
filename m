@@ -2,85 +2,112 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28049C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C3CC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA90C21D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C06621D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:26:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="P0pIMkw4"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="Nj6BUQEZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfLSLZh (ORCPT
+        id S1726769AbfLSL0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 06:25:37 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58361 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726652AbfLSLZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 06:25:37 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47dqLP6ntkz9sPn;
-        Thu, 19 Dec 2019 22:25:33 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1576754734;
-        bh=Zx5Yd53JL3kH4J/q4/1yt1DPvG/CjFpohvESNKMplWE=;
-        h=From:To:Subject:In-Reply-To:References:Date:From;
-        b=P0pIMkw4ErNb1nuX21DZj5B+bxMWXCI5nmpMnd5T6pbiUuAxWRe3O7aYGiY6JIHWI
-         6tKOYZBhSeKKirWC2ajlvKX8n1LklGqR3iEtRq/0czGjJPqibcwrb2HCaq/bJfHlQW
-         joz438XnOFK6gVX3n/z5HJbu5x/xI6epfBhcV9zVSWTH6idQzG9F210BkUS6QdCYuI
-         awM9SDsFVPT7frGLLHg40y4fFq+ze3zhybiXysOeieaka8bMOVc5xH7gaDcMVeatEI
-         jH2+2xsu8mlfVjwjs/jy3HW60tJTnpLnEAELufqZjXp02xJHY8SFdXpJmz5rwaazsu
-         wzDaeBRGKO6PQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Daniel Axtens <dja@axtens.net>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, kasan-dev@googlegroups.com,
-        aneesh.kumar@linux.ibm.com, bsingharora@gmail.com
-Subject: Re: [PATCH v4 4/4] powerpc: Book3S 64-bit "heavyweight" KASAN support
-In-Reply-To: <87bls4tzjn.fsf@dja-thinkpad.axtens.net>
-References: <20191219003630.31288-1-dja@axtens.net> <20191219003630.31288-5-dja@axtens.net> <c4d37067-829f-cd7d-7e94-0ec2223cce71@c-s.fr> <87bls4tzjn.fsf@dja-thinkpad.axtens.net>
-Date:   Thu, 19 Dec 2019 22:25:32 +1100
-Message-ID: <87fthgmuab.fsf@mpe.ellerman.id.au>
+        Thu, 19 Dec 2019 06:26:22 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42820 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbfLSL0W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 06:26:22 -0500
+Received: by mail-wr1-f68.google.com with SMTP id q6so5574988wro.9
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 03:26:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=ZxINuY2pTedRL5AOR8tT78C1M2jclzElPJ7W9Ytee4A=;
+        b=Nj6BUQEZ+CRfeqS8i/TOUwhdSD/LqqktFae+t7JfgDcNBTv07sDWW+AN6qK4jJxq2b
+         bD96kwCBm+NCxbmhwMq95YWUG6nwJtQUz+B0gWcpUboDbYAvGxtqalmKIIDrPQsdQakD
+         0vumq1+lukQ7gHQ8kRlgoND+EH8XGHRzhB5Qw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ZxINuY2pTedRL5AOR8tT78C1M2jclzElPJ7W9Ytee4A=;
+        b=cZDuipcvMvuNnfuH5Lg/uqIzmQg8MlbOuhsRl2wiXmWwoRzkvrZTQud5SFijepHj4N
+         RobNjXbd4SEJOX9DDhmE9DGtng29O3eDeHMJTASiN5Qgm6Lg86BSLBO/W9aaRMZcLfUH
+         AvwraUuO9oGEUwegd9AFA5uWn87I+PyI8/XpXSCNnXNNwCKYJasgQa+65S3Hcv3Fj1xz
+         3ScitI/jEgKr0I+biA8BWRrATVKcqKro7Gf9VXvAvoqAmftCwAzyC7n4RV4S2pdRKhXX
+         WOAzOjyCw0RAiTJI1MXFcByVsA8SMZEubiqTgymmJNtvGtN2MRjqadfVZkKkPkkAVkdA
+         zjQw==
+X-Gm-Message-State: APjAAAX5dpj2uPeCJYaUWayAoj+nkeIH1pkgIQPFj5s7BOOdM31igA9J
+        Ig5qU9vP+4QHXqZFCZ2aeufDXw==
+X-Google-Smtp-Source: APXvYqzYYXrskQ1fe2mPfv0sYrehg6SOYYoZVfiW64/lsm4OI0an3dqEGvYMZJ/Hh5HOscaWldIplg==
+X-Received: by 2002:a05:6000:12ce:: with SMTP id l14mr9363595wrx.342.1576754779511;
+        Thu, 19 Dec 2019 03:26:19 -0800 (PST)
+Received: from localhost ([2620:10d:c092:200::1:c2e5])
+        by smtp.gmail.com with ESMTPSA id a16sm6039042wrt.37.2019.12.19.03.26.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 03:26:18 -0800 (PST)
+Date:   Thu, 19 Dec 2019 11:26:18 +0000
+From:   Chris Down <chris@chrisdown.name>
+To:     teawater <teawaterz@linux.alibaba.com>
+Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
+        akpm@linux-foundation.org, guro@fb.com, shakeelb@google.com,
+        Yang Shi <yang.shi@linux.alibaba.com>, tj@kernel.org,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH] mm: vmscan: memcg: Add global shrink priority
+Message-ID: <20191219112618.GA72828@chrisdown.name>
+References: <1576662179-16861-1-git-send-email-teawaterz@linux.alibaba.com>
+ <20191218140952.GA255739@chrisdown.name>
+ <25AA9500-B249-42C2-B162-2B8D4EE83BB0@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <25AA9500-B249-42C2-B162-2B8D4EE83BB0@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Daniel Axtens <dja@axtens.net> writes:
-> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->> On 12/19/2019 12:36 AM, Daniel Axtens wrote:
->>> KASAN support on Book3S is a bit tricky to get right:
-...
->>> diff --git a/arch/powerpc/include/asm/kasan.h b/arch/powerpc/include/asm/kasan.h
->>> index 296e51c2f066..f18268cbdc33 100644
->>> --- a/arch/powerpc/include/asm/kasan.h
->>> +++ b/arch/powerpc/include/asm/kasan.h
->>> @@ -2,6 +2,9 @@
->>>   #ifndef __ASM_KASAN_H
->>>   #define __ASM_KASAN_H
->>>   
->>> +#include <asm/page.h>
->>> +#include <asm/pgtable.h>
->>
->> What do you need asm/pgtable.h for ?
->>
->> Build failure due to circular inclusion of asm/pgtable.h:
+Hi Hui,
+
+teawater writes:
+>Memory.min, low, high can affect the global shrink behavior.  They can help 
+>task keep some pages to help protect performance.
 >
-> I see there's a lot of ppc32 stuff, I clearly need to bite the bullet
-> and get a ppc32 toolchain so I can squash these without chewing up any
-> more of your time. I'll sort that out and send a new spin.
+>But what I want is the low priority tasks (the tasks that performance is not 
+>very important) do more shrink first.  And when low priority tasks doesn’t 
+>have enough pages to be dropped and system need more free page, shrink the 
+>high priority task’s pages.  Because at this time, system’s stable is more 
+>important than the performance of priority task.
+>With memory.min and memory.low, I have no idea to config them to support this.  
+>That is why I add global shrink priority.
 
-I think you run Ubuntu, in which case it should just be:
+For sure, that's what I'm suggesting you use memory.{min,low} for -- you define 
+some subset of the cgroup hierarchy as "protected", and then you bias reclaim 
+away from protected cgroups (and thus *towards* unprotected cgroups) by biasing 
+the size of LRU scanning. See my patch that went into 5.4 and the examples in 
+the commit message:
 
-$ apt install gcc-powerpc-linux-gnu
+     commit 9783aa9917f8ae24759e67bf882f1aba32fe4ea1
+     Author: Chris Down <chris@chrisdown.name>
+     Date:   Sun Oct 6 17:58:32 2019 -0700
 
-cheers
+         mm, memcg: proportional memory.{low,min} reclaim
+
+You can see how we're using memory.{low,min} to achieve this in this case 
+study[0]. It's not exactly equivalent technically to your solution, but the end 
+goals are similar.
+
+Thanks,
+
+Chris
+
+0: https://facebookmicrosites.github.io/cgroup2/docs/overview.html#case-study-the-fbtax2-project
