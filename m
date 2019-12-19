@@ -4,85 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B52DC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B3DC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6278E222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D147D222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:10:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbfLSGJv (ORCPT
+        id S1726620AbfLSGKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 01:09:51 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51940 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725821AbfLSGJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 01:09:51 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6F5BBCEFE6931D3BD258;
-        Thu, 19 Dec 2019 14:09:48 +0800 (CST)
-Received: from linux-lmwb.huawei.com (10.175.103.112) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 19 Dec 2019 14:09:40 +0800
-From:   Ma Feng <mafeng.ma@huawei.com>
-To:     Stefan Schaeckeler <sschaeck@cisco.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
-CC:     <linux-edac@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        Ma Feng <mafeng.ma@huawei.com>
-Subject: [PATCH] EDAC/aspeed: Remove unneeded semicolon
-Date:   Thu, 19 Dec 2019 14:10:35 +0800
-Message-ID: <1576735835-114453-1-git-send-email-mafeng.ma@huawei.com>
-X-Mailer: git-send-email 2.6.2
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.103.112]
-X-CFilter-Loop: Reflected
+        Thu, 19 Dec 2019 01:10:05 -0500
+Received: from mga03.intel.com ([134.134.136.65]:43463 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725821AbfLSGKF (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 01:10:05 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 22:10:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
+   d="scan'208";a="390418552"
+Received: from kbl.sh.intel.com ([10.239.159.163])
+  by orsmga005.jf.intel.com with ESMTP; 18 Dec 2019 22:10:02 -0800
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH v5 1/4] perf report: Fix incorrectly added dimensions as switch perf data file
+Date:   Thu, 19 Dec 2019 14:09:26 +0800
+Message-Id: <20191219060929.3714-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes coccicheck warning:
+We observed an issue that was some extra columns displayed after switching
+perf data file in browser. The steps to reproduce:
 
-drivers/edac/aspeed_edac.c:246:2-3: Unneeded semicolon
-drivers/edac/aspeed_edac.c:255:2-3: Unneeded semicolon
+1. perf record -a -e cycles,instructions -- sleep 3
+2. perf report --group
+3. In browser, we use hotkey 's' to switch to another perf.data
+4. Now in browser, the extra columns 'Self' and 'Children' are displayed.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Ma Feng <mafeng.ma@huawei.com>
+The issue is setup_sorting() executed again after repeat path, so dimensions
+are added again.
+
+This patch checks the last key returned from __cmd_report(). If it's
+K_SWITCH_INPUT_DATA, skips the setup_sorting().
+
+ v5:
+ ---
+ New patch in v5.
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 ---
- drivers/edac/aspeed_edac.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/builtin-report.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/edac/aspeed_edac.c b/drivers/edac/aspeed_edac.c
-index 09a9e3d..b194658b 100644
---- a/drivers/edac/aspeed_edac.c
-+++ b/drivers/edac/aspeed_edac.c
-@@ -243,7 +243,7 @@ static int init_csrows(struct mem_ctl_info *mci)
- 	if (!np) {
- 		dev_err(mci->pdev, "dt: missing /memory node\n");
- 		return -ENODEV;
--	};
-+	}
-
- 	rc = of_address_to_resource(np, 0, &r);
-
-@@ -252,7 +252,7 @@ static int init_csrows(struct mem_ctl_info *mci)
- 	if (rc) {
- 		dev_err(mci->pdev, "dt: failed requesting resource for /memory node\n");
- 		return rc;
--	};
-+	}
-
- 	dev_dbg(mci->pdev, "dt: /memory node resources: first page r.start=0x%x, resource_size=0x%x, PAGE_SHIFT macro=0x%x\n",
- 		r.start, resource_size(&r), PAGE_SHIFT);
---
-2.6.2
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 387311c67264..de988589d99b 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -1076,6 +1076,7 @@ int cmd_report(int argc, const char **argv)
+ 	struct stat st;
+ 	bool has_br_stack = false;
+ 	int branch_mode = -1;
++	int last_key = 0;
+ 	bool branch_call_mode = false;
+ #define CALLCHAIN_DEFAULT_OPT  "graph,0.5,caller,function,percent"
+ 	static const char report_callchain_help[] = "Display call graph (stack chain/backtrace):\n\n"
+@@ -1450,7 +1451,8 @@ int cmd_report(int argc, const char **argv)
+ 		sort_order = sort_tmp;
+ 	}
+ 
+-	if (setup_sorting(session->evlist) < 0) {
++	if ((last_key != K_SWITCH_INPUT_DATA) &&
++	    (setup_sorting(session->evlist) < 0)) {
+ 		if (sort_order)
+ 			parse_options_usage(report_usage, options, "s", 1);
+ 		if (field_order)
+@@ -1530,6 +1532,7 @@ int cmd_report(int argc, const char **argv)
+ 	ret = __cmd_report(&report);
+ 	if (ret == K_SWITCH_INPUT_DATA) {
+ 		perf_session__delete(session);
++		last_key = K_SWITCH_INPUT_DATA;
+ 		goto repeat;
+ 	} else
+ 		ret = 0;
+-- 
+2.17.1
 
