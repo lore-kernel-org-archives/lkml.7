@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE035C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1798BC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 852EA24685
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE27C24680
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:44:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781068;
-	bh=pahtd4hOPN+QauF9eODSpt9bK7YQHXplYxhSaS/zQcs=;
+	s=default; t=1576781072;
+	bh=x88hTkT5ZvJPKah2VvdrZDLkwYcGhc0fgga42mM7isA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rh/q0gvw2qZ6nQRYa89L3QOZG7ZbLWNMZk/ojGC7NfR3eKrvpgXPYsB9MK/fxbpis
-	 ItkJzicOdelJqihwl5sOmFTB12iU4n9PB8U2IACnnyRP8i7zjO40l5ZVJWjLOeCYYY
-	 MacSeFqTpvm9E/oBZhfMf9Wau3ALIowiyAir7MQg=
+	b=th7tX51hvQtSeaA41j4lvV9qSY8z1c/Wa8K6TDsteBwaCiEg+sk1KOTYwAs5bUywg
+	 ZbKutDPdx7QwFgTWWkHyZpypJgomfaE5Pan5d3tU8qXQeRihdSSkR6WSzn73gVephS
+	 Ay7jtVTi3OWlbN3wkuri4iZBzOI7oPbRrEXUKjpo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbfLSSo1 (ORCPT
+        id S1729007AbfLSSob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:44:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36306 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:44:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728748AbfLSSoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:44:21 -0500
+        id S1728995AbfLSSo0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:44:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66FB024679;
-        Thu, 19 Dec 2019 18:44:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A10324685;
+        Thu, 19 Dec 2019 18:44:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781060;
-        bh=pahtd4hOPN+QauF9eODSpt9bK7YQHXplYxhSaS/zQcs=;
+        s=default; t=1576781065;
+        bh=x88hTkT5ZvJPKah2VvdrZDLkwYcGhc0fgga42mM7isA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S3WqWF3mHlhFoVNnme/qMGch3ARf4pZvSevqS4Jznok8oA4Qlavaza30uUDUoRJVI
-         aq4l+uMSyy23DKBifaKfC6jKAdk73b2nRi2dXs5bNaQvZoKrMiCv75OjbobgDsQg0G
-         JMqTrctgTPuX2LilN1NbgUimN48WV5Wqwjf3J/A0=
+        b=KJJau3xsB4Km64OFNc/m66jmcmcawETsuVwlVvldAz0Y7BxKvALI7OBP9JQQ5h0Ky
+         dm0wiB2s7icQTSJoT7v6DpQSiutwVmBfVLQqMyKDTnuoRcEQDrfPYpX0FkzOnr8rof
+         TfVgZ95MmrJWWTDaIKsz6dirJN+03Hhmm+FQHXL4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, zhengbin <zhengbin13@huawei.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
+        stable@vger.kernel.org, Alexey Dobriyan <adobriyan@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 066/199] nfsd: Return EPERM, not EACCES, in some SETATTR cases
-Date:   Thu, 19 Dec 2019 19:32:28 +0100
-Message-Id: <20191219183218.657419581@linuxfoundation.org>
+Subject: [PATCH 4.9 041/199] ACPI: fix acpi_find_child_device() invocation in acpi_preset_companion()
+Date:   Thu, 19 Dec 2019 19:32:03 +0100
+Message-Id: <20191219183217.213974885@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,55 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: Alexey Dobriyan <adobriyan@gmail.com>
 
-[ Upstream commit 255fbca65137e25b12bced18ec9a014dc77ecda0 ]
+[ Upstream commit f8c6d1402b89f22a3647705d63cbd171aa19a77e ]
 
-As the man(2) page for utime/utimes states, EPERM is returned when the
-second parameter of utime or utimes is not NULL, the caller's effective UID
-does not match the owner of the file, and the caller is not privileged.
+acpi_find_child_device() accepts boolean not pointer as last argument.
 
-However, in a NFS directory mounted from knfsd, it will return EACCES
-(from nfsd_setattr-> fh_verify->nfsd_permission).  This patch fixes
-that.
-
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+[ rjw: Subject ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/vfs.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ include/linux/acpi.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 8f0b19a3ca810..b8cd100cfcd6d 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -395,10 +395,23 @@ nfsd_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp, struct iattr *iap,
- 	bool		get_write_count;
- 	bool		size_change = (iap->ia_valid & ATTR_SIZE);
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 719eb97217a3c..5670bb9788bb4 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -77,7 +77,7 @@ static inline bool has_acpi_companion(struct device *dev)
+ static inline void acpi_preset_companion(struct device *dev,
+ 					 struct acpi_device *parent, u64 addr)
+ {
+-	ACPI_COMPANION_SET(dev, acpi_find_child_device(parent, addr, NULL));
++	ACPI_COMPANION_SET(dev, acpi_find_child_device(parent, addr, false));
+ }
  
--	if (iap->ia_valid & (ATTR_ATIME | ATTR_MTIME | ATTR_SIZE))
-+	if (iap->ia_valid & ATTR_SIZE) {
- 		accmode |= NFSD_MAY_WRITE|NFSD_MAY_OWNER_OVERRIDE;
--	if (iap->ia_valid & ATTR_SIZE)
- 		ftype = S_IFREG;
-+	}
-+
-+	/*
-+	 * If utimes(2) and friends are called with times not NULL, we should
-+	 * not set NFSD_MAY_WRITE bit. Otherwise fh_verify->nfsd_permission
-+	 * will return EACCESS, when the caller's effective UID does not match
-+	 * the owner of the file, and the caller is not privileged. In this
-+	 * situation, we should return EPERM(notify_change will return this).
-+	 */
-+	if (iap->ia_valid & (ATTR_ATIME | ATTR_MTIME)) {
-+		accmode |= NFSD_MAY_OWNER_OVERRIDE;
-+		if (!(iap->ia_valid & (ATTR_ATIME_SET | ATTR_MTIME_SET)))
-+			accmode |= NFSD_MAY_WRITE;
-+	}
- 
- 	/* Callers that do fh_verify should do the fh_want_write: */
- 	get_write_count = !fhp->fh_dentry;
+ static inline const char *acpi_dev_name(struct acpi_device *adev)
 -- 
 2.20.1
 
