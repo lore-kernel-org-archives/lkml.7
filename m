@@ -2,51 +2,53 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D91C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 161E7C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5CEE24679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBF152465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781300;
-	bh=raEhjKyyauHBwil+/jEVLYQR1fmpfbl5W8O9XSVWr3U=;
+	s=default; t=1576781307;
+	bh=vbSty8xfqqjy3G3EUlVHgCD1DEQzgp/nrTCd4ktqP+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0cgp+Va2CrFC59IEJERA2/Ae93hdCm1ffyZNQ30iVXpKXWkPJKR5ix3W6gfdnI+Mm
-	 m2YDMAXY2XfAiOOiu8SzuUbdNpbBAsV0nJzAK2vBUdqnF6s/6B1OYy6ovQlhi6r8AY
-	 6CPsapTXYH9MTLKwUK5PGehD71xYSn5zEZKFpxvk=
+	b=fqi8raUQ9Uoub9leC5e6YiZPxkDLlBhNba2uA9js+o1rW4QhiqNOaCrCOjzGPySBW
+	 aUGUbeT3H0bWxQT6R9/dYE/LDDzcYMzvvOfQDh2a/JsXGXjlRRyl3Si3B4SlQJq42w
+	 /0PhWweGr7/Uu1yjNHLkuWGxbPIgjSMrL7zkj/os=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728990AbfLSSsT (ORCPT
+        id S1729632AbfLSSs0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:48:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41294 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:48:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729339AbfLSSsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:48:11 -0500
+        id S1729091AbfLSSsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:48:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D300F24683;
-        Thu, 19 Dec 2019 18:48:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87C0224676;
+        Thu, 19 Dec 2019 18:48:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781291;
-        bh=raEhjKyyauHBwil+/jEVLYQR1fmpfbl5W8O9XSVWr3U=;
+        s=default; t=1576781301;
+        bh=vbSty8xfqqjy3G3EUlVHgCD1DEQzgp/nrTCd4ktqP+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J97np0op+4/ZXgxyPpPxb4ImFWJG7Zm2w8gaCBjdnsk/rxfvGpg3xGC6w5OLd5Zkq
-         mdwaHZu/cjvbWN/mlxQX8abSqKw38xvU8/aUztMe+pOeZfRelKm6kKcDSCTbIr/CZ6
-         DRvmDMjanjTn2K24PHuhCejCuSUQqVgJY0fJi+fc=
+        b=VTDRjk3JFrzKg1d5Au+gWabIQqh1/TPWhWR5aZaBCdiRSDJw4jzccz0XaImHcWcB8
+         rafWwe8xwyo59Q2QFZ7/+0fgqqpF5rql/q+6dK+LxTCYlS31h7+bQZvNKMKiy1fuoC
+         xs1B5WOzdepHFuA/8JQw7f929MLK/JbamYEQl49w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 124/199] ALSA: hda - Fix pending unsol events at shutdown
-Date:   Thu, 19 Dec 2019 19:33:26 +0100
-Message-Id: <20191219183221.826025855@linuxfoundation.org>
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 163/199] scsi: qla2xxx: Fix qla24xx_process_bidir_cmd()
+Date:   Thu, 19 Dec 2019 19:34:05 +0100
+Message-Id: <20191219183224.439797920@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -59,54 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit ca58f55108fee41d87c9123f85ad4863e5de7f45 ]
+[ Upstream commit c29282c65d1cf54daeea63be46243d7f69d72f4d ]
 
-This is an alternative fix attemp for the issue reported in the commit
-caa8422d01e9 ("ALSA: hda: Flush interrupts on disabling") that was
-reverted later due to regressions.  Instead of tweaking the hardware
-disablement order and the enforced irq flushing, do calling
-cancel_work_sync() of the unsol work early enough, and explicitly
-ignore the unsol events during the shutdown by checking the
-bus->shutdown flag.
+Set the r??_data_len variables before using these instead of after.
 
-Fixes: caa8422d01e9 ("ALSA: hda: Flush interrupts on disabling")
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://lore.kernel.org/r/s5h1ruxt9cz.wl-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+This patch fixes the following Coverity complaint:
+
+const: At condition req_data_len != rsp_data_len, the value of req_data_len
+must be equal to 0.
+const: At condition req_data_len != rsp_data_len, the value of rsp_data_len
+must be equal to 0.
+dead_error_condition: The condition req_data_len != rsp_data_len cannot be
+true.
+
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Fixes: a9b6f722f62d ("[SCSI] qla2xxx: Implementation of bidirectional.") # v3.7.
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Tested-by: Himanshu Madhani <hmadhani@marvell.com>
+Reviewed-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_bind.c  |    4 ++++
- sound/pci/hda/hda_intel.c |    3 +++
- 2 files changed, 7 insertions(+)
+ drivers/scsi/qla2xxx/qla_bsg.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
---- a/sound/pci/hda/hda_bind.c
-+++ b/sound/pci/hda/hda_bind.c
-@@ -42,6 +42,10 @@ static void hda_codec_unsol_event(struct
- {
- 	struct hda_codec *codec = container_of(dev, struct hda_codec, core);
+diff --git a/drivers/scsi/qla2xxx/qla_bsg.c b/drivers/scsi/qla2xxx/qla_bsg.c
+index e7db95d442deb..09f7a8cfed4d0 100644
+--- a/drivers/scsi/qla2xxx/qla_bsg.c
++++ b/drivers/scsi/qla2xxx/qla_bsg.c
+@@ -1744,8 +1744,8 @@ qla24xx_process_bidir_cmd(struct fc_bsg_job *bsg_job)
+ 	uint16_t nextlid = 0;
+ 	uint32_t tot_dsds;
+ 	srb_t *sp = NULL;
+-	uint32_t req_data_len = 0;
+-	uint32_t rsp_data_len = 0;
++	uint32_t req_data_len;
++	uint32_t rsp_data_len;
  
-+	/* ignore unsol events during shutdown */
-+	if (codec->bus->shutdown)
-+		return;
+ 	/* Check the type of the adapter */
+ 	if (!IS_BIDI_CAPABLE(ha)) {
+@@ -1850,6 +1850,9 @@ qla24xx_process_bidir_cmd(struct fc_bsg_job *bsg_job)
+ 		goto done_unmap_sg;
+ 	}
+ 
++	req_data_len = bsg_job->request_payload.payload_len;
++	rsp_data_len = bsg_job->reply_payload.payload_len;
 +
- 	if (codec->patch_ops.unsol_event)
- 		codec->patch_ops.unsol_event(codec, ev);
- }
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1275,8 +1275,11 @@ static int azx_free(struct azx *chip)
- static int azx_dev_disconnect(struct snd_device *device)
- {
- 	struct azx *chip = device->device_data;
-+	struct hdac_bus *bus = azx_bus(chip);
+ 	if (req_data_len != rsp_data_len) {
+ 		rval = EXT_STATUS_BUSY;
+ 		ql_log(ql_log_warn, vha, 0x70aa,
+@@ -1857,10 +1860,6 @@ qla24xx_process_bidir_cmd(struct fc_bsg_job *bsg_job)
+ 		goto done_unmap_sg;
+ 	}
  
- 	chip->bus.shutdown = 1;
-+	cancel_work_sync(&bus->unsol_work);
-+
- 	return 0;
- }
- 
+-	req_data_len = bsg_job->request_payload.payload_len;
+-	rsp_data_len = bsg_job->reply_payload.payload_len;
+-
+-
+ 	/* Alloc SRB structure */
+ 	sp = qla2x00_get_sp(vha, &(vha->bidir_fcport), GFP_KERNEL);
+ 	if (!sp) {
+-- 
+2.20.1
+
 
 
