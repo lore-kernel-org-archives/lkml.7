@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E56C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 783B8C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A5AE222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E93524676
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781212;
-	bh=5Q8ef8tjuHuf0kMqNot+Fh9TOq/CFHB91XyZiKLMHGM=;
+	s=default; t=1576781215;
+	bh=wg6xEPyzN+QW9rUxBPw/45Bdi9Xh4+pcfjxZdhhjDe4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UZZFMJi3dGeO+sTBRa2dI79cdjGOmS5oRA2sYgVoOTcW5ZLwmLNTCkBOXLvJiBs5w
-	 KZyPJVjLG0h4BXo4nn4uVSuQKVppSqvpuB+ND2lG6a9cAWDmaqUcZAa4QxC8o8NpJE
-	 88unA7z24YCjVvXZMlnAyc6FlKtdYUiJzsEGyDFA=
+	b=o1hpf9j3oXCrEkgGk5ICWa7MYwEkq0oRmsaXtvBv2EZp3iJzrhWlphf/deAUU01ij
+	 8puFIB71gdWbP6DVMzDTgViio3kcOE2QFQHdwLNBhG/88ZWPsd08U0wZv1qy6EUn5N
+	 984HnKu1AorQSQnf3DCJ7QmJ69LIALOdKYOr30Lk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729384AbfLSSqv (ORCPT
+        id S1729393AbfLSSqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:46:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39438 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:46:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729363AbfLSSqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:46:43 -0500
+        id S1729068AbfLSSqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:46:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 643E124676;
-        Thu, 19 Dec 2019 18:46:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EBF4222C2;
+        Thu, 19 Dec 2019 18:46:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781201;
-        bh=5Q8ef8tjuHuf0kMqNot+Fh9TOq/CFHB91XyZiKLMHGM=;
+        s=default; t=1576781206;
+        bh=wg6xEPyzN+QW9rUxBPw/45Bdi9Xh4+pcfjxZdhhjDe4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dz+p/x6/P3XLYMUc1t/PiVXyOUkgz8hf/K2PGRM7L8jusRHTzBWAfBBsqHhbMai6M
-         woXB4aBC6m3rFNbzGoxv11mK6efqsyXhstUrEIcjG0HgCH0aQY0zSJpTOBKbNmm8vG
-         oKTW7sn12350uCthGJQpwFB03GsyuueKV3Fa6e+M=
+        b=sPZCwpO+hrej151AKIAJGJ7Y2a+rkU9KrAFVYzzLL3koiVxol/Due/oEtgBceTqs7
+         Cba9wSUmFKBQxgz0bgoW6BBA8D6PP+3vqRFMnytRNeZ9eThrSHd6M6/PcDI+Be+Z2a
+         OfhQI7Rfz/6WGXYEqowAMVxOYbEtEDm3LuwqeM3U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sahaj Sarup <sahajsarup@gmail.com>,
-        Mark Salter <msalter@redhat.com>,
-        Gary R Hook <gary.hook@amd.com>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.9 087/199] crypto: ccp - fix uninitialized list head
-Date:   Thu, 19 Dec 2019 19:32:49 +0100
-Message-Id: <20191219183219.757570137@linuxfoundation.org>
+Subject: [PATCH 4.9 089/199] crypto: user - fix memory leak in crypto_report
+Date:   Thu, 19 Dec 2019 19:32:51 +0100
+Message-Id: <20191219183219.861072954@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -61,87 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Salter <msalter@redhat.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit 691505a803a7f223b2af621848d581259c61f77d upstream.
+commit ffdde5932042600c6807d46c1550b28b0db6a3bc upstream.
 
-A NULL-pointer dereference was reported in fedora bz#1762199 while
-reshaping a raid6 array after adding a fifth drive to an existing
-array.
+In crypto_report, a new skb is created via nlmsg_new(). This skb should
+be released if crypto_report_alg() fails.
 
-[   47.343549] md/raid:md0: raid level 6 active with 3 out of 5 devices, algorithm 2
-[   47.804017] md0: detected capacity change from 0 to 7885289422848
-[   47.822083] Unable to handle kernel read from unreadable memory at virtual address 0000000000000000
-...
-[   47.940477] CPU: 1 PID: 14210 Comm: md0_raid6 Tainted: G        W         5.2.18-200.fc30.aarch64 #1
-[   47.949594] Hardware name: AMD Overdrive/Supercharger/To be filled by O.E.M., BIOS ROD1002C 04/08/2016
-[   47.958886] pstate: 00400085 (nzcv daIf +PAN -UAO)
-[   47.963668] pc : __list_del_entry_valid+0x2c/0xa8
-[   47.968366] lr : ccp_tx_submit+0x84/0x168 [ccp]
-[   47.972882] sp : ffff00001369b970
-[   47.976184] x29: ffff00001369b970 x28: ffff00001369bdb8
-[   47.981483] x27: 00000000ffffffff x26: ffff8003b758af70
-[   47.986782] x25: ffff8003b758b2d8 x24: ffff8003e6245818
-[   47.992080] x23: 0000000000000000 x22: ffff8003e62450c0
-[   47.997379] x21: ffff8003dfd6add8 x20: 0000000000000003
-[   48.002678] x19: ffff8003e6245100 x18: 0000000000000000
-[   48.007976] x17: 0000000000000000 x16: 0000000000000000
-[   48.013274] x15: 0000000000000000 x14: 0000000000000000
-[   48.018572] x13: ffff7e000ef83a00 x12: 0000000000000001
-[   48.023870] x11: ffff000010eff998 x10: 00000000000019a0
-[   48.029169] x9 : 0000000000000000 x8 : ffff8003e6245180
-[   48.034467] x7 : 0000000000000000 x6 : 000000000000003f
-[   48.039766] x5 : 0000000000000040 x4 : ffff8003e0145080
-[   48.045064] x3 : dead000000000200 x2 : 0000000000000000
-[   48.050362] x1 : 0000000000000000 x0 : ffff8003e62450c0
-[   48.055660] Call trace:
-[   48.058095]  __list_del_entry_valid+0x2c/0xa8
-[   48.062442]  ccp_tx_submit+0x84/0x168 [ccp]
-[   48.066615]  async_tx_submit+0x224/0x368 [async_tx]
-[   48.071480]  async_trigger_callback+0x68/0xfc [async_tx]
-[   48.076784]  ops_run_biofill+0x178/0x1e8 [raid456]
-[   48.081566]  raid_run_ops+0x248/0x818 [raid456]
-[   48.086086]  handle_stripe+0x864/0x1208 [raid456]
-[   48.090781]  handle_active_stripes.isra.0+0xb0/0x278 [raid456]
-[   48.096604]  raid5d+0x378/0x618 [raid456]
-[   48.100602]  md_thread+0xa0/0x150
-[   48.103905]  kthread+0x104/0x130
-[   48.107122]  ret_from_fork+0x10/0x18
-[   48.110686] Code: d2804003 f2fbd5a3 eb03003f 54000320 (f9400021)
-[   48.116766] ---[ end trace 23f390a527f7ad77 ]---
-
-ccp_tx_submit is passed a dma_async_tx_descriptor which is contained in
-a ccp_dma_desc and adds it to a ccp channel's pending list:
-
-	list_del(&desc->entry);
-	list_add_tail(&desc->entry, &chan->pending);
-
-The problem is that desc->entry may be uninitialized in the
-async_trigger_callback path where the descriptor was gotten
-from ccp_prep_dma_interrupt which got it from ccp_alloc_dma_desc
-which doesn't initialize the desc->entry list head. So, just
-initialize the list head to avoid the problem.
-
+Fixes: a38f7907b926 ("crypto: Add userspace configuration API")
 Cc: <stable@vger.kernel.org>
-Reported-by: Sahaj Sarup <sahajsarup@gmail.com>
-Signed-off-by: Mark Salter <msalter@redhat.com>
-Acked-by: Gary R Hook <gary.hook@amd.com>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccp/ccp-dmaengine.c |    1 +
- 1 file changed, 1 insertion(+)
+ crypto/crypto_user.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/crypto/ccp/ccp-dmaengine.c
-+++ b/drivers/crypto/ccp/ccp-dmaengine.c
-@@ -309,6 +309,7 @@ static struct ccp_dma_desc *ccp_alloc_dm
- 	desc->tx_desc.flags = flags;
- 	desc->tx_desc.tx_submit = ccp_tx_submit;
- 	desc->ccp = chan->ccp;
-+	INIT_LIST_HEAD(&desc->entry);
- 	INIT_LIST_HEAD(&desc->pending);
- 	INIT_LIST_HEAD(&desc->active);
- 	desc->status = DMA_IN_PROGRESS;
+--- a/crypto/crypto_user.c
++++ b/crypto/crypto_user.c
+@@ -269,8 +269,10 @@ static int crypto_report(struct sk_buff
+ drop_alg:
+ 	crypto_mod_put(alg);
+ 
+-	if (err)
++	if (err) {
++		kfree_skb(skb);
+ 		return err;
++	}
+ 
+ 	return nlmsg_unicast(crypto_nlsk, skb, NETLINK_CB(in_skb).portid);
+ }
 
 
