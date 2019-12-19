@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8C1C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A03C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61FAF20716
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB7320716
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780641;
-	bh=43saCZAc0s4ncF9r0XGHpoXWpMn26EU8d9AjHPHuwdQ=;
+	s=default; t=1576780644;
+	bh=/2y428DZ9/7flek+FERqmdl3zOPt5kbdF28aKkoGOJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IO0T5iyFKhaCqzHNHvTUX2UOMltteHuzV0aKUKWCdVtrCdqOb05iLVTx4V8XU4dX4
-	 +tIHARCzp8Cu8xw/CMmbNFWzTsISzfdu7Sa7se4thfdEtxAN0R/rVAuaETZb7qFSqk
-	 QNITl/9Kx7m8jzcjPpyr3O2//qAFQEIVSsTw1Z1g=
+	b=O9TP1NE2px3eVPYzjkLLiEncNU2T1E3i86ogYDQ334Uzp37qejRHxTfio7wsgFQTr
+	 r3nfXIazTnAmuGLJMH9XKhMWdyVTkJ08hlvEciwqkVk/pZCqoganZmYwYkaZbmnc5B
+	 NRaaM+NC4z5bWLf8LgdzeBUuruMo1VCwtbBqb6Bk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbfLSShU (ORCPT
+        id S1727813AbfLSShX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:37:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54732 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:37:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727791AbfLSShP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:37:15 -0500
+        id S1727767AbfLSShS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:37:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 624AA20716;
-        Thu, 19 Dec 2019 18:37:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF2CA24679;
+        Thu, 19 Dec 2019 18:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780634;
-        bh=43saCZAc0s4ncF9r0XGHpoXWpMn26EU8d9AjHPHuwdQ=;
+        s=default; t=1576780637;
+        bh=/2y428DZ9/7flek+FERqmdl3zOPt5kbdF28aKkoGOJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V3PT/XZChQd+KEPVoDWVOytvz2oo9aAc/QmJedPxgAsClieJcw1ASblJfNiMDYoFf
-         M93REmmXDkGN15ZBT2XYuv2xE7GUGoy9IHDYdQuXy5JnF4BLn9QUneDk59+T0A9At8
-         2/GoVryL5pCWi5ZO2TWhJ84AGv+M0RYH9lFYCQi8=
+        b=yh3eFwiT0vLmDlIgbrlYRKGInqfv04GTR79LME5piXYz1rh9OHuhZ7b8z8cuWjH5B
+         kxHFBX7y0Yso9bdXAFqPiHT/+OqIWtj0RH5CMb6rqfJTPrjg8pnNczocXqao95H3MB
+         k/azOaqxzwaNqzJSvJB0vD/ZHKFeXT21L05yE1YE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 4.4 054/162] fuse: verify nlink
-Date:   Thu, 19 Dec 2019 19:32:42 +0100
-Message-Id: <20191219183211.169480687@linuxfoundation.org>
+        stable@vger.kernel.org, Arijit Banerjee <arijit@rubrik.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.4 055/162] fuse: verify attributes
+Date:   Thu, 19 Dec 2019 19:32:43 +0100
+Message-Id: <20191219183211.237804822@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -60,30 +61,119 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Miklos Szeredi <mszeredi@redhat.com>
 
-commit c634da718db9b2fac201df2ae1b1b095344ce5eb upstream.
+commit eb59bd17d2fa6e5e84fba61a5ebdea984222e6d5 upstream.
 
-When adding a new hard link, make sure that i_nlink doesn't overflow.
+If a filesystem returns negative inode sizes, future reads on the file were
+causing the cpu to spin on truncate_pagecache.
 
-Fixes: ac45d61357e8 ("fuse: fix nlink after unlink")
-Cc: <stable@vger.kernel.org> # v3.4
+Create a helper to validate the attributes.  This now does two things:
+
+ - check the file mode
+ - check if the file size fits in i_size without overflowing
+
+Reported-by: Arijit Banerjee <arijit@rubrik.com>
+Fixes: d8a5ba45457e ("[PATCH] FUSE - core")
+Cc: <stable@vger.kernel.org> # v2.6.14
 Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fuse/dir.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/fuse/dir.c    |   24 +++++++++++++++++-------
+ fs/fuse/fuse_i.h |    2 ++
+ 2 files changed, 19 insertions(+), 7 deletions(-)
 
 --- a/fs/fuse/dir.c
 +++ b/fs/fuse/dir.c
-@@ -812,7 +812,8 @@ static int fuse_link(struct dentry *entr
+@@ -240,7 +240,8 @@ static int fuse_dentry_revalidate(struct
+ 		kfree(forget);
+ 		if (ret == -ENOMEM)
+ 			goto out;
+-		if (ret || (outarg.attr.mode ^ inode->i_mode) & S_IFMT)
++		if (ret || fuse_invalid_attr(&outarg.attr) ||
++		    (outarg.attr.mode ^ inode->i_mode) & S_IFMT)
+ 			goto invalid;
  
- 		spin_lock(&fc->lock);
- 		fi->attr_version = ++fc->attr_version;
--		inc_nlink(inode);
-+		if (likely(inode->i_nlink < UINT_MAX))
-+			inc_nlink(inode);
- 		spin_unlock(&fc->lock);
- 		fuse_invalidate_attr(inode);
- 		fuse_update_ctime(inode);
+ 		fuse_change_attributes(inode, &outarg.attr,
+@@ -282,6 +283,12 @@ int fuse_valid_type(int m)
+ 		S_ISBLK(m) || S_ISFIFO(m) || S_ISSOCK(m);
+ }
+ 
++bool fuse_invalid_attr(struct fuse_attr *attr)
++{
++	return !fuse_valid_type(attr->mode) ||
++		attr->size > LLONG_MAX;
++}
++
+ int fuse_lookup_name(struct super_block *sb, u64 nodeid, struct qstr *name,
+ 		     struct fuse_entry_out *outarg, struct inode **inode)
+ {
+@@ -313,7 +320,7 @@ int fuse_lookup_name(struct super_block
+ 	err = -EIO;
+ 	if (!outarg->nodeid)
+ 		goto out_put_forget;
+-	if (!fuse_valid_type(outarg->attr.mode))
++	if (fuse_invalid_attr(&outarg->attr))
+ 		goto out_put_forget;
+ 
+ 	*inode = fuse_iget(sb, outarg->nodeid, outarg->generation,
+@@ -433,7 +440,8 @@ static int fuse_create_open(struct inode
+ 		goto out_free_ff;
+ 
+ 	err = -EIO;
+-	if (!S_ISREG(outentry.attr.mode) || invalid_nodeid(outentry.nodeid))
++	if (!S_ISREG(outentry.attr.mode) || invalid_nodeid(outentry.nodeid) ||
++	    fuse_invalid_attr(&outentry.attr))
+ 		goto out_free_ff;
+ 
+ 	ff->fh = outopen.fh;
+@@ -539,7 +547,7 @@ static int create_new_entry(struct fuse_
+ 		goto out_put_forget_req;
+ 
+ 	err = -EIO;
+-	if (invalid_nodeid(outarg.nodeid))
++	if (invalid_nodeid(outarg.nodeid) || fuse_invalid_attr(&outarg.attr))
+ 		goto out_put_forget_req;
+ 
+ 	if ((outarg.attr.mode ^ mode) & S_IFMT)
+@@ -893,7 +901,8 @@ static int fuse_do_getattr(struct inode
+ 	args.out.args[0].value = &outarg;
+ 	err = fuse_simple_request(fc, &args);
+ 	if (!err) {
+-		if ((inode->i_mode ^ outarg.attr.mode) & S_IFMT) {
++		if (fuse_invalid_attr(&outarg.attr) ||
++		    (inode->i_mode ^ outarg.attr.mode) & S_IFMT) {
+ 			make_bad_inode(inode);
+ 			err = -EIO;
+ 		} else {
+@@ -1198,7 +1207,7 @@ static int fuse_direntplus_link(struct f
+ 
+ 	if (invalid_nodeid(o->nodeid))
+ 		return -EIO;
+-	if (!fuse_valid_type(o->attr.mode))
++	if (fuse_invalid_attr(&o->attr))
+ 		return -EIO;
+ 
+ 	fc = get_fuse_conn(dir);
+@@ -1670,7 +1679,8 @@ int fuse_do_setattr(struct inode *inode,
+ 		goto error;
+ 	}
+ 
+-	if ((inode->i_mode ^ outarg.attr.mode) & S_IFMT) {
++	if (fuse_invalid_attr(&outarg.attr) ||
++	    (inode->i_mode ^ outarg.attr.mode) & S_IFMT) {
+ 		make_bad_inode(inode);
+ 		err = -EIO;
+ 		goto error;
+--- a/fs/fuse/fuse_i.h
++++ b/fs/fuse/fuse_i.h
+@@ -887,6 +887,8 @@ void fuse_ctl_remove_conn(struct fuse_co
+  */
+ int fuse_valid_type(int m);
+ 
++bool fuse_invalid_attr(struct fuse_attr *attr);
++
+ /**
+  * Is current process allowed to perform filesystem operation?
+  */
 
 
