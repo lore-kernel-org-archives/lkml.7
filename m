@@ -2,60 +2,60 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA44C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 682ECC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 568C224676
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3349C24679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:33:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jq/RoVBQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Knz8XZQx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfLSKd1 (ORCPT
+        id S1726925AbfLSKdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 05:33:27 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39744 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726769AbfLSKdT (ORCPT
+        Thu, 19 Dec 2019 05:33:20 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39738 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726846AbfLSKdN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 05:33:19 -0500
-Received: by mail-wm1-f65.google.com with SMTP id 20so4934102wmj.4
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 02:33:17 -0800 (PST)
+        Thu, 19 Dec 2019 05:33:13 -0500
+Received: by mail-wm1-f68.google.com with SMTP id 20so4933799wmj.4
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 02:33:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=UpfkndITw/1h6ZYfXIWQrUX2mzHma7l6m7IK0V8q2nM=;
-        b=Jq/RoVBQUdYougVCwhsmeMWjBjrNCV266LCRZYiOKSQCC+HXqnkdyFQNLqbV3MQfjk
-         t4Ro8rV3EKvd4KHJqxr8Ldmg6vZxVW18xqPRqQ5+YdNa6aT/IVZjHV/M3/VUMo4XXImK
-         BFeXhpMFYhwAY5fqnVWVHs+holLoSXbry+uDxP7kjoMd8l33khaUEtoP7rHWELMiaMfy
-         ZNx6rE0HyNd9nKxLTtTg8m2CPnrZ9lINMdS05P3Z+H7wR/KyXAqCyu4wbwbNYuTORc6k
-         Cdq3snOBdrvb5cHDDxDwpa1yt3c1FQYnDhJhViq3v8DtUHkje3sFj0OdZSw/NmgjfrKk
-         FoHQ==
+        bh=cc/Wcghptv17eVo74c8YLg74slbbKTTES3sc9U0AuPU=;
+        b=Knz8XZQxvrqCAziJ5Io5M47qu60/JIGafmV2LXe7XAK5Ysm80nt6pQgyyZL0TZfbOB
+         m4YS9T3A6tv27CAPBMqG1iFqtUamry0y9Y7r1K0CelFa/6xpAkMFEj33DJZ/4SKCQpXx
+         cU6pXhJEsRTHsIka9XDhd39LO19BFqM9QARfbM4FpzYhMCI8WpvX3/rQ4Z+SBtSBGdj3
+         SB5c46cQS+25HGjNyCBHCbIoMMXPL1hkwoYVfvMuB7fSL70DsvlfrMmNU2Y4uS1Gs3jo
+         mZ+4nyI1i8NGgUKwoDPZlASGmt6Q2u6RM7nXAvf4z3/a0Z2KYiDzP2oG/sVJR4YkYyng
+         VUuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UpfkndITw/1h6ZYfXIWQrUX2mzHma7l6m7IK0V8q2nM=;
-        b=UBiykm76Dm3Wpl53+pr1D2f+FtahK4WXEj6MP91kz3m0wTct83Sna5Q79cSd/UP1s6
-         ingFTTE4/JXleOIchN3D4k4GOatheuotoq6i9gjtfhqxlJIOm+kj76XRInd0ozDtGWhg
-         3KsK3pvw0JHXMLdx++6Ht8s9HnRF6dDhmQe3861CPS5aS/1+RxkCdZfFIPTxosMYyuRc
-         obdZUg+tcEBB/DjEel1ORwJrekg1PFdnphQOob1Cdkd+Z/JEFsMOaMTGro1ZZYgdQitF
-         elKPTloi89476UxSXv4yJE8mHel8tHoqN/FVY4yZxDMWuOy7edEcMhOdt2sj8sy+c8Ss
-         /lDw==
-X-Gm-Message-State: APjAAAVDgUsZkOWXnYaOnyzu15wQDY6+r7Oevd5KyW+PeeisIyLC/WZV
-        7AC2PIYfV0sX7jNhlOz1pr8KpQ==
-X-Google-Smtp-Source: APXvYqwl6PRQmxRp2FeaUrF1dSbhoP+n1mCs6HIPNucmAod9GoKn3RCFhO9Un5ocsWwCOZY6wlcBjA==
-X-Received: by 2002:a05:600c:2207:: with SMTP id z7mr8847992wml.138.1576751596755;
-        Thu, 19 Dec 2019 02:33:16 -0800 (PST)
+        bh=cc/Wcghptv17eVo74c8YLg74slbbKTTES3sc9U0AuPU=;
+        b=nCgisYQHbTnWdH5c65AcfZRrI4lRh6PoT45PKBtu7MPQBPAtSSIiEU3txZCatcGgfr
+         a2oXeNydPSmJ0Dngw06FxoWNd1U8kJO6H8v81TKv0an9fyx1DH0MGGSu8oRX8964vMPY
+         pv2hif7wInB7pBfGu/Cgbaskhz61F/Aed4eqfu+GTOR0gJG7+t/bw77Pz2248Bezu9Sk
+         mOmmoTKdWHTGX7UvY+74W4dgdOND0lySZ8p3wd43dOUYkVdihim2URk+3d0sDIrpHJMc
+         xjY1h1ldgK83chaGC/NHkcV/m/q8riDUJX+ETBRuvz6vP+NufKw9WxBdgbgks4Dzx98V
+         yqiA==
+X-Gm-Message-State: APjAAAXOHWxBQ+UQkEIpdgedGxBKE7npZeJplEqW97msxkYbjImm06M0
+        oWstkyhypNguW+aP/NZtFgxtkw==
+X-Google-Smtp-Source: APXvYqzBbjxALPKEqx0qx5tqcV0AEweYyIjKRxiRHg9Yap0x+zKqyEQHY1D40pg3fh4b6C7N+SrLgA==
+X-Received: by 2002:a1c:7f94:: with SMTP id a142mr9035050wmd.33.1576751591109;
+        Thu, 19 Dec 2019 02:33:11 -0800 (PST)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id i11sm5962942wrs.10.2019.12.19.02.33.15
+        by smtp.gmail.com with ESMTPSA id i11sm5962942wrs.10.2019.12.19.02.33.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 02:33:15 -0800 (PST)
+        Thu, 19 Dec 2019 02:33:10 -0800 (PST)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org
 Cc:     robh@kernel.org, vinod.koul@linaro.org,
@@ -63,9 +63,9 @@ Cc:     robh@kernel.org, vinod.koul@linaro.org,
         linux-kernel@vger.kernel.org, spapothi@codeaurora.org,
         bgoswami@codeaurora.org, linux-gpio@vger.kernel.org,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v6 11/11] ASoC: qcom: sdm845: add support to DB845c and Lenovo Yoga
-Date:   Thu, 19 Dec 2019 10:31:53 +0000
-Message-Id: <20191219103153.14875-12-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v6 07/11] ASoC: wcd934x: add audio routings
+Date:   Thu, 19 Dec 2019 10:31:49 +0000
+Message-Id: <20191219103153.14875-8-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191219103153.14875-1-srinivas.kandagatla@linaro.org>
 References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org>
@@ -76,167 +76,328 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support to Lenovo Yoga c630 compatible strings
-and related setup to the sound machine driver.
+This patch adds audio routing for both playback and capture.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- sound/soc/qcom/sdm845.c | 86 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 85 insertions(+), 1 deletion(-)
+ sound/soc/codecs/wcd934x.c | 290 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 290 insertions(+)
 
-diff --git a/sound/soc/qcom/sdm845.c b/sound/soc/qcom/sdm845.c
-index 28f3cef696e6..3b5547a27aad 100644
---- a/sound/soc/qcom/sdm845.c
-+++ b/sound/soc/qcom/sdm845.c
-@@ -24,6 +24,9 @@
- #define RIGHT_SPK_TDM_TX_MASK   0xC0
- #define SPK_TDM_RX_MASK         0x03
- #define NUM_TDM_SLOTS           8
-+#define SLIM_MAX_TX_PORTS 16
-+#define SLIM_MAX_RX_PORTS 16
-+#define WCD934X_DEFAULT_MCLK_RATE	9600000
+diff --git a/sound/soc/codecs/wcd934x.c b/sound/soc/codecs/wcd934x.c
+index 24f78a0b7f5a..158e878abd6c 100644
+--- a/sound/soc/codecs/wcd934x.c
++++ b/sound/soc/codecs/wcd934x.c
+@@ -135,6 +135,162 @@
+ 	} \
+ }
  
- struct sdm845_snd_data {
- 	struct snd_soc_jack jack;
-@@ -36,6 +39,39 @@ struct sdm845_snd_data {
- 
- static unsigned int tdm_slot_offset[8] = {0, 4, 8, 12, 16, 20, 24, 28};
- 
-+static int sdm845_slim_snd_hw_params(struct snd_pcm_substream *substream,
-+				     struct snd_pcm_hw_params *params)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dai_link *dai_link = rtd->dai_link;
-+	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
-+	u32 rx_ch[SLIM_MAX_RX_PORTS], tx_ch[SLIM_MAX_TX_PORTS];
-+	u32 rx_ch_cnt = 0, tx_ch_cnt = 0;
-+	int ret = 0, i;
++#define WCD934X_INTERPOLATOR_PATH(id)			\
++	{"RX INT" #id "_1 MIX1 INP0", "RX0", "SLIM RX0"},	\
++	{"RX INT" #id "_1 MIX1 INP0", "RX1", "SLIM RX1"},	\
++	{"RX INT" #id "_1 MIX1 INP0", "RX2", "SLIM RX2"},	\
++	{"RX INT" #id "_1 MIX1 INP0", "RX3", "SLIM RX3"},	\
++	{"RX INT" #id "_1 MIX1 INP0", "RX4", "SLIM RX4"},	\
++	{"RX INT" #id "_1 MIX1 INP0", "RX5", "SLIM RX5"},	\
++	{"RX INT" #id "_1 MIX1 INP0", "RX6", "SLIM RX6"},	\
++	{"RX INT" #id "_1 MIX1 INP0", "RX7", "SLIM RX7"},	\
++	{"RX INT" #id "_1 MIX1 INP0", "IIR0", "IIR0"},	\
++	{"RX INT" #id "_1 MIX1 INP0", "IIR1", "IIR1"},	\
++	{"RX INT" #id "_1 MIX1 INP1", "RX0", "SLIM RX0"},	\
++	{"RX INT" #id "_1 MIX1 INP1", "RX1", "SLIM RX1"},	\
++	{"RX INT" #id "_1 MIX1 INP1", "RX2", "SLIM RX2"},	\
++	{"RX INT" #id "_1 MIX1 INP1", "RX3", "SLIM RX3"},	\
++	{"RX INT" #id "_1 MIX1 INP1", "RX4", "SLIM RX4"},	\
++	{"RX INT" #id "_1 MIX1 INP1", "RX5", "SLIM RX5"},	\
++	{"RX INT" #id "_1 MIX1 INP1", "RX6", "SLIM RX6"},	\
++	{"RX INT" #id "_1 MIX1 INP1", "RX7", "SLIM RX7"},	\
++	{"RX INT" #id "_1 MIX1 INP1", "IIR0", "IIR0"},	\
++	{"RX INT" #id "_1 MIX1 INP1", "IIR1", "IIR1"},	\
++	{"RX INT" #id "_1 MIX1 INP2", "RX0", "SLIM RX0"},	\
++	{"RX INT" #id "_1 MIX1 INP2", "RX1", "SLIM RX1"},	\
++	{"RX INT" #id "_1 MIX1 INP2", "RX2", "SLIM RX2"},	\
++	{"RX INT" #id "_1 MIX1 INP2", "RX3", "SLIM RX3"},	\
++	{"RX INT" #id "_1 MIX1 INP2", "RX4", "SLIM RX4"},	\
++	{"RX INT" #id "_1 MIX1 INP2", "RX5", "SLIM RX5"},	\
++	{"RX INT" #id "_1 MIX1 INP2", "RX6", "SLIM RX6"},	\
++	{"RX INT" #id "_1 MIX1 INP2", "RX7", "SLIM RX7"},	\
++	{"RX INT" #id "_1 MIX1 INP2", "IIR0", "IIR0"},		\
++	{"RX INT" #id "_1 MIX1 INP2", "IIR1", "IIR1"},		\
++	{"RX INT" #id "_1 MIX1", NULL, "RX INT" #id "_1 MIX1 INP0"}, \
++	{"RX INT" #id "_1 MIX1", NULL, "RX INT" #id "_1 MIX1 INP1"}, \
++	{"RX INT" #id "_1 MIX1", NULL, "RX INT" #id "_1 MIX1 INP2"}, \
++	{"RX INT" #id "_2 MUX", "RX0", "SLIM RX0"},	\
++	{"RX INT" #id "_2 MUX", "RX1", "SLIM RX1"},	\
++	{"RX INT" #id "_2 MUX", "RX2", "SLIM RX2"},	\
++	{"RX INT" #id "_2 MUX", "RX3", "SLIM RX3"},	\
++	{"RX INT" #id "_2 MUX", "RX4", "SLIM RX4"},	\
++	{"RX INT" #id "_2 MUX", "RX5", "SLIM RX5"},	\
++	{"RX INT" #id "_2 MUX", "RX6", "SLIM RX6"},	\
++	{"RX INT" #id "_2 MUX", "RX7", "SLIM RX7"},	\
++	{"RX INT" #id "_2 MUX", NULL, "INT" #id "_CLK"}, \
++	{"RX INT" #id "_2 MUX", NULL, "DSMDEM" #id "_CLK"}, \
++	{"RX INT" #id "_2 INTERP", NULL, "RX INT" #id "_2 MUX"},	\
++	{"RX INT" #id " SEC MIX", NULL, "RX INT" #id "_2 INTERP"},	\
++	{"RX INT" #id "_1 INTERP", NULL, "RX INT" #id "_1 MIX1"},	\
++	{"RX INT" #id "_1 INTERP", NULL, "INT" #id "_CLK"},	\
++	{"RX INT" #id "_1 INTERP", NULL, "DSMDEM" #id "_CLK"},	\
++	{"RX INT" #id " SEC MIX", NULL, "RX INT" #id "_1 INTERP"}
 +
-+	for (i = 0 ; i < dai_link->num_codecs; i++) {
-+		ret = snd_soc_dai_get_channel_map(rtd->codec_dais[i],
-+				&tx_ch_cnt, tx_ch, &rx_ch_cnt, rx_ch);
++#define WCD934X_INTERPOLATOR_MIX2(id)			\
++	{"RX INT" #id " MIX2", NULL, "RX INT" #id " SEC MIX"}, \
++	{"RX INT" #id " MIX2", NULL, "RX INT" #id " MIX2 INP"}
 +
-+		if (ret != 0 && ret != -ENOTSUPP) {
-+			pr_err("failed to get codec chan map, err:%d\n", ret);
-+			return ret;
-+		} else if (ret == -ENOTSUPP) {
-+			/* Ignore unsupported */
-+			continue;
-+		}
++#define WCD934X_SLIM_RX_AIF_PATH(id)	\
++	{"SLIM RX"#id" MUX", "AIF1_PB", "AIF1 PB"},	\
++	{"SLIM RX"#id" MUX", "AIF2_PB", "AIF2 PB"},	\
++	{"SLIM RX"#id" MUX", "AIF3_PB", "AIF3 PB"},	\
++	{"SLIM RX"#id" MUX", "AIF4_PB", "AIF4 PB"},   \
++	{"SLIM RX"#id, NULL, "SLIM RX"#id" MUX"}
 +
-+		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-+			ret = snd_soc_dai_set_channel_map(cpu_dai, 0, NULL,
-+							  rx_ch_cnt, rx_ch);
-+		else
-+			ret = snd_soc_dai_set_channel_map(cpu_dai, tx_ch_cnt,
-+							  tx_ch, 0, NULL);
-+	}
++#define WCD934X_ADC_MUX(id) \
++	{"ADC MUX" #id, "DMIC", "DMIC MUX" #id },	\
++	{"ADC MUX" #id, "AMIC", "AMIC MUX" #id },	\
++	{"DMIC MUX" #id, "DMIC0", "DMIC0"},		\
++	{"DMIC MUX" #id, "DMIC1", "DMIC1"},		\
++	{"DMIC MUX" #id, "DMIC2", "DMIC2"},		\
++	{"DMIC MUX" #id, "DMIC3", "DMIC3"},		\
++	{"DMIC MUX" #id, "DMIC4", "DMIC4"},		\
++	{"DMIC MUX" #id, "DMIC5", "DMIC5"},		\
++	{"AMIC MUX" #id, "ADC1", "ADC1"},		\
++	{"AMIC MUX" #id, "ADC2", "ADC2"},		\
++	{"AMIC MUX" #id, "ADC3", "ADC3"},		\
++	{"AMIC MUX" #id, "ADC4", "ADC4"}
 +
-+	return 0;
-+}
++#define WCD934X_IIR_INP_MUX(id) \
++	{"IIR" #id, NULL, "IIR" #id " INP0 MUX"},	\
++	{"IIR" #id " INP0 MUX", "DEC0", "ADC MUX0"},	\
++	{"IIR" #id " INP0 MUX", "DEC1", "ADC MUX1"},	\
++	{"IIR" #id " INP0 MUX", "DEC2", "ADC MUX2"},	\
++	{"IIR" #id " INP0 MUX", "DEC3", "ADC MUX3"},	\
++	{"IIR" #id " INP0 MUX", "DEC4", "ADC MUX4"},	\
++	{"IIR" #id " INP0 MUX", "DEC5", "ADC MUX5"},	\
++	{"IIR" #id " INP0 MUX", "DEC6", "ADC MUX6"},	\
++	{"IIR" #id " INP0 MUX", "DEC7", "ADC MUX7"},	\
++	{"IIR" #id " INP0 MUX", "DEC8", "ADC MUX8"},	\
++	{"IIR" #id " INP0 MUX", "RX0", "SLIM RX0"},	\
++	{"IIR" #id " INP0 MUX", "RX1", "SLIM RX1"},	\
++	{"IIR" #id " INP0 MUX", "RX2", "SLIM RX2"},	\
++	{"IIR" #id " INP0 MUX", "RX3", "SLIM RX3"},	\
++	{"IIR" #id " INP0 MUX", "RX4", "SLIM RX4"},	\
++	{"IIR" #id " INP0 MUX", "RX5", "SLIM RX5"},	\
++	{"IIR" #id " INP0 MUX", "RX6", "SLIM RX6"},	\
++	{"IIR" #id " INP0 MUX", "RX7", "SLIM RX7"},	\
++	{"IIR" #id, NULL, "IIR" #id " INP1 MUX"},	\
++	{"IIR" #id " INP1 MUX", "DEC0", "ADC MUX0"},	\
++	{"IIR" #id " INP1 MUX", "DEC1", "ADC MUX1"},	\
++	{"IIR" #id " INP1 MUX", "DEC2", "ADC MUX2"},	\
++	{"IIR" #id " INP1 MUX", "DEC3", "ADC MUX3"},	\
++	{"IIR" #id " INP1 MUX", "DEC4", "ADC MUX4"},	\
++	{"IIR" #id " INP1 MUX", "DEC5", "ADC MUX5"},	\
++	{"IIR" #id " INP1 MUX", "DEC6", "ADC MUX6"},	\
++	{"IIR" #id " INP1 MUX", "DEC7", "ADC MUX7"},	\
++	{"IIR" #id " INP1 MUX", "DEC8", "ADC MUX8"},	\
++	{"IIR" #id " INP1 MUX", "RX0", "SLIM RX0"},	\
++	{"IIR" #id " INP1 MUX", "RX1", "SLIM RX1"},	\
++	{"IIR" #id " INP1 MUX", "RX2", "SLIM RX2"},	\
++	{"IIR" #id " INP1 MUX", "RX3", "SLIM RX3"},	\
++	{"IIR" #id " INP1 MUX", "RX4", "SLIM RX4"},	\
++	{"IIR" #id " INP1 MUX", "RX5", "SLIM RX5"},	\
++	{"IIR" #id " INP1 MUX", "RX6", "SLIM RX6"},	\
++	{"IIR" #id " INP1 MUX", "RX7", "SLIM RX7"},	\
++	{"IIR" #id, NULL, "IIR" #id " INP2 MUX"},	\
++	{"IIR" #id " INP2 MUX", "DEC0", "ADC MUX0"},	\
++	{"IIR" #id " INP2 MUX", "DEC1", "ADC MUX1"},	\
++	{"IIR" #id " INP2 MUX", "DEC2", "ADC MUX2"},	\
++	{"IIR" #id " INP2 MUX", "DEC3", "ADC MUX3"},	\
++	{"IIR" #id " INP2 MUX", "DEC4", "ADC MUX4"},	\
++	{"IIR" #id " INP2 MUX", "DEC5", "ADC MUX5"},	\
++	{"IIR" #id " INP2 MUX", "DEC6", "ADC MUX6"},	\
++	{"IIR" #id " INP2 MUX", "DEC7", "ADC MUX7"},	\
++	{"IIR" #id " INP2 MUX", "DEC8", "ADC MUX8"},	\
++	{"IIR" #id " INP2 MUX", "RX0", "SLIM RX0"},	\
++	{"IIR" #id " INP2 MUX", "RX1", "SLIM RX1"},	\
++	{"IIR" #id " INP2 MUX", "RX2", "SLIM RX2"},	\
++	{"IIR" #id " INP2 MUX", "RX3", "SLIM RX3"},	\
++	{"IIR" #id " INP2 MUX", "RX4", "SLIM RX4"},	\
++	{"IIR" #id " INP2 MUX", "RX5", "SLIM RX5"},	\
++	{"IIR" #id " INP2 MUX", "RX6", "SLIM RX6"},	\
++	{"IIR" #id " INP2 MUX", "RX7", "SLIM RX7"},	\
++	{"IIR" #id, NULL, "IIR" #id " INP3 MUX"},	\
++	{"IIR" #id " INP3 MUX", "DEC0", "ADC MUX0"},	\
++	{"IIR" #id " INP3 MUX", "DEC1", "ADC MUX1"},	\
++	{"IIR" #id " INP3 MUX", "DEC2", "ADC MUX2"},	\
++	{"IIR" #id " INP3 MUX", "DEC3", "ADC MUX3"},	\
++	{"IIR" #id " INP3 MUX", "DEC4", "ADC MUX4"},	\
++	{"IIR" #id " INP3 MUX", "DEC5", "ADC MUX5"},	\
++	{"IIR" #id " INP3 MUX", "DEC6", "ADC MUX6"},	\
++	{"IIR" #id " INP3 MUX", "DEC7", "ADC MUX7"},	\
++	{"IIR" #id " INP3 MUX", "DEC8", "ADC MUX8"},	\
++	{"IIR" #id " INP3 MUX", "RX0", "SLIM RX0"},	\
++	{"IIR" #id " INP3 MUX", "RX1", "SLIM RX1"},	\
++	{"IIR" #id " INP3 MUX", "RX2", "SLIM RX2"},	\
++	{"IIR" #id " INP3 MUX", "RX3", "SLIM RX3"},	\
++	{"IIR" #id " INP3 MUX", "RX4", "SLIM RX4"},	\
++	{"IIR" #id " INP3 MUX", "RX5", "SLIM RX5"},	\
++	{"IIR" #id " INP3 MUX", "RX6", "SLIM RX6"},	\
++	{"IIR" #id " INP3 MUX", "RX7", "SLIM RX7"}
 +
- static int sdm845_tdm_snd_hw_params(struct snd_pcm_substream *substream,
- 					struct snd_pcm_hw_params *params)
- {
-@@ -151,6 +187,11 @@ static int sdm845_snd_hw_params(struct snd_pcm_substream *substream,
- 	case QUATERNARY_TDM_TX_0:
- 		ret = sdm845_tdm_snd_hw_params(substream, params);
- 		break;
-+	case SLIMBUS_0_RX...SLIMBUS_6_TX:
-+		ret = sdm845_slim_snd_hw_params(substream, params);
-+		break;
-+	case QUATERNARY_MI2S_RX:
-+		break;
- 	default:
- 		pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
- 		break;
-@@ -173,7 +214,20 @@ static int sdm845_dai_init(struct snd_soc_pcm_runtime *rtd)
- 	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
- 	struct sdm845_snd_data *pdata = snd_soc_card_get_drvdata(card);
- 	struct snd_jack *jack;
--	int rval;
-+	struct snd_soc_dai_link *dai_link = rtd->dai_link;
-+	/*
-+	 * Codec SLIMBUS configuration
-+	 * RX1, RX2, RX3, RX4, RX5, RX6, RX7, RX8, RX9, RX10, RX11, RX12, RX13
-+	 * TX1, TX2, TX3, TX4, TX5, TX6, TX7, TX8, TX9, TX10, TX11, TX12, TX13
-+	 * TX14, TX15, TX16
-+	 */
-+	unsigned int rx_ch[SLIM_MAX_RX_PORTS] = {144, 145, 146, 147, 148, 149,
-+					150, 151, 152, 153, 154, 155, 156};
-+	unsigned int tx_ch[SLIM_MAX_TX_PORTS] = {128, 129, 130, 131, 132, 133,
-+					    134, 135, 136, 137, 138, 139,
-+					    140, 141, 142, 143};
-+	int rval, i;
++#define WCD934X_SLIM_TX_AIF_PATH(id)	\
++	{"AIF1_CAP Mixer", "SLIM TX" #id, "SLIM TX" #id },	\
++	{"AIF2_CAP Mixer", "SLIM TX" #id, "SLIM TX" #id },	\
++	{"AIF3_CAP Mixer", "SLIM TX" #id, "SLIM TX" #id },	\
++	{"SLIM TX" #id, NULL, "CDC_IF TX" #id " MUX"}
 +
- 
- 	if (!pdata->jack_setup) {
- 		rval = snd_soc_card_jack_new(card, "Headset Jack",
-@@ -211,6 +265,21 @@ static int sdm845_dai_init(struct snd_soc_pcm_runtime *rtd)
- 			return rval;
- 		}
- 		break;
-+	case SLIMBUS_0_RX...SLIMBUS_6_TX:
-+		for (i = 0 ; i < dai_link->num_codecs; i++) {
-+			rval = snd_soc_dai_set_channel_map(rtd->codec_dais[i],
-+							  ARRAY_SIZE(tx_ch),
-+							  tx_ch,
-+							  ARRAY_SIZE(rx_ch),
-+							  rx_ch);
-+			if (rval != 0 && rval != -ENOTSUPP)
-+				return rval;
-+
-+			snd_soc_dai_set_sysclk(rtd->codec_dais[i], 0,
-+					       WCD934X_DEFAULT_MCLK_RATE,
-+					       SNDRV_PCM_STREAM_PLAYBACK);
-+		}
-+		break;
- 	default:
- 		break;
- 	}
-@@ -256,6 +325,14 @@ static int sdm845_snd_startup(struct snd_pcm_substream *substream)
- 		}
- 		snd_soc_dai_set_fmt(cpu_dai, fmt);
- 		snd_soc_dai_set_fmt(codec_dai, codec_dai_fmt);
-+		break;
-+	case QUATERNARY_MI2S_RX:
-+		snd_soc_dai_set_sysclk(cpu_dai,
-+			Q6AFE_LPASS_CLK_ID_QUAD_MI2S_IBIT,
-+			MI2S_BCLK_RATE, SNDRV_PCM_STREAM_PLAYBACK);
-+		snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_CBS_CFS);
-+
-+
- 		break;
- 
- 	case QUATERNARY_TDM_RX_0:
-@@ -294,6 +371,8 @@ static int sdm845_snd_startup(struct snd_pcm_substream *substream)
- 			}
- 		}
- 		break;
-+	case SLIMBUS_0_RX...SLIMBUS_6_TX:
-+		break;
- 
- 	default:
- 		pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
-@@ -338,6 +417,9 @@ static void  sdm845_snd_shutdown(struct snd_pcm_substream *substream)
- 				0, SNDRV_PCM_STREAM_PLAYBACK);
- 		}
- 		break;
-+	case SLIMBUS_0_RX...SLIMBUS_6_TX:
-+	case QUATERNARY_MI2S_RX:
-+		break;
- 
- 	default:
- 		pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
-@@ -451,6 +533,8 @@ static int sdm845_snd_platform_remove(struct platform_device *pdev)
- 
- static const struct of_device_id sdm845_snd_device_id[]  = {
- 	{ .compatible = "qcom,sdm845-sndcard" },
-+	{ .compatible = "qcom,db845c-sndcard" },
-+	{ .compatible = "lenovo,yoga-c630-sndcard" },
- 	{},
+ enum {
+ 	MIC_BIAS_1 = 1,
+ 	MIC_BIAS_2,
+@@ -4678,6 +4834,138 @@ static const struct snd_soc_dapm_widget wcd934x_dapm_widgets[] = {
+ 			   ARRAY_SIZE(aif3_slim_cap_mixer)),
  };
- MODULE_DEVICE_TABLE(of, sdm845_snd_device_id);
+ 
++static const struct snd_soc_dapm_route wcd934x_audio_map[] = {
++	/* RX0-RX7 */
++	WCD934X_SLIM_RX_AIF_PATH(0),
++	WCD934X_SLIM_RX_AIF_PATH(1),
++	WCD934X_SLIM_RX_AIF_PATH(2),
++	WCD934X_SLIM_RX_AIF_PATH(3),
++	WCD934X_SLIM_RX_AIF_PATH(4),
++	WCD934X_SLIM_RX_AIF_PATH(5),
++	WCD934X_SLIM_RX_AIF_PATH(6),
++	WCD934X_SLIM_RX_AIF_PATH(7),
++
++	/* RX0 Ear out */
++	WCD934X_INTERPOLATOR_PATH(0),
++	WCD934X_INTERPOLATOR_MIX2(0),
++	{"RX INT0 DEM MUX", "CLSH_DSM_OUT", "RX INT0 MIX2"},
++	{"RX INT0 DAC", NULL, "RX INT0 DEM MUX"},
++	{"RX INT0 DAC", NULL, "RX_BIAS"},
++	{"EAR PA", NULL, "RX INT0 DAC"},
++	{"EAR", NULL, "EAR PA"},
++
++	/* RX1 Headphone left */
++	WCD934X_INTERPOLATOR_PATH(1),
++	WCD934X_INTERPOLATOR_MIX2(1),
++	{"RX INT1 MIX3", NULL, "RX INT1 MIX2"},
++	{"RX INT1 DEM MUX", "CLSH_DSM_OUT", "RX INT1 MIX3"},
++	{"RX INT1 DAC", NULL, "RX INT1 DEM MUX"},
++	{"RX INT1 DAC", NULL, "RX_BIAS"},
++	{"HPHL PA", NULL, "RX INT1 DAC"},
++	{"HPHL", NULL, "HPHL PA"},
++
++	/* RX2 Headphone right */
++	WCD934X_INTERPOLATOR_PATH(2),
++	WCD934X_INTERPOLATOR_MIX2(2),
++	{"RX INT2 MIX3", NULL, "RX INT2 MIX2"},
++	{"RX INT2 DEM MUX", "CLSH_DSM_OUT", "RX INT2 MIX3"},
++	{"RX INT2 DAC", NULL, "RX INT2 DEM MUX"},
++	{"RX INT2 DAC", NULL, "RX_BIAS"},
++	{"HPHR PA", NULL, "RX INT2 DAC"},
++	{"HPHR", NULL, "HPHR PA"},
++
++	/* RX3 HIFi LineOut1 */
++	WCD934X_INTERPOLATOR_PATH(3),
++	WCD934X_INTERPOLATOR_MIX2(3),
++	{"RX INT3 MIX3", NULL, "RX INT3 MIX2"},
++	{"RX INT3 DAC", NULL, "RX INT3 MIX3"},
++	{"RX INT3 DAC", NULL, "RX_BIAS"},
++	{"LINEOUT1 PA", NULL, "RX INT3 DAC"},
++	{"LINEOUT1", NULL, "LINEOUT1 PA"},
++
++	/* RX4 HIFi LineOut2 */
++	WCD934X_INTERPOLATOR_PATH(4),
++	WCD934X_INTERPOLATOR_MIX2(4),
++	{"RX INT4 MIX3", NULL, "RX INT4 MIX2"},
++	{"RX INT4 DAC", NULL, "RX INT4 MIX3"},
++	{"RX INT4 DAC", NULL, "RX_BIAS"},
++	{"LINEOUT2 PA", NULL, "RX INT4 DAC"},
++	{"LINEOUT2", NULL, "LINEOUT2 PA"},
++
++	/* RX7 Speaker Left Out PA */
++	WCD934X_INTERPOLATOR_PATH(7),
++	WCD934X_INTERPOLATOR_MIX2(7),
++	{"RX INT7 CHAIN", NULL, "RX INT7 MIX2"},
++	{"RX INT7 CHAIN", NULL, "RX_BIAS"},
++	{"RX INT7 CHAIN", NULL, "SBOOST0"},
++	{"RX INT7 CHAIN", NULL, "SBOOST0_CLK"},
++	{"SPK1 OUT", NULL, "RX INT7 CHAIN"},
++
++	/* RX8 Speaker Right Out PA */
++	WCD934X_INTERPOLATOR_PATH(8),
++	{"RX INT8 CHAIN", NULL, "RX INT8 SEC MIX"},
++	{"RX INT8 CHAIN", NULL, "RX_BIAS"},
++	{"RX INT8 CHAIN", NULL, "SBOOST1"},
++	{"RX INT8 CHAIN", NULL, "SBOOST1_CLK"},
++	{"SPK2 OUT", NULL, "RX INT8 CHAIN"},
++
++	/* Tx */
++	{"AIF1 CAP", NULL, "AIF1_CAP Mixer"},
++	{"AIF2 CAP", NULL, "AIF2_CAP Mixer"},
++	{"AIF3 CAP", NULL, "AIF3_CAP Mixer"},
++
++	WCD934X_SLIM_TX_AIF_PATH(0),
++	WCD934X_SLIM_TX_AIF_PATH(1),
++	WCD934X_SLIM_TX_AIF_PATH(2),
++	WCD934X_SLIM_TX_AIF_PATH(3),
++	WCD934X_SLIM_TX_AIF_PATH(4),
++	WCD934X_SLIM_TX_AIF_PATH(5),
++	WCD934X_SLIM_TX_AIF_PATH(6),
++	WCD934X_SLIM_TX_AIF_PATH(7),
++	WCD934X_SLIM_TX_AIF_PATH(8),
++
++	WCD934X_ADC_MUX(0),
++	WCD934X_ADC_MUX(1),
++	WCD934X_ADC_MUX(2),
++	WCD934X_ADC_MUX(3),
++	WCD934X_ADC_MUX(4),
++	WCD934X_ADC_MUX(5),
++	WCD934X_ADC_MUX(6),
++	WCD934X_ADC_MUX(7),
++	WCD934X_ADC_MUX(8),
++
++	{"CDC_IF TX0 MUX", "DEC0", "ADC MUX0"},
++	{"CDC_IF TX1 MUX", "DEC1", "ADC MUX1"},
++	{"CDC_IF TX2 MUX", "DEC2", "ADC MUX2"},
++	{"CDC_IF TX3 MUX", "DEC3", "ADC MUX3"},
++	{"CDC_IF TX4 MUX", "DEC4", "ADC MUX4"},
++	{"CDC_IF TX5 MUX", "DEC5", "ADC MUX5"},
++	{"CDC_IF TX6 MUX", "DEC6", "ADC MUX6"},
++	{"CDC_IF TX7 MUX", "DEC7", "ADC MUX7"},
++	{"CDC_IF TX8 MUX", "DEC8", "ADC MUX8"},
++
++	{"AMIC4_5 SEL", "AMIC4", "AMIC4"},
++	{"AMIC4_5 SEL", "AMIC5", "AMIC5"},
++
++	{ "DMIC0", NULL, "DMIC0 Pin" },
++	{ "DMIC1", NULL, "DMIC1 Pin" },
++	{ "DMIC2", NULL, "DMIC2 Pin" },
++	{ "DMIC3", NULL, "DMIC3 Pin" },
++	{ "DMIC4", NULL, "DMIC4 Pin" },
++	{ "DMIC5", NULL, "DMIC5 Pin" },
++
++	{"ADC1", NULL, "AMIC1"},
++	{"ADC2", NULL, "AMIC2"},
++	{"ADC3", NULL, "AMIC3"},
++	{"ADC4", NULL, "AMIC4_5 SEL"},
++
++	WCD934X_IIR_INP_MUX(0),
++	WCD934X_IIR_INP_MUX(1),
++
++	{"SRC0", NULL, "IIR0"},
++	{"SRC1", NULL, "IIR1"},
++};
++
+ static const struct snd_soc_component_driver wcd934x_component_drv = {
+ 	.probe = wcd934x_comp_probe,
+ 	.remove = wcd934x_comp_remove,
+@@ -4686,6 +4974,8 @@ static const struct snd_soc_component_driver wcd934x_component_drv = {
+ 	.num_controls = ARRAY_SIZE(wcd934x_snd_controls),
+ 	.dapm_widgets = wcd934x_dapm_widgets,
+ 	.num_dapm_widgets = ARRAY_SIZE(wcd934x_dapm_widgets),
++	.dapm_routes = wcd934x_audio_map,
++	.num_dapm_routes = ARRAY_SIZE(wcd934x_audio_map),
+ };
+ 
+ static int wcd934x_codec_parse_data(struct wcd934x_codec *wcd)
 -- 
 2.21.0
 
