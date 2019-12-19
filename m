@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E84B4C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4BAC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDF0F222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BCA4227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:52:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781533;
-	bh=rwsOWEu9rxz3FJIISfOWzxd38wpAApF+6l0CcPtX2qw=;
+	s=default; t=1576781536;
+	bh=DGLDLv+d3n/O9WVynloj1PVnNCkOjp5CdHLJ8EgL49k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rl8Gy9VmCVqQqjP4MMvY7OxbzXkwvseF3I0aH2r1WIJ+CneKyITBdrPhrxbCtgE5e
-	 qjL8GEqVM5t+7bk6HRAeUuQSKe+Jgixg4zcxRRTvAzeDE6jY39Q5LGoeiBF578tigo
-	 mKUOU7fAHCqI9FNMwsHYNlIODCwMg1YA3TZ3Z0v0=
+	b=z9frkBTw0ko/FzmueJdw99lNPnZxlnL6LzEl1o/OJ7w43dr5gU1kN79EOeqKMV+Dk
+	 0IIeAegCA7nQ43+pgnrRq2dzJ8KupdIYrRcsPHj5Cr+2bI8Gjt4cFVpQt+Sesl/km/
+	 R+RqERNmDykMKK6wQxRM4dWcOOD8rg0Z1FT4wx/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730239AbfLSSwM (ORCPT
+        id S1730024AbfLSSwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:52:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46624 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:52:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730229AbfLSSwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:52:08 -0500
+        id S1729824AbfLSSwK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:52:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35DEC24685;
-        Thu, 19 Dec 2019 18:52:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94130222C2;
+        Thu, 19 Dec 2019 18:52:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781527;
-        bh=rwsOWEu9rxz3FJIISfOWzxd38wpAApF+6l0CcPtX2qw=;
+        s=default; t=1576781530;
+        bh=DGLDLv+d3n/O9WVynloj1PVnNCkOjp5CdHLJ8EgL49k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JCYcPSi0hrkJfJW+vlrXwwW1l7u00aSquEPru/ZpseBpA81rskgNvGcIFgljvvpjS
-         LdTLaFsSOz144iTGX4Xb3hqIozhkAqp/i2aEgYL8VJLSwHULbBejjzj2aIBoyiybiA
-         W8i8BP1XB0WXEJQtB4qm4l7GBc1Cg85/TsatbYmw=
+        b=Cql1eLErDsAodsU+P8Hnofbby40zsbWJ/hopkZVqf7jp0MnSTRYnl/BLqSGuUIyg4
+         l0T7hKh5sSA5OYHOBmRVVyQtJqSIJxKhLmDUH9L0uN2T3pL/dX3JZjNCukiNNoSpTB
+         kP9+vUyE7TUFMExydNdWtxaX40FGwgGNGTAdOPpI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4.19 21/47] PCI/MSI: Fix incorrect MSI-X masking on resume
-Date:   Thu, 19 Dec 2019 19:34:35 +0100
-Message-Id: <20191219182924.120568737@linuxfoundation.org>
+        stable@vger.kernel.org,
+        George Cherian <george.cherian@marvell.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Robert Richter <rrichter@marvell.com>
+Subject: [PATCH 4.19 22/47] PCI: Apply Cavium ACS quirk to ThunderX2 and ThunderX3
+Date:   Thu, 19 Dec 2019 19:34:36 +0100
+Message-Id: <20191219182924.729980116@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182857.659088743@linuxfoundation.org>
 References: <20191219182857.659088743@linuxfoundation.org>
@@ -59,63 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian-Hong Pan <jian-hong@endlessm.com>
+From: George Cherian <george.cherian@marvell.com>
 
-commit e045fa29e89383c717e308609edd19d2fd29e1be upstream.
+commit f338bb9f0179cb959977b74e8331b312264d720b upstream.
 
-When a driver enables MSI-X, msix_program_entries() reads the MSI-X Vector
-Control register for each vector and saves it in desc->masked.  Each
-register is 32 bits and bit 0 is the actual Mask bit.
+Enhance the ACS quirk for Cavium Processors. Add the root port vendor IDs
+for ThunderX2 and ThunderX3 series of processors.
 
-When we restored these registers during resume, we previously set the Mask
-bit if *any* bit in desc->masked was set instead of when the Mask bit
-itself was set:
-
-  pci_restore_state
-    pci_restore_msi_state
-      __pci_restore_msix_state
-        for_each_pci_msi_entry
-          msix_mask_irq(entry, entry->masked)   <-- entire u32 word
-            __pci_msix_desc_mask_irq(desc, flag)
-              mask_bits = desc->masked & ~PCI_MSIX_ENTRY_CTRL_MASKBIT
-              if (flag)       <-- testing entire u32, not just bit 0
-                mask_bits |= PCI_MSIX_ENTRY_CTRL_MASKBIT
-              writel(mask_bits, desc_addr + PCI_MSIX_ENTRY_VECTOR_CTRL)
-
-This means that after resume, MSI-X vectors were masked when they shouldn't
-be, which leads to timeouts like this:
-
-  nvme nvme0: I/O 978 QID 3 timeout, completion polled
-
-On resume, set the Mask bit only when the saved Mask bit from suspend was
-set.
-
-This should remove the need for 19ea025e1d28 ("nvme: Add quirk for Kingston
-NVME SSD running FW E8FK11.T").
-
-[bhelgaas: commit log, move fix to __pci_msix_desc_mask_irq()]
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=204887
-Link: https://lore.kernel.org/r/20191008034238.2503-1-jian-hong@endlessm.com
-Fixes: f2440d9acbe8 ("PCI MSI: Refactor interrupt masking code")
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+[bhelgaas: add Fixes: and stable tag]
+Fixes: f2ddaf8dfd4a ("PCI: Apply Cavium ThunderX ACS quirk to more Root Ports")
+Link: https://lore.kernel.org/r/20191111024243.GA11408@dc5-eodlnx05.marvell.com
+Signed-off-by: George Cherian <george.cherian@marvell.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: stable@vger.kernel.org
+Reviewed-by: Robert Richter <rrichter@marvell.com>
+Cc: stable@vger.kernel.org	# v4.12+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/msi.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/quirks.c |   20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -211,7 +211,7 @@ u32 __pci_msix_desc_mask_irq(struct msi_
- 		return 0;
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4219,15 +4219,21 @@ static int pci_quirk_amd_sb_acs(struct p
  
- 	mask_bits &= ~PCI_MSIX_ENTRY_CTRL_MASKBIT;
--	if (flag)
-+	if (flag & PCI_MSIX_ENTRY_CTRL_MASKBIT)
- 		mask_bits |= PCI_MSIX_ENTRY_CTRL_MASKBIT;
- 	writel(mask_bits, pci_msix_desc_addr(desc) + PCI_MSIX_ENTRY_VECTOR_CTRL);
+ static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
+ {
++	if (!pci_is_pcie(dev) || pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
++		return false;
++
++	switch (dev->device) {
+ 	/*
+-	 * Effectively selects all downstream ports for whole ThunderX 1
+-	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
+-	 * bits of device ID are used to indicate which subdevice is used
+-	 * within the SoC.
++	 * Effectively selects all downstream ports for whole ThunderX1
++	 * (which represents 8 SoCs).
+ 	 */
+-	return (pci_is_pcie(dev) &&
+-		(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) &&
+-		((dev->device & 0xf800) == 0xa000));
++	case 0xa000 ... 0xa7ff: /* ThunderX1 */
++	case 0xaf84:  /* ThunderX2 */
++	case 0xb884:  /* ThunderX3 */
++		return true;
++	default:
++		return false;
++	}
+ }
  
+ static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
 
 
