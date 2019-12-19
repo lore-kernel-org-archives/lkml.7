@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5881C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97296C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC74D222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A2EA24683
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781739;
-	bh=3kMk/6+SFGtrVB5KH8H8fXTgxTZmZcp64HGVqP3ntaI=;
+	s=default; t=1576781744;
+	bh=TZK9qfo0DzdmFZOVWpiZoY7z4vgGJN+XeFnk4PmuS6w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=trkYfN5+du8kiPwzJNLSFH/aGw/YY3eF/7ofritknOoHtuz10DWGEdVL3iC+O6V8M
-	 ofxNzH7CE0UI835Tlrzq9USzb1jSUT0FPKQy1wgyCSxw92xgweyglZH1zEKK09Fup2
-	 odHOzBvCCUULtVVnDx+5/eIorYlUHpHodXqG5aMA=
+	b=DzkWaVfuIf3HsDCAY5p+vBK/YITmsXbFjRmXGOuSYFwdraD8Y0wWHYOBh42qhz7rg
+	 Mpk0Jdsg+IYHCIFKkn5/9V3RA/BZhXIQIm8arSPVTQPbdXbNdAn+BQIoTiZWKM522a
+	 8V1GsXhI1uf6PlJpi1FwNeMP7c2Xt9MZ20k/Orpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730097AbfLSSzi (ORCPT
+        id S1730715AbfLSSzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:55:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51728 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:55:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730323AbfLSSzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:55:36 -0500
+        id S1730699AbfLSSzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:55:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5229C24689;
-        Thu, 19 Dec 2019 18:55:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2896224692;
+        Thu, 19 Dec 2019 18:55:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781735;
-        bh=3kMk/6+SFGtrVB5KH8H8fXTgxTZmZcp64HGVqP3ntaI=;
+        s=default; t=1576781740;
+        bh=TZK9qfo0DzdmFZOVWpiZoY7z4vgGJN+XeFnk4PmuS6w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VveEhlI93U6DxbGABsvZXcguAZgo+7dsgfA2IOcjBIhn679J/BD/ulezc+ulYOTBs
-         c3GEQ2xRUdJniosyOI4yi9PlASOs9N4ToURPpxegpjcdhlLfoMTzZB2YAgWQNodg7J
-         uFIXYLN5YX/Q6LjNlLKu/zl2jDxxh4e4dXynqAmY=
+        b=wapQJPotLrz6z7DOljKjpt473psWdCwRPJ3K1b3Febh3ybfE6El+6I+z1kWbmlaTb
+         p4PJ2ePVNIaGAWJJSsTEj+HbNbWH2vdwNK1SOb+a0MhcyRP1D9JnzuypsoRidbXoHq
+         vpmenAmPzmnqaUBG5UbZa1M+HN6KEPXxX5b9vwUo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
+        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        Hannes Reinecke <hare@suse.de>,
         Bart Van Assche <bvanassche@acm.org>,
+        Roman Bolshakov <r.bolshakov@yadro.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.4 59/80] scsi: iscsi: Fix a potential deadlock in the timeout handler
-Date:   Thu, 19 Dec 2019 19:34:51 +0100
-Message-Id: <20191219183131.918040857@linuxfoundation.org>
+Subject: [PATCH 5.4 61/80] scsi: qla2xxx: Initialize free_work before flushing it
+Date:   Thu, 19 Dec 2019 19:34:53 +0100
+Message-Id: <20191219183134.492394786@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -62,119 +63,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Roman Bolshakov <r.bolshakov@yadro.com>
 
-commit 5480e299b5ae57956af01d4839c9fc88a465eeab upstream.
+commit 4c86b037a6db3ad2922ef3ba8a8989eb7794e040 upstream.
 
-Some time ago the block layer was modified such that timeout handlers are
-called from thread context instead of interrupt context. Make it safe to
-run the iSCSI timeout handler in thread context. This patch fixes the
-following lockdep complaint:
+Target creation triggers a new BUG_ON introduced in in commit 4d43d395fed1
+("workqueue: Try to catch flush_work() without INIT_WORK().").  The BUG_ON
+reveals an attempt to flush free_work in qla24xx_do_nack_work before it's
+initialized in qlt_unreg_sess:
 
-================================
-WARNING: inconsistent lock state
-5.5.1-dbg+ #11 Not tainted
---------------------------------
-inconsistent {IN-SOFTIRQ-W} -> {SOFTIRQ-ON-W} usage.
-kworker/7:1H/206 [HC0[0]:SC0[0]:HE1:SE1] takes:
-ffff88802d9827e8 (&(&session->frwd_lock)->rlock){+.?.}, at: iscsi_eh_cmd_timed_out+0xa6/0x6d0 [libiscsi]
-{IN-SOFTIRQ-W} state was registered at:
-  lock_acquire+0x106/0x240
-  _raw_spin_lock+0x38/0x50
-  iscsi_check_transport_timeouts+0x3e/0x210 [libiscsi]
-  call_timer_fn+0x132/0x470
-  __run_timers.part.0+0x39f/0x5b0
-  run_timer_softirq+0x63/0xc0
-  __do_softirq+0x12d/0x5fd
-  irq_exit+0xb3/0x110
-  smp_apic_timer_interrupt+0x131/0x3d0
-  apic_timer_interrupt+0xf/0x20
-  default_idle+0x31/0x230
-  arch_cpu_idle+0x13/0x20
-  default_idle_call+0x53/0x60
-  do_idle+0x38a/0x3f0
-  cpu_startup_entry+0x24/0x30
-  start_secondary+0x222/0x290
-  secondary_startup_64+0xa4/0xb0
-irq event stamp: 1383705
-hardirqs last  enabled at (1383705): [<ffffffff81aace5c>] _raw_spin_unlock_irq+0x2c/0x50
-hardirqs last disabled at (1383704): [<ffffffff81aacb98>] _raw_spin_lock_irq+0x18/0x50
-softirqs last  enabled at (1383690): [<ffffffffa0e2efea>] iscsi_queuecommand+0x76a/0xa20 [libiscsi]
-softirqs last disabled at (1383682): [<ffffffffa0e2e998>] iscsi_queuecommand+0x118/0xa20 [libiscsi]
+  WARNING: CPU: 7 PID: 211 at kernel/workqueue.c:3031 __flush_work.isra.38+0x40/0x2e0
+  CPU: 7 PID: 211 Comm: kworker/7:1 Kdump: loaded Tainted: G            E     5.3.0-rc7-vanilla+ #2
+  Workqueue: qla2xxx_wq qla2x00_iocb_work_fn [qla2xxx]
+  NIP:  c000000000159620 LR: c0080000009d91b0 CTR: c0000000001598c0
+  REGS: c000000005f3f730 TRAP: 0700   Tainted: G            E      (5.3.0-rc7-vanilla+)
+  MSR:  800000000282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 24002222  XER: 00000000
+  CFAR: c0000000001598d0 IRQMASK: 0
+  GPR00: c0080000009d91b0 c000000005f3f9c0 c000000001670a00 c0000003f8655ca8
+  GPR04: c0000003f8655c00 000000000000ffff 0000000000000011 ffffffffffffffff
+  GPR08: c008000000949228 0000000000000000 0000000000000001 c0080000009e7780
+  GPR12: 0000000000002200 c00000003fff6200 c000000000161bc8 0000000000000004
+  GPR16: c0000003f9d68280 0000000002000000 0000000000000005 0000000000000003
+  GPR20: 0000000000000002 000000000000ffff 0000000000000000 fffffffffffffef7
+  GPR24: c000000004f73848 c000000004f73838 c000000004f73f28 c000000005f3fb60
+  GPR28: c000000004f73e48 c000000004f73c80 c000000004f73818 c0000003f9d68280
+  NIP [c000000000159620] __flush_work.isra.38+0x40/0x2e0
+  LR [c0080000009d91b0] qla24xx_do_nack_work+0x88/0x180 [qla2xxx]
+  Call Trace:
+  [c000000005f3f9c0] [c000000000159644] __flush_work.isra.38+0x64/0x2e0 (unreliable)
+  [c000000005f3fa50] [c0080000009d91a0] qla24xx_do_nack_work+0x78/0x180 [qla2xxx]
+  [c000000005f3fae0] [c0080000009496ec] qla2x00_do_work+0x604/0xb90 [qla2xxx]
+  [c000000005f3fc40] [c008000000949cd8] qla2x00_iocb_work_fn+0x60/0xe0 [qla2xxx]
+  [c000000005f3fc80] [c000000000157bb8] process_one_work+0x2c8/0x5b0
+  [c000000005f3fd10] [c000000000157f28] worker_thread+0x88/0x660
+  [c000000005f3fdb0] [c000000000161d64] kthread+0x1a4/0x1b0
+  [c000000005f3fe20] [c00000000000b960] ret_from_kernel_thread+0x5c/0x7c
+  Instruction dump:
+  3d22001d 892966b1 7d908026 91810008 f821ff71 69290001 0b090000 2e290000
+  40920200 e9230018 7d2a0074 794ad182 <0b0a0000> 2fa90000 419e01e8 7c0802a6
+  ---[ end trace 5ccf335d4f90fcb8 ]---
 
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(&(&session->frwd_lock)->rlock);
-  <Interrupt>
-    lock(&(&session->frwd_lock)->rlock);
-
- *** DEADLOCK ***
-
-2 locks held by kworker/7:1H/206:
- #0: ffff8880d57bf928 ((wq_completion)kblockd){+.+.}, at: process_one_work+0x472/0xab0
- #1: ffff88802b9c7de8 ((work_completion)(&q->timeout_work)){+.+.}, at: process_one_work+0x476/0xab0
-
-stack backtrace:
-CPU: 7 PID: 206 Comm: kworker/7:1H Not tainted 5.5.1-dbg+ #11
-Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
-Workqueue: kblockd blk_mq_timeout_work
-Call Trace:
- dump_stack+0xa5/0xe6
- print_usage_bug.cold+0x232/0x23b
- mark_lock+0x8dc/0xa70
- __lock_acquire+0xcea/0x2af0
- lock_acquire+0x106/0x240
- _raw_spin_lock+0x38/0x50
- iscsi_eh_cmd_timed_out+0xa6/0x6d0 [libiscsi]
- scsi_times_out+0xf4/0x440 [scsi_mod]
- scsi_timeout+0x1d/0x20 [scsi_mod]
- blk_mq_check_expired+0x365/0x3a0
- bt_iter+0xd6/0xf0
- blk_mq_queue_tag_busy_iter+0x3de/0x650
- blk_mq_timeout_work+0x1af/0x380
- process_one_work+0x56d/0xab0
- worker_thread+0x7a/0x5d0
- kthread+0x1bc/0x210
- ret_from_fork+0x24/0x30
-
-Fixes: 287922eb0b18 ("block: defer timeouts to a workqueue")
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Keith Busch <keith.busch@intel.com>
-Cc: Lee Duncan <lduncan@suse.com>
-Cc: Chris Leech <cleech@redhat.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191209173457.187370-1-bvanassche@acm.org
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Lee Duncan <lduncan@suse.com>
+Fixes: 1021f0bc2f3d6 ("scsi: qla2xxx: allow session delete to finish before create.")
+Cc: Quinn Tran <qutran@marvell.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20191125165702.1013-4-r.bolshakov@yadro.com
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Tested-by: Hannes Reinecke <hare@suse.de>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/libiscsi.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/qla2xxx/qla_init.c   |    1 +
+ drivers/scsi/qla2xxx/qla_target.c |    1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/scsi/libiscsi.c
-+++ b/drivers/scsi/libiscsi.c
-@@ -1945,7 +1945,7 @@ enum blk_eh_timer_return iscsi_eh_cmd_ti
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -4847,6 +4847,7 @@ qla2x00_alloc_fcport(scsi_qla_host_t *vh
+ 	}
  
- 	ISCSI_DBG_EH(session, "scsi cmd %p timedout\n", sc);
+ 	INIT_WORK(&fcport->del_work, qla24xx_delete_sess_fn);
++	INIT_WORK(&fcport->free_work, qlt_free_session_done);
+ 	INIT_WORK(&fcport->reg_work, qla_register_fcport_fn);
+ 	INIT_LIST_HEAD(&fcport->gnl_entry);
+ 	INIT_LIST_HEAD(&fcport->list);
+--- a/drivers/scsi/qla2xxx/qla_target.c
++++ b/drivers/scsi/qla2xxx/qla_target.c
+@@ -1160,7 +1160,6 @@ void qlt_unreg_sess(struct fc_port *sess
+ 	sess->last_rscn_gen = sess->rscn_gen;
+ 	sess->last_login_gen = sess->login_gen;
  
--	spin_lock(&session->frwd_lock);
-+	spin_lock_bh(&session->frwd_lock);
- 	task = (struct iscsi_task *)sc->SCp.ptr;
- 	if (!task) {
- 		/*
-@@ -2072,7 +2072,7 @@ enum blk_eh_timer_return iscsi_eh_cmd_ti
- done:
- 	if (task)
- 		task->last_timeout = jiffies;
--	spin_unlock(&session->frwd_lock);
-+	spin_unlock_bh(&session->frwd_lock);
- 	ISCSI_DBG_EH(session, "return %s\n", rc == BLK_EH_RESET_TIMER ?
- 		     "timer reset" : "shutdown or nh");
- 	return rc;
+-	INIT_WORK(&sess->free_work, qlt_free_session_done);
+ 	queue_work(sess->vha->hw->wq, &sess->free_work);
+ }
+ EXPORT_SYMBOL(qlt_unreg_sess);
 
 
