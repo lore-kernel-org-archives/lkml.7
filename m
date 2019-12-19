@@ -2,136 +2,432 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2818CC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8023C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECD22222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:53:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576756424;
-	bh=SuU+24DpuXrx5211MYii93F6LCyY+XEqxcYIJhM8zSk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pbSKUO7g8hnL6m98NCIWB6GSn9yqYa7IRLCZVyhG8kjqqKs6wG0Z8/mDF6NRjTvhU
-	 NlBDEiMSh3dQwW1nubWImm9obDcJYDEXoEKsaxzQn14yeSBT6lKx9XBgARrq4F+s/r
-	 ycjWhG7xg0WiGOw0zl4ZNAky2Evlu5YhBi0jsZhM=
+	by mail.kernel.org (Postfix) with ESMTP id 85E6324650
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:54:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uBn6rD+G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfLSLxn (ORCPT
+        id S1726855AbfLSLy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 06:53:43 -0500
-Received: from mail-wm1-f53.google.com ([209.85.128.53]:55873 "EHLO
-        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbfLSLxm (ORCPT
+        Thu, 19 Dec 2019 06:54:29 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:49562 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726668AbfLSLy3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 06:53:42 -0500
-Received: by mail-wm1-f53.google.com with SMTP id q9so5142495wmj.5;
-        Thu, 19 Dec 2019 03:53:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=37gQpcAQV0uGXWF2P6lDcl72vbYLnQ1on9sxAjdCGgo=;
-        b=aNAYg7aZM20rsnIN7TURKRv9DX6ydpxddfTgmAwI31VI5kYP538U9L2CEUyMTC3Zal
-         w/V3zNhk8yvxwACTBKwGgbo0Q59TRvcaF/L0C0xK+Z8gxtCCE4Yj+O3KnltUy+iQ5RHB
-         tyZxfkbW1xigfBBW4uy4rziNkk6YnyS/G6kKyERFwgFZFM8N0XMuGF1wN3xyY9xFBk87
-         4UtB02THYgnDEKKul81zUtw6r7HLUdBXPnGKiHuxoxOyMGM4StLJBeCLyhIUoNaI2C2A
-         Z3ycpXYsqmNZCG0G1KMf0qALLyfvoDAzEeUb5RpkOiY09EHjBwLdEeMjkLXqjkK07hd2
-         zfjw==
-X-Gm-Message-State: APjAAAW1hx2mahTaZL+0Je2RCyTAdEN7KK4pAYRT0NembDCsqiRZ7380
-        5mrZuJLmRvDfYnnl88wAVRc=
-X-Google-Smtp-Source: APXvYqwTLTJA64/+wydnYynZTE1/u09huIDMynf4a+WZKA6CpZpX8ZFLt9ZQDomwuOG39LFDdf/EaQ==
-X-Received: by 2002:a05:600c:210b:: with SMTP id u11mr9672502wml.43.1576756420927;
-        Thu, 19 Dec 2019 03:53:40 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id x17sm6041804wrt.74.2019.12.19.03.53.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 03:53:40 -0800 (PST)
-Date:   Thu, 19 Dec 2019 12:53:38 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yunsheng Lin <linyunsheng@huawei.com>
-Cc:     Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        "brouer@redhat.com" <brouer@redhat.com>,
-        "jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>,
-        Li Rongqing <lirongqing@baidu.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        peterz@infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        bhelgaas@google.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][v2] page_pool: handle page recycle for NUMA_NO_NODE
- condition
-Message-ID: <20191219115338.GC26945@dhcp22.suse.cz>
-References: <20191211194933.15b53c11@carbon>
- <831ed886842c894f7b2ffe83fe34705180a86b3b.camel@mellanox.com>
- <0a252066-fdc3-a81d-7a36-8f49d2babc01@huawei.com>
- <20191216121557.GE30281@dhcp22.suse.cz>
- <20191216123426.GA18663@apalos.home>
- <20191216130845.GF30281@dhcp22.suse.cz>
- <20191216132128.GA19355@apalos.home>
- <9041ea7f-0ca6-d0fe-9942-8907222ead5e@huawei.com>
- <20191217091131.GB31063@dhcp22.suse.cz>
- <ff280412-bb31-5ffb-99f0-6d49bb470855@huawei.com>
+        Thu, 19 Dec 2019 06:54:29 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJBsN5C027372;
+        Thu, 19 Dec 2019 05:54:23 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576756463;
+        bh=Ko9KIy5aRJy9BimtZ/Vgw14Gb9tWbncPsDyTDAZD+Ro=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=uBn6rD+GK6tCqG+xOOmAVs2nZbguZKtAG+YPsnDU1XHFUsqHp/ZrPe4jp9aXl2ZZk
+         W3KCM2aCoANSaciLJIZoaZl/L8AgdEj3lHm5SwzZUlUci4A7kNsvn9wlELfG7Ycyh+
+         0QRP9xkrnRalAIJpUqqJ0A/etlxqv2/ZtVnex9qE=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBJBsNDv111023
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 19 Dec 2019 05:54:23 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Dec 2019 05:54:19 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Dec 2019 05:54:19 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJBsHvF034940;
+        Thu, 19 Dec 2019 05:54:18 -0600
+Subject: Re: [PATCHv3 02/15] remoteproc/omap: Add device tree support
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, Suman Anna <s-anna@ti.com>,
+        Tony Lindgren <tony@atomide.com>
+References: <20191213125537.11509-1-t-kristo@ti.com>
+ <20191213125537.11509-3-t-kristo@ti.com> <20191217230141.GA16271@xps15>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <5f3369f2-c8e2-f00c-e0cb-3757129b03a2@ti.com>
+Date:   Thu, 19 Dec 2019 13:54:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ff280412-bb31-5ffb-99f0-6d49bb470855@huawei.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191217230141.GA16271@xps15>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 19-12-19 10:09:33, Yunsheng Lin wrote:
-[...]
-> > There is not real guarantee that NUMA_NO_NODE is going to imply local
-> > node and we do not want to grow any subtle dependency on that behavior.
+On 18/12/2019 01:01, Mathieu Poirier wrote:
+> Hi Tero,
 > 
-> Strictly speaking, using numa_mem_id() also does not have real guarantee
-> that it will allocate local memory when local memory is used up, right?
-> Because alloc_pages_node() is basically turning the node to numa_mem_id()
-> when it is NUMA_NO_NODE.
-
-yes, both allocations are allowed to fallback to other nodes unless
-there is an explicit nodemask specified.
-
-> Unless we do not allow passing NUMA_NO_NODE to alloc_pages_node(), otherwise
-> I can not see difference between NUMA_NO_NODE and numa_mem_id().
-
-The difference is in the presented intention. NUMA_NO_NODE means no node
-preference. We turn it into an implicit local node preference because
-this is the best assumption we can in general. If you provide numa_mem_id
-then you explicitly ask for the local node preference because you know
-that this is the best for your specific code. See the difference?
-
-The NUMA_NO_NODE -> local node is a heuristic which might change
-(albeit unlikely).
- 
-> >> And for those drivers, locality is decided by rx interrupt affinity, not
-> >> dev_to_node(). So when rx interrupt affinity changes, the old page from old
-> >> node will not be recycled(by checking page_to_nid(page) == numa_mem_id()),
-> >> new pages will be allocated to replace the old pages and the new pages will
-> >> be recycled because allocation and recycling happens in the same context,
-> >> which means numa_mem_id() returns the same node of new page allocated, see
-> >> [2].
-> > 
-> > Well, but my understanding is that the generic page pool implementation
-> > has a clear means to change the affinity (namely page_pool_update_nid()).
-> > So my primary question is, why does NUMA_NO_NODE should be use as a
-> > bypass for that?
+> On Fri, Dec 13, 2019 at 02:55:24PM +0200, Tero Kristo wrote:
+>> From: Suman Anna <s-anna@ti.com>
+>>
+>> OMAP4+ SoCs support device tree boot only. The OMAP remoteproc
+>> driver is enhanced to support remoteproc devices created through
+>> Device Tree, support for legacy platform devices has been
+>> deprecated. The current DT support handles the IPU and DSP
+>> processor subsystems on OMAP4 and OMAP5 SoCs.
+>>
+>> The OMAP remoteproc driver relies on the ti-sysc, reset, and
+>> syscon layers for performing clock, reset and boot vector
+>> management (DSP remoteprocs only) of the devices, but some of
+>> these are limited only to the machine-specific layers
+>> in arch/arm. The dependency against control module API for boot
+>> vector management of the DSP remoteprocs has now been removed
+>> with added logic to parse the boot register from the DT node
+>> and program it appropriately directly within the driver.
+>>
+>> The OMAP remoteproc driver expects the firmware names to be
+>> provided via device tree entries (firmware-name.) These are used
+>> to load the proper firmware during boot of the remote processor.
+>>
+>> Cc: Tony Lindgren <tony@atomide.com>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> [t-kristo@ti.com: converted to use ti-sysc framework]
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> ---
+>>   drivers/remoteproc/omap_remoteproc.c | 191 +++++++++++++++++++++++----
+>>   1 file changed, 168 insertions(+), 23 deletions(-)
+>>
+>> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+>> index 6398194075aa..558634624590 100644
+>> --- a/drivers/remoteproc/omap_remoteproc.c
+>> +++ b/drivers/remoteproc/omap_remoteproc.c
+>> @@ -2,7 +2,7 @@
+>>   /*
+>>    * OMAP Remote Processor driver
+>>    *
+>> - * Copyright (C) 2011 Texas Instruments, Inc.
+>> + * Copyright (C) 2011-2019 Texas Instruments Incorporated - http://www.ti.com/
+>>    * Copyright (C) 2011 Google, Inc.
+>>    *
+>>    * Ohad Ben-Cohen <ohad@wizery.com>
+>> @@ -16,27 +16,53 @@
+>>   #include <linux/kernel.h>
+>>   #include <linux/module.h>
+>>   #include <linux/err.h>
+>> +#include <linux/of_device.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/dma-mapping.h>
+>>   #include <linux/remoteproc.h>
+>>   #include <linux/mailbox_client.h>
+>>   #include <linux/omap-mailbox.h>
+>> -
+>> -#include <linux/platform_data/remoteproc-omap.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/reset.h>
+>>   
+>>   #include "omap_remoteproc.h"
+>>   #include "remoteproc_internal.h"
+>>   
+>> +/**
+>> + * struct omap_rproc_boot_data - boot data structure for the DSP omap rprocs
+>> + * @syscon: regmap handle for the system control configuration module
+>> + * @boot_reg: boot register offset within the @syscon regmap
+>> + */
+>> +struct omap_rproc_boot_data {
+>> +	struct regmap *syscon;
+>> +	unsigned int boot_reg;
+>> +};
+>> +
+>>   /**
+>>    * struct omap_rproc - omap remote processor state
+>>    * @mbox: mailbox channel handle
+>>    * @client: mailbox client to request the mailbox channel
+>> + * @boot_data: boot data structure for setting processor boot address
+>>    * @rproc: rproc handle
+>> + * @reset: reset handle
+>>    */
+>>   struct omap_rproc {
+>>   	struct mbox_chan *mbox;
+>>   	struct mbox_client client;
+>> +	struct omap_rproc_boot_data *boot_data;
+>>   	struct rproc *rproc;
+>> +	struct reset_control *reset;
+>> +};
+>> +
+>> +/**
+>> + * struct omap_rproc_dev_data - device data for the omap remote processor
+>> + * @device_name: device name of the remote processor
+>> + * @has_bootreg: true if this remote processor has boot register
+>> + */
+>> +struct omap_rproc_dev_data {
+>> +	const char *device_name;
+>> +	bool has_bootreg;
+>>   };
+>>   
+>>   /**
+>> @@ -92,6 +118,21 @@ static void omap_rproc_kick(struct rproc *rproc, int vqid)
+>>   			ret);
+>>   }
+>>   
+>> +/**
+>> + * omap_rproc_write_dsp_boot_addr - set boot address for a DSP remote processor
+>> + * @rproc: handle of a remote processor
+>> + *
+>> + * Set boot address for a supported DSP remote processor.
+>> + */
+>> +static void omap_rproc_write_dsp_boot_addr(struct rproc *rproc)
+>> +{
+>> +	struct omap_rproc *oproc = rproc->priv;
+>> +	struct omap_rproc_boot_data *bdata = oproc->boot_data;
+>> +	u32 offset = bdata->boot_reg;
+>> +
+>> +	regmap_write(bdata->syscon, offset, rproc->bootaddr);
+>> +}
+>> +
+>>   /*
+>>    * Power up the remote processor.
+>>    *
+>> @@ -103,13 +144,11 @@ static int omap_rproc_start(struct rproc *rproc)
+>>   {
+>>   	struct omap_rproc *oproc = rproc->priv;
+>>   	struct device *dev = rproc->dev.parent;
+>> -	struct platform_device *pdev = to_platform_device(dev);
+>> -	struct omap_rproc_pdata *pdata = pdev->dev.platform_data;
+>>   	int ret;
+>>   	struct mbox_client *client = &oproc->client;
+>>   
+>> -	if (pdata->set_bootaddr)
+>> -		pdata->set_bootaddr(rproc->bootaddr);
+>> +	if (oproc->boot_data)
+>> +		omap_rproc_write_dsp_boot_addr(rproc);
+>>   
+>>   	client->dev = dev;
+>>   	client->tx_done = NULL;
+>> @@ -117,7 +156,7 @@ static int omap_rproc_start(struct rproc *rproc)
+>>   	client->tx_block = false;
+>>   	client->knows_txdone = false;
+>>   
+>> -	oproc->mbox = omap_mbox_request_channel(client, pdata->mbox_name);
+>> +	oproc->mbox = mbox_request_channel(client, 0);
+>>   	if (IS_ERR(oproc->mbox)) {
+>>   		ret = -EBUSY;
+>>   		dev_err(dev, "mbox_request_channel failed: %ld\n",
+>> @@ -138,11 +177,7 @@ static int omap_rproc_start(struct rproc *rproc)
+>>   		goto put_mbox;
+>>   	}
+>>   
+>> -	ret = pdata->device_enable(pdev);
+>> -	if (ret) {
+>> -		dev_err(dev, "omap_device_enable failed: %d\n", ret);
+>> -		goto put_mbox;
+>> -	}
+>> +	reset_control_deassert(oproc->reset);
+>>   
+>>   	return 0;
+>>   
+>> @@ -154,15 +189,9 @@ static int omap_rproc_start(struct rproc *rproc)
+>>   /* power off the remote processor */
+>>   static int omap_rproc_stop(struct rproc *rproc)
+>>   {
+>> -	struct device *dev = rproc->dev.parent;
+>> -	struct platform_device *pdev = to_platform_device(dev);
+>> -	struct omap_rproc_pdata *pdata = pdev->dev.platform_data;
+>>   	struct omap_rproc *oproc = rproc->priv;
+>> -	int ret;
+>>   
+>> -	ret = pdata->device_shutdown(pdev);
+>> -	if (ret)
+>> -		return ret;
+>> +	reset_control_assert(oproc->reset);
+>>   
+>>   	mbox_free_channel(oproc->mbox);
+>>   
+>> @@ -175,12 +204,122 @@ static const struct rproc_ops omap_rproc_ops = {
+>>   	.kick		= omap_rproc_kick,
+>>   };
+>>   
+>> +static const struct omap_rproc_dev_data omap4_dsp_dev_data = {
+>> +	.device_name	= "dsp",
+>> +	.has_bootreg	= true,
+>> +};
+>> +
+>> +static const struct omap_rproc_dev_data omap4_ipu_dev_data = {
+>> +	.device_name	= "ipu",
+>> +};
+>> +
+>> +static const struct omap_rproc_dev_data omap5_dsp_dev_data = {
+>> +	.device_name	= "dsp",
+>> +	.has_bootreg	= true,
+>> +};
+>> +
+>> +static const struct omap_rproc_dev_data omap5_ipu_dev_data = {
+>> +	.device_name	= "ipu",
+>> +};
+>> +
+>> +static const struct of_device_id omap_rproc_of_match[] = {
+>> +	{
+>> +		.compatible     = "ti,omap4-dsp",
+>> +		.data           = &omap4_dsp_dev_data,
+>> +	},
+>> +	{
+>> +		.compatible     = "ti,omap4-ipu",
+>> +		.data           = &omap4_ipu_dev_data,
+>> +	},
+>> +	{
+>> +		.compatible     = "ti,omap5-dsp",
+>> +		.data           = &omap5_dsp_dev_data,
+>> +	},
+>> +	{
+>> +		.compatible     = "ti,omap5-ipu",
+>> +		.data           = &omap5_ipu_dev_data,
+>> +	},
+>> +	{
+>> +		/* end */
+>> +	},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, omap_rproc_of_match);
+>> +
+>> +static const char *omap_rproc_get_firmware(struct platform_device *pdev)
+>> +{
+>> +	const char *fw_name;
+>> +	int ret;
+>> +
+>> +	ret = of_property_read_string(pdev->dev.of_node, "firmware-name",
+>> +				      &fw_name);
+>> +	if (ret)
+>> +		return ERR_PTR(ret);
+>> +
+>> +	return fw_name;
+>> +}
+>> +
+>> +static int omap_rproc_get_boot_data(struct platform_device *pdev,
+>> +				    struct rproc *rproc)
+>> +{
+>> +	struct device_node *np = pdev->dev.of_node;
+>> +	struct omap_rproc *oproc = rproc->priv;
+>> +	const struct omap_rproc_dev_data *data;
+>> +	int ret;
+>> +
+>> +	data = of_device_get_match_data(&pdev->dev);
+>> +	if (!data)
+>> +		return -ENODEV;
+>> +
+>> +	if (!data->has_bootreg)
+>> +		return 0;
+>> +
+>> +	oproc->boot_data = devm_kzalloc(&pdev->dev, sizeof(*oproc->boot_data),
+>> +					GFP_KERNEL);
+>> +	if (!oproc->boot_data)
+>> +		return -ENOMEM;
+>> +
+>> +	if (!of_property_read_bool(np, "ti,bootreg")) {
+>> +		dev_err(&pdev->dev, "ti,bootreg property is missing\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	oproc->boot_data->syscon =
+>> +			syscon_regmap_lookup_by_phandle(np, "ti,bootreg");
+>> +	if (IS_ERR(oproc->boot_data->syscon)) {
+>> +		ret = PTR_ERR(oproc->boot_data->syscon);
+>> +		return ret;
+>> +	}
+>> +
+>> +	if (of_property_read_u32_index(np, "ti,bootreg", 1,
+>> +				       &oproc->boot_data->boot_reg)) {
+>> +		dev_err(&pdev->dev, "couldn't get the boot register\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static int omap_rproc_probe(struct platform_device *pdev)
+>>   {
+>> -	struct omap_rproc_pdata *pdata = pdev->dev.platform_data;
+>> +	struct device_node *np = pdev->dev.of_node;
+>>   	struct omap_rproc *oproc;
+>>   	struct rproc *rproc;
+>> +	const char *firmware;
+>>   	int ret;
+>> +	struct reset_control *reset;
+>> +
+>> +	if (!np) {
+>> +		dev_err(&pdev->dev, "only DT-based devices are supported\n");
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	reset = devm_reset_control_array_get_optional_exclusive(&pdev->dev);
+>> +	if (IS_ERR(reset))
+>> +		return PTR_ERR(reset);
 > 
-> In that case, page_pool_update_nid() need to be called explicitly, which
-> may not be the reality, because for drivers using page pool now, mlx5 seems
-> to be the only one to call page_pool_update_nid(), which may lead to
-> copy & paste problem when not careful enough.
+> Definition of a reset is listed as "required" in the bindings but here it is
+> optional.  If this is really what you want then adding a comment to exlain your
+> choice is probably a good idea.
 
-The API is quite new AFAIU and I think it would be better to use it in
-the intended way. Relying on implicit and undocumented behavior is just
-going to bend that API in the future and it will impose an additional
-burden to any future changes.
--- 
-Michal Hocko
-SUSE Labs
+Right, I think I updated the binding to require this but forgot to 
+update the driver for this part. Will fix this.
+
+-Tero
+
+> 
+>> +
+>> +	firmware = omap_rproc_get_firmware(pdev);
+>> +	if (IS_ERR(firmware))
+>> +		return PTR_ERR(firmware);
+>>   
+>>   	ret = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32));
+>>   	if (ret) {
+>> @@ -188,16 +327,21 @@ static int omap_rproc_probe(struct platform_device *pdev)
+>>   		return ret;
+>>   	}
+>>   
+>> -	rproc = rproc_alloc(&pdev->dev, pdata->name, &omap_rproc_ops,
+>> -			    pdata->firmware, sizeof(*oproc));
+>> +	rproc = rproc_alloc(&pdev->dev, dev_name(&pdev->dev), &omap_rproc_ops,
+>> +			    firmware, sizeof(*oproc));
+>>   	if (!rproc)
+>>   		return -ENOMEM;
+>>   
+>>   	oproc = rproc->priv;
+>>   	oproc->rproc = rproc;
+>> +	oproc->reset = reset;
+>>   	/* All existing OMAP IPU and DSP processors have an MMU */
+>>   	rproc->has_iommu = true;
+>>   
+>> +	ret = omap_rproc_get_boot_data(pdev, rproc);
+>> +	if (ret)
+>> +		goto free_rproc;
+>> +
+>>   	platform_set_drvdata(pdev, rproc);
+>>   
+>>   	ret = rproc_add(rproc);
+>> @@ -226,6 +370,7 @@ static struct platform_driver omap_rproc_driver = {
+>>   	.remove = omap_rproc_remove,
+>>   	.driver = {
+>>   		.name = "omap-rproc",
+>> +		.of_match_table = omap_rproc_of_match,
+> 
+>                  .of_match_table = of_match_ptr(omap_rproc_of_match),
+> 
+> Thanks,
+> Mathieu
+> 
+>>   	},
+>>   };
+>>   
+>> -- 
+>> 2.17.1
+>>
+>> --
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
