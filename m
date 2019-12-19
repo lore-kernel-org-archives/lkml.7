@@ -2,138 +2,129 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE712C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 110A7C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3FB82146E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:02:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576774936;
-	bh=Gf6fKzJZuUvXAHQkWvxm55YxdWNDzJNdosA6mUGKHjA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=K5aCpmFKihXjv794WQ8SpHH33B+1gclh9ZwvblLualm3rP4RMT7PXNMCzMknH3a3+
-	 PWX6dnW6lK0ADzYvUcrux/F960esntco9X3y5pIyK/l8Fp4QALLJfLPD1ncUjPDbEX
-	 jd0JbTDceP7WA18UjbOrfvc12Tm2m9DBzYveIoq4=
+	by mail.kernel.org (Postfix) with ESMTP id DFE5C2146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 17:02:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfLSRCQ (ORCPT
+        id S1727052AbfLSRCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 12:02:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56858 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 12:02:54 -0500
+Received: from mga09.intel.com ([134.134.136.24]:2712 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726760AbfLSRCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 12:02:15 -0500
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E449124672;
-        Thu, 19 Dec 2019 17:02:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576774934;
-        bh=Gf6fKzJZuUvXAHQkWvxm55YxdWNDzJNdosA6mUGKHjA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TQSEStuFgF7/JuT7Nq1X2HLaXZOiPmH15GI9c3S5NciCRZgcu5ua6eFxscAd1vxoY
-         EdgjxJzrKnIySNbcSpK0IFtvqkoc7XnQGZvin7Di/w1GBEQqrIhjtK4sBdUQnnIBtm
-         fR99zovTezoaed3BLXJsuvAzjSHYyOeL+svDUu2E=
-Received: by mail-qk1-f173.google.com with SMTP id x1so5181803qkl.12;
-        Thu, 19 Dec 2019 09:02:13 -0800 (PST)
-X-Gm-Message-State: APjAAAWvCHVTdrPKnNkbBKyObKgdmcF0A4i0Q8yTLIOF8hNHDYaXeV0y
-        S2l43uR9OZz4Y8jFSTl1h1BBgM6bglje+lHE0A==
-X-Google-Smtp-Source: APXvYqxfo/7e9wzlMy580Vd/102R/rWBP0PwZ//fNoQ8yxxiQhL+I/hOaEas3Y+kT2x51tzh7mSZJnDkNL/eoDWO7/0=
-X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr8421615qkl.119.1576774933015;
- Thu, 19 Dec 2019 09:02:13 -0800 (PST)
-MIME-Version: 1.0
-References: <20191218114625.28438-1-frank-w@public-files.de>
- <CAK7LNARWYE4-4Qp-YfTrrt1YCZ68b28FDoE45cDJkZTqUyXNUw@mail.gmail.com>
- <CAL_Jsq+we-0c25Hn+eGDTsyTDwKEvs9LWV9QtLX1+8V3DmtFtg@mail.gmail.com> <trinity-76f78a91-fc1f-479c-bd38-a7b989b28234-1576757117258@3c-app-gmx-bap68>
-In-Reply-To: <trinity-76f78a91-fc1f-479c-bd38-a7b989b28234-1576757117258@3c-app-gmx-bap68>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 19 Dec 2019 11:02:01 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL9gZbVC5X3gwYWpYc9-Geb4FvUP0cED8NC_MCEGQCy3g@mail.gmail.com>
-Message-ID: <CAL_JsqL9gZbVC5X3gwYWpYc9-Geb4FvUP0cED8NC_MCEGQCy3g@mail.gmail.com>
-Subject: Re: Re: [PATCH] kbuild: Add DTC_CPP_FLAGS
-To:     Frank Wunderlich <frank-w@public-files.de>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        DTML <devicetree@vger.kernel.org>
+        id S1726760AbfLSRCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 12:02:53 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Dec 2019 09:02:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,332,1571727600"; 
+   d="scan'208";a="218228545"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.51])
+  by orsmga006.jf.intel.com with ESMTP; 19 Dec 2019 09:02:52 -0800
+Message-ID: <19a94f88f1bc66bb81dbf5dd72083d03ca5090e9.camel@intel.com>
+Subject: Re: [PATCH v2 3/3] x86/fpu/xstate: Invalidate fpregs when
+ __fpu_restore_sig() fails
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Date:   Thu, 19 Dec 2019 08:44:08 -0800
+In-Reply-To: <20191219142217.axgpqlb7zzluoxnf@linutronix.de>
+References: <20191212210855.19260-1-yu-cheng.yu@intel.com>
+         <20191212210855.19260-4-yu-cheng.yu@intel.com>
+         <20191218155449.sk4gjabtynh67jqb@linutronix.de>
+         <587463c4e5fa82dff8748e5f753890ac390e993e.camel@intel.com>
+         <20191219142217.axgpqlb7zzluoxnf@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 6:05 AM Frank Wunderlich
-<frank-w@public-files.de> wrote:
->
-> Hi Rob,
->
-> so the way you prefer is this one (use new file for additions and including the board dts):
+On Thu, 2019-12-19 at 15:22 +0100, Sebastian Andrzej Siewior wrote:
+> On 2019-12-18 12:53:59 [-0800], Yu-cheng Yu wrote:
+> > I could have explained this better, sorry!  I will explain the first
+> > case below; other cases are similar.
+> > 
+> > In copy_user_to_fpregs_zeroing(), we have:
+> > 
+> >     if (user_xsave()) {
+> >         ...
+> >         if (unlikely(init_bv))
+> >             copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
+> >         return copy_user_to_xregs(buf, xbv);
+> >         ...
+> >     }
+> > 
+> > The copy_user_to_xregs() may fail, and when that happens, before going to
+> > the slow path, there is fpregs_unlock() and context switches may happen.
+> 
+> The context switch may only happen after fpregs_unlock().
+> 
+> > However, at this point, fpu_fpregs_owner_ctx has not been changed; it could
+> > still be another task's FPU.
+> 
+> TIF_NEED_FPU_LOAD is set for the task in __fpu__restore_sig() and its
+> context (__fpu_invalidate_fpregs_state()) has been invalidated. So the
+> FPU register may contain another task's content and
+> fpu_fpregs_owner_ctx points to another context.
+> 
+> >                               For this to happen and to be detected, the user
+> > stack page needs to be non-present, fpu_fpregs_owner_ctx need to be another task,
+> > and that other task needs to be able to detect its registers are modified.
+> > The last factor is not easy to reproduce, and a CET control-protection fault
+> > helps.
+> 
+> So far everything is legal. However. If there is a context switch before
+> fpregs_lock() then this is bad before we don't account for that.
+> So that:
+> 
+> diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
+> --- a/arch/x86/kernel/fpu/signal.c
+> +++ b/arch/x86/kernel/fpu/signal.c
+> @@ -352,6 +352,7 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+>  			fpregs_unlock();
+>  			return 0;
+>  		}
+> +		fpregs_deactivate(fpu);
+>  		fpregs_unlock();
+>  	}
+>  
+> @@ -403,6 +404,8 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+>  	}
+>  	if (!ret)
+>  		fpregs_mark_activate();
+> +	else
+> +		fpregs_deactivate(fpu);
+>  	fpregs_unlock();
+>  
+>  err_out:
+> 
+> 
+> Should be enough.
 
-Yes, or you could use an overlay, but that will raise other issues
-(current lack of support building them in the kernel).
+Yes, this works.  But then everywhere that calls copy_*_to_xregs_*() etc. needs to be checked.
+Are there other alternatives?
 
-> arch/arm64/boot/dts/mediatek/mt7622-bpi-r64-mt7531.dts (example for mt7531-phy)
->
-> /*
->  * Copyright (c) 2018 MediaTek Inc.
->  * Author:
->  *
->  * SPDX-License-Identifier: (GPL-2.0 OR MIT)
->  */
->
-> /dts-v1/;
->
-> #include "mt7622-bananapi-bpi-r64.dts"
->
-> / {
->         gsw: gsw@0 {
->                 compatible = "mediatek,mt753x";
->                 mediatek,ethsys = <&ethsys>;
->                 #address-cells = <1>;
->                 #size-cells = <0>;
->         };
-> };
->
-> &gsw {
->         mediatek,mdio = <&mdio>;
->         mediatek,portmap = "wllll";
->         mediatek,mdio_master_pinmux = <0>;
->         reset-gpios = <&pio 54 0>;
->         interrupt-parent = <&pio>;
->         interrupts = <53 IRQ_TYPE_LEVEL_HIGH>;
->         status = "okay";
->
->         port5: port@5 {
->                 compatible = "mediatek,mt753x-port";
->                 reg = <5>;
->                 phy-mode = "rgmii";
->                 fixed-link {
->                         speed = <1000>;
->                         full-duplex;
->                 };
->         };
->
->         port6: port@6 {
->                 compatible = "mediatek,mt753x-port";
->                 reg = <6>;
->                 phy-mode = "2500base-x";
->                 fixed-link {
->                         speed = <2500>;
->                         full-duplex;
->                 };
->         };
-> };
->
-> at least it compiles and after decompile the new nodes are visible...
->
-> is there any way to drop nodes (in case dsa-driver gets merged i don't need it in the other 2)? i can disable them, but they will be present.
+Yu-cheng
 
-Yes, use '/delete-node/'.
-
-Rob
