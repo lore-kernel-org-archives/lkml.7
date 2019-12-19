@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA99C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D72BC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D29024680
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7B9E24672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780982;
-	bh=7qZGJelULVxUzXvNCcQGpWBoKxbjnvtdeG82dKQgVT4=;
+	s=default; t=1576780988;
+	bh=cogc0FukY8/3EVaRPufi7VD8ZbhSDT10BfN6/bzVrd8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ctaJ/yXHnhx3dtWNALrzCy3zK9QS2GQIKyxb+LbAPFz+5QtXmHsfu4sBLGdw5XcVB
-	 mSwsVST2dM5xEd5mN0fycaam8Sres6IDRVlcaWwYejNX/cS78nKNlKaQ6TbJDxmvco
-	 /FKWPCOeS4EEcEZQPPWnYwSconA+JV2umggpoCao=
+	b=dCamJ5IN1kb3DPDqk4VkNfB7HgsdHr9SXO6mIOWZ+8//3tDps44e38Fgdy25vepyS
+	 PGU3uX7mVvdVm+kbrf4jAKu/FWdxOUw52ObLGXF/Z7i+cekM4vIjw9XHCp2/MCdysh
+	 ukMHc81N7KsSBqbaDkFYHcSKLShrNit8RA+JX0cM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728225AbfLSSnB (ORCPT
+        id S1728802AbfLSSnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:43:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34418 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:43:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728773AbfLSSm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:42:58 -0500
+        id S1728783AbfLSSnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:43:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1790B222C2;
-        Thu, 19 Dec 2019 18:42:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4F11222C2;
+        Thu, 19 Dec 2019 18:43:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780977;
-        bh=7qZGJelULVxUzXvNCcQGpWBoKxbjnvtdeG82dKQgVT4=;
+        s=default; t=1576780982;
+        bh=cogc0FukY8/3EVaRPufi7VD8ZbhSDT10BfN6/bzVrd8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wo+2xaPF1zes/pqfAeCF7oMfEGrKuFZBQTssrwB7QWtsHg7TtWd/WkxkSty+bizSw
-         nGXX2o6EdnaRKh2LahAuergEt9QRDKGqjb6doJVeMcplGhSz+Tbk/c7PwSO8mXl90H
-         sb9D9HfsbOs+GmNM9k8LGl0Fg2iIa+zam28LljEA=
+        b=vKc8bXfINoxtk4GCMZxqD4n2KvSaWrERakOQc5Sy090i/yxUbMTZIpZcbom1IDn6Z
+         1yAhmWcr3zSIRKQ0sr524vPP43pa361Mtp4Rxyo9rJkvfWNstBZAs3udrLgANDpKGO
+         7WgyGgmdu6/eLHajDcsGiYHfN0MsqBb67oz2PhxM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cheng-Yi Chiang <cychiang@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
+        stable@vger.kernel.org, Vincent Chen <vincentc@andestech.com>,
+        Greentime Hu <greentime@andestech.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 031/199] regulator: Fix return value of _set_load() stub
-Date:   Thu, 19 Dec 2019 19:31:53 +0100
-Message-Id: <20191219183216.600647207@linuxfoundation.org>
+Subject: [PATCH 4.9 033/199] math-emu/soft-fp.h: (_FP_ROUND_ZERO) cast 0 to void to fix warning
+Date:   Thu, 19 Dec 2019 19:31:55 +0100
+Message-Id: <20191219183216.728995131@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -61,37 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Brown <broonie@kernel.org>
+From: Vincent Chen <vincentc@andestech.com>
 
-[ Upstream commit f1abf67217de91f5cd3c757ae857632ca565099a ]
+[ Upstream commit 83312f1b7ae205dca647bf52bbe2d51303cdedfb ]
 
-The stub implementation of _set_load() returns a mode value which is
-within the bounds of valid return codes for success (the documentation
-just says that failures are negative error codes) but not sensible or
-what the actual implementation does.  Fix it to just return 0.
+_FP_ROUND_ZERO is defined as 0 and used as a statemente in macro
+_FP_ROUND. This generates "error: statement with no effect
+[-Werror=unused-value]" from gcc. Defining _FP_ROUND_ZERO as (void)0 to
+fix it.
 
-Reported-by: Cheng-Yi Chiang <cychiang@chromium.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+This modification is quoted from glibc 'commit <In libc/:>
+(8ed1e7d5894000c155acbd06f)'
+
+Signed-off-by: Vincent Chen <vincentc@andestech.com>
+Acked-by: Greentime Hu <greentime@andestech.com>
+Signed-off-by: Greentime Hu <greentime@andestech.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/regulator/consumer.h | 2 +-
+ include/math-emu/soft-fp.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/regulator/consumer.h b/include/linux/regulator/consumer.h
-index 692108222271a..bab9236e43675 100644
---- a/include/linux/regulator/consumer.h
-+++ b/include/linux/regulator/consumer.h
-@@ -479,7 +479,7 @@ static inline unsigned int regulator_get_mode(struct regulator *regulator)
+diff --git a/include/math-emu/soft-fp.h b/include/math-emu/soft-fp.h
+index 3f284bc031809..5650c16283830 100644
+--- a/include/math-emu/soft-fp.h
++++ b/include/math-emu/soft-fp.h
+@@ -138,7 +138,7 @@ do {							\
+       _FP_FRAC_ADDI_##wc(X, _FP_WORK_ROUND);		\
+ } while (0)
  
- static inline int regulator_set_load(struct regulator *regulator, int load_uA)
- {
--	return REGULATOR_MODE_NORMAL;
-+	return 0;
- }
+-#define _FP_ROUND_ZERO(wc, X)		0
++#define _FP_ROUND_ZERO(wc, X)		(void)0
  
- static inline int regulator_allow_bypass(struct regulator *regulator,
+ #define _FP_ROUND_PINF(wc, X)				\
+ do {							\
 -- 
 2.20.1
 
