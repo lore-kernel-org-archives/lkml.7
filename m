@@ -2,92 +2,110 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DED1C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23ED7C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 739C621D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:34:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AoTnognS"
+	by mail.kernel.org (Postfix) with ESMTP id E45DD222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:35:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576719306;
+	bh=zlmjIO2b2FaAxQJsiqVFTASCy9VFPOanROvzfemYg04=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ByaxjQW0dk2Syy6dV0aNCYXJq3AdJuP7hKJLtPnQ6k6rECHWW0aTd57cjeLxOANVZ
+	 6Ot4hcNdYxzB1zkS3oJPhTJG02MgD2pIyYxcneB/C32dvSgdm8KIch9zphmxS1zcga
+	 eXlDo5LCpm2Mo9UGfw2+8sYPkv+wuPj+jIovJTso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfLSBeU (ORCPT
+        id S1726770AbfLSBfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 20:34:20 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:41444 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbfLSBeU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 20:34:20 -0500
-Received: by mail-qk1-f193.google.com with SMTP id x129so3304039qke.8;
-        Wed, 18 Dec 2019 17:34:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BCSxFafqPE5ERz3UrkP5uxFwiwYg6nGJeQKlM4gvCAU=;
-        b=AoTnognSO/nELYlSs55Y0LZS7ZwnLR5p+y/QO74XN/A8K+7vHMvE/jiJ+Jq/Ul+2PG
-         5lVjCcDYkgFxpv5+gGYSmHBhcLXB/DndFqGxcOG/DzvMHX+eugQO7oKigvLAr1b2i2/H
-         GyYgJbImMczndYXzKJFqkkhF+a6/XZoXyH3T2ZCXFQrs5wg9uh+guHpnfIPQ+xHsUmpz
-         0uCXqlYH5+TfkA1fIxeJ31XpiNlGyjW9y5Vg+wAH4OGeedzEcgW/RYM5m2D2KfPDNYx0
-         r9YaHHczYY/cfgwyNEN2HSGZSynOtTFNrFiGqEzSYKqnvA15hd2wlery0iVYpYzO+eGL
-         R8fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BCSxFafqPE5ERz3UrkP5uxFwiwYg6nGJeQKlM4gvCAU=;
-        b=VKBx77XWRqOl+EkGxo8G5/rggbWC9jOfWT4UpgCviUxaGDgc+nnZacW4o9yPS8q2UN
-         AI+yYdSl9VYdRHF+ebWfMqWoARN2t+jYjxuWY4tk6WoQwQNBdIaVpnu3OBB4KA00FoA2
-         MzrJpqKLqhEXogrmhj56E8g9pLWlCtM3tDWrbvKO5jkblp6eWEQtHSzggeQcX380anrt
-         euIg/phGVaXkjbJAT6Pcm6u7KaOQTMhAm7kk5iMkkBZF4JJjuqtkgBX/c3yqRwufS16y
-         tYKPpha1+ThJ2nvUH725l37GZsRNwmpUVyanVf3LCKk/89iep4MXfWEFmcmJgXqtCSln
-         Ad8A==
-X-Gm-Message-State: APjAAAXVfGpBAAyAM9dVTSg2KunOCbAwW0u4K8G1x92eqnx+4X3AtWeQ
-        FyoF2naJnNO7pcQOwFJXrb9uOQbQLc6dftN6hbsq+tDg
-X-Google-Smtp-Source: APXvYqxaN0OeO3c7GsQVcs5292WIZw+d+djvRDMX1ntmlnFQbkJKQmSjBMrY06hv/6U6pVL+GUm82/OqYtsDB6kdL24=
-X-Received: by 2002:a37:8e03:: with SMTP id q3mr5803812qkd.395.1576719259097;
- Wed, 18 Dec 2019 17:34:19 -0800 (PST)
+        Wed, 18 Dec 2019 20:35:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37946 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726463AbfLSBfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 20:35:05 -0500
+Received: from earth.universe (dyndsl-095-033-172-209.ewe-ip-backbone.de [95.33.172.209])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16FAB21D7D;
+        Thu, 19 Dec 2019 01:35:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576719304;
+        bh=zlmjIO2b2FaAxQJsiqVFTASCy9VFPOanROvzfemYg04=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TxrLoohY3XDvgA14Z27//h7jfxW7HgNwqhR3liMAnPf3Sg+y4hjvHwGb1zXNb+BgE
+         Hm7y29f49ENkibEgd3Oyn60eSKCfxkHDknqox6clDWUpbgvs0xUMRP1BsFsGt5si3b
+         Cs4ItrX6b2emX1Q04gbb2u3PVz9yGg4bD+J3uXZU=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 58BF53C0C7B; Thu, 19 Dec 2019 02:35:02 +0100 (CET)
+Date:   Thu, 19 Dec 2019 02:35:02 +0100
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Elliot Berman <eberman@codeaurora.org>
+Subject: Re: linux-next: build failure after merge of the battery tree
+Message-ID: <20191219013502.npqamx4m63hw4af6@earth.universe>
+References: <20191219110144.0ccba0bf@canb.auug.org.au>
 MIME-Version: 1.0
-References: <cover.1575863274.git.baolin.wang7@gmail.com> <20191219005439.63nk4fpraveoeqyv@earth.universe>
-In-Reply-To: <20191219005439.63nk4fpraveoeqyv@earth.universe>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Thu, 19 Dec 2019 09:34:07 +0800
-Message-ID: <CADBw62oQ8FaoVXCe7w9rAYy7mR6j8vOAUoeM_K3u4XC0JwTe3g@mail.gmail.com>
-Subject: Re: [PATCH v3 0/5] Improve the SC27XX fuel gauge controller
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        yuanjiang.yu@unisoc.com, Baolin Wang <baolin.wang@linaro.org>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Orson Zhai <orsonzhai@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="56lbjnfnwaqtrgrv"
+Content-Disposition: inline
+In-Reply-To: <20191219110144.0ccba0bf@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastian,
 
-On Thu, Dec 19, 2019 at 8:54 AM Sebastian Reichel
-<sebastian.reichel@collabora.com> wrote:
->
-> Hi,
->
-> On Mon, Dec 09, 2019 at 11:56:20AM +0800, Baolin Wang wrote:
-> > This patch set adds one battery resistance-temperature table to optimize
-> > the real battery internal resistance in different tempertures, and
-> > calibrates the resistance of coulomb counter to improve the accuracy
-> > of the coulomb counter.
-> >
-> > Any comments are welcome. Thanks.
->
-> Thanks, queued to power-supply's for-next branch. I changed the
-> comment for struct sc27xx_fgu_data, so that it states calib_resist
-> being in uOhm instead of mOhm.
+--56lbjnfnwaqtrgrv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-OK. Thanks.
+Hi Stephen,
+
+On Thu, Dec 19, 2019 at 11:01:44AM +1100, Stephen Rothwell wrote:
+> After merging the battery tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+>=20
+> ERROR: "machine_restart" [drivers/power/reset/restart-poweroff.ko] undefi=
+ned!
+>=20
+> Caused by commit
+>=20
+>   263ec7d0c497 ("power: reset: Enable tristate on restart power-off drive=
+r")
+
+Thanks, I already dropped that commit after noticing the problem myself.
+
+> I have used the bettery tree from next-20191218 for today.
+
+Maybe renaming the battery tree to bettery helps to get only good
+patches? :)
+
+-- Sebastian
+
+--56lbjnfnwaqtrgrv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl3608EACgkQ2O7X88g7
++pqqSQ//asM/GhQXI+uC0W/yWFv/A8VIYcSpXuyrfcchR9hzCi85Dt6jm1znjrGa
+lA9C9GVFFKrutVWx5ysKXcaAxYFV0zKl8VlxDkOAUgTJW6plfGANjDHhDdxj1hXl
+VQBm/t7otXvn1jxm6475rjyUQtWCy9sLswWDgBl+p6GnEQ8EyT9JmaByQ6qPRd/7
+MY4eVNtW9o8TK99Exzd327wR+2HGdubvJfW1oCKsMiyTKifBG4i0f/3iqbzzmNlw
+u9oZzo67kY5TvF9QlWwGkggy207FNps3LZjmTLTmiQTyrieGUOp/iqg297AlNW1M
+qZJGqnxc5qPkINTpxLOV9eU6xeiAGlvGCgZFVKO42eW2ErK1BzthrwiIw5P+fIjR
+ribdi1MgEmcN1+F1SRyYTzt+QY4Fl6mevuYJXGEuXU4Oic6moEsUQsGC9J4eOVOL
+WCev8yRVORpN8atk1iAkMmBEXdz+4cwp6BEPVMekawzm8U4/0ehsJmgLNd5xZyVB
+M4KOYIHxPNPLIW+Fj2BOiNKWalWMRRp6mC50eTGPBfw4OeW8t/mY4DI6ejHh7CHx
+axmxdsbS6QNScyxhRQgLSCaBRj08JUog/s4B0AL7wC9R1+ZejpI9rSvfGv1zkWMw
+Kv/+GltEFda4rGgFWPbN9f7JRHbHkmCI0PZU7HYJCoAT9chpSqE=
+=eNIV
+-----END PGP SIGNATURE-----
+
+--56lbjnfnwaqtrgrv--
