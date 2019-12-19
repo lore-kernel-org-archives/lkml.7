@@ -2,339 +2,191 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4189C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 907F5C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DBF02467F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:07:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AC082467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:10:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="VgFrbe7V"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wcs2hFZc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbfLSUHn (ORCPT
+        id S1727125AbfLSUKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 15:07:43 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:33334 "EHLO
+        Thu, 19 Dec 2019 15:10:15 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:33459 "EHLO
         mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727190AbfLSUHd (ORCPT
+        with ESMTP id S1726869AbfLSUKP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 15:07:33 -0500
-Received: by mail-qv1-f67.google.com with SMTP id z3so2749031qvn.0
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 12:07:32 -0800 (PST)
+        Thu, 19 Dec 2019 15:10:15 -0500
+Received: by mail-qv1-f67.google.com with SMTP id z3so2752139qvn.0
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 12:10:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xhnsM6+i6PGg0LZOZdtt3M5JWJhYXNMihWGbHtyPi9Y=;
-        b=VgFrbe7VG7KwWLfV/nS4/zUzfwC7Pf536oWSgQ2AOxOsw4Dnj5j8ToIT7+Ot3O5QBp
-         WflITjv4O6Piy4b/Q0LskNKxVwFLGnGJTzZeqgzCm/2F6+kQVY7Q6eBGZK/cVmrPufXs
-         0/+ajn551IAgPhIIdMmMsjwv27wiwum2iJ+3jmiK0y2+7HNvxYj7NfwOvljQR7wzzU7A
-         hGXL6fIt10IPRcF9uQLzMHPRysEoj3Gw5iMgQvahBunEZ+3aBAIgTNMXYMV7iE+UnLob
-         k9sVJ+DqTCk1fSNDf4PwOf0kd0gQqypMQ2J3+m4KoOVA4GoG6eRdwqywxCHRJkYyE3zR
-         uncA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UMFhKuHlOVhgEaaeCe2yyMwI6vpRch0/oXdENcz2O5U=;
+        b=Wcs2hFZcDJhVBXcnmKTUyc83ImGBQao9vo8CZUDsadAsXO0S8Ahfr05knkzAHe8ZPb
+         W95fUn4szixbsV5avaZTSELPexgv/dpnjnnJrXQDrp0UMluB0rnKAawBVHx/feqK8eu2
+         hFc0Vtw44tgNwgobI3Ke5K7pjqeIkz1dUAmcM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xhnsM6+i6PGg0LZOZdtt3M5JWJhYXNMihWGbHtyPi9Y=;
-        b=Znlkc4o62IHGNbaxGRHpUtiDgyNKd5ZySL1Vlm+URNKanXKU2gmZfucYxtOQS+oP50
-         qjieTRsB2edXxGwt1qsivk5FFk/At2PnIeiJXvquRe1xabin/zE9S/RToJmggMRc8Wpm
-         4MF4qDsq0ASxxprH30qn8dmb190Qc3D9AAmmKucRCAZrta5dBERSW2V3if7q+HwEP2h1
-         viGoe07w8lgq3PLgC6qz1HvPSE1xAQy/vrkv3/256vdTQoHxE+axuTZSVZJF6KOoe57S
-         K2eV4KnyWFOYH0Hq02OKkiZEasa5P6RSBZZeTQxXOIKj3Pee1Iqkjih0KwUzvvKrxlmW
-         lSFA==
-X-Gm-Message-State: APjAAAVQxptO0WRhOsVegqVDY0gaH1lCGFqwA+8l097mzTK2XI94AYeg
-        xzQ5b04QJVoSXXoHEZ9aeCfCxQ==
-X-Google-Smtp-Source: APXvYqy1UVff1aZ5RFPZegwEqyTij6y3NZCbSDY/zf2WLMRfiNtWiKbMGDTy4jfMU7SUnRkyvxEYPw==
-X-Received: by 2002:a0c:cdc4:: with SMTP id a4mr9500900qvn.21.1576786051943;
-        Thu, 19 Dec 2019 12:07:31 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::91a1])
-        by smtp.gmail.com with ESMTPSA id g21sm1995500qkl.116.2019.12.19.12.07.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 12:07:31 -0800 (PST)
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH v2 2/3] mm: memcontrol: clean up and document effective low/min calculations
-Date:   Thu, 19 Dec 2019 15:07:17 -0500
-Message-Id: <20191219200718.15696-3-hannes@cmpxchg.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191219200718.15696-1-hannes@cmpxchg.org>
-References: <20191219200718.15696-1-hannes@cmpxchg.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UMFhKuHlOVhgEaaeCe2yyMwI6vpRch0/oXdENcz2O5U=;
+        b=cGG4YAY/g/tFrsmSRT+mZV8/XOXLWATzFTBxCBZO+11MA9IFX3SQyinSfXo4AmsuiM
+         9+8HKOaPA93dAyg6BwmumcILDyvU82FOY1v9oYGUK9OiiMud+8EdonRI410IY2vGCNx+
+         9W+/yJF39eoPa4pXBfR3WaPxzwJOiDhCt6oj9rvk/qFcW+cECtcuC5R2i0u6d5m1WVeK
+         aeWdfM4erYdPsu/6R0XdG0/srXuHeAs4pA2V2Kouag9TuuUV6gGuNuJJRaU91+pcGVP7
+         AapEjdjgdRyFcwvrFpBjFw/hcXmMvFULYn7IDTtQxP6LT0A4jwTQYdTmhDqCY3hx3l9a
+         fm6A==
+X-Gm-Message-State: APjAAAWQE1szbvQfWg/TxA1te8UlLD06lWunGyAqH7ciFMP/G5o4egHC
+        g+U7paSpgpRCk9zXMTteQcUVcWVxUyeA+iEJgMKLSw==
+X-Google-Smtp-Source: APXvYqwXA3vmU63ZnZrNZ0f6HM3eWgDN4WzmuAGz1j+NO1xeyQU2USX42aJLl6HnTcxpwEBJYgctCUWeRewiXjqyDS8=
+X-Received: by 2002:a05:6214:192f:: with SMTP id es15mr9152336qvb.219.1576786213896;
+ Thu, 19 Dec 2019 12:10:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191218230701.59166-1-pmalani@chromium.org> <d9aea1f0-1b5d-44bc-7fcc-eb0b8f9634fd@collabora.com>
+In-Reply-To: <d9aea1f0-1b5d-44bc-7fcc-eb0b8f9634fd@collabora.com>
+From:   Prashant Malani <pmalani@chromium.org>
+Date:   Thu, 19 Dec 2019 12:10:03 -0800
+Message-ID: <CACeCKacA=w+D8W4uPwX6cf+2M7N=CfENR5B0d_=vtBxdJv8jnQ@mail.gmail.com>
+Subject: Re: [PATCH v2] platform: chrome: Add cros-ec-pd-notify driver
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jon Flatley <jflat@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The effective protection of any given cgroup is a somewhat complicated
-construct that depends on the ancestor's configuration, siblings'
-configurations, as well as current memory utilization in all these
-groups. It's done this way to satisfy hierarchical delegation
-requirements while also making the configuration semantics flexible
-and expressive in complex real life scenarios.
+Thanks for your review Enric. I've noted the addressed comments inline
+(my apologies if I've trimmed the quoted text too aggressively).
 
-Unfortunately, all the rules and requirements are sparsely documented,
-and the code is a little too clever in merging different scenarios
-into a single min() expression. This makes it hard to reason about the
-implementation and avoid breaking semantics when making changes to it.
+On Thu, Dec 19, 2019 at 1:44 AM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+>
+> Hello Prashant and Jon,
+>
+> Thank you for the patch.
+>
+> On 19/12/19 0:07, Prashant Malani wrote:
+> > From: Jon Flatley <jflat@chromium.org>
+> >
+> > ChromiumOS uses ACPI device with HID "GOOG0003" for power delivery
+> > related events. The existing cros-usbpd-charger driver relies on these
+> > events without ever actually receiving them on ACPI platforms. This is
+> > because in the ChromeOS kernel trees, the GOOG0003 device is owned by an
+> > ACPI driver that offers firmware updates to USB-C chargers.
+> >
+> > +++ b/drivers/mfd/cros_ec_dev.c
+> > @@ -85,6 +85,9 @@ static const struct mfd_cell cros_ec_sensorhub_cells[] = {
+> >  static const struct mfd_cell cros_usbpd_charger_cells[] = {
+> >       { .name = "cros-usbpd-charger", },
+> >       { .name = "cros-usbpd-logger", },
+> > +#ifndef CONFIG_ACPI
+> > +     { .name = "cros-ec-pd-notify", },
+>
+> Could make sense name as cros-usbpd-notify to be coherent with the other drivers
+> names?
+Done.
+>
+> > +#endif
+> >  };
+> >
+> >  static const struct cros_feature_to_cells cros_subdevices[] = {
+> > diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
+> > index 5f57282a28da0..972c129b7b7ba 100644
+> > --- a/drivers/platform/chrome/Kconfig
+> > +++ b/drivers/platform/chrome/Kconfig
+> > @@ -131,6 +131,15 @@ config CROS_EC_LPC
+> >         To compile this driver as a module, choose M here: the
+> >         module will be called cros_ec_lpcs.
+> >
+> > +config CROS_EC_PD_NOTIFY
+>
+> CROS_USBPD_NOTIFY ?
+Done
+>
+> > +     tristate "ChromeOS Type-C power delivery event notifier"
+> > +     depends on CROS_EC
+> > +     help
+> > +       If you say Y here, you get support for Type-C PD event notifications
+> > +       from the ChromeOS EC. On ACPI platorms this driver will bind to the
+> > +       GOOG0003 ACPI device, and on non-ACPI platforms this driver will get
+> > +       initialized on ECs which support the feature EC_FEATURE_USB_PD.
+> > +
+>
+> Add all this below CROS_USBPD_LOGGER
+Done
+>
+> >  config CROS_EC_PROTO
+> >       bool
+> >       help
+> > diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
+> > index aacd5920d8a18..6070baa8320ca 100644
+> > --- a/drivers/platform/chrome/Makefile
+> > +++ b/drivers/platform/chrome/Makefile
 
-This patch documents each semantic rule individually and splits out
-the handling of the overcommit case from the regular case.
+> > +
+> > +#include <linux/acpi.h>
+> > +#include <linux/module.h>
+> > +#include <linux/mfd/cros_ec.h>
+>
+> No need to worry about this for now, but just to let you know, this include will
+> be unnecessary after https://lkml.org/lkml/2019/12/3/530
+>
+> It is fine for now, I'll remove the include when I pick up the patch.
+>
+Ack.
+> > diff --git a/include/linux/platform_data/cros_ec_pd_notify.h b/include/linux/platform_data/cros_ec_pd_notify.h
+> > new file mode 100644
+> > index 0000000000000..907be5a130d60
+> > --- /dev/null
+> > +++ b/include/linux/platform_data/cros_ec_pd_notify.h
+>
+> cros_usbpd_notify.h?
+Done.
+>
+> > @@ -0,0 +1,17 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * ChromeOS EC Power Delivery Notifier Driver
+> > + *
+> > + * Copyright 2019 Google LLC
+> > + */
+> > +
+> > +#ifndef __LINUX_PLATFORM_DATA_CROS_EC_PD_NOTIFY_H
+> > +#define __LINUX_PLATFORM_DATA_CROS_EC_PD_NOTIFY_H
+> > +
+> > +#include <linux/notifier.h>
+> > +
+> > +int cros_ec_pd_register_notify(struct notifier_block *nb);
+> > +
+> > +void cros_ec_pd_unregister_notify(struct notifier_block *nb);
+> > +
+> > +#endif  /* __LINUX_PLATFORM_DATA_CROS_EC_PD_NOTIFY_H */
+> >
+>
+> The driver looks good to me, the only real complain is split the patch in two,
+> one for the MFD subsystem and another one for chrome/platform.
+Done. WIll split into two patches.
 
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- mm/memcontrol.c | 190 ++++++++++++++++++++++++++----------------------
- 1 file changed, 104 insertions(+), 86 deletions(-)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 874a0b00f89b..9c771c4d6339 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -6204,65 +6204,55 @@ struct cgroup_subsys memory_cgrp_subsys = {
- 	.early_init = 0,
- };
- 
--/**
-- * mem_cgroup_protected - check if memory consumption is in the normal range
-- * @root: the top ancestor of the sub-tree being checked
-- * @memcg: the memory cgroup to check
-- *
-- * WARNING: This function is not stateless! It can only be used as part
-- *          of a top-down tree iteration, not for isolated queries.
-- *
-- * Returns one of the following:
-- *   MEMCG_PROT_NONE: cgroup memory is not protected
-- *   MEMCG_PROT_LOW: cgroup memory is protected as long there is
-- *     an unprotected supply of reclaimable memory from other cgroups.
-- *   MEMCG_PROT_MIN: cgroup memory is protected
-- *
-- * @root is exclusive; it is never protected when looked at directly
-+/*
-+ * This function calculates an individual cgroup's effective
-+ * protection which is derived from its own memory.min/low, its
-+ * parent's and siblings' settings, as well as the actual memory
-+ * distribution in the tree.
-  *
-- * To provide a proper hierarchical behavior, effective memory.min/low values
-- * are used. Below is the description of how effective memory.low is calculated.
-- * Effective memory.min values is calculated in the same way.
-+ * The following rules apply to the effective protection values:
-  *
-- * Effective memory.low is always equal or less than the original memory.low.
-- * If there is no memory.low overcommittment (which is always true for
-- * top-level memory cgroups), these two values are equal.
-- * Otherwise, it's a part of parent's effective memory.low,
-- * calculated as a cgroup's memory.low usage divided by sum of sibling's
-- * memory.low usages, where memory.low usage is the size of actually
-- * protected memory.
-+ * 1. At the first level of reclaim, effective protection is equal to
-+ *    the declared protection in memory.min and memory.low.
-  *
-- *                                             low_usage
-- * elow = min( memory.low, parent->elow * ------------------ ),
-- *                                        siblings_low_usage
-+ * 2. To enable safe delegation of the protection configuration, at
-+ *    subsequent levels the effective protection is capped to the
-+ *    parent's effective protection.
-  *
-- * low_usage = min(memory.low, memory.current)
-+ * 3. To make complex and dynamic subtrees easier to configure, the
-+ *    user is allowed to overcommit the declared protection at a given
-+ *    level. If that is the case, the parent's effective protection is
-+ *    distributed to the children in proportion to how much protection
-+ *    they have declared and how much of it they are utilizing.
-  *
-+ *    This makes distribution proportional, but also work-conserving:
-+ *    if one cgroup claims much more protection than it uses memory,
-+ *    the unused remainder is available to its siblings.
-  *
-- * Such definition of the effective memory.low provides the expected
-- * hierarchical behavior: parent's memory.low value is limiting
-- * children, unprotected memory is reclaimed first and cgroups,
-- * which are not using their guarantee do not affect actual memory
-- * distribution.
-+ *    Consider the following example tree:
-  *
-- * For example, if there are memcgs A, A/B, A/C, A/D and A/E:
-+ *        A      A/memory.low = 2G, A/memory.current = 6G
-+ *       //\\
-+ *      BC  DE   B/memory.low = 3G  B/memory.current = 2G
-+ *               C/memory.low = 1G  C/memory.current = 2G
-+ *               D/memory.low = 0   D/memory.current = 2G
-+ *               E/memory.low = 10G E/memory.current = 0
-  *
-- *     A      A/memory.low = 2G, A/memory.current = 6G
-- *    //\\
-- *   BC  DE   B/memory.low = 3G  B/memory.current = 2G
-- *            C/memory.low = 1G  C/memory.current = 2G
-- *            D/memory.low = 0   D/memory.current = 2G
-- *            E/memory.low = 10G E/memory.current = 0
-+ *    and memory pressure is applied, the following memory
-+ *    distribution is expected (approximately*):
-  *
-- * and the memory pressure is applied, the following memory distribution
-- * is expected (approximately):
-+ *      A/memory.current = 2G
-+ *      B/memory.current = 1.3G
-+ *      C/memory.current = 0.6G
-+ *      D/memory.current = 0
-+ *      E/memory.current = 0
-  *
-- *     A/memory.current = 2G
-+ *    *assuming equal allocation rate and reclaimability
-  *
-- *     B/memory.current = 1.3G
-- *     C/memory.current = 0.6G
-- *     D/memory.current = 0
-- *     E/memory.current = 0
-+ * 4. Conversely, when the declared protection is undercommitted at a
-+ *    given level, the distribution of the larger parental protection
-+ *    budget is NOT proportional. A cgroup's protection from a sibling
-+ *    is capped to its own memory.min/low setting.
-  *
-  * These calculations require constant tracking of the actual low usages
-  * (see propagate_protected_usage()), as well as recursive calculation of
-@@ -6272,12 +6262,63 @@ struct cgroup_subsys memory_cgrp_subsys = {
-  * for next usage. This part is intentionally racy, but it's ok,
-  * as memory.low is a best-effort mechanism.
-  */
-+static unsigned long effective_protection(unsigned long usage,
-+					  unsigned long setting,
-+					  unsigned long parent_effective,
-+					  unsigned long siblings_protected)
-+{
-+	unsigned long protected;
-+
-+	protected = min(usage, setting);
-+	/*
-+	 * If all cgroups at this level combined claim and use more
-+	 * protection then what the parent affords them, distribute
-+	 * shares in proportion to utilization.
-+	 *
-+	 * We are using actual utilization rather than the statically
-+	 * claimed protection in order to be work-conserving: claimed
-+	 * but unused protection is available to siblings that would
-+	 * otherwise get a smaller chunk than what they claimed.
-+	 */
-+	if (siblings_protected > parent_effective)
-+		return protected * parent_effective / siblings_protected;
-+
-+	/*
-+	 * Ok, utilized protection of all children is within what the
-+	 * parent affords them, so we know whatever this child claims
-+	 * and utilizes is effectively protected.
-+	 *
-+	 * If there is unprotected usage beyond this value, reclaim
-+	 * will apply pressure in proportion to that amount.
-+	 *
-+	 * If there is unutilized protection, the cgroup will be fully
-+	 * shielded from reclaim, but we do return a smaller value for
-+	 * protection than what the group could enjoy in theory. This
-+	 * is okay. With the overcommit distribution above, effective
-+	 * protection is always dependent on how memory is actually
-+	 * consumed among the siblings anyway.
-+	 */
-+	return protected;
-+}
-+
-+/**
-+ * mem_cgroup_protected - check if memory consumption is in the normal range
-+ * @root: the top ancestor of the sub-tree being checked
-+ * @memcg: the memory cgroup to check
-+ *
-+ * WARNING: This function is not stateless! It can only be used as part
-+ *          of a top-down tree iteration, not for isolated queries.
-+ *
-+ * Returns one of the following:
-+ *   MEMCG_PROT_NONE: cgroup memory is not protected
-+ *   MEMCG_PROT_LOW: cgroup memory is protected as long there is
-+ *     an unprotected supply of reclaimable memory from other cgroups.
-+ *   MEMCG_PROT_MIN: cgroup memory is protected
-+ */
- enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
- 						struct mem_cgroup *memcg)
- {
- 	struct mem_cgroup *parent;
--	unsigned long emin, parent_emin;
--	unsigned long elow, parent_elow;
- 	unsigned long usage;
- 
- 	if (mem_cgroup_disabled())
-@@ -6292,52 +6333,29 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
- 	if (!usage)
- 		return MEMCG_PROT_NONE;
- 
--	emin = memcg->memory.min;
--	elow = memcg->memory.low;
--
- 	parent = parent_mem_cgroup(memcg);
- 	/* No parent means a non-hierarchical mode on v1 memcg */
- 	if (!parent)
- 		return MEMCG_PROT_NONE;
- 
--	if (parent == root)
--		goto exit;
--
--	parent_emin = READ_ONCE(parent->memory.emin);
--	emin = min(emin, parent_emin);
--	if (emin && parent_emin) {
--		unsigned long min_usage, siblings_min_usage;
--
--		min_usage = min(usage, memcg->memory.min);
--		siblings_min_usage = atomic_long_read(
--			&parent->memory.children_min_usage);
--
--		if (min_usage && siblings_min_usage)
--			emin = min(emin, parent_emin * min_usage /
--				   siblings_min_usage);
-+	if (parent == root) {
-+		memcg->memory.emin = memcg->memory.min;
-+		memcg->memory.elow = memcg->memory.low;
-+		goto out;
- 	}
- 
--	parent_elow = READ_ONCE(parent->memory.elow);
--	elow = min(elow, parent_elow);
--	if (elow && parent_elow) {
--		unsigned long low_usage, siblings_low_usage;
--
--		low_usage = min(usage, memcg->memory.low);
--		siblings_low_usage = atomic_long_read(
--			&parent->memory.children_low_usage);
-+	memcg->memory.emin = effective_protection(usage,
-+			memcg->memory.min, READ_ONCE(parent->memory.emin),
-+			atomic_long_read(&parent->memory.children_min_usage));
- 
--		if (low_usage && siblings_low_usage)
--			elow = min(elow, parent_elow * low_usage /
--				   siblings_low_usage);
--	}
--
--exit:
--	memcg->memory.emin = emin;
--	memcg->memory.elow = elow;
-+	memcg->memory.elow = effective_protection(usage,
-+			memcg->memory.low, READ_ONCE(parent->memory.elow),
-+			atomic_long_read(&parent->memory.children_low_usage));
- 
--	if (usage <= emin)
-+out:
-+	if (usage <= memcg->memory.emin)
- 		return MEMCG_PROT_MIN;
--	else if (usage <= elow)
-+	else if (usage <= memcg->memory.elow)
- 		return MEMCG_PROT_LOW;
- 	else
- 		return MEMCG_PROT_NONE;
--- 
-2.24.1
-
+>Also, my
+> preference is rename cros_ec_pd_notify to cros_usbpd_notify to be coherent with
+> previous related drivera, but is not a must.
+>
+> Thanks,
+>  Enric
+>
+>
+>
+>
