@@ -2,105 +2,117 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29237C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B20C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09B27206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 09:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59F88206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:02:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hykn+ZX/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbfLSJ66 (ORCPT
+        id S1726694AbfLSKC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 04:58:58 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:45744 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726652AbfLSJ65 (ORCPT
+        Thu, 19 Dec 2019 05:02:57 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:45166 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726609AbfLSKC5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 04:58:57 -0500
-X-AuditID: c0a8fbf4-183ff70000001fa6-4e-5dfb49dfc7dc
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id BE.74.08102.FD94BFD5; Thu, 19 Dec 2019 10:58:55 +0100 (CET)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Thu, 19 Dec 2019 10:58:50 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>
-CC:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>
-Subject: Re: [PATCH v7 02/12] dt-bindings: mfd: Document ROHM BD71828
- bindings
-Thread-Topic: [PATCH v7 02/12] dt-bindings: mfd: Document ROHM BD71828
- bindings
-Thread-Index: AQHVtlEjPJdYWhzff0OqIDcPrX4s7KfBKG6A
-Date:   Thu, 19 Dec 2019 09:58:47 +0000
-Message-ID: <f9b0fbb7b898691d09ed8954e8df67cf3706aa96.camel@fi.rohmeurope.com>
-References: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
-         <702daeb9d8604e2feddd5f6f92b067a2d60d81ad.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
-In-Reply-To: <702daeb9d8604e2feddd5f6f92b067a2d60d81ad.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [84.253.217.17]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B6C67A5C16966941A778612C207EB21C@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Thu, 19 Dec 2019 05:02:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=o+0r16DLXVbC+7Zxqq6v+t/eSFuvrc9Emyuzqsf4HpQ=; b=hykn+ZX/usebevoo+tpjD7cev
+        zhqEgk1m4ICoMp2ftEfbrQ+/PnEryttu+L2s1ewb/bBJ8wTJJAZYpMOG9aVdlk1OYbzKwe21T6dup
+        3gChZRsSYwtKHKIObN1Z2JxyJ3W0UzeBQ5Lg7sdU9Lmcy1Fj51RLv5BqU9J1vK4SIWUHbaMhAfTEP
+        2hKMMSwe1TIqBOBck0rCBtLAvWHwLcxAO2zNNoy2lWEw6aP7y/OnvBmd6JRKeq2BhTkKPx546MMN7
+        0AakeW6h4y/T1pYMEoI85GzjBruV3ed9XgizMyUfOL8kEjlZfiDWBlZ+6NCmEZZsUkq8lBtV8Zp3A
+        97pJcKCqg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ihsdg-0006Bx-Pn; Thu, 19 Dec 2019 10:02:36 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 457C63007F2;
+        Thu, 19 Dec 2019 11:01:09 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9AC6D2B291C44; Thu, 19 Dec 2019 11:02:32 +0100 (CET)
+Date:   Thu, 19 Dec 2019 11:02:32 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Mel Gorman <mgorman@techsingularity.net>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>, pauld@redhat.com,
+        srikar@linux.vnet.ibm.com, quentin.perret@arm.com,
+        dietmar.eggemann@arm.com, Morten.Rasmussen@arm.com,
+        hdanton@sina.com, parth@linux.ibm.com, riel@surriel.com,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sched, fair: Allow a small degree of load imbalance
+ between SD_NUMA domains
+Message-ID: <20191219100232.GY2844@hirez.programming.kicks-ass.net>
+References: <20191218154402.GF3178@techsingularity.net>
+ <8f049805-3e97-09bb-2d32-0718be1dec9b@arm.com>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0xTVxzHPfd5QK+eVhjH+gqNBl/TsZjsaJwhKvFqssXJP2iseBlXipSW
-        3Jb5wGVsSsSqEaPGWCk+ywglaqv4LMZhrdoZlYDVRZyrz2gUVHRGYbh7vSr8c87n/L7n+/ue
-        P34H0sYHnAkW2F2yYpdsZi6ROVvbFfjyzpwuy1drOoaQA83XebKuvYYnr7xRhmyP3+fI7vAV
-        lmz48yhLbjUcZsid1+cB+be1giLbun+nyIuNf7PkyO5uQFpOVXGk4elBQCL+Vo74bjRTpMp3
-        kSHN0UxyO3qeI+WNYZ70xAJMRrJYX10PxI6b5bxYXV8qnvTc5sVg3XpObIuFOPHCzeOUuKP6
-        LSXW+t/wYmdwxLzEhf2n5Uqun7IK8u2Tpi/pb41VeKnid3DF5YiXLQNt0A0gxGgy7g596waJ
-        0IiuA9ywsZPTDxcBPr3zNaNd4tA07P6L1zAJTcGBZoMbJEAaVUHcU7FK48FoHo5dizMaJ6Ef
-        cLxuK9D5a7x5TSWlMYNG4+qjLziNBfQ9ru98+jFqP8C7/mn/cCkBWXFZxPeBARqO15fpdRql
-        4ODDN6zGGCF8IHSV1jkZP77X87Geivf6g6z2ThqNxYdOTdKtGfjwwxpe51S8bUOc199gwJd2
-        3mcqwReePgmeXrenj9vTx+3p494D2DqAi6QCW77kktMnKnLJRMVhLVK3Hx1FQaAPzKsT4H3T
-        nCZAQdAEhkDKnCzkTe2yGAfmOvJWWiWnNUcpscnOJoAhbU4SblW8tRiFPGnlKllxfJKGQsac
-        IqTFt1iMSMsqlOViWfmkDoPQjAW/qDY1KHK+vGJpgc3VK1MwQWueaEpyyvY8WZFKXNYcbTpy
-        nOp4aNIANXexZhecxVKRWtWtUZAOKx9799Ew7PWp642ORh9tZOwOu2xKEdbOVg1IM1hL7J/j
-        noAUCMyDhXKt3QD173zu9kQNotQgOPadFuSSeiVTGfhj1r3vvjEUHqLbJtwNLEqL/vooNiia
-        Ptt+uvhZ8uQ9GZaRhT8r/42vyWSfN87vrBVKZ/wSjtzdf2amI9JS2N7vuK0lPnr45ewFyw/+
-        9t49LJ/NepT9MkRnPTCVtkbTxtDc8kHn4qFMccvczFGrN2Xnzg8YZnVPrQNt/pebY6lp4WPL
-        zIzTKqWPoxWn9D/9jQrW+AMAAA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8f049805-3e97-09bb-2d32-0718be1dec9b@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gTWFyaywgTGVlLCBSb2INCg0KSSBqdXN0IG5vdGljZWQgd2UgaGF2ZSBhIGRlcGVuZGVu
-Y3kgaGVyZS4gVGhpcyBiaW5kaW5nIGlzIHJlZmVycmluZyB0bw0KcmVndWxhdG9yIGJpbmRpbmcg
-LSB3aGljaCB3YXMgYXBwbGllZCBieSBNYXJrIGFuZCBpcyB0aHVzIG1pc3NpbmcgZnJvbQ0KdGhl
-IHNlcmllcy4gV2hhdCdzIHRoZSBiZXN0IHdheSBmb3J3YXJkPw0KDQpPbiBUaHUsIDIwMTktMTIt
-MTkgYXQgMTE6NDYgKzAyMDAsIE1hdHRpIFZhaXR0aW5lbiB3cm90ZToNCj4gUk9ITSBCRDcxODI4
-IFBvd2VyIG1hbmFnZW1lbnQgSUMgaW50ZWdyYXRlcyA3IGJ1Y2sgY29udmVydGVycywgNw0KPiBM
-RE9zLA0KPiBhIHJlYWwtdGltZSBjbG9jayAoUlRDKSwgMyBHUE8vcmVndWxhdG9yIGNvbnRyb2wg
-cGlucywgSEFMTCBpbnB1dA0KPiBhbmQgYSAzMi43Njgga0h6IGNsb2NrIGdhdGUuDQo+IA0KPiBE
-b2N1bWVudCB0aGUgZHQgYmluZGluZ3MgZHJpdmVycyBhcmUgdXNpbmcuDQo+IA0KPiBTaWduZWQt
-b2ZmLWJ5OiBNYXR0aSBWYWl0dGluZW4gPG1hdHRpLnZhaXR0aW5lbkBmaS5yb2htZXVyb3BlLmNv
-bT4NCj4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQo+IC0tLQ0K
-PiANCj4gTm8gY2hhbmdlcyBzaW5jZSB2Ng0KDQovL3NuaXANCg0KPiArICByZWd1bGF0b3JzOg0K
-PiArICAgICRyZWY6IC4uL3JlZ3VsYXRvci9yb2htLGJkNzE4MjgtcmVndWxhdG9yLnlhbWwNCg0K
-VGhpcyBmaWxlIGlzIG1pc3NpbmcgZnJvbSB0aGUgc2VyaWVzIGFuZCBpcyBhcHBsaWVkIHRvIE1h
-cmsncyB0cmVlLg0KDQpCciwNCglNYXR0aSBWYWl0dGluZW4NCg0K
+On Wed, Dec 18, 2019 at 06:50:52PM +0000, Valentin Schneider wrote:
+> I'm quite sure you have reasons to have written it that way, but I was
+> hoping we could squash it down to something like:
+> ---
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 08a233e97a01..f05d09a8452e 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -8680,16 +8680,27 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
+>  			env->migration_type = migrate_task;
+>  			lsub_positive(&nr_diff, local->sum_nr_running);
+>  			env->imbalance = nr_diff >> 1;
+> -			return;
+> +		} else {
+> +
+> +			/*
+> +			 * If there is no overload, we just want to even the number of
+> +			 * idle cpus.
+> +			 */
+> +			env->migration_type = migrate_task;
+> +			env->imbalance = max_t(long, 0, (local->idle_cpus -
+> +							 busiest->idle_cpus) >> 1);
+>  		}
+>  
+>  		/*
+> -		 * If there is no overload, we just want to even the number of
+> -		 * idle cpus.
+> +		 * Allow for a small imbalance between NUMA groups; don't do any
+> +		 * of it if there is at least half as many tasks / busy CPUs as
+> +		 * there are available CPUs in the busiest group
+>  		 */
+> -		env->migration_type = migrate_task;
+> -		env->imbalance = max_t(long, 0, (local->idle_cpus -
+> -						 busiest->idle_cpus) >> 1);
+> +		if (env->sd->flags & SD_NUMA &&
+> +		    (busiest->sum_nr_running < busiest->group_weight >> 1) &&
+> +		    (env->imbalance < busiest->group_weight * (env->sd->imbalance_pct - 100) / 100))
+
+Note that this form allows avoiding the division. Every time I see that
+/100 I'm thinking we should rename and make imbalance_pct a base-2
+thing.
+
+> +				env->imbalance = 0;
+> +
+>  		return;
+>  	}
+>  
