@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 729E4C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACD9C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4639C24679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36DFD24679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781427;
-	bh=HHdoDJ7rmZglhmmXVeqvhm7b+Zk+loPFJUyB8Ox7+cg=;
+	s=default; t=1576781430;
+	bh=vVlHfKK7lbNM4dstoY77z0seU4XGgjMCnhLHwYP2yaE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dhNf193A5s6rzq4X09S0FDoHsJyXeBOmlTqy4iK3bav9ty8c1wCuCbgUmBwulTQwl
-	 7B5dPYABAmtCaIyjf9kl6MUzWCTnr/5coZ3LXxeJUtVL4+Y1SkNBESW3LC+WaxfQE3
-	 RvC/5Ms19iisfEVW3QszTBqnOKR+zwNj1VFRsWY0=
+	b=iL38Tt0zNBD3RPbbMzZjdwT+NWZB1OkX68Lha8co6+1QXZJtlonhLfPJmMZlM9uCd
+	 6pLShpIAer9nVrhdkgyNQVZY4FrYkBgT7xgFtjDDQK09aGxH5hYcORxTbWif17QA1V
+	 df7wVTSNa1bVhdvx3aCrMjF5P/Xpb+F4RiIrUUG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729981AbfLSSu0 (ORCPT
+        id S1729440AbfLSSu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:50:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44226 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:50:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729970AbfLSSuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:50:23 -0500
+        id S1729979AbfLSSu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:50:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CBFB2064B;
-        Thu, 19 Dec 2019 18:50:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAC402064B;
+        Thu, 19 Dec 2019 18:50:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781422;
-        bh=HHdoDJ7rmZglhmmXVeqvhm7b+Zk+loPFJUyB8Ox7+cg=;
+        s=default; t=1576781425;
+        bh=vVlHfKK7lbNM4dstoY77z0seU4XGgjMCnhLHwYP2yaE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c8fGXNobPaa7H6Zt8WGJfFOr4JEUxaIQ+Z0ULJ/LxF4T7iuZx8H9h85weHRQ+kuUZ
-         5GyfaVoHrEe5RLupVZRXURDnc6fIsoOrFtA61bVnk/6adjuu4Ipobzkahm9ETfRBjl
-         KLwKdVyKhKilVwprmpihJtp6ibqaURTyZsN2phSM=
+        b=YfGxqdq4QBn0li4zZxTIS7m6DdAmlNlGD2xeJD2xhhgzzfOEGMVGMMsW/CHzoIKNK
+         hJPIOWiRbuRNIFR+qEcDoRR3qu5GSSbbEjOBbSLKLrw6Ka0+P9ROPdIPJQHv6b+yS7
+         GutXF+D67U1KN5E2X4WTQ/0Qq0Zt21pyK2RH3Svs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaron Conole <aconole@redhat.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 05/36] openvswitch: support asymmetric conntrack
-Date:   Thu, 19 Dec 2019 19:34:22 +0100
-Message-Id: <20191219182855.197824990@linuxfoundation.org>
+Subject: [PATCH 4.14 06/36] tcp: md5: fix potential overestimation of TCP option space
+Date:   Thu, 19 Dec 2019 19:34:23 +0100
+Message-Id: <20191219182855.431781197@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182848.708141124@linuxfoundation.org>
 References: <20191219182848.708141124@linuxfoundation.org>
@@ -59,46 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaron Conole <aconole@redhat.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 5d50aa83e2c8e91ced2cca77c198b468ca9210f4 ]
+[ Upstream commit 9424e2e7ad93ffffa88f882c9bc5023570904b55 ]
 
-The openvswitch module shares a common conntrack and NAT infrastructure
-exposed via netfilter.  It's possible that a packet needs both SNAT and
-DNAT manipulation, due to e.g. tuple collision.  Netfilter can support
-this because it runs through the NAT table twice - once on ingress and
-again after egress.  The openvswitch module doesn't have such capability.
+Back in 2008, Adam Langley fixed the corner case of packets for flows
+having all of the following options : MD5 TS SACK
 
-Like netfilter hook infrastructure, we should run through NAT twice to
-keep the symmetry.
+Since MD5 needs 20 bytes, and TS needs 12 bytes, no sack block
+can be cooked from the remaining 8 bytes.
 
-Fixes: 05752523e565 ("openvswitch: Interface with NAT.")
-Signed-off-by: Aaron Conole <aconole@redhat.com>
+tcp_established_options() correctly sets opts->num_sack_blocks
+to zero, but returns 36 instead of 32.
+
+This means TCP cooks packets with 4 extra bytes at the end
+of options, containing unitialized bytes.
+
+Fixes: 33ad798c924b ("tcp: options clean up")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/openvswitch/conntrack.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ net/ipv4/tcp_output.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/net/openvswitch/conntrack.c
-+++ b/net/openvswitch/conntrack.c
-@@ -879,6 +879,17 @@ static int ovs_ct_nat(struct net *net, s
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -708,8 +708,9 @@ static unsigned int tcp_established_opti
+ 			min_t(unsigned int, eff_sacks,
+ 			      (remaining - TCPOLEN_SACK_BASE_ALIGNED) /
+ 			      TCPOLEN_SACK_PERBLOCK);
+-		size += TCPOLEN_SACK_BASE_ALIGNED +
+-			opts->num_sack_blocks * TCPOLEN_SACK_PERBLOCK;
++		if (likely(opts->num_sack_blocks))
++			size += TCPOLEN_SACK_BASE_ALIGNED +
++				opts->num_sack_blocks * TCPOLEN_SACK_PERBLOCK;
  	}
- 	err = ovs_ct_nat_execute(skb, ct, ctinfo, &info->range, maniptype);
  
-+	if (err == NF_ACCEPT &&
-+	    ct->status & IPS_SRC_NAT && ct->status & IPS_DST_NAT) {
-+		if (maniptype == NF_NAT_MANIP_SRC)
-+			maniptype = NF_NAT_MANIP_DST;
-+		else
-+			maniptype = NF_NAT_MANIP_SRC;
-+
-+		err = ovs_ct_nat_execute(skb, ct, ctinfo, &info->range,
-+					 maniptype);
-+	}
-+
- 	/* Mark NAT done if successful and update the flow key. */
- 	if (err == NF_ACCEPT)
- 		ovs_nat_update_key(key, skb, maniptype);
+ 	return size;
 
 
