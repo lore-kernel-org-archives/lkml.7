@@ -2,131 +2,138 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F32C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 851E2C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC194222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:12:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576717977;
-	bh=EnDbUNs/vALEvcA8Z9IMx3LTjG39IibUT3Ww5yvhwFY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=f8f4nnaOCIbuG1AO9w3XrHvHY6L4UoWYKlCpC7GSDzuna25Du4PGBbB5+CUo1FQB7
-	 pvPxVfyZXezCYJFGMy92/CBzWbuv5GFXp+qWvt1eThD3MOfoQg2YSYGeIj+HlqNPfW
-	 EaUDFqXUN5Q7rRgpCqZgRzGWbianOXIVUv6X7p2Q=
+	by mail.kernel.org (Postfix) with ESMTP id 54BD42176D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:14:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfLSBM5 (ORCPT
+        id S1726726AbfLSBOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 20:12:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39382 "EHLO mail.kernel.org"
+        Wed, 18 Dec 2019 20:14:43 -0500
+Received: from mga04.intel.com ([192.55.52.120]:29072 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726536AbfLSBM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 20:12:56 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E2C52176D;
-        Thu, 19 Dec 2019 01:12:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576717975;
-        bh=EnDbUNs/vALEvcA8Z9IMx3LTjG39IibUT3Ww5yvhwFY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Vt7ZmhZL4/z+GEPYZsGwvLn9s0Enyv8//u9UmcZY0C7jMBx40N5FHa7TnUecE/lUS
-         3CkvMLNFZ7D13BfI9AeDbJK8xptCUiHyeApiQsLcjvk2ZKhKTmC6HdRP1msxv00ol5
-         /W+nVAbaoumyeUvxDFGy4GSPw4QXqEnoA7n2e90w=
-Date:   Wed, 18 Dec 2019 17:12:54 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Mina Almasry <almasrymina@google.com>
-Cc:     mike.kravetz@oracle.com, shuah@kernel.org, rientjes@google.com,
-        shakeelb@google.com, gthelen@google.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org,
-        aneesh.kumar@linux.vnet.ibm.com, mkoutny@suse.com,
-        Hillf Danton <hdanton@sina.com>,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v9 1/8] hugetlb_cgroup: Add hugetlb_cgroup reservation
- counter
-Message-Id: <20191218171254.79664a964c0c61e6054dff64@linux-foundation.org>
-In-Reply-To: <20191217231615.164161-1-almasrymina@google.com>
-References: <20191217231615.164161-1-almasrymina@google.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        id S1726463AbfLSBOn (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 20:14:43 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 17:14:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
+   d="scan'208";a="228079089"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.69]) ([10.239.196.69])
+  by orsmga002.jf.intel.com with ESMTP; 18 Dec 2019 17:14:40 -0800
+Subject: Re: [PATCH v4 3/3] perf report: support hotkey to let user select any
+ event for sorting
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20191218022443.18958-1-yao.jin@linux.intel.com>
+ <20191218022443.18958-3-yao.jin@linux.intel.com>
+ <20191218074708.GC19062@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <879a7e9e-f7e0-29c9-d10a-a3d2732e6c2f@linux.intel.com>
+Date:   Thu, 19 Dec 2019 09:14:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+MIME-Version: 1.0
+In-Reply-To: <20191218074708.GC19062@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Dec 2019 15:16:08 -0800 Mina Almasry <almasrymina@google.com> wrote:
-
-> These counters will track hugetlb reservations rather than hugetlb
-> memory faulted in. This patch only adds the counter, following patches
-> add the charging and uncharging of the counter.
-> 
-> This is patch 1 of an 8 patch series.
-> 
-> Problem:
-> Currently tasks attempting to allocate more hugetlb memory than is available get
-> a failure at mmap/shmget time. This is thanks to Hugetlbfs Reservations [1].
-> However, if a task attempts to allocate hugetlb memory only more than its
-> hugetlb_cgroup limit allows, the kernel will allow the mmap/shmget call,
-> but will SIGBUS the task when it attempts to fault the memory in.
-> 
-> We have developers interested in using hugetlb_cgroups, and they have expressed
-> dissatisfaction regarding this behavior. We'd like to improve this
-> behavior such that tasks violating the hugetlb_cgroup limits get an error on
-> mmap/shmget time, rather than getting SIGBUS'd when they try to fault
-> the excess memory in.
-> 
-> The underlying problem is that today's hugetlb_cgroup accounting happens
-> at hugetlb memory *fault* time, rather than at *reservation* time.
-> Thus, enforcing the hugetlb_cgroup limit only happens at fault time, and
-> the offending task gets SIGBUS'd.
-> 
-> Proposed Solution:
-> A new page counter named hugetlb.xMB.reservation_[limit|usage]_in_bytes. This
-> counter has slightly different semantics than
-> hugetlb.xMB.[limit|usage]_in_bytes:
-> 
-> - While usage_in_bytes tracks all *faulted* hugetlb memory,
-> reservation_usage_in_bytes tracks all *reserved* hugetlb memory and
-> hugetlb memory faulted in without a prior reservation.
-> 
-> - If a task attempts to reserve more memory than limit_in_bytes allows,
-> the kernel will allow it to do so. But if a task attempts to reserve
-> more memory than reservation_limit_in_bytes, the kernel will fail this
-> reservation.
-> 
-> This proposal is implemented in this patch series, with tests to verify
-> functionality and show the usage. We also added cgroup-v2 support to
-> hugetlb_cgroup so that the new use cases can be extended to v2.
-
-This would make
-http://lkml.kernel.org/r/20191216193831.540953-1-gscrivan@redhat.com
-obsolete?
 
 
-> Alternatives considered:
-> 1. A new cgroup, instead of only a new page_counter attached to
->    the existing hugetlb_cgroup. Adding a new cgroup seemed like a lot of code
->    duplication with hugetlb_cgroup. Keeping hugetlb related page counters under
->    hugetlb_cgroup seemed cleaner as well.
+On 12/18/2019 3:47 PM, Jiri Olsa wrote:
+> On Wed, Dec 18, 2019 at 10:24:43AM +0800, Jin Yao wrote:
+>> When performing "perf report --group", it shows the event group information
+>> together. In previous patch, we have supported a new option "--group-sort-idx"
+>> to sort the output by the event at the index n in event group.
+>>
+>> It would be nice if we can use a hotkey in browser to select a event
+>> to sort.
+>>
+>> For example,
+>>
+>>    # perf report --group
+>>
+>>   Samples: 12K of events 'cpu/instructions,period=2000003/, cpu/cpu-cycles,period=200003/, ...
+>>                          Overhead  Command    Shared Object            Symbol
+>>    92.19%  98.68%   0.00%  93.30%  mgen       mgen                     [.] LOOP1
+>>     3.12%   0.29%   0.00%   0.16%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x0000000000049515
+>>     1.56%   0.03%   0.00%   0.04%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x00000000000494b7
+>>     1.56%   0.01%   0.00%   0.00%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x00000000000494ce
+>>     1.56%   0.00%   0.00%   0.00%  mgen       [kernel.kallsyms]        [k] task_tick_fair
+>>     0.00%   0.15%   0.00%   0.04%  perf       [kernel.kallsyms]        [k] smp_call_function_single
+>>     0.00%   0.13%   0.00%   6.08%  swapper    [kernel.kallsyms]        [k] intel_idle
+>>     0.00%   0.03%   0.00%   0.00%  gsd-color  libglib-2.0.so.0.5600.4  [.] g_main_context_check
+>>     0.00%   0.03%   0.00%   0.00%  swapper    [kernel.kallsyms]        [k] apic_timer_interrupt
+>>     0.00%   0.03%   0.00%   0.00%  swapper    [kernel.kallsyms]        [k] check_preempt_curr
+>>
+>> When user press hotkey '3' (event index, starting from 0), it indicates
+>> to sort output by the forth event in group.
+>>
+>>    Samples: 12K of events 'cpu/instructions,period=2000003/, cpu/cpu-cycles,period=200003/, ...
+>>                          Overhead  Command    Shared Object            Symbol
+>>    92.19%  98.68%   0.00%  93.30%  mgen       mgen                     [.] LOOP1
+>>     0.00%   0.13%   0.00%   6.08%  swapper    [kernel.kallsyms]        [k] intel_idle
+>>     3.12%   0.29%   0.00%   0.16%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x0000000000049515
+>>     0.00%   0.00%   0.00%   0.06%  swapper    [kernel.kallsyms]        [k] hrtimer_start_range_ns
+>>     1.56%   0.03%   0.00%   0.04%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x00000000000494b7
+>>     0.00%   0.15%   0.00%   0.04%  perf       [kernel.kallsyms]        [k] smp_call_function_single
+>>     0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] update_curr
+>>     0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] apic_timer_interrupt
+>>     0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] native_apic_msr_eoi_write
+>>     0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] __update_load_avg_se
 > 
-> 2. Instead of adding a new counter, we considered adding a sysctl that modifies
->    the behavior of hugetlb.xMB.[limit|usage]_in_bytes, to do accounting at
->    reservation time rather than fault time. Adding a new page_counter seems
->    better as userspace could, if it wants, choose to enforce different cgroups
->    differently: one via limit_in_bytes, and another via
->    reservation_limit_in_bytes. This could be very useful if you're
->    transitioning how hugetlb memory is partitioned on your system one
->    cgroup at a time, for example. Also, someone may find usage for both
->    limit_in_bytes and reservation_limit_in_bytes concurrently, and this
->    approach gives them the option to do so.
+> when I press 0...9 I'm getting extra columns:
+> 
+> Samples: 134  of events 'anon group { cycles:u, instructions:u, cache-misses:u, cycles:u, instructions:u }', Event count (approx.): 7107344
+>                                  Overhead  Command  Shared Object     Symbol                                                                  Self
+>    17.95%  41.20%   0.00%  12.44%  41.30%  ls       libc-2.29.so      [.] __strcoll_l                       17.95%  41.20%   0.00%  12.44%  41.30%       N/A
+>     0.00%  13.22%   0.00%   0.00%   0.00%  ls       ls                [.] 0x000000000000871c                 0.00%  13.22%   0.00%   0.00%   0.00%       N/A
+>     8.32%  11.49%   0.00%   2.62%   9.34%  ls       ld-2.29.so        [.] do_lookup_x                        8.32%  11.49%   0.00%   2.62%   9.34%       N/A
+>     0.00%   8.29%  31.18%  13.34%   3.05%  ls       ld-2.29.so        [.] _dl_lookup_symbol_x                0.00%   8.29%  31.18%  13.34%   3.05%       N/A
+>     0.00%   6.47%   0.00%   0.00%   0.00%  ls       libc-2.29.so      [.] __strlen_avx2                      0.00%   6.47%   0.00%   0.00%   0.00%       N/A
+>     0.00%   5.97%   0.00%   0.00%   0.00%  ls       ls                [.] 0x0000000000014001                 0.00%   5.97%   0.00%   0.00%   0.00%       N/A
+>     5.77%   5.83%   7.79%   4.78%   5.04%  ls       ld-2.29.so        [.] strcmp                             5.77%   5.83%   7.79%   4.78%   5.04%       N/A
+>     2.31%   4.35%   8.30%   0.00%   0.00%  ls       ld-2.29.so        [.] _dl_map_object_from_fd             2.31%   4.35%   8.30%   0.00%   0.00%       N/A
+>     0.00%   2.96%   0.00%   1.30%   2.22%  ls       ld-2.29.so        [.] __GI___tunables_init               0.00%   2.96%   0.00%   1.30%   2.22%       N/A
+>     0.66%   0.22%   0.68%   0.00%   0.21%  ls       ld-2.29.so        [.] _dl_start                          0.66%   0.22%   0.68%   0.00%   0.21%       N/A
+>     2.42%   0.00%   0.02%   3.16%   0.00%  ls       [unknown]         [k] 0xffffffffa2a012b0                 2.42%   0.00%   0.02%   3.16%   0.00%       N/A
+>     0.16%   0.00%   0.01%   0.20%   0.00%  ls       ld-2.29.so        [.] _start                             0.16%   0.00%   0.01%   0.20%   0.00%       N/A
+>     0.00%   0.00%  11.47%   0.00%   0.00%  ls       libcap.so.2.26    [.] 0x0000000000002420                 0.00%   0.00%  11.47%   0.00%   0.00%       N/A
+>     0.00%   0.00%  10.50%   0.00%   0.00%  ls       libc-2.29.so      [.] __GI___tcgetattr                   0.00%   0.00%  10.50%   0.00%   0.00%       N/A
+>     0.00%   0.00%   9.14%   0.00%   0.00%  ls       ls                [.] 0x000000000000767a                 0.00%   0.00%   9.14%   0.00%   0.00%       N/A
+>    13.60%   0.00%   7.14%   2.31%   0.00%  ls       ld-2.29.so        [.] _dl_relocate_object               13.60%   0.00%   7.14%   2.31%   0.00%       N/A
+>     2.13%   0.00%   6.14%   0.00%   0.00%  ls       ld-2.29.so        [.] _dl_map_object_deps                2.13%   0.00%   6.14%   0.00%   0.00%       N/A
+>     0.00%   0.00%   5.27%   0.00%   0.00%  ls       ld-2.29.so        [.] strlen                             0.00%   0.00%   5.27%   0.00%   0.00%       N/A
+>     1.31%   0.00%   2.37%   1.08%   0.00%  ls       ld-2.29.so        [.] _dl_sysdep_start                   1.31%   0.00%   2.37%   1.08%   0.00%       N/A
+> 
+> 
+> jirka
 > 
 
+Looks it's an existing issue in perf. We can reproduce it by following 
+steps.
+
+1. perf record -a -e cycles,instructions -- sleep 3
+2. perf report --group
+3. In browser, we use hotkey 's' to switch to another perf.data
+4. Now in browser, the extra columns 'Self' and 'Children' will be shown.
+
+But I have not figured out which patch caused this issue. :(
+
+Thanks
+Jin Yao
