@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC07CC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C231C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84DBF206D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 679ED24676
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782296;
-	bh=acpiQ8S8p214CMEtig0/MyjfF1B50rLRX1blueo3VQ0=;
+	s=default; t=1576782303;
+	bh=pOaiTSfXfkzb4yCkG99q6kYmRc3WfbW5SLo/nngysWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P+xyPqnfGKPQqDSKRDxQN8w7Pk7M4v6XobKn9hegGgMa8cr8XB+1yL8Jf+6rK0VMj
-	 DjP+hppL7HEefAlyqmbHY6s8Qg6ir0QWVmHKZp6aM2notta6j38wQsBgwkxaXJiSh6
-	 BV8UV5z9Ybv6AgJvXEuGS9vP9mNmFZlZfw8qBX3c=
+	b=Va0dqMZ2frD+w2o1HZF6R6uyfIPYfPO4WqstFHZ0TzA2hJsIif7k/0q1hodLEC1G9
+	 kR9RlLoLY4SBFmQOGqhx15SC/EuFn86aFy2xxQPgAYt26W+eQ3oj+V/+pgHRfJLOj7
+	 TRyxMQTkUiFmeRA16EidoIA4W47yIOU9lXvJlNj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729769AbfLSTE4 (ORCPT
+        id S1729788AbfLSTFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:04:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39384 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 14:05:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729050AbfLSSqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:46:40 -0500
+        id S1729071AbfLSSq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:46:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01EAE206D7;
-        Thu, 19 Dec 2019 18:46:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8D272465E;
+        Thu, 19 Dec 2019 18:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781199;
-        bh=acpiQ8S8p214CMEtig0/MyjfF1B50rLRX1blueo3VQ0=;
+        s=default; t=1576781187;
+        bh=pOaiTSfXfkzb4yCkG99q6kYmRc3WfbW5SLo/nngysWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zF5/vktp6+Nol3DO86HpG28+JiGESRKUb0Re7abrESHQLeogHMB8dz56WTZsaM0cq
-         h8ikLY7ms3JnO5LcPtplB4erC1OOCApwgRumaZY5ej3tmJ3qA+GfkQoNs6V/ddc1fG
-         ynjRmXODf3Kop5zDGHUbozhXTnn1puFWic7EJwy4=
+        b=lv3LVLUOsyFKGo87hnVUIuO0rc1jtZv+YVvonvPZyK4YxKDNwmzaXBWxjBQUT8rOP
+         +m5Eq7h7qSc8fUGntq6AQeYZ3OJ+72btZgps0qlmJG9kMbdQ0UtEBi+zwZrNdyZsDU
+         nO8INNA06sX2W6TbqEVVk3dmvnbEB+JsdJObW3Ok=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.9 086/199] crypto: crypto4xx - fix double-free in crypto4xx_destroy_sdr
-Date:   Thu, 19 Dec 2019 19:32:48 +0100
-Message-Id: <20191219183219.705699684@linuxfoundation.org>
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.9 117/199] btrfs: Remove btrfs_bio::flags member
+Date:   Thu, 19 Dec 2019 19:33:19 +0100
+Message-Id: <20191219183221.372071081@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -59,43 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Lamparter <chunkeey@gmail.com>
+From: Qu Wenruo <wqu@suse.com>
 
-commit 746c908c4d72e49068ab216c3926d2720d71a90d upstream.
+commit 34b127aecd4fe8e6a3903e10f204a7b7ffddca22 upstream.
 
-This patch fixes a crash that can happen during probe
-when the available dma memory is not enough (this can
-happen if the crypto4xx is built as a module).
+The last user of btrfs_bio::flags was removed in commit 326e1dbb5736
+("block: remove management of bi_remaining when restoring original
+bi_end_io"), remove it.
 
-The descriptor window mapping would end up being free'd
-twice, once in crypto4xx_build_pdr() and the second time
-in crypto4xx_destroy_sdr().
+(Tagged for stable as the structure is heavily used and space savings
+are desirable.)
 
-Fixes: 5d59ad6eea82 ("crypto: crypto4xx - fix crypto4xx_build_pdr, crypto4xx_build_sdr leak")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/amcc/crypto4xx_core.c |    6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ fs/btrfs/volumes.h |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/crypto/amcc/crypto4xx_core.c
-+++ b/drivers/crypto/amcc/crypto4xx_core.c
-@@ -400,12 +400,8 @@ static u32 crypto4xx_build_sdr(struct cr
- 		dma_alloc_coherent(dev->core_dev->device,
- 			dev->scatter_buffer_size * PPC4XX_NUM_SD,
- 			&dev->scatter_buffer_pa, GFP_ATOMIC);
--	if (!dev->scatter_buffer_va) {
--		dma_free_coherent(dev->core_dev->device,
--				  sizeof(struct ce_sd) * PPC4XX_NUM_SD,
--				  dev->sdr, dev->sdr_pa);
-+	if (!dev->scatter_buffer_va)
- 		return -ENOMEM;
--	}
- 
- 	sd_array = dev->sdr;
- 
+--- a/fs/btrfs/volumes.h
++++ b/fs/btrfs/volumes.h
+@@ -312,7 +312,6 @@ struct btrfs_bio {
+ 	u64 map_type; /* get from map_lookup->type */
+ 	bio_end_io_t *end_io;
+ 	struct bio *orig_bio;
+-	unsigned long flags;
+ 	void *private;
+ 	atomic_t error;
+ 	int max_errors;
 
 
