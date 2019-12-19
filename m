@@ -2,101 +2,88 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47AD3C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 02:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F3B8C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 02:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B8DA227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 02:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 731A72465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 02:48:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576723719;
+	bh=2EXJXzAEGIHXEfPa6nkVtL3FzloAs4v91fJ3KzYNT5Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=JAj7OfxUleImneiJjVr/lWmRIJI4EI6Db4RLYIyruq4yVHuKdlBFrBYGk9wGhEddX
+	 6wJZO8B4DknVJiheQB3t4lPd7qJOndeniU3vKjaTL60Zpl3qlGkLxOV66zqAQhLVvl
+	 L4XaHL2ZK31NXfDOkPNbM0+xkuwsZbOd5xZ05nTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfLSCrr (ORCPT
+        id S1726891AbfLSCsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 21:47:47 -0500
-Received: from mga07.intel.com ([134.134.136.100]:35149 "EHLO mga07.intel.com"
+        Wed, 18 Dec 2019 21:48:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbfLSCrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 21:47:47 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 18:47:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="228099504"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga002.jf.intel.com with ESMTP; 18 Dec 2019 18:47:45 -0800
-Cc:     baolu.lu@linux.intel.com, "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: Re: [PATCH v8 04/10] iommu/vt-d: Support flushing more translation
- cache types
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>
-References: <1576524252-79116-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1576524252-79116-5-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <24cc06da-14ec-908d-361d-a8b321b10852@linux.intel.com>
-Date:   Thu, 19 Dec 2019 10:46:51 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        id S1726463AbfLSCsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 21:48:38 -0500
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A4B024680
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 02:48:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576723717;
+        bh=2EXJXzAEGIHXEfPa6nkVtL3FzloAs4v91fJ3KzYNT5Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KtDVa4AYNTPZy8VE550NbmwG03kUR++u4xYHWWU0WooYL65BsDijqksELTit44lFs
+         TTMzUwVCIMNcOpicLAlYVQ7RHWp9MHtlUp+tt/AAeCI7WGs5SeqYHRxrFfT66kDd1W
+         7T5rFAZDXHUlzstHWKH832zo0+yVN+h89jiImX+I=
+Received: by mail-wm1-f45.google.com with SMTP id p9so3897714wmc.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 18:48:37 -0800 (PST)
+X-Gm-Message-State: APjAAAVMCRP9hG364jyxnFO8w4nL1ZOoPAeSMhPqsFAjp9pomMmTqUTz
+        /AT8+wzHGJxcqMkkJw+1OtybyCeKYkBRrmH9vxnnlg==
+X-Google-Smtp-Source: APXvYqz3T1fk02wqZ4ZsJBtNovun0jn9i9cho/RL8rpMgcUxRsvat0cJbxk7KwzJT6edcjcjxUq61FkYWwUNSFDjxtc=
+X-Received: by 2002:a1c:20d6:: with SMTP id g205mr7154296wmg.38.1576723715742;
+ Wed, 18 Dec 2019 18:48:35 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1576524252-79116-5-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191126110659.GA14042@redhat.com> <20191203141239.GA30688@redhat.com>
+ <20191218151904.GA3127@redhat.com> <CAHk-=whNhwFigBDSnyrfJYxr-uAe6PHiWTcHcZzPW+vZ3eWAXw@mail.gmail.com>
+In-Reply-To: <CAHk-=whNhwFigBDSnyrfJYxr-uAe6PHiWTcHcZzPW+vZ3eWAXw@mail.gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 18 Dec 2019 18:48:24 -0800
+X-Gmail-Original-Message-ID: <CALCETrWJ8PLbxvX6yuP7Q3kz_=dZinacUd-3-OqUkZNSMCE34g@mail.gmail.com>
+Message-ID: <CALCETrWJ8PLbxvX6yuP7Q3kz_=dZinacUd-3-OqUkZNSMCE34g@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] x86: fix get_nr_restart_syscall()
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+        Jan Kratochvil <jan.kratochvil@redhat.com>,
+        Pedro Alves <palves@redhat.com>, Peter Anvin <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Dec 18, 2019 at 12:02 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Wed, Dec 18, 2019 at 7:19 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > Andy, Linus, do you have any objections?
+>
+> It's ok by me, no objections. I still don't love your "hide the bit in
+> thread flags over return to user space", and would still prefer it in
+> the restart block, but I don't care _that_ deeply.
+>
 
-On 12/17/19 3:24 AM, Jacob Pan wrote:
-> When Shared Virtual Memory is exposed to a guest via vIOMMU, scalable
-> IOTLB invalidation may be passed down from outside IOMMU subsystems.
-> This patch adds invalidation functions that can be used for additional
-> translation cache types.
-> 
-> Signed-off-by: Jacob Pan<jacob.jun.pan@linux.intel.com>
-> ---
->   drivers/iommu/dmar.c        | 46 +++++++++++++++++++++++++++++++++++++++++++++
->   drivers/iommu/intel-pasid.c |  3 ++-
->   include/linux/intel-iommu.h | 21 +++++++++++++++++----
->   3 files changed, 65 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-> index 3acfa6a25fa2..f2f5d75da94a 100644
-> --- a/drivers/iommu/dmar.c
-> +++ b/drivers/iommu/dmar.c
-> @@ -1348,6 +1348,20 @@ void qi_flush_iotlb(struct intel_iommu *iommu, u16 did, u64 addr,
->   	qi_submit_sync(&desc, iommu);
->   }
->   
-> +/* PASID-based IOTLB Invalidate */
-> +void qi_flush_iotlb_pasid(struct intel_iommu *iommu, u16 did, u64 addr, u32 pasid,
-> +		unsigned int size_order, u64 granu, int ih)
-> +{
-> +	struct qi_desc desc = {.qw2 = 0, .qw3 = 0};
-> +
-> +	desc.qw0 = QI_EIOTLB_PASID(pasid) | QI_EIOTLB_DID(did) |
-> +		QI_EIOTLB_GRAN(granu) | QI_EIOTLB_TYPE;
-> +	desc.qw1 = QI_EIOTLB_ADDR(addr) | QI_EIOTLB_IH(ih) |
-> +		QI_EIOTLB_AM(size_order);
-> +
-> +	qi_submit_sync(&desc, iommu);
-> +}
-
-There's another version of pasid-based iotlb invalidation.
-
-https://lkml.org/lkml/2019/12/10/2128
-
-Let's consider merging them.
-
-Best regards,
-baolu
+I'd rather stick it in restart_block.  I'd also like to see the kernel
+*verify* that the variant of restart_syscall() that's invoked is the
+same as the variant that should be invoked.  In my mind, very few
+syscalls say "I can't believe there are no major bugs in here" like
+restart_syscall(), and being conservative is nice.
