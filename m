@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 426C0C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77567C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14A7E206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4917F222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:58:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781905;
-	bh=jM4AaFsdUm+PCgilD4TxVD2a/AGAmFNdPl4DlFC+EvU=;
+	s=default; t=1576781910;
+	bh=zP6kqnQJ5BCUk2R2cL1qnZys2A33AWA+hG5nkb7QpSM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IpmENt0d/dkNWyiAC0baUahiVM9SL9lPjWdCdlPUhY4kmngNmHpsjg+jieUZ8Tlk+
-	 nolA8lAWXVTOkQM6bbRVhvCDqnDKHo6kYR6rbhtf+S79NWoOOUqhYtZzSUOLalbY9b
-	 BM+5+J2+xxTUxsXXHd1FaLm1SbS1z2SH8uyq2epo=
+	b=w8MqwVcilxDaRqFfKELIIXE8qNJgBWSdsYHpGVqMwR6aaZy5Bx00GVGvuFofAZ7Gx
+	 v+1Rvdy/nf3zke9P7anx/fr2SimcFDYW+nYP0qjIvQolRy48gVFpl0tmaUn6bpO0ni
+	 47Z11liMMlnRUucxzSjwyvYAawdg2Nq42M/SoT9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730118AbfLSS6Y (ORCPT
+        id S1730551AbfLSSyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:58:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50536 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:54:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730273AbfLSSyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:54:55 -0500
+        id S1730543AbfLSSyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:54:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9334D206EC;
-        Thu, 19 Dec 2019 18:54:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDA86227BF;
+        Thu, 19 Dec 2019 18:54:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781695;
-        bh=jM4AaFsdUm+PCgilD4TxVD2a/AGAmFNdPl4DlFC+EvU=;
+        s=default; t=1576781680;
+        bh=zP6kqnQJ5BCUk2R2cL1qnZys2A33AWA+hG5nkb7QpSM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nwpdwecqpy74LXwL7VivJDnDmds/T6W3ciX2Cd5CHPGlxtUEaMVE2QAn+23C5M1A4
-         6cMV3h4eDytV5X07Eqxy9lMTX65fcum3wX74yw1XIBYk6gqzBRMlTPPtt/qrYlkgGz
-         UfC4+PVqHLt5eaDOjy/qBD/ctQXqFX889KGQ6zM8=
+        b=ux7kV5NHeq8AftP4pLZ79fKllULU5O0uJnXmoNANvZYMI2ECF0Fl6uks/ZzkuZsdZ
+         CsC2bd+D+ns/vPWWpMA+yKTiADsSRzCyLn9sCZ0jSgl34Dxrvr8kFKZ7QoetJLyDne
+         RZdtKzEkG46n86tPxXHOE7mjSoD4EguUEIF5Fnv8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 5.4 43/80] drm/panfrost: Fix a race in panfrost_ioctl_madvise()
-Date:   Thu, 19 Dec 2019 19:34:35 +0100
-Message-Id: <20191219183111.174687637@linuxfoundation.org>
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.4 07/80] PCI/PM: Always return devices to D0 when thawing
+Date:   Thu, 19 Dec 2019 19:33:59 +0100
+Message-Id: <20191219183038.872792429@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
 References: <20191219183031.278083125@linuxfoundation.org>
@@ -62,56 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Brezillon <boris.brezillon@collabora.com>
+From: Dexuan Cui <decui@microsoft.com>
 
-commit 70cc77952efebf6722d483cb83cfb563ac9768db upstream.
+commit f2c33ccacb2d4bbeae2a255a7ca0cbfd03017b7c upstream.
 
-If 2 threads change the MADVISE property of the same BO in parallel we
-might end up with an shmem->madv value that's inconsistent with the
-presence of the BO in the shrinker list.
+pci_pm_thaw_noirq() is supposed to return the device to D0 and restore its
+configuration registers, but previously it only did that for devices whose
+drivers implemented the new power management ops.
 
-The easiest solution to fix that is to protect the
-drm_gem_shmem_madvise() call with the shrinker lock.
+Hibernation, e.g., via "echo disk > /sys/power/state", involves freezing
+devices, creating a hibernation image, thawing devices, writing the image,
+and powering off.  The fact that thawing did not return devices with legacy
+power management to D0 caused errors, e.g., in this path:
 
-Fixes: 013b65101315 ("drm/panfrost: Add madvise and shrinker support")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-Reviewed-by: Steven Price <steven.price@arm.com>
-Acked-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191129135908.2439529-3-boris.brezillon@collabora.com
+  pci_pm_thaw_noirq
+    if (pci_has_legacy_pm_support(pci_dev)) # true for Mellanox VF driver
+      return pci_legacy_resume_early(dev)   # ... legacy PM skips the rest
+    pci_set_power_state(pci_dev, PCI_D0)
+    pci_restore_state(pci_dev)
+  pci_pm_thaw
+    if (pci_has_legacy_pm_support(pci_dev))
+      pci_legacy_resume
+	drv->resume
+	  mlx4_resume
+	    ...
+	      pci_enable_msix_range
+	        ...
+		  if (dev->current_state != PCI_D0)  # <---
+		    return -EINVAL;
+
+which caused these warnings:
+
+  mlx4_core a6d1:00:02.0: INTx is not supported in multi-function mode, aborting
+  PM: dpm_run_callback(): pci_pm_thaw+0x0/0xd7 returns -95
+  PM: Device a6d1:00:02.0 failed to thaw: error -95
+
+Return devices to D0 and restore config registers for all devices, not just
+those whose drivers support new power management.
+
+[bhelgaas: also call pci_restore_state() before pci_legacy_resume_early(),
+update comment, add stable tag, commit log]
+Link: https://lore.kernel.org/r/KU1P153MB016637CAEAD346F0AA8E3801BFAD0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: stable@vger.kernel.org	# v4.13+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/panfrost/panfrost_drv.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/pci/pci-driver.c |   17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
---- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-@@ -347,20 +347,19 @@ static int panfrost_ioctl_madvise(struct
- 		return -ENOENT;
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -1076,17 +1076,22 @@ static int pci_pm_thaw_noirq(struct devi
+ 			return error;
  	}
  
-+	mutex_lock(&pfdev->shrinker_lock);
- 	args->retained = drm_gem_shmem_madvise(gem_obj, args->madv);
- 
- 	if (args->retained) {
- 		struct panfrost_gem_object *bo = to_panfrost_bo(gem_obj);
- 
--		mutex_lock(&pfdev->shrinker_lock);
+-	if (pci_has_legacy_pm_support(pci_dev))
+-		return pci_legacy_resume_early(dev);
 -
- 		if (args->madv == PANFROST_MADV_DONTNEED)
--			list_add_tail(&bo->base.madv_list, &pfdev->shrinker_list);
-+			list_add_tail(&bo->base.madv_list,
-+				      &pfdev->shrinker_list);
- 		else if (args->madv == PANFROST_MADV_WILLNEED)
- 			list_del_init(&bo->base.madv_list);
--
--		mutex_unlock(&pfdev->shrinker_lock);
- 	}
-+	mutex_unlock(&pfdev->shrinker_lock);
+ 	/*
+-	 * pci_restore_state() requires the device to be in D0 (because of MSI
+-	 * restoration among other things), so force it into D0 in case the
+-	 * driver's "freeze" callbacks put it into a low-power state directly.
++	 * Both the legacy ->resume_early() and the new pm->thaw_noirq()
++	 * callbacks assume the device has been returned to D0 and its
++	 * config state has been restored.
++	 *
++	 * In addition, pci_restore_state() restores MSI-X state in MMIO
++	 * space, which requires the device to be in D0, so return it to D0
++	 * in case the driver's "freeze" callbacks put it into a low-power
++	 * state.
+ 	 */
+ 	pci_set_power_state(pci_dev, PCI_D0);
+ 	pci_restore_state(pci_dev);
  
- 	drm_gem_object_put_unlocked(gem_obj);
- 	return 0;
++	if (pci_has_legacy_pm_support(pci_dev))
++		return pci_legacy_resume_early(dev);
++
+ 	if (drv && drv->pm && drv->pm->thaw_noirq)
+ 		error = drv->pm->thaw_noirq(dev);
+ 
 
 
