@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDC6C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA03C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6499A2467E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D46BD2468E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:07:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="VjJqbq8A"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="hrP75sKP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfLSUHd (ORCPT
+        id S1727266AbfLSUHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 15:07:33 -0500
-Received: from mail-qk1-f182.google.com ([209.85.222.182]:40641 "EHLO
-        mail-qk1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbfLSUHb (ORCPT
+        Thu, 19 Dec 2019 15:07:37 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:35002 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726982AbfLSUHf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 15:07:31 -0500
-Received: by mail-qk1-f182.google.com with SMTP id c17so5692157qkg.7
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 12:07:31 -0800 (PST)
+        Thu, 19 Dec 2019 15:07:35 -0500
+Received: by mail-qk1-f195.google.com with SMTP id z76so6065854qka.2
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 12:07:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PL8MqaXiwKQ8e2aIklCO0Oeg7gsz/w0sjRuDLttFpbE=;
-        b=VjJqbq8AABYf4B2P0PurzpZKzScRk6aKxSxjKiPZC2bbemPtys0tkpxfKzesX+pi/I
-         zvKCA09NmYbT/ny6h+fp2IXx+mr+BRS3tLEOMXGlIDS3w+FE8IYlU+nQIXcCPh7uIEDk
-         Nq1CGXd0WGMPPIIoDXamG/lLVJ/QkeL0LA0EXie07RYrAwFFhHCtP/9/CBPjz1VP9rbq
-         NBXuhyXT8uwUBoncpw85LFHiaLJcJ8DxwSaG2+3ZgQr+XDnMDQpolsZYMTv5hJ3KCOpZ
-         JqXD80xpUOZj+B6PejIcrLsOhSNuxTlWUF8Vii+nfGe+EtAb9D9cD8hlH9jGTA8W52qt
-         tRnw==
+        bh=naDrDkzQetnvNjvL9C0fTIA+vJoKEu+DEBxfjm27VzU=;
+        b=hrP75sKPSn7AnGNw4tHGUMMvbkb/xjE1utAHCrHPx1Is0h8Vu2oO0MGlONZxCYPXRb
+         RJvYrFKtWacv4ltAP810jwGutftiWKjDsXbXTaG4Gziahu+8YMY6qpVjyYntQ7it2m82
+         n3nKx7pKxTvyNpFJurHPlWB5wJkz/+uBnn/jV12AXkK/+eip37LVSmRNLe+VnMLUg4iv
+         BpuPih6Dop9c67g6dSdQWhVOGtbdi9SLXJv+HeUY8madZr7a2CRNYp/ha87+/V1cZz2i
+         HB0sJmRNMwmBvwdQ/u6uIQ00lHiJPg8kCWh3yrC8GU6FDGHVgJhCepOoKuYynRxaF+Yg
+         GV/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PL8MqaXiwKQ8e2aIklCO0Oeg7gsz/w0sjRuDLttFpbE=;
-        b=XffDCUzSPpc5NTtky4z3SDHJfPrgtjYshhSAYgXbZtTPbMihZygIpu1Dg4YUYHSOzF
-         uNaX67iMyMHwhQ4s2uoZcv5nwT17Kyk1JpYPIrF9WIctpLSl7hbxnqi3xzpL2Q3fJVtH
-         oYiRS/aBCImpgymndhs0FFI3frNNFhXl4Nexcue9aIdijSnodVQq6ki6aluDzG8UsHIC
-         baNSXMrWLdeBBHGETRm7jT8YO25u1I6bESPrjVVaP5Q7g9iygkJRfDXUwZmxzjJYgpij
-         g1sxUWbGf231t689XPQbrVKR9HL9QGF4PUvoqMU0jHVteDhhv/zE1LcffQdorEU9Zgpw
-         YIbA==
-X-Gm-Message-State: APjAAAWG100QBnC8O1QrExIDfWSTQFk/55ByspRrY3ICiVxg/MumfCt8
-        CvaWkHbx4GA+C5ZxffuEssP28g==
-X-Google-Smtp-Source: APXvYqzpH5gqg/GGNlohwp4UTljGPvbBPqtX7jDbdB9yYDkFhlQguLBBlSlP+fZw/KJ0JBWts9VElA==
-X-Received: by 2002:a05:620a:899:: with SMTP id b25mr10005980qka.197.1576786050454;
-        Thu, 19 Dec 2019 12:07:30 -0800 (PST)
+        bh=naDrDkzQetnvNjvL9C0fTIA+vJoKEu+DEBxfjm27VzU=;
+        b=ZYdggPWvvtXHSkIUhbYJzcvhnObE/1iGKZpFvRUB+2wmmzYhyAqt/qZ404K63gj8O/
+         2sFvN58zBEXKhZISxN6jd1wiuamKJ4r7XTDxH0VL/EysxTPuKuR/MH2WGfJo9PZqZ7Iv
+         aaen+iCLx3ANUn+Lq+/c/sSoaLX8GyDAye1AjaDAVOzwx6jrw0jKX+aXv6qUdszzwoQG
+         fQF0u3U/ifLTgQJFiJD5WsbU1ORu4BQZy+uaAC00vlzuEFqnbxjK723HfV9dqK+zLwIb
+         04CI+BvFUUkzSsutKJyB+jQD5n5ljj4iPvi5YeQQzNu8sOYlFjqT1aUyhMdiIrnZtLm2
+         B1jw==
+X-Gm-Message-State: APjAAAXHYj0twkcCxgaZSIYIKVxSxD0x966uxKJ/BF8xODBheUfK8H4Q
+        zhUq80uA1VZ/40BeGFsUrImDSg==
+X-Google-Smtp-Source: APXvYqzYxBMSf5B+bREKVb2h8MLJ8FbhI62KADZTUzPkF5WWEIWEfNpCjWMUWERoDt2uNO6jkLmP2Q==
+X-Received: by 2002:ae9:ebc5:: with SMTP id b188mr10076870qkg.464.1576786053596;
+        Thu, 19 Dec 2019 12:07:33 -0800 (PST)
 Received: from localhost ([2620:10d:c091:500::91a1])
-        by smtp.gmail.com with ESMTPSA id j15sm2161073qtn.37.2019.12.19.12.07.29
+        by smtp.gmail.com with ESMTPSA id n1sm1990647qkk.122.2019.12.19.12.07.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 12:07:29 -0800 (PST)
+        Thu, 19 Dec 2019 12:07:32 -0800 (PST)
 From:   Johannes Weiner <hannes@cmpxchg.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
         Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
         cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-team@fb.com
-Subject: [PATCH v2 1/3] mm: memcontrol: fix memory.low proportional distribution
-Date:   Thu, 19 Dec 2019 15:07:16 -0500
-Message-Id: <20191219200718.15696-2-hannes@cmpxchg.org>
+Subject: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
+Date:   Thu, 19 Dec 2019 15:07:18 -0500
+Message-Id: <20191219200718.15696-4-hannes@cmpxchg.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219200718.15696-1-hannes@cmpxchg.org>
 References: <20191219200718.15696-1-hannes@cmpxchg.org>
@@ -75,148 +75,293 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When memory.low is overcommitted - i.e. the children claim more
-protection than their shared ancestor grants them - the allowance is
-distributed in proportion to how much each sibling uses their own
-declared protection:
+Right now, the effective protection of any given cgroup is capped by
+its own explicit memory.low setting, regardless of what the parent
+says. The reasons for this are mostly historical and ease of
+implementation: to make delegation of memory.low safe, effective
+protection is the min() of all memory.low up the tree.
 
-	low_usage = min(memory.low, memory.current)
-	elow = parent_elow * (low_usage / siblings_low_usage)
+Unfortunately, this limitation makes it impossible to protect an
+entire subtree from another without forcing the user to make explicit
+protection allocations all the way to the leaf cgroups - something
+that is highly undesirable in real life scenarios.
 
-However, siblings_low_usage is not the sum of all low_usages. It sums
-up the usages of *only those cgroups that are within their memory.low*
-That means that low_usage can be *bigger* than siblings_low_usage, and
-consequently the total protection afforded to the children can be
-bigger than what the ancestor grants the subtree.
+Consider memory in a data center host. At the cgroup top level, we
+have a distinction between system management software and the actual
+workload the system is executing. Both branches are further subdivided
+into individual services, job components etc.
 
-Consider three groups where two are in excess of their protection:
+We want to protect the workload as a whole from the system management
+software, but that doesn't mean we want to protect and prioritize
+individual workload wrt each other. Their memory demand can vary over
+time, and we'd want the VM to simply cache the hottest data within the
+workload subtree. Yet, the current memory.low limitations force us to
+allocate a fixed amount of protection to each workload component in
+order to get protection from system management software in
+general. This results in very inefficient resource distribution.
 
-  A/memory.low = 10G
-  A/A1/memory.low = 10G, memory.current = 20G
-  A/A2/memory.low = 10G, memory.current = 20G
-  A/A3/memory.low = 10G, memory.current =  8G
-  siblings_low_usage = 8G (only A3 contributes)
+To enable such use cases, this patch adds the concept of recursive
+protection to the memory.low setting, while retaining the abilty to
+assign fixed protection in leaf groups as well.
 
-  A1/elow = parent_elow(10G) * low_usage(10G) / siblings_low_usage(8G) = 12.5G -> 10G
-  A2/elow = parent_elow(10G) * low_usage(10G) / siblings_low_usage(8G) = 12.5G -> 10G
-  A3/elow = parent_elow(10G) * low_usage(8G) / siblings_low_usage(8G) = 10.0G
+That means that if protection is explicitly allocated among siblings,
+those configured weights are being followed during page reclaim just
+like they are now.
 
-  (the 12.5G are capped to the explicit memory.low setting of 10G)
+However, if the memory.low set at a higher level is not fully claimed
+by the children in that subtree, the "floating" remainder is applied
+to each cgroup in the tree in proportion to its size. Since reclaim
+pressure is applied in proportion to size as well, each child in that
+tree gets the same boost, and the effect is neutral among siblings -
+with respect to each other, they behave as if no memory control was
+enabled at all, and the VM simply balances the memory demands
+optimally within the subtree. But collectively those cgroups enjoy a
+boost over the cgroups in neighboring trees.
 
-With that, the sum of all awarded protection below A is 30G, when A
-only grants 10G for the entire subtree.
+This allows us to recursively protect one subtree (workload) from
+another (system management), but let subgroups compete freely among
+each other without having to assign fixed shares to each leaf.
 
-What does this mean in practice? A1 and A2 would still be in excess of
-their 10G allowance and would be reclaimed, whereas A3 would not. As
-they eventually drop below their protection setting, they would be
-counted in siblings_low_usage again and the error would right itself.
+The floating protection composes naturally with fixed
+protection. Consider the following example tree:
 
-When reclaim was applied in a binary fashion (cgroup is reclaimed when
-it's above its protection, otherwise it's skipped) this would actually
-work out just fine. However, since 1bc63fb1272b ("mm, memcg: make scan
-aggression always exclude protection"), reclaim pressure is scaled to
-how much a cgroup is above its protection. As a result this
-calculation error unduly skews pressure away from A1 and A2 toward the
-rest of the system.
+		A            A: low = 2G
+               / \          A1: low = 1G
+              A1 A2         A2: low = 0G
 
-But why did we do it like this in the first place?
+As outside pressure is applied to this tree, A1 will enjoy a fixed
+protection from A2 of 1G, but the remaining, unclaimed 1G from A is
+split evenly among A1 and A2. Assuming equal memory demand in both,
+memory usage will converge on A1 using 1.5G and A2 using 0.5G.
 
-The reasoning behind exempting groups in excess from
-siblings_low_usage was to go after them first during reclaim in an
-overcommitted subtree:
-
-  A/memory.low = 2G, memory.current = 4G
-  A/A1/memory.low = 3G, memory.current = 2G
-  A/A2/memory.low = 1G, memory.current = 2G
-
-  siblings_low_usage = 2G (only A1 contributes)
-  A1/elow = parent_elow(2G) * low_usage(2G) / siblings_low_usage(2G) = 2G
-  A2/elow = parent_elow(2G) * low_usage(1G) / siblings_low_usage(2G) = 1G
-
-While the children combined are overcomitting A and are technically
-both at fault, A2 is actively declaring unprotected memory and we
-would like to reclaim that first.
-
-However, while this sounds like a noble goal on the face of it, it
-doesn't make much difference in actual memory distribution: Because A
-is overcommitted, reclaim will not stop once A2 gets pushed back to
-within its allowance; we'll have to reclaim A1 either way. The end
-result is still that protection is distributed proportionally, with A1
-getting 3/4 (1.5G) and A2 getting 1/4 (0.5G) of A's allowance.
-
-[ If A weren't overcommitted, it wouldn't make a difference since each
-  cgroup would just get the protection it declares:
-
-  A/memory.low = 2G, memory.current = 3G
-  A/A1/memory.low = 1G, memory.current = 1G
-  A/A2/memory.low = 1G, memory.current = 2G
-
-  With the current calculation:
-
-  siblings_low_usage = 1G (only A1 contributes)
-  A1/elow = parent_elow(2G) * low_usage(1G) / siblings_low_usage(1G) = 2G -> 1G
-  A2/elow = parent_elow(2G) * low_usage(1G) / siblings_low_usage(1G) = 2G -> 1G
-
-  Including excess groups in siblings_low_usage:
-
-  siblings_low_usage = 2G
-  A1/elow = parent_elow(2G) * low_usage(1G) / siblings_low_usage(2G) = 1G -> 1G
-  A2/elow = parent_elow(2G) * low_usage(1G) / siblings_low_usage(2G) = 1G -> 1G ]
-
-Simplify the calculation and fix the proportional reclaim bug by
-including excess cgroups in siblings_low_usage.
+There is a slight risk of regressing theoretical setups where the
+top-level cgroups don't know about the true budgeting and set bogusly
+high "bypass" values that are meaningfully allocated down the
+tree. Such setups would rely on unclaimed protection to be discarded,
+and distributing it would change the intended behavior. Be safe and
+hide the new behavior behind a mount option, 'memory_recursiveprot'.
 
 Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 ---
- mm/memcontrol.c   |  4 +---
- mm/page_counter.c | 12 ++----------
- 2 files changed, 3 insertions(+), 13 deletions(-)
+ Documentation/admin-guide/cgroup-v2.rst | 11 +++++
+ include/linux/cgroup-defs.h             |  5 ++
+ kernel/cgroup/cgroup.c                  | 17 ++++++-
+ mm/memcontrol.c                         | 65 +++++++++++++++++++++++--
+ 4 files changed, 93 insertions(+), 5 deletions(-)
 
+diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+index 0636bcb60b5a..e569d83621da 100644
+--- a/Documentation/admin-guide/cgroup-v2.rst
++++ b/Documentation/admin-guide/cgroup-v2.rst
+@@ -186,6 +186,17 @@ cgroup v2 currently supports the following mount options.
+         modified through remount from the init namespace. The mount
+         option is ignored on non-init namespace mounts.
+ 
++  memory_recursiveprot
++
++        Recursively apply memory.min and memory.low protection to
++        entire subtrees, without requiring explicit downward
++        propagation into leaf cgroups.  This allows protecting entire
++        subtrees from one another, while retaining free competition
++        within those subtrees.  This should have been the default
++        behavior but is a mount-option to avoid regressing setups
++        relying on the original semantics (e.g. specifying bogusly
++        high 'bypass' protection values at higher tree levels).
++
+ 
+ Organizing Processes and Threads
+ --------------------------------
+diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
+index 63097cb243cb..e1fafed22db1 100644
+--- a/include/linux/cgroup-defs.h
++++ b/include/linux/cgroup-defs.h
+@@ -94,6 +94,11 @@ enum {
+ 	 * Enable legacy local memory.events.
+ 	 */
+ 	CGRP_ROOT_MEMORY_LOCAL_EVENTS = (1 << 5),
++
++	/*
++	 * Enable recursive subtree protection
++	 */
++	CGRP_ROOT_MEMORY_RECURSIVE_PROT = (1 << 6),
+ };
+ 
+ /* cftype->flags */
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 735af8f15f95..a2f8d2ab8dec 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -1813,12 +1813,14 @@ int cgroup_show_path(struct seq_file *sf, struct kernfs_node *kf_node,
+ enum cgroup2_param {
+ 	Opt_nsdelegate,
+ 	Opt_memory_localevents,
++	Opt_memory_recursiveprot,
+ 	nr__cgroup2_params
+ };
+ 
+ static const struct fs_parameter_spec cgroup2_param_specs[] = {
+ 	fsparam_flag("nsdelegate",		Opt_nsdelegate),
+ 	fsparam_flag("memory_localevents",	Opt_memory_localevents),
++	fsparam_flag("memory_recursiveprot",	Opt_memory_recursiveprot),
+ 	{}
+ };
+ 
+@@ -1844,6 +1846,9 @@ static int cgroup2_parse_param(struct fs_context *fc, struct fs_parameter *param
+ 	case Opt_memory_localevents:
+ 		ctx->flags |= CGRP_ROOT_MEMORY_LOCAL_EVENTS;
+ 		return 0;
++	case Opt_memory_recursiveprot:
++		ctx->flags |= CGRP_ROOT_MEMORY_RECURSIVE_PROT;
++		return 0;
+ 	}
+ 	return -EINVAL;
+ }
+@@ -1860,6 +1865,11 @@ static void apply_cgroup_root_flags(unsigned int root_flags)
+ 			cgrp_dfl_root.flags |= CGRP_ROOT_MEMORY_LOCAL_EVENTS;
+ 		else
+ 			cgrp_dfl_root.flags &= ~CGRP_ROOT_MEMORY_LOCAL_EVENTS;
++
++		if (root_flags & CGRP_ROOT_MEMORY_RECURSIVE_PROT)
++			cgrp_dfl_root.flags |= CGRP_ROOT_MEMORY_RECURSIVE_PROT;
++		else
++			cgrp_dfl_root.flags &= ~CGRP_ROOT_MEMORY_RECURSIVE_PROT;
+ 	}
+ }
+ 
+@@ -1869,6 +1879,8 @@ static int cgroup_show_options(struct seq_file *seq, struct kernfs_root *kf_root
+ 		seq_puts(seq, ",nsdelegate");
+ 	if (cgrp_dfl_root.flags & CGRP_ROOT_MEMORY_LOCAL_EVENTS)
+ 		seq_puts(seq, ",memory_localevents");
++	if (cgrp_dfl_root.flags & CGRP_ROOT_MEMORY_RECURSIVE_PROT)
++		seq_puts(seq, ",memory_recursiveprot");
+ 	return 0;
+ }
+ 
+@@ -6364,7 +6376,10 @@ static struct kobj_attribute cgroup_delegate_attr = __ATTR_RO(delegate);
+ static ssize_t features_show(struct kobject *kobj, struct kobj_attribute *attr,
+ 			     char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "nsdelegate\nmemory_localevents\n");
++	return snprintf(buf, PAGE_SIZE,
++			"nsdelegate\n"
++			"memory_localevents\n"
++			"memory_recursiveprot\n");
+ }
+ static struct kobj_attribute cgroup_features_attr = __ATTR_RO(features);
+ 
 diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index c5b5f74cfd4d..874a0b00f89b 100644
+index 9c771c4d6339..cf02e3ef3ed9 100644
 --- a/mm/memcontrol.c
 +++ b/mm/memcontrol.c
-@@ -6236,9 +6236,7 @@ struct cgroup_subsys memory_cgrp_subsys = {
-  * elow = min( memory.low, parent->elow * ------------------ ),
-  *                                        siblings_low_usage
+@@ -6254,6 +6254,32 @@ struct cgroup_subsys memory_cgrp_subsys = {
+  *    budget is NOT proportional. A cgroup's protection from a sibling
+  *    is capped to its own memory.min/low setting.
   *
-- *             | memory.current, if memory.current < memory.low
-- * low_usage = |
-- *	       | 0, otherwise.
-+ * low_usage = min(memory.low, memory.current)
-  *
-  *
-  * Such definition of the effective memory.low provides the expected
-diff --git a/mm/page_counter.c b/mm/page_counter.c
-index de31470655f6..75d53f15f040 100644
---- a/mm/page_counter.c
-+++ b/mm/page_counter.c
-@@ -23,11 +23,7 @@ static void propagate_protected_usage(struct page_counter *c,
- 		return;
++ * 5. However, to allow protecting recursive subtrees from each other
++ *    without having to declare each individual cgroup's fixed share
++ *    of the ancestor's claim to protection, any unutilized -
++ *    "floating" - protection from up the tree is distributed in
++ *    proportion to each cgroup's *usage*. This makes the protection
++ *    neutral wrt sibling cgroups and lets them compete freely over
++ *    the shared parental protection budget, but it protects the
++ *    subtree as a whole from neighboring subtrees.
++ *
++ *    Consider the following example tree:
++ *
++ *        A            A: low = 2G
++ *       / \           B: low = 1G
++ *      B   C          C: low = 0G
++ *
++ *    As memory pressure is applied, the following memory distribution
++ *    is expected (approximately):
++ *
++ *      A/memory.current = 2G
++ *      B/memory.current = 1.5G
++ *      C/memory.current = 0.5G
++ *
++ * Note that 4. and 5. are not in conflict: 4. is about protecting
++ * against immediate siblings whereas 5. is about protecting against
++ * neighboring subtrees.
++ *
+  * These calculations require constant tracking of the actual low usages
+  * (see propagate_protected_usage()), as well as recursive calculation of
+  * effective memory.low values. But as we do call mem_cgroup_protected()
+@@ -6263,11 +6289,13 @@ struct cgroup_subsys memory_cgrp_subsys = {
+  * as memory.low is a best-effort mechanism.
+  */
+ static unsigned long effective_protection(unsigned long usage,
++					  unsigned long parent_usage,
+ 					  unsigned long setting,
+ 					  unsigned long parent_effective,
+ 					  unsigned long siblings_protected)
+ {
+ 	unsigned long protected;
++	unsigned long ep;
  
- 	if (c->min || atomic_long_read(&c->min_usage)) {
--		if (usage <= c->min)
--			protected = usage;
--		else
--			protected = 0;
--
-+		protected = min(usage, c->min);
- 		old_protected = atomic_long_xchg(&c->min_usage, protected);
- 		delta = protected - old_protected;
- 		if (delta)
-@@ -35,11 +31,7 @@ static void propagate_protected_usage(struct page_counter *c,
+ 	protected = min(usage, setting);
+ 	/*
+@@ -6298,7 +6326,34 @@ static unsigned long effective_protection(unsigned long usage,
+ 	 * protection is always dependent on how memory is actually
+ 	 * consumed among the siblings anyway.
+ 	 */
+-	return protected;
++	ep = protected;
++
++	/*
++	 * If the children aren't claiming (all of) the protection
++	 * afforded to them by the parent, distribute the remainder in
++	 * proportion to the (unprotected) memory of each cgroup. That
++	 * way, cgroups that aren't explicitly prioritized wrt each
++	 * other compete freely over the allowance, but they are
++	 * collectively protected from neighboring trees.
++	 *
++	 * We're using unprotected memory for the weight so that if
++	 * some cgroups DO claim explicit protection, we don't protect
++	 * the same bytes twice.
++	 */
++	if (!(cgrp_dfl_root.flags & CGRP_ROOT_MEMORY_RECURSIVE_PROT))
++		return ep;
++
++	if (parent_effective > siblings_protected && usage > protected) {
++		unsigned long unclaimed;
++
++		unclaimed = parent_effective - siblings_protected;
++		unclaimed *= usage - protected;
++		unclaimed /= parent_usage - siblings_protected;
++
++		ep += unclaimed;
++	}
++
++	return ep;
+ }
+ 
+ /**
+@@ -6318,8 +6373,8 @@ static unsigned long effective_protection(unsigned long usage,
+ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
+ 						struct mem_cgroup *memcg)
+ {
++	unsigned long usage, parent_usage;
+ 	struct mem_cgroup *parent;
+-	unsigned long usage;
+ 
+ 	if (mem_cgroup_disabled())
+ 		return MEMCG_PROT_NONE;
+@@ -6344,11 +6399,13 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
+ 		goto out;
  	}
  
- 	if (c->low || atomic_long_read(&c->low_usage)) {
--		if (usage <= c->low)
--			protected = usage;
--		else
--			protected = 0;
--
-+		protected = min(usage, c->low);
- 		old_protected = atomic_long_xchg(&c->low_usage, protected);
- 		delta = protected - old_protected;
- 		if (delta)
+-	memcg->memory.emin = effective_protection(usage,
++	parent_usage = page_counter_read(&parent->memory);
++
++	memcg->memory.emin = effective_protection(usage, parent_usage,
+ 			memcg->memory.min, READ_ONCE(parent->memory.emin),
+ 			atomic_long_read(&parent->memory.children_min_usage));
+ 
+-	memcg->memory.elow = effective_protection(usage,
++	memcg->memory.elow = effective_protection(usage, parent_usage,
+ 			memcg->memory.low, READ_ONCE(parent->memory.elow),
+ 			atomic_long_read(&parent->memory.children_low_usage));
+ 
 -- 
 2.24.1
 
