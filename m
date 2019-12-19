@@ -2,540 +2,896 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B20FAC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF46EC2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D9852082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83F9820716
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:53:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=upb.ro header.i=@upb.ro header.b="Py4EWSzo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j8rdB2jv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfLSMvF (ORCPT
+        id S1726777AbfLSMxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 07:51:05 -0500
-Received: from mail-sender230.upb.ro ([141.85.13.230]:47352 "EHLO mx.upb.ro"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726694AbfLSMvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 07:51:05 -0500
-X-Greylist: delayed 569 seconds by postgrey-1.27 at vger.kernel.org; Thu, 19 Dec 2019 07:50:59 EST
-Received: from localhost (localhost [127.0.0.1])
-        by mx.upb.ro (Postfix) with ESMTP id 2E6B6B561D12;
-        Thu, 19 Dec 2019 14:41:28 +0200 (EET)
-Received: from mx.upb.ro ([127.0.0.1])
-        by localhost (mx.upb.ro [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id r_lmHRd9MUMt; Thu, 19 Dec 2019 14:41:24 +0200 (EET)
-Received: from localhost (localhost [127.0.0.1])
-        by mx.upb.ro (Postfix) with ESMTP id 7E893B561E4D;
-        Thu, 19 Dec 2019 14:41:24 +0200 (EET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mx.upb.ro 7E893B561E4D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=upb.ro;
-        s=96342B8A-77E4-11E5-BA93-D93D0963A2DF; t=1576759284;
-        bh=djwm5AwoeH/zUuaFnnURslLnLriY/Da+TivkMPI8EUU=;
-        h=From:To:Date:Message-Id:MIME-Version;
-        b=Py4EWSzo08BfRL6avznRFHW9qAaWXF8g7oIqgUFq3UAtTPwWR8oFN4h4UKgV7Smg5
-         RVps+l0duGWRRATlJWt2qkVBfsD148v7+RafT/arrZmWJO2bzTr1DqTEYCFSWvcY2G
-         TD//xNHXBDU4F62C8qIi95tslYu6W990xR1B+jRg=
-X-Virus-Scanned: amavisd-new at upb.ro
-Received: from mx.upb.ro ([127.0.0.1])
-        by localhost (mx.upb.ro [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id oMOWJeNiNllZ; Thu, 19 Dec 2019 14:41:24 +0200 (EET)
-Received: from localhost.localdomain (unknown [46.222.245.86])
-        by mx.upb.ro (Postfix) with ESMTPSA id 7D5A8B561D12;
-        Thu, 19 Dec 2019 14:41:23 +0200 (EET)
-From:   Radu Pirea <radu_nicolae.pirea@upb.ro>
-To:     linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Radu Pirea <radu_nicolae.pirea@upb.ro>,
-        Chirag Parekh <chirag.parekh@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH] i2c: cadence: Added slave support
-Date:   Thu, 19 Dec 2019 14:41:20 +0200
-Message-Id: <20191219124120.53754-1-radu_nicolae.pirea@upb.ro>
-X-Mailer: git-send-email 2.24.0
+        Thu, 19 Dec 2019 07:53:12 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:34787 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726734AbfLSMxM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 07:53:12 -0500
+Received: by mail-ed1-f65.google.com with SMTP id l8so4783484edw.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 04:53:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:subject:to:cc:references:message-id:date:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=fTAqZRYEHX+3JVEQkz90JpovJds8zZZ7Bh/pDCSqmbk=;
+        b=j8rdB2jv1o9Cno0mE7IdLZ6IZ8JbiUjzskl2aekOzny+KLt3yVqQZOO3/GSY+laMGJ
+         tc2LUj2LA2iUe6nBjfMN5gJbq5rExWQ4fopqC6BTTRQBbXw8VvhBo5m9X/bjVAFU/NHV
+         mdkUeB31eYiNqI+dD79F3qO3kkT8jCTYtxJ+ERh7vHkwROriruLHVeQh8CcrFC5uZumJ
+         9/rcKoc5NEMaaRxLtzN/JUb8LNeh1lqKNdIfYscCat6tWTbunBezkFv5SKj5yECI/IHo
+         nd2k79sd5zHGqkkTC0pc40M1qqr59yqSnibG1op4bGADK6E9K99YagEwuSmUlsdZbn95
+         eaQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fTAqZRYEHX+3JVEQkz90JpovJds8zZZ7Bh/pDCSqmbk=;
+        b=RicR/oLjUMf3/G7TpYPkefLgLAXKnb1Gs5nmOy2ReZs5FRvAG05dFscH3AYj9NT4FE
+         TCkJxnJSelUzL+ISlVxoi8P9waAtnaubbGg3lBT0W7p4OIp3NZMvXBbvHubDGYvJk9pl
+         kha7tAJUv2WlVwuXAL4nX+vCtglow3wa6VPY00OJqq3ckjXH8pAktytr5Es2JRPjWytt
+         S5kQgoVa7wj2vSrpg1p0j1IF5stv9Eg9Z6YyfKalEE3hxFXz5RO+fYgJLiP36PowGIvP
+         v9pWu7mubLsaMamZCF/tkdc6CyoR2M8RF3YBm4rhE506CSaftaXgmfpmUTGw/zN1wXdg
+         /cww==
+X-Gm-Message-State: APjAAAV2oe8eVLE2LhXg1V9LExjD8WDoRz/Z+NA4AWjCWMK6Iaz3mlq1
+        92QN+yleA1r1hsRfdeM+UbCNnA==
+X-Google-Smtp-Source: APXvYqwt2xRIGijsSP7kuMSxozPCUjIWbw7fAgOL4dzH1Ivm8kWM4CbnHr8DZDI6zUTN2+4kvBWThg==
+X-Received: by 2002:a17:906:3519:: with SMTP id r25mr9559587eja.47.1576759988435;
+        Thu, 19 Dec 2019 04:53:08 -0800 (PST)
+Received: from [192.168.27.135] ([37.157.136.193])
+        by smtp.googlemail.com with ESMTPSA id u13sm463006ejz.69.2019.12.19.04.53.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Dec 2019 04:53:07 -0800 (PST)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH v1 2/4] interconnect: qcom: Consolidate interconnect RPMh
+ support
+To:     David Dai <daidavid1@codeaurora.org>, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org
+Cc:     evgreen@google.com, sboyd@kernel.org, ilina@codeaurora.org,
+        seansw@qti.qualcomm.com, elder@linaro.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
+References: <1576475925-20601-1-git-send-email-daidavid1@codeaurora.org>
+ <1576475925-20601-3-git-send-email-daidavid1@codeaurora.org>
+Message-ID: <5fafbd7f-b523-7cf4-48e3-2e381945f41c@linaro.org>
+Date:   Thu, 19 Dec 2019 14:53:05 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1576475925-20601-3-git-send-email-daidavid1@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added support for I2C slave functionality
+Hi David,
 
-Signed-off-by: Chirag Parekh <chirag.parekh@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Radu Pirea <radu_nicolae.pirea@upb.ro>
----
+Thank you for updating this patch series!
 
-Hi,
+On 16.12.19 7:58, David Dai wrote:
+> Add bcm voter driver and add support for RPMh specific interconnect providers
+> which implements the set and aggregate functionalities that translates
+> bandwidth requests into RPMh messages. These modules provide a common set of
+> functionalities for all Qualcomm RPMh based interconnect providers and
+> should help reduce code duplication when adding new providers.
+> 
+> Signed-off-by: David Dai <daidavid1@codeaurora.org>
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 
-This patch implements the slave interface for the i2c cadence driver. Mos=
-t of the
-work has been done by the guys from Xilinx. All I have done it was to por=
-t the
-patch to the upstream kernel, test it and fix some minor issues.
+Not really. Please remove.
 
-Any suggestion about how can I improve this patch is welcome.
+> ---
+>  drivers/interconnect/qcom/Kconfig     |   8 +
+>  drivers/interconnect/qcom/Makefile    |   6 +
+>  drivers/interconnect/qcom/bcm-voter.c | 356 ++++++++++++++++++++++++++++++++++
+>  drivers/interconnect/qcom/bcm-voter.h |  28 +++
+>  drivers/interconnect/qcom/icc-rpmh.c  | 158 +++++++++++++++
+>  drivers/interconnect/qcom/icc-rpmh.h  | 150 ++++++++++++++
+>  6 files changed, 706 insertions(+)
+>  create mode 100644 drivers/interconnect/qcom/bcm-voter.c
+>  create mode 100644 drivers/interconnect/qcom/bcm-voter.h
+>  create mode 100644 drivers/interconnect/qcom/icc-rpmh.c
+>  create mode 100644 drivers/interconnect/qcom/icc-rpmh.h
+> 
+> diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
+> index 2f9304d..e5af199 100644
+> --- a/drivers/interconnect/qcom/Kconfig
+> +++ b/drivers/interconnect/qcom/Kconfig
+> @@ -27,9 +27,17 @@ config INTERCONNECT_QCOM_SDM845
+>  	tristate "Qualcomm SDM845 interconnect driver"
+>  	depends on INTERCONNECT_QCOM
+>  	depends on (QCOM_RPMH && QCOM_COMMAND_DB && OF) || COMPILE_TEST
+> +	select INTERCONNECT_QCOM_RPMH
+> +	select INTERCONNECT_QCOM_BCM_VOTER
+>  	help
+>  	  This is a driver for the Qualcomm Network-on-Chip on sdm845-based
+>  	  platforms.
+>  
+> +config INTERCONNECT_QCOM_BCM_VOTER
+> +	tristate
+> +
+> +config INTERCONNECT_QCOM_RPMH
+> +	tristate
+> +
 
-Thanks.
+Let's try to keep alphabetical order, so move these up.
 
-Radu P.
+>  config INTERCONNECT_QCOM_SMD_RPM
+>  	tristate
+> diff --git a/drivers/interconnect/qcom/Makefile b/drivers/interconnect/qcom/Makefile
+> index 9adf9e3..e921b13 100644
+> --- a/drivers/interconnect/qcom/Makefile
+> +++ b/drivers/interconnect/qcom/Makefile
+> @@ -4,8 +4,14 @@ qnoc-msm8974-objs			:= msm8974.o
+>  qnoc-qcs404-objs			:= qcs404.o
+>  qnoc-sdm845-objs			:= sdm845.o
+>  icc-smd-rpm-objs			:= smd-rpm.o
+> +icc-bcm-voter-objs			:= bcm-voter.o
+> +icc-rpmh-obj				:= icc-rpmh.o
+> +icc-smd-rpm-objs			:= smd-rpm.o
 
- drivers/i2c/busses/i2c-cadence.c | 317 ++++++++++++++++++++++++++++++-
- 1 file changed, 307 insertions(+), 10 deletions(-)
+Duplicate? Please remove.
 
-diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-ca=
-dence.c
-index 9d71ce15db05..ea6bf989ba1c 100644
---- a/drivers/i2c/busses/i2c-cadence.c
-+++ b/drivers/i2c/busses/i2c-cadence.c
-@@ -23,6 +23,7 @@
- #define CDNS_I2C_ISR_OFFSET		0x10 /* IRQ Status Register, RW */
- #define CDNS_I2C_XFER_SIZE_OFFSET	0x14 /* Transfer Size Register, RW */
- #define CDNS_I2C_TIME_OUT_OFFSET	0x1C /* Time Out Register, RW */
-+#define CDNS_I2C_IMR_OFFSET		0x20 /* IRQ Mask Register, RO */
- #define CDNS_I2C_IER_OFFSET		0x24 /* IRQ Enable Register, WO */
- #define CDNS_I2C_IDR_OFFSET		0x28 /* IRQ Disable Register, WO */
-=20
-@@ -40,9 +41,17 @@
- #define CDNS_I2C_CR_DIVB_SHIFT		8
- #define CDNS_I2C_CR_DIVB_MASK		(0x3f << CDNS_I2C_CR_DIVB_SHIFT)
-=20
-+#define CDNS_I2C_CR_MASTER_EN_MASK	(CDNS_I2C_CR_NEA | \
-+					 CDNS_I2C_CR_ACK_EN | \
-+					 CDNS_I2C_CR_MS)
-+
-+#define CDNS_I2C_CR_SLAVE_EN_MASK	~CDNS_I2C_CR_MASTER_EN_MASK
-+
- /* Status Register Bit mask definitions */
- #define CDNS_I2C_SR_BA		BIT(8)
-+#define CDNS_I2C_SR_TXDV	BIT(6)
- #define CDNS_I2C_SR_RXDV	BIT(5)
-+#define CDNS_I2C_SR_RXRW	BIT(3)
-=20
- /*
-  * I2C Address Register Bit mask definitions
-@@ -91,6 +100,14 @@
- 					 CDNS_I2C_IXR_DATA | \
- 					 CDNS_I2C_IXR_COMP)
-=20
-+#define CDNS_I2C_IXR_SLAVE_INTR_MASK	(CDNS_I2C_IXR_RX_UNF | \
-+					 CDNS_I2C_IXR_TX_OVF | \
-+					 CDNS_I2C_IXR_RX_OVF | \
-+					 CDNS_I2C_IXR_TO | \
-+					 CDNS_I2C_IXR_NACK | \
-+					 CDNS_I2C_IXR_DATA | \
-+					 CDNS_I2C_IXR_COMP)
-+
- #define CDNS_I2C_TIMEOUT		msecs_to_jiffies(1000)
- /* timeout for pm runtime autosuspend */
- #define CNDS_I2C_PM_TIMEOUT		1000	/* ms */
-@@ -117,6 +134,32 @@
- #define cdns_i2c_readreg(offset)       readl_relaxed(id->membase + offse=
-t)
- #define cdns_i2c_writereg(val, offset) writel_relaxed(val, id->membase +=
- offset)
-=20
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+/**
-+ * enum cdns_i2c_mode - I2C Controller current operating mode
-+ *
-+ * @CDNS_I2C_MODE_SLAVE:       I2C controller operating in slave mode
-+ * @CDNS_I2C_MODE_MASTER:      I2C Controller operating in master mode
-+ */
-+enum cdns_i2c_mode {
-+	CDNS_I2C_MODE_SLAVE,
-+	CDNS_I2C_MODE_MASTER,
-+};
-+
-+/**
-+ * enum cdns_i2c_slave_mode - Slave state when I2C is operating in slave=
- mode
-+ *
-+ * @CDNS_I2C_SLAVE_STATE_IDLE: I2C slave idle
-+ * @CDNS_I2C_SLAVE_STATE_SEND: I2C slave sending data to master
-+ * @CDNS_I2C_SLAVE_STATE_RECV: I2C slave receiving data from master
-+ */
-+enum cdns_i2c_slave_state {
-+	CDNS_I2C_SLAVE_STATE_IDLE,
-+	CDNS_I2C_SLAVE_STATE_SEND,
-+	CDNS_I2C_SLAVE_STATE_RECV,
-+};
-+#endif
-+
- /**
-  * struct cdns_i2c - I2C device private data structure
-  *
-@@ -138,6 +181,10 @@
-  * @clk:		Pointer to struct clk
-  * @clk_rate_change_nb:	Notifier block for clock rate changes
-  * @quirks:		flag for broken hold bit usage in r1p10
-+ * @ctrl_reg_diva_divb: value of fields DIV_A and DIV_B from CR register
-+ * @slave:		Registered slave instance.
-+ * @dev_mode:		I2C operating role(master/slave).
-+ * @slave_state:	I2C Slave state(idle/read/write).
-  */
- struct cdns_i2c {
- 	struct device		*dev;
-@@ -158,6 +205,12 @@ struct cdns_i2c {
- 	struct clk *clk;
- 	struct notifier_block clk_rate_change_nb;
- 	u32 quirks;
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	u16 ctrl_reg_diva_divb;
-+	struct i2c_client *slave;
-+	enum cdns_i2c_mode dev_mode;
-+	enum cdns_i2c_slave_state slave_state;
-+#endif
- };
-=20
- struct cdns_platform_data {
-@@ -186,17 +239,155 @@ static inline bool cdns_is_holdquirk(struct cdns_i=
-2c *id, bool hold_wrkaround)
- 		(id->curr_recv_count =3D=3D CDNS_I2C_FIFO_DEPTH + 1));
- }
-=20
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+static void cdns_i2c_set_mode(enum cdns_i2c_mode mode, struct cdns_i2c *=
-id)
-+{
-+	/* Disable all interrupts */
-+	cdns_i2c_writereg(CDNS_I2C_IXR_ALL_INTR_MASK, CDNS_I2C_IDR_OFFSET);
-+
-+	/* Clear FIFO and transfer size */
-+	cdns_i2c_writereg(CDNS_I2C_CR_CLR_FIFO, CDNS_I2C_CR_OFFSET);
-+
-+	/* Update device mode and state */
-+	id->dev_mode =3D mode;
-+	id->slave_state =3D CDNS_I2C_SLAVE_STATE_IDLE;
-+
-+	switch (mode) {
-+	case CDNS_I2C_MODE_MASTER:
-+		/* Enable i2c master */
-+		cdns_i2c_writereg(id->ctrl_reg_diva_divb |
-+				  CDNS_I2C_CR_MASTER_EN_MASK,
-+				  CDNS_I2C_CR_OFFSET);
-+		/*
-+		 * This delay is needed to give the IP some time to switch to
-+		 * the master mode. With lower values(like 110 us) i2cdetect
-+		 * will not detect any slave and without this delay, the IP will
-+		 * trigger a timeout interrupt.
-+		 */
-+		usleep_range(115, 125);
-+		break;
-+	case CDNS_I2C_MODE_SLAVE:
-+		/* Enable i2c slave */
-+		cdns_i2c_writereg(id->ctrl_reg_diva_divb &
-+				  CDNS_I2C_CR_SLAVE_EN_MASK,
-+				  CDNS_I2C_CR_OFFSET);
-+
-+		/* Setting slave address */
-+		cdns_i2c_writereg(id->slave->addr & CDNS_I2C_ADDR_MASK,
-+				  CDNS_I2C_ADDR_OFFSET);
-+
-+		/* Enable slave send/receive interrupts */
-+		cdns_i2c_writereg(CDNS_I2C_IXR_SLAVE_INTR_MASK,
-+				  CDNS_I2C_IER_OFFSET);
-+		break;
-+	}
-+}
-+
-+static void cdns_i2c_slave_rcv_data(struct cdns_i2c *id)
-+{
-+	u8 bytes;
-+	unsigned char data;
-+
-+	/* Prepare backend for data reception */
-+	if (id->slave_state =3D=3D CDNS_I2C_SLAVE_STATE_IDLE) {
-+		id->slave_state =3D CDNS_I2C_SLAVE_STATE_RECV;
-+		i2c_slave_event(id->slave, I2C_SLAVE_WRITE_REQUESTED, NULL);
-+	}
-+
-+	/* Fetch number of bytes to receive */
-+	bytes =3D cdns_i2c_readreg(CDNS_I2C_XFER_SIZE_OFFSET);
-+
-+	/* Read data and send to backend */
-+	while (bytes--) {
-+		data =3D cdns_i2c_readreg(CDNS_I2C_DATA_OFFSET);
-+		i2c_slave_event(id->slave, I2C_SLAVE_WRITE_RECEIVED, &data);
-+	}
-+}
-+
-+static void cdns_i2c_slave_send_data(struct cdns_i2c *id)
-+{
-+	u8 data;
-+
-+	/* Prepare backend for data transmission */
-+	if (id->slave_state =3D=3D CDNS_I2C_SLAVE_STATE_IDLE) {
-+		id->slave_state =3D CDNS_I2C_SLAVE_STATE_SEND;
-+		i2c_slave_event(id->slave, I2C_SLAVE_READ_REQUESTED, &data);
-+	} else {
-+		i2c_slave_event(id->slave, I2C_SLAVE_READ_PROCESSED, &data);
-+	}
-+
-+	/* Send data over bus */
-+	cdns_i2c_writereg(data, CDNS_I2C_DATA_OFFSET);
-+}
-+
- /**
-- * cdns_i2c_isr - Interrupt handler for the I2C device
-- * @irq:	irq number for the I2C device
-- * @ptr:	void pointer to cdns_i2c structure
-+ * cdns_i2c_slave_isr - Interrupt handler for the I2C device in slave ro=
-le
-+ * @ptr:       Pointer to I2C device private data
-+ *
-+ * This function handles the data interrupt and transfer complete interr=
-upt of
-+ * the I2C device in slave role.
-+ *
-+ * Return: IRQ_HANDLED always
-+ */
-+static irqreturn_t cdns_i2c_slave_isr(void *ptr)
-+{
-+	struct cdns_i2c *id =3D ptr;
-+	unsigned int isr_status, i2c_status;
-+
-+	/* Fetch the interrupt status */
-+	isr_status =3D cdns_i2c_readreg(CDNS_I2C_ISR_OFFSET);
-+	cdns_i2c_writereg(isr_status, CDNS_I2C_ISR_OFFSET);
-+
-+	/* Ignore masked interrupts */
-+	isr_status &=3D ~cdns_i2c_readreg(CDNS_I2C_IMR_OFFSET);
-+
-+	/* Fetch transfer mode (send/receive) */
-+	i2c_status =3D cdns_i2c_readreg(CDNS_I2C_SR_OFFSET);
-+
-+	/* Handle data send/receive */
-+	if (i2c_status & CDNS_I2C_SR_RXRW) {
-+		/* Send data to master */
-+		if (isr_status & CDNS_I2C_IXR_DATA)
-+			cdns_i2c_slave_send_data(id);
-+
-+		if (isr_status & CDNS_I2C_IXR_COMP) {
-+			id->slave_state =3D CDNS_I2C_SLAVE_STATE_IDLE;
-+			i2c_slave_event(id->slave, I2C_SLAVE_STOP, NULL);
-+		}
-+	} else {
-+		/* Receive data from master */
-+		if (isr_status & CDNS_I2C_IXR_DATA)
-+			cdns_i2c_slave_rcv_data(id);
-+
-+		if (isr_status & CDNS_I2C_IXR_COMP) {
-+			cdns_i2c_slave_rcv_data(id);
-+			id->slave_state =3D CDNS_I2C_SLAVE_STATE_IDLE;
-+			i2c_slave_event(id->slave, I2C_SLAVE_STOP, NULL);
-+		}
-+	}
-+
-+	/* Master indicated xfer stop or fifo underflow/overflow */
-+	if (isr_status & (CDNS_I2C_IXR_NACK | CDNS_I2C_IXR_RX_OVF |
-+			  CDNS_I2C_IXR_RX_UNF | CDNS_I2C_IXR_TX_OVF)) {
-+		id->slave_state =3D CDNS_I2C_SLAVE_STATE_IDLE;
-+		i2c_slave_event(id->slave, I2C_SLAVE_STOP, NULL);
-+		cdns_i2c_writereg(CDNS_I2C_CR_CLR_FIFO, CDNS_I2C_CR_OFFSET);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+#endif
-+
-+/**
-+ * cdns_i2c_master_isr - Interrupt handler for the I2C device in master =
-role
-+ * @ptr:       Pointer to I2C device private data
-  *
-  * This function handles the data interrupt, transfer complete interrupt=
- and
-- * the error interrupts of the I2C device.
-+ * the error interrupts of the I2C device in master role.
-  *
-  * Return: IRQ_HANDLED always
-  */
--static irqreturn_t cdns_i2c_isr(int irq, void *ptr)
-+static irqreturn_t cdns_i2c_master_isr(void *ptr)
- {
- 	unsigned int isr_status, avail_bytes, updatetx;
- 	unsigned int bytes_to_send;
-@@ -352,6 +543,27 @@ static irqreturn_t cdns_i2c_isr(int irq, void *ptr)
- 	return status;
- }
-=20
-+/**
-+ * cdns_i2c_isr - Interrupt handler for the I2C device
-+ * @irq:	irq number for the I2C device
-+ * @ptr:	void pointer to cdns_i2c structure
-+ *
-+ * This function passes the control to slave/master based on current rol=
-e of
-+ * i2c controller.
-+ *
-+ * Return: IRQ_HANDLED always
-+ */
-+static irqreturn_t cdns_i2c_isr(int irq, void *ptr)
-+{
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	struct cdns_i2c *id =3D ptr;
-+
-+	if (id->dev_mode =3D=3D CDNS_I2C_MODE_SLAVE)
-+		return cdns_i2c_slave_isr(ptr);
-+#endif
-+	return cdns_i2c_master_isr(ptr);
-+}
-+
- /**
-  * cdns_i2c_mrecv - Prepare and start a master receive operation
-  * @id:		pointer to the i2c device structure
-@@ -572,10 +784,28 @@ static int cdns_i2c_master_xfer(struct i2c_adapter =
-*adap, struct i2c_msg *msgs,
- 	u32 reg;
- 	struct cdns_i2c *id =3D adap->algo_data;
- 	bool hold_quirk;
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	bool change_role =3D false;
-+#endif
-=20
- 	ret =3D pm_runtime_get_sync(id->dev);
- 	if (ret < 0)
- 		return ret;
-+
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	/* Check i2c operating mode and switch if possible */
-+	if (id->dev_mode =3D=3D CDNS_I2C_MODE_SLAVE) {
-+		if (id->slave_state !=3D CDNS_I2C_SLAVE_STATE_IDLE)
-+			return -EAGAIN;
-+
-+		/* Set mode to master */
-+		cdns_i2c_set_mode(CDNS_I2C_MODE_MASTER, id);
-+
-+		/* Mark flag to change role once xfer is completed */
-+		change_role =3D true;
-+	}
-+#endif
-+
- 	/* Check if the bus is free */
- 	if (cdns_i2c_readreg(CDNS_I2C_SR_OFFSET) & CDNS_I2C_SR_BA) {
- 		ret =3D -EAGAIN;
-@@ -634,7 +864,15 @@ static int cdns_i2c_master_xfer(struct i2c_adapter *=
-adap, struct i2c_msg *msgs,
- 	}
-=20
- 	ret =3D num;
-+
- out:
-+
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	/* Switch i2c mode to slave */
-+	if (change_role)
-+		cdns_i2c_set_mode(CDNS_I2C_MODE_SLAVE, id);
-+#endif
-+
- 	pm_runtime_mark_last_busy(id->dev);
- 	pm_runtime_put_autosuspend(id->dev);
- 	return ret;
-@@ -648,14 +886,67 @@ static int cdns_i2c_master_xfer(struct i2c_adapter =
-*adap, struct i2c_msg *msgs,
-  */
- static u32 cdns_i2c_func(struct i2c_adapter *adap)
- {
--	return I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR |
--		(I2C_FUNC_SMBUS_EMUL & ~I2C_FUNC_SMBUS_QUICK) |
--		I2C_FUNC_SMBUS_BLOCK_DATA;
-+	u32 func =3D I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR |
-+			(I2C_FUNC_SMBUS_EMUL & ~I2C_FUNC_SMBUS_QUICK) |
-+			I2C_FUNC_SMBUS_BLOCK_DATA;
-+
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	func |=3D I2C_FUNC_SLAVE;
-+#endif
-+
-+	return func;
-+}
-+
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+static int cdns_reg_slave(struct i2c_client *slave)
-+{
-+	int ret;
-+	struct cdns_i2c *id =3D container_of(slave->adapter, struct cdns_i2c,
-+									adap);
-+
-+	if (id->slave)
-+		return -EBUSY;
-+
-+	if (slave->flags & I2C_CLIENT_TEN)
-+		return -EAFNOSUPPORT;
-+
-+	ret =3D pm_runtime_get_sync(id->dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Store slave information */
-+	id->slave =3D slave;
-+
-+	/* Enable I2C slave */
-+	cdns_i2c_set_mode(CDNS_I2C_MODE_SLAVE, id);
-+
-+	return 0;
-+}
-+
-+static int cdns_unreg_slave(struct i2c_client *slave)
-+{
-+	struct cdns_i2c *id =3D container_of(slave->adapter, struct cdns_i2c,
-+									adap);
-+
-+	pm_runtime_put(id->dev);
-+
-+	/* Remove slave information */
-+	id->slave =3D NULL;
-+
-+	/* Enable I2C master */
-+	cdns_i2c_set_mode(CDNS_I2C_MODE_MASTER, id);
-+
-+	return 0;
- }
-+#endif
-=20
- static const struct i2c_algorithm cdns_i2c_algo =3D {
- 	.master_xfer	=3D cdns_i2c_master_xfer,
- 	.functionality	=3D cdns_i2c_func,
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	.reg_slave	=3D cdns_reg_slave,
-+	.unreg_slave	=3D cdns_unreg_slave,
-+#endif
- };
-=20
- /**
-@@ -750,6 +1041,8 @@ static int cdns_i2c_setclk(unsigned long clk_in, str=
-uct cdns_i2c *id)
- 	ctrl_reg |=3D ((div_a << CDNS_I2C_CR_DIVA_SHIFT) |
- 			(div_b << CDNS_I2C_CR_DIVB_SHIFT));
- 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
-+	id->ctrl_reg_diva_divb =3D ctrl_reg & (CDNS_I2C_CR_DIVA_MASK |
-+				 CDNS_I2C_CR_DIVB_MASK);
-=20
- 	return 0;
- }
-@@ -943,8 +1236,12 @@ static int cdns_i2c_probe(struct platform_device *p=
-dev)
- 	if (ret || (id->i2c_clk > CDNS_I2C_SPEED_MAX))
- 		id->i2c_clk =3D CDNS_I2C_SPEED_DEFAULT;
-=20
--	cdns_i2c_writereg(CDNS_I2C_CR_ACK_EN | CDNS_I2C_CR_NEA | CDNS_I2C_CR_MS=
-,
--			  CDNS_I2C_CR_OFFSET);
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	/* Set initial mode to master */
-+	id->dev_mode =3D CDNS_I2C_MODE_MASTER;
-+	id->slave_state =3D CDNS_I2C_SLAVE_STATE_IDLE;
-+#endif
-+	cdns_i2c_writereg(CDNS_I2C_CR_MASTER_EN_MASK, CDNS_I2C_CR_OFFSET);
-=20
- 	ret =3D cdns_i2c_setclk(id->input_clk, id);
- 	if (ret) {
---=20
-2.24.0
+>  
+> +obj-$(CONFIG_INTERCONNECT_QCOM_BCM_VOTER) += icc-bcm-voter.o
+> +obj-$(CONFIG_INTERCONNECT_QCOM_MSM8916) += qnoc-msm8916.o
 
+Unrelated change?
+
+>  obj-$(CONFIG_INTERCONNECT_QCOM_MSM8974) += qnoc-msm8974.o
+>  obj-$(CONFIG_INTERCONNECT_QCOM_QCS404) += qnoc-qcs404.o
+> +obj-$(CONFIG_INTERCONNECT_QCOM_RPMH) += icc-rpmh.o
+>  obj-$(CONFIG_INTERCONNECT_QCOM_SDM845) += qnoc-sdm845.o
+>  obj-$(CONFIG_INTERCONNECT_QCOM_SMD_RPM) += icc-smd-rpm.o
+> diff --git a/drivers/interconnect/qcom/bcm-voter.c b/drivers/interconnect/qcom/bcm-voter.c
+> new file mode 100644
+> index 0000000..7a8764e
+> --- /dev/null
+> +++ b/drivers/interconnect/qcom/bcm-voter.c
+> @@ -0,0 +1,356 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + *
+> + */
+> +#include <linux/interconnect-provider.h>
+> +#include <linux/list_sort.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include <soc/qcom/rpmh.h>
+> +#include <soc/qcom/tcs.h>
+> +
+> +#include "bcm-voter.h"
+> +#include "icc-rpmh.h"
+> +
+> +static LIST_HEAD(bcm_voters);
+> +
+> +/**
+> + * struct bcm_voter - Bus Clock Manager voter
+> + * @dev: reference to the device that communicates with the BCM
+> + * @np: reference to the device node to match bcm voters
+> + * @lock: mutex to protect commit and wake/sleep lists in the voter
+> + * @commit_list: list containing bcms to be committed to hardware
+> + * @ws_list: list containing bcms that have different wake/sleep votes
+> + * @voter_node: list of bcm voters
+> + */
+> +struct bcm_voter {
+> +	struct device *dev;
+> +	struct device_node *np;
+> +	struct mutex lock;
+> +	struct list_head commit_list;
+> +	struct list_head ws_list;
+> +	struct list_head voter_node;
+> +};
+> +
+> +static int cmp_vcd(void *priv, struct list_head *a, struct list_head *b)
+> +{
+> +	const struct qcom_icc_bcm *bcm_a =
+> +			list_entry(a, struct qcom_icc_bcm, list);
+> +	const struct qcom_icc_bcm *bcm_b =
+> +			list_entry(b, struct qcom_icc_bcm, list);
+> +
+> +	if (bcm_a->aux_data.vcd < bcm_b->aux_data.vcd)
+> +		return -1;
+> +	else if (bcm_a->aux_data.vcd == bcm_b->aux_data.vcd)
+> +		return 0;
+> +	else
+> +		return 1;
+> +}
+> +
+> +static void bcm_aggregate(struct qcom_icc_bcm *bcm)
+> +{
+> +	size_t i, bucket;
+> +	u64 agg_avg[QCOM_ICC_NUM_BUCKETS] = {0};
+> +	u64 agg_peak[QCOM_ICC_NUM_BUCKETS] = {0};
+> +	u64 temp;
+> +
+> +	for (bucket = 0; bucket < QCOM_ICC_NUM_BUCKETS; bucket++) {
+> +		for (i = 0; i < bcm->num_nodes; i++) {
+> +			temp = bcm->nodes[i]->sum_avg[bucket] * bcm->aux_data.width;
+> +			do_div(temp, bcm->nodes[i]->buswidth * bcm->nodes[i]->channels);
+> +			agg_avg[bucket] = max(agg_avg[bucket], temp);
+> +
+> +			temp = bcm->nodes[i]->max_peak[bucket] * bcm->aux_data.width;
+> +			do_div(temp, bcm->nodes[i]->buswidth);
+> +			agg_peak[bucket] = max(agg_peak[bucket], temp);
+> +		}
+> +
+> +		temp = agg_avg[bucket] * 1000ULL;
+> +		do_div(temp, bcm->aux_data.unit);
+> +		bcm->vote_x[bucket] = temp;
+> +
+> +		temp = agg_peak[bucket] * 1000ULL;
+> +		do_div(temp, bcm->aux_data.unit);
+> +		bcm->vote_y[bucket] = temp;
+> +	}
+> +
+> +	if (bcm->keepalive && bcm->vote_x[QCOM_ICC_BUCKET_AMC] == 0 &&
+> +	    bcm->vote_y[QCOM_ICC_BUCKET_AMC] == 0) {
+> +		bcm->vote_x[QCOM_ICC_BUCKET_AMC] = 1;
+> +		bcm->vote_x[QCOM_ICC_BUCKET_WAKE] = 1;
+> +		bcm->vote_y[QCOM_ICC_BUCKET_AMC] = 1;
+> +		bcm->vote_y[QCOM_ICC_BUCKET_WAKE] = 1;
+> +	}
+> +}
+> +
+> +static inline void tcs_cmd_gen(struct tcs_cmd *cmd, u64 vote_x, u64 vote_y,
+> +			u32 addr, bool commit)
+> +{
+> +	bool valid = true;
+> +
+> +	if (!cmd)
+> +		return;
+> +
+> +	if (vote_x == 0 && vote_y == 0)
+> +		valid = false;
+> +
+> +	if (vote_x > BCM_TCS_CMD_VOTE_MASK)
+> +		vote_x = BCM_TCS_CMD_VOTE_MASK;
+> +
+> +	if (vote_y > BCM_TCS_CMD_VOTE_MASK)
+> +		vote_y = BCM_TCS_CMD_VOTE_MASK;
+> +
+> +	cmd->addr = addr;
+> +	cmd->data = BCM_TCS_CMD(commit, valid, vote_x, vote_y);
+> +
+> +	/*
+> +	 * Set the wait for completion flag on command that need to be completed
+> +	 * before the next command.
+> +	 */
+> +	if (commit)
+> +		cmd->wait = true;
+> +}
+> +
+> +static void tcs_list_gen(struct list_head *bcm_list, int bucket,
+> +			 struct tcs_cmd tcs_list[MAX_VCD],
+> +			 int n[MAX_VCD])
+> +{
+> +	struct qcom_icc_bcm *bcm;
+> +	bool commit;
+> +	size_t idx = 0, batch = 0, cur_vcd_size = 0;
+> +
+> +	memset(n, 0, sizeof(int) * MAX_VCD);
+> +
+> +	list_for_each_entry(bcm, bcm_list, list) {
+> +		commit = false;
+> +		cur_vcd_size++;
+> +		if ((list_is_last(&bcm->list, bcm_list)) ||
+> +		    bcm->aux_data.vcd != list_next_entry(bcm, list)->aux_data.vcd) {
+> +			commit = true;
+> +			cur_vcd_size = 0;
+> +		}
+> +		tcs_cmd_gen(&tcs_list[idx], bcm->vote_x[bucket],
+> +			    bcm->vote_y[bucket], bcm->addr, commit);
+> +		idx++;
+> +		n[batch]++;
+> +		/*
+> +		 * Batch the BCMs in such a way that we do not split them in
+> +		 * multiple payloads when they are under the same VCD. This is
+> +		 * to ensure that every BCM is committed since we only set the
+> +		 * commit bit on the last BCM request of every VCD.
+> +		 */
+> +		if (n[batch] >= MAX_RPMH_PAYLOAD) {
+> +			if (!commit) {
+> +				n[batch] = cur_vcd_size;
+> +				n[batch + 1] = cur_vcd_size;
+> +			}
+> +			batch++;
+> +		}
+> +	}
+> +}
+> +
+> +/**
+> + * of_bcm_voter_get - gets a bcm voter handle from DT node
+> + * @dev: device pointer for the consumer device
+> + * @name: name for the bcm voter device
+> + *
+> + * This function will match a device_node pointer for the phandle
+> + * specified in the device DT and return a bcm_voter handle on success.
+> + *
+> + * Returns bcm_voter pointer or ERR_PTR() on error. EPROBE_DEFER is returned
+> + * when matching bcm voter is yet to be found.
+> + */
+> +struct bcm_voter *of_bcm_voter_get(struct device *dev, const char *name)
+> +{
+> +	struct bcm_voter *voter = ERR_PTR(-EPROBE_DEFER);
+> +	struct bcm_voter *temp;
+> +	struct device_node *np, *node;
+> +	int idx = 0;
+> +
+> +	if (!dev || !dev->of_node)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	np = dev->of_node;
+> +
+> +	if (name) {
+> +		idx = of_property_match_string(np, "qcom,bcm-voter-names", name);
+> +		if (idx < 0)
+> +			return ERR_PTR(idx);
+> +	}
+> +
+> +	node = of_parse_phandle(np, "qcom,bcm-voters", idx);
+> +
+> +	list_for_each_entry(temp, &bcm_voters, voter_node) {
+> +		if (temp->np == node) {
+> +			voter = temp;
+> +			break;
+> +		}
+> +	}
+> +
+> +	return voter;
+> +}
+> +EXPORT_SYMBOL_GPL(of_bcm_voter_get);
+> +
+> +/**
+> + * qcom_icc_bcm_voter_add - queues up the bcm nodes that require updates
+> + * @voter: voter that the bcms are being added to
+> + * @bcm: bcm to add to the commit and wake sleep list
+> + */
+> +void qcom_icc_bcm_voter_add(struct bcm_voter *voter, struct qcom_icc_bcm *bcm)
+> +{
+> +	if (!voter)
+> +		return;
+> +
+> +	mutex_lock(&voter->lock);
+> +	list_add_tail(&bcm->list, &voter->commit_list);
+
+Isn't there a problem if we try to add the same bcm to the commit list?
+
+> +
+> +	if (list_empty(&bcm->ws_list))
+> +		list_add_tail(&bcm->ws_list, &voter->ws_list);
+> +
+> +	mutex_unlock(&voter->lock);
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_icc_bcm_voter_add);
+> +
+> +/**
+> + * qcom_icc_bcm_voter_commit - generates and commits tcs cmds based on bcms
+> + * @voter: voter that needs flushing
+> + *
+> + * This function generates a set of AMC commands and flushes to the BCM device
+> + * associated with the voter. It conditionally generate WAKE and SLEEP commands
+> + * based on deltas between WAKE/SLEEP requirements. The ws_list persists
+> + * through multiple commit requests and bcm nodes are removed only when the
+> + * requirements for WAKE matches SLEEP.
+> + *
+> + * Returns 0 on success, or an appropriate error code otherwise.
+> + */
+> +int qcom_icc_bcm_voter_commit(struct bcm_voter *voter)
+> +{
+> +	struct qcom_icc_bcm *bcm;
+> +	struct qcom_icc_bcm *bcm_tmp;
+> +	int commit_idx[MAX_VCD];
+> +	struct tcs_cmd cmds[MAX_BCMS];
+> +	int ret = 0;
+> +
+> +	if (!voter)
+> +		return 0;
+> +
+> +	mutex_lock(&voter->lock);
+> +	list_for_each_entry(bcm, &voter->commit_list, list)
+> +		bcm_aggregate(bcm);
+> +
+> +	/*
+> +	 * Pre sort the BCMs based on VCD for ease of generating a command list
+> +	 * that groups the BCMs with the same VCD together. VCDs are numbered
+> +	 * with lowest being the most expensive time wise, ensuring that
+> +	 * those commands are being sent the earliest in the queue. This needs
+> +	 * to be sorted every commit since we can't guarantee the order in which
+> +	 * the BCMs are added to the list.
+> +	 */
+> +	list_sort(NULL, &voter->commit_list, cmp_vcd);
+> +
+> +	/*
+> +	 * Construct the command list based on a pre ordered list of BCMs
+> +	 * based on VCD.
+> +	 */
+> +	tcs_list_gen(&voter->commit_list, QCOM_ICC_BUCKET_AMC, cmds, commit_idx);
+> +
+> +	if (!commit_idx[0])
+> +		goto out;
+> +
+> +	ret = rpmh_invalidate(voter->dev);
+> +	if (ret) {
+> +		pr_err("Error invalidating RPMH client (%d)\n", ret);
+> +		goto out;
+> +	}
+> +
+> +	ret = rpmh_write_batch(voter->dev, RPMH_ACTIVE_ONLY_STATE,
+> +			       cmds, commit_idx);
+> +	if (ret) {
+> +		pr_err("Error sending AMC RPMH requests (%d)\n", ret);
+> +		goto out;
+> +	}
+> +
+> +	INIT_LIST_HEAD(&voter->commit_list);
+> +
+> +	list_for_each_entry_safe(bcm, bcm_tmp, &voter->ws_list, ws_list) {
+> +		/*
+> +		 * Only generate WAKE and SLEEP commands if a resource's
+> +		 * requirements change as the execution environment transitions
+> +		 * between different power states.
+> +		 */
+> +		if (bcm->vote_x[QCOM_ICC_BUCKET_WAKE] !=
+> +		    bcm->vote_x[QCOM_ICC_BUCKET_SLEEP] ||
+> +		    bcm->vote_y[QCOM_ICC_BUCKET_WAKE] !=
+> +		    bcm->vote_y[QCOM_ICC_BUCKET_SLEEP])
+> +			list_add_tail(&bcm->list, &voter->commit_list);
+> +		else
+> +			list_del_init(&bcm->ws_list);
+> +	}
+> +
+> +	if (list_empty(&voter->commit_list))
+> +		goto out;
+> +
+> +	list_sort(NULL, &voter->commit_list, cmp_vcd);
+> +
+> +	tcs_list_gen(&voter->commit_list, QCOM_ICC_BUCKET_WAKE, cmds, commit_idx);
+> +
+> +	ret = rpmh_write_batch(voter->dev, RPMH_WAKE_ONLY_STATE, cmds, commit_idx);
+> +	if (ret) {
+> +		pr_err("Error sending WAKE RPMH requests (%d)\n", ret);
+> +		goto out;
+> +	}
+> +
+> +	tcs_list_gen(&voter->commit_list, QCOM_ICC_BUCKET_SLEEP, cmds, commit_idx);
+> +
+> +	ret = rpmh_write_batch(voter->dev, RPMH_SLEEP_STATE, cmds, commit_idx);
+> +	if (ret) {
+> +		pr_err("Error sending SLEEP RPMH requests (%d)\n", ret);
+> +		goto out;
+> +	}
+> +
+> +out:
+> +	INIT_LIST_HEAD(&voter->commit_list);
+> +	mutex_unlock(&voter->lock);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_icc_bcm_voter_commit);
+> +
+> +static int qcom_icc_bcm_voter_probe(struct platform_device *pdev)
+> +{
+> +	struct bcm_voter *voter;
+> +
+> +	voter = devm_kzalloc(&pdev->dev, sizeof(*voter), GFP_KERNEL);
+> +	if (!voter)
+> +		return -ENOMEM;
+> +
+> +	voter->dev = &pdev->dev;
+> +	voter->np = pdev->dev.of_node;
+> +	mutex_init(&voter->lock);
+> +	INIT_LIST_HEAD(&voter->commit_list);
+> +	INIT_LIST_HEAD(&voter->ws_list);
+> +	list_add_tail(&voter->voter_node, &bcm_voters);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id bcm_voter_of_match[] = {
+> +	{ .compatible = "qcom,sdm845-bcm-voter" },
+> +	{ },
+> +};
+> +
+> +static struct platform_driver qcom_icc_bcm_voter_driver = {
+> +	.probe = qcom_icc_bcm_voter_probe,
+> +	.driver = {
+> +		.name		= "sdm845_bcm_voter",
+> +		.of_match_table = bcm_voter_of_match,
+> +	},
+> +};
+> +module_platform_driver(qcom_icc_bcm_voter_driver);
+> +MODULE_AUTHOR("David Dai <daidavid1@codeaurora.org>");
+> +MODULE_DESCRIPTION("Qualcomm BCM Voter interconnect driver");
+> +MODULE_LICENSE("GPL v2");
+> +
+> diff --git a/drivers/interconnect/qcom/bcm-voter.h b/drivers/interconnect/qcom/bcm-voter.h
+> new file mode 100644
+> index 0000000..bb687b7
+> --- /dev/null
+> +++ b/drivers/interconnect/qcom/bcm-voter.h
+> @@ -0,0 +1,28 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + *
+> + */
+> +
+> +#ifndef __DRIVERS_INTERCONNECT_QCOM_ICC_BCM_VOTER_H__
+> +#define __DRIVERS_INTERCONNECT_QCOM_ICC_BCM_VOTER_H__
+
+This doesn't match the path and filename.
+
+> +
+> +#include <soc/qcom/cmd-db.h>
+> +#include <soc/qcom/rpmh.h>
+> +#include <soc/qcom/tcs.h>
+> +
+> +#include "icc-rpmh.h"
+> +
+> +#define DEFINE_QBCM(_name, _bcmname, _keepalive, _numnodes, ...)	\
+> +		static struct qcom_icc_bcm _name = {			\
+> +		.name = _bcmname,					\
+> +		.keepalive = _keepalive,				\
+> +		.num_nodes = _numnodes,					\
+> +		.nodes = { __VA_ARGS__ },				\
+> +	}
+> +
+> +struct bcm_voter *of_bcm_voter_get(struct device *dev, const char *name);
+> +void qcom_icc_bcm_voter_add(struct bcm_voter *voter, struct qcom_icc_bcm *bcm);
+> +int qcom_icc_bcm_voter_commit(struct bcm_voter *voter);
+> +
+> +#endif
+> diff --git a/drivers/interconnect/qcom/icc-rpmh.c b/drivers/interconnect/qcom/icc-rpmh.c
+> new file mode 100644
+> index 0000000..0041deb
+> --- /dev/null
+> +++ b/drivers/interconnect/qcom/icc-rpmh.c
+> @@ -0,0 +1,158 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + *
+> + */
+> +
+> +#include <asm/div64.h>
+> +#include <dt-bindings/interconnect/qcom,sdm845.h>
+> +#include <linux/interconnect.h>
+> +#include <linux/interconnect-provider.h>
+> +#include <linux/module.h>
+> +
+> +#include "icc-rpmh.h"
+> +#include "bcm-voter.h"
+
+Move above icc-rpmh.h to keep the alphabetical order.
+
+> +
+> +/**
+> + * qcom_icc_pre_aggregate - cleans up stale values from prior icc_set
+> + * @node: icc node to operate on
+> + */
+> +void qcom_icc_pre_aggregate(struct icc_node *node)
+> +{
+> +	size_t i;
+> +	struct qcom_icc_node *qn;
+> +
+> +	qn = node->data;
+> +
+> +	for (i = 0; i < QCOM_ICC_NUM_BUCKETS; i++) {
+> +		qn->sum_avg[i] = 0;
+> +		qn->max_peak[i] = 0;
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_icc_pre_aggregate); > +
+> +/**
+> + * qcom_icc_aggregate - aggregate bw for buckets indicated by tag
+> + * @node: node to aggregate
+> + * @tag: tag to indicate which buckets to aggregate
+> + * @avg_bw: new bw to sum aggregate
+> + * @peak_bw: new bw to max aggregate
+> + * @agg_avg: existing aggregate avg bw val
+> + * @agg_peak: existing aggregate peak bw val
+> + */
+> +int qcom_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
+> +		       u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
+> +{
+> +	size_t i;
+> +	struct qcom_icc_node *qn;
+> +	struct qcom_icc_provider *qp;
+> +
+> +	qn = node->data;
+> +	qp = to_qcom_provider(node->provider);
+> +
+> +	if (!tag)
+> +		tag = QCOM_ICC_TAG_ALWAYS;
+> +
+> +	for (i = 0; i < QCOM_ICC_NUM_BUCKETS; i++) {
+> +		if (tag & BIT(i)) {
+> +			qn->sum_avg[i] += avg_bw;
+> +			qn->max_peak[i] = max_t(u32, qn->max_peak[i], peak_bw);
+> +		}
+> +	}
+> +
+> +	*agg_avg += avg_bw;
+> +	*agg_peak = max_t(u32, *agg_peak, peak_bw);
+> +
+> +	for (i = 0; i < qn->num_bcms; i++)
+> +		qcom_icc_bcm_voter_add(qp->voter, qn->bcms[i]);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_icc_aggregate);
+> +
+> +/**
+> + * qcom_icc_set - set the constraints based on path
+> + * @src: source node for the path to set constraints on
+> + * @dst: destination node for the path to set constraints on
+> + *
+> + * Return: 0 on success, or an error code otherwise
+> + */
+> +int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
+> +{
+> +	struct qcom_icc_provider *qp;
+> +	struct icc_node *node;
+> +	int ret = 0;
+> +
+> +	if (!src)
+> +		node = dst;
+> +	else
+> +		node = src;
+> +
+> +	qp = to_qcom_provider(node->provider);
+> +
+> +	qcom_icc_bcm_voter_commit(qp->voter);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_icc_set);
+> +
+> +/**
+> + * qcom_icc_bcm_init - populates bcm aux data and connect qnodes
+> + * @bcm: bcm to be initialized
+> + * @dev: associated provider device
+> + *
+> + * Return: 0 on success, or an error code otherwise
+> + */
+> +int qcom_icc_bcm_init(struct qcom_icc_bcm *bcm, struct device *dev)
+> +{
+> +	struct qcom_icc_node *qn;
+> +	const struct bcm_db *data;
+> +	size_t data_count;
+> +	int i;
+> +
+> +	bcm->addr = cmd_db_read_addr(bcm->name);
+> +	if (!bcm->addr) {
+> +		dev_err(dev, "%s could not find RPMh address\n",
+> +			bcm->name);
+> +		return -EINVAL;
+> +	}
+> +
+> +	data = cmd_db_read_aux_data(bcm->name, &data_count);
+> +	if (IS_ERR(data)) {
+> +		dev_err(dev, "%s command db read error (%ld)\n",
+> +			bcm->name, PTR_ERR(data));
+> +		return PTR_ERR(data);
+> +	}
+> +	if (!data_count) {
+> +		dev_err(dev, "%s command db missing or partial aux data\n",
+> +			bcm->name);
+> +		return -EINVAL;
+> +	}
+> +
+> +	bcm->aux_data.unit = le32_to_cpu(data->unit);
+> +	bcm->aux_data.width = le16_to_cpu(data->width);
+> +	bcm->aux_data.vcd = data->vcd;
+> +	bcm->aux_data.reserved = data->reserved;
+> +	INIT_LIST_HEAD(&bcm->list);
+> +	INIT_LIST_HEAD(&bcm->ws_list);
+> +
+> +	/*
+> +	 * Link Qnodes to their respective BCMs
+> +	 */
+> +	for (i = 0; i < bcm->num_nodes; i++) {
+> +		qn = bcm->nodes[i];
+> +		qn->bcms[qn->num_bcms] = bcm;
+> +		qn->num_bcms++;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_icc_bcm_init);
+> +
+> +static struct platform_driver qcom_icc_rpmh_driver = {
+> +	.driver = {
+> +		.name		= "icc_rpmh",
+> +	},
+> +};
+> +module_platform_driver(qcom_icc_rpmh_driver);
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/interconnect/qcom/icc-rpmh.h b/drivers/interconnect/qcom/icc-rpmh.h
+> new file mode 100644
+> index 0000000..b32c7e3
+> --- /dev/null
+> +++ b/drivers/interconnect/qcom/icc-rpmh.h
+> @@ -0,0 +1,150 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + *
+> + */
+> +
+> +#ifndef __DRIVERS_INTERCONNECT_QCOM_ICC_RPMH_H__
+> +#define __DRIVERS_INTERCONNECT_QCOM_ICC_RPMH_H__
+> +
+> +#define to_qcom_provider(_provider) \
+> +	container_of(_provider, struct qcom_icc_provider, provider)
+> +
+> +/**
+> + * struct qcom_icc_provider - Qualcomm specific interconnect provider
+> + * @dev: reference to the NoC device
+> + * @bcms: list of bcms that maps to the provider
+> + * @num_bcms: number of @bcms
+> + * @voter: bcm voter targeted by this provider
+> + */
+> +struct qcom_icc_provider {
+> +	struct icc_provider provider;
+
+This is missing in the kerneldoc above.
+
+> +	struct device *dev;
+> +	struct qcom_icc_bcm **bcms;
+> +	size_t num_bcms;
+> +	struct bcm_voter *voter;
+> +};
+> +
+> +/**
+> + * struct bcm_db - Auxiliary data pertaining to each Bus Clock Manager (BCM)
+> + * @unit: divisor used to convert bytes/sec bw value to an RPMh msg
+> + * @width: multiplier used to convert bytes/sec bw value to an RPMh msg
+> + * @vcd: virtual clock domain that this bcm belongs to
+> + * @reserved: reserved field
+> + */
+> +struct bcm_db {
+> +	__le32 unit;
+> +	__le16 width;
+> +	u8 vcd;
+> +	u8 reserved;
+> +};
+> +
+> +#define MAX_LINKS		128
+> +#define MAX_BCMS		64
+> +#define MAX_BCM_PER_NODE	3
+> +#define MAX_VCD			10
+> +
+> +/*
+> + * The AMC bucket denotes constraints that are applied to hardware when
+> + * icc_set_bw() completes, whereas the WAKE and SLEEP constraints are applied
+> + * when the execution environment transitions between active and low power mode.
+> + */
+> +#define QCOM_ICC_BUCKET_AMC		0
+> +#define QCOM_ICC_BUCKET_WAKE		1
+> +#define QCOM_ICC_BUCKET_SLEEP		2
+> +#define QCOM_ICC_NUM_BUCKETS		3
+> +#define QCOM_ICC_TAG_AMC		BIT(QCOM_ICC_BUCKET_AMC)
+> +#define QCOM_ICC_TAG_WAKE		BIT(QCOM_ICC_BUCKET_WAKE)
+> +#define QCOM_ICC_TAG_SLEEP		BIT(QCOM_ICC_BUCKET_SLEEP)
+> +#define QCOM_ICC_TAG_ACTIVE_ONLY	(QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE)
+
+Seems unused?
+
+> +#define QCOM_ICC_TAG_ALWAYS		(QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE |\
+> +					 QCOM_ICC_TAG_SLEEP)
+> +
+> +/**
+> + * struct qcom_icc_node - Qualcomm specific interconnect nodes
+> + * @name: the node name used in debugfs
+> + * @links: an array of nodes where we can go next while traversing
+> + * @id: a unique node identifier
+> + * @num_links: the total number of @links
+> + * @channels: num of channels at this node
+> + * @buswidth: width of the interconnect between a node and the bus
+> + * @sum_avg: current sum aggregate value of all avg bw requests
+> + * @max_peak: current max aggregate value of all peak bw requests
+> + * @bcms: list of bcms associated with this logical node
+> + * @num_bcms: num of @bcms
+> + */
+> +struct qcom_icc_node {
+> +	const char *name;
+> +	u16 links[MAX_LINKS];
+> +	u16 id;
+> +	u16 num_links;
+> +	u16 channels;
+> +	u16 buswidth;
+> +	u64 sum_avg[QCOM_ICC_NUM_BUCKETS];
+> +	u64 max_peak[QCOM_ICC_NUM_BUCKETS];
+> +	struct qcom_icc_bcm *bcms[MAX_BCM_PER_NODE];
+> +	size_t num_bcms;
+> +};
+> +
+> +/**
+> + * struct qcom_icc_bcm - Qualcomm specific hardware accelerator nodes
+> + * known as Bus Clock Manager (BCM)
+> + * @name: the bcm node name used to fetch BCM data from command db
+> + * @type: latency or bandwidth bcm
+> + * @addr: address offsets used when voting to RPMH
+> + * @vote_x: aggregated threshold values, represents sum_bw when @type is bw bcm
+> + * @vote_y: aggregated threshold values, represents peak_bw when @type is bw bcm
+> + * @dirty: flag used to indicate whether the bcm needs to be committed
+> + * @keepalive: flag used to indicate whether a keepalive is required
+> + * @aux_data: auxiliary data used when calculating threshold values and
+> + * communicating with RPMh
+> + * @list: used to link to other bcms when compiling lists for commit
+> + * @ws_list: used to keep track of bcms that may transition between wake/sleep
+> + * @num_nodes: total number of @num_nodes
+> + * @nodes: list of qcom_icc_nodes that this BCM encapsulates
+> + */
+> +struct qcom_icc_bcm {
+> +	const char *name;
+> +	u32 type;
+> +	u32 addr;
+> +	u64 vote_x[QCOM_ICC_NUM_BUCKETS];
+> +	u64 vote_y[QCOM_ICC_NUM_BUCKETS];
+> +	bool dirty;
+> +	bool keepalive;
+> +	struct bcm_db aux_data;
+> +	struct list_head list;
+> +	struct list_head ws_list;
+> +	size_t num_nodes;
+> +	struct qcom_icc_node *nodes[];
+> +};
+> +
+> +struct qcom_icc_fabric {
+> +	struct qcom_icc_node **nodes;
+> +	size_t num_nodes;
+> +};
+> +
+> +struct qcom_icc_desc {
+> +	struct qcom_icc_node **nodes;
+> +	size_t num_nodes;
+> +	struct qcom_icc_bcm **bcms;
+> +	size_t num_bcms;
+> +};
+> +
+> +#define DEFINE_QNODE(_name, _id, _channels, _buswidth,			\
+> +			_numlinks, ...)					\
+> +		static struct qcom_icc_node _name = {			\
+> +		.id = _id,						\
+> +		.name = #_name,						\
+> +		.channels = _channels,					\
+> +		.buswidth = _buswidth,					\
+> +		.num_links = _numlinks,					\
+> +		.links = { __VA_ARGS__ },				\
+> +	}
+> +
+> +int qcom_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
+> +			      u32 peak_bw, u32 *agg_avg, u32 *agg_peak);
+
+Nit: Please align to the open parenthesis.
+
+> +int qcom_icc_set(struct icc_node *src, struct icc_node *dst);
+> +int qcom_icc_bcm_init(struct qcom_icc_bcm *bcm, struct device *dev);
+> +void qcom_icc_pre_aggregate(struct icc_node *node);
+> +
+> +#endif
+> 
+
+Thanks,
+Georgi
