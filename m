@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFCEDC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0615DC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B4C821D7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0E1321D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 10:33:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ktZZjyoT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SMNsyxx7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbfLSKdl (ORCPT
+        id S1727072AbfLSKdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 05:33:41 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45921 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726882AbfLSKdP (ORCPT
+        Thu, 19 Dec 2019 05:33:45 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33727 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbfLSKdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 05:33:15 -0500
-Received: by mail-wr1-f66.google.com with SMTP id j42so5395678wrj.12
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 02:33:14 -0800 (PST)
+        Thu, 19 Dec 2019 05:33:14 -0500
+Received: by mail-wm1-f67.google.com with SMTP id d139so6717298wmd.0
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 02:33:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DVqcfTgjqDIP2wy7JDCyl9+vrKLd49ALRMx75DX6+Wc=;
-        b=ktZZjyoTyUtEdNALf1SUzrS1RPulAqz9Se89Q4db1cThkkBsCMs7gsG3rDtjq0yNsi
-         1sjtnRgiV78PeN17xTD2FWam85YUufWlTpQnBXMbIi06RLpnGboxtv+lh2I7L6ZZ6H1O
-         3tfMyfeWxJUph3D1z8GuVXxKMcMCGa80N4qGnVTJc+0jwa5vjgerOi5ecxVgWHzOpM34
-         snKbXZbSzJyTQh3V20VFLiT7UOnM4/BX84Iflpnejm/qpOw8ITHqpwm/y8Bg0ZPVgyV1
-         7unaqHWFOSXFtKm9uVU4Ca4EHzCkmntnjAK9Nd8DGIAR2LrbCdoidB5OEZ8WN0+E3dMr
-         WZaQ==
+        bh=bP6qV0Ge4OMghuS4pDxfRI185IDu6wuYLbRLvgY6Moc=;
+        b=SMNsyxx7pM0b1zkW0RLF0Ik1SoN8mF1dLMIOX7+uhrefdK8m4QfUEC8B7dESlSX43D
+         o3Mm5OxXX1I1Rmrn4vAqg/c16QLZxlUS8daAh+vH2g1yQMIfxGCGj0/au5+jzW7+1MJV
+         CjB5wB1FWHFqTBnr0RjOy39QxfQFfJC7GICtDSTJoct4srrMWKb9neNcdaKXc8URW2X+
+         L+2HYf0iz/nnCVEkCxGVR1+guCkiAJp/XUKavpVFnQLjl77N/PiCHP+0qHECp+Wuz7aV
+         NaQ2ATplLJ1sXdZE+5WBn6F0StShPIDMLvlccayCdSw+CQBZR/x2LVc0zyEIuLiugJP4
+         HfBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DVqcfTgjqDIP2wy7JDCyl9+vrKLd49ALRMx75DX6+Wc=;
-        b=jiiR3i580fVoKuqFmV8+88C0nlcxReN2/PsRT3o+6p7dT1qvsGvBdPdj3dEW2jI+7a
-         P4lxxiF+8NfuTpRQCg/5K/BmAgFkC8aUMRA2pzI9EYmb5DtbaLzvjnMzNMD2idcXwswR
-         qN+ZAoQ8crQUuWxv9Mxqrt6NLVkPPZ5KLHT/YjQbUZSB4eNexiJg1nsW5rOoGFDrMMxT
-         UCDmb3aYCrMGUoV1sSkRYLB87xV4ly+YJB9MzW5LL7PElzvBwNR2tZexT0OMnAST553m
-         a/6eAv+J4xc3XKbrwKYI21wG9ChmNqfQ31x+O7wt0dfoyTAafO4h+seJ9hrx2sMgk2kC
-         OJYw==
-X-Gm-Message-State: APjAAAX7JhYY+u4lygVlrfXrtnf0dK7sm4ZkOnxsDocRFdCxYkJ4Wap8
-        hIlEjSVhSFZk7wBqK+T71FSD+A==
-X-Google-Smtp-Source: APXvYqywH6nF4apRKFQBfuslkaG/uLnfHUFGV9WQbZz83s/5IJ6BvRgIs+spPH6XgHIa6218fyOCfA==
-X-Received: by 2002:adf:de84:: with SMTP id w4mr8217555wrl.97.1576751593796;
-        Thu, 19 Dec 2019 02:33:13 -0800 (PST)
+        bh=bP6qV0Ge4OMghuS4pDxfRI185IDu6wuYLbRLvgY6Moc=;
+        b=GoZVulooYvfKbZLcQ24kabKFg94s7zN1nUqIQGHwDgLcqBkvKNkM5BWO3JRzigRXz8
+         bEUcZxuOVRSjQ1x2srKojYn3NgqqkZXWzie+kWukvf75lkOTzQzHljS+UTITNrqbVHbK
+         fhn9V76UMu9mlVojskZbtYTL4YIgAhgXSi1dmnlCB0Rl9PWBzxKjtw7yxhpI/dee14Cv
+         NMlXdUKv7D8ArZZ/r/K+RB9TnlnG/BQHdfAt3Z3ijgn+nNxEkqIte6zQUPTLm0RJ/SVH
+         6z8tte7I+j+prUvuIjkDmkdje78KmAecgRY/cqcd+bDxGH9BIoB3ajmzCd0VykGhqAVV
+         rSKg==
+X-Gm-Message-State: APjAAAVQumXTCPPS021RpDvmYISLmiKNpPeJ1NNYo2L+f+o/Np6im4Eh
+        qW8ZOK1fRSTyefH8RZ+HVFUAIGcHM4g=
+X-Google-Smtp-Source: APXvYqzwOH98SgAnD5SDQMHUns16r8ldkHFrtDb0Q3HVojtJ8JC8Dm2IqDYd3FXluATryDb1bNRBCQ==
+X-Received: by 2002:a05:600c:1:: with SMTP id g1mr8751070wmc.131.1576751592455;
+        Thu, 19 Dec 2019 02:33:12 -0800 (PST)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id i11sm5962942wrs.10.2019.12.19.02.33.12
+        by smtp.gmail.com with ESMTPSA id i11sm5962942wrs.10.2019.12.19.02.33.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 02:33:13 -0800 (PST)
+        Thu, 19 Dec 2019 02:33:11 -0800 (PST)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org
 Cc:     robh@kernel.org, vinod.koul@linaro.org,
@@ -63,9 +63,9 @@ Cc:     robh@kernel.org, vinod.koul@linaro.org,
         linux-kernel@vger.kernel.org, spapothi@codeaurora.org,
         bgoswami@codeaurora.org, linux-gpio@vger.kernel.org,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v6 09/11] gpio: wcd934x: Add support to wcd934x gpio controller
-Date:   Thu, 19 Dec 2019 10:31:51 +0000
-Message-Id: <20191219103153.14875-10-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v6 08/11] dt-bindings: gpio: wcd934x: Add bindings for gpio
+Date:   Thu, 19 Dec 2019 10:31:50 +0000
+Message-Id: <20191219103153.14875-9-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191219103153.14875-1-srinivas.kandagatla@linaro.org>
 References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org>
@@ -76,158 +76,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support to wcd934x gpio block found in
-WCD9340/WC9341 Audio codecs.
+Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
+gpio controller to control 5 gpios on the chip. This patch adds
+required device tree bindings for it.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/gpio/Kconfig        |   8 +++
- drivers/gpio/Makefile       |   1 +
- drivers/gpio/gpio-wcd934x.c | 104 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 113 insertions(+)
- create mode 100644 drivers/gpio/gpio-wcd934x.c
+ .../bindings/gpio/qcom,wcd934x-gpio.yaml      | 47 +++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/qcom,wcd934x-gpio.yaml
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 8adffd42f8cb..3da3e228c221 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -613,6 +613,14 @@ config GPIO_VX855
- 	  additional drivers must be enabled in order to use the
- 	  functionality of the device.
- 
-+config GPIO_WCD934X
-+	tristate "Qualcomm Technologies Inc WCD9340/WCD9341 gpio controller driver"
-+	depends on MFD_WCD934X && OF_GPIO
-+	select GPIO_GENERIC
-+	help
-+         This driver is to supprot GPIO block found on the Qualcomm Technologies
-+	 Inc WCD9340/WCD9341 Audio Codec.
-+
- config GPIO_XGENE
- 	bool "APM X-Gene GPIO controller support"
- 	depends on ARM64 && OF_GPIO
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 34eb8b2b12dd..116133f905e7 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -157,6 +157,7 @@ obj-$(CONFIG_GPIO_VF610)		+= gpio-vf610.o
- obj-$(CONFIG_GPIO_VIPERBOARD)		+= gpio-viperboard.o
- obj-$(CONFIG_GPIO_VR41XX)		+= gpio-vr41xx.o
- obj-$(CONFIG_GPIO_VX855)		+= gpio-vx855.o
-+obj-$(CONFIG_GPIO_WCD934X)		+= gpio-wcd934x.o
- obj-$(CONFIG_GPIO_WHISKEY_COVE)		+= gpio-wcove.o
- obj-$(CONFIG_GPIO_WINBOND)		+= gpio-winbond.o
- obj-$(CONFIG_GPIO_WM831X)		+= gpio-wm831x.o
-diff --git a/drivers/gpio/gpio-wcd934x.c b/drivers/gpio/gpio-wcd934x.c
+diff --git a/Documentation/devicetree/bindings/gpio/qcom,wcd934x-gpio.yaml b/Documentation/devicetree/bindings/gpio/qcom,wcd934x-gpio.yaml
 new file mode 100644
-index 000000000000..0aac33235c5f
+index 000000000000..32a566ec3558
 --- /dev/null
-+++ b/drivers/gpio/gpio-wcd934x.c
-@@ -0,0 +1,104 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2019, Linaro Limited
++++ b/Documentation/devicetree/bindings/gpio/qcom,wcd934x-gpio.yaml
+@@ -0,0 +1,47 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/qcom,wcd934x-gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include <linux/module.h>
-+#include <linux/gpio.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+#include <linux/of_device.h>
++title: WCD9340/WCD9341 GPIO controller
 +
-+#define WCD_PIN_MASK(p) BIT(p - 1)
-+#define WCD_REG_DIR_CTL_OFFSET 0x42
-+#define WCD_REG_VAL_CTL_OFFSET 0x43
-+#define WCD934X_NPINS		5
++maintainers:
++  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 +
-+struct wcd_gpio_data {
-+	struct regmap *map;
-+	struct gpio_chip chip;
-+};
++description: |
++  Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
++  gpio controller to control 5 gpios on the chip.
 +
-+static int wcd_gpio_direction_input(struct gpio_chip *chip, unsigned int pin)
-+{
-+	struct wcd_gpio_data *data = gpiochip_get_data(chip);
++properties:
++  compatible:
++    enum:
++      - qcom,wcd9340-gpio
++      - qcom,wcd9341-gpio
 +
-+	return regmap_update_bits(data->map, WCD_REG_DIR_CTL_OFFSET,
-+				  WCD_PIN_MASK(pin), 0);
-+}
++  reg:
++    maxItems: 1
 +
-+static int wcd_gpio_direction_output(struct gpio_chip *chip, unsigned int pin,
-+				     int val)
-+{
-+	struct wcd_gpio_data *data = gpiochip_get_data(chip);
++  gpio-controller: true
 +
-+	regmap_update_bits(data->map, WCD_REG_DIR_CTL_OFFSET,
-+			   WCD_PIN_MASK(pin), WCD_PIN_MASK(pin));
++  '#gpio-cells':
++    const: 2
 +
-+	return regmap_update_bits(data->map, WCD_REG_VAL_CTL_OFFSET,
-+				  WCD_PIN_MASK(pin),
-+				  val ? WCD_PIN_MASK(pin) : 0);
-+}
++required:
++  - compatible
++  - reg
++  - gpio-controller
++  - "#gpio-cells"
 +
-+static int wcd_gpio_get(struct gpio_chip *chip, unsigned int pin)
-+{
-+	struct wcd_gpio_data *data = gpiochip_get_data(chip);
-+	int value;
++additionalProperties: false
 +
-+	regmap_read(data->map, WCD_REG_VAL_CTL_OFFSET, &value);
++examples:
++  - |
++    wcdgpio: gpio@42 {
++        compatible = "qcom,wcd9340-gpio";
++        reg = <0x042 0x2>;
++        gpio-controller;
++        #gpio-cells = <2>;
++    };
 +
-+	return !!(value && WCD_PIN_MASK(pin));
-+}
-+
-+static void wcd_gpio_set(struct gpio_chip *chip, unsigned int pin, int val)
-+{
-+	wcd_gpio_direction_output(chip, pin, val);
-+}
-+
-+static int wcd_gpio_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct wcd_gpio_data *data;
-+	struct gpio_chip *chip;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->map = dev_get_regmap(dev->parent, NULL);
-+	if (!data->map) {
-+		dev_err(dev, "%s: failed to get regmap\n", __func__);
-+		return  -EINVAL;
-+	}
-+
-+	chip = &data->chip;
-+	chip->direction_input  = wcd_gpio_direction_input;
-+	chip->direction_output = wcd_gpio_direction_output;
-+	chip->get = wcd_gpio_get;
-+	chip->set = wcd_gpio_set;
-+	chip->parent = dev;
-+	chip->base = -1;
-+	chip->ngpio = WCD934X_NPINS;
-+	chip->label = dev_name(dev);
-+	chip->of_gpio_n_cells = 2;
-+	chip->can_sleep = false;
-+
-+	return devm_gpiochip_add_data(dev, chip, data);
-+}
-+
-+static const struct of_device_id wcd_gpio_of_match[] = {
-+	{ .compatible = "qcom,wcd9340-gpio" },
-+	{ .compatible = "qcom,wcd9341-gpio" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, wcd_gpio_of_match);
-+
-+static struct platform_driver wcd_gpio_driver = {
-+	.driver = {
-+		   .name = "wcd934x-gpio",
-+		   .of_match_table = wcd_gpio_of_match,
-+	},
-+	.probe = wcd_gpio_probe,
-+};
-+
-+module_platform_driver(wcd_gpio_driver);
-+MODULE_DESCRIPTION("Qualcomm Technologies, Inc WCD GPIO control driver");
-+MODULE_LICENSE("GPL v2");
++...
 -- 
 2.21.0
 
