@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB99C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E43C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFBD024683
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7722624682
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:51:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781505;
-	bh=uwbsH1ug9PaiCVZDYE78+LciTlu5HfsGYmkej1Wx1Zk=;
+	s=default; t=1576781510;
+	bh=O5G0hKE6HK0VPuLIX+BPH8BvpGsTGynaMG+lo67m6/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p3qIRz0CSLSQD1thT9/XEYvBHxzwGpmmUmZqHWMQPDBiKJzmBo0P9tmdIanqFefik
-	 eS5ogaF8cEn/5TU6DWlgdA5ZrrzSiAti0psuBfUBg5VIFKfKEyuV6VmIAVntght6hk
-	 2gbcLe9e46r+ilRcxP9Di49OXiuH0OIyk6bX+pbg=
+	b=RM2Sd+3Pkq3QPgRvFzBcGnUWYGk0R1i4exFOGP8hpDKq/lYx/D+N1tN7MbHPtxi56
+	 eCoQHmhxHgygvM2yurRNXOjW9Al2Mf4+RjGugDpgi8cRg6+1OGpXNjN66ZJyM9O8cl
+	 HxcXL+5qcbbCfzRj06ENHCSTZFs3Jja1BFCKD20Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730166AbfLSSvo (ORCPT
+        id S1729897AbfLSSvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:51:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46000 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:51:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729914AbfLSSvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:51:39 -0500
+        id S1730170AbfLSSvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:51:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D4B32064B;
-        Thu, 19 Dec 2019 18:51:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6510F20674;
+        Thu, 19 Dec 2019 18:51:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781498;
-        bh=uwbsH1ug9PaiCVZDYE78+LciTlu5HfsGYmkej1Wx1Zk=;
+        s=default; t=1576781505;
+        bh=O5G0hKE6HK0VPuLIX+BPH8BvpGsTGynaMG+lo67m6/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=plBeNJsufgwkBoPcE76ReAkScWpQCuwdV80/R9rb+ZRk6emokqekvlZMiHdqoN9Jr
-         ru1gvTgyWU6KE8UTcFIqritIvlgx5oke20sqc47hi3c+zGsoRg55FI3zPMCloMo+zb
-         o6yxGqORDSIONb3ba0lwmgdKboMBYATlTaWVHpRM=
+        b=zl5JSNaC5JdIg/e3fBiFO3frtNnMB4NGpt2myByO6wxY5pHyC6MII+g0wzJHKb/S8
+         Q30h4HC4CwWncBQpKVsd+dgkXEEcoReEPVNkg5YHUf8kCzrdvmxKSljzzTaBuaqOaJ
+         bLP2Z+vKVnhFOv3dxc+0/da5qT5FOk9NA26NIyf0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        Jon Maloy <jon.maloy@ericsson.com>,
+        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 10/47] tipc: fix ordering of tipc module init and exit routine
-Date:   Thu, 19 Dec 2019 19:34:24 +0100
-Message-Id: <20191219182907.255018607@linuxfoundation.org>
+Subject: [PATCH 4.19 13/47] tcp: tighten acceptance of ACKs not matching a child socket
+Date:   Thu, 19 Dec 2019 19:34:27 +0100
+Message-Id: <20191219182911.985451104@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182857.659088743@linuxfoundation.org>
 References: <20191219182857.659088743@linuxfoundation.org>
@@ -60,159 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Guillaume Nault <gnault@redhat.com>
 
-[ Upstream commit 9cf1cd8ee3ee09ef2859017df2058e2f53c5347f ]
+[ Upstream commit cb44a08f8647fd2e8db5cc9ac27cd8355fa392d8 ]
 
-In order to set/get/dump, the tipc uses the generic netlink
-infrastructure. So, when tipc module is inserted, init function
-calls genl_register_family().
-After genl_register_family(), set/get/dump commands are immediately
-allowed and these callbacks internally use the net_generic.
-net_generic is allocated by register_pernet_device() but this
-is called after genl_register_family() in the __init function.
-So, these callbacks would use un-initialized net_generic.
+When no synflood occurs, the synflood timestamp isn't updated.
+Therefore it can be so old that time_after32() can consider it to be
+in the future.
 
-Test commands:
-    #SHELL1
-    while :
-    do
-        modprobe tipc
-        modprobe -rv tipc
-    done
+That's a problem for tcp_synq_no_recent_overflow() as it may report
+that a recent overflow occurred while, in fact, it's just that jiffies
+has grown past 'last_overflow' + TCP_SYNCOOKIE_VALID + 2^31.
 
-    #SHELL2
-    while :
-    do
-        tipc link list
-    done
+Spurious detection of recent overflows lead to extra syncookie
+verification in cookie_v[46]_check(). At that point, the verification
+should fail and the packet dropped. But we should have dropped the
+packet earlier as we didn't even send a syncookie.
 
-Splat looks like:
-[   59.616322][ T2788] kasan: CONFIG_KASAN_INLINE enabled
-[   59.617234][ T2788] kasan: GPF could be caused by NULL-ptr deref or user memory access
-[   59.618398][ T2788] general protection fault: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
-[   59.619389][ T2788] CPU: 3 PID: 2788 Comm: tipc Not tainted 5.4.0+ #194
-[   59.620231][ T2788] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[   59.621428][ T2788] RIP: 0010:tipc_bcast_get_broadcast_mode+0x131/0x310 [tipc]
-[   59.622379][ T2788] Code: c7 c6 ef 8b 38 c0 65 ff 0d 84 83 c9 3f e8 d7 a5 f2 e3 48 8d bb 38 11 00 00 48 b8 00 00 00 00
-[   59.622550][ T2780] NET: Registered protocol family 30
-[   59.624627][ T2788] RSP: 0018:ffff88804b09f578 EFLAGS: 00010202
-[   59.624630][ T2788] RAX: dffffc0000000000 RBX: 0000000000000011 RCX: 000000008bc66907
-[   59.624631][ T2788] RDX: 0000000000000229 RSI: 000000004b3cf4cc RDI: 0000000000001149
-[   59.624633][ T2788] RBP: ffff88804b09f588 R08: 0000000000000003 R09: fffffbfff4fb3df1
-[   59.624635][ T2788] R10: fffffbfff50318f8 R11: ffff888066cadc18 R12: ffffffffa6cc2f40
-[   59.624637][ T2788] R13: 1ffff11009613eba R14: ffff8880662e9328 R15: ffff8880662e9328
-[   59.624639][ T2788] FS:  00007f57d8f7b740(0000) GS:ffff88806cc00000(0000) knlGS:0000000000000000
-[   59.624645][ T2788] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   59.625875][ T2780] tipc: Started in single node mode
-[   59.626128][ T2788] CR2: 00007f57d887a8c0 CR3: 000000004b140002 CR4: 00000000000606e0
-[   59.633991][ T2788] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   59.635195][ T2788] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   59.636478][ T2788] Call Trace:
-[   59.637025][ T2788]  tipc_nl_add_bc_link+0x179/0x1470 [tipc]
-[   59.638219][ T2788]  ? lock_downgrade+0x6e0/0x6e0
-[   59.638923][ T2788]  ? __tipc_nl_add_link+0xf90/0xf90 [tipc]
-[   59.639533][ T2788]  ? tipc_nl_node_dump_link+0x318/0xa50 [tipc]
-[   59.640160][ T2788]  ? mutex_lock_io_nested+0x1380/0x1380
-[   59.640746][ T2788]  tipc_nl_node_dump_link+0x4fd/0xa50 [tipc]
-[   59.641356][ T2788]  ? tipc_nl_node_reset_link_stats+0x340/0x340 [tipc]
-[   59.642088][ T2788]  ? __skb_ext_del+0x270/0x270
-[   59.642594][ T2788]  genl_lock_dumpit+0x85/0xb0
-[   59.643050][ T2788]  netlink_dump+0x49c/0xed0
-[   59.643529][ T2788]  ? __netlink_sendskb+0xc0/0xc0
-[   59.644044][ T2788]  ? __netlink_dump_start+0x190/0x800
-[   59.644617][ T2788]  ? __mutex_unlock_slowpath+0xd0/0x670
-[   59.645177][ T2788]  __netlink_dump_start+0x5a0/0x800
-[   59.645692][ T2788]  genl_rcv_msg+0xa75/0xe90
-[   59.646144][ T2788]  ? __lock_acquire+0xdfe/0x3de0
-[   59.646692][ T2788]  ? genl_family_rcv_msg_attrs_parse+0x320/0x320
-[   59.647340][ T2788]  ? genl_lock_dumpit+0xb0/0xb0
-[   59.647821][ T2788]  ? genl_unlock+0x20/0x20
-[   59.648290][ T2788]  ? genl_parallel_done+0xe0/0xe0
-[   59.648787][ T2788]  ? find_held_lock+0x39/0x1d0
-[   59.649276][ T2788]  ? genl_rcv+0x15/0x40
-[   59.649722][ T2788]  ? lock_contended+0xcd0/0xcd0
-[   59.650296][ T2788]  netlink_rcv_skb+0x121/0x350
-[   59.650828][ T2788]  ? genl_family_rcv_msg_attrs_parse+0x320/0x320
-[   59.651491][ T2788]  ? netlink_ack+0x940/0x940
-[   59.651953][ T2788]  ? lock_acquire+0x164/0x3b0
-[   59.652449][ T2788]  genl_rcv+0x24/0x40
-[   59.652841][ T2788]  netlink_unicast+0x421/0x600
-[ ... ]
+Let's refine tcp_synq_no_recent_overflow() to report a recent overflow
+only if jiffies is within the
+[last_overflow, last_overflow + TCP_SYNCOOKIE_VALID] interval. This
+way, no spurious recent overflow is reported when jiffies wraps and
+'last_overflow' becomes in the future from the point of view of
+time_after32().
 
-Fixes: 7e4369057806 ("tipc: fix a slab object leak")
-Fixes: a62fbccecd62 ("tipc: make subscriber server support net namespace")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Acked-by: Jon Maloy <jon.maloy@ericsson.com>
+However, if jiffies wraps and enters the
+[last_overflow, last_overflow + TCP_SYNCOOKIE_VALID] interval (with
+'last_overflow' being a stale synflood timestamp), then
+tcp_synq_no_recent_overflow() still erroneously reports an
+overflow. In such cases, we have to rely on syncookie verification
+to drop the packet. We unfortunately have no way to differentiate
+between a fresh and a stale syncookie timestamp.
+
+In practice, using last_overflow as lower bound is problematic.
+If the synflood timestamp is concurrently updated between the time
+we read jiffies and the moment we store the timestamp in
+'last_overflow', then 'now' becomes smaller than 'last_overflow' and
+tcp_synq_no_recent_overflow() returns true, potentially dropping a
+valid syncookie.
+
+Reading jiffies after loading the timestamp could fix the problem,
+but that'd require a memory barrier. Let's just accommodate for
+potential timestamp growth instead and extend the interval using
+'last_overflow - HZ' as lower bound.
+
+Signed-off-by: Guillaume Nault <gnault@redhat.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tipc/core.c |   29 +++++++++++++++--------------
- 1 file changed, 15 insertions(+), 14 deletions(-)
+ include/net/tcp.h |   16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
---- a/net/tipc/core.c
-+++ b/net/tipc/core.c
-@@ -120,14 +120,6 @@ static int __init tipc_init(void)
- 	sysctl_tipc_rmem[1] = RCVBUF_DEF;
- 	sysctl_tipc_rmem[2] = RCVBUF_MAX;
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -509,13 +509,23 @@ static inline bool tcp_synq_no_recent_ov
+ 		reuse = rcu_dereference(sk->sk_reuseport_cb);
+ 		if (likely(reuse)) {
+ 			last_overflow = READ_ONCE(reuse->synq_overflow_ts);
+-			return time_after32(now, last_overflow +
+-					    TCP_SYNCOOKIE_VALID);
++			return !time_between32(now, last_overflow - HZ,
++					       last_overflow +
++					       TCP_SYNCOOKIE_VALID);
+ 		}
+ 	}
  
--	err = tipc_netlink_start();
--	if (err)
--		goto out_netlink;
--
--	err = tipc_netlink_compat_start();
--	if (err)
--		goto out_netlink_compat;
--
- 	err = tipc_register_sysctl();
- 	if (err)
- 		goto out_sysctl;
-@@ -148,8 +140,21 @@ static int __init tipc_init(void)
- 	if (err)
- 		goto out_bearer;
- 
-+	err = tipc_netlink_start();
-+	if (err)
-+		goto out_netlink;
+ 	last_overflow = tcp_sk(sk)->rx_opt.ts_recent_stamp;
+-	return time_after32(now, last_overflow + TCP_SYNCOOKIE_VALID);
 +
-+	err = tipc_netlink_compat_start();
-+	if (err)
-+		goto out_netlink_compat;
-+
- 	pr_info("Started in single node mode\n");
- 	return 0;
-+
-+out_netlink_compat:
-+	tipc_netlink_stop();
-+out_netlink:
-+	tipc_bearer_cleanup();
- out_bearer:
- 	unregister_pernet_device(&tipc_topsrv_net_ops);
- out_pernet_topsrv:
-@@ -159,22 +164,18 @@ out_socket:
- out_pernet:
- 	tipc_unregister_sysctl();
- out_sysctl:
--	tipc_netlink_compat_stop();
--out_netlink_compat:
--	tipc_netlink_stop();
--out_netlink:
- 	pr_err("Unable to start in single node mode\n");
- 	return err;
++	/* If last_overflow <= jiffies <= last_overflow + TCP_SYNCOOKIE_VALID,
++	 * then we're under synflood. However, we have to use
++	 * 'last_overflow - HZ' as lower bound. That's because a concurrent
++	 * tcp_synq_overflow() could update .ts_recent_stamp after we read
++	 * jiffies but before we store .ts_recent_stamp into last_overflow,
++	 * which could lead to rejecting a valid syncookie.
++	 */
++	return !time_between32(now, last_overflow - HZ,
++			       last_overflow + TCP_SYNCOOKIE_VALID);
  }
  
- static void __exit tipc_exit(void)
- {
-+	tipc_netlink_compat_stop();
-+	tipc_netlink_stop();
- 	tipc_bearer_cleanup();
- 	unregister_pernet_device(&tipc_topsrv_net_ops);
- 	tipc_socket_stop();
- 	unregister_pernet_device(&tipc_net_ops);
--	tipc_netlink_stop();
--	tipc_netlink_compat_stop();
- 	tipc_unregister_sysctl();
- 
- 	pr_info("Deactivated\n");
+ static inline u32 tcp_cookie_time(void)
 
 
