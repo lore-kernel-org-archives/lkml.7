@@ -2,196 +2,122 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7AE3C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 02:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB94EC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 02:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE00222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 02:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 847FE222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 02:56:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfLSC4h (ORCPT
+        id S1726903AbfLSC4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 21:56:37 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:53234 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726751AbfLSC4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 21:56:37 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 68396688B725795AE78A;
-        Thu, 19 Dec 2019 10:56:33 +0800 (CST)
-Received: from [127.0.0.1] (10.177.131.64) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Thu, 19 Dec 2019
- 10:56:26 +0800
-Subject: Re: [PATCH v6 0/4] support reserving crashkernel above 4G on arm64
- kdump
-To:     John Donnelly <john.p.donnelly@oracle.com>
-References: <20190830071200.56169-1-chenzhou10@huawei.com>
- <2a97b296-59e7-0a26-84fa-e2ddcd7987b6@huawei.com>
- <11E080AF-28F1-481A-BF16-9C062091D900@oracle.com>
-CC:     <tglx@linutronix.de>, <mingo@redhat.com>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <james.morse@arm.com>, <dyoung@redhat.com>, <bhsharma@redhat.com>,
-        <horms@verge.net.au>, <kexec@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <guohanjun@huawei.com>
-From:   Chen Zhou <chenzhou10@huawei.com>
-Message-ID: <94c4540b-6467-002f-6cfc-bacc4ac45d24@huawei.com>
-Date:   Thu, 19 Dec 2019 10:56:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Wed, 18 Dec 2019 21:56:49 -0500
+Received: from mga09.intel.com ([134.134.136.24]:49607 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726751AbfLSC4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 21:56:49 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 18:56:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
+   d="scan'208";a="416044730"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga005.fm.intel.com with ESMTP; 18 Dec 2019 18:56:46 -0800
+Date:   Thu, 19 Dec 2019 10:56:45 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, cai@lca.pw, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Patch v2] mm: remove dead code totalram_pages_set()
+Message-ID: <20191219025645.GA5741@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20191218005543.24146-1-richardw.yang@linux.intel.com>
+ <20795dc0-8f6c-73cd-c98f-636f4ac59154@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <11E080AF-28F1-481A-BF16-9C062091D900@oracle.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.131.64]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20795dc0-8f6c-73cd-c98f-636f4ac59154@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+On Wed, Dec 18, 2019 at 09:46:58AM +0100, David Hildenbrand wrote:
+>On 18.12.19 01:55, Wei Yang wrote:
+>> No one uses totalram_pages_set(), just remove it.
+>> 
+>> Fixes: ca79b0c211af ("mm: convert totalram_pages and totalhigh_pages
+>> variables to atomic")
+>
+>Hi Wei, thanks for the update.
+>
+>We should really avoid "Fixes" tags here. This is neither a bugfix nor a
+>compile fix.
+>
 
-On 2019/12/19 1:18, John Donnelly wrote:
-> HI 
-> 
-> SEE INLINE ON A QUESTION :
-> 
->> On Dec 17, 2019, at 8:07 PM, Chen Zhou <chenzhou10@huawei.com> wrote:
->>
->> Hi all,
->>
->> Friendly ping...
->>
->> On 2019/8/30 15:11, Chen Zhou wrote:
->>> I am busy with other things, so it was a long time before this version was
->>> released.
->>>
->>> This patch series enable reserving crashkernel above 4G in arm64.
->>>
->>> There are following issues in arm64 kdump:
->>> 1. We use crashkernel=X to reserve crashkernel below 4G, which will fail
->>> when there is no enough low memory.
->>> 2. Currently, crashkernel=Y@X can be used to reserve crashkernel above 4G,
->>> in this case, if swiotlb or DMA buffers are requierd, crash dump kernel
->>> will boot failure because there is no low memory available for allocation.
-> 
->   
->       Can you elaborate when the boot failures may fail due to lacking  swiotlb or DMA buffers ? Are these related to certain adapters or specific  platforms  ? 
-> 
->      I have not seen this when using   crashkernel=2024M@35GB . 
-> 
+Agree, when I pick up this tags, I am a little not sure whether this is
+correct.
 
-For example, in my environment "Huawei TaiShan 2280",
-we need to use mpt3sas driver in crash dump kernel for dumping vmcore.
+>@Andrew, can you fix that up to:
+>"Last user was removed in commit ca79b0c211af ("mm: convert
+>totalram_pages and totalhigh_pages variables to atomic")."
+>
 
-mpt3sas driver needs to call dma_pool_alloc to allocate some pages,
-if there is no DMA buffer, page allocation will fail, which leads to crash dump kernel boot failure,
-like this:
+Hmm... this one is not that exact. This function is introduced in commit
+ca79b0c211af and no one use it on its birth.
 
-[2019/12/19 9:12:41] [   12.403501] mpt3sas_cm0: diag reset: SUCCESS
-[2019/12/19 9:12:41] [   12.456076] mpt3sas_cm0: reply_post_free pool: dma_pool_alloc failed
-[2019/12/19 9:12:41] [   12.462515] pci 0004:48:00.0: can't derive routing for PCI INT A
-[2019/12/19 9:12:41] [   12.468761] mpt3sas 0004:49:00.0: PCI INT A: no GSI
-[2019/12/19 9:12:41] [   12.476348] mpt3sas_cm0: failure at drivers/scsi/mpt3sas/mpt3sas_scsih.c:10626/_scsih_probe()!
-[2019/12/19 9:14:38] [ TIME ] Timed out waiting for device dev-di…b3\x2d890a\x2d2ead7df26f48.device.
-[2019/12/19 9:14:38] [DEPEND] Dependency failed for Initrd Root Device.
-[2019/12/19 9:14:38] [DEPEND] Dependency failed for /sysroot.
-[2019/12/19 9:14:38] [DEPEND] Dependency failed for Initrd Root File System.
-[2019/12/19 9:14:38] [DEPEND] Dependency failed for Reload Configuration from the Real Root.
-[2019/12/19 9:14:38] [DEPEND] Dependency failed for File System C…40bae-9eb8-46b3-890a-2ead7df26f48.
+Maybe we need to change it to:
 
-Thanks,
-Chen Zhou
+    totalram_pages_set() is introduced in commit ca79b0c211af ("mm: convert
+    totalram_pages and totalhigh_pages variables to atomic"), but no one
+    use it.
 
-> 
->>>
->>> To solve these issues, introduce crashkernel=X,low to reserve specified
->>> size low memory.
->>> Crashkernel=X tries to reserve memory for the crash dump kernel under
->>> 4G. If crashkernel=Y,low is specified simultaneously, reserve spcified
->>> size low memory for crash kdump kernel devices firstly and then reserve
->>> memory above 4G.
->>>
->>> When crashkernel is reserved above 4G in memory, that is, crashkernel=X,low
->>> is specified simultaneously, kernel should reserve specified size low memory
->>> for crash dump kernel devices. So there may be two crash kernel regions, one
->>> is below 4G, the other is above 4G.
->>> In order to distinct from the high region and make no effect to the use of
->>> kexec-tools, rename the low region as "Crash kernel (low)", and add DT property
->>> "linux,low-memory-range" to crash dump kernel's dtb to pass the low region.
->>>
->>> Besides, we need to modify kexec-tools:
->>> arm64: kdump: add another DT property to crash dump kernel's dtb(see [1])
->>>
->>> The previous changes and discussions can be retrieved from:
->>>
->>> Changes since [v5]
->>> - Move reserve_crashkernel_low() into kernel/crash_core.c.
->>> - Delete crashkernel=X,high.
->>> - Modify crashkernel=X,low.
->>> If crashkernel=X,low is specified simultaneously, reserve spcified size low
->>> memory for crash kdump kernel devices firstly and then reserve memory above 4G.
->>> In addition, rename crashk_low_res as "Crash kernel (low)" for arm64, and then
->>> pass to crash dump kernel by DT property "linux,low-memory-range".
->>> - Update Documentation/admin-guide/kdump/kdump.rst.
->>>
->>> Changes since [v4]
->>> - Reimplement memblock_cap_memory_ranges for multiple ranges by Mike.
->>>
->>> Changes since [v3]
->>> - Add memblock_cap_memory_ranges back for multiple ranges.
->>> - Fix some compiling warnings.
->>>
->>> Changes since [v2]
->>> - Split patch "arm64: kdump: support reserving crashkernel above 4G" as
->>> two. Put "move reserve_crashkernel_low() into kexec_core.c" in a separate
->>> patch.
->>>
->>> Changes since [v1]:
->>> - Move common reserve_crashkernel_low() code into kernel/kexec_core.c.
->>> - Remove memblock_cap_memory_ranges() i added in v1 and implement that
->>> in fdt_enforce_memory_region().
->>> There are at most two crash kernel regions, for two crash kernel regions
->>> case, we cap the memory range [min(regs[*].start), max(regs[*].end)]
->>> and then remove the memory range in the middle.
->>>
->>> [1]: https://urldefense.proofpoint.com/v2/url?u=http-3A__lists.infradead.org_pipermail_kexec_2019-2DAugust_023569.html&d=DwICAg&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=t2fPg9D87F7D8jm0_3CG9yoiIKdRg4qc_thBw4bzMhc&m=ZAC6UYbT-3qLR3Dvevd09m6neWWzGWSphuvXXlXow68&s=9tn9kUBabiuYhVtXauANSDGaISnCnHLYcAUQgsPBFxs&e= 
->>> [v1]: https://urldefense.proofpoint.com/v2/url?u=https-3A__lkml.org_lkml_2019_4_2_1174&d=DwICAg&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=t2fPg9D87F7D8jm0_3CG9yoiIKdRg4qc_thBw4bzMhc&m=ZAC6UYbT-3qLR3Dvevd09m6neWWzGWSphuvXXlXow68&s=F-lM7II2cuMF_sK3b6-QhSbWM3X-pI_WZEs0sZitS7A&e= 
->>> [v2]: https://urldefense.proofpoint.com/v2/url?u=https-3A__lkml.org_lkml_2019_4_9_86&d=DwICAg&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=t2fPg9D87F7D8jm0_3CG9yoiIKdRg4qc_thBw4bzMhc&m=ZAC6UYbT-3qLR3Dvevd09m6neWWzGWSphuvXXlXow68&s=5Y-S6sqMTklHkOQsNtjTX3C7pV05BjKLGhJVfMHEvDs&e= 
->>> [v3]: https://urldefense.proofpoint.com/v2/url?u=https-3A__lkml.org_lkml_2019_4_9_306&d=DwICAg&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=t2fPg9D87F7D8jm0_3CG9yoiIKdRg4qc_thBw4bzMhc&m=ZAC6UYbT-3qLR3Dvevd09m6neWWzGWSphuvXXlXow68&s=cWn4zSRQupaZ3jjz4eDvD-pNkoLyL_hsZoRx4yJoD0c&e= 
->>> [v4]: https://urldefense.proofpoint.com/v2/url?u=https-3A__lkml.org_lkml_2019_4_15_273&d=DwICAg&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=t2fPg9D87F7D8jm0_3CG9yoiIKdRg4qc_thBw4bzMhc&m=ZAC6UYbT-3qLR3Dvevd09m6neWWzGWSphuvXXlXow68&s=Nslk4RJKIyIuT0IoQoolXNjupEDXplPhQQwnTSoXNWE&e= 
->>> [v5]: https://urldefense.proofpoint.com/v2/url?u=https-3A__lkml.org_lkml_2019_5_6_1360&d=DwICAg&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=t2fPg9D87F7D8jm0_3CG9yoiIKdRg4qc_thBw4bzMhc&m=ZAC6UYbT-3qLR3Dvevd09m6neWWzGWSphuvXXlXow68&s=HJVAM6sCxV2DnNg5d4pw8WPqtkmQnKvztEmkSIgtQ5M&e= 
->>>
->>> Chen Zhou (4):
->>>  x86: kdump: move reserve_crashkernel_low() into crash_core.c
->>>  arm64: kdump: reserve crashkenel above 4G for crash dump kernel
->>>  arm64: kdump: add memory for devices by DT property, low-memory-range
->>>  kdump: update Documentation about crashkernel on arm64
->>>
->>> Documentation/admin-guide/kdump/kdump.rst       | 13 ++++-
->>> Documentation/admin-guide/kernel-parameters.txt | 12 ++++-
->>> arch/arm64/include/asm/kexec.h                  |  3 ++
->>> arch/arm64/kernel/setup.c                       |  8 ++-
->>> arch/arm64/mm/init.c                            | 61 +++++++++++++++++++++--
->>> arch/x86/include/asm/kexec.h                    |  3 ++
->>> arch/x86/kernel/setup.c                         | 65 +++----------------------
->>> include/linux/crash_core.h                      |  4 ++
->>> include/linux/kexec.h                           |  1 -
->>> kernel/crash_core.c                             | 65 +++++++++++++++++++++++++
->>> 10 files changed, 168 insertions(+), 67 deletions(-)
->>>
->>
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> https://urldefense.proofpoint.com/v2/url?u=http-3A__lists.infradead.org_mailman_listinfo_kexec&d=DwICAg&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=t2fPg9D87F7D8jm0_3CG9yoiIKdRg4qc_thBw4bzMhc&m=ZAC6UYbT-3qLR3Dvevd09m6neWWzGWSphuvXXlXow68&s=XMcFx61B_QPg-FUfG_-t88DKCnGm4grqu6zRguiHYrU&e= 
-> 
-> 
-> .
-> 
+Thanks for your comments:-)
 
+>Cheers!
+>
+>> 
+>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>> Reviewed-by: David Hildenbrand <david@redhat.com>
+>> 
+>> ---
+>> v2: fix typo and points which commit introduce it.
+>> ---
+>>  include/linux/mm.h | 5 -----
+>>  1 file changed, 5 deletions(-)
+>> 
+>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>> index 74232b28949b..4cf023c4c6b3 100644
+>> --- a/include/linux/mm.h
+>> +++ b/include/linux/mm.h
+>> @@ -70,11 +70,6 @@ static inline void totalram_pages_add(long count)
+>>  	atomic_long_add(count, &_totalram_pages);
+>>  }
+>>  
+>> -static inline void totalram_pages_set(long val)
+>> -{
+>> -	atomic_long_set(&_totalram_pages, val);
+>> -}
+>> -
+>>  extern void * high_memory;
+>>  extern int page_cluster;
+>>  
+>> 
+>
+>
+>-- 
+>Thanks,
+>
+>David / dhildenb
+
+-- 
+Wei Yang
+Help you, Help me
