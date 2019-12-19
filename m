@@ -2,179 +2,102 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74948C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62996C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46E22222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:16:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37D22222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 21:18:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DpAgGRtL"
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="CcoAQ8RP";
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="CcoAQ8RP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727438AbfLSVQr (ORCPT
+        id S1727258AbfLSVSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 16:16:47 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:10406 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbfLSVQq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 16:16:46 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dfbe8b30000>; Thu, 19 Dec 2019 13:16:35 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 19 Dec 2019 13:16:45 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 19 Dec 2019 13:16:45 -0800
-Received: from [10.2.165.11] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Dec
- 2019 21:16:42 +0000
-Subject: Re: [PATCH v11 00/25] mm/gup: track dma-pinned pages: FOLL_PIN
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-CC:     Leon Romanovsky <leon@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Alex Williamson" <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        Maor Gottlieb <maorg@mellanox.com>
-References: <20191216222537.491123-1-jhubbard@nvidia.com>
- <20191219132607.GA410823@unreal>
- <a4849322-8e17-119e-a664-80d9f95d850b@nvidia.com>
- <20191219210743.GN17227@ziepe.ca>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <42a3e5c1-6301-db0b-5d09-212edf5ecf2a@nvidia.com>
-Date:   Thu, 19 Dec 2019 13:13:54 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 19 Dec 2019 16:18:03 -0500
+Received: from node.akkea.ca ([192.155.83.177]:35702 "EHLO node.akkea.ca"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726967AbfLSVSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 16:18:02 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by node.akkea.ca (Postfix) with ESMTP id 61CDB4E2006;
+        Thu, 19 Dec 2019 21:18:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1576790282; bh=OFvkXpgSlnb0/pUde8cMlEl0cLNJVrFCr4s08Ho54bQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=CcoAQ8RPcCBtfw7CpmT+5ehRWvIo07gAA5GsrhmxS4lEoacb9JvZNlJ7Hgrar3uPs
+         XMCWZ/8rcendV4xcx6LTmFMfuDbBn5Sjcc+Ep9TFmyTDXQVYIJ9zCgXTtevZjf7Q8W
+         CRjLEe8tw7Q0/M2PBJqTULSpJSNd/8qCti0Vef6I=
+X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
+Received: from node.akkea.ca ([127.0.0.1])
+        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id WS9QXKpTBfZG; Thu, 19 Dec 2019 21:18:02 +0000 (UTC)
+Received: from www.akkea.ca (node.akkea.ca [192.155.83.177])
+        by node.akkea.ca (Postfix) with ESMTPSA id 095444E2003;
+        Thu, 19 Dec 2019 21:18:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1576790282; bh=OFvkXpgSlnb0/pUde8cMlEl0cLNJVrFCr4s08Ho54bQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=CcoAQ8RPcCBtfw7CpmT+5ehRWvIo07gAA5GsrhmxS4lEoacb9JvZNlJ7Hgrar3uPs
+         XMCWZ/8rcendV4xcx6LTmFMfuDbBn5Sjcc+Ep9TFmyTDXQVYIJ9zCgXTtevZjf7Q8W
+         CRjLEe8tw7Q0/M2PBJqTULSpJSNd/8qCti0Vef6I=
 MIME-Version: 1.0
-In-Reply-To: <20191219210743.GN17227@ziepe.ca>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576790195; bh=e+stzM4MKJvMbnHvF2MQtGYZPTDUXmhAC++H/dKblxU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=DpAgGRtLU03goQ45lwT7ONh8PGmHo2uEl58mvIXxDE1nHXoSem5kfykU7etb/JcJL
-         /yvdQuNedqWs+SUfVSLa4E60NrM+DSMnCAe2ItTu7yCQ5BHkbAsDg8Mpyow9MA1pYC
-         3jVYe0GuNI9xJv3hjbBlrnChECIJB3Q5siLf6V5xGWCqbhXjMLlDdPH405dRvVKPVH
-         0B/YfWOP+8DomZJl09OCXT8zLxeag4uByq64+u082UEQpj/kDFhFOsIPO4HgJs9I5d
-         GI+vJAY5OMeBcbGVYpOeSe0O73rRuIYou0nCs6Mvptf4ghAI7UtlU7flZFGsoZAujM
-         ZE4962uBaaz9A==
+Date:   Thu, 19 Dec 2019 13:18:02 -0800
+From:   Angus Ainslie <angus@akkea.ca>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     krzk@kernel.org, Rob Herring <robh@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@puri.sm
+Subject: Re: [PATCH v2 0/2] Add MAX17055 fuel guage
+In-Reply-To: <20191219001531.gnav4roprttdwknc@earth.universe>
+References: <20191214152755.25138-1-angus@akkea.ca>
+ <20191219001531.gnav4roprttdwknc@earth.universe>
+Message-ID: <cb3c9effe0995d2cd7b48ef4a9c6ae03@akkea.ca>
+X-Sender: angus@akkea.ca
+User-Agent: Roundcube Webmail/1.3.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/19/19 1:07 PM, Jason Gunthorpe wrote:
-> On Thu, Dec 19, 2019 at 12:30:31PM -0800, John Hubbard wrote:
->> On 12/19/19 5:26 AM, Leon Romanovsky wrote:
->>> On Mon, Dec 16, 2019 at 02:25:12PM -0800, John Hubbard wrote:
->>>> Hi,
->>>>
->>>> This implements an API naming change (put_user_page*() -->
->>>> unpin_user_page*()), and also implements tracking of FOLL_PIN pages. It
->>>> extends that tracking to a few select subsystems. More subsystems will
->>>> be added in follow up work.
->>>
->>> Hi John,
->>>
->>> The patchset generates kernel panics in our IB testing. In our tests, we
->>> allocated single memory block and registered multiple MRs using the single
->>> block.
->>>
->>> The possible bad flow is:
->>>    ib_umem_geti() ->
->>>     pin_user_pages_fast(FOLL_WRITE) ->
->>>      internal_get_user_pages_fast(FOLL_WRITE) ->
->>>       gup_pgd_range() ->
->>>        gup_huge_pd() ->
->>>         gup_hugepte() ->
->>>          try_grab_compound_head() ->
->>
->> Hi Leon,
->>
->> Thanks very much for the detailed report! So we're overflowing...
->>
->> At first look, this seems likely to be hitting a weak point in the
->> GUP_PIN_COUNTING_BIAS-based design, one that I believed could be deferred
->> (there's a writeup in Documentation/core-api/pin_user_page.rst, lines
->> 99-121). Basically it's pretty easy to overflow the page->_refcount
->> with huge pages if the pages have a *lot* of subpages.
->>
->> We can only do about 7 pins on 1GB huge pages that use 4KB subpages.
+On 2019-12-18 16:15, Sebastian Reichel wrote:
+> Hi,
 > 
-> Considering that establishing these pins is entirely under user
-> control, we can't have a limit here.
-
-There's already a limit, it's just a much larger one. :) What does "no limit"
-really mean, numerically, to you in this case?
-
+> On Sat, Dec 14, 2019 at 07:27:53AM -0800, Angus Ainslie (Purism) wrote:
+>> Extend the max17042_battery driver to include the MAX17055.
 > 
-> If the number of allowed pins are exhausted then the
-> pin_user_pages_fast() must fail back to the user.
-
-
-I'll poke around the IB call stack and see how much of that return path
-is in place, if any. Because it's the same situation for get_user_pages_fast().
-This code just added a warning on overflow so we could spot it early.
-
+> Thanks, queued to power-suply's for-next branch.
 > 
->> 3. It would be nice if I could reproduce this. I have a two-node mlx5 Infiniband
->> test setup, but I have done only the tiniest bit of user space IB coding, so
->> if you have any test programs that aren't too hard to deal with that could
->> possibly hit this, or be tweaked to hit it, I'd be grateful. Keeping in mind
->> that I'm not an advanced IB programmer. At all. :)
-> 
-> Clone this:
-> 
-> https://github.com/linux-rdma/rdma-core.git
-> 
-> Install all the required deps to build it (notably cython), see the README.md
-> 
-> $ ./build.sh
-> $ build/bin/run_tests.py
-> 
-> If you get things that far I think Leon can get a reproduction for you
+> -- Sebastian
 > 
 
-OK, here goes.
+Thanks
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+Angus
+
+>> 
+>> Changes since v1:
+>> 
+>> Change blacklist driver checks to whitelists.
+>> 
+>> Angus Ainslie (Purism) (2):
+>>   power: supply: max17042: add MAX17055 support
+>>   device-tree: bindings: max17042_battery: add all of the compatible
+>>     strings
+>> 
+>>  .../power/supply/max17042_battery.txt         |  6 ++-
+>>  drivers/power/supply/max17042_battery.c       | 17 +++++--
+>>  include/linux/power/max17042_battery.h        | 48 
+>> ++++++++++++++++++-
+>>  3 files changed, 66 insertions(+), 5 deletions(-)
+>> 
+>> --
+>> 2.17.1
+>> 
