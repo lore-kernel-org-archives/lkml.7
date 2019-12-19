@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16321C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB9DC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E03622465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B819024683
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:48:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781285;
-	bh=/mQwVnJ81ceu8NQUm2eQWohnmLq0oL3GwPJKUbRkFT8=;
+	s=default; t=1576781288;
+	bh=UtmX9GiSmxXu/9EaoD1243Db0uC3Xo+gs5g7A8/UcsI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tbOyLoC52HmwS2JYr7bXSLAnPNzpV5j3Yp56wHKoH9E+6382hrxXpysBd1acv4BAx
-	 cUT6q6u3PYwAfh9yQvHeR7/d66pVNbHgtRqYpwAXPHghpqEuCugV3t7unNPyCyXja9
-	 c/gcwv7rUIThExy3M91jcieGpZ3oogTGwJYT4toI=
+	b=xWtrJirmqVfv4dZSdAmDC/3U12nKaLKc6dXt/VBrJr1ljI+q1P6CECPLAyB5PoOBs
+	 SjrCo2BoLOdKlaMXxzUpmkp1f9xGf87JIN0FwjJNi89fWwkCMPFBfjEuNHNPiu545m
+	 2P733MpINfbWI0uW2RZ3OXwq6xFagXS8S9dj1flk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbfLSSsA (ORCPT
+        id S1729574AbfLSSsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:48:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40878 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:48:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729539AbfLSSrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:47:55 -0500
+        id S1729548AbfLSSsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:48:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A79124680;
-        Thu, 19 Dec 2019 18:47:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CC392465E;
+        Thu, 19 Dec 2019 18:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781274;
-        bh=/mQwVnJ81ceu8NQUm2eQWohnmLq0oL3GwPJKUbRkFT8=;
+        s=default; t=1576781279;
+        bh=UtmX9GiSmxXu/9EaoD1243Db0uC3Xo+gs5g7A8/UcsI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cUEcEokO81ePJ2G/I5UZKhUxNthgT0JZMzszFrvj9SOebJ8G4KCksgc3MCfng1mgU
-         n2ui77OUA4dE9ojGUxGyTTn+7HCNXiQW95Yud9FfZ8yEKa+E8AnX+KnDwGIjW8Idrn
-         FsYGowmXZyhd5esHgGdNj1bEr/qtOeBHlNgfMS28=
+        b=uSoSiWcTMgblCk8eY/KmUtnAkx9vAvGkACraa8VY5/2oqfV25qM6hNqLodHeXWPkH
+         aYC/O4d/Zr4taeOdzO19mVfDp+8vs6pyRRKCinWQO5fO45M+xc9HyTED23OGQUcFD8
+         MXDLb+ZE46THKVT8GiZOy+34GU428D7WRqmpWS6g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 153/199] omap: pdata-quirks: remove openpandora quirks for mmc3 and wl1251
-Date:   Thu, 19 Dec 2019 19:33:55 +0100
-Message-Id: <20191219183223.769888882@linuxfoundation.org>
+Subject: [PATCH 4.9 155/199] e100: Fix passing zero to PTR_ERR warning in e100_load_ucode_wait
+Date:   Thu, 19 Dec 2019 19:33:57 +0100
+Message-Id: <20191219183223.902557376@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -61,140 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: H. Nikolaus Schaller <hns@goldelico.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 2398c41d64321e62af54424fd399964f3d48cdc2 ]
+[ Upstream commit cd0d465bb697a9c7bf66a9fe940f7981232f1676 ]
 
-With a wl1251 child node of mmc3 in the device tree decoded
-in omap_hsmmc.c to handle special wl1251 initialization, we do
-no longer need to instantiate the mmc3 through pdata quirks.
+Fix a static code checker warning:
+drivers/net/ethernet/intel/e100.c:1349
+ e100_load_ucode_wait() warn: passing zero to 'PTR_ERR'
 
-We also can remove the wlan regulator and reset/interrupt definitions
-and do them through device tree.
-
-Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: <stable@vger.kernel.org> # v4.7+
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/pdata-quirks.c | 93 ------------------------------
- 1 file changed, 93 deletions(-)
+ drivers/net/ethernet/intel/e100.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-index 88676fe9b1194..c3b3972c301a5 100644
---- a/arch/arm/mach-omap2/pdata-quirks.c
-+++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -308,108 +308,15 @@ static void __init omap3_logicpd_torpedo_init(void)
- }
+diff --git a/drivers/net/ethernet/intel/e100.c b/drivers/net/ethernet/intel/e100.c
+index 068789e694c9b..93c29094ceff9 100644
+--- a/drivers/net/ethernet/intel/e100.c
++++ b/drivers/net/ethernet/intel/e100.c
+@@ -1370,8 +1370,8 @@ static inline int e100_load_ucode_wait(struct nic *nic)
  
- /* omap3pandora legacy devices */
--#define PANDORA_WIFI_IRQ_GPIO		21
--#define PANDORA_WIFI_NRESET_GPIO	23
+ 	fw = e100_request_firmware(nic);
+ 	/* If it's NULL, then no ucode is required */
+-	if (!fw || IS_ERR(fw))
+-		return PTR_ERR(fw);
++	if (IS_ERR_OR_NULL(fw))
++		return PTR_ERR_OR_ZERO(fw);
  
- static struct platform_device pandora_backlight = {
- 	.name	= "pandora-backlight",
- 	.id	= -1,
- };
- 
--static struct regulator_consumer_supply pandora_vmmc3_supply[] = {
--	REGULATOR_SUPPLY("vmmc", "omap_hsmmc.2"),
--};
--
--static struct regulator_init_data pandora_vmmc3 = {
--	.constraints = {
--		.valid_ops_mask		= REGULATOR_CHANGE_STATUS,
--	},
--	.num_consumer_supplies	= ARRAY_SIZE(pandora_vmmc3_supply),
--	.consumer_supplies	= pandora_vmmc3_supply,
--};
--
--static struct fixed_voltage_config pandora_vwlan = {
--	.supply_name		= "vwlan",
--	.microvolts		= 1800000, /* 1.8V */
--	.gpio			= PANDORA_WIFI_NRESET_GPIO,
--	.startup_delay		= 50000, /* 50ms */
--	.enable_high		= 1,
--	.init_data		= &pandora_vmmc3,
--};
--
--static struct platform_device pandora_vwlan_device = {
--	.name		= "reg-fixed-voltage",
--	.id		= 1,
--	.dev = {
--		.platform_data = &pandora_vwlan,
--	},
--};
--
--static void pandora_wl1251_init_card(struct mmc_card *card)
--{
--	/*
--	 * We have TI wl1251 attached to MMC3. Pass this information to
--	 * SDIO core because it can't be probed by normal methods.
--	 */
--	if (card->type == MMC_TYPE_SDIO || card->type == MMC_TYPE_SD_COMBO) {
--		card->quirks |= MMC_QUIRK_NONSTD_SDIO;
--		card->cccr.wide_bus = 1;
--		card->cis.vendor = 0x104c;
--		card->cis.device = 0x9066;
--		card->cis.blksize = 512;
--		card->cis.max_dtr = 24000000;
--		card->ocr = 0x80;
--	}
--}
--
--static struct omap2_hsmmc_info pandora_mmc3[] = {
--	{
--		.mmc		= 3,
--		.caps		= MMC_CAP_4_BIT_DATA | MMC_CAP_POWER_OFF_CARD,
--		.gpio_cd	= -EINVAL,
--		.gpio_wp	= -EINVAL,
--		.init_card	= pandora_wl1251_init_card,
--	},
--	{}	/* Terminator */
--};
--
--static void __init pandora_wl1251_init(void)
--{
--	struct wl1251_platform_data pandora_wl1251_pdata;
--	int ret;
--
--	memset(&pandora_wl1251_pdata, 0, sizeof(pandora_wl1251_pdata));
--
--	pandora_wl1251_pdata.power_gpio = -1;
--
--	ret = gpio_request_one(PANDORA_WIFI_IRQ_GPIO, GPIOF_IN, "wl1251 irq");
--	if (ret < 0)
--		goto fail;
--
--	pandora_wl1251_pdata.irq = gpio_to_irq(PANDORA_WIFI_IRQ_GPIO);
--	if (pandora_wl1251_pdata.irq < 0)
--		goto fail_irq;
--
--	pandora_wl1251_pdata.use_eeprom = true;
--	ret = wl1251_set_platform_data(&pandora_wl1251_pdata);
--	if (ret < 0)
--		goto fail_irq;
--
--	return;
--
--fail_irq:
--	gpio_free(PANDORA_WIFI_IRQ_GPIO);
--fail:
--	pr_err("wl1251 board initialisation failed\n");
--}
--
- static void __init omap3_pandora_legacy_init(void)
- {
- 	platform_device_register(&pandora_backlight);
--	platform_device_register(&pandora_vwlan_device);
--	omap_hsmmc_init(pandora_mmc3);
--	omap_hsmmc_late_init(pandora_mmc3);
--	pandora_wl1251_init();
- }
- #endif /* CONFIG_ARCH_OMAP3 */
- 
+ 	if ((err = e100_exec_cb(nic, (void *)fw, e100_setup_ucode)))
+ 		netif_err(nic, probe, nic->netdev,
 -- 
 2.20.1
 
