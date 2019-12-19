@@ -7,46 +7,55 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E5BC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F31C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7771924685
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2F5024686
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780778;
-	bh=UJD928C7anYrORACAu6Oao0G9JR8oRn8ffJSvKjKt3I=;
+	s=default; t=1576780783;
+	bh=J6bDJs5K6fQHfb3h+kE6+fpwnQBs18l9Kc6dZMXqGB0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ft9Qq3u8Q2wErm3UWInlQ6O8WwkWwlB8LRyTs3SLlVbSPEJ160q0IB3VtAsOym3NQ
-	 SfnkdjT0NUibG4JrTMXtBEd6BvwL/4CdpzWatEfYeyQpBRaxp99VT7gNmQ8CJYKZ/7
-	 R7nMkYxhUQbfhiCF4CxjX7ZZBdw+FnqtyiS3hoyk=
+	b=VHdMGEVgBjXddQAVjrXETniKKyjAuKrcMJOftvFt4Bb5MCpO18eec82UJOHAXwVNv
+	 Y9VFvRaCHYjz1zIUKTAvBpCKPc6iYnEw2itWegYDIr/ZoZtQDlniOPxNCYrL2fxQLB
+	 8NGzBV63u6li1KIkkgclrnU3MjeCyTO4c808RS2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbfLSSjh (ORCPT
+        id S1728264AbfLSSjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:39:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57868 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:39:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728235AbfLSSje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:39:34 -0500
+        id S1727956AbfLSSjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:39:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E402220716;
-        Thu, 19 Dec 2019 18:39:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEEB0206D7;
+        Thu, 19 Dec 2019 18:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780773;
-        bh=UJD928C7anYrORACAu6Oao0G9JR8oRn8ffJSvKjKt3I=;
+        s=default; t=1576780778;
+        bh=J6bDJs5K6fQHfb3h+kE6+fpwnQBs18l9Kc6dZMXqGB0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HJBuLZMBeK4bejroaSDA+2OOm7nrfrISG27JG6x4OStMzi0QkDoKcmJO986gN6iqp
-         K47+h4C95KRrCze9l/qTCtz3AQseOD64uWKAqih3rflUYIbUPGxl8rVIYE5L3DNFyC
-         EpjS0Z6XOi/dC/Ib0His69tF16YPiXPgf4gvKg+s=
+        b=sOtEe77+jz63LJ7dO8V98s0f9yf0hS9MUrosXRkpOOJh1r/GlMSYOvs13mCQ6LGtT
+         LjB4R9tRqEG+isbw+NlKRqGFjV55sBPOA/Wc0k0NBQOJuP2lY1jIOye0jXy8AQP+jz
+         /WbMu7mk8rIApwfg7bDHPTNEoudmh9FE+LfEd9zc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Tejun Heo <tj@kernel.org>
-Subject: [PATCH 4.4 109/162] cgroup: pids: use atomic64_t for pids->limit
-Date:   Thu, 19 Dec 2019 19:33:37 +0100
-Message-Id: <20191219183214.393367665@linuxfoundation.org>
+        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Brian Gerst <brgerst@gmail.com>,
+        Denys Vlasenko <dvlasenk@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jann Horn <jann@thejh.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        "zhangyi (F)" <yi.zhang@huawei.com>
+Subject: [PATCH 4.4 075/162] sched/core: Allow putting thread_info into task_struct
+Date:   Thu, 19 Dec 2019 19:33:03 +0100
+Message-Id: <20191219183212.365902632@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -59,78 +68,217 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aleksa Sarai <cyphar@cyphar.com>
+From: Andy Lutomirski <luto@kernel.org>
 
-commit a713af394cf382a30dd28a1015cbe572f1b9ca75 upstream.
+commit c65eacbe290b8141554c71b2c94489e73ade8c8d upstream.
 
-Because pids->limit can be changed concurrently (but we don't want to
-take a lock because it would be needlessly expensive), use atomic64_ts
-instead.
+If an arch opts in by setting CONFIG_THREAD_INFO_IN_TASK_STRUCT,
+then thread_info is defined as a single 'u32 flags' and is the first
+entry of task_struct.  thread_info::task is removed (it serves no
+purpose if thread_info is embedded in task_struct), and
+thread_info::cpu gets its own slot in task_struct.
 
-Fixes: commit 49b786ea146f ("cgroup: implement the PIDs subsystem")
-Cc: stable@vger.kernel.org # v4.3+
-Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
-Signed-off-by: Tejun Heo <tj@kernel.org>
+This is heavily based on a patch written by Linus.
+
+Originally-from: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Jann Horn <jann@thejh.net>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/a0898196f0476195ca02713691a5037a14f2aac5.1473801993.git.luto@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/cgroup_pids.c |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ include/linux/init_task.h   |    9 +++++++++
+ include/linux/sched.h       |   36 ++++++++++++++++++++++++++++++++++--
+ include/linux/thread_info.h |   15 +++++++++++++++
+ init/Kconfig                |    7 +++++++
+ init/init_task.c            |    7 +++++--
+ kernel/sched/sched.h        |    4 ++++
+ 6 files changed, 74 insertions(+), 4 deletions(-)
 
---- a/kernel/cgroup_pids.c
-+++ b/kernel/cgroup_pids.c
-@@ -48,7 +48,7 @@ struct pids_cgroup {
- 	 * %PIDS_MAX = (%PID_MAX_LIMIT + 1).
- 	 */
- 	atomic64_t			counter;
--	int64_t				limit;
-+	atomic64_t			limit;
+--- a/include/linux/init_task.h
++++ b/include/linux/init_task.h
+@@ -15,6 +15,8 @@
+ #include <net/net_namespace.h>
+ #include <linux/sched/rt.h>
+ 
++#include <asm/thread_info.h>
++
+ #ifdef CONFIG_SMP
+ # define INIT_PUSHABLE_TASKS(tsk)					\
+ 	.pushable_tasks = PLIST_NODE_INIT(tsk.pushable_tasks, MAX_PRIO),
+@@ -183,12 +185,19 @@ extern struct task_group root_task_group
+ # define INIT_KASAN(tsk)
+ #endif
+ 
++#ifdef CONFIG_THREAD_INFO_IN_TASK
++# define INIT_TASK_TI(tsk) .thread_info = INIT_THREAD_INFO(tsk),
++#else
++# define INIT_TASK_TI(tsk)
++#endif
++
+ /*
+  *  INIT_TASK is used to set up the first task table, touch at
+  * your own risk!. Base=0, limit=0x1fffff (=2MB)
+  */
+ #define INIT_TASK(tsk)	\
+ {									\
++	INIT_TASK_TI(tsk)						\
+ 	.state		= 0,						\
+ 	.stack		= &init_thread_info,				\
+ 	.usage		= ATOMIC_INIT(2),				\
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1389,6 +1389,13 @@ struct tlbflush_unmap_batch {
  };
  
- static struct pids_cgroup *css_pids(struct cgroup_subsys_state *css)
-@@ -70,8 +70,8 @@ pids_css_alloc(struct cgroup_subsys_stat
- 	if (!pids)
- 		return ERR_PTR(-ENOMEM);
+ struct task_struct {
++#ifdef CONFIG_THREAD_INFO_IN_TASK
++	/*
++	 * For reasons of header soup (see current_thread_info()), this
++	 * must be the first element of task_struct.
++	 */
++	struct thread_info thread_info;
++#endif
+ 	volatile long state;	/* -1 unrunnable, 0 runnable, >0 stopped */
+ 	void *stack;
+ 	atomic_t usage;
+@@ -1398,6 +1405,9 @@ struct task_struct {
+ #ifdef CONFIG_SMP
+ 	struct llist_node wake_entry;
+ 	int on_cpu;
++#ifdef CONFIG_THREAD_INFO_IN_TASK
++	unsigned int cpu;	/* current CPU */
++#endif
+ 	unsigned int wakee_flips;
+ 	unsigned long wakee_flip_decay_ts;
+ 	struct task_struct *last_wakee;
+@@ -2440,7 +2450,9 @@ extern void set_curr_task(int cpu, struc
+ void yield(void);
  
--	pids->limit = PIDS_MAX;
- 	atomic64_set(&pids->counter, 0);
-+	atomic64_set(&pids->limit, PIDS_MAX);
- 	return &pids->css;
+ union thread_union {
++#ifndef CONFIG_THREAD_INFO_IN_TASK
+ 	struct thread_info thread_info;
++#endif
+ 	unsigned long stack[THREAD_SIZE/sizeof(long)];
+ };
+ 
+@@ -2840,10 +2852,26 @@ static inline void threadgroup_change_en
+ 	cgroup_threadgroup_change_end(tsk);
  }
  
-@@ -142,13 +142,14 @@ static int pids_try_charge(struct pids_c
+-#ifndef __HAVE_THREAD_FUNCTIONS
++#ifdef CONFIG_THREAD_INFO_IN_TASK
++
++static inline struct thread_info *task_thread_info(struct task_struct *task)
++{
++	return &task->thread_info;
++}
++static inline void *task_stack_page(const struct task_struct *task)
++{
++	return task->stack;
++}
++#define setup_thread_stack(new,old)	do { } while(0)
++static inline unsigned long *end_of_stack(const struct task_struct *task)
++{
++	return task->stack;
++}
++
++#elif !defined(__HAVE_THREAD_FUNCTIONS)
  
- 	for (p = pids; parent_pids(p); p = parent_pids(p)) {
- 		int64_t new = atomic64_add_return(num, &p->counter);
-+		int64_t limit = atomic64_read(&p->limit);
+ #define task_thread_info(task)	((struct thread_info *)(task)->stack)
+-#define task_stack_page(task)	((task)->stack)
++#define task_stack_page(task)	((void *)(task)->stack)
  
- 		/*
- 		 * Since new is capped to the maximum number of pid_t, if
- 		 * p->limit is %PIDS_MAX then we know that this test will never
- 		 * fail.
- 		 */
--		if (new > p->limit)
-+		if (new > limit)
- 			goto revert;
- 	}
- 
-@@ -262,7 +263,7 @@ set_limit:
- 	 * Limit updates don't need to be mutex'd, since it isn't
- 	 * critical that any racing fork()s follow the new limit.
- 	 */
--	pids->limit = limit;
-+	atomic64_set(&pids->limit, limit);
- 	return nbytes;
- }
- 
-@@ -270,7 +271,7 @@ static int pids_max_show(struct seq_file
+ static inline void setup_thread_stack(struct task_struct *p, struct task_struct *org)
  {
- 	struct cgroup_subsys_state *css = seq_css(sf);
- 	struct pids_cgroup *pids = css_pids(css);
--	int64_t limit = pids->limit;
-+	int64_t limit = atomic64_read(&pids->limit);
+@@ -3135,7 +3163,11 @@ static inline void ptrace_signal_wake_up
  
- 	if (limit >= PIDS_MAX)
- 		seq_printf(sf, "%s\n", PIDS_MAX_STR);
+ static inline unsigned int task_cpu(const struct task_struct *p)
+ {
++#ifdef CONFIG_THREAD_INFO_IN_TASK
++	return p->cpu;
++#else
+ 	return task_thread_info(p)->cpu;
++#endif
+ }
+ 
+ static inline int task_node(const struct task_struct *p)
+--- a/include/linux/thread_info.h
++++ b/include/linux/thread_info.h
+@@ -13,6 +13,21 @@
+ struct timespec;
+ struct compat_timespec;
+ 
++#ifdef CONFIG_THREAD_INFO_IN_TASK
++struct thread_info {
++	u32			flags;		/* low level flags */
++};
++
++#define INIT_THREAD_INFO(tsk)			\
++{						\
++	.flags		= 0,			\
++}
++#endif
++
++#ifdef CONFIG_THREAD_INFO_IN_TASK
++#define current_thread_info() ((struct thread_info *)current)
++#endif
++
+ /*
+  * System call restart block.
+  */
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -26,6 +26,13 @@ config IRQ_WORK
+ config BUILDTIME_EXTABLE_SORT
+ 	bool
+ 
++config THREAD_INFO_IN_TASK
++	bool
++	help
++	  Select this to move thread_info off the stack into task_struct.  To
++	  make this work, an arch will need to remove all thread_info fields
++	  except flags and fix any runtime bugs.
++
+ menu "General setup"
+ 
+ config BROKEN
+--- a/init/init_task.c
++++ b/init/init_task.c
+@@ -22,5 +22,8 @@ EXPORT_SYMBOL(init_task);
+  * Initial thread structure. Alignment of this is handled by a special
+  * linker map entry.
+  */
+-union thread_union init_thread_union __init_task_data =
+-	{ INIT_THREAD_INFO(init_task) };
++union thread_union init_thread_union __init_task_data = {
++#ifndef CONFIG_THREAD_INFO_IN_TASK
++	INIT_THREAD_INFO(init_task)
++#endif
++};
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -978,7 +978,11 @@ static inline void __set_task_cpu(struct
+ 	 * per-task data have been completed by this moment.
+ 	 */
+ 	smp_wmb();
++#ifdef CONFIG_THREAD_INFO_IN_TASK
++	p->cpu = cpu;
++#else
+ 	task_thread_info(p)->cpu = cpu;
++#endif
+ 	p->wake_cpu = cpu;
+ #endif
+ }
 
 
