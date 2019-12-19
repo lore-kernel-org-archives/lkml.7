@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B19C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40497C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2229724672
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CDC824672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:55:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfLSWxr (ORCPT
+        id S1727029AbfLSWzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 17:53:47 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:64903 "EHLO
+        Thu, 19 Dec 2019 17:55:54 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:51514 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbfLSWxr (ORCPT
+        with ESMTP id S1726830AbfLSWzy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 17:53:47 -0500
+        Thu, 19 Dec 2019 17:55:54 -0500
 Received: from 79.184.253.1.ipv4.supernova.orange.pl (79.184.253.1) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
- id 497cfa437542538e; Thu, 19 Dec 2019 23:53:44 +0100
+ id ee0c570a228e0dac; Thu, 19 Dec 2019 23:55:51 +0100
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Erik Kaneda <erik.kaneda@intel.com>
-Subject: [PATCH] ACPICA: Update the list of maintainers
-Date:   Thu, 19 Dec 2019 23:53:44 +0100
-Message-ID: <18147806.IHdYjMWO1X@kreacher>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>
+Subject: [PATCH] mailmap: Add entry for <rjw@sisk.pl>
+Date:   Thu, 19 Dec 2019 23:55:51 +0100
+Message-ID: <5262239.5eEoY8XddG@kreacher>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -38,42 +38,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+The old email address I contributed to the kernel from in the past
+has not been functional for a few years, so add a .mailmap entry
+for it.
 
-The Erik's last name and email address have changed recently,
-so update MAINTAINERS and .mailmap to reflect that change.
-
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Rafael J. Wysocki <rjw@rjwysocki.net>
 ---
- .mailmap    |    1 +
- MAINTAINERS |    2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ .mailmap |    1 +
+ 1 file changed, 1 insertion(+)
 
-Index: linux-pm/MAINTAINERS
-===================================================================
---- linux-pm.orig/MAINTAINERS
-+++ linux-pm/MAINTAINERS
-@@ -345,7 +345,7 @@ F:	drivers/acpi/apei/
- 
- ACPI COMPONENT ARCHITECTURE (ACPICA)
- M:	Robert Moore <robert.moore@intel.com>
--M:	Erik Schmauss <erik.schmauss@intel.com>
-+M:	Erik Kaneda <erik.kaneda@intel.com>
- M:	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
- L:	linux-acpi@vger.kernel.org
- L:	devel@acpica.org
 Index: linux-pm/.mailmap
 ===================================================================
 --- linux-pm.orig/.mailmap
 +++ linux-pm/.mailmap
-@@ -74,6 +74,7 @@ Dmitry Safonov <0x7f454c46@gmail.com> <d
- Domen Puncer <domen@coderock.org>
- Douglas Gilbert <dougg@torque.net>
- Ed L. Cashin <ecashin@coraid.com>
-+Erik Kaneda <erik.kaneda@intel.com> <erik.schmauss@intel.com>
- Evgeniy Polyakov <johnpol@2ka.mipt.ru>
- Felipe W Damasio <felipewd@terra.com.br>
- Felix Kuhling <fxkuehl@gmx.de>
+@@ -216,6 +216,7 @@ Praveen BP <praveenbp@ti.com>
+ Punit Agrawal <punitagrawal@gmail.com> <punit.agrawal@arm.com>
+ Qais Yousef <qsyousef@gmail.com> <qais.yousef@imgtec.com>
+ Quentin Perret <qperret@qperret.net> <quentin.perret@arm.com>
++Rafael J. Wysocki <rjw@rjwysocki.net> <rjw@sisk.pl>
+ Rajesh Shah <rajesh.shah@intel.com>
+ Ralf Baechle <ralf@linux-mips.org>
+ Ralf Wildenhues <Ralf.Wildenhues@gmx.de>
 
 
 
