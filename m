@@ -2,253 +2,94 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EB7C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFF5C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A260224679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:47:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576795674;
-	bh=8GcBnntoXyRz8XWSW60SBcCPacwS7TvkNShSEN8spKw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=mEbevo6xoa3UecgbgCVOqPdjGVloCOlnYkY5/631wycfAcqkyPBOeGI3TB3g9gkbU
-	 cgQAnC3u2T85AQF2L2OoXQH/yCMLpmWQZ08fjXc/rwt+fEgwQCBD9H7EHK1PIimGmR
-	 BGepnhnwnmgVLfaX3ur/OIfZ84LfadM66f1dVWWo=
+	by mail.kernel.org (Postfix) with ESMTP id 9D36B24676
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 22:50:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfLSWrx (ORCPT
+        id S1727020AbfLSWuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 17:47:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51496 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726818AbfLSWrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 17:47:53 -0500
-Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 783C424676;
-        Thu, 19 Dec 2019 22:47:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576795671;
-        bh=8GcBnntoXyRz8XWSW60SBcCPacwS7TvkNShSEN8spKw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=iVxne02lXPGE7JLWXH2ApVnlkXdRZLs6triyU+ubK2gzI/jY3Ks9IxiaRc9yX0MpM
-         3w/8prLTYogAlcOOCFIfDK7PgU+qlvIMOEqpQMLxkszXlgg4saKTtUWR93n6MioGu2
-         Ioypml7rHSALjSVdCMLy0ScApSlRLV+lW3jzaVS0=
-Date:   Thu, 19 Dec 2019 16:47:49 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH 11/13] PCI: j721e: Add TI J721E PCIe driver
-Message-ID: <20191219224749.GA4225@google.com>
+        Thu, 19 Dec 2019 17:50:15 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:62079 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726830AbfLSWuP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 17:50:15 -0500
+Received: from 79.184.253.1.ipv4.supernova.orange.pl (79.184.253.1) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
+ id 72de2fff78dbc4fc; Thu, 19 Dec 2019 23:50:12 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux ACPI <linux-acpi@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH] ACPI: EC: Reference count query handlers under lock
+Date:   Thu, 19 Dec 2019 23:50:12 +0100
+Message-ID: <6539399.uB9r8gDyXt@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191209092147.22901-12-kishon@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 02:51:45PM +0530, Kishon Vijay Abraham I wrote:
-> Add support for PCIe controller in J721E SoC. The controller uses the
-> Cadence PCIe core programmed by pcie-cadence*.c. The PCIe controller
-> will work in both host mode and device mode.
-> Some of the features of the controller are:
->   *) Supports both RC mode and EP mode
->   *) Supports MSI and MSI-X support
->   *) Supports upto GEN3 speed mode
->   *) Supports SR-IOV capability
->   *) Ability to route all transactions via SMMU (support will be added
->      in a later patch).
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/controller/cadence/Kconfig     |  23 ++
->  drivers/pci/controller/cadence/Makefile    |   1 +
->  drivers/pci/controller/cadence/pci-j721e.c | 430 +++++++++++++++++++++
->  3 files changed, 454 insertions(+)
->  create mode 100644 drivers/pci/controller/cadence/pci-j721e.c
-> 
-> diff --git a/drivers/pci/controller/cadence/Kconfig b/drivers/pci/controller/cadence/Kconfig
-> index b76b3cf55ce5..5d30564190e1 100644
-> --- a/drivers/pci/controller/cadence/Kconfig
-> +++ b/drivers/pci/controller/cadence/Kconfig
-> @@ -42,4 +42,27 @@ config PCIE_CADENCE_PLAT_EP
->  	  endpoint mode. This PCIe controller may be embedded into many
->  	  different vendors SoCs.
->  
-> +config PCI_J721E
-> +	bool
-> +
-> +config PCI_J721E_HOST
-> +	bool "TI J721E PCIe platform host controller"
-> +	depends on OF
-> +	select PCIE_CADENCE_HOST
-> +	select PCI_J721E
-> +	help
-> +	  Say Y here if you want to support the TI J721E PCIe platform
-> +	  controller in host mode. TI J721E PCIe controller uses Cadence PCIe
-> +	  core.
-> +
-> +config PCI_J721E_EP
-> +	bool "TI J721E PCIe platform endpoint controller"
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Most drivers call these "PCIe host controller" and "PCIe endpoint
-controller" or similar.  Does adding "platform" indicate something
-useful?
+There is a race condition in acpi_ec_get_query_handler()
+theoretically allowing query handlers to go away before
+reference counting them.
 
-> +	depends on OF
-> +	depends on PCI_ENDPOINT
-> +	select PCIE_CADENCE_EP
-> +	select PCI_J721E
-> +	help
-> +	  Say Y here if you want to support the TI J721E PCIe platform
-> +	  controller in endpoint mode. TI J721E PCIe controller uses Cadence PCIe
-> +	  core.
->  endmenu
-> diff --git a/drivers/pci/controller/cadence/Makefile b/drivers/pci/controller/cadence/Makefile
-> index 232a3f20876a..9bac5fb2f13d 100644
-> --- a/drivers/pci/controller/cadence/Makefile
-> +++ b/drivers/pci/controller/cadence/Makefile
-> @@ -3,3 +3,4 @@ obj-$(CONFIG_PCIE_CADENCE) += pcie-cadence.o
->  obj-$(CONFIG_PCIE_CADENCE_HOST) += pcie-cadence-host.o
->  obj-$(CONFIG_PCIE_CADENCE_EP) += pcie-cadence-ep.o
->  obj-$(CONFIG_PCIE_CADENCE_PLAT) += pcie-cadence-plat.o
-> +obj-$(CONFIG_PCI_J721E) += pci-j721e.o
-> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-> new file mode 100644
-> index 000000000000..9ffb7e88c739
-> --- /dev/null
-> +++ b/drivers/pci/controller/cadence/pci-j721e.c
-> @@ -0,0 +1,430 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/**
-> + * pci-j721e - PCIe controller driver for TI's J721E SoCs
-> + *
-> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
-> + * Author: Kishon Vijay Abraham I <kishon@ti.com>
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/io.h>
-> +#include <linux/irqchip/chained_irq.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/pci.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/regmap.h>
-> +
-> +#include "../../pci.h"
-> +#include "pcie-cadence.h"
-> +
-> +#define J721E_PCIE_USER_CMD_STATUS	0x4
-> +#define LINK_TRAINING_ENABLE		BIT(0)
-> +
-> +#define J721E_PCIE_USER_LINKSTATUS	0x14
-> +#define LINK_STATUS			GENMASK(1, 0)
-> +
-> +enum link_status {
-> +	NO_RECIEVERS_DETECTED,
+In order to avoid it, call kref_get() on query handlers under
+ec->mutex.
 
-s/NO_RECIEVERS_DETECTED/NO_RECEIVERS_DETECTED/
+Also simplify the code a bit while at it.
 
-> +	LINK_TRAINING_IN_PROGRESS,
-> +	LINK_UP_DL_IN_PROGRESS,
-> +	LINK_UP_DL_COMPLETED,
-> +};
-> +
-> +#define J721E_MODE_RC			BIT(7)
-> +#define LANE_COUNT_MASK			BIT(8)
-> +#define LANE_COUNT(n)			((n) << 8)
-> +
-> +#define GENERATION_SEL_MASK		GENMASK(1, 0)
-> +
-> +#define MAX_LANES			2
-> +
-> +struct j721e_pcie {
-> +	struct device		*dev;
-> +	struct device_node	*node;
-> +	u32			mode;
-> +	u32			num_lanes;
-> +	struct cdns_pcie	*cdns_pcie;
-> +	void __iomem		*user_cfg_base;
-> +};
-> +
-> +enum j721e_pcie_mode {
-> +	PCI_MODE_RC,
-> +	PCI_MODE_EP,
-> +};
-> +
-> +struct j721e_pcie_data {
-> +	enum j721e_pcie_mode	mode;
-> +};
-> +
-> +static inline u32 j721e_pcie_user_readl(struct j721e_pcie *pcie, u32 offset)
-> +{
-> +	return readl(pcie->user_cfg_base + offset);
-> +}
-> +
-> +static inline void j721e_pcie_user_writel(struct j721e_pcie *pcie, u32 offset,
-> +					  u32 value)
-> +{
-> +	writel(value, pcie->user_cfg_base + offset);
-> +}
-> +
-> +static int j721e_pcie_start_link(struct cdns_pcie *cdns_pcie, bool start)
-> +{
-> +	struct j721e_pcie *pcie = dev_get_drvdata(cdns_pcie->dev);
-> +	u32 reg;
-> +
-> +	reg = j721e_pcie_user_readl(pcie, J721E_PCIE_USER_CMD_STATUS);
-> +	if (start)
-> +		reg |= LINK_TRAINING_ENABLE;
-> +	else
-> +		reg &= ~LINK_TRAINING_ENABLE;
-> +	j721e_pcie_user_writel(pcie, J721E_PCIE_USER_CMD_STATUS, reg);
-> +
-> +	return 0;
-> +}
-> +
-> +static bool j721e_pcie_is_link_up(struct cdns_pcie *cdns_pcie)
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/acpi/ec.c |   16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
 
-There are many *_pcie_link_up() definitions that looks essentially
-like this; maybe this could be simply j721e_pcie_link_up() to match?
+Index: linux-pm/drivers/acpi/ec.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/ec.c
++++ linux-pm/drivers/acpi/ec.c
+@@ -1053,28 +1053,20 @@ void acpi_ec_unblock_transactions(void)
+                                 Event Management
+    -------------------------------------------------------------------------- */
+ static struct acpi_ec_query_handler *
+-acpi_ec_get_query_handler(struct acpi_ec_query_handler *handler)
+-{
+-	if (handler)
+-		kref_get(&handler->kref);
+-	return handler;
+-}
+-
+-static struct acpi_ec_query_handler *
+ acpi_ec_get_query_handler_by_value(struct acpi_ec *ec, u8 value)
+ {
+ 	struct acpi_ec_query_handler *handler;
+-	bool found = false;
+ 
+ 	mutex_lock(&ec->mutex);
+ 	list_for_each_entry(handler, &ec->list, node) {
+ 		if (value == handler->query_bit) {
+-			found = true;
+-			break;
++			kref_get(&handler->kref);
++			mutex_unlock(&ec->mutex);
++			return handler;
+ 		}
+ 	}
+ 	mutex_unlock(&ec->mutex);
+-	return found ? acpi_ec_get_query_handler(handler) : NULL;
++	return NULL;
+ }
+ 
+ static void acpi_ec_query_handler_release(struct kref *kref)
 
-> +{
-> +	struct j721e_pcie *pcie = dev_get_drvdata(cdns_pcie->dev);
-> +	u32 reg;
-> +
-> +	reg = j721e_pcie_user_readl(pcie, J721E_PCIE_USER_LINKSTATUS);
-> +	reg &= LINK_STATUS;
-> +	if (reg == LINK_UP_DL_COMPLETED)
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
-> +static const struct cdns_pcie_ops j721e_ops_ops = {
-> +	.read = cdns_pcie_read32,
-> +	.write = cdns_pcie_write32,
-> +	.start_link = j721e_pcie_start_link,
-> +	.is_link_up = j721e_pcie_is_link_up,
-> +};
 
-Can these match struct dw_pcie_ops more closely, e.g., ".link_up"
-instead of ".is_link_up", ".start_link" and ".stop_link" instead of
-".start_link(..., bool)"?
 
-Bjorn
