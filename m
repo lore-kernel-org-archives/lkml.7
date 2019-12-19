@@ -2,130 +2,118 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,GAPPY_SUBJECT,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B71C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC1CC2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DD2424692
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:52:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="g9BqwR2T"
+	by mail.kernel.org (Postfix) with ESMTP id A5135222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:52:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576756344;
+	bh=LcrmCaN5uDXEpt4OoWn+E8iVhyr7DZdG10rCcpysVYs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Eb+4zCRcOtltXc20S+OSP9MJF+e17RTxl2yxHT7zXd9NZc1CXdl3KId0WYHOFs0vu
+	 zBnU8GOXVd6ScfmxX1IPjbhYKOA9szQYX+vM9sVwHgr59cxE91HPOER49SnVXJvW1E
+	 976SjXz5KDr6ZRTehpcXnP1JbmRPczYMEhY1zrGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfLSLwC (ORCPT
+        id S1726933AbfLSLwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 06:52:02 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:32933 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbfLSLwA (ORCPT
+        Thu, 19 Dec 2019 06:52:23 -0500
+Received: from conuserg-07.nifty.com ([210.131.2.74]:53153 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726730AbfLSLwX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 06:52:00 -0500
-Received: by mail-wm1-f67.google.com with SMTP id d139so6872114wmd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 03:51:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=tY1YFADtaZKXzMf5Ie7W6ruxIu2Bb0htwIWWuGbAKcM=;
-        b=g9BqwR2T1/I9UWMAVp/ZqXBkfesKLtxfql62Ats6JCmHyrgeqIcvyF5bBUnfb71mMy
-         QP4vUYVPzSIO7PPHg0+ASpHinxdROHkqmPkLRKUTO2aiJ8QMyzo+Mzww2couC1OVe+qS
-         2j1PYVjLW27+L5u+IgU4B0z+DmkQdgGptoWBtL64wPFWXJAkiyS7r3M771dmzoXDnJOp
-         nc/vWUYzH04qcXn3ayS4jzZLRTt5SrbfmBEA3WTISAO29jIaM1ccONkGGpiy9LQ2PzBp
-         7av5v7DTa3eZt2rCQOMMIWGeEqUb4ydb4BqCeAqWFQXQYku29EQGVtKvY95Xt4zqqB1X
-         YJ4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=tY1YFADtaZKXzMf5Ie7W6ruxIu2Bb0htwIWWuGbAKcM=;
-        b=CVNQsL2KA1WTVQ1rLHWgCGlt6+jTan/rjsnvj2L+Jh0KXUVJuRd7N0MktUNGyVfh3N
-         9I4ml2ehexixk97LlNx59tRFkAZspAhg4xjIMl9YPvPQP22Jy7UgzKGdWfKMDnu7I7Qn
-         grheoYseH2/MAN2x9VVIDfZUnKDLyvQTLN3aOKBXFWvI5bI+hYQp2G+kk4B2Ti88X6MO
-         nA6PDFlvkI3dfqNEC+5m9jRCte+SffR4kdGQxVPzVb2KFKH5EXkKEoWLjf900XBxY867
-         ITvLXwTraD1GjGkxFZYoHlDh3MPCyc3M9pcm+gNrQFkZjM+qJWWFjUPXxVYWTMnqMkO0
-         xN6g==
-X-Gm-Message-State: APjAAAX8awxrgdacuXgGdfhEZxt/bH58vN9bzXS9ZqzvDC2SZih3H+B2
-        J8cb9NPcNNr2AO6fzR34/1R8xQ==
-X-Google-Smtp-Source: APXvYqzlwjvltFbDap8RdkQ64BKs2O//iQJUD+y6qLqzurI6gy3wxklpvAm+GERYUdoyUdGko4ntpA==
-X-Received: by 2002:a7b:c851:: with SMTP id c17mr9872505wml.71.1576756318833;
-        Thu, 19 Dec 2019 03:51:58 -0800 (PST)
-Received: from localhost.localdomain (i16-les01-ntr-213-44-229-207.sfr.lns.abo.bbox.fr. [213.44.229.207])
-        by smtp.googlemail.com with ESMTPSA id k16sm6489660wru.0.2019.12.19.03.51.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 03:51:58 -0800 (PST)
-From:   Khouloud Touil <ktouil@baylibre.com>
-To:     bgolaszewski@baylibre.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, srinivas.kandagatla@linaro.org,
-        baylibre-upstreaming@groups.io
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linus.walleij@linaro.org,
-        Khouloud Touil <ktouil@baylibre.com>
-Subject: [PATCH v3 1/4] dt-bindings: nvmem: new optional property write-protect-gpios
-Date:   Thu, 19 Dec 2019 12:51:38 +0100
-Message-Id: <20191219115141.24653-2-ktouil@baylibre.com>
+        Thu, 19 Dec 2019 06:52:23 -0500
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id xBJBpA5E025113;
+        Thu, 19 Dec 2019 20:51:10 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com xBJBpA5E025113
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1576756271;
+        bh=13lrGAJJ2x/6FuBvyBEwfGd2aNby5ZIL20FfDY8lhqI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=b7IHOHfY0A0wMqmrhiyzNrbSEJOen74MGyrMd7xy6fRQ1TpVOpyYLshSMpw8sRqAM
+         VKirQRVgkBjDthaeqrpOW5bc0D2Xeliw5wHcx7hRneRSfWyB3ovVIFwAbnz54hnvzn
+         CjJRFv7SCSy769UzDCXBQjBE3LWXAKc5B2owJsXtOvbyZKCEfz3wsCNaWY9eHJreFV
+         SyLATB43U+HCCA2k7cVrh7Q46BW8FTDmmyEUDa7SpyUOUC8tnnJvHXDskXOtjpbW3b
+         GHZLGy9ME2FniUai6YL0m30AksBpwv0PpmWh2FoRshDz96BpVZjpUrOvyRha7JNDkw
+         mPsg99rnxkWsQ==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Johan Hovold <johan@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] kbuild: clarify the difference between obj-y and obj-m w.r.t. descending
+Date:   Thu, 19 Dec 2019 20:51:00 +0900
+Message-Id: <20191219115100.958-1-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191219115141.24653-1-ktouil@baylibre.com>
-References: <20191219115141.24653-1-ktouil@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Several memories have a write-protect pin, that when pulled high, it
-blocks the write operation.
+Kbuild descends into a directory by either 'y' or 'm', but there is an
+important difference.
 
-On some boards, this pin is connected to a GPIO and pulled high by
-default, which forces the user to manually change its state before
-writing.
+Kbuild combines the built-in objects into built-in.a in each directory.
+The built-in.a in the directory visited by obj-y is merged into the
+built-in.a in the parent directory. This merge happens recursively when
+Kbuild is ascending back towards the top directory, so built-in objects
+are linked into vmlinux eventually. This works properly only when the
+Makefile that specifies obj-y is reachable by the chain of obj-y.
 
-Instead of modifying all the memory drivers to check this pin, make
-the NVMEM subsystem check if the write-protect GPIO being passed
-through the nvmem_config or defined in the device tree and pull it
-low whenever writing to the memory.
+On the other hand, Kbuild does not take built-in.a from the directory
+visited by obj-m. This it, all the objects in that directory are supposed
+to be modular. If Kbuild descends into a directory by obj-m, but the
+Makefile in the sub-directory specifies obj-y, those objects are just
+left orphan.
 
-Add a new optional property to the device tree binding document, which
-allows to specify the GPIO line to which the write-protect pin is
-connected.
+The current statement "Kbuild only uses this information to decide that
+it needs to visit the directory" is misleading. Clarify the difference.
 
-Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
+Reported-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
- Documentation/devicetree/bindings/nvmem/nvmem.yaml | 11 +++++++++++
- 1 file changed, 11 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/nvmem/nvmem.yaml b/Documentation/devicetree/bindings/nvmem/nvmem.yaml
-index 1c75a059206c..b43c6c65294e 100644
---- a/Documentation/devicetree/bindings/nvmem/nvmem.yaml
-+++ b/Documentation/devicetree/bindings/nvmem/nvmem.yaml
-@@ -34,6 +34,14 @@ properties:
-     description:
-       Mark the provider as read only.
- 
-+  wp-gpios:
-+    description:
-+      GPIO to which the write-protect pin of the chip is connected.
-+      The write-protect GPIO is asserted, when it's driven high
-+      (logical '1') to block the write operation. It's deasserted,
-+      when it's driven low (logical '0') to allow writing.
-+    maxItems: 1
+ Documentation/kbuild/makefiles.rst | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
+index b9b50553bfc5..d7e6534a8505 100644
+--- a/Documentation/kbuild/makefiles.rst
++++ b/Documentation/kbuild/makefiles.rst
+@@ -297,9 +297,19 @@ more details, with real examples.
+ 	If CONFIG_EXT2_FS is set to either 'y' (built-in) or 'm' (modular)
+ 	the corresponding obj- variable will be set, and kbuild will descend
+ 	down in the ext2 directory.
+-	Kbuild only uses this information to decide that it needs to visit
+-	the directory, it is the Makefile in the subdirectory that
+-	specifies what is modular and what is built-in.
 +
- patternProperties:
-   "^.*@[0-9a-f]+$":
-     type: object
-@@ -63,9 +71,12 @@ patternProperties:
- 
- examples:
-   - |
-+      #include <dt-bindings/gpio/gpio.h>
++	Kbuild uses this information not only to decide that it needs to visit
++	the directory, but also to decide whether or not to link objects from
++	the directory into vmlinux.
 +
-       qfprom: eeprom@700000 {
-           #address-cells = <1>;
-           #size-cells = <1>;
-+          wp-gpios = <&gpio1 3 GPIO_ACTIVE_HIGH>;
++	When Kbuild descends into the directory with 'y', all built-in objects
++	from that directory are combined into the built-in.a, which will be
++	eventually linked into vmlinux.
++
++	When Kbuild descends into the directory with 'm', in contrast, nothing
++	from that directory will be linked into vmlinux. If the Makefile in
++	that directory specifies obj-y, those objects will be left orphan.
++	It is very likely a bug of the Makefile or of dependencies in Kconfig.
  
-           /* ... */
- 
+ 	It is good practice to use a `CONFIG_` variable when assigning directory
+ 	names. This allows kbuild to totally skip the directory if the
 -- 
 2.17.1
 
