@@ -2,250 +2,119 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F12CC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C14D5C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE0542146E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9758624672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 05:13:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pBgP9BeT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbfLSFKf (ORCPT
+        id S1726797AbfLSFNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 00:10:35 -0500
-Received: from mga17.intel.com ([192.55.52.151]:34166 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbfLSFKf (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 00:10:35 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 21:10:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="222176614"
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.69]) ([10.239.196.69])
-  by fmsmga001.fm.intel.com with ESMTP; 18 Dec 2019 21:10:33 -0800
-Subject: Re: [PATCH v4 3/3] perf report: support hotkey to let user select any
- event for sorting
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20191218022443.18958-1-yao.jin@linux.intel.com>
- <20191218022443.18958-3-yao.jin@linux.intel.com>
- <20191218074708.GC19062@krava>
- <879a7e9e-f7e0-29c9-d10a-a3d2732e6c2f@linux.intel.com>
-Message-ID: <7d7a722a-9e8c-3245-48a2-5944df19c927@linux.intel.com>
-Date:   Thu, 19 Dec 2019 13:10:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Thu, 19 Dec 2019 00:13:52 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:6125 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbfLSFNw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 00:13:52 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dfb06f20000>; Wed, 18 Dec 2019 21:13:22 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 18 Dec 2019 21:13:51 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 18 Dec 2019 21:13:51 -0800
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Dec
+ 2019 05:13:51 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 19 Dec 2019 05:13:50 +0000
+Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dfb070e0001>; Wed, 18 Dec 2019 21:13:50 -0800
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Michael Kerrisk <mtk.manpages@gmail.com>
+CC:     <linux-man@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christopher Lameter <cl@linux.com>,
+        <linux-api@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        <linux-mm@kvack.org>, John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Brice Goglin <Brice.Goglin@inria.fr>,
+        Yang Shi <yang.shi@linux.alibaba.com>
+Subject: [PATCH] move_pages.2: remove ENOENT from the list of possible return values
+Date:   Wed, 18 Dec 2019 21:13:47 -0800
+Message-ID: <20191219051347.1278026-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <879a7e9e-f7e0-29c9-d10a-a3d2732e6c2f@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1576732402; bh=9R3otvYjxL+EhzYozx6MHy5SVGQPaMnj791NKARfzDo=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=pBgP9BeT11sBQ7OaVQILvcGGl6CzWgDqvsaSTzwyqM78gphzm/5LVdioLZNllm+4H
+         y6wt61DriVzx0s62ZtjPFf3KC+wFnjSh3kGMguMxUL1d44VBwbHUGgeCDBiP08YtpT
+         b9t8ZDktVlUsUpS0KJzf41g9Rhcl/MkhwPlXemDu9Tv2PGPGBRomInr51RJD8ql1MA
+         6gb07qWLhsSYuU88apCj3O/0T+Xk9aLsWBut91BSM5NUWvKdbrMCtGQco2elQ4RGJs
+         ZKw+tcWS33OtldT6pfMjEhBw2L2PYBGGbGy5KD/qQL8/HGc21CNe0PcZRNvG4tpun8
+         3Iscb9A7XifEA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Linux kernel commit e78bbfa82624 ("mm: stop returning -ENOENT from
+sys_move_pages() if nothing got migrated") had the effect of *never*
+returning -ENOENT, in any situation. So we need to update the man page
+to reflect that ENOENT is not a possible return value.
 
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Brice Goglin <Brice.Goglin@inria.fr>
+Cc: Yang Shi <yang.shi@linux.alibaba.com>
+Cc: Christoph Lameter <cl@linux.com>
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
 
-On 12/19/2019 9:14 AM, Jin, Yao wrote:
-> 
-> 
-> On 12/18/2019 3:47 PM, Jiri Olsa wrote:
->> On Wed, Dec 18, 2019 at 10:24:43AM +0800, Jin Yao wrote:
->>> When performing "perf report --group", it shows the event group 
->>> information
->>> together. In previous patch, we have supported a new option 
->>> "--group-sort-idx"
->>> to sort the output by the event at the index n in event group.
->>>
->>> It would be nice if we can use a hotkey in browser to select a event
->>> to sort.
->>>
->>> For example,
->>>
->>>    # perf report --group
->>>
->>>   Samples: 12K of events 'cpu/instructions,period=2000003/, 
->>> cpu/cpu-cycles,period=200003/, ...
->>>                          Overhead  Command    Shared 
->>> Object            Symbol
->>>    92.19%  98.68%   0.00%  93.30%  mgen       
->>> mgen                     [.] LOOP1
->>>     3.12%   0.29%   0.00%   0.16%  gsd-color  
->>> libglib-2.0.so.0.5600.4  [.] 0x0000000000049515
->>>     1.56%   0.03%   0.00%   0.04%  gsd-color  
->>> libglib-2.0.so.0.5600.4  [.] 0x00000000000494b7
->>>     1.56%   0.01%   0.00%   0.00%  gsd-color  
->>> libglib-2.0.so.0.5600.4  [.] 0x00000000000494ce
->>>     1.56%   0.00%   0.00%   0.00%  mgen       
->>> [kernel.kallsyms]        [k] task_tick_fair
->>>     0.00%   0.15%   0.00%   0.04%  perf       
->>> [kernel.kallsyms]        [k] smp_call_function_single
->>>     0.00%   0.13%   0.00%   6.08%  swapper    
->>> [kernel.kallsyms]        [k] intel_idle
->>>     0.00%   0.03%   0.00%   0.00%  gsd-color  
->>> libglib-2.0.so.0.5600.4  [.] g_main_context_check
->>>     0.00%   0.03%   0.00%   0.00%  swapper    
->>> [kernel.kallsyms]        [k] apic_timer_interrupt
->>>     0.00%   0.03%   0.00%   0.00%  swapper    
->>> [kernel.kallsyms]        [k] check_preempt_curr
->>>
->>> When user press hotkey '3' (event index, starting from 0), it indicates
->>> to sort output by the forth event in group.
->>>
->>>    Samples: 12K of events 'cpu/instructions,period=2000003/, 
->>> cpu/cpu-cycles,period=200003/, ...
->>>                          Overhead  Command    Shared 
->>> Object            Symbol
->>>    92.19%  98.68%   0.00%  93.30%  mgen       
->>> mgen                     [.] LOOP1
->>>     0.00%   0.13%   0.00%   6.08%  swapper    
->>> [kernel.kallsyms]        [k] intel_idle
->>>     3.12%   0.29%   0.00%   0.16%  gsd-color  
->>> libglib-2.0.so.0.5600.4  [.] 0x0000000000049515
->>>     0.00%   0.00%   0.00%   0.06%  swapper    
->>> [kernel.kallsyms]        [k] hrtimer_start_range_ns
->>>     1.56%   0.03%   0.00%   0.04%  gsd-color  
->>> libglib-2.0.so.0.5600.4  [.] 0x00000000000494b7
->>>     0.00%   0.15%   0.00%   0.04%  perf       
->>> [kernel.kallsyms]        [k] smp_call_function_single
->>>     0.00%   0.00%   0.00%   0.02%  mgen       
->>> [kernel.kallsyms]        [k] update_curr
->>>     0.00%   0.00%   0.00%   0.02%  mgen       
->>> [kernel.kallsyms]        [k] apic_timer_interrupt
->>>     0.00%   0.00%   0.00%   0.02%  mgen       
->>> [kernel.kallsyms]        [k] native_apic_msr_eoi_write
->>>     0.00%   0.00%   0.00%   0.02%  mgen       
->>> [kernel.kallsyms]        [k] __update_load_avg_se
->>
->> when I press 0...9 I'm getting extra columns:
->>
->> Samples: 134  of events 'anon group { cycles:u, instructions:u, 
->> cache-misses:u, cycles:u, instructions:u }', Event count (approx.): 
->> 7107344
->>                                  Overhead  Command  Shared Object     
->> Symbol                                                                  Self 
->>
->>    17.95%  41.20%   0.00%  12.44%  41.30%  ls       libc-2.29.so      
->> [.] __strcoll_l                       17.95%  41.20%   0.00%  12.44%  
->> 41.30%       N/A
->>     0.00%  13.22%   0.00%   0.00%   0.00%  ls       ls                
->> [.] 0x000000000000871c                 0.00%  13.22%   0.00%   0.00%   
->> 0.00%       N/A
->>     8.32%  11.49%   0.00%   2.62%   9.34%  ls       ld-2.29.so        
->> [.] do_lookup_x                        8.32%  11.49%   0.00%   2.62%   
->> 9.34%       N/A
->>     0.00%   8.29%  31.18%  13.34%   3.05%  ls       ld-2.29.so        
->> [.] _dl_lookup_symbol_x                0.00%   8.29%  31.18%  13.34%   
->> 3.05%       N/A
->>     0.00%   6.47%   0.00%   0.00%   0.00%  ls       libc-2.29.so      
->> [.] __strlen_avx2                      0.00%   6.47%   0.00%   0.00%   
->> 0.00%       N/A
->>     0.00%   5.97%   0.00%   0.00%   0.00%  ls       ls                
->> [.] 0x0000000000014001                 0.00%   5.97%   0.00%   0.00%   
->> 0.00%       N/A
->>     5.77%   5.83%   7.79%   4.78%   5.04%  ls       ld-2.29.so        
->> [.] strcmp                             5.77%   5.83%   7.79%   4.78%   
->> 5.04%       N/A
->>     2.31%   4.35%   8.30%   0.00%   0.00%  ls       ld-2.29.so        
->> [.] _dl_map_object_from_fd             2.31%   4.35%   8.30%   0.00%   
->> 0.00%       N/A
->>     0.00%   2.96%   0.00%   1.30%   2.22%  ls       ld-2.29.so        
->> [.] __GI___tunables_init               0.00%   2.96%   0.00%   1.30%   
->> 2.22%       N/A
->>     0.66%   0.22%   0.68%   0.00%   0.21%  ls       ld-2.29.so        
->> [.] _dl_start                          0.66%   0.22%   0.68%   0.00%   
->> 0.21%       N/A
->>     2.42%   0.00%   0.02%   3.16%   0.00%  ls       [unknown]         
->> [k] 0xffffffffa2a012b0                 2.42%   0.00%   0.02%   3.16%   
->> 0.00%       N/A
->>     0.16%   0.00%   0.01%   0.20%   0.00%  ls       ld-2.29.so        
->> [.] _start                             0.16%   0.00%   0.01%   0.20%   
->> 0.00%       N/A
->>     0.00%   0.00%  11.47%   0.00%   0.00%  ls       libcap.so.2.26    
->> [.] 0x0000000000002420                 0.00%   0.00%  11.47%   0.00%   
->> 0.00%       N/A
->>     0.00%   0.00%  10.50%   0.00%   0.00%  ls       libc-2.29.so      
->> [.] __GI___tcgetattr                   0.00%   0.00%  10.50%   0.00%   
->> 0.00%       N/A
->>     0.00%   0.00%   9.14%   0.00%   0.00%  ls       ls                
->> [.] 0x000000000000767a                 0.00%   0.00%   9.14%   0.00%   
->> 0.00%       N/A
->>    13.60%   0.00%   7.14%   2.31%   0.00%  ls       ld-2.29.so        
->> [.] _dl_relocate_object               13.60%   0.00%   7.14%   2.31%   
->> 0.00%       N/A
->>     2.13%   0.00%   6.14%   0.00%   0.00%  ls       ld-2.29.so        
->> [.] _dl_map_object_deps                2.13%   0.00%   6.14%   0.00%   
->> 0.00%       N/A
->>     0.00%   0.00%   5.27%   0.00%   0.00%  ls       ld-2.29.so        
->> [.] strlen                             0.00%   0.00%   5.27%   0.00%   
->> 0.00%       N/A
->>     1.31%   0.00%   2.37%   1.08%   0.00%  ls       ld-2.29.so        
->> [.] _dl_sysdep_start                   1.31%   0.00%   2.37%   1.08%   
->> 0.00%       N/A
->>
->>
->> jirka
->>
-> 
-> Looks it's an existing issue in perf. We can reproduce it by following 
-> steps.
-> 
-> 1. perf record -a -e cycles,instructions -- sleep 3
-> 2. perf report --group
-> 3. In browser, we use hotkey 's' to switch to another perf.data
-> 4. Now in browser, the extra columns 'Self' and 'Children' will be shown.
-> 
-> But I have not figured out which patch caused this issue. :(
-> 
-> Thanks
-> Jin Yao
+Hi,
 
-I have debugged this issue and I find that's because setup_sorting() is 
-executed again after repeat path, so dimensions are added again.
+This fix for the man page was ACK'd by Michal, here:
 
-Could you help to review following fix? Thanks!
+https://lore.kernel.org/r/20191218101711.GB21485@dhcp22.suse.cz
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 387311c67264..de988589d99b 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -1076,6 +1076,7 @@ int cmd_report(int argc, const char **argv)
-         struct stat st;
-         bool has_br_stack = false;
-         int branch_mode = -1;
-+       int last_key = 0;
-         bool branch_call_mode = false;
-  #define CALLCHAIN_DEFAULT_OPT  "graph,0.5,caller,function,percent"
-         static const char report_callchain_help[] = "Display call graph 
-(stack chain/backtrace):\n\n"
-@@ -1450,7 +1451,8 @@ int cmd_report(int argc, const char **argv)
-                 sort_order = sort_tmp;
-         }
+thanks,
+John Hubbard
+NVIDIA
 
--       if (setup_sorting(session->evlist) < 0) {
-+       if ((last_key != K_SWITCH_INPUT_DATA) &&
-+           (setup_sorting(session->evlist) < 0)) {
-                 if (sort_order)
-                         parse_options_usage(report_usage, options, "s", 1);
-                 if (field_order)
-@@ -1530,6 +1532,7 @@ int cmd_report(int argc, const char **argv)
-         ret = __cmd_report(&report);
-         if (ret == K_SWITCH_INPUT_DATA) {
-                 perf_session__delete(session);
-+               last_key = K_SWITCH_INPUT_DATA;
-                 goto repeat;
-         } else
-                 ret = 0;
+ man2/move_pages.2 | 6 ------
+ 1 file changed, 6 deletions(-)
 
-Thanks
-Jin Yao
+diff --git a/man2/move_pages.2 b/man2/move_pages.2
+index 2d96468fa..1bf1053f2 100644
+--- a/man2/move_pages.2
++++ b/man2/move_pages.2
+@@ -191,12 +191,6 @@ was specified or an attempt was made to migrate pages =
+of a kernel thread.
+ .B ENODEV
+ One of the target nodes is not online.
+ .TP
+-.B ENOENT
+-No pages were found that require moving.
+-All pages are either already
+-on the target node, not present, had an invalid address or could not be
+-moved because they were mapped by multiple processes.
+-.TP
+ .B EPERM
+ The caller specified
+ .B MPOL_MF_MOVE_ALL
+--=20
+2.24.1
+
