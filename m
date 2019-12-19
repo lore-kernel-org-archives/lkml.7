@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3084C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C12FC2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7929624679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:10:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1A15222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782650;
-	bh=n0R84Wlbi1EN+zgAoGETcxrfBsDxb76mo6+qqDnhY10=;
+	s=default; t=1576782654;
+	bh=sgvSsHT1HrAvcpowKwzs5s4e7dGUrVatLm0FTA/3/lU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IyQoBbCIS06tH+QJjMxJ1qkT4VkThAnzMcQsbPjIW/Q57cyawwVci7Q0IEL8/cuAV
-	 IqhrSE7Mpd2UfKiBWtL4a/CsyW2mZLpz4Q2Xe5gigRVQ/mzFn++fVaXmTSYOWXqgUd
-	 aJhYTllkRrbgjHUhycYrTiyJK7BwBvDvjdLBPDZA=
+	b=2ErHzDatIj9jqN8ap6jDyJGgdWjoQe3YEt0Iz3O9O9YCz94nNYlSPR7Ow5eFiWbLZ
+	 zNJq0Hh+LmMRzWU346YX1Y/IQEJycfhMIwqjATWdDhmSU53VPpBqg/raPqLb9CRZr4
+	 fYH/vQPBo+sEUiRbzEh9XkO/CwSuajvmNwbdMu9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbfLSSjI (ORCPT
+        id S1726866AbfLSTKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:39:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56980 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 14:10:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728110AbfLSSi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:38:58 -0500
+        id S1728140AbfLSSjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:39:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E22424672;
-        Thu, 19 Dec 2019 18:38:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F682222C2;
+        Thu, 19 Dec 2019 18:39:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780736;
-        bh=n0R84Wlbi1EN+zgAoGETcxrfBsDxb76mo6+qqDnhY10=;
+        s=default; t=1576780744;
+        bh=sgvSsHT1HrAvcpowKwzs5s4e7dGUrVatLm0FTA/3/lU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hKd4LV5I0K6jVQdekYS2yewHjVsx+Cww2oe5KNRyJFLeFvbyXHxvXrUh2r6J7WKMX
-         zEFcBa3YWHf9c6qmctKjKAp15Y/GO43EK9m3rANTHe/3gS+dLgIwLg6AKoQ3HutGpv
-         bJiPe5X2BWk/WlByI8IWws/6Ob6fJ1QybKpJifMw=
+        b=iwUg3EIJwYMtCRh0RRufZ6Bvd9y9De+GOzQgiWcspBXIiS+0rztBQnr+P2eB1w/ag
+         3GuB95TPmayMUJGg4jQbTugVJnbUB6Q34Wh4+EbzJ7BjvS+hS7nPGLggJgpvHxD6AM
+         5UMDoCVaaXx0XPx5eV0niBRHolkUEaVk0D9P2aDg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pete Zaitcev <zaitcev@redhat.com>,
-        syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com,
-        Alan Stern <stern@rowland.harvard.edu>
-Subject: [PATCH 4.4 096/162] usb: mon: Fix a deadlock in usbmon between mmap and read
-Date:   Thu, 19 Dec 2019 19:33:24 +0100
-Message-Id: <20191219183213.631341595@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.4 072/162] appletalk: Fix potential NULL pointer dereference in unregister_snap_client
+Date:   Thu, 19 Dec 2019 19:33:00 +0100
+Message-Id: <20191219183212.195804514@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -60,104 +61,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pete Zaitcev <zaitcev@redhat.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit 19e6317d24c25ee737c65d1ffb7483bdda4bb54a upstream.
+commit 9804501fa1228048857910a6bf23e085aade37cc upstream.
 
-The problem arises because our read() function grabs a lock of the
-circular buffer, finds something of interest, then invokes copy_to_user()
-straight from the buffer, which in turn takes mm->mmap_sem. In the same
-time, the callback mon_bin_vma_fault() is invoked under mm->mmap_sem.
-It attempts to take the fetch lock and deadlocks.
+register_snap_client may return NULL, all the callers
+check it, but only print a warning. This will result in
+NULL pointer dereference in unregister_snap_client and other
+places.
 
-This patch does away with protecting of our page list with any
-semaphores, and instead relies on the kernel not close the device
-while mmap is active in a process.
+It has always been used like this since v2.6
 
-In addition, we prohibit re-sizing of a buffer while mmap is active.
-This way, when (now unlocked) fault is processed, it works with the
-page that is intended to be mapped-in, and not some other random page.
-Note that this may have an ABI impact, but hopefully no legitimate
-program is this wrong.
-
-Signed-off-by: Pete Zaitcev <zaitcev@redhat.com>
-Reported-by: syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com
-Reviewed-by: Alan Stern <stern@rowland.harvard.edu>
-Fixes: 46eb14a6e158 ("USB: fix usbmon BUG trigger")
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191204203941.3503452b@suzdal.zaitcev.lan
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to <4.15: adjust context]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/mon/mon_bin.c |   32 +++++++++++++++++++++-----------
- 1 file changed, 21 insertions(+), 11 deletions(-)
+ include/linux/atalk.h |    2 +-
+ net/appletalk/aarp.c  |   15 ++++++++++++---
+ net/appletalk/ddp.c   |   20 ++++++++++++--------
+ 3 files changed, 25 insertions(+), 12 deletions(-)
 
---- a/drivers/usb/mon/mon_bin.c
-+++ b/drivers/usb/mon/mon_bin.c
-@@ -1035,12 +1035,18 @@ static long mon_bin_ioctl(struct file *f
+--- a/include/linux/atalk.h
++++ b/include/linux/atalk.h
+@@ -107,7 +107,7 @@ static __inline__ struct elapaarp *aarp_
+ #define AARP_RESOLVE_TIME	(10 * HZ)
  
- 		mutex_lock(&rp->fetch_lock);
- 		spin_lock_irqsave(&rp->b_lock, flags);
--		mon_free_buff(rp->b_vec, rp->b_size/CHUNK_SIZE);
--		kfree(rp->b_vec);
--		rp->b_vec  = vec;
--		rp->b_size = size;
--		rp->b_read = rp->b_in = rp->b_out = rp->b_cnt = 0;
--		rp->cnt_lost = 0;
-+		if (rp->mmap_active) {
-+			mon_free_buff(vec, size/CHUNK_SIZE);
-+			kfree(vec);
-+			ret = -EBUSY;
-+		} else {
-+			mon_free_buff(rp->b_vec, rp->b_size/CHUNK_SIZE);
-+			kfree(rp->b_vec);
-+			rp->b_vec  = vec;
-+			rp->b_size = size;
-+			rp->b_read = rp->b_in = rp->b_out = rp->b_cnt = 0;
-+			rp->cnt_lost = 0;
-+		}
- 		spin_unlock_irqrestore(&rp->b_lock, flags);
- 		mutex_unlock(&rp->fetch_lock);
- 		}
-@@ -1212,13 +1218,21 @@ mon_bin_poll(struct file *file, struct p
- static void mon_bin_vma_open(struct vm_area_struct *vma)
+ extern struct datalink_proto *ddp_dl, *aarp_dl;
+-extern void aarp_proto_init(void);
++extern int aarp_proto_init(void);
+ 
+ /* Inter module exports */
+ 
+--- a/net/appletalk/aarp.c
++++ b/net/appletalk/aarp.c
+@@ -879,15 +879,24 @@ static struct notifier_block aarp_notifi
+ 
+ static unsigned char aarp_snap_id[] = { 0x00, 0x00, 0x00, 0x80, 0xF3 };
+ 
+-void __init aarp_proto_init(void)
++int __init aarp_proto_init(void)
  {
- 	struct mon_reader_bin *rp = vma->vm_private_data;
-+	unsigned long flags;
++	int rc;
 +
-+	spin_lock_irqsave(&rp->b_lock, flags);
- 	rp->mmap_active++;
-+	spin_unlock_irqrestore(&rp->b_lock, flags);
+ 	aarp_dl = register_snap_client(aarp_snap_id, aarp_rcv);
+-	if (!aarp_dl)
++	if (!aarp_dl) {
+ 		printk(KERN_CRIT "Unable to register AARP with SNAP.\n");
++		return -ENOMEM;
++	}
+ 	setup_timer(&aarp_timer, aarp_expire_timeout, 0);
+ 	aarp_timer.expires  = jiffies + sysctl_aarp_expiry_time;
+ 	add_timer(&aarp_timer);
+-	register_netdevice_notifier(&aarp_notifier);
++	rc = register_netdevice_notifier(&aarp_notifier);
++	if (rc) {
++		del_timer_sync(&aarp_timer);
++		unregister_snap_client(aarp_dl);
++	}
++	return rc;
  }
  
- static void mon_bin_vma_close(struct vm_area_struct *vma)
+ /* Remove the AARP entries associated with a device. */
+--- a/net/appletalk/ddp.c
++++ b/net/appletalk/ddp.c
+@@ -1911,9 +1911,6 @@ static unsigned char ddp_snap_id[] = { 0
+ EXPORT_SYMBOL(atrtr_get_dev);
+ EXPORT_SYMBOL(atalk_find_dev_addr);
+ 
+-static const char atalk_err_snap[] __initconst =
+-	KERN_CRIT "Unable to register DDP with SNAP.\n";
+-
+ /* Called by proto.c on kernel start up */
+ static int __init atalk_init(void)
  {
-+	unsigned long flags;
+@@ -1928,17 +1925,22 @@ static int __init atalk_init(void)
+ 		goto out_proto;
+ 
+ 	ddp_dl = register_snap_client(ddp_snap_id, atalk_rcv);
+-	if (!ddp_dl)
+-		printk(atalk_err_snap);
++	if (!ddp_dl) {
++		pr_crit("Unable to register DDP with SNAP.\n");
++		goto out_sock;
++	}
+ 
+ 	dev_add_pack(&ltalk_packet_type);
+ 	dev_add_pack(&ppptalk_packet_type);
+ 
+ 	rc = register_netdevice_notifier(&ddp_notifier);
+ 	if (rc)
+-		goto out_sock;
++		goto out_snap;
 +
- 	struct mon_reader_bin *rp = vma->vm_private_data;
-+	spin_lock_irqsave(&rp->b_lock, flags);
- 	rp->mmap_active--;
-+	spin_unlock_irqrestore(&rp->b_lock, flags);
- }
++	rc = aarp_proto_init();
++	if (rc)
++		goto out_dev;
  
- /*
-@@ -1230,16 +1244,12 @@ static int mon_bin_vma_fault(struct vm_a
- 	unsigned long offset, chunk_idx;
- 	struct page *pageptr;
- 
--	mutex_lock(&rp->fetch_lock);
- 	offset = vmf->pgoff << PAGE_SHIFT;
--	if (offset >= rp->b_size) {
--		mutex_unlock(&rp->fetch_lock);
-+	if (offset >= rp->b_size)
- 		return VM_FAULT_SIGBUS;
--	}
- 	chunk_idx = offset / CHUNK_SIZE;
- 	pageptr = rp->b_vec[chunk_idx].pg;
- 	get_page(pageptr);
--	mutex_unlock(&rp->fetch_lock);
- 	vmf->page = pageptr;
- 	return 0;
- }
+-	aarp_proto_init();
+ 	rc = atalk_proc_init();
+ 	if (rc)
+ 		goto out_aarp;
+@@ -1952,11 +1954,13 @@ out_proc:
+ 	atalk_proc_exit();
+ out_aarp:
+ 	aarp_cleanup_module();
++out_dev:
+ 	unregister_netdevice_notifier(&ddp_notifier);
+-out_sock:
++out_snap:
+ 	dev_remove_pack(&ppptalk_packet_type);
+ 	dev_remove_pack(&ltalk_packet_type);
+ 	unregister_snap_client(ddp_dl);
++out_sock:
+ 	sock_unregister(PF_APPLETALK);
+ out_proto:
+ 	proto_unregister(&ddp_proto);
 
 
