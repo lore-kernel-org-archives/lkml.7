@@ -2,159 +2,85 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC9FC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 02:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2B4C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 02:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 849812465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 02:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08038227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 02:50:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfLSCua (ORCPT
+        id S1726907AbfLSCuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 21:50:30 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:54507 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfLSCua (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 21:50:30 -0500
-Received: from [10.28.19.135] (10.28.19.135) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 19 Dec
- 2019 10:51:04 +0800
-Subject: Re: [PATCH v5 2/4] dt-bindings: watchdog: add new binding for meson
- secure watchdog
-To:     Rob Herring <robh@kernel.org>
-CC:     Guenter Roeck <linux@roeck-us.net>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        <devicetree@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        <linux-kernel@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>,
-        Jerome Brunet <jbrunet@baylibre.com>
-References: <1576153187-28378-1-git-send-email-xingyu.chen@amlogic.com>
- <1576153187-28378-3-git-send-email-xingyu.chen@amlogic.com>
- <CAFBinCBHLqgPExPsVaSWdSOr0Oj-jeYa4Z82U-pJ=fS+D1wGnA@mail.gmail.com>
- <f7b0afe7-e317-2422-de7e-878837f9f238@amlogic.com>
- <a8f5ab1d-264c-5b2c-e72b-3774b9f44c22@roeck-us.net>
- <1da513d7-20e1-726a-dcc4-952cbfbbe63a@amlogic.com>
- <20191218203404.GA2451@bogus>
-From:   Xingyu Chen <xingyu.chen@amlogic.com>
-Message-ID: <2d762720-cb08-e72a-06e5-4096e211e34b@amlogic.com>
-Date:   Thu, 19 Dec 2019 10:51:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 18 Dec 2019 21:50:35 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8147 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726463AbfLSCud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 21:50:33 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 86CAE7DB640449C6FB7B;
+        Thu, 19 Dec 2019 10:50:31 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 19 Dec 2019 10:50:20 +0800
+From:   Ma Feng <mafeng.ma@huawei.com>
+To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        "Gregory Clement" <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Ma Feng <mafeng.ma@huawei.com>
+Subject: [PATCH] pinctrl: armada-37xx: Remove unneeded semicolon
+Date:   Thu, 19 Dec 2019 10:51:05 +0800
+Message-ID: <1576723865-111331-1-git-send-email-mafeng.ma@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-In-Reply-To: <20191218203404.GA2451@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-Originating-IP: [10.28.19.135]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Rob
+Fixes coccicheck warning:
 
-On 2019/12/19 4:34, Rob Herring wrote:
-> On Wed, Dec 18, 2019 at 03:37:49PM +0800, Xingyu Chen wrote:
->> Hi, Guenter Martin
->>
->> On 2019/12/16 21:30, Guenter Roeck wrote:
->>> On 12/15/19 10:03 PM, Xingyu Chen wrote:
->>>> Hi, Martin
->>>>
->>>> Sorry for the late reply.
->>>>
->>>> On 2019/12/13 4:05, Martin Blumenstingl wrote:
->>>>> Hi Xingyu and Rob,
->>>>>
->>>>> On Thu, Dec 12, 2019 at 1:20 PM Xingyu Chen
->>>>> <xingyu.chen@amlogic.com> wrote:
->>>>> [...]
->>>>>> +examples:
->>>>>> +  - |
->>>>>> +    watchdog {
->>>>>> +          compatible = "amlogic,meson-sec-wdt";
->>>>>> +          timeout-sec = <60>;
->>>>>> +    };
->>>>> in v3 of this patch Rob commented that there shouldn't be an OF node
->>>>> if there are no additional properties
->>>>> with timeout-sec there's now an additional property so my
->>>>> understanding is that it's fine to have an OF node
->>>> Your understanding is correct.
->>>>> what I don't understand yet is where this node should be placed.
->>>>> is it supposed to be a child node of the secure monitor node (for
->>>>> which we already have a binding here:
->>>>> Documentation/devicetree/bindings/firmware/meson/meson_sm.txt) or
->>>>> where else would we place it inside the .dts?
->>>> IMO,  Although the watchdog node need to reference the meson_sm
->>>> node, there is no
->>>> bus-like dependencies between the devices which the two nodes
->>>> corresponding to.
->>>> so i think that the watchdog node as child node of meson_sm maybe
->>>> not appropriate.
->>> The watchdog driver needs the meson SM's dt node, and it depends on the
->>> existence
->>> of that node. That seems enough of a relationship to warrant having it
->>> as child note.
->> Thanks for your reply, if i take the wdt node as child of secure monitor
->> (sm), how should
->> i register or find the wdt device ?
->>
->> I only think of the following three methods :
->> 1). update the sm driver，and scan&register wdt device when the sm driver
->> probes(It is like i2c), but there
->> are too many changes involved.
-> Just add of_platform_default_populate() call and clean-up calls. That's
-> not what I'd call 'too many changes'.
-Thanks for your guidance.
->
->   
->> 2). add "simple-bus" key string to compatible of sm node, and it will make
->> the child node is registered as
->> platform device, but it seems that the key string is not match current
->> scene.
-> You previously said it's not a bus...
->
->> secure-monitor {
->>      compatible = "amlogic,meson-gxbb-sm",  "simple-bus";
->>
->>      watchdog {
->>          compatible = "amlogic,meson-sec-wdt";
->>          timeout-sec = <60>;
->>      }
->> }
->>
->> 3).  don't register device, and find directly the watchdog node by using the
->> of_* API in watchdog
->> driver (Eg: linux-4.x/drivers/tee/optee/core.c)
->>
->> secure-monitor {
->>      compatible = "amlogic,meson-gxbb-sm";
->>
->>      watchdog {
->>          compatible = "amlogic,meson-sec-wdt";
->>          timeout-sec = <60>;
->>      }
->> }
->>
->> The method 3 looks better for me, do you have a better suggestion ? Thanks
->>
->> BR
->>> Guenter
->>>
->>> .
->>>
-> .
->
+drivers/pinctrl/mvebu/pinctrl-armada-37xx.c:736:2-3: Unneeded semicolon
+drivers/pinctrl/mvebu/pinctrl-armada-37xx.c:803:2-3: Unneeded semicolon
+
+Fixes: commit 5715092a458c ("pinctrl: armada-37xx: Add gpio support")
+       commit 2f227605394b ("pinctrl: armada-37xx: Add irqchip support")
+
+Signed-off-by: Ma Feng <mafeng.ma@huawei.com>
+---
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+index aa9dcde..9f0b3d3 100644
+--- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
++++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+@@ -733,7 +733,7 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
+ 			ret = 0;
+ 			break;
+ 		}
+-	};
++	}
+ 	if (ret) {
+ 		dev_err(dev, "no gpio-controller child node\n");
+ 		return ret;
+@@ -800,7 +800,7 @@ static int armada_37xx_gpiochip_register(struct platform_device *pdev,
+ 			ret = 0;
+ 			break;
+ 		}
+-	};
++	}
+ 	if (ret)
+ 		return ret;
+
+--
+2.6.2
+
