@@ -2,182 +2,112 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E77C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1D3C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45FC7206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18C2021655
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 14:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576767073;
-	bh=zdOA0WpGahNtfocWFERrDKk6UCtOuy9GMpkckf4Fwxk=;
+	s=default; t=1576767131;
+	bh=h5uwDXioLUFnf8pa0360sFJXjia47EPj99fCozJPJsE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nLVnkTY1PUYIpfHpg4x4+C7OV50yhDhMGJ4ttelygjPSGD/ZKmcWZXx5sPa4a7JJR
-	 jpEicfC+z4B5w6FwqzCJw5ncRtR8w7skGpx9jiMa+CH9WdOar2BJgLhtp8zIFKBFag
-	 PAX9N7iYd5gOhyoTEGBT8PtNILhdWRY1pHhd8qMg=
+	b=ie3EpxV+6m3FMvhi8L0AkoEtEyrmxx6IiA5LS6jhPzBirRpzhCm6fiI0+2Ck3wXGf
+	 lNXt8lrNbBEtrplNxIU0Slp7AAWciQEqWcyUFYWShzzDd5WD2QEef2IRlZfHCq8DlT
+	 pAOBidhqWL/oEHfusJvAGDy8RAWw6p8gy2Ffl9Ks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbfLSOvM (ORCPT
+        id S1726905AbfLSOwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 09:51:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59710 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726759AbfLSOvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 09:51:12 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02BC72053B;
-        Thu, 19 Dec 2019 14:51:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576767071;
-        bh=zdOA0WpGahNtfocWFERrDKk6UCtOuy9GMpkckf4Fwxk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AKiLxU0tZ0LfjduRGTpGTGQYS6qKBoQYdU/qVU54+NjF1WWbXvmOjo0iDN7KdmFTe
-         T5G+OLjQ8dOdxIrgffd+zHK2JcCwugosgzuI0H7WJ5fSSRvN63FSN0o+pXCRdlkN5q
-         87Qqze04V9DtkVA7LXOP+UStiGLhyYMlU7cjjkeM=
-Date:   Thu, 19 Dec 2019 15:51:09 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Dmitry Safonov <dima@arista.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-serial@vger.kernel.org
-Cc:     Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org,
-        kbuild test robot <lkp@intel.com>
-Subject: [PATCH v2] tty: serial: 21285: stop using the unused[] variable from
- struct uart_port
-Message-ID: <20191219145109.GA1962496@kroah.com>
-References: <20191219082006.GA1001454@kroah.com>
+        Thu, 19 Dec 2019 09:52:10 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34078 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726757AbfLSOwJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 09:52:09 -0500
+Received: by mail-wm1-f67.google.com with SMTP id f4so7214147wmj.1;
+        Thu, 19 Dec 2019 06:52:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6a2uv8yUsIcld92k0bZWXnT9m14VpNvshEjzyMppfcI=;
+        b=Y5xsgeFA8cv/mLuHZ0jf+dXTL+/obYi+FPWI1V7Ln7pQ6yW0+El6MbHHMIe3PyKjDD
+         V2ter9Y2Kr7hYMnwHFbg/8pLwF8Cm0164gU/5+QS5Dyyu4Rv8k6Xo9aQJO7Txve7/Qwl
+         Jkp/1cMk3OvQrL80j4WQVnyIE1zXX4SEKhpb368f1r18bs99mIEZCsvviMd68Cd3Odmu
+         K2C5BOF5vATwlIbz5+DwkwOQPyvjg+D80YXx/OcCs4cYlPA7a01QaWmQmjKtQM930j4g
+         lY10EvCBNZY98vKlIiBGLIb9wlz4GuzjngGEsDYRICoI9xv1e5tG93oQL+cOerFqSqO6
+         YDuA==
+X-Gm-Message-State: APjAAAU0jEbtmsL0B2eOMP73o4QdYNbEN1ZPn0qmnX4yQvA4VidoxUQg
+        saMej3DygXQ7Vf86Ax5MLEQ=
+X-Google-Smtp-Source: APXvYqwxXeasoFx/Mf1e5pfruwgNAsTmVPaOVqfgHL3Pl9myImdedJoXolvtkk+EpYAhczAcGz7y4w==
+X-Received: by 2002:a1c:4d18:: with SMTP id o24mr10436735wmh.35.1576767127725;
+        Thu, 19 Dec 2019 06:52:07 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id c4sm6450772wml.7.2019.12.19.06.52.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 06:52:06 -0800 (PST)
+Date:   Thu, 19 Dec 2019 15:52:06 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     netdev@vger.kernel.org, lirongqing@baidu.com,
+        linyunsheng@huawei.com,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Saeed Mahameed <saeedm@mellanox.com>, peterz@infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [net-next v4 PATCH] page_pool: handle page recycle for
+ NUMA_NO_NODE condition
+Message-ID: <20191219145206.GE26945@dhcp22.suse.cz>
+References: <20191218084437.6db92d32@carbon>
+ <157665609556.170047.13435503155369210509.stgit@firesoul>
+ <20191219120925.GD26945@dhcp22.suse.cz>
+ <20191219143535.6c7bc880@carbon>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191219082006.GA1001454@kroah.com>
+In-Reply-To: <20191219143535.6c7bc880@carbon>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Much like the samsung_tty driver (now I know where they copied the idea
-from), the 21285 uart driver uses 2 bytes from the "unused" array of
-struct uart_port to keep tx/rx enabled/disabled state.  Those fields are
-going away (they were never really needed in the first place), so fix up
-the 21285 driver by another horrible hack.
+On Thu 19-12-19 14:35:35, Jesper Dangaard Brouer wrote:
+> On Thu, 19 Dec 2019 13:09:25 +0100
+> Michal Hocko <mhocko@kernel.org> wrote:
+> 
+> > On Wed 18-12-19 09:01:35, Jesper Dangaard Brouer wrote:
+> > [...]
+> > > For the NUMA_NO_NODE case, when a NIC IRQ is moved to another NUMA
+> > > node, then ptr_ring will be emptied in 65 (PP_ALLOC_CACHE_REFILL+1)
+> > > chunks per allocation and allocation fall-through to the real
+> > > page-allocator with the new nid derived from numa_mem_id(). We accept
+> > > that transitioning the alloc cache doesn't happen immediately.  
+> 
+> Oh, I just realized that the drivers usually refill several RX
+> packet-pages at once, this means that this is called N times, meaning
+> during a NUMA change this will result in N * 65 pages returned.
+> 
+> 
+> > Could you explain what is the expected semantic of NUMA_NO_NODE in this
+> > case? Does it imply always the preferred locality? See my other email[1] to
+> > this matter.
+> 
+> I do think we want NUMA_NO_NODE to mean preferred locality.
 
-Instead of creating a whole structure for just 2 bytes, just use two
-bits from the private_data pointer instead, as that pointer is never
-used.  The two bits reflect if tx/rx is now enabled/disabled.
+I obviously have no saying here because I am not really familiar with
+the users of this API but I would note that if there is such an implicit
+assumption then you make it impossible to use the numa agnostic page
+pool allocator (aka fast reallocation). This might be not important here
+but future extension would be harder (you can still hack it around aka
+NUMA_REALLY_NO_NODE). My experience tells me that people are quite
+creative and usually require (or worse assume) semantics that you
+thought were not useful.
 
-Astute readers will note that once rx is disabled, nothing ever seems to
-turn it back on, making one wonder if anyone has ever done this.
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Cc: Dmitry Safonov <dima@arista.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Jiri Slaby <jslaby@suse.com>
-Cc: linux-serial@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/tty/serial/21285.c | 55 +++++++++++++++++++++++++++++++-------
- 1 file changed, 45 insertions(+), 10 deletions(-)
-
-v2: use clear_bit(), not set_bit() to actually clear a bit :)
-
-diff --git a/drivers/tty/serial/21285.c b/drivers/tty/serial/21285.c
-index 32b3acf8150a..718e010fcb04 100644
---- a/drivers/tty/serial/21285.c
-+++ b/drivers/tty/serial/21285.c
-@@ -41,8 +41,43 @@
- 
- static const char serial21285_name[] = "Footbridge UART";
- 
--#define tx_enabled(port)	((port)->unused[0])
--#define rx_enabled(port)	((port)->unused[1])
-+/*
-+ * We only need 2 bits of data, so instead of creating a whole structure for
-+ * this, use bits of the private_data pointer of the uart port structure.
-+ */
-+#define tx_enabled_bit	0
-+#define rx_enabled_bit	1
-+
-+static bool is_enabled(struct uart_port *port, int bit)
-+{
-+	unsigned long private_data = (unsigned long)port->private_data;
-+
-+	if (test_bit(bit, &private_data))
-+		return true;
-+	return false;
-+}
-+
-+static void enable(struct uart_port *port, int bit)
-+{
-+	unsigned long private_data = (unsigned long)port->private_data;
-+
-+	set_bit(bit, &private_data);
-+}
-+
-+static void disable(struct uart_port *port, int bit)
-+{
-+	unsigned long private_data = (unsigned long)port->private_data;
-+
-+	clear_bit(bit, &private_data);
-+}
-+
-+#define is_tx_enabled(port)	is_enabled(port, tx_enabled_bit)
-+#define tx_enable(port)		enable(port, tx_enabled_bit)
-+#define tx_disable(port)	disable(port, tx_enabled_bit)
-+
-+#define is_rx_enabled(port)	is_enabled(port, rx_enabled_bit)
-+#define rx_enable(port)		enable(port, rx_enabled_bit)
-+#define rx_disable(port)	disable(port, rx_enabled_bit)
- 
- /*
-  * The documented expression for selecting the divisor is:
-@@ -57,25 +92,25 @@ static const char serial21285_name[] = "Footbridge UART";
- 
- static void serial21285_stop_tx(struct uart_port *port)
- {
--	if (tx_enabled(port)) {
-+	if (is_tx_enabled(port)) {
- 		disable_irq_nosync(IRQ_CONTX);
--		tx_enabled(port) = 0;
-+		tx_disable(port);
- 	}
- }
- 
- static void serial21285_start_tx(struct uart_port *port)
- {
--	if (!tx_enabled(port)) {
-+	if (!is_tx_enabled(port)) {
- 		enable_irq(IRQ_CONTX);
--		tx_enabled(port) = 1;
-+		tx_enable(port);
- 	}
- }
- 
- static void serial21285_stop_rx(struct uart_port *port)
- {
--	if (rx_enabled(port)) {
-+	if (is_rx_enabled(port)) {
- 		disable_irq_nosync(IRQ_CONRX);
--		rx_enabled(port) = 0;
-+		rx_disable(port);
- 	}
- }
- 
-@@ -185,8 +220,8 @@ static int serial21285_startup(struct uart_port *port)
- {
- 	int ret;
- 
--	tx_enabled(port) = 1;
--	rx_enabled(port) = 1;
-+	tx_enable(port);
-+	rx_enable(port);
- 
- 	ret = request_irq(IRQ_CONRX, serial21285_rx_chars, 0,
- 			  serial21285_name, port);
+That being said, if the NUMA_NO_NODE really should have a special
+locality meaning then document it explicitly at least.
 -- 
-2.24.1
-
+Michal Hocko
+SUSE Labs
