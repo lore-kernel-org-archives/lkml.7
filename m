@@ -2,101 +2,93 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD35C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB7AC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9693624687
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:36:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="k4Nwt35P"
+	by mail.kernel.org (Postfix) with ESMTP id 8C132222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:36:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbfLSAgv (ORCPT
+        id S1726841AbfLSAgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 19:36:51 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35028 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbfLSAgv (ORCPT
+        Wed, 18 Dec 2019 19:36:55 -0500
+Received: from mo-csw1514.securemx.jp ([210.130.202.153]:48690 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfLSAgv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 18 Dec 2019 19:36:51 -0500
-Received: by mail-pf1-f193.google.com with SMTP id b19so2169467pfo.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 16:36:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jwvqhmbLPpvanCf4CYPj6H756JJZayFM0Q320MsSZZo=;
-        b=k4Nwt35P5Y6vpp5eWeg7ICwByB0EwQyyowsDLV+6ZjXccOSXxzH4VyQAMACbY+sydr
-         zIs9Aeq3/V4oDQtaEhQ+NaOQbmBcBOxeuhQ7riNcsbvewq0M4nzTlDfm2cbySiYpdo/T
-         fNwlUadrRPTWo5WIf8GgUTYzkrtucd1Al4vdc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jwvqhmbLPpvanCf4CYPj6H756JJZayFM0Q320MsSZZo=;
-        b=QR9O4UYBRQtTDIfTYSTciUg3sEbrEtUrTMdQy7UdkLbnZZ6we0YCOqiJf8aMTu/u76
-         hkolDZsC2lBGCMFUh4RBDCugLqj99QFujGwg0jO+g3wEOfu9Oe74JJXqHs9eACj4TAa+
-         Cqbkx5cx2mmLDTm3tmqkmegb6wf9wYPz5aEu1fjqcWunkEqlMPkHFBzbJJlXB/Xi0WTD
-         SV9wk1rREmN08eCvmp6C081ioPfinSMk/RdEJDqp6Zmwmhf37eNy11DZioqT/EWb7q+j
-         dYMtn28QvhOFdx8U+bSrTarEEdBQgNDI283ZHbVKBHj7BKMaJrnSNNSowojAjqfR7W5I
-         TeAg==
-X-Gm-Message-State: APjAAAUxdJWZd0NSRymwq7pR2pCrj48MoC+HtKDfD/yLY6vuTVIndk43
-        Zv0VFi/ODirtR4EHcjJVyno5YOvfleY=
-X-Google-Smtp-Source: APXvYqzzS8EOpr5E7586Za1Qh1X/ZSa891rAEoUjLTYK149N03+CJ1w2Dzgoafjj0iCq1zJhp2OB0A==
-X-Received: by 2002:a63:211f:: with SMTP id h31mr5808165pgh.299.1576715809809;
-        Wed, 18 Dec 2019 16:36:49 -0800 (PST)
-Received: from localhost (2001-44b8-111e-5c00-b05d-cbfe-b2ee-de17.static.ipv6.internode.on.net. [2001:44b8:111e:5c00:b05d:cbfe:b2ee:de17])
-        by smtp.gmail.com with ESMTPSA id k12sm4636303pgm.65.2019.12.18.16.36.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 16:36:49 -0800 (PST)
-From:   Daniel Axtens <dja@axtens.net>
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, kasan-dev@googlegroups.com,
-        christophe.leroy@c-s.fr, aneesh.kumar@linux.ibm.com,
-        bsingharora@gmail.com
-Cc:     Daniel Axtens <dja@axtens.net>
-Subject: [PATCH v4 3/4] powerpc/mm/kasan: rename kasan_init_32.c to init_32.c
-Date:   Thu, 19 Dec 2019 11:36:29 +1100
-Message-Id: <20191219003630.31288-4-dja@axtens.net>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191219003630.31288-1-dja@axtens.net>
-References: <20191219003630.31288-1-dja@axtens.net>
+Received: by mo-csw.securemx.jp (mx-mo-csw1514) id xBJ0aYfM008093; Thu, 19 Dec 2019 09:36:34 +0900
+X-Iguazu-Qid: 34tKGlJZZqk6vL4KLA
+X-Iguazu-QSIG: v=2; s=0; t=1576715794; q=34tKGlJZZqk6vL4KLA; m=SwoY/TSCZoTPn4z9YK3xPmEM2rXSGc3P6PU8pEkguk4=
+Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
+        by relay.securemx.jp (mx-mr1511) id xBJ0aXjQ029406;
+        Thu, 19 Dec 2019 09:36:33 +0900
+Received: from enc02.toshiba.co.jp ([61.202.160.51])
+        by imx12.toshiba.co.jp  with ESMTP id xBJ0aXh7020534;
+        Thu, 19 Dec 2019 09:36:33 +0900 (JST)
+Received: from hop101.toshiba.co.jp ([133.199.85.107])
+        by enc02.toshiba.co.jp  with ESMTP id xBJ0aWCm015498;
+        Thu, 19 Dec 2019 09:36:32 +0900
+From:   Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     linux-serial@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nobuhiro1.iwamatsu@toshiba.co.jp,
+        shrirang.bagul@canonical.com, stable@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH] serdev: Don't claim unsupported serial devices
+References: <20191218065646.817493-1-punit1.agrawal@toshiba.co.jp>
+        <096046b6-324a-8496-8599-ed7e5ffc6e3c@redhat.com>
+Date:   Thu, 19 Dec 2019 09:37:23 +0900
+In-Reply-To: <096046b6-324a-8496-8599-ed7e5ffc6e3c@redhat.com> (Hans de
+        Goede's message of "Wed, 18 Dec 2019 11:05:40 +0100")
+X-TSB-HOP: ON
+Message-ID: <87eex1noak.fsf@kokedama.swc.toshiba.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kasan is already implied by the directory name, we don't need to
-repeat it.
+Hans de Goede <hdegoede@redhat.com> writes:
 
-Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Daniel Axtens <dja@axtens.net>
----
- arch/powerpc/mm/kasan/Makefile                       | 2 +-
- arch/powerpc/mm/kasan/{kasan_init_32.c => init_32.c} | 0
- 2 files changed, 1 insertion(+), 1 deletion(-)
- rename arch/powerpc/mm/kasan/{kasan_init_32.c => init_32.c} (100%)
+> Hi,
+>
+> On 18-12-2019 07:56, Punit Agrawal wrote:
+>> Serdev sub-system claims all serial devices that are not already
+>> enumerated. As a result, no device node is created for serial port on
+>> certain boards such as the Apollo Lake based UP2. This has the
+>> unintended consequence of not being able to raise the login prompt via
+>> serial connection.
+>>
+>> Introduce a blacklist to reject devices that should not be treated as
+>> a serdev device. Add the Intel HS UART peripheral ids to the blacklist
+>> to bring back serial port on SoCs carrying them.
+>>
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+>> Cc: Rob Herring <robh@kernel.org>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: Johan Hovold <johan@kernel.org>
+>> Cc: Hans de Goede <hdegoede@redhat.com>
+>
+> Thank you for addressing this long standing issue.
 
-diff --git a/arch/powerpc/mm/kasan/Makefile b/arch/powerpc/mm/kasan/Makefile
-index 6577897673dd..36a4e1b10b2d 100644
---- a/arch/powerpc/mm/kasan/Makefile
-+++ b/arch/powerpc/mm/kasan/Makefile
-@@ -2,4 +2,4 @@
- 
- KASAN_SANITIZE := n
- 
--obj-$(CONFIG_PPC32)           += kasan_init_32.o
-+obj-$(CONFIG_PPC32)           += init_32.o
-diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/init_32.c
-similarity index 100%
-rename from arch/powerpc/mm/kasan/kasan_init_32.c
-rename to arch/powerpc/mm/kasan/init_32.c
--- 
-2.20.1
+I am surprised there hasn't been more people complaining! Maybe even on
+x86 mainline isn't that widely used on development boards.
+
+> The basic approach here looks good to me, once the minor
+> comments from other reviewers are addressed you can add my:
+>
+> Acked-by: Hans de Goede <hdegoede@redhat.com>
+
+Thanks!
+
+[...]
 
