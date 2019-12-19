@@ -2,192 +2,197 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F69C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5270AC2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B34120716
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ECCE20716
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 13:13:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GK1cbM7H"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rHT8uHWu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfLSNNR (ORCPT
+        id S1726891AbfLSNNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 08:13:17 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:56236 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbfLSNNR (ORCPT
+        Thu, 19 Dec 2019 08:13:54 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55675 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726701AbfLSNNy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 08:13:17 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJDD7UZ002286;
-        Thu, 19 Dec 2019 07:13:07 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576761188;
-        bh=KpH/tH+NsOsRovCmkYgi/0I9FOPMrHG3B7b6JVEqIBE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=GK1cbM7HGrsGlHyIwq3TvwgMootFKhnrfTJ6xdxhfI2jWttjRU+6bS7CvJJRMV6Ns
-         Fy1X2rit3h1sXjIBI1C0gsaOBHK8HIfj3LzDID3SnVFdV2L0SoCufpiVHa+d6XltYC
-         3ZxjXuWhR1bOHoPjfnpfAAvsJsISvV/xk8hyvqos=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBJDD7nb020647
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Dec 2019 07:13:07 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
- Dec 2019 07:13:06 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 19 Dec 2019 07:13:06 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJDD38D090087;
-        Thu, 19 Dec 2019 07:13:03 -0600
-Subject: Re: [PATCH 10/13] dt-bindings: PCI: Add EP mode dt-bindings for TI's
- J721E SoC
-To:     Rob Herring <robh@kernel.org>, Tom Joseph <tjoseph@cadence.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Murray <andrew.murray@arm.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>
-References: <20191209092147.22901-1-kishon@ti.com>
- <20191209092147.22901-11-kishon@ti.com> <20191219001408.GA20303@bogus>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <fb090674-abff-e2e1-492d-0585100980d0@ti.com>
-Date:   Thu, 19 Dec 2019 18:44:46 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 19 Dec 2019 08:13:54 -0500
+Received: by mail-wm1-f67.google.com with SMTP id q9so5383480wmj.5;
+        Thu, 19 Dec 2019 05:13:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=30R4i+eh2J89uoscLSPeK2Vr51YPAn+dxaXVrzkfTok=;
+        b=rHT8uHWuF7uDqMjuhM4LcwCROZK0wbgQNLPrFloVqZcfJXR9vn2W6dka3yHyoFWlSc
+         ceRHwub1HBeA7Q4LXL3thRs4s2c6fVRPERL38lhsiHaQIZEdgRJMvvlaiyPSkpT+Vauq
+         b6cQOc6+50kN/PSsO0Ksg3JP9igvfde6bPMgXtSIQD2KhJcBggEb7SXCGYGRb9GM+oKK
+         GNRAgQJBGPZPkuqB7262xVVZ2rBYgdgARgXwf14HPcyokwZMUw2Re3FmBc31jtBjQ7tU
+         DgACcSNtTbGrrePNyvLbnXwRACw9UHV+RylA4Q/Hg85cRwrfOIHgbobX7hdkO56gkIiO
+         GKvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=30R4i+eh2J89uoscLSPeK2Vr51YPAn+dxaXVrzkfTok=;
+        b=r6ZCMbdOFjoWLtpXDCBHDGWxY7d+5znKD6VVQng89PfyWBhQFyUzQsxX8KX/PUZJz0
+         MzAqejc3DsA7dAzDvJ6q06GeQ0lZ7jsJmQlHYa4ufR8P21kI1ddIpavwFg496pJjzRlR
+         WYQXXXAHdVZZCPtSn//JrwpSlwvmOXNMqFxzqD87PHQYk1BgcvtyIjDQCNQkhDiBaw2g
+         pBPta5eqUVl3HPA50k8LMcSphGVjt8cxe6Rx08TLOGFjkPYJFrXK3dpwh8mV01SB4ZvW
+         8M+6oZj7AbJUboZPY6i/dWdWp+yw/jJNXWHseR+gpYa1C3uq2Yfyyhn/Nk6uWDk3yKXU
+         29uA==
+X-Gm-Message-State: APjAAAUQWxTqH+zNRnvdYH9MRd/5cFlgy694IRGjj7qxF/wdmaQBNR5b
+        xHC7BPjMi4AxAZMTv60zsIo=
+X-Google-Smtp-Source: APXvYqxFt/j8Nd0py8kCGIHPPC0m9nro9zdbl3jOq/YkNA4zx9U1YwIP6XsuI5PzZw0OskmDRzNLSg==
+X-Received: by 2002:a7b:cb97:: with SMTP id m23mr9836342wmi.37.1576761231485;
+        Thu, 19 Dec 2019 05:13:51 -0800 (PST)
+Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
+        by smtp.gmail.com with ESMTPSA id j2sm6212161wmk.23.2019.12.19.05.13.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 05:13:50 -0800 (PST)
+Date:   Thu, 19 Dec 2019 14:13:49 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Nagarjuna Kristam <nkristam@nvidia.com>
+Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
+        mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Patch V2 00/18] Tegra XUSB OTG support
+Message-ID: <20191219131349.GI1440537@ulmo>
+References: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20191219001408.GA20303@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cf0hFtnykp6aONGL"
+Content-Disposition: inline
+In-Reply-To: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Tom
 
-On 19/12/19 5:44 am, Rob Herring wrote:
-> On Mon, Dec 09, 2019 at 02:51:44PM +0530, Kishon Vijay Abraham I wrote:
->> Add PCIe EP mode dt-bindings for TI's J721E SoC.
->>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  .../bindings/pci/ti,j721e-pci-ep.yaml         | 113 ++++++++++++++++++
->>  1 file changed, 113 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
->> new file mode 100644
->> index 000000000000..4e2af4733998
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
->> @@ -0,0 +1,113 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +# Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/pci/ti,j721e-pci-ep.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: TI J721E PCI EP (PCIe Wrapper)
->> +
->> +maintainers:
->> +  - Kishon Vijay Abraham I <kishon@ti.com>
->> +
->> +properties:
->> +  compatible:
->> +      enum:
->> +          - ti,j721e-pcie-ep
-> 
-> Indentation.
-> 
->> +
->> +  reg:
->> +    maxItems: 4
->> +
->> +  reg-names:
->> +    items:
->> +      - const: intd_cfg
->> +      - const: user_cfg
->> +      - const: reg
->> +      - const: mem
->> +
->> +  ti,syscon-pcie-ctrl:
->> +    description: Phandle to the SYSCON entry required for configuring PCIe mode
->> +                 and link speed.
->> +    allOf:
->> +      - $ref: /schemas/types.yaml#/definitions/phandle
->> +
->> +  max-link-speed:
->> +    minimum: 1
->> +    maximum: 3
->> +
->> +  num-lanes:
->> +    minimum: 1
->> +    maximum: 2
->> +
->> +  power-domains:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +    description: clock-specifier to represent input to the PCIe
->> +
->> +  clock-names:
->> +    items:
->> +      - const: fck
->> +
->> +  cdns,max-outbound-regions:
->> +    description: As defined in
->> +                 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
->> +    allOf:
->> +      - $ref: /schemas/types.yaml#/definitions/int32
-> 
-> uint32
-> 
->> +      - enum: [16]
->> +
->> +  max-functions:
->> +    minimum: 1
->> +    maximum: 6
-> 
-> Needs a type ref. Or a common definition.
-> 
->> +
->> +  dma-coherent:
->> +    description: Indicates that the PCIe IP block can ensure the coherency
->> +
->> +  phys:
-> 
-> How many? Need to convert cdns,cdns-pcie-host.txt...
+--cf0hFtnykp6aONGL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Dec 18, 2019 at 02:46:13PM +0530, Nagarjuna Kristam wrote:
+> This patch series adds OTG support on XUSB hardware used in Tegra210 and
+> Tegra186 SoCs.
+>=20
+> This patchset is composed with :
+>  - dt bindings of XUSB Pad Controller
+>  - dt bindings for XUSB device Driver
+>  - Tegra PHY driver for usb-role-switch and usb-phy
+>  - Tegra XUSB host mode driver to support OTG mode
+>  - Tegra XUSB device mode driver to use usb-phy and multi device mode
+>  - dts for XUSB pad controller
+>  - dts for xudc
+>=20
+> Tegra Pad controller driver register for role switch updates for
+> OTG/peripheral capable USB ports and adds usb-phy for that corresponding
+> USB ports.
+>=20
+> Host and Device mode drivers gets usb-phy from USB2's phy and registers
+> notifier for role changes to perform corresponding role tasks.
+>=20
+> Tests done:
+>  - device mode support using micro-B USB cable connection between ubuntu
+>    host and DUT on micro-B port
+>  - host mode support by connecting pen-drive to micro USB port on DUT
+>    using micro-B OTG cable.
+>  - toggling between these 2 modes by hot plugging corresponding cables.
 
-Tom, Can you convert cdns,cdns-pcie-host.txt to YAML binding?
-> 
->> +    description: As defined in
->> +                 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
->> +
->> +  phy-names:
->> +    description: As defined in
->> +                 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-> 
-> For all the properties shared with host mode, it might make sense to 
-> define a common schema with all those properties and then include it in 
-> the host and endpoint schemas.
+Are there any tests we can run without manual intervention? Can we force
+the device into peripheral mode and then setup a configuration using
+configfs? I'm not sure how useful that would be since it doesn't really
+exercise the driver code very much and doesn't tell whether it's
+actually working.
 
-Sure.
+Any other way how we can test this?
 
-Thanks
-Kishon
+Thierry
+
+>=20
+> DUT: Jetson-tx1, Jetson tx2.
+>=20
+> V2:
+>  - Updated usb-role-switch documentation for Padctl driver.
+>  - Update XUDC bindings doc as suggested by Rob.
+>  - Used standard error codes for error return.
+>  - Added of_platform_depopulate during error and driver removal.
+>  - Updated error variable during phy initialization in XUDC driver.
+>  - Updated Tegra210 soc dtb file as per changes to binding doc.
+>=20
+> Nagarjuna Kristam (18):
+>   dt-bindings: phy: tegra-xusb: Add usb-role-switch
+>   dt-bindings: usb: Add NVIDIA Tegra XUSB device mode controller binding
+>   phy: tegra: xusb: Add usb-role-switch support
+>   phy: tegra: xusb: Add usb-phy support
+>   phy: tegra: xusb: Add support to get companion USB 3 port
+>   phy: tegra: xusb: Add set_mode support for USB 2 phy on Tegra210
+>   phy: tegra: xusb: Add set_mode support for utmi phy on Tegra186
+>   usb: xhci-tegra: Add OTG support
+>   usb: gadget: tegra-xudc: Remove usb-role-switch support
+>   usb: gadget: tegra-xudc: Add usb-phy support
+>   usb: gadget: tegra-xudc: use phy_set_mode to set/unset device mode
+>   usb: gadget: tegra-xudc: support multiple device modes
+>   arm64: tegra: update OTG port entries for jetson-tx1
+>   arm64: tegra: update OTG port entries for jetson-tx2
+>   arm64: tegra: Add xudc node for Tegra210
+>   arm64: tegra: Enable xudc on Jetson TX1
+>   arm64: tegra: Add xudc node for Tegra186
+>   arm64: tegra: Enable xudc node on Jetson TX2
+>=20
+>  .../bindings/phy/nvidia,tegra124-xusb-padctl.txt   |   6 +
+>  .../devicetree/bindings/usb/nvidia,tegra-xudc.yaml | 190 ++++++++++++++
+>  arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts |  23 +-
+>  arch/arm64/boot/dts/nvidia/tegra186.dtsi           |  19 ++
+>  arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |  34 ++-
+>  arch/arm64/boot/dts/nvidia/tegra210.dtsi           |  19 ++
+>  drivers/phy/tegra/Kconfig                          |   1 +
+>  drivers/phy/tegra/xusb-tegra186.c                  | 109 ++++++--
+>  drivers/phy/tegra/xusb-tegra210.c                  | 126 ++++++++--
+>  drivers/phy/tegra/xusb.c                           | 134 ++++++++++
+>  drivers/phy/tegra/xusb.h                           |   5 +
+>  drivers/usb/gadget/udc/tegra-xudc.c                | 276 ++++++++++++++-=
+------
+>  drivers/usb/host/xhci-tegra.c                      | 225 +++++++++++++++=
++-
+>  include/linux/phy/tegra/xusb.h                     |   2 +
+>  14 files changed, 1031 insertions(+), 138 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xu=
+dc.yaml
+>=20
+> --=20
+> 2.7.4
+>=20
+
+--cf0hFtnykp6aONGL
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl37d40ACgkQ3SOs138+
+s6GmMQ//UeIXKC8LonKqcjeF4FAXBH0H7fV5IRwdnm8zsRqWRZ18gzLd4ewLz6p3
+ETMQBEkzqmxtPsRsWnreMp1lSG8afpBTSjmfRKLqO56+Ch6LB2NRJWU8W+VzHi/m
+dMswAhZtjs++/jAPZX/EeME8EBEK60LoSk0XXLCZP51X20OJyJ49IN3SjZUrURP3
+DDR2ZGJzL+1gg6PZVRoGFW0qgXyfbK85X189EKCKkG3YnBpXEVOE00HvCOupMdkM
+9b8C8JvLP5kDpIVQafyrEphVMdleHNSkXkEYZgyE/TDUG6ypTgUebDxuHLaQu8sq
+iZy0bRS3P/uKBHZPxTeURW/EQURY8hBZf8j45Jqq/Qp7LXS6KXaFRFC28d9FealH
+bSTUIC2ji+QYuPqyZUj8KwtNXL3pcvOLvUeU7HesM1JRVtA91Qmgy/x1qFqseDGu
+fHawy4TE6CFdnaMK+SnmlYgEqH6DtyWCEDq7X8n0RC+IfBd3jTz4JfOKGt2VwLQW
+y6t5vP/TSC2eaKRdJIBjEERiqzPEkHGO4Q/7Qm7jrgMx8Uwq8QafMx9Qu5CvSFsV
+KZP6nGzhIA32VJAOfn9RdzYpVn7LYvQEZWZ5/vruMvlzJyEbg0vKTtx78akBR73q
+6bOLf2kCC3LeSUn/9oTGF63t59L1+9fN7s49eGt/ku91XTG/aN4=
+=9laO
+-----END PGP SIGNATURE-----
+
+--cf0hFtnykp6aONGL--
