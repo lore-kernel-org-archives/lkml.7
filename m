@@ -2,93 +2,153 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70B3C2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E3AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C71F222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD20222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:07:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782429;
-	bh=/LUzzBf+Yofy0eimmBq0G62TXMndjXspkVTWifPx2yg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HNiS0x+oY8koDfBSy/gJt6tlOwNk8TZ0SAeK1/qvJTRcApw9MbBA5yyR9s2MihGuc
-	 vid6grqsR8BtK/i8YnUTvbgUW6jvgWbETER+jCfo/GA0hcbpMgnXkwwJz/kUialya6
-	 NfLHT3oB92lEs+ZjptUFVrGf4QLFQG7dhHUytNU0=
+	s=default; t=1576782432;
+	bh=EgbNXCKO32bDznwIxG/zUcXXSse1WyN1wD/XW0tsgKs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PpxFW47T9ZQgTbseAKRiuU+2H7lLdq934KW72cSp3y3Icg4wzinrBVo23lUJtzpY6
+	 lJrO2GkfO52giDLFEYNF/4ondY6ffJCPepuFvrc7LibS9mb4ldiEbTE1u7xxOSnoGp
+	 7Pxu7O40jwkqqrWyorvE7caauUUfYNErcFwnDUhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728850AbfLSSnh (ORCPT
+        id S1728889AbfLSTHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:43:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35192 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728593AbfLSSnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:43:32 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FC9A206D7;
-        Thu, 19 Dec 2019 18:43:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781011;
-        bh=/LUzzBf+Yofy0eimmBq0G62TXMndjXspkVTWifPx2yg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d7iy2VwC/Mabt/f4Rc7X9UhaKWZmo5mS98YYNbRbqn+KHSRzonRpDnx5CAFUPF/ys
-         CbVrhivYEDuecKnekVo5DWGYxbbcV6gyjgIEQgQ2dyuxAadKukyWD/83KdbRkaJ7ki
-         R9gYq5lQOViu97Z9sCdTQro8fqguy1jmj5TTd/Xw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 4.9 039/199] dmaengine: coh901318: Remove unused variable
-Date:   Thu, 19 Dec 2019 19:32:01 +0100
-Message-Id: <20191219183217.081976972@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
-References: <20191219183214.629503389@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 19 Dec 2019 14:07:11 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41860 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728137AbfLSSnX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:43:23 -0500
+Received: by mail-ot1-f66.google.com with SMTP id r27so8339997otc.8;
+        Thu, 19 Dec 2019 10:43:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ATCr26B2OQVBaMy930gvC8+YwzqQLoxjbV1kq1l7KCk=;
+        b=CjcHXC7bZXk5AsbMcdwa+6cfASsiCGVz+wR56vMtBUcxd5jDPbYMhnK4oYaexzOTug
+         u4tPYpYd/NxUejUhl6V7DD2j/rnc9CjQfNcFAWc4DBZdm9V3DWI+h0I3aHq1myFSFS+Q
+         8ybcBFLJBnTCDB+UTlzxm7b+10RKjTQ1PgQnXPLnPITiKn2/zZkuYp1hnOOVWKzCah2B
+         ssY7r1rMqo+YB98MYw6hQF8ir91mb6C92kPJbgAwLQ8LkUtqYirtdsiJVI8v97ZB2Cny
+         OdpTnwj6ZdsRbOc19lj+G07GCvVQ711SdE7AjTqev9emjZquJkqr6Q5ZVug8Hxeogqma
+         sUoA==
+X-Gm-Message-State: APjAAAXB2965kvh0ogAd3ywbMTXMzOc2chjy2Dto3hLAktctn5Mx8Cop
+        ycUUAzUva8gjldq+f1tmWbD5vYRMlQ==
+X-Google-Smtp-Source: APXvYqzHVHy4Y8bxjQIOFjcCok4NiCDbPD19EFZ7LpJjtchr7wNNUALhEQj3m9Oz59bjfHKnScEnxw==
+X-Received: by 2002:a9d:6d06:: with SMTP id o6mr10381223otp.239.1576781002486;
+        Thu, 19 Dec 2019 10:43:22 -0800 (PST)
+Received: from localhost ([2607:fb90:bdf:98e:3549:d84c:9720:edb4])
+        by smtp.gmail.com with ESMTPSA id r205sm2279361oih.54.2019.12.19.10.43.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 10:43:21 -0800 (PST)
+Date:   Thu, 19 Dec 2019 12:43:18 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     shubhrajyoti.datta@gmail.com
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        michal.simek@xilinx.com, gregkh@linuxfoundation.org,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Subject: Re: [PATCH v2 2/2] devicetree: bindings: Add the binding doc for
+ xilinx APM
+Message-ID: <20191219184318.GA13328@bogus>
+References: <1575901405-3084-1-git-send-email-shubhrajyoti.datta@gmail.com>
+ <1575901405-3084-2-git-send-email-shubhrajyoti.datta@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1575901405-3084-2-git-send-email-shubhrajyoti.datta@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vinod Koul <vkoul@kernel.org>
+On Mon, Dec 09, 2019 at 07:53:25PM +0530, shubhrajyoti.datta@gmail.com wrote:
+> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> 
+> Add the devicetree binding for xilinx APM.
+> 
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> ---
+> v2:
+> patch added
+> 
+>  .../devicetree/bindings/perf/xilinx_apm.txt        | 44 ++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/perf/xilinx_apm.txt
 
-commit 35faaf0df42d285b40f8a6310afbe096720f7758 upstream.
+As Michal said, DT schema please.
+> 
+> diff --git a/Documentation/devicetree/bindings/perf/xilinx_apm.txt b/Documentation/devicetree/bindings/perf/xilinx_apm.txt
+> new file mode 100644
+> index 0000000..a11c82e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/perf/xilinx_apm.txt
+> @@ -0,0 +1,44 @@
+> +* Xilinx AXI Performance monitor IP
+> +
+> +Required properties:
+> +- compatible: "xlnx,axi-perf-monitor"
 
-Commit 627469e4445b ("dmaengine: coh901318: Fix a double-lock bug") left
-flags variable unused, so remove it to fix the warning.
+Version?
 
-drivers/dma/coh901318.c: In function 'coh901318_config':
-drivers/dma/coh901318.c:1805:16: warning: unused variable 'flags' [-Wunused-variable]
-  unsigned long flags;
-                ^~~~~
+> +- interrupts: Should contain APM interrupts.
+> +- interrupt-parent: Must be core interrupt controller.
 
-Fixes: 627469e4445b ("dmaengine: coh901318: Fix a double-lock bug")
-Reported-By: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Drop this.
 
----
- drivers/dma/coh901318.c |    1 -
- 1 file changed, 1 deletion(-)
+> +- reg: Should contain APM registers location and length.
+> +- xlnx,enable-profile: Enables the profile mode.
+> +- xlnx,enable-trace: Enables trace mode.
+> +- xlnx,num-monitor-slots: Maximum number of slots in APM.
+> +- xlnx,enable-event-count: Enable event count.
+> +- xlnx,enable-event-log: Enable event logging.
+> +- xlnx,have-sampled-metric-cnt:Sampled metric counters enabled in APM.
+> +- xlnx,num-of-counters: Number of counters in APM
+> +- xlnx,metric-count-width: Metric Counter width (32/64)
+> +- xlnx,metrics-sample-count-width: Sampled metric counter width
+> +- xlnx,global-count-width: Global Clock counter width
 
---- a/drivers/dma/coh901318.c
-+++ b/drivers/dma/coh901318.c
-@@ -1797,7 +1797,6 @@ static struct dma_chan *coh901318_xlate(
- static int coh901318_config(struct coh901318_chan *cohc,
- 			    struct coh901318_params *param)
- {
--	unsigned long flags;
- 	const struct coh901318_params *p;
- 	int channel = cohc->id;
- 	void __iomem *virtbase = cohc->base->virtbase;
+All these synthesis time config and not discoverable?
 
+Tell h/w designers to add feature registers so all this is 
+discoverable. </rant>
 
+> +- clocks: Input clock specifier.
+> +
+> +Optional properties:
+> +- xlnx,id-filter-32bit: APM is in 32-bit mode
+> +
+> +Example:
+> +++++++++
+> +
+> +apm: apm@44a00000 {
+> +    compatible = "xlnx,axi-perf-monitor";
+> +    interrupt-parent = <&axi_intc_1>;
+> +    interrupts = <1 2>;
+> +    reg = <0x44a00000 0x1000>;
+> +    clocks = <&clkc 15>;
+> +    xlnx,enable-profile = <0>;
+> +    xlnx,enable-trace = <0>;
+> +    xlnx,num-monitor-slots = <4>;
+> +    xlnx,enable-event-count = <1>;
+> +    xlnx,enable-event-log = <1>;
+> +    xlnx,have-sampled-metric-cnt = <1>;
+> +    xlnx,num-of-counters = <8>;
+> +    xlnx,metric-count-width = <32>;
+> +    xlnx,metrics-sample-count-width = <32>;
+> +    xlnx,global-count-width = <32>;
+> +    xlnx,metric-count-scale = <1>;
+> +    xlnx,id-filter-32bit;
+> +};
+> -- 
+> 2.1.1
+> 
