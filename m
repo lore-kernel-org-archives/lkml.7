@@ -4,37 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67FB0C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1AAC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45381227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CC97227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:58:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfLSG6E (ORCPT
+        id S1727078AbfLSG63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 01:58:04 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51222 "EHLO huawei.com"
+        Thu, 19 Dec 2019 01:58:29 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:51088 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726536AbfLSG5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 01:57:50 -0500
+        id S1726704AbfLSG5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 01:57:48 -0500
 Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E8E414080D346588586C;
+        by Forcepoint Email with ESMTP id DB4F6FF9E85E5EDE86D4;
         Thu, 19 Dec 2019 14:57:46 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 19 Dec 2019 14:57:39 +0800
+ 14.3.439.0; Thu, 19 Dec 2019 14:57:38 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
-        Yunsheng Lin <linyunsheng@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 5/8] net: hns3: implement ndo_features_check ops for hns3 driver
-Date:   Thu, 19 Dec 2019 14:57:44 +0800
-Message-ID: <1576738667-37960-6-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 2/8] net: hns3: remove useless mutex vport_cfg_mutex in the struct hclge_dev
+Date:   Thu, 19 Dec 2019 14:57:41 +0800
+Message-ID: <1576738667-37960-3-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1576738667-37960-1-git-send-email-tanhuazhong@huawei.com>
 References: <1576738667-37960-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,73 +46,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+Mutex vport_cfg_mutex has been used to protect uc_mac_list,
+mc_mac_list and vlan_list from being modified by unloading
+or reset task at the same time. But now unloading will
+set up HCLGE_STATE_REMOVING flag and call cancel_work_sync to
+break down this race condition, so this mutex is unnecessary.
 
-The function netif_skb_features() will disable the TSO feature
-by using dflt_features_check() if the driver does not implement
-ndo_features_check ops, which may cause performance degradation
-problem when hns3 hardware can do multiple tagged TSO.
-
-Also, the HNS3 hardware only supports checksum on the SKB with
-a max header len of 480 bytes, so remove the checksum and TSO
-related features when the header len is over 480 bytes.
-
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 32 +++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 9 ---------
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h | 2 --
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c  | 2 --
+ 3 files changed, 13 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 5679a0c..840a1fb 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1556,6 +1556,37 @@ static int hns3_nic_set_features(struct net_device *netdev,
- 	return 0;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 4e7a078..76b4418 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -7534,7 +7534,6 @@ void hclge_uninit_vport_mac_table(struct hclge_dev *hdev)
+ 	struct hclge_vport *vport;
+ 	int i;
+ 
+-	mutex_lock(&hdev->vport_cfg_mutex);
+ 	for (i = 0; i < hdev->num_alloc_vport; i++) {
+ 		vport = &hdev->vport[i];
+ 		list_for_each_entry_safe(mac, tmp, &vport->uc_mac_list, node) {
+@@ -7547,7 +7546,6 @@ void hclge_uninit_vport_mac_table(struct hclge_dev *hdev)
+ 			kfree(mac);
+ 		}
+ 	}
+-	mutex_unlock(&hdev->vport_cfg_mutex);
  }
  
-+static netdev_features_t hns3_features_check(struct sk_buff *skb,
-+					     struct net_device *dev,
-+					     netdev_features_t features)
-+{
-+#define HNS3_MAX_HDR_LEN	480U
-+#define HNS3_MAX_L4_HDR_LEN	60U
-+
-+	size_t len;
-+
-+	if (skb->ip_summed != CHECKSUM_PARTIAL)
-+		return features;
-+
-+	if (skb->encapsulation)
-+		len = skb_inner_transport_header(skb) - skb->data;
-+	else
-+		len = skb_transport_header(skb) - skb->data;
-+
-+	/* Assume L4 is 60 byte as TCP is the only protocol with a
-+	 * a flexible value, and it's max len is 60 bytes.
-+	 */
-+	len += HNS3_MAX_L4_HDR_LEN;
-+
-+	/* Hardware only supports checksum on the skb with a max header
-+	 * len of 480 bytes.
-+	 */
-+	if (len > HNS3_MAX_HDR_LEN)
-+		features &= ~(NETIF_F_CSUM_MASK | NETIF_F_GSO_MASK);
-+
-+	return features;
-+}
-+
- static void hns3_nic_get_stats64(struct net_device *netdev,
- 				 struct rtnl_link_stats64 *stats)
- {
-@@ -1970,6 +2001,7 @@ static const struct net_device_ops hns3_nic_netdev_ops = {
- 	.ndo_do_ioctl		= hns3_nic_do_ioctl,
- 	.ndo_change_mtu		= hns3_nic_change_mtu,
- 	.ndo_set_features	= hns3_nic_set_features,
-+	.ndo_features_check	= hns3_features_check,
- 	.ndo_get_stats64	= hns3_nic_get_stats64,
- 	.ndo_setup_tc		= hns3_nic_setup_tc,
- 	.ndo_set_rx_mode	= hns3_nic_set_rx_mode,
+ static int hclge_get_mac_ethertype_cmd_status(struct hclge_dev *hdev,
+@@ -8308,7 +8306,6 @@ void hclge_uninit_vport_vlan_table(struct hclge_dev *hdev)
+ 	struct hclge_vport *vport;
+ 	int i;
+ 
+-	mutex_lock(&hdev->vport_cfg_mutex);
+ 	for (i = 0; i < hdev->num_alloc_vport; i++) {
+ 		vport = &hdev->vport[i];
+ 		list_for_each_entry_safe(vlan, tmp, &vport->vlan_list, node) {
+@@ -8316,7 +8313,6 @@ void hclge_uninit_vport_vlan_table(struct hclge_dev *hdev)
+ 			kfree(vlan);
+ 		}
+ 	}
+-	mutex_unlock(&hdev->vport_cfg_mutex);
+ }
+ 
+ static void hclge_restore_vlan_table(struct hnae3_handle *handle)
+@@ -8328,7 +8324,6 @@ static void hclge_restore_vlan_table(struct hnae3_handle *handle)
+ 	u16 state, vlan_id;
+ 	int i;
+ 
+-	mutex_lock(&hdev->vport_cfg_mutex);
+ 	for (i = 0; i < hdev->num_alloc_vport; i++) {
+ 		vport = &hdev->vport[i];
+ 		vlan_proto = vport->port_base_vlan_cfg.vlan_info.vlan_proto;
+@@ -8354,8 +8349,6 @@ static void hclge_restore_vlan_table(struct hnae3_handle *handle)
+ 				break;
+ 		}
+ 	}
+-
+-	mutex_unlock(&hdev->vport_cfg_mutex);
+ }
+ 
+ int hclge_en_hw_strip_rxvtag(struct hnae3_handle *handle, bool enable)
+@@ -9390,7 +9383,6 @@ static int hclge_init_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 	hdev->mps = ETH_FRAME_LEN + ETH_FCS_LEN + 2 * VLAN_HLEN;
+ 
+ 	mutex_init(&hdev->vport_lock);
+-	mutex_init(&hdev->vport_cfg_mutex);
+ 	spin_lock_init(&hdev->fd_rule_lock);
+ 
+ 	ret = hclge_pci_init(hdev);
+@@ -9943,7 +9935,6 @@ static void hclge_uninit_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 	mutex_destroy(&hdev->vport_lock);
+ 	hclge_uninit_vport_mac_table(hdev);
+ 	hclge_uninit_vport_vlan_table(hdev);
+-	mutex_destroy(&hdev->vport_cfg_mutex);
+ 	ae_dev->priv = NULL;
+ }
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+index 3a91397..4e5cfda 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+@@ -821,8 +821,6 @@ struct hclge_dev {
+ 	u16 share_umv_size;
+ 	struct mutex umv_mutex; /* protect share_umv_size */
+ 
+-	struct mutex vport_cfg_mutex;   /* Protect stored vf table */
+-
+ 	DECLARE_KFIFO(mac_tnl_log, struct hclge_mac_tnl_stats,
+ 		      HCLGE_MAC_TNL_LOG_SIZE);
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
+index a79d151..f905dd3 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
+@@ -797,13 +797,11 @@ void hclge_mbx_handler(struct hclge_dev *hdev)
+ 			hclge_get_link_mode(vport, req);
+ 			break;
+ 		case HCLGE_MBX_GET_VF_FLR_STATUS:
+-			mutex_lock(&hdev->vport_cfg_mutex);
+ 			hclge_rm_vport_all_mac_table(vport, true,
+ 						     HCLGE_MAC_ADDR_UC);
+ 			hclge_rm_vport_all_mac_table(vport, true,
+ 						     HCLGE_MAC_ADDR_MC);
+ 			hclge_rm_vport_all_vlan_table(vport, true);
+-			mutex_unlock(&hdev->vport_cfg_mutex);
+ 			break;
+ 		case HCLGE_MBX_GET_MEDIA_TYPE:
+ 			ret = hclge_get_vf_media_type(vport, req);
 -- 
 2.7.4
 
