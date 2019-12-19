@@ -2,106 +2,93 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E54AEC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F120CC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C25D224679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB7642467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 20:24:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576787053;
+	bh=rB7RdJ5CY766k2WiHzSf8gurkzBF257kMGZ4coYwpS8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Yo9fgBaARdceYWJq19eeBGoB/kqQBiGJZrwbUNkgVX7HKy3d1st9Ijz8zjotySR+3
+	 QvDrIzMrRDuv6dNLu0aTJsMh24m66pekaH/YiTPtPLhIfYACB3jPEgoWc6C8FcfZkh
+	 kkggsIFdK3H3OEZZ/ZPQYPNRNR5iIzlZY7Jmfrag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbfLSUXb (ORCPT
+        id S1727322AbfLSUYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 15:23:31 -0500
-Received: from mx2.suse.de ([195.135.220.15]:48472 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726869AbfLSUXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 15:23:31 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 74D57B2EF;
-        Thu, 19 Dec 2019 20:23:29 +0000 (UTC)
-Message-ID: <1576787357.8929.12.camel@suse.cz>
-Subject: Re: [PATCH v4 2/6] x86,sched: Add support for frequency invariance
- on SKYLAKE_X
-From:   Giovanni Gherdovich <ggherdovich@suse.cz>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
-        Len Brown <lenb@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>, x86@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Paul Turner <pjt@google.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Quentin Perret <qperret@qperret.net>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Doug Smythies <dsmythies@telus.net>
-Date:   Thu, 19 Dec 2019 21:29:17 +0100
-In-Reply-To: <20191218200624.GI11457@worktop.programming.kicks-ass.net>
-References: <20191113124654.18122-1-ggherdovich@suse.cz>
-         <20191113124654.18122-3-ggherdovich@suse.cz>
-         <20191218200624.GI11457@worktop.programming.kicks-ass.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 19 Dec 2019 15:24:13 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:45727 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727252AbfLSUYN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 15:24:13 -0500
+Received: by mail-ed1-f67.google.com with SMTP id v28so6131589edw.12;
+        Thu, 19 Dec 2019 12:24:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kfPOftMgyHwmTl9WE1/kmaYqo1mCz0RjY/e682DeC3s=;
+        b=h2qyv2C8YoEyCpsGqxXc5SgrKLHNHZGATRXyxkdoGgDr/v6t7hR/EoyS3XbDeYxcZp
+         rllAPHs1W8024+ZKoVbUBKXXeSOPTTwq5dwWBqpPH7yv0ISqUvRtKKuSE4mOPuGkmNfw
+         /+rQhwUr3wutkqRG7KnfPPQyGdBBnSQqTikj5xVwD4IC1oP2i0LQ+fDmaNHbR9wNSjbN
+         EwAcwzMQM3GBEH+IhCqDbtS81TKwhfRTKNOgdb9AX/u/Xix+oESN++6XVupR201CWnFO
+         8hIedFoSEGTPo9/PVdchsRoJRHBrLzwAaYk/BVwwOgNJp7ugXZgXZlNOUJtAt4wTzkfr
+         6blg==
+X-Gm-Message-State: APjAAAXGtlUJHWUBDfHETXa01Ihg5Y3RP9mgyA88Cu+kdEoMw7c3OqDt
+        WDpQVOAeRDDhjlciUNccMX4LFHw0
+X-Google-Smtp-Source: APXvYqxhei91nPSOagRw+yW1O53K+HsOw19umpw0wFdmEKPWZTgVHzJaJjee30WnP+VobmEWUSYBBQ==
+X-Received: by 2002:a05:6402:12d2:: with SMTP id k18mr11351647edx.253.1576787050963;
+        Thu, 19 Dec 2019 12:24:10 -0800 (PST)
+Received: from kozik-lap ([194.230.155.234])
+        by smtp.googlemail.com with ESMTPSA id r19sm698496ejr.33.2019.12.19.12.24.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 19 Dec 2019 12:24:10 -0800 (PST)
+Date:   Thu, 19 Dec 2019 21:24:08 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Kamil Konieczny <k.konieczny@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v2 1/2] ARM: dts: exynos: Move bus related OPPs to the
+ boards DTS
+Message-ID: <20191219202408.GA22054@kozik-lap>
+References: <20191219105130.29394-1-m.szyprowski@samsung.com>
+ <CGME20191219105136eucas1p1edadfa2fba7f15ec03f0eec7570809ce@eucas1p1.samsung.com>
+ <20191219105130.29394-2-m.szyprowski@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191219105130.29394-2-m.szyprowski@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-12-18 at 21:06 +0100, Peter Zijlstra wrote:
-> On Wed, Nov 13, 2019 at 01:46:50PM +0100, Giovanni Gherdovich wrote:
-> > The scheduler needs the ratio freq_curr/freq_max for frequency-invariant
-> > accounting. On SKYLAKE_X CPUs set freq_max to the highest frequency that can
-> > be sustained by a group of at least 4 cores.
-> > 
-> > From the changelog of commit 31e07522be56 ("tools/power turbostat: fix
-> > decoding for GLM, DNV, SKX turbo-ratio limits"):
-> > 
-> > >   Newer processors do not hard-code the the number of cpus in each bin
-> > >   to {1, 2, 3, 4, 5, 6, 7, 8}  Rather, they can specify any number
-> > >   of CPUS in each of the 8 bins:
-> > > 
-> > >   eg.
-> > > 
-> > >   ...
-> > >   37 * 100.0 = 3600.0 MHz max turbo 4 active cores
-> > >   38 * 100.0 = 3700.0 MHz max turbo 3 active cores
-> > >   39 * 100.0 = 3800.0 MHz max turbo 2 active cores
-> > >   39 * 100.0 = 3900.0 MHz max turbo 1 active cores
-> > > 
-> > >   could now look something like this:
-> > > 
-> > >   ...
-> > >   37 * 100.0 = 3600.0 MHz max turbo 16 active cores
-> > >   38 * 100.0 = 3700.0 MHz max turbo 8 active cores
-> > >   39 * 100.0 = 3800.0 MHz max turbo 4 active cores
-> > >   39 * 100.0 = 3900.0 MHz max turbo 2 active cores
-> > 
-> > This encoding of turbo levels applies to both SKYLAKE_X and GOLDMONT/GOLDMONT_D,
-> > but we treat these two classes in separate commits because their freq_max
-> > values need to be different. For SKX we prefer a lower freq_max in the ratio
-> > freq_curr/freq_max, allowing load and utilization to overshoot and the
-> > schedutil governor to be more performance-oriented. Models from the Atom
-> > series (such as GOLDMONT*) are handled in a forthcoming commit as they have to
-> > favor power-efficiency over performance.
+On Thu, Dec 19, 2019 at 11:51:29AM +0100, Marek Szyprowski wrote:
+> Currently the only Exynos5422-based boards that support bus frequency
+> scaling are Hardkernel's Odroid XU3/XU4/HC1. Move the bus related OPPs to
+> the boards DTS, because those OPPs heavily depend on the clock topology
+> and top PLL rates, which are being configured by the board's bootloader.
 > 
-> Can we at least use a single function to decode both? A little like the
-> below. I'm not married to the naming, but I think it is a little silly
-> to have 2 different functions to decode the exact same MSRs.
-> 
-> (one could even go as far as to make a boot param to override the {1,4}
-> default core count for these things)
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos5420.dtsi             | 259 -----------------
+>  arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 261 +++++++++++++++++-
 
-Sure, that was actually a gross oversight on my part for not seeing that.
-Thanks for catching it and sketching a solution.
+Thanks, applied.
 
-Giovanni
+Best regards,
+Krzysztof
+
