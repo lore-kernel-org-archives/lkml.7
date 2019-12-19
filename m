@@ -2,220 +2,99 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC476C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8359C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3969222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:15:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="IeudtLmI"
+	by mail.kernel.org (Postfix) with ESMTP id 8AEC6227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:15:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576782959;
+	bh=Ovk4S9XdooZpwds9kvkFV5q6xWu8VVrE8ivZlClNVEA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=igvuxaKmCZpaqmln6nHvNgpZ4GhbOiGWYDo0A6vry2/D+ltBLhqhx7Bi69UOVVO3I
+	 mrH/eFyKGQT+5+bbRmtCLryRBM/NmkoZxFtswrrDtfem7m9Jac8e96vOBu9/J7Igmx
+	 RFYiMvhEmTqlKfQSEr2edRm7yo1yj0m3VHqHC3m4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbfLSTPk (ORCPT
+        id S1727202AbfLSTP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:15:40 -0500
-Received: from mail-bn8nam11on2045.outbound.protection.outlook.com ([40.107.236.45]:6233
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726908AbfLSTPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 14:15:39 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Nrl1UGNqNH7ZEtgHTrvFNpBfgm1QIiIJmhE8d89mKNU1ZvIYZp+0JUtHJwf6MH8wSTnci6bUzpqdcb6jSdrPFWWxOATnSahXKbCrzvNmOs3JfXHCiONFJL3axxRwwycSL4z8qUoQqSlk3jraXBIAQzaf6BRzJy/10Zp5pdkUpTgAJhhT/33MkNa/nqZMLAT4V95Soc+mKSR52SdPdLcERVEu/+5WZKIbXmFN7psl5LYUeE2TZEwd5ia+oKXs4ds7lQag1/uL4eRD6QNG51rrBXn7FSqnNpbSOGAwQDrrZB+QzwaZKLQH6aNnaKk84wMEcUT91ECAPO4i+r0+sAQpBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B00Evl5Ap4uGxLA9CFlsB1BWEmflAn5Dzc0+/mQgHTU=;
- b=ZusbQBbmSL3qq+Sa7KrbUsxLN94D45AW9UhxQEJq6EC5og7nZ1xkDmU7UgxnmFVQAw+XkgtU86yJ5MWbKEfplvtGWThmZG0JnW0wmmCjuuIIhm+ZfUe17CMiios/d7KcsN1EOJ9yxaScTSIdYH5+785dzZrS78TatphQio8jHbLMRkRn3X2eXEiqiUx92nkx9LcWADzYA7G3MhkmLkakE5UN1gPwgq8ftBAKtY5EaykeX0FcqhXv1dHaspx9C21A1bsoLu57CukfzCvOdKuJ6H5Krj/nIUKut0tkCv37rFNQvWVLODgLk5Np1hvMVBM1fAdu7HnLGJNcCW2ecwS7rg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B00Evl5Ap4uGxLA9CFlsB1BWEmflAn5Dzc0+/mQgHTU=;
- b=IeudtLmIpsSfEFjULCqJq+J/bZNDz4hcQugXycsD9LJQsTy8bsy1jn5wokFp4xCWdjUTHZaHGYKaZlcPBXPEeVajsGl2fsX0xNumb0+qzBx0xBs46tngSA3tkhBVlJpLbU25uWlWcS6zp2a4JO0hU+1PSh+z4G7nLPTp08yGPAM=
-Received: from CY4PR12MB1350.namprd12.prod.outlook.com (10.168.169.7) by
- CY4PR12MB1847.namprd12.prod.outlook.com (10.175.60.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.19; Thu, 19 Dec 2019 19:15:33 +0000
-Received: from CY4PR12MB1350.namprd12.prod.outlook.com
- ([fe80::a853:ee41:9aca:ecdd]) by CY4PR12MB1350.namprd12.prod.outlook.com
- ([fe80::a853:ee41:9aca:ecdd%9]) with mapi id 15.20.2559.012; Thu, 19 Dec 2019
- 19:15:33 +0000
-From:   "Deucher, Alexander" <Alexander.Deucher@amd.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Joerg Roedel <joro@8bytes.org>
-CC:     Christoph Hellwig <hch@infradead.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] iommu/amd: Disable IOMMU on Stoney Ridge systems
-Thread-Topic: [PATCH v2] iommu/amd: Disable IOMMU on Stoney Ridge systems
-Thread-Index: AQHVpsBguKm4D8iWWkiQt39oc44V0aenFmmAgAWQOoCAEYuVgIACFhIAgAGraTA=
-Date:   Thu, 19 Dec 2019 19:15:32 +0000
-Message-ID: <CY4PR12MB13505BE6EFF95F7C48253120F7520@CY4PR12MB1350.namprd12.prod.outlook.com>
-References: <20191129142154.29658-1-kai.heng.feng@canonical.com>
- <20191202170011.GC30032@infradead.org>
- <974A8EB3-70B6-4A33-B36C-CFF69464493C@canonical.com>
- <20191217095341.GG8689@8bytes.org>
- <6DC0EAB3-89B5-4A16-9A38-D7AD954DDF1C@canonical.com>
-In-Reply-To: <6DC0EAB3-89B5-4A16-9A38-D7AD954DDF1C@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Alexander.Deucher@amd.com; 
-x-originating-ip: [165.204.84.11]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 24d18bb8-0f56-48f5-8a3c-08d784b7d203
-x-ms-traffictypediagnostic: CY4PR12MB1847:
-x-microsoft-antispam-prvs: <CY4PR12MB184768C14646FBDC435BC601F7520@CY4PR12MB1847.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0256C18696
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(396003)(39860400002)(366004)(136003)(189003)(199004)(13464003)(478600001)(52536014)(55016002)(186003)(81156014)(81166006)(8936002)(26005)(6506007)(86362001)(4326008)(53546011)(66556008)(66476007)(64756008)(66446008)(33656002)(9686003)(76116006)(54906003)(2906002)(7696005)(5660300002)(66946007)(110136005)(8676002)(71200400001)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1847;H:CY4PR12MB1350.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: eA/hRlCKVYcW38LtA1TQJFnIb9SYi1tcWlFFZXL4xDuYMqH9c/UO/inprBWueot1rGIepOfb1eFLn1pUt6CRqqmjSZWF1NbBei/rdLeRZIQrIp13vc2ZiHB2YATa3OBQJ5t/Tg3IvCgadXnJ5weZh1+R6b+1kM4slX1rgF2hjJAUFzAfsBsdalOtWwZSEo36Ltk8WUiV7sdsHv/KnC70CM/82xHeR5XZg1/NrobRJduERohNfIDmqYETDwr+drXSYQ3R2VstfA6vsq1E7bDubPNlPvnaHUda6uJVtuuI4iZen96XNlY8hcdt11/ihqBFwP/g3eBsc2kKO18VeNbOKbwUxKdG2tJLAvbxVOrTLLE2ZNcCcO0TqWHgp7hPIeRGXDqelxuzahsLiB2pJ8NdnZ1Ls0beorfSpUZ4gVMnYSLBaMY5l6kXX8XR2RVOb0N/oxxQTDsEmm1lcG/1rtAA3XRmG2MWjHmKT1Yy8PVaSJ/Z50u5s0FDkdKLZvggJkDW
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 19 Dec 2019 14:15:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39962 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726907AbfLSTP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 14:15:58 -0500
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 911C9222C2;
+        Thu, 19 Dec 2019 19:15:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576782957;
+        bh=Ovk4S9XdooZpwds9kvkFV5q6xWu8VVrE8ivZlClNVEA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1w1k5/RiIq/QdWAdD/kR8UvWFkV1peeJXQpVDE52VGTfgi4TtTeIjsbgc7aC7ekg1
+         zg0fvuYWg3+roF3GB77lC/xK29yKQEhizE3yGhuvdyMhn4C6va/TKx29blMGU/A9+l
+         TL+d96/GHfII3P1hSP+V+PYw+lTYSrUyuGHG1Pnk=
+Date:   Thu, 19 Dec 2019 11:15:56 -0800
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     axboe@kernel.dk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+Subject: Re: kernel BUG at fs/buffer.c:LINE!
+Message-ID: <20191219191556.GA68282@jaegeuk-macbookpro.roam.corp.google.com>
+References: <0000000000009716290599fcd496@google.com>
+ <31033055-c245-4eda-2814-3fd8b0d59cb9@acm.org>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 24d18bb8-0f56-48f5-8a3c-08d784b7d203
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Dec 2019 19:15:33.1734
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cIx+oFVQMUvHF/MbgBwz5Oa2BVSrP+2cxgAzvb3aJPNJwgMTeWjScpN+sv7a3wwbBOKt8nY58+0qzCWuk1eklw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1847
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <31033055-c245-4eda-2814-3fd8b0d59cb9@acm.org>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> Sent: Wednesday, December 18, 2019 12:45 PM
-> To: Joerg Roedel <joro@8bytes.org>
-> Cc: Christoph Hellwig <hch@infradead.org>; Deucher, Alexander
-> <Alexander.Deucher@amd.com>; iommu@lists.linux-foundation.org; Kernel
-> development list <linux-kernel@vger.kernel.org>
-> Subject: Re: [PATCH v2] iommu/amd: Disable IOMMU on Stoney Ridge
-> systems
->=20
->=20
->=20
-> > On Dec 17, 2019, at 17:53, Joerg Roedel <joro@8bytes.org> wrote:
-> >
-> > On Fri, Dec 06, 2019 at 01:57:41PM +0800, Kai-Heng Feng wrote:
-> >> Hi Joerg,
-> >>
-> >>> On Dec 3, 2019, at 01:00, Christoph Hellwig <hch@infradead.org> wrote=
-:
-> >>>
-> >>> On Fri, Nov 29, 2019 at 10:21:54PM +0800, Kai-Heng Feng wrote:
-> >>>> Serious screen flickering when Stoney Ridge outputs to a 4K monitor.
-> >>>>
-> >>>> According to Alex Deucher, IOMMU isn't enabled on Windows, so let's
-> >>>> do the same here to avoid screen flickering on 4K monitor.
-> >>>
-> >>> Disabling the IOMMU entirely seem pretty severe.  Isn't it enough to
-> >>> identity map the GPU device?
-> >>
-> >> Ok, there's set_device_exclusion_range() to exclude the device from
-> IOMMU.
-> >> However I don't know how to generate range_start and range_length,
-> which are read from ACPI.
-> >
-> > set_device_exclusion_range() is not the solution here. The best is if
-> > the GPU device is put into a passthrough domain at boot, in which it
-> > will be identity mapped. DMA still goes through the IOMMU in this
-> > case, but it only needs to lookup the device-table, page-table walks
-> > will not be done anymore.
-> >
-> > The best way to implement this is to put it into the
-> > amd_iommu_add_device() in drivers/iommu/amd_iommu.c. There is this
-> > check:
-> >
-> >        if (dev_data->iommu_v2)
-> > 		iommu_request_dm_for_dev(dev);
-> >
-> > The iommu_request_dm_for_dev() function causes the device to be
-> > identity mapped. The check can be extended to also check for a device
-> > white-list for devices that need identity mapping.
->=20
-> My patch looks like this but the original behavior (4K screen flickering)=
- is still
-> the same:
+On 12/18, Bart Van Assche wrote:
+> On 2019-12-18 08:21, syzbot wrote:
+> > syzbot has bisected this bug to:
+> > 
+> > commit 5db470e229e22b7eda6e23b5566e532c96fb5bc3
+> > Author: Jaegeuk Kim <jaegeuk@kernel.org>
+> > Date:   Thu Jan 10 03:17:14 2019 +0000
+> > 
+> >     loop: drop caches if offset or block_size are changed
+> > 
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13f3ca8ee00000
+> > start commit:   2187f215 Merge tag 'for-5.5-rc2-tag' of
+> > git://git.kernel.o..
+> > git tree:       upstream
+> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=100bca8ee00000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=17f3ca8ee00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=dcf10bf83926432a
+> > dashboard link:
+> > https://syzkaller.appspot.com/bug?extid=cfed5b56649bddf80d6e
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1171ba8ee00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=107440aee00000
+> 
+> Hi Jaegeuk,
+> 
+> Since syzbot has identified a reproducer I think that it's easy to test
+> whether your new patch fixes what syzbot discovered. Have you already
+> had the chance to test this?
 
-Does reverting the patch to disable ATS along with this patch help?
+Hi Bart,
 
-Alex
+Let me try to reproduce this.
 
->=20
-> diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-> index bd25674ee4db..f913a25c9e92 100644
-> --- a/drivers/iommu/amd_iommu.c
-> +++ b/drivers/iommu/amd_iommu.c
-> @@ -42,6 +42,7 @@
->  #include <asm/iommu.h>
->  #include <asm/gart.h>
->  #include <asm/dma.h>
-> +#include <asm/pci-direct.h>
->=20
->  #include "amd_iommu_proto.h"
->  #include "amd_iommu_types.h"
-> @@ -2159,6 +2160,8 @@ static int amd_iommu_add_device(struct device
-> *dev)
->         struct iommu_domain *domain;
->         struct amd_iommu *iommu;
->         int ret, devid;
-> +       bool need_identity_mapping =3D false;
-> +       u32 header;
->=20
->         if (!check_device(dev) || get_dev_data(dev))
->                 return 0;
-> @@ -2184,7 +2187,11 @@ static int amd_iommu_add_device(struct device
-> *dev)
->=20
->         BUG_ON(!dev_data);
->=20
-> -       if (dev_data->iommu_v2)
-> +       header =3D read_pci_config(0, PCI_BUS_NUM(devid), PCI_SLOT(devid)=
-,
-> PCI_FUNC(devid));
-> +       if ((header & 0xffff) =3D=3D 0x1002 && (header >> 16) =3D=3D 0x98=
-e4)
-> +               need_identity_mapping =3D true;
-> +
-> +       if (dev_data->iommu_v2 || need_identity_mapping)
->                 iommu_request_dm_for_dev(dev);
->=20
->         /* Domains are initialized for this device - have a look what we =
-ended up
-> with */
->=20
->=20
-> $ dmesg | grep -i direct
-> [    0.011446] Using GB pages for direct mapping
-> [    0.703369] pci 0000:00:01.0: Using iommu direct mapping
-> [    0.703830] pci 0000:00:08.0: Using iommu direct mapping
->=20
-> So the graphics device (pci 0000:00:01.0:) is using direct mapping after =
-the
-> change.
->=20
-> Kai-Heng
->=20
-> >
-> > HTH,
-> >
-> > 	Joerg
+Thanks,
 
+> 
+> Thanks,
+> 
+> Bart.
