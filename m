@@ -2,106 +2,95 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.9 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	GAPPY_SUBJECT,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD1CC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8502BC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE694222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 591DE222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:53:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TNm6MsJf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M7RH+lIC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727211AbfLSTvs (ORCPT
+        id S1727162AbfLSTxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:51:48 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46059 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726936AbfLSTvr (ORCPT
+        Thu, 19 Dec 2019 14:53:05 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:47976 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726906AbfLSTxF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 14:51:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576785106;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LdgAOpOdKbBtqr3OQnzNVIAPVkSgqeU/JucweY0YpHE=;
-        b=TNm6MsJfxRJb5oiyQhjUgCPKbD603ugqcrTrQXtSgFOi/aQlKBvZ2KqhM+Md5c6a0Tr9lV
-        hTldD4fIvYEAYMM0uuvst3QzYRMMcncoYkJixXNVKcCYmTOhMgvZeNBGEnaymcQoFn8523
-        0nxYFwAJAX5swiddgtchCQIQNDbvJcE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-189-UITzEVvuN-WPr6RurqVhDA-1; Thu, 19 Dec 2019 14:51:45 -0500
-X-MC-Unique: UITzEVvuN-WPr6RurqVhDA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AD524800053;
-        Thu, 19 Dec 2019 19:51:42 +0000 (UTC)
-Received: from gondolin (ovpn-117-134.ams2.redhat.com [10.36.117.134])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D3D226E73;
-        Thu, 19 Dec 2019 19:51:35 +0000 (UTC)
-Date:   Thu, 19 Dec 2019 20:51:32 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kurz <groug@kaod.org>
-Subject: Re: [PATCH v2 29/45] KVM: Introduce kvm_vcpu_destroy()
-Message-ID: <20191219205132.32d401f6.cohuck@redhat.com>
-In-Reply-To: <20191218215530.2280-30-sean.j.christopherson@intel.com>
-References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
-        <20191218215530.2280-30-sean.j.christopherson@intel.com>
-Organization: Red Hat GmbH
+        Thu, 19 Dec 2019 14:53:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qJw64LD7zJyT8BUXk7jEe7SP15JODV5psaJwB35+yl8=; b=M7RH+lIClBp3oVqj9u9ThFnLk
+        Zn1ewN8entymF3LEt5wzeCLjFvy3RIAPabxVcUZevXG/5zig7Kp1GpYdwqqNH0gckDP6VnFKl+pA2
+        jmmlt1VjPv+jPSdRphxADDGFyBfH0KxYeWaP9MOFjFNSdPrFRsoMyMxTqKu7yMEnJir/IyKhabZhN
+        WGpX9A6gshFyZIrhsvqKkoHi6govGD29KUukNrWsIC2GuVepjqE/0pS/xM5JR0f5fm9IA1UmqkUF6
+        WwsprIPUsmh5RLjwHTPwfoW29EtBKV9fUMY5I9LYFgO3ly+vmgDIqAJPPu6CGotg9knwbZJuHwRa9
+        1h8k9bv8w==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ii1r4-00054h-Hl; Thu, 19 Dec 2019 19:53:02 +0000
+Date:   Thu, 19 Dec 2019 11:53:02 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Johan Hovold <johan@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kbuild: clarify the difference between obj-y and obj-m
+ w.r.t. descending
+Message-ID: <20191219195302.GG32169@bombadil.infradead.org>
+References: <20191219115100.958-1-masahiroy@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191219115100.958-1-masahiroy@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Dec 2019 13:55:14 -0800
-Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-
-> Add kvm_vcpu_destroy() and wire up all architectures to call the common
-> function instead of their arch specific implementation.  The common
-> destruction function will be used by future patches to move allocation
-> and initialization of vCPUs to common KVM code, i.e. to free resources
-> that are allocated by arch agnostic code.
+On Thu, Dec 19, 2019 at 08:51:00PM +0900, Masahiro Yamada wrote:
+> Kbuild descends into a directory by either 'y' or 'm', but there is an
+> important difference.
 > 
-> No functional change intended.
+> Kbuild combines the built-in objects into built-in.a in each directory.
+> The built-in.a in the directory visited by obj-y is merged into the
+> built-in.a in the parent directory. This merge happens recursively when
+> Kbuild is ascending back towards the top directory, so built-in objects
+> are linked into vmlinux eventually. This works properly only when the
+> Makefile that specifies obj-y is reachable by the chain of obj-y.
 > 
-> Acked-by: Christoffer Dall <christoffer.dall@arm.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/mips/kvm/mips.c       | 2 +-
->  arch/powerpc/kvm/powerpc.c | 2 +-
->  arch/s390/kvm/kvm-s390.c   | 2 +-
->  arch/x86/kvm/x86.c         | 2 +-
->  include/linux/kvm_host.h   | 1 +
->  virt/kvm/arm/arm.c         | 2 +-
->  virt/kvm/kvm_main.c        | 6 ++++++
->  7 files changed, 12 insertions(+), 5 deletions(-)
+> On the other hand, Kbuild does not take built-in.a from the directory
+> visited by obj-m. This it, all the objects in that directory are supposed
+> to be modular. If Kbuild descends into a directory by obj-m, but the
+> Makefile in the sub-directory specifies obj-y, those objects are just
+> left orphan.
+> 
+> The current statement "Kbuild only uses this information to decide that
+> it needs to visit the directory" is misleading. Clarify the difference.
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> +	Kbuild uses this information not only to decide that it needs to visit
+> +	the directory, but also to decide whether or not to link objects from
+> +	the directory into vmlinux.
+> +
+> +	When Kbuild descends into the directory with 'y', all built-in objects
+> +	from that directory are combined into the built-in.a, which will be
+> +	eventually linked into vmlinux.
+> +
+> +	When Kbuild descends into the directory with 'm', in contrast, nothing
+> +	from that directory will be linked into vmlinux. If the Makefile in
+> +	that directory specifies obj-y, those objects will be left orphan.
+> +	It is very likely a bug of the Makefile or of dependencies in Kconfig.
 
+Perhaps the implementation should be changed to match the documentation?
+This seems like a very subtle point for people to know.
