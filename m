@@ -2,124 +2,191 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 600E9C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2B6C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35138218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54E8A22314
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:35:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sD+yWKkJ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cYi9HYXp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfLSAdA (ORCPT
+        id S1726752AbfLSAfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 19:33:00 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39845 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbfLSAdA (ORCPT
+        Wed, 18 Dec 2019 19:35:24 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4798 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfLSAfW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 19:33:00 -0500
-Received: by mail-pf1-f194.google.com with SMTP id q10so2154673pfs.6;
-        Wed, 18 Dec 2019 16:32:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=p0q8QxoTzBEMo9IJAgQ5mnM7oqp1lTPhY1a2DTeSNu0=;
-        b=sD+yWKkJaSLMn9+NH4JWR4Z0jpYCBDVtGUkIH10gaoa7OL7HVyppH63hIoT2oQe6pJ
-         lIHzlt8Uf1qSKtfuyFCSE+pO8KK9a+g+niJedeIWeNOMyx+8NxpLrbLGzQJURTtZ3a+T
-         bH6kLI3J0wDK6BjzTP2mvy6Ia6SKtpNYZZEoUREttZ3yXKf1JleHpjQ/PMQZEiZp4/zX
-         rB6ugqXcbdfFyDE3810WjOcxmZ+iNF7niJXmrCilZGtWYc9+pkAqXvj0DsjwnPeOix93
-         v4RXWOG52PjLGIjYf9SiW0Z1/Ai2Bt/EST23feB8ihwNkeK7QbmceuuheRWsJNKvRFcM
-         LsSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=p0q8QxoTzBEMo9IJAgQ5mnM7oqp1lTPhY1a2DTeSNu0=;
-        b=N49HwNz4dIsCn8yVG1hteSc5hZal1geekdn7/mUyFDSlWe4+bg4Y1ovKgyScu+QkH0
-         A7rFaVU7B3yzcDWMvZI32d10o53ff7N5LBzGREHLnnpG1IhXACaMUNzVx2izoGILG/3W
-         eTu5OQudbgRrNllVVWNSfKPBLeSbdoDoFb32YLDHL8PtQq1GbLcAqbBGyxkIW4GfvDmC
-         fOhMMTZSQ00DxFkzNo1zO1PxgJZI/PGyfVR7WNWGuPrZriUyTekGZaumivdBo+t2TLt3
-         PGByk9bdUd2Esx4VRKe0xSaVtwdYVTdPT+XAJEe08GcBHhdAuquz9bujX2i/EDRJubk8
-         1Fmg==
-X-Gm-Message-State: APjAAAW2vEe2VRBhFmDz2GBE7OBEq7c/BNTIuRF2L6I2kOhVa+pzIupJ
-        8MNIS6zLGKUrzoPqvfpwFVaXICNn
-X-Google-Smtp-Source: APXvYqypzKHQBv3aT4OD6iC5R4Mscfj9bYi5rG9iGuw5KdGufEgvY8n/CeRjJtyduSIT1Ue24HnQDw==
-X-Received: by 2002:a63:4d5e:: with SMTP id n30mr6072905pgl.275.1576715579176;
-        Wed, 18 Dec 2019 16:32:59 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g10sm4524960pgh.35.2019.12.18.16.32.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 18 Dec 2019 16:32:58 -0800 (PST)
-Date:   Wed, 18 Dec 2019 16:32:57 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
-        Chris Healy <cphealy@gmail.com>
-Subject: Re: [PATCH v2] hwmon: Driver for temperature sensors on SATA drives
-Message-ID: <20191219003256.GA28144@roeck-us.net>
-References: <20191215174509.1847-1-linux@roeck-us.net>
- <20191215174509.1847-2-linux@roeck-us.net>
- <yq1r211dvck.fsf@oracle.com>
+        Wed, 18 Dec 2019 19:35:22 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dfac5be0002>; Wed, 18 Dec 2019 16:35:11 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 18 Dec 2019 16:35:20 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 18 Dec 2019 16:35:20 -0800
+Received: from [10.2.165.11] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Dec
+ 2019 00:35:19 +0000
+Subject: Re: [PATCH v11 04/25] mm: devmap: refactor 1-based refcounting for
+ ZONE_DEVICE pages
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+References: <20191216222537.491123-1-jhubbard@nvidia.com>
+ <20191216222537.491123-5-jhubbard@nvidia.com>
+ <20191218160420.gyt4c45e6zsnxqv6@box>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <ddd08105-f48a-dbe1-7de1-f2fa2c5772a9@nvidia.com>
+Date:   Wed, 18 Dec 2019 16:32:28 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq1r211dvck.fsf@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191218160420.gyt4c45e6zsnxqv6@box>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1576715711; bh=lLxcLcvWuEdaa9mbUu8pEb7NikbQGA+3x199V+Yf2Go=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=cYi9HYXpThVPsCQ2FAhPpBmvg9pzZEnocfVab3p1rbztjUsDI5b7umJJYuIEvZ0PR
+         vx+h2sHA10T2/Q1X4aDK6z59gq6N+0cBNEv1SBLGL1VNlncyvmlNdNaO1iWAyTGswr
+         udKbzxqm/wjq006CK108fXCeD0IesoZvzh/gx+LNePAFcn6r9jhacWQ3SpCYW8xspg
+         AWQc+0t7+YICrLyj0yQoqsCoU6687MNUgeKhf8m6yAmv/OIxmxbjV85i5eQJrONL9B
+         rit0zRnR4Y3ZhStASBSUCGicK22P7QWUhCF8hgj/JAlQLXg8wWjGsZLK//Xu0ERwbe
+         cFLl9sQIYjnfg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 07:15:07PM -0500, Martin K. Petersen wrote:
+On 12/18/19 8:04 AM, Kirill A. Shutemov wrote:
+> On Mon, Dec 16, 2019 at 02:25:16PM -0800, John Hubbard wrote:
+>> An upcoming patch changes and complicates the refcounting and
+>> especially the "put page" aspects of it. In order to keep
+>> everything clean, refactor the devmap page release routines:
+>>
+>> * Rename put_devmap_managed_page() to page_is_devmap_managed(),
+>>    and limit the functionality to "read only": return a bool,
+>>    with no side effects.
+>>
+>> * Add a new routine, put_devmap_managed_page(), to handle checking
+>>    what kind of page it is, and what kind of refcount handling it
+>>    requires.
+>>
+>> * Rename __put_devmap_managed_page() to free_devmap_managed_page(),
+>>    and limit the functionality to unconditionally freeing a devmap
+>>    page.
 > 
-> Guenter,
-> 
-> > This driver solves this problem by adding support for reading the
-> > temperature of SATA drives from the kernel using the hwmon API and
-> > by adding a temperature zone for each drive.
-> 
-> My working tree is available here:
-> 
->   https://git.kernel.org/pub/scm/linux/kernel/git/mkp/linux.git/log/?h=5.6/drivetemp
-> 
-> A few notes:
-> 
->  - Before applying your patch I did s/satatemp/drivetemp/
-> 
->  - I get a crash in the driver core during probe if the drivetemp module
->    is loaded prior to loading ahci or a SCSI HBA driver. This crash is
->    unrelated to my changes. Haven't had time to debug.
-> 
->  - I tweaked your ATA detection heuristics and now use the cached VPD
->    page 0x89 instead of fetching one from the device.
-> 
->  - I also added support for reading the temperature log page on SCSI
->    drives.
-> 
->  - Tested with a mixed bag of about 40 SCSI and SATA drives attached.
-> 
->  - I still think sensor naming needs work. How and where are the
->    "drivetemp-scsi-8-140" names generated?
-> 
-Quick one: In libsensors, outside the kernel. The naming is generic,
-along the line of <driver name>-<bus name>-<bus index>-<slot>.
+> What the reason to separate put_devmap_managed_page() from
+> free_devmap_managed_page() if free_devmap_managed_page() has exacly one
+> caller? Is it preparation for the next patches?
 
-> I'll tinker some more but thought I'd share what I have for now.
+
+Yes. A later patch, #23, adds another caller: __unpin_devmap_managed_user_page().
+
+...
+>> @@ -971,7 +971,14 @@ static inline bool put_devmap_managed_page(struct page *page)
+>>   	return false;
+>>   }
+>>   
+>> +bool put_devmap_managed_page(struct page *page);
+>> +
+>>   #else /* CONFIG_DEV_PAGEMAP_OPS */
+>> +static inline bool page_is_devmap_managed(struct page *page)
+>> +{
+>> +	return false;
+>> +}
+>> +
+>>   static inline bool put_devmap_managed_page(struct page *page)
+>>   {
+>>   	return false;
+>> @@ -1028,8 +1035,10 @@ static inline void put_page(struct page *page)
+>>   	 * need to inform the device driver through callback. See
+>>   	 * include/linux/memremap.h and HMM for details.
+>>   	 */
+>> -	if (put_devmap_managed_page(page))
+>> +	if (page_is_devmap_managed(page)) {
+>> +		put_devmap_managed_page(page);
 > 
-Thanks for sharing. I'll be out on vacation until January 1. I'll look
-at the code after I am back.
+> put_devmap_managed_page() has yet another page_is_devmap_managed() check
+> inside. It looks strange.
+> 
 
-Guenter
+Good point, it's an extra unnecessary check. So to clean it up, I'll note
+that the "if" check is required here in put_page(), in order to stay out of
+non-inlined function calls in the hot path (put_page()). So I'll do the
+following:
 
-> -- 
-> Martin K. Petersen	Oracle Linux Engineering
+* Leave the above code as it is here
+
+* Simplify put_devmap_managed_page(), it was trying to do two separate things,
+   and those two things have different requirements. So change it to a void
+   function, with a WARN_ON_ONCE to assert that page_is_devmap_managed() is true,
+
+* And change the other caller (release_pages()) to do that check.
+
+...
+>> @@ -1102,3 +1102,27 @@ void __init swap_setup(void)
+>>   	 * _really_ don't want to cluster much more
+>>   	 */
+>>   }
+>> +
+>> +#ifdef CONFIG_DEV_PAGEMAP_OPS
+>> +bool put_devmap_managed_page(struct page *page)
+>> +{
+>> +	bool is_devmap = page_is_devmap_managed(page);
+>> +
+>> +	if (is_devmap) {
+> 
+> Reversing the condition would save you an indentation level.
+
+Yes. Done.
+
+I'll also git-reply with an updated patch so you can see what it looks like.
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
