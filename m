@@ -2,155 +2,107 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C4EC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AAEC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D17B2146E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A9932146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 16:16:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="JQJBKIRV"
+	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="CRdleZru"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfLSQM4 (ORCPT
+        id S1726945AbfLSQQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 11:12:56 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41733 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbfLSQMz (ORCPT
+        Thu, 19 Dec 2019 11:16:07 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:42395 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbfLSQQH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 11:12:55 -0500
-Received: by mail-pg1-f196.google.com with SMTP id x8so3352444pgk.8
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 08:12:55 -0800 (PST)
+        Thu, 19 Dec 2019 11:16:07 -0500
+Received: by mail-ed1-f65.google.com with SMTP id e10so5415564edv.9
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 08:16:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bx8Jb0WaQCTtu/dzL5GBmb8jnnDesSBUSvEFPOM12Yc=;
-        b=JQJBKIRVGtI4VwCCP3hyatO9EmbXSVs/aw6TLzZIdjHxwAHAFsxHTmhBoSd0+E4JuL
-         j4avCkTjYoOlG87Cns9LFhyu+xGoaYInHiXcCbWrbnsXqvQcUnMDQ2YeZAmlWlAUb84k
-         sOVhQJlbtXk5vQtRC6N3Bd2Gdi39AvyiTzS9M=
+        d=sargun.me; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xgC42fe1N8wsAY2Zpi//y6cU+ssloLAYZDPn1Fg0a/Q=;
+        b=CRdleZru1BN0IO10qM3c/+ShZhD9u54Ow/x+ihrZrMg1kMI/Uhc5n0Kz0jBVzovz2A
+         7wBAnnk2QTrZykncxgmLNoo9u1auLtLGveneGj6/nZ4QhSB4vBB1zMz+ft2e03lT8zXY
+         vxB5O8DU6BJacQeiY76F3DU2JM0AgLJ/hqGtU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bx8Jb0WaQCTtu/dzL5GBmb8jnnDesSBUSvEFPOM12Yc=;
-        b=Z1+GIksnhyZIJSetqEltrKhBNgY+xo8pgjgeNlMiD9R2udD2azIhkSC6M8nWHIisrG
-         /kxpmbyxSbsoevD1ncexstzrOmrKmUljDT9XC4JZLONbofVPWMvHdTqsK+CVz61t/Nqv
-         cpyO66lwq5lN4PLJwRHrqNPjU8ff0Wz0OBUT4iSKaPOVKZo8uzHFpJmkSpBi3/hHwgAM
-         BeuWGAPney3QML7j2MbvsmtNkpKRZV560Cuo9nPXil9QAnldbvKrOhkFQjDHSli+txZI
-         dDKkyDlz95YtQ4nWFpIpMEtS1zuK5Ggj0NvH+u8nh/caBll/IWd8CZnXF0oRvtIOoJ4C
-         muGg==
-X-Gm-Message-State: APjAAAXSvAERnjIrOabW5PjoWjye6SpZROl4qC1qTV9qg3S+2KY+0bH7
-        vX58XqusRph7AJVykgWqJGOhnydZMqk=
-X-Google-Smtp-Source: APXvYqw66nmbW+O3AVs6mvJmDJp+F1dljrELDidgKaMGsS8zDDjKSglw8t0bZYNqEUzI65h7lWpNwA==
-X-Received: by 2002:a63:6507:: with SMTP id z7mr10081594pgb.322.1576771974899;
-        Thu, 19 Dec 2019 08:12:54 -0800 (PST)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id a13sm8813570pfc.40.2019.12.19.08.12.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 08:12:54 -0800 (PST)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        bristot@redhat.com, frextrite@gmail.com,
-        madhuparnabhowmik04@gmail.com, urezki@gmail.com,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH rcu-dev] rcuperf: Measure memory footprint during kfree_rcu() test
-Date:   Thu, 19 Dec 2019 11:12:48 -0500
-Message-Id: <20191219161248.109734-1-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xgC42fe1N8wsAY2Zpi//y6cU+ssloLAYZDPn1Fg0a/Q=;
+        b=TKOm9HTOOSN/1dA419/7hEqnANpGxX+hq9/mgt9pX8qGRpkIweOxt9Fi8C/PdxuQe8
+         jUq8XNPvfGpgM3/TvzERUmsGwpKHhbOasexbGijwlt9HCDGXjap89iMoiCPX8RtMz0fO
+         3H9oJCoy6kQ0O6TJv/yvJMQ5XEN/xOFCtvvEzdxmIpRbqZljiWKUtF5ZA7+KPC7xJQmV
+         APzWOTrCBcbXTyJgNoy4EQDjinMkX2GCBVTCVtnFrWdySRf2DfBySbIIqqPA2v8e56VR
+         e9m6F/h5cAaKtUqWjX40ZWABK52MmcGMuCRgBqOWEWIS50SoOdU0boWf/M5xscJyHx6y
+         yWVw==
+X-Gm-Message-State: APjAAAXYJIG7B9E5iD9HeiK8s41zsEm8kJ9aEJS8eGNPjZl1/OW9To0s
+        ed3aAdB8qIyzFKtyUoOVZA6uQHSojmuXI2GUr720dw==
+X-Google-Smtp-Source: APXvYqzO/uAhMSfNB8MjlZnPiJ5czTYp4nAlpcNumi04dxRBB+6KCzUzjEJgBeMvk27GNs+8F2b3SaBxP/hJE8qwgB4=
+X-Received: by 2002:a17:906:5358:: with SMTP id j24mr10598276ejo.44.1576772164912;
+ Thu, 19 Dec 2019 08:16:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191218235459.GA17271@ircssh-2.c.rugged-nimbus-611.internal>
+ <CAK8P3a2eT=bHkUamyp-P3Y2adNq1KBk7UknCYBY5_aR4zJmYaQ@mail.gmail.com> <20191219103525.yqb5f4pbd2dvztkb@wittgenstein>
+In-Reply-To: <20191219103525.yqb5f4pbd2dvztkb@wittgenstein>
+From:   Sargun Dhillon <sargun@sargun.me>
+Date:   Thu, 19 Dec 2019 08:15:29 -0800
+Message-ID: <CAMp4zn_z-CCQYMpT=GjZeGVLobjHBCSbmfha1rtWdmptOQ8JtA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/5] pid: Add PIDFD_IOCTL_GETFD to fetch file
+ descriptors from processes
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Oleg Nesterov <oleg@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Gian-Carlo Pascutto <gpascutto@mozilla.com>,
+        =?UTF-8?Q?Emilio_Cobos_=C3=81lvarez?= <ealvarez@mozilla.com>,
+        Jed Davis <jld@mozilla.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During changes to kfree_rcu() code, we often check how much is free
-memory. Instead of doing so manually, add a measurement in the test
-itself. We measure 4 times during the test for available memory and
-compare with the beginning.
+On Thu, Dec 19, 2019 at 2:35 AM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
+> I guess this is the remaining question we should settle, i.e. what do we
+> prefer.
+> I still think that adding a new syscall for this seems a bit rich. On
+> the other hand it seems that a lot more people agree that using a
+> dedicated syscall instead of an ioctl is the correct way; especially
+> when it touches core kernel functionality. I mean that was one of the
+> takeaways from the pidfd API ioctl-vs-syscall discussion.
+>
+> A syscall is nicer especially for core-kernel code like this.
+> So I guess the only way to find out is to try the syscall approach and
+> either get yelled and switch to an ioctl() or have it accepted.
+>
+> What does everyone else think? Arnd, still in favor of a syscall I take
+> it. Oleg, you had suggested a syscall too, right? Florian, any
+> thoughts/worries on/about this from the glibc side?
+>
+> Christian
 
-A sample run shows something like:
-
-Total time taken by all kfree'ers: 6369738407 ns, loops: 10000, batches: 764 memory footprint:216MB
-
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-
-
----
-Cc: bristot@redhat.com
-Cc: frextrite@gmail.com
-Cc: madhuparnabhowmik04@gmail.com
-Cc: urezki@gmail.com
-
- kernel/rcu/rcuperf.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
-index da94b89cd531..bf8e9d9b532c 100644
---- a/kernel/rcu/rcuperf.c
-+++ b/kernel/rcu/rcuperf.c
-@@ -12,6 +12,7 @@
- #include <linux/types.h>
- #include <linux/kernel.h>
- #include <linux/init.h>
-+#include <linux/mm.h>
- #include <linux/module.h>
- #include <linux/kthread.h>
- #include <linux/err.h>
-@@ -611,12 +612,14 @@ kfree_perf_thread(void *arg)
- 	long me = (long)arg;
- 	struct kfree_obj *alloc_ptr;
- 	u64 start_time, end_time;
-+	long mem_begin, mem_during = 0;
- 
- 	VERBOSE_PERFOUT_STRING("kfree_perf_thread task started");
- 	set_cpus_allowed_ptr(current, cpumask_of(me % nr_cpu_ids));
- 	set_user_nice(current, MAX_NICE);
- 
- 	start_time = ktime_get_mono_fast_ns();
-+	mem_begin = si_mem_available();
- 
- 	if (atomic_inc_return(&n_kfree_perf_thread_started) >= kfree_nrealthreads) {
- 		if (gp_exp)
-@@ -626,7 +629,14 @@ kfree_perf_thread(void *arg)
- 	}
- 
- 	do {
-+		if (!mem_during) {
-+			mem_during = mem_begin = si_mem_available();
-+		} else if (loop % (kfree_loops / 4) == 0) {
-+			mem_during = (mem_during + si_mem_available()) / 2;
-+		}
-+
- 		for (i = 0; i < kfree_alloc_num; i++) {
-+
- 			alloc_ptr = kmalloc(sizeof(struct kfree_obj), GFP_KERNEL);
- 			if (!alloc_ptr)
- 				return -ENOMEM;
-@@ -645,9 +655,11 @@ kfree_perf_thread(void *arg)
- 		else
- 			b_rcu_gp_test_finished = cur_ops->get_gp_seq();
- 
--		pr_alert("Total time taken by all kfree'ers: %llu ns, loops: %d, batches: %ld\n",
-+		pr_alert("Total time taken by all kfree'ers: %llu ns, loops: %d, batches: %ld, memory footprint: %ldMB\n",
- 		       (unsigned long long)(end_time - start_time), kfree_loops,
--		       rcuperf_seq_diff(b_rcu_gp_test_finished, b_rcu_gp_test_started));
-+		       rcuperf_seq_diff(b_rcu_gp_test_finished, b_rcu_gp_test_started),
-+		       (mem_begin - mem_during) >> (20 - PAGE_SHIFT));
-+
- 		if (shutdown) {
- 			smp_mb(); /* Assign before wake. */
- 			wake_up(&shutdown_wq);
--- 
-2.24.1.735.g03f4e72817-goog
+My feelings towards this are that syscalls might pose a problem if we
+ever want to extend this API. Of course we can have a reserved
+"flags" field, and populate it later, but what if we turn out to need
+a proper struct? I already know we're going to want to add one
+around cgroup metadata (net_cls), and likely we'll want to add
+a "steal" flag as well. As Arnd mentioned earlier, this is trivial to
+fix in a traditional ioctl environment, as ioctls are "cheap". How
+do we feel about potentially adding a pidfd_getfd2? Or are we
+confident that reserved flags will save us?
