@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAD5C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E5BC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90F8E2467F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7771924685
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:39:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780775;
-	bh=2W/pubB/NGofUWGdwzpKRkBMf3PPruaJEe5OyHSlTYM=;
+	s=default; t=1576780778;
+	bh=UJD928C7anYrORACAu6Oao0G9JR8oRn8ffJSvKjKt3I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ub7y/D8VrtyKH68E9hlDZO+WigN1nMtI+4rNbiM2aHmc3xi8kymmNDHxJU8OQQzLO
-	 M10Er83RrZz9MtKXanFadYalq2SnK1vUmgU06dh0F3/XFCWpC44u0YCNZjebliTyFA
-	 MEutGiqS0tIbc5LvJZtvSe62XkQqZhFKnO3UPFzo=
+	b=Ft9Qq3u8Q2wErm3UWInlQ6O8WwkWwlB8LRyTs3SLlVbSPEJ160q0IB3VtAsOym3NQ
+	 SfnkdjT0NUibG4JrTMXtBEd6BvwL/4CdpzWatEfYeyQpBRaxp99VT7gNmQ8CJYKZ/7
+	 R7nMkYxhUQbfhiCF4CxjX7ZZBdw+FnqtyiS3hoyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbfLSSje (ORCPT
+        id S1728249AbfLSSjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:39:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57672 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:39:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727920AbfLSSj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:39:26 -0500
+        id S1728235AbfLSSje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:39:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BF8720716;
-        Thu, 19 Dec 2019 18:39:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E402220716;
+        Thu, 19 Dec 2019 18:39:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780766;
-        bh=2W/pubB/NGofUWGdwzpKRkBMf3PPruaJEe5OyHSlTYM=;
+        s=default; t=1576780773;
+        bh=UJD928C7anYrORACAu6Oao0G9JR8oRn8ffJSvKjKt3I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z8dcWiKABoxCGru/2jqhS7SkqDqQBBE2+fDAUte6V4GdFlhMCWCg/qX7hupe54+YH
-         Ta5JNwMdYAP/GtEZmDfMs8GYNRvUhA7lrmAvlyy+n3rlsmHp6UTKUIeLeAs0XiRkLh
-         UvbbHz6TZusIMZb8ZXB6sfomg5CTKKm+anZSxC0o=
+        b=HJBuLZMBeK4bejroaSDA+2OOm7nrfrISG27JG6x4OStMzi0QkDoKcmJO986gN6iqp
+         K47+h4C95KRrCze9l/qTCtz3AQseOD64uWKAqih3rflUYIbUPGxl8rVIYE5L3DNFyC
+         EpjS0Z6XOi/dC/Ib0His69tF16YPiXPgf4gvKg+s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pawel Harlozinski <pawel.harlozinski@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.4 107/162] ASoC: Jack: Fix NULL pointer dereference in snd_soc_jack_report
-Date:   Thu, 19 Dec 2019 19:33:35 +0100
-Message-Id: <20191219183214.267661379@linuxfoundation.org>
+        stable@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Tejun Heo <tj@kernel.org>
+Subject: [PATCH 4.4 109/162] cgroup: pids: use atomic64_t for pids->limit
+Date:   Thu, 19 Dec 2019 19:33:37 +0100
+Message-Id: <20191219183214.393367665@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -60,37 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pawel Harlozinski <pawel.harlozinski@linux.intel.com>
+From: Aleksa Sarai <cyphar@cyphar.com>
 
-commit 8f157d4ff039e03e2ed4cb602eeed2fd4687a58f upstream.
+commit a713af394cf382a30dd28a1015cbe572f1b9ca75 upstream.
 
-Check for existance of jack before tracing.
-NULL pointer dereference has been reported by KASAN while unloading
-machine driver (snd_soc_cnl_rt274).
+Because pids->limit can be changed concurrently (but we don't want to
+take a lock because it would be needlessly expensive), use atomic64_ts
+instead.
 
-Signed-off-by: Pawel Harlozinski <pawel.harlozinski@linux.intel.com>
-Link: https://lore.kernel.org/r/20191112130237.10141-1-pawel.harlozinski@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org
+Fixes: commit 49b786ea146f ("cgroup: implement the PIDs subsystem")
+Cc: stable@vger.kernel.org # v4.3+
+Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-jack.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ kernel/cgroup_pids.c |   11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
---- a/sound/soc/soc-jack.c
-+++ b/sound/soc/soc-jack.c
-@@ -80,10 +80,9 @@ void snd_soc_jack_report(struct snd_soc_
- 	unsigned int sync = 0;
- 	int enable;
+--- a/kernel/cgroup_pids.c
++++ b/kernel/cgroup_pids.c
+@@ -48,7 +48,7 @@ struct pids_cgroup {
+ 	 * %PIDS_MAX = (%PID_MAX_LIMIT + 1).
+ 	 */
+ 	atomic64_t			counter;
+-	int64_t				limit;
++	atomic64_t			limit;
+ };
  
--	trace_snd_soc_jack_report(jack, mask, status);
--
- 	if (!jack)
- 		return;
-+	trace_snd_soc_jack_report(jack, mask, status);
+ static struct pids_cgroup *css_pids(struct cgroup_subsys_state *css)
+@@ -70,8 +70,8 @@ pids_css_alloc(struct cgroup_subsys_stat
+ 	if (!pids)
+ 		return ERR_PTR(-ENOMEM);
  
- 	dapm = &jack->card->dapm;
+-	pids->limit = PIDS_MAX;
+ 	atomic64_set(&pids->counter, 0);
++	atomic64_set(&pids->limit, PIDS_MAX);
+ 	return &pids->css;
+ }
  
+@@ -142,13 +142,14 @@ static int pids_try_charge(struct pids_c
+ 
+ 	for (p = pids; parent_pids(p); p = parent_pids(p)) {
+ 		int64_t new = atomic64_add_return(num, &p->counter);
++		int64_t limit = atomic64_read(&p->limit);
+ 
+ 		/*
+ 		 * Since new is capped to the maximum number of pid_t, if
+ 		 * p->limit is %PIDS_MAX then we know that this test will never
+ 		 * fail.
+ 		 */
+-		if (new > p->limit)
++		if (new > limit)
+ 			goto revert;
+ 	}
+ 
+@@ -262,7 +263,7 @@ set_limit:
+ 	 * Limit updates don't need to be mutex'd, since it isn't
+ 	 * critical that any racing fork()s follow the new limit.
+ 	 */
+-	pids->limit = limit;
++	atomic64_set(&pids->limit, limit);
+ 	return nbytes;
+ }
+ 
+@@ -270,7 +271,7 @@ static int pids_max_show(struct seq_file
+ {
+ 	struct cgroup_subsys_state *css = seq_css(sf);
+ 	struct pids_cgroup *pids = css_pids(css);
+-	int64_t limit = pids->limit;
++	int64_t limit = atomic64_read(&pids->limit);
+ 
+ 	if (limit >= PIDS_MAX)
+ 		seq_printf(sf, "%s\n", PIDS_MAX_STR);
 
 
