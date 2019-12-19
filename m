@@ -6,148 +6,112 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BA2C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBFDC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 464B724650
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E037724650
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 00:20:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbfLSASi (ORCPT
+        id S1726713AbfLSAUV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 19:18:38 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:38958 "EHLO
+        Wed, 18 Dec 2019 19:20:21 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:38974 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfLSASi (ORCPT
+        with ESMTP id S1726536AbfLSAUV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 19:18:38 -0500
+        Wed, 18 Dec 2019 19:20:21 -0500
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: sre)
-        with ESMTPSA id 7A04D291E6E
+        with ESMTPSA id E29C3291E6E
 Received: by earth.universe (Postfix, from userid 1000)
-        id CB20B3C0C7B; Thu, 19 Dec 2019 01:18:33 +0100 (CET)
-Date:   Thu, 19 Dec 2019 01:18:33 +0100
+        id E98603C0C7B; Thu, 19 Dec 2019 01:20:17 +0100 (CET)
+Date:   Thu, 19 Dec 2019 01:20:17 +0100
 From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH] power: supply: Fix Kconfig indentation
-Message-ID: <20191219001833.fvfj2xgibkxwiu57@earth.universe>
-References: <20191120133959.14109-1-krzk@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH] power: supply: max77650: add of_match table
+Message-ID: <20191219002017.4f4j3u6tghhjgf32@earth.universe>
+References: <20191210100855.11252-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="dhhibu4vnoabxivd"
+        protocol="application/pgp-signature"; boundary="h27er267woat7low"
 Content-Disposition: inline
-In-Reply-To: <20191120133959.14109-1-krzk@kernel.org>
+In-Reply-To: <20191210100855.11252-1-brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---dhhibu4vnoabxivd
+--h27er267woat7low
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Wed, Nov 20, 2019 at 09:39:59PM +0800, Krzysztof Kozlowski wrote:
-> Adjust indentation from spaces to tab (+optional two spaces) as in
-> coding style with command like:
-> 	$ sed -e 's/^        /\t/' -i */Kconfig
+On Tue, Dec 10, 2019 at 11:08:55AM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >=20
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> We need the of_match table if we want to use the compatible string in
+> the pmic's child node and get the charger driver loaded automatically.
+>=20
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > ---
 
 Thanks, queued to power-supply's for-next branch.
 
 -- Sebastian
 
->  drivers/power/supply/Kconfig | 30 +++++++++++++++---------------
->  1 file changed, 15 insertions(+), 15 deletions(-)
+>  drivers/power/supply/max77650-charger.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
 >=20
-> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-> index 27164a1d3c7c..9a5591ab90d0 100644
-> --- a/drivers/power/supply/Kconfig
-> +++ b/drivers/power/supply/Kconfig
-> @@ -73,10 +73,10 @@ config WM831X_POWER
->  	  provided by Wolfson Microelectronics WM831x PMICs.
+> diff --git a/drivers/power/supply/max77650-charger.c b/drivers/power/supp=
+ly/max77650-charger.c
+> index 5f9477c5cf5a..d913428bedc0 100644
+> --- a/drivers/power/supply/max77650-charger.c
+> +++ b/drivers/power/supply/max77650-charger.c
+> @@ -354,9 +354,16 @@ static int max77650_charger_remove(struct platform_d=
+evice *pdev)
+>  	return max77650_charger_disable(chg);
+>  }
 > =20
->  config WM8350_POWER
-> -        tristate "WM8350 PMU support"
-> -        depends on MFD_WM8350
-> -        help
-> -          Say Y here to enable support for the power management unit
-> +	tristate "WM8350 PMU support"
-> +	depends on MFD_WM8350
-> +	help
-> +	  Say Y here to enable support for the power management unit
->  	  provided by the Wolfson Microelectronics WM8350 PMIC.
-> =20
->  config TEST_POWER
-> @@ -209,16 +209,16 @@ config BATTERY_WM97XX
->  	  Say Y to enable support for battery measured by WM97xx aux port.
-> =20
->  config BATTERY_SBS
-> -        tristate "SBS Compliant gas gauge"
-> -        depends on I2C
-> -        help
-> +	tristate "SBS Compliant gas gauge"
-> +	depends on I2C
-> +	help
->  	  Say Y to include support for SBS battery driver for SBS-compliant
->  	  gas gauges.
-> =20
->  config CHARGER_SBS
-> -        tristate "SBS Compliant charger"
-> -        depends on I2C
-> -        help
-> +	tristate "SBS Compliant charger"
-> +	depends on I2C
-> +	help
->  	  Say Y to include support for SBS compliant battery chargers.
-> =20
->  config MANAGER_SBS
-> @@ -484,11 +484,11 @@ config CHARGER_MANAGER
->  	depends on REGULATOR
->  	select EXTCON
->  	help
-> -          Say Y to enable charger-manager support, which allows multiple
-> -          chargers attached to a battery and multiple batteries attached=
- to a
-> -          system. The charger-manager also can monitor charging status in
-> -          runtime and in suspend-to-RAM by waking up the system periodic=
-ally
-> -          with help of suspend_again support.
-> +	  Say Y to enable charger-manager support, which allows multiple
-> +	  chargers attached to a battery and multiple batteries attached to a
-> +	  system. The charger-manager also can monitor charging status in
-> +	  runtime and in suspend-to-RAM by waking up the system periodically
-> +	  with help of suspend_again support.
-> =20
->  config CHARGER_LT3651
->  	tristate "Analog Devices LT3651 charger"
+> +static const struct of_device_id max77650_charger_of_match[] =3D {
+> +	{ .compatible =3D "maxim,max77650-charger" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, max77650_charger_of_match);
+> +
+>  static struct platform_driver max77650_charger_driver =3D {
+>  	.driver =3D {
+>  		.name =3D "max77650-charger",
+> +		.of_match_table =3D max77650_charger_of_match,
+>  	},
+>  	.probe =3D max77650_charger_probe,
+>  	.remove =3D max77650_charger_remove,
 > --=20
-> 2.17.1
+> 2.23.0
 >=20
 
---dhhibu4vnoabxivd
+--h27er267woat7low
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl36wdkACgkQ2O7X88g7
-+prglg/6AuQjzRWz0WzOc8yuV4MVLbFjxBnAMr6Kk3Z4e1xmbr0ThqVUplbBgnHi
-XhYg75C4LCJ34K5Fmm9vQKf1vSwLOkSCpttpYaVrD/BEhgMu9tDUhmHAiDJPvEd1
-89cmKjL/sH0+yfLzZH6Td2grBGM3NP68SdS6ER4MoP2bbS5EsWhaAvag3VIwxFH9
-YqQ9xvVd+ooJU7AJLLS68yqLoHJq52+rpFXmuiKnpcIRAuPynm7/ECKwb4AEmqVG
-uPd8b5OFKdyToONbiw/lNLtcr1mWTDySehDeG7me5/AAfGGV+z9930qRucA5+59z
-I+zEQ37LslKXIFAhWGxKN3T+EjeyL4fUZwmFcsnSU6ohf/wnt1oKpiUxL6FjoKsD
-YWQJnDQk4a+Vc0jNTpTpUXGxiZtBGkxi1aO55iGxxvh0Xx4R1IKE5k4Gu+pjh+yr
-hbmwaweU1ZHWyAJ5r/L3fm+qHWeiLjDV5aHkhaFJLZDNfpnZQIFreRRfRaxQIu21
-dXMuRIW22WC+kjJ7z2vxiELAYMZKJjZQM+xsHscyQkB2lbPQo4RB/4z/+jCe7NOn
-+n/SkrwesGdHtuqIr4qzYK6ufLS25LYOIL7ZFXa7gampVBPJSGJl8BxQ9hE297rA
-5YvecmUhv9FAD+N1meofGEr5d0FtdAcZ39yLricIG/MHiIDOTDw=
-=BuYn
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl36wkEACgkQ2O7X88g7
++po83g/9E//H8/CqygBtibD+Mu7D7rKESNwpdCcLJjRmLIAQUpKGTJNRv0T9xZmk
+/ow/02Lv4SwHDYetIfqT0rJtM64TC5kGfIcC089ixFkkOgvnHxsp+H5AOUwWfOGe
+ozE55OK0LjJUUzIDDUSo4i+AMclfwstTtWdkeliOkBXARI1DIJ3O5XVQybwEjPjN
+WwyvIxWjxgcehJD15ax+mzfq9hi0x3cK5GA8dWitXaYthJzaOC8VZdchvh1H65gT
+UDhwjJfSWDGYdgvCRcvmCB3XGYH0MRZvLXOOBVnb40CVE3FiEhwEycXSXZ1zZ+x3
+rg2P2fqAk9htmOtw0ihNIrqePfnnrQJM2CLb7LGZ3SCYEf9QN+V1Ip0OU7WvbAsg
+JMtvQ7o4XDyl0L8U8dnsbQA4JOhpdKpnKGFcEN3d1BD97rRMTWmxkqaH2rzX/wWA
+FG7uN7+n3eXDwI6XnTPA7Kt9mDBveI3ceh78zxSjwJx4S6mWrCRzpYXvIjS4zQLI
+2rnsk1qKIqqfT863meIOanuq8zGMwqAFwIyeC345am7Qe48n9sYuQIHIbpCK+E7x
+hsS5s8aeq05r7zWISiuBv4bhyDgRWBUsUMWwtOq9tEPD1IZm38iYGHE96itYy4X5
+leDacI19zC/yIGhYoAyp704YWnJxcdKVS+A+sgKnhVtccsYyvx0=
+=Koja
 -----END PGP SIGNATURE-----
 
---dhhibu4vnoabxivd--
+--h27er267woat7low--
