@@ -2,189 +2,137 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9315EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD1FC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72AEB222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 678A2218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 11:18:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="olyhCioZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbfLSLSk (ORCPT
+        id S1726834AbfLSLS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 06:18:40 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:38605 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbfLSLSj (ORCPT
+        Thu, 19 Dec 2019 06:18:56 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:41784 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbfLSLS4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 06:18:39 -0500
-Received: from [79.140.121.60] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1ihtp5-0003Wa-E1; Thu, 19 Dec 2019 11:18:27 +0000
-Date:   Thu, 19 Dec 2019 12:18:26 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Shuah Khan <shuah@kernel.org>,
-        David Laight <david.laight@aculab.com>,
-        Florian Weimer <fweimer@redhat.com>, dev@opencontainers.org,
-        containers@lists.linux-foundation.org, libc-alpha@sourceware.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        arnd@arndb.de
-Subject: Re: [PATCH 2/2] openat2: drop open_how->__padding field
-Message-ID: <20191219111825.2tzgdlbk3t2pspnw@wittgenstein>
-References: <20191219105533.12508-1-cyphar@cyphar.com>
- <20191219105533.12508-3-cyphar@cyphar.com>
+        Thu, 19 Dec 2019 06:18:56 -0500
+Received: by mail-qt1-f194.google.com with SMTP id k40so4717511qtk.8
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 03:18:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bK8n6wbBN5dxvdBb/dRS2eU8CTYt3wfHaaqEvwHYw6w=;
+        b=olyhCioZcG5C9/pkpgg3SRcVKM1mjVPirLaD8+/gENMPM7eQ2zSKqiOJeYRQm1ZS2N
+         MBAjeWSVWXLCW/0XHOfuYk6+l3Y2a4ouPlj+xYIze8Zq2gwwnpMgkMVgGhlCCeThCa/Y
+         XsGXTsOANc5AYvFWqGJZsdBKnl2b0qaZ4X1nhqLXJUl8KKQz12UOteEp2tF3/zITeYo3
+         BjfV765xJXGnxESMb/kgvzN/kBojhLDXBYftnJeoXkXahh85ocPFRP9GjLN7GWz5HS5C
+         RTn1oW3LZ5MVet8dhgYMDimSHhW5nwLbDlwF4gKrjzy+mURsVIoIIuU+cx9uyhLHfv7Z
+         nKzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bK8n6wbBN5dxvdBb/dRS2eU8CTYt3wfHaaqEvwHYw6w=;
+        b=auVkpUchH2+m4ER5Skn91nAC+A9RwdC3quX/w1nFPmVa3gyBD25tDkW9S6I7M90/HD
+         /fBICqrlpfGh713pv5r/dPkvxZvpdPEqNiSHI0s+xDgvoFonf2iLG6Eo586PATA9gNuJ
+         fCFvF/WEWhVP7ZG4ZYQHhItvUNBlCUpmIcnrE8b0WrcFe08NRhe3dDIxgplmheQ+HzwL
+         JY3z4xXjwh5/nGcZXC6UQ7OCC22oxYrfmuD1N15B8Grc+82PLKywqMQE0XfqeFFyaZ/U
+         uCriA0ee/Gk71Z+SLdsx/7AtMOYOTOjMq98szDJlomPgChzqxliH/xskqGzGVv18ofIz
+         zD9w==
+X-Gm-Message-State: APjAAAU3R2cdRempkED1wfb+vKlVXgsTadv0ZfTjHrEhJbu21jK+4ahI
+        c1LLhMmnmCadFpRzl3mhgteZ40tA3T8QgmFswVBaKpxTTEA=
+X-Google-Smtp-Source: APXvYqy/7xDxs6Oprnqj7Qdps0fLNiZZ7dbmhMXERokFGiFOSRdb1HLo5cgmVsADQJGBhgEF04TYosIhqL1Bwf/bX54=
+X-Received: by 2002:ac8:24c1:: with SMTP id t1mr6443012qtt.257.1576754334788;
+ Thu, 19 Dec 2019 03:18:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191219105533.12508-3-cyphar@cyphar.com>
-User-Agent: NeoMutt/20180716
+References: <20191208232734.225161-1-Jason@zx2c4.com> <CACT4Y+bsJVmgbD-WogwU=LfWiPN1JgjBrwx4s8Y14hDd7vqqhQ@mail.gmail.com>
+ <CAHmME9o0AparjaaOSoZD14RAW8_AJTfKfcx3Y2ndDAPFNC-MeQ@mail.gmail.com>
+ <CACT4Y+Zssd6OZ2-U4kjw18mNthQyzPWZV_gkH3uATnSv1SVDfA@mail.gmail.com>
+ <CAHmME9oM=YHMZyg23WEzmZAof=7iv-A01VazB3ihhR99f6X1cg@mail.gmail.com>
+ <CACT4Y+aCEZm_BA5mmVTnK2cR8CQUky5w1qvmb2KpSR4-Pzp4Ow@mail.gmail.com>
+ <CAHmME9rYstVLCBOgdMLqMeVDrX1V-f92vRKDqWsREROWdPbb6g@mail.gmail.com>
+ <CAHmME9qUWr69o0r+Mtm8tRSeQq3P780DhWAhpJkNWBfZ+J5OYA@mail.gmail.com>
+ <CACT4Y+YfBDvQHdK24ybyyy5p07MXNMnLA7+gq9axq-EizN6jhA@mail.gmail.com> <CAHmME9qcv5izLz-_Z2fQefhgxDKwgVU=MkkJmAkAn3O_dXs5fA@mail.gmail.com>
+In-Reply-To: <CAHmME9qcv5izLz-_Z2fQefhgxDKwgVU=MkkJmAkAn3O_dXs5fA@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 19 Dec 2019 12:18:43 +0100
+Message-ID: <CACT4Y+arVNCYpJZsY7vMhBEKQsaig_o6j7E=ib4tF5d25c-cjw@mail.gmail.com>
+Subject: Re: [PATCH net-next v2] net: WireGuard secure network tunnel
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 09:55:30PM +1100, Aleksa Sarai wrote:
-> The purpose of explicit padding was to allow us to use the space in the
-> future (C provides no guarantee about the value of padding bytes and
-> thus userspace could've provided garbage).
-> 
-> However, the downside of explicit padding is that any extension we wish
-> to add should fit the space exactly (otherwise we may end up with a u16
-> which will never be used). In addition, the correct error to return for
-> non-zero padding is not clear (-EINVAL doesn't imply "you're using an
-> extension field unsupported by this kernel", but -E2BIG seems a bit odd
-> if the structure size isn't different).
-> 
-> The simplest solution is to just match the design of clone3(2) -- use
-> u64s for all fields. The extra few-bytes cost of extra fields is not
-> significant (it's unlikely configuration structs will ever be extremely
-> large) and it allows for more flag space if necessary.
-> 
-> As openat2(2) is not yet in Linus's tree, we can iron out these minor
-> warts before we commit to this as a stable ABI.
-> 
-> Suggested-by: David Laight <david.laight@aculab.com>
-> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+On Thu, Dec 19, 2019 at 11:53 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+>
+> On Thu, Dec 19, 2019 at 11:49 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+> >
+> > On Thu, Dec 19, 2019 at 11:11 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+> > >
+> > > On Thu, Dec 19, 2019 at 11:07 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+> > > >
+> > > > On Thu, Dec 19, 2019 at 10:35 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+> > > > That's exciting about syzcaller having at it with WireGuard. Is there
+> > > > some place where I can "see" it fuzzing WireGuard, or do I just wait
+> > > > for the bug reports to come rolling in?
+> > >
+> > > Ahh, found it: https://storage.googleapis.com/syzkaller/cover/ci-upstream-net-kasan-gce.html
+> > > Looks like we're at 1% and counting. :)
+> >
+> > Yes, that's it. But that's mostly stray coverage.
+> > wg_netdevice_notification I guess mostly because it tested _other_ device types.
+> > And a bit of netlink because it sends random garbage into netlink.
+> >
+> > For netlink part it would require something along these lines:
+> > https://github.com/google/syzkaller/blob/master/sys/linux/socket_netlink_generic_devlink.txt
+> > https://github.com/google/syzkaller/blob/master/sys/linux/socket_netlink_crypto.txt
+> > https://github.com/google/syzkaller/blob/master/sys/linux/socket_netlink_generic_fou.txt
+> > https://github.com/google/syzkaller/blob/master/sys/linux/socket_netlink_generic_seg6.txt
+> >
+> > And for device setup, harder to say. Either pre-create one here:
+> > https://github.com/google/syzkaller/blob/79b211f74b08737aeb4934c6ff69a263b3c38013/executor/common_linux.h#L668
+> > or teach it how to create them on the fly or both or something else.
+> >
+> > Probably some wire packet formats here:
+> > https://github.com/google/syzkaller/blob/79b211f74b08737aeb4934c6ff69a263b3c38013/sys/linux/vnet.txt
+>
+> Ahh, cool, okay. Netlink, device creation, and basic packet structure
+> is a good start. What about the crypto, though?
 
-Fine with me.
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-
-> ---
->  fs/open.c                                     |  2 --
->  include/uapi/linux/openat2.h                  |  3 +--
->  tools/testing/selftests/openat2/helpers.h     |  3 +--
->  .../testing/selftests/openat2/openat2_test.c  | 24 +++++++------------
->  4 files changed, 10 insertions(+), 22 deletions(-)
-> 
-> diff --git a/fs/open.c b/fs/open.c
-> index 50a46501bcc9..8cdb2b675867 100644
-> --- a/fs/open.c
-> +++ b/fs/open.c
-> @@ -993,8 +993,6 @@ static inline int build_open_flags(const struct open_how *how,
->  		return -EINVAL;
->  	if (how->resolve & ~VALID_RESOLVE_FLAGS)
->  		return -EINVAL;
-> -	if (memchr_inv(how->__padding, 0, sizeof(how->__padding)))
-> -		return -EINVAL;
->  
->  	/* Deal with the mode. */
->  	if (WILL_CREATE(flags)) {
-> diff --git a/include/uapi/linux/openat2.h b/include/uapi/linux/openat2.h
-> index 19ef775e8e5e..76fad4ada2d4 100644
-> --- a/include/uapi/linux/openat2.h
-> +++ b/include/uapi/linux/openat2.h
-> @@ -16,8 +16,7 @@
->   */
->  struct open_how {
->  	__aligned_u64 flags;
-> -	__u16 mode;
-> -	__u16 __padding[3]; /* must be zeroed */
-> +	__aligned_u64 mode;
->  	__aligned_u64 resolve;
->  };
->  
-> diff --git a/tools/testing/selftests/openat2/helpers.h b/tools/testing/selftests/openat2/helpers.h
-> index 43ca5ceab6e3..d756775d0725 100644
-> --- a/tools/testing/selftests/openat2/helpers.h
-> +++ b/tools/testing/selftests/openat2/helpers.h
-> @@ -37,8 +37,7 @@
->   */
->  struct open_how {
->  	__aligned_u64 flags;
-> -	__u16 mode;
-> -	__u16 __padding[3]; /* must be zeroed */
-> +	__aligned_u64 mode;
->  	__aligned_u64 resolve;
->  };
->  
-> diff --git a/tools/testing/selftests/openat2/openat2_test.c b/tools/testing/selftests/openat2/openat2_test.c
-> index 0b64fedc008b..b386367c606b 100644
-> --- a/tools/testing/selftests/openat2/openat2_test.c
-> +++ b/tools/testing/selftests/openat2/openat2_test.c
-> @@ -40,7 +40,7 @@ struct struct_test {
->  	int err;
->  };
->  
-> -#define NUM_OPENAT2_STRUCT_TESTS 10
-> +#define NUM_OPENAT2_STRUCT_TESTS 7
->  #define NUM_OPENAT2_STRUCT_VARIATIONS 13
->  
->  void test_openat2_struct(void)
-> @@ -57,20 +57,6 @@ void test_openat2_struct(void)
->  		  .arg.inner.flags = O_RDONLY,
->  		  .size = sizeof(struct open_how_ext) },
->  
-> -		/* Normal struct with broken padding. */
-> -		{ .name = "normal struct (non-zero padding[0])",
-> -		  .arg.inner.flags = O_RDONLY,
-> -		  .arg.inner.__padding = {0xa0, 0x00, 0x00},
-> -		  .size = sizeof(struct open_how_ext), .err = -EINVAL },
-> -		{ .name = "normal struct (non-zero padding[1])",
-> -		  .arg.inner.flags = O_RDONLY,
-> -		  .arg.inner.__padding = {0x00, 0x1a, 0x00},
-> -		  .size = sizeof(struct open_how_ext), .err = -EINVAL },
-> -		{ .name = "normal struct (non-zero padding[2])",
-> -		  .arg.inner.flags = O_RDONLY,
-> -		  .arg.inner.__padding = {0x00, 0x00, 0xef},
-> -		  .size = sizeof(struct open_how_ext), .err = -EINVAL },
-> -
->  		/* TODO: Once expanded, check zero-padding. */
->  
->  		/* Smaller than version-0 struct. */
-> @@ -169,7 +155,7 @@ struct flag_test {
->  	int err;
->  };
->  
-> -#define NUM_OPENAT2_FLAG_TESTS 21
-> +#define NUM_OPENAT2_FLAG_TESTS 23
->  
->  void test_openat2_flags(void)
->  {
-> @@ -214,9 +200,15 @@ void test_openat2_flags(void)
->  		{ .name = "invalid how.mode and O_CREAT",
->  		  .how.flags = O_CREAT,
->  		  .how.mode = 0xFFFF, .err = -EINVAL },
-> +		{ .name = "invalid (very large) how.mode and O_CREAT",
-> +		  .how.flags = O_CREAT,
-> +		  .how.mode = 0xC000000000000000ULL, .err = -EINVAL },
->  		{ .name = "invalid how.mode and O_TMPFILE",
->  		  .how.flags = O_TMPFILE | O_RDWR,
->  		  .how.mode = 0x1337, .err = -EINVAL },
-> +		{ .name = "invalid (very large) how.mode and O_TMPFILE",
-> +		  .how.flags = O_TMPFILE | O_RDWR,
-> +		  .how.mode = 0x0000A00000000000ULL, .err = -EINVAL },
->  
->  		/* ->resolve must only contain RESOLVE_* flags. */
->  		{ .name = "invalid how.resolve and O_RDONLY",
-> -- 
-> 2.24.0
-> 
+It depends. What exactly we need there?
+syzkaller uses comparison operand interception which allows it e.g. to
+guess signatures/checksums in some cases.
+We also have this special checksum type in descriptions:
+https://github.com/google/syzkaller/blob/79b211f74b08737aeb4934c6ff69a263b3c38013/sys/linux/vnet.txt#L462
+which means "fill in other data, then calculate the checksum and put
+in that location".
+Other things can be done in a similar way, e.g. some crypto. But that
+requires more effort and leads to a tradeoff between effort/gain.
+Generally we like smaller set of more generic constructs in
+descriptions that can help with a set of different kernel interfaces.
+But if it's lots of custom support for a single very special case,
+then it becomes somewhat questionable.
+But we have some ugly hack for such cases as well, e.g. for netfilter
+we just say "screw it, so many special one-off cases, so we will just
+write one-off procedural code":
+https://github.com/google/syzkaller/blob/79b211f74b08737aeb4934c6ff69a263b3c38013/sys/linux/init_iptables.go
+But generally we try to avoid that (and/or later replace ugly custom
+code with generic constructs).
