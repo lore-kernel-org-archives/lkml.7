@@ -2,82 +2,99 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C27E5C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B79C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4872467E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:46:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576784781;
-	bh=xUSTFd7GGdvk10sf3+om8mg9EYMJvjpiQnqD0QauP2I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D+yapatSzRGA2fmynniD6jAys66NOq8NNdgCCf274EF5ePoYCbJAQy2KoL+L6DYl5
-	 HaRPr3XlpxwVq+RhDI83I7LXWFXLYL4PqwflOxNYMQYjRl/XgNXxbcTfWVbY539DI9
-	 te+fKLzVCR7u6GfX3ZO+SsOoBIFFr3RyZMSJBmeE=
+	by mail.kernel.org (Postfix) with ESMTP id F14A124672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:47:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KxYT5OwG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfLSTqU (ORCPT
+        id S1727119AbfLSTrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:46:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57226 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726840AbfLSTqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 14:46:20 -0500
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 19 Dec 2019 14:47:49 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25369 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726906AbfLSTrt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 14:47:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576784868;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7s8aSCvp52Fcz2Wx/tS6wh/olyKy8a3YGMnOjn2uv8E=;
+        b=KxYT5OwG6aazsdc6iH1JX2B+zsw1tJNHBss9X0G3QLQo+t8RYy/AuwVzSFfhDJiXfuW2v9
+        +1hVX51fB3zj1kL9bkmX9mUvhlM0IMo6QJzwc1jq2iXk536f0xGIC6iNn2s8Dxc27UNvs3
+        wUwbRa0iCiEIEkPv6YiSuisXAILwV0w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-198--uvnZKzHMz6b8tS9keq1SQ-1; Thu, 19 Dec 2019 14:47:46 -0500
+X-MC-Unique: -uvnZKzHMz6b8tS9keq1SQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3297227BF;
-        Thu, 19 Dec 2019 19:46:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576784779;
-        bh=xUSTFd7GGdvk10sf3+om8mg9EYMJvjpiQnqD0QauP2I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TlZXCHKVySipIwV8OQTf4eP3VeA0QPzE+s9nJVK5IUitaVn0l2mcL7AWC2Xvaxbju
-         l4K26akuLHBCiPdJZXw9IjzSH3PlfKq+EHYNazCz9xmkuM90nZO4pSvrwtESuW0ggT
-         4/G6f+qMiFE1v3SEzi1TZcwsUyDIJy4Cpr3wiQ5Q=
-Date:   Thu, 19 Dec 2019 14:46:18 -0500
-From:   Sasha Levin <sashal@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH AUTOSEL 5.4 197/350] ASoC: SOF: imx: fix reverse
- CONFIG_SND_SOC_SOF_OF dependency
-Message-ID: <20191219194618.GQ17708@sasha-vm>
-References: <20191210210735.9077-1-sashal@kernel.org>
- <20191210210735.9077-158-sashal@kernel.org>
- <20191211110005.GC3870@sirena.org.uk>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 30A4C1856A60;
+        Thu, 19 Dec 2019 19:47:44 +0000 (UTC)
+Received: from gondolin (ovpn-117-134.ams2.redhat.com [10.36.117.134])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7E3D610021B2;
+        Thu, 19 Dec 2019 19:47:36 +0000 (UTC)
+Date:   Thu, 19 Dec 2019 20:47:33 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kurz <groug@kaod.org>
+Subject: Re: [PATCH v2 26/45] KVM: s390: Invoke kvm_vcpu_init() before
+ allocating sie_page
+Message-ID: <20191219204733.791f7380.cohuck@redhat.com>
+In-Reply-To: <20191218215530.2280-27-sean.j.christopherson@intel.com>
+References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
+        <20191218215530.2280-27-sean.j.christopherson@intel.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191211110005.GC3870@sirena.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 11:00:05AM +0000, Mark Brown wrote:
->On Tue, Dec 10, 2019 at 04:05:02PM -0500, Sasha Levin wrote:
->> From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->>
->> [ Upstream commit f9ad75468453b019b92c5296e6a04bf7c37f49e4 ]
->>
->> updated solution to the problem reported with randconfig:
->>
->> CONFIG_SND_SOC_SOF_IMX depends on CONFIG_SND_SOC_SOF, but is in
->> turn referenced by the sof-of-dev driver. This creates a reverse
->> dependency that manifests in a link error when CONFIG_SND_SOC_SOF_OF
->> is built-in but CONFIG_SND_SOC_SOF_IMX=m:
->
->Are you sure this doesn't depend on any other Kconfig changes?
+On Wed, 18 Dec 2019 13:55:11 -0800
+Sean Christopherson <sean.j.christopherson@intel.com> wrote:
 
-Nope, but it didn't fail my build tests.
+> Now that s390's implementation of kvm_arch_vcpu_init() is empty, move
+> the call to kvm_vcpu_init() above the allocation of the sie_page.  This
+> paves the way for moving vcpu allocation and initialization into common
+> KVM code without any associated functional change.
+> 
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/s390/kvm/kvm-s390.c | 18 ++++++++++--------
+>  1 file changed, 10 insertions(+), 8 deletions(-)
 
--- 
-Thanks,
-Sasha
+Seems to be fine.
+
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+
