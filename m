@@ -2,101 +2,103 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E9AC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D30C6C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09ABD227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92A8222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:22:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ob3u1ZS5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbfLSSUD (ORCPT
+        id S1726935AbfLSSWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:20:03 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:49523 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbfLSSUD (ORCPT
+        Thu, 19 Dec 2019 13:22:46 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:40099 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726836AbfLSSWq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:20:03 -0500
-Received: from orion.localdomain ([77.9.67.183]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MfbwW-1i22sl1zi4-00g1kL; Thu, 19 Dec 2019 19:19:47 +0100
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, matthias.bgg@gmail.com,
-        linux-clk@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: [PATCH] drivers: clk: make gpio-gated clock support optional
-Date:   Thu, 19 Dec 2019 19:19:14 +0100
-Message-Id: <20191219181914.6015-1-info@metux.net>
-X-Mailer: git-send-email 2.11.0
-X-Provags-ID: V03:K1:jpHLwXNk9hOLka9uvW//uJQnzAGMKxKM6PXIdnWgi5UdfcFPP+1
- qkK0BKGr8o0uMs0aLjei1OLw/VfwDVzrMMX8YdAgKDP0WTG6UAnGMSg5IgKoQv33epGyvmU
- fmwygj1HeGDDsFI+mnsMGJYDe3g2Ad+7b1ZBSWFf1aXz8ugcDazSaGJTI75cUqF1AglVx8k
- VNx7FW/KSmUFk1d4iDdcw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:sZrDCi3e6so=:SovrMjBvwFTmI8GTl4TqmU
- srSdn+cnFcrzRx4RsShLdt4hxCM3koBsYCyWjP57HxiKQi+nITWLO1c1j1wAYVRDCcWDr2UJx
- tSQyvXQJMLN6p7Kz5kAWBVDqtxrtPQ1T1V0byUtC/qDMqZIz1nTyI4bgs0484Zj3hSJUrYMAB
- 9gCPyHZ+nI3rUN+5vaUfw7wqyJFEpDfI7PdYgtGK2da81sZNfdEDuesmQyRSGuh0WClTDMzXl
- ugor+XYc9uVj5IKsb9VRGhoGCLc+kifuR+M2fw8nZkgefFJaxDablwdPy5XCDakR+4UvW1ODV
- 1zy3ZeHhmmrynmMzPuQotPq0R6t1iAvpViyvu0QIuMRxjBAu+fzx75gFw/Qc+bBFiAFq9CTyq
- mHEpXB20lFUpfKhc3pPNxZdkXtI/6JVOPiZxtR52RgDoet3oaBvUZ3fl6TRnQTV8e8J5xvuTf
- yg6bel6FwI3cgJBrIzIUDHygS4PftZonnyAS5KBSYio2Z2P2Bn+vnn5su3FP6oSzO1a12u+Rk
- LP5hRaX5t1uoob6PgJ2M+283T2UziMnqiwPTv9cu2YTAHgjad9M/H9VFzed7PqUqHmqr5tVjS
- 7qGqtUIeWL0X7VGkqx2v9kYw4+jJVu474kHtb4trmJPDX26TQrS9bDi7a5td+6jUqy4SH2P5x
- dium3iEh95GQ4OlIeBIsZviVWIxezaEHd3CZfp5Dv41S1wGFwM36EbhzjI1L/Lnaox22cfEQw
- MZiTkeEANK8cKo9/kex7VxiASlW44PYO270FO2LMyW/3DLkZtM0jOog5Z1lSfC2PidlwveRoH
- ZMjbooPVm+xA9xol4nQiEMNjWxzwcjQlImPE5tbm65VEjwStCkSQ/Z2uBUEp7jGEG16+qrrSd
- 529HVRNCzLi0enpkZ1SQ==
+        Thu, 19 Dec 2019 13:22:46 -0500
+Received: by mail-pj1-f66.google.com with SMTP id bg7so2419305pjb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 10:22:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=KXwFzfFzkYhY2Rnva/wezf54bh0dmerJAZ0lGR8bFSM=;
+        b=Ob3u1ZS5Y2lM+xNn3smagXJWwa+13n2h9N1s/MqmA/ZeLp8npgsWnqOQglR44wkR8t
+         HwDBZruhxNK+aDv7mQMK68l5P/N4C3O2JckUUbSHKkEGsbWvu/qUFOcQqSTODZhCRUse
+         9ZFwm+rdTllSQV5tl4j2ccySo67lLA6HifXiCaRp6gpWjStS4Q1/fijvecPvOoij2Dex
+         /nlE6Yr5Z6tQIWzXKs/NOpbaV/umuWhjvUfJbruMq16PVbMR5XloFfGuajjYq39ELwgO
+         kP56uIFCttgb3blX2KKbPrbwhtXs+SqvS9ZIUvRI9tsPaZky9umRogofXWZc2EA75coY
+         +XRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=KXwFzfFzkYhY2Rnva/wezf54bh0dmerJAZ0lGR8bFSM=;
+        b=SAV4cchmEgCxEbIByupMjwz6OcEgxrGeVdmd/hGTLtYFmcashvO01dYBtLLjGmxcdm
+         d4+hrSimrzRBk/0aSNAPbogwcKUsUcyOybKrbI+YRn1Ed9QdquwIfGFihVU+G41Yv9rf
+         4IZt3G4vuNcfhWqMMct0pC7NfDOToGZtCTcAtCIdreC7D72SRsNnuxWUJOu4tCF5341R
+         VXJcgi3bOwYEIyc4a5LbcYnLt9/eYXO2Mv0lRyAruSfvlyqT+PJ/jRm8ubOorWwddeYZ
+         J4w4FR0jXmiE7S0BvOi4hMD3U2hkYBwTGVFFgUaF6Ocdk8mMCiYzCsA5T1aPcdFWc6Gx
+         b7tg==
+X-Gm-Message-State: APjAAAVBpZtjHZ2WLX24vm3il5k9LqgFp8cVFmacMMLPwQJgfo/r7pkJ
+        1V2fQ0iLmyDLzIAFIpBsfdka
+X-Google-Smtp-Source: APXvYqwHxxL4wmdr1ywy2f+7iVqrfz0NIx6K6ZuFNh1p+BD48pNF3UuYWRUx2XBjCUe57WmKnFOgdA==
+X-Received: by 2002:a17:90a:f84:: with SMTP id 4mr11269191pjz.74.1576779765730;
+        Thu, 19 Dec 2019 10:22:45 -0800 (PST)
+Received: from localhost.localdomain ([2409:4072:6010:65a5:a416:e9bd:178a:9286])
+        by smtp.gmail.com with ESMTPSA id i3sm9085735pfg.94.2019.12.19.10.22.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 10:22:45 -0800 (PST)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     mchehab@kernel.org, sakari.ailus@iki.fi
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 0/6] Improvements to IMX290 CMOS driver
+Date:   Thu, 19 Dec 2019 23:52:16 +0530
+Message-Id: <20191219182222.18961-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The gpio-gate-clock / gpio-mux-clock driver isn't used much,
-just by a few ARM SoCs, so there's no need to always include
-it unconditionally.
+Hello,
 
-Thus make it optional, but keep it enabled by default.
+This patchset adds improvements to the existing media driver for IMX290
+CMOS sensor from Sony. The major changes are adding 2 lane support, test
+pattern generation, RAW12 mode support, configurable link frequency &
+pixel rate.
 
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- drivers/clk/Kconfig  | 7 +++++++
- drivers/clk/Makefile | 2 +-
- 2 files changed, 8 insertions(+), 1 deletion(-)
+The link frequency & pixel rate combinations depend on various factors like
+lane count, resolution and image format as per the datasheet.
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 45653a0e6ecd..880f89c46f6f 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -23,6 +23,13 @@ config COMMON_CLK
- menu "Common Clock Framework"
- 	depends on COMMON_CLK
- 
-+config COMMON_CLK_GPIO
-+	tristate "GPIO gated clock support"
-+	default y
-+	---help---
-+	  Supports gpio gated clocks, which can be enabled/disabled via
-+	  gpio output.
-+
- config COMMON_CLK_WM831X
- 	tristate "Clock driver for WM831x/2x PMICs"
- 	depends on MFD_WM831X
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index 0696a0c1ab58..2b614126672a 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -11,7 +11,7 @@ obj-$(CONFIG_COMMON_CLK)	+= clk-multiplier.o
- obj-$(CONFIG_COMMON_CLK)	+= clk-mux.o
- obj-$(CONFIG_COMMON_CLK)	+= clk-composite.o
- obj-$(CONFIG_COMMON_CLK)	+= clk-fractional-divider.o
--obj-$(CONFIG_COMMON_CLK)	+= clk-gpio.o
-+obj-$(CONFIG_COMMON_CLK_GPIO)	+= clk-gpio.o
- ifeq ($(CONFIG_OF), y)
- obj-$(CONFIG_COMMON_CLK)	+= clk-conf.o
- endif
+Thanks,
+Mani
+
+Changes in v2:
+
+* Incorporated review comments from Sakari
+  https://lkml.org/lkml/2019/11/29/428
+* Added a patch to move settle time delay out of for loop in
+  imx290_set_register_array()
+
+Manivannan Sadhasivam (6):
+  media: i2c: imx290: Add support for 2 data lanes
+  media: i2c: imx290: Add support for test pattern generation
+  media: i2c: imx290: Add RAW12 mode support
+  media: i2c: imx290: Add support to enumerate all frame sizes
+  media: i2c: imx290: Add configurable link frequency and pixel rate
+  media: i2c: imx290: Move the settle time delay out of loop
+
+ drivers/media/i2c/imx290.c | 337 +++++++++++++++++++++++++++++++------
+ 1 file changed, 283 insertions(+), 54 deletions(-)
+
 -- 
-2.11.0
+2.17.1
 
