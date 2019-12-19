@@ -2,180 +2,123 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9400C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 917A7C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3A862146E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A41D222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:52:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lbZCOev+"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qhGd5MP8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbfLSGui (ORCPT
+        id S1726636AbfLSGw0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 01:50:38 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:53187 "EHLO
+        Thu, 19 Dec 2019 01:52:26 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:53780 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725844AbfLSGuh (ORCPT
+        by vger.kernel.org with ESMTP id S1726155AbfLSGw0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 01:50:37 -0500
+        Thu, 19 Dec 2019 01:52:26 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576738236; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=xFqqnNZlkXdgS0NnusZ7Jx8AbXtVSYn7KtW5NLzf9ok=;
- b=lbZCOev+oGtFXSj4g8Ofnhhi5UphR/aPg81JbMArYuJAtPPuDJVMr+qkm/u4QfDC5PbRTLYJ
- 75TIPJhYgr2OJ5E/QUuomX+0Rhu0tm3M/SHbsiWYi4fbzbFSxalSWuOmxVwiRI/7136I1eWM
- oAAjQy2SUjRE37t3LVT8CJSQZ4Y=
+ s=smtp; t=1576738345; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=R4pG3Dx1SRgEuA1xuLK7CEXE7WH4oBwCAk7ZxvQgeRc=; b=qhGd5MP8K7AZuFmVHJ/m0Hv0oRyBFRoSfHooUMIoBrtKuN7Nb+llrLcr+mwhLQF3uTIISaiR
+ qZwju2uwKyes8HJFdtFf3BFHez9nb2x+gQiwfYNgqiqOS0VeXPQwOcevyK2v0kOScX037C8w
+ nZOr+xif7b7EazoDWJyIW/bx/bI=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5dfb1db6.7fdae2af9df8-smtp-out-n02;
- Thu, 19 Dec 2019 06:50:30 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5dfb1e28.7f3277fb8d88-smtp-out-n03;
+ Thu, 19 Dec 2019 06:52:24 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 07410C494B5; Thu, 19 Dec 2019 06:50:28 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        id 58BC8C55682; Thu, 19 Dec 2019 06:52:23 +0000 (UTC)
+Received: from rocky-Inspiron-7590.qca.qualcomm.com (unknown [180.166.53.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 10D61C48B03;
-        Thu, 19 Dec 2019 06:50:28 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 19 Dec 2019 12:20:27 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>, tsoni@codeaurora.org,
-        psodagud@codeaurora.org
-Subject: Re: [PATCH 1/2] dt-bindings: edac: Add DT bindings for Kryo EDAC
-In-Reply-To: <20191218233714.GA30302@bogus>
-References: <cover.1575529553.git.saiprakash.ranjan@codeaurora.org>
- <0101016ed57a3259-eee09e9e-e99a-40f1-ab1c-63e58a42615c-000000@us-west-2.amazonses.com>
- <20191218233714.GA30302@bogus>
-Message-ID: <7469b239edd4beed3e8fefdf02f10ada@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        (Authenticated sender: rjliao)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 320A5C48B2D;
+        Thu, 19 Dec 2019 06:52:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 320A5C48B2D
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rjliao@codeaurora.org
+From:   Rocky Liao <rjliao@codeaurora.org>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        Rocky Liao <rjliao@codeaurora.org>
+Subject: [PATCH v1] Bluetooth: hci_qca: Retry btsoc initialize when it fails
+Date:   Thu, 19 Dec 2019 14:52:17 +0800
+Message-Id: <20191219065217.14122-1-rjliao@codeaurora.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+This patch adds the retry of btsoc initialization when it fails. There are
+reports that the btsoc initialization may fail on some platforms but the
+repro ratio is very low. The failure may be caused by UART, platform HW or
+the btsoc itself but it's very difficlut to root cause, given the repro
+ratio is very low. Add a retry for the btsoc initialization will resolve
+most of the failures and make Bluetooth finally works.
 
-On 2019-12-19 05:07, Rob Herring wrote:
-> On Thu, Dec 05, 2019 at 09:53:05AM +0000, Sai Prakash Ranjan wrote:
->> This adds DT bindings for Kryo EDAC implemented with RAS
->> extensions on KRYO{3,4}XX CPU cores for reporting of cache
->> errors.
->> 
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> ---
->>  .../bindings/edac/qcom-kryo-edac.yaml         | 67 
->> +++++++++++++++++++
->>  1 file changed, 67 insertions(+)
->>  create mode 100644 
->> Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml 
->> b/Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml
->> new file mode 100644
->> index 000000000000..1a39429a73b4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml
->> @@ -0,0 +1,67 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/edac/qcom-kryo-edac.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Kryo Error Detection and Correction(EDAC)
->> +
->> +maintainers:
->> +  - Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> +
->> +description: |
->> +  Kryo EDAC is defined to describe on-chip error detection and 
->> correction
->> +  for the Kryo CPU cores which implement RAS extensions. It will 
->> report
->> +  all Single Bit Errors and Double Bit Errors found in L1/L2 caches 
->> in
->> +  in two registers ERXSTATUS_EL1 and ERXMISC0_EL1. L3-SCU cache 
->> errors
->> +  are reported in ERR1STATUS and ERR1MISC0 registers.
->> +    ERXSTATUS_EL1 - Selected Error Record Primary Status Register, 
->> EL1
->> +    ERXMISC0_EL1 - Selected Error Record Miscellaneous Register 0, 
->> EL1
->> +    ERR1STATUS - Error Record Primary Status Register
->> +    ERR1MISC0 - Error Record Miscellaneous Register 0
->> +  Current implementation of Kryo ECC(Error Correcting Code) mechanism 
->> is
->> +  based on interrupts.
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - qcom,kryo-edac
->> +
->> +  interrupts:
->> +    minItems: 1
->> +    maxItems: 4
->> +    items:
->> +      - description: l1-l2 cache faultirq interrupt
->> +      - description: l1-l2 cache errirq interrupt
->> +      - description: l3-scu cache errirq interrupt
->> +      - description: l3-scu cache faultirq interrupt
->> +
->> +  interrupt-names:
->> +    minItems: 1
->> +    maxItems: 4
-> 
-> You are saying only these combinations are valid:
-> 
-> l1-l2-faultirq
-> 
-> l1-l2-faultirq
-> l1-l2-errirq
-> 
-> l1-l2-faultirq
-> l1-l2-errirq
-> l3-scu-errirq
-> 
-> l1-l2-faultirq
-> l1-l2-errirq
-> l3-scu-errirq
-> l3-scu-faultirq
-> 
-> Is that your intent?
-> 
+Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+---
+ drivers/bluetooth/hci_qca.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-No, I want any combination of interrupts to be valid with atleast one 
-interrupt as mandatory.
-I thought specifying minItems as 1 and maxItems as 4 will take care of 
-this,  am I doing something wrong?
-
-Thanks,
-Sai
-
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 1cb706acdef6..af45b31f1b5f 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -53,6 +53,9 @@
+ /* Controller debug log header */
+ #define QCA_DEBUG_HANDLE	0x2EDC
+ 
++/* max retry count when init fails */
++#define QCA_MAX_INIT_RETRY_COUNT 3
++
+ enum qca_flags {
+ 	QCA_IBS_ENABLED,
+ 	QCA_DROP_VENDOR_EVENT,
+@@ -1259,6 +1262,7 @@ static int qca_setup(struct hci_uart *hu)
+ 	struct qca_data *qca = hu->priv;
+ 	struct qca_serdev *qcadev;
+ 	unsigned int speed, qca_baudrate = QCA_BAUDRATE_115200;
++	unsigned int init_retry_count = 0;
+ 	enum qca_btsoc_type soc_type = qca_soc_type(hu);
+ 	const char *firmware_name = qca_get_firmware_name(hu);
+ 	int ret;
+@@ -1276,6 +1280,7 @@ static int qca_setup(struct hci_uart *hu)
+ 	 */
+ 	set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
+ 
++retry:
+ 	if (qca_is_wcn399x(soc_type)) {
+ 		bt_dev_info(hdev, "setting up wcn3990");
+ 
+@@ -1341,6 +1346,20 @@ static int qca_setup(struct hci_uart *hu)
+ 		 * patch/nvm-config is found, so run with original fw/config.
+ 		 */
+ 		ret = 0;
++	} else {
++		if (init_retry_count < QCA_MAX_INIT_RETRY_COUNT) {
++			qca_power_off(hdev);
++			if (hu->serdev) {
++				serdev_device_close(hu->serdev);
++				ret = serdev_device_open(hu->serdev);
++				if (ret) {
++					bt_dev_err(hu->hdev, "open port fail");
++					return ret;
++				}
++			}
++			init_retry_count++;
++			goto retry;
++		}
+ 	}
+ 
+ 	/* Setup bdaddr */
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
