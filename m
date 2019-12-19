@@ -2,51 +2,52 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 803D2C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCD8C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D6B720716
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20D2F24679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:37:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576780673;
-	bh=tqqSbL3wDs7vPZ25IGZn+gmqQoApZ1G5ZTIp/DzGsHo=;
+	s=default; t=1576780677;
+	bh=5iE0gUff8uiKAoyBOvSGE815pKxZqfHAZqQo7ujxFS8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ArXUa2FmGmLZVKEL/yR9rvQrvvcVbzCa4no8npyz93XSbbwH7wZ7H2spFMVU0evuZ
-	 UifLzMbIyYQk5Jgdw6qnU0MPTxNSjSzIwH7YZPvyH4j18t3bI3YR9ZAkVppvFmI86v
-	 FbVlj+f8Rq7efR2loUdz9Un0Vy85gEDYTNFVqGGE=
+	b=OORZf137XrmQ8qBBqwdD+kJDjDGqZSHZAWeBR7f2Re4CRihgRtYBj88xV9EsSoDhB
+	 RLOBjCeGdIPpCPLU/cAblxipwLUZk2NCNwllYooVkHuOmgrYmOmOdafhrnNHU2qw+Q
+	 /GhE02A5oXHUZkyJsLfhJfdSQMS2ZGq7iDi+Viu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbfLSShw (ORCPT
+        id S1727925AbfLSShz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:37:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55568 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:37:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727881AbfLSShr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:37:47 -0500
+        id S1727909AbfLSShv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:37:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BAB824679;
-        Thu, 19 Dec 2019 18:37:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1C9B20716;
+        Thu, 19 Dec 2019 18:37:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780666;
-        bh=tqqSbL3wDs7vPZ25IGZn+gmqQoApZ1G5ZTIp/DzGsHo=;
+        s=default; t=1576780671;
+        bh=5iE0gUff8uiKAoyBOvSGE815pKxZqfHAZqQo7ujxFS8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cfIMW1SklfNyER7mMIrdFBl+V4FkXDeGjyF3LvQJyyYzDMnbeBfR+rVP/ex7JpgC+
-         tj8HVq3+b6jkDhn7eqfdH8GTBdtDgDuF6TuQT1jcblXLqKb3peSMO5Tko/5AjmtM7L
-         fDglW4vO0dNUTjWqxTM78gZqePaDcQe3wgCB6o+g=
+        b=D0UOmzShlnrMNAq5jrUo0JtMJz9NP/+ewoiBo553O82is6UztmpKilDRy7reMJNlX
+         +a/0by3Lh23Bklw5apE7dU+/XY6zry6pE+6SiPCcxkkUF7Vz+g/RFctK/zdKmppU8t
+         4HxyxXBJfs5TycZZOaamjCIX83xRc+LOeObEJO7o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.4 066/162] crypto: crypto4xx - fix double-free in crypto4xx_destroy_sdr
-Date:   Thu, 19 Dec 2019 19:32:54 +0100
-Message-Id: <20191219183211.858183332@linuxfoundation.org>
+        stable@vger.kernel.org, Alexey Dobriyan <adobriyan@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 032/162] ACPI: fix acpi_find_child_device() invocation in acpi_preset_companion()
+Date:   Thu, 19 Dec 2019 19:32:20 +0100
+Message-Id: <20191219183209.704129766@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -59,43 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Lamparter <chunkeey@gmail.com>
+From: Alexey Dobriyan <adobriyan@gmail.com>
 
-commit 746c908c4d72e49068ab216c3926d2720d71a90d upstream.
+[ Upstream commit f8c6d1402b89f22a3647705d63cbd171aa19a77e ]
 
-This patch fixes a crash that can happen during probe
-when the available dma memory is not enough (this can
-happen if the crypto4xx is built as a module).
+acpi_find_child_device() accepts boolean not pointer as last argument.
 
-The descriptor window mapping would end up being free'd
-twice, once in crypto4xx_build_pdr() and the second time
-in crypto4xx_destroy_sdr().
-
-Fixes: 5d59ad6eea82 ("crypto: crypto4xx - fix crypto4xx_build_pdr, crypto4xx_build_sdr leak")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+[ rjw: Subject ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/amcc/crypto4xx_core.c |    6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ include/linux/acpi.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/crypto/amcc/crypto4xx_core.c
-+++ b/drivers/crypto/amcc/crypto4xx_core.c
-@@ -399,12 +399,8 @@ static u32 crypto4xx_build_sdr(struct cr
- 		dma_alloc_coherent(dev->core_dev->device,
- 			dev->scatter_buffer_size * PPC4XX_NUM_SD,
- 			&dev->scatter_buffer_pa, GFP_ATOMIC);
--	if (!dev->scatter_buffer_va) {
--		dma_free_coherent(dev->core_dev->device,
--				  sizeof(struct ce_sd) * PPC4XX_NUM_SD,
--				  dev->sdr, dev->sdr_pa);
-+	if (!dev->scatter_buffer_va)
- 		return -ENOMEM;
--	}
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 6a30f1e03aa9e..0bd0a9ad54556 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -75,7 +75,7 @@ static inline bool has_acpi_companion(struct device *dev)
+ static inline void acpi_preset_companion(struct device *dev,
+ 					 struct acpi_device *parent, u64 addr)
+ {
+-	ACPI_COMPANION_SET(dev, acpi_find_child_device(parent, addr, NULL));
++	ACPI_COMPANION_SET(dev, acpi_find_child_device(parent, addr, false));
+ }
  
- 	sd_array = dev->sdr;
- 
+ static inline const char *acpi_dev_name(struct acpi_device *adev)
+-- 
+2.20.1
+
 
 
