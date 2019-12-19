@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8534C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6384FC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB961206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29D24206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:59:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781990;
-	bh=Nox2nDepk2UQKD7bAqVj6N2AFjwhMtazOEae/HJoPu0=;
+	s=default; t=1576781999;
+	bh=smHb2yJslfRp7JzvVGL6X+y/C/ALUdM8xW4zzojIxAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HJgrMpa4HHOHvoK+5QUsjrxlQBsC3OERpd26JqbCq+YjrqHURBD4htYoQOT9PdXv7
-	 rEDjCCKHj2TfQHelmi4BkBJhpGn0drXgccjDQfem0r27RDI0d6aL5h8z5oU3r5iOy1
-	 Or//PHaBwKwNFwyAZ86xwZep/dAuF38jGq3q9NGE=
+	b=Wq85dYwaEmj/FBW1AmdygFO2PCn016kbxgKBqIHPk/ohqF1Dngpl1RFCpsfCIQiRq
+	 cqTcTuQjRezDxlCWClwM0tuexXwaOodruc6VbSbVorE5Kg3UCFAb20dU3Gz07nUuXK
+	 LUrXrXubLe10DeioiK3prEpc3AMTTjMAA3fsoMWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730454AbfLSS7t (ORCPT
+        id S1730396AbfLSS75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:59:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47742 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:59:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730289AbfLSSw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:52:56 -0500
+        id S1730279AbfLSSwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:52:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B342420674;
-        Thu, 19 Dec 2019 18:52:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 304EA227BF;
+        Thu, 19 Dec 2019 18:52:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781576;
-        bh=Nox2nDepk2UQKD7bAqVj6N2AFjwhMtazOEae/HJoPu0=;
+        s=default; t=1576781561;
+        bh=smHb2yJslfRp7JzvVGL6X+y/C/ALUdM8xW4zzojIxAU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xBwpiX44YX+UyBnOq61TzEf6W6uvXOGHPC7bY+PRQiRVg2x51RVsIcL4fWsj2OkF8
-         oJGNjFFhQjqRcTn72x1B7NPoZshANGygf2FvNJmlf3Qkcx2mQAobyHcRvjMdL8dfn/
-         rvjeLZTrqj4sAfG+4VOvFa/5Y8TfRLi6qgAkFjOA=
+        b=SWL4DoTEyr4qu7mJL72S6ltkdAS0MhVBnfvOWRsmRAsrhbGe8gknDvLKg3GKaeZn3
+         XeaZT8R6yIQtlijTz9M5lNCG+xxjD9pg3SldZf1UtUduagZc8V7xZx46JcCFdX+Wqp
+         r+2dLBPAexIHJtVvd5qH2RDOpTJ/s0QMJ/cYrTpw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Drew Hastings <dhastings@crucialwebhost.com>,
-        Martin Wilck <mwilck@suse.de>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.19 42/47] dm mpath: remove harmful bio-based optimization
-Date:   Thu, 19 Dec 2019 19:34:56 +0100
-Message-Id: <20191219182949.452976698@linuxfoundation.org>
+        stable@vger.kernel.org, Mian Yousaf Kaukab <ykaukab@suse.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 07/47] net: thunderx: start phy before starting autonegotiation
+Date:   Thu, 19 Dec 2019 19:34:21 +0100
+Message-Id: <20191219182902.771900337@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219182857.659088743@linuxfoundation.org>
 References: <20191219182857.659088743@linuxfoundation.org>
@@ -61,82 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Snitzer <snitzer@redhat.com>
+From: Mian Yousaf Kaukab <ykaukab@suse.de>
 
-commit dbaf971c9cdf10843071a60dcafc1aaab3162354 upstream.
+[ Upstream commit a350d2e7adbb57181d33e3aa6f0565632747feaa ]
 
-Removes the branching for edge-case where no SCSI device handler
-exists.  The __map_bio_fast() method was far too limited, by only
-selecting a new pathgroup or path IFF there was a path failure, fix this
-be eliminating it in favor of __map_bio().  __map_bio()'s extra SCSI
-device handler specific MPATHF_PG_INIT_REQUIRED test is not in the fast
-path anyway.
+Since commit 2b3e88ea6528 ("net: phy: improve phy state checking")
+phy_start_aneg() expects phy state to be >= PHY_UP. Call phy_start()
+before calling phy_start_aneg() during probe so that autonegotiation
+is initiated.
 
-This change restores full path selector functionality for bio-based
-configurations that don't haave a SCSI device handler.  But it should be
-noted that the path selectors do have an impact on performance for
-certain networks that are extremely fast (and don't require frequent
-switching).
+As phy_start() takes care of calling phy_start_aneg(), drop the explicit
+call to phy_start_aneg().
 
-Fixes: 8d47e65948dd ("dm mpath: remove unnecessary NVMe branching in favor of scsi_dh checks")
-Cc: stable@vger.kernel.org
-Reported-by: Drew Hastings <dhastings@crucialwebhost.com>
-Suggested-by: Martin Wilck <mwilck@suse.de>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Network fails without this patch on Octeon TX.
+
+Fixes: 2b3e88ea6528 ("net: phy: improve phy state checking")
+Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/md/dm-mpath.c |   37 +------------------------------------
- 1 file changed, 1 insertion(+), 36 deletions(-)
+ drivers/net/ethernet/cavium/thunder/thunder_bgx.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/md/dm-mpath.c
-+++ b/drivers/md/dm-mpath.c
-@@ -609,45 +609,10 @@ static struct pgpath *__map_bio(struct m
- 	return pgpath;
- }
+--- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
++++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
+@@ -1118,7 +1118,7 @@ static int bgx_lmac_enable(struct bgx *b
+ 				       phy_interface_mode(lmac->lmac_type)))
+ 			return -ENODEV;
  
--static struct pgpath *__map_bio_fast(struct multipath *m, struct bio *bio)
--{
--	struct pgpath *pgpath;
--	unsigned long flags;
--
--	/* Do we need to select a new pgpath? */
--	/*
--	 * FIXME: currently only switching path if no path (due to failure, etc)
--	 * - which negates the point of using a path selector
--	 */
--	pgpath = READ_ONCE(m->current_pgpath);
--	if (!pgpath)
--		pgpath = choose_pgpath(m, bio->bi_iter.bi_size);
--
--	if (!pgpath) {
--		if (test_bit(MPATHF_QUEUE_IF_NO_PATH, &m->flags)) {
--			/* Queue for the daemon to resubmit */
--			spin_lock_irqsave(&m->lock, flags);
--			bio_list_add(&m->queued_bios, bio);
--			spin_unlock_irqrestore(&m->lock, flags);
--			queue_work(kmultipathd, &m->process_queued_bios);
--
--			return ERR_PTR(-EAGAIN);
--		}
--		return NULL;
--	}
--
--	return pgpath;
--}
--
- static int __multipath_map_bio(struct multipath *m, struct bio *bio,
- 			       struct dm_mpath_io *mpio)
- {
--	struct pgpath *pgpath;
--
--	if (!m->hw_handler_name)
--		pgpath = __map_bio_fast(m, bio);
--	else
--		pgpath = __map_bio(m, bio);
-+	struct pgpath *pgpath = __map_bio(m, bio);
+-		phy_start_aneg(lmac->phydev);
++		phy_start(lmac->phydev);
+ 		return 0;
+ 	}
  
- 	if (IS_ERR(pgpath))
- 		return DM_MAPIO_SUBMITTED;
 
 
