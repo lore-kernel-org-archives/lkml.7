@@ -2,102 +2,123 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AC7C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A87C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1D3922314
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0184218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 01:04:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbfLSBD2 (ORCPT
+        id S1726744AbfLSBEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 20:03:28 -0500
-Received: from mga17.intel.com ([192.55.52.151]:19284 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbfLSBDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 20:03:25 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 17:03:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="417435276"
-Received: from jtreacy-mobl1.ger.corp.intel.com (HELO localhost) ([10.251.82.127])
-  by fmsmga006.fm.intel.com with ESMTP; 18 Dec 2019 17:03:22 -0800
-Date:   Thu, 19 Dec 2019 03:03:17 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        keyrings@vger.kernel.org, jmorris@namei.org, dhowells@redhat.com
-Subject: [GIT PULL] tpmdd updates for Linux v5.5-rc3
-Message-ID: <20191219010317.GA3086@linux.intel.com>
+        Wed, 18 Dec 2019 20:04:53 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39384 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfLSBEx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 20:04:53 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 9073D2911A3
+Received: by earth.universe (Postfix, from userid 1000)
+        id 2F2903C0C7B; Thu, 19 Dec 2019 02:04:49 +0100 (CET)
+Date:   Thu, 19 Dec 2019 02:04:49 +0100
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2] power: reset: Fix Kconfig indentation
+Message-ID: <20191219010449.hqwpyconyywymrti@earth.universe>
+References: <1574306395-12906-1-git-send-email-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6vs4cusmq2csjes2"
 Content-Disposition: inline
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1574306395-12906-1-git-send-email-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bunch of fixes for rc3.
 
-/Jarkko
+--6vs4cusmq2csjes2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The following changes since commit 37d4e84f765bb3038ddfeebdc5d1cfd7e1ef688f:
+Hi,
 
-  Merge tag 'ceph-for-5.5-rc2' of git://github.com/ceph/ceph-client (2019-12-12 10:56:37 -0800)
+On Thu, Nov 21, 2019 at 04:19:55AM +0100, Krzysztof Kozlowski wrote:
+> Adjust indentation from spaces to tab (+optional two spaces) as in
+> coding style with command like:
+> 	$ sed -e 's/^        /\t/' -i */Kconfig
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>=20
+> ---
 
-are available in the Git repository at:
+Thanks, queued.
 
-  git://git.infradead.org/users/jjs/linux-tpmdd.git tpmdd-next-20191219
+-- Sebastian
 
-for you to fetch changes up to 1760eb689ed68c6746744aff2092bff57c78d907:
+> Changes since v1:
+> 1. Fix also 7-space and tab+1 space indentation issues.
+> ---
+>  drivers/power/reset/Kconfig | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+> index c721939767eb..0498363203e8 100644
+> --- a/drivers/power/reset/Kconfig
+> +++ b/drivers/power/reset/Kconfig
+> @@ -141,14 +141,14 @@ config POWER_RESET_LTC2952
+>  	  down via the LTC2952. Bindings are made in the device tree.
+> =20
+>  config POWER_RESET_MT6323
+> -       bool "MediaTek MT6323 power-off driver"
+> -       depends on MFD_MT6397
+> -       help
+> -         The power-off driver is responsible for externally shutdown down
+> -         the power of a remote MediaTek SoC MT6323 is connected to throu=
+gh
+> -         controlling a tiny circuit BBPU inside MT6323 RTC.
+> -
+> -         Say Y if you have a board where MT6323 could be found.
+> +	bool "MediaTek MT6323 power-off driver"
+> +	depends on MFD_MT6397
+> +	help
+> +	  The power-off driver is responsible for externally shutdown down
+> +	  the power of a remote MediaTek SoC MT6323 is connected to through
+> +	  controlling a tiny circuit BBPU inside MT6323 RTC.
+> +
+> +	  Say Y if you have a board where MT6323 could be found.
+> =20
+>  config POWER_RESET_QNAP
+>  	bool "QNAP power-off driver"
+> --=20
+> 2.7.4
+>=20
 
-  tpm/tpm_ftpm_tee: add shutdown call back (2019-12-19 02:31:28 +0200)
+--6vs4cusmq2csjes2
+Content-Type: application/pgp-signature; name="signature.asc"
 
-----------------------------------------------------------------
-tpmdd fixes for Linux v5.5-rc3
+-----BEGIN PGP SIGNATURE-----
 
-----------------------------------------------------------------
-Eric Biggers (2):
-      KEYS: remove CONFIG_KEYS_COMPAT
-      KEYS: asymmetric: return ENOMEM if akcipher_request_alloc() fails
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl36zLEACgkQ2O7X88g7
++pogZg//VdCdZ79V71shkba9VYra6IoHJseyBBTafueLgDSUgMz1ue4W7wTIiOpw
+jzUsaLuaV4jnXaL8fqzAJuCgylOfSLdpHDZkkzWW2YARB7hgshieOIwBrWzgfQAk
+E++BEbTdjXbcxna3CpuaSiwuWmh6jfb+YoMu+oSzY2KvbTg8EmiSbfNh8WvNgXBP
+XNSqEtNlLtdvfkbDvtX1HScGvcF7KlCvacax/2PXBOwywC5DEw7XTENd0Jpqyl96
+zD7c9rVZZhk9w9rYXD7fk//xvKrKAdSfG9Ub6BWW/AncpU1RGxPreBje7KMAtRp6
+cQ4cgoIlNitrD+tNheRRdii7fyDqyIl2YRwZ+Ckgj4LcwhoDMNDwOpLdZR1fOtxA
++dgrmitmEv6KSwyrmNTDIN9rQFlKOSFkokxn9GCP0WfDj710tsShNBHn7NGtOZ9y
+c5i33dQNBcUPL+Ep8B+tb8nwLrPm3OrR2ptN7AJ82CYIBH9O+6cT1nl4Bjt+DU9N
+NVdhVrACsu4Feutx8gHzlqF5lJYx9HWg84ngEi1cYhSVK25kv2rOMufPxanK+ULC
+QEJiFWWlcyMmuVHdHglgzSZBFFnmPZkVoDo27/DchVIYUOnevTBzxxOIG6/MyP5p
+CUarJceGzYNSnf3qESDp6IAQ5debhOPi+B71MjkNfHirsXG9ZNg=
+=PQMd
+-----END PGP SIGNATURE-----
 
-James Bottomley (1):
-      security: keys: trusted: fix lost handle flush
-
-Jerry Snitselaar (1):
-      tpm_tis: reserve chip for duration of tpm_tis_core_init
-
-Pavel Tatashin (1):
-      tpm/tpm_ftpm_tee: add shutdown call back
-
-Tadeusz Struk (3):
-      tpm: fix invalid locking in NONBLOCKING mode
-      tpm: selftest: add test covering async mode
-      tpm: selftest: cleanup after unseal with wrong auth/policy test
-
- crypto/asymmetric_keys/asym_tpm.c          |  1 +
- crypto/asymmetric_keys/public_key.c        |  1 +
- drivers/char/tpm/tpm-dev-common.c          |  8 +++++++
- drivers/char/tpm/tpm.h                     |  1 -
- drivers/char/tpm/tpm2-cmd.c                |  1 +
- drivers/char/tpm/tpm_ftpm_tee.c            | 22 +++++++++++++++----
- drivers/char/tpm/tpm_tis_core.c            | 35 +++++++++++++++---------------
- include/linux/tpm.h                        |  1 +
- security/keys/Kconfig                      |  4 ----
- security/keys/Makefile                     |  2 +-
- security/keys/compat.c                     |  5 -----
- security/keys/internal.h                   |  4 ++--
- security/keys/trusted-keys/trusted_tpm2.c  |  1 +
- tools/testing/selftests/tpm2/test_smoke.sh |  6 +++++
- tools/testing/selftests/tpm2/tpm2.py       | 19 ++++++++++++++--
- tools/testing/selftests/tpm2/tpm2_tests.py | 13 +++++++++++
- 16 files changed, 88 insertions(+), 36 deletions(-)
+--6vs4cusmq2csjes2--
