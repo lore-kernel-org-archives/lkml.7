@@ -2,75 +2,180 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC4FC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9400C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8412B222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3A862146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 06:50:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lbZCOev+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbfLSGpx (ORCPT
+        id S1726609AbfLSGui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 01:45:53 -0500
-Received: from isilmar-4.linta.de ([136.243.71.142]:48936 "EHLO
-        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfLSGpx (ORCPT
+        Thu, 19 Dec 2019 01:50:38 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:53187 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725844AbfLSGuh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 01:45:53 -0500
-Received: by isilmar-4.linta.de (Postfix, from userid 1000)
-        id 3CD452009B2; Thu, 19 Dec 2019 06:45:51 +0000 (UTC)
-Date:   Thu, 19 Dec 2019 07:45:51 +0100
-From:   Dominik Brodowski <linux@dominikbrodowski.net>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mtd: maps: pcmciamtd: fix possible
- sleep-in-atomic-context bugs in pcmciamtd_set_vpp()
-Message-ID: <20191219064551.stdx4aoyhwsbqbjj@isilmar-4.linta.de>
-References: <20191219032023.7177-1-baijiaju1990@gmail.com>
+        Thu, 19 Dec 2019 01:50:37 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576738236; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=xFqqnNZlkXdgS0NnusZ7Jx8AbXtVSYn7KtW5NLzf9ok=;
+ b=lbZCOev+oGtFXSj4g8Ofnhhi5UphR/aPg81JbMArYuJAtPPuDJVMr+qkm/u4QfDC5PbRTLYJ
+ 75TIPJhYgr2OJ5E/QUuomX+0Rhu0tm3M/SHbsiWYi4fbzbFSxalSWuOmxVwiRI/7136I1eWM
+ oAAjQy2SUjRE37t3LVT8CJSQZ4Y=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5dfb1db6.7fdae2af9df8-smtp-out-n02;
+ Thu, 19 Dec 2019 06:50:30 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 07410C494B5; Thu, 19 Dec 2019 06:50:28 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 10D61C48B03;
+        Thu, 19 Dec 2019 06:50:28 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191219032023.7177-1-baijiaju1990@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 19 Dec 2019 12:20:27 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>, tsoni@codeaurora.org,
+        psodagud@codeaurora.org
+Subject: Re: [PATCH 1/2] dt-bindings: edac: Add DT bindings for Kryo EDAC
+In-Reply-To: <20191218233714.GA30302@bogus>
+References: <cover.1575529553.git.saiprakash.ranjan@codeaurora.org>
+ <0101016ed57a3259-eee09e9e-e99a-40f1-ab1c-63e58a42615c-000000@us-west-2.amazonses.com>
+ <20191218233714.GA30302@bogus>
+Message-ID: <7469b239edd4beed3e8fefdf02f10ada@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 11:20:23AM +0800, Jia-Ju Bai wrote:
-> The driver may sleep while holding a spinlock.
-> The function call path (from bottom to top) in Linux 4.19 is:
-> 
-> drivers/pcmcia/pcmcia_resource.c, 312:
-> 	mutex_lock in pcmcia_fixup_vpp
-> drivers/mtd/maps/pcmciamtd.c, 309:
-> 	pcmcia_fixup_vpp in pcmciamtd_set_vpp
-> drivers/mtd/maps/pcmciamtd.c, 306:
-> 	_raw_spin_lock_irqsave in pcmciamtd_set_vpp
-> 
-> drivers/pcmcia/pcmcia_resource.c, 312:
-> 	mutex_lock in pcmcia_fixup_vpp
-> drivers/mtd/maps/pcmciamtd.c, 312:
-> 	pcmcia_fixup_vpp in pcmciamtd_set_vpp
-> drivers/mtd/maps/pcmciamtd.c, 306:
-> 	_raw_spin_lock_irqsave in pcmciamtd_set_vp
-> 
-> mutex_lock() may sleep at runtime.
-> 
-> To fix these bugs, the spinlock is replaced with a mutex.
-> 
-> These bugs are found by a static analysis tool STCheck written by
-> myself.
-> 
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Reviewed-by: Dominik Brodowski <linux@dominikbrodowski.net>
+Hi Rob,
 
-I presume this will go upstream (with CC to stable -- likely applies to all
-longterm kernels still maintained) via MTD? Or should I route it via pcmcia?
+On 2019-12-19 05:07, Rob Herring wrote:
+> On Thu, Dec 05, 2019 at 09:53:05AM +0000, Sai Prakash Ranjan wrote:
+>> This adds DT bindings for Kryo EDAC implemented with RAS
+>> extensions on KRYO{3,4}XX CPU cores for reporting of cache
+>> errors.
+>> 
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> ---
+>>  .../bindings/edac/qcom-kryo-edac.yaml         | 67 
+>> +++++++++++++++++++
+>>  1 file changed, 67 insertions(+)
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml
+>> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml 
+>> b/Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml
+>> new file mode 100644
+>> index 000000000000..1a39429a73b4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml
+>> @@ -0,0 +1,67 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/edac/qcom-kryo-edac.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Kryo Error Detection and Correction(EDAC)
+>> +
+>> +maintainers:
+>> +  - Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> +
+>> +description: |
+>> +  Kryo EDAC is defined to describe on-chip error detection and 
+>> correction
+>> +  for the Kryo CPU cores which implement RAS extensions. It will 
+>> report
+>> +  all Single Bit Errors and Double Bit Errors found in L1/L2 caches 
+>> in
+>> +  in two registers ERXSTATUS_EL1 and ERXMISC0_EL1. L3-SCU cache 
+>> errors
+>> +  are reported in ERR1STATUS and ERR1MISC0 registers.
+>> +    ERXSTATUS_EL1 - Selected Error Record Primary Status Register, 
+>> EL1
+>> +    ERXMISC0_EL1 - Selected Error Record Miscellaneous Register 0, 
+>> EL1
+>> +    ERR1STATUS - Error Record Primary Status Register
+>> +    ERR1MISC0 - Error Record Miscellaneous Register 0
+>> +  Current implementation of Kryo ECC(Error Correcting Code) mechanism 
+>> is
+>> +  based on interrupts.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - qcom,kryo-edac
+>> +
+>> +  interrupts:
+>> +    minItems: 1
+>> +    maxItems: 4
+>> +    items:
+>> +      - description: l1-l2 cache faultirq interrupt
+>> +      - description: l1-l2 cache errirq interrupt
+>> +      - description: l3-scu cache errirq interrupt
+>> +      - description: l3-scu cache faultirq interrupt
+>> +
+>> +  interrupt-names:
+>> +    minItems: 1
+>> +    maxItems: 4
+> 
+> You are saying only these combinations are valid:
+> 
+> l1-l2-faultirq
+> 
+> l1-l2-faultirq
+> l1-l2-errirq
+> 
+> l1-l2-faultirq
+> l1-l2-errirq
+> l3-scu-errirq
+> 
+> l1-l2-faultirq
+> l1-l2-errirq
+> l3-scu-errirq
+> l3-scu-faultirq
+> 
+> Is that your intent?
+> 
+
+No, I want any combination of interrupts to be valid with atleast one 
+interrupt as mandatory.
+I thought specifying minItems as 1 and maxItems as 4 will take care of 
+this,  am I doing something wrong?
 
 Thanks,
-	Dominik
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
