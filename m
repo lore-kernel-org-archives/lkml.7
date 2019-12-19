@@ -2,134 +2,135 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 632EEC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30704C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33FD820716
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:10:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GyQUlmhV"
+	by mail.kernel.org (Postfix) with ESMTP id D4B7B227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 12:11:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576757483;
+	bh=RE2T76IU/lncwRrDRAlG+ju/T9yNzhZZa+kkSWXB+hk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mv0AsvcX3s/Dqw5nOrX1mqs2bdgD/VIlGp7pFrsPTfgwSVQWj4xGAuIzrbUg8DTTI
+	 zs2XIURNFJoltcuOVjDyzzPqiE2tOsfVzeCo4qVdyWM9rIYtSFiVP6Qec1r2Tv87ez
+	 6cB9PvywXaQ/6vdDHeiEinaBZNDBHem6iXE6xh2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfLSMK6 (ORCPT
+        id S1726828AbfLSMLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 07:10:58 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55792 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbfLSMK6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 07:10:58 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJCAm6A100054;
-        Thu, 19 Dec 2019 06:10:48 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576757448;
-        bh=v7Np/OFkk20fqw6MV6RMIPQQKnOLNyFYGAZXUuSYuis=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=GyQUlmhVIxuCexAwcASlKaNdBf4wIzpZSBhv1Apxw/aaLiQRDVPrssznmXnsNX/eY
-         5okO5d8vuR3DuOJtiuAdGVdMHZ0gU5mTeJp1hpz+D6NghP5Cjzr38iyopE6FnuZXZv
-         a5+u5ytJzvZEpuRScDl0GmdeuUKn3g8nSko27ZZE=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJCAmkd026460;
-        Thu, 19 Dec 2019 06:10:48 -0600
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
- Dec 2019 06:10:48 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 19 Dec 2019 06:10:47 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJCAiUg062952;
-        Thu, 19 Dec 2019 06:10:45 -0600
-Subject: Re: [PATCH 08/13] PCI: cadence: Use local management register to
- configure Vendor ID
-To:     Andrew Murray <andrew.murray@arm.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, Tom Joseph <tjoseph@cadence.com>
-References: <20191209092147.22901-1-kishon@ti.com>
- <20191209092147.22901-9-kishon@ti.com>
- <20191217124238.GE24359@e119886-lin.cambridge.arm.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <cdb15479-6cc4-e00f-34a6-6cf191179bf7@ti.com>
-Date:   Thu, 19 Dec 2019 17:42:27 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 19 Dec 2019 07:11:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39744 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726668AbfLSMLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 07:11:21 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BEFF20716;
+        Thu, 19 Dec 2019 12:11:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576757481;
+        bh=RE2T76IU/lncwRrDRAlG+ju/T9yNzhZZa+kkSWXB+hk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0ixnxT3uqPi6FVe/deKUePFfnKx9P1IGOKn1P09zsr5cJF5tc+Lb/RinNJ6zRexCz
+         d4w/YFMVv6noAYAo12vcpw9/xsADKJmW1JkRrwXaOXPOxbKCpRgXB/UF6b9ftaH2wF
+         dIhF3//DAkyn3jnXauqEMxnnraV8I9v9EaclRVHs=
+Date:   Thu, 19 Dec 2019 12:11:16 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Daniel Axtens <dja@axtens.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
+ Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
+Message-ID: <20191219121115.GB32361@willie-the-truck>
+References: <20191212100756.GA11317@willie-the-truck>
+ <20191212104610.GW2827@hirez.programming.kicks-ass.net>
+ <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
+ <20191212180634.GA19020@willie-the-truck>
+ <CAHk-=whRxB0adkz+V7SQC8Ac_rr_YfaPY8M2mFDfJP2FFBNz8A@mail.gmail.com>
+ <20191212193401.GB19020@willie-the-truck>
+ <CAHk-=wiMuHmWzQ7-CRQB6o+SHtA-u-Rp6VZwPcqDbjAaug80rQ@mail.gmail.com>
+ <20191217170719.GA869@willie-the-truck>
+ <CAHk-=whBnZBVNwu8aVVp205EKk7xtsnQgSjs38a5=y9HyheXzQ@mail.gmail.com>
+ <CAHk-=wjNLxSZZs+A0tyb-MnJ2YU-sqTAfy0-X+9vxjXfs_O4zA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191217124238.GE24359@e119886-lin.cambridge.arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjNLxSZZs+A0tyb-MnJ2YU-sqTAfy0-X+9vxjXfs_O4zA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Tom
-
-Hi,
-
-On 17/12/19 6:12 pm, Andrew Murray wrote:
-> On Mon, Dec 09, 2019 at 02:51:42PM +0530, Kishon Vijay Abraham I wrote:
->> PCI_VENDOR_ID in root port configuration space is read-only register
->> and writing to it will have no effect. Use local management register to
->> configure Vendor ID and Subsystem Vendor ID.
+On Tue, Dec 17, 2019 at 10:32:35AM -0800, Linus Torvalds wrote:
+> On Tue, Dec 17, 2019 at 10:04 AM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > Let me think about it.
 > 
-> Is this a bug fix? Can you add a Fixes tag and make that clearer?
-
-I think this might have worked in Cadence platform? Tom?
-
-Thanks
-Kishon
-
+> How about we just get rid of the union entirely, and just use
+> 'unsigned long' or 'unsigned long long' depending on the size.
 > 
-> Thanks,
+> Something like the attached patch - it still requires that it be an
+> arithmetic type, but now because of the final cast.
 > 
-> Andrew Murray
+> But it might still be a cast to a volatile type, of course. Then the
+> result will be volatile, but at least now READ_ONCE() won't be taking
+> the address of a volatile variable on the stack - does that at least
+> fix some of the horrible code generation. Hmm?
+
+Sounds like it according to mpe, but I'll confirm too for arm64.
+
+> This is untested, because I obviously still have the cases of
+> structures (page table entries) being accessed once..
 > 
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  drivers/pci/controller/cadence/pcie-cadence-host.c | 9 +++++++--
->>  1 file changed, 7 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> index cf817be237af..afb2c96a6538 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
->> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> @@ -71,6 +71,7 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
->>  {
->>  	struct cdns_pcie *pcie = &rc->pcie;
->>  	u32 value, ctrl;
->> +	u32 id;
->>  
->>  	/*
->>  	 * Set the root complex BAR configuration register:
->> @@ -90,8 +91,12 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
->>  	cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
->>  
->>  	/* Set root port configuration space */
->> -	if (rc->vendor_id != 0xffff)
->> -		cdns_pcie_rp_writew(pcie, PCI_VENDOR_ID, rc->vendor_id);
->> +	if (rc->vendor_id != 0xffff) {
->> +		id = CDNS_PCIE_LM_ID_VENDOR(rc->vendor_id) |
->> +			CDNS_PCIE_LM_ID_SUBSYS(rc->vendor_id);
->> +		cdns_pcie_writel(pcie, CDNS_PCIE_LM_ID, id);
->> +	}
->> +
->>  	if (rc->device_id != 0xffff)
->>  		cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, rc->device_id);
->>  
->> -- 
->> 2.17.1
->>
+>               Linus
+
+>  include/linux/compiler.h | 33 +++++++++++++++++----------------
+>  1 file changed, 17 insertions(+), 16 deletions(-)
+> 
+> diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+> index 5e88e7e33abe..8b4282194f16 100644
+> --- a/include/linux/compiler.h
+> +++ b/include/linux/compiler.h
+> @@ -179,18 +179,18 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+>  
+>  #include <uapi/linux/types.h>
+>  
+> -#define __READ_ONCE_SIZE						\
+> -({									\
+> -	switch (size) {							\
+> -	case 1: *(__u8 *)res = *(volatile __u8 *)p; break;		\
+> -	case 2: *(__u16 *)res = *(volatile __u16 *)p; break;		\
+> -	case 4: *(__u32 *)res = *(volatile __u32 *)p; break;		\
+> -	case 8: *(__u64 *)res = *(volatile __u64 *)p; break;		\
+> -	default:							\
+> -		barrier();						\
+> -		__builtin_memcpy((void *)res, (const void *)p, size);	\
+> -		barrier();						\
+> -	}								\
+> +/* "unsigned long" or "unsigned long long" - make it fit in a register if possible */
+> +#define __READ_ONCE_TYPE(size) \
+> +	__typeof__(__builtin_choose_expr(size > sizeof(0UL), 0ULL, 0UL))
+
+Ha, I wondered when '__builtin_choose_expr()' would make an appearance in
+this thread! Nice trick. I'll try integrating this with what I have and see
+what I run into next.
+
+Back down the rabbit hole...
+
+Will
