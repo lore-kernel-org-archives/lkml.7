@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2E3C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 791ECC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76F15222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DDFC222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:09:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782539;
-	bh=TsvhNeAS7QpjrVGbREBFkeHb/CNC3NqL0b7YAKujFZ4=;
+	s=default; t=1576782546;
+	bh=k/Vn97eY/o48QnUPvrMfmIs4W8FZyzJ3R15DAh3PVyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J30KpnEOBesMq6SfUUF9HsWmgcH2j01KUo76eqZvEkDo4/x+/9T3iQ1NnU+PkeW8f
-	 aUnol643noegDZHMsEnl2Dg6BY3Jk9WYd0EiBKM3P1/b1F9wtWFoXPqR6a+rg1qxWZ
-	 npzff2saK9fB21dgVWaNWOg8C0qJ7LDzaXta/qlA=
+	b=wQB6Exq6H3oK4Y0S95fJc3GvcV7DO1SULmQudi2tMmLWTAPGaAyifQbvElUrA5CYW
+	 53Lqb6cP0Wf59vMK5kVXS0NfqmXxmL1xH4ViRjrMA1mkEMUh6IOJVav07887TksnKj
+	 b+AYe1eYR6j0THAfGDXWj07yD0+ER7QxLQtsOTaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbfLSSlR (ORCPT
+        id S1728377AbfLSTJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:41:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60188 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 14:09:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728493AbfLSSlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:41:13 -0500
+        id S1727574AbfLSSlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:41:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89EA6206D7;
-        Thu, 19 Dec 2019 18:41:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 381EF206D7;
+        Thu, 19 Dec 2019 18:41:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576780873;
-        bh=TsvhNeAS7QpjrVGbREBFkeHb/CNC3NqL0b7YAKujFZ4=;
+        s=default; t=1576780865;
+        bh=k/Vn97eY/o48QnUPvrMfmIs4W8FZyzJ3R15DAh3PVyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V0wQghgzG+ML5tFxcXHoeug07yUTGDNOkJE0jcxdNclnnNonlFpJElZuiJZ8Q3W/t
-         0c2htEgZF2r920JaksdscKgi3NnGHfRiMn3XkZTJXCgHXc0jmYGXlJ1rNWRrK+dzaC
-         vx4Q2CmA3bTfxusxVtqPW9n8QyVS25QnldOKeU6I=
+        b=0hQfjfk6h5VNbnEdhKf17EsIIyHyZhugZdCKAvoZH9bfeswTcB+UKvuSTYVq1TiPh
+         Saeai+OOqSEMdiGeICw6RXRTzP4VH3KxfWTaCP557aqXnc25myLHMrqtA3itkFmb4g
+         8+CeeUoTZmLTx9ut84aWn/rKD7d5glwKF6TGFwW4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
+        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 150/162] net: ethernet: ti: cpsw: fix extra rx interrupt
-Date:   Thu, 19 Dec 2019 19:34:18 +0100
-Message-Id: <20191219183216.904800822@linuxfoundation.org>
+Subject: [PATCH 4.4 148/162] tcp: tighten acceptance of ACKs not matching a child socket
+Date:   Thu, 19 Dec 2019 19:34:16 +0100
+Message-Id: <20191219183216.782494552@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
 References: <20191219183150.477687052@linuxfoundation.org>
@@ -60,36 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Guillaume Nault <gnault@redhat.com>
 
-[ Upstream commit 51302f77bedab8768b761ed1899c08f89af9e4e2 ]
+[ Upstream commit cb44a08f8647fd2e8db5cc9ac27cd8355fa392d8 ]
 
-Now RX interrupt is triggered twice every time, because in
-cpsw_rx_interrupt() it is asked first and then disabled. So there will be
-pending interrupt always, when RX interrupt is enabled again in NAPI
-handler.
+When no synflood occurs, the synflood timestamp isn't updated.
+Therefore it can be so old that time_after32() can consider it to be
+in the future.
 
-Fix it by first disabling IRQ and then do ask.
+That's a problem for tcp_synq_no_recent_overflow() as it may report
+that a recent overflow occurred while, in fact, it's just that jiffies
+has grown past 'last_overflow' + TCP_SYNCOOKIE_VALID + 2^31.
 
-Fixes: 870915feabdc ("drivers: net: cpsw: remove disable_irq/enable_irq as irq can be masked from cpsw itself")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Spurious detection of recent overflows lead to extra syncookie
+verification in cookie_v[46]_check(). At that point, the verification
+should fail and the packet dropped. But we should have dropped the
+packet earlier as we didn't even send a syncookie.
+
+Let's refine tcp_synq_no_recent_overflow() to report a recent overflow
+only if jiffies is within the
+[last_overflow, last_overflow + TCP_SYNCOOKIE_VALID] interval. This
+way, no spurious recent overflow is reported when jiffies wraps and
+'last_overflow' becomes in the future from the point of view of
+time_after32().
+
+However, if jiffies wraps and enters the
+[last_overflow, last_overflow + TCP_SYNCOOKIE_VALID] interval (with
+'last_overflow' being a stale synflood timestamp), then
+tcp_synq_no_recent_overflow() still erroneously reports an
+overflow. In such cases, we have to rely on syncookie verification
+to drop the packet. We unfortunately have no way to differentiate
+between a fresh and a stale syncookie timestamp.
+
+In practice, using last_overflow as lower bound is problematic.
+If the synflood timestamp is concurrently updated between the time
+we read jiffies and the moment we store the timestamp in
+'last_overflow', then 'now' becomes smaller than 'last_overflow' and
+tcp_synq_no_recent_overflow() returns true, potentially dropping a
+valid syncookie.
+
+Reading jiffies after loading the timestamp could fix the problem,
+but that'd require a memory barrier. Let's just accommodate for
+potential timestamp growth instead and extend the interval using
+'last_overflow - HZ' as lower bound.
+
+Signed-off-by: Guillaume Nault <gnault@redhat.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/ti/cpsw.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/tcp.h |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -777,8 +777,8 @@ static irqreturn_t cpsw_rx_interrupt(int
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -514,7 +514,15 @@ static inline bool tcp_synq_no_recent_ov
  {
- 	struct cpsw_priv *priv = dev_id;
+ 	unsigned long last_overflow = tcp_sk(sk)->rx_opt.ts_recent_stamp;
  
--	cpdma_ctlr_eoi(priv->dma, CPDMA_EOI_RX);
- 	writel(0, &priv->wr_regs->rx_en);
-+	cpdma_ctlr_eoi(priv->dma, CPDMA_EOI_RX);
+-	return time_after(jiffies, last_overflow + TCP_SYNCOOKIE_VALID);
++	/* If last_overflow <= jiffies <= last_overflow + TCP_SYNCOOKIE_VALID,
++	 * then we're under synflood. However, we have to use
++	 * 'last_overflow - HZ' as lower bound. That's because a concurrent
++	 * tcp_synq_overflow() could update .ts_recent_stamp after we read
++	 * jiffies but before we store .ts_recent_stamp into last_overflow,
++	 * which could lead to rejecting a valid syncookie.
++	 */
++	return !time_between32(jiffies, last_overflow - HZ,
++			       last_overflow + TCP_SYNCOOKIE_VALID);
+ }
  
- 	if (priv->quirk_irq) {
- 		disable_irq_nosync(priv->irqs_table[0]);
+ static inline u32 tcp_cookie_time(void)
 
 
