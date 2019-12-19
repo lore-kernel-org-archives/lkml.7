@@ -2,118 +2,103 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D12E1C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F24C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 947B621655
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:41:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576798865;
-	bh=qU0AYjQ3Wt/z+EkJGVcRfZu2Rkl4zsRX9qrUSPHANUk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GI6wNPU7nas5roYIWQohnBMp+TgX27Vy+YBYrGiAk91TjQMMxUav5yZ+kI4w/XTUh
-	 WMZRXMqSVjPgYSkYu4D4RoNF051jIJP+CeU9AOR9RUvcZwlasj89LaUfdjeLw/B0F0
-	 5l8ZXLGQY9mWE3s+7sDiWVejh/RLqq8pkK6n1nnw=
+	by mail.kernel.org (Postfix) with ESMTP id 2836D24672
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 23:41:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="wCILxctC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727135AbfLSXlE (ORCPT
+        id S1726967AbfLSXl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 18:41:04 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40577 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726967AbfLSXlE (ORCPT
+        Thu, 19 Dec 2019 18:41:27 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46158 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726992AbfLSXl0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 18:41:04 -0500
-Received: by mail-ot1-f67.google.com with SMTP id w21so1583502otj.7;
-        Thu, 19 Dec 2019 15:41:03 -0800 (PST)
+        Thu, 19 Dec 2019 18:41:26 -0500
+Received: by mail-pl1-f193.google.com with SMTP id y8so3267663pll.13
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 15:41:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=43LknG5z6bO6b1jirRWQ3OMn0IwVLrmac7Ek+kzqWi4=;
+        b=wCILxctCW8G9X5XBw2VwbNAppjxq6085IDCbS41g8TMKp3aEF9iVIOjWvFw4/szWZc
+         PuObOSY5Hog39wOrRTgQWeV2kk40S8PrDWF9rVhtsEFKRBgNMSGw3tMBXv1wr5XPBDe5
+         IktY3NwjfBIDkLj97i9kQkx7g1XKsnxJQ7XuNdWTadHZdY2otvWoIZKWJoLJI/7hXJZX
+         n+LElsBwh4mI4ao/EWjSYwRkIEJZr/iAiYUKtW9DYGvOTBfc4hPGu18kTxVgtuTXNXaY
+         gUygXqwN/uy1PiEHTQ71+7hNF1m6ZNC3SSS5tn4RfLSHmmDDCQWac2KWkTeuB2qO6yLZ
+         oLJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3NfDG7avH+ujpcCBpbFffoQ4me1PnPp49OU9/9ftPuE=;
-        b=QNVJURKqy99mz8SlvQjSgapNbZc3lVtDbzBYq3sINJnpJICcBwEvKVBcy01mTzZEqu
-         fx52bbtwyQTEvfDq0yfOA1ATxGu+uwoooYBvhoAr9RYBsP8BHvFTzT+b6mwD6czx0SRC
-         341jziKyAXFilnNUCysIwg3ToPJpR8zvBat7ZNfAT643ekTB/qImuYlBAtn0Zj8ff1N1
-         80PUdMVMoW87Q22docLQjcwjV23iLURmtBY3hGd9a1Cy2rpeNab6wJEj5Fv9IqyS7sDK
-         0hk+EXnCqMFVb0hbByMdOao6auHaE/ym2UKUleJec79HRy0ajE5/qoQsLYf18G9br9KE
-         wYag==
-X-Gm-Message-State: APjAAAV8ws0Dy4CvU6I1rv8mEe8piHurOAoD1OlQXnFV2zTCctkgPpXi
-        ZRhIssg0bSD8sd0KwcOMAQ==
-X-Google-Smtp-Source: APXvYqzAQ3Wpwz3g5jix2Do+I3Pb2ucPQFPn2hVTxMKOwUBxxicCkn6k6qUaRkAyoO5pODcIC0pAJw==
-X-Received: by 2002:a9d:5c02:: with SMTP id o2mr2095128otk.176.1576798863533;
-        Thu, 19 Dec 2019 15:41:03 -0800 (PST)
-Received: from localhost (ip-184-205-174-147.ftwttx.spcsdns.net. [184.205.174.147])
-        by smtp.gmail.com with ESMTPSA id 4sm2767680otu.0.2019.12.19.15.41.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 15:41:02 -0800 (PST)
-Date:   Thu, 19 Dec 2019 17:41:00 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, peng.fan@nxp.com,
-        ping.bai@nxp.com, Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 2/7] soc: imx: gpcv2: Update imx8m-power.h to include
- iMX8M Mini
-Message-ID: <20191219234100.GA19269@bogus>
-References: <20191213160542.15757-1-aford173@gmail.com>
- <20191213160542.15757-3-aford173@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191213160542.15757-3-aford173@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=43LknG5z6bO6b1jirRWQ3OMn0IwVLrmac7Ek+kzqWi4=;
+        b=eFaLj6Fg74E7HB3LYwG/5HB5Loc2XjgPL3MK1owTZT0CyRQa29PziI3E1iPIYHXsa1
+         90D+Fy2toU4Jr0dfrCP1JFn91YeqUkM8C9KDz74tFGhMUgaa2Rm7jKA3ReobdIqB3v2k
+         ylO7TlRuvUlZ8s6i6gfy45+k5vWsnNcQ29sxaEgdbWf5gT69yMAALJ6ET0p1gpa4AFhi
+         5OJdn2J3Upp7g9rvQgB9OZ4Ze5w1mb+li/6aV4Uh0/jHDsbmut9Q+uhFuqAI2hVIdSkC
+         2pRg2SijOTQ3/Lc9XePftzd46jzu6skQXaR2tr9Bp5a/GyqOLoNpOPop5bsns1fiiqTx
+         Dt0A==
+X-Gm-Message-State: APjAAAVCKCzJH3cB8c6z10qQC7FboZJzUgatRKU/6YwHM77jgK4zYkgl
+        pLmAPyjnGxdfcwtOqhaya9BXHg==
+X-Google-Smtp-Source: APXvYqxPqbKcXuZXeBirlhTjoQMKgjvHy1iW9+l9NjMaBzSnwIpy6e9a6vUUAEoz3F3tPyCgcvAi4g==
+X-Received: by 2002:a17:90a:1696:: with SMTP id o22mr12479837pja.78.1576798886222;
+        Thu, 19 Dec 2019 15:41:26 -0800 (PST)
+Received: from rip.lixom.net (99-152-116-91.lightspeed.sntcca.sbcglobal.net. [99.152.116.91])
+        by smtp.gmail.com with ESMTPSA id l15sm7979746pjl.24.2019.12.19.15.41.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Dec 2019 15:41:25 -0800 (PST)
+From:   Olof Johansson <olof@lixom.net>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>
+Cc:     coreteam@netfilter.org, netfilter-devel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Olof Johansson <olof@lixom.net>
+Subject: [PATCH] netfilter: nf_flow_table: big endian fix for TCP flags
+Date:   Thu, 19 Dec 2019 15:40:47 -0800
+Message-Id: <20191219234047.97315-1-olof@lixom.net>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 10:05:37AM -0600, Adam Ford wrote:
-> In preparation for i.MX8M Mini support in the GPC driver, the
-> include file used by both the device tree and the source needs to
-> have the appropriate references for it.
-> 
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-> ---
-> V2:  No Change
-> 
->  include/dt-bindings/power/imx8m-power.h | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/include/dt-bindings/power/imx8m-power.h b/include/dt-bindings/power/imx8m-power.h
-> index 8a513bd9166e..0054bba744b8 100644
-> --- a/include/dt-bindings/power/imx8m-power.h
-> +++ b/include/dt-bindings/power/imx8m-power.h
-> @@ -18,4 +18,18 @@
->  #define IMX8M_POWER_DOMAIN_MIPI_CSI2	9
->  #define IMX8M_POWER_DOMAIN_PCIE2	10
->  
-> +#define IMX8MM_POWER_DOMAIN_MIPI	0
-> +#define IMX8MM_POWER_DOMAIN_PCIE	1
-> +#define IMX8MM_POWER_DOMAIN_USB_OTG1	2
-> +#define IMX8MM_POWER_DOMAIN_USB_OTG2	3
-> +#define IMX8MM_POWER_DOMAIN_DDR1	4
-> +#define IMX8MM_POWER_DOMAIN_GPU2D	5
-> +#define IMX8MM_POWER_DOMAIN_GPU	6
-> +#define IMX8MM_POWER_DOMAIN_VPU	7
-> +#define IMX8MM_POWER_DOMAIN_GPU3D	8
-> +#define IMX8MM_POWER_DOMAIN_DISP	9
-> +#define IMX8MM_POWER_VPU_G1		10
-> +#define IMX8MM_POWER_VPU_G2		11
-> +#define IMX8MM_POWER_VPU_H1		12
+TCP_FLAG_* are 32-bit big endian constants, not 16-bit. So on big endian
+machines, you need to shift them down to fit the 16-bit tcp.mask here.
 
-Why is _DOMAIN missing from the last 3?
+This surfaced through ARM allmodconfig, which is big endian:
 
-> +
->  #endif
-> -- 
-> 2.20.1
-> 
+net/netfilter/nf_flow_table_offload.c: In function 'nf_flow_rule_match':
+net/netfilter/nf_flow_table_offload.c:91:21: warning: unsigned conversion from 'int' to '__be16' {aka 'short unsigned int'} changes value from '327680' to '0' [-Woverflow]
+
+Need to convert to/from host word order to keep LE/BE behaving the same.
+
+Fixes: c29f74e0df7a ("netfilter: nf_flow_table: hardware offload support")
+Signed-off-by: Olof Johansson <olof@lixom.net>
+---
+ net/netfilter/nf_flow_table_offload.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/netfilter/nf_flow_table_offload.c b/net/netfilter/nf_flow_table_offload.c
+index de7a0d1e15c88..e32ff796378c6 100644
+--- a/net/netfilter/nf_flow_table_offload.c
++++ b/net/netfilter/nf_flow_table_offload.c
+@@ -88,7 +88,7 @@ static int nf_flow_rule_match(struct nf_flow_match *match,
+ 	switch (tuple->l4proto) {
+ 	case IPPROTO_TCP:
+ 		key->tcp.flags = 0;
+-		mask->tcp.flags = TCP_FLAG_RST | TCP_FLAG_FIN;
++		mask->tcp.flags = htons(ntohl(TCP_FLAG_RST | TCP_FLAG_FIN) >> 16);
+ 		match->dissector.used_keys |= BIT(FLOW_DISSECTOR_KEY_TCP);
+ 		break;
+ 	case IPPROTO_UDP:
+-- 
+2.11.0
+
