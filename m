@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B41C0C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9D6C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F9572465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80D50206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 19:03:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782199;
-	bh=cvmxQ3pO4VoFUH6m+dMfaat/Qo5N3IdyNKWRcLij1as=;
+	s=default; t=1576782209;
+	bh=mmimQIgTyuvtWYam+z7wFFeCycZlB+nxkHe2I6laZPc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Onxcx1Molp7LNJhagMTA396toSwBQ1Pi9Z3OKr/amX41uHyZTxC+40memBLRDJQwF
-	 40xPF7zeJ1pwJnSk40GOU1jBXD7Cvr8CTumdTLAnSQ1R5KFkSkSgfp+iEaa0nge6ns
-	 exT2qzApt1TJBo++eqi0HJ7AYNbziNFottUkEEhc=
+	b=FNJwcKlQEAKhU3Vx2A3mwBk6FrBcKDJweaZBEjLhVZl0AxvP6KHwEdZY99LXyK+eK
+	 KzaySskK1TnSymVY3RJLSB/vlysSY342K1xnfeEeJWF19YJ6BMCxTw433oqx89zHzf
+	 gbTKWe5X7yixhoPzB6X8AHII3nvWdRBflHrvDWX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729858AbfLSTDS (ORCPT
+        id S1729620AbfLSSsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:03:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41836 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:48:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728472AbfLSSsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:48:41 -0500
+        id S1729595AbfLSSsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:48:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B26E2465E;
-        Thu, 19 Dec 2019 18:48:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 298A92465E;
+        Thu, 19 Dec 2019 18:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781320;
-        bh=cvmxQ3pO4VoFUH6m+dMfaat/Qo5N3IdyNKWRcLij1as=;
+        s=default; t=1576781298;
+        bh=mmimQIgTyuvtWYam+z7wFFeCycZlB+nxkHe2I6laZPc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KA/DQ0CSUchn8h8JWeYr4VG6AqZOXfycAmwutq8ssIT3UqCZYyMfgtun2s4qMG01+
-         pgGy/gC4ctXFHAdYv/grqfSk1dpNQCkqlwBJVI4LbpZft5HcGL6k4RmoTA0rL1gWDY
-         9VHsBna9HvKvmX1cUbDu2Q3DahloHfhyoX8oyPr8=
+        b=Tux7M/XPl9WlXYxzNZcC+XxepBp81+oKdmvuE3vAFuJQI/pwtBAFdTdOGhUW/MC85
+         vqq3c8YlmfGCEp4aCG/z5Plnx8Nthy7hdumuOyQfVKzxfAwpWRE65eYVyMF1QmVxDP
+         jj8lZOmH26GldQBuB+Tznv2AwhwQatQAgl7acPRc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Prarit Bhargava <prarit@redhat.com>,
-        Konstantin Khorenko <khorenko@virtuozzo.com>,
-        Jessica Yu <jeyu@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 174/199] kernel/module.c: wakeup processes in module_wq on module unload
-Date:   Thu, 19 Dec 2019 19:34:16 +0100
-Message-Id: <20191219183225.177799954@linuxfoundation.org>
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 162/199] scsi: qla2xxx: Fix session lookup in qlt_abort_work()
+Date:   Thu, 19 Dec 2019 19:34:04 +0100
+Message-Id: <20191219183224.372362008@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
 References: <20191219183214.629503389@linuxfoundation.org>
@@ -60,59 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khorenko <khorenko@virtuozzo.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 5d603311615f612320bb77bd2a82553ef1ced5b7 ]
+[ Upstream commit ac452b8e79320c9e90c78edf32ba2d42431e4daf ]
 
-Fix the race between load and unload a kernel module.
+Pass the correct session ID to find_sess_by_s_id() instead of passing an
+uninitialized variable.
 
-sys_delete_module()
- try_stop_module()
-  mod->state = _GOING
-					add_unformed_module()
-					 old = find_module_all()
-					 (old->state == _GOING =>
-					  wait_event_interruptible())
-
-					 During pre-condition
-					 finished_loading() rets 0
-					 schedule()
-					 (never gets waken up later)
- free_module()
-  mod->state = _UNFORMED
-   list_del_rcu(&mod->list)
-   (dels mod from "modules" list)
-
-return
-
-The race above leads to modprobe hanging forever on loading
-a module.
-
-Error paths on loading module call wake_up_all(&module_wq) after
-freeing module, so let's do the same on straight module unload.
-
-Fixes: 6e6de3dee51a ("kernel/module.c: Only return -EEXIST for modules that have finished loading")
-Reviewed-by: Prarit Bhargava <prarit@redhat.com>
-Signed-off-by: Konstantin Khorenko <khorenko@virtuozzo.com>
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Fixes: 2d70c103fd2a ("[SCSI] qla2xxx: Add LLD target-mode infrastructure for >= 24xx series") # v3.5.
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Tested-by: Himanshu Madhani <hmadhani@marvell.com>
+Reviewed-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/module.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/scsi/qla2xxx/qla_target.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/kernel/module.c b/kernel/module.c
-index fb9e07aec49e0..9cb1437151ae7 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -995,6 +995,8 @@ SYSCALL_DEFINE2(delete_module, const char __user *, name_user,
- 	strlcpy(last_unloaded_module, mod->name, sizeof(last_unloaded_module));
+diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
+index d13e91e164258..3b20cf8b161e4 100644
+--- a/drivers/scsi/qla2xxx/qla_target.c
++++ b/drivers/scsi/qla2xxx/qla_target.c
+@@ -5893,7 +5893,6 @@ static void qlt_abort_work(struct qla_tgt *tgt,
+ 	struct qla_hw_data *ha = vha->hw;
+ 	struct qla_tgt_sess *sess = NULL;
+ 	unsigned long flags = 0, flags2 = 0;
+-	uint32_t be_s_id;
+ 	uint8_t s_id[3];
+ 	int rc;
  
- 	free_module(mod);
-+	/* someone could wait for the module in add_unformed_module() */
-+	wake_up_all(&module_wq);
- 	return 0;
- out:
- 	mutex_unlock(&module_mutex);
+@@ -5906,8 +5905,7 @@ static void qlt_abort_work(struct qla_tgt *tgt,
+ 	s_id[1] = prm->abts.fcp_hdr_le.s_id[1];
+ 	s_id[2] = prm->abts.fcp_hdr_le.s_id[0];
+ 
+-	sess = ha->tgt.tgt_ops->find_sess_by_s_id(vha,
+-	    (unsigned char *)&be_s_id);
++	sess = ha->tgt.tgt_ops->find_sess_by_s_id(vha, s_id);
+ 	if (!sess) {
+ 		spin_unlock_irqrestore(&ha->tgt.sess_lock, flags2);
+ 
 -- 
 2.20.1
 
