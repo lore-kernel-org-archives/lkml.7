@@ -2,134 +2,248 @@ Return-Path: <SRS0=nnGO=2J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E1BCC2D0C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A92F0C2D0C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E401C24679
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CCFB24679
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Dec 2019 18:50:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576781438;
-	bh=SITc7/PEGxVwVplmUK2aVfm5gJJQYv4EfPlG7C40O1U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1dGLqj5uTCZJV0wzWZdmCPq2LsCoDf88T3kjaf2qubCTFuqOCivJ97cj5ay2apHty
-	 JrRp2EnDDCDr2on7ABPykRM+PC8knuOKxdVQoOq+dahpCae6uDHpFMV3EDsxNMkrS+
-	 xbNYjQMHLjsLnjpxjQWlqQ4EQKWevDriCdYhGUyg=
+	s=default; t=1576781442;
+	bh=Qv7E2OuioSDxlU0VReXiZmlP7tE7UmrfQyW9nm3JkpA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=osKgakf/yC6gdfhes8woBLQ2DQ0sRBbtZVbgbCa1NTHIsItwXLA3XLO0FagPkBPT7
+	 XVr3Et54FVKL/sJfMXpXQdchtvd21uxJztwYOw0PGvWSW3KZdCTCj2rBnuJKpKjqV0
+	 zjfOA0aMtG5QqKt99IT0oEPdvUS5Pw3EHJrXe3hA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730014AbfLSSuh (ORCPT
+        id S1730032AbfLSSul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:50:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44418 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 13:50:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729722AbfLSSue (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 13:50:34 -0500
+        id S1730008AbfLSSug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:50:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AEE820674;
-        Thu, 19 Dec 2019 18:50:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A628D2064B;
+        Thu, 19 Dec 2019 18:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576781432;
-        bh=SITc7/PEGxVwVplmUK2aVfm5gJJQYv4EfPlG7C40O1U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l2Eeg9shGSdq4AIbs2KQTJdkgsNhmgCLHGeSBbbVyxnDX9ErC5veF5nTzlV6LZFNA
-         iQYuJyQSxNwMlYiYUj8mSBvjbpJHaYGX+e3KGtcd16MW2NgJtHfS/GK4ZlWkUaRuiW
-         HlYAGeTenlYN+y0fTSU6I/bq8byMk6c9Bmz/R5qQ=
+        s=default; t=1576781435;
+        bh=Qv7E2OuioSDxlU0VReXiZmlP7tE7UmrfQyW9nm3JkpA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=TiIdvOKrTb7Bvu+TvWOP7p8HdFnDBgiV08d5824kN++F6IEFQaJDWxdVcZM0PTY7g
+         zCR7r1qJO/2Sga4mJ/feig/efuKgrz4q8ig3XE0WpOGc3SIca4gPn1QJJR2a2YQqT9
+         jBaiiP5JLNKBzMBzSQdlBs/OTHOkdwJGceYoZsy0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 09/36] tcp: tighten acceptance of ACKs not matching a child socket
-Date:   Thu, 19 Dec 2019 19:34:26 +0100
-Message-Id: <20191219182856.561120120@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.14 00/36] 4.14.160-stable review
+Date:   Thu, 19 Dec 2019 19:34:17 +0100
+Message-Id: <20191219182848.708141124@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191219182848.708141124@linuxfoundation.org>
-References: <20191219182848.708141124@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.160-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.14.160-rc1
+X-KernelTest-Deadline: 2019-12-21T18:29+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guillaume Nault <gnault@redhat.com>
+This is the start of the stable review cycle for the 4.14.160 release.
+There are 36 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-[ Upstream commit cb44a08f8647fd2e8db5cc9ac27cd8355fa392d8 ]
+Responses should be made by Sat, 21 Dec 2019 18:24:44 +0000.
+Anything received after that time might be too late.
 
-When no synflood occurs, the synflood timestamp isn't updated.
-Therefore it can be so old that time_after32() can consider it to be
-in the future.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.160-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+and the diffstat can be found below.
 
-That's a problem for tcp_synq_no_recent_overflow() as it may report
-that a recent overflow occurred while, in fact, it's just that jiffies
-has grown past 'last_overflow' + TCP_SYNCOOKIE_VALID + 2^31.
+thanks,
 
-Spurious detection of recent overflows lead to extra syncookie
-verification in cookie_v[46]_check(). At that point, the verification
-should fail and the packet dropped. But we should have dropped the
-packet earlier as we didn't even send a syncookie.
+greg k-h
 
-Let's refine tcp_synq_no_recent_overflow() to report a recent overflow
-only if jiffies is within the
-[last_overflow, last_overflow + TCP_SYNCOOKIE_VALID] interval. This
-way, no spurious recent overflow is reported when jiffies wraps and
-'last_overflow' becomes in the future from the point of view of
-time_after32().
+-------------
+Pseudo-Shortlog of commits:
 
-However, if jiffies wraps and enters the
-[last_overflow, last_overflow + TCP_SYNCOOKIE_VALID] interval (with
-'last_overflow' being a stale synflood timestamp), then
-tcp_synq_no_recent_overflow() still erroneously reports an
-overflow. In such cases, we have to rely on syncookie verification
-to drop the packet. We unfortunately have no way to differentiate
-between a fresh and a stale syncookie timestamp.
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.14.160-rc1
 
-In practice, using last_overflow as lower bound is problematic.
-If the synflood timestamp is concurrently updated between the time
-we read jiffies and the moment we store the timestamp in
-'last_overflow', then 'now' becomes smaller than 'last_overflow' and
-tcp_synq_no_recent_overflow() returns true, potentially dropping a
-valid syncookie.
+Aaro Koskinen <aaro.koskinen@nokia.com>
+    net: stmmac: don't stop NAPI processing when dropping a packet
 
-Reading jiffies after loading the timestamp could fix the problem,
-but that'd require a memory barrier. Let's just accommodate for
-potential timestamp growth instead and extend the interval using
-'last_overflow - HZ' as lower bound.
+Aaro Koskinen <aaro.koskinen@nokia.com>
+    net: stmmac: use correct DMA buffer size in the RX descriptor
 
-Signed-off-by: Guillaume Nault <gnault@redhat.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/net/tcp.h |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+Mathias Nyman <mathias.nyman@linux.intel.com>
+    xhci: fix USB3 device initiated resume race with roothub autosuspend
 
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -512,7 +512,15 @@ static inline bool tcp_synq_no_recent_ov
- {
- 	unsigned long last_overflow = tcp_sk(sk)->rx_opt.ts_recent_stamp;
- 
--	return time_after(jiffies, last_overflow + TCP_SYNCOOKIE_VALID);
-+	/* If last_overflow <= jiffies <= last_overflow + TCP_SYNCOOKIE_VALID,
-+	 * then we're under synflood. However, we have to use
-+	 * 'last_overflow - HZ' as lower bound. That's because a concurrent
-+	 * tcp_synq_overflow() could update .ts_recent_stamp after we read
-+	 * jiffies but before we store .ts_recent_stamp into last_overflow,
-+	 * which could lead to rejecting a valid syncookie.
-+	 */
-+	return !time_between32(jiffies, last_overflow - HZ,
-+			       last_overflow + TCP_SYNCOOKIE_VALID);
- }
- 
- static inline u32 tcp_cookie_time(void)
+Alex Deucher <alexander.deucher@amd.com>
+    drm/radeon: fix r1xx/r2xx register checker for POT textures
+
+Bart Van Assche <bvanassche@acm.org>
+    scsi: iscsi: Fix a potential deadlock in the timeout handler
+
+Hou Tao <houtao1@huawei.com>
+    dm btree: increase rebalance threshold in __rebalance2()
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    dma-buf: Fix memory leak in sync_file_merge()
+
+Jiang Yi <giangyi@amazon.com>
+    vfio/pci: call irq_bypass_unregister_producer() before freeing irq
+
+Dmitry Osipenko <digetx@gmail.com>
+    ARM: tegra: Fix FLOW_CTLR_HALT register clobbering by tegra_resume()
+
+Lihua Yao <ylhuajnu@outlook.com>
+    ARM: dts: s3c64xx: Fix init order of clock providers
+
+Pavel Shilovsky <pshilov@microsoft.com>
+    CIFS: Respect O_SYNC and O_DIRECT flags during reconnect
+
+Bjorn Andersson <bjorn.andersson@linaro.org>
+    rpmsg: glink: Free pending deferred work on remove
+
+Bjorn Andersson <bjorn.andersson@linaro.org>
+    rpmsg: glink: Don't send pending rx_done during remove
+
+Chris Lew <clew@codeaurora.org>
+    rpmsg: glink: Fix rpmsg_register_device err handling
+
+Chris Lew <clew@codeaurora.org>
+    rpmsg: glink: Put an extra reference during cleanup
+
+Arun Kumar Neelakantam <aneela@codeaurora.org>
+    rpmsg: glink: Fix use after free in open_ack TIMEOUT case
+
+Arun Kumar Neelakantam <aneela@codeaurora.org>
+    rpmsg: glink: Fix reuse intents memory leak issue
+
+Chris Lew <clew@codeaurora.org>
+    rpmsg: glink: Set tail pointer to 0 at end of FIFO
+
+Max Filippov <jcmvbkbc@gmail.com>
+    xtensa: fix TLB sanity checker
+
+George Cherian <george.cherian@marvell.com>
+    PCI: Apply Cavium ACS quirk to ThunderX2 and ThunderX3
+
+Jian-Hong Pan <jian-hong@endlessm.com>
+    PCI/MSI: Fix incorrect MSI-X masking on resume
+
+Steffen Liebergeld <steffen.liebergeld@kernkonzept.com>
+    PCI: Fix Intel ACS quirk UPDCR register address
+
+Dexuan Cui <decui@microsoft.com>
+    PCI/PM: Always return devices to D0 when thawing
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Revert "regulator: Defer init completion for a while after late_initcall"
+
+Ivan Bornyakov <brnkv.i1@gmail.com>
+    nvme: host: core: fix precedence of ternary operator
+
+Eric Dumazet <edumazet@google.com>
+    inet: protect against too small mtu values.
+
+Guillaume Nault <gnault@redhat.com>
+    tcp: Protect accesses to .ts_recent_stamp with {READ,WRITE}_ONCE()
+
+Guillaume Nault <gnault@redhat.com>
+    tcp: tighten acceptance of ACKs not matching a child socket
+
+Guillaume Nault <gnault@redhat.com>
+    tcp: fix rejected syncookies due to stale timestamps
+
+Taehee Yoo <ap420073@gmail.com>
+    tipc: fix ordering of tipc module init and exit routine
+
+Eric Dumazet <edumazet@google.com>
+    tcp: md5: fix potential overestimation of TCP option space
+
+Aaron Conole <aconole@redhat.com>
+    openvswitch: support asymmetric conntrack
+
+Mian Yousaf Kaukab <ykaukab@suse.de>
+    net: thunderx: start phy before starting autonegotiation
+
+Grygorii Strashko <grygorii.strashko@ti.com>
+    net: ethernet: ti: cpsw: fix extra rx interrupt
+
+Alexander Lobakin <alobakin@dlink.ru>
+    net: dsa: fix flow dissection on Tx path
+
+Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+    net: bridge: deny dev_set_mac_address() when unregistering
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |  4 +-
+ arch/arm/boot/dts/s3c6410-mini6410.dts             |  4 ++
+ arch/arm/boot/dts/s3c6410-smdk6410.dts             |  4 ++
+ arch/arm/mach-tegra/reset-handler.S                |  6 +--
+ arch/xtensa/mm/tlb.c                               |  4 +-
+ drivers/dma-buf/sync_file.c                        |  2 +-
+ drivers/gpu/drm/radeon/r100.c                      |  4 +-
+ drivers/gpu/drm/radeon/r200.c                      |  4 +-
+ drivers/md/persistent-data/dm-btree-remove.c       |  8 +++-
+ drivers/net/ethernet/cavium/thunder/thunder_bgx.c  |  2 +-
+ drivers/net/ethernet/stmicro/stmmac/common.h       |  2 +-
+ drivers/net/ethernet/stmicro/stmmac/descs_com.h    | 22 +++++----
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c |  2 +-
+ drivers/net/ethernet/stmicro/stmmac/enh_desc.c     | 10 ++--
+ drivers/net/ethernet/stmicro/stmmac/norm_desc.c    | 10 ++--
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 22 +++++----
+ drivers/net/ethernet/ti/cpsw.c                     |  2 +-
+ drivers/nvme/host/core.c                           |  4 +-
+ drivers/pci/msi.c                                  |  2 +-
+ drivers/pci/pci-driver.c                           | 17 ++++---
+ drivers/pci/quirks.c                               | 22 +++++----
+ drivers/regulator/core.c                           | 42 +++++------------
+ drivers/rpmsg/qcom_glink_native.c                  | 53 +++++++++++++++++-----
+ drivers/rpmsg/qcom_glink_smem.c                    |  2 +-
+ drivers/scsi/libiscsi.c                            |  4 +-
+ drivers/usb/host/xhci-hub.c                        |  8 ++++
+ drivers/usb/host/xhci-ring.c                       |  6 +--
+ drivers/vfio/pci/vfio_pci_intrs.c                  |  2 +-
+ fs/cifs/file.c                                     |  7 +++
+ include/linux/netdevice.h                          |  5 ++
+ include/linux/time.h                               | 13 ++++++
+ include/net/ip.h                                   |  5 ++
+ include/net/tcp.h                                  | 18 ++++++--
+ net/bridge/br_device.c                             |  6 +++
+ net/core/dev.c                                     |  3 +-
+ net/core/flow_dissector.c                          |  5 +-
+ net/ipv4/devinet.c                                 |  5 --
+ net/ipv4/ip_output.c                               | 14 ++++--
+ net/ipv4/tcp_output.c                              |  5 +-
+ net/openvswitch/conntrack.c                        | 11 +++++
+ net/tipc/core.c                                    | 29 ++++++------
+ 41 files changed, 257 insertions(+), 143 deletions(-)
 
 
