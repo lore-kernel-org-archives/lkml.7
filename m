@@ -2,139 +2,122 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BE6C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 998D7C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28138206DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6348521655
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:26:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576877208;
+	bh=GB0uH5v3CIKNR642grWZ0+CyMiDRyZ1gPbwQP4C+Aw0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HegtjdkjXYkRbWfGfL5WMLd9hgI9+sRt4qMTNia+JaERpllVSE/ana6PxlkUZSRDP
+	 xHEAVmRhP68x3PbcLQtaABA2qveCT1AH/89+T7Z9/JdF1Y8/8hnFGpePmTRbkEXKMj
+	 HcIQxqhx09lcZrWjxVFo3BRv4F2LhdAoISrR0GV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbfLTVZK (ORCPT
+        id S1727529AbfLTV0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 16:25:10 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:42721 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727402AbfLTVZJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 16:25:09 -0500
-Received: by mail-io1-f72.google.com with SMTP id e7so6894832iog.9
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 13:25:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=W3gsafMJQillzgO7L6f2ij3ENy4HZfZexVDohq89908=;
-        b=ZpPyafC13UFGruclXJL6XVNeqlhqzqh8/hZYh4TA7YsFNrGY1CmKXJ0pk89hFbaT6V
-         +bLQUmctpsM0XXjRHjtJJ+VS7Oh/3nuA3V6GttssZZmaJE4zX+XLycZLP3GhAKP3T/Wa
-         7v6fEkWX38gSJdL7cIIZ5/CkJNkaMqhHTsccRpYf5DEufLTjPo9EZjWLWVual/w4ahNw
-         c4fvdAFqT6Vj5SKjta07cfjBKduZuaUkiFeAG9lgaT3sVWzk9bC/QlkEvIp3lFoKLl2L
-         v0/AbOo5Lt3oYrnTVQMe6oRQR4rkX/CEgBvSRUHgkqasQabPeSBu5GUsTrYiK9K0j1eh
-         hZAQ==
-X-Gm-Message-State: APjAAAXmeKGHf1qdmDvxmpO6quYsEgv5JnLy5ijyW0Yy1dNBikf3/D6g
-        A8I2zIfFvmhdKBX75YdOIhmfSoq0OUZdaiRUDl8NCdZiwncp
-X-Google-Smtp-Source: APXvYqwQu3SSaguPbzx8uFQ8GKkuZywzsHmSCe9GRFzk75/tVa72pZKGaEmtOCpP5Zf+msbzUUOGnfFenIvYivgTL4kRk+XC2rHT
+        Fri, 20 Dec 2019 16:26:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56122 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727473AbfLTV0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 16:26:47 -0500
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82FDE206DA;
+        Fri, 20 Dec 2019 21:26:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576877206;
+        bh=GB0uH5v3CIKNR642grWZ0+CyMiDRyZ1gPbwQP4C+Aw0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mnD/cqIsY2DEGGEQjd5GSK4d6ltKJg8qF/7HVUf0RdCncfWQz6dCALsQSlUt4WWO5
+         GQjczmmQeTpmisqGhWEcfBC3ePvP11TPVHCEOxmgXyYC8Kd+cni1wpwfewiyQapBan
+         bbci6tmLpqU1uq5xNWdo1u7EofBgHvoVgC/xCiTQ=
+Date:   Fri, 20 Dec 2019 13:26:45 -0800
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chao Yu <chao@kernel.org>,
+        Linux-Next <linux-next@vger.kernel.org>
+Subject: Re: [RFC PATCH v5] f2fs: support data compression
+Message-ID: <20191220212645.GA14042@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20191216062806.112361-1-yuchao0@huawei.com>
+ <CAMuHMdUDURUQJjJU+2QQgY1hXN8ndJ6dwc-PF1CWc-HAio0sKA@mail.gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9aca:: with SMTP id x10mr11388888ion.80.1576877108885;
- Fri, 20 Dec 2019 13:25:08 -0800 (PST)
-Date:   Fri, 20 Dec 2019 13:25:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ee01f5059a294f5c@google.com>
-Subject: WARNING in percpu_ref_exit
-From:   syzbot <syzbot+2eea1ab51194c814cb70@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUDURUQJjJU+2QQgY1hXN8ndJ6dwc-PF1CWc-HAio0sKA@mail.gmail.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 12/19, Geert Uytterhoeven wrote:
+> Hi,
+> 
+> On Mon, Dec 16, 2019 at 7:29 AM Chao Yu <yuchao0@huawei.com> wrote:
+> >
+> > This patch tries to support compression in f2fs.
+> 
+> 
+> 
+> > --- a/fs/f2fs/file.c
+> > +++ b/fs/f2fs/file.c
+> 
+> > @@ -667,6 +719,24 @@ int f2fs_truncate_blocks(struct inode *inode, u64 from, bool lock)
+> >         return err;
+> >  }
+> >
+> > +int f2fs_truncate_blocks(struct inode *inode, u64 from, bool lock)
+> > +{
+> > +       u64 free_from = from;
+> > +
+> > +       /*
+> > +        * for compressed file, only support cluster size
+> > +        * aligned truncation.
+> > +        */
+> > +       if (f2fs_compressed_file(inode)) {
+> > +               size_t cluster_size = PAGE_SIZE <<
+> > +                                       F2FS_I(inode)->i_log_cluster_size;
+> > +
+> > +               free_from = roundup(from, cluster_size);
+> 
+> This is a 64-by-32 or 64-by-64 division, causing a link failure on
+> 32-bit platforms:
+> 
+>     fs/f2fs/file.o: In function `f2fs_truncate_blocks':
+>     file.c:(.text+0x1db4): undefined reference to `__udivdi3'
+> 
+> Please use DIV_ROUND_UP_ULL() instead.
 
-syzbot found the following crash on:
+Thanks, I applied it in:
+https://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git/commit/?h=dev
 
-HEAD commit:    7ddd09fc Add linux-next specific files for 20191220
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1457dcb9e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f183b01c3088afc6
-dashboard link: https://syzkaller.appspot.com/bug?extid=2eea1ab51194c814cb70
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=116182c1e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16d3c925e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+2eea1ab51194c814cb70@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 9727 at lib/percpu-refcount.c:111  
-percpu_ref_exit+0xab/0xd0 lib/percpu-refcount.c:111
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 9727 Comm: syz-executor571 Not tainted  
-5.5.0-rc2-next-20191220-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  panic+0x2e3/0x75c kernel/panic.c:221
-  __warn.cold+0x2f/0x3e kernel/panic.c:582
-  report_bug+0x289/0x300 lib/bug.c:195
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  fixup_bug arch/x86/kernel/traps.c:169 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:percpu_ref_exit+0xab/0xd0 lib/percpu-refcount.c:111
-Code: 00 00 00 00 fc ff df 48 c1 ea 03 80 3c 02 00 75 1d 48 c7 43 08 03 00  
-00 00 e8 01 41 e5 fd 5b 41 5c 41 5d 5d c3 e8 f5 40 e5 fd <0f> 0b eb bf 4c  
-89 ef e8 29 2c 23 fe eb d9 e8 82 2b 23 fe eb a7 4c
-RSP: 0018:ffffc90003bf7968 EFLAGS: 00010293
-RAX: ffff8880a700e500 RBX: ffff8880990cde10 RCX: ffffffff83901432
-RDX: 0000000000000000 RSI: ffffffff8390149b RDI: ffff8880990cde28
-RBP: ffffc90003bf7980 R08: ffff8880a700e500 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000607f514357c0
-R13: ffff8880990cde18 R14: ffff8880973e3000 R15: ffff8880973e3228
-  io_sqe_files_unregister+0x7d/0x2f0 fs/io_uring.c:4623
-  io_ring_ctx_free fs/io_uring.c:5575 [inline]
-  io_ring_ctx_wait_and_kill+0x430/0x9a0 fs/io_uring.c:5644
-  io_uring_release+0x42/0x50 fs/io_uring.c:5652
-  __fput+0x2ff/0x890 fs/file_table.c:280
-  ____fput+0x16/0x20 fs/file_table.c:313
-  task_work_run+0x145/0x1c0 kernel/task_work.c:113
-  exit_task_work include/linux/task_work.h:22 [inline]
-  do_exit+0x909/0x2f20 kernel/exit.c:797
-  do_group_exit+0x135/0x360 kernel/exit.c:895
-  get_signal+0x47c/0x24f0 kernel/signal.c:2734
-  do_signal+0x87/0x1700 arch/x86/kernel/signal.c:815
-  exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:160
-  prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
-  do_syscall_64+0x676/0x790 arch/x86/entry/common.c:304
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4468f9
-Code: e8 0c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 5b 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fb197749db8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-RAX: fffffffffffffe00 RBX: 00000000006dbc48 RCX: 00000000004468f9
-RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00000000006dbc48
-RBP: 00000000006dbc40 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc4c
-R13: 00007ffc42ed8b0f R14: 00007fb19774a9c0 R15: 0000000000000001
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+> 
+> Reported-by: <noreply@ellerman.id.au>
+> 
+> > +       }
+> > +
+> > +       return do_truncate_blocks(inode, free_from, lock);
+> > +}
+> 
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
