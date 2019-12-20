@@ -2,185 +2,134 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB34C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A372C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81A682465E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:07:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="deDir/kb";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="7k+FbETc"
+	by mail.kernel.org (Postfix) with ESMTP id 3C9332465E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:11:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfLTJHA (ORCPT
+        id S1727190AbfLTJLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 04:07:00 -0500
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:3490 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727129AbfLTJHA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 04:07:00 -0500
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBK95cwJ010597;
-        Fri, 20 Dec 2019 01:05:38 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=proofpoint;
- bh=vwu1+QAT7F0FB9mnOfF+8voHzKZrYCynHuyJimrLK94=;
- b=deDir/kbMob3mtTti4krPuB5ZA29O8cGo50BOqaalFUPeJfJV4tzrgX77vtleK1ZOOGs
- UyGK8IrKmnB4SArQomZxycQSQUsjKudtGIJ74ElbzNDYZvxZ1mpQQE5IEvWl5S8c84BD
- 3dmoctSZE3ynLRqZyrOlPAoH17b5jKyWgs6wODpQ2CtkDYyDe4rwHX6rMuq4J/FcMm/I
- 463p3sH5QUH5Ug2scYlZ9GlKE3PdupbT/mVSg7gCm/mgkSiVdvRPC5jUZ1+2XrYejRkV
- s4qEDvQUZdCr5u/frZM2ENR2UcJYA2HpnQsGLSEkSFpmYTVfeLLiT4/O+aDEjWeCdxw/ ew== 
-Received: from nam02-bl2-obe.outbound.protection.outlook.com (mail-bl2nam02lp2057.outbound.protection.outlook.com [104.47.38.57])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 2wyr9p6xqd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Dec 2019 01:05:38 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IzqlGRlGbNOs7WrOSb0Nk+MrrDfdWDirzx0kr9HYOP2jiSVkWKcUjGcTMaDRy6siVK0e2xkawxDDznhou8ZbD7xJ42yMtZJLaJNreEEbHJMXnfE1LxKnyB4f/R+JouaC5VC/hdqJxdMjDQu3NmzXWYSbTrGuajyDlqRxmqS1HAHDhwus+JcLJmfavKpaZ53zn5ogGPfpqHbgOPjaU7fBg/5rp45DFw+sTF0CuZhVp+nvZhvtFx+oDvZwDl4Kbf6f2nFHBLfLUnY03GZQfDihDDyzUF8O+MI04yDoZ+oegQQbf1S3gHKBt227wpkmZ1eH5ixcxaoNWM0HxbSZnMyLTw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vwu1+QAT7F0FB9mnOfF+8voHzKZrYCynHuyJimrLK94=;
- b=QPTP/5vCro8xw6uiY53iAVIXE9zz+LugNFx+CyPBkZ/nL7VvrkpIi21E3P2LRRK4KgUWz0G8G2lR8UMSV4/3vgSirjqX1D4/hKYeR8v8R2wOtyFaOlQ+bfkPYi6IRisMsAUcHPqRy15xpkfxRF5xEBnbclSES9GYOnMFbxIqazWiSKmtdh6ROnqHjZII/HqZjR8IfHLcJ442tGlinNz+EStLL+L1kqEUUW0leyS1WJcDtZhMTJ4ohkbS2ZvJibi5N1N/5YScHmsUESXRmqbI7HJiqHppXbURSYKq4ae44V1/ahrGEpy3rd5JiSmw/VNQCS96wuj9eMZc3mGldpPqZA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
- dkim=pass header.d=cadence.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vwu1+QAT7F0FB9mnOfF+8voHzKZrYCynHuyJimrLK94=;
- b=7k+FbETcN38+kj8hX1e8balZ5C1cLwIzTgBvH9Le4a+M4Mwxh8D5om+5iMUr/D+3+e2Ed3Amoj1XzVLFm9qUERDLYjRRjojUqe/lHUPOA7v4UNC7tiKp1XCNh8zKyzE7mWk+XzplGm0MdBDaX+zHIj2WHE8eOG4ueEMFNJvioXA=
-Received: from BY5PR07MB6514.namprd07.prod.outlook.com (10.255.137.27) by
- BY5PR07MB6531.namprd07.prod.outlook.com (10.255.138.156) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.13; Fri, 20 Dec 2019 09:05:36 +0000
-Received: from BY5PR07MB6514.namprd07.prod.outlook.com
- ([fe80::e5b3:f11f:7907:d5e7]) by BY5PR07MB6514.namprd07.prod.outlook.com
- ([fe80::e5b3:f11f:7907:d5e7%5]) with mapi id 15.20.2559.015; Fri, 20 Dec 2019
- 09:05:35 +0000
-From:   Milind Parab <mparab@cadence.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-CC:     "nicolas.nerre@microchip.com" <nicolas.nerre@microchip.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "antoine.tenart@bootlin.com" <antoine.tenart@bootlin.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dhananjay Vilasrao Kangude <dkangude@cadence.com>,
-        "a.fatoum@pengutronix.de" <a.fatoum@pengutronix.de>,
-        "brad.mouring@ni.com" <brad.mouring@ni.com>,
-        Parshuram Raju Thombare <pthombar@cadence.com>
-Subject: RE: [PATCH v2 3/3] net: macb: add support for high speed interface
-Thread-Topic: [PATCH v2 3/3] net: macb: add support for high speed interface
-Thread-Index: AQHVsZm5l82MVXLf60OyobQPmImAGae7UQaAgAACAgCAAWMWwIAACq4AgAYCPxA=
-Date:   Fri, 20 Dec 2019 09:05:35 +0000
-Message-ID: <BY5PR07MB65143BFFE9D08FBA2BD94669D32D0@BY5PR07MB6514.namprd07.prod.outlook.com>
-References: <1576230007-11181-1-git-send-email-mparab@cadence.com>
- <1576230177-11404-1-git-send-email-mparab@cadence.com>
- <20191215151249.GA25745@shell.armlinux.org.uk>
- <20191215152000.GW1344@shell.armlinux.org.uk>
- <BY5PR07MB65143D385836FF49966F5F6AD3510@BY5PR07MB6514.namprd07.prod.outlook.com>
- <20191216130908.GI25745@shell.armlinux.org.uk>
-In-Reply-To: <20191216130908.GI25745@shell.armlinux.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcbXBhcmFiXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctZGYzNzZmNTAtMjMwNy0xMWVhLWFlY2YtZDhmMmNhNGQyNWFhXGFtZS10ZXN0XGRmMzc2ZjUxLTIzMDctMTFlYS1hZWNmLWQ4ZjJjYTRkMjVhYWJvZHkudHh0IiBzej0iMjgxNCIgdD0iMTMyMjEzMDYzMzE1Mzg1NTUyIiBoPSJaUmcvV1lDdzRrc2V1MlRGZnZndlM0ZnFaSmM9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
-x-dg-rorf: true
-x-originating-ip: [14.143.9.161]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6b14a89f-9536-4e2b-9c47-08d7852bc6b2
-x-ms-traffictypediagnostic: BY5PR07MB6531:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR07MB653137B571405A169E7C7606D32D0@BY5PR07MB6531.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 025796F161
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(346002)(376002)(39860400002)(396003)(199004)(189003)(36092001)(8676002)(55016002)(2906002)(86362001)(186003)(66946007)(66476007)(5660300002)(76116006)(55236004)(66446008)(66556008)(107886003)(64756008)(478600001)(71200400001)(6506007)(33656002)(7696005)(26005)(9686003)(6916009)(81156014)(7416002)(4326008)(52536014)(316002)(54906003)(8936002)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR07MB6531;H:BY5PR07MB6514.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: cadence.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: gosJK1s7zKugrWqLYoct5mq9Oru+twW1L1vHSkAXBeXK4HoDMagHPFh7MSK/Mv2qWD02rTNkBEomtIGaYpDEEw7rgYPloALU+AhJGRqcJ56Xl2hGcs/aA4S/lTclFX4DYzRC1KG5CqCMAnoJroDIZ626r0b5rhXLQVoiVRuxwXV74M5ueeACOujzdTS5qiS6gG9B8Ne2YKpfEa8pb02Ck0tNOzkgSQVI0faFi8A4iAbkfD3v2uyiEihIYBHr8U//p/1YE2Y8x1b/sR6MI33VL3XXyO5RMDY+JluYWuvLP8RdGv9IpJvYvDDv8wucp7f+m/tAK5KzqKdJw6Ph6G8k0v2grOX3eolE6i625OJcMiSnkd6ZrKhvG05u41vzM3mJzAKaxN6WHUyZFKD8C74RNdbN7WBN3OMZ8Z9T7/R/McJuHwjay6X8XtsSXB7RxtOIYg/MhEplr1J2ZS1/w34vSsD72uPFNQP+62uRv8KcnWhZGhoN5LhXRVvd4r562pbY
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 20 Dec 2019 04:11:36 -0500
+Received: from mx2.suse.de ([195.135.220.15]:41152 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727129AbfLTJLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 04:11:35 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 70A3DAE88;
+        Fri, 20 Dec 2019 09:11:33 +0000 (UTC)
+Date:   Fri, 20 Dec 2019 10:11:31 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2] printk: Fix preferred console selection with multiple
+ matches
+Message-ID: <20191220091131.4uifcbudwppjspf4@pathway.suse.cz>
+References: <2712d7e2fb68bca06a33e2e062fc8e65a2652410.camel@kernel.crashing.org>
+ <20191219135053.xr67lybhycepcxkp@pathway.suse.cz>
+ <32fde8cd451ea0eaff38108d9f2f2d4a97a43097.camel@kernel.crashing.org>
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b14a89f-9536-4e2b-9c47-08d7852bc6b2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Dec 2019 09:05:35.8697
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cFhMWg2EFIuHLLahgoEfGP1tXQggi0sx8gDbk5V3c45J47LHKMzDGIDx1QZt2z2m49qvM301ulypgFykKZtCrtwHIFB5dXCqsBUqOSqZJTE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR07MB6531
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-19_08:2019-12-17,2019-12-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 malwarescore=0
- impostorscore=0 adultscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0
- suspectscore=0 priorityscore=1501 mlxlogscore=878 mlxscore=0 phishscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912200073
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <32fde8cd451ea0eaff38108d9f2f2d4a97a43097.camel@kernel.crashing.org>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>
->> Additional 3rd party I2C IP required (not part of GEM) for module
->> interrogation (MDIO to I2C handled by SW
->>  +--------------+                                  +-----------+
->>  |              |       |        |                 |  SFP+     |
->>  | GEM MAC/DMA  | <---> | SerDes | <---- SFI-----> | Optical   |
->>  |   USX PCS|   |       | (PMA)  |                 | Module    |
->>  +--------------+                                  +-----------+
->>                                                          ^
->>         +--------+                                       |
->>         | I2C    |                                       |
->>         | Master | <-------------------------------------|
->>         +--------+
->The kernel supports this through the sfp and phylink support. SFI is
->more commonly known as 10GBASE-R. Note that this is *not* USXGMII.
->Link status needs to come from the MAC side, so macb_mac_pcs_get_state()
->is required.
->
->> Rate determined by 10GBASE-T PHY capability through auto-negotiation.
->> I2C IP required
->>  +--------------+                                  +-----------+
->>  |              |       |        |                 |  SFP+ to  |
->>  | GEM MAC/DMA  | <---> | SerDes | <---- SFI-----> | 10GBASE-T |
->>  |   USX PCS|   |       | (PMA)  |                 |           |
->>  +--------------+                                  +-----------+
->>                                                          ^
->>         +--------+                                       |
->>         | I2C    |                                       |
->>         | Master | <-------------------------------------|
->>         +--------+
->
->The 10G copper module I have uses 10GBASE-R, 5000BASE-X, 2500BASE-X,
->and SGMII (without in-band status), dynamically switching between
->these depending on the results of the copper side negotiation.
->
->> USXGMII PHY. Uses MDIO or equivalent for status xfer
->>  +-------------+                                    +--------+
->>  |             |       |        |                   |        |
->>  | GEM MAC/DMA | <---> | SerDes | <--- USXGMII ---> |  PHY   |
->>  |  USX PCS    |       | (PMA)  |                   |        |
->>  +-------------+                                    +--------+
->>        ^                                                 ^
->>        |_____________________ MDIO ______________________|
->
->Overall, please implement phylink properly for your MAC, rather than
->the current half-hearted approach that *will* break in various
->circumstances.
->
-We would need more time to get back on the restructured implementation. Whi=
-le we
-work on that, is it okay to accept patch 1/3 and patch 2/3?
+On Fri 2019-12-20 08:48:24, Benjamin Herrenschmidt wrote:
+> On Thu, 2019-12-19 at 14:50 +0100, Petr Mladek wrote:
+> > The code really need simplification. I would prefer to take the risk
+> > and reduce the amount of added conditions as much as possible.
+> > I have an idea, see below.
+> 
+> I wanted you to say that :-) I'll rework along those lines. Just a nit
+> or two:
+> > 
+> > 
+> > > --- a/kernel/printk/printk.c
+> > > +++ b/kernel/printk/printk.c
+> > > @@ -2542,6 +2545,53 @@ static int __init keep_bootcon_setup(char *str)
+> > >  
+> > >  early_param("keep_bootcon", keep_bootcon_setup);
+> > >  
+> > > +enum con_match {
+> > > +	con_matched,
+> > > +	con_matched_preferred,
+> > > +	con_braille,
+> > > +	con_failed,
+> > > +	con_no_match,
+> > > +};
+> > 
+> > Please, replace this with int, where:
+> > 
+> >    + con_matched -> 0
+> >    + con_matched_preferred -> 0 and make "has_preferred" global variable
+> >    + con_braile -> 0		later check for CON_BRL flag
+> >    + con_failed -> -EFAULT
+> >    + con_no_match -> -ENOENT
+> 
+> Not fan of using -EFAULT here, it's a detail since it's rather kernel
+> internal, but I'd rather use -ENXIO for no match and -EIO for failed
+> (or pass the original error code up if any). That said it's really bike
+> shed painting at this point :-)
 
+Sigh, either variant is somehow confusing.
+
+I think that -ENOENT is a bit better than -EIO. It is abbreviation of
+"No entry or No entity" which quite fits here. Also the device might
+exist but it is not used when not requested.
+
+I do not mind about -EFAULT vs -EIO. Well, -EIO might actually
+better describe the reality.
+
+That said, I do not want to spend much time on bikesheding. Feel free
+to use whatever looks better to you.
+
+
+> > > @@ -2615,41 +2664,19 @@ void register_console(struct console *newcon)
+> > 	/* Prefer command line over platform specific defaults. */
+> > 	err = try_match_new_console(newcon, true);
+> > 	if (err = -ENOENT)
+> > 		err = try_match_new_console(newcon, false);
+> > 
+> > 	/* printk() messages are not printed to Braille consoles. */
+> > 	if (err || console->flags | CON_BRL)
+> > 		return;
+> 
+> So this changes the existing behaviour in one way that may or may not
+> matter, I don't know:
+> 
+> If setup() fails, the existing code will not exit. That means that if
+> the console has CON_ENABLED already set (some do set it statically or
+> set it from outside this function, I haven't looked into details the
+> various circumstances this can happen), the existing code will still
+> insert it. Your patch will make us not insert it.
+
+Great catch! There is still a lot to learn about this code.
+
+It seems that, for example, pstore and netconsole are not added
+into console_cmdline and do not match. They relly on the explicitely
+set CON_ENABLED.
+
+I would prefer to hide this into the new "shorter" function. I would
+rename it to try_enable_new_console() and add the following at the end:
+
+	/*
+	 * For example, pstore, netconsole, are enabled even
+	 * without matching.
+	 */
+	if (console->flags & CON_ENABLED)
+		return 0;
+
+Best Regards,
+Petr
