@@ -2,68 +2,92 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF41C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CBBC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17A11206DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:45:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576867524;
-	bh=AB4siEhED5j0416+2sMoma4toRhn6RpvO+9sj8Jbv4I=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=dpgaWcDeDIwKVEgIT+hh0OtGrev8mmxri8fNPpVnP+lrI5ounaIAIZHz06ja5kEFC
-	 /XG36HH/7GC3sliQZHt1Jcra5gFXnAnffUxsixNHi40yIdaeXp9DnKcpyNRYgPFcuP
-	 totzDPAUjS+KCK/5SrqoePqn26qWnJBcX3uyUC5Q=
+	by mail.kernel.org (Postfix) with ESMTP id EF27E21655
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:47:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zn/G+njr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727587AbfLTSpW (ORCPT
+        id S1727508AbfLTSrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 13:45:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42492 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727508AbfLTSpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 13:45:12 -0500
-Subject: Re: [git pull] IOMMU Fixes for Linux v5.5-rc2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576867511;
-        bh=AB4siEhED5j0416+2sMoma4toRhn6RpvO+9sj8Jbv4I=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=2Q2amZ74uZSr7vQG2OJFLkTXcWPoXSpAswftjGR6+psWELXAPEjJxMcv62z+BuuRS
-         NUfCWfVct6wwJwB41eEG1a53hQ5+Aa1AmF+sIeQ0tQCjC8knrmadSTzRkbqSVyh/bw
-         oTWmQRa9MWzTKKWUJoyYAqRkkkcijtf9RIjB8AAM=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191220113020.GA18747@8bytes.org>
-References: <20191220113020.GA18747@8bytes.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191220113020.GA18747@8bytes.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git
- tags/iommu-fixes-v5.5-rc2
-X-PR-Tracked-Commit-Id: c18647900ec864d401ba09b3bbd5b34f331f8d26
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b371ddb94fae82b6565020639b7db31934043c65
-Message-Id: <157686751152.22538.2666482295104019680.pr-tracker-bot@kernel.org>
-Date:   Fri, 20 Dec 2019 18:45:11 +0000
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+        Fri, 20 Dec 2019 13:47:04 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46565 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727394AbfLTSrE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 13:47:04 -0500
+Received: by mail-pl1-f193.google.com with SMTP id y8so4454903pll.13;
+        Fri, 20 Dec 2019 10:47:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WUFFdmrlLLOcZoODl24Mz9x5e4SBbfgw0WqBc+hkjRw=;
+        b=Zn/G+njrDF2WV1P+SPyANEG7P6SV/9L+l0w6UHSCX3+hvSciiJzE7yELDIKsz/K0T7
+         w6evSjvopfbchMqB9MJaLl9Bkrg9qb6cQYs8UCTTaMEPWVO5dKcivREzBQR+1fWS7Ril
+         5OH28j2J8CnZ8YAC/kD7tYO7Z9GNT6OTNrwCuacvGQRwSfriT+QT8ARexKjjaeJ+XK2N
+         c8Uh78SghhVspsDKGIMeHr3aVGtB7vNUfFAB9ZHlCRpfw179Y6y6tZYpXmMMGR6yHGop
+         vS6/yqD9NPTG7asg0MWQkx4yqpbW2ulbkpOaNA+DTc0x8WEotzmkuYAoe+N3IJ+/N0gz
+         /GxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WUFFdmrlLLOcZoODl24Mz9x5e4SBbfgw0WqBc+hkjRw=;
+        b=aLfX7y++rlKNpxEBCB0XmipTPpkOel0PYPPnVgCBbe7EPrvp5/el9fLec4KqW/pSVp
+         i5TpOlgZUZK8CumXxGEYvAY0u2dYspnmBZZ+S5F5DiiVLUmZzRdI/H4C7xN6afShMMzH
+         D5TF0uSaaoDiyeaXz2JebHxSs1DlspNp5dhKJ8Ti6HuWeU97ktYaT0mCp/s0W5Sa/5s4
+         h28sZMnxoSL6KZaM7r0u5AsXghg3f/ZLIOl9gzVVceoj/SuRkaO2PMkzJSZWlvdzAZds
+         00gj2D6fhqnKGl0MNfZo41T7gPDDuVImB4KcYjr1OxpC1HmXX27L70Z3lDSvlK71Lte4
+         X9Kw==
+X-Gm-Message-State: APjAAAX5s5sO8MVtY1eWqYqkEE6LVVkTYYOS+Xf6GIzDh5o7zKATUIWe
+        cNm/KGpbg43xMMzWSwTwTpw=
+X-Google-Smtp-Source: APXvYqxB8/zw26funWFuWvGzeZh11f08sIS8/UbzKqUeyTZIAzQRUyNCQBpUtuO27NEFaSHPrLBlpg==
+X-Received: by 2002:a17:90a:ab86:: with SMTP id n6mr18006586pjq.53.1576867622873;
+        Fri, 20 Dec 2019 10:47:02 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j14sm12390317pgs.57.2019.12.20.10.47.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 20 Dec 2019 10:47:01 -0800 (PST)
+Date:   Fri, 20 Dec 2019 10:47:00 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 000/162] 4.4.207-stable review
+Message-ID: <20191220184700.GA26293@roeck-us.net>
+References: <20191219183150.477687052@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 20 Dec 2019 12:30:26 +0100:
+On Thu, Dec 19, 2019 at 07:31:48PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.207 release.
+> There are 162 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 21 Dec 2019 18:24:44 +0000.
+> Anything received after that time might be too late.
+> 
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-fixes-v5.5-rc2
+Build results:
+	total: 170 pass: 170 fail: 0
+Qemu test results:
+	total: 327 pass: 327 fail: 0
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b371ddb94fae82b6565020639b7db31934043c65
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Guenter
