@@ -2,281 +2,139 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54903C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D79CC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2522720716
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:48:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12F0B206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:50:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="FwXM8Kku"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfLTQsq (ORCPT
+        id S1727428AbfLTQuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 11:48:46 -0500
-Received: from foss.arm.com ([217.140.110.172]:53332 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727181AbfLTQsp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 11:48:45 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A06B71FB;
-        Fri, 20 Dec 2019 08:48:44 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 877B83F6CF;
-        Fri, 20 Dec 2019 08:48:42 -0800 (PST)
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>
-Cc:     Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        valentin.schneider@arm.com, qperret@google.com,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Qais Yousef <qais.yousef@arm.com>
-Subject: [PATCH] sched/rt: Add a new sysctl to control uclamp_util_min
-Date:   Fri, 20 Dec 2019 16:48:38 +0000
-Message-Id: <20191220164838.31619-1-qais.yousef@arm.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 20 Dec 2019 11:50:03 -0500
+Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.22]:20999 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727233AbfLTQuC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 11:50:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1576860600;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:Cc:Message-Id:Date:Subject:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=rUxpZn7cfcxARKCHzhVD7qNlVTVpzSzhoASApFtny/I=;
+        b=FwXM8KkuymqUEVQ9wzpf5BCc/r9f9olxDwb0jNOs7Ts66GX3UMHgVbkCNrOdto82i7
+        HEsbtZF/aWWA3fZAlApW6QfBs/zOMq2grRHXzJYvTpVs9NNNRnv05uITDebL2z6VFANJ
+        ZQszImN4mZLU7KlAEmpvv7g+sWI6RMvPaKhesRPAJX+MyhHgQ0+DrCWegDnCOij4uuGw
+        IYBdgpj2vJRuflAcnY0wFtrQERZJEsaTBd6CDtm2zhdNCpYJ5nTozAEXZ3F37HHALPtd
+        DiYeaC6tzPGWMvTcbUWTy8Zaosn9HsytOCdJs/GU4ThGqPp0s6Il/TQIaZ2/0FKB7J0K
+        hWAQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/vuwDOpExo="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.1.1 DYNA|AUTH)
+        with ESMTPSA id 4012cfvBKGns8za
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Fri, 20 Dec 2019 17:49:54 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Subject: [BUG] CI20: interrupt-controller@10001000 didn't like hwirq-0x0 to VIRQ8 mapping (rc=-19) 
+Date:   Fri, 20 Dec 2019 17:49:52 +0100
+Message-Id: <8BA39E30-53CB-47DB-8890-465ACB760402@goldelico.com>
+Cc:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        MIPS Creator CI20 Development 
+        <mips-creator-ci20-dev@googlegroups.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Zhou Yanjie <zhouyanjie@zoho.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RT tasks by default try to run at the highest capacity/performance
-level. When uclamp is selected this default behavior is retained by
-enforcing the uclamp_util_min of the RT tasks to be
-uclamp_none(UCLAMP_MAX), which is SCHED_CAPACITY_SCALE; the maximum
-value.
+Hi Paul,
+since v5.5-rc1 the boot log is flooded by a sequence of messages like:
 
-See commit 1a00d999971c ("sched/uclamp: Set default clamps for RT tasks").
+[    0.000000] NR_IRQS: 222
+[    0.000000] irq: :interrupt-controller@10001000 didn't like hwirq-0x0 =
+to VIRQ8 mapping (rc=3D-19)
+[    0.000000] irq: :interrupt-controller@10001000 didn't like hwirq-0x1 =
+to VIRQ9 mapping (rc=3D-19)
+[    0.000000] irq: :interrupt-controller@10001000 didn't like hwirq-0x2 =
+to VIRQ10 mapping (rc=3D-19)
+[    0.000000] irq: :interrupt-controller@10001000 didn't like hwirq-0x3 =
+to VIRQ11 mapping (rc=3D-19)
+[    0.000000] irq: :interrupt-controller@10001000 didn't like hwirq-0x4 =
+to VIRQ12 mapping (rc=3D-19)
+...
+[    0.000000] irq: :interrupt-controller@10001000 didn't like =
+hwirq-0x3e to VIRQ70 mapping (rc=3D-19)
+[    0.000000] irq: :interrupt-controller@10001000 didn't like =
+hwirq-0x3f to VIRQ71 mapping (rc=3D-19)
 
-On battery powered devices, this default behavior could consume more
-power, and it is desired to be able to tune it down. While uclamp allows
-tuning this by changing the uclamp_util_min of the individual tasks, but
-this is cumbersome and error prone.
+A handful of /proc/interrupts are nevertheless working.
 
-To control the default behavior globally by system admins and device
-integrators, introduce the new sysctl_sched_rt_uclamp_util_min to
-change the default uclamp_util_min value of the RT tasks.
+I have now analyzed the situation a little:
 
-Whenever the new default changes, it'd be applied on the next wakeup of
-the RT task, assuming that it still uses the system default value and
-not a user applied one.
+* the message is printed by irq_domain_associate()
+* call sequence is ingenic_intc_of_init() -> irq_domain_add_legacy() -> =
+irq_domain_associate_many() -> irq_domain_associate()
+* the reason for the message is that
+  domain->ops->map()
+  called in irq_domain_associate() returns an error
+* domain->ops is initialized to &irq_generic_chip_ops
+* domain->ops->map is initialized to irq_map_generic_chip()
+* irq_map_generic_chip() calls __irq_get_domain_generic_chip()
+* which returns -ENODEV (-19) if d->gc =3D=3D NULL
 
-If the uclamp_util_min of an RT task is 0, then the RT utilization of
-the rq is used to drive the frequency selection in schedutil for RT
-tasks.
+So the location, where the -19 comes from, is found.
 
-Tested on Juno-r2 in combination of the RT capacity awareness patches.
-By default an RT task will go to the highest capacity CPU and run at the
-maximum frequency. With this patch the RT task can run anywhere and
-doesn't cause the frequency to be maximum all the time.
+Now why is d->gc =3D=3D NULL in __irq_get_domain_generic_chip() ?
 
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
----
- include/linux/sched/sysctl.h |  1 +
- kernel/sched/core.c          | 54 ++++++++++++++++++++++++++++++++----
- kernel/sched/rt.c            |  6 ++++
- kernel/sched/sched.h         |  4 +++
- kernel/sysctl.c              |  7 +++++
- 5 files changed, 67 insertions(+), 5 deletions(-)
+This IMHO seems to be a bad initialization sequence:
 
-diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
-index d4f6215ee03f..ec73d8db2092 100644
---- a/include/linux/sched/sysctl.h
-+++ b/include/linux/sched/sysctl.h
-@@ -59,6 +59,7 @@ extern int sysctl_sched_rt_runtime;
- #ifdef CONFIG_UCLAMP_TASK
- extern unsigned int sysctl_sched_uclamp_util_min;
- extern unsigned int sysctl_sched_uclamp_util_max;
-+extern unsigned int sysctl_sched_rt_uclamp_util_min;
- #endif
- 
- #ifdef CONFIG_CFS_BANDWIDTH
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 90e4b00ace89..a8ab0bb7a967 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -792,6 +792,23 @@ unsigned int sysctl_sched_uclamp_util_min = SCHED_CAPACITY_SCALE;
- /* Max allowed maximum utilization */
- unsigned int sysctl_sched_uclamp_util_max = SCHED_CAPACITY_SCALE;
- 
-+/*
-+ * By default RT tasks run at the maximum performance point/capacity of the
-+ * system. Uclamp enforces this by always setting UCLAMP_MIN of RT tasks to
-+ * SCHED_CAPACITY_SCALE.
-+ *
-+ * This knob allows admins to change the default behavior when uclamp is being
-+ * used. In battery powered devices particularly running at the maximum
-+ * capacity will increase energy consumption and shorten the battery life.
-+ *
-+ * This knob only affects the default value RT uses when a new RT task is
-+ * forked or has just changed policy to RT and no uclamp user settings were
-+ * applied (ie: the task didn't modify the default value to a new value.
-+ *
-+ * This knob will not override the system default values defined above.
-+ */
-+unsigned int sysctl_sched_rt_uclamp_util_min = SCHED_CAPACITY_SCALE;
-+
- /* All clamps are required to be less or equal than these values */
- static struct uclamp_se uclamp_default[UCLAMP_CNT];
- 
-@@ -919,6 +936,14 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
- 	return uc_req;
- }
- 
-+void uclamp_rt_sync_default_util_min(struct task_struct *p)
-+{
-+	struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
-+
-+	if (!uc_se->user_defined)
-+		uclamp_se_set(uc_se, sysctl_sched_rt_uclamp_util_min, false);
-+}
-+
- unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
- {
- 	struct uclamp_se uc_eff;
-@@ -1116,12 +1141,13 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
- 				loff_t *ppos)
- {
- 	bool update_root_tg = false;
--	int old_min, old_max;
-+	int old_min, old_max, old_rt_min;
- 	int result;
- 
- 	mutex_lock(&uclamp_mutex);
- 	old_min = sysctl_sched_uclamp_util_min;
- 	old_max = sysctl_sched_uclamp_util_max;
-+	old_rt_min = sysctl_sched_rt_uclamp_util_min;
- 
- 	result = proc_dointvec(table, write, buffer, lenp, ppos);
- 	if (result)
-@@ -1129,12 +1155,23 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
- 	if (!write)
- 		goto done;
- 
-+	/*
-+	 * The new value will be applied to all RT tasks the next time they
-+	 * wakeup, assuming the task is using the system default and not a user
-+	 * specified value. In the latter we shall leave the value as the user
-+	 * requested.
-+	 */
- 	if (sysctl_sched_uclamp_util_min > sysctl_sched_uclamp_util_max ||
- 	    sysctl_sched_uclamp_util_max > SCHED_CAPACITY_SCALE) {
- 		result = -EINVAL;
- 		goto undo;
- 	}
- 
-+	if (sysctl_sched_rt_uclamp_util_min > SCHED_CAPACITY_SCALE) {
-+		result = -EINVAL;
-+		goto undo;
-+	}
-+
- 	if (old_min != sysctl_sched_uclamp_util_min) {
- 		uclamp_se_set(&uclamp_default[UCLAMP_MIN],
- 			      sysctl_sched_uclamp_util_min, false);
-@@ -1160,6 +1197,7 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
- undo:
- 	sysctl_sched_uclamp_util_min = old_min;
- 	sysctl_sched_uclamp_util_max = old_max;
-+	sysctl_sched_rt_uclamp_util_min = old_rt_min;
- done:
- 	mutex_unlock(&uclamp_mutex);
- 
-@@ -1202,9 +1240,12 @@ static void __setscheduler_uclamp(struct task_struct *p,
- 		if (uc_se->user_defined)
- 			continue;
- 
--		/* By default, RT tasks always get 100% boost */
-+		/*
-+		 * By default, RT tasks always get 100% boost, which the admins
-+		 * are allowed change via sysctl_sched_rt_uclamp_util_min knob.
-+		 */
- 		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
--			clamp_value = uclamp_none(UCLAMP_MAX);
-+			clamp_value = sysctl_sched_rt_uclamp_util_min;
- 
- 		uclamp_se_set(uc_se, clamp_value, false);
- 	}
-@@ -1236,9 +1277,12 @@ static void uclamp_fork(struct task_struct *p)
- 	for_each_clamp_id(clamp_id) {
- 		unsigned int clamp_value = uclamp_none(clamp_id);
- 
--		/* By default, RT tasks always get 100% boost */
-+		/*
-+		 * By default, RT tasks always get 100% boost, which the admins
-+		 * are allowed change via sysctl_sched_rt_uclamp_util_min knob.
-+		 */
- 		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
--			clamp_value = uclamp_none(UCLAMP_MAX);
-+			clamp_value = sysctl_sched_rt_uclamp_util_min;
- 
- 		uclamp_se_set(&p->uclamp_req[clamp_id], clamp_value, false);
- 	}
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index e591d40fd645..19572dfc175b 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -2147,6 +2147,12 @@ static void pull_rt_task(struct rq *this_rq)
-  */
- static void task_woken_rt(struct rq *rq, struct task_struct *p)
- {
-+	/*
-+	 * When sysctl_sched_rt_uclamp_util_min value is changed by the user,
-+	 * we apply any new value on the next wakeup, which is here.
-+	 */
-+	uclamp_rt_sync_default_util_min(p);
-+
- 	if (!task_running(rq, p) &&
- 	    !test_tsk_need_resched(rq->curr) &&
- 	    p->nr_cpus_allowed > 1 &&
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 280a3c735935..337bf17b1a9d 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -2300,6 +2300,8 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags) {}
- #endif /* CONFIG_CPU_FREQ */
- 
- #ifdef CONFIG_UCLAMP_TASK
-+void uclamp_rt_sync_default_util_min(struct task_struct *p);
-+
- unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
- 
- static __always_inline
-@@ -2330,6 +2332,8 @@ static inline unsigned int uclamp_util(struct rq *rq, unsigned int util)
- 	return uclamp_util_with(rq, util, NULL);
- }
- #else /* CONFIG_UCLAMP_TASK */
-+void uclamp_rt_sync_default_util_min(struct task_struct *p) {}
-+
- static inline unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
- 					    struct task_struct *p)
- {
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 70665934d53e..06183762daac 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -465,6 +465,13 @@ static struct ctl_table kern_table[] = {
- 		.mode		= 0644,
- 		.proc_handler	= sysctl_sched_uclamp_handler,
- 	},
-+	{
-+		.procname	= "sched_rt_util_clamp_min",
-+		.data		= &sysctl_sched_rt_uclamp_util_min,
-+		.maxlen		= sizeof(unsigned int),
-+		.mode		= 0644,
-+		.proc_handler	= sysctl_sched_uclamp_handler,
-+	},
- #endif
- #ifdef CONFIG_SCHED_AUTOGROUP
- 	{
--- 
-2.17.1
+* ingenic_intc_of_init() calls firstly irq_domain_add_legacy()
+* which does *not* initialize domain->gc but expects it to be !NULL =
+through irq_map_generic_chip()
+* and would only irq_alloc_domain_generic_chips() which initializes =
+domain->gc if irq_domain_add_legacy() is successful
+* irq_alloc_domain_generic_chips() would initialize domain->gc by =
+calling __irq_alloc_domain_generic_chips()
+
+There are indeed significant changes in drivers/irqchip/irq-ingenic.c
+from v5.4to v5.5-rc1 which have introduced the use of =
+irq_domain_add_legacy()
+and irq_alloc_domain_generic_chips() by
+
+52ecc87642f2 irqchip: ingenic: Error out if IRQ domain creation failed
+208caadce5d4 irqchip: ingenic: Get virq number from IRQ domain
+8bc7464b5140 irqchip: ingenic: Alloc generic chips from IRQ domain
+b8b0145f7d0e irqchip: Ingenic: Add process for more than one irq at the =
+same time.
+
+Most likely 52ecc87642f2 has changed the call sequence and therefore =
+always fails.
+
+Is there some essential patch missing to be upstreamed?
+I have looked but not found anything related in linux-next.
+
+I have also tried reverting 52ecc87642f2 alone but it has conflicts.
+
+But I can revert all 4 commits with an otherwise unchanged setup and
+the messages are gone for me.
+
+How would a fix look like?
+
+BR and thanks,
+Nikolaus
 
