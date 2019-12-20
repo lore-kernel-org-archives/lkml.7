@@ -2,117 +2,173 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0C7C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C56C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DDCF24679
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0678A24679
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:35:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Y6oJ3aJw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbfLTHcs (ORCPT
+        id S1727176AbfLTHfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 02:32:48 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14142 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725941AbfLTHcs (ORCPT
+        Fri, 20 Dec 2019 02:35:20 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:12616 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbfLTHfU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 02:32:48 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBK7TxfK155005
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 02:32:47 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2x0jw8djmd-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 02:32:47 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <svens@linux.ibm.com>;
-        Fri, 20 Dec 2019 07:32:44 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 20 Dec 2019 07:32:42 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBK7WfvA57147616
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Dec 2019 07:32:41 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2E3D7A4067;
-        Fri, 20 Dec 2019 07:32:41 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EF294A405F;
-        Fri, 20 Dec 2019 07:32:40 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Fri, 20 Dec 2019 07:32:40 +0000 (GMT)
-Date:   Fri, 20 Dec 2019 08:32:40 +0100
-From:   Sven Schnelle <svens@linux.ibm.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        linux-trace-devel@vger.kernel.org,
-        Shuah Khan <shuahkhan@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] selftests/ftrace: fix glob selftest
-References: <20191218074427.96184-1-svens@linux.ibm.com>
- <20191218074427.96184-2-svens@linux.ibm.com>
- <20191219183151.58d81624@gandalf.local.home>
- <20191220162746.d0889aeac721f8e4d400db64@kernel.org>
+        Fri, 20 Dec 2019 02:35:20 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dfc79ac0000>; Thu, 19 Dec 2019 23:35:08 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 19 Dec 2019 23:35:19 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 19 Dec 2019 23:35:19 -0800
+Received: from [10.19.108.118] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Dec
+ 2019 07:35:16 +0000
+Subject: Re: [Patch V2 00/18] Tegra XUSB OTG support
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Nagarjuna Kristam <nkristam@nvidia.com>
+CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <jonathanh@nvidia.com>, <mark.rutland@arm.com>,
+        <robh+dt@kernel.org>, <kishon@ti.com>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
+ <20191219131349.GI1440537@ulmo>
+X-Nvconfidentiality: public
+From:   JC Kuo <jckuo@nvidia.com>
+Message-ID: <5212a532-1366-ff4f-e9c2-94b04e23eefd@nvidia.com>
+Date:   Fri, 20 Dec 2019 15:35:14 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191220162746.d0889aeac721f8e4d400db64@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-TM-AS-GCONF: 00
-x-cbid: 19122007-0028-0000-0000-000003CA86B7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19122007-0029-0000-0000-0000248DDA63
-Message-Id: <20191220073240.GA72310@tuxmaker.boeblingen.de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-19_08:2019-12-17,2019-12-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- adultscore=0 clxscore=1011 impostorscore=0 mlxlogscore=999 phishscore=0
- spamscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912200059
+In-Reply-To: <20191219131349.GI1440537@ulmo>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1576827309; bh=g6cinNKpqTaYMi4kn9LaHC8VtZ+9vfK0NwqwRxkQQ3I=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Y6oJ3aJwLN3PCdxpS/MejfceoJ/njnLjWhXyjSgJzYIPFt/fV07ypdyLLpTNfFBNC
+         izOP0QGOVSKIB7Jz/JojMSMykpP2CpgzaBSz6b3BVB40xDF+30ookfvkVbt1/gUG5G
+         dfW0U12nPyeMoqY2rwD4bxZD5nzHmiRFqTqC7xJdNXydb1dA/zIwm8yxmqy92JQUxt
+         UTkgu+MlWTMR+DfvPEqEIKhtQ+XOHvb+0ya/iQNoyC4W4S1XCvomqhK0bIZhWausf3
+         DIdpYg6ReBr2cr+KVMterj4QrHBholgCH/z7B5nXxiP8jNHUtRVkBH7YQgeqL2hp7J
+         POgkki8pSP55A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On Fri, Dec 20, 2019 at 04:27:46PM +0900, Masami Hiramatsu wrote:
-> On Thu, 19 Dec 2019 18:31:51 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+
+On 12/19/19 9:13 PM, Thierry Reding wrote:
+> On Wed, Dec 18, 2019 at 02:46:13PM +0530, Nagarjuna Kristam wrote:
+>> This patch series adds OTG support on XUSB hardware used in Tegra210 and
+>> Tegra186 SoCs.
+>>
+>> This patchset is composed with :
+>>  - dt bindings of XUSB Pad Controller
+>>  - dt bindings for XUSB device Driver
+>>  - Tegra PHY driver for usb-role-switch and usb-phy
+>>  - Tegra XUSB host mode driver to support OTG mode
+>>  - Tegra XUSB device mode driver to use usb-phy and multi device mode
+>>  - dts for XUSB pad controller
+>>  - dts for xudc
+>>
+>> Tegra Pad controller driver register for role switch updates for
+>> OTG/peripheral capable USB ports and adds usb-phy for that corresponding
+>> USB ports.
+>>
+>> Host and Device mode drivers gets usb-phy from USB2's phy and registers
+>> notifier for role changes to perform corresponding role tasks.
+>>
+>> Tests done:
+>>  - device mode support using micro-B USB cable connection between ubuntu
+>>    host and DUT on micro-B port
+It's a micro-AB port according to Micro USB specifications.
+
+>>  - host mode support by connecting pen-drive to micro USB port on DUT
+>>    using micro-B OTG cable.
+It's a standard-A to micro-A converter.
+
+>>  - toggling between these 2 modes by hot plugging corresponding cables.
 > 
-> > On Wed, 18 Dec 2019 08:44:25 +0100
-> > Sven Schnelle <svens@linux.ibm.com> wrote:
-> > 
-> > > test.d/ftrace/func-filter-glob.tc is failing on s390 because it has
-> > > ARCH_INLINE_SPIN_LOCK and friends set to 'y'. So the usual
-> > > __raw_spin_lock symbol isn't in the ftrace function list. Change
-> > > '*aw*lock' to '*time*ns' which would hopefully match some of the
-> > > ktime_() functions on all platforms.
-> > 
-> > This requires an ack from Masami, and this patch can go through Shuah's
-> > tree.
-> > 
-> > Also, any patches for the Linux kernel should be Cc'd to lkml. The
-> > linux-trace-devel is mostly for tracing tools, not kernel patches.
+> Are there any tests we can run without manual intervention? Can we force
+> the device into peripheral mode and then setup a configuration using
+> configfs? I'm not sure how useful that would be since it doesn't really
+> exercise the driver code very much and doesn't tell whether it's
+> actually working.
 > 
-> Thanks Steve to CC to me.
-> BTW, are there any reason why we use different symbols for different
-> glob patterns?
-> I mean we can use 'schedul*', '*chedule' and '*sch*ule' as test
-> glob patterns.
+> Any other way how we can test this?
+> 
+I don't think there is a way to test role-swap and host/device driver without
+swapping cables. Thanks.
 
-Don't know, but i don't see a reason why we should have different patterns. If
-there's an agreement that we prefer a common pattern i can update the patch and
-resend.
-
-Regards
-Sven
-
+> Thierry
+> 
+>>
+>> DUT: Jetson-tx1, Jetson tx2.
+>>
+>> V2:
+>>  - Updated usb-role-switch documentation for Padctl driver.
+>>  - Update XUDC bindings doc as suggested by Rob.
+>>  - Used standard error codes for error return.
+>>  - Added of_platform_depopulate during error and driver removal.
+>>  - Updated error variable during phy initialization in XUDC driver.
+>>  - Updated Tegra210 soc dtb file as per changes to binding doc.
+>>
+>> Nagarjuna Kristam (18):
+>>   dt-bindings: phy: tegra-xusb: Add usb-role-switch
+>>   dt-bindings: usb: Add NVIDIA Tegra XUSB device mode controller binding
+>>   phy: tegra: xusb: Add usb-role-switch support
+>>   phy: tegra: xusb: Add usb-phy support
+>>   phy: tegra: xusb: Add support to get companion USB 3 port
+>>   phy: tegra: xusb: Add set_mode support for USB 2 phy on Tegra210
+>>   phy: tegra: xusb: Add set_mode support for utmi phy on Tegra186
+>>   usb: xhci-tegra: Add OTG support
+>>   usb: gadget: tegra-xudc: Remove usb-role-switch support
+>>   usb: gadget: tegra-xudc: Add usb-phy support
+>>   usb: gadget: tegra-xudc: use phy_set_mode to set/unset device mode
+>>   usb: gadget: tegra-xudc: support multiple device modes
+>>   arm64: tegra: update OTG port entries for jetson-tx1
+>>   arm64: tegra: update OTG port entries for jetson-tx2
+>>   arm64: tegra: Add xudc node for Tegra210
+>>   arm64: tegra: Enable xudc on Jetson TX1
+>>   arm64: tegra: Add xudc node for Tegra186
+>>   arm64: tegra: Enable xudc node on Jetson TX2
+>>
+>>  .../bindings/phy/nvidia,tegra124-xusb-padctl.txt   |   6 +
+>>  .../devicetree/bindings/usb/nvidia,tegra-xudc.yaml | 190 ++++++++++++++
+>>  arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts |  23 +-
+>>  arch/arm64/boot/dts/nvidia/tegra186.dtsi           |  19 ++
+>>  arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |  34 ++-
+>>  arch/arm64/boot/dts/nvidia/tegra210.dtsi           |  19 ++
+>>  drivers/phy/tegra/Kconfig                          |   1 +
+>>  drivers/phy/tegra/xusb-tegra186.c                  | 109 ++++++--
+>>  drivers/phy/tegra/xusb-tegra210.c                  | 126 ++++++++--
+>>  drivers/phy/tegra/xusb.c                           | 134 ++++++++++
+>>  drivers/phy/tegra/xusb.h                           |   5 +
+>>  drivers/usb/gadget/udc/tegra-xudc.c                | 276 ++++++++++++++-------
+>>  drivers/usb/host/xhci-tegra.c                      | 225 ++++++++++++++++-
+>>  include/linux/phy/tegra/xusb.h                     |   2 +
+>>  14 files changed, 1031 insertions(+), 138 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.yaml
+>>
+>> -- 
+>> 2.7.4
+>>
