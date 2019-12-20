@@ -2,118 +2,189 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32305C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D3CC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07302218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:07:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576847235;
-	bh=hSDUwdKW3yrFJVWxez/KM8OwO5W5CJyt4daJ1sfRKLI=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=YUyzzujypkXta1jxJkQxpp00chuGW+yk1+e3IlzdSlfdkA12lXtudVyqyyRSKO9Mn
-	 GYSJbg5pWJIyJhhzhNZJZlx7cuVDEUpjFLyaRjsB/TCBQv34iXDf6kGQohku95vsLx
-	 YLVAq3JdYYhuPOxe0/KipzKNHJKttDy55L03qhCs=
+	by mail.kernel.org (Postfix) with ESMTP id 9E08021655
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:08:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GzcrcTUt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbfLTNHN (ORCPT
+        id S1727437AbfLTNIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 08:07:13 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:45704 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727344AbfLTNHN (ORCPT
+        Fri, 20 Dec 2019 08:08:12 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39071 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727370AbfLTNIL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 08:07:13 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iiHzl-0005uV-GW; Fri, 20 Dec 2019 14:07:05 +0100
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Subject: Re: [PATCH] KVM: arm/arm64: vgic: Handle =?UTF-8?Q?GICR=5FPENDBAS?=  =?UTF-8?Q?ER=2EPTZ=20filed=20as=20RAZ?=
-X-PHP-Originating-Script: 0:main.inc
+        Fri, 20 Dec 2019 08:08:11 -0500
+Received: by mail-pf1-f196.google.com with SMTP id q10so5192762pfs.6
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 05:08:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=meDitHt8qyvVvhpt+x/CzgZZK4BHEUE/N3YzuDpyS6w=;
+        b=GzcrcTUta+EBedAj8mVaPAO2+l2jkXwr/govHhy8/tR7y0KjEyEfKUkYnUljmc2hq5
+         YicK+EEf3JdJVmLP1s9H6mmtSkxGeLSpFuvTTwY3lA/Ypf5O9YcVWfseHPmgQSOuowcD
+         XfrbDzKTLRKq9NUos+8PPmpmiIC9PbrP9GAYs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=meDitHt8qyvVvhpt+x/CzgZZK4BHEUE/N3YzuDpyS6w=;
+        b=fE84I+tcv+4ZzbCdfzXI4HCU6rjggkuwcOK3Seq42M45FIZt0M6IY+QKDvp3TsXQEF
+         oeeYJWubwwuu2aad1zmlRTwIb2tOfLhWyebfJ8rN2RXWinptHaNcZPfd2TtEQMMysFoz
+         KgfDLmmPEQCIiiN8bM7fBzAoTEiKCR+NzHxnHW6EDPrY07BzTUdMykxv9uX7GBU+F86c
+         PeXjJDrP0tkZ/8X/b98MF/ql3S60B312/wXlqS6NzNfSgs+YxGfwUk+5s64BCGNpKUML
+         pJgh/VFxKn0UxqPy9fygkvqQspNMAi3R0DuFzavNyQoMjVM2IWV0Kd9ly80hKcN+iNlA
+         nH9w==
+X-Gm-Message-State: APjAAAVsZmD1EVgI1oBhsNAnF4RAPJ+tOj9XPMfAYxY3Q9timUHDBgSa
+        T2hMpcrgbOzG46gJrorBXbymcg==
+X-Google-Smtp-Source: APXvYqwFRwyu5QWdevIerg75X3jjqVtRPPDstapmZRlXiLTdYC4bUNnX0Tqvl8NLkavB185wI0tplQ==
+X-Received: by 2002:a65:4242:: with SMTP id d2mr1422153pgq.166.1576847291041;
+        Fri, 20 Dec 2019 05:08:11 -0800 (PST)
+Received: from tfiga.tok.corp.google.com ([2401:fa00:8f:203:f5fe:2a5e:f953:c0ed])
+        by smtp.gmail.com with ESMTPSA id 100sm10273862pjo.17.2019.12.20.05.08.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 05:08:10 -0800 (PST)
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     linux-media@vger.kernel.org
+Cc:     Shunqian Zheng <zhengsq@rock-chips.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: [PATCH] media: i2c: ov5695: Fix power on and off sequences
+Date:   Fri, 20 Dec 2019 22:08:00 +0900
+Message-Id: <20191220130800.61589-1-tfiga@chromium.org>
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 20 Dec 2019 13:07:05 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <andre.przywara@arm.com>, <eric.auger@redhat.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
-        <wanghaibin.wang@huawei.com>
-In-Reply-To: <20191220111833.1422-1-yuzenghui@huawei.com>
-References: <20191220111833.1422-1-yuzenghui@huawei.com>
-Message-ID: <71e3dcc00ad5ab8dffd732bfe7381705@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, andre.przywara@arm.com, eric.auger@redhat.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-20 11:18, Zenghui Yu wrote:
-> Although guest will hardly read and use the PTZ (Pending Table Zero)
-> bit in GICR_PENDBASER, let us emulate the architecture strictly.
-> As per IHI 0069E 9.11.30, PTZ field is WO, and reads as 0.
->
-> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-> ---
->
-> Noticed when checking all fields of GICR_PENDBASER register.
-> But _not_ sure whether it's worth a fix, as Linux never sets
-> the PTZ bit before enabling LPI (set GICR_CTLR_ENABLE_LPIS).
->
-> And I wonder under which scenarios can this bit be written as 1.
-> It seems difficult for software to determine whether the pending
-> table contains all zeros when writing this bit.
+From: Dongchun Zhu <dongchun.zhu@mediatek.com>
 
-This is a useless HW optimization, where it can avoid reading the
-pending table the very first time you write to this register if
-it is told that it is all zero. A decent ITS implementation
-already has a mechanism to find out about the pending bits by
-looking into the IMPDEF area (the first 1kB) of the pending table.
-PTZ is just yet another way to do the same thing.
+From the measured hardware signal, OV5695 reset pin goes high for a
+short period of time during boot-up. From the sensor specification, the
+reset pin is active low and the DT binding defines the pin as active
+low, which means that the values set by the driver are inverted and thus
+the value requested in probe ends up high.
 
-This can only happen once in the lifetime of the system (when 
-allocating
-the table), and Linux doesn't really care. As usual, the GIC is setting
-the level of useless complexity pretty high...
+Fix it by changing probe to request the reset GPIO initialized to high,
+which makes the initial state of the physical signal low.
 
->
->  virt/kvm/arm/vgic/vgic-mmio-v3.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c
-> b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-> index 7dfd15dbb308..ebc218840fc2 100644
-> --- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
-> +++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-> @@ -414,8 +414,11 @@ static unsigned long
-> vgic_mmio_read_pendbase(struct kvm_vcpu *vcpu,
->  					     gpa_t addr, unsigned int len)
->  {
->  	struct vgic_cpu *vgic_cpu = &vcpu->arch.vgic_cpu;
-> +	u64 value = vgic_cpu->pendbaser;
->
-> -	return extract_bytes(vgic_cpu->pendbaser, addr & 7, len);
-> +	value &= ~GICR_PENDBASER_PTZ;
-> +
-> +	return extract_bytes(value, addr & 7, len);
->  }
->
->  static void vgic_mmio_write_pendbase(struct kvm_vcpu *vcpu,
+In addition, DOVDD rising must occur before DVDD rising from spec., but
+regulator_bulk_enable() API enables all the regulators asynchronously.
+Use an explicit loops of regulator_enable() instead.
 
-Otherwise looks good. I'll queue it with Eric's correction
-to the subject line.
+For power off sequence, it is required that DVDD falls first. Given the
+bulk API does not give any guarantee about the order of regulators,
+change the driver to use regulator_disable() instead.
 
-Thanks,
+The sensor also requires a delay between reset high and first I2C
+transaction, which was assumed to be 8192 XVCLK cycles, but 1ms is
+recommended by the vendor. Fix this as well.
 
-         M.
+Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+---
+ drivers/media/i2c/ov5695.c | 41 +++++++++++++++++++++-----------------
+ 1 file changed, 23 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/media/i2c/ov5695.c b/drivers/media/i2c/ov5695.c
+index d6cd15bb699ac..8d0cc3893fcfc 100644
+--- a/drivers/media/i2c/ov5695.c
++++ b/drivers/media/i2c/ov5695.c
+@@ -971,16 +971,9 @@ static int ov5695_s_stream(struct v4l2_subdev *sd, int on)
+ 	return ret;
+ }
+ 
+-/* Calculate the delay in us by clock rate and clock cycles */
+-static inline u32 ov5695_cal_delay(u32 cycles)
+-{
+-	return DIV_ROUND_UP(cycles, OV5695_XVCLK_FREQ / 1000 / 1000);
+-}
+-
+ static int __ov5695_power_on(struct ov5695 *ov5695)
+ {
+-	int ret;
+-	u32 delay_us;
++	int i, ret;
+ 	struct device *dev = &ov5695->client->dev;
+ 
+ 	ret = clk_prepare_enable(ov5695->xvclk);
+@@ -991,21 +984,24 @@ static int __ov5695_power_on(struct ov5695 *ov5695)
+ 
+ 	gpiod_set_value_cansleep(ov5695->reset_gpio, 1);
+ 
+-	ret = regulator_bulk_enable(OV5695_NUM_SUPPLIES, ov5695->supplies);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to enable regulators\n");
+-		goto disable_clk;
++	for (i = 0; i < OV5695_NUM_SUPPLIES; i++) {
++		ret = regulator_enable(ov5695->supplies[i].consumer);
++		if (ret) {
++			dev_err(dev, "Failed to enable %s: %d\n",
++				ov5695->supplies[i].supply, ret);
++			goto disable_reg_clk;
++		}
+ 	}
+ 
+ 	gpiod_set_value_cansleep(ov5695->reset_gpio, 0);
+ 
+-	/* 8192 cycles prior to first SCCB transaction */
+-	delay_us = ov5695_cal_delay(8192);
+-	usleep_range(delay_us, delay_us * 2);
++	usleep_range(1000, 1200);
+ 
+ 	return 0;
+ 
+-disable_clk:
++disable_reg_clk:
++	for (--i; i >= 0; i--)
++		regulator_disable(ov5695->supplies[i].consumer);
+ 	clk_disable_unprepare(ov5695->xvclk);
+ 
+ 	return ret;
+@@ -1013,9 +1009,18 @@ static int __ov5695_power_on(struct ov5695 *ov5695)
+ 
+ static void __ov5695_power_off(struct ov5695 *ov5695)
+ {
++	struct device *dev = &ov5695->client->dev;
++	int i, ret;
++
+ 	clk_disable_unprepare(ov5695->xvclk);
+ 	gpiod_set_value_cansleep(ov5695->reset_gpio, 1);
+-	regulator_bulk_disable(OV5695_NUM_SUPPLIES, ov5695->supplies);
++
++	for (i = OV5695_NUM_SUPPLIES - 1; i >= 0; i--) {
++		ret = regulator_disable(ov5695->supplies[i].consumer);
++		if (ret)
++			dev_err(dev, "Failed to disable %s: %d\n",
++				ov5695->supplies[i].supply, ret);
++	}
+ }
+ 
+ static int __maybe_unused ov5695_runtime_resume(struct device *dev)
+@@ -1285,7 +1290,7 @@ static int ov5695_probe(struct i2c_client *client,
+ 	if (clk_get_rate(ov5695->xvclk) != OV5695_XVCLK_FREQ)
+ 		dev_warn(dev, "xvclk mismatched, modes are based on 24MHz\n");
+ 
+-	ov5695->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
++	ov5695->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
+ 	if (IS_ERR(ov5695->reset_gpio)) {
+ 		dev_err(dev, "Failed to get reset-gpios\n");
+ 		return -EINVAL;
 -- 
-Jazz is not dead. It just smells funny...
+2.24.1.735.g03f4e72817-goog
+
