@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 312A8C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 619EBC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC9BB21D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3284C218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:48:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576853286;
-	bh=Tbquh1Fj1o2WG2c/z313x7NCjA3H4GBJz8gcqT1tAcw=;
+	s=default; t=1576853288;
+	bh=MuC6FWBBnfdeREOpVAHA4y09Wy0aKmWP9NwlDlxJz7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=naI0+nQsvmrzfvK4yPMzAvrf1r4UZPvdzD4vq7lQjI0AUPorV24/XN4qXL/T/BiKD
-	 /dajkwGTZDMtNzsOmB4S+oUlW0gynIwKGcc3FMRIKooNC5ybEvt5uxn/6bBIYqLog8
-	 TrXl6ekRg2hZDwgLy4RfUfZ7CrsTAp6aQKxJND80=
+	b=BX4sW4n+jrGujjNENXY+2W0eoqfJFp0NifM3UAkvX22WV5YRztIGK6fabyzuKcqFN
+	 c/EX+xmUFWIJKhUN8fHC7u8UyXGO/o930gPlR1L55bEVT+wnRdjqaBN1WAbZVGDC8W
+	 S+WWdij0bs/owhqn/LU3ea9l1C3yoSIJFd4oFmMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbfLTOsE (ORCPT
+        id S1727983AbfLTOsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:48:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46444 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:48:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727861AbfLTOr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:47:58 -0500
+        id S1727893AbfLTOr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:47:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39A3524680;
-        Fri, 20 Dec 2019 14:47:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1A382465E;
+        Fri, 20 Dec 2019 14:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576853278;
-        bh=Tbquh1Fj1o2WG2c/z313x7NCjA3H4GBJz8gcqT1tAcw=;
+        s=default; t=1576853275;
+        bh=MuC6FWBBnfdeREOpVAHA4y09Wy0aKmWP9NwlDlxJz7w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vxwfSws05OI5Be+aGh0cEVrycj4alyc445GgDtnqRgHnLv4F58JI1aD8zV24ETQxK
-         zmfuJ9YSi0+9nw8jNlS029d4OAZKcZyzPK2EHbDsDN2Gk8iclreTOqDF5ApjAA18p2
-         g7GpBMMZQTy03v95P+kSqY49MRo9DXVGZiK9G1H4=
+        b=xzeciv0aYi3fjVcMI1UXE4fsB79hrybK0F1cvfI5deChB2fb72WhNK4oRoj3PmRHk
+         XblxLIFTi/Bd8gh/xvfSHQdGPULpp75CXRidrFYmAFShUZ0Kqz1zIfT/LKWBS/If3R
+         lG1jtO/z73X/bRaTXewSE9usoz0CDG9zuSKIrxBM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Juergen Gross <jgross@suse.com>,
-        Nicholas Tsirakis <niko.tsirakis@gmail.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, xen-devel@lists.xenproject.org
-Subject: [PATCH AUTOSEL 4.4 11/11] xen/balloon: fix ballooned page accounting without hotplug enabled
-Date:   Fri, 20 Dec 2019 09:47:43 -0500
-Message-Id: <20191220144744.10565-11-sashal@kernel.org>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 09/11] s390/cpum_sf: Adjust sampling interval to avoid hitting sample limits
+Date:   Fri, 20 Dec 2019 09:47:41 -0500
+Message-Id: <20191220144744.10565-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220144744.10565-1-sashal@kernel.org>
 References: <20191220144744.10565-1-sashal@kernel.org>
@@ -60,41 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-[ Upstream commit c673ec61ade89bf2f417960f986bc25671762efb ]
+[ Upstream commit 39d4a501a9ef55c57b51e3ef07fc2aeed7f30b3b ]
 
-When CONFIG_XEN_BALLOON_MEMORY_HOTPLUG is not defined
-reserve_additional_memory() will set balloon_stats.target_pages to a
-wrong value in case there are still some ballooned pages allocated via
-alloc_xenballooned_pages().
+Function perf_event_ever_overflow() and perf_event_account_interrupt()
+are called every time samples are processed by the interrupt handler.
+However function perf_event_account_interrupt() has checks to avoid being
+flooded with interrupts (more then 1000 samples are received per
+task_tick).  Samples are then dropped and a PERF_RECORD_THROTTLED is
+added to the perf data. The perf subsystem limit calculation is:
 
-This will result in balloon_process() no longer be triggered when
-ballooned pages are freed in batches.
+    maximum sample frequency := 100000 --> 1 samples per 10 us
+    task_tick = 10ms = 10000us --> 1000 samples per task_tick
 
-Reported-by: Nicholas Tsirakis <niko.tsirakis@gmail.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+The work flow is
+
+measurement_alert() uses SDBT head and each SBDT points to 511
+ SDB pages, each with 126 sample entries. After processing 8 SBDs
+ and for each valid sample calling:
+
+     perf_event_overflow()
+       perf_event_account_interrupts()
+
+there is a considerable amount of samples being dropped, especially when
+the sample frequency is very high and near the 100000 limit.
+
+To avoid the high amount of samples being dropped near the end of a
+task_tick time frame, increment the sampling interval in case of
+dropped events. The CPU Measurement sampling facility on the s390
+supports only intervals, specifiing how many CPU cycles have to be
+executed before a sample is generated. Increase the interval when the
+samples being generated hit the task_tick limit.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/balloon.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/s390/kernel/perf_cpum_sf.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
-index cfab1d24e4bcc..1c789056e7e84 100644
---- a/drivers/xen/balloon.c
-+++ b/drivers/xen/balloon.c
-@@ -392,7 +392,8 @@ static struct notifier_block xen_memory_nb = {
- #else
- static enum bp_state reserve_additional_memory(void)
- {
--	balloon_stats.target_pages = balloon_stats.current_pages;
-+	balloon_stats.target_pages = balloon_stats.current_pages +
-+				     balloon_stats.target_unpopulated;
- 	return BP_ECANCELED;
- }
- #endif /* CONFIG_XEN_BALLOON_MEMORY_HOTPLUG */
+diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
+index 874762a51c546..c81627527af0a 100644
+--- a/arch/s390/kernel/perf_cpum_sf.c
++++ b/arch/s390/kernel/perf_cpum_sf.c
+@@ -1293,6 +1293,22 @@ static void hw_perf_event_update(struct perf_event *event, int flush_all)
+ 	if (sampl_overflow)
+ 		OVERFLOW_REG(hwc) = DIV_ROUND_UP(OVERFLOW_REG(hwc) +
+ 						 sampl_overflow, 1 + num_sdb);
++
++	/* Perf_event_overflow() and perf_event_account_interrupt() limit
++	 * the interrupt rate to an upper limit. Roughly 1000 samples per
++	 * task tick.
++	 * Hitting this limit results in a large number
++	 * of throttled REF_REPORT_THROTTLE entries and the samples
++	 * are dropped.
++	 * Slightly increase the interval to avoid hitting this limit.
++	 */
++	if (event_overflow) {
++		SAMPL_RATE(hwc) += DIV_ROUND_UP(SAMPL_RATE(hwc), 10);
++		debug_sprintf_event(sfdbg, 1, "%s: rate adjustment %ld\n",
++				    __func__,
++				    DIV_ROUND_UP(SAMPL_RATE(hwc), 10));
++	}
++
+ 	if (sampl_overflow || event_overflow)
+ 		debug_sprintf_event(sfdbg, 4, "hw_perf_event_update: "
+ 				    "overflow stats: sample=%llu event=%llu\n",
 -- 
 2.20.1
 
