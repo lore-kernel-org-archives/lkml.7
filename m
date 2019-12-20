@@ -2,152 +2,139 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB275C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BE6C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF1D6206DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:22:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VccLePC7"
+	by mail.kernel.org (Postfix) with ESMTP id 28138206DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:25:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727567AbfLTVWK (ORCPT
+        id S1727513AbfLTVZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 16:22:10 -0500
-Received: from mail-pj1-f74.google.com ([209.85.216.74]:35912 "EHLO
-        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727402AbfLTVWK (ORCPT
+        Fri, 20 Dec 2019 16:25:10 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:42721 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727402AbfLTVZJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 16:22:10 -0500
-Received: by mail-pj1-f74.google.com with SMTP id m61so6044752pjb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 13:22:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=r9lHUhVFmnwnvOI5+OYOqNbrR4sRrsu0Lvjkysu9m60=;
-        b=VccLePC7IXuSG66sx0PbhNexga6fWcYCg7SXxnBD8scdmE77qzrp8kF5tiLoxIvGyZ
-         cgK70KJ/9brCj7xNGnxcD5GmiI3v95REtyIFZKcDUNcjClkCij1om62AJlI1ZIJSwm4r
-         VyLinh19pG1DNbeVj+CrqjyWjdPG57HVKg/ApLWg8GY1NIEIlrb7IwGrAWzZw4AI/CU0
-         5RMbSPsGxtHhlNDlvmajf1daaT8ueDprlX322nqjNm/3N3yqswVvHXR338cTdHW8DZbe
-         77MdGvRoDccK14cs3eCsPZcP1Q1GcXGUFCrwA0WrabkD+Xv9iQ1zQ2h96D2vbpGsc6Os
-         Id/g==
+        Fri, 20 Dec 2019 16:25:09 -0500
+Received: by mail-io1-f72.google.com with SMTP id e7so6894832iog.9
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 13:25:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=r9lHUhVFmnwnvOI5+OYOqNbrR4sRrsu0Lvjkysu9m60=;
-        b=SVI9l3ckmDy61zV1Yx2ceO8ThER5c8l/LNXfYDCESALfmxCD1zu3xt4urTRrwYh5ot
-         MbdNYX2UshdTDHclczEHysFbWOnetNyXoK3M+L/2DxBvjeykubQCJxEqjJLf81p6xte0
-         mEQIYhO9HYiCyBa6RLkGvxCOTeSbZgRKtZuMpnVOoAQ1rrJkdMK5ZuhFvRDd3C+VROuq
-         LYZ+6jP8qyrgAiPS4/ak/1sdXRfLUcbrI6x9S1jPCqWBanSDbu18gzwkiqSxETmg2kAm
-         A2IMUxb5wVZdnW6yFML4esXPIDYDPVwKNuBgVfu+Vuk5RsH4bacWIhSBi7PPAHsz27YD
-         rT3g==
-X-Gm-Message-State: APjAAAXFXeJ/vjnfkg3KtDYTnisvQBAXj6gv3T7o9/36nQGVnjSxaVGW
-        cC2mvy45fw2T/MsilDB2DXsLI2hRvw4=
-X-Google-Smtp-Source: APXvYqzAyuXgHTXrORNS6szcAloXE1fh1IDUxk+eoYefkB4yiERkk+yPhmXzgc5nXJYrKSjHf0NpTIjsDAA=
-X-Received: by 2002:a63:bc01:: with SMTP id q1mr18010589pge.442.1576876929534;
- Fri, 20 Dec 2019 13:22:09 -0800 (PST)
-Date:   Fri, 20 Dec 2019 13:22:07 -0800
-Message-Id: <20191220212207.76726-1-adelva@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-Subject: [PATCH net] virtio-net: Skip set_features on non-cvq devices
-From:   Alistair Delva <adelva@google.com>
-To:     netdev@vger.kernel.org
-Cc:     stable@vger.kernel.org, "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>, kernel-team@android.com,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=W3gsafMJQillzgO7L6f2ij3ENy4HZfZexVDohq89908=;
+        b=ZpPyafC13UFGruclXJL6XVNeqlhqzqh8/hZYh4TA7YsFNrGY1CmKXJ0pk89hFbaT6V
+         +bLQUmctpsM0XXjRHjtJJ+VS7Oh/3nuA3V6GttssZZmaJE4zX+XLycZLP3GhAKP3T/Wa
+         7v6fEkWX38gSJdL7cIIZ5/CkJNkaMqhHTsccRpYf5DEufLTjPo9EZjWLWVual/w4ahNw
+         c4fvdAFqT6Vj5SKjta07cfjBKduZuaUkiFeAG9lgaT3sVWzk9bC/QlkEvIp3lFoKLl2L
+         v0/AbOo5Lt3oYrnTVQMe6oRQR4rkX/CEgBvSRUHgkqasQabPeSBu5GUsTrYiK9K0j1eh
+         hZAQ==
+X-Gm-Message-State: APjAAAXmeKGHf1qdmDvxmpO6quYsEgv5JnLy5ijyW0Yy1dNBikf3/D6g
+        A8I2zIfFvmhdKBX75YdOIhmfSoq0OUZdaiRUDl8NCdZiwncp
+X-Google-Smtp-Source: APXvYqwQu3SSaguPbzx8uFQ8GKkuZywzsHmSCe9GRFzk75/tVa72pZKGaEmtOCpP5Zf+msbzUUOGnfFenIvYivgTL4kRk+XC2rHT
+MIME-Version: 1.0
+X-Received: by 2002:a5d:9aca:: with SMTP id x10mr11388888ion.80.1576877108885;
+ Fri, 20 Dec 2019 13:25:08 -0800 (PST)
+Date:   Fri, 20 Dec 2019 13:25:08 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ee01f5059a294f5c@google.com>
+Subject: WARNING in percpu_ref_exit
+From:   syzbot <syzbot+2eea1ab51194c814cb70@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, io-uring@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On devices without control virtqueue support, such as the virtio_net
-implementation in crosvm[1], attempting to configure LRO will panic the
-kernel:
+Hello,
 
-kernel BUG at drivers/net/virtio_net.c:1591!
-invalid opcode: 0000 [#1] PREEMPT SMP PTI
-CPU: 1 PID: 483 Comm: Binder:330_1 Not tainted 5.4.5-01326-g19463e9acaac #1
-Hardware name: ChromiumOS crosvm, BIOS 0
-RIP: 0010:virtnet_send_command+0x15d/0x170 [virtio_net]
-Code: d8 00 00 00 80 78 02 00 0f 94 c0 65 48 8b 0c 25 28 00 00 00 48 3b 4c 24 70 75 11 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 <0f> 0b e8 ec a4 12 c8 66 90 66 2e 0f 1f 84 00 00 00 00 00 55 48 89
-RSP: 0018:ffffb97940e7bb50 EFLAGS: 00010246
-RAX: ffffffffc0596020 RBX: ffffa0e1fc8ea840 RCX: 0000000000000017
-RDX: ffffffffc0596110 RSI: 0000000000000011 RDI: 000000000000000d
-RBP: ffffb97940e7bbf8 R08: ffffa0e1fc8ea0b0 R09: ffffa0e1fc8ea0b0
-R10: ffffffffffffffff R11: ffffffffc0590940 R12: 0000000000000005
-R13: ffffa0e1ffad2c00 R14: ffffb97940e7bc08 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffffa0e1fd100000(006b) knlGS:00000000e5ef7494
-CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-CR2: 00000000e5eeb82c CR3: 0000000079b06001 CR4: 0000000000360ee0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+syzbot found the following crash on:
+
+HEAD commit:    7ddd09fc Add linux-next specific files for 20191220
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1457dcb9e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f183b01c3088afc6
+dashboard link: https://syzkaller.appspot.com/bug?extid=2eea1ab51194c814cb70
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=116182c1e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16d3c925e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+2eea1ab51194c814cb70@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 9727 at lib/percpu-refcount.c:111  
+percpu_ref_exit+0xab/0xd0 lib/percpu-refcount.c:111
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 9727 Comm: syz-executor571 Not tainted  
+5.5.0-rc2-next-20191220-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
 Call Trace:
- ? preempt_count_add+0x58/0xb0
- ? _raw_spin_lock_irqsave+0x36/0x70
- ? _raw_spin_unlock_irqrestore+0x1a/0x40
- ? __wake_up+0x70/0x190
- virtnet_set_features+0x90/0xf0 [virtio_net]
- __netdev_update_features+0x271/0x980
- ? nlmsg_notify+0x5b/0xa0
- dev_disable_lro+0x2b/0x190
- ? inet_netconf_notify_devconf+0xe2/0x120
- devinet_sysctl_forward+0x176/0x1e0
- proc_sys_call_handler+0x1f0/0x250
- proc_sys_write+0xf/0x20
- __vfs_write+0x3e/0x190
- ? __sb_start_write+0x6d/0xd0
- vfs_write+0xd3/0x190
- ksys_write+0x68/0xd0
- __ia32_sys_write+0x14/0x20
- do_fast_syscall_32+0x86/0xe0
- entry_SYSENTER_compat+0x7c/0x8e
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  panic+0x2e3/0x75c kernel/panic.c:221
+  __warn.cold+0x2f/0x3e kernel/panic.c:582
+  report_bug+0x289/0x300 lib/bug.c:195
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  fixup_bug arch/x86/kernel/traps.c:169 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:percpu_ref_exit+0xab/0xd0 lib/percpu-refcount.c:111
+Code: 00 00 00 00 fc ff df 48 c1 ea 03 80 3c 02 00 75 1d 48 c7 43 08 03 00  
+00 00 e8 01 41 e5 fd 5b 41 5c 41 5d 5d c3 e8 f5 40 e5 fd <0f> 0b eb bf 4c  
+89 ef e8 29 2c 23 fe eb d9 e8 82 2b 23 fe eb a7 4c
+RSP: 0018:ffffc90003bf7968 EFLAGS: 00010293
+RAX: ffff8880a700e500 RBX: ffff8880990cde10 RCX: ffffffff83901432
+RDX: 0000000000000000 RSI: ffffffff8390149b RDI: ffff8880990cde28
+RBP: ffffc90003bf7980 R08: ffff8880a700e500 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000607f514357c0
+R13: ffff8880990cde18 R14: ffff8880973e3000 R15: ffff8880973e3228
+  io_sqe_files_unregister+0x7d/0x2f0 fs/io_uring.c:4623
+  io_ring_ctx_free fs/io_uring.c:5575 [inline]
+  io_ring_ctx_wait_and_kill+0x430/0x9a0 fs/io_uring.c:5644
+  io_uring_release+0x42/0x50 fs/io_uring.c:5652
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  exit_task_work include/linux/task_work.h:22 [inline]
+  do_exit+0x909/0x2f20 kernel/exit.c:797
+  do_group_exit+0x135/0x360 kernel/exit.c:895
+  get_signal+0x47c/0x24f0 kernel/signal.c:2734
+  do_signal+0x87/0x1700 arch/x86/kernel/signal.c:815
+  exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:160
+  prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+  do_syscall_64+0x676/0x790 arch/x86/entry/common.c:304
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4468f9
+Code: e8 0c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 5b 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fb197749db8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: fffffffffffffe00 RBX: 00000000006dbc48 RCX: 00000000004468f9
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00000000006dbc48
+RBP: 00000000006dbc40 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc4c
+R13: 00007ffc42ed8b0f R14: 00007fb19774a9c0 R15: 0000000000000001
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-This happens because virtio_set_features() does not check the presence
-of the control virtqueue feature, which is sanity checked by a BUG_ON
-in virtnet_send_command().
 
-Fix this by skipping any feature processing if the control virtqueue is
-missing. This should be OK for any future feature that is added, as
-presumably all of them would require control virtqueue support to notify
-the endpoint that offload etc. should begin.
-
-[1] https://chromium.googlesource.com/chromiumos/platform/crosvm/
-
-Fixes: a02e8964eaf9 ("virtio-net: ethtool configurable LRO")
-Cc: stable@vger.kernel.org [4.20+]
-Cc: Michael S. Tsirkin <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: kernel-team@android.com
-Cc: virtualization@lists.linux-foundation.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Alistair Delva <adelva@google.com>
 ---
- drivers/net/virtio_net.c | 3 +++
- 1 file changed, 3 insertions(+)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-index 4d7d5434cc5d..709bcd34e485 100644
---- a/drivers/net/virtio_net.c
-+++ b/drivers/net/virtio_net.c
-@@ -2560,6 +2560,9 @@ static int virtnet_set_features(struct net_device *dev,
- 	u64 offloads;
- 	int err;
- 
-+	if (!vi->has_cvq)
-+		return 0;
-+
- 	if ((dev->features ^ features) & NETIF_F_LRO) {
- 		if (vi->xdp_queue_pairs)
- 			return -EBUSY;
--- 
-2.24.1.735.g03f4e72817-goog
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
