@@ -2,107 +2,107 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48544C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1C1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21DAF206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:52:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wi41QjtY"
+	by mail.kernel.org (Postfix) with ESMTP id ED4DC21655
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:53:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbfLTSwr (ORCPT
+        id S1727527AbfLTSxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 13:52:47 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45522 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727422AbfLTSwr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 13:52:47 -0500
-Received: by mail-pg1-f196.google.com with SMTP id b9so5355847pgk.12;
-        Fri, 20 Dec 2019 10:52:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=viSDKHeCFOSvx9dSLRqIUBIoY3RXWubdy5kL+SpzoFg=;
-        b=Wi41QjtYcdhEKQ/mMOm3062dR8QpHuAqf+3mpXRmCf2vnUX/8jb7PaJvOz0rZyDNiu
-         B8GM7GTnFaAijSsVb1homQ1nDaXi29ULAzHa9ENhiljYgXhJh1BhMgPrGPOz7DuaxFOM
-         nAn/hl0wT2EvBtEh1JbcR8/6/WCFarReFkmq8ixoTOrqw8EKbhPakgBu60U7U/bYGSW5
-         U9We0WMuDUtGzM1iQibBADkbhQiutSe4Pi1Q7/3Vv2/e72/hZKBEZrII3wnjW8miWUSV
-         0X4S/2TCtkDcPddJEYkSMGY5HEJM4hJrRnhrPL0XCIc1QCiTrILFZbeNKHr76wxflvG0
-         Gs8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=viSDKHeCFOSvx9dSLRqIUBIoY3RXWubdy5kL+SpzoFg=;
-        b=ZGXcAC1ZqSSc+eSBa7Cl6mROoG/W2rEcJm0soAgsIyDKxqFY2vZbfgQWOTwLLgpbCx
-         Cfyij8qwPFWMCMeKX33SvKMHs3qDQpIcbBQWzBmD45AtY/xMfxeC0imdFKBIvJIcaJZK
-         wOJ/q3yX2t8q8p0M4JL+MOcRD5BNJYuIVU85Ujl9fvcjvTdBV4nDP9AAYRHklp1LelRp
-         88PFSvEyPwHjIh1kYt89bRKx0Bm79APJYmod+I0CEziwn+9ZYju2lTHLyKrykH2XDKYt
-         wJ3cQI9KdnLcsKvrsIx4YzyoGRLLAjf4f5xkWCaYj/tszHaVwrm1ASK9qs8hrtyV86Hy
-         h6iA==
-X-Gm-Message-State: APjAAAX85XSUtsgBhWfZLUeTjbiEpyF1xt0hMqLzKki759faGqubnTEd
-        cwaDwl4UexhNzxBvxuJgQJU=
-X-Google-Smtp-Source: APXvYqw3+FkouZXlvsj+BIhI08Ng8f6cpe/jOcktRzeTK9Fth/TX0QGc4OD8Q3UWX0r/L796ujadMQ==
-X-Received: by 2002:a62:d407:: with SMTP id a7mr15445832pfh.242.1576867966770;
-        Fri, 20 Dec 2019 10:52:46 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g7sm14388582pfq.33.2019.12.20.10.52.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 20 Dec 2019 10:52:46 -0800 (PST)
-Date:   Fri, 20 Dec 2019 10:52:40 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Srinivas Neeli <srinivas.neeli@xilinx.com>
-Cc:     shubhraj@xilinx.com, sgoud@xilinx.com, michal.simek@xilinx.com,
-        wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org, git@xilinx.com
-Subject: Re: [PATCH] watchdog: cadence: Skip printing pointer value
-Message-ID: <20191220185240.GF26293@roeck-us.net>
-References: <1576825096-26605-1-git-send-email-srinivas.neeli@xilinx.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1576825096-26605-1-git-send-email-srinivas.neeli@xilinx.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 20 Dec 2019 13:53:01 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:54932 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727390AbfLTSxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 13:53:00 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B05A52003C1;
+        Fri, 20 Dec 2019 19:52:58 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A0C142013CC;
+        Fri, 20 Dec 2019 19:52:54 +0100 (CET)
+Received: from lsv03124.swis.in-blr01.nxp.com (lsv03124.swis.in-blr01.nxp.com [92.120.146.121])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A7FBB402A5;
+        Sat, 21 Dec 2019 02:52:49 +0800 (SGT)
+From:   Kuldeep Singh <kuldeep.singh@nxp.com>
+To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuldeep Singh <kuldeep.singh@nxp.com>
+Subject: [PATCH] arm64: dts: ls208xa: Update qspi node properties for LS2088ARDB
+Date:   Sat, 21 Dec 2019 00:22:34 +0530
+Message-Id: <1576867954-17756-1-git-send-email-kuldeep.singh@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 12:28:16PM +0530, Srinivas Neeli wrote:
-> "%p" is not printing the pointer value.
-> In driver, printing pointer value is not useful so avoiding print.
-> 
-> Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
+LS2088ADB has one spansion flash s25fs512s of size 64M.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Add qspi dts entry for the board using compatibles as "jedec,spi-nor" to
+probe flash successfully. Also, align properties with other board dts
+properties.
 
-> ---
->  drivers/watchdog/cadence_wdt.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/watchdog/cadence_wdt.c b/drivers/watchdog/cadence_wdt.c
-> index 06bd4e1a5923..672b184da875 100644
-> --- a/drivers/watchdog/cadence_wdt.c
-> +++ b/drivers/watchdog/cadence_wdt.c
-> @@ -369,9 +369,8 @@ static int cdns_wdt_probe(struct platform_device *pdev)
->  		return ret;
->  	platform_set_drvdata(pdev, wdt);
->  
-> -	dev_info(dev, "Xilinx Watchdog Timer at %p with timeout %ds%s\n",
-> -		 wdt->regs, cdns_wdt_device->timeout,
-> -		 nowayout ? ", nowayout" : "");
-> +	dev_info(dev, "Xilinx Watchdog Timer with timeout %ds%s\n",
-> +		 cdns_wdt_device->timeout, nowayout ? ", nowayout" : "");
->  
->  	return 0;
->  }
-> -- 
-> 2.7.4
-> 
+Use dt-bindings constants in interrupts instead of using numbers.
+
+Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi | 10 +++++++++-
+ arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi     |  4 ++--
+ 2 files changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi
+index 6fd7f63085c9..d0d670227ae2 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi
+@@ -108,7 +108,15 @@
+ };
+ 
+ &qspi {
+-	status = "disabled";
++	status = "okay";
++
++	s25fs512s0: flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "jedec,spi-nor";
++		spi-max-frequency = <50000000>;
++		reg = <0>;
++	};
+ };
+ 
+ &sata0 {
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+index 8b2fd278844b..f96d06da96be 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+@@ -618,16 +618,16 @@
+ 		};
+ 
+ 		qspi: spi@20c0000 {
+-			status = "disabled";
+ 			compatible = "fsl,ls2080a-qspi";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <0x0 0x20c0000 0x0 0x10000>,
+ 			      <0x0 0x20000000 0x0 0x10000000>;
+ 			reg-names = "QuadSPI", "QuadSPI-memory";
+-			interrupts = <0 25 0x4>; /* Level high type */
++			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
+ 			clock-names = "qspi_en", "qspi";
++			status = "disabled";
+ 		};
+ 
+ 		pcie1: pcie@3400000 {
+-- 
+2.17.1
+
