@@ -2,144 +2,119 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,GAPPY_SUBJECT,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA422C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85188C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A09DF21D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:01:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NJ82iblB"
+	by mail.kernel.org (Postfix) with ESMTP id 5CF4021D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:01:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576857678;
+	bh=nss522fjsc4IMQgNirpgmqAWul7eLY6E+zwfShik6rQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jnMl5IqMXl7HJmPQ7Br2xbyklLIZExhdtxFWfKdJrDK0Cn+cQwloVd453b1Zl+5/e
+	 NDbtUX+jqeNAaHp14UreKazZBZcQr3N+YpHk9VEtkKEQevRLVGm4Rsv9IAMkgGkPIk
+	 TsS07ZMqYJIqKsEIbXk51tUJNlhQ2VmDwdplmIB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727441AbfLTQBB (ORCPT
+        id S1727460AbfLTQBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 11:01:01 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54712 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727417AbfLTQBB (ORCPT
+        Fri, 20 Dec 2019 11:01:17 -0500
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:52435 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727400AbfLTQBR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 11:01:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576857659;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=l025u6fxXKxK3eWge8nzvLZFfpRbb+ibWiXZ7ykWyCA=;
-        b=NJ82iblBVbqA1JcHPMCGQhP+QvT8aFrQjddIIzkjfKKhQAKjN6+KZaYahs6b/+ioGFA1pS
-        eESPvwJsXoAA4CyyEt2nWR2+1LlLhOYACA8+a2xsj5x7LoodgyG4LjtF8mNt8CppTUpCgq
-        0Mf9rCHt85YP91bIZHhvPbbFddv9qKE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-416-uTYIN32MOW6V0xu7MdKMDA-1; Fri, 20 Dec 2019 11:00:58 -0500
-X-MC-Unique: uTYIN32MOW6V0xu7MdKMDA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 019A6800D48;
-        Fri, 20 Dec 2019 16:00:54 +0000 (UTC)
-Received: from gondolin (dhcp-192-245.str.redhat.com [10.33.192.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5F3DF6046B;
-        Fri, 20 Dec 2019 16:00:47 +0000 (UTC)
-Date:   Fri, 20 Dec 2019 17:00:45 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kurz <groug@kaod.org>
-Subject: Re: [PATCH v2 30/45] KVM: Move vcpu alloc and init invocation to
- common code
-Message-ID: <20191220170045.725fb05c.cohuck@redhat.com>
-In-Reply-To: <20191220155330.GA21021@linux.intel.com>
-References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
-        <20191218215530.2280-31-sean.j.christopherson@intel.com>
-        <20191220103325.34fc2bf0.cohuck@redhat.com>
-        <20191220155330.GA21021@linux.intel.com>
-Organization: Red Hat GmbH
+        Fri, 20 Dec 2019 11:01:17 -0500
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id xBKG0xIR030187;
+        Sat, 21 Dec 2019 01:01:00 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com xBKG0xIR030187
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1576857660;
+        bh=JBuboHPmNik0ZyiwIictN4KeobZ3dSMDBlvswdJAN1Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=N8suPW5iMMTgQpTfKkpYa1su5lB5daMEQJFrqp23jtmgma+NW9aKRGHGG98bJyTmb
+         MbEZCfQRoG6G0Qc4Pi7irDB3vqvM/fbIyvep7penqC6EeDsZaRQOZpcSDSCK2dS/RM
+         5TJMHrP0U72OtIBzZGeZmYNpWR7x3Z8hmsPYCTlFlUz8I/MIUK2QAFayQtRwZhMCF5
+         cjJipHIKxrlopjyFSTl/pUhOP0xLtqeaFQagKxhFkCPjVYonco08BEy26lGQfw3JLg
+         e75YNvtrk0+ZSxOEUOO0xaLJI3h0FOiBsctSzutyjbucsHpbbWcIO+l5RNl9U64+fr
+         eazArGdy84JFw==
+X-Nifty-SrcIP: [209.85.217.49]
+Received: by mail-vs1-f49.google.com with SMTP id g15so6354709vsf.1;
+        Fri, 20 Dec 2019 08:01:00 -0800 (PST)
+X-Gm-Message-State: APjAAAUNzXZkXwmhkuZa+ckG/cSTp0H1RBzYbh4As4sW84dBOVGdwVws
+        IxOxHD/jnd+BGYcEbGAWAoPhqaoiTVGAehJhqME=
+X-Google-Smtp-Source: APXvYqyf2+mR65DbEIYHCtHErAD0DJUeTFqmUFTgm9371QmntjF5JtbnI0f7yAkOzt5lC3WpCJl5apomzmiwZaBt2YE=
+X-Received: by 2002:a67:7ac4:: with SMTP id v187mr9102940vsc.181.1576857658971;
+ Fri, 20 Dec 2019 08:00:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <20191219115100.958-1-masahiroy@kernel.org> <20191219195302.GG32169@bombadil.infradead.org>
+In-Reply-To: <20191219195302.GG32169@bombadil.infradead.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sat, 21 Dec 2019 01:00:22 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQsD5KMA-DrDS-9krNdQLfHJEnJ2NB6mq2aLemY2xs+-w@mail.gmail.com>
+Message-ID: <CAK7LNAQsD5KMA-DrDS-9krNdQLfHJEnJ2NB6mq2aLemY2xs+-w@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: clarify the difference between obj-y and obj-m
+ w.r.t. descending
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Johan Hovold <johan@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Dec 2019 07:53:30 -0800
-Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+On Fri, Dec 20, 2019 at 4:53 AM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> On Thu, Dec 19, 2019 at 08:51:00PM +0900, Masahiro Yamada wrote:
+> > Kbuild descends into a directory by either 'y' or 'm', but there is an
+> > important difference.
+> >
+> > Kbuild combines the built-in objects into built-in.a in each directory.
+> > The built-in.a in the directory visited by obj-y is merged into the
+> > built-in.a in the parent directory. This merge happens recursively when
+> > Kbuild is ascending back towards the top directory, so built-in objects
+> > are linked into vmlinux eventually. This works properly only when the
+> > Makefile that specifies obj-y is reachable by the chain of obj-y.
+> >
+> > On the other hand, Kbuild does not take built-in.a from the directory
+> > visited by obj-m. This it, all the objects in that directory are supposed
+> > to be modular. If Kbuild descends into a directory by obj-m, but the
+> > Makefile in the sub-directory specifies obj-y, those objects are just
+> > left orphan.
+> >
+> > The current statement "Kbuild only uses this information to decide that
+> > it needs to visit the directory" is misleading. Clarify the difference.
+>
+> > +     Kbuild uses this information not only to decide that it needs to visit
+> > +     the directory, but also to decide whether or not to link objects from
+> > +     the directory into vmlinux.
+> > +
+> > +     When Kbuild descends into the directory with 'y', all built-in objects
+> > +     from that directory are combined into the built-in.a, which will be
+> > +     eventually linked into vmlinux.
+> > +
+> > +     When Kbuild descends into the directory with 'm', in contrast, nothing
+> > +     from that directory will be linked into vmlinux. If the Makefile in
+> > +     that directory specifies obj-y, those objects will be left orphan.
+> > +     It is very likely a bug of the Makefile or of dependencies in Kconfig.
+>
+> Perhaps the implementation should be changed to match the documentation?
+> This seems like a very subtle point for people to know.
 
-> On Fri, Dec 20, 2019 at 10:33:25AM +0100, Cornelia Huck wrote:
-> > On Wed, 18 Dec 2019 13:55:15 -0800
-> > Sean Christopherson <sean.j.christopherson@intel.com> wrote:  
-> > > +int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
-> > >  {
-> > > -	struct kvm_vcpu *vcpu;
-> > >  	struct sie_page *sie_page;
-> > >  	int rc;
-> > >  
-> > > -	rc = -ENOMEM;
-> > > -
-> > > -	vcpu = kmem_cache_zalloc(kvm_vcpu_cache, GFP_KERNEL);
-> > > -	if (!vcpu)
-> > > -		goto out;
-> > > -
-> > > -	rc = kvm_vcpu_init(vcpu, kvm, id);
-> > > -	if (rc)
-> > > -		goto out_free_cpu;
-> > > -
-> > > -	rc = -ENOMEM;
-> > > -
-> > >  	BUILD_BUG_ON(sizeof(struct sie_page) != 4096);
-> > >  	sie_page = (struct sie_page *) get_zeroed_page(GFP_KERNEL);
-> > >  	if (!sie_page)
-> > > -		goto out_uninit_vcpu;
-> > > +		return -ENOMEM;
-> > >  
-> > >  	vcpu->arch.sie_block = &sie_page->sie_block;
-> > >  	vcpu->arch.sie_block->itdba = (unsigned long) &sie_page->itdb;
-> > > @@ -3087,15 +3070,11 @@ struct kvm_vcpu *kvm_arch_vcpu_create(struct kvm *kvm,
-> > >  		 vcpu->arch.sie_block);
-> > >  	trace_kvm_s390_create_vcpu(id, vcpu, vcpu->arch.sie_block);
-> > >  
-> > > -	return vcpu;
-> > > +	return 0;
-> > > +
-> > >  out_free_sie_block:
-> > >  	free_page((unsigned long)(vcpu->arch.sie_block));
-> > > -out_uninit_vcpu:
-> > > -	kvm_vcpu_uninit(vcpu);
-> > > -out_free_cpu:
-> > > -	kmem_cache_free(kvm_vcpu_cache, vcpu);
-> > > -out:
-> > > -	return ERR_PTR(rc);
-> > > +	return rc;  
-> > 
-> > This is getting a bit hard to follow across the patches, but I think rc
-> > is now only set for ucontrol guests. So this looks correct right now,
-> > but feels a bit brittle... should we maybe init rc to 0 and always
-> > return rc instead?  
-> 
-> Yes, but only for a few patches until kvm_s390_vcpu_setup() is introduced,
-> at which point @rc is unconditionally set at the end.
+I also considered this, but
+I do not think the current behavior is too odd.
+So, I am not changing it.
 
-Indeed; so feel free to leave this as-is.
-
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-
+-- 
+Best Regards
+Masahiro Yamada
