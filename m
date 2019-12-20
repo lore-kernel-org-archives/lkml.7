@@ -2,99 +2,75 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3FAC47409
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3510FC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19662206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:31:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852276;
-	bh=7RbFZR9l6fbJb/ENm2CCwzXl9j4zXlKt2/R1YDXiBaE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xBqCmwdjoqkfF5n3pRhBU87Zcigkwjumki7TwwyGOjz+l/yTHdXuimzn/7Pk/6hfX
-	 L35gN2kStRkTzyGQAsK/rk6ukb8mQJQXMLdZz2xiQBN7p4YR0N693K21yBbXRiVSdP
-	 nFH7bB2Yd93JmAMApMkFGGcVwfsj9QfH0DaYRRrE=
+	by mail.kernel.org (Postfix) with ESMTP id 1089121D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:31:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbfLTObP (ORCPT
+        id S1728111AbfLTObT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:31:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35140 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:31:19 -0500
+Received: from foss.arm.com ([217.140.110.172]:51340 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727993AbfLTObD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:31:03 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92E9E24688;
-        Fri, 20 Dec 2019 14:31:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852262;
-        bh=7RbFZR9l6fbJb/ENm2CCwzXl9j4zXlKt2/R1YDXiBaE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OnrWIBCBFiXC4PRxcKitdTe9Tf/d0tTpH8B7+nd89VYBI99fIxlCG44wBmrbahO36
-         Ep4TJ71Ax5npY/ZHhWuNfdYvnMDDjVX42mZ3M/Qccd0LgUdVhANqi3ntpYTtZ/MtqR
-         ToWKbVEmXqmZ+BfGn8CiEcCtvtFq/F/ATyU/L9t8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Juergen Gross <jgross@suse.com>,
-        Nicholas Tsirakis <niko.tsirakis@gmail.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, xen-devel@lists.xenproject.org
-Subject: [PATCH AUTOSEL 5.4 51/52] xen/balloon: fix ballooned page accounting without hotplug enabled
-Date:   Fri, 20 Dec 2019 09:29:53 -0500
-Message-Id: <20191220142954.9500-51-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
-References: <20191220142954.9500-1-sashal@kernel.org>
+        id S1728039AbfLTObH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:31:07 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5FC1811B3;
+        Fri, 20 Dec 2019 06:31:07 -0800 (PST)
+Received: from e119886-lin.cambridge.arm.com (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 87C853F86C;
+        Fri, 20 Dec 2019 06:31:05 -0800 (PST)
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH v2 16/18] KVM: arm64: enable SPE support
+Date:   Fri, 20 Dec 2019 14:30:23 +0000
+Message-Id: <20191220143025.33853-17-andrew.murray@arm.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191220143025.33853-1-andrew.murray@arm.com>
+References: <20191220143025.33853-1-andrew.murray@arm.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-[ Upstream commit c673ec61ade89bf2f417960f986bc25671762efb ]
+We have all the bits and pieces to enable SPE for guest in place, so
+lets enable it.
 
-When CONFIG_XEN_BALLOON_MEMORY_HOTPLUG is not defined
-reserve_additional_memory() will set balloon_stats.target_pages to a
-wrong value in case there are still some ballooned pages allocated via
-alloc_xenballooned_pages().
-
-This will result in balloon_process() no longer be triggered when
-ballooned pages are freed in batches.
-
-Reported-by: Nicholas Tsirakis <niko.tsirakis@gmail.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Andrew Murray <andrew.murray@arm.com>
 ---
- drivers/xen/balloon.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ virt/kvm/arm/arm.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
-index 5bae515c8e25c..bed90d612e484 100644
---- a/drivers/xen/balloon.c
-+++ b/drivers/xen/balloon.c
-@@ -395,7 +395,8 @@ static struct notifier_block xen_memory_nb = {
- #else
- static enum bp_state reserve_additional_memory(void)
- {
--	balloon_stats.target_pages = balloon_stats.current_pages;
-+	balloon_stats.target_pages = balloon_stats.current_pages +
-+				     balloon_stats.target_unpopulated;
- 	return BP_ECANCELED;
+diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+index a66085c8e785..fb3ad0835255 100644
+--- a/virt/kvm/arm/arm.c
++++ b/virt/kvm/arm/arm.c
+@@ -611,6 +611,10 @@ static int kvm_vcpu_first_run_init(struct kvm_vcpu *vcpu)
+ 		return ret;
+ 
+ 	ret = kvm_arm_pmu_v3_enable(vcpu);
++	if (ret)
++		return ret;
++
++	ret = kvm_arm_spe_v1_enable(vcpu);
+ 
+ 	return ret;
  }
- #endif /* CONFIG_XEN_BALLOON_MEMORY_HOTPLUG */
 -- 
-2.20.1
+2.21.0
 
