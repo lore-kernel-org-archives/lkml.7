@@ -2,84 +2,146 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DD7C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A66BC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E637C2467F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5B132467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576836903;
-	bh=DxzAhHie1jM2AMgKqihWMBSP8hR6Xu6a9XQRUYb4ekk=;
+	s=default; t=1576836906;
+	bh=3q1NF9VG9IWQH0lcsKzRWfLp9RNI0lBU9URATav/sck=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kYjpXuiKKE/qjY3hrFEh/5+4ytAI4ZKBNe+0k29TC6oxnoMAzsg3YKZ+XscX9OeGr
-	 nR7OBXt0QCTiKSDiDd4ZqdcjPtmMJJQ9sFtauDgSl4i5tQF3nnUAZqWjUvFgxNXUB1
-	 7TVx+11zw2FbOoaZzgBRsUxy1vRE0aYHiB5rzEg8=
+	b=2WsLh3aUfhJfuQAfe8Yyd9ft894z4tFn8PtR8yJdBtfbtPbY4yrxqKx3+Ww+VZ54L
+	 2X2MiBTQhzNTd/3Ibg/kdgocWpAXid7b96lfcVC3RDhLXzcKVDCe69X7RGm9hD9L/v
+	 e1wUwhaP3RZevpPOYokZhlACUzvOUUR9IaeCaf0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbfLTKPB (ORCPT
+        id S1727420AbfLTKPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 05:15:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52072 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 05:15:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727235AbfLTKPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727129AbfLTKPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Dec 2019 05:15:01 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+Received: from localhost (unknown [106.201.107.54])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE5B9206EF;
-        Fri, 20 Dec 2019 10:15:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18F5D206D8;
+        Fri, 20 Dec 2019 10:14:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1576836901;
-        bh=DxzAhHie1jM2AMgKqihWMBSP8hR6Xu6a9XQRUYb4ekk=;
+        bh=3q1NF9VG9IWQH0lcsKzRWfLp9RNI0lBU9URATav/sck=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xAD0JmwRWwZoljeVkCxWJdQoMNzvxRyMztCgFcrrEqR1G6nUVR0pa8QGKLoWzGHkw
-         TpJZwTR/A1Yp2xvBuysVBsQ5S2fhYgyfQ3xpzy1Ceo5f3Dz8sZz1tizoD1aSQmwQSY
-         mYNPYS+VDZgs+UW08ZtoolTHq30KC33Ln4zaT/i4=
-Date:   Fri, 20 Dec 2019 11:14:58 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] USB: EHCI: ehci-mv: drop pxa_ehci_type and unused device
- IDs
-Message-ID: <20191220101458.GA2259298@kroah.com>
-References: <20191220070202.239870-1-lkundrak@v3.sk>
- <20191220073537.GA2193408@kroah.com>
- <1fdbe2d493b71ed2105a8976ebbccbba28adfe26.camel@v3.sk>
+        b=gxHI/HJ87pI2J2ulQlfQdf6utepKQnhIl8aUTOmKmyc4Gy1AS/BlCDM8D6h30RU1q
+         tFA5JERdV3SyPUgVJXQWTinJTNYs+bMMTVe/LzFse92eoKqDeWsKMzaxd4TBaQnMYV
+         4nTCX9z29x19dtDhNUDlXVuqmRBKo32w6wui6mKU=
+Date:   Fri, 20 Dec 2019 15:44:56 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
+        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
+        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
+        j-keerthy@ti.com, vigneshr@ti.com
+Subject: Re: [PATCH v7 03/12] dmaengine: doc: Add sections for per descriptor
+ metadata support
+Message-ID: <20191220101456.GO2536@vkoul-mobl>
+References: <20191209094332.4047-1-peter.ujfalusi@ti.com>
+ <20191209094332.4047-4-peter.ujfalusi@ti.com>
+ <20191220082810.GJ2536@vkoul-mobl>
+ <4508bc1c-d424-3285-cb47-d32a4d25b2c9@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1fdbe2d493b71ed2105a8976ebbccbba28adfe26.camel@v3.sk>
+In-Reply-To: <4508bc1c-d424-3285-cb47-d32a4d25b2c9@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 09:55:07AM +0100, Lubomir Rintel wrote:
-> On Fri, 2019-12-20 at 08:35 +0100, Greg Kroah-Hartman wrote:
-> > On Fri, Dec 20, 2019 at 08:02:02AM +0100, Lubomir Rintel wrote:
-> > > A trivial cleanup.
+On 20-12-19, 11:52, Peter Ujfalusi wrote:
+> Hi Vinod,
+> 
+> On 20/12/2019 10.28, Vinod Koul wrote:
+> > Hi Peter,
 > > 
-> > How is dropping device ids a "trivial cleanup"?
+> > On 09-12-19, 11:43, Peter Ujfalusi wrote:
 > > 
-> > Please be more descriptive as to why you are making a change.
+> >> +  Optional: per descriptor metadata
+> >> +  ---------------------------------
+> >> +  DMAengine provides two ways for metadata support.
+> >> +
+> >> +  DESC_METADATA_CLIENT
+> >> +
+> >> +    The metadata buffer is allocated/provided by the client driver and it is
+> >> +    attached to the descriptor.
+> >> +
+> >> +  .. code-block:: c
+> >> +
+> >> +     int dmaengine_desc_attach_metadata(struct dma_async_tx_descriptor *desc,
+> >> +				   void *data, size_t len);
+> >> +
+> >> +  DESC_METADATA_ENGINE
+> >> +
+> >> +    The metadata buffer is allocated/managed by the DMA driver. The client
+> > 
+> > and when would it be freed?
 > 
-> Thanks for the response. I'll post a v2 with a hopefully better
-> description.
+> It is not defined as it could be driver dependent, but afaik we have
+> defined (which I'm not sure why it is not here or in the code) that in
+> DESC_METADATA_ENGINE case the metadata pointer is valid for the client
+> between the time it got the desc (via prep call) and the execution of
+> the completion callback.
+> Iow, DESC_METADATA_ENGINE does not make any sense if the client want to
+> receive metadata back and does not provide a callback.
+
+Make sense and once callback completes driver can free it up!
 > 
-> > Also, you sent a number of patches here and I do not know what order
-> > they should be applied in.  Please resend them all as a numbered patch
-> > series so that I have a clue what to do.
+> I will extend the documentation and comment in the code to reflect this.
+
+makes sense, thanks!
+
 > 
-> I did that because the patches are completely independent of each other
-> -- they don't conflict and don't need to be applied any particular
-> order. Would you still prefer a numbered series?
+> >> +    driver can ask for the pointer, maximum size and the currently used size of
+> >> +    the metadata and can directly update or read it.
+> >> +
+> >> +  .. code-block:: c
+> >> +
+> >> +     void *dmaengine_desc_get_metadata_ptr(struct dma_async_tx_descriptor *desc,
+> >> +		size_t *payload_len, size_t *max_len);
+> >> +
+> >> +     int dmaengine_desc_set_metadata_len(struct dma_async_tx_descriptor *desc,
+> >> +		size_t payload_len);
+> >> +
+> >> +  Client drivers can query if a given mode is supported with:
+> >> +
+> >> +  .. code-block:: c
+> >> +
+> >> +     bool dmaengine_is_metadata_mode_supported(struct dma_chan *chan,
+> >> +		enum dma_desc_metadata_mode mode);
+> >> +
+> >> +  Depending on the used mode client drivers must follow different flow.
+> >> +
+> >> +  DESC_METADATA_CLIENT
+> >> +
+> >> +    - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
+> >> +      1. prepare the descriptor (dmaengine_prep_*)
+> >> +         construct the metadata in the client's buffer
+> >> +      2. use dmaengine_desc_attach_metadata() to attach the buffer to the
+> >> +         descriptor
+> >> +      3. submit the transfer
+> > 
+> > This is simpler, txn finished the metadata would be freed up right?
+> 
+> It is up to the client driver what it does with the provided buffer. As
+> for what the DMA driver does is not documented as it is not relevant and
+> can be different by different HW or SW implementation.
 
-A numbered series is always easier.
-
-thanks,
-
-greg k-h
+yeah lets document that and the fact the dmaengine driver cant touch it
+after the callback
+-- 
+~Vinod
