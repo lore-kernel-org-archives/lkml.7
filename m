@@ -2,87 +2,164 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B53C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 08:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DF9C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 08:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21148206EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 08:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 241AA20716
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 08:43:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZG9xnL6n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfLTInO (ORCPT
+        id S1727444AbfLTIn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 03:43:14 -0500
-Received: from 8bytes.org ([81.169.241.247]:58300 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727191AbfLTInK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 03:43:10 -0500
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 97A4B46B; Fri, 20 Dec 2019 09:43:08 +0100 (CET)
-Date:   Fri, 20 Dec 2019 09:43:03 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linuxfoundation.org,
-        kernel-team@android.com,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        John Garry <john.garry@huawei.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Greg Kroah-Hartman <gregkh@google.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH v4 03/16] PCI/ATS: Restore EXPORT_SYMBOL_GPL() for
- pci_{enable,disable}_ats()
-Message-ID: <20191220084303.GA9347@8bytes.org>
-References: <20191219120352.382-1-will@kernel.org>
- <20191219120352.382-4-will@kernel.org>
+        Fri, 20 Dec 2019 03:43:29 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:57998 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727191AbfLTIn3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 03:43:29 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBK8hQrO078594;
+        Fri, 20 Dec 2019 02:43:26 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576831406;
+        bh=Ng3XXQ6ve5B8Rt5c8JR1MWjxEvgKuTg6BU0y28dGlIs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ZG9xnL6nNEQmRquyVafnegBOKQxmkbgGCiaaLbJB39G3ITexsUJsWaR1afBKPnCpK
+         MegzcDMsTQ7mxcW+CTMpTCamZw/Hms3aOknrz2tCtwo7/utVw9IIZnIn9KGIXm0DiX
+         gOf7z2YjxAbTZ9Du8O1ZNJ7ACP6Uq+7aFoFP+kUA=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBK8hQC0047271
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 20 Dec 2019 02:43:26 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
+ Dec 2019 02:43:24 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 20 Dec 2019 02:43:24 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBK8hNDh094719;
+        Fri, 20 Dec 2019 02:43:23 -0600
+Subject: Re: [PATCH 08/18] mfd: twl4030-audio: Make it explicitly non-modular
+To:     Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Lee Jones <lee.jones@linaro.org>
+CC:     <linux-kernel@vger.kernel.org>, Tony Lindgren <tony@atomide.com>,
+        <linux-omap@vger.kernel.org>
+References: <1576702137-25905-1-git-send-email-paul.gortmaker@windriver.com>
+ <1576702137-25905-9-git-send-email-paul.gortmaker@windriver.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <b9d0151b-b2cd-c75b-f146-db00b372354c@ti.com>
+Date:   Fri, 20 Dec 2019 10:43:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191219120352.382-4-will@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1576702137-25905-9-git-send-email-paul.gortmaker@windriver.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
 
-On Thu, Dec 19, 2019 at 12:03:39PM +0000, Will Deacon wrote:
-> From: Greg Kroah-Hartman <gregkh@google.com>
+
+On 18/12/2019 22.48, Paul Gortmaker wrote:
+> The Kconfig currently controlling compilation of this code is:
 > 
-> Commit d355bb209783 ("PCI/ATS: Remove unnecessary EXPORT_SYMBOL_GPL()")
-> unexported a bunch of symbols from the PCI core since the only external
-> users were non-modular IOMMU drivers. Although most of those symbols
-> can remain private for now, 'pci_{enable,disable_ats()' is required for
-> the ARM SMMUv3 driver to build as a module, otherwise we get a build
-> failure as follows:
+> drivers/mfd/Kconfig:config MFD_TWL4030_AUDIO
+> drivers/mfd/Kconfig:    bool "TI TWL4030 Audio"
 > 
->   | ERROR: "pci_enable_ats" [drivers/iommu/arm-smmu-v3.ko] undefined!
->   | ERROR: "pci_disable_ats" [drivers/iommu/arm-smmu-v3.ko] undefined!
+> ...meaning that it currently is not being built as a module by anyone.
 > 
-> Re-export these two functions so that the ARM SMMUv3 driver can be build
-> as a module.
+> Lets remove the modular code that is essentially orphaned, so that
+> when reading the driver there is no doubt it is builtin-only.
 > 
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Joerg Roedel <jroedel@suse.de>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@google.com>
-> [will: rewrote commit message]
-> Signed-off-by: Will Deacon <will@kernel.org>
+> We explicitly disallow a driver unbind, since that doesn't have a
+> sensible use case anyway, and it allows us to drop the ".remove"
+> code for non-modular drivers.
+> 
+> Since module_platform_driver() uses the same init level priority as
+> builtin_platform_driver() the init ordering remains unchanged with
+> this commit.
+> 
+> Also note that MODULE_DEVICE_TABLE is a no-op for non-modular code.
+> 
+> We also delete the MODULE_LICENSE tag etc. since all that information
+> is already contained at the top of the file in the comments.
+
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+
+> 
+> Cc: Tony Lindgren <tony@atomide.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Cc: linux-omap@vger.kernel.org
+> Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
 > ---
->  drivers/pci/ats.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/mfd/twl4030-audio.c | 21 +++------------------
+>  1 file changed, 3 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/mfd/twl4030-audio.c b/drivers/mfd/twl4030-audio.c
+> index 4536d829b43e..7612997e3b86 100644
+> --- a/drivers/mfd/twl4030-audio.c
+> +++ b/drivers/mfd/twl4030-audio.c
+> @@ -8,7 +8,7 @@
+>   * Copyright:   (C) 2009 Nokia Corporation
+>   */
+>  
+> -#include <linux/module.h>
+> +#include <linux/init.h>
+>  #include <linux/types.h>
+>  #include <linux/slab.h>
+>  #include <linux/kernel.h>
+> @@ -258,32 +258,17 @@ static int twl4030_audio_probe(struct platform_device *pdev)
+>  	return ret;
+>  }
+>  
+> -static int twl4030_audio_remove(struct platform_device *pdev)
+> -{
+> -	mfd_remove_devices(&pdev->dev);
+> -	twl4030_audio_dev = NULL;
+> -
+> -	return 0;
+> -}
+> -
+>  static const struct of_device_id twl4030_audio_of_match[] = {
+>  	{.compatible = "ti,twl4030-audio", },
+>  	{ },
+>  };
+> -MODULE_DEVICE_TABLE(of, twl4030_audio_of_match);
+>  
+>  static struct platform_driver twl4030_audio_driver = {
+>  	.driver		= {
+>  		.name	= "twl4030-audio",
+>  		.of_match_table = twl4030_audio_of_match,
+> +		.suppress_bind_attrs = true,
+>  	},
+>  	.probe		= twl4030_audio_probe,
+> -	.remove		= twl4030_audio_remove,
+>  };
+> -
+> -module_platform_driver(twl4030_audio_driver);
+> -
+> -MODULE_AUTHOR("Peter Ujfalusi <peter.ujfalusi@ti.com>");
+> -MODULE_DESCRIPTION("TWL4030 audio block MFD driver");
+> -MODULE_LICENSE("GPL");
+> -MODULE_ALIAS("platform:twl4030-audio");
+> +builtin_platform_driver(twl4030_audio_driver);
+> 
 
-Are you fine with this change? I would apply this series to my tree
-then.
+- Péter
 
-Regards,
-
-	Joerg
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
