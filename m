@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0657C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5174DC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4BEE206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2606B222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852471;
-	bh=FDtr2mn+6VzBS6ydVoBBe90J2KyAi6JKvNtaBCBC2o4=;
+	s=default; t=1576852474;
+	bh=6sWzmQDeg1/vZEhrwOu0mgaGDs5oEm0Uqe+Gk8JOxxI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TFs0KpYB5rADtk0Ho/+bgZelHx51E7yJn2r/PJFH12CtdgndqGi2b/yu/sUDYT2RO
-	 367xUMSYKFcxcKknpChxJAB922aAOUd9aG5QxVy8Pj6qbDBtWHN3gej9yeJIsmX58k
-	 OMv9iqfkIYqM09OQWCL6IAmZp6n8j43nK0PKkGuk=
+	b=QuxRHylB9l3jYfBPPNCrq9YtnzWA2fSlrSp22QDBZR2w+juEYQlRjRUZwjT6DTh5q
+	 ckDxM5qExHfrkVeskgKL3kCv+7abz7ReuQ+lA/yUnsWj3p86uoJTfn7ochuysWegDX
+	 wNXF6JWpkTDHfBjuKXJikHbhsd7Q7RHUBtHRDP5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbfLTOea (ORCPT
+        id S1728061AbfLTOe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:34:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33986 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:34:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727669AbfLTOaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:30:25 -0500
+        id S1727644AbfLTOa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:30:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF21524680;
-        Fri, 20 Dec 2019 14:30:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 614AD222C2;
+        Fri, 20 Dec 2019 14:30:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852224;
-        bh=FDtr2mn+6VzBS6ydVoBBe90J2KyAi6JKvNtaBCBC2o4=;
+        s=default; t=1576852227;
+        bh=6sWzmQDeg1/vZEhrwOu0mgaGDs5oEm0Uqe+Gk8JOxxI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FdvTPJDDVtxrP2hDrEko3LrFC4nSUzNTtNUmWmEum5K3uNHuvqZKZ4doiLjeNO+Nx
-         j5zu7xenHjCZmsEC+yHdxvoj7SK41Taa2tIkMXh1az19PQ7Q97SnQJrONjXcMd1jkt
-         vgw6yyqH0St9LxIxoPOn09sFq7wCpXANwW8/vcUU=
+        b=DMs8R3G0m9I4AGC+DovIa6zo3VmOvwuhAeEtWkKLtOLxS6cqLc+hJAb5fC6lUJgGd
+         b4H5FbZ+1I7yqMft9/hboXqvXcaHvaFURNUoP3tmKVfrSzcfZS7I5zG2hSmTZZ/1M3
+         umGKYZI99mppqAucOJf/wxHLTyKSbA8u+sK/xs2k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steve Wise <larrystevenwise@gmail.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 22/52] rxe: correctly calculate iCRC for unaligned payloads
-Date:   Fri, 20 Dec 2019 09:29:24 -0500
-Message-Id: <20191220142954.9500-22-sashal@kernel.org>
+Cc:     Quinn Tran <qutran@marvell.com>, Hannes Reinecke <hare@suse.de>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        Roman Bolshakov <r.bolshakov@yadro.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 24/52] scsi: qla2xxx: Use explicit LOGO in target mode
+Date:   Fri, 20 Dec 2019 09:29:26 -0500
+Message-Id: <20191220142954.9500-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
 References: <20191220142954.9500-1-sashal@kernel.org>
@@ -59,80 +61,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Wise <larrystevenwise@gmail.com>
+From: Quinn Tran <qutran@marvell.com>
 
-[ Upstream commit 2030abddec6884aaf5892f5724c48fc340e6826f ]
+[ Upstream commit 86196a8fa8a84af1395a28ea0548f2ce6ae9bc22 ]
 
-If RoCE PDUs being sent or received contain pad bytes, then the iCRC
-is miscalculated, resulting in PDUs being emitted by RXE with an incorrect
-iCRC, as well as ingress PDUs being dropped due to erroneously detecting
-a bad iCRC in the PDU.  The fix is to include the pad bytes, if any,
-in iCRC computations.
+Target makes implicit LOGO on session teardown. LOGO ELS is not send on the
+wire and initiator is not aware that target no longer wants talking to
+it. Initiator keeps sending I/O requests, target responds with BA_RJT, they
+time out and then initiator sends ABORT TASK (ABTS-LS).
 
-Note: This bug has caused broken on-the-wire compatibility with actual
-hardware RoCE devices since the soft-RoCE driver was first put into the
-mainstream kernel.  Fixing it will create an incompatibility with the
-original soft-RoCE devices, but is necessary to be compatible with real
-hardware devices.
+Current behaviour incurs unneeded I/O timeout and can be fixed for some
+initiators by making explicit LOGO on session deletion.
 
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Signed-off-by: Steve Wise <larrystevenwise@gmail.com>
-Link: https://lore.kernel.org/r/20191203020319.15036-2-larrystevenwise@gmail.com
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+Link: https://lore.kernel.org/r/20191125165702.1013-3-r.bolshakov@yadro.com
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Tested-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_recv.c | 2 +-
- drivers/infiniband/sw/rxe/rxe_req.c  | 6 ++++++
- drivers/infiniband/sw/rxe/rxe_resp.c | 7 +++++++
- 3 files changed, 14 insertions(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_def.h     |  1 +
+ drivers/scsi/qla2xxx/qla_iocb.c    | 16 ++++++++++++----
+ drivers/scsi/qla2xxx/qla_target.c  |  1 +
+ drivers/scsi/qla2xxx/tcm_qla2xxx.c |  1 +
+ 4 files changed, 15 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_recv.c b/drivers/infiniband/sw/rxe/rxe_recv.c
-index f9a492ed900b9..831ad578a7b29 100644
---- a/drivers/infiniband/sw/rxe/rxe_recv.c
-+++ b/drivers/infiniband/sw/rxe/rxe_recv.c
-@@ -389,7 +389,7 @@ void rxe_rcv(struct sk_buff *skb)
+diff --git a/drivers/scsi/qla2xxx/qla_def.h b/drivers/scsi/qla2xxx/qla_def.h
+index d5386edddaf64..1eb3fe281cc3c 100644
+--- a/drivers/scsi/qla2xxx/qla_def.h
++++ b/drivers/scsi/qla2xxx/qla_def.h
+@@ -2401,6 +2401,7 @@ typedef struct fc_port {
+ 	unsigned int id_changed:1;
+ 	unsigned int scan_needed:1;
+ 	unsigned int n2n_flag:1;
++	unsigned int explicit_logout:1;
  
- 	calc_icrc = rxe_icrc_hdr(pkt, skb);
- 	calc_icrc = rxe_crc32(rxe, calc_icrc, (u8 *)payload_addr(pkt),
--			      payload_size(pkt));
-+			      payload_size(pkt) + bth_pad(pkt));
- 	calc_icrc = (__force u32)cpu_to_be32(~calc_icrc);
- 	if (unlikely(calc_icrc != pack_icrc)) {
- 		if (skb->protocol == htons(ETH_P_IPV6))
-diff --git a/drivers/infiniband/sw/rxe/rxe_req.c b/drivers/infiniband/sw/rxe/rxe_req.c
-index c5d9b558fa90a..e5031172c0193 100644
---- a/drivers/infiniband/sw/rxe/rxe_req.c
-+++ b/drivers/infiniband/sw/rxe/rxe_req.c
-@@ -500,6 +500,12 @@ static int fill_packet(struct rxe_qp *qp, struct rxe_send_wqe *wqe,
- 			if (err)
- 				return err;
- 		}
-+		if (bth_pad(pkt)) {
-+			u8 *pad = payload_addr(pkt) + paylen;
+ 	struct completion nvme_del_done;
+ 	uint32_t nvme_prli_service_param;
+diff --git a/drivers/scsi/qla2xxx/qla_iocb.c b/drivers/scsi/qla2xxx/qla_iocb.c
+index 518eb954cf42c..44dc97cebb06b 100644
+--- a/drivers/scsi/qla2xxx/qla_iocb.c
++++ b/drivers/scsi/qla2xxx/qla_iocb.c
+@@ -2405,11 +2405,19 @@ qla2x00_login_iocb(srb_t *sp, struct mbx_entry *mbx)
+ static void
+ qla24xx_logout_iocb(srb_t *sp, struct logio_entry_24xx *logio)
+ {
++	u16 control_flags = LCF_COMMAND_LOGO;
+ 	logio->entry_type = LOGINOUT_PORT_IOCB_TYPE;
+-	logio->control_flags =
+-	    cpu_to_le16(LCF_COMMAND_LOGO|LCF_IMPL_LOGO);
+-	if (!sp->fcport->keep_nport_handle)
+-		logio->control_flags |= cpu_to_le16(LCF_FREE_NPORT);
 +
-+			memset(pad, 0, bth_pad(pkt));
-+			crc = rxe_crc32(rxe, crc, pad, bth_pad(pkt));
-+		}
- 	}
- 	p = payload_addr(pkt) + paylen + bth_pad(pkt);
- 
-diff --git a/drivers/infiniband/sw/rxe/rxe_resp.c b/drivers/infiniband/sw/rxe/rxe_resp.c
-index 1cbfbd98eb221..c4a8195bf6709 100644
---- a/drivers/infiniband/sw/rxe/rxe_resp.c
-+++ b/drivers/infiniband/sw/rxe/rxe_resp.c
-@@ -732,6 +732,13 @@ static enum resp_states read_reply(struct rxe_qp *qp,
- 	if (err)
- 		pr_err("Failed copying memory\n");
- 
-+	if (bth_pad(&ack_pkt)) {
-+		struct rxe_dev *rxe = to_rdev(qp->ibqp.device);
-+		u8 *pad = payload_addr(&ack_pkt) + payload;
++	if (sp->fcport->explicit_logout) {
++		control_flags |= LCF_EXPL_LOGO|LCF_FREE_NPORT;
++	} else {
++		control_flags |= LCF_IMPL_LOGO;
 +
-+		memset(pad, 0, bth_pad(&ack_pkt));
-+		icrc = rxe_crc32(rxe, icrc, pad, bth_pad(&ack_pkt));
++		if (!sp->fcport->keep_nport_handle)
++			control_flags |= LCF_FREE_NPORT;
 +	}
- 	p = payload_addr(&ack_pkt) + payload + bth_pad(&ack_pkt);
- 	*p = ~icrc;
++
++	logio->control_flags = cpu_to_le16(control_flags);
+ 	logio->nport_handle = cpu_to_le16(sp->fcport->loop_id);
+ 	logio->port_id[0] = sp->fcport->d_id.b.al_pa;
+ 	logio->port_id[1] = sp->fcport->d_id.b.area;
+diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
+index a06e56224a559..29729efac51f2 100644
+--- a/drivers/scsi/qla2xxx/qla_target.c
++++ b/drivers/scsi/qla2xxx/qla_target.c
+@@ -1104,6 +1104,7 @@ void qlt_free_session_done(struct work_struct *work)
+ 		}
+ 	}
+ 
++	sess->explicit_logout = 0;
+ 	spin_unlock_irqrestore(&ha->tgt.sess_lock, flags);
+ 	sess->free_pending = 0;
+ 
+diff --git a/drivers/scsi/qla2xxx/tcm_qla2xxx.c b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
+index 042a24314edcf..589cd22198bb0 100644
+--- a/drivers/scsi/qla2xxx/tcm_qla2xxx.c
++++ b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
+@@ -348,6 +348,7 @@ static void tcm_qla2xxx_close_session(struct se_session *se_sess)
+ 	target_sess_cmd_list_set_waiting(se_sess);
+ 	spin_unlock_irqrestore(&vha->hw->tgt.sess_lock, flags);
+ 
++	sess->explicit_logout = 1;
+ 	tcm_qla2xxx_put_sess(sess);
+ }
  
 -- 
 2.20.1
