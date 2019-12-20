@@ -2,165 +2,125 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74AF4C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 05:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C37C1C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 05:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DB54227BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 05:10:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nxZX0SaY"
+	by mail.kernel.org (Postfix) with ESMTP id 9371424682
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 05:10:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576818619;
+	bh=qcdnrjHps8J+NCOxxbTp9n6XGdgvtGVAMWWTJAm9goY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LsYkqsKATRA7NcihfWRO0Kgo8WVj8tIFJLEHplVtym2R2H4JfErQV7Bd1RpT57HPL
+	 qUpHKPt6H9QNd6HiVOd5NQmIA8pKU5O8ih+p0qwD/gm0QtyUdgLYEfagdX/+ElCkHN
+	 W4bJDwVki/j2HMzwXII8wZezVAMGNP/1N9qz9fwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbfLTFKM (ORCPT
+        id S1727180AbfLTFKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 00:10:12 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:37203 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfLTFKL (ORCPT
+        Fri, 20 Dec 2019 00:10:18 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33611 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbfLTFKS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 00:10:11 -0500
-Received: by mail-qk1-f194.google.com with SMTP id 21so6686052qky.4
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 21:10:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ntKHp8be8MgVI2s2eVNC29AikwQBJmgjfDyjOV2J6Js=;
-        b=nxZX0SaYLy6siw1Z52AO6P4CNlGoN0ffJHzMUraIHho1PAnjU0gEVBEjkXNvFEM6pO
-         hifzQSpk5jZgVhsXTX/VW0ByEzO/cp1gJ9sx2meyCukivk/DH+113v1ijYjGAmOKJZ/4
-         nKaWnQzkhuW1MUQig+cFfWWz+eiVgpn0Gu+Uo=
+        Fri, 20 Dec 2019 00:10:18 -0500
+Received: by mail-lj1-f195.google.com with SMTP id y6so633523lji.0
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 21:10:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ntKHp8be8MgVI2s2eVNC29AikwQBJmgjfDyjOV2J6Js=;
-        b=clDLRsDbq0mof88MkyZ527sxhBjur8Lf4R2l9pY+YJpx85u1ITly9KpmZ2VHKEdXW1
-         JevtNcd1iDkK+Kk38lx+18tShEdSiZNiKinMkATyoeZVk4j6D2bMPjzmZPnE5dH/h+17
-         Q/ngkD5Qymihwqo5p314VRyhGGSNn7fCwimF+Vf7B44qRFJC81t24OgUvQ94/loYbIYz
-         0OCjLbrLYYDtz+pftfVRiIn7u66OUA/v56o+TEZyYNtiMR7LrbGBkWi3w6JC00eSGQl2
-         cXtc2fAxibf1Xy1jQUECGR7RAtxDQUbupHlVeWE/2BgXHPqynjNqniLY9S2hb9U/BfF7
-         mdLQ==
-X-Gm-Message-State: APjAAAXLI7xn4IjeIQA32b+1K02OKHGJKO8TGeJGOUlKXdA29uLW8NSw
-        +5RdJFNxQdi/sHJ+T5DrgjVpuNpdTtzZiqkHMqnt5Q==
-X-Google-Smtp-Source: APXvYqxtXszs5D+1NIYItqKHVvomxV2wPLGpnwbnDvZpCUBW2GIgLh+zNpJJA+SZgpRhZ5uZoGVLqRge9+ZD1bw8olY=
-X-Received: by 2002:a37:4bc6:: with SMTP id y189mr11718397qka.18.1576818610250;
- Thu, 19 Dec 2019 21:10:10 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kLySkqD/LApGvm4F01o6HLsM+dST2BfCFVYrBB8urA8=;
+        b=MLwERFjk4gzZt9TfWABeft3Vt3MYIsUcCCvX9dCNMPUjjKicLGLOkPK/eRb/YBFMB3
+         F3EO0xXzNGPwkxy32wMuZQMtb+0pG857a7lFHfhhEvzHZq7B2EkFYjMqa92nwqTNpgwJ
+         +n9GLmdHC9tcDWhO+t18xF4QrNdyOuv2RRvUc1oVBTiIrIaJb8TBOP5Nlh2KY3OebHPW
+         DIZ4GjmiG5euYSGTN5ZgQfiYERbPRFja3aCYlkacCMBtjR/hNrYtriVBjf9WLPO0tkC7
+         lxnX14/GyNiHQEMKLRSRBvrD7y8rfyZ0vO/8DoBppIBEA5iNw9J6ZbdM4WedeORdHDOk
+         flxQ==
+X-Gm-Message-State: APjAAAURmqnTq8FrBEgCHZLWsmmPBYZCgctzxgcricmQy/LVRyYpE2zS
+        HoRaIuq/FSqEMsX3QEX6NGc=
+X-Google-Smtp-Source: APXvYqwT/scfxUoqxxaSzUcn6Q7kYRhDPvctLjzlJ+YEwuVAiS4OIEi2ROw/CrHGZ2kBcaj4C3pJbA==
+X-Received: by 2002:a2e:9cd8:: with SMTP id g24mr8328286ljj.243.1576818616049;
+        Thu, 19 Dec 2019 21:10:16 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id m8sm3408222lfp.4.2019.12.19.21.10.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 21:10:15 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1iiAYH-0004MT-P2; Fri, 20 Dec 2019 06:10:13 +0100
+Date:   Fri, 20 Dec 2019 06:10:13 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        emamd001@umn.edu
+Subject: Re: [PATCH] clocksource/drivers: Fix memory leaks in
+ ttc_setup_clockevent and ttc_setup_clocksource
+Message-ID: <20191220051013.GT22665@localhost>
+References: <20191220000923.9924-1-navid.emamdoost@gmail.com>
 MIME-Version: 1.0
-References: <1576813564-23927-1-git-send-email-weiyi.lu@mediatek.com>
- <1576813564-23927-6-git-send-email-weiyi.lu@mediatek.com> <CANMq1KBLuugcoWb1o=rUkBR7oY5Cf5rX=DCvpVP5D_6FJ8jipw@mail.gmail.com>
- <1576818001.8410.16.camel@mtksdaap41>
-In-Reply-To: <1576818001.8410.16.camel@mtksdaap41>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Fri, 20 Dec 2019 13:09:59 +0800
-Message-ID: <CANMq1KBUbUHZdZz6qWOyJvdWAi+YVOPgRY0gjsPLN9YCgYMh=A@mail.gmail.com>
-Subject: Re: [PATCH v11 05/10] soc: mediatek: Remove infracfg misc driver support
-To:     Weiyi Lu <weiyi.lu@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        Fan Chen <fan.chen@mediatek.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191220000923.9924-1-navid.emamdoost@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 1:00 PM Weiyi Lu <weiyi.lu@mediatek.com> wrote:
->
-> On Fri, 2019-12-20 at 12:11 +0800, Nicolas Boichat wrote:
-> > On Fri, Dec 20, 2019 at 11:46 AM Weiyi Lu <weiyi.lu@mediatek.com> wrote:
-> > >
-> > > In previous patches, we introduce scpsys-ext driver that covers
-> > > the functions which infracfg misc driver provided.
-> > > And then replace bus_prot_mask with bp_table of all compatibles.
-> > > Now, we're going to remove infracfg misc drvier which is no longer
-> > > being used.
-> > >
-> > > Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
-> > > ---
-> > >  drivers/soc/mediatek/Kconfig          | 10 -----
-> > >  drivers/soc/mediatek/Makefile         |  3 +-
-> > >  drivers/soc/mediatek/mtk-infracfg.c   | 79 -----------------------------------
-> > >  include/linux/soc/mediatek/infracfg.h | 39 -----------------
-> > >  4 files changed, 1 insertion(+), 130 deletions(-)
-> > >  delete mode 100644 drivers/soc/mediatek/mtk-infracfg.c
-> > >  delete mode 100644 include/linux/soc/mediatek/infracfg.h
-> > > [snip]
-> > > diff --git a/include/linux/soc/mediatek/infracfg.h b/include/linux/soc/mediatek/infracfg.h
-> > > deleted file mode 100644
-> > > index fd25f01..0000000
-> > > --- a/include/linux/soc/mediatek/infracfg.h
-> > > +++ /dev/null
-> > > @@ -1,39 +0,0 @@
-> > > -/* SPDX-License-Identifier: GPL-2.0 */
-> > > -#ifndef __SOC_MEDIATEK_INFRACFG_H
-> > > -#define __SOC_MEDIATEK_INFRACFG_H
-> > > -
-> > > -#define MT8173_TOP_AXI_PROT_EN_MCI_M2          BIT(0)
-> > > -#define MT8173_TOP_AXI_PROT_EN_MM_M0           BIT(1)
-> > > -#define MT8173_TOP_AXI_PROT_EN_MM_M1           BIT(2)
-> > > -#define MT8173_TOP_AXI_PROT_EN_MMAPB_S         BIT(6)
-> > > -#define MT8173_TOP_AXI_PROT_EN_L2C_M2          BIT(9)
-> > > -#define MT8173_TOP_AXI_PROT_EN_L2SS_SMI                BIT(11)
-> > > -#define MT8173_TOP_AXI_PROT_EN_L2SS_ADD                BIT(12)
-> > > -#define MT8173_TOP_AXI_PROT_EN_CCI_M2          BIT(13)
-> > > -#define MT8173_TOP_AXI_PROT_EN_MFG_S           BIT(14)
-> > > -#define MT8173_TOP_AXI_PROT_EN_PERI_M0         BIT(15)
-> > > -#define MT8173_TOP_AXI_PROT_EN_PERI_M1         BIT(16)
-> > > -#define MT8173_TOP_AXI_PROT_EN_DEBUGSYS                BIT(17)
-> > > -#define MT8173_TOP_AXI_PROT_EN_CQ_DMA          BIT(18)
-> > > -#define MT8173_TOP_AXI_PROT_EN_GCPU            BIT(19)
-> > > -#define MT8173_TOP_AXI_PROT_EN_IOMMU           BIT(20)
-> > > -#define MT8173_TOP_AXI_PROT_EN_MFG_M0          BIT(21)
-> > > -#define MT8173_TOP_AXI_PROT_EN_MFG_M1          BIT(22)
-> > > -#define MT8173_TOP_AXI_PROT_EN_MFG_SNOOP_OUT   BIT(23)
-> > > -
-> > > -#define MT2701_TOP_AXI_PROT_EN_MM_M0           BIT(1)
-> > > -#define MT2701_TOP_AXI_PROT_EN_CONN_M          BIT(2)
-> > > -#define MT2701_TOP_AXI_PROT_EN_CONN_S          BIT(8)
-> > > -
-> > > -#define MT7622_TOP_AXI_PROT_EN_ETHSYS          (BIT(3) | BIT(17))
-> > > -#define MT7622_TOP_AXI_PROT_EN_HIF0            (BIT(24) | BIT(25))
-> > > -#define MT7622_TOP_AXI_PROT_EN_HIF1            (BIT(26) | BIT(27) | \
-> > > -                                                BIT(28))
-> > > -#define MT7622_TOP_AXI_PROT_EN_WB              (BIT(2) | BIT(6) | \
-> > > -                                                BIT(7) | BIT(8))
-> >
-> > Err wait, don't you need these values in patch 04/10?
-> >
->
-> Actually I already duplicated those being used into scpsys-ext.h and
-> then replace the header file in patch 04/10
+On Thu, Dec 19, 2019 at 06:09:21PM -0600, Navid Emamdoost wrote:
+> In the implementation of ttc_setup_clockevent() and
+> ttc_setup_clocksource(), the allocated memory for ttccs is leaked when
+> clk_notifier_register() fails. Use goto to direct the execution into error
+> handling path.
 
-Oh, missed that, SGTM then.
+No, that memory was never leaked since that function did not return on
+registration errors before your patch.
 
-Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
+> Fixes: 70504f311d4b ("clocksource/drivers/cadence_ttc: Convert init function to return error")
 
-> --- a/drivers/soc/mediatek/mtk-scpsys.c
-> +++ b/drivers/soc/mediatek/mtk-scpsys.c
-> @@ -11,7 +11,7 @@
-> -#include <linux/soc/mediatek/infracfg.h>
-> +#include "scpsys-ext.h"
->
-> so I remove the infracfg.h directly in this patch and add those new for
-> MT8183 in scpsys-ext.h
->
-> > > -
-> > > -int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask,
-> > > -               bool reg_update);
-> > > -int mtk_infracfg_clear_bus_protection(struct regmap *infracfg, u32 mask,
-> > > -               bool reg_update);
-> > > -#endif /* __SOC_MEDIATEK_INFRACFG_H */
-> > > --
-> > > 1.8.1.1.dirty
->
+Perhaps you meant to fix the actual leak that was added by this commit
+in a different function, ttc_setup_clockevent(), when returning on
+notifier-registration errors?
+
+Also should the clock be left enabled on errors?
+
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> ---
+>  drivers/clocksource/timer-cadence-ttc.c | 22 +++++++++++++---------
+>  1 file changed, 13 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/clocksource/timer-cadence-ttc.c b/drivers/clocksource/timer-cadence-ttc.c
+> index c6d11a1cb238..46d69982ad33 100644
+> --- a/drivers/clocksource/timer-cadence-ttc.c
+> +++ b/drivers/clocksource/timer-cadence-ttc.c
+> @@ -328,10 +328,8 @@ static int __init ttc_setup_clocksource(struct clk *clk, void __iomem *base,
+>  	ttccs->ttc.clk = clk;
+>  
+>  	err = clk_prepare_enable(ttccs->ttc.clk);
+> -	if (err) {
+> -		kfree(ttccs);
+> -		return err;
+> -	}
+> +	if (err)
+> +		goto release_ttcce;
+>  
+>  	ttccs->ttc.freq = clk_get_rate(ttccs->ttc.clk);
+>  
+> @@ -341,8 +339,10 @@ static int __init ttc_setup_clocksource(struct clk *clk, void __iomem *base,
+>  
+>  	err = clk_notifier_register(ttccs->ttc.clk,
+>  				    &ttccs->ttc.clk_rate_change_nb);
+> -	if (err)
+> +	if (err) {
+>  		pr_warn("Unable to register clock notifier.\n");
+> +		goto release_ttcce;
+> +	}
+
+Johan
