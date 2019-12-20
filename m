@@ -2,134 +2,121 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D13A8C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8E0C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E95E227BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7233024679
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:51:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sSjUPVxx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IVln0UOQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbfLTJtl (ORCPT
+        id S1727252AbfLTJvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 04:49:41 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:44526 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727167AbfLTJtl (ORCPT
+        Fri, 20 Dec 2019 04:51:03 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52037 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727177AbfLTJvD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 04:49:41 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBK9nd6R042676;
-        Fri, 20 Dec 2019 03:49:39 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576835379;
-        bh=QQcV+9YkaofN+92Zx46IG5q0lPQPGT6TS9og2QtYkvI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=sSjUPVxxfOs/58dhff06y73O2VPjE4HZ29LFreqfiBLGfZHje8fytaiuCGq8Nzvl2
-         trzbJI3AOVdyx9tVjFCclLnDoIR/rovNY+CXulVO8Nf4nO0UvQbj6wdCLqzE9gfUuJ
-         /xnjYxE5TK68CAM4UBTymu59bIc65KXMVnYTMhmo=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBK9ndlm063409
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 20 Dec 2019 03:49:39 -0600
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
- Dec 2019 03:49:38 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 20 Dec 2019 03:49:38 -0600
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBK9nab3091264;
-        Fri, 20 Dec 2019 03:49:36 -0600
-Subject: Re: [PATCHv3 09/15] remoteproc/omap: Remove the
- omap_rproc_reserve_cma declaration
-To:     Suman Anna <s-anna@ti.com>, <bjorn.andersson@linaro.org>,
-        <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
-        <linux-omap@vger.kernel.org>
-References: <20191213125537.11509-1-t-kristo@ti.com>
- <20191213125537.11509-10-t-kristo@ti.com>
- <75420692-ecbc-f7cd-f7bc-9df0849d91dc@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <c975de56-a6c6-a2d7-9eda-d075fad496d8@ti.com>
-Date:   Fri, 20 Dec 2019 11:49:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 20 Dec 2019 04:51:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576835461;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=99eauVFberJXv2fQAwZtixMy3egbUdn3Of2y1/7QSBo=;
+        b=IVln0UOQ+zyEwEHp55eUIZiZy/FvqttwaBseZUpaEi7qW2GKRk21WB3vBefLls1NXRIba7
+        mTZBO7WsPcULlQ8CaX2KBHZHTnf2YOwlQPFXXXyOPKD/UeoA8CHkVQQ21Cdub+kB1Vagr4
+        EjLD6zOjQX+oe7DSP6lxjcGM4VP2kJo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-232-KSOnSj7mOiGqSWdMbp1wmw-1; Fri, 20 Dec 2019 04:51:00 -0500
+X-MC-Unique: KSOnSj7mOiGqSWdMbp1wmw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 04477189CD00;
+        Fri, 20 Dec 2019 09:50:58 +0000 (UTC)
+Received: from gondolin (dhcp-192-245.str.redhat.com [10.33.192.245])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B0B7C26FC4;
+        Fri, 20 Dec 2019 09:50:51 +0000 (UTC)
+Date:   Fri, 20 Dec 2019 10:50:49 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kurz <groug@kaod.org>
+Subject: Re: [PATCH v2 32/45] KVM: Move initialization of preempt notifier
+ to kvm_vcpu_init()
+Message-ID: <20191220105049.3fbdbbcc.cohuck@redhat.com>
+In-Reply-To: <20191218215530.2280-33-sean.j.christopherson@intel.com>
+References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
+        <20191218215530.2280-33-sean.j.christopherson@intel.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <75420692-ecbc-f7cd-f7bc-9df0849d91dc@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/12/2019 04:47, Suman Anna wrote:
-> Hi Tero,
-> 
-> On 12/13/19 6:55 AM, Tero Kristo wrote:
->> From: Suman Anna <s-anna@ti.com>
->>
->> The omap_rproc_reserve_cma() function is not defined at the moment.
->> This prototype was to be used to define a function to declare a
->> remoteproc device-specific CMA pool.
->>
->> The remoteproc devices will be defined through DT going forward. A
->> device specific CMA pool will be defined under the reserved-memory
->> node, and will be associated with the appropriate remoteproc device
->> node. This function prototype will no longer be needed and has
->> therefore been cleaned up.
->>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> 
-> With the structure removed, you can actually drop the file altogether.
+On Wed, 18 Dec 2019 13:55:17 -0800
+Sean Christopherson <sean.j.christopherson@intel.com> wrote:
 
-Yeah, let me check that out.
-
--Tero
-
+> Initialize the preempt notifier immediately in kvm_vcpu_init() to pave
+> the way for removing kvm_arch_vcpu_setup(), i.e. to allow arch specific
+> code to call vcpu_load() during kvm_arch_vcpu_create().
 > 
-> regards
-> Suman
+> Back when preemption support was added, the location of the call to init
+> the preempt notifier was perfectly sane.  The overall vCPU creation flow
+> featured a single arch specific hook and the preempt notifer was used
+> immediately after its initialization (by vcpu_load()).  E.g.:
 > 
->> ---
->>   include/linux/platform_data/remoteproc-omap.h | 12 ------------
->>   1 file changed, 12 deletions(-)
->>
->> diff --git a/include/linux/platform_data/remoteproc-omap.h b/include/linux/platform_data/remoteproc-omap.h
->> index 6bea01e199fe..49c78805916f 100644
->> --- a/include/linux/platform_data/remoteproc-omap.h
->> +++ b/include/linux/platform_data/remoteproc-omap.h
->> @@ -21,16 +21,4 @@ struct omap_rproc_pdata {
->>   	int (*device_shutdown)(struct platform_device *pdev);
->>   };
->>   
->> -#if defined(CONFIG_OMAP_REMOTEPROC) || defined(CONFIG_OMAP_REMOTEPROC_MODULE)
->> -
->> -void __init omap_rproc_reserve_cma(void);
->> -
->> -#else
->> -
->> -static inline void __init omap_rproc_reserve_cma(void)
->> -{
->> -}
->> -
->> -#endif
->> -
->>   #endif /* _PLAT_REMOTEPROC_H */
->>
+>         vcpu = kvm_arch_ops->vcpu_create(kvm, n);
+>         if (IS_ERR(vcpu))
+>                 return PTR_ERR(vcpu);
 > 
+>         preempt_notifier_init(&vcpu->preempt_notifier, &kvm_preempt_ops);
+> 
+>         vcpu_load(vcpu);
+>         r = kvm_mmu_setup(vcpu);
+>         vcpu_put(vcpu);
+>         if (r < 0)
+>                 goto free_vcpu;
+> 
+> Today, the call to preempt_notifier_init() is sandwiched between two
+> arch specific calls, kvm_arch_vcpu_create() and kvm_arch_vcpu_setup(),
+> which needlessly forces x86 (and possibly others?) to split its vCPU
+> creation flow.  Init the preempt notifier prior to any arch specific
+> call so that each arch can independently decide how best to organize
+> its creation flow.
+> 
+> Acked-by: Christoffer Dall <christoffer.dall@arm.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  virt/kvm/kvm_main.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+
