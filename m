@@ -2,228 +2,159 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1522C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 22:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAA9C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 22:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6CB52082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 22:40:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NRffTbo6"
+	by mail.kernel.org (Postfix) with ESMTP id A2A7F21655
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 22:44:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576881899;
+	bh=v3aT8i1kmfUNSU54kS7vQUV8GP/eYzB/rE68T0MccPQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yYo4bMJyQM/2F3sUFJpHWtkdupoGC7Du4T0sLCgFFOG7Q1TUKawOKL8J787CKaet7
+	 VEQ0YdetKqaUnvz9xNJiLwZkz3opvPYO7Q4dV6ued32g5cU8LkMr62Y6UiPCpTj+xD
+	 tigNidcmu5ec6zxBI8mNE820cryRPO7guXpEY+dk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbfLTWk0 (ORCPT
+        id S1726594AbfLTWo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 17:40:26 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:45183 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbfLTWk0 (ORCPT
+        Fri, 20 Dec 2019 17:44:58 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39248 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbfLTWo6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 17:40:26 -0500
-Received: by mail-vs1-f65.google.com with SMTP id b4so6587119vsa.12
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 14:40:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lNPn3jTBrwGAUgkWhsaau0xZPRg7/357uMDLAycFnt4=;
-        b=NRffTbo6m1RIaJKI7R6fU+906J19eVbTcd5zBSITIfQw73ZidBHN8zq0Zev66pG9y1
-         zVmQDh3NbHhRC929EbqFFVfCOHF92mqG3H9ru76/2dTD9eFSxOHNGbsbwzakLjbeVFdw
-         k2VLJgL2OLyRX7yrwRur4fywqFpq2Dq6GVjfc=
+        Fri, 20 Dec 2019 17:44:58 -0500
+Received: by mail-io1-f68.google.com with SMTP id c16so9537103ioh.6;
+        Fri, 20 Dec 2019 14:44:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lNPn3jTBrwGAUgkWhsaau0xZPRg7/357uMDLAycFnt4=;
-        b=AKZhTgR9CbNjYzJrGzrJYbpQWegxKDLQtEOzNTz+A6dyAnIw8VM64LnPq1IDbuUhih
-         Z5AmM8sKXPaCxDUuHBq79tRLAPLGyZ0TpTQYb/RdaNjnmdzWry8UcSHVUzJS4edOQ9BP
-         cDDDuaPBC+66XgVZh2oC30wEuryKzTIncU5/iGd7eUxTH38TbHTnSDLaD3gaNHc1y+hD
-         yOd/1vFN1vpFuwU84sihaJ0kLM4oIYj/HRcEw97mWom7tHMd58WIrgbYusbEuUlZh+sU
-         vdHC9Qes77SO1C0bC5rRfRe8Hnr06LvxEM9VxdXA0Vkf2RwfHfisW6zoulbvXuGEkuto
-         eQCg==
-X-Gm-Message-State: APjAAAXGMhHbgK5Wi2hybe/HW3gBnbJMGb36DXxtCGnsKyEyzpHCRpLJ
-        N7Uz28+y/jkeCsjoyw9uKzy+1SiAZ+7CZg==
-X-Google-Smtp-Source: APXvYqwdpUOWD4EUhecSl8wAsXxxyGAIXxrfE/8dK3WART2yQJOKJPkwMdqOJV0J516xGHsis52CcA==
-X-Received: by 2002:a67:ec89:: with SMTP id h9mr116269vsp.112.1576881624612;
-        Fri, 20 Dec 2019 14:40:24 -0800 (PST)
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
-        by smtp.gmail.com with ESMTPSA id p78sm3429911vkf.0.2019.12.20.14.40.24
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Dec 2019 14:40:24 -0800 (PST)
-Received: by mail-ua1-f54.google.com with SMTP id a12so3831469uan.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 14:40:24 -0800 (PST)
-X-Received: by 2002:ab0:94:: with SMTP id 20mr10805511uaj.71.1576881623480;
- Fri, 20 Dec 2019 14:40:23 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7WksmJcfldBGfJZrpiFcVuuuNcslqmFm7JaA1MXSRJw=;
+        b=WvV4M3SZMDzHl53cn3HF3nz3zDmc4Dtwj1+38BeOwH27LvVBnfbhYolB8FbLskxmlZ
+         qm1yRDarf0SGqod6ugjwLkPs8VFxsskG3jUtaqRIs74/8iB9dcQ9wJxeGFsO5Cp58vSx
+         KxGDFLCUnkoIeqsLtIQRlWSY3Z+vjZ5b+u0MkwNzY+L/PvoszZtIPjCPAzC8mR95gyDC
+         uFfYSKpWb4m4i8XRcen76F/9bBZv1A5DlOdWyQNIDq8NCiRXCuCeXxclUShGEw7o/NPc
+         D7n19KIL+ZLCNpDS6c4x58i9eIqtW7xH4Xw3NmJpS/L9puF4fswAbHqHAEEruY0wXI6p
+         41RA==
+X-Gm-Message-State: APjAAAXXqEAAHF6nmQTGRKnPrC1fa3wjn7uUpR7wPNrz09Y5zj3JCK1a
+        1+KAOjSl7UjBrOYDmlV23w==
+X-Google-Smtp-Source: APXvYqwtuXnxyLzSziWitzIzubl3H2AMh1E7q6ytM/gh5JGmnxiN9pRqFX6kE1zi5VLp9PQSEdPfJg==
+X-Received: by 2002:a02:a309:: with SMTP id q9mr14248125jai.141.1576881897182;
+        Fri, 20 Dec 2019 14:44:57 -0800 (PST)
+Received: from localhost ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id e85sm5472679ilk.78.2019.12.20.14.44.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 14:44:56 -0800 (PST)
+Date:   Fri, 20 Dec 2019 15:44:55 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     p.zabel@pengutronix.de, Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@codeaurora.org>, lee.jones@linaro.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: Re: [PATCH 1/3] dt-bindings: clocks: Convert Allwinner legacy clocks
+ to schemas
+Message-ID: <20191220224455.GA18967@bogus>
+References: <20191219090712.947490-1-maxime@cerno.tech>
 MIME-Version: 1.0
-References: <20191220212207.76726-1-adelva@google.com>
-In-Reply-To: <20191220212207.76726-1-adelva@google.com>
-From:   Stephen Barber <smbarber@chromium.org>
-Date:   Fri, 20 Dec 2019 14:40:12 -0800
-X-Gmail-Original-Message-ID: <CADR9n4__Tjev_q+-f=GqPWs4_bo3dnBe7htnbogCQbqWArQV6g@mail.gmail.com>
-Message-ID: <CADR9n4__Tjev_q+-f=GqPWs4_bo3dnBe7htnbogCQbqWArQV6g@mail.gmail.com>
-Subject: Re: [PATCH net] virtio-net: Skip set_features on non-cvq devices
-To:     Alistair Delva <adelva@google.com>
-Cc:     netdev@vger.kernel.org, stable@vger.kernel.org,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>, kernel-team@android.com,
-        virtualization@lists.linux-foundation.org,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191219090712.947490-1-maxime@cerno.tech>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 1:22 PM Alistair Delva <adelva@google.com> wrote:
->
-> On devices without control virtqueue support, such as the virtio_net
-> implementation in crosvm[1], attempting to configure LRO will panic the
-> kernel:
-
-If you'd like to try using the control virtqueue, I have a WIP patch
-at crrev.com/c/1968200
-
-The downside there is that when enabling IP forwarding the guest
-successfully disables LRO,
-which AFAIK (please correct me if I'm wrong!) is generally safe when
-using virtio-net. My iperf
-tests showed a ~90% bandwidth reduction, so we'd need to force LRO
-back on after enabling
-IP forwarding if the control queue offload patch lands.
-
->
-> kernel BUG at drivers/net/virtio_net.c:1591!
-> invalid opcode: 0000 [#1] PREEMPT SMP PTI
-> CPU: 1 PID: 483 Comm: Binder:330_1 Not tainted 5.4.5-01326-g19463e9acaac #1
-> Hardware name: ChromiumOS crosvm, BIOS 0
-> RIP: 0010:virtnet_send_command+0x15d/0x170 [virtio_net]
-> Code: d8 00 00 00 80 78 02 00 0f 94 c0 65 48 8b 0c 25 28 00 00 00 48 3b 4c 24 70 75 11 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 <0f> 0b e8 ec a4 12 c8 66 90 66 2e 0f 1f 84 00 00 00 00 00 55 48 89
-> RSP: 0018:ffffb97940e7bb50 EFLAGS: 00010246
-> RAX: ffffffffc0596020 RBX: ffffa0e1fc8ea840 RCX: 0000000000000017
-> RDX: ffffffffc0596110 RSI: 0000000000000011 RDI: 000000000000000d
-> RBP: ffffb97940e7bbf8 R08: ffffa0e1fc8ea0b0 R09: ffffa0e1fc8ea0b0
-> R10: ffffffffffffffff R11: ffffffffc0590940 R12: 0000000000000005
-> R13: ffffa0e1ffad2c00 R14: ffffb97940e7bc08 R15: 0000000000000000
-> FS:  0000000000000000(0000) GS:ffffa0e1fd100000(006b) knlGS:00000000e5ef7494
-> CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-> CR2: 00000000e5eeb82c CR3: 0000000079b06001 CR4: 0000000000360ee0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  ? preempt_count_add+0x58/0xb0
->  ? _raw_spin_lock_irqsave+0x36/0x70
->  ? _raw_spin_unlock_irqrestore+0x1a/0x40
->  ? __wake_up+0x70/0x190
->  virtnet_set_features+0x90/0xf0 [virtio_net]
->  __netdev_update_features+0x271/0x980
->  ? nlmsg_notify+0x5b/0xa0
->  dev_disable_lro+0x2b/0x190
->  ? inet_netconf_notify_devconf+0xe2/0x120
->  devinet_sysctl_forward+0x176/0x1e0
->  proc_sys_call_handler+0x1f0/0x250
->  proc_sys_write+0xf/0x20
->  __vfs_write+0x3e/0x190
->  ? __sb_start_write+0x6d/0xd0
->  vfs_write+0xd3/0x190
->  ksys_write+0x68/0xd0
->  __ia32_sys_write+0x14/0x20
->  do_fast_syscall_32+0x86/0xe0
->  entry_SYSENTER_compat+0x7c/0x8e
->
-> This happens because virtio_set_features() does not check the presence
-> of the control virtqueue feature, which is sanity checked by a BUG_ON
-> in virtnet_send_command().
->
-> Fix this by skipping any feature processing if the control virtqueue is
-> missing. This should be OK for any future feature that is added, as
-> presumably all of them would require control virtqueue support to notify
-> the endpoint that offload etc. should begin.
-
-This sounds okay to me. This does end up hitting a netdev_WARN later on though:
-[    1.885957] ------------[ cut here ]------------
-[    1.888398] netdevice: eth0: failed to disable LRO!
-[    1.890369] WARNING: CPU: 0 PID: 163 at
-/mnt/host/source/src/third_party/kernel/v5.4/net/core/dev.c:1483
-dev_disable_lro+0x91/0x95
-[    1.894761] CPU: 0 PID: 163 Comm: lxd Not tainted 5.4.5 #2
-[    1.896698] Hardware name: ChromiumOS crosvm, BIOS 0
-[    1.898387] RIP: 0010:dev_disable_lro+0x91/0x95
-[    1.899877] Code: a6 4d 0f 44 f7 eb 07 49 c7 c6 af 78 60 a6 4c 89
-ff e8 6a 00 00 00 48 c7 c7 dd 73 60 a6 4c 89 f6 48 89 c2 31 c0 e8 36
-e2 a5 ff <0f> 0b eb 8a 53 48 83 ec 18 48 89 fb 65 48 8b 04 25 28 00 00
-00 48
-[    1.905701] RSP: 0018:ffffae0fc0427d78 EFLAGS: 00010246
-[    1.907282] RAX: fe766977dd14fb00 RBX: 0000000000000001 RCX: ffffffffa683aa50
-[    1.909391] RDX: fffffffffffffe6d RSI: 0000000000000082 RDI: ffffffffa683aa20
-[    1.911503] RBP: ffff990bd3f8e050 R08: ffff0a1000000600 R09: 0000004000000000
-[    1.913613] R10: 0000000000000193 R11: ffffffffa5af56a5 R12: ffffffffa6882690
-[    1.915729] R13: ffff990bd3ec2248 R14: ffff990bd3f8e000 R15: ffff990bd3f8e000
-[    1.918555] FS:  00007ca813fff700(0000) GS:ffff990bd4c00000(0000)
-knlGS:0000000000000000
-[    1.920648] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    1.922039] CR2: 00005ba0e1789990 CR3: 00000001d1716003 CR4: 00000000003606b0
-[    1.923716] Call Trace:
-[    1.924356]  devinet_sysctl_forward+0x15a/0x1b9
-[    1.925444]  proc_sys_call_handler+0xc3/0xe0
-[    1.926491]  __vfs_write+0x3d/0x19b
-[    1.927351]  ? selinux_file_permission+0x8c/0x124
-[    1.928482]  vfs_write+0xea/0x17f
-[    1.929329]  ksys_write+0x68/0xc9
-[    1.930178]  do_syscall_64+0x4a/0x5d
-[    1.931063]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[    1.932272] RIP: 0033:0x5ba0e10655c0
-[    1.933159] Code: 8b 7c 24 10 48 8b 74 24 18 48 8b 54 24 20 49 c7
-c2 00 00 00 00 49 c7 c0 00 00 00 00 49 c7 c1 00 00 00 00 48 8b 44 24
-08 0f 05 <48> 3d 01 f0 ff ff 76 20 48 c7 44 24 28 ff ff ff ff 48 c7 44
-24 30
-[    1.937440] RSP: 002b:000000c00041e258 EFLAGS: 00000216 ORIG_RAX:
-0000000000000001
-[    1.939224] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00005ba0e10655c0
-[    1.940897] RDX: 0000000000000001 RSI: 000000c00041e4d8 RDI: 0000000000000018
-[    1.942600] RBP: 000000c00041e2a8 R08: 0000000000000000 R09: 0000000000000000
-[    1.944310] R10: 0000000000000000 R11: 0000000000000216 R12: 000000000000000c
-[    1.946007] R13: 0000000000000032 R14: 00005ba0e0fa01e8 R15: 0000000000000000
-[    1.947706] ---[ end trace 9ac0c921383f98c0 ]---
-
-
->
-> [1] https://chromium.googlesource.com/chromiumos/platform/crosvm/
->
-> Fixes: a02e8964eaf9 ("virtio-net: ethtool configurable LRO")
-> Cc: stable@vger.kernel.org [4.20+]
-> Cc: Michael S. Tsirkin <mst@redhat.com>
-> Cc: Jason Wang <jasowang@redhat.com>
-> Cc: David S. Miller <davem@davemloft.net>
-> Cc: kernel-team@android.com
-> Cc: virtualization@lists.linux-foundation.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Alistair Delva <adelva@google.com>
-
-Tested-by: Stephen Barber <smbarber@chromium.org>
-
+On Thu, 19 Dec 2019 10:07:10 +0100, Maxime Ripard wrote:
+> The Allwinner SoCs have a legacy set of bindings (and a framework to
+> support it in Linux) for their clock controllers.
+> 
+> Now that we have the DT validation in place, let's split into separate file
+> and convert the device tree bindings for those clocks to schemas, and mark
+> them all as deprecated.
+> 
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 > ---
->  drivers/net/virtio_net.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> index 4d7d5434cc5d..709bcd34e485 100644
-> --- a/drivers/net/virtio_net.c
-> +++ b/drivers/net/virtio_net.c
-> @@ -2560,6 +2560,9 @@ static int virtnet_set_features(struct net_device *dev,
->         u64 offloads;
->         int err;
->
-> +       if (!vi->has_cvq)
-> +               return 0;
-> +
->         if ((dev->features ^ features) & NETIF_F_LRO) {
->                 if (vi->xdp_queue_pairs)
->                         return -EBUSY;
-> --
-> 2.24.1.735.g03f4e72817-goog
->
+>  .../clock/allwinner,sun4i-a10-ahb-clk.yaml    | 108 +++++++++
+>  .../clock/allwinner,sun4i-a10-apb0-clk.yaml   |  50 ++++
+>  .../clock/allwinner,sun4i-a10-apb1-clk.yaml   |  52 ++++
+>  .../clock/allwinner,sun4i-a10-axi-clk.yaml    |  61 +++++
+>  .../clock/allwinner,sun4i-a10-cpu-clk.yaml    |  52 ++++
+>  .../allwinner,sun4i-a10-display-clk.yaml      |  57 +++++
+>  .../clock/allwinner,sun4i-a10-gates-clk.yaml  | 152 ++++++++++++
+>  .../clock/allwinner,sun4i-a10-mbus-clk.yaml   |  63 +++++
+>  .../clock/allwinner,sun4i-a10-mmc-clk.yaml    |  87 +++++++
+>  .../clock/allwinner,sun4i-a10-mod0-clk.yaml   |  80 +++++++
+>  .../clock/allwinner,sun4i-a10-mod1-clk.yaml   |  57 +++++
+>  .../clock/allwinner,sun4i-a10-osc-clk.yaml    |  51 ++++
+>  .../clock/allwinner,sun4i-a10-pll1-clk.yaml   |  71 ++++++
+>  .../clock/allwinner,sun4i-a10-pll3-clk.yaml   |  50 ++++
+>  .../clock/allwinner,sun4i-a10-pll5-clk.yaml   |  53 +++++
+>  .../clock/allwinner,sun4i-a10-pll6-clk.yaml   |  53 +++++
+>  .../allwinner,sun4i-a10-tcon-ch0-clk.yaml     |  77 ++++++
+>  .../clock/allwinner,sun4i-a10-usb-clk.yaml    | 166 +++++++++++++
+>  .../clock/allwinner,sun4i-a10-ve-clk.yaml     |  55 +++++
+>  .../clock/allwinner,sun5i-a13-ahb-clk.yaml    |  52 ++++
+>  .../clock/allwinner,sun6i-a31-pll6-clk.yaml   |  53 +++++
+>  .../clock/allwinner,sun7i-a20-gmac-clk.yaml   |  51 ++++
+>  .../clock/allwinner,sun7i-a20-out-clk.yaml    |  52 ++++
+>  .../allwinner,sun8i-h3-bus-gates-clk.yaml     | 103 ++++++++
+>  .../clock/allwinner,sun9i-a80-ahb-clk.yaml    |  52 ++++
+>  .../clock/allwinner,sun9i-a80-apb0-clk.yaml   |  63 +++++
+>  .../clock/allwinner,sun9i-a80-cpus-clk.yaml   |  52 ++++
+>  .../clock/allwinner,sun9i-a80-gt-clk.yaml     |  52 ++++
+>  .../allwinner,sun9i-a80-mmc-config-clk.yaml   |  68 ++++++
+>  .../clock/allwinner,sun9i-a80-pll4-clk.yaml   |  50 ++++
+>  .../allwinner,sun9i-a80-usb-mod-clk.yaml      |  60 +++++
+>  .../allwinner,sun9i-a80-usb-phy-clk.yaml      |  60 +++++
+>  .../devicetree/bindings/clock/sunxi.txt       | 225 ------------------
+>  33 files changed, 2163 insertions(+), 225 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ahb-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-apb0-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-apb1-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-axi-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-cpu-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-display-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-gates-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mbus-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mmc-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mod0-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mod1-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-osc-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll1-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll3-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll5-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll6-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-tcon-ch0-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-usb-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ve-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun5i-a13-ahb-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun6i-a31-pll6-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun7i-a20-gmac-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun7i-a20-out-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun8i-h3-bus-gates-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-ahb-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-apb0-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-cpus-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-gt-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-mmc-config-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-pll4-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-usb-mod-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-usb-phy-clk.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/clock/sunxi.txt
+> 
+
+Applied, thanks.
+
+Rob
