@@ -2,130 +2,84 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18583C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D699FC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D40B824679
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:12:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="aewkQnNn"
+	by mail.kernel.org (Postfix) with ESMTP id AC14624683
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:13:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576826018;
+	bh=asblTKSwJQla1GlpN4lSu52KJ12DcIMzvwmFapZOCJw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UvCavkqPBVqLWf8IxhsDy7/MT3M8ue+oaEL2jtvKZV/rAQkcdi6uE3CJaUPHs4Qor
+	 Sf6ZBeKBAEDpyRELAoXVvwtgTuPHVIcNXnvscUfHqtIxVGN6OwaNL65f6HmT2ZyKU5
+	 3c6v4LYaAfUJWzsQ837pXs2jI7oQ9Z7O7/vOLzDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727301AbfLTHM2 (ORCPT
+        id S1727333AbfLTHNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 02:12:28 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33847 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727164AbfLTHM2 (ORCPT
+        Fri, 20 Dec 2019 02:13:37 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45464 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbfLTHNh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 02:12:28 -0500
-Received: by mail-wr1-f65.google.com with SMTP id t2so8367767wrr.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 23:12:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=I2m7FEoEgsHjv2bLMPPs6pK2dGPZu4nGzDA5vSdYg2g=;
-        b=aewkQnNnv53dP93qLGgJshlGAMUAoExZYBjsVGTZKP3swyysCcVeWAoQK1MODPAqWO
-         BH53JDDE0Vde5lV9G8gtPQmual1laQg5+txVUMKiUqvsAgtSDM0k6xrhhAD+NWpRLecc
-         miAJyaBSOvGqk3WNsk4AXF5DAUfUvrI7ezFLDEpnermkNfDgH92qIJ+t7GhIAATdcj9s
-         OcibV53NmKFy5pLKPkXIYAS1f5w43RPGhNATVtk98rZJVvYKDFhzZSN23StvGv9fcJc+
-         AxGYHoD5cJONLccWUTAXfl4zGyRK/MTXN01egZjsnycA0ZC/oa6WyW6rl8jPkB+kSkc2
-         xkog==
+        Fri, 20 Dec 2019 02:13:37 -0500
+Received: by mail-wr1-f66.google.com with SMTP id j42so8309245wrj.12;
+        Thu, 19 Dec 2019 23:13:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=I2m7FEoEgsHjv2bLMPPs6pK2dGPZu4nGzDA5vSdYg2g=;
-        b=fY9UVjHyT2YjHThF0wzNtXYn29nVvFkAnprzhcY1IqrBGt0ByAf2vGp9jqYqDIZopG
-         5v5hlVOqCC6QEIxZ/2T5aUjF6+lSP9BdWfZ/J+PKEamuiicLsNSYLb4ICUBtk9FnhC+Q
-         PGTpVI70tIKMQ4HXDiP27n0q0136JSC1PQFJ+gNOlXjsbO2HFa5f/4UGdvtPgAYpprqa
-         SBKGf9/tbBF8TT3SdJA+P29hb2gqXCgaY6Q6OaURb/7feIDDrN7U6qZQTQwACLh1nhf3
-         giQbqyfVGA68/oU38fvKuqJMy4oW3eHyscDjA9nkdZGSo2G133Aq4MNM51ppkQZrOvji
-         mN6A==
-X-Gm-Message-State: APjAAAXH5Z9247dWaeLCazCMHsQXCbi/tQppXI/hvP/OpiethA8txHKz
-        ESdNx3dDBz0A8AgEoDV5v3GrXg==
-X-Google-Smtp-Source: APXvYqwzANwQbkdywUdCxVE2iwgboUXMP8N0dc0HdOPN/yCnvAV54g1qiVetuF6mZDjwYzh67zoPOQ==
-X-Received: by 2002:a5d:6b82:: with SMTP id n2mr13483479wrx.153.1576825946247;
-        Thu, 19 Dec 2019 23:12:26 -0800 (PST)
-Received: from rudolphp (b2b-78-94-0-50.unitymedia.biz. [78.94.0.50])
-        by smtp.gmail.com with ESMTPSA id x6sm8530461wmi.44.2019.12.19.23.12.23
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FOQzWpHfx4pdEUl4NggtZJqU0xFxHqL/b5XZR3ZC39E=;
+        b=QkGVKx++/WV6H4PtmjKdkwN4r8XbhV9bLtp6el9zG87BCvk5DoWsjDhTEFV5beMA8m
+         LlOvVMuzWcxKCQv55Gv0rx9sYHQC6bpIZtfhTtBoFaEzRpcAKXg73PpNUbH+lNmpJOeL
+         Z/eB//GPeKU/fuXX6XOod/hyCb1wzssu21pH6byoydZQm0hmA9PygZOoBRVjfP3oHuc3
+         nubRBDhGb4CQtGpoEc948GLFBb6ZOI0UfYM5IfUicJho+FQrDZVdJPC0gJDYLxboZkz+
+         P0ZrFAOofGhKbALH81zsPwjn1RyOguKxLCDZEtxudLFl8vlRoTJnGh1EoXTLsR7Gvh5J
+         w+6g==
+X-Gm-Message-State: APjAAAXxQkJ2Bb4F2HNrer0N+buuIof3L4PqFiYjfg9dIDz7EfBJldkR
+        eAIBN3t0y03IGFcUBpeOkXGdF83n
+X-Google-Smtp-Source: APXvYqw7CXurc2quSgaz5A798GccKKbvTrl6mO4b61Y+BCiP1i/FuiRxu1BeUhnZUrnAQZU6IO1TwQ==
+X-Received: by 2002:adf:f7c4:: with SMTP id a4mr13025777wrq.332.1576826015587;
+        Thu, 19 Dec 2019 23:13:35 -0800 (PST)
+Received: from localhost (ip-37-188-150-151.eurotel.cz. [37.188.150.151])
+        by smtp.gmail.com with ESMTPSA id g7sm8987211wrq.21.2019.12.19.23.13.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 23:12:24 -0800 (PST)
-Message-ID: <9158a0d87f6493977455179202cd86165437f5f6.camel@9elements.com>
-Subject: Re: [PATCH v3 1/2] firmware: google: Expose CBMEM over sysfs
-From:   patrick.rudolph@9elements.com
-To:     Julius Werner <jwerner@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Samuel Holland <samuel@sholland.org>
-Date:   Fri, 20 Dec 2019 08:12:22 +0100
-In-Reply-To: <CAODwPW8Koy1BvKGJU6PKexYx+PNE+WY7+m69gcxT689vBy+AoQ@mail.gmail.com>
-References: <20191128125100.14291-1-patrick.rudolph@9elements.com>
-         <20191128125100.14291-2-patrick.rudolph@9elements.com>
-         <CAODwPW8Koy1BvKGJU6PKexYx+PNE+WY7+m69gcxT689vBy+AoQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Thu, 19 Dec 2019 23:13:34 -0800 (PST)
+Date:   Fri, 20 Dec 2019 08:13:34 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     zgpeng.linux@gmail.com
+Cc:     akpm@linux-foundation.org, hannes@cmpxchg.org,
+        vdavydov.dev@gmail.com, shakeelb@google.com, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        zgpeng <zgpeng@tencent.com>
+Subject: Re: [PATCH] oom: choose a more suitable process to kill while all
+ processes are not killable
+Message-ID: <20191220071334.GB20332@dhcp22.suse.cz>
+References: <1576823172-25943-1-git-send-email-zgpeng.linux@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576823172-25943-1-git-send-email-zgpeng.linux@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-12-09 at 22:54 -0800, Julius Werner wrote:
-> > +static int cbmem_probe(struct coreboot_device *cdev)
-> > +{
-> > +       struct device *dev = &cdev->dev;
-> > +       struct cb_priv *priv;
-> > +       int err;
-> > +
-> > +       priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-> > +       if (!priv)
-> > +               return -ENOMEM;
-> > +
-> > +       memcpy(&priv->entry, &cdev->cbmem_entry, sizeof(priv-
-> > >entry));
-> > +
-> > +       priv->remap = memremap(priv->entry.address,
-> > +                              priv->entry.entry_size,
-> > MEMREMAP_WB);
+On Fri 20-12-19 14:26:12, zgpeng.linux@gmail.com wrote:
+> From: zgpeng <zgpeng@tencent.com>
 > 
-> We've just been discussing some problems with CBMEM areas and memory
-> mapping types in Chrome OS. CBMEM is not guaranteed to be page-
-> aligned
-> (at least not the "small" entries), but the kernel can only assign
-> memory attributes for a page at a time (and refuses to map the same
-> area twice with two different memory types, for good reason). So if
-> CBMEM entries sharing a page are mapped as writeback by one driver
-> but
-> uncached by the other, things break.
-> 
-> There are some CBMEM entries that need to be mapped uncached (e.g.
-> the
-> ACPI UCSI table, which isn't even handled by anything using this
-> CBMEM
-> code) and others for which it would make more sense (e.g. the memory
-> console, where firmware may add more lines at runtime), but I don't
-> think there are any regions that really *need* to be writeback. None
-> of the stuff accessing these areas should access them often enough
-> that caching matters, and I think it's generally more common to map
-> firmware memory areas as uncached anyway. So how about we standardize
-> on mapping it all uncached to avoid any attribute clashes? (That
-> would
-> mean changing the existing VPD and memconsole drivers to use
-> ioremap(), too.)
+> It has been found in multiple business scenarios that when a oom occurs
+> in a cgroup, the process that consumes the most memory in the cgroup is 
+> not killed first. Analysis of the reasons found that each process in the
+> cgroup oom_score_adj is set to -998, oom_badness in the calculation of 
+> points, if points is negative, uniformly set it to 1.
 
-I wasn't aware that CBMEM is used for DMA as there's no such concept in
-coreboot yet. For me it looks like the UCSI is regular DRAM mapped as
-WB accessed by the ACPI interpreter.
-I'll prepare a new patch-set using ioremap in all drivers that access
-CBMEM.
-
+Can you provide an example of the oom report?
+-- 
+Michal Hocko
+SUSE Labs
