@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A514C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D29F8C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3DFD24687
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92DFB2467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852514;
-	bh=poCgc+XuigasFh8jiFvh/hpav7KlF6IhwdhTZXEK/00=;
+	s=default; t=1576852517;
+	bh=RQzRcBuZsIpg/iLzmjEdBG4fBsc02bPgP9y1jmerNYs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TFROpmOMsFOgpetb/Q9IJO/7cBPmwp3GHdoZDkOKy/oHdvFj8LGafu+GouYEv2j67
-	 7XkOFTURVcdWyHQYSoKdyJO8NNAz58jfLCBLPw1Z57FFJBIpMOpqW4Q61CKsA90Haq
-	 z8jJXpv09NaPcPjaErx/bjLt51eXbV7KV3lPaev8=
+	b=Kf5O+0fVmw9qulH0mBz7drIYpjNcCx1kvemN8aem3Al7t+L/9vwit3FYrJ6Lb+A86
+	 Xxru9sIsQNUDINHosxAikUqHG3COiM5uv2RjZy6Xk0SGL/vgXkN3E1zjTOqr8nTsxo
+	 cLGjR5YvLkT/SWKd/e9/Jkc7n8oWFD9GmNGTkRUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbfLTOfN (ORCPT
+        id S1728386AbfLTOfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:35:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39328 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:35:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728329AbfLTOfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:35:01 -0500
+        id S1727422AbfLTOfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:35:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AE9224680;
-        Fri, 20 Dec 2019 14:34:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB5BD2467F;
+        Fri, 20 Dec 2019 14:35:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852500;
-        bh=poCgc+XuigasFh8jiFvh/hpav7KlF6IhwdhTZXEK/00=;
+        s=default; t=1576852501;
+        bh=RQzRcBuZsIpg/iLzmjEdBG4fBsc02bPgP9y1jmerNYs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qxTtwdmRBaHjzTwfbVfQf//aNHk/ZFVRomjqc0nLECU7JJd0wcJJDH+X2PpYsTYMe
-         a0SP1j6Nafo+rwplxhJKiJdBJfRQPL8EwS+T80RtdT1zDUzm3gFBonzN+ThZ5bATPz
-         XQPf/FcSsS84uU3tuQNX7DFygyeSGnc34cvgak8s=
+        b=Liy8EPSH6jKpOWa0xTe9mzzLsufd7nxiyYNDPGjRgu0YNaNmbJrIhRQSQpM9nAuCz
+         Ro9MmjjWAopTchwFZEG/P6M9f3dgiBtKhtvMGcdDNqZRARCvS7mN0QQGUCj2Z8GTPa
+         9y1ZE3WjKV7w+SDevuWbhZoaetevZAwzVattAVDo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Roman Bolshakov <r.bolshakov@yadro.com>,
-        Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        Hannes Reinecke <hare@suse.de>,
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 20/34] scsi: qla2xxx: Ignore PORT UPDATE after N2N PLOGI
-Date:   Fri, 20 Dec 2019 09:34:19 -0500
-Message-Id: <20191220143433.9922-20-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 21/34] scsi: iscsi: qla4xxx: fix double free in probe
+Date:   Fri, 20 Dec 2019 09:34:20 -0500
+Message-Id: <20191220143433.9922-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220143433.9922-1-sashal@kernel.org>
 References: <20191220143433.9922-1-sashal@kernel.org>
@@ -62,57 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Bolshakov <r.bolshakov@yadro.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit af22f0c7b052c5c203207f1e5ebd6aa65f87c538 ]
+[ Upstream commit fee92f25777789d73e1936b91472e9c4644457c8 ]
 
-PORT UPDATE asynchronous event is generated on the host that issues PLOGI
-ELS (in the case of higher WWPN). In that case, the event shouldn't be
-handled as it sets unwanted DPC flags (i.e. LOOP_RESYNC_NEEDED) that
-trigger link flap.
+On this error path we call qla4xxx_mem_free() and then the caller also
+calls qla4xxx_free_adapter() which calls qla4xxx_mem_free().  It leads to a
+couple double frees:
 
-Ignore the event if the host has higher WWPN, but handle otherwise.
+drivers/scsi/qla4xxx/ql4_os.c:8856 qla4xxx_probe_adapter() warn: 'ha->chap_dma_pool' double freed
+drivers/scsi/qla4xxx/ql4_os.c:8856 qla4xxx_probe_adapter() warn: 'ha->fw_ddb_dma_pool' double freed
 
-Cc: Quinn Tran <qutran@marvell.com>
-Link: https://lore.kernel.org/r/20191125165702.1013-13-r.bolshakov@yadro.com
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Tested-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
+Fixes: afaf5a2d341d ("[SCSI] Initial Commit of qla4xxx")
+Link: https://lore.kernel.org/r/20191203094421.hw7ex7qr3j2rbsmx@kili.mountain
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_mbx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/qla4xxx/ql4_os.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
-index b01f69dd4b283..abef3b29fa101 100644
---- a/drivers/scsi/qla2xxx/qla_mbx.c
-+++ b/drivers/scsi/qla2xxx/qla_mbx.c
-@@ -3871,6 +3871,7 @@ qla24xx_report_id_acquisition(scsi_qla_host_t *vha,
- 					vha->d_id.b24 = 0;
- 					vha->d_id.b.al_pa = 1;
- 					ha->flags.n2n_bigger = 1;
-+					ha->flags.n2n_ae = 0;
+diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
+index 25c8ce54a976d..f8acf101af3d9 100644
+--- a/drivers/scsi/qla4xxx/ql4_os.c
++++ b/drivers/scsi/qla4xxx/ql4_os.c
+@@ -4280,7 +4280,6 @@ static int qla4xxx_mem_alloc(struct scsi_qla_host *ha)
+ 	return QLA_SUCCESS;
  
- 					id.b.al_pa = 2;
- 					ql_dbg(ql_dbg_async, vha, 0x5075,
-@@ -3881,6 +3882,7 @@ qla24xx_report_id_acquisition(scsi_qla_host_t *vha,
- 					    "Format 1: Remote login - Waiting for WWPN %8phC.\n",
- 					    rptid_entry->u.f1.port_name);
- 					ha->flags.n2n_bigger = 0;
-+					ha->flags.n2n_ae = 1;
- 				}
- 				qla24xx_post_newsess_work(vha, &id,
- 				    rptid_entry->u.f1.port_name,
-@@ -3892,7 +3894,6 @@ qla24xx_report_id_acquisition(scsi_qla_host_t *vha,
- 			/* if our portname is higher then initiate N2N login */
+ mem_alloc_error_exit:
+-	qla4xxx_mem_free(ha);
+ 	return QLA_ERROR;
+ }
  
- 			set_bit(N2N_LOGIN_NEEDED, &vha->dpc_flags);
--			ha->flags.n2n_ae = 1;
- 			return;
- 			break;
- 		case TOPO_FL:
 -- 
 2.20.1
 
