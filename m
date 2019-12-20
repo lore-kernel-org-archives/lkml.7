@@ -2,149 +2,98 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50808C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 03:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F6BC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 03:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ACEE24688
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 03:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C057206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 03:48:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="e/HnjBMB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K7xtH7YC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727467AbfLTDqr (ORCPT
+        id S1727188AbfLTDsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 22:46:47 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:40750 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727024AbfLTDqQ (ORCPT
+        Thu, 19 Dec 2019 22:48:25 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42453 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727020AbfLTDsZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 22:46:16 -0500
-X-UUID: c184a00e992e4a688619ee8619bd097c-20191220
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=w8agqSkABPe2gpBFFdaj1Yu7esFJCdenNL3aq1JoRvw=;
-        b=e/HnjBMBLGpgHL5pXlaaJJWFGo5cLW22hLuwwSY7mhcI8qlxXQY/Tx1YTKnHdz6t4L3e3mQbzaBwxAOwhl0qZ8M1RR4YswJzmXEncX7vk8g97NyHgF0CCyOm/emKPJjGGcjXzymz4nPBWf8tKHQB2EnDDr3+LKj5LIWKt4lbTqs=;
-X-UUID: c184a00e992e4a688619ee8619bd097c-20191220
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <weiyi.lu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1585691683; Fri, 20 Dec 2019 11:46:09 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 20 Dec 2019 11:45:50 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 20 Dec 2019 11:46:07 +0800
-From:   Weiyi Lu <weiyi.lu@mediatek.com>
-To:     Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
-CC:     James Liao <jamesjj.liao@mediatek.com>,
-        Fan Chen <fan.chen@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>
-Subject: [PATCH v11 06/10] soc: mediatek: Add subsys clock control for bus protection
-Date:   Fri, 20 Dec 2019 11:46:00 +0800
-Message-ID: <1576813564-23927-7-git-send-email-weiyi.lu@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1576813564-23927-1-git-send-email-weiyi.lu@mediatek.com>
-References: <1576813564-23927-1-git-send-email-weiyi.lu@mediatek.com>
+        Thu, 19 Dec 2019 22:48:25 -0500
+Received: by mail-io1-f67.google.com with SMTP id n11so1311765iom.9
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 19:48:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/5xRolE5dJvA7tdJmuE0DTxJx+uRpisDGCBUfeRMXSM=;
+        b=K7xtH7YCSSZQ096YgPc5qIj9YHYxNW7cmkptjfJEDK3oxVfF6gislTzqxlNYnS8yZn
+         cCgJoc+Gsu4kVIct/nNcP3H+Q0Un0h2GNn8HRpBdArpfg5D7EmR10Ne4ZxRPdXaE0ihI
+         io81vp5+n9v3osGZrTjmzbMCy9OPTsFLywAS9aHXgFIrqAmXD41/GfXSEkfCWEzD4e2e
+         NUFtpJfQqQwTQ+bULiaEOwmptPCIKgv8tBPZNySNkU5YDGVNsvN/SIiLqKhbjjdJ07ON
+         ZvCNf+x9H9ISgmIZ3R9Caxb5hNrxFa2O+FTKb8h5h3b439NTowJ8jhso1uL3sKSpGnsj
+         zjpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/5xRolE5dJvA7tdJmuE0DTxJx+uRpisDGCBUfeRMXSM=;
+        b=swt2mk7tSvyOkv/nO3nwCHC3DLhhSOwNsz4OActFBZkNIYjNj+8O06Z/ymDGwo0ffB
+         Egzqgm4voOXFEXdwJqhsLpFzIOtGWmj6HyTy+LtWKymqRtC7qgWgVkVoSeoYIYal3AQZ
+         gkUlRcYH6XZEjxIuu5vIHmLwdMAuHvYSizmvUicxBLO54/+bcIdm4Behsvm9zJPxUrUY
+         Z7ylG27xkBwQw7+LSgbSqF7a0rG69SPsvGj3gdcdiB/D9oDnGiWbbCPotTEn+ViQf/fK
+         0J8/9RVgY3dNGSHCZ7wBQUJUPDXgC72uTEtCcDinNEEjzEo/wfx0VGWzyXaQNtpYSm8K
+         VX5Q==
+X-Gm-Message-State: APjAAAV2DUDUyBOjjSeka+tnf4pgOlrfel2/KgKg2pQcxXxFmeEE/E3E
+        IK1LD6CLJ/cDOZYztoGuciE+8pmbVueKffygLK3t
+X-Google-Smtp-Source: APXvYqyBJdasz/TCOTp+h3nWUu0XU27QVLvPuhBGMxADP6E4YYEQl/Q4OlO7SrDVk6HZzl+veZsHn2KikBNNkj/oDqM=
+X-Received: by 2002:a6b:b717:: with SMTP id h23mr8598334iof.273.1576813704203;
+ Thu, 19 Dec 2019 19:48:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20191219115812.102620-1-brgerst@gmail.com> <CALCETrW1zE0Uufrg_UG4JNQKMy3UFxnd+XmZye2gdTV36C-yTw@mail.gmail.com>
+In-Reply-To: <CALCETrW1zE0Uufrg_UG4JNQKMy3UFxnd+XmZye2gdTV36C-yTw@mail.gmail.com>
+From:   Brian Gerst <brgerst@gmail.com>
+Date:   Thu, 19 Dec 2019 22:48:13 -0500
+Message-ID: <CAMzpN2if2m4McWpL49U4QAEM1MJ+qgTe-emN8vKcjVc1H+84vA@mail.gmail.com>
+Subject: Re: [PATCH] x86: Remove force_iret()
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Oleg Nesterov <oleg@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIHN1YnN5cyBDRyBjb250cm9sIGZsb3cgYmVmb3JlL2FmdGVyIHRoZSBidXMgcHJvdGVjdCBj
-b250cm9sDQpkdWUgdG8gYnVzIHByb3RlY3Rpb24gbmVlZCBTTUkgYnVzIHJlbGF0aXZlIENHcyBl
-bmFibGVkIHRvIGZlZWRiYWNrDQppdHMgYWNrLg0KDQpTaWduZWQtb2ZmLWJ5OiBXZWl5aSBMdSA8
-d2VpeWkubHVAbWVkaWF0ZWsuY29tPg0KUmV2aWV3ZWQtYnk6IE5pY29sYXMgQm9pY2hhdCA8ZHJp
-bmtjYXRAY2hyb21pdW0ub3JnPg0KLS0tDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXNjcHN5
-cy5jIHwgNzIgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tDQogMSBmaWxl
-IGNoYW5nZWQsIDcwIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQg
-YS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstc2Nwc3lzLmMgYi9kcml2ZXJzL3NvYy9tZWRpYXRl
-ay9tdGstc2Nwc3lzLmMNCmluZGV4IDc2M2NhNTguLjMyYmU0YjMgMTAwNjQ0DQotLS0gYS9kcml2
-ZXJzL3NvYy9tZWRpYXRlay9tdGstc2Nwc3lzLmMNCisrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVr
-L210ay1zY3BzeXMuYw0KQEAgLTc5LDYgKzc5LDcgQEANCiAjZGVmaW5lIFBXUl9TVEFUVVNfV0IJ
-CQlCSVQoMjcpCS8qIE1UNzYyMiAqLw0KIA0KICNkZWZpbmUgTUFYX0NMS1MJMw0KKyNkZWZpbmUg
-TUFYX1NVQlNZU19DTEtTIDEwDQogDQogLyoqDQogICogc3RydWN0IHNjcF9kb21haW5fZGF0YSAt
-IHNjcCBkb21haW4gZGF0YSBmb3IgcG93ZXIgb24vb2ZmIGZsb3cNCkBAIC04OCw2ICs4OSw4IEBA
-DQogICogQHNyYW1fcGRuX2JpdHM6IFRoZSBtYXNrIGZvciBzcmFtIHBvd2VyIGNvbnRyb2wgYml0
-cy4NCiAgKiBAc3JhbV9wZG5fYWNrX2JpdHM6IFRoZSBtYXNrIGZvciBzcmFtIHBvd2VyIGNvbnRy
-b2wgYWNrZWQgYml0cy4NCiAgKiBAYmFzaWNfY2xrX25hbWU6IFRoZSBiYXNpYyBjbG9ja3MgcmVx
-dWlyZWQgYnkgdGhpcyBwb3dlciBkb21haW4uDQorICogQHN1YnN5c19jbGtfcHJlZml4OiBUaGUg
-cHJlZml4IG5hbWUgb2YgdGhlIGNsb2NrcyBuZWVkIHRvIGJlIGVuYWJsZWQNCisgKiAgICAgICAg
-ICAgICAgICAgICAgIGJlZm9yZSByZWxlYXNpbmcgYnVzIHByb3RlY3Rpb24uDQogICogQGNhcHM6
-IFRoZSBmbGFnIGZvciBhY3RpdmUgd2FrZS11cCBhY3Rpb24uDQogICogQGJwX3RhYmxlOiBUaGUg
-bWFzayB0YWJsZSBmb3IgbXVsdGlwbGUgc3RlcCBidXMgcHJvdGVjdGlvbi4NCiAgKi8NCkBAIC05
-OCw2ICsxMDEsNyBAQCBzdHJ1Y3Qgc2NwX2RvbWFpbl9kYXRhIHsNCiAJdTMyIHNyYW1fcGRuX2Jp
-dHM7DQogCXUzMiBzcmFtX3Bkbl9hY2tfYml0czsNCiAJY29uc3QgY2hhciAqYmFzaWNfY2xrX25h
-bWVbTUFYX0NMS1NdOw0KKwljb25zdCBjaGFyICpzdWJzeXNfY2xrX3ByZWZpeDsNCiAJdTggY2Fw
-czsNCiAJc3RydWN0IGJ1c19wcm90IGJwX3RhYmxlW01BWF9TVEVQU107DQogfTsNCkBAIC0xMDgs
-NiArMTEyLDcgQEAgc3RydWN0IHNjcF9kb21haW4gew0KIAlzdHJ1Y3QgZ2VuZXJpY19wbV9kb21h
-aW4gZ2VucGQ7DQogCXN0cnVjdCBzY3AgKnNjcDsNCiAJc3RydWN0IGNsayAqY2xrW01BWF9DTEtT
-XTsNCisJc3RydWN0IGNsayAqc3Vic3lzX2Nsa1tNQVhfU1VCU1lTX0NMS1NdOw0KIAljb25zdCBz
-dHJ1Y3Qgc2NwX2RvbWFpbl9kYXRhICpkYXRhOw0KIAlzdHJ1Y3QgcmVndWxhdG9yICpzdXBwbHk7
-DQogfTsNCkBAIC0zMDEsMTYgKzMwNiwyMiBAQCBzdGF0aWMgaW50IHNjcHN5c19wb3dlcl9vbihz
-dHJ1Y3QgZ2VuZXJpY19wbV9kb21haW4gKmdlbnBkKQ0KIAl2YWwgfD0gUFdSX1JTVF9CX0JJVDsN
-CiAJd3JpdGVsKHZhbCwgY3RsX2FkZHIpOw0KIA0KLQlyZXQgPSBzY3BzeXNfc3JhbV9lbmFibGUo
-c2NwZCwgY3RsX2FkZHIpOw0KKwlyZXQgPSBzY3BzeXNfY2xrX2VuYWJsZShzY3BkLT5zdWJzeXNf
-Y2xrLCBNQVhfU1VCU1lTX0NMS1MpOw0KIAlpZiAocmV0IDwgMCkNCiAJCWdvdG8gZXJyX3B3cl9h
-Y2s7DQogDQorCXJldCA9IHNjcHN5c19zcmFtX2VuYWJsZShzY3BkLCBjdGxfYWRkcik7DQorCWlm
-IChyZXQgPCAwKQ0KKwkJZ290byBlcnJfc3JhbTsNCisNCiAJcmV0ID0gc2Nwc3lzX2J1c19wcm90
-ZWN0X2Rpc2FibGUoc2NwZCk7DQogCWlmIChyZXQgPCAwKQ0KLQkJZ290byBlcnJfcHdyX2FjazsN
-CisJCWdvdG8gZXJyX3NyYW07DQogDQogCXJldHVybiAwOw0KIA0KK2Vycl9zcmFtOg0KKwlzY3Bz
-eXNfY2xrX2Rpc2FibGUoc2NwZC0+c3Vic3lzX2NsaywgTUFYX1NVQlNZU19DTEtTKTsNCiBlcnJf
-cHdyX2FjazoNCiAJc2Nwc3lzX2Nsa19kaXNhYmxlKHNjcGQtPmNsaywgTUFYX0NMS1MpOw0KIGVy
-cl9jbGs6DQpAQCAtMzM3LDYgKzM0OCw4IEBAIHN0YXRpYyBpbnQgc2Nwc3lzX3Bvd2VyX29mZihz
-dHJ1Y3QgZ2VuZXJpY19wbV9kb21haW4gKmdlbnBkKQ0KIAlpZiAocmV0IDwgMCkNCiAJCWdvdG8g
-b3V0Ow0KIA0KKwlzY3BzeXNfY2xrX2Rpc2FibGUoc2NwZC0+c3Vic3lzX2NsaywgTUFYX1NVQlNZ
-U19DTEtTKTsNCisNCiAJLyogc3Vic3lzIHBvd2VyIG9mZiAqLw0KIAl2YWwgPSByZWFkbChjdGxf
-YWRkcik7DQogCXZhbCB8PSBQV1JfSVNPX0JJVDsNCkBAIC0zNzQsNiArMzg3LDQ4IEBAIHN0YXRp
-YyBpbnQgc2Nwc3lzX3Bvd2VyX29mZihzdHJ1Y3QgZ2VuZXJpY19wbV9kb21haW4gKmdlbnBkKQ0K
-IAlyZXR1cm4gcmV0Ow0KIH0NCiANCitzdGF0aWMgaW50IGluaXRfc3Vic3lzX2Nsa3Moc3RydWN0
-IHBsYXRmb3JtX2RldmljZSAqcGRldiwNCisJCWNvbnN0IGNoYXIgKnByZWZpeCwgc3RydWN0IGNs
-ayAqKmNsaykNCit7DQorCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSA9IHBkZXYtPmRldi5vZl9u
-b2RlOw0KKwl1MzIgcHJlZml4X2xlbiwgc3ViX2Nsa19jbnQgPSAwOw0KKwlzdHJ1Y3QgcHJvcGVy
-dHkgKnByb3A7DQorCWNvbnN0IGNoYXIgKmNsa19uYW1lOw0KKw0KKwlpZiAoIW5vZGUpIHsNCisJ
-CWRldl9lcnIoJnBkZXYtPmRldiwgIkNhbm5vdCBmaW5kIHNjcHN5cyBub2RlOiAlbGRcbiIsDQor
-CQkJUFRSX0VSUihub2RlKSk7DQorCQlyZXR1cm4gUFRSX0VSUihub2RlKTsNCisJfQ0KKw0KKwlw
-cmVmaXhfbGVuID0gc3RybGVuKHByZWZpeCk7DQorDQorCW9mX3Byb3BlcnR5X2Zvcl9lYWNoX3N0
-cmluZyhub2RlLCAiY2xvY2stbmFtZXMiLCBwcm9wLCBjbGtfbmFtZSkgew0KKwkJaWYgKCFzdHJu
-Y21wKGNsa19uYW1lLCBwcmVmaXgsIHByZWZpeF9sZW4pICYmDQorCQkJCShjbGtfbmFtZVtwcmVm
-aXhfbGVuXSA9PSAnLScpKSB7DQorCQkJaWYgKHN1Yl9jbGtfY250ID49IE1BWF9TVUJTWVNfQ0xL
-Uykgew0KKwkJCQlkZXZfZXJyKCZwZGV2LT5kZXYsDQorCQkJCQkic3Vic3lzIGNsayBvdXQgb2Yg
-cmFuZ2UgJWRcbiIsDQorCQkJCQlzdWJfY2xrX2NudCk7DQorCQkJCXJldHVybiAtRU5PTUVNOw0K
-KwkJCX0NCisNCisJCQljbGtbc3ViX2Nsa19jbnRdID0gZGV2bV9jbGtfZ2V0KCZwZGV2LT5kZXYs
-DQorCQkJCQkJY2xrX25hbWUpOw0KKw0KKwkJCWlmIChJU19FUlIoY2xrW3N1Yl9jbGtfY250XSkp
-IHsNCisJCQkJZGV2X2VycigmcGRldi0+ZGV2LA0KKwkJCQkJIlN1YnN5cyBjbGsgZ2V0IGZhaWwg
-JWxkXG4iLA0KKwkJCQkJUFRSX0VSUihjbGtbc3ViX2Nsa19jbnRdKSk7DQorCQkJCXJldHVybiBQ
-VFJfRVJSKGNsa1tzdWJfY2xrX2NudF0pOw0KKwkJCX0NCisJCQlzdWJfY2xrX2NudCsrOw0KKwkJ
-fQ0KKwl9DQorDQorCXJldHVybiBzdWJfY2xrX2NudDsNCit9DQorDQogc3RhdGljIGludCBpbml0
-X2Jhc2ljX2Nsa3Moc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwgc3RydWN0IGNsayAqKmNs
-aywNCiAJCQljb25zdCBjaGFyICogY29uc3QgKm5hbWUpDQogew0KQEAgLTQ2Niw2ICs1MjEsNyBA
-QCBzdGF0aWMgc3RydWN0IHNjcCAqaW5pdF9zY3Aoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
-diwNCiAJCXN0cnVjdCBzY3BfZG9tYWluICpzY3BkID0gJnNjcC0+ZG9tYWluc1tpXTsNCiAJCXN0
-cnVjdCBnZW5lcmljX3BtX2RvbWFpbiAqZ2VucGQgPSAmc2NwZC0+Z2VucGQ7DQogCQljb25zdCBz
-dHJ1Y3Qgc2NwX2RvbWFpbl9kYXRhICpkYXRhID0gJnNjcF9kb21haW5fZGF0YVtpXTsNCisJCWlu
-dCBjbGtfY250Ow0KIA0KIAkJcGRfZGF0YS0+ZG9tYWluc1tpXSA9IGdlbnBkOw0KIAkJc2NwZC0+
-c2NwID0gc2NwOw0KQEAgLTQ3Niw2ICs1MzIsMTggQEAgc3RhdGljIHN0cnVjdCBzY3AgKmluaXRf
-c2NwKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsDQogCQlpZiAocmV0KQ0KIAkJCXJldHVy
-biBFUlJfUFRSKHJldCk7DQogDQorCQlpZiAoZGF0YS0+c3Vic3lzX2Nsa19wcmVmaXgpIHsNCisJ
-CQljbGtfY250ID0gaW5pdF9zdWJzeXNfY2xrcyhwZGV2LA0KKwkJCQkJZGF0YS0+c3Vic3lzX2Ns
-a19wcmVmaXgsDQorCQkJCQlzY3BkLT5zdWJzeXNfY2xrKTsNCisJCQlpZiAoY2xrX2NudCA8IDAp
-IHsNCisJCQkJZGV2X2VycigmcGRldi0+ZGV2LA0KKwkJCQkJIiVzOiBzdWJzeXMgY2xrIHVuYXZh
-aWxhYmxlXG4iLA0KKwkJCQkJZGF0YS0+bmFtZSk7DQorCQkJCXJldHVybiBFUlJfUFRSKGNsa19j
-bnQpOw0KKwkJCX0NCisJCX0NCisNCiAJCWdlbnBkLT5uYW1lID0gZGF0YS0+bmFtZTsNCiAJCWdl
-bnBkLT5wb3dlcl9vZmYgPSBzY3BzeXNfcG93ZXJfb2ZmOw0KIAkJZ2VucGQtPnBvd2VyX29uID0g
-c2Nwc3lzX3Bvd2VyX29uOw0KLS0gDQoxLjguMS4xLmRpcnR5DQo=
+On Thu, Dec 19, 2019 at 8:50 PM Andy Lutomirski <luto@kernel.org> wrote:
+>
+> On Thu, Dec 19, 2019 at 3:58 AM Brian Gerst <brgerst@gmail.com> wrote:
+> >
+> > force_iret() was originally intended to prevent the return to user mode with
+> > the SYSRET or SYSEXIT instructions, in cases where the register state could
+> > have been changed to be incompatible with those instructions.
+>
+> It's more than that.  Before the big syscall rework, we didn't restore
+> the caller-saved regs.  See:
+>
+> commit 21d375b6b34ff511a507de27bf316b3dde6938d9
+> Author: Andy Lutomirski <luto@kernel.org>
+> Date:   Sun Jan 28 10:38:49 2018 -0800
+>
+>     x86/entry/64: Remove the SYSCALL64 fast path
+>
+> So if you changed r12, for example, the change would get lost.
 
+force_iret() specifically dealt with changes to CS, SS and EFLAGS.
+Saving and restoring the extra registers was a different problem
+although it affected the same functions like ptrace, signals, and
+exec.
+
+--
+Brian Gerst
