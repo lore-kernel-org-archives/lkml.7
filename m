@@ -2,211 +2,250 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B13C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44627C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF7024672
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:50:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576806613;
-	bh=ilkLnoHo7EaGLJaUaoTKqHyZz38N26PazO3SkXo3GyM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=IJutcfQY5w3nbbHrAuS0Xbwc0+D7HJWne3OJhnp0Xj9Fqc8lo8IQQt5AySWmV0kha
-	 sZtQ5Y3TkXcvVyBBomlFWBYPzVF6axi/CFiWYHSePRrX46GpE++0vnOumipqaw17yV
-	 Ddwgzj5LR7AuJbwL4i6sMc7B4f7CpKnMylhxdE0Y=
+	by mail.kernel.org (Postfix) with ESMTP id 0EAA2227BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:52:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gOaH9Gox"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfLTBuM (ORCPT
+        id S1727140AbfLTBwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 20:50:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49960 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbfLTBuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 20:50:12 -0500
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC8BD2467F
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 01:50:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576806611;
-        bh=ilkLnoHo7EaGLJaUaoTKqHyZz38N26PazO3SkXo3GyM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EMNBjmsJ4KtzjViKtGv8WXocxETJgyqaCSQSMhLeUoiFxNtfRU58/IEz2WBkl3f1m
-         DlxLqxIambbcM0teSXlU2u3yWBojSizgIWpGRIJIUx34J5AMiPfc3JJ5iATvIwyokO
-         MVmEpEcX/hl06FdObWRTALir4GNudUz0DEMdJZ3M=
-Received: by mail-wr1-f48.google.com with SMTP id z7so7818949wrl.13
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 17:50:10 -0800 (PST)
-X-Gm-Message-State: APjAAAVJwfUaC/8cKM7rliH0wdGzWrgqOhbaWcijgpZMpF9weld7sTAG
-        qC7dlTALidSj4pxeNz7i4ZY+wXOMG8mVWsI2Eai35w==
-X-Google-Smtp-Source: APXvYqwqz1lP8dteMiGFgB803NjS2+zXu6rXOGofAhHN0J2BXqlKcx84b1BZi/xfgxKsJI3TR0quGVQhWU+JOaDiJFE=
-X-Received: by 2002:a5d:4acb:: with SMTP id y11mr12764126wrs.106.1576806609240;
- Thu, 19 Dec 2019 17:50:09 -0800 (PST)
+        Thu, 19 Dec 2019 20:52:50 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:45080 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbfLTBwt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 20:52:49 -0500
+Received: by mail-qt1-f196.google.com with SMTP id l12so6799506qtq.12
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 17:52:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CCSISgtL7V8q9QzteOk0TtxD6M/0tQtEP4MUsyWTHdY=;
+        b=gOaH9GoxzGYN498MOlNcrkcsTwVBFU5rEcYT0q8i6Gt7Xlz00HRMAfxIgfudrfEd3v
+         mY/JFetkm4h7jGUNaWFVWbIt0hFRfM4oTe1FK0pgweSnospRz8tp6ZuvIUvm+Y67Zsr3
+         DorRN3MY/Dn01rwI/p7EAIBQ/8MS5+MvYXVNTjNny7IpDjElbh6bR5C+uwrWOS3SC0af
+         NOrONYHdm8wI6wJ4fp465deSnxdSj8yI6t1AmeIXF8mTi9xLE1lquWhIPtxhYQO8cr6c
+         wFmR6NkvP1JKqfMdsuVXcymXSYzUGt7lPasrwHLQyjRcaAd8XJIet5B14Rtm+P1055aa
+         yBQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=CCSISgtL7V8q9QzteOk0TtxD6M/0tQtEP4MUsyWTHdY=;
+        b=qShGCaQdH28PspHwCdRDR5ENXeW4Skw8ErSF2IotzIwLNqwYEpJeiWtmHiMLfik3Ou
+         MWTRL3djBT2I1BEuey7Iczsht9ShkW+sZ1l+3/j7dmRZg5bpbzATbl3JMVbrtD7bbdAO
+         WaPv4VCGLz729ml0eRcxRp/xZamhXYtjH8IgvebjJ0R8Gp9EJuvOPx+X/5Euarorfiuv
+         xQP8ZgRywjieHX68eDP2wp/P5n49/1l0mI8aReH4GmRUlOK1l8nOxHp8pwJqYAYPRoaK
+         XyIV1bEO6NaqNoQPbz33Da/Tt/vhV5CWQluhWscJdcmJxLCWZ39Ykc37sxiSWd5gR8pt
+         pcDg==
+X-Gm-Message-State: APjAAAX4hXeHIxB4FQrjxjMisrhhQ6j/fjUOWFkbNlO/0Z0TBQuRLJqq
+        5eIa+F0ujCjW9ZQXhHsMH9jmrO8ae94=
+X-Google-Smtp-Source: APXvYqwZzRJYZaDplMj+cs7gO/EShqkHd/IVN0lblFKUygOJQPmh7grAKNTN8o+yJbQNopfjIqa2dg==
+X-Received: by 2002:aed:2f45:: with SMTP id l63mr9965730qtd.221.1576806768487;
+        Thu, 19 Dec 2019 17:52:48 -0800 (PST)
+Received: from localhost.localdomain (209-6-36-129.s6527.c3-0.smr-cbr2.sbo-smr.ma.cable.rcncustomer.com. [209.6.36.129])
+        by smtp.gmail.com with ESMTPSA id f42sm2568030qta.0.2019.12.19.17.52.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 17:52:47 -0800 (PST)
+Date:   Thu, 19 Dec 2019 20:52:45 -0500
+From:   Konrad Rzeszutek Wilk <konrad@darnok.org>
+To:     Ashish Kalra <Ashish.Kalra@amd.com>
+Cc:     hch@lst.de, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, luto@kernel.org,
+        peterz@infradead.org, dave.hansen@linux-intel.com,
+        konrad.wilk@oracle.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, brijesh.singh@amd.com,
+        Thomas.Lendacky@amd.com
+Subject: Re: [PATCH v2] swiotlb: Adjust SWIOTBL bounce buffer size for SEV
+ guests.
+Message-ID: <20191220015245.GA7010@localhost.localdomain>
+References: <20191209231346.5602-1-Ashish.Kalra@amd.com>
 MIME-Version: 1.0
-References: <20191219115812.102620-1-brgerst@gmail.com>
-In-Reply-To: <20191219115812.102620-1-brgerst@gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 19 Dec 2019 17:49:58 -0800
-X-Gmail-Original-Message-ID: <CALCETrW1zE0Uufrg_UG4JNQKMy3UFxnd+XmZye2gdTV36C-yTw@mail.gmail.com>
-Message-ID: <CALCETrW1zE0Uufrg_UG4JNQKMy3UFxnd+XmZye2gdTV36C-yTw@mail.gmail.com>
-Subject: Re: [PATCH] x86: Remove force_iret()
-To:     Brian Gerst <brgerst@gmail.com>
-Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Oleg Nesterov <oleg@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191209231346.5602-1-Ashish.Kalra@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 3:58 AM Brian Gerst <brgerst@gmail.com> wrote:
->
-> force_iret() was originally intended to prevent the return to user mode with
-> the SYSRET or SYSEXIT instructions, in cases where the register state could
-> have been changed to be incompatible with those instructions.
+On Mon, Dec 09, 2019 at 11:13:46PM +0000, Ashish Kalra wrote:
+> From: Ashish Kalra <ashish.kalra@amd.com>
+> 
+> For SEV, all DMA to and from guest has to use shared
+> (un-encrypted) pages. SEV uses SWIOTLB to make this happen
+> without requiring changes to device drivers. However,
+> depending on workload being run, the default 64MB of SWIOTLB
+> might not be enough and SWIOTLB may run out of buffers to
+> use for DMA, resulting in I/O errors.
+> 
+> Increase the default size of SWIOTLB for SEV guests using
+> a minimum value of 128MB and a maximum value of 512MB,
+> determining on amount of provisioned guest memory.
+> 
+> The SWIOTLB default size adjustment is added as an
+> architecture specific interface/callback to allow
+> architectures such as those supporting memory encryption
+> to adjust/expand SWIOTLB size for their use.
 
-It's more than that.  Before the big syscall rework, we didn't restore
-the caller-saved regs.  See:
+What if this was made dynamic? That is if there is a memory
+pressure you end up expanding the SWIOTLB dynamically?
 
-commit 21d375b6b34ff511a507de27bf316b3dde6938d9
-Author: Andy Lutomirski <luto@kernel.org>
-Date:   Sun Jan 28 10:38:49 2018 -0800
+Also is it worth doing this calculation based on memory or
+more on the # of PCI devices + their MMIO ranges size?
 
-    x86/entry/64: Remove the SYSCALL64 fast path
-
-So if you changed r12, for example, the change would get lost.
-
- The entry code
-> has been significantly reworked since then, and register state is validated
-> before SYSRET or SYSEXIT are used.  force_iret() no longer serves its original
-> purpose and can be eliminated.
->
-> Signed-off-by: Brian Gerst <brgerst@gmail.com>
+> 
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
 > ---
->  arch/x86/ia32/ia32_signal.c        |  2 --
->  arch/x86/include/asm/ptrace.h      | 16 ----------------
->  arch/x86/include/asm/thread_info.h |  9 ---------
->  arch/x86/kernel/process_32.c       |  1 -
->  arch/x86/kernel/process_64.c       |  1 -
->  arch/x86/kernel/signal.c           |  2 --
->  arch/x86/kernel/vm86_32.c          |  1 -
->  7 files changed, 32 deletions(-)
->
-> diff --git a/arch/x86/ia32/ia32_signal.c b/arch/x86/ia32/ia32_signal.c
-> index 30416d7f19d4..a3aefe9b9401 100644
-> --- a/arch/x86/ia32/ia32_signal.c
-> +++ b/arch/x86/ia32/ia32_signal.c
-> @@ -114,8 +114,6 @@ static int ia32_restore_sigcontext(struct pt_regs *regs,
->
->         err |= fpu__restore_sig(buf, 1);
->
-> -       force_iret();
-> -
->         return err;
+> Changes in v2:
+>  - Fix compile errors as
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+>  arch/x86/Kconfig           |  1 +
+>  arch/x86/mm/mem_encrypt.c  | 36 ++++++++++++++++++++++++++++++++++++
+>  include/linux/dma-direct.h | 10 ++++++++++
+>  kernel/dma/Kconfig         |  3 +++
+>  kernel/dma/swiotlb.c       | 14 ++++++++++++--
+>  5 files changed, 62 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 5e8949953660..e75622e58d34 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -1522,6 +1522,7 @@ config AMD_MEM_ENCRYPT
+>  	select DYNAMIC_PHYSICAL_MASK
+>  	select ARCH_USE_MEMREMAP_PROT
+>  	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
+> +	select ARCH_HAS_ADJUST_SWIOTLB_DEFAULT
+>  	---help---
+>  	  Say yes to enable support for the encryption of system memory.
+>  	  This requires an AMD processor that supports Secure Memory
+> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+> index a03614bd3e1a..f4bd4b431ba1 100644
+> --- a/arch/x86/mm/mem_encrypt.c
+> +++ b/arch/x86/mm/mem_encrypt.c
+> @@ -376,6 +376,42 @@ bool force_dma_unencrypted(struct device *dev)
+>  	return false;
 >  }
->
-> diff --git a/arch/x86/include/asm/ptrace.h b/arch/x86/include/asm/ptrace.h
-> index 5057a8ed100b..78897a8da01f 100644
-> --- a/arch/x86/include/asm/ptrace.h
-> +++ b/arch/x86/include/asm/ptrace.h
-> @@ -339,22 +339,6 @@ static inline unsigned long regs_get_kernel_argument(struct pt_regs *regs,
->
->  #define ARCH_HAS_USER_SINGLE_STEP_REPORT
->
-> -/*
-> - * When hitting ptrace_stop(), we cannot return using SYSRET because
-> - * that does not restore the full CPU state, only a minimal set.  The
-> - * ptracer can change arbitrary register values, which is usually okay
-> - * because the usual ptrace stops run off the signal delivery path which
-> - * forces IRET; however, ptrace_event() stops happen in arbitrary places
-> - * in the kernel and don't force IRET path.
-> - *
-> - * So force IRET path after a ptrace stop.
-> - */
-> -#define arch_ptrace_stop_needed(code, info)                            \
-> -({                                                                     \
-> -       force_iret();                                                   \
-> -       false;                                                          \
-> -})
-> -
->  struct user_desc;
->  extern int do_get_thread_area(struct task_struct *p, int idx,
->                               struct user_desc __user *info);
-> diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/thread_info.h
-> index d779366ce3f8..cf4327986e98 100644
-> --- a/arch/x86/include/asm/thread_info.h
-> +++ b/arch/x86/include/asm/thread_info.h
-> @@ -239,15 +239,6 @@ static inline int arch_within_stack_frames(const void * const stack,
->                            current_thread_info()->status & TS_COMPAT)
->  #endif
->
-> -/*
-> - * Force syscall return via IRET by making it look as if there was
-> - * some work pending. IRET is our most capable (but slowest) syscall
-> - * return path, which is able to restore modified SS, CS and certain
-> - * EFLAGS values that other (fast) syscall return instructions
-> - * are not able to restore properly.
-> - */
-> -#define force_iret() set_thread_flag(TIF_NOTIFY_RESUME)
-> -
->  extern void arch_task_cache_init(void);
->  extern int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src);
->  extern void arch_release_task_struct(struct task_struct *tsk);
-> diff --git a/arch/x86/kernel/process_32.c b/arch/x86/kernel/process_32.c
-> index 323499f48858..5052ced43373 100644
-> --- a/arch/x86/kernel/process_32.c
-> +++ b/arch/x86/kernel/process_32.c
-> @@ -124,7 +124,6 @@ start_thread(struct pt_regs *regs, unsigned long new_ip, unsigned long new_sp)
->         regs->ip                = new_ip;
->         regs->sp                = new_sp;
->         regs->flags             = X86_EFLAGS_IF;
-> -       force_iret();
+>  
+> +#define TOTAL_MEM_1G	0x40000000U
+> +#define TOTAL_MEM_4G	0x100000000U
+> +
+> +/*
+> + * Override for SWIOTLB default size adjustment -
+> + * ARCH_HAS_ADJUST_SWIOTLB_DEFAULT
+> + */
+> +unsigned long adjust_swiotlb_default_size(unsigned long default_size)
+> +{
+> +	/*
+> +	 * For SEV, all DMA has to occur via shared/unencrypted pages.
+> +	 * SEV uses SWOTLB to make this happen without changing device
+> +	 * drivers. However, depending on the workload being run, the
+> +	 * default 64MB of SWIOTLB may not be enough & SWIOTLB may
+> +	 * run out of buffers for using DMA, resulting in I/O errors.
+> +	 * Increase the default size of SWIOTLB for SEV guests using
+> +	 * a minimum value of 128MB and a maximum value of 512GB,
+> +	 * depending on amount of provisioned guest memory.
+> +	 */
+> +	if (sev_active()) {
+> +		unsigned long total_mem = get_num_physpages() << PAGE_SHIFT;
+> +
+> +		if (total_mem <= TOTAL_MEM_1G)
+> +			default_size = default_size * 2;
+> +		else if (total_mem <= TOTAL_MEM_4G)
+> +			default_size = default_size * 4;
+> +		else
+> +			default_size = default_size * 8;
+> +
+> +		pr_info_once("SEV is active, SWIOTLB default size set to %luMB\n",
+> +			     default_size >> 20);
+> +	}
+> +
+> +	return default_size;
+> +}
+> +
+>  /* Architecture __weak replacement functions */
+>  void __init mem_encrypt_free_decrypted_mem(void)
+>  {
+> diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
+> index 24b8684aa21d..85507d21493f 100644
+> --- a/include/linux/dma-direct.h
+> +++ b/include/linux/dma-direct.h
+> @@ -35,6 +35,16 @@ static inline bool force_dma_unencrypted(struct device *dev)
 >  }
->  EXPORT_SYMBOL_GPL(start_thread);
->
-> diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
-> index 506d66830d4d..ffd497804dbc 100644
-> --- a/arch/x86/kernel/process_64.c
-> +++ b/arch/x86/kernel/process_64.c
-> @@ -394,7 +394,6 @@ start_thread_common(struct pt_regs *regs, unsigned long new_ip,
->         regs->cs                = _cs;
->         regs->ss                = _ss;
->         regs->flags             = X86_EFLAGS_IF;
-> -       force_iret();
+>  #endif /* CONFIG_ARCH_HAS_FORCE_DMA_UNENCRYPTED */
+>  
+> +#ifdef CONFIG_ARCH_HAS_ADJUST_SWIOTLB_DEFAULT
+> +unsigned long adjust_swiotlb_default_size(unsigned long default_size);
+> +#else
+> +static inline unsigned long adjust_swiotlb_default_size
+> +		(unsigned long default_size)
+> +{
+> +	return default_size;
+> +}
+> +#endif	/* CONFIG_ARCH_HAS_ADJUST_SWIOTLB_DEFAULT */
+> +
+>  /*
+>   * If memory encryption is supported, phys_to_dma will set the memory encryption
+>   * bit in the DMA address, and dma_to_phys will clear it.  The raw __phys_to_dma
+> diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
+> index 4c103a24e380..851c4500ff88 100644
+> --- a/kernel/dma/Kconfig
+> +++ b/kernel/dma/Kconfig
+> @@ -54,6 +54,9 @@ config ARCH_HAS_DMA_PREP_COHERENT
+>  config ARCH_HAS_FORCE_DMA_UNENCRYPTED
+>  	bool
+>  
+> +config ARCH_HAS_ADJUST_SWIOTLB_DEFAULT
+> +	bool
+> +
+>  config DMA_NONCOHERENT_CACHE_SYNC
+>  	bool
+>  
+> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+> index 9280d6f8271e..7dd72bd88f1c 100644
+> --- a/kernel/dma/swiotlb.c
+> +++ b/kernel/dma/swiotlb.c
+> @@ -155,11 +155,21 @@ void swiotlb_set_max_segment(unsigned int val)
+>  #define IO_TLB_DEFAULT_SIZE (64UL<<20)
+>  unsigned long swiotlb_size_or_default(void)
+>  {
+> +	unsigned long default_size = IO_TLB_DEFAULT_SIZE;
+>  	unsigned long size;
+>  
+> +	/*
+> +	 * If swiotlb size/amount of slabs are not defined on kernel command
+> +	 * line, then give a chance to architectures to adjust swiotlb
+> +	 * size, this may be required by some architectures such as those
+> +	 * supporting memory encryption.
+> +	 */
+> +	if (!io_tlb_nslabs)
+> +		default_size = adjust_swiotlb_default_size(default_size);
+> +
+>  	size = io_tlb_nslabs << IO_TLB_SHIFT;
+>  
+> -	return size ? size : (IO_TLB_DEFAULT_SIZE);
+> +	return size ? size : default_size;
 >  }
->
->  void
-> diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
-> index 8eb7193e158d..8a29573851a3 100644
-> --- a/arch/x86/kernel/signal.c
-> +++ b/arch/x86/kernel/signal.c
-> @@ -151,8 +151,6 @@ static int restore_sigcontext(struct pt_regs *regs,
->
->         err |= fpu__restore_sig(buf, IS_ENABLED(CONFIG_X86_32));
->
-> -       force_iret();
-> -
->         return err;
->  }
->
-> diff --git a/arch/x86/kernel/vm86_32.c b/arch/x86/kernel/vm86_32.c
-> index a76c12b38e92..91d55454e702 100644
-> --- a/arch/x86/kernel/vm86_32.c
-> +++ b/arch/x86/kernel/vm86_32.c
-> @@ -381,7 +381,6 @@ static long do_sys_vm86(struct vm86plus_struct __user *user_vm86, bool plus)
->                 mark_screen_rdonly(tsk->mm);
->
->         memcpy((struct kernel_vm86_regs *)regs, &vm86regs, sizeof(vm86regs));
-> -       force_iret();
->         return regs->ax;
->  }
->
-> --
-> 2.23.0
->
+>  
+>  void swiotlb_print_info(void)
+> @@ -245,7 +255,7 @@ int __init swiotlb_init_with_tbl(char *tlb, unsigned long nslabs, int verbose)
+>  void  __init
+>  swiotlb_init(int verbose)
+>  {
+> -	size_t default_size = IO_TLB_DEFAULT_SIZE;
+> +	unsigned long default_size = swiotlb_size_or_default();
+>  	unsigned char *vstart;
+>  	unsigned long bytes;
+>  
+> -- 
+> 2.17.1
+> 
