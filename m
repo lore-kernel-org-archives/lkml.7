@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA7EC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F81C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:18:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C29324672
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B08B32467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:18:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HuVJUaMC"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pKn+1R9P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbfLTASP (ORCPT
+        id S1727391AbfLTASR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 19:18:15 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:38238 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727252AbfLTASL (ORCPT
+        Thu, 19 Dec 2019 19:18:17 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:57689 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727221AbfLTASM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 19:18:11 -0500
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191220001805epoutp04e5dbf110eb627f97e50783cc22fe48ba~h7DuUVG4K1373313733epoutp04O
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 00:18:05 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191220001805epoutp04e5dbf110eb627f97e50783cc22fe48ba~h7DuUVG4K1373313733epoutp04O
+        Thu, 19 Dec 2019 19:18:12 -0500
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191220001804epoutp036aa75737212424b523f95b400d8c0d55~h7DttXxLT1395213952epoutp03N
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 00:18:04 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191220001804epoutp036aa75737212424b523f95b400d8c0d55~h7DttXxLT1395213952epoutp03N
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1576801085;
-        bh=eX43I+qUocUpECabhW06ewcSAYF+DXL//QhEerlGfJ0=;
+        s=mail20170921; t=1576801084;
+        bh=FthgohP5usrQGRR1x0ruph/6eykA1sFddMA2lyrvL9k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HuVJUaMCId+d6MyCMktULJu1zufmNLSZQGfaKj6DparF4hNVsORXJqivZi54yx1Ud
-         5Qi59JKQQXIta8f8bZpI6NZhmcSxa0xRpaMTpkfQykqXj4yeTMk+uTNFyPBTsp8WvX
-         nCgnlHvLSJl6EdJ15l+hy09YwjywxmyKB445mzzs=
+        b=pKn+1R9PzoTWs04WY8zeIQVh39RlLGdxFoemdxPJIfhSf5Pw3Xx/xowJ7WZqp9ItI
+         gEZP4vFauktsj/B0RtzwiQ8FL4LzeIjt6LR+rB+u/xbKZJQVpiV6wW4+hqtO5+ptQ9
+         Bip/mWoKQWROhXph9ybFlUg6g8DM+r4xlTuzIzbk=
 Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20191220001804epcas1p3d714a4067c0c06c4da2c113712f2110b~h7Dt7LEb21359613596epcas1p3q;
-        Fri, 20 Dec 2019 00:18:04 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.152]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 47f8Tj1SF4zMqYkt; Fri, 20 Dec
-        2019 00:18:01 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        AF.0E.48019.9331CFD5; Fri, 20 Dec 2019 09:18:01 +0900 (KST)
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20191220001803epcas1p493ed22c7ba4fae3b0a4739e2ac9f5c83~h7DtIOJEH2970029700epcas1p48;
+        Fri, 20 Dec 2019 00:18:03 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.156]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 47f8Th25zMzMqYkq; Fri, 20 Dec
+        2019 00:18:00 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        06.7D.52419.8331CFD5; Fri, 20 Dec 2019 09:18:00 +0900 (KST)
 Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191220001800epcas1p2f2dfd9d24e275425b07a06bcdeb4aba9~h7DqBPUIe0401904019epcas1p2O;
-        Fri, 20 Dec 2019 00:18:00 +0000 (GMT)
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191220001759epcas1p1fc0e5019514f7c99606347432d66bfd0~h7DpKJ2xQ2819628196epcas1p1n;
+        Fri, 20 Dec 2019 00:17:59 +0000 (GMT)
 Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
         epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191220001800epsmtrp126c101be240b24abc78f6b3303e58865~h7DqARxA61705617056epsmtrp1Z;
-        Fri, 20 Dec 2019 00:18:00 +0000 (GMT)
-X-AuditID: b6c32a38-6b4789c00001bb93-6a-5dfc1339b920
+        20191220001759epsmtrp1b51908df8b1f9f8ff8867c9fc9bd074d~h7DpJKDJ61705617056epsmtrp1R;
+        Fri, 20 Dec 2019 00:17:59 +0000 (GMT)
+X-AuditID: b6c32a37-5b7ff7000001ccc3-12-5dfc1338083f
 Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
         epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E5.7C.06569.8331CFD5; Fri, 20 Dec 2019 09:18:00 +0900 (KST)
+        8F.6C.06569.7331CFD5; Fri, 20 Dec 2019 09:17:59 +0900 (KST)
 Received: from localhost.localdomain (unknown [10.113.221.102]) by
         epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191220001800epsmtip111e3e06f1fdda1e3566767b27de19e3a~h7Dp0an3w2227322273epsmtip1o;
-        Fri, 20 Dec 2019 00:18:00 +0000 (GMT)
+        20191220001759epsmtip1dc61565a113c9a4ce9e7eb00800b33ca~h7Do8q4kK2050220502epsmtip1y;
+        Fri, 20 Dec 2019 00:17:59 +0000 (GMT)
 From:   Chanwoo Choi <cw00.choi@samsung.com>
 To:     robh+dt@kernel.org, krzk@kernel.org, heiko@sntech.de,
         leonard.crestez@nxp.com, lukasz.luba@arm.com
@@ -69,447 +69,308 @@ Cc:     mark.rutland@arm.com, a.swigon@samsung.com,
         linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: [PATCH v2 10/11] ARM: dts: exynos: Replace deprecated property for
- Exynos bus and DMC
-Date:   Fri, 20 Dec 2019 09:24:29 +0900
-Message-Id: <20191220002430.11995-11-cw00.choi@samsung.com>
+Subject: [PATCH v2 03/11] PM / devfreq: event: Add
+ devfreq_event_get_edev_by_node function
+Date:   Fri, 20 Dec 2019 09:24:22 +0900
+Message-Id: <20191220002430.11995-4-cw00.choi@samsung.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191220002430.11995-1-cw00.choi@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjuO8dzMVocptbX6LJOFCRoHufWZ2l070ARgtWPaKyDO23ibu1s
-        lQWlkrmkixVFRmqRhZpdXGYWmWWLLpAalhq27ldXgZes0LJtx6h/z/u8z/O9l++lcWUlqaIz
-        bS7RaRMsLDk6ou72zPi45KghfcJjL4lelOYD1NH/gUBlvmYCDb8OEGj/mwCOWlouUuhh3mcK
-        Vfh7COR9006gtmvHSdS31wdQ78thHB1tuYGhk3k7KXTO56fQ6Y5HGOrKrSBRfoOPmq/kq0ur
-        Ae+t2k3yl8p38DVf6zF+X20V4K+0l+J8n3dyGrU2K8UsCkbRqRZtGXZjps2Uyi5PNywyaHUJ
-        XByXjGazaptgFVPZxSvS4pZmWoJjsOpNgsUdpNIESWJnzUtx2t0uUW22S65UVnQYLY5kR7wk
-        WCW3zRSfYbfO4RISErVB4fosc8OREsLRzm8ZaO4kckDXnEIQSUMmCf7My8UKwWhaydQD+Hao
-        h5CDXgB///oCQiolMwCg/8qkv46GW09wWdQAYFX3vRFHP4APDt+hQiqSiYWNHzvJEI5mzLA4
-        0BYW4UwPBgvr/OFEFLMefjlaHkzQdAQzHeYMmEK0gpkLCw6ewuRqU+DZizfxEI4M8rXvX1Gh
-        dyAzTMKaQBEuixbDbw+7KRlHwe67tSNYBT/t3zWCt8HK+z5SNnsArG1sJeSEBjaePoSFmsCZ
-        mfDCtVkyPRVeHSwJj48zY+HXb3vCfUJGAT27lLJkGmx76R/pcwI8VbCblDEPA+8uk/Lm9gHY
-        128sApOP/StwAoAqME50SFaTKHGOpP9/zAvCZxqL6sH15hVNgKEBO0Yxf8OgXkkIm6RsaxOA
-        NM5GK7o8P/VKhVHI3io67Qan2yJKTUAbXOQBXBWTYQ8evc1l4LSJGo0GJXE6Lcex4xX0j0d6
-        JWMSXGKWKDpE518fRkeqcsDKlIW6yurr9T1nHGWajvTLq7PdMz6XEZYLdQ8qW+8NHVt3d0ZU
-        qtNDq1y5m5dmi5p5558t0xmLheK3nqKnowYfP4/BDNvT7b1+vW5JRTH/XeqLMY3rHP5UE1di
-        fBpRoIpelOSuyzjeqv54ZMHAmvi28olNU3JurepONFli8ys23mYjJLPAxeJOSfgDSmgakLwD
-        AAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMLMWRmVeSWpSXmKPExsWy7bCSnK6F8J9Yg70/5S3uz2tltLj+5Tmr
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrJJsWRmVeSWpSXmKPExsWy7bCmrq6F8J9Yg8ZZ3Bb357UyWlz/8pzV
+        Yv6Rc6wW/x+9ZrXof/ya2eL8+Q3sFmeb3rBbrLj7kdVi0+NrrBaXd81hs/jce4TR4tOD/8wW
+        M87vY7JY2NTCbrH2yF12i6XXLzJZ3G5cwWbRuvcIu4OQx5p5axg9Nq3qZPPYvKTeY+O7HUwe
+        fVtWMXpsvzaP2ePzJrkA9qhsm4zUxJTUIoXUvOT8lMy8dFsl7+B453hTMwNDXUNLC3MlhbzE
+        3FRbJRefAF23zBygN5QUyhJzSoFCAYnFxUr6djZF+aUlqQoZ+cUltkqpBSk5BZYFesWJucWl
+        eel6yfm5VoYGBkamQIUJ2Rlnfs9jK1jiXrGj/xdjA+N26y5GTg4JAROJTf9XMHYxcnEICexg
+        lFj89ScrhPOJUaLvzkEWCOcbo8Se/81MMC2X93YxQyT2Mkos+bKQCcL5wiix/ddLdpAqNgEt
+        if0vbrCB2CICGRIzX18Gm8ss8JFJomvbXaAEB4ewQIzEzlnqICaLgKrErS9xICavgJXEpXnm
+        ELvkJVZvOMAMYnMKWEtsefaQHWSKhMB/NomDs4+wQxS5SHy+vwnKFpZ4dXwLlC0l8bK/Dcqu
+        llh58ggbRHMHo8SW/RdYIRLGEvuXTmYCWcwsoCmxfpc+RFhRYufvuYwgNrMAn8S7rz2sICUS
+        ArwSHW1CECXKEpcf3IWGiaTE4vZONgjbQ2LupxfQIOljlJj06zn7BEa5WQgbFjAyrmIUSy0o
+        zk1PLTYsMEaOsU2M4GSqZb6DccM5n0OMAhyMSjy8Dmm/Y4VYE8uKK3MPMUpwMCuJ8N7u+Bkr
+        xJuSWFmVWpQfX1Sak1p8iNEUGJATmaVEk/OBiT6vJN7Q1MjY2NjCxNDM1NBQSZyX48fFWCGB
+        9MSS1OzU1ILUIpg+Jg5OqQbGooWC14Ps+TYGtCfzSAnVWt1q+eAoe+lKpufW9rd8mxaW7dsZ
+        enopz3+uuwUSP6bLpa3qDlXwuftUvbio5irz+dhDh19MFLq5vWdS9IqCtfOUyx3rfW6lH9vR
+        cle0o08xWcxkzbfW3y9ZigIufNjE9tnmR0gi0zkL3oS0qbxaKhXpq3MvLO5TYinOSDTUYi4q
+        TgQAdJdMe7wDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrILMWRmVeSWpSXmKPExsWy7bCSnK658J9Yg083lC3uz2tltLj+5Tmr
         xfwj51gt/j96zWrR//g1s8X58xvYLc42vWG3WHH3I6vFpsfXWC0u75rDZvG59wijxacH/5kt
         Zpzfx2SxsKmF3WLtkbvsFkuvX2SyuN24gs2ide8RdgchjzXz1jB6bFrVyeaxeUm9x8Z3O5g8
-        +rasYvTYfm0es8fnTXIB7FFcNimpOZllqUX6dglcGXunzWUtuOZR8e3cDdYGxttWXYycHBIC
-        JhJ7D15l7mLk4hAS2M0osXHeJTaIhKTEtItHgRIcQLawxOHDxRA1nxgl3q3dzwhSwyagJbH/
-        xQ2wehGBPIlNG7+CDWIW+M8k8f3kA7AiYYE4ibUz3zOBDGIRUJVo+JYOEuYVsJZon7SYCWKX
-        vMTqDQeYQWxOoPiWZw/ZQWwhASuJl+cvsE5g5FvAyLCKUTK1oDg3PbfYsMAoL7Vcrzgxt7g0
-        L10vOT93EyM46LW0djCeOBF/iFGAg1GJh9ch7XesEGtiWXFl7iFGCQ5mJRHe2x0/Y4V4UxIr
-        q1KL8uOLSnNSiw8xSnOwKInzyucfixQSSE8sSc1OTS1ILYLJMnFwSjUw1k7hjdbVnrrkT9LR
-        Tf/fyi//6TXhg+bq4NPda93XszKsCDlwOGDRmzU5Dr7CR6cHu9+N4NLf5SH6S4bBY7v0RuWP
-        JkIzLGc5zXyb++dATqHot7vXP19jTxafYHa3stlo+nr3daETqz+e3fwmdHcjo+oOLoszWlsc
-        qwIsHIwNXvYuFztQ9WjfSiWW4oxEQy3mouJEAM4GE2l2AgAA
-X-CMS-MailID: 20191220001800epcas1p2f2dfd9d24e275425b07a06bcdeb4aba9
+        +rasYvTYfm0es8fnTXIB7FFcNimpOZllqUX6dglcGWd+z2MrWOJesaP/F2MD43brLkZODgkB
+        E4nLe7uYQWwhgd2MEnP3BkLEJSWmXTwKFOcAsoUlDh8u7mLkAir5xCix8nc7K0gNm4CWxP4X
+        N9hAbBGBPIlNG78ygxQxC/xnkvh+8gEjSEJYIEpi5rHjTCCDWARUJW59iQMxeQWsJC7NM4dY
+        JS+xesMBsBM4Bawltjx7yA5xjpXEy/MXWCcw8i1gZFjFKJlaUJybnltsWGCUl1quV5yYW1ya
+        l66XnJ+7iREc8FpaOxhPnIg/xCjAwajEw+uQ9jtWiDWxrLgy9xCjBAezkgjv7Y6fsUK8KYmV
+        ValF+fFFpTmpxYcYpTlYlMR55fOPRQoJpCeWpGanphakFsFkmTg4pRoYIxYlGpyTDljUeoIx
+        QM18LgePt/qG4LozZlKM6hNnHnJsk18QYyzzd5GJ5rqkd7PfrWnaGTKDZfqOUvfqv1FXClzz
+        PV6f4np3qjv1dESQ8Oyoj0pTOyexi57525zyinn3IfHHbfmbdRz/zD/yMu2Xim5fHl/6MXPZ
+        e6ftD0zawli3MmtJX5imEktxRqKhFnNRcSIAFj5L7HQCAAA=
+X-CMS-MailID: 20191220001759epcas1p1fc0e5019514f7c99606347432d66bfd0
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: SVC_REQ_APPROVE
 CMS-TYPE: 101P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191220001800epcas1p2f2dfd9d24e275425b07a06bcdeb4aba9
+X-CMS-RootMailID: 20191220001759epcas1p1fc0e5019514f7c99606347432d66bfd0
 References: <20191220002430.11995-1-cw00.choi@samsung.com>
-        <CGME20191220001800epcas1p2f2dfd9d24e275425b07a06bcdeb4aba9@epcas1p2.samsung.com>
+        <CGME20191220001759epcas1p1fc0e5019514f7c99606347432d66bfd0@epcas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the property related to devfreq and devfreq-event device
-to remove the deprecated property name.
-- Replace 'devfreq' with 'exynos,parent-bus' property
-  for getting the parent devfreq device of exynos-bus.
-- Replace 'devfreq-events' with 'exynos,ppmu-device' property
-  for getting the devfreq-event device to monitor bus utilization.
+Previously, devfreq-event core supports 'devfreq-events' property
+in order to get the devfreq_event_dev device by phandle.
+But, 'devfreq-events' property name is not proper on devicetree binding
+because this name doesn't mean the any h/w attribute.
+
+The devfreq-event core hands over the rights of which decide the property name
+for getting the devfreq device on devicetree, to each devfreq device driver.
+Each devfreq driver will decide the property name on devicetree binding
+and then get the devfreq device by using devfreq_event_get_edev_by_node().
+
+And Remove devfreq_event_get_edev_count() function used 'devfreq-events'.
 
 Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 ---
- arch/arm/boot/dts/exynos3250-monk.dts         |  2 +-
- arch/arm/boot/dts/exynos3250-rinato.dts       | 18 +++++-----
- .../boot/dts/exynos4412-itop-scp-core.dtsi    | 16 ++++-----
- arch/arm/boot/dts/exynos4412-midas.dtsi       | 18 +++++-----
- .../boot/dts/exynos4412-odroid-common.dtsi    | 18 +++++-----
- arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 34 +++++++++----------
- 6 files changed, 53 insertions(+), 53 deletions(-)
+ drivers/devfreq/devfreq-event.c         | 53 ++++---------------------
+ drivers/devfreq/exynos-bus.c            | 16 +++++++-
+ drivers/devfreq/rk3399_dmc.c            | 13 +++++-
+ drivers/memory/samsung/exynos5422-dmc.c | 16 ++++++--
+ include/linux/devfreq-event.h           | 14 ++-----
+ 5 files changed, 50 insertions(+), 62 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos3250-monk.dts b/arch/arm/boot/dts/exynos3250-monk.dts
-index 248bd372fe70..c6b1fcd4ba97 100644
---- a/arch/arm/boot/dts/exynos3250-monk.dts
-+++ b/arch/arm/boot/dts/exynos3250-monk.dts
-@@ -158,7 +158,7 @@
- };
+diff --git a/drivers/devfreq/devfreq-event.c b/drivers/devfreq/devfreq-event.c
+index 8c31b0f2e28f..d0c989acbf93 100644
+--- a/drivers/devfreq/devfreq-event.c
++++ b/drivers/devfreq/devfreq-event.c
+@@ -210,25 +210,18 @@ int devfreq_event_reset_event(struct devfreq_event_dev *edev)
+ EXPORT_SYMBOL_GPL(devfreq_event_reset_event);
  
- &bus_dmc {
--	devfreq-events = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
-+	exynos,ppmu-device = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
- 	vdd-supply = <&buck1_reg>;
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/exynos3250-rinato.dts b/arch/arm/boot/dts/exynos3250-rinato.dts
-index 86c26a4edfd7..7ad80354d8df 100644
---- a/arch/arm/boot/dts/exynos3250-rinato.dts
-+++ b/arch/arm/boot/dts/exynos3250-rinato.dts
-@@ -153,49 +153,49 @@
- };
+ /**
+- * devfreq_event_get_edev_by_phandle() - Get the devfreq-event dev from
+- *					 devicetree.
+- * @dev		: the pointer to the given device
+- * @index	: the index into list of devfreq-event device
++ * devfreq_event_get_edev_by_node() - Get the devfreq-event dev from devicetree
++ * @node	: the pointer to device_node
+  *
+  * Note that this function return the pointer of devfreq-event device.
+  */
+-struct devfreq_event_dev *devfreq_event_get_edev_by_phandle(struct device *dev,
+-						      int index)
++struct devfreq_event_dev *devfreq_event_get_edev_by_node(
++					struct device_node *node)
+ {
+-	struct device_node *node;
+ 	struct devfreq_event_dev *edev;
  
- &bus_dmc {
--	devfreq-events = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
-+	exynos,ppmu-device = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
- 	vdd-supply = <&buck1_reg>;
- 	status = "okay";
- };
+-	if (!dev->of_node)
+-		return ERR_PTR(-EINVAL);
+-
+-	node = of_parse_phandle(dev->of_node, "devfreq-events", index);
+ 	if (!node)
+-		return ERR_PTR(-ENODEV);
++		return ERR_PTR(-EINVAL);
  
- &bus_leftbus {
--	devfreq-events = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
-+	exynos,ppmu-device = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
- 	vdd-supply = <&buck3_reg>;
- 	status = "okay";
- };
+ 	mutex_lock(&devfreq_event_list_lock);
+ 	list_for_each_entry(edev, &devfreq_event_list, node) {
+@@ -244,44 +237,12 @@ struct devfreq_event_dev *devfreq_event_get_edev_by_phandle(struct device *dev,
+ out:
+ 	mutex_unlock(&devfreq_event_list_lock);
  
- &bus_rightbus {
--	devfreq = <&bus_leftbus>;
-+	exynos,parent-bus = <&bus_leftbus>;
- 	status = "okay";
- };
+-	if (!edev) {
+-		of_node_put(node);
++	if (!edev)
+ 		return ERR_PTR(-ENODEV);
+-	}
+-
+-	of_node_put(node);
  
- &bus_lcd0 {
--	devfreq = <&bus_leftbus>;
-+	exynos,parent-bus = <&bus_leftbus>;
- 	status = "okay";
- };
+ 	return edev;
+ }
+-EXPORT_SYMBOL_GPL(devfreq_event_get_edev_by_phandle);
+-
+-/**
+- * devfreq_event_get_edev_count() - Get the count of devfreq-event dev
+- * @dev		: the pointer to the given device
+- *
+- * Note that this function return the count of devfreq-event devices.
+- */
+-int devfreq_event_get_edev_count(struct device *dev)
+-{
+-	int count;
+-
+-	if (!dev->of_node) {
+-		dev_err(dev, "device does not have a device node entry\n");
+-		return -EINVAL;
+-	}
+-
+-	count = of_property_count_elems_of_size(dev->of_node, "devfreq-events",
+-						sizeof(u32));
+-	if (count < 0) {
+-		dev_err(dev,
+-			"failed to get the count of devfreq-event in %pOF node\n",
+-			dev->of_node);
+-		return count;
+-	}
+-
+-	return count;
+-}
+-EXPORT_SYMBOL_GPL(devfreq_event_get_edev_count);
++EXPORT_SYMBOL_GPL(devfreq_event_get_edev_by_node);
  
- &bus_fsys {
--	devfreq = <&bus_leftbus>;
-+	exynos,parent-bus = <&bus_leftbus>;
- 	status = "okay";
- };
+ static void devfreq_event_release_edev(struct device *dev)
+ {
+diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+index 1bc4e3c81115..c4931ef53f15 100644
+--- a/drivers/devfreq/exynos-bus.c
++++ b/drivers/devfreq/exynos-bus.c
+@@ -96,6 +96,17 @@ static struct devfreq *exynos_bus_get_parent_devfreq(struct device_node *np)
+ 	return devfreq_get_devfreq_by_node(node);
+ }
  
- &bus_mcuisp {
--	devfreq = <&bus_leftbus>;
-+	exynos,parent-bus = <&bus_leftbus>;
- 	status = "okay";
- };
++static struct devfreq_event_dev *exynos_bus_get_edev(struct device_node *np,
++							int index)
++{
++	struct device_node *node = of_parse_phandle(np, "devfreq-events",
++							index);
++
++	if (!node)
++		return ERR_PTR(-ENODEV);
++	return devfreq_event_get_edev_by_node(node);
++}
++
+ /*
+  * devfreq function for both simple-ondemand and passive governor
+  */
+@@ -202,7 +213,8 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
+ 	 * Get the devfreq-event devices to get the current utilization of
+ 	 * buses. This raw data will be used in devfreq ondemand governor.
+ 	 */
+-	count = devfreq_event_get_edev_count(dev);
++	count = of_property_count_elems_of_size(dev->of_node,
++					"devfreq-events", sizeof(u32));
+ 	if (count < 0) {
+ 		dev_err(dev, "failed to get the count of devfreq-event dev\n");
+ 		ret = count;
+@@ -218,7 +230,7 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
+ 	}
  
- &bus_isp {
--	devfreq = <&bus_leftbus>;
-+	exynos,parent-bus = <&bus_leftbus>;
- 	status = "okay";
- };
+ 	for (i = 0; i < count; i++) {
+-		bus->edev[i] = devfreq_event_get_edev_by_phandle(dev, i);
++		bus->edev[i] = exynos_bus_get_edev(dev->of_node, i);
+ 		if (IS_ERR(bus->edev[i])) {
+ 			ret = -EPROBE_DEFER;
+ 			goto err_regulator;
+diff --git a/drivers/devfreq/rk3399_dmc.c b/drivers/devfreq/rk3399_dmc.c
+index 2f1027c5b647..e712c8662d2f 100644
+--- a/drivers/devfreq/rk3399_dmc.c
++++ b/drivers/devfreq/rk3399_dmc.c
+@@ -303,6 +303,17 @@ static int of_get_ddr_timings(struct dram_timing *timing,
+ 	return ret;
+ }
  
- &bus_peril {
--	devfreq = <&bus_leftbus>;
-+	exynos,parent-bus = <&bus_leftbus>;
- 	status = "okay";
- };
++static struct devfreq_event_dev *of_get_edev(struct device_node *np,
++							int index)
++{
++	struct device_node *node = of_parse_phandle(np, "devfreq-events",
++							index);
++
++	if (!node)
++		return ERR_PTR(-ENODEV);
++	return devfreq_event_get_edev_by_node(node);
++}
++
+ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
+ {
+ 	struct arm_smccc_res res;
+@@ -339,7 +350,7 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
+ 		return PTR_ERR(data->dmc_clk);
+ 	}
  
- &bus_mfc {
--	devfreq = <&bus_leftbus>;
-+	exynos,parent-bus = <&bus_leftbus>;
- 	status = "okay";
- };
+-	data->edev = devfreq_event_get_edev_by_phandle(dev, 0);
++	data->edev = of_get_edev(dev->of_node, 0);
+ 	if (IS_ERR(data->edev))
+ 		return -EPROBE_DEFER;
  
-diff --git a/arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi b/arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi
-index dfceb155b3a7..e275a52eb0d3 100644
---- a/arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi
-+++ b/arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi
-@@ -70,44 +70,44 @@
- };
+diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
+index 47dbf6d1789f..f11fe29a69fc 100644
+--- a/drivers/memory/samsung/exynos5422-dmc.c
++++ b/drivers/memory/samsung/exynos5422-dmc.c
+@@ -1267,6 +1267,16 @@ static int exynos5_dmc_init_clks(struct exynos5_dmc *dmc)
+ 	return 0;
+ }
  
- &bus_dmc {
--	devfreq-events = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
-+	exynos,ppmu-device = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
- 	vdd-supply = <&buck1_reg>;
- 	status = "okay";
- };
++static struct devfreq_event_dev *exynos5_dmc_get_edev(struct device_node *np,
++							int index)
++{
++	struct device_node *node = of_parse_phandle(np, "devfreq-events",
++							index);
++	if (!node)
++		return ERR_PTR(-ENODEV);
++	return devfreq_event_get_edev_by_node(node);
++}
++
+ /**
+  * exynos5_performance_counters_init() - Initializes performance DMC's counters
+  * @dmc:	DMC for which it does the setup
+@@ -1281,7 +1291,8 @@ static int exynos5_performance_counters_init(struct exynos5_dmc *dmc)
+ 	int counters_size;
+ 	int ret, i;
  
- &bus_acp {
--	devfreq = <&bus_dmc>;
-+	exynos,parent-bus = <&bus_dmc>;
- 	status = "okay";
- };
+-	dmc->num_counters = devfreq_event_get_edev_count(dmc->dev);
++	dmc->num_counters = of_property_count_elems_of_size(dmc->dev->of_node,
++					"devfreq-events", sizeof(u32));
+ 	if (dmc->num_counters < 0) {
+ 		dev_err(dmc->dev, "could not get devfreq-event counters\n");
+ 		return dmc->num_counters;
+@@ -1293,8 +1304,7 @@ static int exynos5_performance_counters_init(struct exynos5_dmc *dmc)
+ 		return -ENOMEM;
  
- &bus_c2c {
--	devfreq = <&bus_dmc>;
-+	exynos,parent-bus = <&bus_dmc>;
- 	status = "okay";
- };
+ 	for (i = 0; i < dmc->num_counters; i++) {
+-		dmc->counter[i] =
+-			devfreq_event_get_edev_by_phandle(dmc->dev, i);
++		dmc->counter[i] = exynos5_dmc_get_edev(dmc->dev->of_node, i);
+ 		if (IS_ERR_OR_NULL(dmc->counter[i]))
+ 			return -EPROBE_DEFER;
+ 	}
+diff --git a/include/linux/devfreq-event.h b/include/linux/devfreq-event.h
+index f14f17f8cb7f..967414ac6f7c 100644
+--- a/include/linux/devfreq-event.h
++++ b/include/linux/devfreq-event.h
+@@ -105,9 +105,8 @@ extern int devfreq_event_set_event(struct devfreq_event_dev *edev);
+ extern int devfreq_event_get_event(struct devfreq_event_dev *edev,
+ 				struct devfreq_event_data *edata);
+ extern int devfreq_event_reset_event(struct devfreq_event_dev *edev);
+-extern struct devfreq_event_dev *devfreq_event_get_edev_by_phandle(
+-				struct device *dev, int index);
+-extern int devfreq_event_get_edev_count(struct device *dev);
++extern struct devfreq_event_dev *devfreq_event_get_edev_by_node(
++				struct device_node *node);
+ extern struct devfreq_event_dev *devfreq_event_add_edev(struct device *dev,
+ 				struct devfreq_event_desc *desc);
+ extern int devfreq_event_remove_edev(struct devfreq_event_dev *edev);
+@@ -151,17 +150,12 @@ static inline int devfreq_event_reset_event(struct devfreq_event_dev *edev)
+ 	return -EINVAL;
+ }
  
- &bus_leftbus {
--	devfreq-events = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
-+	exynos,ppmu-device = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
- 	vdd-supply = <&buck3_reg>;
- 	status = "okay";
- };
+-static inline struct devfreq_event_dev *devfreq_event_get_edev_by_phandle(
+-					struct device *dev, int index)
++static inline struct devfreq_event_dev *devfreq_event_get_edev_by_node(
++					struct device_node *node)
+ {
+ 	return ERR_PTR(-EINVAL);
+ }
  
- &bus_rightbus {
--	devfreq = <&bus_leftbus>;
-+	exynos,parent-bus = <&bus_leftbus>;
- 	status = "okay";
- };
- 
- &bus_fsys {
--	devfreq = <&bus_leftbus>;
-+	exynos,parent-bus = <&bus_leftbus>;
- 	status = "okay";
- };
- 
- &bus_peri {
--	devfreq = <&bus_leftbus>;
-+	exynos,parent-bus = <&bus_leftbus>;
- 	status = "okay";
- };
- 
- &bus_mfc {
--	devfreq = <&bus_leftbus>;
-+	exynos,parent-bus = <&bus_leftbus>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/exynos4412-midas.dtsi b/arch/arm/boot/dts/exynos4412-midas.dtsi
-index 83be3a797411..1869eed05167 100644
---- a/arch/arm/boot/dts/exynos4412-midas.dtsi
-+++ b/arch/arm/boot/dts/exynos4412-midas.dtsi
-@@ -288,49 +288,49 @@
- };
- 
- &bus_dmc {
--	devfreq-events = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
-+	exynos,ppmu-device = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
- 	vdd-supply = <&buck1_reg>;
- 	status = "okay";
- };
- 
- &bus_acp {
--	devfreq = <&bus_dmc>;
-+	exynos,parent-bus = <&bus_dmc>;
- 	status = "okay";
- };
- 
- &bus_c2c {
--	devfreq = <&bus_dmc>;
-+	exynos,parent-bus = <&bus_dmc>;
- 	status = "okay";
- };
- 
- &bus_leftbus {
--	devfreq-events = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
-+	exynos,ppmu-device = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
- 	vdd-supply = <&buck3_reg>;
- 	status = "okay";
- };
- 
- &bus_rightbus {
--	devfreq = <&bus_leftbus>;
-+	exynos,parent-bus = <&bus_leftbus>;
- 	status = "okay";
- };
- 
- &bus_display {
--	devfreq = <&bus_leftbus>;
-+	exynos,parent-bus = <&bus_leftbus>;
- 	status = "okay";
- };
- 
- &bus_fsys {
--	devfreq = <&bus_leftbus>;
-+	exynos,parent-bus = <&bus_leftbus>;
- 	status = "okay";
- };
- 
- &bus_peri {
--	devfreq = <&bus_leftbus>;
-+	exynos,parent-bus = <&bus_leftbus>;
- 	status = "okay";
- };
- 
- &bus_mfc {
--	devfreq = <&bus_leftbus>;
-+	exynos,parent-bus = <&bus_leftbus>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-index ea55f377d17c..bb5a7cbcc308 100644
---- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-+++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-@@ -88,49 +88,49 @@
- };
- 
- &bus_dmc {
--	devfreq-events = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
-+	exynos,ppmu-device = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
- 	vdd-supply = <&buck1_reg>;
- 	status = "okay";
- };
- 
- &bus_acp {
--	devfreq = <&bus_dmc>;
-+	exynos,parent-bus = <&bus_dmc>;
- 	status = "okay";
- };
- 
- &bus_c2c {
--	devfreq = <&bus_dmc>;
-+	exynos,parent-bus = <&bus_dmc>;
- 	status = "okay";
- };
- 
- &bus_leftbus {
--	devfreq-events = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
-+	exynos,ppmu-device = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
- 	vdd-supply = <&buck3_reg>;
- 	status = "okay";
- };
- 
- &bus_rightbus {
--	devfreq = <&bus_leftbus>;
-+	exynos,parent-bus = <&bus_leftbus>;
- 	status = "okay";
- };
- 
- &bus_display {
--	devfreq = <&bus_leftbus>;
-+	exynos,parent-bus = <&bus_leftbus>;
- 	status = "okay";
- };
- 
- &bus_fsys {
--	devfreq = <&bus_leftbus>;
-+	exynos,parent-bus = <&bus_leftbus>;
- 	status = "okay";
- };
- 
- &bus_peri {
--	devfreq = <&bus_leftbus>;
-+	exynos,parent-bus = <&bus_leftbus>;
- 	status = "okay";
- };
- 
- &bus_mfc {
--	devfreq = <&bus_leftbus>;
-+	exynos,parent-bus = <&bus_leftbus>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-index 059fa32d1a8f..8510e2787a9c 100644
---- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-@@ -134,7 +134,7 @@
- };
- 
- &bus_wcore {
--	devfreq-events = <&nocp_mem0_0>, <&nocp_mem0_1>,
-+	exynos,ppmu-device = <&nocp_mem0_0>, <&nocp_mem0_1>,
- 			<&nocp_mem1_0>, <&nocp_mem1_1>;
- 	vdd-supply = <&buck3_reg>;
- 	exynos,saturation-ratio = <100>;
-@@ -142,77 +142,77 @@
- };
- 
- &bus_noc {
--	devfreq = <&bus_wcore>;
-+	exynos,parent-bus = <&bus_wcore>;
- 	status = "okay";
- };
- 
- &bus_fsys_apb {
--	devfreq = <&bus_wcore>;
-+	exynos,parent-bus = <&bus_wcore>;
- 	status = "okay";
- };
- 
- &bus_fsys {
--	devfreq = <&bus_wcore>;
-+	exynos,parent-bus = <&bus_wcore>;
- 	status = "okay";
- };
- 
- &bus_fsys2 {
--	devfreq = <&bus_wcore>;
-+	exynos,parent-bus = <&bus_wcore>;
- 	status = "okay";
- };
- 
- &bus_mfc {
--	devfreq = <&bus_wcore>;
-+	exynos,parent-bus = <&bus_wcore>;
- 	status = "okay";
- };
- 
- &bus_gen {
--	devfreq = <&bus_wcore>;
-+	exynos,parent-bus = <&bus_wcore>;
- 	status = "okay";
- };
- 
- &bus_peri {
--	devfreq = <&bus_wcore>;
-+	exynos,parent-bus = <&bus_wcore>;
- 	status = "okay";
- };
- 
- &bus_g2d {
--	devfreq = <&bus_wcore>;
-+	exynos,parent-bus = <&bus_wcore>;
- 	status = "okay";
- };
- 
- &bus_g2d_acp {
--	devfreq = <&bus_wcore>;
-+	exynos,parent-bus = <&bus_wcore>;
- 	status = "okay";
- };
- 
- &bus_jpeg {
--	devfreq = <&bus_wcore>;
-+	exynos,parent-bus = <&bus_wcore>;
- 	status = "okay";
- };
- 
- &bus_jpeg_apb {
--	devfreq = <&bus_wcore>;
-+	exynos,parent-bus = <&bus_wcore>;
- 	status = "okay";
- };
- 
- &bus_disp1_fimd {
--	devfreq = <&bus_wcore>;
-+	exynos,parent-bus = <&bus_wcore>;
- 	status = "okay";
- };
- 
- &bus_disp1 {
--	devfreq = <&bus_wcore>;
-+	exynos,parent-bus = <&bus_wcore>;
- 	status = "okay";
- };
- 
- &bus_gscl_scaler {
--	devfreq = <&bus_wcore>;
-+	exynos,parent-bus = <&bus_wcore>;
- 	status = "okay";
- };
- 
- &bus_mscl {
--	devfreq = <&bus_wcore>;
-+	exynos,parent-bus = <&bus_wcore>;
- 	status = "okay";
- };
- 
-@@ -225,7 +225,7 @@
- };
- 
- &dmc {
--	devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
-+	exynos,ppmu-device = <&ppmu_event3_dmc0_0>, <&ppmu_event3_dmc0_1>,
- 			<&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
- 	device-handle = <&samsung_K3QF2F20DB>;
- 	operating-points-v2 = <&dmc_opp_table>;
+-static inline int devfreq_event_get_edev_count(struct device *dev)
+-{
+-	return -EINVAL;
+-}
+-
+ static inline struct devfreq_event_dev *devfreq_event_add_edev(struct device *dev,
+ 					struct devfreq_event_desc *desc)
+ {
 -- 
 2.17.1
 
