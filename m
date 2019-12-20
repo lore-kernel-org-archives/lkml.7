@@ -2,480 +2,137 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90593C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A90AC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 585D12465E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:49:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576838950;
-	bh=OU4TyWezRQcO/9QNXjrwf0Yqr+TEpq82QNsQ562Iqb4=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=ZvHjUt544VduIvXPrfUYRIVj55NVsn9WhyKwsj1SDkxevNTcvUwZCGJ8aGuXXzMXD
-	 KUOUqq69Y2+7KW/Phbc42v7fmkZ9zkoTNocbRtScQvR11zowcDHzO+HdWOiIhieW6M
-	 d5pBJd3Qh2y2YU327EAlGV6BydpDB6yC/CQcjJ4o=
+	by mail.kernel.org (Postfix) with ESMTP id 0E0F520684
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:49:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ymavTb38"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbfLTKtJ (ORCPT
+        id S1727345AbfLTKtm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 05:49:09 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:37220 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726210AbfLTKtJ (ORCPT
+        Fri, 20 Dec 2019 05:49:42 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38366 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727177AbfLTKtm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 05:49:09 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iiFq8-0003mg-V6; Fri, 20 Dec 2019 11:49:01 +0100
-To:     Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: Re: [PATCH V3 2/2] drivers/irqchip: add NXP INTMUX interrupt  multiplexer support
-X-PHP-Originating-Script: 0:main.inc
+        Fri, 20 Dec 2019 05:49:42 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y17so8981694wrh.5
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 02:49:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Yrfph1/GfS10pnQ52qoQl7bLv2L4obyhx4T8y7yOMZM=;
+        b=ymavTb38A76LwyPLUuMyrDSAg2m7QzQbPORR5ZPH2NkaFQG+SoOTdll8WBIR1m9LFw
+         ITTFftJpv0huxyoEWX84c9qgYu4HbNRiDjrb9QohABFomV77z1zDuQl/xG7W3FZt4sy+
+         cyD5/Jt+GqIURA0HvYLNT8qrsi9keEib+QZkaUfgaYEvvaPAroYRbBzOhHsO82uJbgzp
+         tGCInwJQsonK3ajJ4TwX+ZQQtPjk44YqJOFgiRKPgtnXu2dh1T2C7vsZ1v7ZldR8YCJK
+         BoX7Fu0hOu4ogHv8Da903OVwqH+QMqj0cCS9zG96TReYwU/URWn6o4LNdl+XZXde8XBx
+         87lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Yrfph1/GfS10pnQ52qoQl7bLv2L4obyhx4T8y7yOMZM=;
+        b=taZ8jgbLKMrn6gVZle3Fj8YB6lIGoPcicZqjnSqHyhvYJKWNcK97BUkjDjfcW5CCH9
+         +hNWp2guQwzriaJlmpVLWskj16hRiDwghGi2FYJJTbXPQ1/Jrts0tLZzJpBx95LwBB2h
+         klEzjzry3HDa1rlyjjOx7BfBCdgGNzRPudvHhcNWyNoVtf2q1hKIfqmW+OCh/FTM1yJ3
+         9xMe8DnG2DPxfrRLmOsyKXM6mzl7kr1MwbXtdu8Dnv8ljJGUzzQafilP/rfgiNLrJKf7
+         iR19jD82JsrnCtKnOeXBv/ma41yz3+Tsh2D0bKH2c2e8abGb1sU56DEQ3lpUtKmclzYc
+         lhZQ==
+X-Gm-Message-State: APjAAAU+dITUdd6ZmMhr9hl/7e2EBkRXJxmnTKTJBsNd++N34HkskTM4
+        5AWTfKGlsPnngkQ48gVldfLceQ==
+X-Google-Smtp-Source: APXvYqzZVlLF/dmhxcIff1ZqwYclRHe8LhN0IapHUGsw0pW2MVvDeN20Q5Eah+SrS19icSAsn7/FMQ==
+X-Received: by 2002:a5d:6886:: with SMTP id h6mr2376655wru.154.1576838980176;
+        Fri, 20 Dec 2019 02:49:40 -0800 (PST)
+Received: from apalos.home (ppp-94-64-118-170.home.otenet.gr. [94.64.118.170])
+        by smtp.gmail.com with ESMTPSA id c4sm9328559wml.7.2019.12.20.02.49.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 02:49:39 -0800 (PST)
+Date:   Fri, 20 Dec 2019 12:49:37 +0200
+From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     netdev@vger.kernel.org, lirongqing@baidu.com,
+        linyunsheng@huawei.com, Saeed Mahameed <saeedm@mellanox.com>,
+        mhocko@kernel.org, peterz@infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [net-next v5 PATCH] page_pool: handle page recycle for
+ NUMA_NO_NODE condition
+Message-ID: <20191220104937.GA15487@apalos.home>
+References: <20191218084437.6db92d32@carbon>
+ <157676523108.200893.4571988797174399927.stgit@firesoul>
+ <20191220102314.GB14269@apalos.home>
+ <20191220114116.59d86ff6@carbon>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 20 Dec 2019 10:49:00 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <tglx@linutronix.de>, <jason@lakedaemon.net>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <shawnguo@kernel.org>,
-        <s.hauer@pengutronix.de>, <kernel@pengutronix.de>,
-        <linux-imx@nxp.com>, <linux-kernel@vger.kernel.org>,
-        <fugang.duan@nxp.com>, <linux-arm-kernel@lists.infradead.org>,
-        Shengjiu Wang <shengjiu.wang@nxp.com>
-In-Reply-To: <1576827431-31942-3-git-send-email-qiangqing.zhang@nxp.com>
-References: <1576827431-31942-1-git-send-email-qiangqing.zhang@nxp.com>
- <1576827431-31942-3-git-send-email-qiangqing.zhang@nxp.com>
-Message-ID: <2a2b06ab6d5b3fab51e46cd7dec3f12d@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: qiangqing.zhang@nxp.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, linux-imx@nxp.com, linux-kernel@vger.kernel.org, fugang.duan@nxp.com, linux-arm-kernel@lists.infradead.org, shengjiu.wang@nxp.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191220114116.59d86ff6@carbon>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-20 07:37, Joakim Zhang wrote:
-> The Interrupt Multiplexer (INTMUX) expands the number of peripherals
-> that can interrupt the core:
-> * The INTMUX has 8 channels that are assigned to 8 NVIC interrupt 
-> slots.
-> * Each INTMUX channel can receive up to 32 interrupt sources and has 
-> 1
->   interrupt output.
-> * The INTMUX routes the interrupt sources to the interrupt outputs.
->
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
-> ---
->  drivers/irqchip/Kconfig          |   6 +
->  drivers/irqchip/Makefile         |   1 +
->  drivers/irqchip/irq-imx-intmux.c | 311 
-> +++++++++++++++++++++++++++++++
->  3 files changed, 318 insertions(+)
->  create mode 100644 drivers/irqchip/irq-imx-intmux.c
->
-> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> index ba152954324b..7e2b1e9d0b45 100644
-> --- a/drivers/irqchip/Kconfig
-> +++ b/drivers/irqchip/Kconfig
-> @@ -457,6 +457,12 @@ config IMX_IRQSTEER
->  	help
->  	  Support for the i.MX IRQSTEER interrupt multiplexer/remapper.
->
-> +config IMX_INTMUX
-> +	def_bool y if ARCH_MXC
-> +	select IRQ_DOMAIN
-> +	help
-> +	  Support for the i.MX INTMUX interrupt multiplexer.
-> +
->  config LS1X_IRQ
->  	bool "Loongson-1 Interrupt Controller"
->  	depends on MACH_LOONGSON32
-> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> index e806dda690ea..af976a79d1fb 100644
-> --- a/drivers/irqchip/Makefile
-> +++ b/drivers/irqchip/Makefile
-> @@ -100,6 +100,7 @@ obj-$(CONFIG_CSKY_MPINTC)		+= irq-csky-mpintc.o
->  obj-$(CONFIG_CSKY_APB_INTC)		+= irq-csky-apb-intc.o
->  obj-$(CONFIG_SIFIVE_PLIC)		+= irq-sifive-plic.o
->  obj-$(CONFIG_IMX_IRQSTEER)		+= irq-imx-irqsteer.o
-> +obj-$(CONFIG_IMX_INTMUX)		+= irq-imx-intmux.o
->  obj-$(CONFIG_MADERA_IRQ)		+= irq-madera.o
->  obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
->  obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
-> diff --git a/drivers/irqchip/irq-imx-intmux.c
-> b/drivers/irqchip/irq-imx-intmux.c
-> new file mode 100644
-> index 000000000000..94c67fdd7163
-> --- /dev/null
-> +++ b/drivers/irqchip/irq-imx-intmux.c
-> @@ -0,0 +1,311 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright 2017 NXP
-> +
-> +/*                     INTMUX Block Diagram
-> + *
-> + *                               ________________
-> + * interrupt source #  0  +---->|                |
-> + *                        |     |                |
-> + * interrupt source #  1  +++-->|                |
-> + *            ...         | |   |   channel # 0
-> |--------->interrupt out # 0
-> + *            ...         | |   |                |
-> + *            ...         | |   |                |
-> + * interrupt source # X-1 +++-->|________________|
-> + *                        | | |
-> + *                        | | |
-> + *                        | | |  ________________
-> + *                        +---->|                |
-> + *                        | | | |                |
-> + *                        | +-->|                |
-> + *                        | | | |   channel # 1
-> |--------->interrupt out # 1
-> + *                        | | +>|                |
-> + *                        | | | |                |
-> + *                        | | | |________________|
-> + *                        | | |
-> + *                        | | |
-> + *                        | | |       ...
-> + *                        | | |       ...
-> + *                        | | |
-> + *                        | | |  ________________
-> + *                        +---->|                |
-> + *                          | | |                |
-> + *                          +-->|                |
-> + *                            | |   channel # N
-> |--------->interrupt out # N
-> + *                            +>|                |
-> + *                              |                |
-> + *                              |________________|
-> + *
-> + *
-> + * N: Interrupt Channel Instance Number (N=7)
-> + * X: Interrupt Source Number for each channel (X=32)
-> + *
-> + * The INTMUX interrupt multiplexer has 8 channels, each channel 
-> receives 32
-> + * interrupt sources and generates 1 interrupt output.
-> + *
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-> +#include <linux/irqchip/chained_irq.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/kernel.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/spinlock.h>
-> +
-> +#define CHANIER(n)	(0x10 + (0x40 * n))
-> +#define CHANIPR(n)	(0x20 + (0x40 * n))
-> +
-> +#define CHAN_MAX_NUM		0x8
-> +
-> +struct intmux_irqchip_data {
-> +	int			chanidx;
-> +	int			irq;
-> +	struct irq_domain	*domain;
-> +};
-> +
-> +struct intmux_data {
-> +	raw_spinlock_t			lock;
-> +	void __iomem			*regs;
-> +	struct clk			*ipg_clk;
-> +	int				channum;
-> +	struct intmux_irqchip_data	irqchip_data[];
-> +};
-> +
-> +static void imx_intmux_irq_mask(struct irq_data *d)
-> +{
-> +	struct intmux_irqchip_data *irqchip_data = d->chip_data;
-> +	int idx = irqchip_data->chanidx;
-> +	struct intmux_data *data = container_of(irqchip_data, struct 
-> intmux_data,
-> +						irqchip_data[idx]);
-> +	unsigned long flags;
-> +	void __iomem *reg;
-> +	u32 val;
-> +
-> +	raw_spin_lock_irqsave(&data->lock, flags);
-> +	reg = data->regs + CHANIER(idx);
-> +	val = readl_relaxed(reg);
-> +	/* disable the interrupt source of this channel */
-> +	val &= ~BIT(d->hwirq);
-> +	writel_relaxed(val, reg);
-> +	raw_spin_unlock_irqrestore(&data->lock, flags);
-> +}
-> +
-> +static void imx_intmux_irq_unmask(struct irq_data *d)
-> +{
-> +	struct intmux_irqchip_data *irqchip_data = d->chip_data;
-> +	int idx = irqchip_data->chanidx;
-> +	struct intmux_data *data = container_of(irqchip_data, struct 
-> intmux_data,
-> +						irqchip_data[idx]);
-> +	unsigned long flags;
-> +	void __iomem *reg;
-> +	u32 val;
-> +
-> +	raw_spin_lock_irqsave(&data->lock, flags);
-> +	reg = data->regs + CHANIER(idx);
-> +	val = readl_relaxed(reg);
-> +	/* enable the interrupt source of this channel */
-> +	val |= BIT(d->hwirq);
-> +	writel_relaxed(val, reg);
-> +	raw_spin_unlock_irqrestore(&data->lock, flags);
-> +}
-> +
-> +static struct irq_chip imx_intmux_irq_chip = {
-> +	.name		= "intmux",
-> +	.irq_mask	= imx_intmux_irq_mask,
-> +	.irq_unmask	= imx_intmux_irq_unmask,
-> +};
-> +
-> +static int imx_intmux_irq_map(struct irq_domain *h, unsigned int 
-> irq,
-> +			      irq_hw_number_t hwirq)
-> +{
-> +	irq_set_status_flags(irq, IRQ_LEVEL);
+On Fri, Dec 20, 2019 at 11:41:16AM +0100, Jesper Dangaard Brouer wrote:
+> On Fri, 20 Dec 2019 12:23:14 +0200
+> Ilias Apalodimas <ilias.apalodimas@linaro.org> wrote:
+> 
+> > Hi Jesper, 
+> > 
+> > I like the overall approach since this moves the check out of  the hotpath. 
+> > @Saeed, since i got no hardware to test this on, would it be possible to check
+> > that it still works fine for mlx5?
+> > 
+> > [...]
+> > > +	struct ptr_ring *r = &pool->ring;
+> > > +	struct page *page;
+> > > +	int pref_nid; /* preferred NUMA node */
+> > > +
+> > > +	/* Quicker fallback, avoid locks when ring is empty */
+> > > +	if (__ptr_ring_empty(r))
+> > > +		return NULL;
+> > > +
+> > > +	/* Softirq guarantee CPU and thus NUMA node is stable. This,
+> > > +	 * assumes CPU refilling driver RX-ring will also run RX-NAPI.
+> > > +	 */
+> > > +	pref_nid = (pool->p.nid == NUMA_NO_NODE) ? numa_mem_id() : pool->p.nid;  
+> > 
+> > One of the use cases for this is that during the allocation we are not
+> > guaranteed to pick up the correct NUMA node. 
+> > This will get automatically fixed once the driver starts recycling packets. 
+> > 
+> > I don't feel strongly about this, since i don't usually like hiding value
+> > changes from the user but, would it make sense to move this into 
+> > __page_pool_alloc_pages_slow() and change the pool->p.nid?
+> > 
+> > Since alloc_pages_node() will replace NUMA_NO_NODE with numa_mem_id()
+> > regardless, why not store the actual node in our page pool information?
+> > You can then skip this and check pool->p.nid == numa_mem_id(), regardless of
+> > what's configured. 
+> 
+> This single code line helps support that drivers can control the nid
+> themselves.  This is a feature that is only used my mlx5 AFAIK.
+> 
+> I do think that is useful to allow the driver to "control" the nid, as
+> pinning/preferring the pages to come from the NUMA node that matches
+> the PCI-e controller hardware is installed in does have benefits.
 
-You shouldn't need to do this if you had it right in the xlate 
-callback,
-see below.
-
-> +	irq_set_chip_data(irq, h->host_data);
-> +	irq_set_chip_and_handler(irq, &imx_intmux_irq_chip, 
-> handle_level_irq);
-> +
-> +	return 0;
-> +}
-> +
-> +static int imx_intmux_irq_xlate(struct irq_domain *d, struct
-> device_node *node,
-> +				const u32 *intspec, unsigned int intsize,
-> +				unsigned long *out_hwirq, unsigned int *out_type)
-> +{
-> +	struct intmux_irqchip_data *irqchip_data = d->host_data;
-> +	int idx = irqchip_data->chanidx;
-> +	struct intmux_data *data = container_of(irqchip_data, struct 
-> intmux_data,
-> +						irqchip_data[idx]);
-> +
-> +	/* two cells needed in interrupt specifier:
-> +	 * the 1st cell: hw interrupt number
-> +	 * the 2nd cell: channel index
-> +	 */
-
-The comment format is:
-
-         /*
-          * comments
-          */
-
-> +	if (WARN_ON(intsize != 2))
-> +		return -EINVAL;
-> +
-> +	if (WARN_ON(intspec[1] >= data->channum))
-> +		return -EINVAL;
-> +
-> +	*out_hwirq = intspec[0];
-> +	*out_type = IRQ_TYPE_NONE;
-
-Why NONE? Your interrupts are all level, if I trust the map function.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static int imx_intmux_irq_select(struct irq_domain *d, struct
-> irq_fwspec *fwspec,
-> +				 enum irq_domain_bus_token bus_token)
-> +{
-> +	struct intmux_irqchip_data *irqchip_data = d->host_data;
-> +
-> +	/* Not for us */
-> +	if (fwspec->fwnode != d->fwnode)
-> +		return false;
-> +
-> +	if (irqchip_data->chanidx == fwspec->param[1])
-> +		return true;
-> +	else
-> +		return false;
+Sure you can keep the if statement as-is, it won't break anything. 
+Would we want to store the actual numa id in pool->p.nid if the user selects 
+'NUMA_NO_NODE'?
 
 
-This is trivially simplified as
-
-         return irqchip_data->chanidx == fwspec->param[1];
-
-> +}
-> +
-> +static const struct irq_domain_ops imx_intmux_domain_ops = {
-> +	.map		= imx_intmux_irq_map,
-> +	.xlate		= imx_intmux_irq_xlate,
-> +	.select		= imx_intmux_irq_select,
-> +};
-> +
-> +static void imx_intmux_irq_handler(struct irq_desc *desc)
-> +{
-> +	struct intmux_irqchip_data *irqchip_data = 
-> irq_desc_get_handler_data(desc);
-> +	int idx = irqchip_data->chanidx;
-> +	struct intmux_data *data = container_of(irqchip_data, struct 
-> intmux_data,
-> +						irqchip_data[idx]);
-> +	unsigned long irqstat;
-> +	int pos, virq;
-> +
-> +	chained_irq_enter(irq_desc_get_chip(desc), desc);
-> +
-> +	/* read the interrupt source pending status of this channel */
-> +	irqstat = readl_relaxed(data->regs + CHANIPR(idx));
-> +
-> +	for_each_set_bit(pos, &irqstat, 32) {
-> +		virq = irq_find_mapping(irqchip_data->domain, pos);
-> +		if (virq)
-> +			generic_handle_irq(virq);
-> +	}
-> +
-> +	chained_irq_exit(irq_desc_get_chip(desc), desc);
-> +}
-> +
-> +static int imx_intmux_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct intmux_data *data;
-> +	int channum;
-> +	int i, ret;
-> +
-> +	ret = of_property_read_u32(np, "fsl,intmux_chans", &channum);
-> +	if (ret) {
-> +		channum = 1;
-> +	} else if (channum > CHAN_MAX_NUM) {
-> +		dev_err(&pdev->dev, "supports up to %d multiplex channels\n",
-> +			CHAN_MAX_NUM);
-> +		return -EINVAL;
-> +	}
-> +
-> +	data = devm_kzalloc(&pdev->dev, sizeof(*data) +
-> +			    channum * sizeof(data->irqchip_data[0]), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	data->regs = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(data->regs)) {
-> +		dev_err(&pdev->dev, "failed to initialize reg\n");
-> +		return PTR_ERR(data->regs);
-> +	}
-> +
-> +	data->ipg_clk = devm_clk_get(&pdev->dev, "ipg");
-> +	if (IS_ERR(data->ipg_clk)) {
-> +		ret = PTR_ERR(data->ipg_clk);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "failed to get ipg clk: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	data->channum = channum;
-> +	raw_spin_lock_init(&data->lock);
-> +
-> +	ret = clk_prepare_enable(data->ipg_clk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to enable ipg clk: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	for (i = 0; i < channum; i++) {
-> +		data->irqchip_data[i].chanidx = i;
-> +
-> +		data->irqchip_data[i].irq = irq_of_parse_and_map(np, i);
-> +		if (data->irqchip_data[i].irq <= 0) {
-> +			ret = -EINVAL;
-> +			dev_err(&pdev->dev, "failed to get irq\n");
-> +			goto out;
-> +		}
-> +
-> +		data->irqchip_data[i].domain =
-> +			irq_domain_add_linear(np, 32, &imx_intmux_domain_ops,
-> +					      &data->irqchip_data[i]);
-
-Same problem as before. If the line is too long, use an intermediate
-variable. Or leave the assignment as a single long line. Don't split
-assignment like this.
-
-> +		if (!data->irqchip_data[i].domain) {
-> +			ret = -ENOMEM;
-> +			dev_err(&pdev->dev, "failed to create IRQ domain\n");
-> +			goto out;
-> +		}
-> +
-> +		irq_set_chained_handler_and_data(data->irqchip_data[i].irq,
-> +						 imx_intmux_irq_handler,
-> +						 &data->irqchip_data[i]);
-> +
-> +		/* disable interrupt sources of this channel firstly */
-> +		writel_relaxed(0, data->regs + CHANIER(i));
-
-So you disable interrupts *after* enabling the mux interrupt. If you
-have screaming interrupts, this will lockup. You really need to do
-it *before* enabling the chained interrupt.
-
-> +	}
-> +
-> +	platform_set_drvdata(pdev, data);
-> +
-> +	return 0;
-> +out:
-> +	clk_disable_unprepare(data->ipg_clk);
-> +	return ret;
-> +}
-> +
-> +static int imx_intmux_remove(struct platform_device *pdev)
-> +{
-> +	struct intmux_data *data = platform_get_drvdata(pdev);
-> +	int i;
-> +
-> +	for (i = 0; i < data->channum; i++) {
-> +		/* clear interrupt sources pending status of this channel */
-> +		writel_relaxed(0, data->regs + CHANIPR(i));
-
-If these are level interrupts, this won't do a thing. You need to
-actively *disable* them.
-
-> +
-> +		irq_set_chained_handler_and_data(data->irqchip_data[i].irq,
-> +						 NULL, NULL);
-> +
-> +		irq_domain_remove(data->irqchip_data[i].domain);
-> +	}
-> +
-> +	clk_disable_unprepare(data->ipg_clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id imx_intmux_id[] = {
-> +	{ .compatible = "fsl,imx-intmux", },
-> +	{ /* sentinel */ },
-> +};
-> +
-> +static struct platform_driver imx_intmux_driver = {
-> +	.driver = {
-> +		.name = "imx-intmux",
-> +		.of_match_table = imx_intmux_id,
-> +	},
-> +	.probe = imx_intmux_probe,
-> +	.remove = imx_intmux_remove,
-> +};
-> +builtin_platform_driver(imx_intmux_driver);
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Thanks
+/Ilias
+> 
+> -- 
+> Best regards,
+>   Jesper Dangaard Brouer
+>   MSc.CS, Principal Kernel Engineer at Red Hat
+>   LinkedIn: http://www.linkedin.com/in/brouer
+> 
