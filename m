@@ -2,197 +2,133 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B65C6C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0766FC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71E8F227BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5E0F227BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:02:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Qwc9C2AL"
+	dkim=pass (1024-bit key) header.d=iluvatar.ai header.i=@iluvatar.ai header.b="GfM4E8T+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbfLTGAd (ORCPT
+        id S1727169AbfLTGCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 01:00:33 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:39767 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725781AbfLTGAd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 01:00:33 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576821632; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=Bn5+cRm0CeRTl6i7B2de4J1eXHKdas0PG4oVtUJPYWg=;
- b=Qwc9C2AL9crx8t4HdxV3+DCCMJ42FLvAngA0+eTgc6E1bjOzByp4s+H7frmbS1JvF6Z8u1Cf
- m3hX+e7Abp1hIcdR1/CRc8IUj8FO6BodpzBc6G3yzTPNlkXQJUi1WolkrgV3EnkCGWalJqcN
- XKOjV6ICpZF/9fWHUZ5LNBd4SQg=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5dfc6376.7f0f4e1c7298-smtp-out-n03;
- Fri, 20 Dec 2019 06:00:22 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6EC28C4479F; Fri, 20 Dec 2019 06:00:21 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A7D39C43383;
-        Fri, 20 Dec 2019 06:00:20 +0000 (UTC)
+        Fri, 20 Dec 2019 01:02:25 -0500
+Received: from owa.iluvatar.ai ([103.91.158.24]:16166 "EHLO smg.iluvatar.ai"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726428AbfLTGCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 01:02:24 -0500
+X-AuditID: 0a650161-773ff700000078a3-4d-5dfc7c0c29cb
+Received: from owa.iluvatar.ai (s-10-101-1-102.iluvatar.local [10.101.1.102])
+        by smg.iluvatar.ai (Symantec Messaging Gateway) with SMTP id 36.54.30883.C0C7CFD5; Fri, 20 Dec 2019 15:45:16 +0800 (HKT)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; d=iluvatar.ai; s=key_2018;
+        c=relaxed/relaxed; t=1576821751; h=from:subject:to:date:message-id;
+        bh=E/kfTGrBQBcT2Az00xcJYWmO08Ma30y+BctoVl7P69k=;
+        b=GfM4E8T+EIfm1iOmCEX94HEBX6V5/IsS3S7XvbwDuFrTMfSXCsedIS8gDRO3pWYKFvt+SgOwyIA
+        UOufA3to8ZuBUNlH1yrCQYsySM+kFiyds3bO3qHsx22OnT9OgF3LUG5prHbXf/LTX2l4b1Qf50lHI
+        xpuhI47Oyp40qGWaWSw=
+Received: from hsj-OptiPlex-5060.iluvatar.local (10.101.199.253) by
+ S-10-101-1-102.iluvatar.local (10.101.1.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1415.2; Fri, 20 Dec 2019 14:02:29 +0800
+From:   Huang Shijie <sjhuang@iluvatar.ai>
+To:     <jbaron@akamai.com>
+CC:     <linux-kernel@vger.kernel.org>, <1537577747@qq.com>,
+        Huang Shijie <sjhuang@iluvatar.ai>
+Subject: [PATCH v6] lib/dynamic_debug: make better dynamic log output
+Date:   Fri, 20 Dec 2019 14:02:05 +0800
+Message-ID: <20191220060205.18543-1-sjhuang@iluvatar.ai>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191209094437.14866-1-sjhuang@iluvatar.ai>
+References: <20191209094437.14866-1-sjhuang@iluvatar.ai>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 20 Dec 2019 14:00:20 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Asutosh Das <asutoshd@codeaurora.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] phy: qcom-qmp: Add optional SW reset
-In-Reply-To: <20191220042427.GE2536@vkoul-mobl>
-References: <20191219150433.2785427-1-vkoul@kernel.org>
- <20191219150433.2785427-4-vkoul@kernel.org>
- <ff83ac1f0ec6bca1379e8b873fd30aa2@codeaurora.org>
- <9ef99dcac59dbdc59c7e5eb1a8724ea2@codeaurora.org>
- <20191220042427.GE2536@vkoul-mobl>
-Message-ID: <e55185eda9d7dcbce80a671e630449ea@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-Originating-IP: [10.101.199.253]
+X-ClientProxiedBy: S-10-101-1-102.iluvatar.local (10.101.1.102) To
+ S-10-101-1-102.iluvatar.local (10.101.1.102)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCLMWRmVeSWpSXmKPExsXClcqYpstT8yfWYPtyU4vJVw+wWcxYfJzV
+        4vKuOWwOzB6Tjyxg9rj1bC2rx+dNcgHMUVw2Kak5mWWpRfp2CVwZM27NYC94I1CxcNY8tgbG
+        s7xdjJwcEgImEr0XtzN3MXJxCAmcYJToOjSHGSTBLCAhcfDFC7AEi8BbJokHE7vYIKpamSTW
+        XHzEClLFJqAhMffEXaAqDg4RAXGJ9/NdIZpjJeZ27QMbJCzgKrHv/jJ2EJtFQFXi2OT3YK28
+        AhYSE7aeZ4W4Ql5i9YYDYPWcApYSh66+YQKxhYBqLsy7xAxRLyhxcuYTFpBVQgIKEi9WakG0
+        Kkks2TuLCcIulPj+8i7LBEahWUhemIWkewEj0ypG/uLcdL3MnNKyxJLEIr3EzE2MkKBN3MF4
+        o/Ol3iFGAQ5GJR5ejobfsUKsiWXFlbmHGCU4mJVEeG93/IwV4k1JrKxKLcqPLyrNSS0+xCjN
+        waIkziv072mMkEB6YklqdmpqQWoRTJaJg1OqganW50+b23LPYteanR4FhYuY49KaJk/+7nim
+        6+oqRgu9ppDwEzssvv457rlJXyGJIVP8xj5vjwWO+hVXy7av+Ov2Liz+Rp/Wvg6F6mUCLyrE
+        ertsfp8zrcvv2vBJ2LmGs+XyrgOWrrNOrZvFOu3xTktrQ2sLjmv/eC+JvK081SUvmrhjVfQ/
+        K8kj77YvOn1Ctb5h97xinVdTFhw88dWY4dkh2VSBB2WlXyczbD48ufzG7PvnnrzeteFKUH7N
+        2a7vT5ht+bMvd7BXLvy0ftN3vkB7uySnJ4dmxxVaRZ/sjlmYmH363MPegLiCysa9DYHvvQ2q
+        /GdKGnyIrPAKln5hbH951c2Oc2nzH2TGp4fMW63EUpyRaKjFXFScCADqjHcO1wIAAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-20 12:24, Vinod Koul wrote:
-> On 20-12-19, 08:49, cang@codeaurora.org wrote:
->> On 2019-12-20 08:22, cang@codeaurora.org wrote:
->> > On 2019-12-19 23:04, Vinod Koul wrote:
->> > > For V4 QMP UFS Phy, we need to assert reset bits, configure the phy
->> > > and
->> > > then deassert it, so add optional has_sw_reset flag and use that to
->> > > configure the QPHY_SW_RESET register.
->> > >
->> > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
->> > > ---
->> > >  drivers/phy/qualcomm/phy-qcom-qmp.c | 10 ++++++++++
->> > >  1 file changed, 10 insertions(+)
->> > >
->> > > diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c
->> > > b/drivers/phy/qualcomm/phy-qcom-qmp.c
->> > > index 06f971ca518e..80304b7cd895 100644
->> > > --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
->> > > +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
->> > > @@ -1023,6 +1023,9 @@ struct qmp_phy_cfg {
->> > >
->> > >  	/* true, if PCS block has no separate SW_RESET register */
->> > >  	bool no_pcs_sw_reset;
->> > > +
->> > > +	/* true if sw reset needs to be invoked */
->> > > +	bool has_sw_reset;
->> > >  };
->> > >
->> > >  /**
->> > > @@ -1391,6 +1394,7 @@ static const struct qmp_phy_cfg
->> > > sm8150_ufsphy_cfg = {
->> > >
->> > >  	.is_dual_lane_phy	= true,
->> > >  	.no_pcs_sw_reset	= true,
->> > > +	.has_sw_reset		= true,
->> > >  };
->> > >
->> > >  static void qcom_qmp_phy_configure(void __iomem *base,
->> > > @@ -1475,6 +1479,9 @@ static int qcom_qmp_phy_com_init(struct
->> > > qmp_phy *qphy)
->> > >  			     SW_USB3PHY_RESET_MUX | SW_USB3PHY_RESET);
->> > >  	}
->> > >
->> > > +	if (cfg->has_sw_reset)
->> > > +		qphy_setbits(serdes, cfg->regs[QPHY_SW_RESET], SW_RESET);
->> > > +
->> >
->> > Are you sure you want to set this in the serdes register? QPHY_SW_RESET
->> > is in its pcs register.
->> >
->> > >  	if (cfg->has_phy_com_ctrl)
->> > >  		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
->> > >  			     SW_PWRDN);
->> > > @@ -1651,6 +1658,9 @@ static int qcom_qmp_phy_enable(struct phy *phy)
->> > >  	if (cfg->has_phy_dp_com_ctrl)
->> > >  		qphy_clrbits(dp_com, QPHY_V3_DP_COM_SW_RESET, SW_RESET);
->> > >
->> > > +	if (cfg->has_sw_reset)
->> > > +		qphy_clrbits(pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
->> > > +
->> >
->> > Yet you are clearing it from pcs register.
-> 
-> updated now, will send v2
-> 
->> >
->> > Regards,
->> > Can Guo
->> >
->> > >  	/* start SerDes and Phy-Coding-Sublayer */
->> > >  	qphy_setbits(pcs, cfg->regs[QPHY_START_CTRL], cfg->start_ctrl);
->> 
->> I thought your change would be like this
->> 
->> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c
->> b/drivers/phy/qualcomm/phy-qcom-qmp.c
->> index 8e642a6..a4ab4b7 100755
->> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
->> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
->> @@ -166,6 +166,7 @@ static const unsigned int 
->> sdm845_ufsphy_regs_layout[] =
->> {
->>  };
->> 
->>  static const unsigned int sm8150_ufsphy_regs_layout[] = {
->> +       [QPHY_SW_RESET]                 = 0x08,
->>         [QPHY_START_CTRL]               = 0x00,
->>         [QPHY_PCS_READY_STATUS]         = 0x180,
->>  };
->> @@ -1390,7 +1391,6 @@ static const struct qmp_phy_cfg 
->> sm8150_ufsphy_cfg = {
->>         .pwrdn_ctrl             = SW_PWRDN,
->> 
->>         .is_dual_lane_phy       = true,
->> -       .no_pcs_sw_reset        = true,
->>  };
->> 
->>  static void qcom_qmp_phy_configure(void __iomem *base,
->> @@ -1475,6 +1475,9 @@ static int qcom_qmp_phy_com_init(struct qmp_phy 
->> *qphy)
->>                              SW_USB3PHY_RESET_MUX | SW_USB3PHY_RESET);
->>         }
->> 
->> +       if ((cfg->type == PHY_TYPE_UFS) && (!cfg->no_pcs_sw_reset))
->> +               qphy_setbits(pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
-> 
-> Well am not sure if no_pcs_sw_reset would do this and side effect on
-> other phys (somehow older ones dont seem to need this). That was the
-> reason for a new flag and to be used for specific instances
-> 
-> Thanks
+The driver strings, device name and net device name are not changed for
+the driver's dynamic log output. But dynamic_emit_prefix() which contains
+the function names may change when the function names are changed.
 
-Hi Vinod,
+So the patch makes the better dynamic log output.
 
-That is why I added the check as cfg->type == PHY_TYPE_UFS, meaning this
-change will only apply to UFS.
-FYI, start from 8150(include 8150), QPHY_SW_RESET is present in PHY's
-PCS register. no_pcs_sw_reset = TRUE should only be given to 845 and 
-older
-targets, like 8998, because they don't have this QPHY_SW_RESET in PHY's
-register per their design, that's why they leverage the reset control
-provided by UFS controller.
+And after this patch, the output is the same as the non dynamic debug output
+except it may have an optional prefix.
 
-Thanks,
-Can Guo.
+Signed-off-by: Huang Shijie <sjhuang@iluvatar.ai>
+---
+v5 --> v6:
+	Add more comment from Jason Baron.
+---
+ lib/dynamic_debug.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+index c60409138e13..bfc3b386d603 100644
+--- a/lib/dynamic_debug.c
++++ b/lib/dynamic_debug.c
+@@ -589,9 +589,9 @@ void __dynamic_dev_dbg(struct _ddebug *descriptor,
+ 	} else {
+ 		char buf[PREFIX_SIZE];
+ 
+-		dev_printk_emit(LOGLEVEL_DEBUG, dev, "%s%s %s: %pV",
+-				dynamic_emit_prefix(descriptor, buf),
++		dev_printk_emit(LOGLEVEL_DEBUG, dev, "%s %s %s%pV",
+ 				dev_driver_string(dev), dev_name(dev),
++				dynamic_emit_prefix(descriptor, buf),
+ 				&vaf);
+ 	}
+ 
+@@ -619,11 +619,11 @@ void __dynamic_netdev_dbg(struct _ddebug *descriptor,
+ 		char buf[PREFIX_SIZE];
+ 
+ 		dev_printk_emit(LOGLEVEL_DEBUG, dev->dev.parent,
+-				"%s%s %s %s%s: %pV",
+-				dynamic_emit_prefix(descriptor, buf),
++				"%s %s %s %s %s%pV",
+ 				dev_driver_string(dev->dev.parent),
+ 				dev_name(dev->dev.parent),
+ 				netdev_name(dev), netdev_reg_state(dev),
++				dynamic_emit_prefix(descriptor, buf),
+ 				&vaf);
+ 	} else if (dev) {
+ 		printk(KERN_DEBUG "%s%s: %pV", netdev_name(dev),
+@@ -655,11 +655,11 @@ void __dynamic_ibdev_dbg(struct _ddebug *descriptor,
+ 		char buf[PREFIX_SIZE];
+ 
+ 		dev_printk_emit(LOGLEVEL_DEBUG, ibdev->dev.parent,
+-				"%s%s %s %s: %pV",
+-				dynamic_emit_prefix(descriptor, buf),
++				"%s %s %s %s%pV",
+ 				dev_driver_string(ibdev->dev.parent),
+ 				dev_name(ibdev->dev.parent),
+ 				dev_name(&ibdev->dev),
++				dynamic_emit_prefix(descriptor, buf),
+ 				&vaf);
+ 	} else if (ibdev) {
+ 		printk(KERN_DEBUG "%s: %pV", dev_name(&ibdev->dev), &vaf);
+-- 
+2.17.1
+
