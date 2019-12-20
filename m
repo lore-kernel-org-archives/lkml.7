@@ -2,73 +2,103 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18509C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7286C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC2D124683
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C15C24680
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:06:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="YecgCsSj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DQ87E3uK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbfLTKFj (ORCPT
+        id S1727401AbfLTKGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 05:05:39 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:43270 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727129AbfLTKFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 05:05:39 -0500
-Received: from zn.tnic (p200300EC2F0ED600DC469E28B29B59E9.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:d600:dc46:9e28:b29b:59e9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4668A1EC0BED;
-        Fri, 20 Dec 2019 11:05:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1576836338;
+        Fri, 20 Dec 2019 05:06:35 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:29328 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727184AbfLTKGf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 05:06:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576836394;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=DMfNsoTS3Jp30mfhEhFAKDx1K58MITCksuLDayfcbsM=;
-        b=YecgCsSj5vMtOTmSNAo6x+yiSPr1N0aUpxNBseaRMwiYbqF9C6ZX4SOyarqri/2BPy/97B
-        hq1Qsb0SkQGlFx3hoIlBRDI2hBpc9JzS6pEtOX3GZ5X3uairxSXil2dcl4i58hR0nSmBWc
-        BsagUdp06Aj3EyMaFefc1SAEO/IDQtk=
-Date:   Fri, 20 Dec 2019 11:05:36 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Omar Sandoval <osandov@osandov.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86: define arch_crash_save_vmcoreinfo() if
- CONFIG_CRASH_CORE=y
-Message-ID: <20191220100536.GC1397@zn.tnic>
-References: <9e9eb78c157d26d80f8781f8ce0e088fd12120b4.1575309711.git.osandov@fb.com>
- <20191218104113.GB24886@zn.tnic>
- <20191219202807.GA826140@vader>
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=TJRAO3L22Ih+Pz3y1jOIE97EY53hqHdNJLLu6DqeuvU=;
+        b=DQ87E3uKlcmKSmYWWnszQbwsu7l7Jux6fhXJxrQ4J70EMxD5faikeocPsPB6gM2V883zS4
+        usYAwEP7H2n3OoC+US/AqRz8SXdFdzVVArs+CLZlCJQyJFKJoNcVkxtwmhKspKT0sr8Aau
+        QCgNCQ6a2gxjOcBmghbZtM0MLnYkMOI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-209-Q-jcCQ3WOJCPBNkNsbH44Q-1; Fri, 20 Dec 2019 05:06:30 -0500
+X-MC-Unique: Q-jcCQ3WOJCPBNkNsbH44Q-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E665694D13;
+        Fri, 20 Dec 2019 10:06:26 +0000 (UTC)
+Received: from gondolin (dhcp-192-245.str.redhat.com [10.33.192.245])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0B2431001B00;
+        Fri, 20 Dec 2019 10:06:20 +0000 (UTC)
+Date:   Fri, 20 Dec 2019 11:06:18 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kurz <groug@kaod.org>
+Subject: Re: [PATCH v2 37/45] KVM: Drop kvm_arch_vcpu_setup()
+Message-ID: <20191220110618.05b1dc86.cohuck@redhat.com>
+In-Reply-To: <20191218215530.2280-38-sean.j.christopherson@intel.com>
+References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
+        <20191218215530.2280-38-sean.j.christopherson@intel.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191219202807.GA826140@vader>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 12:28:07PM -0800, Omar Sandoval wrote:
-> Yes, I'm talking about reading VMCOREINFO from /proc/kcore at runtime,
-> no kdump involved. crash [1] and my own tool, drgn [2], use this for
-> live debugging.
+On Wed, 18 Dec 2019 13:55:22 -0800
+Sean Christopherson <sean.j.christopherson@intel.com> wrote:
 
-Ok, please state the gist of the use cases in the commit message so that
-it is clear why you're doing this.
+> Remove kvm_arch_vcpu_setup() now that all arch specific implementations
+> are nops.
+> 
+> Acked-by: Christoffer Dall <christoffer.dall@arm.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/arm/kvm/guest.c      | 5 -----
+>  arch/arm64/kvm/guest.c    | 5 -----
+>  arch/mips/kvm/mips.c      | 5 -----
+>  arch/powerpc/kvm/book3s.c | 5 -----
+>  arch/powerpc/kvm/booke.c  | 5 -----
+>  arch/s390/kvm/kvm-s390.c  | 5 -----
+>  arch/x86/kvm/x86.c        | 5 -----
+>  include/linux/kvm_host.h  | 1 -
+>  virt/kvm/kvm_main.c       | 5 -----
+>  9 files changed, 41 deletions(-)
 
-Thx.
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
