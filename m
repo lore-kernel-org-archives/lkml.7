@@ -2,157 +2,365 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB84C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DC9C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1D3524680
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:44:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="iJoCSDQ6"
+	by mail.kernel.org (Postfix) with ESMTP id 28EA1227BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:45:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbfLTHoz (ORCPT
+        id S1727188AbfLTHpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 02:44:55 -0500
-Received: from mail-eopbgr10071.outbound.protection.outlook.com ([40.107.1.71]:22726
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726002AbfLTHoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 02:44:55 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W7S1w5P1cVmIDhKmRQTx4NiCA1Ior3UZHdoV+EWiX4lS6VgUF3NplOVT/E/dYiHyip4k+Pu3ZRsoHGZJ7vJkdTBZ29moh9QGH1h8+Gt2Sh0hQtKZXQ8K6oJSklvIB5MLCA2udKbmndveAqt12j7sxF/in/ZtWTNImelvu4H+qGyWp1ocoPGjxDILM9AgK8FyMd9XMoG54o+qwaJ51oSFsS8vvSQHfgfSo2Ow5aU+mIWpP5rmBb4LW2fzrvnuFgNqGHmMEGxfO0hckVjBbIY2mdt/A+ge8IoQpT+s4fEttsp1+cQel8sOTbo+NC0YaxMa0NK9qVEHCHf0CM8wjIuWlA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M1rZrW7YdXIPl960aKX4BqzCNhHxgTrb686+13OLQr0=;
- b=jsgObq+3gGMhRg5M8tGpZyVBVTGljp6n9g0krRwXCB8vQCj1TdBs2GkNpJ06aHL5gjXCdyj+Zy+ncdv3noXurmOeqeGNdeggO7uQ7n6iPMjRypjfhQtxVfcqqcGSjK8YLgB6iSsM5Eut/XuGByJQ3+UyXLS+hEAXrUssOfjcJ4ggmr+lqr9oREJRUlYRgtUnXzKONlo3JiGo7hXQLn//Wxvh5ZNGHsEuPFVlV/ZBVuiTL/PMXEzK/S8mf/E3fUh+CvUt8OJ9J36NVN1pgVjWw74s3nn+sRqbKCa+B6rryCUTZJamsQXmYwrpZRSrjBRhi57E2BfZlLo/wT4ZdlkeXA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M1rZrW7YdXIPl960aKX4BqzCNhHxgTrb686+13OLQr0=;
- b=iJoCSDQ62o1i/Eqv1Jmsjrnm3eY7+PoxoRqM79cvBuyQuh7QSzSD3iUZGWttgz0v7BGmxjX+F9c4GmwGEDuXD+Ddqjb1zSNAq9RVpVNyYkB0SFQQvQfryo0YFdwNRk778cmPkDEgdnVJ/LFqkQCiwksi7C7yKooSYVqXABPhbvQ=
-Received: from DB7PR04MB4618.eurprd04.prod.outlook.com (52.135.139.151) by
- DB7PR04MB5081.eurprd04.prod.outlook.com (20.176.236.212) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.20; Fri, 20 Dec 2019 07:44:48 +0000
-Received: from DB7PR04MB4618.eurprd04.prod.outlook.com
- ([fe80::b40b:46af:9458:f2df]) by DB7PR04MB4618.eurprd04.prod.outlook.com
- ([fe80::b40b:46af:9458:f2df%6]) with mapi id 15.20.2559.016; Fri, 20 Dec 2019
- 07:44:48 +0000
-From:   Joakim Zhang <qiangqing.zhang@nxp.com>
-To:     Joakim Zhang <qiangqing.zhang@nxp.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Duan <fugang.duan@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH V3 1/2] dt-bindings/irq: add binding for NXP INTMUX
- interrupt multiplexer
-Thread-Topic: [PATCH V3 1/2] dt-bindings/irq: add binding for NXP INTMUX
- interrupt multiplexer
-Thread-Index: AQHVtwjHFdUOM6ZScEmuNnpSa/osE6fCpASQ
-Date:   Fri, 20 Dec 2019 07:44:48 +0000
-Message-ID: <DB7PR04MB4618D835938530D6051A02C1E62D0@DB7PR04MB4618.eurprd04.prod.outlook.com>
-References: <1576827431-31942-1-git-send-email-qiangqing.zhang@nxp.com>
- <1576827431-31942-2-git-send-email-qiangqing.zhang@nxp.com>
-In-Reply-To: <1576827431-31942-2-git-send-email-qiangqing.zhang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=qiangqing.zhang@nxp.com; 
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5f1b6a8e-0216-4844-8b18-08d785207d73
-x-ms-traffictypediagnostic: DB7PR04MB5081:|DB7PR04MB5081:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB5081E8460197B47B62807DCBE62D0@DB7PR04MB5081.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 025796F161
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(346002)(376002)(396003)(39860400002)(189003)(199004)(13464003)(52536014)(478600001)(110136005)(2906002)(33656002)(54906003)(81166006)(76116006)(316002)(8676002)(81156014)(7696005)(26005)(66946007)(66446008)(7416002)(64756008)(66556008)(66476007)(55016002)(9686003)(8936002)(71200400001)(53546011)(186003)(86362001)(5660300002)(6506007)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5081;H:DB7PR04MB4618.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: SuiRB7azBDkSl+xcwmAn3E7Ud9p2jeEvLOfVGegWG8qxXBMSQHieNm3l4kwC1W9irtl+aayf7DX++OTZnJLtAIb6SfpXxNDM49iUlvw6f6EDPLWkEb4+T4zngnLa43k5xx/V/PRqmdzlKx3qOUP9ED80RBfMLvYgYfI+uhcNRftrMA6mz+g0C1CI1JFR/ZtwnMHPAlq0CPrSfvibtcpQVOIFObWpsgU6B+5lqExx7GI5ZasKpmPMFOKiZgfHikps5aeOiYkewKrQ0VHFJggv8pSnWVS482OkUCPck1Jbww6xt4NbqvKfg/Y2zsE3e6ipjfhtVRwBhJKYcIYv7cWD9E4mWrgPgs748ikBE5s0tUgNHCS2ThHgdlEHWkhm8JvE9bK4olLDbZ809YfyGqOonHVRqU5Pg+21aRtQOjELTRJa+9aoOgd7lZiQb4c34xbLaZc6vkR1CdxVV0J3xiMgq3bFSEIt6Btl5rMAEHbT9JiEMmefITUQ8dIprg8DVbTH
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5f1b6a8e-0216-4844-8b18-08d785207d73
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Dec 2019 07:44:48.5387
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HI8Kkz3YwuZFxuHV2MG61gX6jnB4bot+fON2lfAGd4YsM2KnDrmAA5KF/GHe/xg9KPdVyC3Dn+bFtDfeNOypdg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5081
+        Fri, 20 Dec 2019 02:45:45 -0500
+Received: from mga17.intel.com ([192.55.52.151]:43239 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725941AbfLTHpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 02:45:44 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Dec 2019 23:45:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,335,1571727600"; 
+   d="scan'208";a="213499076"
+Received: from hyperv-sh3.bj.intel.com ([10.240.193.95])
+  by fmsmga008.fm.intel.com with ESMTP; 19 Dec 2019 23:45:36 -0800
+From:   Jing Liu <jing2.liu@linux.intel.com>
+To:     virtio-dev@lists.oasis-open.org
+Cc:     slp@redhat.com, linux-kernel@vger.kernel.org,
+        Jing Liu <jing2.liu@linux.intel.com>,
+        Chao Peng <chao.p.peng@linux.intel.com>,
+        Zha Bin <zhabin@linux.alibaba.com>,
+        Liu Jiang <gerry@linux.alibaba.com>
+Subject: [virtio-dev][PATCH v1 1/2] virtio-mmio: Add MSI and different notification address support
+Date:   Fri, 20 Dec 2019 23:25:03 +0800
+Message-Id: <1576855504-34947-1-git-send-email-jing2.liu@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEpvYWtpbSBaaGFuZyA8cWlh
-bmdxaW5nLnpoYW5nQG54cC5jb20+DQo+IFNlbnQ6IDIwMTnE6jEy1MIyMMjVIDE1OjM3DQo+IFRv
-OiBtYXpAa2VybmVsLm9yZzsgdGdseEBsaW51dHJvbml4LmRlOyBqYXNvbkBsYWtlZGFlbW9uLm5l
-dDsNCj4gcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9A
-a2VybmVsLm9yZzsNCj4gcy5oYXVlckBwZW5ndXRyb25peC5kZQ0KPiBDYzoga2VybmVsQHBlbmd1
-dHJvbml4LmRlOyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPjsNCj4gbGludXgta2Vy
-bmVsQHZnZXIua2VybmVsLm9yZzsgQW5keSBEdWFuIDxmdWdhbmcuZHVhbkBueHAuY29tPjsNCj4g
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBKb2FraW0gWmhhbmcNCj4gPHFp
-YW5ncWluZy56aGFuZ0BueHAuY29tPg0KPiBTdWJqZWN0OiBbUEFUQ0ggVjMgMS8yXSBkdC1iaW5k
-aW5ncy9pcnE6IGFkZCBiaW5kaW5nIGZvciBOWFAgSU5UTVVYIGludGVycnVwdA0KPiBtdWx0aXBs
-ZXhlcg0KPiANCj4gVGhpcyBwYXRjaCBhZGRzIHRoZSBEVCBiaW5kaW5ncyBmb3IgdGhlIE5YUCBJ
-TlRNVVggaW50ZXJydXB0IG11bHRpcGxleGVyIGZvcg0KPiBpLk1YOCBmYW1pbHkgU29Dcy4NCj4g
-DQo+IFNpZ25lZC1vZmYtYnk6IEpvYWtpbSBaaGFuZyA8cWlhbmdxaW5nLnpoYW5nQG54cC5jb20+
-DQo+IC0tLQ0KPiAgLi4uL2ludGVycnVwdC1jb250cm9sbGVyL2ZzbCxpbnRtdXgudHh0ICAgICAg
-IHwgMzYgKysrKysrKysrKysrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDM2IGluc2VydGlv
-bnMoKykNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvZnNsLGludG11eC50eHQNCj4gDQo+IGRpZmYg
-LS1naXQNCj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW50ZXJydXB0LWNv
-bnRyb2xsZXIvZnNsLGludG11eC50eHQNCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvZnNsLGludG11eC50eHQNCj4gbmV3IGZpbGUgbW9k
-ZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMDAwMDAwLi4zZWJlOWNhYzVmMjANCj4gLS0tIC9kZXYv
-bnVsbA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW50ZXJydXB0
-LWNvbnRyb2xsZXIvZnNsLGludG11eC4NCj4gKysrIHR4dA0KPiBAQCAtMCwwICsxLDM2IEBADQo+
-ICtGcmVlc2NhbGUgSU5UTVVYIGludGVycnVwdCBtdWx0aXBsZXhlcg0KPiArDQo+ICtSZXF1aXJl
-ZCBwcm9wZXJ0aWVzOg0KPiArDQo+ICstIGNvbXBhdGlibGU6IFNob3VsZCBiZToNCj4gKyAgIC0g
-ImZzbCxpbXgtaW50bXV4Ig0KPiArLSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgc2l6
-ZSBvZiByZWdpc3RlcnMuDQo+ICstIGludGVycnVwdHM6IFNob3VsZCBjb250YWluIHRoZSBwYXJl
-bnQgaW50ZXJydXB0IGxpbmVzICh1cCB0byA4KSB1c2VkDQo+ICt0bw0KPiArICBtdWx0aXBsZXgg
-dGhlIGlucHV0IGludGVycnVwdHMuDQo+ICstIGNsb2NrczogU2hvdWxkIGNvbnRhaW4gb25lIGNs
-b2NrIGZvciBlbnRyeSBpbiBjbG9jay1uYW1lcy4NCj4gKy0gY2xvY2stbmFtZXM6DQo+ICsgICAt
-ICJpcGciOiBtYWluIGxvZ2ljIGNsb2NrDQo+ICstIGludGVycnVwdC1jb250cm9sbGVyOiBJZGVu
-dGlmaWVzIHRoZSBub2RlIGFzIGFuIGludGVycnVwdCBjb250cm9sbGVyLg0KPiArLSAjaW50ZXJy
-dXB0LWNlbGxzOiBTcGVjaWZpZXMgdGhlIG51bWJlciBvZiBjZWxscyBuZWVkZWQgdG8gZW5jb2Rl
-IGFuDQo+ICsgIGludGVycnVwdCBzb3VyY2UuIFRoZSB2YWx1ZSBtdXN0IGJlIDIuDQo+ICsgICAt
-IHRoZSAxc3QgY2VsbDogaGFyZHdhcmUgaW50ZXJydXB0IG51bWJlcg0KPiArICAgLSB0aGUgMm5k
-IGNlbGw6IGNoYW5uZWwgaW5kZXgsIHZhbHVlIG11c3Qgc21hbGxlciB0aGFuIGNoYW5uZWxzIHVz
-ZWQNCj4gKw0KPiArT3B0aW9uYWwgcHJvcGVydGllczoNCj4gKw0KPiArLSBmc2wsaW50bXV4X2No
-YW5zOiBUaGUgbnVtYmVyIG9mIGNoYW5uZWxzIHVzZWQgZm9yIGludGVycnVwdCBzb3VyY2UuDQo+
-ICtUaGUNCj4gKyAgTWF4aW11bSB2YWx1ZSBpcyA4LiBJZiB0aGlzIHByb3BlcnR5IGlzIG5vdCBz
-ZXQgaW4gRFQgdGhlbiBkcml2ZXINCj4gK3VzZXMNCj4gKyAgMSBjaGFubmVsIGJ5IGRlZmF1bHQu
-DQo+ICsNCj4gK0V4YW1wbGU6DQo+ICsNCj4gKwlpbnRtdXhAMzc0MDAwMDAgew0KPiArCQljb21w
-YXRpYmxlID0gImZzbCxpbXgtaW50bXV4IjsNCj4gKwkJcmVnID0gPDB4Mzc0MDAwMDAgMHgxMDAw
-PjsNCj4gKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE2IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0K
-PiArCQljbG9ja3MgPSA8JmNsayBJTVg4UU1fQ000MF9JUEdfQ0xLPjsNCj4gKwkJY2xvY2stbmFt
-ZXMgPSAiaXBnIjsNCj4gKwkJaW50ZXJydXB0LWNvbnRyb2xsZXI7DQo+ICsJCSNpbnRlcnJ1cHQt
-Y2VsbHMgPSA8MT47DQpIaSBNYXJjLA0KDQpJIGFtIHNvIHNvcnJ5LCB0aGlzIHNob3VsZCBiZSAj
-aW50ZXJydXB0LWNlbGxzID0gPDI+LCB3aWxsIGNvcnJlY3QgaXQgaW4gbmV4dCB2ZXJzaW9uLg0K
-DQpCZXN0IFJlZ2FyZHMsDQpKb2FraW0gWmhhbmcNCj4gKwl9Ow0KPiArDQo+IC0tDQo+IDIuMTcu
-MQ0KDQo=
+Upgrade virtio-mmio to version 3, with the abilities to support
+MSI interrupt and notification features.
+
+The details of version 2 will be appended as part of legacy interface
+in next patch.
+
+Signed-off-by: Jing Liu <jing2.liu@linux.intel.com>
+Signed-off-by: Chao Peng <chao.p.peng@linux.intel.com>
+Signed-off-by: Zha Bin <zhabin@linux.alibaba.com>
+Signed-off-by: Liu Jiang <gerry@linux.alibaba.com>
+---
+ content.tex  | 191 ++++++++++++++++++++++++++++++++++++++++++++++++-----------
+ msi-status.c |   5 ++
+ 2 files changed, 163 insertions(+), 33 deletions(-)
+ create mode 100644 msi-status.c
+
+diff --git a/content.tex b/content.tex
+index d68cfaf..eaaffec 100644
+--- a/content.tex
++++ b/content.tex
+@@ -1597,9 +1597,9 @@ \subsection{MMIO Device Register Layout}\label{sec:Virtio Transport Options / Vi
+   } 
+   \hline
+   \mmioreg{Version}{Device version number}{0x004}{R}{%
+-    0x2.
++    0x3.
+     \begin{note}
+-      Legacy devices (see \ref{sec:Virtio Transport Options / Virtio Over MMIO / Legacy interface}~\nameref{sec:Virtio Transport Options / Virtio Over MMIO / Legacy interface}) used 0x1.
++      Legacy devices (see \ref{sec:Virtio Transport Options / Virtio Over MMIO / Legacy interface}~\nameref{sec:Virtio Transport Options / Virtio Over MMIO / Legacy interface}) used 0x1 or 0x2.
+     \end{note}
+   }
+   \hline 
+@@ -1671,25 +1671,23 @@ \subsection{MMIO Device Register Layout}\label{sec:Virtio Transport Options / Vi
+     accesses apply to the queue selected by writing to \field{QueueSel}.
+   }
+   \hline 
+-  \mmioreg{QueueNotify}{Queue notifier}{0x050}{W}{%
+-    Writing a value to this register notifies the device that
+-    there are new buffers to process in a queue.
++  \mmioreg{QueueNotify}{Queue notifier}{0x050}{RW}{%
++    Reading from the register returns the virtqueue notification configuration.
+ 
+-    When VIRTIO_F_NOTIFICATION_DATA has not been negotiated,
+-    the value written is the queue index.
++    See \ref{sec:Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation / Notification Address}
++    for the configuration format.
+ 
+-    When VIRTIO_F_NOTIFICATION_DATA has been negotiated,
+-    the \field{Notification data} value has the following format:
++    Writing when the notification address calculated by the notification configuration
++    is just located at this register.
+ 
+-    \lstinputlisting{notifications-le.c}
+-
+-    See \ref{sec:Virtqueues / Driver notifications}~\nameref{sec:Virtqueues / Driver notifications}
+-    for the definition of the components.
++    See \ref{sec:Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation / Available Buffer Notifications}
++    to see the notification data format.
+   }
+   \hline 
+   \mmioreg{InterruptStatus}{Interrupt status}{0x60}{R}{%
+     Reading from this register returns a bit mask of events that
+-    caused the device interrupt to be asserted.
++    caused the device interrupt to be asserted. This is only used
++    when MSI is not enabled.
+     The following events are possible:
+     \begin{description}
+       \item[Used Buffer Notification] - bit 0 - the interrupt was asserted
+@@ -1703,7 +1701,7 @@ \subsection{MMIO Device Register Layout}\label{sec:Virtio Transport Options / Vi
+   \mmioreg{InterruptACK}{Interrupt acknowledge}{0x064}{W}{%
+     Writing a value with bits set as defined in \field{InterruptStatus}
+     to this register notifies the device that events causing
+-    the interrupt have been handled.
++    the interrupt have been handled. This is only used when MSI is not enabled.
+   }
+   \hline 
+   \mmioreg{Status}{Device status}{0x070}{RW}{%
+@@ -1762,6 +1760,31 @@ \subsection{MMIO Device Register Layout}\label{sec:Virtio Transport Options / Vi
+     \field{SHMSel} is unused) results in a base address of
+     0xffffffffffffffff.
+   }
++  \hline
++  \mmioreg{MsiStatus}{MSI status}{0x0c0}{R}{%
++    Reading from this register returns the global MSI enable/disable status and maximum
++    number of virtqueues that device supports.
++    \lstinputlisting{msi-status.c}
++  }
++  \hline
++  \mmioreg{MsiCmd}{MSI command}{0x0c2}{W}{%
++    The driver writes to this register with appropriate operators and arguments to
++    execute MSI command to device.
++    Operators supported is setting global MSI enable/disable status
++    and updating MSI configuration to device.
++    See \ref{sec:Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation / Device Initialization / MSI Vector Configuration}
++    for how to use this register.
++  }
++  \hline
++  \mmiodreg{MsiAddrLow}{MsiAddrHigh}{MSI 64 bit address}{0x0c4}{0x0c8}{W}{%
++    Writing to these two registers (lower 32 bits of the address to \field{MsiAddrLow},
++    higher 32 bits to \field{MsiAddrHigh}) notifies the device about the
++    MSI address.
++  }
++  \hline
++  \mmioreg{MsiData}{MSI 32 bit data}{0x0cc}{W}{%
++    Writing to this register notifies the device about the MSI data.
++  }
+   \hline 
+   \mmioreg{ConfigGeneration}{Configuration atomicity value}{0x0fc}{R}{
+     Reading from this register returns a value describing a version of the device-specific configuration space (see \field{Config}).
+@@ -1783,12 +1806,18 @@ \subsection{MMIO Device Register Layout}\label{sec:Virtio Transport Options / Vi
+ 
+ The device MUST return 0x74726976 in \field{MagicValue}.
+ 
+-The device MUST return value 0x2 in \field{Version}.
++The device MUST return value 0x3 in \field{Version}.
+ 
+-The device MUST present each event by setting the corresponding bit in \field{InterruptStatus} from the
++When MSI is disabled, the device MUST present each event by setting the
++corresponding bit in \field{InterruptStatus} from the
+ moment it takes place, until the driver acknowledges the interrupt
+-by writing a corresponding bit mask to the \field{InterruptACK} register.  Bits which
+-do not represent events which took place MUST be zero.
++by writing a corresponding bit mask to the \field{InterruptACK} register.
++Bits which do not represent events which took place MUST be zero.
++
++When MSI is enabled, the device MUST NOT set \field{InterruptStatus} and MUST
++ignore \field{InterruptACK}.
++
++Upon reset, the device MUST clear \field{msi_enabled} bit in \field{MsiStatus}.
+ 
+ Upon reset, the device MUST clear all bits in \field{InterruptStatus} and ready bits in the
+ \field{QueueReady} register for all queues in the device.
+@@ -1814,7 +1843,7 @@ \subsection{MMIO Device Register Layout}\label{sec:Virtio Transport Options / Vi
+ The driver MUST ignore a device with \field{MagicValue} which is not 0x74726976,
+ although it MAY report an error.
+ 
+-The driver MUST ignore a device with \field{Version} which is not 0x2,
++The driver MUST ignore a device with \field{Version} which is not 0x3,
+ although it MAY report an error.
+ 
+ The driver MUST ignore a device with \field{DeviceID} 0x0,
+@@ -1837,7 +1866,12 @@ \subsection{MMIO Device Register Layout}\label{sec:Virtio Transport Options / Vi
+ 
+ The driver MUST ignore undefined bits in \field{InterruptStatus}.
+ 
+-The driver MUST write a value with a bit mask describing events it handled into \field{InterruptACK} when
++The driver MUST ignore undefined bits in \field{MsiStatus}.
++
++When MSI is enabled, the driver MUST NOT access \field{InterruptStatus} and MUST NOT write to \field{InterruptACK}.
++
++When MSI is disabled, the driver MUST write a value with a bit mask
++describing events it handled into \field{InterruptACK} when
+ it finishes handling an interrupt and MUST NOT set any of the undefined bits in the value.
+ 
+ \subsection{MMIO-specific Initialization And Device Operation}\label{sec:Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation}
+@@ -1858,6 +1892,65 @@ \subsubsection{Device Initialization}\label{sec:Virtio Transport Options / Virti
+ Further initialization MUST follow the procedure described in
+ \ref{sec:General Initialization And Device Operation / Device Initialization}~\nameref{sec:General Initialization And Device Operation / Device Initialization}.
+ 
++\paragraph{MSI Vector Configuration}\label{sec:Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation / Device Initialization / MSI Vector Configuration}
++The MSI vectors and interrupt events have fixed relationships.
++The first vector is for device configuraiton
++change event, the second vector is for virtqueue 1, the third vector
++is for virtqueue 2 and so on.
++
++The 16-bit \field{MsiCmd} register including command operator and command argument is used
++to configure MSI vectors and set global MSI enable/disable status.
++\begin{lstlisting}
++le16 {
++    cmd_arg : 12;
++    cmd_op : 4;
++};
++\end{lstlisting}
++
++The \field{cmd_op} specifies the detailed command operator defined as follows.
++\begin{lstlisting}
++#define  VIRTIO_MMIO_MSI_CMD_UPDATE           0x1
++#define  VIRTIO_MMIO_MSI_CMD_ENABLE           0x2
++\end{lstlisting}
++
++\drivernormative{\subparagraph}{MSI Vector Configuration}{Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation / MSI Vector Configuration}
++To configure MSI vector, driver SHOULD firstly notify the MSI address and data by
++writing to \field{MsiAddrLow}, \field{MsiAddrHigh},
++and \field{MsiData}, and immediately follow a \field{MsiCmd} write operation
++using VIRTIO_MMIO_MSI_CMD_UPDATE with corresponding
++virtual queue index as \field{cmd_arg} to device for configuring an event to this MSI vector.
++
++After all MSI vectors are configured, driver SHOULD set global MSI enabled
++by writing to \field{MsiCmd} using VIRTIO_MMIO_MSI_CMD_ENABLE
++with one (0x1) as \field{cmd_arg} to device.
++
++Driver should use VIRTIO_MMIO_MSI_CMD_ENABLE with status zero (0x0) when disabling MSI.
++
++If driver fails to setup any event with a vector,
++it MUST disable MSI by \field{MsiCmd} and use single interrupt for device.
++
++\subsubsection{Notification Address}\label{sec:Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation / Notification Address}
++
++The notification location is calculated by notification structure. Driver reads \field{QueueNotify} to get this structure formatted as follows.
++
++\begin{lstlisting}
++le32 {
++        notify_base : 16;
++        notify_multiplier : 16;
++};
++\end{lstlisting}
++
++\field{notify_multiplier} is combined with virtqueue index to derive the Queue Notify address
++within a memory mapped control registers for a virtqueue:
++
++\begin{lstlisting}
++        notify_base + queue_index * notify_multiplier
++\end{lstlisting}
++
++\begin{note}
++The nofication address may be just located at the \field{QueueNotify}.
++\end{note}
++
+ \subsubsection{Virtqueue Configuration}\label{sec:Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation / Virtqueue Configuration}
+ 
+ The driver will typically initialize the virtual queue in the following way:
+@@ -1885,6 +1978,12 @@ \subsubsection{Virtqueue Configuration}\label{sec:Virtio Transport Options / Vir
+    \field{QueueDriverLow}/\field{QueueDriverHigh} and
+    \field{QueueDeviceLow}/\field{QueueDeviceHigh} register pairs.
+ 
++\item Write MSI address \field{MsiAddrLow}/\field{MsiAddrHigh},
++MSI data \field{MsiData} and MSI update command \field{MsiCmd} with corresponding
++virtqueue index to update
++MSI configuration for device requesting interrupts triggered by
++virtqueue events.
++
+ \item Write 0x1 to \field{QueueReady}.
+ \end{enumerate}
+ 
+@@ -1893,32 +1992,58 @@ \subsubsection{Available Buffer Notifications}\label{sec:Virtio Transport Option
+ When VIRTIO_F_NOTIFICATION_DATA has not been negotiated,
+ the driver sends an available buffer notification to the device by writing
+ the 16-bit virtqueue index
+-of the queue to be notified to \field{QueueNotify}.
++of the queue to be notified to Queue Notify address.
+ 
+ When VIRTIO_F_NOTIFICATION_DATA has been negotiated,
+ the driver sends an available buffer notification to the device by writing
+-the following 32-bit value to \field{QueueNotify}:
++the following 32-bit value to Queue Notify address:
+ \lstinputlisting{notifications-le.c}
+ 
+ See \ref{sec:Virtqueues / Driver notifications}~\nameref{sec:Virtqueues / Driver notifications}
+ for the definition of the components.
+ 
++See \ref{sec:Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation / Notification Address}
++for how to calculate the Queue Notify address.
++
+ \subsubsection{Notifications From The Device}\label{sec:Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation / Notifications From The Device}
+ 
+-The memory mapped virtio device is using a single, dedicated
++If MSI is enabled, the memory mapped virtio
++device uses appropriate MSI interrupt message
++for configuration change notification and used buffer notification which are
++configured by \field{MsiAddrLow}, \field{MsoAddrHigh} and \field{MsiData}.
++
++If MSI is not enabled, the memory mapped virtio device
++uses a single, dedicated
+ interrupt signal, which is asserted when at least one of the
+ bits described in the description of \field{InterruptStatus}
+-is set. This is how the device sends a used buffer notification
+-or a configuration change notification to the device.
++is set.
+ 
+ \drivernormative{\paragraph}{Notifications From The Device}{Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation / Notifications From The Device}
+-After receiving an interrupt, the driver MUST read
+-\field{InterruptStatus} to check what caused the interrupt (see the
+-register description).  The used buffer notification bit being set
+-SHOULD be interpreted as a used buffer notification for each active
+-virtqueue.  After the interrupt is handled, the driver MUST acknowledge
+-it by writing a bit mask corresponding to the handled events to the
+-InterruptACK register.
++A driver MUST handle the case where MSI is disabled, which uses the same interrupt indicating both device configuration
++space change and one or more virtqueues being used.
++
++\subsubsection{Driver Handling Interrupts}\label{sec:Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation / Driver Handling Interrupts}
++
++The driver interrupt handler would typically:
++
++\begin{itemize}
++  \item If MSI is enabled:
++    \begin{itemize}
++      \item
++        Figure out the virtqueue mapped to that MSI vector for the
++        device, to see if any progress has been made by the device
++        which requires servicing.
++      \item
++        If the interrupt belongs to configuration space changing signal,
++        re-examine the configuration space to see what changed.
++    \end{itemize}
++  \item If MSI is disabled:
++    \begin{itemize}
++      \item Read \field{InterruptStatus} to check what caused the interrupt.
++      \item Acknowledge the interrupt by writing a bit mask corresponding
++            to the handled events to the InterruptACK register.
++    \end{itemize}
++\end{itemize}
+ 
+ \subsection{Legacy interface}\label{sec:Virtio Transport Options / Virtio Over MMIO / Legacy interface}
+ 
+diff --git a/msi-status.c b/msi-status.c
+new file mode 100644
+index 0000000..f3bd0ec
+--- /dev/null
++++ b/msi-status.c
+@@ -0,0 +1,5 @@
++le16 {
++    max_queue_num : 11;
++    reserved : 4;
++    msi_enabled: 1;
++};
+-- 
+2.7.4
+
