@@ -2,97 +2,100 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C04C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30828C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9892124679
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:31:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TSszHccR"
+	by mail.kernel.org (Postfix) with ESMTP id 0A50224679
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:32:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbfLTKbG (ORCPT
+        id S1727362AbfLTKcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 05:31:06 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46437 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727283AbfLTKbG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 05:31:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576837865;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hXRURjDIno09T/7uerhfWk5aEa64vSqR0QJi3eOkKRg=;
-        b=TSszHccR7g0oCzCDbq75qFw7a5MPliVJf4rI8b+boVhOOKz5/nuQwDzFGU9Kydr4glXjzS
-        J+KavhpEbdQQuAG7pLLfvjNxWweEC+Nyap6CcSw4bD/8yyK16JzXv9PGruBekzE+JEWIRN
-        DuTrGA8OTBbc6sCpG9c29C9EwtRcP/k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-92-acyk5wgqMtGGRknL5kTE3g-1; Fri, 20 Dec 2019 05:30:58 -0500
-X-MC-Unique: acyk5wgqMtGGRknL5kTE3g-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 21A67107ACC4;
-        Fri, 20 Dec 2019 10:30:56 +0000 (UTC)
-Received: from gondolin (dhcp-192-245.str.redhat.com [10.33.192.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CA6FF26FC5;
-        Fri, 20 Dec 2019 10:30:49 +0000 (UTC)
-Date:   Fri, 20 Dec 2019 11:30:47 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kurz <groug@kaod.org>
-Subject: Re: [PATCH v2 45/45] KVM: Move vcpu->run page allocation out of
- kvm_vcpu_init()
-Message-ID: <20191220113047.2865074a.cohuck@redhat.com>
-In-Reply-To: <20191218215530.2280-46-sean.j.christopherson@intel.com>
-References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
-        <20191218215530.2280-46-sean.j.christopherson@intel.com>
-Organization: Red Hat GmbH
-MIME-Version: 1.0
+        Fri, 20 Dec 2019 05:32:52 -0500
+Received: from mx2.suse.de ([195.135.220.15]:53966 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726210AbfLTKcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 05:32:52 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 30C51AAC3;
+        Fri, 20 Dec 2019 10:32:50 +0000 (UTC)
+Date:   Fri, 20 Dec 2019 11:32:49 +0100
+Message-ID: <s5h4kxv5lta.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>
+Subject: Re: [PATCH] ALSA: usb-audio: fix set_format altsetting sanity check
+In-Reply-To: <20191220102315.GU22665@localhost>
+References: <20191220093134.1248-1-johan@kernel.org>
+        <s5hbls35nxx.wl-tiwai@suse.de>
+        <20191220102315.GU22665@localhost>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Dec 2019 13:55:30 -0800
-Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-
-> Open code the allocation and freeing of the vcpu->run page in
-> kvm_vm_ioctl_create_vcpu() and kvm_vcpu_destroy() respectively.  Doing
-> so allows kvm_vcpu_init() to be a pure init function and eliminates
-> kvm_vcpu_uninit() entirely.
+On Fri, 20 Dec 2019 11:23:15 +0100,
+Johan Hovold wrote:
 > 
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  virt/kvm/kvm_main.c | 34 +++++++++++++---------------------
->  1 file changed, 13 insertions(+), 21 deletions(-)
+> On Fri, Dec 20, 2019 at 10:46:50AM +0100, Takashi Iwai wrote:
+> > On Fri, 20 Dec 2019 10:31:34 +0100,
+> > Johan Hovold wrote:
+> > > 
+> > > Make sure to check the return value of usb_altnum_to_altsetting() to
+> > > avoid dereferencing a NULL pointer when the requested alternate settings
+> > > is missing.
+> > > 
+> > > The format altsetting number may come from a quirk table and there does
+> > > not seem to be any other validation of it (the corresponding index is
+> > > checked however).
+> > > 
+> > > Fixes: b099b9693d23 ("ALSA: usb-audio: Avoid superfluous usb_set_interface() calls")
+> > > Cc: stable <stable@vger.kernel.org>     # 4.18
+> > > Signed-off-by: Johan Hovold <johan@kernel.org>
+> > > ---
+> > >  sound/usb/pcm.c | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/sound/usb/pcm.c b/sound/usb/pcm.c
+> > > index 9c8930bb00c8..73dd9d21bb42 100644
+> > > --- a/sound/usb/pcm.c
+> > > +++ b/sound/usb/pcm.c
+> > > @@ -506,9 +506,9 @@ static int set_format(struct snd_usb_substream *subs, struct audioformat *fmt)
+> > >  	if (WARN_ON(!iface))
+> > >  		return -EINVAL;
+> > >  	alts = usb_altnum_to_altsetting(iface, fmt->altsetting);
+> > > -	altsd = get_iface_desc(alts);
+> > > -	if (WARN_ON(altsd->bAlternateSetting != fmt->altsetting))
+> > > +	if (WARN_ON(!alts))
+> > >  		return -EINVAL;
+> > 
+> > Do we need WARN_ON() here?  If this may hit on syzbot, it'll stop at
+> > this point because of panic_on_warn.
+> 
+> Yeah, I considered that too and decided to leave it in. Just like for
+> the WARN_ON(iface), those numbers should be verified at probe.
+> 
+> I tried tracking where fmt->altsetting comes from, and it seems like
+> a sanity check needs to be added at least to create_fixed_stream_quirk()
+> where, for example, fmt->iface, fmt->altset_idx and the number of
+> endpoints are verified.
+> 
+> If there are other paths that can end up setting these fields to invalid
+> values, we want that WARN_ON() in there so we can fix those.
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Fair enough.
 
+I applied now as-is.  Thanks!
+
+
+Takashi
