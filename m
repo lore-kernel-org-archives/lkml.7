@@ -2,104 +2,184 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 460EFC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A97AC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E15C21655
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 105A42465E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:09:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="APQoEjWO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbfLTMFt (ORCPT
+        id S1727285AbfLTMJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 07:05:49 -0500
-Received: from ns.iliad.fr ([212.27.33.1]:51078 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727184AbfLTMFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 07:05:48 -0500
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 0ED2E21875;
-        Fri, 20 Dec 2019 13:05:44 +0100 (CET)
-Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id E7CB02186A;
-        Fri, 20 Dec 2019 13:05:43 +0100 (CET)
-Subject: Re: [RFC PATCH v1] devres: align devres.data strictly only for
- devm_kmalloc()
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Alexey Brodkin <alexey.brodkin@synopsys.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Tejun Heo <tj@kernel.org>, Mark Brown <broonie@kernel.org>
-References: <74ae22cd-08c1-d846-3e1d-cbc38db87442@free.fr>
- <bf020a68-00fd-2bb7-c3b6-00f5befa293a@free.fr>
- <20191220102218.GA2259862@kroah.com> <20191220102256.GB2259862@kroah.com>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <5b12b473-bf9a-6dc9-838c-f9312eb10635@free.fr>
-Date:   Fri, 20 Dec 2019 13:05:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 20 Dec 2019 07:09:28 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60329 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727177AbfLTMJ1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 07:09:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576843766;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ggNgN4kZ9i+MoUaiQjXmngHKUSv2F7J0XkcDe5Qaau8=;
+        b=APQoEjWO7QehZ1pL/A1G6DmU0fO24guEwtbC7tYnnXjFOYQNocb4vIkQyhDxj6NWM3CxgW
+        dsFE7x8FINNGYi96hvmB6XtHI0dGTrgAv+Q09RHSMndlDskUaaepShTxM3IBSddiQjkyHe
+        FTl8Q9eVFG7kt+yW+weWBb+f2igW1kw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-192-zoztgdUnNKGDy1rqZuF0bA-1; Fri, 20 Dec 2019 07:09:23 -0500
+X-MC-Unique: zoztgdUnNKGDy1rqZuF0bA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 70EB1800D4E;
+        Fri, 20 Dec 2019 12:09:22 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 57AC260BEC;
+        Fri, 20 Dec 2019 12:09:22 +0000 (UTC)
+Received: from zmail25.collab.prod.int.phx2.redhat.com (zmail25.collab.prod.int.phx2.redhat.com [10.5.83.31])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 3072B18089C8;
+        Fri, 20 Dec 2019 12:09:22 +0000 (UTC)
+Date:   Fri, 20 Dec 2019 07:09:20 -0500 (EST)
+From:   Frediano Ziglio <fziglio@redhat.com>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
+        <virtualization@lists.linux-foundation.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
+        <spice-devel@lists.freedesktop.org>,
+        Dave Airlie <airlied@redhat.com>
+Message-ID: <57755373.16738363.1576843760950.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20191220115935.15152-5-kraxel@redhat.com>
+References: <20191220115935.15152-1-kraxel@redhat.com> <20191220115935.15152-5-kraxel@redhat.com>
+Subject: Re: [Spice-devel] [PATCH 4/4] drm/qxl: add drm_driver.release
+ callback.
 MIME-Version: 1.0
-In-Reply-To: <20191220102256.GB2259862@kroah.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Fri Dec 20 13:05:44 2019 +0100 (CET)
+X-Originating-IP: [10.33.32.30, 10.4.195.8]
+Thread-Topic: drm/qxl: add drm_driver.release callback.
+Thread-Index: qFYuv/xSK8+PQDglvsHlqfFXX34xLQ==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/12/2019 11:22, Greg Kroah-Hartman wrote:
-
-> On Fri, Dec 20, 2019 at 11:22:18AM +0100, Greg Kroah-Hartman wrote:
->
->> On Fri, Dec 20, 2019 at 11:19:27AM +0100, Marc Gonzalez wrote:
->>
->>> I keep thinking about the memory waste caused by the strict alignment requirement
->>> on arm64. Is there a way to inspect how much memory has been requested vs how much
->>> has been allocated? (Turning on SLAB DEBUG perhaps?)
->>>
->>> Couldn't there be a kmalloc flag saying "this alloc will not require strict
->>> alignment, so just give me something 8-byte aligned" ?
->>
->> Or you can not use the devm interface for lots of tiny allocations :)
 > 
-> Oh nevermind, "normal" kmalloc allocations are all aligned that way
-> anyway, so that's not going to solve anything, sorry.
+> Move final cleanups to qxl_drm_release() callback.
 
-(For some context, and for what it's worth, my opinion is that device-managed
-deallocation is the best thing since sliced bread.)
+Can you explain in the commit why this is better or preferable?
 
-Typical devm use-case is:
-1) user allocates a resource
-2) user registers release_func+resource_context to devm
+> Add drm_atomic_helper_shutdown() call to qxl_pci_remove().
 
-So typically, only 2 pointers (which is no issue when the alignment
-requirement is 8 bytes). By nature, these are "small" allocations.
+I suppose this is to replace the former manual cleanup calls,
+which were moved to qxl_drm_release, I think this could be
+added in the commit message ("why"), I don't see much value
+in describing "how" this was done.
 
-devm_kmalloc does not follow this pattern, it is a kind of optimization.
-1) user does not allocate the resource (RAM)...
-2) ...because the devm framework "merges" the user's memory request with
-its own memory request for storing metadata -- as a memory allocator does
-when it stores metadata for the request "in front of" the memory block.
-(this is the reason why devm_kmalloc_release() is a noop)
+> 
+> Reorder calls in qxl_device_fini().  Cleaning up gem & ttm
+> might trigger qxl commands, so we should do that before
+> releaseing command rings.
 
+Typo: releaseing -> releasing
+Why not putting this in a separate commit? Was this behaviour
+changed? It does not seem so to me.
 
-(The following is just random thinking out loud)
+> 
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>  drivers/gpu/drm/qxl/qxl_drv.c | 21 ++++++++++++++-------
+>  drivers/gpu/drm/qxl/qxl_kms.c |  8 ++++----
+>  2 files changed, 18 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
+> index 1d601f57a6ba..8044363ba0f2 100644
+> --- a/drivers/gpu/drm/qxl/qxl_drv.c
+> +++ b/drivers/gpu/drm/qxl/qxl_drv.c
+> @@ -34,6 +34,7 @@
+>  #include <linux/pci.h>
+>  
+>  #include <drm/drm.h>
+> +#include <drm/drm_atomic_helper.h>
+>  #include <drm/drm_drv.h>
+>  #include <drm/drm_file.h>
+>  #include <drm/drm_modeset_helper.h>
+> @@ -132,21 +133,25 @@ qxl_pci_probe(struct pci_dev *pdev, const struct
+> pci_device_id *ent)
+>  	return ret;
+>  }
+>  
+> +static void qxl_drm_release(struct drm_device *dev)
+> +{
+> +	struct qxl_device *qdev = dev->dev_private;
+> +
+> +	qxl_modeset_fini(qdev);
+> +	qxl_device_fini(qdev);
+> +	dev->dev_private = NULL;
+> +	kfree(qdev);
+> +}
+> +
+>  static void
+>  qxl_pci_remove(struct pci_dev *pdev)
+>  {
+>  	struct drm_device *dev = pci_get_drvdata(pdev);
+> -	struct qxl_device *qdev = dev->dev_private;
+>  
+>  	drm_dev_unregister(dev);
+> -
+> -	qxl_modeset_fini(qdev);
+> -	qxl_device_fini(qdev);
+> +	drm_atomic_helper_shutdown(dev);
+>  	if (is_vga(pdev))
+>  		vga_put(pdev, VGA_RSRC_LEGACY_IO);
+> -
+> -	dev->dev_private = NULL;
+> -	kfree(qdev);
+>  	drm_dev_put(dev);
+>  }
+>  
+> @@ -279,6 +284,8 @@ static struct drm_driver qxl_driver = {
+>  	.major = 0,
+>  	.minor = 1,
+>  	.patchlevel = 0,
+> +
+> +	.release = qxl_drm_release,
+>  };
+>  
+>  static int __init qxl_init(void)
+> diff --git a/drivers/gpu/drm/qxl/qxl_kms.c b/drivers/gpu/drm/qxl/qxl_kms.c
+> index bfc1631093e9..70b20ee4741a 100644
+> --- a/drivers/gpu/drm/qxl/qxl_kms.c
+> +++ b/drivers/gpu/drm/qxl/qxl_kms.c
+> @@ -299,12 +299,12 @@ void qxl_device_fini(struct qxl_device *qdev)
+>  {
+>  	qxl_bo_unref(&qdev->current_release_bo[0]);
+>  	qxl_bo_unref(&qdev->current_release_bo[1]);
+> -	flush_work(&qdev->gc_work);
+> -	qxl_ring_free(qdev->command_ring);
+> -	qxl_ring_free(qdev->cursor_ring);
+> -	qxl_ring_free(qdev->release_ring);
+>  	qxl_gem_fini(qdev);
+>  	qxl_bo_fini(qdev);
+> +	flush_work(&qdev->gc_work);
+> +	qxl_ring_free(qdev->command_ring);
+> +	qxl_ring_free(qdev->cursor_ring);
+> +	qxl_ring_free(qdev->release_ring);
+>  	io_mapping_free(qdev->surface_mapping);
+>  	io_mapping_free(qdev->vram_mapping);
+>  	iounmap(qdev->ram_header);
 
-If "fixing" the kmalloc strict alignment requirement on arm64 is too
-hard, maybe it would be possible to shave some of the devm memory
-waste by working with (chained) arrays of devm nodes, instead
-of a straight-up linked list. (Akin to a C++ vector) Removal would
-be expensive, but that's supposed to be a rare operation, right?
+Frediano
 
-Regards.
