@@ -2,101 +2,115 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 752D5C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 22:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88527C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 22:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EE1F2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 22:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AD4B2082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 22:05:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eU1XaGdl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbfLTWCS (ORCPT
+        id S1727535AbfLTWFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 17:02:18 -0500
-Received: from foss.arm.com ([217.140.110.172]:55124 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727473AbfLTWCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 17:02:18 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 893BF30E;
-        Fri, 20 Dec 2019 14:02:17 -0800 (PST)
-Received: from [192.168.1.123] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9CCEC3F67D;
-        Fri, 20 Dec 2019 14:02:15 -0800 (PST)
-Subject: Re: [RFC PATCH v1] devres: align devres.data strictly only for
- devm_kmalloc()
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Alexey Brodkin <alexey.brodkin@synopsys.com>,
-        Will Deacon <will@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Tejun Heo <tj@kernel.org>, Mark Brown <broonie@kernel.org>
-References: <74ae22cd-08c1-d846-3e1d-cbc38db87442@free.fr>
- <bf020a68-00fd-2bb7-c3b6-00f5befa293a@free.fr>
- <20191220140655.GN2827@hirez.programming.kicks-ass.net>
- <9be1d523-e92c-836b-b79d-37e880d092a0@arm.com>
- <20191220171359.GP2827@hirez.programming.kicks-ass.net>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <b2e0e322-a4e7-af26-d64a-1ba226e48476@arm.com>
-Date:   Fri, 20 Dec 2019 22:02:13 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 20 Dec 2019 17:05:11 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44777 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727473AbfLTWFK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 17:05:10 -0500
+Received: by mail-pg1-f193.google.com with SMTP id x7so5598233pgl.11;
+        Fri, 20 Dec 2019 14:05:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1Eh3tLTfa9xKRZnK5smb8nRu2xTiAGH5NS4uJ3m/L/Y=;
+        b=eU1XaGdlRacM82UubO8a2yDv6v2ZTsRCgUyxOZwtINc5LvKB3kI515/oTc13VZyd/T
+         csCtlwfHSnkGaXw8feY080++xDiQxmNLLh93wM7JsOarna6QBWK58vMrPbMRYFz+hmRy
+         UJBPfrErxdlrk5/llt1MpiOukqK+VFCI54QhPnsbX1xun18Ie+y33DtX+uUsKVUQ7pC9
+         fxyg776u4jW69fXHivM00Z3vX6M9pNG1w6KHE6BuIeGokggmRDJLmhZTsl9hUgkmQ1C/
+         cFV1hNqiH3WDB668tQnrybhyJE8t6NsIXLBDit39x4vReJJ8urPruXqWd5N4KQmnZiBI
+         6I4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1Eh3tLTfa9xKRZnK5smb8nRu2xTiAGH5NS4uJ3m/L/Y=;
+        b=NJhhEaYfnLzT6Qhiv5r8TEL0rR5GadiYDb36AAsfilBIg6UC245AHS5odysZqNV1vI
+         gwGcPaaw1t7h9cRfQh6UxF9odWThsgZNYgl7N39sxtK+ygKOsPutQ8Sl7uc6/HbAbQYe
+         EUmFg6LiBNRZn73Vu+uJ5WKB2xJY/A4cb9gvtrKUhVP3bskHythk07DhdwJ7I6hAczVD
+         BOlOSaMMb8FbAqqfWmVsZ0ONhYNYvLihnKvlSx0cIUAqmULxXW0ylHUoegs1zXrJiTmJ
+         A2y4Vr6fC+SkOxOhjSHvz1Nj3tfzcGdJm5xHbHQycAFAZl27jqe2DhKLEG125brW/wlt
+         AZ6g==
+X-Gm-Message-State: APjAAAWtfzbOU8vrHNmFTtbhKGJkNDK7K0fe6Hig50T3Bwz8UQ2KPAv3
+        pOj5ZUDri2WreA1EOFmuMwBXw1vk
+X-Google-Smtp-Source: APXvYqzX0S6vxuk1wo0C02S1wS6N1KQA6MeU4h/q98iJaEaS+pTfh5hBIILQRONK0eDnHs0hBjOesA==
+X-Received: by 2002:a62:1548:: with SMTP id 69mr19001240pfv.239.1576879509927;
+        Fri, 20 Dec 2019 14:05:09 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id u5sm13410174pfm.115.2019.12.20.14.05.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 14:05:09 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id CB7B840CB9; Fri, 20 Dec 2019 19:05:06 -0300 (-03)
+Date:   Fri, 20 Dec 2019 19:05:06 -0300
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, bpf <bpf@vger.kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] libbpf: Fix build on read-only filesystems
+Message-ID: <20191220220506.GC9076@kernel.org>
+References: <20191220032558.3259098-1-namhyung@kernel.org>
+ <CAEf4BzaZBSRK2M4LD-c12_2-QLa8+jpPs1E4nA9BNeUDskOMBQ@mail.gmail.com>
+ <20191220204748.GA9076@kernel.org>
+ <CAEf4BzZW+bDxkdmXBJrrCHqBP5UT1NLJJ7mXLNqc6eypRCib6Q@mail.gmail.com>
+ <20191220215328.GB9076@kernel.org>
+ <CAEf4BzZBnY0neQJQ=opaGTO5yMKWhqBB_YRE4QTTBNYBD-RF9g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191220171359.GP2827@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzZBnY0neQJQ=opaGTO5yMKWhqBB_YRE4QTTBNYBD-RF9g@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-20 5:13 pm, Peter Zijlstra wrote:
-> On Fri, Dec 20, 2019 at 03:01:03PM +0000, Robin Murphy wrote:
->> On 2019-12-20 2:06 pm, Peter Zijlstra wrote:
-> 
->>> 	data = kmalloc(size + sizeof(struct devres), GFP_KERNEL);
+Em Fri, Dec 20, 2019 at 02:00:48PM -0800, Andrii Nakryiko escreveu:
+> On Fri, Dec 20, 2019 at 1:53 PM Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
+> > Em Fri, Dec 20, 2019 at 01:45:52PM -0800, Andrii Nakryiko escreveu:
+> > > On Fri, Dec 20, 2019 at 12:47 PM Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
+> > > > Shouldn't this be applied to the current merge window since a behaviour
+> > > > that people relied, i.e. using O= to generate the build in a separate
+> > > > directory, since its not possible to use the source dir tree as it is
+> > > > read-only is now broken, i.e. isn't this a regression?
 
-[ afterthought: size could also legitimately be smaller than a pointer 
-or some odd length such that the necessary alignment of struct devres 
-itself isn't met ]
+> > > Sure, it can be applied against bpf as well, but selftests still need
+> > > to be fixed first.
 
->> At this point, you'd still need to special-case devm_kmalloc() to ensure
->> size is rounded up to the next ARCH_KMALLOC_MINALIGN granule, or you'd go
->> back to the original problem of the struct devres fields potentially sharing
->> a cache line with the data buffer. That needs to be avoided, because if the
->> devres list is modified while the buffer is mapped for noncoherent DMA
->> (which could legitimately happen as they are nominally distinct allocations
->> with different owners) there's liable to be data corruption one way or the
->> other.
-> 
-> Wait up, why are you allowing non-coherent DMA at less than page size
-> granularity? Is that really sane? Is this really supported behaviour for
-> devm ?
+> > I guess this can be done on a separate patch? I.e. if the user doesn't
+> > use selftests the only regression it will see is when trying to build
+> > tools/perf using O=.
 
-There are two DMA APIs - the coherent (or "consistent") API for 
-allocating buffers which are guaranteed safe for random access at any 
-time *is* page-based, and on non-coherent architectures typically 
-involves a non-cacheable remap. There is also the streaming API for 
-one-off transfers of data already existing at a given kernel address 
-(think network packets, USB URBs, etc), which on non-coherent 
-architectures is achieved with explicit cache maintenance plus an API 
-contract that buffers must not be explicitly accessed by CPUs for the 
-duration of the mapping. Addresses from kmalloc() are explicitly valid 
-for dma_map_single() (and indeed are about the only thing you'd ever 
-reasonably feed it), which is the primary reason why 
-ARCH_KMALLOC_MINALIGN gets so big on architectures which can be 
-non-coherent and also suffer from creative cache designs.
+> > I think two patches is best, better granularity, do you see a strict
+> > need for both to be in the same patch?
+ 
+> Sure, it can be two separate patches, but they should go in together,
+> otherwise selftests will be broken.
 
-See DMA-API.txt and DMA-API-HOWTO.txt in Documentation/ for more details 
-if you like.
+Sure, both have to be fixed :-)
 
-Robin.
+- Arnaldo
