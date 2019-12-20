@@ -2,163 +2,111 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D78C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E95F2C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A466B24679
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6F3C24682
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:30:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="HbNZO5uW"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="csjSvXve"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbfLTKaY (ORCPT
+        id S1727412AbfLTKaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 05:30:24 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36689 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727167AbfLTKaY (ORCPT
+        Fri, 20 Dec 2019 05:30:30 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10033 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727167AbfLTKaa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 05:30:24 -0500
-Received: by mail-ot1-f67.google.com with SMTP id w1so11339669otg.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 02:30:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=znR2t9WVo02TVin3awRFyHfwvu+IfsYJ4HHatPXnQoY=;
-        b=HbNZO5uWnC5A/WT4OxFlbs6v/a8KH8diI2a1vMPsjYdIA/S7KQmlChM7PwjI4yZ3kG
-         JGHapqlmP7V2Pf/6ev6WHXXeMVLrc2qhRJ06vRWZrsgpXuvx6lJZ3YIgguB4BXrT3Lh5
-         3WEMSttW0nVXIbSskMDksAt2K5AII93Io4Rs1p2CVcaQYXmdUwPdBVz5zPdwaw4YraS2
-         /qejyLNmyiKnJJHgTMoVX9xMU8Cad2r5KJsYMF7OjNWifSnH2L59jfyGHdsnOs1I+28Y
-         Ev/I//RX2NwRQSkSed/UR2UO6aN7pDIvctkE1IY5m4L/NXPdCNsMP7letzZjUOFxvam8
-         FoEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=znR2t9WVo02TVin3awRFyHfwvu+IfsYJ4HHatPXnQoY=;
-        b=BM+gCzBUI0WwKNKRm3hUU4bZgUXozUlF861v2EZ4nCpdoxKeyf8A7glgb4E8lbwVwm
-         y/UY3lJ4eIQgkgFSZ9pjhEKsqmbabQ9+I5257A8krjda1DrEf+oV4vmU+lUhU1jbxc7c
-         7z+1yuQxd9pDJf2xgQ6RrOALu0AYAUeFXgXydvcxatI+gXY7xx0lwmPypNt+7Hp41BcY
-         f+49dCfIgh2M/DvgZHc7enCaB8HAGtso9Fzl5iLIKV8CafWNdnNqR/BGNdnh1LMsOhzV
-         9QPPX/xTdRjD+xj/iRz+wOBjs+ETN2pnQ+MxtLkjPeaSO2sdG+/4NARbgFRlOdgf6PuY
-         Nohw==
-X-Gm-Message-State: APjAAAVo96tYB+L3NIRFKrNyBCtY8yRoupCamfMNt+PplsNTix9CjWmo
-        2Xh2pl8N8p2r1sHC2x7KyHKwtQ==
-X-Google-Smtp-Source: APXvYqxGkNxo0M404i0Sl5XKzBYh6f6QDUgxzqIhk3CjY7dpCpJR3mzYIgJ2j3g2arJAlG7MVZU2Iw==
-X-Received: by 2002:a05:6830:4b9:: with SMTP id l25mr14560766otd.266.1576837823374;
-        Fri, 20 Dec 2019 02:30:23 -0800 (PST)
-Received: from [26.82.234.166] ([172.58.110.182])
-        by smtp.gmail.com with ESMTPSA id b206sm3010027oif.30.2019.12.20.02.30.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Dec 2019 02:30:22 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] x86: Remove force_iret()
-Date:   Fri, 20 Dec 2019 18:30:19 +0800
-Message-Id: <D890A7DA-542B-42A7-8F82-CDBA6EBCA958@amacapital.net>
-References: <431a146f6461402da61d09fff155f35b@AcuMS.aculab.com>
-Cc:     Brian Gerst <brgerst@gmail.com>, Andy Lutomirski <luto@kernel.org>,
-        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Oleg Nesterov <oleg@redhat.com>
-In-Reply-To: <431a146f6461402da61d09fff155f35b@AcuMS.aculab.com>
-To:     David Laight <David.Laight@aculab.com>
-X-Mailer: iPhone Mail (17C54)
+        Fri, 20 Dec 2019 05:30:30 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dfca2a70001>; Fri, 20 Dec 2019 02:29:59 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 20 Dec 2019 02:30:29 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 20 Dec 2019 02:30:29 -0800
+Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Dec
+ 2019 10:30:26 +0000
+Subject: Re: [PATCH 5.4 00/80] 5.4.6-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20191219183031.278083125@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <ceff4a51-e936-7efb-1731-ef2afa340363@nvidia.com>
+Date:   Fri, 20 Dec 2019 10:30:24 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1576837799; bh=BnRWQ/pU33IuQeg/NqaGlPJl62SJNEe6z4Zzl4QBEsU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=csjSvXvejU3CREfHRF/ErnJUgUlqglsqB6y0Y9NjPDH3CrGMJw2JjaWFvKAWmbRKe
+         lXx2b/QTrIqwzFQu0eN6z0w/JgLIn2zAMGKnj5SEUWWUp9Gt9k5yl4zhLjE5gzzFi1
+         9LDwGyAByzgFApFKaDoODBb6f1PWWMF3QbHkdNPDoqqcYR8A7mbUY+wkkeFfhrRt4w
+         WzIZvgIunf6anNJLkIfOuuxld9pBvNp+HlpA1i9tNKooEpOhEmWj2RDttR7aqbkUCV
+         De5gYJyG4W3+l5csmH+oWB+IIv6uFbteZME8ZxwbxrCYWVlDqQKIQLunf8bQgOvaP0
+         FATTfVtl4o82A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 19/12/2019 18:33, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.6 release.
+> There are 80 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 21 Dec 2019 18:24:44 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.6-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
+> -------------
 
-> On Dec 20, 2019, at 6:10 PM, David Laight <David.Laight@aculab.com> wrote:=
+All tests are passing for Tegra ...
 
->=20
-> =EF=BB=BFFrom: Brian Gerst
->> Sent: 20 December 2019 03:48
->>> On Thu, Dec 19, 2019 at 8:50 PM Andy Lutomirski <luto@kernel.org> wrote:=
+Test results for stable-v5.4:
+    13 builds:	13 pass, 0 fail
+    22 boots:	22 pass, 0 fail
+    38 tests:	38 pass, 0 fail
 
->>>=20
->>> On Thu, Dec 19, 2019 at 3:58 AM Brian Gerst <brgerst@gmail.com> wrote:
->>>>=20
->>>> force_iret() was originally intended to prevent the return to user mode=
- with
->>>> the SYSRET or SYSEXIT instructions, in cases where the register state c=
-ould
->>>> have been changed to be incompatible with those instructions.
->>>=20
->>> It's more than that.  Before the big syscall rework, we didn't restore
->>> the caller-saved regs.  See:
->>>=20
->>> commit 21d375b6b34ff511a507de27bf316b3dde6938d9
->>> Author: Andy Lutomirski <luto@kernel.org>
->>> Date:   Sun Jan 28 10:38:49 2018 -0800
->>>=20
->>>    x86/entry/64: Remove the SYSCALL64 fast path
->>>=20
->>> So if you changed r12, for example, the change would get lost.
->>=20
->> force_iret() specifically dealt with changes to CS, SS and EFLAGS.
->> Saving and restoring the extra registers was a different problem
->> although it affected the same functions like ptrace, signals, and
->> exec.
->=20
-> Is it ever possible for any of the segment registers to refer to the LDT
-> and for another thread to invalidate the entries 'very late' ?
+Linux version:	5.4.6-rc1-g2929dbca18db
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
 
-Not in newer kernels, because the actual LDT is never modified.  Instead, LD=
-T changes create a whole new LDT and propagate it with an IPI.
+Cheers
+Jon
 
-But the IRET path can fail due to changes to the selectors while in the kern=
-el, due to sigreturn or ptrace.  We have delightful selftests for this.
-
->=20
-> So even though the values were valid when changed, they are
-> invalid during the 'return to user' sequence.
->=20
-> I remember writing a signal handler that 'corrupted' all the
-> segment registers (etc) and fixing the NetBSD kernel to handle
-> all the faults restoring the segment registers and IRET faulting
-> in kernel (IIRC invalid user %SS or %CS).
-> (IRET can also fault in user space, but that is a normal fault.)
-
-Did you remember to test the #NP case?  Many kernels forgot that this was po=
-ssible :)
-
->=20
-> Is it actually cheaper to properly validate the segment registers,
-> or take the 'hit' of the slightly slower IRET path and get the cpu
-> to do it for you?
->=20
->=20
-
-The validation we=E2=80=99re talking about is for SYSRET, not IRET.  It has i=
-ts own set of nasty conditions involving EFLAGS, R11, RIP, and RCX.  Fortuna=
-tely no segments are involved. The algorithm is, roughly:
-
-if (okay for SYSRET) {
-  SYSRET (and assume it can=E2=80=99t fail)
-} else {
-  if (need ESPFIX)
-   Horrible hacks;
-  IRET;
-}
-
-And we handle #GP, #SS, #NP and #DF from IRET. And we have selftests for all=
- of this. And no one runs the bloody selftests on 32-bit kernels, resulting i=
-n truly awful bugs.
-
-We can=E2=80=99t handle #GP from SYSRET. Thanks, Intel.
-
-(AMD gets this more right. SYSRET is still a turd, but it can=E2=80=99t faul=
-t. Intel handles RIP canonical checks differently from AMD, and SYSRET will #=
-GP if RCX is noncanonical.  The result was privilege escalation on basically=
- every OS when this was noticed.)=
+-- 
+nvpublic
