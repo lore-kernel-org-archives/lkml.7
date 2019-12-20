@@ -2,213 +2,272 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCA2C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E71C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2A8420866
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A43E12146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:02:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="caln8y2I"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ccsF/+CF";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="NhWY1Ch/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbfLTVBy (ORCPT
+        id S1727725AbfLTVCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 16:01:54 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57433 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726525AbfLTVBx (ORCPT
+        Fri, 20 Dec 2019 16:02:40 -0500
+Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:35842 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727688AbfLTVCh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 16:01:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576875711;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=xpJ+lIL1WdaXz/BCzKHdKAiz9jNb7HE3HwznYCminRs=;
-        b=caln8y2I1rCfd+UhlG1bUqUk4AmAzzj1ed52Ijl5Wl6GPOlK2riM2ZlEKkG49/RpNVqeBg
-        ucOzI8s+LN9Oi7a3wSw2vOZlcY0Kut4SSFTh6OdsXj46j4iHAJa+zluwN4n4JSlLbfIyEL
-        Z5wVmJATmgEe4+XDOUUC3c2zfZzOH80=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-226-BhH4fT5oP26i7rE4qy47WQ-1; Fri, 20 Dec 2019 16:01:50 -0500
-X-MC-Unique: BhH4fT5oP26i7rE4qy47WQ-1
-Received: by mail-qk1-f198.google.com with SMTP id u10so6771021qkk.1
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 13:01:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xpJ+lIL1WdaXz/BCzKHdKAiz9jNb7HE3HwznYCminRs=;
-        b=L271qHIRBZ6e4B6X1C7+2MQWxyM5nN0nm/KKDCDQ3VbnBmM3dBumAnOuDEqcK+Ik6q
-         LW8vaJ7dGzzkQtME+8JAjBOzWmWwwQEODd3hM8H+OGCIfzd3ISW54/bxtWfWIrf1i+bT
-         3wkefixY9Viaz0qMW+YA45+XqbYaQ8o0nktCym0rKnProv/f6JdlHY46YdoSnAk8BiBN
-         KnwHVNK90pNtzRU8vYvy5w0p2JfOZAUYEPzP3clKjcI5PmHVSy/wNi52wfXAqG2S5N2a
-         e7ihulzrau44L/Q7SUpfjvhxJxn+T5uqAWEd1yazDFVkuug7s3UxjBBfpsgfzTYgGNjU
-         WRBQ==
-X-Gm-Message-State: APjAAAXsnFZz6K55xkBtcdLLPqI59zGMOdgQ8xxEJXnnkJP9FUhKBJDx
-        kf/68tLKis7usMpPbSlg/F4/j14fkCCJJlDW4i0dpKn03IaDiYLWO+PLOu3UpPNXUUBbFOQfvfm
-        VNkzei1kkLVLLZwrL3/7dY5uP
-X-Received: by 2002:a0c:b502:: with SMTP id d2mr14274248qve.110.1576875709425;
-        Fri, 20 Dec 2019 13:01:49 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyGmM74vFWoaMutRKZgJghXCmC8qtpjQHdkgeFSxk+2RHIAsRSW7UnwJFLzo8noHTV7kdaZaw==
-X-Received: by 2002:a0c:b502:: with SMTP id d2mr14274206qve.110.1576875708992;
-        Fri, 20 Dec 2019 13:01:48 -0800 (PST)
-Received: from xz-x1.redhat.com ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id q25sm3243836qkq.88.2019.12.20.13.01.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 13:01:48 -0800 (PST)
-From:   Peter Xu <peterx@redhat.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jason Wang <jasowang@redhat.com>, peterx@redhat.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>
-Subject: [PATCH v2 00/17] KVM: Dirty ring interface
-Date:   Fri, 20 Dec 2019 16:01:30 -0500
-Message-Id: <20191220210147.49617-1-peterx@redhat.com>
-X-Mailer: git-send-email 2.24.1
+        Fri, 20 Dec 2019 16:02:37 -0500
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 15DAA404D4;
+        Fri, 20 Dec 2019 21:02:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1576875756; bh=hjLp/bbAdVryhNoD/fCkZRDPTRsAYixvZNxQckngNeg=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=ccsF/+CFcpHPP8+XoH6J+CMlLgOTAv9GG1AC0H1Z+gvYA9ooOfdrPID86oJNIcyku
+         IyE5c4GYV8TmCxz+1AIGnhkWRpBAgTJhmaKCgZ5ITz1ve2DKvjrtsqoGJCidQFq03y
+         6DZGkZnKIMCy8EJ0IZwR3h6CsrxCeA6y7vsa77XhYOzHytdcyrrtqgChr55Jw1Psky
+         P4TZsn+UxjUGduXWTtTUwn4+awqkXGTtq7l1I2li1J+WhaKLncT7FZt3AX2y+DYTfi
+         TqbICdBIASn2xFCX+kK0WpKjCFMpeOAjtu3QyFsYX+jJjXVRcaFB5ILFUhr8uLT4X+
+         Vf40AD1n0EzlQ==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 60C99A0090;
+        Fri, 20 Dec 2019 21:02:33 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 20 Dec 2019 13:02:26 -0800
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Fri, 20 Dec 2019 13:02:26 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hhZ2ZBf8YXoKx2rJ7CTS/rOVh4aPt4KeebVF81Va2EVwr+gquCvrIvPTg4fSiXrNsJoS42edZhbfgTmSwvgF6SqcnBY4UZU8F3XrxWC3wtXpoZb0EapqkQ8XO4iSMDwM7dwmCSLtgEnyP8BuYMKBuGmy2t4dWyJTRTs/XG58uyR3+uxudPgoBiRMkWyDuR36NH85qcDiQ1j1HehRegkLuYcfaFslDZ6n2SMLcjnyIbZyX5gPUFSep3xdGJ6k8E7fHy57fa5amw0sCouxPBtSL05udDo5WrCzQRnZZDRL8zhDqoKPzMJJpJTvYXrjC7ZZlfsi06lIDCPDcVB8XxaDwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hjLp/bbAdVryhNoD/fCkZRDPTRsAYixvZNxQckngNeg=;
+ b=b41d1r57VcnSDxVUuXISjYa+DKEONlRqqGd//06D3oKZ/IcRBhN99NPEODEP9QQHOLpKIfbxBMBxRMR/BAdybW5sHxBrxeFOsj1BuYDDrssyGTuKiWkGwHJX1IErrmPuVnPeMLFyn3nS4ol997XRpjbg5NwR3ZqQNuUAuWZFBr1R0ttb8rL/hfp5f3mZrD2rcHgp+A2btNXwl1EvuB0F00lWWokq/3nUhQu6rdyhtCwZ9omhg6MBYn2iMzqRI6EA4K3pfVkMD16LqnqwN28XltIpQ/d30Ua6keSBpzgEzS1Nwtdun44OnjJCLqrIuIgj7ECRtd1pDTdAoy+vn8dIdg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hjLp/bbAdVryhNoD/fCkZRDPTRsAYixvZNxQckngNeg=;
+ b=NhWY1Ch/I0YxIJpnCQaneaf67A4BmFfnR0BPLboBi54RH3kYLgT0BD9oOsrVzHoLRfXGqGqZ9e9T30PfswbhyjwN1BWrVuXyG/b36qSVuTZdqRQAhan7/fW73ICIR11ry/VEzDR3aIbwxdg8nQkRsXwGHiS0xULmFIRjQdnFejg=
+Received: from CY4PR1201MB0120.namprd12.prod.outlook.com (10.172.78.14) by
+ CY4PR1201MB0261.namprd12.prod.outlook.com (10.172.78.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.14; Fri, 20 Dec 2019 21:02:24 +0000
+Received: from CY4PR1201MB0120.namprd12.prod.outlook.com
+ ([fe80::3977:e2ba:ce57:f79a]) by CY4PR1201MB0120.namprd12.prod.outlook.com
+ ([fe80::3977:e2ba:ce57:f79a%5]) with mapi id 15.20.2538.019; Fri, 20 Dec 2019
+ 21:02:24 +0000
+From:   Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     Will Deacon <will@kernel.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Mark Brown <broonie@kernel.org>, Tejun Heo <tj@kernel.org>,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [RFC PATCH v1] devres: align devres.data strictly only for
+ devm_kmalloc()
+Thread-Topic: [RFC PATCH v1] devres: align devres.data strictly only for
+ devm_kmalloc()
+Thread-Index: AQHVtO8W17bjcgXck0Krmyf4Y6chj6fC1AyAgAA/joCAAA8ggIAASORAgAARRgCAAAVEAA==
+Date:   Fri, 20 Dec 2019 21:02:24 +0000
+Message-ID: <CY4PR1201MB0120C3727E907005D24F5A03A12D0@CY4PR1201MB0120.namprd12.prod.outlook.com>
+References: <74ae22cd-08c1-d846-3e1d-cbc38db87442@free.fr>
+ <bf020a68-00fd-2bb7-c3b6-00f5befa293a@free.fr>
+ <20191220140655.GN2827@hirez.programming.kicks-ass.net>
+ <9be1d523-e92c-836b-b79d-37e880d092a0@arm.com>
+ <CY4PR1201MB012011E554FC69F7B074B7E2A12D0@CY4PR1201MB0120.namprd12.prod.outlook.com>
+ <20191220202346.GT2827@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191220202346.GT2827@hirez.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYWJyb2RraW5c?=
+ =?us-ascii?Q?YXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRi?=
+ =?us-ascii?Q?YTI5ZTM1Ylxtc2dzXG1zZy0wMzg2NTAxNi0yMzZjLTExZWEtYmZmYS04OGIx?=
+ =?us-ascii?Q?MTFjZGUyMTdcYW1lLXRlc3RcMDM4NjUwMTctMjM2Yy0xMWVhLWJmZmEtODhi?=
+ =?us-ascii?Q?MTExY2RlMjE3Ym9keS50eHQiIHN6PSIyMDY1IiB0PSIxMzIyMTM0OTM0MjM0?=
+ =?us-ascii?Q?OTA0NzQiIGg9IkdpaS9obThTRUJvWUVvRlFhSDltd2swQ2Uwdz0iIGlkPSIi?=
+ =?us-ascii?Q?IGJsPSIwIiBibz0iMSIgY2k9ImNBQUFBRVJIVTFSU1JVRk5DZ1VBQUJRSkFB?=
+ =?us-ascii?Q?Q3FSUVhHZUxmVkFlM2JucXZFT0FUSzdkdWVxOFE0Qk1vT0FBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFIQUFBQUNrQ0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFRQUJBQUFBUlgyazFBQUFBQUFBQUFBQUFBQUFBSjRBQUFCbUFHa0Fi?=
+ =?us-ascii?Q?Z0JoQUc0QVl3QmxBRjhBY0FCc0FHRUFiZ0J1QUdrQWJnQm5BRjhBZHdCaEFI?=
+ =?us-ascii?Q?UUFaUUJ5QUcwQVlRQnlBR3NBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhrQVh3?=
+ =?us-ascii?Q?QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3Qm5BR1lBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQ0FB?=
+ =?us-ascii?Q?QUFBQUNlQUFBQVpnQnZBSFVBYmdCa0FISUFlUUJmQUhBQVlRQnlBSFFBYmdC?=
+ =?us-ascii?Q?bEFISUFjd0JmQUhNQVlRQnRBSE1BZFFCdUFHY0FYd0JqQUc4QWJnQm1BQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJtQUc4?=
+ =?us-ascii?Q?QWRRQnVBR1FBY2dCNUFGOEFjQUJoQUhJQWRBQnVBR1VBY2dCekFGOEFjd0Jo?=
+ =?us-ascii?Q?QUcwQWN3QjFBRzRBWndCZkFISUFaUUJ6QUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtB?=
+ =?us-ascii?Q?WHdCd0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCekFHMEFhUUJqQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFD?=
+ =?us-ascii?Q?QUFBQUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFi?=
+ =?us-ascii?Q?Z0JsQUhJQWN3QmZBSE1BZEFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1B?=
+ =?us-ascii?Q?RzhBZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWRB?=
+ =?us-ascii?Q?QnpBRzBBWXdBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFI?=
+ =?us-ascii?Q?a0FYd0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0IxQUcwQVl3QUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFB?=
+ =?us-ascii?Q?QUNBQUFBQUFDZUFBQUFad0IwQUhNQVh3QndBSElBYndCa0FIVUFZd0IwQUY4?=
+ =?us-ascii?Q?QWRBQnlBR0VBYVFCdUFHa0FiZ0JuQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFC?=
+ =?us-ascii?Q?ekFHRUFiQUJsQUhNQVh3QmhBR01BWXdCdkFIVUFiZ0IwQUY4QWNBQnNBR0VB?=
+ =?us-ascii?Q?YmdBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBSE1BWVFCc0FHVUFjd0Jm?=
+ =?us-ascii?Q?QUhFQWRRQnZBSFFBWlFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFB?=
+ =?us-ascii?Q?QUFBQ0FBQUFBQUNlQUFBQWN3QnVBSEFBY3dCZkFHd0FhUUJqQUdVQWJnQnpB?=
+ =?us-ascii?Q?R1VBWHdCMEFHVUFjZ0J0QUY4QU1RQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFB?=
+ =?us-ascii?Q?QUJ6QUc0QWNBQnpBRjhBYkFCcEFHTUFaUUJ1QUhNQVpRQmZBSFFBWlFCeUFH?=
+ =?us-ascii?Q?MEFYd0J6QUhRQWRRQmtBR1VBYmdCMEFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFIWUFad0JmQUdzQVpR?=
+ =?us-ascii?Q?QjVBSGNBYndCeUFHUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFB?=
+ =?us-ascii?Q?QUFBQUFDQUFBQUFBQT0iLz48L21ldGE+?=
+x-dg-rorf: true
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=abrodkin@synopsys.com; 
+x-originating-ip: [188.243.7.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 822e6a30-0df0-48f3-954d-08d7858fe9d7
+x-ms-traffictypediagnostic: CY4PR1201MB0261:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR1201MB0261CAEE1BE4EB086728D7D7A12D0@CY4PR1201MB0261.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 025796F161
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(136003)(346002)(39860400002)(376002)(199004)(189003)(52536014)(81156014)(66476007)(66446008)(33656002)(76116006)(64756008)(66556008)(7696005)(2906002)(26005)(186003)(66946007)(7416002)(6506007)(8936002)(316002)(5660300002)(55016002)(4326008)(54906003)(71200400001)(8676002)(81166006)(9686003)(478600001)(86362001)(6916009);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR1201MB0261;H:CY4PR1201MB0120.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: tbv+yU/sDjhVxUHKJ4y1C/zMndFjV413LMOWAWhN/iLO27w7gdaF44DiJSGbK3dTJObqBcTUwt9JTXRNCVj8kPuk6oFAAO33vr1CST0oEQme/IdjbC5L8h4hZTMbfnF/Lb+I14Z822gUCdU1aaANVhsbHAg2cxUycuXTGognth7lopeW1gOQl8g8Ox3gaqVuTuLSBFwdf0hqvUr6hWZE64QLCHin4B5yetu6NlvtH0cnqEUT65lo3vaOh/NFLXUflduSqZ6LvkoA1wZeqN3aqoHzkeN/a5A1PKZmg/RKjzc3mcMJcAQPCYSMMivFE6cZa17vEadme+H6trryqg/2CRac0isV5Zpdl9k6atmRzI/6MP9bOLdApVYrFrIh3pFimC6SWhgSYnuBGiky4pIQER1cet3TCNIyamUJ1cSDSqDRaGM67HZ7Kd/OzTgsYpw0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: 822e6a30-0df0-48f3-954d-08d7858fe9d7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Dec 2019 21:02:24.4432
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: prtBQysDdxVKdG+b+/REhfP2PPGH3zPZ9c2oQfietzeObJc9oUTgz1Pmd2/YQtoS6wyi1Rd9Mrs2gv1b9SX2Cg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0261
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Branch is here: https://github.com/xzpeter/linux/tree/kvm-dirty-ring
-(based on 5.4.0)
+Hi Peter,
 
-This is v2 of the dirty ring series, and also the first non-RFC
-version of it.  I didn't put a changelog from v1-rfc because I feel
-like it would be easier to go into the patchset comparing to read that
-lengthy and probably helpless changelog.  However I do like to do a
-summary here on what has majorly changed, and also some conclusions on
-the previous v1 discussions.
+> > Well it somehow used to work for quite some time now with the data-buff=
+er
+> > being allocated with 4 words offset (which is 16 bytes for 32-bit platf=
+orm
+>=20
+> 3 words, devres_node is 3 words.
 
-======================
+Correct, but 4th word was implicitly there due to the fact
+on most of 32-bit arches "long long" is aligned by 2 words.
+=20
+> Which is exactly why we had to change it, the odd alignment caused ARC
+> to explode.
 
-* Per-vm ring is dropped
+I know that better than anybody else as it was my pain & grief :)
+=20
+> > and 32 for 64-bit which is still much less than mentioned 128 bytes).
+> > Or we just never managed to identify those rare cases when data corrupt=
+ion
+> > really happened?
+>=20
+> The races are rather rare methinks, you'd have to get a list-op
+> concurrently with a DMA.
+>=20
+> If you get the list corrupted, I'm thinking the crash is fairly likely,
+> albeit really difficuly to debug.
 
-For x86 (which is still the major focus for now), we found that kvmgt
-is probably the only one that still writes to the guest without a vcpu
-context.  It would be a complete pity if we keep the per-vm ring only
-for kvmgt (who shouldn't write directly to guest via kvm api after
-all...), so remove it.  Work should be ongoing in parallel to refactor
-kvmgt to not use kvm apis like kvm_write_guest().
+So that alone IMHO is a good reason to not allow that thing to happen even
+in theory.
 
-However I don't want to break kvmgt before it's fixed.  So this series
-uses an interim way to solve this by fallback no-vcpu-context writes
-to vcpu0 if there is.  So we will keep the interface clean (per-vcpu
-only), while we don't break the code base.  After kvmgt is fixed, we
-can probably even drop this special fallback and kvm->dirty_ring_lock.
+> > > No matter which way round you allocate devres and data, by necessity
+> > > they're always going to consume the same total amount of memory.
+> >
+> > So then the next option I guess is to separate meta-data from data buff=
+ers
+> > completely. Are there any reasons to not do that
+>=20
+> Dunno, should work just fine I think.
+>=20
+> > other than the hack we're
+> > discussing here (meta-data in the beginning of the buffer) used to work=
+ OK-ish?
+>=20
+> If meta-data at the beginngin used to work, I don't see why meta-data at
+> the end wouldn't work equally well. They'd be equally broken.
 
-* Waitqueue is still kept (for now)
+Agree. But if we imagine devm allocations are not used for DMA
+(which is yet another case of interface usage which was never designed for
+but alas this happens left and right) then move of the meta-data to the end=
+ of
+the buffers solves [mostly my] problem... but given that DMA case we discus=
+s
+exists I'm not sure if this move actually worth spending time on.
 
-We did plan to drop the waitqueue, however again if with kvmgt we
-still have chance to ful-fill a ring (and I feel like it'll definitely
-happen if we migrate a kvmgt guest).  This series will only trigger
-the waitqueue mechanism if it's the special case (no-vcpu-context) and
-actually it naturally avoids another mmu lock deadlock issue I've
-encountered, which is good.
-
-For vcpu context writes, now the series is even more strict that we'll
-directly fail the KVM_RUN if the dirty ring is soft full, until the
-userspace collects the dirty rings first.  That'll guarantee the ring
-will never be full.  With that, I dropped KVM_REQ_DIRTY_RING_FULL
-together because then it's not needed.
-
-Potentially this could still also be used by ARM when there're code
-paths that dump the ARM device information to the guests
-(e.g. KVM_DEV_ARM_ITS_SAVE_TABLES).  We'll see.  No matter what, even
-if the code is there, x86 (as long as without kvmgt) should never
-trigger waitqueue.
-
-Although the waitqueue is kept, I dropped the complete waitqueue test,
-simply because now I can never trigger it without kvmgt...
-
-* Why not virtio?
-
-There's already some discussion during v1 patchset on whether it's
-good to use virtio for the data path of delivering dirty pages [1].
-I'd confess the only thing that we might consider to use is the vring
-layout (because virtqueue is tightly bound to devices, while we don't
-have a device contet here), however it's a pity that even we only use
-the most low-level vring api it'll be at least iov based which is
-already an overkill for dirty ring (which is literally an array of
-addresses).  So I just kept things easy.
-
-======================
-
-About the patchset:
-
-Patch 1-5:    Mostly cleanups
-Patch 6,7:    Prepare for the dirty ring interface
-Patch 8-10:   Dirty ring implementation (majorly patch 8)
-Patch 11-17:  Test cases update
-
-Please have a look, thanks.
-
-[1] V1 is here: https://lore.kernel.org/kvm/20191129213505.18472-1-peterx@redhat.com
-
-Paolo Bonzini (1):
-  KVM: Move running VCPU from ARM to common code
-
-Peter Xu (16):
-  KVM: Remove kvm_read_guest_atomic()
-  KVM: X86: Change parameter for fast_page_fault tracepoint
-  KVM: X86: Don't track dirty for KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
-  KVM: Cache as_id in kvm_memory_slot
-  KVM: Add build-time error check on kvm_run size
-  KVM: Pass in kvm pointer into mark_page_dirty_in_slot()
-  KVM: X86: Implement ring-based dirty memory tracking
-  KVM: Make dirty ring exclusive to dirty bitmap log
-  KVM: Don't allocate dirty bitmap if dirty ring is enabled
-  KVM: selftests: Always clear dirty bitmap after iteration
-  KVM: selftests: Sync uapi/linux/kvm.h to tools/
-  KVM: selftests: Use a single binary for dirty/clear log test
-  KVM: selftests: Introduce after_vcpu_run hook for dirty log test
-  KVM: selftests: Add dirty ring buffer test
-  KVM: selftests: Let dirty_log_test async for dirty ring test
-  KVM: selftests: Add "-c" parameter to dirty log test
-
- Documentation/virt/kvm/api.txt                |  96 ++++
- arch/arm/include/asm/kvm_host.h               |   2 -
- arch/arm64/include/asm/kvm_host.h             |   2 -
- arch/x86/include/asm/kvm_host.h               |   3 +
- arch/x86/include/uapi/asm/kvm.h               |   1 +
- arch/x86/kvm/Makefile                         |   3 +-
- arch/x86/kvm/mmu.c                            |   6 +
- arch/x86/kvm/mmutrace.h                       |   9 +-
- arch/x86/kvm/vmx/vmx.c                        |  25 +-
- arch/x86/kvm/x86.c                            |   9 +
- include/linux/kvm_dirty_ring.h                |  57 +++
- include/linux/kvm_host.h                      |  44 +-
- include/trace/events/kvm.h                    |  78 ++++
- include/uapi/linux/kvm.h                      |  31 ++
- tools/include/uapi/linux/kvm.h                |  36 ++
- tools/testing/selftests/kvm/Makefile          |   2 -
- .../selftests/kvm/clear_dirty_log_test.c      |   2 -
- tools/testing/selftests/kvm/dirty_log_test.c  | 420 ++++++++++++++++--
- .../testing/selftests/kvm/include/kvm_util.h  |   4 +
- tools/testing/selftests/kvm/lib/kvm_util.c    |  64 +++
- .../selftests/kvm/lib/kvm_util_internal.h     |   3 +
- virt/kvm/arm/arch_timer.c                     |   2 +-
- virt/kvm/arm/arm.c                            |  29 --
- virt/kvm/arm/perf.c                           |   6 +-
- virt/kvm/arm/vgic/vgic-mmio.c                 |  15 +-
- virt/kvm/dirty_ring.c                         | 201 +++++++++
- virt/kvm/kvm_main.c                           | 269 +++++++++--
- 27 files changed, 1274 insertions(+), 145 deletions(-)
- create mode 100644 include/linux/kvm_dirty_ring.h
- delete mode 100644 tools/testing/selftests/kvm/clear_dirty_log_test.c
- create mode 100644 virt/kvm/dirty_ring.c
-
--- 
-2.24.1
-
+-Alexey
