@@ -2,186 +2,169 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 158CFC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:06:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 734CDC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D01CD21D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:06:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4075E21D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:06:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rons7KyI"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=freesources.org header.i=@freesources.org header.b="U0WrpFIe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbfLTQGE (ORCPT
+        id S1727498AbfLTQGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 11:06:04 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36113 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbfLTQGE (ORCPT
+        Fri, 20 Dec 2019 11:06:14 -0500
+Received: from mx3.freesources.org ([195.34.172.217]:36586 "EHLO
+        mx3.freesources.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbfLTQGN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 11:06:04 -0500
-Received: by mail-pg1-f193.google.com with SMTP id k3so5162507pgc.3;
-        Fri, 20 Dec 2019 08:06:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LGfw/ABfWG44S99dqNjFh7GtGRP7EqyTNmaTlSCAxUg=;
-        b=rons7KyIPEHNTL/N4SxJ2hN2OFbBMQtGxo8h2FuwtbZvEsEL0kBtgIGmZshLGSiWDg
-         mbvPeYAQ/fg77L2oA3SiVkFm5F4ucmmyl2G+l4dtRx10A0gikel1DdfPuvYqD9kLrZVj
-         Vat6/k1CjBcVz8y4xBlasZjwDQUhhi/jQcfqD5vhEI1Qnts8Li7frbrgdzJFVfkaDA3R
-         mPFUvTHkwWJELM/JPBbRuHmDQNSuKxDaDlmr9A+Zd3U2vXpvCI14rg46HQS/Py6C0LDr
-         CXdfyuDqjn93GfqKdlERIADxH3XiCw1hjmFS4uTANHYkWAGbkfYMDqH/Cryo7hh7sPs4
-         QBEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LGfw/ABfWG44S99dqNjFh7GtGRP7EqyTNmaTlSCAxUg=;
-        b=gdsoQyoPtz/U3NjrThgJX/dkMYiFiKiy46TvGKn0IgI21CmxgqSr8gkCR2Oon8Gtsc
-         vxefdFaKW7OlWCorvNL9k3EZ1DuzWOZgNv9KXECxKvPZGCJZGftXrE8VqJpoCBSxRfN6
-         JM/skg8U8Acy8yGod9hFZgwDVdL9RBRu3pjvdq8PHjeuEtXDI5q3GEvwNAxyvFY+7+XV
-         TqTh/y2Z3Zn0dWUb99MGFqNkUDEtQE8Hefq7B0ETKU2QXrXjJV0zPuQcIBSy6NWh8uyR
-         wg9u2QaXGq/qPDJhAE9jGwo/jsO2owp96Vuw5WoKggErOHdX02D/K3Odc5xJXo6vg9h3
-         ptgA==
-X-Gm-Message-State: APjAAAXoyPvbX/2H2lDFKvML2QD/7nGm7g5FLdnpdm4dAx5beQRtvGZj
-        QNEdz7iwtu6cyEhuvv8pe7Y=
-X-Google-Smtp-Source: APXvYqzlixHZOELXQc/0KmNzXrImB3d8Haci6RRW4JwMnGEVrlK0cx6fXDzpc1YV0xrS+z2zYs7/sw==
-X-Received: by 2002:a65:518b:: with SMTP id h11mr15462937pgq.133.1576857963178;
-        Fri, 20 Dec 2019 08:06:03 -0800 (PST)
-Received: from localhost.localdomain ([2001:1284:f013:b9c8:9c5e:a64b:e068:9fbd])
-        by smtp.gmail.com with ESMTPSA id s22sm13054365pfe.90.2019.12.20.08.06.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 08:06:02 -0800 (PST)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id 6E97FC161F; Fri, 20 Dec 2019 13:05:59 -0300 (-03)
-Date:   Fri, 20 Dec 2019 13:05:59 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     syzbot <syzbot+9a1bc632e78a1a98488b@syzkaller.appspotmail.com>
-Cc:     davem@davemloft.net, linux-kernel@vger.kernel.org,
-        linux-sctp@vger.kernel.org, lucien.xin@gmail.com,
-        netdev@vger.kernel.org, nhorman@tuxdriver.com,
-        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
-Subject: Re: general protection fault in sctp_stream_free (2)
-Message-ID: <20191220160559.GD5058@localhost.localdomain>
-References: <0000000000001b6443059a1a815d@google.com>
- <20191220152810.GI4444@localhost.localdomain>
+        Fri, 20 Dec 2019 11:06:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=freesources.org; s=20160526; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=eVmBEIGL6cbYc0NXTjcryxR5FvUOsrygcMmcfd36eF8=; b=U0WrpFIebr3Jm6EddHMA1bvO0M
+        3JiM9cNIO6tigNklyixFNitJh7AIC3fWwpChbicWIMRfeI7B3OR5thopI8WV3NszuFB0C59XrQQwh
+        mkrgwhwVu4qAS2wKv4mVH/upEMnUCwV0lDXfhuau+/1XSUt5zSXzSzjTcd58XNuBkRPY=;
+Received: from anon-62-247.vpn.ipredator.se ([46.246.62.247])
+        by mx3.freesources.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <jonas@freesources.org>)
+        id 1iiKn3-0000Xf-Ve; Fri, 20 Dec 2019 16:06:10 +0000
+Subject: Re: [PATCH 2/2] PM: CONFIG_SUSPEND_SKIP_SYNC sets default for,
+ '/sys/power/sync_on_suspend'
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Tim Dittler <tim.dittler@systemli.org>,
+        Yannik Sembritzki <yannik@sembritzki.me>
+References: <1ee5b9ef-f30e-3fde-2325-ba516a96ced5@freesources.org>
+ <5c3996e1-eee7-1b8f-51bf-a6401d229bff@freesources.org>
+ <5078963.9SuZRVoKLz@kreacher>
+From:   Jonas Meurer <jonas@freesources.org>
+Autocrypt: addr=jonas@freesources.org; prefer-encrypt=mutual; keydata=
+ mQINBEqFXAEBEAC+7gfLht8lDqGH1EPYoctDHvWQ4nk60UFDLfjqHmBGReL/9C7CyxYaqgY4
+ V1/DXPCmsO5PvHMSi6VPn3B81alPKMT6syQhxDN6CXETh/mrxRbTPyQVSKYdD/BvA94vgwfy
+ iInR0N7K6J/mRxqKug14vXlABvfmyWBnW89d15OWs9qy1Ge1mHaA8UgIoUInR2mMqNHQf0nF
+ /TtClN2uPmtv/GeGHfSSCQEjYq9Ih2Z1Re2hnwW1peEc0x7piKUXCXHGyrQdz5IE69SqV1gg
+ vafUrWHNPWz5ZtXsihYioNi3ISuoHUjkKdn+t55en5tvWvi+2JQnMCGa/Wr7iA2EOxallR+z
+ rQRBDe/6wp1XEz6vN1LqCeaRyVOR6q00PtN/Ot0tzPswrHKE6binqG6FBRbu+zeo87cNbMmH
+ IAdIT3ysZCAwA2g310fBByCSiNnfhHg2GyqfC4eDtL/K7uVNqQQEon0yv8lzyUloofKER8eA
+ W4PtahGcLLbREnekAwQMpU8y1a++QXdk1ckLoyGuBVpBX8PiRirzYVmYsGRMK2u0yIy73YYM
+ gYpt6h+Vaoj5EyPbYuJRm3RItByzE84YBbKfA81Xn8FZWc2qTyTeKRMioTu37E/z46wSHCt9
+ UM89/lSz5iplUhnmdrN+u606MDbAdgxR5Lk+1UuhpPgLxIIdPwARAQABtCRKb25hcyBNZXVy
+ ZXIgPGpvbmFzQGZyZWVzb3VyY2VzLm9yZz6JAlcEEwEKAEECGwMCHgECF4AFCwkIBwMFFQoJ
+ CAsFFgIDAQACGQEWIQQsjNKD0+/fQziQ54NSYuf/SRBJ/gUCXP1HQwUJGBuFwgAKCRBSYuf/
+ SRBJ/leqD/wKZ2ltjNmwQ7Mf+F0dATcBoX6dh+0HbgHXbsgZSA6WiVn6qrAYiCgtN0ZLtUeI
+ oFpthum/Fi4XRt29067hx5pt81JJtsRg813PETeBQbrr9whpupcgw4z6rjHT9EuACsWLBBbg
+ hrWPgYMfe9GQupS6nv+kBEotr1v/L+umLFO8q7sbXaXFnxgxV/h6vvMqTK5nWg9MBjTr3ZwH
+ 0k4yGq93mC5Zms921OU8PU1JlPdPnKmU2jaXfReHUDg1fS0NaCapIGksX+ysI4u+NIfujK4T
+ eN5RMWtixoFjaPbLJ65kT3XXcp3dzioPTGEaLWQwBkMJtKXAZ5FJols9t3XySYzDYs2hrDny
+ ADZIkbI/NeIu2hfo6410Nzh6ztevNbYnL7oUS8yHD38ZNBmA3y03KHlbuEf7K6BUq2CrWxTx
+ GhFGNaPk/aDYNb6oYQmllw2m0peCbiCOC1HxYxYznANC//8qh5qgSBy97nLyzP8uJcQINTlS
+ G1hQ4JMVE5XLNRdIZm3HOjyr8Kma3i7C2MlFOtdpYxHhzDQS5qZWPlYm5h0JLpIctyzbyXwP
+ ta2TVqCv59IR64ClYKXP4OGfp0IzUCynWZTOEpwl4IBaPFh40zSXUpuzXHF5yuL8yFOg01fD
+ JGaatwBE+uygh8tndhNvKpRaRXnkbiQkwuaFnCEGR/rjmLkCDQRKhV7yARAAonTShxRdyza6
+ 3jK3Jae2js8IPBid/VAMK8qyqZoLCRsDoWzKGkJ+8/yNavvkD0mD9AEdJQySk5CmNV/PZB6W
+ 3vDpuWYkJ/wbM8g+NTTNVZnnvTirozlu9ZjJmTZL8JAaY2o3Kp6tgPO6924VSwYNIvs1UM4x
+ J+7TjTKqLuUdEgsS2IFnbHWsE5XXS+5pbmzWs+UHCVmkXfbb5yx2aV+rUQSkSDooxcRwLKEf
+ eDbGdNjsW4qBQ6mFx9gYtCSWnvvCck0mTAdD0n7CxRwdhLKTDRy5CsBN4cuL6N05wOnZojv3
+ v6dXctx55EooSFiiDfmwGgu1qdsGDbGLDHC1QRIbouOWiM/4Nf+qfW+8uL+T21wj2Cfb0MaR
+ +TZEJSBSLvoPHavUHUy4/td3lGBE+enhZEyd2kfQIR9Zm/EXty7tBj8CGT+ewzDsb1t8Hovt
+ DpK7Eo04XkQoCeAAdhfa+f5/X/mCBadflnHkn2rpL/noj+pItFZLbFwoL+meRURcuNfIhpIN
+ GaG3j8QJVLIvimdWSSJgmnQJ40Ym7H55EVslHH9cpIzfDUVxMYLVo047QTgfx7Ju1Jdfx8Pf
+ 8nAeXSo+9WpOSZJCMqLp/l9e24zFAjX5bXEnXPhRc8cpCrfPvPUdx+OwtBSp2w69UWJBRdOx
+ sTAwifXNlXxtaUxaM9WKKr8AEQEAAYkCPAQYAQoAJgIbDBYhBCyM0oPT799DOJDng1Ji5/9J
+ EEn+BQJc/UdrBQkYG4L5AAoJEFJi5/9JEEn+tVEP/i/tFQWivHWQuQANoaCs6CAMVslWZhzc
+ +v7Lo4pz0kkA/OI7Hgbgz3gE6O9BDScooPqONyR9Ls7iv3NdvbyxJq7IR3PMb5lTncSlOnR0
+ gIvJ0pT+nHWW14mJ44sd4jF6CdehoTS1IEpsEDKBL5j89z9URmmdPHT0ph2OTtvil8uuYdvl
+ 8mDiQh2RGz/zDNHz+UulgQpercjQyMw+dijnwZZhONQ1wNdFl41SaZyrqbKIxaqHI7Hg0j5j
+ dRTSxUCn8BLicIOmSy9G3mOJdTEu2ChQkz+XdOwUf7Kj5ow+18cWrtjcKeL1JEAVbZyGEZNj
+ eEWthr6/P9q6VCaogTUkODoXUfTWaHOE2NOY0WK13iQ3/oJlW38/LPoEeeiSJWa7gY/2xNXY
+ Zh8SqVGtwdzPzbFga0Vgwaln7vGmMMr6OYsWweqCh9eedAAjOZuJ7pPfvK/w48ylLia7uVPt
+ ClSYWhrlqv5YBNLo029MKn9aXAhDvZ7tN+an4DWNVjwZ3r21b+iXWBMcWcIeIc1ssbj0xMur
+ UUCosSYLy+zSr4+M+H82YexoOSmbYRKUn6pgAMsH7jXYJou70OAqF7vgQ7+dj6qU7zJOD+DF
+ emCqYSyB99fxsxq9SmnB/UfTtBQQk7pkTTZ3TSQiE2u/ZcGVDDAOs5iuW85NbSRxQ499SoyV
+ GrTIuQINBFJzgSIBEADNIxHBVTWw+fyCseGCOjy0NmzCOu5BFmppxeqls9Wu8MmEX06DeBBC
+ DfXpDrDOP7tX3wYdSVElMgqlL9tMCWnY5S5akONn4+dcex0yo0fIM1pZSl0vcVj5xmI+RRkD
+ Sh+0GL69cl2POiEKeXFIbwDIjE5txio5iKIABMQxQHLsKbJmxGPQKdJvXvp5MUhlMikBws4I
+ aihum6/sLZ8vqDn5/OMkzyQBgRhuis9RBaTJy7kvPxqtOXaNO/cvONUODjGhAg0VWejX5yeE
+ auzCg/ZWZeZOgwVLd9/NyCqii1+JHMYz85lk4bLF6rYNXlaXB2UGXnlF5MJ3owek4sgV0H5V
+ /y/8ddi7tTQTXUhbVX5LHq5x8BFKY7UINjOeZ61cMeA7u/bi4EKxx2bj80rbHFw8NmVdMnOa
+ Wklq9kCcizMSkZ3szFLtviY2CQ8UW/VImSJtypqKwkfFJnQTlRWuWl7U1r1MJa6QrmJSlYgw
+ DWcEa2JqAGa+NyTCOrt013GDp9BCWGlOV46sEWflxo0f6J8ebfivY0w91knZE5xbmWm9CG+M
+ g6Yt0K3dLGoBT27c2M7Wynywot4+MKJagmxUC3UDBQbd0BVJQY+UB0eer3RgS+PJcquTGhon
+ rjCHtotZ60IyqNZmnOFr/hEJC6YhmWwyzvokv7GX2Duvpo+Pj957KwARAQABiQIfBCgBCAAJ
+ BQJXtGqxAh0DAAoJEFJi5/9JEEn+3D0QAJn9amcJYUmNJkpUesn56/5uec+Jfhknkun1rrbM
+ Ufx8Jn8hyiX1jqpU3fdVRy6VGTX4o2O9nM/gx7DfwIhYIclJjn6egJ3WloGO3IVP6z38Qvj0
+ BkEJOdyrvHLRyO+dSIQ3ngl0lPFqRqBeieO7O77po3O3iKxZxHqcyeKZvElXTAUWzomXtyVq
+ Lub2UIZDqrtff0gYzTRp5Bt5vHF9k7/DvWl163WxNETMvXIHbAeSybGxHZmdZIJpjfXcjaQJ
+ LKM5S0Kpb2PEHBJlBvYY1JhlA2tYe/KdgsbnPMPFQ6A7ldn8fvIIiI9vZ4HIhlzclTrte8kx
+ VbLR66+g5wu6l30EpX+ONMrDfZM6p+SYukbKJVBH45aPaSJhqyJ5MGqq/AGTHMcS3+vjLHMz
+ Iz4xlgpGNM2uN3crFyjdoIFviJH5uLzLSdI6RzfuHBnFUb/aoFePNmWuV/Rk/KoVHGZme3m7
+ Q7lqpzLTAga6L/UFIUFfnNRbJkADyfxFhIT31FgadDwv+wYc/l8bjra5MjgYmF5aANivt73N
+ L0p3z2fY4N/If9JQljcue1d6C+7SgBwX7uhO9jSzK9pA0q4llanYAgxjtUYudmeBeYRrqS2v
+ KLVmnS2f2SuRMa4dkrZG4VIEVddNuuezSv0XpEFJtNXyzylAeHsYRt0bhxj+9k3wW6RliQRE
+ BBgBAgAPBQJSc4EiAhsCBQkJZgGAAikJEFJi5/9JEEn+wV0gBBkBAgAGBQJSc4EiAAoJEBvz
+ c5c7ZRqnI1UP/0d4D6H2QYgE0O7U3NbS73LG3QHo1uV6BQe1WaZYmiI6P73Q54FZ3Xl/bqdI
+ pMsnFGYpKKxPogWh8Izwf/04cr5obXw4XhfWfXfOv/yLRiYr2lsBzWX8Z4OrgzNSJ69E4ECj
+ FW05WkoBvF7LmtVD95ruUhPwivu52PzAfIy0L8pxTW5uDDttoBsw465kB+nrQrJwIPj46aLP
+ FXX0VhIjWC+yzomQNIaVxgPrhRs3PzhPB17vlggrk2W5awoXgL/gF4ddyJetEt00LHc6ysSC
+ Wzh4WNgwFTUL/XC9OSw/Qf7Z+UbdGUSVAyFzFkP0s8tOlXp2EWMUhep/rap7/G7lBLAyLA5E
+ QtOYzInFV4KXD8spB5WTHsh/QA30RDpEhq2imAa1F5qTnTbwm3Gh3qbXLv7PI7R/WmqHr43m
+ SI+AdJHQsogf8ukdCQhhzDuIUkpa3KFA9ZC8zVyf2IBPqWLkiloOyKvzFSmuF24ooNHEqjAv
+ EwbfNUVefKdeen8A7ipDTXQREjowLRBujOxMedWbjBJWjapKBOMep7NbuQ8/0vrDryuJxwQi
+ JxYr+q/raDRII/sb9NkUWj4jzDI9NgTlt33c+5ne4dpv++msdxL0rsQ64CFqlpx9nVlsep+I
+ 4zTN7+/NsUUbdrBs885gWoc17sZogAWeT9ldsDXzX0S+JFgQTvYP/0/Cwa6eBbw/XlLoHzMs
+ 6POlgQy3M27zUfhWWs8p1lN5lahKlxcFjudMtdH66mhpYlQlSjEjUwHIs5vXxckZt2HfSYyg
+ hg3Z5yZ8X14NFWbR0J++0G5os1vLFQ+nRM4kwSvn9KnL1txDQ0MwekZ/7VuB5GThYkEiOvgZ
+ X7C06ieTtQXoIk3dO+XwnsLl5NcwMlga1sdbM0OQARMKbtKCXRkwWyCaHQI0ei756kUsNCK6
+ ZLe3s705sJ77gVwVdUE6Y5255z2r9MH00QdJk7p/5Axa22qda59Vo/7wxXO9M1tI1WUunWQ+
+ /xNvnLsCvwVnprx9YDsQ18FaKEX+mc0yOzwKhWpT1IVShck8o1kshaaTmB1u/ZbZBgoFYcrS
+ 30kvqVaabEbcuKmkUNTP0h4ewXdpFlx8HoUn/D+etqFR/sdZtzaSYo7F7NAf5ORb5NIyZQTf
+ j5MR0b5PT03y/FxsG+LYDhQGxL3ZWtmPYiDT8W3BExwRg4VkRKuPVM/qDhur45CuqwNZXDQX
+ ucOyOCxbGK0rfZasgPXkzxTWohgQwhBvw+eZ+VXzjHiRyGQ4x1Jay9eYiw7QeOiLDQxQcxLI
+ tAzfoD+TN75zyJrLjknLC+udmMVZMcserZHCUnb9WBW4qMNyy9PI53Ha6bvfZXbZCeS3PjTo
+ 2SCIHpzHfm/mpRL2
+Message-ID: <bc340a6c-aa00-82d0-95a1-809914fb2b44@freesources.org>
+Date:   Fri, 20 Dec 2019 17:06:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191220152810.GI4444@localhost.localdomain>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <5078963.9SuZRVoKLz@kreacher>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 12:28:10PM -0300, Marcelo Ricardo Leitner wrote:
-> On Thu, Dec 19, 2019 at 07:45:09PM -0800, syzbot wrote:
-> > Hello,
-> > 
-> > syzbot found the following crash on:
-> > 
-> > HEAD commit:    6fa9a115 Merge branch 'stmmac-fixes'
-> > git tree:       net
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=10c4fe99e00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=216dca5e1758db87
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=9a1bc632e78a1a98488b
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=178ada71e00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=144f23a6e00000
-> > 
-> > The bug was bisected to:
-> > 
-> > commit 951c6db954a1adefab492f6da805decacabbd1a7
-> > Author: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-> > Date:   Tue Dec 17 01:01:16 2019 +0000
-> > 
-> >     sctp: fix memleak on err handling of stream initialization
+Hey Rafael,
+
+Rafael J. Wysocki:
+> On Monday, December 2, 2019 6:07:43 PM CET Jonas Meurer wrote:
+>> Slightly change the behaviour of build-time switch CONFIG_SUSPEND_SKIP_SYNC:
+>> Make it configure the default for '/sys/power/sync_on_suspend', now that we
+>> have a run-time switch for it.
+>> [...]
 > 
-> Ouch... this wasn't a good fix.
-> When called from sctp_stream_init(), it is doing the right thing.
-> But when called from sctp_send_add_streams(), it can't free the
-> genradix. Ditto from sctp_process_strreset_addstrm_in().
+> I don't see much value in splitting the changes into two patches.
+> On the contrary, this patch is a logical part of the full change, so IMO
+> it should be folded into the [1/2].
+> 
+> Please do so and resubmit.
 
-Tentative fix. I'll post after additional tests.
+Thanks for looking into the patch!
 
---8<--
+I resubmitted it now as a single patch:
 
-diff --git a/net/sctp/stream.c b/net/sctp/stream.c
-index 6a30392068a0..c1a100d2fed3 100644
---- a/net/sctp/stream.c
-+++ b/net/sctp/stream.c
-@@ -84,10 +84,8 @@ static int sctp_stream_alloc_out(struct sctp_stream *stream, __u16 outcnt,
- 		return 0;
- 
- 	ret = genradix_prealloc(&stream->out, outcnt, gfp);
--	if (ret) {
--		genradix_free(&stream->out);
-+	if (ret)
- 		return ret;
--	}
- 
- 	stream->outcnt = outcnt;
- 	return 0;
-@@ -102,10 +100,8 @@ static int sctp_stream_alloc_in(struct sctp_stream *stream, __u16 incnt,
- 		return 0;
- 
- 	ret = genradix_prealloc(&stream->in, incnt, gfp);
--	if (ret) {
--		genradix_free(&stream->in);
-+	if (ret)
- 		return ret;
--	}
- 
- 	stream->incnt = incnt;
- 	return 0;
-@@ -123,7 +119,7 @@ int sctp_stream_init(struct sctp_stream *stream, __u16 outcnt, __u16 incnt,
- 	 * a new one with new outcnt to save memory if needed.
- 	 */
- 	if (outcnt == stream->outcnt)
--		goto in;
-+		goto handle_in;
- 
- 	/* Filter out chunks queued on streams that won't exist anymore */
- 	sched->unsched_all(stream);
-@@ -132,24 +128,28 @@ int sctp_stream_init(struct sctp_stream *stream, __u16 outcnt, __u16 incnt,
- 
- 	ret = sctp_stream_alloc_out(stream, outcnt, gfp);
- 	if (ret)
--		goto out;
-+		goto out_err;
- 
- 	for (i = 0; i < stream->outcnt; i++)
- 		SCTP_SO(stream, i)->state = SCTP_STREAM_OPEN;
- 
--in:
-+handle_in:
- 	sctp_stream_interleave_init(stream);
- 	if (!incnt)
- 		goto out;
- 
- 	ret = sctp_stream_alloc_in(stream, incnt, gfp);
--	if (ret) {
--		sched->free(stream);
--		genradix_free(&stream->out);
--		stream->outcnt = 0;
--		goto out;
--	}
-+	if (ret)
-+		goto in_err;
-+
-+	goto out;
- 
-+in_err:
-+	sched->free(stream);
-+	genradix_free(&stream->in);
-+out_err:
-+	genradix_free(&stream->out);
-+	stream->outcnt = 0;
- out:
- 	return ret;
- }
+[PATCH v2] PM: Add a switch for disabling/enabling sync() before suspend
+
+Kind regards
+ jonas
