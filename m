@@ -2,154 +2,120 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8663CC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA21C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52C9F20866
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:58:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576868301;
-	bh=IZyP1CzWPHFXxWCQpm+dZtMY5icMs84nWMzMuJOJo/0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=MjwNIrcvF2lMxqTQ/ASvguCtY3l6jCNNUNBugW4xL7k8emvyyzLB3UXCQDgPDzaKZ
-	 t8px7XmH0qJqe3oC05EVJGlFeceJJq6mkyUBvsuZqe1Jsmx9/G8pc7oNzrDtTka13k
-	 jXWgu8DCSwYbckhYBRBpiNUuBOLMQv9EPcvUd9x4=
+	by mail.kernel.org (Postfix) with ESMTP id 30B1F206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:01:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lxfCWkPK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbfLTS6U (ORCPT
+        id S1727498AbfLTTA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 13:58:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49588 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727394AbfLTS6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 13:58:20 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9A24206D8;
-        Fri, 20 Dec 2019 18:58:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576868298;
-        bh=IZyP1CzWPHFXxWCQpm+dZtMY5icMs84nWMzMuJOJo/0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QsDv3vbv6woSxz169v5KYYNA69m2xMZMn2xalcEtlCbc+V/IPZrmYExUY3iPEhmcD
-         Lsgdj6z03aj7wk1sGT8sUZ0OSCO2ETByAks9XX44a7NlqjPoQkOaIoA4q44gwqizMU
-         HVcvOrMVqA/4q8OeiNxbP2JBnabrnXkgRvREg5RI=
-Date:   Sat, 21 Dec 2019 03:58:14 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     <naveen.n.rao@linux.ibm.com>, <anil.s.keshavamurthy@intel.com>,
-        <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <paulmck@kernel.org>, <anders.roxell@linaro.org>
-Subject: Re: [RFC PATCH] kprobes: Fix suspicious RCU usage WARN in
- get_kprobe()
-Message-Id: <20191221035814.cb1800611c09b02bc448308d@kernel.org>
-In-Reply-To: <1576846191-18801-1-git-send-email-john.garry@huawei.com>
-References: <1576846191-18801-1-git-send-email-john.garry@huawei.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        Fri, 20 Dec 2019 14:00:59 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35345 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727394AbfLTTA6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 14:00:58 -0500
+Received: by mail-pf1-f195.google.com with SMTP id i23so288412pfo.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 11:00:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=qumAg5ZZqnmgCZCuhulClxZDmH0MbZ40eJLFhdo2hpU=;
+        b=lxfCWkPK7mnoOd1RwFHaRDonZ5VxLArlKVp7F57t2lHc4rWbno7lCzzxcUz7wk8iXf
+         1AQvsI1ccmmZ1eoVsGZfk2H0lQvvu+7/xqS2yxYrhdtyR4mIFYuT8PMXUbpdfjXnZzhy
+         lFWtgVXjeQXtPzDjw+nltjgFM0NcxTy2AFdSo4DYIvEAF/o7guRj3ifCD45msYpdHEiJ
+         1uYuQvvh+Vh5Oqqj0ArYhPTrauYfKWCTLea5D2FScKck/1JcivwDgDhe5E6mowmZrIWp
+         hjQh8RKKz3LmuOuamPi43XAxiirgjYq3Dw6VNhVzU2JCuT7Ocnyc5hqYDQz660RDR1y7
+         0bbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=qumAg5ZZqnmgCZCuhulClxZDmH0MbZ40eJLFhdo2hpU=;
+        b=hDU5z1L94uxJCNRiz2jgW8GYWoDoUM9pNmbaaK3eErjb/wgVTddISkwM3n2XCIlFei
+         m2Jm1U3azyJFLuRbSJ/3/H3b0myRHI0iAWE2cavhtoQ7E8F8Ym4iCKKsJBb5o+MP3iZw
+         FpCySXHbluujgO03aY9OWwp6w0msp2YkxaC1GqspLvpk7GrNvsAaXJ9BqirxWjGMNEhb
+         YU9H2/+KghLgzDof6qoq+JWVjGX/yfpGzWVKWmXGNaWpvpEIkC8Hjew2+KJ3Lhf1sVze
+         j73tpBXn6rwBws26NeTvUTWblkkzHMCsOriGinbQ9cE8n1pkAvBMLYqn9GTDgFymH2TF
+         ExGA==
+X-Gm-Message-State: APjAAAXBPhdPVBYoJkPjlC5321fv4X68eYCCHJX5hWHyVzsagwhH1ljv
+        TRb/raQ2fhj2e7ivx1hFIbJHK+iVmNQ=
+X-Google-Smtp-Source: APXvYqxWsFbzD0XdxpwBzRbsDI5smchKZAtjtiaH3vTy0YlcE6npaLjwitypANGqcq8AWJZq0rnAzA==
+X-Received: by 2002:aa7:9629:: with SMTP id r9mr17989319pfg.51.1576868457602;
+        Fri, 20 Dec 2019 11:00:57 -0800 (PST)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id b98sm11212497pjc.16.2019.12.20.11.00.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 11:00:56 -0800 (PST)
+Date:   Fri, 20 Dec 2019 11:00:56 -0800 (PST)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Daniel Axtens <dja@axtens.net>
+cc:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        ajd@linux.ibm.com, mpe@ellerman.id.au,
+        syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com,
+        syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com,
+        syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com,
+        syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com
+Subject: Re: [PATCH v2] relay: handle alloc_percpu returning NULL in
+ relay_open
+In-Reply-To: <20191219121256.26480-1-dja@axtens.net>
+Message-ID: <alpine.DEB.2.21.1912201100400.68407@chino.kir.corp.google.com>
+References: <20191219121256.26480-1-dja@axtens.net>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+On Thu, 19 Dec 2019, Daniel Axtens wrote:
 
-Thanks for your work. Actually, I already sent the same fix 2 weeks ago.
+> alloc_percpu() may return NULL, which means chan->buf may be set to
+> NULL. In that case, when we do *per_cpu_ptr(chan->buf, ...), we
+> dereference an invalid pointer:
+> 
+> BUG: Unable to handle kernel data access at 0x7dae0000
+> Faulting instruction address: 0xc0000000003f3fec
+> ...
+> NIP [c0000000003f3fec] relay_open+0x29c/0x600
+> LR [c0000000003f3fc0] relay_open+0x270/0x600
+> Call Trace:
+> [c000000054353a70] [c0000000003f3fb4] relay_open+0x264/0x600 (unreliable)
+> [c000000054353b00] [c000000000451764] __blk_trace_setup+0x254/0x600
+> [c000000054353bb0] [c000000000451b78] blk_trace_setup+0x68/0xa0
+> [c000000054353c10] [c0000000010da77c] sg_ioctl+0x7bc/0x2e80
+> [c000000054353cd0] [c000000000758cbc] do_vfs_ioctl+0x13c/0x1300
+> [c000000054353d90] [c000000000759f14] ksys_ioctl+0x94/0x130
+> [c000000054353de0] [c000000000759ff8] sys_ioctl+0x48/0xb0
+> [c000000054353e20] [c00000000000bcd0] system_call+0x5c/0x68
+> 
+> Check if alloc_percpu returns NULL.
+> 
+> This was found by syzkaller both on x86 and powerpc, and the reproducer
+> it found on powerpc is capable of hitting the issue as an unprivileged
+> user.
+> 
+> Fixes: 017c59c042d0 ("relay: Use per CPU constructs for the relay channel buffer pointers")
+> Reported-by: syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com
+> Reported-by: syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com
+> Reported-by: syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com
+> Reported-by: syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com
+> Cc: Akash Goel <akash.goel@intel.com>
+> Cc: Andrew Donnellan <ajd@linux.ibm.com> # syzkaller-ppc64
+> Reviewed-by: Michael Ellerman <mpe@ellerman.id.au>
+> Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+> Cc: stable@vger.kernel.org # v4.10+
+> Signed-off-by: Daniel Axtens <dja@axtens.net>
 
-https://lore.kernel.org/lkml/157535316659.16485.11817291759382261088.stgit@devnote2/
-
-Thank you,
-
-On Fri, 20 Dec 2019 20:49:51 +0800
-John Garry <john.garry@huawei.com> wrote:
-
-> With CONFIG_PROVE_RCU_LIST set, we may get the following WARN in the
-> test code:
-> 
-> Kprobe smoke test: started
-> 
-> =============================
-> WARNING: suspicious RCU usage
-> 5.5.0-rc1-00013-ge15bd404ed10-dirty #802 Not tainted
-> -----------------------------
-> kernel/kprobes.c:329 RCU-list traversed in non-reader section!!
-> 
-> other info that might help us debug this:
-> 
-> rcu_scheduler_active = 2, debug_locks = 1
-> 1 lock held by swapper/0/1:
-> #0: ffff800011bf3648 (kprobe_mutex){+.+.}, at: register_kprobe+0x94/0x5a0
-> 
-> stack backtrace:
-> CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc1-00013-ge15bd404ed10-dirty #802
-> Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon D05 IT21 Nemo 2.0 RC0 04/18/2018
-> Call trace:
-> dump_backtrace+0x0/0x1a0
-> show_stack+0x14/0x20
-> dump_stack+0xe8/0x150
-> lockdep_rcu_suspicious+0xcc/0x110
-> get_kprobe+0xb8/0xc0
-> __get_valid_kprobe+0x18/0xc8
-> register_kprobe+0x9c/0x5a0
-> init_test_probes+0x80/0x400
-> init_kprobes+0x13c/0x154
-> do_one_initcall+0x88/0x428
-> kernel_init_freeable+0x21c/0x2c4
-> kernel_init+0x10/0x108
-> ret_from_fork+0x10/0x18
-> Kprobe smoke test: passed successfully
-> 
-> The code comment tells us the locking requirements:
-> 
-> /*
->  * This routine is called either:
->  * 	- under the kprobe_mutex - during kprobe_[un]register()
->  * 				OR
->  * 	- with preemption disabled - from arch/xxx/kernel/kprobes.c
->  */
-> struct kprobe *get_kprobe(void *addr)
-> {
-> 	struct hlist_head *head;
-> 	struct kprobe *p;
-> 
-> 	head = &kprobe_table[hash_ptr(addr, KPROBE_HASH_BITS)];
-> 	hlist_for_each_entry_rcu(p, head, hlist,
-> 
-> And we have the kprobe_mutex held in the path of concern, so add a
-> RCU list traversal check condition for this.
-> 
-> Signed-off-by: John Garry <john.garry@huawei.com>
-> ---
-> I sent as an RFC as I am not 100% certain that this is the right fix.
-> It does solve my WARN.
-> 
-> I also assume __get_valid_kprobe() will require a similar change for
-> similar reason.
-> 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index 53534aa258a6..908abdac77f1 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -326,7 +326,8 @@ struct kprobe *get_kprobe(void *addr)
->  	struct kprobe *p;
->  
->  	head = &kprobe_table[hash_ptr(addr, KPROBE_HASH_BITS)];
-> -	hlist_for_each_entry_rcu(p, head, hlist) {
-> +	hlist_for_each_entry_rcu(p, head, hlist,
-> +				 mutex_is_locked(&kprobe_mutex)) {
->  		if (p->addr == addr)
->  			return p;
->  	}
-> -- 
-> 2.17.1
-> 
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: David Rientjes <rientjes@google.com>
