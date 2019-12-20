@@ -2,134 +2,176 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A372C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9796C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C9332465E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 858D82465E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:14:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbfLTJLg (ORCPT
+        id S1727209AbfLTJOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 04:11:36 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41152 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727129AbfLTJLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 04:11:35 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 70A3DAE88;
-        Fri, 20 Dec 2019 09:11:33 +0000 (UTC)
-Date:   Fri, 20 Dec 2019 10:11:31 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2] printk: Fix preferred console selection with multiple
- matches
-Message-ID: <20191220091131.4uifcbudwppjspf4@pathway.suse.cz>
-References: <2712d7e2fb68bca06a33e2e062fc8e65a2652410.camel@kernel.crashing.org>
- <20191219135053.xr67lybhycepcxkp@pathway.suse.cz>
- <32fde8cd451ea0eaff38108d9f2f2d4a97a43097.camel@kernel.crashing.org>
+        Fri, 20 Dec 2019 04:14:11 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:33814 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726111AbfLTJOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 04:14:11 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 17E2E865CD7FB3D19ED8;
+        Fri, 20 Dec 2019 17:14:09 +0800 (CST)
+Received: from [127.0.0.1] (10.177.253.249) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Fri, 20 Dec 2019
+ 17:14:04 +0800
+Subject: Re: [Ocfs2-devel] [PATCH v3] ocfs2: call journal flush to mark
+ journal as empty after journal recovery when mount
+To:     Joseph Qi <joseph.qi@linux.alibaba.com>, Kai Li <li.kai4@h3c.com>,
+        <mark@fasheh.com>, <jlbec@evilplan.org>, <chge@linux.alibaba.com>
+References: <20191217020140.2197-1-li.kai4@h3c.com>
+ <5DFB860A.6020501@huawei.com>
+ <05cf7457-31f2-0698-14ae-21a9e7b659cb@linux.alibaba.com>
+CC:     <linux-kernel@vger.kernel.org>, <ocfs2-devel@oss.oracle.com>
+From:   piaojun <piaojun@huawei.com>
+Message-ID: <5DFC90C0.7020704@huawei.com>
+Date:   Fri, 20 Dec 2019 17:13:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <32fde8cd451ea0eaff38108d9f2f2d4a97a43097.camel@kernel.crashing.org>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <05cf7457-31f2-0698-14ae-21a9e7b659cb@linux.alibaba.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.253.249]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2019-12-20 08:48:24, Benjamin Herrenschmidt wrote:
-> On Thu, 2019-12-19 at 14:50 +0100, Petr Mladek wrote:
-> > The code really need simplification. I would prefer to take the risk
-> > and reduce the amount of added conditions as much as possible.
-> > I have an idea, see below.
+
+
+On 2019/12/20 9:11, Joseph Qi wrote:
 > 
-> I wanted you to say that :-) I'll rework along those lines. Just a nit
-> or two:
-> > 
-> > 
-> > > --- a/kernel/printk/printk.c
-> > > +++ b/kernel/printk/printk.c
-> > > @@ -2542,6 +2545,53 @@ static int __init keep_bootcon_setup(char *str)
-> > >  
-> > >  early_param("keep_bootcon", keep_bootcon_setup);
-> > >  
-> > > +enum con_match {
-> > > +	con_matched,
-> > > +	con_matched_preferred,
-> > > +	con_braille,
-> > > +	con_failed,
-> > > +	con_no_match,
-> > > +};
-> > 
-> > Please, replace this with int, where:
-> > 
-> >    + con_matched -> 0
-> >    + con_matched_preferred -> 0 and make "has_preferred" global variable
-> >    + con_braile -> 0		later check for CON_BRL flag
-> >    + con_failed -> -EFAULT
-> >    + con_no_match -> -ENOENT
 > 
-> Not fan of using -EFAULT here, it's a detail since it's rather kernel
-> internal, but I'd rather use -ENXIO for no match and -EIO for failed
-> (or pass the original error code up if any). That said it's really bike
-> shed painting at this point :-)
-
-Sigh, either variant is somehow confusing.
-
-I think that -ENOENT is a bit better than -EIO. It is abbreviation of
-"No entry or No entity" which quite fits here. Also the device might
-exist but it is not used when not requested.
-
-I do not mind about -EFAULT vs -EIO. Well, -EIO might actually
-better describe the reality.
-
-That said, I do not want to spend much time on bikesheding. Feel free
-to use whatever looks better to you.
-
-
-> > > @@ -2615,41 +2664,19 @@ void register_console(struct console *newcon)
-> > 	/* Prefer command line over platform specific defaults. */
-> > 	err = try_match_new_console(newcon, true);
-> > 	if (err = -ENOENT)
-> > 		err = try_match_new_console(newcon, false);
-> > 
-> > 	/* printk() messages are not printed to Braille consoles. */
-> > 	if (err || console->flags | CON_BRL)
-> > 		return;
+> On 19/12/19 22:15, piaojun wrote:
+>>
+>>
+>> On 2019/12/17 10:01, Kai Li wrote:
+>>> If journal is dirty when mount, it will be replayed but jbd2 sb
+>>> log tail cannot be updated to mark a new start because
+>>> journal->j_flag has already been set with JBD2_ABORT first
+>>> in journal_init_common. When a new transaction is committed, it
+>>> will be recored in block 1 first(journal->j_tail is set to 1 in
+>>> journal_reset).If emergency restart happens again before journal
+>>> super block is updated unfortunately, the new recorded trans will
+>>> not be replayed in the next mount.
+>>>
+>>> The following steps describe this procedure in detail.
+>>> 1. mount and touch some files
+>>> 2. these transactions are committed to journal area but not checkpointed
+>>> 3. emergency restart
+>>> 4. mount again and its journals are replayed
+>>> 5. journal super block's first s_start is 1, but its s_seq is not updated
+>>> 6. touch a new file and its trans is committed but not checkpointed
+>>> 7. emergency restart again
+>>> 8. mount and journal is dirty, but trans committed in 6 will not be
+>>> replayed.
+>>>
+>>> This exception happens easily when this lun is used by only one node. If it
+>>> is used by multi-nodes, other node will replay its journal and its
+>>> journal super block will be updated after recovery like what this patch
+>>> does.
+>>>
+>>> ocfs2_recover_node->ocfs2_replay_journal.
+>>>
+>>> The following jbd2 journal can be generated by touching a new file after
+>>> journal is replayed, and seq 15 is the first valid commit, but first seq
+>>> is 13 in journal super block.
+>>> logdump:
+>>> Block 0: Journal Superblock
+>>> Seq: 0   Type: 4 (JBD2_SUPERBLOCK_V2)
+>>> Blocksize: 4096   Total Blocks: 32768   First Block: 1
+>>> First Commit ID: 13   Start Log Blknum: 1
+>>> Error: 0
+>>> Feature Compat: 0
+>>> Feature Incompat: 2 block64
+>>> Feature RO compat: 0
+>>> Journal UUID: 4ED3822C54294467A4F8E87D2BA4BC36
+>>> FS Share Cnt: 1   Dynamic Superblk Blknum: 0
+>>> Per Txn Block Limit    Journal: 0    Data: 0
+>>>
+>>> Block 1: Journal Commit Block
+>>> Seq: 14   Type: 2 (JBD2_COMMIT_BLOCK)
+>>>
+>>> Block 2: Journal Descriptor
+>>> Seq: 15   Type: 1 (JBD2_DESCRIPTOR_BLOCK)
+>>> No. Blocknum        Flags
+>>>  0. 587             none
+>>> UUID: 00000000000000000000000000000000
+>>>  1. 8257792         JBD2_FLAG_SAME_UUID
+>>>  2. 619             JBD2_FLAG_SAME_UUID
+>>>  3. 24772864        JBD2_FLAG_SAME_UUID
+>>>  4. 8257802         JBD2_FLAG_SAME_UUID
+>>>  5. 513             JBD2_FLAG_SAME_UUID JBD2_FLAG_LAST_TAG
+>>> ...
+>>> Block 7: Inode
+>>> Inode: 8257802   Mode: 0640   Generation: 57157641 (0x3682809)
+>>> FS Generation: 2839773110 (0xa9437fb6)
+>>> CRC32: 00000000   ECC: 0000
+>>> Type: Regular   Attr: 0x0   Flags: Valid
+>>> Dynamic Features: (0x1) InlineData
+>>> User: 0 (root)   Group: 0 (root)   Size: 7
+>>> Links: 1   Clusters: 0
+>>> ctime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
+>>> atime: 0x5de5d870 0x113181a1 -- Tue Dec  3 11:37:20.288457121 2019
+>>> mtime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
+>>> dtime: 0x0 -- Thu Jan  1 08:00:00 1970
+>>> ...
+>>> Block 9: Journal Commit Block
+>>> Seq: 15   Type: 2 (JBD2_COMMIT_BLOCK)
+>>>
+>>> The following is jouranl recovery log when recovering the upper jbd2
+>>> journal when mount again.
+>>> syslog:
+>>> [ 2265.648622] ocfs2: File system on device (252,1) was not unmounted cleanly, recovering it.
+>>> [ 2265.649695] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 0
+>>> [ 2265.650407] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 1
+>>> [ 2265.650409] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 2
+>>> [ 2265.650410] fs/jbd2/recovery.c:(jbd2_journal_recover, 278): JBD2: recovery, exit status 0, recovered transactions 13 to 13
+>>>
+>>> Due to first commit seq 13 recorded in journal super is not consistent
+>>> with the value recorded in block 1(seq is 14), journal recovery will be
+>>> terminated before seq 15 even though it is an unbroken commit, inode
+>>> 8257802 is a new file and it will be lost.
+>>>
+>>> Signed-off-by: Kai Li <li.kai4@h3c.com>
+>>> ---
+>>>  fs/ocfs2/journal.c | 8 ++++++++
+>>>  1 file changed, 8 insertions(+)
+>>>
+>>> diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
+>>> index 1afe57f425a0..68ba354cf361 100644
+>>> --- a/fs/ocfs2/journal.c
+>>> +++ b/fs/ocfs2/journal.c
+>>> @@ -1066,6 +1066,14 @@ int ocfs2_journal_load(struct ocfs2_journal *journal, int local, int replayed)
+>>>  
+>>>  	ocfs2_clear_journal_error(osb->sb, journal->j_journal, osb->slot_num);
+>>>  
+>>> +	if (replayed) {
+>>> +		jbd2_journal_lock_updates(journal->j_journal);
+>>> +		status = jbd2_journal_flush(journal->j_journal);
+>>
+>> What if jbd2_journal_flush gets failed? The 's_sequence' and 's_start'
+>> won't be reset, and I wonder if the problem still remains.
+>>
 > 
-> So this changes the existing behaviour in one way that may or may not
-> matter, I don't know:
+> Yes, but we don't want this to fail the mount process, instead we just log
+> an error and system administrator should know the result.
 > 
-> If setup() fails, the existing code will not exit. That means that if
-> the console has CON_ENABLED already set (some do set it statically or
-> set it from outside this function, I haven't looked into details the
-> various circumstances this can happen), the existing code will still
-> insert it. Your patch will make us not insert it.
+Thanks for your reply and I have another question about this issue. IMO
+the second trans is not complete as jbd2 sb has not been updated, so we
+do not need to replay it when mount again.
 
-Great catch! There is still a lot to learn about this code.
+Jun
 
-It seems that, for example, pstore and netconsole are not added
-into console_cmdline and do not match. They relly on the explicitely
-set CON_ENABLED.
-
-I would prefer to hide this into the new "shorter" function. I would
-rename it to try_enable_new_console() and add the following at the end:
-
-	/*
-	 * For example, pstore, netconsole, are enabled even
-	 * without matching.
-	 */
-	if (console->flags & CON_ENABLED)
-		return 0;
-
-Best Regards,
-Petr
