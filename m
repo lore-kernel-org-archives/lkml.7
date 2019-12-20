@@ -2,202 +2,379 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7747DC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 04:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FE7C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 04:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B3B92468E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 04:33:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576816431;
-	bh=/3I8UZHYkgD2I1Xpozao4FAudgwq95weGPaLhwIL07s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OphRc2qidUcE1gHDNonfoSr3mEZcWrjGUQS7bCjICAZVqGoIHP26avqnC7GbxcK6r
-	 2rwrZL5hUoXJGq3RC0qZyM0n6yNb/+bezuWGrv4z8TsuZXGbsoof8509l3E9s5exwr
-	 FB2I4/mjF46PmcR9NJs/WWwdyWz54Xc1GXAeObXs=
+	by mail.kernel.org (Postfix) with ESMTP id 01C1C227BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 04:34:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XFsS68au"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbfLTEdm (ORCPT
+        id S1727497AbfLTEeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 23:33:42 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36594 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727084AbfLTEdi (ORCPT
+        Thu, 19 Dec 2019 23:34:19 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40997 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbfLTEeS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 23:33:38 -0500
-Received: by mail-pl1-f195.google.com with SMTP id a6so2812310plm.3;
-        Thu, 19 Dec 2019 20:33:38 -0800 (PST)
+        Thu, 19 Dec 2019 23:34:18 -0500
+Received: by mail-lf1-f68.google.com with SMTP id m30so5968131lfp.8;
+        Thu, 19 Dec 2019 20:34:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Ol8A4Q2izXyIhNnbQIneXmiX1lSjbq6rcZ9kWpohYUU=;
-        b=YNLSe/LekfFNUGhWYFbV0azLVMSURdLB343//uW8Ta18bCs8toqT2jXKgt4ratPuLT
-         C18xOzT9CXUkptixRixETPmiuJCJ7jnNutrz+QIYLCG6ICjBBVL/jbaY2DLN9U5fMLOm
-         KgCP506Favd+EQK4UPNE+/dnBoOCDpk3+2+Qia3VofW0lz6caHKiIzhAGkNeMZKfSjDn
-         CP+/7Eo5VgMTAP7CR4Bg586Fgu4NLWNuIRG6R9SRR1L7TIOrx7FYpbYu05ATC+XmWhNW
-         QKVG6ywbY/L9jfKAzqqLz+CW3L3yViKxHRXcXjRwJP1YrOmwM35/LBeQu2KI/Dexvse4
-         k9Wg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nKGm2xFRSvP0X3vJgZHxnoRUBlQbc+oj9pelZTqgU7k=;
+        b=XFsS68aujoyzJlShGtNr3xUwKYurDAyaGvR/ZNTa9JOC/e7rhxXIBipB2BYaLINQUF
+         PH6/vJKhMqv41cu2pgcJvvFibGmnmXJ1uX6HGYx10dWUgLIQ53x/LEuoXQLueibT5p6T
+         e8pBhUBS3cvbBWmGneSBajewTPricSJYFkTQqCq28cMfqNi4Tfsl6L8YFBja+coyLN2p
+         ZB9Uu/OXSkzvx8joecRSi6aQlwmpuXDzqUez+2wZJJI/NspHWeywCZZU2TZxKZZpNFjq
+         8+U8fxBJT9fnADvUydy7U2aXkY2SSxsUc7ZZc/S/OzquU/XnVc+VuNVdGv/8dwSz3ZFL
+         LiCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=Ol8A4Q2izXyIhNnbQIneXmiX1lSjbq6rcZ9kWpohYUU=;
-        b=UNC6/0WbthuEMw7BIknIoeGUXTByFJl9GoCYKLGH49FnGbCOODtuHXpav7pBUEbA5+
-         2fyaT7/axRQqCQjLjP+hFis+8hxqu/Ii2ll+zkZxkloQyHQ+/2wLAzw1qZR6wDLf+8+2
-         qfwNoFZGo7uCJ+PXTwQe129ZWGNGSHuPi3Z4FylAvVyT4puKBW1HAgFlM9MTjvfKNajR
-         bdl1aSwKDsHCwfaSQTorM+m4BHACKgSTRnNeeVPZm8MbeCAY3scAOdeob3Ax1kkMdTKT
-         jhaY1mxDbf4x50WvW1TPiC4edB6K7DvFUrVBewN0b+6SP437Mb2jYXORF6JFH5j7d8nC
-         yVzA==
-X-Gm-Message-State: APjAAAVaeFyZUYOcvSSNYeJHBETu63K5BQtLoWzUXlhh3WfW9IOwegL3
-        lpx1tawdBEVY26Ju0HHXnnI=
-X-Google-Smtp-Source: APXvYqx8Ln0AOnLHC4qAstp4iWAA4bpWgjqBdYyaCEjiL8C5OLCmtVl85ms8W08heGYvOlag1jKkeQ==
-X-Received: by 2002:a17:902:b704:: with SMTP id d4mr12389934pls.54.1576816417704;
-        Thu, 19 Dec 2019 20:33:37 -0800 (PST)
-Received: from gaurie.seo.corp.google.com ([2401:fa00:d:1:4eb0:a5ef:3975:7440])
-        by smtp.gmail.com with ESMTPSA id z30sm11013982pfq.154.2019.12.19.20.33.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 20:33:37 -0800 (PST)
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH 7/9] perf record: Add --all-cgroups option
-Date:   Fri, 20 Dec 2019 13:32:51 +0900
-Message-Id: <20191220043253.3278951-8-namhyung@kernel.org>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-In-Reply-To: <20191220043253.3278951-1-namhyung@kernel.org>
-References: <20191220043253.3278951-1-namhyung@kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nKGm2xFRSvP0X3vJgZHxnoRUBlQbc+oj9pelZTqgU7k=;
+        b=QIakmgJLT4VDBxu+kHfDD9fcD87nfCd2YLdxyZuefxSCmHr1VhnreLJqEfd9L5nizG
+         HIBfHFcJGDGDSBKXOVZxnkuEQRmMBlgVwT+Tu2vyZsVVHIjpCgOU6lo7IBBuuw58z6ht
+         589kOVMSz5maB7khJXD1O+duqFYNVPFiBFDymi6b9LavCFNd+szlhmvKghQyFVg7tVbQ
+         UnGIbjwE8UTTYKkod6eZihAJoXLleLxpwod+50RlxuRiRj8RWnYC8C4BBwOoTNe2W5QG
+         JwIpbohCWcWVfDCRRSMwbh6AOvICBmY9SmzXcLvt8x/k83DGTzSgEfAenMm8jD5b2Eo2
+         cAig==
+X-Gm-Message-State: APjAAAV0zNy1EFAMb+zWqHV+rowtX2kuPU4pfnJaXlpyhrAKbbRHB5oj
+        Ch9WE7uBY2dax9+VnoPRjvoQpHAI
+X-Google-Smtp-Source: APXvYqzVTbn2TAXQz089+hANY9rahhNz6la/CgQ5Gdd6NvPbjZK87wAegs2R2PUoir7XlheU/we8CA==
+X-Received: by 2002:ac2:4add:: with SMTP id m29mr7437240lfp.190.1576816455041;
+        Thu, 19 Dec 2019 20:34:15 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id t27sm3771634ljd.26.2019.12.19.20.34.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Dec 2019 20:34:14 -0800 (PST)
+Subject: Re: [PATCH v4 06/19] soc: tegra: Add Tegra PMC clock registrations
+ into PMC driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
+        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
+        josephl@nvidia.com, daniel.lezcano@linaro.org,
+        mmaddireddy@nvidia.com, markz@nvidia.com,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1576613046-17159-1-git-send-email-skomatineni@nvidia.com>
+ <1576613046-17159-7-git-send-email-skomatineni@nvidia.com>
+ <87b2b266-e4a9-9a7a-2336-6ec57d7c4d1d@gmail.com>
+ <55a56c3d-3fac-cc77-46ae-acf5de77d262@gmail.com>
+ <e11d2ea9-20f1-6920-7efc-ba8a50312f75@gmail.com>
+ <c5bb3c25-1fae-3ca9-6bf3-c3d66be20e19@nvidia.com>
+ <664f1a41-d539-36e8-092b-11d7e4555108@nvidia.com>
+ <31020f6b-97bf-eb48-1150-0355c868eafc@gmail.com>
+ <8fa81a47-63e5-d64d-7cc6-7fdd20ff89f0@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <42f39288-da11-e28d-2a0e-28f1b020e674@gmail.com>
+Date:   Fri, 20 Dec 2019 07:34:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
+In-Reply-To: <8fa81a47-63e5-d64d-7cc6-7fdd20ff89f0@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The --all-cgroups option is to enable cgroup profiling support.  It
-tells kernel to record CGROUP events in the ring buffer so that perf
-report can identify task/cgroup association later.
+20.12.2019 07:13, Sowjanya Komatineni пишет:
+> 
+> On 12/19/19 5:39 PM, Dmitry Osipenko wrote:
+>> 20.12.2019 04:21, Sowjanya Komatineni пишет:
+>>> On 12/18/19 4:41 PM, Sowjanya Komatineni wrote:
+>>>> On 12/18/19 1:44 PM, Dmitry Osipenko wrote:
+>>>>> 18.12.2019 11:35, Dmitry Osipenko пишет:
+>>>>>> 18.12.2019 11:30, Dmitry Osipenko пишет:
+>>>>>>> 17.12.2019 23:03, Sowjanya Komatineni пишет:
+>>>>>>>> Tegra PMC has clk_out_1, clk_out_2, and clk_out_3 clocks and
+>>>>>>>> currently
+>>>>>>>> these PMC clocks are registered by Tegra clock driver with each
+>>>>>>>> clock as
+>>>>>>>> separate mux and gate clocks using clk_register_mux and
+>>>>>>>> clk_register_gate
+>>>>>>>> by passing PMC base address and register offsets and PMC
+>>>>>>>> programming for
+>>>>>>>> these clocks happens through direct PMC access by the clock driver.
+>>>>>>>>
+>>>>>>>> With this, when PMC is in secure mode any direct PMC access from
+>>>>>>>> the
+>>>>>>>> non-secure world does not go through and these clocks will not be
+>>>>>>>> functional.
+>>>>>>>>
+>>>>>>>> This patch adds these PMC clocks registration to pmc driver with
+>>>>>>>> PMC as
+>>>>>>>> a clock provider and registers each clock as single clock.
+>>>>>>>>
+>>>>>>>> clk_ops callback implementations for these clocks uses
+>>>>>>>> tegra_pmc_readl and
+>>>>>>>> tegra_pmc_writel which supports PMC programming in both secure
+>>>>>>>> mode and
+>>>>>>>> non-secure mode.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>>>> ---
+>>>>>>>>    drivers/soc/tegra/pmc.c | 248
+>>>>>>>> ++++++++++++++++++++++++++++++++++++++++++++++++
+>>>>>>>>    1 file changed, 248 insertions(+)
+>>>>>>>>
+>>>>>>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+>>>>>>>> index ea0e11a09c12..6d65194a6e71 100644
+>>>>>>>> --- a/drivers/soc/tegra/pmc.c
+>>>>>>>> +++ b/drivers/soc/tegra/pmc.c
+>>>>>>>> @@ -13,6 +13,9 @@
+>>>>>>>>      #include <linux/arm-smccc.h>
+>>>>>>>>    #include <linux/clk.h>
+>>>>>>>> +#include <linux/clk-provider.h>
+>>>>>>>> +#include <linux/clkdev.h>
+>>>>>>>> +#include <linux/clk/clk-conf.h>
+>>>>>>>>    #include <linux/clk/tegra.h>
+>>>>>>>>    #include <linux/debugfs.h>
+>>>>>>>>    #include <linux/delay.h>
+>>>>>>>> @@ -48,6 +51,7 @@
+>>>>>>>>    #include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
+>>>>>>>>    #include <dt-bindings/gpio/tegra186-gpio.h>
+>>>>>>>>    #include <dt-bindings/gpio/tegra194-gpio.h>
+>>>>>>>> +#include <dt-bindings/soc/tegra-pmc.h>
+>>>>>>>>      #define PMC_CNTRL            0x0
+>>>>>>>>    #define  PMC_CNTRL_INTR_POLARITY    BIT(17) /* inverts INTR
+>>>>>>>> polarity */
+>>>>>>>> @@ -100,6 +104,7 @@
+>>>>>>>>    #define PMC_WAKE2_STATUS        0x168
+>>>>>>>>    #define PMC_SW_WAKE2_STATUS        0x16c
+>>>>>>>>    +#define PMC_CLK_OUT_CNTRL        0x1a8
+>>>>>>>>    #define PMC_SENSOR_CTRL            0x1b0
+>>>>>>>>    #define  PMC_SENSOR_CTRL_SCRATCH_WRITE    BIT(2)
+>>>>>>>>    #define  PMC_SENSOR_CTRL_ENABLE_RST    BIT(1)
+>>>>>>>> @@ -155,6 +160,64 @@
+>>>>>>>>    #define  TEGRA_SMC_PMC_READ    0xaa
+>>>>>>>>    #define  TEGRA_SMC_PMC_WRITE    0xbb
+>>>>>>>>    +struct pmc_clk {
+>>>>>>>> +    struct clk_hw    hw;
+>>>>>>>> +    unsigned long    offs;
+>>>>>>>> +    u32        mux_mask;
+>>>>>>>> +    u32        mux_shift;
+>>>>>>>> +    u32        gate_shift;
+>>>>>>>> +};
+>>>>>>>> +
+>>>>>>>> +#define to_pmc_clk(_hw) container_of(_hw, struct pmc_clk, hw)
+>>>>>>>> +
+>>>>>>>> +struct pmc_clk_init_data {
+>>>>>>>> +    char *name;
+>>>>>>>> +    const char *const *parents;
+>>>>>>>> +    int num_parents;
+>>>>>>>> +    int clk_id;
+>>>>>>>> +    u8 mux_shift;
+>>>>>>>> +    u8 gate_shift;
+>>>>>>>> +};
+>>>>>>>> +
+>>>>>>>> +static const char * const clk_out1_parents[] = { "osc",
+>>>>>>>> "osc_div2",
+>>>>>>>> +    "osc_div4", "extern1",
+>>>>>>>> +};
+>>>>>>>> +
+>>>>>>>> +static const char * const clk_out2_parents[] = { "osc",
+>>>>>>>> "osc_div2",
+>>>>>>>> +    "osc_div4", "extern2",
+>>>>>>>> +};
+>>>>>>>> +
+>>>>>>>> +static const char * const clk_out3_parents[] = { "osc",
+>>>>>>>> "osc_div2",
+>>>>>>>> +    "osc_div4", "extern3",
+>>>>>>>> +};
+>>>>>>>> +
+>>>>>>>> +static const struct pmc_clk_init_data tegra_pmc_clks_data[] = {
+>>>>>>>> +    {
+>>>>>>>> +        .name = "clk_out_1",
+>>>>>>>> +        .parents = clk_out1_parents,
+>>>>>>>> +        .num_parents = ARRAY_SIZE(clk_out1_parents),
+>>>>>>>> +        .clk_id = TEGRA_PMC_CLK_OUT_1,
+>>>>>>>> +        .mux_shift = 6,
+>>>>>>>> +        .gate_shift = 2,
+>>>>>>> I'd replace these with a single .shift, given that mux_shift =
+>>>>>>> gate_shift + 4 for all clocks.
+>>>>>>>
+>>>>>>>> +    },
+>>>>>>>> +    {
+>>>>>>>> +        .name = "clk_out_2",
+>>>>>>>> +        .parents = clk_out2_parents,
+>>>>>>>> +        .num_parents = ARRAY_SIZE(clk_out2_parents),
+>>>>>>>> +        .clk_id = TEGRA_PMC_CLK_OUT_2,
+>>>>>>>> +        .mux_shift = 14,
+>>>>>>>> +        .gate_shift = 10,
+>>>>>>>> +    },
+>>>>>>>> +    {
+>>>>>>>> +        .name = "clk_out_3",
+>>>>>>>> +        .parents = clk_out3_parents,
+>>>>>>>> +        .num_parents = ARRAY_SIZE(clk_out3_parents),
+>>>>>>>> +        .clk_id = TEGRA_PMC_CLK_OUT_3,
+>>>>>>>> +        .mux_shift = 22,
+>>>>>>>> +        .gate_shift = 18,
+>>>>>>>> +    },
+>>>>>>>> +};
+>>>>>>>> +
+>>>>>>>>    struct tegra_powergate {
+>>>>>>>>        struct generic_pm_domain genpd;
+>>>>>>>>        struct tegra_pmc *pmc;
+>>>>>>>> @@ -254,6 +317,9 @@ struct tegra_pmc_soc {
+>>>>>>>>         */
+>>>>>>>>        const struct tegra_wake_event *wake_events;
+>>>>>>>>        unsigned int num_wake_events;
+>>>>>>>> +
+>>>>>>>> +    const struct pmc_clk_init_data *pmc_clks_data;
+>>>>>>>> +    unsigned int num_pmc_clks;
+>>>>>>>>    };
+>>>>>>>>      static const char * const tegra186_reset_sources[] = {
+>>>>>>>> @@ -2163,6 +2229,173 @@ static int tegra_pmc_clk_notify_cb(struct
+>>>>>>>> notifier_block *nb,
+>>>>>>>>        return NOTIFY_OK;
+>>>>>>>>    }
+>>>>>>>>    +static void pmc_clk_fence_udelay(u32 offset)
+>>>>>>>> +{
+>>>>>>>> +    tegra_pmc_readl(pmc, offset);
+>>>>>>>> +    /* pmc clk propagation delay 2 us */
+>>>>>>>> +    udelay(2);
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +static u8 pmc_clk_mux_get_parent(struct clk_hw *hw)
+>>>>>>>> +{
+>>>>>>>> +    struct pmc_clk *clk = to_pmc_clk(hw);
+>>>>>>>> +    u32 val;
+>>>>>>>> +
+>>>>>>>> +    val = tegra_pmc_readl(pmc, clk->offs) >> clk->mux_shift;
+>>>>>>>> +    val &= clk->mux_mask;
+>>>>>>>> +
+>>>>>>>> +    return val;
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +static int pmc_clk_mux_set_parent(struct clk_hw *hw, u8 index)
+>>>>>>>> +{
+>>>>>>>> +    struct pmc_clk *clk = to_pmc_clk(hw);
+>>>>>>>> +    u32 val;
+>>>>>>>> +
+>>>>>>>> +    val = tegra_pmc_readl(pmc, clk->offs);
+>>>>>>>> +    val &= ~(clk->mux_mask << clk->mux_shift);
+>>>>>>>> +    val |= index << clk->mux_shift;
+>>>>>>>> +    tegra_pmc_writel(pmc, val, clk->offs);
+>>>>>>>> +    pmc_clk_fence_udelay(clk->offs);
+>> Is this fencing applies only to clock changes or maybe it won't hurt to
+>> move it into tegra_pmc_writel()?
+>>
+>>>>>>>> +    return 0;
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +static int pmc_clk_is_enabled(struct clk_hw *hw)
+>>>>>>>> +{
+>>>>>>>> +    struct pmc_clk *clk = to_pmc_clk(hw);
+>>>>>>>> +
+>>>>>>>> +    return tegra_pmc_readl(pmc, clk->offs) & BIT(clk->gate_shift)
+>>>>>>>> ? 1 : 0;
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +static void pmc_clk_set_state(unsigned long offs, u32 shift, int
+>>>>>>>> state)
+>>>>>>>> +{
+>>>>>>>> +    u32 val;
+>>>>>>>> +
+>>>>>>>> +    val = tegra_pmc_readl(pmc, offs);
+>>>>>>>> +    val = state ? (val | BIT(shift)) : (val & ~BIT(shift));
+>>>>>>>> +    tegra_pmc_writel(pmc, val, offs);
+>>>>>>>> +    pmc_clk_fence_udelay(offs);
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +static int pmc_clk_enable(struct clk_hw *hw)
+>>>>>>>> +{
+>>>>>>>> +    struct pmc_clk *clk = to_pmc_clk(hw);
+>>>>>>>> +
+>>>>>>>> +    pmc_clk_set_state(clk->offs, clk->gate_shift, 1);
+>>>>>>>> +
+>>>>>>>> +    return 0;
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +static void pmc_clk_disable(struct clk_hw *hw)
+>>>>>>>> +{
+>>>>>>>> +    struct pmc_clk *clk = to_pmc_clk(hw);
+>>>>>>>> +
+>>>>>>>> +    pmc_clk_set_state(clk->offs, clk->gate_shift, 0);
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +static const struct clk_ops pmc_clk_ops = {
+>>>>>>>> +    .get_parent = pmc_clk_mux_get_parent,
+>>>>>>>> +    .set_parent = pmc_clk_mux_set_parent,
+>>>>>>>> +    .determine_rate = __clk_mux_determine_rate,
+>>>>>>>> +    .is_enabled = pmc_clk_is_enabled,
+>>>>>>>> +    .enable = pmc_clk_enable,
+>>>>>>>> +    .disable = pmc_clk_disable,
+>>>>>>>> +};
+>>>>>>>> +
+>>>>>>>> +static struct clk *
+>>>>>>>> +tegra_pmc_clk_out_register(const struct pmc_clk_init_data *data,
+>>>>>>>> +               unsigned long offset)
+>>>>>>>> +{
+>>>>>>>> +    struct clk_init_data init;
+>>>>>>>> +    struct pmc_clk *pmc_clk;
+>>>>>>>> +
+>>>>>>>> +    pmc_clk = kzalloc(sizeof(*pmc_clk), GFP_KERNEL);
+>>>>>>>> +    if (!pmc_clk)
+>>>>>>>> +        return ERR_PTR(-ENOMEM);
+>>>>>>>> +
+>>>>>>>> +    init.name = data->name;
+>>>>>>>> +    init.ops = &pmc_clk_ops;
+>>>>>>>> +    init.parent_names = data->parents;
+>>>>>>>> +    init.num_parents = data->num_parents;
+>>>>>>>> +    init.flags = CLK_SET_RATE_NO_REPARENT | CLK_SET_RATE_PARENT |
+>>>>>>>> +             CLK_SET_PARENT_GATE;
+>>>>>>>> +
+>>>>>>>> +    pmc_clk->hw.init = &init;
+>>>>>>>> +    pmc_clk->offs = offset;
+>>>>>>>> +    pmc_clk->mux_mask = 3;
+>>>>>>> If mux_mask is a constant value, perhaps will be better to
+>>>>>>> replace the
+>>>>>>> variable with a literal?
+>>>>>>>
+>>>>>>> #define PMC_CLK_OUT_MUX_MASK    GENMASK(1, 0)
+>>>>>> Maybe even:
+>>>>>>
+>>>>>> #define PMC_CLK_OUT_MUX_MASK(c)    GENMASK(c->shift + 1, c->shift)
+>>>> MUX Mask is used only here for PMC clock out and is same for all
+>>>> clk_out mux so will use
+>>>>
+>>>> #define PMC_CLK_OUT_MUX_MASK    GENMASK(1, 0)
+>>>>
+>>>>> I want to point out that may be a separated gate/mux shifts is a fine
+>>>>> variant, you should try and see whether another variants produce more
+>>>>> concise result.
+>>>>>
+>>>>> [snip]
+>>> We can do mux_shift as gate_shift + 4 and that restricts this clk
+>>> register only for clk1/2/3 as well and there are no other clocks in pmc
+>>> anyway.
+>>>
+>>> How about using bit shift define for CLK1, CLK2, and CLK3?
+>>>
+>>> .mux_shift = PMC_CLK1_SRC_SEL_SHIFT,
+>>>
+>>> .gate_shift = PMC_CLK1_FORCE_EN_SHIFT,
+>>>
+>>>
+>> I think that just renaming ".gate_shift" -> ".force_en_shift" should be
+>> good enough.
+> You meant to assign bit position directly instead of defines like what I
+> have now in v4 and use force_en_shift instead of gate_shift?
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/Documentation/perf-record.txt |  5 ++++-
- tools/perf/builtin-record.c              |  5 +++++
- tools/perf/util/evsel.c                  | 13 ++++++++++++-
- tools/perf/util/evsel.h                  |  1 +
- tools/perf/util/record.h                 |  1 +
- 5 files changed, 23 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index b23a4012a606..6dd9d69d7dee 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -385,7 +385,10 @@ displayed with the weight and local_weight sort keys.  This currently works for
- abort events and some memory events in precise mode on modern Intel CPUs.
- 
- --namespaces::
--Record events of type PERF_RECORD_NAMESPACES.
-+Record events of type PERF_RECORD_NAMESPACES.  This enables 'cgroup_id' sort key.
-+
-+--all-cgroups::
-+Record events of type PERF_RECORD_CGROUP.  This enables 'cgroup' sort key.
- 
- --transaction::
- Record transaction flags for transaction related events.
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 2802de9538ff..7d7912e121d6 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1433,6 +1433,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	if (rec->opts.record_namespaces)
- 		tool->namespace_events = true;
- 
-+	if (rec->opts.record_cgroup)
-+		tool->cgroup_events = true;
-+
- 	if (rec->opts.auxtrace_snapshot_mode || rec->switch_output.enabled) {
- 		signal(SIGUSR2, snapshot_sig_handler);
- 		if (rec->opts.auxtrace_snapshot_mode)
-@@ -2363,6 +2366,8 @@ static struct option __record_options[] = {
- 			"per thread proc mmap processing timeout in ms"),
- 	OPT_BOOLEAN(0, "namespaces", &record.opts.record_namespaces,
- 		    "Record namespaces events"),
-+	OPT_BOOLEAN(0, "all-cgroups", &record.opts.record_cgroup,
-+		    "Record cgroup events"),
- 	OPT_BOOLEAN(0, "switch-events", &record.opts.record_switch_events,
- 		    "Record context switch events"),
- 	OPT_BOOLEAN_FLAG(0, "all-kernel", &record.opts.all_kernel,
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 0f5a67603139..d649b5606178 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1102,6 +1102,11 @@ void perf_evsel__config(struct evsel *evsel, struct record_opts *opts,
- 	if (opts->record_namespaces)
- 		attr->namespaces  = track;
- 
-+	if (opts->record_cgroup) {
-+		attr->cgroup = track && !perf_missing_features.cgroup;
-+		perf_evsel__set_sample_bit(evsel, CGROUP);
-+	}
-+
- 	if (opts->record_switch_events)
- 		attr->context_switch = track;
- 
-@@ -1671,6 +1676,8 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 		evsel->core.attr.ksymbol = 0;
- 	if (perf_missing_features.bpf)
- 		evsel->core.attr.bpf_event = 0;
-+	if (perf_missing_features.cgroup)
-+		evsel->core.attr.cgroup = 0;
- retry_sample_id:
- 	if (perf_missing_features.sample_id_all)
- 		evsel->core.attr.sample_id_all = 0;
-@@ -1782,7 +1789,11 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 	 * Must probe features in the order they were added to the
- 	 * perf_event_attr interface.
- 	 */
--	if (!perf_missing_features.aux_output && evsel->core.attr.aux_output) {
-+	if (!perf_missing_features.cgroup && evsel->core.attr.cgroup) {
-+		perf_missing_features.cgroup = true;
-+		pr_debug2_peo("switching off cgroup\n");
-+		goto fallback_missing_features;
-+	} else if (!perf_missing_features.aux_output && evsel->core.attr.aux_output) {
- 		perf_missing_features.aux_output = true;
- 		pr_debug2_peo("Kernel has no attr.aux_output support, bailing out\n");
- 		goto out_close;
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index dc14f4a823cd..df71b530740b 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -119,6 +119,7 @@ struct perf_missing_features {
- 	bool ksymbol;
- 	bool bpf;
- 	bool aux_output;
-+	bool cgroup;
- };
- 
- extern struct perf_missing_features perf_missing_features;
-diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
-index 5421fd2ad383..24316458be20 100644
---- a/tools/perf/util/record.h
-+++ b/tools/perf/util/record.h
-@@ -34,6 +34,7 @@ struct record_opts {
- 	bool	      auxtrace_snapshot_on_exit;
- 	bool	      auxtrace_sample_mode;
- 	bool	      record_namespaces;
-+	bool	      record_cgroup;
- 	bool	      record_switch_events;
- 	bool	      all_kernel;
- 	bool	      all_user;
--- 
-2.24.1.735.g03f4e72817-goog
-
+Yes
