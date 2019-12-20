@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1982DC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DAEC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E424C24684
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C4E124689
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852509;
-	bh=QffAXIO8wTj9TESbd4JgFXRKt1Sp4VQVkqLq8G2C0y8=;
+	s=default; t=1576852512;
+	bh=3hwFr1ZSEJn7nMsQE8yZf0dKqDxpxdTJJtSZCV8O5bM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kUrntTNdTZRmUSem6P/wfK7rMk2+0TVLMKxmMb5AVXpT0CRAA6wR9hyUBgeCf5lmN
-	 ZI63IrekOi/URGbGryCpow6rCDdGaq8Ydn7+eYOQJs4liQ6H8N7C4thkh+S1RNJs+7
-	 z24lcVDy8JvUVb0bYhI/SiWyh+uIq+Scr8DhYoGQ=
+	b=M5luy/tbUm9+APWPZ+B96XQcK0fZgeMfrQO2g0L3DuqxHEP3+Y5ZKELPadwEBJVVa
+	 4tCDt01QQikAUpFzq4mGJ7UCtZHX3PTPk4cAaRacL0FRnjJmx6n4TH+OrEGJmkDmar
+	 Rr1aifV0z2NqqXadLo/NDsdzeRDpIYTmU071xpBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbfLTOfI (ORCPT
+        id S1728174AbfLTOfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:35:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39246 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:35:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728293AbfLTOe5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:34:57 -0500
+        id S1727634AbfLTOfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:35:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 842F324688;
-        Fri, 20 Dec 2019 14:34:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 295AA21D7D;
+        Fri, 20 Dec 2019 14:34:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852496;
-        bh=QffAXIO8wTj9TESbd4JgFXRKt1Sp4VQVkqLq8G2C0y8=;
+        s=default; t=1576852499;
+        bh=3hwFr1ZSEJn7nMsQE8yZf0dKqDxpxdTJJtSZCV8O5bM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W5PEbGh1cYktLyxpr6EQCKa2Viv4bSFSIj1iq/PQ9a6O/vKBptgASHrmCBke/K1rt
-         4+TAXD3bLADpQ4rilvltZK/r3D81h7vQq0GNc7Iuqe1431j/yi77FAO4Fh8yVxviHd
-         l900RvZ5x+Lj1QaC3ABk266J29kSevwBKb08CYgA=
+        b=CvI5OGFlo0D8ne5FotStHecQMLeXNC5Z1rAE7uOAHJDp65Qr7lot5Wv6WIedjNu3U
+         QZDwQibCJVGT8k0nwAqIekE5Jh5xsy2PGBry2hjuVVKy883lmHHZmWN14F7nfZw47P
+         YLFtPp4whR60c0i4z0kA0CeIOGKntvYwgANEE35E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Roman Bolshakov <r.bolshakov@yadro.com>,
+        Krishna Kant <krishna.kant@purestorage.com>,
+        Alexei Potashnik <alexei@purestorage.com>,
         Quinn Tran <qutran@marvell.com>,
         Himanshu Madhani <hmadhani@marvell.com>,
         Hannes Reinecke <hare@suse.de>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 17/34] scsi: qla2xxx: Fix PLOGI payload and ELS IOCB dump length
-Date:   Fri, 20 Dec 2019 09:34:16 -0500
-Message-Id: <20191220143433.9922-17-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 19/34] scsi: qla2xxx: Send Notify ACK after N2N PLOGI
+Date:   Fri, 20 Dec 2019 09:34:18 -0500
+Message-Id: <20191220143433.9922-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220143433.9922-1-sashal@kernel.org>
 References: <20191220143433.9922-1-sashal@kernel.org>
@@ -64,14 +66,20 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Roman Bolshakov <r.bolshakov@yadro.com>
 
-[ Upstream commit 0334cdea1fba36fad8bdf9516f267ce01de625f7 ]
+[ Upstream commit 5e6b01d84b9d20bcd77fc7c4733a2a4149bf220a ]
 
-The size of the buffer is hardcoded as 0x70 or 112 bytes, while the size of
-ELS IOCB is 0x40 and the size of PLOGI payload returned by Get Parameters
-command is 0x74.
+qlt_handle_login schedules session for deletion even if a login is in
+progress. That causes login bouncing, i.e. a few logins are made before it
+settles down.
 
-Cc: Quinn Tran <qutran@marvell.com>
-Link: https://lore.kernel.org/r/20191125165702.1013-9-r.bolshakov@yadro.com
+Complete the first login by sending Notify Acknowledge IOCB via
+qlt_plogi_ack_unref if the session is pending login completion.
+
+Fixes: 9cd883f07a54 ("scsi: qla2xxx: Fix session cleanup for N2N")
+Cc: Krishna Kant <krishna.kant@purestorage.com>
+Cc: Alexei Potashnik <alexei@purestorage.com>
+Link: https://lore.kernel.org/r/20191125165702.1013-11-r.bolshakov@yadro.com
+Acked-by: Quinn Tran <qutran@marvell.com>
 Acked-by: Himanshu Madhani <hmadhani@marvell.com>
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 Tested-by: Hannes Reinecke <hare@suse.de>
@@ -79,33 +87,21 @@ Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_iocb.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/scsi/qla2xxx/qla_target.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/qla2xxx/qla_iocb.c b/drivers/scsi/qla2xxx/qla_iocb.c
-index c699bbb8485bb..7e47321e003c8 100644
---- a/drivers/scsi/qla2xxx/qla_iocb.c
-+++ b/drivers/scsi/qla2xxx/qla_iocb.c
-@@ -2537,7 +2537,8 @@ qla24xx_els_logo_iocb(srb_t *sp, struct els_entry_24xx *els_iocb)
- 		ql_dbg(ql_dbg_io + ql_dbg_buffer, vha, 0x3073,
- 		    "PLOGI ELS IOCB:\n");
- 		ql_dump_buffer(ql_log_info, vha, 0x0109,
--		    (uint8_t *)els_iocb, 0x70);
-+		    (uint8_t *)els_iocb,
-+		    sizeof(*els_iocb));
- 	} else {
- 		els_iocb->tx_byte_count = sizeof(struct els_logo_payload);
- 		els_iocb->tx_address[0] =
-@@ -2703,7 +2704,8 @@ qla24xx_els_dcmd2_iocb(scsi_qla_host_t *vha, int els_opcode,
+diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
+index 8eda55e917e04..e9545411ec5a9 100644
+--- a/drivers/scsi/qla2xxx/qla_target.c
++++ b/drivers/scsi/qla2xxx/qla_target.c
+@@ -4779,6 +4779,7 @@ static int qlt_handle_login(struct scsi_qla_host *vha,
  
- 	ql_dbg(ql_dbg_disc + ql_dbg_buffer, vha, 0x3073, "PLOGI buffer:\n");
- 	ql_dump_buffer(ql_dbg_disc + ql_dbg_buffer, vha, 0x0109,
--	    (uint8_t *)elsio->u.els_plogi.els_plogi_pyld, 0x70);
-+	    (uint8_t *)elsio->u.els_plogi.els_plogi_pyld,
-+	    sizeof(*elsio->u.els_plogi.els_plogi_pyld));
+ 	switch (sess->disc_state) {
+ 	case DSC_DELETED:
++	case DSC_LOGIN_PEND:
+ 		qlt_plogi_ack_unref(vha, pla);
+ 		break;
  
- 	rval = qla2x00_start_sp(sp);
- 	if (rval != QLA_SUCCESS) {
 -- 
 2.20.1
 
