@@ -2,99 +2,117 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA919C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 17:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 129C7C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 17:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C35072068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 17:35:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Snbp1guX"
+	by mail.kernel.org (Postfix) with ESMTP id E72CF2068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 17:36:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727467AbfLTRfv (ORCPT
+        id S1727485AbfLTRgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 12:35:51 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39167 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727388AbfLTRfu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 12:35:50 -0500
-Received: by mail-io1-f66.google.com with SMTP id c16so8749734ioh.6;
-        Fri, 20 Dec 2019 09:35:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wLQc/GdbaTxAeCv2i12B87WYv/+yect1z7boH4l+zxc=;
-        b=Snbp1guXp8WJMDJ7NEVUNEciyC9/XuhqMy9fNg3+bjS7yLK55or/hnw71baS4sJ1Mt
-         gzT94sJGeHuW14jm+2j6qfFPKE4fxYOMefHHNOyWm4Vx6iUMBpQA3pOBR3Hz1jiE5bzd
-         3XIYrAbuX9Rs5d01UVLArDmRdGdajXIfhotqQPWNBW8BhhRazdOCFAqEp7wb4B7WA5oi
-         R8ERO6pLFKULtxTKJX1gm+JWcAa1SWcuZtqWpraDjNiZD3GNoQJbRUq0E7kt7TFN0IVN
-         Yt6/DqIt5P2n1Ldst1jhjRK8ttvNUA8gjjClChFZHWY3we+2+1G+vHfDP1Mcp2Y8OjvI
-         35pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wLQc/GdbaTxAeCv2i12B87WYv/+yect1z7boH4l+zxc=;
-        b=Y8hJlwY0YQMgCVL5laDXvTg3hn72/mlgy3A5DBOv2RqDCWGQxEgexRsFOHXoxoqpYq
-         FR8vz0/mx9ioJfdM1ZruXf4dYnxmejY/VvnFtS6M0VWzdxvIwk1pVTFzzJqtf2jcGi1l
-         mv5IyA6bIMOFX/DDjFEOxS5cIpvaSI55Yq57RyQZLOlBONk8wZCvjoy48GhN7tPIZH6L
-         bcaf5gKMF3rFFZ+7Fx9F9Yeuqo6bJQeZCbkGjY0nwh8D+EzE+iv3Q5DF0AM4MHJ7KvzB
-         MisHNocBop/llqcsdAdUXvPKc7LUJ0etPYzyGnvzBOpu74OJ21WTZMH+Z//q3ObdW1Yd
-         +qJg==
-X-Gm-Message-State: APjAAAVbYZFeOZ8na8HPz7gpP5HXzX2+Sfuv2yFzGQ1TYuF6m5reGvms
-        HBipZ822o8wnV5I7IcE9U06KQ/PQKZWHBKffh2Q=
-X-Google-Smtp-Source: APXvYqyd6lNdaHFBiEIhRmMdonT6ZPlDDmQi7UK/M23u6kJ0+lmsitobqqCafVHaJ6YJ8DClym6dn6Yf+v+vBHKzdj8=
-X-Received: by 2002:a05:6602:280b:: with SMTP id d11mr10717971ioe.250.1576863349472;
- Fri, 20 Dec 2019 09:35:49 -0800 (PST)
+        Fri, 20 Dec 2019 12:36:24 -0500
+Received: from foss.arm.com ([217.140.110.172]:53638 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727388AbfLTRgX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 12:36:23 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1204C1FB;
+        Fri, 20 Dec 2019 09:36:23 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D01A13F6CF;
+        Fri, 20 Dec 2019 09:36:21 -0800 (PST)
+Date:   Fri, 20 Dec 2019 17:36:19 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] sched: rt: Make RT capacity aware
+Message-ID: <20191220173619.rf4riiayfrcqqo3o@e107158-lin.cambridge.arm.com>
+References: <20191009104611.15363-1-qais.yousef@arm.com>
+ <20191028143749.GE4114@hirez.programming.kicks-ass.net>
+ <20191028140147.036a0001@grimm.local.home>
+ <20191028205034.GL4643@worktop.programming.kicks-ass.net>
+ <20191220160149.fj5gdkaxm763fhfl@e107158-lin.cambridge.arm.com>
+ <20191220171806.GQ2827@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20191220024936.GA380394@chrisdown.name> <CAOQ4uxjqSWcrA1reiyit9DRt+aq2tXBxLdPE31RrYw1yr=4hjg@mail.gmail.com>
- <20191220121615.GB388018@chrisdown.name> <CAOQ4uxgo_kAttnB4N1+om5gScYSDn3FXAr+_GUiqNy_79iiLXQ@mail.gmail.com>
- <20191220164632.GA26902@bombadil.infradead.org>
-In-Reply-To: <20191220164632.GA26902@bombadil.infradead.org>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Fri, 20 Dec 2019 19:35:38 +0200
-Message-ID: <CAOQ4uxhYY9Ep1ncpU+E3bWg4ZpR8pjvLJMA5vj+7frEJ2KTwsg@mail.gmail.com>
-Subject: Re: [PATCH] fs: inode: Reduce volatile inode wraparound risk when
- ino_t is 64 bit
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Chris Down <chris@chrisdown.name>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com,
-        Hugh Dickins <hughd@google.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        "zhengbin (A)" <zhengbin13@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191220171806.GQ2827@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 6:46 PM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Fri, Dec 20, 2019 at 03:41:11PM +0200, Amir Goldstein wrote:
-> > Suggestion:
-> > 1. Extend the kmem_cache API to let the ctor() know if it is
-> > initializing an object
-> >     for the first time (new page) or recycling an object.
->
-> Uh, what?  The ctor is _only_ called when new pages are allocated.
-> Part of the contract with the slab user is that objects are returned to
-> the slab in an initialised state.
+On 12/20/19 18:18, Peter Zijlstra wrote:
+> On Fri, Dec 20, 2019 at 04:01:49PM +0000, Qais Yousef wrote:
+> > On 10/28/19 21:50, Peter Zijlstra wrote:
+> > > On Mon, Oct 28, 2019 at 02:01:47PM -0400, Steven Rostedt wrote:
+> > > > On Mon, 28 Oct 2019 15:37:49 +0100
+> > > > Peter Zijlstra <peterz@infradead.org> wrote:
+> > > 
+> > > > > Works for me; Steve you OK with this?
+> > > > 
+> > > > Nothing against it, but I want to take a deeper look before we accept
+> > > > it. Are you OK in waiting a week? I'm currently at Open Source Summit
+> > > > and still have two more talks to write (giving them Thursday). I wont
+> > > > have time to look till next week.
+> > > 
+> > > Sure, I'll keep it in my queue, but will make sure it doesn't hit -tip
+> > > until you've had time.
+> > 
+> > Reviewers are happy with this now. It'd be nice if you can pick it up again for
+> > the next round to -tip.
+> > 
+> 
+> Sorry, I missed Steve's and Dietmar's replies. It should shorty appear
+> in queue.git and I'll try and push to -tip over the weekend (provided
+> the robots don't come up with something fishy).
 
-Right. I mixed up the ctor() with alloc_inode().
-So is there anything stopping us from reusing an existing non-zero
-value of  i_ino in shmem_get_inode()? for recycling shmem ino
-numbers?
+No worries, thanks! It missed the 5.5 merge window anyway.
 
-Thanks,
-Amir.
+We had 2 reports by the buildbot last time, luckily I kept the fixups at the
+top of my local branch.
+
+Happy to apply locally again or prefer I send v3?
+
+Cheers
+
+---
+
+diff --git a/kernel/sched/cpupri.c b/kernel/sched/cpupri.c
+index 799791c01d60..bdfb802d4c12 100644
+--- a/kernel/sched/cpupri.c
++++ b/kernel/sched/cpupri.c
+@@ -46,6 +46,8 @@ static int convert_prio(int prio)
+  * @cp: The cpupri context
+  * @p: The task
+  * @lowest_mask: A mask to fill in with selected CPUs (or NULL)
++ * @fitness_fn: A pointer to a function to do custom checks whether the CPU
++ *             fits a specific criteria so that we only return those CPUs.
+  *
+  * Note: This function returns the recommended CPUs as calculated during the
+  * current invocation.  By the time the call returns, the CPUs may have in
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index 3a68054e15b3..6afecb5557db 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -452,7 +452,7 @@ static inline int on_rt_rq(struct sched_rt_entity *rt_se)
+  * Note that uclamp_min will be clamped to uclamp_max if uclamp_min
+  * > uclamp_max.
+  */
+-inline bool rt_task_fits_capacity(struct task_struct *p, int cpu)
++static inline bool rt_task_fits_capacity(struct task_struct *p, int cpu)
+ {
+        unsigned int min_cap;
+        unsigned int max_cap;
+
