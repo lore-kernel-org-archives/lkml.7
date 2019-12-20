@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8454FC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFFAC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 597172465E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7136D21D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852525;
-	bh=cFAeeerNIHhEbysudvFWLjjl0LULntAll620cNQ4cKc=;
+	s=default; t=1576852528;
+	bh=cef2ALIBEnBzxkYG45vbt3FVcHCfQJFOp3MYNavC4e0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pI8hog4HnS18Ht52SYlzy3tbM3wvolvNw+dDQ8scZculkFUp+CDNFFj20MUZpdRXM
-	 O6LumH/qSTSjYKgHgjqZHgHT6w2HWfV4mgCy6wMiErL4NV/F6Np1awxlEnn1TaJtHY
-	 jgtN0XU+ZKBF0BtRaHnciT54o7SYfpbnN/m8ysL4=
+	b=bmwJyBcqFKfjwH57pNzwt/3jMj88LyNXfasLw/VUPtM1bI8SgNGRkYN9ZvZSkBq9M
+	 F04WY2/YxuZ9vRqeHb1MylpOLRDfy+N66HAnp16ppljxa/SIA8NFLv5qrQYORkr7mw
+	 YMrY1P9EjQgnSUTq1jsy8h4JlT46jNAlpUtWQ1Vo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbfLTOfX (ORCPT
+        id S1727942AbfLTOf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:35:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39614 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:35:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728207AbfLTOfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:35:11 -0500
+        id S1728383AbfLTOfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:35:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C4E724687;
-        Fri, 20 Dec 2019 14:35:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 641B02465E;
+        Fri, 20 Dec 2019 14:35:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852510;
-        bh=cFAeeerNIHhEbysudvFWLjjl0LULntAll620cNQ4cKc=;
+        s=default; t=1576852515;
+        bh=cef2ALIBEnBzxkYG45vbt3FVcHCfQJFOp3MYNavC4e0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D/3dF5MtFzS7rvS5S5rPJ4aYrGWTk4tIbPaL0klkcbdFPiSxQkr+1HIBVgruqIHlU
-         IC7d8psxN7dW13MW/izUxJu6g4qRkswx7EsGfHNhf/fkedbji+JQtTe8/qLifqqQv9
-         8rTb7BPRxJFCp/MqQvp/Elgs7cBx/vl5AGuvahKA=
+        b=2PND1+PivRSwfqQVRK1NKRtuSPfXdH7T4FGlkwzkqSTw5MPOUOmDR3WmtaXXYUMfl
+         0f82TMKwlt6by5zLr4aPEZCeaczJNax4tLu5eVhJf5UZSXBf2oVAXmoWENWoVsxrnD
+         ZC3cmJiST7oWZl9cADug76KfOamDQz2odlxixXdk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 28/34] s390/cpum_sf: Adjust sampling interval to avoid hitting sample limits
-Date:   Fri, 20 Dec 2019 09:34:27 -0500
-Message-Id: <20191220143433.9922-28-sashal@kernel.org>
+Cc:     Paul Durrant <pdurrant@amazon.com>,
+        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
+        Juergen Gross <jgross@suse.com>,
+        Sasha Levin <sashal@kernel.org>,
+        xen-devel@lists.xenproject.org, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 32/34] xen-blkback: prevent premature module unload
+Date:   Fri, 20 Dec 2019 09:34:31 -0500
+Message-Id: <20191220143433.9922-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220143433.9922-1-sashal@kernel.org>
 References: <20191220143433.9922-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,73 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Paul Durrant <pdurrant@amazon.com>
 
-[ Upstream commit 39d4a501a9ef55c57b51e3ef07fc2aeed7f30b3b ]
+[ Upstream commit fa2ac657f9783f0891b2935490afe9a7fd29d3fa ]
 
-Function perf_event_ever_overflow() and perf_event_account_interrupt()
-are called every time samples are processed by the interrupt handler.
-However function perf_event_account_interrupt() has checks to avoid being
-flooded with interrupts (more then 1000 samples are received per
-task_tick).  Samples are then dropped and a PERF_RECORD_THROTTLED is
-added to the perf data. The perf subsystem limit calculation is:
+Objects allocated by xen_blkif_alloc come from the 'blkif_cache' kmem
+cache. This cache is destoyed when xen-blkif is unloaded so it is
+necessary to wait for the deferred free routine used for such objects to
+complete. This necessity was missed in commit 14855954f636 "xen-blkback:
+allow module to be cleanly unloaded". This patch fixes the problem by
+taking/releasing extra module references in xen_blkif_alloc/free()
+respectively.
 
-    maximum sample frequency := 100000 --> 1 samples per 10 us
-    task_tick = 10ms = 10000us --> 1000 samples per task_tick
-
-The work flow is
-
-measurement_alert() uses SDBT head and each SBDT points to 511
- SDB pages, each with 126 sample entries. After processing 8 SBDs
- and for each valid sample calling:
-
-     perf_event_overflow()
-       perf_event_account_interrupts()
-
-there is a considerable amount of samples being dropped, especially when
-the sample frequency is very high and near the 100000 limit.
-
-To avoid the high amount of samples being dropped near the end of a
-task_tick time frame, increment the sampling interval in case of
-dropped events. The CPU Measurement sampling facility on the s390
-supports only intervals, specifiing how many CPU cycles have to be
-executed before a sample is generated. Increase the interval when the
-samples being generated hit the task_tick limit.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Paul Durrant <pdurrant@amazon.com>
+Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/perf_cpum_sf.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/block/xen-blkback/xenbus.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
-index df92c2af99b69..0b09585305521 100644
---- a/arch/s390/kernel/perf_cpum_sf.c
-+++ b/arch/s390/kernel/perf_cpum_sf.c
-@@ -1260,6 +1260,22 @@ static void hw_perf_event_update(struct perf_event *event, int flush_all)
- 	if (sampl_overflow)
- 		OVERFLOW_REG(hwc) = DIV_ROUND_UP(OVERFLOW_REG(hwc) +
- 						 sampl_overflow, 1 + num_sdb);
+diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
+index 55869b362fdfb..25c41ce070a7f 100644
+--- a/drivers/block/xen-blkback/xenbus.c
++++ b/drivers/block/xen-blkback/xenbus.c
+@@ -179,6 +179,15 @@ static struct xen_blkif *xen_blkif_alloc(domid_t domid)
+ 	blkif->domid = domid;
+ 	atomic_set(&blkif->refcnt, 1);
+ 	init_completion(&blkif->drain_complete);
 +
-+	/* Perf_event_overflow() and perf_event_account_interrupt() limit
-+	 * the interrupt rate to an upper limit. Roughly 1000 samples per
-+	 * task tick.
-+	 * Hitting this limit results in a large number
-+	 * of throttled REF_REPORT_THROTTLE entries and the samples
-+	 * are dropped.
-+	 * Slightly increase the interval to avoid hitting this limit.
++	/*
++	 * Because freeing back to the cache may be deferred, it is not
++	 * safe to unload the module (and hence destroy the cache) until
++	 * this has completed. To prevent premature unloading, take an
++	 * extra module reference here and release only when the object
++	 * has been freed back to the cache.
 +	 */
-+	if (event_overflow) {
-+		SAMPL_RATE(hwc) += DIV_ROUND_UP(SAMPL_RATE(hwc), 10);
-+		debug_sprintf_event(sfdbg, 1, "%s: rate adjustment %ld\n",
-+				    __func__,
-+				    DIV_ROUND_UP(SAMPL_RATE(hwc), 10));
-+	}
-+
- 	if (sampl_overflow || event_overflow)
- 		debug_sprintf_event(sfdbg, 4, "hw_perf_event_update: "
- 				    "overflow stats: sample=%llu event=%llu\n",
++	__module_get(THIS_MODULE);
+ 	INIT_WORK(&blkif->free_work, xen_blkif_deferred_free);
+ 
+ 	return blkif;
+@@ -328,6 +337,7 @@ static void xen_blkif_free(struct xen_blkif *blkif)
+ 
+ 	/* Make sure everything is drained before shutting down */
+ 	kmem_cache_free(xen_blkif_cachep, blkif);
++	module_put(THIS_MODULE);
+ }
+ 
+ int __init xen_blkif_interface_init(void)
 -- 
 2.20.1
 
