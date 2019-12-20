@@ -2,87 +2,110 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A27AC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 20:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD4EC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 20:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0B2920866
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 20:13:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Uyrcnoo7"
+	by mail.kernel.org (Postfix) with ESMTP id 4B1AE20866
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 20:16:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbfLTUNW (ORCPT
+        id S1727492AbfLTUQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 15:13:22 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:36594 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727394AbfLTUNW (ORCPT
+        Fri, 20 Dec 2019 15:16:26 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:34176 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727402AbfLTUQZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 15:13:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=dLcmpRz2dHxIctx3Z0LJU9fWsVWtkTbestp9wAL4NSU=; b=Uyrcnoo7yYQv0BouG+Pl9Xs23
-        g1GITmgl53QOxA7Bb9pvmNKrh90wMCE9ERj7MHfKmCemjC4JwFOns5WCzth2f0hfkBBaB2RDz1bkL
-        1E6eqfGCKfVH7BJmb5OtfZSfLC0OoFeBe9Ixv9k+6TCtdCakxZkD8o3xA40fT9bU33WytdX6aL/A7
-        QJ6Qo2P5Swsq1KUGuze/Xiuh9dS/NpBa5OXEioNGPQ97foMkovsQLzqRLz1mX2b8L76lpm/KqcptJ
-        Ob9Fj87w4QKf0hBWALkDj6dikE4NOCDr52N8xyBIPO5yY5WaMSWjYqpP2CM9Cd5HZEWl3g7cTtjuy
-        qZRQPv/bw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iiOeC-0003nW-M2; Fri, 20 Dec 2019 20:13:16 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DDE52300DB7;
-        Fri, 20 Dec 2019 21:11:49 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0E7352024479A; Fri, 20 Dec 2019 21:13:14 +0100 (CET)
-Date:   Fri, 20 Dec 2019 21:13:14 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     David Howells <dhowells@redhat.com>, linux-afs@lists.infradead.org,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] rxrpc: struct mutex cannot be used for
- rxrpc_call::user_mutex
-Message-ID: <20191220201314.GS2827@hirez.programming.kicks-ass.net>
-References: <157659672074.19580.11641288666811539040.stgit@warthog.procyon.org.uk>
- <20191218135047.GS2844@hirez.programming.kicks-ass.net>
- <20191218190833.ufpxjrvin5jvp3m5@linux-p48b>
- <20191218202801.wokf6hcvbafmjnkd@linux-p48b>
- <20191219090535.GV2844@hirez.programming.kicks-ass.net>
- <20191219174417.jax2fy3fvrvrrpsq@linux-p48b>
+        Fri, 20 Dec 2019 15:16:25 -0500
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iiOhB-00087w-Lp; Fri, 20 Dec 2019 21:16:21 +0100
+Date:   Fri, 20 Dec 2019 21:16:21 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v2 3/3] x86/fpu/xstate: Invalidate fpregs when
+ __fpu_restore_sig() fails
+Message-ID: <20191220201621.riyrptl5vwdukztc@linutronix.de>
+References: <20191212210855.19260-1-yu-cheng.yu@intel.com>
+ <20191212210855.19260-4-yu-cheng.yu@intel.com>
+ <20191218155449.sk4gjabtynh67jqb@linutronix.de>
+ <587463c4e5fa82dff8748e5f753890ac390e993e.camel@intel.com>
+ <20191219142217.axgpqlb7zzluoxnf@linutronix.de>
+ <19a94f88f1bc66bb81dbf5dd72083d03ca5090e9.camel@intel.com>
+ <20191219171635.phdsfkvsyazwaq7s@linutronix.de>
+ <1607597639a6c6255127fef07704ee9193e33166.camel@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191219174417.jax2fy3fvrvrrpsq@linux-p48b>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1607597639a6c6255127fef07704ee9193e33166.camel@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 09:44:17AM -0800, Davidlohr Bueso wrote:
-> On Thu, 19 Dec 2019, Peter Zijlstra wrote:
+On 2019-12-19 09:40:06 [-0800], Yu-cheng Yu wrote:
+> On Thu, 2019-12-19 at 18:16 +0100, Sebastian Andrzej Siewior wrote:
+> > On 2019-12-19 08:44:08 [-0800], Yu-cheng Yu wrote:
+> > > Yes, this works.  But then everywhere that calls copy_*_to_xregs_*() etc. needs to be checked.
+> > > Are there other alternatives?
+> > 
+> > I don't like the big hammer approach of your very much. It might make
+> > all it "correct" but then it might lead to more "invalids" then needed.
+> > It also required to export the symbol which I would like to avoid.
 > 
-> > Automate what exactly?
+> Copying to registers invalids current fpregs context.  It might not cause
+> extra register loading, because registers are in fact already invalidated
+> and any task owning the context needs to reload anyway.  Setting
+> fpu_fpregs_owner_ctx is only to let the rest of the kernel know the
+> fact that already happened.
 > 
-> What I meant was automating finding cases that are 'false positives' such
-> as rxrpc and kexec _before_ re-adding the warn.
+> But, I agree with you the patch does look biggish.
 
-I suppose we can keep the WARN patch in a -next enabled branch for a
-while, without it nessecarily going into linus' tree on the next
-release.
+Now that I looked at it:
+All kernel loads don't fail. If they fail we end up in the handler and
+restore to init-state. So no need to reset `fpu_fpregs_owner_ctx' in this
+case. The variable is actually set to task's FPU state so resetting is
+not required.
+fpu__save() invokes copy_kernel_to_fpregs() (on older boxes) and by
+resetting `fpu_fpregs_owner_ctx' we would load it twice (in fpu__save()
+and on return to userland).
 
-That does require people actually testing -next, which seems somewhat
-optimistic.
+So far I can tell, the only problematic case is the signal code because
+here the state restore *may* fail and we *may* do it in two steps. The
+error happens only if both `may' are true.
 
-Alternatively, you can try your hand at smatch ...
+> > So if this patch works for you and you don't find anything else where it
+> > falls apart then I will audit tomorrow all callers which got the
+> > "invalidator" added and check for that angle.
+> 
+> Yes, that works for me.  Also, most of these call sites are under fpregs_lock(),
+> and we could use __cpu_invalidate_fpregs_state().
+> I was also thinking maybe add warnings when any new code re-introduces the issue,
+> but not sure where to add that.  Do you think that is needed?
+
+I was thinking about it. So the `read-FPU-state' function must be
+invoked within the fpregs_lock() section. This could be easily
+enforced. At fpregs_unlock() time `fpu_fpregs_owner_ctx' must be NULL or
+pointing to task's FPU.
+My brain is fried for today so I'm sure if this is a sane approach. But
+it might be a start.
+
+> Thanks,
+> Yu-cheng
+
+Sebastian
