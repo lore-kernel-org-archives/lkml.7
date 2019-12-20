@@ -2,184 +2,213 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE33C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 08:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF8CC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 08:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D86CA20716
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 08:38:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="gqgZyfDT"
+	by mail.kernel.org (Postfix) with ESMTP id 08C8A20716
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 08:41:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576831310;
+	bh=L533QNwMh74aZS7SvQ2sIdrQmds3Wye/rWgJoy5IiyU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=DGXq2qGnKIagWhX36cLg+rqUSkYf4p+pjpXnVfJSc/TArx67wOkCvipi4bJSELyGE
+	 mN2esKVMx5OVP81SA7fE5LfcfgExw329OiOlviLA7C6m1gkTyX+cXcYwTEshpz0+ou
+	 mwDnYIs60hdQ91lh/kqvwm5esp7wW1pKGfNdWlOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbfLTIiI (ORCPT
+        id S1727209AbfLTIls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 03:38:08 -0500
-Received: from mail-eopbgr700069.outbound.protection.outlook.com ([40.107.70.69]:59936
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726651AbfLTIiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 03:38:08 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oSsigN2HIL1fCcIbf2xexsCr6T9oMf5K8OumU+c8Kz972Tcor+RbyHGQoBCYr3goReVmE2u5hwj/a8mrB5DmevqpK8xU5S/fvILALomOlwfCY9lCuc8kD1uaf/3qYTijb50rW76UGNpCa8+D4IZGViwxN8JPem9bLlnk3HjOq3TG1HKZiGIZDB386dTMBfoE5ccJ6b2Uox1caNRtdS0l3yl4YNf1Gx4rNq8ZpaNPosp7rkZtHFYGAkEGEw5Opb+sVUlICtHK760qHqESanqURY61Elcs6FjjdHscR4DJEX3ZpFHZmZasgNhE+6doFYHEDbT5CeNr8Ke/xF4Fryk+eg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pLcQJIC1S+0YSE6e4VtMV6Hwbg3ZflHxhmeLrgqULr0=;
- b=hW4Xiw4TiLrsFFHGdxLPT+fvGo7CK6FPwvdZaLmWD245y1HgV1QB8SiCFppJQn7sppy+MhTM2BFCqkByN1/esclX6qIEHTnyvnG2n8AKPsx7txosWRNrbGvLirUEw3rHr/Nf835CZn6FDdWrs5XM299Ljw465YfIBtXkddMMrI0EEngaJgzNEQBgOrnPY3ICq5SeD1V4lcufeRw55yVwQcUTNXr4EeTcjbPAH1EmCVOd9pBqMobcgF/lRZiLwbxZOsw7ejQzRw8aRqunON7D11QMoV3Z+nB6Apmq9IBvUrWBSlH8zlnZmv8IVT+L8o1jKQ142bw85y1LE6l1XUq63g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pLcQJIC1S+0YSE6e4VtMV6Hwbg3ZflHxhmeLrgqULr0=;
- b=gqgZyfDTB0oEKdQQeP1TDLIikd4AQmwaSbyGr/EqvnbVrRUbyalw1sTHHM3IURMQa1ke9q7PqAYuFd7arvbeQaK40HuZP9LQOROPkdAAJd57rVaCh+8TAoGQpLYti4pbMHX9ul8c1RFA/a6NaYwFJsiRTEwKnZhAoYRHn90F7PU=
-Received: from BL0PR02CA0113.namprd02.prod.outlook.com (2603:10b6:208:35::18)
- by MN2PR02MB5790.namprd02.prod.outlook.com (2603:10b6:208:11b::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2559.13; Fri, 20 Dec
- 2019 08:38:04 +0000
-Received: from BL2NAM02FT042.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::202) by BL0PR02CA0113.outlook.office365.com
- (2603:10b6:208:35::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2559.13 via Frontend
- Transport; Fri, 20 Dec 2019 08:38:04 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT042.mail.protection.outlook.com (10.152.76.193) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2559.14
- via Frontend Transport; Fri, 20 Dec 2019 08:38:03 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1iiDnO-0002PY-Rh; Fri, 20 Dec 2019 00:38:02 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1iiDnK-000667-2h; Fri, 20 Dec 2019 00:37:58 -0800
-Received: from xsj-pvapsmtp01 (xsj-smtp1.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xBK8blCY025271;
-        Fri, 20 Dec 2019 00:37:47 -0800
-Received: from [172.30.17.107]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1iiDn8-00065H-SM; Fri, 20 Dec 2019 00:37:47 -0800
-Subject: Re: [PATCH] clocksource/drivers: Fix memory leaks in
- ttc_setup_clockevent and ttc_setup_clocksource
-To:     Johan Hovold <johan@kernel.org>,
-        Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     Michal Simek <michal.simek@xilinx.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        emamd001@umn.edu
-References: <20191220000923.9924-1-navid.emamdoost@gmail.com>
- <20191220051013.GT22665@localhost>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <3d72fe70-25fb-cdee-ac7d-bc1aa2ae5137@xilinx.com>
-Date:   Fri, 20 Dec 2019 09:37:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20191220051013.GT22665@localhost>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Fri, 20 Dec 2019 03:41:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52688 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727164AbfLTIls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 03:41:48 -0500
+Received: from devnote2 (unknown [220.96.9.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91240206EC;
+        Fri, 20 Dec 2019 08:41:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576831307;
+        bh=L533QNwMh74aZS7SvQ2sIdrQmds3Wye/rWgJoy5IiyU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YPxkxF5jR7HY0LeJOQvPRE2FJN/AksClfApEsiiVuPOakAyNiJ8QOjBB5Z569/oQD
+         nASRWcQt588Xvuz611BZ26ilwRVpcfHiuH9c25LiXCKBLCa1d7SYBCCAedWOnTyl5B
+         0fWjcRC31411XLRVa8tVCbBhZc2u0iiOpbbq7spo=
+Date:   Fri, 20 Dec 2019 17:41:42 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     rostedt@goodmis.org, artem.bityutskiy@linux.intel.com,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: [PATCH 0/7] tracing: Add support for in-kernel synthetic event
+ API
+Message-Id: <20191220174142.34b4db9ba8f66e9385826e6b@kernel.org>
+In-Reply-To: <1576772667.2236.17.camel@kernel.org>
+References: <cover.1576679206.git.zanussi@kernel.org>
+        <20191219234511.bb499b3d1590059506db6982@kernel.org>
+        <1576772667.2236.17.camel@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(376002)(136003)(346002)(199004)(189003)(336012)(31686004)(70586007)(8936002)(9786002)(26005)(426003)(186003)(70206006)(5660300002)(4326008)(31696002)(44832011)(54906003)(2616005)(6666004)(356004)(81156014)(8676002)(478600001)(36756003)(110136005)(2906002)(316002)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB5790;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e6d9d3bd-ed15-4516-fdda-08d78527ee05
-X-MS-TrafficTypeDiagnostic: MN2PR02MB5790:
-X-Microsoft-Antispam-PRVS: <MN2PR02MB579059FB0DFC6194BB9E81C5C62D0@MN2PR02MB5790.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:2449;
-X-Forefront-PRVS: 025796F161
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: y5zTrcnlDfz6f3B3yamrrW11Mbf1sL/ItwNS7LyilJek2mgmryFV0zHjt85RUF3jeevEsvg7kp6tGHE7694QvpV2eGx3o0HDlJluL89stShezwZ8qxjhnfHKCrZHKtXH+NnwqyaBvD0nkFBYz0kuJA0eFt2tFxkQjShBoV1m7rwQMbeaWle7a6Q8xd5OW+p+QjAGLNhq8ZuwjmIRnY8FLR8L+jPe8aqDJyLRPQ9cpMJ0MU9bGZ0psMO4CzSAnZ0wIKgsxMQksxf0qr+1TkeYKHs4fmfqGg1lYUT5UAYV5g9HVvNoPMniuSDMFptyZmQRiKny7y25XDTfxUa6+ogertwF/OL0MuRi3F/Z5c/5O+eqV8GHZ2THcuLEj7052qoVvJ9nKx16kJ7zJGRG0xv+eTA72fzDTiHdCpYaNXVe7Pf9aSRN68M6xDyy4vQ1sL2d
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Dec 2019 08:38:03.8072
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e6d9d3bd-ed15-4516-fdda-08d78527ee05
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB5790
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20. 12. 19 6:10, Johan Hovold wrote:
-> On Thu, Dec 19, 2019 at 06:09:21PM -0600, Navid Emamdoost wrote:
->> In the implementation of ttc_setup_clockevent() and
->> ttc_setup_clocksource(), the allocated memory for ttccs is leaked when
->> clk_notifier_register() fails. Use goto to direct the execution into error
->> handling path.
-> 
-> No, that memory was never leaked since that function did not return on
-> registration errors before your patch.
-> 
->> Fixes: 70504f311d4b ("clocksource/drivers/cadence_ttc: Convert init function to return error")
-> 
-> Perhaps you meant to fix the actual leak that was added by this commit
-> in a different function, ttc_setup_clockevent(), when returning on
-> notifier-registration errors?
-> 
-> Also should the clock be left enabled on errors?
-> 
->> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
->> ---
->>  drivers/clocksource/timer-cadence-ttc.c | 22 +++++++++++++---------
->>  1 file changed, 13 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/clocksource/timer-cadence-ttc.c b/drivers/clocksource/timer-cadence-ttc.c
->> index c6d11a1cb238..46d69982ad33 100644
->> --- a/drivers/clocksource/timer-cadence-ttc.c
->> +++ b/drivers/clocksource/timer-cadence-ttc.c
->> @@ -328,10 +328,8 @@ static int __init ttc_setup_clocksource(struct clk *clk, void __iomem *base,
->>  	ttccs->ttc.clk = clk;
->>  
->>  	err = clk_prepare_enable(ttccs->ttc.clk);
->> -	if (err) {
->> -		kfree(ttccs);
->> -		return err;
->> -	}
->> +	if (err)
->> +		goto release_ttcce;
->>  
->>  	ttccs->ttc.freq = clk_get_rate(ttccs->ttc.clk);
->>  
->> @@ -341,8 +339,10 @@ static int __init ttc_setup_clocksource(struct clk *clk, void __iomem *base,
->>  
->>  	err = clk_notifier_register(ttccs->ttc.clk,
->>  				    &ttccs->ttc.clk_rate_change_nb);
->> -	if (err)
->> +	if (err) {
->>  		pr_warn("Unable to register clock notifier.\n");
->> +		goto release_ttcce;
->> +	}
-> 
+Hi Tom,
 
-+ this is IMHO v3 version. It means just label it properly and also keep
-changes log.
+On Thu, 19 Dec 2019 10:24:27 -0600
+Tom Zanussi <zanussi@kernel.org> wrote:
 
-Thanks,
-Michal
+> Hi Masami,
+> 
+> On Thu, 2019-12-19 at 23:45 +0900, Masami Hiramatsu wrote:
+> > Hello Tom,
+> > 
+> > On Wed, 18 Dec 2019 09:27:36 -0600
+> > Tom Zanussi <zanussi@kernel.org> wrote:
+> > 
+> > > Hi,
+> > > 
+> > > I've recently had several requests and suggestions from users to
+> > > add
+> > > support for the creation and generation of synthetic events from
+> > > kernel code such as modules, and not just from the available
+> > > command
+> > > line commands.
+> > 
+> > This reminds me my recent series of patches.
+> > 
+> > Could you use synth_event_run_command() for this purpose as I did
+> > in boot-time tracing series?
+> > 
+> > https://lkml.kernel.org/r/157528179955.22451.16317363776831311868.stg
+> > it@devnote2
+> > 
+> > Above example uses a command string as same as command string, but I
+> > think
+> > we can introduce some macros to construct the command string for
+> > easier
+> > definition.
+> > 
+> > Or maybe it is possible to pass the const char *args[] array to that
+> > API,
+> > instead of single char *cmd. (for dynamic event definiton)
+> > 
+> > Maybe we should consider more generic APIs for modules to
+> > create/delete
+> > dynamic-event including synthetic and probes, and those might reuse
+> > existing command parsers.
+> > 
+> 
+> I'll have to look at your patches more closely, but I think it should
+> be possible to generate the command string synth_event_run_command()
+> needs, or the equivalent const char *args[] array you mentioned, from
+> the higher-level event definition in my patches.
 
+Agreed.
+
+> 
+> So the two ways of defining an event in my patches is 1) from a static
+> array known at build-time defined like this:
+> 
+>   static struct synth_field_desc synthtest_fields[] = {
+>        { .type = "pid_t",              .name = "next_pid_field" },
+>        { .type = "char[16]",           .name = "next_comm_field" },
+>        { .type = "u64",                .name = "ts_ns" },
+>        { .type = "u64",                .name = "ts_ms" },
+>        { .type = "unsigned int",       .name = "cpu" },
+>        { .type = "char[64]",           .name = "my_string_field" },
+>        { .type = "int",                .name = "my_int_field" },
+>   };
+> 
+> which is then passed to create_synth_event(&synthtest_fields)
+> 
+> or 2) at run-time by adding fields individually as they become known:
+> 
+>   add_synth_field("type", "name")
+> 
+> which requires some sort of start/end("event name").
+
+I think the 1) API seems a bit redundant IF we can expose the
+single comamnd string interface.
+
+> I think that should all be possible using your patches, and maybe
+> generalizable to not just synth events by removing _synth_ from
+> everything?
+
+If the implementation is enough generic, I think it is better to keep
+"synth" for better usability.
+
+For example, if the API is just generating a command string,
+it would be easy to be reused by probe-events too.
+
+----
+struct dynevent_command {
+  char *cmd_buf;
+  enum dynevent_type type; /* Set by gen_*_cmd and checked on each API */
+};
+
+int gen_synth_cmd(struct dynevent_command *, const char *name, ...);
+int add_synth_field(struct dynevent_command *, const char *type, const char *var);
+int gen_kprobe_cmd(struct dynevent_command *, const char *name, const char *loc, ....);
+int gen_kretprobe_cmd(struct dynevent_command *, const char *name, const char *loc, ....);
+int add_probe_fields(struct dynevent_command *, const char *field, ...);
+int create_dynevent(struct dynevent_command *);
+
+struct dynevent_command cmd;
+
+gen_synth_cmd(&cmd, "synthtest", "pid_t", "next_pid_field");
+add_synth_field(&cmd, "char[16]", "next_comm_field");
+...
+create_dynevent(&cmd);
+
+gen_kprobe_cmd(&cmd, "myprobe", "vfs_read+5", "%ax");
+add_probe_fields(&cmd, "%bx", "%dx");
+create_dynevent(&cmd);
+
+gen_kretprobe_cmd(&cmd, "myretprobe", "vfs_write", "$retval");
+create_dynevent(&cmd);
+----
+
+Actually, these are just wrappers of type verifier & strcat() :P
+And it can provide similar user-experience and generic interface
+with simplar implementation.
+
+>  Let me know what you think.  If that's correct, I can go
+> and rewrite the event creation part on top of your patches.
+
+No need to move onto my series. Mine focuses on tracing
+boot process, but your's are providing APIs for modules.
+
+> > > This patchset adds support for that.  The first three patches add
+> > > some
+> > > minor preliminary setup, followed by the two main patches that add
+> > > the
+> > > ability to create and generate synthetic events from the
+> > > kernel.  The
+> > > next patch adds a test module that demonstrates actual use of the
+> > > API
+> > > and verifies that it works as intended, followed by Documentation.
+> > 
+> > Could you also check the locks are correctly acquired? It seems that
+> > your APIs doesn't lock it.
+> > 
+> 
+> I did notice that I said that trace_types_lock and event_mutex should
+> be held for trace_array_find() but it should only be trace_types_lock,
+> and then I missed doing that in get_event_file() in one place.  And I
+> also don't really need the nolock versions, so will simplify and remove
+> them.  I think elsewhere event_mutex is taken where needed.  But if
+> talking about something else, please let me know.
+
+Yes, that is what I found.
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
