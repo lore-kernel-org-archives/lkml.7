@@ -2,138 +2,87 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCD2C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 362C2C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 845CA227BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:55:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TQC1fmet"
+	by mail.kernel.org (Postfix) with ESMTP id 06628227BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:55:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbfLTBzW (ORCPT
+        id S1726963AbfLTBzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 20:55:22 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:34658 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbfLTBzW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 20:55:22 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBK1YQvW178885;
-        Fri, 20 Dec 2019 01:54:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=yvWe495ldICiygqOjZaczcPhEGKNXC0rTc5IDLPnmg0=;
- b=TQC1fmettNcpPG+K0+r5uCWd4QbxtaXxHbLeXWr6uYZR0w8qvXec9nz2V3nqd/rsA7G0
- +840JBvsu6VKJK0saZjQckAjjnp3kM4dblPfYXGbEs6kOTqCsU7OW8wjY5CnXpL2LVer
- Lmz0GdGblAcbt2Tlx9FAhFLBvNgeNw/RSenBOGDSPlfRZLnmki+NxIsW8YFZwIy6GZZK
- hlPDQBNnE4+QSs86PfkG+PE3xqR9RW6pxgXerp5yENFxo/3DxiR0GA3F0q17n3+WbNMY
- pqBf0lTcc0y/yuvaL051enyPxjy0h7i1rmPaa5WviRThLmxMKt2VRj5MnaWWhMKGJBst 2g== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2x01jae617-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Dec 2019 01:54:48 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBK1sfDV073498;
-        Fri, 20 Dec 2019 01:54:48 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2x04mst1n8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Dec 2019 01:54:47 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBK1rgwj030477;
-        Fri, 20 Dec 2019 01:53:44 GMT
-Received: from localhost (/10.145.178.64)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 19 Dec 2019 17:53:41 -0800
-Date:   Thu, 19 Dec 2019 17:53:39 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>, axboe@kernel.dk,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, tytso@mit.edu,
-        adilger.kernel@dilger.ca, ming.lei@redhat.com, osandov@fb.com,
-        jthumshirn@suse.de, minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
-        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
-        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
-        chaitanya.kulkarni@wdc.com, bvanassche@acm.org,
-        dhowells@redhat.com, asml.silence@gmail.com
-Subject: Re: [PATCH RFC 1/3] block: Add support for REQ_OP_ASSIGN_RANGE
- operation
-Message-ID: <20191220015338.GB7473@magnolia>
-References: <157599668662.12112.10184894900037871860.stgit@localhost.localdomain>
- <157599696813.12112.14140818972910110796.stgit@localhost.localdomain>
- <yq1woatc8zd.fsf@oracle.com>
- <3f2e341b-dea4-c5d0-8eb0-568b6ad2f17b@virtuozzo.com>
- <yq1a77oc56s.fsf@oracle.com>
+        Thu, 19 Dec 2019 20:55:37 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56144 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726964AbfLTBzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 20:55:36 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 0C1F689C28CBC3381A9E;
+        Fri, 20 Dec 2019 09:55:35 +0800 (CST)
+Received: from huawei.com (10.175.127.16) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Fri, 20 Dec 2019
+ 09:55:25 +0800
+From:   chenmaodong <chenmaodong@huawei.com>
+To:     <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
+        <David1.Zhou@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>
+CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, <zhangpan26@huawei.com>,
+        <wuxu.wu@huawei.com>, <hushiyuan@huawei.com>,
+        <chenmaodong@huawei.com>
+Subject: [PATCH ] drm/radeon: Fix potential buffer overflow in ci_set_mc_special_registers()
+Date:   Fri, 20 Dec 2019 09:55:05 +0800
+Message-ID: <1576806905-4590-1-git-send-email-chenmaodong@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq1a77oc56s.fsf@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9476 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912200011
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9476 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912200010
+Content-Type: text/plain
+X-Originating-IP: [10.175.127.16]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 05:37:47PM -0500, Martin K. Petersen wrote:
-> 
-> Kirill,
-> 
-> > Hm. BLKDEV_ZERO_NOUNMAP is used in __blkdev_issue_write_zeroes() only.
-> > So, do I understand right that we should the below two?:
-> >
-> > 1) Introduce a new flag BLKDEV_ZERO_ALLOCATE for
-> > blkdev_issue_write_zeroes().
-> 
-> > 2) Introduce a new flag REQ_NOZERO in enum req_opf.
-> 
-> Something like that. If zeroing is a problem for you.
-> 
-> Right now we offer the following semantics:
-> 
-> 	Deallocate, no zeroing (discard)
-> 
-> 	Optionally deallocate, zeroing (zeroout)
-> 
-> 	Allocate, zeroing (zeroout + NOUNMAP)
-> 
-> Some devices also implement a fourth option which would be:
-> 
-> 	Anchor: Allocate, no zeroing
+Hi,
 
-What happens if you anchor and then try to read the results?  IO error?
+The length of table->mc_reg_address is SMU7_DISCRETE_MC_REGISTER_ARRAY_SIZE.
 
-(Yeah, I'm being lazy and not digging through SBC-3, sorry...)
+In ci_set_mc_special_registers(), the boundary checking
 
---D
+here("if (j > SMU7_DISCRETE_MC_REGISTER_ARRAY_SIZE)") allows 'j' equal to
 
-> > Won't this confuse a reader that we have blkdev_issue_write_zeroes(),
-> > which does not write zeroes sometimes? Maybe we should rename
-> > blkdev_issue_write_zeroes() in some more generic name?
-> 
-> Maybe. The naming is what it is for hysterical raisins and reflects how
-> things are implemented in the storage protocols. I wouldn't worry too
-> much about that. We can rename things if need be but we shouldn't plumb
-> an essentially identical operation through the block stack just to
-> expose a different name at the top.
-> 
-> -- 
-> Martin K. Petersen	Oracle Linux Engineering
+SMU7_DISCRETE_MC_REGISTER_ARRAY_SIZE which can easily cause the 
+
+table->mc_reg_address to read out of bounds. 
+
+To solve this problem, we change ">" to ">=" and check this boundary 
+
+of table->mc_reg_address after "pi->mem_gddr5" is false.
+
+Signed-off-by: chenmaodong <chenmaodong@huawei.com>
+---
+ drivers/gpu/drm/radeon/ci_dpm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/radeon/ci_dpm.c b/drivers/gpu/drm/radeon/ci_dpm.c
+index a97294a..42ef745a 100644
+--- a/drivers/gpu/drm/radeon/ci_dpm.c
++++ b/drivers/gpu/drm/radeon/ci_dpm.c
+@@ -4364,10 +4364,10 @@ static int ci_set_mc_special_registers(struct radeon_device *rdev,
+ 					table->mc_reg_table_entry[k].mc_data[j] |= 0x100;
+ 			}
+ 			j++;
+-			if (j > SMU7_DISCRETE_MC_REGISTER_ARRAY_SIZE)
+-				return -EINVAL;
+ 
+ 			if (!pi->mem_gddr5) {
++				if (j >= SMU7_DISCRETE_MC_REGISTER_ARRAY_SIZE)
++					return -EINVAL;
+ 				table->mc_reg_address[j].s1 = MC_PMG_AUTO_CMD >> 2;
+ 				table->mc_reg_address[j].s0 = MC_PMG_AUTO_CMD >> 2;
+ 				for (k = 0; k < table->num_entries; k++) {
+-- 
+2.7.4
+
