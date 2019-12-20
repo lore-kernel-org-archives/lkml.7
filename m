@@ -2,175 +2,221 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C55C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 025F8C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D2A52468B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:31:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852262;
-	bh=zYukKoBtk75cwM0xfkpM0w8tOaNetdmGgDxMy7GLPrw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c6r2ebKjUHEspuPlu/ynY2HkiA591aoQDADshUGtBRkQsaP1RyacQMWtU0Mv6QAZm
-	 6SUaR+9cTCU8QLcr+6SE931LQTA7ZZACXtmmU0BY8/BXoEsN69jzmScb2JFzL4M2yy
-	 bCXiPzLnfHhnNQdzoFkohNySeXGUEQhfzurhZprg=
+	by mail.kernel.org (Postfix) with ESMTP id CA88324686
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:31:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbfLTObB (ORCPT
+        id S1728001AbfLTObD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:31:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34614 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:31:03 -0500
+Received: from foss.arm.com ([217.140.110.172]:51232 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727861AbfLTOaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727864AbfLTOaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Dec 2019 09:30:46 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6910D21D7E;
-        Fri, 20 Dec 2019 14:30:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852245;
-        bh=zYukKoBtk75cwM0xfkpM0w8tOaNetdmGgDxMy7GLPrw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=exwzzek7jGx44rFVCidj1EV/uLK66089uMsJ9nv3hWNpNI72Uk3ehFCnWk6m8mS9a
-         1vP9nyqkRGsS69cNPjFHV292NGVGU3Lc7XgA2rhW6lAUOf4e53K3zXp3nibBls6tXD
-         Sb3hMQqHzUJH+8w/DpqAcleA3xk3e9Sw27LWfOoM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 37/52] drm/nouveau: Fix drm-core using atomic code-paths on pre-nv50 hardware
-Date:   Fri, 20 Dec 2019 09:29:39 -0500
-Message-Id: <20191220142954.9500-37-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
-References: <20191220142954.9500-1-sashal@kernel.org>
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CFB930E;
+        Fri, 20 Dec 2019 06:30:45 -0800 (PST)
+Received: from e119886-lin.cambridge.arm.com (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8C12B3F718;
+        Fri, 20 Dec 2019 06:30:43 -0800 (PST)
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH v2 06/18] arm64: KVM: split debug save restore across vm/traps activation
+Date:   Fri, 20 Dec 2019 14:30:13 +0000
+Message-Id: <20191220143025.33853-7-andrew.murray@arm.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191220143025.33853-1-andrew.murray@arm.com>
+References: <20191220143025.33853-1-andrew.murray@arm.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-[ Upstream commit 64d17f25dcad518461ccf0c260544e1e379c5b35 ]
+If we enable profiling buffer controls at EL1 generate a trap exception
+to EL2, it also changes profiling buffer to use EL1&0 stage 1 translation
+regime in case of VHE. To support SPE both in the guest and host, we
+need to first stop profiling and flush the profiling buffers before
+we activate/switch vm or enable/disable the traps.
 
-We do not support atomic modesetting on pre-nv50 hardware, but until now
-our connector code was setting drm_connector->state on pre-nv50 hardware.
+In prepartion to do that, lets split the debug save restore functionality
+into 4 steps:
+1. debug_save_host_context - saves the host context
+2. debug_restore_guest_context - restore the guest context
+3. debug_save_guest_context - saves the guest context
+4. debug_restore_host_context - restores the host context
 
-This causes the core to enter atomic modesetting paths in at least:
+Lets rename existing __debug_switch_to_{host,guest} to make sure it's
+aligned to the above and just add the place holders for new ones getting
+added here as we need them to support SPE in guests.
 
-1. drm_connector_get_encoder(), returning connector->state->best_encoder
-which is always 0, causing us to always report 0 as encoder_id in
-the drmModeConnector struct returned by drmModeGetConnector().
-
-2. drm_encoder_get_crtc(), returning NULL because uses_atomic get set,
-causing us to always report 0 as crtc_id in the drmModeEncoder struct
-returned by drmModeGetEncoder()
-
-Which in turn confuses userspace, at least plymouth thinks that the pipe
-has changed because of this and tries to reconfigure it unnecessarily.
-
-More in general we should not set drm_connector->state in the non-atomic
-code as this violates the drm-core's expectations.
-
-This commit fixes this by using a nouveau_conn_atom struct embedded in the
-nouveau_connector struct for property handling in the non-atomic case.
-
-Fixes: https://bugzilla.redhat.com/show_bug.cgi?id=1706557
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Andrew Murray <andrew.murray@arm.com>
 ---
- drivers/gpu/drm/nouveau/nouveau_connector.c | 28 +++++++++++++++------
- drivers/gpu/drm/nouveau/nouveau_connector.h |  6 +++++
- 2 files changed, 27 insertions(+), 7 deletions(-)
+ arch/arm64/include/asm/kvm_hyp.h |  6 ++++--
+ arch/arm64/kvm/hyp/debug-sr.c    | 25 ++++++++++++++++---------
+ arch/arm64/kvm/hyp/switch.c      | 12 ++++++++----
+ 3 files changed, 28 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
-index 94dfa2e5a9abe..805b341db165b 100644
---- a/drivers/gpu/drm/nouveau/nouveau_connector.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
-@@ -245,14 +245,22 @@ nouveau_conn_atomic_duplicate_state(struct drm_connector *connector)
- void
- nouveau_conn_reset(struct drm_connector *connector)
+diff --git a/arch/arm64/include/asm/kvm_hyp.h b/arch/arm64/include/asm/kvm_hyp.h
+index 97f21cc66657..011e7963f772 100644
+--- a/arch/arm64/include/asm/kvm_hyp.h
++++ b/arch/arm64/include/asm/kvm_hyp.h
+@@ -69,8 +69,10 @@ void sysreg_restore_guest_state_vhe(struct kvm_cpu_context *ctxt);
+ void __sysreg32_save_state(struct kvm_vcpu *vcpu);
+ void __sysreg32_restore_state(struct kvm_vcpu *vcpu);
+ 
+-void __debug_switch_to_guest(struct kvm_vcpu *vcpu);
+-void __debug_switch_to_host(struct kvm_vcpu *vcpu);
++void __debug_save_host_context(struct kvm_vcpu *vcpu);
++void __debug_restore_guest_context(struct kvm_vcpu *vcpu);
++void __debug_save_guest_context(struct kvm_vcpu *vcpu);
++void __debug_restore_host_context(struct kvm_vcpu *vcpu);
+ 
+ void __fpsimd_save_state(struct user_fpsimd_state *fp_regs);
+ void __fpsimd_restore_state(struct user_fpsimd_state *fp_regs);
+diff --git a/arch/arm64/kvm/hyp/debug-sr.c b/arch/arm64/kvm/hyp/debug-sr.c
+index 98be2f11c16c..c803daebd596 100644
+--- a/arch/arm64/kvm/hyp/debug-sr.c
++++ b/arch/arm64/kvm/hyp/debug-sr.c
+@@ -168,20 +168,13 @@ static void __hyp_text __debug_restore_state(struct kvm_vcpu *vcpu,
+ 	write_sysreg(ctxt->sys_regs[MDCCINT_EL1], mdccint_el1);
+ }
+ 
+-void __hyp_text __debug_switch_to_guest(struct kvm_vcpu *vcpu)
++void __hyp_text __debug_restore_guest_context(struct kvm_vcpu *vcpu)
  {
-+	struct nouveau_connector *nv_connector = nouveau_connector(connector);
- 	struct nouveau_conn_atom *asyc;
+ 	struct kvm_cpu_context *host_ctxt;
+ 	struct kvm_cpu_context *guest_ctxt;
+ 	struct kvm_guest_debug_arch *host_dbg;
+ 	struct kvm_guest_debug_arch *guest_dbg;
  
--	if (WARN_ON(!(asyc = kzalloc(sizeof(*asyc), GFP_KERNEL))))
--		return;
-+	if (drm_drv_uses_atomic_modeset(connector->dev)) {
-+		if (WARN_ON(!(asyc = kzalloc(sizeof(*asyc), GFP_KERNEL))))
-+			return;
-+
-+		if (connector->state)
-+			nouveau_conn_atomic_destroy_state(connector,
-+							  connector->state);
-+
-+		__drm_atomic_helper_connector_reset(connector, &asyc->state);
-+	} else {
-+		asyc = &nv_connector->properties_state;
-+	}
+-	/*
+-	 * Non-VHE: Disable and flush SPE data generation
+-	 * VHE: The vcpu can run, but it can't hide.
+-	 */
+-	if (!has_vhe())
+-		__debug_save_spe_nvhe(&vcpu->arch.host_debug_state.pmscr_el1);
+-
+ 	if (!(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY))
+ 		return;
  
--	if (connector->state)
--		nouveau_conn_atomic_destroy_state(connector, connector->state);
--	__drm_atomic_helper_connector_reset(connector, &asyc->state);
- 	asyc->dither.mode = DITHERING_MODE_AUTO;
- 	asyc->dither.depth = DITHERING_DEPTH_AUTO;
- 	asyc->scaler.mode = DRM_MODE_SCALE_NONE;
-@@ -276,8 +284,14 @@ void
- nouveau_conn_attach_properties(struct drm_connector *connector)
+@@ -194,7 +187,7 @@ void __hyp_text __debug_switch_to_guest(struct kvm_vcpu *vcpu)
+ 	__debug_restore_state(vcpu, guest_dbg, guest_ctxt);
+ }
+ 
+-void __hyp_text __debug_switch_to_host(struct kvm_vcpu *vcpu)
++void __hyp_text __debug_restore_host_context(struct kvm_vcpu *vcpu)
  {
- 	struct drm_device *dev = connector->dev;
--	struct nouveau_conn_atom *armc = nouveau_conn_atom(connector->state);
- 	struct nouveau_display *disp = nouveau_display(dev);
-+	struct nouveau_connector *nv_connector = nouveau_connector(connector);
-+	struct nouveau_conn_atom *armc;
-+
-+	if (drm_drv_uses_atomic_modeset(connector->dev))
-+		armc = nouveau_conn_atom(connector->state);
-+	else
-+		armc = &nv_connector->properties_state;
+ 	struct kvm_cpu_context *host_ctxt;
+ 	struct kvm_cpu_context *guest_ctxt;
+@@ -218,6 +211,20 @@ void __hyp_text __debug_switch_to_host(struct kvm_vcpu *vcpu)
+ 	vcpu->arch.flags &= ~KVM_ARM64_DEBUG_DIRTY;
+ }
  
- 	/* Init DVI-I specific properties. */
- 	if (connector->connector_type == DRM_MODE_CONNECTOR_DVII)
-@@ -749,9 +763,9 @@ static int
- nouveau_connector_set_property(struct drm_connector *connector,
- 			       struct drm_property *property, uint64_t value)
- {
--	struct nouveau_conn_atom *asyc = nouveau_conn_atom(connector->state);
- 	struct nouveau_connector *nv_connector = nouveau_connector(connector);
- 	struct nouveau_encoder *nv_encoder = nv_connector->detected_encoder;
-+	struct nouveau_conn_atom *asyc = &nv_connector->properties_state;
- 	struct drm_encoder *encoder = to_drm_encoder(nv_encoder);
- 	int ret;
- 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.h b/drivers/gpu/drm/nouveau/nouveau_connector.h
-index de95884208848..de84fb4708c7a 100644
---- a/drivers/gpu/drm/nouveau/nouveau_connector.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_connector.h
-@@ -118,6 +118,12 @@ struct nouveau_connector {
- #ifdef CONFIG_DRM_NOUVEAU_BACKLIGHT
- 	struct nouveau_backlight *backlight;
- #endif
++void __hyp_text __debug_save_host_context(struct kvm_vcpu *vcpu)
++{
 +	/*
-+	 * Our connector property code expects a nouveau_conn_atom struct
-+	 * even on pre-nv50 where we do not support atomic. This embedded
-+	 * version gets used in the non atomic modeset case.
++	 * Non-VHE: Disable and flush SPE data generation
++	 * VHE: The vcpu can run, but it can't hide.
 +	 */
-+	struct nouveau_conn_atom properties_state;
- };
++	if (!has_vhe())
++		__debug_save_spe_nvhe(&vcpu->arch.host_debug_state.pmscr_el1);
++}
++
++void __hyp_text __debug_save_guest_context(struct kvm_vcpu *vcpu)
++{
++}
++
+ u32 __hyp_text __kvm_get_mdcr_el2(void)
+ {
+ 	return read_sysreg(mdcr_el2);
+diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
+index 250f13910882..67b7c160f65b 100644
+--- a/arch/arm64/kvm/hyp/switch.c
++++ b/arch/arm64/kvm/hyp/switch.c
+@@ -626,6 +626,7 @@ int kvm_vcpu_run_vhe(struct kvm_vcpu *vcpu)
+ 	guest_ctxt = &vcpu->arch.ctxt;
  
- static inline struct nouveau_connector *nouveau_connector(
+ 	sysreg_save_host_state_vhe(host_ctxt);
++	__debug_save_host_context(vcpu);
+ 
+ 	/*
+ 	 * ARM erratum 1165522 requires us to configure both stage 1 and
+@@ -642,7 +643,7 @@ int kvm_vcpu_run_vhe(struct kvm_vcpu *vcpu)
+ 	__activate_traps(vcpu);
+ 
+ 	sysreg_restore_guest_state_vhe(guest_ctxt);
+-	__debug_switch_to_guest(vcpu);
++	__debug_restore_guest_context(vcpu);
+ 
+ 	__set_guest_arch_workaround_state(vcpu);
+ 
+@@ -656,6 +657,7 @@ int kvm_vcpu_run_vhe(struct kvm_vcpu *vcpu)
+ 	__set_host_arch_workaround_state(vcpu);
+ 
+ 	sysreg_save_guest_state_vhe(guest_ctxt);
++	__debug_save_guest_context(vcpu);
+ 
+ 	__deactivate_traps(vcpu);
+ 
+@@ -664,7 +666,7 @@ int kvm_vcpu_run_vhe(struct kvm_vcpu *vcpu)
+ 	if (vcpu->arch.flags & KVM_ARM64_FP_ENABLED)
+ 		__fpsimd_save_fpexc32(vcpu);
+ 
+-	__debug_switch_to_host(vcpu);
++	__debug_restore_host_context(vcpu);
+ 
+ 	return exit_code;
+ }
+@@ -698,6 +700,7 @@ int __hyp_text __kvm_vcpu_run_nvhe(struct kvm_vcpu *vcpu)
+ 	pmu_switch_needed = __pmu_switch_to_guest(host_ctxt);
+ 
+ 	__sysreg_save_state_nvhe(host_ctxt);
++	__debug_save_host_context(vcpu);
+ 
+ 	/*
+ 	 * We must restore the 32-bit state before the sysregs, thanks
+@@ -716,7 +719,7 @@ int __hyp_text __kvm_vcpu_run_nvhe(struct kvm_vcpu *vcpu)
+ 	__hyp_vgic_restore_state(vcpu);
+ 	__timer_enable_traps(vcpu);
+ 
+-	__debug_switch_to_guest(vcpu);
++	__debug_restore_guest_context(vcpu);
+ 
+ 	__set_guest_arch_workaround_state(vcpu);
+ 
+@@ -730,6 +733,7 @@ int __hyp_text __kvm_vcpu_run_nvhe(struct kvm_vcpu *vcpu)
+ 	__set_host_arch_workaround_state(vcpu);
+ 
+ 	__sysreg_save_state_nvhe(guest_ctxt);
++	__debug_save_guest_context(vcpu);
+ 	__sysreg32_save_state(vcpu);
+ 	__timer_disable_traps(vcpu);
+ 	__hyp_vgic_save_state(vcpu);
+@@ -746,7 +750,7 @@ int __hyp_text __kvm_vcpu_run_nvhe(struct kvm_vcpu *vcpu)
+ 	 * This must come after restoring the host sysregs, since a non-VHE
+ 	 * system may enable SPE here and make use of the TTBRs.
+ 	 */
+-	__debug_switch_to_host(vcpu);
++	__debug_restore_host_context(vcpu);
+ 
+ 	if (pmu_switch_needed)
+ 		__pmu_switch_to_host(host_ctxt);
 -- 
-2.20.1
+2.21.0
 
