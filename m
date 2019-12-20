@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1FAC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F65C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 438AD206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39BBF206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852540;
-	bh=0HuyhNq1O9Gim5LLI5/7VvT3lzV6D6Lo2ykpaANOOTs=;
+	s=default; t=1576852545;
+	bh=0UPq0ADHUVi3H1HGjyjp01QlhJ9fHqauFQflmudCk+Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1V1rR8a3xPokvoCG4RSRiL0oq4c2OJO+8WDbz9HKlCIq4N0LOCNfXi/Z0hZCggmdK
-	 OoODeIrWrLl9XxngWM6yrZpiNZMFzCRAfauFn0TvKJlgtOrjKGTO0YGe7XliuLlJfT
-	 gJdRPRlYh+558smQF0UeEYVJo5aZsUVhcmvkAM3g=
+	b=f3G4tfPukkUKBFuczgwpUcBZAyJ48O/Alo88Aec5R0+ICi/ANEzrFPA/GhfjWIluu
+	 JW/vdCT5ClldYR+svFzOSwxTenlkvz1I3r06ByYizm/h1EZhZKO9QxcJWf9mih+VJP
+	 KKQ090wuPvV6kbpisM+uF0RvQnq9kXZaQVAwAhjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbfLTOfj (ORCPT
+        id S1727545AbfLTOfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:35:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39722 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:35:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728387AbfLTOfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:35:16 -0500
+        id S1728379AbfLTOfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:35:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A42E124684;
-        Fri, 20 Dec 2019 14:35:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22EE52467F;
+        Fri, 20 Dec 2019 14:35:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852516;
-        bh=0HuyhNq1O9Gim5LLI5/7VvT3lzV6D6Lo2ykpaANOOTs=;
+        s=default; t=1576852514;
+        bh=0UPq0ADHUVi3H1HGjyjp01QlhJ9fHqauFQflmudCk+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wW7cgZmriKsdJJD92QBlUSCHX4lkVW+dR3CQC8p+3T1v1hYq2SIDtV4LH2eFk7ydy
-         nKvOkD+hMFcT2Lp8H5vI5vh0JOjHXgFwCQIytjleayQrht4TE47A48gKZ64pUB0FzH
-         60/CBAFVdtiFmlGXvkHiArhtgDTJNw3yjinE/FGs=
+        b=SngIBtMuoxFTKtQyHeC+/67ICSZjwTcs1fK3WUoS6JgXsvvuccXs1Zs5fKB+v5ozH
+         wZTI+Sr/Zdbs2RA7779UxlgtTnkUNcaQeMRh7w3y40MoIlcl7EFduZtYN4FJvrqvxN
+         zxw6nlWyt5aZ6/rbSODYs+G1piI6R6c+I3pefqBY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Juergen Gross <jgross@suse.com>,
-        Nicholas Tsirakis <niko.tsirakis@gmail.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, xen-devel@lists.xenproject.org
-Subject: [PATCH AUTOSEL 4.19 33/34] xen/balloon: fix ballooned page accounting without hotplug enabled
-Date:   Fri, 20 Dec 2019 09:34:32 -0500
-Message-Id: <20191220143433.9922-33-sashal@kernel.org>
+Cc:     Maor Gottlieb <maorg@mellanox.com>,
+        Raed Salem <raeds@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 31/34] IB/mlx5: Fix steering rule of drop and count
+Date:   Fri, 20 Dec 2019 09:34:30 -0500
+Message-Id: <20191220143433.9922-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220143433.9922-1-sashal@kernel.org>
 References: <20191220143433.9922-1-sashal@kernel.org>
@@ -60,41 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+From: Maor Gottlieb <maorg@mellanox.com>
 
-[ Upstream commit c673ec61ade89bf2f417960f986bc25671762efb ]
+[ Upstream commit ed9085fed9d95d5921582e3c8474f3736c5d2782 ]
 
-When CONFIG_XEN_BALLOON_MEMORY_HOTPLUG is not defined
-reserve_additional_memory() will set balloon_stats.target_pages to a
-wrong value in case there are still some ballooned pages allocated via
-alloc_xenballooned_pages().
+There are two flow rule destinations: QP and packet. While users are
+setting DROP packet rule, the QP should not be set as a destination.
 
-This will result in balloon_process() no longer be triggered when
-ballooned pages are freed in batches.
-
-Reported-by: Nicholas Tsirakis <niko.tsirakis@gmail.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Fixes: 3b3233fbf02e ("IB/mlx5: Add flow counters binding support")
+Signed-off-by: Maor Gottlieb <maorg@mellanox.com>
+Reviewed-by: Raed Salem <raeds@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Link: https://lore.kernel.org/r/20191212091214.315005-4-leon@kernel.org
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/balloon.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/mlx5/main.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
-index 747a15acbce37..6fa7209f24f43 100644
---- a/drivers/xen/balloon.c
-+++ b/drivers/xen/balloon.c
-@@ -395,7 +395,8 @@ static struct notifier_block xen_memory_nb = {
- #else
- static enum bp_state reserve_additional_memory(void)
- {
--	balloon_stats.target_pages = balloon_stats.current_pages;
-+	balloon_stats.target_pages = balloon_stats.current_pages +
-+				     balloon_stats.target_unpopulated;
- 	return BP_ECANCELED;
- }
- #endif /* CONFIG_XEN_BALLOON_MEMORY_HOTPLUG */
+diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
+index f4ffdc588ea07..df5be462dd281 100644
+--- a/drivers/infiniband/hw/mlx5/main.c
++++ b/drivers/infiniband/hw/mlx5/main.c
+@@ -3286,10 +3286,6 @@ static struct mlx5_ib_flow_handler *_create_flow_rule(struct mlx5_ib_dev *dev,
+ 	}
+ 
+ 	INIT_LIST_HEAD(&handler->list);
+-	if (dst) {
+-		memcpy(&dest_arr[0], dst, sizeof(*dst));
+-		dest_num++;
+-	}
+ 
+ 	for (spec_index = 0; spec_index < flow_attr->num_of_specs; spec_index++) {
+ 		err = parse_flow_attr(dev->mdev, spec->match_criteria,
+@@ -3303,6 +3299,11 @@ static struct mlx5_ib_flow_handler *_create_flow_rule(struct mlx5_ib_dev *dev,
+ 		ib_flow += ((union ib_flow_spec *)ib_flow)->size;
+ 	}
+ 
++	if (dst && !(flow_act.action & MLX5_FLOW_CONTEXT_ACTION_DROP)) {
++		memcpy(&dest_arr[0], dst, sizeof(*dst));
++		dest_num++;
++	}
++
+ 	if (!flow_is_multicast_only(flow_attr))
+ 		set_underlay_qp(dev, spec, underlay_qpn);
+ 
+@@ -3340,10 +3341,8 @@ static struct mlx5_ib_flow_handler *_create_flow_rule(struct mlx5_ib_dev *dev,
+ 	}
+ 
+ 	if (flow_act.action & MLX5_FLOW_CONTEXT_ACTION_DROP) {
+-		if (!(flow_act.action & MLX5_FLOW_CONTEXT_ACTION_COUNT)) {
++		if (!dest_num)
+ 			rule_dst = NULL;
+-			dest_num = 0;
+-		}
+ 	} else {
+ 		if (is_egress)
+ 			flow_act.action |= MLX5_FLOW_CONTEXT_ACTION_ALLOW;
 -- 
 2.20.1
 
