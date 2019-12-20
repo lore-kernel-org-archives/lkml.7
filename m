@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F65C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58345C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39BBF206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 254F4206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852545;
-	bh=0UPq0ADHUVi3H1HGjyjp01QlhJ9fHqauFQflmudCk+Q=;
+	s=default; t=1576852551;
+	bh=uoHI+zr6kvyEBV+qP09MMDEmOEe93V3zRQ8+fhnahHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f3G4tfPukkUKBFuczgwpUcBZAyJ48O/Alo88Aec5R0+ICi/ANEzrFPA/GhfjWIluu
-	 JW/vdCT5ClldYR+svFzOSwxTenlkvz1I3r06ByYizm/h1EZhZKO9QxcJWf9mih+VJP
-	 KKQ090wuPvV6kbpisM+uF0RvQnq9kXZaQVAwAhjE=
+	b=B6zEpMYcEKV/i3Lbzg+XNEnGoGzhchb5zLsQnn2hVTr48bwXb5xx7A1isKnGbF4my
+	 RKl737Vf7orXX9S/26Ajlq/vh4H9DtxuwPV7E9Wbqmg7fqWN/nCMlVemjynxl8dyy1
+	 M7eCwUMiwwKc+6y5M/wYaLB8NlPw13h6ZcA5DUGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbfLTOfo (ORCPT
+        id S1727905AbfLTOfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:35:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39670 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:35:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728379AbfLTOfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:35:14 -0500
+        id S1727832AbfLTOfM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:35:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22EE52467F;
-        Fri, 20 Dec 2019 14:35:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1BB024684;
+        Fri, 20 Dec 2019 14:35:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852514;
-        bh=0UPq0ADHUVi3H1HGjyjp01QlhJ9fHqauFQflmudCk+Q=;
+        s=default; t=1576852511;
+        bh=uoHI+zr6kvyEBV+qP09MMDEmOEe93V3zRQ8+fhnahHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SngIBtMuoxFTKtQyHeC+/67ICSZjwTcs1fK3WUoS6JgXsvvuccXs1Zs5fKB+v5ozH
-         wZTI+Sr/Zdbs2RA7779UxlgtTnkUNcaQeMRh7w3y40MoIlcl7EFduZtYN4FJvrqvxN
-         zxw6nlWyt5aZ6/rbSODYs+G1piI6R6c+I3pefqBY=
+        b=TS5StZcNBBxYLUJmZgQG1hgHiuRrHKabjWPqJgt91HgZQAkVX6BFCC/L7Yvx6PTLN
+         EaQ16gbx12BpNslTcgzpHhZ5jdLvV6FYb5yKqekFbjOPlws4GwxFS6OBmYwxKKThth
+         AzjNcbrow7WORzEUKzDqNE8FVtOMyUt5CBRva/Os=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maor Gottlieb <maorg@mellanox.com>,
-        Raed Salem <raeds@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 31/34] IB/mlx5: Fix steering rule of drop and count
-Date:   Fri, 20 Dec 2019 09:34:30 -0500
-Message-Id: <20191220143433.9922-31-sashal@kernel.org>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 29/34] s390/cpum_sf: Avoid SBD overflow condition in irq handler
+Date:   Fri, 20 Dec 2019 09:34:28 -0500
+Message-Id: <20191220143433.9922-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220143433.9922-1-sashal@kernel.org>
 References: <20191220143433.9922-1-sashal@kernel.org>
@@ -61,63 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maor Gottlieb <maorg@mellanox.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-[ Upstream commit ed9085fed9d95d5921582e3c8474f3736c5d2782 ]
+[ Upstream commit 0539ad0b22877225095d8adef0c376f52cc23834 ]
 
-There are two flow rule destinations: QP and packet. While users are
-setting DROP packet rule, the QP should not be set as a destination.
+The s390 CPU Measurement sampling facility has an overflow condition
+which fires when all entries in a SBD are used.
+The measurement alert interrupt is triggered and reads out all samples
+in this SDB. It then tests the successor SDB, if this SBD is not full,
+the interrupt handler does not read any samples at all from this SDB
+The design waits for the hardware to fill this SBD and then trigger
+another meassurement alert interrupt.
 
-Fixes: 3b3233fbf02e ("IB/mlx5: Add flow counters binding support")
-Signed-off-by: Maor Gottlieb <maorg@mellanox.com>
-Reviewed-by: Raed Salem <raeds@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Link: https://lore.kernel.org/r/20191212091214.315005-4-leon@kernel.org
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+This scheme works nicely until
+an perf_event_overflow() function call discards the sample due to
+a too high sampling rate.
+The interrupt handler has logic to read out a partially filled SDB
+when the perf event overflow condition in linux common code is met.
+This causes the CPUM sampling measurement hardware and the PMU
+device driver to operate on the same SBD's trailer entry.
+This should not happen.
+
+This can be seen here using this trace:
+   cpumsf_pmu_add: tear:0xb5286000
+   hw_perf_event_update: sdbt 0xb5286000 full 1 over 0 flush_all:0
+   hw_perf_event_update: sdbt 0xb5286008 full 0 over 0 flush_all:0
+        above shows 1. interrupt
+   hw_perf_event_update: sdbt 0xb5286008 full 1 over 0 flush_all:0
+   hw_perf_event_update: sdbt 0xb5286008 full 0 over 0 flush_all:0
+        above shows 2. interrupt
+	... this goes on fine until...
+   hw_perf_event_update: sdbt 0xb5286068 full 1 over 0 flush_all:0
+   perf_push_sample1: overflow
+      one or more samples read from the IRQ handler are rejected by
+      perf_event_overflow() and the IRQ handler advances to the next SDB
+      and modifies the trailer entry of a partially filled SDB.
+   hw_perf_event_update: sdbt 0xb5286070 full 0 over 0 flush_all:1
+      timestamp: 14:32:52.519953
+
+Next time the IRQ handler is called for this SDB the trailer entry shows
+an overflow count of 19 missed entries.
+   hw_perf_event_update: sdbt 0xb5286070 full 1 over 19 flush_all:1
+      timestamp: 14:32:52.970058
+
+Remove access to a follow on SDB when event overflow happened.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/main.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ arch/s390/kernel/perf_cpum_sf.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
-index f4ffdc588ea07..df5be462dd281 100644
---- a/drivers/infiniband/hw/mlx5/main.c
-+++ b/drivers/infiniband/hw/mlx5/main.c
-@@ -3286,10 +3286,6 @@ static struct mlx5_ib_flow_handler *_create_flow_rule(struct mlx5_ib_dev *dev,
+diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
+index 0b09585305521..8ba440ba84624 100644
+--- a/arch/s390/kernel/perf_cpum_sf.c
++++ b/arch/s390/kernel/perf_cpum_sf.c
+@@ -1248,12 +1248,6 @@ static void hw_perf_event_update(struct perf_event *event, int flush_all)
+ 		 */
+ 		if (flush_all && done)
+ 			break;
+-
+-		/* If an event overflow happened, discard samples by
+-		 * processing any remaining sample-data-blocks.
+-		 */
+-		if (event_overflow)
+-			flush_all = 1;
  	}
  
- 	INIT_LIST_HEAD(&handler->list);
--	if (dst) {
--		memcpy(&dest_arr[0], dst, sizeof(*dst));
--		dest_num++;
--	}
- 
- 	for (spec_index = 0; spec_index < flow_attr->num_of_specs; spec_index++) {
- 		err = parse_flow_attr(dev->mdev, spec->match_criteria,
-@@ -3303,6 +3299,11 @@ static struct mlx5_ib_flow_handler *_create_flow_rule(struct mlx5_ib_dev *dev,
- 		ib_flow += ((union ib_flow_spec *)ib_flow)->size;
- 	}
- 
-+	if (dst && !(flow_act.action & MLX5_FLOW_CONTEXT_ACTION_DROP)) {
-+		memcpy(&dest_arr[0], dst, sizeof(*dst));
-+		dest_num++;
-+	}
-+
- 	if (!flow_is_multicast_only(flow_attr))
- 		set_underlay_qp(dev, spec, underlay_qpn);
- 
-@@ -3340,10 +3341,8 @@ static struct mlx5_ib_flow_handler *_create_flow_rule(struct mlx5_ib_dev *dev,
- 	}
- 
- 	if (flow_act.action & MLX5_FLOW_CONTEXT_ACTION_DROP) {
--		if (!(flow_act.action & MLX5_FLOW_CONTEXT_ACTION_COUNT)) {
-+		if (!dest_num)
- 			rule_dst = NULL;
--			dest_num = 0;
--		}
- 	} else {
- 		if (is_egress)
- 			flow_act.action |= MLX5_FLOW_CONTEXT_ACTION_ALLOW;
+ 	/* Account sample overflows in the event hardware structure */
 -- 
 2.20.1
 
