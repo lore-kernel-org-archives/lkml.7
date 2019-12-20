@@ -2,142 +2,141 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69302C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5DD3C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC2A2467F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:04:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576800242;
-	bh=sWq+9KSTwARofQnWsAgQYWAF/MTYTslzXC2YUL9YOUU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=ok7kWA+5xyVEIkz3KAs2hKYvmm6WzXcE94eb7uArWKOZpMUYB0tN5+bCkeSRtAPDp
-	 SM4/WMoiFeR/ghiKCsiBQCmUU11BG5KWHcrPv7yMu7/RujDE/vMpmpGopUx0J2/ch9
-	 oaWreXudn8R0QkFHMP2XvK7OH0hNll+1UQvtxZ+g=
+	by mail.kernel.org (Postfix) with ESMTP id BBF612465E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:04:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MtYPDg1Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbfLTAEB (ORCPT
+        id S1727179AbfLTAEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 19:04:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59032 "EHLO mail.kernel.org"
+        Thu, 19 Dec 2019 19:04:25 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:60127 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726952AbfLTAEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 19:04:01 -0500
-Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726952AbfLTAEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 19:04:25 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C760222C2;
-        Fri, 20 Dec 2019 00:03:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576800240;
-        bh=sWq+9KSTwARofQnWsAgQYWAF/MTYTslzXC2YUL9YOUU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=y+50dcG+enUsbey/BuOFRBNPTJ0WXZMkKA4w3HQR8Zq9UY4xlF9eE9X9r3HB83JsG
-         YXU+8e9uE7GM/4pbXGCwANX9kLhlNTxzRvHiO+5KKzDk1ZDS/LL4uxhHBgplVK70tr
-         kxQ4OhrPB7NEa333uI4sMwoH07mSCW/ACcbQ6EYc=
-Date:   Thu, 19 Dec 2019 18:03:58 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [PATCH v12 0/4] PCI: Patch series to improve Thunderbolt
- enumeration
-Message-ID: <20191220000358.GA126443@google.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47f89y26csz9sRD;
+        Fri, 20 Dec 2019 11:04:22 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1576800262;
+        bh=takvx2pkdv2X2YMc6lDzRwLeDoZ5lLrcA66pNFNMat0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MtYPDg1Z5sa9MSw4ciMURVAMM3IxFd55715Aa+tcVq/5+lRQIkM6WVyQeP6IQRjPL
+         6JJ9Xq8E+oB/R9zGKQsQDKHeD7MDoU5+M6zOkrEoXXnRENDP5i6p2wFhJfrGjrtWnH
+         +lYKye4ZwkXlq29izx3yG82tcnShSX02goXgnLonG0eOgeg4tYwhk9ny4notH53SoM
+         +/qT3Rfk2HCgmaEyNKdo26LNgWrHtAX0b/io6I4V00Ivs1Zq0bW1iAGbLLtOXCvM1t
+         7X+CkfgR0ltpiOtQhXNqEKjpVolM3dpnzEWxSoSGyZ2LcVAcpRDyOQdKeu4rFyxv0s
+         aiXH0e5sRreqw==
+Date:   Fri, 20 Dec 2019 11:04:21 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: linux-next: build failure after merge of the thermal tree
+Message-ID: <20191220110421.2c155cbf@canb.auug.org.au>
+In-Reply-To: <e792e206-6ed8-733c-bbba-55f5a0b52407@linaro.org>
+References: <20191212095020.523c1fbd@canb.auug.org.au>
+        <20191213091430.383a5f3b@canb.auug.org.au>
+        <e792e206-6ed8-733c-bbba-55f5a0b52407@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PSXP216MB043840E2DE9B81AC8797F63A80530@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/0z+cx..yAbAPU7qtaaW/vUo";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 12:54:25AM +0000, Nicholas Johnson wrote:
-> On Tue, Dec 17, 2019 at 09:12:48AM -0600, Bjorn Helgaas wrote:
-> > On Mon, Dec 09, 2019 at 12:59:29PM +0000, Nicholas Johnson wrote:
-> > > Hi all,
-> > > 
-> > > Since last time:
-> > > 	Reverse Christmas tree for a couple of variables
-> > > 
-> > > 	Changed while to whilst (sounds more formal, and so that 
-> > > 	grepping for "while" only brings up code)
-> > > 
-> > > 	Made sure they still apply to latest Linux v5.5-rc1
-> > > 
-> > > Kind regards,
-> > > Nicholas
-> > > 
-> > > Nicholas Johnson (4):
-> > >   PCI: Consider alignment of hot-added bridges when distributing
-> > >     available resources
-> > >   PCI: In extend_bridge_window() change available to new_size
-> > >   PCI: Change extend_bridge_window() to set resource size directly
-> > >   PCI: Allow extend_bridge_window() to shrink resource if necessary
-> > 
-> > I have tentatively applied these to pci/resource for v5.6, but I need
-> > some kind of high-level description for why we want these changes.
-> I could not find these in linux-next (whereas it was almost immediate 
-> last time), so this must be why.
-> 
-> > The commit logs describe what the code does, and that's good, but we
-> > really need a little more of the *why* and what the user-visible
-> > benefit is.  I know some of this was in earlier postings, but it seems
-> > to have gotten lost along the way.
+--Sig_/0z+cx..yAbAPU7qtaaW/vUo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi Daniel,
+
+On Fri, 13 Dec 2019 02:03:05 +0100 Daniel Lezcano <daniel.lezcano@linaro.or=
+g> wrote:
 >
-> Is this explanation going into the commit notes, or is this just to get 
-> it past reviewers, Greg K-H and Linus Torvalds?
+> On 12/12/2019 23:14, Stephen Rothwell wrote:
+> >=20
+> > On Thu, 12 Dec 2019 09:50:20 +1100 Stephen Rothwell <sfr@canb.auug.org.=
+au> wrote: =20
+> >>
+> >> After merging the thermal tree, today's linux-next build (x86_64
+> >> allmodconfig) failed like this:
+> >>
+> >> drivers/thermal/qoriq_thermal.c: In function 'qoriq_tmu_probe':
+> >> drivers/thermal/qoriq_thermal.c:247:20: error: 'SZ_4K' undeclared (fir=
+st use in this function)
+> >>   247 |   .max_register  =3D SZ_4K,
+> >>       |                    ^~~~~
+> >>
+> >> Caused by commit
+> >>
+> >>   c98030e5440d ("thermal: qoriq: Convert driver to use regmap API")
+> >>
+> >> I have used the thermal tree from next-20191211 for today. =20
+> >=20
+> > Today, I applied the following patch instead: =20
+>=20
+> Thanks for the fix, I'll fold it with the commit c98030e5440d in order
+> to recover the bisectability.
+>=20
+> > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Date: Fri, 13 Dec 2019 09:08:24 +1100
+> > Subject: [PATCH] thermal: qoriq: using SZ_4K requires linux/sizes.h
+> >=20
+> > Fixes: c98030e5440d ("thermal: qoriq: Convert driver to use regmap API")
+> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > ---
+> >  drivers/thermal/qoriq_thermal.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >=20
+> > diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_th=
+ermal.c
+> > index b75d34e07da5..874bc46e6c73 100644
+> > --- a/drivers/thermal/qoriq_thermal.c
+> > +++ b/drivers/thermal/qoriq_thermal.c
+> > @@ -10,6 +10,7 @@
+> >  #include <linux/of.h>
+> >  #include <linux/of_address.h>
+> >  #include <linux/regmap.h>
+> > +#include <linux/sizes.h>
+> >  #include <linux/thermal.h>
+> > =20
+> >  #include "thermal_core.h"
 
-This is for the commit log of the merge commit, i.e., it should answer
-the question of "why should we merge this branch?"  Typically this is
-short, e.g., here's the merge commit for the pci/resource branch that
-was merged for v5.5:
+I am still applying this patch ...
+--=20
+Cheers,
+Stephen Rothwell
 
-  commit 774800cb099f ("Merge branch 'pci/resource'")
-  Author: Bjorn Helgaas <bhelgaas@google.com>
-  Date:   Thu Nov 28 08:54:36 2019 -0600
+--Sig_/0z+cx..yAbAPU7qtaaW/vUo
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-    Merge branch 'pci/resource'
+-----BEGIN PGP SIGNATURE-----
 
-      - Protect pci_reassign_bridge_resources() against concurrent
-        addition/removal (Benjamin Herrenschmidt)
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl38EAUACgkQAVBC80lX
+0GwYXgf5AckAVZs318/xnkkzefekekoTzk78w4cQRIVXRnXzSuA/VRyVVb+qT+uD
+uM+JoN5VivWzJe6RslL0Y7WmgDVYUd+GE3/jhDAGwBNjWNal6RQ6YkTnguJkoNVE
+ZtMNDLlgeSCGLKoTkELzw3aCDf7w/yoEJLGgGHmkrh4gbjL2xm9GffDfu0kJTN8C
+xndErFBRk+ESN5gP5tp5IwU9Iv71l0xZ9bQCDW7tO1p0GDk8WqEHvGJUFqevtU0Z
+zfCr5im/8mZCEvepR/0K0atinteiI+LQ4QNRoWEL//ZjV8f2QsMALiiHGf9g7NBk
+8DuS7L0b0SwX3kdPN8lhBbWJa6GJAQ==
+=UPAi
+-----END PGP SIGNATURE-----
 
-      - Fix bridge dma_ranges resource list cleanup (Rob Herring)
-
-      - Add PCI_STD_NUM_BARS for the number of standard BARs (Denis Efremov)
-
-      - Add "pci=hpmmiosize" and "pci=hpmmioprefsize" parameters to control the
-        MMIO and prefetchable MMIO window sizes of hotplug bridges
-        independently (Nicholas Johnson)
-
-      - Fix MMIO/MMIO_PREF window assignment that assigned more space than
-        desired (Nicholas Johnson)
-
-      - Only enforce bus numbers from bridge EA if the bridge has EA devices
-        downstream (Subbaraya Sundeep)
-
-    * pci/resource:
-      PCI: Do not use bus number zero from EA capability
-      PCI: Avoid double hpmemsize MMIO window assignment
-      PCI: Add "pci=hpmmiosize" and "pci=hpmmioprefsize" parameters
-      PCI: Add PCI_STD_NUM_BARS for the number of standard BARs
-      PCI: Fix missing bridge dma_ranges resource list cleanup
-      PCI: Protect pci_reassign_bridge_resources() against concurrent addition/removal
-
-The logs for individual commits are obviously longer but should answer
-the same question in more detail.
-
-Basically, I'm not comfortable asking Linus to pull material unless I
-can explain what the benefit is.  I'm still struggling to articulate
-the benefit in this case.  I think it makes hotplug work better in
-some cases where we need more alignment than we currently have, but
-that's pretty sketchy.
-
-Bjorn
+--Sig_/0z+cx..yAbAPU7qtaaW/vUo--
