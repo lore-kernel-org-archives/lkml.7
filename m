@@ -2,335 +2,196 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F74C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961D5C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25534218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635CF206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:42:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B19q8/zp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PYzMKyTp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbfLTTko (ORCPT
+        id S1727506AbfLTTm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 14:40:44 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44806 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727411AbfLTTkn (ORCPT
+        Fri, 20 Dec 2019 14:42:28 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43768 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727402AbfLTTm2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 14:40:43 -0500
-Received: by mail-pl1-f194.google.com with SMTP id az3so4520014plb.11
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 11:40:43 -0800 (PST)
+        Fri, 20 Dec 2019 14:42:28 -0500
+Received: by mail-wr1-f65.google.com with SMTP id d16so10482445wre.10
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 11:42:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lFMjMiBcMXdvnNC5YFzR0WC5mSKVlFhkE6pUjNlt2o0=;
-        b=B19q8/zpcMfdRMQeA+2wf9o8PR0ECzC3FS0toBDpXIMbAI0AKsB40ZJOZkzKx94qtV
-         ONjZIJnzP+4jastKJm5d+HN2kGbD2KxIt60lSbRJFPn3pPTAFs0Ps9E214TIKJyOvu/b
-         VLcPMo9Lo6VOV++TGN7R37yQLPr7B3KDG+roI=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Il1oF0g3ydughv8Jds3YmOufzmr6Qzx+GD4OK+haAtA=;
+        b=PYzMKyTpUL0K26WI+Dr6m1u9kWHpKKbZXQiSG0uoqZQAS46qonqRLrJ6rHzuxQHVE4
+         yTTSeMlZlsEI5X/IyrYu8mNqVYOKCTi0szti9CVKA0nQhuCnREJO/+5H9PGZbYG/YQHI
+         ktd+sIy5QrTGEAbaZDASuQV1k9EzdA4p23+wvd62/ktHw61PMKY9Ocj5yrNblluyNKfy
+         XZp0ZFxSTrNOvGxvxNfOXS1X/DLKRSe/JgU5tGGLOu+xbNOQYVCx921LS4/RMRttWNNV
+         Y301Zh3lq64UXVN0WHcs6VmRDbj1H8YvEsgb2Ct3p++lZe0hyHcWCCuFxRVC3Iv1142g
+         P1sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lFMjMiBcMXdvnNC5YFzR0WC5mSKVlFhkE6pUjNlt2o0=;
-        b=dltkpu5J5jnLsNj8EHnMEccWw2hd+hWDEpQohGHi+fRHudPPP+w4fvrEPtPXMoXIBU
-         7vTrn9/EqeKSNmIiIr5p27ZSnXeb2lJyDMmNLp3EFkajMtX2SzC38jKoz9TuDevBbLtl
-         TDPcIB0ouFirI6u9eZTy343vH3PPTUkjebs18H9UetGZB0KefJbM9f3HNBjSY7wWg00J
-         l8tKfTM30ulSKp8MUYSDSLgNCiZfxaNG6PhxTnFI2Xvpd0owRstSvHC/TNqY1OMNLIr0
-         RNTomr1fPoGFXuBm/05dgFbaPR5eJEmLKRKo7GhdUCX8/h123tsDJMwFX2T4t/85299r
-         MCvQ==
-X-Gm-Message-State: APjAAAVsswOmgaJDTAsm5LEtyBsDHrkXpb8OTGlMk4UfUywge0sqWz0C
-        wi5JHTLbdn0VbdWbh9NOcyyp6kechqE=
-X-Google-Smtp-Source: APXvYqw6PqYkotgDMRmdA0pvFyb39Dm9UJjAqWfFKOv8DNfInJ5AhKxDb2dCxveEiBwnSCFmRur3Ng==
-X-Received: by 2002:a17:902:724b:: with SMTP id c11mr16666855pll.177.1576870842823;
-        Fri, 20 Dec 2019 11:40:42 -0800 (PST)
-Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
-        by smtp.gmail.com with ESMTPSA id e2sm14109577pfh.84.2019.12.20.11.40.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 11:40:42 -0800 (PST)
-From:   Prashant Malani <pmalani@chromium.org>
-To:     enric.balletbo@collabora.com, groeck@chromium.org,
-        bleung@chromium.org, lee.jones@linaro.org
-Cc:     linux-kernel@vger.kernel.org, Jon Flatley <jflat@chromium.org>,
-        Prashant Malani <pmalani@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>
-Subject: [PATCH v4 1/2] platform: chrome: Add cros-usbpd-notify driver
-Date:   Fri, 20 Dec 2019 11:38:44 -0800
-Message-Id: <20191220193843.47182-1-pmalani@chromium.org>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Il1oF0g3ydughv8Jds3YmOufzmr6Qzx+GD4OK+haAtA=;
+        b=IF0LJbDhUwAlVtwvXlWdl0vwghwS8ajTNUK30e4jPXcC/e0wG9rPpGqlvyqrucOef7
+         WKXkEUdTHm+Bg+kxr3pLClYvAEvPQ3WZxTV+RuZtmnqStRRwWTkEMY39Px8DVhSTp40o
+         Fj3FykcJrJc42xFLeyliF5bkyL+iJEwREaG+6IuYi0Vh/pisQZsJ0q1XFCTxPfu9Dbe5
+         Fg7nlWD9IFOs9MNTaNfRYrWhEzSu02I7j78FO9NuU6TeLlWVrQcrHiFT/HubY4MN9S0u
+         0PCViZLy0+ttaLqM+H+RVMg9Nbgm78iDks+EATMU8MYBDZi7jHgkmw4KaZ/bWykoNR2j
+         0Srg==
+X-Gm-Message-State: APjAAAXGzLgKWDDljDMGET5TK3GCRpk18e1+rGYWmmd0jf6m6DQdmDhr
+        nyWdG12pDVFMVJuKu5v1PVeUgWSyetfX+oLDQkw=
+X-Google-Smtp-Source: APXvYqwS3x4ycvpu21JJuqMEX6UIs51kUKgvD6zRDQswANHwI6xv7rw2TIDsASMikMs8u5f31Yyr/YGm/upuu+kif0c=
+X-Received: by 2002:a5d:4692:: with SMTP id u18mr13744281wrq.206.1576870944945;
+ Fri, 20 Dec 2019 11:42:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191202214713.41001-1-thomasanderson@google.com>
+ <20191210185924.GA20941@google.com> <20191219233303.GA131109@google.com>
+In-Reply-To: <20191219233303.GA131109@google.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Fri, 20 Dec 2019 14:42:13 -0500
+Message-ID: <CADnq5_OtVFEuiM9eByRpkPX9Vhgu0Oq0aCzbctxOSTL1XJcm7w@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/amd/display: Reduce HDMI pixel encoding if max
+ clock is exceeded
+To:     Tom Anderson <thomasanderson@google.com>
+Cc:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Mikita Lipski <mikita.lipski@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        Mario Kleiner <mario.kleiner.de@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, Daniel Vetter <daniel@ffwll.ch>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Flatley <jflat@chromium.org>
+On Fri, Dec 20, 2019 at 10:10 AM Tom Anderson <thomasanderson@google.com> wrote:
+>
+> Ping.  Is there any action required to get this landed?
 
-ChromiumOS uses ACPI device with HID "GOOG0003" for power delivery
-related events. The existing cros-usbpd-charger driver relies on these
-events without ever actually receiving them on ACPI platforms. This is
-because in the ChromeOS kernel trees, the GOOG0003 device is owned by an
-ACPI driver that offers firmware updates to USB-C chargers.
+Looks good to me, but I'd like to hear from the display guys.
 
-Introduce a new platform driver under cros-ec, the ChromeOS embedded
-controller, that handles these PD events and dispatches them
-appropriately over a notifier chain to all drivers that use them.
+Alex
 
-On non-ACPI platforms, the driver gets instantiated for ECs which
-support the EC_FEATURE_USB_PD feature bit, and on such platforms, the
-notification events will get delivered using the MKBP event handling
-mechanism.
 
-Co-Developed-by: Prashant Malani <pmalani@chromium.org>
-Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-Signed-off-by: Jon Flatley <jflat@chromium.org>
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
----
-
-Changes in v4(pmalani@chromium.org):
-- No code changes, but added new version so that versioning is
-  consistent with the next patch in the series.
-
-Changes in v3 (pmalani@chromium.org):
-- Renamed driver and files from "cros_ec_pd_notify" to
-  "cros_usbpd_notify" to be more consistent with other naming.
-- Moved the change to include cros-usbpd-notify in the charger MFD into
-  a separate follow-on patch.
-
-Changes in v2 (pmalani@chromium.org):
-- Removed dependency on DT entry; instead, we will instantiate the
-  driver on detecting EC_FEATURE_USB_PD for non-ACPI platforms.
-- Modified the cros-ec-pd-notify device to be an mfd_cell under
-  usbpdcharger for non-ACPI platforms. Altered the platform_probe() call
-  to derive the cros EC structs appropriately.
-- Replaced "usbpd_notify" with "pd_notify" in functions and structures.
-- Addressed comments from upstream maintainer.
-
- drivers/platform/chrome/Kconfig               |   9 ++
- drivers/platform/chrome/Makefile              |   1 +
- drivers/platform/chrome/cros_usbpd_notify.c   | 151 ++++++++++++++++++
- .../linux/platform_data/cros_usbpd_notify.h   |  17 ++
- 4 files changed, 178 insertions(+)
- create mode 100644 drivers/platform/chrome/cros_usbpd_notify.c
- create mode 100644 include/linux/platform_data/cros_usbpd_notify.h
-
-diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-index 5f57282a28da0..3a8a98f2fb4d1 100644
---- a/drivers/platform/chrome/Kconfig
-+++ b/drivers/platform/chrome/Kconfig
-@@ -226,6 +226,15 @@ config CROS_USBPD_LOGGER
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called cros_usbpd_logger.
- 
-+config CROS_USBPD_NOTIFY
-+	tristate "ChromeOS Type-C power delivery event notifier"
-+	depends on CROS_EC
-+	help
-+	  If you say Y here, you get support for Type-C PD event notifications
-+	  from the ChromeOS EC. On ACPI platorms this driver will bind to the
-+	  GOOG0003 ACPI device, and on non-ACPI platforms this driver will get
-+	  initialized on ECs which support the feature EC_FEATURE_USB_PD.
-+
- source "drivers/platform/chrome/wilco_ec/Kconfig"
- 
- endif # CHROMEOS_PLATFORMS
-diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
-index aacd5920d8a18..f6465f8ef0b5e 100644
---- a/drivers/platform/chrome/Makefile
-+++ b/drivers/platform/chrome/Makefile
-@@ -22,5 +22,6 @@ obj-$(CONFIG_CROS_EC_DEBUGFS)		+= cros_ec_debugfs.o
- obj-$(CONFIG_CROS_EC_SENSORHUB)		+= cros_ec_sensorhub.o
- obj-$(CONFIG_CROS_EC_SYSFS)		+= cros_ec_sysfs.o
- obj-$(CONFIG_CROS_USBPD_LOGGER)		+= cros_usbpd_logger.o
-+obj-$(CONFIG_CROS_USBPD_NOTIFY)		+= cros_usbpd_notify.o
- 
- obj-$(CONFIG_WILCO_EC)			+= wilco_ec/
-diff --git a/drivers/platform/chrome/cros_usbpd_notify.c b/drivers/platform/chrome/cros_usbpd_notify.c
-new file mode 100644
-index 0000000000000..05a7db834d2e0
---- /dev/null
-+++ b/drivers/platform/chrome/cros_usbpd_notify.c
-@@ -0,0 +1,151 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright 2019 Google LLC
-+ *
-+ * This driver serves as the receiver of cros_ec PD host events.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/module.h>
-+#include <linux/mfd/cros_ec.h>
-+#include <linux/platform_data/cros_ec_commands.h>
-+#include <linux/platform_data/cros_usbpd_notify.h>
-+#include <linux/platform_data/cros_ec_proto.h>
-+#include <linux/platform_device.h>
-+
-+#define DRV_NAME "cros-usbpd-notify"
-+#define ACPI_DRV_NAME "GOOG0003"
-+
-+static BLOCKING_NOTIFIER_HEAD(cros_usbpd_notifier_list);
-+
-+/**
-+ * cros_usbpd_register_notify - Register a notifier callback for PD events.
-+ * @nb: Notifier block pointer to register
-+ *
-+ * On ACPI platforms this corresponds to host events on the ECPD
-+ * "GOOG0003" ACPI device. On non-ACPI platforms this will filter mkbp events
-+ * for USB PD events.
-+ *
-+ * Return: 0 on success or negative error code.
-+ */
-+int cros_usbpd_register_notify(struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_register(
-+			&cros_usbpd_notifier_list, nb);
-+}
-+EXPORT_SYMBOL_GPL(cros_usbpd_register_notify);
-+
-+
-+/**
-+ * cros_usbpd_unregister_notify - Unregister notifier callback for PD events.
-+ * @nb: Notifier block pointer to unregister
-+ *
-+ * Unregister a notifier callback that was previously registered with
-+ * cros_usbpd_register_notify().
-+ */
-+void cros_usbpd_unregister_notify(struct notifier_block *nb)
-+{
-+	blocking_notifier_chain_unregister(&cros_usbpd_notifier_list, nb);
-+}
-+EXPORT_SYMBOL_GPL(cros_usbpd_unregister_notify);
-+
-+#ifdef CONFIG_ACPI
-+
-+static int cros_usbpd_notify_add_acpi(struct acpi_device *adev)
-+{
-+	return 0;
-+}
-+
-+static void cros_usbpd_notify_acpi(struct acpi_device *adev, u32 event)
-+{
-+	blocking_notifier_call_chain(&cros_usbpd_notifier_list, event, NULL);
-+}
-+
-+static const struct acpi_device_id cros_usbpd_notify_acpi_device_ids[] = {
-+	{ ACPI_DRV_NAME, 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, cros_usbpd_acpi_device_ids);
-+
-+static struct acpi_driver cros_usbpd_notify_driver = {
-+	.name = DRV_NAME,
-+	.class = DRV_NAME,
-+	.ids = cros_usbpd_notify_acpi_device_ids,
-+	.ops = {
-+		.add = cros_usbpd_notify_add_acpi,
-+		.notify = cros_usbpd_notify_acpi,
-+	},
-+};
-+module_acpi_driver(cros_usbpd_notify_driver);
-+
-+#else /* CONFIG_ACPI */
-+
-+static int cros_usbpd_notify_plat(struct notifier_block *nb,
-+		unsigned long queued_during_suspend, void *data)
-+{
-+	struct cros_ec_device *ec_dev = (struct cros_ec_device *)data;
-+	u32 host_event = cros_ec_get_host_event(ec_dev);
-+
-+	if (!host_event)
-+		return NOTIFY_BAD;
-+
-+	if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_PD_MCU)) {
-+		blocking_notifier_call_chain(&cros_usbpd_notifier_list,
-+				host_event, NULL);
-+		return NOTIFY_OK;
-+	}
-+	return NOTIFY_DONE;
-+}
-+
-+static int cros_usbpd_notify_probe_plat(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct cros_ec_dev *ecdev = dev_get_drvdata(dev->parent);
-+	struct notifier_block *nb;
-+	int ret;
-+
-+	nb = devm_kzalloc(dev, sizeof(*nb), GFP_KERNEL);
-+	if (!nb)
-+		return -ENOMEM;
-+
-+	nb->notifier_call = cros_usbpd_notify_plat;
-+	dev_set_drvdata(dev, nb);
-+
-+	ret = blocking_notifier_chain_register(&ecdev->ec_dev->event_notifier,
-+						nb);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to register notifier\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int cros_usbpd_notify_remove_plat(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct cros_ec_dev *ecdev = dev_get_drvdata(dev->parent);
-+	struct notifier_block *nb =
-+		(struct notifier_block *)dev_get_drvdata(dev);
-+
-+	blocking_notifier_chain_unregister(&ecdev->ec_dev->event_notifier,
-+			nb);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver cros_usbpd_notify_driver = {
-+	.driver = {
-+		.name = DRV_NAME,
-+	},
-+	.probe = cros_usbpd_notify_probe_plat,
-+	.remove = cros_usbpd_notify_remove_plat,
-+};
-+module_platform_driver(cros_usbpd_notify_driver);
-+
-+#endif /* CONFIG_ACPI */
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("ChromeOS power delivery notifier device");
-+MODULE_AUTHOR("Jon Flatley <jflat@chromium.org>");
-+MODULE_ALIAS("platform:" DRV_NAME);
-diff --git a/include/linux/platform_data/cros_usbpd_notify.h b/include/linux/platform_data/cros_usbpd_notify.h
-new file mode 100644
-index 0000000000000..cd7c7bebf18da
---- /dev/null
-+++ b/include/linux/platform_data/cros_usbpd_notify.h
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * ChromeOS EC Power Delivery Notifier Driver
-+ *
-+ * Copyright 2019 Google LLC
-+ */
-+
-+#ifndef __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H
-+#define __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H
-+
-+#include <linux/notifier.h>
-+
-+int cros_usbpd_register_notify(struct notifier_block *nb);
-+
-+void cros_usbpd_unregister_notify(struct notifier_block *nb);
-+
-+#endif  /* __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H */
--- 
-2.24.1.735.g03f4e72817-goog
-
+>
+> On Tue, Dec 10, 2019 at 10:59:24AM -0800, Tom Anderson wrote:
+> > Friendly ping.
+> >
+> > On Mon, Dec 02, 2019 at 01:47:13PM -0800, Thomas Anderson wrote:
+> > > For high-res (8K) or HFR (4K120) displays, using uncompressed pixel
+> > > formats like YCbCr444 would exceed the bandwidth of HDMI 2.0, so the
+> > > "interesting" modes would be disabled, leaving only low-res or low
+> > > framerate modes.
+> > >
+> > > This change lowers the pixel encoding to 4:2:2 or 4:2:0 if the max TMDS
+> > > clock is exceeded. Verified that 8K30 and 4K120 are now available and
+> > > working with a Samsung Q900R over an HDMI 2.0b link from a Radeon 5700.
+> > >
+> > > Signed-off-by: Thomas Anderson <thomasanderson@google.com>
+> > > ---
+> > >  .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 45 ++++++++++---------
+> > >  1 file changed, 23 insertions(+), 22 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > > index 7aac9568d3be..803e59d97411 100644
+> > > --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > > +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > > @@ -3356,27 +3356,21 @@ get_output_color_space(const struct dc_crtc_timing *dc_crtc_timing)
+> > >     return color_space;
+> > >  }
+> > >
+> > > -static void reduce_mode_colour_depth(struct dc_crtc_timing *timing_out)
+> > > -{
+> > > -   if (timing_out->display_color_depth <= COLOR_DEPTH_888)
+> > > -           return;
+> > > -
+> > > -   timing_out->display_color_depth--;
+> > > -}
+> > > -
+> > > -static void adjust_colour_depth_from_display_info(struct dc_crtc_timing *timing_out,
+> > > -                                           const struct drm_display_info *info)
+> > > +static bool adjust_colour_depth_from_display_info(
+> > > +   struct dc_crtc_timing *timing_out,
+> > > +   const struct drm_display_info *info)
+> > >  {
+> > > +   enum dc_color_depth depth = timing_out->display_color_depth;
+> > >     int normalized_clk;
+> > > -   if (timing_out->display_color_depth <= COLOR_DEPTH_888)
+> > > -           return;
+> > >     do {
+> > >             normalized_clk = timing_out->pix_clk_100hz / 10;
+> > >             /* YCbCr 4:2:0 requires additional adjustment of 1/2 */
+> > >             if (timing_out->pixel_encoding == PIXEL_ENCODING_YCBCR420)
+> > >                     normalized_clk /= 2;
+> > >             /* Adjusting pix clock following on HDMI spec based on colour depth */
+> > > -           switch (timing_out->display_color_depth) {
+> > > +           switch (depth) {
+> > > +           case COLOR_DEPTH_888:
+> > > +                   break;
+> > >             case COLOR_DEPTH_101010:
+> > >                     normalized_clk = (normalized_clk * 30) / 24;
+> > >                     break;
+> > > @@ -3387,14 +3381,15 @@ static void adjust_colour_depth_from_display_info(struct dc_crtc_timing *timing_
+> > >                     normalized_clk = (normalized_clk * 48) / 24;
+> > >                     break;
+> > >             default:
+> > > -                   return;
+> > > +                   /* The above depths are the only ones valid for HDMI. */
+> > > +                   return false;
+> > >             }
+> > > -           if (normalized_clk <= info->max_tmds_clock)
+> > > -                   return;
+> > > -           reduce_mode_colour_depth(timing_out);
+> > > -
+> > > -   } while (timing_out->display_color_depth > COLOR_DEPTH_888);
+> > > -
+> > > +           if (normalized_clk <= info->max_tmds_clock) {
+> > > +                   timing_out->display_color_depth = depth;
+> > > +                   return true;
+> > > +           }
+> > > +   } while (--depth > COLOR_DEPTH_666);
+> > > +   return false;
+> > >  }
+> > >
+> > >  static void fill_stream_properties_from_drm_display_mode(
+> > > @@ -3474,8 +3469,14 @@ static void fill_stream_properties_from_drm_display_mode(
+> > >
+> > >     stream->out_transfer_func->type = TF_TYPE_PREDEFINED;
+> > >     stream->out_transfer_func->tf = TRANSFER_FUNCTION_SRGB;
+> > > -   if (stream->signal == SIGNAL_TYPE_HDMI_TYPE_A)
+> > > -           adjust_colour_depth_from_display_info(timing_out, info);
+> > > +   if (stream->signal == SIGNAL_TYPE_HDMI_TYPE_A) {
+> > > +           if (!adjust_colour_depth_from_display_info(timing_out, info) &&
+> > > +               drm_mode_is_420_also(info, mode_in) &&
+> > > +               timing_out->pixel_encoding != PIXEL_ENCODING_YCBCR420) {
+> > > +                   timing_out->pixel_encoding = PIXEL_ENCODING_YCBCR420;
+> > > +                   adjust_colour_depth_from_display_info(timing_out, info);
+> > > +           }
+> > > +   }
+> > >  }
+> > >
+> > >  static void fill_audio_info(struct audio_info *audio_info,
+> > > --
+> > > 2.24.0.393.g34dc348eaf-goog
+> > >
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
