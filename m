@@ -2,82 +2,89 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5411CC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0912C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27C70206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:32:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A1F9222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:32:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576852356;
+	bh=3gwg+3s135YkjMS6ArKsWvNUOZm+NDSmiy1a8biK980=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TDEEVHnEDoaalcyV2ne+4LMDrPVpOlfQaUuFpXdoel7qO9QA1lYiCiHJ498Icfoc7
+	 iFt9z/5YGThxuYLq5/BsXve3s4qzIKSNEppRQbVlZ8Hfl61L/yU2dLu7o0DMNvMGg8
+	 zbOqfQbdcWlqUX7l/kRirqXrets/xvpg/d3OJ0/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbfLTOca (ORCPT
+        id S1728204AbfLTOcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:32:30 -0500
-Received: from foss.arm.com ([217.140.110.172]:51282 "EHLO foss.arm.com"
+        Fri, 20 Dec 2019 09:32:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727946AbfLTOay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727939AbfLTOay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Dec 2019 09:30:54 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3A33711D4;
-        Fri, 20 Dec 2019 06:30:54 -0800 (PST)
-Received: from e119886-lin.cambridge.arm.com (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 61B7D3F718;
-        Fri, 20 Dec 2019 06:30:52 -0800 (PST)
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH v2 10/18] arm64: KVM/debug: use EL1&0 stage 1 translation regime
-Date:   Fri, 20 Dec 2019 14:30:17 +0000
-Message-Id: <20191220143025.33853-11-andrew.murray@arm.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191220143025.33853-1-andrew.murray@arm.com>
-References: <20191220143025.33853-1-andrew.murray@arm.com>
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D47A721D7E;
+        Fri, 20 Dec 2019 14:30:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576852253;
+        bh=3gwg+3s135YkjMS6ArKsWvNUOZm+NDSmiy1a8biK980=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=E+mxDJDUAFq+LtPiZFBTuwfnN/3kPYWc52tZ6toTyryR2NPakRanGTG9GxGbhU8lf
+         eciQWAzMgIuFCixxIDrNgKd593+QAwJcfUGzpG1Y2wXvy6YTAP9mWZbgjeu8tpP6Va
+         LsglyUALbOKLCS9yorQZdB0mbeUnNPMQbMrjWm/k=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Zhiqiang Liu <liuzhiqiang26@huawei.com>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 44/52] md: raid1: check rdev before reference in raid1_sync_request func
+Date:   Fri, 20 Dec 2019 09:29:46 -0500
+Message-Id: <20191220142954.9500-44-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
+References: <20191220142954.9500-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 
-Now that we have all the save/restore mechanism in place, lets enable
-the translation regime used by buffer from EL2 stage 1 to EL1 stage 1
-on VHE systems.
+[ Upstream commit 028288df635f5a9addd48ac4677b720192747944 ]
 
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-[ Reword commit, don't trap to EL2 ]
-Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+In raid1_sync_request func, rdev should be checked before reference.
+
+Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kvm/hyp/switch.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/md/raid1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
-index 67b7c160f65b..6c153b79829b 100644
---- a/arch/arm64/kvm/hyp/switch.c
-+++ b/arch/arm64/kvm/hyp/switch.c
-@@ -100,6 +100,7 @@ static void activate_traps_vhe(struct kvm_vcpu *vcpu)
- 
- 	write_sysreg(val, cpacr_el1);
- 
-+	write_sysreg(vcpu->arch.mdcr_el2 | 3 << MDCR_EL2_E2PB_SHIFT, mdcr_el2);
- 	write_sysreg(kvm_get_hyp_vector(), vbar_el1);
- }
- NOKPROBE_SYMBOL(activate_traps_vhe);
-@@ -117,6 +118,7 @@ static void __hyp_text __activate_traps_nvhe(struct kvm_vcpu *vcpu)
- 		__activate_traps_fpsimd32(vcpu);
- 	}
- 
-+	write_sysreg(vcpu->arch.mdcr_el2 | 3 << MDCR_EL2_E2PB_SHIFT, mdcr_el2);
- 	write_sysreg(val, cptr_el2);
- 
- 	if (cpus_have_const_cap(ARM64_WORKAROUND_1319367)) {
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index bb29aeefcbd0f..c7137f50bd1d3 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -2781,7 +2781,7 @@ static sector_t raid1_sync_request(struct mddev *mddev, sector_t sector_nr,
+ 				write_targets++;
+ 			}
+ 		}
+-		if (bio->bi_end_io) {
++		if (rdev && bio->bi_end_io) {
+ 			atomic_inc(&rdev->nr_pending);
+ 			bio->bi_iter.bi_sector = sector_nr + rdev->data_offset;
+ 			bio_set_dev(bio, rdev->bdev);
 -- 
-2.21.0
+2.20.1
 
