@@ -2,130 +2,100 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A780C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB76C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 606572146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2CAB2146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:25:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mJFoF0Rh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t3WLxxKL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbfLTJZI (ORCPT
+        id S1727327AbfLTJZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 04:25:08 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36419 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727188AbfLTJZH (ORCPT
+        Fri, 20 Dec 2019 04:25:19 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38142 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727169AbfLTJZS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 04:25:07 -0500
-Received: by mail-lf1-f66.google.com with SMTP id n12so6492180lfe.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 01:25:06 -0800 (PST)
+        Fri, 20 Dec 2019 04:25:18 -0500
+Received: by mail-ed1-f67.google.com with SMTP id i16so7583793edr.5;
+        Fri, 20 Dec 2019 01:25:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=8RYmTZNu6rNeDCUWAArKbe+fNhpEJmiH0HpAnftlJGU=;
-        b=mJFoF0RhvcTnmkupuC8BugsKKrvKQBa1pHKpnAVVtOh/rpmOuxa0vv3w5O+XbKTsSy
-         MS7gJgdvkowex4puWMRrrKNvWnqjRgGVAxsx8elstfhOCNS6Wo7mu+ShxCqDrvwjjZpz
-         HxnNF4XNjyftY8DGSL5hPm2E1WES1AvS8Zgbt7nRL+L/f8KVCcVUTM/ZkyVz8u4Eu6Sv
-         +rC5OmtwjiUzyFeFuagEfYNRyUul7JYpAT8GsRF1/A4ZhspxBjeDbxSUx+A9iK7tp1Lc
-         Diloz4UFAN6bcdlVxcGB18xOk7FtTAsiA+ReDpH0bxaqOF+sK8S4tSMvFYVu8XHsDXx3
-         wl8Q==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iW+E0xO4cl6Le/pRNkxzyx+ZKt3kccSYLfBkkXeukuc=;
+        b=t3WLxxKLD6EyG4OWlTU0Yqy9yEt2NHUh7m7Tfcpbw7RONe59MDpw+50lv3mxZSKIJL
+         hFXjbe+NYTJdx7GcAuoatJSZY6X5abT1JOdQPSeCEWlcoXlPh1GUie/idKjswhEvESx4
+         LudnV3hZPi1nHjK0Pygnfvj9sb2j3V+bABKTAdFKhIum99YT5vZFibC8tW9eKaYW3A4h
+         pgvFSXzcg+g2EtDOFqVXlRazJ6JaX4nhwfbzZzO15sroSIjpOonciRFrLQcir6bPE3nI
+         DB3+AKlgjZbWm3Ld/YyVjTquc/MY3eOKrd+Koz6IQCvapMSLU7NlAMNZuxlNS4IyYGpJ
+         +8xA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8RYmTZNu6rNeDCUWAArKbe+fNhpEJmiH0HpAnftlJGU=;
-        b=Y6lrlKSnltVn98ZSPUWelKvU4nMhUg97REBJwKQw2S2CNh6BwcYTF1n0DYBI0jA0V6
-         ggGxuAaakq54viLGoE8w0Qn1X46o2v/FS7QzJOiC+BhXk6TrPS17wIJJVaS4ncxILTcL
-         Wd3TAFwX/kvxXPMFmIcExX//lgqBkZMyW/NPzObbOOmaH2oWi8EtRlO5323dLJ+3/Aaa
-         FUXx3lSg+CJ5IVTR0fw9mv7/JkIA0ZNDNJZhkzJvuDtVM4DwI33tzL/1q4nkfoOSR328
-         RDSpDHuBjHTho/hD4pqsNcLmTfl7Vvk7B22bIJpq+wwjc3WAkbMiRHjMMaW5MgGuwbR7
-         49qA==
-X-Gm-Message-State: APjAAAWjgtHpH2zYGoE5tS3RGW01DcE3mocC5IS6udutlIGD7ZfwAAkf
-        QJEAiykIo90VsjtFj5+8Kft86g==
-X-Google-Smtp-Source: APXvYqzp+lBQ7NR4W6yIoa3rTpBdjv43+fxD0xtOaURkt0k4igr6KCtDWtj2ciDIYhZK/aovbH/kFA==
-X-Received: by 2002:ac2:5468:: with SMTP id e8mr8382472lfn.113.1576833905658;
-        Fri, 20 Dec 2019 01:25:05 -0800 (PST)
-Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
-        by smtp.gmail.com with ESMTPSA id n5sm3927465ljh.86.2019.12.20.01.25.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 01:25:04 -0800 (PST)
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-To:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [GIT PULL] MMC fixes for v5.5-rc3
-Date:   Fri, 20 Dec 2019 10:25:03 +0100
-Message-Id: <20191220092503.22211-1-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iW+E0xO4cl6Le/pRNkxzyx+ZKt3kccSYLfBkkXeukuc=;
+        b=fts/8h2pDs1uurcVxHu3WOvHVpFwwqV7UV95zjj7rHYOz4aD9XXy/MeZ306LSpvWBg
+         bHrM52kP+XUym8mLNIKa/eeQleZASVv7sj4Qs9fn3dOmUJ3hLQF1rocbFqCvGXJq7Qeq
+         XFTr0RxUz0GJ7wGrBcPzrQSArlXaQYKVMvS6UKEJbuQa8ygdrjfJk5PF5x7ECaq1gTKY
+         s4QeuC6WcFM8GxIkKH9o5e+uzhxPlDQwjG3B/oUbTSYYYceOTIkqeNXy5paqMIQtt34F
+         56hfTpxhuyRVpRA7rpBQUKKIeg1Z5KitQU0iSLs5bJeGYG+pOj6w/qtwfs7P3OfvBTAU
+         TO9w==
+X-Gm-Message-State: APjAAAUeVjiw1GPZ0vv+NLmf9nV+Dg1xLV8rIqa6YTUPSv2ShBlfsMsD
+        YkM1TBdKeM2bBJlGdAa3VYuyfgq8Ht6Yr3g/hig=
+X-Google-Smtp-Source: APXvYqy/qbLAr14kvPkMt9+niEqKtVDn0hoTqq90t+dQcT6zO67x9oZ4UOtDOv+a63LpLJonq1R9Evt6oB3TgV3dC10=
+X-Received: by 2002:a05:6402:12d1:: with SMTP id k17mr14587034edx.291.1576833917042;
+ Fri, 20 Dec 2019 01:25:17 -0800 (PST)
+MIME-Version: 1.0
+References: <20191219124120.53754-1-radu_nicolae.pirea@upb.ro>
+ <20191219130501.GA958@kunai> <6504123809effc310ade02dbb8a63f10db6b6c92.camel@upb.ro>
+In-Reply-To: <6504123809effc310ade02dbb8a63f10db6b6c92.camel@upb.ro>
+From:   Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
+Date:   Fri, 20 Dec 2019 14:55:05 +0530
+Message-ID: <CAKfKVtFqbtovQGQuzgCYzTu4bHOmAOmTz-tZMD89iUkMPc8awA@mail.gmail.com>
+Subject: Re: [PATCH] i2c: cadence: Added slave support
+To:     Radu Pirea <radu_nicolae.pirea@upb.ro>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Chirag Parekh <chirag.parekh@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi ,
 
-Here's a PR with a couple of MMC fixes intended for v5.5-rc3. Details about the
-highlights are as usual found in the signed tag.
+On Thu, Dec 19, 2019 at 7:00 PM Radu Pirea <radu_nicolae.pirea@upb.ro> wrote:
+>
+> On Thu, 2019-12-19 at 14:05 +0100, Wolfram Sang wrote:
+> > > +/**
+> > > + * enum cdns_i2c_mode - I2C Controller current operating mode
+> > > + *
+> > > + * @CDNS_I2C_MODE_SLAVE:       I2C controller operating in slave
+> > > mode
+> > > + * @CDNS_I2C_MODE_MASTER:      I2C Controller operating in master
+> > > mode
+> > > + */
+> >
+> > Can't the hardware operate as master and slave at the same time?
+> >
+>
+> Of course, it can. If the driver has a slave registered wait and
+> listens and if the subsystem needs to use the controller as master, the
+> driver changes the state of the controller to master, sends and reads
+> data from the bus and after this change the state of the controller to
+> slave.
 
-Please pull this in!
+However that should be done only if no master is talking to the slave right?
 
-Kind regards
-Ulf Hansson
-
-
-The following changes since commit d1eef1c619749b2a57e514a3fa67d9a516ffa919:
-
-  Linux 5.5-rc2 (2019-12-15 15:16:08 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.5-rc2
-
-for you to fetch changes up to f667216c5c7c967c3e568cdddefb51fe606bfe26:
-
-  mmc: sdhci-of-esdhc: re-implement erratum A-009204 workaround (2019-12-19 08:13:43 +0100)
-
-----------------------------------------------------------------
-MMC host:
- - mtk-sd: Fix tuning for MT8173 HS200/HS400 mode
- - sdhci: Revert a fix for incorrect switch to HS mode
- - sdhci-msm: Fixup accesses to the DDR_CONFIG register
- - sdhci-of-esdhc: Revert a bad fix for erratum A-009204
- - sdhci-of-esdhc: Re-implement fix for erratum A-009204
- - sdhci-of-esdhc: Fixup P2020 errata handling
- - sdhci-pci: Disable broken CMDQ on Intel GLK based Lenovo systems
-
-----------------------------------------------------------------
-Adrian Hunter (2):
-      mmc: sdhci: Workaround broken command queuing on Intel GLK
-      mmc: sdhci: Add a quirk for broken command queuing
-
-Chaotian Jing (1):
-      mmc: mediatek: fix CMD_TA to 2 for MT8173 HS200/HS400 mode
-
-Faiz Abbas (2):
-      Revert "mmc: sdhci: Fix incorrect switch to HS mode"
-      mmc: sdhci: Update the tuning failed messages to pr_debug level
-
-Rasmus Villemoes (1):
-      mmc: sdhci-of-esdhc: Revert "mmc: sdhci-of-esdhc: add erratum A-009204 support"
-
-Veerabhadrarao Badiganti (1):
-      mmc: sdhci-msm: Correct the offset and value for DDR_CONFIG register
-
-Yangbo Lu (2):
-      mmc: sdhci-of-esdhc: fix P2020 errata handling
-      mmc: sdhci-of-esdhc: re-implement erratum A-009204 workaround
-
- drivers/mmc/host/mtk-sd.c         |  2 ++
- drivers/mmc/host/sdhci-msm.c      | 28 +++++++++++++++++++---------
- drivers/mmc/host/sdhci-of-esdhc.c | 17 ++++++++++++-----
- drivers/mmc/host/sdhci-pci-core.c | 10 +++++++++-
- drivers/mmc/host/sdhci.c          | 11 ++++++-----
- drivers/mmc/host/sdhci.h          |  2 ++
- 6 files changed, 50 insertions(+), 20 deletions(-)
+> In cdns_i2c_master_xfer is done all the magic.
