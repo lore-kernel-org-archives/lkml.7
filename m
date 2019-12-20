@@ -2,120 +2,173 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C1AC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEFE6C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77262206D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E83206D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:31:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AxT8sxi3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W5IZsAhY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbfLTQaY (ORCPT
+        id S1727426AbfLTQbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 11:30:24 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:48768 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbfLTQaY (ORCPT
+        Fri, 20 Dec 2019 11:31:42 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40527 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbfLTQbm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 11:30:24 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBKGTEW4049185;
-        Fri, 20 Dec 2019 16:30:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=8W2cnKxQ5bWF4ipRvYriBMOXbRYSX9ZJzo29FO6rc+4=;
- b=AxT8sxi3eMc7BE2ezG0z0NVEHbKsgFPgRjOakkQ86FveHFWOSu7ZRZZLb8YMw2AKQewL
- 4s809lai90ZraXSCzMli4BVafIvsXOh3G0A0ElrMpPziB8PdHOJeQQ7aWvfp1YTafkEf
- QkJBGYSRF6xenw1IGo25wUO5wta423VgpdqnPijDZybSBkjnmQwRMgu7E0/raerMdYZo
- omGDMEWMUk9+w6XNfENK6rKqugzZNLTwYNF5hbkKyJOO83tsdXAaidaR7S1q8xihllSq
- QlC7sFlCcfRSjaeZFIhXAexxhWvlkwfPA9ra5qClQt9wGb0qfXMUKiPj25vMIiXnsWgn 2g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2x01knsq75-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Dec 2019 16:30:09 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBKGT8wU158468;
-        Fri, 20 Dec 2019 16:30:09 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2x0bgnt4tp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Dec 2019 16:30:09 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBKGU5cC007636;
-        Fri, 20 Dec 2019 16:30:05 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 20 Dec 2019 08:30:04 -0800
-Date:   Fri, 20 Dec 2019 08:30:03 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Chen Wandun <chenwandun@huawei.com>
-Cc:     linux-xfs@vger.kernel.org, bfoster@redhat.com, dchinner@redhat.com,
-        preichl@redhat.com, sandeen@sandeen.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH next] xfs: Make the symbol 'xfs_rtalloc_log_count' static
-Message-ID: <20191220163003.GP7489@magnolia>
-References: <20191220095157.42619-1-chenwandun@huawei.com>
+        Fri, 20 Dec 2019 11:31:42 -0500
+Received: by mail-wr1-f66.google.com with SMTP id c14so9985540wrn.7
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 08:31:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JEPKTWFBgqyz+hVI4T+K0RwVC4SXQz3XQWTyqv52qe8=;
+        b=W5IZsAhYOcgC9qWUZYKC01gRCHi+E98qMCuJ/gpkCo6A1zL/IlfRHzDjgbgPxE32VK
+         Lj18G/l5Tmlan2jDE+DlrH3dYb0dLa0PyZvI0Yny3B0a14NKr7NBKVoBIs7ldxNFnYBk
+         4A9x3WSvrnyIiB+NFpEEfVCPUEA0cPNQjfP24=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JEPKTWFBgqyz+hVI4T+K0RwVC4SXQz3XQWTyqv52qe8=;
+        b=ZKgoEbrySdDrDVSeQHpEUqPo82BfpdNvOoB9sd9RHrg7XlmMu2NaBrVvPpJgOwbock
+         AtIp311O9yRC7Gqs7P0y6enhqHHxNT4Q8YEgDj3znlYJTL7GZIyjJ4ptm4BJGjKrGIDS
+         bZRF9JgJVn/754WErtrkrf2AFXMUmxVjiWu68mD6LU6O/u53/i+iappsTK6FyRSDv+7N
+         bZDiDDYx1Tfcpquw79biDQz491VJFeBmLzqAEiwK8ELl9sqmC61rTJ5G0lEyCqktrUE2
+         rKFdjO8SwgJ+XPFKUn6ymTwd1sXWe9nF3Nu+I81N05Q73SY5MGpl+SsnST5kfis9Usww
+         ty3A==
+X-Gm-Message-State: APjAAAUdM2eK3zaP6x9MkMHhxIlqhNA2/QDJROyUqgPRO6+hiB7k32pY
+        /5gZPU1kzmrKF9Zan8uvzUmQ7w==
+X-Google-Smtp-Source: APXvYqxkB5aC2co8k3B6rs6cg84QwN9ShYX3gqM097SYUJJnoBCgbMFZMv+ot6jikLHHu88ZU05y+Q==
+X-Received: by 2002:adf:ea0f:: with SMTP id q15mr15795873wrm.324.1576859499726;
+        Fri, 20 Dec 2019 08:31:39 -0800 (PST)
+Received: from revest.zrh.corp.google.com ([2a00:79e0:42:204:51d1:d96e:f72e:c8c0])
+        by smtp.gmail.com with ESMTPSA id e6sm10165522wru.44.2019.12.20.08.31.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 08:31:39 -0800 (PST)
+From:   Florent Revest <revest@chromium.org>
+To:     linux-integrity@vger.kernel.org
+Cc:     kpsingh@chromium.org, mjg59@google.com, zohar@linux.ibm.com,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Florent Revest <revest@google.com>
+Subject: [PATCH] ima: add the ability to query ima for the hash of a given file.
+Date:   Fri, 20 Dec 2019 17:31:36 +0100
+Message-Id: <20191220163136.25010-1-revest@chromium.org>
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191220095157.42619-1-chenwandun@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9477 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912200127
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9477 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912200127
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 05:51:57PM +0800, Chen Wandun wrote:
-> Fix the following sparse warning:
-> 
-> fs/xfs/libxfs/xfs_trans_resv.c:206:1: warning: symbol 'xfs_rtalloc_log_count' was not declared. Should it be static?
-> 
-> Fixes: b1de6fc7520f ("xfs: fix log reservation overflows when allocating large rt extents")
-> Signed-off-by: Chen Wandun <chenwandun@huawei.com>
+From: Florent Revest <revest@google.com>
 
-Urk, oops, good catch!
+This allows other parts of the kernel (perhaps a stacked LSM allowing
+system monitoring, eg. the proposed KRSI LSM [1]) to retrieve the hash
+of a given file from IMA if it's present in the iint cache.
 
-Especially since the for-next announcement message got totally eaten by
-$employer MTA or something. :/
+It's true that the existence of the hash means that it's also in the
+audit logs or in /sys/kernel/security/ima/ascii_runtime_measurements,
+but it can be difficult to pull that information out for every
+subsequent exec.  This is especially true if a given host has been up
+for a long time and the file was first measured a long time ago.
 
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+This is based on Peter Moody's patch:
+ https://sourceforge.net/p/linux-ima/mailman/message/33036180/
 
---D
+[1] https://lkml.org/lkml/2019/9/10/393
 
-> ---
->  fs/xfs/libxfs/xfs_trans_resv.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_trans_resv.c b/fs/xfs/libxfs/xfs_trans_resv.c
-> index 824073a839ac..7a9c04920505 100644
-> --- a/fs/xfs/libxfs/xfs_trans_resv.c
-> +++ b/fs/xfs/libxfs/xfs_trans_resv.c
-> @@ -202,7 +202,7 @@ xfs_calc_inode_chunk_res(
->   * blocks as needed to mark inuse MAXEXTLEN blocks' worth of realtime extents,
->   * as well as the realtime summary block.
->   */
-> -unsigned int
-> +static unsigned int
->  xfs_rtalloc_log_count(
->  	struct xfs_mount	*mp,
->  	unsigned int		num_ops)
-> -- 
-> 2.17.1
-> 
+Signed-off-by: Florent Revest <revest@google.com>
+---
+ include/linux/ima.h               |  6 +++++
+ security/integrity/ima/ima_main.c | 41 +++++++++++++++++++++++++++++++
+ 2 files changed, 47 insertions(+)
+
+diff --git a/include/linux/ima.h b/include/linux/ima.h
+index 6d904754d858..d621c65ba9a5 100644
+--- a/include/linux/ima.h
++++ b/include/linux/ima.h
+@@ -23,6 +23,7 @@ extern int ima_read_file(struct file *file, enum kernel_read_file_id id);
+ extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
+ 			      enum kernel_read_file_id id);
+ extern void ima_post_path_mknod(struct dentry *dentry);
++extern int ima_file_hash(struct file *file, char *buf, size_t buf_size);
+ extern void ima_kexec_cmdline(const void *buf, int size);
+ 
+ #ifdef CONFIG_IMA_KEXEC
+@@ -91,6 +92,11 @@ static inline void ima_post_path_mknod(struct dentry *dentry)
+ 	return;
+ }
+ 
++static inline int ima_file_hash(struct file *file, char *buf, size_t buf_size)
++{
++	return -EOPNOTSUPP;
++}
++
+ static inline void ima_kexec_cmdline(const void *buf, int size) {}
+ #endif /* CONFIG_IMA */
+ 
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index d7e987baf127..f054ddf4364e 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -445,6 +445,47 @@ int ima_file_check(struct file *file, int mask)
+ }
+ EXPORT_SYMBOL_GPL(ima_file_check);
+ 
++/**
++ * ima_file_hash - return the stored measurement if a file has been hashed.
++ * @file: pointer to the file
++ * @buf: buffer in which to store the hash
++ * @buf_size: length of the buffer
++ *
++ * On success, output the hash into buf and return the hash algorithm (as
++ * defined in the enum hash_algo).
++ * If the hash is larger than buf, then only size bytes will be copied. It
++ * generally just makes sense to pass a buffer capable of holding the largest
++ * possible hash: IMA_MAX_DIGEST_SIZE
++ *
++ * If IMA is disabled or if no measurement is available, return -EOPNOTSUPP.
++ * If the parameters are incorrect, return -EINVAL.
++ */
++int ima_file_hash(struct file *file, char *buf, size_t buf_size)
++{
++	struct inode *inode;
++	struct integrity_iint_cache *iint;
++	size_t copied_size;
++
++	if (!file || !buf)
++		return -EINVAL;
++
++	if (!ima_policy_flag)
++		return -EOPNOTSUPP;
++
++	inode = file_inode(file);
++	iint = integrity_iint_find(inode);
++	if (!iint)
++		return -EOPNOTSUPP;
++
++	mutex_lock(&iint->mutex);
++	copied_size = min_t(size_t, iint->ima_hash->length, buf_size);
++	memcpy(buf, iint->ima_hash->digest, copied_size);
++	mutex_unlock(&iint->mutex);
++
++	return iint->ima_hash->algo;
++}
++EXPORT_SYMBOL_GPL(ima_file_hash);
++
+ /**
+  * ima_post_create_tmpfile - mark newly created tmpfile as new
+  * @file : newly created tmpfile
+-- 
+2.24.1.735.g03f4e72817-goog
+
