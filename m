@@ -2,178 +2,99 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB48C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 05:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 451BBC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 05:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E60F32467F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 05:35:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m+2m8o3u"
+	by mail.kernel.org (Postfix) with ESMTP id 1C3F72467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 05:40:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbfLTFfN (ORCPT
+        id S1727176AbfLTFku (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 00:35:13 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45815 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbfLTFfM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 00:35:12 -0500
-Received: by mail-lj1-f195.google.com with SMTP id j26so8687768ljc.12
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 21:35:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=TvI9uduLULDLfJEVRURikWZJsrpJdtix4Tat0bsUYgY=;
-        b=m+2m8o3um1gRj3SYDVIwsrELxvX/qVZFCWkRnS3QLmu+XFdQKJWF+wrCoS9eag2Eip
-         5e75NBBkaxpoS3yibqzNbLzaiYPFR0oMBj/f7O5j+UFXQWKq4IF6MBYQRolPl1e+o1A6
-         K7D/T5xId16Vm4lg8vIavkFxgUPjZ9X5qafn+d/Q0LY85x0Zv1rUwqFKP/XbQo5lEn7Q
-         roPWtq4+ju4hxHENEakLh3eILIZw9CyMjUZZCb6rRZuvCwLEN0AXw0eNWuB9Yny+LInZ
-         uRUGDsfkQfoHM2lJoh30Xlo0HLYwXgVlFOUCwgkRnArpMfCxJKkGsd0tXTQA5b3kGtWp
-         x43g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=TvI9uduLULDLfJEVRURikWZJsrpJdtix4Tat0bsUYgY=;
-        b=YV6F6GYQwX4rqu2VN0g75oqEO2I8O4kIdO9S2W4rB5irM9XOdk+1WiTcZaoCVlHQNq
-         sz6jt/S5mMm6YVXEeT169316rgmyfwqH/mUGia0rrfbaP7NLx4qEfWA9p554l0pkG7xs
-         jKCXqtwV6YmKjecVpbshNUJHP0Z4a8tRcUYugcgJcJkOwQR4nMuvwHueUdwlVjzrbjJo
-         i0OW3sM0l9KFnCKJyItnqWxJhgfirXQvZ7gWLhNpVPQxCuUfA4Ty9hdG71wD4Lo1cxen
-         TRBBcShth7XxDrt9c9PobaBLGBeW2QKuUX1TaJKer2LO4kKVOJ7RORL1OyXsTOExOaMZ
-         3Gxg==
-X-Gm-Message-State: APjAAAXVy32Sz0HfLcy6uUmX8yq+ItRehp4whrncPlWXuGC0cr1rFyY1
-        /5HAS85qHAq/gc5taIiuJPte7jNySUuRyjzSpuBsgg==
-X-Google-Smtp-Source: APXvYqydHYeZnJ2j0VyykXZNfau7hIN3gH6EpNyoC8BrddIhiqzBsAX0U5PRmA68oTttxdLTCLlRIA7zfHLIz5tHUuM=
-X-Received: by 2002:a2e:8316:: with SMTP id a22mr8900403ljh.141.1576820110424;
- Thu, 19 Dec 2019 21:35:10 -0800 (PST)
-MIME-Version: 1.0
-References: <20191219182848.708141124@linuxfoundation.org>
-In-Reply-To: <20191219182848.708141124@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 20 Dec 2019 11:04:59 +0530
-Message-ID: <CA+G9fYuV+VLuSFPJzRmy9JOCWFb20aGrSVFSK2YC7N8_vVsTpA@mail.gmail.com>
-Subject: Re: [PATCH 4.14 00/36] 4.14.160-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
+        Fri, 20 Dec 2019 00:40:50 -0500
+Received: from mga07.intel.com ([134.134.136.100]:63509 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725781AbfLTFkt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 00:40:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Dec 2019 21:40:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,334,1571727600"; 
+   d="scan'208";a="416433124"
+Received: from ipwrosz-mobl.ger.corp.intel.com ([10.252.4.56])
+  by fmsmga005.fm.intel.com with ESMTP; 19 Dec 2019 21:40:45 -0800
+Message-ID: <21328530d3f15c75abca8107823a4578e5065ca6.camel@intel.com>
+Subject: Re: iwlwifi: refactor the SAR tables from mvm to acpi
+From:   Luciano Coelho <luciano.coelho@intel.com>
+To:     Colin Ian King <colin.king@canonical.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ihab Zhaika <ihab.zhaika@intel.com>,
+        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Fri, 20 Dec 2019 07:40:44 +0200
+In-Reply-To: <18ea9fa8-93fe-f371-68ee-3d12eac252c8@canonical.com>
+References: <18ea9fa8-93fe-f371-68ee-3d12eac252c8@canonical.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.34.1-2+b1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Dec 2019 at 00:20, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.14.160 release.
-> There are 36 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 21 Dec 2019 18:24:44 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.160-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+On Fri, 2019-12-20 at 00:02 +0000, Colin Ian King wrote:
+> Hi,
+> 
+> Static analysis with Coverity has detected a potential issue with the
+> following commit:
+> 
+> commit 39c1a9728f938c7255ce507c8d56b73e8a4ebddf
+> Author: Ihab Zhaika <ihab.zhaika@intel.com>
+> Date:   Fri Nov 15 09:28:11 2019 +0200
+> 
+>     iwlwifi: refactor the SAR tables from mvm to acpi
+> 
+> 
+> in function iwl_sar_get_ewrd_table() we have an array index pos being
+> initialized to 3 and then incremented each time a loop iterates:
+> 
+>         for (i = 0; i < n_profiles; i++) {
+>                 /* the tables start at element 3 */
+>                 int pos = 3;
+> 
+>                 /* The EWRD profiles officially go from 2 to 4, but we
+>                  * save them in sar_profiles[1-3] (because we don't
+>                  * have profile 0).  So in the array we start from 1.
+>                  */
+>                 ret = iwl_sar_set_profile(&wifi_pkg->package.elements[pos],
+>                                           &fwrt->sar_profiles[i + 1],
+>                                           enabled);
+>                 if (ret < 0)
+>                         break;
+> 
+>                 /* go to the next table */
+>                 pos += ACPI_SAR_TABLE_SIZE;
+>         }
+> 
+> So, each iteration is always accessing package.elements[3]. I'm not sure
+> if that is intentional. If it is, then the increment of pos is not
+> required.  Either way, it's not clear what the original intention is.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Good catch, thanks! We'll fix it.
 
-Summary
-------------------------------------------------------------------------
+--
+Cheers,
+Luca.
 
-kernel: 4.14.160-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: 838b72b47f7ef92850331f8b87e1228d8301f392
-git describe: v4.14.159-37-g838b72b47f7e
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.159-37-g838b72b47f7e
-
-
-No regressions (compared to build v4.14.159)
-
-No Fixes (compared to build v4.14.159)
-
-
-Ran 24211 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* network-basic-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* ssuite
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
