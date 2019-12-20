@@ -2,240 +2,152 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A763AC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC179C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7467021655
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EFF521655
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:31:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nci2QP5h"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Edqfovjo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727394AbfLTMbl (ORCPT
+        id S1727407AbfLTMb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 07:31:41 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43997 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727301AbfLTMbl (ORCPT
+        Fri, 20 Dec 2019 07:31:58 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:35150 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727301AbfLTMb6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 07:31:41 -0500
-Received: by mail-pg1-f194.google.com with SMTP id k197so4870738pga.10;
-        Fri, 20 Dec 2019 04:31:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=F6jV7dZGaKPpiJXhyz7QnNUY1p8ieWyHe/bumU+P16o=;
-        b=Nci2QP5hnlRqvDSICDq96aLGd1YRB5cykPNWi2k0HLLq64ZwPlioYVl6tbgMvRzZh6
-         o6JfGF1eaMA2adacHFkV8paU8h7gEMb+ZMUkbXrfPUJdu/oHfC7e3x3Y8et9CMKo6S3T
-         1ZUrb8TVRDFnvnnSy5LSVSaZGupIg/optVZgTr7xxeCmUwkFgHJ9NGKXHBKfT0Sl1f9+
-         z07S5ee2Mu3vOfmHTfgBlqsRyM6odQX60zQYeMJxLJzrpmsiNREBufBdZQHhjg0rdZ1R
-         wvp+jgcWaRzB1wcTPwZ1i/AsATo4+HRmd8G4fYNpkWfHHBRg6oU5nzXtytyhSmknysmw
-         m4BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=F6jV7dZGaKPpiJXhyz7QnNUY1p8ieWyHe/bumU+P16o=;
-        b=pBANtYR40kSFz5JPTTwr2cj9SglTL7p9T5wAITFgoGkIVr+QVe4eKHehIHcSUAwqVO
-         7HxzpwDHm2QsOAG/BfYpzin0Jn/7BhE04k2XI+770xZDivJiuv/idhtmIp9oUYPaCZSE
-         cashrlOtamZ3/YNKWxoFUjg7oQ2eRIh8m1TUOEdEspsyjz7ME/5u4UAxr+VztJaNaqUY
-         4BWfpKDVKj/qY0q+gOe3lvt5YpKKUKFcwvzJNuFbC73yFfPDgprFIHigVljZCuoaQz3G
-         C0sX8lSJYYbsvNpYfcX1J45Bom338S6eGSrWJQoJzB0KeO+q6lCHJp6y9qhdjx04J5YI
-         ME7A==
-X-Gm-Message-State: APjAAAWtxhBROh9NmjJRFy5P7P+C++6zIkgKcCyla4ZWQ+wHH8AZ5aEq
-        0L1Ag+Y2aX5+3bcHgRqxMP8=
-X-Google-Smtp-Source: APXvYqyib6eSuVyAIukktBCFzf3PpemWu3v1peg1kL61dxE/L2dWJkJ9GGkvXt3U+v0dOSPuhZhW4g==
-X-Received: by 2002:a63:cc4f:: with SMTP id q15mr14825230pgi.159.1576845099944;
-        Fri, 20 Dec 2019 04:31:39 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id t23sm13840813pfq.106.2019.12.20.04.31.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 04:31:39 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 127B440CB9; Fri, 20 Dec 2019 09:31:36 -0300 (-03)
-Date:   Fri, 20 Dec 2019 09:31:36 -0300
-To:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] tools lib: Disable redundant-delcs error for strlcpy
-Message-ID: <20191220123136.GD2032@kernel.org>
-References: <20191208214607.20679-1-vt@altlinux.org>
- <20191217122331.4g5atx7in6njjlw4@altlinux.org>
- <20191217200420.GD7095@redhat.com>
- <20191220025236.kgu3v6yhjndr3zwb@altlinux.org>
+        Fri, 20 Dec 2019 07:31:58 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBKCVQhb094857;
+        Fri, 20 Dec 2019 06:31:26 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576845086;
+        bh=lmntjsYZD2zvLWbmw/UGvX0UwtRYBUAg3GKS2/RioC0=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=EdqfovjoXUhrUmZVLvo8IG25HziLhocUDtW2NRqPV9bkHbuBhEdHxyBBXNbPNRPtA
+         SMQVWE0yJrWuCdVCV8Gu3oO2MyJGbP1IipzHxhobmi9Jtr0aevopl2Qz0aJjaeDs/x
+         BtzegG4jogMKo3v20oXUXYzq+5QXzD5DmdJCPnb8=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBKCVP4F030517;
+        Fri, 20 Dec 2019 06:31:25 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
+ Dec 2019 06:31:25 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 20 Dec 2019 06:31:25 -0600
+Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBKCVLPG099921;
+        Fri, 20 Dec 2019 06:31:22 -0600
+Subject: Re: [PATCH V3 1/2] dt-bindings/irq: add binding for NXP INTMUX
+ interrupt multiplexer
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+To:     Joakim Zhang <qiangqing.zhang@nxp.com>, <maz@kernel.org>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <shawnguo@kernel.org>,
+        <s.hauer@pengutronix.de>
+CC:     <linux-arm-kernel@lists.infradead.org>, <fugang.duan@nxp.com>,
+        <linux-kernel@vger.kernel.org>, <kernel@pengutronix.de>,
+        <linux-imx@nxp.com>
+References: <1576827431-31942-1-git-send-email-qiangqing.zhang@nxp.com>
+ <1576827431-31942-2-git-send-email-qiangqing.zhang@nxp.com>
+ <0cecd3af-8bca-c0d3-1312-925624c63dbf@ti.com>
+Message-ID: <dab8f6ba-2b5e-7b98-55c9-ace98f14842e@ti.com>
+Date:   Fri, 20 Dec 2019 18:00:28 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191220025236.kgu3v6yhjndr3zwb@altlinux.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <0cecd3af-8bca-c0d3-1312-925624c63dbf@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Dec 20, 2019 at 05:52:36AM +0300, Vitaly Chikunov escreveu:
-> Arnaldo,
-> 
-> On Tue, Dec 17, 2019 at 05:04:20PM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Tue, Dec 17, 2019 at 03:23:32PM +0300, Vitaly Chikunov escreveu:
-> > > Arnaldo,
-> 
-> (Btw, you didn't include me into the To: of your reply).
-> 
-> > > Ping. Can you accept or comment on this patch? There is further
-> > > explanations of it:
-> > 
-> > Will this work when building with clang
-> 
-> Clang doesn't produce this warning:
-> 
->   https://clang.llvm.org/docs/DiagnosticsReference.html#wredundant-decls
->   "-Wredundant-decls
->   This diagnostic flag exists for GCC compatibility, and has no effect
->   in Clang."
-> 
-> Thus, this change doesn't affect clang. (When building the kernel objtool
-> compiles OK).
-> 
-> But, compilation with clang fails compiling perf with:
-> 
->     CC       util/string.o
->   ../lib/string.c:99:8: error: attribute declaration must precede definition [-Werror,-Wignored-attributes]
->   size_t __weak strlcpy(char *dest, const char *src, size_t size)
->          ^
->   ../../tools/include/linux/compiler.h:66:34: note: expanded from macro '__weak'
->   # define __weak                 __attribute__((weak))
->                                                  ^
->   /usr/include/bits/string_fortified.h:151:8: note: previous definition is here
->   __NTH (strlcpy (char *__restrict __dest, const char *__restrict __src,
->          ^
->   1 error generated.
-> 
-> This warning could be disabled with this:
-> 
-> diff --git tools/lib/string.c tools/lib/string.c
-> index f2ae1b87c719..65b569014446 100644
-> --- tools/lib/string.c
-> +++ tools/lib/string.c
-> @@ -96,6 +96,8 @@ int strtobool(const char *s, bool *res)
->   * If libc has strlcpy() then that version will override this
->   * implementation:
->   */
-> +#pragma GCC diagnostic push
-> +#pragma GCC diagnostic ignored "-Wignored-attributes"
->  size_t __weak strlcpy(char *dest, const char *src, size_t size)
->  {
->         size_t ret = strlen(src);
-> @@ -107,6 +109,7 @@ size_t __weak strlcpy(char *dest, const char *src, size_t size)
->         }
->         return ret;
->  }
-> +#pragma GCC diagnostic pop
-> 
->  /**
->   * skip_spaces - Removes leading whitespace from @str.
-> 
-> If this is acceptable I will resend v2 with this.
 
-Go ahead, and please let me know if there is any container image for
-Altlinux, as I test with clang on all the distros I have container
-images for, and this hasn't appeared on my radar, i.e. clang + strlcpy
-warnings :-)
 
-- Arnaldo
- 
-> Thanks,
+On 20/12/19 5:10 PM, Lokesh Vutla wrote:
 > 
-> > 
-> > - Arnaldo
-> >  
-> > > 1. It seems that people putting strlcpy() into the tools was already aware of
-> > > the problems it causes and tried to solve them. Probably, that's why they put
-> > > `__weak` attribute on it (so it would be linkable in the presence of another
-> > > strlcpy). Then `#ifndef __UCLIBC__`ed and later `#if defined(__GLIBC__) &&
-> > > !defined(__UCLIBC__)` its declaration. But, solution was incomplete and could
-> > > be improved to make kernel buildable on more systems (where libc contains
-> > > strlcpy).
-> > > 
-> > > There is not need to make `redundant redeclaration` warning an error in
-> > > this case.
-> > > 
-> > > 2. `#pragma GCC diagnostic ignored` trick is already used multiple times
-> > > in the kernel:
-> > > 
-> > >   $ git grep  '#pragma GCC diagnostic ignored'
-> > >   arch/arm/lib/xor-neon.c:#pragma GCC diagnostic ignored "-Wunused-variable"
-> > >   tools/build/feature/test-gtk2-infobar.c:#pragma GCC diagnostic ignored "-Wstrict-prototypes"
-> > >   tools/build/feature/test-gtk2.c:#pragma GCC diagnostic ignored "-Wstrict-prototypes"
-> > >   tools/include/linux/string.h:#pragma GCC diagnostic ignored "-Wredundant-decls"
-> > >   tools/lib/bpf/libbpf.c:#pragma GCC diagnostic ignored "-Wformat-nonliteral"
-> > >   tools/perf/ui/gtk/gtk.h:#pragma GCC diagnostic ignored "-Wstrict-prototypes"
-> > >   tools/testing/selftests/kvm/lib/assert.c:#pragma GCC diagnostic ignored "-Wunused-result"
-> > >   tools/usb/ffs-test.c:#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-> > > 
-> > > So the solution does not seem alien in the kernel and should be acceptable.
-> > > 
-> > > (I also send this to another of your emails in case I used wrong one before.)
-> > > 
-> > > Thanks,
-> > > 
-> > > 
-> > > On Mon, Dec 09, 2019 at 12:46:07AM +0300, Vitaly Chikunov wrote:
-> > > > Disable `redundant-decls' error for strlcpy declaration and solve build
-> > > > error allowing users to compile vanilla kernels.
-> > > > 
-> > > > When glibc have strlcpy (such as in ALT linux since 2004) objtool and
-> > > > perf build fails with something like:
-> > > > 
-> > > >   In file included from exec-cmd.c:3:
-> > > >   tools/include/linux/string.h:20:15: error: redundant redeclaration of ‘strlcpy’ [-Werror=redundant-decls]
-> > > >      20 | extern size_t strlcpy(char *dest, const char *src, size_t size);
-> > > > 	|               ^~~~~~~
-> > > > 
-> > > > It's very hard to produce a perfect fix for that since it is a header
-> > > > file indirectly pulled from many sources from different Makefile builds.
-> > > > 
-> > > > Fixes: ce99091 ("perf tools: Move strlcpy() from perf to tools/lib/string.c")
-> > > > Fixes: 0215d59 ("tools lib: Reinstate strlcpy() header guard with __UCLIBC__")
-> > > > Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
-> > > > Cc: Dmitry V. Levin <ldv@altlinux.org>
-> > > > Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-> > > > Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-> > > > Cc: stable@vger.kernel.org
-> > > > ---
-> > > >  tools/include/linux/string.h | 3 +++
-> > > >  1 file changed, 3 insertions(+)
-> > > > 
-> > > > diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
-> > > > index 980cb9266718..99ede7f5dfb8 100644
-> > > > --- a/tools/include/linux/string.h
-> > > > +++ b/tools/include/linux/string.h
-> > > > @@ -17,7 +17,10 @@ int strtobool(const char *s, bool *res);
-> > > >   * However uClibc headers also define __GLIBC__ hence the hack below
-> > > >   */
-> > > >  #if defined(__GLIBC__) && !defined(__UCLIBC__)
-> > > > +#pragma GCC diagnostic push
-> > > > +#pragma GCC diagnostic ignored "-Wredundant-decls"
-> > > >  extern size_t strlcpy(char *dest, const char *src, size_t size);
-> > > > +#pragma GCC diagnostic pop
-> > > >  #endif
-> > > >  
-> > > >  char *str_error_r(int errnum, char *buf, size_t buflen);
-> > 
+> 
+> On 20/12/19 1:07 PM, Joakim Zhang wrote:
+>> This patch adds the DT bindings for the NXP INTMUX interrupt multiplexer
+>> for i.MX8 family SoCs.
+>>
+>> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+>> ---
+>>  .../interrupt-controller/fsl,intmux.txt       | 36 +++++++++++++++++++
+>>  1 file changed, 36 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.txt
+>> new file mode 100644
+>> index 000000000000..3ebe9cac5f20
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.txt
+>> @@ -0,0 +1,36 @@
+>> +Freescale INTMUX interrupt multiplexer
+>> +
+>> +Required properties:
+>> +
+>> +- compatible: Should be:
+>> +   - "fsl,imx-intmux"
+>> +- reg: Physical base address and size of registers.
+>> +- interrupts: Should contain the parent interrupt lines (up to 8) used to
+>> +  multiplex the input interrupts.
+>> +- clocks: Should contain one clock for entry in clock-names.
+>> +- clock-names:
+>> +   - "ipg": main logic clock
+>> +- interrupt-controller: Identifies the node as an interrupt controller.
+>> +- #interrupt-cells: Specifies the number of cells needed to encode an
+>> +  interrupt source. The value must be 2.
+>> +   - the 1st cell: hardware interrupt number> +   - the 2nd cell: channel index, value must smaller than channels used
+> 
+> As per the xlate function, 1st cell is channel index and 2nd cell is hw
+> interrupt number no?
 
--- 
+Sorry my bad, I read it wrong. Ignore this comment.
 
-- Arnaldo
+Thanks and regards,
+Lokesh
+
+> 
+> Thanks and regards,
+> Lokesh
+> 
+>> +
+>> +Optional properties:
+>> +
+>> +- fsl,intmux_chans: The number of channels used for interrupt source. The
+>> +  Maximum value is 8. If this property is not set in DT then driver uses
+>> +  1 channel by default.
+>> +
+>> +Example:
+>> +
+>> +	intmux@37400000 {
+>> +		compatible = "fsl,imx-intmux";
+>> +		reg = <0x37400000 0x1000>;
+>> +		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+>> +		clocks = <&clk IMX8QM_CM40_IPG_CLK>;
+>> +		clock-names = "ipg";
+>> +		interrupt-controller;
+>> +		#interrupt-cells = <1>;
+>> +	};
+>> +
+>>
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
