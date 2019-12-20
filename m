@@ -2,159 +2,148 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A1CC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A97C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B526F24679
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:53:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A831F24679
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:55:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LpLIk+iW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbfLTLxt (ORCPT
+        id S1727285AbfLTLzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 06:53:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:49922 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727177AbfLTLxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 06:53:49 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 395A030E;
-        Fri, 20 Dec 2019 03:53:48 -0800 (PST)
-Received: from [10.1.194.52] (e112269-lin.cambridge.arm.com [10.1.194.52])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 567D63F719;
-        Fri, 20 Dec 2019 03:53:45 -0800 (PST)
-Subject: Re: [PATCH v17 06/23] powerpc: mm: Add p?d_leaf() definitions
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
-Cc:     Mark Rutland <Mark.Rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Will Deacon <will@kernel.org>,
-        "Liang, Kan" <kan.liang@linux.intel.com>, x86@kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, kvm-ppc@vger.kernel.org,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
-        linuxppc-dev@lists.ozlabs.org
-References: <20191218162402.45610-1-steven.price@arm.com>
- <20191218162402.45610-7-steven.price@arm.com>
- <877e2smt6r.fsf@mpe.ellerman.id.au>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <e99a9857-e9f4-588a-ad12-4d5f3a9de739@arm.com>
-Date:   Fri, 20 Dec 2019 11:53:44 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 20 Dec 2019 06:55:24 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40153 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727184AbfLTLzX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 06:55:23 -0500
+Received: by mail-lf1-f68.google.com with SMTP id i23so6820813lfo.7
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 03:55:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=DPm8u606XYLiFYRzZPxYwiipRU6meoWwaOXT6w0bjOM=;
+        b=LpLIk+iWEQmCJKmxxQtjOBI5VPgYmQDAki9aDGhAS5pRI26oTknEGVSkm+aWTsM91S
+         2433nhpaTvJk79vRxSNlSJbZLx0VzRRaWvNq5tQ7IGd84VjyDNNlRaObga3xfNmsLXml
+         o5leSv2l4rwD1xzRNn5TVD/86OC/oBRDoxYT0vjK2jVgBZotNnqBraKgqsKOTYaU4NIz
+         kchm8GamnHjLnQRBycri25rloiDJTTfcRfDjHc+EWQZkCO7HXrxAQKaSs9Bqo7coBPP/
+         DI9veVI5XkDQfIK+TgJePmtO3gMnAUdW0vsLpuat50vIMmgswqIQnfRZKBC2KusAxdUn
+         uZ0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=DPm8u606XYLiFYRzZPxYwiipRU6meoWwaOXT6w0bjOM=;
+        b=GF1Pd7KK509F7aGt0mmWB9xCFBlHuCej4fHEY9Fl+q9AEEnFZlsc+zSQ1clFiGLwO3
+         Ji8HIN68kmRi9IheMd7igjHUcgE7dloPkukJGk2QUgmpmdshqxH+bLHX4YoGjehwVS2v
+         S4zI6CiSJXkOry8DfaQlznp2FRSHxiYyQWWD7LCpfM5XICtKT18ZjauwnKgae+tfo5Pp
+         eINPME/l0aINz2xvKJ4rlQmNwsTfJFWJnnELO2waX52y7fn8X3npLonLKbwidTSnTbMe
+         VZuQLDVv6D0+wuwBp87YC7k2GhiXj+CeIVBoGVvgRi/NkAVC4sM622+YLLUo6dIrTD+6
+         4+bQ==
+X-Gm-Message-State: APjAAAVg7QR1KwnYMgvxagR5E+6TEnbJwtJnL9cVNMA9ugHq3pc/V63n
+        xFgzYwSKUpd4yd18jhatfufUFJdcQFqcNjMtSOK6mg==
+X-Google-Smtp-Source: APXvYqx1g+drEwy2vCmHS5tkE2wiSoi/HAfHYDfVNuMQEs0wR3lCx84+yKxERoWVh28TXKUehXa2+CgnbmkpWleGBuo=
+X-Received: by 2002:ac2:5147:: with SMTP id q7mr8670447lfd.87.1576842921377;
+ Fri, 20 Dec 2019 03:55:21 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <877e2smt6r.fsf@mpe.ellerman.id.au>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191220160639.3406a5de@canb.auug.org.au>
+In-Reply-To: <20191220160639.3406a5de@canb.auug.org.au>
+From:   Anders Roxell <anders.roxell@linaro.org>
+Date:   Fri, 20 Dec 2019 12:55:10 +0100
+Message-ID: <CADYN=9JjqvNWEsHLW5+GgSvkUkuz_6iMpD=X4Vk6nLQXtXa2Dw@mail.gmail.com>
+Subject: Re: linux-next: Tree for Dec 20
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        martin.petersen@oracle.com, Stanley Chu <stanley.chu@mediatek.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/12/2019 11:49, Michael Ellerman wrote:
-> Steven Price <steven.price@arm.com> writes:
->> walk_page_range() is going to be allowed to walk page tables other than
->> those of user space. For this it needs to know when it has reached a
->> 'leaf' entry in the page tables. This information is provided by the
->> p?d_leaf() functions/macros.
->>
->> For powerpc p?d_is_leaf() functions already exist. Export them using the
->> new p?d_leaf() name.
->>
->> CC: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->> CC: Paul Mackerras <paulus@samba.org>
->> CC: Michael Ellerman <mpe@ellerman.id.au>
->> CC: linuxppc-dev@lists.ozlabs.org
->> CC: kvm-ppc@vger.kernel.org
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> ---
->>  arch/powerpc/include/asm/book3s/64/pgtable.h | 3 +++
->>  1 file changed, 3 insertions(+)
-> 
-> We have fallback versions of our pmd_is_leaf() etc. in
-> arch/powerpc/include/asm/pgtable.h, eg:
-> 
-> #ifndef pmd_is_leaf
-> #define pmd_is_leaf pmd_is_leaf
-> static inline bool pmd_is_leaf(pmd_t pmd)
-> {
-> 	return false;
-> }
-> #endif
-> 
-> Because we support several different MMUs and most of them don't need to
-> do anything.
-> 
-> So we could put the compatibility #defines to your names along with the
-> fallback versions in asm/pgtable.h, rather than in
-> asm/book3s/64/pgtable.h
-> 
-> But I see you also have fallbacks for your versions, so it probably
-> doesn't matter either way.
-> 
-> So I'm OK with this version, unless you think there's a compelling
-> reason to do the compatibility #defines in our asm/pgtable.h
+On Fri, 20 Dec 2019 at 06:06, Stephen Rothwell <sfr@canb.auug.org.au> wrote=
+:
+>
+> Hi all,
 
-I was thinking that (assuming this series actually gets merged this
-time), the p?d_is_leaf() versions could be removed and replaced by
-p?d_leaf() in the future. Since the fallbacks are in the asm-generic
-code it makes sense for the pmd_leaf() definitions to be next to the
-non-fallback versions.
+Hi all,
 
-> Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+>
+> News: There will be no linux-next releases until January 6 (unless I
+> get very bored :-)).
+>
+> Changes since 20191219:
 
-Thanks!
+on arm64 I see this:
 
-Steve
+../drivers/scsi/ufs/ufs-mediatek.c: In function =C3=A2=E2=82=AC=CB=9Cufs_mt=
+k_setup_ref_clk=C3=A2=E2=82=AC=E2=84=A2:
+../drivers/scsi/ufs/ufs-mediatek.c:93:23: error: storage size of
+=C3=A2=E2=82=AC=CB=9Cres=C3=A2=E2=82=AC=E2=84=A2 isn=C3=A2=E2=82=AC=E2=84=
+=A2t known
+  struct arm_smccc_res res;
+                       ^~~
+../drivers/scsi/ufs/ufs-mediatek.c:21:2: error: implicit declaration
+of function =C3=A2=E2=82=AC=CB=9Carm_smccc_smc=C3=A2=E2=82=AC=E2=84=A2
+[-Werror=3Dimplicit-function-declaration]
+  arm_smccc_smc(MTK_SIP_UFS_CONTROL, \
+  ^~~~~~~~~~~~~
+../drivers/scsi/ufs/ufs-mediatek.c:101:3: note: in expansion of macro
+=C3=A2=E2=82=AC=CB=9Cufs_mtk_ref_clk_notify=C3=A2=E2=82=AC=E2=84=A2
+   ufs_mtk_ref_clk_notify(on, res);
+   ^~~~~~~~~~~~~~~~~~~~~~
+../drivers/scsi/ufs/ufs-mediatek.c:21:16: error:
+=C3=A2=E2=82=AC=CB=9CMTK_SIP_UFS_CONTROL=C3=A2=E2=82=AC=E2=84=A2 undeclared=
+ (first use in this function); did
+you mean =C3=A2=E2=82=AC=CB=9CTX_HIBERN8_CONTROL=C3=A2=E2=82=AC=E2=84=A2?
+  arm_smccc_smc(MTK_SIP_UFS_CONTROL, \
+                ^~~~~~~~~~~~~~~~~~~
+../drivers/scsi/ufs/ufs-mediatek.c:101:3: note: in expansion of macro
+=C3=A2=E2=82=AC=CB=9Cufs_mtk_ref_clk_notify=C3=A2=E2=82=AC=E2=84=A2
+   ufs_mtk_ref_clk_notify(on, res);
+   ^~~~~~~~~~~~~~~~~~~~~~
+../drivers/scsi/ufs/ufs-mediatek.c:21:16: note: each undeclared
+identifier is reported only once for each function it appears in
+  arm_smccc_smc(MTK_SIP_UFS_CONTROL, \
+                ^~~~~~~~~~~~~~~~~~~
+../drivers/scsi/ufs/ufs-mediatek.c:101:3: note: in expansion of macro
+=C3=A2=E2=82=AC=CB=9Cufs_mtk_ref_clk_notify=C3=A2=E2=82=AC=E2=84=A2
+   ufs_mtk_ref_clk_notify(on, res);
+   ^~~~~~~~~~~~~~~~~~~~~~
+../drivers/scsi/ufs/ufs-mediatek.c:93:23: warning: unused variable
+=C3=A2=E2=82=AC=CB=9Cres=C3=A2=E2=82=AC=E2=84=A2 [-Wunused-variable]
+  struct arm_smccc_res res;
+                       ^~~
+cc1: some warnings being treated as errors
+make[4]: *** [../scripts/Makefile.build:266:
+drivers/scsi/ufs/ufs-mediatek.o] Error 1
+make[4]: Target '__build' not remade because of errors.
+make[3]: *** [../scripts/Makefile.build:503: drivers/scsi/ufs] Error 2
+make[3]: Target '__build' not remade because of errors.
+make[2]: *** [../scripts/Makefile.build:503: drivers/scsi] Error 2
+../drivers/staging/wilc1000/hif.c: In function =C3=A2=E2=82=AC=CB=9Cwilc_pa=
+rse_join_bss_param=C3=A2=E2=82=AC=E2=84=A2:
+../drivers/staging/wilc1000/hif.c:574:45: warning: array subscript 2
+is above array bounds of =C3=A2=E2=82=AC=CB=9Cu32[2]=C3=A2=E2=82=AC=E2=84=
+=A2 {aka =C3=A2=E2=82=AC=CB=9Cunsigned int[2]=C3=A2=E2=82=AC=E2=84=A2}
+[-Warray-bounds]
+    param->akm_suites[i] =3D crypto->akm_suites[i] & 0xFF;
+                           ~~~~~~~~~~~~~~~~~~^~~
+make[2]: Target '__build' not remade because of errors.
+make[1]: *** [/srv/jenkins/kernel/next/Makefile:1694: drivers] Error 2
+make[1]: Target 'Image' not remade because of errors.
+make[1]: Target 'modules' not remade because of errors.
+make: *** [Makefile:179: sub-make] Error 2
+make: Target 'Image' not remade because of errors.
+make: Target 'modules' not remade because of errors.
 
-> cheers
-> 
-> 
->> diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
->> index b01624e5c467..201a69e6a355 100644
->> --- a/arch/powerpc/include/asm/book3s/64/pgtable.h
->> +++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
->> @@ -1355,18 +1355,21 @@ static inline bool is_pte_rw_upgrade(unsigned long old_val, unsigned long new_va
->>   * Like pmd_huge() and pmd_large(), but works regardless of config options
->>   */
->>  #define pmd_is_leaf pmd_is_leaf
->> +#define pmd_leaf pmd_is_leaf
->>  static inline bool pmd_is_leaf(pmd_t pmd)
->>  {
->>  	return !!(pmd_raw(pmd) & cpu_to_be64(_PAGE_PTE));
->>  }
->>  
->>  #define pud_is_leaf pud_is_leaf
->> +#define pud_leaf pud_is_leaf
->>  static inline bool pud_is_leaf(pud_t pud)
->>  {
->>  	return !!(pud_raw(pud) & cpu_to_be64(_PAGE_PTE));
->>  }
->>  
->>  #define pgd_is_leaf pgd_is_leaf
->> +#define pgd_leaf pgd_is_leaf
->>  static inline bool pgd_is_leaf(pgd_t pgd)
->>  {
->>  	return !!(pgd_raw(pgd) & cpu_to_be64(_PAGE_PTE));
->> -- 
->> 2.20.1
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-
+Cheers,
+Anders
