@@ -2,104 +2,162 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E560AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 045E9C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B46FA206DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:24:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kUGvvJ6d"
+	by mail.kernel.org (Postfix) with ESMTP id C43042064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:27:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfLTTYj (ORCPT
+        id S1727555AbfLTT1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 14:24:39 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:42402 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727452AbfLTTYi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 14:24:38 -0500
-Received: from [10.137.112.111] (unknown [131.107.147.111])
-        by linux.microsoft.com (Postfix) with ESMTPSA id A28A920106BA;
-        Fri, 20 Dec 2019 11:24:37 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A28A920106BA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1576869877;
-        bh=As6dpOsf+0riwLRnC5ZjUILruPScY2eVZszSrSI5Cd8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=kUGvvJ6dcrzmRg6yQIHWK+vkBOmQrWBPnG/GWsAmjA6mV1Tj8vVloSBeRF/K83DHQ
-         RaliTuE8jI443Po8PE5bFR4GpYgcK1xUl/C+RQvU0TkmtoNexZaFDTYQ2vF/qTKuPN
-         6ETCl70BWHtQixoh+of6InLkDFDepaCvIVdvi0sI=
-Subject: Re: [PATCH v5 0/2] IMA: Deferred measurement of keys
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        James.Bottomley@HansenPartnership.com,
-        linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-References: <20191218164434.2877-1-nramas@linux.microsoft.com>
- <1576868506.5241.65.camel@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <589b893b-52e4-783c-0f32-608ed1cfd7f9@linux.microsoft.com>
-Date:   Fri, 20 Dec 2019 11:25:02 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 20 Dec 2019 14:27:39 -0500
+Received: from mga17.intel.com ([192.55.52.151]:28192 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727394AbfLTT1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 14:27:39 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Dec 2019 11:27:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,336,1571727600"; 
+   d="scan'208";a="222547137"
+Received: from gza.jf.intel.com ([10.54.75.28])
+  by fmsmga001.fm.intel.com with ESMTP; 20 Dec 2019 11:27:38 -0800
+From:   John Andersen <john.s.andersen@intel.com>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        pbonzini@redhat.com
+Cc:     hpa@zytor.com, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        John Andersen <john.s.andersen@intel.com>
+Subject: [RESEND RFC 0/2] Paravirtualized Control Register pinning
+Date:   Fri, 20 Dec 2019 11:26:59 -0800
+Message-Id: <20191220192701.23415-1-john.s.andersen@intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <1576868506.5241.65.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/20/2019 11:01 AM, Mimi Zohar wrote:
+Paravirtualized Control Register pinning is a strengthened version of
+existing protections on the Write Protect, Supervisor Mode Execution /
+Access Protection, and User-Mode Instruction Prevention bits. The
+existing protections prevent native_write_cr*() functions from writing
+values which disable those bits. This patchset prevents any guest
+writes to control registers from disabling pinned bits, not just writes
+from native_write_cr*(). This stops attackers within the guest from
+using ROP to disable protection bits.
 
-Hi Mimi,
+https://web.archive.org/web/20171029060939/http://www.blackbunny.io/linux-kernel-x86-64-bypass-smep-kaslr-kptr_restric/
 
->> If the kernel is built with both CONFIG_IMA and
->> CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE enabled then the IMA policy
->> must be applied as a custom policy. Not providing a custom policy
->> in the above configuration would result in asymmeteric keys being queued
->> until a custom policy is loaded. This is by design.
-> 
-> I didn't notice the "This is by design" here, referring to the memory
-> never being freed.  "This is by design" was suppose to refer to
-> requiring a custom policy for measuring keys.
-> 
-> For now, these two patches are queued in the next-integrity-testing
-> branch, but I would appreciate your addressing not freeing the memory
-> associated with the keys, if a custom policy is not loaded.
-> 
-> Please note that I truncated the 2/2 patch description, as it repeats
-> the existing verification example in commit ("2b60c0ecedf8 IMA: Read
-> keyrings= option from the IMA policy").
-> 
-> thanks,
-> 
-> Mimi
-> 
+The protection is implemented by adding MSRs to KVM which contain the
+bits that are allowed to be pinned, and the bits which are pinned. The
+guest or userspace can enable bit pinning by reading MSRs to check
+which bits are allowed to be pinned, and then writing MSRs to set which
+bits they want pinned.
 
-Sure - I am fine with truncating the 2/2 patch description. Thanks for 
-doing that.
+Other hypervisors such as HyperV have implemented similar protections
+for Control Registers and MSRs; which security researchers have found
+effective.
 
-Regarding "Freeing the queued keys if custom policy is not loaded":
+https://www.abatchy.com/2018/01/kernel-exploitation-4
 
-Shall I create a new patch set to address that and have that be reviewed 
-independent of this patch set?
+We add a CR pin feature bit to the KVM cpuid, read only MSRs which
+guests use to identify which bits they may request be pinned, and
+CR pinned MSRs which contain the pinned bits. Guests can request that
+KVM pin bits within control register 0 or 4 via the CR pinned MSRs.
+Writes to the MSRs fail if they include bits that aren't allowed to be
+pinned. Host userspace may clear or modify pinned bits at any time.
+Once pinned bits are set, the guest may pin more allowed bits, but may
+never clear pinned bits.
 
-Like you'd suggested earlier, we can wait for a certain time, after IMA 
-is initialized, and free the queue if a custom policy was not loaded.
+In the event that the guest vcpu attempts to disable any of the pinned
+bits, the vcpu that issued the write is sent a general protection
+fault, and the register is left unchanged.
 
-Please let me know.
+Pinning is not active when running in SMM. Entering SMM disables pinned
+bits, writes to control registers within SMM would therefore trigger
+general protection faults if pinning was enforced.
 
-thanks,
-  -lakshmi
+The guest may never read pinned bits. If an attacker were to read the
+CR pinned MSRs, they might decide to preform another attack which would
+not cause a general protection fault.
 
+Should userspace expose the CR pining CPUID feature bit, it must zero CR
+pinned MSRs on reboot. If it does not, it runs the risk of having the
+guest enable pinning and subsequently cause general protection faults on
+next boot due to early boot code setting control registers to values
+which do not contain the pinned bits.
+
+When running with KVM guest support and paravirtualized CR pinning
+enabled, paravirtualized and existing pinning are setup at the same
+point on the boot CPU. Non-boot CPUs setup pinning upon identification.
+
+Guests using the kexec system call currently do not support
+paravirtualized control register pinning. This is due to early boot
+code writing known good values to control registers, these values do
+not contain the protected bits. This is due to CPU feature
+identification being done at a later time, when the kernel properly
+checks if it can enable protections.
+
+Most distributions enable kexec. However, kexec could be made boot time
+disableable. In this case if a user has disabled kexec at boot time
+the guest will request that paravirtualized control register pinning
+be enabled. This would expand the userbase to users of major
+distributions.
+
+Paravirtualized CR pinning will likely be incompatible with kexec for
+the foreseeable future. Early boot code could possibly be changed to
+not clear protected bits. However, a kernel that requests CR bits be
+pinned can't know if the kernel it's kexecing has been updated to not
+clear protected bits. This would result in the kernel being kexec'd
+almost immediately receiving a general protection fault.
+
+Security conscious kernel configurations disable kexec already, per KSPP
+guidelines. Projects such as Kata Containers, AWS Lambda, ChromeOS
+Termina, and others using KVM to virtualize Linux will benefit from
+this protection.
+
+The usage of SMM in SeaBIOS was explored as a way to communicate to KVM
+that a reboot has occurred and it should zero the pinned bits. When
+using QEMU and SeaBIOS, SMM initialization occurs on reboot. However,
+prior to SMM initialization, BIOS writes zero values to CR0, causing a
+general protection fault to be sent to the guest before SMM can signal
+that the machine has booted.
+
+Pinning of sensitive CR bits has already been implemented to protect
+against exploits directly calling native_write_cr*(). The current
+protection cannot stop ROP attacks which jump directly to a MOV CR
+instruction. Guests running with paravirtualized CR pinning are now
+protected against the use of ROP to disable CR bits. The same bits that
+are being pinned natively may be pinned via the CR pinned MSRs. These
+bits are WP in CR0, and SMEP, SMAP, and UMIP in CR4.
+
+Future patches could protect bits in MSRs in a similar fashion. The NXE
+bit of the EFER MSR is a prime candidate.
+
+John Andersen (2):
+  KVM: X86: Add CR pin MSRs
+  X86: Use KVM CR pin MSRs
+
+ Documentation/virt/kvm/msr.txt       | 38 +++++++++++++++++++++++
+ arch/x86/Kconfig                     |  9 ++++++
+ arch/x86/include/asm/kvm_host.h      |  2 ++
+ arch/x86/include/asm/kvm_para.h      | 10 +++++++
+ arch/x86/include/uapi/asm/kvm_para.h |  5 ++++
+ arch/x86/kernel/cpu/common.c         |  5 ++++
+ arch/x86/kernel/kvm.c                | 17 +++++++++++
+ arch/x86/kvm/cpuid.c                 |  3 +-
+ arch/x86/kvm/x86.c                   | 45 ++++++++++++++++++++++++++++
+ 9 files changed, 133 insertions(+), 1 deletion(-)
+
+-- 
+2.21.0
 
