@@ -2,136 +2,97 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD813C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 22:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A4BC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 22:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA3F2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 22:01:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IpTCt2Bz"
+	by mail.kernel.org (Postfix) with ESMTP id 6CCDD2146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 22:01:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576879309;
+	bh=n9oNlltpSptNjDnyqZpS9pIx39qYhYcQaY7bQ+SruUE=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=YOjfBo3Vm8VoDKDpgJzG9vFTDeoxVFz28xHdIVPvw6WPdSNu4MbginWg9iJFWAwk+
+	 CCtOC9jjciT5frleS3c0biEKr0qD1Ug3stztgWaMgqwCPbktVj66bpotDUbTLmzl2a
+	 837LA+9ltZoVJOr5y7f4nCYsEJ41bR+9/Bq+UFZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727546AbfLTWBA (ORCPT
+        id S1727564AbfLTWBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 17:01:00 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:38961 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727473AbfLTWBA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 17:01:00 -0500
-Received: by mail-qt1-f194.google.com with SMTP id e5so9492188qtm.6;
-        Fri, 20 Dec 2019 14:00:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VvVsQvcLC5AtbCwjS+SvhHuW+/iK9QI8hoMqbN1CNOs=;
-        b=IpTCt2BzCnS1CC0jXQVMxwOkE+E5bpaaM6bsrpAkyp19Y57jDyYgkEK62CGjFKA8h9
-         eHaMv1jjLAfQ9tG6qm5UrFhxelLDEhDDdXQ18p5FnbM0Un38/9SGwQ3dWYAamiccD7+f
-         FTtOZN8RsioXadBjSh59j/n5P/7DnQ8z+wP+DFRcWdNxrd/Z11ZIw8rf5utJxl6Tmj9Z
-         zuKnpXk3hpcPyGx3vAlG3OQ3zXydlFSdpI5xDNAqYNkqUgHH77YQ6d4ZQvuAuqu1znks
-         9+LHtGSSyI1eB7AMmn+hGVV5HIubc7c5BDbcn7N6hgnsOVg3HO0RQ6gA1o/CDHzKQeh9
-         B2xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VvVsQvcLC5AtbCwjS+SvhHuW+/iK9QI8hoMqbN1CNOs=;
-        b=XmvfA9NMYxG7j1jlw2erbiySRKXk0UzMZiFnejJUnjjWQ7JIhL19CA/7sXl07eBCo4
-         VXhqmJNDOd7igI4F0dmZ86yEpZ5w2UB5mc/Gak3d4ZSNC3fMewXx+qHVYQ7c/01+UhL9
-         M7BY2BVPsgAy69aozi5HrU59jtYhcTRKy9x6qE5/RXwthjpV2+HL3KFhqW7OyQ4kUwHH
-         61AAr9Lo5XarHp4fZmSlp5v3VdK4uSZs8GbuIp3emxxZHaKZtPdrpUtEzV4iLabt0lQf
-         ljtSRh7bCOCMjgYZMihJNYKfseyhiaLZ6XDo4gtEedopxUfaRDoOE5zVIROFIhZ4PNoY
-         egyw==
-X-Gm-Message-State: APjAAAUjqLdGa3pjXGvXKEd6FKKdfZEC0GYvUnle9luQErICpQnEq6r5
-        K9cQV+/TuXPreR8q5Aucfw86GRu5xgLjwWQSZY//vsCF
-X-Google-Smtp-Source: APXvYqyYXv+Vjt6olFx4LKp8KxekBgv9L9LYqsXGKC9qkA1aF6MiH0cilnKSCVLdU8GgoXRHeVgylekYRpCv/jwGdAs=
-X-Received: by 2002:ac8:1385:: with SMTP id h5mr13376040qtj.59.1576879259174;
- Fri, 20 Dec 2019 14:00:59 -0800 (PST)
+        Fri, 20 Dec 2019 17:01:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33152 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727473AbfLTWBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 17:01:48 -0500
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93EB32082E;
+        Fri, 20 Dec 2019 22:01:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576879307;
+        bh=n9oNlltpSptNjDnyqZpS9pIx39qYhYcQaY7bQ+SruUE=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=bHGFRGRKGY6aPTeZYj9OSOzhqx8EkfSNzD/GXH5eWu6wSXMQ8Mg3IBQVefBhXlAoz
+         phD3I7zDMZ238iMPGt6ZulqL3xt9PnuM1dnc1izTsqODSOJO57m9jBZoMYVk+c7dGY
+         slLHGZvfmL5DhxnAwCNJalrOtJp8WY5Ph2u14D9c=
+Date:   Fri, 20 Dec 2019 23:01:43 +0100 (CET)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+cc:     Thomas Gleixner <tglx@linutronix.de>, Pavel Machek <pavel@ucw.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpu/SMT: fix x86 link error without CONFIG_SYSFS
+In-Reply-To: <nycvar.YFH.7.76.1912102111480.4603@cbobk.fhfr.pm>
+Message-ID: <nycvar.YFH.7.76.1912202301070.4603@cbobk.fhfr.pm>
+References: <20191210195614.786555-1-arnd@arndb.de> <nycvar.YFH.7.76.1912102111480.4603@cbobk.fhfr.pm>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-References: <20191220032558.3259098-1-namhyung@kernel.org> <CAEf4BzaZBSRK2M4LD-c12_2-QLa8+jpPs1E4nA9BNeUDskOMBQ@mail.gmail.com>
- <20191220204748.GA9076@kernel.org> <CAEf4BzZW+bDxkdmXBJrrCHqBP5UT1NLJJ7mXLNqc6eypRCib6Q@mail.gmail.com>
- <20191220215328.GB9076@kernel.org>
-In-Reply-To: <20191220215328.GB9076@kernel.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 20 Dec 2019 14:00:48 -0800
-Message-ID: <CAEf4BzZBnY0neQJQ=opaGTO5yMKWhqBB_YRE4QTTBNYBD-RF9g@mail.gmail.com>
-Subject: Re: [PATCH] libbpf: Fix build on read-only filesystems
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, bpf <bpf@vger.kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 1:53 PM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
->
-> Em Fri, Dec 20, 2019 at 01:45:52PM -0800, Andrii Nakryiko escreveu:
-> > On Fri, Dec 20, 2019 at 12:47 PM Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
-> > > Em Fri, Dec 20, 2019 at 12:29:36PM -0800, Andrii Nakryiko escreveu:
-> > > > On Thu, Dec 19, 2019 at 7:26 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > > I got the following error when I tried to build perf on a read-only
-> > > > > filesystem with O=dir option.
->
-> > > > >   $ cd /some/where/ro/linux/tools/perf
-> > > > >   $ make O=$HOME/build/perf
-> > > > >   ...
-> > > > >     CC       /home/namhyung/build/perf/lib.o
-> > > > >   /bin/sh: bpf_helper_defs.h: Read-only file system
-> > > > >   make[3]: *** [Makefile:184: bpf_helper_defs.h] Error 1
-> > > > >   make[2]: *** [Makefile.perf:778: /home/namhyung/build/perf/libbpf.a] Error 2
-> > > > >   make[2]: *** Waiting for unfinished jobs....
-> > > > >     LD       /home/namhyung/build/perf/libperf-in.o
-> > > > >     AR       /home/namhyung/build/perf/libperf.a
-> > > > >     PERF_VERSION = 5.4.0
-> > > > >   make[1]: *** [Makefile.perf:225: sub-make] Error 2
-> > > > >   make: *** [Makefile:70: all] Error 2
->
-> > > > > It was becaused bpf_helper_defs.h was generated in current directory.
-> > > > > Move it to OUTPUT directory.
->
-> > > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > > > ---
->
-> > > > Overall nothing is obviously broken, except you need to fix up
-> > > > selftests/bpf's Makefile as well.
->
-> > > > BTW, this patch doesn't apply cleanly to latest bpf-next, so please rebase.
->
-> > > > Also subject prefix should look like [PATCH bpf-next] if it's meant to
-> > > > be applied against bpf-next.
->
-> > > Shouldn't this be applied to the current merge window since a behaviour
-> > > that people relied, i.e. using O= to generate the build in a separate
-> > > directory, since its not possible to use the source dir tree as it is
-> > > read-only is now broken, i.e. isn't this a regression?
->
-> > Sure, it can be applied against bpf as well, but selftests still need
-> > to be fixed first.
->
-> I guess this can be done on a separate patch? I.e. if the user doesn't
-> use selftests the only regression it will see is when trying to build
-> tools/perf using O=.
->
-> I think two patches is best, better granularity, do you see a strict
-> need for both to be in the same patch?
+On Tue, 10 Dec 2019, Jiri Kosina wrote:
 
-Sure, it can be two separate patches, but they should go in together,
-otherwise selftests will be broken.
+> > When CONFIG_SYSFS is disabled, but CONFIG_HOTPLUG_SMT is enabled,
+> > the kernel fails to link:
+> 
+> I wonder where such kernels are running ... or I rather don't :)
+> 
+> > arch/x86/power/cpu.o: In function `hibernate_resume_nonboot_cpu_disable':
+> > (.text+0x38d): undefined reference to `cpuhp_smt_enable'
+> > arch/x86/power/hibernate.o: In function `arch_resume_nosmt':
+> > hibernate.c:(.text+0x291): undefined reference to `cpuhp_smt_enable'
+> > hibernate.c:(.text+0x29c): undefined reference to `cpuhp_smt_disable'
+> > 
+> > Move the exported functions out of the #ifdef section into its
+> > own with the correct conditions.
+> > 
+> > The patch that caused this is marked for stable backports, so
+> > this one may need to be backported as well.
+> > 
+> > Fixes: ec527c318036 ("x86/power: Fix 'nosmt' vs hibernation triple fault during resume")
+> 
+> Reviewed-by: Jiri Kosina <jkosina@suse.cz>
+> 
+> Thanks for fixing my oversight.
 
+Is anyone going to pick this up please?
 
->
-> - Arnaldo
+Thanks,
+
+-- 
+Jiri Kosina
+SUSE Labs
+
