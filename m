@@ -2,218 +2,495 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D64AC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D64C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73E8B2467F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A4E42467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:04:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="OhGfJ+qN"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WzyyWbRc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727252AbfLTLCs (ORCPT
+        id S1727205AbfLTLEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 06:02:48 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:17392 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727177AbfLTLCs (ORCPT
+        Fri, 20 Dec 2019 06:04:40 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:53166 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727177AbfLTLEj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 06:02:48 -0500
-X-UUID: 5dc234f7352b4bf1803446a9b5cb0aaa-20191220
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Aatwr+ttc7zxtmKQFYI1z8gYIV9l40lZAUrGhcyY+f0=;
-        b=OhGfJ+qNuhXnJbUjN/PlCIgiOV2Je8pomSjwscTL92qSdr9M8Ga/jJTbopKEx8aYzA0TBLH5Q9EuLvx552pImTk/wLiTCecP8ZpIssHBWFhTBni11G6DIQ8gpWzfcdwvqRpNNQEspovlHMJc/ygkhC3exL9DPcCs8utJAmGn/Fo=;
-X-UUID: 5dc234f7352b4bf1803446a9b5cb0aaa-20191220
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <chao.hao@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1003720282; Fri, 20 Dec 2019 19:02:40 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 20 Dec 2019 19:02:38 +0800
-Received: from [10.15.20.246] (10.15.20.246) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 20 Dec 2019 19:01:43 +0800
-Message-ID: <1576839713.20031.2.camel@mbjsdccf07>
-Subject: Re: [RESEND,PATCH 01/13] dt-bindings: mediatek: Add bindings for
- MT6779
-From:   chao hao <Chao.Hao@mediatek.com>
-To:     Yong Wu <yong.wu@mediatek.com>
-CC:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Jun Yan <jun.yan@mediatek.com>,
-        Cui Zhang <cui.zhang@mediatek.com>,
-        Guangming Cao <guangming.cao@mediatek.com>,
-        Anan Sun <anan.sun@mediatek.com>,
-        Miles Chen <miles.chen@mediatek.com>
-Date:   Fri, 20 Dec 2019 19:01:53 +0800
-In-Reply-To: <1576497901.28043.71.camel@mhfsdcap03>
-References: <20191104115238.2394-1-chao.hao@mediatek.com>
-         <20191104115238.2394-2-chao.hao@mediatek.com>
-         <1576497901.28043.71.camel@mhfsdcap03>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 20 Dec 2019 06:04:39 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBKB4bjr068540;
+        Fri, 20 Dec 2019 05:04:37 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576839877;
+        bh=j6UQ3O/Hv+Kt21sxYVJUZOij1dDw57JSv0/4dcSA7KI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=WzyyWbRcR3bT/iXwGMdheMqCjKAJEmaVAk0NwacJCRA6eWN94u0sOSvmI8HsTBhNF
+         92slqPea8ovxTqP3Pz/Je43sq2Rkbjgbo5uIXQ+tLNilpbPHScsg2x2fm2aGSCd/9l
+         nB9CrhiLOy6HByQk197eqA0pEAGJbIseRaLVk/ks=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBKB4b0u005961
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 20 Dec 2019 05:04:37 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
+ Dec 2019 05:04:35 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 20 Dec 2019 05:04:35 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBKB4XsK032367;
+        Fri, 20 Dec 2019 05:04:33 -0600
+Subject: Re: [PATCHv3 12/15] remoteproc/omap: add support for system
+ suspend/resume
+To:     Suman Anna <s-anna@ti.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>
+References: <20191213125537.11509-1-t-kristo@ti.com>
+ <20191213125537.11509-13-t-kristo@ti.com> <20191219214603.GA32574@xps15>
+ <abaa5783-047c-e407-8b34-569f3becd7a0@ti.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <313f37c3-e3fb-aae6-d0fa-8a3de90b7b2e@ti.com>
+Date:   Fri, 20 Dec 2019 13:04:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: CED2145DA5A5DB969C5A979274DE6004671E4E920E54B13366D6759B41D5A90B2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <abaa5783-047c-e407-8b34-569f3becd7a0@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTEyLTE2IGF0IDIwOjA1ICswODAwLCBZb25nIFd1IHdyb3RlOg0KPiBPbiBN
-b24sIDIwMTktMTEtMDQgYXQgMTk6NTIgKzA4MDAsIENoYW8gSGFvIHdyb3RlOg0KPiA+IFRoaXMg
-cGF0Y2ggYWRkcyBkZXNjcmlwdGlvbiBmb3IgTVQ2Nzc5IElPTU1VLg0KPiA+IA0KPiA+IE1UNjc3
-OSBoYXMgdHdvIGlvbW11cywgdGhleSBhcmUgTU1fSU9NTVUgYW5kIEFQVV9JT01NVSB3aGljaA0K
-PiA+IHVzZSBBUk0gU2hvcnQtRGVzY3JpcHRvciB0cmFuc2xhdGlvbiBmb3JtYXQuDQo+ID4gDQo+
-ID4gVGhlIE1UNjc3OSBJT01NVSBoYXJkd2FyZSBkaWFncmFtIGlzIGFzIGJlbG93LCBpdCBpcyBv
-bmx5IGEgYnJpZWYNCj4gPiBkaWFncmFtIGFib3V0IGlvbW11LCBpdCBkb24ndCBmb2N1cyBvbiB0
-aGUgcGFydCBvZiBzbWlfbGFyYiwgc28NCj4gPiBJIGRvbid0IGRlc2NyaWJlIHRoZSBzbWlfbGFy
-YiBkZXRhaWxlZGx5Lg0KPiA+IA0KPiA+IAkJCSAgICAgRU1JDQo+ID4gCQkJICAgICAgfA0KPiA+
-IAkgICAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+IAkgICB8CQkJ
-CQl8DQo+ID4gICAgICAgICBNTV9JT01NVSAgICAgICAgICAgICAgICAgICAgICAgICAgICBBUFVf
-SU9NTVUNCj4gPiAJICAgfAkJCQkJfA0KPiA+ICAgICAgICBTTUlfQ09NTU9NLS0tLS0tLS0tLS0J
-CSAgICAgQVBVX0JVUw0KPiA+ICAgICAgICAgICB8CQkgICB8CQkJfA0KPiA+ICAgICBTTUlfTEFS
-QigwfjExKSAgU01JX0xBUkIxMihGQUtFKQkgICAgU01JX0xBUkIxMyhGQUtFKQ0KPiA+IAkgIHwJ
-CSAgIHwJCQl8DQo+ID4gCSAgfAkJICAgfAkJICAgLS0tLS0tLS0tLS0tLS0NCj4gPiAJICB8CQkg
-ICB8CQkgICB8CSB8CXwNCj4gPiAgICBNdWx0aW1lZGlhIGVuZ2luZQkgIENDVQkJICBWUFUgICBN
-RExBICAgRU1EQQ0KPiA+IA0KPiA+IEFsbCB0aGUgY29ubmVjdGlvbnMgYXJlIGhhcmR3YXJlIGZp
-eGVkLCBzb2Z0d2FyZSBjYW4gbm90IGFkanVzdCBpdC4NCj4gPiANCj4gPiBGcm9tIHRoZSBkaWFn
-cmFtIGFib3ZlLCBNTV9JT01NVSBwcm92aWRlcyBtYXBwaW5nIGZvciBtdWx0aW1lZGlhIGVuZ2lu
-ZSwNCj4gPiBidXQgQ0NVIGlzIGNvbm5lY3RlZCB3aXRoIHNtaV9jb21tb24gZGlyZWN0bHksIHdl
-IGNhbiB0YWtlIHRoZW0gYXMgbGFyYjEyLg0KPiA+IEFQVV9JT01NVSBwcm92aWRlcyBtYXBwaW5n
-IGZvciBBUFUgZW5naW5lLCB3ZSBjYW4gdGFrZSB0aGVtIGxhcmIxMy4NCj4gPiBMYXJiMTIgYW5k
-IExhcmIxMyBhcmUgZmFrZSBsYXJicy4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBDaGFvIEhh
-byA8Y2hhby5oYW9AbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4vYmluZGluZ3MvaW9t
-bXUvbWVkaWF0ZWssaW9tbXUudHh0ICAgICAgICAgfCAgIDIgKw0KPiA+ICBpbmNsdWRlL2R0LWJp
-bmRpbmdzL21lbW9yeS9tdDY3NzktbGFyYi1wb3J0LmggfCAyMTcgKysrKysrKysrKysrKysrKysr
-DQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMjE5IGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1v
-ZGUgMTAwNjQ0IGluY2x1ZGUvZHQtYmluZGluZ3MvbWVtb3J5L210Njc3OS1sYXJiLXBvcnQuaA0K
-PiA+IA0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-aW9tbXUvbWVkaWF0ZWssaW9tbXUudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2lvbW11L21lZGlhdGVrLGlvbW11LnR4dA0KPiA+IGluZGV4IGNlNTlhNTA1ZjVhNC4uYzFj
-Y2Q4NTgyZWIyIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9pb21tdS9tZWRpYXRlayxpb21tdS50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvaW9tbXUvbWVkaWF0ZWssaW9tbXUudHh0DQo+ID4gQEAgLTU4LDYg
-KzU4LDcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiAgLSBjb21wYXRpYmxlIDogbXVzdCBi
-ZSBvbmUgb2YgdGhlIGZvbGxvd2luZyBzdHJpbmc6DQo+ID4gIAkibWVkaWF0ZWssbXQyNzAxLW00
-dSIgZm9yIG10MjcwMSB3aGljaCB1c2VzIGdlbmVyYXRpb24gb25lIG00dSBIVy4NCj4gPiAgCSJt
-ZWRpYXRlayxtdDI3MTItbTR1IiBmb3IgbXQyNzEyIHdoaWNoIHVzZXMgZ2VuZXJhdGlvbiB0d28g
-bTR1IEhXLg0KPiA+ICsJIm1lZGlhdGVrLG10Njc3OS1tNHUiIGZvciBtdDY3Nzkgd2hpY2ggdXNl
-cyBnZW5lcmF0aW9uIHR3byBtNHUgSFcuDQo+ID4gIAkibWVkaWF0ZWssbXQ3NjIzLW00dSIsICJt
-ZWRpYXRlayxtdDI3MDEtbTR1IiBmb3IgbXQ3NjIzIHdoaWNoIHVzZXMNCj4gPiAgCQkJCQkJICAg
-ICBnZW5lcmF0aW9uIG9uZSBtNHUgSFcuDQo+ID4gIAkibWVkaWF0ZWssbXQ4MTczLW00dSIgZm9y
-IG10ODE3MyB3aGljaCB1c2VzIGdlbmVyYXRpb24gdHdvIG00dSBIVy4NCj4gPiBAQCAtNzgsNiAr
-NzksNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICAJU3BlY2lmaWVzIHRoZSBtdGtfbTR1
-X2lkIGFzIGRlZmluZWQgaW4NCj4gPiAgCWR0LWJpbmRpbmcvbWVtb3J5L210MjcwMS1sYXJiLXBv
-cnQuaCBmb3IgbXQyNzAxLCBtdDc2MjMNCj4gPiAgCWR0LWJpbmRpbmcvbWVtb3J5L210MjcxMi1s
-YXJiLXBvcnQuaCBmb3IgbXQyNzEyLA0KPiA+ICsJZHQtYmluZGluZy9tZW1vcnkvbXQ2Nzc5LWxh
-cmItcG9ydC5oIGZvciBtdDY3NzksDQo+ID4gIAlkdC1iaW5kaW5nL21lbW9yeS9tdDgxNzMtbGFy
-Yi1wb3J0LmggZm9yIG10ODE3MywgYW5kDQo+ID4gIAlkdC1iaW5kaW5nL21lbW9yeS9tdDgxODMt
-bGFyYi1wb3J0LmggZm9yIG10ODE4My4NCj4gPiAgDQo+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUv
-ZHQtYmluZGluZ3MvbWVtb3J5L210Njc3OS1sYXJiLXBvcnQuaCBiL2luY2x1ZGUvZHQtYmluZGlu
-Z3MvbWVtb3J5L210Njc3OS1sYXJiLXBvcnQuaA0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+
-ID4gaW5kZXggMDAwMDAwMDAwMDAwLi44YjdmMmQyNDQ2ZWENCj4gPiAtLS0gL2Rldi9udWxsDQo+
-ID4gKysrIGIvaW5jbHVkZS9kdC1iaW5kaW5ncy9tZW1vcnkvbXQ2Nzc5LWxhcmItcG9ydC5oDQo+
-ID4gQEAgLTAsMCArMSwyMTcgQEANCj4gPiArLyogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQ
-TC0yLjAgKi8NCj4gPiArLyoNCj4gPiArICogQ29weXJpZ2h0IChjKSAyMDE5IE1lZGlhVGVrIElu
-Yy4NCj4gPiArICogQXV0aG9yOiBDaGFvIEhhbyA8Y2hhby5oYW9AbWVkaWF0ZWsuY29tPg0KPiA+
-ICsgKi8NCj4gPiArDQo+ID4gKyNpZm5kZWYgX0RUU19JT01NVV9QT1JUX01UNjc3OV9IXw0KPiA+
-ICsjZGVmaW5lIF9EVFNfSU9NTVVfUE9SVF9NVDY3NzlfSF8NCj4gPiArDQo+ID4gKyNkZWZpbmUg
-TVRLX000VV9JRChsYXJiLCBwb3J0KQkJICgoKGxhcmIpIDw8IDUpIHwgKHBvcnQpKQ0KPiA+ICsN
-Cj4gPiArI2RlZmluZSBNNFVfTEFSQjBfSUQJCQkgMA0KPiA+ICsjZGVmaW5lIE00VV9MQVJCMV9J
-RAkJCSAxDQo+ID4gKyNkZWZpbmUgTTRVX0xBUkIyX0lECQkJIDINCj4gPiArI2RlZmluZSBNNFVf
-TEFSQjNfSUQJCQkgMw0KPiA+ICsjZGVmaW5lIE00VV9MQVJCNF9JRAkJCSA0DQo+ID4gKyNkZWZp
-bmUgTTRVX0xBUkI1X0lECQkJIDUNCj4gPiArI2RlZmluZSBNNFVfTEFSQjZfSUQJCQkgNg0KPiA+
-ICsjZGVmaW5lIE00VV9MQVJCN19JRAkJCSA3DQo+ID4gKyNkZWZpbmUgTTRVX0xBUkI4X0lECQkJ
-IDgNCj4gPiArI2RlZmluZSBNNFVfTEFSQjlfSUQJCQkgOQ0KPiA+ICsjZGVmaW5lIE00VV9MQVJC
-MTBfSUQJCQkgMTANCj4gPiArI2RlZmluZSBNNFVfTEFSQjExX0lECQkJIDExDQo+ID4gKyNkZWZp
-bmUgTTRVX0xBUkIxMl9JRAkJCSAxMg0KPiA+ICsjZGVmaW5lIE00VV9MQVJCMTNfSUQJCQkgMTMN
-Cj4gPiArDQo+ID4gKy8qIGxhcmIwICovDQo+ID4gKyNkZWZpbmUgTTRVX1BPUlRfRElTUF9QT1NU
-TUFTSzAJCSBNVEtfTTRVX0lEKE00VV9MQVJCMF9JRCwgMCkNCj4gPiArI2RlZmluZSBNNFVfUE9S
-VF9ESVNQX09WTDBfSERSCQkgTVRLX000VV9JRChNNFVfTEFSQjBfSUQsIDEpDQo+ID4gKyNkZWZp
-bmUgTTRVX1BPUlRfRElTUF9PVkwxX0hEUgkJIE1US19NNFVfSUQoTTRVX0xBUkIwX0lELCAyKQ0K
-PiA+ICsjZGVmaW5lIE00VV9QT1JUX0RJU1BfT1ZMMAkJIE1US19NNFVfSUQoTTRVX0xBUkIwX0lE
-LCAzKQ0KPiA+ICsjZGVmaW5lIE00VV9QT1JUX0RJU1BfT1ZMMQkJIE1US19NNFVfSUQoTTRVX0xB
-UkIwX0lELCA0KQ0KPiA+ICsjZGVmaW5lIE00VV9QT1JUX0RJU1BfUFZSSUMwCQkgTVRLX000VV9J
-RChNNFVfTEFSQjBfSUQsIDUpDQo+ID4gKyNkZWZpbmUgTTRVX1BPUlRfRElTUF9SRE1BMAkJIE1U
-S19NNFVfSUQoTTRVX0xBUkIwX0lELCA2KQ0KPiA+ICsjZGVmaW5lIE00VV9QT1JUX0RJU1BfV0RN
-QTAJCSBNVEtfTTRVX0lEKE00VV9MQVJCMF9JRCwgNykNCj4gPiArI2RlZmluZSBNNFVfUE9SVF9E
-SVNQX0ZBS0UwCQkgTVRLX000VV9JRChNNFVfTEFSQjBfSUQsIDgpDQo+ID4gKw0KPiA+ICsvKiBs
-YXJiMSAqLw0KPiA+ICsjZGVmaW5lIE00VV9QT1JUX0RJU1BfT1ZMMF8yTF9IRFIJIE1US19NNFVf
-SUQoTTRVX0xBUkIxX0lELCAwKQ0KPiA+ICsjZGVmaW5lIE00VV9QT1JUX0RJU1BfT1ZMMV8yTF9I
-RFIJIE1US19NNFVfSUQoTTRVX0xBUkIxX0lELCAxKQ0KPiA+ICsjZGVmaW5lIE00VV9QT1JUX0RJ
-U1BfT1ZMMF8yTAkJIE1US19NNFVfSUQoTTRVX0xBUkIxX0lELCAyKQ0KPiA+ICsjZGVmaW5lIE00
-VV9QT1JUX0RJU1BfT1ZMMV8yTAkJIE1US19NNFVfSUQoTTRVX0xBUkIxX0lELCAzKQ0KPiA+ICsj
-ZGVmaW5lIE00VV9QT1JUX0RJU1BfUkRNQTEJCSBNVEtfTTRVX0lEKE00VV9MQVJCMV9JRCwgNCkN
-Cj4gPiArI2RlZmluZSBNNFVfUE9SVF9NRFBfUFZSSUMwCQkgTVRLX000VV9JRChNNFVfTEFSQjFf
-SUQsIDUpDQo+ID4gKyNkZWZpbmUgTTRVX1BPUlRfTURQX1BWUklDMQkJIE1US19NNFVfSUQoTTRV
-X0xBUkIxX0lELCA2KQ0KPiA+ICsjZGVmaW5lIE00VV9QT1JUX01EUF9SRE1BMAkJIE1US19NNFVf
-SUQoTTRVX0xBUkIxX0lELCA3KQ0KPiA+ICsjZGVmaW5lIE00VV9QT1JUX01EUF9SRE1BMQkJIE1U
-S19NNFVfSUQoTTRVX0xBUkIxX0lELCA4KQ0KPiA+ICsjZGVmaW5lIE00VV9QT1JUX01EUF9XUk9U
-MF9SCQkgTVRLX000VV9JRChNNFVfTEFSQjFfSUQsIDkpDQo+ID4gKyNkZWZpbmUgTTRVX1BPUlRf
-TURQX1dST1QwX1cJCSBNVEtfTTRVX0lEKE00VV9MQVJCMV9JRCwgMTApDQo+ID4gKyNkZWZpbmUg
-TTRVX1BPUlRfTURQX1dST1QxX1IJCSBNVEtfTTRVX0lEKE00VV9MQVJCMV9JRCwgMTEpDQo+ID4g
-KyNkZWZpbmUgTTRVX1BPUlRfTURQX1dST1QxX1cJCSBNVEtfTTRVX0lEKE00VV9MQVJCMV9JRCwg
-MTIpDQo+ID4gKyNkZWZpbmUgTTRVX1BPUlRfRElTUF9GQUtFMQkJIE1US19NNFVfSUQoTTRVX0xB
-UkIxX0lELCAxMykNCj4gPiArDQo+ID4gKy8qIGxhcmIyLVZERUMgKi8NCj4gPiArI2RlZmluZSBN
-NFVfUE9SVF9IV19WREVDX01DX0VYVCAgICAgICAgICBNVEtfTTRVX0lEKE00VV9MQVJCMl9JRCwg
-MCkNCj4gPiArI2RlZmluZSBNNFVfUE9SVF9IV19WREVDX1VGT19FWFQgICAgICAgICBNVEtfTTRV
-X0lEKE00VV9MQVJCMl9JRCwgMSkNCj4gPiArI2RlZmluZSBNNFVfUE9SVF9IV19WREVDX1BQX0VY
-VCAgICAgICAgICBNVEtfTTRVX0lEKE00VV9MQVJCMl9JRCwgMikNCj4gPiArI2RlZmluZSBNNFVf
-UE9SVF9IV19WREVDX1BSRURfUkRfRVhUICAgICBNVEtfTTRVX0lEKE00VV9MQVJCMl9JRCwgMykN
-Cj4gPiArI2RlZmluZSBNNFVfUE9SVF9IV19WREVDX1BSRURfV1JfRVhUICAgICBNVEtfTTRVX0lE
-KE00VV9MQVJCMl9JRCwgNCkNCj4gPiArI2RlZmluZSBNNFVfUE9SVF9IV19WREVDX1BQV1JBUF9F
-WFQgICAgICBNVEtfTTRVX0lEKE00VV9MQVJCMl9JRCwgNSkNCj4gPiArI2RlZmluZSBNNFVfUE9S
-VF9IV19WREVDX1RJTEVfRVhUICAgICAgICBNVEtfTTRVX0lEKE00VV9MQVJCMl9JRCwgNikNCj4g
-PiArI2RlZmluZSBNNFVfUE9SVF9IV19WREVDX1ZMRF9FWFQgICAgICAgICBNVEtfTTRVX0lEKE00
-VV9MQVJCMl9JRCwgNykNCj4gPiArI2RlZmluZSBNNFVfUE9SVF9IV19WREVDX1ZMRDJfRVhUICAg
-ICAgICBNVEtfTTRVX0lEKE00VV9MQVJCMl9JRCwgOCkNCj4gPiArI2RlZmluZSBNNFVfUE9SVF9I
-V19WREVDX0FWQ19NVl9FWFQgICAgICBNVEtfTTRVX0lEKE00VV9MQVJCMl9JRCwgOSkNCj4gPiAr
-I2RlZmluZSBNNFVfUE9SVF9IV19WREVDX1VGT19FTkNfRVhUICAgICBNVEtfTTRVX0lEKE00VV9M
-QVJCMl9JRCwgMTApDQo+ID4gKyNkZWZpbmUgTTRVX1BPUlRfSFdfVkRFQ19SR19DVFJMX0RNQV9F
-WFQgTVRLX000VV9JRChNNFVfTEFSQjJfSUQsIDExKQ0KPiA+ICsNCj4gPiArLypsYXJiMy1WRU5D
-Ki8NCj4gDQo+IE5vcm1hbGx5IGFkZCBzcGFjZSBiZWZvcmUgYW5kIGFmdGVyIHRoZSB3b3JkLiBM
-aWtlOiAvKiBsYXJiMy1WRU5DICovDQo+IA0KPiBiZWxvdyBhcmUgdGhlIHNhbWUuDQo+IA0KPiA+
-ICsjZGVmaW5lIE00VV9QT1JUX1ZFTkNfUkNQVQkJIE1US19NNFVfSUQoTTRVX0xBUkIzX0lELCAw
-KQ0KPiA+ICsjZGVmaW5lIE00VV9QT1JUX1ZFTkNfUkVDCQkgTVRLX000VV9JRChNNFVfTEFSQjNf
-SUQsIDEpDQo+ID4gKyNkZWZpbmUgTTRVX1BPUlRfVkVOQ19CU0RNQQkJIE1US19NNFVfSUQoTTRV
-X0xBUkIzX0lELCAyKQ0KPiA+ICsjZGVmaW5lIE00VV9QT1JUX1ZFTkNfU1ZfQ09NVgkJIE1US19N
-NFVfSUQoTTRVX0xBUkIzX0lELCAzKQ0KPiA+ICsjZGVmaW5lIE00VV9QT1JUX1ZFTkNfUkRfQ09N
-VgkJIE1US19NNFVfSUQoTTRVX0xBUkIzX0lELCA0KQ0KPiA+ICsjZGVmaW5lIE00VV9QT1JUX1ZF
-TkNfTkJNX1JETUEJCSBNVEtfTTRVX0lEKE00VV9MQVJCM19JRCwgNSkNCj4gPiArI2RlZmluZSBN
-NFVfUE9SVF9WRU5DX05CTV9SRE1BX0xJVEUJIE1US19NNFVfSUQoTTRVX0xBUkIzX0lELCA2KQ0K
-PiA+ICsjZGVmaW5lIE00VV9QT1JUX0pQR0VOQ19ZX1JETUEJCSBNVEtfTTRVX0lEKE00VV9MQVJC
-M19JRCwgNykNCj4gPiArI2RlZmluZSBNNFVfUE9SVF9KUEdFTkNfQ19SRE1BCQkgTVRLX000VV9J
-RChNNFVfTEFSQjNfSUQsIDgpDQo+ID4gKyNkZWZpbmUgTTRVX1BPUlRfSlBHRU5DX1FfVEFCTEUJ
-CSBNVEtfTTRVX0lEKE00VV9MQVJCM19JRCwgOSkNCj4gPiArI2RlZmluZSBNNFVfUE9SVF9KUEdF
-TkNfQlNETUEJCSBNVEtfTTRVX0lEKE00VV9MQVJCM19JRCwgMTApDQo+ID4gKyNkZWZpbmUgTTRV
-X1BPUlRfSlBHREVDX1dETUEJCSBNVEtfTTRVX0lEKE00VV9MQVJCM19JRCwgMTEpDQo+ID4gKyNk
-ZWZpbmUgTTRVX1BPUlRfSlBHREVDX0JTRE1BCQkgTVRLX000VV9JRChNNFVfTEFSQjNfSUQsIDEy
-KQ0KPiA+ICsjZGVmaW5lIE00VV9QT1JUX1ZFTkNfTkJNX1dETUEJCSBNVEtfTTRVX0lEKE00VV9M
-QVJCM19JRCwgMTMpDQo+ID4gKyNkZWZpbmUgTTRVX1BPUlRfVkVOQ19OQk1fV0RNQV9MSVRFCSBN
-VEtfTTRVX0lEKE00VV9MQVJCM19JRCwgMTQpDQo+ID4gKyNkZWZpbmUgTTRVX1BPUlRfVkVOQ19D
-VVJfTFVNQQkJIE1US19NNFVfSUQoTTRVX0xBUkIzX0lELCAxNSkNCj4gPiArI2RlZmluZSBNNFVf
-UE9SVF9WRU5DX0NVUl9DSFJPTUEJIE1US19NNFVfSUQoTTRVX0xBUkIzX0lELCAxNikNCj4gPiAr
-I2RlZmluZSBNNFVfUE9SVF9WRU5DX1JFRl9MVU1BCQkgTVRLX000VV9JRChNNFVfTEFSQjNfSUQs
-IDE3KQ0KPiA+ICsjZGVmaW5lIE00VV9QT1JUX1ZFTkNfUkVGX0NIUk9NQQkgTVRLX000VV9JRChN
-NFVfTEFSQjNfSUQsIDE4KQ0KPiA+ICsNCj4gPiArLypsYXJiNC1kdW1teSovDQo+ID4gKw0KPiA+
-ICsvKmxhcmI1LUlNRyovDQo+IA0KPiBbc25pcF0NCj4gDQo+ID4gKw0KPiA+ICsjZGVmaW5lIE00
-VV9QT1JUX1ZQVQkJCSBNVEtfTTRVX0lEKE00VV9MQVJCMTNfSUQsIDApDQo+ID4gKyNkZWZpbmUg
-TTRVX1BPUlRfTURMQQkJCSBNVEtfTTRVX0lEKE00VV9MQVJCMTNfSUQsIDEpDQo+ID4gKyNkZWZp
-bmUgTTRVX1BPUlRfRURNQQkJCSBNVEtfTTRVX0lEKE00VV9MQVJCMTNfSUQsIDIpDQo+ID4gKw0K
-PiA+ICsjZGVmaW5lIE00VV9QT1JUX1VOS05PV04JCSAoTTRVX1BPUlRfRURNQSArIDEpDQo+IA0K
-PiBXaGVuIGRvIHlvdSBuZWVkIHRoaXMgVU5LTk9XTiBvbmU/IFRoZSBvdGhlciBTb0MgZG9lc24n
-dCBoYXZlIGl0LiBQbGVhc2UNCj4gcmVtb3ZlIGlmIGl0IGlzIHVubmVjZXNzYXJ5Lg0KPiANCm9r
-LCBJIHdpbGwgZml4IGl0IGluIG5leHQgdmVyc2lvbiwgdGhhbmtzDQoNCj4gPiArDQo+ID4gKyNl
-bmRpZg0KPiANCj4gDQoNCg==
+On 20/12/2019 05:11, Suman Anna wrote:
+> Hi Mathieu, Tero,
+> 
+> On 12/19/19 3:46 PM, Mathieu Poirier wrote:
+>> On Fri, Dec 13, 2019 at 02:55:34PM +0200, Tero Kristo wrote:
+>>> From: Suman Anna <s-anna@ti.com>
+>>>
+>>> This patch adds the support for system suspend/resume to the
+>>> OMAP remoteproc driver so that the OMAP remoteproc devices can
+>>> be suspended/resumed during a system suspend/resume. The support
+>>> is added through the driver PM .suspend/.resume callbacks, and
+>>> requires appropriate support from the OS running on the remote
+>>> processors.
+>>>
+>>> The IPU & DSP remote processors typically have their own private
+>>> modules like registers, internal memories, caches etc. The context
+>>> of these modules need to be saved and restored properly for a
+>>> suspend/resume to work. These are in general not accessible from
+>>> the MPU, so the remote processors themselves have to implement
+>>> the logic for the context save & restore of these modules.
+>>>
+>>> The OMAP remoteproc driver initiates a suspend by sending a mailbox
+>>> message requesting the remote processor to save its context and
+>>> enter into an idle/standby state. The remote processor should
+>>> usually stop whatever processing it is doing to switch to a context
+>>> save mode. The OMAP remoteproc driver detects the completion of
+>>> the context save by checking the module standby status for the
+>>> remoteproc device. It also stops any resources used by the remote
+>>> processors like the timers. The timers need to be running only
+>>> when the processor is active and executing, and need to be stopped
+>>> otherwise to allow the timer driver to reach low-power states. The
+>>> IOMMUs are automatically suspended by the PM core during the late
+>>> suspend stage, after the remoteproc suspend process is completed by
+>>> putting the remote processor cores into reset. Thereafter, the Linux
+>>> kernel can put the domain into further lower power states as possible.
+>>>
+>>> The resume sequence undoes the operations performed in the PM suspend
+>>> callback, by starting the timers and finally releasing the processors
+>>> from reset. This requires that the remote processor side OS be able to
+>>> distinguish a power-resume boot from a power-on/cold boot, restore the
+>>> context of its private modules saved during the suspend phase, and
+>>> resume executing code from where it was suspended. The IOMMUs would
+>>> have been resumed by the PM core during early resume, so they are
+>>> already enabled by the time remoteproc resume callback gets invoked.
+>>>
+>>> The remote processors should save their context into System RAM (DDR),
+>>> as any internal memories are not guaranteed to retain context as it
+>>> depends on the lowest power domain that the remote processor device
+>>> is put into. The management of the DDR contents will be managed by
+>>> the Linux kernel.
+>>>
+>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>> [t-kristo@ti.com: converted to use ti-sysc instead of hwmod]
+>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>>> ---
+>>>   drivers/remoteproc/omap_remoteproc.c | 179 +++++++++++++++++++++++++++
+>>>   drivers/remoteproc/omap_remoteproc.h |  18 ++-
+>>>   2 files changed, 195 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+>>> index 9c750c2ab29d..0a9b9f7d20da 100644
+>>> --- a/drivers/remoteproc/omap_remoteproc.c
+>>> +++ b/drivers/remoteproc/omap_remoteproc.c
+>>> @@ -16,6 +16,7 @@
+>>>   #include <linux/kernel.h>
+>>>   #include <linux/module.h>
+>>>   #include <linux/err.h>
+>>> +#include <linux/io.h>
+>>>   #include <linux/of_device.h>
+>>>   #include <linux/of_reserved_mem.h>
+>>>   #include <linux/platform_device.h>
+>>> @@ -23,10 +24,13 @@
+>>>   #include <linux/remoteproc.h>
+>>>   #include <linux/mailbox_client.h>
+>>>   #include <linux/omap-mailbox.h>
+>>> +#include <linux/omap-iommu.h>
+>>
+>> Please move this up by one line.
+>>
+>>>   #include <linux/regmap.h>
+>>>   #include <linux/mfd/syscon.h>
+>>>   #include <linux/reset.h>
+>>>   #include <clocksource/timer-ti-dm.h>
+>>> +#include <linux/clk.h>
+>>> +#include <linux/clk/ti.h>
+>>
+>> Unless there is a dependency with timer-ti-dm.h, these should go just above linux/err.h
+> 
+> No depencencies, can be reordered.
 
+Will fix these.
+
+> 
+>>
+>>>   
+>>>   #include <linux/platform_data/dmtimer-omap.h>
+>>>   
+>>> @@ -81,6 +85,9 @@ struct omap_rproc_timer {
+>>>    * @timers: timer(s) info used by rproc
+>>>    * @rproc: rproc handle
+>>>    * @reset: reset handle
+>>> + * @pm_comp: completion primitive to sync for suspend response
+>>> + * @fck: functional clock for the remoteproc
+>>> + * @suspend_acked: state machine flag to store the suspend request ack
+>>>    */
+>>>   struct omap_rproc {
+>>>   	struct mbox_chan *mbox;
+>>> @@ -92,6 +99,9 @@ struct omap_rproc {
+>>>   	struct omap_rproc_timer *timers;
+>>>   	struct rproc *rproc;
+>>>   	struct reset_control *reset;
+>>> +	struct completion pm_comp;
+>>> +	struct clk *fck;
+>>> +	bool suspend_acked;
+>>>   };
+>>>   
+>>>   /**
+>>> @@ -349,6 +359,11 @@ static void omap_rproc_mbox_callback(struct mbox_client *client, void *data)
+>>>   	case RP_MBOX_ECHO_REPLY:
+>>>   		dev_info(dev, "received echo reply from %s\n", name);
+>>>   		break;
+>>> +	case RP_MBOX_SUSPEND_ACK:
+>>
+>> We can't get away with implicit fallthroughs anymore - please add /* Fall through */"
+
+Ok, will do.
+
+>>
+>>> +	case RP_MBOX_SUSPEND_CANCEL:
+>>> +		oproc->suspend_acked = msg == RP_MBOX_SUSPEND_ACK;
+>>> +		complete(&oproc->pm_comp);
+>>> +		break;
+>>>   	default:
+>>>   		if (msg >= RP_MBOX_READY && msg < RP_MBOX_END_MSG)
+>>>   			return;
+>>> @@ -529,6 +544,157 @@ static const struct rproc_ops omap_rproc_ops = {
+>>>   	.da_to_va	= omap_rproc_da_to_va,
+>>>   };
+>>>   
+>>> +#ifdef CONFIG_PM
+>>> +static bool _is_rproc_in_standby(struct omap_rproc *oproc)
+>>> +{
+>>> +	return ti_clk_is_in_standby(oproc->fck);
+>>> +}
+>>> +
+>>> +/* 1 sec is long enough time to let the remoteproc side suspend the device */
+>>> +#define DEF_SUSPEND_TIMEOUT 1000
+>>> +static int _omap_rproc_suspend(struct rproc *rproc)
+>>> +{
+>>> +	struct device *dev = rproc->dev.parent;
+>>> +	struct omap_rproc *oproc = rproc->priv;
+>>> +	unsigned long to = msecs_to_jiffies(DEF_SUSPEND_TIMEOUT);
+>>> +	unsigned long ta = jiffies + to;
+>>> +	int ret;
+>>> +
+>>> +	reinit_completion(&oproc->pm_comp);
+>>> +	oproc->suspend_acked = false;
+>>> +	ret = mbox_send_message(oproc->mbox, (void *)RP_MBOX_SUSPEND_SYSTEM);
+>>> +	if (ret < 0) {
+>>> +		dev_err(dev, "PM mbox_send_message failed: %d\n", ret);
+>>> +		return ret;
+>>> +	}
+>>> +
+>>> +	ret = wait_for_completion_timeout(&oproc->pm_comp, to);
+>>> +	if (!oproc->suspend_acked)
+>>> +		return -EBUSY;
+>>> +
+>>> +	/*
+>>> +	 * The remoteproc side is returning the ACK message before saving the
+>>> +	 * context, because the context saving is performed within a SYS/BIOS
+>>> +	 * function, and it cannot have any inter-dependencies against the IPC
+>>> +	 * layer. Also, as the SYS/BIOS needs to preserve properly the processor
+>>> +	 * register set, sending this ACK or signalling the completion of the
+>>> +	 * context save through a shared memory variable can never be the
+>>> +	 * absolute last thing to be executed on the remoteproc side, and the
+>>> +	 * MPU cannot use the ACK message as a sync point to put the remoteproc
+>>> +	 * into reset. The only way to ensure that the remote processor has
+>>> +	 * completed saving the context is to check that the module has reached
+>>> +	 * STANDBY state (after saving the context, the SYS/BIOS executes the
+>>> +	 * appropriate target-specific WFI instruction causing the module to
+>>> +	 * enter STANDBY).
+>>> +	 */
+>>> +	while (!_is_rproc_in_standby(oproc)) {
+>>> +		if (time_after(jiffies, ta))
+>>> +			return -ETIME;
+>>> +		schedule();
+>>> +	}
+>>> +
+>>> +	reset_control_assert(oproc->reset);
+>>> +
+>>> +	ret = omap_rproc_disable_timers(rproc, false);
+>>> +	if (ret) {
+>>> +		dev_err(dev, "disabling timers during suspend failed %d\n",
+>>> +			ret);
+>>> +		goto enable_device;
+>>> +	}
+>>> +
+>>> +	return 0;
+>>> +
+>>> +enable_device:
+>>> +	reset_control_deassert(oproc->reset);
+>>> +	return ret;
+>>> +}
+>>> +
+>>> +static int _omap_rproc_resume(struct rproc *rproc)
+>>> +{
+>>> +	struct device *dev = rproc->dev.parent;
+>>> +	struct omap_rproc *oproc = rproc->priv;
+>>> +	int ret;
+>>> +
+>>> +	/* boot address could be lost after suspend, so restore it */
+>>> +	if (oproc->boot_data) {
+>>> +		ret = omap_rproc_write_dsp_boot_addr(rproc);
+>>> +		if (ret) {
+>>> +			dev_err(dev, "boot address restore failed %d\n", ret);
+>>> +			goto out;
+>>> +		}
+>>> +	}
+>>> +
+>>> +	ret = omap_rproc_enable_timers(rproc, false);
+>>> +	if (ret) {
+>>> +		dev_err(dev, "enabling timers during resume failed %d\n",
+>>> +			ret);
+>>
+>> The "ret);" fits on the live above.
+
+Ok, will fix.
+
+>>
+>>> +		goto out;
+>>> +	}
+>>> +
+>>> +	reset_control_deassert(oproc->reset);
+>>> +
+>>> +out:
+>>> +	return ret;
+>>> +}
+>>> +
+>>> +static int __maybe_unused omap_rproc_suspend(struct device *dev)
+>>
+>> The "__maybe_unused" can be dropped because this is within the #ifdef CONFIG_PM
+>> block.
+> 
+> These are suspend/resume callbacks, so are actually controlled by
+> CONFIG_PM_SLEEP which can be disabled independently from runtime
+> suspend, and hence the annotation.
+
+I'll add these two behind CONFIG_PM_SLEEP, in addition to the whole lot 
+being behind CONFIG_PM.
+
+> 
+>>
+>>> +{
+>>> +	struct platform_device *pdev = to_platform_device(dev);
+>>> +	struct rproc *rproc = platform_get_drvdata(pdev);
+>>> +	int ret = 0;
+>>> +
+>>> +	mutex_lock(&rproc->lock);
+>>> +	if (rproc->state == RPROC_OFFLINE)
+>>> +		goto out;
+>>> +
+>>> +	if (rproc->state == RPROC_SUSPENDED)
+>>> +		goto out;
+>>> +
+>>> +	if (rproc->state != RPROC_RUNNING) {
+>>> +		ret = -EBUSY;
+>>> +		goto out;
+>>> +	}
+>>> +
+>>> +	ret = _omap_rproc_suspend(rproc);
+>>> +	if (ret) {
+>>> +		dev_err(dev, "suspend failed %d\n", ret);
+>>> +		goto out;
+>>> +	}
+>>> +
+>>> +	rproc->state = RPROC_SUSPENDED;
+>>> +out:
+>>> +	mutex_unlock(&rproc->lock);
+>>> +	return ret;
+>>> +}
+>>> +
+>>> +static int __maybe_unused omap_rproc_resume(struct device *dev)
+>>
+>> Same comment as above.
+>>
+>>> +{
+>>> +	struct platform_device *pdev = to_platform_device(dev);
+>>> +	struct rproc *rproc = platform_get_drvdata(pdev);
+>>> +	int ret = 0;
+>>> +
+>>> +	mutex_lock(&rproc->lock);
+>>> +	if (rproc->state == RPROC_OFFLINE)
+>>> +		goto out;
+>>> +
+>>> +	if (rproc->state != RPROC_SUSPENDED) {
+>>> +		ret = -EBUSY;
+>>> +		goto out;
+>>> +	}
+>>> +
+>>> +	ret = _omap_rproc_resume(rproc);
+>>> +	if (ret) {
+>>> +		dev_err(dev, "resume failed %d\n", ret);
+>>> +		goto out;
+>>> +	}
+>>> +
+>>> +	rproc->state = RPROC_RUNNING;
+>>> +out:
+>>> +	mutex_unlock(&rproc->lock);
+>>> +	return ret;
+>>> +}
+>>> +#endif /* CONFIG_PM */
+>>> +
+>>>   static const char * const ipu_mem_names[] = {
+>>>   	"l2ram", NULL
+>>>   };
+>>> @@ -786,6 +952,14 @@ static int omap_rproc_probe(struct platform_device *pdev)
+>>>   			oproc->num_timers);
+>>>   	}
+>>>   
+>>> +	init_completion(&oproc->pm_comp);
+>>> +
+>>> +	oproc->fck = devm_clk_get(&pdev->dev, 0);
+>>> +	if (IS_ERR(oproc->fck)) {
+>>> +		ret = PTR_ERR(oproc->fck);
+>>> +		goto free_rproc;
+>>> +	}
+>>> +
+>>
+>> oproc->fck is not released if an error occurs in of_reserved_mem_device_init()
+>> and rproc_add().
+> 
+> We are using a devres managed API, so why do we need to release it
+> specifically?
+
+Yea I don't think this is needed.
+
+> 
+>>
+>>>   	ret = of_reserved_mem_device_init(&pdev->dev);
+>>>   	if (ret) {
+>>>   		dev_err(&pdev->dev, "device does not have specific CMA pool\n");
+>>> @@ -818,11 +992,16 @@ static int omap_rproc_remove(struct platform_device *pdev)
+>>>   	return 0;
+>>>   }
+>>>   
+>>> +static const struct dev_pm_ops omap_rproc_pm_ops = {
+>>> +	SET_SYSTEM_SLEEP_PM_OPS(omap_rproc_suspend, omap_rproc_resume)
+>>> +};
+>>> +
+>>>   static struct platform_driver omap_rproc_driver = {
+>>>   	.probe = omap_rproc_probe,
+>>>   	.remove = omap_rproc_remove,
+>>>   	.driver = {
+>>>   		.name = "omap-rproc",
+>>> +		.pm = &omap_rproc_pm_ops,
+>>>   		.of_match_table = omap_rproc_of_match,
+>>>   	},
+>>>   };
+>>> diff --git a/drivers/remoteproc/omap_remoteproc.h b/drivers/remoteproc/omap_remoteproc.h
+>>> index 72f656c93caa..c73383e707c7 100644
+>>> --- a/drivers/remoteproc/omap_remoteproc.h
+>>> +++ b/drivers/remoteproc/omap_remoteproc.h
+>>> @@ -1,7 +1,7 @@
+>>>   /*
+>>>    * Remote processor messaging
+>>>    *
+>>> - * Copyright (C) 2011 Texas Instruments, Inc.
+>>> + * Copyright (C) 2011-2018 Texas Instruments, Inc.
+> 
+> %s/2018/2019/
+
+Yep, will fix.
+
+-Tero
+
+> 
+> regards
+> Suman
+> 
+>>>    * Copyright (C) 2011 Google, Inc.
+>>>    * All rights reserved.
+>>>    *
+>>> @@ -57,6 +57,16 @@
+>>>    * @RP_MBOX_ABORT_REQUEST: a "please crash" request, used for testing the
+>>>    * recovery mechanism (to some extent).
+>>>    *
+>>> + * @RP_MBOX_SUSPEND_AUTO: auto suspend request for the remote processor
+>>> + *
+>>> + * @RP_MBOX_SUSPEND_SYSTEM: system suspend request for the remote processor
+>>> + *
+>>> + * @RP_MBOX_SUSPEND_ACK: successful response from remote processor for a
+>>> + * suspend request
+>>> + *
+>>> + * @RP_MBOX_SUSPEND_CANCEL: a cancel suspend response from a remote processor
+>>> + * on a suspend request
+>>> + *
+>>>    * Introduce new message definitions if any here.
+>>>    *
+>>>    * @RP_MBOX_END_MSG: Indicates end of known/defined messages from remote core
+>>> @@ -70,7 +80,11 @@ enum omap_rp_mbox_messages {
+>>>   	RP_MBOX_ECHO_REQUEST	= 0xFFFFFF03,
+>>>   	RP_MBOX_ECHO_REPLY	= 0xFFFFFF04,
+>>>   	RP_MBOX_ABORT_REQUEST	= 0xFFFFFF05,
+>>> -	RP_MBOX_END_MSG		= 0xFFFFFF06,
+>>> +	RP_MBOX_SUSPEND_AUTO	= 0xFFFFFF10,
+>>> +	RP_MBOX_SUSPEND_SYSTEM	= 0xFFFFFF11,
+>>> +	RP_MBOX_SUSPEND_ACK	= 0xFFFFFF12,
+>>> +	RP_MBOX_SUSPEND_CANCEL	= 0xFFFFFF13,
+>>> +	RP_MBOX_END_MSG		= 0xFFFFFF14,
+>>>   };
+>>>   
+>>>   #endif /* _OMAP_RPMSG_H */
+>>> -- 
+>>> 2.17.1
+>>>
+>>> --
+> 
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
