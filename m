@@ -2,88 +2,107 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4EAC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 267A9C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D21D624679
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F162924679
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:13:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727412AbfLTQNS (ORCPT
+        id S1727428AbfLTQNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 11:13:18 -0500
-Received: from 8bytes.org ([81.169.241.247]:58406 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726808AbfLTQNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 11:13:18 -0500
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id B7E12495; Fri, 20 Dec 2019 17:13:16 +0100 (CET)
-Date:   Fri, 20 Dec 2019 17:13:13 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linuxfoundation.org,
-        kernel-team@android.com,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        John Garry <john.garry@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH v4 00/16] iommu: Permit modular builds of ARM SMMU[v3]
- drivers
-Message-ID: <20191220161313.GA21234@8bytes.org>
-References: <20191219120352.382-1-will@kernel.org>
+        Fri, 20 Dec 2019 11:13:22 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37979 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727181AbfLTQNT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 11:13:19 -0500
+Received: by mail-ot1-f67.google.com with SMTP id d7so8046795otf.5;
+        Fri, 20 Dec 2019 08:13:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BEyJkL5nJjdN0xBLrqIKs638OAVTma/KQjSXpanBYC0=;
+        b=b31w2Mk7mNSPj32SGqZKZDTdo+/1pl8/tKcWc2+QvmriQmXgqs1jXebtZQgdT+n7M0
+         /cTUlxs3LgOuZnQisbLs47pPOvuuTuImjiQ5y0kaSZx9eNxSxrr5pfA71LGONbr6RPZ3
+         qjhqUVElcnXVLZSxuyOex+rlbIzqqBimmEwVVfojAD/k9mBc9AxB1sNQ6aC9XDSLkM6Z
+         2Rz9JiNVW3jwj2bq4tBm2hck/Z5GsdKTZcNHsZBNW/O8iZc+nTwLs3A9bF7ugGonoW1v
+         GeBjS3Gq0ThEaMcHaL1NX1CAVsR2CdY4hq8eMUyLIOaKaby7wbz8egCd2nhIhEmATWrl
+         zi2w==
+X-Gm-Message-State: APjAAAURGjH3GSkl50CdhvPc2y4UtcZIU8OGYJEPqtiadrgBJPucR0is
+        Fo1dsMtViy6uqBkdaEkbIGHoXQ7M+/RvDP5Y/aqp22JK
+X-Google-Smtp-Source: APXvYqw2edjR1mdY9qcPfm42FIvOAjdlNrhZq3ZMLOJGE/Ujtj9AfteAIggoEIn8QqzEsgg0qFFoNnGcOZZJD9Z5O7c=
+X-Received: by 2002:a9d:2073:: with SMTP id n106mr5985808ota.145.1576858398139;
+ Fri, 20 Dec 2019 08:13:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191219120352.382-1-will@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191218135230.2610161-1-ben.dooks@codethink.co.uk>
+In-Reply-To: <20191218135230.2610161-1-ben.dooks@codethink.co.uk>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 20 Dec 2019 17:13:07 +0100
+Message-ID: <CAMuHMdWgtOh=MN3wEgTcnQFTBjUwxXUaBvRknxhzQk2DYzN7gA@mail.gmail.com>
+Subject: Re: [PATCH] soc: renesas: rcar-rst: fix __iomem on configure call
+To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 12:03:36PM +0000, Will Deacon wrote:
-> Ard Biesheuvel (1):
->   iommu/arm-smmu: Support SMMU module probing from the IORT
-> 
-> Greg Kroah-Hartman (1):
->   PCI/ATS: Restore EXPORT_SYMBOL_GPL() for pci_{enable,disable}_ats()
-> 
-> Will Deacon (14):
->   drivers/iommu: Export core IOMMU API symbols to permit modular drivers
->   iommu/of: Request ACS from the PCI core when configuring IOMMU linkage
->   PCI: Export pci_ats_disabled() as a GPL symbol to modules
->   drivers/iommu: Take a ref to the IOMMU driver prior to ->add_device()
->   iommu/of: Take a ref to the IOMMU driver during ->of_xlate()
->   drivers/iommu: Allow IOMMU bus ops to be unregistered
->   Revert "iommu/arm-smmu: Make arm-smmu-v3 explicitly non-modular"
->   Revert "iommu/arm-smmu: Make arm-smmu explicitly non-modular"
->   iommu/arm-smmu: Prevent forced unbinding of Arm SMMU drivers
->   iommu/arm-smmu-v3: Unregister IOMMU and bus ops on device removal
->   iommu/arm-smmu-v3: Allow building as a module
->   iommu/arm-smmu: Unregister IOMMU and bus ops on device removal
->   iommu/arm-smmu: Allow building as a module
->   iommu/arm-smmu: Update my email address in MODULE_AUTHOR()
-> 
->  drivers/acpi/arm64/iort.c   |   4 +-
->  drivers/iommu/Kconfig       |  16 ++++-
->  drivers/iommu/Makefile      |   3 +-
->  drivers/iommu/arm-smmu-v3.c |  94 +++++++++++++++++---------
->  drivers/iommu/arm-smmu.c    | 128 +++++++++++++++++++++++++-----------
->  drivers/iommu/iommu-sysfs.c |   5 ++
->  drivers/iommu/iommu.c       |  32 ++++++++-
->  drivers/iommu/of_iommu.c    |  19 ++++--
->  drivers/pci/ats.c           |   2 +
->  drivers/pci/pci.c           |   1 +
->  include/linux/iommu.h       |   4 +-
->  11 files changed, 223 insertions(+), 85 deletions(-)
+Hi Ben,
 
-Applied, thanks.
+On Wed, Dec 18, 2019 at 2:52 PM Ben Dooks (Codethink)
+<ben.dooks@codethink.co.uk> wrote:
+> The configure call back takes a register pointer, so should
+> have been marked with __iomem. Add this to silence the
+> following sparse warnings:
+>
+> rivers/soc/renesas/rcar-rst.c:33:22: warning: incorrect type in initializer (incompatible argument 1 (different address spaces))
+
+d
+
+> drivers/soc/renesas/rcar-rst.c:33:22:    expected int ( *configure )( ... )
+> drivers/soc/renesas/rcar-rst.c:33:22:    got int ( * )( ... )
+> drivers/soc/renesas/rcar-rst.c:97:40: warning: incorrect type in argument 1 (different address spaces)
+> drivers/soc/renesas/rcar-rst.c:97:40:    expected void *base
+> drivers/soc/renesas/rcar-rst.c:97:40:    got void [noderef] <asn:2> *[assigned] base
+>
+> Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+
+Thanks!
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.6...
+
+> --- a/drivers/soc/renesas/rcar-rst.c
+> +++ b/drivers/soc/renesas/rcar-rst.c
+> @@ -21,7 +21,7 @@ static int rcar_rst_enable_wdt_reset(void __iomem *base)
+>
+>  struct rst_config {
+>         unsigned int modemr;            /* Mode Monitoring Register Offset */
+> -       int (*configure)(void *base);   /* Platform specific configuration */
+> +       int (*configure)(void __iomem *base);   /* Platform specific configuration */
+
+... with s/configuration/config/ to conform to the 80-char line limit.
+
+>  };
+>
+>  static const struct rst_config rcar_rst_gen1 __initconst = {
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
