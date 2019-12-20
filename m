@@ -6,54 +6,54 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2A6C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB48CC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 223DA24676
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5F9B206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:34:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbfLTBdg (ORCPT
+        id S1727190AbfLTBee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 20:33:36 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:45002 "EHLO
+        Thu, 19 Dec 2019 20:34:34 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:45020 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727020AbfLTBdg (ORCPT
+        with ESMTP id S1727020AbfLTBed (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 20:33:36 -0500
+        Thu, 19 Dec 2019 20:34:33 -0500
 Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id E84ED1540B59E;
-        Thu, 19 Dec 2019 17:33:35 -0800 (PST)
-Date:   Thu, 19 Dec 2019 17:33:35 -0800 (PST)
-Message-Id: <20191219.173335.447023512566099980.davem@davemloft.net>
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 133921540B9A3;
+        Thu, 19 Dec 2019 17:34:33 -0800 (PST)
+Date:   Thu, 19 Dec 2019 17:34:32 -0800 (PST)
+Message-Id: <20191219.173432.1907178642147983703.davem@davemloft.net>
 To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, r.baldyga@samsung.com, k.opasiak@samsung.com,
-        linux-nfc@lists.01.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] nfc: s3fwrn5: replace the assertion with a WARN_ON
+Cc:     kjlu@umn.edu, tglx@linutronix.de, elfring@users.sourceforge.net,
+        gregkh@linuxfoundation.org, kstewart@linuxfoundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] hdlcdrv: replace unnecessary assertion in
+ hdlcdrv_register
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191217204300.28616-1-pakki001@umn.edu>
-References: <20191217204300.28616-1-pakki001@umn.edu>
+In-Reply-To: <20191217210620.29775-1-pakki001@umn.edu>
+References: <20191217210620.29775-1-pakki001@umn.edu>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 19 Dec 2019 17:33:36 -0800 (PST)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 19 Dec 2019 17:34:33 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Aditya Pakki <pakki001@umn.edu>
-Date: Tue, 17 Dec 2019 14:43:00 -0600
+Date: Tue, 17 Dec 2019 15:06:19 -0600
 
-> In s3fwrn5_fw_recv_frame, if fw_info->rsp is not empty, the
-> current code causes a crash via BUG_ON. However, s3fwrn5_fw_send_msg
-> does not crash in such a scenario. The patch replaces the BUG_ON
-> by returning the error to the callers and frees up skb.
+> In hdlcdrv_register, failure to register the driver causes a crash.
+> The three callers of hdlcdrv_register all pass valid pointers and
+> do not fail. The patch eliminates the unnecessary BUG_ON assertion.
 > 
 > Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 
-Applied.
+Applied to net-next.
