@@ -2,158 +2,152 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57642C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4267CC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2253F2146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:26:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QZNRc8JZ"
+	by mail.kernel.org (Postfix) with ESMTP id 1D3052146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:27:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfLTP0b (ORCPT
+        id S1727533AbfLTP15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 10:26:31 -0500
-Received: from mail-eopbgr30049.outbound.protection.outlook.com ([40.107.3.49]:19840
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727233AbfLTP0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 10:26:30 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hLQxLjkhwovYOKq5Pwwl+HGgvTq0kUNQ1oTBCQZjXmXfiG/gChaYpA+2GkzXleVnN5v5XC7TOi5jG0EKQTuaZEjcphBvyPxPWJZZNl1cdRkC0auDDPmYWsXm68BlRgpfDGPLh7uGRH/nbgdBSa3WMp9TILwYIUi4sd3QrS59cBQJumK7cizIlRWBH7hitlDlKXcdbfdjeq+ysJF51WszRiQwvPcgJp0O1jcrznKmske+zrFySgOusohCfPMmLP4IBSs64YxLDJN1eGbUxLlL6vVATplQ0jpGk4BjfZ+RiyvDgVSo4hmuZoK8TrAedfglBi3ZSGhn6bTyhpbGcYHwIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9hcB23s9PRyBtuiePuuU27vSodo00NsjBxBIo9AykiA=;
- b=ODUyTY0wx8vjsjttdkCSxoXnRPGKrAd5thcAP//PBogu1G6Mx6ajxNw6WaE6ym+twkTh4Xvhn+Q3iA9JBp0+n4LcurSxsvgU5PV6YdhYmI7Z1U2p4k28CmbFl2Io1hRqNFoNwB3F6nSsI5/Te4UYJ3rPHAsMZMobOkOCIQEiNtXVVcjTnquqLKQG8zhwRDUuscaY8xWvIL1G2BccOrJT4gWchpuKnmsRyy6HHJdnY82X5Di7aG4MO8FHX7EGxjSGpWhl8x60MwMtP5KeJu0UBH8aecB4VXreE/ZSCo+fzI/D1PX++E8d7/h0rfgYGPQNhKW1Lv6BL9mZZ3/1D9oSTw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9hcB23s9PRyBtuiePuuU27vSodo00NsjBxBIo9AykiA=;
- b=QZNRc8JZEb0oeUGnQUKUK2AAdA2NI0FemF7tCKF44CZ/U3qmXjCyADyv1HQaELnMjGRRsG5uw/0P947HiBRisQlLdY8JbEB4uVYzi9EDZuEF+9DPuSZVYnXs2qZC6Mg/yB9z1qEvojqJx+1v8ep6jj+NV2Ff1JJO3BL9ZpkGSDM=
-Received: from DB7PR04MB4618.eurprd04.prod.outlook.com (52.135.139.151) by
- DB7PR04MB4683.eurprd04.prod.outlook.com (52.135.139.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.16; Fri, 20 Dec 2019 15:26:26 +0000
-Received: from DB7PR04MB4618.eurprd04.prod.outlook.com
- ([fe80::b40b:46af:9458:f2df]) by DB7PR04MB4618.eurprd04.prod.outlook.com
- ([fe80::b40b:46af:9458:f2df%6]) with mapi id 15.20.2559.016; Fri, 20 Dec 2019
- 15:26:26 +0000
-From:   Joakim Zhang <qiangqing.zhang@nxp.com>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Lokesh Vutla <lokeshvutla@ti.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        Andy Duan <fugang.duan@nxp.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        Fri, 20 Dec 2019 10:27:57 -0500
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.2]:37043 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727233AbfLTP14 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 10:27:56 -0500
+Received: from [85.158.142.100] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-2.bemta.az-a.eu-central-1.aws.symcld.net id 8C/21-05688-978ECFD5; Fri, 20 Dec 2019 15:27:53 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPKsWRWlGSWpSXmKPExsVyU+ECq27liz+
+  xBiu/61pc3jWHzYHR4/MmuQDGKNbMvKT8igTWjIaPm1gKXgpWnDu4kaWB8SJvFyMXh5DAPkaJ
+  xb1fGSGcs4wSP+7vA3I4OdgEtCRmbJ0KZosIaEi8PHqLBaSIWaCTUeL26wNACQ4OYQFvie0vu
+  CFqfCTa53+FqreSaH64nR3EZhFQlVjQNI0JpJxXwFdi3/d0iF0TGCWWfDjBClLDKWAoMfXpCj
+  YQm1FAVuLRyl9gvcwC4hK3nsxnArElBAQkluw5zwxhi0q8fPyPFcI2kNi6dB8LhK0ocWM1yEw
+  OINta4sYDfogxOhILdn8CG88rIChxcuYTlgmMorOQbJiFpGwWkrIFjMyrGM2TijLTM0pyEzNz
+  dA0NDHQNDY11jXVN9RKrdBP1Ukt1k1PzSooSgXJ6ieXFesWVuck5KXp5qSWbGIExk1LIzLqDs
+  fnbW71DjJIcTEqivEn+f2KF+JLyUyozEosz4otKc1KLDzHKcHAoSfB+eQaUEyxKTU+tSMvMAc
+  YvTFqCg0dJhFfyOVCat7ggMbc4Mx0idYrRnmPCy7mLmDkOHp0HJE+uWgIkb74HkkIsefl5qVL
+  ivOwgbQIgbRmleXBDYenmEqOslDAvIwMDgxBPQWpRbmYJqvwrRnEORiVh3haQKTyZeSVwu18B
+  ncUEdBaH5i+Qs0oSEVJSDUwe0oHeQSls08ycosxfLFf7I9L7WUAku1Ig44Xfr+knXvtVatfE1
+  27dKWejP1/BuEzLd6LPT45NTyWElFQ8d8+/4M54XV9AaPHbeCk/j/xou7NWuo2z/8/ace9RS9
+  PbhhkxH/qSxdgPt5xbG/1MPtf03/fkxh+1+2p01H2PTJmgNXXjvrAFercCPQrCgmTC7+98zT8
+  7iK/9D79GWIr17t8vc8z9fWun1gtVnJyTkMH6rkb11PLPepmHeG8fjT8mdnkz82ul6qvvWm2i
+  jTdGLq/bv2Oys/4nGaHpz1RKlJJqH3osuV9hoaTWdtf6Oc/82ZpazQ+K2T55GL3m/HK1+6Tky
+  uZjFssWh/m/+VzEoMRSnJFoqMVcVJwIAKY0mreyAwAA
+X-Env-Sender: david.kim@ncipher.com
+X-Msg-Ref: server-25.tower-225.messagelabs.com!1576855672!1028507!2
+X-Originating-IP: [217.32.208.5]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.44.22; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 30954 invoked from network); 20 Dec 2019 15:27:53 -0000
+Received: from unknown (HELO exukdagfar01.INTERNAL.ROOT.TES) (217.32.208.5)
+  by server-25.tower-225.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 20 Dec 2019 15:27:53 -0000
+Received: from exukdagfar01.INTERNAL.ROOT.TES (10.194.2.70) by
+ exukdagfar01.INTERNAL.ROOT.TES (10.194.2.70) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 20 Dec 2019 15:27:51 +0000
+Received: from exukdagfar01.INTERNAL.ROOT.TES ([fe80::48de:aa33:fc4c:d1f5]) by
+ exukdagfar01.INTERNAL.ROOT.TES ([fe80::48de:aa33:fc4c:d1f5%14]) with mapi id
+ 15.00.1497.000; Fri, 20 Dec 2019 15:27:51 +0000
+From:   "Kim, David" <david.kim@ncipher.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     "arnd@arndb.de" <arnd@arndb.de>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH V3 2/2] drivers/irqchip: add NXP INTMUX interrupt
-  multiplexer support
-Thread-Topic: [PATCH V3 2/2] drivers/irqchip: add NXP INTMUX interrupt
-  multiplexer support
-Thread-Index: AQHVt0CZN4VDSg4vrkOd54zakVbswKfDIpPA
-Date:   Fri, 20 Dec 2019 15:26:26 +0000
-Message-ID: <DB7PR04MB4618A390C538DCD6929DE998E62D0@DB7PR04MB4618.eurprd04.prod.outlook.com>
-References: <1576827431-31942-1-git-send-email-qiangqing.zhang@nxp.com>
- <1576827431-31942-3-git-send-email-qiangqing.zhang@nxp.com>
- <ad5165ba-24d7-ceeb-8794-cdbe4e564bd5@ti.com>
- <DB7PR04MB4618B9A227807CCF884910C6E62D0@DB7PR04MB4618.eurprd04.prod.outlook.com>
- <8bc6bcf113cce13816c62c166f091785@www.loen.fr>
-In-Reply-To: <8bc6bcf113cce13816c62c166f091785@www.loen.fr>
-Accept-Language: en-US
+        "Magee, Tim" <tim.magee@ncipher.com>
+Subject: RE: [PATCH 1/1] drivers: misc: Add support for nCipher HSM devices
+Thread-Topic: [PATCH 1/1] drivers: misc: Add support for nCipher HSM devices
+Thread-Index: AQHVtN0iUtD2ObauYk2ExPz0BKUZFqe+VCKAgATU3UA=
+Date:   Fri, 20 Dec 2019 15:27:51 +0000
+Message-ID: <f5a9bf8828194315b4a9444480f52e11@exukdagfar01.INTERNAL.ROOT.TES>
+References: <20191217132244.14768-1-david.kim@ncipher.com>
+ <20191217132244.14768-2-david.kim@ncipher.com>
+ <20191217133605.GC3362771@kroah.com>
+In-Reply-To: <20191217133605.GC3362771@kroah.com>
+Accept-Language: en-US, en-GB
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=qiangqing.zhang@nxp.com; 
-x-originating-ip: [117.81.222.152]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e60574f5-2a06-403a-4eb5-08d78560faad
-x-ms-traffictypediagnostic: DB7PR04MB4683:|DB7PR04MB4683:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB4683B6ABDF7E2811A79588B8E62D0@DB7PR04MB4683.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1728;
-x-forefront-prvs: 025796F161
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(376002)(366004)(136003)(39860400002)(13464003)(199004)(189003)(4326008)(54906003)(2906002)(478600001)(7416002)(81166006)(8676002)(81156014)(66946007)(76116006)(66476007)(8936002)(66556008)(66446008)(64756008)(7696005)(4001150100001)(55016002)(9686003)(52536014)(5660300002)(186003)(6916009)(6506007)(53546011)(26005)(33656002)(86362001)(71200400001)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4683;H:DB7PR04MB4618.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Zz7mfc3/wZ480VOptjZrITc60MHGKux92GGxMHRglAgDDAU74Q6AaUXw1DEcEU0tIdV+sks+pALMkIHDkYL3jUsH07zcsnTXwdFcDGYWbHITmwYNIhAcpNdKHJVjwVkF3ayFTQGP2mCnkTSya6GPJbkc2sf0TBVnUScVKHLOKaz42cRtZMuP8r+dWjrSNwrZT2ck2pMtpsC9xiKJTLxy9JKHYm2YDoJodpMjISKy4mhbxgeqQse2ofWksjjPMT0fI6Glar3BuODi6CY1Hi2boxhZf0bGHAW7WGxaHZBKfdIBbUn2JtW1uTZDxId1aAMaPNC7dXZ5o5xKRXng+9M/sqovIAdGvlj8aiakcmTKxCXf7zTV3e/Ua165oU8wNKr5MhZ9qfAWq4cc37bmpU4w33C/SZPSYwMD39N3FWdOiTLt9jE5aQ+7hfy8h2OvoJWtMyZ/kNVAO27RUL9XFdS4t0Gs7Pr/NHNYtlHpwKqBV+DvO/2iyZB413PxLV6Ggx4Z
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.194.37.115]
+x-exclaimer-md-config: 7ae4f661-56ee-4cc7-9363-621ce9eeb65f
+Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e60574f5-2a06-403a-4eb5-08d78560faad
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Dec 2019 15:26:26.3352
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: B6swJNWeNIQawWF2xdR8MK6C49qbHHzVooCFU4b9S9sie7LoYpGv7BrE8pEYmKqZFSEbGsW0T8k0lD+MT45gNw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4683
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE1hcmMgWnluZ2llciA8bWF6
-QGtlcm5lbC5vcmc+DQo+IFNlbnQ6IDIwMTnlubQxMuaciDIw5pelIDIyOjIwDQo+IFRvOiBKb2Fr
-aW0gWmhhbmcgPHFpYW5ncWluZy56aGFuZ0BueHAuY29tPg0KPiBDYzogTG9rZXNoIFZ1dGxhIDxs
-b2tlc2h2dXRsYUB0aS5jb20+OyB0Z2x4QGxpbnV0cm9uaXguZGU7DQo+IGphc29uQGxha2VkYWVt
-b24ubmV0OyByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiBzaGF3
-bmd1b0BrZXJuZWwub3JnOyBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOyBBbmR5IER1YW4NCj4gPGZ1
-Z2FuZy5kdWFuQG54cC5jb20+OyBTLmouIFdhbmcgPHNoZW5naml1LndhbmdAbnhwLmNvbT47DQo+
-IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54
-cC5jb20+Ow0KPiBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
-aW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBSRTogW1BBVENIIFYzIDIvMl0gZHJpdmVycy9pcnFj
-aGlwOiBhZGQgTlhQIElOVE1VWCBpbnRlcnJ1cHQNCj4gbXVsdGlwbGV4ZXIgc3VwcG9ydA0KPiAN
-Cj4gT24gMjAxOS0xMi0yMCAxNDoxMCwgSm9ha2ltIFpoYW5nIHdyb3RlOg0KPiA+PiAtLS0tLU9y
-aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+PiBGcm9tOiBMb2tlc2ggVnV0bGEgPGxva2VzaHZ1dGxh
-QHRpLmNvbT4NCj4gDQo+IFsuLi5dDQo+IA0KPiA+PiBEb2VzIHRoZSB1c2VyIGNhcmUgdG8gd2hp
-Y2ggY2hhbm5lbCBkb2VzIHRoZSBpbnRlcnJ1cHQgc291cmNlIGdvZXMNCj4gPj4gdG8/IElmIG5v
-dCwgaW50ZXJydXB0LWNlbGxzIGluIERUIGNhbiBqdXN0IGJlIGEgc2luZ2xlIGVudHJ5IGFuZCB0
-aGUNCj4gPj4gY2hhbm5lbCBzZWxlY3Rpb24gY2FuIGJlIGNvbnRyb2xsZWQgYnkgdGhlIGRyaXZl
-ciBubz8gSSBhbSB0cnlpbmcgdG8NCj4gPj4gdW5kZXJzdGFuZCB3aHkgdXNlciBzaG91bGQgc3Bl
-Y2lmeSB0aGUgY2hhbm5lbCBuby4NCj4gPiBIaSBMb2tlc2gsDQo+ID4NCj4gPiBJZiBhIGZpeGVk
-IGNoYW5uZWwgaXMgc3BlY2lmaWVkIGluIHRoZSBkcml2ZXIsIGFsbCBpbnRlcnJ1cHQgc291cmNl
-cw0KPiA+IHdpbGwgYmUgY29ubmVjdGVkIHRvIHRoaXMgY2hhbm5lbCwgYWZmZWN0aW5nIHRoZSBp
-bnRlcnJ1cHQgcHJpb3JpdHkgdG8NCj4gPiBzb21lIGV4dGVudC4NCj4gPg0KPiA+IEZyb20gbXkg
-cG9pbnQgb2YgdmlldywgYSBmaXhlZCBjaGFubmVsIGNvdWxkIGJlIGVub3VnaCBpZiBkb24ndCBj
-YXJlDQo+ID4gaW50ZXJydXB0IHByaW9yaXR5Lg0KPiANCj4gSG9sZCBvbiBhIHNlYzoNCj4gDQo+
-IElzIHRoZSBjaGFubmVsIHRvIHdoaWNoIGFuIGludGVycnVwdCBpcyByb3V0ZWQgdG8gcHJvZ3Jh
-bW1hYmxlPyBXaGF0IGhhcyB0aGUNCj4gcHJpb3JpdHkgb2YgdGhlIGludGVycnVwdCB0byBkbyB3
-aXRoIHRoaXM/IEhvdyBkb2VzIHRoaXMgYWZmZWN0IGludGVycnVwdA0KPiBkZWxpdmVyeT8NCj4g
-DQo+IEl0IGxvb2tzIGxpa2UgdGhpcyBIVyBkb2VzIG1vcmUgdGhhdCB5b3UgaW5pdGlhbGx5IGV4
-cGxhaW5lZC4uLg0KSGkgTWFyYywNCg0KVGhlIGNoYW5uZWwgdG8gd2hpY2ggYW4gaW50ZXJydXB0
-IGlzIHJvdXRlZCB0byBpcyBub3QgcHJvZ3JhbW1hYmxlLiBFYWNoIGNoYW5uZWwgaGFzIHRoZSBz
-YW1lIDMyIGludGVycnVwdCBzb3VyY2VzLg0KRWFjaCBjaGFubmVsIGhhcyBtYXNrLCB1bm1hc2sg
-YW5kIHN0YXR1cyByZWdpc3Rlci4NCklmIHVzZSAxIGNoYW5uZWwsIDMyIGludGVycnVwdCBzb3Vy
-Y2VzIGlucHV0IGFuZCAxIGludGVycnVwdCBvdXRwdXQuDQpJZiB1c2UgMiBjaGFubmVscywgMzIg
-aW50ZXJydXB0IHNvdXJjZXMgaW5wdXQgYW5kIDIgaW50ZXJydXB0cyBvdXRwdXQuDQpBbmQgc28g
-b24uIFlvdSBjYW4gc2VlIGFib3ZlIElOVE1VWCBibG9jayBkaWFncmFtLiBUaGlzIGlzIGhvdyBI
-VyB3b3Jrcy4NCg0KRm9yIGV4YW1wbGU6DQoxKSB1c2UgMSBjaGFubmVsOg0KV2UgY2FuIGVuYWJs
-ZSAwfjMxIGludGVycnVwdCBpbiBjaGFubmVsIDAuIEFuZCAxIGludGVycnVwdCBvdXRwdXQuIElm
-IGdlbmVyYXRlIGludGVycnVwdCwgd2UgY2Fubm90IGZpZ3VyZSBvdXQgd2hpY2ggaGFsZiBoYXBw
-ZW5lZCBmaXJzdC4NCjIpdXNlIDIgY2hhbm5lbHM6DQpXZSBjYW4gZW5hYmxlIDB+MTUgaW50ZXJy
-dXB0IGluIGNoYW5uZWwgMCwgYW5kIGVuYWJsZSAxNn4zMSBpbiBjaGFubmVsIDEuIEFuZCAyIGlu
-dGVycnVwdHMgb3V0cHV0LiBJZiBnZW5lcmF0ZSBpbnRlcnJ1cHQsIGF0IGxlYXN0IHdlIGNhbiBm
-aW5kIGNoYW5uZWwgMCBvciBjaGFubmVsIDEgZmlyc3QuIFRoZW4gZmluZCAwfjE1IG9yIDE2fjMx
-IGZpcnN0Lg0KDQpUaGlzIGlzIG15IHVuZGVyc3RhbmRpbmcgb2YgdGhlIGludGVycnVwdCBwcmlv
-cml0eSBmcm9tIHRoaXMgaW50bXV4LCBJIGRvbid0IGtub3cgaWYgaXQgaXMgbXkgbWlzdW5kZXJz
-dGFuZGluZy4NCg0KQmVzdCBSZWdhcmRzLA0KSm9ha2ltIFpoYW5nDQo+ICAgICAgICAgIE0uDQo+
-IC0tDQo+IEphenogaXMgbm90IGRlYWQuIEl0IGp1c3Qgc21lbGxzIGZ1bm55Li4uDQo=
+Hi Greg,
+
+I'm just about to push v2 of our patch but wanted to address your comments in the emails you raised them in.
+
+> > +
+> > +/* Device ioctl struct definitions */
+> > +
+> > +/* Result of the ENQUIRY ioctl. */
+> > +struct nfdev_enquiry_str {
+> > +	__u32 busno; /**< Which bus is the PCI device on. */
+> > +	__u8 slotno; /**< Which slot is the PCI device in. */
+> > +	__u8 reserved[3]; /**< for consistent struct alignment */
+> 
+> What is this crazy /**< text?
+> 
+> Please use correct kerneldoc formatting to help document things.
+
+Done. I've also double checked all the other files. Checkpatch didn't seem to complain about these so we missed them, sorry.
+
+> > + */
+> > +#define NFDEV_CONTROL_HARMLESS(c) ((c) <= 1)
+> 
+> Why does userspace need this?
+> 
+
+It doesn't. We've removed that and a couple other leftovers.
+
+> > +enum {
+> > +	/** Enquiry ioctl.
+> > +	 *  \return nfdev_enquiry_str describing the attached device.
+> > +	 */
+> > +	NFDEV_IOCTL_NUM_ENQUIRY = 1,
+> > +
+> > +	/** Channel Update ioctl.
+> > +	 *  \deprecated
+> > +	 */
+> > +	NFDEV_IOCTL_NUM_CHUPDATE,
+> 
+> You have to explicitly set your enums if you want them to work properly in an
+> ioctl.  As it is, this will fail in nasty ways you can never debug :(
+> 
+
+Thanks, we've set them explicitly and also removed the unnecessary ones.
+
+> > +
+> > +#define NFDEV_IOCTL_DEBUG                                                      \
+> > +	_IOW(NFDEV_IOCTL_TYPE, NFDEV_IOCTL_NUM_DEBUG, int)
+> 
+> Why do you care about debugging to userspace through an ioctl?  Just use
+> debugfs and be done with it, that's what it is there for.  Also you can use
+> dynamic debugging (hopefully you already are) and use that kernel-wide
+> api/interface.
+> 
+> Individual drivers should NEVER have custom debugging controls and macros.
+
+Yes, this was accidentally left in. It's been removed now.
+
+> 
+> > +
+> > +#define NFDEV_IOCTL_PCI_IFVERS                                                 \
+> > +	_IOW(NFDEV_IOCTL_TYPE, NFDEV_IOCTL_NUM_PCI_IFVERS, int)
+> 
+> Can't you get this from the pci device information?
+> 
+
+Unfortunately not. Each time the device is brought up or has its state changed, the IFVERS is re-negotiated. This call is our means of discovering what IFVER is supported by the currently running firmware.
+
+Thanks,
+Dave
