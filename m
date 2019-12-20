@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6398CC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FCDC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B27521D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4994F21D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852519;
-	bh=xM2oklz4FFAtArOB5pqVPEnxLppXiEvGloY3AoOlOlk=;
+	s=default; t=1576852522;
+	bh=YCDTaLPBYm/FSHUKf5B+vQAhJ61Kj7eBRk7Oijl1now=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vaH3+jg0uz8dhOpGbtwpXLVEQAmBS4kBtmliltRwhBllkcxzthPoflQwXZxBB3rYU
-	 wTvQ2FhFCLavgeT2bCydb22i8QTYLOkqIjiQjT5db7eaW1VejSXVPSL+ILoU8VD0Sq
-	 bhiNjQNUV8o+eaYkigQT2EnFYpDYv+r0plQ0K7Lg=
+	b=YMuIcSzTf6W4HmXr7b8ySGDNkdXCQXOjG2iCl6AiS6WF1xWnAZHf03wFx0W4e0Ig5
+	 VOIYKJb+2Sm24Cw0fzKsHfemCOUcLRRRh9qn090y2/ZOOHzCFg+5p4Rsk+VdjuRKbT
+	 /JfSO9/00XZCYSnKIKJPQQQUq542UayyGfwwSv04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728395AbfLTOfS (ORCPT
+        id S1728408AbfLTOfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:35:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39452 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:35:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728346AbfLTOfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:35:04 -0500
+        id S1728359AbfLTOfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:35:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ED1824684;
-        Fri, 20 Dec 2019 14:35:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13E8424680;
+        Fri, 20 Dec 2019 14:35:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852504;
-        bh=xM2oklz4FFAtArOB5pqVPEnxLppXiEvGloY3AoOlOlk=;
+        s=default; t=1576852507;
+        bh=YCDTaLPBYm/FSHUKf5B+vQAhJ61Kj7eBRk7Oijl1now=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U5/RHiFcWilLMVTzrgYr5nYt8vE8/EouGZ13o/yAdfvje8XqL+ivNuJs+qcX9ylVk
-         +12bSL5U4OOH4MZ7+U3HkLRbCV3nsi3rrC7YD4LmdNzOyxeWYiLvoqwu+rVhjMIzFu
-         ga5N9ZJTo4Y8O5GT72+WxOF9BG/1DkQ25zj4Bwns=
+        b=ZR6FoVSBN7FouFkxRJKlx0qHpeRvhq+7MV+FYQYRRvfxVB8Di0mnSueObm/iOvf+y
+         pwqhBH2IE2yYeeJa/KMGNDdrPwRvAf8xUbEZTkB+lF8FKNFKXlv512lUs2IU66w3LN
+         dpCDUZb0cLFTplqd85Yk8mkFs5WlYk3eLrCEmACI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>, Lyude Paul <lyude@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 23/34] drm/nouveau: Move the declaration of struct nouveau_conn_atom up a bit
-Date:   Fri, 20 Dec 2019 09:34:22 -0500
-Message-Id: <20191220143433.9922-23-sashal@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Jonathan Billings <jsbillings@jsbillings.org>,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 26/34] afs: Fix creation calls in the dynamic root to fail with EOPNOTSUPP
+Date:   Fri, 20 Dec 2019 09:34:25 -0500
+Message-Id: <20191220143433.9922-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220143433.9922-1-sashal@kernel.org>
 References: <20191220143433.9922-1-sashal@kernel.org>
@@ -60,160 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 37a68eab4cd92b507c9e8afd760fdc18e4fecac6 ]
+[ Upstream commit 1da4bd9f9d187f53618890d7b66b9628bbec3c70 ]
 
-Place the declaration of struct nouveau_conn_atom above that of
-struct nouveau_connector. This commit makes no changes to the moved
-block what so ever, it just moves it up a bit.
+Fix the lookup method on the dynamic root directory such that creation
+calls, such as mkdir, open(O_CREAT), symlink, etc. fail with EOPNOTSUPP
+rather than failing with some odd error (such as EEXIST).
 
-This is a preparation patch to fix some issues with connector handling
-on pre nv50 displays (which do not use atomic modesetting).
+lookup() itself tries to create automount directories when it is invoked.
+These are cached locally in RAM and not committed to storage.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Lyude Paul <lyude@redhat.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
+Tested-by: Jonathan Billings <jsbillings@jsbillings.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_connector.h | 110 ++++++++++----------
- 1 file changed, 55 insertions(+), 55 deletions(-)
+ fs/afs/dynroot.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.h b/drivers/gpu/drm/nouveau/nouveau_connector.h
-index dc7454e7f19aa..b46e99f7641ed 100644
---- a/drivers/gpu/drm/nouveau/nouveau_connector.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_connector.h
-@@ -29,6 +29,7 @@
+diff --git a/fs/afs/dynroot.c b/fs/afs/dynroot.c
+index f29c6dade7f62..069273a2483f9 100644
+--- a/fs/afs/dynroot.c
++++ b/fs/afs/dynroot.c
+@@ -145,6 +145,9 @@ static struct dentry *afs_dynroot_lookup(struct inode *dir, struct dentry *dentr
  
- #include <nvif/notify.h>
+ 	ASSERTCMP(d_inode(dentry), ==, NULL);
  
-+#include <drm/drm_crtc.h>
- #include <drm/drm_edid.h>
- #include <drm/drm_encoder.h>
- #include <drm/drm_dp_helper.h>
-@@ -37,6 +38,60 @@
- 
- struct nvkm_i2c_port;
- 
-+#define nouveau_conn_atom(p)                                                   \
-+	container_of((p), struct nouveau_conn_atom, state)
++	if (flags & LOOKUP_CREATE)
++		return ERR_PTR(-EOPNOTSUPP);
 +
-+struct nouveau_conn_atom {
-+	struct drm_connector_state state;
-+
-+	struct {
-+		/* The enum values specifically defined here match nv50/gf119
-+		 * hw values, and the code relies on this.
-+		 */
-+		enum {
-+			DITHERING_MODE_OFF = 0x00,
-+			DITHERING_MODE_ON = 0x01,
-+			DITHERING_MODE_DYNAMIC2X2 = 0x10 | DITHERING_MODE_ON,
-+			DITHERING_MODE_STATIC2X2 = 0x18 | DITHERING_MODE_ON,
-+			DITHERING_MODE_TEMPORAL = 0x20 | DITHERING_MODE_ON,
-+			DITHERING_MODE_AUTO
-+		} mode;
-+		enum {
-+			DITHERING_DEPTH_6BPC = 0x00,
-+			DITHERING_DEPTH_8BPC = 0x02,
-+			DITHERING_DEPTH_AUTO
-+		} depth;
-+	} dither;
-+
-+	struct {
-+		int mode;	/* DRM_MODE_SCALE_* */
-+		struct {
-+			enum {
-+				UNDERSCAN_OFF,
-+				UNDERSCAN_ON,
-+				UNDERSCAN_AUTO,
-+			} mode;
-+			u32 hborder;
-+			u32 vborder;
-+		} underscan;
-+		bool full;
-+	} scaler;
-+
-+	struct {
-+		int color_vibrance;
-+		int vibrant_hue;
-+	} procamp;
-+
-+	union {
-+		struct {
-+			bool dither:1;
-+			bool scaler:1;
-+			bool procamp:1;
-+		};
-+		u8 mask;
-+	} set;
-+};
-+
- struct nouveau_connector {
- 	struct drm_connector base;
- 	enum dcb_connector_type type;
-@@ -111,61 +166,6 @@ extern int nouveau_ignorelid;
- extern int nouveau_duallink;
- extern int nouveau_hdmimhz;
- 
--#include <drm/drm_crtc.h>
--#define nouveau_conn_atom(p)                                                   \
--	container_of((p), struct nouveau_conn_atom, state)
--
--struct nouveau_conn_atom {
--	struct drm_connector_state state;
--
--	struct {
--		/* The enum values specifically defined here match nv50/gf119
--		 * hw values, and the code relies on this.
--		 */
--		enum {
--			DITHERING_MODE_OFF = 0x00,
--			DITHERING_MODE_ON = 0x01,
--			DITHERING_MODE_DYNAMIC2X2 = 0x10 | DITHERING_MODE_ON,
--			DITHERING_MODE_STATIC2X2 = 0x18 | DITHERING_MODE_ON,
--			DITHERING_MODE_TEMPORAL = 0x20 | DITHERING_MODE_ON,
--			DITHERING_MODE_AUTO
--		} mode;
--		enum {
--			DITHERING_DEPTH_6BPC = 0x00,
--			DITHERING_DEPTH_8BPC = 0x02,
--			DITHERING_DEPTH_AUTO
--		} depth;
--	} dither;
--
--	struct {
--		int mode;	/* DRM_MODE_SCALE_* */
--		struct {
--			enum {
--				UNDERSCAN_OFF,
--				UNDERSCAN_ON,
--				UNDERSCAN_AUTO,
--			} mode;
--			u32 hborder;
--			u32 vborder;
--		} underscan;
--		bool full;
--	} scaler;
--
--	struct {
--		int color_vibrance;
--		int vibrant_hue;
--	} procamp;
--
--	union {
--		struct {
--			bool dither:1;
--			bool scaler:1;
--			bool procamp:1;
--		};
--		u8 mask;
--	} set;
--};
--
- void nouveau_conn_attach_properties(struct drm_connector *);
- void nouveau_conn_reset(struct drm_connector *);
- struct drm_connector_state *
+ 	if (dentry->d_name.len >= AFSNAMEMAX) {
+ 		_leave(" = -ENAMETOOLONG");
+ 		return ERR_PTR(-ENAMETOOLONG);
 -- 
 2.20.1
 
