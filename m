@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8A0C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE463C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B96B021D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:31:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93E13206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:31:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852306;
-	bh=5fQWw3Pf9jDvzny+heHuY3ldUi2oJPZL7MGzXD+p5rw=;
+	s=default; t=1576852310;
+	bh=2+PQTogONJItXGpQy4p8JegmmDr3maW7+wELWTIaNis=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o4gGirXnGY/5LQNsJwP5aWsvmOTDcSLDsdSLmWtfshg5gwJ93G3Sh5I2WHDzu9/r4
-	 +YyRfqV0kFdPBB7nTD41+ANrJErEKSfVZ1+QqL25Kl0LgZ6NkHBz90e8oGGKwxcazE
-	 Vlro3i4IobtdnVHXAJcfk4FH9wepk7iqC8Ldsfv4=
+	b=pMmEmttfKdpbiVj/GXep821DSXoMTtOdarVd5viWEw3lrBaQRBS5mANHUPWjUfRLP
+	 K+QqvGiTkvNH4yoeGzZ8P7p69iSbFnUh7ffDXwvR510emEtcInRtn9WwIv2zxdWsoE
+	 d60eLMlJ2k7jsI2ZTnTgmWqJLRVXgMZ8Mo3CZCHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbfLTObE (ORCPT
+        id S1727650AbfLTObu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:31:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34752 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:31:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727883AbfLTOat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:30:49 -0500
+        id S1728003AbfLTObE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:31:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D41124684;
-        Fri, 20 Dec 2019 14:30:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB7C824685;
+        Fri, 20 Dec 2019 14:31:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852248;
-        bh=5fQWw3Pf9jDvzny+heHuY3ldUi2oJPZL7MGzXD+p5rw=;
+        s=default; t=1576852263;
+        bh=2+PQTogONJItXGpQy4p8JegmmDr3maW7+wELWTIaNis=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lgQ1rOyi74lvu6O2Kh2AaIEcIvKHLG2zCLz024PmyLoKtZN4EViGQKZMOrSqIhuTc
-         zN/g9TZD0Gpch+ViABW0ZpU3MaadvJW6P6fjOSUnPbmxIpGtBetgiuFq3eGNYf6+wc
-         KGk1Zlqfc2lNdbkCHrRwHzut7tswr7gnWo5gQKcg=
+        b=KdjDSSf5ntKhR7/N7xxWB802UKXMGerO9q4PpgAlLcysVMYCmkuqPFuGS7GaL/ZQ/
+         Lux5W5Dfx8n/gD5k3oyD+mPcXn0ksWgc08HWByan8YEu2a7geVYZBCJk435KW8641Z
+         rK02CA5o30dPK1jcJEvBNJxNzh6soDkr3D0ekFC4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>, netdev@vger.kernel.org,
-        David Miller <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 40/52] net: make socket read/write_iter() honor IOCB_NOWAIT
-Date:   Fri, 20 Dec 2019 09:29:42 -0500
-Message-Id: <20191220142954.9500-40-sashal@kernel.org>
+Cc:     Andy Whitcroft <apw@canonical.com>,
+        Andrea Righi <andrea.righi@canonical.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 52/52] PM / hibernate: memory_bm_find_bit(): Tighten node optimisation
+Date:   Fri, 20 Dec 2019 09:29:54 -0500
+Message-Id: <20191220142954.9500-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
 References: <20191220142954.9500-1-sashal@kernel.org>
@@ -59,45 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Andy Whitcroft <apw@canonical.com>
 
-[ Upstream commit ebfcd8955c0b52eb793bcbc9e71140e3d0cdb228 ]
+[ Upstream commit da6043fe85eb5ec621e34a92540735dcebbea134 ]
 
-The socket read/write helpers only look at the file O_NONBLOCK. not
-the iocb IOCB_NOWAIT flag. This breaks users like preadv2/pwritev2
-and io_uring that rely on not having the file itself marked nonblocking,
-but rather the iocb itself.
+When looking for a bit by number we make use of the cached result from the
+preceding lookup to speed up operation.  Firstly we check if the requested
+pfn is within the cached zone and if not lookup the new zone.  We then
+check if the offset for that pfn falls within the existing cached node.
+This happens regardless of whether the node is within the zone we are
+now scanning.  With certain memory layouts it is possible for this to
+false trigger creating a temporary alias for the pfn to a different bit.
+This leads the hibernation code to free memory which it was never allocated
+with the expected fallout.
 
-Cc: netdev@vger.kernel.org
-Acked-by: David Miller <davem@davemloft.net>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Ensure the zone we are scanning matches the cached zone before considering
+the cached node.
+
+Deep thanks go to Andrea for many, many, many hours of hacking and testing
+that went into cornering this bug.
+
+Reported-by: Andrea Righi <andrea.righi@canonical.com>
+Tested-by: Andrea Righi <andrea.righi@canonical.com>
+Signed-off-by: Andy Whitcroft <apw@canonical.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/socket.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/power/snapshot.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/net/socket.c b/net/socket.c
-index d7a106028f0e0..ca8de9e1582d9 100644
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -955,7 +955,7 @@ static ssize_t sock_read_iter(struct kiocb *iocb, struct iov_iter *to)
- 			     .msg_iocb = iocb};
- 	ssize_t res;
+diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
+index 83105874f255b..26b9168321e76 100644
+--- a/kernel/power/snapshot.c
++++ b/kernel/power/snapshot.c
+@@ -734,8 +734,15 @@ static int memory_bm_find_bit(struct memory_bitmap *bm, unsigned long pfn,
+ 	 * We have found the zone. Now walk the radix tree to find the leaf node
+ 	 * for our PFN.
+ 	 */
++
++	/*
++	 * If the zone we wish to scan is the the current zone and the
++	 * pfn falls into the current node then we do not need to walk
++	 * the tree.
++	 */
+ 	node = bm->cur.node;
+-	if (((pfn - zone->start_pfn) & ~BM_BLOCK_MASK) == bm->cur.node_pfn)
++	if (zone == bm->cur.zone &&
++	    ((pfn - zone->start_pfn) & ~BM_BLOCK_MASK) == bm->cur.node_pfn)
+ 		goto node_found;
  
--	if (file->f_flags & O_NONBLOCK)
-+	if (file->f_flags & O_NONBLOCK || (iocb->ki_flags & IOCB_NOWAIT))
- 		msg.msg_flags = MSG_DONTWAIT;
- 
- 	if (iocb->ki_pos != 0)
-@@ -980,7 +980,7 @@ static ssize_t sock_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 	if (iocb->ki_pos != 0)
- 		return -ESPIPE;
- 
--	if (file->f_flags & O_NONBLOCK)
-+	if (file->f_flags & O_NONBLOCK || (iocb->ki_flags & IOCB_NOWAIT))
- 		msg.msg_flags = MSG_DONTWAIT;
- 
- 	if (sock->type == SOCK_SEQPACKET)
+ 	node      = zone->rtree;
 -- 
 2.20.1
 
