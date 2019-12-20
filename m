@@ -2,93 +2,177 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C386C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 05:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A059CC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 05:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3843A2467F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 05:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 758992465E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 05:33:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="WNGXalv6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gyomviuf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbfLTFWB (ORCPT
+        id S1726327AbfLTFdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 00:22:01 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42141 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfLTFWB (ORCPT
+        Fri, 20 Dec 2019 00:33:35 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40622 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbfLTFdf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 00:22:01 -0500
-Received: by mail-ed1-f68.google.com with SMTP id e10so7081580edv.9
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 21:22:00 -0800 (PST)
+        Fri, 20 Dec 2019 00:33:35 -0500
+Received: by mail-lf1-f65.google.com with SMTP id i23so6047777lfo.7
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 21:33:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=c2KTmXeXeXMiud96l6nUg2edTQgCxfxouifxscVRf0g=;
-        b=WNGXalv6wGknAwomwUwaovAuPTvIQk7Xl9TqqlQvmj1rGqrkoFkmOPGli//9tqbPOv
-         bC0y5Bs/3eANQWEqTALhW5Dku73NB5ieBnYuYxc1jUL3Zr8Uqy/gnWwYBGWtxLUJLsqD
-         Tp7EfFzYyAQ8cd9J2+BJ9gPXs0uV9dWqQzzK8=
+         :cc:content-transfer-encoding;
+        bh=ngk7MR82Kujt41YTaxo9DCoXoeevZw1Ny5DAOv5vUYs=;
+        b=gyomviufSEIGGtqYI2ZexwCvjiMMuL4wBewTCLtq1FlhthpLWIYvf1M1+B6a0Fk3yl
+         9TFnEv7qsJfhPUY60VoMthEPPJCwEQAygIkfMeJ/I9kEZUL4rNiL3/kg4Bqjcxe/ZNjr
+         b+f4ntctttnx0mTUd8Do5HYa5b7pWtcsid3OEF+EBXaDMTJEP0BiUTVBY2OjCLE0dZ2W
+         M5mwdknXqssZbq7eXmmlCVQCP+P+V7JDvKh7ABGuGUg8PUhrwTcrbTHHqsbOq5AKQTOu
+         lKp91H2F35uUmZ3TxoAQ5SN+1nQF81S0mXggNtoxTe+aBmODVflzCEfo0x0E+/BkrdV1
+         4q5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c2KTmXeXeXMiud96l6nUg2edTQgCxfxouifxscVRf0g=;
-        b=nzRTujtf2wBsde//Z5EcUQ7A7ZvsVDrqmsa6qDWuMfvmxmHPh9oaDznmRsvHcXtbBq
-         x0MC1crhx9OiHgCD1kMnC7d3Jehy91vEEhUL9lOuJExwvy//R0gmjevbAU5R7ESIRnAH
-         Cj+KSTv+d9CVW0N9fu+JT2KeTfakGfD6sUavXhz8cP4J+osNBArwI2gRGBhtPXHZex+z
-         A/SoYLswzxJISJMnAhBoCAAVDvMEbUIvUyd9AVf0+R1GGPCbTyhhmCrNz5diOZH63/PZ
-         85o+akogNiZnUThPYy/+aQYezC/Y91NtyjHBzSEPXZkO3fjsqjT6vVRwWbhFRRcIvGHy
-         8+/Q==
-X-Gm-Message-State: APjAAAWKNHOx0PCK/jREtkexNvsFGjL6n8gJLUKRBEejlyVlZ2QUZxxr
-        C6WPoapQ8Sjaj7wvGT0vIQfBY6EaGllIVsmmBpAYeQ==
-X-Google-Smtp-Source: APXvYqzEMj7wR7jQmLsuZlyg4/9OOkLUmtqWJIdzbQ1FdkEnv81xGqzaY4T0ckwcnUBu1qoHgE7EBOXhUrhFb4u6MaM=
-X-Received: by 2002:a17:906:4f93:: with SMTP id o19mr13905879eju.52.1576819319133;
- Thu, 19 Dec 2019 21:21:59 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ngk7MR82Kujt41YTaxo9DCoXoeevZw1Ny5DAOv5vUYs=;
+        b=BrQfRGXMiLI4v+srzlK33IEwB6/4Jly4470S3tWgA/wHUdkjBxJh077xljrKlPH21r
+         E2Cw4x0Qe9z8TnqpwJgo68G/HFkFhDjzSNW8x0AqWm02zvkiELPyShsvEgGQkQ4UCISA
+         r948px+2JuZLgoYEwiUYfg+WrnQsOz2JBQ+c8R9jhs9bGvXpWAX6l7bPkOoDFoR8HoMt
+         Bmco2nom4NPDiFYMdsCkfdpG+BU+1pTSDtEWoMpGbzKVsnQwo14bfI5X3tS4O5s6kgnO
+         8DbZuoyz8MF+pEJuni7MT44+02Acl1L7yMTvoGXfp5e9rGQNqxR4bqeHki6U1+w+iQh1
+         pVSA==
+X-Gm-Message-State: APjAAAVkU1gaIh3NrgY9J392gpKRCFvZlRtFtSrM/uqozLkiFtX0vA47
+        s4rKXWUhwEFMu9CQnYIPYeaXwY/hH6B8Vq0pBnL+1K7dXVc=
+X-Google-Smtp-Source: APXvYqyH4vro5ctW+OuCVlO1JYgUQuiWnHhnKN6KUZxqq2i6G6rao+6RI+KttPApFqgcxTXVnyvutjo90vAwpg1FWvo=
+X-Received: by 2002:ac2:54b4:: with SMTP id w20mr7822856lfk.67.1576820012993;
+ Thu, 19 Dec 2019 21:33:32 -0800 (PST)
 MIME-Version: 1.0
-References: <20191218235459.GA17271@ircssh-2.c.rugged-nimbus-611.internal> <CALCETrUK-SHA=sOUrBscpf+Bpxxff2L3RpXEaAfRHNnHGxa-LQ@mail.gmail.com>
-In-Reply-To: <CALCETrUK-SHA=sOUrBscpf+Bpxxff2L3RpXEaAfRHNnHGxa-LQ@mail.gmail.com>
-From:   Sargun Dhillon <sargun@sargun.me>
-Date:   Thu, 19 Dec 2019 21:21:23 -0800
-Message-ID: <CAMp4zn9R3XoV=xLi9y0vn-DotUQGRFA8Cp14aYYvkVYEUuW48w@mail.gmail.com>
-Subject: Re: [PATCH v4 2/5] pid: Add PIDFD_IOCTL_GETFD to fetch file
- descriptors from processes
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Gian-Carlo Pascutto <gpascutto@mozilla.com>,
-        =?UTF-8?Q?Emilio_Cobos_=C3=81lvarez?= <ealvarez@mozilla.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Jed Davis <jld@mozilla.com>, Arnd Bergmann <arnd@arndb.de>
+References: <20191219183214.629503389@linuxfoundation.org>
+In-Reply-To: <20191219183214.629503389@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 20 Dec 2019 11:03:21 +0530
+Message-ID: <CA+G9fYuoeWKys-sY1RcuJ9sHQF_5n6VFJ5ATfEQ_rfj1RXb=bQ@mail.gmail.com>
+Subject: Re: [PATCH 4.9 000/199] 4.9.207-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 5:43 PM Andy Lutomirski <luto@kernel.org> wrote:
+On Fri, 20 Dec 2019 at 00:13, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
+> This is the start of the stable review cycle for the 4.9.207 release.
+> There are 199 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> I don't think this is MODE_READ.  By copying an fd from the task, you
-> can easily change its state.
-Would PTRACE_MODE_ATTACH_REALCREDS  work? I'm curious what
-kind of state change you can cause by borrowing an FD?
+> Responses should be made by Sat, 21 Dec 2019 18:24:44 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.9.207-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.9.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.9.207-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: c87cf142499122d38d7dc3cb92c9e9072d646591
+git describe: v4.9.206-200-gc87cf1424991
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.206-200-gc87cf1424991
 
 
->
-> IMO it would be really nice if pidfd could act more like a capability
-> here and carry a ptrace mode, for example.  But I guess it doesn't
-> right now.
->
->
-> --Andy
+No regressions (compared to build v4.9.206)
+
+No fixes (compared to build v4.9.206)
+
+
+Ran 23314 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* kselftest
+* libhugetlbfs
+* ltp-fs-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* prep-tmp-disk
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* ssuite
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
