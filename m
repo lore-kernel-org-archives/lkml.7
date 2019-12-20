@@ -2,168 +2,97 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A33C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B653C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4296206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 557B6206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:32:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576852367;
+	bh=7JgE0/+qMmvES20+Q4uK73b5Uykyb51CBPXEGNZn+E4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ndeySbcOHGNyh9p2XIoQpCLH7AzL6MvowQ8yY0j2hs9zvFJjXo51mqsqWlNIHxoDX
+	 j6IeIudRjJvjN+Lu+gC7dDH3dcHu44QDRMR6ZZ7WkMWGTZksdAAPpPlaIucVp/ACcu
+	 bGL3Krw/Cdmh50O398e84dDhqEO3ZU0/VKP43jKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728218AbfLTOck (ORCPT
+        id S1728094AbfLTOcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:32:40 -0500
-Received: from foss.arm.com ([217.140.110.172]:51268 "EHLO foss.arm.com"
+        Fri, 20 Dec 2019 09:32:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727926AbfLTOaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:30:52 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 11DCF30E;
-        Fri, 20 Dec 2019 06:30:52 -0800 (PST)
-Received: from e119886-lin.cambridge.arm.com (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 39ABD3F718;
-        Fri, 20 Dec 2019 06:30:50 -0800 (PST)
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH v2 09/18] arm64: KVM: enable conditional save/restore full SPE profiling buffer controls
-Date:   Fri, 20 Dec 2019 14:30:16 +0000
-Message-Id: <20191220143025.33853-10-andrew.murray@arm.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191220143025.33853-1-andrew.murray@arm.com>
-References: <20191220143025.33853-1-andrew.murray@arm.com>
+        id S1727505AbfLTOav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:30:51 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66F7824684;
+        Fri, 20 Dec 2019 14:30:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576852251;
+        bh=7JgE0/+qMmvES20+Q4uK73b5Uykyb51CBPXEGNZn+E4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=g2wmQ52n04SDDKc38+LT6d/wEqBMVAyByA5I0mZEhy3dGhd+WUnkbJJGpQ0enFEOS
+         M41z0gXo3GlKFdZPMDhzOL3ZdzWIsdzFt9M/i8+ypSGCWa60B213NzMUC+kIz1b1Bs
+         84hJeyGKliqSCxFAm/b8wimUMK5LaMClEn/eCTrA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Jonathan Billings <jsbillings@jsbillings.org>,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 42/52] afs: Fix creation calls in the dynamic root to fail with EOPNOTSUPP
+Date:   Fri, 20 Dec 2019 09:29:44 -0500
+Message-Id: <20191220142954.9500-42-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
+References: <20191220142954.9500-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+From: David Howells <dhowells@redhat.com>
 
-Now that we can save/restore the full SPE controls, we can enable it
-if SPE is setup and ready to use in KVM. It's supported in KVM only if
-all the CPUs in the system supports SPE.
+[ Upstream commit 1da4bd9f9d187f53618890d7b66b9628bbec3c70 ]
 
-However to support heterogenous systems, we need to move the check if
-host supports SPE and do a partial save/restore.
+Fix the lookup method on the dynamic root directory such that creation
+calls, such as mkdir, open(O_CREAT), symlink, etc. fail with EOPNOTSUPP
+rather than failing with some odd error (such as EEXIST).
 
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+lookup() itself tries to create automount directories when it is invoked.
+These are cached locally in RAM and not committed to storage.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
+Tested-by: Jonathan Billings <jsbillings@jsbillings.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kvm/hyp/debug-sr.c | 33 ++++++++++++++++-----------------
- include/kvm/arm_spe.h         |  6 ++++++
- 2 files changed, 22 insertions(+), 17 deletions(-)
+ fs/afs/dynroot.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/kvm/hyp/debug-sr.c b/arch/arm64/kvm/hyp/debug-sr.c
-index 12429b212a3a..d8d857067e6d 100644
---- a/arch/arm64/kvm/hyp/debug-sr.c
-+++ b/arch/arm64/kvm/hyp/debug-sr.c
-@@ -86,18 +86,13 @@
- 	}
+diff --git a/fs/afs/dynroot.c b/fs/afs/dynroot.c
+index 4150280509fff..7503899c0a1b5 100644
+--- a/fs/afs/dynroot.c
++++ b/fs/afs/dynroot.c
+@@ -136,6 +136,9 @@ static struct dentry *afs_dynroot_lookup(struct inode *dir, struct dentry *dentr
  
- static void __hyp_text
--__debug_save_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
-+__debug_save_spe_context(struct kvm_cpu_context *ctxt, bool full_ctxt)
- {
- 	u64 reg;
+ 	ASSERTCMP(d_inode(dentry), ==, NULL);
  
- 	/* Clear pmscr in case of early return */
- 	ctxt->sys_regs[PMSCR_EL1] = 0;
- 
--	/* SPE present on this CPU? */
--	if (!cpuid_feature_extract_unsigned_field(read_sysreg(id_aa64dfr0_el1),
--						  ID_AA64DFR0_PMSVER_SHIFT))
--		return;
--
- 	/* Yes; is it owned by higher EL? */
- 	reg = read_sysreg_s(SYS_PMBIDR_EL1);
- 	if (reg & BIT(SYS_PMBIDR_EL1_P_SHIFT))
-@@ -142,7 +137,7 @@ __debug_save_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
- }
- 
- static void __hyp_text
--__debug_restore_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
-+__debug_restore_spe_context(struct kvm_cpu_context *ctxt, bool full_ctxt)
- {
- 	if (!ctxt->sys_regs[PMSCR_EL1])
- 		return;
-@@ -210,11 +205,14 @@ void __hyp_text __debug_restore_guest_context(struct kvm_vcpu *vcpu)
- 	struct kvm_guest_debug_arch *host_dbg;
- 	struct kvm_guest_debug_arch *guest_dbg;
- 
-+	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
-+	guest_ctxt = &vcpu->arch.ctxt;
++	if (flags & LOOKUP_CREATE)
++		return ERR_PTR(-EOPNOTSUPP);
 +
-+	__debug_restore_spe_context(guest_ctxt, kvm_arm_spe_v1_ready(vcpu));
-+
- 	if (!(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY))
- 		return;
- 
--	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
--	guest_ctxt = &vcpu->arch.ctxt;
- 	host_dbg = &vcpu->arch.host_debug_state.regs;
- 	guest_dbg = kern_hyp_va(vcpu->arch.debug_ptr);
- 
-@@ -232,8 +230,7 @@ void __hyp_text __debug_restore_host_context(struct kvm_vcpu *vcpu)
- 	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
- 	guest_ctxt = &vcpu->arch.ctxt;
- 
--	if (!has_vhe())
--		__debug_restore_spe_nvhe(host_ctxt, false);
-+	__debug_restore_spe_context(host_ctxt, kvm_arm_spe_v1_ready(vcpu));
- 
- 	if (!(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY))
- 		return;
-@@ -249,19 +246,21 @@ void __hyp_text __debug_restore_host_context(struct kvm_vcpu *vcpu)
- 
- void __hyp_text __debug_save_host_context(struct kvm_vcpu *vcpu)
- {
--	/*
--	 * Non-VHE: Disable and flush SPE data generation
--	 * VHE: The vcpu can run, but it can't hide.
--	 */
- 	struct kvm_cpu_context *host_ctxt;
- 
- 	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
--	if (!has_vhe())
--		__debug_save_spe_nvhe(host_ctxt, false);
-+	if (cpuid_feature_extract_unsigned_field(read_sysreg(id_aa64dfr0_el1),
-+						 ID_AA64DFR0_PMSVER_SHIFT))
-+		__debug_save_spe_context(host_ctxt, kvm_arm_spe_v1_ready(vcpu));
- }
- 
- void __hyp_text __debug_save_guest_context(struct kvm_vcpu *vcpu)
- {
-+	bool kvm_spe_ready = kvm_arm_spe_v1_ready(vcpu);
-+
-+	/* SPE present on this vCPU? */
-+	if (kvm_spe_ready)
-+		__debug_save_spe_context(&vcpu->arch.ctxt, kvm_spe_ready);
- }
- 
- u32 __hyp_text __kvm_get_mdcr_el2(void)
-diff --git a/include/kvm/arm_spe.h b/include/kvm/arm_spe.h
-index 48d118fdb174..30c40b1bc385 100644
---- a/include/kvm/arm_spe.h
-+++ b/include/kvm/arm_spe.h
-@@ -16,4 +16,10 @@ struct kvm_spe {
- 	bool irq_level;
- };
- 
-+#ifdef CONFIG_KVM_ARM_SPE
-+#define kvm_arm_spe_v1_ready(v)		((v)->arch.spe.ready)
-+#else
-+#define kvm_arm_spe_v1_ready(v)		(false)
-+#endif /* CONFIG_KVM_ARM_SPE */
-+
- #endif /* __ASM_ARM_KVM_SPE_H */
+ 	if (dentry->d_name.len >= AFSNAMEMAX) {
+ 		_leave(" = -ENAMETOOLONG");
+ 		return ERR_PTR(-ENAMETOOLONG);
 -- 
-2.21.0
+2.20.1
 
