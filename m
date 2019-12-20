@@ -2,269 +2,228 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9B2C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 03:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27418C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 03:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B091424680
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 03:31:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCE7624682
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 03:31:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HHqJSuOI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbfLTDbX (ORCPT
+        id S1727407AbfLTDb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 19 Dec 2019 22:31:27 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:35651 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727344AbfLTDbX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Dec 2019 22:31:23 -0500
-Received: from mga18.intel.com ([134.134.136.126]:63520 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726986AbfLTDbX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 22:31:23 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Dec 2019 19:31:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,334,1571727600"; 
-   d="scan'208";a="366276824"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga004.jf.intel.com with ESMTP; 19 Dec 2019 19:31:19 -0800
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        yixin.zhu@linux.intel.com, qi-ming.wu@intel.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v2 2/2] dt-bindings: clk: intel: Add bindings document & header file for CGU
-Date:   Fri, 20 Dec 2019 11:31:08 +0800
-Message-Id: <706ef9c0e08e10798a4cecacff52a4c72e8fe693.1576811332.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1576811332.git.rahul.tanwar@linux.intel.com>
-References: <cover.1576811332.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1576811332.git.rahul.tanwar@linux.intel.com>
-References: <cover.1576811332.git.rahul.tanwar@linux.intel.com>
+X-UUID: b89d7d611a8846a3b9c7eddc7ec4af90-20191220
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=+DJG9P4r2pgr+uIsplGtmMWfn8BOeTpSdtzCFrrKz/c=;
+        b=HHqJSuOIQvq2bNWixyBpGBgDPiTIQXzI1B2JdqqEam7Xx7X7YLOOWzBu6ZYcGFyiJdVKFPpZq3I07MUyhtBLYRnAm9vfmS07XO028aZDkNzsgC0/orJBF6mPm76exNhOM23/+DTxROMTBU6/ojSuzHrIKYIUBthUSKTT81PYHSE=;
+X-UUID: b89d7d611a8846a3b9c7eddc7ec4af90-20191220
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <weiyi.lu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1538930176; Fri, 20 Dec 2019 11:31:15 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 20 Dec 2019 11:30:56 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 20 Dec 2019 11:31:20 +0800
+Message-ID: <1576812673.8410.10.camel@mtksdaap41>
+Subject: Re: [PATCH v10 07/12] soc: mediatek: Remove infracfg misc driver
+ support
+From:   Weiyi Lu <weiyi.lu@mediatek.com>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        Fan Chen <fan.chen@mediatek.com>,
+        "linux-arm Mailing List" <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Date:   Fri, 20 Dec 2019 11:31:13 +0800
+In-Reply-To: <CANMq1KDSVH0kb0YVf5iiVTs=Bpc742gJWjqk3t0KU5LMzVNJSg@mail.gmail.com>
+References: <1576657848-14711-1-git-send-email-weiyi.lu@mediatek.com>
+         <1576657848-14711-8-git-send-email-weiyi.lu@mediatek.com>
+         <CANMq1KDSVH0kb0YVf5iiVTs=Bpc742gJWjqk3t0KU5LMzVNJSg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clock generation unit(CGU) is a clock controller IP of Intel's Lightning
-Mountain(LGM) SoC. Add DT bindings include file and document for CGU clock
-controller driver of LGM.
-
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- .../devicetree/bindings/clock/intel,cgu-lgm.yaml   |  43 ++++++
- include/dt-bindings/clock/intel,lgm-clk.h          | 150 +++++++++++++++++++++
- 2 files changed, 193 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
- create mode 100644 include/dt-bindings/clock/intel,lgm-clk.h
-
-diff --git a/Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml b/Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
-new file mode 100644
-index 000000000000..2c9edabe0490
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
-@@ -0,0 +1,43 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/clock/intel,cgu-lgm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel Lightning Mountain SoC's Clock Controller(CGU) Binding
-+
-+maintainers:
-+  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
-+
-+description: |
-+  Lightning Mountain(LGM) SoC's Clock Generation Unit(CGU) driver provides
-+  all means to access the CGU hardware module in order to generate a series
-+  of clocks for the whole system and individual peripherals.
-+
-+  This binding uses the common clock bindings
-+  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+properties:
-+  compatible:
-+    const: intel,cgu-lgm
-+
-+  reg:
-+    maxItems: 1
-+
-+  '#clock-cells':
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#clock-cells'
-+
-+examples:
-+  - |
-+    cgu: cgu@e0200000 {
-+        compatible = "intel,cgu-lgm";
-+        reg = <0xe0200000 0x33c>;
-+        #clock-cells = <1>;
-+    };
-+
-+...
-diff --git a/include/dt-bindings/clock/intel,lgm-clk.h b/include/dt-bindings/clock/intel,lgm-clk.h
-new file mode 100644
-index 000000000000..09e5dc59ff5b
---- /dev/null
-+++ b/include/dt-bindings/clock/intel,lgm-clk.h
-@@ -0,0 +1,150 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2018 Intel Corporation.
-+ * Lei Chuanhua <Chuanhua.lei@intel.com>
-+ * Zhu Yixin <Yixin.zhu@intel.com>
-+ */
-+
-+#ifndef __INTEL_LGM_CLK_H
-+#define __INTEL_LGM_CLK_H
-+
-+/* PLL clocks */
-+#define LGM_CLK_PLLPP		2
-+#define LGM_CLK_PLL2		3
-+#define LGM_CLK_PLL0CZ		4
-+#define LGM_CLK_PLL0B		5
-+#define LGM_CLK_PLL1		6
-+#define LGM_CLK_LJPLL3		7
-+#define LGM_CLK_LJPLL4		8
-+#define LGM_CLK_PLL0CM0 	9
-+#define LGM_CLK_PLL0CM1 	10
-+
-+/* clocks from PLLs */
-+
-+/* ROPLL clocks */
-+#define LGM_CLK_PP_HW		15
-+#define LGM_CLK_PP_UC		16
-+#define LGM_CLK_PP_FXD		17
-+#define LGM_CLK_PP_TBM		18
-+
-+/* PLL2 clocks */
-+#define LGM_CLK_DDR		20
-+
-+/* PLL0CZ */
-+#define LGM_CLK_CM		25
-+#define LGM_CLK_IC		26
-+#define LGM_CLK_SDIO3		27
-+
-+/* PLL0B */
-+#define LGM_CLK_NGI		30
-+#define LGM_CLK_NOC4		31
-+#define LGM_CLK_SW		32
-+#define LGM_CLK_QSPI		33
-+#define LGM_CLK_CQEM		LGM_CLK_SW
-+#define LGM_CLK_EMMC5		LGM_CLK_NOC4
-+
-+/* PLL1 */
-+#define LGM_CLK_CT		35
-+#define LGM_CLK_DSP		36
-+#define LGM_CLK_4X		37
-+#define LGM_CLK_DCL		38
-+
-+/* LJPLL3 */
-+#define LGM_CLK_CML		40
-+#define LGM_CLK_CBPHY		41
-+#define LGM_CLK_POOL		42
-+#define LGM_CLK_PTP		43
-+
-+/* LJPLL4 */
-+#define LGM_CLK_PCIE		45
-+#define LGM_CLK_SATA		LGM_CLK_PCIE
-+
-+/* Miscellaneous clocks */
-+#define LGM_CLK_EMMC4		46
-+#define LGM_CLK_SDIO2		47
-+#define LGM_CLK_EMMC		48
-+#define LGM_CLK_SDIO		49
-+
-+
-+/* Gate clocks */
-+/* Gate CLK0 */
-+#define LGM_GCLK_C55		60
-+#define LGM_GCLK_VCODEC 	61
-+#define LGM_GCLK_QSPI		62
-+#define LGM_GCLK_TEP		63
-+#define LGM_GCLK_EIP197 	64
-+#define LGM_GCLK_VAULT		65
-+#define LGM_GCLK_TOE		66
-+#define LGM_GCLK_SDXC		67
-+#define LGM_GCLK_EMMC		68
-+#define LGM_GCLK_EIP154 	69
-+#define LGM_GCLK_SPI_DBG	70
-+#define LGM_GCLK_DMA3		71
-+#define LGM_GCLK_TOPNOC 	72
-+
-+/* Gate CLK1 */
-+#define LGM_GCLK_DMA0		80
-+#define LGM_GCLK_LEDC0		81
-+#define LGM_GCLK_LEDC1		82
-+#define LGM_GCLK_I2S0		83
-+#define LGM_GCLK_I2S1		84
-+#define LGM_GCLK_EBU		85
-+#define LGM_GCLK_I2C0		86
-+#define LGM_GCLK_I2C1		87
-+#define LGM_GCLK_I2C2		88
-+#define LGM_GCLK_I2C3		89
-+#define LGM_GCLK_SSC0		90
-+#define LGM_GCLK_SSC1		91
-+#define LGM_GCLK_SSC2		92
-+#define LGM_GCLK_SSC3		93
-+#define LGM_GCLK_GPTC0		94
-+#define LGM_GCLK_GPTC1		95
-+#define LGM_GCLK_GPTC2		96
-+#define LGM_GCLK_GPTC3		97
-+#define LGM_GCLK_ASC0		98
-+#define LGM_GCLK_ASC1		99
-+#define LGM_GCLK_ASC2		100
-+#define LGM_GCLK_ASC3		101
-+#define LGM_GCLK_PCM0		102
-+#define LGM_GCLK_PCM1		103
-+#define LGM_GCLK_PCM2		104
-+#define LGM_GCLK_PERINOC	105
-+
-+/* Gate CLK2 */
-+#define LGM_GCLK_PCIE10 	120
-+#define LGM_GCLK_PCIE11 	121
-+#define LGM_GCLK_PCIE30 	122
-+#define LGM_GCLK_PCIE31 	123
-+#define LGM_GCLK_PCIE20 	124
-+#define LGM_GCLK_PCIE21 	125
-+#define LGM_GCLK_PCIE40 	126
-+#define LGM_GCLK_PCIE41 	127
-+#define LGM_GCLK_XPCS0		128
-+#define LGM_GCLK_XPCS1		129
-+#define LGM_GCLK_XPCS2		130
-+#define LGM_GCLK_XPCS3		131
-+#define LGM_GCLK_SATA0		132
-+#define LGM_GCLK_SATA1		133
-+#define LGM_GCLK_SATA2		134
-+#define LGM_GCLK_SATA3		135
-+
-+/* Gate CLK3 */
-+#define LGM_GCLK_ARCEM4 	140
-+#define LGM_GCLK_VPNHOST	141
-+#define LGM_GCLK_IDMAR1 	142
-+#define LGM_GCLK_IDMAT0 	143
-+#define LGM_GCLK_IDMAT1 	144
-+#define LGM_GCLK_IDMAT2 	145
-+#define LGM_GCLK_PPV4		146
-+#define LGM_GCLK_GSWIPO 	147
-+#define LGM_GCLK_CQEM		148
-+#define LGM_GCLK_PON		149
-+#define LGM_GCLK_BM		150
-+#define LGM_GCLK_PB		151
-+#define LGM_GCLK_XPCS5		152
-+#define LGM_GCLK_USB1		153
-+#define LGM_GCLK_USB2		154
-+
-+#define CLK_NR_CLKS		180
-+
-+#endif /* __INTEL_LGM_CLK_H */
--- 
-2.11.0
+T24gVGh1LCAyMDE5LTEyLTE5IGF0IDExOjU2ICswODAwLCBOaWNvbGFzIEJvaWNoYXQgd3JvdGU6
+DQo+IE9uIFdlZCwgRGVjIDE4LCAyMDE5IGF0IDQ6MzEgUE0gV2VpeWkgTHUgPHdlaXlpLmx1QG1l
+ZGlhdGVrLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBJbiBwcmV2aW91cyBwYXRjaGVzLCB3ZSBpbnRy
+b2R1Y2Ugc2Nwc3lzLWV4dCBkcml2ZXIgdGhhdCBjb3ZlcnMNCj4gPiB0aGUgZnVuY3Rpb25zIHdo
+aWNoIGluZnJhY2ZnIG1pc2MgZHJpdmVyIHByb3ZpZGVkLg0KPiA+IEFuZCB0aGVuIHJlcGxhY2Ug
+YnVzX3Byb3RfbWFzayB3aXRoIGJwX3RhYmxlIG9mIGFsbCBjb21wYXRpYmxlcy4NCj4gPiBOb3cs
+IHdlJ3JlIGdvaW5nIHRvIHJlbW92ZSBpbmZyYWNmZyBtaXNjIGRydmllciB3aGljaCBpcyBubyBs
+b25nZXINCj4gPiBiZWluZyB1c2VkLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogV2VpeWkgTHUg
+PHdlaXlpLmx1QG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9zb2MvbWVkaWF0
+ZWsvS2NvbmZpZyAgICAgICAgICB8IDEwIC0tLS0tDQo+ID4gIGRyaXZlcnMvc29jL21lZGlhdGVr
+L01ha2VmaWxlICAgICAgICAgfCAgMyArLQ0KPiA+ICBkcml2ZXJzL3NvYy9tZWRpYXRlay9tdGst
+aW5mcmFjZmcuYyAgIHwgNzkgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4g
+PiAgaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvaW5mcmFjZmcuaCB8IDM5IC0tLS0tLS0tLS0t
+LS0tLS0tDQo+ID4gIDQgZmlsZXMgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEzMCBkZWxldGlv
+bnMoLSkNCj4gPiAgZGVsZXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1p
+bmZyYWNmZy5jDQo+ID4gIGRlbGV0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2xpbnV4L3NvYy9tZWRp
+YXRlay9pbmZyYWNmZy5oDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0
+ZWsvS2NvbmZpZyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL0tjb25maWcNCj4gPiBpbmRleCAyMTE0
+YjU2Li5mODM3YjNjIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvc29jL21lZGlhdGVrL0tjb25m
+aWcNCj4gPiArKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9LY29uZmlnDQo+ID4gQEAgLTEwLDIx
+ICsxMCwxMiBAQCBjb25maWcgTVRLX0NNRFENCj4gPiAgICAgICAgIGRlcGVuZHMgb24gQVJDSF9N
+RURJQVRFSyB8fCBDT01QSUxFX1RFU1QNCj4gPiAgICAgICAgIHNlbGVjdCBNQUlMQk9YDQo+ID4g
+ICAgICAgICBzZWxlY3QgTVRLX0NNRFFfTUJPWA0KPiA+IC0gICAgICAgc2VsZWN0IE1US19JTkZS
+QUNGRw0KPiA+ICAgICAgICAgaGVscA0KPiA+ICAgICAgICAgICBTYXkgeWVzIGhlcmUgdG8gYWRk
+IHN1cHBvcnQgZm9yIHRoZSBNZWRpYVRlayBDb21tYW5kIFF1ZXVlIChDTURRKQ0KPiA+ICAgICAg
+ICAgICBkcml2ZXIuIFRoZSBDTURRIGlzIHVzZWQgdG8gaGVscCByZWFkL3dyaXRlIHJlZ2lzdGVy
+cyB3aXRoIGNyaXRpY2FsDQo+ID4gICAgICAgICAgIHRpbWUgbGltaXRhdGlvbiwgc3VjaCBhcyB1
+cGRhdGluZyBkaXNwbGF5IGNvbmZpZ3VyYXRpb24gZHVyaW5nIHRoZQ0KPiA+ICAgICAgICAgICB2
+YmxhbmsuDQo+ID4NCj4gPiAtY29uZmlnIE1US19JTkZSQUNGRw0KPiA+IC0gICAgICAgYm9vbCAi
+TWVkaWFUZWsgSU5GUkFDRkcgU3VwcG9ydCINCj4gPiAtICAgICAgIHNlbGVjdCBSRUdNQVANCj4g
+PiAtICAgICAgIGhlbHANCj4gPiAtICAgICAgICAgU2F5IHllcyBoZXJlIHRvIGFkZCBzdXBwb3J0
+IGZvciB0aGUgTWVkaWFUZWsgSU5GUkFDRkcgY29udHJvbGxlci4gVGhlDQo+ID4gLSAgICAgICAg
+IElORlJBQ0ZHIGNvbnRyb2xsZXIgY29udGFpbnMgdmFyaW91cyBpbmZyYXN0cnVjdHVyZSByZWdp
+c3RlcnMgbm90DQo+ID4gLSAgICAgICAgIGRpcmVjdGx5IGFzc29jaWF0ZWQgdG8gYW55IGRldmlj
+ZS4NCj4gPiAtDQo+ID4gIGNvbmZpZyBNVEtfUE1JQ19XUkFQDQo+ID4gICAgICAgICB0cmlzdGF0
+ZSAiTWVkaWFUZWsgUE1JQyBXcmFwcGVyIFN1cHBvcnQiDQo+ID4gICAgICAgICBkZXBlbmRzIG9u
+IFJFU0VUX0NPTlRST0xMRVINCj4gPiBAQCAtMzgsNyArMjksNiBAQCBjb25maWcgTVRLX1NDUFNZ
+Uw0KPiA+ICAgICAgICAgYm9vbCAiTWVkaWFUZWsgU0NQU1lTIFN1cHBvcnQiDQo+ID4gICAgICAg
+ICBkZWZhdWx0IEFSQ0hfTUVESUFURUsNCj4gPiAgICAgICAgIHNlbGVjdCBSRUdNQVANCj4gPiAt
+ICAgICAgIHNlbGVjdCBNVEtfSU5GUkFDRkcNCj4gPiAgICAgICAgIHNlbGVjdCBQTV9HRU5FUklD
+X0RPTUFJTlMgaWYgUE0NCj4gPiAgICAgICAgIGhlbHANCj4gPiAgICAgICAgICAgU2F5IHllcyBo
+ZXJlIHRvIGFkZCBzdXBwb3J0IGZvciB0aGUgTWVkaWFUZWsgU0NQU1lTIHBvd2VyIGRvbWFpbg0K
+PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9NYWtlZmlsZSBiL2RyaXZlcnMv
+c29jL21lZGlhdGVrL01ha2VmaWxlDQo+ID4gaW5kZXggYjQ0MmJlOS4uN2JmN2U4OCAxMDA2NDQN
+Cj4gPiAtLS0gYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9NYWtlZmlsZQ0KPiA+ICsrKyBiL2RyaXZl
+cnMvc29jL21lZGlhdGVrL01ha2VmaWxlDQo+ID4gQEAgLTEsNSArMSw0IEBADQo+ID4gICMgU1BE
+WC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAtb25seQ0KPiA+ICBvYmotJChDT05GSUdfTVRL
+X0NNRFEpICs9IG10ay1jbWRxLWhlbHBlci5vDQo+ID4gLW9iai0kKENPTkZJR19NVEtfSU5GUkFD
+RkcpICs9IG10ay1pbmZyYWNmZy5vIG10ay1zY3BzeXMtZXh0Lm8NCj4gPiAgb2JqLSQoQ09ORklH
+X01US19QTUlDX1dSQVApICs9IG10ay1wbWljLXdyYXAubw0KPiA+IC1vYmotJChDT05GSUdfTVRL
+X1NDUFNZUykgKz0gbXRrLXNjcHN5cy5vDQo+ID4gK29iai0kKENPTkZJR19NVEtfU0NQU1lTKSAr
+PSBtdGstc2Nwc3lzLm8gbXRrLXNjcHN5cy1leHQubw0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJz
+L3NvYy9tZWRpYXRlay9tdGstaW5mcmFjZmcuYyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1p
+bmZyYWNmZy5jDQo+ID4gZGVsZXRlZCBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMzQxYzdh
+Yy4uMDAwMDAwMA0KPiA+IC0tLSBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1pbmZyYWNmZy5j
+DQo+ID4gKysrIC9kZXYvbnVsbA0KPiA+IEBAIC0xLDc5ICswLDAgQEANCj4gPiAtLy8gU1BEWC1M
+aWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAtb25seQ0KPiA+IC0vKg0KPiA+IC0gKiBDb3B5cmln
+aHQgKGMpIDIwMTUgUGVuZ3V0cm9uaXgsIFNhc2NoYSBIYXVlciA8a2VybmVsQHBlbmd1dHJvbml4
+LmRlPg0KPiA+IC0gKi8NCj4gPiAtDQo+ID4gLSNpbmNsdWRlIDxsaW51eC9leHBvcnQuaD4NCj4g
+PiAtI2luY2x1ZGUgPGxpbnV4L2ppZmZpZXMuaD4NCj4gPiAtI2luY2x1ZGUgPGxpbnV4L3JlZ21h
+cC5oPg0KPiA+IC0jaW5jbHVkZSA8bGludXgvc29jL21lZGlhdGVrL2luZnJhY2ZnLmg+DQo+ID4g
+LSNpbmNsdWRlIDxhc20vcHJvY2Vzc29yLmg+DQo+ID4gLQ0KPiA+IC0jZGVmaW5lIE1US19QT0xM
+X0RFTEFZX1VTICAgMTANCj4gPiAtI2RlZmluZSBNVEtfUE9MTF9USU1FT1VUICAgIChqaWZmaWVz
+X3RvX3VzZWNzKEhaKSkNCj4gPiAtDQo+ID4gLSNkZWZpbmUgSU5GUkFfVE9QQVhJX1BST1RFQ1RF
+TiAgICAgICAgIDB4MDIyMA0KPiA+IC0jZGVmaW5lIElORlJBX1RPUEFYSV9QUk9URUNUU1RBMSAg
+ICAgICAweDAyMjgNCj4gPiAtI2RlZmluZSBJTkZSQV9UT1BBWElfUFJPVEVDVEVOX1NFVCAgICAg
+MHgwMjYwDQo+ID4gLSNkZWZpbmUgSU5GUkFfVE9QQVhJX1BST1RFQ1RFTl9DTFIgICAgIDB4MDI2
+NA0KPiA+IC0NCj4gPiAtLyoqDQo+ID4gLSAqIG10a19pbmZyYWNmZ19zZXRfYnVzX3Byb3RlY3Rp
+b24gLSBlbmFibGUgYnVzIHByb3RlY3Rpb24NCj4gPiAtICogQHJlZ21hcDogVGhlIGluZnJhY2Zn
+IHJlZ21hcA0KPiA+IC0gKiBAbWFzazogVGhlIG1hc2sgY29udGFpbmluZyB0aGUgcHJvdGVjdGlv
+biBiaXRzIHRvIGJlIGVuYWJsZWQuDQo+ID4gLSAqIEByZWdfdXBkYXRlOiBUaGUgYm9vbGVhbiBm
+bGFnIGRldGVybWluZXMgdG8gc2V0IHRoZSBwcm90ZWN0aW9uIGJpdHMNCj4gPiAtICogICAgICAg
+ICAgICAgIGJ5IHJlZ21hcF91cGRhdGVfYml0cyB3aXRoIGVuYWJsZSByZWdpc3RlcihQUk9URUNU
+RU4pIG9yDQo+ID4gLSAqICAgICAgICAgICAgICBieSByZWdtYXBfd3JpdGUgd2l0aCBzZXQgcmVn
+aXN0ZXIoUFJPVEVDVEVOX1NFVCkuDQo+ID4gLSAqDQo+ID4gLSAqIFRoaXMgZnVuY3Rpb24gZW5h
+YmxlcyB0aGUgYnVzIHByb3RlY3Rpb24gYml0cyBmb3IgZGlzYWJsZWQgcG93ZXINCj4gPiAtICog
+ZG9tYWlucyBzbyB0aGF0IHRoZSBzeXN0ZW0gZG9lcyBub3QgaGFuZyB3aGVuIHNvbWUgdW5pdCBh
+Y2Nlc3NlcyB0aGUNCj4gPiAtICogYnVzIHdoaWxlIGluIHBvd2VyIGRvd24uDQo+ID4gLSAqLw0K
+PiA+IC1pbnQgbXRrX2luZnJhY2ZnX3NldF9idXNfcHJvdGVjdGlvbihzdHJ1Y3QgcmVnbWFwICpp
+bmZyYWNmZywgdTMyIG1hc2ssDQo+ID4gLSAgICAgICAgICAgICAgIGJvb2wgcmVnX3VwZGF0ZSkN
+Cj4gPiAtew0KPiA+IC0gICAgICAgdTMyIHZhbDsNCj4gPiAtICAgICAgIGludCByZXQ7DQo+ID4g
+LQ0KPiA+IC0gICAgICAgaWYgKHJlZ191cGRhdGUpDQo+ID4gLSAgICAgICAgICAgICAgIHJlZ21h
+cF91cGRhdGVfYml0cyhpbmZyYWNmZywgSU5GUkFfVE9QQVhJX1BST1RFQ1RFTiwgbWFzaywNCj4g
+PiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG1hc2spOw0KPiA+IC0gICAgICAgZWxz
+ZQ0KPiA+IC0gICAgICAgICAgICAgICByZWdtYXBfd3JpdGUoaW5mcmFjZmcsIElORlJBX1RPUEFY
+SV9QUk9URUNURU5fU0VULCBtYXNrKTsNCj4gPiAtDQo+ID4gLSAgICAgICByZXQgPSByZWdtYXBf
+cmVhZF9wb2xsX3RpbWVvdXQoaW5mcmFjZmcsIElORlJBX1RPUEFYSV9QUk9URUNUU1RBMSwNCj4g
+PiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2YWwsICh2YWwgJiBtYXNr
+KSA9PSBtYXNrLA0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIE1U
+S19QT0xMX0RFTEFZX1VTLCBNVEtfUE9MTF9USU1FT1VUKTsNCj4gPiAtDQo+ID4gLSAgICAgICBy
+ZXR1cm4gcmV0Ow0KPiA+IC19DQo+ID4gLQ0KPiA+IC0vKioNCj4gPiAtICogbXRrX2luZnJhY2Zn
+X2NsZWFyX2J1c19wcm90ZWN0aW9uIC0gZGlzYWJsZSBidXMgcHJvdGVjdGlvbg0KPiA+IC0gKiBA
+cmVnbWFwOiBUaGUgaW5mcmFjZmcgcmVnbWFwDQo+ID4gLSAqIEBtYXNrOiBUaGUgbWFzayBjb250
+YWluaW5nIHRoZSBwcm90ZWN0aW9uIGJpdHMgdG8gYmUgZGlzYWJsZWQuDQo+ID4gLSAqIEByZWdf
+dXBkYXRlOiBUaGUgYm9vbGVhbiBmbGFnIGRldGVybWluZXMgdG8gY2xlYXIgdGhlIHByb3RlY3Rp
+b24gYml0cw0KPiA+IC0gKiAgICAgICAgICAgICAgYnkgcmVnbWFwX3VwZGF0ZV9iaXRzIHdpdGgg
+ZW5hYmxlIHJlZ2lzdGVyKFBST1RFQ1RFTikgb3INCj4gPiAtICogICAgICAgICAgICAgIGJ5IHJl
+Z21hcF93cml0ZSB3aXRoIGNsZWFyIHJlZ2lzdGVyKFBST1RFQ1RFTl9DTFIpLg0KPiA+IC0gKg0K
+PiA+IC0gKiBUaGlzIGZ1bmN0aW9uIGRpc2FibGVzIHRoZSBidXMgcHJvdGVjdGlvbiBiaXRzIHBy
+ZXZpb3VzbHkgZW5hYmxlZCB3aXRoDQo+ID4gLSAqIG10a19pbmZyYWNmZ19zZXRfYnVzX3Byb3Rl
+Y3Rpb24uDQo+ID4gLSAqLw0KPiA+IC0NCj4gPiAtaW50IG10a19pbmZyYWNmZ19jbGVhcl9idXNf
+cHJvdGVjdGlvbihzdHJ1Y3QgcmVnbWFwICppbmZyYWNmZywgdTMyIG1hc2ssDQo+ID4gLSAgICAg
+ICAgICAgICAgIGJvb2wgcmVnX3VwZGF0ZSkNCj4gPiAtew0KPiA+IC0gICAgICAgaW50IHJldDsN
+Cj4gPiAtICAgICAgIHUzMiB2YWw7DQo+ID4gLQ0KPiA+IC0gICAgICAgaWYgKHJlZ191cGRhdGUp
+DQo+ID4gLSAgICAgICAgICAgICAgIHJlZ21hcF91cGRhdGVfYml0cyhpbmZyYWNmZywgSU5GUkFf
+VE9QQVhJX1BST1RFQ1RFTiwgbWFzaywgMCk7DQo+ID4gLSAgICAgICBlbHNlDQo+ID4gLSAgICAg
+ICAgICAgICAgIHJlZ21hcF93cml0ZShpbmZyYWNmZywgSU5GUkFfVE9QQVhJX1BST1RFQ1RFTl9D
+TFIsIG1hc2spOw0KPiA+IC0NCj4gPiAtICAgICAgIHJldCA9IHJlZ21hcF9yZWFkX3BvbGxfdGlt
+ZW91dChpbmZyYWNmZywgSU5GUkFfVE9QQVhJX1BST1RFQ1RTVEExLA0KPiA+IC0gICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZhbCwgISh2YWwgJiBtYXNrKSwNCj4gPiAtICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBNVEtfUE9MTF9ERUxBWV9VUywgTVRL
+X1BPTExfVElNRU9VVCk7DQo+ID4gLQ0KPiA+IC0gICAgICAgcmV0dXJuIHJldDsNCj4gPiAtfQ0K
+PiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9pbmZyYWNmZy5oIGIv
+aW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvaW5mcmFjZmcuaA0KPiA+IGRlbGV0ZWQgZmlsZSBt
+b2RlIDEwMDY0NA0KPiA+IGluZGV4IGZkMjVmMDEuLjAwMDAwMDANCj4gPiAtLS0gYS9pbmNsdWRl
+L2xpbnV4L3NvYy9tZWRpYXRlay9pbmZyYWNmZy5oDQo+ID4gKysrIC9kZXYvbnVsbA0KPiA+IEBA
+IC0xLDM5ICswLDAgQEANCj4gPiAtLyogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAg
+Ki8NCj4gPiAtI2lmbmRlZiBfX1NPQ19NRURJQVRFS19JTkZSQUNGR19IDQo+ID4gLSNkZWZpbmUg
+X19TT0NfTUVESUFURUtfSU5GUkFDRkdfSA0KPiA+IC0NCj4gPiAtI2RlZmluZSBNVDgxNzNfVE9Q
+X0FYSV9QUk9UX0VOX01DSV9NMiAgICAgICAgICBCSVQoMCkNCj4gPiAtI2RlZmluZSBNVDgxNzNf
+VE9QX0FYSV9QUk9UX0VOX01NX00wICAgICAgICAgICBCSVQoMSkNCj4gPiAtI2RlZmluZSBNVDgx
+NzNfVE9QX0FYSV9QUk9UX0VOX01NX00xICAgICAgICAgICBCSVQoMikNCj4gPiAtI2RlZmluZSBN
+VDgxNzNfVE9QX0FYSV9QUk9UX0VOX01NQVBCX1MgICAgICAgICBCSVQoNikNCj4gPiAtI2RlZmlu
+ZSBNVDgxNzNfVE9QX0FYSV9QUk9UX0VOX0wyQ19NMiAgICAgICAgICBCSVQoOSkNCj4gPiAtI2Rl
+ZmluZSBNVDgxNzNfVE9QX0FYSV9QUk9UX0VOX0wyU1NfU01JICAgICAgICAgICAgICAgIEJJVCgx
+MSkNCj4gPiAtI2RlZmluZSBNVDgxNzNfVE9QX0FYSV9QUk9UX0VOX0wyU1NfQUREICAgICAgICAg
+ICAgICAgIEJJVCgxMikNCj4gPiAtI2RlZmluZSBNVDgxNzNfVE9QX0FYSV9QUk9UX0VOX0NDSV9N
+MiAgICAgICAgICBCSVQoMTMpDQo+ID4gLSNkZWZpbmUgTVQ4MTczX1RPUF9BWElfUFJPVF9FTl9N
+RkdfUyAgICAgICAgICAgQklUKDE0KQ0KPiA+IC0jZGVmaW5lIE1UODE3M19UT1BfQVhJX1BST1Rf
+RU5fUEVSSV9NMCAgICAgICAgIEJJVCgxNSkNCj4gPiAtI2RlZmluZSBNVDgxNzNfVE9QX0FYSV9Q
+Uk9UX0VOX1BFUklfTTEgICAgICAgICBCSVQoMTYpDQo+ID4gLSNkZWZpbmUgTVQ4MTczX1RPUF9B
+WElfUFJPVF9FTl9ERUJVR1NZUyAgICAgICAgICAgICAgICBCSVQoMTcpDQo+ID4gLSNkZWZpbmUg
+TVQ4MTczX1RPUF9BWElfUFJPVF9FTl9DUV9ETUEgICAgICAgICAgQklUKDE4KQ0KPiA+IC0jZGVm
+aW5lIE1UODE3M19UT1BfQVhJX1BST1RfRU5fR0NQVSAgICAgICAgICAgIEJJVCgxOSkNCj4gPiAt
+I2RlZmluZSBNVDgxNzNfVE9QX0FYSV9QUk9UX0VOX0lPTU1VICAgICAgICAgICBCSVQoMjApDQo+
+ID4gLSNkZWZpbmUgTVQ4MTczX1RPUF9BWElfUFJPVF9FTl9NRkdfTTAgICAgICAgICAgQklUKDIx
+KQ0KPiA+IC0jZGVmaW5lIE1UODE3M19UT1BfQVhJX1BST1RfRU5fTUZHX00xICAgICAgICAgIEJJ
+VCgyMikNCj4gPiAtI2RlZmluZSBNVDgxNzNfVE9QX0FYSV9QUk9UX0VOX01GR19TTk9PUF9PVVQg
+ICBCSVQoMjMpDQo+ID4gLQ0KPiA+IC0jZGVmaW5lIE1UMjcwMV9UT1BfQVhJX1BST1RfRU5fTU1f
+TTAgICAgICAgICAgIEJJVCgxKQ0KPiA+IC0jZGVmaW5lIE1UMjcwMV9UT1BfQVhJX1BST1RfRU5f
+Q09OTl9NICAgICAgICAgIEJJVCgyKQ0KPiA+IC0jZGVmaW5lIE1UMjcwMV9UT1BfQVhJX1BST1Rf
+RU5fQ09OTl9TICAgICAgICAgIEJJVCg4KQ0KPiA+IC0NCj4gPiAtI2RlZmluZSBNVDc2MjJfVE9Q
+X0FYSV9QUk9UX0VOX0VUSFNZUyAgICAgICAgICAoQklUKDMpIHwgQklUKDE3KSkNCj4gPiAtI2Rl
+ZmluZSBNVDc2MjJfVE9QX0FYSV9QUk9UX0VOX0hJRjAgICAgICAgICAgICAoQklUKDI0KSB8IEJJ
+VCgyNSkpDQo+ID4gLSNkZWZpbmUgTVQ3NjIyX1RPUF9BWElfUFJPVF9FTl9ISUYxICAgICAgICAg
+ICAgKEJJVCgyNikgfCBCSVQoMjcpIHwgXA0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICBCSVQoMjgpKQ0KPiA+IC0jZGVmaW5lIE1UNzYyMl9UT1Bf
+QVhJX1BST1RfRU5fV0IgICAgICAgICAgICAgIChCSVQoMikgfCBCSVQoNikgfCBcDQo+ID4gLSAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEJJVCg3KSB8IEJJ
+VCg4KSkNCj4gDQo+IEl0IHdhcyByZWFsbHkgbmljZSB0byBoYXZlIHRoZXNlIGFsbCBkZWZpbmVk
+LCBjYW4gd2UgbW92ZSB0aG9zZSB0bw0KPiBzY3BzeXMtZXh0Lmg/IChhbmQgZG8gdGhlIHNhbWUg
+Zm9yIE1UODE4Mz8pDQo+IA0KDQpTdXJlLiBBbmQgSSdsbCBkbyB0aGUgc2FtZSBmb3IgTVQ4MTgz
+IGluIG5leHQgdmVyc2lvbi4NCg0KPiA+IC1pbnQgbXRrX2luZnJhY2ZnX3NldF9idXNfcHJvdGVj
+dGlvbihzdHJ1Y3QgcmVnbWFwICppbmZyYWNmZywgdTMyIG1hc2ssDQo+ID4gLSAgICAgICAgICAg
+ICAgIGJvb2wgcmVnX3VwZGF0ZSk7DQo+ID4gLWludCBtdGtfaW5mcmFjZmdfY2xlYXJfYnVzX3By
+b3RlY3Rpb24oc3RydWN0IHJlZ21hcCAqaW5mcmFjZmcsIHUzMiBtYXNrLA0KPiA+IC0gICAgICAg
+ICAgICAgICBib29sIHJlZ191cGRhdGUpOw0KPiA+IC0jZW5kaWYgLyogX19TT0NfTUVESUFURUtf
+SU5GUkFDRkdfSCAqLw0KPiA+IC0tDQo+ID4gMS44LjEuMS5kaXJ0eQ0KDQo=
 
