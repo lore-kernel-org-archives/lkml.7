@@ -2,88 +2,119 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A68C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 437BAC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5496620716
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AF8520716
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:47:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gfWcV0ui"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="mtjPX2bn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbfLTQqg (ORCPT
+        id S1727420AbfLTQr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 11:46:36 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:54284 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727181AbfLTQqg (ORCPT
+        Fri, 20 Dec 2019 11:47:57 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:42394 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727181AbfLTQr5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 11:46:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=wBzPcwiacPh3r6JPPuX4OW3YmJm5b2HBjhLdhW1rrhw=; b=gfWcV0uibA4PFU/4rEbLjxkz5
-        MG8MgU55g11y3RIPF3OV3lH6YW6USCsaChSawFavqS03tMJMxbhzQNlUQ4LgBM9czPB2o1NXRqGzJ
-        xsH8yvHWtPIOTxC6G6W+Jmdt6A9gU8VEl9ZXqU2Zk7tOSIFqT2E6eZPwtwbKfL99uKVOivoX5YxWC
-        uWdNcE7sHIvr6yJ50gf/nC2wpbqxAQtaE2GWRlpCZVVwm5d1HL4yjArHFf0xmMzdldrHMNNn3Qjj1
-        OlTvms47JyJWNXCalo/YyzycxUlGS6VJ7DNLoSG6TsfGfZYvdXWJ/lThq4jLxjN3auQzvcE9ac5kf
-        dbwLX4f3w==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iiLQ8-0001ik-7Q; Fri, 20 Dec 2019 16:46:32 +0000
-Date:   Fri, 20 Dec 2019 08:46:32 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Chris Down <chris@chrisdown.name>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com,
-        Hugh Dickins <hughd@google.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        "zhengbin (A)" <zhengbin13@huawei.com>
-Subject: Re: [PATCH] fs: inode: Reduce volatile inode wraparound risk when
- ino_t is 64 bit
-Message-ID: <20191220164632.GA26902@bombadil.infradead.org>
-References: <20191220024936.GA380394@chrisdown.name>
- <CAOQ4uxjqSWcrA1reiyit9DRt+aq2tXBxLdPE31RrYw1yr=4hjg@mail.gmail.com>
- <20191220121615.GB388018@chrisdown.name>
- <CAOQ4uxgo_kAttnB4N1+om5gScYSDn3FXAr+_GUiqNy_79iiLXQ@mail.gmail.com>
+        Fri, 20 Dec 2019 11:47:57 -0500
+Received: from [10.137.112.111] (unknown [131.107.147.111])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 1B2412010C1D;
+        Fri, 20 Dec 2019 08:47:56 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1B2412010C1D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1576860476;
+        bh=NIUGZ+fuf2FDsvapAJaWJ5cOfekjGTTUeUXSm26IsMw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=mtjPX2bnsRQdsMZejTUMArtWQtbrzKQSj3yviq04WLFkhlLiFjJ6iBPCoSICOedm/
+         POUBGuQZqYlrRqgttnRhWGUVb/KRAzqx6fV9yG+j+UrfyWE04xQbz6AfyGUw3KLKB+
+         3MpjdcsPYnkSh7Uy8LtOW0gMH4qSQZ7xX5lH+i4I=
+Subject: Re: [PATCH] ima: add the ability to query ima for the hash of a given
+ file.
+To:     Florent Revest <revest@chromium.org>,
+        linux-integrity@vger.kernel.org
+Cc:     kpsingh@chromium.org, mjg59@google.com, zohar@linux.ibm.com,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Florent Revest <revest@google.com>
+References: <20191220163136.25010-1-revest@chromium.org>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <8f4d9c4e-735d-8ba9-b84a-4f341030e0cf@linux.microsoft.com>
+Date:   Fri, 20 Dec 2019 08:48:20 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxgo_kAttnB4N1+om5gScYSDn3FXAr+_GUiqNy_79iiLXQ@mail.gmail.com>
+In-Reply-To: <20191220163136.25010-1-revest@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 03:41:11PM +0200, Amir Goldstein wrote:
-> Suggestion:
-> 1. Extend the kmem_cache API to let the ctor() know if it is
-> initializing an object
->     for the first time (new page) or recycling an object.
+On 12/20/2019 8:31 AM, Florent Revest wrote:
 
-Uh, what?  The ctor is _only_ called when new pages are allocated.
-Part of the contract with the slab user is that objects are returned to
-the slab in an initialised state.
+>   
+> +/**
+> + * ima_file_hash - return the stored measurement if a file has been hashed.
+> + * @file: pointer to the file
+> + * @buf: buffer in which to store the hash
+> + * @buf_size: length of the buffer
+> + *
+> + * On success, output the hash into buf and return the hash algorithm (as
+> + * defined in the enum hash_algo).
 
-> 2. Let shmem_init_inode retain the value of i_ino of recycled shmem_inode_info
->     objects
-> 3. i_ino is initialized with get_next_ino() only in case it it zero
-> 
-> Alternatively to 1., if simpler to implement and acceptable by slab developers:
-> 1.b. remove the assertion from cache_grow_begin()/new_slab_objects():
->        WARN_ON_ONCE(s->ctor && (flags & __GFP_ZERO));
->        and pass __GFP_ZERO in shmem_alloc_inode()
+> + * If the hash is larger than buf, then only size bytes will be copied. It
+> + * generally just makes sense to pass a buffer capable of holding the largest
+> + * possible hash: IMA_MAX_DIGEST_SIZE
 
-WTF would that _mean_?  I want this object to contain zeroes and whatever
-the constructor sets it to.  WHich one wins?
+If the given buffer is smaller than the hash length, wouldn't it be 
+better to return the required size and a status indicating the buffer is 
+not enough. The caller can then call back with the required buffer.
+
+If the hash is truncated the caller may not know if the hash is partial 
+or not.
+
+> + *
+> + * If IMA is disabled or if no measurement is available, return -EOPNOTSUPP.
+> + * If the parameters are incorrect, return -EINVAL.
+> + */
+> +int ima_file_hash(struct file *file, char *buf, size_t buf_size)
+> +{
+> +	struct inode *inode;
+> +	struct integrity_iint_cache *iint;
+> +	size_t copied_size;
+> +
+> +	if (!file || !buf)
+> +		return -EINVAL;
+> +
+> +	if (!ima_policy_flag)
+> +		return -EOPNOTSUPP;
+> +
+> +	inode = file_inode(file);
+> +	iint = integrity_iint_find(inode);
+> +	if (!iint)
+> +		return -EOPNOTSUPP;
+> +
+> +	mutex_lock(&iint->mutex);
+> +	copied_size = min_t(size_t, iint->ima_hash->length, buf_size);
+> +	memcpy(buf, iint->ima_hash->digest, copied_size);
+> +	mutex_unlock(&iint->mutex);
+> +
+> +	return iint->ima_hash->algo;
+
+Should the hash algorithm be copied from iinit->ima_hash to a local 
+variable while holding the mutex and that one returned?
+
+I assume iinit->mutex  is taken to ensure iinit->ima_hash is not removed 
+while this function is accessing it.
+
+thanks,
+  -lakshmi
 
