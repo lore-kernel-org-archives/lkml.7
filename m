@@ -2,58 +2,201 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB48CC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E0AC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5F9B206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FDB9206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:36:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WAlArbUZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbfLTBee (ORCPT
+        id S1727129AbfLTBgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 20:34:34 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:45020 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727020AbfLTBed (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 20:34:33 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 133921540B9A3;
-        Thu, 19 Dec 2019 17:34:33 -0800 (PST)
-Date:   Thu, 19 Dec 2019 17:34:32 -0800 (PST)
-Message-Id: <20191219.173432.1907178642147983703.davem@davemloft.net>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, tglx@linutronix.de, elfring@users.sourceforge.net,
-        gregkh@linuxfoundation.org, kstewart@linuxfoundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] hdlcdrv: replace unnecessary assertion in
- hdlcdrv_register
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191217210620.29775-1-pakki001@umn.edu>
-References: <20191217210620.29775-1-pakki001@umn.edu>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 19 Dec 2019 17:34:33 -0800 (PST)
+        Thu, 19 Dec 2019 20:36:20 -0500
+Received: from ozlabs.org ([203.11.71.1]:41217 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727020AbfLTBgU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 20:36:20 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47fBCz3rWGz9sPT;
+        Fri, 20 Dec 2019 12:36:15 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1576805776;
+        bh=HbJSgAPpeVSdyHoi1ilZt4nel092vLCUO02ZJNeCLTQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WAlArbUZRjFeIDoB5OGkp4Q/pyUREfJKylBegTakkkPaZPoOGQA8x40j0mMMo1RoX
+         W3YK1Y665Fs10b2zSV2Ed9j8mS44EWzwUeiMBgzzmakkljDaXopqjKv00AOB2X117c
+         EV/UFeXoMO7UrFImIiukp0zg9A3y/sUfAdaTf9E4cpQYfIaHY6Sf/LE/D6jAw0YOc1
+         kRvI2Dk9tQ76eQPkOt9hREhM5ImKi2YCRHan4E3icdklyOOaomdzyY7u0L9cTT6CkW
+         EJEeN07A9KVDJW0We6S7y7tw4hfLvrQpoRCXc1gh5vjcUVSlRlU4E5d1HROIWuUdCV
+         ZhGbVvxC4fmNw==
+Date:   Fri, 20 Dec 2019 12:36:14 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>, Al Viro <viro@ZenIV.linux.org.uk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Aleksa Sarai <cyphar@cyphar.com>
+Subject: linux-next: manual merge of the block tree with the vfs tree
+Message-ID: <20191220123614.5f11d2e3@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/838RX.1z8k=IWCSx+a4itv.";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
-Date: Tue, 17 Dec 2019 15:06:19 -0600
+--Sig_/838RX.1z8k=IWCSx+a4itv.
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> In hdlcdrv_register, failure to register the driver causes a crash.
-> The three callers of hdlcdrv_register all pass valid pointers and
-> do not fail. The patch eliminates the unnecessary BUG_ON assertion.
-> 
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Hi all,
 
-Applied to net-next.
+Today's linux-next merge of the block tree got a conflict in:
+
+  fs/open.c
+
+between commit:
+
+  0a51692d49ec ("open: introduce openat2(2) syscall")
+
+from the vfs tree and commit:
+
+  252270311374 ("fs: make build_open_flags() available internally")
+
+from the block tree.
+
+I fixed it up (see at end, plus the merge fix patch below) and can
+carry the fix as necessary. This is now fixed as far as linux-next is
+concerned, but any non trivial conflicts should be mentioned to your
+upstream maintainer when your tree is submitted for merging.  You may
+also want to consider cooperating with the maintainer of the
+conflicting tree to minimise any particularly complex conflicts.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Fri, 20 Dec 2019 11:50:51 +1100
+Subject: [PATCH] io_uring: fix up for "open: introduce openat2(2) syscall"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ fs/internal.h | 3 ++-
+ fs/io_uring.c | 6 ++++--
+ 2 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/fs/internal.h b/fs/internal.h
+index 166134be439f..dabf747c14fd 100644
+--- a/fs/internal.h
++++ b/fs/internal.h
+@@ -124,7 +124,8 @@ extern struct file *do_filp_open(int dfd, struct filena=
+me *pathname,
+ 		const struct open_flags *op);
+ extern struct file *do_file_open_root(struct dentry *, struct vfsmount *,
+ 		const char *, const struct open_flags *);
+-extern int build_open_flags(int flags, umode_t mode, struct open_flags *op=
+);
++extern struct open_how build_open_how(int flags, umode_t mode);
++extern int build_open_flags(const struct open_how *how, struct open_flags =
+*op);
+=20
+ long do_sys_ftruncate(unsigned int fd, loff_t length, int small);
+ long do_faccessat(int dfd, const char __user *filename, int mode);
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 26edb980df02..c756b8fc44c6 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2337,19 +2337,21 @@ static int io_openat(struct io_kiocb *req, struct i=
+o_kiocb **nxt,
+ 		     bool force_nonblock)
+ {
+ 	struct open_flags op;
++	struct open_how how;
+ 	struct file *file;
+ 	int ret;
+=20
+ 	ret =3D io_openat_prep(req);
+ 	if (ret)
+ 		goto err;
+-	ret =3D build_open_flags(req->open.flags, req->open.mode, &op);
++	how =3D build_open_how(req->open.flags, req->open.mode);
++	ret =3D build_open_flags(&how, &op);
+ 	if (ret)
+ 		goto err;
+ 	if (force_nonblock)
+ 		op.lookup_flags |=3D LOOKUP_NONBLOCK;
+=20
+-	ret =3D get_unused_fd_flags(req->open.flags);
++	ret =3D get_unused_fd_flags(how.flags);
+ 	if (ret < 0)
+ 		goto err;
+=20
+--=20
+2.24.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc fs/open.c
+index 50a46501bcc9,24cb5d58bbda..000000000000
+--- a/fs/open.c
++++ b/fs/open.c
+@@@ -955,29 -955,8 +955,29 @@@ struct file *open_with_fake_path(const=20
+  }
+  EXPORT_SYMBOL(open_with_fake_path);
+ =20
+ -inline int build_open_flags(int flags, umode_t mode, struct open_flags *o=
+p)
+ +#define WILL_CREATE(flags)	(flags & (O_CREAT | __O_TMPFILE))
+ +#define O_PATH_FLAGS		(O_DIRECTORY | O_NOFOLLOW | O_PATH | O_CLOEXEC)
+ +
+- static inline struct open_how build_open_how(int flags, umode_t mode)
+++inline struct open_how build_open_how(int flags, umode_t mode)
+ +{
+ +	struct open_how how =3D {
+ +		.flags =3D flags & VALID_OPEN_FLAGS,
+ +		.mode =3D mode & S_IALLUGO,
+ +	};
+ +
+ +	/* O_PATH beats everything else. */
+ +	if (how.flags & O_PATH)
+ +		how.flags &=3D O_PATH_FLAGS;
+ +	/* Modes should only be set for create-like flags. */
+ +	if (!WILL_CREATE(how.flags))
+ +		how.mode =3D 0;
+ +	return how;
+ +}
+ +
+- static inline int build_open_flags(const struct open_how *how,
+++inline int build_open_flags(const struct open_how *how,
+ +				   struct open_flags *op)
+  {
+ +	int flags =3D how->flags;
+  	int lookup_flags =3D 0;
+  	int acc_mode =3D ACC_MODE(flags);
+ =20
+
+--Sig_/838RX.1z8k=IWCSx+a4itv.
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl38JY4ACgkQAVBC80lX
+0GxEoQgAorTaH+zAjQtnCGGhhrkRrOLs2vcx2ZQHjVFu3HyN9rwnI2AxFxs89coM
+RgBhv7FqJObmGu4S1HYhG1q3V8Lf7HeaxVPyiQ6clq1kSs3dVP1y0au9HRRVtlU1
+wEg4Vx8z40V5R9W8kG/zlGBUSBoaO+9XM37ZhlPecaXQaPVUAw+x+4+ODgBxBLfg
+XYslhaMkEX5QAO4AtKqhCtDsTf0UuWT+yrvA87MuH+0arFzJnOSooZ6zGZNLRZZz
+rQ1Sq+1NT6SbueXWbfSro9TOx15nryz1Ij3KO7iWsIx4zYmhdWNm8BXXOfHErOlz
+0bWWVskOqQu+o+4TvyO+y5EwBQaHIQ==
+=m5tl
+-----END PGP SIGNATURE-----
+
+--Sig_/838RX.1z8k=IWCSx+a4itv.--
