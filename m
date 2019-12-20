@@ -2,121 +2,213 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 970F1C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9ABC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BD6D2467E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C19032467E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:43:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hDmKdmCE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r5LZA7AO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbfLTBmg (ORCPT
+        id S1727221AbfLTBnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 20:42:36 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:35640 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727020AbfLTBmf (ORCPT
+        Thu, 19 Dec 2019 20:43:08 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35661 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727020AbfLTBnH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 20:42:35 -0500
-Received: by mail-il1-f195.google.com with SMTP id g12so6588321ild.2;
-        Thu, 19 Dec 2019 17:42:35 -0800 (PST)
+        Thu, 19 Dec 2019 20:43:07 -0500
+Received: by mail-qk1-f194.google.com with SMTP id z76so6720161qka.2;
+        Thu, 19 Dec 2019 17:43:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=sfr0DkASOT0MoT13/9e3piyeEKgEAbIuAROVb11tB/8=;
-        b=hDmKdmCEoRGDXnjj93XNfw6FoH8rtTZnKOYluWiw5na7UgC74B6XdOt5X1HcRAZnun
-         odMTXStKNxHolBzNSxflFXZPttY+WPy9NuB7kXkL7OP1k/ur6X6NpKB/iKDkiptIEdRS
-         B3pnFp6TsBm89uV38uszZHKpaaGpRnoIf1L685FfOY/qaHRt13u7hKgbWQ6mQ5cz8gRs
-         0M5S7JWjgFvHlPSo1Y0gpvuxkzFLPwBOzs/bm3M+mrbCvk1+QB6786aHyt+b7f8gEJPh
-         EDWgjplRuJyYyf5oXtJ/se+QjE0zNlc4rDEb6iBCEVweQKlA1pEgVjeCj4jya3lq5jJD
-         SMRQ==
+        bh=55+iNip2URhocySz64VQuqG36OguCpiyed96RcKt5ho=;
+        b=r5LZA7AOLRKLkvbuBJihNIk64F96SbOWmmlqtNBgxoGmS3rjh4kpO3tV1NPTAybWYV
+         I+lW49a7cbqqTIoyJOJPlr5sQvuYtX1g2PvwtwYp/aetE4ZkW/snhcf+pwSH3hsHLG4c
+         NBbFBCUW5fCBSeAoQtyRbWYYtNRMgrg6dTOaqeYH/1skmVMy3IUReZCvxWg5pjxVp8gD
+         qmN5X08nul5Y89XDEwJtUpM6YPask3PfojFKbZp0lbHjL5FIlsTdvJqZdo1z9njnE6E7
+         NIoZct5y/C8cin7LUEHDRuEcEo+Ith4lBjRXpdZVkjM6zSc7h73vQ1c5eNT3eJQmi++7
+         h5/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=sfr0DkASOT0MoT13/9e3piyeEKgEAbIuAROVb11tB/8=;
-        b=XObANOzUVpSaiYEBBsfxBQiDN/kUHpJc5XVUhRzoRJNDEHhEOWkTy7vv4L+xkcCh1o
-         pyQvZq3lW7DHxlFbJ/r7fhJCr4IUzdlFSVK3MVXlwWUduKGwq6WJmGr2iF/M6SPk8DGH
-         2bqg2zbP2rUznfViy64vL5aHJ2xSF3MDKIHfHAuPt2nWwo2PYppXoprNDuBxP1G8/2bK
-         u3jDHH0GjF4TkJuR9tEQC5esIVJy78rL6IAwpp6SkXrRnUTOMs3fd3bO4Gdd7xwWhEN4
-         XHVzWBtDIUY07fwZF8beSxHAhFzKdViIofQ00OFEJtqP+2ZfP28s1CchaaNTLbM8HQrh
-         D9YQ==
-X-Gm-Message-State: APjAAAUKgCkHf1qQjaQkCrksy26EcroHXBS25Lvc5VzLcE8uTvoZcpC5
-        oBK4CdrT7CMk4ec1s/X6Hu9zNwetuYYgALJUPWID9A==
-X-Google-Smtp-Source: APXvYqwW12fGRUInSbhFGQiF8M5rMUYdDDkl/mkcbRhVNYfiGDJz2k/OjCft5BgxUUEN5KqBimqQgZwbaY/hrYQzo6Y=
-X-Received: by 2002:a92:4883:: with SMTP id j3mr9930949ilg.272.1576806154739;
- Thu, 19 Dec 2019 17:42:34 -0800 (PST)
+        bh=55+iNip2URhocySz64VQuqG36OguCpiyed96RcKt5ho=;
+        b=Vb6bwwTPTDEGf/x8WwxbgSs7lIL1CxGunCPRpKs5KwP6n3Hc4KQ8hEnXTkusYmGl66
+         Wq12Zm26b9hmYqZx9AFT37q9CdcuC6WRAA9gz/8YSCV49cAmyJiUL0WTJD47sgYyaLGJ
+         qtER44d5Ee2RQuV8DEUjVWqDkS3O08xSykcd9Qzd1eKIa4mL4tUpTLawhMCwoAeWlLMf
+         f+mkBpM0+HBqt3QKB1ccDERCLvmYlO/482NO0tm5bUp3719RFFo9xhW53dWE9pgB/gNl
+         l+IvL+77/qHI8R5OZtPOtaHCWmMUv+CNwq5byL6EdNB4ukc8kvldQ4OpwHPPjuCyXyjK
+         P4pQ==
+X-Gm-Message-State: APjAAAVh6JDj4sN6dkiw0cpPgSApaMsS01xSnz/tNHnSVExZJZR85ivB
+        vX13C32nY6NZNcy39QvfhiDGNVtRxQ3g4JHgXUE=
+X-Google-Smtp-Source: APXvYqy+UM7zTG8cL8j5MjDRUf2oC8QFIUOP8pOY8xEEdVMyeAzYPcEHG528pUjqLnDMv+TscfGZirIgkBQoVy6TIsQ=
+X-Received: by 2002:a05:620a:1298:: with SMTP id w24mr10984911qki.170.1576806186431;
+ Thu, 19 Dec 2019 17:43:06 -0800 (PST)
 MIME-Version: 1.0
-References: <20191218030451.40994-1-natechancellor@gmail.com>
-In-Reply-To: <20191218030451.40994-1-natechancellor@gmail.com>
-From:   Steve French <smfrench@gmail.com>
-Date:   Thu, 19 Dec 2019 19:42:23 -0600
-Message-ID: <CAH2r5mtr=d-LYD_EQ_OQVX5s8QziHvAYNmRnwMpVjeb4JiHMYw@mail.gmail.com>
-Subject: Re: [PATCH] cifs: Adjust indentation in smb2_open_file
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
+References: <8d5358a67746b2aff5f6995cabd11d0d7c9e579e.1575978484.git.baolin.wang7@gmail.com>
+ <20191219201248.GA5109@bogus>
+In-Reply-To: <20191219201248.GA5109@bogus>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Fri, 20 Dec 2019 09:42:55 +0800
+Message-ID: <CADBw62rf6=PPVw5uooKW2xdsNY4VuWTDus8e1sbRiC4yCBNUFQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: thermal: sprd: Add the Spreadtrum
+ thermal documentation
+To:     Rob Herring <robh@kernel.org>
+Cc:     rui.zhang@intel.com, edubezval@gmail.com,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        amit.kucheria@verdurent.com, mark.rutland@arm.com,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linaro.org>, freeman.liu@unisoc.com,
+        Chunyan Zhang <zhang.lyra@gmail.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-merged into cifs-2.6.git for-next
+Hi Rob,
 
-On Tue, Dec 17, 2019 at 9:04 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
+On Fri, Dec 20, 2019 at 4:12 AM Rob Herring <robh@kernel.org> wrote:
 >
-> Clang warns:
+> On Tue, Dec 10, 2019 at 08:07:17PM +0800, Baolin Wang wrote:
+> > From: Baolin Wang <baolin.wang@unisoc.com>
+> >
+> > Add the Spreadtrum thermal documentation.
+> >
+> > Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
+> > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> > ---
+> > Changes from v1:
+> >  - Change to yaml format.
+> > ---
+> >  .../devicetree/bindings/thermal/sprd-thermal.yaml  |   97 ++++++++++++++++++++
+> >  1 file changed, 97 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml b/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
+> > new file mode 100644
+> > index 0000000..92d208a
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
+> > @@ -0,0 +1,97 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/thermal/sprd-thermal.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Spreadtrum thermal sensor controller bindings
+> > +
+> > +maintainers:
+> > +  - Orson Zhai <orsonzhai@gmail.com>
+> > +  - Baolin Wang <baolin.wang7@gmail.com>
+> > +  - Chunyan Zhang <zhang.lyra@gmail.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: sprd,ums512-thermal
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: enable
+> > +
+> > +  nvmem-cells:
+> > +    maxItems: 2
+> > +    description:
+> > +      Reference to nvmem nodes for the calibration data.
+> > +
+> > +  nvmem-cells-names:
+> > +    maxItems: 2
+> > +    items:
+> > +      - const: thm_sign_cal
+> > +      - const: thm_ratio_cal
+> > +
+> > +  "#thermal-sensor-cells":
+> > +    const: 1
+> > +
+> > +  child-node:
 >
-> ../fs/cifs/smb2file.c:70:3: warning: misleading indentation; statement
-> is not part of the previous 'if' [-Wmisleading-indentation]
->          if (oparms->tcon->use_resilient) {
->          ^
-> ../fs/cifs/smb2file.c:66:2: note: previous statement is here
->         if (rc)
->         ^
-> 1 warning generated.
->
-> This warning occurs because there is a space after the tab on this line.
-> Remove it so that the indentation is consistent with the Linux kernel
-> coding style and clang no longer warns.
->
-> Fixes: 592fafe644bf ("Add resilienthandles mount parm")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/826
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->  fs/cifs/smb2file.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/cifs/smb2file.c b/fs/cifs/smb2file.c
-> index 8b0b512c5792..afe1f03aabe3 100644
-> --- a/fs/cifs/smb2file.c
-> +++ b/fs/cifs/smb2file.c
-> @@ -67,7 +67,7 @@ smb2_open_file(const unsigned int xid, struct cifs_open_parms *oparms,
->                 goto out;
->
->
-> -        if (oparms->tcon->use_resilient) {
-> +       if (oparms->tcon->use_resilient) {
->                 /* default timeout is 0, servers pick default (120 seconds) */
->                 nr_ioctl_req.Timeout =
->                         cpu_to_le32(oparms->tcon->handle_timeout);
-> --
-> 2.24.1
->
+> You need actual child node names. It can be a pattern with
+> patternProperties.
 
+Ah, okay, I misunderstood this before.
 
--- 
-Thanks,
+>
+> Make sure 'make dt_binding_check' passes.
 
-Steve
+Sure.
+
+>
+> > +    description: Represent one thermal sensor.
+> > +
+> > +    properties:
+> > +      reg:
+> > +        description: Specify the sensor id.
+> > +        maxItems: 1
+> > +
+> > +      nvmem-cells:
+> > +        maxItems: 1
+> > +        description:
+> > +          Reference to an nvmem node for the calibration data.
+> > +
+> > +      nvmem-cells-names:
+> > +        maxItems: 1
+> > +        items:
+> > +          - const: sen_delta_cal
+>
+> Can be simplified to
+>
+> nvmem-cells-names:
+>   const: sen_delta_cal
+
+Okay.
+
+>
+> > +
+> > +    required:
+> > +      - reg
+> > +      - nvmem-cells
+> > +      - nvmem-cells-names
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - clocks
+> > +  - clock-names
+> > +  - nvmem-cells
+> > +  - nvmem-cells-names
+> > +  - "#thermal-sensor-cells"
+> > +
+> > +examples:
+> > +  - |
+> > +        ap_thm0: thermal@32200000 {
+> > +                compatible = "sprd,ums512-thermal";
+> > +                reg = <0 0x32200000 0 0x10000>;
+> > +                clock-names = "enable";
+> > +                clocks = <&aonapb_gate 32>;
+> > +                #thermal-sensor-cells = <1>;
+> > +                nvmem-cells = <&thm0_sign>, <&thm0_ratio>;
+> > +                nvmem-cell-names = "thm_sign_cal", "thm_ratio_cal";
+> > +
+> > +                prometheus0-sensor@0 {
+> > +                        reg = <0>;
+>
+> This should fail to build. You need #size-cells and #address-cells in
+> the parent.
+
+Yes, will fix in next version. Thanks for your comments.
