@@ -2,247 +2,238 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD565C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BE9C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A93B220866
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:10:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576883444;
-	bh=wR5may7mAUmZ/CfDdApD8FEoqLFXXveiSgTP3bUJqSM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sDbgLfZ75UXdG+2vWJ8bO7h7HopulU4BMJp43zJEFvSkFrxH1ZbPM6m4adpC0aDbV
-	 HUGZQ2IrzMztp8MNcQoKsIlWem+Xm34h42TWRcjg3qFKlofX4w0eU33ON2dUFqSdxw
-	 q0sOpbPi6LoPjEw0rh0ii7INyRBA2GnEC2frLBAI=
+	by mail.kernel.org (Postfix) with ESMTP id 000D320866
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:14:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BbpbjMRA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbfLTXKn (ORCPT
+        id S1726741AbfLTXOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 18:10:43 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45691 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbfLTXKn (ORCPT
+        Fri, 20 Dec 2019 18:14:12 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9006 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726470AbfLTXOL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 18:10:43 -0500
-Received: by mail-io1-f68.google.com with SMTP id i11so10985994ioi.12;
-        Fri, 20 Dec 2019 15:10:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OIn6PrxteiiCCeumPwNHhx+bzoiO5dkpRtAE3G60zXE=;
-        b=GvDFrEcjEUbkQgOH9NP/Cl/JRzkR0Vjpaz4/6BWmy+wcFRh3D3Q6Fk6+d/wSIpDBjO
-         5UA7WW7mclAWJVTOSlo5o5fP7yvPYCD/SVCib1lcRNpFTNNSKLQclykCNebUZZCsPXXJ
-         GriLZNFbttIkv0IsffRDCghGuVv8aPp6bkhI5ho2rDg569tsBWFPiD80ELbM7vvf5qLV
-         TjPlJcRHDBXRpuFO+4arevvOJnNWGfvKSOr99nc9JxYEZubjKlCeWlF01f7SS88+GQ9G
-         9aNVX9Lrxb7PcTi7Kx98YgX5JaDHWvVtSxqxAZSNlJBSpZLMgLzQ4DwI60nwLHpF1QZN
-         Ve1A==
-X-Gm-Message-State: APjAAAVnTj0lmjwSo1Igli+3XQ8+9hwARqVGFwWi+a8V1dTZj08Abvna
-        zqtLmDXX6XYR5vupxXWuAg==
-X-Google-Smtp-Source: APXvYqzCnCrDwqSr2I9ZY+upYlvbICf4o4U9kOYjx5cXQ5142+g7eav5whXMKaItjrPG0hOLydb1Cg==
-X-Received: by 2002:a05:6602:2209:: with SMTP id n9mr10934138ion.62.1576883442554;
-        Fri, 20 Dec 2019 15:10:42 -0800 (PST)
-Received: from localhost ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id m27sm5505377ilb.53.2019.12.20.15.10.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 15:10:41 -0800 (PST)
-Date:   Fri, 20 Dec 2019 16:10:40 -0700
-From:   Rob Herring <robh@kernel.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Andrey Pronin <apronin@chromium.org>
-Subject: Re: [PATCH] dt-bindings: tpm: Convert cr50 binding to YAML
-Message-ID: <20191220231040.GA11384@bogus>
-References: <20191217005424.226858-1-swboyd@chromium.org>
- <CAD=FV=UQAgd2R=ykTCnBZuOvFFKoWu4o-3Rq=GEdrc1KKSi9cQ@mail.gmail.com>
+        Fri, 20 Dec 2019 18:14:11 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dfd55980001>; Fri, 20 Dec 2019 15:13:29 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 20 Dec 2019 15:14:00 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 20 Dec 2019 15:14:00 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Dec
+ 2019 23:13:58 +0000
+Subject: Re: [PATCH v11 00/25] mm/gup: track dma-pinned pages: FOLL_PIN
+To:     Leon Romanovsky <leon@kernel.org>
+CC:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Maor Gottlieb <maorg@mellanox.com>
+References: <20191216222537.491123-1-jhubbard@nvidia.com>
+ <20191219132607.GA410823@unreal>
+ <a4849322-8e17-119e-a664-80d9f95d850b@nvidia.com>
+ <20191219210743.GN17227@ziepe.ca>
+ <f10b2a18-a109-d87d-f156-2e5941cbf4a0@nvidia.com>
+ <20191220184821.GB10944@unreal>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <b70ac328-2dc0-efe3-05c2-3e040b662256@nvidia.com>
+Date:   Fri, 20 Dec 2019 15:13:57 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=UQAgd2R=ykTCnBZuOvFFKoWu4o-3Rq=GEdrc1KKSi9cQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191220184821.GB10944@unreal>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1576883609; bh=YyPKn1pTUo9maui0Cl8wPUC9pCaG4pozfEeSM/q2Xuw=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=BbpbjMRADbiieG0wZwg7/MNcvb0htkXoIVaUqVfL2cVFSq6P/VSfqRlwCWpnneJfD
+         xftzXoBcLiTWuqMXsQ7t6AWCT71WLO1xkGZrhrOn0tcyM5yAfm54j70C7fBwcgnofn
+         b/9H8aCfEVq0LawCERbdcQV3VCGhVN60vVxhAFwFbbDtIhnnLa+AeJbbNjJrpU3Dje
+         2yRq6wb9M/4s8MWJ9EJb7rqgBCMp3VCFwcIApBLsdFacXnYn6jAEGhJxMH7ZmKJPOr
+         2JhGFatda38gjZx3YL2suxRK7cjyk0lHKZiEYew9WUnhSKJKmAtAm3lHA3ArKec7HY
+         TMeZ1MUC9Bnkw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 09:45:02AM -0800, Doug Anderson wrote:
-> Hi,
+On 12/20/19 10:48 AM, Leon Romanovsky wrote:
+...
+>> test_query_qp (tests.test_qp.QPTest) ... ok
+>> test_rdmacm_sync_traffic (tests.test_rdmacm.CMTestCase) ... skipped 'No devices with net interface'
+>>
+>> ======================================================================
+>> FAIL: test_query_port (tests.test_device.DeviceTest)
+>> ----------------------------------------------------------------------
+>> Traceback (most recent call last):
+>>   File "/kernel_work/rdma-core/tests/test_device.py", line 129, in test_query_port
+>>     self.verify_port_attr(port_attr)
+>>   File "/kernel_work/rdma-core/tests/test_device.py", line 113, in verify_port_attr
+>>     assert 'Invalid' not in d.speed_to_str(attr.active_speed)
+>> AssertionError
 > 
-> On Mon, Dec 16, 2019 at 4:54 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> >
-> > This allows us to validate the dt binding to the implementation. Add the
-> > interrupt property too, because that's required but nobody noticed when
-> > the non-YAML binding was introduced.
-> >
-> > Cc: Andrey Pronin <apronin@chromium.org>
-> > Cc: Douglas Anderson <dianders@chromium.org>
-> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> > ---
-> >  .../bindings/security/tpm/google,cr50.txt     | 19 -------
-> >  .../bindings/security/tpm/google,cr50.yaml    | 52 +++++++++++++++++++
-> >  2 files changed, 52 insertions(+), 19 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/security/tpm/google,cr50.txt
-> >  create mode 100644 Documentation/devicetree/bindings/security/tpm/google,cr50.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/security/tpm/google,cr50.txt b/Documentation/devicetree/bindings/security/tpm/google,cr50.txt
-> > deleted file mode 100644
-> > index cd69c2efdd37..000000000000
-> > --- a/Documentation/devicetree/bindings/security/tpm/google,cr50.txt
-> > +++ /dev/null
-> > @@ -1,19 +0,0 @@
-> > -* H1 Secure Microcontroller with Cr50 Firmware on SPI Bus.
-> > -
-> > -H1 Secure Microcontroller running Cr50 firmware provides several
-> > -functions, including TPM-like functionality. It communicates over
-> > -SPI using the FIFO protocol described in the PTP Spec, section 6.
-> > -
-> > -Required properties:
-> > -- compatible: Should be "google,cr50".
-> > -- spi-max-frequency: Maximum SPI frequency.
-> > -
-> > -Example:
-> > -
-> > -&spi0 {
-> > -       tpm@0 {
-> > -               compatible = "google,cr50";
-> > -               reg = <0>;
-> > -               spi-max-frequency = <800000>;
-> > -       };
-> > -};
-> > diff --git a/Documentation/devicetree/bindings/security/tpm/google,cr50.yaml b/Documentation/devicetree/bindings/security/tpm/google,cr50.yaml
-> > new file mode 100644
-> > index 000000000000..8bfff0e757af
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/security/tpm/google,cr50.yaml
-> > @@ -0,0 +1,52 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/tpm/google,cr50.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: H1 Secure Microcontroller with Cr50 Firmware on SPI Bus
-> > +
-> > +description:
-> > +  H1 Secure Microcontroller running Cr50 firmware provides several functions,
-> > +  including TPM-like functionality. It communicates over SPI using the FIFO
-> > +  protocol described in the PTP Spec, section 6.
-> > +
-> > +maintainers:
-> > +  - Andrey Pronin <apronin@chromium.org>
+> I'm very curious how did you get this assert "d.speed_to_str" covers all
+> known speeds according to the IBTA.
 > 
-> Does Andrey agree to be the maintainer here?
-> 
-> 
-> I'd like to see if we can delete most of what you've written here.
-> Specifically in "spi/spi-controller.yaml" you can see a really nice
-> description of what SPI devices ought to look like.  Can we just
-> reference that?  To do that I _think_ we actually need to break that
-> description into a separate YAML file and then include it from there
-> and here.  Maybe someone on the list can confirm or we can just post
-> some patches for that?
-> 
-> 
-> > +properties:
-> > +  compatible:
-> > +    const: google,cr50
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> 
-> I'm curious if you need a minItems here.  ...and if we don't somehow
-> include it, should we follow 'spi-controller.yaml' and treat this like
-> an int?
 
-Really, just 'true' is sufficient as you can't say which CS number it is 
-here.
-> 
-> 
-> > +  spi-max-frequency:
-> > +    maxItems: 1
-> 
-> This is not an array type.  Why do you need maxItems?  Should treat
-> like an int?  Do we have any ranges of sane values we can put here?
-> I'm sure that there is a maximum that Cr50 can talk at.
-> 
-> 
-> > +  interrupts:
-> > +    maxItems: 1
-> 
-> I'm curious if you need a minItems here.
+Hi Leon,
 
-No. It's implied to be the same. (The tooling adds it because that's not 
-how json-schema works).
+Short answer: I can make that one pass, with a small fix the the rdma-core test
+suite:
 
-> 
-> ...also: should we be trying to validate the flags at all?  AKA that
-> Cr50 expects a rising edge interrupt?
+commit a1b9fb0846e1b2356d7a16f4fbdd1960cf8dcbe5 (HEAD -> fix_speed_to_str)
+Author: John Hubbard <jhubbard@nvidia.com>
+Date:   Fri Dec 20 15:07:47 2019 -0800
 
-You can't really because you don't know how many cells.
+    device: fix speed_to_str(), to handle disabled links
+    
+    For disabled links, the raw speed token is 0. However,
+    speed_to_str() doesn't have that in the list. This leads
+    to an assertion when running tests (test_query_port) when
+    one link is down and other link(s) are up.
+    
+    Fix this by returning '(Disabled/down)' for the zero speed
+    case.
 
-> 
-> 
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - spi-max-frequency
-> 
-> Technically spi-max-frequency might not be required (the SPI binding
-> doesn't list it as such), but I guess it was before...
+diff --git a/pyverbs/device.pyx b/pyverbs/device.pyx
+index 33d133fd..f8b7826b 100755
+--- a/pyverbs/device.pyx
++++ b/pyverbs/device.pyx
+@@ -923,8 +923,8 @@ def width_to_str(width):
+ 
+ 
+ def speed_to_str(speed):
+-    l = {1: '2.5 Gbps', 2: '5.0 Gbps', 4: '5.0 Gbps', 8: '10.0 Gbps',
+-         16: '14.0 Gbps', 32: '25.0 Gbps', 64: '50.0 Gbps'}
++    l = {0: '(Disabled/down)', 1: '2.5 Gbps', 2: '5.0 Gbps', 4: '5.0 Gbps',
++         8: '10.0 Gbps', 16: '14.0 Gbps', 32: '25.0 Gbps', 64: '50.0 Gbps'}
+     try:
+         return '{s} ({n})'.format(s=l[speed], n=speed)
+     except KeyError:
 
-Generally, we expect a device knows its max and this should only be used 
-it a board has a lower value. However, sometimes there's exceptions. 
 
-Shouldn't really be debate here unless the old binding doc was wrong.
+Longer answer:
+==============
 
-> 
-> 
-> > +  - interrupts
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +    spi {
-> > +      #address-cells = <0x1>;
-> > +      #size-cells = <0x0>;
-> > +      tpm@0 {
-> > +          compatible = "google,cr50";
-> > +          reg = <0>;
-> > +          spi-max-frequency = <800000>;
-> > +          interrupts = <50 IRQ_TYPE_EDGE_RISING>;
-> 
-> I would tend to prefer seeing the interrupt parent in the example
-> since it's pretty likely that the GPIO controller isn't the overall
-> parent and likely that our interrupt is a GPIO.  I'm not sure the
-> convention, though.
+It looks like this test suite assumes that every link is connected! (Probably
+in most test systems, they are.) But in my setup, the ConnectX cards each have
+two slots, and I only have (and only need) one cable. So one link is up, and
+the other is disabled. 
 
-Example is fine, but shouldn't be in the schema.
+This leads to the other problem, which is that if a link is disabled, the
+test suite finds a "0" token for attr.active_speed. That token is not in the
+approved list, and so d.speed_to_str() asserts.
 
-> > +      };
-> > +    };
-> > +
-> > +...
-> 
-> Is the "..." important here?  I guess this is only if you're trying to
-> jam two bindings into the same file, but I could be wrong.  I guess a
-> bunch of arm ones owned by Rob have it at the end (though the example
-> doesn't?), so maybe it's right?
+With some diagnostics added, I can see it checking each link: one passes, and
+the other asserts:
 
-We won't ever have 2 because '$ref' lookups wouldn't work. 
+diff --git a/tests/test_device.py b/tests/test_device.py
+index 524e0e89..7b33d7db 100644
+--- a/tests/test_device.py
++++ b/tests/test_device.py
+@@ -110,6 +110,12 @@ class DeviceTest(unittest.TestCase):
+         assert 'Invalid' not in d.translate_mtu(attr.max_mtu)
+         assert 'Invalid' not in d.translate_mtu(attr.active_mtu)
+         assert 'Invalid' not in d.width_to_str(attr.active_width)
++        print("")
++        print('Diagnostics ===========================================')
++        print('phys_state:    ', d.phys_state_to_str(attr.phys_state))
++        print('active_width): ', d.width_to_str(attr.active_width))
++        print('active_speed:  ',   d.speed_to_str(attr.active_speed))
++        print('END of Diagnostics ====================================')
+         assert 'Invalid' not in d.speed_to_str(attr.active_speed)
+         assert 'Invalid' not in d.translate_link_layer(attr.link_layer)
+         assert attr.max_msg_sz > 0x1000
 
-It only matters that we are consistent because if/when we want to 
-programatically edit files, the ruamel yaml parser writes out what it is 
-told, not what it read in. That also means fixing these is pretty easy.
+         assert attr.max_msg_sz > 0x1000
 
-My current position is to have them, but it's not anything I check ATM 
-and I forget it too.
+...and the test run from that is:
 
-Rob
+# ./build/bin/run_tests.py --verbose tests.test_device.DeviceTest
+test_dev_list (tests.test_device.DeviceTest) ... ok
+test_open_dev (tests.test_device.DeviceTest) ... ok
+test_query_device (tests.test_device.DeviceTest) ... ok
+test_query_device_ex (tests.test_device.DeviceTest) ... ok
+test_query_gid (tests.test_device.DeviceTest) ... ok
+test_query_port (tests.test_device.DeviceTest) ... 
+Diagnostics ===========================================
+phys_state:     Link up (5)
+active_width):  4X (2)
+active_speed:   25.0 Gbps (32)
+END of Diagnostics ====================================
+
+Diagnostics ===========================================
+phys_state:     Disabled (3)
+active_width):  4X (2)
+active_speed:   Invalid speed
+END of Diagnostics ====================================
+FAIL
+test_query_port_bad_flow (tests.test_device.DeviceTest) ... ok
+
+======================================================================
+FAIL: test_query_port (tests.test_device.DeviceTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/kernel_work/rdma-core/tests/test_device.py", line 135, in test_query_port
+    self.verify_port_attr(port_attr)
+  File "/kernel_work/rdma-core/tests/test_device.py", line 119, in verify_port_attr
+    assert 'Invalid' not in d.speed_to_str(attr.active_speed)
+AssertionError
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.055s
+
+FAILED (failures=1)
+
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
+
