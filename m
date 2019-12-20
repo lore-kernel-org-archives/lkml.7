@@ -2,85 +2,162 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C0BC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1884C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E33C206DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5C1F21927
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:15:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="U9/APrhh"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Sm6WcPq+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbfLTVIR (ORCPT
+        id S1727513AbfLTVPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 16:08:17 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35567 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726525AbfLTVIR (ORCPT
+        Fri, 20 Dec 2019 16:15:03 -0500
+Received: from mail.efficios.com ([167.114.142.138]:56748 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727402AbfLTVPC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 16:08:17 -0500
-Received: by mail-ed1-f68.google.com with SMTP id f8so9718931edv.2
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 13:08:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P2lQDYFiSU61IegoZn+J4VONbd8f0VMeRcMDJoBkFbk=;
-        b=U9/APrhhsF3x2MS6R3KK3ABwN6yY0iFPxC5xw31FcR60dCln0zk9mIa5gU5JcBYoI6
-         t2LTv9/2fajE3eKiszLAErOyWNZ/OvpqFRgugfVCYbHSQSbeD2xnM2o1C3kKsCkyg7NK
-         YMQHkFsnbAsnUtANnjodcIFR/FZUiMtZ7CysoEn2/exNHRjW1X0xVzT7dBI/C+trE30J
-         C3PXJYefx7NEfMXyEwH+jbCdKAykiN16LqaIuUvBZ2qVFAkN7rcmsS5i1AAoEByFG1Jn
-         82EucOLh8/1J+YeyNiXXY7jqER0ZrNtGbMRnZ3Eh+xtpzWO3RBbBub3Ctn8+uYb3KYkJ
-         yHWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P2lQDYFiSU61IegoZn+J4VONbd8f0VMeRcMDJoBkFbk=;
-        b=ChOKBGfIQl71TS1hr+AyA+56ctha+UFyvBoOgyHM92tQNYeLaNqaNtB/dVYNSksc6o
-         QPwMzt+OMt5ZUydP02xDb0yzdni+ckWpQmWcri8OTg5fr9XbwgVK4nDZNPZ2semGoa6T
-         NEKv1WRoxmUFfLZuO4tiQwmRr8dtdz36KxJfUPKqb2VGEtkDUFvFjNHro7gT9Vm5z5AM
-         Zm7jX3FAlwnv7/0twPWYuIMGjKtkd37/ERXKBA7q7/N+1VW8j6JObhbcsuMI82oluXrt
-         qmz7cx9aWe+YwYDQZgv9HMVBjHC73pxO+BWfEjcjdKNw0xgu0Qhlc9nlqDFUv2NCayEX
-         WRXQ==
-X-Gm-Message-State: APjAAAUDPYOb2mOivQNQlYzp3G3f0CSahY0g7F8vjbMyyG4KOs0sJQfg
-        zQdPdpwOOrgGhSWeoT+HzrVRCkoR07PBuocCtNBo0kLy
-X-Google-Smtp-Source: APXvYqySGg6l6ORFyyhC0kSFdcf1phcgOYpzIjO03xOtIiofSZ8Z6UuRq260Bvp3a2c6NoH1c6R8u6BrcrQvWtFORNA=
-X-Received: by 2002:a05:6402:c08:: with SMTP id co8mr18125655edb.197.1576876095176;
- Fri, 20 Dec 2019 13:08:15 -0800 (PST)
+        Fri, 20 Dec 2019 16:15:02 -0500
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id EB2E1690318;
+        Fri, 20 Dec 2019 16:15:00 -0500 (EST)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id AuZ_7fZyEPuh; Fri, 20 Dec 2019 16:15:00 -0500 (EST)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 75457690314;
+        Fri, 20 Dec 2019 16:15:00 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 75457690314
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1576876500;
+        bh=DyLYgI0zjI8pT79Vk8bMwp6yN3rTY6yP7kkznA03AoE=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=Sm6WcPq+rLA8zt4MYfb94nK3+RZLbBdghlOlN7MM6m1GFRdoTZMEGgaUZMycutm1M
+         pc1an4l7K/7ZGFyA9niyKxs2SBZz8sv80cB0LR4w4VHk9H7kbCBvcx0b53KWPVwUeR
+         j9j/d5gZ2/M4RtJH/LAg1ToVOIdka/7uzERnAMi38UnPgh3+ig+s34xfz5x84/ttir
+         j5Kpf7pNXUtqcaxGAx3IMflFW+H5ciDD1t9MIqM2vJeOXwzl24xqFiX/wxyHZd6TKB
+         XIQF9iISzPujP/Cdnn9O5ExaLzNFrwJTXPufzVSN1LzI1WBBcF2+baNK2BFVAyBxrZ
+         adUpNqNuugJ1A==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id qLX3NVtIpGkE; Fri, 20 Dec 2019 16:15:00 -0500 (EST)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 59E49690306;
+        Fri, 20 Dec 2019 16:15:00 -0500 (EST)
+Date:   Fri, 20 Dec 2019 16:15:00 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fw@deneb.enyo.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Neel Natu <neelnatu@google.com>
+Message-ID: <669061171.14506.1576876500152.JavaMail.zimbra@efficios.com>
+In-Reply-To: <875zian2a2.fsf@mid.deneb.enyo.de>
+References: <20191220201207.17389-1-mathieu.desnoyers@efficios.com> <87imman36g.fsf@mid.deneb.enyo.de> <173832695.14381.1576875253374.JavaMail.zimbra@efficios.com> <875zian2a2.fsf@mid.deneb.enyo.de>
+Subject: Re: [PATCH for 5.5 1/2] rseq: Fix: Clarify rseq.h UAPI rseq_cs
+ memory reclaim requirements
 MIME-Version: 1.0
-References: <1576725878-112367-1-git-send-email-mafeng.ma@huawei.com>
-In-Reply-To: <1576725878-112367-1-git-send-email-mafeng.ma@huawei.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Fri, 20 Dec 2019 22:08:04 +0100
-Message-ID: <CAFBinCA27-f0M+XPLkFBbrHzq8HareiuqH2nnC1=Q63uEFswDg@mail.gmail.com>
-Subject: Re: [PATCH] phy: lantiq: vrx200-pcie: Remove unneeded semicolon
-To:     Ma Feng <mafeng.ma@huawei.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.15_GA_3888 (ZimbraWebClient - FF71 (Linux)/8.8.15_GA_3890)
+Thread-Topic: rseq: Fix: Clarify rseq.h UAPI rseq_cs memory reclaim requirements
+Thread-Index: lBXaukfByKp9TejsCTqcOtGiErTiYA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 4:24 AM Ma Feng <mafeng.ma@huawei.com> wrote:
->
-> Fixes coccicheck warning:
->
-> drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c:389:2-3: Unneeded semicolon
->
-> Fixes: e52a632195bf ("phy: lantiq: vrx200-pcie: add a driver for the Lantiq VRX200 PCIe PHY")
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Ma Feng <mafeng.ma@huawei.com>
-Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+----- On Dec 20, 2019, at 3:57 PM, Florian Weimer fw@deneb.enyo.de wrote:
 
-thank you for taking care of this
+> * Mathieu Desnoyers:
+>=20
+>> ----- On Dec 20, 2019, at 3:37 PM, Florian Weimer fw@deneb.enyo.de wrote=
+:
+>>
+>>> * Mathieu Desnoyers:
+>>>=20
+>>>> diff --git a/include/uapi/linux/rseq.h b/include/uapi/linux/rseq.h
+>>>> index 9a402fdb60e9..6f26b0b148a6 100644
+>>>> --- a/include/uapi/linux/rseq.h
+>>>> +++ b/include/uapi/linux/rseq.h
+>>>> @@ -100,7 +100,9 @@ struct rseq {
+>>>>  =09 * instruction sequence block, as well as when the kernel detects =
+that
+>>>>  =09 * it is preempting or delivering a signal outside of the range
+>>>>  =09 * targeted by the rseq_cs. Also needs to be set to NULL by user-s=
+pace
+>>>> -=09 * before reclaiming memory that contains the targeted struct rseq=
+_cs.
+>>>> +=09 * before reclaiming memory that contains the targeted struct rseq=
+_cs
+>>>> +=09 * or reclaiming memory that contains the code refered to by the
+>>>> +=09 * start_ip and post_commit_offset fields of struct rseq_cs.
+>>>=20
+>>> Maybe mention that it's good practice to clear rseq_cs before
+>>> returning from a function that contains a restartable sequence?
+>>
+>> Unfortunately, clearing it is not free. Considering that rseq is meant t=
+o
+>> be used in very hot code paths, it would be preferable that applications
+>> clear it in the very infrequent case where the rseq_cs or code will
+>> vanish (e.g. dlclose or JIT reclaim), and not require it to be cleared
+>> after each critical section. I am therefore reluctant to document the
+>> behavior you describe as a "good practice" for rseq.
+>=20
+> You already have to write to rseq_cs before entering the critical
+> section, right?  Then you've already determined the address, and the
+> cache line is already hot, so it really should be close to zero cost.
 
+Considering that overall rseq executes in fraction of nanoseconds on
+some architectures, adding an extra store is perhaps close to zero,
+but still significantly degrades performance.
 
-Martin
+>=20
+> I mean, you can still discard the advice, but you do so ad your own
+> peril =E2=80=A6
+
+I am also uncomfortable leaving this to the end user. One possibility
+would be to extend rseq or membarrier to add a kind of "rseq-clear"
+barrier, which would ensure that the kernel will have cleared the
+rseq_cs field for each thread belonging to the current process. glibc
+could then call this barrier before dlclose.
+
+This is slightly different from another rseq-barrier that has been
+requested by Paul Turner: a way to ensure that all previously
+running rseq critical sections have completed or aborted.
+
+AFAIU, the desiderata for each of the 2 use-cases is as follows:
+
+rseq-barrier: guarantee that all prior rseq critical sections have
+completed or aborted for the current process or for a set of registered
+processes. Allows doing RCU-like algorithms within rseq critical sections.
+
+rseq-clear: guarantee that the rseq_cs field is cleared for each thread
+belonging to the current process before the barrier system call returns
+to the caller. Aborts currently running rseq critical sections for all
+threads belonging to the current process. The use-case is to allow
+dlclose and JIT reclaim to clear any leftover reference to struct
+rseq_cs or code which are going to be reclaimed.
+
+Thoughts ?
+
+Thanks,
+
+Mathieu
+
+--=20
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
