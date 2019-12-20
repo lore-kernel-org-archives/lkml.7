@@ -2,128 +2,113 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FE0C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0D1C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12A3C24679
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F24B924679
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:20:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kGleREul"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="crSTtJZ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727360AbfLTMUG (ORCPT
+        id S1727394AbfLTMUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 07:20:06 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:48508 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727209AbfLTMUG (ORCPT
+        Fri, 20 Dec 2019 07:20:54 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:37073 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727211AbfLTMUy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 07:20:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=R5Zw3DDJm4ULPliPYUAssjzZ7w7pMoy4+U0VF7anJkg=; b=kGleREul1+TOIzHsXgqHZ4Cbq
-        4MeHJK5OCxVpyeUhcrn4CWbXjCzzGTXNYQmilD7zoJVZs2mlZ+++cSHPzBI73i9aDHhRjONctFEsT
-        /VW6qnZo1P8/l5b+cU+nB+zxwjnAWy6svrA3N/QHZQotSX3ahFyfe3RQbJhB4uotDaqG7FWxgQdwK
-        BZIN/8nCFvnv1iqS5ZcLLw66PHJNQlh53yIqPDCv800XrVXKZH3ehTze5Xt2dFWEJTSUudSYHPHRH
-        LBV2u4nm8Qco5AwB9aVQrWj3p+g/ZFQ/9fj4LSQJNheTcNBqGe1yQVMU4XdjpMeHSfe1oAhe8OwfF
-        I+egC4T4g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iiHG1-0005GX-Fr; Fri, 20 Dec 2019 12:19:51 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 82D67300DB7;
-        Fri, 20 Dec 2019 13:18:23 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6D4702B270F5D; Fri, 20 Dec 2019 13:19:47 +0100 (CET)
-Date:   Fri, 20 Dec 2019 13:19:47 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        Kirill Tkhai <tkhai@yandex.ru>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-        "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
-        "bsegall@google.com" <bsegall@google.com>,
-        "mgorman@suse.de" <mgorman@suse.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [RFC][PATCH 1/4] sched: Force the address order of each sched
- class descriptor
-Message-ID: <20191220121947.GH2844@hirez.programming.kicks-ass.net>
-References: <20191219214451.340746474@goodmis.org>
- <20191219214558.510271353@goodmis.org>
- <0a957e8d-7af8-613c-11ae-f51b9b241eb7@rasmusvillemoes.dk>
- <20191220100033.GE2844@hirez.programming.kicks-ass.net>
- <1ac359e8-fa7f-7ded-e2f2-9f7d0b23a4e1@rasmusvillemoes.dk>
+        Fri, 20 Dec 2019 07:20:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576844453;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nIVo2crlVc/txi8VIButrgzZivg7HgIELD3HSqFbFMs=;
+        b=crSTtJZ3qSuWo3CmlmEX84NAJP3zbQ8QEJ9khr1zVtc2wyGQ5u9Pl9qL9PQrw/1QM/rfJy
+        AlXqEiqShI1pvyO2t0DhJOVzAr/VFk4kR4O6CeBu8R+kQd2P9ChcJrfwr5oN9dXEGVzlpZ
+        KP1OZeHcIms2jjibVUtc5ELTbJ5auKo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-58-KjExN_K5PJeZFLWaH5Dnig-1; Fri, 20 Dec 2019 07:20:46 -0500
+X-MC-Unique: KjExN_K5PJeZFLWaH5Dnig-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 45DE7801E66;
+        Fri, 20 Dec 2019 12:20:45 +0000 (UTC)
+Received: from [10.36.116.117] (ovpn-116-117.ams2.redhat.com [10.36.116.117])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 487485DA75;
+        Fri, 20 Dec 2019 12:20:41 +0000 (UTC)
+Subject: Re: [PATCH] KVM: arm/arm64: vgic: Handle GICR_PENDBASER.PTZ filed as
+ RAZ
+To:     Zenghui Yu <yuzenghui@huawei.com>, maz@kernel.org
+Cc:     andre.przywara@arm.com, linux-kernel@vger.kernel.org,
+        wanghaibin.wang@huawei.com, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org
+References: <20191220111833.1422-1-yuzenghui@huawei.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <c469bc11-9cd0-531a-9bd3-46d070ec0e72@redhat.com>
+Date:   Fri, 20 Dec 2019 13:20:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1ac359e8-fa7f-7ded-e2f2-9f7d0b23a4e1@rasmusvillemoes.dk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191220111833.1422-1-yuzenghui@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 11:12:37AM +0100, Rasmus Villemoes wrote:
-> On 20/12/2019 11.00, Peter Zijlstra wrote:
+Hi,
 
-> >>> +/*
-> >>> + * The order of the sched class addresses are important, as they are
-> >>> + * used to determine the order of the priority of each sched class in
-> >>> + * relation to each other.
-> >>> + */
-> >>> +#define SCHED_DATA				\
-> >>> +	*(__idle_sched_class)			\
-> >>> +	*(__fair_sched_class)			\
-> >>> +	*(__rt_sched_class)			\
-> >>> +	*(__dl_sched_class)			\
-> >>> +	STOP_SCHED_CLASS
-> > 
-> > I'm confused, why does that STOP_SCHED_CLASS need magic here at all?
-> > Doesn't the linker deal with empty sections already by making them 0
-> > sized?
+On 12/20/19 12:18 PM, Zenghui Yu wrote:
+> Although guest will hardly read and use the PTZ (Pending Table Zero)
+> bit in GICR_PENDBASER, let us emulate the architecture strictly.
+> As per IHI 0069E 9.11.30, PTZ field is WO, and reads as 0.
 > 
-> Yes, but dropping the STOP_SCHED_CLASS define doesn't prevent one from
-> needing some ifdeffery to define highest_sched_class if they are laid
-> out in (higher sched class <-> higher address) order.
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+nit
+s/filed/field in the commit title
 
-Would not something like:
+Eric
+> ---
+> 
+> Noticed when checking all fields of GICR_PENDBASER register.
+> But _not_ sure whether it's worth a fix, as Linux never sets
+> the PTZ bit before enabling LPI (set GICR_CTLR_ENABLE_LPIS).
+> 
+> And I wonder under which scenarios can this bit be written as 1.
+> It seems difficult for software to determine whether the pending
+> table contains all zeros when writing this bit.
+> 
+>  virt/kvm/arm/vgic/vgic-mmio-v3.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> index 7dfd15dbb308..ebc218840fc2 100644
+> --- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> +++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> @@ -414,8 +414,11 @@ static unsigned long vgic_mmio_read_pendbase(struct kvm_vcpu *vcpu,
+>  					     gpa_t addr, unsigned int len)
+>  {
+>  	struct vgic_cpu *vgic_cpu = &vcpu->arch.vgic_cpu;
+> +	u64 value = vgic_cpu->pendbaser;
+>  
+> -	return extract_bytes(vgic_cpu->pendbaser, addr & 7, len);
+> +	value &= ~GICR_PENDBASER_PTZ;
+> +
+> +	return extract_bytes(value, addr & 7, len);
+>  }
+>  
+>  static void vgic_mmio_write_pendbase(struct kvm_vcpu *vcpu,
+> 
 
-	__begin_sched_classes = .;
-	*(__idle_sched_class)
-	*(__fair_sched_class)
-	*(__rt_sched_class)
-	*(__dl_sched_class)
-	*(__stop_sched_class)
-	__end_sched_classes = .;
-
-combined with something like:
-
-extern struct sched_class *__begin_sched_classes;
-extern struct sched_class *__end_sched_classes;
-
-#define sched_class_highest (__end_sched_classes - 1)
-#define sched_class_lowest  (__begin_sched_classes - 1)
-
-#define for_class_range(class, _from, _to) \
-	for (class = (_from); class != (_to), class--)
-
-#define for_each_class(class) \
-	for_class_range(class, sched_class_highest, sched_class_lowest)
-
-just work?
-
-When no __stop_sched_class is present, that section is 0 sized, and
-__end_sched_classes points to one past __dl_sched_class, no?
