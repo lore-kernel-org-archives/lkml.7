@@ -2,151 +2,125 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5492C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BAE3C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94F782465E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:13:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10BAE2465E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:13:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="XNxhr+M0"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QJgFuIJ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfLTGNI (ORCPT
+        id S1727177AbfLTGNe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 01:13:08 -0500
-Received: from mail-eopbgr770075.outbound.protection.outlook.com ([40.107.77.75]:58629
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        Fri, 20 Dec 2019 01:13:34 -0500
+Received: from mail-eopbgr140089.outbound.protection.outlook.com ([40.107.14.89]:14318
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725853AbfLTGNI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 01:13:08 -0500
+        id S1725853AbfLTGNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 01:13:33 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RNIXh1aT3tKEst6zzwCWarzWd0RVXKKYS7/IOlnjNzXaQWlvO0gEgZLoOsKRXk3N3xqFs0OuL5RakTEjcCBd0R0bre9H6kAkSjGPXiX4mgOMhT+6/lGVAf/Gol2k1VtNZ3Vvk2MgxbePgBK4l3oWcvJOEHDpwVCl8zIRDf+4wvROsn82lvEZOZhSDLJ37H1lpTuAKvcPKWWF36Uc1jhx/YYk1n1+ossIsAfIcO3FjXNjNSiCSEUdNG3A8JYNf0hSBK7OVVZbNmFlIk5oqECUpDPPHuRoNOMnpMRDR1T4TI0qrlhcH6n8lvPxILKiPoMtv7qkdy7Lzo1cQLBMlQiogg==
+ b=YfPuK063QPkFYqInw5UR7PYI67xyJB1TXfQrEnTpb0za8Chhfj/kxcaplyv15tyz6YQZN34Or3GEne3jYsv48THBJAS//pZ0/RY822eKI5TDekxAobGH1eze6fdzKcTM+BN5iAx6WzvQh46iexrGrjOWpKfYIF0qKx7SQclGCWGfm2eCeUdVBGaPAgnJeXmPxe4KwYOf9iB9KGXis4vZCwdgR8Q2bqay5d5ALcNC/X0z1Fkp0/82R/aljNBfvBVklE+UjTiLMSIdIOW7fStg27FsEthUnK/qNu9/sLpKQ13W7vFqE0BBSXMDzPpIFSqDbLPMTb+oQy3/5VF150ldrQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0Qa+aMJ9hftRyKUDN1LXdUAUje3dhtD9BQj2cJoEgZU=;
- b=I2vcku89hMKmiVKdzyvc/Hg3FHpIawgpXiWFUDQCaLvHI6a/KTdtKwdGuyKPtuYVSiU+Y6EIPzT3nCs65BFKOd/2Z4ai6hZt0dGKe2UJso4MQoR0/yJ/+4Ljj0dbLt+k/IT2uG5ByZUOwK6X/L8i83iwqhpAquDiUt0emcTyodz6FjkqRumNrVELXtjXbdOXbDH4VXnuIYPQatvREaw5r7RFc1JSe6URXWe7q0bnGmhc8QqONV4JITxZttos3t/cW9cHuwzHlXR0lr7jSZdZUHPEo0nWq5g91iYXnJbll7eWyrlhhmN1sG+R+RF7M4y+jZCOikEr4So27fWRzK1iDg==
+ bh=vp7H+cg23gXApADNamgiSE2RURspLu9tDvGvzf5U5fs=;
+ b=amWBj+xy4gV0JnTQCo+LlCC/CxlyawudUy02DJQQCbHQPXWqU8Aaryqzce8vmZJ06B+EjjP4gXZ5M7R9WhOSi8Q8Bx0pM7//XtzS0PMNsgUapCIxE/k5zDvMnTyFGbmjuAF2h+JJvCc/5Jjhl4xbszszJcJ/uEH63GLFuaU7wLSmRKd1YgNsgNFAlJujmO5qttRmYHVDh6m5nlmzetUr0G7MmgO9ydaXIAK00p9+cNDelYRCjnqeSokuUzu2pky7tTTdNxNR9SoEm/dxfcixgLGKucri25MC+mN/vHXiQx2M1C0p9hbASvZMljvGaZX6elvXMZN9Ydkgx6g7xkWEVw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0Qa+aMJ9hftRyKUDN1LXdUAUje3dhtD9BQj2cJoEgZU=;
- b=XNxhr+M0dhvSseupzTDkMNumdTl1cRotGAYwiPPjoJKdcr+wL8ghyBILtM+0WCS/PyEMWPExrfz2kVxHP1q1yy9lUtGDyeFC8QhRXguYAb74DLWNZW6+22jlxIZvVGXlNn746Ow1krQ3WQVVaZcjl55On/m0rilQUWHie0ZEQ4c=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Akshu.Agrawal@amd.com; 
-Received: from MN2PR12MB2878.namprd12.prod.outlook.com (20.179.80.143) by
- MN2PR12MB4000.namprd12.prod.outlook.com (10.255.238.145) with Microsoft SMTP
+ bh=vp7H+cg23gXApADNamgiSE2RURspLu9tDvGvzf5U5fs=;
+ b=QJgFuIJ7rHhlxZmieey4AMwrqgUFqYI0vPpF3MOd4z2vBqvKfmIa5jKtjaXLdZfA0U/9d730W9oWuWG8PnE78/R3womkZO0guypbKD0/vWCEa3cgAzbglahz49nL1jO45aTtQrNxnTYk4doECuz6oxPRVGcWwERRa9iX5lOHooQ=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB4801.eurprd04.prod.outlook.com (20.177.41.155) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.18; Fri, 20 Dec 2019 06:13:05 +0000
-Received: from MN2PR12MB2878.namprd12.prod.outlook.com
- ([fe80::c97e:d4c0:bfaf:5edf]) by MN2PR12MB2878.namprd12.prod.outlook.com
- ([fe80::c97e:d4c0:bfaf:5edf%3]) with mapi id 15.20.2559.012; Fri, 20 Dec 2019
- 06:13:04 +0000
-From:   Akshu Agrawal <akshu.agrawal@amd.com>
-Cc:     akshu.agrawal@amd.com, yuhsuan@chromium.org,
-        Bard Liao <bardliao@realtek.com>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        alsa-devel@alsa-project.org (moderated list:SOUND),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] ASoC: rt5682: Add option to select pulse IRQ in jack detect
-Date:   Fri, 20 Dec 2019 11:42:19 +0530
-Message-Id: <20191220061220.229679-1-akshu.agrawal@amd.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: MA1PR0101CA0031.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:22::17) To MN2PR12MB2878.namprd12.prod.outlook.com
- (2603:10b6:208:aa::15)
-MIME-Version: 1.0
-Received: from ETHANOL2.amd.com (165.204.156.251) by MA1PR0101CA0031.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:22::17) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Fri, 20 Dec 2019 06:13:01 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [165.204.156.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 308757b1-4d57-45cf-a0bc-08d78513ac79
-X-MS-TrafficTypeDiagnostic: MN2PR12MB4000:|MN2PR12MB4000:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB40007CF9F713E64E11F729CAF82D0@MN2PR12MB4000.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:130;
-X-Forefront-PRVS: 025796F161
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(39860400002)(136003)(376002)(396003)(189003)(199004)(478600001)(36756003)(4326008)(8936002)(6666004)(1076003)(2616005)(8676002)(81156014)(54906003)(956004)(7696005)(26005)(6486002)(86362001)(5660300002)(2906002)(316002)(44832011)(52116002)(66556008)(81166006)(16526019)(186003)(109986005)(66476007)(66946007)(266003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB4000;H:MN2PR12MB2878.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
+ 15.20.2538.18; Fri, 20 Dec 2019 06:13:30 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::505:87e7:6b49:3d29]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::505:87e7:6b49:3d29%7]) with mapi id 15.20.2559.015; Fri, 20 Dec 2019
+ 06:13:30 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "jslaby@suse.com" <jslaby@suse.com>
+CC:     "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>, Alice Guo <alice.guo@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V2 0/3] tty: serial: lpuart: cleanup and improve for earlycon
+Thread-Topic: [PATCH V2 0/3] tty: serial: lpuart: cleanup and improve for
+ earlycon
+Thread-Index: AQHVtvyZaPBJM02kmUSDrut+ax1uyw==
+Date:   Fri, 20 Dec 2019 06:13:30 +0000
+Message-ID: <1576822230-23125-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR03CA0056.apcprd03.prod.outlook.com
+ (2603:1096:202:17::26) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 7d9753cb-3ca0-4517-8b81-08d78513bc1e
+x-ms-traffictypediagnostic: AM0PR04MB4801:|AM0PR04MB4801:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB4801A75025AB90140A22292C882D0@AM0PR04MB4801.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3826;
+x-forefront-prvs: 025796F161
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(376002)(346002)(366004)(39860400002)(189003)(199004)(316002)(110136005)(66476007)(66556008)(5660300002)(64756008)(66446008)(26005)(81166006)(81156014)(71200400001)(36756003)(6486002)(4326008)(6512007)(186003)(2906002)(86362001)(54906003)(478600001)(66946007)(8676002)(2616005)(8936002)(52116002)(4744005)(6506007)(44832011);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4801;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rmAdEvTo2tgv1LIuEXJNpZ6KXByTF6p8xrfJoGH9GayqQUOk53b4/0pn6U0Su1McfYTkOw5fteMzRwff/AX1ys702wYEoYhFF7npy4p2/B0q1ngGmGECth+7KKg6bpFkTpWyGUi1hE5SdBVV4ZezmTOgTxLjMbxIWb9WxEI3WtTevoskep85mQU/1nWsB2ZsbH6OjqEyx+t4/ntOm/WZFPCEnqWbHu3EWtav0ZC9BcAqanItnSa5s0XqxppH+Q38oH5Kx4lXUwylCDJygqs12AzF0nre52eabvHvi0zkI6TOK+NmRWA9OJGLav7BJi2EpImZJF7t6Y9n+PZ4bzFAja+ExfUcfe+VmMRk7E08PDIF7E/SuUEPe4axlPXygAaq0krBs4tadQsCLrUpKCVaM+yEwViDQc1tCLPcggYgTPITSpnanD/08Mdys3WJ2QAGoQSZKkGrqW7g7L2ZrKYzlTkmLtyTouAP1yzP/FKY8pI=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 308757b1-4d57-45cf-a0bc-08d78513ac79
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Dec 2019 06:13:04.5306
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: FLLocU93LT2zhX1Vo8oaPOCBkVtl2g8Z2GjoXfszNc9ysNcLRw+9pRuMi3b2wBMBc9gJjKcIs0Mau0nh5AwOnFfSCVIF8+o8MQQhoewErDa+wb9FPTve7/DkejYWJ9Qi8xrBUmNDhByCHP0i6OUIfvmG7QJBCK+Ot9PUez+it4kdRnPz9Q5htgSxdVY9XOX8vFIuDNfnkX3AFS2h7crJuZGC2DtuxctDAaN9xoDynw3b+jNNiHeBJIF/hCoj+1i6FVYoYNPi1iVZNBnPiQMZ7HQhRIodt6EpcvbinXSzgEstD1fgXSowKU0DZKmgsG8a3ax8sMhnJdeRj/L9rLknonDvu3cnHSnGvS7CBGuEOeBcjBWHhlvTcL5/Tt5a5ciAuIYinWA5L9PU3p6C9sevTKvK8D1n4H02X6+YzVuF6vsSB1Mh8uoCkO3l+N2Ndu6a
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d9753cb-3ca0-4517-8b81-08d78513bc1e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Dec 2019 06:13:30.7403
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Nj0LQbCPQmb3MTSj8fbRgkFk0qxDDbQvLo8RdovajDp2kKjc7T0Pu3M3V/WSm/G3SbXZs+TjozxcgPMmiOCeHA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4000
-To:     unlisted-recipients:; (no To-header on input)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qtD75FZk9V7j+zZ1njy4faNF6eEhbsgbjf24qkME10DYJUKKMovAuAWgLdrg1UmpAk6H4DhJv1TV2Ay+SWGJHA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4801
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some SoC need to set IRQ type as pulse along with other JD1 options.
+From: Peng Fan <peng.fan@nxp.com>
 
-Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
----
- include/sound/rt5682.h    | 1 +
- sound/soc/codecs/rt5682.c | 3 +++
- sound/soc/codecs/rt5682.h | 2 ++
- 3 files changed, 6 insertions(+)
+V2:
+  Drop a wrong patch which should not be included in this patchset,
+  nothing else changed.
 
-diff --git a/include/sound/rt5682.h b/include/sound/rt5682.h
-index bc2c31734df1..64cfa77ec9ee 100644
---- a/include/sound/rt5682.h
-+++ b/include/sound/rt5682.h
-@@ -22,6 +22,7 @@ enum rt5682_dmic1_clk_pin {
- enum rt5682_jd_src {
- 	RT5682_JD_NULL,
- 	RT5682_JD1,
-+	RT5682_JD2,
- };
- 
- struct rt5682_platform_data {
-diff --git a/sound/soc/codecs/rt5682.c b/sound/soc/codecs/rt5682.c
-index ae6f6121bc1b..5135d7757361 100644
---- a/sound/soc/codecs/rt5682.c
-+++ b/sound/soc/codecs/rt5682.c
-@@ -1009,6 +1009,9 @@ static int rt5682_set_jack_detect(struct snd_soc_component *component,
- 	}
- 
- 	switch (rt5682->pdata.jd_src) {
-+	case RT5682_JD2:
-+		regmap_update_bits(rt5682->regmap, RT5682_IRQ_CTRL_2,
-+			RT5682_JD1_PULSE_MASK, RT5682_JD1_PULSE_EN);
- 	case RT5682_JD1:
- 		snd_soc_component_update_bits(component, RT5682_CBJ_CTRL_2,
- 			RT5682_EXT_JD_SRC, RT5682_EXT_JD_SRC_MANUAL);
-diff --git a/sound/soc/codecs/rt5682.h b/sound/soc/codecs/rt5682.h
-index 18faaa2a49a0..434b1c9778b2 100644
---- a/sound/soc/codecs/rt5682.h
-+++ b/sound/soc/codecs/rt5682.h
-@@ -1091,6 +1091,8 @@
- #define RT5682_JD1_POL_MASK			(0x1 << 13)
- #define RT5682_JD1_POL_NOR			(0x0 << 13)
- #define RT5682_JD1_POL_INV			(0x1 << 13)
-+#define RT5682_JD1_PULSE_MASK			(0x1 << 10)
-+#define RT5682_JD1_PULSE_EN			(0x1 << 10)
- 
- /* IRQ Control 3 (0x00b8) */
- #define RT5682_IL_IRQ_MASK			(0x1 << 7)
--- 
-2.17.1
+EARLYCON_DECLARE could be dropped, since OF_EARLYCON_DECLARE does same.
+
+i.MX8QXP is compatible with i.MX7ULP, no need an extra entry.
+
+When we could not use stdout-path for earlycon for i.MX8QXP,
+we need pass mmio32 to earlycon, so update code to support the iotype.
+
+Peng Fan (3):
+  tty: serial: fsl_lpuart: drop EARLYCON_DECLARE
+  tty: serial: fsl_lpuart: support UPIO_MEM32 for lpuart32
+  tty: serial: fsl_lpuart: drop earlycon entry for i.MX8QXP
+
+ drivers/tty/serial/fsl_lpuart.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+--=20
+2.16.4
 
