@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BBAC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3567C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AAA0227BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9B2224683
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:56:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HWfl77F+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gaur1TkD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727489AbfLTB4T (ORCPT
+        id S1727504AbfLTB4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 20:56:19 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46586 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727390AbfLTB4O (ORCPT
+        Thu, 19 Dec 2019 20:56:22 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36663 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727437AbfLTB4R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 20:56:14 -0500
-Received: by mail-lf1-f67.google.com with SMTP id f15so5742233lfl.13;
-        Thu, 19 Dec 2019 17:56:12 -0800 (PST)
+        Thu, 19 Dec 2019 20:56:17 -0500
+Received: by mail-lj1-f195.google.com with SMTP id r19so8325909ljg.3;
+        Thu, 19 Dec 2019 17:56:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gtkA3peZEMiQiasILLoJEvV2SQjJRrgtV9+sf4LMnXM=;
-        b=HWfl77F+IvmeKqDiV00NPnWuwRBxIc/099eACUbKtTsD12v1OyPn0jvz91sBae1smV
-         NKMCeNpLFNbbm7uGW5hn6x1dSrAF2K6eSnYiVANSXZaVxH0duIVo8menhSc534ShmnUd
-         SOguaX/nLjNSYASFsZTGJ5uYbD6cUYCtyLHJq2+Aov3t50o79BUddC5c7T6fWc7noc39
-         460oFROd1KUdcSq4yBBTUWa/4TC/aPH1xTy3Z5myCRGCJfiLCSyqDZQMu/Ic+ze4HFDe
-         is3vw9yJng9ldtb3v2QqsBDjUIKTE3gRL5o8jXzDk1Slu9k+9E2xX7WI3zINRqQohdbM
-         idMQ==
+        bh=i7a3lxaMDdErpekYLxYZCSpGszEjiHMz9VIU/9b2FAA=;
+        b=Gaur1TkDTfgRCAAJ2jfXLAtd91digvvIIikB88uo1dJJu/ngUmUAduyjVTTecEsPbY
+         2ezfycR++WnNJa5bhjjWIlzkn6K9EKUjdMxteA2Re2xODQ8wqQ3BOL33fru9bl5htJue
+         QjAnWq0dRdUmL0vuMovs6SyWKCErWy3B+ZuiXBPudXUX0HdDYMYtrdLdQAMp9bzsExtD
+         XV8wwqTLH+5LcNW0tmY8K7qI40dYA0ddYen2acLCSKofTrakr5nDPDSqxS0dDiKQZe8+
+         04t1P4sAYMw6109j1HfsmdSSUEVzd3xclbPhQZL2zGe3pX5x7pAm43gVmxAU3Pasbms+
+         TX3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gtkA3peZEMiQiasILLoJEvV2SQjJRrgtV9+sf4LMnXM=;
-        b=ob7ycIbZsNPJum12T84PfjcSV+zh0f38Hb1M3TjX/1MQhDZpRVSOSz2MmHH4Vqs10z
-         YZGO9bcpqhUmtzK1rMwSYC5EUFZUI7XcqFkTCxINqvqF7lPi2J9wQj04x8MsJwTrnquZ
-         kQkxf2uyP+p95URTBPJ43m4aHH05Uw12wVWqmWhAs+jUbjJrGJc9qR2gRhEcyECER62Q
-         Tp9wHOVFGb5TcGvK6TO5+mq5Rs1i6+yAybco6f5KINp1aHm4GH/bnbrbglp1lVGwZF8b
-         7ybfbmcyzeJzFVbiOD64NpSdlo/7dKJVJVJ3jpbOaloZVLTZ8XfJVLEfBl1/wvU59HVc
-         +YFQ==
-X-Gm-Message-State: APjAAAXBEyRQbb9wMlVhFkGVrKCHTm/o+Ot2gc9yheZHOv/X1oNwJcRs
-        wBsGZTUPEmw+MpyqEXWv2jg=
-X-Google-Smtp-Source: APXvYqyAhiBefq45zCzS1L1EYjIt2qdRvy+5FQW4NSANWKJUXfLH5Ujy7VPvTp+eFbuTXxwbzXVRSg==
-X-Received: by 2002:ac2:4c31:: with SMTP id u17mr7241219lfq.57.1576806971795;
-        Thu, 19 Dec 2019 17:56:11 -0800 (PST)
+        bh=i7a3lxaMDdErpekYLxYZCSpGszEjiHMz9VIU/9b2FAA=;
+        b=fywmB/oamn+5sVvB+hV7Ph82fSO3kkkon+VpS19JDp01D7UXmt6g0nyzCU6hhLrQT4
+         tTD0zDa49zH20VgTJAlhlr3KPHVhUwu+MclcfFuHDrc0AYxnkFDqrhb97CfBnSM7LkAX
+         X41FLIiXcPWU/vAyeRrVEvj+5ujl0PaUFU4ptgljcBX71cHUBsjAebcCrNEWaKEayyi4
+         quW3ltYzXjvYKcEkMMZlzfjd3c/bcJxMb9lazJ0ISHjiIc3J4ypoqFLJznLGMnPtH5a+
+         VctaxB6z0kT8LXrgD5stzo2lEsfKspq1sqXGB9h8Dmx9dAxnNKmtLLV2L0GqE7o5gfQk
+         UTUg==
+X-Gm-Message-State: APjAAAUfmyeAWKfaNsyjHN5k1mi3U+3GGVbCL9GXukl/l7xKo4hl/AkY
+        vTqxkQvAFlN9mRj8ZjcT0RMNiRfd
+X-Google-Smtp-Source: APXvYqwbN97kGheLd00XaTVr135VZRcJmbkDNLnp4cnbkDtsFk0Z5/dfW9k80jO5EEXSV5IdepTn0Q==
+X-Received: by 2002:a2e:2c04:: with SMTP id s4mr8493693ljs.35.1576806974736;
+        Thu, 19 Dec 2019 17:56:14 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id m13sm3270901lfo.40.2019.12.19.17.56.10
+        by smtp.gmail.com with ESMTPSA id m13sm3270901lfo.40.2019.12.19.17.56.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 17:56:11 -0800 (PST)
+        Thu, 19 Dec 2019 17:56:14 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -66,9 +66,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         Felipe Balbi <balbi@kernel.org>
 Cc:     devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
         linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 07/10] usb: phy: tegra: Use devm_otg_ulpi_create()
-Date:   Fri, 20 Dec 2019 04:52:35 +0300
-Message-Id: <20191220015238.9228-8-digetx@gmail.com>
+Subject: [PATCH v2 10/10] usb: chipidea: tegra: Add USB_TEGRA_PHY module to driver's dependencies
+Date:   Fri, 20 Dec 2019 04:52:38 +0300
+Message-Id: <20191220015238.9228-11-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191220015238.9228-1-digetx@gmail.com>
 References: <20191220015238.9228-1-digetx@gmail.com>
@@ -79,63 +79,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The resource-managed variant removes the necessity for the driver to care
-about freeing ULPI resources.
+Now, when ci_hdrc_tegra kernel module is loaded, the phy_tegra_usb module
+is loaded too regardless of kernel's configuration. Previously this
+problem was masked because Tegra's EHCI driver is usually enabled in
+kernel's config and thus PHY driver was getting loaded because of it, but
+now I was making some more thorough testing and noticed that PHY's module
+isn't getting auto-loaded without the host driver.
 
-Suggested-by: Thierry Reding <thierry.reding@gmail.com>
+Note that ChipIdea's driver doesn't use any of the exported functions of
+phy_tegra_usb module and thus the module needs to be requested explicitly.
+
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/usb/phy/phy-tegra-usb.c | 21 +++++----------------
- 1 file changed, 5 insertions(+), 16 deletions(-)
+ drivers/usb/chipidea/Kconfig         | 1 +
+ drivers/usb/chipidea/ci_hdrc_tegra.c | 6 ++++++
+ 2 files changed, 7 insertions(+)
 
-diff --git a/drivers/usb/phy/phy-tegra-usb.c b/drivers/usb/phy/phy-tegra-usb.c
-index 9ce6699f40e7..d5739b6e0b6c 100644
---- a/drivers/usb/phy/phy-tegra-usb.c
-+++ b/drivers/usb/phy/phy-tegra-usb.c
-@@ -1170,7 +1170,9 @@ static int tegra_usb_phy_probe(struct platform_device *pdev)
- 			return err;
- 		}
+diff --git a/drivers/usb/chipidea/Kconfig b/drivers/usb/chipidea/Kconfig
+index ae850b3fddf2..d53db520e209 100644
+--- a/drivers/usb/chipidea/Kconfig
++++ b/drivers/usb/chipidea/Kconfig
+@@ -7,6 +7,7 @@ config USB_CHIPIDEA
+ 	select RESET_CONTROLLER
+ 	select USB_ULPI_BUS
+ 	select USB_ROLE_SWITCH
++	select USB_TEGRA_PHY if ARCH_TEGRA
+ 	help
+ 	  Say Y here if your system has a dual role high speed USB
+ 	  controller based on ChipIdea silicon IP. It supports:
+diff --git a/drivers/usb/chipidea/ci_hdrc_tegra.c b/drivers/usb/chipidea/ci_hdrc_tegra.c
+index 7455df0ede49..8bc11100245d 100644
+--- a/drivers/usb/chipidea/ci_hdrc_tegra.c
++++ b/drivers/usb/chipidea/ci_hdrc_tegra.c
+@@ -53,6 +53,12 @@ static int tegra_udc_probe(struct platform_device *pdev)
+ 	struct tegra_udc *udc;
+ 	int err;
  
--		tegra_phy->ulpi = otg_ulpi_create(&ulpi_viewport_access_ops, 0);
-+		tegra_phy->ulpi = devm_otg_ulpi_create(&pdev->dev,
-+						       &ulpi_viewport_access_ops,
-+						       0);
- 		if (!tegra_phy->ulpi) {
- 			dev_err(&pdev->dev, "Failed to create ULPI OTG\n");
- 			err = -ENOMEM;
-@@ -1205,18 +1207,10 @@ static int tegra_usb_phy_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, tegra_phy);
- 
- 	err = usb_add_phy_dev(&tegra_phy->u_phy);
--	if (err < 0)
--		goto free_ulpi;
-+	if (err)
-+		return err;
- 
- 	return 0;
--
--free_ulpi:
--	if (tegra_phy->ulpi) {
--		kfree(tegra_phy->ulpi->otg);
--		kfree(tegra_phy->ulpi);
--	}
--
--	return err;
- }
- 
- static int tegra_usb_phy_remove(struct platform_device *pdev)
-@@ -1225,11 +1219,6 @@ static int tegra_usb_phy_remove(struct platform_device *pdev)
- 
- 	usb_remove_phy(&tegra_phy->u_phy);
- 
--	if (tegra_phy->ulpi) {
--		kfree(tegra_phy->ulpi->otg);
--		kfree(tegra_phy->ulpi);
--	}
--
- 	return 0;
- }
- 
++	if (IS_MODULE(CONFIG_USB_TEGRA_PHY)) {
++		err = request_module("phy_tegra_usb");
++		if (err)
++			return err;
++	}
++
+ 	udc = devm_kzalloc(&pdev->dev, sizeof(*udc), GFP_KERNEL);
+ 	if (!udc)
+ 		return -ENOMEM;
 -- 
 2.24.0
 
