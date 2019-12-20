@@ -2,252 +2,159 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBCEEC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A1CC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 837CE2468D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B526F24679
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:53:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbfLTLu4 convert rfc822-to-8bit (ORCPT
+        id S1727281AbfLTLxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 06:50:56 -0500
-Received: from mga14.intel.com ([192.55.52.115]:43217 "EHLO mga14.intel.com"
+        Fri, 20 Dec 2019 06:53:49 -0500
+Received: from foss.arm.com ([217.140.110.172]:49922 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727177AbfLTLu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 06:50:56 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Dec 2019 03:50:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,335,1571727600"; 
-   d="scan'208";a="228584602"
-Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
-  by orsmga002.jf.intel.com with ESMTP; 20 Dec 2019 03:50:54 -0800
-Received: from fmsmsx115.amr.corp.intel.com (10.18.116.19) by
- fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 20 Dec 2019 03:50:54 -0800
-Received: from shsmsx103.ccr.corp.intel.com (10.239.4.69) by
- fmsmsx115.amr.corp.intel.com (10.18.116.19) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 20 Dec 2019 03:50:54 -0800
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.90]) by
- SHSMSX103.ccr.corp.intel.com ([169.254.4.29]) with mapi id 14.03.0439.000;
- Fri, 20 Dec 2019 19:50:52 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-CC:     "Raj, Ashok" <ashok.raj@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>, Peter Xu <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4 0/7] Use 1st-level for IOVA translation
-Thread-Topic: [PATCH v4 0/7] Use 1st-level for IOVA translation
-Thread-Index: AQHVthray/3ZZTiwzUq7igUsBwcT3qfC6XAw
-Date:   Fri, 20 Dec 2019 11:50:52 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A13A364@SHSMSX104.ccr.corp.intel.com>
-References: <20191219031634.15168-1-baolu.lu@linux.intel.com>
-In-Reply-To: <20191219031634.15168-1-baolu.lu@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMzVmNGY2YTUtM2IzMC00NWJjLTg0ZjYtYzk2NGM2YjlhNGZiIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiK0NqSTRiTk9FY0ltVksrZ1cxWWtXUlhRZlI1MG1Zb0RNdnZJZ3FsUnMrNlZWN3diOUl3QlNvMVhaSHlzYVwvQUsifQ==
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1727177AbfLTLxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 06:53:49 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 395A030E;
+        Fri, 20 Dec 2019 03:53:48 -0800 (PST)
+Received: from [10.1.194.52] (e112269-lin.cambridge.arm.com [10.1.194.52])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 567D63F719;
+        Fri, 20 Dec 2019 03:53:45 -0800 (PST)
+Subject: Re: [PATCH v17 06/23] powerpc: mm: Add p?d_leaf() definitions
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+Cc:     Mark Rutland <Mark.Rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Paul Mackerras <paulus@samba.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Will Deacon <will@kernel.org>,
+        "Liang, Kan" <kan.liang@linux.intel.com>, x86@kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, kvm-ppc@vger.kernel.org,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
+        linuxppc-dev@lists.ozlabs.org
+References: <20191218162402.45610-1-steven.price@arm.com>
+ <20191218162402.45610-7-steven.price@arm.com>
+ <877e2smt6r.fsf@mpe.ellerman.id.au>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <e99a9857-e9f4-588a-ad12-4d5f3a9de739@arm.com>
+Date:   Fri, 20 Dec 2019 11:53:44 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
+In-Reply-To: <877e2smt6r.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Baolu,
+On 19/12/2019 11:49, Michael Ellerman wrote:
+> Steven Price <steven.price@arm.com> writes:
+>> walk_page_range() is going to be allowed to walk page tables other than
+>> those of user space. For this it needs to know when it has reached a
+>> 'leaf' entry in the page tables. This information is provided by the
+>> p?d_leaf() functions/macros.
+>>
+>> For powerpc p?d_is_leaf() functions already exist. Export them using the
+>> new p?d_leaf() name.
+>>
+>> CC: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+>> CC: Paul Mackerras <paulus@samba.org>
+>> CC: Michael Ellerman <mpe@ellerman.id.au>
+>> CC: linuxppc-dev@lists.ozlabs.org
+>> CC: kvm-ppc@vger.kernel.org
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+>>  arch/powerpc/include/asm/book3s/64/pgtable.h | 3 +++
+>>  1 file changed, 3 insertions(+)
+> 
+> We have fallback versions of our pmd_is_leaf() etc. in
+> arch/powerpc/include/asm/pgtable.h, eg:
+> 
+> #ifndef pmd_is_leaf
+> #define pmd_is_leaf pmd_is_leaf
+> static inline bool pmd_is_leaf(pmd_t pmd)
+> {
+> 	return false;
+> }
+> #endif
+> 
+> Because we support several different MMUs and most of them don't need to
+> do anything.
+> 
+> So we could put the compatibility #defines to your names along with the
+> fallback versions in asm/pgtable.h, rather than in
+> asm/book3s/64/pgtable.h
+> 
+> But I see you also have fallbacks for your versions, so it probably
+> doesn't matter either way.
+> 
+> So I'm OK with this version, unless you think there's a compelling
+> reason to do the compatibility #defines in our asm/pgtable.h
 
-In a brief, this version is pretty good to me. However, I still want
-to have the following checks to see if anything missed. Wish it
-helps.
+I was thinking that (assuming this series actually gets merged this
+time), the p?d_is_leaf() versions could be removed and replaced by
+p?d_leaf() in the future. Since the fallbacks are in the asm-generic
+code it makes sense for the pmd_leaf() definitions to be next to the
+non-fallback versions.
 
-1) would using IOVA over FLPT default on?
-My opinion is that before we have got gIOVA nested translation
-done for passthru devices, we should make this feature as off.
+> Acked-by: Michael Ellerman <mpe@ellerman.id.au>
 
-2) the domain->agaw is somehow calculated according to the
-capabilities related to second level page table. As we are moving
-IOVA to FLPT, I'd suggest to calculate domain->agaw with the
-translation modes FLPT supports (e.g. 4 level and 5 level)
+Thanks!
 
-3) Per VT-d spec, FLPT has canonical requirement to the input
-addresses. So I'd suggest to add some enhance regards to it.
-Please refer to chapter 3.6 :-).
+Steve
 
-3.6 First-Level Translation
-First-level translation restricts the input-address to a canonical address (i.e., address bits 63:N have
-the same value as address bit [N-1], where N is 48-bits with 4-level paging and 57-bits with 5-level
-paging). Requests subject to first-level translation by remapping hardware are subject to canonical
-address checking as a pre-condition for first-level translation, and a violation is treated as a
-translation-fault.
-
-Regards,
-Yi Liu
-
-> From: Lu Baolu [mailto:baolu.lu@linux.intel.com]
-> Sent: Thursday, December 19, 2019 11:16 AM
-> To: Joerg Roedel <joro@8bytes.org>; David Woodhouse <dwmw2@infradead.org>;
-> Alex Williamson <alex.williamson@redhat.com>
-> Subject: [PATCH v4 0/7] Use 1st-level for IOVA translation
-> 
-> Intel VT-d in scalable mode supports two types of page tables
-> for DMA translation: the first level page table and the second
-> level page table. The first level page table uses the same
-> format as the CPU page table, while the second level page table
-> keeps compatible with previous formats. The software is able
-> to choose any one of them for DMA remapping according to the use
-> case.
-> 
-> This patchset aims to move IOVA (I/O Virtual Address) translation
-> to 1st-level page table in scalable mode. This will simplify vIOMMU
-> (IOMMU simulated by VM hypervisor) design by using the two-stage
-> translation, a.k.a. nested mode translation.
-> 
-> As Intel VT-d architecture offers caching mode, guest IOVA (GIOVA)
-> support is currently implemented in a shadow page manner. The device
-> simulation software, like QEMU, has to figure out GIOVA->GPA mappings
-> and write them to a shadowed page table, which will be used by the
-> physical IOMMU. Each time when mappings are created or destroyed in
-> vIOMMU, the simulation software has to intervene. Hence, the changes
-> on GIOVA->GPA could be shadowed to host.
+> cheers
 > 
 > 
->      .-----------.
->      |  vIOMMU   |
->      |-----------|                 .--------------------.
->      |           |IOTLB flush trap |        QEMU        |
->      .-----------. (map/unmap)     |--------------------|
->      |GIOVA->GPA |---------------->|    .------------.  |
->      '-----------'                 |    | GIOVA->HPA |  |
->      |           |                 |    '------------'  |
->      '-----------'                 |                    |
->                                    |                    |
->                                    '--------------------'
->                                                 |
->             <------------------------------------
->             |
->             v VFIO/IOMMU API
->       .-----------.
->       |  pIOMMU   |
->       |-----------|
->       |           |
->       .-----------.
->       |GIOVA->HPA |
->       '-----------'
->       |           |
->       '-----------'
+>> diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
+>> index b01624e5c467..201a69e6a355 100644
+>> --- a/arch/powerpc/include/asm/book3s/64/pgtable.h
+>> +++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
+>> @@ -1355,18 +1355,21 @@ static inline bool is_pte_rw_upgrade(unsigned long old_val, unsigned long new_va
+>>   * Like pmd_huge() and pmd_large(), but works regardless of config options
+>>   */
+>>  #define pmd_is_leaf pmd_is_leaf
+>> +#define pmd_leaf pmd_is_leaf
+>>  static inline bool pmd_is_leaf(pmd_t pmd)
+>>  {
+>>  	return !!(pmd_raw(pmd) & cpu_to_be64(_PAGE_PTE));
+>>  }
+>>  
+>>  #define pud_is_leaf pud_is_leaf
+>> +#define pud_leaf pud_is_leaf
+>>  static inline bool pud_is_leaf(pud_t pud)
+>>  {
+>>  	return !!(pud_raw(pud) & cpu_to_be64(_PAGE_PTE));
+>>  }
+>>  
+>>  #define pgd_is_leaf pgd_is_leaf
+>> +#define pgd_leaf pgd_is_leaf
+>>  static inline bool pgd_is_leaf(pgd_t pgd)
+>>  {
+>>  	return !!(pgd_raw(pgd) & cpu_to_be64(_PAGE_PTE));
+>> -- 
+>> 2.20.1
 > 
-> In VT-d 3.0, scalable mode is introduced, which offers two-level
-> translation page tables and nested translation mode. Regards to
-> GIOVA support, it can be simplified by 1) moving the GIOVA support
-> over 1st-level page table to store GIOVA->GPA mapping in vIOMMU,
-> 2) binding vIOMMU 1st level page table to the pIOMMU, 3) using pIOMMU
-> second level for GPA->HPA translation, and 4) enable nested (a.k.a.
-> dual-stage) translation in host. Compared with current shadow GIOVA
-> support, the new approach makes the vIOMMU design simpler and more
-> efficient as we only need to flush the pIOMMU IOTLB and possible
-> device-IOTLB when an IOVA mapping in vIOMMU is torn down.
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > 
->      .-----------.
->      |  vIOMMU   |
->      |-----------|                 .-----------.
->      |           |IOTLB flush trap |   QEMU    |
->      .-----------.    (unmap)      |-----------|
->      |GIOVA->GPA |---------------->|           |
->      '-----------'                 '-----------'
->      |           |                       |
->      '-----------'                       |
->            <------------------------------
->            |      VFIO/IOMMU
->            |  cache invalidation and
->            | guest gpd bind interfaces
->            v
->      .-----------.
->      |  pIOMMU   |
->      |-----------|
->      .-----------.
->      |GIOVA->GPA |<---First level
->      '-----------'
->      | GPA->HPA  |<---Scond level
->      '-----------'
->      '-----------'
-> 
-> This patch applies the first level page table for IOVA translation
-> unless the DOMAIN_ATTR_NESTING domain attribution has been set.
-> Setting of this attribution means the second level will be used to
-> map gPA (guest physical address) to hPA (host physical address), and
-> the mappings between gVA (guest virtual address) and gPA will be
-> maintained by the guest with the page table address binding to host's
-> first level.
-> 
-> Based-on-idea-by: Ashok Raj <ashok.raj@intel.com>
-> Based-on-idea-by: Kevin Tian <kevin.tian@intel.com>
-> Based-on-idea-by: Liu Yi L <yi.l.liu@intel.com>
-> Based-on-idea-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Based-on-idea-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
-> Based-on-idea-by: Lu Baolu <baolu.lu@linux.intel.com>
-> 
-> Change log:
-> 
-> v3->v4:
->  - The previous version was posted here
->    https://lkml.org/lkml/2019/12/10/2126
->  - Set Execute Disable (bit 63) in first level table entries.
->  - Enhance pasid-based iotlb invalidation for both default domain
->    and auxiliary domain.
->  - Add debugfs file to expose page table internals.
-> 
-> v2->v3:
->  - The previous version was posted here
->    https://lkml.org/lkml/2019/11/27/1831
->  - Accept Jacob's suggestion on merging two page tables.
-> 
->  v1->v2
->  - The first series was posted here
->    https://lkml.org/lkml/2019/9/23/297
->  - Use per domain page table ops to handle different page tables.
->  - Use first level for DMA remapping by default on both bare metal
->    and vm guest.
->  - Code refine according to code review comments for v1.
-> 
-> Lu Baolu (7):
->   iommu/vt-d: Identify domains using first level page table
->   iommu/vt-d: Add set domain DOMAIN_ATTR_NESTING attr
->   iommu/vt-d: Add PASID_FLAG_FL5LP for first-level pasid setup
->   iommu/vt-d: Setup pasid entries for iova over first level
->   iommu/vt-d: Flush PASID-based iotlb for iova over first level
->   iommu/vt-d: Use iova over first level
->   iommu/vt-d: debugfs: Add support to show page table internals
-> 
->  drivers/iommu/dmar.c                |  41 ++++++
->  drivers/iommu/intel-iommu-debugfs.c |  75 +++++++++++
->  drivers/iommu/intel-iommu.c         | 201 +++++++++++++++++++++++++---
->  drivers/iommu/intel-pasid.c         |   7 +-
->  drivers/iommu/intel-pasid.h         |   6 +
->  drivers/iommu/intel-svm.c           |   8 +-
->  include/linux/intel-iommu.h         |  20 ++-
->  7 files changed, 326 insertions(+), 32 deletions(-)
-> 
-> --
-> 2.17.1
 
