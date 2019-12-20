@@ -2,126 +2,129 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E759AC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 243F9C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C52BD24683
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE987227BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:55:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="rGj3AAtL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727338AbfLTGxi (ORCPT
+        id S1727148AbfLTGze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 01:53:38 -0500
-Received: from [167.172.186.51] ([167.172.186.51]:59184 "EHLO shell.v3.sk"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725801AbfLTGxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 01:53:23 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 6B417DFC76;
-        Fri, 20 Dec 2019 06:53:24 +0000 (UTC)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id BUYhCElFSDFC; Fri, 20 Dec 2019 06:53:22 +0000 (UTC)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id B51E1DFC5E;
-        Fri, 20 Dec 2019 06:53:22 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id rSDtHG59z_Kv; Fri, 20 Dec 2019 06:53:22 +0000 (UTC)
-Received: from furthur.lan (unknown [109.183.109.54])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id C846ADFCA3;
-        Fri, 20 Dec 2019 06:53:21 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        soc@kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 4/5] ARM: dts: mmp3: Add HSIC controllers
-Date:   Fri, 20 Dec 2019 07:53:13 +0100
-Message-Id: <20191220065314.237624-5-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191220065314.237624-1-lkundrak@v3.sk>
-References: <20191220065314.237624-1-lkundrak@v3.sk>
+        Fri, 20 Dec 2019 01:55:34 -0500
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:19956 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbfLTGzd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 01:55:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1576824933; x=1608360933;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=p6HW/orEkeI98IrIWa8f4t4rBCRPzGJFpoAOyyMNc2M=;
+  b=rGj3AAtLMrMgpCCnUWlpbpDEE1zpDqV/u9nF9EGEONMtQGFO5jkTnMA6
+   x8SYBl/Ttc5VIv7NfObpUyPWWJs49NhnDUU2UNjIi71D1KTyj+V2b3IAV
+   VXy9Mr+uhg4j7/g+zMqPyUohAqM7qP8EcTtiuAzuwKaDSqMoy/zC17NJw
+   Un3l17VrtIC70ddrWnt5dtXDOkmQ5WNqlsq+r5PC8k8NEghdPLt6zLveB
+   TqXqqe+/yMqVwImCcRopciH2xtqgAw2Q8En7Ytmre3bzy1EjIr9Lb1oVh
+   hE3eKsgPy/N6XwJEVNhajaThs9RIeQY2dxOHPzbivkASVhxRTpj7Osrlf
+   g==;
+IronPort-SDR: ylKh6rP8ht3FOkzOXs2dy7oyWSCUrfzg3cfeWOFlZWHXv503X+LBV6vKJK4zycD21BxzoMzkYj
+ q3I932bieVb1VTDuM7VlN+IYE25ZTZ6xejBnBLnuDNYFDzuReC4aViLqbyIzkjWdQOC0vb1w9d
+ KFtxzIiQhrcF1LtBYBPiH0BecdBw9dhTxDoS2RTvmy0xdZVX7QSaz9YyUCbGEDoBvYUNeVD8km
+ /hfstGopmxFMW2/FcgRd/WapJ1IQ7TzQafvgUpsS9t7GCUy4022q0kLUpWml1pOC1nly6lqdiM
+ 1hg=
+X-IronPort-AV: E=Sophos;i="5.69,334,1571673600"; 
+   d="scan'208";a="127398471"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 20 Dec 2019 14:55:31 +0800
+IronPort-SDR: 4PXrd4EuGXV+zbKrMfRWLWdRx32z+abq9aM0d7JMRQVfzlxRUyCF7yy5YoBL56StQxggsZG5ef
+ H0cvHAMUvfY9VIwACK16G5dk+cZxO80PhWsRcSK37fmW/5sk3j2RYWQQu1c5+F7JHHG5WBwwFc
+ q/cOZ7sAxLnE7XnLjNyhxOruHhpMXFoFdU/BvE25c3cFolkeuYEmJEnwKCtt9vwPbYNWTf0sej
+ iTVJuab/Iy9PAGQqW2yingqD84GHzZHPV3qWQ9HQlK5SAqM7daHkPR6loLw4fLlc56phkY9vUa
+ e6hsSdmPNV8B+AU0nO5T6s7N
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2019 22:49:51 -0800
+IronPort-SDR: L7HvcAQ+HMUl93BipiIfarinR6wnhTbw2ma7EZvOF11W8maIOUUuBQfMmutesNXshr2PJJuijT
+ MMp6n85ndE/Xs7K3al14/qXScLex4BBqCBxdmY6/uO6O9veC8/In1KdiZ/Oyk/2mO6dayAGH52
+ bIJYeyEUJyIUQOQ7Z+VKigH/TZLCbbkeqQbu/qtNFiHJhpXMu3pyRvj2eIXwEiENKDMRxPS6ih
+ VpmqYUgfrz7fylBQBZ9n4smDwKaKf8FsIixPEsjC/0wT3+VPWwRRCRVgn0wGYCG97Y75SOLlH1
+ x3Q=
+WDCIronportException: Internal
+Received: from washi.fujisawa.hgst.com ([10.149.53.254])
+  by uls-op-cesaip02.wdc.com with ESMTP; 19 Dec 2019 22:55:30 -0800
+From:   Damien Le Moal <damien.lemoal@wdc.com>
+To:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Johannes Thumshirn <jth@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Hannes Reinecke <hare@suse.de>
+Subject: [PATCH v2 0/2] New zonefs file system
+Date:   Fri, 20 Dec 2019 15:55:26 +0900
+Message-Id: <20191220065528.317947-1-damien.lemoal@wdc.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two on MMP3, along with the PHYs. The PHYs are made compatible
-with the NOP transceiver, since there's no driver for the time being and
-they're likely configured by the firmware.
+zonefs is a very simple file system exposing each zone of a zoned block
+device as a file. Unlike a regular file system with zoned block device
+support (e.g. f2fs or the on-going btrfs effort), zonefs does not hide
+the sequential write constraint of zoned block devices to the user.
+Files representing sequential write zones of the device must be written
+sequentially starting from the end of the file (append only writes).
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- arch/arm/boot/dts/mmp3.dtsi | 44 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+zonefs is not a POSIX compliant file system. It's goal is to simplify
+the implementation of zoned block devices support in applications by
+replacing raw block device file accesses with a richer file based API,
+avoiding relying on direct block device file ioctls which may
+be more obscure to developers. One example of this approach is the
+implementation of LSM (log-structured merge) tree structures (such as
+used in RocksDB and LevelDB) on zoned block devices by allowing SSTables
+to be stored in a zone file similarly to a regular file system rather
+than as a range of sectors of a zoned device. The introduction of the
+higher level construct "one file is one zone" can help reducing the
+amount of changes needed in the application while at the same time
+allowing the use of zoned block devices with various programming
+languages other than C.
 
-diff --git a/arch/arm/boot/dts/mmp3.dtsi b/arch/arm/boot/dts/mmp3.dtsi
-index d9762de0ed34b..36c50706e60e0 100644
---- a/arch/arm/boot/dts/mmp3.dtsi
-+++ b/arch/arm/boot/dts/mmp3.dtsi
-@@ -201,6 +201,50 @@ usb_otg0: usb-otg@d4208000 {
- 				status =3D "disabled";
- 			};
-=20
-+			hsic_phy0: hsic-phy@f0001800 {
-+				compatible =3D "marvell,mmp3-hsic-phy",
-+					     "usb-nop-xceiv",
-+				reg =3D <0xf0001800 0x40>;
-+				#phy-cells =3D <0>;
-+				status =3D "disabled";
-+			};
-+
-+			hsic0: hsic@f0001000 {
-+				compatible =3D "marvell,pxau2o-ehci";
-+				reg =3D <0xf0001000 0x200>;
-+				interrupts =3D <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks =3D <&soc_clocks MMP2_CLK_USBHSIC0>;
-+				clock-names =3D "USBCLK";
-+				phys =3D <&hsic_phy0>;
-+				phy-names =3D "usb";
-+				phy_type =3D "hsic";
-+				#address-cells =3D <0x01>;
-+				#size-cells =3D <0x00>;
-+				status =3D "disabled";
-+			};
-+
-+			hsic_phy1: hsic-phy@f0002800 {
-+				compatible =3D "marvell,mmp3-hsic-phy",
-+					     "usb-nop-xceiv",
-+				reg =3D <0xf0002800 0x40>;
-+				#phy-cells =3D <0>;
-+				status =3D "disabled";
-+			};
-+
-+			hsic1: hsic@f0002000 {
-+				compatible =3D "marvell,pxau2o-ehci";
-+				reg =3D <0xf0002000 0x200>;
-+				interrupts =3D <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks =3D <&soc_clocks MMP2_CLK_USBHSIC1>;
-+				clock-names =3D "USBCLK";
-+				phys =3D <&hsic_phy1>;
-+				phy-names =3D "usb";
-+				phy_type =3D "hsic";
-+				#address-cells =3D <0x01>;
-+				#size-cells =3D <0x00>;
-+				status =3D "disabled";
-+			};
-+
- 			mmc1: mmc@d4280000 {
- 				compatible =3D "mrvl,pxav3-mmc";
- 				reg =3D <0xd4280000 0x120>;
---=20
-2.24.1
+zonefs IO management implementation uses the new iomap generic code.
+
+Changes from v1:
+* Fixed comment typo
+* Improved documentation as suggested by Hannes
+
+Damien Le Moal (2):
+  fs: New zonefs file system
+  zonefs: Add documentation
+
+ Documentation/filesystems/zonefs.txt |  215 +++++
+ MAINTAINERS                          |   10 +
+ fs/Kconfig                           |    1 +
+ fs/Makefile                          |    1 +
+ fs/zonefs/Kconfig                    |    9 +
+ fs/zonefs/Makefile                   |    4 +
+ fs/zonefs/super.c                    | 1158 ++++++++++++++++++++++++++
+ fs/zonefs/zonefs.h                   |  169 ++++
+ include/uapi/linux/magic.h           |    1 +
+ 9 files changed, 1568 insertions(+)
+ create mode 100644 Documentation/filesystems/zonefs.txt
+ create mode 100644 fs/zonefs/Kconfig
+ create mode 100644 fs/zonefs/Makefile
+ create mode 100644 fs/zonefs/super.c
+ create mode 100644 fs/zonefs/zonefs.h
+
+-- 
+2.23.0
 
