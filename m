@@ -2,83 +2,133 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75964C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D035CC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B8D921655
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:36:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vs5/CCNl"
+	by mail.kernel.org (Postfix) with ESMTP id AC35A2146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:36:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbfLTTgD (ORCPT
+        id S1727536AbfLTTgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 14:36:03 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42445 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727413AbfLTTgB (ORCPT
+        Fri, 20 Dec 2019 14:36:45 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12142 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727413AbfLTTgp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 14:36:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576870559;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0w7BdpFfq1sQvJ5pJAS7Ef9KsGQfYtQlP4zXMnJdaQY=;
-        b=Vs5/CCNlyjFmfpvoWzUFW8DVCTiKOmRXkQjrgNhkdaroOxh/wSJ6wSrsfLiYGjnYzTSD7K
-        lWidjBEJ0dJu0RMk4YrQ+H1fRA+ZX26mCKQtsHGNltRms64hH+b7mh2EWDyv8SuJYo1hcf
-        NHHQg0vnf0F+DwgiLjebDX7TjSra+Tw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-265-1oiERg97PtSBy0Z3cBMOZA-1; Fri, 20 Dec 2019 14:35:55 -0500
-X-MC-Unique: 1oiERg97PtSBy0Z3cBMOZA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0BD7C1081BFB;
-        Fri, 20 Dec 2019 19:35:54 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (ovpn-204-70.brq.redhat.com [10.40.204.70])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 664CC5DA2C;
-        Fri, 20 Dec 2019 19:35:45 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Fri, 20 Dec 2019 20:35:52 +0100 (CET)
-Date:   Fri, 20 Dec 2019 20:35:44 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Brian Gerst <brgerst@gmail.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Subject: Re: [PATCH] x86: Remove force_iret()
-Message-ID: <20191220193543.GD13464@redhat.com>
-References: <20191219115812.102620-1-brgerst@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191219115812.102620-1-brgerst@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Fri, 20 Dec 2019 14:36:45 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBKJJI59131594
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 14:36:44 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2x0xccmvks-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 14:36:44 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 20 Dec 2019 19:36:41 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 20 Dec 2019 19:36:37 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBKJaaAV60620848
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Dec 2019 19:36:37 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DF5D511C05C;
+        Fri, 20 Dec 2019 19:36:36 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BC80A11C054;
+        Fri, 20 Dec 2019 19:36:35 +0000 (GMT)
+Received: from dhcp-9-31-103-79.watson.ibm.com (unknown [9.31.103.79])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 20 Dec 2019 19:36:35 +0000 (GMT)
+Subject: Re: [PATCH v5 0/2] IMA: Deferred measurement of keys
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        James.Bottomley@HansenPartnership.com,
+        linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+Date:   Fri, 20 Dec 2019 14:36:35 -0500
+In-Reply-To: <589b893b-52e4-783c-0f32-608ed1cfd7f9@linux.microsoft.com>
+References: <20191218164434.2877-1-nramas@linux.microsoft.com>
+         <1576868506.5241.65.camel@linux.ibm.com>
+         <589b893b-52e4-783c-0f32-608ed1cfd7f9@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19122019-0020-0000-0000-0000039A55B5
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19122019-0021-0000-0000-000021F18521
+Message-Id: <1576870595.5241.83.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-20_05:2019-12-17,2019-12-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
+ mlxlogscore=999 clxscore=1015 lowpriorityscore=0 priorityscore=1501
+ impostorscore=0 suspectscore=11 spamscore=0 malwarescore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912200143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/19, Brian Gerst wrote:
->
-> force_iret() was originally intended to prevent the return to user mode with
-> the SYSRET or SYSEXIT instructions, in cases where the register state could
-> have been changed to be incompatible with those instructions.  The entry code
-> has been significantly reworked since then, and register state is validated
-> before SYSRET or SYSEXIT are used.  force_iret() no longer serves its original
-> purpose and can be eliminated.
+On Fri, 2019-12-20 at 11:25 -0800, Lakshmi Ramasubramanian wrote:
+> On 12/20/2019 11:01 AM, Mimi Zohar wrote:
+> 
+> Hi Mimi,
+> 
+> >> If the kernel is built with both CONFIG_IMA and
+> >> CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE enabled then the IMA policy
+> >> must be applied as a custom policy. Not providing a custom policy
+> >> in the above configuration would result in asymmeteric keys being queued
+> >> until a custom policy is loaded. This is by design.
+> > 
+> > I didn't notice the "This is by design" here, referring to the memory
+> > never being freed.  "This is by design" was suppose to refer to
+> > requiring a custom policy for measuring keys.
+> > 
+> > For now, these two patches are queued in the next-integrity-testing
+> > branch, but I would appreciate your addressing not freeing the memory
+> > associated with the keys, if a custom policy is not loaded.
+> > 
+> > Please note that I truncated the 2/2 patch description, as it repeats
+> > the existing verification example in commit ("2b60c0ecedf8 IMA: Read
+> > keyrings= option from the IMA policy").
+> > 
+> > thanks,
+> > 
+> > Mimi
+> > 
+> 
+> Sure - I am fine with truncating the 2/2 patch description. Thanks for 
+> doing that.
+> 
+> Regarding "Freeing the queued keys if custom policy is not loaded":
+> 
+> Shall I create a new patch set to address that and have that be reviewed 
+> independent of this patch set?
 
-Plus iiuc today force_iret() == set_thread_flag(TIF_NOTIFY_RESUME) simply has
-no effect on asm paths.
+If it is just a single additional patch, feel free to post it without
+a cover letter.
 
-Acked-by: Oleg Nesterov <oleg@redhat.com>
+> 
+> Like you'd suggested earlier, we can wait for a certain time, after IMA 
+> is initialized, and free the queue if a custom policy was not loaded.
+
+Different types of systems vary in boot time, but perhaps a certain
+amount of time after IMA is initialized would be consistent.  This
+would need to work for IoT devices/sensors to servers.
+
+Mimi 
 
