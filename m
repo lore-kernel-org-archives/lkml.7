@@ -2,182 +2,127 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6922C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D92C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B244E24682
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 427072146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:34:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KoEe95fX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yTdS75r0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727432AbfLTJdo (ORCPT
+        id S1727435AbfLTJeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 04:33:44 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33277 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727279AbfLTJdn (ORCPT
+        Fri, 20 Dec 2019 04:34:00 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:55114 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727193AbfLTJeA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 04:33:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576834422;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kARvpg6EeSn47uf+HJvOWWm63eTYV3jwqH0aHeRURHY=;
-        b=KoEe95fXnH3+7rYUbP5Hts1DNLWdfbNzptZwkKz2TRf2ARuv2Kj6C3PfBIF5D5C4MleZbj
-        ljBUto9BjwrkUvIZDoZyQHGHU7XupKqHT7UrTi25AT2KCzsey2jJXMnfSj4yTq7vb9CfZX
-        v02eH6fh8zjJ9iQ8/niHvCplbCniFL4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-63-euuv6RBAMwGCsT-Q338LuQ-1; Fri, 20 Dec 2019 04:33:41 -0500
-X-MC-Unique: euuv6RBAMwGCsT-Q338LuQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 444D1911EB;
-        Fri, 20 Dec 2019 09:33:38 +0000 (UTC)
-Received: from gondolin (dhcp-192-245.str.redhat.com [10.33.192.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 82CC560BF3;
-        Fri, 20 Dec 2019 09:33:27 +0000 (UTC)
-Date:   Fri, 20 Dec 2019 10:33:25 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kurz <groug@kaod.org>
-Subject: Re: [PATCH v2 30/45] KVM: Move vcpu alloc and init invocation to
- common code
-Message-ID: <20191220103325.34fc2bf0.cohuck@redhat.com>
-In-Reply-To: <20191218215530.2280-31-sean.j.christopherson@intel.com>
-References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
-        <20191218215530.2280-31-sean.j.christopherson@intel.com>
-Organization: Red Hat GmbH
+        Fri, 20 Dec 2019 04:34:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/9YQTDX1rQMnRpGjo8v0aRdduxI1RsOgNUg+1Xxv8xU=; b=yTdS75r0aWwucLsKyw+wk+PmF
+        cLq1DvfA0ELGQR7NF5nSilho2SzKSDeeijmcyQ8lJtMnGsK+vrThJuuWDTCSC5GyyMCC6+JHGEqBV
+        VHyFwPSkAc4icj6zV1qntdkcikuitH0zi42r3f0Al+6ueWUmmEYhR9/A46Ttu+BLWzWKDDH0RYqwj
+        sTN8Mt+G4PfF4j3CB5XauNjGYDKvd5nbwuL1+HR1eTuT64HWiltuLfOZuLfiWREfvEV/ABtSr0uz+
+        doxTOZHgQlWX9NdPZggqUeTBqnNq/DiT0V2mFDoKLusxUTSE/bJaI4t8RTbA5c2SoGHYmfy9VdyAa
+        4sV3LxQeA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iiEfC-0000FS-15; Fri, 20 Dec 2019 09:33:38 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C8C8F30073C;
+        Fri, 20 Dec 2019 10:32:11 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 935062B46862F; Fri, 20 Dec 2019 10:33:35 +0100 (CET)
+Date:   Fri, 20 Dec 2019 10:33:35 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephane Eranian <eranian@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH 1/9] perf/core: Add PERF_RECORD_CGROUP event
+Message-ID: <20191220093335.GC2844@hirez.programming.kicks-ass.net>
+References: <20191220043253.3278951-1-namhyung@kernel.org>
+ <20191220043253.3278951-2-namhyung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191220043253.3278951-2-namhyung@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Dec 2019 13:55:15 -0800
-Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+On Fri, Dec 20, 2019 at 01:32:45PM +0900, Namhyung Kim wrote:
+> To support cgroup tracking, add CGROUP event to save a link between
+> cgroup path and inode number.  The attr.cgroup bit was also added to
+> enable cgroup tracking from userspace.
+> 
+> This event will be generated when a new cgroup becomes active.
+> Userspace might need to synthesize those events for existing cgroups.
+> 
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: Li Zefan <lizefan@huawei.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-> Now that all architectures tightly couple vcpu allocation/free with the
-> mandatory calls to kvm_{un}init_vcpu(), move the sequences verbatim to
-> common KVM code.
-> 
-> Move both allocation and initialization in a single patch to eliminate
-> thrash in arch specific code.  The bisection benefits of moving the two
-> pieces in separate patches is marginal at best, whereas the odds of
-> introducing a transient arch specific bug are non-zero.
-> 
-> Acked-by: Christoffer Dall <christoffer.dall@arm.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+TJ, is this the right thing to do? ISTR you had concerns on this topic
+on the past.
+
 > ---
->  arch/mips/kvm/mips.c       | 33 ++++++---------------------------
->  arch/powerpc/kvm/powerpc.c | 27 ++++-----------------------
->  arch/s390/kvm/kvm-s390.c   | 31 +++++--------------------------
->  arch/x86/kvm/x86.c         | 28 ++--------------------------
->  include/linux/kvm_host.h   |  2 +-
->  virt/kvm/arm/arm.c         | 29 ++---------------------------
->  virt/kvm/kvm_main.c        | 21 ++++++++++++++++++---
->  7 files changed, 38 insertions(+), 133 deletions(-)
-
-(...)
-
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index 8543d338a06a..2ed76584ebd9 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -2530,9 +2530,6 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
->  	if (vcpu->kvm->arch.use_cmma)
->  		kvm_s390_vcpu_unsetup_cmma(vcpu);
->  	free_page((unsigned long)(vcpu->arch.sie_block));
-> -
-> -	kvm_vcpu_uninit(vcpu);
-> -	kmem_cache_free(kvm_vcpu_cache, vcpu);
->  }
+>  include/uapi/linux/perf_event.h |  14 +++-
+>  kernel/events/core.c            | 112 ++++++++++++++++++++++++++++++++
+>  2 files changed, 125 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> index 377d794d3105..7bae2d3380a6 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -377,7 +377,8 @@ struct perf_event_attr {
+>  				ksymbol        :  1, /* include ksymbol events */
+>  				bpf_event      :  1, /* include bpf events */
+>  				aux_output     :  1, /* generate AUX records instead of events */
+> -				__reserved_1   : 32;
+> +				cgroup         :  1, /* include cgroup events */
+> +				__reserved_1   : 31;
 >  
->  static void kvm_free_vcpus(struct kvm *kvm)
-> @@ -3014,29 +3011,15 @@ int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
->  	return 0;
->  }
+>  	union {
+>  		__u32		wakeup_events;	  /* wakeup every n events */
+> @@ -1006,6 +1007,17 @@ enum perf_event_type {
+>  	 */
+>  	PERF_RECORD_BPF_EVENT			= 18,
 >  
-> -struct kvm_vcpu *kvm_arch_vcpu_create(struct kvm *kvm,
-> -				      unsigned int id)
-> +int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
->  {
-> -	struct kvm_vcpu *vcpu;
->  	struct sie_page *sie_page;
->  	int rc;
->  
-> -	rc = -ENOMEM;
-> -
-> -	vcpu = kmem_cache_zalloc(kvm_vcpu_cache, GFP_KERNEL);
-> -	if (!vcpu)
-> -		goto out;
-> -
-> -	rc = kvm_vcpu_init(vcpu, kvm, id);
-> -	if (rc)
-> -		goto out_free_cpu;
-> -
-> -	rc = -ENOMEM;
-> -
->  	BUILD_BUG_ON(sizeof(struct sie_page) != 4096);
->  	sie_page = (struct sie_page *) get_zeroed_page(GFP_KERNEL);
->  	if (!sie_page)
-> -		goto out_uninit_vcpu;
-> +		return -ENOMEM;
->  
->  	vcpu->arch.sie_block = &sie_page->sie_block;
->  	vcpu->arch.sie_block->itdba = (unsigned long) &sie_page->itdb;
-> @@ -3087,15 +3070,11 @@ struct kvm_vcpu *kvm_arch_vcpu_create(struct kvm *kvm,
->  		 vcpu->arch.sie_block);
->  	trace_kvm_s390_create_vcpu(id, vcpu, vcpu->arch.sie_block);
->  
-> -	return vcpu;
-> +	return 0;
-> +
->  out_free_sie_block:
->  	free_page((unsigned long)(vcpu->arch.sie_block));
-> -out_uninit_vcpu:
-> -	kvm_vcpu_uninit(vcpu);
-> -out_free_cpu:
-> -	kmem_cache_free(kvm_vcpu_cache, vcpu);
-> -out:
-> -	return ERR_PTR(rc);
-> +	return rc;
+> +	/*
+> +	 * struct {
+> +	 *	struct perf_event_header	header;
+> +	 *	u64				id;
+> +	 *	u64				path_len;
 
-This is getting a bit hard to follow across the patches, but I think rc
-is now only set for ucontrol guests. So this looks correct right now,
-but feels a bit brittle... should we maybe init rc to 0 and always
-return rc instead?
+You can leave out path_len (also u64 for a length field is silly).
 
->  }
->  
->  int kvm_arch_vcpu_runnable(struct kvm_vcpu *vcpu)
-
-Otherwise, looks good.
-
+> +	 *	char				path[];
+> +	 *	struct sample_id		sample_id;
+> +	 * };
+> +	 */
+> +	PERF_RECORD_CGROUP			= 19,
