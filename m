@@ -2,379 +2,126 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FE7C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 04:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9419DC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 04:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01C1C227BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 04:34:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XFsS68au"
+	by mail.kernel.org (Postfix) with ESMTP id 6EE83227BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 04:35:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbfLTEeT (ORCPT
+        id S1727202AbfLTEfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 23:34:19 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40997 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbfLTEeS (ORCPT
+        Thu, 19 Dec 2019 23:35:30 -0500
+Received: from mout-p-201.mailbox.org ([80.241.56.171]:18280 "EHLO
+        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbfLTEfa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 23:34:18 -0500
-Received: by mail-lf1-f68.google.com with SMTP id m30so5968131lfp.8;
-        Thu, 19 Dec 2019 20:34:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nKGm2xFRSvP0X3vJgZHxnoRUBlQbc+oj9pelZTqgU7k=;
-        b=XFsS68aujoyzJlShGtNr3xUwKYurDAyaGvR/ZNTa9JOC/e7rhxXIBipB2BYaLINQUF
-         PH6/vJKhMqv41cu2pgcJvvFibGmnmXJ1uX6HGYx10dWUgLIQ53x/LEuoXQLueibT5p6T
-         e8pBhUBS3cvbBWmGneSBajewTPricSJYFkTQqCq28cMfqNi4Tfsl6L8YFBja+coyLN2p
-         ZB9Uu/OXSkzvx8joecRSi6aQlwmpuXDzqUez+2wZJJI/NspHWeywCZZU2TZxKZZpNFjq
-         8+U8fxBJT9fnADvUydy7U2aXkY2SSxsUc7ZZc/S/OzquU/XnVc+VuNVdGv/8dwSz3ZFL
-         LiCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nKGm2xFRSvP0X3vJgZHxnoRUBlQbc+oj9pelZTqgU7k=;
-        b=QIakmgJLT4VDBxu+kHfDD9fcD87nfCd2YLdxyZuefxSCmHr1VhnreLJqEfd9L5nizG
-         HIBfHFcJGDGDSBKXOVZxnkuEQRmMBlgVwT+Tu2vyZsVVHIjpCgOU6lo7IBBuuw58z6ht
-         589kOVMSz5maB7khJXD1O+duqFYNVPFiBFDymi6b9LavCFNd+szlhmvKghQyFVg7tVbQ
-         UnGIbjwE8UTTYKkod6eZihAJoXLleLxpwod+50RlxuRiRj8RWnYC8C4BBwOoTNe2W5QG
-         JwIpbohCWcWVfDCRRSMwbh6AOvICBmY9SmzXcLvt8x/k83DGTzSgEfAenMm8jD5b2Eo2
-         cAig==
-X-Gm-Message-State: APjAAAV0zNy1EFAMb+zWqHV+rowtX2kuPU4pfnJaXlpyhrAKbbRHB5oj
-        Ch9WE7uBY2dax9+VnoPRjvoQpHAI
-X-Google-Smtp-Source: APXvYqzVTbn2TAXQz089+hANY9rahhNz6la/CgQ5Gdd6NvPbjZK87wAegs2R2PUoir7XlheU/we8CA==
-X-Received: by 2002:ac2:4add:: with SMTP id m29mr7437240lfp.190.1576816455041;
-        Thu, 19 Dec 2019 20:34:15 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id t27sm3771634ljd.26.2019.12.19.20.34.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Dec 2019 20:34:14 -0800 (PST)
-Subject: Re: [PATCH v4 06/19] soc: tegra: Add Tegra PMC clock registrations
- into PMC driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
-        josephl@nvidia.com, daniel.lezcano@linaro.org,
-        mmaddireddy@nvidia.com, markz@nvidia.com,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1576613046-17159-1-git-send-email-skomatineni@nvidia.com>
- <1576613046-17159-7-git-send-email-skomatineni@nvidia.com>
- <87b2b266-e4a9-9a7a-2336-6ec57d7c4d1d@gmail.com>
- <55a56c3d-3fac-cc77-46ae-acf5de77d262@gmail.com>
- <e11d2ea9-20f1-6920-7efc-ba8a50312f75@gmail.com>
- <c5bb3c25-1fae-3ca9-6bf3-c3d66be20e19@nvidia.com>
- <664f1a41-d539-36e8-092b-11d7e4555108@nvidia.com>
- <31020f6b-97bf-eb48-1150-0355c868eafc@gmail.com>
- <8fa81a47-63e5-d64d-7cc6-7fdd20ff89f0@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <42f39288-da11-e28d-2a0e-28f1b020e674@gmail.com>
-Date:   Fri, 20 Dec 2019 07:34:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 19 Dec 2019 23:35:30 -0500
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 47fGBk2v34zQjm6;
+        Fri, 20 Dec 2019 05:35:26 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
+        with ESMTP id 5BE2jh93RM9y; Fri, 20 Dec 2019 05:35:22 +0100 (CET)
+Date:   Fri, 20 Dec 2019 15:35:10 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Arnd Bergmann <arnd@arndb.de>, Oleg Nesterov <oleg@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Gian-Carlo Pascutto <gpascutto@mozilla.com>,
+        Emilio Cobos =?utf-8?Q?=C3=81lvarez?= <ealvarez@mozilla.com>,
+        Jed Davis <jld@mozilla.com>
+Subject: Re: [PATCH v4 2/5] pid: Add PIDFD_IOCTL_GETFD to fetch file
+ descriptors from processes
+Message-ID: <20191220043510.r5h6wvsp2p5glyjv@yavin.dot.cyphar.com>
+References: <20191218235459.GA17271@ircssh-2.c.rugged-nimbus-611.internal>
+ <CAK8P3a2eT=bHkUamyp-P3Y2adNq1KBk7UknCYBY5_aR4zJmYaQ@mail.gmail.com>
+ <20191219103525.yqb5f4pbd2dvztkb@wittgenstein>
+ <CAMp4zn_z-CCQYMpT=GjZeGVLobjHBCSbmfha1rtWdmptOQ8JtA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <8fa81a47-63e5-d64d-7cc6-7fdd20ff89f0@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="nmgp7ksjzcrpo6tt"
+Content-Disposition: inline
+In-Reply-To: <CAMp4zn_z-CCQYMpT=GjZeGVLobjHBCSbmfha1rtWdmptOQ8JtA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-20.12.2019 07:13, Sowjanya Komatineni пишет:
-> 
-> On 12/19/19 5:39 PM, Dmitry Osipenko wrote:
->> 20.12.2019 04:21, Sowjanya Komatineni пишет:
->>> On 12/18/19 4:41 PM, Sowjanya Komatineni wrote:
->>>> On 12/18/19 1:44 PM, Dmitry Osipenko wrote:
->>>>> 18.12.2019 11:35, Dmitry Osipenko пишет:
->>>>>> 18.12.2019 11:30, Dmitry Osipenko пишет:
->>>>>>> 17.12.2019 23:03, Sowjanya Komatineni пишет:
->>>>>>>> Tegra PMC has clk_out_1, clk_out_2, and clk_out_3 clocks and
->>>>>>>> currently
->>>>>>>> these PMC clocks are registered by Tegra clock driver with each
->>>>>>>> clock as
->>>>>>>> separate mux and gate clocks using clk_register_mux and
->>>>>>>> clk_register_gate
->>>>>>>> by passing PMC base address and register offsets and PMC
->>>>>>>> programming for
->>>>>>>> these clocks happens through direct PMC access by the clock driver.
->>>>>>>>
->>>>>>>> With this, when PMC is in secure mode any direct PMC access from
->>>>>>>> the
->>>>>>>> non-secure world does not go through and these clocks will not be
->>>>>>>> functional.
->>>>>>>>
->>>>>>>> This patch adds these PMC clocks registration to pmc driver with
->>>>>>>> PMC as
->>>>>>>> a clock provider and registers each clock as single clock.
->>>>>>>>
->>>>>>>> clk_ops callback implementations for these clocks uses
->>>>>>>> tegra_pmc_readl and
->>>>>>>> tegra_pmc_writel which supports PMC programming in both secure
->>>>>>>> mode and
->>>>>>>> non-secure mode.
->>>>>>>>
->>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>>> ---
->>>>>>>>    drivers/soc/tegra/pmc.c | 248
->>>>>>>> ++++++++++++++++++++++++++++++++++++++++++++++++
->>>>>>>>    1 file changed, 248 insertions(+)
->>>>>>>>
->>>>>>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->>>>>>>> index ea0e11a09c12..6d65194a6e71 100644
->>>>>>>> --- a/drivers/soc/tegra/pmc.c
->>>>>>>> +++ b/drivers/soc/tegra/pmc.c
->>>>>>>> @@ -13,6 +13,9 @@
->>>>>>>>      #include <linux/arm-smccc.h>
->>>>>>>>    #include <linux/clk.h>
->>>>>>>> +#include <linux/clk-provider.h>
->>>>>>>> +#include <linux/clkdev.h>
->>>>>>>> +#include <linux/clk/clk-conf.h>
->>>>>>>>    #include <linux/clk/tegra.h>
->>>>>>>>    #include <linux/debugfs.h>
->>>>>>>>    #include <linux/delay.h>
->>>>>>>> @@ -48,6 +51,7 @@
->>>>>>>>    #include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
->>>>>>>>    #include <dt-bindings/gpio/tegra186-gpio.h>
->>>>>>>>    #include <dt-bindings/gpio/tegra194-gpio.h>
->>>>>>>> +#include <dt-bindings/soc/tegra-pmc.h>
->>>>>>>>      #define PMC_CNTRL            0x0
->>>>>>>>    #define  PMC_CNTRL_INTR_POLARITY    BIT(17) /* inverts INTR
->>>>>>>> polarity */
->>>>>>>> @@ -100,6 +104,7 @@
->>>>>>>>    #define PMC_WAKE2_STATUS        0x168
->>>>>>>>    #define PMC_SW_WAKE2_STATUS        0x16c
->>>>>>>>    +#define PMC_CLK_OUT_CNTRL        0x1a8
->>>>>>>>    #define PMC_SENSOR_CTRL            0x1b0
->>>>>>>>    #define  PMC_SENSOR_CTRL_SCRATCH_WRITE    BIT(2)
->>>>>>>>    #define  PMC_SENSOR_CTRL_ENABLE_RST    BIT(1)
->>>>>>>> @@ -155,6 +160,64 @@
->>>>>>>>    #define  TEGRA_SMC_PMC_READ    0xaa
->>>>>>>>    #define  TEGRA_SMC_PMC_WRITE    0xbb
->>>>>>>>    +struct pmc_clk {
->>>>>>>> +    struct clk_hw    hw;
->>>>>>>> +    unsigned long    offs;
->>>>>>>> +    u32        mux_mask;
->>>>>>>> +    u32        mux_shift;
->>>>>>>> +    u32        gate_shift;
->>>>>>>> +};
->>>>>>>> +
->>>>>>>> +#define to_pmc_clk(_hw) container_of(_hw, struct pmc_clk, hw)
->>>>>>>> +
->>>>>>>> +struct pmc_clk_init_data {
->>>>>>>> +    char *name;
->>>>>>>> +    const char *const *parents;
->>>>>>>> +    int num_parents;
->>>>>>>> +    int clk_id;
->>>>>>>> +    u8 mux_shift;
->>>>>>>> +    u8 gate_shift;
->>>>>>>> +};
->>>>>>>> +
->>>>>>>> +static const char * const clk_out1_parents[] = { "osc",
->>>>>>>> "osc_div2",
->>>>>>>> +    "osc_div4", "extern1",
->>>>>>>> +};
->>>>>>>> +
->>>>>>>> +static const char * const clk_out2_parents[] = { "osc",
->>>>>>>> "osc_div2",
->>>>>>>> +    "osc_div4", "extern2",
->>>>>>>> +};
->>>>>>>> +
->>>>>>>> +static const char * const clk_out3_parents[] = { "osc",
->>>>>>>> "osc_div2",
->>>>>>>> +    "osc_div4", "extern3",
->>>>>>>> +};
->>>>>>>> +
->>>>>>>> +static const struct pmc_clk_init_data tegra_pmc_clks_data[] = {
->>>>>>>> +    {
->>>>>>>> +        .name = "clk_out_1",
->>>>>>>> +        .parents = clk_out1_parents,
->>>>>>>> +        .num_parents = ARRAY_SIZE(clk_out1_parents),
->>>>>>>> +        .clk_id = TEGRA_PMC_CLK_OUT_1,
->>>>>>>> +        .mux_shift = 6,
->>>>>>>> +        .gate_shift = 2,
->>>>>>> I'd replace these with a single .shift, given that mux_shift =
->>>>>>> gate_shift + 4 for all clocks.
->>>>>>>
->>>>>>>> +    },
->>>>>>>> +    {
->>>>>>>> +        .name = "clk_out_2",
->>>>>>>> +        .parents = clk_out2_parents,
->>>>>>>> +        .num_parents = ARRAY_SIZE(clk_out2_parents),
->>>>>>>> +        .clk_id = TEGRA_PMC_CLK_OUT_2,
->>>>>>>> +        .mux_shift = 14,
->>>>>>>> +        .gate_shift = 10,
->>>>>>>> +    },
->>>>>>>> +    {
->>>>>>>> +        .name = "clk_out_3",
->>>>>>>> +        .parents = clk_out3_parents,
->>>>>>>> +        .num_parents = ARRAY_SIZE(clk_out3_parents),
->>>>>>>> +        .clk_id = TEGRA_PMC_CLK_OUT_3,
->>>>>>>> +        .mux_shift = 22,
->>>>>>>> +        .gate_shift = 18,
->>>>>>>> +    },
->>>>>>>> +};
->>>>>>>> +
->>>>>>>>    struct tegra_powergate {
->>>>>>>>        struct generic_pm_domain genpd;
->>>>>>>>        struct tegra_pmc *pmc;
->>>>>>>> @@ -254,6 +317,9 @@ struct tegra_pmc_soc {
->>>>>>>>         */
->>>>>>>>        const struct tegra_wake_event *wake_events;
->>>>>>>>        unsigned int num_wake_events;
->>>>>>>> +
->>>>>>>> +    const struct pmc_clk_init_data *pmc_clks_data;
->>>>>>>> +    unsigned int num_pmc_clks;
->>>>>>>>    };
->>>>>>>>      static const char * const tegra186_reset_sources[] = {
->>>>>>>> @@ -2163,6 +2229,173 @@ static int tegra_pmc_clk_notify_cb(struct
->>>>>>>> notifier_block *nb,
->>>>>>>>        return NOTIFY_OK;
->>>>>>>>    }
->>>>>>>>    +static void pmc_clk_fence_udelay(u32 offset)
->>>>>>>> +{
->>>>>>>> +    tegra_pmc_readl(pmc, offset);
->>>>>>>> +    /* pmc clk propagation delay 2 us */
->>>>>>>> +    udelay(2);
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static u8 pmc_clk_mux_get_parent(struct clk_hw *hw)
->>>>>>>> +{
->>>>>>>> +    struct pmc_clk *clk = to_pmc_clk(hw);
->>>>>>>> +    u32 val;
->>>>>>>> +
->>>>>>>> +    val = tegra_pmc_readl(pmc, clk->offs) >> clk->mux_shift;
->>>>>>>> +    val &= clk->mux_mask;
->>>>>>>> +
->>>>>>>> +    return val;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static int pmc_clk_mux_set_parent(struct clk_hw *hw, u8 index)
->>>>>>>> +{
->>>>>>>> +    struct pmc_clk *clk = to_pmc_clk(hw);
->>>>>>>> +    u32 val;
->>>>>>>> +
->>>>>>>> +    val = tegra_pmc_readl(pmc, clk->offs);
->>>>>>>> +    val &= ~(clk->mux_mask << clk->mux_shift);
->>>>>>>> +    val |= index << clk->mux_shift;
->>>>>>>> +    tegra_pmc_writel(pmc, val, clk->offs);
->>>>>>>> +    pmc_clk_fence_udelay(clk->offs);
->> Is this fencing applies only to clock changes or maybe it won't hurt to
->> move it into tegra_pmc_writel()?
->>
->>>>>>>> +    return 0;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static int pmc_clk_is_enabled(struct clk_hw *hw)
->>>>>>>> +{
->>>>>>>> +    struct pmc_clk *clk = to_pmc_clk(hw);
->>>>>>>> +
->>>>>>>> +    return tegra_pmc_readl(pmc, clk->offs) & BIT(clk->gate_shift)
->>>>>>>> ? 1 : 0;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static void pmc_clk_set_state(unsigned long offs, u32 shift, int
->>>>>>>> state)
->>>>>>>> +{
->>>>>>>> +    u32 val;
->>>>>>>> +
->>>>>>>> +    val = tegra_pmc_readl(pmc, offs);
->>>>>>>> +    val = state ? (val | BIT(shift)) : (val & ~BIT(shift));
->>>>>>>> +    tegra_pmc_writel(pmc, val, offs);
->>>>>>>> +    pmc_clk_fence_udelay(offs);
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static int pmc_clk_enable(struct clk_hw *hw)
->>>>>>>> +{
->>>>>>>> +    struct pmc_clk *clk = to_pmc_clk(hw);
->>>>>>>> +
->>>>>>>> +    pmc_clk_set_state(clk->offs, clk->gate_shift, 1);
->>>>>>>> +
->>>>>>>> +    return 0;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static void pmc_clk_disable(struct clk_hw *hw)
->>>>>>>> +{
->>>>>>>> +    struct pmc_clk *clk = to_pmc_clk(hw);
->>>>>>>> +
->>>>>>>> +    pmc_clk_set_state(clk->offs, clk->gate_shift, 0);
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static const struct clk_ops pmc_clk_ops = {
->>>>>>>> +    .get_parent = pmc_clk_mux_get_parent,
->>>>>>>> +    .set_parent = pmc_clk_mux_set_parent,
->>>>>>>> +    .determine_rate = __clk_mux_determine_rate,
->>>>>>>> +    .is_enabled = pmc_clk_is_enabled,
->>>>>>>> +    .enable = pmc_clk_enable,
->>>>>>>> +    .disable = pmc_clk_disable,
->>>>>>>> +};
->>>>>>>> +
->>>>>>>> +static struct clk *
->>>>>>>> +tegra_pmc_clk_out_register(const struct pmc_clk_init_data *data,
->>>>>>>> +               unsigned long offset)
->>>>>>>> +{
->>>>>>>> +    struct clk_init_data init;
->>>>>>>> +    struct pmc_clk *pmc_clk;
->>>>>>>> +
->>>>>>>> +    pmc_clk = kzalloc(sizeof(*pmc_clk), GFP_KERNEL);
->>>>>>>> +    if (!pmc_clk)
->>>>>>>> +        return ERR_PTR(-ENOMEM);
->>>>>>>> +
->>>>>>>> +    init.name = data->name;
->>>>>>>> +    init.ops = &pmc_clk_ops;
->>>>>>>> +    init.parent_names = data->parents;
->>>>>>>> +    init.num_parents = data->num_parents;
->>>>>>>> +    init.flags = CLK_SET_RATE_NO_REPARENT | CLK_SET_RATE_PARENT |
->>>>>>>> +             CLK_SET_PARENT_GATE;
->>>>>>>> +
->>>>>>>> +    pmc_clk->hw.init = &init;
->>>>>>>> +    pmc_clk->offs = offset;
->>>>>>>> +    pmc_clk->mux_mask = 3;
->>>>>>> If mux_mask is a constant value, perhaps will be better to
->>>>>>> replace the
->>>>>>> variable with a literal?
->>>>>>>
->>>>>>> #define PMC_CLK_OUT_MUX_MASK    GENMASK(1, 0)
->>>>>> Maybe even:
->>>>>>
->>>>>> #define PMC_CLK_OUT_MUX_MASK(c)    GENMASK(c->shift + 1, c->shift)
->>>> MUX Mask is used only here for PMC clock out and is same for all
->>>> clk_out mux so will use
->>>>
->>>> #define PMC_CLK_OUT_MUX_MASK    GENMASK(1, 0)
->>>>
->>>>> I want to point out that may be a separated gate/mux shifts is a fine
->>>>> variant, you should try and see whether another variants produce more
->>>>> concise result.
->>>>>
->>>>> [snip]
->>> We can do mux_shift as gate_shift + 4 and that restricts this clk
->>> register only for clk1/2/3 as well and there are no other clocks in pmc
->>> anyway.
->>>
->>> How about using bit shift define for CLK1, CLK2, and CLK3?
->>>
->>> .mux_shift = PMC_CLK1_SRC_SEL_SHIFT,
->>>
->>> .gate_shift = PMC_CLK1_FORCE_EN_SHIFT,
->>>
->>>
->> I think that just renaming ".gate_shift" -> ".force_en_shift" should be
->> good enough.
-> You meant to assign bit position directly instead of defines like what I
-> have now in v4 and use force_en_shift instead of gate_shift?
 
-Yes
+--nmgp7ksjzcrpo6tt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On 2019-12-19, Sargun Dhillon <sargun@sargun.me> wrote:
+> On Thu, Dec 19, 2019 at 2:35 AM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> > I guess this is the remaining question we should settle, i.e. what do we
+> > prefer.
+> > I still think that adding a new syscall for this seems a bit rich. On
+> > the other hand it seems that a lot more people agree that using a
+> > dedicated syscall instead of an ioctl is the correct way; especially
+> > when it touches core kernel functionality. I mean that was one of the
+> > takeaways from the pidfd API ioctl-vs-syscall discussion.
+> >
+> > A syscall is nicer especially for core-kernel code like this.
+> > So I guess the only way to find out is to try the syscall approach and
+> > either get yelled and switch to an ioctl() or have it accepted.
+> >
+> > What does everyone else think? Arnd, still in favor of a syscall I take
+> > it. Oleg, you had suggested a syscall too, right? Florian, any
+> > thoughts/worries on/about this from the glibc side?
+> >
+> > Christian
+>=20
+> My feelings towards this are that syscalls might pose a problem if we
+> ever want to extend this API. Of course we can have a reserved
+> "flags" field, and populate it later, but what if we turn out to need
+> a proper struct? I already know we're going to want to add one
+> around cgroup metadata (net_cls), and likely we'll want to add
+> a "steal" flag as well. As Arnd mentioned earlier, this is trivial to
+> fix in a traditional ioctl environment, as ioctls are "cheap". How
+> do we feel about potentially adding a pidfd_getfd2? Or are we
+> confident that reserved flags will save us?
+
+If we end up making this a syscall, then we can re-use the
+copy_struct_from_user() API to make it both extensible and compatible in
+both directions. I wasn't aware that this was frowned upon for ioctls
+(sorry for the extra work) but there are several syscalls which use this
+model for extendability (clone3, openat2, sched_setattr,
+perf_events_open) so there shouldn't be any such complaints for a
+syscall which is extensible.
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--nmgp7ksjzcrpo6tt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXfxPewAKCRCdlLljIbnQ
+ElNGAP0QzHxTfcWUIyKQwziyZ7SKPlC5ve6y0476CjvwfTG0mQD+JDR19gzaS69O
+MYDK8035BURwBnELBe2PceZHzjVhlAQ=
+=Kwh+
+-----END PGP SIGNATURE-----
+
+--nmgp7ksjzcrpo6tt--
