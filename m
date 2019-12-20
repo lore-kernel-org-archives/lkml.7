@@ -2,190 +2,93 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCF8C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C13C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6951D24682
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9826D24687
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:04:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="I8riZzVk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PhTe8eSZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbfLTGEB (ORCPT
+        id S1727281AbfLTGET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 01:04:01 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:41501 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbfLTGEA (ORCPT
+        Fri, 20 Dec 2019 01:04:19 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35353 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbfLTGET (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 01:04:00 -0500
-Received: by mail-pl1-f193.google.com with SMTP id bd4so3630311plb.8
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 22:04:00 -0800 (PST)
+        Fri, 20 Dec 2019 01:04:19 -0500
+Received: by mail-lj1-f194.google.com with SMTP id j1so1396184lja.2
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 22:04:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:subject:in-reply-to:references:date:message-id:mime-version;
-        bh=AMPB7ShRq26cjcwcJP9t45jKBX3IyVrTQyCL756tp90=;
-        b=I8riZzVk/K2+pnrgpWFE1uZQLo+TNx4sVlk/qjoiA4YqJLEt061dszIV+0U/r2TdWE
-         9k043b3Xrp4h8IexCbkjlDyqRhHz6PCBV2U2DrqfVto2v680PLjO2J/CiyKPL955+EEQ
-         B9b4DWKXAkj/aiOjOeN1zMKc7Ba77qz8ITRF8=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TnPyTr2iiNHnW0FS9YnHgx6tK9jG9pl7XCuokVZaafI=;
+        b=PhTe8eSZM1CRDjHBFlNxQ5pvj1zgzFLNdRhHcC2Lp2XM1qd6wU3s0RWNTRZ1YN/AYu
+         VXxyw8EzVnqlngZZuCsT7OS0cWhH6f2bwh/+61kgQ61FpQoYciZLc44V6zvFpz/d7byy
+         CAQygGhDFRvLU6c1CCHW+oCu3PykihSZt8LF42wrm26Bsgx/47xwlonix+L8Ye+XhngK
+         tPR1Gmhee2TnHDeDlMJGayfha+U8vZkBymqSd0qk4PeR2yE+jEBRTesDAMcyurPIMEVm
+         G4WY33Ewvn/sNEMyCDmH5F9vZKC/9HaYCGJ0px7fV5So1GXVHsKGqu2KLCqjwC60Ttql
+         SIbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=AMPB7ShRq26cjcwcJP9t45jKBX3IyVrTQyCL756tp90=;
-        b=Hwqem2/owWMAsk2mX+SdAxbwNmJoOJfZV4IkJhSck0D27D7juxknE8c1hO7DKzL2U6
-         O9DNMrUJh5BnMD9Uwro3v+eUP5CCpAYsQKzScMfARGeoi64vx1FpP+g4ny56BU/3mvvv
-         IH2vczvwkKscDRiM/uWY6CLtkQaq7Tiqcb/yM66+G1deKCObqSBRuSmHn7UDWl4BrICB
-         cWqwshqknvAfKy005aFdO/fUm1bT3pOnv1XI0EimYiUWf3z2JqEuk+eM16BD5nqEbRyx
-         PgilqJMDd5vZexa9ejHrQadbRnLdmH7JIyouHuI9PIWp41gZj/t1AMEDc13d1rdUSvE8
-         E/ZA==
-X-Gm-Message-State: APjAAAU6McAjJphvZsvu11eIA0Uv93+KeR8ZnQMf7k5JlCv9Y86XwbP7
-        27ulcTqQwzKxSSee168Gu35SCQ==
-X-Google-Smtp-Source: APXvYqxUrLwIm/01UvhThpcINxVbqFsuTmtTW9/Tide7dNhWID9p4Y5Ph9VZw/nVK8390ESYSEapVA==
-X-Received: by 2002:a17:90a:5ac4:: with SMTP id n62mr14478392pji.59.1576821839745;
-        Thu, 19 Dec 2019 22:03:59 -0800 (PST)
-Received: from localhost (2001-44b8-1113-6700-b05d-cbfe-b2ee-de17.static.ipv6.internode.on.net. [2001:44b8:1113:6700:b05d:cbfe:b2ee:de17])
-        by smtp.gmail.com with ESMTPSA id y38sm9527104pgk.33.2019.12.19.22.03.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 22:03:58 -0800 (PST)
-From:   Daniel Axtens <dja@axtens.net>
-To:     syzbot <syzbot+4722bf4c6393b73a792b@syzkaller.appspotmail.com>,
-        akpm@linux-foundation.org, allison.henderson@oracle.com,
-        aryabinin@virtuozzo.com, bfoster@redhat.com,
-        darrick.wong@oracle.com, dchinner@redhat.com, dvyukov@google.com,
-        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        sandeen@redhat.com, syzkaller-bugs@googlegroups.com,
-        torvalds@linux-foundation.org
-Subject: Re: BUG: unable to handle kernel paging request in xfs_sb_quiet_read_verify
-In-Reply-To: <000000000000d99340059a100686@google.com>
-References: <000000000000d99340059a100686@google.com>
-Date:   Fri, 20 Dec 2019 17:03:55 +1100
-Message-ID: <874kxvttx0.fsf@dja-thinkpad.axtens.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TnPyTr2iiNHnW0FS9YnHgx6tK9jG9pl7XCuokVZaafI=;
+        b=eigfBlApUQA5jMxcbcocQHOYFBZB2/HBeq/ysTjWnWWyLZPPRYcNjwhcQQGRE5+Mfp
+         YtI4ew73Yr0sB7VG/pAOoNYwWz6dJ9FOGtfvGNBzlxCiiAt1G21PYRD9oCTxGvHY/HoV
+         IiKUfJlICELUk9LvLex8UmE3HFhqK7EWav6OLsurRP64gXpnIcJcOxQZq2zh56BsbnEU
+         DbyBzCN9vtVBFlwkPbZI4/gUhCZ2diaKoFFxyZjEF4fYnkNht9H7gsWTCJyk24R24q4a
+         gaGVXVDbKF+7AAdt1IPgiktoYty+zwfkbmAsiGDEskLi7lLKCE9Zm7VP3yZCdtDXHxNU
+         F2FA==
+X-Gm-Message-State: APjAAAUdej3HetBpnRaz42imWZxXBn7LBpP0T7S7rklYXWffgtIvkvOb
+        h1DGzhEbue3nXP8FhRXdw1FBHiHOQjRbnPikGiE=
+X-Google-Smtp-Source: APXvYqyznCQjAejJGQyUMTiTnBung9lMO1/L3p896yj6PoSLgSFibyAZeOlUUZ0rSGDMIboCKjKbZnJNqx76W4BHskg=
+X-Received: by 2002:a2e:8015:: with SMTP id j21mr8689791ljg.172.1576821857009;
+ Thu, 19 Dec 2019 22:04:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20191219151928.ad4ccf732b64b7f8a26116db@gmail.com> <20191220031357.GA39061@google.com>
+In-Reply-To: <20191220031357.GA39061@google.com>
+From:   Vitaly Wool <vitalywool@gmail.com>
+Date:   Fri, 20 Dec 2019 07:04:05 +0100
+Message-ID: <CAMJBoFPrPuPpcfNCKGF0EkSZ+0R7Un6HuoQhBPsznjVTUkVBSQ@mail.gmail.com>
+Subject: Re: [PATCHv2 0/3] Allow ZRAM to use any zpool-compatible backend
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Streetman <ddstreet@ieee.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Shakeel Butt <shakeelb@google.com>,
+        Henry Burns <henrywolfeburns@gmail.com>,
+        "Theodore Ts'o" <tytso@thunk.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot <syzbot+4722bf4c6393b73a792b@syzkaller.appspotmail.com> writes:
+On Fri, Dec 20, 2019 at 4:14 AM Minchan Kim <minchan@kernel.org> wrote:
 
-> Hello,
+<snip>
+> Look https://lkml.org/lkml/2019/10/29/1169
 >
-> syzbot found the following crash on:
->
-> HEAD commit:    2187f215 Merge tag 'for-5.5-rc2-tag' of git://git.kernel.o..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=11059951e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=ab2ae0615387ef78
-> dashboard link: https://syzkaller.appspot.com/bug?extid=4722bf4c6393b73a792b
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12727c71e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12ff5151e00000
->
-> The bug was bisected to:
->
-> commit 0609ae011deb41c9629b7f5fd626dfa1ac9d16b0
-> Author: Daniel Axtens <dja@axtens.net>
-> Date:   Sun Dec 1 01:55:00 2019 +0000
->
->      x86/kasan: support KASAN_VMALLOC
+> z3fold read is 15% faster *only* when when compression ratio is bad below 50%
+> since zsmalloc involves copy operation if the object is located in the
+> boundary of discrete pages. It's never popular workload.
+> Even, once write is involved(write-only, mixed read-write), z3fold is always
+> slow. Think about that swap-in could cause swap out in the field because devices
+> are usually under memory pressure. Also, look at the memory usage.
+> zsmalloc saves bigger memory for all of compression ratios.
 
-Looking at the log, it's an access of fffff52000680000 that goes wrong.
+Yes I remember that. Since your measurements were done on "an x86" without
+providing any detail on the actual platform used, they are as good as none.
 
-Reversing the shadow calculation, it looks like an attempted access of
-FFFFC90003400000, which is in vmalloc space. I'm not sure what that
-memory represents.
-
-Looking at the instruction pointer, it seems like we're here:
-
-static void
-xfs_sb_quiet_read_verify(
-	struct xfs_buf	*bp)
-{
-	struct xfs_dsb	*dsb = XFS_BUF_TO_SBP(bp);
-
-	if (dsb->sb_magicnum == cpu_to_be32(XFS_SB_MAGIC)) {     <<<< fault here
-		/* XFS filesystem, verify noisily! */
-		xfs_sb_read_verify(bp);
-
-
-Is it possible that dsb is junk?
-
-Regards,
-Daniel
-
->
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=161240aee00000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=151240aee00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=111240aee00000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+4722bf4c6393b73a792b@syzkaller.appspotmail.com
-> Fixes: 0609ae011deb ("x86/kasan: support KASAN_VMALLOC")
->
-> BUG: unable to handle page fault for address: fffff52000680000
-> #PF: supervisor read access in kernel mode
-> #PF: error_code(0x0000) - not-present page
-> PGD 21ffee067 P4D 21ffee067 PUD aa51c067 PMD a85e1067 PTE 0
-> Oops: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 1 PID: 3088 Comm: kworker/1:2 Not tainted 5.5.0-rc2-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> Google 01/01/2011
-> Workqueue: xfs-buf/loop0 xfs_buf_ioend_work
-> RIP: 0010:xfs_sb_quiet_read_verify+0x47/0xc0 fs/xfs/libxfs/xfs_sb.c:735
-> Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 7f 49 8b 9c 24 30 01  
-> 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <0f> b6 04 02 84  
-> c0 74 04 3c 03 7e 50 8b 1b bf 58 46 53 42 89 de e8
-> RSP: 0018:ffffc90008187cc0 EFLAGS: 00010a06
-> RAX: dffffc0000000000 RBX: ffffc90003400000 RCX: ffffffff82ad3c26
-> RDX: 1ffff92000680000 RSI: ffffffff82aa0a0f RDI: ffff8880a2cdba70
-> RBP: ffffc90008187cd0 R08: ffff88809eb6c500 R09: ffffed1015d2703d
-> R10: ffffed1015d2703c R11: ffff8880ae9381e3 R12: ffff8880a2cdb940
-> R13: ffff8880a2cdb95c R14: ffff8880a2cdbb74 R15: 0000000000000000
-> FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: fffff52000680000 CR3: 000000009f5ab000 CR4: 00000000001406e0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->   xfs_buf_ioend+0x3f9/0xde0 fs/xfs/xfs_buf.c:1162
->   xfs_buf_ioend_work+0x19/0x20 fs/xfs/xfs_buf.c:1183
->   process_one_work+0x9af/0x1740 kernel/workqueue.c:2264
->   worker_thread+0x98/0xe40 kernel/workqueue.c:2410
->   kthread+0x361/0x430 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> Modules linked in:
-> CR2: fffff52000680000
-> ---[ end trace 744ceb50d377bf94 ]---
-> RIP: 0010:xfs_sb_quiet_read_verify+0x47/0xc0 fs/xfs/libxfs/xfs_sb.c:735
-> Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 7f 49 8b 9c 24 30 01  
-> 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <0f> b6 04 02 84  
-> c0 74 04 3c 03 7e 50 8b 1b bf 58 46 53 42 89 de e8
-> RSP: 0018:ffffc90008187cc0 EFLAGS: 00010a06
-> RAX: dffffc0000000000 RBX: ffffc90003400000 RCX: ffffffff82ad3c26
-> RDX: 1ffff92000680000 RSI: ffffffff82aa0a0f RDI: ffff8880a2cdba70
-> RBP: ffffc90008187cd0 R08: ffff88809eb6c500 R09: ffffed1015d2703d
-> R10: ffffed1015d2703c R11: ffff8880ae9381e3 R12: ffff8880a2cdb940
-> R13: ffff8880a2cdb95c R14: ffff8880a2cdbb74 R15: 0000000000000000
-> FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: fffff52000680000 CR3: 000000009f5ab000 CR4: 00000000001406e0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+~Vitaly
