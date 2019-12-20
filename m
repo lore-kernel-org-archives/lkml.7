@@ -2,116 +2,163 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AEDC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8873C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED6B8206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:32:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852380;
-	bh=t22WbMwhAkBRvhcTzO0J/E1i++DVIc0kth+PmaFyL2Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mKdyFmOW/UHk3/trDnxpAFiUgEbGIMZ50VseuaDwL6xo7x9iUy6D/lfQzgF+sy7eR
-	 qf1fSDJMaNsjOOUAq7520caJSXvnnb+1OFp/etwlIN5KSnbV0MiSndSykpgAe7KQ+5
-	 tfE/6FgXipOjiVBh4TVWoOxDDyynsky0yemdNt7E=
+	by mail.kernel.org (Postfix) with ESMTP id 6753421D7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:33:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbfLTOc7 (ORCPT
+        id S1728244AbfLTOdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:32:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34704 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:33:02 -0500
+Received: from foss.arm.com ([217.140.110.172]:51246 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727876AbfLTOas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727875AbfLTOas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Dec 2019 09:30:48 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCFA424689;
-        Fri, 20 Dec 2019 14:30:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852247;
-        bh=t22WbMwhAkBRvhcTzO0J/E1i++DVIc0kth+PmaFyL2Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BEout+zqU4Uil8C6QUiX+xA5cmRP0QwqyV1BbAqCAcJ3v4G5ZwyqlC0xr891nnVmS
-         0Z8zbj9kKYRT0Z7NZ9v9qtJOvdi8kktvfa+MTPrUpCwufpzr6sZyG3B2idxR0i+iQ6
-         932Pz1Dvs8odyrF1kh4wXJHiAQNAvM4mE6sYzgVk=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     EJ Hsu <ejh@nvidia.com>, Peter Chen <peter.chen@nxp.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 39/52] usb: gadget: fix wrong endpoint desc
-Date:   Fri, 20 Dec 2019 09:29:41 -0500
-Message-Id: <20191220142954.9500-39-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
-References: <20191220142954.9500-1-sashal@kernel.org>
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B549531B;
+        Fri, 20 Dec 2019 06:30:47 -0800 (PST)
+Received: from e119886-lin.cambridge.arm.com (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DCF893F718;
+        Fri, 20 Dec 2019 06:30:45 -0800 (PST)
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH v2 07/18] arm64: KVM/debug: drop pmscr_el1 and use sys_regs[PMSCR_EL1] in kvm_cpu_context
+Date:   Fri, 20 Dec 2019 14:30:14 +0000
+Message-Id: <20191220143025.33853-8-andrew.murray@arm.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191220143025.33853-1-andrew.murray@arm.com>
+References: <20191220143025.33853-1-andrew.murray@arm.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: EJ Hsu <ejh@nvidia.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-[ Upstream commit e5b5da96da50ef30abb39cb9f694e99366404d24 ]
+kvm_cpu_context now has support to stash the complete SPE buffer control
+context. We no longer need the pmscr_el1 kvm_vcpu_arch and it can be
+dropped.
 
-Gadget driver should always use config_ep_by_speed() to initialize
-usb_ep struct according to usb device's operating speed. Otherwise,
-usb_ep struct may be wrong if usb devcie's operating speed is changed.
-
-The key point in this patch is that we want to make sure the desc pointer
-in usb_ep struct will be set to NULL when gadget is disconnected.
-This will force it to call config_ep_by_speed() to correctly initialize
-usb_ep struct based on the new operating speed when gadget is
-re-connected later.
-
-Reviewed-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: EJ Hsu <ejh@nvidia.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Andrew Murray <andrew.murray@arm.com>
 ---
- drivers/usb/gadget/function/f_ecm.c   | 6 +++++-
- drivers/usb/gadget/function/f_rndis.c | 1 +
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/kvm_host.h |  2 --
+ arch/arm64/kvm/hyp/debug-sr.c     | 26 +++++++++++++++-----------
+ 2 files changed, 15 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/usb/gadget/function/f_ecm.c b/drivers/usb/gadget/function/f_ecm.c
-index 6ce044008cf6c..460d5d7c984f5 100644
---- a/drivers/usb/gadget/function/f_ecm.c
-+++ b/drivers/usb/gadget/function/f_ecm.c
-@@ -621,8 +621,12 @@ static void ecm_disable(struct usb_function *f)
+diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+index 9eb85f14df90..333c6491bec7 100644
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -307,8 +307,6 @@ struct kvm_vcpu_arch {
+ 	struct {
+ 		/* {Break,watch}point registers */
+ 		struct kvm_guest_debug_arch regs;
+-		/* Statistical profiling extension */
+-		u64 pmscr_el1;
+ 	} host_debug_state;
  
- 	DBG(cdev, "ecm deactivated\n");
+ 	/* VGIC state */
+diff --git a/arch/arm64/kvm/hyp/debug-sr.c b/arch/arm64/kvm/hyp/debug-sr.c
+index c803daebd596..8a70a493345e 100644
+--- a/arch/arm64/kvm/hyp/debug-sr.c
++++ b/arch/arm64/kvm/hyp/debug-sr.c
+@@ -85,19 +85,19 @@
+ 	default:	write_debug(ptr[0], reg, 0);			\
+ 	}
  
--	if (ecm->port.in_ep->enabled)
-+	if (ecm->port.in_ep->enabled) {
- 		gether_disconnect(&ecm->port);
-+	} else {
-+		ecm->port.in_ep->desc = NULL;
-+		ecm->port.out_ep->desc = NULL;
-+	}
+-static void __hyp_text __debug_save_spe_nvhe(u64 *pmscr_el1)
++static void __hyp_text __debug_save_spe_nvhe(struct kvm_cpu_context *ctxt)
+ {
+ 	u64 reg;
  
- 	usb_ep_disable(ecm->notify);
- 	ecm->notify->desc = NULL;
-diff --git a/drivers/usb/gadget/function/f_rndis.c b/drivers/usb/gadget/function/f_rndis.c
-index d48df36622b74..0d8e4a364ca6e 100644
---- a/drivers/usb/gadget/function/f_rndis.c
-+++ b/drivers/usb/gadget/function/f_rndis.c
-@@ -618,6 +618,7 @@ static void rndis_disable(struct usb_function *f)
- 	gether_disconnect(&rndis->port);
+ 	/* Clear pmscr in case of early return */
+-	*pmscr_el1 = 0;
++	ctxt->sys_regs[PMSCR_EL1] = 0;
  
- 	usb_ep_disable(rndis->notify);
-+	rndis->notify->desc = NULL;
+ 	/* SPE present on this CPU? */
+ 	if (!cpuid_feature_extract_unsigned_field(read_sysreg(id_aa64dfr0_el1),
+ 						  ID_AA64DFR0_PMSVER_SHIFT))
+ 		return;
+ 
+-	/* Yes; is it owned by EL3? */
++	/* Yes; is it owned by higher EL? */
+ 	reg = read_sysreg_s(SYS_PMBIDR_EL1);
+ 	if (reg & BIT(SYS_PMBIDR_EL1_P_SHIFT))
+ 		return;
+@@ -108,7 +108,7 @@ static void __hyp_text __debug_save_spe_nvhe(u64 *pmscr_el1)
+ 		return;
+ 
+ 	/* Yes; save the control register and disable data generation */
+-	*pmscr_el1 = read_sysreg_el1(SYS_PMSCR);
++	ctxt->sys_regs[PMSCR_EL1] = read_sysreg_el1(SYS_PMSCR);
+ 	write_sysreg_el1(0, SYS_PMSCR);
+ 	isb();
+ 
+@@ -117,16 +117,16 @@ static void __hyp_text __debug_save_spe_nvhe(u64 *pmscr_el1)
+ 	dsb(nsh);
  }
  
- /*-------------------------------------------------------------------------*/
+-static void __hyp_text __debug_restore_spe_nvhe(u64 pmscr_el1)
++static void __hyp_text __debug_restore_spe_nvhe(struct kvm_cpu_context *ctxt)
+ {
+-	if (!pmscr_el1)
++	if (!ctxt->sys_regs[PMSCR_EL1])
+ 		return;
+ 
+ 	/* The host page table is installed, but not yet synchronised */
+ 	isb();
+ 
+ 	/* Re-enable data generation */
+-	write_sysreg_el1(pmscr_el1, SYS_PMSCR);
++	write_sysreg_el1(ctxt->sys_regs[PMSCR_EL1], SYS_PMSCR);
+ }
+ 
+ static void __hyp_text __debug_save_state(struct kvm_vcpu *vcpu,
+@@ -194,14 +194,15 @@ void __hyp_text __debug_restore_host_context(struct kvm_vcpu *vcpu)
+ 	struct kvm_guest_debug_arch *host_dbg;
+ 	struct kvm_guest_debug_arch *guest_dbg;
+ 
++	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
++	guest_ctxt = &vcpu->arch.ctxt;
++
+ 	if (!has_vhe())
+-		__debug_restore_spe_nvhe(vcpu->arch.host_debug_state.pmscr_el1);
++		__debug_restore_spe_nvhe(host_ctxt);
+ 
+ 	if (!(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY))
+ 		return;
+ 
+-	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
+-	guest_ctxt = &vcpu->arch.ctxt;
+ 	host_dbg = &vcpu->arch.host_debug_state.regs;
+ 	guest_dbg = kern_hyp_va(vcpu->arch.debug_ptr);
+ 
+@@ -217,8 +218,11 @@ void __hyp_text __debug_save_host_context(struct kvm_vcpu *vcpu)
+ 	 * Non-VHE: Disable and flush SPE data generation
+ 	 * VHE: The vcpu can run, but it can't hide.
+ 	 */
++	struct kvm_cpu_context *host_ctxt;
++
++	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
+ 	if (!has_vhe())
+-		__debug_save_spe_nvhe(&vcpu->arch.host_debug_state.pmscr_el1);
++		__debug_save_spe_nvhe(host_ctxt);
+ }
+ 
+ void __hyp_text __debug_save_guest_context(struct kvm_vcpu *vcpu)
 -- 
-2.20.1
+2.21.0
 
