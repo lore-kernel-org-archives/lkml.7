@@ -2,76 +2,217 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4EEC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA2FC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA1E2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:30:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576877440;
-	bh=OWFFlIFJu9+vFiYIMboBgbTadMTkcxwtUqVCINB1DYE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dbU573Fx1KHtfWxehINAWjHYw2U0TmOnsIf5GeyMK47XF1sgB6c5XiDLPu4osDy5Y
-	 FpuaeN6G12E7uAMfubHkcpuy947SADWqjAuzFiARvBgs6Tojtrn9wCgWkZOw4wW+Ug
-	 uqPTaxg2100WZ2ggWOOc5Wtqhb1qlxSAm21PgVrU=
+	by mail.kernel.org (Postfix) with ESMTP id D8326206DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:33:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="M1U/ouxh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727510AbfLTVaj (ORCPT
+        id S1727529AbfLTVdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 16:30:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57272 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727413AbfLTVaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 16:30:39 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16884206DA;
-        Fri, 20 Dec 2019 21:30:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576877438;
-        bh=OWFFlIFJu9+vFiYIMboBgbTadMTkcxwtUqVCINB1DYE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dJE5m0aimHakfSYRP3rdRl1lMpGESGPN7vxfi3+kqbzYkORGuJcjbrvTJUjX23hjW
-         gDhZ+Zx6W3y8IUOCtcvAsRi1DLe9S/KbpWFP4Qk5Loat/0haxAc9qoV0krrktHeNIi
-         I5koj2vjEIKr7H5OAH4PkgXuGS/BgeJyT0jhZKSE=
-Date:   Fri, 20 Dec 2019 22:30:36 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dave Kim <david.kim@ncipher.com>
-Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
-        Tim Magee <tim.magee@ncipher.com>
-Subject: Re: [PATCH v2] drivers: misc: Add support for nCipher HSM devices
-Message-ID: <20191220213036.GA27120@kroah.com>
-References: <20191220154738.31448-1-david.kim@ncipher.com>
+        Fri, 20 Dec 2019 16:33:08 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:46858 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727489AbfLTVdI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 16:33:08 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBKLOUxZ080420;
+        Fri, 20 Dec 2019 21:32:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=O5eLQJ2IQaAuC0h1sPo9EP7FE00qk/3elCIpmX0WCE0=;
+ b=M1U/ouxhaOiM+6v6EvH8oATdFdToWd9fT+1TCH0BLj6Aacno9p0DXI4sWhGUlkXlaoIr
+ gQsXv9GWGwRHXIL2q4CR3dRzUXxcj6vuxRx47UUDghgGxMQx15FMvFkpWC1eL2XUSEAt
+ rc9qkK6G3oNHh2YwwEa4gLEhNcdZmXCR8YtlMZkDwjRDsvjEmVt6q0Dvpl30tpQaMxgq
+ 9qz5dvVq5HW6KXJNwGfv9KBGlE7p1//ZDtSfXiUYktT87Qg6iE0RLbDK2kkkewLyBWTV
+ Uv0rlrf0QtDHVnC+l4efSZ797eQMpi7YWbsUWDRPQOJpoRK9XCBY87QJ0zaN4Ih8WHY0 UA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2x0ag18371-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Dec 2019 21:32:58 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBKLNmMw027475;
+        Fri, 20 Dec 2019 21:30:58 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2x0vc4kdfu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Dec 2019 21:30:58 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBKLUss8021912;
+        Fri, 20 Dec 2019 21:30:54 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 20 Dec 2019 13:30:53 -0800
+Date:   Fri, 20 Dec 2019 13:30:52 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     linux-fsdevel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] fs: inode: Reduce volatile inode wraparound risk when
+ ino_t is 64 bit
+Message-ID: <20191220213052.GB7476@magnolia>
+References: <20191220024936.GA380394@chrisdown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191220154738.31448-1-david.kim@ncipher.com>
+In-Reply-To: <20191220024936.GA380394@chrisdown.name>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9477 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912200164
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9477 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912200164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 03:47:38PM +0000, Dave Kim wrote:
-> ﻿From: David Kim <david.kim@ncipher.com>
+On Fri, Dec 20, 2019 at 02:49:36AM +0000, Chris Down wrote:
+> In Facebook production we are seeing heavy inode number wraparounds on
+> tmpfs. On affected tiers, in excess of 10% of hosts show multiple files
+> with different content and the same inode number, with some servers even
+> having as many as 150 duplicated inode numbers with differing file
+> content.
 > 
-> This is the driver for nCipher’s Solo and Solo XC hardware security modules.
-> These modules implement a proprietary command set (the ’nCore API’) to
-> perform cryptographic operations - key generation, signature, and so on. HSM
-> commands and their replies are passed in a serialised binary format over the
-> PCIe bus via a shared memory region. Multiple commands may be in-flight at
-> any one time - command processing is multi-threaded and asynchronous. A write
-> operation may, therefore, deliver multiple commands, and multiple replies may
-> be retrieved in one read operation.
+> This causes actual, tangible problems in production. For example, we
+> have complaints from those working on remote caches that their
+> application is reporting cache corruptions because it uses (device,
+> inodenum) to establish the identity of a particular cache object, but
 
-If this is "just" a crypto accelerator, why isn't this driver using the
-existing in-kernel hardware crypto api?  What is lacking from it that
-you need here?
+...but you cannot delete the (dev, inum) tuple from the cache index when
+you remove a cache object??
 
-thanks,
+> because it's not unique any more, the application refuses to continue
+> and reports cache corruption. Even worse, sometimes applications may not
+> even detect the corruption but may continue anyway, causing phantom and
+> hard to debug behaviour.
+> 
+> In general, userspace applications expect that (device, inodenum) should
+> be enough to be uniquely point to one inode, which seems fair enough.
 
-greg k-h
+Except that it's not.  (dev, inum, generation) uniquely points to an
+instance of an inode from creation to the last unlink.
+
+--D
+
+> This patch changes get_next_ino to use up to min(sizeof(ino_t), 8) bytes
+> to reduce the likelihood of wraparound. On architectures with 32-bit
+> ino_t the problem is, at least, not made any worse than it is right now.
+> 
+> I noted the concern in the comment above about 32-bit applications on a
+> 64-bit kernel with 32-bit wide ino_t in userspace, as documented by Jeff
+> in the commit message for 866b04fc, but these applications are going to
+> get EOVERFLOW on filesystems with non-volatile inode numbers anyway,
+> since those will likely be 64-bit. Concerns about that seem slimmer
+> compared to the disadvantages this presents for known, real users of
+> this functionality on platforms with a 64-bit ino_t.
+> 
+> Other approaches I've considered:
+> 
+> - Use an IDA. If this is a problem for users with 32-bit ino_t as well,
+>   this seems a feasible approach. For now this change is non-intrusive
+>   enough, though, and doesn't make the situation any worse for them than
+>   present at least.
+> - Look for other approaches in userspace. I think this is less
+>   feasible -- users do need to have a way to reliably determine inode
+>   identity, and the risk of wraparound with a 2^32-sized counter is
+>   pretty high, quite clearly manifesting in production for workloads
+>   which make heavy use of tmpfs.
+> 
+> Signed-off-by: Chris Down <chris@chrisdown.name>
+> Reported-by: Phyllipe Medeiros <phyllipe@fb.com>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Jeff Layton <jlayton@kernel.org>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: linux-fsdevel@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: kernel-team@fb.com
+> ---
+>  fs/inode.c         | 29 ++++++++++++++++++-----------
+>  include/linux/fs.h |  2 +-
+>  2 files changed, 19 insertions(+), 12 deletions(-)
+> 
+> diff --git a/fs/inode.c b/fs/inode.c
+> index aff2b5831168..8193c17e2d16 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -870,26 +870,33 @@ static struct inode *find_inode_fast(struct super_block *sb,
+>   * This does not significantly increase overflow rate because every CPU can
+>   * consume at most LAST_INO_BATCH-1 unused inode numbers. So there is
+>   * NR_CPUS*(LAST_INO_BATCH-1) wastage. At 4096 and 1024, this is ~0.1% of the
+> - * 2^32 range, and is a worst-case. Even a 50% wastage would only increase
+> - * overflow rate by 2x, which does not seem too significant.
+> + * 2^32 range (for 32-bit ino_t), and is a worst-case. Even a 50% wastage would
+> + * only increase overflow rate by 2x, which does not seem too significant. With
+> + * a 64-bit ino_t, overflow in general is fairly hard to achieve.
+>   *
+> - * On a 32bit, non LFS stat() call, glibc will generate an EOVERFLOW
+> - * error if st_ino won't fit in target struct field. Use 32bit counter
+> - * here to attempt to avoid that.
+> + * Care should be taken not to overflow when at all possible, since generally
+> + * userspace depends on (device, inodenum) being reliably unique.
+>   */
+>  #define LAST_INO_BATCH 1024
+> -static DEFINE_PER_CPU(unsigned int, last_ino);
+> +static DEFINE_PER_CPU(ino_t, last_ino);
+>  
+> -unsigned int get_next_ino(void)
+> +ino_t get_next_ino(void)
+>  {
+> -	unsigned int *p = &get_cpu_var(last_ino);
+> -	unsigned int res = *p;
+> +	ino_t *p = &get_cpu_var(last_ino);
+> +	ino_t res = *p;
+>  
+>  #ifdef CONFIG_SMP
+>  	if (unlikely((res & (LAST_INO_BATCH-1)) == 0)) {
+> -		static atomic_t shared_last_ino;
+> -		int next = atomic_add_return(LAST_INO_BATCH, &shared_last_ino);
+> +		static atomic64_t shared_last_ino;
+> +		u64 next = atomic64_add_return(LAST_INO_BATCH,
+> +					       &shared_last_ino);
+>  
+> +		/*
+> +		 * This might get truncated if ino_t is 32-bit, and so be more
+> +		 * susceptible to wrap around than on environments where ino_t
+> +		 * is 64-bit, but that's really no worse than always encoding
+> +		 * `res` as unsigned int.
+> +		 */
+>  		res = next - LAST_INO_BATCH;
+>  	}
+>  #endif
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 190c45039359..ca1a04334c9e 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -3052,7 +3052,7 @@ static inline void lockdep_annotate_inode_mutex_key(struct inode *inode) { };
+>  #endif
+>  extern void unlock_new_inode(struct inode *);
+>  extern void discard_new_inode(struct inode *);
+> -extern unsigned int get_next_ino(void);
+> +extern ino_t get_next_ino(void);
+>  extern void evict_inodes(struct super_block *sb);
+>  
+>  extern void __iget(struct inode * inode);
+> -- 
+> 2.24.1
+> 
