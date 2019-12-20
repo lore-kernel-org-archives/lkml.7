@@ -2,78 +2,98 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A886AC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C78BEC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F68224679
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9356A20684
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:19:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LK+J1zGw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfLTHRm (ORCPT
+        id S1727169AbfLTHTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 02:17:42 -0500
-Received: from mx59.baidu.com ([61.135.168.59]:58639 "EHLO
-        tc-sys-mailedm01.tc.baidu.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726142AbfLTHRm (ORCPT
+        Fri, 20 Dec 2019 02:19:42 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:16681 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725914AbfLTHTl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 02:17:42 -0500
-X-Greylist: delayed 570 seconds by postgrey-1.27 at vger.kernel.org; Fri, 20 Dec 2019 02:17:40 EST
-Received: from localhost (cp01-cos-dev01.cp01.baidu.com [10.92.119.46])
-        by tc-sys-mailedm01.tc.baidu.com (Postfix) with ESMTP id 1DE5D204005E;
-        Fri, 20 Dec 2019 15:07:54 +0800 (CST)
-From:   jimyan <jimyan@baidu.com>
-To:     joro@8bytes.org
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        jimyan@baidu.com
-Subject: [PATCH] iommu/vt-d: Don't reject nvme host due to scope mismatch
-Date:   Fri, 20 Dec 2019 15:07:54 +0800
-Message-Id: <1576825674-18022-1-git-send-email-jimyan@baidu.com>
-X-Mailer: git-send-email 1.7.1
+        Fri, 20 Dec 2019 02:19:41 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576826381; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=qQnAOBnm851gvtQP9RARiafEiullQAdZpKpw996rOSk=; b=LK+J1zGwcyMsY9map+ofgfL+RI6uZaFvetVaCYLvEDOLJWxeXKpS78fk6PUlYuv7t2Jg/vnI
+ UEVQvDOJDTLdtRObq/UJ8oEjmHp9FwDJlqI3u8W3HNXMvU+7XcLcuV817Y6WrJjFnz5RHnTJ
+ 4SyBsAWj1O3P9t1Tkphn9HJ1caY=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5dfc7608.7fdada0a99d0-smtp-out-n02;
+ Fri, 20 Dec 2019 07:19:36 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 76001C4479C; Fri, 20 Dec 2019 07:19:35 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 04C50C433CB;
+        Fri, 20 Dec 2019 07:19:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 04C50C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Network Development <netdev@vger.kernel.org>,
+        linux-wireless@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        ath11k@lists.infradead.org
+Subject: Re: [PATCH] ath11k: Remove unnecessary enum scan_priority
+References: <20191211192252.35024-1-natechancellor@gmail.com>
+        <CAKwvOdmQp+Rjgh49kbTp1ocLCjv4SUACEO4+tX5vz4stX-pPpg@mail.gmail.com>
+        <87a77o786o.fsf@kamboji.qca.qualcomm.com>
+        <CAKwvOdk3EPurHLMf81VHowauRYZ4FZXxNg98hJvp8CLgu=SSPw@mail.gmail.com>
+Date:   Fri, 20 Dec 2019 09:19:30 +0200
+In-Reply-To: <CAKwvOdk3EPurHLMf81VHowauRYZ4FZXxNg98hJvp8CLgu=SSPw@mail.gmail.com>
+        (Nick Desaulniers's message of "Thu, 19 Dec 2019 09:06:37 -0800")
+Message-ID: <877e2r4g71.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On a system with an Intel PCIe port configured as a nvme host device, iommu
-initialization fails with
+Nick Desaulniers <ndesaulniers@google.com> writes:
 
-    DMAR: Device scope type does not match for 0000:80:00.0
+> On Thu, Dec 19, 2019 at 5:32 AM Kalle Valo <kvalo@codeaurora.org> wrote:
+>>
+>> Nick Desaulniers <ndesaulniers@google.com> writes:
+>>
+>> > On Wed, Dec 11, 2019 at 11:23 AM Nathan Chancellor
+>> > <natechancellor@gmail.com> wrote:
+>> >> wmi_scan_priority and scan_priority have the same values but the wmi one
+>> >> has WMI prefixed to the names. Since that enum is already being used,
+>> >> get rid of scan_priority and switch its one use to wmi_scan_priority to
+>> >> fix this warning.
+>> >>
+>> > Also, I don't know if the more concisely named enum is preferable?
+>>
+>> I didn't get this comment.
+>
+> Given two enums with the same values:
+> enum scan_priority
+> enum wmi_scan_priority
+> wouldn't you prefer to type wmi_ a few times less?  Doesn't really
+> matter, but that was the point I was making.
 
-This is because the DMAR table reports this device as having scope 2
-(ACPI_DMAR_SCOPE_TYPE_BRIDGE):
+Ah, now I got it :) This enum is part of firmware interface (WMI) so
+yes, I prefer to use the wmi_ prefix to make that obvious.
 
-but the device has a type 0 PCI header:
-80:00.0 Class 0600: Device 8086:2020 (rev 06)
-00: 86 80 20 20 47 05 10 00 06 00 00 06 10 00 00 00
-10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-20: 00 00 00 00 00 00 00 00 00 00 00 00 86 80 00 00
-30: 00 00 00 00 90 00 00 00 00 00 00 00 00 01 00 00
-
-VT-d works perfectly on this system, so there's no reason to bail out
-on initialization due to this apparent scope mismatch. Add the class
-0x600 ("PCI_CLASS_BRIDGE_HOST") as a heuristic for allowing DMAR
-initialization for non-bridge PCI devices listed with scope bridge.
-
-Signed-off-by: jimyan <jimyan@baidu.com>
----
- drivers/iommu/dmar.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-index eecd6a421667..9faf2f0e0237 100644
---- a/drivers/iommu/dmar.c
-+++ b/drivers/iommu/dmar.c
-@@ -244,6 +244,7 @@ int dmar_insert_dev_scope(struct dmar_pci_notify_info *info,
- 		     info->dev->hdr_type != PCI_HEADER_TYPE_NORMAL) ||
- 		    (scope->entry_type == ACPI_DMAR_SCOPE_TYPE_BRIDGE &&
- 		     (info->dev->hdr_type == PCI_HEADER_TYPE_NORMAL &&
-+			  info->dev->class >> 8 != PCI_CLASS_BRIDGE_HOST &&
- 		      info->dev->class >> 8 != PCI_CLASS_BRIDGE_OTHER))) {
- 			pr_warn("Device scope type does not match for %s\n",
- 				pci_name(info->dev));
 -- 
-2.11.0
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
