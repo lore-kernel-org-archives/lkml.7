@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBD5C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AEAC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06DA8222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73583222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:37:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852640;
-	bh=uJ43pXqqAExfV9HJ8vcn7lUngjtVJIsx/CnHYFlyYGM=;
+	s=default; t=1576852643;
+	bh=ypHZeVzKwaqVfm68nDGlOSrMfpR6ZaYZOELyZUlOmbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IUtnY29NV9Ra7fq48lLrgTIowc2sLIgwhCqjCNDVv9VHE0MBZOYnbA6mhx1l4py/5
-	 yNWNKumydirnM88kI/xYowAO/aWyY2dLcI2gUoYhxt9TPgq71dE+1pQCh3y9IwZHDB
-	 r8DmTayvKFFxEVNe2ttpjgGjb0iBAhxdW6zWb0q4=
+	b=TlRXcgWICQyk23OtiDWzprj7rwCwmZIGDTl3CApG1iXsWiLTpWb8XX+hCk55wExpI
+	 h2l+7Lmcn2p76oWj2QHVSMYLzGypULvUOxiXvNYDiIHPYfFlO8R4vqU2b3o2gzQjps
+	 TDBIN55l/HiTa6f9NSQcVdJCj6696mMByQQ3KiCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbfLTOaY (ORCPT
+        id S1727562AbfLTOhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:30:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33768 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:37:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727615AbfLTOaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:30:19 -0500
+        id S1727658AbfLTOaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:30:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9549624682;
-        Fri, 20 Dec 2019 14:30:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 734AB24688;
+        Fri, 20 Dec 2019 14:30:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852218;
-        bh=uJ43pXqqAExfV9HJ8vcn7lUngjtVJIsx/CnHYFlyYGM=;
+        s=default; t=1576852223;
+        bh=ypHZeVzKwaqVfm68nDGlOSrMfpR6ZaYZOELyZUlOmbA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c/DXAXvs9ii87PJ+hLOABkxoBfxH5LoWGMyVgeU9+TpPgba4Za/reZ5cNHE3Z1zi5
-         yRiKzMf0/xM79e5JW062lzEt1aWBpXiw7PsuXp9YoC80rXjkXpxNqQb4AtsnW7AvPu
-         zTqXV0epDfRnCiO6t1lDviR4M2kgbhuNi1dR01aY=
+        b=RH5Jo5KB3hgaHwxiFoul8z+0l8ucxtUeN7N5i6Pkfyrns1vRcRkkyFksDcZQXUU1z
+         hqWeKvfm0h+Ao6C2LYhI83CmZVK2szsrp5MB8Jf1K+ujdbRKO1Fr/IzWVb/AHJHpQr
+         RkYeTYLWXRML1dzuLImh4t4LgDMbCpipUpuJuK/M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 17/52] PM / devfreq: Set scaling_max_freq to max on OPP notifier error
-Date:   Fri, 20 Dec 2019 09:29:19 -0500
-Message-Id: <20191220142954.9500-17-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Parav Pandit <parav@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 21/52] RDMA/cma: add missed unregister_pernet_subsys in init failure
+Date:   Fri, 20 Dec 2019 09:29:23 -0500
+Message-Id: <20191220142954.9500-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
 References: <20191220142954.9500-1-sashal@kernel.org>
@@ -60,42 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit e7cc792d00049c874010b398a27c3cc7bc8fef34 ]
+[ Upstream commit 44a7b6759000ac51b92715579a7bba9e3f9245c2 ]
 
-The devfreq_notifier_call functions will update scaling_min_freq and
-scaling_max_freq when the OPP table is updated.
+The driver forgets to call unregister_pernet_subsys() in the error path
+of cma_init().
+Add the missed call to fix it.
 
-If fetching the maximum frequency fails then scaling_max_freq remains
-set to zero which is confusing. Set to ULONG_MAX instead so we don't
-need special handling for this case in other places.
-
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Fixes: 4be74b42a6d0 ("IB/cma: Separate port allocation to network namespaces")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Reviewed-by: Parav Pandit <parav@mellanox.com>
+Link: https://lore.kernel.org/r/20191206012426.12744-1-hslester96@gmail.com
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/devfreq.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/infiniband/core/cma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index e5c2afdc7b7f0..e185c8846916d 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -560,8 +560,10 @@ static int devfreq_notifier_call(struct notifier_block *nb, unsigned long type,
- 		goto out;
- 
- 	devfreq->scaling_max_freq = find_available_max_freq(devfreq);
--	if (!devfreq->scaling_max_freq)
-+	if (!devfreq->scaling_max_freq) {
-+		devfreq->scaling_max_freq = ULONG_MAX;
- 		goto out;
-+	}
- 
- 	err = update_devfreq(devfreq);
- 
+diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
+index d78f67623f24e..50052e9a17318 100644
+--- a/drivers/infiniband/core/cma.c
++++ b/drivers/infiniband/core/cma.c
+@@ -4736,6 +4736,7 @@ static int __init cma_init(void)
+ err:
+ 	unregister_netdevice_notifier(&cma_nb);
+ 	ib_sa_unregister_client(&sa_client);
++	unregister_pernet_subsys(&cma_pernet_operations);
+ err_wq:
+ 	destroy_workqueue(cma_wq);
+ 	return ret;
 -- 
 2.20.1
 
