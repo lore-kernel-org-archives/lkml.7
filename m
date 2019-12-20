@@ -2,100 +2,88 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A338C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DF4C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C1DE24682
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:16:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a2CSRPf7"
+	by mail.kernel.org (Postfix) with ESMTP id 6C5152467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:17:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576837059;
+	bh=8cdOeBKhZ62/Tum2uJhI+qHIytxi40ciNVfJFG6tW7w=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=CjiEN56jTje4Exs60i4ixwLQesoQvwH7qWE0PFkyfgF+6ciFzPnxhvbwk+dzWhaxk
+	 9ul11ZAl6aQWpXWpqGe2/T1xUcLEAtzgV2IJc0hnEgSbvjDRncyguwdg2I0vCjNqmg
+	 YcQeCIEwLoXBlU9BV03ye3ktS25AFC2vJUBp+hoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727382AbfLTKQi (ORCPT
+        id S1727344AbfLTKRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 05:16:38 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:25123 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727167AbfLTKQi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 05:16:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576836997;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+PzIuYiHMsqvNdlt2YJSoIUgUD4Ah16g2x1kpChg64c=;
-        b=a2CSRPf7w1fav7Mi2gqayy8t90Ku2Z1vZnzrlSsjk9502iu9Crr6BjbS9cBBZ9PJvKoqNF
-        q4q0D1pA9DlvcxL80OuQmlkx9NAV/67L/Oah2gTdfx8YrIP9CqvI3ishy0uhHS2AXh1zxV
-        ip2DmReYeIGrONBfJu25nVGI1TeaEmA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-311-bGcYOmVjOo6uYa_m4PEfLQ-1; Fri, 20 Dec 2019 05:16:36 -0500
-X-MC-Unique: bGcYOmVjOo6uYa_m4PEfLQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 20 Dec 2019 05:17:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53004 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726210AbfLTKRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 05:17:38 -0500
+Received: from localhost.localdomain (unknown [106.201.107.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5909118FE860;
-        Fri, 20 Dec 2019 10:16:33 +0000 (UTC)
-Received: from gondolin (dhcp-192-245.str.redhat.com [10.33.192.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3B61B383;
-        Fri, 20 Dec 2019 10:16:27 +0000 (UTC)
-Date:   Fri, 20 Dec 2019 11:16:24 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kurz <groug@kaod.org>
-Subject: Re: [PATCH v2 44/45] KVM: Move putting of vcpu->pid to
- kvm_vcpu_destroy()
-Message-ID: <20191220111624.47e15479.cohuck@redhat.com>
-In-Reply-To: <20191218215530.2280-45-sean.j.christopherson@intel.com>
-References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
-        <20191218215530.2280-45-sean.j.christopherson@intel.com>
-Organization: Red Hat GmbH
+        by mail.kernel.org (Postfix) with ESMTPSA id C8CAA2467F;
+        Fri, 20 Dec 2019 10:17:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576837057;
+        bh=8cdOeBKhZ62/Tum2uJhI+qHIytxi40ciNVfJFG6tW7w=;
+        h=From:To:Cc:Subject:Date:From;
+        b=N9fRNt1f4O/fBnt99HIW2NfMp2SvXH8DyxONKbrvZHK0XlhgICUFmJxcb8aw/BJbn
+         zup3D5kEeXIDq+Q4mXs/ciByL91j5DCJsb6q+vKhC4R0NKb3pJOS7WagrK13xH+M8J
+         v5rgDUJTsezBQXhwyVU2/xdmZQWJRJdENXHd1/54=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
+        Can Guo <cang@codeaurora.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/5] phy: qcom-qmp: Fixes and updates for sm8150
+Date:   Fri, 20 Dec 2019 15:47:14 +0530
+Message-Id: <20191220101719.3024693-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Dec 2019 13:55:29 -0800
-Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+On 5.5-rc1 we have seen regression on UFS phy on 8998 and SM8150. As
+suggested by Can, increasing the timeout helps so we increase the phy init
+timeout and that fixes the issue for 8998.  The patch 1 should be applied
+to fixes for 5.5
 
-> Move the putting of vcpu->pid to kvm_vcpu_destroy().  vcpu->pid is
-> guaranteed to be NULL when kvm_vcpu_uninit() is called in the error path
-> of kvm_vm_ioctl_create_vcpu(), e.g. it is explicitly nullified by
-> kvm_vcpu_init() and is only changed by KVM_RUN.
-> 
-> No functional change intended.
-> 
-> Acked-by: Christoffer Dall <christoffer.dall@arm.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  virt/kvm/kvm_main.c | 13 +++++++------
->  1 file changed, 7 insertions(+), 6 deletions(-)
+For SM8150 we need additional SW reset so add additional SW reset and
+configure if flag is defined, while at it do small updates to Use register
+defines and remove duplicate powerdown write.
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Changes in v2:
+ - Drop patch 1 and pick the one Bjorn had already sent, makes timeout 10ms
+ - Fix optional reset write as pointed by Can
+ - Fix register define as pointed by Can
+
+Bjorn Andersson (1):
+
+  phy: qcom-qmp: Increase PHY ready timeout
+
+Vinod Koul (4):
+  phy: qcom-qmp: Use register defines
+  phy: qcom-qmp: Add optional SW reset
+  phy: qcom-qmp: remove duplicate powerdown write
+  phy: qcom-qmp: remove no_pcs_sw_reset for sm8150
+
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
+
+-- 
+2.23.0
 
