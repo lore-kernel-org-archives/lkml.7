@@ -2,165 +2,127 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5481FC2D0D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C72DC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FDC724679
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DC0E24679
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:17:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="avEhe0h/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c0OXb6iZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbfLTMQW (ORCPT
+        id S1727369AbfLTMR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 07:16:22 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38659 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727211AbfLTMQV (ORCPT
+        Fri, 20 Dec 2019 07:17:27 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40155 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727202AbfLTMR0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 07:16:21 -0500
-Received: by mail-wr1-f67.google.com with SMTP id y17so9239171wrh.5
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 04:16:20 -0800 (PST)
+        Fri, 20 Dec 2019 07:17:26 -0500
+Received: by mail-pl1-f194.google.com with SMTP id s21so1287087plr.7;
+        Fri, 20 Dec 2019 04:17:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=agoLDBhJR59GTTSs+ez/Yrhh73k6oloZGrgz5Rsg0gM=;
-        b=avEhe0h/Y5RzW/XaZZS0w+OJNrTSQRaj1ODufA74IXVLKtT4JSSrhOZptONbWS/7be
-         PjiBYEjKUg6j99+8UCQe9dN9GIufg8pWG9zZmUYi6KBawfAdk4t8KuBq/VVJjLszIvnU
-         EGwPEX41dSoeDEOmIZ3BcqkAzxBJwWP4HN+lM=
+        bh=6WV/T6CpDhebP945cbfXE+MmOGoQMQ/88QhIuMiSFcg=;
+        b=c0OXb6iZ79HWRkKlGD0qqeGNccVo4B5n6KO5almOyCp3OOi3+wkkXwZohfaqSv45su
+         2pBUYe9ot3TP6VE0oH+rfwDsDQ+l5tEWG3CleaNz8SKGhSNUE2qu7QcgFdeB0nCLtlEx
+         IlMjLYMq0CeEZyhep5aqPus31UsYRJES5zu/erisphniSGFWfP94yogsSJ2AeL6OVVez
+         6+Dh1hbIVfEVA9Q8fHIrXg3mKquUcWgp+KfSY84VYG97B0Y+8Jm5MUlTUcBU2/QFXivh
+         Sc2ElJgUKmRZlxiKb7xZtJstVB4LtmwHjGuqFUnh/wYW8G8DVLceJ8qreq5rgVDI+cty
+         891A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=agoLDBhJR59GTTSs+ez/Yrhh73k6oloZGrgz5Rsg0gM=;
-        b=FouLDk9/pYXvuYuJ7QE7O2xZhtFi1Q8iNZ/QenjdiQRuc6nKQJ3a6RsGjFbiE8pxSQ
-         TXP9LY5QI45Pa8IVqzbzEXnQ1Duf7WkBUhhIt29P6EIAietBepBbSc/AqzEcIhAuJl0i
-         z9f6TJjFeGPh0Lyw4FYS3NGDDxacHU6D11btu/AdY0vvism62E38bpWi5mkHzBP3dIqU
-         JY6aOTPcxd1Vfevz4IB8Yh7AntgsfaMYpgc7gX4YuR6DxEVuWSIlmj1eMULnufDH2lNe
-         K47+Ko4pJhDCP4OFqwa3b0DMMMo+JKk1TAK202IP6mbXTywozDjAzo/QpDerT7mQfOIn
-         QFeg==
-X-Gm-Message-State: APjAAAX3kkbbzfReKmL0OzAC/81LhxtxfYbB4PBYKz8n9+vH4ehFi5aT
-        zCpTsH01JKnRugAG+vBO0OhDtQ==
-X-Google-Smtp-Source: APXvYqxAEMCXkgpMdwF7gD4TxOUEgEjETCC6n0O8uBTNO+16VnxTE8nv1F7hfNRT+M1CW97N312/NA==
-X-Received: by 2002:a5d:4983:: with SMTP id r3mr15186247wrq.134.1576844179206;
-        Fri, 20 Dec 2019 04:16:19 -0800 (PST)
-Received: from localhost ([2a01:4b00:8432:8a00:63de:dd93:20be:f460])
-        by smtp.gmail.com with ESMTPSA id k7sm9289854wmi.19.2019.12.20.04.16.16
+        bh=6WV/T6CpDhebP945cbfXE+MmOGoQMQ/88QhIuMiSFcg=;
+        b=N7Q0rGpWpw+Wg2CWVFSvXdd/IjTLbkaxzDA+mpehOdywZkNUMvsABPju3rercL/kb6
+         ZsDRAtSNYh7uNda9s1hgLZ98PXI3rhfJwp2Jr1m8ZPQUE9doSznBX+wgB7B4wktcbrP/
+         4d9vxx7VwPdMx2X9wRuAwtI2WyuKQAJ7bvVWMEKJM4GV3JeUQw0mGSK65sVQIm8Jze/V
+         h4940Kb6toz6Uhm0jvaT649Tf2BTSWn0fwBxy4lNztKnP/9P5/EJSzR4vys4ZJd6lGu+
+         LoafDk31snvZLkOt/dDUvIyp5+1RsigDT8E2PqlgSUR4Qr11C52N60WSDsoFhCm1RBkZ
+         +SHQ==
+X-Gm-Message-State: APjAAAXSGM7gCtRh1QFAGUL92iglg22E5q8HXD49x00nKaT5Zl3zODRr
+        JkCjN8yJTkDUuAFDBt5mKwQ=
+X-Google-Smtp-Source: APXvYqz/EVj3ToXk1wO3i1VkQUwjv2AoEJCSmXr8EqHlsWftQ/ner9u78glT5f8dGvFwkCyGOZcwvg==
+X-Received: by 2002:a17:902:bd85:: with SMTP id q5mr14660399pls.17.1576844246000;
+        Fri, 20 Dec 2019 04:17:26 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id e16sm11053918pgk.77.2019.12.20.04.17.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 04:16:16 -0800 (PST)
-Date:   Fri, 20 Dec 2019 12:16:15 +0000
-From:   Chris Down <chris@chrisdown.name>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com,
-        Hugh Dickins <hughd@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <miklos@szeredi.hu>
-Subject: Re: [PATCH] fs: inode: Reduce volatile inode wraparound risk when
- ino_t is 64 bit
-Message-ID: <20191220121615.GB388018@chrisdown.name>
-References: <20191220024936.GA380394@chrisdown.name>
- <CAOQ4uxjqSWcrA1reiyit9DRt+aq2tXBxLdPE31RrYw1yr=4hjg@mail.gmail.com>
+        Fri, 20 Dec 2019 04:17:25 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id CCB2B40CB9; Fri, 20 Dec 2019 09:17:23 -0300 (-03)
+Date:   Fri, 20 Dec 2019 09:17:23 -0300
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 06/12] perf report/top: Add 'k' hotkey to zoom directly
+ into the kernel map
+Message-ID: <20191220121723.GC2032@kernel.org>
+References: <20191217144828.2460-1-acme@kernel.org>
+ <20191217144828.2460-7-acme@kernel.org>
+ <CAM9d7ciL-Qnm5v3Tn1rsrNzW3mTWx5HY6W5XBU1MKnLQ7YBdkw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOQ4uxjqSWcrA1reiyit9DRt+aq2tXBxLdPE31RrYw1yr=4hjg@mail.gmail.com>
+In-Reply-To: <CAM9d7ciL-Qnm5v3Tn1rsrNzW3mTWx5HY6W5XBU1MKnLQ7YBdkw@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Amir,
+Em Fri, Dec 20, 2019 at 03:48:23PM +0900, Namhyung Kim escreveu:
+> On Tue, Dec 17, 2019 at 11:49 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > As a convenience, equivalent to pressing Enter in a line with a kernel
+> > symbol and then selecting "Zoom" into the kernel DSO.
+ 
+> We already have 'd' key for 'zoom into current dso'.
 
-Thanks for getting back, I appreciate it.
+Right, current DSO, 'k' is equivalent to:
 
-Amir Goldstein writes:
->How about something like this:
->
->/* just to explain - use an existing macro */
->shmem_ino_shift = ilog2(sizeof(void *));
->inode->i_ino = (__u64)inode >> shmem_ino_shift;
->
->This should solve the reported problem with little complexity,
->but it exposes internal kernel address to userspace.
+1. Navigate to a kernel map entry
+2. Press 'd'
 
-One problem I can see with that approach is that get_next_ino doesn't 
-discriminate based on the context (for example, when it is called for a 
-particular tmpfs mount) which means that eventually wraparound risk is still 
-pushed to the limit on such machines for other users of get_next_ino (like 
-named pipes, sockets, procfs, etc). Granted then the space for collisions 
-between them is less likely due to their general magnitude of inodes at one 
-time compared to some tmpfs workloads, but still.
+And also to:
 
->Can we do anything to mitigate this risk?
->
->For example, instead of trying to maintain a unique map of
->ino_t to struct shmem_inode_info * in the system
->it would be enough (and less expensive) to maintain a unique map of
->shmem_ino_range_t to slab.
->The ino_range id can then be mixes with the relative object index in
->slab to compose i_ino.
->
->The big win here is not having to allocate an id every bunch of inodes
->instead of every inode, but the fact that recycled (i.e. delete/create)
->shmem_inode_info objects get the same i_ino without having to
->allocate any id.
->
->This mimics a standard behavior of blockdev filesystem like ext4/xfs
->where inode number is determined by logical offset on disk and is
->quite often recycled on delete/create.
->
->I realize that the method I described with slab it crossing module layers
->and would probably be NACKED.
+1. Navigate to a kernel map entry
+2. Press ENTER
+3. Navigate to "Zoom into Kernel DSO"
+4. Press ENTER
 
-Yeah, that's more or less my concern with that approach as well, hence why I 
-went for something that seemed less intrusive and keeps with the current inode 
-allocation strategy :-)
+One key versus 2 or four.
 
->Similar result could be achieved by shmem keeping a small stash of
->recycled inode objects, which are not returned to slab right away and
->retain their allocated i_ino. This at least should significantly reduce the
->rate of burning get_next_ino allocation.
+> Do you really want 'k' for kernel specially?
 
-While this issue happens to present itself currently on tmpfs, I'm worried that 
-future users of get_next_ino based on historic precedent might end up hitting 
-this as well. That's the main reason why I'm inclined to try and improve 
-get_next_ino's strategy itself.
+I thought kernel hackers would like the convenience, doing:
 
->Anyway, to add another consideration to the mix, overlayfs uses
->the high ino bits to multiplex several layers into a single ino domain
->(mount option xino=on).
->
->tmpfs is a very commonly used filesystem as overlayfs upper layer,
->so many users are going to benefit from keeping the higher most bits
->of tmpfs ino inodes unused.
->
->For this reason, I dislike the current "grow forever" approach of
->get_next_ino() and prefer that we use a smarter scheme when
->switching over to 64bit values.
+  perf top + k
 
-By "a smarter scheme when switching over to 64bit values", you mean keeping 
-i_ino as low magnitude as possible while still avoiding simultaneous reuse, 
-right?
+To get the main kernel samples looks faster than:
 
-To that extent, if we can reliably and expediently recycle inode numbers, I'm 
-not against sticking to the existing typing scheme in get_next_ino. It's just a 
-matter of agreeing by what method and at what level of the stack that should 
-take place :-)
+  perf top -e cycles:k
 
-I'd appreciate your thoughts on approaches forward. One potential option is to 
-reimplement get_next_ino using an IDA, as mentioned in my patch message. Other 
-than the potential to upset microbenchmarks, do you have concerns with that as 
-a patch?
+And those are not even equivalent, as cycles:k will show everything in
+ring 0, while 'perf top + k' will show just what is in the kernel _and_
+in the main kernel map.
 
-Thanks,
-
-Chris
+- Arnaldo
