@@ -2,127 +2,104 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D92C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4756AC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 427072146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1010B2146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:34:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yTdS75r0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wr73SsqL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfLTJeA (ORCPT
+        id S1727437AbfLTJed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 04:34:00 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:55114 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727193AbfLTJeA (ORCPT
+        Fri, 20 Dec 2019 04:34:33 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:41192 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727279AbfLTJec (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 04:34:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/9YQTDX1rQMnRpGjo8v0aRdduxI1RsOgNUg+1Xxv8xU=; b=yTdS75r0aWwucLsKyw+wk+PmF
-        cLq1DvfA0ELGQR7NF5nSilho2SzKSDeeijmcyQ8lJtMnGsK+vrThJuuWDTCSC5GyyMCC6+JHGEqBV
-        VHyFwPSkAc4icj6zV1qntdkcikuitH0zi42r3f0Al+6ueWUmmEYhR9/A46Ttu+BLWzWKDDH0RYqwj
-        sTN8Mt+G4PfF4j3CB5XauNjGYDKvd5nbwuL1+HR1eTuT64HWiltuLfOZuLfiWREfvEV/ABtSr0uz+
-        doxTOZHgQlWX9NdPZggqUeTBqnNq/DiT0V2mFDoKLusxUTSE/bJaI4t8RTbA5c2SoGHYmfy9VdyAa
-        4sV3LxQeA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iiEfC-0000FS-15; Fri, 20 Dec 2019 09:33:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C8C8F30073C;
-        Fri, 20 Dec 2019 10:32:11 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 935062B46862F; Fri, 20 Dec 2019 10:33:35 +0100 (CET)
-Date:   Fri, 20 Dec 2019 10:33:35 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 1/9] perf/core: Add PERF_RECORD_CGROUP event
-Message-ID: <20191220093335.GC2844@hirez.programming.kicks-ass.net>
-References: <20191220043253.3278951-1-namhyung@kernel.org>
- <20191220043253.3278951-2-namhyung@kernel.org>
+        Fri, 20 Dec 2019 04:34:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576834471;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0/UxvPCeTXUKVldWIXLXTiQznfkGrThtTbge0OdQKe4=;
+        b=Wr73SsqLoUnzP0qsA+LNqwxJnV7UETTmNcjUAqU4jlb9W37Lxg5+FoBMBm472gBMnd9uN2
+        VWV55W3nT7fudccG0+budwK+SwkvapTznOG/+y0bhtsntmn+qAyJZ0wPdbxgrqmEWMhbzK
+        gRY3OGLXWMYiwaT3QSTEWxwUamAfBmo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-102--qmUq0DYNauUF-7U1HEAow-1; Fri, 20 Dec 2019 04:34:28 -0500
+X-MC-Unique: -qmUq0DYNauUF-7U1HEAow-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E9D3510054E3;
+        Fri, 20 Dec 2019 09:34:26 +0000 (UTC)
+Received: from carbon (ovpn-200-18.brq.redhat.com [10.40.200.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 42B5A67009;
+        Fri, 20 Dec 2019 09:34:21 +0000 (UTC)
+Date:   Fri, 20 Dec 2019 10:34:20 +0100
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
+Cc:     bpf <bpf@vger.kernel.org>, brouer@redhat.com,
+        LKML <linux-kernel@vger.kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        Dennis Zhou <dennis@kernel.org>
+Subject: Re: Percpu variables, benchmarking, and performance weirdness
+Message-ID: <20191220103420.6f9304ab@carbon>
+In-Reply-To: <CAJ+HfNgNAzvdBw7gBJTCDQsne-HnWm90H50zNvXBSp4izbwFTA@mail.gmail.com>
+References: <CAJ+HfNgNAzvdBw7gBJTCDQsne-HnWm90H50zNvXBSp4izbwFTA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191220043253.3278951-2-namhyung@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 01:32:45PM +0900, Namhyung Kim wrote:
-> To support cgroup tracking, add CGROUP event to save a link between
-> cgroup path and inode number.  The attr.cgroup bit was also added to
-> enable cgroup tracking from userspace.
-> 
-> This event will be generated when a new cgroup becomes active.
-> Userspace might need to synthesize those events for existing cgroups.
-> 
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: Li Zefan <lizefan@huawei.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+On Fri, 20 Dec 2019 09:25:43 +0100
+Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com> wrote:
 
-TJ, is this the right thing to do? ISTR you had concerns on this topic
-on the past.
+> I've been doing some benchmarking with AF_XDP, and more specific the
+> bpf_xdp_redirect_map() helper and xdp_do_redirect(). One thing that
+> puzzles me is that the percpu-variable accesses stands out.
+>=20
+> I did a horrible hack that just accesses a regular global variable,
+> instead of the percpu struct bpf_redirect_info, and got a performance
+> boost from 22.7 Mpps to 23.8 Mpps with the rxdrop scenario from
+> xdpsock.
 
-> ---
->  include/uapi/linux/perf_event.h |  14 +++-
->  kernel/events/core.c            | 112 ++++++++++++++++++++++++++++++++
->  2 files changed, 125 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-> index 377d794d3105..7bae2d3380a6 100644
-> --- a/include/uapi/linux/perf_event.h
-> +++ b/include/uapi/linux/perf_event.h
-> @@ -377,7 +377,8 @@ struct perf_event_attr {
->  				ksymbol        :  1, /* include ksymbol events */
->  				bpf_event      :  1, /* include bpf events */
->  				aux_output     :  1, /* generate AUX records instead of events */
-> -				__reserved_1   : 32;
-> +				cgroup         :  1, /* include cgroup events */
-> +				__reserved_1   : 31;
->  
->  	union {
->  		__u32		wakeup_events;	  /* wakeup every n events */
-> @@ -1006,6 +1007,17 @@ enum perf_event_type {
->  	 */
->  	PERF_RECORD_BPF_EVENT			= 18,
->  
-> +	/*
-> +	 * struct {
-> +	 *	struct perf_event_header	header;
-> +	 *	u64				id;
-> +	 *	u64				path_len;
+Yes, this an 2 ns overhead, which is annoying in XDP context.
+ (1/22.7-1/23.8)*1000 =3D 2 ns
 
-You can leave out path_len (also u64 for a length field is silly).
+> Have anyone else seen this?
 
-> +	 *	char				path[];
-> +	 *	struct sample_id		sample_id;
-> +	 * };
-> +	 */
-> +	PERF_RECORD_CGROUP			= 19,
+Yes, I see it all the time...
+
+> So, my question to the uarch/percpu folks out there: Why are percpu
+> accesses (%gs segment register) more expensive than regular global
+> variables in this scenario.
+
+I'm also VERY interested in knowing the answer to above question!?
+(Adding LKML to reach more people)
+
+
+> One way around that is changing BPF_PROG_RUN, and BPF_CALL_x to pass a
+> context (struct bpf_redirect_info) explicitly, and access that instead
+> of doing percpu access. That would be a pretty churny patch, and
+> before doing that it would be nice to understand why percpu stands out
+> performance-wise.
+
+--=20
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
+
