@@ -2,111 +2,98 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA2CC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E34C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC95A218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C73C218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:54:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hSSHzTWn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gaZ3w9v2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfLTNvv (ORCPT
+        id S1727411AbfLTNyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 08:51:51 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22573 "EHLO
+        Fri, 20 Dec 2019 08:54:10 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40943 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727344AbfLTNvv (ORCPT
+        with ESMTP id S1727346AbfLTNyK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 08:51:51 -0500
+        Fri, 20 Dec 2019 08:54:10 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576849910;
+        s=mimecast20190719; t=1576850048;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=U7mQnCuZydftKAk49wAI4WdHzawy0qILE1REt91bCOk=;
-        b=hSSHzTWnQG0GtYLrkV+a0mFIK9rNiXEicJwKeLouCWSfw76VTuV1NDVznq5cWIphXgJePR
-        66jJiUgB53220pEbOaPnCAkqtnI3MfIuB1RxzlRzh6CuqzZ/eo7Rs1Sx/fYeHLEhRLOTP0
-        WhQpIqxbSYXCoIOf0AIRWPZTwct7WiU=
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7d5/Dg1qphkKnk5wP6grMwrijICvNfIm/Vmd4UgEDEA=;
+        b=gaZ3w9v2Obl1VmV7olbWFkn55+t/MHJqpl9FINrsuzWdwzi4p07JX6rOikEB/5ZrOHgISp
+        mmxDMrZuZQfrWLl9ftI3oWLH6fZ6gUKn4F2myr079tT4h/GTMmUBtkgu5LpXWDj3AbCGp3
+        cYpL7udtcIOpopoXSU0F+R50SQvnYvk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-91-_ZdHm-ygM-KF68RdeZN3DQ-1; Fri, 20 Dec 2019 08:51:46 -0500
-X-MC-Unique: _ZdHm-ygM-KF68RdeZN3DQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-172-XxCnj0ShNcqc7wHr85ctiw-1; Fri, 20 Dec 2019 08:54:05 -0500
+X-MC-Unique: XxCnj0ShNcqc7wHr85ctiw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7C091100550E;
-        Fri, 20 Dec 2019 13:51:45 +0000 (UTC)
-Received: from llong.com (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 31B4C541FC;
-        Fri, 20 Dec 2019 13:51:42 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH v2] locking/lockdep: Fix buffer overrun problem in stack_trace[]
-Date:   Fri, 20 Dec 2019 08:51:28 -0500
-Message-Id: <20191220135128.14876-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1662B1005502;
+        Fri, 20 Dec 2019 13:54:04 +0000 (UTC)
+Received: from krava (ovpn-204-66.brq.redhat.com [10.40.204.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9908F6E51C;
+        Fri, 20 Dec 2019 13:54:01 +0000 (UTC)
+Date:   Fri, 20 Dec 2019 14:53:58 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v6 1/4] perf report: Fix incorrectly added dimensions as
+ switch perf data file
+Message-ID: <20191220135358.GE17348@krava>
+References: <20191220013722.20592-1-yao.jin@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191220013722.20592-1-yao.jin@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the lockdep code is really running out of the stack_trace entries,
-it is likely that buffer overrun can happen and the data immediately
-after stack_trace[] will be corrupted.
+On Fri, Dec 20, 2019 at 09:37:19AM +0800, Jin Yao wrote:
+> We observed an issue that was some extra columns displayed after switching
+> perf data file in browser. The steps to reproduce:
+> 
+> 1. perf record -a -e cycles,instructions -- sleep 3
+> 2. perf report --group
+> 3. In browser, we use hotkey 's' to switch to another perf.data
+> 4. Now in browser, the extra columns 'Self' and 'Children' are displayed.
+> 
+> The issue is setup_sorting() executed again after repeat path, so dimensions
+> are added again.
+> 
+> This patch checks the last key returned from __cmd_report(). If it's
+> K_SWITCH_INPUT_DATA, skips the setup_sorting().
+> 
+>  v6:
+>  ---
+>  No change.
+> 
+>  v5:
+>  ---
+>  New patch in v5.
+> 
+> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 
-If there is less than LOCK_TRACE_SIZE_IN_LONGS entries left before
-the call to save_trace(), the max_entries computation will leave it
-with a very large positive number because of its unsigned nature. The
-subsequent call to stack_trace_save() will then corrupt the data after
-stack_trace[]. Fix that by changing max_entries to a signed integer
-and check for negative value before calling stack_trace_save().
+for all 4 patches:
 
-Fixes: 12593b7467f9 ("locking/lockdep: Reduce space occupied by stack traces")
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- kernel/locking/lockdep.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 32282e7112d3..32406ef0d6a2 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -482,7 +482,7 @@ static struct lock_trace *save_trace(void)
- 	struct lock_trace *trace, *t2;
- 	struct hlist_head *hash_head;
- 	u32 hash;
--	unsigned int max_entries;
-+	int max_entries;
- 
- 	BUILD_BUG_ON_NOT_POWER_OF_2(STACK_TRACE_HASH_SIZE);
- 	BUILD_BUG_ON(LOCK_TRACE_SIZE_IN_LONGS >= MAX_STACK_TRACE_ENTRIES);
-@@ -490,10 +490,8 @@ static struct lock_trace *save_trace(void)
- 	trace = (struct lock_trace *)(stack_trace + nr_stack_trace_entries);
- 	max_entries = MAX_STACK_TRACE_ENTRIES - nr_stack_trace_entries -
- 		LOCK_TRACE_SIZE_IN_LONGS;
--	trace->nr_entries = stack_trace_save(trace->entries, max_entries, 3);
- 
--	if (nr_stack_trace_entries >= MAX_STACK_TRACE_ENTRIES -
--	    LOCK_TRACE_SIZE_IN_LONGS - 1) {
-+	if (max_entries <= 0) {
- 		if (!debug_locks_off_graph_unlock())
- 			return NULL;
- 
-@@ -502,6 +500,7 @@ static struct lock_trace *save_trace(void)
- 
- 		return NULL;
- 	}
-+	trace->nr_entries = stack_trace_save(trace->entries, max_entries, 3);
- 
- 	hash = jhash(trace->entries, trace->nr_entries *
- 		     sizeof(trace->entries[0]), 0);
--- 
-2.18.1
+thanks,
+jirka
 
