@@ -2,114 +2,168 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 724DFC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 04:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C06C6C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 04:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4590324680
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 04:47:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ET8Oh+6f"
+	by mail.kernel.org (Postfix) with ESMTP id 9EDA624680
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 04:48:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfLTErY (ORCPT
+        id S1727265AbfLTEsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 23:47:24 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:35208 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727084AbfLTErX (ORCPT
+        Thu, 19 Dec 2019 23:48:16 -0500
+Received: from sender4-op-o11.zoho.com ([136.143.188.11]:17102 "EHLO
+        sender4-op-o11.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727135AbfLTEsQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 23:47:23 -0500
-Received: by mail-pj1-f66.google.com with SMTP id s7so3576607pjc.0;
-        Thu, 19 Dec 2019 20:47:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aN12zhf4mlcaV2E22of1kpbrgx4U0ucUVjsbOQtDUz4=;
-        b=ET8Oh+6fwGiwWp5+wSIhFpTodb5pMe8Q9Lu4rNBzrlmuWs/wkoIsN8eUlDqoIYfZBF
-         Ydi9A8CEL6d4MDX3HTpwx0+raVMffPTPCAdm8b9SDzILaMsaygKkTMTDBNlpI+/Np7HR
-         avi/LhBdaTZW8RBs38H8WKyi2K0wgnkWpUVZSBJMJvGU/Jjm6v2vMNZ8H8tsbkd99GSl
-         s23Pv9rKa0/ZH3JSoef9xVsUBCxT1zp7POKFZXiHEx7aBkByeGJQkjgcpPSDzohzkmvk
-         PVNtF+XPTdnGK2u7l1ldy1JbynIJMKduFYcPK4calelYcfzfdzHFQwO8dHnaWGCRXp+3
-         Un9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aN12zhf4mlcaV2E22of1kpbrgx4U0ucUVjsbOQtDUz4=;
-        b=TGkhsxjg2R7BfekxCSjSFp4px+fUFbK/W9arGLnTuCtjFRtj4Mll2G6JjzWtPIe2yT
-         v4hEGCNk+f0rAIbaAWNtD7jqRuBBeNVOma47wiN5/yFLFRRkitaRuwYwDtMhjXl8r41R
-         eO/auCP60FvR+Z2WBL1oqc6wVbzoRxABMfZ5Qsz2hPUnLXsOmMk62OjbF5h5V4AKjOl2
-         eU6Z9MGasPCclgNo1IXiQX+4OR5TlDpNrwuW0yve2vo0BkcMlVcrTlvlK69qvY3VHpn/
-         NPWozj5cFD2guAZ31/8xT4Vp4ATNzT0evFOTOYVfeIzgKdQRNG69L+PlovAbxyFM+szG
-         9R5A==
-X-Gm-Message-State: APjAAAWGViT8KINQNAtJB7Rit+nS+tQlJY3yoGENxgg6MjykxavQbyD+
-        GwDAtDIkcDbVS7/PMvGQdzQ=
-X-Google-Smtp-Source: APXvYqyv2IK999RPM2ym3Yanh5DI+R4t8BSC5a74wES6xt7xZmhV0ugy6lV0u9RfbCSBd7GObf74jg==
-X-Received: by 2002:a17:902:6906:: with SMTP id j6mr7693199plk.321.1576817242890;
-        Thu, 19 Dec 2019 20:47:22 -0800 (PST)
-Received: from CV0038107N9.nsn-intra.net ([2408:84e4:400:2e74:469:cb33:67e2:581f])
-        by smtp.gmail.com with ESMTPSA id u26sm10089189pfn.46.2019.12.19.20.47.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 19 Dec 2019 20:47:22 -0800 (PST)
-From:   Kevin Kou <qdkevin.kou@gmail.com>
-To:     vyasevich@gmail.com
-Cc:     nhorman@tuxdriver.com, marcelo.leitner@gmail.com,
-        davem@davemloft.net, linux-sctp@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        qdkevin.kou@gmail.com
-Subject: [PATCH] sctp: do trace_sctp_probe after SACK validation and check
-Date:   Fri, 20 Dec 2019 04:47:03 +0000
-Message-Id: <20191220044703.88-1-qdkevin.kou@gmail.com>
-X-Mailer: git-send-email 2.23.0.windows.1
+        Thu, 19 Dec 2019 23:48:16 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1576817274; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=Uhi6saMEWIF0W4SD6a/cVY+ZqyC7nFUsZkDlAhSFmL+10LBQStxb8XuQz8o7RldZP1hrzR2lniJR3Ih+6ZxkS9QoDOLPAvLxfHPcyG/Yj1bX/WvC9M92HyhVfxGImiLJ+pRt+uWDpQKZpRanDySa9lFvOphTivFJPikdzFDokoM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1576817274; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=WqQYmIHqakoWmZLNCLRr/lqEXOvRhny8BmoO3hRYEBE=; 
+        b=Bx4erN8TJRQnJjaS/dVim0hWZiyITIUfcb1Qm9i3cbmmFnFVb43Rw5MZPzYgEWHY6fcDFgnXPoBgiCkdM1l1OoRTB2V966Nejs6bX7/v5xSzITFigmx9OMvinqslxg/Dyus9hjcYiqwS8BG44llIaNpChzHEOPOIGUhinvn6aIQ=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=dlrobertson.com;
+        spf=pass  smtp.mailfrom=dan@dlrobertson.com;
+        dmarc=pass header.from=<dan@dlrobertson.com> header.from=<dan@dlrobertson.com>
+Received: from nessie (pool-173-73-58-202.washdc.fios.verizon.net [173.73.58.202]) by mx.zohomail.com
+        with SMTPS id 1576817271424413.5772173135234; Thu, 19 Dec 2019 20:47:51 -0800 (PST)
+Date:   Fri, 20 Dec 2019 04:32:20 +0000
+From:   Dan Robertson <dan@dlrobertson.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        devicetree <devicetree@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Joe Perches <joe@perches.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v7 2/3] iio: (bma400) add driver for the BMA400
+Message-ID: <20191220043220.GA16415@nessie>
+References: <20191219041039.23396-1-dan@dlrobertson.com>
+ <20191219041039.23396-3-dan@dlrobertson.com>
+ <CAHp75VdVmfAi5hSp23Gn8nm6LmX-Mr5Tnxcbus90DrRL+gVFRA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdVmfAi5hSp23Gn8nm6LmX-Mr5Tnxcbus90DrRL+gVFRA@mail.gmail.com>
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function sctp_sf_eat_sack_6_2 now performs
-the Verification Tag validation, Chunk length validation, Bogu check,
-and also the detection of out-of-order SACK based on the RFC2960
-Section 6.2 at the beginning, and finally performs the further
-processing of SACK. The trace_sctp_probe now triggered before
-the above necessary validation and check.
+On Thu, Dec 19, 2019 at 01:02:28PM +0200, Andy Shevchenko wrote:
+> On Thu, Dec 19, 2019 at 6:27 AM Dan Robertson <dan@dlrobertson.com> wrote:
+> > Add a IIO driver for the Bosch BMA400 3-axes ultra-low power accelerometer.
+> > The driver supports reading from the acceleration and temperature
+> > registers. The driver also supports reading and configuring the output data
+> > rate, oversampling ratio, and scale.
+> 
+> ...
+> 
+> > +static int bma400_set_accel_output_data_rate(struct bma400_data *data,
+> > +                                            int hz, int uhz)
+> > +{
+> > +       unsigned int idx;
+> > +       unsigned int odr;
+> > +       unsigned int val;
+> > +       int ret;
+> > +
+> > +       if (hz >= BMA400_ACC_ODR_MIN_WHOLE_HZ) {
+> > +               if (uhz || hz % BMA400_ACC_ODR_MIN_WHOLE_HZ)
+> > +                       return -EINVAL;
+> > +
+> > +               val = hz / BMA400_ACC_ODR_MIN_WHOLE_HZ;
+> 
+> Again, AFAICS division may be avoided in both cases (% and / above)
+> because of is_power_of_2() check below.
+> Can you revisit this?
 
-This patch is to do the trace_sctp_probe after the necessary check
-and validation to SACK.
+Yeah I can update this in the next patchset, but I don't know if it is much more
+readable this way.
 
-Signed-off-by: Kevin Kou <qdkevin.kou@gmail.com>
----
- net/sctp/sm_statefuns.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> > +               if (!is_power_of_2(val))
+> > +                       return -EINVAL;
+> > +
+> > +               idx = __ffs(val) + BMA400_ACC_ODR_MIN_RAW + 1;
+> > +       } else if (hz == BMA400_ACC_ODR_MIN_HZ && uhz == 500000) {
+> > +               idx = BMA400_ACC_ODR_MIN_RAW;
+> > +       } else {
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       ret = regmap_read(data->regmap, BMA400_ACC_CONFIG1_REG, &val);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       /* preserve the range and normal mode osr */
+> 
+> > +       odr = idx | (~BMA400_ACC_ODR_MASK & val);
+> 
+> Yoda style?
 
-diff --git a/net/sctp/sm_statefuns.c b/net/sctp/sm_statefuns.c
-index 42558fa..b4a54df 100644
---- a/net/sctp/sm_statefuns.c
-+++ b/net/sctp/sm_statefuns.c
-@@ -3281,7 +3281,6 @@ enum sctp_disposition sctp_sf_eat_sack_6_2(struct net *net,
- 	struct sctp_sackhdr *sackh;
- 	__u32 ctsn;
- 
--	trace_sctp_probe(ep, asoc, chunk);
- 
- 	if (!sctp_vtag_verify(chunk, asoc))
- 		return sctp_sf_pdiscard(net, ep, asoc, type, arg, commands);
-@@ -3319,6 +3318,8 @@ enum sctp_disposition sctp_sf_eat_sack_6_2(struct net *net,
- 	if (!TSN_lt(ctsn, asoc->next_tsn))
- 		return sctp_sf_violation_ctsn(net, ep, asoc, type, arg, commands);
- 
-+	trace_sctp_probe(ep, asoc, chunk);
-+
- 	/* Return this SACK for further processing.  */
- 	sctp_add_cmd_sf(commands, SCTP_CMD_PROCESS_SACK, SCTP_CHUNK(chunk));
- 
--- 
-1.8.3.1
+Fixed in v8.
+
+> > +
+> > +       ret = regmap_write(data->regmap, BMA400_ACC_CONFIG1_REG, odr);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       bma400_output_data_rate_from_raw(idx, &data->sample_freq.hz,
+> > +                                        &data->sample_freq.uhz);
+> > +       return 0;
+> > +}
+> ...
+> 
+> > +int bma400_accel_scale_to_raw(struct bma400_data *data, unsigned int val)
+> > +{
+> > +       int scale = val / BMA400_SCALE_MIN;
+> > +       int raw;
+> > +
+> > +       if (scale == 0)
+> > +               return -EINVAL;
+> > +
+> > +       raw = __ffs(scale);
+> > +
+> > +       if (val % BMA400_SCALE_MIN || !is_power_of_2(scale))
+> > +               return -EINVAL;
+> 
+> Ditto.
+> 
+> > +
+> > +       return raw;
+> > +}
+> 
+> ...
+> 
+> > +out:
+> 
+> Make a little sense. Why not return directly?
+
+Mostly setup for the next patch in this patchset.
+
+> > +       return ret;
+> 
+> ...
+> 
+> > +       ret = bma400_init(data);
+> > +       if (ret < 0)
+> 
+> May it be positive value returned?
+
+Fixed in v8.
+
+Cheers,
+
+ - Dan
 
