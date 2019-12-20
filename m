@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B216C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D48B5C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC11224682
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D1F424682
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852658;
-	bh=hPhn3y/ZGrQy+jZyE8ezDpT4Ehkv8ucuJyt+ZkmrOb8=;
+	s=default; t=1576852661;
+	bh=jXaBrwxDSZhgZNcbKWjnrjwga5EW9gYMOJk+FGczBG8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yn1EUx45TBypX5Res6Kam43kE3ov9v6haBoQv+SwSfnNU4Lafei6jSCgb3Yh3RVhk
-	 X0xNLY6YIeMFsALiT+YS3YOpR7PljQiqJWyx3X5/PNEubL1FF2ZRVFKOyTj/bnDaQG
-	 +n6RrpNS1CdC6/Ed0MO49Fl9nGKD6ZC147RMkFEg=
+	b=BQn2TUoTBVpOv1i/ObCyRkYmFh1lEelp2YKqxAs6qyP4zKDJONnPB1WOta6YdOVPV
+	 FnHWLt+xC0DIWQhDWWMV0mXjj29/gRW/A4whEQUHvNHUXyPFu8JpNa3iHwB+gpkTGC
+	 qbjKf8cauu0NWvo/gUf8Z7+c1ccUMrZs810RBu4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbfLTOaQ (ORCPT
+        id S1728022AbfLTOhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:30:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33548 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:37:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727536AbfLTOaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:30:12 -0500
+        id S1727576AbfLTOaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:30:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1663B206CB;
-        Fri, 20 Dec 2019 14:30:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50AB1222C2;
+        Fri, 20 Dec 2019 14:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852211;
-        bh=hPhn3y/ZGrQy+jZyE8ezDpT4Ehkv8ucuJyt+ZkmrOb8=;
+        s=default; t=1576852214;
+        bh=jXaBrwxDSZhgZNcbKWjnrjwga5EW9gYMOJk+FGczBG8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bvEacYvZODiiBR2yYsG06kEnaoslWwXhmWHC0Nx3Y9hnpml5hOy+LyN1Yz1d26DSn
-         jdh5l/o4GgSC4+pRP0CI/xkGc+jEjdDVJmXMYmqPYuEUjFuZSEWszSjbaxCOVMxf96
-         VILhVWtMacg4ANcjoscM/BvXKFJwl3UXTRguWGzY=
+        b=M0d8tDXzbv1h9AFX4PSNWahnXLDAdGHCSeOFqvs0b9+K1ZScVH82hkfHC31/MqP+V
+         tZtJ0ij5zNXkwUo83dXnn8VTlWJBCbTO+Vk84nEjqJyWjtDM49YEPA+FOP46PbFxxW
+         EvGjLmqZmA2VHWc4MIbaOl4ZvhP8/MGcqIk63Qas=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 12/52] nvme/pci: Fix write and poll queue types
-Date:   Fri, 20 Dec 2019 09:29:14 -0500
-Message-Id: <20191220142954.9500-12-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Ladislav Michl <ladis@linux-mips.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 14/52] iio: st_accel: Fix unused variable warning
+Date:   Fri, 20 Dec 2019 09:29:16 -0500
+Message-Id: <20191220142954.9500-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
 References: <20191220142954.9500-1-sashal@kernel.org>
@@ -58,44 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keith Busch <kbusch@kernel.org>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 3f68baf706ec68c4120867c25bc439c845fe3e17 ]
+[ Upstream commit 0163c1c521ff8b09cd8ca395003cc00178161d77 ]
 
-The number of poll or write queues should never be negative. Use unsigned
-types so that it's not possible to break have the driver not allocate
-any queues.
+drivers/iio/accel/st_accel_core.c:1005:44: warning:
+ mount_matrix_ext_info defined but not used [-Wunused-const-variable=]
 
-Reviewed-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+Using stub helper while CONFIG_ACPI is disabled to fix it.
+
+Suggested-by: Ladislav Michl <ladis@linux-mips.org>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/iio/accel/st_accel_core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 869f462e6b6ea..29d7427c2b19b 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -68,14 +68,14 @@ static int io_queue_depth = 1024;
- module_param_cb(io_queue_depth, &io_queue_depth_ops, &io_queue_depth, 0644);
- MODULE_PARM_DESC(io_queue_depth, "set io queue depth, should >= 2");
+diff --git a/drivers/iio/accel/st_accel_core.c b/drivers/iio/accel/st_accel_core.c
+index 2e37f8a6d8cfc..be661396095ce 100644
+--- a/drivers/iio/accel/st_accel_core.c
++++ b/drivers/iio/accel/st_accel_core.c
+@@ -993,6 +993,7 @@ static const struct iio_trigger_ops st_accel_trigger_ops = {
+ #define ST_ACCEL_TRIGGER_OPS NULL
+ #endif
  
--static int write_queues;
--module_param(write_queues, int, 0644);
-+static unsigned int write_queues;
-+module_param(write_queues, uint, 0644);
- MODULE_PARM_DESC(write_queues,
- 	"Number of queues to use for writes. If not set, reads and writes "
- 	"will share a queue set.");
++#ifdef CONFIG_ACPI
+ static const struct iio_mount_matrix *
+ get_mount_matrix(const struct iio_dev *indio_dev,
+ 		 const struct iio_chan_spec *chan)
+@@ -1013,7 +1014,6 @@ static const struct iio_chan_spec_ext_info mount_matrix_ext_info[] = {
+ static int apply_acpi_orientation(struct iio_dev *indio_dev,
+ 				  struct iio_chan_spec *channels)
+ {
+-#ifdef CONFIG_ACPI
+ 	struct st_sensor_data *adata = iio_priv(indio_dev);
+ 	struct acpi_buffer buffer = {ACPI_ALLOCATE_BUFFER, NULL};
+ 	struct acpi_device *adev;
+@@ -1141,10 +1141,14 @@ static int apply_acpi_orientation(struct iio_dev *indio_dev,
+ out:
+ 	kfree(buffer.pointer);
+ 	return ret;
++}
+ #else /* !CONFIG_ACPI */
++static int apply_acpi_orientation(struct iio_dev *indio_dev,
++				  struct iio_chan_spec *channels)
++{
+ 	return 0;
+-#endif
+ }
++#endif
  
--static int poll_queues;
--module_param(poll_queues, int, 0644);
-+static unsigned int poll_queues;
-+module_param(poll_queues, uint, 0644);
- MODULE_PARM_DESC(poll_queues, "Number of queues to use for polled IO.");
- 
- struct nvme_dev;
+ /*
+  * st_accel_get_settings() - get sensor settings from device name
 -- 
 2.20.1
 
