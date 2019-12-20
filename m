@@ -2,100 +2,131 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7ABC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1CBC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2762467F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63BE824680
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:37:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576841870;
+	bh=PoKeYq0D9fvJVRVU8du99GUzDT7gpGmoweFFZtR/B6A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZpyAgyPOmuiYcv1slAPuwQ8f8l3QwvgJIUpzxfISVVgoqVlPMYCZ14KWDNEIjQrVe
+	 VLJXW9lns/wwtMQWlMaNq4cg6TgtdvJHkdmU1jGoVQWVzjB94g+XM9MtQRRSeEWFby
+	 S8QZlBGiWYiQo8vsn8rhKW5HNLcWDx5ii2vZsPfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbfLTLhc convert rfc822-to-8bit (ORCPT
+        id S1727359AbfLTLht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 06:37:32 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:47840 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727184AbfLTLhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 06:37:32 -0500
-Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iiGb0-0000CY-Vd; Fri, 20 Dec 2019 12:37:27 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Rob Herring <robh@kernel.org>, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: Re: [PATCH RESEND 1/2] dt-bindings: phy: drop #clock-cells from rockchip,px30-dsi-dphy
-Date:   Fri, 20 Dec 2019 12:37:26 +0100
-Message-ID: <3795174.JdKOkfR0EK@diego>
-In-Reply-To: <45c59145-5705-90f9-ff0e-c84cf8d17e8b@ti.com>
-References: <20191216122448.27867-1-heiko@sntech.de> <12525836.FhlgEYrHGb@diego> <45c59145-5705-90f9-ff0e-c84cf8d17e8b@ti.com>
+        Fri, 20 Dec 2019 06:37:49 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53923 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727184AbfLTLht (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 06:37:49 -0500
+Received: by mail-wm1-f68.google.com with SMTP id m24so8595226wmc.3;
+        Fri, 20 Dec 2019 03:37:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=+xqrG/Fr+lk5K0m1pptDnTQOO1AdoG749ulUXApgoJo=;
+        b=PjsD4G79liFs7IK7ZIxgjW2sIjJcOIfF+7D7HWaxyXYhsvxdmoVfdm6JcF9Nx73Z1R
+         TyohPsE7Cu/VZJ6zF2X2we0ZT2jojRde9jJfztrNF1L9GVPHyFe3RYwUudRcgyekELW7
+         WWXZIM1jZeqvL8Yy6TCLojYuNcVEnswyssEMe20oFdgX42rcvIczqRv9XBzTHRxT83u5
+         hhIWjkdJM2TGxu0+lr6k7jao1sKPUuH89boBbj0Xkz65zGTtkIfasMH1zfZFFOYiPnhr
+         OoDuK7ugzv4yViuSre3YsmfCaAtgKUuU6yhXNxzqdhXHOoPZtudqwCZgY5BTrZQvfn/u
+         qm4w==
+X-Gm-Message-State: APjAAAVe85pwyqnDUtNdqIXch42djNI2d3K2fmoy/mJ61rsZto6pDFNk
+        HUWg7i/y0H0UrHFADaryFlc=
+X-Google-Smtp-Source: APXvYqxea3sQYL0zemf/BDfh/Fngl+lzOAoLU0x312PESG6f2yo0GmWBhUf3frSoVwbx7/PQps66Kg==
+X-Received: by 2002:a1c:638a:: with SMTP id x132mr16983341wmb.43.1576841866625;
+        Fri, 20 Dec 2019 03:37:46 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id f1sm9955905wrp.93.2019.12.20.03.37.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 03:37:45 -0800 (PST)
+Date:   Fri, 20 Dec 2019 12:37:44 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     =?utf-8?B?5b2t5b+X5Yia?= <zgpeng.linux@gmail.com>
+Cc:     akpm@linux-foundation.org, hannes@cmpxchg.org,
+        vdavydov.dev@gmail.com, Shakeel Butt <shakeelb@google.com>,
+        linux-mm@kvack.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, zgpeng <zgpeng@tencent.com>
+Subject: Re: [PATCH] oom: choose a more suitable process to kill while all
+ processes are not killable
+Message-ID: <20191220113744.GF20332@dhcp22.suse.cz>
+References: <1576823172-25943-1-git-send-email-zgpeng.linux@gmail.com>
+ <20191220071334.GB20332@dhcp22.suse.cz>
+ <CAE5vP3mHjdM-PwjUURwXgZDfgQ0b2BbgHkWZCHe-ysSmZ58pFw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAE5vP3mHjdM-PwjUURwXgZDfgQ0b2BbgHkWZCHe-ysSmZ58pFw@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kishon,
+[Please do not top post]
 
-Am Freitag, 20. Dezember 2019, 12:21:28 CET schrieb Kishon Vijay Abraham I:
+On Fri 20-12-19 17:56:20, 彭志刚 wrote:
+> certainly.
 > 
-> On 16/12/19 11:31 pm, Heiko St�bner wrote:
-> > Hi Rob,
-> > 
-> > Am Montag, 16. Dezember 2019, 18:56:15 CET schrieb Rob Herring:
-> >> On Mon, 16 Dec 2019 13:24:47 +0100, Heiko Stuebner wrote:
-> >>> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> >>>
-> >>> Further review of the dsi components for the px30 revealed that the
-> >>> phy shouldn't expose the pll as clock but instead handle settings
-> >>> via phy parameters.
-> >>>
-> >>> As the phy binding is new and not used anywhere yet, just drop them
-> >>> so they don't get used.
-> >>>
-> >>> Fixes: 3817c7961179 ("dt-bindings: phy: add yaml binding for rockchip,px30-dsi-dphy")
-> >>> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> >>> ---
-> >>> Hi Kishon,
-> >>>
-> >>> maybe suitable as a fix for 5.5-rc?
-> >>>
-> >>> Thanks
-> >>> Heiko
-> >>>
-> >>>  .../devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml      | 5 -----
-> >>>  1 file changed, 5 deletions(-)
-> >>>
-> >>
-> >> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> >> there's no need to repost patches *only* to add the tags. The upstream
-> >> maintainer will do that for acks received on the version they apply.
-> >>
-> >> If a tag was not added on purpose, please state why and what changed.
-> > 
-> > sorry about that. The original response somehow did not thread correctly
-> > in my mail client, probably some fault on my side, so I've only found your
-> > mail just now by digging hard.
-> > 
-> > @Kishon, the original mail already got an
-> > 
-> > Acked-by: Rob Herring <robh@kernel.org>
+> Steps to reproduce:
+> (1)Create a mm cgroup and set memory.limit_in_bytes
+> (2)Move the bash process to the newly created cgroup, and set the
+> oom_score_adj of the  bash process to -998.
+> (3)In bash, start multiple processes, each process consumes different
+> memory until cgroup oom is triggered.
 > 
-> merged now, Thanks!
+> The triggered phenomenon is shown below. We can see that when cgroup oom
+> happened, process 23777 was killed, but in fact, 23772 consumes more memory;
+> 
+> [  591.000970] Tasks state (memory values in pages):
+> [  591.000970] [  pid  ]   uid  tgid total_vm      rss pgtables_bytes swapents oom_score_adj name
+> [  591.000973] [  23344]     0 23344     2863      923    61440        0        -998 bash
+> [  591.000975] [  23714]     0 23714    27522    25935   258048        0        -998 test
+> [  591.000976] [  23772]     0 23772   104622   103032   876544        0        -998 test
 
-thanks ... just to make sure, did you also see the driver changes in patch2?
-As I don't see them in either of your branches :-)
+points = 103032 + 0 + 876544/4096 = 103246
 
-Thanks
-Heiko
+> [  591.000978] [  23777]     0 23777    78922    77335   667648        0        -998 test
 
+points = 77335 + 0 + 667648/4096 = 77498
 
+It is not clear what is the actual hard limit but let's assume that
+rss+page_tables is the only charged memory (or at least the majority of
+it). That would be 207680 so the normalized oom_score_adj would be
+-206586 which is way too big for both tasks so from the OOM killer
+perspective both tasks are equal.
+
+The question is whether this is a bug or a (mis)feature. The
+oom_score_adj je documented as follows:
+Documentation/filesystems/proc.txt
+: Consequently, it is very simple for userspace to define the amount of memory to
+: consider for each task.  Setting a /proc/<pid>/oom_score_adj value of +500, for
+: example, is roughly equivalent to allowing the remainder of tasks sharing the
+: same system, cpuset, mempolicy, or memory controller resources to use at least
+: 50% more memory.  A value of -500, on the other hand, would be roughly
+: equivalent to discounting 50% of the task's allowed memory from being considered
+: as scoring against the task.
+
+Which implies that we are talking about the budget based on a usable
+memory (aka hard limit in this case). I do agree that the semantic is
+awkward. I know there are usecases which try to use the existing scheme
+for oom_score_adj to fine tune oom decisions and I am worried your patch
+might break those.
+
+That being said, I am not sure this change is safe wrt. to backward
+compatibility. I would rather recommend to not using oom_score_adj for
+anything but OOM_SCORE_ADJ_MIN resp OOM_SCORE_ADJ_MAX.
+-- 
+Michal Hocko
+SUSE Labs
