@@ -2,240 +2,863 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC80C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE1FC2D0D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBA6321D7D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 270FD21D7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:27:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="n+xbAuli"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BQfYIpkM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbfLTG1f (ORCPT
+        id S1727281AbfLTG1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 01:27:35 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:20070 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbfLTG1f (ORCPT
+        Fri, 20 Dec 2019 01:27:40 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:38299 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbfLTG1i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 01:27:35 -0500
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191220062733epoutp0463da2e86fdb5340a5256f5a81409ee0b~iAGT7EJt41292612926epoutp04P
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 06:27:33 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191220062733epoutp0463da2e86fdb5340a5256f5a81409ee0b~iAGT7EJt41292612926epoutp04P
+        Fri, 20 Dec 2019 01:27:38 -0500
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191220062736epoutp0343454871104a433e927c01e97142f11d~iAGW32P6a1169211692epoutp03a
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 06:27:36 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191220062736epoutp0343454871104a433e927c01e97142f11d~iAGW32P6a1169211692epoutp03a
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1576823253;
-        bh=C1VgkaKpOShOJd4R4rUGDSkZ5bAsf7fJDpVop6OH5eE=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=n+xbAuli+Rg2m6EVdRYfHdQnW1bfC3h5/XEcJmA6bR0a9aF2e8NoafzuPu1DehxpO
-         xWFU8T64RMctjcZ6ONR7+o/Aekn2kN3agiGL6/3ef9VThP72nYkRyJ2e0aSLrgOvmP
-         SYse0tZhLEtsloBi+6OwbFRliaT7Ny+8Q40656Yk=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191220062732epcas1p2fb88e902f8a6b0831907b391d992c6a0~iAGTgmeoA0045200452epcas1p22;
-        Fri, 20 Dec 2019 06:27:32 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.162]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 47fJh35HZmzMqYkr; Fri, 20 Dec
-        2019 06:27:31 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C0.DB.48498.3D96CFD5; Fri, 20 Dec 2019 15:27:31 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20191220062731epcas1p475b8da9288b08c87e474a0c4e88ce219~iAGSDXdpB0237302373epcas1p4-;
-        Fri, 20 Dec 2019 06:27:31 +0000 (GMT)
+        s=mail20170921; t=1576823256;
+        bh=EZOyRc3Mjxhw7YNHGpd6qGopH5qOHyMYHfqVUDxNqsM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BQfYIpkMM5K6F6Ho5z9zPKdw38GSCy02nyBK1peFyyoqKFl0c3PtclCg6FsA3LRqo
+         sTxnQERbDNM/uZKkl8m8kkz1HhDQake4rJAW/HQyhhosy+9j29E7oY/9qBTVzrz1W2
+         TvI/JuTWy36teG+UIDHzSNRYHLre9a5Dyym83mw8=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20191220062736epcas1p39707e1b53e7cc25aed48a2a0ffd17cbe~iAGWmGxjU2636226362epcas1p3i;
+        Fri, 20 Dec 2019 06:27:36 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.163]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 47fJh54X2NzMqYkb; Fri, 20 Dec
+        2019 06:27:33 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        00.65.52419.5D96CFD5; Fri, 20 Dec 2019 15:27:33 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20191220062733epcas1p31665a3ae968ab8c70d91a3cddf529e73~iAGTu8-aJ2863028630epcas1p3K;
+        Fri, 20 Dec 2019 06:27:33 +0000 (GMT)
 Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191220062731epsmtrp1aef25965feb697072cc9eaf914b56e44~iAGSCmWpv2110821108epsmtrp1J;
-        Fri, 20 Dec 2019 06:27:31 +0000 (GMT)
-X-AuditID: b6c32a36-a55ff7000001bd72-a6-5dfc69d3d3b3
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191220062733epsmtrp21ce9cc98fd9422a26f748bb57d6eb57e~iAGTuLmgD0783307833epsmtrp2r;
+        Fri, 20 Dec 2019 06:27:33 +0000 (GMT)
+X-AuditID: b6c32a37-59fff7000001ccc3-9f-5dfc69d50413
 Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
         epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B4.0A.10238.3D96CFD5; Fri, 20 Dec 2019 15:27:31 +0900 (KST)
+        A5.0A.10238.4D96CFD5; Fri, 20 Dec 2019 15:27:32 +0900 (KST)
 Received: from localhost.localdomain (unknown [10.88.103.87]) by
         epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191220062731epsmtip1a5221322ed0a758f5f32e49900c1f80d~iAGR4qDfB2891528915epsmtip1U;
-        Fri, 20 Dec 2019 06:27:31 +0000 (GMT)
+        20191220062732epsmtip1ce1d6e190313500a876bd920d1021d1b~iAGTdL1aY2572925729epsmtip1D;
+        Fri, 20 Dec 2019 06:27:32 +0000 (GMT)
 From:   Namjae Jeon <namjae.jeon@samsung.com>
 To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
         sj1557.seo@samsung.com, linkinjeon@gmail.com,
         Namjae Jeon <namjae.jeon@samsung.com>
-Subject: [PATCH v8 00/13] add the latest exfat driver
-Date:   Fri, 20 Dec 2019 01:24:06 -0500
-Message-Id: <20191220062419.23516-1-namjae.jeon@samsung.com>
+Subject: [PATCH v8 02/13] exfat: add super block operations
+Date:   Fri, 20 Dec 2019 01:24:08 -0500
+Message-Id: <20191220062419.23516-3-namjae.jeon@samsung.com>
 X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCKsWRmVeSWpSXmKPExsWy7bCmnu7lzD+xBr/bdCyaF69ns1i5+iiT
-        xfW7t5gt9uw9yWJxedccNosf0+sttvw7wmpx6f0HFgcOj52z7rJ77J+7ht1j980GNo++LasY
-        PT5vkvM4tP0NWwBbVI5NRmpiSmqRQmpecn5KZl66rZJ3cLxzvKmZgaGuoaWFuZJCXmJuqq2S
-        i0+ArltmDtA9SgpliTmlQKGAxOJiJX07m6L80pJUhYz84hJbpdSClJwCQ4MCveLE3OLSvHS9
-        5PxcK0MDAyNToMqEnIy7e16yFZxQr5j94zBrA+NB+S5GTg4JAROJzm+3mLsYuTiEBHYwSkzt
-        aoJyPjFKHL63jhXC+cYo8eXxOhaYlnufJ7KD2EICexkl1pyVh+s4v2k3UxcjBwebgLbEny2i
-        IDUiAvYSm2cfYAGpYRaYwyixo3cWI0hCWMBUYt+6b2A2i4CqxMllO8AW8ArYSEz70McOsUxe
-        YvWGA2AnSQjMYJNYdqOBCSLhIvFx6lkoW1ji1fEtUA1SEi/729hBjpAQqJb4uJ8ZItzBKPHi
-        uy2EbSxxc/0GVpASZgFNifW79CHCihI7f88FO4dZgE/i3dceVogpvBIdbUIQJaoSfZcOQy2V
-        luhq/wC1yEPi230nSIjESvzc0cw8gVF2FsL8BYyMqxjFUguKc9NTiw0LjJCjaBMjOIVpme1g
-        XHTO5xCjAAejEg+vQ9rvWCHWxLLiytxDjBIczEoivLc7fsYK8aYkVlalFuXHF5XmpBYfYjQF
-        Bt1EZinR5Hxges0riTc0NTI2NrYwMTM3MzVWEufl+HExVkggPbEkNTs1tSC1CKaPiYNTqoFR
-        QNggvCss9XXYEdOfpkHTa4VnOk0WzTJ6tUvp+OL9S1jMA8XkDjkuP3Fn7rSjdb9s3+TPCLu8
-        36tU53I0f+UVzSPbA4JZO1ua5rLcnrzm6x4Onjd/Ph67sudpwD/RXS6uZaXWJy1mOppN6JZa
-        x1KnUPNF7g7ftUNXmz6rBHOtVNmzzVvBNKtLiaU4I9FQi7moOBEA3xO+1XcDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMLMWRmVeSWpSXmKPExsWy7bCSnO7lzD+xBo+bOS2aF69ns1i5+iiT
-        xfW7t5gt9uw9yWJxedccNosf0+sttvw7wmpx6f0HFgcOj52z7rJ77J+7ht1j980GNo++LasY
-        PT5vkvM4tP0NWwBbFJdNSmpOZllqkb5dAlfG3T0v2QpOqFfM/nGYtYHxoHwXIyeHhICJxL3P
-        E9m7GLk4hAR2M0pMu/KWGSIhLXHsxBkgmwPIFpY4fLgYJCwk8IFR4tR3bZAwm4C2xJ8toiBh
-        EQFHid5dh1lAxjALLGKUePdxMitIQljAVGLfum+MIDaLgKrEyWU7WEBsXgEbiWkf+tghVslL
-        rN5wgHkCI88CRoZVjJKpBcW56bnFhgWGeanlesWJucWleel6yfm5mxjBQaWluYPx8pL4Q4wC
-        HIxKPLwOab9jhVgTy4orcw8xSnAwK4nw3u74GSvEm5JYWZValB9fVJqTWnyIUZqDRUmc92ne
-        sUghgfTEktTs1NSC1CKYLBMHp1QDo1xsLuPHR65ei4p+rWJXf7w19oDctHnTXe/aGnxZP5vP
-        StXRn2N9+UpLwdUr/tcwcb/VfdoQEJ8jciX+uoevubH2Ek+RI2KGzFX5OaaajHxv9pW738gT
-        fuL9cJ310S3mUzvWv9E9KaSuE8/GYlhjbVXl/n7bebNbPFdc1Za1CMhMPi40P+m5EktxRqKh
-        FnNRcSIAHib8iCYCAAA=
-X-CMS-MailID: 20191220062731epcas1p475b8da9288b08c87e474a0c4e88ce219
+In-Reply-To: <20191220062419.23516-1-namjae.jeon@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRTmt3t3vVqr27Q8rTC7FNHD2prTW7oSkhilIEhRwVo3d5vSXuxu
+        UkplRfkoxaISH4XmXz5qVrealVizhxYY9hJ7I5hZkVaYiWZtu+vx33cO33e+j3MOicmHpQoy
+        y+rkHFbWTBNh+JW2hcqYp1njemV5XThzsNZNMHUNdyRM96vnGHOjpQNnHl+rIpgfZfsYYeK2
+        lHk0OIQnkbrmilchutbTjSG66z15hK5EqEe6bxejdN6rn4g0Yos5MZNjjZwjmrNm2IxZVpOW
+        Xp9uWGPQxClVMaoVTDwdbWUtnJZOTkmLWZtl9uWho7NZs8vXSmN5nl62KtFhczm56Ewb79TS
+        nN1otquU9qU8a+FdVtPSDJtlpUqpXK7xMbeZM4trXhL2E2fQru6RUTwPvT2AilAoCVQsHOkq
+        wIpQGCmnPAgKK8+HiMVXBDeE40gsviPoEzolfyQlvReCkhYEjU8F6V9JXVsvXoRIkqAWw7gw
+        3S+IoFbDpcqbuJ+DUVUIPMUVAfNwKgHyO2sxP8ap+XBueCCAZVQiNHysChHd5kBD081AP5TS
+        wthwv8Q/CCiBgJftg5hISobRmnNSEYfDh3tCUKyAb59bCH8goHLhS2uQXoDg/YhWxGrocTdJ
+        /RSMWgjua8vE9lxoHjsdiIlRU+Dz8FGpOEUGBYflImU+lDxqC+5kFhTlDwVNdVA2UhdcXCmC
+        6r5BvBRFVfxzqEaoHs3g7LzFxPEqu/r/m11EgZdbFO9BTZ0pXkSRiJ4sS9oxppdL2Wx+t8WL
+        gMToCNmLglG9XGZkd+dwDpvB4TJzvBdpfIs8himmZ9h8D2x1GlSa5Wq1momNi4/TqOlIGfmj
+        Sy+nTKyT28lxds7xRychQxV5aPXmX+6zKxOKmyO3b7xveDBrUnKZd+J5juQunMxxpW4bini3
+        tSp7ffnDsLwtngzTzFP79+oXdK7rVlz5ma/VP64mL7s65mkmpk6rvuXZ09p26E1tUiuvSGve
+        8H42pbi8Mb1iU7L7Vn+vp12YlPo6V/jVI3uyozF0wPrswRLaGFnY10XjfCarWoQ5ePY3osBy
+        JogDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHLMWRmVeSWpSXmKPExsWy7bCSnO6VzD+xBkf2mFk0L17PZrFy9VEm
+        i+t3bzFb7Nl7ksXi8q45bBY/ptdbbPl3hNXi0vsPLA4cHjtn3WX32D93DbvH7psNbB59W1Yx
+        enzeJOdxaPsbtgC2KC6blNSczLLUIn27BK6M3oV32AqmzGOsuP79J0sD44Mmxi5GTg4JAROJ
+        vkcbmbsYuTiEBHYzStxduhoqIS1x7MQZoAQHkC0scfhwMUTNB0aJ3v1T2UHibALaEn+2iIKU
+        iwg4SvTuOswCUsMssIhR4t3HyawgCWEBa4n2c4uZQWwWAVWJtV9fgtm8AjYSq1/PYYfYJS+x
+        esMBsDingK3E76/PmUBsIaCaxm1rGCcw8i1gZFjFKJlaUJybnltsWGCYl1quV5yYW1yal66X
+        nJ+7iREcilqaOxgvL4k/xCjAwajEw+uQ9jtWiDWxrLgy9xCjBAezkgjv7Y6fsUK8KYmVValF
+        +fFFpTmpxYcYpTlYlMR5n+YdixQSSE8sSc1OTS1ILYLJMnFwSjUwsu8rFD01+x632/WlPaEJ
+        Jgt/l/N9XXp9F8OaVVvFbKpNJyrP3HnBf/aTxa/arDgZj59lev/bt9Gf+am6b3fOenurHwt0
+        X0WfSrtx9JnbNdkF3+z2TD7yKrpi4oPAhe8ad515u+DI2p9LZtyK2NhcfOZbQV6U7MXpd7U2
+        5TflLG/wifznXsBl+1yJpTgj0VCLuag4EQBeL3QtQQIAAA==
+X-CMS-MailID: 20191220062733epcas1p31665a3ae968ab8c70d91a3cddf529e73
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: SVC_REQ_APPROVE
 CMS-TYPE: 101P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191220062731epcas1p475b8da9288b08c87e474a0c4e88ce219
-References: <CGME20191220062731epcas1p475b8da9288b08c87e474a0c4e88ce219@epcas1p4.samsung.com>
+X-CMS-RootMailID: 20191220062733epcas1p31665a3ae968ab8c70d91a3cddf529e73
+References: <20191220062419.23516-1-namjae.jeon@samsung.com>
+        <CGME20191220062733epcas1p31665a3ae968ab8c70d91a3cddf529e73@epcas1p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the latest Samsung exfat driver to fs/exfat. This is an
-implementation of the Microsoft exFAT specification. Previous versions
-of this shipped with millions of Android phones, and a random previous
-snaphot has been merged in drivers/staging/.
+This adds the implementation of superblock operations for exfat.
 
-Compared to the sdfat driver shipped on the phones the following changes
-have been made:
-
- - the support for vfat has been removed as that is already supported
-   by fs/fat
- - driver has been renamed to exfat
- - the code has been refactored and clean up to fully integrate into
-   the upstream Linux version and follow the Linux coding style
- - metadata operations like create, lookup and readdir have been further
-   optimized
- - various major and minor bugs have been fixed
-
-We plan to treat this version as the future upstream for the code base
-once merged, and all new features and bug fixes will go upstream first.
-
-v8:
- - Rearrange the function grouping in exfat_fs.h
-   (exfat_count_dir_entries, exfat_get_dentry, exfat_get_dentry_set,
-    exfat_find_location).
- - Mark exfat_extract_uni_name(), exfat_get_uniname_from_ext_entry() and
-   exfat_mirror_bh() as static.
-
-v7:
- - Add the helpers macros for bitmap and fat entry to improve readability.
- - Rename exfat_test_bitmap to exfat_find_free_bitmap.
- - Merge exfat_get_num_entries into exfat_calc_num_entries.
- - Add EXFAT_DATA_CLUSTERS and EXFAT_RESERVED_CLUSTERS macro.
- - Add the macros for EXFAT BIOS block(JUMP_BOOT_LEN, OEM_NAME_LEN,
-   MUST_BE_ZERO_LEN).
- - Add the macros for EXFAT entry type (IS_EXFAT_CRITICAL_PRI,
-   IS_EXFAT_BENIGN_PRI, IS_EXFAT_CRITICAL_SEC).
- - Add EXFAT_FILE_NAME_LEN macro.
- - Change the data type of is_dir with bool in __exfat_write_inode().
- - Change the data type of sync with bool in exfat_set_vol_flags().
- - Merge __exfat_set_vol_flags into exfat_set_vol_flags.
- - Fix wrong statfs->f_namelen.
-
-v6:
- - Fix always false comparison due to limited range of allow_utime's data
-   type.
- - Move bh into loop in exfat_find_dir_entry().
- - Move entry_uniname and unichar variables into
-   an if "entry_type == TYPE_EXTEND" branch.
-
-v5:
- - Remove a blank line between the message and the error code in
-   exfat_load_upcase_table.
- - Move brelse to the end of the while loop and rename release_bh label
-   to free_table in exfat_load_upcase_table.
- - Move an error code assignment after a failed function call.
- - Rename labels and directly return instead of goto.
- - Improve the exception handling in exfat_get_dentry_set().
- - Remove ->d_time leftover.
- - fix boolreturn.cocci warnings.
-
-v4:
- - Declare ALLOC_FAT_CHAIN and ALLOC_NO_FAT_CHAIN macros.
- - Rename labels with proper name.
- - Remove blank lines.
- - Remove pointer check for bh.
- - Move ep into loop in exfat_load_bitmap().
- - Replace READ/WRITE_ONCE() with test_and_clear_bit() and set_bit().
- - Change exfat_allow_set_time return type with bool.
-
-v3:
- - fix wrong sbi->s_dirt set.
-
-v2:
- - Check the bitmap count up to the total clusters.
- - Rename goto labels in several places.
- - Change time mode type with enumeration.
- - Directly return error instead of goto at first error check.
- - Combine seq_printf calls into a single one.
-
-Namjae Jeon (13):
-  exfat: add in-memory and on-disk structures and headers
-  exfat: add super block operations
-  exfat: add inode operations
-  exfat: add directory operations
-  exfat: add file operations
-  exfat: add exfat entry operations
-  exfat: add bitmap operations
-  exfat: add exfat cache
-  exfat: add misc operations
-  exfat: add nls operations
-  exfat: add Kconfig and Makefile
-  exfat: add exfat in fs/Kconfig and fs/Makefile
-  MAINTAINERS: add exfat filesystem
-
- MAINTAINERS          |    7 +
- fs/Kconfig           |    3 +-
- fs/Makefile          |    1 +
- fs/exfat/Kconfig     |   21 +
- fs/exfat/Makefile    |    8 +
- fs/exfat/balloc.c    |  282 ++++++++
- fs/exfat/cache.c     |  325 ++++++++++
- fs/exfat/dir.c       | 1295 +++++++++++++++++++++++++++++++++++++
- fs/exfat/exfat_fs.h  |  559 ++++++++++++++++
- fs/exfat/exfat_raw.h |  202 ++++++
- fs/exfat/fatent.c    |  472 ++++++++++++++
- fs/exfat/file.c      |  343 ++++++++++
- fs/exfat/inode.c     |  694 ++++++++++++++++++++
- fs/exfat/misc.c      |  240 +++++++
- fs/exfat/namei.c     | 1459 ++++++++++++++++++++++++++++++++++++++++++
- fs/exfat/nls.c       |  809 +++++++++++++++++++++++
- fs/exfat/super.c     |  732 +++++++++++++++++++++
- 17 files changed, 7451 insertions(+), 1 deletion(-)
- create mode 100644 fs/exfat/Kconfig
- create mode 100644 fs/exfat/Makefile
- create mode 100644 fs/exfat/balloc.c
- create mode 100644 fs/exfat/cache.c
- create mode 100644 fs/exfat/dir.c
- create mode 100644 fs/exfat/exfat_fs.h
- create mode 100644 fs/exfat/exfat_raw.h
- create mode 100644 fs/exfat/fatent.c
- create mode 100644 fs/exfat/file.c
- create mode 100644 fs/exfat/inode.c
- create mode 100644 fs/exfat/misc.c
- create mode 100644 fs/exfat/namei.c
- create mode 100644 fs/exfat/nls.c
+Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
+Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
+---
+ fs/exfat/super.c | 732 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 732 insertions(+)
  create mode 100644 fs/exfat/super.c
 
+diff --git a/fs/exfat/super.c b/fs/exfat/super.c
+new file mode 100644
+index 000000000000..07687997c7f8
+--- /dev/null
++++ b/fs/exfat/super.c
+@@ -0,0 +1,732 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ *  Copyright (C) 2012-2013 Samsung Electronics Co., Ltd.
++ */
++
++#include <linux/fs_context.h>
++#include <linux/fs_parser.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/time.h>
++#include <linux/mount.h>
++#include <linux/cred.h>
++#include <linux/statfs.h>
++#include <linux/seq_file.h>
++#include <linux/blkdev.h>
++#include <linux/fs_struct.h>
++#include <linux/iversion.h>
++#include <linux/nls.h>
++#include <linux/buffer_head.h>
++
++#include "exfat_raw.h"
++#include "exfat_fs.h"
++
++static char exfat_default_iocharset[] = CONFIG_EXFAT_FS_DEFAULT_IOCHARSET;
++static const char exfat_iocharset_with_utf8[] = "iso8859-1";
++static struct kmem_cache *exfat_inode_cachep;
++
++static void exfat_free_iocharset(struct exfat_sb_info *sbi)
++{
++	if (sbi->options.iocharset != exfat_default_iocharset)
++		kfree(sbi->options.iocharset);
++}
++
++static void exfat_put_super(struct super_block *sb)
++{
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++
++	mutex_lock(&sbi->s_lock);
++	if (test_and_clear_bit(EXFAT_SB_DIRTY, &sbi->s_state))
++		sync_blockdev(sb->s_bdev);
++	exfat_set_vol_flags(sb, VOL_CLEAN);
++	exfat_free_upcase_table(sb);
++	exfat_free_bitmap(sb);
++	mutex_unlock(&sbi->s_lock);
++
++	if (sbi->nls_io) {
++		unload_nls(sbi->nls_io);
++		sbi->nls_io = NULL;
++	}
++	exfat_free_iocharset(sbi);
++	sb->s_fs_info = NULL;
++	kfree(sbi);
++}
++
++static int exfat_sync_fs(struct super_block *sb, int wait)
++{
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++	int err = 0;
++
++	/* If there are some dirty buffers in the bdev inode */
++	mutex_lock(&sbi->s_lock);
++	if (test_and_clear_bit(EXFAT_SB_DIRTY, &sbi->s_state)) {
++		sync_blockdev(sb->s_bdev);
++		if (exfat_set_vol_flags(sb, VOL_CLEAN))
++			err = -EIO;
++	}
++	mutex_unlock(&sbi->s_lock);
++	return err;
++}
++
++static int exfat_statfs(struct dentry *dentry, struct kstatfs *buf)
++{
++	struct super_block *sb = dentry->d_sb;
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++	unsigned long long id = huge_encode_dev(sb->s_bdev->bd_dev);
++
++	if (sbi->used_clusters == ~0u) {
++		mutex_lock(&sbi->s_lock);
++		if (exfat_count_used_clusters(sb, &sbi->used_clusters)) {
++			mutex_unlock(&sbi->s_lock);
++			return -EIO;
++		}
++		mutex_unlock(&sbi->s_lock);
++	}
++
++	buf->f_type = sb->s_magic;
++	buf->f_bsize = sbi->cluster_size;
++	buf->f_blocks = sbi->num_clusters - 2; /* clu 0 & 1 */
++	buf->f_bfree = buf->f_blocks - sbi->used_clusters;
++	buf->f_bavail = buf->f_bfree;
++	buf->f_fsid.val[0] = (unsigned int)id;
++	buf->f_fsid.val[1] = (unsigned int)(id >> 32);
++	/* Unicode utf16 255 characters */
++	buf->f_namelen = EXFAT_MAX_FILE_LEN * NLS_MAX_CHARSET_SIZE;
++	return 0;
++}
++
++int exfat_set_vol_flags(struct super_block *sb, unsigned short new_flag)
++{
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++	struct pbr64 *bpb;
++	bool sync = 0;
++
++	/* flags are not changed */
++	if (sbi->vol_flag == new_flag)
++		return 0;
++
++	sbi->vol_flag = new_flag;
++
++	/* skip updating volume dirty flag,
++	 * if this volume has been mounted with read-only
++	 */
++	if (sb_rdonly(sb))
++		return 0;
++
++	if (!sbi->pbr_bh) {
++		sbi->pbr_bh = sb_bread(sb, 0);
++		if (!sbi->pbr_bh) {
++			exfat_msg(sb, KERN_ERR, "failed to read boot sector");
++			return -ENOMEM;
++		}
++	}
++
++	bpb = (struct pbr64 *)sbi->pbr_bh->b_data;
++	bpb->bsx.vol_flags = cpu_to_le16(new_flag);
++
++	if ((new_flag == VOL_DIRTY) && (!buffer_dirty(sbi->pbr_bh)))
++		sync = true;
++	else
++		sync = false;
++
++	set_buffer_uptodate(sbi->pbr_bh);
++	mark_buffer_dirty(sbi->pbr_bh);
++
++	if (sync)
++		sync_dirty_buffer(sbi->pbr_bh);
++	return 0;
++}
++
++static int exfat_show_options(struct seq_file *m, struct dentry *root)
++{
++	struct super_block *sb = root->d_sb;
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++	struct exfat_mount_options *opts = &sbi->options;
++
++	/* Show partition info */
++	if (!uid_eq(opts->fs_uid, GLOBAL_ROOT_UID))
++		seq_printf(m, ",uid=%u",
++				from_kuid_munged(&init_user_ns, opts->fs_uid));
++	if (!gid_eq(opts->fs_gid, GLOBAL_ROOT_GID))
++		seq_printf(m, ",gid=%u",
++				from_kgid_munged(&init_user_ns, opts->fs_gid));
++	seq_printf(m, ",fmask=%04o,dmask=%04o", opts->fs_fmask, opts->fs_dmask);
++	if (opts->allow_utime)
++		seq_printf(m, ",allow_utime=%04o", opts->allow_utime);
++	if (sbi->nls_io)
++		seq_printf(m, ",iocharset=%s", sbi->nls_io->charset);
++	if (opts->utf8)
++		seq_puts(m, ",utf8");
++	seq_printf(m, ",case_sensitive=%u", opts->case_sensitive);
++	if (opts->tz_utc)
++		seq_puts(m, ",tz=UTC");
++	seq_printf(m, ",bps=%ld", sb->s_blocksize);
++	if (opts->errors == EXFAT_ERRORS_CONT)
++		seq_puts(m, ",errors=continue");
++	else if (opts->errors == EXFAT_ERRORS_PANIC)
++		seq_puts(m, ",errors=panic");
++	else
++		seq_puts(m, ",errors=remount-ro");
++	if (opts->discard)
++		seq_puts(m, ",discard");
++	return 0;
++}
++
++static struct inode *exfat_alloc_inode(struct super_block *sb)
++{
++	struct exfat_inode_info *ei;
++
++	ei = kmem_cache_alloc(exfat_inode_cachep, GFP_NOFS);
++	if (!ei)
++		return NULL;
++
++	init_rwsem(&ei->truncate_lock);
++	return &ei->vfs_inode;
++}
++
++static void exfat_destroy_inode(struct inode *inode)
++{
++	kmem_cache_free(exfat_inode_cachep, EXFAT_I(inode));
++}
++
++static const struct super_operations exfat_sops = {
++	.alloc_inode   = exfat_alloc_inode,
++	.destroy_inode = exfat_destroy_inode,
++	.write_inode   = exfat_write_inode,
++	.evict_inode  = exfat_evict_inode,
++	.put_super     = exfat_put_super,
++	.sync_fs       = exfat_sync_fs,
++	.statfs        = exfat_statfs,
++	.show_options  = exfat_show_options,
++};
++
++enum {
++	Opt_uid,
++	Opt_gid,
++	Opt_umask,
++	Opt_dmask,
++	Opt_fmask,
++	Opt_allow_utime,
++	Opt_charset,
++	Opt_utf8,
++	Opt_case_sensitive,
++	Opt_tz,
++	Opt_errors,
++	Opt_discard,
++};
++
++static const struct fs_parameter_spec exfat_param_specs[] = {
++	fsparam_u32("uid",			Opt_uid),
++	fsparam_u32("gid",			Opt_gid),
++	fsparam_u32oct("umask",			Opt_umask),
++	fsparam_u32oct("dmask",			Opt_dmask),
++	fsparam_u32oct("fmask",			Opt_fmask),
++	fsparam_u32oct("allow_utime",		Opt_allow_utime),
++	fsparam_string("iocharset",		Opt_charset),
++	fsparam_flag("utf8",			Opt_utf8),
++	fsparam_flag("case_sensitive",		Opt_case_sensitive),
++	fsparam_string("tz",			Opt_tz),
++	fsparam_enum("errors",			Opt_errors),
++	fsparam_flag("discard",			Opt_discard),
++	{}
++};
++
++static const struct fs_parameter_enum exfat_param_enums[] = {
++	{ Opt_errors,	"continue",		EXFAT_ERRORS_CONT },
++	{ Opt_errors,	"panic",		EXFAT_ERRORS_PANIC },
++	{ Opt_errors,	"remount-ro",		EXFAT_ERRORS_RO },
++	{}
++};
++
++static const struct fs_parameter_description exfat_parameters = {
++	.name		= "exfat",
++	.specs		= exfat_param_specs,
++	.enums		= exfat_param_enums,
++};
++
++static int exfat_parse_param(struct fs_context *fc, struct fs_parameter *param)
++{
++	struct exfat_sb_info *sbi = fc->s_fs_info;
++	struct exfat_mount_options *opts = &sbi->options;
++	struct fs_parse_result result;
++	int opt;
++
++	opt = fs_parse(fc, &exfat_parameters, param, &result);
++	if (opt < 0)
++		return opt;
++
++	switch (opt) {
++	case Opt_uid:
++		opts->fs_uid = make_kuid(current_user_ns(), result.uint_32);
++		break;
++	case Opt_gid:
++		opts->fs_gid = make_kgid(current_user_ns(), result.uint_32);
++		break;
++	case Opt_umask:
++		opts->fs_fmask = result.uint_32;
++		opts->fs_dmask = result.uint_32;
++		break;
++	case Opt_dmask:
++		opts->fs_dmask = result.uint_32;
++		break;
++	case Opt_fmask:
++		opts->fs_fmask = result.uint_32;
++		break;
++	case Opt_allow_utime:
++		opts->allow_utime = result.uint_32 & 0022;
++		break;
++	case Opt_charset:
++		exfat_free_iocharset(sbi);
++		opts->iocharset = kstrdup(param->string, GFP_KERNEL);
++		if (!opts->iocharset)
++			return -ENOMEM;
++		break;
++	case Opt_case_sensitive:
++		opts->case_sensitive = 1;
++		break;
++	case Opt_utf8:
++		opts->utf8 = 1;
++		break;
++	case Opt_tz:
++		if (!strcmp(param->string, "UTC"))
++			opts->tz_utc = 1;
++		break;
++	case Opt_errors:
++		opts->errors = result.uint_32;
++		break;
++	case Opt_discard:
++		opts->discard = 1;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static void exfat_hash_init(struct super_block *sb)
++{
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++	int i;
++
++	spin_lock_init(&sbi->inode_hash_lock);
++	for (i = 0; i < EXFAT_HASH_SIZE; i++)
++		INIT_HLIST_HEAD(&sbi->inode_hashtable[i]);
++}
++
++static int exfat_read_root(struct inode *inode)
++{
++	struct super_block *sb = inode->i_sb;
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++	struct exfat_inode_info *ei = EXFAT_I(inode);
++	struct exfat_chain cdir;
++	int num_subdirs, num_clu = 0;
++
++	exfat_chain_set(&ei->dir, sbi->root_dir, 0, ALLOC_FAT_CHAIN);
++	ei->entry = -1;
++	ei->start_clu = sbi->root_dir;
++	ei->flags = ALLOC_FAT_CHAIN;
++	ei->type = TYPE_DIR;
++	ei->version = 0;
++	ei->rwoffset = 0;
++	ei->hint_bmap.off = EXFAT_EOF_CLUSTER;
++	ei->hint_stat.eidx = 0;
++	ei->hint_stat.clu = sbi->root_dir;
++	ei->hint_femp.eidx = EXFAT_HINT_NONE;
++
++	exfat_chain_set(&cdir, sbi->root_dir, 0, ALLOC_FAT_CHAIN);
++	if (exfat_count_num_clusters(sb, &cdir, &num_clu))
++		return -EIO;
++	i_size_write(inode, num_clu << sbi->cluster_size_bits);
++
++	num_subdirs = exfat_count_dir_entries(sb, &cdir);
++	if (num_subdirs < 0)
++		return -EIO;
++	set_nlink(inode, num_subdirs + EXFAT_MIN_SUBDIR);
++
++	inode->i_uid = sbi->options.fs_uid;
++	inode->i_gid = sbi->options.fs_gid;
++	inode_inc_iversion(inode);
++	inode->i_generation = 0;
++	inode->i_mode = exfat_make_mode(sbi, ATTR_SUBDIR, 0777);
++	inode->i_op = &exfat_dir_inode_operations;
++	inode->i_fop = &exfat_dir_operations;
++
++	inode->i_blocks = ((i_size_read(inode) + (sbi->cluster_size - 1))
++			& ~(sbi->cluster_size - 1)) >> inode->i_blkbits;
++	EXFAT_I(inode)->i_pos = ((loff_t)sbi->root_dir << 32) | 0xffffffff;
++	EXFAT_I(inode)->i_size_aligned = i_size_read(inode);
++	EXFAT_I(inode)->i_size_ondisk = i_size_read(inode);
++
++	exfat_save_attr(inode, ATTR_SUBDIR);
++	inode->i_mtime = inode->i_atime = inode->i_ctime = current_time(inode);
++	exfat_cache_init_inode(inode);
++	return 0;
++}
++
++static bool is_exfat(struct pbr *pbr)
++{
++	int i = MUST_BE_ZERO_LEN;
++
++	do {
++		if (pbr->bpb.f64.res_zero[i - 1])
++			break;
++	} while (--i);
++	return i ? false : true;
++}
++
++static struct pbr *exfat_read_pbr_with_logical_sector(struct super_block *sb,
++		struct buffer_head **prev_bh)
++{
++	struct pbr *p_pbr = (struct pbr *) (*prev_bh)->b_data;
++	unsigned short logical_sect = 0;
++
++	logical_sect = 1 << p_pbr->bsx.f64.sect_size_bits;
++
++	if (!is_power_of_2(logical_sect) ||
++	    logical_sect < 512 || logical_sect > 4096) {
++		exfat_msg(sb, KERN_ERR, "bogus logical sector size %u",
++				logical_sect);
++		return NULL;
++	}
++
++	if (logical_sect < sb->s_blocksize) {
++		exfat_msg(sb, KERN_ERR,
++			"logical sector size too small for device (logical sector size = %u)",
++			logical_sect);
++		return NULL;
++	}
++
++	if (logical_sect > sb->s_blocksize) {
++		struct buffer_head *bh = NULL;
++
++		__brelse(*prev_bh);
++		*prev_bh = NULL;
++
++		if (!sb_set_blocksize(sb, logical_sect)) {
++			exfat_msg(sb, KERN_ERR,
++				"unable to set blocksize %u", logical_sect);
++			return NULL;
++		}
++		bh = sb_bread(sb, 0);
++		if (!bh) {
++			exfat_msg(sb, KERN_ERR,
++				"unable to read boot sector (logical sector size = %lu)",
++				sb->s_blocksize);
++			return NULL;
++		}
++
++		*prev_bh = bh;
++		p_pbr = (struct pbr *) bh->b_data;
++	}
++	return p_pbr;
++}
++
++/* mount the file system volume */
++static int __exfat_fill_super(struct super_block *sb)
++{
++	int ret;
++	struct pbr *p_pbr;
++	struct pbr64 *p_bpb;
++	struct buffer_head *bh;
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++
++	/* set block size to read super block */
++	sb_min_blocksize(sb, 512);
++
++	/* read boot sector */
++	bh = sb_bread(sb, 0);
++	if (!bh) {
++		exfat_msg(sb, KERN_ERR, "unable to read boot sector");
++		return -EIO;
++	}
++
++	/* PRB is read */
++	p_pbr = (struct pbr *)bh->b_data;
++
++	/* check the validity of PBR */
++	if (le16_to_cpu((p_pbr->signature)) != PBR_SIGNATURE) {
++		exfat_msg(sb, KERN_ERR, "invalid boot record signature");
++		ret = -EINVAL;
++		goto free_bh;
++	}
++
++
++	/* check logical sector size */
++	p_pbr = exfat_read_pbr_with_logical_sector(sb, &bh);
++	if (!p_pbr) {
++		ret = -EIO;
++		goto free_bh;
++	}
++
++	if (!is_exfat(p_pbr)) {
++		ret = -EINVAL;
++		goto free_bh;
++	}
++
++	/* set maximum file size for exFAT */
++	sb->s_maxbytes = 0x7fffffffffffffffLL;
++
++	p_bpb = (struct pbr64 *)p_pbr;
++	if (!p_bpb->bsx.num_fats) {
++		exfat_msg(sb, KERN_ERR, "bogus number of FAT structure");
++		ret = -EINVAL;
++		goto free_bh;
++	}
++
++	sbi->sect_per_clus = 1 << p_bpb->bsx.sect_per_clus_bits;
++	sbi->sect_per_clus_bits = p_bpb->bsx.sect_per_clus_bits;
++	sbi->cluster_size_bits = sbi->sect_per_clus_bits + sb->s_blocksize_bits;
++	sbi->cluster_size = 1 << sbi->cluster_size_bits;
++	sbi->num_FAT_sectors = le32_to_cpu(p_bpb->bsx.fat_length);
++	sbi->FAT1_start_sector = le32_to_cpu(p_bpb->bsx.fat_offset);
++	sbi->FAT2_start_sector = p_bpb->bsx.num_fats == 1 ?
++		sbi->FAT1_start_sector :
++			sbi->FAT1_start_sector + sbi->num_FAT_sectors;
++	sbi->root_start_sector = le32_to_cpu(p_bpb->bsx.clu_offset);
++	sbi->data_start_sector = sbi->root_start_sector;
++	sbi->num_sectors = le64_to_cpu(p_bpb->bsx.vol_length);
++	/* because the cluster index starts with 2 */
++	sbi->num_clusters = le32_to_cpu(p_bpb->bsx.clu_count) +
++		EXFAT_RESERVED_CLUSTERS;
++
++	sbi->vol_id = le32_to_cpu(p_bpb->bsx.vol_serial);
++	sbi->root_dir = le32_to_cpu(p_bpb->bsx.root_cluster);
++	sbi->dentries_in_root = 0;
++	sbi->dentries_per_clu = 1 <<
++		(sbi->cluster_size_bits - DENTRY_SIZE_BITS);
++
++	sbi->vol_flag = le16_to_cpu(p_bpb->bsx.vol_flags);
++	sbi->clu_srch_ptr = EXFAT_FIRST_CLUSTER;
++	sbi->used_clusters = ~0u;
++
++	if (le16_to_cpu(p_bpb->bsx.vol_flags) & VOL_DIRTY) {
++		sbi->vol_flag |= VOL_DIRTY;
++		exfat_msg(sb, KERN_WARNING,
++			"Volume was not properly unmounted. Some data may be corrupt. Please run fsck.");
++	}
++
++	ret = exfat_create_upcase_table(sb);
++	if (ret) {
++		exfat_msg(sb, KERN_ERR, "failed to load upcase table");
++		goto free_bh;
++	}
++
++	/* allocate-bitmap is only for exFAT */
++	ret = exfat_load_bitmap(sb);
++	if (ret) {
++		exfat_msg(sb, KERN_ERR, "failed to load alloc-bitmap");
++		goto free_upcase_table;
++	}
++
++	ret = exfat_count_used_clusters(sb, &sbi->used_clusters);
++	if (ret) {
++		exfat_msg(sb, KERN_ERR, "failed to scan clusters");
++		goto free_alloc_bitmap;
++	}
++
++	return 0;
++
++free_alloc_bitmap:
++	exfat_free_bitmap(sb);
++free_upcase_table:
++	exfat_free_upcase_table(sb);
++free_bh:
++	brelse(bh);
++	return ret;
++}
++
++static int exfat_fill_super(struct super_block *sb, struct fs_context *fc)
++{
++	struct exfat_sb_info *sbi = sb->s_fs_info;
++	struct exfat_mount_options *opts = &sbi->options;
++	struct inode *root_inode;
++	int err;
++
++	if (opts->allow_utime == (unsigned short)-1)
++		opts->allow_utime = ~opts->fs_dmask & 0022;
++
++	if (opts->utf8 && strcmp(opts->iocharset, exfat_iocharset_with_utf8)) {
++		exfat_msg(sb, KERN_WARNING,
++			"utf8 enabled, \"iocharset=%s\" is recommended",
++			exfat_iocharset_with_utf8);
++	}
++
++	if (opts->discard) {
++		struct request_queue *q = bdev_get_queue(sb->s_bdev);
++
++		if (!blk_queue_discard(q))
++			exfat_msg(sb, KERN_WARNING,
++				"mounting with \"discard\" option, but the device does not support discard");
++		opts->discard = 0;
++	}
++
++	sb->s_flags |= SB_NODIRATIME;
++	sb->s_magic = EXFAT_SUPER_MAGIC;
++	sb->s_op = &exfat_sops;
++
++	sb->s_d_op = EXFAT_SB(sb)->options.case_sensitive ?
++			&exfat_dentry_ops : &exfat_ci_dentry_ops;
++
++	err = __exfat_fill_super(sb);
++	if (err) {
++		exfat_msg(sb, KERN_ERR, "failed to recognize exfat type");
++		goto check_nls_io;
++	}
++
++	/* set up enough so that it can read an inode */
++	exfat_hash_init(sb);
++
++	sbi->nls_io = load_nls(sbi->options.iocharset);
++	if (!sbi->nls_io) {
++		exfat_msg(sb, KERN_ERR, "IO charset %s not found",
++				sbi->options.iocharset);
++		err = -EINVAL;
++		goto free_table;
++	}
++
++	root_inode = new_inode(sb);
++	if (!root_inode) {
++		exfat_msg(sb, KERN_ERR, "failed to allocate root inode.");
++		err = -ENOMEM;
++		goto free_table;
++	}
++
++	root_inode->i_ino = EXFAT_ROOT_INO;
++	inode_set_iversion(root_inode, 1);
++	err = exfat_read_root(root_inode);
++	if (err) {
++		exfat_msg(sb, KERN_ERR, "failed to initialize root inode.");
++		goto put_inode;
++	}
++
++	exfat_hash_inode(root_inode, EXFAT_I(root_inode)->i_pos);
++	insert_inode_hash(root_inode);
++
++	sb->s_root = d_make_root(root_inode);
++	if (!sb->s_root) {
++		exfat_msg(sb, KERN_ERR, "failed to get the root dentry");
++		err = -ENOMEM;
++		goto put_inode;
++	}
++
++	return 0;
++
++put_inode:
++	iput(root_inode);
++	sb->s_root = NULL;
++
++free_table:
++	exfat_free_upcase_table(sb);
++	exfat_free_bitmap(sb);
++
++check_nls_io:
++	if (sbi->nls_io)
++		unload_nls(sbi->nls_io);
++	exfat_free_iocharset(sbi);
++	sb->s_fs_info = NULL;
++	kfree(sbi);
++	return err;
++}
++
++static int exfat_get_tree(struct fs_context *fc)
++{
++	return get_tree_bdev(fc, exfat_fill_super);
++}
++
++static void exfat_free(struct fs_context *fc)
++{
++	kfree(fc->s_fs_info);
++}
++
++static const struct fs_context_operations exfat_context_ops = {
++	.parse_param	= exfat_parse_param,
++	.get_tree	= exfat_get_tree,
++	.free		= exfat_free,
++};
++
++static int exfat_init_fs_context(struct fs_context *fc)
++{
++	struct exfat_sb_info *sbi;
++
++	sbi = kzalloc(sizeof(struct exfat_sb_info), GFP_KERNEL);
++	if (!sbi)
++		return -ENOMEM;
++
++	mutex_init(&sbi->s_lock);
++	ratelimit_state_init(&sbi->ratelimit, DEFAULT_RATELIMIT_INTERVAL,
++			DEFAULT_RATELIMIT_BURST);
++
++	sbi->options.fs_uid = current_uid();
++	sbi->options.fs_gid = current_gid();
++	sbi->options.fs_fmask = current->fs->umask;
++	sbi->options.fs_dmask = current->fs->umask;
++	sbi->options.allow_utime = -1;
++	sbi->options.iocharset = exfat_default_iocharset;
++	sbi->options.errors = EXFAT_ERRORS_RO;
++
++	fc->s_fs_info = sbi;
++	fc->ops = &exfat_context_ops;
++	return 0;
++}
++
++static struct file_system_type exfat_fs_type = {
++	.owner			= THIS_MODULE,
++	.name			= "exfat",
++	.init_fs_context	= exfat_init_fs_context,
++	.parameters		= &exfat_parameters,
++	.kill_sb		= kill_block_super,
++	.fs_flags		= FS_REQUIRES_DEV,
++};
++
++static void exfat_inode_init_once(void *foo)
++{
++	struct exfat_inode_info *ei = (struct exfat_inode_info *)foo;
++
++	INIT_HLIST_NODE(&ei->i_hash_fat);
++	inode_init_once(&ei->vfs_inode);
++}
++
++static int __init init_exfat_fs(void)
++{
++	int err;
++
++	err = exfat_cache_init();
++	if (err)
++		return err;
++
++	exfat_inode_cachep = kmem_cache_create("exfat_inode_cache",
++			sizeof(struct exfat_inode_info),
++			0, SLAB_RECLAIM_ACCOUNT | SLAB_MEM_SPREAD,
++			exfat_inode_init_once);
++	if (!exfat_inode_cachep) {
++		err = -ENOMEM;
++		goto shutdown_cache;
++	}
++
++	err = register_filesystem(&exfat_fs_type);
++	if (err)
++		goto destroy_cache;
++
++	return 0;
++
++destroy_cache:
++	kmem_cache_destroy(exfat_inode_cachep);
++shutdown_cache:
++	exfat_cache_shutdown();
++	return err;
++}
++
++static void __exit exit_exfat_fs(void)
++{
++	kmem_cache_destroy(exfat_inode_cachep);
++	unregister_filesystem(&exfat_fs_type);
++	exfat_cache_shutdown();
++}
++
++module_init(init_exfat_fs);
++module_exit(exit_exfat_fs);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("exFAT filesystem support");
++MODULE_AUTHOR("Samsung Electronics Co., Ltd.");
 -- 
 2.17.1
 
