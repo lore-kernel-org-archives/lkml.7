@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0E1C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 617A3C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 189A324686
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 268512468A
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:34:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852491;
-	bh=iN58pcI4a/v+xDGOOjVsgiJM/JmC6IAXuqWupv9eqd0=;
+	s=default; t=1576852494;
+	bh=zUpkqMwan0EDcea0gZWwUYSw2llqaLgxDSihAC5ohjM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L4mQtw/8RFNSobmGcv4zYRCpg3hwSUf8aQ9yA9Rzl5CPO+UjHE1nooj6IF6o+9ekR
-	 Mu+wu97r0qGTiBPsPlpXnkxHduweLCshbEGr1cXwuvqBVZ6lOPaivjpB0zMD+AeYJy
-	 6wNX+jjhVenWhrHAgGDWZzzAqSVAjpx12J/esdFU=
+	b=hm+8Lx5RIBczlcdlslTLHNmervYRySuKU1hVOIC5yvbC5tRrJmrYf1fPDsFq7I95h
+	 el7/zXSMngHAcmjlApmAsDGqacgb9v51be6S2c2MTyIqZGqSw8jTKWaNPi6SZ897Js
+	 uvhxOX2MJUpZo+9LC523fEvdMyUcpGg2f1mtQoBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbfLTOeu (ORCPT
+        id S1727505AbfLTOex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:34:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38838 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:34:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728268AbfLTOep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:34:45 -0500
+        id S1728213AbfLTOes (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:34:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96E212465E;
-        Fri, 20 Dec 2019 14:34:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A22F24695;
+        Fri, 20 Dec 2019 14:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852484;
-        bh=iN58pcI4a/v+xDGOOjVsgiJM/JmC6IAXuqWupv9eqd0=;
+        s=default; t=1576852488;
+        bh=zUpkqMwan0EDcea0gZWwUYSw2llqaLgxDSihAC5ohjM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gDQ3XWykOnZIYpZ1/cXEXR0Li7tJHbU/nvIBl3Z60aegx63Izay3rSEViSKOsFodt
-         CcHiKTaAtzDox9X+gl842l3kjxVFRnjFe8M3/J/AfUpzXYtleio+W+RDPnJ+oukA5o
-         Db7z9A2B8hMQPBszGmTwhHPLg2zngQ21rc0UUfrI=
+        b=FwImDSxoLbj3h6CuG7ZCkpl86R0B7B5YMiJzvj7+KlRVg8MQAvzIr8Q6sOcPu2+36
+         2htUAMkhIXr7wvO9UIVe4GsVAZ9U9GP5Ogaft8oAV/JbzpL9MIWl+he+QFIWltbmYI
+         NZrINpiyOTyMLpJ2byn4dp3pfXESjEjrn7UKA2+I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 08/34] PM / devfreq: Set scaling_max_freq to max on OPP notifier error
-Date:   Fri, 20 Dec 2019 09:34:07 -0500
-Message-Id: <20191220143433.9922-8-sashal@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 11/34] afs: Fix SELinux setting security label on /afs
+Date:   Fri, 20 Dec 2019 09:34:10 -0500
+Message-Id: <20191220143433.9922-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220143433.9922-1-sashal@kernel.org>
 References: <20191220143433.9922-1-sashal@kernel.org>
@@ -60,42 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit e7cc792d00049c874010b398a27c3cc7bc8fef34 ]
+[ Upstream commit bcbccaf2edcf1b76f73f890e968babef446151a4 ]
 
-The devfreq_notifier_call functions will update scaling_min_freq and
-scaling_max_freq when the OPP table is updated.
+Make the AFS dynamic root superblock R/W so that SELinux can set the
+security label on it.  Without this, upgrades to, say, the Fedora
+filesystem-afs RPM fail if afs is mounted on it because the SELinux label
+can't be (re-)applied.
 
-If fetching the maximum frequency fails then scaling_max_freq remains
-set to zero which is confusing. Set to ULONG_MAX instead so we don't
-need special handling for this case in other places.
+It might be better to make it possible to bypass the R/O check for LSM
+label application through setxattr.
 
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Fixes: 4d673da14533 ("afs: Support the AFS dynamic root")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
+cc: selinux@vger.kernel.org
+cc: linux-security-module@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/devfreq.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/afs/super.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index 34e297f28fc2a..a47e76a62287f 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -547,8 +547,10 @@ static int devfreq_notifier_call(struct notifier_block *nb, unsigned long type,
- 		goto out;
- 
- 	devfreq->scaling_max_freq = find_available_max_freq(devfreq);
--	if (!devfreq->scaling_max_freq)
-+	if (!devfreq->scaling_max_freq) {
-+		devfreq->scaling_max_freq = ULONG_MAX;
- 		goto out;
-+	}
- 
- 	err = update_devfreq(devfreq);
- 
+diff --git a/fs/afs/super.c b/fs/afs/super.c
+index 4d3e274207fb7..bd26082974732 100644
+--- a/fs/afs/super.c
++++ b/fs/afs/super.c
+@@ -404,7 +404,6 @@ static int afs_fill_super(struct super_block *sb,
+ 	/* allocate the root inode and dentry */
+ 	if (as->dyn_root) {
+ 		inode = afs_iget_pseudo_dir(sb, true);
+-		sb->s_flags	|= SB_RDONLY;
+ 	} else {
+ 		sprintf(sb->s_id, "%u", as->volume->vid);
+ 		afs_activate_volume(as->volume);
 -- 
 2.20.1
 
