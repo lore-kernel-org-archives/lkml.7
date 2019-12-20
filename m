@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57290C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B216C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29F70218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC11224682
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852651;
-	bh=On32EeY6vkY/ETE03atA2PD9u0/GC2FME0G9pgxsVMY=;
+	s=default; t=1576852658;
+	bh=hPhn3y/ZGrQy+jZyE8ezDpT4Ehkv8ucuJyt+ZkmrOb8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BAIo9o/9VckpkOiGVDSPLuLvwY59M+1IHrXmU6jQ0WJj6qoqKd9frDcr26c6NFVqm
-	 K4/YpwAq1nGqgF/kftM1tuJjiuu6W7p1CLwQBNZ9jxWV9aB2qDPikZ7YS0gjxGf0A9
-	 +mK2Xk3CCG4YcKyAqQcxNb9xMcvlX3KrRM7akn/k=
+	b=yn1EUx45TBypX5Res6Kam43kE3ov9v6haBoQv+SwSfnNU4Lafei6jSCgb3Yh3RVhk
+	 X0xNLY6YIeMFsALiT+YS3YOpR7PljQiqJWyx3X5/PNEubL1FF2ZRVFKOyTj/bnDaQG
+	 +n6RrpNS1CdC6/Ed0MO49Fl9nGKD6ZC147RMkFEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728234AbfLTOha (ORCPT
+        id S1727594AbfLTOaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:37:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33822 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:30:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727619AbfLTOaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:30:20 -0500
+        id S1727536AbfLTOaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:30:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3E0624688;
-        Fri, 20 Dec 2019 14:30:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1663B206CB;
+        Fri, 20 Dec 2019 14:30:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852219;
-        bh=On32EeY6vkY/ETE03atA2PD9u0/GC2FME0G9pgxsVMY=;
+        s=default; t=1576852211;
+        bh=hPhn3y/ZGrQy+jZyE8ezDpT4Ehkv8ucuJyt+ZkmrOb8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vf+0A8711HfcwfnMT2L+NiWELpG4pBYvzL0rgt+RCIjQvyzjA/7YKxmXG2B/w/umY
-         ZN/v621ohmKicy2AI5YJRVhRk9cC/hY6ocoNq3Uxv4Bftsg5L+ftY2vb4M/PGiy16y
-         16t25Dx+uEX5jYTV292iZIqtAl2ErySWqUUYcRj0=
+        b=bvEacYvZODiiBR2yYsG06kEnaoslWwXhmWHC0Nx3Y9hnpml5hOy+LyN1Yz1d26DSn
+         jdh5l/o4GgSC4+pRP0CI/xkGc+jEjdDVJmXMYmqPYuEUjFuZSEWszSjbaxCOVMxf96
+         VILhVWtMacg4ANcjoscM/BvXKFJwl3UXTRguWGzY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 18/52] PM / devfreq: Don't fail devfreq_dev_release if not in list
-Date:   Fri, 20 Dec 2019 09:29:20 -0500
-Message-Id: <20191220142954.9500-18-sashal@kernel.org>
+Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 12/52] nvme/pci: Fix write and poll queue types
+Date:   Fri, 20 Dec 2019 09:29:14 -0500
+Message-Id: <20191220142954.9500-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
 References: <20191220142954.9500-1-sashal@kernel.org>
@@ -60,53 +58,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Keith Busch <kbusch@kernel.org>
 
-[ Upstream commit 42a6b25e67df6ee6675e8d1eaf18065bd73328ba ]
+[ Upstream commit 3f68baf706ec68c4120867c25bc439c845fe3e17 ]
 
-Right now devfreq_dev_release will print a warning and abort the rest of
-the cleanup if the devfreq instance is not part of the global
-devfreq_list. But this is a valid scenario, for example it can happen if
-the governor can't be found or on any other init error that happens
-after device_register.
+The number of poll or write queues should never be negative. Use unsigned
+types so that it's not possible to break have the driver not allocate
+any queues.
 
-Initialize devfreq->node to an empty list head in devfreq_add_device so
-that list_del becomes a safe noop inside devfreq_dev_release and we can
-continue the rest of the cleanup.
-
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Reviewed-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/devfreq.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ drivers/nvme/host/pci.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index e185c8846916d..ffd2d6b44dfba 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -588,11 +588,6 @@ static void devfreq_dev_release(struct device *dev)
- 	struct devfreq *devfreq = to_devfreq(dev);
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 869f462e6b6ea..29d7427c2b19b 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -68,14 +68,14 @@ static int io_queue_depth = 1024;
+ module_param_cb(io_queue_depth, &io_queue_depth_ops, &io_queue_depth, 0644);
+ MODULE_PARM_DESC(io_queue_depth, "set io queue depth, should >= 2");
  
- 	mutex_lock(&devfreq_list_lock);
--	if (IS_ERR(find_device_devfreq(devfreq->dev.parent))) {
--		mutex_unlock(&devfreq_list_lock);
--		dev_warn(&devfreq->dev, "releasing devfreq which doesn't exist\n");
--		return;
--	}
- 	list_del(&devfreq->node);
- 	mutex_unlock(&devfreq_list_lock);
+-static int write_queues;
+-module_param(write_queues, int, 0644);
++static unsigned int write_queues;
++module_param(write_queues, uint, 0644);
+ MODULE_PARM_DESC(write_queues,
+ 	"Number of queues to use for writes. If not set, reads and writes "
+ 	"will share a queue set.");
  
-@@ -647,6 +642,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
- 	devfreq->dev.parent = dev;
- 	devfreq->dev.class = devfreq_class;
- 	devfreq->dev.release = devfreq_dev_release;
-+	INIT_LIST_HEAD(&devfreq->node);
- 	devfreq->profile = profile;
- 	strncpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
- 	devfreq->previous_freq = profile->initial_freq;
+-static int poll_queues;
+-module_param(poll_queues, int, 0644);
++static unsigned int poll_queues;
++module_param(poll_queues, uint, 0644);
+ MODULE_PARM_DESC(poll_queues, "Number of queues to use for polled IO.");
+ 
+ struct nvme_dev;
 -- 
 2.20.1
 
