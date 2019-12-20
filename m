@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 994DDC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A34C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6460824682
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:38:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B0762467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852728;
-	bh=Ga1t74zu3ZcZd9+WWTuiAieeUhQURloJ+zzCSvUioZo=;
+	s=default; t=1576852738;
+	bh=c2ZSCyHbGr/6e5lsFGfMaLvbVe5Lpb/tMm5OOcHm6eo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CGfW9y0xEzvX2wIJ3Ovx+iPONS7KmSGXNqMforRAcRGx5FlFs3+XniFaJ4YJu5b16
-	 kWSCuSCqqFxFuTi+PbQnJZX/zkav7WAgRyPtExW9KwgkN8jfuI7jEaM6MB5iCcGs9R
-	 suh+EcEh8A4bLwz0CIvFfy0073wYgCUOt/sIYLnw=
+	b=lqMfj3JvSW0Np1ZjRHRuool/3e6erjgs7SMjyA5RxW7UlN+IuGdLejuoXyMykbxFP
+	 bX2ME9eo9WN02Wo6rbLScNnmezprnS5pdr5XngnjJY/Pys7SAfyQ7vSzO37fluKMts
+	 kMdHH2sZ9xWlSghwUAOWh0FW3LvGKHfAaL3gS9kE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbfLTOir (ORCPT
+        id S1727778AbfLTOi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:38:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42100 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:38:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728350AbfLTOh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:37:58 -0500
+        id S1728280AbfLTOhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:37:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B43E424689;
-        Fri, 20 Dec 2019 14:37:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A29C24687;
+        Fri, 20 Dec 2019 14:37:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852677;
-        bh=Ga1t74zu3ZcZd9+WWTuiAieeUhQURloJ+zzCSvUioZo=;
+        s=default; t=1576852671;
+        bh=c2ZSCyHbGr/6e5lsFGfMaLvbVe5Lpb/tMm5OOcHm6eo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k8M8WFjNDsoqTIoucsIVluIesbl7mmtlkof5/SxNKVknP/S+2Awvf+XaOw+VaGUcN
-         kugf4UcX+hLNwUg4iEVu/EGb1UTo+BxhB85ByA4urRLqShVGOriA3zBwcat7VGfT5t
-         pe269t79gSYNZZaOox4xwnZyS6cFPw/MKPrJp8dM=
+        b=abj9Kr9HJovGlSNqD2FvW9xKSVuSIlERmwPhV/J/n1KojtpvAxJU54PopperNy6e4
+         0zvkiCiGKkkDDQjylAfexcDq3ss+7gOobRBz+X9M7SokjTl8dTShwPpbjlYPtHOKcb
+         bEoEimG0kwEFiAINtNzikPtCJuVH8+vT2mPzgi+s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>, netdev@vger.kernel.org,
-        David Miller <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 12/19] net: make socket read/write_iter() honor IOCB_NOWAIT
-Date:   Fri, 20 Dec 2019 09:37:33 -0500
-Message-Id: <20191220143741.10220-12-sashal@kernel.org>
+Cc:     Roman Bolshakov <r.bolshakov@yadro.com>,
+        Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvel.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 07/19] scsi: qla2xxx: Don't call qlt_async_event twice
+Date:   Fri, 20 Dec 2019 09:37:28 -0500
+Message-Id: <20191220143741.10220-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220143741.10220-1-sashal@kernel.org>
 References: <20191220143741.10220-1-sashal@kernel.org>
@@ -59,45 +63,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Roman Bolshakov <r.bolshakov@yadro.com>
 
-[ Upstream commit ebfcd8955c0b52eb793bcbc9e71140e3d0cdb228 ]
+[ Upstream commit 2c2f4bed9b6299e6430a65a29b5d27b8763fdf25 ]
 
-The socket read/write helpers only look at the file O_NONBLOCK. not
-the iocb IOCB_NOWAIT flag. This breaks users like preadv2/pwritev2
-and io_uring that rely on not having the file itself marked nonblocking,
-but rather the iocb itself.
+MBA_PORT_UPDATE generates duplicate log lines in target mode because
+qlt_async_event is called twice. Drop the calls within the case as the
+function will be called right after the switch statement.
 
-Cc: netdev@vger.kernel.org
-Acked-by: David Miller <davem@davemloft.net>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: Quinn Tran <qutran@marvell.com>
+Link: https://lore.kernel.org/r/20191125165702.1013-8-r.bolshakov@yadro.com
+Acked-by: Himanshu Madhani <hmadhani@marvel.com>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Tested-by: Hannes Reinecke <hare@suse.de>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/socket.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/qla2xxx/qla_isr.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/net/socket.c b/net/socket.c
-index aab65277314d9..5b134a6b6216f 100644
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -891,7 +891,7 @@ static ssize_t sock_read_iter(struct kiocb *iocb, struct iov_iter *to)
- 			     .msg_iocb = iocb};
- 	ssize_t res;
+diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
+index ebca1a470e9bc..7f2da56274bdb 100644
+--- a/drivers/scsi/qla2xxx/qla_isr.c
++++ b/drivers/scsi/qla2xxx/qla_isr.c
+@@ -1046,8 +1046,6 @@ qla2x00_async_event(scsi_qla_host_t *vha, struct rsp_que *rsp, uint16_t *mb)
+ 			ql_dbg(ql_dbg_async, vha, 0x5011,
+ 			    "Asynchronous PORT UPDATE ignored %04x/%04x/%04x.\n",
+ 			    mb[1], mb[2], mb[3]);
+-
+-			qlt_async_event(mb[0], vha, mb);
+ 			break;
+ 		}
  
--	if (file->f_flags & O_NONBLOCK)
-+	if (file->f_flags & O_NONBLOCK || (iocb->ki_flags & IOCB_NOWAIT))
- 		msg.msg_flags = MSG_DONTWAIT;
+@@ -1065,8 +1063,6 @@ qla2x00_async_event(scsi_qla_host_t *vha, struct rsp_que *rsp, uint16_t *mb)
+ 		set_bit(LOOP_RESYNC_NEEDED, &vha->dpc_flags);
+ 		set_bit(LOCAL_LOOP_UPDATE, &vha->dpc_flags);
+ 		set_bit(VP_CONFIG_OK, &vha->vp_flags);
+-
+-		qlt_async_event(mb[0], vha, mb);
+ 		break;
  
- 	if (iocb->ki_pos != 0)
-@@ -916,7 +916,7 @@ static ssize_t sock_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 	if (iocb->ki_pos != 0)
- 		return -ESPIPE;
- 
--	if (file->f_flags & O_NONBLOCK)
-+	if (file->f_flags & O_NONBLOCK || (iocb->ki_flags & IOCB_NOWAIT))
- 		msg.msg_flags = MSG_DONTWAIT;
- 
- 	if (sock->type == SOCK_SEQPACKET)
+ 	case MBA_RSCN_UPDATE:		/* State Change Registration */
 -- 
 2.20.1
 
