@@ -2,131 +2,142 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F81AC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69302C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD2D222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DC2A2467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:04:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576800242;
+	bh=sWq+9KSTwARofQnWsAgQYWAF/MTYTslzXC2YUL9YOUU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=ok7kWA+5xyVEIkz3KAs2hKYvmm6WzXcE94eb7uArWKOZpMUYB0tN5+bCkeSRtAPDp
+	 SM4/WMoiFeR/ghiKCsiBQCmUU11BG5KWHcrPv7yMu7/RujDE/vMpmpGopUx0J2/ch9
+	 oaWreXudn8R0QkFHMP2XvK7OH0hNll+1UQvtxZ+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbfLTACM (ORCPT
+        id S1727119AbfLTAEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 19:02:12 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:55510 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbfLTACM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 19:02:12 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1ii5k9-0003p9-1d; Fri, 20 Dec 2019 00:02:09 +0000
-To:     Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ihab Zhaika <ihab.zhaika@intel.com>,
-        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: re: iwlwifi: refactor the SAR tables from mvm to acpi
-Message-ID: <18ea9fa8-93fe-f371-68ee-3d12eac252c8@canonical.com>
-Date:   Fri, 20 Dec 2019 00:02:08 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 19 Dec 2019 19:04:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59032 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726952AbfLTAEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 19:04:01 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C760222C2;
+        Fri, 20 Dec 2019 00:03:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576800240;
+        bh=sWq+9KSTwARofQnWsAgQYWAF/MTYTslzXC2YUL9YOUU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=y+50dcG+enUsbey/BuOFRBNPTJ0WXZMkKA4w3HQR8Zq9UY4xlF9eE9X9r3HB83JsG
+         YXU+8e9uE7GM/4pbXGCwANX9kLhlNTxzRvHiO+5KKzDk1ZDS/LL4uxhHBgplVK70tr
+         kxQ4OhrPB7NEa333uI4sMwoH07mSCW/ACcbQ6EYc=
+Date:   Thu, 19 Dec 2019 18:03:58 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [PATCH v12 0/4] PCI: Patch series to improve Thunderbolt
+ enumeration
+Message-ID: <20191220000358.GA126443@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PSXP216MB043840E2DE9B81AC8797F63A80530@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Dec 18, 2019 at 12:54:25AM +0000, Nicholas Johnson wrote:
+> On Tue, Dec 17, 2019 at 09:12:48AM -0600, Bjorn Helgaas wrote:
+> > On Mon, Dec 09, 2019 at 12:59:29PM +0000, Nicholas Johnson wrote:
+> > > Hi all,
+> > > 
+> > > Since last time:
+> > > 	Reverse Christmas tree for a couple of variables
+> > > 
+> > > 	Changed while to whilst (sounds more formal, and so that 
+> > > 	grepping for "while" only brings up code)
+> > > 
+> > > 	Made sure they still apply to latest Linux v5.5-rc1
+> > > 
+> > > Kind regards,
+> > > Nicholas
+> > > 
+> > > Nicholas Johnson (4):
+> > >   PCI: Consider alignment of hot-added bridges when distributing
+> > >     available resources
+> > >   PCI: In extend_bridge_window() change available to new_size
+> > >   PCI: Change extend_bridge_window() to set resource size directly
+> > >   PCI: Allow extend_bridge_window() to shrink resource if necessary
+> > 
+> > I have tentatively applied these to pci/resource for v5.6, but I need
+> > some kind of high-level description for why we want these changes.
+> I could not find these in linux-next (whereas it was almost immediate 
+> last time), so this must be why.
+> 
+> > The commit logs describe what the code does, and that's good, but we
+> > really need a little more of the *why* and what the user-visible
+> > benefit is.  I know some of this was in earlier postings, but it seems
+> > to have gotten lost along the way.
+>
+> Is this explanation going into the commit notes, or is this just to get 
+> it past reviewers, Greg K-H and Linus Torvalds?
 
-Static analysis with Coverity has detected a potential issue with the
-following commit:
+This is for the commit log of the merge commit, i.e., it should answer
+the question of "why should we merge this branch?"  Typically this is
+short, e.g., here's the merge commit for the pci/resource branch that
+was merged for v5.5:
 
-commit 39c1a9728f938c7255ce507c8d56b73e8a4ebddf
-Author: Ihab Zhaika <ihab.zhaika@intel.com>
-Date:   Fri Nov 15 09:28:11 2019 +0200
+  commit 774800cb099f ("Merge branch 'pci/resource'")
+  Author: Bjorn Helgaas <bhelgaas@google.com>
+  Date:   Thu Nov 28 08:54:36 2019 -0600
 
-    iwlwifi: refactor the SAR tables from mvm to acpi
+    Merge branch 'pci/resource'
 
+      - Protect pci_reassign_bridge_resources() against concurrent
+        addition/removal (Benjamin Herrenschmidt)
 
-in function iwl_sar_get_ewrd_table() we have an array index pos being
-initialized to 3 and then incremented each time a loop iterates:
+      - Fix bridge dma_ranges resource list cleanup (Rob Herring)
 
-        for (i = 0; i < n_profiles; i++) {
-                /* the tables start at element 3 */
-                int pos = 3;
+      - Add PCI_STD_NUM_BARS for the number of standard BARs (Denis Efremov)
 
-                /* The EWRD profiles officially go from 2 to 4, but we
-                 * save them in sar_profiles[1-3] (because we don't
-                 * have profile 0).  So in the array we start from 1.
-                 */
-                ret = iwl_sar_set_profile(&wifi_pkg->package.elements[pos],
-                                          &fwrt->sar_profiles[i + 1],
-                                          enabled);
-                if (ret < 0)
-                        break;
+      - Add "pci=hpmmiosize" and "pci=hpmmioprefsize" parameters to control the
+        MMIO and prefetchable MMIO window sizes of hotplug bridges
+        independently (Nicholas Johnson)
 
-                /* go to the next table */
-                pos += ACPI_SAR_TABLE_SIZE;
-        }
+      - Fix MMIO/MMIO_PREF window assignment that assigned more space than
+        desired (Nicholas Johnson)
 
-So, each iteration is always accessing package.elements[3]. I'm not sure
-if that is intentional. If it is, then the increment of pos is not
-required.  Either way, it's not clear what the original intention is.
+      - Only enforce bus numbers from bridge EA if the bridge has EA devices
+        downstream (Subbaraya Sundeep)
 
-Colin
+    * pci/resource:
+      PCI: Do not use bus number zero from EA capability
+      PCI: Avoid double hpmemsize MMIO window assignment
+      PCI: Add "pci=hpmmiosize" and "pci=hpmmioprefsize" parameters
+      PCI: Add PCI_STD_NUM_BARS for the number of standard BARs
+      PCI: Fix missing bridge dma_ranges resource list cleanup
+      PCI: Protect pci_reassign_bridge_resources() against concurrent addition/removal
+
+The logs for individual commits are obviously longer but should answer
+the same question in more detail.
+
+Basically, I'm not comfortable asking Linus to pull material unless I
+can explain what the benefit is.  I'm still struggling to articulate
+the benefit in this case.  I think it makes hotplug work better in
+some cases where we need more alignment than we currently have, but
+that's pretty sketchy.
+
+Bjorn
