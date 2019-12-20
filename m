@@ -2,125 +2,134 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A21D4C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 454BFC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 822072146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:32:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A7722146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:32:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ufnVJ3iP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfLTJci (ORCPT
+        id S1727420AbfLTJc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 04:32:38 -0500
-Received: from mout-p-102.mailbox.org ([80.241.56.152]:42762 "EHLO
-        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727184AbfLTJci (ORCPT
+        Fri, 20 Dec 2019 04:32:56 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34283 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727184AbfLTJc4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 04:32:38 -0500
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 47fNnc1bxbzKmVq;
-        Fri, 20 Dec 2019 10:32:36 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
-        with ESMTP id MnOUozeEKW5C; Fri, 20 Dec 2019 10:32:29 +0100 (CET)
-Date:   Fri, 20 Dec 2019 20:31:53 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     Florian Weimer <fweimer@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        "dev@opencontainers.org" <dev@opencontainers.org>,
-        "containers@lists.linux-foundation.org" 
-        <containers@lists.linux-foundation.org>,
-        "libc-alpha@sourceware.org" <libc-alpha@sourceware.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH 1/2] uapi: split openat2(2) definitions from fcntl.h
-Message-ID: <20191220093153.v7jpzvch3lohabll@yavin.dot.cyphar.com>
-References: <20191219105533.12508-1-cyphar@cyphar.com>
- <20191219105533.12508-2-cyphar@cyphar.com>
- <87a77oy3oe.fsf@oldenburg2.str.redhat.com>
- <20191219134525.mgzmjbsp4wo5b2bw@yavin.dot.cyphar.com>
- <845fc9e8b55e4868bb4d20655e674b50@AcuMS.aculab.com>
+        Fri, 20 Dec 2019 04:32:56 -0500
+Received: by mail-pf1-f194.google.com with SMTP id l127so4896139pfl.1;
+        Fri, 20 Dec 2019 01:32:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hXPvfKvwAwee7RsrZpIamZ8UANcZvc4/7hzUJ9vWG30=;
+        b=ufnVJ3iPxZcZtJ92hsB9jBbHS38GFsw9MyCcx9SHRHdXmWo1pI6ZDU4ZFgZ9JeU7ZS
+         j2irv1vy1DCI/tEIMvh7yIDPtZ4T2IudbrsSUY7w2xI/3TNYdhDJNK4F0fqI2AjK4S1B
+         DZnLX8Uk0BHcXbzLOK9slVuYcpDEF75U/nEREA0vm3SQj7PKE3i2dUru17xsbs7PGUa+
+         uHOr1Rs58B+A9FuO5Dp9W3nhFJ2wYxY31YasiyNKs/k1RteF/C5jxwRfvHem7LcAOi9t
+         +DDteb1doMFCbUdUvGAAcbhL1yk50HwuVaCqH7+UjW7Kjt6F/GNcQIPX9MVEwJgoIE42
+         UdBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hXPvfKvwAwee7RsrZpIamZ8UANcZvc4/7hzUJ9vWG30=;
+        b=HPtTG0JCTxOaBNgAIsfMmf+tNOeaRwFQ7NhINxvzxBhxfSSSuc8V2q5315PjkjKH2E
+         aiKGEWFlL5gaJ4hpBo22WUXTS93EW9ODw+xyWBu/Y2fT1gbtaxlkpCGgp3Jp2O5JwukQ
+         1dUgYwR31j78hLrdSMAVveGCZQSD6iCqK6JIpixrcxCQ6S/psee2yA9sMZzUE/6Zecmk
+         BXfXig3Tx2il9wo2kW4xaB8eYW+bA2Ku/4VjMVKjJKFWKxr0zBaJ4ZMBS+l909oNGHMd
+         TEqCWnUgUhzGX1/qnOdQJkG5np2HkscRP+oab9xZL/PfRFLuBt0VZI198XqV5WarmnKQ
+         uzYg==
+X-Gm-Message-State: APjAAAWwpY9dpUzpGVRoG7MhYV++Eq9GUzOuMobX9ujt2jHMyj6Qqqrk
+        7TNZlSkdmnElOIg4Vgz1rMTmnZc1X5ETp+7G9OA=
+X-Google-Smtp-Source: APXvYqy89KLn49Y7AOaiBDwvJUbGIwKrXpVrAXbM6ogcz28z1+7I0//57vSQh5E6i+knbxU9bqCwYbEzCfkP8R4ECrQ=
+X-Received: by 2002:a62:1944:: with SMTP id 65mr15366030pfz.151.1576834375318;
+ Fri, 20 Dec 2019 01:32:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="givk24x5xczrcujw"
-Content-Disposition: inline
-In-Reply-To: <845fc9e8b55e4868bb4d20655e674b50@AcuMS.aculab.com>
+References: <20191219041039.23396-1-dan@dlrobertson.com> <20191219041039.23396-3-dan@dlrobertson.com>
+ <CAHp75VdVmfAi5hSp23Gn8nm6LmX-Mr5Tnxcbus90DrRL+gVFRA@mail.gmail.com>
+ <20191220043220.GA16415@nessie> <CAHp75Vec5ADoFH9KoTnU5+uEZvGqS2+NUN+MLTiwzofDtGG0+A@mail.gmail.com>
+In-Reply-To: <CAHp75Vec5ADoFH9KoTnU5+uEZvGqS2+NUN+MLTiwzofDtGG0+A@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 20 Dec 2019 11:32:42 +0200
+Message-ID: <CAHp75VdzE4uKKJ_5g8eMZR+GSX9W+7Lc+kh2OYt5o7_8_NHTpw@mail.gmail.com>
+Subject: Re: [PATCH v7 2/3] iio: (bma400) add driver for the BMA400
+To:     Dan Robertson <dan@dlrobertson.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        devicetree <devicetree@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Joe Perches <joe@perches.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---givk24x5xczrcujw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 2019-12-19, David Laight <David.Laight@ACULAB.COM> wrote:
-> From: Aleksa Sarai
-> > Sent: 19 December 2019 13:45
-> > On 2019-12-19, Florian Weimer <fweimer@redhat.com> wrote:
-> > > * Aleksa Sarai:
+On Fri, Dec 20, 2019 at 11:27 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Fri, Dec 20, 2019 at 6:48 AM Dan Robertson <dan@dlrobertson.com> wrote:
+> > On Thu, Dec 19, 2019 at 01:02:28PM +0200, Andy Shevchenko wrote:
+> > > On Thu, Dec 19, 2019 at 6:27 AM Dan Robertson <dan@dlrobertson.com> wrote:
+>
+> > > > +static int bma400_set_accel_output_data_rate(struct bma400_data *data,
+> > > > +                                            int hz, int uhz)
+> > > > +{
+> > > > +       unsigned int idx;
+> > > > +       unsigned int odr;
+> > > > +       unsigned int val;
+> > > > +       int ret;
+> > > > +
+> > > > +       if (hz >= BMA400_ACC_ODR_MIN_WHOLE_HZ) {
+> > > > +               if (uhz || hz % BMA400_ACC_ODR_MIN_WHOLE_HZ)
+> > > > +                       return -EINVAL;
+> > > > +
+> > > > +               val = hz / BMA400_ACC_ODR_MIN_WHOLE_HZ;
 > > >
-> > > > diff --git a/include/uapi/linux/openat2.h b/include/uapi/linux/open=
-at2.h
-> > > > new file mode 100644
-> > > > index 000000000000..19ef775e8e5e
-> > > > --- /dev/null
-> > > > +++ b/include/uapi/linux/openat2.h
-> > > > @@ -0,0 +1,41 @@
-> > > > +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> > > > +#ifndef _UAPI_LINUX_OPENAT2_H
-> > > > +#define _UAPI_LINUX_OPENAT2_H
-> > >
-> > > I think you should include the relevant header for __align_u64
-> > > etc. here.
-> >=20
-> > Right -- no idea why I forgot to include them.
->=20
-> I'm guessing that is just 64bit aligned on 32bit archs like x86?
+> > > Again, AFAICS division may be avoided in both cases (% and / above)
+> > > because of is_power_of_2() check below.
+> > > Can you revisit this?
+> >
+> > Yeah I can update this in the next patchset, but I don't know if it is much more
+> > readable this way.
+>
+> You may describe the algo in the comment.
+>
+> Let's see how it might look like
+>
+>   if (uhz)
+>     return -EINVAL;
+>   idx = __ffs(val);
+>   /* We're expecting value to be 2^n * ODR_MIN_WHOLE_HZ */
+>   if ((val >> idx) != BMA400_ACC_ODR_MIN_WHOLE_HZ)
 
-Yeah,
+Okay, this would require trickier conditional for the cases when
+MIN_WHOLE_HZ can be divided by 2^k...
+Still from performance point of view it might be much faster than division.
 
-#define __aligned_u64 __u64 __attribute__((aligned(8)))
+>     retutn -EINVAL;
+>   idx += BMA400_ACC_ODR_MIN_RAW + 1;
+>
+> Would it work?
+>
+> > > > +               if (!is_power_of_2(val))
+> > > > +                       return -EINVAL;
+> > > > +
+> > > > +               idx = __ffs(val) + BMA400_ACC_ODR_MIN_RAW + 1;
 
-> No need to enforce it provided the structure will have no padding on
-> archs where the 64bit fields are 64bit aligned. A plain __u64 should
-> be fine.
-
-Will this cause problems for x86-on-x86_64 emulation? Requiring an
-8-byte alignment for 'struct open_how' really isn't that undue of a
-burden IMHO. Then again, clone3 is a bit of an outlier since both
-perf_event_open and sched_setattr just use __u64s.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---givk24x5xczrcujw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXfyVBQAKCRCdlLljIbnQ
-EgcoAP43nxgO07GF0RSIdFKrxwO6NwWnJQyl99/kNS5RfDZ1gAD/Z+JrHyahv8Zk
-oTZiuCZTYW9Ii4yfmIqL3r6lnU6qHgM=
-=NPkQ
------END PGP SIGNATURE-----
-
---givk24x5xczrcujw--
+-- 
+With Best Regards,
+Andy Shevchenko
