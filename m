@@ -2,127 +2,147 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF447C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F00C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF728206DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A01E2206DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:20:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T3p6McAp"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="VmdN32C+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbfLTVQp (ORCPT
+        id S1727509AbfLTVUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 16:16:45 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59501 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727552AbfLTVQm (ORCPT
+        Fri, 20 Dec 2019 16:20:53 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45328 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727402AbfLTVUx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 16:16:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576876601;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=m4Ydwgp5PpMnSage4lUP1t9xcFgD9PS/bCLMno8IgRs=;
-        b=T3p6McApLyOvmU4IjHegRNpfdW0+JrMoVgWZ5APBA+aobQB64ZneJYxLTL8ZyqMcALX9C0
-        PMEYyBEpPaUdzHumjGyotMegrrkNyXSScqcJ23JNt2likQrcFwt2LDMGzzQHxq2yjzPg3J
-        lQMTCfGhRA6bpolIg6GD3S4M8PZedmY=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-367-69LpYB8oNuWxe5EK5AxctQ-1; Fri, 20 Dec 2019 16:16:40 -0500
-X-MC-Unique: 69LpYB8oNuWxe5EK5AxctQ-1
-Received: by mail-qk1-f199.google.com with SMTP id u30so6776070qke.13
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 13:16:40 -0800 (PST)
+        Fri, 20 Dec 2019 16:20:53 -0500
+Received: by mail-oi1-f196.google.com with SMTP id n16so1319635oie.12
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 13:20:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=9Qnmp0WI/wJPh5obkk1eDEi0Xc1HmFywljm1WZKRD54=;
+        b=VmdN32C+3faE2DeglNJ2zDUowKjP03iZiRJy1BWyUMp2kNO7p0RHDaRvQQFqs/HURe
+         ILXuVhylyKt7wb20SZYWfC9uGAHzFCq5WPih4QMncAEVOlk++e1Ypt7aQqxmsMT3yD4j
+         36CxC4W0ALOHxaOxIqrEK2F1GZCnv+Zfqsrm13SAIG1OxWSDY7auUPDcsPijHW7xw/UZ
+         R7KqAIbIBgBhNki4cidE5XxyU9Zg6mb1mBwv0shtQKxfGktY1nVym73u/k3c4HtjADcV
+         Id1GIuy3gIGspl3G7KGMGkAwUni3RqIsC6Q4KRWVPeRLiHeLLOho5cSqpVOToQDU7KFN
+         wTuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=m4Ydwgp5PpMnSage4lUP1t9xcFgD9PS/bCLMno8IgRs=;
-        b=lxa4u8UgmCrgQL8HOlzOHK9DESHKJbDo9DCy9RrFKSmF8Zq8Fb5JWv3EoCbUcAG9Om
-         ekOqXJuHNyjsewsRYYcEUCFQaSmqr1bd3diMzaDFRs9jqgh7qw1YtdsY5cQ1YZ8P8nko
-         BE0LcOpW+eZCSmuVkt8Vr3vHKAKiBTDcbg/rFb2sV40h4eTkLg/zSUbwzDnv74/66WmZ
-         NiPhpE3XgCBPdvt/jijIz6CZEDoWtBLy65LGFXKFYbyZd5CHTXGK8Cf92oYGxyOHAcrt
-         UGvdjKfn5Wq2Bz+gJnum6xIjIdH8TTOhrhX06L7nYJJ3xYwyVEIZOYPSCs+aO6dJ3Ui1
-         u2pQ==
-X-Gm-Message-State: APjAAAVIqFx3wsVzdtaJT2r/XVCs7FXGxm7mwoLUZ9NJETpi8eRUrOO2
-        m2xTWdjVFYQhIvoxr/hiT+QbV4xb3NMDrebuWuHgXOa10pOj0jJrN/Ka6h5MNvRT29qgNUMonew
-        akJBN9u/wejZnSgTGkcX9lKmA
-X-Received: by 2002:a37:b283:: with SMTP id b125mr15582021qkf.352.1576876600405;
-        Fri, 20 Dec 2019 13:16:40 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxqq3JoIUjXp2hoYBTRFQiEJY1jwKxiTuHZFetaPNnJ4sDqpMkgZlBdB0zLL7zuFba+vifoJg==
-X-Received: by 2002:a37:b283:: with SMTP id b125mr15581997qkf.352.1576876600127;
-        Fri, 20 Dec 2019 13:16:40 -0800 (PST)
-Received: from xz-x1.redhat.com ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id d25sm3385231qtq.11.2019.12.20.13.16.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 13:16:39 -0800 (PST)
-From:   Peter Xu <peterx@redhat.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Michael S . Tsirkin" <mst@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, peterx@redhat.com,
-        Jason Wang <jasowang@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>
-Subject: [PATCH v2 02/17] KVM: X86: Change parameter for fast_page_fault tracepoint
-Date:   Fri, 20 Dec 2019 16:16:19 -0500
-Message-Id: <20191220211634.51231-3-peterx@redhat.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191220211634.51231-1-peterx@redhat.com>
-References: <20191220211634.51231-1-peterx@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=9Qnmp0WI/wJPh5obkk1eDEi0Xc1HmFywljm1WZKRD54=;
+        b=lTyT9jgRbjSYrIJE5KTZFvEGL7SRT5NbMz6afFI2tIHe/3ixj6gGCj33aTpRSU277z
+         FWM2ebjGfZqlZP9X3lbKwmtBOce8/ls52G6DB9rCrh0hv/S+NXzYCX7lBupfq4y5Ie9q
+         GKLNEmlDzveYefqGNsPi4SwyjvU3SB8bbgIRu03tlL6fGR7n8Ae1IlJ3BcVC/4Mvq7mG
+         IgzpRNALmNn4vfNfzZB2TfonKb4kWStyFabWcehs2Sz58aDlvXX1t5HrtgTkv2/OdtJZ
+         Lsd59KmFXmNUY+oxD4jw4VskcQ6J4dJq1irUQvMRV+W16PjZpIfhOI/dE3/z0lM9UfTm
+         100A==
+X-Gm-Message-State: APjAAAVL/IhEB8FGfnE8S04Vne+fDFkjtHPwNTYNWPxcuGJp7nXL+rgH
+        uU62PB9F02H5DDqYxsnFSQa9uQ==
+X-Google-Smtp-Source: APXvYqx5CXpDGFWd07MxIxOkmCrgSCU+qG1n8l8D1GpIN60/Wzmaj8zotokOH8zdfBTWDwFJfz79SA==
+X-Received: by 2002:a05:6808:3d0:: with SMTP id o16mr1542733oie.79.1576876851262;
+        Fri, 20 Dec 2019 13:20:51 -0800 (PST)
+Received: from [26.82.234.166] ([172.58.110.182])
+        by smtp.gmail.com with ESMTPSA id a15sm3951509otn.64.2019.12.20.13.20.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Dec 2019 13:20:50 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] x86: Remove force_iret()
+Date:   Sat, 21 Dec 2019 05:20:46 +0800
+Message-Id: <A5CA1E6B-B755-4F5A-8813-10713C1C192C@amacapital.net>
+References: <227c8442919d44a790370870aaba416c@AcuMS.aculab.com>
+Cc:     Brian Gerst <brgerst@gmail.com>, Andy Lutomirski <luto@kernel.org>,
+        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Oleg Nesterov <oleg@redhat.com>
+In-Reply-To: <227c8442919d44a790370870aaba416c@AcuMS.aculab.com>
+To:     David Laight <David.Laight@aculab.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It would be clearer to dump the return value to know easily on whether
-did we go through the fast path for handling current page fault.
-Remove the old two last parameters because after all the old/new sptes
-were dumped in the same line.
 
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- arch/x86/kvm/mmutrace.h | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+> On Dec 20, 2019, at 6:59 PM, David Laight <David.Laight@aculab.com> wrote:=
 
-diff --git a/arch/x86/kvm/mmutrace.h b/arch/x86/kvm/mmutrace.h
-index 7ca8831c7d1a..09bdc5c91650 100644
---- a/arch/x86/kvm/mmutrace.h
-+++ b/arch/x86/kvm/mmutrace.h
-@@ -244,9 +244,6 @@ TRACE_EVENT(
- 		  __entry->access)
- );
- 
--#define __spte_satisfied(__spte)				\
--	(__entry->retry && is_writable_pte(__entry->__spte))
--
- TRACE_EVENT(
- 	fast_page_fault,
- 	TP_PROTO(struct kvm_vcpu *vcpu, gva_t gva, u32 error_code,
-@@ -274,12 +271,10 @@ TRACE_EVENT(
- 	),
- 
- 	TP_printk("vcpu %d gva %lx error_code %s sptep %p old %#llx"
--		  " new %llx spurious %d fixed %d", __entry->vcpu_id,
-+		  " new %llx ret %d", __entry->vcpu_id,
- 		  __entry->gva, __print_flags(__entry->error_code, "|",
- 		  kvm_mmu_trace_pferr_flags), __entry->sptep,
--		  __entry->old_spte, __entry->new_spte,
--		  __spte_satisfied(old_spte), __spte_satisfied(new_spte)
--	)
-+		  __entry->old_spte, __entry->new_spte, __entry->retry)
- );
- 
- TRACE_EVENT(
--- 
-2.24.1
+>=20
+> =EF=BB=BFFrom: Andy Lutomirski
+>> Sent: 20 December 2019 10:30
+>>>> On Dec 20, 2019, at 6:10 PM, David Laight <David.Laight@aculab.com> wro=
+te:
+>>>=20
+>>> =EF=BB=BFFrom: Brian Gerst
+>>>> Sent: 20 December 2019 03:48
+>>>>> On Thu, Dec 19, 2019 at 8:50 PM Andy Lutomirski <luto@kernel.org> wrot=
+e:
+>>>>>=20
+>>>>> On Thu, Dec 19, 2019 at 3:58 AM Brian Gerst <brgerst@gmail.com> wrote:=
 
+>>>>>>=20
+>>>>>> force_iret() was originally intended to prevent the return to user mo=
+de with
+>>>>>> the SYSRET or SYSEXIT instructions, in cases where the register state=
+ could
+>>>>>> have been changed to be incompatible with those instructions.
+>>>>>=20
+>>>>> It's more than that.  Before the big syscall rework, we didn't restore=
+
+>>>>> the caller-saved regs.  See:
+>>>>>=20
+>>>>> commit 21d375b6b34ff511a507de27bf316b3dde6938d9
+>>>>> Author: Andy Lutomirski <luto@kernel.org>
+>>>>> Date:   Sun Jan 28 10:38:49 2018 -0800
+>>>>>=20
+>>>>>   x86/entry/64: Remove the SYSCALL64 fast path
+>>>>>=20
+>>>>> So if you changed r12, for example, the change would get lost.
+>>>>=20
+>>>> force_iret() specifically dealt with changes to CS, SS and EFLAGS.
+>>>> Saving and restoring the extra registers was a different problem
+>>>> although it affected the same functions like ptrace, signals, and
+>>>> exec.
+>>>=20
+>>> Is it ever possible for any of the segment registers to refer to the LDT=
+
+>>> and for another thread to invalidate the entries 'very late' ?
+>>=20
+>> Not in newer kernels, because the actual LDT is never modified.
+>> Instead, LDT changes create a whole new LDT and propagate it with an IPI.=
+
+>=20
+> Can the IPI be disabled through the SYSRET path?
+
+There=E2=80=99s a whole dance in prepare_exit_to_usermode().  We turn off in=
+terrupts, then check for pending work (which does not include this IPI, but i=
+ncludes plenty of other nasty things), and we keep interrupts off until we a=
+re in user mode.
+
+> Once in user space, the IPI will interrupt the process and, I presume, it w=
+ill
+> pick up the new LDT on 'return to user'.
+
+The new LDT is picked up in the IPI callback.
+
+> But if the IPI happens between the LDT being set and SYSRET it will (presu=
+mably)
+> remain 'pending' until the next system call?
+> Which could be long enough for one thread to have passed a pointer across g=
+iving
+> an unexpected SEGV (or maybe worse, failing to give an expected one).
+
+modify_ldt() won=E2=80=99t return until all threads have the new LDT.=
