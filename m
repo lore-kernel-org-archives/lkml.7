@@ -2,206 +2,204 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 366F9C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E978BC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC3C024672
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:57:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wicgqo9Q"
+	by mail.kernel.org (Postfix) with ESMTP id B4E8624672
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:06:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbfLTA5U (ORCPT
+        id S1727128AbfLTBGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 19:57:20 -0500
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:46466 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726952AbfLTA5U (ORCPT
+        Thu, 19 Dec 2019 20:06:11 -0500
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:52615 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726992AbfLTBGL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 19:57:20 -0500
-Received: by mail-pf1-f201.google.com with SMTP id w127so4921593pfb.13
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 16:57:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=Nm89Dtlt0fhaI6YSKMozjprE7OGPyoiTJKu0/ET0AB4=;
-        b=Wicgqo9QmSKufWEegg0ttEqE4qIsXexcraZWjhQ8voH+mkXuwME1CGrQgQQXzyD5An
-         TJonosL13dNnEQNQqHnx5OkHYBxiV5Wisza5lYIRg31dNo0W87FmYAWU2BiX9GoBkuyd
-         UdYu0yVVVujsDKCGcWRjT5kB2nAvkeycWfBzz/hbNAiY0/d+7F/9XVAfiTiVyR8jDBOJ
-         qiEXT7iFlp5Rm3rCP3gDf4ex4WLHV4xZBHf1SJqS4yVnkr7+nkDDQ2bxV/klCDFo2PMo
-         C9bzx1Bek1y+YWiV/MZp0IIZbs99k68SG+iuY43pYdGy77Ras6TdHqhkS9wD3hnyrGwN
-         P+Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=Nm89Dtlt0fhaI6YSKMozjprE7OGPyoiTJKu0/ET0AB4=;
-        b=ueDC4rDh9uQH39KY1olyXFNEjUBonedabLLR6ZU4Bg2+EBLQfHqTSmQDhNQB5kUxMd
-         Cpd0tQM3Bc8XhC/N61D4X3SFOeba+Bi4F3JxahgwREC3zD6JUSFBc5ZinMYw3k4mG1ox
-         QsgkMbep6MpDyBmjdPkX8Tcl0pEOrodnUYWYBu4p5L5jo65YsaL2TytzNpimeRtvA/hq
-         iBMhaj36DA1JnwaJyhhYGsX4xjXnwITk0SZHtL+vwZaITAO30AH0acB19r9vnU2Mf0C5
-         Su7vbAm93E8z9iM0OBvOwTQSEcqX9vOam3Bvsq7YRz4ZJuwkbppTehp8nkUd1z5llCWX
-         dwdQ==
-X-Gm-Message-State: APjAAAVgcCfz8DGWNylhljXzaOq91uqPMfUCopqiuShlu0cxnyQ+9RnH
-        CrDq0ViN1w2lvXuP5AE7ib79yKaVGoW9
-X-Google-Smtp-Source: APXvYqxsZXXrQmwLxDA+ea/egRRaweSkKU9q9W8NWHnVPPNJxbstH3jz/mlsjRLHdqNj+1MRCWMFiUnw4VD0
-X-Received: by 2002:a63:2a06:: with SMTP id q6mr11582301pgq.92.1576803439359;
- Thu, 19 Dec 2019 16:57:19 -0800 (PST)
-Date:   Thu, 19 Dec 2019 16:57:08 -0800
-Message-Id: <20191220005708.65594-1-ganshun@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-Subject: [PATCH] Reserve EBDA region
-From:   Gan Shun Lim <ganshun@google.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, Gan Shun Lim <ganshun@google.com>
+        Thu, 19 Dec 2019 20:06:11 -0500
+X-Originating-IP: 209.85.217.42
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
+        (Authenticated sender: pshelar@ovn.org)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 23E5320007;
+        Fri, 20 Dec 2019 01:06:07 +0000 (UTC)
+Received: by mail-vs1-f42.google.com with SMTP id v12so5022825vsv.5;
+        Thu, 19 Dec 2019 17:06:07 -0800 (PST)
+X-Gm-Message-State: APjAAAWLf8zDhUE4M3HDckqbNsLjAMB55AeOP5FOPCE/anwOP9VUGkVK
+        MRFBCrVuxg3jSJLTMUeYOOI+NEQsinBE4QBTLgU=
+X-Google-Smtp-Source: APXvYqzdAdOolKAsiA39U4G+O/Wg9/TOx9O5RpmRYAxyWgnx+q7PQmxCFZSk/izM5zYNJt5TXfdAN/d0EOrILv6HigA=
+X-Received: by 2002:a67:d007:: with SMTP id r7mr6912927vsi.93.1576803966767;
+ Thu, 19 Dec 2019 17:06:06 -0800 (PST)
+MIME-Version: 1.0
+References: <20191217155102.46039-1-mcroce@redhat.com> <CAOrHB_BVf8mXuCUehMy0_Sbq=pgfg7Zu1ivPFT8Y9Zatdj1yPw@mail.gmail.com>
+ <CAGnkfhyojPg9ZxrR=NcNdsndxZpdpjgArzO+HHsVWnCKTBg1Tg@mail.gmail.com>
+In-Reply-To: <CAGnkfhyojPg9ZxrR=NcNdsndxZpdpjgArzO+HHsVWnCKTBg1Tg@mail.gmail.com>
+From:   Pravin Shelar <pshelar@ovn.org>
+Date:   Thu, 19 Dec 2019 17:05:55 -0800
+X-Gmail-Original-Message-ID: <CAOrHB_BnE=pZY-ciAA-vWw0fY0T-u-BCCQyhqNZYK+MOC1C5pA@mail.gmail.com>
+Message-ID: <CAOrHB_BnE=pZY-ciAA-vWw0fY0T-u-BCCQyhqNZYK+MOC1C5pA@mail.gmail.com>
+Subject: Re: [PATCH net-next v2] openvswitch: add TTL decrement action
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        ovs dev <dev@openvswitch.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bindiya Kurle <bindiyakurle@gmail.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        Ben Pfaff <blp@ovn.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we boot LinuxBoot-style (as a UEFI binary), sometimes UEFI does
-not correctly mark the EBDA region as reserved. We reserve it in all
-e820 maps to ensure both the Linuxboot kernel and the future kexec-ed
-kernel do not corrupt it. This patch also adds a LinuxBoot config that
-selects the RESERVE_EBDA automatically.
-
-Signed-off-by: Gan Shun Lim <ganshun@google.com>
----
- arch/x86/Kconfig                | 23 ++++++++++++++++++++
- arch/x86/include/asm/e820/api.h |  1 +
- arch/x86/kernel/e820.c          | 38 +++++++++++++++++++++++++++++++++
- arch/x86/kernel/setup.c         |  4 ++++
- 4 files changed, 66 insertions(+)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 5e89499536606..bf3bd0381df70 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2467,6 +2467,29 @@ config MODIFY_LDT_SYSCALL
- 
- source "kernel/livepatch/Kconfig"
- 
-+config LINUXBOOT
-+	bool "LinuxBoot"
-+	select KEXEC_CORE
-+	select KEXEC
-+	select KEXEC_FILE
-+	select EFI
-+	select EFI_STUB
-+	select RESERVE_EBDA
-+	help
-+	  Include code to handle booting directly out of firmware.
-+	  On EFI systems, this means booting with the EFI boot stub
-+	  as an EFI application, embedded in the firmware image. LinuxBoot
-+	  should then kexec the actual runtime operating system, and is not
-+	  meant to keep running.
-+
-+config RESERVE_EBDA
-+	bool "Reserve the EBDA on boot"
-+	help
-+	  The Extended BIOS Data Area can be left unreserved when booting
-+	  LinuxBoot as an EFI application. This unconditionally marks the
-+	  area as reserved for both current and kexec-ed kernels so that
-+	  it's not accidently corrupted on kexec.
-+
- endmenu
- 
- config ARCH_HAS_ADD_PAGES
-diff --git a/arch/x86/include/asm/e820/api.h b/arch/x86/include/asm/e820/api.h
-index e8f58ddd06d97..57c6bc2f78fda 100644
---- a/arch/x86/include/asm/e820/api.h
-+++ b/arch/x86/include/asm/e820/api.h
-@@ -29,6 +29,7 @@ extern u64  e820__memblock_alloc_reserved(u64 size, u64 align);
- extern void e820__memblock_setup(void);
- 
- extern void e820__reserve_setup_data(void);
-+extern void e820__reserve_ebda(void);
- extern void e820__finish_early_params(void);
- extern void e820__reserve_resources(void);
- extern void e820__reserve_resources_late(void);
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index c5399e80c59c5..8401d3fd9b945 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -18,6 +18,7 @@
- #include <linux/memory_hotplug.h>
- 
- #include <asm/e820/api.h>
-+#include <asm/bios_ebda.h>
- #include <asm/setup.h>
- 
- /*
-@@ -523,6 +524,14 @@ static u64 __init e820__range_update_kexec(u64 start, u64 size, enum e820_type o
- 	return __e820__range_update(e820_table_kexec, start, size, old_type, new_type);
- }
- 
-+static u64 __init e820__range_update_firmware(u64 start, u64 size,
-+					      enum e820_type old_type,
-+					      enum e820_type  new_type)
-+{
-+	return __e820__range_update(e820_table_firmware, start, size,
-+				    old_type, new_type);
-+}
-+
- /* Remove a range of memory from the E820 table: */
- u64 __init e820__range_remove(u64 start, u64 size, enum e820_type old_type, bool check_type)
- {
-@@ -1022,6 +1031,35 @@ void __init e820__reserve_setup_data(void)
- 	e820__print_table("reserve setup_data");
- }
- 
-+void __init e820__reserve_ebda(void)
-+{
-+	unsigned long address;
-+	unsigned long start_page, new_length;
-+	size_t length;
-+
-+	address = get_bios_ebda();
-+	if (!address) {
-+		pr_info("BIOS EBDA non-existent.\n");
-+		return;
-+	}
-+	length = get_bios_ebda_length();
-+	start_page = ALIGN_DOWN(address, PAGE_SIZE);
-+	new_length = PAGE_ALIGN(address + length) - start_page;
-+	pr_info("BIOS EBDA structure found at phys 0x%lx, length 0x%x\n",
-+		address, (unsigned int)length);
-+	pr_info("Reserving EBDA Page aligned starting at 0x%lx, length 0x%lx\n",
-+		start_page, new_length);
-+	// Reserve page aligned because memremap doesn't allow us to access
-+	// mixed pages.
-+	e820__range_update(start_page, new_length, E820_TYPE_RAM,
-+			   E820_TYPE_RESERVED);
-+	// reserve only the actual ebda region to pass on.
-+	e820__range_update_kexec(address, length, E820_TYPE_RAM,
-+				 E820_TYPE_RESERVED);
-+	e820__range_update_firmware(address, length, E820_TYPE_RAM,
-+				    E820_TYPE_RESERVED);
-+}
-+
- /*
-  * Called after parse_early_param(), after early parameters (such as mem=)
-  * have been processed, in which case we already have an E820 table filled in
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index cedfe2077a69b..06226d8222d13 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -1036,6 +1036,10 @@ void __init setup_arch(char **cmdline_p)
- 		setup_clear_cpu_cap(X86_FEATURE_APIC);
- 	}
- 
-+#ifdef CONFIG_LINUXBOOT_RESERVE_EBDA
-+	/* update the e820_saved too */
-+	e820__reserve_ebda();
-+#endif
- 	e820__reserve_setup_data();
- 	e820__finish_early_params();
- 
--- 
-2.24.1.735.g03f4e72817-goog
-
+On Thu, Dec 19, 2019 at 8:36 AM Matteo Croce <mcroce@redhat.com> wrote:
+>
+> On Wed, Dec 18, 2019 at 4:06 AM Pravin Shelar <pshelar@ovn.org> wrote:
+> >
+> > On Tue, Dec 17, 2019 at 7:51 AM Matteo Croce <mcroce@redhat.com> wrote:
+> > >
+> > > New action to decrement TTL instead of setting it to a fixed value.
+> > > This action will decrement the TTL and, in case of expired TTL, drop it
+> > > or execute an action passed via a nested attribute.
+> > > The default TTL expired action is to drop the packet.
+> > >
+> > > Supports both IPv4 and IPv6 via the ttl and hop_limit fields, respectively.
+> > >
+> > > Tested with a corresponding change in the userspace:
+> > >
+> > >     # ovs-dpctl dump-flows
+> > >     in_port(2),eth(),eth_type(0x0800), packets:0, bytes:0, used:never, actions:dec_ttl{ttl<=1 action:(drop)},1,1
+> > >     in_port(1),eth(),eth_type(0x0800), packets:0, bytes:0, used:never, actions:dec_ttl{ttl<=1 action:(drop)},1,2
+> > >     in_port(1),eth(),eth_type(0x0806), packets:0, bytes:0, used:never, actions:2
+> > >     in_port(2),eth(),eth_type(0x0806), packets:0, bytes:0, used:never, actions:1
+> > >
+> > >     # ping -c1 192.168.0.2 -t 42
+> > >     IP (tos 0x0, ttl 41, id 61647, offset 0, flags [DF], proto ICMP (1), length 84)
+> > >         192.168.0.1 > 192.168.0.2: ICMP echo request, id 386, seq 1, length 64
+> > >     # ping -c1 192.168.0.2 -t 120
+> > >     IP (tos 0x0, ttl 119, id 62070, offset 0, flags [DF], proto ICMP (1), length 84)
+> > >         192.168.0.1 > 192.168.0.2: ICMP echo request, id 388, seq 1, length 64
+> > >     # ping -c1 192.168.0.2 -t 1
+> > >     #
+> > >
+> > > Co-authored-by: Bindiya Kurle <bindiyakurle@gmail.com>
+> > > Signed-off-by: Bindiya Kurle <bindiyakurle@gmail.com>
+> > > Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> > > ---
+> > >  include/uapi/linux/openvswitch.h |  22 +++++++
+> > >  net/openvswitch/actions.c        |  71 +++++++++++++++++++++
+> > >  net/openvswitch/flow_netlink.c   | 105 +++++++++++++++++++++++++++++++
+> > >  3 files changed, 198 insertions(+)
+> > >
+> > > diff --git a/include/uapi/linux/openvswitch.h b/include/uapi/linux/openvswitch.h
+> > > index a87b44cd5590..b6684bc04883 100644
+> > > --- a/include/uapi/linux/openvswitch.h
+> > > +++ b/include/uapi/linux/openvswitch.h
+> > > @@ -927,6 +927,7 @@ enum ovs_action_attr {
+> > >         OVS_ACTION_ATTR_METER,        /* u32 meter ID. */
+> > >         OVS_ACTION_ATTR_CLONE,        /* Nested OVS_CLONE_ATTR_*.  */
+> > >         OVS_ACTION_ATTR_CHECK_PKT_LEN, /* Nested OVS_CHECK_PKT_LEN_ATTR_*. */
+> > > +       OVS_ACTION_ATTR_DEC_TTL,       /* Nested OVS_DEC_TTL_ATTR_*. */
+> > >
+> > >         __OVS_ACTION_ATTR_MAX,        /* Nothing past this will be accepted
+> > >                                        * from userspace. */
+> > > @@ -939,6 +940,23 @@ enum ovs_action_attr {
+> > >  };
+> > >
+> > >  #define OVS_ACTION_ATTR_MAX (__OVS_ACTION_ATTR_MAX - 1)
+> > > +enum ovs_dec_ttl_attr {
+> > > +       OVS_DEC_TTL_ATTR_UNSPEC,
+> > > +       OVS_DEC_TTL_ATTR_ACTION_TYPE,    /* Action Type u32 */
+> > > +       OVS_DEC_TTL_ATTR_ACTION,         /* nested action */
+> > > +       __OVS_DEC_TTL_ATTR_MAX,
+> > > +#ifdef __KERNEL__
+> > > +       OVS_DEC_TTL_ATTR_ARG          /* struct sample_arg  */
+> > > +#endif
+> > > +};
+> > > +
+> >
+> > I do not see need for type or OVS_DEC_TTL_ACTION_DROP, if there are no
+> > nested action the datapath can drop the packet.
+> >
+> > > +#ifdef __KERNEL__
+> > > +struct dec_ttl_arg {
+> > > +       u32 action_type;            /* dec_ttl action type.*/
+> > > +};
+> > > +#endif
+> > > +
+> > > +#define OVS_DEC_TTL_ATTR_MAX (__OVS_DEC_TTL_ATTR_MAX - 1)
+> > >
+> > >  /* Meters. */
+> > >  #define OVS_METER_FAMILY  "ovs_meter"
+> > > @@ -1009,6 +1027,10 @@ enum ovs_ct_limit_attr {
+> > >         __OVS_CT_LIMIT_ATTR_MAX
+> > >  };
+> > >
+> > > +enum ovs_dec_ttl_action {            /*Actions supported by dec_ttl */
+> > > +       OVS_DEC_TTL_ACTION_DROP,
+> > > +       OVS_DEC_TTL_ACTION_USER_SPACE
+> > > +};
+> > >  #define OVS_CT_LIMIT_ATTR_MAX (__OVS_CT_LIMIT_ATTR_MAX - 1)
+> > >
+> > >  #define OVS_ZONE_LIMIT_DEFAULT_ZONE -1
+> > > diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
+> > > index 4c8395462303..5329668732b1 100644
+> > > --- a/net/openvswitch/actions.c
+> > > +++ b/net/openvswitch/actions.c
+> > > @@ -960,6 +960,31 @@ static int output_userspace(struct datapath *dp, struct sk_buff *skb,
+> > >         return ovs_dp_upcall(dp, skb, key, &upcall, cutlen);
+> > >  }
+> > >
+> > > +static int dec_ttl(struct datapath *dp, struct sk_buff *skb,
+> > > +                  struct sw_flow_key *fk, const struct nlattr *attr, bool last)
+> > > +{
+> > > +       struct nlattr *actions;
+> > > +       struct nlattr *dec_ttl_arg;
+> > > +       int rem = nla_len(attr);
+> > > +       const struct dec_ttl_arg *arg;
+> > > +
+> > > +       /* The first action is always OVS_DEC_TTL_ATTR_ARG. */
+> > > +       dec_ttl_arg = nla_data(attr);
+> > > +       arg = nla_data(dec_ttl_arg);
+> > > +       actions = nla_next(dec_ttl_arg, &rem);
+> > > +
+> > > +       switch (arg->action_type) {
+> > > +       case OVS_DEC_TTL_ACTION_DROP:
+> > > +               consume_skb(skb);
+> > > +               break;
+> > > +
+> > > +       case OVS_DEC_TTL_ACTION_USER_SPACE:
+> > > +               return clone_execute(dp, skb, fk, 0, actions, rem, last, false);
+> > > +       }
+> > > +
+> > > +       return 0;
+> > > +}
+> > > +
+> > >  /* When 'last' is true, sample() should always consume the 'skb'.
+> > >   * Otherwise, sample() should keep 'skb' intact regardless what
+> > >   * actions are executed within sample().
+> > > @@ -1176,6 +1201,44 @@ static int execute_check_pkt_len(struct datapath *dp, struct sk_buff *skb,
+> > >                              nla_len(actions), last, clone_flow_key);
+> > >  }
+> > >
+> > > +static int execute_dec_ttl(struct sk_buff *skb, struct sw_flow_key *key)
+> > > +{
+> > > +       int err;
+> > > +
+> > > +       if (skb->protocol == htons(ETH_P_IPV6)) {
+> > > +               struct ipv6hdr *nh = ipv6_hdr(skb);
+> > > +
+> > > +               err = skb_ensure_writable(skb, skb_network_offset(skb) +
+> > > +                                         sizeof(*nh));
+> > There is no need to initialize 'nh', just use 'struct ipv6hdr' to get the size.
+>
+> But I have to set it later to have nh->hop_limit.
+> Do you mean to assign it before the skb_ensure_writable check?
+> What differs sizeof(*nh) and sizeof(struct ipv6hdr)? The former will
+> work also after a refactor.
+>
+I meant you can initialize it after skb_ensure_writable() call to
+avoid refreshing the pointer after this call.
