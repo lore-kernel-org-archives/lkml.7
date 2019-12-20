@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DD2C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F04C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D89F2468E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96D8324685
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852227;
-	bh=pR3v+Fh3eBiXXgY0dmnmsCMTsRR48ZYQyo4tV0b7a3M=;
+	s=default; t=1576852230;
+	bh=JriKYppCGOwWvDy5Lii1aazEjyX/STfg7F/GzmWaLU0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ti/Qs8aAmsXz4nE7fx4/R+swHGjLC99lDjdPlwoi9ZlyxYxni0CrK4Ok6NP3GG1Qw
-	 ujw+W/D8Kbp9XNBzHi0q/nXsExbAFT5kZKEMAzm9DbwHcyBJOnsdp8jZdLkMilQJA+
-	 hqbVan9c8wAtV4tGXB5So9IDNxsxsNNGClIGTHVA=
+	b=iSPIPmIPHEf0ib032uegpUb4ndUa/BwpkqORrKe2tcdecX9OejuQw0KFAMh+Dng6/
+	 fi/1kAgPx4ZNEbIG83kpNj53F2Wiz3LIw442C+6z2cdqBUxowAP9miGYB7zHlPVSSq
+	 l5b6x1Z+BABBAtuo1teskugtw55wHTnGMvI3Cm2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727690AbfLTOa0 (ORCPT
+        id S1727708AbfLTOa3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:30:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33938 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:30:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727644AbfLTOaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:30:22 -0500
+        id S1727686AbfLTOa0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:30:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17BAB2468A;
-        Fri, 20 Dec 2019 14:30:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0113124685;
+        Fri, 20 Dec 2019 14:30:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852222;
-        bh=pR3v+Fh3eBiXXgY0dmnmsCMTsRR48ZYQyo4tV0b7a3M=;
+        s=default; t=1576852225;
+        bh=JriKYppCGOwWvDy5Lii1aazEjyX/STfg7F/GzmWaLU0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n1Hdnpvy9Pi7xGYcT6yanm0DaOszTLf1yoJj8Pyry/P6NhlswKyl7r+6OpcMnAcUY
-         T9Ex2/F+dzcwmGEZMPrTK/llduVr1voabpVMDAPE6ICVQrS9jk5gp0U1ldWZoa8k40
-         tO6yfMOpAElbHfmBDx7YmsOprPnlKsNUN2YcDaGA=
+        b=sboz5UiLlz/B91KL/ZlW2y+a6UOb9dJN+7QWjcDTwQB8M7gzNXTQJqNQdbq8kcVaU
+         9Q/VPZ2c+rsa/QBT1R6GuRSyS3e6D7eSJBLdSt6eqAih9YrOClHNLosdoFQG11j9Li
+         QfHm9sS+iEKpxOkJT+ABsI/C1dT9bYh2xWLRxh5E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 20/52] afs: Fix SELinux setting security label on /afs
-Date:   Fri, 20 Dec 2019 09:29:22 -0500
-Message-Id: <20191220142954.9500-20-sashal@kernel.org>
+Cc:     Bo Wu <wubo40@huawei.com>, Zhiqiang Liu <liuzhiqiang26@huawei.com>,
+        James Smart <james.smart@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 23/52] scsi: lpfc: Fix memory leak on lpfc_bsg_write_ebuf_set func
+Date:   Fri, 20 Dec 2019 09:29:25 -0500
+Message-Id: <20191220142954.9500-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
 References: <20191220142954.9500-1-sashal@kernel.org>
@@ -60,40 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Bo Wu <wubo40@huawei.com>
 
-[ Upstream commit bcbccaf2edcf1b76f73f890e968babef446151a4 ]
+[ Upstream commit 9a1b0b9a6dab452fb0e39fe96880c4faf3878369 ]
 
-Make the AFS dynamic root superblock R/W so that SELinux can set the
-security label on it.  Without this, upgrades to, say, the Fedora
-filesystem-afs RPM fail if afs is mounted on it because the SELinux label
-can't be (re-)applied.
+When phba->mbox_ext_buf_ctx.seqNum != phba->mbox_ext_buf_ctx.numBuf,
+dd_data should be freed before return SLI_CONFIG_HANDLED.
 
-It might be better to make it possible to bypass the R/O check for LSM
-label application through setxattr.
+When lpfc_sli_issue_mbox func return fails, pmboxq should be also freed in
+job_error tag.
 
-Fixes: 4d673da14533 ("afs: Support the AFS dynamic root")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
-cc: selinux@vger.kernel.org
-cc: linux-security-module@vger.kernel.org
+Link: https://lore.kernel.org/r/EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915E7A966@DGGEML525-MBS.china.huawei.com
+Signed-off-by: Bo Wu <wubo40@huawei.com>
+Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Reviewed-by: James Smart <james.smart@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/super.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/scsi/lpfc/lpfc_bsg.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/fs/afs/super.c b/fs/afs/super.c
-index 488641b1a418d..d9a6036b70b9f 100644
---- a/fs/afs/super.c
-+++ b/fs/afs/super.c
-@@ -448,7 +448,6 @@ static int afs_fill_super(struct super_block *sb, struct afs_fs_context *ctx)
- 	/* allocate the root inode and dentry */
- 	if (as->dyn_root) {
- 		inode = afs_iget_pseudo_dir(sb, true);
--		sb->s_flags	|= SB_RDONLY;
- 	} else {
- 		sprintf(sb->s_id, "%llu", as->volume->vid);
- 		afs_activate_volume(as->volume);
+diff --git a/drivers/scsi/lpfc/lpfc_bsg.c b/drivers/scsi/lpfc/lpfc_bsg.c
+index 39a736b887b16..6c2b03415a2cc 100644
+--- a/drivers/scsi/lpfc/lpfc_bsg.c
++++ b/drivers/scsi/lpfc/lpfc_bsg.c
+@@ -4489,12 +4489,6 @@ lpfc_bsg_write_ebuf_set(struct lpfc_hba *phba, struct bsg_job *job,
+ 	phba->mbox_ext_buf_ctx.seqNum++;
+ 	nemb_tp = phba->mbox_ext_buf_ctx.nembType;
+ 
+-	dd_data = kmalloc(sizeof(struct bsg_job_data), GFP_KERNEL);
+-	if (!dd_data) {
+-		rc = -ENOMEM;
+-		goto job_error;
+-	}
+-
+ 	pbuf = (uint8_t *)dmabuf->virt;
+ 	size = job->request_payload.payload_len;
+ 	sg_copy_to_buffer(job->request_payload.sg_list,
+@@ -4531,6 +4525,13 @@ lpfc_bsg_write_ebuf_set(struct lpfc_hba *phba, struct bsg_job *job,
+ 				"2968 SLI_CONFIG ext-buffer wr all %d "
+ 				"ebuffers received\n",
+ 				phba->mbox_ext_buf_ctx.numBuf);
++
++		dd_data = kmalloc(sizeof(struct bsg_job_data), GFP_KERNEL);
++		if (!dd_data) {
++			rc = -ENOMEM;
++			goto job_error;
++		}
++
+ 		/* mailbox command structure for base driver */
+ 		pmboxq = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
+ 		if (!pmboxq) {
+@@ -4579,6 +4580,8 @@ lpfc_bsg_write_ebuf_set(struct lpfc_hba *phba, struct bsg_job *job,
+ 	return SLI_CONFIG_HANDLED;
+ 
+ job_error:
++	if (pmboxq)
++		mempool_free(pmboxq, phba->mbox_mem_pool);
+ 	lpfc_bsg_dma_page_free(phba, dmabuf);
+ 	kfree(dd_data);
+ 
 -- 
 2.20.1
 
