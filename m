@@ -2,70 +2,238 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDF7C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5494EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E42622146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 288DF24679
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:37:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t+U8cH9i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbfLTJhQ (ORCPT
+        id S1727419AbfLTJhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 04:37:16 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7723 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727269AbfLTJhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 04:37:14 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7471C67DC73F0406B35C;
-        Fri, 20 Dec 2019 17:37:11 +0800 (CST)
-Received: from euler.huawei.com (10.175.104.193) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 20 Dec 2019 17:37:02 +0800
-From:   Chen Wandun <chenwandun@huawei.com>
-To:     <darrick.wong@oracle.com>, <linux-xfs@vger.kernel.org>,
-        <bfoster@redhat.com>, <dchinner@redhat.com>, <preichl@redhat.com>,
-        <sandeen@sandeen.net>, <linux-kernel@vger.kernel.org>
-CC:     <chenwandun@huawei.com>
-Subject: [PATCH next] xfs: Make the symbol 'xfs_rtalloc_log_count' static
-Date:   Fri, 20 Dec 2019 17:51:57 +0800
-Message-ID: <20191220095157.42619-1-chenwandun@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 20 Dec 2019 04:37:54 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:43966 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727192AbfLTJhx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 04:37:53 -0500
+Received: by mail-ed1-f66.google.com with SMTP id dc19so7610111edb.10
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 01:37:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zOD+/rCtXUEpuvPO7n4te3y6wG+M5leYuzLiofTN8Co=;
+        b=t+U8cH9iblYlEGuw22f4vXJpGkea/lT7i3E2K2XQEZau0RsTPkegG2RVKR0ezm7+Tm
+         ALcj3R67PKzGgWoo3rGBmDTLEaH5kfS/K03dsnjYbu1xBOtEc2Jb0C+4fx0+5wpXTv4M
+         4P1F/kmz0XEgOKzKDQkn1PS5EieXgFi1XJqBxE/8VyY0JiTfxiMUn3+kFJHGcLEnPECN
+         oIMpVIK+Sd2HWnS5Btxm+uwJ26gms579fUYFvtsN7F04EvAt4UUyK+stDBfJJQRpdl8F
+         Iilxvxw2hkQpvrDbG/kbmEs3q5N5r8JpnNHmaEHp6YOmwsm+fra7IoJxHjkY/u+rU2u+
+         SG4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zOD+/rCtXUEpuvPO7n4te3y6wG+M5leYuzLiofTN8Co=;
+        b=Y/6WCfY9CdObrI0bu7i7G5Ef3RDkbx3WRJ5DrSMBQcPtcoPdj+qlhhiU27GybrPDou
+         dwzXhmTnDm4TLRr5eiR1aKxx+YsAE1bbH5+Alh9mVgP7VLmiNCgHBuAD1WsurJ7PQVtK
+         qTfuw2o9iF3dtsp1lQp+xSXuDW9xRdDO9RDpdyCyAM1XVpe4hOx8WFRvTkKgQh5ti6gd
+         a7RVoNk157kjLFlTnZvWJTYN3v66eYcZ38NNDDNRSUPHvjGDgKE2RCCi7kmgEVmH3ge/
+         LI4QMC7pQg2hVcu7J/CuLKC7hmqPHFLVaf9GJ+e6CXJHiWwVa8k5inusI58EB4+laZUd
+         2dSg==
+X-Gm-Message-State: APjAAAWkP2+HTVIWk5aYsA/2JU4BbNbPF02F5eVryVqy4QXydUxRSaJY
+        Xa/OmMYxQ7OC3bwdw4MaYr+Ddw==
+X-Google-Smtp-Source: APXvYqy8GUCmwTn8lA5Sd00+zACmd+ZtWI/WlBRNFa+x6wCrN776jsTrZbhxncG017eEqPw69i4tug==
+X-Received: by 2002:aa7:d3d0:: with SMTP id o16mr14913746edr.102.1576834671481;
+        Fri, 20 Dec 2019 01:37:51 -0800 (PST)
+Received: from [192.168.27.209] ([37.157.136.193])
+        by smtp.googlemail.com with ESMTPSA id m5sm855526ede.10.2019.12.20.01.37.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Dec 2019 01:37:50 -0800 (PST)
+Subject: Re: [PATCH 2/3] dt-bindings: media: venus: Add sc7180 DT schema
+To:     Dikshita Agarwal <dikshita@codeaurora.org>,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, vgarodia@codeaurora.org
+References: <1576828760-13176-1-git-send-email-dikshita@codeaurora.org>
+ <1576828760-13176-3-git-send-email-dikshita@codeaurora.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <0b38ad39-4601-2b1b-2710-63796ed0c730@linaro.org>
+Date:   Fri, 20 Dec 2019 11:37:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.104.193]
-X-CFilter-Loop: Reflected
+In-Reply-To: <1576828760-13176-3-git-send-email-dikshita@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following sparse warning:
+Hi Dikshita,
 
-fs/xfs/libxfs/xfs_trans_resv.c:206:1: warning: symbol 'xfs_rtalloc_log_count' was not declared. Should it be static?
+Thanks for the patch!
 
-Fixes: b1de6fc7520f ("xfs: fix log reservation overflows when allocating large rt extents")
-Signed-off-by: Chen Wandun <chenwandun@huawei.com>
----
- fs/xfs/libxfs/xfs_trans_resv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Please see Rob's comments about DT schema for msm8916. You have to
+address them too.
 
-diff --git a/fs/xfs/libxfs/xfs_trans_resv.c b/fs/xfs/libxfs/xfs_trans_resv.c
-index 824073a839ac..7a9c04920505 100644
---- a/fs/xfs/libxfs/xfs_trans_resv.c
-+++ b/fs/xfs/libxfs/xfs_trans_resv.c
-@@ -202,7 +202,7 @@ xfs_calc_inode_chunk_res(
-  * blocks as needed to mark inuse MAXEXTLEN blocks' worth of realtime extents,
-  * as well as the realtime summary block.
-  */
--unsigned int
-+static unsigned int
- xfs_rtalloc_log_count(
- 	struct xfs_mount	*mp,
- 	unsigned int		num_ops)
+On 12/20/19 9:59 AM, Dikshita Agarwal wrote:
+> Add new qcom,sc7180-venus DT binding schema.
+> 
+> Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
+> ---
+>  .../bindings/media/qcom,venus-sc7180.yaml          | 131 +++++++++++++++++++++
+>  1 file changed, 131 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/qcom,venus-sc7180.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/qcom,venus-sc7180.yaml b/Documentation/devicetree/bindings/media/qcom,venus-sc7180.yaml
+> new file mode 100644
+> index 0000000..a609739
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/qcom,venus-sc7180.yaml
+> @@ -0,0 +1,131 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/media/qcom,venus-sc7180.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm Venus video encode and decode accelerators
+> +
+> +maintainers:
+> +  - Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> +
+> +description: |
+> +  The Venus IP is a video encode and decode accelerator present
+> +  on Qualcomm platforms
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,sc7180-venus
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 2
+> +
+> +  power-domain-names:
+> +    maxItems: 2
+> +    items:
+> +      - const: venus
+> +      - const: vcodec0
+> +
+> +  clocks:
+> +    maxItems: 5
+> +
+> +  clock-names:
+> +    maxItems: 5
+> +    items:
+> +      - const: core
+> +      - const: iface
+> +      - const: bus
+> +      - const: vcodec0_core
+> +      - const: vcodec0_bus
+> +
+> +  iommus:
+> +    minItems: 1
+> +    maxItems: 20
+> +
+> +  memory-region:
+> +    maxItems: 1
+> +
+> +  video-core0:
+> +    type: object
+> +
+> +    properties:
+> +      compatible:
+> +        const: "venus-decoder"
+> +
+> +    required:
+> +      - compatible
+> +
+> +  video-core1:
+> +    type: object
+> +
+> +    properties:
+> +      compatible:
+> +        const: "venus-encoder"
+> +
+> +    required:
+> +      - compatible
+> +
+> +  video-firmware:
+> +    type: object
+> +
+> +    description: |
+> +      Firmware subnode is needed when the platform does not
+> +      have TrustZone.
+> +
+> +    properties:
+> +      iommus:
+> +        minItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - power-domains
+> +  - power-domain-names
+> +  - clocks
+> +  - clock-names
+> +  - iommus
+> +  - memory-region
+> +  - video-core0
+> +  - video-core1
+> +
+> +examples:
+> +  - |
+> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +        #include <dt-bindings/clock/qcom,videocc-sc7180.h>
+> +
+> +		venus: video-codec@aa00000 {
+> +			compatible = "qcom,sc7180-venus";
+> +			reg = <0 0x0aa00000 0 0xff000>;
+> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> +			power-domains = <&videocc VENUS_GDSC>,
+> +					<&videocc VCODEC0_GDSC>;
+> +
+> +			power-domain-names = "venus", "vcodec0";
+> +			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+> +				<&videocc VIDEO_CC_VENUS_AHB_CLK>,
+> +				<&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
+> +				<&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
+> +				<&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
+> +			clock-names = "core", "iface", "bus",
+> +					"vcodec0_core", "vcodec0_bus";
+> +			iommus = <&apps_smmu 0x0C00 0x60>;
+> +			memory-region = <&venus_mem>;
+> +			video-core0 {
+> +					compatible = "venus-decoder";
+> +			};
+> +			video-core1 {
+> +					compatible = "venus-encoder";
+> +			};
+> +			video-firmware {
+> +					iommus = <&apps_smmu 0x0C42 0x0>;
+> +			};
+> +		};
+> 
+
 -- 
-2.17.1
-
+regards,
+Stan
