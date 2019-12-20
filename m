@@ -2,119 +2,112 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51029C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA2AC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 276BC24682
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:23:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576837401;
-	bh=II0NRQVe0K3k6bgLA69zZCY0PayThzMfZPnWcTRyZcg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F11pdHtmL3Ox7+vxpaDgAYY5MAc3v4kDK6nhKFnSd8CDNWBqKSsZVb3hK4btgXUQT
-	 RPdpSp3mpg1KQhvAt96XgVtGXEG6xrqAMI2c4YGaaRsqmkOG1RHCbsJ2XDPB1LXeuO
-	 NKSbtosDLpYb0+tBxC0HFTysBZ2g93J7ZBCk26DE=
+	by mail.kernel.org (Postfix) with ESMTP id 7E10F24683
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:23:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jirLvM+4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfLTKXU (ORCPT
+        id S1727390AbfLTKX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 05:23:20 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35766 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727129AbfLTKXT (ORCPT
+        Fri, 20 Dec 2019 05:23:26 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35043 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727167AbfLTKXT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Dec 2019 05:23:19 -0500
-Received: by mail-lf1-f65.google.com with SMTP id 15so6644138lfr.2;
-        Fri, 20 Dec 2019 02:23:18 -0800 (PST)
+Received: by mail-wm1-f65.google.com with SMTP id p17so8662679wmb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 02:23:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=uQdPlsn4yWeKR+P38HI2aR4JDYgkGH7cKD0IIfa/6Fc=;
+        b=jirLvM+45Mm+kCnkPb1PBEZ3dBor6q81/EXh8ttVUS/A0vTzgIYSZDzjfmGjFuXFIe
+         gsD5C1kowEtYt3aXLevBGa4Q2IHwZhgA64ewav4/isbWiLjWs5FDXszXMK9IQV2qT0CO
+         7Vg/i8/dB05ZMmnhB+9ob27DTES72p3VhKK7J4bVtMGlTRQ8uSoLGZ1N3LlBpdZ1tncP
+         Pm340rTErQZ0m5Sjljtl5FnB7pj1tLBsJ6oVKYptRgcIiSdh147tGidGZRmkwQu6hC8n
+         MWY6QBuj26wnMhKQxpgeZUS9RnrwwQ44LBx2BVZREVzL+U1B1vgCDINbMRHv7JDWhZkD
+         QNJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=fVDETBozZ4/qDsszN1mn7+6jrkiK3wgtTef6sQxNVJ4=;
-        b=i0dM/oQQTwXG3nUbFKGEtfXQeZt2hu1rpqn3iuzNZE0oWnPpMXGHPO9ZNW6NVRvz6O
-         8vhMIkXS3sFrHLWSriDBL0gCr3gG77Q+KLFKcqVr+QNWRwkhPk3oq+tKRUcDNljJzO1y
-         LhtufvDXsNYOh2GBGmDYQ+IzEYwIyU+UmvpqrbnpI/zkb7azz8egtrbVJjVSk7zopvTp
-         gLin2lwoLSZmFH82ee0zTUjcZFY0K9Zo9hUGrVT/Ot24q4ZM/rqE92qiAo+A8BYzvxLy
-         YudbKxDQrs6+YW0lqvMeG1Lig5R6DsHpOZxipt0Mf+teMcXMd69oKqqWwMhgGTvCAuwx
-         1HfA==
-X-Gm-Message-State: APjAAAVlrf36ochj1UolRwFNfU2JrsJWOyZNpecZ2wmcdlHDaEjgENZL
-        hOzGdsJpCN00UXLnytUPVsU=
-X-Google-Smtp-Source: APXvYqxnhc7AhHRdkgCq7FXSfcejTVt7KSCTYkqz/ngaR2fEsJGHcFdA3ZXx4mY+iUrPwzq5NkOmrQ==
-X-Received: by 2002:a19:c205:: with SMTP id l5mr8258003lfc.159.1576837397388;
+        bh=uQdPlsn4yWeKR+P38HI2aR4JDYgkGH7cKD0IIfa/6Fc=;
+        b=GMoDs42Kp4fkXeKU/WNevi1RHh8qLQEMDKNsigRcUKXOzgmnxJAFwI5UrBVYQ8NhJv
+         rw/U2cOBN4jznEsTlTVZa3VWdcNWp0sFwbQp1+7Q4f8tLLQWs2DdHrZlR50KYDxTYw3c
+         Po39jvUmivpDBhzZWg471fXGGvkiPOteD8/bmnIBhLwCfZpSRPhiPtIK9xddrUi2I3gf
+         B6YxBACecjqq+3Fv5sCWzQQHF9ZI3U4jobGCCARAcfNf4tR3vg3NmDXOurfpzkRPXj5T
+         Rbwf1f12JBx84/REwIJgSNWo7pFxsM10B0eNH364hCwTXsPfO7u0yNR77vmdCwDqxD/i
+         Lm4A==
+X-Gm-Message-State: APjAAAXx+w7ceAqcwemr14UvjH0TZApG8qDJyNKz95tLsOK+d+bpSRru
+        NA9E5UQ5UWjwoOFddQHd9oZ5HA==
+X-Google-Smtp-Source: APXvYqxj5tK9m0x1h+AojOEUs+hkHY7x0TGAJPxJY/PS/z7eZ+XWW6Dp1nUpWbfNd9XwnsII9Tlhcg==
+X-Received: by 2002:a7b:cf2d:: with SMTP id m13mr15511250wmg.163.1576837397900;
         Fri, 20 Dec 2019 02:23:17 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id h19sm4044923ljk.44.2019.12.20.02.23.16
+Received: from apalos.home (ppp-94-64-118-170.home.otenet.gr. [94.64.118.170])
+        by smtp.gmail.com with ESMTPSA id q11sm9523141wrp.24.2019.12.20.02.23.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 02:23:16 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1iiFRD-00018f-PN; Fri, 20 Dec 2019 11:23:15 +0100
-Date:   Fri, 20 Dec 2019 11:23:15 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Johan Hovold <johan@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH] ALSA: usb-audio: fix set_format altsetting sanity check
-Message-ID: <20191220102315.GU22665@localhost>
-References: <20191220093134.1248-1-johan@kernel.org>
- <s5hbls35nxx.wl-tiwai@suse.de>
+        Fri, 20 Dec 2019 02:23:17 -0800 (PST)
+Date:   Fri, 20 Dec 2019 12:23:14 +0200
+From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     netdev@vger.kernel.org, lirongqing@baidu.com,
+        linyunsheng@huawei.com, Saeed Mahameed <saeedm@mellanox.com>,
+        mhocko@kernel.org, peterz@infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [net-next v5 PATCH] page_pool: handle page recycle for
+ NUMA_NO_NODE condition
+Message-ID: <20191220102314.GB14269@apalos.home>
+References: <20191218084437.6db92d32@carbon>
+ <157676523108.200893.4571988797174399927.stgit@firesoul>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <s5hbls35nxx.wl-tiwai@suse.de>
+In-Reply-To: <157676523108.200893.4571988797174399927.stgit@firesoul>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 10:46:50AM +0100, Takashi Iwai wrote:
-> On Fri, 20 Dec 2019 10:31:34 +0100,
-> Johan Hovold wrote:
-> > 
-> > Make sure to check the return value of usb_altnum_to_altsetting() to
-> > avoid dereferencing a NULL pointer when the requested alternate settings
-> > is missing.
-> > 
-> > The format altsetting number may come from a quirk table and there does
-> > not seem to be any other validation of it (the corresponding index is
-> > checked however).
-> > 
-> > Fixes: b099b9693d23 ("ALSA: usb-audio: Avoid superfluous usb_set_interface() calls")
-> > Cc: stable <stable@vger.kernel.org>     # 4.18
-> > Signed-off-by: Johan Hovold <johan@kernel.org>
-> > ---
-> >  sound/usb/pcm.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/sound/usb/pcm.c b/sound/usb/pcm.c
-> > index 9c8930bb00c8..73dd9d21bb42 100644
-> > --- a/sound/usb/pcm.c
-> > +++ b/sound/usb/pcm.c
-> > @@ -506,9 +506,9 @@ static int set_format(struct snd_usb_substream *subs, struct audioformat *fmt)
-> >  	if (WARN_ON(!iface))
-> >  		return -EINVAL;
-> >  	alts = usb_altnum_to_altsetting(iface, fmt->altsetting);
-> > -	altsd = get_iface_desc(alts);
-> > -	if (WARN_ON(altsd->bAlternateSetting != fmt->altsetting))
-> > +	if (WARN_ON(!alts))
-> >  		return -EINVAL;
-> 
-> Do we need WARN_ON() here?  If this may hit on syzbot, it'll stop at
-> this point because of panic_on_warn.
+Hi Jesper, 
 
-Yeah, I considered that too and decided to leave it in. Just like for
-the WARN_ON(iface), those numbers should be verified at probe.
+I like the overall approach since this moves the check out of  the hotpath. 
+@Saeed, since i got no hardware to test this on, would it be possible to check
+that it still works fine for mlx5?
 
-I tried tracking where fmt->altsetting comes from, and it seems like
-a sanity check needs to be added at least to create_fixed_stream_quirk()
-where, for example, fmt->iface, fmt->altset_idx and the number of
-endpoints are verified.
+[...]
+> +	struct ptr_ring *r = &pool->ring;
+> +	struct page *page;
+> +	int pref_nid; /* preferred NUMA node */
+> +
+> +	/* Quicker fallback, avoid locks when ring is empty */
+> +	if (__ptr_ring_empty(r))
+> +		return NULL;
+> +
+> +	/* Softirq guarantee CPU and thus NUMA node is stable. This,
+> +	 * assumes CPU refilling driver RX-ring will also run RX-NAPI.
+> +	 */
+> +	pref_nid = (pool->p.nid == NUMA_NO_NODE) ? numa_mem_id() : pool->p.nid;
 
-If there are other paths that can end up setting these fields to invalid
-values, we want that WARN_ON() in there so we can fix those.
+One of the use cases for this is that during the allocation we are not
+guaranteed to pick up the correct NUMA node. 
+This will get automatically fixed once the driver starts recycling packets. 
 
-Johan
+I don't feel strongly about this, since i don't usually like hiding value
+changes from the user but, would it make sense to move this into 
+__page_pool_alloc_pages_slow() and change the pool->p.nid?
+
+Since alloc_pages_node() will replace NUMA_NO_NODE with numa_mem_id()
+regardless, why not store the actual node in our page pool information?
+You can then skip this and check pool->p.nid == numa_mem_id(), regardless of
+what's configured. 
+
+Thanks
+/Ilias
