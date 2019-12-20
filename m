@@ -2,110 +2,108 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A22BAC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDD6C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD772072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D002146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:05:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Dg9+0JwC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K7kTLLVm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfLTXAo (ORCPT
+        id S1726634AbfLTXF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 18:00:44 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:33562 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbfLTXAo (ORCPT
+        Fri, 20 Dec 2019 18:05:27 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51562 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726129AbfLTXF1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 18:00:44 -0500
-Received: by mail-il1-f194.google.com with SMTP id v15so9334567iln.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 15:00:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=kYpUFg+g66OYb+0+NDvmD3uzMBedPiin3i8BKFrTBZw=;
-        b=Dg9+0JwC0nl7+te1/6kqnsS0yw2ym/KBliialLPLp3KLENQXrsQ4hs3MFdyjzlKqld
-         vpzcmhBHAeVo3JiNOTOyT/5OIaLPkflMLAg4itd7iEy48e5e8vjRSNXw2KmuWLpDVen5
-         u8m+o6D6Ce1KBC1GYrdSC66voxU6MWkOuVGk3PbdmodUuWlMmW70Htw1XT4hiqGRAf8b
-         46RX3autdlYKZy4ZamcrjI7G2dJDRScbr1MSx5z5aPoC6bVuo9qd4iyRCZ2dZBOzr+yc
-         9LAp5wSkwuGE01uyjAyCBKszam+XUgI6Y0SZMSFT0rVe0zYxU1Y7vvTDPbhdDcA/cTxQ
-         KV5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=kYpUFg+g66OYb+0+NDvmD3uzMBedPiin3i8BKFrTBZw=;
-        b=eFjqQXPHlQg9FFZpMp6RPb99MaB73VZky+IqaiiaxFXY4URA8VVZ/dhkCRciSIBVvL
-         bJCYXsB9L9dwoCsbqCIQ3NskgsNsKCa//RIoDxh/HxjJpJJpy1L8579HeQE4NCeJGr/c
-         Wc94cmWMQZWPouE0ar9R0P15fLvLcCKhqVJQrjDTDCs+XYb3k3lfKC8S8xhO8qXHpANi
-         W+dNTRZW8w0aU0R7hZ77z/HQ+YDTEcnDaLNAgrB8NnhKe02ogV9XAGEBbCcwc6cvWJvW
-         Ngg82Xj+dRZcFPHfmNjgOOKzSdQFNkfRwJGpu6Gqh/wZDWFHUogOi+Es/sBPRxKhrSE6
-         c2eg==
-X-Gm-Message-State: APjAAAWYFjbOPH96pDODSMx3VOL41TZkxDig/bUuWCBjRuo8NNCOF3IX
-        3yu8I4S0xSczp2lrRsPiKcclWA==
-X-Google-Smtp-Source: APXvYqwHDVsOJy6xq6j6CKHzVDaMD3x7chhr2BoQe/hKpFFOE+Zlw2OuSvViO0uW1zFxhD1O/Go46w==
-X-Received: by 2002:a92:d708:: with SMTP id m8mr14116422iln.244.1576882843543;
-        Fri, 20 Dec 2019 15:00:43 -0800 (PST)
-Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id h23sm5524854ilf.57.2019.12.20.15.00.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 15:00:43 -0800 (PST)
-Date:   Fri, 20 Dec 2019 15:00:41 -0800 (PST)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Olof Johansson <olof@lixom.net>
-cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] riscv: export flush_icache_all to modules
-In-Reply-To: <CAOesGMg_VySkckuTfeMWkfcQ6fUBokAQbCGXP9emz9WvtX4fKQ@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.9999.1912201500230.57866@viisi.sifive.com>
-References: <20191217040704.91995-1-olof@lixom.net> <alpine.DEB.2.21.9999.1912200302290.3767@viisi.sifive.com> <CAOesGMg_VySkckuTfeMWkfcQ6fUBokAQbCGXP9emz9WvtX4fKQ@mail.gmail.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Fri, 20 Dec 2019 18:05:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576883125;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=qL/Mm3oMnQqw/MILDz90PSbUAcYZcAXsXZfzb5qXcZE=;
+        b=K7kTLLVmo+QRUXgSZmhS20tCe6D2RGzPTbqEmSdE/RXZgjI/MfhJwM9q59w3ScUs7nvGah
+        GTPz6oECRA0lfVk/eqT+E1/79/+7vcQGTVI1JO25YlN1yBoUvMwbOPNOOqYJM2GuADHb0g
+        jXp4K4gKQNsHjalUSXXyHHdRaEtdkS8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-256-oFn70SybO2SwwV1GYYDK-Q-1; Fri, 20 Dec 2019 18:05:22 -0500
+X-MC-Unique: oFn70SybO2SwwV1GYYDK-Q-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5FCFA107ACC4;
+        Fri, 20 Dec 2019 23:05:21 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-52.rdu2.redhat.com [10.10.120.52])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 918A61001902;
+        Fri, 20 Dec 2019 23:05:20 +0000 (UTC)
+Subject: [PATCH net 0/3] rxrpc: Fixes
+From:   David Howells <dhowells@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 20 Dec 2019 23:05:19 +0000
+Message-ID: <157688311975.18694.10870615714269857980.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Dec 2019, Olof Johansson wrote:
 
-> On Fri, Dec 20, 2019 at 3:05 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
-> >
-> > On Mon, 16 Dec 2019, Olof Johansson wrote:
-> >
-> > > This is needed by LKDTM (crash dump test module), it calls
-> > > flush_icache_range(), which on RISC-V turns into flush_icache_all(). On
-> > > other architectures, the actual implementation is exported, so follow
-> > > that precedence and export it here too.
-> > >
-> > > Fixes build of CONFIG_LKDTM that fails with:
-> > > ERROR: "flush_icache_all" [drivers/misc/lkdtm/lkdtm.ko] undefined!
-> >
-> > In the past we've resisted doing this; see
-> >
-> > https://lore.kernel.org/linux-riscv/20190611134945.GA28532@lst.de/
-> >
-> > under the principle that we don't want modules to be able to flush the I$
-> > directly via this interface.  But maybe, like moving the L2 related code
-> > out of arch/riscv, we should just do it.
-> 
-> So you are aware that all other architectures that don't have coherent
-> icache already exports this, right?
-> 
-> Being more puritan on RISC-V buys nothing w.r.t. keeping modules from
-> doing anything, you'll just end up having to mark a bunch of them
-> broken on your architecture. :(
+Here are a couple of bugfixes plus a patch that makes one of the bugfixes
+easier:
 
-Yep, we'll pick it up.
+ (1) Move the ping and mutex unlock on a new call from rxrpc_input_packet()
+     into rxrpc_new_incoming_call(), which it calls.  This means the
+     lock-unlock section is entirely within the latter function.  This
+     simplifies patch (2).
+
+ (2) Don't take the call->user_mutex at all in the softirq path.  Mutexes
+     aren't allowed to be taken or released there and a patch was merged
+     that caused a warning to be emitted every time this happened.  Looking
+     at the code again, it looks like that taking the mutex isn't actually
+     necessary, as the value of call->state will block access to the call.
+
+ (3) Fix the incoming call path to check incoming calls earlier to reject
+     calls to RPC services for which we don't have a security key of the
+     appropriate class.  This avoids an assertion failure if YFS tries
+     making a secure call to the kafs cache manager RPC service.
+
+The patches are tagged here:
+
+	git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
+	rxrpc-fixes-20191220
+
+and can also be found on the following branch:
+
+	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-fs.git/log/?h=rxrpc-fixes
+
+David
+---
+David Howells (3):
+      rxrpc: Unlock new call in rxrpc_new_incoming_call() rather than the caller
+      rxrpc: Don't take call->user_mutex in rxrpc_new_incoming_call()
+      rxrpc: Fix missing security check on incoming calls
 
 
-- Paul
+ net/rxrpc/ar-internal.h  |   10 +++++--
+ net/rxrpc/call_accept.c  |   60 ++++++++++++++++++++++++---------------
+ net/rxrpc/conn_event.c   |   16 +----------
+ net/rxrpc/conn_service.c |    4 +++
+ net/rxrpc/input.c        |   18 ------------
+ net/rxrpc/rxkad.c        |    5 ++-
+ net/rxrpc/security.c     |   70 ++++++++++++++++++++++------------------------
+ 7 files changed, 85 insertions(+), 98 deletions(-)
+
