@@ -2,129 +2,122 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFEB3C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED1B0C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF8DF206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF153206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:32:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576852327;
+	bh=yLVIhH+swugmzM/oMFaJtbU7LLW0/139xHCniGzhzic=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=c3O1PeVswaFvndFpPh8VCahBrpURp54hW8jUy2FISFDlO3ldQzmGCWT7uzu3QSQY4
+	 EG7TBww891ALe+xSCkp01Uwt/bEbwm/HbEFI/jKHUIfSLK/pyRuI+kkc3/InXdqYfQ
+	 ok4N9r/ksbMTB+P/rn9ldu1ZSk6LQPh8j9cQKQog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728154AbfLTOcA (ORCPT
+        id S1727641AbfLTOcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:32:00 -0500
-Received: from foss.arm.com ([217.140.110.172]:51312 "EHLO foss.arm.com"
+        Fri, 20 Dec 2019 09:32:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727983AbfLTObB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:31:01 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB5FF11D4;
-        Fri, 20 Dec 2019 06:31:00 -0800 (PST)
-Received: from e119886-lin.cambridge.arm.com (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0EEF63F718;
-        Fri, 20 Dec 2019 06:30:58 -0800 (PST)
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH v2 13/18] perf: arm_spe: Add KVM structure for obtaining IRQ info
-Date:   Fri, 20 Dec 2019 14:30:20 +0000
-Message-Id: <20191220143025.33853-14-andrew.murray@arm.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191220143025.33853-1-andrew.murray@arm.com>
-References: <20191220143025.33853-1-andrew.murray@arm.com>
+        id S1727968AbfLTObA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:31:00 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0821321D7E;
+        Fri, 20 Dec 2019 14:30:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576852259;
+        bh=yLVIhH+swugmzM/oMFaJtbU7LLW0/139xHCniGzhzic=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ImqkofKcK1LnNNf/Wzj3YG4MIePYQBtC8YjMWslj+TKDaRWWu4olnmlJlhB+a2mh+
+         +M/4eZqMiVMjeVVKnsJKwXdxcQjBGuPHc4iKPWkYH++c6l5J8AfYdG9SFedcAZLwDg
+         jqSPhyrCdXMhvnz7cx1mCcUKtPayGcspmhQZoUiM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Maor Gottlieb <maorg@mellanox.com>,
+        Raed Salem <raeds@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 49/52] IB/mlx5: Fix steering rule of drop and count
+Date:   Fri, 20 Dec 2019 09:29:51 -0500
+Message-Id: <20191220142954.9500-49-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
+References: <20191220142954.9500-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KVM requires knowledge of the physical SPE IRQ number such that it can
-associate it with any virtual IRQ for guests that require SPE emulation.
+From: Maor Gottlieb <maorg@mellanox.com>
 
-Let's create a structure to hold this information and an accessor that
-KVM can use to retrieve this information.
+[ Upstream commit ed9085fed9d95d5921582e3c8474f3736c5d2782 ]
 
-We expect that each SPE device will have the same physical PPI number
-and thus will warn when this is not the case.
+There are two flow rule destinations: QP and packet. While users are
+setting DROP packet rule, the QP should not be set as a destination.
 
-Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+Fixes: 3b3233fbf02e ("IB/mlx5: Add flow counters binding support")
+Signed-off-by: Maor Gottlieb <maorg@mellanox.com>
+Reviewed-by: Raed Salem <raeds@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Link: https://lore.kernel.org/r/20191212091214.315005-4-leon@kernel.org
+Signed-off-by: Doug Ledford <dledford@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/arm_spe_pmu.c | 23 +++++++++++++++++++++++
- include/kvm/arm_spe.h      |  6 ++++++
- 2 files changed, 29 insertions(+)
+ drivers/infiniband/hw/mlx5/main.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-index 4e4984a55cd1..2d24af4cfcab 100644
---- a/drivers/perf/arm_spe_pmu.c
-+++ b/drivers/perf/arm_spe_pmu.c
-@@ -34,6 +34,9 @@
- #include <linux/smp.h>
- #include <linux/vmalloc.h>
- 
-+#include <linux/kvm_host.h>
-+#include <kvm/arm_spe.h>
-+
- #include <asm/barrier.h>
- #include <asm/cpufeature.h>
- #include <asm/mmu.h>
-@@ -1127,6 +1130,24 @@ static void arm_spe_pmu_dev_teardown(struct arm_spe_pmu *spe_pmu)
- 	free_percpu_irq(spe_pmu->irq, spe_pmu->handle);
- }
- 
-+#ifdef CONFIG_KVM_ARM_SPE
-+static struct arm_spe_kvm_info arm_spe_kvm_info;
-+
-+struct arm_spe_kvm_info *arm_spe_get_kvm_info(void)
-+{
-+	return &arm_spe_kvm_info;
-+}
-+
-+static void arm_spe_populate_kvm_info(struct arm_spe_pmu *spe_pmu)
-+{
-+	WARN_ON_ONCE(arm_spe_kvm_info.physical_irq != 0 &&
-+		     arm_spe_kvm_info.physical_irq != spe_pmu->irq);
-+	arm_spe_kvm_info.physical_irq = spe_pmu->irq;
-+}
-+#else
-+static void arm_spe_populate_kvm_info(struct arm_spe_pmu *spe_pmu) {}
-+#endif
-+
- /* Driver and device probing */
- static int arm_spe_pmu_irq_probe(struct arm_spe_pmu *spe_pmu)
- {
-@@ -1149,6 +1170,8 @@ static int arm_spe_pmu_irq_probe(struct arm_spe_pmu *spe_pmu)
+diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
+index 831539419c301..e1cfbedefcbc9 100644
+--- a/drivers/infiniband/hw/mlx5/main.c
++++ b/drivers/infiniband/hw/mlx5/main.c
+@@ -3548,10 +3548,6 @@ static struct mlx5_ib_flow_handler *_create_flow_rule(struct mlx5_ib_dev *dev,
  	}
  
- 	spe_pmu->irq = irq;
-+	arm_spe_populate_kvm_info(spe_pmu);
-+
- 	return 0;
- }
+ 	INIT_LIST_HEAD(&handler->list);
+-	if (dst) {
+-		memcpy(&dest_arr[0], dst, sizeof(*dst));
+-		dest_num++;
+-	}
  
-diff --git a/include/kvm/arm_spe.h b/include/kvm/arm_spe.h
-index d1f3c564dfd0..9c65130d726d 100644
---- a/include/kvm/arm_spe.h
-+++ b/include/kvm/arm_spe.h
-@@ -17,6 +17,12 @@ struct kvm_spe {
- 	bool irq_level;
- };
+ 	for (spec_index = 0; spec_index < flow_attr->num_of_specs; spec_index++) {
+ 		err = parse_flow_attr(dev->mdev, spec,
+@@ -3564,6 +3560,11 @@ static struct mlx5_ib_flow_handler *_create_flow_rule(struct mlx5_ib_dev *dev,
+ 		ib_flow += ((union ib_flow_spec *)ib_flow)->size;
+ 	}
  
-+struct arm_spe_kvm_info {
-+	int physical_irq;
-+};
++	if (dst && !(flow_act.action & MLX5_FLOW_CONTEXT_ACTION_DROP)) {
++		memcpy(&dest_arr[0], dst, sizeof(*dst));
++		dest_num++;
++	}
 +
-+struct arm_spe_kvm_info *arm_spe_get_kvm_info(void);
-+
- #ifdef CONFIG_KVM_ARM_SPE
- #define kvm_arm_spe_v1_ready(v)		((v)->arch.spe.ready)
- #define kvm_arm_spe_irq_initialized(v)		\
+ 	if (!flow_is_multicast_only(flow_attr))
+ 		set_underlay_qp(dev, spec, underlay_qpn);
+ 
+@@ -3604,10 +3605,8 @@ static struct mlx5_ib_flow_handler *_create_flow_rule(struct mlx5_ib_dev *dev,
+ 	}
+ 
+ 	if (flow_act.action & MLX5_FLOW_CONTEXT_ACTION_DROP) {
+-		if (!(flow_act.action & MLX5_FLOW_CONTEXT_ACTION_COUNT)) {
++		if (!dest_num)
+ 			rule_dst = NULL;
+-			dest_num = 0;
+-		}
+ 	} else {
+ 		if (is_egress)
+ 			flow_act.action |= MLX5_FLOW_CONTEXT_ACTION_ALLOW;
 -- 
-2.21.0
+2.20.1
 
