@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD756C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 310EAC2D0D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A03C5206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F176D24689
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852215;
-	bh=1+9B4pT/COanMs68Ai8xARKxLGeMVZb8EwEpf1LTB2E=;
+	s=default; t=1576852219;
+	bh=ffxSmAInVjoBFWsjoG4GzBBZtLQ3wyeLI/kWu06mIho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TuCIXC8jWWO1hUHqfR4XXYxxQc8eSnhf0RqDd4Spi7RCY5Nkb7/zu3pABqBWlewic
-	 IUKompgjnEe4acufvDprQcei5T2KIZjSFNz/+auXw+I+tUZI5CCN0tr+ook1V2wQZ7
-	 bL8BNqEdG/GAwXzcKTlOmjRvZrwuXhKyo61w8mD0=
+	b=jBqNDzdjSgWqalBfS2jVt2xMArfgqh39l3B4lg2Mv5ZJryWwY5BBLGwyR5J23rZzi
+	 tNFGG5vAiaMXPdH7oeVDLe5VI8JjEsDLypzOmBdpCAEGBwTdpmXESzHYJkz8dzcLia
+	 9lA/vLvS9evPbg3DnNiFUU1eA6980QUgXYPfCVkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbfLTOaO (ORCPT
+        id S1727611AbfLTOaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:30:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33520 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:30:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727549AbfLTOaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:30:11 -0500
+        id S1727556AbfLTOaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:30:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 669A224680;
-        Fri, 20 Dec 2019 14:30:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A3912465E;
+        Fri, 20 Dec 2019 14:30:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852210;
-        bh=1+9B4pT/COanMs68Ai8xARKxLGeMVZb8EwEpf1LTB2E=;
+        s=default; t=1576852212;
+        bh=ffxSmAInVjoBFWsjoG4GzBBZtLQ3wyeLI/kWu06mIho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ese7gWie/Jim3KapJc0KZwVC1scZD04k50OiuRR2SD6Ymz+EcuingM1SbPZV5FuXc
-         GcIP45NxI2YQgZVCUWcJdwD8ZwMQ2y9OQKEZDpfotVXyXRXkQi+faF/3mz47dwQi/a
-         o1ITaeIkiNyCrmRI1WvXnqCt1m8pmIR1ia1/Wiwo=
+        b=EuZONW27lieQnZpP+ApfaqD6LO+u768OEokxv2xjP3YEPVaCmjBRJBm9CdGm4a2vh
+         HXXn7tVQoCA7FaWHU5mG2EJ5X0M0H5x+y5EE1JZQRUhL0yG3g9XTRYsyFGzzJYddCN
+         M3D4VwaMjc1JRzb/dyUK4wVNDMCX6FkF22qiaLFY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Yang <Eric.Yang2@amd.com>, Tony Cheng <Tony.Cheng@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 11/52] drm/amd/display: update dispclk and dppclk vco frequency
-Date:   Fri, 20 Dec 2019 09:29:13 -0500
-Message-Id: <20191220142954.9500-11-sashal@kernel.org>
+Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 13/52] nvme/pci: Fix read queue count
+Date:   Fri, 20 Dec 2019 09:29:15 -0500
+Message-Id: <20191220142954.9500-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
 References: <20191220142954.9500-1-sashal@kernel.org>
@@ -61,36 +58,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Yang <Eric.Yang2@amd.com>
+From: Keith Busch <kbusch@kernel.org>
 
-[ Upstream commit 44ce6c3dc8479bb3ed68df13b502b0901675e7d6 ]
+[ Upstream commit 7e4c6b9a5d22485acf009b3c3510a370f096dd54 ]
 
-Value obtained from DV is not allowing 8k60 CTA mode with DSC to
-pass, after checking real value being used in hw, find out that
-correct value is 3600, which will allow that mode.
+If nvme.write_queues equals the number of CPUs, the driver had decreased
+the number of interrupts available such that there could only be one read
+queue even if the controller could support more. Remove the interrupt
+count reduction in this case. The driver wouldn't request more IRQs than
+it wants queues anyway.
 
-Signed-off-by: Eric Yang <Eric.Yang2@amd.com>
-Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Reviewed-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvme/host/pci.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
-index de182185fe1f5..b0e5e64df2127 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
-@@ -258,7 +258,7 @@ struct _vcs_dpi_soc_bounding_box_st dcn2_1_soc = {
- 	.vmm_page_size_bytes = 4096,
- 	.dram_clock_change_latency_us = 23.84,
- 	.return_bus_width_bytes = 64,
--	.dispclk_dppclk_vco_speed_mhz = 3550,
-+	.dispclk_dppclk_vco_speed_mhz = 3600,
- 	.xfc_bus_transport_time_us = 4,
- 	.xfc_xbuf_latency_tolerance_us = 4,
- 	.use_urgent_burst_bw = 1,
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 29d7427c2b19b..14d513087a14b 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -2060,7 +2060,6 @@ static int nvme_setup_irqs(struct nvme_dev *dev, unsigned int nr_io_queues)
+ 		.priv		= dev,
+ 	};
+ 	unsigned int irq_queues, this_p_queues;
+-	unsigned int nr_cpus = num_possible_cpus();
+ 
+ 	/*
+ 	 * Poll queues don't need interrupts, but we need at least one IO
+@@ -2071,10 +2070,7 @@ static int nvme_setup_irqs(struct nvme_dev *dev, unsigned int nr_io_queues)
+ 		this_p_queues = nr_io_queues - 1;
+ 		irq_queues = 1;
+ 	} else {
+-		if (nr_cpus < nr_io_queues - this_p_queues)
+-			irq_queues = nr_cpus + 1;
+-		else
+-			irq_queues = nr_io_queues - this_p_queues + 1;
++		irq_queues = nr_io_queues - this_p_queues + 1;
+ 	}
+ 	dev->io_queues[HCTX_TYPE_POLL] = this_p_queues;
+ 
 -- 
 2.20.1
 
