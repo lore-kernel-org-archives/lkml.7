@@ -2,89 +2,587 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9CAC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B11C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B9C324679
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B5AA24680
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:08:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="FwfDOzr2"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ycZUREK0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbfLTLHL (ORCPT
+        id S1727329AbfLTLIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 06:07:11 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:46399 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727177AbfLTLHK (ORCPT
+        Fri, 20 Dec 2019 06:08:39 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:53630 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727177AbfLTLIj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 06:07:10 -0500
-Received: by mail-il1-f196.google.com with SMTP id t17so7579744ilm.13
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 03:07:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=CuvYmZxLd8M5BiQxeXMEPvKPsn+T62f9uaUdU+HsmZI=;
-        b=FwfDOzr2MfGAiaCWXP4Vk9K87UmjUQo6aakivfZOVFPohjKd5SrzNfxYDQ8tvd9eBC
-         +YanTBNiGCq353VWzjbaueAE1tkeJjXv0T/suPEhNc8cgeqkauiTLFXGilXy9FMoBoG6
-         HvGb3ovru3NdYW1DqwJ6bJkUDYkVBDWlYROV2ALtuirb8h9eLcuWGQwrjX7/i6NzHbqR
-         N7JXX4ucOsr7H5352iJQ58Im9WfybP1VlQatLQWNRe//JgEHcx/i/GV1Bwj5Up1INqrH
-         GRGO8EOQ/CdEjaGlrlkdpv6AGkh/Jhp3jwErieygv8Ncr6AhVuEd+YG7NIC+/KBHmxAx
-         qMog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=CuvYmZxLd8M5BiQxeXMEPvKPsn+T62f9uaUdU+HsmZI=;
-        b=BfPmINE5s96f8GSbE1WM6PKgaZh6tpEbSa7WbY5gmGHCYsIFs3nCs/C6kVeoixCi9z
-         kIRBCGUS0+e3gP/osXJ034aqgUhrNQpuAybu8LJyn3jDl9xzX7wrQxb1+YALcuYfiNMe
-         YbyQZOzJdvJMbkR/AZ1c7bhxnvSVUzawXRnDnzStOxzCZWRRM9R0QovyTqq7rgyeUXDF
-         JIZZTJBcDf/pAWoPuvdb9PhgzStZs+7VYh44fcbG9wEp5B5Z3S4wuOuXdIEnEqFeWPm8
-         3jARrU2XSdpyVRkwRyahrfp/UPuNNhvQ5C8s0IndN9b93xvQJD/t+XUj5ko8pLFYi7yI
-         e8dA==
-X-Gm-Message-State: APjAAAWkf3Q3+t+M1sX7+LUYdW576jPVz1881PpmbooEc72Oy0fFljYC
-        o/WjpFVRlb7kcknJhF8r8q0yUw==
-X-Google-Smtp-Source: APXvYqwpMTaRtzctXAmhjDIK368kqdrepo6dFIR1hQ9bfncZwyvO5j/1INF5YTU3nfNI5+PJkTY+Sg==
-X-Received: by 2002:a92:9e99:: with SMTP id s25mr11698837ilk.80.1576840030346;
-        Fri, 20 Dec 2019 03:07:10 -0800 (PST)
-Received: from localhost (67-0-26-4.albq.qwest.net. [67.0.26.4])
-        by smtp.gmail.com with ESMTPSA id g6sm4416389ilj.64.2019.12.20.03.07.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 03:07:09 -0800 (PST)
-Date:   Fri, 20 Dec 2019 03:07:08 -0800 (PST)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Greentime Hu <greentime.hu@sifive.com>
-cc:     green.hu@gmail.com, greentime@kernel.org, hch@lst.de,
-        palmer@dabbelt.com, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: fix scratch register clearing in M-mode.
-In-Reply-To: <20191219064459.20790-1-greentime.hu@sifive.com>
-Message-ID: <alpine.DEB.2.21.9999.1912200306570.3767@viisi.sifive.com>
-References: <20191219064459.20790-1-greentime.hu@sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Fri, 20 Dec 2019 06:08:39 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBKB8alF069820;
+        Fri, 20 Dec 2019 05:08:36 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576840116;
+        bh=RIs4WaTfd4Vcphtx298DeNuZ5LWPR9pavqf7RBvqicg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ycZUREK0PlX7alqJRPufwWILfyzk9bOSwl0XF6OB3rUVXgw7wKaHEM2ZP/rpk25TB
+         Iduyp/KFUOAMGX8QiXj1VduK2pOF53KLKlT2YwYJc2wzPDRBgQkNz8hMjk6EDnNfZ6
+         Yu7wGP7DxLAa/xo+GcR2Id5IcvmAAtqOSqSNMEm0=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBKB8agH039575;
+        Fri, 20 Dec 2019 05:08:36 -0600
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
+ Dec 2019 05:08:33 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 20 Dec 2019 05:08:33 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBKB8VPG094957;
+        Fri, 20 Dec 2019 05:08:31 -0600
+Subject: Re: [PATCHv3 13/15] remoteproc/omap: add support for runtime
+ auto-suspend/resume
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, Suman Anna <s-anna@ti.com>
+References: <20191213125537.11509-1-t-kristo@ti.com>
+ <20191213125537.11509-14-t-kristo@ti.com> <20191219234332.GB32574@xps15>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <860100a0-0bd7-d584-4177-de6ca82c245c@ti.com>
+Date:   Fri, 20 Dec 2019 13:08:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191219234332.GB32574@xps15>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Dec 2019, Greentime Hu wrote:
-
-> This patch fixes that the sscratch register clearing in M-mode. It cleared
-> sscratch register in M-mode, but it should clear mscratch register. That will
-> cause kernel trap if the CPU core doesn't support S-mode when trying to access
-> sscratch.
+On 20/12/2019 01:43, Mathieu Poirier wrote:
+> On Fri, Dec 13, 2019 at 02:55:35PM +0200, Tero Kristo wrote:
+>> From: Suman Anna <s-anna@ti.com>
+>>
+>> This patch enhances the PM support in the OMAP remoteproc driver to
+>> support the runtime auto-suspend. A remoteproc may not be required to
+>> be running all the time, and typically will need to be active only
+>> during certain usecases. As such, to save power, it should be turned
+>> off during potential long periods of inactivity between usecases.
+>> This suspend and resume of the device is a relatively heavy process
+>> in terms of latencies, so a remoteproc should be suspended only after
+>> a certain period of prolonged inactivity. The OMAP remoteproc driver
+>> leverages the runtime pm framework's auto_suspend feature to accomplish
+>> this functionality. This feature is automatically enabled when a remote
+>> processor has successfully booted. The 'autosuspend_delay_ms' for each
+>> device dictates the inactivity period/time to wait for before
+>> suspending the device.
+>>
+>> The runtime auto-suspend design relies on marking the last busy time
+>> on every communication (virtqueue kick) to and from the remote processor.
+>> When there has been no activity for 'autosuspend_delay_ms' time, the
+>> runtime PM framework invokes the driver's runtime pm suspend callback
+>> to suspend the device. The remote processor will be woken up on the
+>> initiation of the next communication message through the runtime pm
+>> resume callback. The current auto-suspend design also allows a remote
+>> processor to deny a auto-suspend attempt, if it wishes to, by sending a
+>> NACK response to the initial suspend request message sent to the remote
+>> processor as part of the suspend process. The auto-suspend request is
+>> also only attempted if the remote processor is idled and in standby at
+>> the time of inactivity timer expiry. This choice is made to avoid
+>> unnecessary messaging, and the auto-suspend is simply rescheduled to
+>> be attempted again after a further lapse of autosuspend_delay_ms.
+>>
+>> The runtime pm callbacks functionality in this patch reuses most of the
+>> core logic from the suspend/resume support code, and make use of an
+>> additional auto_suspend flag to differentiate the logic in common code
+>> from system suspend. The system suspend/resume sequences are also updated
+>> to reflect the proper pm_runtime statuses, and also to really perform a
+>> suspend/resume only if the remoteproc has not been auto-suspended at the
+>> time of request. The remote processor is left in suspended state on a
+>> system resume if it has been auto-suspended before, and will be woken up
+>> only when a usecase needs to run. The other significant change in this
+>> patch is to reset the remoteproc device's pm_domain so as to avoid
+>> conflicts with the ordering sequences in the device pm_domain's runtime
+>> callbacks and the reset management and clock management implemented
+>> within the runtime callbacks in the driver.
+>>
+>> The OMAP remoteproc driver currently uses a default value of 10 seconds
+>> for all OMAP remoteprocs, and a different value can be chosen either by
+>> choosing a positive value for the 'autosuspend_delay' in the device's
+>> omap_rproc_fw_data in the driver match data or by updating the
+>> 'autosuspend_delay_ms' field at runtime through the sysfs interface.
+>>      Eg: To use 25 seconds for IPU2 on DRA7xx,
+>>        echo 25000 > /sys/bus/platform/devices/55020000.ipu/power/autosuspend_delay_ms
+>>
+>> The runtime suspend feature can also be similarly enabled or disabled by
+>> writing 'auto' or 'on' to the device's 'control' power field. The default
+>> is enabled.
+>>      Eg: To disable auto-suspend for IPU2 on DRA7xx SoC,
+>>        echo on > /sys/bus/platform/devices/55020000.ipu/power/control
+>>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> [t-kristo@ti.com: converted to use ti-sysc instead of hwmod]
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> ---
+>>   drivers/remoteproc/omap_remoteproc.c | 220 ++++++++++++++++++++++++++-
+>>   1 file changed, 214 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+>> index 0a9b9f7d20da..463d6f60947a 100644
+>> --- a/drivers/remoteproc/omap_remoteproc.c
+>> +++ b/drivers/remoteproc/omap_remoteproc.c
+>> @@ -20,6 +20,7 @@
+>>   #include <linux/of_device.h>
+>>   #include <linux/of_reserved_mem.h>
+>>   #include <linux/platform_device.h>
+>> +#include <linux/pm_runtime.h>
+>>   #include <linux/dma-mapping.h>
+>>   #include <linux/remoteproc.h>
+>>   #include <linux/mailbox_client.h>
+>> @@ -37,6 +38,9 @@
+>>   #include "omap_remoteproc.h"
+>>   #include "remoteproc_internal.h"
+>>   
+>> +/* default auto-suspend delay (ms) */
+>> +#define DEFAULT_AUTOSUSPEND_DELAY		10000
+>> +
+>>   /**
+>>    * struct omap_rproc_boot_data - boot data structure for the DSP omap rprocs
+>>    * @syscon: regmap handle for the system control configuration module
+>> @@ -83,6 +87,8 @@ struct omap_rproc_timer {
+>>    * @num_mems: number of internal memory regions
+>>    * @num_timers: number of rproc timer(s)
+>>    * @timers: timer(s) info used by rproc
+>> + * @autosuspend_delay: auto-suspend delay value to be used for runtime pm
+>> + * @need_resume: if true a resume is needed in the system resume callback
+>>    * @rproc: rproc handle
+>>    * @reset: reset handle
+>>    * @pm_comp: completion primitive to sync for suspend response
+>> @@ -97,6 +103,8 @@ struct omap_rproc {
+>>   	int num_mems;
+>>   	int num_timers;
+>>   	struct omap_rproc_timer *timers;
+>> +	int autosuspend_delay;
+>> +	bool need_resume;
+>>   	struct rproc *rproc;
+>>   	struct reset_control *reset;
+>>   	struct completion pm_comp;
+>> @@ -111,6 +119,7 @@ struct omap_rproc {
+>>    * @boot_reg_shift: bit shift for the boot register mask
+>>    * @mem_names: memory names for this remote processor
+>>    * @dev_addrs: device addresses corresponding to the memory names
+>> + * @autosuspend_delay: custom auto-suspend delay value in milliseconds
+>>    */
+>>   struct omap_rproc_dev_data {
+>>   	const char *device_name;
+>> @@ -118,6 +127,7 @@ struct omap_rproc_dev_data {
+>>   	int boot_reg_shift;
+>>   	const char * const *mem_names;
+>>   	const u32 *dev_addrs;
+>> +	int autosuspend_delay;
+>>   };
+>>   
+>>   /**
+>> @@ -384,11 +394,23 @@ static void omap_rproc_kick(struct rproc *rproc, int vqid)
+>>   	struct device *dev = rproc->dev.parent;
+>>   	int ret;
+>>   
+>> +	/* wake up the rproc before kicking it */
+>> +	ret = pm_runtime_get_sync(dev);
+>> +	if (WARN_ON(ret < 0)) {
+>> +		dev_err(dev, "pm_runtime_get_sync() failed during kick, ret = %d\n",
+>> +			ret);
+>> +		pm_runtime_put_noidle(dev);
+>> +		return;
+>> +	}
+>> +
+>>   	/* send the index of the triggered virtqueue in the mailbox payload */
+>>   	ret = mbox_send_message(oproc->mbox, (void *)vqid);
+>>   	if (ret < 0)
+>>   		dev_err(dev, "failed to send mailbox message, status = %d\n",
+>>   			ret);
+>> +
+>> +	pm_runtime_mark_last_busy(dev);
+>> +	pm_runtime_put_autosuspend(dev);
+>>   }
+>>   
+>>   /**
+>> @@ -473,6 +495,19 @@ static int omap_rproc_start(struct rproc *rproc)
+>>   		goto put_mbox;
+>>   	}
+>>   
+>> +	/*
+>> +	 * remote processor is up, so update the runtime pm status and
+>> +	 * enable the auto-suspend. The device usage count is incremented
+>> +	 * manually for balancing it for auto-suspend
+>> +	 */
+>> +	pm_runtime_set_active(dev);
+>> +	pm_runtime_set_autosuspend_delay(dev, oproc->autosuspend_delay);
+>> +	pm_runtime_use_autosuspend(dev);
+>> +	pm_runtime_get(dev);
+>> +	pm_runtime_enable(dev);
+>> +	pm_runtime_mark_last_busy(dev);
+>> +	pm_runtime_put_autosuspend(dev);
+>> +
+>>   	reset_control_deassert(oproc->reset);
+>>   
+>>   	return 0;
+>> @@ -485,9 +520,26 @@ static int omap_rproc_start(struct rproc *rproc)
+>>   /* power off the remote processor */
+>>   static int omap_rproc_stop(struct rproc *rproc)
+>>   {
+>> +	struct device *dev = rproc->dev.parent;
+>>   	struct omap_rproc *oproc = rproc->priv;
+>>   	int ret;
+>>   
+>> +	/*
+>> +	 * cancel any possible scheduled runtime suspend by incrementing
+>> +	 * the device usage count, and resuming the device. The remoteproc
+>> +	 * also needs to be woken up if suspended, to avoid the remoteproc
+>> +	 * OS to continue to remember any context that it has saved, and
+>> +	 * avoid potential issues in misindentifying a subsequent device
+>> +	 * reboot as a power restore boot
+>> +	 */
+>> +	ret = pm_runtime_get_sync(dev);
+>> +	if (ret < 0) {
+>> +		pm_runtime_put_noidle(dev);
+>> +		return ret;
+>> +	}
+>> +
+>> +	pm_runtime_put_sync(dev);
+>> +
+>>   	reset_control_assert(oproc->reset);
+>>   
+>>   	ret = omap_rproc_disable_timers(rproc, true);
+>> @@ -496,6 +548,15 @@ static int omap_rproc_stop(struct rproc *rproc)
+>>   
+>>   	mbox_free_channel(oproc->mbox);
+>>   
+>> +	/*
+>> +	 * update the runtime pm states and status now that the remoteproc
+>> +	 * has stopped
+>> +	 */
+>> +	pm_runtime_disable(dev);
+>> +	pm_runtime_dont_use_autosuspend(dev);
+>> +	pm_runtime_put_noidle(dev);
+>> +	pm_runtime_set_suspended(dev);
+>> +
+>>   	return 0;
+>>   }
+>>   
+>> @@ -552,17 +613,19 @@ static bool _is_rproc_in_standby(struct omap_rproc *oproc)
+>>   
+>>   /* 1 sec is long enough time to let the remoteproc side suspend the device */
+>>   #define DEF_SUSPEND_TIMEOUT 1000
+>> -static int _omap_rproc_suspend(struct rproc *rproc)
+>> +static int _omap_rproc_suspend(struct rproc *rproc, bool auto_suspend)
+>>   {
+>>   	struct device *dev = rproc->dev.parent;
+>>   	struct omap_rproc *oproc = rproc->priv;
+>>   	unsigned long to = msecs_to_jiffies(DEF_SUSPEND_TIMEOUT);
+>>   	unsigned long ta = jiffies + to;
+>> +	u32 suspend_msg = auto_suspend ?
+>> +				RP_MBOX_SUSPEND_AUTO : RP_MBOX_SUSPEND_SYSTEM;
+>>   	int ret;
+>>   
+>>   	reinit_completion(&oproc->pm_comp);
+>>   	oproc->suspend_acked = false;
+>> -	ret = mbox_send_message(oproc->mbox, (void *)RP_MBOX_SUSPEND_SYSTEM);
+>> +	ret = mbox_send_message(oproc->mbox, (void *)suspend_msg);
+>>   	if (ret < 0) {
+>>   		dev_err(dev, "PM mbox_send_message failed: %d\n", ret);
+>>   		return ret;
+>> @@ -602,25 +665,55 @@ static int _omap_rproc_suspend(struct rproc *rproc)
+>>   		goto enable_device;
+>>   	}
+>>   
+>> +	/*
+>> +	 * IOMMUs would have to be disabled specifically for runtime suspend.
+>> +	 * They are handled automatically through System PM callbacks for
+>> +	 * regular system suspend
+>> +	 */
+>> +	if (auto_suspend) {
+>> +		ret = omap_iommu_domain_deactivate(rproc->domain);
+>> +		if (ret) {
+>> +			dev_err(dev, "iommu domain deactivate failed %d\n",
+>> +				ret);
+>> +			goto enable_timers;
+>> +		}
+>> +	}
+>> +
+>>   	return 0;
+>> +enable_timers:
+>> +	/* ignore errors on re-enabling code */
+>> +	omap_rproc_enable_timers(rproc, false);
+>>   
+>>   enable_device:
+>>   	reset_control_deassert(oproc->reset);
+>>   	return ret;
+>>   }
+>>   
+>> -static int _omap_rproc_resume(struct rproc *rproc)
+>> +static int _omap_rproc_resume(struct rproc *rproc, bool auto_suspend)
+>>   {
+>>   	struct device *dev = rproc->dev.parent;
+>>   	struct omap_rproc *oproc = rproc->priv;
+>>   	int ret;
+>>   
+>> +	/*
+>> +	 * IOMMUs would have to be enabled specifically for runtime resume.
+>> +	 * They would have been already enabled automatically through System
+>> +	 * PM callbacks for regular system resume
+>> +	 */
+>> +	if (auto_suspend) {
+>> +		ret = omap_iommu_domain_activate(rproc->domain);
+>> +		if (ret) {
+>> +			dev_err(dev, "omap_iommu activate failed %d\n", ret);
+>> +			goto out;
+>> +		}
+>> +	}
+>> +
+>>   	/* boot address could be lost after suspend, so restore it */
+>>   	if (oproc->boot_data) {
+>>   		ret = omap_rproc_write_dsp_boot_addr(rproc);
+>>   		if (ret) {
+>>   			dev_err(dev, "boot address restore failed %d\n", ret);
+>> -			goto out;
+>> +			goto suspend_iommu;
 > 
-> Fixes: 9e80635619b5 ("riscv: clear the instruction cache and all registers when booting")
-> Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+> The same needs to be done if omap_rproc_enable_timers() fails.
 
-Thanks Greentime, queued for v5.5-rc.
+Ok, will enhance the error handling logic a bit for v4.
 
-- Paul
+> 
+>>   		}
+>>   	}
+>>   
+>> @@ -633,6 +726,12 @@ static int _omap_rproc_resume(struct rproc *rproc)
+>>   
+>>   	reset_control_deassert(oproc->reset);
+>>   
+>> +	return 0;
+>> +
+>> +suspend_iommu:
+>> +	if (auto_suspend)
+>> +		omap_iommu_domain_deactivate(rproc->domain);
+>> +
+>>   out:
+>>   	return ret;
+>>   }
+>> @@ -641,6 +740,7 @@ static int __maybe_unused omap_rproc_suspend(struct device *dev)
+>>   {
+>>   	struct platform_device *pdev = to_platform_device(dev);
+>>   	struct rproc *rproc = platform_get_drvdata(pdev);
+>> +	struct omap_rproc *oproc = rproc->priv;
+>>   	int ret = 0;
+>>   
+>>   	mutex_lock(&rproc->lock);
+>> @@ -655,13 +755,25 @@ static int __maybe_unused omap_rproc_suspend(struct device *dev)
+>>   		goto out;
+>>   	}
+>>   
+>> -	ret = _omap_rproc_suspend(rproc);
+>> +	ret = _omap_rproc_suspend(rproc, false);
+>>   	if (ret) {
+>>   		dev_err(dev, "suspend failed %d\n", ret);
+>>   		goto out;
+>>   	}
+>>   
+>> +	/*
+>> +	 * remoteproc is running at the time of system suspend, so remember
+>> +	 * it so as to wake it up during system resume
+>> +	 */
+>> +	oproc->need_resume = 1;
+> 
+> Please use 'true' to be consistent with the type and omap_rproc_resume().
+
+Right.
+
+> 
+>>   	rproc->state = RPROC_SUSPENDED;
+>> +
+>> +	/*
+>> +	 * update the runtime pm status to be suspended, without decrementing
+>> +	 * the device usage count
+>> +	 */
+>> +	pm_runtime_disable(dev);
+>> +	pm_runtime_set_suspended(dev);
+>>   out:
+>>   	mutex_unlock(&rproc->lock);
+>>   	return ret;
+>> @@ -671,6 +783,7 @@ static int __maybe_unused omap_rproc_resume(struct device *dev)
+>>   {
+>>   	struct platform_device *pdev = to_platform_device(dev);
+>>   	struct rproc *rproc = platform_get_drvdata(pdev);
+>> +	struct omap_rproc *oproc = rproc->priv;
+>>   	int ret = 0;
+>>   
+>>   	mutex_lock(&rproc->lock);
+>> @@ -682,17 +795,91 @@ static int __maybe_unused omap_rproc_resume(struct device *dev)
+>>   		goto out;
+>>   	}
+>>   
+>> -	ret = _omap_rproc_resume(rproc);
+>> +	/*
+>> +	 * remoteproc was auto-suspended at the time of system suspend,
+>> +	 * so no need to wake-up the processor (leave it in suspended
+>> +	 * state, will be woken up during a subsequent runtime_resume)
+>> +	 */
+>> +	if (!oproc->need_resume)
+>> +		goto out;
+>> +
+>> +	ret = _omap_rproc_resume(rproc, false);
+>>   	if (ret) {
+>>   		dev_err(dev, "resume failed %d\n", ret);
+>>   		goto out;
+>>   	}
+>> +	oproc->need_resume = false;
+>>   
+>>   	rproc->state = RPROC_RUNNING;
+>> +
+>> +	/*
+>> +	 * update the runtime pm status to be active, without incrementing
+>> +	 * the device usage count
+>> +	 */
+>> +	pm_runtime_set_active(dev);
+>> +	pm_runtime_enable(dev);
+>> +	pm_runtime_mark_last_busy(dev);
+>>   out:
+>>   	mutex_unlock(&rproc->lock);
+>>   	return ret;
+>>   }
+>> +
+>> +static int omap_rproc_runtime_suspend(struct device *dev)
+>> +{
+>> +	struct rproc *rproc = dev_get_drvdata(dev);
+>> +	struct omap_rproc *oproc = rproc->priv;
+>> +	int ret;
+>> +
+>> +	if (rproc->state == RPROC_CRASHED) {
+>> +		dev_dbg(dev, "rproc cannot be runtime suspended when crashed!\n");
+>> +		return -EBUSY;
+>> +	}
+>> +
+>> +	if (WARN_ON(rproc->state != RPROC_RUNNING)) {
+>> +		dev_err(dev, "rproc cannot be runtime suspended when not running!\n");
+>> +		return -EBUSY;
+>> +	}
+>> +
+>> +	/*
+>> +	 * do not even attempt suspend if the remote processor is not
+>> +	 * idled for runtime auto-suspend
+>> +	 */
+>> +	if (!_is_rproc_in_standby(oproc)) {
+>> +		ret = -EBUSY;
+>> +		goto abort;
+>> +	}
+>> +
+>> +	ret = _omap_rproc_suspend(rproc, true);
+>> +	if (ret)
+>> +		goto abort;
+>> +
+>> +	rproc->state = RPROC_SUSPENDED;
+>> +	return 0;
+>> +
+>> +abort:
+>> +	pm_runtime_mark_last_busy(dev);
+>> +	return ret;
+>> +}
+>> +
+>> +static int omap_rproc_runtime_resume(struct device *dev)
+>> +{
+>> +	struct rproc *rproc = dev_get_drvdata(dev);
+>> +	int ret;
+>> +
+>> +	if (WARN_ON(rproc->state != RPROC_SUSPENDED)) {
+>> +		dev_err(dev, "rproc cannot be runtime resumed if not suspended!\n");
+>> +		return -EBUSY;
+>> +	}
+>> +
+>> +	ret = _omap_rproc_resume(rproc, true);
+>> +	if (ret) {
+>> +		dev_err(dev, "runtime resume failed %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	rproc->state = RPROC_RUNNING;
+>> +	return 0;
+>> +}
+>>   #endif /* CONFIG_PM */
+>>   
+>>   static const char * const ipu_mem_names[] = {
+>> @@ -778,6 +965,20 @@ static const struct of_device_id omap_rproc_of_match[] = {
+>>   };
+>>   MODULE_DEVICE_TABLE(of, omap_rproc_of_match);
+>>   
+>> +static int omap_rproc_get_autosuspend_delay(struct platform_device *pdev)
+>> +{
+>> +	const struct omap_rproc_dev_data *data;
+>> +	int delay;
+>> +
+>> +	data = of_device_get_match_data(&pdev->dev);
+>> +	if (!data)
+>> +		return -ENODEV;
+> 
+> This check is done in omap_rproc_of_get_internal_memories() and
+> omap_rproc_get_boot_data().  I think it would be best to do it once at the top
+> of the probe() function and be done with it.
+> 
+> That being said and as noted in a previous comment, I would push all tuneables
+> to the DT.  If the property is missing then things default to
+> DEFAULT_AUTOSUSPEND_DELAY.
+
+Ok, let me do that.
+
+-Tero
+
+> 
+>> +
+>> +	delay = data->autosuspend_delay;
+>> +
+>> +	return (delay > 0) ? delay : DEFAULT_AUTOSUSPEND_DELAY;
+>> +}
+>> +
+>>   static const char *omap_rproc_get_firmware(struct platform_device *pdev)
+>>   {
+>>   	const char *fw_name;
+>> @@ -953,6 +1154,11 @@ static int omap_rproc_probe(struct platform_device *pdev)
+>>   	}
+>>   
+>>   	init_completion(&oproc->pm_comp);
+>> +	oproc->autosuspend_delay = omap_rproc_get_autosuspend_delay(pdev);
+>> +	if (oproc->autosuspend_delay < 0) {
+>> +		ret = oproc->autosuspend_delay;
+>> +		goto free_rproc;
+>> +	}
+>>   
+>>   	oproc->fck = devm_clk_get(&pdev->dev, 0);
+>>   	if (IS_ERR(oproc->fck)) {
+>> @@ -994,6 +1200,8 @@ static int omap_rproc_remove(struct platform_device *pdev)
+>>   
+>>   static const struct dev_pm_ops omap_rproc_pm_ops = {
+>>   	SET_SYSTEM_SLEEP_PM_OPS(omap_rproc_suspend, omap_rproc_resume)
+>> +	SET_RUNTIME_PM_OPS(omap_rproc_runtime_suspend,
+>> +			   omap_rproc_runtime_resume, NULL)
+>>   };
+>>   
+>>   static struct platform_driver omap_rproc_driver = {
+>> -- 
+>> 2.17.1
+>>
+>> --
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
