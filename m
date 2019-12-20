@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B22C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A323FC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C63BD206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:31:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE63206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:31:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbfLTOba (ORCPT
+        id S1728033AbfLTObG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:31:30 -0500
-Received: from foss.arm.com ([217.140.110.172]:51362 "EHLO foss.arm.com"
+        Fri, 20 Dec 2019 09:31:06 -0500
+Received: from foss.arm.com ([217.140.110.172]:51258 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727441AbfLTObM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:31:12 -0500
+        id S1727806AbfLTOau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:30:50 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B240831B;
-        Fri, 20 Dec 2019 06:31:11 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DDD54106F;
+        Fri, 20 Dec 2019 06:30:49 -0800 (PST)
 Received: from e119886-lin.cambridge.arm.com (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9AF03F718;
-        Fri, 20 Dec 2019 06:31:09 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 113893F718;
+        Fri, 20 Dec 2019 06:30:47 -0800 (PST)
 From:   Andrew Murray <andrew.murray@arm.com>
 To:     Marc Zyngier <marc.zyngier@arm.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -32,9 +32,9 @@ To:     Marc Zyngier <marc.zyngier@arm.com>,
 Cc:     Sudeep Holla <sudeep.holla@arm.com>, kvmarm@lists.cs.columbia.edu,
         linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH v2 18/18, KVMTOOL] kvm: add a vcpu feature for SPEv1 support
-Date:   Fri, 20 Dec 2019 14:30:25 +0000
-Message-Id: <20191220143025.33853-19-andrew.murray@arm.com>
+Subject: [PATCH v2 08/18] arm64: KVM: add support to save/restore SPE profiling buffer controls
+Date:   Fri, 20 Dec 2019 14:30:15 +0000
+Message-Id: <20191220143025.33853-9-andrew.murray@arm.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191220143025.33853-1-andrew.murray@arm.com>
 References: <20191220143025.33853-1-andrew.murray@arm.com>
@@ -45,210 +45,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a runtime configurable for KVM tool to enable Statistical
-Profiling Extensions version 1 support in guest kernel. A command line
-option --spe is required to use the same.
+From: Sudeep Holla <sudeep.holla@arm.com>
+
+Currently since we don't support profiling using SPE in the guests,
+we just save the PMSCR_EL1, flush the profiling buffers and disable
+sampling. However in order to support simultaneous sampling both in
+the host and guests, we need to save and reatore the complete SPE
+profiling buffer controls' context.
+
+Let's add the support for the same and keep it disabled for now.
+We can enable it conditionally only if guests are allowed to use
+SPE.
 
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-[ Add SPE to init features ]
+[ Clear PMBSR bit when saving state to prevent spurious interrupts ]
 Signed-off-by: Andrew Murray <andrew.murray@arm.com>
 ---
- Makefile                                  |  2 +-
- arm/aarch64/arm-cpu.c                     |  2 +
- arm/aarch64/include/kvm/kvm-config-arch.h |  2 +
- arm/aarch64/include/kvm/kvm-cpu-arch.h    |  3 +-
- arm/aarch64/kvm-cpu.c                     |  4 ++
- arm/include/arm-common/kvm-config-arch.h  |  1 +
- arm/include/arm-common/spe.h              |  4 ++
- arm/spe.c                                 | 81 +++++++++++++++++++++++
- 8 files changed, 97 insertions(+), 2 deletions(-)
- create mode 100644 arm/include/arm-common/spe.h
- create mode 100644 arm/spe.c
+ arch/arm64/kvm/hyp/debug-sr.c | 51 +++++++++++++++++++++++++++++------
+ 1 file changed, 43 insertions(+), 8 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 3862112c5ec6..04dddb3e7699 100644
---- a/Makefile
-+++ b/Makefile
-@@ -158,7 +158,7 @@ endif
- # ARM
- OBJS_ARM_COMMON		:= arm/fdt.o arm/gic.o arm/gicv2m.o arm/ioport.o \
- 			   arm/kvm.o arm/kvm-cpu.o arm/pci.o arm/timer.o \
--			   arm/pmu.o
-+			   arm/pmu.o arm/spe.o
- HDRS_ARM_COMMON		:= arm/include
- ifeq ($(ARCH), arm)
- 	DEFINES		+= -DCONFIG_ARM
-diff --git a/arm/aarch64/arm-cpu.c b/arm/aarch64/arm-cpu.c
-index d7572b7790b1..6ccea033f361 100644
---- a/arm/aarch64/arm-cpu.c
-+++ b/arm/aarch64/arm-cpu.c
-@@ -6,6 +6,7 @@
- #include "arm-common/gic.h"
- #include "arm-common/timer.h"
- #include "arm-common/pmu.h"
-+#include "arm-common/spe.h"
+diff --git a/arch/arm64/kvm/hyp/debug-sr.c b/arch/arm64/kvm/hyp/debug-sr.c
+index 8a70a493345e..12429b212a3a 100644
+--- a/arch/arm64/kvm/hyp/debug-sr.c
++++ b/arch/arm64/kvm/hyp/debug-sr.c
+@@ -85,7 +85,8 @@
+ 	default:	write_debug(ptr[0], reg, 0);			\
+ 	}
  
- #include <linux/byteorder.h>
- #include <linux/types.h>
-@@ -17,6 +18,7 @@ static void generate_fdt_nodes(void *fdt, struct kvm *kvm)
- 	gic__generate_fdt_nodes(fdt, kvm->cfg.arch.irqchip);
- 	timer__generate_fdt_nodes(fdt, kvm, timer_interrupts);
- 	pmu__generate_fdt_nodes(fdt, kvm);
-+	spe__generate_fdt_nodes(fdt, kvm);
- }
+-static void __hyp_text __debug_save_spe_nvhe(struct kvm_cpu_context *ctxt)
++static void __hyp_text
++__debug_save_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
+ {
+ 	u64 reg;
  
- static int arm_cpu__vcpu_init(struct kvm_cpu *vcpu)
-diff --git a/arm/aarch64/include/kvm/kvm-config-arch.h b/arm/aarch64/include/kvm/kvm-config-arch.h
-index 04be43dfa9b2..9968e1666de5 100644
---- a/arm/aarch64/include/kvm/kvm-config-arch.h
-+++ b/arm/aarch64/include/kvm/kvm-config-arch.h
-@@ -6,6 +6,8 @@
- 			"Run AArch32 guest"),				\
- 	OPT_BOOLEAN('\0', "pmu", &(cfg)->has_pmuv3,			\
- 			"Create PMUv3 device"),				\
-+	OPT_BOOLEAN('\0', "spe", &(cfg)->has_spev1,			\
-+			"Create SPEv1 device"),				\
- 	OPT_U64('\0', "kaslr-seed", &(cfg)->kaslr_seed,			\
- 			"Specify random seed for Kernel Address Space "	\
- 			"Layout Randomization (KASLR)"),
-diff --git a/arm/aarch64/include/kvm/kvm-cpu-arch.h b/arm/aarch64/include/kvm/kvm-cpu-arch.h
-index 8dfb82ecbc37..080183fa4f81 100644
---- a/arm/aarch64/include/kvm/kvm-cpu-arch.h
-+++ b/arm/aarch64/include/kvm/kvm-cpu-arch.h
-@@ -8,7 +8,8 @@
- #define ARM_VCPU_FEATURE_FLAGS(kvm, cpuid)	{				\
- 	[0] = ((!!(cpuid) << KVM_ARM_VCPU_POWER_OFF) |				\
- 	       (!!(kvm)->cfg.arch.aarch32_guest << KVM_ARM_VCPU_EL1_32BIT) |	\
--	       (!!(kvm)->cfg.arch.has_pmuv3 << KVM_ARM_VCPU_PMU_V3))		\
-+	       (!!(kvm)->cfg.arch.has_pmuv3 << KVM_ARM_VCPU_PMU_V3) |		\
-+	       (!!(kvm)->cfg.arch.has_spev1 << KVM_ARM_VCPU_SPE_V1))		\
- }
+@@ -102,22 +103,46 @@ static void __hyp_text __debug_save_spe_nvhe(struct kvm_cpu_context *ctxt)
+ 	if (reg & BIT(SYS_PMBIDR_EL1_P_SHIFT))
+ 		return;
  
- #define ARM_MPIDR_HWID_BITMASK	0xFF00FFFFFFUL
-diff --git a/arm/aarch64/kvm-cpu.c b/arm/aarch64/kvm-cpu.c
-index 9f3e8586880c..90c2e1784e97 100644
---- a/arm/aarch64/kvm-cpu.c
-+++ b/arm/aarch64/kvm-cpu.c
-@@ -140,6 +140,10 @@ void kvm_cpu__select_features(struct kvm *kvm, struct kvm_vcpu_init *init)
- 	/* Enable SVE if available */
- 	if (kvm__supports_extension(kvm, KVM_CAP_ARM_SVE))
- 		init->features[0] |= 1UL << KVM_ARM_VCPU_SVE;
+-	/* No; is the host actually using the thing? */
+-	reg = read_sysreg_s(SYS_PMBLIMITR_EL1);
+-	if (!(reg & BIT(SYS_PMBLIMITR_EL1_E_SHIFT)))
++	/* Save the control register and disable data generation */
++	ctxt->sys_regs[PMSCR_EL1] = read_sysreg_el1(SYS_PMSCR);
 +
-+	/* Enable SPE if available */
-+	if (kvm__supports_extension(kvm, KVM_CAP_ARM_SPE_V1))
-+		init->features[0] |= 1UL << KVM_ARM_VCPU_SPE_V1;
- }
++	if (!ctxt->sys_regs[PMSCR_EL1])
+ 		return;
  
- int kvm_cpu__configure_features(struct kvm_cpu *vcpu)
-diff --git a/arm/include/arm-common/kvm-config-arch.h b/arm/include/arm-common/kvm-config-arch.h
-index 5734c46ab9e6..742733e289af 100644
---- a/arm/include/arm-common/kvm-config-arch.h
-+++ b/arm/include/arm-common/kvm-config-arch.h
-@@ -9,6 +9,7 @@ struct kvm_config_arch {
- 	bool		virtio_trans_pci;
- 	bool		aarch32_guest;
- 	bool		has_pmuv3;
-+	bool		has_spev1;
- 	u64		kaslr_seed;
- 	enum irqchip_type irqchip;
- 	u64		fw_addr;
-diff --git a/arm/include/arm-common/spe.h b/arm/include/arm-common/spe.h
-new file mode 100644
-index 000000000000..bcfa40877f6f
---- /dev/null
-+++ b/arm/include/arm-common/spe.h
-@@ -0,0 +1,4 @@
+ 	/* Yes; save the control register and disable data generation */
+-	ctxt->sys_regs[PMSCR_EL1] = read_sysreg_el1(SYS_PMSCR);
+ 	write_sysreg_el1(0, SYS_PMSCR);
+ 	isb();
+ 
+ 	/* Now drain all buffered data to memory */
+ 	psb_csync();
+ 	dsb(nsh);
 +
-+#define KVM_ARM_SPEV1_PPI			21
-+
-+void spe__generate_fdt_nodes(void *fdt, struct kvm *kvm);
-diff --git a/arm/spe.c b/arm/spe.c
-new file mode 100644
-index 000000000000..ec03b01a3866
---- /dev/null
-+++ b/arm/spe.c
-@@ -0,0 +1,81 @@
-+#include "kvm/fdt.h"
-+#include "kvm/kvm.h"
-+#include "kvm/kvm-cpu.h"
-+#include "kvm/util.h"
-+
-+#include "arm-common/gic.h"
-+#include "arm-common/spe.h"
-+
-+#ifdef CONFIG_ARM64
-+static int set_spe_attr(struct kvm *kvm, int vcpu_idx,
-+			struct kvm_device_attr *attr)
-+{
-+	int ret, fd;
-+
-+	fd = kvm->cpus[vcpu_idx]->vcpu_fd;
-+
-+	ret = ioctl(fd, KVM_HAS_DEVICE_ATTR, attr);
-+	if (!ret) {
-+		ret = ioctl(fd, KVM_SET_DEVICE_ATTR, attr);
-+		if (ret)
-+			pr_err("SPE KVM_SET_DEVICE_ATTR failed (%d)\n", ret);
-+	} else {
-+		pr_err("Unsupported SPE on vcpu%d\n", vcpu_idx);
-+	}
-+
-+	return ret;
-+}
-+
-+void spe__generate_fdt_nodes(void *fdt, struct kvm *kvm)
-+{
-+	const char compatible[] = "arm,statistical-profiling-extension-v1";
-+	int irq = KVM_ARM_SPEV1_PPI;
-+	int i, ret;
-+
-+	u32 cpu_mask = (((1 << kvm->nrcpus) - 1) << GIC_FDT_IRQ_PPI_CPU_SHIFT) \
-+		       & GIC_FDT_IRQ_PPI_CPU_MASK;
-+	u32 irq_prop[] = {
-+		cpu_to_fdt32(GIC_FDT_IRQ_TYPE_PPI),
-+		cpu_to_fdt32(irq - 16),
-+		cpu_to_fdt32(cpu_mask | IRQ_TYPE_LEVEL_HIGH),
-+	};
-+
-+	if (!kvm->cfg.arch.has_spev1)
++	if (!full_ctxt)
 +		return;
 +
-+	if (!kvm__supports_extension(kvm, KVM_CAP_ARM_SPE_V1)) {
-+		pr_info("SPE unsupported\n");
-+		return;
++	ctxt->sys_regs[PMBLIMITR_EL1] = read_sysreg_s(SYS_PMBLIMITR_EL1);
++	write_sysreg_s(0, SYS_PMBLIMITR_EL1);
++
++	/*
++	 * As PMBSR is conditionally restored when returning to the host we
++	 * must ensure the service bit is unset here to prevent a spurious
++	 * host SPE interrupt from being raised.
++	 */
++	ctxt->sys_regs[PMBSR_EL1] = read_sysreg_s(SYS_PMBSR_EL1);
++	write_sysreg_s(0, SYS_PMBSR_EL1);
++
++	isb();
++
++	ctxt->sys_regs[PMSICR_EL1] = read_sysreg_s(SYS_PMSICR_EL1);
++	ctxt->sys_regs[PMSIRR_EL1] = read_sysreg_s(SYS_PMSIRR_EL1);
++	ctxt->sys_regs[PMSFCR_EL1] = read_sysreg_s(SYS_PMSFCR_EL1);
++	ctxt->sys_regs[PMSEVFR_EL1] = read_sysreg_s(SYS_PMSEVFR_EL1);
++	ctxt->sys_regs[PMSLATFR_EL1] = read_sysreg_s(SYS_PMSLATFR_EL1);
++	ctxt->sys_regs[PMBPTR_EL1] = read_sysreg_s(SYS_PMBPTR_EL1);
+ }
+ 
+-static void __hyp_text __debug_restore_spe_nvhe(struct kvm_cpu_context *ctxt)
++static void __hyp_text
++__debug_restore_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
+ {
+ 	if (!ctxt->sys_regs[PMSCR_EL1])
+ 		return;
+@@ -126,6 +151,16 @@ static void __hyp_text __debug_restore_spe_nvhe(struct kvm_cpu_context *ctxt)
+ 	isb();
+ 
+ 	/* Re-enable data generation */
++	if (full_ctxt) {
++		write_sysreg_s(ctxt->sys_regs[PMBPTR_EL1], SYS_PMBPTR_EL1);
++		write_sysreg_s(ctxt->sys_regs[PMBLIMITR_EL1], SYS_PMBLIMITR_EL1);
++		write_sysreg_s(ctxt->sys_regs[PMSFCR_EL1], SYS_PMSFCR_EL1);
++		write_sysreg_s(ctxt->sys_regs[PMSEVFR_EL1], SYS_PMSEVFR_EL1);
++		write_sysreg_s(ctxt->sys_regs[PMSLATFR_EL1], SYS_PMSLATFR_EL1);
++		write_sysreg_s(ctxt->sys_regs[PMSIRR_EL1], SYS_PMSIRR_EL1);
++		write_sysreg_s(ctxt->sys_regs[PMSICR_EL1], SYS_PMSICR_EL1);
++		write_sysreg_s(ctxt->sys_regs[PMBSR_EL1], SYS_PMBSR_EL1);
 +	}
-+
-+	for (i = 0; i < kvm->nrcpus; i++) {
-+		struct kvm_device_attr spe_attr;
-+
-+		spe_attr = (struct kvm_device_attr){
-+			.group	= KVM_ARM_VCPU_SPE_V1_CTRL,
-+			.addr	= (u64)(unsigned long)&irq,
-+			.attr	= KVM_ARM_VCPU_SPE_V1_IRQ,
-+		};
-+
-+		ret = set_spe_attr(kvm, i, &spe_attr);
-+		if (ret)
-+			return;
-+
-+		spe_attr = (struct kvm_device_attr){
-+			.group	= KVM_ARM_VCPU_SPE_V1_CTRL,
-+			.attr	= KVM_ARM_VCPU_SPE_V1_INIT,
-+		};
-+
-+		ret = set_spe_attr(kvm, i, &spe_attr);
-+		if (ret)
-+			return;
-+	}
-+
-+	_FDT(fdt_begin_node(fdt, "spe"));
-+	_FDT(fdt_property(fdt, "compatible", compatible, sizeof(compatible)));
-+	_FDT(fdt_property(fdt, "interrupts", irq_prop, sizeof(irq_prop)));
-+	_FDT(fdt_end_node(fdt));
-+}
-+#else
-+void spe__generate_fdt_nodes(void *fdt, struct kvm *kvm) { }
-+#endif
+ 	write_sysreg_el1(ctxt->sys_regs[PMSCR_EL1], SYS_PMSCR);
+ }
+ 
+@@ -198,7 +233,7 @@ void __hyp_text __debug_restore_host_context(struct kvm_vcpu *vcpu)
+ 	guest_ctxt = &vcpu->arch.ctxt;
+ 
+ 	if (!has_vhe())
+-		__debug_restore_spe_nvhe(host_ctxt);
++		__debug_restore_spe_nvhe(host_ctxt, false);
+ 
+ 	if (!(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY))
+ 		return;
+@@ -222,7 +257,7 @@ void __hyp_text __debug_save_host_context(struct kvm_vcpu *vcpu)
+ 
+ 	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
+ 	if (!has_vhe())
+-		__debug_save_spe_nvhe(host_ctxt);
++		__debug_save_spe_nvhe(host_ctxt, false);
+ }
+ 
+ void __hyp_text __debug_save_guest_context(struct kvm_vcpu *vcpu)
 -- 
 2.21.0
 
