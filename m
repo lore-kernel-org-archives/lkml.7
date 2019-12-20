@@ -2,457 +2,99 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44087C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3FAC47409
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 115A3222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19662206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:31:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576852276;
+	bh=7RbFZR9l6fbJb/ENm2CCwzXl9j4zXlKt2/R1YDXiBaE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xBqCmwdjoqkfF5n3pRhBU87Zcigkwjumki7TwwyGOjz+l/yTHdXuimzn/7Pk/6hfX
+	 L35gN2kStRkTzyGQAsK/rk6ukb8mQJQXMLdZz2xiQBN7p4YR0N693K21yBbXRiVSdP
+	 nFH7bB2Yd93JmAMApMkFGGcVwfsj9QfH0DaYRRrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbfLTObN (ORCPT
+        id S1728089AbfLTObP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:31:13 -0500
-Received: from foss.arm.com ([217.140.110.172]:51302 "EHLO foss.arm.com"
+        Fri, 20 Dec 2019 09:31:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727849AbfLTOa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:30:59 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B3B7711FB;
-        Fri, 20 Dec 2019 06:30:58 -0800 (PST)
-Received: from e119886-lin.cambridge.arm.com (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B2CE23F718;
-        Fri, 20 Dec 2019 06:30:56 -0800 (PST)
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH v2 12/18] KVM: arm64: add a new vcpu device control group for SPEv1
-Date:   Fri, 20 Dec 2019 14:30:19 +0000
-Message-Id: <20191220143025.33853-13-andrew.murray@arm.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191220143025.33853-1-andrew.murray@arm.com>
-References: <20191220143025.33853-1-andrew.murray@arm.com>
+        id S1727993AbfLTObD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:31:03 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92E9E24688;
+        Fri, 20 Dec 2019 14:31:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576852262;
+        bh=7RbFZR9l6fbJb/ENm2CCwzXl9j4zXlKt2/R1YDXiBaE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OnrWIBCBFiXC4PRxcKitdTe9Tf/d0tTpH8B7+nd89VYBI99fIxlCG44wBmrbahO36
+         Ep4TJ71Ax5npY/ZHhWuNfdYvnMDDjVX42mZ3M/Qccd0LgUdVhANqi3ntpYTtZ/MtqR
+         ToWKbVEmXqmZ+BfGn8CiEcCtvtFq/F/ATyU/L9t8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Juergen Gross <jgross@suse.com>,
+        Nicholas Tsirakis <niko.tsirakis@gmail.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, xen-devel@lists.xenproject.org
+Subject: [PATCH AUTOSEL 5.4 51/52] xen/balloon: fix ballooned page accounting without hotplug enabled
+Date:   Fri, 20 Dec 2019 09:29:53 -0500
+Message-Id: <20191220142954.9500-51-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
+References: <20191220142954.9500-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+From: Juergen Gross <jgross@suse.com>
 
-To configure the virtual SPEv1 overflow interrupt number, we use the
-vcpu kvm_device ioctl, encapsulating the KVM_ARM_VCPU_SPE_V1_IRQ
-attribute within the KVM_ARM_VCPU_SPE_V1_CTRL group.
+[ Upstream commit c673ec61ade89bf2f417960f986bc25671762efb ]
 
-After configuring the SPEv1, call the vcpu ioctl with attribute
-KVM_ARM_VCPU_SPE_V1_INIT to initialize the SPEv1.
+When CONFIG_XEN_BALLOON_MEMORY_HOTPLUG is not defined
+reserve_additional_memory() will set balloon_stats.target_pages to a
+wrong value in case there are still some ballooned pages allocated via
+alloc_xenballooned_pages().
 
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+This will result in balloon_process() no longer be triggered when
+ballooned pages are freed in batches.
+
+Reported-by: Nicholas Tsirakis <niko.tsirakis@gmail.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/virt/kvm/devices/vcpu.txt |  28 ++++
- arch/arm64/include/asm/kvm_host.h       |   2 +-
- arch/arm64/include/uapi/asm/kvm.h       |   4 +
- arch/arm64/kvm/Makefile                 |   1 +
- arch/arm64/kvm/guest.c                  |   6 +
- arch/arm64/kvm/reset.c                  |   3 +
- include/kvm/arm_spe.h                   |  45 +++++++
- include/uapi/linux/kvm.h                |   1 +
- virt/kvm/arm/arm.c                      |   1 +
- virt/kvm/arm/spe.c                      | 163 ++++++++++++++++++++++++
- 10 files changed, 253 insertions(+), 1 deletion(-)
- create mode 100644 virt/kvm/arm/spe.c
+ drivers/xen/balloon.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/virt/kvm/devices/vcpu.txt b/Documentation/virt/kvm/devices/vcpu.txt
-index 6f3bd64a05b0..cefad056d677 100644
---- a/Documentation/virt/kvm/devices/vcpu.txt
-+++ b/Documentation/virt/kvm/devices/vcpu.txt
-@@ -74,3 +74,31 @@ Specifies the base address of the stolen time structure for this VCPU. The
- base address must be 64 byte aligned and exist within a valid guest memory
- region. See Documentation/virt/kvm/arm/pvtime.txt for more information
- including the layout of the stolen time structure.
-+
-+4. GROUP: KVM_ARM_VCPU_SPE_V1_CTRL
-+Architectures: ARM64
-+
-+4.1. ATTRIBUTE: KVM_ARM_VCPU_SPE_V1_IRQ
-+Parameters: in kvm_device_attr.addr the address for SPE buffer overflow interrupt
-+	    is a pointer to an int
-+Returns: -EBUSY: The SPE overflow interrupt is already set
-+         -ENXIO: The overflow interrupt not set when attempting to get it
-+         -ENODEV: SPEv1 not supported
-+         -EINVAL: Invalid SPE overflow interrupt number supplied or
-+                  trying to set the IRQ number without using an in-kernel
-+                  irqchip.
-+
-+A value describing the SPEv1 (Statistical Profiling Extension v1) overflow
-+interrupt number for this vcpu. This interrupt should be PPI and the interrupt
-+type and number must be same for each vcpu.
-+
-+4.2 ATTRIBUTE: KVM_ARM_VCPU_SPE_V1_INIT
-+Parameters: no additional parameter in kvm_device_attr.addr
-+Returns: -ENODEV: SPEv1 not supported or GIC not initialized
-+         -ENXIO: SPEv1 not properly configured or in-kernel irqchip not
-+                 configured as required prior to calling this attribute
-+         -EBUSY: SPEv1 already initialized
-+
-+Request the initialization of the SPEv1.  If using the SPEv1 with an in-kernel
-+virtual GIC implementation, this must be done after initializing the in-kernel
-+irqchip.
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index 333c6491bec7..d00f450dc4cd 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -39,7 +39,7 @@
- 
- #define KVM_MAX_VCPUS VGIC_V3_MAX_CPUS
- 
--#define KVM_VCPU_MAX_FEATURES 7
-+#define KVM_VCPU_MAX_FEATURES 8
- 
- #define KVM_REQ_SLEEP \
- 	KVM_ARCH_REQ_FLAGS(0, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
-diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
-index 820e5751ada7..905a73f30079 100644
---- a/arch/arm64/include/uapi/asm/kvm.h
-+++ b/arch/arm64/include/uapi/asm/kvm.h
-@@ -106,6 +106,7 @@ struct kvm_regs {
- #define KVM_ARM_VCPU_SVE		4 /* enable SVE for this CPU */
- #define KVM_ARM_VCPU_PTRAUTH_ADDRESS	5 /* VCPU uses address authentication */
- #define KVM_ARM_VCPU_PTRAUTH_GENERIC	6 /* VCPU uses generic authentication */
-+#define KVM_ARM_VCPU_SPE_V1		7 /* Support guest SPEv1 */
- 
- struct kvm_vcpu_init {
- 	__u32 target;
-@@ -326,6 +327,9 @@ struct kvm_vcpu_events {
- #define   KVM_ARM_VCPU_TIMER_IRQ_PTIMER		1
- #define KVM_ARM_VCPU_PVTIME_CTRL	2
- #define   KVM_ARM_VCPU_PVTIME_IPA	0
-+#define KVM_ARM_VCPU_SPE_V1_CTRL	3
-+#define   KVM_ARM_VCPU_SPE_V1_IRQ	0
-+#define   KVM_ARM_VCPU_SPE_V1_INIT	1
- 
- /* KVM_IRQ_LINE irq field index values */
- #define KVM_ARM_IRQ_VCPU2_SHIFT		28
-diff --git a/arch/arm64/kvm/Makefile b/arch/arm64/kvm/Makefile
-index 5ffbdc39e780..526f3bf09321 100644
---- a/arch/arm64/kvm/Makefile
-+++ b/arch/arm64/kvm/Makefile
-@@ -37,3 +37,4 @@ kvm-$(CONFIG_KVM_ARM_HOST) += $(KVM)/arm/vgic/vgic-debug.o
- kvm-$(CONFIG_KVM_ARM_HOST) += $(KVM)/irqchip.o
- kvm-$(CONFIG_KVM_ARM_HOST) += $(KVM)/arm/arch_timer.o
- kvm-$(CONFIG_KVM_ARM_PMU) += $(KVM)/arm/pmu.o
-+kvm-$(CONFIG_KVM_ARM_SPE) += $(KVM)/arm/spe.o
-diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
-index 2fff06114a8f..50fea538b8bd 100644
---- a/arch/arm64/kvm/guest.c
-+++ b/arch/arm64/kvm/guest.c
-@@ -874,6 +874,8 @@ int kvm_arm_vcpu_arch_set_attr(struct kvm_vcpu *vcpu,
- 		break;
- 	case KVM_ARM_VCPU_PVTIME_CTRL:
- 		ret = kvm_arm_pvtime_set_attr(vcpu, attr);
-+	case KVM_ARM_VCPU_SPE_V1_CTRL:
-+		ret = kvm_arm_spe_v1_set_attr(vcpu, attr);
- 		break;
- 	default:
- 		ret = -ENXIO;
-@@ -897,6 +899,8 @@ int kvm_arm_vcpu_arch_get_attr(struct kvm_vcpu *vcpu,
- 		break;
- 	case KVM_ARM_VCPU_PVTIME_CTRL:
- 		ret = kvm_arm_pvtime_get_attr(vcpu, attr);
-+	case KVM_ARM_VCPU_SPE_V1_CTRL:
-+		ret = kvm_arm_spe_v1_get_attr(vcpu, attr);
- 		break;
- 	default:
- 		ret = -ENXIO;
-@@ -920,6 +924,8 @@ int kvm_arm_vcpu_arch_has_attr(struct kvm_vcpu *vcpu,
- 		break;
- 	case KVM_ARM_VCPU_PVTIME_CTRL:
- 		ret = kvm_arm_pvtime_has_attr(vcpu, attr);
-+	case KVM_ARM_VCPU_SPE_V1_CTRL:
-+		ret = kvm_arm_spe_v1_has_attr(vcpu, attr);
- 		break;
- 	default:
- 		ret = -ENXIO;
-diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
-index f4a8ae918827..cf17aff1489d 100644
---- a/arch/arm64/kvm/reset.c
-+++ b/arch/arm64/kvm/reset.c
-@@ -80,6 +80,9 @@ int kvm_arch_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 	case KVM_CAP_ARM_INJECT_SERROR_ESR:
- 		r = cpus_have_const_cap(ARM64_HAS_RAS_EXTN);
- 		break;
-+	case KVM_CAP_ARM_SPE_V1:
-+		r = kvm_arm_support_spe_v1();
-+		break;
- 	case KVM_CAP_SET_GUEST_DEBUG:
- 	case KVM_CAP_VCPU_ATTRIBUTES:
- 		r = 1;
-diff --git a/include/kvm/arm_spe.h b/include/kvm/arm_spe.h
-index 30c40b1bc385..d1f3c564dfd0 100644
---- a/include/kvm/arm_spe.h
-+++ b/include/kvm/arm_spe.h
-@@ -8,6 +8,7 @@
- 
- #include <uapi/linux/kvm.h>
- #include <linux/kvm_host.h>
-+#include <linux/cpufeature.h>
- 
- struct kvm_spe {
- 	int irq_num;
-@@ -18,8 +19,52 @@ struct kvm_spe {
- 
- #ifdef CONFIG_KVM_ARM_SPE
- #define kvm_arm_spe_v1_ready(v)		((v)->arch.spe.ready)
-+#define kvm_arm_spe_irq_initialized(v)		\
-+	((v)->arch.spe.irq_num >= VGIC_NR_SGIS &&	\
-+	(v)->arch.spe.irq_num <= VGIC_MAX_PRIVATE)
-+
-+static inline bool kvm_arm_support_spe_v1(void)
-+{
-+	u64 dfr0 = read_sanitised_ftr_reg(SYS_ID_AA64DFR0_EL1);
-+
-+	return !!cpuid_feature_extract_unsigned_field(dfr0,
-+						      ID_AA64DFR0_PMSVER_SHIFT);
-+}
-+
-+int kvm_arm_spe_v1_set_attr(struct kvm_vcpu *vcpu,
-+			    struct kvm_device_attr *attr);
-+int kvm_arm_spe_v1_get_attr(struct kvm_vcpu *vcpu,
-+			    struct kvm_device_attr *attr);
-+int kvm_arm_spe_v1_has_attr(struct kvm_vcpu *vcpu,
-+			    struct kvm_device_attr *attr);
-+int kvm_arm_spe_v1_enable(struct kvm_vcpu *vcpu);
+diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
+index 5bae515c8e25c..bed90d612e484 100644
+--- a/drivers/xen/balloon.c
++++ b/drivers/xen/balloon.c
+@@ -395,7 +395,8 @@ static struct notifier_block xen_memory_nb = {
  #else
- #define kvm_arm_spe_v1_ready(v)		(false)
-+#define kvm_arm_support_spe_v1()	(false)
-+#define kvm_arm_spe_irq_initialized(v)	(false)
-+
-+static inline int kvm_arm_spe_v1_set_attr(struct kvm_vcpu *vcpu,
-+					  struct kvm_device_attr *attr)
-+{
-+	return -ENXIO;
-+}
-+
-+static inline int kvm_arm_spe_v1_get_attr(struct kvm_vcpu *vcpu,
-+					  struct kvm_device_attr *attr)
-+{
-+	return -ENXIO;
-+}
-+
-+static inline int kvm_arm_spe_v1_has_attr(struct kvm_vcpu *vcpu,
-+					  struct kvm_device_attr *attr)
-+{
-+	return -ENXIO;
-+}
-+
-+static inline int kvm_arm_spe_v1_enable(struct kvm_vcpu *vcpu)
-+{
-+	return 0;
-+}
- #endif /* CONFIG_KVM_ARM_SPE */
- 
- #endif /* __ASM_ARM_KVM_SPE_H */
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index f0a16b4adbbd..1a362c230e4a 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -1009,6 +1009,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_PPC_GUEST_DEBUG_SSTEP 176
- #define KVM_CAP_ARM_NISV_TO_USER 177
- #define KVM_CAP_ARM_INJECT_EXT_DABT 178
-+#define KVM_CAP_ARM_SPE_V1 179
- 
- #ifdef KVM_CAP_IRQ_ROUTING
- 
-diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
-index 12e0280291ce..340d2388ee2c 100644
---- a/virt/kvm/arm/arm.c
-+++ b/virt/kvm/arm/arm.c
-@@ -22,6 +22,7 @@
- #include <trace/events/kvm.h>
- #include <kvm/arm_pmu.h>
- #include <kvm/arm_psci.h>
-+#include <kvm/arm_spe.h>
- 
- #define CREATE_TRACE_POINTS
- #include "trace.h"
-diff --git a/virt/kvm/arm/spe.c b/virt/kvm/arm/spe.c
-new file mode 100644
-index 000000000000..83ac2cce2cc3
---- /dev/null
-+++ b/virt/kvm/arm/spe.c
-@@ -0,0 +1,163 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 ARM Ltd.
-+ */
-+
-+#include <linux/cpu.h>
-+#include <linux/kvm.h>
-+#include <linux/kvm_host.h>
-+#include <linux/uaccess.h>
-+#include <asm/kvm_emulate.h>
-+#include <kvm/arm_spe.h>
-+#include <kvm/arm_vgic.h>
-+
-+int kvm_arm_spe_v1_enable(struct kvm_vcpu *vcpu)
-+{
-+	if (!vcpu->arch.spe.created)
-+		return 0;
-+
-+	/*
-+	 * A valid interrupt configuration for the SPE is either to have a
-+	 * properly configured interrupt number and using an in-kernel irqchip.
-+	 */
-+	if (irqchip_in_kernel(vcpu->kvm)) {
-+		int irq = vcpu->arch.spe.irq_num;
-+
-+		if (!kvm_arm_spe_irq_initialized(vcpu))
-+			return -EINVAL;
-+
-+		if (!irq_is_ppi(irq))
-+			return -EINVAL;
-+	}
-+
-+	vcpu->arch.spe.ready = true;
-+
-+	return 0;
-+}
-+
-+static int kvm_arm_spe_v1_init(struct kvm_vcpu *vcpu)
-+{
-+	if (!kvm_arm_support_spe_v1())
-+		return -ENODEV;
-+
-+	if (!test_bit(KVM_ARM_VCPU_SPE_V1, vcpu->arch.features))
-+		return -ENXIO;
-+
-+	if (vcpu->arch.spe.created)
-+		return -EBUSY;
-+
-+	if (irqchip_in_kernel(vcpu->kvm)) {
-+		int ret;
-+
-+		/*
-+		 * If using the SPE with an in-kernel virtual GIC
-+		 * implementation, we require the GIC to be already
-+		 * initialized when initializing the SPE.
-+		 */
-+		if (!vgic_initialized(vcpu->kvm))
-+			return -ENODEV;
-+
-+		ret = kvm_vgic_set_owner(vcpu, vcpu->arch.spe.irq_num,
-+					 &vcpu->arch.spe);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	vcpu->arch.spe.created = true;
-+	return 0;
-+}
-+
-+/*
-+ * For one VM the interrupt type must be same for each vcpu.
-+ * As a PPI, the interrupt number is the same for all vcpus,
-+ * while as an SPI it must be a separate number per vcpu.
-+ */
-+static bool spe_irq_is_valid(struct kvm *kvm, int irq)
-+{
-+	int i;
-+	struct kvm_vcpu *vcpu;
-+
-+	kvm_for_each_vcpu(i, vcpu, kvm) {
-+		if (!kvm_arm_spe_irq_initialized(vcpu))
-+			continue;
-+
-+		if (vcpu->arch.spe.irq_num != irq)
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
-+int kvm_arm_spe_v1_set_attr(struct kvm_vcpu *vcpu, struct kvm_device_attr *attr)
-+{
-+	switch (attr->attr) {
-+	case KVM_ARM_VCPU_SPE_V1_IRQ: {
-+		int __user *uaddr = (int __user *)(long)attr->addr;
-+		int irq;
-+
-+		if (!irqchip_in_kernel(vcpu->kvm))
-+			return -EINVAL;
-+
-+		if (!test_bit(KVM_ARM_VCPU_SPE_V1, vcpu->arch.features))
-+			return -ENODEV;
-+
-+		if (get_user(irq, uaddr))
-+			return -EFAULT;
-+
-+		/* The SPE overflow interrupt can be a PPI only */
-+		if (!(irq_is_ppi(irq)))
-+			return -EINVAL;
-+
-+		if (!spe_irq_is_valid(vcpu->kvm, irq))
-+			return -EINVAL;
-+
-+		if (kvm_arm_spe_irq_initialized(vcpu))
-+			return -EBUSY;
-+
-+		kvm_debug("Set kvm ARM SPE irq: %d\n", irq);
-+		vcpu->arch.spe.irq_num = irq;
-+		return 0;
-+	}
-+	case KVM_ARM_VCPU_SPE_V1_INIT:
-+		return kvm_arm_spe_v1_init(vcpu);
-+	}
-+
-+	return -ENXIO;
-+}
-+
-+int kvm_arm_spe_v1_get_attr(struct kvm_vcpu *vcpu, struct kvm_device_attr *attr)
-+{
-+	switch (attr->attr) {
-+	case KVM_ARM_VCPU_SPE_V1_IRQ: {
-+		int __user *uaddr = (int __user *)(long)attr->addr;
-+		int irq;
-+
-+		if (!irqchip_in_kernel(vcpu->kvm))
-+			return -EINVAL;
-+
-+		if (!test_bit(KVM_ARM_VCPU_SPE_V1, vcpu->arch.features))
-+			return -ENODEV;
-+
-+		if (!kvm_arm_spe_irq_initialized(vcpu))
-+			return -ENXIO;
-+
-+		irq = vcpu->arch.spe.irq_num;
-+		return put_user(irq, uaddr);
-+	}
-+	}
-+
-+	return -ENXIO;
-+}
-+
-+int kvm_arm_spe_v1_has_attr(struct kvm_vcpu *vcpu, struct kvm_device_attr *attr)
-+{
-+	switch (attr->attr) {
-+	case KVM_ARM_VCPU_SPE_V1_IRQ:
-+	case KVM_ARM_VCPU_SPE_V1_INIT:
-+		if (kvm_arm_support_spe_v1() &&
-+		    test_bit(KVM_ARM_VCPU_SPE_V1, vcpu->arch.features))
-+			return 0;
-+	}
-+
-+	return -ENXIO;
-+}
+ static enum bp_state reserve_additional_memory(void)
+ {
+-	balloon_stats.target_pages = balloon_stats.current_pages;
++	balloon_stats.target_pages = balloon_stats.current_pages +
++				     balloon_stats.target_unpopulated;
+ 	return BP_ECANCELED;
+ }
+ #endif /* CONFIG_XEN_BALLOON_MEMORY_HOTPLUG */
 -- 
-2.21.0
+2.20.1
 
