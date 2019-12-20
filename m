@@ -2,106 +2,188 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 673CDC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDF3C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39CC52146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:36:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FzuMgYO0"
+	by mail.kernel.org (Postfix) with ESMTP id 31B722146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:37:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfLTJg2 (ORCPT
+        id S1727401AbfLTJhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 04:36:28 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:55170 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727167AbfLTJg1 (ORCPT
+        Fri, 20 Dec 2019 04:37:10 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:35234 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbfLTJhK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 04:36:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=IeC3Wh4lNy11h5SgeP1/xOYlLb3Jw6kDXhcV/C+ENkU=; b=FzuMgYO0pde3xh1++9b24OYgG
-        LCeSCwVdXvQF3MKcL5fdI4Q9y6s0yuwPArFJb0716ETxmW7FgnuBZ3K0VUcTZVqkfyE9xHK+ovcT/
-        zw2rPT1YVc+rmhJfj/2GuH+W8nlgLoABVxxiM3WFh6mXslAz3aC8ghImCxCwOnXJMWISdSnsq3hUi
-        4ev4QSQ3nSftSsqTebVPslge2m9gIK9L3VkFRtxsRMoOVTFquoL/wi5CmaNXt0Gto9+OZzLydwy4k
-        5m584NgatcPfdFYDbnSKhZUnrjUBRedMqNCvdf5tDjwq+hEHeHTF/aXG44S17rhatarrnC/3Q0Ulc
-        KyAbwUjKA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iiEhi-0000IZ-R4; Fri, 20 Dec 2019 09:36:15 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9FFDC3007F2;
-        Fri, 20 Dec 2019 10:34:49 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8CAD82B4061AD; Fri, 20 Dec 2019 10:36:13 +0100 (CET)
-Date:   Fri, 20 Dec 2019 10:36:13 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [PATCH 2/9] perf/core: Add PERF_SAMPLE_CGROUP feature
-Message-ID: <20191220093613.GD2844@hirez.programming.kicks-ass.net>
-References: <20191220043253.3278951-1-namhyung@kernel.org>
- <20191220043253.3278951-3-namhyung@kernel.org>
+        Fri, 20 Dec 2019 04:37:10 -0500
+Received: by mail-io1-f71.google.com with SMTP id x10so1289578iob.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 01:37:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=+SRiHYUIYqPOXXwQdb6uqMp3IkOEsDJQnj3uiqHrcuA=;
+        b=dEsqLPS7v4XVp8EgvwmIHcI2KuGeFyf44hr1DNDhOyaPYEhH1OrImCDiync9xEJQ04
+         IqUlon+ToFAdtHM/VtecnPG2jyEUc9i6Pb2LnhKzjuVF3cRqLjuQ1y/OdIpdrEuxXtLi
+         xGh7m0yNsmFFYVJ2UkJhy/V802diy7z5zNLI4ZJ48xc9twjeDhh9zkszu4/oAJ5CUKTL
+         V97Dqt1qTYEjo/PHG5iU/Qp/WNfhxu3hbhj/ZSIlQbqXoP5fd6QcodqWcwBrYn+bkQDJ
+         X6ZDAHZSkYxG9xy1fDFMAiyIXM7cjH/OTnvEdySSeJh5WrB+VTYxmRrX5UMdsKaSiO6K
+         b1BQ==
+X-Gm-Message-State: APjAAAXB0byQTyQHhoav9OCub/PyetRHK+RDLTOw+ee9ENeDnXXlhM0y
+        o/desrTtP8mmwIPkv/h0BDpv6KTmiX/esUQw92eff+4nSzaH
+X-Google-Smtp-Source: APXvYqyh4rBUg6jIvlbuqTRpqz+dSoOIG5JntiBqjSV9Er/XOFvDyCNuEuu/S5oP3MA6hGBZzZVnFUSC3nC30nTBZQWKH3rK8Oxv
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191220043253.3278951-3-namhyung@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a5e:940e:: with SMTP id q14mr8716436ioj.247.1576834629339;
+ Fri, 20 Dec 2019 01:37:09 -0800 (PST)
+Date:   Fri, 20 Dec 2019 01:37:09 -0800
+In-Reply-To: <00000000000083c858059877d77c@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f39399059a1f6b2c@google.com>
+Subject: Re: KASAN: use-after-free Write in nr_release
+From:   syzbot <syzbot+caa188bdfc1eeafeb418@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, hdanton@sina.com, linux-hams@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        ralf@linux-mips.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 01:32:46PM +0900, Namhyung Kim wrote:
-> The PERF_SAMPLE_CGROUP bit is to save (perf_event) cgroup information
-> in the sample.  It will add a 64-bit id to identify current cgroup and
-> it's the file handle in the cgroup file system.  Userspace should use
-> this information with PERF_RECORD_CGROUP event to match which cgroup
-> it belongs.
-> 
-> I put it before PERF_SAMPLE_AUX for simplicity since it just needs a
-> 64-bit word.  But if we want bigger samples, I can work on that
-> direction too.
-> 
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: Li Zefan <lizefan@huawei.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
+syzbot has found a reproducer for the following crash on:
 
-> @@ -6895,6 +6901,18 @@ void perf_prepare_sample(struct perf_event_header *header,
->  	if (sample_type & PERF_SAMPLE_PHYS_ADDR)
->  		data->phys_addr = perf_virt_to_phys(data->addr);
->  
-> +	if (sample_type & PERF_SAMPLE_CGROUP) {
-> +		u64 cgrp_id = 0;
-> +#ifdef CONFIG_CGROUP_PERF
-> +		struct cgroup *cgrp;
-> +
-> +		/* protected by RCU */
-> +		cgrp = task_css_check(current, perf_event_cgrp_id, 1)->cgroup;
-> +		cgrp_id = cgroup_id(cgrp);
-> +#endif
-> +		data->cgroup = cgrp_id;
-> +	}
+HEAD commit:    7e0165b2 Merge branch 'akpm' (patches from Andrew)
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13d65fa6e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1b59a3066828ac4c
+dashboard link: https://syzkaller.appspot.com/bug?extid=caa188bdfc1eeafeb418
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12d9dd51e00000
 
-Would it make more sense to refuse SAMPLE_CGROUP if !CGROUP_PERF?
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+caa188bdfc1eeafeb418@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in atomic_fetch_add  
+include/asm-generic/atomic-instrumented.h:111 [inline]
+BUG: KASAN: use-after-free in refcount_add include/linux/refcount.h:188  
+[inline]
+BUG: KASAN: use-after-free in refcount_inc include/linux/refcount.h:228  
+[inline]
+BUG: KASAN: use-after-free in sock_hold include/net/sock.h:648 [inline]
+BUG: KASAN: use-after-free in nr_release+0x65/0x4c0  
+net/netrom/af_netrom.c:498
+Write of size 4 at addr ffff8880781a3080 by task syz-executor.0/12044
+
+CPU: 1 PID: 12044 Comm: syz-executor.0 Not tainted 5.5.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:639
+  check_memory_region_inline mm/kasan/generic.c:185 [inline]
+  check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
+  __kasan_check_write+0x14/0x20 mm/kasan/common.c:101
+  atomic_fetch_add include/asm-generic/atomic-instrumented.h:111 [inline]
+  refcount_add include/linux/refcount.h:188 [inline]
+  refcount_inc include/linux/refcount.h:228 [inline]
+  sock_hold include/net/sock.h:648 [inline]
+  nr_release+0x65/0x4c0 net/netrom/af_netrom.c:498
+  __sock_release+0xce/0x280 net/socket.c:592
+  sock_close+0x1e/0x30 net/socket.c:1270
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:164
+  prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+  do_syscall_64+0x676/0x790 arch/x86/entry/common.c:304
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4144b1
+Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48  
+83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48  
+89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00007ffc1b260070 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000006 RCX: 00000000004144b1
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000005
+RBP: 0000000000000001 R08: ffffffffffffffff R09: ffffffffffffffff
+R10: 00007ffc1b260150 R11: 0000000000000293 R12: 000000000075c9a0
+R13: 000000000075c9a0 R14: 0000000000761390 R15: 000000000075c124
+
+Allocated by task 12049:
+  save_stack+0x23/0x90 mm/kasan/common.c:72
+  set_track mm/kasan/common.c:80 [inline]
+  __kasan_kmalloc mm/kasan/common.c:513 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:486
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
+  __do_kmalloc mm/slab.c:3656 [inline]
+  __kmalloc+0x163/0x770 mm/slab.c:3665
+  kmalloc include/linux/slab.h:561 [inline]
+  sk_prot_alloc+0x23a/0x310 net/core/sock.c:1603
+  sk_alloc+0x39/0xfd0 net/core/sock.c:1657
+  nr_create+0xb9/0x5e0 net/netrom/af_netrom.c:411
+  __sock_create+0x3ce/0x730 net/socket.c:1420
+  sock_create net/socket.c:1471 [inline]
+  __sys_socket+0x103/0x220 net/socket.c:1513
+  __do_sys_socket net/socket.c:1522 [inline]
+  __se_sys_socket net/socket.c:1520 [inline]
+  __x64_sys_socket+0x73/0xb0 net/socket.c:1520
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 12044:
+  save_stack+0x23/0x90 mm/kasan/common.c:72
+  set_track mm/kasan/common.c:80 [inline]
+  kasan_set_free_info mm/kasan/common.c:335 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:474
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
+  __cache_free mm/slab.c:3426 [inline]
+  kfree+0x10a/0x2c0 mm/slab.c:3757
+  sk_prot_free net/core/sock.c:1640 [inline]
+  __sk_destruct+0x5d8/0x7f0 net/core/sock.c:1724
+  sk_destruct+0xd5/0x110 net/core/sock.c:1739
+  __sk_free+0xfb/0x360 net/core/sock.c:1750
+  sk_free+0x83/0xb0 net/core/sock.c:1761
+  sock_put include/net/sock.h:1729 [inline]
+  nr_release+0x3f4/0x4c0 net/netrom/af_netrom.c:532
+  __sock_release+0xce/0x280 net/socket.c:592
+  sock_close+0x1e/0x30 net/socket.c:1270
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:164
+  prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+  do_syscall_64+0x676/0x790 arch/x86/entry/common.c:304
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8880781a3000
+  which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 128 bytes inside of
+  2048-byte region [ffff8880781a3000, ffff8880781a3800)
+The buggy address belongs to the page:
+page:ffffea0001e068c0 refcount:1 mapcount:0 mapping:ffff8880aa400e00  
+index:0x0
+raw: 00fffe0000000200 ffffea0001e06848 ffffea0001af0088 ffff8880aa400e00
+raw: 0000000000000000 ffff8880781a3000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8880781a2f80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+  ffff8880781a3000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff8880781a3080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                    ^
+  ffff8880781a3100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8880781a3180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
