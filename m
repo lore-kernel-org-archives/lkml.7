@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D760C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D5CC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3998218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07C11218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:36:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852588;
-	bh=Y1uIUqGV/gU6SzNRPB7L721NVR+rAnUh4bOBc61BYC4=;
+	s=default; t=1576852598;
+	bh=hg/MGBX1/oCvnA6QS1rp73A+mtf+nq5bJmNcbcqKbpE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sqCxBc9bX1gFXQ6M96v0m4uJDDEsGXzTlZXlgZlZ6NgX7qYFRuIwep7aLppeMG67/
-	 7wUmrqL/h9NL5rnJdrMRLFpN2j9MdmTiZ8otm6oTDjM6NqAIwDFERHcblAE5F7iYuP
-	 AzRAL8jPh4SMqyl/cJTKNRbZC3IA0Y35kS+MU3G8=
+	b=pW1ZTXq+Qy/qbaN3vU6bhSw9Lc7mXO5UQ7eS6NZpe/WsUCxz98h0gHHXcPmmoSP71
+	 vjX4pdOqGfKdkE9fxrlCR75/jgEfcCAc3oQd5hrCDGBhwm8qXTUXl5JEFtXwpf0oas
+	 4fuu7g1IeJOpJA/bBUTCh1GMjxdL1hWCzXb8PFKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbfLTOg1 (ORCPT
+        id S1727927AbfLTOgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:36:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39276 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:36:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728318AbfLTOe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:34:58 -0500
+        id S1727960AbfLTOew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:34:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D24642465E;
-        Fri, 20 Dec 2019 14:34:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3508F24689;
+        Fri, 20 Dec 2019 14:34:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852497;
-        bh=Y1uIUqGV/gU6SzNRPB7L721NVR+rAnUh4bOBc61BYC4=;
+        s=default; t=1576852492;
+        bh=hg/MGBX1/oCvnA6QS1rp73A+mtf+nq5bJmNcbcqKbpE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RXw6Ic14RFcYGtsW8GFncp2CGvutn6m0HpMg/dJV/7Gj8VQ47dQpqLFRDZz7BhAKK
-         uHnIPCVp3NTeccenV3Tjd8Lr1vQw3qTCBol14H4OeDo+DoCztBYD25FQcNeOyQfOBQ
-         IjU+jHiG4Oz76DDi+PFiS99W4vDGXouqk6C7k4wg=
+        b=CaVrCUfGK76tLqn2H05yoT/k1RcXHLaCWNyNJrhWHb2tk1uKj1lpZh8tA9MRAwLhE
+         oxNgAfruMnPoW6U0kSV/krysPj1TAMK44XdyGbgwf2r9yKD4bv67kluarevsHDb4ea
+         /aBkcErMNxxsqWi7JRQVFFDPZvfPHve1FO7/l7Xw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Roman Bolshakov <r.bolshakov@yadro.com>,
-        Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        Hannes Reinecke <hare@suse.de>,
+Cc:     Bo Wu <wubo40@huawei.com>, Zhiqiang Liu <liuzhiqiang26@huawei.com>,
+        James Smart <james.smart@broadcom.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 18/34] scsi: qla2xxx: Configure local loop for N2N target
-Date:   Fri, 20 Dec 2019 09:34:17 -0500
-Message-Id: <20191220143433.9922-18-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 14/34] scsi: lpfc: Fix memory leak on lpfc_bsg_write_ebuf_set func
+Date:   Fri, 20 Dec 2019 09:34:13 -0500
+Message-Id: <20191220143433.9922-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220143433.9922-1-sashal@kernel.org>
 References: <20191220143433.9922-1-sashal@kernel.org>
@@ -62,55 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Bolshakov <r.bolshakov@yadro.com>
+From: Bo Wu <wubo40@huawei.com>
 
-[ Upstream commit fd1de5830a5abaf444cc4312871e02c41e24fdc1 ]
+[ Upstream commit 9a1b0b9a6dab452fb0e39fe96880c4faf3878369 ]
 
-qla2x00_configure_local_loop initializes PLOGI payload for PLOGI ELS using
-Get Parameters mailbox command.
+When phba->mbox_ext_buf_ctx.seqNum != phba->mbox_ext_buf_ctx.numBuf,
+dd_data should be freed before return SLI_CONFIG_HANDLED.
 
-In the case when the driver is running in target mode, the topology is N2N
-and the target port has higher WWPN, LOCAL_LOOP_UPDATE bit is cleared too
-early and PLOGI payload is not initialized by the Get Parameters
-command. That causes a failure of ELS IOCB carrying the PLOGI with 0x15 aka
-Data Underrun error.
+When lpfc_sli_issue_mbox func return fails, pmboxq should be also freed in
+job_error tag.
 
-LOCAL_LOOP_UPDATE has to be set to initialize PLOGI payload.
-
-Fixes: 48acad099074 ("scsi: qla2xxx: Fix N2N link re-connect")
-Link: https://lore.kernel.org/r/20191125165702.1013-10-r.bolshakov@yadro.com
-Acked-by: Quinn Tran <qutran@marvell.com>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Tested-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
+Link: https://lore.kernel.org/r/EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915E7A966@DGGEML525-MBS.china.huawei.com
+Signed-off-by: Bo Wu <wubo40@huawei.com>
+Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Reviewed-by: James Smart <james.smart@broadcom.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_init.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ drivers/scsi/lpfc/lpfc_bsg.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
-index d734dcf517b92..753338d5343b9 100644
---- a/drivers/scsi/qla2xxx/qla_init.c
-+++ b/drivers/scsi/qla2xxx/qla_init.c
-@@ -4814,14 +4814,8 @@ qla2x00_configure_loop(scsi_qla_host_t *vha)
- 		set_bit(RSCN_UPDATE, &flags);
- 		clear_bit(LOCAL_LOOP_UPDATE, &flags);
+diff --git a/drivers/scsi/lpfc/lpfc_bsg.c b/drivers/scsi/lpfc/lpfc_bsg.c
+index 99aea52e584b0..21f104c5eab62 100644
+--- a/drivers/scsi/lpfc/lpfc_bsg.c
++++ b/drivers/scsi/lpfc/lpfc_bsg.c
+@@ -4419,12 +4419,6 @@ lpfc_bsg_write_ebuf_set(struct lpfc_hba *phba, struct bsg_job *job,
+ 	phba->mbox_ext_buf_ctx.seqNum++;
+ 	nemb_tp = phba->mbox_ext_buf_ctx.nembType;
  
--	} else if (ha->current_topology == ISP_CFG_N) {
--		clear_bit(RSCN_UPDATE, &flags);
--		if (qla_tgt_mode_enabled(vha)) {
--			/* allow the other side to start the login */
--			clear_bit(LOCAL_LOOP_UPDATE, &flags);
--			set_bit(RELOGIN_NEEDED, &vha->dpc_flags);
--		}
--	} else if (ha->current_topology == ISP_CFG_NL) {
-+	} else if (ha->current_topology == ISP_CFG_NL ||
-+		   ha->current_topology == ISP_CFG_N) {
- 		clear_bit(RSCN_UPDATE, &flags);
- 		set_bit(LOCAL_LOOP_UPDATE, &flags);
- 	} else if (!vha->flags.online ||
+-	dd_data = kmalloc(sizeof(struct bsg_job_data), GFP_KERNEL);
+-	if (!dd_data) {
+-		rc = -ENOMEM;
+-		goto job_error;
+-	}
+-
+ 	pbuf = (uint8_t *)dmabuf->virt;
+ 	size = job->request_payload.payload_len;
+ 	sg_copy_to_buffer(job->request_payload.sg_list,
+@@ -4461,6 +4455,13 @@ lpfc_bsg_write_ebuf_set(struct lpfc_hba *phba, struct bsg_job *job,
+ 				"2968 SLI_CONFIG ext-buffer wr all %d "
+ 				"ebuffers received\n",
+ 				phba->mbox_ext_buf_ctx.numBuf);
++
++		dd_data = kmalloc(sizeof(struct bsg_job_data), GFP_KERNEL);
++		if (!dd_data) {
++			rc = -ENOMEM;
++			goto job_error;
++		}
++
+ 		/* mailbox command structure for base driver */
+ 		pmboxq = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
+ 		if (!pmboxq) {
+@@ -4509,6 +4510,8 @@ lpfc_bsg_write_ebuf_set(struct lpfc_hba *phba, struct bsg_job *job,
+ 	return SLI_CONFIG_HANDLED;
+ 
+ job_error:
++	if (pmboxq)
++		mempool_free(pmboxq, phba->mbox_mem_pool);
+ 	lpfc_bsg_dma_page_free(phba, dmabuf);
+ 	kfree(dd_data);
+ 
 -- 
 2.20.1
 
