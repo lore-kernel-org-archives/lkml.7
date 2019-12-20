@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5174DC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C216C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2606B222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00F4A21D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:34:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852474;
-	bh=6sWzmQDeg1/vZEhrwOu0mgaGDs5oEm0Uqe+Gk8JOxxI=;
+	s=default; t=1576852479;
+	bh=qv6nHl3U2UK+MBIiMPGf+saM44ZLTVoUgETDroEouvg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QuxRHylB9l3jYfBPPNCrq9YtnzWA2fSlrSp22QDBZR2w+juEYQlRjRUZwjT6DTh5q
-	 ckDxM5qExHfrkVeskgKL3kCv+7abz7ReuQ+lA/yUnsWj3p86uoJTfn7ochuysWegDX
-	 wNXF6JWpkTDHfBjuKXJikHbhsd7Q7RHUBtHRDP5g=
+	b=AA6HLuhi9Mryzj2ZxVqrAjkCMkimV2V1VMFWy0rMDdVfl9tmhZ3UyZaJ8jUgehL3q
+	 tnIa68Rihj4gj+LXldLoK8ElzaZqrv1CKTj1ZjeUKQwpbnIf7nrdOVl3yl5kN6MP5U
+	 lJ+tkvvHyTP8hmz4B6XKL0+fTEvlW3JOY8HiEAgA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbfLTOe3 (ORCPT
+        id S1727678AbfLTOaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:34:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34060 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:30:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727644AbfLTOa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:30:27 -0500
+        id S1727636AbfLTOaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:30:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 614AD222C2;
-        Fri, 20 Dec 2019 14:30:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0308624687;
+        Fri, 20 Dec 2019 14:30:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852227;
-        bh=6sWzmQDeg1/vZEhrwOu0mgaGDs5oEm0Uqe+Gk8JOxxI=;
+        s=default; t=1576852220;
+        bh=qv6nHl3U2UK+MBIiMPGf+saM44ZLTVoUgETDroEouvg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DMs8R3G0m9I4AGC+DovIa6zo3VmOvwuhAeEtWkKLtOLxS6cqLc+hJAb5fC6lUJgGd
-         b4H5FbZ+1I7yqMft9/hboXqvXcaHvaFURNUoP3tmKVfrSzcfZS7I5zG2hSmTZZ/1M3
-         umGKYZI99mppqAucOJf/wxHLTyKSbA8u+sK/xs2k=
+        b=llPaCHswqe3qEvERiZkulS07251d66u9HyzKRBd4RMzR7Zo1eUbFwpWvuamflQf65
+         SkXYtj0FTksciTxi+82CgtNyg6b+g2ba/pXxX1s1VScpNsiAxYIwR/WKH7FPhl8+pU
+         Vmt9FPw2VTQA0gyZneCXLTzYDgzb6iHRHXPdWwzA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Quinn Tran <qutran@marvell.com>, Hannes Reinecke <hare@suse.de>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        Roman Bolshakov <r.bolshakov@yadro.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 24/52] scsi: qla2xxx: Use explicit LOGO in target mode
-Date:   Fri, 20 Dec 2019 09:29:26 -0500
-Message-Id: <20191220142954.9500-24-sashal@kernel.org>
+Cc:     Marc Dionne <marc.dionne@auristor.com>,
+        David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 19/52] afs: Fix afs_find_server lookups for ipv4 peers
+Date:   Fri, 20 Dec 2019 09:29:21 -0500
+Message-Id: <20191220142954.9500-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
 References: <20191220142954.9500-1-sashal@kernel.org>
@@ -61,97 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: Marc Dionne <marc.dionne@auristor.com>
 
-[ Upstream commit 86196a8fa8a84af1395a28ea0548f2ce6ae9bc22 ]
+[ Upstream commit 9bd0160d12370a076e44f8d1320cde9c83f2c647 ]
 
-Target makes implicit LOGO on session teardown. LOGO ELS is not send on the
-wire and initiator is not aware that target no longer wants talking to
-it. Initiator keeps sending I/O requests, target responds with BA_RJT, they
-time out and then initiator sends ABORT TASK (ABTS-LS).
+afs_find_server tries to find a server that has an address that
+matches the transport address of an rxrpc peer.  The code assumes
+that the transport address is always ipv6, with ipv4 represented
+as ipv4 mapped addresses, but that's not the case.  If the transport
+family is AF_INET, srx->transport.sin6.sin6_addr.s6_addr32[] will
+be beyond the actual ipv4 address and will always be 0, and all
+ipv4 addresses will be seen as matching.
 
-Current behaviour incurs unneeded I/O timeout and can be fixed for some
-initiators by making explicit LOGO on session deletion.
+As a result, the first ipv4 address seen on any server will be
+considered a match, and the server returned may be the wrong one.
 
-Link: https://lore.kernel.org/r/20191125165702.1013-3-r.bolshakov@yadro.com
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Tested-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+One of the consequences is that callbacks received over ipv4 will
+only be correctly applied for the server that happens to have the
+first ipv4 address on the fs_addresses4 list.  Callbacks over ipv4
+from all other servers are dropped, causing the client to serve stale
+data.
+
+This is fixed by looking at the transport family, and comparing ipv4
+addresses based on a sockaddr_in structure rather than a sockaddr_in6.
+
+Fixes: d2ddc776a458 ("afs: Overhaul volume and server record caching and fileserver rotation")
+Signed-off-by: Marc Dionne <marc.dionne@auristor.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_def.h     |  1 +
- drivers/scsi/qla2xxx/qla_iocb.c    | 16 ++++++++++++----
- drivers/scsi/qla2xxx/qla_target.c  |  1 +
- drivers/scsi/qla2xxx/tcm_qla2xxx.c |  1 +
- 4 files changed, 15 insertions(+), 4 deletions(-)
+ fs/afs/server.c | 21 ++++++++-------------
+ 1 file changed, 8 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_def.h b/drivers/scsi/qla2xxx/qla_def.h
-index d5386edddaf64..1eb3fe281cc3c 100644
---- a/drivers/scsi/qla2xxx/qla_def.h
-+++ b/drivers/scsi/qla2xxx/qla_def.h
-@@ -2401,6 +2401,7 @@ typedef struct fc_port {
- 	unsigned int id_changed:1;
- 	unsigned int scan_needed:1;
- 	unsigned int n2n_flag:1;
-+	unsigned int explicit_logout:1;
- 
- 	struct completion nvme_del_done;
- 	uint32_t nvme_prli_service_param;
-diff --git a/drivers/scsi/qla2xxx/qla_iocb.c b/drivers/scsi/qla2xxx/qla_iocb.c
-index 518eb954cf42c..44dc97cebb06b 100644
---- a/drivers/scsi/qla2xxx/qla_iocb.c
-+++ b/drivers/scsi/qla2xxx/qla_iocb.c
-@@ -2405,11 +2405,19 @@ qla2x00_login_iocb(srb_t *sp, struct mbx_entry *mbx)
- static void
- qla24xx_logout_iocb(srb_t *sp, struct logio_entry_24xx *logio)
+diff --git a/fs/afs/server.c b/fs/afs/server.c
+index 64d440aaabc04..ca8115ba1724b 100644
+--- a/fs/afs/server.c
++++ b/fs/afs/server.c
+@@ -32,18 +32,11 @@ static void afs_dec_servers_outstanding(struct afs_net *net)
+ struct afs_server *afs_find_server(struct afs_net *net,
+ 				   const struct sockaddr_rxrpc *srx)
  {
-+	u16 control_flags = LCF_COMMAND_LOGO;
- 	logio->entry_type = LOGINOUT_PORT_IOCB_TYPE;
--	logio->control_flags =
--	    cpu_to_le16(LCF_COMMAND_LOGO|LCF_IMPL_LOGO);
--	if (!sp->fcport->keep_nport_handle)
--		logio->control_flags |= cpu_to_le16(LCF_FREE_NPORT);
-+
-+	if (sp->fcport->explicit_logout) {
-+		control_flags |= LCF_EXPL_LOGO|LCF_FREE_NPORT;
-+	} else {
-+		control_flags |= LCF_IMPL_LOGO;
-+
-+		if (!sp->fcport->keep_nport_handle)
-+			control_flags |= LCF_FREE_NPORT;
-+	}
-+
-+	logio->control_flags = cpu_to_le16(control_flags);
- 	logio->nport_handle = cpu_to_le16(sp->fcport->loop_id);
- 	logio->port_id[0] = sp->fcport->d_id.b.al_pa;
- 	logio->port_id[1] = sp->fcport->d_id.b.area;
-diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
-index a06e56224a559..29729efac51f2 100644
---- a/drivers/scsi/qla2xxx/qla_target.c
-+++ b/drivers/scsi/qla2xxx/qla_target.c
-@@ -1104,6 +1104,7 @@ void qlt_free_session_done(struct work_struct *work)
- 		}
- 	}
+-	const struct sockaddr_in6 *a = &srx->transport.sin6, *b;
+ 	const struct afs_addr_list *alist;
+ 	struct afs_server *server = NULL;
+ 	unsigned int i;
+-	bool ipv6 = true;
+ 	int seq = 0, diff;
  
-+	sess->explicit_logout = 0;
- 	spin_unlock_irqrestore(&ha->tgt.sess_lock, flags);
- 	sess->free_pending = 0;
+-	if (srx->transport.sin6.sin6_addr.s6_addr32[0] == 0 ||
+-	    srx->transport.sin6.sin6_addr.s6_addr32[1] == 0 ||
+-	    srx->transport.sin6.sin6_addr.s6_addr32[2] == htonl(0xffff))
+-		ipv6 = false;
+-
+ 	rcu_read_lock();
  
-diff --git a/drivers/scsi/qla2xxx/tcm_qla2xxx.c b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-index 042a24314edcf..589cd22198bb0 100644
---- a/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-+++ b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-@@ -348,6 +348,7 @@ static void tcm_qla2xxx_close_session(struct se_session *se_sess)
- 	target_sess_cmd_list_set_waiting(se_sess);
- 	spin_unlock_irqrestore(&vha->hw->tgt.sess_lock, flags);
+ 	do {
+@@ -52,7 +45,8 @@ struct afs_server *afs_find_server(struct afs_net *net,
+ 		server = NULL;
+ 		read_seqbegin_or_lock(&net->fs_addr_lock, &seq);
  
-+	sess->explicit_logout = 1;
- 	tcm_qla2xxx_put_sess(sess);
- }
- 
+-		if (ipv6) {
++		if (srx->transport.family == AF_INET6) {
++			const struct sockaddr_in6 *a = &srx->transport.sin6, *b;
+ 			hlist_for_each_entry_rcu(server, &net->fs_addresses6, addr6_link) {
+ 				alist = rcu_dereference(server->addresses);
+ 				for (i = alist->nr_ipv4; i < alist->nr_addrs; i++) {
+@@ -68,15 +62,16 @@ struct afs_server *afs_find_server(struct afs_net *net,
+ 				}
+ 			}
+ 		} else {
++			const struct sockaddr_in *a = &srx->transport.sin, *b;
+ 			hlist_for_each_entry_rcu(server, &net->fs_addresses4, addr4_link) {
+ 				alist = rcu_dereference(server->addresses);
+ 				for (i = 0; i < alist->nr_ipv4; i++) {
+-					b = &alist->addrs[i].transport.sin6;
+-					diff = ((u16 __force)a->sin6_port -
+-						(u16 __force)b->sin6_port);
++					b = &alist->addrs[i].transport.sin;
++					diff = ((u16 __force)a->sin_port -
++						(u16 __force)b->sin_port);
+ 					if (diff == 0)
+-						diff = ((u32 __force)a->sin6_addr.s6_addr32[3] -
+-							(u32 __force)b->sin6_addr.s6_addr32[3]);
++						diff = ((u32 __force)a->sin_addr.s_addr -
++							(u32 __force)b->sin_addr.s_addr);
+ 					if (diff == 0)
+ 						goto found;
+ 				}
 -- 
 2.20.1
 
