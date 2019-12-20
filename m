@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFFAC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EDCC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7136D21D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2F4321D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852528;
-	bh=cef2ALIBEnBzxkYG45vbt3FVcHCfQJFOp3MYNavC4e0=;
+	s=default; t=1576852531;
+	bh=EORNhPZLJFNshtpIwBCg2nMHFc3I05xt2lsmpmEoUn4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bmwJyBcqFKfjwH57pNzwt/3jMj88LyNXfasLw/VUPtM1bI8SgNGRkYN9ZvZSkBq9M
-	 F04WY2/YxuZ9vRqeHb1MylpOLRDfy+N66HAnp16ppljxa/SIA8NFLv5qrQYORkr7mw
-	 YMrY1P9EjQgnSUTq1jsy8h4JlT46jNAlpUtWQ1Vo=
+	b=aB5KOUVWbnkBCk4MVg+l6Q58fkQVpNbX2qqkNxz38X1S364LmfG8CGgOJ5NuZfwd0
+	 HuR9WsTXj6Sn+WxdYNUncSRO6gy3qq3Ec6Md3jcXHsKLziThnXFTD1zUxznb8q/xwV
+	 lJ9KsWllrNP19PqPTpXJBh5JlaUTYpe+ZCGWgeJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbfLTOf1 (ORCPT
+        id S1727531AbfLTOf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:35:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39706 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:35:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728383AbfLTOfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:35:15 -0500
+        id S1728021AbfLTOfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:35:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 641B02465E;
-        Fri, 20 Dec 2019 14:35:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBD1621D7E;
+        Fri, 20 Dec 2019 14:35:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852515;
-        bh=cef2ALIBEnBzxkYG45vbt3FVcHCfQJFOp3MYNavC4e0=;
+        s=default; t=1576852517;
+        bh=EORNhPZLJFNshtpIwBCg2nMHFc3I05xt2lsmpmEoUn4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2PND1+PivRSwfqQVRK1NKRtuSPfXdH7T4FGlkwzkqSTw5MPOUOmDR3WmtaXXYUMfl
-         0f82TMKwlt6by5zLr4aPEZCeaczJNax4tLu5eVhJf5UZSXBf2oVAXmoWENWoVsxrnD
-         ZC3cmJiST7oWZl9cADug76KfOamDQz2odlxixXdk=
+        b=EnvCNoVaVKyAf/KclV3vK0U4ICRfYYpI0+ArcowBwevHacqj8eMET99GhL1aA6C95
+         3lBbhQLPQnfNc5HxidUN5d7EckdMStwnwS+SQ1gm51To9N/14hdPAVq2c+xvzzsnai
+         ySLyvPIJAXVm8qWg5PqUkJH0etlq3fbW/bK0w7sA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Durrant <pdurrant@amazon.com>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Juergen Gross <jgross@suse.com>,
-        Sasha Levin <sashal@kernel.org>,
-        xen-devel@lists.xenproject.org, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 32/34] xen-blkback: prevent premature module unload
-Date:   Fri, 20 Dec 2019 09:34:31 -0500
-Message-Id: <20191220143433.9922-32-sashal@kernel.org>
+Cc:     Andy Whitcroft <apw@canonical.com>,
+        Andrea Righi <andrea.righi@canonical.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 34/34] PM / hibernate: memory_bm_find_bit(): Tighten node optimisation
+Date:   Fri, 20 Dec 2019 09:34:33 -0500
+Message-Id: <20191220143433.9922-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220143433.9922-1-sashal@kernel.org>
 References: <20191220143433.9922-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,54 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Durrant <pdurrant@amazon.com>
+From: Andy Whitcroft <apw@canonical.com>
 
-[ Upstream commit fa2ac657f9783f0891b2935490afe9a7fd29d3fa ]
+[ Upstream commit da6043fe85eb5ec621e34a92540735dcebbea134 ]
 
-Objects allocated by xen_blkif_alloc come from the 'blkif_cache' kmem
-cache. This cache is destoyed when xen-blkif is unloaded so it is
-necessary to wait for the deferred free routine used for such objects to
-complete. This necessity was missed in commit 14855954f636 "xen-blkback:
-allow module to be cleanly unloaded". This patch fixes the problem by
-taking/releasing extra module references in xen_blkif_alloc/free()
-respectively.
+When looking for a bit by number we make use of the cached result from the
+preceding lookup to speed up operation.  Firstly we check if the requested
+pfn is within the cached zone and if not lookup the new zone.  We then
+check if the offset for that pfn falls within the existing cached node.
+This happens regardless of whether the node is within the zone we are
+now scanning.  With certain memory layouts it is possible for this to
+false trigger creating a temporary alias for the pfn to a different bit.
+This leads the hibernation code to free memory which it was never allocated
+with the expected fallout.
 
-Signed-off-by: Paul Durrant <pdurrant@amazon.com>
-Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Ensure the zone we are scanning matches the cached zone before considering
+the cached node.
+
+Deep thanks go to Andrea for many, many, many hours of hacking and testing
+that went into cornering this bug.
+
+Reported-by: Andrea Righi <andrea.righi@canonical.com>
+Tested-by: Andrea Righi <andrea.righi@canonical.com>
+Signed-off-by: Andy Whitcroft <apw@canonical.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/xen-blkback/xenbus.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ kernel/power/snapshot.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
-index 55869b362fdfb..25c41ce070a7f 100644
---- a/drivers/block/xen-blkback/xenbus.c
-+++ b/drivers/block/xen-blkback/xenbus.c
-@@ -179,6 +179,15 @@ static struct xen_blkif *xen_blkif_alloc(domid_t domid)
- 	blkif->domid = domid;
- 	atomic_set(&blkif->refcnt, 1);
- 	init_completion(&blkif->drain_complete);
+diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
+index 3d37c279c0900..f2635fc751d93 100644
+--- a/kernel/power/snapshot.c
++++ b/kernel/power/snapshot.c
+@@ -736,8 +736,15 @@ static int memory_bm_find_bit(struct memory_bitmap *bm, unsigned long pfn,
+ 	 * We have found the zone. Now walk the radix tree to find the leaf node
+ 	 * for our PFN.
+ 	 */
 +
 +	/*
-+	 * Because freeing back to the cache may be deferred, it is not
-+	 * safe to unload the module (and hence destroy the cache) until
-+	 * this has completed. To prevent premature unloading, take an
-+	 * extra module reference here and release only when the object
-+	 * has been freed back to the cache.
++	 * If the zone we wish to scan is the the current zone and the
++	 * pfn falls into the current node then we do not need to walk
++	 * the tree.
 +	 */
-+	__module_get(THIS_MODULE);
- 	INIT_WORK(&blkif->free_work, xen_blkif_deferred_free);
+ 	node = bm->cur.node;
+-	if (((pfn - zone->start_pfn) & ~BM_BLOCK_MASK) == bm->cur.node_pfn)
++	if (zone == bm->cur.zone &&
++	    ((pfn - zone->start_pfn) & ~BM_BLOCK_MASK) == bm->cur.node_pfn)
+ 		goto node_found;
  
- 	return blkif;
-@@ -328,6 +337,7 @@ static void xen_blkif_free(struct xen_blkif *blkif)
- 
- 	/* Make sure everything is drained before shutting down */
- 	kmem_cache_free(xen_blkif_cachep, blkif);
-+	module_put(THIS_MODULE);
- }
- 
- int __init xen_blkif_interface_init(void)
+ 	node      = zone->rtree;
 -- 
 2.20.1
 
