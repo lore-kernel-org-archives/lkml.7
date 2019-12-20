@@ -2,57 +2,58 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7708EC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B37C3C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 425902146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82A712082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:28:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="ijOzIAtj"
+	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="uK3AhW1c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbfLTX1x (ORCPT
+        id S1726733AbfLTX2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 18:27:53 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:47097 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbfLTX1x (ORCPT
+        Fri, 20 Dec 2019 18:28:04 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44424 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbfLTX2E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 18:27:53 -0500
-Received: by mail-il1-f196.google.com with SMTP id t17so9310301ilm.13
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 15:27:52 -0800 (PST)
+        Fri, 20 Dec 2019 18:28:04 -0500
+Received: by mail-io1-f68.google.com with SMTP id b10so11030302iof.11
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 15:28:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sargun.me; s=google;
         h=date:from:to:cc:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=ZUqxZgsASKzXQm2M4tklMIaw/3yZpJ0Kn5yfMnOfzzY=;
-        b=ijOzIAtjctijgjeGKCJEIw69D+tQ8KJziesTnkjrghSsh26P9NishfxV+v33x4HzAN
-         M2qWhV2qzQhj3ofKKWr/SoDVbHNHHWbRoxpD1ie5hIoH09+/g0LNokwv07dK11OPFruH
-         /Um6LDMKgFwgPdDrMF/HBA7U6Y3RJ2/dpyCoo=
+        bh=CX/EMM8AnWfaI4rNz03pFAf5OWqiTpv8JaYTV9Mz/lc=;
+        b=uK3AhW1cGSB2r++u32XTz9HtiQf9DqoAJjZTRWoiXrjhVWY6c5A2GADwJdSXWsp2/X
+         FsGsLqdPVE3e+/7ZjXCDprcZpUcC7yZ4UWf6Jr6Czg9nUCF0j6YtxlOzYegNvAokHGMa
+         IvrQIWpnkjoATVBm197EtU7IuXBoy83PBzK4c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=ZUqxZgsASKzXQm2M4tklMIaw/3yZpJ0Kn5yfMnOfzzY=;
-        b=QiRpUAYepd4DxEzTXaSe3QRc1tbUmP1Vp7MzNDsynsdnTaG0gim/xp63AzW9ZEYnE+
-         xg1Tms3MCXTHASP+VV9Pvb62wXOp0FJKadn1dCrrCNmOy83jeEWJZQEvahoeVyg6PoG4
-         4lmqwvK/C/6cir4qfbIIhuZiPj6lB0CxmkooF4IWmx55zdCuKzoh1I3xJet/vTFicOB9
-         tI/NdM6WYpvp5e+EwJemTkq/cZrrUhAZ2unzXLk4p6iFmefh2nyrjcJGw8DO8yanB/Hf
-         jWsvkFzTqDvzOA+gMqoZslzj6H+GecRk53sO/ZOXApeLLg/iNBg8NuDFNN7fhqHhcA8b
-         U8Sg==
-X-Gm-Message-State: APjAAAWMyHN2t+BUqIRB7xpWLIxn3gTzhUnXYq9jA+hPXUY+b1pL6Ldo
-        h2d7hAHUscQbmRwfxTR1i9LczAHqb6uQbg==
-X-Google-Smtp-Source: APXvYqx6DJF0HdWYtUyZuIY8x9eKPbK1WdvoFdpSid5cjGP9+CD+I3Cilcm+4gQY7hzUU6i6jTw7HA==
-X-Received: by 2002:a92:cb10:: with SMTP id s16mr14563659ilo.176.1576884471551;
-        Fri, 20 Dec 2019 15:27:51 -0800 (PST)
+        bh=CX/EMM8AnWfaI4rNz03pFAf5OWqiTpv8JaYTV9Mz/lc=;
+        b=uTqsfHYGgM9115j+HMRvEgPyICcpyPzLXXWwrxIsM46k9+r05YsDxoKMQjguxvnwjo
+         dD6XydPyK2xPkjtvrNFP8h2Ssl/zK4Ke4VJWlVBy6IKtVQKT7lQzuuy7lNAvxlGHvZzZ
+         m57uDvA67c+RXN14FtxYDKnkjyNjP3w38ZV8mS1xtdLHWR14ZciwsD+QTyR1HCL/ViHR
+         /tayKA8Y1RfWAjBBekeAqc4OUp3d/h/1RDuPRO827PIDFWiY4Q0ZECU++mBr50bWZB8M
+         1aVtfrlWdX0YKBM7XkcwNm6saOftMFKuMc9q/hegLsSU6W1kk2z9vr9G37hQCnT3qIgH
+         4otg==
+X-Gm-Message-State: APjAAAW06A6iBzqJxMr0/QLfOjQwYuTOGUPnq0/loa5qnLvf0qCKT+7B
+        kw7/frPGBcLwa9huzZGQORBhSkZMJGtSeQ==
+X-Google-Smtp-Source: APXvYqxsP0bwleRoHecpmcs1c/KtuGVrDwDug1CwLOoHCIMnBUjjBhwWd5nxifsPFV+UuKhkDPnVNg==
+X-Received: by 2002:a5e:924c:: with SMTP id z12mr12049921iop.296.1576884482976;
+        Fri, 20 Dec 2019 15:28:02 -0800 (PST)
 Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
-        by smtp.gmail.com with ESMTPSA id m90sm1462397ilh.56.2019.12.20.15.27.51
+        by smtp.gmail.com with ESMTPSA id a12sm3941787ion.73.2019.12.20.15.28.02
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Dec 2019 15:27:51 -0800 (PST)
-Date:   Fri, 20 Dec 2019 23:27:49 +0000
+        Fri, 20 Dec 2019 15:28:02 -0800 (PST)
+Date:   Fri, 20 Dec 2019 23:28:01 +0000
 From:   Sargun Dhillon <sargun@sargun.me>
 To:     linux-kernel@vger.kernel.org,
         containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
@@ -62,8 +63,8 @@ Cc:     tycho@tycho.ws, jannh@google.com, cyphar@cyphar.com,
         viro@zeniv.linux.org.uk, gpascutto@mozilla.com,
         ealvarez@mozilla.com, fweimer@redhat.com, jld@mozilla.com,
         arnd@arndb.de
-Subject: [PATCH v5 0/3] Add pidfd_getfd syscall
-Message-ID: <20191220232746.GA20215@ircssh-2.c.rugged-nimbus-611.internal>
+Subject: [PATCH v5 1/3] vfs, fdtable: Add get_task_file helper
+Message-ID: <20191220232758.GA20224@ircssh-2.c.rugged-nimbus-611.internal>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -73,83 +74,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset introduces a mechanism (pidfd_getfd syscall) to get file
-descriptors from other processes via pidfd. Although this can be achieved
-using SCM_RIGHTS, and parasitic code injection, this offers a more
-straightforward mechanism, with less overhead and complexity. The process
-under manipulation's fd still remains.
+This introduces a function which can be used to fetch a file, given an
+arbitrary task. As long as the user holds a reference (refcnt) to the
+task_struct it is safe to call, and will either return NULL on failure,
+or a pointer to the file, with a refcnt.
 
-It includes a model for extensibility, specifically to allow for future
-features around cgroup migration of sockets, and allowing for the fd
-to be taken (closing the fd in the process under manipulation).
+Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+---
+ fs/file.c            | 22 ++++++++++++++++++++--
+ include/linux/file.h |  2 ++
+ 2 files changed, 22 insertions(+), 2 deletions(-)
 
-The syscall numbers were chosen to be one greater than openat2.
-
-Summary of history:
-This initially started as a ptrace command. It did not require the process
-to be stopped, and felt like kind of an awkward fit for ptrace. After that,
-it moved to an ioctl on the pidfd. Given functionality, it made sense to
-make it a syscall which did not require the process to be stopped.
-
-Changes since v4:
- * Turn into a syscall
- * Move to PTRACE_MODE_ATTACH_REALCREDS from PTRACE_MODE_READ_REALCREDS
- * Remove the sample code. This will come in another patchset, as the
-   new self-tests cover all the functionality.
-
-Changes since v3:
- * Add self-test
- * Move to ioctl passing fd directly, versus args struct
- * Shuffle around include files
-
-Changes since v2:
- * Move to ioctl on pidfd instead of ptrace function
- * Add security check before moving file descriptor
-
-Changes since the RFC v1:
- * Introduce a new helper to fs/file.c to fetch a file descriptor from
-   any process. It largely uses the code suggested by Oleg, with a few
-   changes to fix locking
- * It uses an extensible options struct to supply the FD, and option.
- * I added a sample, using the code from the user-ptrace sample
-
-Sargun Dhillon (3):
-  vfs, fdtable: Add get_task_file helper
-  pid: Introduce pidfd_getfd syscall
-  test: Add test for pidfd getfd
-
- MAINTAINERS                                   |   1 +
- arch/alpha/kernel/syscalls/syscall.tbl        |   1 +
- arch/arm/tools/syscall.tbl                    |   1 +
- arch/arm64/include/asm/unistd.h               |   2 +-
- arch/arm64/include/asm/unistd32.h             |   2 +
- arch/ia64/kernel/syscalls/syscall.tbl         |   1 +
- arch/m68k/kernel/syscalls/syscall.tbl         |   1 +
- arch/microblaze/kernel/syscalls/syscall.tbl   |   1 +
- arch/mips/kernel/syscalls/syscall_n32.tbl     |   1 +
- arch/mips/kernel/syscalls/syscall_n64.tbl     |   1 +
- arch/mips/kernel/syscalls/syscall_o32.tbl     |   1 +
- arch/parisc/kernel/syscalls/syscall.tbl       |   1 +
- arch/powerpc/kernel/syscalls/syscall.tbl      |   1 +
- arch/s390/kernel/syscalls/syscall.tbl         |   1 +
- arch/sh/kernel/syscalls/syscall.tbl           |   1 +
- arch/sparc/kernel/syscalls/syscall.tbl        |   1 +
- arch/x86/entry/syscalls/syscall_32.tbl        |   1 +
- arch/x86/entry/syscalls/syscall_64.tbl        |   1 +
- arch/xtensa/kernel/syscalls/syscall.tbl       |   1 +
- fs/file.c                                     |  22 +-
- include/linux/file.h                          |   2 +
- include/linux/syscalls.h                      |   4 +
- include/uapi/asm-generic/unistd.h             |   3 +-
- include/uapi/linux/pidfd.h                    |  10 +
- kernel/pid.c                                  | 115 ++++++++
- tools/testing/selftests/pidfd/.gitignore      |   1 +
- tools/testing/selftests/pidfd/Makefile        |   2 +-
- .../selftests/pidfd/pidfd_getfd_test.c        | 262 ++++++++++++++++++
- 28 files changed, 437 insertions(+), 5 deletions(-)
- create mode 100644 include/uapi/linux/pidfd.h
- create mode 100644 tools/testing/selftests/pidfd/pidfd_getfd_test.c
-
+diff --git a/fs/file.c b/fs/file.c
+index 2f4fcf985079..0ceeb046f4f3 100644
+--- a/fs/file.c
++++ b/fs/file.c
+@@ -706,9 +706,9 @@ void do_close_on_exec(struct files_struct *files)
+ 	spin_unlock(&files->file_lock);
+ }
+ 
+-static struct file *__fget(unsigned int fd, fmode_t mask, unsigned int refs)
++static struct file *__fget_files(struct files_struct *files, unsigned int fd,
++				 fmode_t mask, unsigned int refs)
+ {
+-	struct files_struct *files = current->files;
+ 	struct file *file;
+ 
+ 	rcu_read_lock();
+@@ -729,6 +729,11 @@ static struct file *__fget(unsigned int fd, fmode_t mask, unsigned int refs)
+ 	return file;
+ }
+ 
++static struct file *__fget(unsigned int fd, fmode_t mask, unsigned int refs)
++{
++	return __fget_files(current->files, fd, mask, refs);
++}
++
+ struct file *fget_many(unsigned int fd, unsigned int refs)
+ {
+ 	return __fget(fd, FMODE_PATH, refs);
+@@ -746,6 +751,19 @@ struct file *fget_raw(unsigned int fd)
+ }
+ EXPORT_SYMBOL(fget_raw);
+ 
++struct file *fget_task(struct task_struct *task, unsigned int fd)
++{
++	struct file *file = NULL;
++
++	task_lock(task);
++	if (task->files)
++		file = __fget_files(task->files, fd, 0, 1);
++
++	task_unlock(task);
++
++	return file;
++}
++
+ /*
+  * Lightweight file lookup - no refcnt increment if fd table isn't shared.
+  *
+diff --git a/include/linux/file.h b/include/linux/file.h
+index 3fcddff56bc4..c6c7b24ea9f7 100644
+--- a/include/linux/file.h
++++ b/include/linux/file.h
+@@ -16,6 +16,7 @@ extern void fput(struct file *);
+ extern void fput_many(struct file *, unsigned int);
+ 
+ struct file_operations;
++struct task_struct;
+ struct vfsmount;
+ struct dentry;
+ struct inode;
+@@ -47,6 +48,7 @@ static inline void fdput(struct fd fd)
+ extern struct file *fget(unsigned int fd);
+ extern struct file *fget_many(unsigned int fd, unsigned int refs);
+ extern struct file *fget_raw(unsigned int fd);
++extern struct file *fget_task(struct task_struct *task, unsigned int fd);
+ extern unsigned long __fdget(unsigned int fd);
+ extern unsigned long __fdget_raw(unsigned int fd);
+ extern unsigned long __fdget_pos(unsigned int fd);
 -- 
 2.20.1
 
