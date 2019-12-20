@@ -2,172 +2,98 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8114EC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A48C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C345206DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E1BE20866
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:38:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KXdg4XI9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727539AbfLTVfL (ORCPT
+        id S1727546AbfLTViK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 16:35:11 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:38907 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727510AbfLTVfK (ORCPT
+        Fri, 20 Dec 2019 16:38:10 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:23038 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727422AbfLTViJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 16:35:10 -0500
-Received: by mail-il1-f200.google.com with SMTP id i67so8654537ilf.5
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 13:35:08 -0800 (PST)
+        Fri, 20 Dec 2019 16:38:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576877887;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=DgH/TocIdbrujZ/WjTBKFFzHicEM2iW/+AB7POG9On8=;
+        b=KXdg4XI9TdqMgyII9MPgBfrgPHfOYwTO/vhsdd+1OOKbl1cIeu8I7xHYusbOp3ErlPEJsz
+        u2WkbYZC3PVs/Jr9s3+XXaL+n2kU2GuQcex0AXeE2qX2xjcjpwNudh8OF7MfliYXm+WBRO
+        coUTe0stk37GWP26BAXGkfWZKcrPloE=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-390-DPUYjouiPaGGa2D2NOH4Rw-1; Fri, 20 Dec 2019 16:38:06 -0500
+X-MC-Unique: DPUYjouiPaGGa2D2NOH4Rw-1
+Received: by mail-qv1-f71.google.com with SMTP id e14so6822554qvr.6
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 13:38:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=wfGBWjmItVt3DfW1Y+0jHm4muOZNGwKi+vppyTSZe+0=;
-        b=hHUO+5MYuxkxJ6Co6O57k0yETLLgyomGl1cEbI7gTYzDLjDyZMLia9E5ETxA0TAUa0
-         86PtjtOtJDVzCfyzM1z3MgYAb6lokjCyzqAtuRCRAIZB5g/Q4U00CXptkncNgnPwoLat
-         xQsa/d1hrxQkc3aJMF5kpOtOef4Nv7J7mhMlGp0NeUodlrZCTDWHFfbsgqQ8rWd4WpDI
-         M/MvS4eP61BbhfOs32X4N4VapznLiO4GHtId4u7MrmTcOFMsYoS0HB/FpoQXag+hY+tj
-         7fyUkNnqGq+is0bwS+g9iEKp+B9sUnMVuVDg3PK/h1A644G2sI1NoKmIEQwTh3OVcsJI
-         XhoQ==
-X-Gm-Message-State: APjAAAXKi+9LMibosELwGo6KMQdPW3wEqHe9iBLBlChUQJyNusEDxuEf
-        1eVUcpEyXNxO9niI9zUdLKugVNRPmnQ7uwoU5MH6+rGmGAFI
-X-Google-Smtp-Source: APXvYqwRE1w1DzwCNNXFQEj41fP7B1Lt/3mZcXuVQbrwHAWWRMiFZAEp5+RullaASJ/qlzG2XKFghcJuW9p+PvFjJ2sgTis6ln+O
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DgH/TocIdbrujZ/WjTBKFFzHicEM2iW/+AB7POG9On8=;
+        b=TBHl77DoOaAuvi052uk7EXabXzJ5rytfpxEdZcuLeVWAhxQ80+TBljWdi3si2RNdiy
+         LrYD5s9JqzJaThVruETUeAZaKwRbPwGU8eyIIqGwCMGDwCe/iFSnN392DQ7kK9HNEP/4
+         EdMsm5AMmv5qwP8q34CQVdQsGJSlL2JL34/670qjmn4g5RGcHxi+7eTktUA5ysqrijBG
+         cyHWkT3G2yUAFHiuZ6NcdrObxC7Xm04hqDIYvR3jiQ1ngpWn3qZVoCNhRtq+V4CeaUdH
+         d3+4KC3Q//vLpYDMvWMy3km2YSqvwIvjxklSdnC8WvRC18S2QpP45M5rAxInX1Vn3IoQ
+         yuQw==
+X-Gm-Message-State: APjAAAUhle9akAAm11pWxZpzGen4CvKEeJldgJWY7SmxEcO+l2zvcsqY
+        5GBCiM81X97+pXOI4fznRx9o9vuLo/w2uJFHvVgrZnZtX8/3TQR066D1iDKoGBCyRw08U8Dr9tt
+        Wm0miXPnqYOWCr2VBFoPwUCkj
+X-Received: by 2002:ae9:d887:: with SMTP id u129mr9801518qkf.357.1576877886089;
+        Fri, 20 Dec 2019 13:38:06 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxeshcS8kRdmw06LPZnDTlyOsMQ3kMcPeJ2cQ7Zp4KmJbxpzBkgpKY/e1utdzrBp+XlaW8hkQ==
+X-Received: by 2002:ae9:d887:: with SMTP id u129mr9801498qkf.357.1576877885812;
+        Fri, 20 Dec 2019 13:38:05 -0800 (PST)
+Received: from xz-x1 ([104.156.64.74])
+        by smtp.gmail.com with ESMTPSA id l85sm3208162qke.103.2019.12.20.13.38.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 13:38:05 -0800 (PST)
+Date:   Fri, 20 Dec 2019 16:38:03 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Michael S . Tsirkin" <mst@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Christophe de Dinechin <dinechin@redhat.com>
+Subject: Re: [PATCH v2 00/17] KVM: Dirty ring interface
+Message-ID: <20191220213803.GA51391@xz-x1>
+References: <20191220211634.51231-1-peterx@redhat.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:f913:: with SMTP id j19mr10899368iog.124.1576877708426;
- Fri, 20 Dec 2019 13:35:08 -0800 (PST)
-Date:   Fri, 20 Dec 2019 13:35:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000aa4ede059a297356@google.com>
-Subject: KASAN: use-after-free Read in io_wq_flush
-From:   syzbot <syzbot+a2cf8365eb32fc6dbb5e@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191220211634.51231-1-peterx@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+If you see three identical half-posted series which only contains
+patches 00-09... I am very sorry for ruining your inbox...  I think my
+mail server is not happy to continue sending the rest of the patches,
+and I'll get this during sending the patch 10:
 
-syzbot found the following crash on:
+4.3.0 Temporary System Problem.  Try again later (10). d25sm3385231qtq.11 - gsmtp
 
-HEAD commit:    7ddd09fc Add linux-next specific files for 20191220
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=11a074c1e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f183b01c3088afc6
-dashboard link: https://syzkaller.appspot.com/bug?extid=a2cf8365eb32fc6dbb5e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1190743ee00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12b97f1ee00000
+So far I don't see what's wrong with patch 10, either.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a2cf8365eb32fc6dbb5e@syzkaller.appspotmail.com
+I'll try to fix it up before I send 4th time (or anyone knows please
+hint me)... Please ignore the previous three in-complete versions.
 
-==================================================================
-BUG: KASAN: use-after-free in io_wq_flush+0x1f7/0x210 fs/io-wq.c:1009
-Read of size 8 at addr ffff88809ea14b00 by task kworker/1:2/2797
+-- 
+Peter Xu
 
-CPU: 1 PID: 2797 Comm: kworker/1:2 Not tainted  
-5.5.0-rc2-next-20191220-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events io_ring_file_ref_switch
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
-  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:639
-  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
-  io_wq_flush+0x1f7/0x210 fs/io-wq.c:1009
-  io_destruct_skb+0x8e/0xc0 fs/io_uring.c:4668
-  skb_release_head_state+0xeb/0x260 net/core/skbuff.c:652
-  skb_release_all+0x16/0x60 net/core/skbuff.c:663
-  __kfree_skb net/core/skbuff.c:679 [inline]
-  kfree_skb net/core/skbuff.c:697 [inline]
-  kfree_skb+0x101/0x420 net/core/skbuff.c:691
-  io_ring_file_put fs/io_uring.c:4836 [inline]
-  io_ring_file_ref_switch+0x68a/0xac0 fs/io_uring.c:4881
-  process_one_work+0x9af/0x1740 kernel/workqueue.c:2264
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2410
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Allocated by task 9381:
-  save_stack+0x23/0x90 mm/kasan/common.c:72
-  set_track mm/kasan/common.c:80 [inline]
-  __kasan_kmalloc mm/kasan/common.c:513 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:486
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
-  kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3551
-  kmalloc include/linux/slab.h:555 [inline]
-  kzalloc include/linux/slab.h:669 [inline]
-  io_wq_create+0x52/0xa40 fs/io-wq.c:1024
-  io_sq_offload_start fs/io_uring.c:5244 [inline]
-  io_uring_create fs/io_uring.c:6002 [inline]
-  io_uring_setup+0xf4a/0x2080 fs/io_uring.c:6062
-  __do_sys_io_uring_setup fs/io_uring.c:6075 [inline]
-  __se_sys_io_uring_setup fs/io_uring.c:6072 [inline]
-  __x64_sys_io_uring_setup+0x54/0x80 fs/io_uring.c:6072
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 9381:
-  save_stack+0x23/0x90 mm/kasan/common.c:72
-  set_track mm/kasan/common.c:80 [inline]
-  kasan_set_free_info mm/kasan/common.c:335 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:474
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
-  __cache_free mm/slab.c:3426 [inline]
-  kfree+0x10a/0x2c0 mm/slab.c:3757
-  io_wq_destroy+0x2ce/0x3c0 fs/io-wq.c:1116
-  io_finish_async+0x128/0x1b0 fs/io_uring.c:4657
-  io_ring_ctx_free fs/io_uring.c:5569 [inline]
-  io_ring_ctx_wait_and_kill+0x330/0x9a0 fs/io_uring.c:5644
-  io_uring_release+0x42/0x50 fs/io_uring.c:5652
-  __fput+0x2ff/0x890 fs/file_table.c:280
-  ____fput+0x16/0x20 fs/file_table.c:313
-  task_work_run+0x145/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:164
-  prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
-  do_syscall_64+0x676/0x790 arch/x86/entry/common.c:304
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff88809ea14b00
-  which belongs to the cache kmalloc-192 of size 192
-The buggy address is located 0 bytes inside of
-  192-byte region [ffff88809ea14b00, ffff88809ea14bc0)
-The buggy address belongs to the page:
-page:ffffea00027a8500 refcount:1 mapcount:0 mapping:ffff8880aa400000  
-index:0x0
-raw: 00fffe0000000200 ffffea00027a8148 ffffea00027a8f08 ffff8880aa400000
-raw: 0000000000000000 ffff88809ea14000 0000000100000010 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff88809ea14a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  ffff88809ea14a80: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
-> ffff88809ea14b00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                    ^
-  ffff88809ea14b80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-  ffff88809ea14c00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
