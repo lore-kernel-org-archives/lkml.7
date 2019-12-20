@@ -2,126 +2,87 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9419DC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 04:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A22AC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 04:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EE83227BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 04:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1797924682
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 04:39:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576816778;
+	bh=TAAVSEoWcknK8Katv0LBqXYKvupJQtdKWouFaq0e0CI=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=LWD/I7zXRtzyTBtSpmluQIeTW3ldolt9VcA5Y1BgMqKp6BrExh8pvKQheNIooTasc
+	 jvd6Q38vNzft45hj/9cX7Ub7QNxtlzN0rcX9nLZz00PqIzqIgwaC5Itv+OO3buISIg
+	 M8u7irzCnpScI5IDTpyfJiRlDmLmVDjixj6XaVpM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbfLTEfa (ORCPT
+        id S1727177AbfLTEjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 23:35:30 -0500
-Received: from mout-p-201.mailbox.org ([80.241.56.171]:18280 "EHLO
-        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbfLTEfa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 23:35:30 -0500
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        Thu, 19 Dec 2019 23:39:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51682 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727084AbfLTEjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 23:39:37 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 47fGBk2v34zQjm6;
-        Fri, 20 Dec 2019 05:35:26 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
-        with ESMTP id 5BE2jh93RM9y; Fri, 20 Dec 2019 05:35:22 +0100 (CET)
-Date:   Fri, 20 Dec 2019 15:35:10 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Arnd Bergmann <arnd@arndb.de>, Oleg Nesterov <oleg@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Gian-Carlo Pascutto <gpascutto@mozilla.com>,
-        Emilio Cobos =?utf-8?Q?=C3=81lvarez?= <ealvarez@mozilla.com>,
-        Jed Davis <jld@mozilla.com>
-Subject: Re: [PATCH v4 2/5] pid: Add PIDFD_IOCTL_GETFD to fetch file
- descriptors from processes
-Message-ID: <20191220043510.r5h6wvsp2p5glyjv@yavin.dot.cyphar.com>
-References: <20191218235459.GA17271@ircssh-2.c.rugged-nimbus-611.internal>
- <CAK8P3a2eT=bHkUamyp-P3Y2adNq1KBk7UknCYBY5_aR4zJmYaQ@mail.gmail.com>
- <20191219103525.yqb5f4pbd2dvztkb@wittgenstein>
- <CAMp4zn_z-CCQYMpT=GjZeGVLobjHBCSbmfha1rtWdmptOQ8JtA@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id F0E432467F;
+        Fri, 20 Dec 2019 04:39:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576816776;
+        bh=TAAVSEoWcknK8Katv0LBqXYKvupJQtdKWouFaq0e0CI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=XIWy1uVrK7rsnYo8CX33wx9AMCNweuYxR85Vv+EWXTkmRhLu+Hax3sq3tttnwUCXG
+         TFjIXd6E8f62WyYLRjMzWY2UQYxFySKAwutsMlGPqF8GImf9lRFfHnva9/0y3Edd/g
+         6W+2N4yQaIy37DISCP31rhY4UwMKLuEoZXblYA0I=
+Subject: Re: [PATCH 4.14 00/36] 4.14.160-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20191219182848.708141124@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <826f6b1a-f5e6-e0d8-717b-cd1596f431b7@kernel.org>
+Date:   Thu, 19 Dec 2019 21:39:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nmgp7ksjzcrpo6tt"
-Content-Disposition: inline
-In-Reply-To: <CAMp4zn_z-CCQYMpT=GjZeGVLobjHBCSbmfha1rtWdmptOQ8JtA@mail.gmail.com>
+In-Reply-To: <20191219182848.708141124@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 12/19/19 11:34 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.160 release.
+> There are 36 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 21 Dec 2019 18:24:44 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.160-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
---nmgp7ksjzcrpo6tt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Compiled and booted on my test system. No dmesg regressions.
 
-On 2019-12-19, Sargun Dhillon <sargun@sargun.me> wrote:
-> On Thu, Dec 19, 2019 at 2:35 AM Christian Brauner
-> <christian.brauner@ubuntu.com> wrote:
-> > I guess this is the remaining question we should settle, i.e. what do we
-> > prefer.
-> > I still think that adding a new syscall for this seems a bit rich. On
-> > the other hand it seems that a lot more people agree that using a
-> > dedicated syscall instead of an ioctl is the correct way; especially
-> > when it touches core kernel functionality. I mean that was one of the
-> > takeaways from the pidfd API ioctl-vs-syscall discussion.
-> >
-> > A syscall is nicer especially for core-kernel code like this.
-> > So I guess the only way to find out is to try the syscall approach and
-> > either get yelled and switch to an ioctl() or have it accepted.
-> >
-> > What does everyone else think? Arnd, still in favor of a syscall I take
-> > it. Oleg, you had suggested a syscall too, right? Florian, any
-> > thoughts/worries on/about this from the glibc side?
-> >
-> > Christian
->=20
-> My feelings towards this are that syscalls might pose a problem if we
-> ever want to extend this API. Of course we can have a reserved
-> "flags" field, and populate it later, but what if we turn out to need
-> a proper struct? I already know we're going to want to add one
-> around cgroup metadata (net_cls), and likely we'll want to add
-> a "steal" flag as well. As Arnd mentioned earlier, this is trivial to
-> fix in a traditional ioctl environment, as ioctls are "cheap". How
-> do we feel about potentially adding a pidfd_getfd2? Or are we
-> confident that reserved flags will save us?
-
-If we end up making this a syscall, then we can re-use the
-copy_struct_from_user() API to make it both extensible and compatible in
-both directions. I wasn't aware that this was frowned upon for ioctls
-(sorry for the extra work) but there are several syscalls which use this
-model for extendability (clone3, openat2, sched_setattr,
-perf_events_open) so there shouldn't be any such complaints for a
-syscall which is extensible.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---nmgp7ksjzcrpo6tt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXfxPewAKCRCdlLljIbnQ
-ElNGAP0QzHxTfcWUIyKQwziyZ7SKPlC5ve6y0476CjvwfTG0mQD+JDR19gzaS69O
-MYDK8035BURwBnELBe2PceZHzjVhlAQ=
-=Kwh+
------END PGP SIGNATURE-----
-
---nmgp7ksjzcrpo6tt--
+thanks,
+-- Shuah
