@@ -2,115 +2,81 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88527C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 22:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 644F5C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 22:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AD4B2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 22:05:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eU1XaGdl"
+	by mail.kernel.org (Postfix) with ESMTP id 406D52146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 22:05:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfLTWFL (ORCPT
+        id S1727632AbfLTWFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 17:05:11 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44777 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727473AbfLTWFK (ORCPT
+        Fri, 20 Dec 2019 17:05:39 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:57542 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727604AbfLTWFh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 17:05:10 -0500
-Received: by mail-pg1-f193.google.com with SMTP id x7so5598233pgl.11;
-        Fri, 20 Dec 2019 14:05:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1Eh3tLTfa9xKRZnK5smb8nRu2xTiAGH5NS4uJ3m/L/Y=;
-        b=eU1XaGdlRacM82UubO8a2yDv6v2ZTsRCgUyxOZwtINc5LvKB3kI515/oTc13VZyd/T
-         csCtlwfHSnkGaXw8feY080++xDiQxmNLLh93wM7JsOarna6QBWK58vMrPbMRYFz+hmRy
-         UJBPfrErxdlrk5/llt1MpiOukqK+VFCI54QhPnsbX1xun18Ie+y33DtX+uUsKVUQ7pC9
-         fxyg776u4jW69fXHivM00Z3vX6M9pNG1w6KHE6BuIeGokggmRDJLmhZTsl9hUgkmQ1C/
-         cFV1hNqiH3WDB668tQnrybhyJE8t6NsIXLBDit39x4vReJJ8urPruXqWd5N4KQmnZiBI
-         6I4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1Eh3tLTfa9xKRZnK5smb8nRu2xTiAGH5NS4uJ3m/L/Y=;
-        b=NJhhEaYfnLzT6Qhiv5r8TEL0rR5GadiYDb36AAsfilBIg6UC245AHS5odysZqNV1vI
-         gwGcPaaw1t7h9cRfQh6UxF9odWThsgZNYgl7N39sxtK+ygKOsPutQ8Sl7uc6/HbAbQYe
-         EUmFg6LiBNRZn73Vu+uJ5WKB2xJY/A4cb9gvtrKUhVP3bskHythk07DhdwJ7I6hAczVD
-         BOlOSaMMb8FbAqqfWmVsZ0ONhYNYvLihnKvlSx0cIUAqmULxXW0ylHUoegs1zXrJiTmJ
-         A2y4Vr6fC+SkOxOhjSHvz1Nj3tfzcGdJm5xHbHQycAFAZl27jqe2DhKLEG125brW/wlt
-         AZ6g==
-X-Gm-Message-State: APjAAAWtfzbOU8vrHNmFTtbhKGJkNDK7K0fe6Hig50T3Bwz8UQ2KPAv3
-        pOj5ZUDri2WreA1EOFmuMwBXw1vk
-X-Google-Smtp-Source: APXvYqzX0S6vxuk1wo0C02S1wS6N1KQA6MeU4h/q98iJaEaS+pTfh5hBIILQRONK0eDnHs0hBjOesA==
-X-Received: by 2002:a62:1548:: with SMTP id 69mr19001240pfv.239.1576879509927;
-        Fri, 20 Dec 2019 14:05:09 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id u5sm13410174pfm.115.2019.12.20.14.05.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 14:05:09 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CB7B840CB9; Fri, 20 Dec 2019 19:05:06 -0300 (-03)
-Date:   Fri, 20 Dec 2019 19:05:06 -0300
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, bpf <bpf@vger.kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] libbpf: Fix build on read-only filesystems
-Message-ID: <20191220220506.GC9076@kernel.org>
-References: <20191220032558.3259098-1-namhyung@kernel.org>
- <CAEf4BzaZBSRK2M4LD-c12_2-QLa8+jpPs1E4nA9BNeUDskOMBQ@mail.gmail.com>
- <20191220204748.GA9076@kernel.org>
- <CAEf4BzZW+bDxkdmXBJrrCHqBP5UT1NLJJ7mXLNqc6eypRCib6Q@mail.gmail.com>
- <20191220215328.GB9076@kernel.org>
- <CAEf4BzZBnY0neQJQ=opaGTO5yMKWhqBB_YRE4QTTBNYBD-RF9g@mail.gmail.com>
+        Fri, 20 Dec 2019 17:05:37 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iiQOl-0005Ku-8o; Fri, 20 Dec 2019 22:05:27 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rajmohan Mani <rajmohan.mani@intel.com>
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] thunderbolt: fix memory leak of object sw
+Date:   Fri, 20 Dec 2019 22:05:26 +0000
+Message-Id: <20191220220526.11307-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzZBnY0neQJQ=opaGTO5yMKWhqBB_YRE4QTTBNYBD-RF9g@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Dec 20, 2019 at 02:00:48PM -0800, Andrii Nakryiko escreveu:
-> On Fri, Dec 20, 2019 at 1:53 PM Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
-> > Em Fri, Dec 20, 2019 at 01:45:52PM -0800, Andrii Nakryiko escreveu:
-> > > On Fri, Dec 20, 2019 at 12:47 PM Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
-> > > > Shouldn't this be applied to the current merge window since a behaviour
-> > > > that people relied, i.e. using O= to generate the build in a separate
-> > > > directory, since its not possible to use the source dir tree as it is
-> > > > read-only is now broken, i.e. isn't this a regression?
+From: Colin Ian King <colin.king@canonical.com>
 
-> > > Sure, it can be applied against bpf as well, but selftests still need
-> > > to be fixed first.
+In the case where the call tb_switch_exceeds_max_depth is true
+the error reurn path leaks memory in sw.  Fix this by setting
+the return error code to -EADDRNOTAVAIL and returning via the
+error exit path err_free_sw_ports to free sw. sw has been kzalloc'd
+so the free of the NULL sw->ports is fine.
 
-> > I guess this can be done on a separate patch? I.e. if the user doesn't
-> > use selftests the only regression it will see is when trying to build
-> > tools/perf using O=.
+Addresses-Coverity: ("Resource leak")
+Fixes: b04079837b20 ("thunderbolt: Add initial support for USB4")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/thunderbolt/switch.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-> > I think two patches is best, better granularity, do you see a strict
-> > need for both to be in the same patch?
+diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+index 3454e6154958..ad5479f21174 100644
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -1885,8 +1885,10 @@ struct tb_switch *tb_switch_alloc(struct tb *tb, struct device *parent,
+ 	sw->config.enabled = 0;
  
-> Sure, it can be two separate patches, but they should go in together,
-> otherwise selftests will be broken.
+ 	/* Make sure we do not exceed maximum topology limit */
+-	if (tb_switch_exceeds_max_depth(sw, depth))
+-		return ERR_PTR(-EADDRNOTAVAIL);
++	if (tb_switch_exceeds_max_depth(sw, depth)) {
++		ret = -EADDRNOTAVAIL;
++		goto err_free_sw_ports;
++	}
+ 
+ 	/* initialize ports */
+ 	sw->ports = kcalloc(sw->config.max_port_number + 1, sizeof(*sw->ports),
+-- 
+2.24.0
 
-Sure, both have to be fixed :-)
-
-- Arnaldo
