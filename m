@@ -2,104 +2,124 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5169C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 02:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41485C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 02:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0E952467E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 02:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E24C2465E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 02:47:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eYb1W3+T"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Q6scEtJH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfLTCpo (ORCPT
+        id S1727148AbfLTCrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 21:45:44 -0500
-Received: from ozlabs.org ([203.11.71.1]:35815 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbfLTCpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 21:45:43 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47fCm46mdBz9sRX;
-        Fri, 20 Dec 2019 13:45:40 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1576809941;
-        bh=S+Vd4CiK/V7OBYDe81f0w3P2BE6PmGpdcqG5olDC60g=;
-        h=Date:From:To:Cc:Subject:From;
-        b=eYb1W3+TxXCYAMdlVFCxzXuKiJNmCAubwdqOGmlQqiRXklbf0AcYDscC+acDETvwp
-         PUnT3dNbkcsvAT9gUBHGiPEIdQj0YUGaER3IwLD7NHoMEioTrmQi1rMIgRo7vMJC5i
-         bFFqp0aLrausu6wAz9twY1cz/n3oCLiv1yKvrtyyrxavQxGkfthte7njFbdplxQyFl
-         Bri7VMprHED/oWP9l7Tnbtfjljorz1Vk9JwsAvzvo0NQJ109wYZ4azv1P7tvaYOHw0
-         a8ND0uNADmvyWGKfKzbs16yHeEIYRrTCNqjn2B7zUcd2cCyvAvwbAZIL48c5a5OIRA
-         EbYY/aw2S2/WA==
-Date:   Fri, 20 Dec 2019 13:45:39 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>, David Howells <dhowells@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the driver-core tree with the keys tree
-Message-ID: <20191220134539.38872256@canb.auug.org.au>
+        Thu, 19 Dec 2019 21:47:41 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:49600 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbfLTCrl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 21:47:41 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBK2leWt010171;
+        Thu, 19 Dec 2019 20:47:40 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576810060;
+        bh=HXApxIRNsh32DrkR8Mxs4Ae0SPX+t5QFqt8IIpf+fAM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Q6scEtJH71fKjgdpgRf6JqEl6c0X2ynYJb+QesXnmnEKxkbZUh6Bf4X78Kl8DNOVU
+         B2rwfcAP4UicxMIiXy1EJt/t5F12cu7Ay1+p2L70vvhPeu6OApA6OaA8haT+4NV26C
+         1yYflY0R8Hm2128smvKR61fqz7pV/b1A/uA/29/M=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBK2leCh056071
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 19 Dec 2019 20:47:40 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Dec 2019 20:47:37 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Dec 2019 20:47:37 -0600
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBK2lbun124782;
+        Thu, 19 Dec 2019 20:47:37 -0600
+Subject: Re: [PATCHv3 09/15] remoteproc/omap: Remove the
+ omap_rproc_reserve_cma declaration
+To:     Tero Kristo <t-kristo@ti.com>, <bjorn.andersson@linaro.org>,
+        <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
+        <linux-omap@vger.kernel.org>
+References: <20191213125537.11509-1-t-kristo@ti.com>
+ <20191213125537.11509-10-t-kristo@ti.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <75420692-ecbc-f7cd-f7bc-9df0849d91dc@ti.com>
+Date:   Thu, 19 Dec 2019 20:47:37 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/UccbYI=04d4e_ODkYncx9Bm";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20191213125537.11509-10-t-kristo@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/UccbYI=04d4e_ODkYncx9Bm
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Tero,
 
-Hi all,
+On 12/13/19 6:55 AM, Tero Kristo wrote:
+> From: Suman Anna <s-anna@ti.com>
+> 
+> The omap_rproc_reserve_cma() function is not defined at the moment.
+> This prototype was to be used to define a function to declare a
+> remoteproc device-specific CMA pool.
+> 
+> The remoteproc devices will be defined through DT going forward. A
+> device specific CMA pool will be defined under the reserved-memory
+> node, and will be associated with the appropriate remoteproc device
+> node. This function prototype will no longer be needed and has
+> therefore been cleaned up.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Today's linux-next merge of the driver-core tree got a conflict in:
+With the structure removed, you can actually drop the file altogether.
 
-  include/linux/device.h
+regards
+Suman
 
-between commit:
+> ---
+>  include/linux/platform_data/remoteproc-omap.h | 12 ------------
+>  1 file changed, 12 deletions(-)
+> 
+> diff --git a/include/linux/platform_data/remoteproc-omap.h b/include/linux/platform_data/remoteproc-omap.h
+> index 6bea01e199fe..49c78805916f 100644
+> --- a/include/linux/platform_data/remoteproc-omap.h
+> +++ b/include/linux/platform_data/remoteproc-omap.h
+> @@ -21,16 +21,4 @@ struct omap_rproc_pdata {
+>  	int (*device_shutdown)(struct platform_device *pdev);
+>  };
+>  
+> -#if defined(CONFIG_OMAP_REMOTEPROC) || defined(CONFIG_OMAP_REMOTEPROC_MODULE)
+> -
+> -void __init omap_rproc_reserve_cma(void);
+> -
+> -#else
+> -
+> -static inline void __init omap_rproc_reserve_cma(void)
+> -{
+> -}
+> -
+> -#endif
+> -
+>  #endif /* _PLAT_REMOTEPROC_H */
+> 
 
-  3a92c6e49c47 ("Add a general, global device notification watch list")
-
-from the (20191211 version of the) keys tree and commit:
-
-  af628aae8640 ("device.h: move dev_printk()-like functions to dev_printk.h=
-")
-
-from the driver-core tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
-
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/UccbYI=04d4e_ODkYncx9Bm
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl38NdMACgkQAVBC80lX
-0Gx6TQgAlEhYTL2VvX27CZwaHsGJVKAye0F77x1fyrlDPMMloaiEZlQLaIS7ZsQP
-UIBCvxcW0dYErtoF2LZyeThN8/+Di8WP5JjQ3mn1G0HNK9XZus1ZGQTR+1VDECIP
-qhITA2wcJV/ppPF8SsiGZ6xddjx8nlCaJDCAwbMNyUkAIRtBGUgoIpUe88i7RI9q
-kntLtwQ2mN8T7SnC6JpDZRhIjRYv9/E/qQJHh69vjSA9qwpSIEm6QpvH/gSU1Gy5
-VaTYby7dsEYR4kbto7e1xajKYV6+M0VfeWd4gMvo/s17SZURAunR7jEdq3j5FbL5
-Z5CLoZ4WfhDUqGlQ/xISMzy3dxB3Fw==
-=py+0
------END PGP SIGNATURE-----
-
---Sig_/UccbYI=04d4e_ODkYncx9Bm--
