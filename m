@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D0EC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 892F8C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38526206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56795206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:32:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852371;
-	bh=yncMnTIlVeBDgGpkBuy+C4FVdWGC/AeEWtvv41q7wLc=;
+	s=default; t=1576852377;
+	bh=kn1yMQ++v+tSgPYIXSWQshWLlh0px6/1OR/qxa63mqs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lUdDjFqowWmk++LjYB2PYo/aHhobDM+6ZCXq6rCaEcNLttLknJYzdgI7p5k8/qQvt
-	 cZFisHrTVU8A6wLRdx0MuriTb8hWqrFIzSlMo2ULIhsGoiBnpqA5+0p8mJv7NpI9Ml
-	 +mgUaumLsS89N8EpwzHzYoyvhVsYlNKb8KxT8iXk=
+	b=DXzoHZVE7k5UwmLPZXoAZXSBNZuDQXFzpl/2PpPkOQsGPNddX2zRtUhKEjQJckAwG
+	 IED0M70NkH596LswCet6OArFblSpNl6scmX55+JyXmtVQvr9QAKDQQuu69Q0eOigNn
+	 zdsI42UW/T2aGbFn+3eHsk9qnOaCUiiqMKuZu7gM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728226AbfLTOcu (ORCPT
+        id S1727894AbfLTOat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:32:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34780 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:30:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727903AbfLTOau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:30:50 -0500
+        id S1727806AbfLTOaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:30:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36D3A24691;
-        Fri, 20 Dec 2019 14:30:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 201F324688;
+        Fri, 20 Dec 2019 14:30:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852250;
-        bh=yncMnTIlVeBDgGpkBuy+C4FVdWGC/AeEWtvv41q7wLc=;
+        s=default; t=1576852238;
+        bh=kn1yMQ++v+tSgPYIXSWQshWLlh0px6/1OR/qxa63mqs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J2T2anbFEL1ePDhmZx6qaxnIV+KNSwX6EEoMRjs9RWcnNL+bkxcR7ny043G4KSgzY
-         w9Q05dZ+ikQ3IWadl1iA8B7BM1v0+QZfOi+h8Km+ICdvULsBOEmfaVbYFy5hnW+9Wg
-         p0HMroSpZ3w2SntZdLTfiw5bsQ4Q3SybtZ5tSAoE=
+        b=dRQ/rL1hBIdxFHzaj8Df2eZdHvalLVmb8iihpj6zXMaYbhhWXxANpREbmbg1BFXnp
+         n1E3L+u6QOwiHzvWv+RG50N9b1/C6yFUX/Q7dpZlknpyCkBLwIQpcoQ3wHKJFAw3Ag
+         NxXZJlsV5Laskx0Os7bNykmw83nF7K4dm9yw6VOA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Jonathan Billings <jsbillings@jsbillings.org>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 41/52] afs: Fix mountpoint parsing
-Date:   Fri, 20 Dec 2019 09:29:43 -0500
-Message-Id: <20191220142954.9500-41-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 32/52] scsi: iscsi: qla4xxx: fix double free in probe
+Date:   Fri, 20 Dec 2019 09:29:34 -0500
+Message-Id: <20191220142954.9500-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
 References: <20191220142954.9500-1-sashal@kernel.org>
@@ -60,63 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 158d58335393af3956a9c06f0816ee75ed1f1447 ]
+[ Upstream commit fee92f25777789d73e1936b91472e9c4644457c8 ]
 
-Each AFS mountpoint has strings that define the target to be mounted.  This
-is required to end in a dot that is supposed to be stripped off.  The
-string can include suffixes of ".readonly" or ".backup" - which are
-supposed to come before the terminal dot.  To add to the confusion, the "fs
-lsmount" afs utility does not show the terminal dot when displaying the
-string.
+On this error path we call qla4xxx_mem_free() and then the caller also
+calls qla4xxx_free_adapter() which calls qla4xxx_mem_free().  It leads to a
+couple double frees:
 
-The kernel mount source string parser, however, assumes that the terminal
-dot marks the suffix and that the suffix is always "" and is thus ignored.
-In most cases, there is no suffix and this is not a problem - but if there
-is a suffix, it is lost and this affects the ability to mount the correct
-volume.
+drivers/scsi/qla4xxx/ql4_os.c:8856 qla4xxx_probe_adapter() warn: 'ha->chap_dma_pool' double freed
+drivers/scsi/qla4xxx/ql4_os.c:8856 qla4xxx_probe_adapter() warn: 'ha->fw_ddb_dma_pool' double freed
 
-The command line mount command, on the other hand, is expected not to
-include a terminal dot - so the problem doesn't arise there.
-
-Fix this by making sure that the dot exists and then stripping it when
-passing the string to the mount configuration.
-
-Fixes: bec5eb614130 ("AFS: Implement an autocell mount capability [ver #2]")
-Reported-by: Jonathan Billings <jsbillings@jsbillings.org>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
-Tested-by: Jonathan Billings <jsbillings@jsbillings.org>
+Fixes: afaf5a2d341d ("[SCSI] Initial Commit of qla4xxx")
+Link: https://lore.kernel.org/r/20191203094421.hw7ex7qr3j2rbsmx@kili.mountain
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/mntpt.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/scsi/qla4xxx/ql4_os.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/fs/afs/mntpt.c b/fs/afs/mntpt.c
-index f532d6d3bd28c..79bc5f1338edf 100644
---- a/fs/afs/mntpt.c
-+++ b/fs/afs/mntpt.c
-@@ -126,7 +126,7 @@ static int afs_mntpt_set_params(struct fs_context *fc, struct dentry *mntpt)
- 		if (src_as->cell)
- 			ctx->cell = afs_get_cell(src_as->cell);
+diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
+index 8c674eca09f13..2323432a0edbc 100644
+--- a/drivers/scsi/qla4xxx/ql4_os.c
++++ b/drivers/scsi/qla4xxx/ql4_os.c
+@@ -4275,7 +4275,6 @@ static int qla4xxx_mem_alloc(struct scsi_qla_host *ha)
+ 	return QLA_SUCCESS;
  
--		if (size > PAGE_SIZE - 1)
-+		if (size < 2 || size > PAGE_SIZE - 1)
- 			return -EINVAL;
+ mem_alloc_error_exit:
+-	qla4xxx_mem_free(ha);
+ 	return QLA_ERROR;
+ }
  
- 		page = read_mapping_page(d_inode(mntpt)->i_mapping, 0, NULL);
-@@ -140,7 +140,9 @@ static int afs_mntpt_set_params(struct fs_context *fc, struct dentry *mntpt)
- 		}
- 
- 		buf = kmap(page);
--		ret = vfs_parse_fs_string(fc, "source", buf, size);
-+		ret = -EINVAL;
-+		if (buf[size - 1] == '.')
-+			ret = vfs_parse_fs_string(fc, "source", buf, size - 1);
- 		kunmap(page);
- 		put_page(page);
- 		if (ret < 0)
 -- 
 2.20.1
 
