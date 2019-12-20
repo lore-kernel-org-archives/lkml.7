@@ -2,116 +2,121 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E953C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 970F1C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11D582467E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:41:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576806094;
-	bh=jbp7qS/A1/yOwSoNImxVhKr1vUeyyU2Wox5UkPB26pA=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=d1Wz3JsRHqNN5cGLt5KpZHGdbZHmIi9+NsKXrOfd7gYJWkm0hscg4GZNJyPruTKb7
-	 17IppI6cuxPe+xcGX6DrNnqGEGVcaj+X5soZC3O8ProQWDbOZx05iw7kutq6vwDGgr
-	 1JT4cSd8F4Y6SYe6T4veVPTe9oeElYefdwO5XHyc=
+	by mail.kernel.org (Postfix) with ESMTP id 6BD6D2467E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:42:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hDmKdmCE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbfLTBld (ORCPT
+        id S1727198AbfLTBmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 20:41:33 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:38126 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727070AbfLTBlc (ORCPT
+        Thu, 19 Dec 2019 20:42:36 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:35640 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727020AbfLTBmf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 20:41:32 -0500
-Received: by mail-il1-f193.google.com with SMTP id f5so6570340ilq.5
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 17:41:32 -0800 (PST)
+        Thu, 19 Dec 2019 20:42:35 -0500
+Received: by mail-il1-f195.google.com with SMTP id g12so6588321ild.2;
+        Thu, 19 Dec 2019 17:42:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kihFHk0I3eiSjPlsPOEWwLG5M5I3W9sqheb6sgl2P4k=;
-        b=hiDu43S+ngvlMBE/4HJGTNYC1y1RavL4d+i+AbAdZAnmrfii3Ek2G5DaS1DHwSceO2
-         hkYpdiXmsDhaduWGWG7ZuISR/pQrC7JlsMNpMQLaPA7Zvco28exuJNPYEMTjQa71P3p1
-         nSmP3yaHXzQRXTKiyg9VPBxyCj7audWltZfb8=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sfr0DkASOT0MoT13/9e3piyeEKgEAbIuAROVb11tB/8=;
+        b=hDmKdmCEoRGDXnjj93XNfw6FoH8rtTZnKOYluWiw5na7UgC74B6XdOt5X1HcRAZnun
+         odMTXStKNxHolBzNSxflFXZPttY+WPy9NuB7kXkL7OP1k/ur6X6NpKB/iKDkiptIEdRS
+         B3pnFp6TsBm89uV38uszZHKpaaGpRnoIf1L685FfOY/qaHRt13u7hKgbWQ6mQ5cz8gRs
+         0M5S7JWjgFvHlPSo1Y0gpvuxkzFLPwBOzs/bm3M+mrbCvk1+QB6786aHyt+b7f8gEJPh
+         EDWgjplRuJyYyf5oXtJ/se+QjE0zNlc4rDEb6iBCEVweQKlA1pEgVjeCj4jya3lq5jJD
+         SMRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kihFHk0I3eiSjPlsPOEWwLG5M5I3W9sqheb6sgl2P4k=;
-        b=j2SYAIOaS+GmaimykFcq11KKbkP3UV1qAaK/MTzefbNmEKSMObOub3vzruI2+qOccG
-         MORXcdC8F5ZT9r8O3k5RC2G8C0yn9Q3UbELU4CuXUnAFaa3O9U1El6QTx0bWUjZePQ1j
-         8UYvjUm+1IXBtAGqvjut7+dDpl4IZoe7Xn+LY6xnPLbmOTG05l8SFA4afGwOznRWnYey
-         j7s/SnqfxHm8Ot+1VYQWQKtOaHQqlm9wzXJQKy8Nr9MsvVP4MbeGhr0WRFcdMojSgYYF
-         45vVDaAyODLGVsmtQxJ53u/FCoA42bQMuJQf24z+3GU25wOo4SRPOPC0kFhdd4aHI9CR
-         paqg==
-X-Gm-Message-State: APjAAAV+luJ5fA854LRyJ10zi1nAIkMOTpFLSQx82L5SXyohdrcz6epR
-        uH7PSFa8atwf7hMsW5ZYdmlutw==
-X-Google-Smtp-Source: APXvYqxJ1wlBxbfbo8n32neUIKY7qhlUNucAfrLjjhF9jQmtKljvxSLHrLQZTJntHeTRF1avB9VQhA==
-X-Received: by 2002:a92:84dd:: with SMTP id y90mr9120333ilk.99.1576806092085;
-        Thu, 19 Dec 2019 17:41:32 -0800 (PST)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id i136sm1505454ild.23.2019.12.19.17.41.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Dec 2019 17:41:31 -0800 (PST)
-Subject: Re: [PATCH for 5.4 0/3] Restartable Sequences Fixes
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20190917182959.16333-1-mathieu.desnoyers@efficios.com>
- <211848436.2172.1576078102568.JavaMail.zimbra@efficios.com>
- <b67930c1-c8e0-124f-9a88-6ecace27317c@linuxfoundation.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <7fd53b32-8d9e-5c24-56c5-86c1c7c700dc@linuxfoundation.org>
-Date:   Thu, 19 Dec 2019 18:41:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sfr0DkASOT0MoT13/9e3piyeEKgEAbIuAROVb11tB/8=;
+        b=XObANOzUVpSaiYEBBsfxBQiDN/kUHpJc5XVUhRzoRJNDEHhEOWkTy7vv4L+xkcCh1o
+         pyQvZq3lW7DHxlFbJ/r7fhJCr4IUzdlFSVK3MVXlwWUduKGwq6WJmGr2iF/M6SPk8DGH
+         2bqg2zbP2rUznfViy64vL5aHJ2xSF3MDKIHfHAuPt2nWwo2PYppXoprNDuBxP1G8/2bK
+         u3jDHH0GjF4TkJuR9tEQC5esIVJy78rL6IAwpp6SkXrRnUTOMs3fd3bO4Gdd7xwWhEN4
+         XHVzWBtDIUY07fwZF8beSxHAhFzKdViIofQ00OFEJtqP+2ZfP28s1CchaaNTLbM8HQrh
+         D9YQ==
+X-Gm-Message-State: APjAAAUKgCkHf1qQjaQkCrksy26EcroHXBS25Lvc5VzLcE8uTvoZcpC5
+        oBK4CdrT7CMk4ec1s/X6Hu9zNwetuYYgALJUPWID9A==
+X-Google-Smtp-Source: APXvYqwW12fGRUInSbhFGQiF8M5rMUYdDDkl/mkcbRhVNYfiGDJz2k/OjCft5BgxUUEN5KqBimqQgZwbaY/hrYQzo6Y=
+X-Received: by 2002:a92:4883:: with SMTP id j3mr9930949ilg.272.1576806154739;
+ Thu, 19 Dec 2019 17:42:34 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <b67930c1-c8e0-124f-9a88-6ecace27317c@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191218030451.40994-1-natechancellor@gmail.com>
+In-Reply-To: <20191218030451.40994-1-natechancellor@gmail.com>
+From:   Steve French <smfrench@gmail.com>
+Date:   Thu, 19 Dec 2019 19:42:23 -0600
+Message-ID: <CAH2r5mtr=d-LYD_EQ_OQVX5s8QziHvAYNmRnwMpVjeb4JiHMYw@mail.gmail.com>
+Subject: Re: [PATCH] cifs: Adjust indentation in smb2_open_file
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/11/19 8:47 AM, Shuah Khan wrote:
-> On 12/11/19 8:28 AM, Mathieu Desnoyers wrote:
->> Hi Thomas,
->>
->> I thought those rseq fixes posted in September were in the -tip tree, 
->> but it
->> seems that they never made it to mainline.
->>
->> Now Shuah Khan noticed the issue with gettid() compatibility with glibc
->> 2.30+. This series contained that fix.
->>
->> Should I re-post it, or is this series on track to get into mainline
->> at some point ?
->>
-> 
-> It will be great this can make it into 5.5-rc2 or so.
-> 
-> thanks,
-> -- Shuah
-> 
+merged into cifs-2.6.git for-next
 
-I am pulling this patch in for Linux 5.5-rc4.
+On Tue, Dec 17, 2019 at 9:04 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Clang warns:
+>
+> ../fs/cifs/smb2file.c:70:3: warning: misleading indentation; statement
+> is not part of the previous 'if' [-Wmisleading-indentation]
+>          if (oparms->tcon->use_resilient) {
+>          ^
+> ../fs/cifs/smb2file.c:66:2: note: previous statement is here
+>         if (rc)
+>         ^
+> 1 warning generated.
+>
+> This warning occurs because there is a space after the tab on this line.
+> Remove it so that the indentation is consistent with the Linux kernel
+> coding style and clang no longer warns.
+>
+> Fixes: 592fafe644bf ("Add resilienthandles mount parm")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/826
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>  fs/cifs/smb2file.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/fs/cifs/smb2file.c b/fs/cifs/smb2file.c
+> index 8b0b512c5792..afe1f03aabe3 100644
+> --- a/fs/cifs/smb2file.c
+> +++ b/fs/cifs/smb2file.c
+> @@ -67,7 +67,7 @@ smb2_open_file(const unsigned int xid, struct cifs_open_parms *oparms,
+>                 goto out;
+>
+>
+> -        if (oparms->tcon->use_resilient) {
+> +       if (oparms->tcon->use_resilient) {
+>                 /* default timeout is 0, servers pick default (120 seconds) */
+>                 nr_ioctl_req.Timeout =
+>                         cpu_to_le32(oparms->tcon->handle_timeout);
+> --
+> 2.24.1
+>
 
-Let me know if you have any objections.
 
-thanks,
--- Shuah
+-- 
+Thanks,
+
+Steve
