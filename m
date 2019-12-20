@@ -2,115 +2,177 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BD5C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 098EDC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73DAC2465E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:20:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="cSPcVwWI"
+	by mail.kernel.org (Postfix) with ESMTP id CCA002465E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:20:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727277AbfLTJUV (ORCPT
+        id S1727317AbfLTJUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 04:20:21 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33951 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727167AbfLTJUV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 04:20:21 -0500
-Received: by mail-lj1-f196.google.com with SMTP id z22so4455029ljg.1
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 01:20:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3v7dxzSJEJ1yWkClVjvOyMii5LUuWGWUSQjt8LKR3wA=;
-        b=cSPcVwWIVS1ArGZRrJfotRqRQooXD8MIeMchCt+DhIL0IxF/ZlKkI4jg1aAydkRK+r
-         OHjXxr/DIapkkt3MnnXJ4nI+FENizI+oMHKMKTYIP6Tj2MXeJ2VBNv7kdDYCxiDXfPxV
-         opo142e9QxQY7ddx+jsyPP3Szd1Sm9lS8QC5DAv+fy6YHfQo6YOVqLSyp+Pgby7SuVOq
-         2FwQcbJqu73W1/GOPIPvuJ6dlp2keMafuCu6nXbClec0IN2kt5HQS3pFfbBjUujMRXN+
-         3XLGcE8YGj0uBaeyPAKl14aNj4KdhovWo5mvhkCqPMGWB0fo1x5+n4NV3aFEM8aSAGyW
-         dqZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3v7dxzSJEJ1yWkClVjvOyMii5LUuWGWUSQjt8LKR3wA=;
-        b=T4Dwt4v5i4rNXD5O4FqBJlDfMmojm0eN9KQmpFVB1toTkUbvbp1lGUQ6hRJ2a430eu
-         SSnEYBx7kjH4Cp3Nir6QuBcePVigZcwdW90ecSazno3a508eg+NwCkPMe2UXqvrmqQ0q
-         1Of3vCx+eiNI42KwpsGWO5r8JVlg0S7GS6xaw4UC7JcNPYFdm7cG3Gmlw10hOzHNTew1
-         kAjWm2nDHGCXcy/8t8PNhmcsGHsmOlZKr/zTlJNumu861j7PKtmCtK4keYwbBm9r81OS
-         4mF6eTF3V7qLIk1Bf9XrJ4KH2yp34aDftkqZObBv0ABV4IlcvzmejqyX4sT8mAQ2qURS
-         Yn2g==
-X-Gm-Message-State: APjAAAWdEUn7xuNk1CPpqenOQwjloDwAsiTt6sFFHk2US6Te3ZZrDo4L
-        N4dopdyRkkIPrEeKafndld2kMiaNPT6Gs12jqniO9A==
-X-Google-Smtp-Source: APXvYqzkgitfd8EblC1qDia6uilzFpgb0yD6XfXD6tjTDy/iHZuEFJgr8hb+2pI9Ng9Y4SA3O6d1QgLiQ0AXG0L6h3o=
-X-Received: by 2002:a05:651c:8f:: with SMTP id 15mr9026170ljq.109.1576833618773;
- Fri, 20 Dec 2019 01:20:18 -0800 (PST)
+        Fri, 20 Dec 2019 04:20:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:48540 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727169AbfLTJUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 04:20:45 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7D8130E;
+        Fri, 20 Dec 2019 01:20:44 -0800 (PST)
+Received: from [10.37.12.112] (unknown [10.37.12.112])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 501863F718;
+        Fri, 20 Dec 2019 01:20:43 -0800 (PST)
+Subject: Re: [PATCH 1/2] include: trace: Add SCMI header with trace events
+To:     Jim Quinlan <james.quinlan@broadcom.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, rostedt@goodmis.org
+References: <20191216161650.21844-1-lukasz.luba@arm.com>
+ <20191218120900.GA28599@bogus>
+ <7b59a2f1-0786-d24f-a653-76a60c15a8ae@broadcom.com>
+ <CA+-6iNxn29WpUrbc9gL4EMTJfZj7FRCeO-_QaUqbjJYd1JAEKA@mail.gmail.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <7fe599d3-1ce2-1fde-2911-9516a26090b6@arm.com>
+Date:   Fri, 20 Dec 2019 09:20:40 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191218235459.GA17271@ircssh-2.c.rugged-nimbus-611.internal> <CALCETrUK-SHA=sOUrBscpf+Bpxxff2L3RpXEaAfRHNnHGxa-LQ@mail.gmail.com>
-In-Reply-To: <CALCETrUK-SHA=sOUrBscpf+Bpxxff2L3RpXEaAfRHNnHGxa-LQ@mail.gmail.com>
-From:   Christian Brauner <christian@brauner.io>
-Date:   Fri, 20 Dec 2019 10:20:07 +0100
-Message-ID: <CAHrFyr6oWgeQGS9Yh4akorWyrfdYt6j6Y6v=v9=rDVgf5TbMQg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/5] pid: Add PIDFD_IOCTL_GETFD to fetch file
- descriptors from processes
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Sargun Dhillon <sargun@sargun.me>, ealvarez@mozilla.com,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        gpascutto@mozilla.com, Linux API <linux-api@vger.kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        jld@mozilla.com, LKML <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CA+-6iNxn29WpUrbc9gL4EMTJfZj7FRCeO-_QaUqbjJYd1JAEKA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 2:43 AM Andy Lutomirski <luto@kernel.org> wrote:
->
-> On Wed, Dec 18, 2019 at 3:55 PM Sargun Dhillon <sargun@sargun.me> wrote:
-> >
-> > +
-> > +       if (!ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS)) {
-> > +               file = ERR_PTR(-EPERM);
-> > +               goto out;
-> > +       }
->
-> I don't think this is MODE_READ.  By copying an fd from the task, you
-> can easily change its state.
->
-> IMO it would be really nice if pidfd could act more like a capability
+Hi Jim,
 
-That's ultimately what I would like to get to.
+On 12/19/19 4:32 PM, Jim Quinlan wrote:
+>> I also see a stretch of over 100 (contiguous) of these
+>>
+>> ... scmi_rx_done: transfer_id=48321 msg_id=7 protocol_id=128 seq=0 msg_type=0
+>> ... scmi_rx_done: transfer_id=48322 msg_id=8 protocol_id=128 seq=0 msg_type=0
+>> ... scmi_rx_done: transfer_id=48323 msg_id=7 protocol_id=128 seq=0 msg_type=0
+>> ... scmi_rx_done: transfer_id=48324 msg_id=8 protocol_id=128 seq=0 msg_type=0
+>>
+>> which I cannot explain -- perhaps ftrace doesn't work well in interrupt context?
+> 
+> Hello,
+> Please ignore my previous results; I've switched to using 'nop' as the
+> current_tracer and the above issue has cleared up.  I now get traces
+> like below:
+> 
+>            <idle>-0     [000] d.h.   907.608763: scmi_rx_done:
+> transfer_id=10599 msg_id=7 protocol_id=128 seq=2 msg_type=0
+>         t1-sensor-1817  [003] ....   907.608879: scmi_xfer_begin:
+> transfer_id=10601 msg_id=6 protocol_id=21 seq=1 poll=0
+>           t0-brcm-1815  [000] d.h.   907.614133: scmi_rx_done:
+> transfer_id=10600 msg_id=7 protocol_id=20 seq=0 msg_type=0
+>           t0-brcm-1815  [000] ....   907.614189: scmi_xfer_end:
+> transfer_id=10599 msg_id=7 protocol_id=128 seq=2 status=0
+>           t0-brcm-1815  [000] ....   907.614215: scmi_xfer_begin:
+> transfer_id=10602 msg_id=8 protocol_id=128 seq=2 poll=0
+>            <idle>-0     [000] d.h.   907.616380: scmi_rx_done:
+> transfer_id=10601 msg_id=6 protocol_id=21 seq=1 msg_type=0
+>          t2-clock-1818  [003] ....   907.616418: scmi_xfer_end:
+> transfer_id=10600 msg_id=7 protocol_id=20 seq=0 status=0
+>          t2-clock-1818  [003] ....   907.616440: scmi_xfer_begin:
+> transfer_id=10603 msg_id=7 protocol_id=20 seq=0 poll=0
+>         t1-sensor-1817  [003] ....   907.616474: scmi_xfer_end:
+> transfer_id=10601 msg_id=6 protocol_id=21 seq=1 status=0
+>            <idle>-0     [000] d.h.   907.616478: scmi_rx_done:
+> transfer_id=10602 msg_id=8 protocol_id=128 seq=2 msg_type=0
+>           t0-brcm-1815  [000] d.h.   907.616526: scmi_rx_done:
+> transfer_id=10603 msg_id=7 protocol_id=20 seq=0 msg_type=0
+>           t0-brcm-1815  [000] ....   907.616559: scmi_xfer_end:
+> transfer_id=10602 msg_id=8 protocol_id=128 seq=2 status=0
+>           t0-brcm-1815  [000] .n..   907.616588: scmi_xfer_begin:
+> transfer_id=10604 msg_id=7 protocol_id=128 seq=1 poll=0
+>         t1-sensor-1817  [003] ....   907.616628: scmi_xfer_begin:
+> transfer_id=10605 msg_id=6 protocol_id=21 seq=2 poll=0
+>          t2-clock-1818  [003] ....   907.616660: scmi_xfer_end:
+> transfer_id=10603 msg_id=7 protocol_id=20 seq=0 status=0
+>            <idle>-0     [000] d.h.   907.616665: scmi_rx_done:
+> transfer_id=10604 msg_id=7 protocol_id=128 seq=1 msg_type=0
+>          t2-clock-1818  [003] ....   907.616673: scmi_xfer_begin:
+> transfer_id=10606 msg_id=7 protocol_id=20 seq=0 poll=0
+>           t0-brcm-1815  [000] d.h.   907.618782: scmi_rx_done:
+> transfer_id=10605 msg_id=6 protocol_id=21 seq=2 msg_type=0
+>         t1-sensor-1817  [003] ....   907.618829: scmi_xfer_end:
+> transfer_id=10605 msg_id=6 protocol_id=21 seq=2 status=0
+>           t0-brcm-1815  [000] dnH.   907.618834: scmi_rx_done:
+> transfer_id=10606 msg_id=7 protocol_id=20 seq=0 msg_type=0
+>           t0-brcm-1815  [000] .n..   907.618855: scmi_xfer_end:
+> transfer_id=10604 msg_id=7 protocol_id=128 seq=1 status=0
+>           t0-brcm-1815  [000] .n..   907.618873: scmi_xfer_begin:
+> transfer_id=10607 msg_id=8 protocol_id=128 seq=1 poll=0
+>          t2-clock-1818  [003] ....   907.618890: scmi_xfer_end:
+> transfer_id=10606 msg_id=7 protocol_id=20 seq=0 status=0
+>         rcu_sched-7     [000] d.h.   907.618898: scmi_rx_done:
+> transfer_id=10607 msg_id=8 protocol_id=128 seq=1 msg_type=0
+>           t0-brcm-1815  [000] ....   907.618934: scmi_xfer_end:
+> transfer_id=10607 msg_id=8 protocol_id=128 seq=1 status=0
+>           t3-brcm-1819  [003] ....   907.618958: scmi_xfer_begin:
+> transfer_id=10608 msg_id=7 protocol_id=128 seq=0 poll=0
+>            <idle>-0     [000] d.h.   907.618974: scmi_rx_done:
+> transfer_id=10608 msg_id=7 protocol_id=128 seq=0 msg_type=0
+>           t3-brcm-1819  [003] ....   907.619005: scmi_xfer_end:
+> transfer_id=10608 msg_id=7 protocol_id=128 seq=0 status=0
+>           t3-brcm-1819  [003] ....   907.619013: scmi_xfer_begin:
+> transfer_id=10609 msg_id=8 protocol_id=128 seq=0 poll=0
+> 
+> And with V2 having the added xfer id allows me to more easily post
+> process the above with a script and highlight messages that took too
+> long (round trip times > 3msec get a double asterisk):
+> 
+>       10585      0.02 ms  proto=128  cmd=8  seq=0
+>       10586      2.16 ms  proto= 21  cmd=6  seq=0
+>       10587      0.87 ms  proto=128  cmd=7  seq=1
+>       10588      0.02 ms  proto=128  cmd=8  seq=0
+>       10589      0.05 ms  proto=128  cmd=7  seq=0
+>       10590      2.15 ms  proto= 21  cmd=6  seq=1
+>       10591      2.19 ms  proto=128  cmd=8  seq=0
+>       10592      2.13 ms  proto= 21  cmd=6  seq=0
+>       10593      0.03 ms  proto=128  cmd=7  seq=0
+>       10594      0.02 ms  proto=128  cmd=8  seq=0
+>       10595      0.02 ms  proto=128  cmd=7  seq=0
+>       10596      0.02 ms  proto=128  cmd=8  seq=0
+>       10597  **  7.16 ms  proto= 20  cmd=7  seq=0
+>       10598  **  7.12 ms  proto= 21  cmd=6  seq=1
+>       10599  ** 11.58 ms  proto=128  cmd=7  seq=2
+>       10600  **  9.28 ms  proto= 20  cmd=7  seq=0
+>       10601  **  7.60 ms  proto= 21  cmd=6  seq=1
+>       10602      2.34 ms  proto=128  cmd=8  seq=2
+>       10603      0.22 ms  proto= 20  cmd=7  seq=0
+>       10604      2.27 ms  proto=128  cmd=7  seq=1
+>       10605      2.20 ms  proto= 21  cmd=6  seq=2
+> 
+> So I do find the extra msg id helpful as well as the extra traceprint.
 
-> here and carry a ptrace mode, for example.  But I guess it doesn't
-> right now.
+Thank you for sharing your experiments and thoughts. I have probably
+similar setup for stressing the communication channel, but I do also
+some wired things in the firmware. That's why I need to measure these
+delays. I am happy that it is useful for you also.
 
-It doesn't right now for mainly two reasons.
-The way I think about it is that a pidfd gets a capability at process
-creation time. Before v5.3 we couldn't have done that because legacy
-clone() couldn't be extended anymore. Imho, this has changed with clone3().
-The other reason was that the basic properties a process can be created
-with right now do not lend itself to be turned into a capability. Even
-if they did
-suddenly treating them like such would prevent userspace from switching to
-clone3() because it would regress usecases they had.
-However, for new properties this is not a problem. I have some ideas around this
-(e.g. spawning private processes only reapable through pidfds and auto-cleanup
-if there's no pidfd anymore).
-From an implementation perspective clone3() could get a __aligned_u64 caps
-(naming up for debate since we don't want people to think this is equivalent
-to our current capabilities) field.
-Where at process creation time you could e.g. specify PIDFD_CAP_GET_FD and
-only then can you use that pidfd to get file descriptors from other processes.
-You still need ptrace_access() to get the actual fd of course.
+I don't know if your firmware supports 'fast channel', but please keep
+in mind that it is not tracked in this 'transfer_id'.
+This transfer_id in v2 version does not show the real transfers
+to the firmware since there is another path called 'fast channel' or
+'fast_switch' in the CPUfreq. It is in drivers/firmware/arm_scmi/perf.c
+and the atomic variable is not incremented in that path. Adding it also
+there just for atomic_inc() probably would add delays in the fast_switch
+and also brings little value.
+For the normal channel, where we have spinlocks and other stuff, this
+atomic_inc() could stay in my opinion.
 
-Christian
+Regards,
+Lukasz
+
+> 
+> Regards,
+> Jim Quinlan
+> 
