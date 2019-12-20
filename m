@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A437BC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E4AC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7229824680
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B347C2467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:38:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852678;
-	bh=xI0TBm8RVQoWa+cMb1AL9H2j8o1GcbWwhDnTupo3DE8=;
+	s=default; t=1576852685;
+	bh=ypZKQYyvYWF6PX/rd/ElPTo5DDilecVzz+PAaPIOE8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DqX2cgc4Km+FOXu8CdQcyP+b9+rA2nggtxrupGGTxdn+i1bi+2yORrbQ9i+10Fhbq
-	 ZMzEMIq/hurQBVRJNm8pjK2ZjTfewFYD59kRqlOTeAcNAogLgGuAh0WSJx5HGPiUXo
-	 MX4sdh7/H0bSryVhNVw6xdHc/yBHwmmH5GBkIcfc=
+	b=k6Fi92TcrtPnsudGxtxgI943YbvMrrANO/hUM8xBncCo7fBUBjEYY1HxW0FVlZq36
+	 NnT900/M4W+5Wlkj5P79EHznnDX2qn6WUrvDyz2/P/qpFtR94b4Vk913tv/VNXcN3G
+	 i30ZdBg8KCHz+19ijaL4wDgSrBWPVWiEndjMQyi0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728343AbfLTOh4 (ORCPT
+        id S1728401AbfLTOiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:37:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42028 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:38:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728241AbfLTOhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:37:53 -0500
+        id S1728103AbfLTOh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:37:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D165B24689;
-        Fri, 20 Dec 2019 14:37:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9644B24682;
+        Fri, 20 Dec 2019 14:37:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852672;
-        bh=xI0TBm8RVQoWa+cMb1AL9H2j8o1GcbWwhDnTupo3DE8=;
+        s=default; t=1576852676;
+        bh=ypZKQYyvYWF6PX/rd/ElPTo5DDilecVzz+PAaPIOE8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b0J1N6PS98T/akKXkGzqCQHHMyWLRGnIkyeV7jMJ1hgrIWHXHOAc6cRW8StIUoST5
-         Js6xP5jyYQn4rT3eYjSZEY/ao3WAdg7szxA7GFmPNvUjCYV96VPprbFj/DY3yON0V7
-         aMzfUPanCR1ql7LoBd+0QufcFm8N4M6Q2B3JMb0s=
+        b=AH3o8o99WSvNNHFWUyCOimUh1pAUZo6jIbiLo3nT2BI+YQTnJyIbRMitcSg29QE27
+         dIau+b/XmXM8AEljKKkUxfzlTCCORAFjW1aFgyLgtze2wZWC/n3oeftGJyz9acUJ+C
+         3q3OzhR9O4ZqykNqxKlejuTS7NHxqGmZ/zMiGHLA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 08/19] scsi: iscsi: qla4xxx: fix double free in probe
-Date:   Fri, 20 Dec 2019 09:37:29 -0500
-Message-Id: <20191220143741.10220-8-sashal@kernel.org>
+Cc:     EJ Hsu <ejh@nvidia.com>, Peter Chen <peter.chen@nxp.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 11/19] usb: gadget: fix wrong endpoint desc
+Date:   Fri, 20 Dec 2019 09:37:32 -0500
+Message-Id: <20191220143741.10220-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220143741.10220-1-sashal@kernel.org>
 References: <20191220143741.10220-1-sashal@kernel.org>
@@ -59,38 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: EJ Hsu <ejh@nvidia.com>
 
-[ Upstream commit fee92f25777789d73e1936b91472e9c4644457c8 ]
+[ Upstream commit e5b5da96da50ef30abb39cb9f694e99366404d24 ]
 
-On this error path we call qla4xxx_mem_free() and then the caller also
-calls qla4xxx_free_adapter() which calls qla4xxx_mem_free().  It leads to a
-couple double frees:
+Gadget driver should always use config_ep_by_speed() to initialize
+usb_ep struct according to usb device's operating speed. Otherwise,
+usb_ep struct may be wrong if usb devcie's operating speed is changed.
 
-drivers/scsi/qla4xxx/ql4_os.c:8856 qla4xxx_probe_adapter() warn: 'ha->chap_dma_pool' double freed
-drivers/scsi/qla4xxx/ql4_os.c:8856 qla4xxx_probe_adapter() warn: 'ha->fw_ddb_dma_pool' double freed
+The key point in this patch is that we want to make sure the desc pointer
+in usb_ep struct will be set to NULL when gadget is disconnected.
+This will force it to call config_ep_by_speed() to correctly initialize
+usb_ep struct based on the new operating speed when gadget is
+re-connected later.
 
-Fixes: afaf5a2d341d ("[SCSI] Initial Commit of qla4xxx")
-Link: https://lore.kernel.org/r/20191203094421.hw7ex7qr3j2rbsmx@kili.mountain
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: EJ Hsu <ejh@nvidia.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla4xxx/ql4_os.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/usb/gadget/function/f_ecm.c   | 6 +++++-
+ drivers/usb/gadget/function/f_rndis.c | 1 +
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
-index 4421f9bdfcf77..b0ad60565fe94 100644
---- a/drivers/scsi/qla4xxx/ql4_os.c
-+++ b/drivers/scsi/qla4xxx/ql4_os.c
-@@ -4285,7 +4285,6 @@ static int qla4xxx_mem_alloc(struct scsi_qla_host *ha)
- 	return QLA_SUCCESS;
+diff --git a/drivers/usb/gadget/function/f_ecm.c b/drivers/usb/gadget/function/f_ecm.c
+index 4c488d15b6f6e..dc99ed94f03d2 100644
+--- a/drivers/usb/gadget/function/f_ecm.c
++++ b/drivers/usb/gadget/function/f_ecm.c
+@@ -625,8 +625,12 @@ static void ecm_disable(struct usb_function *f)
  
- mem_alloc_error_exit:
--	qla4xxx_mem_free(ha);
- 	return QLA_ERROR;
+ 	DBG(cdev, "ecm deactivated\n");
+ 
+-	if (ecm->port.in_ep->enabled)
++	if (ecm->port.in_ep->enabled) {
+ 		gether_disconnect(&ecm->port);
++	} else {
++		ecm->port.in_ep->desc = NULL;
++		ecm->port.out_ep->desc = NULL;
++	}
+ 
+ 	usb_ep_disable(ecm->notify);
+ 	ecm->notify->desc = NULL;
+diff --git a/drivers/usb/gadget/function/f_rndis.c b/drivers/usb/gadget/function/f_rndis.c
+index c7c5b3ce1d988..2bde68f5d2463 100644
+--- a/drivers/usb/gadget/function/f_rndis.c
++++ b/drivers/usb/gadget/function/f_rndis.c
+@@ -622,6 +622,7 @@ static void rndis_disable(struct usb_function *f)
+ 	gether_disconnect(&rndis->port);
+ 
+ 	usb_ep_disable(rndis->notify);
++	rndis->notify->desc = NULL;
  }
  
+ /*-------------------------------------------------------------------------*/
 -- 
 2.20.1
 
