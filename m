@@ -2,414 +2,480 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1528C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90593C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7F0C24680
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 585D12465E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:49:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576838950;
+	bh=OU4TyWezRQcO/9QNXjrwf0Yqr+TEpq82QNsQ562Iqb4=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=ZvHjUt544VduIvXPrfUYRIVj55NVsn9WhyKwsj1SDkxevNTcvUwZCGJ8aGuXXzMXD
+	 KUOUqq69Y2+7KW/Phbc42v7fmkZ9zkoTNocbRtScQvR11zowcDHzO+HdWOiIhieW6M
+	 d5pBJd3Qh2y2YU327EAlGV6BydpDB6yC/CQcjJ4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbfLTKpy (ORCPT
+        id S1727276AbfLTKtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 05:45:54 -0500
-Received: from mga02.intel.com ([134.134.136.20]:4109 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726210AbfLTKpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 05:45:54 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Dec 2019 02:45:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,335,1571727600"; 
-   d="scan'208";a="210780192"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 20 Dec 2019 02:45:51 -0800
-Received: from andy by smile with local (Exim 4.93-RC7)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1iiFn5-00011C-9a; Fri, 20 Dec 2019 12:45:51 +0200
-Date:   Fri, 20 Dec 2019 12:45:51 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kishon@ti.com, robh@kernel.org, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@intel.com
-Subject: Re: [PATCH 2/2] phy: intel: Add driver support for combo phy
-Message-ID: <20191220104551.GV32742@smile.fi.intel.com>
-References: <9f3df8c403bba3633391551fc601cbcd2f950959.1576824311.git.eswara.kota@linux.intel.com>
- <09556a80a967780072ae1240c7c8356f9142de50.1576824311.git.eswara.kota@linux.intel.com>
+        Fri, 20 Dec 2019 05:49:09 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:37220 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726210AbfLTKtJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 05:49:09 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iiFq8-0003mg-V6; Fri, 20 Dec 2019 11:49:01 +0100
+To:     Joakim Zhang <qiangqing.zhang@nxp.com>
+Subject: Re: [PATCH V3 2/2] drivers/irqchip: add NXP INTMUX interrupt  multiplexer support
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <09556a80a967780072ae1240c7c8356f9142de50.1576824311.git.eswara.kota@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 20 Dec 2019 10:49:00 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <tglx@linutronix.de>, <jason@lakedaemon.net>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <shawnguo@kernel.org>,
+        <s.hauer@pengutronix.de>, <kernel@pengutronix.de>,
+        <linux-imx@nxp.com>, <linux-kernel@vger.kernel.org>,
+        <fugang.duan@nxp.com>, <linux-arm-kernel@lists.infradead.org>,
+        Shengjiu Wang <shengjiu.wang@nxp.com>
+In-Reply-To: <1576827431-31942-3-git-send-email-qiangqing.zhang@nxp.com>
+References: <1576827431-31942-1-git-send-email-qiangqing.zhang@nxp.com>
+ <1576827431-31942-3-git-send-email-qiangqing.zhang@nxp.com>
+Message-ID: <2a2b06ab6d5b3fab51e46cd7dec3f12d@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: qiangqing.zhang@nxp.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, linux-imx@nxp.com, linux-kernel@vger.kernel.org, fugang.duan@nxp.com, linux-arm-kernel@lists.infradead.org, shengjiu.wang@nxp.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 03:28:28PM +0800, Dilip Kota wrote:
-> Combo phy subsystem provides PHYs for various
-> controllers like PCIe, SATA and EMAC.
-
-...
-
-> +#define REG_COMBO_MODE(x)	((x) * 0x200)
-
-Perhaps  + 0x000
-
-> +#define REG_CLK_DISABLE(x)	((x) * 0x200 + 0x124)
-
-...
-
-> +static const char *const intel_iphy_names[] = {"pcie", "xpcs", "sata"};
-> +static const unsigned long intel_iphy_clk_rate[] = {
-
-names (note S)
-rate -> rates
-
-> +	CLK_100MHZ, CLK_156_25MHZ, CLK_100MHZ
+On 2019-12-20 07:37, Joakim Zhang wrote:
+> The Interrupt Multiplexer (INTMUX) expands the number of peripherals
+> that can interrupt the core:
+> * The INTMUX has 8 channels that are assigned to 8 NVIC interrupt 
+> slots.
+> * Each INTMUX channel can receive up to 32 interrupt sources and has 
+> 1
+>   interrupt output.
+> * The INTMUX routes the interrupt sources to the interrupt outputs.
+>
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+> ---
+>  drivers/irqchip/Kconfig          |   6 +
+>  drivers/irqchip/Makefile         |   1 +
+>  drivers/irqchip/irq-imx-intmux.c | 311 
+> +++++++++++++++++++++++++++++++
+>  3 files changed, 318 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-imx-intmux.c
+>
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index ba152954324b..7e2b1e9d0b45 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -457,6 +457,12 @@ config IMX_IRQSTEER
+>  	help
+>  	  Support for the i.MX IRQSTEER interrupt multiplexer/remapper.
+>
+> +config IMX_INTMUX
+> +	def_bool y if ARCH_MXC
+> +	select IRQ_DOMAIN
+> +	help
+> +	  Support for the i.MX INTMUX interrupt multiplexer.
+> +
+>  config LS1X_IRQ
+>  	bool "Loongson-1 Interrupt Controller"
+>  	depends on MACH_LOONGSON32
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index e806dda690ea..af976a79d1fb 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -100,6 +100,7 @@ obj-$(CONFIG_CSKY_MPINTC)		+= irq-csky-mpintc.o
+>  obj-$(CONFIG_CSKY_APB_INTC)		+= irq-csky-apb-intc.o
+>  obj-$(CONFIG_SIFIVE_PLIC)		+= irq-sifive-plic.o
+>  obj-$(CONFIG_IMX_IRQSTEER)		+= irq-imx-irqsteer.o
+> +obj-$(CONFIG_IMX_INTMUX)		+= irq-imx-intmux.o
+>  obj-$(CONFIG_MADERA_IRQ)		+= irq-madera.o
+>  obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
+>  obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
+> diff --git a/drivers/irqchip/irq-imx-intmux.c
+> b/drivers/irqchip/irq-imx-intmux.c
+> new file mode 100644
+> index 000000000000..94c67fdd7163
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-imx-intmux.c
+> @@ -0,0 +1,311 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright 2017 NXP
+> +
+> +/*                     INTMUX Block Diagram
+> + *
+> + *                               ________________
+> + * interrupt source #  0  +---->|                |
+> + *                        |     |                |
+> + * interrupt source #  1  +++-->|                |
+> + *            ...         | |   |   channel # 0
+> |--------->interrupt out # 0
+> + *            ...         | |   |                |
+> + *            ...         | |   |                |
+> + * interrupt source # X-1 +++-->|________________|
+> + *                        | | |
+> + *                        | | |
+> + *                        | | |  ________________
+> + *                        +---->|                |
+> + *                        | | | |                |
+> + *                        | +-->|                |
+> + *                        | | | |   channel # 1
+> |--------->interrupt out # 1
+> + *                        | | +>|                |
+> + *                        | | | |                |
+> + *                        | | | |________________|
+> + *                        | | |
+> + *                        | | |
+> + *                        | | |       ...
+> + *                        | | |       ...
+> + *                        | | |
+> + *                        | | |  ________________
+> + *                        +---->|                |
+> + *                          | | |                |
+> + *                          +-->|                |
+> + *                            | |   channel # N
+> |--------->interrupt out # N
+> + *                            +>|                |
+> + *                              |                |
+> + *                              |________________|
+> + *
+> + *
+> + * N: Interrupt Channel Instance Number (N=7)
+> + * X: Interrupt Source Number for each channel (X=32)
+> + *
+> + * The INTMUX interrupt multiplexer has 8 channels, each channel 
+> receives 32
+> + * interrupt sources and generates 1 interrupt output.
+> + *
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/kernel.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/spinlock.h>
+> +
+> +#define CHANIER(n)	(0x10 + (0x40 * n))
+> +#define CHANIPR(n)	(0x20 + (0x40 * n))
+> +
+> +#define CHAN_MAX_NUM		0x8
+> +
+> +struct intmux_irqchip_data {
+> +	int			chanidx;
+> +	int			irq;
+> +	struct irq_domain	*domain;
 > +};
-
-...
-
-> +static ssize_t intel_cbphy_info_show(struct device *dev,
-> +				     struct device_attribute *attr, char *buf)
-> +{
-> +	struct intel_combo_phy *cbphy;
-> +	int i, off;
 > +
-> +	cbphy = dev_get_drvdata(dev);
-> +
-> +	off = sprintf(buf, "mode: %u\n", cbphy->mode);
-> +
-> +	off += sprintf(buf + off, "aggr mode: %s\n",
-
-> +		      cbphy->aggr_mode == PHY_DL_MODE ? "Yes" : "No");
-
-Can't you do
-
-static inline const char *yesno(bool choice)
-{
-	return choice ? "Yes" : "No";
-}
-
-and use it here and below?
-
-Somebody already shared the idea that the above helper should be available
-globally.
-
-> +
-> +	off += sprintf(buf + off, "capability: ");
-> +	for (i = PHY_PCIE_MODE; i < PHY_MAX_MODE; i++) {
-> +		if (BIT(i) & cbphy->phy_cap)
-> +			off += sprintf(buf + off, "%s ", intel_iphy_names[i]);
-> +	}
-> +
-> +	off += sprintf(buf + off, "\n");
-> +
-> +	for (i = 0; i < PHY_MAX_NUM; i++) {
-> +		off += sprintf(buf + off, "PHY%d mode: %s, enable: %s\n",
-> +			       i, intel_iphy_names[cbphy->iphy[i].phy_mode],
-> +			       cbphy->iphy[i].enable ? "Yes" : "No");
-> +	}
-> +
-> +	return off;
-> +}
-
-...
-
-> +static struct attribute *intel_cbphy_attrs[] = {
-> +	&dev_attr_intel_cbphy_info.attr,
-
-> +	NULL,
-
-Comma is redundant for terminator lines.
-
+> +struct intmux_data {
+> +	raw_spinlock_t			lock;
+> +	void __iomem			*regs;
+> +	struct clk			*ipg_clk;
+> +	int				channum;
+> +	struct intmux_irqchip_data	irqchip_data[];
 > +};
-
-
-> +static int intel_cbphy_sysfs_init(struct intel_combo_phy *cbphy)
+> +
+> +static void imx_intmux_irq_mask(struct irq_data *d)
 > +{
-> +	return devm_device_add_groups(cbphy->dev, intel_cbphy_groups);
-> +}
-
-What the point?
-Moreover, can't you use .dev_groups member of struct device_driver?
-
-...
-
-> +		ret =  phy_cfg(sphy);
-
-In several places you have extra unneeded white spaces.
-
-...
-
-> +	combo_phy_w32_off_mask(iphy->app_base, PCIE_PHY_CLK_PAD,
-> +			       0, PCIE_PHY_GEN_CTRL);
-
-Configure your editor properly! There is plenty of room on the previous line.
-
-...
-
-> +	combo_phy_w32_off_mask(iphy->app_base, PCIE_PHY_CLK_PAD,
-> +			       1, PCIE_PHY_GEN_CTRL);
-
-Ditto.
-
-...
-
-> +static int intel_cbphy_init(struct phy *phy)
-> +{
-> +	struct intel_cbphy_iphy *iphy;
-
-
-> +	int ret = 0;
-
-Redundant assignment. See below.
-
+> +	struct intmux_irqchip_data *irqchip_data = d->chip_data;
+> +	int idx = irqchip_data->chanidx;
+> +	struct intmux_data *data = container_of(irqchip_data, struct 
+> intmux_data,
+> +						irqchip_data[idx]);
+> +	unsigned long flags;
+> +	void __iomem *reg;
+> +	u32 val;
 > +
-> +	iphy = phy_get_drvdata(phy);
-> +
-> +	if (iphy->phy_mode == PHY_PCIE_MODE) {
-> +		ret = intel_cbphy_iphy_cfg(iphy,
-> +					   intel_cbphy_pcie_en_pad_refclk);
-> +	}
-> +
-> +	if (!ret)
-> +		ret = intel_cbphy_iphy_cfg(iphy, intel_cbphy_iphy_power_on);
-> +
-> +	return ret;
-
-Why not to simple do
-
-	if (A) {
-		ret = ...;
-		if (ret)
-			return ret;
-	}
-
-	return intel_...;
-
-?
-
+> +	raw_spin_lock_irqsave(&data->lock, flags);
+> +	reg = data->regs + CHANIER(idx);
+> +	val = readl_relaxed(reg);
+> +	/* disable the interrupt source of this channel */
+> +	val &= ~BIT(d->hwirq);
+> +	writel_relaxed(val, reg);
+> +	raw_spin_unlock_irqrestore(&data->lock, flags);
 > +}
 > +
-> +static int intel_cbphy_exit(struct phy *phy)
+> +static void imx_intmux_irq_unmask(struct irq_data *d)
 > +{
-> +	struct intel_cbphy_iphy *iphy;
-> +	int ret = 0;
+> +	struct intmux_irqchip_data *irqchip_data = d->chip_data;
+> +	int idx = irqchip_data->chanidx;
+> +	struct intmux_data *data = container_of(irqchip_data, struct 
+> intmux_data,
+> +						irqchip_data[idx]);
+> +	unsigned long flags;
+> +	void __iomem *reg;
+> +	u32 val;
 > +
-> +	iphy = phy_get_drvdata(phy);
-> +
-> +	if (iphy->power_en)
-> +		ret = intel_cbphy_iphy_cfg(iphy, intel_cbphy_iphy_power_off);
-> +
-> +	if (!ret && iphy->phy_mode == PHY_PCIE_MODE)
-> +		ret = intel_cbphy_iphy_cfg(iphy,
-> +					   intel_cbphy_pcie_dis_pad_refclk);
-> +
-> +	return ret;
-
-Ditto.
-
+> +	raw_spin_lock_irqsave(&data->lock, flags);
+> +	reg = data->regs + CHANIER(idx);
+> +	val = readl_relaxed(reg);
+> +	/* enable the interrupt source of this channel */
+> +	val |= BIT(d->hwirq);
+> +	writel_relaxed(val, reg);
+> +	raw_spin_unlock_irqrestore(&data->lock, flags);
 > +}
-
-...
-
-> +static int intel_cbphy_iphy_mem_resource(struct intel_cbphy_iphy *iphy)
+> +
+> +static struct irq_chip imx_intmux_irq_chip = {
+> +	.name		= "intmux",
+> +	.irq_mask	= imx_intmux_irq_mask,
+> +	.irq_unmask	= imx_intmux_irq_unmask,
+> +};
+> +
+> +static int imx_intmux_irq_map(struct irq_domain *h, unsigned int 
+> irq,
+> +			      irq_hw_number_t hwirq)
 > +{
-> +	void __iomem *base;
-> +
-> +	base = devm_platform_ioremap_resource(iphy->pdev, 0);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	iphy->app_base = base;
+> +	irq_set_status_flags(irq, IRQ_LEVEL);
+
+You shouldn't need to do this if you had it right in the xlate 
+callback,
+see below.
+
+> +	irq_set_chip_data(irq, h->host_data);
+> +	irq_set_chip_and_handler(irq, &imx_intmux_irq_chip, 
+> handle_level_irq);
 > +
 > +	return 0;
 > +}
-
-What's the point of this helper?
-
-...
-
-> +static int intel_cbphy_iphy_get_clks(struct intel_cbphy_iphy *iphy)
+> +
+> +static int imx_intmux_irq_xlate(struct irq_domain *d, struct
+> device_node *node,
+> +				const u32 *intspec, unsigned int intsize,
+> +				unsigned long *out_hwirq, unsigned int *out_type)
 > +{
-> +	enum intel_phy_mode mode = iphy->phy_mode;
-> +	struct device *dev = iphy->dev;
-
-> +	int ret = 0;
-
-Redundant. Simple return 0 explicitly at the end.
-Ditto for other places in this patch.
-
-> +	if (IS_ERR(iphy->freq_clk)) {
-> +		ret = PTR_ERR(iphy->freq_clk);
-> +		if (ret != -EPROBE_DEFER) {
-> +			dev_err(dev, "PHY[%u:%u] No %s freq clock\n",
-> +				COMBO_PHY_ID(iphy), PHY_ID(iphy),
-> +				intel_iphy_names[mode]);
-> +		}
+> +	struct intmux_irqchip_data *irqchip_data = d->host_data;
+> +	int idx = irqchip_data->chanidx;
+> +	struct intmux_data *data = container_of(irqchip_data, struct 
+> intmux_data,
+> +						irqchip_data[idx]);
 > +
-> +		return ret;
-> +	}
+> +	/* two cells needed in interrupt specifier:
+> +	 * the 1st cell: hw interrupt number
+> +	 * the 2nd cell: channel index
+> +	 */
+
+The comment format is:
+
+         /*
+          * comments
+          */
+
+> +	if (WARN_ON(intsize != 2))
+> +		return -EINVAL;
 > +
-> +	iphy->clk_rate = intel_iphy_clk_rate[mode];
+> +	if (WARN_ON(intspec[1] >= data->channum))
+> +		return -EINVAL;
 > +
-> +	return ret;
+> +	*out_hwirq = intspec[0];
+> +	*out_type = IRQ_TYPE_NONE;
+
+Why NONE? Your interrupts are all level, if I trust the map function.
+
+> +
+> +	return 0;
 > +}
-
-...
-
-> +static int intel_cbphy_iphy_dt_parse(struct intel_combo_phy *cbphy,
-> +				     struct fwnode_handle *fwn, int idx)
-
-fwn -> fwnode.
-
-> +{
-> +	struct intel_cbphy_iphy *iphy = &cbphy->iphy[idx];
-> +	struct platform_device *pdev;
-> +	struct device *dev;
-> +	int ret = 0;
-> +	u32 prop;
 > +
-> +	iphy->id = idx;
-> +	iphy->enable = false;
-> +	iphy->power_en = false;
-> +	iphy->parent = cbphy;
-
-> +	iphy->np = to_of_node(fwn);
-> +	pdev = of_find_device_by_node(iphy->np);
-
-Why? Can't it be done simpler?
-
-> +	if (!pdev) {
-> +		dev_warn(cbphy->dev, "Combo-PHY%u: PHY device: %d disabled!\n",
-> +			 cbphy->id, idx);
-> +		return 0;
-> +	}
-
-> +	if (!(BIT(iphy->phy_mode) & cbphy->phy_cap)) {
-
-Yoda style?
-
-...
-
-> +				" Mode mismatch lane0 : %u, lane1 : %u\n",
-
-Extra leading space.
-
-...
-
-> +static int intel_cbphy_dt_parse(struct intel_combo_phy *cbphy)
+> +static int imx_intmux_irq_select(struct irq_domain *d, struct
+> irq_fwspec *fwspec,
+> +				 enum irq_domain_bus_token bus_token)
 > +{
-> +	struct device *dev = cbphy->dev;
-
-> +	struct device_node *np = dev->of_node;
-
-Why do you need this one? You have to device if it's OF centric driver or not.
-
-> +	struct fwnode_handle *fwn;
-
-Better name is fwnode as done in plenty other drivers.
-
-> +	int i = 0, ret = 0;
-
-i = 0 better to have near to its user.
-ret = 0 is redundant assignment.
+> +	struct intmux_irqchip_data *irqchip_data = d->host_data;
+> +
+> +	/* Not for us */
+> +	if (fwspec->fwnode != d->fwnode)
+> +		return false;
+> +
+> +	if (irqchip_data->chanidx == fwspec->param[1])
+> +		return true;
+> +	else
+> +		return false;
 
 
-> +	ret = device_property_read_u32(dev, "intel,bid", &cbphy->bid);
+This is trivially simplified as
+
+         return irqchip_data->chanidx == fwspec->param[1];
+
+> +}
+> +
+> +static const struct irq_domain_ops imx_intmux_domain_ops = {
+> +	.map		= imx_intmux_irq_map,
+> +	.xlate		= imx_intmux_irq_xlate,
+> +	.select		= imx_intmux_irq_select,
+> +};
+> +
+> +static void imx_intmux_irq_handler(struct irq_desc *desc)
+> +{
+> +	struct intmux_irqchip_data *irqchip_data = 
+> irq_desc_get_handler_data(desc);
+> +	int idx = irqchip_data->chanidx;
+> +	struct intmux_data *data = container_of(irqchip_data, struct 
+> intmux_data,
+> +						irqchip_data[idx]);
+> +	unsigned long irqstat;
+> +	int pos, virq;
+> +
+> +	chained_irq_enter(irq_desc_get_chip(desc), desc);
+> +
+> +	/* read the interrupt source pending status of this channel */
+> +	irqstat = readl_relaxed(data->regs + CHANIPR(idx));
+> +
+> +	for_each_set_bit(pos, &irqstat, 32) {
+> +		virq = irq_find_mapping(irqchip_data->domain, pos);
+> +		if (virq)
+> +			generic_handle_irq(virq);
+> +	}
+> +
+> +	chained_irq_exit(irq_desc_get_chip(desc), desc);
+> +}
+> +
+> +static int imx_intmux_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct intmux_data *data;
+> +	int channum;
+> +	int i, ret;
+> +
+> +	ret = of_property_read_u32(np, "fsl,intmux_chans", &channum);
 > +	if (ret) {
-> +		dev_err(dev, "NO intel,bid provided!\n");
+> +		channum = 1;
+> +	} else if (channum > CHAN_MAX_NUM) {
+> +		dev_err(&pdev->dev, "supports up to %d multiplex channels\n",
+> +			CHAN_MAX_NUM);
+> +		return -EINVAL;
+> +	}
+> +
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data) +
+> +			    channum * sizeof(data->irqchip_data[0]), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->regs = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(data->regs)) {
+> +		dev_err(&pdev->dev, "failed to initialize reg\n");
+> +		return PTR_ERR(data->regs);
+> +	}
+> +
+> +	data->ipg_clk = devm_clk_get(&pdev->dev, "ipg");
+> +	if (IS_ERR(data->ipg_clk)) {
+> +		ret = PTR_ERR(data->ipg_clk);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(&pdev->dev, "failed to get ipg clk: %d\n", ret);
 > +		return ret;
 > +	}
 > +
-> +	device_for_each_child_node(dev, fwn) {
-> +		if (i >= PHY_MAX_NUM) {
-> +			fwnode_handle_put(fwn);
-> +			dev_err(dev, "Error: DT child number larger than %d\n",
-> +				PHY_MAX_NUM);
-> +			return -EINVAL;
-> +		}
+> +	data->channum = channum;
+> +	raw_spin_lock_init(&data->lock);
 > +
-> +		ret = intel_cbphy_iphy_dt_parse(cbphy, fwn, i);
-> +		if (ret) {
-> +			fwnode_handle_put(fwn);
-> +			return ret;
-> +		}
-> +
-> +		i++;
+> +	ret = clk_prepare_enable(data->ipg_clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to enable ipg clk: %d\n", ret);
+> +		return ret;
 > +	}
 > +
-> +	return intel_cbphy_dt_sanity_check(cbphy);
-> +}
-
-...
-
-> +	regmap_write(cbphy->hsiocfg, REG_COMBO_MODE(cbphy->bid), cb_mode);
-
-No error check?
-
+> +	for (i = 0; i < channum; i++) {
+> +		data->irqchip_data[i].chanidx = i;
 > +
-> +	return 0;
+> +		data->irqchip_data[i].irq = irq_of_parse_and_map(np, i);
+> +		if (data->irqchip_data[i].irq <= 0) {
+> +			ret = -EINVAL;
+> +			dev_err(&pdev->dev, "failed to get irq\n");
+> +			goto out;
+> +		}
+> +
+> +		data->irqchip_data[i].domain =
+> +			irq_domain_add_linear(np, 32, &imx_intmux_domain_ops,
+> +					      &data->irqchip_data[i]);
 
-...
+Same problem as before. If the line is too long, use an intermediate
+variable. Or leave the assignment as a single long line. Don't split
+assignment like this.
 
-> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-> +	if (IS_ERR(phy_provider)) {
-> +		dev_err(dev, "PHY[%u:%u]: register phy provider failed!\n",
-> +			COMBO_PHY_ID(iphy), PHY_ID(iphy));
+> +		if (!data->irqchip_data[i].domain) {
+> +			ret = -ENOMEM;
+> +			dev_err(&pdev->dev, "failed to create IRQ domain\n");
+> +			goto out;
+> +		}
+> +
+> +		irq_set_chained_handler_and_data(data->irqchip_data[i].irq,
+> +						 imx_intmux_irq_handler,
+> +						 &data->irqchip_data[i]);
+> +
+> +		/* disable interrupt sources of this channel firstly */
+> +		writel_relaxed(0, data->regs + CHANIER(i));
 
-> +		return PTR_ERR(phy_provider);
+So you disable interrupts *after* enabling the mux interrupt. If you
+have screaming interrupts, this will lockup. You really need to do
+it *before* enabling the chained interrupt.
+
 > +	}
 > +
-> +	return 0;
-
-return PTR_ERR_OR_ZERO(...);
-
-...
-
-> +	ret = of_property_read_u32(dev->of_node, "cell-index", &id);
-
-You should decide either you go with OF centric API(s) or with device property
-one as below.
-
-> +	if (!device_property_read_bool(dev, "intel,cap-pcie-only"))
-> +		cbphy->phy_cap |= PHY_XPCS_CAP | PHY_SATA_CAP;
-
-...
-
-> +	ret = intel_cbphy_sysfs_init(cbphy);
+> +	platform_set_drvdata(pdev, data);
 > +
+> +	return 0;
+> +out:
+> +	clk_disable_unprepare(data->ipg_clk);
 > +	return ret;
+> +}
+> +
+> +static int imx_intmux_remove(struct platform_device *pdev)
+> +{
+> +	struct intmux_data *data = platform_get_drvdata(pdev);
+> +	int i;
+> +
+> +	for (i = 0; i < data->channum; i++) {
+> +		/* clear interrupt sources pending status of this channel */
+> +		writel_relaxed(0, data->regs + CHANIPR(i));
 
-return intel_...();
+If these are level interrupts, this won't do a thing. You need to
+actively *disable* them.
 
-...
-
-> +static struct platform_driver intel_cbphy_driver = {
-> +	.probe = intel_cbphy_probe,
-> +	.driver = {
-> +		.name = "intel-combo-phy",
-> +		.of_match_table = of_intel_cbphy_match,
+> +
+> +		irq_set_chained_handler_and_data(data->irqchip_data[i].irq,
+> +						 NULL, NULL);
+> +
+> +		irq_domain_remove(data->irqchip_data[i].domain);
 > +	}
+> +
+> +	clk_disable_unprepare(data->ipg_clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id imx_intmux_id[] = {
+> +	{ .compatible = "fsl,imx-intmux", },
+> +	{ /* sentinel */ },
 > +};
 > +
-> +builtin_platform_driver(intel_cbphy_driver);
+> +static struct platform_driver imx_intmux_driver = {
+> +	.driver = {
+> +		.name = "imx-intmux",
+> +		.of_match_table = imx_intmux_id,
+> +	},
+> +	.probe = imx_intmux_probe,
+> +	.remove = imx_intmux_remove,
+> +};
+> +builtin_platform_driver(imx_intmux_driver);
 
-Can we unbound it? Is it okay to do unbind/bind cycle? Had it been tested for
-that?
-
+         M.
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Jazz is not dead. It just smells funny...
