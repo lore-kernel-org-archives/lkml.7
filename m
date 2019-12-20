@@ -2,242 +2,118 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E39C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32305C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBC472067C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:04:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QnIh9yQr"
+	by mail.kernel.org (Postfix) with ESMTP id 07302218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:07:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576847235;
+	bh=hSDUwdKW3yrFJVWxez/KM8OwO5W5CJyt4daJ1sfRKLI=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=YUyzzujypkXta1jxJkQxpp00chuGW+yk1+e3IlzdSlfdkA12lXtudVyqyyRSKO9Mn
+	 GYSJbg5pWJIyJhhzhNZJZlx7cuVDEUpjFLyaRjsB/TCBQv34iXDf6kGQohku95vsLx
+	 YLVAq3JdYYhuPOxe0/KipzKNHJKttDy55L03qhCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbfLTNEz (ORCPT
+        id S1727411AbfLTNHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 08:04:55 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:23164 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727344AbfLTNEz (ORCPT
+        Fri, 20 Dec 2019 08:07:13 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:45704 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727344AbfLTNHN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 08:04:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576847093;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mVySOG+KQbTfStUG6rCGdNjLNmZw207w3OGOv2aprho=;
-        b=QnIh9yQrJzSGqi0yt4Fn7rPXmfdMOdYEoDrsOJXlYKcC69addwaEBBvEtdDwMg6F8uJym8
-        qa/v6TJGAHO8CMiQg4OZm42A3zpHVplfNAtAjCwikTwjpdhVXz/d+hGijLKNjuIYVZZxBO
-        wDUSZDAMqYO5ePOZNyRs0OxFJsMUC4c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-153-ZxxgX2FRMHitA0GAGrtLsA-1; Fri, 20 Dec 2019 08:04:49 -0500
-X-MC-Unique: ZxxgX2FRMHitA0GAGrtLsA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 85D3B184BEC7;
-        Fri, 20 Dec 2019 13:04:47 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B1B969A86;
-        Fri, 20 Dec 2019 13:04:43 +0000 (UTC)
-Date:   Fri, 20 Dec 2019 08:04:41 -0500
-From:   Brian Foster <bfoster@redhat.com>
-To:     Daniel Axtens <dja@axtens.net>
-Cc:     syzbot <syzbot+4722bf4c6393b73a792b@syzkaller.appspotmail.com>,
-        akpm@linux-foundation.org, allison.henderson@oracle.com,
-        aryabinin@virtuozzo.com, darrick.wong@oracle.com,
-        dchinner@redhat.com, dvyukov@google.com,
-        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        sandeen@redhat.com, syzkaller-bugs@googlegroups.com,
-        torvalds@linux-foundation.org
-Subject: Re: BUG: unable to handle kernel paging request in
- xfs_sb_quiet_read_verify
-Message-ID: <20191220130441.GA11941@bfoster>
-References: <000000000000d99340059a100686@google.com>
- <874kxvttx0.fsf@dja-thinkpad.axtens.net>
+        Fri, 20 Dec 2019 08:07:13 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iiHzl-0005uV-GW; Fri, 20 Dec 2019 14:07:05 +0100
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Subject: Re: [PATCH] KVM: arm/arm64: vgic: Handle =?UTF-8?Q?GICR=5FPENDBAS?=  =?UTF-8?Q?ER=2EPTZ=20filed=20as=20RAZ?=
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874kxvttx0.fsf@dja-thinkpad.axtens.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 20 Dec 2019 13:07:05 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <andre.przywara@arm.com>, <eric.auger@redhat.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
+        <wanghaibin.wang@huawei.com>
+In-Reply-To: <20191220111833.1422-1-yuzenghui@huawei.com>
+References: <20191220111833.1422-1-yuzenghui@huawei.com>
+Message-ID: <71e3dcc00ad5ab8dffd732bfe7381705@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, andre.przywara@arm.com, eric.auger@redhat.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 05:03:55PM +1100, Daniel Axtens wrote:
-> syzbot <syzbot+4722bf4c6393b73a792b@syzkaller.appspotmail.com> writes:
-> 
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    2187f215 Merge tag 'for-5.5-rc2-tag' of git://git.kernel.o..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=11059951e00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=ab2ae0615387ef78
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=4722bf4c6393b73a792b
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12727c71e00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12ff5151e00000
-> >
-> > The bug was bisected to:
-> >
-> > commit 0609ae011deb41c9629b7f5fd626dfa1ac9d16b0
-> > Author: Daniel Axtens <dja@axtens.net>
-> > Date:   Sun Dec 1 01:55:00 2019 +0000
-> >
-> >      x86/kasan: support KASAN_VMALLOC
-> 
-> Looking at the log, it's an access of fffff52000680000 that goes wrong.
-> 
-> Reversing the shadow calculation, it looks like an attempted access of
-> FFFFC90003400000, which is in vmalloc space. I'm not sure what that
-> memory represents.
-> 
-> Looking at the instruction pointer, it seems like we're here:
-> 
-> static void
-> xfs_sb_quiet_read_verify(
-> 	struct xfs_buf	*bp)
-> {
-> 	struct xfs_dsb	*dsb = XFS_BUF_TO_SBP(bp);
-> 
-> 	if (dsb->sb_magicnum == cpu_to_be32(XFS_SB_MAGIC)) {     <<<< fault here
-> 		/* XFS filesystem, verify noisily! */
-> 		xfs_sb_read_verify(bp);
-> 
-> 
-> Is it possible that dsb is junk?
-> 
+On 2019-12-20 11:18, Zenghui Yu wrote:
+> Although guest will hardly read and use the PTZ (Pending Table Zero)
+> bit in GICR_PENDBASER, let us emulate the architecture strictly.
+> As per IHI 0069E 9.11.30, PTZ field is WO, and reads as 0.
+>
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+> ---
+>
+> Noticed when checking all fields of GICR_PENDBASER register.
+> But _not_ sure whether it's worth a fix, as Linux never sets
+> the PTZ bit before enabling LPI (set GICR_CTLR_ENABLE_LPIS).
+>
+> And I wonder under which scenarios can this bit be written as 1.
+> It seems difficult for software to determine whether the pending
+> table contains all zeros when writing this bit.
 
-Hmm.. so the context here is a read I/O completion verifier. That means
-the I/O returned success and we're running a verifier function to detect
-content corruption, etc., before the buffer read returns to the caller.
-This particular call is quiet superblock verification, which is used
-when the filesystem may legitimately be something other than XFS (so we
-don't want to spit out corruption messages if the verification fails).
-From that perspective, it's certainly possible dsb is junk.
+This is a useless HW optimization, where it can avoid reading the
+pending table the very first time you write to this register if
+it is told that it is all zero. A decent ITS implementation
+already has a mechanism to find out about the pending bits by
+looking into the IMPDEF area (the first 1kB) of the pending table.
+PTZ is just yet another way to do the same thing.
 
-The buffer itself is a sector sized uncached buffer. That means the page
-count for the buffer shouldn't be more than 1, which in turn means that
-->b_addr should be initialized as such:
+This can only happen once in the lifetime of the system (when 
+allocating
+the table), and Linux doesn't really care. As usual, the GIC is setting
+the level of useless complexity pretty high...
 
-_xfs_buf_map_pages()
-{
-	...
-        if (bp->b_page_count == 1) {
-                /* A single page buffer is always mappable */
-                bp->b_addr = page_address(bp->b_pages[0]) + bp->b_offset;
-	...
-}
+>
+>  virt/kvm/arm/vgic/vgic-mmio-v3.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> index 7dfd15dbb308..ebc218840fc2 100644
+> --- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> +++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> @@ -414,8 +414,11 @@ static unsigned long
+> vgic_mmio_read_pendbase(struct kvm_vcpu *vcpu,
+>  					     gpa_t addr, unsigned int len)
+>  {
+>  	struct vgic_cpu *vgic_cpu = &vcpu->arch.vgic_cpu;
+> +	u64 value = vgic_cpu->pendbaser;
+>
+> -	return extract_bytes(vgic_cpu->pendbaser, addr & 7, len);
+> +	value &= ~GICR_PENDBASER_PTZ;
+> +
+> +	return extract_bytes(value, addr & 7, len);
+>  }
+>
+>  static void vgic_mmio_write_pendbase(struct kvm_vcpu *vcpu,
 
-... which isn't a vmap. However, we do have a multi-read dance in
-xfs_readsb() where we first read the superblock without a verifier, read
-the sector size specified in the super (which could be garbage) and then
-re-read the superblock with a buffer based on that. So when I run the
-attached reproducer, I see something like this:
+Otherwise looks good. I'll queue it with Eric's correction
+to the subject line.
 
-<...>-885   [002] ...1    68.897501: xfs_buf_init: dev 7:0 bno 0xffffffffffffffff nblks 0x1 hold 1 pincount 0 lock 0 flags NO_IOACCT caller xfs_buf_get_uncached+0x91/0x3c0 [xfs]
-repro-885   [002] ...1    68.897576: xfs_buf_get_uncached: dev 7:0 bno 0xffffffffffffffff nblks 0x1 hold 1 pincount 0 lock 0 flags NO_IOACCT|PAGES caller xfs_buf_read_uncached+0x3f/0x140 [xfs]
-...
-repro-885   [002] ...1    68.899077: xfs_buf_init: dev 7:0 bno 0xffffffffffffffff nblks 0x41 hold 1 pincount 0 lock 0 flags NO_IOACCT caller xfs_buf_get_uncached+0x91/0x3c0 [xfs]
-repro-885   [002] ...1    68.899613: xfs_buf_get_uncached: dev 7:0 bno 0xffffffffffffffff nblks 0x41 hold 1 pincount 0 lock 0 flags NO_IOACCT|PAGES caller xfs_buf_read_uncached+0x3f/0x140 [xfs]
-...
+Thanks,
 
-... where the sector size (65 * 512 == 33280) looks bogus. That said, it
-looks like we have error checks throughout the page allocation/mapping
-sequence so it isn't obvious what the problem is here. As far as we can
-tell, we successfully allocated and mapped the 9 pages required for this
-I/O. Thus I'd think we'd be able to get far enough to examine the
-content to establish this is not a valid XFS sb and fail the mount.
-
-Since this mapping functionality is fairly fundamental code in XFS, I
-ran a quick test to use a multi-page directory block size (i.e. mkfs.xfs
--f <dev> -nsize=8k), started populating a directory and very quickly hit
-a similar crash. I'm going to double check that this works as expected
-without KASAN vmalloc support enabled, but is it possible something is
-wrong with KASAN here?
-
-Brian
-
-> Regards,
-> Daniel
-> 
-> >
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=161240aee00000
-> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=151240aee00000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=111240aee00000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+4722bf4c6393b73a792b@syzkaller.appspotmail.com
-> > Fixes: 0609ae011deb ("x86/kasan: support KASAN_VMALLOC")
-> >
-> > BUG: unable to handle page fault for address: fffff52000680000
-> > #PF: supervisor read access in kernel mode
-> > #PF: error_code(0x0000) - not-present page
-> > PGD 21ffee067 P4D 21ffee067 PUD aa51c067 PMD a85e1067 PTE 0
-> > Oops: 0000 [#1] PREEMPT SMP KASAN
-> > CPU: 1 PID: 3088 Comm: kworker/1:2 Not tainted 5.5.0-rc2-syzkaller #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> > Google 01/01/2011
-> > Workqueue: xfs-buf/loop0 xfs_buf_ioend_work
-> > RIP: 0010:xfs_sb_quiet_read_verify+0x47/0xc0 fs/xfs/libxfs/xfs_sb.c:735
-> > Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 7f 49 8b 9c 24 30 01  
-> > 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <0f> b6 04 02 84  
-> > c0 74 04 3c 03 7e 50 8b 1b bf 58 46 53 42 89 de e8
-> > RSP: 0018:ffffc90008187cc0 EFLAGS: 00010a06
-> > RAX: dffffc0000000000 RBX: ffffc90003400000 RCX: ffffffff82ad3c26
-> > RDX: 1ffff92000680000 RSI: ffffffff82aa0a0f RDI: ffff8880a2cdba70
-> > RBP: ffffc90008187cd0 R08: ffff88809eb6c500 R09: ffffed1015d2703d
-> > R10: ffffed1015d2703c R11: ffff8880ae9381e3 R12: ffff8880a2cdb940
-> > R13: ffff8880a2cdb95c R14: ffff8880a2cdbb74 R15: 0000000000000000
-> > FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: fffff52000680000 CR3: 000000009f5ab000 CR4: 00000000001406e0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > Call Trace:
-> >   xfs_buf_ioend+0x3f9/0xde0 fs/xfs/xfs_buf.c:1162
-> >   xfs_buf_ioend_work+0x19/0x20 fs/xfs/xfs_buf.c:1183
-> >   process_one_work+0x9af/0x1740 kernel/workqueue.c:2264
-> >   worker_thread+0x98/0xe40 kernel/workqueue.c:2410
-> >   kthread+0x361/0x430 kernel/kthread.c:255
-> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> > Modules linked in:
-> > CR2: fffff52000680000
-> > ---[ end trace 744ceb50d377bf94 ]---
-> > RIP: 0010:xfs_sb_quiet_read_verify+0x47/0xc0 fs/xfs/libxfs/xfs_sb.c:735
-> > Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 7f 49 8b 9c 24 30 01  
-> > 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <0f> b6 04 02 84  
-> > c0 74 04 3c 03 7e 50 8b 1b bf 58 46 53 42 89 de e8
-> > RSP: 0018:ffffc90008187cc0 EFLAGS: 00010a06
-> > RAX: dffffc0000000000 RBX: ffffc90003400000 RCX: ffffffff82ad3c26
-> > RDX: 1ffff92000680000 RSI: ffffffff82aa0a0f RDI: ffff8880a2cdba70
-> > RBP: ffffc90008187cd0 R08: ffff88809eb6c500 R09: ffffed1015d2703d
-> > R10: ffffed1015d2703c R11: ffff8880ae9381e3 R12: ffff8880a2cdb940
-> > R13: ffff8880a2cdb95c R14: ffff8880a2cdbb74 R15: 0000000000000000
-> > FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: fffff52000680000 CR3: 000000009f5ab000 CR4: 00000000001406e0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> >
-> >
-> > ---
-> > This bug is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >
-> > syzbot will keep track of this bug report. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> > syzbot can test patches for this bug, for details see:
-> > https://goo.gl/tpsmEJ#testing-patches
-> 
-
+         M.
+-- 
+Jazz is not dead. It just smells funny...
