@@ -2,87 +2,72 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F30B7C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CCDAC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0256227BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59B35227BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:49:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbfLTHsy convert rfc822-to-8bit (ORCPT
+        id S1727202AbfLTHtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 02:48:54 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:37385 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726210AbfLTHsy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 02:48:54 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TlPlhLn_1576828129;
-Received: from 30.30.208.24(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0TlPlhLn_1576828129)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 20 Dec 2019 15:48:50 +0800
-Content-Type: text/plain;
-        charset=gb2312
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] mm: vmscan: memcg: Add global shrink priority
-From:   teawater <teawaterz@linux.alibaba.com>
-In-Reply-To: <20191219112618.GA72828@chrisdown.name>
-Date:   Fri, 20 Dec 2019 15:48:49 +0800
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, shakeelb@google.com,
-        Yang Shi <yang.shi@linux.alibaba.com>, tj@kernel.org,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-mm@kvack.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <1A189775-3B43-4C49-B827-15D001C2D2FC@linux.alibaba.com>
-References: <1576662179-16861-1-git-send-email-teawaterz@linux.alibaba.com>
- <20191218140952.GA255739@chrisdown.name>
- <25AA9500-B249-42C2-B162-2B8D4EE83BB0@linux.alibaba.com>
- <20191219112618.GA72828@chrisdown.name>
-To:     Chris Down <chris@chrisdown.name>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Fri, 20 Dec 2019 02:49:20 -0500
+Received: from [167.172.186.51] ([167.172.186.51]:59808 "EHLO shell.v3.sk"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726210AbfLTHtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 02:49:20 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 461F8DFCB6;
+        Fri, 20 Dec 2019 07:49:21 +0000 (UTC)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id sG631e4DBLQp; Fri, 20 Dec 2019 07:49:20 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 70F13DFCB3;
+        Fri, 20 Dec 2019 07:49:20 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id hqEhmObLWdmr; Fri, 20 Dec 2019 07:49:20 +0000 (UTC)
+Received: from furthur.lan (unknown [109.183.109.54])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id C5884DFCB1;
+        Fri, 20 Dec 2019 07:49:19 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Add support for Chrontel CH7033 VGA/DVI Encoder
+Date:   Fri, 20 Dec 2019 08:49:11 +0100
+Message-Id: <20191220074914.249281-1-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
+
+chained to this message is a driver for CH7033 along with device tree
+binding docs.
+
+Tested to work well on MMP3-based Dell Wyse 3020, some tweaks might be
+needed for other configurations. There's not datasheet or programming
+manual available.
+
+Thanks,
+Lubo
 
 
-> 在 2019年12月19日，19:26，Chris Down <chris@chrisdown.name> 写道：
-> 
-> Hi Hui,
-> 
-> teawater writes:
->> Memory.min, low, high can affect the global shrink behavior.  They can help task keep some pages to help protect performance.
->> 
->> But what I want is the low priority tasks (the tasks that performance is not very important) do more shrink first.  And when low priority tasks doesn’t have enough pages to be dropped and system need more free page, shrink the high priority task’s pages.  Because at this time, system’s stable is more important than the performance of priority task.
->> With memory.min and memory.low, I have no idea to config them to support this.  That is why I add global shrink priority.
-> 
-> For sure, that's what I'm suggesting you use memory.{min,low} for -- you define some subset of the cgroup hierarchy as "protected", and then you bias reclaim away from protected cgroups (and thus *towards* unprotected cgroups) by biasing the size of LRU scanning. See my patch that went into 5.4 and the examples in the commit message:
-> 
->    commit 9783aa9917f8ae24759e67bf882f1aba32fe4ea1
->    Author: Chris Down <chris@chrisdown.name>
->    Date:   Sun Oct 6 17:58:32 2019 -0700
-> 
->        mm, memcg: proportional memory.{low,min} reclaim
-> 
-> You can see how we're using memory.{low,min} to achieve this in this case study[0]. It's not exactly equivalent technically to your solution, but the end goals are similar.
-> 
-> Thanks,
-> 
-> Chris
-> 
-> 0: https://facebookmicrosites.github.io/cgroup2/docs/overview.html#case-study-the-fbtax2-project
-
-Hi Chris,
-
-Really appreciate for your help.  I will try to use it handle my problem.
-
-Best,
-Hui
