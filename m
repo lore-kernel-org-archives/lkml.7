@@ -2,122 +2,151 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAE2C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CD8C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1609B2467F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBC062467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:55:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VN0SVFKX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lnsxrNEC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbfLTKwx (ORCPT
+        id S1727277AbfLTKzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 05:52:53 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42483 "EHLO
+        Fri, 20 Dec 2019 05:55:08 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38962 "EHLO
         mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbfLTKwx (ORCPT
+        with ESMTP id S1727198AbfLTKzH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 05:52:53 -0500
-Received: by mail-wr1-f68.google.com with SMTP id q6so8940361wro.9
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 02:52:52 -0800 (PST)
+        Fri, 20 Dec 2019 05:55:07 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y11so8976915wrt.6
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 02:55:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=zIL1GNLI3fK7aSg6DfMu511CTkd/o54Y5uOn48aAaYY=;
-        b=VN0SVFKX5uXsOAdDBxENIoVCMPwSNHINlQXf4fLOv9KuypkjmPtussx6xMViQLfqy9
-         eQM+h55AnlLGapsZK9XUa+GcXqT9hkHLAAFiNo6PKnPsB99EyOuwtY29Keo6cgzT3mkB
-         NNcJL7GW1UF9oyp3VbqyDODc7lub/M6IYcgssUKjHCcT1DlYZXy1IAQZ6/iC39QTDQp9
-         YSAYli2k6iA0mC6D6l7Ayv562uTmxR4B3azfmEt30AGJ/8W+wPLYopwPvHL3oxisjTSg
-         1sTW+a2Zzd1hSC8B7QREXhVHm9yvawfae6yyArRiBXBC6JMOfnVScIctd8N7G53ihdNs
-         j9aw==
+        bh=a9C14P9lsGAuh8F6Rdx7vHrUThQ9aonGy2O3DOUo7Ds=;
+        b=lnsxrNECjkBnFDoUoh4Zk3vI7gih7BdHS5VDD/ljXCsq9ilLRKOZ8GzzX7sx/6q8XK
+         zXuAKwefaAx9xOCMJiNWqqF/21CHWenY5X0UiZceAAACBFFJpSOR2/UekgYy3Alhn+7K
+         ieZJlFRB2hooAr36DkhTxOLH/VBGWvH3v/mySwaI6BcLANoApcE8RhKRUozqUqqmupM9
+         pRRKHrcSYVWSErKLI8B7XsVpW7oGvA9qLZMI7MVHFPZ7zG0gSaC9VyAIgYXmv8TF26Ih
+         fDVRzS4kElTzBv5ztckoj5PvaMpdOldZIi3GMchS7cYL/6H8DBkQYaUkNyrvhqkZXB72
+         YaSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=zIL1GNLI3fK7aSg6DfMu511CTkd/o54Y5uOn48aAaYY=;
-        b=QlPHKzxg9XTwaXx1pkH+oQx38S7DNK4XzV1jb0It74J6H9GNqeqaQxJgCThzAR0Loi
-         HYtqI0uQWUG7TENM2T4VumN1SEcjxbOuvuSd80eMXmVJpj4nlzydHE34Qj0efM/+aQWX
-         oTmUO8eS+Yg45cJWKuEhzFLeuv2VvNOiMjPOXoDD0oZY2Js1QIpVYK/4dLN8qaFvrTvi
-         u0BjRjPmntaa6cwpMRHLfLQW3EaMmbRLYIr93FFwrScaZaLePn4WOwp4EykH5PSwaddV
-         GwBpvNUTJ6QuSV+Z/nZDAJopSG10Vk7VjBoj8kvxXjda1VctrDrs1kJfs2QEU5/Wceyu
-         fNTw==
-X-Gm-Message-State: APjAAAW535y3x4ThTiXoaj5i2PxU7AmF0iUgI+uZJWWucqAQv/zKcvqq
-        AyWTZKYr/vtiFu4Sq5rkaCrPhg==
-X-Google-Smtp-Source: APXvYqyTg/20mAwGx72lef4y8wVB4rf1GGq8qaOrVpqYfFM1xDKnaiTQiFAlYd8nPoEhrHgmv0LWZw==
-X-Received: by 2002:adf:eb46:: with SMTP id u6mr14929539wrn.239.1576839171568;
-        Fri, 20 Dec 2019 02:52:51 -0800 (PST)
+        bh=a9C14P9lsGAuh8F6Rdx7vHrUThQ9aonGy2O3DOUo7Ds=;
+        b=T+FPYC2V7t5Nvh+XebMshPK2SCxyJcQBqabD0wakuOurqdXBt1snM70BzrLDWsKXwd
+         2Jv8ctOMCpLE6OjG1y1GySRKtFNynSTYu9PtHt0gb3YQH0rNdTetT6FkI0Z5Qy/bYhoW
+         +A5ZCKyV153YCwP6bH9xyc5v4cqIjFviOrnMeshZfgjWagzOIuvl+4o3EULE3baTPKYf
+         6UTHVlwGYeoKpeapdIvRuiVp+EnaQUnkRR8Y2B5F0zoIvTADp06ORYMdZg23nWI6ZneF
+         qQVMyE/r1RUhxGLMdeKyf5lmHJgtudVd3WNPE5UXznxcEc3kpc2VDDJUNrDFPKwrL1cA
+         GLRQ==
+X-Gm-Message-State: APjAAAWsfpBFpoGfHCUxmDocU9QWsSc4TOBVUZ5Q9HG3X9BG4SYO3Lfp
+        XZPQwI8dchxkzpZJQTyYXIHQMQ==
+X-Google-Smtp-Source: APXvYqyicvSFzhHzxpljiw/uidTI78NGorAjjg+bi/J4O8iYxkHUB7TVkQ+2LhBMrPCHOQeS/2zn7Q==
+X-Received: by 2002:adf:f052:: with SMTP id t18mr14250816wro.192.1576839304724;
+        Fri, 20 Dec 2019 02:55:04 -0800 (PST)
 Received: from dell ([2.27.35.132])
-        by smtp.gmail.com with ESMTPSA id e12sm9515113wrn.56.2019.12.20.02.52.50
+        by smtp.gmail.com with ESMTPSA id f17sm9339549wmc.8.2019.12.20.02.55.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 02:52:51 -0800 (PST)
-Date:   Fri, 20 Dec 2019 10:52:52 +0000
+        Fri, 20 Dec 2019 02:55:04 -0800 (PST)
+Date:   Fri, 20 Dec 2019 10:55:05 +0000
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Prashant Malani <pmalani@chromium.org>, groeck@chromium.org,
-        bleung@chromium.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] mfd: cros_ec: Add usbpd-notify to usbpd_charger
-Message-ID: <20191220105252.GR18955@dell>
-References: <20191219201340.196259-1-pmalani@chromium.org>
- <20191219201340.196259-2-pmalani@chromium.org>
- <f3d6267e-2429-e5a0-2a0e-60cab5bb1bb9@collabora.com>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "broonie@kernel.org" <broonie@kernel.org>
+Subject: Re: [PATCH v7 02/12] dt-bindings: mfd: Document ROHM BD71828 bindings
+Message-ID: <20191220105505.GS18955@dell>
+References: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+ <702daeb9d8604e2feddd5f6f92b067a2d60d81ad.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+ <f9b0fbb7b898691d09ed8954e8df67cf3706aa96.camel@fi.rohmeurope.com>
+ <20191219143647.GQ18955@dell>
+ <e734a11ed158814119256a3fac253a8574c90837.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <f3d6267e-2429-e5a0-2a0e-60cab5bb1bb9@collabora.com>
+In-Reply-To: <e734a11ed158814119256a3fac253a8574c90837.camel@fi.rohmeurope.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Dec 2019, Enric Balletbo i Serra wrote:
+On Fri, 20 Dec 2019, Vaittinen, Matti wrote:
 
-> Hi Prashant,
 > 
-> This should be [PATCH v3 2/2]. All the patches in the series should have the
-> same version otherwise makes difficult to follow.
-> 
-> Thanks,
->  Enric
-> 
-> On 19/12/19 21:13, Prashant Malani wrote:
-> > Add the cros-usbpd-notify driver as a cell for the cros_usbpd_charger
-> > subdevice on non-ACPI platforms.
+> On Thu, 2019-12-19 at 14:36 +0000, Lee Jones wrote:
+> > On Thu, 19 Dec 2019, Vaittinen, Matti wrote:
 > > 
-> > This driver allows other cros-ec devices to receive PD event
-> > notifications from the Chrome OS Embedded Controller (EC) via a
-> > notification chain.
+> > > Hello Mark, Lee, Rob
+> > > 
+> > > I just noticed we have a dependency here. This binding is referring
+> > > to
+> > > regulator binding - which was applied by Mark and is thus missing
+> > > from
+> > > the series. What's the best way forward?
+> > > 
+> > > On Thu, 2019-12-19 at 11:46 +0200, Matti Vaittinen wrote:
+> > > > ROHM BD71828 Power management IC integrates 7 buck converters, 7
+> > > > LDOs,
+> > > > a real-time clock (RTC), 3 GPO/regulator control pins, HALL input
+> > > > and a 32.768 kHz clock gate.
+> > > > 
+> > > > Document the dt bindings drivers are using.
+> > > > 
+> > > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com
+> > > > >
+> > > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > > ---
+> > > > 
+> > > > No changes since v6
+> > > 
+> > > //snip
+> > > 
+> > > > +  regulators:
+> > > > +    $ref: ../regulator/rohm,bd71828-regulator.yaml
+> > > 
+> > > This file is missing from the series and is applied to Mark's tree.
 > > 
-> > Change-Id: I4c062d261fa1a504b43b0a0c0a98a661829593b9
-> > Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> > ---
-> >  drivers/mfd/cros_ec_dev.c | 3 +++
-> >  1 file changed, 3 insertions(+)
+> > Shouldn't matter.  I guess they're all heading for he same release.
 > > 
-> > diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-> > index c4b977a5dd966..1dde480f35b93 100644
-> > --- a/drivers/mfd/cros_ec_dev.c
-> > +++ b/drivers/mfd/cros_ec_dev.c
-> > @@ -85,6 +85,9 @@ static const struct mfd_cell cros_ec_sensorhub_cells[] = {
-> >  static const struct mfd_cell cros_usbpd_charger_cells[] = {
-> >  	{ .name = "cros-usbpd-charger", },
-> >  	{ .name = "cros-usbpd-logger", },
-> > +#ifndef CONFIG_ACPI
-> > +	{ .name = "cros-usbpd-notify", },
-> > +#endif
+> Ok. Thanks for clarification. I was asking this because Rob asked me to
+> reorder the patches a few versions ago so that the dt_binding_check
+> Make target would not be broken between commits. He asked me to submit
+> the regulator and LED bindings first and MFD (which refers to those)
+> only after them. Thus I was wondering if the final merge order of MFD
+> and regulator trees is such that it can result the breakage Rob hoped
+> to avoid. But I am more than glad if the series can go in like this :)
 
-We don't want #iferry all over our c-files.  If you *have* to rely on
-Kconfig configurations, split this out into a separate cell and use
-IS_ENABLED().
+It's not something that concerns me personally.  I only care about
+*build* breakages.  Rob might be more upset about it however.
 
 -- 
 Lee Jones [李琼斯]
