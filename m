@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 917BCC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC9EC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64D9A222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 574ED222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852210;
-	bh=Wnhq2dkFTn8OU/FjGAcQtJk5oK5O3rmGFMjRCEfGvAc=;
+	s=default; t=1576852212;
+	bh=JVdsZGegTIK6KkrOyFZrOxGq/flHJ3EyKYQfV2YU9lw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bxm9KKUi/ZSzukKsIKNeRlrTLIfMK17dqUdcEfgVl48XFk3Wq5OcoJlXd4iTD78kJ
-	 Daxs4Y3ECtXC9xqq379Wbv/pEhTi2dj6jNQ+IlKfqYS+k3m8lQrVCG1h9Bg0jh4QX9
-	 4k7lPstciCZ/1J6fGOugCNEOg9/Iz89PBHT84vHA=
+	b=e+XO2lqwPxTeEvHzrYJFrpeftn3fbna5zZUmcyhlcP1s1CbSnTBvqIAbEmtW8A+UH
+	 AGtlUlKAA6lBhFXbZlbMxXZAJ9K6R3lqyq3E7ZIVNX6G7fERNX9qFh+u1eoInipfz8
+	 KSiX11vq5YNheWyiT0thldluc4DfopHA+G9etopc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbfLTOaJ (ORCPT
+        id S1727555AbfLTOaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:30:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33300 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:30:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727509AbfLTOaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:30:05 -0500
+        id S1727536AbfLTOaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:30:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6DC5206CB;
-        Fri, 20 Dec 2019 14:30:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 118AD2465E;
+        Fri, 20 Dec 2019 14:30:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852204;
-        bh=Wnhq2dkFTn8OU/FjGAcQtJk5oK5O3rmGFMjRCEfGvAc=;
+        s=default; t=1576852209;
+        bh=JVdsZGegTIK6KkrOyFZrOxGq/flHJ3EyKYQfV2YU9lw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QHSLH4xRx650kz68UbtsKqCUJOX8Bn/1bArdRH/tIex/uaQ2bA2C/JHa9hdq9sFMZ
-         mdbOBItnruWr4Emf/0t8XoCYrkdN5HxtQgwVpn/9b7Z7LSwKzCfYuRs9HPUsHfF6JD
-         0Xu2KEZ8G7SNVlpYqbfh31A2zGvu7jW2+5Ymw8m8=
+        b=pGBCpisA2yqL4q1HybnC32mp1BAr7fIn2v/fnOog3NdrphYV4Nw948oGPiExti8r1
+         h+KDhrFMZxnucStxuFYq/k8Jp5Ip2GnYjQkiAix8iHehRG2VisVQu0ntE1Nr9fkzk3
+         o5c5JqOsCr15LcUuKMERiuypz1iBq16b0taHrRMo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Nikola Cornij <nikola.cornij@amd.com>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
+        Tony Cheng <Tony.Cheng@amd.com>, Leo Li <sunpeng.li@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 07/52] drm/amd/display: Map DSC resources 1-to-1 if numbers of OPPs and DSCs are equal
-Date:   Fri, 20 Dec 2019 09:29:09 -0500
-Message-Id: <20191220142954.9500-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 10/52] drm/amd/display: Reset steer fifo before unblanking the stream
+Date:   Fri, 20 Dec 2019 09:29:12 -0500
+Message-Id: <20191220142954.9500-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
 References: <20191220142954.9500-1-sashal@kernel.org>
@@ -64,72 +63,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nikola Cornij <nikola.cornij@amd.com>
 
-[ Upstream commit a1fc44b609b4e9c0941f0e4a1fc69d367af5ab69 ]
+[ Upstream commit 87de6cb2f28153bc74d0a001ca099c29453e145f ]
 
 [why]
-On ASICs where number of DSCs is the same as OPPs there's no need
-for DSC resource management. Mappping 1-to-1 fixes mode-set- or S3-
--related issues for such platforms.
+During mode transition steer fifo could overflow. Quite often it
+recovers by itself, but sometimes it doesn't.
 
 [how]
-Map DSC resources 1-to-1 to pipes only if number of OPPs is the same
-as number of DSCs. This will still keep other ASICs working.
-A follow-up patch to fix mode-set issues on those ASICs will be
-required if testing shows issues with mode set.
+Add steer fifo reset before unblanking the stream. Also add a short
+delay when resetting dig resync fifo to make sure register writes
+don't end up back-to-back, in which case the HW might miss the reset
+request.
 
 Signed-off-by: Nikola Cornij <nikola.cornij@amd.com>
-Reviewed-by: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
+Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
 Acked-by: Leo Li <sunpeng.li@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/amd/display/dc/dcn20/dcn20_resource.c   | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ .../drm/amd/display/dc/dcn20/dcn20_stream_encoder.c  | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-index 6b2f2f1a1c9ce..d95b265ae9b85 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-@@ -1419,13 +1419,20 @@ enum dc_status dcn20_build_mapped_resource(const struct dc *dc, struct dc_state
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_stream_encoder.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_stream_encoder.c
+index 5ab9d62404981..e95025b1d14d2 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_stream_encoder.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_stream_encoder.c
+@@ -492,15 +492,23 @@ void enc2_stream_encoder_dp_unblank(
+ 				DP_VID_N_MUL, n_multiply);
+ 	}
  
- static void acquire_dsc(struct resource_context *res_ctx,
- 			const struct resource_pool *pool,
--			struct display_stream_compressor **dsc)
-+			struct display_stream_compressor **dsc,
-+			int pipe_idx)
- {
- 	int i;
+-	/* set DIG_START to 0x1 to reset FIFO */
++	/* make sure stream is disabled before resetting steer fifo */
++	REG_UPDATE(DP_VID_STREAM_CNTL, DP_VID_STREAM_ENABLE, false);
++	REG_WAIT(DP_VID_STREAM_CNTL, DP_VID_STREAM_STATUS, 0, 10, 5000);
  
- 	ASSERT(*dsc == NULL);
- 	*dsc = NULL;
++	/* set DIG_START to 0x1 to reset FIFO */
+ 	REG_UPDATE(DIG_FE_CNTL, DIG_START, 1);
++	udelay(1);
  
-+	if (pool->res_cap->num_dsc == pool->res_cap->num_opp) {
-+		*dsc = pool->dscs[pipe_idx];
-+		res_ctx->is_dsc_acquired[pipe_idx] = true;
-+		return;
-+	}
-+
- 	/* Find first free DSC */
- 	for (i = 0; i < pool->res_cap->num_dsc; i++)
- 		if (!res_ctx->is_dsc_acquired[i]) {
-@@ -1468,7 +1475,7 @@ static enum dc_status add_dsc_to_stream_resource(struct dc *dc,
- 		if (pipe_ctx->stream != dc_stream)
- 			continue;
+ 	/* write 0 to take the FIFO out of reset */
  
--		acquire_dsc(&dc_ctx->res_ctx, pool, &pipe_ctx->stream_res.dsc);
-+		acquire_dsc(&dc_ctx->res_ctx, pool, &pipe_ctx->stream_res.dsc, i);
+ 	REG_UPDATE(DIG_FE_CNTL, DIG_START, 0);
  
- 		/* The number of DSCs can be less than the number of pipes */
- 		if (!pipe_ctx->stream_res.dsc) {
-@@ -1669,7 +1676,7 @@ static bool dcn20_split_stream_for_odm(
- 	next_odm_pipe->stream_res.opp = pool->opps[next_odm_pipe->pipe_idx];
- #ifdef CONFIG_DRM_AMD_DC_DSC_SUPPORT
- 	if (next_odm_pipe->stream->timing.flags.DSC == 1) {
--		acquire_dsc(res_ctx, pool, &next_odm_pipe->stream_res.dsc);
-+		acquire_dsc(res_ctx, pool, &next_odm_pipe->stream_res.dsc, next_odm_pipe->pipe_idx);
- 		ASSERT(next_odm_pipe->stream_res.dsc);
- 		if (next_odm_pipe->stream_res.dsc == NULL)
- 			return false;
+-	/* switch DP encoder to CRTC data */
++	/* switch DP encoder to CRTC data, but reset it the fifo first. It may happen
++	 * that it overflows during mode transition, and sometimes doesn't recover.
++	 */
++	REG_UPDATE(DP_STEER_FIFO, DP_STEER_FIFO_RESET, 1);
++	udelay(10);
+ 
+ 	REG_UPDATE(DP_STEER_FIFO, DP_STEER_FIFO_RESET, 0);
+ 
 -- 
 2.20.1
 
