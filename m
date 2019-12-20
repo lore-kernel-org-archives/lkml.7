@@ -2,328 +2,144 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D38B9C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B7AC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EA9924682
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5322B227BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:58:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="p6kfVYtx"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Hfjeob8D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbfLTGzl (ORCPT
+        id S1727084AbfLTG6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 01:55:41 -0500
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:19956 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbfLTGze (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 01:55:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1576824935; x=1608360935;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=PPwtUIpLXH40rNqY8dfEIUUyawcYgNz2QRGOWudK+t4=;
-  b=p6kfVYtxAvHAdd+yY4LMzi//JyaxKGZeiLn+MmeUug4jyRYcDrQo+gl+
-   rkkeA5b1klCkrLHSmbGkLOs9Gpc51B9lfXgqtZBsnYOzZHWXzGBJoY4KS
-   zdzDgpyqAAPX7mfrKL5kbyUcXSPptor8PVlF1LeJU627IgIb1I/7ItKL6
-   ih0bdpv2VreNtm7BSKuMen5mMi5rLNzAz0E/YJbRm2FDo8Frz3i+NwV6w
-   rjGNSXDfOALpFZ/r01PqBFudEW5RL6ONPybvpKb1WCLhi0p3PxOu9J3N/
-   vSVBDpCKUCj6MAW2wWT5zqcHpkvisAxyzZ+XGGdXd1r/GN6BYMCvZkol5
-   g==;
-IronPort-SDR: mr1+Eg8isrXn5q55DLIb0HjYN5S/Dui4iAPWHTCkyj68p8kBK3oEA6eZcNt0hui1pxzqxwwLsB
- cEouNtPbGyLjjlKLAKtYCg4aPsFDVIWCX2Hzlksw3WkWvgVd9j2XNBSBiWe1OrLE5A3E+9yYYv
- v0whJ9PpSVRhySWcd+oMt9xSV6bi+j73NkLXlF52Mf622v9/ESfZU66VusDYcmNnRM+DNlfWdS
- RbEFBI/rFmdBdcGZT7i2eP1aEJsuiXpQI2F69PfsIs+9yMWD2XbGUhGPPLPZ+rKuFLDrMXC4xE
- 5zc=
-X-IronPort-AV: E=Sophos;i="5.69,334,1571673600"; 
-   d="scan'208";a="127398481"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 20 Dec 2019 14:55:34 +0800
-IronPort-SDR: 5fh/1hnFvJQnbtNYOVoogUkRcM0iiZIWH3lx3aHdl+4rY9igcrOKvj5BpVvdH7epgEAjJTiW9Y
- vI1LKr/4oC2L5fH+xENwee1EWvECzuNatZPP8xt0e2E6JkUOyXB7URf/eQ0zbMvYF/VrV+eqz6
- 5NF5FgzfUfbGbiOiFSZdBtVbNP+Uxc2QBkyfSbR89+dGZqWfDF4jA+VEKhsOhxDiW50923DypU
- 4to6LWLSh5076i4INeA7y4aGKVDtEoEucFuJ6TBgKufZ3BhBvw/TXCeXyJYrAcCZusLx67CxOw
- l7QhwlecZdFFe8b5wQmpMiDN
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2019 22:49:55 -0800
-IronPort-SDR: W+UknRwVtOMnXUa3pcns0CEhbC34dDxomS8+55Q5QPaOWQYgziwPLhrwVZg/pVkeL359BeCNF5
- AeSXRl63Vt3ayMGhaq/hrmUGPYDu97DacqSWRbb624MgGUBiwxf3pHvpjlJuidSck1r/hfBZ3b
- u7c1zNYYIyeTIYS7/sPevU9z7+/Cml6wnz73Lq1lnkfUjo2r1/hRU+8RFpt3fZ8msqLmQgSkPq
- UncprsQyxrdt7Wp8uyFNKl4QBOrrVx7yvY11Gspg+bq8rG6iURX27VOzHkYyxnKADa9ZwAIj3t
- /uw=
-WDCIronportException: Internal
-Received: from washi.fujisawa.hgst.com ([10.149.53.254])
-  by uls-op-cesaip02.wdc.com with ESMTP; 19 Dec 2019 22:55:33 -0800
-From:   Damien Le Moal <damien.lemoal@wdc.com>
-To:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Johannes Thumshirn <jth@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Hannes Reinecke <hare@suse.de>
-Subject: [PATCH v2 2/2] zonefs: Add documentation
-Date:   Fri, 20 Dec 2019 15:55:28 +0900
-Message-Id: <20191220065528.317947-3-damien.lemoal@wdc.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191220065528.317947-1-damien.lemoal@wdc.com>
-References: <20191220065528.317947-1-damien.lemoal@wdc.com>
+        Fri, 20 Dec 2019 01:58:51 -0500
+Received: from mail-mw2nam12on2056.outbound.protection.outlook.com ([40.107.244.56]:6164
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725874AbfLTG6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 01:58:50 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HOh6gcEyx0j6g80syGuZHh0+uQ29IVx3CGRcBADIPs7e+GDkptG7uW3xFB82y2UZ996zz8CvMI9kf1bUuvYTaG02XfkjWo3MgLfFfDdfLi5+cmyYcn6OvQZxlDlDtG5pV33Z0qnslrAutuG4j/nvNUj5bOWdxMC/KNq9yCRIYWZH5au7oTxE6E5/wYYlSqIJ8IyCr2gk5T94P2lDjWycsNitmcmvQbU1142QfzYGaOyzbJNmYhs42BRAfGup+/uJXiZrYaK1doXxEFlWDzUjaKMuun5Hi0+T5y2DeDPwU4Aj/oeHGh25OPG8/LtdnavGUekvlQbnOwnAZYNUwhWtBA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4heOmA9Yh9glwYyw7jSt6o5ywg3XqMK2awkKp0hZSG0=;
+ b=OPlou1IXNCy5jHrDjdhdCozyEdHmSFLUUWWFewTaoumtlDK+3NnKvm69nvL8Lo8g2Kv5u2Jq0Kps4YCQErW7ySGl5yExZ7NujfSC3V9LCzXgM48L/Irb3dGrFrewxEYOQOCAQPmP/p3hGwOyBqw1WUp7D1AIgO3GjqUh1s16ig+Epe2QbqRXM7GxHYgm4o12nf7A+sqN+ttG6z11P0xEku6dTE+5GAkpdOtUsr/2VRdSPdgcSTvb6bso2IENR88b8AL4LK9qgQFVqfsIBgucgiM1yNszsP5IVL3ET6ByzXurXIzprypdWVxzswfGnJWjd8Mi1XS56tCK7SiiqTyRiA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4heOmA9Yh9glwYyw7jSt6o5ywg3XqMK2awkKp0hZSG0=;
+ b=Hfjeob8DyFJtmm87fF8AT8Ho4PeN+R6E8Pp6I2X+JPISFUHkz060mDt6dJEwblrIt5puMPfj39T0hteyiMRz2nBVuH58WCsED2dctm5okd13cBUQZwYR2B+TlrISacAQvURzmwiprphEFD449lw3CTUxtwLqBeHsIRK7dX+EpBY=
+Received: from SN4PR0201CA0045.namprd02.prod.outlook.com
+ (2603:10b6:803:2e::31) by DM5PR02MB3306.namprd02.prod.outlook.com
+ (2603:10b6:4:66::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.17; Fri, 20 Dec
+ 2019 06:58:46 +0000
+Received: from CY1NAM02FT007.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::201) by SN4PR0201CA0045.outlook.office365.com
+ (2603:10b6:803:2e::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2559.14 via Frontend
+ Transport; Fri, 20 Dec 2019 06:58:46 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT007.mail.protection.outlook.com (10.152.75.5) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2559.14
+ via Frontend Transport; Fri, 20 Dec 2019 06:58:45 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1iiCFJ-0007KK-CQ; Thu, 19 Dec 2019 22:58:45 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1iiCFE-0006Xj-9H; Thu, 19 Dec 2019 22:58:40 -0800
+Received: from xsj-pvapsmtp01 (xsj-smtp.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xBK6wboe032515;
+        Thu, 19 Dec 2019 22:58:37 -0800
+Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1iiCFA-0006WQ-Gh; Thu, 19 Dec 2019 22:58:37 -0800
+From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
+To:     linux@roeck-us.net, shubhraj@xilinx.com, sgoud@xilinx.com,
+        michal.simek@xilinx.com
+Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org, git@xilinx.com,
+        Srinivas Neeli <srinivas.neeli@xilinx.com>
+Subject: [PATCH] watchdog: cadence: Skip printing pointer value
+Date:   Fri, 20 Dec 2019 12:28:16 +0530
+Message-Id: <1576825096-26605-1-git-send-email-srinivas.neeli@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(376002)(346002)(396003)(199004)(189003)(5660300002)(81166006)(44832011)(70586007)(356004)(36756003)(426003)(7696005)(6666004)(4744005)(26005)(2906002)(478600001)(70206006)(316002)(8936002)(2616005)(186003)(8676002)(107886003)(336012)(4326008)(81156014)(6636002)(9786002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR02MB3306;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b6af0f72-a6c2-457d-8fac-08d7851a0ec8
+X-MS-TrafficTypeDiagnostic: DM5PR02MB3306:
+X-Microsoft-Antispam-PRVS: <DM5PR02MB3306C6A0CE6522F3F9685DB3AF2D0@DM5PR02MB3306.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:177;
+X-Forefront-PRVS: 025796F161
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zSsq6nDel56+e2shLRLEYn40b7NQSxcVa1RAGFqDcVqXPwJIigjQvTdng99Pi3KXMAXGDO8axdAWlM4LQakcuTNdpO2Zn9Bsp4Y9L8g7MdtzlMen42nWZB59XXPIjMh2cUyvJty28ZwRr+ZP4p+VIPjEg8MuuNUvlX3B7broVVuCsh9ZHxpnGuHcDkq7B3WuZhWz22WCyP7PwegiKF/ZW6Y9+XL0pnd2PZWlSfk0PLjLM73DX+LKfWUmwcsbTghQ3VETau/kqy4yI/W83v4HSnh4vxuRoWzBBtOdhXM842HMBfLgcBgSOBCLBAbJjSr6RmPGS9U++sCG+junK+ngiQWoy6h85ODeI43gqv93WlaapnSFxgZZPNLZTOFOjvqR7keNF5MWVwMYFdeR6UxnEYUdDkBrCO7GjI6QzKOcQ0h3tUzhdQJiy7Myj1aEIAw3
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Dec 2019 06:58:45.8612
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b6af0f72-a6c2-457d-8fac-08d7851a0ec8
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR02MB3306
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the new file Documentation/filesystems/zonefs.txt to document zonefs
-principles and user-space tool usage.
+"%p" is not printing the pointer value.
+In driver, printing pointer value is not useful so avoiding print.
 
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
 ---
- Documentation/filesystems/zonefs.txt | 215 +++++++++++++++++++++++++++
- MAINTAINERS                          |   1 +
- 2 files changed, 216 insertions(+)
- create mode 100644 Documentation/filesystems/zonefs.txt
+ drivers/watchdog/cadence_wdt.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/filesystems/zonefs.txt b/Documentation/filesystems/zonefs.txt
-new file mode 100644
-index 000000000000..e88a4743bc64
---- /dev/null
-+++ b/Documentation/filesystems/zonefs.txt
-@@ -0,0 +1,215 @@
-+ZoneFS - Zone filesystem for Zoned block devices
-+
-+Overview
-+========
-+
-+zonefs is a very simple file system exposing each zone of a zoned block device
-+as a file. Unlike a regular file system with zoned block device support (e.g.
-+f2fs), zonefs does not hide the sequential write constraint of zoned block
-+devices to the user. Files representing sequential write zones of the device
-+must be written sequentially starting from the end of the file (append only
-+writes).
-+
-+As such, zonefs is in essence closer to a raw block device access interface
-+than to a full featured POSIX file system. The goal of zonefs is to simplify
-+the implementation of zoned block devices support in applications by replacing
-+raw block device file accesses with a richer file API, avoiding relying on
-+direct block device file ioctls which may be more obscure to developers. One
-+example of this approach is the implementation of LSM (log-structured merge)
-+tree structures (such as used in RocksDB and LevelDB) on zoned block devices
-+by allowing SSTables to be stored in a zone file similarly to a regular file
-+system rather than as a range of sectors of the entire disk. The introduction
-+of the higher level construct "one file is one zone" can help reducing the
-+amount of changes needed in the application as well as introducing support for
-+different application programming languages.
-+
-+zonefs on-disk metadata
-+-----------------------
-+
-+zonefs on-disk metadata is reduced to an immutable super block which
-+persistently stores a magic number and optional features flags and values. On
-+mount, zonefs uses blkdev_report_zones() to obtain the device zone configuration
-+and populates the mount point with a static file tree solely based on this
-+information. File sizes come from the device zone type and write pointer
-+position managed by the device itself.
-+
-+The super block is always writen on disk at sector 0. The first zone of the
-+device storing the super block is never exposed as a zone file by zonefs. If the
-+zone containing the super block is a sequential zone, the mkzonefs format tool
-+always "finishes" the zone, that is, transition the zone to a full state to make
-+it readonly, preventing any data write.
-+
-+Zone type sub-directories
-+-------------------------
-+
-+Files representing zones of the same type are grouped together under the same
-+sub-directory automatically created on mount.
-+
-+For conventional zones, the sub-directory "cnv" is used. This directory is
-+however created only and only if the device has useable conventional zones. If
-+the device only has a single conventional zone at sector 0, the zone will not
-+be exposed as a file as it will be used to store zonefs super block. For such
-+devices, the "cnv" sub-directory will not be created.
-+
-+For sequential write zones, the sub-directory "seq" is used.
-+
-+These two directories are the only directories that exist in zonefs. Users
-+cannot create other directories and cannot rename nor delete the "cnv" and
-+"seq" sub-directories.
-+
-+The size of the directories indicated by the st_size field of struct stat,
-+obtained with the stat() or fstat() system calls, indicate the number of files
-+existing under the directory.
-+
-+Zone files
-+----------
-+
-+Zone files are named using the number of the zone they represent within the set
-+of zones of a particular type. That is, both the "cnv" and "seq" directories
-+contain files named "0", "1", "2", ... The file numbers also represent
-+increasing zone start sector on the device.
-+
-+All read and write operations to zone files are not allowed beyond the file
-+maximum size, that is, beyond the zone size. Any access exceeding the zone
-+size is failed with the -EFBIG error.
-+
-+Creating, deleting, renaming or modifying any attribute of files and
-+sub-directories is not allowed.
-+
-+The number of blocks of a file as reported by stat() and fstat() indicates the
-+size of the file zone, or in other words, the maximum file size.
-+
-+Conventional zone files
-+-----------------------
-+
-+The size of conventional zone files is fixed to the size of the zone they
-+represent. Conventional zone files cannot be truncated.
-+
-+These files can be randomly read and written, using any form of IO operation:
-+buffered IOs, direct IOs, memory mapped IOs (mmap) etc. There are no IO
-+constraint for these files beyond the file size limit mentioned above.
-+
-+Sequential zone files
-+---------------------
-+
-+The size of sequential zone files present in the "seq" sub-directory represent
-+the file's zone write pointer position relative to the zone start sector.
-+
-+Sequential zone files can only be written sequentially, starting from the file
-+end, that is, write operations can only be append writes. Zonefs makes no
-+attempt at accepting random writes and will fail any write request that has a
-+start offset not corresponding to the end of the last issued write.
-+
-+In order to give guarantees regarding write ordering, zonefs also prevents
-+buffered writes and mmap writes for sequential files. Only direct IO writes are
-+accepted. There are no restrictions on read operations nor on the type of IO
-+used to request reads (buffered IOs, direct IOs and mmap reads are all
-+accepted).
-+
-+Truncating sequential zone files is allowed only down to 0, in wich case, the
-+zone is reset to rewind the file zone write pointer position to the start of
-+the zone, or up to the zone size, in which case the file's zone is transitioned
-+to the FULL state (finish zone operation).
-+
-+zonefs format options
-+---------------------
-+
-+Several optional features of zonefs can be enabled at format time.
-+* Conventional zone aggregation: ranges of contiguous conventional zones can be
-+  agregated into a single larger file instead of the default one file per zone.
-+* File ownership: The owner UID and GID of zone files is by default 0 (root)
-+  but can be changed to any valid UID/GID.
-+* File access permissions: the default 640 access permissions can be changed.
-+
-+User Space Tools
-+----------------
-+
-+The mkzonefs tool is used to format zoned block devices for use with zonefs.
-+This tool is available on Github at:
-+
-+git@github.com:damien-lemoal/zonefs-tools.git.
-+
-+zonefs-tools also includes a test suite which can be run against any zoned
-+block device, including null_blk block device created with zoned mode.
-+
-+Examples
-+--------
-+
-+The following formats a 15TB host-managed SMR HDD with 256 MB zones
-+with the conventional zones aggregation feature enabled.
-+
-+# mkzonefs -o aggr_cnv /dev/sdX
-+# mount -t zonefs /dev/sdX /mnt
-+# ls -l /mnt/
-+total 0
-+dr-xr-xr-x 2 root root     1 Nov 25 13:23 cnv
-+dr-xr-xr-x 2 root root 55356 Nov 25 13:23 seq
-+
-+The size of the zone files sub-directories indicate the number of files
-+existing for each type of zones. In this example, there is only one
-+conventional zone file (all conventional zones are agreggated under a single
-+file).
-+
-+# ls -l /mnt/cnv
-+total 137101312
-+-rw-r----- 1 root root 140391743488 Nov 25 13:23 0
-+
-+This aggregated conventional zone file can be used as a regular file.
-+
-+# mkfs.ext4 /mnt/cnv/0
-+# mount -o loop /mnt/cnv/0 /data
-+
-+The "seq" sub-directory grouping files for sequential write zones has in this
-+example 55356 zones.
-+
-+# ls -lv /mnt/seq
-+total 14511243264
-+-rw-r----- 1 root root 0 Nov 25 13:23 0
-+-rw-r----- 1 root root 0 Nov 25 13:23 1
-+-rw-r----- 1 root root 0 Nov 25 13:23 2
-+...
-+-rw-r----- 1 root root 0 Nov 25 13:23 55354
-+-rw-r----- 1 root root 0 Nov 25 13:23 55355
-+
-+For sequential write zone files, the file size changes as data is appended at
-+the end of the file, similarly to any regular file system.
-+
-+# dd if=/dev/zero of=/mnt/seq/0 bs=4096 count=1 conv=notrunc oflag=direct
-+1+0 records in
-+1+0 records out
-+4096 bytes (4.1 kB, 4.0 KiB) copied, 1.05112 s, 3.9 kB/s
-+
-+# ls -l /mnt/seq/0
-+-rw-r----- 1 root root 4096 Nov 25 13:23 /mnt/sdh/seq/0
-+
-+The written file can be truncated to the zone size, prventing any further write
-+operation.
-+
-+# truncate -s 268435456 /mnt/seq/0
-+# ls -l /mnt/seq/0
-+-rw-r----- 1 root root 268435456 Nov 25 13:49 /mnt/seq/0
-+
-+Truncation to 0 size allows freeing the file zone storage space and restart
-+append-writes to the file.
-+
-+# truncate -s 0 /mnt/seq/0
-+# ls -l /mnt/seq/0
-+-rw-r----- 1 root root 0 Nov 25 13:49 /mnt/seq/0
-+
-+Since files are statically mapped to zones on the disk, the number of blocks of
-+a file as reported by stat() and fstat() indicates the size of the file zone.
-+
-+# stat /mnt/seq/0
-+  File: /mnt/seq/0
-+  Size: 0         	Blocks: 524288     IO Block: 4096   regular empty file
-+Device: 870h/2160d	Inode: 50431       Links: 1
-+Access: (0640/-rw-r-----)  Uid: (    0/    root)   Gid: (    0/    root)
-+Access: 2019-11-25 13:23:57.048971997 +0900
-+Modify: 2019-11-25 13:52:25.553805765 +0900
-+Change: 2019-11-25 13:52:25.553805765 +0900
-+ Birth: -
-+
-+The number of blocks of the file ("Blocks") in units of 512B blocks gives the
-+maximum file size of 524288 * 512 B = 256 MB, corresponding to the device zone
-+size in this example. Of note is that the "IO block" field always indicates the
-+minimum IO size for writes and corresponds to the device physical sector size.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8eb6f02a1efa..66f348fa90df 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18292,6 +18292,7 @@ L:	linux-fsdevel@vger.kernel.org
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/dlemoal/zonefs.git
- S:	Maintained
- F:	fs/zonefs/
-+F:	Documentation/filesystems/zonefs.txt
+diff --git a/drivers/watchdog/cadence_wdt.c b/drivers/watchdog/cadence_wdt.c
+index 06bd4e1a5923..672b184da875 100644
+--- a/drivers/watchdog/cadence_wdt.c
++++ b/drivers/watchdog/cadence_wdt.c
+@@ -369,9 +369,8 @@ static int cdns_wdt_probe(struct platform_device *pdev)
+ 		return ret;
+ 	platform_set_drvdata(pdev, wdt);
  
- ZPOOL COMPRESSED PAGE STORAGE API
- M:	Dan Streetman <ddstreet@ieee.org>
+-	dev_info(dev, "Xilinx Watchdog Timer at %p with timeout %ds%s\n",
+-		 wdt->regs, cdns_wdt_device->timeout,
+-		 nowayout ? ", nowayout" : "");
++	dev_info(dev, "Xilinx Watchdog Timer with timeout %ds%s\n",
++		 cdns_wdt_device->timeout, nowayout ? ", nowayout" : "");
+ 
+ 	return 0;
+ }
 -- 
-2.23.0
+2.7.4
 
