@@ -2,130 +2,114 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 023A1C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B94C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8B0324684
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C9BD24679
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:18:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ry6bmtLZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C69pT8lW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbfLTMSO (ORCPT
+        id S1727391AbfLTMSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 07:18:14 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35636 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727197AbfLTMSO (ORCPT
+        Fri, 20 Dec 2019 07:18:53 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41092 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727197AbfLTMSx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 07:18:14 -0500
-Received: by mail-io1-f65.google.com with SMTP id v18so9199385iol.2
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 04:18:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+fpn5MBrUsO68vwFWveOAH2qULu+Kd/H5CmwM9v3iQ8=;
-        b=ry6bmtLZkIP/fUiJw7N0x7wl432V1h8rQGXiC73T1m3xeoYjUa+VwnKva5Wtp/PkUf
-         WFJZrRAGuDZTkPCN2KriGUTeasYUB3zrwp6b/Fk7AIa4iQ2yv7AnJ70oXsu0gFmrTlmU
-         4wUmqzuI1hTMhZoPkdsq6rI0iA3QKZ4MaWtS8v3Xyy18gdMzg0kysnXPVaShQXOtV4vV
-         UH2lwHEole8gh+m3DG0asxBPLXijl/MOJ7q4XwnCMpoUI49TvlW2np6Ow6ZACemDp7Oc
-         Ufb/QobWEisK+g65YqwofVZTEB4Dnrlq5ZyqsAzSamKIA0oHXa6DAgBiYEGoVAZRj+zH
-         7EKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+fpn5MBrUsO68vwFWveOAH2qULu+Kd/H5CmwM9v3iQ8=;
-        b=PNJ0niRIknjZg1mwplmIEq0+OqczMKj8mtx9LH7/Bi3Z8+qJ6Yb0VCfFSXMaygBR0s
-         81xnQvAX+O2qObD/j2/FZ0f4OtNlQ02yT1eUP0puQa943uo2/Agf+li2UNewQnmeuk5+
-         bA13TqVhWxjrzVJL6N8/7ijj7penoEFGsSohTRay5lExzsuVkVmfcwfa4/PHR1lyH/WJ
-         9Q33idrAC3MLsTkkNqZBy7RAGPoQD+gdjKgILjBbwsVFQzjRVQFwNq6Shy6QUn9VwdnS
-         PXuH1CcHF35bWW88+xuG3embz9VcRcjAnlhVOQoWzkyz+Q52gxFZf/xOtPUacfaFieKQ
-         sSnQ==
-X-Gm-Message-State: APjAAAW/G58GrSYmfnbs3SSDuY2cA/uJmUHG+jVwg5C3zUhjDnV/nGxD
-        xlwbqAtW2q3n7kIstrMo73ar5G+MNaMCcG9fdQ==
-X-Google-Smtp-Source: APXvYqwoXFpvJgEZdjM7NQES6jn5HwmN8ah4g6rQdgJS5l43sIBIJBKGiyWEdnBrhbk2vHVzGcC3uMS6RXak3U+Yelg=
-X-Received: by 2002:a5e:8344:: with SMTP id y4mr9243560iom.27.1576844293749;
- Fri, 20 Dec 2019 04:18:13 -0800 (PST)
+        Fri, 20 Dec 2019 07:18:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576844332;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+uqLwzuT4/p/TrN/iMvSErZDSEuFtnJzWf7maJMj2iM=;
+        b=C69pT8lWa53wGuSRZCB/GP4Q4UVFnSvk/8pZhiXGdv1gTMKFWhNoEhkj5BYD4zCiwPFU/T
+        eoyrqCqVtmrY0vSEn8erqQMFnSdvqriKJVmk5FjvVNVlPL7aG0gbPdxLkmhFwH7eHu5n3q
+        tKBMRM7K5x82MJ+Q0zD4eDKttd15nH0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-369-pvLJVYDBOgu0tNOhkYFqLQ-1; Fri, 20 Dec 2019 07:18:48 -0500
+X-MC-Unique: pvLJVYDBOgu0tNOhkYFqLQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 358EC185432C;
+        Fri, 20 Dec 2019 12:18:47 +0000 (UTC)
+Received: from [10.36.116.117] (ovpn-116-117.ams2.redhat.com [10.36.116.117])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2086A5C3F8;
+        Fri, 20 Dec 2019 12:18:41 +0000 (UTC)
+Subject: Re: [PATCH] KVM: arm/arm64: vgic: Handle GICR_PENDBASER.PTZ filed as
+ RAZ
+To:     Zenghui Yu <yuzenghui@huawei.com>, maz@kernel.org
+Cc:     andre.przywara@arm.com, linux-kernel@vger.kernel.org,
+        wanghaibin.wang@huawei.com, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org
+References: <20191220111833.1422-1-yuzenghui@huawei.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <8f8b063c-45cf-166d-bd94-ff96831314c0@redhat.com>
+Date:   Fri, 20 Dec 2019 13:18:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <20191219115812.102620-1-brgerst@gmail.com> <CALCETrW1zE0Uufrg_UG4JNQKMy3UFxnd+XmZye2gdTV36C-yTw@mail.gmail.com>
- <CAMzpN2if2m4McWpL49U4QAEM1MJ+qgTe-emN8vKcjVc1H+84vA@mail.gmail.com> <431a146f6461402da61d09fff155f35b@AcuMS.aculab.com>
-In-Reply-To: <431a146f6461402da61d09fff155f35b@AcuMS.aculab.com>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Fri, 20 Dec 2019 07:18:02 -0500
-Message-ID: <CAMzpN2i+DrKkzDyiS6Cj61LmCu+--e5puQpKrNxYVMDRPMvvBw@mail.gmail.com>
-Subject: Re: [PATCH] x86: Remove force_iret()
-To:     David Laight <David.Laight@aculab.com>
-Cc:     Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Oleg Nesterov <oleg@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191220111833.1422-1-yuzenghui@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 5:10 AM David Laight <David.Laight@aculab.com> wrote:
->
-> From: Brian Gerst
-> > Sent: 20 December 2019 03:48
-> > On Thu, Dec 19, 2019 at 8:50 PM Andy Lutomirski <luto@kernel.org> wrote:
-> > >
-> > > On Thu, Dec 19, 2019 at 3:58 AM Brian Gerst <brgerst@gmail.com> wrote:
-> > > >
-> > > > force_iret() was originally intended to prevent the return to user mode with
-> > > > the SYSRET or SYSEXIT instructions, in cases where the register state could
-> > > > have been changed to be incompatible with those instructions.
-> > >
-> > > It's more than that.  Before the big syscall rework, we didn't restore
-> > > the caller-saved regs.  See:
-> > >
-> > > commit 21d375b6b34ff511a507de27bf316b3dde6938d9
-> > > Author: Andy Lutomirski <luto@kernel.org>
-> > > Date:   Sun Jan 28 10:38:49 2018 -0800
-> > >
-> > >     x86/entry/64: Remove the SYSCALL64 fast path
-> > >
-> > > So if you changed r12, for example, the change would get lost.
-> >
-> > force_iret() specifically dealt with changes to CS, SS and EFLAGS.
-> > Saving and restoring the extra registers was a different problem
-> > although it affected the same functions like ptrace, signals, and
-> > exec.
->
-> Is it ever possible for any of the segment registers to refer to the LDT
-> and for another thread to invalidate the entries 'very late' ?
-> So even though the values were valid when changed, they are
-> invalid during the 'return to user' sequence.
+Hi Zenghui,
 
-Not in the SYSRET case, where the kernel requires that CS and SS are
-static segments in the GDT.  Any userspace context that uses LDT
-segments for CS/SS must return with IRET.  There is fault handling for
-IRET (fixup_bad_iret()) for this case.
+On 12/20/19 12:18 PM, Zenghui Yu wrote:
+> Although guest will hardly read and use the PTZ (Pending Table Zero)
+> bit in GICR_PENDBASER, let us emulate the architecture strictly.
+> As per IHI 0069E 9.11.30, PTZ field is WO, and reads as 0.
+> 
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+> ---
+> 
+> Noticed when checking all fields of GICR_PENDBASER register.
+> But _not_ sure whether it's worth a fix, as Linux never sets
+> the PTZ bit before enabling LPI (set GICR_CTLR_ENABLE_LPIS).
+> 
+> And I wonder under which scenarios can this bit be written as 1.
+> It seems difficult for software to determine whether the pending
+> table contains all zeros when writing this bit.
+> 
+>  virt/kvm/arm/vgic/vgic-mmio-v3.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> index 7dfd15dbb308..ebc218840fc2 100644
+> --- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> +++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> @@ -414,8 +414,11 @@ static unsigned long vgic_mmio_read_pendbase(struct kvm_vcpu *vcpu,
+>  					     gpa_t addr, unsigned int len)
+>  {
+>  	struct vgic_cpu *vgic_cpu = &vcpu->arch.vgic_cpu;
+> +	u64 value = vgic_cpu->pendbaser;
+>  
+> -	return extract_bytes(vgic_cpu->pendbaser, addr & 7, len);
+> +	value &= ~GICR_PENDBASER_PTZ;
+> +
+> +	return extract_bytes(value, addr & 7, len);
+>  }
+>  
+>  static void vgic_mmio_write_pendbase(struct kvm_vcpu *vcpu,
+> 
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-> I remember writing a signal handler that 'corrupted' all the
-> segment registers (etc) and fixing the NetBSD kernel to handle
-> all the faults restoring the segment registers and IRET faulting
-> in kernel (IIRC invalid user %SS or %CS).
-> (IRET can also fault in user space, but that is a normal fault.)
->
-> Is it actually cheaper to properly validate the segment registers,
-> or take the 'hit' of the slightly slower IRET path and get the cpu
-> to do it for you?
+Thanks
 
-SYSRET is faster because it avoids segment table lookups and
-permission checks for CS and SS.  It simply sets the selectors to
-values set in an MSR and the attributes (base, limit, etc.) to fixed
-values.  It is up to the OS to make sure the actual segment
-descriptors in memory match those default attributes.
+Eric
 
---
-Brian Gerst
