@@ -2,94 +2,120 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA8EC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C1AC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31982206D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77262206D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:30:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="AEuugIbB"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AxT8sxi3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbfLTQ0n (ORCPT
+        id S1727411AbfLTQaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 11:26:43 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:35801 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727388AbfLTQ0m (ORCPT
+        Fri, 20 Dec 2019 11:30:24 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:48768 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbfLTQaY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 11:26:42 -0500
-Received: by mail-il1-f195.google.com with SMTP id g12so8454820ild.2
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 08:26:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XckgZbhUqnPG5tRhtRl+VwNraSkfSgZlNelmEK6ect0=;
-        b=AEuugIbB9WF845MSH5WI6aAhvlU0SMwnsAkN5hO2bYAsqNIwrUOXb5eSnBTsDtYftJ
-         jjtpHfTfy7MvgKkeQ+aJ4scdVeZKOb7UNymDQjdYn9K290SGfuYR3Hf4wyqfvUIdpBVy
-         xGnMQHopqgNrfj0GHWMUCmEy4+hBc5m9SBXIQz0b/3v6Hc9f2igwwqhCqPvqdEGD4SgH
-         alwXEnkX19G7hb2LjRi97+NG4ndRVomaLuZpZ6gutg/DTRC6gggGLBEdX+1WG7yh0S29
-         qCQd2aZpQmfwWcgneT49zSCxvqrBpL7IDDube6EDsAzWPfjlLHYrS4fbBvM9Ntabozew
-         0FJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XckgZbhUqnPG5tRhtRl+VwNraSkfSgZlNelmEK6ect0=;
-        b=CGbeV524oLq6QOkc0Jz0neckwb+4amt1ZTq9mhKUTGgtmOR7cwSl/XT/aEqzx+r+Bt
-         pATd/OLd0PW2BRNoPWireoKp9eUM9lhG2WYzbMfIlDVuEgLoCjzgs1HPismtXtJ4C0nC
-         IYiiPmJsjW0ByGkBv2qQAIwxDtlBz2A1S/NdX7ao8Fx68qfEa/vvc+2IrwgcebS/DtZZ
-         ceMF8pNE4vLTdstax8BEwRk3LX20ffE15I2r4+o0I2NylDrpTQn1JlGyREmngXoN5W1I
-         eoTrRH44PkAeIe5qAFp3SAt+lFK8r7v3MemM0WOO70S5k7iLUH59KCsF1E6afauv8zgp
-         n62A==
-X-Gm-Message-State: APjAAAUPKD4DazTxNGFKsRRbcoLdrqfsaME8+01QxNPw/kGde88BfxyL
-        9+pYCoJIZqIcmhzEmIaWxNqYh0Qtvb5UNvrbdDLJJ3yx
-X-Google-Smtp-Source: APXvYqwuLs7NjC3AP9OHJgs9RHyJryAKeItR8Tg55boVjTWuxFzoVgvETeExPk+NFhdbfwfZE34jAox3WSo+hyDsZm8=
-X-Received: by 2002:a92:8d88:: with SMTP id w8mr13316300ill.71.1576859202125;
- Fri, 20 Dec 2019 08:26:42 -0800 (PST)
-MIME-Version: 1.0
-References: <20191220155109.8959-1-jinpuwang@gmail.com> <20191220155109.8959-2-jinpuwang@gmail.com>
-In-Reply-To: <20191220155109.8959-2-jinpuwang@gmail.com>
-From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Date:   Fri, 20 Dec 2019 17:26:31 +0100
-Message-ID: <CAMGffE=GDo8BgKGXpvTHZNOuCXViyfG2QfOzNDpCJR9kjFSnmg@mail.gmail.com>
-Subject: Re: [PATCH v5 01/25] sysfs: export sysfs_remove_file_self()
-To:     Jack Wang <jinpuwang@gmail.com>
-Cc:     linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Danil Kipnis <danil.kipnis@cloud.ionos.com>, rpenyaev@suse.de,
-        Jack Wang <jinpu.wang@cloud.iono.com>,
-        Roman Pen <roman.penyaev@profitbricks.com>,
+        Fri, 20 Dec 2019 11:30:24 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBKGTEW4049185;
+        Fri, 20 Dec 2019 16:30:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=8W2cnKxQ5bWF4ipRvYriBMOXbRYSX9ZJzo29FO6rc+4=;
+ b=AxT8sxi3eMc7BE2ezG0z0NVEHbKsgFPgRjOakkQ86FveHFWOSu7ZRZZLb8YMw2AKQewL
+ 4s809lai90ZraXSCzMli4BVafIvsXOh3G0A0ElrMpPziB8PdHOJeQQ7aWvfp1YTafkEf
+ QkJBGYSRF6xenw1IGo25wUO5wta423VgpdqnPijDZybSBkjnmQwRMgu7E0/raerMdYZo
+ omGDMEWMUk9+w6XNfENK6rKqugzZNLTwYNF5hbkKyJOO83tsdXAaidaR7S1q8xihllSq
+ QlC7sFlCcfRSjaeZFIhXAexxhWvlkwfPA9ra5qClQt9wGb0qfXMUKiPj25vMIiXnsWgn 2g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2x01knsq75-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Dec 2019 16:30:09 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBKGT8wU158468;
+        Fri, 20 Dec 2019 16:30:09 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2x0bgnt4tp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Dec 2019 16:30:09 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBKGU5cC007636;
+        Fri, 20 Dec 2019 16:30:05 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 20 Dec 2019 08:30:04 -0800
+Date:   Fri, 20 Dec 2019 08:30:03 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Chen Wandun <chenwandun@huawei.com>
+Cc:     linux-xfs@vger.kernel.org, bfoster@redhat.com, dchinner@redhat.com,
+        preichl@redhat.com, sandeen@sandeen.net,
         linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH next] xfs: Make the symbol 'xfs_rtalloc_log_count' static
+Message-ID: <20191220163003.GP7489@magnolia>
+References: <20191220095157.42619-1-chenwandun@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191220095157.42619-1-chenwandun@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9477 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912200127
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9477 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912200127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 4:51 PM Jack Wang <jinpuwang@gmail.com> wrote:
->
-> From: Jack Wang <jinpu.wang@cloud.iono.com>
->
-> Function is going to be used in transport over RDMA module
-> in subsequent patches, so export it to GPL modules.
->
-> Signed-off-by: Roman Pen <roman.penyaev@profitbricks.com>
-> Acked-by: Tejun Heo <tj@kernel.org>
-> Cc: linux-kernel@vger.kernel.org
-> [jwang: extend the commit message]
-> Signed-off-by: Jack Wang <jinpu.wang@cloud.iono.com>
-Sorry, I made a mistake, the email address was wrong, should be cloud.ionos.com,
-I've fixed it locally, it will be fixed next round if necessary.
+On Fri, Dec 20, 2019 at 05:51:57PM +0800, Chen Wandun wrote:
+> Fix the following sparse warning:
+> 
+> fs/xfs/libxfs/xfs_trans_resv.c:206:1: warning: symbol 'xfs_rtalloc_log_count' was not declared. Should it be static?
+> 
+> Fixes: b1de6fc7520f ("xfs: fix log reservation overflows when allocating large rt extents")
+> Signed-off-by: Chen Wandun <chenwandun@huawei.com>
 
-Regards,
-Jack Wang
+Urk, oops, good catch!
+
+Especially since the for-next announcement message got totally eaten by
+$employer MTA or something. :/
+
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+
+--D
+
+> ---
+>  fs/xfs/libxfs/xfs_trans_resv.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_trans_resv.c b/fs/xfs/libxfs/xfs_trans_resv.c
+> index 824073a839ac..7a9c04920505 100644
+> --- a/fs/xfs/libxfs/xfs_trans_resv.c
+> +++ b/fs/xfs/libxfs/xfs_trans_resv.c
+> @@ -202,7 +202,7 @@ xfs_calc_inode_chunk_res(
+>   * blocks as needed to mark inuse MAXEXTLEN blocks' worth of realtime extents,
+>   * as well as the realtime summary block.
+>   */
+> -unsigned int
+> +static unsigned int
+>  xfs_rtalloc_log_count(
+>  	struct xfs_mount	*mp,
+>  	unsigned int		num_ops)
+> -- 
+> 2.17.1
+> 
