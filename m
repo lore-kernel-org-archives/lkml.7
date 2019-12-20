@@ -2,98 +2,447 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C598C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC9DC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2642D2467F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 293B52467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:11:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IXrVnnTF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbfLTKKQ (ORCPT
+        id S1727345AbfLTKLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 05:10:16 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:58149 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726210AbfLTKKP (ORCPT
+        Fri, 20 Dec 2019 05:11:12 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:49076 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727129AbfLTKLL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 05:10:15 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-133-yPtZzMMDPiugfTa6rRJszw-1; Fri, 20 Dec 2019 10:10:11 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 20 Dec 2019 10:10:10 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 20 Dec 2019 10:10:10 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Brian Gerst' <brgerst@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>
-CC:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Oleg Nesterov <oleg@redhat.com>
-Subject: RE: [PATCH] x86: Remove force_iret()
-Thread-Topic: [PATCH] x86: Remove force_iret()
-Thread-Index: AQHVtuhWtS7aVpT6VkyrDyqz06b2R6fCyteg
-Date:   Fri, 20 Dec 2019 10:10:10 +0000
-Message-ID: <431a146f6461402da61d09fff155f35b@AcuMS.aculab.com>
-References: <20191219115812.102620-1-brgerst@gmail.com>
- <CALCETrW1zE0Uufrg_UG4JNQKMy3UFxnd+XmZye2gdTV36C-yTw@mail.gmail.com>
- <CAMzpN2if2m4McWpL49U4QAEM1MJ+qgTe-emN8vKcjVc1H+84vA@mail.gmail.com>
-In-Reply-To: <CAMzpN2if2m4McWpL49U4QAEM1MJ+qgTe-emN8vKcjVc1H+84vA@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Fri, 20 Dec 2019 05:11:11 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576836670; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=fJjQDBOVdREkukt2JdGRiwD2zFis/+LRqv1PRRBxv6M=;
+ b=IXrVnnTF5OGieMdvwRZbTGN2a6X8FaE4TYUE0uygki2t6e52rMk6douxTPeUIHrxTut0Das9
+ 7F8fZ8m8YsSUX6aupMqTq3IVRrqzPTkBplk+wdXc1ghKS9Fv/wOLH89Q3mPwWxXk7uPPYfMJ
+ mxLJy9wPlsHnyCOXpWdnR67XdA8=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5dfc9e36.7f39eed20a08-smtp-out-n03;
+ Fri, 20 Dec 2019 10:11:02 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B7988C4479C; Fri, 20 Dec 2019 10:11:01 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: smasetty)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F0310C433CB;
+        Fri, 20 Dec 2019 10:10:59 +0000 (UTC)
 MIME-Version: 1.0
-X-MC-Unique: yPtZzMMDPiugfTa6rRJszw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 20 Dec 2019 15:40:59 +0530
+From:   smasetty@codeaurora.org
+To:     Sharat Masetty <smasetty@codeaurora.org>
+Cc:     freedreno@lists.freedesktop.org, dri-devel@freedesktop.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, robin.murphy@arm.com, joro@8bytes.org,
+        iommu@lists.linux-foundation.org, saiprakash.ranjan@codeaurora.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH 5/5] drm/msm/a6xx: Add support for using system cache(LLC)
+In-Reply-To: <20191219195814.GA23673@jcrouse1-lnx.qualcomm.com>
+References: <1576761286-20451-1-git-send-email-smasetty@codeaurora.org>
+ <1576761286-20451-6-git-send-email-smasetty@codeaurora.org>
+ <20191219195814.GA23673@jcrouse1-lnx.qualcomm.com>
+Message-ID: <9c32a63c7300cb68e459f58a1b6fe3f8@codeaurora.org>
+X-Sender: smasetty@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQnJpYW4gR2Vyc3QNCj4gU2VudDogMjAgRGVjZW1iZXIgMjAxOSAwMzo0OA0KPiBPbiBU
-aHUsIERlYyAxOSwgMjAxOSBhdCA4OjUwIFBNIEFuZHkgTHV0b21pcnNraSA8bHV0b0BrZXJuZWwu
-b3JnPiB3cm90ZToNCj4gPg0KPiA+IE9uIFRodSwgRGVjIDE5LCAyMDE5IGF0IDM6NTggQU0gQnJp
-YW4gR2Vyc3QgPGJyZ2Vyc3RAZ21haWwuY29tPiB3cm90ZToNCj4gPiA+DQo+ID4gPiBmb3JjZV9p
-cmV0KCkgd2FzIG9yaWdpbmFsbHkgaW50ZW5kZWQgdG8gcHJldmVudCB0aGUgcmV0dXJuIHRvIHVz
-ZXIgbW9kZSB3aXRoDQo+ID4gPiB0aGUgU1lTUkVUIG9yIFNZU0VYSVQgaW5zdHJ1Y3Rpb25zLCBp
-biBjYXNlcyB3aGVyZSB0aGUgcmVnaXN0ZXIgc3RhdGUgY291bGQNCj4gPiA+IGhhdmUgYmVlbiBj
-aGFuZ2VkIHRvIGJlIGluY29tcGF0aWJsZSB3aXRoIHRob3NlIGluc3RydWN0aW9ucy4NCj4gPg0K
-PiA+IEl0J3MgbW9yZSB0aGFuIHRoYXQuICBCZWZvcmUgdGhlIGJpZyBzeXNjYWxsIHJld29yaywg
-d2UgZGlkbid0IHJlc3RvcmUNCj4gPiB0aGUgY2FsbGVyLXNhdmVkIHJlZ3MuICBTZWU6DQo+ID4N
-Cj4gPiBjb21taXQgMjFkMzc1YjZiMzRmZjUxMWE1MDdkZTI3YmYzMTZiM2RkZTY5MzhkOQ0KPiA+
-IEF1dGhvcjogQW5keSBMdXRvbWlyc2tpIDxsdXRvQGtlcm5lbC5vcmc+DQo+ID4gRGF0ZTogICBT
-dW4gSmFuIDI4IDEwOjM4OjQ5IDIwMTggLTA4MDANCj4gPg0KPiA+ICAgICB4ODYvZW50cnkvNjQ6
-IFJlbW92ZSB0aGUgU1lTQ0FMTDY0IGZhc3QgcGF0aA0KPiA+DQo+ID4gU28gaWYgeW91IGNoYW5n
-ZWQgcjEyLCBmb3IgZXhhbXBsZSwgdGhlIGNoYW5nZSB3b3VsZCBnZXQgbG9zdC4NCj4gDQo+IGZv
-cmNlX2lyZXQoKSBzcGVjaWZpY2FsbHkgZGVhbHQgd2l0aCBjaGFuZ2VzIHRvIENTLCBTUyBhbmQg
-RUZMQUdTLg0KPiBTYXZpbmcgYW5kIHJlc3RvcmluZyB0aGUgZXh0cmEgcmVnaXN0ZXJzIHdhcyBh
-IGRpZmZlcmVudCBwcm9ibGVtDQo+IGFsdGhvdWdoIGl0IGFmZmVjdGVkIHRoZSBzYW1lIGZ1bmN0
-aW9ucyBsaWtlIHB0cmFjZSwgc2lnbmFscywgYW5kDQo+IGV4ZWMuDQoNCklzIGl0IGV2ZXIgcG9z
-c2libGUgZm9yIGFueSBvZiB0aGUgc2VnbWVudCByZWdpc3RlcnMgdG8gcmVmZXIgdG8gdGhlIExE
-VA0KYW5kIGZvciBhbm90aGVyIHRocmVhZCB0byBpbnZhbGlkYXRlIHRoZSBlbnRyaWVzICd2ZXJ5
-IGxhdGUnID8NCg0KU28gZXZlbiB0aG91Z2ggdGhlIHZhbHVlcyB3ZXJlIHZhbGlkIHdoZW4gY2hh
-bmdlZCwgdGhleSBhcmUNCmludmFsaWQgZHVyaW5nIHRoZSAncmV0dXJuIHRvIHVzZXInIHNlcXVl
-bmNlLg0KDQpJIHJlbWVtYmVyIHdyaXRpbmcgYSBzaWduYWwgaGFuZGxlciB0aGF0ICdjb3JydXB0
-ZWQnIGFsbCB0aGUNCnNlZ21lbnQgcmVnaXN0ZXJzIChldGMpIGFuZCBmaXhpbmcgdGhlIE5ldEJT
-RCBrZXJuZWwgdG8gaGFuZGxlDQphbGwgdGhlIGZhdWx0cyByZXN0b3JpbmcgdGhlIHNlZ21lbnQg
-cmVnaXN0ZXJzIGFuZCBJUkVUIGZhdWx0aW5nDQppbiBrZXJuZWwgKElJUkMgaW52YWxpZCB1c2Vy
-ICVTUyBvciAlQ1MpLg0KKElSRVQgY2FuIGFsc28gZmF1bHQgaW4gdXNlciBzcGFjZSwgYnV0IHRo
-YXQgaXMgYSBub3JtYWwgZmF1bHQuKQ0KDQpJcyBpdCBhY3R1YWxseSBjaGVhcGVyIHRvIHByb3Bl
-cmx5IHZhbGlkYXRlIHRoZSBzZWdtZW50IHJlZ2lzdGVycywNCm9yIHRha2UgdGhlICdoaXQnIG9m
-IHRoZSBzbGlnaHRseSBzbG93ZXIgSVJFVCBwYXRoIGFuZCBnZXQgdGhlIGNwdQ0KdG8gZG8gaXQg
-Zm9yIHlvdT8NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJh
-bWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0
-cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+On 2019-12-20 01:28, Jordan Crouse wrote:
+> On Thu, Dec 19, 2019 at 06:44:46PM +0530, Sharat Masetty wrote:
+>> The last level system cache can be partitioned to 32 different slices
+>> of which GPU has two slices preallocated. One slice is used for 
+>> caching GPU
+>> buffers and the other slice is used for caching the GPU SMMU 
+>> pagetables.
+>> This patch talks to the core system cache driver to acquire the slice 
+>> handles,
+>> configure the SCID's to those slices and activates and deactivates the 
+>> slices
+>> upon GPU power collapse and restore.
+>> 
+>> Some support from the IOMMU driver is also needed to make use of the
+>> system cache. IOMMU_QCOM_SYS_CACHE is a buffer protection flag which 
+>> enables
+>> caching GPU data buffers in the system cache with memory attributes 
+>> such
+>> as outer cacheable, read-allocate, write-allocate for buffers. The GPU
+>> then has the ability to override a few cacheability parameters which 
+>> it
+>> does to override write-allocate to write-no-allocate as the GPU 
+>> hardware
+>> does not benefit much from it.
+>> 
+>> Similarly DOMAIN_ATTR_QCOM_SYS_CACHE is another domain level attribute
+>> used by the IOMMU driver to set the right attributes to cache the 
+>> hardware
+>> pagetables into the system cache.
+>> 
+>> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+>> ---
+>>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 122 
+>> +++++++++++++++++++++++++++++++++-
+>>  drivers/gpu/drm/msm/adreno/a6xx_gpu.h |   9 +++
+>>  drivers/gpu/drm/msm/msm_iommu.c       |  13 ++++
+>>  drivers/gpu/drm/msm/msm_mmu.h         |   3 +
+>>  4 files changed, 146 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c 
+>> b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+>> index faff6ff..0c7fdee 100644
+>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+>> @@ -9,6 +9,7 @@
+>>  #include "a6xx_gmu.xml.h"
+>> 
+>>  #include <linux/devfreq.h>
+>> +#include <linux/soc/qcom/llcc-qcom.h>
+>> 
+>>  #define GPU_PAS_ID 13
+>> 
+>> @@ -781,6 +782,117 @@ static void 
+>> a6xx_bus_clear_pending_transactions(struct adreno_gpu *adreno_gpu)
+>>  	gpu_write(gpu, REG_A6XX_GBIF_HALT, 0x0);
+>>  }
+>> 
+>> +#define A6XX_LLC_NUM_GPU_SCIDS		5
+>> +#define A6XX_GPU_LLC_SCID_NUM_BITS	5
+> 
+> As I mention below, I'm not sure if we need these
+> 
+>> +#define A6XX_GPU_LLC_SCID_MASK \
+>> +	((1 << (A6XX_LLC_NUM_GPU_SCIDS * A6XX_GPU_LLC_SCID_NUM_BITS)) - 1)
+>> +
+>> +#define A6XX_GPUHTW_LLC_SCID_SHIFT	25
+>> +#define A6XX_GPUHTW_LLC_SCID_MASK \
+>> +	(((1 << A6XX_GPU_LLC_SCID_NUM_BITS) - 1) << 
+>> A6XX_GPUHTW_LLC_SCID_SHIFT)
+>> +
+> 
+> Normally these go into the envytools regmap but if we're going to do 
+> these guys
+> lets use the power of <linux/bitfield.h> for good.
+> 
+> #define A6XX_GPU_LLC_SCID GENMASK(24, 0)
+> #define A6XX_GPUHTW_LLC_SCID GENMASK(29, 25)
+> 
+>> +static inline void a6xx_gpu_cx_rmw(struct a6xx_llc *llc,
+> 
+> Don't mark C functions as inline - let the compiler figure it out for 
+> you.
+> 
+>> +	u32 reg, u32 mask, u32 or)
+>> +{
+>> +	msm_rmw(llc->mmio + (reg << 2), mask, or);
+>> +}
+>> +
+>> +static void a6xx_llc_deactivate(struct a6xx_llc *llc)
+>> +{
+>> +	llcc_slice_deactivate(llc->gpu_llc_slice);
+>> +	llcc_slice_deactivate(llc->gpuhtw_llc_slice);
+>> +}
+>> +
+>> +static void a6xx_llc_activate(struct a6xx_llc *llc)
+>> +{
+>> +	if (!llc->mmio)
+>> +		return;
+>> +
+>> +	/* Program the sub-cache ID for all GPU blocks */
+>> +	if (!llcc_slice_activate(llc->gpu_llc_slice))
+>> +		a6xx_gpu_cx_rmw(llc,
+>> +				REG_A6XX_CX_MISC_SYSTEM_CACHE_CNTL_1,
+>> +				A6XX_GPU_LLC_SCID_MASK,
+>> +				(llc->cntl1_regval &
+>> +				 A6XX_GPU_LLC_SCID_MASK));
+> 
+> This is out of order with the comments below, but if we store the slice 
+> id then
+> you could calculate regval here and not have to store it.
+> 
+>> +
+>> +	/* Program the sub-cache ID for the GPU pagetables */
+>> +	if (!llcc_slice_activate(llc->gpuhtw_llc_slice))
+> 
+> val |= FIELD_SET(A6XX_GPUHTW_LLC_SCID, htw_llc_sliceid);
+> 
+>> +		a6xx_gpu_cx_rmw(llc,
+>> +				REG_A6XX_CX_MISC_SYSTEM_CACHE_CNTL_1,
+>> +				A6XX_GPUHTW_LLC_SCID_MASK,
+>> +				(llc->cntl1_regval &
+>> +				 A6XX_GPUHTW_LLC_SCID_MASK));
+> 
+> And this could be FIELD_SET(A6XX_GPUHTW_LLC_SCID, sliceid);
+> 
+> In theory you could just calculate the u32 and write it directly 
+> without a rmw.
+> In fact, that might be preferable - if the slice activate failed, you 
+> don't want
+> to run the risk that the scid for htw is still populated.
+> 
+>> +
+>> +	/* Program cacheability overrides */
+>> +	a6xx_gpu_cx_rmw(llc, REG_A6XX_CX_MISC_SYSTEM_CACHE_CNTL_0, 0xF,
+>> +		llc->cntl0_regval);
+> 
+> As below, this could easily be a constant.
+> 
+>> +}
+>> +
+>> +static void a6xx_llc_slices_destroy(struct a6xx_llc *llc)
+>> +{
+>> +	if (llc->mmio)
+>> +		iounmap(llc->mmio);
+> 
+> msm_ioremap returns a devm_ managed resource, so do not use iounmap() 
+> to free
+> it. Bets to just leave it and let the gpu device handle it when it goes 
+> boom.
+> 
+>> +
+>> +	llcc_slice_putd(llc->gpu_llc_slice);
+>> +	llcc_slice_putd(llc->gpuhtw_llc_slice);
+>> +}
+>> +
+>> +static int a6xx_llc_slices_init(struct platform_device *pdev,
+> T
+> This can be void, I don't think we care if it passes or fails.
+> 
+>> +		struct a6xx_llc *llc)
+>> +{
+>> +	llc->mmio = msm_ioremap(pdev, "cx_mem", "gpu_cx");
+>> +	if (IS_ERR_OR_NULL(llc->mmio))
+> 
+> msm_ioremap can not return NULL.
+> 
+>> +		return -ENODEV;
+>> +
+>> +	llc->gpu_llc_slice = llcc_slice_getd(LLCC_GPU);
+>> +	llc->gpuhtw_llc_slice = llcc_slice_getd(LLCC_GPUHTW);
+>> +	if (IS_ERR(llc->gpu_llc_slice) && IS_ERR(llc->gpuhtw_llc_slice))
+>> +		return -ENODEV;
+>> +
+>> +	/*
+>> +	 * CNTL0 provides options to override the settings for the
+>> +	 * read and write allocation policies for the LLC. These
+>> +	 * overrides are global for all memory transactions from
+>> +	 * the GPU.
+>> +	 *
+>> +	 * 0x3: read-no-alloc-overridden = 0
+>> +	 *      read-no-alloc = 0 - Allocate lines on read miss
+>> +	 *      write-no-alloc-overridden = 1
+>> +	 *      write-no-alloc = 1 - Do not allocates lines on write miss
+>> +	 */
+>> +	llc->cntl0_regval = 0x03;
+> 
+> This is a fixed value isn't it?  We should be able to get away with 
+> writing a
+> constant.
+> 
+>> +
+>> +	/*
+>> +	 * CNTL1 is used to specify SCID for (CP, TP, VFD, CCU and UBWC
+>> +	 * FLAG cache) GPU blocks. This value will be passed along with
+>> +	 * the address for any memory transaction from GPU to identify
+>> +	 * the sub-cache for that transaction.
+>> +	 */
+>> +	if (!IS_ERR(llc->gpu_llc_slice)) {
+>> +		u32 gpu_scid = llcc_get_slice_id(llc->gpu_llc_slice);
+>> +		int i;
+>> +
+>> +		for (i = 0; i < A6XX_LLC_NUM_GPU_SCIDS; i++)
+>> +			llc->cntl1_regval |=
+>> +				gpu_scid << (A6XX_GPU_LLC_SCID_NUM_BITS * i);
+> 
+> As above, i'm not sure a loop is better than just:
+> 
+> gpu_scid &= 0x1f;
+> 
+> llc->cntl1_regval = (gpu_scid << 0) || (gpu_scid << 5) | (gpu_scid << 
+> 10)
+>  | (gpu_scid << 15) | (gpu_scid << 20);
+> 
+> And I'm not even sure we need do this math here in the first place.
+> 
+>> +	}
+>> +
+>> +	/*
+>> +	 * Set SCID for GPU IOMMU. This will be used to access
+>> +	 * page tables that are cached in LLC.
+>> +	 */
+>> +	if (!IS_ERR(llc->gpuhtw_llc_slice)) {
+>> +		u32 gpuhtw_scid = llcc_get_slice_id(llc->gpuhtw_llc_slice);
+>> +
+>> +		llc->cntl1_regval |=
+>> +			gpuhtw_scid << A6XX_GPUHTW_LLC_SCID_SHIFT;
+>> +	}
+> 
+> As above, I think storing the slice id could be more beneficial than 
+> calculating
+> a value, but if we do calculate a value, use 
+> FIELD_SET(A6XX_GPUHTW_LLC_SCID, )
+> 
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static int a6xx_pm_resume(struct msm_gpu *gpu)
+>>  {
+>>  	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
+>> @@ -795,6 +907,8 @@ static int a6xx_pm_resume(struct msm_gpu *gpu)
+>> 
+>>  	msm_gpu_resume_devfreq(gpu);
+>> 
+>> +	a6xx_llc_activate(&a6xx_gpu->llc);
+>> +
+>>  	return 0;
+>>  }
+>> 
+>> @@ -803,6 +917,8 @@ static int a6xx_pm_suspend(struct msm_gpu *gpu)
+>>  	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
+>>  	struct a6xx_gpu *a6xx_gpu = to_a6xx_gpu(adreno_gpu);
+>> 
+>> +	a6xx_llc_deactivate(&a6xx_gpu->llc);
+>> +
+>>  	devfreq_suspend_device(gpu->devfreq.devfreq);
+>> 
+>>  	/*
+>> @@ -851,6 +967,7 @@ static void a6xx_destroy(struct msm_gpu *gpu)
+>>  		drm_gem_object_put_unlocked(a6xx_gpu->sqe_bo);
+>>  	}
+>> 
+>> +	a6xx_llc_slices_destroy(&a6xx_gpu->llc);
+>>  	a6xx_gmu_remove(a6xx_gpu);
+>> 
+>>  	adreno_gpu_cleanup(adreno_gpu);
+>> @@ -924,7 +1041,10 @@ struct msm_gpu *a6xx_gpu_init(struct drm_device 
+>> *dev)
+>>  	adreno_gpu->registers = NULL;
+>>  	adreno_gpu->reg_offsets = a6xx_register_offsets;
+>> 
+>> -	ret = adreno_gpu_init(dev, pdev, adreno_gpu, &funcs, 1, 0);
+>> +	ret = a6xx_llc_slices_init(pdev, &a6xx_gpu->llc);
+>> +
+> 
+> Confirming we don't care if a6xx_llc_slices_init passes or fails.
 
+Are you suggesting to unconditionally set the memory attributes in 
+iommu(see the code below in msm_iommu.c).
+We probably wouldn't need this patch too in that case: 
+https://patchwork.freedesktop.org/patch/346097/
+
+The return code  is used in the line below to pass 
+MMU_FEATURE_USE_SYSTEM_CACHE. Am I missing something here?
+
+> 
+>> +	ret = adreno_gpu_init(dev, pdev, adreno_gpu, &funcs, 1,
+>> +			ret ? 0 : MMU_FEATURE_USE_SYSTEM_CACHE);
+>>  	if (ret) {
+>>  		a6xx_destroy(&(a6xx_gpu->base.base));
+>>  		return ERR_PTR(ret);
+>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h 
+>> b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
+>> index 7239b8b..09b9ad0 100644
+>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
+>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
+>> @@ -12,6 +12,14 @@
+>> 
+>>  extern bool hang_debug;
+>> 
+>> +struct a6xx_llc {
+>> +	void __iomem *mmio;
+>> +	void *gpu_llc_slice;
+>> +	void *gpuhtw_llc_slice;
+>> +	u32 cntl0_regval;
+> 
+> As above, I'm not sure if cntl0 is needed.  Heck, I'm not even sure 
+> cntl1 is
+> needed - since we could store or query the ids at activate time.
+> 
+>> +	u32 cntl1_regval;
+>> +};
+>> +
+>>  struct a6xx_gpu {
+>>  	struct adreno_gpu base;
+>> 
+>> @@ -21,6 +29,7 @@ struct a6xx_gpu {
+>>  	struct msm_ringbuffer *cur_ring;
+>> 
+>>  	struct a6xx_gmu gmu;
+>> +	struct a6xx_llc llc;
+>>  };
+>> 
+>>  #define to_a6xx_gpu(x) container_of(x, struct a6xx_gpu, base)
+>> diff --git a/drivers/gpu/drm/msm/msm_iommu.c 
+>> b/drivers/gpu/drm/msm/msm_iommu.c
+>> index 8c95c31..4699367 100644
+>> --- a/drivers/gpu/drm/msm/msm_iommu.c
+>> +++ b/drivers/gpu/drm/msm/msm_iommu.c
+>> @@ -27,6 +27,16 @@ static int msm_iommu_attach(struct msm_mmu *mmu, 
+>> const char * const *names,
+>>  			    int cnt)
+>>  {
+>>  	struct msm_iommu *iommu = to_msm_iommu(mmu);
+>> +	int gpu_htw_llc = 1;
+>> +
+>> +	/*
+>> +	 * This allows GPU to set the bus attributes required
+>> +	 * to use system cache on behalf of the iommu page table
+>> +	 * walker.
+>> +	 */
+>> +	if (msm_mmu_has_feature(mmu, MMU_FEATURE_USE_SYSTEM_CACHE))
+>> +		iommu_domain_set_attr(iommu->domain,
+>> +				DOMAIN_ATTR_QCOM_SYS_CACHE, &gpu_htw_llc);
+> 
+> We're all okay if this fails?  No harm no foul?
+> 
+>> 
+>>  	return iommu_attach_device(iommu->domain, mmu->dev);
+>>  }
+>> @@ -45,6 +55,9 @@ static int msm_iommu_map(struct msm_mmu *mmu, 
+>> uint64_t iova,
+>>  	struct msm_iommu *iommu = to_msm_iommu(mmu);
+>>  	size_t ret;
+>> 
+>> +	if (msm_mmu_has_feature(mmu, MMU_FEATURE_USE_SYSTEM_CACHE))
+>> +		prot |= IOMMU_QCOM_SYS_CACHE;
+>> +
+>>  	ret = iommu_map_sg(iommu->domain, iova, sgt->sgl, sgt->nents, prot);
+>>  	WARN_ON(!ret);
+>> 
+>> diff --git a/drivers/gpu/drm/msm/msm_mmu.h 
+>> b/drivers/gpu/drm/msm/msm_mmu.h
+>> index 1e4ac36d..3e6bdad 100644
+>> --- a/drivers/gpu/drm/msm/msm_mmu.h
+>> +++ b/drivers/gpu/drm/msm/msm_mmu.h
+>> @@ -18,6 +18,9 @@ struct msm_mmu_funcs {
+>>  	void (*destroy)(struct msm_mmu *mmu);
+>>  };
+>> 
+>> +/* MMU features */
+>> +#define MMU_FEATURE_USE_SYSTEM_CACHE (1 << 0)
+>> +
+>>  struct msm_mmu {
+>>  	const struct msm_mmu_funcs *funcs;
+>>  	struct device *dev;
+>> --
+>> 1.9.1
+>> 
