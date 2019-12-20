@@ -2,87 +2,103 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C81C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61191C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED55A2072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C21C2068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:08:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576865305;
+	bh=+XL7ZInXX1HHmOCI5izumvXTe4GPIdZh/XmifK4Czh4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=q0mlb1Wg+GnGOs1N0TGwEbsFxDsX0Cb1wtVO5c/45CwCegQF9xBigm8pXKsG0kbk0
+	 HBsdKEw3q1YjPJS9RKFT8p6kNL/gAX72nTl6S3rQ6W5r4gs99nS+Q91fqQ6S9aE2R8
+	 1M3v1SDFj319UU+gsiJf7f6V58TnikOWujcKv5JU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727523AbfLTSIU (ORCPT
+        id S1727539AbfLTSIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 13:08:20 -0500
-Received: from foss.arm.com ([217.140.110.172]:53888 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727390AbfLTSIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 13:08:19 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C1D5D1FB;
-        Fri, 20 Dec 2019 10:08:18 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8DC363F67D;
-        Fri, 20 Dec 2019 10:08:17 -0800 (PST)
-Date:   Fri, 20 Dec 2019 18:08:15 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 11/18] KVM: arm64: don't trap Statistical Profiling
- controls to EL2
-Message-ID: <20191220180815.GE25258@lakrids.cambridge.arm.com>
-References: <20191220143025.33853-1-andrew.murray@arm.com>
- <20191220143025.33853-12-andrew.murray@arm.com>
+        Fri, 20 Dec 2019 13:08:24 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35181 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727390AbfLTSIX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 13:08:23 -0500
+Received: by mail-lf1-f66.google.com with SMTP id 15so7732379lfr.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 10:08:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DXVFal7Vfx9p/0v6Lfo4AszqTDh48OL14YxtwAoozRw=;
+        b=S8tRDL7EKj2cfmNGSzq9/Y7J88woUCjBT1gnU/MsJm+oNAd2FtQMXWc8JR9T4yMk6Z
+         W/xJKyur9rwEu0sOZYuzVaJXfvy7UqJxeCkSdc9eWrH/bJ+gd7vrM+qCYygBZmCZWcfC
+         QiCG2fO9+1AooB6euumc03SFYpbbHQeUB6w1I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DXVFal7Vfx9p/0v6Lfo4AszqTDh48OL14YxtwAoozRw=;
+        b=aHB+D+5AvZKyiyE00iI/AuNQG/0LYNzr+bwvSIn/3+uNE3H/HLDqLULWnABBMnk7+k
+         zXLUByqBjPW3/x2U8BO2Ak/ModawpSyPDKwXPBkLcy+zuzFBl9e38PDmoF3HO+8UWUza
+         8Cnx6U0faLCFvqpjo9tnkSGPyCyEjV2XtU4xnFscexaQynGculoJokagUIEOhnZpJZt/
+         kRDHjTt5+BYvVQte/VJ5GeVX+tBKQ5ins2YGrpbdli2lorFD/yYlOI6KI1O/jkPZBk/X
+         ouzeEenZBJStub+nNRLBWCyjOY/XcXAdP/AxaR9eqm2RL/mYFMKzvZmDCufIg99fYj1u
+         yyvg==
+X-Gm-Message-State: APjAAAW14xCMa3gU8GpicCDJose0zx648m5hQCirqgdeglgo7fh92KB+
+        UMcfkqgKNMAGllw9Nkl5+2/0IEiP8rQ=
+X-Google-Smtp-Source: APXvYqyzxVTvpngDk9afBR3yvHnT4ilV3q1VDLvAuUQd62net1rXyQnw8ekzeOzjr4niNwP71UHQ/g==
+X-Received: by 2002:ac2:52a3:: with SMTP id r3mr9893826lfm.189.1576865300770;
+        Fri, 20 Dec 2019 10:08:20 -0800 (PST)
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
+        by smtp.gmail.com with ESMTPSA id i197sm4429198lfi.56.2019.12.20.10.08.19
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Dec 2019 10:08:19 -0800 (PST)
+Received: by mail-lj1-f170.google.com with SMTP id j1so3533226lja.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 10:08:19 -0800 (PST)
+X-Received: by 2002:a05:651c:239:: with SMTP id z25mr10813815ljn.48.1576865299304;
+ Fri, 20 Dec 2019 10:08:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191220143025.33853-12-andrew.murray@arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+References: <20191220070747.GA2190169@kroah.com>
+In-Reply-To: <20191220070747.GA2190169@kroah.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 20 Dec 2019 10:08:03 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whcLH7EXVZbD0g1Bw7McrofQ-7vwiL2GAeMn=z9PP4VEQ@mail.gmail.com>
+Message-ID: <CAHk-=whcLH7EXVZbD0g1Bw7McrofQ-7vwiL2GAeMn=z9PP4VEQ@mail.gmail.com>
+Subject: Re: [GIT PULL] TTY/Serial driver fixes for 5.5-rc3
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc:     Jiri Slaby <jslaby@suse.cz>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 02:30:18PM +0000, Andrew Murray wrote:
-> As we now save/restore the profiler state there is no need to trap
-> accesses to the statistical profiling controls. Let's unset the
-> _TPMS bit.
-> 
-> Signed-off-by: Andrew Murray <andrew.murray@arm.com>
-> ---
->  arch/arm64/kvm/debug.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
-> index 43487f035385..07ca783e7d9e 100644
-> --- a/arch/arm64/kvm/debug.c
-> +++ b/arch/arm64/kvm/debug.c
-> @@ -88,7 +88,6 @@ void kvm_arm_reset_debug_ptr(struct kvm_vcpu *vcpu)
->   *  - Performance monitors (MDCR_EL2_TPM/MDCR_EL2_TPMCR)
->   *  - Debug ROM Address (MDCR_EL2_TDRA)
->   *  - OS related registers (MDCR_EL2_TDOSA)
-> - *  - Statistical profiler (MDCR_EL2_TPMS/MDCR_EL2_E2PB)
->   *
->   * Additionally, KVM only traps guest accesses to the debug registers if
->   * the guest is not actively using them (see the KVM_ARM64_DEBUG_DIRTY
-> @@ -111,7 +110,6 @@ void kvm_arm_setup_debug(struct kvm_vcpu *vcpu)
->  	 */
->  	vcpu->arch.mdcr_el2 = __this_cpu_read(mdcr_el2) & MDCR_EL2_HPMN_MASK;
->  	vcpu->arch.mdcr_el2 |= (MDCR_EL2_TPM |
-> -				MDCR_EL2_TPMS |
->  				MDCR_EL2_TPMCR |
->  				MDCR_EL2_TDRA |
->  				MDCR_EL2_TDOSA);
+On Thu, Dec 19, 2019 at 11:07 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> The last tty core fix should resolve a long-standing bug with a race
+> at port creation time that some people would see, and Sudip finally
+> tracked down.
 
-I think that this should be conditional on some vcpu feature flag.
+Hmm, looks good. But it makes me wonder if we should now try to remove
+the second call to tty_port_link_device()?
 
-If nothing else, this could break existing migration cases otherwise.
+Now we have a number of helpers that do that tty_port_link_device()
+call for the driver (eg tty_port_register_device_attr_serdev(),
+tty_port_register_device_attr(), and the just added
+uart_add_one_port()).
 
-Thanks,
-Mark.
+But we also have drivers doing it by hand, and presumably we now have
+drivers that do it through multiple paths? I guess it's harmless, but
+it feels a bit odd. No?
+
+            Linus
