@@ -2,116 +2,96 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 981D4C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C067AC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63A0B2467F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9073324676
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:15:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TCGsuxyN"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="NNy98T7d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727174AbfLTAON (ORCPT
+        id S1727188AbfLTAPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 19:14:13 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38027 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726992AbfLTAON (ORCPT
+        Thu, 19 Dec 2019 19:15:40 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36123 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726952AbfLTAPk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 19:14:13 -0500
-Received: by mail-io1-f67.google.com with SMTP id v3so7657607ioj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 16:14:12 -0800 (PST)
+        Thu, 19 Dec 2019 19:15:40 -0500
+Received: by mail-pf1-f195.google.com with SMTP id x184so4219020pfb.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 16:15:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DSBzbWB7QqhpPeTI1Nu3CdSKSF5DFJ1xy+2l/2BwbzI=;
-        b=TCGsuxyN57BiemwmY4L0TI6RbOFu/6NkPfJZhjiD1hszmXXVHzuglib54KMoo1cm6c
-         IqJ8GX4xvmwU9uDTh2uZQ5JqrEU5nQPG7A3m6CocVr3rTBosFPQ7hyXRLG5y0cuZQFAP
-         p9aTUQkl8Knj7CQxm0l+3K5N0rw/oA8ewX/3o=
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=Xza35VKEvSvjMP8PzRVZ35j7UizUwWQ11TtoEWfsA3Q=;
+        b=NNy98T7dz4IUNnNLaJQft6RAEhtwCcTFXv02GozymvM1Ea1jNkJFQv2PQ+QRRXSLFk
+         Mk5zTLKbBusvQPv+bg/u7qv8XzRqAPNTtdH+4maUWOK8PwJVrv6imA3+TuoGotcjr/rq
+         WeaXXWd19uZ6bdYkMrnQAJmo+Q55zv1IfdYygUO/CGVTxuS5zngvmsySsLuWoGoKa2zG
+         PxqsjNI4ya8KxN5qjphBTmkxJTPQoMpLZ6fLFikgoG2+MMx6ywYVBEYidrg7wqU/s40N
+         8g6m8CfYBp5/K3xC38QRkgsNQ2VUJEBe9gbcJJnF5RGAFwvBjneY+pxLSV0c3juCFZnW
+         T5JQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DSBzbWB7QqhpPeTI1Nu3CdSKSF5DFJ1xy+2l/2BwbzI=;
-        b=MEW41e8xIztbouHl0UMhxQsj+lxt+E16caDXiJd0JFcXpTeKcxnEwH9VGH4TEV8PO+
-         WsiH3j4B12DbefOsHFE0w8B87EJ9vftwwLGBOP9V3f2IVVxHG6dmuxZUXTPDv+HMYH48
-         OKjgTw1QkG3NCYEgIk6OBIItC/+FWsPPwSuTc+19HFPcyfswFg96sWqkiYfOG7mrBGz4
-         vRaXylbEVPacOlJobtkQhwmA4EWfd/MuIN7ALOenggIfM8M8FwFX+iy7ahA9ef7jeQBE
-         nXWaGLAH5QM49kAcrprVocRs7F6FmlXPKDvJESq7nJ7x/EYA/HZQhK8QX8SOlg1QcRzh
-         GI1A==
-X-Gm-Message-State: APjAAAVtqK/AexlCeOBhTt2NF8Sc4jBIljHRCPX0LlH50cKPlYC2r3rL
-        hheoLlLhTBZF8Y7H3dMg6ZwqETvO4XdoZRJmIpqERg==
-X-Google-Smtp-Source: APXvYqzKI77IzPWHmf6MLacA03+yp3D4IujBehG9GJ1A7DXEy0QkZWv8M5GBrSKsp+eOPeLiRwRHUss3MtNpuWX7V6s=
-X-Received: by 2002:a5d:89c8:: with SMTP id a8mr7781523iot.186.1576800851978;
- Thu, 19 Dec 2019 16:14:11 -0800 (PST)
-MIME-Version: 1.0
-References: <20191219201340.196259-1-pmalani@chromium.org> <20191219201340.196259-2-pmalani@chromium.org>
-In-Reply-To: <20191219201340.196259-2-pmalani@chromium.org>
-From:   Benson Leung <bleung@chromium.org>
-Date:   Thu, 19 Dec 2019 16:13:59 -0800
-Message-ID: <CANLzEktdkZvdpJusvC67xjyxw5+botWH+TLBmfT8hg6u6P+yPA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mfd: cros_ec: Add usbpd-notify to usbpd_charger
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Xza35VKEvSvjMP8PzRVZ35j7UizUwWQ11TtoEWfsA3Q=;
+        b=Wl7AP9FLS1qmVj7tjPiMcgFMyD0K9NftQyZu0nVDZjOt15apcUEWlWRrkBfQ3RaboK
+         ET7gdFg9Wf7rA61yWQ6HiP4VQtDzClC6DOIVYNqTfxvs4tKGJj2tC/8o3TUjabLw5kYh
+         W8O+a2dTMEDDNvSQgU94cVjG41b9PQURHbG536Ezmupb8T6y1e6MsdpnhJiPUrTbf+jR
+         aFBFiHryFXF8qIEMWtno+PDypmSoJixPMdmhB66nKj2imOYjOzbyyL4VKMUmZliN0j0h
+         89VHXy6ckK1hf0+QL/vBHQfdP0lMFveW1xN9nI59ORCWMVx+jg6brtZPgerdUHWaUQQf
+         qmgQ==
+X-Gm-Message-State: APjAAAVRZE/lNQOkMwnHptE/L5jWIyosmrbguFmtwbD+tDkHKL6CkyPD
+        DNhBx4oPDy3IOqgsVKUR4yG+xrlqEgpfLw==
+X-Google-Smtp-Source: APXvYqzHTcFOfPjIOzxBXsbVb01FSma/OGljIvD3S6xqG+A2sFrTNEZIUktiv1IzutARjpJbzkpXRg==
+X-Received: by 2002:a65:58ce:: with SMTP id e14mr11807199pgu.153.1576800939356;
+        Thu, 19 Dec 2019 16:15:39 -0800 (PST)
+Received: from rip.lixom.net (99-152-116-91.lightspeed.sntcca.sbcglobal.net. [99.152.116.91])
+        by smtp.gmail.com with ESMTPSA id e16sm8603679pgk.77.2019.12.19.16.15.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Dec 2019 16:15:37 -0800 (PST)
+From:   Olof Johansson <olof@lixom.net>
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Olof Johansson <olof@lixom.net>
+Subject: [PATCH] net/mlx5e: Fix printk format warning
+Date:   Thu, 19 Dec 2019 16:15:17 -0800
+Message-Id: <20191220001517.105297-1-olof@lixom.net>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Prashant,
+Use "%zu" for size_t. Seen on ARM allmodconfig:
 
-On Thu, Dec 19, 2019 at 12:14 PM Prashant Malani <pmalani@chromium.org> wrote:
->
-> Add the cros-usbpd-notify driver as a cell for the cros_usbpd_charger
-> subdevice on non-ACPI platforms.
->
-> This driver allows other cros-ec devices to receive PD event
-> notifications from the Chrome OS Embedded Controller (EC) via a
-> notification chain.
->
-> Change-Id: I4c062d261fa1a504b43b0a0c0a98a661829593b9
+drivers/net/ethernet/mellanox/mlx5/core/wq.c: In function 'mlx5_wq_cyc_wqe_dump':
+include/linux/kern_levels.h:5:18: warning: format '%ld' expects argument of type 'long int', but argument 5 has type 'size_t' {aka 'unsigned int'} [-Wformat=]
 
-Make sure to strip Gerrit's Change-Ids before sending upstream. They
-don't have any meaning outside of chromiumos.
+Fixes: 130c7b46c93d ("net/mlx5e: TX, Dump WQs wqe descriptors on CQE with error events")
+Signed-off-by: Olof Johansson <olof@lixom.net>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/wq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> ---
->  drivers/mfd/cros_ec_dev.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-> index c4b977a5dd966..1dde480f35b93 100644
-> --- a/drivers/mfd/cros_ec_dev.c
-> +++ b/drivers/mfd/cros_ec_dev.c
-> @@ -85,6 +85,9 @@ static const struct mfd_cell cros_ec_sensorhub_cells[] = {
->  static const struct mfd_cell cros_usbpd_charger_cells[] = {
->         { .name = "cros-usbpd-charger", },
->         { .name = "cros-usbpd-logger", },
-> +#ifndef CONFIG_ACPI
-> +       { .name = "cros-usbpd-notify", },
-> +#endif
->  };
->
->  static const struct cros_feature_to_cells cros_subdevices[] = {
-> --
-> 2.24.1.735.g03f4e72817-goog
->
-
-
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/wq.c b/drivers/net/ethernet/mellanox/mlx5/core/wq.c
+index f2a0e72285bac..02f7e4a39578a 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/wq.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/wq.c
+@@ -89,7 +89,7 @@ void mlx5_wq_cyc_wqe_dump(struct mlx5_wq_cyc *wq, u16 ix, u8 nstrides)
+ 	len = nstrides << wq->fbc.log_stride;
+ 	wqe = mlx5_wq_cyc_get_wqe(wq, ix);
+ 
+-	pr_info("WQE DUMP: WQ size %d WQ cur size %d, WQE index 0x%x, len: %ld\n",
++	pr_info("WQE DUMP: WQ size %d WQ cur size %d, WQE index 0x%x, len: %zu\n",
+ 		mlx5_wq_cyc_get_size(wq), wq->cur_sz, ix, len);
+ 	print_hex_dump(KERN_WARNING, "", DUMP_PREFIX_OFFSET, 16, 1, wqe, len, false);
+ }
 -- 
-Benson Leung
-Staff Software Engineer
-Chrome OS Kernel
-Google Inc.
-bleung@google.com
-Chromium OS Project
-bleung@chromium.org
+2.11.0
+
