@@ -2,120 +2,152 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F732C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 05:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E648BC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 05:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BFBE2467F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 05:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B677621D7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 05:01:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d1Sqr6jj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726030AbfLTFAy (ORCPT
+        id S1727110AbfLTFBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 00:00:54 -0500
-Received: from mail.parknet.co.jp ([210.171.160.6]:39866 "EHLO
-        mail.parknet.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfLTFAy (ORCPT
+        Fri, 20 Dec 2019 00:01:47 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36678 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbfLTFBr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 00:00:54 -0500
-X-Greylist: delayed 435 seconds by postgrey-1.27 at vger.kernel.org; Fri, 20 Dec 2019 00:00:54 EST
-Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
-        by mail.parknet.co.jp (Postfix) with ESMTPSA id 96E0115CBE3;
-        Fri, 20 Dec 2019 13:53:37 +0900 (JST)
-Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
-        by ibmpc.myhome.or.jp (8.15.2/8.15.2/Debian-15) with ESMTPS id xBK4raVv037128
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-        Fri, 20 Dec 2019 13:53:37 +0900
-Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
-        by devron.myhome.or.jp (8.15.2/8.15.2/Debian-15) with ESMTPS id xBK4raLR170506
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-        Fri, 20 Dec 2019 13:53:36 +0900
-Received: (from hirofumi@localhost)
-        by devron.myhome.or.jp (8.15.2/8.15.2/Submit) id xBK4rZcW170504;
-        Fri, 20 Dec 2019 13:53:35 +0900
-From:   OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
+        Fri, 20 Dec 2019 00:01:47 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p17so7873740wma.1;
+        Thu, 19 Dec 2019 21:01:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to;
+        bh=upxU0sSVmZx48s5pcLgl2PhLJm36OOz7fOd0OEBAsWk=;
+        b=d1Sqr6jjZ2LAID5NMaS24UN540fd7UB2d9MQlu3Qv5RJrtwdaBYzg62QzxceoXAwcI
+         gH2JkmQo1Fp16RLHJM5UUMYrbQTtBElrOpezk3w0gzKrjyZtq1a7uhIoxk8opKChvNz/
+         3k18bwYaft9fplY9QUN/WX7jnFhAZ2ixU4mIfwA3U2TruskdX76KZR1MBTrCrep8WWrY
+         11BbFHo4xJAi3oXJLFbjNOvQBCUDYos8koMhh3aXfeRUNP78UUaCNun853NHORBn3pF9
+         p5b32/nv/nbkWhFqmTWUOGjUbBbwevSgSFF/RP/j9l4ylfd9kidxfGYMfL+qU6zq8eqR
+         oiqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
+        bh=upxU0sSVmZx48s5pcLgl2PhLJm36OOz7fOd0OEBAsWk=;
+        b=uFy7MHN+VeaBOAg6MkuEZS0wfpabPJTVzijI/XGUjNc3x6NTfPs17LyyEZOG/6v6ZK
+         W1kauHXfG+lDqRIITSL+FGBoP1o/esrpXKzMaM/RwZnlNaIAiDuzoIhc4vo1yfuDa8eq
+         eTCY+M6K2nBMrdxOWg1MjBcffMNDlheuE2GnCeU0n8faYzzZzLGNekjb7quOgnwcirK7
+         ElK2yADnYp0nRXACJTFm8fBTnWo2dbTtRgaVUwHu+LtVvec6PUrEOaqhvEQ+2hiKinUd
+         NiA/6cIEuqKBetrIq030DzqGg9Knkh54CLODSN3lCQ0b/37LPL63YAeRonkCHldaIEg7
+         0f/A==
+X-Gm-Message-State: APjAAAVBrD9rKgThVl+mD3u0Be38RdkskVc4BhlrYwEc/WVtkJ7jrdfl
+        N61rD1+kj2E3of+1KYemVQs=
+X-Google-Smtp-Source: APXvYqwPT8rvktm9nnQ5N9hZi4dAyJOk8j9TNmEnO33NGcxDqrJtkiRXzDWDiYZaBfvAZe/SFodf+g==
+X-Received: by 2002:a1c:9d8b:: with SMTP id g133mr13404376wme.27.1576818104014;
+        Thu, 19 Dec 2019 21:01:44 -0800 (PST)
+Received: from localhost.localdomain ([2a02:2450:10d2:194d:5015:4c4c:42e9:e517])
+        by smtp.gmail.com with ESMTPSA id x26sm7976691wmc.30.2019.12.19.21.01.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 19 Dec 2019 21:01:43 -0800 (PST)
+From:   SeongJae Park <sj38.park@gmail.com>
+To:     shuah <shuah@kernel.org>
+Cc:     SeongJae Park <sj38.park@gmail.com>, brendanhiggins@google.com,
+        sjpark@amazon.com, corbet@lwn.net, kunit-dev@googlegroups.com,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH v2] Documentation: filesystems: convert vfat.txt to RST
-References: <20191121130605.29074-1-dwlsalmeida@gmail.com>
-        <20191219100025.255003e6@lwn.net>
-Date:   Fri, 20 Dec 2019 13:53:35 +0900
-In-Reply-To: <20191219100025.255003e6@lwn.net> (Jonathan Corbet's message of
-        "Thu, 19 Dec 2019 10:00:25 -0700")
-Message-ID: <87immbwqb4.fsf@mail.parknet.co.jp>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.0.50 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
+        linux-kselftest@vger.kernel.org, sjpark@amazon.de
+Subject: Re: Re: [PATCH v6 0/6] Fix nits in the kunit
+Date:   Fri, 20 Dec 2019 06:01:21 +0100
+Message-Id: <20191220050121.24334-1-sj38.park@gmail.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <13f1203e-030d-699e-d12d-d9fea335ca36@kernel.org> (raw)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jonathan Corbet <corbet@lwn.net> writes:
+On Thu, 19 Dec 2019 16:37:28 -0700 shuah <shuah@kernel.org> wrote:
 
-> On Thu, 21 Nov 2019 10:06:05 -0300
-> "Daniel W. S. Almeida" <dwlsalmeida@gmail.com> wrote:
->
->> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
->> 
->> Converts vfat.txt to the reStructuredText format, improving presentation
->> without changing the underlying content.
->> 
->> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
->> -----------------------------------------------------------
->> Changes in v2:
->> Refactored long lines as pointed out by Jonathan
->> Copied the maintainer
->> Updated the reference in the MAINTAINERS file for vfat
->> 
->> I did not move this into admin-guide, waiting on what the 
->> maintainer has to say about this and also about old sections
->> in the text, if any.
->
-> This one, too, could user a bit less markup, and more consistent markup.
-> If you have to mark up literal text, for example, it should be ``literal``,
-> not *emphasis*.  But please think about whether it needs marking up at all.
->
-> I have one other thing here, that could use input from the vfat maintainer:
+> On 12/11/19 7:27 PM, SeongJae Park wrote:
+> > This patchset contains trivial fixes for the kunit documentations and
+> > the wrapper python scripts.
+> > 
+> > 
+> > Baseline
+> > --------
+> > 
+> > This patchset is based on 'kselftest/fixes' branch of
+> > linux-kselftest[1].  A complete tree is available at my repo:
+> > https://github.com/sjp38/linux/tree/kunit_fix/20191205_v6
+> > 
+> > 
+> > Version History
+> > ---------------
+> > 
+> > Changes from v5
+> > (https://lore.kernel.org/linux-kselftest/20191205093440.21824-1-sjpark@amazon.com):
+> >   - Rebased on kselftest/fixes
+> >   - Add 'Reviewed-by' and 'Tested-by' from Brendan Higgins
+> > 
+> > Changes from v4
+> > (https://lore.kernel.org/linux-doc/1575490683-13015-1-git-send-email-sj38.park@gmail.com/):
+> >   - Rebased on Heidi Fahim's patch[2]
+> >   - Fix failing kunit_tool_test test
+> >   - Add 'build_dir' option test in 'kunit_tool_test.py'
+> > 
+> > Changes from v3
+> > (https://lore.kernel.org/linux-kselftest/20191204192141.GA247851@google.com):
+> >   - Fix the 4th patch, "kunit: Place 'test.log' under the 'build_dir'" to
+> >     set default value of 'build_dir' as '' instead of NULL so that kunit
+> >     can run even though '--build_dir' option is not given.
+> > 
+> > Changes from v2
+> > (https://lore.kernel.org/linux-kselftest/1575361141-6806-1-git-send-email-sj38.park@gmail.com):
+> >   - Make 'build_dir' if not exists (missed from v3 by mistake)
+> > 
+> > Changes from v1
+> > (https://lore.kernel.org/linux-doc/1575242724-4937-1-git-send-email-sj38.park@gmail.com):
+> >   - Remove "docs/kunit/start: Skip wrapper run command" (A similar
+> >     approach is ongoing)
+> >   - Make 'build_dir' if not exists
+> > 
+> > SeongJae Park (6):
+> >    docs/kunit/start: Use in-tree 'kunit_defconfig'
+> >    kunit: Remove duplicated defconfig creation
+> >    kunit: Create default config in '--build_dir'
+> >    kunit: Place 'test.log' under the 'build_dir'
+> >    kunit: Rename 'kunitconfig' to '.kunitconfig'
+> >    kunit/kunit_tool_test: Test '--build_dir' option run
+> > 
+> >   Documentation/dev-tools/kunit/start.rst | 13 +++++--------
+> >   tools/testing/kunit/kunit.py            | 18 +++++++++++-------
+> >   tools/testing/kunit/kunit_kernel.py     | 10 +++++-----
+> >   tools/testing/kunit/kunit_tool_test.py  | 10 +++++++++-
+> >   4 files changed, 30 insertions(+), 21 deletions(-)
+> > 
+> 
+> Hi SeongJae Park,
+> 
+> Please make sure your From and Signed-off-by addresses match. I tried
+> applying these patches and I am seeing warnings.
+> 
+> WARNING: Missing Signed-off-by: line by nominal patch author 'SeongJae 
+> Park <sj38.park@gmail.com>'
 
-Sorry, I have very small knowledge in Documentation stuff. So I was
-thinking no need my input...
+I tried to reproduce the warning on my side using 'git am' and 'checkpatch.pl',
+but those doesn't show me such warnings.  Could you please let me know what
+command you use?  Or, you could simply ignore the warning and use 'SeongJae
+Park <sjpark@amazon.de>'.
 
-I don't know what markup is proper here. My opinion would be, let's
-make it be consistent with other Documents/*.
 
->> +BUG REPORTS
->> +===========
->> +If you have trouble with the *VFAT* filesystem, mail bug reports to
->> +chaffee@bmrc.cs.berkeley.edu.
->> +
->> +Please specify the filename and the operation that gave you trouble.
->> +
->> +TEST SUITE
->> +==========
->> +If you plan to make any modifications to the vfat filesystem, please
->> +get the test suite that comes with the vfat distribution at
->> +
->> +`<http://web.archive.org/web/*/http://bmrc.berkeley.edu/people/chaffee/vfat.html>`_
->> +
->> +This tests quite a few parts of the vfat filesystem and additional
->> +tests for new features or untested features would be appreciated.
->
-> What are the chances that the above email address works at all, especially
-> given that the associated web page has to be dug out of the wayback
-> machine?  We should really try to avoid perpetuating obviously wrong
-> information when we can.  Hirofumi, do you have any thoughts on what might
-> replace this section?
+Thanks,
+SeongJae Park
 
-Those sections are so long years didn't work, IIRC. So IMHO, we can
-remove those simply. The address for bug report would work from
-MAINTAINER, lkml as usual, and even bugzilla.
-
-Thanks.
--- 
-OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+> 
+> thanks,
+> -- Shuah
