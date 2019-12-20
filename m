@@ -2,117 +2,88 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89997C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 04:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A13B8C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 04:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EEA121D7D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 04:29:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="A0aDjvyH"
+	by mail.kernel.org (Postfix) with ESMTP id 6D4D7227BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 04:30:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576816219;
+	bh=VJGqaYnhSm2JshvldWioV0bz4Nr/0zvVu1IPlllhtIw=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=JAPxpoSTAO5lvN2IQxKe42Wo+O2Obwg9ospFDNs8mJhnYixdGUsYOrSipKLi1LiO3
+	 yXrUGMpEIBr9acs+UbdLkVrwXIklt4RQNYFv4Wl1pwjLPGaedvSB6iSNHxuCicF/4h
+	 Ci8hnWcpS6IHZqRD7BvdKgB5qE/WjwwcfKOYcuAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbfLTE31 (ORCPT
+        id S1727216AbfLTEaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 23:29:27 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44737 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727110AbfLTE31 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 23:29:27 -0500
-Received: by mail-wr1-f68.google.com with SMTP id q10so8060749wrm.11
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 20:29:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yRRnujDGn+DKixV01iK1kQ9R1Hb6ldjE0k/esoxvtVg=;
-        b=A0aDjvyHIdJhLqDtp99NMEN/80Jxl6wvh+lvb7+lH/qp6guNY98LBPwD0tcfMsFfk6
-         g6s7MAEi2vlSscOrVsRDLJm1UzTKiVag9IlTkT+joi/WQhHf0NJ5d4IHH/ekSVlZyili
-         wBB35uFGXtDvGNNUvJK8qm8EHrv+BJC+5cCJs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yRRnujDGn+DKixV01iK1kQ9R1Hb6ldjE0k/esoxvtVg=;
-        b=l935aQcpV+P4QVQgw5JJV6Seql0ur3vpixdL4+DycRdsOrGk6IAg8AwduMCCbXBfAj
-         zGkdmuX0jqmu7b5VC7FvDQfVkbNFNXvde5x+oziW7Biq/6cWjnYjCMGCRJY0M0LWxqYL
-         E8MuxUiA7gXVwqgWAkCH1HCfnKDFaDRCkCLwNLvIlFkaE0syzM4oCEG4qGYVog9OSecr
-         btnOGer0c0tH1cUjFs/W4TR8SKbOuVCt+j/GEU7JkYwpPA/cfvk5W7CGE+Mr0/0MPp/D
-         sooYV03R/6WyBrL3IEChMq8qCnasYA/o+dOStk4UpiisuHBQZsWl9QhJlW98SsB7nO/r
-         EydQ==
-X-Gm-Message-State: APjAAAUw2RxHXRzuYEU7QGMGAIaI/ISlK+mvVg3dFicxcL15IY3K2YV/
-        g9ezIlYLZHOK8GspqKpd8Ipq8Q==
-X-Google-Smtp-Source: APXvYqwLRAXyAkhlCKztZpOXJtBJaYt9dagkawITr0ZMAIpf7TA6fhV48XsQuPRBh7oEnf2WLQ3OVQ==
-X-Received: by 2002:adf:ec83:: with SMTP id z3mr12721685wrn.133.1576816164528;
-        Thu, 19 Dec 2019 20:29:24 -0800 (PST)
-Received: from localhost ([2a01:4b00:8432:8a00:63de:dd93:20be:f460])
-        by smtp.gmail.com with ESMTPSA id x1sm8274608wru.50.2019.12.19.20.29.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 20:29:24 -0800 (PST)
-Date:   Fri, 20 Dec 2019 04:29:23 +0000
-From:   Chris Down <chris@chrisdown.name>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH v2 0/3] mm: memcontrol: recursive memory protection
-Message-ID: <20191220042923.GA388018@chrisdown.name>
-References: <20191219200718.15696-1-hannes@cmpxchg.org>
+        Thu, 19 Dec 2019 23:30:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50040 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727084AbfLTEaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 23:30:18 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BD4121D7D;
+        Fri, 20 Dec 2019 04:30:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576816217;
+        bh=VJGqaYnhSm2JshvldWioV0bz4Nr/0zvVu1IPlllhtIw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=dP9zHZHuQeIEvJJYkGeUDAPKa3eS0bL7mkNuh/dSCdbd+bTNydlvQimN/M0oMHDVC
+         m8Kp3tiAbbXoPZ8pR0TBtnpvm0l2P50kjyur5Cyx8aL73BdWeDrWiUukLxwEK833xV
+         NGAOBUZ1cBiQmXsFDyyyG22CjQWAtbGQgmIc9zrk=
+Subject: Re: [PATCH 5.4 00/80] 5.4.6-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20191219183031.278083125@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <edc11c7b-86a5-319d-a2c0-640234eb1003@kernel.org>
+Date:   Thu, 19 Dec 2019 21:30:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191219200718.15696-1-hannes@cmpxchg.org>
+In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Johannes Weiner writes:
->Changes since v1:
->- improved Changelogs based on the discussion with Roman. Thanks!
->- fix div0 when recursive & fixed protection is combined
->- fix an unused compiler warning
->
->The current memory.low (and memory.min) semantics require protection
->to be assigned to a cgroup in an untinterrupted chain from the
->top-level cgroup all the way to the leaf.
->
->In practice, we want to protect entire cgroup subtrees from each other
->(system management software vs. workload), but we would like the VM to
->balance memory optimally *within* each subtree, without having to make
->explicit weight allocations among individual components. The current
->semantics make that impossible.
->
->This patch series extends memory.low/min such that the knobs apply
->recursively to the entire subtree. Users can still assign explicit
->protection to subgroups, but if they don't, the protection set by the
->parent cgroup will be distributed dynamically such that children
->compete freely - as if no memory control were enabled inside the
->subtree - but enjoy protection from neighboring trees.
+On 12/19/19 11:33 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.6 release.
+> There are 80 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 21 Dec 2019 18:24:44 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.6-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Thanks, from experience working with these semantics in userspace, I agree that 
-this design makes it easier to configure the protections in a way that is 
-meaningful.
+Compiled and booted on my test system. No dmesg regressions.
 
-For the series:
+thanks,
+-- Shuah
 
-Acked-by: Chris Down <chris@chrisdown.name>
-
->Patch #1 fixes an existing bug that can give a cgroup tree more
->protection than it should receive as per ancestor configuration.
->
->Patch #2 simplifies and documents the existing code to make it easier
->to reason about the changes in the next patch.
->
->Patch #3 finally implements recursive memory protection semantics.
-
-Just as an off-topic aside, although I'm sure you already have it in mind, we 
-should definitely make sure to clearly point this out to those in the container 
-management tooling space who are in the process of moving to support/default to 
-v2. For example, I wonder about CoreOS' systemwide strategy around memory 
-management and whether it can benefit from this.
