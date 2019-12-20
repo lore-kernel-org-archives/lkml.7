@@ -2,117 +2,121 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE79C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D520FC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C8B724679
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4FCC20684
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:59:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OJoVZWIc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbfLTL4P (ORCPT
+        id S1727301AbfLTL7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 06:56:15 -0500
-Received: from relay.sw.ru ([185.231.240.75]:41354 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727177AbfLTL4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 06:56:15 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1iiGs9-0006Sg-TL; Fri, 20 Dec 2019 14:55:10 +0300
-Subject: Re: [PATCH RFC 1/3] block: Add support for REQ_OP_ASSIGN_RANGE
- operation
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        tytso@mit.edu, adilger.kernel@dilger.ca, ming.lei@redhat.com,
-        osandov@fb.com, jthumshirn@suse.de, minwoo.im.dev@gmail.com,
-        damien.lemoal@wdc.com, andrea.parri@amarulasolutions.com,
-        hare@suse.com, tj@kernel.org, ajay.joshi@wdc.com, sagi@grimberg.me,
-        dsterba@suse.com, chaitanya.kulkarni@wdc.com, bvanassche@acm.org,
-        dhowells@redhat.com, asml.silence@gmail.com
-References: <157599668662.12112.10184894900037871860.stgit@localhost.localdomain>
- <157599696813.12112.14140818972910110796.stgit@localhost.localdomain>
- <yq1woatc8zd.fsf@oracle.com>
- <3f2e341b-dea4-c5d0-8eb0-568b6ad2f17b@virtuozzo.com>
- <yq1a77oc56s.fsf@oracle.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <625c9ee4-bedb-ff60-845e-2d440c4f58aa@virtuozzo.com>
-Date:   Fri, 20 Dec 2019 14:55:09 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <yq1a77oc56s.fsf@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 20 Dec 2019 06:59:43 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53829 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727177AbfLTL7n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 06:59:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576843182;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
+        bh=EimEcwtT13iZd2BQPB2j/TIU/TkI66KaW5WQSgBY8gg=;
+        b=OJoVZWIczmRY13vzDkktQbKnVFIA1/Y0v4r4OlXk0A9nMOT7mjIqhNBWffOmgHD5+lU5v+
+        ZIV9+m8csHHes4Nfn4DePj960LmHTk62QgmEqifDbxGhvjtjexIyvTuQKFir50wHN1B3NP
+        BWHokEmxMw+cEsr9tn2F4y1UdfPRpEg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-409-41aUINrDOjGjBE6Dq_5GEQ-1; Fri, 20 Dec 2019 06:59:40 -0500
+X-MC-Unique: 41aUINrDOjGjBE6Dq_5GEQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 117C5800053;
+        Fri, 20 Dec 2019 11:59:39 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-98.ams2.redhat.com [10.36.116.98])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4F0166046B;
+        Fri, 20 Dec 2019 11:59:36 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 917633F13E; Fri, 20 Dec 2019 12:59:35 +0100 (CET)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Gerd Hoffmann <kraxel@redhat.com>,
+        Dave Airlie <airlied@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org (open list:DRM DRIVER FOR
+        QEMU'S CIRRUS DEVICE), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 2/4] drm/cirrus: add drm_driver.release callback.
+Date:   Fri, 20 Dec 2019 12:59:33 +0100
+Message-Id: <20191220115935.15152-3-kraxel@redhat.com>
+In-Reply-To: <20191220115935.15152-1-kraxel@redhat.com>
+References: <20191220115935.15152-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Martin,
+Move final cleanups from cirrus_pci_remove() to the new callback.
+Add drm_atomic_helper_shutdown() call to cirrus_pci_remove().
 
-On 20.12.2019 01:37, Martin K. Petersen wrote:
-> 
-> Kirill,
-> 
->> Hm. BLKDEV_ZERO_NOUNMAP is used in __blkdev_issue_write_zeroes() only.
->> So, do I understand right that we should the below two?:
->>
->> 1) Introduce a new flag BLKDEV_ZERO_ALLOCATE for
->> blkdev_issue_write_zeroes().
-> 
->> 2) Introduce a new flag REQ_NOZERO in enum req_opf.
-> 
-> Something like that. If zeroing is a problem for you.
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ drivers/gpu/drm/cirrus/cirrus.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-My intention is to use this in fs allocators to notify virtual block devices
-about allocated blocks (like in patch [3/3]). Filesystems allocators know about
-written and unwritten extents, and they don't need a zeroing of allocated blocks.
+diff --git a/drivers/gpu/drm/cirrus/cirrus.c b/drivers/gpu/drm/cirrus/cirrus.c
+index 248c9f765c45..a4ca66f9a423 100644
+--- a/drivers/gpu/drm/cirrus/cirrus.c
++++ b/drivers/gpu/drm/cirrus/cirrus.c
+@@ -510,6 +510,16 @@ static void cirrus_mode_config_init(struct cirrus_device *cirrus)
+ 
+ /* ------------------------------------------------------------------ */
+ 
++static void cirrus_release(struct drm_device *dev)
++{
++	struct cirrus_device *cirrus = dev->dev_private;
++
++	drm_mode_config_cleanup(dev);
++	iounmap(cirrus->mmio);
++	iounmap(cirrus->vram);
++	kfree(cirrus);
++}
++
+ DEFINE_DRM_GEM_FOPS(cirrus_fops);
+ 
+ static struct drm_driver cirrus_driver = {
+@@ -523,6 +533,7 @@ static struct drm_driver cirrus_driver = {
+ 
+ 	.fops		 = &cirrus_fops,
+ 	DRM_GEM_SHMEM_DRIVER_OPS,
++	.release         = cirrus_release,
+ };
+ 
+ static int cirrus_pci_probe(struct pci_dev *pdev,
+@@ -604,14 +615,10 @@ static int cirrus_pci_probe(struct pci_dev *pdev,
+ static void cirrus_pci_remove(struct pci_dev *pdev)
+ {
+ 	struct drm_device *dev = pci_get_drvdata(pdev);
+-	struct cirrus_device *cirrus = dev->dev_private;
+ 
+ 	drm_dev_unregister(dev);
+-	drm_mode_config_cleanup(dev);
+-	iounmap(cirrus->mmio);
+-	iounmap(cirrus->vram);
++	drm_atomic_helper_shutdown(dev);
+ 	drm_dev_put(dev);
+-	kfree(cirrus);
+ 	pci_release_regions(pdev);
+ }
+ 
+-- 
+2.18.1
 
-Since a block range allocation action is less complicated (and faster), than
-operation of allocation + zeroing of allocated blocks (at least for some devices),
-we just choose it as the fastest. This is the reason we avoid zeroing.
-
-> Right now we offer the following semantics:
-> 
-> 	Deallocate, no zeroing (discard)
-> 
-> 	Optionally deallocate, zeroing (zeroout)
-> 
-> 	Allocate, zeroing (zeroout + NOUNMAP)
-> 
-> Some devices also implement a fourth option which would be:
-> 
-> 	Anchor: Allocate, no zeroing
-> 
->> Won't this confuse a reader that we have blkdev_issue_write_zeroes(),
->> which does not write zeroes sometimes? Maybe we should rename
->> blkdev_issue_write_zeroes() in some more generic name?
-> 
-> Maybe. The naming is what it is for hysterical raisins and reflects how
-> things are implemented in the storage protocols. I wouldn't worry too
-> much about that. We can rename things if need be but we shouldn't plumb
-> an essentially identical operation through the block stack just to
-> expose a different name at the top.
-
-Not introduction a new operation is a good thing. Especially, since we don't
-need a specific max_xxx_xxx_sectors != max_write_zeroes_sectors for it.
-
-I'll rework the patch in this way (it seems it will become pretty small
-after that).
-
-One more thing to discuss. The new REQ_NOZERO flag won't be supported
-by many block devices (their number will be even less, than number of
-REQ_OP_WRITE_ZEROES supporters). Will this be a good thing, in case
-of we will be completing BLKDEV_ZERO_ALLOCATE bios in __blkdev_issue_write_zeroes()
-before splitting? I mean introduction of some flag in struct request_queue::limits.
-Completion of them with -EOPNOTSUPP in block devices drivers looks
-suboptimal for me.
-
-Thanks,
-Kirill
