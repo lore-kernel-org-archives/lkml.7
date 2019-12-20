@@ -2,163 +2,97 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8873C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DE6C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6753421D7D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B089E21D7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:33:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576852390;
+	bh=tjRKg4UXjRDa3umwleOY3eLlM2dgbRCxqbyRm2e4EDk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=uesubTeHRyGLSbKrFLMTj/Al4XD74FIMLqcvL7MlxLve9ktQFuAKxdy3qM2/3hIKz
+	 51U5j+500Hfa49Dc4PaUDHAnhjJgm1Z/Hxb2iFz5GaQ8MPCJ/1Lr4IWe0yK0iLVwDK
+	 QW3uW2LP0ngnmaFYo2Wuggy8tHEoTXn+lNdgqGOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728244AbfLTOdC (ORCPT
+        id S1728057AbfLTOdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:33:02 -0500
-Received: from foss.arm.com ([217.140.110.172]:51246 "EHLO foss.arm.com"
+        Fri, 20 Dec 2019 09:33:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727875AbfLTOas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:30:48 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B549531B;
-        Fri, 20 Dec 2019 06:30:47 -0800 (PST)
-Received: from e119886-lin.cambridge.arm.com (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DCF893F718;
-        Fri, 20 Dec 2019 06:30:45 -0800 (PST)
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH v2 07/18] arm64: KVM/debug: drop pmscr_el1 and use sys_regs[PMSCR_EL1] in kvm_cpu_context
-Date:   Fri, 20 Dec 2019 14:30:14 +0000
-Message-Id: <20191220143025.33853-8-andrew.murray@arm.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191220143025.33853-1-andrew.murray@arm.com>
-References: <20191220143025.33853-1-andrew.murray@arm.com>
+        id S1727869AbfLTOaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:30:46 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 994D224685;
+        Fri, 20 Dec 2019 14:30:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576852246;
+        bh=tjRKg4UXjRDa3umwleOY3eLlM2dgbRCxqbyRm2e4EDk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bVjPdCpoCSbPExcC23RqDWl1CcQ3QxjKCz7M1Z95Khen6QAYMnB5wvqpuAaCAbdmQ
+         LvbMwLfQpsvNu5IgkE6pfFCEYh4Mf97U1HMr1XifISsCbEqPGB1UGnEk2m8PwmPQa8
+         vVvZ5v3eyobP6H7LTcG49gn29IHHXYt1LVS//NxI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ben Skeggs <bskeggs@redhat.com>, Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 38/52] drm/nouveau/kms/nv50-: fix panel scaling
+Date:   Fri, 20 Dec 2019 09:29:40 -0500
+Message-Id: <20191220142954.9500-38-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
+References: <20191220142954.9500-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+From: Ben Skeggs <bskeggs@redhat.com>
 
-kvm_cpu_context now has support to stash the complete SPE buffer control
-context. We no longer need the pmscr_el1 kvm_vcpu_arch and it can be
-dropped.
+[ Upstream commit 3d1890ef8023e61934e070021b06cc9f417260c0 ]
 
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+Under certain circumstances, encoder atomic_check() can be entered
+without adjusted_mode having been reset to the same as mode, which
+confuses the scaling logic and can lead to a misprogrammed display.
+
+Fix this by checking against the user-provided mode directly.
+
+Link: https://bugs.freedesktop.org/show_bug.cgi?id=108615
+Link: https://gitlab.freedesktop.org/xorg/driver/xf86-video-nouveau/issues/464
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/kvm_host.h |  2 --
- arch/arm64/kvm/hyp/debug-sr.c     | 26 +++++++++++++++-----------
- 2 files changed, 15 insertions(+), 13 deletions(-)
+ drivers/gpu/drm/nouveau/dispnv50/disp.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index 9eb85f14df90..333c6491bec7 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -307,8 +307,6 @@ struct kvm_vcpu_arch {
- 	struct {
- 		/* {Break,watch}point registers */
- 		struct kvm_guest_debug_arch regs;
--		/* Statistical profiling extension */
--		u64 pmscr_el1;
- 	} host_debug_state;
- 
- 	/* VGIC state */
-diff --git a/arch/arm64/kvm/hyp/debug-sr.c b/arch/arm64/kvm/hyp/debug-sr.c
-index c803daebd596..8a70a493345e 100644
---- a/arch/arm64/kvm/hyp/debug-sr.c
-+++ b/arch/arm64/kvm/hyp/debug-sr.c
-@@ -85,19 +85,19 @@
- 	default:	write_debug(ptr[0], reg, 0);			\
- 	}
- 
--static void __hyp_text __debug_save_spe_nvhe(u64 *pmscr_el1)
-+static void __hyp_text __debug_save_spe_nvhe(struct kvm_cpu_context *ctxt)
- {
- 	u64 reg;
- 
- 	/* Clear pmscr in case of early return */
--	*pmscr_el1 = 0;
-+	ctxt->sys_regs[PMSCR_EL1] = 0;
- 
- 	/* SPE present on this CPU? */
- 	if (!cpuid_feature_extract_unsigned_field(read_sysreg(id_aa64dfr0_el1),
- 						  ID_AA64DFR0_PMSVER_SHIFT))
- 		return;
- 
--	/* Yes; is it owned by EL3? */
-+	/* Yes; is it owned by higher EL? */
- 	reg = read_sysreg_s(SYS_PMBIDR_EL1);
- 	if (reg & BIT(SYS_PMBIDR_EL1_P_SHIFT))
- 		return;
-@@ -108,7 +108,7 @@ static void __hyp_text __debug_save_spe_nvhe(u64 *pmscr_el1)
- 		return;
- 
- 	/* Yes; save the control register and disable data generation */
--	*pmscr_el1 = read_sysreg_el1(SYS_PMSCR);
-+	ctxt->sys_regs[PMSCR_EL1] = read_sysreg_el1(SYS_PMSCR);
- 	write_sysreg_el1(0, SYS_PMSCR);
- 	isb();
- 
-@@ -117,16 +117,16 @@ static void __hyp_text __debug_save_spe_nvhe(u64 *pmscr_el1)
- 	dsb(nsh);
- }
- 
--static void __hyp_text __debug_restore_spe_nvhe(u64 pmscr_el1)
-+static void __hyp_text __debug_restore_spe_nvhe(struct kvm_cpu_context *ctxt)
- {
--	if (!pmscr_el1)
-+	if (!ctxt->sys_regs[PMSCR_EL1])
- 		return;
- 
- 	/* The host page table is installed, but not yet synchronised */
- 	isb();
- 
- 	/* Re-enable data generation */
--	write_sysreg_el1(pmscr_el1, SYS_PMSCR);
-+	write_sysreg_el1(ctxt->sys_regs[PMSCR_EL1], SYS_PMSCR);
- }
- 
- static void __hyp_text __debug_save_state(struct kvm_vcpu *vcpu,
-@@ -194,14 +194,15 @@ void __hyp_text __debug_restore_host_context(struct kvm_vcpu *vcpu)
- 	struct kvm_guest_debug_arch *host_dbg;
- 	struct kvm_guest_debug_arch *guest_dbg;
- 
-+	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
-+	guest_ctxt = &vcpu->arch.ctxt;
-+
- 	if (!has_vhe())
--		__debug_restore_spe_nvhe(vcpu->arch.host_debug_state.pmscr_el1);
-+		__debug_restore_spe_nvhe(host_ctxt);
- 
- 	if (!(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY))
- 		return;
- 
--	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
--	guest_ctxt = &vcpu->arch.ctxt;
- 	host_dbg = &vcpu->arch.host_debug_state.regs;
- 	guest_dbg = kern_hyp_va(vcpu->arch.debug_ptr);
- 
-@@ -217,8 +218,11 @@ void __hyp_text __debug_save_host_context(struct kvm_vcpu *vcpu)
- 	 * Non-VHE: Disable and flush SPE data generation
- 	 * VHE: The vcpu can run, but it can't hide.
- 	 */
-+	struct kvm_cpu_context *host_ctxt;
-+
-+	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
- 	if (!has_vhe())
--		__debug_save_spe_nvhe(&vcpu->arch.host_debug_state.pmscr_el1);
-+		__debug_save_spe_nvhe(host_ctxt);
- }
- 
- void __hyp_text __debug_save_guest_context(struct kvm_vcpu *vcpu)
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+index b46be8a091e99..8f4675c28c6f9 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+@@ -326,9 +326,9 @@ nv50_outp_atomic_check_view(struct drm_encoder *encoder,
+ 			 * same size as the native one (e.g. different
+ 			 * refresh rate)
+ 			 */
+-			if (adjusted_mode->hdisplay == native_mode->hdisplay &&
+-			    adjusted_mode->vdisplay == native_mode->vdisplay &&
+-			    adjusted_mode->type & DRM_MODE_TYPE_DRIVER)
++			if (mode->hdisplay == native_mode->hdisplay &&
++			    mode->vdisplay == native_mode->vdisplay &&
++			    mode->type & DRM_MODE_TYPE_DRIVER)
+ 				break;
+ 			mode = native_mode;
+ 			asyc->scaler.full = true;
 -- 
-2.21.0
+2.20.1
 
