@@ -2,316 +2,111 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D8EC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B64C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1EE227BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7466E2067C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbfLTHDX (ORCPT
+        id S1727252AbfLTHEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 02:03:23 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:33863 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbfLTHDW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 02:03:22 -0500
-Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Fri, 20 Dec
- 2019 15:03:52 +0800
-Subject: Re: [PATCH v4 2/6] clk: meson: add support for A1 PLL clock ops
-From:   Jian Hu <jian.hu@amlogic.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20191206074052.15557-1-jian.hu@amlogic.com>
- <20191206074052.15557-3-jian.hu@amlogic.com>
- <1j8snhluhg.fsf@starbuckisacylon.baylibre.com>
- <741284be-2ae8-1102-22bc-c510e822c883@amlogic.com>
- <1jk16vb8qm.fsf@starbuckisacylon.baylibre.com>
- <0bc6176f-c0b8-5c31-4c6b-d3686eefe56e@amlogic.com>
-Message-ID: <627a8d8b-f049-4cdd-6dd0-5c5acc58a90c@amlogic.com>
-Date:   Fri, 20 Dec 2019 15:03:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Fri, 20 Dec 2019 02:04:46 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:58640 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726276AbfLTHEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 02:04:46 -0500
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1iiCL6-0008PG-MV; Fri, 20 Dec 2019 15:04:44 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1iiCL1-0007oZ-Fl; Fri, 20 Dec 2019 15:04:39 +0800
+Date:   Fri, 20 Dec 2019 15:04:39 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Rijo Thomas <Rijo-john.Thomas@amd.com>
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Gary Hook <gary.hook@amd.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        Nimesh Easow <Nimesh.Easow@amd.com>,
+        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [RFC PATCH v3 0/6] Add TEE interface support to AMD Secure
+ Processor driver
+Message-ID: <20191220070439.etvk73fedrijsrgm@gondor.apana.org.au>
+References: <cover.1575438845.git.Rijo-john.Thomas@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <0bc6176f-c0b8-5c31-4c6b-d3686eefe56e@amlogic.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.28.39.99]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1575438845.git.Rijo-john.Thomas@amd.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi jerome
-
-On 2019/12/18 16:37, Jian Hu wrote:
+On Wed, Dec 04, 2019 at 11:48:57AM +0530, Rijo Thomas wrote:
+> The goal of this patch series is to introduce TEE (Trusted Execution
+> Environment) interface support to AMD Secure Processor driver. The
+> TEE is a secure area of a processor which ensures that sensitive data
+> is stored, processed and protected in an isolated and trusted
+> environment. The Platform Security Processor (PSP) is a dedicated
+> processor which provides TEE to enable HW platform security. It offers
+> protection against software attacks generated in Rich Operating System
+> (Rich OS) such as Linux running on x86.
 > 
+> Based on the platform feature support, the PSP is capable of supporting
+> either SEV (Secure Encrypted Virtualization) and/or TEE. The first three
+> patches in this series is about moving SEV specific functions and data
+> structures from PSP device driver file to a dedicated SEV interface
+> driver file. The last two patches add TEE interface support to AMD
+> Secure Processor driver. This TEE interface will be used by AMD-TEE
+> driver to submit command buffers for processing in PSP Trusted Execution
+> Environment.
 > 
-> On 2019/12/17 17:29, Jerome Brunet wrote:
->>
->> On Tue 17 Dec 2019 at 09:41, Jian Hu <jian.hu@amlogic.com> wrote:
->>
->>> On 2019/12/12 18:16, Jerome Brunet wrote:
->>>>
->>>> On Fri 06 Dec 2019 at 08:40, Jian Hu <jian.hu@amlogic.com> wrote:
->>>>
->>>>> The A1 PLL design is different with previous SoCs. The PLL
->>>>> internal analog modules Power-on sequence is different
->>>>> with previous, and thus requires a strict register sequence to
->>>>> enable the PLL.
->>>>>
->>>>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->>>>> ---
->>>>>    drivers/clk/meson/clk-pll.c | 21 +++++++++++++++++++++
->>>>>    drivers/clk/meson/clk-pll.h |  1 +
->>>>>    drivers/clk/meson/parm.h    |  1 +
->>>>>    3 files changed, 23 insertions(+)
->>>>>
->>>>> diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
->>>>> index ddb1e5634739..4aff31a51589 100644
->>>>> --- a/drivers/clk/meson/clk-pll.c
->>>>> +++ b/drivers/clk/meson/clk-pll.c
->>>>> @@ -318,6 +318,23 @@ static int meson_clk_pll_enable(struct clk_hw 
->>>>> *hw)
->>>>>        struct clk_regmap *clk = to_clk_regmap(hw);
->>>>>        struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
->>>>>    +    /*
->>>>> +     * The A1 design is different with previous SoCs.The PLL
->>>>> +     * internal analog modules Power-on sequence is different with
->>>>> +     * previous, and thus requires a strict register sequence to
->>>>> +     * enable the PLL.
->>>>
->>>> The code does something more, not completly different. This comment is
->>>> not aligned with what the code does
->>> ok, I will correct the comment.
->>>>
->>>>> +     */
->>>>> +    if (MESON_PARM_APPLICABLE(&pll->current_en)) {
->>>>> +        /* Enable the pll */
->>>>> +        meson_parm_write(clk->map, &pll->en, 1);
->>>>> +        udelay(10);
->>>>> +        /* Enable the pll self-adaption module current */
->>>>> +        meson_parm_write(clk->map, &pll->current_en, 1);
->>>>> +        udelay(40);
->>>>> +        meson_parm_write(clk->map, &pll->rst, 1);
->>>>> +        meson_parm_write(clk->map, &pll->rst, 0);
->>>>
->>>> Here you enable the PLL and self adaptation module then reset the PLL.
->>>> However:
->>>> #1 when you enter this function, the PLL should already by in reset
->>>> and disabled
->>>> #2 the code after that will reset the PLL again
->>> For A1 PLLs, There is no reset bit, It will not reset the PLL.
->>> And in V2, you mentioned PARM 'rst' can be used for one toggling, And 
->>> 'rst'
->>> is used for BIT(6) in CTRL2.
->>>
->>
->> oh my ! What is it then ? Why do you need to toggle it ? What does is 
->> do ?
->>
-> The PLL enable flow:
->       step1: enable the PLL
->       step2: enable the self adaptation module
->       step3: reset the lock detect module, let the lock detect module 
->             work，And then the PLL will work.
+> v3:
+> * Rebased the patches onto cryptodev-2.6 tree with base commit
+>   4ee812f6143d (crypto: vmx - Avoid weird build failures)
 > 
-> Toggle the bit 6 in CTRL2 can reset the lock detect module.
+> v2:
+> * Rebased the patches on cryptodev-2.6 tree with base commit
+>   d158367682cd (crypto: atmel - Fix selection of CRYPTO_AUTHENC)
+> * Regenerated patch with correct diff-stat to show file rename
+> * Used Co-developed-by: tag to give proper credit to co-author
+> 
+> Rijo Thomas (6):
+>   crypto: ccp - rename psp-dev files to sev-dev
+>   crypto: ccp - create a generic psp-dev file
+>   crypto: ccp - move SEV vdata to a dedicated data structure
+>   crypto: ccp - check whether PSP supports SEV or TEE before
+>     initialization
+>   crypto: ccp - add TEE support for Raven Ridge
+>   crypto: ccp - provide in-kernel API to submit TEE commands
+> 
+>  drivers/crypto/ccp/Makefile  |    4 +-
+>  drivers/crypto/ccp/psp-dev.c | 1033 ++++------------------------------------
+>  drivers/crypto/ccp/psp-dev.h |   51 +-
+>  drivers/crypto/ccp/sev-dev.c | 1068 ++++++++++++++++++++++++++++++++++++++++++
+>  drivers/crypto/ccp/sev-dev.h |   63 +++
+>  drivers/crypto/ccp/sp-dev.h  |   17 +-
+>  drivers/crypto/ccp/sp-pci.c  |   43 +-
+>  drivers/crypto/ccp/tee-dev.c |  364 ++++++++++++++
+>  drivers/crypto/ccp/tee-dev.h |  110 +++++
+>  include/linux/psp-tee.h      |   73 +++
+>  10 files changed, 1842 insertions(+), 984 deletions(-)
+>  create mode 100644 drivers/crypto/ccp/sev-dev.c
+>  create mode 100644 drivers/crypto/ccp/sev-dev.h
+>  create mode 100644 drivers/crypto/ccp/tee-dev.c
+>  create mode 100644 drivers/crypto/ccp/tee-dev.h
+>  create mode 100644 include/linux/psp-tee.h
 
-#1  I intend to introduce a new PARM 'l_detect', and the 
-meson_clk_pll_enable is blow. Please help to review it.
-
-static int meson_clk_pll_enable(struct clk_hw *hw)
-{
-         struct clk_regmap *clk = to_clk_regmap(hw);
-         struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
-
-         /* do nothing if the PLL is already enabled */
-         if (clk_hw_is_enabled(hw))
-                 return 0;
-         /*
-          * Compared with the previous SoCs, self-adaption module current
-          * is newly added, keep the new power-on sequence to enable the
-          * PLL.
-          */
-         if (MESON_PARM_APPLICABLE(&pll->current_en)) {
-                 /* Enable the pll */
-                 meson_parm_write(clk->map, &pll->en, 1);
-                 udelay(10);
-                 /* Enable the pll self-adaption module current */
-                 meson_parm_write(clk->map, &pll->current_en, 1);
-                 udelay(40);
-                 /* Enable lock detect module */
-                 meson_parm_write(clk->map, &pll->l_detect, 1);
-                 meson_parm_write(clk->map, &pll->l_detect, 0);
-                 goto out;
-         }
-
-         /* Make sure the pll is in reset */
-         meson_parm_write(clk->map, &pll->rst, 1);
-
-         /* Enable the pll */
-         meson_parm_write(clk->map, &pll->en, 1);
-
-         /* Take the pll out reset */
-         meson_parm_write(clk->map, &pll->rst, 0);
-
-out:
-         if (meson_clk_pll_wait_lock(hw))
-                 return -EIO;
-
-         return 0;
-}
-
-
-#2  Add check for PARM 'rst' when
-writing to it, the same with frac.
-
-if (MESON_PARM_APPLICABLE(&pll->rst))
-    meson_parm_write(clk->map, &pll->rst, 1);
-
-
-And I have tested it for it, The periphs and hifi pll works well.
-
-Or any good idea about it?
-
->>> Quote V2 the HIFI PLL init_regs definition：
->>>
->>>
->>> +static const struct reg_sequence a1_hifi_init_regs[] = {
->>> +    { .reg = ANACTRL_HIFIPLL_CTRL1, .def = 0x01800000 },
->>> +    { .reg = ANACTRL_HIFIPLL_CTRL2, .def = 0x00001100 },
->>> +    { .reg = ANACTRL_HIFIPLL_CTRL3, .def = 0x100a1100 },
->>> +    { .reg = ANACTRL_HIFIPLL_CTRL4, .def = 0x00302000 },
->>> +    { .reg = ANACTRL_HIFIPLL_CTRL0, .def = 0x01f18440 },
->>> +    { .reg = ANACTRL_HIFIPLL_CTRL0, .def = 0x11f18440, .delay_us = 
->>> 10 },
->>> +    { .reg = ANACTRL_HIFIPLL_CTRL0, .def = 0x15f18440, .delay_us = 
->>> 40 },
->>> +    { .reg = ANACTRL_HIFIPLL_CTRL2, .def = 0x00001140 },
->>> +    { .reg = ANACTRL_HIFIPLL_CTRL2, .def = 0x00001100 },
->>> +};
->>>
->>> So maybe another new PARM should be defined to avoid the ambiguity.
->>> What do you think about it?
->>
->> This is not the point of my comment Jian !
->>
->> I'm assuming here that you have tested your v4 before sending and that
->> it work (hopefully)
->>
-> Yes, it works wells. I have tested the drivers before sending every 
-> patchset version.
->> The fact is that with this code, when disabled the bit behind rst
->> (whatever it is) is set. So when you get to enable the bit is already 
->> set.
->> The code you sent does the same as the snip I gave you in the reply.
->>
->> Now, if your PLL is THAT different, maybe it would be best if you could
->> clearly explain how it works, what bit should be set and why. Then we
->> will be able to figure out how the driver has to be restructured.
->>
-> the same as 'The PLL enable flow' above
->>>
->>>>
->>>> So if what you submited works, inserting the following should 
->>>> accomplish
->>>> the same thing:
->>>>
->>>> ---8<---
->>>> diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
->>>> index 489092dde3a6..9b38df0a7682 100644
->>>> --- a/drivers/clk/meson/clk-pll.c
->>>> +++ b/drivers/clk/meson/clk-pll.c
->>>> @@ -330,6 +330,13 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
->>>>           /* Enable the pll */
->>>>           meson_parm_write(clk->map, &pll->en, 1);
->>>>
->>>> +       if (MESON_PARM_APPLICABLE(&pll->current_en)) {
->>>> +               udelay(10);
->>>> +               /* Enable the pll self-adaption module current */
->>>> +               meson_parm_write(clk->map, &pll->current_en, 1);
->>>> +               udelay(40);
->>>> +       }
->>>> +
->>>>           /* Take the pll out reset */
->>>>           meson_parm_write(clk->map, &pll->rst, 0);
->>>> --->8---
->>>>
->>>>
->>>>
->>>>
->>>>> +    }
->>>>> +
->>>>>        /* do nothing if the PLL is already enabled */
->>>>>        if (clk_hw_is_enabled(hw))
->>>>>            return 0;
->>>>
->>>> In any case, nothing should be done on the clock before this check
->>>> otherwise you might just break the clock
->>>>
->>> OK, I will put the enabled check ahead.
->>>>> @@ -347,6 +364,10 @@ static void meson_clk_pll_disable(struct 
->>>>> clk_hw *hw)
->>>>>          /* Disable the pll */
->>>>>        meson_parm_write(clk->map, &pll->en, 0);
->>>>> +
->>>>> +    /* Disable PLL internal self-adaption module current */
->>>>> +    if (MESON_PARM_APPLICABLE(&pll->current_en))
->>>>> +        meson_parm_write(clk->map, &pll->current_en, 0);
->>>>>    }
->>>>>      static int meson_clk_pll_set_rate(struct clk_hw *hw, unsigned 
->>>>> long
->>>>> rate,
->>>>> diff --git a/drivers/clk/meson/clk-pll.h b/drivers/clk/meson/clk-pll.h
->>>>> index 367efd0f6410..30f039242a65 100644
->>>>> --- a/drivers/clk/meson/clk-pll.h
->>>>> +++ b/drivers/clk/meson/clk-pll.h
->>>>> @@ -36,6 +36,7 @@ struct meson_clk_pll_data {
->>>>>        struct parm frac;
->>>>>        struct parm l;
->>>>>        struct parm rst;
->>>>> +    struct parm current_en;
->>>>>        const struct reg_sequence *init_regs;
->>>>>        unsigned int init_count;
->>>>>        const struct pll_params_table *table;
->>>>> diff --git a/drivers/clk/meson/parm.h b/drivers/clk/meson/parm.h
->>>>> index 3c9ef1b505ce..c53fb26577e3 100644
->>>>> --- a/drivers/clk/meson/parm.h
->>>>> +++ b/drivers/clk/meson/parm.h
->>>>> @@ -20,6 +20,7 @@
->>>>>        (((reg) & CLRPMASK(width, shift)) | ((val) << (shift)))
->>>>>      #define MESON_PARM_APPLICABLE(p)        (!!((p)->width))
->>>>> +#define MESON_PARM_CURRENT(p)            (!!((p)->width))
->>>>
->>>> Why do we need that ?
->>> OK, I will remove it ,and use 'MESON_PARM_APPLICABLE' instead
->>>>
->>>>>      struct parm {
->>>>>        u16    reg_off;
->>>>
->>>> .
->>>>
->>
->> .
->>
+All applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
