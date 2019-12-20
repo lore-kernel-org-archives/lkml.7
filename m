@@ -2,107 +2,165 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1101C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5481FC2D0D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF01324679
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FDC724679
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:16:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="avEhe0h/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbfLTMPp (ORCPT
+        id S1727357AbfLTMQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 07:15:45 -0500
-Received: from mga12.intel.com ([192.55.52.136]:5665 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727177AbfLTMPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 07:15:45 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Dec 2019 04:15:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,335,1571727600"; 
-   d="scan'208";a="416519636"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 20 Dec 2019 04:15:43 -0800
-Received: from andy by smile with local (Exim 4.93-RC7)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1iiHC3-0002kc-8y; Fri, 20 Dec 2019 14:15:43 +0200
-Date:   Fri, 20 Dec 2019 14:15:43 +0200
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 12/13] gpiolib: add new ioctl() for monitoring changes
- in line info
-Message-ID: <20191220121543.GY32742@smile.fi.intel.com>
-References: <20191219171528.6348-1-brgl@bgdev.pl>
- <20191219171528.6348-13-brgl@bgdev.pl>
- <CAHp75VeMEngXiFmvTrsW7UZMz0ppR-W-J4D1xU+qKGfLXkG3kg@mail.gmail.com>
- <CAMpxmJV4UU21x8rfNMaJ6G2OiRa3qC2vYQWH4C_T+nS4b_NcUw@mail.gmail.com>
+        Fri, 20 Dec 2019 07:16:22 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38659 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727211AbfLTMQV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 07:16:21 -0500
+Received: by mail-wr1-f67.google.com with SMTP id y17so9239171wrh.5
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 04:16:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=agoLDBhJR59GTTSs+ez/Yrhh73k6oloZGrgz5Rsg0gM=;
+        b=avEhe0h/Y5RzW/XaZZS0w+OJNrTSQRaj1ODufA74IXVLKtT4JSSrhOZptONbWS/7be
+         PjiBYEjKUg6j99+8UCQe9dN9GIufg8pWG9zZmUYi6KBawfAdk4t8KuBq/VVJjLszIvnU
+         EGwPEX41dSoeDEOmIZ3BcqkAzxBJwWP4HN+lM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=agoLDBhJR59GTTSs+ez/Yrhh73k6oloZGrgz5Rsg0gM=;
+        b=FouLDk9/pYXvuYuJ7QE7O2xZhtFi1Q8iNZ/QenjdiQRuc6nKQJ3a6RsGjFbiE8pxSQ
+         TXP9LY5QI45Pa8IVqzbzEXnQ1Duf7WkBUhhIt29P6EIAietBepBbSc/AqzEcIhAuJl0i
+         z9f6TJjFeGPh0Lyw4FYS3NGDDxacHU6D11btu/AdY0vvism62E38bpWi5mkHzBP3dIqU
+         JY6aOTPcxd1Vfevz4IB8Yh7AntgsfaMYpgc7gX4YuR6DxEVuWSIlmj1eMULnufDH2lNe
+         K47+Ko4pJhDCP4OFqwa3b0DMMMo+JKk1TAK202IP6mbXTywozDjAzo/QpDerT7mQfOIn
+         QFeg==
+X-Gm-Message-State: APjAAAX3kkbbzfReKmL0OzAC/81LhxtxfYbB4PBYKz8n9+vH4ehFi5aT
+        zCpTsH01JKnRugAG+vBO0OhDtQ==
+X-Google-Smtp-Source: APXvYqxAEMCXkgpMdwF7gD4TxOUEgEjETCC6n0O8uBTNO+16VnxTE8nv1F7hfNRT+M1CW97N312/NA==
+X-Received: by 2002:a5d:4983:: with SMTP id r3mr15186247wrq.134.1576844179206;
+        Fri, 20 Dec 2019 04:16:19 -0800 (PST)
+Received: from localhost ([2a01:4b00:8432:8a00:63de:dd93:20be:f460])
+        by smtp.gmail.com with ESMTPSA id k7sm9289854wmi.19.2019.12.20.04.16.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 04:16:16 -0800 (PST)
+Date:   Fri, 20 Dec 2019 12:16:15 +0000
+From:   Chris Down <chris@chrisdown.name>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com,
+        Hugh Dickins <hughd@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <miklos@szeredi.hu>
+Subject: Re: [PATCH] fs: inode: Reduce volatile inode wraparound risk when
+ ino_t is 64 bit
+Message-ID: <20191220121615.GB388018@chrisdown.name>
+References: <20191220024936.GA380394@chrisdown.name>
+ <CAOQ4uxjqSWcrA1reiyit9DRt+aq2tXBxLdPE31RrYw1yr=4hjg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpxmJV4UU21x8rfNMaJ6G2OiRa3qC2vYQWH4C_T+nS4b_NcUw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAOQ4uxjqSWcrA1reiyit9DRt+aq2tXBxLdPE31RrYw1yr=4hjg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 12:25:59PM +0100, Bartosz Golaszewski wrote:
-> czw., 19 gru 2019 o 19:17 Andy Shevchenko <andy.shevchenko@gmail.com>
-> napisał(a):
-> > On Thu, Dec 19, 2019 at 7:17 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+Hi Amir,
 
-...
+Thanks for getting back, I appreciate it.
 
-> > > +/**
-> > > + * struct gpioline_info_changed - Information about a change in status
-> > > + * of a GPIO line
-> > > + * @info: updated line information
-> > > + * @timestamp: estimate of time of status change occurrence, in nanoseconds
-> > > + * and GPIOLINE_CHANGED_CONFIG
-> > > + * @event_type: one of GPIOLINE_CHANGED_REQUESTED, GPIOLINE_CHANGED_RELEASED
-> > > + */
-> > > +struct gpioline_info_changed {
-> >
-> > > +       struct gpioline_info info;
-> >
-> > Is this guaranteed to be always 8 byte aligned?
-> > I'm expecting to see some comments there and / or here about it.
-> >
-> 
-> struct gpioline_info alone is 32-bit aligned but its size is 72 bytes
-> which works for 64-bit alignment. This new structure's biggest element
-> in 64-bit, so it's 64-bit aligned on 64-bit arch. We have 72 bytes of
-> gpioline_info, 8 bytes of timestamp, 32 bytes of event type and 5 * 32
-> bytes of padding. Should be fine, but I'll add comments to the header.
+Amir Goldstein writes:
+>How about something like this:
+>
+>/* just to explain - use an existing macro */
+>shmem_ino_shift = ilog2(sizeof(void *));
+>inode->i_ino = (__u64)inode >> shmem_ino_shift;
+>
+>This should solve the reported problem with little complexity,
+>but it exposes internal kernel address to userspace.
 
-Yes, what I meant is to add comment at least to struct gpioline_info definition
-that if somebody would like to change it there (which also might be a
-problematic here, if there is no versioning scheme / length member).
+One problem I can see with that approach is that get_next_ino doesn't 
+discriminate based on the context (for example, when it is called for a 
+particular tmpfs mount) which means that eventually wraparound risk is still 
+pushed to the limit on such machines for other users of get_next_ino (like 
+named pipes, sockets, procfs, etc). Granted then the space for collisions 
+between them is less likely due to their general magnitude of inodes at one 
+time compared to some tmpfs workloads, but still.
 
-> > > +       __u64 timestamp;
-> > > +       __u32 event_type;
-> > > +       __u32 padding[5]; /* for future use */
-> > > +};
+>Can we do anything to mitigate this risk?
+>
+>For example, instead of trying to maintain a unique map of
+>ino_t to struct shmem_inode_info * in the system
+>it would be enough (and less expensive) to maintain a unique map of
+>shmem_ino_range_t to slab.
+>The ino_range id can then be mixes with the relative object index in
+>slab to compose i_ino.
+>
+>The big win here is not having to allocate an id every bunch of inodes
+>instead of every inode, but the fact that recycled (i.e. delete/create)
+>shmem_inode_info objects get the same i_ino without having to
+>allocate any id.
+>
+>This mimics a standard behavior of blockdev filesystem like ext4/xfs
+>where inode number is determined by logical offset on disk and is
+>quite often recycled on delete/create.
+>
+>I realize that the method I described with slab it crossing module layers
+>and would probably be NACKED.
 
-Offtopic a bit, had you had a chance to look at Buildroot and our scripts
-I shared?
+Yeah, that's more or less my concern with that approach as well, hence why I 
+went for something that seemed less intrusive and keeps with the current inode 
+allocation strategy :-)
 
--- 
-With Best Regards,
-Andy Shevchenko
+>Similar result could be achieved by shmem keeping a small stash of
+>recycled inode objects, which are not returned to slab right away and
+>retain their allocated i_ino. This at least should significantly reduce the
+>rate of burning get_next_ino allocation.
 
+While this issue happens to present itself currently on tmpfs, I'm worried that 
+future users of get_next_ino based on historic precedent might end up hitting 
+this as well. That's the main reason why I'm inclined to try and improve 
+get_next_ino's strategy itself.
 
+>Anyway, to add another consideration to the mix, overlayfs uses
+>the high ino bits to multiplex several layers into a single ino domain
+>(mount option xino=on).
+>
+>tmpfs is a very commonly used filesystem as overlayfs upper layer,
+>so many users are going to benefit from keeping the higher most bits
+>of tmpfs ino inodes unused.
+>
+>For this reason, I dislike the current "grow forever" approach of
+>get_next_ino() and prefer that we use a smarter scheme when
+>switching over to 64bit values.
+
+By "a smarter scheme when switching over to 64bit values", you mean keeping 
+i_ino as low magnitude as possible while still avoiding simultaneous reuse, 
+right?
+
+To that extent, if we can reliably and expediently recycle inode numbers, I'm 
+not against sticking to the existing typing scheme in get_next_ino. It's just a 
+matter of agreeing by what method and at what level of the stack that should 
+take place :-)
+
+I'd appreciate your thoughts on approaches forward. One potential option is to 
+reimplement get_next_ino using an IDA, as mentioned in my patch message. Other 
+than the potential to upset microbenchmarks, do you have concerns with that as 
+a patch?
+
+Thanks,
+
+Chris
