@@ -2,258 +2,143 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61945C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF420C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C76A2064B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B64C9218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:42:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flawful.org header.i=@flawful.org header.b="u5oB4Mzu"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="NlxVAmZm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbfLTOkX (ORCPT
+        id S1727440AbfLTOmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:40:23 -0500
-Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:34868 "EHLO
-        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727407AbfLTOkX (ORCPT
+        Fri, 20 Dec 2019 09:42:06 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:33835 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727233AbfLTOmF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:40:23 -0500
-X-Greylist: delayed 379 seconds by postgrey-1.27 at vger.kernel.org; Fri, 20 Dec 2019 09:40:21 EST
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id 84F9D3F36C;
-        Fri, 20 Dec 2019 15:33:59 +0100 (CET)
-Authentication-Results: pio-pvt-msa3.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=flawful.org header.i=@flawful.org header.b=u5oB4Mzu;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 4iaXAKwHxOaC; Fri, 20 Dec 2019 15:33:58 +0100 (CET)
-Received: from flawful.org (ua-84-217-220-205.bbcust.telenor.se [84.217.220.205])
-        (Authenticated sender: mb274189)
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id F07543F363;
-        Fri, 20 Dec 2019 15:33:57 +0100 (CET)
-Received: by flawful.org (Postfix, from userid 1001)
-        id 7C724778; Fri, 20 Dec 2019 15:33:56 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flawful.org; s=mail;
-        t=1576852436; bh=uIwpsC9CqzY2wzmFL/L7G29tuR1CW3dSiiv7KHs724c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u5oB4Mzu1xVtBR0eepkJZ8Ots2kLODostidNmYqaMn/1ESctkrTfsnWtfqMMC/xDv
-         oFORI+O8DkK+muqQmsN6M4VPflFYMJpviD8fcowOM8Fm0rjNqtCfgAnGB6g6Ww0goA
-         at7lAqcKUFmsqUxKlg7lGVthKl5LRxWhC4CSJl34=
-Date:   Fri, 20 Dec 2019 15:33:56 +0100
-From:   Niklas Cassel <nks@flawful.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Niklas Cassel <niklas.cassel@linaro.org>,
-        linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org,
-        sboyd@kernel.org, vireshk@kernel.org, bjorn.andersson@linaro.org,
-        ulf.hansson@linaro.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 1/5] dt-bindings: power: avs: Add support for CPR
- (Core Power Reduction)
-Message-ID: <20191220143356.cprp55jmuhtcx7wr@flawful.org>
-References: <20191129213917.1301110-1-niklas.cassel@linaro.org>
- <20191129213917.1301110-2-niklas.cassel@linaro.org>
- <121319954.uyNvbQYpoT@kreacher>
+        Fri, 20 Dec 2019 09:42:05 -0500
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 995B123D1F;
+        Fri, 20 Dec 2019 15:42:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1576852922;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=26uu/iYvQFOJAnS0060bLZ77XfkUo39xWpFGhKD5fKs=;
+        b=NlxVAmZmUO38pfDyNXoynkyFDgU1V0eXyf1nIOlEk9kdTStG9NyOotZfMEhNR8s93LF1hE
+        pyLvfMKhWEqp29Xk7ecYyJBg3IwOBjOcMkSEeGoDuYXURcFQB2EDwpr2HRb5aWvhU1F/4y
+        1P4YpQn5q+kezks5d/mGVM4kQjvCnG4=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <121319954.uyNvbQYpoT@kreacher>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Fri, 20 Dec 2019 15:42:02 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Wen He <wen.he_1@nxp.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>, Leo Li <leoyang.li@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [EXT] Re: [v11 2/2] clk: ls1028a: Add clock driver for Display
+ output interface
+In-Reply-To: <DB7PR04MB519563398D95F64E44E795CEE2500@DB7PR04MB5195.eurprd04.prod.outlook.com>
+References: <20191205072653.34701-1-wen.he_1@nxp.com>
+ <20191205072653.34701-2-wen.he_1@nxp.com>
+ <20191212221817.B7FF1206DA@mail.kernel.org>
+ <F2C21019-79F4-450F-A575-9621E5747C4E@walle.cc>
+ <20191216175543.F2C60206B7@mail.kernel.org>
+ <DB7PR04MB519563398D95F64E44E795CEE2500@DB7PR04MB5195.eurprd04.prod.outlook.com>
+Message-ID: <289c144119601032f701a4560ca1902a@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.8
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 995B123D1F
+X-Spamd-Result: default: False [1.40 / 15.00];
+         ARC_NA(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[9];
+         NEURAL_HAM(-0.00)[-0.262];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 10:31:53AM +0100, Rafael J. Wysocki wrote:
-> On Friday, November 29, 2019 10:39:11 PM CET Niklas Cassel wrote:
-> > Add DT bindings to describe the CPR HW found on certain Qualcomm SoCs.
-> > 
-> > Co-developed-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> > Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> > Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > ---
-> > Changes since v6:
-> > -Picked up Bjorn's and Ulf's Reviewed-by.
-> > 
-> >  .../bindings/power/avs/qcom,cpr.txt           | 130 ++++++++++++++++++
-> >  1 file changed, 130 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt b/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
-> > new file mode 100644
-> > index 000000000000..ab0d5ebbad4e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
-> > @@ -0,0 +1,130 @@
-> > +QCOM CPR (Core Power Reduction)
-> > +
-> > +CPR (Core Power Reduction) is a technology to reduce core power on a CPU
-> > +or other device. Each OPP of a device corresponds to a "corner" that has
-> > +a range of valid voltages for a particular frequency. While the device is
-> > +running at a particular frequency, CPR monitors dynamic factors such as
-> > +temperature, etc. and suggests adjustments to the voltage to save power
-> > +and meet silicon characteristic requirements.
-> > +
-> > +- compatible:
-> > +	Usage: required
-> > +	Value type: <string>
-> > +	Definition: should be "qcom,qcs404-cpr", "qcom,cpr" for qcs404
-> > +
-> > +- reg:
-> > +	Usage: required
-> > +	Value type: <prop-encoded-array>
-> > +	Definition: base address and size of the rbcpr register region
-> > +
-> > +- interrupts:
-> > +	Usage: required
-> > +	Value type: <prop-encoded-array>
-> > +	Definition: should specify the CPR interrupt
-> > +
-> > +- clocks:
-> > +	Usage: required
-> > +	Value type: <prop-encoded-array>
-> > +	Definition: phandle to the reference clock
-> > +
-> > +- clock-names:
-> > +	Usage: required
-> > +	Value type: <stringlist>
-> > +	Definition: must be "ref"
-> > +
-> > +- vdd-apc-supply:
-> > +	Usage: required
-> > +	Value type: <phandle>
-> > +	Definition: phandle to the vdd-apc-supply regulator
-> > +
-> > +- #power-domain-cells:
-> > +	Usage: required
-> > +	Value type: <u32>
-> > +	Definition: should be 0
-> > +
-> > +- operating-points-v2:
-> > +	Usage: required
-> > +	Value type: <phandle>
-> > +	Definition: A phandle to the OPP table containing the
-> > +		    performance states supported by the CPR
-> > +		    power domain
-> > +
-> > +- acc-syscon:
-> > +	Usage: optional
-> > +	Value type: <phandle>
-> > +	Definition: phandle to syscon for writing ACC settings
-> > +
-> > +- nvmem-cells:
-> > +	Usage: required
-> > +	Value type: <phandle>
-> > +	Definition: phandle to nvmem cells containing the data
-> > +		    that makes up a fuse corner, for each fuse corner.
-> > +		    As well as the CPR fuse revision.
-> > +
-> > +- nvmem-cell-names:
-> > +	Usage: required
-> > +	Value type: <stringlist>
-> > +	Definition: should be "cpr_quotient_offset1", "cpr_quotient_offset2",
-> > +		    "cpr_quotient_offset3", "cpr_init_voltage1",
-> > +		    "cpr_init_voltage2", "cpr_init_voltage3", "cpr_quotient1",
-> > +		    "cpr_quotient2", "cpr_quotient3", "cpr_ring_osc1",
-> > +		    "cpr_ring_osc2", "cpr_ring_osc3", "cpr_fuse_revision"
-> > +		    for qcs404.
-> > +
-> > +Example:
-> > +
-> > +	cpr_opp_table: cpr-opp-table {
-> > +		compatible = "operating-points-v2-qcom-level";
-> > +
-> > +		cpr_opp1: opp1 {
-> > +			opp-level = <1>;
-> > +			qcom,opp-fuse-level = <1>;
-> > +		};
-> > +		cpr_opp2: opp2 {
-> > +			opp-level = <2>;
-> > +			qcom,opp-fuse-level = <2>;
-> > +		};
-> > +		cpr_opp3: opp3 {
-> > +			opp-level = <3>;
-> > +			qcom,opp-fuse-level = <3>;
-> > +		};
-> > +	};
-> > +
-> > +	power-controller@b018000 {
-> > +		compatible = "qcom,qcs404-cpr", "qcom,cpr";
-> > +		reg = <0x0b018000 0x1000>;
-> > +		interrupts = <0 15 IRQ_TYPE_EDGE_RISING>;
-> > +		clocks = <&xo_board>;
-> > +		clock-names = "ref";
-> > +		vdd-apc-supply = <&pms405_s3>;
-> > +		#power-domain-cells = <0>;
-> > +		operating-points-v2 = <&cpr_opp_table>;
-> > +		acc-syscon = <&tcsr>;
-> > +
-> > +		nvmem-cells = <&cpr_efuse_quot_offset1>,
-> > +			<&cpr_efuse_quot_offset2>,
-> > +			<&cpr_efuse_quot_offset3>,
-> > +			<&cpr_efuse_init_voltage1>,
-> > +			<&cpr_efuse_init_voltage2>,
-> > +			<&cpr_efuse_init_voltage3>,
-> > +			<&cpr_efuse_quot1>,
-> > +			<&cpr_efuse_quot2>,
-> > +			<&cpr_efuse_quot3>,
-> > +			<&cpr_efuse_ring1>,
-> > +			<&cpr_efuse_ring2>,
-> > +			<&cpr_efuse_ring3>,
-> > +			<&cpr_efuse_revision>;
-> > +		nvmem-cell-names = "cpr_quotient_offset1",
-> > +			"cpr_quotient_offset2",
-> > +			"cpr_quotient_offset3",
-> > +			"cpr_init_voltage1",
-> > +			"cpr_init_voltage2",
-> > +			"cpr_init_voltage3",
-> > +			"cpr_quotient1",
-> > +			"cpr_quotient2",
-> > +			"cpr_quotient3",
-> > +			"cpr_ring_osc1",
-> > +			"cpr_ring_osc2",
-> > +			"cpr_ring_osc3",
-> > +			"cpr_fuse_revision";
-> > +	};
-> > 
+Am 2019-12-17 08:08, schrieb Wen He:
+>> -----Original Message-----
+>> From: Stephen Boyd <sboyd@kernel.org>
+>> Sent: 2019年12月17日 1:56
+>> To: Leo Li <leoyang.li@nxp.com>; Mark Rutland <mark.rutland@arm.com>;
+>> Michael Turquette <mturquette@baylibre.com>; Michael Walle
+>> <michael@walle.cc>; Rob Herring <robh+dt@kernel.org>; Wen He
+>> <wen.he_1@nxp.com>; devicetree@vger.kernel.org; 
+>> linux-clk@vger.kernel.org;
+>> linux-kernel@vger.kernel.org
+>> Subject: [EXT] Re: [v11 2/2] clk: ls1028a: Add clock driver for 
+>> Display output
+>> interface
+>> 
+>> Caution: EXT Email
+>> 
+>> Quoting Michael Walle (2019-12-12 16:06:16)
+>> > Am 12. Dezember 2019 23:18:16 MEZ schrieb Stephen Boyd
+>> <sboyd@kernel.org>:
+>> > >Quoting Wen He (2019-12-04 23:26:53)
+>> > >> Add clock driver for QorIQ LS1028A Display output interfaces(LCD,
+>> > >DPHY),
+>> > >> as implemented in TSMC CLN28HPM PLL, this PLL supports the
+>> > >programmable
+>> > >> integer division and range of the display output pixel clock's
+>> > >27-594MHz.
+>> > >>
+>> > >> Signed-off-by: Wen He <wen.he_1@nxp.com>
+>> > >> Signed-off-by: Michael Walle <michael@walle.cc>
+>> > >
+>> > >Is Michael the author? SoB chain is backwards here.
+>> >
+>> > the original driver was from Wen. I've just supplied some code and the
+>> > vco frequency stuff. so its basically a sob of us both.
+>> >
+>> > -michael
+>> 
+>> Ok. That's a Co-developed-by: tag then. Thanks for letting us know.
 > 
-> I have queued up this one and the [2/5] for 5.6, but if you'd rather want them
-> to go in via a different patch, please let me know and I'll drop them.
-> 
+> The v12 version patch was sent out.
+> Does need I change the author sign to below?
 
-Thanks a lot Rafael!
+I guess you mean the MODULE_AUTHOR()? I don't care if you add me or not,
+so do as you like.
 
-I would very much prefer them to go via your tree.
+> Co-developed-by: Wen He <wen.he_1@nxp.com>
+> Signed-off-by: Wen He <wen.he_1@nxp.com>
+> Co-developed-by: Michael Walle <michael.@walle.cc>
+> Signed-off-by: Michael Walle <michael.@walle.cc>
+> Signed-off-by: Wen He <wen.he_1@nxp.com>
 
-Unfortunately it seems like kbuild test robot
-found an incorrect printk format specifier in
-one of the debug prints.
+Judging by the other Co-developed-by: lines it should be
 
-Line 838
-dev_dbg(dev, "efuse read(%s) = %x, bytes %ld\n", cname, *data, len);
+Co-developed-by: Michael Walle <michael.@walle.cc>
+Signed-off-by: Michael Walle <michael.@walle.cc>
+Signed-off-by: Wen He <wen.he_1@nxp.com>
 
-should be
-dev_dbg(dev, "efuse read(%s) = %x, bytes %zd\n", cname, *data, len);
-
-So %zd rather than %ld.
-
-This was obviously an error, but didn't show when
-compiling on arm64 or x86_64.
-
-Sorry for this inconvenience.
-
-Could you fix up the commit or do I need to do a respin?
-
-
-Kind regards,
-Niklas
+-michael
