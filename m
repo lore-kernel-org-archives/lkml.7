@@ -2,103 +2,128 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C220FC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA29C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93612227BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9838824672
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:52:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Lz51U0QI"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="rNLyeV0f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfLTAvF (ORCPT
+        id S1727128AbfLTAwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 19:51:05 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35381 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726952AbfLTAvF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 19:51:05 -0500
-Received: by mail-pf1-f194.google.com with SMTP id b19so4256796pfo.2
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 16:51:04 -0800 (PST)
+        Thu, 19 Dec 2019 19:52:38 -0500
+Received: from mail-mw2nam12on2071.outbound.protection.outlook.com ([40.107.244.71]:6107
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726952AbfLTAwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 19:52:38 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=k3RAA6rJH93YQjz5sK9OYnm+fz7xPd5ZrN5E2imtXzBT9paKSkr3HdMgWMRWfifNBQ+gvfgT34N4GCO6ENNtJjw9aliNxMHuylmm5Tq2UJrfSHHOnDZQuIAxvGR71pSaRK0aaeqZa+yH/O0aszJMM55qpv3nQSwG3eoXiugZXL/Ec2FsGizZbl+wFL0QyiCKqmwXnO7dYCgAL/pNtA9fwIIklmyL26idFthg/ffJ1MIbRJNj/TY+zpQDVMQ4VNkKKn4VqpXqdnH2rSYDtR0BJ1Rp0RwdYuDEYxNUr+ClrLfyTtHNcDoqRZQc2TnPzk2KAV9L5RkDbI79KYjwSTJ09w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X5PZYdo8XBquULSzWmV+VywqtlPEXF9y4o31GuZB5SI=;
+ b=FkRXqguwsJQ/JbP8AQhyzZOayNCFynRlWWI647ZRILWFrDbrBsM7uE2b+qVkKl0nWgBtRzHPiLGSiOGMe2+M0gPlnJnmqM6EoxYVSr0fl8JCVKWxHXPZJ7GRxO//aZy7k6KPPVCmCUpIahxJcdI4gerDHvJmAC1vdVW164xXGy45g7HH3/wwF00uB8qb0SLAMOrDxYpZf1Mv1XjBwbZ2u+G+zgrt1TTb4e9elfrgtuMBE891gYL7tVYizXY8mlM5oQeKzMyqdcY9OHb+rNEMTexdMmDHPOnEagJYlDEJrm+qPi8dveSCfVRbjEnZM7a30/9MMiDESmy0tJm7GlJhqw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tOcPFNf2vX0/BY8Sft5h0txWxIib2Ekx0BekGv4rKT8=;
-        b=Lz51U0QI0OgK6Qj5WmzoQvNIGP4CNPWEYzgHpnhPem/ApUZzq9fpsuh4efxpqxpLC8
-         AomHskpcZgljqvzpJ7UDmUVDmKs9QxmlDGQapttcc3GKAwJkVqsQzJtVFxRpyPwPDeKU
-         4mI/OaP29a3yrqQWiJVpybc2z2ttYiTSl6/rk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tOcPFNf2vX0/BY8Sft5h0txWxIib2Ekx0BekGv4rKT8=;
-        b=ASHX50fh2BO4Th6RRZBnJWTOliJD8GgN7WLmhd6nIkd3TZhMmBhmC/5pTtDn/h3Gic
-         bhbpukfjfKJVZYmeglgZaz91qf00ZUTapcCxbWhZ5tyI6DWYFOmoEqHhBD9bt/3tss+U
-         Av/XEbuCzRao/DsjTIA6qt5uBlk+8PmrdoaFSD2cz++/NACLmOhmioGAdOpnkPla4lWT
-         qCfV6V0piZ1Aj67HNVXo9EZqOoMnvWdrHInWMKgL11IMbee460V9PIVXuH8uDkRfesgM
-         JuEaYyFVRjmQwtEziv0RJeGRjJ0EGvBu9pEaapfBAuYBjNfrDqGoaEwDvf1VA+psFdUy
-         r+mw==
-X-Gm-Message-State: APjAAAXRg00mRekDTwFNRzaJ6xmLMGkWLnFzZK4SddJx2Kchjctvjdzm
-        QEr35zLpHz/3hOOUfYYlnfihoA==
-X-Google-Smtp-Source: APXvYqx0zMwXaFm3Ll6uQnl1zySKniwcSnnlHZJRpdZrbbpWoYT0xnd3kTkZAlmnuc9dsa5CoVNtUA==
-X-Received: by 2002:a63:d406:: with SMTP id a6mr12217402pgh.264.1576803064022;
-        Thu, 19 Dec 2019 16:51:04 -0800 (PST)
-Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
-        by smtp.gmail.com with ESMTPSA id w8sm9466116pfn.186.2019.12.19.16.51.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 16:51:03 -0800 (PST)
-From:   Prashant Malani <pmalani@chromium.org>
-To:     enric.balletbo@collabora.com, groeck@chromium.org,
-        bleung@chromium.org, lee.jones@linaro.org
-Cc:     linux-kernel@vger.kernel.org,
-        Prashant Malani <pmalani@chromium.org>
-Subject: [PATCH v2 2/2] mfd: cros_ec: Add usbpd-notify to usbpd_charger
-Date:   Thu, 19 Dec 2019 16:49:47 -0800
-Message-Id: <20191220004946.113151-2-pmalani@chromium.org>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X5PZYdo8XBquULSzWmV+VywqtlPEXF9y4o31GuZB5SI=;
+ b=rNLyeV0fY0VIOB3mWaN8fc/eX5zrpxVGfffkBOEVR4LbRXZmrUF6yA113c6x5OJqAA85KB958k275h+J2W5N7utVMEIpQJ41ibu4RGsA+/UCrcUEh7yX/sPWaT+5p2Ttdk0JVioYGct35Xzyi2s4VwhU8+us8Rcp+R/6DjuMXOk=
+Received: from BYAPR12MB2806.namprd12.prod.outlook.com (20.176.254.20) by
+ BYAPR12MB3509.namprd12.prod.outlook.com (20.179.94.78) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.16; Fri, 20 Dec 2019 00:52:35 +0000
+Received: from BYAPR12MB2806.namprd12.prod.outlook.com
+ ([fe80::bccf:40ec:3b93:4269]) by BYAPR12MB2806.namprd12.prod.outlook.com
+ ([fe80::bccf:40ec:3b93:4269%6]) with mapi id 15.20.2538.019; Fri, 20 Dec 2019
+ 00:52:34 +0000
+From:   "Chen, Guchun" <Guchun.Chen@amd.com>
+To:     Alex Deucher <alexdeucher@gmail.com>
+CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: linux-next: Fixes tag needs some work in the amdgpu tree
+Thread-Topic: linux-next: Fixes tag needs some work in the amdgpu tree
+Thread-Index: AQHVtenBDREYp5T5WEStp+oONEi+uKfAqYHQgAA5RACAAVCkMA==
+Date:   Fri, 20 Dec 2019 00:52:34 +0000
+Message-ID: <BYAPR12MB2806BBCC7DCC63F2AC83297EF12D0@BYAPR12MB2806.namprd12.prod.outlook.com>
+References: <20191219082557.16092126@canb.auug.org.au>
+ <BYAPR12MB2806A8EBBB8B6F9AE29FBC00F1520@BYAPR12MB2806.namprd12.prod.outlook.com>
+ <CADnq5_PTLEXHd3U8fkKVcckFjCDN_p3n9PoQWwLkzRODqDd71A@mail.gmail.com>
+In-Reply-To: <CADnq5_PTLEXHd3U8fkKVcckFjCDN_p3n9PoQWwLkzRODqDd71A@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Guchun.Chen@amd.com; 
+x-originating-ip: [180.167.199.189]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 714330b4-984d-47a0-4a8a-08d784e6e6e2
+x-ms-traffictypediagnostic: BYAPR12MB3509:
+x-microsoft-antispam-prvs: <BYAPR12MB35091D585B64F8EB5E7BB767F12D0@BYAPR12MB3509.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 025796F161
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(376002)(39860400002)(346002)(136003)(53754006)(13464003)(199004)(189003)(186003)(6916009)(54906003)(9686003)(316002)(71200400001)(6506007)(81166006)(52536014)(81156014)(7696005)(53546011)(478600001)(4326008)(76116006)(66446008)(64756008)(8936002)(66556008)(66476007)(33656002)(26005)(2906002)(55016002)(8676002)(86362001)(66946007)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR12MB3509;H:BYAPR12MB2806.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: r9Vm47ZsSRRVn4YL9RDmiv8Y0h9r0WQQm2GyecHDCxjSb3JQBQOedLloIzIHDYCBozRrJSxMo0i80g2xDpUY7E2I4IXWdJyvrhTA1Py5atM+5X1aR0HxP95UR+qhYFxDXnYPxf8mUsJ16uPrq4b/jcQThBA8uDBtXXydaF3pm29+MVhs7sgLU6AKlqHIrvm8zsOqw0rjdLDDZvISTAe1yavl0yDe7PLrMvSXSkv3xywWZ8ECqQkdYhTBwRIOCOlvYX334JqQOrBL0sqKB8TupKgagSGgEqQIUq8azCtCYeLCVUfwrygIRUMOfeQcZzk2XJt6rO0E+Rrqpk0KvmTHdzpePLa4//GcQH2dGSUm3XhDHI7Dqdbiu5aTMeV2u/iaYz6mrzQWq8JqoHP/w8NhCC4MEYrVY3NLRDwB1eFZnrqQhoc8wiP6MBVzU7cvsPrHWLgO6yOKgakvJ4xTcV6gft5qcTriWcZB4gtmkEBABuH7r7KIOlujzbCgEOuW+hYWNWCLhJLAeDOaq2hG/UMYSw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 714330b4-984d-47a0-4a8a-08d784e6e6e2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Dec 2019 00:52:34.6509
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: snpZnpq9UpXMAI5DdmyfdxvGULBYe9dBBldCnBWOudrevLNDT+kc9yvtR8qqg4nhtBv/YuQNvlwMNKYb02I6PQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3509
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the cros-usbpd-notify driver as a cell for the cros_usbpd_charger
-subdevice on non-ACPI platforms.
-
-This driver allows other cros-ec devices to receive PD event
-notifications from the Chrome OS Embedded Controller (EC) via a
-notification chain.
-
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
----
-
-Changes in v2:
-- Removed auto-generated Change-Id.
-
- drivers/mfd/cros_ec_dev.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-index c4b977a5dd966..1dde480f35b93 100644
---- a/drivers/mfd/cros_ec_dev.c
-+++ b/drivers/mfd/cros_ec_dev.c
-@@ -85,6 +85,9 @@ static const struct mfd_cell cros_ec_sensorhub_cells[] = {
- static const struct mfd_cell cros_usbpd_charger_cells[] = {
- 	{ .name = "cros-usbpd-charger", },
- 	{ .name = "cros-usbpd-logger", },
-+#ifndef CONFIG_ACPI
-+	{ .name = "cros-usbpd-notify", },
-+#endif
- };
- 
- static const struct cros_feature_to_cells cros_subdevices[] = {
--- 
-2.24.1.735.g03f4e72817-goog
-
+VGhhbmtzIEFsZXggYW5kIFN0ZXBoZW4uDQpJIHdpbGwgYmUgYXdhcmUgb2YgdGhpcyBuZXh0IHRp
+bWUuIFNvcnJ5IGZvciB0aGUgaW5jb252ZW5pZW5jZSBhZ2Fpbi4NCg0KUmVnYXJkcywNCkd1Y2h1
+bg0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogQWxleCBEZXVjaGVyIDxhbGV4
+ZGV1Y2hlckBnbWFpbC5jb20+IA0KU2VudDogVGh1cnNkYXksIERlY2VtYmVyIDE5LCAyMDE5IDEy
+OjQ3IFBNDQpUbzogQ2hlbiwgR3VjaHVuIDxHdWNodW4uQ2hlbkBhbWQuY29tPg0KQ2M6IFN0ZXBo
+ZW4gUm90aHdlbGwgPHNmckBjYW5iLmF1dWcub3JnLmF1PjsgTGludXggTmV4dCBNYWlsaW5nIExp
+c3QgPGxpbnV4LW5leHRAdmdlci5rZXJuZWwub3JnPjsgTGludXggS2VybmVsIE1haWxpbmcgTGlz
+dCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz4NClN1YmplY3Q6IFJlOiBsaW51eC1uZXh0
+OiBGaXhlcyB0YWcgbmVlZHMgc29tZSB3b3JrIGluIHRoZSBhbWRncHUgdHJlZQ0KDQpPbiBXZWQs
+IERlYyAxOCwgMjAxOSBhdCA4OjIyIFBNIENoZW4sIEd1Y2h1biA8R3VjaHVuLkNoZW5AYW1kLmNv
+bT4gd3JvdGU6DQo+DQo+IFtBTUQgT2ZmaWNpYWwgVXNlIE9ubHkgLSBJbnRlcm5hbCBEaXN0cmli
+dXRpb24gT25seV0NCj4NCj4gSGkgU3RlcGhlbiwNCj4NCj4gU29ycnkgZm9yIHRoZSBpbmNvbnZl
+bmllbmNlLiBIb3cgSSBjYW4gZml4IHRoaXM/DQo+DQoNCkFscmVhZHkgZml4ZWQuDQoNCkFsZXgN
+Cg0KPiBSZWdhcmRzLA0KPiBHdWNodW4NCj4NCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0N
+Cj4gRnJvbTogU3RlcGhlbiBSb3Rod2VsbCA8c2ZyQGNhbmIuYXV1Zy5vcmcuYXU+DQo+IFNlbnQ6
+IFRodXJzZGF5LCBEZWNlbWJlciAxOSwgMjAxOSA1OjI2IEFNDQo+IFRvOiBBbGV4IERldWNoZXIg
+PGFsZXhkZXVjaGVyQGdtYWlsLmNvbT4NCj4gQ2M6IExpbnV4IE5leHQgTWFpbGluZyBMaXN0IDxs
+aW51eC1uZXh0QHZnZXIua2VybmVsLm9yZz47IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3QgPGxp
+bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBDaGVuLCBHdWNodW4gPEd1Y2h1bi5DaGVuQGFt
+ZC5jb20+DQo+IFN1YmplY3Q6IGxpbnV4LW5leHQ6IEZpeGVzIHRhZyBuZWVkcyBzb21lIHdvcmsg
+aW4gdGhlIGFtZGdwdSB0cmVlDQo+DQo+IEhpIGFsbCwNCj4NCj4gSW4gY29tbWl0DQo+DQo+ICAg
+Y2FhMDE2NTkwMjhhICgiZHJtL2FtZGdwdTogbW92ZSB1bWMgb2Zmc2V0IHRvIG9uZSBuZXcgaGVh
+ZGVyIGZpbGUgZm9yIEFyY3R1cnVzIikNCj4NCj4gRml4ZXMgdGFnDQo+DQo+ICAgRml4ZXM6IDk2
+ODY1NjNjNGM0MiBkcm0vYW1kZ3B1OiBBZGRlZCBSQVMgVU1DIGVycm9yIHF1ZXJ5IHN1cHBvcnQg
+Zm9yIEFyY3R1cnVzDQo+DQo+IGhhcyB0aGVzZSBwcm9ibGVtKHMpOg0KPg0KPiAgIC0gVGFyZ2V0
+IFNIQTEgZG9lcyBub3QgZXhpc3QNCj4NCj4gRGlkIHlvdSBtZWFuDQo+DQo+IEZpeGVzOiA0Y2Y3
+ODFjMjRjM2IgKCJkcm0vYW1kZ3B1OiBBZGRlZCBSQVMgVU1DIGVycm9yIHF1ZXJ5IHN1cHBvcnQg
+Zm9yIEFyY3R1cnVzIikNCj4NCj4gQWxzbywgcGxlYXNlIGtlZXAgYWxsIHRoZSB0YWdzIHRvZ2V0
+aGVyIGF0IHRoZSBlbmQgb2YgdGhlIGNvbW1pdCBtZXNzYWdlLg0KPg0KPiAtLQ0KPiBDaGVlcnMs
+DQo+IFN0ZXBoZW4gUm90aHdlbGwNCg==
