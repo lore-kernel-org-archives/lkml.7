@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01119C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516C9C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C57C3206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 272832146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:40:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r/+yaoUA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CQjMpL4h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbfLTTjf (ORCPT
+        id S1727514AbfLTTki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 14:39:35 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41029 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727402AbfLTTjf (ORCPT
+        Fri, 20 Dec 2019 14:40:38 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51146 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727411AbfLTTkh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 14:39:35 -0500
-Received: by mail-wr1-f67.google.com with SMTP id c9so10509618wrw.8
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 11:39:34 -0800 (PST)
+        Fri, 20 Dec 2019 14:40:37 -0500
+Received: by mail-wm1-f67.google.com with SMTP id a5so10078549wmb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 11:40:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hg66hkKf1/l6gSi7Ru8j+0F4eQ0bALANcCRIs1Swg2o=;
-        b=r/+yaoUAVeaMIGg3aNjF1y+tpFeSm1Ds7vqOIVrpyjRCx2u/9/6Ymr9/+P87/OCQRE
-         +Nk77dJwyms5xgFPK4+f/eSnyCDgP0Gn4nwxhWVtUTA2C5eZWRLrvcOLyK2uwyWL1Lhf
-         M4Ro385jhulqaoz57QOvwJrKtcSRJOT70A3UKDwx1A9xyfn7dxsKbNgBcj6zx851qfOB
-         mK+7+An8JhIjPYonOvPOqmCgGa33/PBWjnvlb67MqwshycWxFHM4awVofKI4JJNmuz4j
-         q4OpajkPXuZiRIUYtxQ56Y3DRUMsHKaoeB/3sXMzO6dAhyD4U2Vo9Bx1GGfgl3ngWyfF
-         21kQ==
+        bh=hdYNVeVJ9zG7uGLj2brLM5VkYYRU60Z3UwUXj26j7Y4=;
+        b=CQjMpL4hpX1WnvIacGuyzDar6rEtOQ1Hzw1EWSkC5XHG14fswPnJF+1QV21ZfGULQA
+         mo9Kz7hvURKWJsuf04nj3n1t675ntsjJiu6YgdNBoPx+1I1VLVA5sNxdGONzPvsomlcy
+         UR35nKhJ3NFWeMAlJz/Nm17pxvMqiK3/R8cLZjLuwX6skmzUW6/NBiL2F2E609zQBP6l
+         EnMNIw+vKToWzJCrnqHUKuW0T16VZaqdkAwBDK6jOZHj/wAb62pB9QGbeOGw3vzCBrQS
+         jvsjALrM4HfNat7B+63vHH17sL5/w5yEgaPTkOdOdi4e1Ph+JDDG6mRaza3jnjxOT1nt
+         9TBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hg66hkKf1/l6gSi7Ru8j+0F4eQ0bALANcCRIs1Swg2o=;
-        b=QS1NoUPCiKGiKpkKYrIiZT8WQZsuhzvNshxj2ly2BDD54X9nXo2u7O7JwoBUs5SCSh
-         /9Pr8xl3FpZ7P6C/sYxydLFj0wh+t7MXfXa0c4W9ABnQRXIl6bHZP9B8TM7OjGcX7yMI
-         wRv281gUieWWnA+VxSdHGdEFBJpCyL/DQG6W6SX1Hcz7k8EgSGJHACEEtfMfC9WDlDZW
-         RhHz6wJ2KJNivsnVxCfWgsbL7Zt9zvLRxZ4UltuOQLqSrEmO6kR1uPypJCExM6wN2ywo
-         VEnuSLQtxdhkIvLNHeKlZlmhsc0UWmt4v8M+fVXze+Kw9bhbkXvSWcicj6VKsCWV/aot
-         +BnQ==
-X-Gm-Message-State: APjAAAUbtWSLpLsGEDNydU/Z6JxlFPALQqha8oeQUJHyr2ofg87ckOO7
-        hCXYTiXFBUVHSriBf46pdaztUJC8994mwY3/POvtvQ==
-X-Google-Smtp-Source: APXvYqwDmNTqWZW+leKA59a8gVyfZird0232HELGZmTDZotesfmREMjGXBz0jjcX0ntchFAScxKEm4Gi5Tuy0oass+U=
-X-Received: by 2002:a5d:6a0f:: with SMTP id m15mr16913087wru.40.1576870773493;
- Fri, 20 Dec 2019 11:39:33 -0800 (PST)
+        bh=hdYNVeVJ9zG7uGLj2brLM5VkYYRU60Z3UwUXj26j7Y4=;
+        b=bXWwet4XTukZ85YjRXGM7mSQ0N214nczAIFkAFQmiQ1m28KVk+pa36wsiaG+9Xt2pr
+         +QwpNZTrIS4bqxssPS34BSgOpvYrKALoSz6NUf8XYzs3Yy+mykyL0gf1kKVKUFSEli5I
+         MegFxlg/0xu4EDwYaLusGGLUCSV+syIowOe1SGtWhx34daF9ehXNJ7PWbhO02+YRoCat
+         xXCHShZHNIlZu5bGUtzndCE1TFJI56zzr7hivuU8QVQ72QwdIhwMhSLHSNp75EHCFXH7
+         9X3xVWcoWxUxMbQkq2UBSmRo9RsXBHUiHjxzriMlLOrri77v8vIHowqvf4Iw3S1QEMlo
+         fzDQ==
+X-Gm-Message-State: APjAAAV77Yc9XiLQwun/BNJOjoriu51j7rt0+snzd6vDkaeRskjbKqLC
+        NQvwt+x5KAjzBOfljb7LR9ECbj4JqpQr9YXtq6h/kA==
+X-Google-Smtp-Source: APXvYqym0wfGn4MUh0Q5DxHRfhzWymg3X0lx1rvhD/+srbD8Wct7zzVCcUi8kXTeECHde0dGL3nXAC88Ujygt72NEnw=
+X-Received: by 2002:a1c:6404:: with SMTP id y4mr18312577wmb.143.1576870835379;
+ Fri, 20 Dec 2019 11:40:35 -0800 (PST)
 MIME-Version: 1.0
-References: <1576824253-47863-1-git-send-email-mafeng.ma@huawei.com>
-In-Reply-To: <1576824253-47863-1-git-send-email-mafeng.ma@huawei.com>
+References: <1576834568-82874-1-git-send-email-mafeng.ma@huawei.com>
+In-Reply-To: <1576834568-82874-1-git-send-email-mafeng.ma@huawei.com>
 From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 20 Dec 2019 14:39:20 -0500
-Message-ID: <CADnq5_PBt3LeLPc48C5rP=G9d8TgBNj71XiyXo6kZChr30hyWQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/amdgpu: Remove unneeded variable 'ret' in amdgpu_device.c
+Date:   Fri, 20 Dec 2019 14:40:23 -0500
+Message-ID: <CADnq5_MgHpY4NJg+QcneaEWjVUa0qtdN8WX4aBrsx=hv2ukVdw@mail.gmail.com>
+Subject: Re: [PATCH] drm/amdgpu: Remove unneeded variable 'ret' in navi10_ih.c
 To:     Ma Feng <mafeng.ma@huawei.com>
 Cc:     Alex Deucher <alexander.deucher@amd.com>,
         Christian Koenig <christian.koenig@amd.com>,
@@ -79,35 +79,34 @@ On Fri, Dec 20, 2019 at 10:10 AM Ma Feng <mafeng.ma@huawei.com> wrote:
 >
 > Fixes coccicheck warning:
 >
-> drivers/gpu/drm/amd/amdgpu/amdgpu_device.c:1036:5-8: Unneeded variable: "ret". Return "0" on line 1079
+> drivers/gpu/drm/amd/amdgpu/navi10_ih.c:113:5-8: Unneeded variable: "ret". Return "0" on line 182
 >
 > Reported-by: Hulk Robot <hulkci@huawei.com>
 > Signed-off-by: Ma Feng <mafeng.ma@huawei.com>
 
-Applied.  thanks!
+Applied.  Thanks!
 
 Alex
 
 > ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+>  drivers/gpu/drm/amd/amdgpu/navi10_ih.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 >
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> index 080ec18..6a4b142 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> @@ -1033,8 +1033,6 @@ static void amdgpu_device_check_smu_prv_buffer_size(struct amdgpu_device *adev)
->   */
->  static int amdgpu_device_check_arguments(struct amdgpu_device *adev)
+> diff --git a/drivers/gpu/drm/amd/amdgpu/navi10_ih.c b/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
+> index 9af7356..f737ce4 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
+> @@ -110,7 +110,6 @@ static uint32_t navi10_ih_rb_cntl(struct amdgpu_ih_ring *ih, uint32_t ih_rb_cntl
+>  static int navi10_ih_irq_init(struct amdgpu_device *adev)
 >  {
+>         struct amdgpu_ih_ring *ih = &adev->irq.ih;
 > -       int ret = 0;
-> -
->         if (amdgpu_sched_jobs < 4) {
->                 dev_warn(adev->dev, "sched jobs (%d) must be at least 4\n",
->                          amdgpu_sched_jobs);
-> @@ -1076,7 +1074,7 @@ static int amdgpu_device_check_arguments(struct amdgpu_device *adev)
+>         u32 ih_rb_cntl, ih_doorbell_rtpr, ih_chicken;
+>         u32 tmp;
 >
->         adev->tmz.enabled = amdgpu_is_tmz(adev);
+> @@ -179,7 +178,7 @@ static int navi10_ih_irq_init(struct amdgpu_device *adev)
+>         /* enable interrupts */
+>         navi10_ih_enable_interrupts(adev);
 >
 > -       return ret;
 > +       return 0;
