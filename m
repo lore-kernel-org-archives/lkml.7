@@ -2,114 +2,174 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0A5C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344A4C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DBCD2465E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F7AC24683
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:30:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbfLTLaa (ORCPT
+        id S1727370AbfLTLas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 06:30:30 -0500
-Received: from 8bytes.org ([81.169.241.247]:58350 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727198AbfLTLa3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 06:30:29 -0500
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 740D02C7; Fri, 20 Dec 2019 12:30:28 +0100 (CET)
-Date:   Fri, 20 Dec 2019 12:30:26 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: [git pull] IOMMU Fixes for Linux v5.5-rc2
-Message-ID: <20191220113020.GA18747@8bytes.org>
+        Fri, 20 Dec 2019 06:30:48 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2211 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727192AbfLTLas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 06:30:48 -0500
+Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id B1ADF1CBF2C20DA4F7A8;
+        Fri, 20 Dec 2019 11:30:46 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML712-CAH.china.huawei.com (10.201.108.35) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 20 Dec 2019 11:30:46 +0000
+Received: from [127.0.0.1] (10.202.227.179) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Fri, 20 Dec
+ 2019 11:30:46 +0000
+Subject: Re: [PATCH RFC 1/1] genirq: Make threaded handler use irq affinity
+ for managed interrupt
+From:   John Garry <john.garry@huawei.com>
+To:     Marc Zyngier <maz@kernel.org>
+CC:     Ming Lei <ming.lei@redhat.com>, <tglx@linutronix.de>,
+        "chenxiang (M)" <chenxiang66@hisilicon.com>,
+        <bigeasy@linutronix.de>, <linux-kernel@vger.kernel.org>,
+        <hare@suse.com>, <hch@lst.de>, <axboe@kernel.dk>,
+        <bvanassche@acm.org>, <peterz@infradead.org>, <mingo@redhat.com>
+References: <1575642904-58295-1-git-send-email-john.garry@huawei.com>
+ <1575642904-58295-2-git-send-email-john.garry@huawei.com>
+ <20191207080335.GA6077@ming.t460p>
+ <78a10958-fdc9-0576-0c39-6079b9749d39@huawei.com>
+ <20191210014335.GA25022@ming.t460p>
+ <0ad37515-c22d-6857-65a2-cc28256a8afa@huawei.com>
+ <20191212223805.GA24463@ming.t460p>
+ <d4b89ecf-7ced-d5d6-fc02-6d4257580465@huawei.com>
+ <20191213131822.GA19876@ming.t460p>
+ <b7f3bcea-84ec-f9f6-a3aa-007ae712415f@huawei.com>
+ <20191214135641.5a817512@why>
+ <7db89b97-1b9e-8dd1-684a-3eef1b1af244@huawei.com>
+ <50d9ba606e1e3ee1665a0328ffac67ac@www.loen.fr>
+ <a5f6a542-2dbc-62de-52e2-bd5413b5db51@huawei.com>
+ <68058fd28c939b8e065524715494de95@www.loen.fr>
+ <ac5b5a25-df2e-18e9-6b0f-60af8c7cec3b@huawei.com>
+Message-ID: <687cbcc4-89d9-63ea-a246-ce2abaae501a@huawei.com>
+Date:   Fri, 20 Dec 2019 11:30:44 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ac5b5a25-df2e-18e9-6b0f-60af8c7cec3b@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.179]
+X-ClientProxiedBy: lhreml702-chm.china.huawei.com (10.201.108.51) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+>> So you enqueue requests from CPU0 only? It seems a bit odd...
+> 
+> No, but maybe I wasn't clear enough. I'll give an overview:
+> 
+> For D06 SAS controller - which is a multi-queue PCI device - we use 
+> managed interrupts. The HW has 16 submission/completion queues, so for 
+> 96 cores, we have an even spread of 6 CPUs assigned per queue; and this 
+> per-queue CPU mask is the interrupt affinity mask. So CPU0-5 would 
+> submit any IO on queue0, CPU6-11 on queue2, and so on. PCI NVMe is 
+> essentially the same.
+> 
+> These are the environments which we're trying to promote performance.
+> 
+> Then for D05 SAS controller - which is multi-queue platform device 
+> (mbigen) - we don't use managed interrupts. We still submit IO from any 
+> CPU, but we choose the queue to submit IO on a round-robin basis to 
+> promote some isolation, i.e. reduce inter-queue lock contention, so the 
+> queue chosen has nothing to do with the CPU.
+> 
+> And with your change we may submit on cpu4 but service the interrupt on 
+> cpu30, as an example. While previously we would always service on cpu0. 
+> The old way still isn't ideal, I'll admit.
+> 
+> For this env, we would just like to maintain the same performance. And 
+> it's here that we see the performance drop.
+> 
 
-thanks for taking care of the KASAN related IOMMU fix while I was dived
-into other development work and sorry for the inconvenience. Here are
-the other IOMMU fixes that piled up during the last weeks:
+Hi Marc,
 
-The following changes since commit d1eef1c619749b2a57e514a3fa67d9a516ffa919:
+We've got some more results and it looks promising.
 
-  Linux 5.5-rc2 (2019-12-15 15:16:08 -0800)
+So with your patch we get a performance boost of 3180.1K -> 3294.9K IOPS 
+in the D06 SAS env. Then when we change the driver to use threaded 
+interrupt handler (mainline currently uses tasklet), we get a boost 
+again up to 3415K IOPS.
 
-are available in the Git repository at:
+Now this is essentially the same figure we had with using threaded 
+handler + the gen irq change in spreading the handler CPU affinity. We 
+did also test your patch + gen irq change and got a performance drop, to 
+3347K IOPS.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-fixes-v5.5-rc2
+So tentatively I'd say your patch may be all we need.
 
-for you to fetch changes up to c18647900ec864d401ba09b3bbd5b34f331f8d26:
+FYI, here is how the effective affinity is looking for both SAS 
+controllers with your patch:
 
-  iommu/dma: Relax locking in iommu_dma_prepare_msi() (2019-12-18 17:41:36 +0100)
+74:02.0
+irq 81, cpu list 24-29, effective list 24 cq
+irq 82, cpu list 30-35, effective list 30 cq
+irq 83, cpu list 36-41, effective list 36 cq
+irq 84, cpu list 42-47, effective list 42 cq
+irq 85, cpu list 48-53, effective list 48 cq
+irq 86, cpu list 54-59, effective list 56 cq
+irq 87, cpu list 60-65, effective list 60 cq
+irq 88, cpu list 66-71, effective list 66 cq
+irq 89, cpu list 72-77, effective list 72 cq
+irq 90, cpu list 78-83, effective list 78 cq
+irq 91, cpu list 84-89, effective list 84 cq
+irq 92, cpu list 90-95, effective list 90 cq
+irq 93, cpu list 0-5, effective list 0 cq
+irq 94, cpu list 6-11, effective list 6 cq
+irq 95, cpu list 12-17, effective list 12 cq
+irq 96, cpu list 18-23, effective list 18 cq
 
-----------------------------------------------------------------
-IOMMU Fixes for Linux v5.5-rc2
+74:04.0
+irq 113, cpu list 24-29, effective list 25 cq
+irq 114, cpu list 30-35, effective list 31 cq
+irq 115, cpu list 36-41, effective list 37 cq
+irq 116, cpu list 42-47, effective list 43 cq
+irq 117, cpu list 48-53, effective list 49 cq
+irq 118, cpu list 54-59, effective list 57 cq
+irq 119, cpu list 60-65, effective list 61 cq
+irq 120, cpu list 66-71, effective list 67 cq
+irq 121, cpu list 72-77, effective list 73 cq
+irq 122, cpu list 78-83, effective list 79 cq
+irq 123, cpu list 84-89, effective list 85 cq
+irq 124, cpu list 90-95, effective list 91 cq
+irq 125, cpu list 0-5, effective list 1 cq
+irq 126, cpu list 6-11, effective list 7 cq
+irq 127, cpu list 12-17, effective list 17 cq
+irq 128, cpu list 18-23, effective list 19 cq
 
-Including:
+As for your patch itself, I'm still concerned of possible regressions if 
+we don't apply this effective interrupt affinity spread policy to only 
+managed interrupts.
 
-	- Fix kmemleak warning in IOVA code
+JFYI, about NVMe CPU lockup issue, there are 2 works on going here:
+https://lore.kernel.org/linux-nvme/20191209175622.1964-1-kbusch@kernel.org/T/#t
+https://lore.kernel.org/linux-block/20191218071942.22336-1-ming.lei@redhat.com/T/#t
 
-	- Fix compile warnings on ARM32/64 in dma-iommu code due to
-	  dma_mask type mismatches
+Cheers,
+John
 
-	- Make ISA reserved regions relaxable, so that VFIO can assign
-	  devices which have such regions defined
+Ps. Thanks to Xiang Chen for all the work here in getting these results.
 
-	- Fix mapping errors resulting in IO page-faults in the VT-d
-	  driver
+>>
+>>>>>> Please give this new patch a shot on your system (my D05 doesn't have
+>>>>>> any managed devices):
+>>>>>
+>>>>> We could consider supporting platform msi managed interrupts, but I 
 
-	- Make sure direct mappings for a domain are created after the
-	  default domain is updated
-
-	- Map ISA reserved regions in the VT-d driver with correct
-	  permissions
-
-	- Remove unneeded check for PSI capability in the IOTLB flush
-	  code of the VT-d driver
-
-	- Lockdep fix iommu_dma_prepare_msi()
-
-----------------------------------------------------------------
-Alex Williamson (1):
-      iommu/vt-d: Set ISA bridge reserved region as relaxable
-
-Jerry Snitselaar (2):
-      iommu: set group default domain before creating direct mappings
-      iommu/vt-d: Allocate reserved region for ISA with correct permission
-
-Lu Baolu (2):
-      iommu/vt-d: Fix dmar pte read access not set error
-      iommu/vt-d: Remove incorrect PSI capability check
-
-Robin Murphy (2):
-      iommu/dma: Rationalise types for DMA masks
-      iommu/dma: Relax locking in iommu_dma_prepare_msi()
-
-Xiaotao Yin (1):
-      iommu/iova: Init the struct iova to fix the possible memleak
-
- drivers/iommu/dma-iommu.c   | 23 +++++++++++------------
- drivers/iommu/intel-iommu.c | 12 ++----------
- drivers/iommu/intel-svm.c   |  6 +-----
- drivers/iommu/iommu.c       |  4 ++--
- drivers/iommu/iova.c        |  2 +-
- 5 files changed, 17 insertions(+), 30 deletions(-)
-
-Please pull.
-
-Thanks,
-
-	Joerg
