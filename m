@@ -2,139 +2,117 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB29C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56C3C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AFED206DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:34:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IUCECYPG"
+	by mail.kernel.org (Postfix) with ESMTP id B1E482067C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:37:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727442AbfLTNek (ORCPT
+        id S1727420AbfLTNhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 08:34:40 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27526 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727369AbfLTNej (ORCPT
+        Fri, 20 Dec 2019 08:37:01 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40285 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727362AbfLTNhB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 08:34:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576848878;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=A4pL4OODD+dNtOJL84eETWJb22soRNmjqRpR6jv+Yl0=;
-        b=IUCECYPGy5vO52jtRHsXFPPKXz3PQVnso0QtQWLDLALdGA8b4qmso8IaBxEnpmGQeElOXi
-        nYFhEs/ftQT/o8MlikfuLl5o7+FC7P8G6FtwAhRTKQWSHXuqh8cs1BJDlr4+HS3KziplUm
-        Jfq7CNwiJ/5yIkHhQ3lqZidK2EB5DhI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-225-6Pew3VxsOK2ji34xTTd9YQ-1; Fri, 20 Dec 2019 08:34:33 -0500
-X-MC-Unique: 6Pew3VxsOK2ji34xTTd9YQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 87B49800D48;
-        Fri, 20 Dec 2019 13:34:32 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D55945C28F;
-        Fri, 20 Dec 2019 13:34:31 +0000 (UTC)
-Subject: Re: [PATCH] locking/lockdep: Fix potential buffer overrun problem in
- stack_trace[]
-To:     Bart Van Assche <bvanassche@acm.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     linux-kernel@vger.kernel.org
-References: <20191219182812.20191-1-longman@redhat.com>
- <0cdfb26d-7faa-9da0-05b9-79bb21703283@acm.org>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <3ed5735a-2f42-682b-4319-6cb4633c240b@redhat.com>
-Date:   Fri, 20 Dec 2019 08:34:31 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 20 Dec 2019 08:37:01 -0500
+Received: by mail-oi1-f195.google.com with SMTP id c77so4009769oib.7;
+        Fri, 20 Dec 2019 05:37:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I1fCOA/Sv1KGJSA6mRhrFG67s6gpWFpFbY2201u/RCQ=;
+        b=PWwBA0+ipxLwsdIDQLVU9Opbl240+SDJgommm+PZ69gXiO11VtmYzH3wYtNDRrtA0L
+         xVlhl7BJ4k12iU+3FjdWkQ9/QPcDljn2tEBAEcV5ExQ4y+X13r5iw1tGwzaV0BYLnfDD
+         jOq9aavLXueP6irHasTrkwBV7gJV6F1wwirPQnmX/6VWFvzxk5j8aA1g9q2pC+qcXIjL
+         JKNI6VFcz4g/byZrXbx7DLzc3sznJO8QWpG4hLhCmbX+q2MfmOYMvtDpFGzPq6QgP51e
+         mWc6Z1cbQTszouo45g5c+2iPnLjlK8hPnB406/nAfhlopXmhZs755PAE3viOR5fbjoIT
+         R5gg==
+X-Gm-Message-State: APjAAAXerdouZvwrWX6Yd1ULmFBnED/lLA4kaWMF4CbeigKxE898V+yG
+        5pnvC0z9ZURSuv66lF83sBq8iA18VHmrRmi/sl8=
+X-Google-Smtp-Source: APXvYqx99YdXrtAVo+2lBsGy+1MasKuJ6va9hTNxUc2EXy1QdfUgsmv0s+kIJ0R5ysWOYRqLdQ9XYSQAnclfK9n+XcY=
+X-Received: by 2002:aca:1a06:: with SMTP id a6mr3453327oia.148.1576849020359;
+ Fri, 20 Dec 2019 05:37:00 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <0cdfb26d-7faa-9da0-05b9-79bb21703283@acm.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <git-mailbomb-linux-master-8ffb055beae58574d3e77b4bf9d4d15eace1ca27@kernel.org>
+ <CAMuHMdVgF0PVmqXbaWqkrcML0O-hhWB3akj8UAn8Q_hN2evm+A@mail.gmail.com>
+ <CAM_iQpWOhXR=x10i0S88qXTfG2nv9EypONTp6_vpBzs=iOySRQ@mail.gmail.com>
+ <CAMuHMdXL8kycJm5EG6Ubx4aYGVGJH9JuJzP-vSM55wZ6RtyT+w@mail.gmail.com> <CAM_iQpXJiiiFdEZ1XYf0v0CNEwT=fSmpxWPVJ_L2_tPSd8u+-w@mail.gmail.com>
+In-Reply-To: <CAM_iQpXJiiiFdEZ1XYf0v0CNEwT=fSmpxWPVJ_L2_tPSd8u+-w@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 20 Dec 2019 14:36:49 +0100
+Message-ID: <CAMuHMdVYqfEF4NxwR64jDno9KdzX3pgVRSphBzfsJjQ6ORTq_g@mail.gmail.com>
+Subject: Re: refcount_warn_saturate WARNING (was: Re: cls_flower: Fix the
+ behavior using port ranges with hw-offload)
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     Yoshiki Komachi <komachi.yoshiki@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/19/19 9:57 PM, Bart Van Assche wrote:
-> On 2019-12-19 10:28, Waiman Long wrote:
->> If the lockdep code is really running out of the stack_trace entries,
->> there is a possiblity that buffer overrun can happen and corrupt the
->              ^^^^^^^^^^
->              possibility?
->> data immediately after stack_trace[].
->>
->> If there is less than LOCK_TRACE_SIZE_IN_LONGS entries left before
->> the call to save_trace(), the max_entries computation will leave it
->> with a very large positive number because of its unsigned nature. The
->> subsequent call to stack_trace_save() will then corrupt the data after
->> stack_trace[]. Fix that by changing max_entries to a signed integer
->> and check for negative value before calling stack_trace_save().
->>
->> Fixes: 12593b7467f9 ("locking/lockdep: Reduce space occupied by stack traces")
->> Signed-off-by: Waiman Long <longman@redhat.com>
->> ---
->>  kernel/locking/lockdep.c | 7 +++----
->>  1 file changed, 3 insertions(+), 4 deletions(-)
->>
->> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
->> index 32282e7112d3..56e260a7582f 100644
->> --- a/kernel/locking/lockdep.c
->> +++ b/kernel/locking/lockdep.c
->> @@ -482,7 +482,7 @@ static struct lock_trace *save_trace(void)
->>  	struct lock_trace *trace, *t2;
->>  	struct hlist_head *hash_head;
->>  	u32 hash;
->> -	unsigned int max_entries;
->> +	int max_entries;
->>  
->>  	BUILD_BUG_ON_NOT_POWER_OF_2(STACK_TRACE_HASH_SIZE);
->>  	BUILD_BUG_ON(LOCK_TRACE_SIZE_IN_LONGS >= MAX_STACK_TRACE_ENTRIES);
->> @@ -490,10 +490,8 @@ static struct lock_trace *save_trace(void)
->>  	trace = (struct lock_trace *)(stack_trace + nr_stack_trace_entries);
->>  	max_entries = MAX_STACK_TRACE_ENTRIES - nr_stack_trace_entries -
->>  		LOCK_TRACE_SIZE_IN_LONGS;
->> -	trace->nr_entries = stack_trace_save(trace->entries, max_entries, 3);
->>  
->> -	if (nr_stack_trace_entries >= MAX_STACK_TRACE_ENTRIES -
->> -	    LOCK_TRACE_SIZE_IN_LONGS - 1) {
->> +	if (max_entries < 0) {
->>  		if (!debug_locks_off_graph_unlock())
->>  			return NULL;
->>  
->> @@ -502,6 +500,7 @@ static struct lock_trace *save_trace(void)
->>  
->>  		return NULL;
->>  	}
->> +	trace->nr_entries = stack_trace_save(trace->entries, max_entries, 3);
->>  
->>  	hash = jhash(trace->entries, trace->nr_entries *
->>  		     sizeof(trace->entries[0]), 0);
-> I'm not sure whether it is useful to call stack_trace_save() if
-> max_entries == 0. How about changing the "max_entries < 0" test into
-> "max_entries <= 0"?
+Hi Cong,
 
-I have actually added some instrumentation code to check the
-distribution of stack trace lengths. I did get hits (about 40) on
-zero-length stack traces after system bootup. But I am fine changing it
-to <= 0.
+On Thu, Dec 19, 2019 at 10:52 PM Cong Wang <xiyou.wangcong@gmail.com> wrote:
+> On Thu, Dec 19, 2019 at 1:01 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Thu, Dec 19, 2019 at 9:50 PM Cong Wang <xiyou.wangcong@gmail.com> wrote:
+> > > On Thu, Dec 19, 2019 at 2:12 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > I still see the below warning on m68k/ARAnyM during boot with v5.5-rc2
+> > > > and next-20191219.
+> > > > Reverting commit 8ffb055beae58574 ("cls_flower: Fix the behavior using
+> > > > port ranges with hw-offload") fixes that.
+> > > >
+> > > > As this is networking, perhaps this is seen on big-endian only?
+> > > > Or !CONFIG_SMP?
+> > > >
+> > > > Do you have a clue?
+> > > > I'm especially worried as this commit is already being backported to stable.
+> > > > Thanks!
+> > >
+> > > I did a quick look at the offending commit, I can't even connect it to
+> > > any dst refcnt.
+> > >
+> > > Do you have any more information? Like what happened before the
+> > > warning? Does your system use cls_flower filters at all? If so, please
+> > > share your tc configurations.
+> >
+> > No, I don't use clf_flower filters.  This is just a normal old Debian boot,
+> > where the root file system is being remounted, followed by the warning.
+>
+> > To me, it also looks very strange.  But it's 100% reproducible for me.
+> > Git bisect pointed to this commit, and reverting it fixes the issue.
+>
+> Hmm, does the attached patch have any luck to fix it?
 
-Cheers,
-Longman
+Thanks, but unfortunately it doesn't help.
 
+More investigation revealed that the above commit caused some shifts in the
+kernel binary, moving dst_default_metrics to a 2-byte aligned address.
+This is incompatible with the use of DST_METRICS_FLAGS and
+__DST_METRICS_PTR().
 
+Fix sent: "[PATCH] net: dst: Force 4-byte alignment of dst_metrics"
+https://lore.kernel.org/linux-m68k/20191220133140.5684-1-geert@linux-m68k.org/
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
