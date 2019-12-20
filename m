@@ -2,141 +2,121 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 751F3C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C579FC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4B421655
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A290121655
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:38:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbfLTPib (ORCPT
+        id S1727543AbfLTPif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 10:38:31 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2212 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726808AbfLTPib (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 10:38:31 -0500
-Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 5D4369A1CA2D908B3AD6;
-        Fri, 20 Dec 2019 15:38:29 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml702-cah.china.huawei.com (10.201.108.43) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 20 Dec 2019 15:38:28 +0000
-Received: from [127.0.0.1] (10.210.166.34) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Fri, 20 Dec
- 2019 15:38:27 +0000
-Subject: Re: [PATCH RFC 1/1] genirq: Make threaded handler use irq affinity
- for managed interrupt
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Ming Lei <ming.lei@redhat.com>, <tglx@linutronix.de>,
-        "chenxiang (M)" <chenxiang66@hisilicon.com>,
-        <bigeasy@linutronix.de>, <linux-kernel@vger.kernel.org>,
-        <hare@suse.com>, <hch@lst.de>, <axboe@kernel.dk>,
-        <bvanassche@acm.org>, <peterz@infradead.org>, <mingo@redhat.com>
-References: <1575642904-58295-1-git-send-email-john.garry@huawei.com>
- <1575642904-58295-2-git-send-email-john.garry@huawei.com>
- <20191207080335.GA6077@ming.t460p>
- <78a10958-fdc9-0576-0c39-6079b9749d39@huawei.com>
- <20191210014335.GA25022@ming.t460p>
- <0ad37515-c22d-6857-65a2-cc28256a8afa@huawei.com>
- <20191212223805.GA24463@ming.t460p>
- <d4b89ecf-7ced-d5d6-fc02-6d4257580465@huawei.com>
- <20191213131822.GA19876@ming.t460p>
- <b7f3bcea-84ec-f9f6-a3aa-007ae712415f@huawei.com>
- <20191214135641.5a817512@why>
- <7db89b97-1b9e-8dd1-684a-3eef1b1af244@huawei.com>
- <50d9ba606e1e3ee1665a0328ffac67ac@www.loen.fr>
- <a5f6a542-2dbc-62de-52e2-bd5413b5db51@huawei.com>
- <68058fd28c939b8e065524715494de95@www.loen.fr>
- <ac5b5a25-df2e-18e9-6b0f-60af8c7cec3b@huawei.com>
- <687cbcc4-89d9-63ea-a246-ce2abaae501a@huawei.com>
- <0fd543f8ffd90f90deb691aea1c275b4@www.loen.fr>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <a5154365-59c5-429b-559e-94ad6dffcdb0@huawei.com>
-Date:   Fri, 20 Dec 2019 15:38:24 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 20 Dec 2019 10:38:35 -0500
+Received: from foss.arm.com ([217.140.110.172]:52590 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726808AbfLTPif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 10:38:35 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E063D30E;
+        Fri, 20 Dec 2019 07:38:34 -0800 (PST)
+Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.52])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 069513F6CF;
+        Fri, 20 Dec 2019 07:38:33 -0800 (PST)
+From:   Steven Price <steven.price@arm.com>
+To:     =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Steven Price <steven.price@arm.com>,
+        =?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas_os@shipmail.org>
+Subject: [PATCH] mm/hmm: Cleanup hmm_vma_walk_pud()/walk_pud_range()
+Date:   Fri, 20 Dec 2019 15:38:26 +0000
+Message-Id: <20191220153826.24229-1-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <0fd543f8ffd90f90deb691aea1c275b4@www.loen.fr>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.166.34]
-X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> We've got some more results and it looks promising.
->>
->> So with your patch we get a performance boost of 3180.1K -> 3294.9K
->> IOPS in the D06 SAS env. Then when we change the driver to use
->> threaded interrupt handler (mainline currently uses tasklet), we get a
->> boost again up to 3415K IOPS.
->>
->> Now this is essentially the same figure we had with using threaded
->> handler + the gen irq change in spreading the handler CPU affinity. We
->> did also test your patch + gen irq change and got a performance drop,
->> to 3347K IOPS.
->>
->> So tentatively I'd say your patch may be all we need.
-> 
-> OK.
-> 
->> FYI, here is how the effective affinity is looking for both SAS
->> controllers with your patch:
->>
->> 74:02.0
->> irq 81, cpu list 24-29, effective list 24 cq
->> irq 82, cpu list 30-35, effective list 30 cq
-> 
-> Cool.
-> 
-> [...]
-> 
->> As for your patch itself, I'm still concerned of possible regressions
->> if we don't apply this effective interrupt affinity spread policy to
->> only managed interrupts.
-> 
-> I'll try and revise that as I post the patch, probably at some point
-> between now and Christmas. I still think we should find a way to
-> address this for the D05 SAS driver though, maybe by managing the
-> affinity yourself in the driver. But this requires experimentation.
+There are a number of minor misuses of the page table APIs in
+hmm_vma_walk_pud():
 
-I've already done something experimental for the driver to manage the 
-affinity, and performance is generally much better:
+If the pud_trans_huge_lock() hasn't been obtained it might be because
+the PUD is unstable, so we should retry.
 
-https://github.com/hisilicon/kernel-dev/commit/e15bd404ed1086fed44da34ed3bd37a8433688a7
+If it has been obtained then there's no need for a READ_ONCE, and the
+PUD cannot be pud_none() or !pud_present() so these paths are dead code.
 
-But I still think it's wise to only consider managed interrupts for now.
+Finally in walk_pud_range(), after a call to split_huge_pud() the code
+should check pud_trans_unstable() rather than pud_none() to decide
+whether the PUD should be retried.
 
-> 
->> JFYI, about NVMe CPU lockup issue, there are 2 works on going here:
->>
->> https://lore.kernel.org/linux-nvme/20191209175622.1964-1-kbusch@kernel.org/T/#t 
->>
->>
->> https://lore.kernel.org/linux-block/20191218071942.22336-1-ming.lei@redhat.com/T/#t 
->>
-> 
-> I've also managed to trigger some of them now that I have access to
-> a decent box with nvme storage. 
+Suggested-by: Thomas Hellström (VMware) <thomas_os@shipmail.org>
+Signed-off-by: Steven Price <steven.price@arm.com>
+---
+This is based on top of my "Generic page walk and ptdump" series and
+fixes some pre-existing bugs spotted by Thomas.
 
-I only have 2x NVMe SSDs when this occurs - I should not be hitting this...
+ mm/hmm.c      | 16 +++++-----------
+ mm/pagewalk.c |  2 +-
+ 2 files changed, 6 insertions(+), 12 deletions(-)
 
-Out of curiosity, have you tried
-> with the SMMU disabled? I'm wondering whether we hit some livelock
-> condition on unmapping buffers...
+diff --git a/mm/hmm.c b/mm/hmm.c
+index a71295e99968..d4aae4dcc6e8 100644
+--- a/mm/hmm.c
++++ b/mm/hmm.c
+@@ -480,28 +480,22 @@ static int hmm_vma_walk_pud(pud_t *pudp, unsigned long start, unsigned long end,
+ 	int ret = 0;
+ 	spinlock_t *ptl = pud_trans_huge_lock(pudp, walk->vma);
+ 
+-	if (!ptl)
++	if (!ptl) {
++		if (pud_trans_unstable(pudp))
++			walk->action = ACTION_AGAIN;
+ 		return 0;
++	}
+ 
+ 	/* Normally we don't want to split the huge page */
+ 	walk->action = ACTION_CONTINUE;
+ 
+-	pud = READ_ONCE(*pudp);
+-	if (pud_none(pud)) {
+-		ret = hmm_vma_walk_hole(start, end, -1, walk);
+-		goto out_unlock;
+-	}
++	pud = *pudp;
+ 
+ 	if (pud_huge(pud) && pud_devmap(pud)) {
+ 		unsigned long i, npages, pfn;
+ 		uint64_t *pfns, cpu_flags;
+ 		bool fault, write_fault;
+ 
+-		if (!pud_present(pud)) {
+-			ret = hmm_vma_walk_hole(start, end, -1, walk);
+-			goto out_unlock;
+-		}
+-
+ 		i = (addr - range->start) >> PAGE_SHIFT;
+ 		npages = (end - addr) >> PAGE_SHIFT;
+ 		pfns = &range->pfns[i];
+diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+index 5895ce4f1a85..4598f545b869 100644
+--- a/mm/pagewalk.c
++++ b/mm/pagewalk.c
+@@ -154,7 +154,7 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
+ 
+ 		if (walk->vma)
+ 			split_huge_pud(walk->vma, pud, addr);
+-		if (pud_none(*pud))
++		if (pud_trans_unstable(pud))
+ 			goto again;
+ 
+ 		err = walk_pmd_range(pud, addr, next, walk);
+-- 
+2.20.1
 
-No, but I can give it a try. Doing that should lower the CPU usage, 
-though, so maybe masks the issue - probably not.
-
-Much appreciated,
-John
