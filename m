@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E870CC47409
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 226DFC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD4D9218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA85921D7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852753;
-	bh=h8/rVvVlXD4qTJQp9CRzTZ8qD1HEPbNwGWApU53B5mk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=m1LMfOTqP5mM/OdoGn0PasUngrQl8YiYUP10R9TlWKbFE5ZLyrD0AylXDIzL0JtAj
-	 U2nxpByIh3YcP5/b5hOATWzYv4QrfLnCQf9RLRco+kjBpuIhJONBTiLUbG8jK6pbCJ
-	 OzDHZYSQDu4Wa4j1svvbVmcHd3Re9OjGiltbZGlY=
+	s=default; t=1576852758;
+	bh=1DfEY/u/oopEKz6dd40hOoNVENPcu2kpxGVCYTXP62g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=dB6/zG7Iksx+fVrlNgs16qRDrc8NhRhvFXh8jvGU9R7WipDdkp/2fZgYNP7yQzIU6
+	 p0Qqyl6Mw3lZYjbWcScijCze/FFHgyrKKgdU1NG2Z9FkNKnIFTMqxsh+eaKYBCaHKh
+	 NpVj7v2leAI9J83HQWSULyX9diZ+wngKbJ6C4Yw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbfLTOhs (ORCPT
+        id S1727898AbfLTOjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:37:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41832 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:39:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727709AbfLTOhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:37:45 -0500
+        id S1727579AbfLTOhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:37:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76EBB21D7E;
-        Fri, 20 Dec 2019 14:37:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9595E24680;
+        Fri, 20 Dec 2019 14:37:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852663;
-        bh=h8/rVvVlXD4qTJQp9CRzTZ8qD1HEPbNwGWApU53B5mk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=L5ItyQsqlBEjnXaxBDpNFA6+/86neCjnyPnORCQruvQaSdFH+MdZUeaGb2Q167suz
-         haoBWGVdeNK2lb8Xg1aY38lnpeVu8jC8Ga7eBcaIM62QjRbLCABpM453O/vdeyQSnr
-         JhvfmuDBSorYQSoCtpwQti7RB7iTsp5LgywrWQfQ=
+        s=default; t=1576852666;
+        bh=1DfEY/u/oopEKz6dd40hOoNVENPcu2kpxGVCYTXP62g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LVEYaydIbX0NbrSq6QWd0+MGp0xLaIltde2t7dRZO9vuhX4Kk2MTNwMTa74CjaGcp
+         6Z0is13ZraUB+O1n5wGM1iZxuOPnZiRnhhttvy19YBFdWX+r4p/EIFZv0CK1oXni6e
+         yFe7MYRWiXBe/LZBNSF0Q+rondrTD8ARHJvM6G4g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Keith Busch <kbusch@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 01/19] nvme_fc: add module to ops template to allow module references
-Date:   Fri, 20 Dec 2019 09:37:22 -0500
-Message-Id: <20191220143741.10220-1-sashal@kernel.org>
+Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 03/19] PM / devfreq: Don't fail devfreq_dev_release if not in list
+Date:   Fri, 20 Dec 2019 09:37:24 -0500
+Message-Id: <20191220143741.10220-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191220143741.10220-1-sashal@kernel.org>
+References: <20191220143741.10220-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,152 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Leonard Crestez <leonard.crestez@nxp.com>
 
-[ Upstream commit 863fbae929c7a5b64e96b8a3ffb34a29eefb9f8f ]
+[ Upstream commit 42a6b25e67df6ee6675e8d1eaf18065bd73328ba ]
 
-In nvme-fc: it's possible to have connected active controllers
-and as no references are taken on the LLDD, the LLDD can be
-unloaded.  The controller would enter a reconnect state and as
-long as the LLDD resumed within the reconnect timeout, the
-controller would resume.  But if a namespace on the controller
-is the root device, allowing the driver to unload can be problematic.
-To reload the driver, it may require new io to the boot device,
-and as it's no longer connected we get into a catch-22 that
-eventually fails, and the system locks up.
+Right now devfreq_dev_release will print a warning and abort the rest of
+the cleanup if the devfreq instance is not part of the global
+devfreq_list. But this is a valid scenario, for example it can happen if
+the governor can't be found or on any other init error that happens
+after device_register.
 
-Fix this issue by taking a module reference for every connected
-controller (which is what the core layer did to the transport
-module). Reference is cleared when the controller is removed.
+Initialize devfreq->node to an empty list head in devfreq_add_device so
+that list_del becomes a safe noop inside devfreq_dev_release and we can
+continue the rest of the cleanup.
 
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/fc.c          | 14 ++++++++++++--
- drivers/nvme/target/fcloop.c    |  1 +
- drivers/scsi/lpfc/lpfc_nvme.c   |  2 ++
- drivers/scsi/qla2xxx/qla_nvme.c |  1 +
- include/linux/nvme-fc-driver.h  |  4 ++++
- 5 files changed, 20 insertions(+), 2 deletions(-)
+ drivers/devfreq/devfreq.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
-index 058d542647dd5..9e4d2ecf736d5 100644
---- a/drivers/nvme/host/fc.c
-+++ b/drivers/nvme/host/fc.c
-@@ -337,7 +337,8 @@ nvme_fc_register_localport(struct nvme_fc_port_info *pinfo,
- 	    !template->ls_req || !template->fcp_io ||
- 	    !template->ls_abort || !template->fcp_abort ||
- 	    !template->max_hw_queues || !template->max_sgl_segments ||
--	    !template->max_dif_sgl_segments || !template->dma_boundary) {
-+	    !template->max_dif_sgl_segments || !template->dma_boundary ||
-+	    !template->module) {
- 		ret = -EINVAL;
- 		goto out_reghost_failed;
- 	}
-@@ -1762,6 +1763,7 @@ nvme_fc_ctrl_free(struct kref *ref)
- {
- 	struct nvme_fc_ctrl *ctrl =
- 		container_of(ref, struct nvme_fc_ctrl, ref);
-+	struct nvme_fc_lport *lport = ctrl->lport;
- 	unsigned long flags;
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index dc9c0032c97b2..7b510ef1d0ddc 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -484,11 +484,6 @@ static void devfreq_dev_release(struct device *dev)
+ 	struct devfreq *devfreq = to_devfreq(dev);
  
- 	if (ctrl->ctrl.tagset) {
-@@ -1787,6 +1789,7 @@ nvme_fc_ctrl_free(struct kref *ref)
- 	if (ctrl->ctrl.opts)
- 		nvmf_free_options(ctrl->ctrl.opts);
- 	kfree(ctrl);
-+	module_put(lport->ops->module);
- }
+ 	mutex_lock(&devfreq_list_lock);
+-	if (IS_ERR(find_device_devfreq(devfreq->dev.parent))) {
+-		mutex_unlock(&devfreq_list_lock);
+-		dev_warn(&devfreq->dev, "releasing devfreq which doesn't exist\n");
+-		return;
+-	}
+ 	list_del(&devfreq->node);
+ 	mutex_unlock(&devfreq_list_lock);
  
- static void
-@@ -2765,10 +2768,15 @@ nvme_fc_init_ctrl(struct device *dev, struct nvmf_ctrl_options *opts,
- 		goto out_fail;
- 	}
- 
-+	if (!try_module_get(lport->ops->module)) {
-+		ret = -EUNATCH;
-+		goto out_free_ctrl;
-+	}
-+
- 	idx = ida_simple_get(&nvme_fc_ctrl_cnt, 0, 0, GFP_KERNEL);
- 	if (idx < 0) {
- 		ret = -ENOSPC;
--		goto out_free_ctrl;
-+		goto out_mod_put;
- 	}
- 
- 	ctrl->ctrl.opts = opts;
-@@ -2915,6 +2923,8 @@ nvme_fc_init_ctrl(struct device *dev, struct nvmf_ctrl_options *opts,
- out_free_ida:
- 	put_device(ctrl->dev);
- 	ida_simple_remove(&nvme_fc_ctrl_cnt, ctrl->cnum);
-+out_mod_put:
-+	module_put(lport->ops->module);
- out_free_ctrl:
- 	kfree(ctrl);
- out_fail:
-diff --git a/drivers/nvme/target/fcloop.c b/drivers/nvme/target/fcloop.c
-index 096523d8dd422..b8fe8702065bc 100644
---- a/drivers/nvme/target/fcloop.c
-+++ b/drivers/nvme/target/fcloop.c
-@@ -693,6 +693,7 @@ fcloop_targetport_delete(struct nvmet_fc_target_port *targetport)
- #define FCLOOP_DMABOUND_4G		0xFFFFFFFF
- 
- static struct nvme_fc_port_template fctemplate = {
-+	.module			= THIS_MODULE,
- 	.localport_delete	= fcloop_localport_delete,
- 	.remoteport_delete	= fcloop_remoteport_delete,
- 	.create_queue		= fcloop_create_queue,
-diff --git a/drivers/scsi/lpfc/lpfc_nvme.c b/drivers/scsi/lpfc/lpfc_nvme.c
-index fcf4b4175d771..af937b91765e6 100644
---- a/drivers/scsi/lpfc/lpfc_nvme.c
-+++ b/drivers/scsi/lpfc/lpfc_nvme.c
-@@ -1591,6 +1591,8 @@ lpfc_nvme_fcp_abort(struct nvme_fc_local_port *pnvme_lport,
- 
- /* Declare and initialization an instance of the FC NVME template. */
- static struct nvme_fc_port_template lpfc_nvme_template = {
-+	.module	= THIS_MODULE,
-+
- 	/* initiator-based functions */
- 	.localport_delete  = lpfc_nvme_localport_delete,
- 	.remoteport_delete = lpfc_nvme_remoteport_delete,
-diff --git a/drivers/scsi/qla2xxx/qla_nvme.c b/drivers/scsi/qla2xxx/qla_nvme.c
-index 6b33a1f24f561..7dceed0212361 100644
---- a/drivers/scsi/qla2xxx/qla_nvme.c
-+++ b/drivers/scsi/qla2xxx/qla_nvme.c
-@@ -578,6 +578,7 @@ static void qla_nvme_remoteport_delete(struct nvme_fc_remote_port *rport)
- }
- 
- static struct nvme_fc_port_template qla_nvme_fc_transport = {
-+	.module	= THIS_MODULE,
- 	.localport_delete = qla_nvme_localport_delete,
- 	.remoteport_delete = qla_nvme_remoteport_delete,
- 	.create_queue   = qla_nvme_alloc_queue,
-diff --git a/include/linux/nvme-fc-driver.h b/include/linux/nvme-fc-driver.h
-index a726f96010d59..e9c3b98df3e25 100644
---- a/include/linux/nvme-fc-driver.h
-+++ b/include/linux/nvme-fc-driver.h
-@@ -279,6 +279,8 @@ struct nvme_fc_remote_port {
-  *
-  * Host/Initiator Transport Entrypoints/Parameters:
-  *
-+ * @module:  The LLDD module using the interface
-+ *
-  * @localport_delete:  The LLDD initiates deletion of a localport via
-  *       nvme_fc_deregister_localport(). However, the teardown is
-  *       asynchronous. This routine is called upon the completion of the
-@@ -392,6 +394,8 @@ struct nvme_fc_remote_port {
-  *       Value is Mandatory. Allowed to be zero.
-  */
- struct nvme_fc_port_template {
-+	struct module	*module;
-+
- 	/* initiator-based functions */
- 	void	(*localport_delete)(struct nvme_fc_local_port *);
- 	void	(*remoteport_delete)(struct nvme_fc_remote_port *);
+@@ -547,6 +542,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
+ 	devfreq->dev.parent = dev;
+ 	devfreq->dev.class = devfreq_class;
+ 	devfreq->dev.release = devfreq_dev_release;
++	INIT_LIST_HEAD(&devfreq->node);
+ 	devfreq->profile = profile;
+ 	strncpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
+ 	devfreq->previous_freq = profile->initial_freq;
 -- 
 2.20.1
 
