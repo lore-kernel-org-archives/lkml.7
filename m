@@ -1,80 +1,114 @@
 Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FAAC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B14CC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57C032465E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF87D2465E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:55:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576835701;
+	bh=ZvFZkSWKpFjRd2JXVMxEnSX/W0KkXIR4qevF9Q/DSjA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zHchrW8XERLTzngjZjB4cyr30vE8yq3IBtQ0TR6ACYfhW9x34zt7yV9+ZWIjD4m3z
+	 1JMqA14UxLkVsdGGzgijqVCNs4gat24uVYPxl0MCdrypvRXJIwHFbia89r6UhSaWBm
+	 LwkhrQ1vspzj8UtJHp18k03MigC16LzsDty3RHJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbfLTJxb (ORCPT
+        id S1727341AbfLTJzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 04:53:31 -0500
-Received: from mga01.intel.com ([192.55.52.88]:8042 "EHLO mga01.intel.com"
+        Fri, 20 Dec 2019 04:55:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727167AbfLTJxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 04:53:31 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Dec 2019 01:53:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,335,1571727600"; 
-   d="scan'208";a="206500229"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga007.jf.intel.com with ESMTP; 20 Dec 2019 01:53:27 -0800
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-To:     lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        andrew.murray@arm.com, robh@kernel.org,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, Dilip Kota <eswara.kota@linux.intel.com>
-Subject: [PATCH 1/1] dt-bindings: PCI: intel: Fix dt_binding_check compilation failure
-Date:   Fri, 20 Dec 2019 17:53:24 +0800
-Message-Id: <3319036bb29e0b25fc3b85293301e32aee0540dc.1576833842.git.eswara.kota@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
+        id S1727192AbfLTJzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 04:55:00 -0500
+Received: from localhost (unknown [106.201.107.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97E35206EC;
+        Fri, 20 Dec 2019 09:54:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576835699;
+        bh=ZvFZkSWKpFjRd2JXVMxEnSX/W0KkXIR4qevF9Q/DSjA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dGZ3PO/0HmLtt2laAvR9GI41mPKMF8qQXO3Bh25YGGwsdIG9D7V2w6UQ7cn7e9kMF
+         o6E6mRXPYtow/dMGdGptgtUr3ZEcITFVOqfUj7RRH1R0xqhF2dOkLc3Kp/+PrkA05w
+         pWkvuE+7hMV5IovIWAPjxsg+B3KzLR55tiAqM8e4=
+Date:   Fri, 20 Dec 2019 15:24:55 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
+        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
+        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
+        j-keerthy@ti.com, vigneshr@ti.com
+Subject: Re: [PATCH v7 06/12] dmaengine: ti: Add cppi5 header for K3
+ NAVSS/UDMA
+Message-ID: <20191220095455.GM2536@vkoul-mobl>
+References: <20191209094332.4047-1-peter.ujfalusi@ti.com>
+ <20191209094332.4047-7-peter.ujfalusi@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191209094332.4047-7-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove <dt-bindings/clock/intel,lgm-clk.h> dependency as
-it is not present in the mainline tree. Use numeric value
-instead of LGM_GCLK_PCIE10 macro.
+On 09-12-19, 11:43, Peter Ujfalusi wrote:
 
-Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
----
- Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> +#define CPPI5_INFO2_DESC_RETPUSHPOLICY		BIT(16)
+> +#define CPPI5_INFO2_DESC_RETP_MASK		GENMASK(18, 16)
+> +
+> +#define CPPI5_INFO2_DESC_RETQ_SHIFT		(0)
+> +#define CPPI5_INFO2_DESC_RETQ_MASK		GENMASK(15, 0)
+> +
+> +#define CPPI5_INFO3_DESC_SRCTAG_SHIFT		(16U)
+> +#define CPPI5_INFO3_DESC_SRCTAG_MASK		GENMASK(31, 16)
+> +#define CPPI5_INFO3_DESC_DSTTAG_SHIFT		(0)
+> +#define CPPI5_INFO3_DESC_DSTTAG_MASK		GENMASK(15, 0)
+> +
+> +#define CPPI5_BUFINFO1_HDESC_DATA_LEN_SHIFT	(0)
+> +#define CPPI5_BUFINFO1_HDESC_DATA_LEN_MASK	GENMASK(27, 0)
+> +
+> +#define CPPI5_OBUFINFO0_HDESC_BUF_LEN_SHIFT	(0)
+> +#define CPPI5_OBUFINFO0_HDESC_BUF_LEN_MASK	GENMASK(27, 0)
 
-diff --git a/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-index db605d8a387d..a7da5141b8e0 100644
---- a/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-@@ -107,7 +107,6 @@ additionalProperties: false
- examples:
-   - |
-     #include <dt-bindings/gpio/gpio.h>
--    #include <dt-bindings/clock/intel,lgm-clk.h>
-     pcie10: pcie@d0e00000 {
-       compatible = "intel,lgm-pcie", "snps,dw-pcie";
-       device_type = "pci";
-@@ -129,7 +128,7 @@ examples:
-                       <0 0 0 4 &ioapic1 30 1>;
-       ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
-       resets = <&rcu0 0x50 0>;
--      clocks = <&cgu0 LGM_GCLK_PCIE10>;
-+      clocks = <&cgu0 120>;
-       phys = <&cb0phy0>;
-       phy-names = "pcie";
-       reset-assert-ms = <500>;
+I think you can remove the SHIFT defines and use ffs() to get the bit
+position for shift
+
+> +static inline u32 cppi5_hdesc_calc_size(bool epib, u32 psdata_size,
+> +					u32 sw_data_size)
+> +{
+> +	u32 desc_size;
+> +
+> +	if (psdata_size > CPPI5_INFO0_HDESC_PSDATA_MAX_SIZE)
+> +		return 0;
+> +
+> +	desc_size = sizeof(struct cppi5_host_desc_t) + psdata_size +
+> +		    sw_data_size;
+
+I think there was an API for this kind of mem allocation of struct and
+buffer attached...
+
+> +static inline void cppi5_hdesc_reset_hbdesc(struct cppi5_host_desc_t *desc)
+> +{
+> +	desc->hdr = (struct cppi5_desc_hdr_t) { 0 };
+> +	desc->next_desc = 0;
+
+would this not be superfluous? Or if you want a memset call?
+
+> +static inline u32 *cppi5_hdesc_get_psdata32(struct cppi5_host_desc_t *desc)
+> +{
+> +	return (u32 *)cppi5_hdesc_get_psdata(desc);
+
+you dont need casts away from void *
+
 -- 
-2.11.0
-
+~Vinod
