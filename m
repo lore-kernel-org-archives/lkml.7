@@ -2,134 +2,88 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBC5C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 20:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C47EC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 20:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1CC12082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 20:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F25172082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 20:50:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qNlfru8a"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="P0+F991o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbfLTUrx (ORCPT
+        id S1727510AbfLTUug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 15:47:53 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36071 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726525AbfLTUrx (ORCPT
+        Fri, 20 Dec 2019 15:50:36 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:45136 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727422AbfLTUuf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 15:47:53 -0500
-Received: by mail-pl1-f196.google.com with SMTP id a6so3864291plm.3;
-        Fri, 20 Dec 2019 12:47:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=f40bQDy6bbmWGpJ8gtvPrGZ9k+HSSNNsGWV0KlBXr2I=;
-        b=qNlfru8aAC0YrW0PRWN8jHhdu+gd8QS6FRn4zvgHAeHJUwv9LoteHyPBKG0GSRviXT
-         W/2ShNQZW8LbkoyulPdei6LBZfKwrMGFMqu128TdvbRz7fpSnNWfqTKcYBRnnix/yOxx
-         0Fu2lm6drRBEC+dlGEEDqT5sQwG3uQj+3Hbjh7Hic+x+V7cGJf8lOjKx28lmC3L6QiVj
-         Gs9fTd9zHj63pzMfRJJ+nz13E7VXg413UBcSL8oi4NPXX18dpBGytEnftyz9L8xzl9jk
-         Aa3wQ+afCi6rMotTaIvWHwZWAcu5W48lq5+VZFgUUmfsDM9ISZSWO1K0sMRoUiGBqVXX
-         9VHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=f40bQDy6bbmWGpJ8gtvPrGZ9k+HSSNNsGWV0KlBXr2I=;
-        b=evK6+PDSMjFmj9AfwDi//foTMUhAAc5yr8xbGHZWtjZCTCdJtqXKZkMzz4SABjkdlw
-         NtAZxTDpyAVa4vhtIOyS1Y+U5Sb/xoruaEW7vrHuQ9QqVMmKcPVDwMtcIuOD7/gbbPH7
-         MDxwZEU2daIWmXYjQT0svLvaexm/FmNlnXk1okZSJB+IOwhgaSE7KzEyAHZ/0WJCFOKT
-         gY6+/NSRn5dWrbpjamBrWQ3XrN8Gb4wemP07io3Tn9kjrixVwaV8pzNJjm7nslGf02Gp
-         sM2V0uBOGpKFrBvkFYMMha/gUXbHhYHgxD2mEEIthfpc+1iCGYC9ZV+IKY8hXjMdhTXo
-         W12g==
-X-Gm-Message-State: APjAAAXxDbFI51Qt0+2o3U4eae0JeIwcwZdZoX1TYuR4o3b7MZddMjVW
-        WPVSXprGvu+wFnXaVhmwK00=
-X-Google-Smtp-Source: APXvYqxUaPGTYayT6LJmFBvJaH4z2jskQX+3XoRvHOOXoOyPFY99CQQa9TUPkUCgJrMhiKCiu/2bjw==
-X-Received: by 2002:a17:902:64:: with SMTP id 91mr17424583pla.307.1576874872336;
-        Fri, 20 Dec 2019 12:47:52 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id d2sm11461080pjv.18.2019.12.20.12.47.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 12:47:51 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id DCC4840CB9; Fri, 20 Dec 2019 17:47:48 -0300 (-03)
-Date:   Fri, 20 Dec 2019 17:47:48 -0300
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, bpf <bpf@vger.kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] libbpf: Fix build on read-only filesystems
-Message-ID: <20191220204748.GA9076@kernel.org>
-References: <20191220032558.3259098-1-namhyung@kernel.org>
- <CAEf4BzaZBSRK2M4LD-c12_2-QLa8+jpPs1E4nA9BNeUDskOMBQ@mail.gmail.com>
+        Fri, 20 Dec 2019 15:50:35 -0500
+Received: from [10.137.112.108] (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id CCD0120106BA;
+        Fri, 20 Dec 2019 12:50:34 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CCD0120106BA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1576875035;
+        bh=nCXI723Paiou2qhM6Iep4RO6p6kZcLH60+OZE/A0Wj0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=P0+F991oIoc1uIRq2J/OZoa8NNdiJNVhpC3IYKHSoWeKEVzWoyGJpgn/IA0hfphjZ
+         nCpVTpTjTT/XO4EE8LWgHUL/5WmRvhOHCWBTF224K04MJRhQJqoH9udQdNhI5h6Cbx
+         THFVWApuNdTRqU0hXUxLvUP+mtueX23TYjvW8Ibo=
+Subject: Re: [PATCH v5 0/2] IMA: Deferred measurement of keys
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        James.Bottomley@HansenPartnership.com,
+        linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+References: <20191218164434.2877-1-nramas@linux.microsoft.com>
+ <1576868506.5241.65.camel@linux.ibm.com>
+ <589b893b-52e4-783c-0f32-608ed1cfd7f9@linux.microsoft.com>
+ <1576870595.5241.83.camel@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <9f346e6d-04f2-b8cd-bf67-f1cee59d9630@linux.microsoft.com>
+Date:   Fri, 20 Dec 2019 12:50:34 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzaZBSRK2M4LD-c12_2-QLa8+jpPs1E4nA9BNeUDskOMBQ@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <1576870595.5241.83.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Dec 20, 2019 at 12:29:36PM -0800, Andrii Nakryiko escreveu:
-> On Thu, Dec 19, 2019 at 7:26 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > I got the following error when I tried to build perf on a read-only
-> > filesystem with O=dir option.
-> >
-> >   $ cd /some/where/ro/linux/tools/perf
-> >   $ make O=$HOME/build/perf
-> >   ...
-> >     CC       /home/namhyung/build/perf/lib.o
-> >   /bin/sh: bpf_helper_defs.h: Read-only file system
-> >   make[3]: *** [Makefile:184: bpf_helper_defs.h] Error 1
-> >   make[2]: *** [Makefile.perf:778: /home/namhyung/build/perf/libbpf.a] Error 2
-> >   make[2]: *** Waiting for unfinished jobs....
-> >     LD       /home/namhyung/build/perf/libperf-in.o
-> >     AR       /home/namhyung/build/perf/libperf.a
-> >     PERF_VERSION = 5.4.0
-> >   make[1]: *** [Makefile.perf:225: sub-make] Error 2
-> >   make: *** [Makefile:70: all] Error 2
-> >
-> > It was becaused bpf_helper_defs.h was generated in current directory.
-> > Move it to OUTPUT directory.
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> 
-> Overall nothing is obviously broken, except you need to fix up
-> selftests/bpf's Makefile as well.
-> 
-> BTW, this patch doesn't apply cleanly to latest bpf-next, so please rebase.
-> 
-> Also subject prefix should look like [PATCH bpf-next] if it's meant to
-> be applied against bpf-next.
+On 12/20/19 11:36 AM, Mimi Zohar wrote:
 
-Shouldn't this be applied to the current merge window since a behaviour
-that people relied, i.e. using O= to generate the build in a separate
-directory, since its not possible to use the source dir tree as it is
-read-only is now broken, i.e. isn't this a regression?
-
-- Arnaldo
- 
-> >  tools/lib/bpf/Makefile | 14 +++++++-------
-> >  1 file changed, 7 insertions(+), 7 deletions(-)
-> >
+>>
+>> Shall I create a new patch set to address that and have that be reviewed
+>> independent of this patch set?
 > 
-> [...]
+> If it is just a single additional patch, feel free to post it without
+> a cover letter.
 
--- 
+Sure
 
-- Arnaldo
+>>
+>> Like you'd suggested earlier, we can wait for a certain time, after IMA
+>> is initialized, and free the queue if a custom policy was not loaded.
+> 
+> Different types of systems vary in boot time, but perhaps a certain
+> amount of time after IMA is initialized would be consistent.  This
+> would need to work for IoT devices/sensors to servers.
+> 
+> Mimi
+> 
+
+Yes - I agree.
+
+thanks,
+  -lakshmi
