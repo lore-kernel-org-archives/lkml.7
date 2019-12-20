@@ -4,49 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A82AAC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B29BEC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 713B421655
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86EE521655
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576847364;
-	bh=z9BphCZrr8pVS6by4Dj/5isL6Vy7+SuDHoPLLbjcOIc=;
+	s=default; t=1576847368;
+	bh=1tziA3YCCjB3Mj2it3ep1rb5eCdLNiPTA2djASD0X6I=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=G+EaL4gFD/dD/KkrmFN1j03PqhjtiOhFqtulz/Y3XiE1MbWz2mnAJ/gFprmzsq9PZ
-	 5qOyJpaBYjlRcLQy/tUwFR0Z1txlSmwxBkq19Aa3UUJMMzoW0JFGyA6ptlxobddPeI
-	 WjV/p+lzpIHjpAwwyyO+HuhUovVlRDWlNniCspHA=
+	b=GDWY3Q1FWRGzEsEFK9jo66905kazNUc0Td7vOpwxEJrNjO9fuxJjfAQZDYe+0GZQG
+	 HyYPVUcrMlIqlC3xHjLEwtK1zQZT3YYK6NSbl2B3sRWevdK7igS4iMdicUyNIVsM4F
+	 w/WM5l6FadDnSdAm/s1WWSWqIJQUNWu1Zb9S9Tgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727441AbfLTNJX (ORCPT
+        id S1727459AbfLTNJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 08:09:23 -0500
-Received: from foss.arm.com ([217.140.110.172]:50680 "EHLO foss.arm.com"
+        Fri, 20 Dec 2019 08:09:26 -0500
+Received: from foss.arm.com ([217.140.110.172]:50694 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727359AbfLTNJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 08:09:23 -0500
+        id S1727419AbfLTNJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 08:09:25 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 445FB30E;
-        Fri, 20 Dec 2019 05:09:22 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B5DFB31B;
+        Fri, 20 Dec 2019 05:09:24 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B70A73F719;
-        Fri, 20 Dec 2019 05:09:21 -0800 (PST)
-Date:   Fri, 20 Dec 2019 13:09:20 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3580B3F719;
+        Fri, 20 Dec 2019 05:09:24 -0800 (PST)
+Date:   Fri, 20 Dec 2019 13:09:22 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Pascal Paillet <p.paillet@st.com>
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
         Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>, p.paillet@st.com,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Applied "regulator: Convert stm32-pwr regulator to json-schema" to the regulator tree
-In-Reply-To: <20191205161359.20755-1-p.paillet@st.com>
-Message-Id: <applied-20191205161359.20755-1-p.paillet@st.com>
+        matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Subject: Applied "regulator: bd71828: remove get_voltage operation" to the regulator tree
+In-Reply-To: <20191219113444.GA28299@localhost.localdomain>
+Message-Id: <applied-20191219113444.GA28299@localhost.localdomain>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -55,7 +50,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: Convert stm32-pwr regulator to json-schema
+   regulator: bd71828: remove get_voltage operation
 
 has been applied to the regulator tree at
 
@@ -80,144 +75,51 @@ to this mail.
 Thanks,
 Mark
 
-From 130ac214294bcb5efc93229c7d10144c4992e90a Mon Sep 17 00:00:00 2001
-From: Pascal Paillet <p.paillet@st.com>
-Date: Thu, 5 Dec 2019 17:13:59 +0100
-Subject: [PATCH] regulator: Convert stm32-pwr regulator to json-schema
+From a14a0b5fc17901cdbc2e9d412e7ed4fbd75e284c Mon Sep 17 00:00:00 2001
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Date: Thu, 19 Dec 2019 13:34:44 +0200
+Subject: [PATCH] regulator: bd71828: remove get_voltage operation
 
-Convert the stm32-pwr regulator binding to DT schema format using
-json-schema.
+Simplify LDO6 voltage getting on BD71828 by removing the
+get_voltage call-back and providing the fixed voltage in
+regulator_desc instead
 
-Signed-off-by: Pascal Paillet <p.paillet@st.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/20191205161359.20755-1-p.paillet@st.com
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Suggested-by: Mark Brown <broonie@kernel.org>
+Link: https://lore.kernel.org/r/20191219113444.GA28299@localhost.localdomain
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../regulator/st,stm32mp1-pwr-reg.txt         | 43 -------------
- .../regulator/st,stm32mp1-pwr-reg.yaml        | 64 +++++++++++++++++++
- 2 files changed, 64 insertions(+), 43 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
- create mode 100644 Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml
+ drivers/regulator/bd71828-regulator.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
-deleted file mode 100644
-index e372dd3f0c8a..000000000000
---- a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
-+++ /dev/null
-@@ -1,43 +0,0 @@
--STM32MP1 PWR Regulators
-------------------------
+diff --git a/drivers/regulator/bd71828-regulator.c b/drivers/regulator/bd71828-regulator.c
+index edba51da5661..b2fa17be4988 100644
+--- a/drivers/regulator/bd71828-regulator.c
++++ b/drivers/regulator/bd71828-regulator.c
+@@ -197,15 +197,9 @@ static const struct regulator_ops bd71828_ldo_ops = {
+ 	.get_voltage_sel = regulator_get_voltage_sel_regmap,
+ };
+ 
+-static int bd71828_ldo6_get_voltage(struct regulator_dev *rdev)
+-{
+-	return BD71828_LDO_6_VOLTAGE;
+-}
 -
--Available Regulators in STM32MP1 PWR block are:
--  - reg11 for regulator 1V1
--  - reg18 for regulator 1V8
--  - usb33 for the swtich USB3V3
--
--Required properties:
--- compatible: Must be "st,stm32mp1,pwr-reg"
--- list of child nodes that specify the regulator reg11, reg18 or usb33
--  initialization data for defined regulators. The definition for each of
--  these nodes is defined using the standard binding for regulators found at
--  Documentation/devicetree/bindings/regulator/regulator.txt.
--- vdd-supply: phandle to the parent supply/regulator node for vdd input
--- vdd_3v3_usbfs-supply: phandle to the parent supply/regulator node for usb33
--
--Example:
--
--pwr_regulators: pwr@50001000 {
--	compatible = "st,stm32mp1,pwr-reg";
--	reg = <0x50001000 0x10>;
--	vdd-supply = <&vdd>;
--	vdd_3v3_usbfs-supply = <&vdd_usb>;
--
--	reg11: reg11 {
--		regulator-name = "reg11";
--		regulator-min-microvolt = <1100000>;
--		regulator-max-microvolt = <1100000>;
--	};
--
--	reg18: reg18 {
--		regulator-name = "reg18";
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <1800000>;
--	};
--
--	usb33: usb33 {
--		regulator-name = "usb33";
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml
-new file mode 100644
-index 000000000000..8d8f38fe85dc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml
-@@ -0,0 +1,64 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/st,stm32mp1-pwr-reg.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STM32MP1 PWR voltage regulators
-+
-+maintainers:
-+  - Pascal Paillet <p.paillet@st.com>
-+
-+properties:
-+  compatible:
-+    const: st,stm32mp1,pwr-reg
-+
-+  reg:
-+    maxItems: 1
-+
-+  vdd-supply:
-+    description: Input supply phandle(s) for vdd input
-+
-+  vdd_3v3_usbfs-supply:
-+    description: Input supply phandle(s) for vdd_3v3_usbfs input
-+
-+patternProperties:
-+  "^(reg11|reg18|usb33)$":
-+    type: object
-+
-+    allOf:
-+      - $ref: "regulator.yaml#"
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    pwr@50001000 {
-+      compatible = "st,stm32mp1,pwr-reg";
-+      reg = <0x50001000 0x10>;
-+      vdd-supply = <&vdd>;
-+      vdd_3v3_usbfs-supply = <&vdd_usb>;
-+
-+      reg11 {
-+        regulator-name = "reg11";
-+        regulator-min-microvolt = <1100000>;
-+        regulator-max-microvolt = <1100000>;
-+      };
-+
-+      reg18 {
-+        regulator-name = "reg18";
-+        regulator-min-microvolt = <1800000>;
-+        regulator-max-microvolt = <1800000>;
-+      };
-+
-+      usb33 {
-+        regulator-name = "usb33";
-+        regulator-min-microvolt = <3300000>;
-+        regulator-max-microvolt = <3300000>;
-+      };
-+    };
-+...
+ static const struct regulator_ops bd71828_ldo6_ops = {
+ 	.enable = regulator_enable_regmap,
+ 	.disable = regulator_disable_regmap,
+-	.get_voltage = bd71828_ldo6_get_voltage,
+ 	.is_enabled = regulator_is_enabled_regmap,
+ };
+ 
+@@ -697,6 +691,7 @@ static const struct bd71828_regulator_data bd71828_rdata[] = {
+ 			.id = BD71828_LDO6,
+ 			.ops = &bd71828_ldo6_ops,
+ 			.type = REGULATOR_VOLTAGE,
++			.fixed_uV = BD71828_LDO_6_VOLTAGE,
+ 			.n_voltages = 1,
+ 			.enable_reg = BD71828_REG_LDO6_EN,
+ 			.enable_mask = BD71828_MASK_RUN_EN,
 -- 
 2.20.1
 
