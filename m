@@ -2,121 +2,151 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 022B1C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E848C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2CD320866
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5055A2070C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:55:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="oRvXZWdo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfLTXwv (ORCPT
+        id S1726826AbfLTXzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 18:52:51 -0500
-Received: from vmicros1.altlinux.org ([194.107.17.57]:46176 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbfLTXwv (ORCPT
+        Fri, 20 Dec 2019 18:55:06 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10960 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfLTXzF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 18:52:51 -0500
-Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id 32B7872CCE9;
-        Sat, 21 Dec 2019 02:52:48 +0300 (MSK)
-Received: from beacon.altlinux.org (unknown [185.6.174.98])
-        by imap.altlinux.org (Postfix) with ESMTPSA id B4EFF4A4AEF;
-        Sat, 21 Dec 2019 02:52:47 +0300 (MSK)
-From:   Vitaly Chikunov <vt@altlinux.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     Vitaly Chikunov <vt@altlinux.org>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        stable@vger.kernel.org
-Subject: [PATCH v2] tools lib: Fix builds when glibc contains strlcpy
-Date:   Sat, 21 Dec 2019 02:52:39 +0300
-Message-Id: <20191220235239.26928-1-vt@altlinux.org>
-X-Mailer: git-send-email 2.11.0
+        Fri, 20 Dec 2019 18:55:05 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dfd5f350000>; Fri, 20 Dec 2019 15:54:29 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 20 Dec 2019 15:55:00 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 20 Dec 2019 15:55:00 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Dec
+ 2019 23:54:55 +0000
+Subject: Re: [PATCH v11 00/25] mm/gup: track dma-pinned pages: FOLL_PIN
+To:     Leon Romanovsky <leon@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        "Paul Mackerras" <paulus@samba.org>, Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Maor Gottlieb <maorg@mellanox.com>
+References: <20191216222537.491123-1-jhubbard@nvidia.com>
+ <20191219132607.GA410823@unreal>
+ <a4849322-8e17-119e-a664-80d9f95d850b@nvidia.com>
+ <20191219210743.GN17227@ziepe.ca> <20191220182939.GA10944@unreal>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <1001a5fc-a71d-9c0f-1090-546c4913d8a2@nvidia.com>
+Date:   Fri, 20 Dec 2019 15:54:55 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191220182939.GA10944@unreal>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1576886069; bh=/03FljbsYciU5tHAkbKg2NU1vxam4rPGvNuyvBOvTmI=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=oRvXZWdofYZmMnKtHbC887r9WWAfrydUr/UibodWJ1qaNTyMPy3+W8R0NcaZhg7dS
+         971HGgJD6LwSffJ62pj2tIvxp3eHI8BXVOtdjk7S3sjdZSz9tGHLzm7ujCZVURuC8a
+         irEUmm/OhCMXyR+iqtnm6nCO/xQp89VT1WotayqMgxGp4mpoDDX+NNHJX4q0B3UwU3
+         +RvXPnLJz1mCrbJfx3TkKb0L+jPAoTDVjeRU4xrKmbuD30tHozBBlUpnyYWoaOHmat
+         YDkXozvEZrxOc0h7qKS+l5AK23MRif8N+YKUGoUxe7vXoCKoEk2wdk8r2SNOo6On86
+         EItNjAud0AHkw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Disable a couple of compilation warning (which are treated as errors) on
-strlcpy definition and declaration, allow users to compile perf and
-kernel (objtool).
+On 12/20/19 10:29 AM, Leon Romanovsky wrote:
+...
+>> $ ./build.sh
+>> $ build/bin/run_tests.py
+>>
+>> If you get things that far I think Leon can get a reproduction for you
+> 
+> I'm not so optimistic about that.
+> 
 
-1. When glibc have strlcpy (such as in ALT Linux since 2004) objtool and
-perf build fails with this (in gcc):
+OK, I'm going to proceed for now on the assumption that I've got an overflow
+problem that happens when huge pages are pinned. If I can get more information,
+great, otherwise it's probably enough.
 
-  In file included from exec-cmd.c:3:
-  tools/include/linux/string.h:20:15: error: redundant redeclaration of ‘strlcpy’ [-Werror=redundant-decls]
-     20 | extern size_t strlcpy(char *dest, const char *src, size_t size);
+One thing: for your repro, if you know the huge page size, and the system
+page size for that case, that would really help. Also the number of pins per
+page, more or less, that you'd expect. Because Jason says that only 2M huge 
+pages are used...
 
-2. Clang ignores `-Wredundant-decls', but produces another warning when
-building perf:
+Because the other possibility is that the refcount really is going negative, 
+likely due to a mismatched pin/unpin somehow.
 
-    CC       util/string.o
-  ../lib/string.c:99:8: error: attribute declaration must precede definition [-Werror,-Wignored-attributes]
-  size_t __weak strlcpy(char *dest, const char *src, size_t size)
-  ../../tools/include/linux/compiler.h:66:34: note: expanded from macro '__weak'
-  # define __weak                 __attribute__((weak))
-  /usr/include/bits/string_fortified.h:151:8: note: previous definition is here
-  __NTH (strlcpy (char *__restrict __dest, const char *__restrict __src,
+If there's not an obvious repro case available, but you do have one (is it easy
+to repro, though?), then *if* you have the time, I could point you to a github
+branch that reduces GUP_PIN_COUNTING_BIAS by, say, 4x, by applying this:
 
-Fixes: ce99091 ("perf tools: Move strlcpy() from perf to tools/lib/string.c")
-Fixes: 0215d59 ("tools lib: Reinstate strlcpy() header guard with __UCLIBC__")
-Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
-Cc: Dmitry V. Levin <ldv@altlinux.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc: stable@vger.kernel.org
----
- tools/include/linux/string.h | 3 +++
- tools/lib/string.c           | 3 +++
- 2 files changed, 6 insertions(+)
-
-diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
-index 980cb9266718..99ede7f5dfb8 100644
---- a/tools/include/linux/string.h
-+++ b/tools/include/linux/string.h
-@@ -17,7 +17,10 @@ int strtobool(const char *s, bool *res);
-  * However uClibc headers also define __GLIBC__ hence the hack below
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index bb44c4d2ada7..8526fd03b978 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -1077,7 +1077,7 @@ static inline void put_page(struct page *page)
+  * get_user_pages and page_mkclean and other calls that race to set up page
+  * table entries.
   */
- #if defined(__GLIBC__) && !defined(__UCLIBC__)
-+#pragma GCC diagnostic push
-+#pragma GCC diagnostic ignored "-Wredundant-decls"
- extern size_t strlcpy(char *dest, const char *src, size_t size);
-+#pragma GCC diagnostic pop
- #endif
+-#define GUP_PIN_COUNTING_BIAS (1U << 10)
++#define GUP_PIN_COUNTING_BIAS (1U << 8)
  
- char *str_error_r(int errnum, char *buf, size_t buflen);
-diff --git a/tools/lib/string.c b/tools/lib/string.c
-index f2ae1b87c719..65b569014446 100644
---- a/tools/lib/string.c
-+++ b/tools/lib/string.c
-@@ -96,6 +96,8 @@ int strtobool(const char *s, bool *res)
-  * If libc has strlcpy() then that version will override this
-  * implementation:
-  */
-+#pragma GCC diagnostic push
-+#pragma GCC diagnostic ignored "-Wignored-attributes"
- size_t __weak strlcpy(char *dest, const char *src, size_t size)
- {
- 	size_t ret = strlen(src);
-@@ -107,6 +109,7 @@ size_t __weak strlcpy(char *dest, const char *src, size_t size)
- 	}
- 	return ret;
- }
-+#pragma GCC diagnostic pop
- 
- /**
-  * skip_spaces - Removes leading whitespace from @str.
+ void unpin_user_page(struct page *page);
+ void unpin_user_pages_dirty_lock(struct page **pages, unsigned long npages,
+
+If that fails to repro, then we would be zeroing in on the root cause. 
+
+The branch is here (I just tested it and it seems healthy):
+
+git@github.com:johnhubbard/linux.git  pin_user_pages_tracking_v11_with_diags
+
+
+
+thanks,
 -- 
-2.11.0
-
+John Hubbard
+NVIDIA
