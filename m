@@ -2,289 +2,115 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C90C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5946FC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4EC521D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:33:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fB6Gur4Q"
+	by mail.kernel.org (Postfix) with ESMTP id 2F532206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:33:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576852421;
+	bh=S+I4X7KlRcTEWsdcW8geetJIuxmRoUdu3fdUvIJzxNk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=dLD6Cf9cA84DJKUD2deM+teMN/p6E/N0JVa6/hu4sbw/CXdGFG+ddt/6aEOz60r4O
+	 k+rnTAD3GSg3nn1TRxLVOATN6BqD1QgRmRedrcyzduMIO3Y2IFoYPl+AVGdkBXn8z8
+	 rHW6dBg3uaeAZCyaN+tWVGT+k6TAfntJLhi7Ch/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728256AbfLTOd0 (ORCPT
+        id S1727784AbfLTOah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:33:26 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:43243 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727585AbfLTOdX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:33:23 -0500
-Received: by mail-il1-f196.google.com with SMTP id v69so8090558ili.10;
-        Fri, 20 Dec 2019 06:33:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B7zRI5HFZ9GdOv7/nuMrwlmDNkCl7lHHGMLGFpofT+E=;
-        b=fB6Gur4QH9KukcvwvfXarOJODwF4Cj8kYhFYHj92mj89R38WMd+4D6+qXvS02ibmDN
-         nmiCag1Iq36Y/OoVirpVXpYThuT4m1WeI3fIvUJNtbXp6XqO93+1PSgTyje9oIcsLd4w
-         DPSftyDp7iy0EaPbhK56tb7K2XIa8yESSOhLrtByhcK5cxET6CQ5LOdesQyfB6rt4k+r
-         Z8qrnko03b72rFxPMcff+vvdykOdSr3xbSb5A5EdXW0qDRZ9JQbWH+AZaoxXBWJnYWBn
-         aPMhV1hz37HQm00sBnYfzZ8SOA8fUTOxu+0rBBKQspC2/nrqcdErlcsC7PT+f0rNmjCE
-         vTag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B7zRI5HFZ9GdOv7/nuMrwlmDNkCl7lHHGMLGFpofT+E=;
-        b=Oh4kAO7NtOGX3hn9m4sJ7aRc2MDr1Aj5LBhyw5DKo/xTtA3aa2DmBFRSeiD3NwfJFt
-         bL8+nMGJJ8MWLEguP179aEz5f+UGkZ6dn3XJxF8IXPq58iyofP0MFBh3tAkxLuui4Q8a
-         bw2DQwvP0K9H3qeDA6sp84c0EXoXjvrr+alFFzp/1+3Qxnd5rdmoASoTez5D3idsGmtH
-         7rVuWJ+MoayDVcG7TThDC6HAbAgWhOEY7l3XVhmzCZfrZgBxoKAr3ksni3GxBC7+MFEd
-         r8YnODr9vP8zCrw1pTsuESBs1cQZqZhjC9XBjDQQelGBKT+CQI/QToyZzRaTi/eWSdEo
-         7oDg==
-X-Gm-Message-State: APjAAAVYE3d3TpBcjqrmyCXBgUDex7VX+ZTnUo1YAp+q6s+ugfhllsc+
-        5boiPa58wTkzxK3khlrwoRv+0hcRsJfyY6GBc1U=
-X-Google-Smtp-Source: APXvYqziBD0NHeii8XJfTXHcWaB5cMulU0ZxJuLhN36rkOAlUk9SmN8ImVZQtX/lp8iQVt5ZG1U2Dd6RJLNTZHnrEqA=
-X-Received: by 2002:a92:465c:: with SMTP id t89mr13064188ila.263.1576852402106;
- Fri, 20 Dec 2019 06:33:22 -0800 (PST)
+        Fri, 20 Dec 2019 09:30:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34258 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727737AbfLTOad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:30:33 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DCF424684;
+        Fri, 20 Dec 2019 14:30:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576852233;
+        bh=S+I4X7KlRcTEWsdcW8geetJIuxmRoUdu3fdUvIJzxNk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wnCmGfYFBFedkzBF23758iie3kXuasSJDu0MpT8iFK0VWLMSYwLWpVD5WqdDIKgOm
+         v7DtukX9czeS5atBTtm1sn/W/Q+JQlmtyxkRpVgZ7o3D3/GITE8oyXjGUUwePzj/Ht
+         QOSlAM36tAFA8Zpdl/Mnl+JaF/qpaGFHGtJzU/Fs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Roman Bolshakov <r.bolshakov@yadro.com>,
+        Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        Hannes Reinecke <hare@suse.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 28/52] scsi: qla2xxx: Configure local loop for N2N target
+Date:   Fri, 20 Dec 2019 09:29:30 -0500
+Message-Id: <20191220142954.9500-28-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
+References: <20191220142954.9500-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20191218132217.28141-1-sibis@codeaurora.org> <20191218132217.28141-6-sibis@codeaurora.org>
- <20191220065954.GA1908628@ripper>
-In-Reply-To: <20191220065954.GA1908628@ripper>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Fri, 20 Dec 2019 07:33:11 -0700
-Message-ID: <CAOCk7NoaWw8Tor-P02SESztWEGpGMK6GbRNG45yMVYhMdDCEnQ@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] arm64: dts: qcom: msm8998: Add ADSP, MPSS and SLPI nodes
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Sibi Sankar <sibis@codeaurora.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        linux-remoteproc@vger.kernel.org,
-        DTML <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 12:00 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Wed 18 Dec 05:22 PST 2019, Sibi Sankar wrote:
->
-> > This patch adds ADSP, MPSS and SLPI nodes for MSM8998 SoCs.
-> >
-> > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi |   8 ++
-> >  arch/arm64/boot/dts/qcom/msm8998.dtsi     | 124 ++++++++++++++++++++++
-> >  2 files changed, 132 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> > index 6db3f9e0344d1..e87094665c52c 100644
-> > --- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> > @@ -312,6 +312,14 @@
-> >       };
-> >  };
-> >
-> > +&remoteproc_adsp {
-> > +     status = "okay";
-> > +};
-> > +
-> > +&remoteproc_slpi {
-> > +     status = "okay";
-> > +};
-> > +
-> >  &tlmm {
-> >       gpio-reserved-ranges = <0 4>, <81 4>;
-> >  };
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> > index 8d799e868a5d3..014127700afb0 100644
-> > --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> > @@ -1075,6 +1075,61 @@
-> >                       #interrupt-cells = <0x2>;
-> >               };
-> >
-> > +             remoteproc_mss: remoteproc@4080000 {
-> > +                     compatible = "qcom,msm8998-mss-pil";
-> > +                     reg = <0x04080000 0x100>, <0x04180000 0x20>;
-> > +                     reg-names = "qdsp6", "rmb";
-> > +
-> > +                     interrupts-extended =
-> > +                             <&intc GIC_SPI 448 IRQ_TYPE_EDGE_RISING>,
-> > +                             <&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-> > +                             <&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-> > +                             <&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-> > +                             <&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>,
-> > +                             <&modem_smp2p_in 7 IRQ_TYPE_EDGE_RISING>;
-> > +                     interrupt-names = "wdog", "fatal", "ready",
-> > +                                       "handover", "stop-ack",
-> > +                                       "shutdown-ack";
-> > +
-> > +                     clocks = <&gcc GCC_MSS_CFG_AHB_CLK>,
-> > +                              <&gcc GCC_BIMC_MSS_Q6_AXI_CLK>,
-> > +                              <&gcc GCC_BOOT_ROM_AHB_CLK>,
-> > +                              <&gcc GCC_MSS_GPLL0_DIV_CLK_SRC>,
-> > +                              <&gcc GCC_MSS_SNOC_AXI_CLK>,
-> > +                              <&gcc GCC_MSS_MNOC_BIMC_AXI_CLK>,
-> > +                              <&rpmcc RPM_SMD_QDSS_CLK>,
-> > +                              <&rpmcc RPM_SMD_XO_CLK_SRC>;
->
-> RPM_SMD_XO_CLK_SRC doesn't seem to be implemented...
->
-> I did pull in a patch from Jeff that defines it, but when I boot the
-> modem I see the following error repeatedly:
+From: Roman Bolshakov <r.bolshakov@yadro.com>
 
-Yeah, we need to figure out a solution for rpmcc to actually provide
-this since the previous N solutions were not acceptable.  Its on my
-todo list to look into in Jan.  However, I really think the DT should
-be defined this way, since it replicates the hardware config.
+[ Upstream commit fd1de5830a5abaf444cc4312871e02c41e24fdc1 ]
 
->
-> [  616.632227] qcom-q6v5-mss 4080000.remoteproc: fatal error received: dog_hb.c:266:DOG_HB detects starvation of task 0xda172640, triage with its own
+qla2x00_configure_local_loop initializes PLOGI payload for PLOGI ELS using
+Get Parameters mailbox command.
 
-Maybe the BIMC fix will address this?
+In the case when the driver is running in target mode, the topology is N2N
+and the target port has higher WWPN, LOCAL_LOOP_UPDATE bit is cleared too
+early and PLOGI payload is not initialized by the Get Parameters
+command. That causes a failure of ELS IOCB carrying the PLOGI with 0x15 aka
+Data Underrun error.
 
->
->
->
-> All the qrtr services seems registered nicely, so the remote does come
-> up before it goes down.
->
-> Also, adsp comes up nicely.
->
-> Regards,
-> Bjorn
->
-> > +                     clock-names = "iface", "bus", "mem", "gpll0_mss",
-> > +                                   "snoc_axi", "mnoc_axi", "qdss", "xo";
-> > +
-> > +                     qcom,smem-states = <&modem_smp2p_out 0>;
-> > +                     qcom,smem-state-names = "stop";
-> > +
-> > +                     resets = <&gcc GCC_MSS_RESTART>;
-> > +                     reset-names = "mss_restart";
-> > +
-> > +                     qcom,halt-regs = <&tcsr_mutex_regs 0x23000 0x25000 0x24000>;
-> > +
-> > +                     power-domains = <&rpmpd MSM8998_VDDCX>,
-> > +                                     <&rpmpd MSM8998_VDDMX>;
-> > +                     power-domain-names = "cx", "mx";
-> > +
-> > +                     mba {
-> > +                             memory-region = <&mba_mem>;
-> > +                     };
-> > +
-> > +                     mpss {
-> > +                             memory-region = <&mpss_mem>;
-> > +                     };
-> > +
-> > +                     glink-edge {
-> > +                             interrupts = <GIC_SPI 452 IRQ_TYPE_EDGE_RISING>;
-> > +                             label = "modem";
-> > +                             qcom,remote-pid = <1>;
-> > +                             mboxes = <&apcs_glb 15>;
-> > +                     };
-> > +             };
-> > +
-> >               gpucc: clock-controller@5065000 {
-> >                       compatible = "qcom,msm8998-gpucc";
-> >                       #clock-cells = <1>;
-> > @@ -1088,6 +1143,42 @@
-> >                                     "gpll0";
-> >               };
-> >
-> > +             remoteproc_slpi: remoteproc@5800000 {
-> > +                     compatible = "qcom,msm8998-slpi-pas";
-> > +                     reg = <0x05800000 0x4040>;
-> > +
-> > +                     interrupts-extended = <&intc GIC_SPI 390 IRQ_TYPE_EDGE_RISING>,
-> > +                                           <&slpi_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-> > +                                           <&slpi_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-> > +                                           <&slpi_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-> > +                                           <&slpi_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
-> > +                     interrupt-names = "wdog", "fatal", "ready",
-> > +                                       "handover", "stop-ack";
-> > +
-> > +                     px-supply = <&vreg_lvs2a_1p8>;
-> > +
-> > +                     clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
-> > +                              <&rpmcc RPM_SMD_AGGR2_NOC_CLK>;
-> > +                     clock-names = "xo", "aggre2";
-> > +
-> > +                     memory-region = <&slpi_mem>;
-> > +
-> > +                     qcom,smem-states = <&slpi_smp2p_out 0>;
-> > +                     qcom,smem-state-names = "stop";
-> > +
-> > +                     power-domains = <&rpmpd MSM8998_SSCCX>;
-> > +                     power-domain-names = "ssc_cx";
-> > +
-> > +                     status = "disabled";
-> > +
-> > +                     glink-edge {
-> > +                             interrupts = <GIC_SPI 179 IRQ_TYPE_EDGE_RISING>;
-> > +                             label = "dsps";
-> > +                             qcom,remote-pid = <3>;
-> > +                             mboxes = <&apcs_glb 27>;
-> > +                     };
-> > +             };
-> > +
-> >               stm: stm@6002000 {
-> >                       compatible = "arm,coresight-stm", "arm,primecell";
-> >                       reg = <0x06002000 0x1000>,
-> > @@ -1880,6 +1971,39 @@
-> >                       #size-cells = <0>;
-> >               };
-> >
-> > +             remoteproc_adsp: remoteproc@17300000 {
-> > +                     compatible = "qcom,msm8998-adsp-pas";
-> > +                     reg = <0x17300000 0x4040>;
-> > +
-> > +                     interrupts-extended = <&intc GIC_SPI 162 IRQ_TYPE_EDGE_RISING>,
-> > +                                           <&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-> > +                                           <&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-> > +                                           <&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-> > +                                           <&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
-> > +                     interrupt-names = "wdog", "fatal", "ready",
-> > +                                       "handover", "stop-ack";
-> > +
-> > +                     clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>;
-> > +                     clock-names = "xo";
-> > +
-> > +                     memory-region = <&adsp_mem>;
-> > +
-> > +                     qcom,smem-states = <&adsp_smp2p_out 0>;
-> > +                     qcom,smem-state-names = "stop";
-> > +
-> > +                     power-domains = <&rpmpd MSM8998_VDDCX>;
-> > +                     power-domain-names = "cx";
-> > +
-> > +                     status = "disabled";
-> > +
-> > +                     glink-edge {
-> > +                             interrupts = <GIC_SPI 157 IRQ_TYPE_EDGE_RISING>;
-> > +                             label = "lpass";
-> > +                             qcom,remote-pid = <2>;
-> > +                             mboxes = <&apcs_glb 9>;
-> > +                     };
-> > +             };
-> > +
-> >               apcs_glb: mailbox@17911000 {
-> >                       compatible = "qcom,msm8998-apcs-hmss-global";
-> >                       reg = <0x17911000 0x1000>;
-> > --
-> > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> > a Linux Foundation Collaborative Project
+LOCAL_LOOP_UPDATE has to be set to initialize PLOGI payload.
+
+Fixes: 48acad099074 ("scsi: qla2xxx: Fix N2N link re-connect")
+Link: https://lore.kernel.org/r/20191125165702.1013-10-r.bolshakov@yadro.com
+Acked-by: Quinn Tran <qutran@marvell.com>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Tested-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/qla2xxx/qla_init.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index d400b51929a6e..7364f3b62b9d9 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -4925,14 +4925,8 @@ qla2x00_configure_loop(scsi_qla_host_t *vha)
+ 		set_bit(RSCN_UPDATE, &flags);
+ 		clear_bit(LOCAL_LOOP_UPDATE, &flags);
+ 
+-	} else if (ha->current_topology == ISP_CFG_N) {
+-		clear_bit(RSCN_UPDATE, &flags);
+-		if (qla_tgt_mode_enabled(vha)) {
+-			/* allow the other side to start the login */
+-			clear_bit(LOCAL_LOOP_UPDATE, &flags);
+-			set_bit(RELOGIN_NEEDED, &vha->dpc_flags);
+-		}
+-	} else if (ha->current_topology == ISP_CFG_NL) {
++	} else if (ha->current_topology == ISP_CFG_NL ||
++		   ha->current_topology == ISP_CFG_N) {
+ 		clear_bit(RSCN_UPDATE, &flags);
+ 		set_bit(LOCAL_LOOP_UPDATE, &flags);
+ 	} else if (!vha->flags.online ||
+-- 
+2.20.1
+
