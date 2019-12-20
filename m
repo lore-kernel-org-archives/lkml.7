@@ -2,149 +2,110 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5389C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F90C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7D3E2467F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BC802467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:13:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="L1ZlN/vT"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="whFIJrJD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727327AbfLTKMl (ORCPT
+        id S1727351AbfLTKNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 05:12:41 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41091 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbfLTKMl (ORCPT
+        Fri, 20 Dec 2019 05:13:22 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33478 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727129AbfLTKNV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 05:12:41 -0500
-Received: by mail-lj1-f193.google.com with SMTP id h23so9414378ljc.8
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 02:12:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5M+97VbPVz5fx10oR8PMt5OPdUW758AjR3+Ji1vzz5M=;
-        b=L1ZlN/vTOi3FuOhcVzlqz11rikUE109c0s2Si9hpwWNPLIKRQ/qB7kVRUO5Ak/dmSd
-         bT5nZME+i87t5vsXEhQazURlMkxIXy/krhexuF1BqmfAPw7fMSe/hRk8wdqn430egyv8
-         aIhAE4cOu1xPOxmBuNxyA/rygFdbDQuEfno2k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5M+97VbPVz5fx10oR8PMt5OPdUW758AjR3+Ji1vzz5M=;
-        b=s1keIMQzPhEFyWk40prgXqN9fzD28PaEWhGsKd7vV0Jva51Jhdul1I1r2vPp66sYu7
-         jC1huKiUc3Q0IWGXcocCRE0367iziVivAsyWdaBctpvsjrg9vFMicpy1krrOgdZPZPHb
-         0SC76ucPhms+pfZDNLTH5SR3kW6QebhscxXo2OLo182kxStB1fgtWdTfCUgunR8Q4eR8
-         CSKdhpUrrWqdzXejmywWMCHpfXKRJ/IiIsCuyP8RcCvHrN0yV4CqpLhqYHoGnsqFBLgV
-         dBXo45B31inHt/es/aYYQW2n5BAv5AlV2yqgLRXEF/EYifa7hO7PDUDtUINioXxeOPo8
-         Gurw==
-X-Gm-Message-State: APjAAAWMui2FWTKlmtfBVcNenF3GtaCquYLSB4v/+HcddIDNpdTgpQ99
-        3mcv/zknO6cOxTXHR6YB3MrUUg==
-X-Google-Smtp-Source: APXvYqz6J8xgcSHMRi83jJqJdmTY+U/Gz3RT9kImbqgEYi/DZzUvoSGgWa5Ogm82BJx+FJsV1hgVwA==
-X-Received: by 2002:a2e:5304:: with SMTP id h4mr9433917ljb.75.1576836759355;
-        Fri, 20 Dec 2019 02:12:39 -0800 (PST)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id i19sm3843910lfj.17.2019.12.20.02.12.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Dec 2019 02:12:38 -0800 (PST)
-Subject: Re: [RFC][PATCH 1/4] sched: Force the address order of each sched
- class descriptor
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        Kirill Tkhai <tkhai@yandex.ru>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-        "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
-        "bsegall@google.com" <bsegall@google.com>,
-        "mgorman@suse.de" <mgorman@suse.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20191219214451.340746474@goodmis.org>
- <20191219214558.510271353@goodmis.org>
- <0a957e8d-7af8-613c-11ae-f51b9b241eb7@rasmusvillemoes.dk>
- <20191220100033.GE2844@hirez.programming.kicks-ass.net>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <1ac359e8-fa7f-7ded-e2f2-9f7d0b23a4e1@rasmusvillemoes.dk>
-Date:   Fri, 20 Dec 2019 11:12:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Fri, 20 Dec 2019 05:13:21 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBKADDQe056920;
+        Fri, 20 Dec 2019 04:13:13 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576836793;
+        bh=9DmEO+OYxJgAdf+riV2ejuQ1fMZXsgBMxnnPcmuwnhE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=whFIJrJD4FprTZAOiJ8wEeSEisPM8Fr46QZ4DUg2HBS0RzHmsZClqBvWZG7dtqXXX
+         jBMa+TkyD+euyhiIO3PtCHaVpBXU2f2wIAOuIYSQHgMCRnWeO20FdKHDL2SMCMSLz4
+         WAcpB+HHQOqrcVsItNufA43SY3GMKqEpJPdlA8mk=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBKADCSi014986
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 20 Dec 2019 04:13:12 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
+ Dec 2019 04:13:05 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 20 Dec 2019 04:13:05 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBKAD1TA072417;
+        Fri, 20 Dec 2019 04:13:02 -0600
+Subject: Re: [PATCH v7 05/12] dmaengine: Add support for reporting DMA cached
+ data amount
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
+        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>,
+        <vigneshr@ti.com>
+References: <20191209094332.4047-1-peter.ujfalusi@ti.com>
+ <20191209094332.4047-6-peter.ujfalusi@ti.com>
+ <20191220083713.GL2536@vkoul-mobl>
+ <f28301f7-4624-b4f8-d781-7ebfa4ae7856@ti.com>
+ <20191220095755.GN2536@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <ea912bfb-a315-a230-85e9-9c9110b3f0d7@ti.com>
+Date:   Fri, 20 Dec 2019 12:13:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191220100033.GE2844@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20191220095755.GN2536@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/12/2019 11.00, Peter Zijlstra wrote:
-> On Fri, Dec 20, 2019 at 09:52:37AM +0100, Rasmus Villemoes wrote:
->> On 19/12/2019 22.44, Steven Rostedt wrote:
->>> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+
+
+On 20/12/2019 11.57, Vinod Koul wrote:
+> On 20-12-19, 10:49, Peter Ujfalusi wrote:
+> 
+>>>> +static inline void dma_set_in_flight_bytes(struct dma_tx_state *state,
+>>>> +					   u32 in_flight_bytes)
+>>>> +{
+>>>> +	if (state)
+>>>> +		state->in_flight_bytes = in_flight_bytes;
+>>>> +}
 >>>
->>> In order to make a micro optimization in pick_next_task(), the order of the
->>> sched class descriptor address must be in the same order as their priority
->>> to each other. That is:
+>>> This would be used by dmaengine drivers right, so lets move it to drivers/dma/dmaengine.h
 >>>
->>>  &idle_sched_class < &fair_sched_class < &rt_sched_class <
->>>  &dl_sched_class < &stop_sched_class
->>>
->>> In order to guarantee this order of the sched class descriptors, add each
->>> one into their own data section and force the order in the linker script.
+>>> lets not expose this to users :)
 >>
->> I think it would make the code simpler if one reverses these, see other
->> reply.
+>> I have put it where the dma_set_residue() was.
+>> I can add a patch first to move dma_set_residue() then add
 > 
-> I started out agreeing, because of that mess around STOP_SCHED_CLASS and
-> that horrid BEFORE_CRUD thing.
-> 
-> Then, when I fixed it all up, I saw what it did to Kyrill's patch (#4)
-> and that ends up looking like:
-> 
-> -       if (likely((prev->sched_class == &idle_sched_class ||
-> -                   prev->sched_class == &fair_sched_class) &&
-> +       if (likely(prev->sched_class >= &fair_sched_class &&
-> 
-> And that's just weird.
+> not sure I follow, but dma_set_residue() in already in drivers/dma/dmaengine.h
 
-I kind of agree, but if one can come up with good enough macro names, I
-think all that comparison logic should be in helpers either way the
-array is laid out. Something like
+and this patch adds the dma_set_in_flight_bytes() to
+drivers/dma/dmaengine.h
 
-#define sched_class_lower_eq [something] /* perhaps comment on the array
-order */
-sched_class_lower_eq(prev->sched_class, &fair_sched_class)
+in include/linux/dmaengine.h the dma_tx_state struct is updated only.
 
-> Then I had a better look and now...
-> 
->>> +/*
->>> + * The order of the sched class addresses are important, as they are
->>> + * used to determine the order of the priority of each sched class in
->>> + * relation to each other.
->>> + */
->>> +#define SCHED_DATA				\
->>> +	*(__idle_sched_class)			\
->>> +	*(__fair_sched_class)			\
->>> +	*(__rt_sched_class)			\
->>> +	*(__dl_sched_class)			\
->>> +	STOP_SCHED_CLASS
-> 
-> I'm confused, why does that STOP_SCHED_CLASS need magic here at all?
-> Doesn't the linker deal with empty sections already by making them 0
-> sized?
+- Péter
 
-Yes, but dropping the STOP_SCHED_CLASS define doesn't prevent one from
-needing some ifdeffery to define highest_sched_class if they are laid
-out in (higher sched class <-> higher address) order.
-
-Rasmus
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
