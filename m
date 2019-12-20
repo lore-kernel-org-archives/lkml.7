@@ -2,192 +2,200 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A21A5C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 02:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 256DDC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 02:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A47120716
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 02:49:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="dO66Fqa3"
+	by mail.kernel.org (Postfix) with ESMTP id EF3AE227BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 02:52:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbfLTCtl (ORCPT
+        id S1727167AbfLTCwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 21:49:41 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38941 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbfLTCtl (ORCPT
+        Thu, 19 Dec 2019 21:52:40 -0500
+Received: from vmicros1.altlinux.org ([194.107.17.57]:52876 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbfLTCwj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 21:49:41 -0500
-Received: by mail-wm1-f66.google.com with SMTP id 20so7560931wmj.4
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 18:49:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=3dLi1FN4YuHTK91k3PaWwlK01Zg48IND9WDfUCQ0nug=;
-        b=dO66Fqa3XMaKGPCSvFs4jNIPGQ3yORAEBJ87DqlfN8HELqe1P4KBQBhr0c8k3+NKTV
-         vhalMsnfFMYVDX/bfHNyT4YAIABEQ6Yp95jumUnKvTQAEbj9d9t9birE7kZDRpDF70Wp
-         SAj2YiAQ18qwN8Tg87JQT9yZ17HBJr1PCHxNc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=3dLi1FN4YuHTK91k3PaWwlK01Zg48IND9WDfUCQ0nug=;
-        b=Sbu0l112b6CuyZx18MlaqHdEuGhGaiuwhm2f+HvVrn5eZJeMoLNLr+PpKWuv1TbupT
-         NNk0tBa+Zk9LiIsUUhj9r2zY6QEv381gBBUcjeSJImI3xmYt9mqOk/2Oq2/71OygXhag
-         hJHlEfSif3ENjnCxFJrgPi7nBfNX7HKCmxeadMS76JWrYh61t9eDdAKHHm7OQRk71gMo
-         8UtWpUNAm3JnFq4s7ET9INzP0jNqLUhFqmHmLONq5sV0cKmnDzpyILrXAjo7Vp6LZzhX
-         Aj2fDNcBoSu1VrSE5zDm85quuxrnCMojMwhOrs6uLLMp2unmIofzkg4xypqQRNw1a9n5
-         WIcw==
-X-Gm-Message-State: APjAAAVt8qAwlw8hncz4j+Hli+j/hJlW6uJQ5seQpa25TmQwdmFOsUWT
-        kYqNWXX+/FqrNgjiXNcIRNBboag6mG+JfIe8
-X-Google-Smtp-Source: APXvYqxT8x3YdvMdnGsp2PZJu2iYUAEMJ3/fb9pqO77S/7VEy4oAOaKykbpVEn7CAydy1TK0TWzluA==
-X-Received: by 2002:a1c:4008:: with SMTP id n8mr12666080wma.121.1576810177917;
-        Thu, 19 Dec 2019 18:49:37 -0800 (PST)
-Received: from localhost ([2620:10d:c092:180::1:aad7])
-        by smtp.gmail.com with ESMTPSA id q19sm7891917wmc.12.2019.12.19.18.49.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 18:49:37 -0800 (PST)
-Date:   Fri, 20 Dec 2019 02:49:36 +0000
-From:   Chris Down <chris@chrisdown.name>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH] fs: inode: Reduce volatile inode wraparound risk when ino_t
- is 64 bit
-Message-ID: <20191220024936.GA380394@chrisdown.name>
+        Thu, 19 Dec 2019 21:52:39 -0500
+Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 83CD672CCE9;
+        Fri, 20 Dec 2019 05:52:36 +0300 (MSK)
+Received: from altlinux.org (sole.flsd.net [185.75.180.6])
+        by imap.altlinux.org (Postfix) with ESMTPSA id 666444A4AEF;
+        Fri, 20 Dec 2019 05:52:36 +0300 (MSK)
+Date:   Fri, 20 Dec 2019 05:52:36 +0300
+From:   Vitaly Chikunov <vt@altlinux.org>
+To:     Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        stable@vger.kernel.org, acme@kernel.org
+Subject: Re: [PATCH] tools lib: Disable redundant-delcs error for strlcpy
+Message-ID: <20191220025236.kgu3v6yhjndr3zwb@altlinux.org>
+Mail-Followup-To: Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>, stable@vger.kernel.org,
+        acme@kernel.org
+References: <20191208214607.20679-1-vt@altlinux.org>
+ <20191217122331.4g5atx7in6njjlw4@altlinux.org>
+ <20191217200420.GD7095@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191217200420.GD7095@redhat.com>
+User-Agent: NeoMutt/20171215-106-ac61c7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In Facebook production we are seeing heavy inode number wraparounds on
-tmpfs. On affected tiers, in excess of 10% of hosts show multiple files
-with different content and the same inode number, with some servers even
-having as many as 150 duplicated inode numbers with differing file
-content.
+Arnaldo,
 
-This causes actual, tangible problems in production. For example, we
-have complaints from those working on remote caches that their
-application is reporting cache corruptions because it uses (device,
-inodenum) to establish the identity of a particular cache object, but
-because it's not unique any more, the application refuses to continue
-and reports cache corruption. Even worse, sometimes applications may not
-even detect the corruption but may continue anyway, causing phantom and
-hard to debug behaviour.
+On Tue, Dec 17, 2019 at 05:04:20PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Dec 17, 2019 at 03:23:32PM +0300, Vitaly Chikunov escreveu:
+> > Arnaldo,
 
-In general, userspace applications expect that (device, inodenum) should
-be enough to be uniquely point to one inode, which seems fair enough.
-This patch changes get_next_ino to use up to min(sizeof(ino_t), 8) bytes
-to reduce the likelihood of wraparound. On architectures with 32-bit
-ino_t the problem is, at least, not made any worse than it is right now.
+(Btw, you didn't include me into the To: of your reply).
 
-I noted the concern in the comment above about 32-bit applications on a
-64-bit kernel with 32-bit wide ino_t in userspace, as documented by Jeff
-in the commit message for 866b04fc, but these applications are going to
-get EOVERFLOW on filesystems with non-volatile inode numbers anyway,
-since those will likely be 64-bit. Concerns about that seem slimmer
-compared to the disadvantages this presents for known, real users of
-this functionality on platforms with a 64-bit ino_t.
+> > Ping. Can you accept or comment on this patch? There is further
+> > explanations of it:
+> 
+> Will this work when building with clang
 
-Other approaches I've considered:
+Clang doesn't produce this warning:
 
-- Use an IDA. If this is a problem for users with 32-bit ino_t as well,
-  this seems a feasible approach. For now this change is non-intrusive
-  enough, though, and doesn't make the situation any worse for them than
-  present at least.
-- Look for other approaches in userspace. I think this is less
-  feasible -- users do need to have a way to reliably determine inode
-  identity, and the risk of wraparound with a 2^32-sized counter is
-  pretty high, quite clearly manifesting in production for workloads
-  which make heavy use of tmpfs.
+  https://clang.llvm.org/docs/DiagnosticsReference.html#wredundant-decls
+  "-Wredundant-decls
+  This diagnostic flag exists for GCC compatibility, and has no effect
+  in Clang."
 
-Signed-off-by: Chris Down <chris@chrisdown.name>
-Reported-by: Phyllipe Medeiros <phyllipe@fb.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Jeff Layton <jlayton@kernel.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: kernel-team@fb.com
----
- fs/inode.c         | 29 ++++++++++++++++++-----------
- include/linux/fs.h |  2 +-
- 2 files changed, 19 insertions(+), 12 deletions(-)
+Thus, this change doesn't affect clang. (When building the kernel objtool
+compiles OK).
 
-diff --git a/fs/inode.c b/fs/inode.c
-index aff2b5831168..8193c17e2d16 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -870,26 +870,33 @@ static struct inode *find_inode_fast(struct super_block *sb,
-  * This does not significantly increase overflow rate because every CPU can
-  * consume at most LAST_INO_BATCH-1 unused inode numbers. So there is
-  * NR_CPUS*(LAST_INO_BATCH-1) wastage. At 4096 and 1024, this is ~0.1% of the
-- * 2^32 range, and is a worst-case. Even a 50% wastage would only increase
-- * overflow rate by 2x, which does not seem too significant.
-+ * 2^32 range (for 32-bit ino_t), and is a worst-case. Even a 50% wastage would
-+ * only increase overflow rate by 2x, which does not seem too significant. With
-+ * a 64-bit ino_t, overflow in general is fairly hard to achieve.
-  *
-- * On a 32bit, non LFS stat() call, glibc will generate an EOVERFLOW
-- * error if st_ino won't fit in target struct field. Use 32bit counter
-- * here to attempt to avoid that.
-+ * Care should be taken not to overflow when at all possible, since generally
-+ * userspace depends on (device, inodenum) being reliably unique.
+But, compilation with clang fails compiling perf with:
+
+    CC       util/string.o
+  ../lib/string.c:99:8: error: attribute declaration must precede definition [-Werror,-Wignored-attributes]
+  size_t __weak strlcpy(char *dest, const char *src, size_t size)
+         ^
+  ../../tools/include/linux/compiler.h:66:34: note: expanded from macro '__weak'
+  # define __weak                 __attribute__((weak))
+                                                 ^
+  /usr/include/bits/string_fortified.h:151:8: note: previous definition is here
+  __NTH (strlcpy (char *__restrict __dest, const char *__restrict __src,
+         ^
+  1 error generated.
+
+This warning could be disabled with this:
+
+diff --git tools/lib/string.c tools/lib/string.c
+index f2ae1b87c719..65b569014446 100644
+--- tools/lib/string.c
++++ tools/lib/string.c
+@@ -96,6 +96,8 @@ int strtobool(const char *s, bool *res)
+  * If libc has strlcpy() then that version will override this
+  * implementation:
   */
- #define LAST_INO_BATCH 1024
--static DEFINE_PER_CPU(unsigned int, last_ino);
-+static DEFINE_PER_CPU(ino_t, last_ino);
- 
--unsigned int get_next_ino(void)
-+ino_t get_next_ino(void)
++#pragma GCC diagnostic push
++#pragma GCC diagnostic ignored "-Wignored-attributes"
+ size_t __weak strlcpy(char *dest, const char *src, size_t size)
  {
--	unsigned int *p = &get_cpu_var(last_ino);
--	unsigned int res = *p;
-+	ino_t *p = &get_cpu_var(last_ino);
-+	ino_t res = *p;
- 
- #ifdef CONFIG_SMP
- 	if (unlikely((res & (LAST_INO_BATCH-1)) == 0)) {
--		static atomic_t shared_last_ino;
--		int next = atomic_add_return(LAST_INO_BATCH, &shared_last_ino);
-+		static atomic64_t shared_last_ino;
-+		u64 next = atomic64_add_return(LAST_INO_BATCH,
-+					       &shared_last_ino);
- 
-+		/*
-+		 * This might get truncated if ino_t is 32-bit, and so be more
-+		 * susceptible to wrap around than on environments where ino_t
-+		 * is 64-bit, but that's really no worse than always encoding
-+		 * `res` as unsigned int.
-+		 */
- 		res = next - LAST_INO_BATCH;
- 	}
- #endif
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 190c45039359..ca1a04334c9e 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3052,7 +3052,7 @@ static inline void lockdep_annotate_inode_mutex_key(struct inode *inode) { };
- #endif
- extern void unlock_new_inode(struct inode *);
- extern void discard_new_inode(struct inode *);
--extern unsigned int get_next_ino(void);
-+extern ino_t get_next_ino(void);
- extern void evict_inodes(struct super_block *sb);
- 
- extern void __iget(struct inode * inode);
--- 
-2.24.1
+        size_t ret = strlen(src);
+@@ -107,6 +109,7 @@ size_t __weak strlcpy(char *dest, const char *src, size_t size)
+        }
+        return ret;
+ }
++#pragma GCC diagnostic pop
 
+ /**
+  * skip_spaces - Removes leading whitespace from @str.
+
+If this is acceptable I will resend v2 with this.
+
+Thanks,
+
+> 
+> - Arnaldo
+>  
+> > 1. It seems that people putting strlcpy() into the tools was already aware of
+> > the problems it causes and tried to solve them. Probably, that's why they put
+> > `__weak` attribute on it (so it would be linkable in the presence of another
+> > strlcpy). Then `#ifndef __UCLIBC__`ed and later `#if defined(__GLIBC__) &&
+> > !defined(__UCLIBC__)` its declaration. But, solution was incomplete and could
+> > be improved to make kernel buildable on more systems (where libc contains
+> > strlcpy).
+> > 
+> > There is not need to make `redundant redeclaration` warning an error in
+> > this case.
+> > 
+> > 2. `#pragma GCC diagnostic ignored` trick is already used multiple times
+> > in the kernel:
+> > 
+> >   $ git grep  '#pragma GCC diagnostic ignored'
+> >   arch/arm/lib/xor-neon.c:#pragma GCC diagnostic ignored "-Wunused-variable"
+> >   tools/build/feature/test-gtk2-infobar.c:#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+> >   tools/build/feature/test-gtk2.c:#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+> >   tools/include/linux/string.h:#pragma GCC diagnostic ignored "-Wredundant-decls"
+> >   tools/lib/bpf/libbpf.c:#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+> >   tools/perf/ui/gtk/gtk.h:#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+> >   tools/testing/selftests/kvm/lib/assert.c:#pragma GCC diagnostic ignored "-Wunused-result"
+> >   tools/usb/ffs-test.c:#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+> > 
+> > So the solution does not seem alien in the kernel and should be acceptable.
+> > 
+> > (I also send this to another of your emails in case I used wrong one before.)
+> > 
+> > Thanks,
+> > 
+> > 
+> > On Mon, Dec 09, 2019 at 12:46:07AM +0300, Vitaly Chikunov wrote:
+> > > Disable `redundant-decls' error for strlcpy declaration and solve build
+> > > error allowing users to compile vanilla kernels.
+> > > 
+> > > When glibc have strlcpy (such as in ALT linux since 2004) objtool and
+> > > perf build fails with something like:
+> > > 
+> > >   In file included from exec-cmd.c:3:
+> > >   tools/include/linux/string.h:20:15: error: redundant redeclaration of ‘strlcpy’ [-Werror=redundant-decls]
+> > >      20 | extern size_t strlcpy(char *dest, const char *src, size_t size);
+> > > 	|               ^~~~~~~
+> > > 
+> > > It's very hard to produce a perfect fix for that since it is a header
+> > > file indirectly pulled from many sources from different Makefile builds.
+> > > 
+> > > Fixes: ce99091 ("perf tools: Move strlcpy() from perf to tools/lib/string.c")
+> > > Fixes: 0215d59 ("tools lib: Reinstate strlcpy() header guard with __UCLIBC__")
+> > > Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
+> > > Cc: Dmitry V. Levin <ldv@altlinux.org>
+> > > Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+> > > Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+> > > Cc: stable@vger.kernel.org
+> > > ---
+> > >  tools/include/linux/string.h | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > > 
+> > > diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
+> > > index 980cb9266718..99ede7f5dfb8 100644
+> > > --- a/tools/include/linux/string.h
+> > > +++ b/tools/include/linux/string.h
+> > > @@ -17,7 +17,10 @@ int strtobool(const char *s, bool *res);
+> > >   * However uClibc headers also define __GLIBC__ hence the hack below
+> > >   */
+> > >  #if defined(__GLIBC__) && !defined(__UCLIBC__)
+> > > +#pragma GCC diagnostic push
+> > > +#pragma GCC diagnostic ignored "-Wredundant-decls"
+> > >  extern size_t strlcpy(char *dest, const char *src, size_t size);
+> > > +#pragma GCC diagnostic pop
+> > >  #endif
+> > >  
+> > >  char *str_error_r(int errnum, char *buf, size_t buflen);
+> 
