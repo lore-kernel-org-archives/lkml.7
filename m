@@ -2,115 +2,111 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5711AC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 08:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 000C0C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 08:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BD0D20716
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 08:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C915C20716
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 08:48:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="wGysDDgA"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ttjR8bV7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727301AbfLTIqG (ORCPT
+        id S1727241AbfLTIsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 03:46:06 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:38575 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727084AbfLTIqF (ORCPT
+        Fri, 20 Dec 2019 03:48:01 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:58524 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727084AbfLTIsB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 03:46:05 -0500
-Received: by mail-il1-f194.google.com with SMTP id f5so7308831ilq.5
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 00:46:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=KC26HLxDRJovHhJMQJ5lAOVG1MGnXvkpVbRgP05Myy8=;
-        b=wGysDDgA6GikQjvpFg8fc9uWKd6ow/H5uWmlEJTvI6JSdWwXLy7FE3Jk45OM7TPvx8
-         uDGbc6HjJYSEVAtx4uLF2iO4gIm6UMOpD2b+z2IlGicu85cZ7Pax5SHniFT1UWJv91tt
-         dWsk/0xi4OGemcCc/UtNS94tkNge5KaCf0kwUQKC8SZWKmZYI756Ic7b5y+7FwczBX6y
-         KMd8F4vcQdw20wrpAco9thUkr0jKhm2yz5exzZVOsmGj8wQbFg3e9PJXApdYVgi7oTyN
-         huFMvLT5kaaXNxt58BBbOi1NPj4O4HMlL3fdS6mZxpf63vTvUavDdJAOXWWJEwDjpQ8f
-         xpng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=KC26HLxDRJovHhJMQJ5lAOVG1MGnXvkpVbRgP05Myy8=;
-        b=MgQEfwKuAY08RMERK4+qKoMEMUZ7rWdoLJ/o+HsIaEuYzscf+rullkpOsM/y6/Wo06
-         Y4ctxKNX3usQLWMu4orsKwe7KRZRUxXnz9dokKGH8PVuCnp/G35R8A9WpAWu9hDwXAzb
-         oD/S3JEF00exrmzHnd9PmlF3yPOtiXJyOd2ofW1LCEGr0Zgwdom2Skh97gBIphBdZvY7
-         af+kP55IXuSaZbomyC6BlGotE7RCahhaff/OlYMUv0so74hJ1SeZGJsAXjP0JHgLpq8t
-         eMgxENALXX5/v7FSek0GIVEOse53Y5AZEz7Yq/FC9wN6Wrs86HZ9PqCqxkMJnk7wNidn
-         8DZw==
-X-Gm-Message-State: APjAAAWQkjM8Acz3ZBF0oGaMWowix7K6XTcF4uIxj+vP7sEOlt4LRRtM
-        rZajiWXcJp0NluylFAOKQP97A+rn1QPoRl+dZkBMCg==
-X-Google-Smtp-Source: APXvYqzfZI/yDgZRH6zmbRR6u1hg2SOZ1sEwewAt9u+5DJxdAzgsObY6+rRXk4URsBrcWW71e7mazhPpGhACe16NMpw=
-X-Received: by 2002:a92:8712:: with SMTP id m18mr6251028ild.40.1576831564827;
- Fri, 20 Dec 2019 00:46:04 -0800 (PST)
+        Fri, 20 Dec 2019 03:48:01 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBK8lkiC080256;
+        Fri, 20 Dec 2019 02:47:46 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576831667;
+        bh=Y8SJjnPJ2zTuwuUuXvi/iusPn5VXym1DpE2Ni2sJVGo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ttjR8bV7NcwEdlkksg4iqfMbc72kqxA+NZTKn9KmxuhtXaL3iKjJXdhaOe2e/Ezqv
+         nbs7Au55+6yRYcCGdvlleszGHyIlbb+kJmuFygZ5ljUOwzoBIN2whH0Z78c5MJHrjJ
+         Izudz+vTDeyFhiiD6C7C8kAp+755Iw8c7TO64hFI=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBK8lkr6065686;
+        Fri, 20 Dec 2019 02:47:46 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
+ Dec 2019 02:47:46 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 20 Dec 2019 02:47:46 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBK8lgp6045691;
+        Fri, 20 Dec 2019 02:47:43 -0600
+Subject: Re: [PATCH v7 04/12] dmaengine: Add metadata_ops for
+ dma_async_tx_descriptor
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
+        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>,
+        <vigneshr@ti.com>
+References: <20191209094332.4047-1-peter.ujfalusi@ti.com>
+ <20191209094332.4047-5-peter.ujfalusi@ti.com>
+ <20191220083216.GK2536@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <8f66594b-3c4a-dae2-9445-0e7d28e017b8@ti.com>
+Date:   Fri, 20 Dec 2019 10:48:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191219171528.6348-1-brgl@bgdev.pl> <20191219171528.6348-13-brgl@bgdev.pl>
- <20191219172414.GA2094615@kroah.com>
-In-Reply-To: <20191219172414.GA2094615@kroah.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 20 Dec 2019 09:45:53 +0100
-Message-ID: <CAMRc=McM6VeOHj5hhk5bLoc=Vy3LTnuoCt-18s8BFOZDbChqqw@mail.gmail.com>
-Subject: Re: [PATCH v3 12/13] gpiolib: add new ioctl() for monitoring changes
- in line info
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191220083216.GK2536@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 19 gru 2019 o 18:24 Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> napisa=C5=82(a):
->
-> On Thu, Dec 19, 2019 at 06:15:27PM +0100, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Currently there is no way for user-space to be informed about changes
-> > in status of GPIO lines e.g. when someone else requests the line or its
-> > config changes. We can only periodically re-read the line-info. This
-> > is fine for simple one-off user-space tools, but any daemon that provid=
-es
-> > a centralized access to GPIO chips would benefit hugely from an event
-> > driven line info synchronization.
-> >
-> > This patch adds a new ioctl() that allows user-space processes to reuse
-> > the file descriptor associated with the character device for watching
-> > any changes in line properties. Every such event contains the updated
-> > line information.
-> >
-> > Currently the events are generated on three types of status changes: wh=
-en
-> > a line is requested, when it's released and when its config is changed.
-> > The first two are self-explanatory. For the third one: this will only
-> > happen when another user-space process calls the new SET_CONFIG ioctl()
-> > as any changes that can happen from within the kernel (i.e.
-> > set_transitory() or set_debounce()) are of no interest to user-space.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > ---
-> >  drivers/gpio/gpiolib.c    | 191 ++++++++++++++++++++++++++++++++++++--
-> >  drivers/gpio/gpiolib.h    |   1 +
-> >  include/uapi/linux/gpio.h |  24 +++++
-> >  tools/gpio/gpio-watch     | Bin 0 -> 26528 bytes
->
-> Did you mean for this binary file to be checked in?
->
+Hi Vinod,
 
-No, of course not, it's a mistake. I'll remove it in v4.
+On 20/12/2019 10.32, Vinod Koul wrote:
+> Hi Peter,
+> 
+> On 09-12-19, 11:43, Peter Ujfalusi wrote:
+> 
+>> +int dmaengine_desc_attach_metadata(struct dma_async_tx_descriptor *desc,
+>> +				   void *data, size_t len)
+>> +{
+>> +	int ret;
+>> +
+>> +	if (!desc)
+>> +		return -EINVAL;
+>> +
+>> +	ret = desc_check_and_set_metadata_mode(desc, DESC_METADATA_CLIENT);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (!desc->metadata_ops || !desc->metadata_ops->attach)
+>> +		return -ENOTSUPP;
+>> +
+>> +	return desc->metadata_ops->attach(desc, data, len);
+> 
+> this looks good to me, only thing is we should check if people are
+> mixing the modes :)
 
-Bart
+desc_check_and_set_metadata_mode() does the checking to make sure that
+the modes are not mixed.
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
