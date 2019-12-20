@@ -2,98 +2,120 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C468CC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9268AC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 834A821D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:55:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="TjvMiIej"
+	by mail.kernel.org (Postfix) with ESMTP id 71C8221D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:56:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbfLTPy7 (ORCPT
+        id S1727442AbfLTP4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 10:54:59 -0500
-Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:51836 "EHLO
-        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727233AbfLTPy7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 10:54:59 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 7EAFB3F76A;
-        Fri, 20 Dec 2019 16:54:56 +0100 (CET)
-Authentication-Results: pio-pvt-msa2.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=TjvMiIej;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id yDT3YremuHvA; Fri, 20 Dec 2019 16:54:55 +0100 (CET)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id A757C3F5D4;
-        Fri, 20 Dec 2019 16:54:54 +0100 (CET)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id E7330362158;
-        Fri, 20 Dec 2019 16:54:53 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1576857293; bh=dh0iOkelcGLbAowahmsupk/G5uFo11djWIGikieW09g=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=TjvMiIej3WKfCTNKKBket9vK9kUw2WaxcPusZmwdhhpQq8vKoRj8/rrlyfjWESb7V
-         +plX6u+EcOriAPTTNoaq/rGIiB5SvExgu6fC3FBPysf9h4HRTiLDXYDVBV4BiPVu+L
-         goF34lR6seDAv3zNoQW/U+W+TIKKz101D+VWmcXE=
-Subject: Re: [PATCH] mm/hmm: Cleanup hmm_vma_walk_pud()/walk_pud_range()
-To:     Steven Price <steven.price@arm.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20191220153826.24229-1-steven.price@arm.com>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <0d648083-2664-f99c-f1d7-4655e66b3a5b@shipmail.org>
-Date:   Fri, 20 Dec 2019 16:54:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 20 Dec 2019 10:56:08 -0500
+Received: from mga11.intel.com ([192.55.52.93]:27924 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727270AbfLTP4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 10:56:08 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Dec 2019 07:56:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,336,1571727600"; 
+   d="scan'208";a="241535997"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga004.fm.intel.com with ESMTP; 20 Dec 2019 07:56:07 -0800
+Date:   Fri, 20 Dec 2019 07:56:07 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kurz <groug@kaod.org>
+Subject: Re: [PATCH v2 35/45] KVM: s390: Manually invoke vcpu setup during
+ kvm_arch_vcpu_create()
+Message-ID: <20191220155607.GB20453@linux.intel.com>
+References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
+ <20191218215530.2280-36-sean.j.christopherson@intel.com>
+ <20191220110445.3a42041a.cohuck@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191220153826.24229-1-steven.price@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191220110445.3a42041a.cohuck@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/20/19 4:38 PM, Steven Price wrote:
-> There are a number of minor misuses of the page table APIs in
-> hmm_vma_walk_pud():
->
-> If the pud_trans_huge_lock() hasn't been obtained it might be because
-> the PUD is unstable, so we should retry.
->
-> If it has been obtained then there's no need for a READ_ONCE, and the
-> PUD cannot be pud_none() or !pud_present() so these paths are dead code.
->
-> Finally in walk_pud_range(), after a call to split_huge_pud() the code
-> should check pud_trans_unstable() rather than pud_none() to decide
-> whether the PUD should be retried.
->
-> Suggested-by: Thomas Hellström (VMware) <thomas_os@shipmail.org>
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
-> This is based on top of my "Generic page walk and ptdump" series and
-> fixes some pre-existing bugs spotted by Thomas.
->
->   mm/hmm.c      | 16 +++++-----------
->   mm/pagewalk.c |  2 +-
->   2 files changed, 6 insertions(+), 12 deletions(-)
+On Fri, Dec 20, 2019 at 11:04:45AM +0100, Cornelia Huck wrote:
+> On Wed, 18 Dec 2019 13:55:20 -0800
+> Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+> 
+> > Rename kvm_arch_vcpu_setup() to kvm_s390_vcpu_setup() and manually call
+> > the new function during kvm_arch_vcpu_create().  Define an empty
+> > kvm_arch_vcpu_setup() as it's still required for compilation.  This
+> > is effectively a nop as kvm_arch_vcpu_create() and kvm_arch_vcpu_setup()
+> > are called back-to-back by common KVM code.  Obsoleting
+> > kvm_arch_vcpu_setup() paves the way for its removal.
+> > 
+> > Note, gmap_remove() is now called if setup fails, as s390 was previously
+> > freeing it via kvm_arch_vcpu_destroy(), which is called by common KVM
+> > code if kvm_arch_vcpu_setup() fails.
+> 
+> Yes, this looks like the only thing that needs to be undone
+> (sca_add_vcpu() is done later in the process.)
+> 
+> Maybe mention that gmap_remove() is for ucontrol only? I was confused
+> for a moment :)
 
-LGTM.
+Will do.
 
-Reviewed-by: Thomas Hellstrom <thellstrom@vmware.com>
+Would it also make sense to open code __kvm_ucontrol_vcpu_init() in a
+separate patch immediately preceding this change?  That'd make it a little
+more obvious why gmap_remove() is called, and it would eliminate the
+"uninit" verbiage in the label, e.g.:
 
+        if (kvm_is_ucontrol(vcpu->kvm)) {
+                vcpu->arch.gmap = gmap_create(current->mm, -1UL);
+                if (!vcpu->arch.gmap) {
+                        rc = -ENOMEM;
+                        goto out_free_sie_block;
+                }
+                vcpu->arch.gmap->private = vcpu->kvm;
+        }
+
+        VM_EVENT(kvm, 3, "create cpu %d at 0x%pK, sie block at 0x%pK", id, vcpu,
+                 vcpu->arch.sie_block);
+        trace_kvm_s390_create_vcpu(id, vcpu, vcpu->arch.sie_block);
+
+        rc = kvm_s390_vcpu_setup(vcpu);
+        if (rc)
+                goto out_free_ucontrol_gmap;
+        return 0;
+
+out_free_ucontrol_gmap:
+        if (kvm_is_ucontrol(vcpu->kvm))
+                gmap_remove(vcpu->arch.gmap);
+out_free_sie_block:
+        free_page((unsigned long)(vcpu->arch.sie_block));
+        return rc;
+}
 
