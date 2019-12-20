@@ -2,117 +2,149 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A191CC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E4AC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77DE42465E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3560A24680
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:42:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="htjyBedo"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dHt2yfVj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfLTKl1 (ORCPT
+        id S1727315AbfLTKmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 05:41:27 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31677 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727185AbfLTKl1 (ORCPT
+        Fri, 20 Dec 2019 05:42:05 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50870 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbfLTKmF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 05:41:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576838486;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=o286XbqEZOzvo8vaNNAbdZckk8Oq7ortZIq6pvklUuM=;
-        b=htjyBedoDaSyCN0o3kLBFdJ4q5zQjlp97WqMiOBIxqFItlg89TDXWFCU/ACnrcM2h+0JWL
-        JIJRvdf5VKYm0ACdkW9+sN3+pTvPK9YSPB1gd/9hEsKY+ghxAuJoV5SsIG+cbBFqZJw5ck
-        Vgs+ETwPgm9202n30CAlAdphmYNFPr4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-279-kDuglqqyPYGYQ7IMX8e6Ew-1; Fri, 20 Dec 2019 05:41:24 -0500
-X-MC-Unique: kDuglqqyPYGYQ7IMX8e6Ew-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 040D9DB21;
-        Fri, 20 Dec 2019 10:41:23 +0000 (UTC)
-Received: from carbon (ovpn-200-18.brq.redhat.com [10.40.200.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DCCF77D9D7;
-        Fri, 20 Dec 2019 10:41:17 +0000 (UTC)
-Date:   Fri, 20 Dec 2019 11:41:16 +0100
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Cc:     netdev@vger.kernel.org, lirongqing@baidu.com,
-        linyunsheng@huawei.com, Saeed Mahameed <saeedm@mellanox.com>,
-        mhocko@kernel.org, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, brouer@redhat.com
-Subject: Re: [net-next v5 PATCH] page_pool: handle page recycle for
- NUMA_NO_NODE condition
-Message-ID: <20191220114116.59d86ff6@carbon>
-In-Reply-To: <20191220102314.GB14269@apalos.home>
-References: <20191218084437.6db92d32@carbon>
-        <157676523108.200893.4571988797174399927.stgit@firesoul>
-        <20191220102314.GB14269@apalos.home>
+        Fri, 20 Dec 2019 05:42:05 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBKAfu1p061714;
+        Fri, 20 Dec 2019 04:41:56 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576838516;
+        bh=2v2z+FS+yA7LYnWwxztL6URPv5REOEKRsiKuUYtz5xE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=dHt2yfVjBXdDDHSnVV4JabkC8Wkx8sVLr0nA12+xfaxXlDn2MLtSHGdx6hxK474nB
+         dKIi6IGX6eLhZP/XKdwhe1ZG57BtZN1t5HwNlLUgc061NKIK5fnDOklWP0ZKopBg+J
+         S750CPw72EoWAfXbN9EwXBZsDZgrv+dgFxRlayPY=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBKAfuG1103346
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 20 Dec 2019 04:41:56 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
+ Dec 2019 04:41:55 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 20 Dec 2019 04:41:55 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBKAfqQ1122772;
+        Fri, 20 Dec 2019 04:41:52 -0600
+Subject: Re: [PATCH v7 06/12] dmaengine: ti: Add cppi5 header for K3
+ NAVSS/UDMA
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
+        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>,
+        <vigneshr@ti.com>
+References: <20191209094332.4047-1-peter.ujfalusi@ti.com>
+ <20191209094332.4047-7-peter.ujfalusi@ti.com>
+ <20191220095455.GM2536@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <d5bd6bcf-9c1e-8633-fdc4-ee787100b44c@ti.com>
+Date:   Fri, 20 Dec 2019 12:42:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <20191220095455.GM2536@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Dec 2019 12:23:14 +0200
-Ilias Apalodimas <ilias.apalodimas@linaro.org> wrote:
+Hi Vinod,
 
-> Hi Jesper, 
+On 20/12/2019 11.54, Vinod Koul wrote:
+> On 09-12-19, 11:43, Peter Ujfalusi wrote:
 > 
-> I like the overall approach since this moves the check out of  the hotpath. 
-> @Saeed, since i got no hardware to test this on, would it be possible to check
-> that it still works fine for mlx5?
+>> +#define CPPI5_INFO2_DESC_RETPUSHPOLICY		BIT(16)
+>> +#define CPPI5_INFO2_DESC_RETP_MASK		GENMASK(18, 16)
+>> +
+>> +#define CPPI5_INFO2_DESC_RETQ_SHIFT		(0)
+>> +#define CPPI5_INFO2_DESC_RETQ_MASK		GENMASK(15, 0)
+>> +
+>> +#define CPPI5_INFO3_DESC_SRCTAG_SHIFT		(16U)
+>> +#define CPPI5_INFO3_DESC_SRCTAG_MASK		GENMASK(31, 16)
+>> +#define CPPI5_INFO3_DESC_DSTTAG_SHIFT		(0)
+>> +#define CPPI5_INFO3_DESC_DSTTAG_MASK		GENMASK(15, 0)
+>> +
+>> +#define CPPI5_BUFINFO1_HDESC_DATA_LEN_SHIFT	(0)
+>> +#define CPPI5_BUFINFO1_HDESC_DATA_LEN_MASK	GENMASK(27, 0)
+>> +
+>> +#define CPPI5_OBUFINFO0_HDESC_BUF_LEN_SHIFT	(0)
+>> +#define CPPI5_OBUFINFO0_HDESC_BUF_LEN_MASK	GENMASK(27, 0)
 > 
-> [...]
-> > +	struct ptr_ring *r = &pool->ring;
-> > +	struct page *page;
-> > +	int pref_nid; /* preferred NUMA node */
-> > +
-> > +	/* Quicker fallback, avoid locks when ring is empty */
-> > +	if (__ptr_ring_empty(r))
-> > +		return NULL;
-> > +
-> > +	/* Softirq guarantee CPU and thus NUMA node is stable. This,
-> > +	 * assumes CPU refilling driver RX-ring will also run RX-NAPI.
-> > +	 */
-> > +	pref_nid = (pool->p.nid == NUMA_NO_NODE) ? numa_mem_id() : pool->p.nid;  
-> 
-> One of the use cases for this is that during the allocation we are not
-> guaranteed to pick up the correct NUMA node. 
-> This will get automatically fixed once the driver starts recycling packets. 
-> 
-> I don't feel strongly about this, since i don't usually like hiding value
-> changes from the user but, would it make sense to move this into 
-> __page_pool_alloc_pages_slow() and change the pool->p.nid?
-> 
-> Since alloc_pages_node() will replace NUMA_NO_NODE with numa_mem_id()
-> regardless, why not store the actual node in our page pool information?
-> You can then skip this and check pool->p.nid == numa_mem_id(), regardless of
-> what's configured. 
+> I think you can remove the SHIFT defines and use ffs() to get the bit
+> position for shift
 
-This single code line helps support that drivers can control the nid
-themselves.  This is a feature that is only used my mlx5 AFAIK.
+Right. I'll convert to use ffs()
 
-I do think that is useful to allow the driver to "control" the nid, as
-pinning/preferring the pages to come from the NUMA node that matches
-the PCI-e controller hardware is installed in does have benefits.
+> 
+>> +static inline u32 cppi5_hdesc_calc_size(bool epib, u32 psdata_size,
+>> +					u32 sw_data_size)
+>> +{
+>> +	u32 desc_size;
+>> +
+>> +	if (psdata_size > CPPI5_INFO0_HDESC_PSDATA_MAX_SIZE)
+>> +		return 0;
+>> +
+>> +	desc_size = sizeof(struct cppi5_host_desc_t) + psdata_size +
+>> +		    sw_data_size;
+> 
+> I think there was an API for this kind of mem allocation of struct and
+> buffer attached...
 
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+The returned size is not only used when allocating memory or setting up
+the dma_pool, but for UDMAP's fetch size parameter.
 
+>> +static inline void cppi5_hdesc_reset_hbdesc(struct cppi5_host_desc_t *desc)
+>> +{
+>> +	desc->hdr = (struct cppi5_desc_hdr_t) { 0 };
+>> +	desc->next_desc = 0;
+> 
+> would this not be superfluous? Or if you want a memset call?
+
+The intention is to reset the header and the next descriptor link but
+leave the backing buffer information intact. This allows the reuse of a
+descriptor+buffer and we only need to set the header bits + next
+descriptor pointer if any.
+
+>> +static inline u32 *cppi5_hdesc_get_psdata32(struct cppi5_host_desc_t *desc)
+>> +{
+>> +	return (u32 *)cppi5_hdesc_get_psdata(desc);
+> 
+> you dont need casts away from void *
+
+Hrm, or just remove this, clients can use the cppi5_hdesc_get_psdata()
+directly.
+
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
