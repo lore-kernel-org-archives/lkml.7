@@ -2,79 +2,109 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E276C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EF2C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FBE224683
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 180F024680
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:24:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Tk2mRZKA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727344AbfLTMYn (ORCPT
+        id S1727420AbfLTMY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 07:24:43 -0500
-Received: from mx.socionext.com ([202.248.49.38]:46531 "EHLO mx.socionext.com"
+        Fri, 20 Dec 2019 07:24:57 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:48358 "EHLO mail.andi.de1.cc"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727262AbfLTMYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 07:24:43 -0500
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 20 Dec 2019 21:24:41 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id E610C18008B;
-        Fri, 20 Dec 2019 21:24:41 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 20 Dec 2019 21:25:28 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id A4D241A01CF;
-        Fri, 20 Dec 2019 21:24:41 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH RESEND] PCI: endpoint: Fix clearing start entry in configfs
-Date:   Fri, 20 Dec 2019 21:24:37 +0900
-Message-Id: <1576844677-24933-1-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        id S1727347AbfLTMY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 07:24:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Message-Id:Date:Subject:Cc:To:From:Sender:
+        Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=RBosA1WXv7+ZQ+18j+VhmhTjKGR8E8xllD/Rd9oJey4=; b=Tk2mRZKAgHCqxHXhZkJZCaXkcz
+        ziDMUULEv7GANWvFA+/U0sKpZscZo/do24A4Pg4/5KH64P9F78UefievcccXdBj7+1VGNHClW4MJH
+        sQ8WBEu8GuWD8jbx+pvJ5dSFsJRXwj3nz+iPQwVArFVRU+VN/V3EgD/ointGEBkabTOM=;
+Received: from [2a02:790:ff:1019:7ee9:d3ff:fe1f:a246] (helo=localhost)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iiHKn-0001zJ-6K; Fri, 20 Dec 2019 13:24:45 +0100
+Received: from andi by localhost with local (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iiHKj-0008TW-Ni; Fri, 20 Dec 2019 13:24:42 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rtc@vger.kernel.org, stefan@agner.ch, b.galvani@gmail.com,
+        phh@phh.me, letux-kernel@openphoenux.org
+Cc:     Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH v5 0/5] Add rtc support for rn5t618 mfd
+Date:   Fri, 20 Dec 2019 13:24:11 +0100
+Message-Id: <20191220122416.31881-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The value of 'start' entry is no change whenever writing 0 to configfs.
-So the endpoint that stopped once can't restart.
+In the variant RC5T619 the mfd has an RTC. This patchset adds
+support for it. To do so it adds the missing register defines in 
+rn5t618.h and general irq handling for that.
+It seems that the irq definitions are the same except missing RTC
+but due to missing ability to test that I do not add them here.
 
-The following command lines are an example restarting endpoint and
-reprogramming configurations after receiving bus-reset.
+The rtc driver itself is based on 
+https://github.com/kobolabs/Kobo-Reader/blob/master/hw/imx6sll-clara/kernel.tar.bz2
+but heavily reworked.
 
-    echo 0 > controllers/66000000.pcie-ep/start
-    rm controllers/66000000.pcie-ep/func1
-    ln -s functions/pci_epf_test/func1 controllers/66000000.pcie-ep/
-    echo 1 > controllers/66000000.pcie-ep/start
+It was tested on the Kobo Clara HD.
 
-However, the first 'echo' can't set 0 to 'start', so the last 'echo' can't
-restart endpoint.
+For cleaning up there is a separate off-topic patch:
+mfd: rn5t618: cleanup i2c_device_id
 
-Fixes: d74679911610 ("PCI: endpoint: Introduce configfs entry for configuring EP functions")
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- drivers/pci/endpoint/pci-ep-cfs.c | 1 +
- 1 file changed, 1 insertion(+)
+Changes in v5:
+- static rn5t618_irq_init
+- PLATFORM_DEVID_NONE
+- added some Acked-Bys
 
-diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
-index d1288a0..4fead88 100644
---- a/drivers/pci/endpoint/pci-ep-cfs.c
-+++ b/drivers/pci/endpoint/pci-ep-cfs.c
-@@ -58,6 +58,7 @@ static ssize_t pci_epc_start_store(struct config_item *item, const char *page,
- 
- 	if (!start) {
- 		pci_epc_stop(epc);
-+		epc_group->start = 0;
- 		return len;
- 	}
- 
+Changes in v4:
+- use macros for IRQ definitions
+- merge rn5t618-core.c and rn5t618-irq.c
+
+Changes in v3:
+- alignment cleanup
+- output cleanup, remove useless toggling of alarm flag in rtc probe
+- updated bindings description, so patch 1/5 becomes 2/6 and so on
+
+Changes in v2:
+- no dead code in irq code
+- various improvements and cleanups in rtc driver itself
+
+Andreas Kemnade (5):
+  dt-bindings: mfd: rn5t618: Document optional property interrupts
+  mfd: rn5t618: add IRQ support
+  mfd: rn5t618: add RTC related registers
+  mfd: rn5t618: add more subdevices
+  rtc: rc5t619: add ricoh rc5t619 RTC driver
+
+ Documentation/devicetree/bindings/mfd/rn5t618.txt |   4 +
+ drivers/mfd/Kconfig                               |   1 +
+ drivers/mfd/rn5t618.c                             | 109 +++++-
+ drivers/rtc/Kconfig                               |  10 +
+ drivers/rtc/Makefile                              |   1 +
+ drivers/rtc/rtc-rc5t619.c                         | 444 ++++++++++++++++++++++
+ include/linux/mfd/rn5t618.h                       |  26 ++
+ 7 files changed, 593 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/rtc/rtc-rc5t619.c
+
 -- 
-2.7.4
+2.11.0
 
