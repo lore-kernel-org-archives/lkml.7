@@ -2,113 +2,70 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B7DC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 17:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 795E6C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 17:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E41FA206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 17:33:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d1sfmHOo"
+	by mail.kernel.org (Postfix) with ESMTP id 58F14206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 17:35:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfLTRdE (ORCPT
+        id S1727436AbfLTRfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 12:33:04 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:45179 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727390AbfLTRdD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 12:33:03 -0500
-Received: by mail-qk1-f194.google.com with SMTP id x1so8232008qkl.12
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 09:33:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I4GRO/tWiHbtugNhV7RJoylU3LHor0URi+UMEUF74qE=;
-        b=d1sfmHOoN92uPuLuu8fgnRwjyA5F1JWhhVFF57FV7A2DSxKQqRF4LGQa69tbTalwUh
-         1zL8yEdkg72wO0woe+DVlrUMKZ8uS9dQaa+SmFcwb+JeUY4UPw64tQXdrq93FETmgWDo
-         Qse0URFDLMNwpusPCyMWsdhUpgpPL0BfRXU6U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I4GRO/tWiHbtugNhV7RJoylU3LHor0URi+UMEUF74qE=;
-        b=Rst9A2SmE/tAKyhU2njizjPXbqc4/2MUA/ZnOFitVpVCxEfVRzfwLE1UWuXV57ASXi
-         C033o4aQO4p1xBlxfCyPHN/VmOv8sWzFrrQ4vnQprEjQgNPfqmYpp/YYtliLRq0ygudJ
-         oPSczvL4MPvd+S6qepnS+imyLLZTCthTo7EjI4i9tDNMEGS/Wq01TDK//hKvGHHirJwS
-         Rx9DFhcW9Ponm9CLMZkXiO8GfBQgI25mpN255EuirI92CLKN3ZbnHkcIycHsdhS7zw81
-         rgsUXT/kmn87JZX9gSaekNsqpOiBZ2HD2B8wiyhQoQPAjJ5n+Mm/7yy6Ai1WMLbthneY
-         UBkg==
-X-Gm-Message-State: APjAAAUqaDUrXcBjlLfEl+xt1n53tV+TgcJa9issfoHdD8weZ2bcYtvX
-        b0kJCG3+dOIDFoYbXo0AYAEoUVv4oxHdxiIOQc31cQ==
-X-Google-Smtp-Source: APXvYqyECW5ukaLyBjYrwaRekIeLNwYlDah24gVYQkCKTiWSXa2ygEc+b0DkuTHIrCff61ddxAEKw1t+6msgwF6EG38=
-X-Received: by 2002:a37:5b41:: with SMTP id p62mr14388232qkb.442.1576863182554;
- Fri, 20 Dec 2019 09:33:02 -0800 (PST)
+        Fri, 20 Dec 2019 12:35:48 -0500
+Received: from mga05.intel.com ([192.55.52.43]:14901 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727388AbfLTRfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 12:35:48 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Dec 2019 09:35:47 -0800
+X-IronPort-AV: E=Sophos;i="5.69,336,1571727600"; 
+   d="scan'208";a="390933689"
+Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.24.14.83]) ([10.24.14.83])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 20 Dec 2019 09:35:47 -0800
+Subject: Re: [PATCH v2] x86/resctrl: Fix potential memory leak
+To:     Shakeel Butt <shakeelb@google.com>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <20191220164358.177202-1-shakeelb@google.com>
+From:   Reinette Chatre <reinette.chatre@intel.com>
+Message-ID: <4312bfd5-2b31-8f29-03a4-677daf8ee331@intel.com>
+Date:   Fri, 20 Dec 2019 09:35:45 -0800
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <20191219201340.196259-1-pmalani@chromium.org> <20191219201340.196259-2-pmalani@chromium.org>
- <f3d6267e-2429-e5a0-2a0e-60cab5bb1bb9@collabora.com>
-In-Reply-To: <f3d6267e-2429-e5a0-2a0e-60cab5bb1bb9@collabora.com>
-From:   Prashant Malani <pmalani@chromium.org>
-Date:   Fri, 20 Dec 2019 09:32:51 -0800
-Message-ID: <CACeCKafK+XpHnQzjXePMLiv7F7dVDVcNJNO4nOF3VvSqCR-+fA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mfd: cros_ec: Add usbpd-notify to usbpd_charger
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191220164358.177202-1-shakeelb@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 12:55 AM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> Hi Prashant,
->
-> This should be [PATCH v3 2/2]. All the patches in the series should have the
-> same version otherwise makes difficult to follow.
->
-Noted. I was under the impression that  new patches would have
-individual version numbers. I will correct this in the next version.
-Thanks!
+Hi Shakeel,
 
-> Thanks,
->  Enric
->
-> On 19/12/19 21:13, Prashant Malani wrote:
-> > Add the cros-usbpd-notify driver as a cell for the cros_usbpd_charger
-> > subdevice on non-ACPI platforms.
-> >
-> > This driver allows other cros-ec devices to receive PD event
-> > notifications from the Chrome OS Embedded Controller (EC) via a
-> > notification chain.
-> >
-> > Change-Id: I4c062d261fa1a504b43b0a0c0a98a661829593b9
-> > Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> > ---
-> >  drivers/mfd/cros_ec_dev.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-> > index c4b977a5dd966..1dde480f35b93 100644
-> > --- a/drivers/mfd/cros_ec_dev.c
-> > +++ b/drivers/mfd/cros_ec_dev.c
-> > @@ -85,6 +85,9 @@ static const struct mfd_cell cros_ec_sensorhub_cells[] = {
-> >  static const struct mfd_cell cros_usbpd_charger_cells[] = {
-> >       { .name = "cros-usbpd-charger", },
-> >       { .name = "cros-usbpd-logger", },
-> > +#ifndef CONFIG_ACPI
-> > +     { .name = "cros-usbpd-notify", },
-> > +#endif
-> >  };
-> >
-> >  static const struct cros_feature_to_cells cros_subdevices[] = {
-> >
+On 12/20/2019 8:43 AM, Shakeel Butt wrote:
+> The set_cache_qos_cfg() is leaking memory when the given level is not
+> RDT_RESOURCE_L3 or RDT_RESOURCE_L2. However at the moment, this function
+> is called with only valid levels but to make it more robust and future
+> proof, we should be handling the error path gracefully.
+> 
+> Fixes: 99adde9b370de ("x86/intel_rdt: Enable L2 CDP in MSR IA32_L2_QOS_CFG")
+> Signed-off-by: Shakeel Butt <shakeelb@google.com>
+> Acked-by: Fenghua Yu <fenghua.yu@intel.com>
+> ---
+> Changes since v1:
+> - Updated the commit message
+
+Thank you.
+
+Acked-by: Reinette Chatre <reinette.chatre@intel.com>
+
+Reinette
