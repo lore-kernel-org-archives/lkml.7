@@ -2,137 +2,170 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF05C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DE7C47409
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEE2C2468B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD9A621D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576852251;
+	bh=/MS10nszUwF6I5dV/Ux6RGz0tsPDlASNy6iNfgudSc4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Lam+LhOVlFIX8jCK5CpOdMGq5nvkRiHV0di9iXujP/Gd861gaKn+IjikPDnvCek9W
+	 F7R+ud8so+X/hAMW7MeUKeeYNnCRcMHqlCp15WhswqfBtPmrXm4mTTO4sK9m53BmC4
+	 lLYwiE+MEi3Bh6IP5fb1lH24eODieW/A8KtnOP4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbfLTOap (ORCPT
+        id S1727917AbfLTOav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:30:45 -0500
-Received: from foss.arm.com ([217.140.110.172]:51198 "EHLO foss.arm.com"
+        Fri, 20 Dec 2019 09:30:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727809AbfLTOaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:30:39 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF45611D4;
-        Fri, 20 Dec 2019 06:30:38 -0800 (PST)
-Received: from e119886-lin.cambridge.arm.com (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1120D3F718;
-        Fri, 20 Dec 2019 06:30:36 -0800 (PST)
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH v2 03/18] arm64: KVM: define SPE data structure for each vcpu
-Date:   Fri, 20 Dec 2019 14:30:10 +0000
-Message-Id: <20191220143025.33853-4-andrew.murray@arm.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191220143025.33853-1-andrew.murray@arm.com>
-References: <20191220143025.33853-1-andrew.murray@arm.com>
+        id S1727816AbfLTOam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:30:42 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 737C624684;
+        Fri, 20 Dec 2019 14:30:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576852241;
+        bh=/MS10nszUwF6I5dV/Ux6RGz0tsPDlASNy6iNfgudSc4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LCpCmCeguItGmOq5zVSc9K5ChO8Vd/YAWRxOf4Eo7RCQlogR0WXXm8lX5gbi1U0r1
+         Am12DPMZxDHem/lF6UAkwxeORM7YYV7b6VshC0Lbfi/lI38wTW8ofLBb+tKk10mtTR
+         OKkdmaKBBry550Q/9k6A9xvIfw80zFUVrcd5Ys7s=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Bo Wu <wubo40@huawei.com>, Zhiqiang Liu <liuzhiqiang26@huawei.com>,
+        Lee Duncan <lduncan@suse.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, open-iscsi@googlegroups.com,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 34/52] scsi: iscsi: Avoid potential deadlock in iscsi_if_rx func
+Date:   Fri, 20 Dec 2019 09:29:36 -0500
+Message-Id: <20191220142954.9500-34-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
+References: <20191220142954.9500-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+From: Bo Wu <wubo40@huawei.com>
 
-In order to support virtual SPE for guest, so define some basic structs.
-This features depends on host having hardware with SPE support.
+[ Upstream commit bba340c79bfe3644829db5c852fdfa9e33837d6d ]
 
-Since we can support this only on ARM64, add a separate config symbol
-for the same.
+In iscsi_if_rx func, after receiving one request through
+iscsi_if_recv_msg func, iscsi_if_send_reply will be called to try to
+reply to the request in a do-while loop.  If the iscsi_if_send_reply
+function keeps returning -EAGAIN, a deadlock will occur.
 
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-[ Add irq_level, rename irq to irq_num for kvm_spe ]
-Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+For example, a client only send msg without calling recvmsg func, then
+it will result in the watchdog soft lockup.  The details are given as
+follows:
+
+	sock_fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_ISCSI);
+	retval = bind(sock_fd, (struct sock addr*) & src_addr, sizeof(src_addr);
+	while (1) {
+		state_msg = sendmsg(sock_fd, &msg, 0);
+		//Note: recvmsg(sock_fd, &msg, 0) is not processed here.
+	}
+	close(sock_fd);
+
+watchdog: BUG: soft lockup - CPU#7 stuck for 22s! [netlink_test:253305] Sample time: 4000897528 ns(HZ: 250) Sample stat:
+curr: user: 675503481560, nice: 321724050, sys: 448689506750, idle: 4654054240530, iowait: 40885550700, irq: 14161174020, softirq: 8104324140, st: 0
+deta: user: 0, nice: 0, sys: 3998210100, idle: 0, iowait: 0, irq: 1547170, softirq: 242870, st: 0 Sample softirq:
+         TIMER:        992
+         SCHED:          8
+Sample irqstat:
+         irq    2: delta       1003, curr:    3103802, arch_timer
+CPU: 7 PID: 253305 Comm: netlink_test Kdump: loaded Tainted: G           OE
+Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
+pstate: 40400005 (nZcv daif +PAN -UAO)
+pc : __alloc_skb+0x104/0x1b0
+lr : __alloc_skb+0x9c/0x1b0
+sp : ffff000033603a30
+x29: ffff000033603a30 x28: 00000000000002dd
+x27: ffff800b34ced810 x26: ffff800ba7569f00
+x25: 00000000ffffffff x24: 0000000000000000
+x23: ffff800f7c43f600 x22: 0000000000480020
+x21: ffff0000091d9000 x20: ffff800b34eff200
+x19: ffff800ba7569f00 x18: 0000000000000000
+x17: 0000000000000000 x16: 0000000000000000
+x15: 0000000000000000 x14: 0001000101000100
+x13: 0000000101010000 x12: 0101000001010100
+x11: 0001010101010001 x10: 00000000000002dd
+x9 : ffff000033603d58 x8 : ffff800b34eff400
+x7 : ffff800ba7569200 x6 : ffff800b34eff400
+x5 : 0000000000000000 x4 : 00000000ffffffff
+x3 : 0000000000000000 x2 : 0000000000000001
+x1 : ffff800b34eff2c0 x0 : 0000000000000300 Call trace:
+__alloc_skb+0x104/0x1b0
+iscsi_if_rx+0x144/0x12bc [scsi_transport_iscsi]
+netlink_unicast+0x1e0/0x258
+netlink_sendmsg+0x310/0x378
+sock_sendmsg+0x4c/0x70
+sock_write_iter+0x90/0xf0
+__vfs_write+0x11c/0x190
+vfs_write+0xac/0x1c0
+ksys_write+0x6c/0xd8
+__arm64_sys_write+0x24/0x30
+el0_svc_common+0x78/0x130
+el0_svc_handler+0x38/0x78
+el0_svc+0x8/0xc
+
+Link: https://lore.kernel.org/r/EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915E3D4D2@dggeml505-mbx.china.huawei.com
+Signed-off-by: Bo Wu <wubo40@huawei.com>
+Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/kvm_host.h |  2 ++
- arch/arm64/kvm/Kconfig            |  7 +++++++
- include/kvm/arm_spe.h             | 19 +++++++++++++++++++
- 3 files changed, 28 insertions(+)
- create mode 100644 include/kvm/arm_spe.h
+ drivers/scsi/scsi_transport_iscsi.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index c61260cf63c5..f5dcff912645 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -35,6 +35,7 @@
- #include <kvm/arm_vgic.h>
- #include <kvm/arm_arch_timer.h>
- #include <kvm/arm_pmu.h>
-+#include <kvm/arm_spe.h>
+diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
+index 417b868d8735e..ed8d9709b9b96 100644
+--- a/drivers/scsi/scsi_transport_iscsi.c
++++ b/drivers/scsi/scsi_transport_iscsi.c
+@@ -24,6 +24,8 @@
  
- #define KVM_MAX_VCPUS VGIC_V3_MAX_CPUS
+ #define ISCSI_TRANSPORT_VERSION "2.0-870"
  
-@@ -302,6 +303,7 @@ struct kvm_vcpu_arch {
- 	struct vgic_cpu vgic_cpu;
- 	struct arch_timer_cpu timer_cpu;
- 	struct kvm_pmu pmu;
-+	struct kvm_spe spe;
++#define ISCSI_SEND_MAX_ALLOWED  10
++
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/iscsi.h>
  
- 	/*
- 	 * Anything that is not used directly from assembly code goes
-diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
-index a475c68cbfec..af5be2c57dcb 100644
---- a/arch/arm64/kvm/Kconfig
-+++ b/arch/arm64/kvm/Kconfig
-@@ -35,6 +35,7 @@ config KVM
- 	select HAVE_KVM_EVENTFD
- 	select HAVE_KVM_IRQFD
- 	select KVM_ARM_PMU if HW_PERF_EVENTS
-+	select KVM_ARM_SPE if (HW_PERF_EVENTS && ARM_SPE_PMU)
- 	select HAVE_KVM_MSI
- 	select HAVE_KVM_IRQCHIP
- 	select HAVE_KVM_IRQ_ROUTING
-@@ -61,6 +62,12 @@ config KVM_ARM_PMU
- 	  Adds support for a virtual Performance Monitoring Unit (PMU) in
- 	  virtual machines.
+@@ -3682,6 +3684,7 @@ iscsi_if_rx(struct sk_buff *skb)
+ 		struct nlmsghdr	*nlh;
+ 		struct iscsi_uevent *ev;
+ 		uint32_t group;
++		int retries = ISCSI_SEND_MAX_ALLOWED;
  
-+config KVM_ARM_SPE
-+	bool
-+	---help---
-+	  Adds support for a virtual Statistical Profiling Extension(SPE) in
-+	  virtual machines.
-+
- config KVM_INDIRECT_VECTORS
-        def_bool KVM && (HARDEN_BRANCH_PREDICTOR || HARDEN_EL2_VECTORS)
- 
-diff --git a/include/kvm/arm_spe.h b/include/kvm/arm_spe.h
-new file mode 100644
-index 000000000000..48d118fdb174
---- /dev/null
-+++ b/include/kvm/arm_spe.h
-@@ -0,0 +1,19 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 ARM Ltd.
-+ */
-+
-+#ifndef __ASM_ARM_KVM_SPE_H
-+#define __ASM_ARM_KVM_SPE_H
-+
-+#include <uapi/linux/kvm.h>
-+#include <linux/kvm_host.h>
-+
-+struct kvm_spe {
-+	int irq_num;
-+	bool ready; /* indicates that SPE KVM instance is ready for use */
-+	bool created; /* SPE KVM instance is created, may not be ready yet */
-+	bool irq_level;
-+};
-+
-+#endif /* __ASM_ARM_KVM_SPE_H */
+ 		nlh = nlmsg_hdr(skb);
+ 		if (nlh->nlmsg_len < sizeof(*nlh) + sizeof(*ev) ||
+@@ -3712,6 +3715,10 @@ iscsi_if_rx(struct sk_buff *skb)
+ 				break;
+ 			err = iscsi_if_send_reply(portid, nlh->nlmsg_type,
+ 						  ev, sizeof(*ev));
++			if (err == -EAGAIN && --retries < 0) {
++				printk(KERN_WARNING "Send reply failed, error %d\n", err);
++				break;
++			}
+ 		} while (err < 0 && err != -ECONNREFUSED && err != -ESRCH);
+ 		skb_pull(skb, rlen);
+ 	}
 -- 
-2.21.0
+2.20.1
 
