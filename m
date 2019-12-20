@@ -2,134 +2,175 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 454BFC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5915C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A7722146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:32:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8930A2146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:33:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ufnVJ3iP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c/r8EebM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbfLTJc4 (ORCPT
+        id S1727401AbfLTJdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 04:32:56 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34283 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727184AbfLTJc4 (ORCPT
+        Fri, 20 Dec 2019 04:33:43 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35375 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727262AbfLTJdn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 04:32:56 -0500
-Received: by mail-pf1-f194.google.com with SMTP id l127so4896139pfl.1;
-        Fri, 20 Dec 2019 01:32:55 -0800 (PST)
+        Fri, 20 Dec 2019 04:33:43 -0500
+Received: by mail-ed1-f67.google.com with SMTP id f8so7624946edv.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 01:33:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hXPvfKvwAwee7RsrZpIamZ8UANcZvc4/7hzUJ9vWG30=;
-        b=ufnVJ3iPxZcZtJ92hsB9jBbHS38GFsw9MyCcx9SHRHdXmWo1pI6ZDU4ZFgZ9JeU7ZS
-         j2irv1vy1DCI/tEIMvh7yIDPtZ4T2IudbrsSUY7w2xI/3TNYdhDJNK4F0fqI2AjK4S1B
-         DZnLX8Uk0BHcXbzLOK9slVuYcpDEF75U/nEREA0vm3SQj7PKE3i2dUru17xsbs7PGUa+
-         uHOr1Rs58B+A9FuO5Dp9W3nhFJ2wYxY31YasiyNKs/k1RteF/C5jxwRfvHem7LcAOi9t
-         +DDteb1doMFCbUdUvGAAcbhL1yk50HwuVaCqH7+UjW7Kjt6F/GNcQIPX9MVEwJgoIE42
-         UdBg==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=IdRAcGLRRg8iKt3mImCAWyzVNXDNfr3GQXuYmx9xEBc=;
+        b=c/r8EebMIT04qDRK32za4rw3kkCHqeJihYbC/JuIH5uKb2pINtIbYx1BMVb5HlGgrA
+         rZ04UxrGuKKVmEhy/6vrlAkCcQLHFSPNVEZ+5fs5aBufrHW9sVug77pRH7b/+c3251/O
+         NOxG9SzKAzUzdjhSCk7pugFRACejjYiHeq9Y3zgbR8M4LxtfdtAp7mQm77rqbw/Kg+YA
+         +MYNSgLiJdU488X7zdi/Nz7EgIGIXOIcp+wtV2g9gFe5GtZnP4/Gl2hSJbnSWRJzb83k
+         itY4K+L7MhblfKTmWCQ0CIDMs7g14Dyyt+q3QYPXGECwHgPyO0foPFqpY3icWZDVVpTS
+         RPyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hXPvfKvwAwee7RsrZpIamZ8UANcZvc4/7hzUJ9vWG30=;
-        b=HPtTG0JCTxOaBNgAIsfMmf+tNOeaRwFQ7NhINxvzxBhxfSSSuc8V2q5315PjkjKH2E
-         aiKGEWFlL5gaJ4hpBo22WUXTS93EW9ODw+xyWBu/Y2fT1gbtaxlkpCGgp3Jp2O5JwukQ
-         1dUgYwR31j78hLrdSMAVveGCZQSD6iCqK6JIpixrcxCQ6S/psee2yA9sMZzUE/6Zecmk
-         BXfXig3Tx2il9wo2kW4xaB8eYW+bA2Ku/4VjMVKjJKFWKxr0zBaJ4ZMBS+l909oNGHMd
-         TEqCWnUgUhzGX1/qnOdQJkG5np2HkscRP+oab9xZL/PfRFLuBt0VZI198XqV5WarmnKQ
-         uzYg==
-X-Gm-Message-State: APjAAAWwpY9dpUzpGVRoG7MhYV++Eq9GUzOuMobX9ujt2jHMyj6Qqqrk
-        7TNZlSkdmnElOIg4Vgz1rMTmnZc1X5ETp+7G9OA=
-X-Google-Smtp-Source: APXvYqy89KLn49Y7AOaiBDwvJUbGIwKrXpVrAXbM6ogcz28z1+7I0//57vSQh5E6i+knbxU9bqCwYbEzCfkP8R4ECrQ=
-X-Received: by 2002:a62:1944:: with SMTP id 65mr15366030pfz.151.1576834375318;
- Fri, 20 Dec 2019 01:32:55 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IdRAcGLRRg8iKt3mImCAWyzVNXDNfr3GQXuYmx9xEBc=;
+        b=eM3AVjXDuxqija9Z3LnxBi3XbCJW7fxYs55TfGioZTCO1QIIQCeJOmyBgnJtPQtfCi
+         X9PYdsGYTJw5JCHCWCC1TD4D2P6St85CvZ40sHxtVg7HGDRQKnC0LeX/blZ3/MRfSNt5
+         TUYpiXzX9mXMwFsWD6+igunxCi3QjrwL8V8V6ViHmU6BZJeESE1sWfKdiwvDrJ12MtJp
+         aa789TQvoQVninQph4HF5XBT+4vppRtmsV3c3AE7tYn0vhBRpjBTpx3SAsBYgL+r9/O1
+         nr93kMhMOeC+Guj8Xl443UVpDu4FGLlbvPeR9xfsS5FjQfhLkPLKW293+dmZpNcxZ3cJ
+         wqCw==
+X-Gm-Message-State: APjAAAW3O2oyuMJwquqb7OHIW2WsL1jQoeeNdhRtyyAAucErT/vpFdfu
+        4LAdkPEb0UwWIxAQpthh1AJzwQ==
+X-Google-Smtp-Source: APXvYqzWCfqm8KGSdm+UnLUG2XwPn5sKlp0oZPiMWYuaTmOCE/DBPs/XpccD3F2EzBw03B9ho0xHAA==
+X-Received: by 2002:a50:e108:: with SMTP id h8mr14849903edl.196.1576834421273;
+        Fri, 20 Dec 2019 01:33:41 -0800 (PST)
+Received: from [192.168.27.209] ([37.157.136.193])
+        by smtp.googlemail.com with ESMTPSA id ay24sm856223edb.29.2019.12.20.01.33.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Dec 2019 01:33:40 -0800 (PST)
+Subject: Re: [PATCH 3/3] venus: core: add sc7180 DT compatible and resource
+ struct
+To:     Dikshita Agarwal <dikshita@codeaurora.org>,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, vgarodia@codeaurora.org
+References: <1576828760-13176-1-git-send-email-dikshita@codeaurora.org>
+ <1576828760-13176-4-git-send-email-dikshita@codeaurora.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <b1b5ee06-bc39-cfc0-b2c8-8073f8857fde@linaro.org>
+Date:   Fri, 20 Dec 2019 11:33:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20191219041039.23396-1-dan@dlrobertson.com> <20191219041039.23396-3-dan@dlrobertson.com>
- <CAHp75VdVmfAi5hSp23Gn8nm6LmX-Mr5Tnxcbus90DrRL+gVFRA@mail.gmail.com>
- <20191220043220.GA16415@nessie> <CAHp75Vec5ADoFH9KoTnU5+uEZvGqS2+NUN+MLTiwzofDtGG0+A@mail.gmail.com>
-In-Reply-To: <CAHp75Vec5ADoFH9KoTnU5+uEZvGqS2+NUN+MLTiwzofDtGG0+A@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 20 Dec 2019 11:32:42 +0200
-Message-ID: <CAHp75VdzE4uKKJ_5g8eMZR+GSX9W+7Lc+kh2OYt5o7_8_NHTpw@mail.gmail.com>
-Subject: Re: [PATCH v7 2/3] iio: (bma400) add driver for the BMA400
-To:     Dan Robertson <dan@dlrobertson.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        devicetree <devicetree@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Joe Perches <joe@perches.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1576828760-13176-4-git-send-email-dikshita@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 11:27 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Fri, Dec 20, 2019 at 6:48 AM Dan Robertson <dan@dlrobertson.com> wrote:
-> > On Thu, Dec 19, 2019 at 01:02:28PM +0200, Andy Shevchenko wrote:
-> > > On Thu, Dec 19, 2019 at 6:27 AM Dan Robertson <dan@dlrobertson.com> wrote:
->
-> > > > +static int bma400_set_accel_output_data_rate(struct bma400_data *data,
-> > > > +                                            int hz, int uhz)
-> > > > +{
-> > > > +       unsigned int idx;
-> > > > +       unsigned int odr;
-> > > > +       unsigned int val;
-> > > > +       int ret;
-> > > > +
-> > > > +       if (hz >= BMA400_ACC_ODR_MIN_WHOLE_HZ) {
-> > > > +               if (uhz || hz % BMA400_ACC_ODR_MIN_WHOLE_HZ)
-> > > > +                       return -EINVAL;
-> > > > +
-> > > > +               val = hz / BMA400_ACC_ODR_MIN_WHOLE_HZ;
-> > >
-> > > Again, AFAICS division may be avoided in both cases (% and / above)
-> > > because of is_power_of_2() check below.
-> > > Can you revisit this?
-> >
-> > Yeah I can update this in the next patchset, but I don't know if it is much more
-> > readable this way.
->
-> You may describe the algo in the comment.
->
-> Let's see how it might look like
->
->   if (uhz)
->     return -EINVAL;
->   idx = __ffs(val);
->   /* We're expecting value to be 2^n * ODR_MIN_WHOLE_HZ */
->   if ((val >> idx) != BMA400_ACC_ODR_MIN_WHOLE_HZ)
+Hi Dikshita,
 
-Okay, this would require trickier conditional for the cases when
-MIN_WHOLE_HZ can be divided by 2^k...
-Still from performance point of view it might be much faster than division.
+Thanks for the patch!
 
->     retutn -EINVAL;
->   idx += BMA400_ACC_ODR_MIN_RAW + 1;
->
-> Would it work?
->
-> > > > +               if (!is_power_of_2(val))
-> > > > +                       return -EINVAL;
-> > > > +
-> > > > +               idx = __ffs(val) + BMA400_ACC_ODR_MIN_RAW + 1;
+On 12/20/19 9:59 AM, Dikshita Agarwal wrote:
+> This add DT compatible string and resource structure for sc7180.
+> 
+> Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
+> ---
+>  drivers/media/platform/qcom/venus/core.c | 58 +++++++++++++++++++++++++++++++-
+>  1 file changed, 57 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+> index c7525d9..e8c8b28 100644
+> --- a/drivers/media/platform/qcom/venus/core.c
+> +++ b/drivers/media/platform/qcom/venus/core.c
+> @@ -469,7 +469,7 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
+>  	{ 2073600, 3929000, 0, 5551000, 0 },	/* 4096x2160@60 */
+>  	{ 1036800, 1987000, 0, 2797000, 0 },	/* 4096x2160@30 */
+>  	{  489600, 1040000, 0, 1298000, 0 },	/* 1920x1080@60 */
+> -	{  244800,  530000, 0,  659000, 0 },	/* 1920x1080@30 */
+> +	{  244800,  442000, 0,  659000, 0 },	/* 1920x1080@30 */
+
+unrelated change, please drop it
+
+>  };
+>  
+>  static const struct venus_resources sdm845_res = {
+> @@ -521,11 +521,67 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
+>  	.fwname = "qcom/venus-5.2/venus.mdt",
+>  };
+>  
+> +static const struct freq_tbl sc7180_freq_table[] = {
+> +	{  0, 380000000 },
+> +	{  0, 340000000 },
+> +	{  0, 270000000 },
+> +	{  0, 150000000 },
+
+why .load is zero?
+
+> +};
+> +
+> +static struct codec_freq_data sc7180_codec_freq_data[] =  {
+> +	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675, 10 },
+> +	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_ENC, 675, 10 },
+> +	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_ENC, 675, 10 },
+> +	{ V4L2_PIX_FMT_MPEG2, VIDC_SESSION_TYPE_DEC, 200, 10 },
+> +	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_DEC, 200, 10 },
+> +	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_DEC, 200, 10 },
+> +	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_DEC, 200, 10 },
+> +	{ V4L2_PIX_FMT_VP9, VIDC_SESSION_TYPE_DEC, 200, 10 },
+> +};
+
+the table is exactly the same as sdm845 one, please reuse it.
+
+> +
+> +static const struct bw_tbl sc7180_bw_table_enc[] = {
+> +	{  972000,  750000, 0, 0, 0 },	/* 3840x2160@30 */
+> +	{  489600,  451000, 0, 0, 0 },	/* 1920x1080@60 */
+> +	{  244800,  234000, 0, 0, 0 },	/* 1920x1080@30 */
+> +};
+> +
+> +static const struct bw_tbl sc7180_bw_table_dec[] = {
+> +	{ 1036800, 1386000, 0, 1875000, 0 },	/* 4096x2160@30 */
+> +	{  489600,  865000, 0, 1146000, 0 },	/* 1920x1080@60 */
+> +	{  244800,  530000, 0,  583000, 0 },	/* 1920x1080@30 */
+> +};
+> +
+> +static const struct venus_resources sc7180_res = {
+> +	.freq_tbl = sc7180_freq_table,
+> +	.freq_tbl_size = ARRAY_SIZE(sc7180_freq_table),
+> +	.bw_tbl_enc = sc7180_bw_table_enc,
+> +	.bw_tbl_enc_size = ARRAY_SIZE(sc7180_bw_table_enc),
+> +	.bw_tbl_dec = sc7180_bw_table_dec,
+> +	.bw_tbl_dec_size = ARRAY_SIZE(sc7180_bw_table_dec),
+> +	.codec_freq_data = sc7180_codec_freq_data,
+> +	.codec_freq_data_size = ARRAY_SIZE(sc7180_codec_freq_data),
+> +	.clks = {"core", "iface", "bus" },
+> +	.clks_num = 3,
+> +	.vcodec0_clks = { "vcodec0_core", "vcodec0_bus" },
+> +	.vcodec_clks_num = 2,
+> +	.vcodec_pmdomains = { "venus", "vcodec0" },
+> +	.vcodec_pmdomains_num = 2,
+> +	.vcodec_num = 1,
+> +	.max_load = 3110400,	/* 4096x2160@90 */
+
+Looking into above bandwidth tables I can guess that the maximimum load
+is reached at 4096x2160@30? If so you have to change it here.
+
+<cut>
 
 -- 
-With Best Regards,
-Andy Shevchenko
+regards,
+Stan
