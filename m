@@ -2,119 +2,118 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B159C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC50C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46838206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4097206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:04:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TGomQ9fF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727523AbfLTTCD (ORCPT
+        id S1727513AbfLTTEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 14:02:03 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32478 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727394AbfLTTCD (ORCPT
+        Fri, 20 Dec 2019 14:04:31 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:52865 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727394AbfLTTEa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 14:02:03 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBKIw1Lr024708
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 14:02:02 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2x0wb1uqwq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 14:02:01 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Fri, 20 Dec 2019 19:01:53 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 20 Dec 2019 19:01:49 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBKJ1mUp41353236
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Dec 2019 19:01:48 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5D082A4053;
-        Fri, 20 Dec 2019 19:01:48 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2C44FA404D;
-        Fri, 20 Dec 2019 19:01:47 +0000 (GMT)
-Received: from dhcp-9-31-103-79.watson.ibm.com (unknown [9.31.103.79])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 20 Dec 2019 19:01:47 +0000 (GMT)
-Subject: Re: [PATCH v5 0/2] IMA: Deferred measurement of keys
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        James.Bottomley@HansenPartnership.com,
-        linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Date:   Fri, 20 Dec 2019 14:01:46 -0500
-In-Reply-To: <20191218164434.2877-1-nramas@linux.microsoft.com>
-References: <20191218164434.2877-1-nramas@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19122019-0012-0000-0000-0000037700B6
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19122019-0013-0000-0000-000021B2F8BE
-Message-Id: <1576868506.5241.65.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-20_05:2019-12-17,2019-12-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- lowpriorityscore=0 adultscore=0 spamscore=0 clxscore=1015
- priorityscore=1501 mlxlogscore=999 phishscore=0 malwarescore=0
- suspectscore=3 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912200139
+        Fri, 20 Dec 2019 14:04:30 -0500
+Received: by mail-pj1-f68.google.com with SMTP id w23so4504884pjd.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 11:04:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qGjb7eWoCkZSqsMkOMbh0emAlLhfNF+XZ0Dr2/fwtoA=;
+        b=TGomQ9fFTiqX2VOyWk437Wi8Jo5ypgF7XDqRU+xa96kpKduPCd6PaJsmUCnNrz/wXX
+         FRHkyWn2qIhKM5nIuGM3ctTolrpcNhhMNYuzDl1kzW6UBYupI8DnJVGdEEcAFeDXFtP6
+         T1qCJwjEc31LWZWPuiPQJOr/mLInHC+UXSLY7rBWrdZc8eQ1NRIu1Uugog/4KhfwJ58u
+         akT5RL2PCWMxASEyobnHn9/hOxXoIn2SLvJR3RMadPTP9QpyQNllsZ/A03FW0fkHqRCu
+         SzSihvCIAzAWnH0m3XlMZskEUM+Ced6YWCQSrbrOc6fUva4ICP3C6/z5a+PtTW2By8wr
+         KavQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qGjb7eWoCkZSqsMkOMbh0emAlLhfNF+XZ0Dr2/fwtoA=;
+        b=j2hKvkAzNfdCOSj8YzSb27Bj/Vz+AV80Xjyj4IJHslP+bNDd6dN9Wz9d0k0YqZDtmj
+         7g5dQ3Nw3lGL4XLai3j/WcBFhdws465xK5KI8p6tuDkrh6gfm09d+nHmqHeK8Xp3jHV2
+         Ec19nv5cJsKF4k8hrGvt1sDx4t04JMBshbWZ8f1jZlrZd1ueZJKPsSxUT5hgGKnTFIqi
+         WyzJopoyF6iGHl4pJh5+F8A26IvL/G0EYt5ruEBCkdr+va9S+4KvW16/yqIOnMe1UDJD
+         0i4hkY4ts55UWQl/u0YVLrgyTCSzacSPPYNBJE4jBGux3oBZgsDdOXSBhY+mjyAppumF
+         HlmA==
+X-Gm-Message-State: APjAAAUDjwYIApy0aaD4d+r/rD1c35gyYMvjpvGikZMcPrMsfVMSFZDB
+        3REfB+VAXCN0//ec0dCGmdQuxA==
+X-Google-Smtp-Source: APXvYqzj/ieFQoyLUA0Oa0WPwtOBqCvbXDqpN+HBNirj9Qp2WbSOWzuFCEJ2uvBjwxdDq5q2WV103Q==
+X-Received: by 2002:a17:902:7c0d:: with SMTP id x13mr16807903pll.85.1576868669546;
+        Fri, 20 Dec 2019 11:04:29 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id m22sm13172633pgn.8.2019.12.20.11.04.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 11:04:28 -0800 (PST)
+Date:   Fri, 20 Dec 2019 11:04:26 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     linux-pm@vger.kernel.org, evgreen@chromium.org,
+        daidavid1@codeaurora.org, okukatla@codeaurora.org,
+        jcrouse@codeaurora.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] interconnect: Check for valid path in icc_set_bw()
+Message-ID: <20191220190426.GE549437@yoga>
+References: <20191220171310.24169-1-georgi.djakov@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191220171310.24169-1-georgi.djakov@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-12-18 at 08:44 -0800, Lakshmi Ramasubramanian wrote:
-> This patchset extends the previous version[1] by adding support for
-> deferred processing of keys.
+On Fri 20 Dec 09:13 PST 2019, Georgi Djakov wrote:
+
+> Use IS_ERR() to ensure that the path passed to icc_set_bw() is valid.
 > 
-> With the patchset referenced above, the IMA subsystem supports
-> measuring asymmetric keys when the key is created or updated.
-> But keys created or updated before a custom IMA policy is loaded
-> are currently not measured. This includes keys added to, for instance,
-> .builtin_trusted_keys which happens early in the boot process.
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+>  drivers/interconnect/core.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> This change adds support for queuing keys created or updated before
-> a custom IMA policy is loaded. The queued keys are processed when
-> a custom policy is loaded. Keys created or updated after a custom policy
-> is loaded are measured immediately (not queued).
-> 
-> If the kernel is built with both CONFIG_IMA and
-> CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE enabled then the IMA policy
-> must be applied as a custom policy. Not providing a custom policy
-> in the above configuration would result in asymmeteric keys being queued
-> until a custom policy is loaded. This is by design.
+> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+> index 63c164264b73..14a6f7ade44a 100644
+> --- a/drivers/interconnect/core.c
+> +++ b/drivers/interconnect/core.c
+> @@ -498,6 +498,11 @@ int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
+>  	if (!path || !path->num_nodes)
+>  		return 0;
+>  
+> +	if (IS_ERR(path)) {
 
-I didn't notice the "This is by design" here, referring to the memory
-never being freed.  "This is by design" was suppose to refer to
-requiring a custom policy for measuring keys.
+This is a sign of a logical error, and the print is likely to be
+ignored/lost in the noise. So I think the response should aid to help
+the developer hitting this to resolve the issue.
 
-For now, these two patches are queued in the next-integrity-testing
-branch, but I would appreciate your addressing not freeing the memory
-associated with the keys, if a custom policy is not loaded.
+So I think this is more visible and more useful as:
 
-Please note that I truncated the 2/2 patch description, as it repeats
-the existing verification example in commit ("2b60c0ecedf8 IMA: Read
-keyrings= option from the IMA policy").
+	if (WARN_ON(IS_ERR(path)))
+		return -EINVAL;
 
-thanks,
 
-Mimi
+PS. Doesn't path->num_nodes == 0 fall in this category as well? When
+would you have a path object with no nodes passed to this function?
 
+Regards,
+Bjorn
+
+> +		pr_err("%s: invalid path=%ld\n", __func__, PTR_ERR(path));
+> +		return -EINVAL;
+> +	}
+> +
+>  	mutex_lock(&icc_lock);
+>  
+>  	old_avg = path->reqs[0].avg_bw;
