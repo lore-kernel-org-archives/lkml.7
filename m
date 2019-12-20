@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC27C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0657C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ED9B206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:34:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4BEE206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:34:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852457;
-	bh=jLRbyEh3v+4dIORUjQ5y/dUimDiqgJ1vGemZ8HWNewg=;
+	s=default; t=1576852471;
+	bh=FDtr2mn+6VzBS6ydVoBBe90J2KyAi6JKvNtaBCBC2o4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yubeK9eG1V//RtNUjoqc3323tcusEs9fb2G9kSxQtOM7WAsVk/Zw1IAXNTPKHsnvB
-	 ZML1md1kYko0N8SWjCof/shVQVQPXDiFY/ffKOAHJARiZV/IW9U6fWx5eY4PdtpdY3
-	 XdtjvphYa5niJGcC2wU4mB/Nqy3Yzt4E1Yv7IFEc=
+	b=TFs0KpYB5rADtk0Ho/+bgZelHx51E7yJn2r/PJFH12CtdgndqGi2b/yu/sUDYT2RO
+	 367xUMSYKFcxcKknpChxJAB922aAOUd9aG5QxVy8Pj6qbDBtWHN3gej9yeJIsmX58k
+	 OMv9iqfkIYqM09OQWCL6IAmZp6n8j43nK0PKkGuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbfLTOeQ (ORCPT
+        id S1728096AbfLTOea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:34:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34204 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:34:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727731AbfLTOac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:30:32 -0500
+        id S1727669AbfLTOaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:30:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D10A42469A;
-        Fri, 20 Dec 2019 14:30:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF21524680;
+        Fri, 20 Dec 2019 14:30:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852232;
-        bh=jLRbyEh3v+4dIORUjQ5y/dUimDiqgJ1vGemZ8HWNewg=;
+        s=default; t=1576852224;
+        bh=FDtr2mn+6VzBS6ydVoBBe90J2KyAi6JKvNtaBCBC2o4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZRx6It6s3WZkQZEhaBwUZkdonslYA/z/5WgiIi3arGlHTyWDl36wZwuEyNWcLl9OK
-         Q2YaTqHTP944KQFWN+gwP/bfLkk1bbRFvpuPc6XSYAjMjl73SvTyaKkEL6wyd4XUCf
-         M2VD27tdu0SJOnKBSW7trWbomg9I6+0wH3Zj1nWs=
+        b=FdvTPJDDVtxrP2hDrEko3LrFC4nSUzNTtNUmWmEum5K3uNHuvqZKZ4doiLjeNO+Nx
+         j5zu7xenHjCZmsEC+yHdxvoj7SK41Taa2tIkMXh1az19PQ7Q97SnQJrONjXcMd1jkt
+         vgw6yyqH0St9LxIxoPOn09sFq7wCpXANwW8/vcUU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Roman Bolshakov <r.bolshakov@yadro.com>,
-        Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        Hannes Reinecke <hare@suse.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 27/52] scsi: qla2xxx: Fix PLOGI payload and ELS IOCB dump length
-Date:   Fri, 20 Dec 2019 09:29:29 -0500
-Message-Id: <20191220142954.9500-27-sashal@kernel.org>
+Cc:     Steve Wise <larrystevenwise@gmail.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 22/52] rxe: correctly calculate iCRC for unaligned payloads
+Date:   Fri, 20 Dec 2019 09:29:24 -0500
+Message-Id: <20191220142954.9500-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
 References: <20191220142954.9500-1-sashal@kernel.org>
@@ -62,50 +59,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Bolshakov <r.bolshakov@yadro.com>
+From: Steve Wise <larrystevenwise@gmail.com>
 
-[ Upstream commit 0334cdea1fba36fad8bdf9516f267ce01de625f7 ]
+[ Upstream commit 2030abddec6884aaf5892f5724c48fc340e6826f ]
 
-The size of the buffer is hardcoded as 0x70 or 112 bytes, while the size of
-ELS IOCB is 0x40 and the size of PLOGI payload returned by Get Parameters
-command is 0x74.
+If RoCE PDUs being sent or received contain pad bytes, then the iCRC
+is miscalculated, resulting in PDUs being emitted by RXE with an incorrect
+iCRC, as well as ingress PDUs being dropped due to erroneously detecting
+a bad iCRC in the PDU.  The fix is to include the pad bytes, if any,
+in iCRC computations.
 
-Cc: Quinn Tran <qutran@marvell.com>
-Link: https://lore.kernel.org/r/20191125165702.1013-9-r.bolshakov@yadro.com
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Tested-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Note: This bug has caused broken on-the-wire compatibility with actual
+hardware RoCE devices since the soft-RoCE driver was first put into the
+mainstream kernel.  Fixing it will create an incompatibility with the
+original soft-RoCE devices, but is necessary to be compatible with real
+hardware devices.
+
+Fixes: 8700e3e7c485 ("Soft RoCE driver")
+Signed-off-by: Steve Wise <larrystevenwise@gmail.com>
+Link: https://lore.kernel.org/r/20191203020319.15036-2-larrystevenwise@gmail.com
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_iocb.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/infiniband/sw/rxe/rxe_recv.c | 2 +-
+ drivers/infiniband/sw/rxe/rxe_req.c  | 6 ++++++
+ drivers/infiniband/sw/rxe/rxe_resp.c | 7 +++++++
+ 3 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_iocb.c b/drivers/scsi/qla2xxx/qla_iocb.c
-index 44dc97cebb06b..bdf1994251b9b 100644
---- a/drivers/scsi/qla2xxx/qla_iocb.c
-+++ b/drivers/scsi/qla2xxx/qla_iocb.c
-@@ -2684,7 +2684,8 @@ qla24xx_els_logo_iocb(srb_t *sp, struct els_entry_24xx *els_iocb)
- 		ql_dbg(ql_dbg_io + ql_dbg_buffer, vha, 0x3073,
- 		    "PLOGI ELS IOCB:\n");
- 		ql_dump_buffer(ql_log_info, vha, 0x0109,
--		    (uint8_t *)els_iocb, 0x70);
-+		    (uint8_t *)els_iocb,
-+		    sizeof(*els_iocb));
- 	} else {
- 		els_iocb->control_flags = 1 << 13;
- 		els_iocb->tx_byte_count =
-@@ -2850,7 +2851,8 @@ qla24xx_els_dcmd2_iocb(scsi_qla_host_t *vha, int els_opcode,
+diff --git a/drivers/infiniband/sw/rxe/rxe_recv.c b/drivers/infiniband/sw/rxe/rxe_recv.c
+index f9a492ed900b9..831ad578a7b29 100644
+--- a/drivers/infiniband/sw/rxe/rxe_recv.c
++++ b/drivers/infiniband/sw/rxe/rxe_recv.c
+@@ -389,7 +389,7 @@ void rxe_rcv(struct sk_buff *skb)
  
- 	ql_dbg(ql_dbg_disc + ql_dbg_buffer, vha, 0x3073, "PLOGI buffer:\n");
- 	ql_dump_buffer(ql_dbg_disc + ql_dbg_buffer, vha, 0x0109,
--	    (uint8_t *)elsio->u.els_plogi.els_plogi_pyld, 0x70);
-+	    (uint8_t *)elsio->u.els_plogi.els_plogi_pyld,
-+	    sizeof(*elsio->u.els_plogi.els_plogi_pyld));
+ 	calc_icrc = rxe_icrc_hdr(pkt, skb);
+ 	calc_icrc = rxe_crc32(rxe, calc_icrc, (u8 *)payload_addr(pkt),
+-			      payload_size(pkt));
++			      payload_size(pkt) + bth_pad(pkt));
+ 	calc_icrc = (__force u32)cpu_to_be32(~calc_icrc);
+ 	if (unlikely(calc_icrc != pack_icrc)) {
+ 		if (skb->protocol == htons(ETH_P_IPV6))
+diff --git a/drivers/infiniband/sw/rxe/rxe_req.c b/drivers/infiniband/sw/rxe/rxe_req.c
+index c5d9b558fa90a..e5031172c0193 100644
+--- a/drivers/infiniband/sw/rxe/rxe_req.c
++++ b/drivers/infiniband/sw/rxe/rxe_req.c
+@@ -500,6 +500,12 @@ static int fill_packet(struct rxe_qp *qp, struct rxe_send_wqe *wqe,
+ 			if (err)
+ 				return err;
+ 		}
++		if (bth_pad(pkt)) {
++			u8 *pad = payload_addr(pkt) + paylen;
++
++			memset(pad, 0, bth_pad(pkt));
++			crc = rxe_crc32(rxe, crc, pad, bth_pad(pkt));
++		}
+ 	}
+ 	p = payload_addr(pkt) + paylen + bth_pad(pkt);
  
- 	rval = qla2x00_start_sp(sp);
- 	if (rval != QLA_SUCCESS) {
+diff --git a/drivers/infiniband/sw/rxe/rxe_resp.c b/drivers/infiniband/sw/rxe/rxe_resp.c
+index 1cbfbd98eb221..c4a8195bf6709 100644
+--- a/drivers/infiniband/sw/rxe/rxe_resp.c
++++ b/drivers/infiniband/sw/rxe/rxe_resp.c
+@@ -732,6 +732,13 @@ static enum resp_states read_reply(struct rxe_qp *qp,
+ 	if (err)
+ 		pr_err("Failed copying memory\n");
+ 
++	if (bth_pad(&ack_pkt)) {
++		struct rxe_dev *rxe = to_rdev(qp->ibqp.device);
++		u8 *pad = payload_addr(&ack_pkt) + payload;
++
++		memset(pad, 0, bth_pad(&ack_pkt));
++		icrc = rxe_crc32(rxe, icrc, pad, bth_pad(&ack_pkt));
++	}
+ 	p = payload_addr(&ack_pkt) + payload + bth_pad(&ack_pkt);
+ 	*p = ~icrc;
+ 
 -- 
 2.20.1
 
