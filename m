@@ -2,176 +2,115 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FC9C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F293C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB8662465E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:23:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xj9kQjuZ"
+	by mail.kernel.org (Postfix) with ESMTP id 761222467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:27:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576826873;
+	bh=C3/+t09+JlYgXJMiyf/c69h3aWt3GYU+pk/ofLVh8Fs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=iowBJ+LJ5/72RikOnIT7wIAIg4qVwKQYprq/LmTd+l1fA6sguNcq8rQvXhGs6YQ0m
+	 nm/HJ5mybEG/9Jd2GOToPOdWYwMXuwIAHYCqKHPqPuPdSO5jyxuxeCPgjB16ytmiaY
+	 zmChRfTkGigENlqF58amq5P1hGN3TprxfdGoWeKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbfLTHXL (ORCPT
+        id S1727169AbfLTH1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 02:23:11 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:43598 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbfLTHXK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 02:23:10 -0500
-Received: by mail-lf1-f67.google.com with SMTP id 9so6212546lfq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 23:23:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Rola18/NrFdJZewc5vu51EWvXO4VwEoKDPAbPVAT1mM=;
-        b=Xj9kQjuZ2M59HRg/FQrsvfp48n4qROD5ZIqQt6F3fwXyFmyeYOyLHaStEfXc1X3kHY
-         DN1jf5O/ee/Dak3LtRUu10bz+Vrp1/16m08XnG16G8jHiXwcHTFii0Pbkx9A0rRUlwrd
-         /bVso1MvWt3eO0N4wfZ78qv+pedBorKgG4zr31wP5cbUHfe6dHVfBf3XwxJ1c6Q/lv5o
-         VTycGvb8bR8QLpXZAS5pXHMPSVxFO+4VrX5PAAFtgZJef1L2iaZLjAUJO+Vfw/r1+WPx
-         S+MN43HqQo+IzlF8bGCSbrBLDFnyOUA8TsfAG3z4sWQ/5WhRcdlNZx5avippvhh1P8IU
-         xUhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Rola18/NrFdJZewc5vu51EWvXO4VwEoKDPAbPVAT1mM=;
-        b=PpSBmi0YRkGe74+ZoGMmQbNyHWzgCJnEkgroDOm6QNrjb3jpT4Yl/sXEGv/AvlfZ+g
-         nhQKBXu/+CM4ZvP1QSmphK16mkXpWutia+WTeVaUBQ7XMS7jUmYcw/S+qtpwI64eCk9m
-         T0HH/ykZECSYpiNSjaQrwknlmBdKIhzovD8t3CaOA5SDpdm7xxwzQhAvdoRuxcBRKnEd
-         CoYA/aSwocJO0c4iV8tvIN3fuFwyFKPVjVysPRJynA9aVDr2cFZSKwCWDXMr+KXSbGsA
-         /cLWFQ4X9uph82LcxU3ML0qJ0lrMtwrzdsQRd924QkILOux4DpodGQ//UEW3P2VNRLhW
-         CaKA==
-X-Gm-Message-State: APjAAAXHVmPyPawEyDQ3KNAdK5QEa6ygamRXBdvGvh/zdyYvKVejp7Hh
-        0NE1rD6Gd4KiRZ9e2wipd9EdxeVjp8hO4+ZlMWxRCw==
-X-Google-Smtp-Source: APXvYqwU200PuZWOY1N7qZ+qxPbbDgWRMaEGaQ0S0rLSvBxL1aKQrvkhcX7mZm/5S5BVpZbmKG5QX2593mU+gbFilik=
-X-Received: by 2002:ac2:54b4:: with SMTP id w20mr8072025lfk.67.1576826588235;
- Thu, 19 Dec 2019 23:23:08 -0800 (PST)
-MIME-Version: 1.0
-References: <20191219183031.278083125@linuxfoundation.org>
-In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 20 Dec 2019 12:52:56 +0530
-Message-ID: <CA+G9fYtsFr-tmw5jAfYgrrjzo794YaouEBXXj1fE_UH3U9MaxQ@mail.gmail.com>
-Subject: Re: [PATCH 5.4 00/80] 5.4.6-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 20 Dec 2019 02:27:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726002AbfLTH1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 02:27:52 -0500
+Received: from devnote2 (unknown [220.96.9.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 732C624679;
+        Fri, 20 Dec 2019 07:27:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576826871;
+        bh=C3/+t09+JlYgXJMiyf/c69h3aWt3GYU+pk/ofLVh8Fs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HIz/Z212wye7ju9Tty7e9/kVztJFHp+gGsEHEAGGPk9VMMUeUOf3J0U63GnGqinGe
+         NYjb3XgYkt/Eilfj2UywlpBzZFGiyQjVAJ7c4XlEYbhWv/iMVaJfOPmK7XZ+GrT6Pz
+         hFQC7q5hRaTNJR1CHmsNxcgMIqouP1ZOJkNpKgMg=
+Date:   Fri, 20 Dec 2019 16:27:46 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Sven Schnelle <svens@linux.ibm.com>,
+        linux-trace-devel@vger.kernel.org,
+        Shuah Khan <shuahkhan@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] selftests/ftrace: fix glob selftest
+Message-Id: <20191220162746.d0889aeac721f8e4d400db64@kernel.org>
+In-Reply-To: <20191219183151.58d81624@gandalf.local.home>
+References: <20191218074427.96184-1-svens@linux.ibm.com>
+        <20191218074427.96184-2-svens@linux.ibm.com>
+        <20191219183151.58d81624@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Dec 2019 at 00:24, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.4.6 release.
-> There are 80 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 21 Dec 2019 18:24:44 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.6-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Thu, 19 Dec 2019 18:31:51 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+> On Wed, 18 Dec 2019 08:44:25 +0100
+> Sven Schnelle <svens@linux.ibm.com> wrote:
+> 
+> > test.d/ftrace/func-filter-glob.tc is failing on s390 because it has
+> > ARCH_INLINE_SPIN_LOCK and friends set to 'y'. So the usual
+> > __raw_spin_lock symbol isn't in the ftrace function list. Change
+> > '*aw*lock' to '*time*ns' which would hopefully match some of the
+> > ktime_() functions on all platforms.
+> 
+> This requires an ack from Masami, and this patch can go through Shuah's
+> tree.
+> 
+> Also, any patches for the Linux kernel should be Cc'd to lkml. The
+> linux-trace-devel is mostly for tracing tools, not kernel patches.
 
-Summary
-------------------------------------------------------------------------
+Thanks Steve to CC to me.
+BTW, are there any reason why we use different symbols for different
+glob patterns?
+I mean we can use 'schedul*', '*chedule' and '*sch*ule' as test
+glob patterns.
 
-kernel: 5.4.6-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.4.y
-git commit: 2929dbca18dbbf1701d1865564362a9c342b71d1
-git describe: v5.4.5-81-g2929dbca18db
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
-ld/v5.4.5-81-g2929dbca18db
+Thank you,
 
-No regressions (compared to build v5.4.5)
+> 
+> -- Steve
+> 
+> > 
+> > Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+> > ---
+> >  .../testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc  | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc
+> > index 27a54a17da65..a5d61667cd56 100644
+> > --- a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc
+> > +++ b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc
+> > @@ -30,7 +30,7 @@ ftrace_filter_check '*schedule*' '^.*schedule.*$'
+> >  ftrace_filter_check 'schedule*' '^schedule.*$'
+> >  
+> >  # filter by *mid*end
+> > -ftrace_filter_check '*aw*lock' '.*aw.*lock$'
+> > +ftrace_filter_check '*time*ns' '.*time.*ns$'
+> >  
+> >  # filter by start*mid*
+> >  ftrace_filter_check 'mutex*try*' '^mutex.*try.*'
+> 
 
-No fixes (compared to build v5.4.5)
 
-Ran 23063 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
