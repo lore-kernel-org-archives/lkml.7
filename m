@@ -5,104 +5,108 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D97CCC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D1DC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4B6B24680
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ABD424680
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576825672;
-	bh=aFS+0PHvMZNXAX3LB7Kp3RPtki0Ke/sDgUiUCMTGwZI=;
+	s=default; t=1576825692;
+	bh=ShcbXlpFdXilKh58f9Dmtn2A8cXnIYIsKLvamhRUsQU=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=veZWNmXMxC/lbjWeo8H3OQfKWS8jBxTMjmkD7uTN4snHVowo6M8p7B2OHVWDy0b0z
-	 IxwxaI3AtEVJE8KpQDoa9c9OjqPd4uN6AQOrTkKB1ze+9pfvqfdqWugaecbd/BFuQq
-	 pwJu5nnZtyGOLJktP5AowfFqAu0pUAM3OUG61bVw=
+	b=biokS2f7yJ0U09Zs9j03jZgr5Pz+yaZDTNkjL9duYTHcOQKJKEySMtvp9jHLeLdwj
+	 T2F0w2/FpMH10TYb+6TGIu7AE6IctfXMUjvIiB7GrPfiOpqwUinK88pWkOP6t/WRo9
+	 XG5uXrT4mAASrHbOZZ9v4Rij1CWFL5Ziu+nZlanI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbfLTHHv (ORCPT
+        id S1727425AbfLTHIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 02:07:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57814 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 02:08:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727298AbfLTHHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 02:07:51 -0500
+        id S1727298AbfLTHIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 02:08:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABC0924679;
-        Fri, 20 Dec 2019 07:07:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE2C824679;
+        Fri, 20 Dec 2019 07:08:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576825670;
-        bh=aFS+0PHvMZNXAX3LB7Kp3RPtki0Ke/sDgUiUCMTGwZI=;
+        s=default; t=1576825690;
+        bh=ShcbXlpFdXilKh58f9Dmtn2A8cXnIYIsKLvamhRUsQU=;
         h=Date:From:To:Cc:Subject:From;
-        b=Q3Y2keQ49oszEdE4a0IZ/6aCYd8yrN7KFE5Mp2DmIi7GMcrBy+08qveB6Tak9EIhl
-         Srj32iHOgWL2psLvCA8lJSt0dOG8W7KAq53p+n9jiQUCH56MW3v4hayBc4I5H/djwv
-         +wqfswrzQ40eoKesa0aun78ZA9sQi6Tx/rogkrfo=
-Date:   Fri, 20 Dec 2019 08:07:47 +0100
+        b=X8932mrlA4KqrE33D0NO1+bWX1GSbKRYyA1kIi5eFcID5yezP95okCEruFFpKXfPW
+         NpaYKFbxOS26/LKFNQXZnaxaPF7u6VQA83jjZHeEHqXN+wGrfs9GwyitsVX05R/Viq
+         4su0K1aFz4ZBHtgplyhN/1VrfQWKdmVr6aj75mdY=
+Date:   Fri, 20 Dec 2019 08:08:08 +0100
 From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Jiri Slaby <jslaby@suse.cz>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: [GIT PULL] TTY/Serial driver fixes for 5.5-rc3
-Message-ID: <20191220070747.GA2190169@kroah.com>
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     devel@linuxdriverproject.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Staging driver fixes for 5.5-rc3
+Message-ID: <20191220070808.GA2190290@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+The following changes since commit d1eef1c619749b2a57e514a3fa67d9a516ffa919:
 
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+  Linux 5.5-rc2 (2019-12-15 15:16:08 -0800)
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tags/tty-5.5-rc3
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git tags/staging-5.5-rc3
 
-for you to fetch changes up to cb47b9f8630ae3fa3f5fbd0c7003faba7abdf711:
+for you to fetch changes up to c05c403b1d123031f86e65e867be2c2e9ee1e7e3:
 
-  tty/serial: atmel: fix out of range clock divider handling (2019-12-17 14:17:32 +0100)
+  staging: wfx: fix wrong error message (2019-12-18 15:51:06 +0100)
 
 ----------------------------------------------------------------
-TTY/Serial fixes for 5.5-rc3
+Staging driver fixes for 5.5-rc3
 
-Here are some small tty and serial driver fixes for 5.5-rc3.
+Here are some small staging driver fixes for a number of reported
+issues.
 
-Only 4 small patches here:
-  - atmel serial driver fix
-  - msm_serial driver fix
-  - sprd serial driver fix
-  - tty core port fix
-
-The last tty core fix should resolve a long-standing bug with a race
-at port creation time that some people would see, and Sudip finally
-tracked down.
+The majority here are some fixes for the wfx driver, but also in here is
+a comedi driver fix found during some code review, and an axis-fifo
+build dependancy issue to resolve some reported testing problems.
 
 All of these have been in linux-next with no reported issues.
 
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ----------------------------------------------------------------
-David Engraf (1):
-      tty/serial: atmel: fix out of range clock divider handling
+Brendan Higgins (1):
+      staging: axis-fifo: add unspecified HAS_IOMEM dependency
 
-Leo Yan (1):
-      tty: serial: msm_serial: Fix lockup for sysrq and oops
+Ian Abbott (1):
+      staging: comedi: gsc_hpdi: check dma_alloc_coherent() return value
 
-Sudip Mukherjee (1):
-      tty: link tty and port before configuring it as console
+Jérôme Pouiller (10):
+      staging: wfx: fix the cache of rate policies on interface reset
+      staging: wfx: fix case of lack of tx_retry_policies
+      staging: wfx: fix counter overflow
+      staging: wfx: use boolean appropriately
+      staging: wfx: firmware does not support more than 32 total retries
+      staging: wfx: fix rate control handling
+      staging: wfx: ensure that retry policy always fallbacks to MCS0 / 1Mbps
+      staging: wfx: detect race condition in WEP authentication
+      staging: wfx: fix hif_set_mfp() with big endian hosts
+      staging: wfx: fix wrong error message
 
-Yonghan Ye (1):
-      serial: sprd: Add clearing break interrupt operation
-
- drivers/tty/serial/atmel_serial.c | 43 ++++++++++++++++++++-------------------
- drivers/tty/serial/msm_serial.c   | 13 ++++++++++--
- drivers/tty/serial/serial_core.c  |  1 +
- drivers/tty/serial/sprd_serial.c  |  3 +++
- drivers/tty/tty_port.c            |  3 ++-
- 5 files changed, 39 insertions(+), 24 deletions(-)
+ drivers/staging/axis-fifo/Kconfig         |  2 +-
+ drivers/staging/comedi/drivers/gsc_hpdi.c | 10 +++++++++
+ drivers/staging/wfx/data_tx.c             | 35 ++++++++++++++++++++++---------
+ drivers/staging/wfx/data_tx.h             |  5 +++--
+ drivers/staging/wfx/hif_tx_mib.h          |  1 -
+ drivers/staging/wfx/main.c                |  2 +-
+ drivers/staging/wfx/queue.c               |  1 +
+ drivers/staging/wfx/sta.c                 |  6 +++++-
+ 8 files changed, 46 insertions(+), 16 deletions(-)
