@@ -2,225 +2,416 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 523BCC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 03:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A2FC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 03:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 174642465E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 03:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFB7E2467E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 03:38:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="JNHICVJW"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Bfej4B/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfLTDfx (ORCPT
+        id S1727180AbfLTDiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 22:35:53 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:39691 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbfLTDfw (ORCPT
+        Thu, 19 Dec 2019 22:38:20 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:43158 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbfLTDiU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 22:35:52 -0500
-Received: by mail-pj1-f68.google.com with SMTP id t101so3501621pjb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 19:35:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UmQnWafOdRpZ6qRbt/GsBhbNrsVsnOzntGu8doafqRE=;
-        b=JNHICVJW4CcUNzuNkAWHrzQkEyZkAKrKN/AhbVR3AD0zZNAb5ZRAW5zGuAXdWsqTV/
-         dU7RUN29AHrl8RQTgYZMS4cY9+xeRbT8fbuMtk8GUmiEzAILVEne5x8VhC53CjvkqRLE
-         IZNGv5WDUZHaczCi2YTDzhaf4mzRWEDVPwSl/sdv5jmDKEw47qd2RPmwz6h82m1vFLOs
-         hoVVm/CUxD1jcVYwqX7IzXQckmz27cEzvYN7Cz/C0UPuSJLj/XreoIEk3Y9dVW9gaCo/
-         /y+uUc2yCCJ7v7aAtECIAhx8TtCC4irO8iEYrFnJN1sQipUC9r+3nh+HIvcnG05MWf4G
-         lu7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=UmQnWafOdRpZ6qRbt/GsBhbNrsVsnOzntGu8doafqRE=;
-        b=R15qoo9/+PGd99oT3B1rSnM4g3ZILwOuqifx2aZaotBC377Q/elyiPsligMFfMZ4n2
-         xEMpJxwUuP/ZVHgP7e2HZbkHxOPyZ2ctuhBiOdelVlRRtP2EIFD54K923X3WfE9VC9Ur
-         WDPBVxnsQL32emyFZtIBKlgdYUNUC78+xrBquy7BTJ2Sni4+jqj8CkoYdVhg6x29S6tH
-         mLF+4rLalL79x59xolAtJ8/ZExgclPF+hKrCSNMb1LyEg+jWVdRaqhcusQMXPJ3BlIUW
-         oPa/vj+h844iq78/NXWOvjPnNE5CbmIWhjy9Qck4eQPDNyUX+EywhfXdQbLMRlImaPn9
-         duHg==
-X-Gm-Message-State: APjAAAU74PHMctx5vrIthS8lDtRm14NlVMKZMDMTjkeJgzBbC6+lxNTt
-        rjF36MbgSUg7CSYar2KKNmPXEg==
-X-Google-Smtp-Source: APXvYqyKwTb5d2hmGkBRV/Olzs4TAb/PIxvDaeqrezActoskJlcYt23H7RQzXEvplVTPv+Q1ZG7rTQ==
-X-Received: by 2002:a17:902:bcc9:: with SMTP id o9mr3764161pls.127.1576812951909;
-        Thu, 19 Dec 2019 19:35:51 -0800 (PST)
-Received: from [10.61.2.175] ([122.99.82.10])
-        by smtp.gmail.com with ESMTPSA id i9sm10443231pfd.166.2019.12.19.19.35.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Dec 2019 19:35:51 -0800 (PST)
-Subject: Re: [PATCH 1/1] kvm/book3s_64: Fixes crash caused by not cleaning
- vhost IOTLB
-To:     Leonardo Bras <leonardo@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, farosas@linux.ibm.com,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Alex Williamson <alex.williamson@redhat.com>
-References: <20191217210658.73144-1-leonardo@linux.ibm.com>
- <be0c0f8f-3c8e-acd1-c6a2-479f6bd3c373@ozlabs.ru>
- <0c598160a866318e1fa672afdb07d3ee762c2ac1.camel@linux.ibm.com>
-From:   Alexey Kardashevskiy <aik@ozlabs.ru>
-Autocrypt: addr=aik@ozlabs.ru; keydata=
- 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
-Message-ID: <085aba63-b6c4-00f4-3a5f-bd158d91fd3e@ozlabs.ru>
-Date:   Fri, 20 Dec 2019 14:35:46 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 19 Dec 2019 22:38:20 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBK3cIKM036248;
+        Thu, 19 Dec 2019 21:38:18 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576813098;
+        bh=kytTfq4zJPIUUmZj5LU8lqCzqKd1h5uVUXLWjCh/l7E=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Bfej4B/SiyFNveLbd/4iIU86BZIiZbb3yOr7k3fPp3CsQGzkAH/+1GFIlDPQ/nYtq
+         zSNUp4LOtS2xhmAs/S1SC/yvbPGcp7ci+AXjwncvDiDIg0RuUBIgQpIL2vt+86BgdJ
+         3E1zxNlZt/eqp/pEeqLxV/CynBg9InRF1DtcXuAg=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBK3cI5s102103
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 19 Dec 2019 21:38:18 -0600
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Dec 2019 21:38:18 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Dec 2019 21:38:18 -0600
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBK3cII0069444;
+        Thu, 19 Dec 2019 21:38:18 -0600
+Subject: Re: [PATCHv3 01/15] dt-bindings: remoteproc: Add OMAP remoteproc
+ bindings
+To:     Tero Kristo <t-kristo@ti.com>, <bjorn.andersson@linaro.org>,
+        <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
+        <linux-omap@vger.kernel.org>
+References: <20191213125537.11509-1-t-kristo@ti.com>
+ <20191213125537.11509-2-t-kristo@ti.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <883310e6-8703-3cbc-9f08-54bad365d31d@ti.com>
+Date:   Thu, 19 Dec 2019 21:38:18 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <0c598160a866318e1fa672afdb07d3ee762c2ac1.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191213125537.11509-2-t-kristo@ti.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 12/13/19 6:55 AM, Tero Kristo wrote:
+> From: Suman Anna <s-anna@ti.com>
+> 
+> Add the device tree bindings document for the IPU and DSP
+> remote processor devices on OMAP4+ SoCs.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> [t-kristo@ti.com: converted to schema]
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> ---
+>  .../remoteproc/ti,omap-remoteproc.yaml        | 315 ++++++++++++++++++
+>  1 file changed, 315 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+> new file mode 100644
+> index 000000000000..c87dda0a6559
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+> @@ -0,0 +1,315 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/remoteproc/ti,omap-remoteproc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: OMAP4+ Remoteproc Devices
+> +
+> +maintainers:
+> +  - Suman Anna <s-anna@ti.com>
+> +
+> +description:
+> +  The OMAP family of SoCs usually have one or more slave processor sub-systems
+> +  that are used to offload some of the processor-intensive tasks, or to manage
+> +  other hardware accelerators, for achieving various system level goals.
+> +
+> +  The processor cores in the sub-system are usually behind an IOMMU, and may
+> +  contain additional sub-modules like Internal RAM and/or ROMs, L1 and/or L2
+> +  caches, an Interrupt Controller, a Cache Controller etc.
+> +
+> +  The OMAP SoCs usually have a DSP processor sub-system and/or an IPU processor
+> +  sub-system. The DSP processor sub-system can contain any of the TI's C64x,
+> +  C66x or C67x family of DSP cores as the main execution unit. The IPU processor
+> +  sub-system usually contains either a Dual-Core Cortex-M3 or Dual-Core
+> +  Cortex-M4 processors.
+> +
+> +  Each remote processor sub-system is represented as a single DT node. Each node
+> +  has a number of required or optional properties that enable the OS running on
+> +  the host processor (MPU) to perform the device management of the remote
+> +  processor and to communicate with the remote processor. The various properties
+> +  can be classified as constant or variable. The constant properties are
+> +  dictated by the SoC and does not change from one board to another having the
+> +  same SoC. Examples of constant properties include 'iommus', 'reg'. The
+> +  variable properties are dictated by the system integration aspects such as
+> +  memory on the board, or configuration used within the corresponding firmware
+> +  image. Examples of variable properties include 'mboxes', 'memory-region',
+> +  'timers', 'watchdog-timers' etc.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,omap4-dsp
+> +      - ti,omap5-dsp
+> +      - ti,dra7-dsp
+> +      - ti,omap4-ipu
+> +      - ti,omap5-ipu
+> +      - ti,dra7-ipu
+> +
+> +  iommus:
+> +    minItems: 1
+> +    maxItems: 2
+> +    description: |
+> +      phandles to OMAP IOMMU nodes, that need to be programmed
+> +      for this remote processor to access any external RAM memory or
+> +      other peripheral device address spaces. This property usually
+> +      has only a single phandle. Multiple phandles are used only in
+> +      cases where the sub-system has different ports for different
+> +      sub-modules within the processor sub-system (eg: DRA7 DSPs),
+> +      and need the same programming in both the MMUs.
+> +
+> +  mboxes:
+> +    minItems: 1
+> +    maxItems: 2
+> +    description: |
+> +      OMAP Mailbox specifier denoting the sub-mailbox, to be used for
+> +      communication with the remote processor. The specifier format is
+> +      as per the bindings,
+> +      Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
+> +      This property should match with the sub-mailbox node used in
+> +      the firmware image.
+> +
+> +  clocks:
+> +    description: |
+> +      Main functional clock for the remote processor
+> +
+> +  resets:
+> +    description: |
+> +      Reset handles for the remote processor
+> +
+> +  memory-region:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: |
+> +      phandle to the reserved memory node to be associated
+> +      with the remoteproc device. The reserved memory node
+> +      can be a CMA memory node, and should be defined as
+> +      per the bindings,
+> +      Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> +
+> +  firmware-name:
+> +    description: |
+> +      Default name of the firmware to load to the remote processor.
+> +
+> +# Optional properties:
+> +# --------------------
+> +# Some of these properties are mandatory on some SoCs, and some are optional
+> +# depending on the configuration of the firmware image to be executed on the
+> +# remote processor. The conditions are mentioned for each property.
+> +#
+> +# The following are the optional properties:
+> +
+> +  reg:
+> +    description: |
+> +      Address space for any remoteproc memories present on
+> +      the SoC. Should contain an entry for each value in
+> +      'reg-names'. These are mandatory for all DSP and IPU
+> +      processors that have them (OMAP4/OMAP5 DSPs do not have
+> +      any RAMs)
+> +
+> +  reg-names:
+> +    description: |
+> +      Required names for each of the address spaces defined in
+> +      the 'reg' property. Should contain a string from among
+> +      the following names, each representing the corresponding
+> +      internal RAM memory region.
+> +    minItems: 1
+> +    maxItems: 3
+> +    items:
+> +      - const: l2ram
+> +      - const: l1pram
+> +      - const: l1dram
+> +
+> +  ti,bootreg:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description: |
+> +      Should be a pair of the phandle to the System Control
+> +      Configuration region that contains the boot address
+> +      register, and the register offset of the boot address
+> +      register within the System Control module. This property
+> +      is required for all the DSP instances on OMAP4, OMAP5
+> +      and DRA7xx SoCs.
+> +
+> +  ti,timers:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description: |
+> +      One or more phandles to OMAP DMTimer nodes, that serve
+> +      as System/Tick timers for the OS running on the remote
+> +      processors. This will usually be a single timer if the
+> +      processor sub-system is running in SMP mode, or one per
+> +      core in the processor sub-system. This can also be used
+> +      to reserve specific timers to be dedicated to the
+> +      remote processors.
+> +
+> +      This property is mandatory on remote processors requiring
+> +      external tick wakeup, and to support Power Management
+> +      features. The timers to be used should match with the
+> +      timers used in the firmware image.
+> +
+> +  ti,watchdog-timers:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description: |
+> +      One or more phandles to OMAP DMTimer nodes, used to
+> +      serve as Watchdog timers for the processor cores. This
+> +      will usually be one per executing processor core, even
+> +      if the processor sub-system is running a SMP OS.
+> +
+> +      The timers to be used should match with the watchdog
+> +      timers used in the firmware image.
+> +
+> +if:
+> +  properties:
+> +    compatible:
+> +      enum:
+> +        - ti,dra7-dsp
+> +then:
+> +  properties:
+> +    reg:
+> +      minItems: 3
+> +      maxItems: 3
+> +    ti,bootreg:
+> +      minItems: 1
+> +      maxItems: 1
+> +
+> +else:
+> +  if:
+> +    properties:
+> +      compatible:
+> +        enum:
+> +          - ti,omap4-ipu
+> +          - ti,omap5-ipu
+> +          - ti,dra7-ipu
+> +  then:
+> +    properties:
+> +      reg:
+> +        minItems: 1
+> +        maxItems: 1
+> +
+> +  else:
+> +    properties:
+> +      reg:
+> +        maxItems: 0
+> +      ti,bootreg:
+> +        minItems: 1
+> +        maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - iommus
+> +  - mboxes
+> +  - memory-region
+> +  - clocks
+> +  - resets
+> +  - firmware-name
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +
+> +    //Example 1: OMAP4 DSP
+> +
+> +    /* DSP Reserved Memory node */
+> +    #include <dt-bindings/clock/omap4.h>
+> +    reserved-memory {
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +
+> +        dsp_memory_region: dsp-memory@98000000 {
+> +            compatible = "shared-dma-pool";
+> +            reg = <0x98000000 0x800000>;
+> +            reusable;
+> +        };
+> +    };
+> +
+> +    /* DSP node */
+> +    ocp {
+> +        dsp: dsp {
+> +            compatible = "ti,omap4-dsp";
+> +            ti,bootreg = <&scm_conf 0x304>;
+> +            iommus = <&mmu_dsp>;
+> +            mboxes = <&mailbox &mbox_dsp>;
+> +            memory-region = <&dsp_memory_region>;
+> +            ti,timers = <&timer5>;
+> +            ti,watchdog-timers = <&timer6>;
+> +            clocks = <&tesla_clkctrl OMAP4_DSP_CLKCTRL 0>;
+> +            resets = <&prm_tesla 0>, <&prm_tesla 1>;
+> +            firmware-name = "omap4-dsp-fw.xe64T";
+> +        };
+> +    };
+> +
+> +  - |+
+> +
+> +    //Example 2: OMAP5 IPU
+> +
+> +    /* IPU Reserved Memory node */
+> +    #include <dt-bindings/clock/omap5.h>
+> +    reserved-memory {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        ipu_memory_region: ipu-memory@95800000 {
+> +            compatible = "shared-dma-pool";
+> +            reg = <0 0x95800000 0 0x3800000>;
+> +            reusable;
+> +        };
+> +    };
+> +
+> +    /* IPU node */
+> +    ocp {
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +
+> +        ipu: ipu@55020000 {
+> +            compatible = "ti,omap5-ipu";
+> +            reg = <0x55020000 0x10000>;
+> +            reg-names = "l2ram";
+> +            iommus = <&mmu_ipu>;
+> +            mboxes = <&mailbox &mbox_ipu>;
+> +            memory-region = <&ipu_memory_region>;
+> +            ti,timers = <&timer3>, <&timer4>;
+> +            ti,watchdog-timers = <&timer9>, <&timer11>;
+> +            clocks = <&ipu_clkctrl OMAP5_MMU_IPU_CLKCTRL 0>;
+> +            resets = <&prm_core 2>;
+> +            firmware-name = "omap5-ipu-fw.xem";
 
+Minor typo here, compared to the actual name we use.
 
-On 19/12/2019 10:28, Leonardo Bras wrote:
-> On Wed, 2019-12-18 at 15:53 +1100, Alexey Kardashevskiy wrote:
->> H_STUFF_TCE is always called with 0. Well, may be some AIX somewhere
->> calls it with a value other than zero, and I probably saw some other
->> value somewhere but in QEMU/KVM case it is 0 so you effectively disable
->> in-kernel acceleration of H_STUFF_TCE which is
->> undesirable.
->>
-> 
-> Thanks for the feedback!
-> 
->> For now we should disable in-kernel H_STUFF_TCE/... handlers in QEMU
->> just like we do for VFIO for older host kernels:
->>
->> https://git.qemu.org/?p=qemu.git;a=blob;f=hw/ppc/spapr_iommu.c;h=3d3bcc86496a5277d62f7855fbb09c013c015f27;hb=HEAD#l208
->  
-> I am still reading into this temporary solution, I could still not
-> understand how it works.
-> 
->> I am not sure what a proper solution would be, something like an eventfd
->> and KVM's kvmppc_h_stuff_tce() signaling vhost that the latter needs to
->> invalidate iotlbs. Or we can just say that we do not allow KVM
->> acceleration if there is vhost+iommu on the same liobn (== vPHB, pretty
->> much). Thanks,
-> 
-> I am not used to eventfd, but i agree it's a valid solution to talk to
-> QEMU and then use it to send a message via /dev/vhost.
-> KVM -> QEMU -> vhost
-> 
-> But I can't get my mind out of another solution: doing it in
-> kernelspace.  I am not sure how that would work, though.
-> 
-> If I could understand correctly, there is a vhost IOTLB per vhost_dev,
-> and H_STUFF_TCE is not called in 64-bit DMA case (for tce_value == 0
-> case, at least), which makes sense, given it doesn't need to invalidate
-> entries on IOTLB.
-> 
-> So, we would need to somehow replace `return H_TOO_HARD` in this patch
-> with code that could call vhost_process_iotlb_msg() with
-> VHOST_IOTLB_INVALIDATE.
-> 
-> For that, I would need to know what are the vhost_dev's of that
-> process, which I don't know if it's possible to do currently (or safe
-> at all).
-> 
-> I am thinking of linking all vhost_dev's with a list (list.h) that
-> could be searched, comparing `mm_struct *` of the calling task with all
-> vhost_dev's, and removing the entry of all IOTLB that hits.
-> 
-> Not sure if that's the best approach to find the related vhost_dev's.
-> 
-> What do you think?
+regards
+Suman
 
+> +        };
+> +    };
+> +
+> +  - |+
+> +
+> +    //Example 3: DRA7xx/AM57xx DSP
+> +
+> +    /* DSP1 Reserved Memory node */
+> +    #include <dt-bindings/clock/dra7.h>
+> +    reserved-memory {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        dsp1_memory_region: dsp1-memory@99000000 {
+> +            compatible = "shared-dma-pool";
+> +            reg = <0x0 0x99000000 0x0 0x4000000>;
+> +            reusable;
+> +        };
+> +    };
+> +
+> +    /* DSP1 node */
+> +    ocp {
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +
+> +        dsp1: dsp@40800000 {
+> +            compatible = "ti,dra7-dsp";
+> +            reg = <0x40800000 0x48000>,
+> +                  <0x40e00000 0x8000>,
+> +                  <0x40f00000 0x8000>;
+> +            reg-names = "l2ram", "l1pram", "l1dram";
+> +            ti,bootreg = <&scm_conf 0x55c>;
+> +            iommus = <&mmu0_dsp1>, <&mmu1_dsp1>;
+> +            mboxes = <&mailbox5 &mbox_dsp1_ipc3x>;
+> +            memory-region = <&dsp1_memory_region>;
+> +            ti,timers = <&timer5>;
+> +            ti,watchdog-timers = <&timer10>;
+> +            resets = <&prm_dsp1 0>;
+> +            clocks = <&dsp1_clkctrl DRA7_DSP1_MMU0_DSP1_CLKCTRL 0>;
+> +            firmware-name = "dra7-dsp1-fw.xe66";
+> +        };
+> +    };
+> 
 
-As discussed in slack, we need to do the same thing we do with physical
-devices when we invalidate hardware IOMMU translation caches via
-tbl->it_ops->tce_kill. The problem to solve now is how we tell KVM/PPC
-about vhost/iotlb (is there an fd?), something similar to the existing
-KVM_DEV_VFIO_GROUP_SET_SPAPR_TCE. I guess x86 handles all the mappings
-in QEMU and therefore they do not have this problem. Thanks,
-
-
--- 
-Alexey
