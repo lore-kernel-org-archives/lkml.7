@@ -2,130 +2,82 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B03CC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5411CC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E2B7206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:32:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852346;
-	bh=n+gg0n3LejR8QTDafsZl873FhmpQrSyUohuW454i2+M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jqXRkYCFykos3RekiecU1CjQe1qa9sGn3b9xSTxdokUFQiiPNKCB5QgBkq2p+/XcE
-	 6gB+TiLYwLdi8VUizO9Qf26WmdgkanyZb9ZZ9HkXN0lgNVL2gD9kti1DLO8mP4Ix1l
-	 8OHctruwgRmlgP7r/RAASO7HtCRtd5JdMLvozfnM=
+	by mail.kernel.org (Postfix) with ESMTP id 27C70206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:32:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbfLTOcZ (ORCPT
+        id S1728193AbfLTOca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:32:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34986 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:32:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:51282 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727948AbfLTOaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:30:55 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDE0824686;
-        Fri, 20 Dec 2019 14:30:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852254;
-        bh=n+gg0n3LejR8QTDafsZl873FhmpQrSyUohuW454i2+M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OV99B+WAovUHUBequoUXdjfNOnhaGvKoOHuHx/07q6Mvkkg7lml9/l8BN6QkDb71i
-         PaFOoVGnwa0dSDc8gARRO1yWCgt976JeRlOR+1t5eTg5MxCAXcYUHwKrzJ91VJVwEw
-         HRBIYqo41ceAQzZOMPc6dIKw6U6OBTsAGIpqouPg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 45/52] s390/cpum_sf: Adjust sampling interval to avoid hitting sample limits
-Date:   Fri, 20 Dec 2019 09:29:47 -0500
-Message-Id: <20191220142954.9500-45-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
-References: <20191220142954.9500-1-sashal@kernel.org>
+        id S1727946AbfLTOay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:30:54 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3A33711D4;
+        Fri, 20 Dec 2019 06:30:54 -0800 (PST)
+Received: from e119886-lin.cambridge.arm.com (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 61B7D3F718;
+        Fri, 20 Dec 2019 06:30:52 -0800 (PST)
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH v2 10/18] arm64: KVM/debug: use EL1&0 stage 1 translation regime
+Date:   Fri, 20 Dec 2019 14:30:17 +0000
+Message-Id: <20191220143025.33853-11-andrew.murray@arm.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191220143025.33853-1-andrew.murray@arm.com>
+References: <20191220143025.33853-1-andrew.murray@arm.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-[ Upstream commit 39d4a501a9ef55c57b51e3ef07fc2aeed7f30b3b ]
+Now that we have all the save/restore mechanism in place, lets enable
+the translation regime used by buffer from EL2 stage 1 to EL1 stage 1
+on VHE systems.
 
-Function perf_event_ever_overflow() and perf_event_account_interrupt()
-are called every time samples are processed by the interrupt handler.
-However function perf_event_account_interrupt() has checks to avoid being
-flooded with interrupts (more then 1000 samples are received per
-task_tick).  Samples are then dropped and a PERF_RECORD_THROTTLED is
-added to the perf data. The perf subsystem limit calculation is:
-
-    maximum sample frequency := 100000 --> 1 samples per 10 us
-    task_tick = 10ms = 10000us --> 1000 samples per task_tick
-
-The work flow is
-
-measurement_alert() uses SDBT head and each SBDT points to 511
- SDB pages, each with 126 sample entries. After processing 8 SBDs
- and for each valid sample calling:
-
-     perf_event_overflow()
-       perf_event_account_interrupts()
-
-there is a considerable amount of samples being dropped, especially when
-the sample frequency is very high and near the 100000 limit.
-
-To avoid the high amount of samples being dropped near the end of a
-task_tick time frame, increment the sampling interval in case of
-dropped events. The CPU Measurement sampling facility on the s390
-supports only intervals, specifiing how many CPU cycles have to be
-executed before a sample is generated. Increase the interval when the
-samples being generated hit the task_tick limit.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+[ Reword commit, don't trap to EL2 ]
+Signed-off-by: Andrew Murray <andrew.murray@arm.com>
 ---
- arch/s390/kernel/perf_cpum_sf.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/arm64/kvm/hyp/switch.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
-index 3d8b12a9a6ff4..8c384e6ea36ac 100644
---- a/arch/s390/kernel/perf_cpum_sf.c
-+++ b/arch/s390/kernel/perf_cpum_sf.c
-@@ -1312,6 +1312,22 @@ static void hw_perf_event_update(struct perf_event *event, int flush_all)
- 	if (sampl_overflow)
- 		OVERFLOW_REG(hwc) = DIV_ROUND_UP(OVERFLOW_REG(hwc) +
- 						 sampl_overflow, 1 + num_sdb);
-+
-+	/* Perf_event_overflow() and perf_event_account_interrupt() limit
-+	 * the interrupt rate to an upper limit. Roughly 1000 samples per
-+	 * task tick.
-+	 * Hitting this limit results in a large number
-+	 * of throttled REF_REPORT_THROTTLE entries and the samples
-+	 * are dropped.
-+	 * Slightly increase the interval to avoid hitting this limit.
-+	 */
-+	if (event_overflow) {
-+		SAMPL_RATE(hwc) += DIV_ROUND_UP(SAMPL_RATE(hwc), 10);
-+		debug_sprintf_event(sfdbg, 1, "%s: rate adjustment %ld\n",
-+				    __func__,
-+				    DIV_ROUND_UP(SAMPL_RATE(hwc), 10));
-+	}
-+
- 	if (sampl_overflow || event_overflow)
- 		debug_sprintf_event(sfdbg, 4, "hw_perf_event_update: "
- 				    "overflow stats: sample=%llu event=%llu\n",
+diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
+index 67b7c160f65b..6c153b79829b 100644
+--- a/arch/arm64/kvm/hyp/switch.c
++++ b/arch/arm64/kvm/hyp/switch.c
+@@ -100,6 +100,7 @@ static void activate_traps_vhe(struct kvm_vcpu *vcpu)
+ 
+ 	write_sysreg(val, cpacr_el1);
+ 
++	write_sysreg(vcpu->arch.mdcr_el2 | 3 << MDCR_EL2_E2PB_SHIFT, mdcr_el2);
+ 	write_sysreg(kvm_get_hyp_vector(), vbar_el1);
+ }
+ NOKPROBE_SYMBOL(activate_traps_vhe);
+@@ -117,6 +118,7 @@ static void __hyp_text __activate_traps_nvhe(struct kvm_vcpu *vcpu)
+ 		__activate_traps_fpsimd32(vcpu);
+ 	}
+ 
++	write_sysreg(vcpu->arch.mdcr_el2 | 3 << MDCR_EL2_E2PB_SHIFT, mdcr_el2);
+ 	write_sysreg(val, cptr_el2);
+ 
+ 	if (cpus_have_const_cap(ARM64_WORKAROUND_1319367)) {
 -- 
-2.20.1
+2.21.0
 
