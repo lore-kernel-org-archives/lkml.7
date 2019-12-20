@@ -2,243 +2,80 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9376C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 08:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 301A8C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 08:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C972624679
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 08:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F35112467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 08:14:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfLTIKb (ORCPT
+        id S1727188AbfLTIOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 03:10:31 -0500
-Received: from mga02.intel.com ([134.134.136.20]:58693 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725941AbfLTIKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 03:10:30 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Dec 2019 00:10:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,335,1571727600"; 
-   d="scan'208";a="416461808"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.76]) ([10.237.72.76])
-  by fmsmga005.fm.intel.com with ESMTP; 20 Dec 2019 00:10:28 -0800
-Subject: Re: [PATCH v2] mmc: sdhci-cadence: tune multi-block read gap
-To:     Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191217115502.5590-1-vladimir.kondratiev@intel.com>
- <20191217121102.11213-1-vladimir.kondratiev@intel.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <6b59ee49-bbba-5cb2-36c4-e9e404af3ff5@intel.com>
-Date:   Fri, 20 Dec 2019 10:09:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 20 Dec 2019 03:14:04 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:47132 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbfLTIOD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 03:14:03 -0500
+Received: by mail-io1-f71.google.com with SMTP id 13so5538066iof.14
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 00:14:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=HwhEudMPancjOLmNPDtIZH3YRpT3d3B5zGNbPpoAiF4=;
+        b=LT4lsOrHrRiWbucfnYJN9LpGIZAf02kaIbebh+rrPRffdJ1v15VOnqFvrzNoqybMFd
+         P02cXCE4Aa63ucZHT3hZiv2Tn+HQT7Q2hRMI6NLz5o7at4hHKdhzUAxeeoSyp9Nc5bWD
+         Y/YUUrOfaCXtQ7IZJa4uST5Ijs2xJbGih1zzApYgyW+PbLDn3OHIZ+TQywwylJ7czBWV
+         /j6y7Hr+DRVg43Mal311p73pOwEt3QhU5gFVYjILNf0DT2oULkj0Ezhx3d7mRZnwqJTV
+         ywFW4TDAivL0HCKas2PGkVpU45vvXsy3lYPSZjCghjDHVQ7BnoLJBFTo/RJ/hgt+0You
+         +5fg==
+X-Gm-Message-State: APjAAAWnTo17ox3sNCrO6IswRvb/OZBw8jGb8xm+hdm0lLJqQvBbVhsq
+        fJm66ySbZRywcsTkC8Bs7PTTx/6qTH+x+sdJ0DI7bJPvcM97
+X-Google-Smtp-Source: APXvYqzzkxfg5ZzcJxfe+aBm7XwCcX7piKL4LgQ4AXtSuKltTsybPJGKOlhivpmRcgNnreZf3AbISv7B6MW6XbBdiVJfATCYynA1
 MIME-Version: 1.0
-In-Reply-To: <20191217121102.11213-1-vladimir.kondratiev@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a5e:8e4d:: with SMTP id r13mr8605992ioo.60.1576829641276;
+ Fri, 20 Dec 2019 00:14:01 -0800 (PST)
+Date:   Fri, 20 Dec 2019 00:14:01 -0800
+In-Reply-To: <001a1143e62e6f71d20565bf329f@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a3c3ef059a1e4260@google.com>
+Subject: Re: KASAN: stack-out-of-bounds Read in update_stack_state
+From:   syzbot <syzbot+2990ca6e76c080858a9c@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, glider@google.com, hpa@zytor.com,
+        jpoimboe@redhat.com, keescook@chromium.org,
+        linux-kernel@vger.kernel.org, mbenes@suse.cz, mhiramat@kernel.org,
+        mingo@redhat.com, netdev@vger.kernel.org, rostedt@goodmis.org,
+        rppt@linux.ibm.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/12/19 2:11 pm, Vladimir Kondratiev wrote:
-> Additional tuning required for multi-block read command.
-> Implement it accordingly to Cadence recommendation.
-> 
-> 2 registers used: HRS37 and HRS38. To HRS37, SD interface mode programmed,
-> this selects HRS38 slot - there is separate slot for every SD interface
-> mode. HRS38 contains gap parameter,
-> it is selected by starting with gap=0 and sending multi-block read command.
-> gap incremented until multi-block read succeeds.
-> 
-> As of now, this tuning executed for HS200 only
-> 
-> Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@intel.com>
-> ---
->  drivers/mmc/host/sdhci-cadence.c | 137 ++++++++++++++++++++++++++++++-
->  1 file changed, 136 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
-> index ae0ec27dd7cc..d0bed1932b6c 100644
-> --- a/drivers/mmc/host/sdhci-cadence.c
-> +++ b/drivers/mmc/host/sdhci-cadence.c
-> @@ -34,6 +34,23 @@
->  #define   SDHCI_CDNS_HRS06_MODE_MMC_HS400	0x5
->  #define   SDHCI_CDNS_HRS06_MODE_MMC_HS400ES	0x6
->  
-> +/* Read block gap */
-> +#define SDHCI_CDNS_HRS37		0x94	/* interface mode select */
-> +#define   SDHCI_CDNS_HRS37_MODE_DS		0x0
-> +#define   SDHCI_CDNS_HRS37_MODE_HS		0x1
-> +#define   SDHCI_CDNS_HRS37_MODE_UDS_SDR12	0x8
-> +#define   SDHCI_CDNS_HRS37_MODE_UDS_SDR25	0x9
-> +#define   SDHCI_CDNS_HRS37_MODE_UDS_SDR50	0xa
-> +#define   SDHCI_CDNS_HRS37_MODE_UDS_SDR104	0xb
-> +#define   SDHCI_CDNS_HRS37_MODE_UDS_DDR50	0xc
-> +#define   SDHCI_CDNS_HRS37_MODE_MMC_LEGACY	0x20
-> +#define   SDHCI_CDNS_HRS37_MODE_MMC_SDR		0x21
-> +#define   SDHCI_CDNS_HRS37_MODE_MMC_DDR		0x22
-> +#define   SDHCI_CDNS_HRS37_MODE_MMC_HS200	0x23
-> +#define   SDHCI_CDNS_HRS37_MODE_MMC_HS400	0x24
-> +#define   SDHCI_CDNS_HRS37_MODE_MMC_HS400ES	0x25
-> +#define SDHCI_CDNS_HRS38		0x98	/* Read block gap coefficient */
-> +#define   SDHCI_CDNS_HRS38_BLKGAP_MAX		0xf
->  /* SRS - Slot Register Set (SDHCI-compatible) */
->  #define SDHCI_CDNS_SRS_BASE		0x200
->  
-> @@ -272,6 +289,118 @@ static int sdhci_cdns_set_tune_val(struct sdhci_host *host, unsigned int val)
->  	return 0;
->  }
->  
-> +/**
-> + * mmc_send_mb_read() - send multi-block read command
-> + * @host: MMC host
-> + *
-> + * Sends multi-block read command, CMD23/CMD18/CMD12, ignore read data
-> + *
-> + * Return: error code
-> + */
-> +static int mmc_send_mb_read(struct mmc_host *host)
-> +{
-> +	const int blksz = 512;
-> +	const int blocks = 32;
-> +	struct scatterlist sg;
-> +	struct mmc_command sbc = {
-> +		.opcode = MMC_SET_BLOCK_COUNT,
-> +		.arg = blocks,
-> +		.flags = MMC_RSP_R1 | MMC_CMD_AC,
-> +	};
-> +	struct mmc_command cmd = {
-> +		.opcode = MMC_READ_MULTIPLE_BLOCK,
-> +		.arg = 0,
-> +		.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_ADTC,
-> +	};
-> +	struct mmc_command stop = {
-> +		.opcode = MMC_STOP_TRANSMISSION,
-> +		.arg = 0,
-> +		.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_AC,
-> +	};
-> +	struct mmc_data data = {
-> +		.flags = MMC_DATA_READ,
-> +		.blksz = blksz,
-> +		.blocks = blocks,
-> +		.blk_addr = 0,
-> +		.timeout_ns =  800000000,	/* 800ms */
-> +		.timeout_clks = 1000,
-> +		.sg = &sg,
-> +		.sg_len = 1,
-> +	};
-> +	struct mmc_request mrq = {
-> +		.sbc = &sbc,
-> +		.cmd = &cmd,
-> +		.data = &data,
-> +		.stop = &stop,
-> +	};
-> +	int size = blksz * blocks, err = 0;
-> +	u8 *data_buf;
-> +
-> +	data_buf = kzalloc(size, GFP_KERNEL);
-> +	if (!data_buf)
-> +		return -ENOMEM;
-> +
-> +	sg_init_one(&sg, data_buf, size);
-> +
-> +	mmc_wait_for_req(host, &mrq);
+syzbot suspects this bug was fixed by commit:
 
-This is a bit weird.  Why can't a regular tuning command be used?
+commit 4ee7c60de83ac01fa4c33c55937357601631e8ad
+Author: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Date:   Fri Mar 23 14:18:03 2018 +0000
 
-> +
-> +	if (cmd.error) {
-> +		err = cmd.error;
-> +		goto out;
-> +	}
-> +
-> +	if (data.error) {
-> +		err = data.error;
-> +		goto out;
-> +	}
-> +
-> +out:
-> +	kfree(data_buf);
-> +	return err;
-> +}
-> +
-> +/**
-> + * sdhci_cdns_tune_blkgap() - tune multi-block read gap
-> + * @mmc: MMC host
-> + *
-> + * Tune delay used in multi block read. To do so,
-> + * try sending multi-block read command with incremented gap, unless
-> + * it succeeds.
-> + *
-> + * Return: error code
-> + */
-> +static int sdhci_cdns_tune_blkgap(struct mmc_host *mmc)
-> +{
-> +	struct sdhci_host *host = mmc_priv(mmc);
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_cdns_priv *priv = sdhci_pltfm_priv(pltfm_host);
-> +	void __iomem *hrs37_reg = priv->hrs_addr + SDHCI_CDNS_HRS37;
-> +	void __iomem *hrs38_reg = priv->hrs_addr + SDHCI_CDNS_HRS38;
-> +	bool tuned = false;
-> +	u8 gap;
-> +	u8 hrs37_mode;
-> +
-> +	switch (host->timing) {
-> +	case MMC_TIMING_MMC_HS200:
-> +		hrs37_mode = SDHCI_CDNS_HRS37_MODE_MMC_HS200;
-> +		break;
-> +	default:
-> +		return 0; /* no tuning in this mode */
-> +	}
-> +
-> +	writel(hrs37_mode, hrs37_reg);
-> +
-> +	for (gap = 0; gap <= SDHCI_CDNS_HRS38_BLKGAP_MAX; gap++) {
-> +		writel(gap, hrs38_reg);
-> +		tuned = !mmc_send_mb_read(mmc);
-> +		if (tuned)
-> +			break;
-> +	}
-> +	dev_dbg(mmc_dev(mmc), "read block gap tune %s, gap %d\n",
-> +		tuned ? "OK" : "failed", gap);
-> +	return tuned ? 0 : -EIO;
-> +}
-> +
->  static int sdhci_cdns_execute_tuning(struct mmc_host *mmc, u32 opcode)
->  {
->  	struct sdhci_host *host = mmc_priv(mmc);
-> @@ -279,6 +408,7 @@ static int sdhci_cdns_execute_tuning(struct mmc_host *mmc, u32 opcode)
->  	int max_streak = 0;
->  	int end_of_streak = 0;
->  	int i;
-> +	int ret;
->  
->  	/*
->  	 * This handler only implements the eMMC tuning that is specific to
-> @@ -308,7 +438,12 @@ static int sdhci_cdns_execute_tuning(struct mmc_host *mmc, u32 opcode)
->  		return -EIO;
->  	}
->  
-> -	return sdhci_cdns_set_tune_val(host, end_of_streak - max_streak / 2);
-> +	ret = sdhci_cdns_set_tune_val(host, end_of_streak - max_streak / 2);
-> +
-> +	if (!ret)
-> +		ret = sdhci_cdns_tune_blkgap(mmc);
-> +
-> +	return ret;
->  }
->  
->  static void sdhci_cdns_hs400_enhanced_strobe(struct mmc_host *mmc,
-> 
+     init, tracing: Add initcall trace events
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11ebd0aee00000
+start commit:   0b6b8a3d Merge branch 'bpf-misc-selftest-improvements'
+git tree:       bpf-next
+kernel config:  https://syzkaller.appspot.com/x/.config?x=82a189bf69e089b5
+dashboard link: https://syzkaller.appspot.com/bug?extid=2990ca6e76c080858a9c
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11dde5b3800000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1347b65d800000
+
+If the result looks correct, please mark the bug fixed by replying with:
+
+#syz fix: init, tracing: Add initcall trace events
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
