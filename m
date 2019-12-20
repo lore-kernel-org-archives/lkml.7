@@ -7,122 +7,125 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C72DC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 023A1C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC0E24679
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B0324684
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:18:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c0OXb6iZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ry6bmtLZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727369AbfLTMR1 (ORCPT
+        id S1727384AbfLTMSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 07:17:27 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40155 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727202AbfLTMR0 (ORCPT
+        Fri, 20 Dec 2019 07:18:14 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35636 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727197AbfLTMSO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 07:17:26 -0500
-Received: by mail-pl1-f194.google.com with SMTP id s21so1287087plr.7;
-        Fri, 20 Dec 2019 04:17:26 -0800 (PST)
+        Fri, 20 Dec 2019 07:18:14 -0500
+Received: by mail-io1-f65.google.com with SMTP id v18so9199385iol.2
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 04:18:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6WV/T6CpDhebP945cbfXE+MmOGoQMQ/88QhIuMiSFcg=;
-        b=c0OXb6iZ79HWRkKlGD0qqeGNccVo4B5n6KO5almOyCp3OOi3+wkkXwZohfaqSv45su
-         2pBUYe9ot3TP6VE0oH+rfwDsDQ+l5tEWG3CleaNz8SKGhSNUE2qu7QcgFdeB0nCLtlEx
-         IlMjLYMq0CeEZyhep5aqPus31UsYRJES5zu/erisphniSGFWfP94yogsSJ2AeL6OVVez
-         6+Dh1hbIVfEVA9Q8fHIrXg3mKquUcWgp+KfSY84VYG97B0Y+8Jm5MUlTUcBU2/QFXivh
-         Sc2ElJgUKmRZlxiKb7xZtJstVB4LtmwHjGuqFUnh/wYW8G8DVLceJ8qreq5rgVDI+cty
-         891A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+fpn5MBrUsO68vwFWveOAH2qULu+Kd/H5CmwM9v3iQ8=;
+        b=ry6bmtLZkIP/fUiJw7N0x7wl432V1h8rQGXiC73T1m3xeoYjUa+VwnKva5Wtp/PkUf
+         WFJZrRAGuDZTkPCN2KriGUTeasYUB3zrwp6b/Fk7AIa4iQ2yv7AnJ70oXsu0gFmrTlmU
+         4wUmqzuI1hTMhZoPkdsq6rI0iA3QKZ4MaWtS8v3Xyy18gdMzg0kysnXPVaShQXOtV4vV
+         UH2lwHEole8gh+m3DG0asxBPLXijl/MOJ7q4XwnCMpoUI49TvlW2np6Ow6ZACemDp7Oc
+         Ufb/QobWEisK+g65YqwofVZTEB4Dnrlq5ZyqsAzSamKIA0oHXa6DAgBiYEGoVAZRj+zH
+         7EKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6WV/T6CpDhebP945cbfXE+MmOGoQMQ/88QhIuMiSFcg=;
-        b=N7Q0rGpWpw+Wg2CWVFSvXdd/IjTLbkaxzDA+mpehOdywZkNUMvsABPju3rercL/kb6
-         ZsDRAtSNYh7uNda9s1hgLZ98PXI3rhfJwp2Jr1m8ZPQUE9doSznBX+wgB7B4wktcbrP/
-         4d9vxx7VwPdMx2X9wRuAwtI2WyuKQAJ7bvVWMEKJM4GV3JeUQw0mGSK65sVQIm8Jze/V
-         h4940Kb6toz6Uhm0jvaT649Tf2BTSWn0fwBxy4lNztKnP/9P5/EJSzR4vys4ZJd6lGu+
-         LoafDk31snvZLkOt/dDUvIyp5+1RsigDT8E2PqlgSUR4Qr11C52N60WSDsoFhCm1RBkZ
-         +SHQ==
-X-Gm-Message-State: APjAAAXSGM7gCtRh1QFAGUL92iglg22E5q8HXD49x00nKaT5Zl3zODRr
-        JkCjN8yJTkDUuAFDBt5mKwQ=
-X-Google-Smtp-Source: APXvYqz/EVj3ToXk1wO3i1VkQUwjv2AoEJCSmXr8EqHlsWftQ/ner9u78glT5f8dGvFwkCyGOZcwvg==
-X-Received: by 2002:a17:902:bd85:: with SMTP id q5mr14660399pls.17.1576844246000;
-        Fri, 20 Dec 2019 04:17:26 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id e16sm11053918pgk.77.2019.12.20.04.17.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 04:17:25 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CCB2B40CB9; Fri, 20 Dec 2019 09:17:23 -0300 (-03)
-Date:   Fri, 20 Dec 2019 09:17:23 -0300
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 06/12] perf report/top: Add 'k' hotkey to zoom directly
- into the kernel map
-Message-ID: <20191220121723.GC2032@kernel.org>
-References: <20191217144828.2460-1-acme@kernel.org>
- <20191217144828.2460-7-acme@kernel.org>
- <CAM9d7ciL-Qnm5v3Tn1rsrNzW3mTWx5HY6W5XBU1MKnLQ7YBdkw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+fpn5MBrUsO68vwFWveOAH2qULu+Kd/H5CmwM9v3iQ8=;
+        b=PNJ0niRIknjZg1mwplmIEq0+OqczMKj8mtx9LH7/Bi3Z8+qJ6Yb0VCfFSXMaygBR0s
+         81xnQvAX+O2qObD/j2/FZ0f4OtNlQ02yT1eUP0puQa943uo2/Agf+li2UNewQnmeuk5+
+         bA13TqVhWxjrzVJL6N8/7ijj7penoEFGsSohTRay5lExzsuVkVmfcwfa4/PHR1lyH/WJ
+         9Q33idrAC3MLsTkkNqZBy7RAGPoQD+gdjKgILjBbwsVFQzjRVQFwNq6Shy6QUn9VwdnS
+         PXuH1CcHF35bWW88+xuG3embz9VcRcjAnlhVOQoWzkyz+Q52gxFZf/xOtPUacfaFieKQ
+         sSnQ==
+X-Gm-Message-State: APjAAAW/G58GrSYmfnbs3SSDuY2cA/uJmUHG+jVwg5C3zUhjDnV/nGxD
+        xlwbqAtW2q3n7kIstrMo73ar5G+MNaMCcG9fdQ==
+X-Google-Smtp-Source: APXvYqwoXFpvJgEZdjM7NQES6jn5HwmN8ah4g6rQdgJS5l43sIBIJBKGiyWEdnBrhbk2vHVzGcC3uMS6RXak3U+Yelg=
+X-Received: by 2002:a5e:8344:: with SMTP id y4mr9243560iom.27.1576844293749;
+ Fri, 20 Dec 2019 04:18:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM9d7ciL-Qnm5v3Tn1rsrNzW3mTWx5HY6W5XBU1MKnLQ7YBdkw@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+References: <20191219115812.102620-1-brgerst@gmail.com> <CALCETrW1zE0Uufrg_UG4JNQKMy3UFxnd+XmZye2gdTV36C-yTw@mail.gmail.com>
+ <CAMzpN2if2m4McWpL49U4QAEM1MJ+qgTe-emN8vKcjVc1H+84vA@mail.gmail.com> <431a146f6461402da61d09fff155f35b@AcuMS.aculab.com>
+In-Reply-To: <431a146f6461402da61d09fff155f35b@AcuMS.aculab.com>
+From:   Brian Gerst <brgerst@gmail.com>
+Date:   Fri, 20 Dec 2019 07:18:02 -0500
+Message-ID: <CAMzpN2i+DrKkzDyiS6Cj61LmCu+--e5puQpKrNxYVMDRPMvvBw@mail.gmail.com>
+Subject: Re: [PATCH] x86: Remove force_iret()
+To:     David Laight <David.Laight@aculab.com>
+Cc:     Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Oleg Nesterov <oleg@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Dec 20, 2019 at 03:48:23PM +0900, Namhyung Kim escreveu:
-> On Tue, Dec 17, 2019 at 11:49 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > As a convenience, equivalent to pressing Enter in a line with a kernel
-> > symbol and then selecting "Zoom" into the kernel DSO.
- 
-> We already have 'd' key for 'zoom into current dso'.
+On Fri, Dec 20, 2019 at 5:10 AM David Laight <David.Laight@aculab.com> wrote:
+>
+> From: Brian Gerst
+> > Sent: 20 December 2019 03:48
+> > On Thu, Dec 19, 2019 at 8:50 PM Andy Lutomirski <luto@kernel.org> wrote:
+> > >
+> > > On Thu, Dec 19, 2019 at 3:58 AM Brian Gerst <brgerst@gmail.com> wrote:
+> > > >
+> > > > force_iret() was originally intended to prevent the return to user mode with
+> > > > the SYSRET or SYSEXIT instructions, in cases where the register state could
+> > > > have been changed to be incompatible with those instructions.
+> > >
+> > > It's more than that.  Before the big syscall rework, we didn't restore
+> > > the caller-saved regs.  See:
+> > >
+> > > commit 21d375b6b34ff511a507de27bf316b3dde6938d9
+> > > Author: Andy Lutomirski <luto@kernel.org>
+> > > Date:   Sun Jan 28 10:38:49 2018 -0800
+> > >
+> > >     x86/entry/64: Remove the SYSCALL64 fast path
+> > >
+> > > So if you changed r12, for example, the change would get lost.
+> >
+> > force_iret() specifically dealt with changes to CS, SS and EFLAGS.
+> > Saving and restoring the extra registers was a different problem
+> > although it affected the same functions like ptrace, signals, and
+> > exec.
+>
+> Is it ever possible for any of the segment registers to refer to the LDT
+> and for another thread to invalidate the entries 'very late' ?
+> So even though the values were valid when changed, they are
+> invalid during the 'return to user' sequence.
 
-Right, current DSO, 'k' is equivalent to:
+Not in the SYSRET case, where the kernel requires that CS and SS are
+static segments in the GDT.  Any userspace context that uses LDT
+segments for CS/SS must return with IRET.  There is fault handling for
+IRET (fixup_bad_iret()) for this case.
 
-1. Navigate to a kernel map entry
-2. Press 'd'
+> I remember writing a signal handler that 'corrupted' all the
+> segment registers (etc) and fixing the NetBSD kernel to handle
+> all the faults restoring the segment registers and IRET faulting
+> in kernel (IIRC invalid user %SS or %CS).
+> (IRET can also fault in user space, but that is a normal fault.)
+>
+> Is it actually cheaper to properly validate the segment registers,
+> or take the 'hit' of the slightly slower IRET path and get the cpu
+> to do it for you?
 
-And also to:
+SYSRET is faster because it avoids segment table lookups and
+permission checks for CS and SS.  It simply sets the selectors to
+values set in an MSR and the attributes (base, limit, etc.) to fixed
+values.  It is up to the OS to make sure the actual segment
+descriptors in memory match those default attributes.
 
-1. Navigate to a kernel map entry
-2. Press ENTER
-3. Navigate to "Zoom into Kernel DSO"
-4. Press ENTER
-
-One key versus 2 or four.
-
-> Do you really want 'k' for kernel specially?
-
-I thought kernel hackers would like the convenience, doing:
-
-  perf top + k
-
-To get the main kernel samples looks faster than:
-
-  perf top -e cycles:k
-
-And those are not even equivalent, as cycles:k will show everything in
-ring 0, while 'perf top + k' will show just what is in the kernel _and_
-in the main kernel map.
-
-- Arnaldo
+--
+Brian Gerst
