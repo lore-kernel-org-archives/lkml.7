@@ -2,171 +2,120 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3309EC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 20:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E7DC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 20:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F31312146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 20:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 949F12146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 20:12:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oK+kh+0M"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="kIXRicsU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbfLTUKp (ORCPT
+        id S1727535AbfLTUMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 15:10:45 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:43440 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727394AbfLTUKp (ORCPT
+        Fri, 20 Dec 2019 15:12:19 -0500
+Received: from mail.efficios.com ([167.114.142.138]:55104 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727394AbfLTUMT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 15:10:45 -0500
-Received: by mail-qv1-f65.google.com with SMTP id p2so4082407qvo.10;
-        Fri, 20 Dec 2019 12:10:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5AnFVXcpaMggl4isK2KnEZsWpPp4HGly8JnBK5gmpAI=;
-        b=oK+kh+0MsknQ032w8zMAVC02TIgrYGdMIyen1bd/7jTfWFT2IFI1Nc2kd5KWVzFBOz
-         K03JieNRd9G5plx77dxoI8pRx/tXmZjQ9tfPA/ZzV05xXsg+dv8wNBFvhgLL49Hhq2NT
-         BocZcc8p1vTo2TDOWcA7k/VwvY6oHtPI8k50P6fSHcJ3W8HqbgoHL0eWlVm8tKocoFk5
-         1T2RMeGY37h32j/v00dGq8XeIDJAuCP30SgmB285PfEyxSPCzjecSWA4SutWSotiYTKD
-         BYeK0hgzwG5sg3mXolyArUptUW8rai4nDroBqbWa5fHgb44vizfRtdMpmgK1OgkAcIXU
-         Fifw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5AnFVXcpaMggl4isK2KnEZsWpPp4HGly8JnBK5gmpAI=;
-        b=F2hk3ZkxJxsow+VvAEKZzoZVo6uDl0jiNKmRPJ7irvH5qws0R7xZ2saPF+uJX6/91A
-         +ZI+gGPSO1RZhzi7iaot06PF8OZMn12LPr0Naak3LUZTFfdCPVQZTOZMwHUWE4J4tRRv
-         RNGieo4c3a3qyCgkA/cruYhNJlaYd2ffFtZ+2FgsSfZ1d10tg/9sPNwIHr+CEF/fPuRI
-         4uo0Yeq1cWR9q7TLbMrAVa5qlXD1XP9jcqa9pxT7F5bPpsJOab1pvRcfhJL8sILMNOVz
-         eSi7txpvVxT0PAIhCyi1ok2+jpJxdEd/glXg0DBajqVDBvaUTQJjPwh/N9izLq/9cNZd
-         p3hg==
-X-Gm-Message-State: APjAAAXAneVIKVMGIohjui//EfTMH7kfWcmDGP/Bvk4hVLvHRrsidQ2z
-        j5w450Pml6qiGYhgBAcGmQwX/q3locxqt4vfh+8=
-X-Google-Smtp-Source: APXvYqzMC8VDhootDrscnawAbrG4m/tH2DJ6nL/RoOUGJXfF1Ax00uff5xVnpdZ4pFD120TXNJUKVLUW0LWv4zXXmXs=
-X-Received: by 2002:a0c:990d:: with SMTP id h13mr13782566qvd.247.1576872643845;
- Fri, 20 Dec 2019 12:10:43 -0800 (PST)
-MIME-Version: 1.0
-References: <20191220154208.15895-1-kpsingh@chromium.org> <20191220154208.15895-2-kpsingh@chromium.org>
-In-Reply-To: <20191220154208.15895-2-kpsingh@chromium.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 20 Dec 2019 12:10:32 -0800
-Message-ID: <CAEf4BzZJf_GBCXYYmE0Hk7O2GdeOr-3VCxdAaxCUk-MHRar3Og@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v1 01/13] bpf: Refactor BPF_EVENT context macros
- to its own header.
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 20 Dec 2019 15:12:19 -0500
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id A616A68FA9A;
+        Fri, 20 Dec 2019 15:12:17 -0500 (EST)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id yqE96adCoYLl; Fri, 20 Dec 2019 15:12:17 -0500 (EST)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 1C18A68FA97;
+        Fri, 20 Dec 2019 15:12:17 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 1C18A68FA97
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1576872737;
+        bh=980W3whSRgBeVIaqMTIFKJArmeV0Zx+uhmhhz5FKa8s=;
+        h=From:To:Date:Message-Id;
+        b=kIXRicsU3ZmQ2ebkOvSyMn7uOcWZVbX6npx4UZHYpc5L4YiLfNpivw3Eqt+tp7Efj
+         6GbXUD4B3HIKkr1M8kkUUpBRfE1cS73+PUUKsegA403F6whWiCD4OBk7yp963G7gXK
+         O9dSwqCyiyxQuLKLruPrathlMnWNgag+aTHqT+BOvnwC9tm43BwcmpNzV4WzRCL/zk
+         l8qxRd/cXn5zuJZQEN6NlJToiqFGe3w0AhiAXmYFrTc1nx9ZqyvkYqShAIjI0jrX7+
+         F7RFTg204Ob1H//lfNTnwxxNF5HzFMs50x7u+Kqpt2fUwyPeuO4vQIBXw4LtoBka4k
+         DfU1pOpQYZSew==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id S8tKXA6YpzEL; Fri, 20 Dec 2019 15:12:17 -0500 (EST)
+Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
+        by mail.efficios.com (Postfix) with ESMTPSA id BFE6068FA91;
+        Fri, 20 Dec 2019 15:12:16 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api@vger.kernel.org, stable@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Florian Weimer <fw@deneb.enyo.de>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Neel Natu <neelnatu@google.com>
+Subject: [PATCH for 5.5 1/2] rseq: Fix: Clarify rseq.h UAPI rseq_cs memory reclaim requirements
+Date:   Fri, 20 Dec 2019 15:12:06 -0500
+Message-Id: <20191220201207.17389-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 7:43 AM KP Singh <kpsingh@chromium.org> wrote:
->
-> From: KP Singh <kpsingh@google.com>
->
-> These macros are useful for other program types than tracing.
-> i.e. KRSI (an upccoming BPF based LSM) which does not use
-> BPF_PROG_TYPE_TRACE but uses verifiable BTF accesses similar
-> to raw tracepoints.
->
-> Signed-off-by: KP Singh <kpsingh@google.com>
-> ---
->  include/linux/bpf_event.h | 78 +++++++++++++++++++++++++++++++++++++++
->  include/trace/bpf_probe.h | 30 +--------------
->  kernel/trace/bpf_trace.c  | 24 +-----------
->  3 files changed, 81 insertions(+), 51 deletions(-)
->  create mode 100644 include/linux/bpf_event.h
->
-> diff --git a/include/linux/bpf_event.h b/include/linux/bpf_event.h
-> new file mode 100644
-> index 000000000000..353eb1f5a3d0
-> --- /dev/null
-> +++ b/include/linux/bpf_event.h
-> @@ -0,0 +1,78 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +
-> +/*
-> + * Copyright (c) 2018 Facebook
-> + * Copyright 2019 Google LLC.
-> + */
-> +
-> +#ifndef _LINUX_BPF_EVENT_H
-> +#define _LINUX_BPF_EVENT_H
-> +
-> +#ifdef CONFIG_BPF_EVENTS
-> +
-> +/* cast any integer, pointer, or small struct to u64 */
-> +#define UINTTYPE(size) \
-> +       __typeof__(__builtin_choose_expr(size == 1,  (u8)1, \
-> +                  __builtin_choose_expr(size == 2, (u16)2, \
-> +                  __builtin_choose_expr(size == 4, (u32)3, \
-> +                  __builtin_choose_expr(size == 8, (u64)4, \
-> +                                        (void)5)))))
-> +#define __CAST_TO_U64(x) ({ \
-> +       typeof(x) __src = (x); \
-> +       UINTTYPE(sizeof(x)) __dst; \
-> +       memcpy(&__dst, &__src, sizeof(__dst)); \
-> +       (u64)__dst; })
-> +
-> +#define __CAST0(...) 0
-> +#define __CAST1(a, ...) __CAST_TO_U64(a)
-> +#define __CAST2(a, ...) __CAST_TO_U64(a), __CAST1(__VA_ARGS__)
-> +#define __CAST3(a, ...) __CAST_TO_U64(a), __CAST2(__VA_ARGS__)
-> +#define __CAST4(a, ...) __CAST_TO_U64(a), __CAST3(__VA_ARGS__)
-> +#define __CAST5(a, ...) __CAST_TO_U64(a), __CAST4(__VA_ARGS__)
-> +#define __CAST6(a, ...) __CAST_TO_U64(a), __CAST5(__VA_ARGS__)
-> +#define __CAST7(a, ...) __CAST_TO_U64(a), __CAST6(__VA_ARGS__)
-> +#define __CAST8(a, ...) __CAST_TO_U64(a), __CAST7(__VA_ARGS__)
-> +#define __CAST9(a, ...) __CAST_TO_U64(a), __CAST8(__VA_ARGS__)
-> +#define __CAST10(a ,...) __CAST_TO_U64(a), __CAST9(__VA_ARGS__)
-> +#define __CAST11(a, ...) __CAST_TO_U64(a), __CAST10(__VA_ARGS__)
-> +#define __CAST12(a, ...) __CAST_TO_U64(a), __CAST11(__VA_ARGS__)
-> +/* tracepoints with more than 12 arguments will hit build error */
-> +#define CAST_TO_U64(...) CONCATENATE(__CAST, COUNT_ARGS(__VA_ARGS__))(__VA_ARGS__)
-> +
-> +#define UINTTYPE(size) \
-> +       __typeof__(__builtin_choose_expr(size == 1,  (u8)1, \
-> +                  __builtin_choose_expr(size == 2, (u16)2, \
-> +                  __builtin_choose_expr(size == 4, (u32)3, \
-> +                  __builtin_choose_expr(size == 8, (u64)4, \
-> +                                        (void)5)))))
+The rseq.h UAPI documents that the rseq_cs field must be cleared
+before reclaiming memory that contains the targeted struct rseq_cs.
 
-Is it the same macro as above?
+We should extend this comment to also dictate that the rseq_cs field
+must be cleared before reclaiming memory of the code pointed to by
+the rseq_cs start_ip and post_commit_offset fields.
 
-> +
+While we can expect that use of dlclose(3) will typically unmap
+both struct rseq_cs and its associated code at once, nothing would
+theoretically prevent a JIT from reclaiming the code without
+reclaiming the struct rseq_cs, which would erroneously allow the
+kernel to consider new code which is not a rseq critical section
+as a rseq critical section following a code reclaim.
 
-[...]
+Suggested-by: Florian Weimer <fw@deneb.enyo.de>
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Florian Weimer <fw@deneb.enyo.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: "H . Peter Anvin" <hpa@zytor.com>
+Cc: Paul Turner <pjt@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Neel Natu <neelnatu@google.com>
+Cc: linux-api@vger.kernel.org
+---
+ include/uapi/linux/rseq.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/include/uapi/linux/rseq.h b/include/uapi/linux/rseq.h
+index 9a402fdb60e9..6f26b0b148a6 100644
+--- a/include/uapi/linux/rseq.h
++++ b/include/uapi/linux/rseq.h
+@@ -100,7 +100,9 @@ struct rseq {
+ 	 * instruction sequence block, as well as when the kernel detects that
+ 	 * it is preempting or delivering a signal outside of the range
+ 	 * targeted by the rseq_cs. Also needs to be set to NULL by user-space
+-	 * before reclaiming memory that contains the targeted struct rseq_cs.
++	 * before reclaiming memory that contains the targeted struct rseq_cs
++	 * or reclaiming memory that contains the code refered to by the
++	 * start_ip and post_commit_offset fields of struct rseq_cs.
+ 	 *
+ 	 * Read and set by the kernel. Set by user-space with single-copy
+ 	 * atomicity semantics. This field should only be updated by the
+-- 
+2.17.1
+
