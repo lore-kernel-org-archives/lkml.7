@@ -6,25 +6,33 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 911D0C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B910AC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D9B02072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94C86206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:49:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfLTXtI (ORCPT
+        id S1726846AbfLTXtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 18:49:08 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:59214 "EHLO
+        Fri, 20 Dec 2019 18:49:52 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:59227 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726470AbfLTXtH (ORCPT
+        with ESMTP id S1726470AbfLTXtw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 18:49:07 -0500
+        Fri, 20 Dec 2019 18:49:52 -0500
 Received: from 1.general.cking.uk.vpn ([10.172.193.212])
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <colin.king@canonical.com>)
-        id 1iiS11-0001vf-KC; Fri, 20 Dec 2019 23:49:03 +0000
+        id 1iiS1l-0001xO-N0; Fri, 20 Dec 2019 23:49:49 +0000
+Subject: Re: [PATCH][next] io_uring: fix missing error return when
+ percpu_ref_init fails
+To:     Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191220233322.13599-1-colin.king@canonical.com>
+ <398f514a-e2ce-8b4f-16cf-4edeec5fa1e7@kernel.dk>
 From:   Colin Ian King <colin.king@canonical.com>
 Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
  mQINBE6TJCgBEACo6nMNvy06zNKj5tiwDsXXS+LhT+LwtEsy9EnraKYXAf2xwazcICSjX06e
@@ -68,61 +76,34 @@ Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
  WNp62+mTeHsX6v9EACH4S+Cw9Q1qJElFEu9/1vFNBmGY2vDv14gU2xEiS2eIvKiYl/b5Y85Q
  QLOHWV8up73KK5Qq/6bm4BqVd1rKGI9un8kezUQNGBKre2KKs6wquH8oynDP/baoYxEGMXBg
  GF/qjOC6OY+U7kNUW3N/A7J3M2VdOTLu3hVTzJMZdlMmmsg74azvZDV75dUigqXcwjE=
-To:     Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        netdev@vger.kernel.org,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: re: net: stmmac: Add basic EST support for GMAC5+
-Message-ID: <c1b6b4cc-bc94-8ed6-0098-de9e5321722a@canonical.com>
-Date:   Fri, 20 Dec 2019 23:49:02 +0000
+Message-ID: <cf270359-fd06-3175-d0ef-ec2adc628235@canonical.com>
+Date:   Fri, 20 Dec 2019 23:49:49 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
+In-Reply-To: <398f514a-e2ce-8b4f-16cf-4edeec5fa1e7@kernel.dk>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 20/12/2019 23:48, Jens Axboe wrote:
+> On 12/20/19 4:33 PM, Colin King wrote:
+>> From: Colin Ian King <colin.king@canonical.com>
+>>
+>> Currently when the call to percpu_ref_init fails ctx->file_data is
+>> set to null and because there is a missing return statement the
+>> following statement dereferences this null pointer causing an oops.
+>> Fix this by adding the missing -ENOMEM return to avoid the oops.
+> 
+> Nice, thanks! I'm guessing I didn't have the necessary magic debug
+> options to allow failure injection for failing.
 
-Static analysis with Coverity has detected a potential issue with the
-following commit:
-
-commit 504723af0d85434be5fb6f2dde0b62644a7f1ead
-Author: Jose Abreu <joabreu@synopsys.com>
-Date:   Wed Dec 18 11:33:05 2019 +0100
-
-    net: stmmac: Add basic EST support for GMAC5+
-
-
-In function dwmac5_est_configure() we have a u64 total_ctr being
-assigned as follows:
-
-	total_ctr = cfg->ctr[0] + cfg->ctr[1] * 1000000000;
-
-The cfg->ctr[1] is a u32, the multiplication of cfg->ctr[1] is a u32
-multiplication operation, so multiplying by 1000000000 can potentially
-cause an overflow.  Either cfg->ctr[1] needs to be cast to a u64 or
-1000000000 should be at least a 1000000000UL to avoid this overflow. I
-was going to fix this but on further inspection I was not sure if the
-original code was intended as:
-
-	total_ctr = cfg->ctr[0] + cfg->ctr[1] * 1000000000UL;
-or:
-	total_ctr = (cfg->ctr[0] + cfg->ctr[1]) * 1000000000UL;
-
-..hence I'm flagging this up as potential error.
+Fortunately we have Coverity to the rescue :-)
 
 Colin
-
-
 
 
