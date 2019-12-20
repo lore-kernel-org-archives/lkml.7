@@ -2,166 +2,170 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11567C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68133C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC89F2467F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:46:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="WBxNdLsK"
+	by mail.kernel.org (Postfix) with ESMTP id 3FEF02146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:51:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbfLTMqt (ORCPT
+        id S1727382AbfLTMvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 07:46:49 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:60755 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727211AbfLTMqs (ORCPT
+        Fri, 20 Dec 2019 07:51:00 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3428 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727335AbfLTMvA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 07:46:48 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 6D56123D1F;
-        Fri, 20 Dec 2019 13:46:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1576846005;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GrX8218OZlK1OdarzjqvWdw/65Ksoux5IbNS+/y+8TE=;
-        b=WBxNdLsKddON8fDuOngYT9aWaqD8OK10kkTHtAcjAiHlYv7llsmLpvhqbamS4C1dZQPjBD
-        ikjLCAjK28tl/KKgfkgOS8iBDDou6hkY/ifKISm8BpyY2r0GkSsY6F69i2GfMp4A/2HPKP
-        3Uq08nQc7zBAb6uwpsEqEMvPyVzL4jc=
+        Fri, 20 Dec 2019 07:51:00 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBKCofFP020816
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 07:50:59 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2x0kspxu36-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 07:50:59 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
+        Fri, 20 Dec 2019 12:50:57 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 20 Dec 2019 12:50:54 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBKCorCq30867544
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Dec 2019 12:50:54 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DC4A1A4059;
+        Fri, 20 Dec 2019 12:50:53 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3AE4FA4053;
+        Fri, 20 Dec 2019 12:50:49 +0000 (GMT)
+Received: from oc0383214508.ibm.com (unknown [9.102.1.51])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 20 Dec 2019 12:50:48 +0000 (GMT)
+Subject: Re: [RFC] cpuidle : Add debugfs support for cpuidle core
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
+References: <20191217143834.19797-1-huntbag@linux.vnet.ibm.com>
+ <CAJZ5v0jmMwRGDY70EV3sqpw7uJ4R+VomoWtJ9rWzNTVuV3AUxQ@mail.gmail.com>
+ <CAOSf1CF9F1iViKCCoJXOPmkbj+kLXnJJz5b5B7xLgrLpCZoB3w@mail.gmail.com>
+ <CAJZ5v0iMutsf1UK+01dsZa1WDZAVK_fvOZJ-2FgiYXwWDqdnig@mail.gmail.com>
+From:   Abhishek <huntbag@linux.vnet.ibm.com>
+Date:   Fri, 20 Dec 2019 18:20:46 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 20 Dec 2019 13:46:40 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/2] dt-bindings: mtd: spi-nor: document new flag
-In-Reply-To: <2dfc30a7-3261-d783-8256-f72458a0141b@ti.com>
-References: <20191214191943.3679-1-michael@walle.cc>
- <556fe468-0080-ad05-8228-5ff8f1b3dac6@ti.com>
- <af3692dba69e85fa8136ab3d170bef39@walle.cc>
- <2dfc30a7-3261-d783-8256-f72458a0141b@ti.com>
-Message-ID: <09f5f76eb49a38c4b2960abe688b2892@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.8
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 6D56123D1F
-X-Spamd-Result: default: False [1.40 / 15.00];
-         ARC_NA(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[9];
-         NEURAL_HAM(-0.00)[-0.742];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+In-Reply-To: <CAJZ5v0iMutsf1UK+01dsZa1WDZAVK_fvOZJ-2FgiYXwWDqdnig@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19122012-0028-0000-0000-000003CA9D8F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19122012-0029-0000-0000-0000248DF248
+Message-Id: <33e38a86-a022-6c15-7c78-77903ec5abc5@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-20_02:2019-12-17,2019-12-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ mlxscore=0 malwarescore=0 clxscore=1015 phishscore=0 mlxlogscore=999
+ lowpriorityscore=0 impostorscore=0 adultscore=0 bulkscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912200102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vignesh,
+Hi Rafael,
 
-Am 2019-12-19 06:33, schrieb Vignesh Raghavendra:
-> Hi Michael,
-> 
-> [...]
->>>> +- no-unlock : By default, linux unlocks the whole flash because 
->>>> there
->>>> +           are legacy flash devices which are locked by default
->>>> +           after reset. Set this flag if you don't want linux to
->>>> +           unlock the whole flash automatically. In this case you
->>>> +           can control the non-volatile bits by the
->>>> +           flash_lock/flash_unlock tools.
->>>> 
->>> 
->>> Current SPI NOR framework unconditionally unlocks entire flash which
->>> I agree is not the best thing to do, but I don't think we need
->>> new DT property here. MTD cmdline partitions and DT partitions 
->>> already
->>> provide a way to specify that a partition should remain locked[1][2]
->> 
->> I know that the MTD layer has the same kind of unlocking. But that
->> unlocking is done on a per mtd partition basis. Eg. consider something
->> like the following
->> 
->>  mtd1 bootloader  (locked)
->>  mtd2 firmware    (locked)
->>  mtd3 kernel
->>  mtd4 environment
->> 
->> Further assume, that the end of mtd2 aligns with one of the possible
->> locking areas which are supported by the flash chip. Eg. the first 
->> quarter.
->> 
->> The mtd layer would do two (or four, if "lock" property is set) 
->> unlock()
->> calls, one for mtd1 and one for mtd2.
->> 
-> 
-> 
->> My point here is, that the mtd partitions doesn't always map to the
->> locking regions of the SPI flash (at least if the are not merged 
->> together).
->> 
-> 
-> You are right! This will be an issue if existing partitions are not
-> aligned to locking regions.
-> 
-> I take my comments back... But I am not sure if a new DT property is 
-> the
-> needed. This does not describe HW and is specific to Linux SPI NOR
-> stack. How about a module parameter instead?
-> Module parameter won't provide per flash granularity in controlling
-> unlocking behavior. But I don't think that matters.
 
-I don't argue against having a kernel parameter, but just wanting to 
-point
-out another alternative (which might be controversial):
+On 12/19/2019 02:34 PM, Rafael J. Wysocki wrote:
+> On Wed, Dec 18, 2019 at 3:26 PM Oliver O'Halloran <oohall@gmail.com> wrote:
+>> On Wed, Dec 18, 2019 at 3:51 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>>> On Tue, Dec 17, 2019 at 3:42 PM Abhishek Goel
+>>> <huntbag@linux.vnet.ibm.com> wrote:
+>>>> Up until now, we did not have a way to tune cpuidle attribute like
+>>>> residency in kernel. This patch adds support for debugfs in cpuidle core.
+>>>> Thereby providing support for tuning cpuidle attributes like residency in
+>>>> kernel at runtime.
+>>> This is not a good idea in my view, for a couple of reasons.
+>>>
+>>> First off, if the target residency of an idle state is changed, it
+>>> effectively becomes a different one and all of the statistics
+>>> regarding it become outdated at that point.  Synchronizing that would
+>>> be a pain.
+>>>
+>>> Next, governors may get confused if idle state parameters are changed
+>>> on the fly.  In particular, the statistics collected by the teo
+>>> governor depend on the target residencies of idle states, so if one of
+>>> them changes, the governor needs to be reloaded.
+>>>
+>>> Next, idle states are expected to be ordered by the target residency
+>>> (and by the exit latency), so their parameters cannot be allowed to
+>>> change freely anyway.
+>>>
+>>> Finally, the idle state parameters are expected to reflect the
+>>> properties of the hardware, which wouldn't hold any more if they were
+>>> allowed to change at any time.
+>> Certainly does sound like a headache.
+>>
+>>>> For example: Tuning residency at runtime can be used to quantify governors
+>>>> decision making as governor uses residency as one of the parameter to
+>>>> take decision about the state that needs to be entered while idling.
+>>> IMO it would be better to introduce a testing cpuidle driver with an
+>>> artificial set of idle states (or even such that the set of idle
+>>> states to be used by it can be defined by the user e.g. via module
+>>> parameters) for this purpose.
+>> The motivation for this patch isn't really a desire to test / tune the
+>> governor. It's intended to allow working around a performance problem
+>> caused by using high-latency idle states on some interrupt heavy GPU
+>> workload. The interrupts occur around ~30ms apart which is long enough
+>> for the governor to put the CPU into the deeper states and over the
+>> course of long job the additional wakeup latency adds up. The initial
+>> fix someone came up with was cooking the residency values so the
+>> high-latency states had a residency of +50ms to prevent the govenor
+>> from using them. However, that fix is supposed to go into a bit of
+>> firmware I maintain and I'm not terribly happy with the idea. I'm
+>> fairly sure that ~30ms value is workload dependent and personally I
+>> don't think firmware should be making up numbers to trick specific
+>> kernel versions into doing specific things.
+>>
+>> My impression is the right solution is to have the GPU driver set a PM
+>> QoS constraint on the CPUs receiving interrupts while a job is
+>> on-going.
+> Yes, that would address the GPU problem.
+>
+>> However, interrupt latency sensitivity isn't something
+>> that's unique to GPUs so I'm wondering it it makes sense to have the
+>> governor factor in interrupt traffic when deciding what state to use.
+>> Is that something that's been tried before?
+> Yes, that is in the works.
+>
+> The existing governors should take interrupts into account too in the
+> form of the expected idle duration corrections, but that may not be
+> particularly precise.  If the governor currently in use (I guess menu)
+> doesn't to that, you may try an alternative one (e.g. teo).
 
-  - What is the purpose of this unlock_all() at all. Apparently there are
-    some flashes which have the protection bits set. Either at startup
-    (and then they are non-volatile) or they come in that state out of 
-the
-    factory. The latter makes little sense IMHO.
+For this particular case, I tried TEO but it did not solve the issue.
+> That said, work is in progress on taking the actual interrupt
+> frequency into account in idle duration prediction.
+>
+> Thanks!
 
-  - Actually, all newer flashes we've used have these bits non-volatile 
-and
-    are unlocked by default.
+Could you please point out to the patch looking into device interrupt
+frequency for cpuidle.
 
-So can't we have a whitelist (ie. a new flag in the spi_nor_ids) which
-supresses the unlock if they haven't any block protections bit set
-according to the manual? Because in this case the unlocking makes never
-sense IMHO.
+Thanks.
 
--michael
-
-> 
-> Tudor,
-> 
-> You had a patch doing something similar. Does module param sound good 
-> to
-> you?
