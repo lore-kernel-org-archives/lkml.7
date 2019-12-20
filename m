@@ -2,164 +2,99 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14934C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 05:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 756C5C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 05:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEFD9227BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 05:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AF17227BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 05:19:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="avEufOmY"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="k+zZPdqi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfLTFSt (ORCPT
+        id S1727191AbfLTFTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 00:18:49 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40678 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfLTFSs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 00:18:48 -0500
-Received: by mail-wr1-f68.google.com with SMTP id c14so8131023wrn.7;
-        Thu, 19 Dec 2019 21:18:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to;
-        bh=4+wjQc43o9dT8sTyzqXcM6Q5iP3S8TVqsdDe6tdjj4c=;
-        b=avEufOmY9TC+QOYLEgyqg95h5vYO/m7RDU38Gy3ATTR21z31HogXAhp+6OVQdZMhQ4
-         ojwSVAAW7MmS0mh8ZqtQhAGDlu/GmIw1GNYXLGesyyFPnSFQkWMu0hCbKLT88O//JbC6
-         ME4WdeEZGMZpUwMVvpy5YtXvR3vyy8K6UO5Z0uvjMikM2gDA5xVkYR4qjfqdDdP1HOW4
-         VTXJtyTT4Xzj13jTcRLWu/x+Bnq87PIjVmbXS8SbNZ4VE+IybIDciXmU/jvf5DM+dPnx
-         utF1+Zia1DjNOzbYdIg1hv0GbiDMOjrUE5c3aeLlg+ShiTWUvqcEHzNUaGcW55u2MTj/
-         xE7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
-        bh=4+wjQc43o9dT8sTyzqXcM6Q5iP3S8TVqsdDe6tdjj4c=;
-        b=EYcv4kbFHcypJhZUGonf9gigyJLHSUvOOez+yNxpZfdghLaExZvzeWPCR6NaGlFiQb
-         nF9RSASbFn3iXfeujFymFRy5L/ZOmG1c74rV2vQHcmdNpLbtY/q8bbET4KlfYhoI483A
-         UsztoKWTeTqgJLtFt4g15vZnsyP/iatSh3F3S0q3unGgUCsMQ7T7h8w/7reW2O3DyUDA
-         KMnWHZGw1Mmc3KYXxzUW9I7PisP4bK6MMDK3iVsoWNThOkpn8GepBjPm67IvDStXOET3
-         hHDu6uxwU8MAXhgu3UmGrAL4jm3JwPTKpHYU7HnyOWxP/HW2XyZhLHVyR2jXLuJv9uly
-         LW9w==
-X-Gm-Message-State: APjAAAWy+9tY8f1DIFUegfvVYc3Y3hWZTFUMPEPg9J8qCxl0zbocHUUh
-        6k61R43JEheq10qrY4u/Fw4=
-X-Google-Smtp-Source: APXvYqwNlJjJ9tox9SPxML8q+PqF9vyoai/IiFmR2JQafLxBihNEdpp+nJ8qR061hlM3FBT2wZnQlg==
-X-Received: by 2002:a5d:6ac2:: with SMTP id u2mr13414279wrw.233.1576819126081;
-        Thu, 19 Dec 2019 21:18:46 -0800 (PST)
-Received: from localhost.localdomain ([2a02:2450:10d2:194d:5015:4c4c:42e9:e517])
-        by smtp.gmail.com with ESMTPSA id b10sm8626987wrt.90.2019.12.19.21.18.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 19 Dec 2019 21:18:45 -0800 (PST)
-From:   SeongJae Park <sj38.park@gmail.com>
-To:     SeongJae Park <sj38.park@gmail.com>
-Cc:     shuah <shuah@kernel.org>, brendanhiggins@google.com,
-        sjpark@amazon.com, corbet@lwn.net, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, sjpark@amazon.de
-Subject: Re: Re: Re: [PATCH v6 0/6] Fix nits in the kunit
-Date:   Fri, 20 Dec 2019 06:18:31 +0100
-Message-Id: <20191220051831.25296-1-sj38.park@gmail.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20191220050121.24334-1-sj38.park@gmail.com> (raw)
+        Fri, 20 Dec 2019 00:19:12 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:47693 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725775AbfLTFTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 00:19:12 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47fH9945Qbz9sP3;
+        Fri, 20 Dec 2019 16:19:09 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1576819149;
+        bh=n32zCL1EMMDsQqIYpA6kkK7coHHZ22QAgS0f+VPFMVM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=k+zZPdqisR7WV5ZyW9v3r5JMnr209Cy2Jmu3P+V+327GqeeLCuctMypi29gl40o2m
+         8GXRFGQKpa4G1/02xsa3bDNsj7uLSqYlc+S756/8iEmVryAdDhxmszIN5BWBdi7QGy
+         20mz8MhV8DnSlGcj6C9cf6HEx12fKbHkzXg9gvctWFmrLKsug6EIEOekfu9/vY0CCe
+         mH2k79AFbza6aFDLDeWyHpQv1zYuzLBTmbD1TbE6cldtY8cbw4c6uX/jDhJZ3JTw56
+         ktgXcweljK0b+v3eLzIpKGz7YHN7tLvMlz5ay6F7b0csO7NuCyCAMx3Pp8AdmfN0VT
+         oafSYLFBAnQZw==
+Date:   Fri, 20 Dec 2019 16:19:08 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>
+Subject: linux-next: Fixes tag needs some work in the scsi-mkp tree
+Message-ID: <20191220161908.10b18dcf@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/78cN_7SkV/HwfFHNWRVa7kV";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Dec 2019 06:01:21 +0100 SeongJae Park <sj38.park@gmail.com> wrote:
+--Sig_/78cN_7SkV/HwfFHNWRVa7kV
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> On Thu, 19 Dec 2019 16:37:28 -0700 shuah <shuah@kernel.org> wrote:
-> 
-> > On 12/11/19 7:27 PM, SeongJae Park wrote:
-> > > This patchset contains trivial fixes for the kunit documentations and
-> > > the wrapper python scripts.
-> > > 
-> > > 
-> > > Baseline
-> > > --------
-> > > 
-> > > This patchset is based on 'kselftest/fixes' branch of
-> > > linux-kselftest[1].  A complete tree is available at my repo:
-> > > https://github.com/sjp38/linux/tree/kunit_fix/20191205_v6
-> > > 
-> > > 
-> > > Version History
-> > > ---------------
-> > > 
-> > > Changes from v5
-> > > (https://lore.kernel.org/linux-kselftest/20191205093440.21824-1-sjpark@amazon.com):
-> > >   - Rebased on kselftest/fixes
-> > >   - Add 'Reviewed-by' and 'Tested-by' from Brendan Higgins
-> > > 
-> > > Changes from v4
-> > > (https://lore.kernel.org/linux-doc/1575490683-13015-1-git-send-email-sj38.park@gmail.com/):
-> > >   - Rebased on Heidi Fahim's patch[2]
-> > >   - Fix failing kunit_tool_test test
-> > >   - Add 'build_dir' option test in 'kunit_tool_test.py'
-> > > 
-> > > Changes from v3
-> > > (https://lore.kernel.org/linux-kselftest/20191204192141.GA247851@google.com):
-> > >   - Fix the 4th patch, "kunit: Place 'test.log' under the 'build_dir'" to
-> > >     set default value of 'build_dir' as '' instead of NULL so that kunit
-> > >     can run even though '--build_dir' option is not given.
-> > > 
-> > > Changes from v2
-> > > (https://lore.kernel.org/linux-kselftest/1575361141-6806-1-git-send-email-sj38.park@gmail.com):
-> > >   - Make 'build_dir' if not exists (missed from v3 by mistake)
-> > > 
-> > > Changes from v1
-> > > (https://lore.kernel.org/linux-doc/1575242724-4937-1-git-send-email-sj38.park@gmail.com):
-> > >   - Remove "docs/kunit/start: Skip wrapper run command" (A similar
-> > >     approach is ongoing)
-> > >   - Make 'build_dir' if not exists
-> > > 
-> > > SeongJae Park (6):
-> > >    docs/kunit/start: Use in-tree 'kunit_defconfig'
-> > >    kunit: Remove duplicated defconfig creation
-> > >    kunit: Create default config in '--build_dir'
-> > >    kunit: Place 'test.log' under the 'build_dir'
-> > >    kunit: Rename 'kunitconfig' to '.kunitconfig'
-> > >    kunit/kunit_tool_test: Test '--build_dir' option run
-> > > 
-> > >   Documentation/dev-tools/kunit/start.rst | 13 +++++--------
-> > >   tools/testing/kunit/kunit.py            | 18 +++++++++++-------
-> > >   tools/testing/kunit/kunit_kernel.py     | 10 +++++-----
-> > >   tools/testing/kunit/kunit_tool_test.py  | 10 +++++++++-
-> > >   4 files changed, 30 insertions(+), 21 deletions(-)
-> > > 
-> > 
-> > Hi SeongJae Park,
-> > 
-> > Please make sure your From and Signed-off-by addresses match. I tried
-> > applying these patches and I am seeing warnings.
-> > 
-> > WARNING: Missing Signed-off-by: line by nominal patch author 'SeongJae 
-> > Park <sj38.park@gmail.com>'
-> 
-> I tried to reproduce the warning on my side using 'git am' and 'checkpatch.pl',
-> but those doesn't show me such warnings.  Could you please let me know what
-> command you use?  Or, you could simply ignore the warning and use 'SeongJae
-> Park <sjpark@amazon.de>'.
+Hi all,
 
-Seems like 'send-email' has ignored 'From:' in my original patche files.  I
-rebased those on latest kselftest/fixes and sent v7.  If anything wrong, please
-let me know.
+In commit
 
+  08c0de658b08 ("scsi: qla2xxx: Fix stuck login session using prli_pend_tim=
+er")
 
-Thanks,
-SeongJae Park
+Fixes tag
 
-> 
-> 
-> Thanks,
-> SeongJae Park
-> 
-> > 
-> > thanks,
-> > -- Shuah
-> 
+  Fixes: 974950710e2a ("qla2xxx: Fix stuck login session")
+
+has these problem(s):
+
+  - Target SHA1 does not exist
+
+Did you mean
+
+Fixes: ce0ba496dccf ("scsi: qla2xxx: Fix stuck login session")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/78cN_7SkV/HwfFHNWRVa7kV
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl38WcwACgkQAVBC80lX
+0GxZ2wf/ZKjdMnYrcRcUpSCis+L18aVo1AmrlPHd13qxmoDz8MLMqCk5TvEaDFA+
+wtrmheO72WOE1JKOhdebRWc88rXaVlnlUpaAFUhrvw8iLg+REXVs1ePKaDjYFX+G
+EpoMLR9t6skZmXaLW/v6rGbKhuMdn8rAjz26iCWr2Pe2ekyUshZv6HfMTPLo1y9O
+yKAI/1KZU1iX5Q8ck2IVq7l7gBUf1WI8RkUJveRCEtHEOsz+5IIfonb2g4I846+/
+qLPMLMWA/1eoWhy/+5v+LUhak59smnTDbnko9ub4VtPAOpwRbYlAoGyrmZ2tdlK+
+mCTjj4MFzSEIhcNyXLAuAMUPtq4DDw==
+=P0d6
+-----END PGP SIGNATURE-----
+
+--Sig_/78cN_7SkV/HwfFHNWRVa7kV--
