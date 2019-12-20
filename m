@@ -2,92 +2,107 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9ED7C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48544C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3257218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21DAF206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:52:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BKn111MN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wi41QjtY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbfLTSup (ORCPT
+        id S1727505AbfLTSwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 13:50:45 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36763 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727390AbfLTSuo (ORCPT
+        Fri, 20 Dec 2019 13:52:47 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45522 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727422AbfLTSwr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 13:50:44 -0500
-Received: by mail-pf1-f195.google.com with SMTP id x184so5701677pfb.3;
-        Fri, 20 Dec 2019 10:50:44 -0800 (PST)
+        Fri, 20 Dec 2019 13:52:47 -0500
+Received: by mail-pg1-f196.google.com with SMTP id b9so5355847pgk.12;
+        Fri, 20 Dec 2019 10:52:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Ak7VGqCjH/jK0JxWIx/zXhSXNOG6BUrxQ8Rmu2KD6CE=;
-        b=BKn111MNvB0QoAOY8pnbxUhjwIgBr9HUNkGeF7VB2Z6sFbFqykqa3kb9qdhv3LLC+Y
-         jiU6F5VU+5ax8CUKj4D1uI7p2eabylBaJBLMyZMiK6dEvSTQ1Oq5VrPUogQits5s5sU2
-         pA40bp7tczWZt8r963ScrEGkgKypLL7sQCvi5jGlf/y7IsFc/wkinm5fSppfXM/TSxfG
-         MShQsqT5sTHJLR2Gdww6+AsRlagsMRv/lHIJRM0XjRzcAdN5GPYQ0xuzqFfrIGG2l6Uc
-         4fS8OYz0TFBfMHlxqUPWGiGBj2BYPjQhTNGKtK3MxMINVtX2M0wPY6Vfxbg7zrppDu4v
-         wsdg==
+        bh=viSDKHeCFOSvx9dSLRqIUBIoY3RXWubdy5kL+SpzoFg=;
+        b=Wi41QjtYcdhEKQ/mMOm3062dR8QpHuAqf+3mpXRmCf2vnUX/8jb7PaJvOz0rZyDNiu
+         B8GM7GTnFaAijSsVb1homQ1nDaXi29ULAzHa9ENhiljYgXhJh1BhMgPrGPOz7DuaxFOM
+         nAn/hl0wT2EvBtEh1JbcR8/6/WCFarReFkmq8ixoTOrqw8EKbhPakgBu60U7U/bYGSW5
+         U9We0WMuDUtGzM1iQibBADkbhQiutSe4Pi1Q7/3Vv2/e72/hZKBEZrII3wnjW8miWUSV
+         0X4S/2TCtkDcPddJEYkSMGY5HEJM4hJrRnhrPL0XCIc1QCiTrILFZbeNKHr76wxflvG0
+         Gs8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ak7VGqCjH/jK0JxWIx/zXhSXNOG6BUrxQ8Rmu2KD6CE=;
-        b=m2dBhyodiOwfWb3lS+h9NzpmFGtLb6Q27gwieqpTMtt2rleAPHMELQZeOTzCSwEepp
-         fgeyQknfDThQqf4dh6eNzZyPzLr68/yNkEfKQ2L/sOI+nXLwlQ6Ft1JR7JmzUsJQ2xEw
-         6xJtevKGI3ERQw7w/X8YgF5PAdunBejfk3SPBHAPy6mebwQCVi9C+jqfu2IkScCErBlE
-         nizrqhU2f0d+ttFYHr9eGMyaO86OcN64cbllg0oSuVSESKcGpHj06iQ2lMwzgcxN+5gf
-         +N557o3BCW0xFvjGqFjsVd14fY7zB4X7SkLf2anoWWZE9q+1nYPyERKYA22syto82Age
-         RSDA==
-X-Gm-Message-State: APjAAAWpiTi/5lAkJc31lXBXJnfiLAdJI5aHU5wgCW1X4D2H+z6np4sg
-        rnYagyZcNXRM8daxOtZfiRg=
-X-Google-Smtp-Source: APXvYqwOSBw1YhQulOPHVztDZwVIS0Viru8PJxZMXRGaSRHeBMWYLb2YwjJS67S67SeX+ppLYWE1uQ==
-X-Received: by 2002:a63:5b0a:: with SMTP id p10mr16281847pgb.228.1576867843930;
-        Fri, 20 Dec 2019 10:50:43 -0800 (PST)
+        bh=viSDKHeCFOSvx9dSLRqIUBIoY3RXWubdy5kL+SpzoFg=;
+        b=ZGXcAC1ZqSSc+eSBa7Cl6mROoG/W2rEcJm0soAgsIyDKxqFY2vZbfgQWOTwLLgpbCx
+         Cfyij8qwPFWMCMeKX33SvKMHs3qDQpIcbBQWzBmD45AtY/xMfxeC0imdFKBIvJIcaJZK
+         wOJ/q3yX2t8q8p0M4JL+MOcRD5BNJYuIVU85Ujl9fvcjvTdBV4nDP9AAYRHklp1LelRp
+         88PFSvEyPwHjIh1kYt89bRKx0Bm79APJYmod+I0CEziwn+9ZYju2lTHLyKrykH2XDKYt
+         wJ3cQI9KdnLcsKvrsIx4YzyoGRLLAjf4f5xkWCaYj/tszHaVwrm1ASK9qs8hrtyV86Hy
+         h6iA==
+X-Gm-Message-State: APjAAAX85XSUtsgBhWfZLUeTjbiEpyF1xt0hMqLzKki759faGqubnTEd
+        cwaDwl4UexhNzxBvxuJgQJU=
+X-Google-Smtp-Source: APXvYqw3+FkouZXlvsj+BIhI08Ng8f6cpe/jOcktRzeTK9Fth/TX0QGc4OD8Q3UWX0r/L796ujadMQ==
+X-Received: by 2002:a62:d407:: with SMTP id a7mr15445832pfh.242.1576867966770;
+        Fri, 20 Dec 2019 10:52:46 -0800 (PST)
 Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x33sm12150402pga.86.2019.12.20.10.50.43
+        by smtp.gmail.com with ESMTPSA id g7sm14388582pfq.33.2019.12.20.10.52.46
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 20 Dec 2019 10:50:43 -0800 (PST)
-Date:   Fri, 20 Dec 2019 10:50:42 -0800
+        Fri, 20 Dec 2019 10:52:46 -0800 (PST)
+Date:   Fri, 20 Dec 2019 10:52:40 -0800
 From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.4 00/80] 5.4.6-stable review
-Message-ID: <20191220185042.GE26293@roeck-us.net>
-References: <20191219183031.278083125@linuxfoundation.org>
+To:     Srinivas Neeli <srinivas.neeli@xilinx.com>
+Cc:     shubhraj@xilinx.com, sgoud@xilinx.com, michal.simek@xilinx.com,
+        wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org, git@xilinx.com
+Subject: Re: [PATCH] watchdog: cadence: Skip printing pointer value
+Message-ID: <20191220185240.GF26293@roeck-us.net>
+References: <1576825096-26605-1-git-send-email-srinivas.neeli@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
+In-Reply-To: <1576825096-26605-1-git-send-email-srinivas.neeli@xilinx.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 07:33:52PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.6 release.
-> There are 80 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Fri, Dec 20, 2019 at 12:28:16PM +0530, Srinivas Neeli wrote:
+> "%p" is not printing the pointer value.
+> In driver, printing pointer value is not useful so avoiding print.
 > 
-> Responses should be made by Sat, 21 Dec 2019 18:24:44 +0000.
-> Anything received after that time might be too late.
+> Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+>  drivers/watchdog/cadence_wdt.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 > 
-
-Build results:
-	total: 158 pass: 158 fail: 0
-Qemu test results:
-	total: 387 pass: 387 fail: 0
-
-Guenter
+> diff --git a/drivers/watchdog/cadence_wdt.c b/drivers/watchdog/cadence_wdt.c
+> index 06bd4e1a5923..672b184da875 100644
+> --- a/drivers/watchdog/cadence_wdt.c
+> +++ b/drivers/watchdog/cadence_wdt.c
+> @@ -369,9 +369,8 @@ static int cdns_wdt_probe(struct platform_device *pdev)
+>  		return ret;
+>  	platform_set_drvdata(pdev, wdt);
+>  
+> -	dev_info(dev, "Xilinx Watchdog Timer at %p with timeout %ds%s\n",
+> -		 wdt->regs, cdns_wdt_device->timeout,
+> -		 nowayout ? ", nowayout" : "");
+> +	dev_info(dev, "Xilinx Watchdog Timer with timeout %ds%s\n",
+> +		 cdns_wdt_device->timeout, nowayout ? ", nowayout" : "");
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.7.4
+> 
