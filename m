@@ -2,69 +2,246 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6A1C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A03AC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 673DF2465E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:15:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECBD72467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:16:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbfLTJPr (ORCPT
+        id S1727265AbfLTJQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 04:15:47 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:55789 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbfLTJPr (ORCPT
+        Fri, 20 Dec 2019 04:16:19 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:9320 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727192AbfLTJQS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 04:15:47 -0500
-Received: from 79.184.253.1.ipv4.supernova.orange.pl (79.184.253.1) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
- id 3ef3e23fc2895822; Fri, 20 Dec 2019 10:15:44 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Zhang Rui <rui.zhang@intel.com>
-Cc:     x86@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tony.luck@intel.com
-Subject: Re: [PATCH 1/2] x86/cpu: Add Jasper Lake to Intel family
-Date:   Fri, 20 Dec 2019 10:15:44 +0100
-Message-ID: <10825235.GLIYtX2vNs@kreacher>
-In-Reply-To: <20191216083345.2782-1-rui.zhang@intel.com>
-References: <20191216083345.2782-1-rui.zhang@intel.com>
+        Fri, 20 Dec 2019 04:16:18 -0500
+Received: from droid15-sz.amlogic.com (10.28.8.25) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 20 Dec 2019
+ 17:16:51 +0800
+From:   Jian Hu <jian.hu@amlogic.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Jian Hu <jian.hu@amlogic.com>, Kevin Hilman <khilman@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        <linux-amlogic@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v3] arm64: dts: meson-a1: add I2C nodes
+Date:   Fri, 20 Dec 2019 17:16:11 +0800
+Message-ID: <20191220091611.36319-1-jian.hu@amlogic.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.28.8.25]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, December 16, 2019 9:33:44 AM CET Zhang Rui wrote:
-> Japser Lake is an Atom family processor.
-> It uses Tremont cores and is targeted at mobile platforms.
-> 
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-> ---
->  arch/x86/include/asm/intel-family.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-> index c606c0b70738..4981c293f926 100644
-> --- a/arch/x86/include/asm/intel-family.h
-> +++ b/arch/x86/include/asm/intel-family.h
-> @@ -111,6 +111,7 @@
->  
->  #define INTEL_FAM6_ATOM_TREMONT_D	0x86 /* Jacobsville */
->  #define INTEL_FAM6_ATOM_TREMONT		0x96 /* Elkhart Lake */
-> +#define INTEL_FAM6_ATOM_TREMONT_L	0x9C /* Jasper Lake */
->  
->  /* Xeon Phi */
->  
-> 
+There are four I2C controllers in A1 series,
+Share the same comptible with AXG. Compared to AXG,
+Drive strength feature is newly added in A1.
 
-Applying this one along with the [2/2] as 5.6 material, thanks!
+Signed-off-by: Jian Hu <jian.hu@amlogic.com>
 
+---
+This patch depends on A1 clock patchset at [0][3]
 
+Changes since v1 at [1]:
+-change reg length to 0x20
+-assign i2c bus alias in dts file
+-add new feature note compared to AXG in changelog
+
+Changes since v2 at [2]:
+-remove the dependence the commit description
+-remove i2c alias in dtsi
+-reorder the i2c nodes
+-reorder the i2c pins
+
+[0] https://lkml.kernel.org/r/20191206074052.15557-1-jian.hu@amlogic.com
+[1] https://lkml.kernel.org/r/20191202111253.94872-1-jian.hu@amlogic.com
+[2] https://lkml.kernel.org/r/20191211032802.83309-1-jian.hu@amlogic.com
+[3] https://lkml.kernel.org/r/20191206074052.15557-1-jian.hu@amlogic.com
+---
+---
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 142 ++++++++++++++++++++++
+ 1 file changed, 142 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+index eab2ecd36aa8..1542eeee699d 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+@@ -117,6 +117,16 @@
+ 				};
+ 			};
+ 
++			i2c0: i2c@1400 {
++				compatible = "amlogic,meson-axg-i2c";
++				reg = <0x0 0x1400 0x0 0x20>;
++				interrupts = <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				clocks = <&clkc_periphs CLKID_I2C_M_A>;
++				status = "disabled";
++			};
++
+ 			uart_AO: serial@1c00 {
+ 				compatible = "amlogic,meson-gx-uart",
+ 					     "amlogic,meson-ao-uart";
+@@ -136,6 +146,36 @@
+ 				clock-names = "xtal", "pclk", "baud";
+ 				status = "disabled";
+ 			};
++
++			i2c1: i2c@5c00 {
++				compatible = "amlogic,meson-axg-i2c";
++				reg = <0x0 0x5c00 0x0 0x20>;
++				interrupts = <GIC_SPI 68 IRQ_TYPE_EDGE_RISING>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				clocks = <&clkc_periphs CLKID_I2C_M_B>;
++				status = "disabled";
++			};
++
++			i2c2: i2c@6800 {
++				compatible = "amlogic,meson-axg-i2c";
++				reg = <0x0 0x6800 0x0 0x20>;
++				interrupts = <GIC_SPI 76 IRQ_TYPE_EDGE_RISING>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				clocks = <&clkc_periphs CLKID_I2C_M_C>;
++				status = "disabled";
++			};
++
++			i2c3: i2c@6c00 {
++				compatible = "amlogic,meson-axg-i2c";
++				reg = <0x0 0x6c00 0x0 0x20>;
++				interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				clocks = <&clkc_periphs CLKID_I2C_M_D>;
++				status = "disabled";
++			};
+ 		};
+ 
+ 		gic: interrupt-controller@ff901000 {
+@@ -171,3 +211,105 @@
+ 		#clock-cells = <0>;
+ 	};
+ };
++
++&periphs_pinctrl {
++	i2c0_f9_pins:i2c0-f9 {
++		mux {
++			groups = "i2c0_sck_f9",
++				"i2c0_sda_f10";
++			function = "i2c0";
++			bias-pull-up;
++			drive-strength-microamp = <3000>;
++		};
++	};
++
++	i2c0_f11_pins:i2c0-f11 {
++		mux {
++			groups = "i2c0_sck_f11",
++				"i2c0_sda_f12";
++			function = "i2c0";
++			bias-pull-up;
++			drive-strength-microamp = <3000>;
++		};
++	};
++
++	i2c1_a_pins:i2c1-a {
++		mux {
++			groups = "i2c1_sck_a",
++				"i2c1_sda_a";
++			function = "i2c1";
++			bias-pull-up;
++			drive-strength-microamp = <3000>;
++		};
++	};
++
++	i2c1_x_pins:i2c1-x {
++		mux {
++			groups = "i2c1_sck_x",
++				"i2c1_sda_x";
++			function = "i2c1";
++			bias-pull-up;
++			drive-strength-microamp = <3000>;
++		};
++	};
++
++	i2c2_a4_pins:i2c2-a4 {
++		mux {
++			groups = "i2c2_sck_a4",
++				"i2c2_sda_a5";
++			function = "i2c2";
++			bias-pull-up;
++			drive-strength-microamp = <3000>;
++		};
++	};
++
++	i2c2_a8_pins:i2c2-a8 {
++		mux {
++			groups = "i2c2_sck_a8",
++				"i2c2_sda_a9";
++			function = "i2c2";
++			bias-pull-up;
++			drive-strength-microamp = <3000>;
++		};
++	};
++
++	i2c2_x0_pins:i2c2-x0 {
++		mux {
++			groups = "i2c2_sck_x0",
++				"i2c2_sda_x1";
++			function = "i2c2";
++			bias-pull-up;
++			drive-strength-microamp = <3000>;
++		};
++	};
++
++	i2c2_x15_pins:i2c2-x15 {
++		mux {
++			groups = "i2c2_sck_x15",
++				"i2c2_sda_x16";
++			function = "i2c2";
++			bias-pull-up;
++			drive-strength-microamp = <3000>;
++		};
++	};
++
++	i2c3_f_pins:i2c3-f {
++		mux {
++			groups = "i2c3_sck_f",
++				"i2c3_sda_f";
++			function = "i2c3";
++			bias-pull-up;
++			drive-strength-microamp = <3000>;
++		};
++	};
++
++	i2c3_x_pins:i2c3-x {
++		mux {
++			groups = "i2c3_sck_x",
++				"i2c3_sda_x";
++			function = "i2c3";
++			bias-pull-up;
++			drive-strength-microamp = <3000>;
++		};
++	};
++};
+-- 
+2.24.0
 
