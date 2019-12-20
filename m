@@ -2,103 +2,65 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FD9C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7EAC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01CC72467F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48EC62467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:18:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbfLTKS2 convert rfc822-to-8bit (ORCPT
+        id S1727395AbfLTKSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 05:18:28 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:26312 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727184AbfLTKS1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 05:18:27 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id uk-mta-7-xsbhb676OPeybTliNzrcug-1;
- Fri, 20 Dec 2019 10:18:24 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 20 Dec 2019 10:18:23 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 20 Dec 2019 10:18:23 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Aleksa Sarai' <cyphar@cyphar.com>
-CC:     Florian Weimer <fweimer@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Shuah Khan <shuah@kernel.org>,
-        "Christian Brauner" <christian.brauner@ubuntu.com>,
-        "dev@opencontainers.org" <dev@opencontainers.org>,
-        "containers@lists.linux-foundation.org" 
-        <containers@lists.linux-foundation.org>,
-        "libc-alpha@sourceware.org" <libc-alpha@sourceware.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Fri, 20 Dec 2019 05:18:50 -0500
+Received: from mga05.intel.com ([192.55.52.43]:51159 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727129AbfLTKSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 05:18:50 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Dec 2019 02:18:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,335,1571727600"; 
+   d="scan'208";a="222470644"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 20 Dec 2019 02:18:47 -0800
+Received: by lahna (sSMTP sendmail emulation); Fri, 20 Dec 2019 12:18:46 +0200
+Date:   Fri, 20 Dec 2019 12:18:46 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-Subject: RE: [PATCH 1/2] uapi: split openat2(2) definitions from fcntl.h
-Thread-Topic: [PATCH 1/2] uapi: split openat2(2) definitions from fcntl.h
-Thread-Index: AQHVtnKfNpps3AEjjUOZljxYP1VvUqfBfNKAgAFG6YCAAAuokA==
-Date:   Fri, 20 Dec 2019 10:18:23 +0000
-Message-ID: <85251686ad074be18db926f903497a45@AcuMS.aculab.com>
-References: <20191219105533.12508-1-cyphar@cyphar.com>
- <20191219105533.12508-2-cyphar@cyphar.com>
- <87a77oy3oe.fsf@oldenburg2.str.redhat.com>
- <20191219134525.mgzmjbsp4wo5b2bw@yavin.dot.cyphar.com>
- <845fc9e8b55e4868bb4d20655e674b50@AcuMS.aculab.com>
- <20191220093153.v7jpzvch3lohabll@yavin.dot.cyphar.com>
-In-Reply-To: <20191220093153.v7jpzvch3lohabll@yavin.dot.cyphar.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [PATCH v12 0/4] PCI: Patch series to improve Thunderbolt
+ enumeration
+Message-ID: <20191220101846.GV2913417@lahna.fi.intel.com>
+References: <PSXP216MB043840E2DE9B81AC8797F63A80530@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <20191220000358.GA126443@google.com>
+ <PSXP216MB043888F94710A361E4D84DFF802D0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-X-MC-Unique: xsbhb676OPeybTliNzrcug-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PSXP216MB043888F94710A361E4D84DFF802D0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aleksa Sarai
-> Sent: 20 December 2019 09:32
-...
-> > I'm guessing that is just 64bit aligned on 32bit archs like x86?
-> 
-> Yeah,
-> 
-> #define __aligned_u64 __u64 __attribute__((aligned(8)))
-> 
-> > No need to enforce it provided the structure will have no padding on
-> > archs where the 64bit fields are 64bit aligned. A plain __u64 should
-> > be fine.
-> 
-> Will this cause problems for x86-on-x86_64 emulation? Requiring an
-> 8-byte alignment for 'struct open_how' really isn't that undue of a
-> burden IMHO. Then again, clone3 is a bit of an outlier since both
-> perf_event_open and sched_setattr just use __u64s.
+On Fri, Dec 20, 2019 at 08:50:14AM +0000, Nicholas Johnson wrote:
+> Mika, what would you have written if you had to do this?
 
-Makes diddly-squit difference.
-The 64bit kernel will 64bit align the structure.
-The kernel must allow for the userspace structure having arbitrary alignment.
-So there is no reason to (try to) align the user structure.
+Heh, I'm not the best person to ask :) Something like below maybe?
 
-	David
+  Improve PCI resource allocation on systems with Thunderbolt
+  add-in-card but no support from BIOS side.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+I think that's what your series is about.
