@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F60C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D43CFC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AEC9218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3B0121D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852603;
-	bh=W9zbRmuy6oxxYdUeD2QHIDLLTPNGatBeVljSEgekXjo=;
+	s=default; t=1576852611;
+	bh=dv+JqRDbCcIOhSLjp+k6A9kZqZ63vaPQJPej8O9jRGk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ikB9w7yLITzrupx5UjrhzbyYod+Vn687PlPf9Gk+yjYdXAIintndHCgNSERs7q81h
-	 mYAipZ5WpV2dgwS8PYPczPRezESe0+FLYWAgdl+fFML9/V5JI79e3F3I94f4MNdsEd
-	 NAiItLzFPtOaDR2fAH4aLapqLCmiLQSAWm5hJZxc=
+	b=erwIO1Q600uiB7zN62Ey1+FhMEWYDKYyMVTzMBSyhOkzqEyw631OMoFQwMF4dTbzy
+	 cH5P+9vZkrDSuKMqHQS5hopVfLq+TqEfgw9p8TrKOVIYCtPnxFGX4fngZcvZWsOt6/
+	 C6Z3gGXmIk5Ji0c9BsRAKuVsiPS+JxzF2G/Vw2fI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728106AbfLTOgm (ORCPT
+        id S1727967AbfLTOgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:36:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39060 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:36:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728305AbfLTOev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:34:51 -0500
+        id S1728289AbfLTOer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:34:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 205402465E;
-        Fri, 20 Dec 2019 14:34:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16A11222C2;
+        Fri, 20 Dec 2019 14:34:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852490;
-        bh=W9zbRmuy6oxxYdUeD2QHIDLLTPNGatBeVljSEgekXjo=;
+        s=default; t=1576852486;
+        bh=dv+JqRDbCcIOhSLjp+k6A9kZqZ63vaPQJPej8O9jRGk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xrp4ynRjHCIT5Jj2iumv7CBDg+PeEtS1OrUtyK6ex6KOO8YLsYEDO4IcR+LBbim0R
-         /Bk0TqQ7s2j6DCCcysxc+4HwOaB6BUPOoe+5EhAwYgD9MZiZPMaITTF3+49cjE48qa
-         3Zx5lIJB4+adK/sS+G9caS/YVcvWRj5DaVmoiBbk=
+        b=ES024Ypz8p7oHiA8uPdKQZSDJNeEczr99yIR7QfByeUuio8lD0JhQ0zeOr8sgW584
+         oAuk0t5QALwqVbvMkkdHTurjDtyrLqAbinVxXzx34OU2oZYU4dUhrQsebwcloLU67G
+         9I6qWgHdujZmgABdc4l6B1tjup7ln73JaxhK/udg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steve Wise <larrystevenwise@gmail.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 13/34] rxe: correctly calculate iCRC for unaligned payloads
-Date:   Fri, 20 Dec 2019 09:34:12 -0500
-Message-Id: <20191220143433.9922-13-sashal@kernel.org>
+Cc:     Marc Dionne <marc.dionne@auristor.com>,
+        David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 10/34] afs: Fix afs_find_server lookups for ipv4 peers
+Date:   Fri, 20 Dec 2019 09:34:09 -0500
+Message-Id: <20191220143433.9922-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220143433.9922-1-sashal@kernel.org>
 References: <20191220143433.9922-1-sashal@kernel.org>
@@ -59,81 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Wise <larrystevenwise@gmail.com>
+From: Marc Dionne <marc.dionne@auristor.com>
 
-[ Upstream commit 2030abddec6884aaf5892f5724c48fc340e6826f ]
+[ Upstream commit 9bd0160d12370a076e44f8d1320cde9c83f2c647 ]
 
-If RoCE PDUs being sent or received contain pad bytes, then the iCRC
-is miscalculated, resulting in PDUs being emitted by RXE with an incorrect
-iCRC, as well as ingress PDUs being dropped due to erroneously detecting
-a bad iCRC in the PDU.  The fix is to include the pad bytes, if any,
-in iCRC computations.
+afs_find_server tries to find a server that has an address that
+matches the transport address of an rxrpc peer.  The code assumes
+that the transport address is always ipv6, with ipv4 represented
+as ipv4 mapped addresses, but that's not the case.  If the transport
+family is AF_INET, srx->transport.sin6.sin6_addr.s6_addr32[] will
+be beyond the actual ipv4 address and will always be 0, and all
+ipv4 addresses will be seen as matching.
 
-Note: This bug has caused broken on-the-wire compatibility with actual
-hardware RoCE devices since the soft-RoCE driver was first put into the
-mainstream kernel.  Fixing it will create an incompatibility with the
-original soft-RoCE devices, but is necessary to be compatible with real
-hardware devices.
+As a result, the first ipv4 address seen on any server will be
+considered a match, and the server returned may be the wrong one.
 
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Signed-off-by: Steve Wise <larrystevenwise@gmail.com>
-Link: https://lore.kernel.org/r/20191203020319.15036-2-larrystevenwise@gmail.com
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+One of the consequences is that callbacks received over ipv4 will
+only be correctly applied for the server that happens to have the
+first ipv4 address on the fs_addresses4 list.  Callbacks over ipv4
+from all other servers are dropped, causing the client to serve stale
+data.
+
+This is fixed by looking at the transport family, and comparing ipv4
+addresses based on a sockaddr_in structure rather than a sockaddr_in6.
+
+Fixes: d2ddc776a458 ("afs: Overhaul volume and server record caching and fileserver rotation")
+Signed-off-by: Marc Dionne <marc.dionne@auristor.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_recv.c | 2 +-
- drivers/infiniband/sw/rxe/rxe_req.c  | 6 ++++++
- drivers/infiniband/sw/rxe/rxe_resp.c | 7 +++++++
- 3 files changed, 14 insertions(+), 1 deletion(-)
+ fs/afs/server.c | 21 ++++++++-------------
+ 1 file changed, 8 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_recv.c b/drivers/infiniband/sw/rxe/rxe_recv.c
-index d30dbac24583a..695a607e2d14c 100644
---- a/drivers/infiniband/sw/rxe/rxe_recv.c
-+++ b/drivers/infiniband/sw/rxe/rxe_recv.c
-@@ -391,7 +391,7 @@ void rxe_rcv(struct sk_buff *skb)
+diff --git a/fs/afs/server.c b/fs/afs/server.c
+index 1d329e6981d51..2c7f6211c3601 100644
+--- a/fs/afs/server.c
++++ b/fs/afs/server.c
+@@ -34,18 +34,11 @@ static void afs_dec_servers_outstanding(struct afs_net *net)
+ struct afs_server *afs_find_server(struct afs_net *net,
+ 				   const struct sockaddr_rxrpc *srx)
+ {
+-	const struct sockaddr_in6 *a = &srx->transport.sin6, *b;
+ 	const struct afs_addr_list *alist;
+ 	struct afs_server *server = NULL;
+ 	unsigned int i;
+-	bool ipv6 = true;
+ 	int seq = 0, diff;
  
- 	calc_icrc = rxe_icrc_hdr(pkt, skb);
- 	calc_icrc = rxe_crc32(rxe, calc_icrc, (u8 *)payload_addr(pkt),
--			      payload_size(pkt));
-+			      payload_size(pkt) + bth_pad(pkt));
- 	calc_icrc = (__force u32)cpu_to_be32(~calc_icrc);
- 	if (unlikely(calc_icrc != pack_icrc)) {
- 		if (skb->protocol == htons(ETH_P_IPV6))
-diff --git a/drivers/infiniband/sw/rxe/rxe_req.c b/drivers/infiniband/sw/rxe/rxe_req.c
-index f7dd8de799415..1c1eae0ef8c28 100644
---- a/drivers/infiniband/sw/rxe/rxe_req.c
-+++ b/drivers/infiniband/sw/rxe/rxe_req.c
-@@ -500,6 +500,12 @@ static int fill_packet(struct rxe_qp *qp, struct rxe_send_wqe *wqe,
- 			if (err)
- 				return err;
- 		}
-+		if (bth_pad(pkt)) {
-+			u8 *pad = payload_addr(pkt) + paylen;
-+
-+			memset(pad, 0, bth_pad(pkt));
-+			crc = rxe_crc32(rxe, crc, pad, bth_pad(pkt));
-+		}
- 	}
- 	p = payload_addr(pkt) + paylen + bth_pad(pkt);
+-	if (srx->transport.sin6.sin6_addr.s6_addr32[0] == 0 ||
+-	    srx->transport.sin6.sin6_addr.s6_addr32[1] == 0 ||
+-	    srx->transport.sin6.sin6_addr.s6_addr32[2] == htonl(0xffff))
+-		ipv6 = false;
+-
+ 	rcu_read_lock();
  
-diff --git a/drivers/infiniband/sw/rxe/rxe_resp.c b/drivers/infiniband/sw/rxe/rxe_resp.c
-index 681d8e0913d06..9078cfd3b8bdd 100644
---- a/drivers/infiniband/sw/rxe/rxe_resp.c
-+++ b/drivers/infiniband/sw/rxe/rxe_resp.c
-@@ -737,6 +737,13 @@ static enum resp_states read_reply(struct rxe_qp *qp,
- 	if (err)
- 		pr_err("Failed copying memory\n");
+ 	do {
+@@ -54,7 +47,8 @@ struct afs_server *afs_find_server(struct afs_net *net,
+ 		server = NULL;
+ 		read_seqbegin_or_lock(&net->fs_addr_lock, &seq);
  
-+	if (bth_pad(&ack_pkt)) {
-+		struct rxe_dev *rxe = to_rdev(qp->ibqp.device);
-+		u8 *pad = payload_addr(&ack_pkt) + payload;
-+
-+		memset(pad, 0, bth_pad(&ack_pkt));
-+		icrc = rxe_crc32(rxe, icrc, pad, bth_pad(&ack_pkt));
-+	}
- 	p = payload_addr(&ack_pkt) + payload + bth_pad(&ack_pkt);
- 	*p = ~icrc;
- 
+-		if (ipv6) {
++		if (srx->transport.family == AF_INET6) {
++			const struct sockaddr_in6 *a = &srx->transport.sin6, *b;
+ 			hlist_for_each_entry_rcu(server, &net->fs_addresses6, addr6_link) {
+ 				alist = rcu_dereference(server->addresses);
+ 				for (i = alist->nr_ipv4; i < alist->nr_addrs; i++) {
+@@ -70,15 +64,16 @@ struct afs_server *afs_find_server(struct afs_net *net,
+ 				}
+ 			}
+ 		} else {
++			const struct sockaddr_in *a = &srx->transport.sin, *b;
+ 			hlist_for_each_entry_rcu(server, &net->fs_addresses4, addr4_link) {
+ 				alist = rcu_dereference(server->addresses);
+ 				for (i = 0; i < alist->nr_ipv4; i++) {
+-					b = &alist->addrs[i].transport.sin6;
+-					diff = ((u16 __force)a->sin6_port -
+-						(u16 __force)b->sin6_port);
++					b = &alist->addrs[i].transport.sin;
++					diff = ((u16 __force)a->sin_port -
++						(u16 __force)b->sin_port);
+ 					if (diff == 0)
+-						diff = ((u32 __force)a->sin6_addr.s6_addr32[3] -
+-							(u32 __force)b->sin6_addr.s6_addr32[3]);
++						diff = ((u32 __force)a->sin_addr.s_addr -
++							(u32 __force)b->sin_addr.s_addr);
+ 					if (diff == 0)
+ 						goto found;
+ 				}
 -- 
 2.20.1
 
