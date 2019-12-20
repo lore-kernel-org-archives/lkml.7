@@ -2,238 +2,425 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BE9C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 393B8C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 000D320866
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:14:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BbpbjMRA"
+	by mail.kernel.org (Postfix) with ESMTP id 0895A21655
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:20:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576884050;
+	bh=QRy2/CSZpLOhRrRkDznRjqlAJlg30wqS0LRftcflTIk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UbaSPWLpK2hJTPMpLtie+onoJPFeXxYjt/iCN2yQ9LzwmBKJ6oYHW5ERbaS6N5mZa
+	 lN1d+Aug2DYGIJnq6Ov70w2zqW3PFLbI/5qhQrV4lBp8RIz3+GTdsj8t2T3zvwf9N8
+	 CLFpfzmnTEMg7ZuqoQzUo2AExo3JBSkOlKQdFdHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfLTXOM (ORCPT
+        id S1726666AbfLTXUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 18:14:12 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9006 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726470AbfLTXOL (ORCPT
+        Fri, 20 Dec 2019 18:20:49 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:35949 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbfLTXUs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 18:14:11 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dfd55980001>; Fri, 20 Dec 2019 15:13:29 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 20 Dec 2019 15:14:00 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 20 Dec 2019 15:14:00 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Dec
- 2019 23:13:58 +0000
-Subject: Re: [PATCH v11 00/25] mm/gup: track dma-pinned pages: FOLL_PIN
-To:     Leon Romanovsky <leon@kernel.org>
-CC:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        Maor Gottlieb <maorg@mellanox.com>
-References: <20191216222537.491123-1-jhubbard@nvidia.com>
- <20191219132607.GA410823@unreal>
- <a4849322-8e17-119e-a664-80d9f95d850b@nvidia.com>
- <20191219210743.GN17227@ziepe.ca>
- <f10b2a18-a109-d87d-f156-2e5941cbf4a0@nvidia.com>
- <20191220184821.GB10944@unreal>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <b70ac328-2dc0-efe3-05c2-3e040b662256@nvidia.com>
-Date:   Fri, 20 Dec 2019 15:13:57 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 20 Dec 2019 18:20:48 -0500
+Received: by mail-io1-f66.google.com with SMTP id r13so967411ioa.3;
+        Fri, 20 Dec 2019 15:20:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nToGohRzbcvtGJGvS9bZUDG4QHSeGKTIa0oX9N/eOCw=;
+        b=qzZUkiAJ4eEvc97U77xOEP5Ws3xzxTdBnN8iLtpO8Gz97gvMq5TUp4+B7hgamg/LLv
+         SD0d9K8utb7LfF472beTJf57nQbAnTLel7eviysC3jjBMygW/py0FPp1QaisI2SFBks0
+         lNRrRLRAx2PSK0I6EidI2gIkUAryhwmUGbvkPz2fuuyE6v9yaGvsYQDMfDsWa/Vdto++
+         W8dU/knPT9rP6ykshot3yNP2CL70VtUAmprUz8WOcrLDyE+YP9u113ZA6gilrIXqWM3L
+         xOiKSsVOoo9gjxBXQc+qaFTmxQHAFw6+lW05L+EdrcCXKn2+xIsl0yrEAYXU6rXhZr9L
+         MxAA==
+X-Gm-Message-State: APjAAAW2cZllzKjI4ZAHc9Q/ipni8Et6Qb1zdpEgzZJAelNz4Bgzlucd
+        v+7TuczobpGBSIgET2bxIA==
+X-Google-Smtp-Source: APXvYqyAHATAQt3ZrPRsZ/7csGNdq8RLdQi+VY25XtzUjR1itdJ/03MzT3khYszSykAkaHrsWPwDnQ==
+X-Received: by 2002:a6b:e711:: with SMTP id b17mr11434927ioh.307.1576884047752;
+        Fri, 20 Dec 2019 15:20:47 -0800 (PST)
+Received: from localhost ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id j5sm3923212ioq.30.2019.12.20.15.20.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 15:20:46 -0800 (PST)
+Date:   Fri, 20 Dec 2019 16:20:46 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mgautam@codeaurora.org, swboyd@chromium.org
+Subject: Re: [PATCH V2] dt-bindings: geni-se: Convert QUP geni-se bindings to
+ YAML
+Message-ID: <20191220232046.GA408@bogus>
+References: <1576576279-29927-1-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20191220184821.GB10944@unreal>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576883609; bh=YyPKn1pTUo9maui0Cl8wPUC9pCaG4pozfEeSM/q2Xuw=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=BbpbjMRADbiieG0wZwg7/MNcvb0htkXoIVaUqVfL2cVFSq6P/VSfqRlwCWpnneJfD
-         xftzXoBcLiTWuqMXsQ7t6AWCT71WLO1xkGZrhrOn0tcyM5yAfm54j70C7fBwcgnofn
-         b/9H8aCfEVq0LawCERbdcQV3VCGhVN60vVxhAFwFbbDtIhnnLa+AeJbbNjJrpU3Dje
-         2yRq6wb9M/4s8MWJ9EJb7rqgBCMp3VCFwcIApBLsdFacXnYn6jAEGhJxMH7ZmKJPOr
-         2JhGFatda38gjZx3YL2suxRK7cjyk0lHKZiEYew9WUnhSKJKmAtAm3lHA3ArKec7HY
-         TMeZ1MUC9Bnkw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576576279-29927-1-git-send-email-akashast@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/20/19 10:48 AM, Leon Romanovsky wrote:
-...
->> test_query_qp (tests.test_qp.QPTest) ... ok
->> test_rdmacm_sync_traffic (tests.test_rdmacm.CMTestCase) ... skipped 'No devices with net interface'
->>
->> ======================================================================
->> FAIL: test_query_port (tests.test_device.DeviceTest)
->> ----------------------------------------------------------------------
->> Traceback (most recent call last):
->>   File "/kernel_work/rdma-core/tests/test_device.py", line 129, in test_query_port
->>     self.verify_port_attr(port_attr)
->>   File "/kernel_work/rdma-core/tests/test_device.py", line 113, in verify_port_attr
->>     assert 'Invalid' not in d.speed_to_str(attr.active_speed)
->> AssertionError
+On Tue, Dec 17, 2019 at 03:21:19PM +0530, Akash Asthana wrote:
+> Convert QUP geni-se bindings to DT schema format using json-schema.
 > 
-> I'm very curious how did you get this assert "d.speed_to_str" covers all
-> known speeds according to the IBTA.
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> ---
+> Changes in V2:
+>  - As per Stephen's comment corrected defintion of interrupts for UART node.
+>    Any valid UART node must contain atleast 1 interrupts.
 > 
+>  .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  |  94 ----------
+>  .../devicetree/bindings/soc/qcom/qcom,geni-se.yaml | 197 +++++++++++++++++++++
+>  2 files changed, 197 insertions(+), 94 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+> deleted file mode 100644
+> index dab7ca9..0000000
+> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+> +++ /dev/null
+> @@ -1,94 +0,0 @@
+> -Qualcomm Technologies, Inc. GENI Serial Engine QUP Wrapper Controller
+> -
+> -Generic Interface (GENI) based Qualcomm Universal Peripheral (QUP) wrapper
+> -is a programmable module for supporting a wide range of serial interfaces
+> -like UART, SPI, I2C, I3C, etc. A single QUP module can provide upto 8 Serial
+> -Interfaces, using its internal Serial Engines. The GENI Serial Engine QUP
+> -Wrapper controller is modeled as a node with zero or more child nodes each
+> -representing a serial engine.
+> -
+> -Required properties:
+> -- compatible:		Must be "qcom,geni-se-qup".
+> -- reg:			Must contain QUP register address and length.
+> -- clock-names:		Must contain "m-ahb" and "s-ahb".
+> -- clocks:		AHB clocks needed by the device.
+> -
+> -Required properties if child node exists:
+> -- #address-cells: 	Must be <1> for Serial Engine Address
+> -- #size-cells: 		Must be <1> for Serial Engine Address Size
+> -- ranges: 		Must be present
+> -
+> -Properties for children:
+> -
+> -A GENI based QUP wrapper controller node can contain 0 or more child nodes
+> -representing serial devices.  These serial devices can be a QCOM UART, I2C
+> -controller, SPI controller, or some combination of aforementioned devices.
+> -Please refer below the child node definitions for the supported serial
+> -interface protocols.
+> -
+> -Qualcomm Technologies Inc. GENI Serial Engine based I2C Controller
+> -
+> -Required properties:
+> -- compatible:		Must be "qcom,geni-i2c".
+> -- reg: 			Must contain QUP register address and length.
+> -- interrupts: 		Must contain I2C interrupt.
+> -- clock-names: 		Must contain "se".
+> -- clocks: 		Serial engine core clock needed by the device.
+> -- #address-cells:	Must be <1> for I2C device address.
+> -- #size-cells:		Must be <0> as I2C addresses have no size component.
+> -
+> -Optional property:
+> -- clock-frequency:	Desired I2C bus clock frequency in Hz.
+> -			When missing default to 100000Hz.
+> -
+> -Child nodes should conform to I2C bus binding as described in i2c.txt.
+> -
+> -Qualcomm Technologies Inc. GENI Serial Engine based UART Controller
+> -
+> -Required properties:
+> -- compatible:		Must be "qcom,geni-debug-uart" or "qcom,geni-uart".
+> -- reg: 			Must contain UART register location and length.
+> -- interrupts: 		Must contain UART core interrupts.
+> -- clock-names:		Must contain "se".
+> -- clocks:		Serial engine core clock needed by the device.
+> -
+> -Qualcomm Technologies Inc. GENI Serial Engine based SPI Controller
+> -node binding is described in
+> -Documentation/devicetree/bindings/spi/qcom,spi-geni-qcom.txt.
+> -
+> -Example:
+> -	geniqup@8c0000 {
+> -		compatible = "qcom,geni-se-qup";
+> -		reg = <0x8c0000 0x6000>;
+> -		clock-names = "m-ahb", "s-ahb";
+> -		clocks = <&clock_gcc GCC_QUPV3_WRAP_0_M_AHB_CLK>,
+> -			<&clock_gcc GCC_QUPV3_WRAP_0_S_AHB_CLK>;
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+> -		ranges;
+> -
+> -		i2c0: i2c@a94000 {
+> -			compatible = "qcom,geni-i2c";
+> -			reg = <0xa94000 0x4000>;
+> -			interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
+> -			clock-names = "se";
+> -			clocks = <&clock_gcc GCC_QUPV3_WRAP0_S5_CLK>;
+> -			pinctrl-names = "default", "sleep";
+> -			pinctrl-0 = <&qup_1_i2c_5_active>;
+> -			pinctrl-1 = <&qup_1_i2c_5_sleep>;
+> -			#address-cells = <1>;
+> -			#size-cells = <0>;
+> -		};
+> -
+> -		uart0: serial@a88000 {
+> -			compatible = "qcom,geni-debug-uart";
+> -			reg = <0xa88000 0x7000>;
+> -			interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
+> -			clock-names = "se";
+> -			clocks = <&clock_gcc GCC_QUPV3_WRAP0_S0_CLK>;
+> -			pinctrl-names = "default", "sleep";
+> -			pinctrl-0 = <&qup_1_uart_3_active>;
+> -			pinctrl-1 = <&qup_1_uart_3_sleep>;
+> -		};
+> -
+> -	}
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
+> new file mode 100644
+> index 0000000..5ba0e0e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
+> @@ -0,0 +1,197 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/soc/qcom/qcom,geni-se.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: GENI Serial Engine QUP Wrapper Controller
+> +
+> +maintainers:
+> + - Mukesh Savaliya <msavaliy@codeaurora.org>
+> + - Akash Asthana <akashast@codeaurora.org>
+> +
+> +description: |
+> + Generic Interface (GENI) based Qualcomm Universal Peripheral (QUP) wrapper
+> + is a programmable module for supporting a wide range of serial interfaces
+> + like UART, SPI, I2C, I3C, etc. A single QUP module can provide upto 8 Serial
+> + Interfaces, using its internal Serial Engines. The GENI Serial Engine QUP
+> + Wrapper controller is modeled as a node with zero or more child nodes each
+> + representing a serial engine.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,geni-se-qup
+> +
+> +  reg:
+> +    description: QUP wrapper common register address and length.
+> +
+> +  clock-names:
+> +    items:
+> +      - const: m-ahb
+> +      - const: s-ahb
+> +
+> +  clocks:
+> +    minItems: 2
+> +    maxItems: 2
+> +    items:
+> +      - description: Master AHB Clock
+> +      - description: Slave AHB Clock
+> +
+> +  "#address-cells":
+> +     const: 2
+> +
+> +  "#size-cells":
+> +     const: 2
+> +
+> +  ranges: true
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - ranges
+> +
+> +patternProperties:
+> +  "[i2c|spi]@[0-9]+$":
 
-Hi Leon,
+You'll need to split this so you can a add $ref to SPI and I2C 
+controller schemas.
 
-Short answer: I can make that one pass, with a small fix the the rdma-core test
-suite:
+For example:
 
-commit a1b9fb0846e1b2356d7a16f4fbdd1960cf8dcbe5 (HEAD -> fix_speed_to_str)
-Author: John Hubbard <jhubbard@nvidia.com>
-Date:   Fri Dec 20 15:07:47 2019 -0800
-
-    device: fix speed_to_str(), to handle disabled links
-    
-    For disabled links, the raw speed token is 0. However,
-    speed_to_str() doesn't have that in the list. This leads
-    to an assertion when running tests (test_query_port) when
-    one link is down and other link(s) are up.
-    
-    Fix this by returning '(Disabled/down)' for the zero speed
-    case.
-
-diff --git a/pyverbs/device.pyx b/pyverbs/device.pyx
-index 33d133fd..f8b7826b 100755
---- a/pyverbs/device.pyx
-+++ b/pyverbs/device.pyx
-@@ -923,8 +923,8 @@ def width_to_str(width):
- 
- 
- def speed_to_str(speed):
--    l = {1: '2.5 Gbps', 2: '5.0 Gbps', 4: '5.0 Gbps', 8: '10.0 Gbps',
--         16: '14.0 Gbps', 32: '25.0 Gbps', 64: '50.0 Gbps'}
-+    l = {0: '(Disabled/down)', 1: '2.5 Gbps', 2: '5.0 Gbps', 4: '5.0 Gbps',
-+         8: '10.0 Gbps', 16: '14.0 Gbps', 32: '25.0 Gbps', 64: '50.0 Gbps'}
-     try:
-         return '{s} ({n})'.format(s=l[speed], n=speed)
-     except KeyError:
+allOf:
+  - $ref: /spi/spi-controller.yaml#
 
 
-Longer answer:
-==============
-
-It looks like this test suite assumes that every link is connected! (Probably
-in most test systems, they are.) But in my setup, the ConnectX cards each have
-two slots, and I only have (and only need) one cable. So one link is up, and
-the other is disabled. 
-
-This leads to the other problem, which is that if a link is disabled, the
-test suite finds a "0" token for attr.active_speed. That token is not in the
-approved list, and so d.speed_to_str() asserts.
-
-With some diagnostics added, I can see it checking each link: one passes, and
-the other asserts:
-
-diff --git a/tests/test_device.py b/tests/test_device.py
-index 524e0e89..7b33d7db 100644
---- a/tests/test_device.py
-+++ b/tests/test_device.py
-@@ -110,6 +110,12 @@ class DeviceTest(unittest.TestCase):
-         assert 'Invalid' not in d.translate_mtu(attr.max_mtu)
-         assert 'Invalid' not in d.translate_mtu(attr.active_mtu)
-         assert 'Invalid' not in d.width_to_str(attr.active_width)
-+        print("")
-+        print('Diagnostics ===========================================')
-+        print('phys_state:    ', d.phys_state_to_str(attr.phys_state))
-+        print('active_width): ', d.width_to_str(attr.active_width))
-+        print('active_speed:  ',   d.speed_to_str(attr.active_speed))
-+        print('END of Diagnostics ====================================')
-         assert 'Invalid' not in d.speed_to_str(attr.active_speed)
-         assert 'Invalid' not in d.translate_link_layer(attr.link_layer)
-         assert attr.max_msg_sz > 0x1000
-
-         assert attr.max_msg_sz > 0x1000
-
-...and the test run from that is:
-
-# ./build/bin/run_tests.py --verbose tests.test_device.DeviceTest
-test_dev_list (tests.test_device.DeviceTest) ... ok
-test_open_dev (tests.test_device.DeviceTest) ... ok
-test_query_device (tests.test_device.DeviceTest) ... ok
-test_query_device_ex (tests.test_device.DeviceTest) ... ok
-test_query_gid (tests.test_device.DeviceTest) ... ok
-test_query_port (tests.test_device.DeviceTest) ... 
-Diagnostics ===========================================
-phys_state:     Link up (5)
-active_width):  4X (2)
-active_speed:   25.0 Gbps (32)
-END of Diagnostics ====================================
-
-Diagnostics ===========================================
-phys_state:     Disabled (3)
-active_width):  4X (2)
-active_speed:   Invalid speed
-END of Diagnostics ====================================
-FAIL
-test_query_port_bad_flow (tests.test_device.DeviceTest) ... ok
-
-======================================================================
-FAIL: test_query_port (tests.test_device.DeviceTest)
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/kernel_work/rdma-core/tests/test_device.py", line 135, in test_query_port
-    self.verify_port_attr(port_attr)
-  File "/kernel_work/rdma-core/tests/test_device.py", line 119, in verify_port_attr
-    assert 'Invalid' not in d.speed_to_str(attr.active_speed)
-AssertionError
-
-----------------------------------------------------------------------
-Ran 7 tests in 0.055s
-
-FAILED (failures=1)
+Though you could have 1 pattern that matches everything common and then 
+ones for I2C, SPI, etc.
 
 
+> +    type: object
+> +    description: GENI Serial Engine based I2C and SPI Controller.
+> +                 SPI in master mode supports up to 50MHz, up to four chip
+> +                 selects, programmable data path from 4 bits to 32 bits and
+> +                 numerous protocol variants.
+> +
+> +    properties:
+> +      compatible:
+> +        enum:
+> +          - qcom,geni-i2c
+> +          - qcom,geni-spi
+> +
+> +      reg:
+> +        description: GENI Serial Engine register address and length.
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+Number of reg entries? Needs a 'maxItems: 1' or a list of the entries.
 
+> +
+> +      interrupts:
+> +        maxItems: 1
+> +
+> +      clock-names:
+> +        const: se
+> +
+> +      clocks:
+> +        description: Serial engine core clock needed by the device.
+> +        maxItems: 1
+> +
+> +      "#address-cells":
+> +         const: 1
+> +
+> +      "#size-cells":
+> +         const: 0
+> +
+> +      clock-frequency:
+> +        description: Desired I2C bus clock frequency in Hz.
+> +        default: 100000
+> +
+> +    required:
+> +      - compatible
+> +      - reg
+> +      - interrupts
+> +      - clock-names
+> +      - clocks
+> +      - "#address-cells"
+> +      - "#size-cells"
+> +
+> +  "serial@[0-9]+$":
+
+unit-address is hex.
+
+> +    type: object
+> +    description: GENI Serial Engine based UART Controller.
+> +
+> +    properties:
+> +      compatible:
+> +        enum:
+> +          - qcom,geni-uart
+> +          - qcom,geni-debug-uart
+> +
+> +      reg:
+> +        description: GENI Serial Engine register address and length.
+
+Number of reg entries?
+
+> +
+> +      interrupts:
+> +        minItems: 1
+> +        maxItems: 2
+> +        items:
+> +          - description: UART core irq
+> +          - description: Wakeup irq (RX GPIO)
+> +
+> +      clock-names:
+> +        const: se
+> +
+> +      clocks:
+> +        description: Serial engine core clock needed by the device.
+> +        maxItems: 1
+> +
+> +    required:
+> +      - compatible
+> +      - reg
+> +      - interrupts
+> +      - clock-names
+> +      - clocks
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    soc: soc@0 {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        qupv3_id_0: geniqup@8c0000 {
+> +            compatible = "qcom,geni-se-qup";
+> +            reg = <0 0x008c0000 0 0x6000>;
+> +            clocks = <&gcc GCC_QUPV3_WRAP_0_M_AHB_CLK>,
+> +                <&gcc GCC_QUPV3_WRAP_0_S_AHB_CLK>;
+> +            #address-cells = <2>;
+> +            #size-cells = <2>;
+> +            ranges;
+> +            status = "disabled";
+
+Don't show status in examples.
+
+Why is the example changed? I don't really want to review it again.
+
+> +
+> +            i2c0: i2c@880000 {
+> +                compatible = "qcom,geni-i2c";
+> +                reg = <0 0x00880000 0 0x4000>;
+> +                clock-names = "se";
+> +                clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
+> +                pinctrl-names = "default";
+> +                pinctrl-0 = <&qup_i2c0_default>;
+> +                interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +                status = "disabled";
+> +            };
+> +
+> +            spi0: spi@880000 {
+
+Overlapping addresses are a problem unless these are all enable only 1 
+at a time. The original example didn't have this issue.
+
+> +                compatible = "qcom,geni-spi";
+> +                reg = <0 0x00880000 0 0x4000>;
+> +                clock-names = "se";
+> +                clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
+> +                pinctrl-names = "default";
+> +                pinctrl-0 = <&qup_spi0_default>;
+> +                interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +                status = "disabled";
+> +            };
+> +
+> +            uart0: serial@880000 {
+> +                compatible = "qcom,geni-uart";
+> +                reg = <0 0x00880000 0 0x4000>;
+> +                clock-names = "se";
+> +                clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
+> +                pinctrl-names = "default";
+> +                pinctrl-0 = <&qup_uart0_default>;
+> +                interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
+> +                status = "disabled";
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+> 
