@@ -2,104 +2,79 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1922C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41C1C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B72262465E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:10:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G65PKDWV"
+	by mail.kernel.org (Postfix) with ESMTP id A6BE82465E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:10:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbfLTBKG (ORCPT
+        id S1727192AbfLTBKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 20:10:06 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:39773 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726992AbfLTBKG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 20:10:06 -0500
-Received: by mail-lf1-f65.google.com with SMTP id y1so5702227lfb.6;
-        Thu, 19 Dec 2019 17:10:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vfXm6wroocpySxHofx5c4RN9rb7rL72Tf/ud1qMqmoY=;
-        b=G65PKDWVPT8+CLmF6P9smz/Dioz++TJ9ygZxsNXMvxPv1x0DWS+GCbzzfnY6X9cZ/+
-         qkBMf4gu/uuprXCiBit4s1jbkrh5ACIQxAPnYZoIS2KrPQbKWqPKMwk5fgsCgUJ5HyXA
-         eSKecA1JtVz1+tKv84R0X6NkNCZ6aDUeHC+Tz97HsnYVIl8bvYIszdP6jYP2FKvoDYMB
-         BUuqrEOEWlQxHcBglTGXEcYumSKeY/wUzV4hCLaKijQcgfEUls6Xj74T4Myj8qJ7cSPK
-         7ULYbCthziu8V7VghwALXOkb15JXswM6PsD/3NeqW+O514n6KCUPj5CUIgfZPZHe2smx
-         7KeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vfXm6wroocpySxHofx5c4RN9rb7rL72Tf/ud1qMqmoY=;
-        b=idV2as2nOnwdF416GM2UtvtV2qL08aX3mPL3Yt1KWkr21zgIgr6pykrsGnqeBqfaEv
-         4yINyOSg2/dy3nVibUFE6tJqD/lpoZ8g+OYG4XmuilC3xMc/4BQS3Lp6WEtWQJg7YKvH
-         fGadAyd7EjA8MIK3WwtKlceJvYpaml/fBGSkjm/jNgBR/QvdvPj6eA0sDhHNT5efhAo7
-         GAurCqX5J3TTmu/pvOkdPCzlOSrVWLVjqIQL5BguAIBDbf0QAGzswcKQCG7iEsgCc6Gj
-         FTnG/cRzQ5ZnkRaGGR83CQGXC8uBbtAHrbueZfBusX+cn+8ciIp+dAEfEFK4YA/WqyPY
-         6ueA==
-X-Gm-Message-State: APjAAAWtmWXJiEsuPMjh6K85uRJ2IdLljyQNOBtq67uQ3vQpjhQzl3I7
-        7thxxrk6WuiD6HkD7ihN9eY=
-X-Google-Smtp-Source: APXvYqzrNLmEcJpG0JJJYPq9vWiBHeyQpiDFG0zq4ESkVj7MdFyCrN+aQYkJOUlWsi2n+v7u1EDBSA==
-X-Received: by 2002:a19:3f51:: with SMTP id m78mr7469292lfa.70.1576804204162;
-        Thu, 19 Dec 2019 17:10:04 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id a12sm3542761ljk.48.2019.12.19.17.10.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Dec 2019 17:10:03 -0800 (PST)
-Subject: Re: [PATCH v2 9/9] dt-bindings: input: elants-i2c: Document eKTF3624
-To:     Rob Herring <robh@kernel.org>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, Henrik Rydberg <rydberg@bitmath.org>,
-        James Chen <james.chen@emc.com.tw>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>,
-        Scott Liu <scott.liu@emc.com.tw>
-References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
- <882916345a8aa2dc545a1bd2ca150cf913371d1a.1576079249.git.mirq-linux@rere.qmqm.pl>
- <20191219214254.GA25646@bogus>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <0f91ef03-42f7-9fcc-2394-2d10a9dbbb17@gmail.com>
-Date:   Fri, 20 Dec 2019 04:10:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 19 Dec 2019 20:10:35 -0500
+Received: from correo.us.es ([193.147.175.20]:47896 "EHLO mail.us.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727150AbfLTBKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 20:10:35 -0500
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id 9E39CF25A7
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 02:10:32 +0100 (CET)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 924FADA705
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 02:10:32 +0100 (CET)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id 7C01CDA70A; Fri, 20 Dec 2019 02:10:32 +0100 (CET)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 58DB7DA70A;
+        Fri, 20 Dec 2019 02:10:30 +0100 (CET)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Fri, 20 Dec 2019 02:10:30 +0100 (CET)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (sys.soleta.eu [212.170.55.40])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id 358254265A5A;
+        Fri, 20 Dec 2019 02:10:30 +0100 (CET)
+Date:   Fri, 20 Dec 2019 02:10:30 +0100
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>, wenxu <wenxu@ucloud.cn>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] netfilter: nf_flow_table: fix big-endian integer overflow
+Message-ID: <20191220011030.asdeqwlnrztu6byi@salvia>
+References: <20191210202443.2226043-1-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <20191219214254.GA25646@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191210202443.2226043-1-arnd@arndb.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-20.12.2019 00:43, Rob Herring пишет:
-> On Wed, 11 Dec 2019 17:03:26 +0100, =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= wrote:
->> From: Dmitry Osipenko <digetx@gmail.com>
->>
->> The eKTF3624 hardware is similar to eKTH3500.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
->> ---
->>  Documentation/devicetree/bindings/input/elants_i2c.txt | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
+On Tue, Dec 10, 2019 at 09:24:28PM +0100, Arnd Bergmann wrote:
+> In some configurations, gcc reports an integer overflow:
 > 
-> Acked-by: Rob Herring <robh@kernel.org>
+> net/netfilter/nf_flow_table_offload.c: In function 'nf_flow_rule_match':
+> net/netfilter/nf_flow_table_offload.c:80:21: error: unsigned conversion from 'int' to '__be16' {aka 'short unsigned int'} changes value from '327680' to '0' [-Werror=overflow]
+>    mask->tcp.flags = TCP_FLAG_RST | TCP_FLAG_FIN;
+>                      ^~~~~~~~~~~~
 > 
+> From what I can tell, we want the upper 16 bits of these constants,
+> so they need to be shifted in cpu-endian mode.
+> 
+> Fixes: c29f74e0df7a ("netfilter: nf_flow_table: hardware offload support")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Thank you very much!
+Applied, thanks.
