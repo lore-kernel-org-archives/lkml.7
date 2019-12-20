@@ -2,115 +2,103 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C216AC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 17:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F36C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 17:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97566206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 17:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5007C206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 17:53:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sbiLKIjo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="mmDSDsCJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727432AbfLTRpA (ORCPT
+        id S1727432AbfLTRx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 12:45:00 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54356 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727388AbfLTRpA (ORCPT
+        Fri, 20 Dec 2019 12:53:57 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:11664 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727390AbfLTRx5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 12:45:00 -0500
-Received: by mail-wm1-f66.google.com with SMTP id b19so9757960wmj.4
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 09:44:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Vb72jc4spAcABwLaDNL79fswtIsTkbWjFqxfZ/KoMkQ=;
-        b=sbiLKIjoBcIPp6lfdCUskCN7rdWS5ztUieDzd5hGCa43P6jDxZRKu/2VB4JjQp9fVv
-         5ipiNrhR2ruTMTgIxzvyVQjCpK8kngCih3h1WZcvdZUxmdYoVwdWLuLg8jW2PMdM6MfW
-         bERjEraoO7LAhdGBDaogKaO0v3ftBxYc1j9Rn+yeAnMdM/Tq9YIskDox2i40bI9O5n8J
-         yt6NPD2X3le9L6KopHwuS5nKvGoHjZnnmSMunaQ9w+HSSewc9RhkJMDyIucnLCYY+YzL
-         +bSwUY9/fXkbpP6U0T+YO6mSB9o10qjqDWqepqez56HVJu4vATttHZfXxP7/khnVcJ/T
-         Mjrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Vb72jc4spAcABwLaDNL79fswtIsTkbWjFqxfZ/KoMkQ=;
-        b=QfECuAa4+mAGecz4AItLbyOSzQWHh5SoOtIeilE9M6J9BCI5nCyydf3LOdRySYN6NR
-         4tHfU9Um03ridUL5eDOzkUOYGOZRAiqU0ohTNW+Sk3HhXW9NoOhQsDU8BGPla+sB8jcL
-         oGroMGrURfRH/ur/eFelc5s26nLZ1f1HjH3WoV2eO0QlmGDsAA5mjfg3mdcXkK32TZ3s
-         EqUijs5PxJoXMH2MjTGayisbfKLlFRQ1M9Zl6m9wxEe4Mv5OsZ8Z4BP7YF5dNWenCW4J
-         H5y1ABy1pd/54KXfIzXHTdgXGZljbXJZdgboma6FfBqhb7EfU5HppJWrmKWKYo55Vxti
-         3zjg==
-X-Gm-Message-State: APjAAAXYCd/TRYVIEm9Iuwgsa9h1WXi5PPBoapJ+vLkHzjfRlaQVsjhN
-        +YDn3XsiUvL96m/sWafbFZI=
-X-Google-Smtp-Source: APXvYqxrHraXo73B9lFeIY5XoWKQTek2jE0WVcL0zSjObjZUUXEqjBNuXikx/k4BRqrNKhXKKYAEyw==
-X-Received: by 2002:a1c:1f51:: with SMTP id f78mr16881907wmf.60.1576863897866;
-        Fri, 20 Dec 2019 09:44:57 -0800 (PST)
-Received: from localhost.localdomain (dslb-092-073-054-252.092.073.pools.vodafone-ip.de. [92.73.54.252])
-        by smtp.gmail.com with ESMTPSA id b68sm10715536wme.6.2019.12.20.09.44.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 09:44:57 -0800 (PST)
-From:   Michael Straube <straube.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH] staging: rtl8188eu: use break to exit while loop
-Date:   Fri, 20 Dec 2019 18:44:13 +0100
-Message-Id: <20191220174413.13913-1-straube.linux@gmail.com>
-X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 20 Dec 2019 12:53:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1576864432;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=1s9X+rtXJnxaA4mRnY408QIKXl/OpEB6Wrj3+YsevTY=;
+        b=mmDSDsCJeB8ADsanGUHtFo6lnZipZuAkHKaWsM7ejFsWldYLTGaGNe+UbYTe/8anfD
+        UM+9h6qTEnl6plNGMnPZpUYFmCZMOVYyMV2c2ED9LDG9vXvgCzXpuUcUTuPC3xnN2vfv
+        OfzXWq+df5TW/QeDuLHVziT3cEDDpKXzQeG86jIXubyJGsm0awj5mOr8HchUStsrnzS7
+        IHeiBr2+0AbfZ+zhZIxQAuiNTIo0JnGH0KDc2tx0T6Zj6scVTxWRxVCzivxQntFI5Bps
+        xyYqoypqwkr3KIiXDtAF285MVUmm+zS7SQHIijgEO2V7nYnU1jm7cJkNnAv0OkahGSNU
+        erAg==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/vuwDOpExo="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.1.1 DYNA|AUTH)
+        with ESMTPSA id 4012cfvBKHrn99x
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Fri, 20 Dec 2019 18:53:49 +0100 (CET)
+Content-Type: text/plain; charset=iso-8859-1
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [BUG] CI20: interrupt-controller@10001000 didn't like hwirq-0x0  to VIRQ8 mapping (rc=-19)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <1576862814.3.2@crapouillou.net>
+Date:   Fri, 20 Dec 2019 18:53:48 +0100
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        MIPS Creator CI20 Development 
+        <mips-creator-ci20-dev@googlegroups.com>,
+        Zhou Yanjie <zhouyanjie@zoho.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D90B0805-EDD2-48A0-8DFC-FD3135B86787@goldelico.com>
+References: <8BA39E30-53CB-47DB-8890-465ACB760402@goldelico.com> <1576861276.3.1@crapouillou.net> <4ea8fd0952b940b37a174fded9b5ebda@www.loen.fr> <1576862814.3.2@crapouillou.net>
+To:     Paul Cercueil <paul@crapouillou.net>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The variable bContinual in Efuse_PgPacketRead() is only used to break
-out of a while loop. Remove the variable and use break instead.
+Hi Paul,
 
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
----
- drivers/staging/rtl8188eu/core/rtw_efuse.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+> Am 20.12.2019 um 18:26 schrieb Paul Cercueil <paul@crapouillou.net>:
+>=20
+> Hi Marc,
+>=20
+> I wasn't aware of the bug, that's why there is no tag.
+> I can send a V2 with a fix tag (and Cc linux-stable) if Nikolaus =
+reports it working.
 
-diff --git a/drivers/staging/rtl8188eu/core/rtw_efuse.c b/drivers/staging/rtl8188eu/core/rtw_efuse.c
-index d9b0f9e6235c..0b86ae8338d9 100644
---- a/drivers/staging/rtl8188eu/core/rtw_efuse.c
-+++ b/drivers/staging/rtl8188eu/core/rtw_efuse.c
-@@ -402,7 +402,6 @@ static u16 Efuse_GetCurrentSize(struct adapter *pAdapter)
- int Efuse_PgPacketRead(struct adapter *pAdapter, u8 offset, u8 *data)
- {
- 	u8 ReadState = PG_STATE_HEADER;
--	int	bContinual = true;
- 	int	bDataEmpty = true;
- 	u8 efuse_data, word_cnts = 0;
- 	u16	efuse_addr = 0;
-@@ -422,7 +421,7 @@ int Efuse_PgPacketRead(struct adapter *pAdapter, u8 offset, u8 *data)
- 	/*  <Roger_TODO> Efuse has been pre-programmed dummy 5Bytes at the end of Efuse by CP. */
- 	/*  Skip dummy parts to prevent unexpected data read from Efuse. */
- 	/*  By pass right now. 2009.02.19. */
--	while (bContinual && AVAILABLE_EFUSE_ADDR(efuse_addr)) {
-+	while (AVAILABLE_EFUSE_ADDR(efuse_addr)) {
- 		/*   Header Read ------------- */
- 		if (ReadState & PG_STATE_HEADER) {
- 			if (efuse_OneByteRead(pAdapter, efuse_addr, &efuse_data) && (efuse_data != 0xFF)) {
-@@ -464,7 +463,7 @@ int Efuse_PgPacketRead(struct adapter *pAdapter, u8 offset, u8 *data)
- 					ReadState = PG_STATE_HEADER;
- 				}
- 			} else {
--				bContinual = false;
-+				break;
- 			}
- 		} else if (ReadState & PG_STATE_DATA) {
- 			/*   Data section Read ------------- */
--- 
-2.24.0
+Yes it works! Messages are gone, CI20 still boots, and cat =
+/proc/interrupts shows them counting upwards.
+
+Unfortunately I can't answer to the original [PATCH], but please add my
+
+Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+
+to v2.
+
+>=20
+> -Paul
+>=20
+>=20
+> Le ven., d=E9c. 20, 2019 at 17:09, Marc Zyngier <maz@kernel.org> a =
+=E9crit :
+>> On 2019-12-20 17:01, Paul Cercueil wrote:
+>>> Hi Nikolaus,
+>>> Try with this: https://lkml.org/lkml/2019/11/22/1831
+>>> And don't hesitate to add your Tested-by :)
+>> Is that an actual fix? It wasn't tagged as such, which is why
+>> I didn't send it right away... It'd  be good to find out.
+
+
+BR and thanks,
+Nikolaus
+
 
