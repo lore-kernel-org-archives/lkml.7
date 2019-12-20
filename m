@@ -2,148 +2,117 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A97C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE79C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A831F24679
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:55:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LpLIk+iW"
+	by mail.kernel.org (Postfix) with ESMTP id 4C8B724679
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:56:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbfLTLzY (ORCPT
+        id S1727347AbfLTL4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 06:55:24 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40153 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727184AbfLTLzX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 06:55:23 -0500
-Received: by mail-lf1-f68.google.com with SMTP id i23so6820813lfo.7
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 03:55:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=DPm8u606XYLiFYRzZPxYwiipRU6meoWwaOXT6w0bjOM=;
-        b=LpLIk+iWEQmCJKmxxQtjOBI5VPgYmQDAki9aDGhAS5pRI26oTknEGVSkm+aWTsM91S
-         2433nhpaTvJk79vRxSNlSJbZLx0VzRRaWvNq5tQ7IGd84VjyDNNlRaObga3xfNmsLXml
-         o5leSv2l4rwD1xzRNn5TVD/86OC/oBRDoxYT0vjK2jVgBZotNnqBraKgqsKOTYaU4NIz
-         kchm8GamnHjLnQRBycri25rloiDJTTfcRfDjHc+EWQZkCO7HXrxAQKaSs9Bqo7coBPP/
-         DI9veVI5XkDQfIK+TgJePmtO3gMnAUdW0vsLpuat50vIMmgswqIQnfRZKBC2KusAxdUn
-         uZ0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=DPm8u606XYLiFYRzZPxYwiipRU6meoWwaOXT6w0bjOM=;
-        b=GF1Pd7KK509F7aGt0mmWB9xCFBlHuCej4fHEY9Fl+q9AEEnFZlsc+zSQ1clFiGLwO3
-         Ji8HIN68kmRi9IheMd7igjHUcgE7dloPkukJGk2QUgmpmdshqxH+bLHX4YoGjehwVS2v
-         S4zI6CiSJXkOry8DfaQlznp2FRSHxiYyQWWD7LCpfM5XICtKT18ZjauwnKgae+tfo5Pp
-         eINPME/l0aINz2xvKJ4rlQmNwsTfJFWJnnELO2waX52y7fn8X3npLonLKbwidTSnTbMe
-         VZuQLDVv6D0+wuwBp87YC7k2GhiXj+CeIVBoGVvgRi/NkAVC4sM622+YLLUo6dIrTD+6
-         4+bQ==
-X-Gm-Message-State: APjAAAVg7QR1KwnYMgvxagR5E+6TEnbJwtJnL9cVNMA9ugHq3pc/V63n
-        xFgzYwSKUpd4yd18jhatfufUFJdcQFqcNjMtSOK6mg==
-X-Google-Smtp-Source: APXvYqx1g+drEwy2vCmHS5tkE2wiSoi/HAfHYDfVNuMQEs0wR3lCx84+yKxERoWVh28TXKUehXa2+CgnbmkpWleGBuo=
-X-Received: by 2002:ac2:5147:: with SMTP id q7mr8670447lfd.87.1576842921377;
- Fri, 20 Dec 2019 03:55:21 -0800 (PST)
+        Fri, 20 Dec 2019 06:56:15 -0500
+Received: from relay.sw.ru ([185.231.240.75]:41354 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727177AbfLTL4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 06:56:15 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1iiGs9-0006Sg-TL; Fri, 20 Dec 2019 14:55:10 +0300
+Subject: Re: [PATCH RFC 1/3] block: Add support for REQ_OP_ASSIGN_RANGE
+ operation
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        tytso@mit.edu, adilger.kernel@dilger.ca, ming.lei@redhat.com,
+        osandov@fb.com, jthumshirn@suse.de, minwoo.im.dev@gmail.com,
+        damien.lemoal@wdc.com, andrea.parri@amarulasolutions.com,
+        hare@suse.com, tj@kernel.org, ajay.joshi@wdc.com, sagi@grimberg.me,
+        dsterba@suse.com, chaitanya.kulkarni@wdc.com, bvanassche@acm.org,
+        dhowells@redhat.com, asml.silence@gmail.com
+References: <157599668662.12112.10184894900037871860.stgit@localhost.localdomain>
+ <157599696813.12112.14140818972910110796.stgit@localhost.localdomain>
+ <yq1woatc8zd.fsf@oracle.com>
+ <3f2e341b-dea4-c5d0-8eb0-568b6ad2f17b@virtuozzo.com>
+ <yq1a77oc56s.fsf@oracle.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <625c9ee4-bedb-ff60-845e-2d440c4f58aa@virtuozzo.com>
+Date:   Fri, 20 Dec 2019 14:55:09 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191220160639.3406a5de@canb.auug.org.au>
-In-Reply-To: <20191220160639.3406a5de@canb.auug.org.au>
-From:   Anders Roxell <anders.roxell@linaro.org>
-Date:   Fri, 20 Dec 2019 12:55:10 +0100
-Message-ID: <CADYN=9JjqvNWEsHLW5+GgSvkUkuz_6iMpD=X4Vk6nLQXtXa2Dw@mail.gmail.com>
-Subject: Re: linux-next: Tree for Dec 20
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        martin.petersen@oracle.com, Stanley Chu <stanley.chu@mediatek.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <yq1a77oc56s.fsf@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Dec 2019 at 06:06, Stephen Rothwell <sfr@canb.auug.org.au> wrote=
-:
->
-> Hi all,
+Hi, Martin,
 
-Hi all,
+On 20.12.2019 01:37, Martin K. Petersen wrote:
+> 
+> Kirill,
+> 
+>> Hm. BLKDEV_ZERO_NOUNMAP is used in __blkdev_issue_write_zeroes() only.
+>> So, do I understand right that we should the below two?:
+>>
+>> 1) Introduce a new flag BLKDEV_ZERO_ALLOCATE for
+>> blkdev_issue_write_zeroes().
+> 
+>> 2) Introduce a new flag REQ_NOZERO in enum req_opf.
+> 
+> Something like that. If zeroing is a problem for you.
 
->
-> News: There will be no linux-next releases until January 6 (unless I
-> get very bored :-)).
->
-> Changes since 20191219:
+My intention is to use this in fs allocators to notify virtual block devices
+about allocated blocks (like in patch [3/3]). Filesystems allocators know about
+written and unwritten extents, and they don't need a zeroing of allocated blocks.
 
-on arm64 I see this:
+Since a block range allocation action is less complicated (and faster), than
+operation of allocation + zeroing of allocated blocks (at least for some devices),
+we just choose it as the fastest. This is the reason we avoid zeroing.
 
-../drivers/scsi/ufs/ufs-mediatek.c: In function =C3=A2=E2=82=AC=CB=9Cufs_mt=
-k_setup_ref_clk=C3=A2=E2=82=AC=E2=84=A2:
-../drivers/scsi/ufs/ufs-mediatek.c:93:23: error: storage size of
-=C3=A2=E2=82=AC=CB=9Cres=C3=A2=E2=82=AC=E2=84=A2 isn=C3=A2=E2=82=AC=E2=84=
-=A2t known
-  struct arm_smccc_res res;
-                       ^~~
-../drivers/scsi/ufs/ufs-mediatek.c:21:2: error: implicit declaration
-of function =C3=A2=E2=82=AC=CB=9Carm_smccc_smc=C3=A2=E2=82=AC=E2=84=A2
-[-Werror=3Dimplicit-function-declaration]
-  arm_smccc_smc(MTK_SIP_UFS_CONTROL, \
-  ^~~~~~~~~~~~~
-../drivers/scsi/ufs/ufs-mediatek.c:101:3: note: in expansion of macro
-=C3=A2=E2=82=AC=CB=9Cufs_mtk_ref_clk_notify=C3=A2=E2=82=AC=E2=84=A2
-   ufs_mtk_ref_clk_notify(on, res);
-   ^~~~~~~~~~~~~~~~~~~~~~
-../drivers/scsi/ufs/ufs-mediatek.c:21:16: error:
-=C3=A2=E2=82=AC=CB=9CMTK_SIP_UFS_CONTROL=C3=A2=E2=82=AC=E2=84=A2 undeclared=
- (first use in this function); did
-you mean =C3=A2=E2=82=AC=CB=9CTX_HIBERN8_CONTROL=C3=A2=E2=82=AC=E2=84=A2?
-  arm_smccc_smc(MTK_SIP_UFS_CONTROL, \
-                ^~~~~~~~~~~~~~~~~~~
-../drivers/scsi/ufs/ufs-mediatek.c:101:3: note: in expansion of macro
-=C3=A2=E2=82=AC=CB=9Cufs_mtk_ref_clk_notify=C3=A2=E2=82=AC=E2=84=A2
-   ufs_mtk_ref_clk_notify(on, res);
-   ^~~~~~~~~~~~~~~~~~~~~~
-../drivers/scsi/ufs/ufs-mediatek.c:21:16: note: each undeclared
-identifier is reported only once for each function it appears in
-  arm_smccc_smc(MTK_SIP_UFS_CONTROL, \
-                ^~~~~~~~~~~~~~~~~~~
-../drivers/scsi/ufs/ufs-mediatek.c:101:3: note: in expansion of macro
-=C3=A2=E2=82=AC=CB=9Cufs_mtk_ref_clk_notify=C3=A2=E2=82=AC=E2=84=A2
-   ufs_mtk_ref_clk_notify(on, res);
-   ^~~~~~~~~~~~~~~~~~~~~~
-../drivers/scsi/ufs/ufs-mediatek.c:93:23: warning: unused variable
-=C3=A2=E2=82=AC=CB=9Cres=C3=A2=E2=82=AC=E2=84=A2 [-Wunused-variable]
-  struct arm_smccc_res res;
-                       ^~~
-cc1: some warnings being treated as errors
-make[4]: *** [../scripts/Makefile.build:266:
-drivers/scsi/ufs/ufs-mediatek.o] Error 1
-make[4]: Target '__build' not remade because of errors.
-make[3]: *** [../scripts/Makefile.build:503: drivers/scsi/ufs] Error 2
-make[3]: Target '__build' not remade because of errors.
-make[2]: *** [../scripts/Makefile.build:503: drivers/scsi] Error 2
-../drivers/staging/wilc1000/hif.c: In function =C3=A2=E2=82=AC=CB=9Cwilc_pa=
-rse_join_bss_param=C3=A2=E2=82=AC=E2=84=A2:
-../drivers/staging/wilc1000/hif.c:574:45: warning: array subscript 2
-is above array bounds of =C3=A2=E2=82=AC=CB=9Cu32[2]=C3=A2=E2=82=AC=E2=84=
-=A2 {aka =C3=A2=E2=82=AC=CB=9Cunsigned int[2]=C3=A2=E2=82=AC=E2=84=A2}
-[-Warray-bounds]
-    param->akm_suites[i] =3D crypto->akm_suites[i] & 0xFF;
-                           ~~~~~~~~~~~~~~~~~~^~~
-make[2]: Target '__build' not remade because of errors.
-make[1]: *** [/srv/jenkins/kernel/next/Makefile:1694: drivers] Error 2
-make[1]: Target 'Image' not remade because of errors.
-make[1]: Target 'modules' not remade because of errors.
-make: *** [Makefile:179: sub-make] Error 2
-make: Target 'Image' not remade because of errors.
-make: Target 'modules' not remade because of errors.
+> Right now we offer the following semantics:
+> 
+> 	Deallocate, no zeroing (discard)
+> 
+> 	Optionally deallocate, zeroing (zeroout)
+> 
+> 	Allocate, zeroing (zeroout + NOUNMAP)
+> 
+> Some devices also implement a fourth option which would be:
+> 
+> 	Anchor: Allocate, no zeroing
+> 
+>> Won't this confuse a reader that we have blkdev_issue_write_zeroes(),
+>> which does not write zeroes sometimes? Maybe we should rename
+>> blkdev_issue_write_zeroes() in some more generic name?
+> 
+> Maybe. The naming is what it is for hysterical raisins and reflects how
+> things are implemented in the storage protocols. I wouldn't worry too
+> much about that. We can rename things if need be but we shouldn't plumb
+> an essentially identical operation through the block stack just to
+> expose a different name at the top.
 
-Cheers,
-Anders
+Not introduction a new operation is a good thing. Especially, since we don't
+need a specific max_xxx_xxx_sectors != max_write_zeroes_sectors for it.
+
+I'll rework the patch in this way (it seems it will become pretty small
+after that).
+
+One more thing to discuss. The new REQ_NOZERO flag won't be supported
+by many block devices (their number will be even less, than number of
+REQ_OP_WRITE_ZEROES supporters). Will this be a good thing, in case
+of we will be completing BLKDEV_ZERO_ALLOCATE bios in __blkdev_issue_write_zeroes()
+before splitting? I mean introduction of some flag in struct request_queue::limits.
+Completion of them with -EOPNOTSUPP in block devices drivers looks
+suboptimal for me.
+
+Thanks,
+Kirill
