@@ -2,177 +2,103 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB882C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C220FC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C060F227BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93612227BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:51:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ATnpg4dk"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Lz51U0QI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbfLTAt7 (ORCPT
+        id S1727089AbfLTAvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 19:49:59 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:34373 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726998AbfLTAt7 (ORCPT
+        Thu, 19 Dec 2019 19:51:05 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35381 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726952AbfLTAvF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 19:49:59 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576802998; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=jUpr23tiVEby6XBvi3JbQitdR58sTc5kIsZaB83jplw=;
- b=ATnpg4dk2+vg7gnZmYUvQJ0ePSBvT0y+pU0bvjl82KEOdrX/zIzdw9EsBuqnRVDFJmep8FqS
- utD/MG4fvaBBMjHdQcmyIBAOq4lwJl0jFsceXb7A/iZBYnM3MhFaru0DPrwPTwvVwuGdtbI7
- EicKdxz3WJ0E9HdbWrOQTvHkDbY=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5dfc1ab3.7efbe2d7c768-smtp-out-n01;
- Fri, 20 Dec 2019 00:49:55 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 377D1C4479D; Fri, 20 Dec 2019 00:49:54 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 83C20C433A2;
-        Fri, 20 Dec 2019 00:49:53 +0000 (UTC)
+        Thu, 19 Dec 2019 19:51:05 -0500
+Received: by mail-pf1-f194.google.com with SMTP id b19so4256796pfo.2
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 16:51:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tOcPFNf2vX0/BY8Sft5h0txWxIib2Ekx0BekGv4rKT8=;
+        b=Lz51U0QI0OgK6Qj5WmzoQvNIGP4CNPWEYzgHpnhPem/ApUZzq9fpsuh4efxpqxpLC8
+         AomHskpcZgljqvzpJ7UDmUVDmKs9QxmlDGQapttcc3GKAwJkVqsQzJtVFxRpyPwPDeKU
+         4mI/OaP29a3yrqQWiJVpybc2z2ttYiTSl6/rk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tOcPFNf2vX0/BY8Sft5h0txWxIib2Ekx0BekGv4rKT8=;
+        b=ASHX50fh2BO4Th6RRZBnJWTOliJD8GgN7WLmhd6nIkd3TZhMmBhmC/5pTtDn/h3Gic
+         bhbpukfjfKJVZYmeglgZaz91qf00ZUTapcCxbWhZ5tyI6DWYFOmoEqHhBD9bt/3tss+U
+         Av/XEbuCzRao/DsjTIA6qt5uBlk+8PmrdoaFSD2cz++/NACLmOhmioGAdOpnkPla4lWT
+         qCfV6V0piZ1Aj67HNVXo9EZqOoMnvWdrHInWMKgL11IMbee460V9PIVXuH8uDkRfesgM
+         JuEaYyFVRjmQwtEziv0RJeGRjJ0EGvBu9pEaapfBAuYBjNfrDqGoaEwDvf1VA+psFdUy
+         r+mw==
+X-Gm-Message-State: APjAAAXRg00mRekDTwFNRzaJ6xmLMGkWLnFzZK4SddJx2Kchjctvjdzm
+        QEr35zLpHz/3hOOUfYYlnfihoA==
+X-Google-Smtp-Source: APXvYqx0zMwXaFm3Ll6uQnl1zySKniwcSnnlHZJRpdZrbbpWoYT0xnd3kTkZAlmnuc9dsa5CoVNtUA==
+X-Received: by 2002:a63:d406:: with SMTP id a6mr12217402pgh.264.1576803064022;
+        Thu, 19 Dec 2019 16:51:04 -0800 (PST)
+Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
+        by smtp.gmail.com with ESMTPSA id w8sm9466116pfn.186.2019.12.19.16.51.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 16:51:03 -0800 (PST)
+From:   Prashant Malani <pmalani@chromium.org>
+To:     enric.balletbo@collabora.com, groeck@chromium.org,
+        bleung@chromium.org, lee.jones@linaro.org
+Cc:     linux-kernel@vger.kernel.org,
+        Prashant Malani <pmalani@chromium.org>
+Subject: [PATCH v2 2/2] mfd: cros_ec: Add usbpd-notify to usbpd_charger
+Date:   Thu, 19 Dec 2019 16:49:47 -0800
+Message-Id: <20191220004946.113151-2-pmalani@chromium.org>
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 20 Dec 2019 08:49:53 +0800
-From:   cang@codeaurora.org
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Asutosh Das <asutoshd@codeaurora.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] phy: qcom-qmp: Add optional SW reset
-In-Reply-To: <ff83ac1f0ec6bca1379e8b873fd30aa2@codeaurora.org>
-References: <20191219150433.2785427-1-vkoul@kernel.org>
- <20191219150433.2785427-4-vkoul@kernel.org>
- <ff83ac1f0ec6bca1379e8b873fd30aa2@codeaurora.org>
-Message-ID: <9ef99dcac59dbdc59c7e5eb1a8724ea2@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-20 08:22, cang@codeaurora.org wrote:
-> On 2019-12-19 23:04, Vinod Koul wrote:
->> For V4 QMP UFS Phy, we need to assert reset bits, configure the phy 
->> and
->> then deassert it, so add optional has_sw_reset flag and use that to
->> configure the QPHY_SW_RESET register.
->> 
->> Signed-off-by: Vinod Koul <vkoul@kernel.org>
->> ---
->>  drivers/phy/qualcomm/phy-qcom-qmp.c | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
->> 
->> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c
->> b/drivers/phy/qualcomm/phy-qcom-qmp.c
->> index 06f971ca518e..80304b7cd895 100644
->> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
->> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
->> @@ -1023,6 +1023,9 @@ struct qmp_phy_cfg {
->> 
->>  	/* true, if PCS block has no separate SW_RESET register */
->>  	bool no_pcs_sw_reset;
->> +
->> +	/* true if sw reset needs to be invoked */
->> +	bool has_sw_reset;
->>  };
->> 
->>  /**
->> @@ -1391,6 +1394,7 @@ static const struct qmp_phy_cfg 
->> sm8150_ufsphy_cfg = {
->> 
->>  	.is_dual_lane_phy	= true,
->>  	.no_pcs_sw_reset	= true,
->> +	.has_sw_reset		= true,
->>  };
->> 
->>  static void qcom_qmp_phy_configure(void __iomem *base,
->> @@ -1475,6 +1479,9 @@ static int qcom_qmp_phy_com_init(struct qmp_phy 
->> *qphy)
->>  			     SW_USB3PHY_RESET_MUX | SW_USB3PHY_RESET);
->>  	}
->> 
->> +	if (cfg->has_sw_reset)
->> +		qphy_setbits(serdes, cfg->regs[QPHY_SW_RESET], SW_RESET);
->> +
-> 
-> Are you sure you want to set this in the serdes register? QPHY_SW_RESET
-> is in its pcs register.
-> 
->>  	if (cfg->has_phy_com_ctrl)
->>  		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
->>  			     SW_PWRDN);
->> @@ -1651,6 +1658,9 @@ static int qcom_qmp_phy_enable(struct phy *phy)
->>  	if (cfg->has_phy_dp_com_ctrl)
->>  		qphy_clrbits(dp_com, QPHY_V3_DP_COM_SW_RESET, SW_RESET);
->> 
->> +	if (cfg->has_sw_reset)
->> +		qphy_clrbits(pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
->> +
-> 
-> Yet you are clearing it from pcs register.
-> 
-> Regards,
-> Can Guo
-> 
->>  	/* start SerDes and Phy-Coding-Sublayer */
->>  	qphy_setbits(pcs, cfg->regs[QPHY_START_CTRL], cfg->start_ctrl);
+Add the cros-usbpd-notify driver as a cell for the cros_usbpd_charger
+subdevice on non-ACPI platforms.
 
-I thought your change would be like this
+This driver allows other cros-ec devices to receive PD event
+notifications from the Chrome OS Embedded Controller (EC) via a
+notification chain.
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c 
-b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 8e642a6..a4ab4b7 100755
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -166,6 +166,7 @@ static const unsigned int 
-sdm845_ufsphy_regs_layout[] = {
-  };
+Signed-off-by: Prashant Malani <pmalani@chromium.org>
+---
 
-  static const unsigned int sm8150_ufsphy_regs_layout[] = {
-+       [QPHY_SW_RESET]                 = 0x08,
-         [QPHY_START_CTRL]               = 0x00,
-         [QPHY_PCS_READY_STATUS]         = 0x180,
-  };
-@@ -1390,7 +1391,6 @@ static const struct qmp_phy_cfg sm8150_ufsphy_cfg 
-= {
-         .pwrdn_ctrl             = SW_PWRDN,
+Changes in v2:
+- Removed auto-generated Change-Id.
 
-         .is_dual_lane_phy       = true,
--       .no_pcs_sw_reset        = true,
-  };
+ drivers/mfd/cros_ec_dev.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-  static void qcom_qmp_phy_configure(void __iomem *base,
-@@ -1475,6 +1475,9 @@ static int qcom_qmp_phy_com_init(struct qmp_phy 
-*qphy)
-                              SW_USB3PHY_RESET_MUX | SW_USB3PHY_RESET);
-         }
+diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+index c4b977a5dd966..1dde480f35b93 100644
+--- a/drivers/mfd/cros_ec_dev.c
++++ b/drivers/mfd/cros_ec_dev.c
+@@ -85,6 +85,9 @@ static const struct mfd_cell cros_ec_sensorhub_cells[] = {
+ static const struct mfd_cell cros_usbpd_charger_cells[] = {
+ 	{ .name = "cros-usbpd-charger", },
+ 	{ .name = "cros-usbpd-logger", },
++#ifndef CONFIG_ACPI
++	{ .name = "cros-usbpd-notify", },
++#endif
+ };
+ 
+ static const struct cros_feature_to_cells cros_subdevices[] = {
+-- 
+2.24.1.735.g03f4e72817-goog
 
-+       if ((cfg->type == PHY_TYPE_UFS) && (!cfg->no_pcs_sw_reset))
-+               qphy_setbits(pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
-+
-         if (cfg->has_phy_com_ctrl)
-                 qphy_setbits(serdes, 
-cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
-                              SW_PWRDN);
-
-Regards,
-Can Guo.
