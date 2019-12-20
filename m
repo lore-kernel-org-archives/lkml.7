@@ -2,120 +2,137 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D928C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7444EC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FEAF24679
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:09:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="OcSHhzyh"
+	by mail.kernel.org (Postfix) with ESMTP id 4B09824679
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:10:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576825822;
+	bh=lu+82vmeF72yERVCgMIPNu3jeKVIiSz/mUtEo62bEpA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dnpVbplzTxFTuAOAPdUJqNR7EF6q83mL72+ugaVPc/LfGOAlEeYp0KcTR15nNSR61
+	 MhipmDbpDQsFOJML9rSa9/SVYlcrXADC5YNECrt7Vj673/mY7vsyzh4DgUZrSX5RtY
+	 K2MLHecdnFmbbAF/Md4wDEybZV4s5kTNtZcbcwPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbfLTHJC (ORCPT
+        id S1727262AbfLTHKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 02:09:02 -0500
-Received: from mail-eopbgr50042.outbound.protection.outlook.com ([40.107.5.42]:27534
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726030AbfLTHJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 02:09:02 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iteSw1DRyC7prXjgY5EkZKH8u1UtiKtpyfM/KsIMbGdhO9ilG2Lvc9n8aS/nKwGpqhvT+misqtWCrDBxZfS7YVJF/qXDq9J2u9ppYPlZL0WlbrIrfQcXLMyObfjPC0LXCqeUoz3dr2Bv9kmLkd3/APRKaTRZoD1kRB/fNSV+vbascFZQM3ABPCgU8ZEYlQBU8/WZJQUT7GWZ8E6MD+JiD2CgGD4l56+Y0tVdotx7BN77nGvqG01NERUs2kvTo85FNIB6OwG948lBjvZFhgHByzN3+0TVBaiwLbPI6g8mJ9RjtN0OIOgWP3VVr4I5ymnoaTwfixYLXZkTgXjgMJzg9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lUbK6qd8pyegHrh3axa0QBYf2i/k/2R5b4uW0voqH14=;
- b=S3jRrlxjDx0YChr0ReGab/5mSPA727KBwrTt9SPuJhTpR7IQvPJnoPS5+kEmf5iOS0dgeYoq4X7Dah/YK7QljGkXMnsP+BVtsxf/OCzui1LssZH+gHZ9FTONf+G5Cq9vWA0DHKsioxY5FBA35Vo99Vb4/wrzvqhnJS/MtsHGkbU+CEMb4u9yxNaUSrWL4yKwkpaSQhaJTyxm0oqGfNl4Pweb7CNgGbXahAf8YCS3Gf7aUch0i1e3dV3N3mS9DHH33/jE3KvnOlV6yGfGBNVyeXekCyv5ioKg6Alf//lXzJS+o3e+cF3oi8DoF2fR9BdLOFV8dPMbL1kUMxplXj6mPg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lUbK6qd8pyegHrh3axa0QBYf2i/k/2R5b4uW0voqH14=;
- b=OcSHhzyh/eg74Nlb4AFqUkjbRvWeyYjdlH61IX0wpLTy7Ye6MYTPuQvq28ZN8vCJQjwuoPUcZDCR6ngJhhCRerr+tNUDpYJLMsjI5tmejUsAj5LRd3TWuSBPT99npAWOZtHJZc+GnqcgHyG3u+k4mXUNtMylSfK33BtwtDDgwEU=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3328.eurprd04.prod.outlook.com (52.134.8.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.15; Fri, 20 Dec 2019 07:08:58 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::64c8:fba:99e8:5ec4]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::64c8:fba:99e8:5ec4%6]) with mapi id 15.20.2559.016; Fri, 20 Dec 2019
- 07:08:58 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Adam Ford <aford173@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-Subject: Re: [PATCH V3 3/3] arm64: defconfig: Enable CRYPTO_DEV_FSL_CAAM
-Thread-Topic: [PATCH V3 3/3] arm64: defconfig: Enable CRYPTO_DEV_FSL_CAAM
-Thread-Index: AQHVtaP5bVLk+LtFv0Os3iLGq42xGg==
-Date:   Fri, 20 Dec 2019 07:08:58 +0000
-Message-ID: <VI1PR0402MB34858B611ED0ACD84CC5EC06982D0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <20191218130616.13860-1-aford173@gmail.com>
- <20191218130616.13860-3-aford173@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 4cec1f50-e608-40c9-6339-08d7851b7bc6
-x-ms-traffictypediagnostic: VI1PR0402MB3328:|VI1PR0402MB3328:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB3328AD75EECC356193EC29E5982D0@VI1PR0402MB3328.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3276;
-x-forefront-prvs: 025796F161
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(376002)(346002)(136003)(366004)(199004)(189003)(44832011)(66556008)(5660300002)(55016002)(2906002)(33656002)(9686003)(6506007)(26005)(316002)(110136005)(54906003)(66446008)(91956017)(8676002)(81156014)(8936002)(81166006)(478600001)(86362001)(76116006)(7416002)(52536014)(186003)(64756008)(66476007)(4326008)(7696005)(66946007)(558084003)(53546011)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3328;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: qHR59k+fUTH8J6Gob0ATg4i9+dHc+ooxq01NR81o8r+dxHaPVV8Shp09m+i31HQLCRXRylylw9WD2/0S6QOz9N7/Lsofu3p5o/N218Jl9n64KGHkeE/mfYq2oy7EXcdM5Gi8CN1LjSRpHwDXH0l2aw8EUtdSqjUFz1Y2SIEZ/SHmn0DmlTpuDkCQX2yzWotIVm1JPYlAR4rPN+/5eLIIxroZb6n8XIZZqu77QHQ6XlpPcfWrZJboesseuPI1bRKOw6nEfuLTY4khBlnlxOCYqrOkYl/lZHsimXIS8V7ZoCNVtElxul4qAXEhgBa1woFQxGd0iIzhIAtU2MGs7NXHvEZyUg5RI26XVDhVoFhEKfQlIZazc1ahhzE6uhB6k8zbuZfqOxnNGlGPHlHNx/qdZ7ddxTDH7P1cGC3dDilg58GRNlUHzkyzua3DPKEmqQlT
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 20 Dec 2019 02:10:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59536 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726030AbfLTHKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 02:10:21 -0500
+Received: from localhost (unknown [106.201.107.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5188424679;
+        Fri, 20 Dec 2019 07:10:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576825820;
+        bh=lu+82vmeF72yERVCgMIPNu3jeKVIiSz/mUtEo62bEpA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SN4sxlPGhVGoieGEioVmdAftiYAwG9w1gyhLVKdfVQnbH7wN2NyFeapLzpOulyxoG
+         NrH7BRFSWJq5vTcrUDWz6XIkHac1L6Ed3p1wdKg20Q7N5CahBP27oDWmAfuIX6D+a2
+         V2Qrj7We1fwh5pGrUpoudDTrT6WsNH1w3McVaX2k=
+Date:   Fri, 20 Dec 2019 12:40:15 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Can Guo <cang@codeaurora.org>
+Cc:     Asutosh Das <asutoshd@codeaurora.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] phy: qcom-qmp: Add optional SW reset
+Message-ID: <20191220071015.GF2536@vkoul-mobl>
+References: <20191219150433.2785427-1-vkoul@kernel.org>
+ <20191219150433.2785427-4-vkoul@kernel.org>
+ <ff83ac1f0ec6bca1379e8b873fd30aa2@codeaurora.org>
+ <9ef99dcac59dbdc59c7e5eb1a8724ea2@codeaurora.org>
+ <20191220042427.GE2536@vkoul-mobl>
+ <e55185eda9d7dcbce80a671e630449ea@codeaurora.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4cec1f50-e608-40c9-6339-08d7851b7bc6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Dec 2019 07:08:58.2955
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: elRtOe1Y5AD1lCpsi3WmiMU32TLv4oRjtgsGoY4WyZb+1HpO28+N2qLZ0Y+e39m4FxvgTmQynG0M/NqoMOHirQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3328
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e55185eda9d7dcbce80a671e630449ea@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/18/2019 3:06 PM, Adam Ford wrote:=0A=
-> Both the i.MX8MQ and i.MX8M Mini support the CAAM driver, but it=0A=
-> is currently not enabled by default.=0A=
-> =0A=
-> This patch enables this as a module.=0A=
-> =0A=
-> Signed-off-by: Adam Ford <aford173@gmail.com>=0A=
-Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+On 20-12-19, 14:00, Can Guo wrote:
+> On 2019-12-20 12:24, Vinod Koul wrote:
+> > On 20-12-19, 08:49, cang@codeaurora.org wrote:
+> > > On 2019-12-20 08:22, cang@codeaurora.org wrote:
+> > > > On 2019-12-19 23:04, Vinod Koul wrote:
+> > > >
+> > > > >  	/* start SerDes and Phy-Coding-Sublayer */
+> > > > >  	qphy_setbits(pcs, cfg->regs[QPHY_START_CTRL], cfg->start_ctrl);
+> > > 
+> > > I thought your change would be like this
+> > > 
+> > > diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> > > b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> > > index 8e642a6..a4ab4b7 100755
+> > > --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> > > +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> > > @@ -166,6 +166,7 @@ static const unsigned int
+> > > sdm845_ufsphy_regs_layout[] =
+> > > {
+> > >  };
+> > > 
+> > >  static const unsigned int sm8150_ufsphy_regs_layout[] = {
+> > > +       [QPHY_SW_RESET]                 = 0x08,
+> > >         [QPHY_START_CTRL]               = 0x00,
+> > >         [QPHY_PCS_READY_STATUS]         = 0x180,
+> > >  };
+> > > @@ -1390,7 +1391,6 @@ static const struct qmp_phy_cfg
+> > > sm8150_ufsphy_cfg = {
+> > >         .pwrdn_ctrl             = SW_PWRDN,
+> > > 
+> > >         .is_dual_lane_phy       = true,
+> > > -       .no_pcs_sw_reset        = true,
+> > >  };
+> > > 
+> > >  static void qcom_qmp_phy_configure(void __iomem *base,
+> > > @@ -1475,6 +1475,9 @@ static int qcom_qmp_phy_com_init(struct
+> > > qmp_phy *qphy)
+> > >                              SW_USB3PHY_RESET_MUX | SW_USB3PHY_RESET);
+> > >         }
+> > > 
+> > > +       if ((cfg->type == PHY_TYPE_UFS) && (!cfg->no_pcs_sw_reset))
+> > > +               qphy_setbits(pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
+> > 
+> > Well am not sure if no_pcs_sw_reset would do this and side effect on
+> > other phys (somehow older ones dont seem to need this). That was the
+> > reason for a new flag and to be used for specific instances
+> > 
+> > Thanks
+> 
+> Hi Vinod,
+> 
+> That is why I added the check as cfg->type == PHY_TYPE_UFS, meaning this
+> change will only apply to UFS.
+> FYI, start from 8150(include 8150), QPHY_SW_RESET is present in PHY's
+> PCS register. no_pcs_sw_reset = TRUE should only be given to 845 and older
+> targets, like 8998, because they don't have this QPHY_SW_RESET in PHY's
+> register per their design, that's why they leverage the reset control
+> provided by UFS controller.
+
+I have removed no_pcs_sw_reset and tested.
+
+Well as you said even with UFS we have variations between various chips,
+so I thought leaving it separate might be better than creating a chance
+of regression on older platforms!
+
+Moreover, are we sure that the reset wont be there for other qmp phy's
+in future other than UFS...
+
+Thanks
+-- 
+~Vinod
