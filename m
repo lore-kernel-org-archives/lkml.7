@@ -2,132 +2,116 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6201EC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAC6C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36C8521D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:23:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jBJ8C1Ki"
+	by mail.kernel.org (Postfix) with ESMTP id A140021D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:23:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576855410;
+	bh=Xngl0akcA9oyoBaD+j4NC9ZhmSFN/lCnqu5mH8MwMww=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nRMsYMyyJmvKx/m/dQIgz1N2NgAdsLWf5Jb2AyTeyMT+uYS6q1ZTn0E1RGwwO2t5m
+	 q38zAvW3tmmJo+88hm5AImqcivCs6vkegPmwPqqxtHTHNc1ohR46y464ImvSndJOhj
+	 e5TDDgMHsah8uX2H4N6Go9u6Kl0QPgCW+vG+Jqk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727510AbfLTPXM (ORCPT
+        id S1727541AbfLTPX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 10:23:12 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38890 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727233AbfLTPXJ (ORCPT
+        Fri, 20 Dec 2019 10:23:29 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:38500 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727233AbfLTPX3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 10:23:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576855388;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=REPT/CW2BcWBlFErj4a87Ibw25mwKgnWDpl3f0NJphc=;
-        b=jBJ8C1Kiks0f86+E3JuJqJbDmRwclFf6scJMw1h4/M22cIJI8BsQRiVyJ3RrBKlQwBlq/M
-        r1N/DGPoTTyOib5CL+qozntTkq4EhKRIHurTGKTUA8Ab83O/2Pwd9UIblNEbZ2kVBa6zXl
-        mOsEuWKsDycudsyRw7XaH381HA8x4rQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-399-UxnnOdlxOiufnf7vQkk-kA-1; Fri, 20 Dec 2019 10:23:04 -0500
-X-MC-Unique: UxnnOdlxOiufnf7vQkk-kA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 47E97189DF6C;
-        Fri, 20 Dec 2019 15:23:03 +0000 (UTC)
-Received: from carbon (ovpn-200-18.brq.redhat.com [10.40.200.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 311FB60C81;
-        Fri, 20 Dec 2019 15:22:55 +0000 (UTC)
-Date:   Fri, 20 Dec 2019 16:22:54 +0100
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Cc:     netdev@vger.kernel.org, lirongqing@baidu.com,
-        linyunsheng@huawei.com, Saeed Mahameed <saeedm@mellanox.com>,
-        mhocko@kernel.org, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, brouer@redhat.com
-Subject: Re: [net-next v5 PATCH] page_pool: handle page recycle for
- NUMA_NO_NODE condition
-Message-ID: <20191220162254.0138263e@carbon>
-In-Reply-To: <20191220104937.GA15487@apalos.home>
-References: <20191218084437.6db92d32@carbon>
-        <157676523108.200893.4571988797174399927.stgit@firesoul>
-        <20191220102314.GB14269@apalos.home>
-        <20191220114116.59d86ff6@carbon>
-        <20191220104937.GA15487@apalos.home>
+        Fri, 20 Dec 2019 10:23:29 -0500
+Received: by mail-qv1-f68.google.com with SMTP id t6so3749339qvs.5;
+        Fri, 20 Dec 2019 07:23:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2dn9cCazElcEyS2nqL7r4gWAf9lvaYb6Vn/YiRslYl4=;
+        b=dGqWkP7rNkkQ7wUNrXT5Y+51zZH0VVkgByyhw1p3XDzd8Hm6ZI/KbJ15sYaaKz40mK
+         m14HPSZLBB8qG6man7ts9USB8X02PwIELsvF+5HE7dyPBIQEYANf400GS5D45CGtOwGd
+         UoUgAvbZgoFH9qNxz1fAu4gPXznAN221WPoStJYmjwGiZts7nmHEeS4QP/bfEgD3WXxI
+         W0coGzcwpxRTNR5W+wa4L+N6p1VkOWbvkAG28QfMLLeqIxFKEsP6elr6fsdzJRtTLtnK
+         Y0Yv9GoWMDoQ5a2sEI99k0ieykriHKFoOw1e0zMDDEd5yHCZgMD0jZzoP+5USz+bgVgm
+         uc0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2dn9cCazElcEyS2nqL7r4gWAf9lvaYb6Vn/YiRslYl4=;
+        b=s8Nvstzdyxh1Gf1YqUtPWUHIe1z+fTMnvr7S0cGW+ndzuybLHSWqttGwyfPqO50YdM
+         bEapaEUXRIJ9CDR/KfvPbTy+9nthgJIBA1FvFWBovbs+UWL0qwr6cxWIkAEqZ+YYJrVK
+         15oubOVFoPcQRjbbTpAhHhkg0uWCuZkT7LwWwNZoJELxjmwhK5L7cJq8LAWq0aVdMCLY
+         5UrTxHknoVALpcw6bIxOMb/eybPK8v3khw0dvzXsVdaQdkc8IWLqwV7eaqNFwr4xnfw0
+         fiPoqXWINfCInPttoXOJARDPwUGRvNI32pXKGWYQcZlwT1+CK5UePyqmIeWaALlEEryi
+         EB3A==
+X-Gm-Message-State: APjAAAWVgTILhUKsjGCDT/87bafybIxFlIf1vuyt18kinLwqWocPlPjO
+        0Hc0ko9A9ejfN+G30p/6EYo=
+X-Google-Smtp-Source: APXvYqzDPIlFhFSz/g8F5LJ6vpVFsAu6aHjc9thDeArzy5CSpzV1/fm1bZ/GTXvelMJtI2ygX+dpKw==
+X-Received: by 2002:a0c:aa8a:: with SMTP id f10mr13041213qvb.200.1576855408130;
+        Fri, 20 Dec 2019 07:23:28 -0800 (PST)
+Received: from localhost ([2620:10d:c091:480::11e7])
+        by smtp.gmail.com with ESMTPSA id n19sm2941698qkn.52.2019.12.20.07.23.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 20 Dec 2019 07:23:27 -0800 (PST)
+Date:   Fri, 20 Dec 2019 07:23:24 -0800
+From:   Tejun Heo <tj@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephane Eranian <eranian@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Subject: Re: [PATCH 2/9] perf/core: Add PERF_SAMPLE_CGROUP feature
+Message-ID: <20191220152324.GG2914998@devbig004.ftw2.facebook.com>
+References: <20191220043253.3278951-1-namhyung@kernel.org>
+ <20191220043253.3278951-3-namhyung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191220043253.3278951-3-namhyung@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Dec 2019 12:49:37 +0200
-Ilias Apalodimas <ilias.apalodimas@linaro.org> wrote:
+On Fri, Dec 20, 2019 at 01:32:46PM +0900, Namhyung Kim wrote:
+> The PERF_SAMPLE_CGROUP bit is to save (perf_event) cgroup information
+> in the sample.  It will add a 64-bit id to identify current cgroup and
+> it's the file handle in the cgroup file system.  Userspace should use
+> this information with PERF_RECORD_CGROUP event to match which cgroup
+> it belongs.
 
-> On Fri, Dec 20, 2019 at 11:41:16AM +0100, Jesper Dangaard Brouer wrote:
-> > On Fri, 20 Dec 2019 12:23:14 +0200
-> > Ilias Apalodimas <ilias.apalodimas@linaro.org> wrote:
-> >   
-> > > Hi Jesper, 
-> > > 
-> > > I like the overall approach since this moves the check out of  the hotpath. 
-> > > @Saeed, since i got no hardware to test this on, would it be possible to check
-> > > that it still works fine for mlx5?
-> > > 
-> > > [...]  
-> > > > +	struct ptr_ring *r = &pool->ring;
-> > > > +	struct page *page;
-> > > > +	int pref_nid; /* preferred NUMA node */
-> > > > +
-> > > > +	/* Quicker fallback, avoid locks when ring is empty */
-> > > > +	if (__ptr_ring_empty(r))
-> > > > +		return NULL;
-> > > > +
-> > > > +	/* Softirq guarantee CPU and thus NUMA node is stable. This,
-> > > > +	 * assumes CPU refilling driver RX-ring will also run RX-NAPI.
-> > > > +	 */
-> > > > +	pref_nid = (pool->p.nid == NUMA_NO_NODE) ? numa_mem_id() : pool->p.nid;    
-> > > 
-> > > One of the use cases for this is that during the allocation we are not
-> > > guaranteed to pick up the correct NUMA node. 
-> > > This will get automatically fixed once the driver starts recycling packets. 
-> > > 
-> > > I don't feel strongly about this, since i don't usually like hiding value
-> > > changes from the user but, would it make sense to move this into 
-> > > __page_pool_alloc_pages_slow() and change the pool->p.nid?
-> > > 
-> > > Since alloc_pages_node() will replace NUMA_NO_NODE with numa_mem_id()
-> > > regardless, why not store the actual node in our page pool information?
-> > > You can then skip this and check pool->p.nid == numa_mem_id(), regardless of
-> > > what's configured.   
-> > 
-> > This single code line helps support that drivers can control the nid
-> > themselves.  This is a feature that is only used my mlx5 AFAIK.
-> > 
-> > I do think that is useful to allow the driver to "control" the nid, as
-> > pinning/preferring the pages to come from the NUMA node that matches
-> > the PCI-e controller hardware is installed in does have benefits.  
-> 
-> Sure you can keep the if statement as-is, it won't break anything. 
-> Would we want to store the actual numa id in pool->p.nid if the user
-> selects 'NUMA_NO_NODE'?
- 
-No. pool->p.nid should stay as NUMA_NO_NODE, because that makes it
-dynamic.  If someone moves an RX IRQ to another CPU on another NUMA
-node, then this 'NUMA_NO_NODE' setting makes pages transitioned
-automatically.
+You don't need PERF_RECORD_CGROUP for that.  Something like the
+following should work.
+
+	struct {
+		struct file_handle fh;
+		char stor[MAX_HANDLE_SZ];
+	} fh_store;
+	struct file_handle *fh = &fh_store;
+
+	fh->handle_type = 0xfe; // FILEID_KERNFS
+	fh->handle_bytes = sizeof(u64);
+	*(u64 *)fh->f_handle = cgrp_id;
+
+	mnt_fd = open('/sys/fs/cgroup', O_RDONLY);
+	fd = open_by_handle_at(mnt_fd, fh, O_RDONLY);
+
+	snprintf(proc_path, PATH_MAX, "/proc/self/fd/%d", fd);
+	readlink(proc_path, cgrp_path, PATH_MAX);
 
 -- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
-
+tejun
