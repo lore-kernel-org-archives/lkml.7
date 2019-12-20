@@ -2,139 +2,69 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B2CC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6870C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC3F421655
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:53:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m3pxAg9o"
+	by mail.kernel.org (Postfix) with ESMTP id 9B60F2082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 21:55:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576878912;
+	bh=yDZkkNYzD3FWAU/SrWygpNmHhynYzNaJvIqIotWBGXc=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=CcmhheBYAK1MiWWEwweq4CMOyew7CTgUGBU8wGo9tcKm/tg/ahu/+82j8UjNrlQgd
+	 xSuoJwWGZqDe1F4HVxvGb4WDyREMl+cZO1baS/gAYPb+DQgIgKIb4t9s1Io9X1S6V1
+	 9uFGCou3ciF8TYx8cz3oDbsahBG0ewyqaSDmYAL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbfLTVxd (ORCPT
+        id S1727536AbfLTVzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 16:53:33 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:53245 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727413AbfLTVxc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 16:53:32 -0500
-Received: by mail-pj1-f67.google.com with SMTP id w23so4684757pjd.2;
-        Fri, 20 Dec 2019 13:53:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=34n9dhKF2BKeM8ejCw1ltZGnOmOAja8Xu9rgOz3lRzQ=;
-        b=m3pxAg9oLLP7uJZGCaLQRp5sKISrC4DFipGhfubjmi+vJW9Xzuwl47IwvxGEg5Fzof
-         atE4v4tfyTOgn2pNktXmURqiyKZMkI4Q7pF5PkCi1vDEBVz8LvQwPzhDmA0i3EYovlpo
-         Q4Oja6z1e27KOO2QSnB0PjjK9OjawQPhZn6oPJ2GJ5G0Lbl0SeoRLVIsM262FUtDvGGs
-         4dFlwJ2f9UUMvy3SJSz9loVJ/U3y2t9FalitiJhcmjktH9rm1UtycoBkAFWjXO+dlSjP
-         6cSgt1owzPcMtZPmeDhf49tqljaBq/dVAWipml0p+rWLZzGJXYxCTe4/aM2iIlXKHqbt
-         0pTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=34n9dhKF2BKeM8ejCw1ltZGnOmOAja8Xu9rgOz3lRzQ=;
-        b=VoVNBlqFEqGPVNzgwR9prMhruIo7pffrW/MgWDX4SjNnrwnwl0q7K1gWZ7eiWCJ4qY
-         WIC7SUCYRf9xivLvOtioDPiBexYYR3yUrCE+PLwj9wRmXk1cTf4l04RSNi5ipDnD53Ks
-         KthVBIGfah+TrPf+dFxDIF0gWvGn+cVtSaon2lCKPi5+3i++yQaWtsBLWDsOu7FlcrYl
-         QE1YQ77gW9QavgHz5knQMwyFP7GKKTqGfX+pI9tFdtfx744vbzkZC0T6YXdIfY96lID1
-         ZUtoSajVC/d2MqUtpxZ8aotBKfYKuTTbmhmWoINhGnsiqFmq/X8g1M8gEJ+HfyEEPZZc
-         RVDg==
-X-Gm-Message-State: APjAAAU1+/f8NOH1MI59bvSgkBgQo/4KUSUWDQZ2yynC6MNSs1N2IBOP
-        65q21eNo/E7u7ePx+of0n0cYVvDp
-X-Google-Smtp-Source: APXvYqz+vxbaCZBvNvOKxzLxBLi6w2zYkotL2DIYIuIbaAOQDXjpw/Iuzmb1DcOHRk+NoeWJAeggOA==
-X-Received: by 2002:a17:90b:309:: with SMTP id ay9mr9304060pjb.22.1576878812009;
-        Fri, 20 Dec 2019 13:53:32 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id 199sm14941485pfv.81.2019.12.20.13.53.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 13:53:31 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B6AD940CB9; Fri, 20 Dec 2019 18:53:28 -0300 (-03)
-Date:   Fri, 20 Dec 2019 18:53:28 -0300
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, bpf <bpf@vger.kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] libbpf: Fix build on read-only filesystems
-Message-ID: <20191220215328.GB9076@kernel.org>
-References: <20191220032558.3259098-1-namhyung@kernel.org>
- <CAEf4BzaZBSRK2M4LD-c12_2-QLa8+jpPs1E4nA9BNeUDskOMBQ@mail.gmail.com>
- <20191220204748.GA9076@kernel.org>
- <CAEf4BzZW+bDxkdmXBJrrCHqBP5UT1NLJJ7mXLNqc6eypRCib6Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzZW+bDxkdmXBJrrCHqBP5UT1NLJJ7mXLNqc6eypRCib6Q@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+        Fri, 20 Dec 2019 16:55:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60620 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727478AbfLTVzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 16:55:11 -0500
+Subject: Re: [GIT PULL] Devicetree fixes for v5.5-rc, take 2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576878910;
+        bh=yDZkkNYzD3FWAU/SrWygpNmHhynYzNaJvIqIotWBGXc=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=18cU+GffupsWdRJkIxiR0slE2TNLSK0JRAgAm1AjrcPr6wFE0glStEBkOusfey1H4
+         mqtovn4MwPPNc5NQcRuUGNjMqOQmgTtSmDT6a1UltCxYt+otsAcHPwl9ILNzWngksQ
+         LQzEMvkGWlqrUGS89iG9vNz+UNkGjt/aaTOpAzXs=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20191220213832.GA23111@bogus>
+References: <20191220213832.GA23111@bogus>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191220213832.GA23111@bogus>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+ tags/devicetree-fixes-for-5.5-2
+X-PR-Tracked-Commit-Id: dbce0b65046d1735d7054c54ec2387dba84ba258
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: f1fd1610cbb6655883d1838ac79e53301596685d
+Message-Id: <157687891063.23463.16217436355639459996.pr-tracker-bot@kernel.org>
+Date:   Fri, 20 Dec 2019 21:55:10 +0000
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Dec 20, 2019 at 01:45:52PM -0800, Andrii Nakryiko escreveu:
-> On Fri, Dec 20, 2019 at 12:47 PM Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
-> > Em Fri, Dec 20, 2019 at 12:29:36PM -0800, Andrii Nakryiko escreveu:
-> > > On Thu, Dec 19, 2019 at 7:26 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > I got the following error when I tried to build perf on a read-only
-> > > > filesystem with O=dir option.
+The pull request you sent on Fri, 20 Dec 2019 14:38:32 -0700:
 
-> > > >   $ cd /some/where/ro/linux/tools/perf
-> > > >   $ make O=$HOME/build/perf
-> > > >   ...
-> > > >     CC       /home/namhyung/build/perf/lib.o
-> > > >   /bin/sh: bpf_helper_defs.h: Read-only file system
-> > > >   make[3]: *** [Makefile:184: bpf_helper_defs.h] Error 1
-> > > >   make[2]: *** [Makefile.perf:778: /home/namhyung/build/perf/libbpf.a] Error 2
-> > > >   make[2]: *** Waiting for unfinished jobs....
-> > > >     LD       /home/namhyung/build/perf/libperf-in.o
-> > > >     AR       /home/namhyung/build/perf/libperf.a
-> > > >     PERF_VERSION = 5.4.0
-> > > >   make[1]: *** [Makefile.perf:225: sub-make] Error 2
-> > > >   make: *** [Makefile:70: all] Error 2
+> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.5-2
 
-> > > > It was becaused bpf_helper_defs.h was generated in current directory.
-> > > > Move it to OUTPUT directory.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/f1fd1610cbb6655883d1838ac79e53301596685d
 
-> > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > > ---
+Thank you!
 
-> > > Overall nothing is obviously broken, except you need to fix up
-> > > selftests/bpf's Makefile as well.
-
-> > > BTW, this patch doesn't apply cleanly to latest bpf-next, so please rebase.
-
-> > > Also subject prefix should look like [PATCH bpf-next] if it's meant to
-> > > be applied against bpf-next.
-
-> > Shouldn't this be applied to the current merge window since a behaviour
-> > that people relied, i.e. using O= to generate the build in a separate
-> > directory, since its not possible to use the source dir tree as it is
-> > read-only is now broken, i.e. isn't this a regression?
- 
-> Sure, it can be applied against bpf as well, but selftests still need
-> to be fixed first.
-
-I guess this can be done on a separate patch? I.e. if the user doesn't
-use selftests the only regression it will see is when trying to build
-tools/perf using O=.
-
-I think two patches is best, better granularity, do you see a strict
-need for both to be in the same patch?
-
-- Arnaldo
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
