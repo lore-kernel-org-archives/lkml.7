@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0563C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A437BC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 876E824682
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7229824680
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:37:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852674;
-	bh=S/+D/P89rf3ZaMdTEGFBWcWJ2l3DQINki0/kIE5C6n0=;
+	s=default; t=1576852678;
+	bh=xI0TBm8RVQoWa+cMb1AL9H2j8o1GcbWwhDnTupo3DE8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ywOn6R7tcZCcY7GXauguLKeXvDo718JiIzyndV5EovuPoUDyXOyx5RLf+pXTxREot
-	 2SNJH77f0xxRbTGSodVMMYHGPnezqNAMne0u4MLsASA72hmoFnw0CIo/5Unny0Z8RF
-	 j6uJHbgUxoxhHINl/6cFlAVJtlBIpII4f4j1rWC4=
+	b=DqX2cgc4Km+FOXu8CdQcyP+b9+rA2nggtxrupGGTxdn+i1bi+2yORrbQ9i+10Fhbq
+	 ZMzEMIq/hurQBVRJNm8pjK2ZjTfewFYD59kRqlOTeAcNAogLgGuAh0WSJx5HGPiUXo
+	 MX4sdh7/H0bSryVhNVw6xdHc/yBHwmmH5GBkIcfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbfLTOhw (ORCPT
+        id S1728343AbfLTOh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:37:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41944 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:37:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728241AbfLTOht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:37:49 -0500
+        id S1728241AbfLTOhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:37:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 096B12468A;
-        Fri, 20 Dec 2019 14:37:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D165B24689;
+        Fri, 20 Dec 2019 14:37:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852668;
-        bh=S/+D/P89rf3ZaMdTEGFBWcWJ2l3DQINki0/kIE5C6n0=;
+        s=default; t=1576852672;
+        bh=xI0TBm8RVQoWa+cMb1AL9H2j8o1GcbWwhDnTupo3DE8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T5fkQVhJDCTE46GvNqVVAV2At4c6BoTx4Gqz77t2YOSu5MMWTf+bn8Y51zQrzbSpO
-         NhcD0VjdMpWXjXgV86IgrRWy0h0w6XT9kBTCduwfCOa1jJPeM6EScwEnUc63421gZh
-         nhROXkJ5AYM/0K08B18f9k6PkG9vd/TAYeT3v1oo=
+        b=b0J1N6PS98T/akKXkGzqCQHHMyWLRGnIkyeV7jMJ1hgrIWHXHOAc6cRW8StIUoST5
+         Js6xP5jyYQn4rT3eYjSZEY/ao3WAdg7szxA7GFmPNvUjCYV96VPprbFj/DY3yON0V7
+         aMzfUPanCR1ql7LoBd+0QufcFm8N4M6Q2B3JMb0s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steve Wise <larrystevenwise@gmail.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 05/19] rxe: correctly calculate iCRC for unaligned payloads
-Date:   Fri, 20 Dec 2019 09:37:26 -0500
-Message-Id: <20191220143741.10220-5-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 08/19] scsi: iscsi: qla4xxx: fix double free in probe
+Date:   Fri, 20 Dec 2019 09:37:29 -0500
+Message-Id: <20191220143741.10220-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220143741.10220-1-sashal@kernel.org>
 References: <20191220143741.10220-1-sashal@kernel.org>
@@ -59,80 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Wise <larrystevenwise@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 2030abddec6884aaf5892f5724c48fc340e6826f ]
+[ Upstream commit fee92f25777789d73e1936b91472e9c4644457c8 ]
 
-If RoCE PDUs being sent or received contain pad bytes, then the iCRC
-is miscalculated, resulting in PDUs being emitted by RXE with an incorrect
-iCRC, as well as ingress PDUs being dropped due to erroneously detecting
-a bad iCRC in the PDU.  The fix is to include the pad bytes, if any,
-in iCRC computations.
+On this error path we call qla4xxx_mem_free() and then the caller also
+calls qla4xxx_free_adapter() which calls qla4xxx_mem_free().  It leads to a
+couple double frees:
 
-Note: This bug has caused broken on-the-wire compatibility with actual
-hardware RoCE devices since the soft-RoCE driver was first put into the
-mainstream kernel.  Fixing it will create an incompatibility with the
-original soft-RoCE devices, but is necessary to be compatible with real
-hardware devices.
+drivers/scsi/qla4xxx/ql4_os.c:8856 qla4xxx_probe_adapter() warn: 'ha->chap_dma_pool' double freed
+drivers/scsi/qla4xxx/ql4_os.c:8856 qla4xxx_probe_adapter() warn: 'ha->fw_ddb_dma_pool' double freed
 
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Signed-off-by: Steve Wise <larrystevenwise@gmail.com>
-Link: https://lore.kernel.org/r/20191203020319.15036-2-larrystevenwise@gmail.com
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+Fixes: afaf5a2d341d ("[SCSI] Initial Commit of qla4xxx")
+Link: https://lore.kernel.org/r/20191203094421.hw7ex7qr3j2rbsmx@kili.mountain
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_recv.c | 2 +-
- drivers/infiniband/sw/rxe/rxe_req.c  | 6 ++++++
- drivers/infiniband/sw/rxe/rxe_resp.c | 7 +++++++
- 3 files changed, 14 insertions(+), 1 deletion(-)
+ drivers/scsi/qla4xxx/ql4_os.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_recv.c b/drivers/infiniband/sw/rxe/rxe_recv.c
-index 83412df726a51..b7098f7bb30e5 100644
---- a/drivers/infiniband/sw/rxe/rxe_recv.c
-+++ b/drivers/infiniband/sw/rxe/rxe_recv.c
-@@ -393,7 +393,7 @@ int rxe_rcv(struct sk_buff *skb)
+diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
+index 4421f9bdfcf77..b0ad60565fe94 100644
+--- a/drivers/scsi/qla4xxx/ql4_os.c
++++ b/drivers/scsi/qla4xxx/ql4_os.c
+@@ -4285,7 +4285,6 @@ static int qla4xxx_mem_alloc(struct scsi_qla_host *ha)
+ 	return QLA_SUCCESS;
  
- 	calc_icrc = rxe_icrc_hdr(pkt, skb);
- 	calc_icrc = rxe_crc32(rxe, calc_icrc, (u8 *)payload_addr(pkt),
--			      payload_size(pkt));
-+			      payload_size(pkt) + bth_pad(pkt));
- 	calc_icrc = (__force u32)cpu_to_be32(~calc_icrc);
- 	if (unlikely(calc_icrc != pack_icrc)) {
- 		if (skb->protocol == htons(ETH_P_IPV6))
-diff --git a/drivers/infiniband/sw/rxe/rxe_req.c b/drivers/infiniband/sw/rxe/rxe_req.c
-index 9fd4f04df3b33..e6785b1ea85fc 100644
---- a/drivers/infiniband/sw/rxe/rxe_req.c
-+++ b/drivers/infiniband/sw/rxe/rxe_req.c
-@@ -500,6 +500,12 @@ static int fill_packet(struct rxe_qp *qp, struct rxe_send_wqe *wqe,
- 			if (err)
- 				return err;
- 		}
-+		if (bth_pad(pkt)) {
-+			u8 *pad = payload_addr(pkt) + paylen;
-+
-+			memset(pad, 0, bth_pad(pkt));
-+			crc = rxe_crc32(rxe, crc, pad, bth_pad(pkt));
-+		}
- 	}
- 	p = payload_addr(pkt) + paylen + bth_pad(pkt);
- 
-diff --git a/drivers/infiniband/sw/rxe/rxe_resp.c b/drivers/infiniband/sw/rxe/rxe_resp.c
-index 9207682b7a2ee..a07a29b488632 100644
---- a/drivers/infiniband/sw/rxe/rxe_resp.c
-+++ b/drivers/infiniband/sw/rxe/rxe_resp.c
-@@ -738,6 +738,13 @@ static enum resp_states read_reply(struct rxe_qp *qp,
- 	if (err)
- 		pr_err("Failed copying memory\n");
- 
-+	if (bth_pad(&ack_pkt)) {
-+		struct rxe_dev *rxe = to_rdev(qp->ibqp.device);
-+		u8 *pad = payload_addr(&ack_pkt) + payload;
-+
-+		memset(pad, 0, bth_pad(&ack_pkt));
-+		icrc = rxe_crc32(rxe, icrc, pad, bth_pad(&ack_pkt));
-+	}
- 	p = payload_addr(&ack_pkt) + payload + bth_pad(&ack_pkt);
- 	*p = ~icrc;
+ mem_alloc_error_exit:
+-	qla4xxx_mem_free(ha);
+ 	return QLA_ERROR;
+ }
  
 -- 
 2.20.1
