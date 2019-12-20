@@ -2,106 +2,165 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 617EAC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 295A9C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 360A024682
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:13:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HKGMY/dt"
+	by mail.kernel.org (Postfix) with ESMTP id 06AD72467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:13:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbfLTKNy (ORCPT
+        id S1727412AbfLTKN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 05:13:54 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:35027 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727209AbfLTKNx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 05:13:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576836831;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4ZBQ5qBfF/8KamOQgNLAI32dbiC3Uea19/Os0WpLjyk=;
-        b=HKGMY/dtlrzmVUJyfQ+wdcbcXLmF2nYE4gl2QScbrGIAVKfNgDPzZbEcOdjkzshHyha0gn
-        ArSVSoT/ToSU00KnO8mUelG1/kqTpIBeV84vhcoH0kX8da7roe8vKuFk2qPVuCY+KMdyJv
-        TgwvRFyV4EOGvt/MlGjXPaesVqy3Woc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-303-o9p1hEkKN3a2EfGixxaSPw-1; Fri, 20 Dec 2019 05:13:49 -0500
-X-MC-Unique: o9p1hEkKN3a2EfGixxaSPw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DB342800D4C;
-        Fri, 20 Dec 2019 10:13:45 +0000 (UTC)
-Received: from gondolin (dhcp-192-245.str.redhat.com [10.33.192.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0A4706E3F7;
-        Fri, 20 Dec 2019 10:13:39 +0000 (UTC)
-Date:   Fri, 20 Dec 2019 11:13:37 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kurz <groug@kaod.org>
-Subject: Re: [PATCH v2 43/45] KVM: Drop kvm_arch_vcpu_init() and
- kvm_arch_vcpu_uninit()
-Message-ID: <20191220111337.6bb2ea3a.cohuck@redhat.com>
-In-Reply-To: <20191218215530.2280-44-sean.j.christopherson@intel.com>
-References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
-        <20191218215530.2280-44-sean.j.christopherson@intel.com>
-Organization: Red Hat GmbH
+        Fri, 20 Dec 2019 05:13:58 -0500
+Received: from mga09.intel.com ([134.134.136.24]:27828 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727399AbfLTKN4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 05:13:56 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Dec 2019 02:13:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,335,1571727600"; 
+   d="scan'208";a="228566117"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 20 Dec 2019 02:13:52 -0800
+Received: from andy by smile with local (Exim 4.93-RC7)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1iiFI8-0000Yx-UM; Fri, 20 Dec 2019 12:13:52 +0200
+Date:   Fri, 20 Dec 2019 12:13:52 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yixin.zhu@linux.intel.com, qi-ming.wu@intel.com,
+        rtanwar <rahul.tanwar@intel.com>
+Subject: Re: [PATCH v2 1/2] clk: intel: Add CGU clock driver for a new SoC
+Message-ID: <20191220101352.GU32742@smile.fi.intel.com>
+References: <cover.1576811332.git.rahul.tanwar@linux.intel.com>
+ <ee8a8a0f0c882e22361895b2663870c8037c422f.1576811332.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ee8a8a0f0c882e22361895b2663870c8037c422f.1576811332.git.rahul.tanwar@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Dec 2019 13:55:28 -0800
-Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-
-> Remove kvm_arch_vcpu_init() and kvm_arch_vcpu_uninit() now that all
-> arch specific implementations are nops.
+On Fri, Dec 20, 2019 at 11:31:07AM +0800, Rahul Tanwar wrote:
+> From: rtanwar <rahul.tanwar@intel.com>
 > 
-> Acked-by: Christoffer Dall <christoffer.dall@arm.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/arm/include/asm/kvm_host.h   |  1 -
->  arch/arm64/include/asm/kvm_host.h |  1 -
->  arch/arm64/kvm/reset.c            |  5 -----
->  arch/mips/kvm/mips.c              | 10 ----------
->  arch/powerpc/kvm/powerpc.c        | 10 ----------
->  arch/s390/include/asm/kvm_host.h  |  1 -
->  arch/s390/kvm/kvm-s390.c          |  5 -----
->  arch/x86/kvm/x86.c                | 10 ----------
->  include/linux/kvm_host.h          |  3 ---
->  virt/kvm/arm/arm.c                |  5 -----
->  virt/kvm/kvm_main.c               | 16 ++--------------
->  11 files changed, 2 insertions(+), 65 deletions(-)
+> Clock Generation Unit(CGU) is a new clock controller IP of a forthcoming
+> Intel network processor SoC. It provides programming interfaces to control
+> & configure all CPU & peripheral clocks. Add common clock framework based
+> clock controller driver for CGU.
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+...
+
+>  drivers/clk/Kconfig           |   8 +
+
+This should be in x86 folder and you perhaps need to add
+source "drivers/clk/x86/Kconfig" here.
+
+Also drivers/clk/Makefile should be updated accordingly.
+
+...
+
+> +static int lgm_pll_wait_for_lock(struct lgm_clk_pll *pll)
+> +{
+> +	int max_loop_cnt = 100;
+> +	unsigned long flags;
+> +	unsigned int val;
+> +
+> +	while (max_loop_cnt > 0) {
+> +		raw_spin_lock_irqsave(&pll->lock, flags);
+> +		val = lgm_get_clk_val(pll->membase, pll->reg, 0, 1);
+> +		raw_spin_unlock_irqrestore(&pll->lock, flags);
+> +
+> +		if (val)
+> +			return 0;
+> +
+> +		udelay(1);
+> +		max_loop_cnt--;
+> +	}
+
+Looks like a repetition of iopoll.h.
+Even without that the waiting loops like this more natural in a form of
+
+	unsigned int count = ...;
+	...
+	do {
+		...
+	} while (--count);
+
+> +
+> +	return -EIO;
+> +}
+
+I think I told you that during internal review.
+
+...
+
+> +void lgm_set_clk_val(void *membase, u32 reg,
+> +		     u8 shift, u8 width, u32 set_val)
+
+There is plenty of space, and to be precise it would take exactly 80, on the
+previous line.
+
+> +{
+> +	u32 mask = (GENMASK(width - 1, 0) << shift);
+> +	u32 regval;
+> +
+> +	regval = readl(membase + reg);
+> +	regval = (regval & ~mask) | ((set_val << shift) & mask);
+> +	writel(regval, membase + reg);
+> +}
+
+...
+
+> +void lgm_clk_add_lookup(struct lgm_clk_provider *ctx,
+> +			struct clk_hw *hw, unsigned int id)
+
+Ditto.
+
+...
+
+> +	if (gate->flags & GATE_CLK_HW)
+> +		reg = GATE_HW_REG_EN(gate->reg);
+> +	else if (gate->flags & GATE_CLK_SW)
+> +		reg = gate->reg;
+> +	else {
+> +		dev_err(gate->dev, "%s has unsupported flags 0x%lx\n",
+> +			clk_hw_get_name(hw), gate->flags);
+> +		return 0;
+> +	}
+
+Missed curly braces in first two conditionals.
+
+...
+
+> +	if (gate->flags & GATE_CLK_HW)
+> +		reg = GATE_HW_REG_STAT(gate->reg);
+> +	else if (gate->flags & GATE_CLK_SW)
+> +		reg = gate->reg;
+> +	else {
+> +		dev_err(gate->dev, "%s has unsupported flags 0x%lx\n",
+> +			clk_hw_get_name(hw), gate->flags);
+> +		return 0;
+> +	}
+
+Ditto.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
