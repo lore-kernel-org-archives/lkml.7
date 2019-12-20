@@ -2,115 +2,106 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C02C9C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2193EC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 977B9227BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:40:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBAF1227BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:44:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IiSA+8Zu"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Icotu/xE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbfLTAk0 (ORCPT
+        id S1727006AbfLTAof (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 19:40:26 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44990 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726952AbfLTAk0 (ORCPT
+        Thu, 19 Dec 2019 19:44:35 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:28276 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726952AbfLTAof (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 19:40:26 -0500
-Received: by mail-pl1-f195.google.com with SMTP id az3so3324271plb.11
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 16:40:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jRdtiusu+beWJmpVDOcRJ7adeaD2r8nAbkaw7dnEM3o=;
-        b=IiSA+8Zu5xMGrVWMYcIurnZ+82iGEVaMNMAYiegms9yncV4Odo6L5M/TGQpyIezn8m
-         tV4zwJ4ShOl3QB4MLIww8dJAE8GgAtN7bg0I0FblsIfNchewk13zr9OCsk24esyGcjqe
-         CeGtVcnpDJB1UcX3MdrZrffNlHFR9DBIuVtsQScHTeosd/J4UpJWV4sVJUWxuiyyXFQU
-         usb0+ndwgbW0KJE1z0Nad/3t/NOHqyRlRhrJe85j6rweybaBMTQABri1nG5ZdcejyZTZ
-         Yyv5+xScQSwEnGQiQDlpr+SiYIO0C+ZYrWJ42h1joK3SUIkhf0UQcgqSZAIkbCqAZ3pP
-         EReQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jRdtiusu+beWJmpVDOcRJ7adeaD2r8nAbkaw7dnEM3o=;
-        b=FmWnAvSKv64rNs4R64TXfizH2Ic//mkmTZP4OO6vAIfi2ysrLatvsPypacJMNIsQjl
-         /FA6Clsz97Y0qTZFNq8sTw5rdLkzCqd5FjSfqnTNZ7KzbgiaZEzPmjSiiNawlcYavGbr
-         4VZHAN+lrkOaXlXsfcOmUrGQx2zhTUHpvIW+M7Kf81rB/dMoa3ezGzXe4WCCCfwEkA+J
-         2tgY8P/MHiym+x6XIOLbi/H7ljbJIl61PwwzcgVkVmwbpxW6ABjeOYrK8j7J/hfpQ7jh
-         Or2RfNtztRKlfkqRaxwfC1HgoYU+nNa+yjjN84oEB8DJcDY1r2iEjOWo+rRnKMYtkNV8
-         CfTw==
-X-Gm-Message-State: APjAAAXFLD55L1EHO0g8pc5U/WphKiBmsIrE0oYTd4U2OuU2Odqa/uNT
-        Jn4dMkDmnJJHhbRghMMDjwFXWg==
-X-Google-Smtp-Source: APXvYqyXI07TRonse1dFs0JYqbSY6q5JMDHO4GTlLVXHf3CyrogLeSTQza7mciIV4JED48jdhYeetg==
-X-Received: by 2002:a17:902:59c9:: with SMTP id d9mr11951312plj.184.1576802425465;
-        Thu, 19 Dec 2019 16:40:25 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id o16sm8713462pgl.58.2019.12.19.16.40.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 16:40:24 -0800 (PST)
-Date:   Thu, 19 Dec 2019 16:40:22 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 3/3] arm64: dts: qcom: qcs404: Update the compatible for
- watchdog timer
-Message-ID: <20191220004022.GE3755841@builder>
-References: <cover.1576211720.git.saiprakash.ranjan@codeaurora.org>
- <757995875cc12d3f5a8f5fd5659b04653950970a.1576211720.git.saiprakash.ranjan@codeaurora.org>
+        Thu, 19 Dec 2019 19:44:35 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576802674; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=6xe+Bi/b3YFf+5YXiGnceVZDQa8BVLlPiBIbPciKOWY=;
+ b=Icotu/xE2tHdfZ50IIPyacxn5W9/1XcjPXBdNejKYF28KlZjYau5PD8xfoLsuKpJrBzN/ACT
+ b2m7PGGh+X22kLvCNQBdA6IBYnUUuFJnHmgzc7+gT23kP64/24c/kwoPLbB0uKwYhuDlk8jL
+ m7Rsu9MjqvJcLVOOsUzaglKN6Bw=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5dfc196a.7f82852ae998-smtp-out-n02;
+ Fri, 20 Dec 2019 00:44:26 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E2475C4479D; Fri, 20 Dec 2019 00:44:25 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7FCEBC43383;
+        Fri, 20 Dec 2019 00:44:25 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <757995875cc12d3f5a8f5fd5659b04653950970a.1576211720.git.saiprakash.ranjan@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 20 Dec 2019 08:44:25 +0800
+From:   cang@codeaurora.org
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] phy: qcom-qmp: Use register defines
+In-Reply-To: <20191219150433.2785427-3-vkoul@kernel.org>
+References: <20191219150433.2785427-1-vkoul@kernel.org>
+ <20191219150433.2785427-3-vkoul@kernel.org>
+Message-ID: <9e69d0b803cdbfe69d6edb62b8aa9b24@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 12 Dec 20:53 PST 2019, Sai Prakash Ranjan wrote:
-
-> Update the compatible for QCS404 watchdog timer with proper
-> SoC specific compatible.
+On 2019-12-19 23:04, Vinod Koul wrote:
+> We already define register offsets so use them in register layout.
 > 
-
-Applied
-
-Thanks,
-Bjorn
-
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
 > ---
->  arch/arm64/boot/dts/qcom/qcs404.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/phy/qualcomm/phy-qcom-qmp.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> index f5f0c4c9cb16..c9e8e629045b 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> @@ -905,7 +905,7 @@
->  		};
->  
->  		watchdog@b017000 {
-> -			compatible = "qcom,kpss-wdt";
-> +			compatible = "qcom,apss-wdt-qcs404", "qcom,kpss-wdt";
->  			reg = <0x0b017000 0x1000>;
->  			clocks = <&sleep_clk>;
->  		};
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index c2e800a3825a..06f971ca518e 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> @@ -166,8 +166,8 @@ static const unsigned int 
+> sdm845_ufsphy_regs_layout[] = {
+>  };
+> 
+>  static const unsigned int sm8150_ufsphy_regs_layout[] = {
+> -	[QPHY_START_CTRL]		= 0x00,
+> -	[QPHY_PCS_READY_STATUS]		= 0x180,
+> +	[QPHY_START_CTRL]		= QPHY_V4_PHY_START,
+> +	[QPHY_SW_RESET]			= QPHY_V4_SW_RESET,
+>  };
+> 
+>  static const struct qmp_phy_init_tbl msm8996_pcie_serdes_tbl[] = {
+
+Why is the QPHY_PCS_READY_STATUS removed here? Then what "status" are we
+polling here for UFS PHY?
+
+<snip>
+      if (cfg->type == PHY_TYPE_UFS) {
+          status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
+          mask = PCS_READY;
+          ready = PCS_READY;
+      } else {
+<snip>
+
+Can Guo.
