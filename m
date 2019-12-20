@@ -2,80 +2,117 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB78C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2D2C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37DCF2468E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9267C21D7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576852240;
+	bh=DbXMjSWpi+Z9+KBIdLUKG2sfKhNfYxqWvszvtbwE964=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=I10Q84Hw9c7hCufsGW4wrpA7PNCHs7uhobq8wAKqpY1T79xUyx/jOnoIWlsqvp+rz
+	 7wTdnf4dbf2zw3DKXmy6vAESMJgcSIxG39Y3BK1eahQUsLRsK1z1BZ+H3wuY4+//nb
+	 KuJfco1jyvJ8xIN7h8a/VgUkLHmpcTYFC9uPCby8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbfLTOai (ORCPT
+        id S1727814AbfLTOaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:30:38 -0500
-Received: from foss.arm.com ([217.140.110.172]:51180 "EHLO foss.arm.com"
+        Fri, 20 Dec 2019 09:30:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727754AbfLTOaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:30:35 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CAC431B;
-        Fri, 20 Dec 2019 06:30:34 -0800 (PST)
-Received: from e119886-lin.cambridge.arm.com (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B39603F718;
-        Fri, 20 Dec 2019 06:30:32 -0800 (PST)
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH v2 01/18] dt-bindings: ARM SPE: highlight the need for PPI partitions on heterogeneous systems
-Date:   Fri, 20 Dec 2019 14:30:08 +0000
-Message-Id: <20191220143025.33853-2-andrew.murray@arm.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191220143025.33853-1-andrew.murray@arm.com>
-References: <20191220143025.33853-1-andrew.murray@arm.com>
+        id S1727790AbfLTOai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:30:38 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF10C24685;
+        Fri, 20 Dec 2019 14:30:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576852237;
+        bh=DbXMjSWpi+Z9+KBIdLUKG2sfKhNfYxqWvszvtbwE964=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fqnw+HCqXZAH/I4KjUOqt+VRvQ0NWd5lyZt667U4S54A8h7WX1JbZVM92XBKfikSt
+         4zTdJIAAiowTgbyNc/0aZ+zjaN0rx/7QS52+mjd44f1Tw3YqfoxrkS3gCVW6JqvQ3z
+         hHSmGxTfi0OdX8xoDwudlzt1Os6mmY3o24A+7cMs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Roman Bolshakov <r.bolshakov@yadro.com>,
+        Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        Hannes Reinecke <hare@suse.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 31/52] scsi: qla2xxx: Ignore PORT UPDATE after N2N PLOGI
+Date:   Fri, 20 Dec 2019 09:29:33 -0500
+Message-Id: <20191220142954.9500-31-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
+References: <20191220142954.9500-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+From: Roman Bolshakov <r.bolshakov@yadro.com>
 
-It's not entirely clear for the binding document that the only way to
-express ARM SPE affined to a subset of CPUs on a heterogeneous systems
-is through the use of PPI partitions available in the interrupt
-controller bindings.
+[ Upstream commit af22f0c7b052c5c203207f1e5ebd6aa65f87c538 ]
 
-Let's make it clear.
+PORT UPDATE asynchronous event is generated on the host that issues PLOGI
+ELS (in the case of higher WWPN). In that case, the event shouldn't be
+handled as it sets unwanted DPC flags (i.e. LOOP_RESYNC_NEEDED) that
+trigger link flap.
 
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+Ignore the event if the host has higher WWPN, but handle otherwise.
+
+Cc: Quinn Tran <qutran@marvell.com>
+Link: https://lore.kernel.org/r/20191125165702.1013-13-r.bolshakov@yadro.com
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Tested-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/devicetree/bindings/arm/spe-pmu.txt | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/scsi/qla2xxx/qla_mbx.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/spe-pmu.txt b/Documentation/devicetree/bindings/arm/spe-pmu.txt
-index 93372f2a7df9..4f4815800f6e 100644
---- a/Documentation/devicetree/bindings/arm/spe-pmu.txt
-+++ b/Documentation/devicetree/bindings/arm/spe-pmu.txt
-@@ -9,8 +9,9 @@ performance sample data using an in-memory trace buffer.
- 	       "arm,statistical-profiling-extension-v1"
+diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
+index 4d90cf101f5fc..eac76e934cbe2 100644
+--- a/drivers/scsi/qla2xxx/qla_mbx.c
++++ b/drivers/scsi/qla2xxx/qla_mbx.c
+@@ -3920,6 +3920,7 @@ qla24xx_report_id_acquisition(scsi_qla_host_t *vha,
+ 					vha->d_id.b24 = 0;
+ 					vha->d_id.b.al_pa = 1;
+ 					ha->flags.n2n_bigger = 1;
++					ha->flags.n2n_ae = 0;
  
- - interrupts : Exactly 1 PPI must be listed. For heterogeneous systems where
--               SPE is only supported on a subset of the CPUs, please consult
--	       the arm,gic-v3 binding for details on describing a PPI partition.
-+               SPE is only supported on a subset of the CPUs, a PPI partition
-+	       described in the arm,gic-v3 binding must be used to describe
-+	       the set of CPUs this interrupt is affine to.
+ 					id.b.al_pa = 2;
+ 					ql_dbg(ql_dbg_async, vha, 0x5075,
+@@ -3930,6 +3931,7 @@ qla24xx_report_id_acquisition(scsi_qla_host_t *vha,
+ 					    "Format 1: Remote login - Waiting for WWPN %8phC.\n",
+ 					    rptid_entry->u.f1.port_name);
+ 					ha->flags.n2n_bigger = 0;
++					ha->flags.n2n_ae = 1;
+ 				}
+ 				qla24xx_post_newsess_work(vha, &id,
+ 				    rptid_entry->u.f1.port_name,
+@@ -3941,7 +3943,6 @@ qla24xx_report_id_acquisition(scsi_qla_host_t *vha,
+ 			/* if our portname is higher then initiate N2N login */
  
- ** Example:
- 
+ 			set_bit(N2N_LOGIN_NEEDED, &vha->dpc_flags);
+-			ha->flags.n2n_ae = 1;
+ 			return;
+ 			break;
+ 		case TOPO_FL:
 -- 
-2.21.0
+2.20.1
 
