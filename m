@@ -2,109 +2,124 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49010C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A9AC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 251742146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07AB62146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:53:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727470AbfLTMxR (ORCPT
+        id S1727486AbfLTMxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 07:53:17 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30672 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727397AbfLTMxQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 07:53:16 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBKCosoh102131
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 07:53:15 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2x0ufv6axv-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 07:53:15 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Fri, 20 Dec 2019 12:53:13 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 20 Dec 2019 12:53:09 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBKCr8eo31457450
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Dec 2019 12:53:08 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5DD0AA4054;
-        Fri, 20 Dec 2019 12:53:08 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 201F0A4060;
-        Fri, 20 Dec 2019 12:53:07 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.154.31])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 20 Dec 2019 12:53:07 +0000 (GMT)
-Subject: Re: [PATCH v5 1/2] IMA: Define workqueue for early boot "key"
- measurements
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        James.Bottomley@HansenPartnership.com,
-        linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Date:   Fri, 20 Dec 2019 07:53:06 -0500
-In-Reply-To: <503845c9-beeb-b520-ec3f-af5fa7d2b91f@linux.microsoft.com>
-References: <20191218164434.2877-1-nramas@linux.microsoft.com>
-         <20191218164434.2877-2-nramas@linux.microsoft.com>
-         <1576761104.4579.426.camel@linux.ibm.com>
-         <503845c9-beeb-b520-ec3f-af5fa7d2b91f@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19122012-0028-0000-0000-000003CA9DAE
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19122012-0029-0000-0000-0000248DF269
-Message-Id: <1576846386.5241.13.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-20_02:2019-12-17,2019-12-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 mlxlogscore=999
- phishscore=0 malwarescore=0 suspectscore=0 spamscore=0 impostorscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912200102
+        Fri, 20 Dec 2019 07:53:31 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50994 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727362AbfLTMxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 07:53:30 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 4F011375F1562EBCE835;
+        Fri, 20 Dec 2019 20:53:27 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 20 Dec 2019 20:53:17 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <naveen.n.rao@linux.ibm.com>, <anil.s.keshavamurthy@intel.com>,
+        <davem@davemloft.net>, <mhiramat@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <paulmck@kernel.org>,
+        <anders.roxell@linaro.org>, John Garry <john.garry@huawei.com>
+Subject: [RFC PATCH] kprobes: Fix suspicious RCU usage WARN in get_kprobe()
+Date:   Fri, 20 Dec 2019 20:49:51 +0800
+Message-ID: <1576846191-18801-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-12-19 at 08:55 -0800, Lakshmi Ramasubramanian wrote:
-> I am not sure if the mutex can be removed.
-> 
-> In ima_queue_key() we need to test the flag and add the key to the list 
-> as an atomic operation:
-> 
->   if (!test_bit())
->      insert_key_to_list
-> 
-> Suppose the if condition is true, but before we could insert the key to 
-> the list, ima_process_queued_keys() runs and processes queued keys we'll 
-> add the key to the list and never process it.
-> 
-> Is there an API in the kernel to test and add an entry to a list 
-> atomically?
+With CONFIG_PROVE_RCU_LIST set, we may get the following WARN in the
+test code:
 
-Ok, using test_and_set_bit() and test_bit() only helps, if we can get
-rid of the mutex.  I'll queue these patches.
+Kprobe smoke test: started
 
-thanks,
+=============================
+WARNING: suspicious RCU usage
+5.5.0-rc1-00013-ge15bd404ed10-dirty #802 Not tainted
+-----------------------------
+kernel/kprobes.c:329 RCU-list traversed in non-reader section!!
 
-Mimi
+other info that might help us debug this:
+
+rcu_scheduler_active = 2, debug_locks = 1
+1 lock held by swapper/0/1:
+#0: ffff800011bf3648 (kprobe_mutex){+.+.}, at: register_kprobe+0x94/0x5a0
+
+stack backtrace:
+CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc1-00013-ge15bd404ed10-dirty #802
+Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon D05 IT21 Nemo 2.0 RC0 04/18/2018
+Call trace:
+dump_backtrace+0x0/0x1a0
+show_stack+0x14/0x20
+dump_stack+0xe8/0x150
+lockdep_rcu_suspicious+0xcc/0x110
+get_kprobe+0xb8/0xc0
+__get_valid_kprobe+0x18/0xc8
+register_kprobe+0x9c/0x5a0
+init_test_probes+0x80/0x400
+init_kprobes+0x13c/0x154
+do_one_initcall+0x88/0x428
+kernel_init_freeable+0x21c/0x2c4
+kernel_init+0x10/0x108
+ret_from_fork+0x10/0x18
+Kprobe smoke test: passed successfully
+
+The code comment tells us the locking requirements:
+
+/*
+ * This routine is called either:
+ * 	- under the kprobe_mutex - during kprobe_[un]register()
+ * 				OR
+ * 	- with preemption disabled - from arch/xxx/kernel/kprobes.c
+ */
+struct kprobe *get_kprobe(void *addr)
+{
+	struct hlist_head *head;
+	struct kprobe *p;
+
+	head = &kprobe_table[hash_ptr(addr, KPROBE_HASH_BITS)];
+	hlist_for_each_entry_rcu(p, head, hlist,
+
+And we have the kprobe_mutex held in the path of concern, so add a
+RCU list traversal check condition for this.
+
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+I sent as an RFC as I am not 100% certain that this is the right fix.
+It does solve my WARN.
+
+I also assume __get_valid_kprobe() will require a similar change for
+similar reason.
+
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 53534aa258a6..908abdac77f1 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -326,7 +326,8 @@ struct kprobe *get_kprobe(void *addr)
+ 	struct kprobe *p;
+ 
+ 	head = &kprobe_table[hash_ptr(addr, KPROBE_HASH_BITS)];
+-	hlist_for_each_entry_rcu(p, head, hlist) {
++	hlist_for_each_entry_rcu(p, head, hlist,
++				 mutex_is_locked(&kprobe_mutex)) {
+ 		if (p->addr == addr)
+ 			return p;
+ 	}
+-- 
+2.17.1
 
