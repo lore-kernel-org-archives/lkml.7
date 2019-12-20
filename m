@@ -2,87 +2,98 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95EB1C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF45C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D26A206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:54:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QD2MJT6w"
+	by mail.kernel.org (Postfix) with ESMTP id 6A05E206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:55:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576868148;
+	bh=IHewiafZP6O9c1Wi2X5HdbeCK4jiwo8/eMpUfBGFAj8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Ndi6MSD4yxKlGaauC6yau6LzrUDbm7oB3gkaAQ+dYwF/CYkiZ1JlkCBc1UWzFhg85
+	 LvOFOwJSAiQCMvYr7sd5rZx1YA1On6SW029oQm2+TPRzIgMcPHk4t9LDHWYQBsfoUl
+	 VGB2447BZgCfZCtEgLE46JnzrjFmF8cOFw9s5htA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbfLTSyM (ORCPT
+        id S1727534AbfLTSzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 13:54:12 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44497 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727404AbfLTSyM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 13:54:12 -0500
-Received: by mail-wr1-f67.google.com with SMTP id q10so10387073wrm.11
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 10:54:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=TrbY94qgfc3+UcgXhbi/ANI583h6IbUS67gFLb/gN+k=;
-        b=QD2MJT6wmUkO2cdIzOyTv5s0LB/DXWT0yKNT9MrizoxAgozyKGi5dHk0OfhInu6d0A
-         1x7OmPHwUpoxTnRjYPTQ5Ek4QEd0dBQN9/23kwBZkK9e+FKLLgSlbJmdX1y4i2Oz5BcS
-         T5PTC+WIG497h/2donR358VhmJHjLuj/0+jFilop20MDhPgxqLayu5dkHCabQaWXPxO0
-         t6V0805n3k8iUft06jNYxNLDXraw4cHUh5+G4NBVS/F6onSXK25nfIta6PdBH+5K55UG
-         RdYeD6qzwvBkCKlGbh1XObUi957mv73Offsy/+g9KCz25hjw4dIRxzCAEp9p3W4nZNPl
-         lHcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=TrbY94qgfc3+UcgXhbi/ANI583h6IbUS67gFLb/gN+k=;
-        b=jN5FfOUlKkEJ+iDrIW7x6faa9liMensipzE8EVsGCKifdYCw2HtFVDRlXwEjJl8qs0
-         C779vSswZjY2xRHAJPpESPZLeNuvaZipQteCTl+Tw3SsgChwJDyjRB6hOKWnKeuNqrT3
-         0TxsbzlLApRjKUZHCisqLx/6HIXHXFnt6qytnSeqxDcyQEb4fQTmIWwysfdUdKeVRBMH
-         w9Z67P1APwKTUtWCYiuN/Dibni7Rg5KAR5/DOphSXyZNIz5jkMTAx7DXqC1m159fSUml
-         A4jCvfkfUc5QtRevkJixT/26mCPLjkHKulgC072Hmag+QW97DPAMHgeJZolFgIJj4Ih3
-         CVow==
-X-Gm-Message-State: APjAAAVRcxWi+YB+hK4lu3cm026b6BBMaOjSRbGLdRJummAQLU1nVwe3
-        dgJ6Me0qnX5lvj9cmJ0vcgo=
-X-Google-Smtp-Source: APXvYqz1odYwpyJ7ltBG2KoCmQclnoyc7ENMv/Njh/Miu9dGxzlMXF1dWCYbUmed76MksXEvNsR11g==
-X-Received: by 2002:adf:bc87:: with SMTP id g7mr17390983wrh.121.1576868049922;
-        Fri, 20 Dec 2019 10:54:09 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id q8sm10256857wmq.3.2019.12.20.10.54.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 10:54:09 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Justin Chen <justinpopo6@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARM: brcmstb: Add debug UART entry for 7216
-Date:   Fri, 20 Dec 2019 10:54:06 -0800
-Message-Id: <20191220185406.1886-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191210224859.30899-1-f.fainelli@gmail.com>
-References: <20191210224859.30899-1-f.fainelli@gmail.com>
+        Fri, 20 Dec 2019 13:55:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49234 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727404AbfLTSzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 13:55:47 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30FCB206D8;
+        Fri, 20 Dec 2019 18:55:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576868146;
+        bh=IHewiafZP6O9c1Wi2X5HdbeCK4jiwo8/eMpUfBGFAj8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=U+hwi9xhbzx5Cthi3fBq4U/+DZfatJ3jgwzF339RzFOZ65b3fWHMYhjqCFAB67xuM
+         7zM8MMO7HAthc9iOA2KF6PfhOFXtg1jiRtFAa3iBuvjovZb3EkTvxvSiopP/Ep/WgQ
+         DzFVRo3YerxAzmEVVhnu+O/2WdxoXYppPX9RBdcY=
+Date:   Sat, 21 Dec 2019 03:55:41 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>, paulmck@kernel.org,
+        joel@joelfernandes.org,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        David Miller <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -tip V2 0/2] kprobes: Fix RCU warning and cleanup
+Message-Id: <20191221035541.69fc05613351b8dabd6e1a44@kernel.org>
+In-Reply-To: <157535316659.16485.11817291759382261088.stgit@devnote2>
+References: <157535316659.16485.11817291759382261088.stgit@devnote2>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019 14:48:56 -0800, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> From: Justin Chen <justinpopo6@gmail.com>
-> 
-> 7216 has the same memory map as 7278 and the same physical address for
-> the UART, alias the definition accordingly.
-> 
-> Signed-off-by: Justin Chen <justinpopo6@gmail.com>
-> [florian: expand commit message]
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
+Hi Ingo,
 
-Applied to soc/next, thanks!
---
-Florian
+Could you pick this series to fix the false-positive RCU-list warnings?
+
+Thank you,
+
+On Tue,  3 Dec 2019 15:06:06 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
+
+> Hi,
+> 
+> Here is a couple of patches which fix suspicious RCU
+> usage warnings in kprobes.
+> 
+> Anders reported the first warning in kprobe smoke test
+> with CONFIG_PROVE_RCU_LIST=y. While fixing this issue,
+> I found similar issues and cleanups in kprobes.
+> 
+> Thank you,
+> 
+> ---
+> 
+> Masami Hiramatsu (2):
+>       kprobes: Suppress the suspicious RCU warning on kprobes
+>       kprobes: Use non RCU traversal APIs on kprobe_tables if possible
+> 
+> 
+>  kernel/kprobes.c |   32 ++++++++++++++++++++++----------
+>  1 file changed, 22 insertions(+), 10 deletions(-)
+> 
+> --
+> Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
