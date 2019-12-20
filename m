@@ -2,100 +2,124 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F9EC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 17:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E41FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 17:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5ADC206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 17:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F88F206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 17:56:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=flawful.org header.i=@flawful.org header.b="PDKt/T2C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbfLTRz3 (ORCPT
+        id S1727511AbfLTR4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 12:55:29 -0500
-Received: from foss.arm.com ([217.140.110.172]:53762 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727421AbfLTRz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 12:55:28 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 619A01FB;
-        Fri, 20 Dec 2019 09:55:28 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D2C13F67D;
-        Fri, 20 Dec 2019 09:55:27 -0800 (PST)
-Date:   Fri, 20 Dec 2019 17:55:25 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/18] arm64: KVM: add SPE profiling support
-Message-ID: <20191220175524.GC25258@lakrids.cambridge.arm.com>
-References: <20191220143025.33853-1-andrew.murray@arm.com>
+        Fri, 20 Dec 2019 12:56:22 -0500
+Received: from pio-pvt-msa1.bahnhof.se ([79.136.2.40]:37590 "EHLO
+        pio-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727413AbfLTR4W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 12:56:22 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 28CC93F4AC;
+        Fri, 20 Dec 2019 18:56:19 +0100 (CET)
+Authentication-Results: pio-pvt-msa1.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=flawful.org header.i=@flawful.org header.b="PDKt/T2C";
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Ae1RvXHghbKa; Fri, 20 Dec 2019 18:56:18 +0100 (CET)
+Received: from flawful.org (ua-84-217-220-205.bbcust.telenor.se [84.217.220.205])
+        (Authenticated sender: mb274189)
+        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 8BF2C3F368;
+        Fri, 20 Dec 2019 18:56:17 +0100 (CET)
+Received: by flawful.org (Postfix, from userid 1001)
+        id A1258778; Fri, 20 Dec 2019 18:56:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flawful.org; s=mail;
+        t=1576864576; bh=8sfDuMtRxJ8hPMJm3nR5BkYWmVNNN3yvCkmGXMpZi9s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PDKt/T2CXsxsVk/B7xteB3rEODwWfnt1Z3AQQ8VW5CW56tAsjMG3UX7xHLBSSesga
+         e22DOblEzyXbxayHv6vucp3pDon2WykIdXZut+D0Oz1QO+eJvBVNWono8Fh+MQLS46
+         aTzaWCU6dQqT/ywzY1FZo4kng5SOZlKV6IK6s8yM=
+Date:   Fri, 20 Dec 2019 18:56:16 +0100
+From:   Niklas Cassel <nks@flawful.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 7/7] clk: qcom: apcs-msm8916: use clk_parent_data to
+ specify the parent
+Message-ID: <20191220175616.3wdslb7hm773zb22@flawful.org>
+References: <20191125135910.679310-1-niklas.cassel@linaro.org>
+ <20191125135910.679310-8-niklas.cassel@linaro.org>
+ <20191219062339.DC0DE21582@mail.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191220143025.33853-1-andrew.murray@arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20191219062339.DC0DE21582@mail.kernel.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
-
-On Fri, Dec 20, 2019 at 02:30:07PM +0000, Andrew Murray wrote:
-> This series implements support for allowing KVM guests to use the Arm
-> Statistical Profiling Extension (SPE).
+On Wed, Dec 18, 2019 at 10:23:39PM -0800, Stephen Boyd wrote:
+> Quoting Niklas Cassel (2019-11-25 05:59:09)
+> > diff --git a/drivers/clk/qcom/apcs-msm8916.c b/drivers/clk/qcom/apcs-msm8916.c
+> > index 46061b3d230e..bb91644edc00 100644
+> > --- a/drivers/clk/qcom/apcs-msm8916.c
+> > +++ b/drivers/clk/qcom/apcs-msm8916.c
+> > @@ -51,6 +51,19 @@ static int qcom_apcs_msm8916_clk_probe(struct platform_device *pdev)
+> >         struct clk_init_data init = { };
+> >         int ret = -ENODEV;
+> >  
+> > +       /*
+> > +        * This driver is defined by the devicetree binding
+> > +        * Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt,
+> > +        * however, this driver is registered as a platform device by
+> > +        * qcom-apcs-ipc-mailbox.c. Because of this, when this driver
+> > +        * uses dev_get_regmap() and devm_clk_get(), it has to send the parent
+> > +        * device as argument.
+> > +        * When registering with the clock framework, we cannot use this trick,
+> > +        * since the clock framework always looks at dev->of_node when it tries
+> > +        * to find parent clock names using clk_parent_data.
+> > +        */
+> > +       dev->of_node = parent->of_node;
 > 
-> It has been tested on a model to ensure that both host and guest can
-> simultaneously use SPE with valid data. E.g.
+> This is odd. The clks could be registered with of_clk_hw_register() but
+> then we lose the device provider information. Maybe we should search up
+> one level to the parent node and if that has a DT node but the
+> clk controller device doesn't we should use that instead?
+
+Hello Stephen,
+
+Having this in the clk core is totally fine with me,
+since it solves my problem.
+
+Will you cook up a patch, or do you want me to do it?
+
+Kind regards,
+Niklas
+
 > 
-> $ perf record -e arm_spe/ts_enable=1,pa_enable=1,pct_enable=1/ \
->         dd if=/dev/zero of=/dev/null count=1000
-> $ perf report --dump-raw-trace > spe_buf.txt
-
-What happens if I run perf record on the VMM, or on the CPU(s) that the
-VMM is running on? i.e.
-
-$ perf record -e arm_spe/ts_enable=1,pa_enable=1,pct_enable=1/ \
-        lkvm ${OPTIONS_FOR_GUEST_USING_SPE}
-
-... or:
-
-$ perf record -a -c 0 -e arm_spe/ts_enable=1,pa_enable=1,pct_enable=1/ \
-        sleep 1000 &
-$ taskset -c 0 lkvm ${OPTIONS_FOR_GUEST_USING_SPE} &
-
-> As we save and restore the SPE context, the guest can access the SPE
-> registers directly, thus in this version of the series we remove the
-> trapping and emulation.
-> 
-> In the previous series of this support, when KVM SPE isn't supported
-> (e.g. via CONFIG_KVM_ARM_SPE) we were able to return a value of 0 to
-> all reads of the SPE registers - as we can no longer do this there isn't
-> a mechanism to prevent the guest from using SPE - thus I'm keen for
-> feedback on the best way of resolving this.
-
-When not providing SPE to the guest, surely we should be trapping the
-registers and injecting an UNDEF?
-
-What happens today, without these patches?
-
-> It appears necessary to pin the entire guest memory in order to provide
-> guest SPE access - otherwise it is possible for the guest to receive
-> Stage-2 faults.
-
-AFAICT these patches do not implement this. I assume that's what you're
-trying to point out here, but I just want to make sure that's explicit.
-
-Maybe this is a reason to trap+emulate if there's something more
-sensible that hyp can do if it sees a Stage-2 fault.
-
-Thanks,
-Mark.
+> ----8<-----
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index b68e200829f2..c8745c415c04 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -3669,7 +3669,7 @@ __clk_register(struct device *dev, struct device_node *np, struct clk_hw *hw)
+>  	if (dev && pm_runtime_enabled(dev))
+>  		core->rpm_enabled = true;
+>  	core->dev = dev;
+> -	core->of_node = np;
+> +	core->of_node = np ? : dev_of_node(dev->parent);
+>  	if (dev && dev->driver)
+>  		core->owner = dev->driver->owner;
+>  	core->hw = hw;
