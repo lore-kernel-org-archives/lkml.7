@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7774CC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13414C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 445ED21D7D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE82321D7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852198;
-	bh=DaKcY2ZpqbDstz9wKYKjtF3MBp5yvPnCH85aOptTh+g=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=mNaGizfaWC6l3me5Z4l0ql3TcD1TdzQTsKzzRZsu7pHQTu/Xu9j7gKwjOzfEPF+vR
-	 fHqU97yKmqmH+azzhjoOES2VAu0RNGr+TO+Ox0jKd+BBZEML850iH36X7InjbgVUNA
-	 xJxsRQzZCg1fhFp/smsHjrXdqkqseJ+/V8JTuYnY=
+	s=default; t=1576852205;
+	bh=/I6+Hsqr6v9xI0xByVoqUjWM2QPpF2hzrFHfe/Pa7ms=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DJEndBkUW86erTLw/j+oPpzsR4vK8u/+ay2+6W0KQaUx10uNtz7ncZ6MIIIJzHpie
+	 exzpoXRIwvLYZe4bTJshLRP5pflSfYPjnsDfnF2BKSVeGOxu/tenoo2G9NJa2Eqayi
+	 7bZm53SWMh6hos3jfSKnmbzNxsAopWU9KRT6JQss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbfLTO35 (ORCPT
+        id S1727507AbfLTOaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:29:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33068 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:30:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727369AbfLTO35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:29:57 -0500
+        id S1727483AbfLTOaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:30:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CBE4206CB;
-        Fri, 20 Dec 2019 14:29:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 791ED206CB;
+        Fri, 20 Dec 2019 14:30:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852196;
-        bh=DaKcY2ZpqbDstz9wKYKjtF3MBp5yvPnCH85aOptTh+g=;
-        h=From:To:Cc:Subject:Date:From;
-        b=pd69Fkx3rDQ1+5mFJx9W0sSYc63XiA6PYX0lhklgJ2u/dscvGoe98DFCoHIKfGUQP
-         /oEZXBukDQZt1fc5ovGeDcPr8Wx1dmHl2Cn5KUXqc24eIoBcx9SAdN9zrhqJYxtxBy
-         yhLYqCtDFqNKmDfAcZ00Z5so2OhB9emI9VNZZWFM=
+        s=default; t=1576852202;
+        bh=/I6+Hsqr6v9xI0xByVoqUjWM2QPpF2hzrFHfe/Pa7ms=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zaNIOimS40/0b8fBRbFZibo7n0Lc+K5zrmRf6JieodJVpatnnb6QOkYBUmwl3se/l
+         /zxtQmPcFArVEYFOUfD+cC2fDle1F3dLVAYKxV/JSn6Hl9et92H3OBg6nUH40M9MaF
+         AGEqiC8ZP3syb4pz31RnFcvyULDvk/9vAFy7tFD0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephan Gerhold <stephan@gerhold.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 01/52] drm/mcde: dsi: Fix invalid pointer dereference if panel cannot be found
-Date:   Fri, 20 Dec 2019 09:29:03 -0500
-Message-Id: <20191220142954.9500-1-sashal@kernel.org>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        Evan Quan <evan.quan@amd.com>, Sasha Levin <sashal@kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 05/52] drm/amdgpu: add header line for power profile on Arcturus
+Date:   Fri, 20 Dec 2019 09:29:07 -0500
+Message-Id: <20191220142954.9500-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
+References: <20191220142954.9500-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,57 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-[ Upstream commit c131280c03bd1c225c2e64e9ef75873ffca3d96e ]
+[ Upstream commit 14891c316ca7e15d81dba78f30fb630e3f9ee2c9 ]
 
-The "panel" pointer is not reset to NULL if of_drm_find_panel()
-returns an error. Therefore we later assume that a panel was found,
-and try to dereference the error pointer, resulting in:
+So the output is consistent with other asics.
 
-    mcde-dsi a0351000.dsi: failed to find panel try bridge (4294966779)
-    Unable to handle kernel paging request at virtual address fffffe03
-    PC is at drm_panel_bridge_add.part.0+0x10/0x5c
-    LR is at mcde_dsi_bind+0x120/0x464
-    ...
-
-Reset "panel" to NULL to avoid this problem.
-Also change the format string of the error to %ld to print
-the negative errors correctly. The crash above then becomes:
-
-    mcde-dsi a0351000.dsi: failed to find panel try bridge (-517)
-    mcde-dsi a0351000.dsi: no panel or bridge
-    ...
-
-Fixes: 5fc537bfd000 ("drm/mcde: Add new driver for ST-Ericsson MCDE")
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191118130252.170324-1-stephan@gerhold.net
+Reviewed-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mcde/mcde_dsi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/powerplay/arcturus_ppt.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/gpu/drm/mcde/mcde_dsi.c b/drivers/gpu/drm/mcde/mcde_dsi.c
-index f9c9e32b299c9..35bb825d19188 100644
---- a/drivers/gpu/drm/mcde/mcde_dsi.c
-+++ b/drivers/gpu/drm/mcde/mcde_dsi.c
-@@ -935,11 +935,13 @@ static int mcde_dsi_bind(struct device *dev, struct device *master,
- 	for_each_available_child_of_node(dev->of_node, child) {
- 		panel = of_drm_find_panel(child);
- 		if (IS_ERR(panel)) {
--			dev_err(dev, "failed to find panel try bridge (%lu)\n",
-+			dev_err(dev, "failed to find panel try bridge (%ld)\n",
- 				PTR_ERR(panel));
-+			panel = NULL;
+diff --git a/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c b/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c
+index d493a3f8c07a6..b68bf8dcfa783 100644
+--- a/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c
++++ b/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c
+@@ -1388,12 +1388,17 @@ static int arcturus_get_power_profile_mode(struct smu_context *smu,
+ 					"VR",
+ 					"COMPUTE",
+ 					"CUSTOM"};
++	static const char *title[] = {
++			"PROFILE_INDEX(NAME)"};
+ 	uint32_t i, size = 0;
+ 	int16_t workload_type = 0;
+ 
+ 	if (!smu->pm_enabled || !buf)
+ 		return -EINVAL;
+ 
++	size += sprintf(buf + size, "%16s\n",
++			title[0]);
 +
- 			bridge = of_drm_find_bridge(child);
- 			if (IS_ERR(bridge)) {
--				dev_err(dev, "failed to find bridge (%lu)\n",
-+				dev_err(dev, "failed to find bridge (%ld)\n",
- 					PTR_ERR(bridge));
- 				return PTR_ERR(bridge);
- 			}
+ 	for (i = 0; i <= PP_SMC_POWER_PROFILE_CUSTOM; i++) {
+ 		/*
+ 		 * Conv PP_SMC_POWER_PROFILE* to WORKLOAD_PPLIB_*_BIT
 -- 
 2.20.1
 
