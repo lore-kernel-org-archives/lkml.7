@@ -2,80 +2,102 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FE0C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4772C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB67A21D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80AF0206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:33:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576852427;
+	bh=wkJAdtkBXdnXu9aJYtGZe9L7P79h8OzAjQykNDwnR8c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=G019D4xokt3PNJbm9tiSGZL/XNwY/eZC0g1Kcys2ZZGV2P3WbIDfJDnzTqQRAVUvL
+	 qMKd8xxvP8EDRvwVKry1xfDjRynvpvsNqt38ehJl0V+RXkdDZzSTl1gdMhNIUuJX91
+	 F4udHQAm1ghiRjR72dmrc+1q66Y2e0+GJt7RdJao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728026AbfLTOdo (ORCPT
+        id S1728263AbfLTOdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:33:44 -0500
-Received: from foss.arm.com ([217.140.110.172]:51188 "EHLO foss.arm.com"
+        Fri, 20 Dec 2019 09:33:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727783AbfLTOah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727780AbfLTOah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Dec 2019 09:30:37 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B569D106F;
-        Fri, 20 Dec 2019 06:30:36 -0800 (PST)
-Received: from e119886-lin.cambridge.arm.com (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC14E3F718;
-        Fri, 20 Dec 2019 06:30:34 -0800 (PST)
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH v2 02/18] arm64: KVM: reset E2PB correctly in MDCR_EL2 when exiting the guest(VHE)
-Date:   Fri, 20 Dec 2019 14:30:09 +0000
-Message-Id: <20191220143025.33853-3-andrew.murray@arm.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191220143025.33853-1-andrew.murray@arm.com>
-References: <20191220143025.33853-1-andrew.murray@arm.com>
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D52924689;
+        Fri, 20 Dec 2019 14:30:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576852236;
+        bh=wkJAdtkBXdnXu9aJYtGZe9L7P79h8OzAjQykNDwnR8c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fvV72O5uH60SYxsRPw0oX0FHw1sniAi1uX4lOH9N3rNvQSYbnQpaHmBvPFwnCdH/X
+         kBdY/i46RwyeMVUuQ8jodc2nqcdg8Xg0qEziE5nfe2KwOlmbAPCapblCzMxCUfw9eR
+         +xgXwMwkHdAN3vQKG+7qNc1kB9imgGfa9Tk0lRFY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Roman Bolshakov <r.bolshakov@yadro.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        Quinn Tran <qutran@marvell.com>,
+        Hannes Reinecke <hare@suse.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 30/52] scsi: qla2xxx: Don't defer relogin unconditonally
+Date:   Fri, 20 Dec 2019 09:29:32 -0500
+Message-Id: <20191220142954.9500-30-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
+References: <20191220142954.9500-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+From: Roman Bolshakov <r.bolshakov@yadro.com>
 
-On VHE systems, the reset value for MDCR_EL2.E2PB=b00 which defaults
-to profiling buffer using the EL2 stage 1 translations. However if the
-guest are allowed to use profiling buffers changing E2PB settings, we
-need to ensure we resume back MDCR_EL2.E2PB=b00. Currently we just
-do bitwise '&' with MDCR_EL2_E2PB_MASK which will retain the value.
+[ Upstream commit dabc5ec915f3a2c657ecfb529cd3d4ec303a4412 ]
 
-So fix it by clearing all the bits in E2PB.
+qla2x00_configure_local_loop sets RELOGIN_NEEDED bit and calls
+qla24xx_fcport_handle_login to perform the login. This bit triggers a wake
+up of DPC later after a successful login.
 
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+The deferred call is not needed if login succeeds, and it's set in
+qla24xx_fcport_handle_login in case of errors, hence it should be safe to
+drop.
+
+Link: https://lore.kernel.org/r/20191125165702.1013-12-r.bolshakov@yadro.com
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Acked-by: Quinn Tran <qutran@marvell.com>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Tested-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kvm/hyp/switch.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/scsi/qla2xxx/qla_init.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
-index 72fbbd86eb5e..250f13910882 100644
---- a/arch/arm64/kvm/hyp/switch.c
-+++ b/arch/arm64/kvm/hyp/switch.c
-@@ -228,9 +228,7 @@ void deactivate_traps_vhe_put(void)
- {
- 	u64 mdcr_el2 = read_sysreg(mdcr_el2);
- 
--	mdcr_el2 &= MDCR_EL2_HPMN_MASK |
--		    MDCR_EL2_E2PB_MASK << MDCR_EL2_E2PB_SHIFT |
--		    MDCR_EL2_TPMS;
-+	mdcr_el2 &= MDCR_EL2_HPMN_MASK | MDCR_EL2_TPMS;
- 
- 	write_sysreg(mdcr_el2, mdcr_el2);
- 
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index 7364f3b62b9d9..1c3a5fcbd3153 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -5043,7 +5043,6 @@ qla2x00_configure_local_loop(scsi_qla_host_t *vha)
+ 				memcpy(&ha->plogi_els_payld.data,
+ 				    (void *)ha->init_cb,
+ 				    sizeof(ha->plogi_els_payld.data));
+-				set_bit(RELOGIN_NEEDED, &vha->dpc_flags);
+ 			} else {
+ 				ql_dbg(ql_dbg_init, vha, 0x00d1,
+ 				    "PLOGI ELS param read fail.\n");
 -- 
-2.21.0
+2.20.1
 
