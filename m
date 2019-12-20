@@ -2,139 +2,125 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D79CC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AC7C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12F0B206A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 606BC206A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:51:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="FwXM8Kku"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OjR2Le/o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbfLTQuD (ORCPT
+        id S1727417AbfLTQvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 11:50:03 -0500
-Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.22]:20999 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727233AbfLTQuC (ORCPT
+        Fri, 20 Dec 2019 11:51:19 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42545 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727181AbfLTQvT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 11:50:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1576860600;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:Cc:Message-Id:Date:Subject:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=rUxpZn7cfcxARKCHzhVD7qNlVTVpzSzhoASApFtny/I=;
-        b=FwXM8KkuymqUEVQ9wzpf5BCc/r9f9olxDwb0jNOs7Ts66GX3UMHgVbkCNrOdto82i7
-        HEsbtZF/aWWA3fZAlApW6QfBs/zOMq2grRHXzJYvTpVs9NNNRnv05uITDebL2z6VFANJ
-        ZQszImN4mZLU7KlAEmpvv7g+sWI6RMvPaKhesRPAJX+MyhHgQ0+DrCWegDnCOij4uuGw
-        IYBdgpj2vJRuflAcnY0wFtrQERZJEsaTBd6CDtm2zhdNCpYJ5nTozAEXZ3F37HHALPtd
-        DiYeaC6tzPGWMvTcbUWTy8Zaosn9HsytOCdJs/GU4ThGqPp0s6Il/TQIaZ2/0FKB7J0K
-        hWAQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/vuwDOpExo="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.1.1 DYNA|AUTH)
-        with ESMTPSA id 4012cfvBKGns8za
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Fri, 20 Dec 2019 17:49:54 +0100 (CET)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+        Fri, 20 Dec 2019 11:51:19 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 4so5505143pfz.9
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 08:51:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ajRMXmSY5Z78AT9GSMVh3nOVbX/834wxTwFR9fI4zHM=;
+        b=OjR2Le/o8ntDEe4xbiK3QMrmk+HoKDxJ0eX6ZW6uIbmNkMBvA2Z8QZalLMPolr8CS1
+         FiBW3JQZj6ltgIkwlUvZN/NHSGaBUqD9NMYO6izQH4+ml+1NDa4GHJiL9LQYWnzK41Nh
+         jlAFb/SgNTGjwGuzVneS6l/gAgh0jFhf5PTgp2c3qUDD1KDGLyQC0aY0b6ISZa6biH3d
+         D/AunXca2raciTtijZRIH9twGkMZH7UPNCYX91KJRETCionZN5JhCioVgvZ9gvQtLvhy
+         k/vhAvp3spGeR8dztmCLBrUC2iA/62Sj3jkk+eCCzBFe/UuBBER9lXhJQTn92jE2c5iw
+         emmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ajRMXmSY5Z78AT9GSMVh3nOVbX/834wxTwFR9fI4zHM=;
+        b=X1lpUl2q9rtRG8lwahNxqqR/NraTYbFtWbSVRfmK8koZGSX/x2l4TA3tEWKxYegBVj
+         FmzEwPWctsUNHJOse02weV7gCI5bzMsJ4wj7/aWeHIJA1jvJgUdKRPyhcIgHL5ZxIyPl
+         9zNEjdZbp6aSMejXvppNx2PuptR/TewhfMf3w5MY3F3RUfLC+gHFEcXnu0x4uvRlJt+w
+         x9D75qGkWztXauIjrUqdRC1OXpyAXxAKep0nSlTH16GlVoIOeGw8/xDfXZhVuKyDCndU
+         r7F+cpnnLu1HysYO0SLZh1mG9v2wSdSXh12G8NTztmQpLhq1VFC9DgNaslUBgU8XsjA4
+         uV3w==
+X-Gm-Message-State: APjAAAVKG0bNe8Xrhk01MRVQgg7ydDkARL/ptPb3LzlMzPGL+r5Kcy3X
+        Fht06o6CUYwhdpC2zCm2uA+Cj74UUlM=
+X-Google-Smtp-Source: APXvYqypTThp0pUp6TQBM9XQVvoIm7eBim6W3UjiAvmDFfaPROzaFbZBONE6R+TZkrT0a8P4LuoIBg==
+X-Received: by 2002:a62:296:: with SMTP id 144mr17326034pfc.120.1576860677016;
+        Fri, 20 Dec 2019 08:51:17 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id g9sm13930844pfm.150.2019.12.20.08.51.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 08:51:16 -0800 (PST)
+Date:   Fri, 20 Dec 2019 08:51:13 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     linux-pm@vger.kernel.org, evgreen@chromium.org,
+        daidavid1@codeaurora.org, okukatla@codeaurora.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] interconnect: Print the tag in the debugfs summary
+Message-ID: <20191220165113.GB549437@yoga>
+References: <20191220163846.6485-1-georgi.djakov@linaro.org>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Subject: [BUG] CI20: interrupt-controller@10001000 didn't like hwirq-0x0 to VIRQ8 mapping (rc=-19) 
-Date:   Fri, 20 Dec 2019 17:49:52 +0100
-Message-Id: <8BA39E30-53CB-47DB-8890-465ACB760402@goldelico.com>
-Cc:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org,
-        MIPS Creator CI20 Development 
-        <mips-creator-ci20-dev@googlegroups.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Zhou Yanjie <zhouyanjie@zoho.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-X-Mailer: Apple Mail (2.3124)
+Content-Disposition: inline
+In-Reply-To: <20191220163846.6485-1-georgi.djakov@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
-since v5.5-rc1 the boot log is flooded by a sequence of messages like:
+On Fri 20 Dec 08:38 PST 2019, Georgi Djakov wrote:
 
-[    0.000000] NR_IRQS: 222
-[    0.000000] irq: :interrupt-controller@10001000 didn't like hwirq-0x0 =
-to VIRQ8 mapping (rc=3D-19)
-[    0.000000] irq: :interrupt-controller@10001000 didn't like hwirq-0x1 =
-to VIRQ9 mapping (rc=3D-19)
-[    0.000000] irq: :interrupt-controller@10001000 didn't like hwirq-0x2 =
-to VIRQ10 mapping (rc=3D-19)
-[    0.000000] irq: :interrupt-controller@10001000 didn't like hwirq-0x3 =
-to VIRQ11 mapping (rc=3D-19)
-[    0.000000] irq: :interrupt-controller@10001000 didn't like hwirq-0x4 =
-to VIRQ12 mapping (rc=3D-19)
-...
-[    0.000000] irq: :interrupt-controller@10001000 didn't like =
-hwirq-0x3e to VIRQ70 mapping (rc=3D-19)
-[    0.000000] irq: :interrupt-controller@10001000 didn't like =
-hwirq-0x3f to VIRQ71 mapping (rc=3D-19)
+> Now we can have a tag associated with the path. Add this information
+> to the interconnect_summary file, as the current information in debugfs
+> is incomplete.
+> 
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 
-A handful of /proc/interrupts are nevertheless working.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-I have now analyzed the situation a little:
-
-* the message is printed by irq_domain_associate()
-* call sequence is ingenic_intc_of_init() -> irq_domain_add_legacy() -> =
-irq_domain_associate_many() -> irq_domain_associate()
-* the reason for the message is that
-  domain->ops->map()
-  called in irq_domain_associate() returns an error
-* domain->ops is initialized to &irq_generic_chip_ops
-* domain->ops->map is initialized to irq_map_generic_chip()
-* irq_map_generic_chip() calls __irq_get_domain_generic_chip()
-* which returns -ENODEV (-19) if d->gc =3D=3D NULL
-
-So the location, where the -19 comes from, is found.
-
-Now why is d->gc =3D=3D NULL in __irq_get_domain_generic_chip() ?
-
-This IMHO seems to be a bad initialization sequence:
-
-* ingenic_intc_of_init() calls firstly irq_domain_add_legacy()
-* which does *not* initialize domain->gc but expects it to be !NULL =
-through irq_map_generic_chip()
-* and would only irq_alloc_domain_generic_chips() which initializes =
-domain->gc if irq_domain_add_legacy() is successful
-* irq_alloc_domain_generic_chips() would initialize domain->gc by =
-calling __irq_alloc_domain_generic_chips()
-
-There are indeed significant changes in drivers/irqchip/irq-ingenic.c
-from v5.4to v5.5-rc1 which have introduced the use of =
-irq_domain_add_legacy()
-and irq_alloc_domain_generic_chips() by
-
-52ecc87642f2 irqchip: ingenic: Error out if IRQ domain creation failed
-208caadce5d4 irqchip: ingenic: Get virq number from IRQ domain
-8bc7464b5140 irqchip: ingenic: Alloc generic chips from IRQ domain
-b8b0145f7d0e irqchip: Ingenic: Add process for more than one irq at the =
-same time.
-
-Most likely 52ecc87642f2 has changed the call sequence and therefore =
-always fails.
-
-Is there some essential patch missing to be upstreamed?
-I have looked but not found anything related in linux-next.
-
-I have also tried reverting 52ecc87642f2 alone but it has conflicts.
-
-But I can revert all 4 commits with an otherwise unchanged setup and
-the messages are gone for me.
-
-How would a fix look like?
-
-BR and thanks,
-Nikolaus
-
+> ---
+>  drivers/interconnect/core.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+> index 1867fad56c0f..ae80fbea5d2d 100644
+> --- a/drivers/interconnect/core.c
+> +++ b/drivers/interconnect/core.c
+> @@ -34,7 +34,7 @@ static void icc_summary_show_one(struct seq_file *s, struct icc_node *n)
+>  	if (!n)
+>  		return;
+>  
+> -	seq_printf(s, "%-30s %12u %12u\n",
+> +	seq_printf(s, "%-42s %12u %12u\n",
+>  		   n->name, n->avg_bw, n->peak_bw);
+>  }
+>  
+> @@ -42,8 +42,8 @@ static int icc_summary_show(struct seq_file *s, void *data)
+>  {
+>  	struct icc_provider *provider;
+>  
+> -	seq_puts(s, " node                                   avg         peak\n");
+> -	seq_puts(s, "--------------------------------------------------------\n");
+> +	seq_puts(s, " node                                  tag          avg         peak\n");
+> +	seq_puts(s, "--------------------------------------------------------------------\n");
+>  
+>  	mutex_lock(&icc_lock);
+>  
+> @@ -58,8 +58,8 @@ static int icc_summary_show(struct seq_file *s, void *data)
+>  				if (!r->dev)
+>  					continue;
+>  
+> -				seq_printf(s, "    %-26s %12u %12u\n",
+> -					   dev_name(r->dev), r->avg_bw,
+> +				seq_printf(s, "  %-27s %12u %12u %12u\n",
+> +					   dev_name(r->dev), r->tag, r->avg_bw,
+>  					   r->peak_bw);
+>  			}
+>  		}
