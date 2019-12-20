@@ -2,189 +2,222 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D3CC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A82AAC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E08021655
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:08:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GzcrcTUt"
+	by mail.kernel.org (Postfix) with ESMTP id 713B421655
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:09:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576847364;
+	bh=z9BphCZrr8pVS6by4Dj/5isL6Vy7+SuDHoPLLbjcOIc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=G+EaL4gFD/dD/KkrmFN1j03PqhjtiOhFqtulz/Y3XiE1MbWz2mnAJ/gFprmzsq9PZ
+	 5qOyJpaBYjlRcLQy/tUwFR0Z1txlSmwxBkq19Aa3UUJMMzoW0JFGyA6ptlxobddPeI
+	 WjV/p+lzpIHjpAwwyyO+HuhUovVlRDWlNniCspHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfLTNIM (ORCPT
+        id S1727441AbfLTNJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 08:08:12 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39071 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727370AbfLTNIL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 08:08:11 -0500
-Received: by mail-pf1-f196.google.com with SMTP id q10so5192762pfs.6
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 05:08:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=meDitHt8qyvVvhpt+x/CzgZZK4BHEUE/N3YzuDpyS6w=;
-        b=GzcrcTUta+EBedAj8mVaPAO2+l2jkXwr/govHhy8/tR7y0KjEyEfKUkYnUljmc2hq5
-         YicK+EEf3JdJVmLP1s9H6mmtSkxGeLSpFuvTTwY3lA/Ypf5O9YcVWfseHPmgQSOuowcD
-         XfrbDzKTLRKq9NUos+8PPmpmiIC9PbrP9GAYs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=meDitHt8qyvVvhpt+x/CzgZZK4BHEUE/N3YzuDpyS6w=;
-        b=fE84I+tcv+4ZzbCdfzXI4HCU6rjggkuwcOK3Seq42M45FIZt0M6IY+QKDvp3TsXQEF
-         oeeYJWubwwuu2aad1zmlRTwIb2tOfLhWyebfJ8rN2RXWinptHaNcZPfd2TtEQMMysFoz
-         KgfDLmmPEQCIiiN8bM7fBzAoTEiKCR+NzHxnHW6EDPrY07BzTUdMykxv9uX7GBU+F86c
-         PeXjJDrP0tkZ/8X/b98MF/ql3S60B312/wXlqS6NzNfSgs+YxGfwUk+5s64BCGNpKUML
-         pJgh/VFxKn0UxqPy9fygkvqQspNMAi3R0DuFzavNyQoMjVM2IWV0Kd9ly80hKcN+iNlA
-         nH9w==
-X-Gm-Message-State: APjAAAVsZmD1EVgI1oBhsNAnF4RAPJ+tOj9XPMfAYxY3Q9timUHDBgSa
-        T2hMpcrgbOzG46gJrorBXbymcg==
-X-Google-Smtp-Source: APXvYqwFRwyu5QWdevIerg75X3jjqVtRPPDstapmZRlXiLTdYC4bUNnX0Tqvl8NLkavB185wI0tplQ==
-X-Received: by 2002:a65:4242:: with SMTP id d2mr1422153pgq.166.1576847291041;
-        Fri, 20 Dec 2019 05:08:11 -0800 (PST)
-Received: from tfiga.tok.corp.google.com ([2401:fa00:8f:203:f5fe:2a5e:f953:c0ed])
-        by smtp.gmail.com with ESMTPSA id 100sm10273862pjo.17.2019.12.20.05.08.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 05:08:10 -0800 (PST)
-From:   Tomasz Figa <tfiga@chromium.org>
-To:     linux-media@vger.kernel.org
-Cc:     Shunqian Zheng <zhengsq@rock-chips.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Subject: [PATCH] media: i2c: ov5695: Fix power on and off sequences
-Date:   Fri, 20 Dec 2019 22:08:00 +0900
-Message-Id: <20191220130800.61589-1-tfiga@chromium.org>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 20 Dec 2019 08:09:23 -0500
+Received: from foss.arm.com ([217.140.110.172]:50680 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727359AbfLTNJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 08:09:23 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 445FB30E;
+        Fri, 20 Dec 2019 05:09:22 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B70A73F719;
+        Fri, 20 Dec 2019 05:09:21 -0800 (PST)
+Date:   Fri, 20 Dec 2019 13:09:20 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Pascal Paillet <p.paillet@st.com>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>, p.paillet@st.com,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Applied "regulator: Convert stm32-pwr regulator to json-schema" to the regulator tree
+In-Reply-To: <20191205161359.20755-1-p.paillet@st.com>
+Message-Id: <applied-20191205161359.20755-1-p.paillet@st.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+The patch
 
-From the measured hardware signal, OV5695 reset pin goes high for a
-short period of time during boot-up. From the sensor specification, the
-reset pin is active low and the DT binding defines the pin as active
-low, which means that the values set by the driver are inverted and thus
-the value requested in probe ends up high.
+   regulator: Convert stm32-pwr regulator to json-schema
 
-Fix it by changing probe to request the reset GPIO initialized to high,
-which makes the initial state of the physical signal low.
+has been applied to the regulator tree at
 
-In addition, DOVDD rising must occur before DVDD rising from spec., but
-regulator_bulk_enable() API enables all the regulators asynchronously.
-Use an explicit loops of regulator_enable() instead.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.6
 
-For power off sequence, it is required that DVDD falls first. Given the
-bulk API does not give any guarantee about the order of regulators,
-change the driver to use regulator_disable() instead.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-The sensor also requires a delay between reset high and first I2C
-transaction, which was assumed to be 8192 XVCLK cycles, but 1ms is
-recommended by the vendor. Fix this as well.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 130ac214294bcb5efc93229c7d10144c4992e90a Mon Sep 17 00:00:00 2001
+From: Pascal Paillet <p.paillet@st.com>
+Date: Thu, 5 Dec 2019 17:13:59 +0100
+Subject: [PATCH] regulator: Convert stm32-pwr regulator to json-schema
+
+Convert the stm32-pwr regulator binding to DT schema format using
+json-schema.
+
+Signed-off-by: Pascal Paillet <p.paillet@st.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/r/20191205161359.20755-1-p.paillet@st.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/media/i2c/ov5695.c | 41 +++++++++++++++++++++-----------------
- 1 file changed, 23 insertions(+), 18 deletions(-)
+ .../regulator/st,stm32mp1-pwr-reg.txt         | 43 -------------
+ .../regulator/st,stm32mp1-pwr-reg.yaml        | 64 +++++++++++++++++++
+ 2 files changed, 64 insertions(+), 43 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml
 
-diff --git a/drivers/media/i2c/ov5695.c b/drivers/media/i2c/ov5695.c
-index d6cd15bb699ac..8d0cc3893fcfc 100644
---- a/drivers/media/i2c/ov5695.c
-+++ b/drivers/media/i2c/ov5695.c
-@@ -971,16 +971,9 @@ static int ov5695_s_stream(struct v4l2_subdev *sd, int on)
- 	return ret;
- }
- 
--/* Calculate the delay in us by clock rate and clock cycles */
--static inline u32 ov5695_cal_delay(u32 cycles)
--{
--	return DIV_ROUND_UP(cycles, OV5695_XVCLK_FREQ / 1000 / 1000);
--}
+diff --git a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
+deleted file mode 100644
+index e372dd3f0c8a..000000000000
+--- a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
++++ /dev/null
+@@ -1,43 +0,0 @@
+-STM32MP1 PWR Regulators
+------------------------
 -
- static int __ov5695_power_on(struct ov5695 *ov5695)
- {
--	int ret;
--	u32 delay_us;
-+	int i, ret;
- 	struct device *dev = &ov5695->client->dev;
- 
- 	ret = clk_prepare_enable(ov5695->xvclk);
-@@ -991,21 +984,24 @@ static int __ov5695_power_on(struct ov5695 *ov5695)
- 
- 	gpiod_set_value_cansleep(ov5695->reset_gpio, 1);
- 
--	ret = regulator_bulk_enable(OV5695_NUM_SUPPLIES, ov5695->supplies);
--	if (ret < 0) {
--		dev_err(dev, "Failed to enable regulators\n");
--		goto disable_clk;
-+	for (i = 0; i < OV5695_NUM_SUPPLIES; i++) {
-+		ret = regulator_enable(ov5695->supplies[i].consumer);
-+		if (ret) {
-+			dev_err(dev, "Failed to enable %s: %d\n",
-+				ov5695->supplies[i].supply, ret);
-+			goto disable_reg_clk;
-+		}
- 	}
- 
- 	gpiod_set_value_cansleep(ov5695->reset_gpio, 0);
- 
--	/* 8192 cycles prior to first SCCB transaction */
--	delay_us = ov5695_cal_delay(8192);
--	usleep_range(delay_us, delay_us * 2);
-+	usleep_range(1000, 1200);
- 
- 	return 0;
- 
--disable_clk:
-+disable_reg_clk:
-+	for (--i; i >= 0; i--)
-+		regulator_disable(ov5695->supplies[i].consumer);
- 	clk_disable_unprepare(ov5695->xvclk);
- 
- 	return ret;
-@@ -1013,9 +1009,18 @@ static int __ov5695_power_on(struct ov5695 *ov5695)
- 
- static void __ov5695_power_off(struct ov5695 *ov5695)
- {
-+	struct device *dev = &ov5695->client->dev;
-+	int i, ret;
+-Available Regulators in STM32MP1 PWR block are:
+-  - reg11 for regulator 1V1
+-  - reg18 for regulator 1V8
+-  - usb33 for the swtich USB3V3
+-
+-Required properties:
+-- compatible: Must be "st,stm32mp1,pwr-reg"
+-- list of child nodes that specify the regulator reg11, reg18 or usb33
+-  initialization data for defined regulators. The definition for each of
+-  these nodes is defined using the standard binding for regulators found at
+-  Documentation/devicetree/bindings/regulator/regulator.txt.
+-- vdd-supply: phandle to the parent supply/regulator node for vdd input
+-- vdd_3v3_usbfs-supply: phandle to the parent supply/regulator node for usb33
+-
+-Example:
+-
+-pwr_regulators: pwr@50001000 {
+-	compatible = "st,stm32mp1,pwr-reg";
+-	reg = <0x50001000 0x10>;
+-	vdd-supply = <&vdd>;
+-	vdd_3v3_usbfs-supply = <&vdd_usb>;
+-
+-	reg11: reg11 {
+-		regulator-name = "reg11";
+-		regulator-min-microvolt = <1100000>;
+-		regulator-max-microvolt = <1100000>;
+-	};
+-
+-	reg18: reg18 {
+-		regulator-name = "reg18";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <1800000>;
+-	};
+-
+-	usb33: usb33 {
+-		regulator-name = "usb33";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml
+new file mode 100644
+index 000000000000..8d8f38fe85dc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml
+@@ -0,0 +1,64 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/regulator/st,stm32mp1-pwr-reg.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	clk_disable_unprepare(ov5695->xvclk);
- 	gpiod_set_value_cansleep(ov5695->reset_gpio, 1);
--	regulator_bulk_disable(OV5695_NUM_SUPPLIES, ov5695->supplies);
++title: STM32MP1 PWR voltage regulators
 +
-+	for (i = OV5695_NUM_SUPPLIES - 1; i >= 0; i--) {
-+		ret = regulator_disable(ov5695->supplies[i].consumer);
-+		if (ret)
-+			dev_err(dev, "Failed to disable %s: %d\n",
-+				ov5695->supplies[i].supply, ret);
-+	}
- }
- 
- static int __maybe_unused ov5695_runtime_resume(struct device *dev)
-@@ -1285,7 +1290,7 @@ static int ov5695_probe(struct i2c_client *client,
- 	if (clk_get_rate(ov5695->xvclk) != OV5695_XVCLK_FREQ)
- 		dev_warn(dev, "xvclk mismatched, modes are based on 24MHz\n");
- 
--	ov5695->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-+	ov5695->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
- 	if (IS_ERR(ov5695->reset_gpio)) {
- 		dev_err(dev, "Failed to get reset-gpios\n");
- 		return -EINVAL;
++maintainers:
++  - Pascal Paillet <p.paillet@st.com>
++
++properties:
++  compatible:
++    const: st,stm32mp1,pwr-reg
++
++  reg:
++    maxItems: 1
++
++  vdd-supply:
++    description: Input supply phandle(s) for vdd input
++
++  vdd_3v3_usbfs-supply:
++    description: Input supply phandle(s) for vdd_3v3_usbfs input
++
++patternProperties:
++  "^(reg11|reg18|usb33)$":
++    type: object
++
++    allOf:
++      - $ref: "regulator.yaml#"
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    pwr@50001000 {
++      compatible = "st,stm32mp1,pwr-reg";
++      reg = <0x50001000 0x10>;
++      vdd-supply = <&vdd>;
++      vdd_3v3_usbfs-supply = <&vdd_usb>;
++
++      reg11 {
++        regulator-name = "reg11";
++        regulator-min-microvolt = <1100000>;
++        regulator-max-microvolt = <1100000>;
++      };
++
++      reg18 {
++        regulator-name = "reg18";
++        regulator-min-microvolt = <1800000>;
++        regulator-max-microvolt = <1800000>;
++      };
++
++      usb33 {
++        regulator-name = "usb33";
++        regulator-min-microvolt = <3300000>;
++        regulator-max-microvolt = <3300000>;
++      };
++    };
++...
 -- 
-2.24.1.735.g03f4e72817-goog
+2.20.1
 
