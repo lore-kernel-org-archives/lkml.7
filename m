@@ -2,76 +2,87 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B9AC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 22:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E374C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 22:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B23D62082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 22:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 429AF2082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 22:48:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576882085;
+	bh=V1BLoQuv7QZCtwHgCJz2iWoKi0HKQ0gCd1B1Jm9M+2E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TIPL6VCvp5aHoosALd6vaD4FL5hYa92Z0zOnIpfqntBZH6rK/2zmDbslRXYZ/S7+u
+	 lCUt7gv0Q6eyNbKPkh21MxU7+susYcJfeItd5hOGDWEWQbHT/Xi/VuR+AHNSdzttld
+	 E3rkEgFIJF9nEO0G4j6uBQf9tfyyG9BxEkkBbiDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbfLTWql (ORCPT
+        id S1726716AbfLTWsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 17:46:41 -0500
-Received: from utopia.booyaka.com ([74.50.51.50]:56689 "EHLO
-        utopia.booyaka.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbfLTWql (ORCPT
+        Fri, 20 Dec 2019 17:48:04 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:35200 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbfLTWsE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 17:46:41 -0500
-Received: (qmail 14788 invoked by uid 1019); 20 Dec 2019 22:46:39 -0000
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 20 Dec 2019 22:46:39 -0000
-Date:   Fri, 20 Dec 2019 22:46:39 +0000 (UTC)
-From:   Paul Walmsley <paul@pwsan.com>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-cc:     Patrick Staehlin <me@packi.ch>, Ingo Molnar <mingo@kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Alan Kao <alankao@andestech.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Zong Li <zong@andestech.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jim Wilson <jimw@sifive.com>,
-        zhong jiang <zhongjiang@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [RFC/RFT 2/2] RISC-V: kprobes/kretprobe support
-In-Reply-To: <alpine.DEB.2.21.9999.1912200313100.3767@viisi.sifive.com>
-Message-ID: <alpine.DEB.2.21.999.1912202244070.7752@utopia.booyaka.com>
-References: <20181113195804.22825-1-me@packi.ch> <20181113195804.22825-3-me@packi.ch> <20181114003730.06f810517a270070734df4ce@kernel.org> <20181114074951.0902699286fdf8652f2878a4@kernel.org> <05082ba4-33d6-a95c-e049-78791dafc009@packi.ch>
- <alpine.DEB.2.21.9999.1912200313100.3767@viisi.sifive.com>
-User-Agent: Alpine 2.21.999 (DEB 260 2018-02-26)
+        Fri, 20 Dec 2019 17:48:04 -0500
+Received: by mail-il1-f196.google.com with SMTP id g12so9316475ild.2;
+        Fri, 20 Dec 2019 14:48:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5ydh8/8SwQZQURpsj7H5OMlNH6BqWqcQ+ZSr278ZEo8=;
+        b=p5nTIHIDOZeE5Lqqnshklv7LPVQaFQft7rGYRhMWXwZumlmvgCbzjTYCtVi3gcoc9u
+         rlSiJpDLoMx1i+/4BLEqbbZ4fWxUtv9900at5i1Jg/0s7TBWiavTs7CXXYyoyxwElcXL
+         6d43HaGk6SkY58Dh4jPlqKZdwTX45P/qs0l3FK7VvTMeaEGjrG8a0CCi2AM9WnTUPpgz
+         e2Y/AM2SwxRVAPRT7Zmqma9shMm4TsQ+7ToXn2NHsbfVar2uu2sXkCUKUru4ojmW8slT
+         KbxRDstuEML2o8IwTBc0xFZLg153dQ16bd9AF12C1FxFJMJuG4BXSPz6nXpRDoHL+qrt
+         3QdQ==
+X-Gm-Message-State: APjAAAUDOSfh1Ec04O8jRgHuYoOCrbXywVJHKKcLKPruGnrUsIpdVk0j
+        pLX9maYC73ESqOyOsa7hUw==
+X-Google-Smtp-Source: APXvYqzy+s5mc7VlnG7SFlraOtuA08IEQUgo479SMw+kCniTuFHiYyY/N6k1UpCt0aeX1y2CIkVv9Q==
+X-Received: by 2002:a92:af08:: with SMTP id n8mr14166376ili.217.1576882083423;
+        Fri, 20 Dec 2019 14:48:03 -0800 (PST)
+Received: from localhost ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id j26sm3918819iok.3.2019.12.20.14.48.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 14:48:02 -0800 (PST)
+Date:   Fri, 20 Dec 2019 15:48:02 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, khilman@baylibre.com,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: Re: [PATCH] dt-bindings: usb: amlogic,meson-g12a-usb-ctrl: fix clock
+ names
+Message-ID: <20191220224802.GA26316@bogus>
+References: <20191218142613.13683-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218142613.13683-1-benjamin.gaignard@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Dec 2019, Paul Walmsley wrote:
+On Wed, 18 Dec 2019 15:26:13 +0100, Benjamin Gaignard wrote:
+> dwc2 bindings require clock-names to be "otg".
+> Fix the example in amlogic,meson-g12a-usb-ctrl to follow this requirement.
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-> Are you still working on these kprobes/kretprobe patches for RISC-V?
+Applied, thanks.
 
-Just saw the reply that contained the original off-list messages:
-
-https://lore.kernel.org/linux-riscv/20181113195804.22825-1-me@packi.ch/T/#mdfae8698806243c76f88f1da8594c23756523e82
-
-Looking forward to what comes in early January.
-
-I know the BPF guys have some test cases that are blocked by missing 
-kprobes/tracepoint support:
-
-https://lore.kernel.org/linux-riscv/20191216091343.23260-1-bjorn.topel@gmail.com/
-
-
-
-- Paul
+Rob
