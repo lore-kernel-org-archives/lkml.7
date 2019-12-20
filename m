@@ -4,56 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D24C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D21EEC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5F3E218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7C33218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576853238;
-	bh=zpryMmh7r1ZdKjkQ4fS6T5Gjlv9Z7AzzCKc75EjCr44=;
+	s=default; t=1576853241;
+	bh=+DaVvfO99JAJfFS1lRQb5Sdvz/o2T3GbRSLO0P1lpjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ndG3ATcwUsCvT8mvMeNUWtmdWa89Npy57Ee8Qyx7zRCSRO5OC2OKA2D85kBQbLaah
-	 oZciO/sQ99Il4Q4BJwTpRvVUcdMna4i/+iVEKOBSyYLxq2Bo8qkU0TSDEPfpaAMGHy
-	 aQKyaEYB18+4RLylG94b9PrXsz539ato9zHMseKo=
+	b=2qzsEV5rOiMmcrmYiBbFq+GTzhAhErfq71gnqqQLHU7hE9sk5P2PS15aKN5fh0Whr
+	 5aWWHP5RupyXDEWw9MpZdJBwboR4IKQJ56M0GayK6PZFcoAEOspxIImSnQUk8k3rdN
+	 amVoc3qUdl6RYDqRFFBwXw8dAYxPBkdD/RZBSbxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbfLTOrR (ORCPT
+        id S1727742AbfLTOrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:47:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45442 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:47:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727667AbfLTOrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:47:14 -0500
+        id S1727710AbfLTOrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:47:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AE3B24680;
-        Fri, 20 Dec 2019 14:47:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22C8A2465E;
+        Fri, 20 Dec 2019 14:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576853234;
-        bh=zpryMmh7r1ZdKjkQ4fS6T5Gjlv9Z7AzzCKc75EjCr44=;
+        s=default; t=1576853233;
+        bh=+DaVvfO99JAJfFS1lRQb5Sdvz/o2T3GbRSLO0P1lpjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hI+sSIBzQ0lvNZZsOjF0Y6CmVJcf9Y3ey4CEPskzLwp55veR8sT15d1W2TIUwC0W5
-         B6RF5KEfLnHh+jDMSpIsRNLoqUZ3eW7pGN+vG83fD/0U89x8I6p7mypSbphIvJOo4A
-         Z/w3ghCF57pg+nNl5TF3EXpiEQIhCMo52OI4nJVA=
+        b=2myjXAiciubhc0RhTe3yvgGdAlSb3pBkQF1AWjb9IKHTHu5A68iM434cMO+YLRBHY
+         vZ4EXUmebMr8DqnwqRB4qfnExRMJH4AruvsEwvr5yvBq8piS5CNF529uuoiORqoYA7
+         0VGfwuvfB30okAygX6TtVwQ0+Dh2gxoaVt9rruJU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Durrant <pdurrant@amazon.com>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Juergen Gross <jgross@suse.com>,
-        Sasha Levin <sashal@kernel.org>,
-        xen-devel@lists.xenproject.org, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 12/14] xen-blkback: prevent premature module unload
-Date:   Fri, 20 Dec 2019 09:46:56 -0500
-Message-Id: <20191220144658.10414-12-sashal@kernel.org>
+Cc:     Parav Pandit <parav@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 11/14] IB/mlx4: Follow mirror sequence of device add during device removal
+Date:   Fri, 20 Dec 2019 09:46:55 -0500
+Message-Id: <20191220144658.10414-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220144658.10414-1-sashal@kernel.org>
 References: <20191220144658.10414-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,54 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Durrant <pdurrant@amazon.com>
+From: Parav Pandit <parav@mellanox.com>
 
-[ Upstream commit fa2ac657f9783f0891b2935490afe9a7fd29d3fa ]
+[ Upstream commit 89f988d93c62384758b19323c886db917a80c371 ]
 
-Objects allocated by xen_blkif_alloc come from the 'blkif_cache' kmem
-cache. This cache is destoyed when xen-blkif is unloaded so it is
-necessary to wait for the deferred free routine used for such objects to
-complete. This necessity was missed in commit 14855954f636 "xen-blkback:
-allow module to be cleanly unloaded". This patch fixes the problem by
-taking/releasing extra module references in xen_blkif_alloc/free()
-respectively.
+Current code device add sequence is:
 
-Signed-off-by: Paul Durrant <pdurrant@amazon.com>
-Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+ib_register_device()
+ib_mad_init()
+init_sriov_init()
+register_netdev_notifier()
+
+Therefore, the remove sequence should be,
+
+unregister_netdev_notifier()
+close_sriov()
+mad_cleanup()
+ib_unregister_device()
+
+However it is not above.
+Hence, make do above remove sequence.
+
+Fixes: fa417f7b520ee ("IB/mlx4: Add support for IBoE")
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Link: https://lore.kernel.org/r/20191212091214.315005-3-leon@kernel.org
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/xen-blkback/xenbus.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/infiniband/hw/mlx4/main.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
-index ad736d7de8383..1d1f866579679 100644
---- a/drivers/block/xen-blkback/xenbus.c
-+++ b/drivers/block/xen-blkback/xenbus.c
-@@ -178,6 +178,15 @@ static struct xen_blkif *xen_blkif_alloc(domid_t domid)
- 	blkif->domid = domid;
- 	atomic_set(&blkif->refcnt, 1);
- 	init_completion(&blkif->drain_complete);
+diff --git a/drivers/infiniband/hw/mlx4/main.c b/drivers/infiniband/hw/mlx4/main.c
+index 7ccf7225f75a7..adc46b809ef2a 100644
+--- a/drivers/infiniband/hw/mlx4/main.c
++++ b/drivers/infiniband/hw/mlx4/main.c
+@@ -3031,16 +3031,17 @@ static void mlx4_ib_remove(struct mlx4_dev *dev, void *ibdev_ptr)
+ 	ibdev->ib_active = false;
+ 	flush_workqueue(wq);
+ 
+-	mlx4_ib_close_sriov(ibdev);
+-	mlx4_ib_mad_cleanup(ibdev);
+-	ib_unregister_device(&ibdev->ib_dev);
+-	mlx4_ib_diag_cleanup(ibdev);
+ 	if (ibdev->iboe.nb.notifier_call) {
+ 		if (unregister_netdevice_notifier(&ibdev->iboe.nb))
+ 			pr_warn("failure unregistering notifier\n");
+ 		ibdev->iboe.nb.notifier_call = NULL;
+ 	}
+ 
++	mlx4_ib_close_sriov(ibdev);
++	mlx4_ib_mad_cleanup(ibdev);
++	ib_unregister_device(&ibdev->ib_dev);
++	mlx4_ib_diag_cleanup(ibdev);
 +
-+	/*
-+	 * Because freeing back to the cache may be deferred, it is not
-+	 * safe to unload the module (and hence destroy the cache) until
-+	 * this has completed. To prevent premature unloading, take an
-+	 * extra module reference here and release only when the object
-+	 * has been freed back to the cache.
-+	 */
-+	__module_get(THIS_MODULE);
- 	INIT_WORK(&blkif->free_work, xen_blkif_deferred_free);
- 
- 	return blkif;
-@@ -322,6 +331,7 @@ static void xen_blkif_free(struct xen_blkif *blkif)
- 
- 	/* Make sure everything is drained before shutting down */
- 	kmem_cache_free(xen_blkif_cachep, blkif);
-+	module_put(THIS_MODULE);
- }
- 
- int __init xen_blkif_interface_init(void)
+ 	mlx4_qp_release_range(dev, ibdev->steer_qpn_base,
+ 			      ibdev->steer_qpn_count);
+ 	kfree(ibdev->ib_uc_qpns_bitmap);
 -- 
 2.20.1
 
