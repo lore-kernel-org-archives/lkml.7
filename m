@@ -2,108 +2,178 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 141BCC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 05:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB48C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 05:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC5BF206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 05:35:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E60F32467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 05:35:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="MSLKMuHu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m+2m8o3u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727174AbfLTFfB (ORCPT
+        id S1727202AbfLTFfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 00:35:01 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41564 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbfLTFfB (ORCPT
+        Fri, 20 Dec 2019 00:35:13 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45815 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbfLTFfM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 00:35:01 -0500
-Received: by mail-io1-f66.google.com with SMTP id c16so4630957ioo.8
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 21:35:01 -0800 (PST)
+        Fri, 20 Dec 2019 00:35:12 -0500
+Received: by mail-lj1-f195.google.com with SMTP id j26so8687768ljc.12
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 21:35:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bJH9ngAKUt2zZBSAR+jdXkYppUB/dH1U+o3RlVCLv24=;
-        b=MSLKMuHu9QZksGDMR6iUQ/crRkDEPYDqT4JZL7mzTHB6il8vBxzjQRibZnMfCeT2le
-         mQida8F+9unRkoc1GnDv4mI9YgnWe4GyoeK7jjYVPdrZtNVSRl4AM8yGg+29WN1dGwug
-         VTLCzs7L6SS5hPiivZvxr3YennyaDl2vj7jCX03XRxW5Loh1HeH/mGVl2dLvu0gSyhhu
-         DpRPoS7E4pPCerJDnXIK+sTEnhPo4HYvBa9x3kXqYm65XfftWoxUyOFeUfOj73fZam6G
-         /6MvRT0FkORkkE2gjxcJxGRZm0wdNDGFGf3rTGB97TetN1i9BDOJK79BjRuNDdLb5dzY
-         Fz9A==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=TvI9uduLULDLfJEVRURikWZJsrpJdtix4Tat0bsUYgY=;
+        b=m+2m8o3um1gRj3SYDVIwsrELxvX/qVZFCWkRnS3QLmu+XFdQKJWF+wrCoS9eag2Eip
+         5e75NBBkaxpoS3yibqzNbLzaiYPFR0oMBj/f7O5j+UFXQWKq4IF6MBYQRolPl1e+o1A6
+         K7D/T5xId16Vm4lg8vIavkFxgUPjZ9X5qafn+d/Q0LY85x0Zv1rUwqFKP/XbQo5lEn7Q
+         roPWtq4+ju4hxHENEakLh3eILIZw9CyMjUZZCb6rRZuvCwLEN0AXw0eNWuB9Yny+LInZ
+         uRUGDsfkQfoHM2lJoh30Xlo0HLYwXgVlFOUCwgkRnArpMfCxJKkGsd0tXTQA5b3kGtWp
+         x43g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bJH9ngAKUt2zZBSAR+jdXkYppUB/dH1U+o3RlVCLv24=;
-        b=NPvafD2mVcoEogsHbphWKJ8ns6flOdl4iRbY6L9SwxR+fEOpNqEGM6CMRqMa2MPD3N
-         e3NaTcedejbGVWtCU6/0X8cvKfFC4/L4SYFCsTZLwUGneJgPPf6jC4jAo8HVfDvn4VJh
-         /FftXWkMueFuQSwLvOxXtBouHu/JktisnVp80iifmdLhdz61bGJi+lMDtAP76rcgHjfa
-         XK4hDL71nOwLHhsRBzHJ2EfRRPavRB75qNjjfa3IZ6ul6Y4WkWDAxgrnnLcGPqpZZ2GG
-         BGOnAjwquSBDQiNXT0frmFJq7QIHmDgEWTJ4lkzZfwgGXMSn4m05TJ5sN7gVrD35nfU5
-         t31g==
-X-Gm-Message-State: APjAAAUE4GAk14P0kgghzlEiK5lKHpdJlnvBWMh5I6vubdzP5Hn6MmoJ
-        EnzhT36BG1TBMLrkFshs5j2eWw==
-X-Google-Smtp-Source: APXvYqz3mkdhGZsgbEu11Mzt0Nz4pjnOdDnxa00QXAm4U97lfdYncbGpna1SDIs8u3ttfnE7oQWhUQ==
-X-Received: by 2002:a6b:c8c8:: with SMTP id y191mr9069907iof.104.1576820100628;
-        Thu, 19 Dec 2019 21:35:00 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id h3sm3880783ilh.6.2019.12.19.21.34.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Dec 2019 21:35:00 -0800 (PST)
-Subject: Re: linux-next: manual merge of the block tree with the vfs tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>
-References: <20191220123614.5f11d2e3@canb.auug.org.au>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <f6ff3aa5-e08b-8b25-454a-9aa51b8b5c37@kernel.dk>
-Date:   Thu, 19 Dec 2019 22:34:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=TvI9uduLULDLfJEVRURikWZJsrpJdtix4Tat0bsUYgY=;
+        b=YV6F6GYQwX4rqu2VN0g75oqEO2I8O4kIdO9S2W4rB5irM9XOdk+1WiTcZaoCVlHQNq
+         sz6jt/S5mMm6YVXEeT169316rgmyfwqH/mUGia0rrfbaP7NLx4qEfWA9p554l0pkG7xs
+         jKCXqtwV6YmKjecVpbshNUJHP0Z4a8tRcUYugcgJcJkOwQR4nMuvwHueUdwlVjzrbjJo
+         i0OW3sM0l9KFnCKJyItnqWxJhgfirXQvZ7gWLhNpVPQxCuUfA4Ty9hdG71wD4Lo1cxen
+         TRBBcShth7XxDrt9c9PobaBLGBeW2QKuUX1TaJKer2LO4kKVOJ7RORL1OyXsTOExOaMZ
+         3Gxg==
+X-Gm-Message-State: APjAAAXVy32Sz0HfLcy6uUmX8yq+ItRehp4whrncPlWXuGC0cr1rFyY1
+        /5HAS85qHAq/gc5taIiuJPte7jNySUuRyjzSpuBsgg==
+X-Google-Smtp-Source: APXvYqydHYeZnJ2j0VyykXZNfau7hIN3gH6EpNyoC8BrddIhiqzBsAX0U5PRmA68oTttxdLTCLlRIA7zfHLIz5tHUuM=
+X-Received: by 2002:a2e:8316:: with SMTP id a22mr8900403ljh.141.1576820110424;
+ Thu, 19 Dec 2019 21:35:10 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191220123614.5f11d2e3@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191219182848.708141124@linuxfoundation.org>
+In-Reply-To: <20191219182848.708141124@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 20 Dec 2019 11:04:59 +0530
+Message-ID: <CA+G9fYuV+VLuSFPJzRmy9JOCWFb20aGrSVFSK2YC7N8_vVsTpA@mail.gmail.com>
+Subject: Re: [PATCH 4.14 00/36] 4.14.160-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/19/19 6:36 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the block tree got a conflict in:
-> 
->   fs/open.c
-> 
-> between commit:
-> 
->   0a51692d49ec ("open: introduce openat2(2) syscall")
-> 
-> from the vfs tree and commit:
-> 
->   252270311374 ("fs: make build_open_flags() available internally")
-> 
-> from the block tree.
-> 
-> I fixed it up (see at end, plus the merge fix patch below) and can
-> carry the fix as necessary. This is now fixed as far as linux-next is
-> concerned, but any non trivial conflicts should be mentioned to your
-> upstream maintainer when your tree is submitted for merging.  You may
-> also want to consider cooperating with the maintainer of the
-> conflicting tree to minimise any particularly complex conflicts.
+On Fri, 20 Dec 2019 at 00:20, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.14.160 release.
+> There are 36 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 21 Dec 2019 18:24:44 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.14.160-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-Thanks Stephen, I may just pull in the vfs tree to avoid this conflict.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
--- 
-Jens Axboe
+Summary
+------------------------------------------------------------------------
 
+kernel: 4.14.160-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.14.y
+git commit: 838b72b47f7ef92850331f8b87e1228d8301f392
+git describe: v4.14.159-37-g838b72b47f7e
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
+ild/v4.14.159-37-g838b72b47f7e
+
+
+No regressions (compared to build v4.14.159)
+
+No Fixes (compared to build v4.14.159)
+
+
+Ran 24211 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* network-basic-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* ssuite
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
