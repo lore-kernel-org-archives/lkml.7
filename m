@@ -2,257 +2,240 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA9EC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC80C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6841421D7D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBA6321D7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:27:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P/w4T7Yl"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="n+xbAuli"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbfLTG0W (ORCPT
+        id S1727169AbfLTG1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 01:26:22 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37554 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbfLTG0V (ORCPT
+        Fri, 20 Dec 2019 01:27:35 -0500
+Received: from mailout4.samsung.com ([203.254.224.34]:20070 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbfLTG1f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 01:26:21 -0500
-Received: by mail-pf1-f196.google.com with SMTP id p14so4638107pfn.4;
-        Thu, 19 Dec 2019 22:26:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=sLQwYn83trd9XP0m0VSg2ROtVjHj/MiokIdaMbs0cVg=;
-        b=P/w4T7YlmdltPydFyxnyFx8IP3iRFTt6ngWTIipJ8X9+t5RdFUxp0GmzwR1y8cFoil
-         0Un/ojBgwFRQxx3bN0PrWfAWJnbYKK2RbXFj0gs2mIC5ZTQmbP8wDEnZYR4R3UF3Bven
-         LDChDt+bkb1McC8Dypn3T53eBELy4Oc523i8oTZpCdB2Z/JniO0d7xSON9wNI7wLMtp8
-         AVmUWj/t0Xnt5gKGC4ECIybmU5CaUf9itm+km1cb8eFHxzuDbf99lhtW7PjtYqSbFxco
-         DUTK3lDOAjFLXYfhLdmE0mvzLW9ssveAi0aExIyEyF7Az6gntHBK8UUXAAASFni9YFC5
-         XIug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=sLQwYn83trd9XP0m0VSg2ROtVjHj/MiokIdaMbs0cVg=;
-        b=eHOdIEN9djBwaqWhmmYk3wnYCYkSW/dG7BLEhgFA1saWbKzm/+/Cq5AJmEgtYI62rw
-         BAKjUqIqRsuTO8z0ziHlQWsjFqDRp2KSR82qcfx0MQ/+XXI+ECQSkbKiNN7dAM8SN2C8
-         rjN14yqnUWrocvvlzODbq/MMyZw7eo7KSjnixnJd5hmTMLpamenyv40q4K2Rj4zPb0eQ
-         jKeW+fUx1fUXJoXKVFSqmoTWLnSeT1iqfo6lvee8lQestqdXnbKzDIiVb4vZRic+ikiU
-         P0CvknGBrcIczygZUQFuJ7Ok1c07YzUmAl4BIITzcKOZXZb1jLbbmRaD3/43ImNwZ9eJ
-         7GuA==
-X-Gm-Message-State: APjAAAVTm+yXpXZyhbPeR2HA+hP0Da8cjPNQBvRODxoZCF6/uv/xy2v2
-        rrz5AJLlupcN+Ym9v96x1PjQ8B8wyVI=
-X-Google-Smtp-Source: APXvYqy0UUWibb6exuBS3rItPtIaJrg0uC4VXYXtj0dKoxluNWpPOzAefrFh8N6Qx556bVbVRyAtbw==
-X-Received: by 2002:aa7:8007:: with SMTP id j7mr14295020pfi.73.1576823180794;
-        Thu, 19 Dec 2019 22:26:20 -0800 (PST)
-Received: from TENCENT64 ([150.109.127.35])
-        by smtp.gmail.com with ESMTPSA id 203sm11218039pfy.185.2019.12.19.22.26.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 19 Dec 2019 22:26:20 -0800 (PST)
-From:   zgpeng.linux@gmail.com
-To:     akpm@linux-foundation.org, hannes@cmpxchg.org, mhocko@kernel.org,
-        vdavydov.dev@gmail.com, shakeelb@google.com
-Cc:     linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zgpeng <zgpeng@tencent.com>
-Subject: [PATCH] oom: choose a more suitable process to kill while all processes are not killable
-Date:   Fri, 20 Dec 2019 14:26:12 +0800
-Message-Id: <1576823172-25943-1-git-send-email-zgpeng.linux@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 20 Dec 2019 01:27:35 -0500
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191220062733epoutp0463da2e86fdb5340a5256f5a81409ee0b~iAGT7EJt41292612926epoutp04P
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 06:27:33 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191220062733epoutp0463da2e86fdb5340a5256f5a81409ee0b~iAGT7EJt41292612926epoutp04P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1576823253;
+        bh=C1VgkaKpOShOJd4R4rUGDSkZ5bAsf7fJDpVop6OH5eE=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=n+xbAuli+Rg2m6EVdRYfHdQnW1bfC3h5/XEcJmA6bR0a9aF2e8NoafzuPu1DehxpO
+         xWFU8T64RMctjcZ6ONR7+o/Aekn2kN3agiGL6/3ef9VThP72nYkRyJ2e0aSLrgOvmP
+         SYse0tZhLEtsloBi+6OwbFRliaT7Ny+8Q40656Yk=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191220062732epcas1p2fb88e902f8a6b0831907b391d992c6a0~iAGTgmeoA0045200452epcas1p22;
+        Fri, 20 Dec 2019 06:27:32 +0000 (GMT)
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.162]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 47fJh35HZmzMqYkr; Fri, 20 Dec
+        2019 06:27:31 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C0.DB.48498.3D96CFD5; Fri, 20 Dec 2019 15:27:31 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20191220062731epcas1p475b8da9288b08c87e474a0c4e88ce219~iAGSDXdpB0237302373epcas1p4-;
+        Fri, 20 Dec 2019 06:27:31 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191220062731epsmtrp1aef25965feb697072cc9eaf914b56e44~iAGSCmWpv2110821108epsmtrp1J;
+        Fri, 20 Dec 2019 06:27:31 +0000 (GMT)
+X-AuditID: b6c32a36-a55ff7000001bd72-a6-5dfc69d3d3b3
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B4.0A.10238.3D96CFD5; Fri, 20 Dec 2019 15:27:31 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.88.103.87]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191220062731epsmtip1a5221322ed0a758f5f32e49900c1f80d~iAGR4qDfB2891528915epsmtip1U;
+        Fri, 20 Dec 2019 06:27:31 +0000 (GMT)
+From:   Namjae Jeon <namjae.jeon@samsung.com>
+To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com, linkinjeon@gmail.com,
+        Namjae Jeon <namjae.jeon@samsung.com>
+Subject: [PATCH v8 00/13] add the latest exfat driver
+Date:   Fri, 20 Dec 2019 01:24:06 -0500
+Message-Id: <20191220062419.23516-1-namjae.jeon@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCKsWRmVeSWpSXmKPExsWy7bCmnu7lzD+xBr/bdCyaF69ns1i5+iiT
+        xfW7t5gt9uw9yWJxedccNosf0+sttvw7wmpx6f0HFgcOj52z7rJ77J+7ht1j980GNo++LasY
+        PT5vkvM4tP0NWwBbVI5NRmpiSmqRQmpecn5KZl66rZJ3cLxzvKmZgaGuoaWFuZJCXmJuqq2S
+        i0+ArltmDtA9SgpliTmlQKGAxOJiJX07m6L80pJUhYz84hJbpdSClJwCQ4MCveLE3OLSvHS9
+        5PxcK0MDAyNToMqEnIy7e16yFZxQr5j94zBrA+NB+S5GTg4JAROJzm+3mLsYuTiEBHYwSkzt
+        aoJyPjFKHL63jhXC+cYo8eXxOhaYlnufJ7KD2EICexkl1pyVh+s4v2k3UxcjBwebgLbEny2i
+        IDUiAvYSm2cfYAGpYRaYwyixo3cWI0hCWMBUYt+6b2A2i4CqxMllO8AW8ArYSEz70McOsUxe
+        YvWGA2AnSQjMYJNYdqOBCSLhIvFx6lkoW1ji1fEtUA1SEi/729hBjpAQqJb4uJ8ZItzBKPHi
+        uy2EbSxxc/0GVpASZgFNifW79CHCihI7f88FO4dZgE/i3dceVogpvBIdbUIQJaoSfZcOQy2V
+        luhq/wC1yEPi230nSIjESvzc0cw8gVF2FsL8BYyMqxjFUguKc9NTiw0LjJCjaBMjOIVpme1g
+        XHTO5xCjAAejEg+vQ9rvWCHWxLLiytxDjBIczEoivLc7fsYK8aYkVlalFuXHF5XmpBYfYjQF
+        Bt1EZinR5Hxges0riTc0NTI2NrYwMTM3MzVWEufl+HExVkggPbEkNTs1tSC1CKaPiYNTqoFR
+        QNggvCss9XXYEdOfpkHTa4VnOk0WzTJ6tUvp+OL9S1jMA8XkDjkuP3Fn7rSjdb9s3+TPCLu8
+        36tU53I0f+UVzSPbA4JZO1ua5rLcnrzm6x4Onjd/Ph67sudpwD/RXS6uZaXWJy1mOppN6JZa
+        x1KnUPNF7g7ftUNXmz6rBHOtVNmzzVvBNKtLiaU4I9FQi7moOBEA3xO+1XcDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMLMWRmVeSWpSXmKPExsWy7bCSnO7lzD+xBo+bOS2aF69ns1i5+iiT
+        xfW7t5gt9uw9yWJxedccNosf0+sttvw7wmpx6f0HFgcOj52z7rJ77J+7ht1j980GNo++LasY
+        PT5vkvM4tP0NWwBbFJdNSmpOZllqkb5dAlfG3T0v2QpOqFfM/nGYtYHxoHwXIyeHhICJxL3P
+        E9m7GLk4hAR2M0pMu/KWGSIhLXHsxBkgmwPIFpY4fLgYJCwk8IFR4tR3bZAwm4C2xJ8toiBh
+        EQFHid5dh1lAxjALLGKUePdxMitIQljAVGLfum+MIDaLgKrEyWU7WEBsXgEbiWkf+tghVslL
+        rN5wgHkCI88CRoZVjJKpBcW56bnFhgWGeanlesWJucWleel6yfm5mxjBQaWluYPx8pL4Q4wC
+        HIxKPLwOab9jhVgTy4orcw8xSnAwK4nw3u74GSvEm5JYWZValB9fVJqTWnyIUZqDRUmc92ne
+        sUghgfTEktTs1NSC1CKYLBMHp1QDo1xsLuPHR65ei4p+rWJXf7w19oDctHnTXe/aGnxZP5vP
+        StXRn2N9+UpLwdUr/tcwcb/VfdoQEJ8jciX+uoevubH2Ek+RI2KGzFX5OaaajHxv9pW738gT
+        fuL9cJ310S3mUzvWv9E9KaSuE8/GYlhjbVXl/n7bebNbPFdc1Za1CMhMPi40P+m5EktxRqKh
+        FnNRcSIAHib8iCYCAAA=
+X-CMS-MailID: 20191220062731epcas1p475b8da9288b08c87e474a0c4e88ce219
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191220062731epcas1p475b8da9288b08c87e474a0c4e88ce219
+References: <CGME20191220062731epcas1p475b8da9288b08c87e474a0c4e88ce219@epcas1p4.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zgpeng <zgpeng@tencent.com>
+This adds the latest Samsung exfat driver to fs/exfat. This is an
+implementation of the Microsoft exFAT specification. Previous versions
+of this shipped with millions of Android phones, and a random previous
+snaphot has been merged in drivers/staging/.
 
-It has been found in multiple business scenarios that when a oom occurs
-in a cgroup, the process that consumes the most memory in the cgroup is 
-not killed first. Analysis of the reasons found that each process in the
-cgroup oom_score_adj is set to -998, oom_badness in the calculation of 
-points, if points is negative, uniformly set it to 1. For these processes 
-that should not be killed, the kernel does not distinguish which process 
-consumes the most memory. As a result, there is a phenomenon that a 
-process with low memory consumption may be killed first. In addition, 
-when the memory is large, even if oom_score_adj is not set so small, 
-such as -1, there will be similar problems.
+Compared to the sdfat driver shipped on the phones the following changes
+have been made:
 
-Based on the scenario mentioned above, the existing oom killer can be 
-optimized. In this patch, oom_badness is optimized so that when points 
-are negative, it can also distinguish which process consumes the most 
-memory. Therefore, when oom occurs, the process with the largest memory 
-consumption can be killed first.
+ - the support for vfat has been removed as that is already supported
+   by fs/fat
+ - driver has been renamed to exfat
+ - the code has been refactored and clean up to fully integrate into
+   the upstream Linux version and follow the Linux coding style
+ - metadata operations like create, lookup and readdir have been further
+   optimized
+ - various major and minor bugs have been fixed
 
-Signed-off-by: zgpeng <zgpeng@tencent.com>
----
- drivers/tty/sysrq.c |  1 +
- fs/proc/base.c      |  6 ++++--
- include/linux/oom.h |  4 ++--
- mm/memcontrol.c     |  1 +
- mm/oom_kill.c       | 21 +++++++++------------
- mm/page_alloc.c     |  1 +
- 6 files changed, 18 insertions(+), 16 deletions(-)
+We plan to treat this version as the future upstream for the code base
+once merged, and all new features and bug fixes will go upstream first.
 
-diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-index 573b205..1fe79d9 100644
---- a/drivers/tty/sysrq.c
-+++ b/drivers/tty/sysrq.c
-@@ -367,6 +367,7 @@ static void moom_callback(struct work_struct *ignored)
- 		.memcg = NULL,
- 		.gfp_mask = gfp_mask,
- 		.order = -1,
-+		.chosen_points = LONG_MIN,
- 	};
- 
- 	mutex_lock(&oom_lock);
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index ebea950..2c7c4e0 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -548,9 +548,11 @@ static int proc_oom_score(struct seq_file *m, struct pid_namespace *ns,
- 			  struct pid *pid, struct task_struct *task)
- {
- 	unsigned long totalpages = totalram_pages() + total_swap_pages;
--	unsigned long points = 0;
-+	long points = 0;
- 
--	points = oom_badness(task, totalpages) * 1000 / totalpages;
-+	points = oom_badness(task, totalpages);
-+	points = points > 0 ? points : 1;
-+	points = points * 1000 / totalpages;
- 	seq_printf(m, "%lu\n", points);
- 
- 	return 0;
-diff --git a/include/linux/oom.h b/include/linux/oom.h
-index c696c26..2d2b898 100644
---- a/include/linux/oom.h
-+++ b/include/linux/oom.h
-@@ -48,7 +48,7 @@ struct oom_control {
- 	/* Used by oom implementation, do not set */
- 	unsigned long totalpages;
- 	struct task_struct *chosen;
--	unsigned long chosen_points;
-+	long chosen_points;
- 
- 	/* Used to print the constraint info. */
- 	enum oom_constraint constraint;
-@@ -107,7 +107,7 @@ static inline vm_fault_t check_stable_address_space(struct mm_struct *mm)
- 
- bool __oom_reap_task_mm(struct mm_struct *mm);
- 
--extern unsigned long oom_badness(struct task_struct *p,
-+extern long oom_badness(struct task_struct *p,
- 		unsigned long totalpages);
- 
- extern bool out_of_memory(struct oom_control *oc);
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index c5b5f74..73e2381 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1563,6 +1563,7 @@ static bool mem_cgroup_out_of_memory(struct mem_cgroup *memcg, gfp_t gfp_mask,
- 		.memcg = memcg,
- 		.gfp_mask = gfp_mask,
- 		.order = order,
-+		.chosen_points = LONG_MIN,
- 	};
- 	bool ret;
- 
-diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-index 71e3ace..160f364 100644
---- a/mm/oom_kill.c
-+++ b/mm/oom_kill.c
-@@ -195,17 +195,17 @@ static bool is_dump_unreclaim_slabs(void)
-  * predictable as possible.  The goal is to return the highest value for the
-  * task consuming the most memory to avoid subsequent oom failures.
-  */
--unsigned long oom_badness(struct task_struct *p, unsigned long totalpages)
-+long oom_badness(struct task_struct *p, unsigned long totalpages)
- {
- 	long points;
- 	long adj;
- 
- 	if (oom_unkillable_task(p))
--		return 0;
-+		return LONG_MIN;
- 
- 	p = find_lock_task_mm(p);
- 	if (!p)
--		return 0;
-+		return LONG_MIN;
- 
- 	/*
- 	 * Do not even consider tasks which are explicitly marked oom
-@@ -217,7 +217,7 @@ unsigned long oom_badness(struct task_struct *p, unsigned long totalpages)
- 			test_bit(MMF_OOM_SKIP, &p->mm->flags) ||
- 			in_vfork(p)) {
- 		task_unlock(p);
--		return 0;
-+		return LONG_MIN;
- 	}
- 
- 	/*
-@@ -232,11 +232,7 @@ unsigned long oom_badness(struct task_struct *p, unsigned long totalpages)
- 	adj *= totalpages / 1000;
- 	points += adj;
- 
--	/*
--	 * Never return 0 for an eligible task regardless of the root bonus and
--	 * oom_score_adj (oom_score_adj can't be OOM_SCORE_ADJ_MIN here).
--	 */
--	return points > 0 ? points : 1;
-+	return points;
- }
- 
- static const char * const oom_constraint_text[] = {
-@@ -309,7 +305,7 @@ static enum oom_constraint constrained_alloc(struct oom_control *oc)
- static int oom_evaluate_task(struct task_struct *task, void *arg)
- {
- 	struct oom_control *oc = arg;
--	unsigned long points;
-+	long points;
- 
- 	if (oom_unkillable_task(task))
- 		goto next;
-@@ -335,12 +331,12 @@ static int oom_evaluate_task(struct task_struct *task, void *arg)
- 	 * killed first if it triggers an oom, then select it.
- 	 */
- 	if (oom_task_origin(task)) {
--		points = ULONG_MAX;
-+		points = LONG_MAX;
- 		goto select;
- 	}
- 
- 	points = oom_badness(task, oc->totalpages);
--	if (!points || points < oc->chosen_points)
-+	if (points == LONG_MIN || points < oc->chosen_points)
- 		goto next;
- 
- select:
-@@ -1126,6 +1122,7 @@ void pagefault_out_of_memory(void)
- 		.memcg = NULL,
- 		.gfp_mask = 0,
- 		.order = 0,
-+		.chosen_points = LONG_MIN,
- 	};
- 
- 	if (mem_cgroup_oom_synchronize(true))
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 4785a8a..63ccb2a 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -3797,6 +3797,7 @@ void warn_alloc(gfp_t gfp_mask, nodemask_t *nodemask, const char *fmt, ...)
- 		.memcg = NULL,
- 		.gfp_mask = gfp_mask,
- 		.order = order,
-+		.chosen_points = LONG_MIN,
- 	};
- 	struct page *page;
- 
+v8:
+ - Rearrange the function grouping in exfat_fs.h
+   (exfat_count_dir_entries, exfat_get_dentry, exfat_get_dentry_set,
+    exfat_find_location).
+ - Mark exfat_extract_uni_name(), exfat_get_uniname_from_ext_entry() and
+   exfat_mirror_bh() as static.
+
+v7:
+ - Add the helpers macros for bitmap and fat entry to improve readability.
+ - Rename exfat_test_bitmap to exfat_find_free_bitmap.
+ - Merge exfat_get_num_entries into exfat_calc_num_entries.
+ - Add EXFAT_DATA_CLUSTERS and EXFAT_RESERVED_CLUSTERS macro.
+ - Add the macros for EXFAT BIOS block(JUMP_BOOT_LEN, OEM_NAME_LEN,
+   MUST_BE_ZERO_LEN).
+ - Add the macros for EXFAT entry type (IS_EXFAT_CRITICAL_PRI,
+   IS_EXFAT_BENIGN_PRI, IS_EXFAT_CRITICAL_SEC).
+ - Add EXFAT_FILE_NAME_LEN macro.
+ - Change the data type of is_dir with bool in __exfat_write_inode().
+ - Change the data type of sync with bool in exfat_set_vol_flags().
+ - Merge __exfat_set_vol_flags into exfat_set_vol_flags.
+ - Fix wrong statfs->f_namelen.
+
+v6:
+ - Fix always false comparison due to limited range of allow_utime's data
+   type.
+ - Move bh into loop in exfat_find_dir_entry().
+ - Move entry_uniname and unichar variables into
+   an if "entry_type == TYPE_EXTEND" branch.
+
+v5:
+ - Remove a blank line between the message and the error code in
+   exfat_load_upcase_table.
+ - Move brelse to the end of the while loop and rename release_bh label
+   to free_table in exfat_load_upcase_table.
+ - Move an error code assignment after a failed function call.
+ - Rename labels and directly return instead of goto.
+ - Improve the exception handling in exfat_get_dentry_set().
+ - Remove ->d_time leftover.
+ - fix boolreturn.cocci warnings.
+
+v4:
+ - Declare ALLOC_FAT_CHAIN and ALLOC_NO_FAT_CHAIN macros.
+ - Rename labels with proper name.
+ - Remove blank lines.
+ - Remove pointer check for bh.
+ - Move ep into loop in exfat_load_bitmap().
+ - Replace READ/WRITE_ONCE() with test_and_clear_bit() and set_bit().
+ - Change exfat_allow_set_time return type with bool.
+
+v3:
+ - fix wrong sbi->s_dirt set.
+
+v2:
+ - Check the bitmap count up to the total clusters.
+ - Rename goto labels in several places.
+ - Change time mode type with enumeration.
+ - Directly return error instead of goto at first error check.
+ - Combine seq_printf calls into a single one.
+
+Namjae Jeon (13):
+  exfat: add in-memory and on-disk structures and headers
+  exfat: add super block operations
+  exfat: add inode operations
+  exfat: add directory operations
+  exfat: add file operations
+  exfat: add exfat entry operations
+  exfat: add bitmap operations
+  exfat: add exfat cache
+  exfat: add misc operations
+  exfat: add nls operations
+  exfat: add Kconfig and Makefile
+  exfat: add exfat in fs/Kconfig and fs/Makefile
+  MAINTAINERS: add exfat filesystem
+
+ MAINTAINERS          |    7 +
+ fs/Kconfig           |    3 +-
+ fs/Makefile          |    1 +
+ fs/exfat/Kconfig     |   21 +
+ fs/exfat/Makefile    |    8 +
+ fs/exfat/balloc.c    |  282 ++++++++
+ fs/exfat/cache.c     |  325 ++++++++++
+ fs/exfat/dir.c       | 1295 +++++++++++++++++++++++++++++++++++++
+ fs/exfat/exfat_fs.h  |  559 ++++++++++++++++
+ fs/exfat/exfat_raw.h |  202 ++++++
+ fs/exfat/fatent.c    |  472 ++++++++++++++
+ fs/exfat/file.c      |  343 ++++++++++
+ fs/exfat/inode.c     |  694 ++++++++++++++++++++
+ fs/exfat/misc.c      |  240 +++++++
+ fs/exfat/namei.c     | 1459 ++++++++++++++++++++++++++++++++++++++++++
+ fs/exfat/nls.c       |  809 +++++++++++++++++++++++
+ fs/exfat/super.c     |  732 +++++++++++++++++++++
+ 17 files changed, 7451 insertions(+), 1 deletion(-)
+ create mode 100644 fs/exfat/Kconfig
+ create mode 100644 fs/exfat/Makefile
+ create mode 100644 fs/exfat/balloc.c
+ create mode 100644 fs/exfat/cache.c
+ create mode 100644 fs/exfat/dir.c
+ create mode 100644 fs/exfat/exfat_fs.h
+ create mode 100644 fs/exfat/exfat_raw.h
+ create mode 100644 fs/exfat/fatent.c
+ create mode 100644 fs/exfat/file.c
+ create mode 100644 fs/exfat/inode.c
+ create mode 100644 fs/exfat/misc.c
+ create mode 100644 fs/exfat/namei.c
+ create mode 100644 fs/exfat/nls.c
+ create mode 100644 fs/exfat/super.c
+
 -- 
-1.8.3.1
+2.17.1
 
