@@ -2,351 +2,247 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 922F2C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD565C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 524C52072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:06:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aVk8tYUZ"
+	by mail.kernel.org (Postfix) with ESMTP id A93B220866
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 23:10:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576883444;
+	bh=wR5may7mAUmZ/CfDdApD8FEoqLFXXveiSgTP3bUJqSM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sDbgLfZ75UXdG+2vWJ8bO7h7HopulU4BMJp43zJEFvSkFrxH1ZbPM6m4adpC0aDbV
+	 HUGZQ2IrzMztp8MNcQoKsIlWem+Xm34h42TWRcjg3qFKlofX4w0eU33ON2dUFqSdxw
+	 q0sOpbPi6LoPjEw0rh0ii7INyRBA2GnEC2frLBAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbfLTXGE (ORCPT
+        id S1726634AbfLTXKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 18:06:04 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56827 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726129AbfLTXGD (ORCPT
+        Fri, 20 Dec 2019 18:10:43 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45691 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726389AbfLTXKn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 18:06:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576883162;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=I4hdYlMK6WBSjpJr/8E5qXKfSqEggOH1BqMglYJakSU=;
-        b=aVk8tYUZKzcrnMzE4ga58IMWb9COVlgcyw2i3DI9RoSDfTdkKwSba3DQNaKjcecYSabjIu
-        hKcJRjtwAGMTAffDBk7AoJ/zlgjBN+wwhgUlcjiCyQB9H6ccBEmtP/LbfNlfq1fl3w/PDg
-        Kd2hisN7g+cMSjk3hxEvdxP5kbbSpJw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-238-qKNi1jamPTymTAjxnNe8FQ-1; Fri, 20 Dec 2019 18:05:58 -0500
-X-MC-Unique: qKNi1jamPTymTAjxnNe8FQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 98D831005502;
-        Fri, 20 Dec 2019 23:05:57 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-52.rdu2.redhat.com [10.10.120.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9F6245D727;
-        Fri, 20 Dec 2019 23:05:56 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH net 3/3] rxrpc: Fix missing security check on incoming calls
-From:   David Howells <dhowells@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 20 Dec 2019 23:05:55 +0000
-Message-ID: <157688315586.18782.17209540659953040432.stgit@warthog.procyon.org.uk>
-In-Reply-To: <157688313527.18782.11664545318996365146.stgit@warthog.procyon.org.uk>
-References: <157688313527.18782.11664545318996365146.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Fri, 20 Dec 2019 18:10:43 -0500
+Received: by mail-io1-f68.google.com with SMTP id i11so10985994ioi.12;
+        Fri, 20 Dec 2019 15:10:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OIn6PrxteiiCCeumPwNHhx+bzoiO5dkpRtAE3G60zXE=;
+        b=GvDFrEcjEUbkQgOH9NP/Cl/JRzkR0Vjpaz4/6BWmy+wcFRh3D3Q6Fk6+d/wSIpDBjO
+         5UA7WW7mclAWJVTOSlo5o5fP7yvPYCD/SVCib1lcRNpFTNNSKLQclykCNebUZZCsPXXJ
+         GriLZNFbttIkv0IsffRDCghGuVv8aPp6bkhI5ho2rDg569tsBWFPiD80ELbM7vvf5qLV
+         TjPlJcRHDBXRpuFO+4arevvOJnNWGfvKSOr99nc9JxYEZubjKlCeWlF01f7SS88+GQ9G
+         9aNVX9Lrxb7PcTi7Kx98YgX5JaDHWvVtSxqxAZSNlJBSpZLMgLzQ4DwI60nwLHpF1QZN
+         Ve1A==
+X-Gm-Message-State: APjAAAVnTj0lmjwSo1Igli+3XQ8+9hwARqVGFwWi+a8V1dTZj08Abvna
+        zqtLmDXX6XYR5vupxXWuAg==
+X-Google-Smtp-Source: APXvYqzCnCrDwqSr2I9ZY+upYlvbICf4o4U9kOYjx5cXQ5142+g7eav5whXMKaItjrPG0hOLydb1Cg==
+X-Received: by 2002:a05:6602:2209:: with SMTP id n9mr10934138ion.62.1576883442554;
+        Fri, 20 Dec 2019 15:10:42 -0800 (PST)
+Received: from localhost ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id m27sm5505377ilb.53.2019.12.20.15.10.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 15:10:41 -0800 (PST)
+Date:   Fri, 20 Dec 2019 16:10:40 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Andrey Pronin <apronin@chromium.org>
+Subject: Re: [PATCH] dt-bindings: tpm: Convert cr50 binding to YAML
+Message-ID: <20191220231040.GA11384@bogus>
+References: <20191217005424.226858-1-swboyd@chromium.org>
+ <CAD=FV=UQAgd2R=ykTCnBZuOvFFKoWu4o-3Rq=GEdrc1KKSi9cQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=UQAgd2R=ykTCnBZuOvFFKoWu4o-3Rq=GEdrc1KKSi9cQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix rxrpc_new_incoming_call() to check that we have a suitable service key
-available for the combination of service ID and security class of a new
-incoming call - and to reject calls for which we don't.
+On Tue, Dec 17, 2019 at 09:45:02AM -0800, Doug Anderson wrote:
+> Hi,
+> 
+> On Mon, Dec 16, 2019 at 4:54 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> >
+> > This allows us to validate the dt binding to the implementation. Add the
+> > interrupt property too, because that's required but nobody noticed when
+> > the non-YAML binding was introduced.
+> >
+> > Cc: Andrey Pronin <apronin@chromium.org>
+> > Cc: Douglas Anderson <dianders@chromium.org>
+> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> > ---
+> >  .../bindings/security/tpm/google,cr50.txt     | 19 -------
+> >  .../bindings/security/tpm/google,cr50.yaml    | 52 +++++++++++++++++++
+> >  2 files changed, 52 insertions(+), 19 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/security/tpm/google,cr50.txt
+> >  create mode 100644 Documentation/devicetree/bindings/security/tpm/google,cr50.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/security/tpm/google,cr50.txt b/Documentation/devicetree/bindings/security/tpm/google,cr50.txt
+> > deleted file mode 100644
+> > index cd69c2efdd37..000000000000
+> > --- a/Documentation/devicetree/bindings/security/tpm/google,cr50.txt
+> > +++ /dev/null
+> > @@ -1,19 +0,0 @@
+> > -* H1 Secure Microcontroller with Cr50 Firmware on SPI Bus.
+> > -
+> > -H1 Secure Microcontroller running Cr50 firmware provides several
+> > -functions, including TPM-like functionality. It communicates over
+> > -SPI using the FIFO protocol described in the PTP Spec, section 6.
+> > -
+> > -Required properties:
+> > -- compatible: Should be "google,cr50".
+> > -- spi-max-frequency: Maximum SPI frequency.
+> > -
+> > -Example:
+> > -
+> > -&spi0 {
+> > -       tpm@0 {
+> > -               compatible = "google,cr50";
+> > -               reg = <0>;
+> > -               spi-max-frequency = <800000>;
+> > -       };
+> > -};
+> > diff --git a/Documentation/devicetree/bindings/security/tpm/google,cr50.yaml b/Documentation/devicetree/bindings/security/tpm/google,cr50.yaml
+> > new file mode 100644
+> > index 000000000000..8bfff0e757af
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/security/tpm/google,cr50.yaml
+> > @@ -0,0 +1,52 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/tpm/google,cr50.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: H1 Secure Microcontroller with Cr50 Firmware on SPI Bus
+> > +
+> > +description:
+> > +  H1 Secure Microcontroller running Cr50 firmware provides several functions,
+> > +  including TPM-like functionality. It communicates over SPI using the FIFO
+> > +  protocol described in the PTP Spec, section 6.
+> > +
+> > +maintainers:
+> > +  - Andrey Pronin <apronin@chromium.org>
+> 
+> Does Andrey agree to be the maintainer here?
+> 
+> 
+> I'd like to see if we can delete most of what you've written here.
+> Specifically in "spi/spi-controller.yaml" you can see a really nice
+> description of what SPI devices ought to look like.  Can we just
+> reference that?  To do that I _think_ we actually need to break that
+> description into a separate YAML file and then include it from there
+> and here.  Maybe someone on the list can confirm or we can just post
+> some patches for that?
+> 
+> 
+> > +properties:
+> > +  compatible:
+> > +    const: google,cr50
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> 
+> I'm curious if you need a minItems here.  ...and if we don't somehow
+> include it, should we follow 'spi-controller.yaml' and treat this like
+> an int?
 
-This causes an assertion like the following to appear:
+Really, just 'true' is sufficient as you can't say which CS number it is 
+here.
+> 
+> 
+> > +  spi-max-frequency:
+> > +    maxItems: 1
+> 
+> This is not an array type.  Why do you need maxItems?  Should treat
+> like an int?  Do we have any ranges of sane values we can put here?
+> I'm sure that there is a maximum that Cr50 can talk at.
+> 
+> 
+> > +  interrupts:
+> > +    maxItems: 1
+> 
+> I'm curious if you need a minItems here.
 
-	rxrpc: Assertion failed - 6(0x6) == 12(0xc) is false
-	kernel BUG at net/rxrpc/call_object.c:456!
+No. It's implied to be the same. (The tooling adds it because that's not 
+how json-schema works).
 
-Where call->state is RXRPC_CALL_SERVER_SECURING (6) rather than
-RXRPC_CALL_COMPLETE (12).
+> 
+> ...also: should we be trying to validate the flags at all?  AKA that
+> Cr50 expects a rising edge interrupt?
 
-Fixes: 248f219cb8bc ("rxrpc: Rewrite the data and ack handling code")
-Reported-by: Marc Dionne <marc.dionne@auristor.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+You can't really because you don't know how many cells.
 
- net/rxrpc/ar-internal.h  |   10 +++++--
- net/rxrpc/call_accept.c  |   14 +++++++--
- net/rxrpc/conn_event.c   |   16 +----------
- net/rxrpc/conn_service.c |    4 +++
- net/rxrpc/rxkad.c        |    5 ++-
- net/rxrpc/security.c     |   70 ++++++++++++++++++++++------------------------
- 6 files changed, 59 insertions(+), 60 deletions(-)
+> 
+> 
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - spi-max-frequency
+> 
+> Technically spi-max-frequency might not be required (the SPI binding
+> doesn't list it as such), but I guess it was before...
 
-diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
-index 7c7d10f2e0c1..5e99df80e80a 100644
---- a/net/rxrpc/ar-internal.h
-+++ b/net/rxrpc/ar-internal.h
-@@ -209,6 +209,7 @@ struct rxrpc_skb_priv {
- struct rxrpc_security {
- 	const char		*name;		/* name of this service */
- 	u8			security_index;	/* security type provided */
-+	u32			no_key_abort;	/* Abort code indicating no key */
- 
- 	/* Initialise a security service */
- 	int (*init)(void);
-@@ -977,8 +978,9 @@ static inline void rxrpc_reduce_conn_timer(struct rxrpc_connection *conn,
- struct rxrpc_connection *rxrpc_find_service_conn_rcu(struct rxrpc_peer *,
- 						     struct sk_buff *);
- struct rxrpc_connection *rxrpc_prealloc_service_connection(struct rxrpc_net *, gfp_t);
--void rxrpc_new_incoming_connection(struct rxrpc_sock *,
--				   struct rxrpc_connection *, struct sk_buff *);
-+void rxrpc_new_incoming_connection(struct rxrpc_sock *, struct rxrpc_connection *,
-+				   const struct rxrpc_security *, struct key *,
-+				   struct sk_buff *);
- void rxrpc_unpublish_service_conn(struct rxrpc_connection *);
- 
- /*
-@@ -1103,7 +1105,9 @@ extern const struct rxrpc_security rxkad;
- int __init rxrpc_init_security(void);
- void rxrpc_exit_security(void);
- int rxrpc_init_client_conn_security(struct rxrpc_connection *);
--int rxrpc_init_server_conn_security(struct rxrpc_connection *);
-+bool rxrpc_look_up_server_security(struct rxrpc_local *, struct rxrpc_sock *,
-+				   const struct rxrpc_security **, struct key **,
-+				   struct sk_buff *);
- 
- /*
-  * sendmsg.c
-diff --git a/net/rxrpc/call_accept.c b/net/rxrpc/call_accept.c
-index 44fa22b020ef..70e44abf106c 100644
---- a/net/rxrpc/call_accept.c
-+++ b/net/rxrpc/call_accept.c
-@@ -263,6 +263,8 @@ static struct rxrpc_call *rxrpc_alloc_incoming_call(struct rxrpc_sock *rx,
- 						    struct rxrpc_local *local,
- 						    struct rxrpc_peer *peer,
- 						    struct rxrpc_connection *conn,
-+						    const struct rxrpc_security *sec,
-+						    struct key *key,
- 						    struct sk_buff *skb)
- {
- 	struct rxrpc_backlog *b = rx->backlog;
-@@ -310,7 +312,7 @@ static struct rxrpc_call *rxrpc_alloc_incoming_call(struct rxrpc_sock *rx,
- 		conn->params.local = rxrpc_get_local(local);
- 		conn->params.peer = peer;
- 		rxrpc_see_connection(conn);
--		rxrpc_new_incoming_connection(rx, conn, skb);
-+		rxrpc_new_incoming_connection(rx, conn, sec, key, skb);
- 	} else {
- 		rxrpc_get_connection(conn);
- 	}
-@@ -349,9 +351,11 @@ struct rxrpc_call *rxrpc_new_incoming_call(struct rxrpc_local *local,
- 					   struct sk_buff *skb)
- {
- 	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
-+	const struct rxrpc_security *sec = NULL;
- 	struct rxrpc_connection *conn;
- 	struct rxrpc_peer *peer = NULL;
--	struct rxrpc_call *call;
-+	struct rxrpc_call *call = NULL;
-+	struct key *key = NULL;
- 
- 	_enter("");
- 
-@@ -372,7 +376,11 @@ struct rxrpc_call *rxrpc_new_incoming_call(struct rxrpc_local *local,
- 	 */
- 	conn = rxrpc_find_connection_rcu(local, skb, &peer);
- 
--	call = rxrpc_alloc_incoming_call(rx, local, peer, conn, skb);
-+	if (!conn && !rxrpc_look_up_server_security(local, rx, &sec, &key, skb))
-+		goto no_call;
-+
-+	call = rxrpc_alloc_incoming_call(rx, local, peer, conn, sec, key, skb);
-+	key_put(key);
- 	if (!call) {
- 		skb->mark = RXRPC_SKB_MARK_REJECT_BUSY;
- 		goto no_call;
-diff --git a/net/rxrpc/conn_event.c b/net/rxrpc/conn_event.c
-index a1ceef4f5cd0..808a4723f868 100644
---- a/net/rxrpc/conn_event.c
-+++ b/net/rxrpc/conn_event.c
-@@ -376,21 +376,7 @@ static void rxrpc_secure_connection(struct rxrpc_connection *conn)
- 	_enter("{%d}", conn->debug_id);
- 
- 	ASSERT(conn->security_ix != 0);
--
--	if (!conn->params.key) {
--		_debug("set up security");
--		ret = rxrpc_init_server_conn_security(conn);
--		switch (ret) {
--		case 0:
--			break;
--		case -ENOENT:
--			abort_code = RX_CALL_DEAD;
--			goto abort;
--		default:
--			abort_code = RXKADNOAUTH;
--			goto abort;
--		}
--	}
-+	ASSERT(conn->server_key);
- 
- 	if (conn->security->issue_challenge(conn) < 0) {
- 		abort_code = RX_CALL_DEAD;
-diff --git a/net/rxrpc/conn_service.c b/net/rxrpc/conn_service.c
-index 123d6ceab15c..21da48e3d2e5 100644
---- a/net/rxrpc/conn_service.c
-+++ b/net/rxrpc/conn_service.c
-@@ -148,6 +148,8 @@ struct rxrpc_connection *rxrpc_prealloc_service_connection(struct rxrpc_net *rxn
-  */
- void rxrpc_new_incoming_connection(struct rxrpc_sock *rx,
- 				   struct rxrpc_connection *conn,
-+				   const struct rxrpc_security *sec,
-+				   struct key *key,
- 				   struct sk_buff *skb)
- {
- 	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
-@@ -160,6 +162,8 @@ void rxrpc_new_incoming_connection(struct rxrpc_sock *rx,
- 	conn->service_id	= sp->hdr.serviceId;
- 	conn->security_ix	= sp->hdr.securityIndex;
- 	conn->out_clientflag	= 0;
-+	conn->security		= sec;
-+	conn->server_key	= key_get(key);
- 	if (conn->security_ix)
- 		conn->state	= RXRPC_CONN_SERVICE_UNSECURED;
- 	else
-diff --git a/net/rxrpc/rxkad.c b/net/rxrpc/rxkad.c
-index 8d8aa3c230b5..098f1f9ec53b 100644
---- a/net/rxrpc/rxkad.c
-+++ b/net/rxrpc/rxkad.c
-@@ -648,9 +648,9 @@ static int rxkad_issue_challenge(struct rxrpc_connection *conn)
- 	u32 serial;
- 	int ret;
- 
--	_enter("{%d,%x}", conn->debug_id, key_serial(conn->params.key));
-+	_enter("{%d,%x}", conn->debug_id, key_serial(conn->server_key));
- 
--	ret = key_validate(conn->params.key);
-+	ret = key_validate(conn->server_key);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -1293,6 +1293,7 @@ static void rxkad_exit(void)
- const struct rxrpc_security rxkad = {
- 	.name				= "rxkad",
- 	.security_index			= RXRPC_SECURITY_RXKAD,
-+	.no_key_abort			= RXKADUNKNOWNKEY,
- 	.init				= rxkad_init,
- 	.exit				= rxkad_exit,
- 	.init_connection_security	= rxkad_init_connection_security,
-diff --git a/net/rxrpc/security.c b/net/rxrpc/security.c
-index a4c47d2b7054..9b1fb9ed0717 100644
---- a/net/rxrpc/security.c
-+++ b/net/rxrpc/security.c
-@@ -101,62 +101,58 @@ int rxrpc_init_client_conn_security(struct rxrpc_connection *conn)
- }
- 
- /*
-- * initialise the security on a server connection
-+ * Find the security key for a server connection.
-  */
--int rxrpc_init_server_conn_security(struct rxrpc_connection *conn)
-+bool rxrpc_look_up_server_security(struct rxrpc_local *local, struct rxrpc_sock *rx,
-+				   const struct rxrpc_security **_sec,
-+				   struct key **_key,
-+				   struct sk_buff *skb)
- {
- 	const struct rxrpc_security *sec;
--	struct rxrpc_local *local = conn->params.local;
--	struct rxrpc_sock *rx;
--	struct key *key;
--	key_ref_t kref;
-+	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
-+	key_ref_t kref = NULL;
- 	char kdesc[5 + 1 + 3 + 1];
- 
- 	_enter("");
- 
--	sprintf(kdesc, "%u:%u", conn->service_id, conn->security_ix);
-+	sprintf(kdesc, "%u:%u", sp->hdr.serviceId, sp->hdr.securityIndex);
- 
--	sec = rxrpc_security_lookup(conn->security_ix);
-+	sec = rxrpc_security_lookup(sp->hdr.securityIndex);
- 	if (!sec) {
--		_leave(" = -ENOKEY [lookup]");
--		return -ENOKEY;
-+		trace_rxrpc_abort(0, "SVS",
-+				  sp->hdr.cid, sp->hdr.callNumber, sp->hdr.seq,
-+				  RX_INVALID_OPERATION, EKEYREJECTED);
-+		skb->mark = RXRPC_SKB_MARK_REJECT_ABORT;
-+		skb->priority = RX_INVALID_OPERATION;
-+		return false;
- 	}
- 
--	/* find the service */
--	read_lock(&local->services_lock);
--	rx = rcu_dereference_protected(local->service,
--				       lockdep_is_held(&local->services_lock));
--	if (rx && (rx->srx.srx_service == conn->service_id ||
--		   rx->second_service == conn->service_id))
--		goto found_service;
-+	if (sp->hdr.securityIndex == RXRPC_SECURITY_NONE)
-+		goto out;
- 
--	/* the service appears to have died */
--	read_unlock(&local->services_lock);
--	_leave(" = -ENOENT");
--	return -ENOENT;
--
--found_service:
- 	if (!rx->securities) {
--		read_unlock(&local->services_lock);
--		_leave(" = -ENOKEY");
--		return -ENOKEY;
-+		trace_rxrpc_abort(0, "SVR",
-+				  sp->hdr.cid, sp->hdr.callNumber, sp->hdr.seq,
-+				  RX_INVALID_OPERATION, EKEYREJECTED);
-+		skb->mark = RXRPC_SKB_MARK_REJECT_ABORT;
-+		skb->priority = RX_INVALID_OPERATION;
-+		return false;
- 	}
- 
- 	/* look through the service's keyring */
- 	kref = keyring_search(make_key_ref(rx->securities, 1UL),
- 			      &key_type_rxrpc_s, kdesc, true);
- 	if (IS_ERR(kref)) {
--		read_unlock(&local->services_lock);
--		_leave(" = %ld [search]", PTR_ERR(kref));
--		return PTR_ERR(kref);
-+		trace_rxrpc_abort(0, "SVK",
-+				  sp->hdr.cid, sp->hdr.callNumber, sp->hdr.seq,
-+				  sec->no_key_abort, EKEYREJECTED);
-+		skb->mark = RXRPC_SKB_MARK_REJECT_ABORT;
-+		skb->priority = sec->no_key_abort;
-+		return false;
- 	}
- 
--	key = key_ref_to_ptr(kref);
--	read_unlock(&local->services_lock);
--
--	conn->server_key = key;
--	conn->security = sec;
--
--	_leave(" = 0");
--	return 0;
-+out:
-+	*_sec = sec;
-+	*_key = key_ref_to_ptr(kref);
-+	return true;
- }
+Generally, we expect a device knows its max and this should only be used 
+it a board has a lower value. However, sometimes there's exceptions. 
 
+Shouldn't really be debate here unless the old binding doc was wrong.
+
+> 
+> 
+> > +  - interrupts
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > +    spi {
+> > +      #address-cells = <0x1>;
+> > +      #size-cells = <0x0>;
+> > +      tpm@0 {
+> > +          compatible = "google,cr50";
+> > +          reg = <0>;
+> > +          spi-max-frequency = <800000>;
+> > +          interrupts = <50 IRQ_TYPE_EDGE_RISING>;
+> 
+> I would tend to prefer seeing the interrupt parent in the example
+> since it's pretty likely that the GPIO controller isn't the overall
+> parent and likely that our interrupt is a GPIO.  I'm not sure the
+> convention, though.
+
+Example is fine, but shouldn't be in the schema.
+
+> > +      };
+> > +    };
+> > +
+> > +...
+> 
+> Is the "..." important here?  I guess this is only if you're trying to
+> jam two bindings into the same file, but I could be wrong.  I guess a
+> bunch of arm ones owned by Rob have it at the end (though the example
+> doesn't?), so maybe it's right?
+
+We won't ever have 2 because '$ref' lookups wouldn't work. 
+
+It only matters that we are consistent because if/when we want to 
+programatically edit files, the ruamel yaml parser writes out what it is 
+told, not what it read in. That also means fixing these is pretty easy.
+
+My current position is to have them, but it's not anything I check ATM 
+and I forget it too.
+
+Rob
