@@ -2,187 +2,116 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02678C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 981D4C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C688824676
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63A0B2467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 00:14:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AB1vxyAh"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TCGsuxyN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbfLTAMl (ORCPT
+        id S1727174AbfLTAON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 19:12:41 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:37969 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbfLTAMk (ORCPT
+        Thu, 19 Dec 2019 19:14:13 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38027 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726992AbfLTAON (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 19:12:40 -0500
-Received: by mail-il1-f195.google.com with SMTP id f5so6424351ilq.5
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 16:12:39 -0800 (PST)
+        Thu, 19 Dec 2019 19:14:13 -0500
+Received: by mail-io1-f67.google.com with SMTP id v3so7657607ioj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 16:14:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qs+Sa1+sjdzty0pSCITj5traxewzN9G4gEr6T5j5V9o=;
-        b=AB1vxyAhSPg1F6ndqplSaA8FVhn2Lc5356ua92meLm6LyrQ23o1YyQLCVWsOCjkemv
-         0RzNk6LZKO//2H5SpazVTDR1nQ66iwWrxj/n56XZZ0+HKXmPQe8/REQkeA1U0pW/bafh
-         KzYHlz0UMZ7b0Tx5VoRAm/y1jB8VpibJim9lYR+cHLkWmg4NRR01a0WLTvMXQF+4vgo1
-         D4idV7lc60ZDKjrXJfmRsmWCbvnPzLpES3ak6A4m+4xf+ACIyK73384Qn5ERdlwQ6IIm
-         /huR3RcIWvtvM+IL7Imwkyev4MyOX2iczJH0B4XTBc0xLsbb4Wzc64qb/9eLgiRSAbxL
-         Tx+A==
+        bh=DSBzbWB7QqhpPeTI1Nu3CdSKSF5DFJ1xy+2l/2BwbzI=;
+        b=TCGsuxyN57BiemwmY4L0TI6RbOFu/6NkPfJZhjiD1hszmXXVHzuglib54KMoo1cm6c
+         IqJ8GX4xvmwU9uDTh2uZQ5JqrEU5nQPG7A3m6CocVr3rTBosFPQ7hyXRLG5y0cuZQFAP
+         p9aTUQkl8Knj7CQxm0l+3K5N0rw/oA8ewX/3o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qs+Sa1+sjdzty0pSCITj5traxewzN9G4gEr6T5j5V9o=;
-        b=YSlq2IIaNuj2nfXao16o8i1mfeCcypWlNwcaM/Ow/x5uyMxuz54w3TP6/6I5O/DQwz
-         FzJZ0dhtQ0nku/RvwLW6k4iSgN5ZPnwinqlWRhgMgqY8asKHBkqkeUYxV5Ro/4qhIAw0
-         4lgxGc+kpEb55OgIApYtV8xfeJdCo9jM/5C8aqBQWsLCSrO38rXS/EQKGaOQrzVXvHI3
-         c/Hn2k7VmHyrAPZqOquwYeFgtjkBnImqK6yMLNlOjFCm9Y9g0QgYShemF6533pOoSI68
-         An47AMVo81AOp7biMIewVhLtDAqT2bf0Fpl/9uT8YHFb+StPREU/L1601N+HGKTxEW4a
-         s4OQ==
-X-Gm-Message-State: APjAAAVV/Rf8RT6wfJC3KljwgaYcWalJISsglnHbgn2WtDjURF5Y6fu/
-        GPcqs9SxcDrjqGlfg5kBJiU54Y/1cbH+sFuWJULq1A==
-X-Google-Smtp-Source: APXvYqwVkT3CPJ6BN3SwzlEKH987cMoOerm9iYmX3wpm0k/KDXdLWFripwK1aX2mpwPSzcGFK+Y/d/WLoT1WAt/xby8=
-X-Received: by 2002:a92:1711:: with SMTP id u17mr9937804ill.72.1576800759377;
- Thu, 19 Dec 2019 16:12:39 -0800 (PST)
+        bh=DSBzbWB7QqhpPeTI1Nu3CdSKSF5DFJ1xy+2l/2BwbzI=;
+        b=MEW41e8xIztbouHl0UMhxQsj+lxt+E16caDXiJd0JFcXpTeKcxnEwH9VGH4TEV8PO+
+         WsiH3j4B12DbefOsHFE0w8B87EJ9vftwwLGBOP9V3f2IVVxHG6dmuxZUXTPDv+HMYH48
+         OKjgTw1QkG3NCYEgIk6OBIItC/+FWsPPwSuTc+19HFPcyfswFg96sWqkiYfOG7mrBGz4
+         vRaXylbEVPacOlJobtkQhwmA4EWfd/MuIN7ALOenggIfM8M8FwFX+iy7ahA9ef7jeQBE
+         nXWaGLAH5QM49kAcrprVocRs7F6FmlXPKDvJESq7nJ7x/EYA/HZQhK8QX8SOlg1QcRzh
+         GI1A==
+X-Gm-Message-State: APjAAAVtqK/AexlCeOBhTt2NF8Sc4jBIljHRCPX0LlH50cKPlYC2r3rL
+        hheoLlLhTBZF8Y7H3dMg6ZwqETvO4XdoZRJmIpqERg==
+X-Google-Smtp-Source: APXvYqzKI77IzPWHmf6MLacA03+yp3D4IujBehG9GJ1A7DXEy0QkZWv8M5GBrSKsp+eOPeLiRwRHUss3MtNpuWX7V6s=
+X-Received: by 2002:a5d:89c8:: with SMTP id a8mr7781523iot.186.1576800851978;
+ Thu, 19 Dec 2019 16:14:11 -0800 (PST)
 MIME-Version: 1.0
-References: <20191213125537.11509-1-t-kristo@ti.com> <20191213125537.11509-6-t-kristo@ti.com>
- <20191218003815.GC16271@xps15> <5869498f-086c-cea4-edcf-1b75fb22cf22@ti.com>
-In-Reply-To: <5869498f-086c-cea4-edcf-1b75fb22cf22@ti.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Thu, 19 Dec 2019 17:12:28 -0700
-Message-ID: <CANLsYkz=ZV-AABXq2mSdwKkcdkQgFwStepteFnMBc4j=ahe4Dw@mail.gmail.com>
-Subject: Re: [PATCHv3 05/15] remoteproc/omap: Add the rproc ops .da_to_va() implementation
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-remoteproc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap@vger.kernel.org, Suman Anna <s-anna@ti.com>
+References: <20191219201340.196259-1-pmalani@chromium.org> <20191219201340.196259-2-pmalani@chromium.org>
+In-Reply-To: <20191219201340.196259-2-pmalani@chromium.org>
+From:   Benson Leung <bleung@chromium.org>
+Date:   Thu, 19 Dec 2019 16:13:59 -0800
+Message-ID: <CANLzEktdkZvdpJusvC67xjyxw5+botWH+TLBmfT8hg6u6P+yPA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] mfd: cros_ec: Add usbpd-notify to usbpd_charger
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Dec 2019 at 06:18, Tero Kristo <t-kristo@ti.com> wrote:
->
-> On 18/12/2019 02:38, Mathieu Poirier wrote:
-> > On Fri, Dec 13, 2019 at 02:55:27PM +0200, Tero Kristo wrote:
-> >> From: Suman Anna <s-anna@ti.com>
-> >>
-> >> An implementation for the rproc ops .da_to_va() has been added
-> >> that provides the address translation between device addresses
-> >> to kernel virtual addresses for internal RAMs present on that
-> >> particular remote processor device. The implementation provides
-> >> the translations based on the addresses parsed and stored during
-> >> the probe.
-> >>
-> >> This ops gets invoked by the exported rproc_da_to_va() function
-> >> and allows the remoteproc core's ELF loader to be able to load
-> >> program data directly into the internal memories.
-> >>
-> >> Signed-off-by: Suman Anna <s-anna@ti.com>
-> >> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> >> ---
-> >>   drivers/remoteproc/omap_remoteproc.c | 39 ++++++++++++++++++++++++++++
-> >>   1 file changed, 39 insertions(+)
-> >>
-> >> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
-> >> index 844703507a74..28f14e24b389 100644
-> >> --- a/drivers/remoteproc/omap_remoteproc.c
-> >> +++ b/drivers/remoteproc/omap_remoteproc.c
-> >> @@ -232,10 +232,49 @@ static int omap_rproc_stop(struct rproc *rproc)
-> >>      return 0;
-> >>   }
-> >>
-> >> +/**
-> >> + * omap_rproc_da_to_va() - internal memory translation helper
-> >> + * @rproc: remote processor to apply the address translation for
-> >> + * @da: device address to translate
-> >> + * @len: length of the memory buffer
-> >> + *
-> >> + * Custom function implementing the rproc .da_to_va ops to provide address
-> >> + * translation (device address to kernel virtual address) for internal RAMs
-> >> + * present in a DSP or IPU device). The translated addresses can be used
-> >> + * either by the remoteproc core for loading, or by any rpmsg bus drivers.
-> >> + * Returns the translated virtual address in kernel memory space, or NULL
-> >> + * in failure.
-> >> + */
-> >> +static void *omap_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
-> >> +{
-> >> +    struct omap_rproc *oproc = rproc->priv;
-> >> +    int i;
-> >> +    u32 offset;
-> >> +
-> >> +    if (len <= 0)
-> >> +            return NULL;
-> >> +
-> >> +    if (!oproc->num_mems)
-> >> +            return NULL;
-> >> +
-> >> +    for (i = 0; i < oproc->num_mems; i++) {
-> >> +            if (da >= oproc->mem[i].dev_addr && da + len <=
-> >
-> > Shouldn't this be '<' rather than '<=' ?
->
-> No, I think <= is correct. You need to consider the initial byte in the
-> range also. Consider a simple case where you provide the exact da + len
-> corresponding to a specific memory range.
+Hey Prashant,
 
-For that specific case you are correct.  On the flip side if @da falls
-somewhere after @mem[i].dev_addr, there is a possibility to clobber
-the first byte of the next range if <= is used.
+On Thu, Dec 19, 2019 at 12:14 PM Prashant Malani <pmalani@chromium.org> wrote:
+>
+> Add the cros-usbpd-notify driver as a cell for the cros_usbpd_charger
+> subdevice on non-ACPI platforms.
+>
+> This driver allows other cros-ec devices to receive PD event
+> notifications from the Chrome OS Embedded Controller (EC) via a
+> notification chain.
+>
+> Change-Id: I4c062d261fa1a504b43b0a0c0a98a661829593b9
 
-Thanks,
-Mathieu
+Make sure to strip Gerrit's Change-Ids before sending upstream. They
+don't have any meaning outside of chromiumos.
 
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> ---
+>  drivers/mfd/cros_ec_dev.c | 3 +++
+>  1 file changed, 3 insertions(+)
 >
-> >
-> >> +                oproc->mem[i].dev_addr +  oproc->mem[i].size) {
-> >
-> > One space too many after the '+' .
+> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+> index c4b977a5dd966..1dde480f35b93 100644
+> --- a/drivers/mfd/cros_ec_dev.c
+> +++ b/drivers/mfd/cros_ec_dev.c
+> @@ -85,6 +85,9 @@ static const struct mfd_cell cros_ec_sensorhub_cells[] = {
+>  static const struct mfd_cell cros_usbpd_charger_cells[] = {
+>         { .name = "cros-usbpd-charger", },
+>         { .name = "cros-usbpd-logger", },
+> +#ifndef CONFIG_ACPI
+> +       { .name = "cros-usbpd-notify", },
+> +#endif
+>  };
 >
-> True, I wonder why checkpatch did not catch this.
->
-> >
-> >> +                    offset = da -  oproc->mem[i].dev_addr;
-> >
-> > One space too many after then '-' .
->
-> Same, will fix these two.
->
-> -Tero
->
-> >
-> >> +                    /* __force to make sparse happy with type conversion */
-> >> +                    return (__force void *)(oproc->mem[i].cpu_addr +
-> >> +                                            offset);
-> >> +            }
-> >> +    }
-> >> +
-> >> +    return NULL;
-> >> +}
-> >> +
-> >>   static const struct rproc_ops omap_rproc_ops = {
-> >>      .start          = omap_rproc_start,
-> >>      .stop           = omap_rproc_stop,
-> >>      .kick           = omap_rproc_kick,
-> >> +    .da_to_va       = omap_rproc_da_to_va,
-> >>   };
-> >>
-> >>   static const char * const ipu_mem_names[] = {
-> >> --
-> >> 2.17.1
-> >>
-> >> --
->
+>  static const struct cros_feature_to_cells cros_subdevices[] = {
 > --
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 2.24.1.735.g03f4e72817-goog
+>
+
+
+-- 
+Benson Leung
+Staff Software Engineer
+Chrome OS Kernel
+Google Inc.
+bleung@google.com
+Chromium OS Project
+bleung@chromium.org
