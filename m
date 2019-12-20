@@ -2,119 +2,101 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 437BAC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 782C0C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF8520716
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B11F20716
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:48:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="mtjPX2bn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gFPhTKrY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbfLTQr5 (ORCPT
+        id S1727435AbfLTQsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 11:47:57 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:42394 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727181AbfLTQr5 (ORCPT
+        Fri, 20 Dec 2019 11:48:21 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:54326 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727181AbfLTQsV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 11:47:57 -0500
-Received: from [10.137.112.111] (unknown [131.107.147.111])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 1B2412010C1D;
-        Fri, 20 Dec 2019 08:47:56 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1B2412010C1D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1576860476;
-        bh=NIUGZ+fuf2FDsvapAJaWJ5cOfekjGTTUeUXSm26IsMw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=mtjPX2bnsRQdsMZejTUMArtWQtbrzKQSj3yviq04WLFkhlLiFjJ6iBPCoSICOedm/
-         POUBGuQZqYlrRqgttnRhWGUVb/KRAzqx6fV9yG+j+UrfyWE04xQbz6AfyGUw3KLKB+
-         3MpjdcsPYnkSh7Uy8LtOW0gMH4qSQZ7xX5lH+i4I=
-Subject: Re: [PATCH] ima: add the ability to query ima for the hash of a given
- file.
-To:     Florent Revest <revest@chromium.org>,
-        linux-integrity@vger.kernel.org
-Cc:     kpsingh@chromium.org, mjg59@google.com, zohar@linux.ibm.com,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Florent Revest <revest@google.com>
-References: <20191220163136.25010-1-revest@chromium.org>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <8f4d9c4e-735d-8ba9-b84a-4f341030e0cf@linux.microsoft.com>
-Date:   Fri, 20 Dec 2019 08:48:20 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 20 Dec 2019 11:48:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4XBS8twGfIEA22qKdCxJ5jlOvqASpEkGjgMxOfO6nj8=; b=gFPhTKrY1zvEpl525VDPXURkc
+        Gpdssy2T5h+eX2tj1uhEL90vJulZNH3bYI64f2SGK7fuVH2zECUL1u5l6mMb89H7+yry/vEbRX171
+        9BQEH/UwOo7LEYM8tZp+SOTfphPvjWSQ1uCFhFjeSXkX5D8tsNQRPLk6Q22fMW9G5KzVMpOVpqu4d
+        K6dv6lHU/z+UrPIbOoERFrpP51MOak7IG3+YP9m+E5wxphrkg5wxtAZTSzY9mGH0p4qLt7GRNy+2M
+        LVW776pTnCsdUibZyKY19PKshLRIOJYyh/j2vsdEDHEhJWTdq4hGT+I5oQIv29nvNHL6JfqFMTuF+
+        lDdv5drkw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iiLRi-0002Q1-Bx; Fri, 20 Dec 2019 16:48:10 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E9879303D9F;
+        Fri, 20 Dec 2019 17:46:38 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id F345120E07103; Fri, 20 Dec 2019 17:48:02 +0100 (CET)
+Date:   Fri, 20 Dec 2019 17:48:02 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephane Eranian <eranian@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Subject: Re: [PATCH 2/9] perf/core: Add PERF_SAMPLE_CGROUP feature
+Message-ID: <20191220164802.GO2827@hirez.programming.kicks-ass.net>
+References: <20191220043253.3278951-1-namhyung@kernel.org>
+ <20191220043253.3278951-3-namhyung@kernel.org>
+ <20191220152324.GG2914998@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-In-Reply-To: <20191220163136.25010-1-revest@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191220152324.GG2914998@devbig004.ftw2.facebook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/20/2019 8:31 AM, Florent Revest wrote:
+On Fri, Dec 20, 2019 at 07:23:24AM -0800, Tejun Heo wrote:
+> On Fri, Dec 20, 2019 at 01:32:46PM +0900, Namhyung Kim wrote:
+> > The PERF_SAMPLE_CGROUP bit is to save (perf_event) cgroup information
+> > in the sample.  It will add a 64-bit id to identify current cgroup and
+> > it's the file handle in the cgroup file system.  Userspace should use
+> > this information with PERF_RECORD_CGROUP event to match which cgroup
+> > it belongs.
+> 
+> You don't need PERF_RECORD_CGROUP for that.  Something like the
+> following should work.
+> 
+> 	struct {
+> 		struct file_handle fh;
+> 		char stor[MAX_HANDLE_SZ];
+> 	} fh_store;
+> 	struct file_handle *fh = &fh_store;
+> 
+> 	fh->handle_type = 0xfe; // FILEID_KERNFS
+> 	fh->handle_bytes = sizeof(u64);
+> 	*(u64 *)fh->f_handle = cgrp_id;
+> 
+> 	mnt_fd = open('/sys/fs/cgroup', O_RDONLY);
+> 	fd = open_by_handle_at(mnt_fd, fh, O_RDONLY);
+> 
+> 	snprintf(proc_path, PATH_MAX, "/proc/self/fd/%d", fd);
+> 	readlink(proc_path, cgrp_path, PATH_MAX);
 
->   
-> +/**
-> + * ima_file_hash - return the stored measurement if a file has been hashed.
-> + * @file: pointer to the file
-> + * @buf: buffer in which to store the hash
-> + * @buf_size: length of the buffer
-> + *
-> + * On success, output the hash into buf and return the hash algorithm (as
-> + * defined in the enum hash_algo).
-
-> + * If the hash is larger than buf, then only size bytes will be copied. It
-> + * generally just makes sense to pass a buffer capable of holding the largest
-> + * possible hash: IMA_MAX_DIGEST_SIZE
-
-If the given buffer is smaller than the hash length, wouldn't it be 
-better to return the required size and a status indicating the buffer is 
-not enough. The caller can then call back with the required buffer.
-
-If the hash is truncated the caller may not know if the hash is partial 
-or not.
-
-> + *
-> + * If IMA is disabled or if no measurement is available, return -EOPNOTSUPP.
-> + * If the parameters are incorrect, return -EINVAL.
-> + */
-> +int ima_file_hash(struct file *file, char *buf, size_t buf_size)
-> +{
-> +	struct inode *inode;
-> +	struct integrity_iint_cache *iint;
-> +	size_t copied_size;
-> +
-> +	if (!file || !buf)
-> +		return -EINVAL;
-> +
-> +	if (!ima_policy_flag)
-> +		return -EOPNOTSUPP;
-> +
-> +	inode = file_inode(file);
-> +	iint = integrity_iint_find(inode);
-> +	if (!iint)
-> +		return -EOPNOTSUPP;
-> +
-> +	mutex_lock(&iint->mutex);
-> +	copied_size = min_t(size_t, iint->ima_hash->length, buf_size);
-> +	memcpy(buf, iint->ima_hash->digest, copied_size);
-> +	mutex_unlock(&iint->mutex);
-> +
-> +	return iint->ima_hash->algo;
-
-Should the hash algorithm be copied from iinit->ima_hash to a local 
-variable while holding the mutex and that one returned?
-
-I assume iinit->mutex  is taken to ensure iinit->ima_hash is not removed 
-while this function is accessing it.
-
-thanks,
-  -lakshmi
-
+That assumes the cgroup is still in existence, which might not be the
+case I presume.
