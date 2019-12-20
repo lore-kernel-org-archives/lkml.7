@@ -2,238 +2,182 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1498BC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0436C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D107924680
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8753D24680
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:07:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="LEvYf7U9";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="SDYzkeT7"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="ndZZl735"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbfLTKHn (ORCPT
+        id S1727428AbfLTKHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 05:07:43 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:37748 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727180AbfLTKHn (ORCPT
+        Fri, 20 Dec 2019 05:07:47 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:4642 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727235AbfLTKHo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 05:07:43 -0500
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 41C4F4245C;
-        Fri, 20 Dec 2019 10:07:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1576836462; bh=JLRSs1nY9XXJmB7hWv7XvEZxVgMd5e5IMNiLoxvdhsQ=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=LEvYf7U9nsEilcBcuAKYX2Fg7mr5PzxfHkoAqh8OCSTD9sguEY/i/v46eEFSiHBr3
-         KLMBdSeqyKG/il7m9kqRHcUf3wKdbFP8VY/eIOD8fKokSBg2ZLBrjJwvzsD/X2ks9e
-         Gz5cGAL6ztb0x2AfalEK7qJ34LZldEeL6HN7ZRWiPm7zLVgPZqlHZGie6TZeB9c8E+
-         MxESzS4OmXh3Sb1h7U0refq+KUiIi8vR8kQSdTwaeQiPCKfsvkWXWyhzEw9qPmerDX
-         VN4fGpNTS9P9wrH1jhAOU+GgWp0gb3cLGXL60yk1+xFqqMDUswTC0PXAB+QHSIJ5kK
-         XsBLaWFJOuZhA==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id A8122A007D;
-        Fri, 20 Dec 2019 10:07:41 +0000 (UTC)
-Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 20 Dec 2019 02:06:54 -0800
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Fri, 20 Dec 2019 02:06:53 -0800
+        Fri, 20 Dec 2019 05:07:44 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBKA74vs002717;
+        Fri, 20 Dec 2019 05:07:41 -0500
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2168.outbound.protection.outlook.com [104.47.59.168])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2x0b85jtub-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Dec 2019 05:07:41 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QR2uTENtoJEvM7z81Cns2uEfEGtopSI6p2udSqGTHXD1IRqdzARx5W0UjQF0P/Vgn7UnCHemVtxjvBBOtCvxVjtTNTjTx8VuKbBNclhUakpqUEcQ30D7CHOCA5bZ+YdLYVOssVbGa9asXK4lRsoN/6aysUOiJkJNDjLIlTw8Dc5HI+4zNzUIxpYiLiZWmK0dD5uHP/7k7f56Lf5Ebovh81bRIuK8+JfYfT+WgNX8UyKQVpfgIpFTBbbn7EUSmjYihrQD5TptYa+9TywIxGMO3Dl5+PmaAPBkI3WSBV2iJx/lgIwS1DOsV7d0toGETIYp/4dLPkPBJRFDbYZkiXgKHA==
+ b=fWFm1CASuh6gmzrny8ZG/qLMYyY0MTRzwbf1WK//C4y7MIMSOsjF2TathJVkjqZrMrxsA19JDLNf4TsCpDNnFNk1nDjJ3fRn79g9Rp3nUvid4rO7SgDLL6s+HTuhxBV7k4AC3Owz693pieBdWc+/GEdrwJHaiKGUw7TAdUoK11dFSdbOg91tHkVEXlFraCD5PMM/Wo54miqAiu0G9MEw1HlYomS8Hil6WS6gCBqM8P/F/wieMAaWWyIT2MeIOamwo2tyjzSHlEk6CUMWXj+vUIi5gGtImCrE89KDX+uKmRkkPXg8K0Jgi8U19G7Lah83OzsJllv+a/Z3wt/tBEpKMg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TNpmnyBhB2vOSPMZLpBb7GVqDEETJ79jtwE5Uk+9L6o=;
- b=ROwviWP90zzzhYqAaIgLth80Uel9W95BIrgLGWWWx3HGRNvkPyi82xTWYmSH7HzImYfvwJoJKmPiqOxlb9JBABWhcOE5yY9rk3HlzJN0ooeH8nIvu9Ujds9Yjm/+2Wdhkk4YTy8oDjO43guu9OdqSUqHWnGL1tTQhdp3U5RqBFVEOt7u7L5/qTa3B2jVLrcMxw/URcFzVUfhVjPV1RaArbu9ChQ5bMEX9LqlxR38AROmDvMRn8cH9TuCTw7JJU66HxAHpDMu7ObX8HEepdzrtNss03jZd0qCoyzOmSpa7JCHE1ZU00gKHGXTvNPYaQmsF0VEpgqUXRt167sD0iJKPw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
+ bh=Z5cbR+puhsgRINa+NErcKYosDNK4IaY0vtxRPGVwDl4=;
+ b=LIlDxzUkKh7sutU94s8z/9M7wXj33IG422I95k0pl1CUDXU/mMLda7AzOaPYEDw82AUomV2ip2cE0AiwAj1KN/APNbs5DL9i3lXtRevk4mb4jGnaZYShcGZv8/m9Bsp9S5RkYpVdyd156M4qko86Br8ylB/L56L3Qk0yZU/3HNzbBiPI314DDiEZd6Yp9Ae9lmmSKEz6flMFlzZMO2+C3mI7YhgVd1Yi0aCAgnYkADjOfNBbLXqyvWKEnN49ZsxPhoarHhnEaJbFIrEK9EXeWAlqw6k5NW2rOhBLVz+sMhe1cOk3U59Yrgw/giNN4ngS8xBYdkxtpZeBTKt5RbsCTg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.55) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TNpmnyBhB2vOSPMZLpBb7GVqDEETJ79jtwE5Uk+9L6o=;
- b=SDYzkeT7jFVszVcCuIQBfH9DVNJtNxwUnHNL5sKCZ2UNCLcWIdsGkDtNjrsVKYhF5x/jF6aqZkrHDRsNGmG3IDm75UoY8iiBIio3PsAd2py3pgDyBClqKY1VI4fZk+tl/JMr4DagPkJgHZ5ishNCXjGPTT6NVaSNCPIsfJBJca0=
-Received: from CH2PR12MB4007.namprd12.prod.outlook.com (52.132.247.78) by
- CH2PR12MB3943.namprd12.prod.outlook.com (52.132.246.157) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.20; Fri, 20 Dec 2019 10:06:52 +0000
-Received: from CH2PR12MB4007.namprd12.prod.outlook.com
- ([fe80::91dd:c9b2:778a:5b08]) by CH2PR12MB4007.namprd12.prod.outlook.com
- ([fe80::91dd:c9b2:778a:5b08%6]) with mapi id 15.20.2559.016; Fri, 20 Dec 2019
- 10:06:52 +0000
-From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] PCI: dwc: Use private data pointer of "struct irq_domain"
- to get pcie_port
-Thread-Topic: [PATCH] PCI: dwc: Use private data pointer of "struct
- irq_domain" to get pcie_port
-Thread-Index: AQHVtxzsA9tmkyvMcEKavM47bnlVf6fCzBkQ
-Date:   Fri, 20 Dec 2019 10:06:52 +0000
-Message-ID: <CH2PR12MB40079F8FCD26E58EF9C5B48FDA2D0@CH2PR12MB4007.namprd12.prod.outlook.com>
-References: <20191220100550.777-1-kishon@ti.com>
-In-Reply-To: <20191220100550.777-1-kishon@ti.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcZ3VzdGF2b1xh?=
- =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
- =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLTZmOTI5ZTAxLTIzMTAtMTFlYS05ODllLWY4OTRj?=
- =?us-ascii?Q?MjczODA0MlxhbWUtdGVzdFw2ZjkyOWUwMy0yMzEwLTExZWEtOTg5ZS1mODk0?=
- =?us-ascii?Q?YzI3MzgwNDJib2R5LnR4dCIgc3o9IjEzNjkiIHQ9IjEzMjIxMzEwMDA5Njgz?=
- =?us-ascii?Q?ODcyNiIgaD0iOVNvSHI0VFpmaUVPSWh0Yk5RWm8vbDh2QkF3PSIgaWQ9IiIg?=
- =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFC?=
- =?us-ascii?Q?RzNPd3hIYmZWQWJ0Wnk4bnhCdWQvdTFuTHlmRUc1MzhPQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBQ2tDQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUVBQVFBQkFBQUFFR0lZelFBQUFBQUFBQUFBQUFBQUFKNEFBQUJtQUdrQWJn?=
- =?us-ascii?Q?QmhBRzRBWXdCbEFGOEFjQUJzQUdFQWJnQnVBR2tBYmdCbkFGOEFkd0JoQUhR?=
- =?us-ascii?Q?QVpRQnlBRzBBWVFCeUFHc0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?RUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtBWHdC?=
- =?us-ascii?Q?d0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCbkFHWUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFB?=
- =?us-ascii?Q?QUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFiZ0Js?=
- =?us-ascii?Q?QUhJQWN3QmZBSE1BWVFCdEFITUFkUUJ1QUdjQVh3QmpBRzhBYmdCbUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1BRzhB?=
- =?us-ascii?Q?ZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWN3QmhB?=
- =?us-ascii?Q?RzBBY3dCMUFHNEFad0JmQUhJQVpRQnpBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FY?=
- =?us-ascii?Q?d0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0J6QUcwQWFRQmpBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
- =?us-ascii?Q?QUFBQUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJn?=
- =?us-ascii?Q?QmxBSElBY3dCZkFITUFkQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFH?=
- =?us-ascii?Q?OEFkUUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBZEFC?=
- =?us-ascii?Q?ekFHMEFZd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhr?=
- =?us-ascii?Q?QVh3QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QjFBRzBBWXdBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFB?=
- =?us-ascii?Q?Q0FBQUFBQUNlQUFBQVp3QjBBSE1BWHdCd0FISUFid0JrQUhVQVl3QjBBRjhB?=
- =?us-ascii?Q?ZEFCeUFHRUFhUUJ1QUdrQWJnQm5BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJ6?=
- =?us-ascii?Q?QUdFQWJBQmxBSE1BWHdCaEFHTUFZd0J2QUhVQWJnQjBBRjhBY0FCc0FHRUFi?=
- =?us-ascii?Q?Z0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFITUFZUUJzQUdVQWN3QmZB?=
- =?us-ascii?Q?SEVBZFFCdkFIUUFaUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFB?=
- =?us-ascii?Q?QUFDQUFBQUFBQ2VBQUFBY3dCdUFIQUFjd0JmQUd3QWFRQmpBR1VBYmdCekFH?=
- =?us-ascii?Q?VUFYd0IwQUdVQWNnQnRBRjhBTVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFB?=
- =?us-ascii?Q?QnpBRzRBY0FCekFGOEFiQUJwQUdNQVpRQnVBSE1BWlFCZkFIUUFaUUJ5QUcw?=
- =?us-ascii?Q?QVh3QnpBSFFBZFFCa0FHVUFiZ0IwQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhZQVp3QmZBR3NBWlFC?=
- =?us-ascii?Q?NUFIY0Fid0J5QUdRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFB?=
- =?us-ascii?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=gustavo@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dbd70756-6715-4597-a947-08d785345619
-x-ms-traffictypediagnostic: CH2PR12MB3943:
-x-microsoft-antispam-prvs: <CH2PR12MB3943277BAA058D4DADE5F8F3DA2D0@CH2PR12MB3943.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1850;
-x-forefront-prvs: 025796F161
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(376002)(346002)(39860400002)(396003)(189003)(199004)(66446008)(54906003)(110136005)(53546011)(7696005)(186003)(8936002)(33656002)(86362001)(81166006)(8676002)(316002)(64756008)(4326008)(6506007)(66946007)(26005)(81156014)(76116006)(52536014)(66556008)(5660300002)(66476007)(2906002)(9686003)(55016002)(478600001)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:CH2PR12MB3943;H:CH2PR12MB4007.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: AwZ54cdMhpQwZhXNOZGzsTt8BbPomdZ0elz/zBwgp0d6oaRnpV590zETp6UjlrA1jgKUP/SpHL2atlggA9Hm6XBlf2Lb30CpQ6Ogv15PWNIvG3I578pBAzqCzIUwMgczOD82QpS8aKWE3dH7VCQiMpmJKsY1g9OjrNGAvA27VLyySeys18QYhJDLRSPlIzKtEi3fREYrion20O+138rdXtD5qPiqwF96B2S+TRcmcKIJYFZPTRG77RkSdBNCn/H6drdNm4Xra5z40FPhDylZy8vTTJKdpqRhTFwUaGsBQhWa5iHpRbjl2M5I3fTfqEqWXkfa4T0FMXVoHpCSfjpODPtIcCf2yswim7PXwf5q4Pt4wohj+bZ8DMVN+FcLtdn6qyFwtHt/21pfzJrf4oUjF5s+/CC+03DvpNA/7N+lOfW0nhFpmHFK/eG9Po9Hk7GF
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ bh=Z5cbR+puhsgRINa+NErcKYosDNK4IaY0vtxRPGVwDl4=;
+ b=ndZZl735JkQ8lEIw8RPRloiOKnVcVCPZzz+1SORbqZ6HfFDMAm2hjrJxBSrXEkQVlKzeQNHZE0ED053aarhvrpn1uOmDQkHYHagiUzgXBcSpgZ0D0M797xiHowdM9gvv6luKrPLXK80o/XuHT8phI+x5v3e7jlkpoDtx3DLDVDg=
+Received: from BN6PR03CA0074.namprd03.prod.outlook.com (2603:10b6:405:6f::12)
+ by CO2PR03MB2325.namprd03.prod.outlook.com (2603:10b6:102:16::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2559.16; Fri, 20 Dec
+ 2019 10:07:40 +0000
+Received: from SN1NAM02FT023.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::204) by BN6PR03CA0074.outlook.office365.com
+ (2603:10b6:405:6f::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2559.14 via Frontend
+ Transport; Fri, 20 Dec 2019 10:07:39 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ SN1NAM02FT023.mail.protection.outlook.com (10.152.72.156) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2559.14
+ via Frontend Transport; Fri, 20 Dec 2019 10:07:39 +0000
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id xBKA7cXM023754
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+        Fri, 20 Dec 2019 02:07:38 -0800
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Fri, 20 Dec
+ 2019 05:07:37 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Fri, 20 Dec 2019 05:07:37 -0500
+Received: from tachici-Precision-5530.ad.analog.com ([10.48.65.175])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id xBKA7YvL027824;
+        Fri, 20 Dec 2019 05:07:34 -0500
+From:   Alexandru Tachici <alexandru.tachici@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Tachici <alexandru.tachici@analog.com>
+Subject: [PATCH] iio: adc: ad7124: Fix DT channel configuration
+Date:   Fri, 20 Dec 2019 12:07:19 +0200
+Message-ID: <20191220100719.15171-1-alexandru.tachici@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: dbd70756-6715-4597-a947-08d785345619
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Dec 2019 10:06:52.4730
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(376002)(136003)(396003)(346002)(199004)(189003)(7696005)(44832011)(356004)(6666004)(336012)(110136005)(36756003)(26005)(426003)(186003)(54906003)(316002)(1076003)(246002)(8676002)(8936002)(478600001)(2906002)(4326008)(7636002)(86362001)(5660300002)(107886003)(70206006)(70586007)(2616005)(334744003);DIR:OUT;SFP:1101;SCL:1;SRVR:CO2PR03MB2325;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a30da4b2-34c5-4a17-0817-08d78534721a
+X-MS-TrafficTypeDiagnostic: CO2PR03MB2325:
+X-Microsoft-Antispam-PRVS: <CO2PR03MB23252165D07A354FEE0AD28B902D0@CO2PR03MB2325.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 025796F161
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: rG7eQ30JwVTElxJKNuW1dx2Zo2gNwMpmFJgs8R1PozfnobkoWz+m5XhaCJ0Hla03+3Zmu3SzoD1YVMbL2hd9BoVdtzlvcLkp47dAxG0xJ+PYVBsTO+iWz8KTwmdfjg/6o8Wt6Qwv9k5azfXjXCWjA5v/Vke9AVSSBSOD6HZVs7HQ2nT3qQDYtUa7qO9nFAfno2aCSi442JoS9Rtfj4LN1/lu1sET3Y/klThN2t+rsVVNhkAQhITwfQt52WPagjKZiKJavVELHJBLpydIuiX++3dUc9lcsUfKoTp9YKML6bh6ykxnR61bMWDWFqX0jQkgkBjsa7Hwg05f7lk9iXEi8d3OYeFG91RDOrFvbGtuEzhggax3NPoVstTQs/Nhx88aQjrMG7TyLioYBNbrEbHQB5Yh9HsaFLp5lcgsOaLnBdUBVsx+MVtmEPsUk11binGHFrVv8XUGtN4qygZiVK+4lP3a92yDj7V1+GMKNm8MX5o04t8iVHxNMTJelxbKJu7/
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Dec 2019 10:07:39.4275
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VxWUctLMWcTgUaBmE6Q1mkSKhUVdkJ5jnpEYe2t7ycJn7c3I97N8kwiungU8CX21Y5/en0/I1t6UN6R/bFljsg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB3943
-X-OriginatorOrg: synopsys.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a30da4b2-34c5-4a17-0817-08d78534721a
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO2PR03MB2325
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-20_01:2019-12-17,2019-12-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
+ mlxlogscore=999 malwarescore=0 spamscore=0 mlxscore=0 impostorscore=0
+ phishscore=0 priorityscore=1501 suspectscore=0 lowpriorityscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912200082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 10:5:50, Kishon Vijay Abraham I <kishon@ti.com>=20
-wrote:
+This patch fixes device tree channel configuration.
 
-> No functional change. Get "struct pcie_port *" from private data
-> pointer of "struct irq_domain" in dw_pcie_irq_domain_free() to make
-> it look similar to how "struct pcie_port *" is obtained in
-> dw_pcie_irq_domain_alloc()
->=20
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-host.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/=
-pci/controller/dwc/pcie-designware-host.c
-> index 395feb8ca051..c3d72b06e964 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -236,7 +236,7 @@ static void dw_pcie_irq_domain_free(struct irq_domain=
- *domain,
->  				    unsigned int virq, unsigned int nr_irqs)
->  {
->  	struct irq_data *d =3D irq_domain_get_irq_data(domain, virq);
-> -	struct pcie_port *pp =3D irq_data_get_irq_chip_data(d);
-> +	struct pcie_port *pp =3D domain->host_data;
->  	unsigned long flags;
-> =20
->  	raw_spin_lock_irqsave(&pp->lock, flags);
-> --=20
-> 2.17.1
+ad7124 driver reads channels configuration from the device tree.
+It expects to find channel specifications as child nodes.
+Before this patch ad7124 driver assumed that the child nodes are parsed
+by for_each_available_child_of_node in the order 0,1,2,3...
 
+This is wrong and the real order of the children can be seen by running:
+dtc -I fs /sys/firmware/devicetree/base on the machine.
 
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+For example, running this on an rpi 3B+ yields the real
+children order: 4,2,0,7,5,3,1,6
 
+Before this patch the driver assigned the channel configuration
+like this:
+        - 0 <- 4
+        - 1 <- 2
+        - 2 <- 0
+        ........
+For example, the symptoms can be observed by connecting the 4th channel
+to a 1V tension and then reading the in_voltage0-voltage19_raw sysfs
+(multiplied of course by the scale) one would see that channel 0
+measures 1V and channel 4 measures only noise.
+
+Now the driver uses the reg property of each child in order to
+correctly identify to which channel the parsed configuration
+belongs to.
+
+Fixes b3af341bbd966: ("iio: adc: Add ad7124 support")
+Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+---
+ drivers/iio/adc/ad7124.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
+index e24d141d3c74..ed37d2b2b3b3 100644
+--- a/drivers/iio/adc/ad7124.c
++++ b/drivers/iio/adc/ad7124.c
+@@ -495,13 +495,11 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
+ 		st->channel_config[channel].buf_negative =
+ 			of_property_read_bool(child, "adi,buffered-negative");
+ 
+-		*chan = ad7124_channel_template;
+-		chan->address = channel;
+-		chan->scan_index = channel;
+-		chan->channel = ain[0];
+-		chan->channel2 = ain[1];
+-
+-		chan++;
++		chan[channel] = ad7124_channel_template;
++		chan[channel].address = channel;
++		chan[channel].scan_index = channel;
++		chan[channel].channel = ain[0];
++		chan[channel].channel2 = ain[1];
+ 	}
+ 
+ 	return 0;
+-- 
+2.20.1
 
