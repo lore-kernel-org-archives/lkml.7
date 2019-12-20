@@ -2,87 +2,114 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4B2C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 04:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 724DFC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 04:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4143424682
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 04:46:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576817173;
-	bh=RpmSljn9O8trFrIwF6/L0kx4crHeI8F3g7HdviWpXBw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=aMz77A/BWin06wsUZy1QUI4oqeCHsXnP7wt7TojzJ0drj8MKIY42mC81OBakNEYFg
-	 DTTig2CJH7gRJRZJNtMwvZ6lY6n4mxW2CWMazg8aodyWs4GMolCbD9gjQdzZ3cTkjm
-	 DhKCF3yiaVKHkwoiiy+9ZQwRql7S6Pxj/BxRYdOI=
+	by mail.kernel.org (Postfix) with ESMTP id 4590324680
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 04:47:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ET8Oh+6f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfLTEqM (ORCPT
+        id S1727209AbfLTErY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 23:46:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52504 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727128AbfLTEqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 23:46:12 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09C6024680;
-        Fri, 20 Dec 2019 04:46:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576817171;
-        bh=RpmSljn9O8trFrIwF6/L0kx4crHeI8F3g7HdviWpXBw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=I9qiyNYvEwogSwBR/rJ/OSIrS+kdlM5Eth8ShnPtZ8Qn40KLLyhCecCDm8Q6XpoK3
-         /84+3G2LOk6572QLbmJzxnlFpG6Hx6eMA9NHO4L9c/zuV/pcZ68WAkcNVg/D4Tluiv
-         5Qx6UYj3JA/KWXDGsDUKltOKZG0PkRNZsmi8myoE=
-Subject: Re: [PATCH 4.4 000/162] 4.4.207-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20191219183150.477687052@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <fb839d4e-92b3-e348-f2b5-0bcf5f508781@kernel.org>
-Date:   Thu, 19 Dec 2019 21:46:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 19 Dec 2019 23:47:24 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:35208 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727084AbfLTErX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 23:47:23 -0500
+Received: by mail-pj1-f66.google.com with SMTP id s7so3576607pjc.0;
+        Thu, 19 Dec 2019 20:47:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aN12zhf4mlcaV2E22of1kpbrgx4U0ucUVjsbOQtDUz4=;
+        b=ET8Oh+6fwGiwWp5+wSIhFpTodb5pMe8Q9Lu4rNBzrlmuWs/wkoIsN8eUlDqoIYfZBF
+         Ydi9A8CEL6d4MDX3HTpwx0+raVMffPTPCAdm8b9SDzILaMsaygKkTMTDBNlpI+/Np7HR
+         avi/LhBdaTZW8RBs38H8WKyi2K0wgnkWpUVZSBJMJvGU/Jjm6v2vMNZ8H8tsbkd99GSl
+         s23Pv9rKa0/ZH3JSoef9xVsUBCxT1zp7POKFZXiHEx7aBkByeGJQkjgcpPSDzohzkmvk
+         PVNtF+XPTdnGK2u7l1ldy1JbynIJMKduFYcPK4calelYcfzfdzHFQwO8dHnaWGCRXp+3
+         Un9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aN12zhf4mlcaV2E22of1kpbrgx4U0ucUVjsbOQtDUz4=;
+        b=TGkhsxjg2R7BfekxCSjSFp4px+fUFbK/W9arGLnTuCtjFRtj4Mll2G6JjzWtPIe2yT
+         v4hEGCNk+f0rAIbaAWNtD7jqRuBBeNVOma47wiN5/yFLFRRkitaRuwYwDtMhjXl8r41R
+         eO/auCP60FvR+Z2WBL1oqc6wVbzoRxABMfZ5Qsz2hPUnLXsOmMk62OjbF5h5V4AKjOl2
+         eU6Z9MGasPCclgNo1IXiQX+4OR5TlDpNrwuW0yve2vo0BkcMlVcrTlvlK69qvY3VHpn/
+         NPWozj5cFD2guAZ31/8xT4Vp4ATNzT0evFOTOYVfeIzgKdQRNG69L+PlovAbxyFM+szG
+         9R5A==
+X-Gm-Message-State: APjAAAWGViT8KINQNAtJB7Rit+nS+tQlJY3yoGENxgg6MjykxavQbyD+
+        GwDAtDIkcDbVS7/PMvGQdzQ=
+X-Google-Smtp-Source: APXvYqyv2IK999RPM2ym3Yanh5DI+R4t8BSC5a74wES6xt7xZmhV0ugy6lV0u9RfbCSBd7GObf74jg==
+X-Received: by 2002:a17:902:6906:: with SMTP id j6mr7693199plk.321.1576817242890;
+        Thu, 19 Dec 2019 20:47:22 -0800 (PST)
+Received: from CV0038107N9.nsn-intra.net ([2408:84e4:400:2e74:469:cb33:67e2:581f])
+        by smtp.gmail.com with ESMTPSA id u26sm10089189pfn.46.2019.12.19.20.47.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Dec 2019 20:47:22 -0800 (PST)
+From:   Kevin Kou <qdkevin.kou@gmail.com>
+To:     vyasevich@gmail.com
+Cc:     nhorman@tuxdriver.com, marcelo.leitner@gmail.com,
+        davem@davemloft.net, linux-sctp@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        qdkevin.kou@gmail.com
+Subject: [PATCH] sctp: do trace_sctp_probe after SACK validation and check
+Date:   Fri, 20 Dec 2019 04:47:03 +0000
+Message-Id: <20191220044703.88-1-qdkevin.kou@gmail.com>
+X-Mailer: git-send-email 2.23.0.windows.1
 MIME-Version: 1.0
-In-Reply-To: <20191219183150.477687052@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/19/19 11:31 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.207 release.
-> There are 162 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 21 Dec 2019 18:24:44 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.207-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+The function sctp_sf_eat_sack_6_2 now performs
+the Verification Tag validation, Chunk length validation, Bogu check,
+and also the detection of out-of-order SACK based on the RFC2960
+Section 6.2 at the beginning, and finally performs the further
+processing of SACK. The trace_sctp_probe now triggered before
+the above necessary validation and check.
 
-Compiled and booted on my test system. No dmesg regressions.
+This patch is to do the trace_sctp_probe after the necessary check
+and validation to SACK.
 
-thanks,
--- Shuah
+Signed-off-by: Kevin Kou <qdkevin.kou@gmail.com>
+---
+ net/sctp/sm_statefuns.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/net/sctp/sm_statefuns.c b/net/sctp/sm_statefuns.c
+index 42558fa..b4a54df 100644
+--- a/net/sctp/sm_statefuns.c
++++ b/net/sctp/sm_statefuns.c
+@@ -3281,7 +3281,6 @@ enum sctp_disposition sctp_sf_eat_sack_6_2(struct net *net,
+ 	struct sctp_sackhdr *sackh;
+ 	__u32 ctsn;
+ 
+-	trace_sctp_probe(ep, asoc, chunk);
+ 
+ 	if (!sctp_vtag_verify(chunk, asoc))
+ 		return sctp_sf_pdiscard(net, ep, asoc, type, arg, commands);
+@@ -3319,6 +3318,8 @@ enum sctp_disposition sctp_sf_eat_sack_6_2(struct net *net,
+ 	if (!TSN_lt(ctsn, asoc->next_tsn))
+ 		return sctp_sf_violation_ctsn(net, ep, asoc, type, arg, commands);
+ 
++	trace_sctp_probe(ep, asoc, chunk);
++
+ 	/* Return this SACK for further processing.  */
+ 	sctp_add_cmd_sf(commands, SCTP_CMD_PROCESS_SACK, SCTP_CHUNK(chunk));
+ 
+-- 
+1.8.3.1
+
