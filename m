@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FCDC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8454FC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4994F21D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 597172465E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852522;
-	bh=YCDTaLPBYm/FSHUKf5B+vQAhJ61Kj7eBRk7Oijl1now=;
+	s=default; t=1576852525;
+	bh=cFAeeerNIHhEbysudvFWLjjl0LULntAll620cNQ4cKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YMuIcSzTf6W4HmXr7b8ySGDNkdXCQXOjG2iCl6AiS6WF1xWnAZHf03wFx0W4e0Ig5
-	 VOIYKJb+2Sm24Cw0fzKsHfemCOUcLRRRh9qn090y2/ZOOHzCFg+5p4Rsk+VdjuRKbT
-	 /JfSO9/00XZCYSnKIKJPQQQUq542UayyGfwwSv04=
+	b=pI8hog4HnS18Ht52SYlzy3tbM3wvolvNw+dDQ8scZculkFUp+CDNFFj20MUZpdRXM
+	 O6LumH/qSTSjYKgHgjqZHgHT6w2HWfV4mgCy6wMiErL4NV/F6Np1awxlEnn1TaJtHY
+	 jgtN0XU+ZKBF0BtRaHnciT54o7SYfpbnN/m8ysL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbfLTOfV (ORCPT
+        id S1727791AbfLTOfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:35:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39560 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:35:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728359AbfLTOfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:35:08 -0500
+        id S1728207AbfLTOfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:35:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13E8424680;
-        Fri, 20 Dec 2019 14:35:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C4E724687;
+        Fri, 20 Dec 2019 14:35:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852507;
-        bh=YCDTaLPBYm/FSHUKf5B+vQAhJ61Kj7eBRk7Oijl1now=;
+        s=default; t=1576852510;
+        bh=cFAeeerNIHhEbysudvFWLjjl0LULntAll620cNQ4cKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZR6FoVSBN7FouFkxRJKlx0qHpeRvhq+7MV+FYQYRRvfxVB8Di0mnSueObm/iOvf+y
-         pwqhBH2IE2yYeeJa/KMGNDdrPwRvAf8xUbEZTkB+lF8FKNFKXlv512lUs2IU66w3LN
-         dpCDUZb0cLFTplqd85Yk8mkFs5WlYk3eLrCEmACI=
+        b=D/3dF5MtFzS7rvS5S5rPJ4aYrGWTk4tIbPaL0klkcbdFPiSxQkr+1HIBVgruqIHlU
+         IC7d8psxN7dW13MW/izUxJu6g4qRkswx7EsGfHNhf/fkedbji+JQtTe8/qLifqqQv9
+         8rTb7BPRxJFCp/MqQvp/Elgs7cBx/vl5AGuvahKA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Jonathan Billings <jsbillings@jsbillings.org>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 26/34] afs: Fix creation calls in the dynamic root to fail with EOPNOTSUPP
-Date:   Fri, 20 Dec 2019 09:34:25 -0500
-Message-Id: <20191220143433.9922-26-sashal@kernel.org>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 28/34] s390/cpum_sf: Adjust sampling interval to avoid hitting sample limits
+Date:   Fri, 20 Dec 2019 09:34:27 -0500
+Message-Id: <20191220143433.9922-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220143433.9922-1-sashal@kernel.org>
 References: <20191220143433.9922-1-sashal@kernel.org>
@@ -60,39 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-[ Upstream commit 1da4bd9f9d187f53618890d7b66b9628bbec3c70 ]
+[ Upstream commit 39d4a501a9ef55c57b51e3ef07fc2aeed7f30b3b ]
 
-Fix the lookup method on the dynamic root directory such that creation
-calls, such as mkdir, open(O_CREAT), symlink, etc. fail with EOPNOTSUPP
-rather than failing with some odd error (such as EEXIST).
+Function perf_event_ever_overflow() and perf_event_account_interrupt()
+are called every time samples are processed by the interrupt handler.
+However function perf_event_account_interrupt() has checks to avoid being
+flooded with interrupts (more then 1000 samples are received per
+task_tick).  Samples are then dropped and a PERF_RECORD_THROTTLED is
+added to the perf data. The perf subsystem limit calculation is:
 
-lookup() itself tries to create automount directories when it is invoked.
-These are cached locally in RAM and not committed to storage.
+    maximum sample frequency := 100000 --> 1 samples per 10 us
+    task_tick = 10ms = 10000us --> 1000 samples per task_tick
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
-Tested-by: Jonathan Billings <jsbillings@jsbillings.org>
+The work flow is
+
+measurement_alert() uses SDBT head and each SBDT points to 511
+ SDB pages, each with 126 sample entries. After processing 8 SBDs
+ and for each valid sample calling:
+
+     perf_event_overflow()
+       perf_event_account_interrupts()
+
+there is a considerable amount of samples being dropped, especially when
+the sample frequency is very high and near the 100000 limit.
+
+To avoid the high amount of samples being dropped near the end of a
+task_tick time frame, increment the sampling interval in case of
+dropped events. The CPU Measurement sampling facility on the s390
+supports only intervals, specifiing how many CPU cycles have to be
+executed before a sample is generated. Increase the interval when the
+samples being generated hit the task_tick limit.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/dynroot.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/s390/kernel/perf_cpum_sf.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/fs/afs/dynroot.c b/fs/afs/dynroot.c
-index f29c6dade7f62..069273a2483f9 100644
---- a/fs/afs/dynroot.c
-+++ b/fs/afs/dynroot.c
-@@ -145,6 +145,9 @@ static struct dentry *afs_dynroot_lookup(struct inode *dir, struct dentry *dentr
- 
- 	ASSERTCMP(d_inode(dentry), ==, NULL);
- 
-+	if (flags & LOOKUP_CREATE)
-+		return ERR_PTR(-EOPNOTSUPP);
+diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
+index df92c2af99b69..0b09585305521 100644
+--- a/arch/s390/kernel/perf_cpum_sf.c
++++ b/arch/s390/kernel/perf_cpum_sf.c
+@@ -1260,6 +1260,22 @@ static void hw_perf_event_update(struct perf_event *event, int flush_all)
+ 	if (sampl_overflow)
+ 		OVERFLOW_REG(hwc) = DIV_ROUND_UP(OVERFLOW_REG(hwc) +
+ 						 sampl_overflow, 1 + num_sdb);
 +
- 	if (dentry->d_name.len >= AFSNAMEMAX) {
- 		_leave(" = -ENAMETOOLONG");
- 		return ERR_PTR(-ENAMETOOLONG);
++	/* Perf_event_overflow() and perf_event_account_interrupt() limit
++	 * the interrupt rate to an upper limit. Roughly 1000 samples per
++	 * task tick.
++	 * Hitting this limit results in a large number
++	 * of throttled REF_REPORT_THROTTLE entries and the samples
++	 * are dropped.
++	 * Slightly increase the interval to avoid hitting this limit.
++	 */
++	if (event_overflow) {
++		SAMPL_RATE(hwc) += DIV_ROUND_UP(SAMPL_RATE(hwc), 10);
++		debug_sprintf_event(sfdbg, 1, "%s: rate adjustment %ld\n",
++				    __func__,
++				    DIV_ROUND_UP(SAMPL_RATE(hwc), 10));
++	}
++
+ 	if (sampl_overflow || event_overflow)
+ 		debug_sprintf_event(sfdbg, 4, "hw_perf_event_update: "
+ 				    "overflow stats: sample=%llu event=%llu\n",
 -- 
 2.20.1
 
