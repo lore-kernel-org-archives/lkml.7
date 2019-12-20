@@ -2,179 +2,363 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F041C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C00BC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF6362072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B1072072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:02:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="HckGBqUL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PNtYpA5u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbfLTSAT (ORCPT
+        id S1727489AbfLTSCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 13:00:19 -0500
-Received: from mout.web.de ([212.227.17.11]:54763 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727391AbfLTSAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 13:00:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1576864810;
-        bh=yce4km4FZO3qbZkUPuO0g1fDKgNurNILOxq/T6vHzLo=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=HckGBqULb5Mxm0O4ssaXfE0UlUgISlrHGK2TR2V6+I7sh+RtT2i+YlFhaDxD9Q+yc
-         4AIdcwtAeblsogz7p8zWxbQzAQ4G6Jy0Tg6SmnMjEeyoNdzvd/ph9asRSYBdowQpu+
-         UTOPBdYif3Wcev3YrrybrcjI3P9oqznsrsziAt/k=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.94.196]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lnj7L-1i1t1302RD-00hwQe; Fri, 20
- Dec 2019 19:00:10 +0100
-Subject: Re: Improving documentation for programming interfaces
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>, linux-doc@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Cc:     LKML <linux-kernel@vger.kernel.org>
-References: <350cd156-9080-24fe-c49e-96e758d3ca45@web.de>
- <20191220151945.GD59959@mit.edu>
- <0557f349-322c-92b3-9fc3-94e59538ca91@web.de>
- <20191220171753.GA234417@mit.edu>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
- +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
- mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
- lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
- YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
- GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
- rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
- 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
- jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
- BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
- cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
- Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
- g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
- OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
- CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
- LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
- sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
- kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
- i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
- g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
- q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
- NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
- nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
- 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
- 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
- wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
- riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
- DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
- fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
- 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
- xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
- qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
- Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
- Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
- +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
- hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
- /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
- tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
- qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
- Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
- x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
- pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <f802d21a-e6cb-f947-2e52-8553f5e255d5@web.de>
-Date:   Fri, 20 Dec 2019 19:00:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 20 Dec 2019 13:02:23 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:50732 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727406AbfLTSCW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 13:02:22 -0500
+Received: by mail-pj1-f66.google.com with SMTP id r67so4429151pjb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 10:02:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=15PN4V+zSlwzXPA/wIz+83Cjw2lOO0ahfJ6vikM1dYA=;
+        b=PNtYpA5uJqiOnEOFzl2qaca0PjL3paxpnCNqQF3tRb+UloPGpFPWHG8qhSHH/btBqc
+         SvONhUW6QBPVXpkqZdFCbPZHUg73+hkb2gj8hXRbIWlLyFTmsmdxUo4PBgR6xDS9cf2o
+         ZPLWrUf5hM4FpJM95ju0m1v2Sk+uoovXH/NN7bupJSvV6m0M5XKFfj6Odm1HGc5P4Yqx
+         +CMulGZ0FKEEGZCmkYU5+QVahORmq6NqzI0ptTAnnckLLWvcb28UGtGN54KYiwEcrVrV
+         CvHepGq/cYVUFJ8NocJ2NjGPjzBvk+qYkOE8UIHS4z16X6WpjpwhTSHzyFMFYZCcNJ6I
+         catA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=15PN4V+zSlwzXPA/wIz+83Cjw2lOO0ahfJ6vikM1dYA=;
+        b=so+rQnkdm8mYmqxFdlGb1JPztZCAS9//oRtJ2vdD8lRUJWlevIYMpjz1RPd/gkfyA/
+         NSsQGVw2hyJBJKDyPUKM2qxmHCVISGD2mHrqmYlseKKzLfsy54yuxLNtCgE9mLUDXKc2
+         5BQPkHcaxZHfuQ/x0sAhgbMkXdQ4QkIWbxvw62Lp4hhmZEqK0Q39wbR84bvVFsuwCylD
+         4H70ZEegthPBP4Nu/7J8ZDCvGPGQq+YmVEsOqc898zms+vyw3L8qV85Zd1qtLvidMOAc
+         cT7igW+3fPA9gogD2xK+mcdlPbTU/fQ947qf4va5bcJ0fvgXMdnhUgvf4mBBkI4FKZYy
+         iXbw==
+X-Gm-Message-State: APjAAAUWgFlpsv8N4/wbXJsKMWa6pDAu8+SDJJjmhS7EqlnGtkXnb+U4
+        2lABdX8QFnRIky5lGBv6Wjygvw==
+X-Google-Smtp-Source: APXvYqyvZeCeMQLi4pnx3i/2qKQTPUClIuNtr/g438GM/OLkjyf8Qr5KP3yzznXPUlBF6KZu4n6NMQ==
+X-Received: by 2002:a17:902:7b8c:: with SMTP id w12mr7952531pll.30.1576864940848;
+        Fri, 20 Dec 2019 10:02:20 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id y6sm6062175pjy.1.2019.12.20.10.02.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 10:02:20 -0800 (PST)
+Date:   Fri, 20 Dec 2019 10:02:17 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Sibi Sankar <sibis@codeaurora.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        linux-remoteproc@vger.kernel.org,
+        DTML <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH v2 5/5] arm64: dts: qcom: msm8998: Add ADSP, MPSS and
+ SLPI nodes
+Message-ID: <20191220180217.GF3755841@builder>
+References: <20191218132217.28141-1-sibis@codeaurora.org>
+ <20191218132217.28141-6-sibis@codeaurora.org>
+ <20191220065954.GA1908628@ripper>
+ <CAOCk7NoaWw8Tor-P02SESztWEGpGMK6GbRNG45yMVYhMdDCEnQ@mail.gmail.com>
+ <20191220170525.GC549437@yoga>
+ <CAOCk7Nr3vMRpC6QQ21HCrd9B=PFo4D=-yQ196YnsP_0jBV3RCQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191220171753.GA234417@mit.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:LoAsynVO+PRxJIKs2NhpXwhU1iobCJxOoTWd3LCJul4UJPH+PXF
- qTOJLdbk6KHEG55fVDkwo4QibPpjTojnbbFDm+rK/HeRNcXsRLneJP0HIvmrrPYjfRieCau
- bSqDEhGAP1gknXO8NrYALPQQMgAhLZuTi6gBWGKtuAGQQli0/pj1OFzGo1Crlru4bBWmTPR
- QnqCSuAq2/JHiI670XngA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:coKulRqyiR4=:Su7ID2SKVk14I+Z+WSsjwN
- 8ue8N3Ls3shYE/wCleNadBDygT9R7KtSvvHcUcqLHhbpAAESCZSspEMatj9dBvdb8CdnfaU/7
- piVwuMQ/pXBzYgsdt3nd9kVcg1WShhI6gi5t9/mWH5AmKU8PEKPx0lHt3i4309HCQGX8mVHNc
- B91fbgCAeEg6YkKuctRZsCBEVcqhk8YuDJ8TtHQqHsNj1rwSSimwbTe2zNroICM+w24cjBKvB
- +X+OL3M9lOSSw5hf5E19KxS5hlS5e9i2Ruw4YAO9Do50HyZlIAeIkKyGLvjryPVicO5TAJDRg
- KMzlyK5Yr3m8TbARGAT6YNImZ92VgDWNpwhKV4R5BNOos/v19BldUV1XfqAQtG5BfrA5K0qsb
- /+U9z3WLAQumkxFfPhAjn0g9ZmoSoo0VWmRJgk+lh92egot+Sr2VPYZOs0C7WeGRn4ZoaT/ao
- 2cMQSgbOuKldolWMZCWwUxsqA9ONvy2gt5oA1qf3LQXF5T+OO4YoQ/EKsVoyjO7Uk6gygOZ+Y
- XetH6FFktQVH8o+yxBS7Q6wMVxYXWwShfHQ4Fz+SQbwFWrtY2i5pmcWPq2y7+A1dlW5QI00/6
- vUALFxB0CUZYX+TRQ2lTo1Jf3k0hmvxph973PCsk5cxjsJ9eiTaHTTZdl9Z6brQ0O/6jcL4l2
- 8rNZDBhzVwqq3exsmEtZTaJCtD6nhxnPmgSZ/0O+OatGG67nSKBvoRO2wQdroe9ltl95Et7Lh
- 8bwYfSVQ2hh8lHXdVRNQHrYv8M/JZdMbjP7hLf0PckQ0wxvp95Y/SQVH1s48fXLSk2i2U6PlM
- LO3PPVBTY7KinRJoXTLCh8ncCZpzvHYOJN8HZgJ/YogHAOAVn87YzHBK2IqdvWFlyq3NDvJCM
- v8RtoLCUTLsybKJoJbmZuWozLjfd//d5+k5YJBVHkuMiLU9N0Cjm0E2mTOAzGfMriIkWo8uz8
- 3xffBOro7LNxCeC4CjpKcGMusLFRB23yh9AEufkJU/8QXrPbOzJLTifHFVMureoNDiC4LFFqD
- VHE/7wjuBOMAwdaQkgzrnSm1ZKTD9xC62dJAr0O5CjyhAtlWSNMwR4R4Q3sHSHi7f4S4TngA4
- CeZ61BciYUhVb4mKKz5xNG4C+LTWw+Yir5culKgJXiQNGn9VHcVTC/zauqmaubmlOa5kdcYR9
- wO6i+qCGKgSroOwSvOR+pMBLsSGiK2ShZhxC53nhrEK6iWr9UtE7hxQhf8FIinEqTYMitRq5K
- p5ejlB9IyVAKFSsormFnbTx1GxPq1zogllxwI6ri91Bz66lMdk0L3PcWfVCQ=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOCk7Nr3vMRpC6QQ21HCrd9B=PFo4D=-yQ196YnsP_0jBV3RCQ@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> Further examples:
->> * kmalloc =E2=87=92 kfree
->> * kobject_create =E2=87=92 kobject_put
->> * device_register =E2=87=92 put_device
->>
->> Can preprocessor macros help to express any more relationships for simi=
-lar function pairs?
->
-> Sorry, this is still not making sense.
+On Fri 20 Dec 09:10 PST 2019, Jeffrey Hugo wrote:
 
-I suggest to reconsider such a view.
+> On Fri, Dec 20, 2019 at 10:05 AM Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> >
+> > On Fri 20 Dec 06:33 PST 2019, Jeffrey Hugo wrote:
+> >
+> > > On Fri, Dec 20, 2019 at 12:00 AM Bjorn Andersson
+> > > <bjorn.andersson@linaro.org> wrote:
+> > > >
+> > > > On Wed 18 Dec 05:22 PST 2019, Sibi Sankar wrote:
+> > > >
+> > > > > This patch adds ADSP, MPSS and SLPI nodes for MSM8998 SoCs.
+> > > > >
+> > > > > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> > > > > ---
+> > > > >  arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi |   8 ++
+> > > > >  arch/arm64/boot/dts/qcom/msm8998.dtsi     | 124 ++++++++++++++++++++++
+> > > > >  2 files changed, 132 insertions(+)
+> > > > >
+> > > > > diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+> > > > > index 6db3f9e0344d1..e87094665c52c 100644
+> > > > > --- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+> > > > > +++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+> > > > > @@ -312,6 +312,14 @@
+> > > > >       };
+> > > > >  };
+> > > > >
+> > > > > +&remoteproc_adsp {
+> > > > > +     status = "okay";
+> > > > > +};
+> > > > > +
+> > > > > +&remoteproc_slpi {
+> > > > > +     status = "okay";
+> > > > > +};
+> > > > > +
+> > > > >  &tlmm {
+> > > > >       gpio-reserved-ranges = <0 4>, <81 4>;
+> > > > >  };
+> > > > > diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> > > > > index 8d799e868a5d3..014127700afb0 100644
+> > > > > --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> > > > > +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> > > > > @@ -1075,6 +1075,61 @@
+> > > > >                       #interrupt-cells = <0x2>;
+> > > > >               };
+> > > > >
+> > > > > +             remoteproc_mss: remoteproc@4080000 {
+> > > > > +                     compatible = "qcom,msm8998-mss-pil";
+> > > > > +                     reg = <0x04080000 0x100>, <0x04180000 0x20>;
+> > > > > +                     reg-names = "qdsp6", "rmb";
+> > > > > +
+> > > > > +                     interrupts-extended =
+> > > > > +                             <&intc GIC_SPI 448 IRQ_TYPE_EDGE_RISING>,
+> > > > > +                             <&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+> > > > > +                             <&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
+> > > > > +                             <&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
+> > > > > +                             <&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>,
+> > > > > +                             <&modem_smp2p_in 7 IRQ_TYPE_EDGE_RISING>;
+> > > > > +                     interrupt-names = "wdog", "fatal", "ready",
+> > > > > +                                       "handover", "stop-ack",
+> > > > > +                                       "shutdown-ack";
+> > > > > +
+> > > > > +                     clocks = <&gcc GCC_MSS_CFG_AHB_CLK>,
+> > > > > +                              <&gcc GCC_BIMC_MSS_Q6_AXI_CLK>,
+> > > > > +                              <&gcc GCC_BOOT_ROM_AHB_CLK>,
+> > > > > +                              <&gcc GCC_MSS_GPLL0_DIV_CLK_SRC>,
+> > > > > +                              <&gcc GCC_MSS_SNOC_AXI_CLK>,
+> > > > > +                              <&gcc GCC_MSS_MNOC_BIMC_AXI_CLK>,
+> > > > > +                              <&rpmcc RPM_SMD_QDSS_CLK>,
+> > > > > +                              <&rpmcc RPM_SMD_XO_CLK_SRC>;
+> > > >
+> > > > RPM_SMD_XO_CLK_SRC doesn't seem to be implemented...
+> > > >
+> > > > I did pull in a patch from Jeff that defines it, but when I boot the
+> > > > modem I see the following error repeatedly:
+> > >
+> > > Yeah, we need to figure out a solution for rpmcc to actually provide
+> > > this since the previous N solutions were not acceptable.  Its on my
+> > > todo list to look into in Jan.  However, I really think the DT should
+> > > be defined this way, since it replicates the hardware config.
+> > >
+> >
+> > I presume you can't rely on parent_data due to issues before rpmcc has
+> > probed properly?
+> 
+> I don't think so, but I need to circle back on that.
+> 
+> >
+> > Not sure what to do about that, perhaps we can stop-gap by adding the
+> > new clock and setting up the DT, and then swing back to wiring it up
+> > internally in gcc later?
+> 
+> The define should be there.  The DT should compile.  The issue will be
+> that the driver will not get the clock at runtime, which is
+> functionally equivalent to what we have now (in the end, modem doesnt
+> boot with or without this change, will boot with an out of tree
+> patch).  Adding the clock to rpmcc without coordinating with gcc will
+> cause issues in the clock framework with multiple defines of the same
+> clock.
+> 
+
+Yeah, it compiles and boots. I just wasn't able to conclude that the
+patches where working properly.
+
+But, I found another email from Sibi regarding the starvation reported,
+it turns out that this version of the modem firmware requires diag to be
+present. So after launching diag-router the modem is up and running.
 
 
-> =E2=80=A6  You said "a pointer would
-> contain also the background information by which the resource should
-> usually be released".  Huh?  There's no room for a pointer to also
-> store context of whether it was allocated using kmalloc, or malloc, etc.
-
-There are metadata (software documentation) to consider in the source code=
-.
-
-You get usually informed by comments for some allocation functions
-which is the corresponding resource release function.
-Such comments can vary. Thus I would appreciate to work with these data
-in a more structured format.
-
-
-> Did you have some concrete idea of how a preprocessor macros could be
-> used to perform what appears to be completely impractical?
-
-A macro can be chosen to which function names can be passed.
-
-Example:
-TRIGGER_RELEASE_AFTER(kfree, kmalloc, kcalloc, kzalloc, kmemdup)
-
-Appropriate data type definitions could eventually be generated
-by related macros.
-
-
-> And how would that information be used by the kernel?
-
-Documentation purposes.
-
-
-> And for what benefit?
-
-Consistent representation of relationships in a structured way.
-
-
-> And can you show that the benefits will be worth the costs?
-
-I propose to improve possibilities also for the support of better
-source code analysis.
+As such, I've merged the series. Let's try to figure out the clock
+situation to make it functional out of the box.
 
 Regards,
-Markus
+Bjorn
+
+> >
+> > > >
+> > > > [  616.632227] qcom-q6v5-mss 4080000.remoteproc: fatal error received: dog_hb.c:266:DOG_HB detects starvation of task 0xda172640, triage with its own
+> > >
+> > > Maybe the BIMC fix will address this?
+> > >
+> >
+> > Just applying "clk: qcom: smd: Add missing bimc clock" did not change
+> > things.
+> >
+> > So just to be clear, I'm testing this with the following patches on top
+> > of linux-next:
+> >
+> > clk: qcom: smd: Add missing bimc clock
+> > clk: qcom: smd: Add XO clock for MSM8998
+> > arm64: dts: msm8998: Add xo clock to gcc node
+> > arm64: dts: qcom: msm8998: Add ADSP, MPSS and SLPI nodes
+> > arm64: dts: qcom: msm8998: Update reserved memory map
+> > remoteproc: qcom: pas: Add MSM8998 ADSP and SLPI support
+> > dt-bindings: remoteproc: qcom: Add ADSP and SLPI support for MSM8998 SoC
+> > remoteproc: q6v5-mss: Remove mem clk from the active pool
+> > phy: qcom-qmp: Add optional SW reset
+> > phy: qcom-qmp: Increase the phy init timeout
+> >
+> > Regards,
+> > Bjorn
+> >
+> > > >
+> > > >
+> > > >
+> > > > All the qrtr services seems registered nicely, so the remote does come
+> > > > up before it goes down.
+> > > >
+> > > > Also, adsp comes up nicely.
+> > > >
+> > > > Regards,
+> > > > Bjorn
+> > > >
+> > > > > +                     clock-names = "iface", "bus", "mem", "gpll0_mss",
+> > > > > +                                   "snoc_axi", "mnoc_axi", "qdss", "xo";
+> > > > > +
+> > > > > +                     qcom,smem-states = <&modem_smp2p_out 0>;
+> > > > > +                     qcom,smem-state-names = "stop";
+> > > > > +
+> > > > > +                     resets = <&gcc GCC_MSS_RESTART>;
+> > > > > +                     reset-names = "mss_restart";
+> > > > > +
+> > > > > +                     qcom,halt-regs = <&tcsr_mutex_regs 0x23000 0x25000 0x24000>;
+> > > > > +
+> > > > > +                     power-domains = <&rpmpd MSM8998_VDDCX>,
+> > > > > +                                     <&rpmpd MSM8998_VDDMX>;
+> > > > > +                     power-domain-names = "cx", "mx";
+> > > > > +
+> > > > > +                     mba {
+> > > > > +                             memory-region = <&mba_mem>;
+> > > > > +                     };
+> > > > > +
+> > > > > +                     mpss {
+> > > > > +                             memory-region = <&mpss_mem>;
+> > > > > +                     };
+> > > > > +
+> > > > > +                     glink-edge {
+> > > > > +                             interrupts = <GIC_SPI 452 IRQ_TYPE_EDGE_RISING>;
+> > > > > +                             label = "modem";
+> > > > > +                             qcom,remote-pid = <1>;
+> > > > > +                             mboxes = <&apcs_glb 15>;
+> > > > > +                     };
+> > > > > +             };
+> > > > > +
+> > > > >               gpucc: clock-controller@5065000 {
+> > > > >                       compatible = "qcom,msm8998-gpucc";
+> > > > >                       #clock-cells = <1>;
+> > > > > @@ -1088,6 +1143,42 @@
+> > > > >                                     "gpll0";
+> > > > >               };
+> > > > >
+> > > > > +             remoteproc_slpi: remoteproc@5800000 {
+> > > > > +                     compatible = "qcom,msm8998-slpi-pas";
+> > > > > +                     reg = <0x05800000 0x4040>;
+> > > > > +
+> > > > > +                     interrupts-extended = <&intc GIC_SPI 390 IRQ_TYPE_EDGE_RISING>,
+> > > > > +                                           <&slpi_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+> > > > > +                                           <&slpi_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
+> > > > > +                                           <&slpi_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
+> > > > > +                                           <&slpi_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
+> > > > > +                     interrupt-names = "wdog", "fatal", "ready",
+> > > > > +                                       "handover", "stop-ack";
+> > > > > +
+> > > > > +                     px-supply = <&vreg_lvs2a_1p8>;
+> > > > > +
+> > > > > +                     clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
+> > > > > +                              <&rpmcc RPM_SMD_AGGR2_NOC_CLK>;
+> > > > > +                     clock-names = "xo", "aggre2";
+> > > > > +
+> > > > > +                     memory-region = <&slpi_mem>;
+> > > > > +
+> > > > > +                     qcom,smem-states = <&slpi_smp2p_out 0>;
+> > > > > +                     qcom,smem-state-names = "stop";
+> > > > > +
+> > > > > +                     power-domains = <&rpmpd MSM8998_SSCCX>;
+> > > > > +                     power-domain-names = "ssc_cx";
+> > > > > +
+> > > > > +                     status = "disabled";
+> > > > > +
+> > > > > +                     glink-edge {
+> > > > > +                             interrupts = <GIC_SPI 179 IRQ_TYPE_EDGE_RISING>;
+> > > > > +                             label = "dsps";
+> > > > > +                             qcom,remote-pid = <3>;
+> > > > > +                             mboxes = <&apcs_glb 27>;
+> > > > > +                     };
+> > > > > +             };
+> > > > > +
+> > > > >               stm: stm@6002000 {
+> > > > >                       compatible = "arm,coresight-stm", "arm,primecell";
+> > > > >                       reg = <0x06002000 0x1000>,
+> > > > > @@ -1880,6 +1971,39 @@
+> > > > >                       #size-cells = <0>;
+> > > > >               };
+> > > > >
+> > > > > +             remoteproc_adsp: remoteproc@17300000 {
+> > > > > +                     compatible = "qcom,msm8998-adsp-pas";
+> > > > > +                     reg = <0x17300000 0x4040>;
+> > > > > +
+> > > > > +                     interrupts-extended = <&intc GIC_SPI 162 IRQ_TYPE_EDGE_RISING>,
+> > > > > +                                           <&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+> > > > > +                                           <&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
+> > > > > +                                           <&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
+> > > > > +                                           <&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
+> > > > > +                     interrupt-names = "wdog", "fatal", "ready",
+> > > > > +                                       "handover", "stop-ack";
+> > > > > +
+> > > > > +                     clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>;
+> > > > > +                     clock-names = "xo";
+> > > > > +
+> > > > > +                     memory-region = <&adsp_mem>;
+> > > > > +
+> > > > > +                     qcom,smem-states = <&adsp_smp2p_out 0>;
+> > > > > +                     qcom,smem-state-names = "stop";
+> > > > > +
+> > > > > +                     power-domains = <&rpmpd MSM8998_VDDCX>;
+> > > > > +                     power-domain-names = "cx";
+> > > > > +
+> > > > > +                     status = "disabled";
+> > > > > +
+> > > > > +                     glink-edge {
+> > > > > +                             interrupts = <GIC_SPI 157 IRQ_TYPE_EDGE_RISING>;
+> > > > > +                             label = "lpass";
+> > > > > +                             qcom,remote-pid = <2>;
+> > > > > +                             mboxes = <&apcs_glb 9>;
+> > > > > +                     };
+> > > > > +             };
+> > > > > +
+> > > > >               apcs_glb: mailbox@17911000 {
+> > > > >                       compatible = "qcom,msm8998-apcs-hmss-global";
+> > > > >                       reg = <0x17911000 0x1000>;
+> > > > > --
+> > > > > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> > > > > a Linux Foundation Collaborative Project
