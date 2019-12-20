@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77881C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 263F4C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 444A521D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF155206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852554;
-	bh=HgNU+6xGYufx4iwzAlrIbH0amQfl2E2FmuW1mVCZUxs=;
+	s=default; t=1576852562;
+	bh=JYQDwSi2AWrgkrokV5h7ry6f5YjebKQk2ZX05B8b/Ro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XWeEgeK1sOlAXOfwOe83DWrbknpRCC3PE+91d6Ld4NiXSMpoTzyKlHpod9/SUmfTT
-	 tu9CuU5GG7NHrerFgqQ1GBsuaemDfLcVt5MACSG9zP1hjUpmOyYj1N60ovIOMSxarg
-	 xtPVhUGkswnIfDPtNBI+5OAGew6ZNw4OB9mbcksQ=
+	b=hvKR0V8IJFsuNn29yGmBiloThcLYA0xL2D+mJ3nNAoxpReY6g/36vThNZnBAgirx/
+	 74j5X6LmfcwBIACxiwFmP7Z3A/eqkwnHB2or0hOeufUiymwMbsuheJmIccEtb4sp1D
+	 ZLmaNeXh7q5HFPwZe3IbyHMfjR9NYzaedSbUqJjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728429AbfLTOft (ORCPT
+        id S1727730AbfLTOgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:35:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39658 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:36:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728376AbfLTOfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:35:13 -0500
+        id S1728108AbfLTOfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:35:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5E3121D7E;
-        Fri, 20 Dec 2019 14:35:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 631652467F;
+        Fri, 20 Dec 2019 14:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852512;
-        bh=HgNU+6xGYufx4iwzAlrIbH0amQfl2E2FmuW1mVCZUxs=;
+        s=default; t=1576852509;
+        bh=JYQDwSi2AWrgkrokV5h7ry6f5YjebKQk2ZX05B8b/Ro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IN7qZEDHa3AsirPVcq4tMUGuQlMJwDgDmPPQztW0ANw21wu4mR+rozQKFOoqGx1ju
-         6dManef87NDBfljJFbIV9yg8FClXSi31Yr1MNTJhG5Ec1FXJ5lBk61s7FbvDFIRC7+
-         IJPkv94ORgOO3Q1e0Gzyf5xcrW9xz3wz6p9PR6AA=
+        b=F95ITaHIL9O0dW7dtfO94GbCgIx9Myrm2/lHJVDHQ2rK2I2Q3om7VCDkIlmSvIEBy
+         /2hUDC2YnePC1QH8tQu8UMxq/8hhI+nWqOIJZ2N7SUvpv38iXwV+Quipd5YFP2AXLd
+         SDcXffJeYIUSahcflWHRseNUP1nwVzbhu5cscivo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Parav Pandit <parav@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 30/34] IB/mlx4: Follow mirror sequence of device add during device removal
-Date:   Fri, 20 Dec 2019 09:34:29 -0500
-Message-Id: <20191220143433.9922-30-sashal@kernel.org>
+Cc:     Zhiqiang Liu <liuzhiqiang26@huawei.com>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 27/34] md: raid1: check rdev before reference in raid1_sync_request func
+Date:   Fri, 20 Dec 2019 09:34:26 -0500
+Message-Id: <20191220143433.9922-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220143433.9922-1-sashal@kernel.org>
 References: <20191220143433.9922-1-sashal@kernel.org>
@@ -61,64 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 
-[ Upstream commit 89f988d93c62384758b19323c886db917a80c371 ]
+[ Upstream commit 028288df635f5a9addd48ac4677b720192747944 ]
 
-Current code device add sequence is:
+In raid1_sync_request func, rdev should be checked before reference.
 
-ib_register_device()
-ib_mad_init()
-init_sriov_init()
-register_netdev_notifier()
-
-Therefore, the remove sequence should be,
-
-unregister_netdev_notifier()
-close_sriov()
-mad_cleanup()
-ib_unregister_device()
-
-However it is not above.
-Hence, make do above remove sequence.
-
-Fixes: fa417f7b520ee ("IB/mlx4: Add support for IBoE")
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Link: https://lore.kernel.org/r/20191212091214.315005-3-leon@kernel.org
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx4/main.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/md/raid1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/mlx4/main.c b/drivers/infiniband/hw/mlx4/main.c
-index 0bbeaaae47e07..9386bb57b3d71 100644
---- a/drivers/infiniband/hw/mlx4/main.c
-+++ b/drivers/infiniband/hw/mlx4/main.c
-@@ -3069,16 +3069,17 @@ static void mlx4_ib_remove(struct mlx4_dev *dev, void *ibdev_ptr)
- 	ibdev->ib_active = false;
- 	flush_workqueue(wq);
- 
--	mlx4_ib_close_sriov(ibdev);
--	mlx4_ib_mad_cleanup(ibdev);
--	ib_unregister_device(&ibdev->ib_dev);
--	mlx4_ib_diag_cleanup(ibdev);
- 	if (ibdev->iboe.nb.notifier_call) {
- 		if (unregister_netdevice_notifier(&ibdev->iboe.nb))
- 			pr_warn("failure unregistering notifier\n");
- 		ibdev->iboe.nb.notifier_call = NULL;
- 	}
- 
-+	mlx4_ib_close_sriov(ibdev);
-+	mlx4_ib_mad_cleanup(ibdev);
-+	ib_unregister_device(&ibdev->ib_dev);
-+	mlx4_ib_diag_cleanup(ibdev);
-+
- 	mlx4_qp_release_range(dev, ibdev->steer_qpn_base,
- 			      ibdev->steer_qpn_count);
- 	kfree(ibdev->ib_uc_qpns_bitmap);
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 6800dcd50a11b..abcb4c3a76c18 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -2756,7 +2756,7 @@ static sector_t raid1_sync_request(struct mddev *mddev, sector_t sector_nr,
+ 				write_targets++;
+ 			}
+ 		}
+-		if (bio->bi_end_io) {
++		if (rdev && bio->bi_end_io) {
+ 			atomic_inc(&rdev->nr_pending);
+ 			bio->bi_iter.bi_sector = sector_nr + rdev->data_offset;
+ 			bio_set_dev(bio, rdev->bdev);
 -- 
 2.20.1
 
