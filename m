@@ -2,182 +2,176 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B83C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCCB0C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4FB8222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 823CB2064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:27:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="YTK/TSFl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbfLTT1q (ORCPT
+        id S1727610AbfLTT16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 14:27:46 -0500
-Received: from mga17.intel.com ([192.55.52.151]:28192 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727394AbfLTT1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 14:27:40 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Dec 2019 11:27:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,336,1571727600"; 
-   d="scan'208";a="222547143"
-Received: from gza.jf.intel.com ([10.54.75.28])
-  by fmsmga001.fm.intel.com with ESMTP; 20 Dec 2019 11:27:39 -0800
-From:   John Andersen <john.s.andersen@intel.com>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        pbonzini@redhat.com
-Cc:     hpa@zytor.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        John Andersen <john.s.andersen@intel.com>
-Subject: [RESEND RFC 2/2] X86: Use KVM CR pin MSRs
-Date:   Fri, 20 Dec 2019 11:27:01 -0800
-Message-Id: <20191220192701.23415-3-john.s.andersen@intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191220192701.23415-1-john.s.andersen@intel.com>
-References: <20191220192701.23415-1-john.s.andersen@intel.com>
+        Fri, 20 Dec 2019 14:27:58 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:56227 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727506AbfLTT15 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 14:27:57 -0500
+Received: by mail-pj1-f68.google.com with SMTP id d5so4528283pjz.5
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 11:27:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=EvIFqRnAdOlkVcCdvRW7F1ZhBkcNaR9uw4ViiQ4eoIU=;
+        b=YTK/TSFlVaSV8NxPION6nXy7pOiNzGo3JUnemFKcFW8MvOigdXAsF2qdcy0eMivBMU
+         qJWyRU2ueLSPFjSsuIgMt3IXxe9sj+DfQTvCQfgwKazFq7GyyFRaTM4abSAv4imLVNlY
+         EauWutPRqihZM9HBSuwcYvsY75GEUF+0Rs64U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=EvIFqRnAdOlkVcCdvRW7F1ZhBkcNaR9uw4ViiQ4eoIU=;
+        b=EwnR5gYNkBeGkFzsZTkJszOiB+idzi5bHMFRiE0pioxrfznR4AxmksZjWI12Q7HRyv
+         IkgUyn1so0zpHRO/x4WLZ4AIxBB7V+Ah7jrg7qjtTYA3r9XLEizKm78CnYCyOOxlGBql
+         lLdoEC0IpRg1pJ6lKpGbi9oVvuksHYNCG4HL5dbWMy1M54l7wskUaop3GBOH+8HszJFH
+         vfjx9l1lmkCin8PnOQrIR4zNV8Uih4kDpuVHtQTDVloi3ykTe62QMeZgmIg/RYrNs0r9
+         ajJqdu6TwSs2bbWLpP4eLqJXTtb8YM0Bcej1r7YjeF+zCcXNeGnVQysnx5OUBCaIdqhl
+         2e9g==
+X-Gm-Message-State: APjAAAXU+KPFE0hTbUAsWRjZ9xasLq6LXXrzqrJNS757KMO1zFT5rgX3
+        PdNJgv9NIVkG7tChWaCUEwsxtA==
+X-Google-Smtp-Source: APXvYqzhaT6cL2EcgkOxtp87cxr/PYOotI/N9/XDAlMYx8xjXNWrN/8WFIVeBum/aEkj49uhlqSbBg==
+X-Received: by 2002:a17:902:ff0c:: with SMTP id f12mr16572511plj.226.1576870076733;
+        Fri, 20 Dec 2019 11:27:56 -0800 (PST)
+Received: from localhost (2001-44b8-1113-6700-b05d-cbfe-b2ee-de17.static.ipv6.internode.on.net. [2001:44b8:1113:6700:b05d:cbfe:b2ee:de17])
+        by smtp.gmail.com with ESMTPSA id d14sm15023364pfq.117.2019.12.20.11.27.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 11:27:56 -0800 (PST)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     syzbot <syzbot+4722bf4c6393b73a792b@syzkaller.appspotmail.com>,
+        akpm@linux-foundation.org, allison.henderson@oracle.com,
+        aryabinin@virtuozzo.com, darrick.wong@oracle.com,
+        dchinner@redhat.com, dvyukov@google.com,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        sandeen@redhat.com, syzkaller-bugs@googlegroups.com,
+        torvalds@linux-foundation.org
+Subject: Re: BUG: unable to handle kernel paging request in xfs_sb_quiet_read_verify
+In-Reply-To: <20191220130441.GA11941@bfoster>
+References: <000000000000d99340059a100686@google.com> <874kxvttx0.fsf@dja-thinkpad.axtens.net> <20191220130441.GA11941@bfoster>
+Date:   Sat, 21 Dec 2019 06:27:51 +1100
+Message-ID: <87zhfmssp4.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Strengthen existing control register pinning when running
-paravirtualized under KVM. Check which bits KVM supports pinning for
-each control register and only pin supported bits which are already
-pinned via the existing native protection. Write to KVM CR0 and CR4
-pinned MSRs to enable pinning.
 
-Initiate KVM assisted pinning directly following the setup of native
-pinning on boot CPU. For non-boot CPUs initiate paravirtualized pinning
-on CPU identification.
+>> > HEAD commit:    2187f215 Merge tag 'for-5.5-rc2-tag' of git://git.kernel.o..
 
-Identification of non-boot CPUs takes place after the boot CPU has setup
-native CR pinning. Therefore, non-boot CPUs access pinned bits setup by
-the boot CPU and request that those be pinned. All CPUs request
-paravirtualized pinning of the same bits which are already pinned
-natively.
 
-Guests using the kexec system call currently do not support
-paravirtualized control register pinning. This is due to early boot
-code writing known good values to control registers, these values do
-not contain the protected bits. This is due to CPU feature
-identification being done at a later time, when the kernel properly
-checks if it can enable protections.
+> Since this mapping functionality is fairly fundamental code in XFS, I
+> ran a quick test to use a multi-page directory block size (i.e. mkfs.xfs
+> -f <dev> -nsize=8k), started populating a directory and very quickly hit
+> a similar crash. I'm going to double check that this works as expected
+> without KASAN vmalloc support enabled, but is it possible something is
+> wrong with KASAN here?
 
-Signed-off-by: John Andersen <john.s.andersen@intel.com>
----
- arch/x86/Kconfig                |  9 +++++++++
- arch/x86/include/asm/kvm_para.h | 10 ++++++++++
- arch/x86/kernel/cpu/common.c    |  5 +++++
- arch/x86/kernel/kvm.c           | 17 +++++++++++++++++
- 4 files changed, 41 insertions(+)
+Yes, as it turns out. xfs is using vm_map_ram, and the commit syzkaller
+is testing is missing the support for vm_map_ram. Support landed in
+master at d98c9e83b5e7 ("kasan: fix crashes on access to memory mapped
+by vm_map_ram()") but that's _after_ 2187f215 which syzkaller was
+testing
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 8ef85139553f..f5c61e3bd0c9 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -839,6 +839,15 @@ config PARAVIRT_TIME_ACCOUNTING
- config PARAVIRT_CLOCK
- 	bool
- 
-+config PARAVIRT_CR_PIN
-+       bool "Paravirtual bit pinning for CR0 and CR4"
-+       depends on KVM_GUEST && !KEXEC
-+       help
-+         Select this option to have the virtualised guest request that the
-+         hypervisor disallow it from disabling protections set in control
-+         registers. The hypervisor will prevent exploits from disabling
-+         features such as SMEP, SMAP, UMIP, and WP.
-+
- config JAILHOUSE_GUEST
- 	bool "Jailhouse non-root cell support"
- 	depends on X86_64 && PCI
-diff --git a/arch/x86/include/asm/kvm_para.h b/arch/x86/include/asm/kvm_para.h
-index 9b4df6eaa11a..a7b48e43d2dc 100644
---- a/arch/x86/include/asm/kvm_para.h
-+++ b/arch/x86/include/asm/kvm_para.h
-@@ -102,6 +102,16 @@ static inline void kvm_spinlock_init(void)
- }
- #endif /* CONFIG_PARAVIRT_SPINLOCKS */
- 
-+#ifdef CONFIG_PARAVIRT_CR_PIN
-+void kvm_setup_paravirt_cr_pinning(unsigned long cr0_pinned_bits,
-+				   unsigned long cr4_pinned_bits);
-+#else
-+static inline void kvm_setup_paravirt_cr_pinning(unsigned long cr0_pinned_bits,
-+						 unsigned long cr4_pinned_bits)
-+{
-+}
-+#endif /* CONFIG_PARAVIRT_CR_PIN */
-+
- #else /* CONFIG_KVM_GUEST */
- #define kvm_async_pf_task_wait(T, I) do {} while(0)
- #define kvm_async_pf_task_wake(T) do {} while(0)
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index fffe21945374..e6112abb7115 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -20,6 +20,7 @@
- #include <linux/smp.h>
- #include <linux/io.h>
- #include <linux/syscore_ops.h>
-+#include <linux/kvm_para.h>
- 
- #include <asm/stackprotector.h>
- #include <asm/perf_event.h>
-@@ -435,6 +436,8 @@ static void __init setup_cr_pinning(void)
- 	mask = (X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_UMIP);
- 	cr4_pinned_bits = this_cpu_read(cpu_tlbstate.cr4) & mask;
- 	static_key_enable(&cr_pinning.key);
-+
-+	kvm_setup_paravirt_cr_pinning(X86_CR0_WP, cr4_pinned_bits);
- }
- 
- /*
-@@ -1597,6 +1600,8 @@ void identify_secondary_cpu(struct cpuinfo_x86 *c)
- 	mtrr_ap_init();
- 	validate_apic_and_package_id(c);
- 	x86_spec_ctrl_setup_ap();
-+
-+	kvm_setup_paravirt_cr_pinning(X86_CR0_WP, cr4_pinned_bits);
- }
- 
- static __init int setup_noclflush(char *arg)
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 32ef1ee733b7..b8404cd9f318 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -858,6 +858,23 @@ void __init kvm_spinlock_init(void)
- 
- #endif	/* CONFIG_PARAVIRT_SPINLOCKS */
- 
-+#ifdef CONFIG_PARAVIRT_CR_PIN
-+void kvm_setup_paravirt_cr_pinning(unsigned long cr0_pinned_bits,
-+				   unsigned long cr4_pinned_bits)
-+{
-+	u64 mask;
-+
-+	if (!kvm_para_has_feature(KVM_FEATURE_CR_PIN))
-+		return;
-+
-+	rdmsrl(MSR_KVM_CR0_PIN_ALLOWED, mask);
-+	wrmsrl(MSR_KVM_CR0_PINNED, cr0_pinned_bits & mask);
-+
-+	rdmsrl(MSR_KVM_CR4_PIN_ALLOWED, mask);
-+	wrmsrl(MSR_KVM_CR4_PINNED, cr4_pinned_bits & mask);
-+}
-+#endif
-+
- #ifdef CONFIG_ARCH_CPUIDLE_HALTPOLL
- 
- static void kvm_disable_host_haltpoll(void *i)
--- 
-2.21.0
+#syz fix: kasan: fix crashes on access to memory mapped by vm_map_ram()
 
+Sorry for the noise.
+
+Regards,
+Daniel
+
+>
+> Brian
+>
+>> Regards,
+>> Daniel
+>> 
+>> >
+>> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=161240aee00000
+>> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=151240aee00000
+>> > console output: https://syzkaller.appspot.com/x/log.txt?x=111240aee00000
+>> >
+>> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>> > Reported-by: syzbot+4722bf4c6393b73a792b@syzkaller.appspotmail.com
+>> > Fixes: 0609ae011deb ("x86/kasan: support KASAN_VMALLOC")
+>> >
+>> > BUG: unable to handle page fault for address: fffff52000680000
+>> > #PF: supervisor read access in kernel mode
+>> > #PF: error_code(0x0000) - not-present page
+>> > PGD 21ffee067 P4D 21ffee067 PUD aa51c067 PMD a85e1067 PTE 0
+>> > Oops: 0000 [#1] PREEMPT SMP KASAN
+>> > CPU: 1 PID: 3088 Comm: kworker/1:2 Not tainted 5.5.0-rc2-syzkaller #0
+>> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+>> > Google 01/01/2011
+>> > Workqueue: xfs-buf/loop0 xfs_buf_ioend_work
+>> > RIP: 0010:xfs_sb_quiet_read_verify+0x47/0xc0 fs/xfs/libxfs/xfs_sb.c:735
+>> > Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 7f 49 8b 9c 24 30 01  
+>> > 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <0f> b6 04 02 84  
+>> > c0 74 04 3c 03 7e 50 8b 1b bf 58 46 53 42 89 de e8
+>> > RSP: 0018:ffffc90008187cc0 EFLAGS: 00010a06
+>> > RAX: dffffc0000000000 RBX: ffffc90003400000 RCX: ffffffff82ad3c26
+>> > RDX: 1ffff92000680000 RSI: ffffffff82aa0a0f RDI: ffff8880a2cdba70
+>> > RBP: ffffc90008187cd0 R08: ffff88809eb6c500 R09: ffffed1015d2703d
+>> > R10: ffffed1015d2703c R11: ffff8880ae9381e3 R12: ffff8880a2cdb940
+>> > R13: ffff8880a2cdb95c R14: ffff8880a2cdbb74 R15: 0000000000000000
+>> > FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+>> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> > CR2: fffff52000680000 CR3: 000000009f5ab000 CR4: 00000000001406e0
+>> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>> > Call Trace:
+>> >   xfs_buf_ioend+0x3f9/0xde0 fs/xfs/xfs_buf.c:1162
+>> >   xfs_buf_ioend_work+0x19/0x20 fs/xfs/xfs_buf.c:1183
+>> >   process_one_work+0x9af/0x1740 kernel/workqueue.c:2264
+>> >   worker_thread+0x98/0xe40 kernel/workqueue.c:2410
+>> >   kthread+0x361/0x430 kernel/kthread.c:255
+>> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>> > Modules linked in:
+>> > CR2: fffff52000680000
+>> > ---[ end trace 744ceb50d377bf94 ]---
+>> > RIP: 0010:xfs_sb_quiet_read_verify+0x47/0xc0 fs/xfs/libxfs/xfs_sb.c:735
+>> > Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 7f 49 8b 9c 24 30 01  
+>> > 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <0f> b6 04 02 84  
+>> > c0 74 04 3c 03 7e 50 8b 1b bf 58 46 53 42 89 de e8
+>> > RSP: 0018:ffffc90008187cc0 EFLAGS: 00010a06
+>> > RAX: dffffc0000000000 RBX: ffffc90003400000 RCX: ffffffff82ad3c26
+>> > RDX: 1ffff92000680000 RSI: ffffffff82aa0a0f RDI: ffff8880a2cdba70
+>> > RBP: ffffc90008187cd0 R08: ffff88809eb6c500 R09: ffffed1015d2703d
+>> > R10: ffffed1015d2703c R11: ffff8880ae9381e3 R12: ffff8880a2cdb940
+>> > R13: ffff8880a2cdb95c R14: ffff8880a2cdbb74 R15: 0000000000000000
+>> > FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+>> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> > CR2: fffff52000680000 CR3: 000000009f5ab000 CR4: 00000000001406e0
+>> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>> >
+>> >
+>> > ---
+>> > This bug is generated by a bot. It may contain errors.
+>> > See https://goo.gl/tpsmEJ for more information about syzbot.
+>> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+>> >
+>> > syzbot will keep track of this bug report. See:
+>> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+>> > syzbot can test patches for this bug, for details see:
+>> > https://goo.gl/tpsmEJ#testing-patches
+>> 
