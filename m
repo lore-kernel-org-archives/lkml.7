@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F5EC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3CDC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63F08206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71119206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:36:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852567;
-	bh=ReBJzI1bblwfuxFxlTI6RjR8uIjmzEnXygv1ae5ILjM=;
+	s=default; t=1576852573;
+	bh=t22WbMwhAkBRvhcTzO0J/E1i++DVIc0kth+PmaFyL2Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HYVGtggaPpX5uADUhCX88DS3L21NockEV7ZyTBgJJgTew1/+gQYiJiHlh8Q8tNKBK
-	 y8LOyQjP6KkRuJQ2kH/nl3JbYDyOUA1DurlOqWMakgaphB5EbCWnSp7ardYurUtlAi
-	 aLpwa3DXpuMCiEVkK5bN4cGTPOBEb0qIqVsBrxDc=
+	b=OspGamnyErgcPn2bj6oXo7zc3tmNNGIKEtejk7zvdemyM7b/jbsvj6QrzIlAdo/Cg
+	 HrbvIVddBxgfqkubdp295aJY09LPUbUfEG3zQjbHojEU7RBRA3J2W5itg00+dDyJu0
+	 ciFEUWMctGntNhI6OUHVE8hfmt3vKGA9n5sF8+VU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbfLTOgG (ORCPT
+        id S1727751AbfLTOgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:36:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39496 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:36:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727857AbfLTOfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:35:07 -0500
+        id S1728349AbfLTOfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:35:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB4372467F;
-        Fri, 20 Dec 2019 14:35:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 873B32468F;
+        Fri, 20 Dec 2019 14:35:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852506;
-        bh=ReBJzI1bblwfuxFxlTI6RjR8uIjmzEnXygv1ae5ILjM=;
+        s=default; t=1576852505;
+        bh=t22WbMwhAkBRvhcTzO0J/E1i++DVIc0kth+PmaFyL2Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JPFzO381W84CSYKl98XFavIdEp5Y3nDJ85LIHs8aXcwOf8aPLn9eIpvTTvgy0IX7q
-         U9s6pX/IxKvTn1e5DHPlnFi9gtYBFL7xajJKEigCrsgA+RkWVmVjCYgJ79dYvgzmYe
-         sM490AkKgqz+ZKtMhP+6QPJponeyitOWwl478LOU=
+        b=sxkdhh5bKFTJEko2Hd4et541sbS6ev8DoUJdJl4wQO6THk887lTK+yDIjrA1nj7TB
+         o6/WkJQfdX794rk+WeixEmMok/rr2aRumuB53JvtME6dVAUZ4jpVtOL8ArgccFyPIi
+         ZxzDFu2uEdfJ/mu5+ZDPetPS1xqicFntb5Uf9juc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>, netdev@vger.kernel.org,
-        David Miller <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 25/34] net: make socket read/write_iter() honor IOCB_NOWAIT
-Date:   Fri, 20 Dec 2019 09:34:24 -0500
-Message-Id: <20191220143433.9922-25-sashal@kernel.org>
+Cc:     EJ Hsu <ejh@nvidia.com>, Peter Chen <peter.chen@nxp.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 24/34] usb: gadget: fix wrong endpoint desc
+Date:   Fri, 20 Dec 2019 09:34:23 -0500
+Message-Id: <20191220143433.9922-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220143433.9922-1-sashal@kernel.org>
 References: <20191220143433.9922-1-sashal@kernel.org>
@@ -59,45 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: EJ Hsu <ejh@nvidia.com>
 
-[ Upstream commit ebfcd8955c0b52eb793bcbc9e71140e3d0cdb228 ]
+[ Upstream commit e5b5da96da50ef30abb39cb9f694e99366404d24 ]
 
-The socket read/write helpers only look at the file O_NONBLOCK. not
-the iocb IOCB_NOWAIT flag. This breaks users like preadv2/pwritev2
-and io_uring that rely on not having the file itself marked nonblocking,
-but rather the iocb itself.
+Gadget driver should always use config_ep_by_speed() to initialize
+usb_ep struct according to usb device's operating speed. Otherwise,
+usb_ep struct may be wrong if usb devcie's operating speed is changed.
 
-Cc: netdev@vger.kernel.org
-Acked-by: David Miller <davem@davemloft.net>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+The key point in this patch is that we want to make sure the desc pointer
+in usb_ep struct will be set to NULL when gadget is disconnected.
+This will force it to call config_ep_by_speed() to correctly initialize
+usb_ep struct based on the new operating speed when gadget is
+re-connected later.
+
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: EJ Hsu <ejh@nvidia.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/socket.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/function/f_ecm.c   | 6 +++++-
+ drivers/usb/gadget/function/f_rndis.c | 1 +
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/net/socket.c b/net/socket.c
-index 18d27b8c25116..1290aad5d1c35 100644
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -867,7 +867,7 @@ static ssize_t sock_read_iter(struct kiocb *iocb, struct iov_iter *to)
- 			     .msg_iocb = iocb};
- 	ssize_t res;
+diff --git a/drivers/usb/gadget/function/f_ecm.c b/drivers/usb/gadget/function/f_ecm.c
+index 6ce044008cf6c..460d5d7c984f5 100644
+--- a/drivers/usb/gadget/function/f_ecm.c
++++ b/drivers/usb/gadget/function/f_ecm.c
+@@ -621,8 +621,12 @@ static void ecm_disable(struct usb_function *f)
  
--	if (file->f_flags & O_NONBLOCK)
-+	if (file->f_flags & O_NONBLOCK || (iocb->ki_flags & IOCB_NOWAIT))
- 		msg.msg_flags = MSG_DONTWAIT;
+ 	DBG(cdev, "ecm deactivated\n");
  
- 	if (iocb->ki_pos != 0)
-@@ -892,7 +892,7 @@ static ssize_t sock_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 	if (iocb->ki_pos != 0)
- 		return -ESPIPE;
+-	if (ecm->port.in_ep->enabled)
++	if (ecm->port.in_ep->enabled) {
+ 		gether_disconnect(&ecm->port);
++	} else {
++		ecm->port.in_ep->desc = NULL;
++		ecm->port.out_ep->desc = NULL;
++	}
  
--	if (file->f_flags & O_NONBLOCK)
-+	if (file->f_flags & O_NONBLOCK || (iocb->ki_flags & IOCB_NOWAIT))
- 		msg.msg_flags = MSG_DONTWAIT;
+ 	usb_ep_disable(ecm->notify);
+ 	ecm->notify->desc = NULL;
+diff --git a/drivers/usb/gadget/function/f_rndis.c b/drivers/usb/gadget/function/f_rndis.c
+index d48df36622b74..0d8e4a364ca6e 100644
+--- a/drivers/usb/gadget/function/f_rndis.c
++++ b/drivers/usb/gadget/function/f_rndis.c
+@@ -618,6 +618,7 @@ static void rndis_disable(struct usb_function *f)
+ 	gether_disconnect(&rndis->port);
  
- 	if (sock->type == SOCK_SEQPACKET)
+ 	usb_ep_disable(rndis->notify);
++	rndis->notify->desc = NULL;
+ }
+ 
+ /*-------------------------------------------------------------------------*/
 -- 
 2.20.1
 
