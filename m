@@ -2,168 +2,109 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC93C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B23C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A48F6218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:45:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eCzaA1gU"
+	by mail.kernel.org (Postfix) with ESMTP id ACD8821D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:47:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576853222;
+	bh=pdUyHJteufkCXxpdXdKTIz/lLrsqxkuHnSEupLHzhRE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=YajttbZRZq86B4TO5k8xu7UNJ3RFykNx7+VZbBxwz3/2Q6JOI6hPyOnNjXnEdHc2Y
+	 1gpTr43X9T9WFUKRvEoEVQXhXElB2AFsw0DcNlowuVzBtGTXKGEhpf40w+Xo5Z1V6w
+	 Iv0icHuKuRUkHzrdHn8mKItkd/I7ZtU4XkbeE1qo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbfLTOpt (ORCPT
+        id S1727495AbfLTOrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:45:49 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40477 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727381AbfLTOps (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:45:48 -0500
-Received: by mail-wr1-f66.google.com with SMTP id c14so9646155wrn.7;
-        Fri, 20 Dec 2019 06:45:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=pl3hFVbXh8V/pNW7LI4EULZNEnEA05Snk8lDcRO0F4I=;
-        b=eCzaA1gUWIYYBIg/IQTWc7sIFKYB1GqkT8s32yc8blx3R6j6hCIgTMBBckZDLig7fP
-         gp+sHfVT0yCurfEg7SKiyTLnNBa/KSfJPef0t5hUqx1vlrMGhHZuZVF91eX1N8oKMGn+
-         DWdCBVwIJV76oYCUvgrtWOHj38aMNSEolWVQFkUX2nXVVyoPajrRVvH4dgZoUJPIRiAb
-         3J+RRM5gKHwVo8VM6pTBAElWiaNdY4zUwzHzRKdlrQl20Oq692hBUJNOJpJeEdkum8X7
-         cZzOXYPLktB+3RHudr7hTjT0LRRoS78rI8/d+02KFwcahewvN1YMT3gntD6jtMRRgJjp
-         ufaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pl3hFVbXh8V/pNW7LI4EULZNEnEA05Snk8lDcRO0F4I=;
-        b=OOjWAM81ajVStFTXhmmeYQFBGuoVgQ+1YoEakYq3KmjQ10yIowHNgWy0/r24x9J6Xd
-         8qGxVezxulUVQyJUwXt5nDo42yB4oulUrYr2cEGZvr/eJTd28URHjAWTM+x9iVIDP832
-         BCdyrZn1tDfxU1YuCiCgEupYYgpt0yas8XQ+et0NKVvPx2Z+JnRQmmfAXk6fcM6K8M7T
-         +5c+bHRKv7E7WOkOy7XdWeGtF1rgi5BI5xcXpL5s4cKeX+XQqxczAd4c0aILzyEFVd7f
-         eTw3FudBnKLANfPtgJ/xHlzPppfL1/cRFImLFTAqq+CZWgTTAtznjO2RgB1wRWcSD5+a
-         SeTg==
-X-Gm-Message-State: APjAAAWYpERI0QU070n/spdcKX8zywwIBJaRJCFwEyKRKSaxSO9I+yCh
-        PI0uKKmo3W6uFzAeXDc8zTI=
-X-Google-Smtp-Source: APXvYqwzSfkfp87+FaM77mK7bj+bOyD1OkSjuuKjhQwV4WixlXdcVQ1GWCN+pLWH1WcgZc5ig7ROIA==
-X-Received: by 2002:adf:e5ce:: with SMTP id a14mr15388222wrn.214.1576853146255;
-        Fri, 20 Dec 2019 06:45:46 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id 5sm10546226wrh.5.2019.12.20.06.45.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Dec 2019 06:45:45 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: rockchip: rk3399-evb: sort nodes in alphabetical order
-Date:   Fri, 20 Dec 2019 15:45:37 +0100
-Message-Id: <20191220144537.30867-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Fri, 20 Dec 2019 09:47:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45146 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727381AbfLTOrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:47:01 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C7C8218AC;
+        Fri, 20 Dec 2019 14:46:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576853220;
+        bh=pdUyHJteufkCXxpdXdKTIz/lLrsqxkuHnSEupLHzhRE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kbTaoQQ9VjrL5bpLnKtfIs/tromjBqJEhDu/ydv7AggqC798GpYF7Mm2La1j0R6wo
+         sTuqlWp2fkIsKOfVQzVxlSKL1RfUVdAq0YXWgMVdd2XUkQ4iQ2qY/HTZmEnEPcvTmM
+         r3z6qd4JbdQ7K1Ot/f5gqDZJ6twjI5T2naeoZFqk=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 01/14] PM / devfreq: Don't fail devfreq_dev_release if not in list
+Date:   Fri, 20 Dec 2019 09:46:45 -0500
+Message-Id: <20191220144658.10414-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sort nodes in alphabetical order.
+From: Leonard Crestez <leonard.crestez@nxp.com>
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+[ Upstream commit 42a6b25e67df6ee6675e8d1eaf18065bd73328ba ]
+
+Right now devfreq_dev_release will print a warning and abort the rest of
+the cleanup if the devfreq instance is not part of the global
+devfreq_list. But this is a valid scenario, for example it can happen if
+the governor can't be found or on any other init error that happens
+after device_register.
+
+Initialize devfreq->node to an empty list head in devfreq_add_device so
+that list_del becomes a safe noop inside devfreq_dev_release and we can
+continue the rest of the cleanup.
+
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-evb.dts | 66 ++++++++++++++---------------
- 1 file changed, 33 insertions(+), 33 deletions(-)
+ drivers/devfreq/devfreq.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-index 77008dca4..6e8b63db2 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-@@ -134,6 +134,39 @@
- 	status = "okay";
- };
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index db70cee71caa1..dc103edc9fc17 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -481,11 +481,6 @@ static int devfreq_notifier_call(struct notifier_block *nb, unsigned long type,
+ static void _remove_devfreq(struct devfreq *devfreq)
+ {
+ 	mutex_lock(&devfreq_list_lock);
+-	if (IS_ERR(find_device_devfreq(devfreq->dev.parent))) {
+-		mutex_unlock(&devfreq_list_lock);
+-		dev_warn(&devfreq->dev, "releasing devfreq which doesn't exist\n");
+-		return;
+-	}
+ 	list_del(&devfreq->node);
+ 	mutex_unlock(&devfreq_list_lock);
  
-+&pcie0 {
-+	ep-gpios = <&gpio3 RK_PB5 GPIO_ACTIVE_HIGH>;
-+	num-lanes = <4>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie_clkreqn_cpm>;
-+	status = "disabled";
-+};
-+
-+&pcie_phy {
-+	status = "disabled";
-+};
-+
-+&pinctrl {
-+	pmic {
-+		pmic_int_l: pmic-int-l {
-+			rockchip,pins =
-+				<1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+
-+		pmic_dvs2: pmic-dvs2 {
-+			rockchip,pins =
-+				<1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_down>;
-+		};
-+	};
-+
-+	usb2 {
-+		vcc5v0_host_en: vcc5v0-host-en {
-+			rockchip,pins =
-+				<4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+};
-+
- &pwm0 {
- 	status = "okay";
- };
-@@ -154,18 +187,6 @@
- 	status = "okay";
- };
- 
--&pcie_phy {
--	status = "disabled";
--};
--
--&pcie0 {
--	ep-gpios = <&gpio3 RK_PB5 GPIO_ACTIVE_HIGH>;
--	num-lanes = <4>;
--	pinctrl-names = "default";
--	pinctrl-0 = <&pcie_clkreqn_cpm>;
--	status = "disabled";
--};
--
- &u2phy0 {
- 	status = "okay";
- };
-@@ -203,24 +224,3 @@
- &usb_host1_ohci {
- 	status = "okay";
- };
--
--&pinctrl {
--	pmic {
--		pmic_int_l: pmic-int-l {
--			rockchip,pins =
--				<1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_up>;
--		};
--
--		pmic_dvs2: pmic-dvs2 {
--			rockchip,pins =
--				<1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_down>;
--		};
--	};
--
--	usb2 {
--		vcc5v0_host_en: vcc5v0-host-en {
--			rockchip,pins =
--				<4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
--		};
--	};
--};
+@@ -557,6 +552,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
+ 	devfreq->dev.parent = dev;
+ 	devfreq->dev.class = devfreq_class;
+ 	devfreq->dev.release = devfreq_dev_release;
++	INIT_LIST_HEAD(&devfreq->node);
+ 	devfreq->profile = profile;
+ 	strncpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
+ 	devfreq->previous_freq = profile->initial_freq;
 -- 
-2.11.0
+2.20.1
 
