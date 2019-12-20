@@ -2,301 +2,205 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 242DFC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 02:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A96D6C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 02:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D929F2467F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 02:31:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576809111;
-	bh=yzIoQNb9cCqvf40q8+0JHILkgoLH11KOCqGW7LQPE68=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=vQG/Rlv1s7r4TpowqMYQEM4ayfSiNEqjggjnkoTttaUkdIWedBWsE0nv6b+s18OEM
-	 jnt7McEfROYcl/H6gwTF7MLbbaz/Qb3OESyJEyc8+Hv5DnPDIJdH6aZ7hUWpJK5QWt
-	 udWuFI5+3qZmzUQo60q87s04mEMR+5UocZ0JdLjw=
+	by mail.kernel.org (Postfix) with ESMTP id 66F6A24680
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 02:34:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VOwV33Qc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbfLTCbu (ORCPT
+        id S1727167AbfLTCeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 21:31:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38254 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbfLTCbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 21:31:49 -0500
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6982E2465E;
-        Fri, 20 Dec 2019 02:31:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576809108;
-        bh=yzIoQNb9cCqvf40q8+0JHILkgoLH11KOCqGW7LQPE68=;
-        h=From:To:Cc:Subject:Date:From;
-        b=J0HrwaV7MOaKyPxhx3WBMpi1YaMQDgiW3GCHkYDzHvGABtd8qfhXx7aGAWEY8/Y8+
-         cmXnEwNvhS6Y/rbXEL03GlaStm9rWucQgJYn1FZFCJWtFYXto0IQtNPP4dNrCKr6qP
-         EmWfW4EZNDTAK3gj9246+RKjowxEiaRd+3YAxgPY=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        Tom Zanussi <zanussi@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH -tip] tracing: trigger: Replace unneeded RCU-list traversals
-Date:   Fri, 20 Dec 2019 11:31:43 +0900
-Message-Id: <157680910305.11685.15110237954275915782.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-User-Agent: StGit/0.17.1-dirty
+        Thu, 19 Dec 2019 21:34:24 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56838 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbfLTCeY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 21:34:24 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBK2YLxR104807;
+        Thu, 19 Dec 2019 20:34:21 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576809261;
+        bh=PBGWCZIMwZ5RNu34zEdKuEOlYTouyF9F2WPVl+QhAEo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=VOwV33QcAtR6m09EDZ+cu4SGtg8aGTk2adu0wVhho5tP5r1RDWeRo/Jl52x4n59Js
+         LwyUBfo84cxD1oZ04omzh7mXdJcXmI7PKKP9AZNANOJcRWHTATIYDkK1CI3dn9PtyR
+         9v0VG9pOoKg+Ss0y/m7/FFE6VlEO0mN35c/7AiLs=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBK2YL3F105500;
+        Thu, 19 Dec 2019 20:34:21 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Dec 2019 20:34:20 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Dec 2019 20:34:20 -0600
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBK2YK0f102070;
+        Thu, 19 Dec 2019 20:34:20 -0600
+Subject: Re: [PATCHv3 05/15] remoteproc/omap: Add the rproc ops .da_to_va()
+ implementation
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Tero Kristo <t-kristo@ti.com>
+CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        <linux-remoteproc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>
+References: <20191213125537.11509-1-t-kristo@ti.com>
+ <20191213125537.11509-6-t-kristo@ti.com> <20191218003815.GC16271@xps15>
+ <5869498f-086c-cea4-edcf-1b75fb22cf22@ti.com>
+ <CANLsYkz=ZV-AABXq2mSdwKkcdkQgFwStepteFnMBc4j=ahe4Dw@mail.gmail.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <bd76da62-c9ad-2284-cf4b-8b0f02ed3e66@ti.com>
+Date:   Thu, 19 Dec 2019 20:34:20 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <CANLsYkz=ZV-AABXq2mSdwKkcdkQgFwStepteFnMBc4j=ahe4Dw@mail.gmail.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With CONFIG_PROVE_RCU_LIST, I had many suspicious RCU warnings
-when I ran ftracetest trigger testcases.
+On 12/19/19 6:12 PM, Mathieu Poirier wrote:
+> On Thu, 19 Dec 2019 at 06:18, Tero Kristo <t-kristo@ti.com> wrote:
+>>
+>> On 18/12/2019 02:38, Mathieu Poirier wrote:
+>>> On Fri, Dec 13, 2019 at 02:55:27PM +0200, Tero Kristo wrote:
+>>>> From: Suman Anna <s-anna@ti.com>
+>>>>
+>>>> An implementation for the rproc ops .da_to_va() has been added
+>>>> that provides the address translation between device addresses
+>>>> to kernel virtual addresses for internal RAMs present on that
+>>>> particular remote processor device. The implementation provides
+>>>> the translations based on the addresses parsed and stored during
+>>>> the probe.
+>>>>
+>>>> This ops gets invoked by the exported rproc_da_to_va() function
+>>>> and allows the remoteproc core's ELF loader to be able to load
+>>>> program data directly into the internal memories.
+>>>>
+>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>>>> ---
+>>>>   drivers/remoteproc/omap_remoteproc.c | 39 ++++++++++++++++++++++++++++
+>>>>   1 file changed, 39 insertions(+)
+>>>>
+>>>> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+>>>> index 844703507a74..28f14e24b389 100644
+>>>> --- a/drivers/remoteproc/omap_remoteproc.c
+>>>> +++ b/drivers/remoteproc/omap_remoteproc.c
+>>>> @@ -232,10 +232,49 @@ static int omap_rproc_stop(struct rproc *rproc)
+>>>>      return 0;
+>>>>   }
+>>>>
+>>>> +/**
+>>>> + * omap_rproc_da_to_va() - internal memory translation helper
+>>>> + * @rproc: remote processor to apply the address translation for
+>>>> + * @da: device address to translate
+>>>> + * @len: length of the memory buffer
+>>>> + *
+>>>> + * Custom function implementing the rproc .da_to_va ops to provide address
+>>>> + * translation (device address to kernel virtual address) for internal RAMs
+>>>> + * present in a DSP or IPU device). The translated addresses can be used
+>>>> + * either by the remoteproc core for loading, or by any rpmsg bus drivers.
+>>>> + * Returns the translated virtual address in kernel memory space, or NULL
+>>>> + * in failure.
+>>>> + */
+>>>> +static void *omap_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
+>>>> +{
+>>>> +    struct omap_rproc *oproc = rproc->priv;
+>>>> +    int i;
+>>>> +    u32 offset;
+>>>> +
+>>>> +    if (len <= 0)
+>>>> +            return NULL;
+>>>> +
+>>>> +    if (!oproc->num_mems)
+>>>> +            return NULL;
+>>>> +
+>>>> +    for (i = 0; i < oproc->num_mems; i++) {
+>>>> +            if (da >= oproc->mem[i].dev_addr && da + len <=
+>>>
+>>> Shouldn't this be '<' rather than '<=' ?
+>>
+>> No, I think <= is correct. You need to consider the initial byte in the
+>> range also. Consider a simple case where you provide the exact da + len
+>> corresponding to a specific memory range.
+> 
+> For that specific case you are correct.  On the flip side if @da falls
+> somewhere after @mem[i].dev_addr, there is a possibility to clobber
+> the first byte of the next range if <= is used.
 
------
-  # dmesg -c > /dev/null
-  # ./ftracetest test.d/trigger
-  ...
-  # dmesg | grep "RCU-list traversed" | cut -f 2 -d ] | cut -f 2 -d " "
-  kernel/trace/trace_events_hist.c:6070
-  kernel/trace/trace_events_hist.c:1760
-  kernel/trace/trace_events_hist.c:5911
-  kernel/trace/trace_events_trigger.c:504
-  kernel/trace/trace_events_hist.c:1810
-  kernel/trace/trace_events_hist.c:3158
-  kernel/trace/trace_events_hist.c:3105
-  kernel/trace/trace_events_hist.c:5518
-  kernel/trace/trace_events_hist.c:5998
-  kernel/trace/trace_events_hist.c:6019
-  kernel/trace/trace_events_hist.c:6044
-  kernel/trace/trace_events_trigger.c:1500
-  kernel/trace/trace_events_trigger.c:1540
-  kernel/trace/trace_events_trigger.c:539
-  kernel/trace/trace_events_trigger.c:584
------
+Not really, you will miss out on the last byte actually if you use just
+<. This is just address range check, any memcpy would actually end one
+byte before.
 
-I investigated those warnings and found that the RCU-list
-traversals in event trigger and hist didn't need to use
-RCU version because those were called only under event_mutex.
+Eg: 0x80000 of len 0x10000. I should perfectly be able to copy 0x1000
+bytes at 0x8f000.
 
-I also checked other RCU-list traversals related to event
-trigger list, and found that most of them were called from
-event_hist_trigger_func() or hist_unregister_trigger() or
-register/unregister functions except for a few cases.
+regards
+Suman
 
-Replace these unneeded RCU-list traversals with normal list
-traversal macro and lockdep_assert_held() to check the
-event_mutex is held.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- kernel/trace/trace_events_hist.c    |   41 ++++++++++++++++++++++++++---------
- kernel/trace/trace_events_trigger.c |   20 +++++++++++++----
- 2 files changed, 45 insertions(+), 16 deletions(-)
-
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 23b0195ac977..844f8325077f 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -1753,11 +1753,13 @@ static struct hist_field *find_var(struct hist_trigger_data *hist_data,
- 	struct event_trigger_data *test;
- 	struct hist_field *hist_field;
- 
-+	lockdep_assert_held(&event_mutex);
-+
- 	hist_field = find_var_field(hist_data, var_name);
- 	if (hist_field)
- 		return hist_field;
- 
--	list_for_each_entry_rcu(test, &file->triggers, list) {
-+	list_for_each_entry(test, &file->triggers, list) {
- 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
- 			test_data = test->private_data;
- 			hist_field = find_var_field(test_data, var_name);
-@@ -1807,7 +1809,9 @@ static struct hist_field *find_file_var(struct trace_event_file *file,
- 	struct event_trigger_data *test;
- 	struct hist_field *hist_field;
- 
--	list_for_each_entry_rcu(test, &file->triggers, list) {
-+	lockdep_assert_held(&event_mutex);
-+
-+	list_for_each_entry(test, &file->triggers, list) {
- 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
- 			test_data = test->private_data;
- 			hist_field = find_var_field(test_data, var_name);
-@@ -3102,7 +3106,9 @@ static char *find_trigger_filter(struct hist_trigger_data *hist_data,
- {
- 	struct event_trigger_data *test;
- 
--	list_for_each_entry_rcu(test, &file->triggers, list) {
-+	lockdep_assert_held(&event_mutex);
-+
-+	list_for_each_entry(test, &file->triggers, list) {
- 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
- 			if (test->private_data == hist_data)
- 				return test->filter_str;
-@@ -3153,9 +3159,11 @@ find_compatible_hist(struct hist_trigger_data *target_hist_data,
- 	struct event_trigger_data *test;
- 	unsigned int n_keys;
- 
-+	lockdep_assert_held(&event_mutex);
-+
- 	n_keys = target_hist_data->n_fields - target_hist_data->n_vals;
- 
--	list_for_each_entry_rcu(test, &file->triggers, list) {
-+	list_for_each_entry(test, &file->triggers, list) {
- 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
- 			hist_data = test->private_data;
- 
-@@ -5515,7 +5523,7 @@ static int hist_show(struct seq_file *m, void *v)
- 		goto out_unlock;
- 	}
- 
--	list_for_each_entry_rcu(data, &event_file->triggers, list) {
-+	list_for_each_entry(data, &event_file->triggers, list) {
- 		if (data->cmd_ops->trigger_type == ETT_EVENT_HIST)
- 			hist_trigger_show(m, data, n++);
- 	}
-@@ -5908,7 +5916,9 @@ static int hist_register_trigger(char *glob, struct event_trigger_ops *ops,
- 	if (hist_data->attrs->name && !named_data)
- 		goto new;
- 
--	list_for_each_entry_rcu(test, &file->triggers, list) {
-+	lockdep_assert_held(&event_mutex);
-+
-+	list_for_each_entry(test, &file->triggers, list) {
- 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
- 			if (!hist_trigger_match(data, test, named_data, false))
- 				continue;
-@@ -5992,10 +6002,12 @@ static bool have_hist_trigger_match(struct event_trigger_data *data,
- 	struct event_trigger_data *test, *named_data = NULL;
- 	bool match = false;
- 
-+	lockdep_assert_held(&event_mutex);
-+
- 	if (hist_data->attrs->name)
- 		named_data = find_named_trigger(hist_data->attrs->name);
- 
--	list_for_each_entry_rcu(test, &file->triggers, list) {
-+	list_for_each_entry(test, &file->triggers, list) {
- 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
- 			if (hist_trigger_match(data, test, named_data, false)) {
- 				match = true;
-@@ -6013,10 +6025,12 @@ static bool hist_trigger_check_refs(struct event_trigger_data *data,
- 	struct hist_trigger_data *hist_data = data->private_data;
- 	struct event_trigger_data *test, *named_data = NULL;
- 
-+	lockdep_assert_held(&event_mutex);
-+
- 	if (hist_data->attrs->name)
- 		named_data = find_named_trigger(hist_data->attrs->name);
- 
--	list_for_each_entry_rcu(test, &file->triggers, list) {
-+	list_for_each_entry(test, &file->triggers, list) {
- 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
- 			if (!hist_trigger_match(data, test, named_data, false))
- 				continue;
-@@ -6038,10 +6052,12 @@ static void hist_unregister_trigger(char *glob, struct event_trigger_ops *ops,
- 	struct event_trigger_data *test, *named_data = NULL;
- 	bool unregistered = false;
- 
-+	lockdep_assert_held(&event_mutex);
-+
- 	if (hist_data->attrs->name)
- 		named_data = find_named_trigger(hist_data->attrs->name);
- 
--	list_for_each_entry_rcu(test, &file->triggers, list) {
-+	list_for_each_entry(test, &file->triggers, list) {
- 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
- 			if (!hist_trigger_match(data, test, named_data, false))
- 				continue;
-@@ -6067,7 +6083,9 @@ static bool hist_file_check_refs(struct trace_event_file *file)
- 	struct hist_trigger_data *hist_data;
- 	struct event_trigger_data *test;
- 
--	list_for_each_entry_rcu(test, &file->triggers, list) {
-+	lockdep_assert_held(&event_mutex);
-+
-+	list_for_each_entry(test, &file->triggers, list) {
- 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
- 			hist_data = test->private_data;
- 			if (check_var_refs(hist_data))
-@@ -6310,7 +6328,8 @@ hist_enable_trigger(struct event_trigger_data *data, void *rec,
- 	struct enable_trigger_data *enable_data = data->private_data;
- 	struct event_trigger_data *test;
- 
--	list_for_each_entry_rcu(test, &enable_data->file->triggers, list) {
-+	list_for_each_entry_rcu(test, &enable_data->file->triggers, list,
-+				lockdep_is_held(&event_mutex)) {
- 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
- 			if (enable_data->enable)
- 				test->paused = false;
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index 2cd53ca21b51..40106fff06a4 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -501,7 +501,9 @@ void update_cond_flag(struct trace_event_file *file)
- 	struct event_trigger_data *data;
- 	bool set_cond = false;
- 
--	list_for_each_entry_rcu(data, &file->triggers, list) {
-+	lockdep_assert_held(&event_mutex);
-+
-+	list_for_each_entry(data, &file->triggers, list) {
- 		if (data->filter || event_command_post_trigger(data->cmd_ops) ||
- 		    event_command_needs_rec(data->cmd_ops)) {
- 			set_cond = true;
-@@ -536,7 +538,9 @@ static int register_trigger(char *glob, struct event_trigger_ops *ops,
- 	struct event_trigger_data *test;
- 	int ret = 0;
- 
--	list_for_each_entry_rcu(test, &file->triggers, list) {
-+	lockdep_assert_held(&event_mutex);
-+
-+	list_for_each_entry(test, &file->triggers, list) {
- 		if (test->cmd_ops->trigger_type == data->cmd_ops->trigger_type) {
- 			ret = -EEXIST;
- 			goto out;
-@@ -581,7 +585,9 @@ static void unregister_trigger(char *glob, struct event_trigger_ops *ops,
- 	struct event_trigger_data *data;
- 	bool unregistered = false;
- 
--	list_for_each_entry_rcu(data, &file->triggers, list) {
-+	lockdep_assert_held(&event_mutex);
-+
-+	list_for_each_entry(data, &file->triggers, list) {
- 		if (data->cmd_ops->trigger_type == test->cmd_ops->trigger_type) {
- 			unregistered = true;
- 			list_del_rcu(&data->list);
-@@ -1497,7 +1503,9 @@ int event_enable_register_trigger(char *glob,
- 	struct event_trigger_data *test;
- 	int ret = 0;
- 
--	list_for_each_entry_rcu(test, &file->triggers, list) {
-+	lockdep_assert_held(&event_mutex);
-+
-+	list_for_each_entry(test, &file->triggers, list) {
- 		test_enable_data = test->private_data;
- 		if (test_enable_data &&
- 		    (test->cmd_ops->trigger_type ==
-@@ -1537,7 +1545,9 @@ void event_enable_unregister_trigger(char *glob,
- 	struct event_trigger_data *data;
- 	bool unregistered = false;
- 
--	list_for_each_entry_rcu(data, &file->triggers, list) {
-+	lockdep_assert_held(&event_mutex);
-+
-+	list_for_each_entry(data, &file->triggers, list) {
- 		enable_data = data->private_data;
- 		if (enable_data &&
- 		    (data->cmd_ops->trigger_type ==
+> 
+> Thanks,
+> Mathieu
+> 
+>>
+>>>
+>>>> +                oproc->mem[i].dev_addr +  oproc->mem[i].size) {
+>>>
+>>> One space too many after the '+' .
+>>
+>> True, I wonder why checkpatch did not catch this.
+>>
+>>>
+>>>> +                    offset = da -  oproc->mem[i].dev_addr;
+>>>
+>>> One space too many after then '-' .
+>>
+>> Same, will fix these two.
+>>
+>> -Tero
+>>
+>>>
+>>>> +                    /* __force to make sparse happy with type conversion */
+>>>> +                    return (__force void *)(oproc->mem[i].cpu_addr +
+>>>> +                                            offset);
+>>>> +            }
+>>>> +    }
+>>>> +
+>>>> +    return NULL;
+>>>> +}
+>>>> +
+>>>>   static const struct rproc_ops omap_rproc_ops = {
+>>>>      .start          = omap_rproc_start,
+>>>>      .stop           = omap_rproc_stop,
+>>>>      .kick           = omap_rproc_kick,
+>>>> +    .da_to_va       = omap_rproc_da_to_va,
+>>>>   };
+>>>>
+>>>>   static const char * const ipu_mem_names[] = {
+>>>> --
+>>>> 2.17.1
+>>>>
+>>>> --
+>>
+>> --
+>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
