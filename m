@@ -2,122 +2,238 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB245C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6F4C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 900B124680
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:25:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XCSvcuHZ"
+	by mail.kernel.org (Postfix) with ESMTP id 68CD224680
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:26:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfLTJZW (ORCPT
+        id S1727298AbfLTJ0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 04:25:22 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28404 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727188AbfLTJZT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 04:25:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576833918;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LsxcLVbBun1f96xBFFfgPOlzuKGlq4r29EdM+SsmX7k=;
-        b=XCSvcuHZl4fYpSg3+lJGo7wB9zu/5eGQ/Sk161B0dNiEKY/TWOPMT4PKIswsjbfsgWmozX
-        30WcZ2NxviW42XxYvpMCXrNS4PQvI3F//kMadPHcURTdX5+TGwZjCutY6tAVNbdh0tM9XC
-        VNIv2l6v3eIrXbxeJYOQ8yICFjiWQr0=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-227-DN7bz1JNNq-O5ERHkaPWew-1; Fri, 20 Dec 2019 04:25:17 -0500
-X-MC-Unique: DN7bz1JNNq-O5ERHkaPWew-1
-Received: by mail-wr1-f70.google.com with SMTP id z15so915952wrw.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 01:25:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LsxcLVbBun1f96xBFFfgPOlzuKGlq4r29EdM+SsmX7k=;
-        b=BxhYflSWIamtWaqafq9ptcVlKqEOwwtJFh7/2nEnj/3uSaoRSScv84Ya0DWLDk3uNc
-         jUZ8N6GlYlUzrF4y/V9U9HzH5l20CQavFHpw914qMgY2MTxIe2SHElVGlz0VWYFQHmpA
-         OQisBnJunPs0TROHzgIjae4SUfmAMpGsMLQ6dvVRsjn8kl9BdVEvuQ8nng61oqvNAyZ/
-         K+XPyJK/MX5cwir6NtfekFws1D9t/FGLLWsK1NW7fV+A2BcMmdkUVNrih5S9oeE8Liyw
-         7+Ko5DaQ8VTGVR9Yt93+Qr3sJupvdgUsZ3KdCY3j+dm+ud7DzNOLJsPUwqpYryL4sAu3
-         U7kQ==
-X-Gm-Message-State: APjAAAU56jsobPB+iDtI6wDjuAl2EVY8OkEGUpxudbdff3X8aUDei+Km
-        SLUiJEf0HfiaJjKfJNyoNQFDRoKuN8DljpevPDyiK968iEyWdKOYkuRBlKR2/n+dack+WA2EyIH
-        Mu0clu8kxFuLKPcA+2FdES3/0
-X-Received: by 2002:a05:600c:246:: with SMTP id 6mr15371254wmj.122.1576833916356;
-        Fri, 20 Dec 2019 01:25:16 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzw8wZPLS7TkKIeuMQ4kT47hh6TgBs/pAj1q7SP7litoY6M7b4efDd9KnpDPbJZMMJOaN3lqQ==
-X-Received: by 2002:a05:600c:246:: with SMTP id 6mr15371232wmj.122.1576833916119;
-        Fri, 20 Dec 2019 01:25:16 -0800 (PST)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id m7sm9097969wrr.40.2019.12.20.01.25.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Dec 2019 01:25:15 -0800 (PST)
-Subject: Re: [PATCH v2] kvm/svm: PKU not currently supported
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        John Allen <john.allen@amd.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rkrcmar@redhat.com, vkuznets@redhat.com
-References: <20191219201759.21860-1-john.allen@amd.com>
- <20191219203214.GC6439@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <8a77e3b9-049e-e622-9332-9bebb829bc3d@redhat.com>
-Date:   Fri, 20 Dec 2019 10:25:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 20 Dec 2019 04:26:41 -0500
+Received: from mga14.intel.com ([192.55.52.115]:33849 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727167AbfLTJ0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 04:26:41 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Dec 2019 01:26:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,335,1571727600"; 
+   d="scan'208";a="298971795"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 20 Dec 2019 01:26:39 -0800
+Received: from [10.226.39.9] (unknown [10.226.39.9])
+        by linux.intel.com (Postfix) with ESMTP id C428758042B;
+        Fri, 20 Dec 2019 01:26:36 -0800 (PST)
+Subject: Re: [PATCH v11 1/3] dt-bindings: PCI: intel: Add YAML schemas for the
+ PCIe RC controller
+To:     Rob Herring <robh@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+References: <cover.1575860791.git.eswara.kota@linux.intel.com>
+ <a276c1107d40917901a4265d4d8622dee060e4f5.1575860791.git.eswara.kota@linux.intel.com>
+ <CAL_JsqJE=7P3z8AzWUfWu1PCV4EVC1PBJ+ZAu3vmAcq5G5D34g@mail.gmail.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <621fb081-e3de-0c4f-3d3d-03c5ad19fa07@linux.intel.com>
+Date:   Fri, 20 Dec 2019 17:26:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <20191219203214.GC6439@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+In-Reply-To: <CAL_JsqJE=7P3z8AzWUfWu1PCV4EVC1PBJ+ZAu3vmAcq5G5D34g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/12/19 21:32, Sean Christopherson wrote:
-> On Thu, Dec 19, 2019 at 02:17:59PM -0600, John Allen wrote:
->> Current SVM implementation does not have support for handling PKU. Guests
->> running on a host with future AMD cpus that support the feature will read
->> garbage from the PKRU register and will hit segmentation faults on boot as
->> memory is getting marked as protected that should not be. Ensure that cpuid
->> from SVM does not advertise the feature.
+
+On 12/20/2019 12:32 AM, Rob Herring wrote:
+> On Sun, Dec 8, 2019 at 9:20 PM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+>> Add YAML schemas for PCIe RC controller on Intel Gateway SoCs
+>> which is Synopsys DesignWare based PCIe core.
 >>
->> Signed-off-by: John Allen <john.allen@amd.com>
+>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+>> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
 >> ---
->> v2:
->>   -Introduce kvm_x86_ops->pku_supported()
-> 
-> I like the v1 approach better, it's less code to unwind when SVM gains
-> support for virtualizaing PKU.
-> 
-> The existing cases of kvm_x86_ops->*_supported() in __do_cpuid_func() are
-> necessary to handle cases where it may not be possible to expose a feature
-> even though it's supported in hardware, host and KVM, e.g. VMX's separate
-> MSR-based features and PT's software control to hide it from guest.  In
-> this case, hiding PKU is purely due to lack of support in KVM.  The SVM
-> series to enable PKU can then delete a single line of SVM code instead of
-> having to go back in and do surgery on x86 and VMX.
-> 
+>>   .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 138 +++++++++++++++++++++
+>>   1 file changed, 138 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+>> new file mode 100644
+>> index 000000000000..db605d8a387d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+>> @@ -0,0 +1,138 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/pci/intel-gw-pcie.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: PCIe RC controller on Intel Gateway SoCs
+>> +
+>> +maintainers:
+>> +  - Dilip Kota <eswara.kota@linux.intel.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    items:
+>> +      - const: intel,lgm-pcie
+>> +      - const: snps,dw-pcie
+>> +
+>> +  device_type:
+>> +    const: pci
+>> +
+>> +  "#address-cells":
+>> +    const: 3
+>> +
+>> +  "#size-cells":
+>> +    const: 2
+>> +
+>> +  reg:
+>> +    items:
+>> +      - description: Controller control and status registers.
+>> +      - description: PCIe configuration registers.
+>> +      - description: Controller application registers.
+>> +
+>> +  reg-names:
+>> +    items:
+>> +      - const: dbi
+>> +      - const: config
+>> +      - const: app
+>> +
+>> +  ranges:
+>> +    maxItems: 1
+>> +
+>> +  resets:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +  phys:
+>> +    maxItems: 1
+>> +
+>> +  phy-names:
+>> +    const: pcie
+>> +
+>> +  reset-gpios:
+>> +    maxItems: 1
+>> +
+>> +  linux,pci-domain: true
+>> +
+>> +  num-lanes:
+>> +    maximum: 2
+>> +    description: Number of lanes to use for this port.
+>> +
+>> +  '#interrupt-cells':
+>> +    const: 1
+>> +
+>> +  interrupt-map-mask:
+>> +    description: Standard PCI IRQ mapping properties.
+>> +
+>> +  interrupt-map:
+>> +    description: Standard PCI IRQ mapping properties.
+>> +
+>> +  max-link-speed:
+>> +    description: Specify PCI Gen for link capability.
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>> +      - enum: [ 1, 2, 3, 4 ]
+>> +      - default: 1
+>> +
+>> +  bus-range:
+>> +    description: Range of bus numbers associated with this controller.
+>> +
+>> +  reset-assert-ms:
+>> +    description: |
+>> +      Delay after asserting reset to the PCIe device.
+>> +    maximum: 500
+>> +    default: 100
+>> +
+>> +required:
+>> +  - compatible
+>> +  - device_type
+>> +  - "#address-cells"
+>> +  - "#size-cells"
+>> +  - reg
+>> +  - reg-names
+>> +  - ranges
+>> +  - resets
+>> +  - clocks
+>> +  - phys
+>> +  - phy-names
+>> +  - reset-gpios
+>> +  - '#interrupt-cells'
+>> +  - interrupt-map
+>> +  - interrupt-map-mask
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/gpio/gpio.h>
+>> +    #include <dt-bindings/clock/intel,lgm-clk.h>
+> I guess this is applied now as the example fails to build in
+> linux-next as this header is missing.
+>
+> At this point I'd settle for just 'make dt_binding_check' passing on
+> linux-next even though it should pass on maintainer trees too.
+> However, it doesn't appear the clock driver with this header is close
+> to being merged. The binding was sent on Aug 28 and not to the DT list
+> so I hadn't seen it. Given that, I'd suggest a follow-up patch to
+> remove the header dependency here. Just change LGM_GCLK_PCIE10 to the
+> value.
+Sure, i will send the patch.
 
-I sort of liked the V1 approach better, in that I liked using
-set_supported_cpuid but I didn't like *removing* features from it.
-
-I think all *_supported() should be removed, and the code moved from
-__do_cpuid_func() to set_supported_cpuid.
-
-For now, however, this one is consistent with other features so I am
-applying it.
-
-Paolo
-
+Regards,
+Dilip
+>> +    pcie10: pcie@d0e00000 {
+>> +      compatible = "intel,lgm-pcie", "snps,dw-pcie";
+>> +      device_type = "pci";
+>> +      #address-cells = <3>;
+>> +      #size-cells = <2>;
+>> +      reg = <0xd0e00000 0x1000>,
+>> +            <0xd2000000 0x800000>,
+>> +            <0xd0a41000 0x1000>;
+>> +      reg-names = "dbi", "config", "app";
+>> +      linux,pci-domain = <0>;
+>> +      max-link-speed = <4>;
+>> +      bus-range = <0x00 0x08>;
+>> +      interrupt-parent = <&ioapic1>;
+>> +      #interrupt-cells = <1>;
+>> +      interrupt-map-mask = <0 0 0 0x7>;
+>> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
+>> +                      <0 0 0 2 &ioapic1 28 1>,
+>> +                      <0 0 0 3 &ioapic1 29 1>,
+>> +                      <0 0 0 4 &ioapic1 30 1>;
+>> +      ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
+>> +      resets = <&rcu0 0x50 0>;
+>> +      clocks = <&cgu0 LGM_GCLK_PCIE10>;
+>> +      phys = <&cb0phy0>;
+>> +      phy-names = "pcie";
+>> +      reset-assert-ms = <500>;
+>> +      reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
+>> +      num-lanes = <2>;
+>> +    };
+>> --
+>> 2.11.0
+>>
