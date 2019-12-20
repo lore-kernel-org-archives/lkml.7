@@ -2,200 +2,211 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 256DDC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 02:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE72AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 02:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF3AE227BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 02:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB04C2467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 02:57:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbfLTCwk (ORCPT
+        id S1727128AbfLTC5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 21:52:40 -0500
-Received: from vmicros1.altlinux.org ([194.107.17.57]:52876 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbfLTCwj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 21:52:39 -0500
-Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id 83CD672CCE9;
-        Fri, 20 Dec 2019 05:52:36 +0300 (MSK)
-Received: from altlinux.org (sole.flsd.net [185.75.180.6])
-        by imap.altlinux.org (Postfix) with ESMTPSA id 666444A4AEF;
-        Fri, 20 Dec 2019 05:52:36 +0300 (MSK)
-Date:   Fri, 20 Dec 2019 05:52:36 +0300
-From:   Vitaly Chikunov <vt@altlinux.org>
-To:     Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        stable@vger.kernel.org, acme@kernel.org
-Subject: Re: [PATCH] tools lib: Disable redundant-delcs error for strlcpy
-Message-ID: <20191220025236.kgu3v6yhjndr3zwb@altlinux.org>
-Mail-Followup-To: Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>, stable@vger.kernel.org,
-        acme@kernel.org
-References: <20191208214607.20679-1-vt@altlinux.org>
- <20191217122331.4g5atx7in6njjlw4@altlinux.org>
- <20191217200420.GD7095@redhat.com>
+        Thu, 19 Dec 2019 21:57:08 -0500
+Received: from fieldses.org ([173.255.197.46]:38956 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726964AbfLTC5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 21:57:08 -0500
+Received: by fieldses.org (Postfix, from userid 2815)
+        id BCC801BE3; Thu, 19 Dec 2019 21:57:07 -0500 (EST)
+Date:   Thu, 19 Dec 2019 21:57:07 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, y2038@lists.linaro.org
+Subject: Re: [PATCH v2 10/12] nfsd: use boottime for lease expiry alculation
+Message-ID: <20191220025707.GH12026@fieldses.org>
+References: <20191213141046.1770441-1-arnd@arndb.de>
+ <20191213141046.1770441-11-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191217200420.GD7095@redhat.com>
-User-Agent: NeoMutt/20171215-106-ac61c7
+In-Reply-To: <20191213141046.1770441-11-arnd@arndb.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnaldo,
+On Fri, Dec 13, 2019 at 03:10:44PM +0100, Arnd Bergmann wrote:
+> @@ -5212,8 +5211,8 @@ nfs4_laundromat(struct nfsd_net *nn)
+>  	struct nfs4_ol_stateid *stp;
+>  	struct nfsd4_blocked_lock *nbl;
+>  	struct list_head *pos, *next, reaplist;
+> -	time_t cutoff = get_seconds() - nn->nfsd4_lease;
+> -	time_t t, new_timeo = nn->nfsd4_lease;
+> +	time64_t cutoff = ktime_get_boottime_seconds() - nn->nfsd4_lease;
 
-On Tue, Dec 17, 2019 at 05:04:20PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Tue, Dec 17, 2019 at 03:23:32PM +0300, Vitaly Chikunov escreveu:
-> > Arnaldo,
+For some reason the version I was testing still had this as
+get_seconds(), which was what was causing test failures.  I'm not quite
+sure what happened--I may have just typo'd something while fixing up a
+conflict.
 
-(Btw, you didn't include me into the To: of your reply).
+--b.
 
-> > Ping. Can you accept or comment on this patch? There is further
-> > explanations of it:
-> 
-> Will this work when building with clang
-
-Clang doesn't produce this warning:
-
-  https://clang.llvm.org/docs/DiagnosticsReference.html#wredundant-decls
-  "-Wredundant-decls
-  This diagnostic flag exists for GCC compatibility, and has no effect
-  in Clang."
-
-Thus, this change doesn't affect clang. (When building the kernel objtool
-compiles OK).
-
-But, compilation with clang fails compiling perf with:
-
-    CC       util/string.o
-  ../lib/string.c:99:8: error: attribute declaration must precede definition [-Werror,-Wignored-attributes]
-  size_t __weak strlcpy(char *dest, const char *src, size_t size)
-         ^
-  ../../tools/include/linux/compiler.h:66:34: note: expanded from macro '__weak'
-  # define __weak                 __attribute__((weak))
-                                                 ^
-  /usr/include/bits/string_fortified.h:151:8: note: previous definition is here
-  __NTH (strlcpy (char *__restrict __dest, const char *__restrict __src,
-         ^
-  1 error generated.
-
-This warning could be disabled with this:
-
-diff --git tools/lib/string.c tools/lib/string.c
-index f2ae1b87c719..65b569014446 100644
---- tools/lib/string.c
-+++ tools/lib/string.c
-@@ -96,6 +96,8 @@ int strtobool(const char *s, bool *res)
-  * If libc has strlcpy() then that version will override this
-  * implementation:
-  */
-+#pragma GCC diagnostic push
-+#pragma GCC diagnostic ignored "-Wignored-attributes"
- size_t __weak strlcpy(char *dest, const char *src, size_t size)
- {
-        size_t ret = strlen(src);
-@@ -107,6 +109,7 @@ size_t __weak strlcpy(char *dest, const char *src, size_t size)
-        }
-        return ret;
- }
-+#pragma GCC diagnostic pop
-
- /**
-  * skip_spaces - Removes leading whitespace from @str.
-
-If this is acceptable I will resend v2 with this.
-
-Thanks,
-
-> 
-> - Arnaldo
+> +	time64_t t, new_timeo = nn->nfsd4_lease;
 >  
-> > 1. It seems that people putting strlcpy() into the tools was already aware of
-> > the problems it causes and tried to solve them. Probably, that's why they put
-> > `__weak` attribute on it (so it would be linkable in the presence of another
-> > strlcpy). Then `#ifndef __UCLIBC__`ed and later `#if defined(__GLIBC__) &&
-> > !defined(__UCLIBC__)` its declaration. But, solution was incomplete and could
-> > be improved to make kernel buildable on more systems (where libc contains
-> > strlcpy).
-> > 
-> > There is not need to make `redundant redeclaration` warning an error in
-> > this case.
-> > 
-> > 2. `#pragma GCC diagnostic ignored` trick is already used multiple times
-> > in the kernel:
-> > 
-> >   $ git grep  '#pragma GCC diagnostic ignored'
-> >   arch/arm/lib/xor-neon.c:#pragma GCC diagnostic ignored "-Wunused-variable"
-> >   tools/build/feature/test-gtk2-infobar.c:#pragma GCC diagnostic ignored "-Wstrict-prototypes"
-> >   tools/build/feature/test-gtk2.c:#pragma GCC diagnostic ignored "-Wstrict-prototypes"
-> >   tools/include/linux/string.h:#pragma GCC diagnostic ignored "-Wredundant-decls"
-> >   tools/lib/bpf/libbpf.c:#pragma GCC diagnostic ignored "-Wformat-nonliteral"
-> >   tools/perf/ui/gtk/gtk.h:#pragma GCC diagnostic ignored "-Wstrict-prototypes"
-> >   tools/testing/selftests/kvm/lib/assert.c:#pragma GCC diagnostic ignored "-Wunused-result"
-> >   tools/usb/ffs-test.c:#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-> > 
-> > So the solution does not seem alien in the kernel and should be acceptable.
-> > 
-> > (I also send this to another of your emails in case I used wrong one before.)
-> > 
-> > Thanks,
-> > 
-> > 
-> > On Mon, Dec 09, 2019 at 12:46:07AM +0300, Vitaly Chikunov wrote:
-> > > Disable `redundant-decls' error for strlcpy declaration and solve build
-> > > error allowing users to compile vanilla kernels.
-> > > 
-> > > When glibc have strlcpy (such as in ALT linux since 2004) objtool and
-> > > perf build fails with something like:
-> > > 
-> > >   In file included from exec-cmd.c:3:
-> > >   tools/include/linux/string.h:20:15: error: redundant redeclaration of ‘strlcpy’ [-Werror=redundant-decls]
-> > >      20 | extern size_t strlcpy(char *dest, const char *src, size_t size);
-> > > 	|               ^~~~~~~
-> > > 
-> > > It's very hard to produce a perfect fix for that since it is a header
-> > > file indirectly pulled from many sources from different Makefile builds.
-> > > 
-> > > Fixes: ce99091 ("perf tools: Move strlcpy() from perf to tools/lib/string.c")
-> > > Fixes: 0215d59 ("tools lib: Reinstate strlcpy() header guard with __UCLIBC__")
-> > > Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
-> > > Cc: Dmitry V. Levin <ldv@altlinux.org>
-> > > Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-> > > Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-> > > Cc: stable@vger.kernel.org
-> > > ---
-> > >  tools/include/linux/string.h | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > > 
-> > > diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
-> > > index 980cb9266718..99ede7f5dfb8 100644
-> > > --- a/tools/include/linux/string.h
-> > > +++ b/tools/include/linux/string.h
-> > > @@ -17,7 +17,10 @@ int strtobool(const char *s, bool *res);
-> > >   * However uClibc headers also define __GLIBC__ hence the hack below
-> > >   */
-> > >  #if defined(__GLIBC__) && !defined(__UCLIBC__)
-> > > +#pragma GCC diagnostic push
-> > > +#pragma GCC diagnostic ignored "-Wredundant-decls"
-> > >  extern size_t strlcpy(char *dest, const char *src, size_t size);
-> > > +#pragma GCC diagnostic pop
-> > >  #endif
-> > >  
-> > >  char *str_error_r(int errnum, char *buf, size_t buflen);
-> 
+>  	dprintk("NFSD: laundromat service - starting\n");
+>  
+> @@ -5227,7 +5226,7 @@ nfs4_laundromat(struct nfsd_net *nn)
+>  	spin_lock(&nn->client_lock);
+>  	list_for_each_safe(pos, next, &nn->client_lru) {
+>  		clp = list_entry(pos, struct nfs4_client, cl_lru);
+> -		if (time_after((unsigned long)clp->cl_time, (unsigned long)cutoff)) {
+> +		if (clp->cl_time > cutoff) {
+>  			t = clp->cl_time - cutoff;
+>  			new_timeo = min(new_timeo, t);
+>  			break;
+> @@ -5250,7 +5249,7 @@ nfs4_laundromat(struct nfsd_net *nn)
+>  	spin_lock(&state_lock);
+>  	list_for_each_safe(pos, next, &nn->del_recall_lru) {
+>  		dp = list_entry (pos, struct nfs4_delegation, dl_recall_lru);
+> -		if (time_after((unsigned long)dp->dl_time, (unsigned long)cutoff)) {
+> +		if (dp->dl_time > cutoff) {
+>  			t = dp->dl_time - cutoff;
+>  			new_timeo = min(new_timeo, t);
+>  			break;
+> @@ -5270,8 +5269,7 @@ nfs4_laundromat(struct nfsd_net *nn)
+>  	while (!list_empty(&nn->close_lru)) {
+>  		oo = list_first_entry(&nn->close_lru, struct nfs4_openowner,
+>  					oo_close_lru);
+> -		if (time_after((unsigned long)oo->oo_time,
+> -			       (unsigned long)cutoff)) {
+> +		if (oo->oo_time > cutoff) {
+>  			t = oo->oo_time - cutoff;
+>  			new_timeo = min(new_timeo, t);
+>  			break;
+> @@ -5301,8 +5299,7 @@ nfs4_laundromat(struct nfsd_net *nn)
+>  	while (!list_empty(&nn->blocked_locks_lru)) {
+>  		nbl = list_first_entry(&nn->blocked_locks_lru,
+>  					struct nfsd4_blocked_lock, nbl_lru);
+> -		if (time_after((unsigned long)nbl->nbl_time,
+> -			       (unsigned long)cutoff)) {
+> +		if (nbl->nbl_time > cutoff) {
+>  			t = nbl->nbl_time - cutoff;
+>  			new_timeo = min(new_timeo, t);
+>  			break;
+> @@ -5319,7 +5316,7 @@ nfs4_laundromat(struct nfsd_net *nn)
+>  		free_blocked_lock(nbl);
+>  	}
+>  out:
+> -	new_timeo = max_t(time_t, new_timeo, NFSD_LAUNDROMAT_MINTIMEOUT);
+> +	new_timeo = max_t(time64_t, new_timeo, NFSD_LAUNDROMAT_MINTIMEOUT);
+>  	return new_timeo;
+>  }
+>  
+> @@ -5329,13 +5326,13 @@ static void laundromat_main(struct work_struct *);
+>  static void
+>  laundromat_main(struct work_struct *laundry)
+>  {
+> -	time_t t;
+> +	time64_t t;
+>  	struct delayed_work *dwork = to_delayed_work(laundry);
+>  	struct nfsd_net *nn = container_of(dwork, struct nfsd_net,
+>  					   laundromat_work);
+>  
+>  	t = nfs4_laundromat(nn);
+> -	dprintk("NFSD: laundromat_main - sleeping for %ld seconds\n", t);
+> +	dprintk("NFSD: laundromat_main - sleeping for %lld seconds\n", t);
+>  	queue_delayed_work(laundry_wq, &nn->laundromat_work, t*HZ);
+>  }
+>  
+> @@ -6549,7 +6546,7 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>  	}
+>  
+>  	if (fl_flags & FL_SLEEP) {
+> -		nbl->nbl_time = get_seconds();
+> +		nbl->nbl_time = ktime_get_boottime_seconds();
+>  		spin_lock(&nn->blocked_locks_lock);
+>  		list_add_tail(&nbl->nbl_list, &lock_sop->lo_blocked);
+>  		list_add_tail(&nbl->nbl_lru, &nn->blocked_locks_lru);
+> @@ -7709,7 +7706,7 @@ nfs4_state_start_net(struct net *net)
+>  	nfsd4_client_tracking_init(net);
+>  	if (nn->track_reclaim_completes && nn->reclaim_str_hashtbl_size == 0)
+>  		goto skip_grace;
+> -	printk(KERN_INFO "NFSD: starting %ld-second grace period (net %x)\n",
+> +	printk(KERN_INFO "NFSD: starting %lld-second grace period (net %x)\n",
+>  	       nn->nfsd4_grace, net->ns.inum);
+>  	queue_delayed_work(laundry_wq, &nn->laundromat_work, nn->nfsd4_grace * HZ);
+>  	return 0;
+> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> index 11b42c523f04..aace740d5a92 100644
+> --- a/fs/nfsd/nfsctl.c
+> +++ b/fs/nfsd/nfsctl.c
+> @@ -956,7 +956,7 @@ static ssize_t write_maxconn(struct file *file, char *buf, size_t size)
+>  
+>  #ifdef CONFIG_NFSD_V4
+>  static ssize_t __nfsd4_write_time(struct file *file, char *buf, size_t size,
+> -				  time_t *time, struct nfsd_net *nn)
+> +				  time64_t *time, struct nfsd_net *nn)
+>  {
+>  	char *mesg = buf;
+>  	int rv, i;
+> @@ -984,11 +984,11 @@ static ssize_t __nfsd4_write_time(struct file *file, char *buf, size_t size,
+>  		*time = i;
+>  	}
+>  
+> -	return scnprintf(buf, SIMPLE_TRANSACTION_LIMIT, "%ld\n", *time);
+> +	return scnprintf(buf, SIMPLE_TRANSACTION_LIMIT, "%lld\n", *time);
+>  }
+>  
+>  static ssize_t nfsd4_write_time(struct file *file, char *buf, size_t size,
+> -				time_t *time, struct nfsd_net *nn)
+> +				time64_t *time, struct nfsd_net *nn)
+>  {
+>  	ssize_t rv;
+>  
+> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+> index 03fc7b4380f9..e426b22b5028 100644
+> --- a/fs/nfsd/state.h
+> +++ b/fs/nfsd/state.h
+> @@ -132,7 +132,7 @@ struct nfs4_delegation {
+>  	struct list_head	dl_recall_lru;  /* delegation recalled */
+>  	struct nfs4_clnt_odstate *dl_clnt_odstate;
+>  	u32			dl_type;
+> -	time_t			dl_time;
+> +	time64_t		dl_time;
+>  /* For recall: */
+>  	int			dl_retries;
+>  	struct nfsd4_callback	dl_recall;
+> @@ -310,7 +310,7 @@ struct nfs4_client {
+>  #endif
+>  	struct xdr_netobj	cl_name; 	/* id generated by client */
+>  	nfs4_verifier		cl_verifier; 	/* generated by client */
+> -	time_t                  cl_time;        /* time of last lease renewal */
+> +	time64_t		cl_time;	/* time of last lease renewal */
+>  	struct sockaddr_storage	cl_addr; 	/* client ipaddress */
+>  	bool			cl_mach_cred;	/* SP4_MACH_CRED in force */
+>  	struct svc_cred		cl_cred; 	/* setclientid principal */
+> @@ -449,7 +449,7 @@ struct nfs4_openowner {
+>  	 */
+>  	struct list_head	oo_close_lru;
+>  	struct nfs4_ol_stateid *oo_last_closed_stid;
+> -	time_t			oo_time; /* time of placement on so_close_lru */
+> +	time64_t		oo_time; /* time of placement on so_close_lru */
+>  #define NFS4_OO_CONFIRMED   1
+>  	unsigned char		oo_flags;
+>  };
+> @@ -606,7 +606,7 @@ static inline bool nfsd4_stateid_generation_after(stateid_t *a, stateid_t *b)
+>  struct nfsd4_blocked_lock {
+>  	struct list_head	nbl_list;
+>  	struct list_head	nbl_lru;
+> -	time_t			nbl_time;
+> +	time64_t		nbl_time;
+>  	struct file_lock	nbl_lock;
+>  	struct knfsd_fh		nbl_fh;
+>  	struct nfsd4_callback	nbl_cb;
+> -- 
+> 2.20.0
