@@ -2,222 +2,389 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A26C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EF4C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ED1E24680
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B18362465E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:42:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Jkvasgdi"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ILIcn9J7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727723AbfLTPmk (ORCPT
+        id S1727730AbfLTPmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 10:42:40 -0500
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:9663 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727613AbfLTPmR (ORCPT
+        Fri, 20 Dec 2019 10:42:47 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36467 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727580AbfLTPmQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 10:42:17 -0500
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="Nicolas.Ferre@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: QGXlQ01Tv3Rm0uYjYsifKeytlMki4JMM2fbrvsq+lVC+74i7BEx8zqlOfZZCBDDx99PNhRRois
- reIQraPA8o5pX829ABeEU9qWMIsIJvbnv0Vx6QPSlfsQlBf5ipZ+m9qwX4V5UMFBgjBxFVCS6r
- AqWTpQUtwcjdYEQ70lRA8cE1rTD419uY1vdHLWKMJzxv1Ys+rIieKnq50C/gqBEnqqXMUEFIqd
- dgzVVa4Ldqf4DmAPui8ynxP2QQDBwHVXDjv4kiDfDmlZdOzr/5t/VfJvn5RB1HeYJUuRPArcUx
- I6A=
-X-IronPort-AV: E=Sophos;i="5.69,336,1571727600"; 
-   d="scan'208";a="59175751"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Dec 2019 08:42:16 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 20 Dec 2019 08:42:13 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Fri, 20 Dec 2019 08:42:17 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cXyQrxuLrWq5jSKQJTNQSZvaGDJFBF12VbiKhsYgJSYYOEagKBB4kl41TIZihcHfKMhwxJ+CPBKCJ5rjlh3GB3FVtTg9G3c2pyQW1Dcki8Ytn9f1y5+aDSYJ0VcezbS+CoBWi1ZqRxmrmkOaB567WpFvpw9Gxhu/HVrOxoaA/v7X0lPF+wiRq6w4bzpuZ/U+YwBly0lQa9Clohvt6pl2xwI5ZNAa/ftX4op+Ln+90hPO1LscylpKlI4Dqa/vY2UZ7yGeuudmorub7jVY6lHTAsX1VylCzSBmQWzYwfmJK6dW3hnZEJWysxsV1wM58xUUBcZWPTwHZHpWhvICuaX0Nw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xOpqmFIKEzpepvnf2Ut7dbRynroMXnXS6O4ONIkrAIM=;
- b=Y2CG1/I3hp3k9DLhAFdG4u9dTzefRnVEtO8ibJG4hr33FOSJTwFfH5oM85ptuTRXNdRxpoYBte98CoYH5UHqPEdY3H5uaIYQ61g9b+dbemodyqn+MpjZsIRukXdOkZltefCwP9aHINfJ8w3a31AF4FYmscBlMCvprapRIoDP4dpM4QMACwMyGFooRD2uMUMKcrnd85bowSEzxh3SPewm9k3LnQ26mqB7yvu043dY/YipvEkmBObyJKqZQwf0iZlVPTeFsLDFxkscg59D6deeAOglZaptuO8fzqEI3p7TyenAXKSDlJFynklvLzUtYAm2jBUozE/ejSh2yATs1aO6tA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        Fri, 20 Dec 2019 10:42:16 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z3so9865368wru.3
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 07:42:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xOpqmFIKEzpepvnf2Ut7dbRynroMXnXS6O4ONIkrAIM=;
- b=JkvasgdiNZRe5S7oeFOWsKnMco6AcaZR9tY9gxCpEFYvVC6Y76eQiY1aQMOzfUKsdgiXIhufzVphLceuz4Hr6Ei8vY9jx9uetEwH50ECTbr1kKPnT4qmY6UBf+kxnr3zxYkVPyR3DmR8L/AWVbqW7Qq8dRVt1r8vb1lg3Iog3Vk=
-Received: from SN6PR11MB2830.namprd11.prod.outlook.com (52.135.91.21) by
- SN6PR11MB2909.namprd11.prod.outlook.com (52.135.126.77) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.14; Fri, 20 Dec 2019 15:42:10 +0000
-Received: from SN6PR11MB2830.namprd11.prod.outlook.com
- ([fe80::9439:53a6:d896:d176]) by SN6PR11MB2830.namprd11.prod.outlook.com
- ([fe80::9439:53a6:d896:d176%7]) with mapi id 15.20.2559.012; Fri, 20 Dec 2019
- 15:42:10 +0000
-From:   <Nicolas.Ferre@microchip.com>
-To:     <Claudiu.Beznea@microchip.com>, <sre@kernel.org>,
-        <alexandre.belloni@bootlin.com>
-CC:     <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] power: reset: at91-poweroff: introduce struct
- shdwc_reg_config
-Thread-Topic: [PATCH v2 1/2] power: reset: at91-poweroff: introduce struct
- shdwc_reg_config
-Thread-Index: AQHVt0qOlx7ofyKccU+5Noka4mrDhqfDKX0A
-Date:   Fri, 20 Dec 2019 15:42:10 +0000
-Message-ID: <b7618ccceecacc45565854b5a038fe044aad85e5.camel@microchip.com>
-References: <1576855878-13213-1-git-send-email-claudiu.beznea@microchip.com>
-         <1576855878-13213-2-git-send-email-claudiu.beznea@microchip.com>
-In-Reply-To: <1576855878-13213-2-git-send-email-claudiu.beznea@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.41.198.74]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8c56d138-c072-45db-bab8-08d785632d44
-x-ms-traffictypediagnostic: SN6PR11MB2909:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR11MB29097D5B62A8809D6CC69E25E02D0@SN6PR11MB2909.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:159;
-x-forefront-prvs: 025796F161
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(376002)(346002)(136003)(39860400002)(189003)(199004)(110136005)(5660300002)(186003)(54906003)(71200400001)(4326008)(316002)(86362001)(6486002)(76116006)(91956017)(66446008)(64756008)(66556008)(66476007)(66946007)(36756003)(81166006)(81156014)(8676002)(6512007)(2906002)(2616005)(26005)(8936002)(6506007)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR11MB2909;H:SN6PR11MB2830.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ONKDL/wtW8NmBxTNfycob5aBj9yDtTjBq/x44c9P0/qUCe6BkWnS0IF4V2pvCxO2JLjfRDb7ask5gKEtL9pJws8VoiEIfESfybe/YF9tsjrRsw4IVapH25pGslVnBtXgvu8DTkqqSpuKLFJKdhIcrZ/EeSQg2pylXFUezIEMn0mWojMCiKBqVIdELZPrp/RaX9pOhUOn62/yU/SBotxygcXQuYQTa+hkPnb2FHdHe0f09leSo4J8B6jJ+kH/khbLflKLjME2kFlSznaOD4tp2WpLgEetI/iK67YwSmtCC8jYpH3j2zAqFNe4i7IE+IvFIAsLbV528tBMrm8mmybQEGo6fZVJMY7TpxG5v3GcKkE7exLwxYniPa45tUG7EGHmM7FEdnPREdI6FaLir8TEw1y3ChkJCu33AzuhmwUVvVVRqafwch+LhnmqPzM13Ncc
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E3215EFB51EA0243AACDB5A50D323273@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=26xnb3yuodzvJ1GOX80TL/NTUMzeN/hcWJWSUPgYjvU=;
+        b=ILIcn9J79FlT8818+aNbXNhk50sYcbV+kGDqSyLUn+qVfFlVVl4PbEomsmB8G+mSOJ
+         7HVcdPU/TXhyZcHGoOX6W2RZ4hja6cYG9ROG263qp7cyp1k9AYr73jLeSyWEASdUXLPy
+         iTZH4ChZT//wxRl1PTQHmS8vt7ZfFK3rRalgI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=26xnb3yuodzvJ1GOX80TL/NTUMzeN/hcWJWSUPgYjvU=;
+        b=Kge7TVCd2HF08hE0Q2eI2nzwxw+vcFFwCBj0Yr0ehPg9V3Qpppbui4t7QHCBbzz86Z
+         U0FOzX2HXGPpjhChZP4el/QkZ7KD/mLi2LtNIktCDPW1exicrZWrEf2OUknqGkig32LE
+         LniGExDPnh/K20c8gIJuaGOWfc9K0bLfbK4jDYnd+vJqneJjCY07uN5NGCezZbs4A42U
+         8d3rhbyDk4LZJicyCNO9cm/klwxGLTE7GzNSWN8WknG8bS3VLMJ+6Pu2l95mhJVGtq3Z
+         HRIjx0UZcnUnEt966wFfr62oCEjOfAa9SquGsjsskH9TSqaczkgp9pa8ET6X4bGCx6kE
+         xhDg==
+X-Gm-Message-State: APjAAAXNvBx0uOY/FqNBuZm3rVSfxJOjzhNW3H8nzyz5oXCEdU21Gf0G
+        bjkEhygQtI1pdVHc1ea6uWs+NPTxz10=
+X-Google-Smtp-Source: APXvYqx0SCWAGTWBEvQnNAPV9/Z+sh+xziw7OolJOaozCJhZq+TwINckqp4msLHVrwe7MrC50G83Uw==
+X-Received: by 2002:adf:de84:: with SMTP id w4mr15240542wrl.97.1576856532603;
+        Fri, 20 Dec 2019 07:42:12 -0800 (PST)
+Received: from kpsingh-kernel.localdomain ([2a00:79e1:abc:308:c46b:b838:66cf:6204])
+        by smtp.gmail.com with ESMTPSA id x11sm10118062wmg.46.2019.12.20.07.42.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 07:42:11 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Subject: [PATCH bpf-next v1 07/13] bpf: lsm: Implement attach, detach and execution.
+Date:   Fri, 20 Dec 2019 16:42:02 +0100
+Message-Id: <20191220154208.15895-8-kpsingh@chromium.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191220154208.15895-1-kpsingh@chromium.org>
+References: <20191220154208.15895-1-kpsingh@chromium.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c56d138-c072-45db-bab8-08d785632d44
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Dec 2019 15:42:10.2860
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: q2gaHUGJZEgta9hKvIrspmS3JNqm1W5jcsR3UJd8SVp7Do/fLCwUxoSxMNj0PLUN5LhIpjW/Wr3ul+b2jfmWwuNQmakwXMabUkXzSbcb9e0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB2909
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TGUgdmVuZHJlZGkgMjAgZMOpY2VtYnJlIDIwMTkgw6AgMTc6MzEgKzAyMDAsIENsYXVkaXUgQmV6
-bmVhIGEgw6ljcml0IDoNCj4gVGhpcyBkcml2ZXIgdXNlcyBBVDkxX1BNQ19NQ0tSIGluIHBvd2Vy
-b2ZmKCkgZnVuY3Rpb24uIEJ1dCB0aGUNCj4gU0FNOVg2MCdzIFBNQyB2ZXJzaW9ucyBtYXBzIEFU
-OTFfUE1DX01DS1IgZnVuY3Rpb25hbGl0eSBhdCBkaWZmZXJlbnQNCj4gb2Zmc2V0IGNvbXBhcmVk
-IHRvIHRoZSBTQU1BNUQyJ3Mgb25lLiBUaGlzIHBhdGNoIHByZXBhcmVzIHRoZSBmaWVsZA0KPiBz
-byB0aGF0IGRpZmZlcmVudCBBVDkxX1BNQ19NQ0tSJ3Mgb2Zmc2V0cyB0byBiZSBpbnRyb2R1Y2Vk
-IGluDQo+IHN0cnVjdCByZWdfY29uZmlnIHNvIHRoYXQgcHJvcGVyIG9mZnNldCB0byBiZSB1c2Vk
-IGZvciBBVDkxX1BNQ19NQ0tSDQo+IGJhc2VkIG9uIGNvbXBhdGlibGUgc3RyaW5nLg0KPiANCj4g
-U2lnbmVkLW9mZi1ieTogQ2xhdWRpdSBCZXpuZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5j
-b20+DQoNCkFja2VkLWJ5OiBOaWNvbGFzIEZlcnJlIDxuaWNvbGFzLmZlcnJlQG1pY3JvY2hpcC5j
-b20+DQoNCj4gLS0tDQo+ICBkcml2ZXJzL3Bvd2VyL3Jlc2V0L2F0OTEtc2FtYTVkMl9zaGR3Yy5j
-IHwgNTQgKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tDQo+IC0tLS0tDQo+ICAxIGZpbGUgY2hh
-bmdlZCwgMzIgaW5zZXJ0aW9ucygrKSwgMjIgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9wb3dlci9yZXNldC9hdDkxLXNhbWE1ZDJfc2hkd2MuYw0KPiBiL2RyaXZlcnMv
-cG93ZXIvcmVzZXQvYXQ5MS1zYW1hNWQyX3NoZHdjLmMNCj4gaW5kZXggMWMxOGY0NjVhMjQ1Li44
-NDgwNmQyMDg0NmIgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcG93ZXIvcmVzZXQvYXQ5MS1zYW1h
-NWQyX3NoZHdjLmMNCj4gKysrIGIvZHJpdmVycy9wb3dlci9yZXNldC9hdDkxLXNhbWE1ZDJfc2hk
-d2MuYw0KPiBAQCAtNjYsNyArNjYsNyBAQA0KPiAgDQo+ICAjZGVmaW5lIFNIRFdfQ0ZHX05PVF9V
-U0VECSgzMikNCj4gIA0KPiAtc3RydWN0IHNoZHdjX2NvbmZpZyB7DQo+ICtzdHJ1Y3Qgc2hkd2Nf
-cmVnX2NvbmZpZyB7DQo+ICAJdTggd2t1cF9waW5faW5wdXQ7DQo+ICAJdTggbXJfcnRjd2tfc2hp
-ZnQ7DQo+ICAJdTggbXJfcnR0d2tfc2hpZnQ7DQo+IEBAIC03NCw4ICs3NCwxMiBAQCBzdHJ1Y3Qg
-c2hkd2NfY29uZmlnIHsNCj4gIAl1OCBzcl9ydHR3a19zaGlmdDsNCj4gIH07DQo+ICANCj4gK3N0
-cnVjdCByZWdfY29uZmlnIHsNCj4gKwlzdHJ1Y3Qgc2hkd2NfcmVnX2NvbmZpZyBzaGR3YzsNCj4g
-K307DQo+ICsNCj4gIHN0cnVjdCBzaGR3YyB7DQo+IC0JY29uc3Qgc3RydWN0IHNoZHdjX2NvbmZp
-ZyAqY2ZnOw0KPiArCWNvbnN0IHN0cnVjdCByZWdfY29uZmlnICpyY2ZnOw0KPiAgCXN0cnVjdCBj
-bGsgKnNjbGs7DQo+ICAJdm9pZCBfX2lvbWVtICpzaGR3Y19iYXNlOw0KPiAgCXZvaWQgX19pb21l
-bSAqbXBkZHJjX2Jhc2U7DQo+IEBAIC05NSw2ICs5OSw3IEBAIHN0YXRpYyBjb25zdCB1bnNpZ25l
-ZCBsb25nIGxvbmcgc2R3Y19kYmNfcGVyaW9kW10gPSB7DQo+ICBzdGF0aWMgdm9pZCBfX2luaXQg
-YXQ5MV93YWtldXBfc3RhdHVzKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICB7DQo+
-ICAJc3RydWN0IHNoZHdjICpzaGR3ID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEocGRldik7DQo+ICsJ
-Y29uc3Qgc3RydWN0IHJlZ19jb25maWcgKnJjZmcgPSBzaGR3LT5yY2ZnOw0KPiAgCXUzMiByZWc7
-DQo+ICAJY2hhciAqcmVhc29uID0gInVua25vd24iOw0KPiAgDQo+IEBAIC0xMDYsMTEgKzExMSwx
-MSBAQCBzdGF0aWMgdm9pZCBfX2luaXQgYXQ5MV93YWtldXBfc3RhdHVzKHN0cnVjdA0KPiBwbGF0
-Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAJaWYgKCFyZWcpDQo+ICAJCXJldHVybjsNCj4gIA0KPiAt
-CWlmIChTSERXX1dLX1BJTihyZWcsIHNoZHctPmNmZykpDQo+ICsJaWYgKFNIRFdfV0tfUElOKHJl
-ZywgJnJjZmctPnNoZHdjKSkNCj4gIAkJcmVhc29uID0gIldLVVAgcGluIjsNCj4gLQllbHNlIGlm
-IChTSERXX1JUQ1dLKHJlZywgc2hkdy0+Y2ZnKSkNCj4gKwllbHNlIGlmIChTSERXX1JUQ1dLKHJl
-ZywgJnJjZmctPnNoZHdjKSkNCj4gIAkJcmVhc29uID0gIlJUQyI7DQo+IC0JZWxzZSBpZiAoU0hE
-V19SVFRXSyhyZWcsIHNoZHctPmNmZykpDQo+ICsJZWxzZSBpZiAoU0hEV19SVFRXSyhyZWcsICZy
-Y2ZnLT5zaGR3YykpDQo+ICAJCXJlYXNvbiA9ICJSVFQiOw0KPiAgDQo+ICAJcHJfaW5mbygiQVQ5
-MTogV2FrZS1VcCBzb3VyY2U6ICVzXG4iLCByZWFzb24pOw0KPiBAQCAtMjE1LDYgKzIyMCw3IEBA
-IHN0YXRpYyB1MzIgYXQ5MV9zaGR3Y19nZXRfd2FrZXVwX2lucHV0KHN0cnVjdA0KPiBwbGF0Zm9y
-bV9kZXZpY2UgKnBkZXYsDQo+ICBzdGF0aWMgdm9pZCBhdDkxX3NoZHdjX2R0X2NvbmZpZ3VyZShz
-dHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAgew0KPiAgCXN0cnVjdCBzaGR3YyAqc2hk
-dyA9IHBsYXRmb3JtX2dldF9kcnZkYXRhKHBkZXYpOw0KPiArCWNvbnN0IHN0cnVjdCByZWdfY29u
-ZmlnICpyY2ZnID0gc2hkdy0+cmNmZzsNCj4gIAlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gcGRl
-di0+ZGV2Lm9mX25vZGU7DQo+ICAJdTMyIG1vZGUgPSAwLCB0bXAsIGlucHV0Ow0KPiAgDQo+IEBA
-IC0yMjcsMTAgKzIzMywxMCBAQCBzdGF0aWMgdm9pZCBhdDkxX3NoZHdjX2R0X2NvbmZpZ3VyZShz
-dHJ1Y3QNCj4gcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAgCQltb2RlIHw9IEFUOTFfU0hEV19X
-S1VQREJDKGF0OTFfc2hkd2NfZGVib3VuY2VyX3ZhbHVlKHBkZXYsDQo+IHRtcCkpOw0KPiAgDQo+
-ICAJaWYgKG9mX3Byb3BlcnR5X3JlYWRfYm9vbChucCwgImF0bWVsLHdha2V1cC1ydGMtdGltZXIi
-KSkNCj4gLQkJbW9kZSB8PSBTSERXX1JUQ1dLRU4oc2hkdy0+Y2ZnKTsNCj4gKwkJbW9kZSB8PSBT
-SERXX1JUQ1dLRU4oJnJjZmctPnNoZHdjKTsNCj4gIA0KPiAgCWlmIChvZl9wcm9wZXJ0eV9yZWFk
-X2Jvb2wobnAsICJhdG1lbCx3YWtldXAtcnR0LXRpbWVyIikpDQo+IC0JCW1vZGUgfD0gU0hEV19S
-VFRXS0VOKHNoZHctPmNmZyk7DQo+ICsJCW1vZGUgfD0gU0hEV19SVFRXS0VOKCZyY2ZnLT5zaGR3
-Yyk7DQo+ICANCj4gIAlkZXZfZGJnKCZwZGV2LT5kZXYsICIlczogbW9kZSA9ICUjeFxuIiwgX19m
-dW5jX18sIG1vZGUpOw0KPiAgCXdyaXRlbChtb2RlLCBzaGR3LT5zaGR3Y19iYXNlICsgQVQ5MV9T
-SERXX01SKTsNCj4gQEAgLTIzOSwzMCArMjQ1LDM0IEBAIHN0YXRpYyB2b2lkIGF0OTFfc2hkd2Nf
-ZHRfY29uZmlndXJlKHN0cnVjdA0KPiBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAJd3JpdGVs
-KGlucHV0LCBzaGR3LT5zaGR3Y19iYXNlICsgQVQ5MV9TSERXX1dVSVIpOw0KPiAgfQ0KPiAgDQo+
-IC1zdGF0aWMgY29uc3Qgc3RydWN0IHNoZHdjX2NvbmZpZyBzYW1hNWQyX3NoZHdjX2NvbmZpZyA9
-IHsNCj4gLQkud2t1cF9waW5faW5wdXQgPSAwLA0KPiAtCS5tcl9ydGN3a19zaGlmdCA9IDE3LA0K
-PiAtCS5tcl9ydHR3a19zaGlmdAk9IFNIRFdfQ0ZHX05PVF9VU0VELA0KPiAtCS5zcl9ydGN3a19z
-aGlmdCA9IDUsDQo+IC0JLnNyX3J0dHdrX3NoaWZ0ID0gU0hEV19DRkdfTk9UX1VTRUQsDQo+ICtz
-dGF0aWMgY29uc3Qgc3RydWN0IHJlZ19jb25maWcgc2FtYTVkMl9yZWdfY29uZmlnID0gew0KPiAr
-CS5zaGR3YyA9IHsNCj4gKwkJLndrdXBfcGluX2lucHV0ID0gMCwNCj4gKwkJLm1yX3J0Y3drX3No
-aWZ0ID0gMTcsDQo+ICsJCS5tcl9ydHR3a19zaGlmdAk9IFNIRFdfQ0ZHX05PVF9VU0VELA0KPiAr
-CQkuc3JfcnRjd2tfc2hpZnQgPSA1LA0KPiArCQkuc3JfcnR0d2tfc2hpZnQgPSBTSERXX0NGR19O
-T1RfVVNFRCwNCj4gKwl9LA0KPiAgfTsNCj4gIA0KPiAtc3RhdGljIGNvbnN0IHN0cnVjdCBzaGR3
-Y19jb25maWcgc2FtOXg2MF9zaGR3Y19jb25maWcgPSB7DQo+IC0JLndrdXBfcGluX2lucHV0ID0g
-MCwNCj4gLQkubXJfcnRjd2tfc2hpZnQgPSAxNywNCj4gLQkubXJfcnR0d2tfc2hpZnQgPSAxNiwN
-Cj4gLQkuc3JfcnRjd2tfc2hpZnQgPSA1LA0KPiAtCS5zcl9ydHR3a19zaGlmdCA9IDQsDQo+ICtz
-dGF0aWMgY29uc3Qgc3RydWN0IHJlZ19jb25maWcgc2FtOXg2MF9yZWdfY29uZmlnID0gew0KPiAr
-CS5zaGR3YyA9IHsNCj4gKwkJLndrdXBfcGluX2lucHV0ID0gMCwNCj4gKwkJLm1yX3J0Y3drX3No
-aWZ0ID0gMTcsDQo+ICsJCS5tcl9ydHR3a19zaGlmdCA9IDE2LA0KPiArCQkuc3JfcnRjd2tfc2hp
-ZnQgPSA1LA0KPiArCQkuc3JfcnR0d2tfc2hpZnQgPSA0LA0KPiArCX0sDQo+ICB9Ow0KPiAgDQo+
-ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBhdDkxX3NoZHdjX29mX21hdGNoW10g
-PSB7DQo+ICAJew0KPiAgCQkuY29tcGF0aWJsZSA9ICJhdG1lbCxzYW1hNWQyLXNoZHdjIiwNCj4g
-LQkJLmRhdGEgPSAmc2FtYTVkMl9zaGR3Y19jb25maWcsDQo+ICsJCS5kYXRhID0gJnNhbWE1ZDJf
-cmVnX2NvbmZpZywNCj4gIAl9LA0KPiAgCXsNCj4gIAkJLmNvbXBhdGlibGUgPSAibWljcm9jaGlw
-LHNhbTl4NjAtc2hkd2MiLA0KPiAtCQkuZGF0YSA9ICZzYW05eDYwX3NoZHdjX2NvbmZpZywNCj4g
-KwkJLmRhdGEgPSAmc2FtOXg2MF9yZWdfY29uZmlnLA0KPiAgCX0sIHsNCj4gIAkJLypzZW50aW5l
-bCovDQo+ICAJfQ0KPiBAQCAtMzAzLDcgKzMxMyw3IEBAIHN0YXRpYyBpbnQgX19pbml0IGF0OTFf
-c2hkd2NfcHJvYmUoc3RydWN0DQo+IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gIAl9DQo+ICAN
-Cj4gIAltYXRjaCA9IG9mX21hdGNoX25vZGUoYXQ5MV9zaGR3Y19vZl9tYXRjaCwgcGRldi0+ZGV2
-Lm9mX25vZGUpOw0KPiAtCWF0OTFfc2hkd2MtPmNmZyA9IG1hdGNoLT5kYXRhOw0KPiArCWF0OTFf
-c2hkd2MtPnJjZmcgPSBtYXRjaC0+ZGF0YTsNCj4gIA0KPiAgCWF0OTFfc2hkd2MtPnNjbGsgPSBk
-ZXZtX2Nsa19nZXQoJnBkZXYtPmRldiwgTlVMTCk7DQo+ICAJaWYgKElTX0VSUihhdDkxX3NoZHdj
-LT5zY2xrKSkNCg==
+From: KP Singh <kpsingh@google.com>
+
+A user space program can attach an eBPF program by:
+
+  hook_fd = open("/sys/kernel/security/bpf/bprm_check_security",
+		 O_RDWR|O_CLOEXEC)
+  prog_fd = bpf(BPF_PROG_LOAD, ...)
+  bpf(BPF_PROG_ATTACH, hook_fd, prog_fd)
+
+The following permissions are required to attach a program to a hook:
+
+- CAP_SYS_ADMIN to load eBPF programs
+- CAP_MAC_ADMIN (to update the policy of an LSM)
+- The securityfs file being a valid hook and writable (O_RDWR)
+
+When such an attach call is received, the attachment logic looks up the
+dentry and appends the program to the bpf_prog_array.
+
+The BPF programs are stored in a bpf_prog_array and writes to the array
+are guarded by a mutex. The eBPF programs are executed as a part of the
+LSM hook they are attached to. If any of the eBPF programs return
+an error (-ENOPERM) the action represented by the hook is denied.
+
+Signed-off-by: KP Singh <kpsingh@google.com>
+---
+ MAINTAINERS             |   1 +
+ include/linux/bpf_lsm.h |  13 ++++
+ kernel/bpf/syscall.c    |   5 +-
+ security/bpf/lsm_fs.c   |  19 +++++-
+ security/bpf/ops.c      | 134 ++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 169 insertions(+), 3 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3b82d8ff21fb..681ae39bb2f0 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3181,6 +3181,7 @@ L:	linux-security-module@vger.kernel.org
+ L:	bpf@vger.kernel.org
+ S:	Maintained
+ F:	security/bpf/
++F:	include/linux/bpf_lsm.h
+ 
+ BROADCOM B44 10/100 ETHERNET DRIVER
+ M:	Michael Chan <michael.chan@broadcom.com>
+diff --git a/include/linux/bpf_lsm.h b/include/linux/bpf_lsm.h
+index 76f81e642dc2..c029f2b8d6fd 100644
+--- a/include/linux/bpf_lsm.h
++++ b/include/linux/bpf_lsm.h
+@@ -7,6 +7,19 @@
+ 
+ #ifdef CONFIG_SECURITY_BPF
+ extern int bpf_lsm_fs_initialized;
++int bpf_lsm_attach(const union bpf_attr *attr, struct bpf_prog *prog);
++int bpf_lsm_detach(const union bpf_attr *attr);
++#else
++static inline int bpf_lsm_attach(const union bpf_attr *attr,
++				 struct bpf_prog *prog)
++{
++	return -EINVAL;
++}
++
++static inline int bpf_lsm_detach(const union bpf_attr *attr)
++{
++	return -EINVAL;
++}
+ #endif /* CONFIG_SECURITY_BPF */
+ 
+ #endif /* _LINUX_BPF_LSM_H */
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 4fcaf6042c07..8897b774973f 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -4,6 +4,7 @@
+ #include <linux/bpf.h>
+ #include <linux/bpf_trace.h>
+ #include <linux/bpf_lirc.h>
++#include <linux/bpf_lsm.h>
+ #include <linux/btf.h>
+ #include <linux/syscalls.h>
+ #include <linux/slab.h>
+@@ -2132,7 +2133,7 @@ static int bpf_prog_attach(const union bpf_attr *attr)
+ 		ret = lirc_prog_attach(attr, prog);
+ 		break;
+ 	case BPF_PROG_TYPE_LSM:
+-		ret = -EINVAL;
++		ret = bpf_lsm_attach(attr, prog);
+ 		break;
+ 	case BPF_PROG_TYPE_FLOW_DISSECTOR:
+ 		ret = skb_flow_dissector_bpf_prog_attach(attr, prog);
+@@ -2200,6 +2201,8 @@ static int bpf_prog_detach(const union bpf_attr *attr)
+ 	case BPF_CGROUP_SETSOCKOPT:
+ 		ptype = BPF_PROG_TYPE_CGROUP_SOCKOPT;
+ 		break;
++	case BPF_LSM_MAC:
++		return bpf_lsm_detach(attr);
+ 	default:
+ 		return -EINVAL;
+ 	}
+diff --git a/security/bpf/lsm_fs.c b/security/bpf/lsm_fs.c
+index 49165394ef7d..b271e9582d0f 100644
+--- a/security/bpf/lsm_fs.c
++++ b/security/bpf/lsm_fs.c
+@@ -9,6 +9,8 @@
+ #include <linux/file.h>
+ #include <linux/fs.h>
+ #include <linux/types.h>
++#include <linux/filter.h>
++#include <linux/bpf.h>
+ #include <linux/security.h>
+ #include <linux/bpf_lsm.h>
+ 
+@@ -28,6 +30,19 @@ bool is_bpf_lsm_hook_file(struct file *f)
+ 
+ static void __init free_hook(struct bpf_lsm_hook *h)
+ {
++	struct bpf_prog_array_item *item;
++	/*
++	 * This function is __init so we are guaranteed that there will be
++	 * no concurrent access.
++	 */
++	struct bpf_prog_array *progs = rcu_dereference_raw(h->progs);
++
++	if (progs) {
++		for (item = progs->items; item->prog; item++)
++			bpf_prog_put(item->prog);
++		bpf_prog_array_free(progs);
++	}
++
+ 	securityfs_remove(h->h_dentry);
+ 	h->h_dentry = NULL;
+ }
+@@ -36,8 +51,8 @@ static int __init init_hook(struct bpf_lsm_hook *h, struct dentry *parent)
+ {
+ 	struct dentry *h_dentry;
+ 
+-	h_dentry = securityfs_create_file(h->name, 0600, parent,
+-			NULL, &hook_ops);
++	h_dentry = securityfs_create_file(h->name, 0600,
++					  parent, NULL, &hook_ops);
+ 	if (IS_ERR(h_dentry))
+ 		return PTR_ERR(h_dentry);
+ 
+diff --git a/security/bpf/ops.c b/security/bpf/ops.c
+index 2fa3ebdf598d..eb8a8db28109 100644
+--- a/security/bpf/ops.c
++++ b/security/bpf/ops.c
+@@ -4,11 +4,145 @@
+  * Copyright 2019 Google LLC.
+  */
+ 
++#include <linux/err.h>
++#include <linux/types.h>
+ #include <linux/filter.h>
+ #include <linux/bpf.h>
++#include <linux/security.h>
++#include <linux/bpf_lsm.h>
++
++#include "bpf_lsm.h"
++#include "fs.h"
++
++static struct bpf_lsm_hook *get_hook_from_fd(int fd)
++{
++	struct bpf_lsm_hook *h;
++	struct fd f;
++	int ret;
++
++	/*
++	 * Only CAP_MAC_ADMIN users are allowed to make changes to LSM hooks
++	 */
++	if (!capable(CAP_MAC_ADMIN))
++		return ERR_PTR(-EPERM);
++
++
++	f = fdget(fd);
++	if (!f.file)
++		return ERR_PTR(-EBADF);
++
++
++	if (!is_bpf_lsm_hook_file(f.file)) {
++		ret = -EINVAL;
++		goto error;
++	}
++
++	/*
++	 * It's wrong to attach the program to the hook if the file is not
++	 * opened for a writing. Note that, this is an EBADF and not an EPERM
++	 * because the file has been opened with an incorrect mode.
++	 */
++	if (!(f.file->f_mode & FMODE_WRITE)) {
++		ret = -EBADF;
++		goto error;
++	}
++
++	/*
++	 * The securityfs dentry never disappears, so we don't need to take a
++	 * reference to it.
++	 */
++	h = file_dentry(f.file)->d_fsdata;
++	if (WARN_ON(!h)) {
++		ret = -EINVAL;
++		goto error;
++	}
++	fdput(f);
++	return h;
++
++error:
++	fdput(f);
++	return ERR_PTR(ret);
++}
++
++int bpf_lsm_attach(const union bpf_attr *attr, struct bpf_prog *prog)
++{
++	struct bpf_prog_array *old_array;
++	struct bpf_prog_array *new_array;
++	struct bpf_lsm_hook *h;
++	int ret = 0;
++
++	h = get_hook_from_fd(attr->target_fd);
++	if (IS_ERR(h))
++		return PTR_ERR(h);
++
++	mutex_lock(&h->mutex);
++	old_array = rcu_dereference_protected(h->progs,
++					      lockdep_is_held(&h->mutex));
++
++	ret = bpf_prog_array_copy(old_array, NULL, prog, &new_array);
++	if (ret < 0)
++		goto unlock;
++
++	rcu_assign_pointer(h->progs, new_array);
++	bpf_prog_array_free(old_array);
++
++unlock:
++	mutex_unlock(&h->mutex);
++	return ret;
++}
++
++int bpf_lsm_detach(const union bpf_attr *attr)
++{
++	struct bpf_prog_array *old_array, *new_array;
++	struct bpf_prog *prog;
++	struct bpf_lsm_hook *h;
++	int ret = 0;
++
++	if (attr->attach_flags)
++		return -EINVAL;
++
++	h = get_hook_from_fd(attr->target_fd);
++	if (IS_ERR(h))
++		return PTR_ERR(h);
++
++	prog = bpf_prog_get_type(attr->attach_bpf_fd,
++				 BPF_PROG_TYPE_LSM);
++	if (IS_ERR(prog))
++		return PTR_ERR(prog);
++
++	mutex_lock(&h->mutex);
++	old_array = rcu_dereference_protected(h->progs,
++					      lockdep_is_held(&h->mutex));
++
++	ret = bpf_prog_array_copy(old_array, prog, NULL, &new_array);
++	if (ret)
++		goto unlock;
++
++	rcu_assign_pointer(h->progs, new_array);
++	bpf_prog_array_free(old_array);
++unlock:
++	bpf_prog_put(prog);
++	mutex_unlock(&h->mutex);
++	return ret;
++}
+ 
+ const struct bpf_prog_ops lsm_prog_ops = {
+ };
+ 
++static const struct bpf_func_proto *get_bpf_func_proto(enum bpf_func_id
++		func_id, const struct bpf_prog *prog)
++{
++	switch (func_id) {
++	case BPF_FUNC_map_lookup_elem:
++		return &bpf_map_lookup_elem_proto;
++	case BPF_FUNC_get_current_pid_tgid:
++		return &bpf_get_current_pid_tgid_proto;
++	default:
++		return NULL;
++	}
++}
++
+ const struct bpf_verifier_ops lsm_verifier_ops = {
++	.get_func_proto = get_bpf_func_proto,
++	.is_valid_access = btf_ctx_access,
+ };
+-- 
+2.20.1
+
