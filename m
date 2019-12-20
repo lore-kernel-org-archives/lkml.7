@@ -2,84 +2,125 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D699FC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E110C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC14624683
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:13:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576826018;
-	bh=asblTKSwJQla1GlpN4lSu52KJ12DcIMzvwmFapZOCJw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UvCavkqPBVqLWf8IxhsDy7/MT3M8ue+oaEL2jtvKZV/rAQkcdi6uE3CJaUPHs4Qor
-	 Sf6ZBeKBAEDpyRELAoXVvwtgTuPHVIcNXnvscUfHqtIxVGN6OwaNL65f6HmT2ZyKU5
-	 3c6v4LYaAfUJWzsQ837pXs2jI7oQ9Z7O7/vOLzDo=
+	by mail.kernel.org (Postfix) with ESMTP id 3D56624679
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:14:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727333AbfLTHNh (ORCPT
+        id S1727276AbfLTHOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 02:13:37 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45464 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726651AbfLTHNh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 02:13:37 -0500
-Received: by mail-wr1-f66.google.com with SMTP id j42so8309245wrj.12;
-        Thu, 19 Dec 2019 23:13:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FOQzWpHfx4pdEUl4NggtZJqU0xFxHqL/b5XZR3ZC39E=;
-        b=QkGVKx++/WV6H4PtmjKdkwN4r8XbhV9bLtp6el9zG87BCvk5DoWsjDhTEFV5beMA8m
-         LlOvVMuzWcxKCQv55Gv0rx9sYHQC6bpIZtfhTtBoFaEzRpcAKXg73PpNUbH+lNmpJOeL
-         Z/eB//GPeKU/fuXX6XOod/hyCb1wzssu21pH6byoydZQm0hmA9PygZOoBRVjfP3oHuc3
-         nubRBDhGb4CQtGpoEc948GLFBb6ZOI0UfYM5IfUicJho+FQrDZVdJPC0gJDYLxboZkz+
-         P0ZrFAOofGhKbALH81zsPwjn1RyOguKxLCDZEtxudLFl8vlRoTJnGh1EoXTLsR7Gvh5J
-         w+6g==
-X-Gm-Message-State: APjAAAXxQkJ2Bb4F2HNrer0N+buuIof3L4PqFiYjfg9dIDz7EfBJldkR
-        eAIBN3t0y03IGFcUBpeOkXGdF83n
-X-Google-Smtp-Source: APXvYqw7CXurc2quSgaz5A798GccKKbvTrl6mO4b61Y+BCiP1i/FuiRxu1BeUhnZUrnAQZU6IO1TwQ==
-X-Received: by 2002:adf:f7c4:: with SMTP id a4mr13025777wrq.332.1576826015587;
-        Thu, 19 Dec 2019 23:13:35 -0800 (PST)
-Received: from localhost (ip-37-188-150-151.eurotel.cz. [37.188.150.151])
-        by smtp.gmail.com with ESMTPSA id g7sm8987211wrq.21.2019.12.19.23.13.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 23:13:34 -0800 (PST)
-Date:   Fri, 20 Dec 2019 08:13:34 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     zgpeng.linux@gmail.com
-Cc:     akpm@linux-foundation.org, hannes@cmpxchg.org,
-        vdavydov.dev@gmail.com, shakeelb@google.com, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        zgpeng <zgpeng@tencent.com>
-Subject: Re: [PATCH] oom: choose a more suitable process to kill while all
- processes are not killable
-Message-ID: <20191220071334.GB20332@dhcp22.suse.cz>
-References: <1576823172-25943-1-git-send-email-zgpeng.linux@gmail.com>
+        Fri, 20 Dec 2019 02:14:49 -0500
+Received: from [167.172.186.51] ([167.172.186.51]:59546 "EHLO shell.v3.sk"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726030AbfLTHOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 02:14:49 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 8597FDFCAF;
+        Fri, 20 Dec 2019 07:14:50 +0000 (UTC)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id vIzVzB36xj78; Fri, 20 Dec 2019 07:14:50 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id DE67CDFCB0;
+        Fri, 20 Dec 2019 07:14:49 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id EFegCLmctJug; Fri, 20 Dec 2019 07:14:49 +0000 (UTC)
+Received: from furthur.lan (unknown [109.183.109.54])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 78E15DFCAF;
+        Fri, 20 Dec 2019 07:14:49 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Olof Johansson <olof@lixom.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, soc@kernel.org,
+        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH] ARM: dts: mmp3: Fix the TWSI ranges
+Date:   Fri, 20 Dec 2019 08:14:43 +0100
+Message-Id: <20191220071443.247183-1-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1576823172-25943-1-git-send-email-zgpeng.linux@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 20-12-19 14:26:12, zgpeng.linux@gmail.com wrote:
-> From: zgpeng <zgpeng@tencent.com>
-> 
-> It has been found in multiple business scenarios that when a oom occurs
-> in a cgroup, the process that consumes the most memory in the cgroup is 
-> not killed first. Analysis of the reasons found that each process in the
-> cgroup oom_score_adj is set to -998, oom_badness in the calculation of 
-> points, if points is negative, uniformly set it to 1.
+The register blocks don't occupy 4K. In fact, some blocks are packed
+close to others and assuming they're 4K causes overlaps:
 
-Can you provide an example of the oom report?
--- 
-Michal Hocko
-SUSE Labs
+  pxa2xx-i2c d4033800.i2c: can't request region for resource
+    [mem 0xd4033800-0xd40347ff]
+
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+ arch/arm/boot/dts/mmp3.dtsi | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm/boot/dts/mmp3.dtsi b/arch/arm/boot/dts/mmp3.dtsi
+index 7e38b7f662be4..991b07253090f 100644
+--- a/arch/arm/boot/dts/mmp3.dtsi
++++ b/arch/arm/boot/dts/mmp3.dtsi
+@@ -415,7 +415,7 @@ gcb5: gpio@d4019108 {
+=20
+ 			twsi1: i2c@d4011000 {
+ 				compatible =3D "mrvl,mmp-twsi";
+-				reg =3D <0xd4011000 0x1000>;
++				reg =3D <0xd4011000 0x70>;
+ 				interrupts =3D <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks =3D <&soc_clocks MMP2_CLK_TWSI0>;
+ 				resets =3D <&soc_clocks MMP2_CLK_TWSI0>;
+@@ -427,7 +427,7 @@ twsi1: i2c@d4011000 {
+=20
+ 			twsi2: i2c@d4031000 {
+ 				compatible =3D "mrvl,mmp-twsi";
+-				reg =3D <0xd4031000 0x1000>;
++				reg =3D <0xd4031000 0x70>;
+ 				interrupt-parent =3D <&twsi_mux>;
+ 				interrupts =3D <0>;
+ 				clocks =3D <&soc_clocks MMP2_CLK_TWSI1>;
+@@ -439,7 +439,7 @@ twsi2: i2c@d4031000 {
+=20
+ 			twsi3: i2c@d4032000 {
+ 				compatible =3D "mrvl,mmp-twsi";
+-				reg =3D <0xd4032000 0x1000>;
++				reg =3D <0xd4032000 0x70>;
+ 				interrupt-parent =3D <&twsi_mux>;
+ 				interrupts =3D <1>;
+ 				clocks =3D <&soc_clocks MMP2_CLK_TWSI2>;
+@@ -451,7 +451,7 @@ twsi3: i2c@d4032000 {
+=20
+ 			twsi4: i2c@d4033000 {
+ 				compatible =3D "mrvl,mmp-twsi";
+-				reg =3D <0xd4033000 0x1000>;
++				reg =3D <0xd4033000 0x70>;
+ 				interrupt-parent =3D <&twsi_mux>;
+ 				interrupts =3D <2>;
+ 				clocks =3D <&soc_clocks MMP2_CLK_TWSI3>;
+@@ -464,7 +464,7 @@ twsi4: i2c@d4033000 {
+=20
+ 			twsi5: i2c@d4033800 {
+ 				compatible =3D "mrvl,mmp-twsi";
+-				reg =3D <0xd4033800 0x1000>;
++				reg =3D <0xd4033800 0x70>;
+ 				interrupt-parent =3D <&twsi_mux>;
+ 				interrupts =3D <3>;
+ 				clocks =3D <&soc_clocks MMP2_CLK_TWSI4>;
+@@ -476,7 +476,7 @@ twsi5: i2c@d4033800 {
+=20
+ 			twsi6: i2c@d4034000 {
+ 				compatible =3D "mrvl,mmp-twsi";
+-				reg =3D <0xd4034000 0x1000>;
++				reg =3D <0xd4034000 0x70>;
+ 				interrupt-parent =3D <&twsi_mux>;
+ 				interrupts =3D <4>;
+ 				clocks =3D <&soc_clocks MMP2_CLK_TWSI5>;
+--=20
+2.24.1
+
