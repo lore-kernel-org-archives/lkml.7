@@ -2,128 +2,87 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8D6C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 20:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A27AC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 20:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C082720866
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 20:12:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0B2920866
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 20:13:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="lFXvNz/m"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Uyrcnoo7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727569AbfLTUMa (ORCPT
+        id S1727578AbfLTUNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 15:12:30 -0500
-Received: from mail.efficios.com ([167.114.142.138]:55158 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727394AbfLTUMa (ORCPT
+        Fri, 20 Dec 2019 15:13:22 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:36594 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727394AbfLTUNW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 15:12:30 -0500
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id F2D8F68FAC9;
-        Fri, 20 Dec 2019 15:12:28 -0500 (EST)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id cWg_65jkC2UV; Fri, 20 Dec 2019 15:12:28 -0500 (EST)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 90BF568FAC2;
-        Fri, 20 Dec 2019 15:12:28 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 90BF568FAC2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1576872748;
-        bh=BLA9MFelolTOOzit3HVTwby0Z66HKWE9ebEuUq5wze0=;
-        h=From:To:Date:Message-Id;
-        b=lFXvNz/mrX4WBS8Gus0BXgf5ZBDCkGjV+aIpxq99KJkXkmgb37FwylyiPdUcYvMi/
-         29B+4rMp0/skTymq661M/I/1YTbrXNPmC/0EGRgmoAk+aNOwvP7dl21I5jrMaEOk3U
-         rjeInMvMiBgziDOK7dW0Oup0ZaUjp0XJl8w1r0qYbXLIHnvzlWRm/KWy3UweJgwKDj
-         06FdtHsFy6O+XEzmcKni6C8raib7KHmddV1Bzue9TY1mLwpOrV1gZ9IbcZXBZAQ240
-         r9Xu8wfnufJd+O1+1ekDeMKR+Zzns9qfnZNRLYDueMRo37sWTvo8L9/dZQmueoLatB
-         +MFXw7JH80NoQ==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id JnLzaRxd1sQs; Fri, 20 Dec 2019 15:12:28 -0500 (EST)
-Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
-        by mail.efficios.com (Postfix) with ESMTPSA id 41C7168FABB;
-        Fri, 20 Dec 2019 15:12:28 -0500 (EST)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api@vger.kernel.org, stable@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Florian Weimer <fw@deneb.enyo.de>,
-        Dmitry Vyukov <dvyukov@google.com>
-Subject: [PATCH for 5.5 2/2] rseq/selftests: Clarify rseq_prepare_unload() helper requirements
-Date:   Fri, 20 Dec 2019 15:12:07 -0500
-Message-Id: <20191220201207.17389-2-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191220201207.17389-1-mathieu.desnoyers@efficios.com>
-References: <20191220201207.17389-1-mathieu.desnoyers@efficios.com>
+        Fri, 20 Dec 2019 15:13:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=dLcmpRz2dHxIctx3Z0LJU9fWsVWtkTbestp9wAL4NSU=; b=Uyrcnoo7yYQv0BouG+Pl9Xs23
+        g1GITmgl53QOxA7Bb9pvmNKrh90wMCE9ERj7MHfKmCemjC4JwFOns5WCzth2f0hfkBBaB2RDz1bkL
+        1E6eqfGCKfVH7BJmb5OtfZSfLC0OoFeBe9Ixv9k+6TCtdCakxZkD8o3xA40fT9bU33WytdX6aL/A7
+        QJ6Qo2P5Swsq1KUGuze/Xiuh9dS/NpBa5OXEioNGPQ97foMkovsQLzqRLz1mX2b8L76lpm/KqcptJ
+        Ob9Fj87w4QKf0hBWALkDj6dikE4NOCDr52N8xyBIPO5yY5WaMSWjYqpP2CM9Cd5HZEWl3g7cTtjuy
+        qZRQPv/bw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iiOeC-0003nW-M2; Fri, 20 Dec 2019 20:13:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DDE52300DB7;
+        Fri, 20 Dec 2019 21:11:49 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0E7352024479A; Fri, 20 Dec 2019 21:13:14 +0100 (CET)
+Date:   Fri, 20 Dec 2019 21:13:14 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     David Howells <dhowells@redhat.com>, linux-afs@lists.infradead.org,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] rxrpc: struct mutex cannot be used for
+ rxrpc_call::user_mutex
+Message-ID: <20191220201314.GS2827@hirez.programming.kicks-ass.net>
+References: <157659672074.19580.11641288666811539040.stgit@warthog.procyon.org.uk>
+ <20191218135047.GS2844@hirez.programming.kicks-ass.net>
+ <20191218190833.ufpxjrvin5jvp3m5@linux-p48b>
+ <20191218202801.wokf6hcvbafmjnkd@linux-p48b>
+ <20191219090535.GV2844@hirez.programming.kicks-ass.net>
+ <20191219174417.jax2fy3fvrvrrpsq@linux-p48b>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191219174417.jax2fy3fvrvrrpsq@linux-p48b>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The rseq.h UAPI now documents that the rseq_cs field must be cleared
-before reclaiming memory that contains the targeted struct rseq_cs, but
-also that the rseq_cs field must be cleared before reclaiming memory of
-the code pointed to by the rseq_cs start_ip and post_commit_offset
-fields.
+On Thu, Dec 19, 2019 at 09:44:17AM -0800, Davidlohr Bueso wrote:
+> On Thu, 19 Dec 2019, Peter Zijlstra wrote:
+> 
+> > Automate what exactly?
+> 
+> What I meant was automating finding cases that are 'false positives' such
+> as rxrpc and kexec _before_ re-adding the warn.
 
-While we can expect that use of dlclose(3) will typically unmap
-both struct rseq_cs and its associated code at once, nothing would
-theoretically prevent a JIT from reclaiming the code without
-reclaiming the struct rseq_cs, which would erroneously allow the
-kernel to consider new code which is not a rseq critical section
-as a rseq critical section following a code reclaim.
+I suppose we can keep the WARN patch in a -next enabled branch for a
+while, without it nessecarily going into linus' tree on the next
+release.
 
-Suggested-by: Florian Weimer <fw@deneb.enyo.de>
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Florian Weimer <fw@deneb.enyo.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: "H . Peter Anvin" <hpa@zytor.com>
-Cc: Paul Turner <pjt@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
----
- tools/testing/selftests/rseq/rseq.h | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+That does require people actually testing -next, which seems somewhat
+optimistic.
 
-diff --git a/tools/testing/selftests/rseq/rseq.h b/tools/testing/selftests/rseq/rseq.h
-index d40d60e7499e..15cbd51d0818 100644
---- a/tools/testing/selftests/rseq/rseq.h
-+++ b/tools/testing/selftests/rseq/rseq.h
-@@ -149,11 +149,13 @@ static inline void rseq_clear_rseq_cs(void)
- /*
-  * rseq_prepare_unload() should be invoked by each thread executing a rseq
-  * critical section at least once between their last critical section and
-- * library unload of the library defining the rseq critical section
-- * (struct rseq_cs). This also applies to use of rseq in code generated by
-- * JIT: rseq_prepare_unload() should be invoked at least once by each
-- * thread executing a rseq critical section before reclaim of the memory
-- * holding the struct rseq_cs.
-+ * library unload of the library defining the rseq critical section (struct
-+ * rseq_cs) or the code refered to by the struct rseq_cs start_ip and
-+ * post_commit_offset fields. This also applies to use of rseq in code
-+ * generated by JIT: rseq_prepare_unload() should be invoked at least once by
-+ * each thread executing a rseq critical section before reclaim of the memory
-+ * holding the struct rseq_cs or reclaim of the code pointed to by struct
-+ * rseq_cs start_ip and post_commit_offset fields.
-  */
- static inline void rseq_prepare_unload(void)
- {
--- 
-2.17.1
-
+Alternatively, you can try your hand at smatch ...
