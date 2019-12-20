@@ -2,140 +2,451 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E399C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D3EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B2332467F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:44:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FDF52467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:46:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GDkV/1HF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfLTLoT convert rfc822-to-8bit (ORCPT
+        id S1727317AbfLTLqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 06:44:19 -0500
-Received: from mga05.intel.com ([192.55.52.43]:56232 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727177AbfLTLoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 06:44:18 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Dec 2019 03:44:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,335,1571727600"; 
-   d="scan'208";a="416513880"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by fmsmga005.fm.intel.com with ESMTP; 20 Dec 2019 03:44:18 -0800
-Received: from fmsmsx114.amr.corp.intel.com (10.18.116.8) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 20 Dec 2019 03:44:18 -0800
-Received: from shsmsx102.ccr.corp.intel.com (10.239.4.154) by
- FMSMSX114.amr.corp.intel.com (10.18.116.8) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 20 Dec 2019 03:44:17 -0800
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.90]) by
- shsmsx102.ccr.corp.intel.com ([169.254.2.109]) with mapi id 14.03.0439.000;
- Fri, 20 Dec 2019 19:44:15 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "David Woodhouse" <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-CC:     "Raj, Ashok" <ashok.raj@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>, Peter Xu <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4 4/7] iommu/vt-d: Setup pasid entries for iova over
- first level
-Thread-Topic: [PATCH v4 4/7] iommu/vt-d: Setup pasid entries for iova over
- first level
-Thread-Index: AQHVthrhmA1+nPY36UOVgBomY8KF4KfC58BA
-Date:   Fri, 20 Dec 2019 11:44:15 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A13A334@SHSMSX104.ccr.corp.intel.com>
-References: <20191219031634.15168-1-baolu.lu@linux.intel.com>
- <20191219031634.15168-5-baolu.lu@linux.intel.com>
-In-Reply-To: <20191219031634.15168-5-baolu.lu@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZjliMzllZmEtYzk0MS00YzBhLWEwNGQtMzE3ODk5NTgzYWYzIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiRktFb1l3NDlWOUZ1RFh2SERTK2FiS2MrNXdSMU9CUDZEc0o2NE5jRzl1YmVySUhESGRKcnFORDZYVUpJVWxRQyJ9
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 20 Dec 2019 06:46:25 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:36928 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727177AbfLTLqY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 06:46:24 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBKBjwS0048904;
+        Fri, 20 Dec 2019 05:45:58 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576842358;
+        bh=1LAT3RISibOfk01ytXtrUx0VR3iDUwbFIkdeADMwoqk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=GDkV/1HFebYIB2L6WL1hSEQWEbNfc3cewjTHSzYU3694cCh3ni6tX1OyxhV6NPVm8
+         oHa7zN8rszg4yu+e6t3nDv5ONznshnVNQZwiYm7665D8rLXF0HerZoem6WLzfZhXMP
+         32lYsKpVT/Au5RkWnSTSXGfRF8ymTE7CHmvij5uQ=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBKBjwNR105382
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 20 Dec 2019 05:45:58 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
+ Dec 2019 05:45:58 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 20 Dec 2019 05:45:58 -0600
+Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBKBjsT7026338;
+        Fri, 20 Dec 2019 05:45:54 -0600
+Subject: Re: [PATCH V3 2/2] drivers/irqchip: add NXP INTMUX interrupt
+ multiplexer support
+To:     Joakim Zhang <qiangqing.zhang@nxp.com>, <maz@kernel.org>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <shawnguo@kernel.org>,
+        <s.hauer@pengutronix.de>
+CC:     <fugang.duan@nxp.com>, Shengjiu Wang <shengjiu.wang@nxp.com>,
+        <linux-kernel@vger.kernel.org>, <linux-imx@nxp.com>,
+        <kernel@pengutronix.de>, <linux-arm-kernel@lists.infradead.org>
+References: <1576827431-31942-1-git-send-email-qiangqing.zhang@nxp.com>
+ <1576827431-31942-3-git-send-email-qiangqing.zhang@nxp.com>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <ad5165ba-24d7-ceeb-8794-cdbe4e564bd5@ti.com>
+Date:   Fri, 20 Dec 2019 17:15:01 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <1576827431-31942-3-git-send-email-qiangqing.zhang@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Lu Baolu [mailto:baolu.lu@linux.intel.com]
-> Sent: Thursday, December 19, 2019 11:17 AM
-> To: Joerg Roedel <joro@8bytes.org>; David Woodhouse <dwmw2@infradead.org>;
-> Alex Williamson <alex.williamson@redhat.com>
-> Subject: [PATCH v4 4/7] iommu/vt-d: Setup pasid entries for iova over first level
+
+
+On 20/12/19 1:07 PM, Joakim Zhang wrote:
+> The Interrupt Multiplexer (INTMUX) expands the number of peripherals
+> that can interrupt the core:
+> * The INTMUX has 8 channels that are assigned to 8 NVIC interrupt slots.
+> * Each INTMUX channel can receive up to 32 interrupt sources and has 1
+>   interrupt output.
+> * The INTMUX routes the interrupt sources to the interrupt outputs.
 > 
-> Intel VT-d in scalable mode supports two types of page tables for IOVA translation:
-> first level and second level. The IOMMU driver can choose one from both for IOVA
-> translation according to the use case. This sets up the pasid entry if a domain is
-> selected to use the first-level page table for iova translation.
-> 
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
 > ---
->  drivers/iommu/intel-iommu.c | 48 +++++++++++++++++++++++++++++++++++--
->  include/linux/intel-iommu.h | 16 ++++++++-----
->  2 files changed, 56 insertions(+), 8 deletions(-)
+>  drivers/irqchip/Kconfig          |   6 +
+>  drivers/irqchip/Makefile         |   1 +
+>  drivers/irqchip/irq-imx-intmux.c | 311 +++++++++++++++++++++++++++++++
+>  3 files changed, 318 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-imx-intmux.c
 > 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c index
-> 2b5a47584baf..f0813997dea2 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -571,6 +571,11 @@ static inline int domain_type_is_si(struct dmar_domain
-> *domain)
->  	return domain->flags & DOMAIN_FLAG_STATIC_IDENTITY;  }
-> 
-> +static inline bool domain_use_first_level(struct dmar_domain *domain) {
-> +	return domain->flags & DOMAIN_FLAG_USE_FIRST_LEVEL; }
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index ba152954324b..7e2b1e9d0b45 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -457,6 +457,12 @@ config IMX_IRQSTEER
+>  	help
+>  	  Support for the i.MX IRQSTEER interrupt multiplexer/remapper.
+>  
+> +config IMX_INTMUX
+> +	def_bool y if ARCH_MXC
+> +	select IRQ_DOMAIN
+> +	help
+> +	  Support for the i.MX INTMUX interrupt multiplexer.
 > +
->  static inline int domain_pfn_supported(struct dmar_domain *domain,
->  				       unsigned long pfn)
->  {
-> @@ -2288,6 +2293,8 @@ static int __domain_mapping(struct dmar_domain
-> *domain, unsigned long iov_pfn,
->  		return -EINVAL;
-> 
->  	prot &= DMA_PTE_READ | DMA_PTE_WRITE | DMA_PTE_SNP;
-> +	if (domain_use_first_level(domain))
-> +		prot |= DMA_FL_PTE_PRESENT | DMA_FL_PTE_XD;
-> 
->  	if (!sg) {
->  		sg_res = nr_pages;
-> @@ -2515,6 +2522,36 @@ dmar_search_domain_by_dev_info(int segment, int bus,
-> int devfn)
->  	return NULL;
->  }
-> 
-> +static int domain_setup_first_level(struct intel_iommu *iommu,
-> +				    struct dmar_domain *domain,
-> +				    struct device *dev,
-> +				    int pasid)
+>  config LS1X_IRQ
+>  	bool "Loongson-1 Interrupt Controller"
+>  	depends on MACH_LOONGSON32
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index e806dda690ea..af976a79d1fb 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -100,6 +100,7 @@ obj-$(CONFIG_CSKY_MPINTC)		+= irq-csky-mpintc.o
+>  obj-$(CONFIG_CSKY_APB_INTC)		+= irq-csky-apb-intc.o
+>  obj-$(CONFIG_SIFIVE_PLIC)		+= irq-sifive-plic.o
+>  obj-$(CONFIG_IMX_IRQSTEER)		+= irq-imx-irqsteer.o
+> +obj-$(CONFIG_IMX_INTMUX)		+= irq-imx-intmux.o
+>  obj-$(CONFIG_MADERA_IRQ)		+= irq-madera.o
+>  obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
+>  obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
+> diff --git a/drivers/irqchip/irq-imx-intmux.c b/drivers/irqchip/irq-imx-intmux.c
+> new file mode 100644
+> index 000000000000..94c67fdd7163
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-imx-intmux.c
+> @@ -0,0 +1,311 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright 2017 NXP
+> +
+> +/*                     INTMUX Block Diagram
+> + *
+> + *                               ________________
+> + * interrupt source #  0  +---->|                |
+> + *                        |     |                |
+> + * interrupt source #  1  +++-->|                |
+> + *            ...         | |   |   channel # 0  |--------->interrupt out # 0
+> + *            ...         | |   |                |
+> + *            ...         | |   |                |
+> + * interrupt source # X-1 +++-->|________________|
+> + *                        | | |
+> + *                        | | |
+> + *                        | | |  ________________
+> + *                        +---->|                |
+> + *                        | | | |                |
+> + *                        | +-->|                |
+> + *                        | | | |   channel # 1  |--------->interrupt out # 1
+> + *                        | | +>|                |
+> + *                        | | | |                |
+> + *                        | | | |________________|
+> + *                        | | |
+> + *                        | | |
+> + *                        | | |       ...
+> + *                        | | |       ...
+> + *                        | | |
+> + *                        | | |  ________________
+> + *                        +---->|                |
+> + *                          | | |                |
+> + *                          +-->|                |
+> + *                            | |   channel # N  |--------->interrupt out # N
+> + *                            +>|                |
+> + *                              |                |
+> + *                              |________________|
+> + *
+> + *
+> + * N: Interrupt Channel Instance Number (N=7)
+> + * X: Interrupt Source Number for each channel (X=32)
+> + *
+> + * The INTMUX interrupt multiplexer has 8 channels, each channel receives 32
+> + * interrupt sources and generates 1 interrupt output.
+
+Does the user care to which channel does the interrupt source goes to? If not,
+interrupt-cells in DT can just be a single entry and the channel selection can
+be controlled by the driver no? I am trying to understand why user should
+specify the channel no.
+
+Thanks and regards,
+Lokesh
+
+> + *
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/kernel.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/spinlock.h>
+> +
+> +#define CHANIER(n)	(0x10 + (0x40 * n))
+> +#define CHANIPR(n)	(0x20 + (0x40 * n))
+> +
+> +#define CHAN_MAX_NUM		0x8
+> +
+> +struct intmux_irqchip_data {
+> +	int			chanidx;
+> +	int			irq;
+> +	struct irq_domain	*domain;
+> +};
+> +
+> +struct intmux_data {
+> +	raw_spinlock_t			lock;
+> +	void __iomem			*regs;
+> +	struct clk			*ipg_clk;
+> +	int				channum;
+> +	struct intmux_irqchip_data	irqchip_data[];
+> +};
+> +
+> +static void imx_intmux_irq_mask(struct irq_data *d)
 > +{
-> +	int flags = PASID_FLAG_SUPERVISOR_MODE;
-
-Hi Baolu,
-
-Could you explain a bit why PASID_FLAG_SUPERVISOR_MODE is
-required?
-
-Regards,
-Yi Liu
-
+> +	struct intmux_irqchip_data *irqchip_data = d->chip_data;
+> +	int idx = irqchip_data->chanidx;
+> +	struct intmux_data *data = container_of(irqchip_data, struct intmux_data,
+> +						irqchip_data[idx]);
+> +	unsigned long flags;
+> +	void __iomem *reg;
+> +	u32 val;
+> +
+> +	raw_spin_lock_irqsave(&data->lock, flags);
+> +	reg = data->regs + CHANIER(idx);
+> +	val = readl_relaxed(reg);
+> +	/* disable the interrupt source of this channel */
+> +	val &= ~BIT(d->hwirq);
+> +	writel_relaxed(val, reg);
+> +	raw_spin_unlock_irqrestore(&data->lock, flags);
+> +}
+> +
+> +static void imx_intmux_irq_unmask(struct irq_data *d)
+> +{
+> +	struct intmux_irqchip_data *irqchip_data = d->chip_data;
+> +	int idx = irqchip_data->chanidx;
+> +	struct intmux_data *data = container_of(irqchip_data, struct intmux_data,
+> +						irqchip_data[idx]);
+> +	unsigned long flags;
+> +	void __iomem *reg;
+> +	u32 val;
+> +
+> +	raw_spin_lock_irqsave(&data->lock, flags);
+> +	reg = data->regs + CHANIER(idx);
+> +	val = readl_relaxed(reg);
+> +	/* enable the interrupt source of this channel */
+> +	val |= BIT(d->hwirq);
+> +	writel_relaxed(val, reg);
+> +	raw_spin_unlock_irqrestore(&data->lock, flags);
+> +}
+> +
+> +static struct irq_chip imx_intmux_irq_chip = {
+> +	.name		= "intmux",
+> +	.irq_mask	= imx_intmux_irq_mask,
+> +	.irq_unmask	= imx_intmux_irq_unmask,
+> +};
+> +
+> +static int imx_intmux_irq_map(struct irq_domain *h, unsigned int irq,
+> +			      irq_hw_number_t hwirq)
+> +{
+> +	irq_set_status_flags(irq, IRQ_LEVEL);
+> +	irq_set_chip_data(irq, h->host_data);
+> +	irq_set_chip_and_handler(irq, &imx_intmux_irq_chip, handle_level_irq);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx_intmux_irq_xlate(struct irq_domain *d, struct device_node *node,
+> +				const u32 *intspec, unsigned int intsize,
+> +				unsigned long *out_hwirq, unsigned int *out_type)
+> +{
+> +	struct intmux_irqchip_data *irqchip_data = d->host_data;
+> +	int idx = irqchip_data->chanidx;
+> +	struct intmux_data *data = container_of(irqchip_data, struct intmux_data,
+> +						irqchip_data[idx]);
+> +
+> +	/* two cells needed in interrupt specifier:
+> +	 * the 1st cell: hw interrupt number
+> +	 * the 2nd cell: channel index
+> +	 */
+> +	if (WARN_ON(intsize != 2))
+> +		return -EINVAL;
+> +
+> +	if (WARN_ON(intspec[1] >= data->channum))
+> +		return -EINVAL;
+> +
+> +	*out_hwirq = intspec[0];
+> +	*out_type = IRQ_TYPE_NONE;
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx_intmux_irq_select(struct irq_domain *d, struct irq_fwspec *fwspec,
+> +				 enum irq_domain_bus_token bus_token)
+> +{
+> +	struct intmux_irqchip_data *irqchip_data = d->host_data;
+> +
+> +	/* Not for us */
+> +	if (fwspec->fwnode != d->fwnode)
+> +		return false;
+> +
+> +	if (irqchip_data->chanidx == fwspec->param[1])
+> +		return true;
+> +	else
+> +		return false;
+> +}
+> +
+> +static const struct irq_domain_ops imx_intmux_domain_ops = {
+> +	.map		= imx_intmux_irq_map,
+> +	.xlate		= imx_intmux_irq_xlate,
+> +	.select		= imx_intmux_irq_select,
+> +};
+> +
+> +static void imx_intmux_irq_handler(struct irq_desc *desc)
+> +{
+> +	struct intmux_irqchip_data *irqchip_data = irq_desc_get_handler_data(desc);
+> +	int idx = irqchip_data->chanidx;
+> +	struct intmux_data *data = container_of(irqchip_data, struct intmux_data,
+> +						irqchip_data[idx]);
+> +	unsigned long irqstat;
+> +	int pos, virq;
+> +
+> +	chained_irq_enter(irq_desc_get_chip(desc), desc);
+> +
+> +	/* read the interrupt source pending status of this channel */
+> +	irqstat = readl_relaxed(data->regs + CHANIPR(idx));
+> +
+> +	for_each_set_bit(pos, &irqstat, 32) {
+> +		virq = irq_find_mapping(irqchip_data->domain, pos);
+> +		if (virq)
+> +			generic_handle_irq(virq);
+> +	}
+> +
+> +	chained_irq_exit(irq_desc_get_chip(desc), desc);
+> +}
+> +
+> +static int imx_intmux_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct intmux_data *data;
+> +	int channum;
+> +	int i, ret;
+> +
+> +	ret = of_property_read_u32(np, "fsl,intmux_chans", &channum);
+> +	if (ret) {
+> +		channum = 1;
+> +	} else if (channum > CHAN_MAX_NUM) {
+> +		dev_err(&pdev->dev, "supports up to %d multiplex channels\n",
+> +			CHAN_MAX_NUM);
+> +		return -EINVAL;
+> +	}
+> +
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data) +
+> +			    channum * sizeof(data->irqchip_data[0]), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->regs = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(data->regs)) {
+> +		dev_err(&pdev->dev, "failed to initialize reg\n");
+> +		return PTR_ERR(data->regs);
+> +	}
+> +
+> +	data->ipg_clk = devm_clk_get(&pdev->dev, "ipg");
+> +	if (IS_ERR(data->ipg_clk)) {
+> +		ret = PTR_ERR(data->ipg_clk);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(&pdev->dev, "failed to get ipg clk: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	data->channum = channum;
+> +	raw_spin_lock_init(&data->lock);
+> +
+> +	ret = clk_prepare_enable(data->ipg_clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to enable ipg clk: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	for (i = 0; i < channum; i++) {
+> +		data->irqchip_data[i].chanidx = i;
+> +
+> +		data->irqchip_data[i].irq = irq_of_parse_and_map(np, i);
+> +		if (data->irqchip_data[i].irq <= 0) {
+> +			ret = -EINVAL;
+> +			dev_err(&pdev->dev, "failed to get irq\n");
+> +			goto out;
+> +		}
+> +
+> +		data->irqchip_data[i].domain =
+> +			irq_domain_add_linear(np, 32, &imx_intmux_domain_ops,
+> +					      &data->irqchip_data[i]);
+> +		if (!data->irqchip_data[i].domain) {
+> +			ret = -ENOMEM;
+> +			dev_err(&pdev->dev, "failed to create IRQ domain\n");
+> +			goto out;
+> +		}
+> +
+> +		irq_set_chained_handler_and_data(data->irqchip_data[i].irq,
+> +						 imx_intmux_irq_handler,
+> +						 &data->irqchip_data[i]);
+> +
+> +		/* disable interrupt sources of this channel firstly */
+> +		writel_relaxed(0, data->regs + CHANIER(i));
+> +	}
+> +
+> +	platform_set_drvdata(pdev, data);
+> +
+> +	return 0;
+> +out:
+> +	clk_disable_unprepare(data->ipg_clk);
+> +	return ret;
+> +}
+> +
+> +static int imx_intmux_remove(struct platform_device *pdev)
+> +{
+> +	struct intmux_data *data = platform_get_drvdata(pdev);
+> +	int i;
+> +
+> +	for (i = 0; i < data->channum; i++) {
+> +		/* clear interrupt sources pending status of this channel */
+> +		writel_relaxed(0, data->regs + CHANIPR(i));
+> +
+> +		irq_set_chained_handler_and_data(data->irqchip_data[i].irq,
+> +						 NULL, NULL);
+> +
+> +		irq_domain_remove(data->irqchip_data[i].domain);
+> +	}
+> +
+> +	clk_disable_unprepare(data->ipg_clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id imx_intmux_id[] = {
+> +	{ .compatible = "fsl,imx-intmux", },
+> +	{ /* sentinel */ },
+> +};
+> +
+> +static struct platform_driver imx_intmux_driver = {
+> +	.driver = {
+> +		.name = "imx-intmux",
+> +		.of_match_table = imx_intmux_id,
+> +	},
+> +	.probe = imx_intmux_probe,
+> +	.remove = imx_intmux_remove,
+> +};
+> +builtin_platform_driver(imx_intmux_driver);
+> 
