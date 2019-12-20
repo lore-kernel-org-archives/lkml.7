@@ -2,122 +2,181 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1183CC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3622BC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3B1820716
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:40:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mikemestnik-net.20150623.gappssmtp.com header.i=@mikemestnik-net.20150623.gappssmtp.com header.b="pvIYYCay"
+	by mail.kernel.org (Postfix) with ESMTP id 1749120716
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:42:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbfLTQkG (ORCPT
+        id S1727404AbfLTQmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 11:40:06 -0500
-Received: from mail-vk1-f179.google.com ([209.85.221.179]:36652 "EHLO
-        mail-vk1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727181AbfLTQkF (ORCPT
+        Fri, 20 Dec 2019 11:42:01 -0500
+Received: from vmicros1.altlinux.org ([194.107.17.57]:40554 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727181AbfLTQmA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 11:40:05 -0500
-Received: by mail-vk1-f179.google.com with SMTP id i4so2770552vkc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 08:40:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mikemestnik-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=Szt8eXgLGqLENPC5c/6IBOHsWrH3UT5g9f383dKNd6I=;
-        b=pvIYYCayUMQrn/09DDaAaAz9YH/eWvX83bwnHv0TguLckHE/B5mpV1rKLfLPrwOxep
-         k/6ejiVvyAgh6F4V6NsYcH7fx3A3uUn5iDv7/BpIkb/XN0kBof+n9YskgHA45xUSNZ5t
-         a0C11p+h8BNEFske3PYYs8D3QylyOE/jykpUVDCs/7O32F3HM4U0Hq0xM1LcO6Q0mnVz
-         PhcmZGsCNen/hs3/BKpn9tcTIq92KcRLM/9ojdEqg3ab3BgFDDWSRH3oHqtQt5SlIuMN
-         mVndFJu8fXJT/JOvxMgUnC6nJhalTS+bc2dnKtlcqG6XcL07R7Xi0nYAGvX48ndSQcCW
-         b/Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=Szt8eXgLGqLENPC5c/6IBOHsWrH3UT5g9f383dKNd6I=;
-        b=mMwRSouMlftPEs7mCXV0CTnRRv1eiKrM7Sp/uAoXvp+AdkCoB2SWAmvwzlKgfzp95w
-         OoRDUx9k8HwtUj2ARsrvIJOomqv5gYVouHLrMc0VGC7fl1FpZDrK5sbmHllt+tiNAXqN
-         Jo0nA3KQPq2xJ5Fmwxo6rh74WFMcgPY3FefFi0aqGYGZYtkGJMH10vMxL//H0Pf/ofXr
-         44gL+a3tj3BnGKe5aTFw/7KJn/4iMLkzPIEdBkKUflfzm695sNuefoyj/lsaq8j424c1
-         wi+Gtd9LZ6TxWp3s672wa8PvnO4n0LT9002+D2UdGIvNh+WVFdtYYjTw91HnTo6qLHoC
-         655A==
-X-Gm-Message-State: APjAAAXuUVR96E4sEzUmjg8FrUVTrlswpwfyc6lzOjVrViWC4uYuz5ek
-        brsG6x1Uevg5pHk+h4ZuB2hEAz/WueJG3WwcHGGCFwAtky4=
-X-Google-Smtp-Source: APXvYqzRz6Wk5ylhZ6QcbAxLHTzAj+zlERNyPNWhHiujuKoaSxXZVcwDfYzVLBJ+Jo4P7ny1aKvXrlREDPzFf/q79jA=
-X-Received: by 2002:a1f:252:: with SMTP id 79mr10575894vkc.96.1576860004685;
- Fri, 20 Dec 2019 08:40:04 -0800 (PST)
+        Fri, 20 Dec 2019 11:42:00 -0500
+Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id E93B472CCE9;
+        Fri, 20 Dec 2019 19:41:56 +0300 (MSK)
+Received: from altlinux.org (sole.flsd.net [185.75.180.6])
+        by imap.altlinux.org (Postfix) with ESMTPSA id B6D284A4AEF;
+        Fri, 20 Dec 2019 19:41:56 +0300 (MSK)
+Date:   Fri, 20 Dec 2019 19:41:56 +0300
+From:   Vitaly Chikunov <vt@altlinux.org>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        "Dmitry V . Levin" <ldv@altlinux.org>, stable@vger.kernel.org,
+        Vitaly Chikunov <vt@altlinux.org>
+Subject: Re: [PATCH] tools lib: Disable redundant-delcs error for strlcpy
+Message-ID: <20191220164155.3gxstkam3ctk7kji@altlinux.org>
+Mail-Followup-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        "Dmitry V . Levin" <ldv@altlinux.org>, stable@vger.kernel.org
+References: <20191208214607.20679-1-vt@altlinux.org>
+ <20191217122331.4g5atx7in6njjlw4@altlinux.org>
+ <20191217200420.GD7095@redhat.com>
+ <20191220025236.kgu3v6yhjndr3zwb@altlinux.org>
+ <20191220123136.GD2032@kernel.org>
 MIME-Version: 1.0
-From:   Mike Mestnik <cheako@mikemestnik.net>
-Date:   Fri, 20 Dec 2019 10:39:53 -0600
-Message-ID: <CAF8px57Sawr1COPueoXt-Tso++_Vyt=XLfUcXxNvv-M1590cDg@mail.gmail.com>
-Subject: System freeze log.
-To:     linux-kernel@vger.kernel.org
-Content-Type: multipart/mixed; boundary="00000000000070cfe3059a255403"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191220123136.GD2032@kernel.org>
+User-Agent: NeoMutt/20171215-106-ac61c7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---00000000000070cfe3059a255403
-Content-Type: text/plain; charset="UTF-8"
+Arnaldo,
 
-https://pastebin.com/k7CqCwPz
+On Fri, Dec 20, 2019 at 09:31:36AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Dec 20, 2019 at 05:52:36AM +0300, Vitaly Chikunov escreveu:
+> > If this is acceptable I will resend v2 with this.
+> 
+> Go ahead, and please let me know if there is any container image for
+> Altlinux, as I test with clang on all the distros I have container
+> images for, and this hasn't appeared on my radar, i.e. clang + strlcpy
+> warnings :-)
 
---00000000000070cfe3059a255403
-Content-Type: text/plain; charset="US-ASCII"; name="messages.txt"
-Content-Disposition: attachment; filename="messages.txt"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k4edq2q30>
-X-Attachment-Id: f_k4edq2q30
+ALT Linux container micro how-to:
 
-RGVjIDIwIDA4OjM0OjMxIG55c2Ega2VybmVsOiBbIDI1OTUuMTA5NDc3XSBwZXJmOiBpbnRlcnJ1
-cHQgdG9vayB0b28gbG9uZyAoNDA2MCA+IDQwMzApLCBsb3dlcmluZyBrZXJuZWwucGVyZl9ldmVu
-dF9tYXhfc2FtcGxlX3JhdGUgdG8gNDkyNTAKRGVjIDIwIDA4OjQyOjU1IG55c2Ega2VybmVsOiBb
-IDMwOTkuMjgwNDUzXSBwZXJmOiBpbnRlcnJ1cHQgdG9vayB0b28gbG9uZyAoNTEyMCA+IDUwNzUp
-LCBsb3dlcmluZyBrZXJuZWwucGVyZl9ldmVudF9tYXhfc2FtcGxlX3JhdGUgdG8gMzkwMDAKRGVj
-IDIwIDA4OjQzOjA0IG55c2EgL3Vzci9saWIvZ2RtMy9nZG0teC1zZXNzaW9uWzE2MzldOiAoRUUp
-IGNsaWVudCBidWc6IHRpbWVyIGV2ZW50NyBkZWJvdW5jZTogb2Zmc2V0IG5lZ2F0aXZlICgtMW1z
-KQpEZWMgMjAgMDg6NDM6MDQgbnlzYSAvdXNyL2xpYi9nZG0zL2dkbS14LXNlc3Npb25bMTYzOV06
-IChFRSkgY2xpZW50IGJ1ZzogdGltZXIgZXZlbnQ3IGRlYm91bmNlIHNob3J0OiBvZmZzZXQgbmVn
-YXRpdmUgKC0xNW1zKQpEZWMgMjAgMDg6NTI6NDEgbnlzYSBzdGVhbS5kZXNrdG9wWzE3NThdOiBJ
-bnN0YWxsaW5nIGJyZWFrcGFkIGV4Y2VwdGlvbiBoYW5kbGVyIGZvciBhcHBpZChzdGVhbSkvdmVy
-c2lvbigxNTc2NzE3NTQxKQpEZWMgMjAgMDg6NTQ6MDAgbnlzYSBrZXJuZWw6IFsgMzc2My43OTg1
-MTBdIHBlcmY6IGludGVycnVwdCB0b29rIHRvbyBsb25nICg2NDAxID4gNjQwMCksIGxvd2VyaW5n
-IGtlcm5lbC5wZXJmX2V2ZW50X21heF9zYW1wbGVfcmF0ZSB0byAzMTAwMApEZWMgMjAgMDg6NTU6
-NDggbnlzYSAvdXNyL2xpYi9nZG0zL2dkbS14LXNlc3Npb25bMTYzOV06IChFRSkgY2xpZW50IGJ1
-ZzogdGltZXIgZXZlbnQ3IGRlYm91bmNlIHNob3J0OiBvZmZzZXQgbmVnYXRpdmUgKC0zbXMpCkRl
-YyAyMCAwOTowMzoxNyBueXNhIHN0ZWFtLmRlc2t0b3BbMTc1OF06IEluc3RhbGxpbmcgYnJlYWtw
-YWQgZXhjZXB0aW9uIGhhbmRsZXIgZm9yIGFwcGlkKHN0ZWFtKS92ZXJzaW9uKDE1NzY3MTc1NDEp
-CkRlYyAyMCAwOTowNjo0NCBueXNhIC91c3IvbGliL2dkbTMvZ2RtLXgtc2Vzc2lvblsxNjM5XTog
-KEVFKSBjbGllbnQgYnVnOiB0aW1lciBldmVudDYgdHJhY2twb2ludDogb2Zmc2V0IG5lZ2F0aXZl
-ICgtMTBtcykKRGVjIDIwIDA5OjA2OjQ0IG55c2EgL3Vzci9saWIvZ2RtMy9nZG0teC1zZXNzaW9u
-WzE2MzldOiAoRUUpIGNsaWVudCBidWc6IHRpbWVyIGV2ZW50NiB0cmFja3BvaW50OiBvZmZzZXQg
-bmVnYXRpdmUgKC00Nm1zKQpEZWMgMjAgMDk6MTQ6MDkgbnlzYSBzdGVhbS5kZXNrdG9wWzE3NThd
-OiBUSFJFQUQgLSBzdGFydGVkICdTaW1UaHJlYWQnICgxNDA3MTExMzAyOTQwMTYpCkRlYyAyMCAw
-OToxOTo1MSBueXNhIGtlcm5lbDogWyA1MzE1LjEzNjY4Ml0gcGVyZjogaW50ZXJydXB0IHRvb2sg
-dG9vIGxvbmcgKDgwNTEgPiA4MDAxKSwgbG93ZXJpbmcga2VybmVsLnBlcmZfZXZlbnRfbWF4X3Nh
-bXBsZV9yYXRlIHRvIDI0NzUwCkRlYyAyMCAwOTozMTo0MCBueXNhIC91c3IvbGliL2dkbTMvZ2Rt
-LXgtc2Vzc2lvblsxNjM5XTogKEVFKSBjbGllbnQgYnVnOiB0aW1lciBldmVudDYgdHJhY2twb2lu
-dDogb2Zmc2V0IG5lZ2F0aXZlICgtMTBtcykKRGVjIDIwIDA5OjM5OjM5IG55c2EgL3Vzci9saWIv
-Z2RtMy9nZG0teC1zZXNzaW9uWzE2MzldOiAoRUUpIGNsaWVudCBidWc6IHRpbWVyIGV2ZW50NyBk
-ZWJvdW5jZTogb2Zmc2V0IG5lZ2F0aXZlICgtMm1zKQpEZWMgMjAgMDk6NDc6MDEgbnlzYSBzdGVh
-bS5kZXNrdG9wWzE3NThdOiBJbnN0YWxsaW5nIGJyZWFrcGFkIGV4Y2VwdGlvbiBoYW5kbGVyIGZv
-ciBhcHBpZChzdGVhbSkvdmVyc2lvbigxNTc2NzE3NTQxKQpEZWMgMjAgMTA6MDg6MjMgbnlzYSAv
-dXNyL2xpYi9nZG0zL2dkbS14LXNlc3Npb25bMTYzOV06IChFRSkgY2xpZW50IGJ1ZzogdGltZXIg
-ZXZlbnQ3IGRlYm91bmNlIHNob3J0OiBvZmZzZXQgbmVnYXRpdmUgKC03bXMpCkRlYyAyMCAxMDox
-NzoxNyBueXNhIG10cC1wcm9iZTogY2hlY2tpbmcgYnVzIDMsIGRldmljZSAzOiAiL3N5cy9kZXZp
-Y2VzL3BjaTAwMDA6MDAvMDAwMDowMDowOC4xLzAwMDA6MDU6MDAuNC91c2IzLzMtMiIKRGVjIDIw
-IDEwOjE3OjE3IG55c2EgbXRwLXByb2JlOiBidXM6IDMsIGRldmljZTogMyB3YXMgbm90IGFuIE1U
-UCBkZXZpY2UKRGVjIDIwIDEwOjE3OjE3IG55c2EgdWRpc2tzZFs1OTJdOiB1ZGlza3MgZGFlbW9u
-IHZlcnNpb24gMi44LjIgc3RhcnRpbmcKRGVjIDIwIDEwOjE3OjE3IG55c2Ega2VybmVsOiBbICAg
-IDAuMDAwMDAwXSBMaW51eCB2ZXJzaW9uIDQuMTkuMC02LWFtZDY0IChkZWJpYW4ta2VybmVsQGxp
-c3RzLmRlYmlhbi5vcmcpIChnY2MgdmVyc2lvbiA4LjMuMCAoRGViaWFuIDguMy4wLTYpKSAjMSBT
-TVAgRGViaWFuIDQuMTkuNjctMitkZWIxMHUxICgyMDE5LTA5LTIwKQpEZWMgMjAgMTA6MTc6MTcg
-bnlzYSBrZXJuZWw6IFsgICAgMC4wMDAwMDBdIENvbW1hbmQgbGluZTogQk9PVF9JTUFHRT0vYm9v
-dC92bWxpbnV6LTQuMTkuMC02LWFtZDY0IHJvb3Q9VVVJRD0wNzE4OTdlYi1jN2NlLTRiMWQtOWY2
-Zi1iZTYzNDAxYjUzMmYgcm8gaWRsZT1ub213YWl0IGFtZGdwdS5ncHVfcmVjb3Zlcnk9MSBxdWll
-dAoK
---00000000000070cfe3059a255403--
+Docker: https://en.altlinux.org/Docker
+  Quick start:
+    # docker run -it alt:sisyphus
+    [root@28fd15798968 /]# apt-get update
+    [root@28fd15798968 /]# apt-get install clang rpm-build
+
+  It will install clang-7.0.
+
+systemd-nspawn:
+   Images are at http://ftp.altlinux.org/pub/distributions/ALTLinux/images/Sisyphus/cloud/
+   Quick start:
+   # machinectl pull-tar --verify=no http://ftp.altlinux.org/pub/distributions/ALTLinux/images/Sisyphus/cloud/alt-sisyphus-rootfs-systemd-x86_64.tar.xz alttest
+   # systemd-nspawn -M alttest
+   [root@alttest ~]# apt-get update
+   [root@alttest ~]# apt-get install clang rpm-build
+
+There is also LXD support: https://en.altlinux.org/LXD
+
+ps. If you going to use binary clang from http://releases.llvm.org/download.html#9.0.0
+I would recommend version clang+llvm-9.0.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz
+and `ln -snf x86_64-alt-linux /usr/lib64/gcc/x86_64-unknown-linux` to
+workaround `cannot find -lgcc` error.
+
+Thanks,
+
+> 
+> - Arnaldo
+>  
+> > Thanks,
+> > 
+> > > 
+> > > - Arnaldo
+> > >  
+> > > > 1. It seems that people putting strlcpy() into the tools was already aware of
+> > > > the problems it causes and tried to solve them. Probably, that's why they put
+> > > > `__weak` attribute on it (so it would be linkable in the presence of another
+> > > > strlcpy). Then `#ifndef __UCLIBC__`ed and later `#if defined(__GLIBC__) &&
+> > > > !defined(__UCLIBC__)` its declaration. But, solution was incomplete and could
+> > > > be improved to make kernel buildable on more systems (where libc contains
+> > > > strlcpy).
+> > > > 
+> > > > There is not need to make `redundant redeclaration` warning an error in
+> > > > this case.
+> > > > 
+> > > > 2. `#pragma GCC diagnostic ignored` trick is already used multiple times
+> > > > in the kernel:
+> > > > 
+> > > >   $ git grep  '#pragma GCC diagnostic ignored'
+> > > >   arch/arm/lib/xor-neon.c:#pragma GCC diagnostic ignored "-Wunused-variable"
+> > > >   tools/build/feature/test-gtk2-infobar.c:#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+> > > >   tools/build/feature/test-gtk2.c:#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+> > > >   tools/include/linux/string.h:#pragma GCC diagnostic ignored "-Wredundant-decls"
+> > > >   tools/lib/bpf/libbpf.c:#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+> > > >   tools/perf/ui/gtk/gtk.h:#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+> > > >   tools/testing/selftests/kvm/lib/assert.c:#pragma GCC diagnostic ignored "-Wunused-result"
+> > > >   tools/usb/ffs-test.c:#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+> > > > 
+> > > > So the solution does not seem alien in the kernel and should be acceptable.
+> > > > 
+> > > > (I also send this to another of your emails in case I used wrong one before.)
+> > > > 
+> > > > Thanks,
+> > > > 
+> > > > 
+> > > > On Mon, Dec 09, 2019 at 12:46:07AM +0300, Vitaly Chikunov wrote:
+> > > > > Disable `redundant-decls' error for strlcpy declaration and solve build
+> > > > > error allowing users to compile vanilla kernels.
+> > > > > 
+> > > > > When glibc have strlcpy (such as in ALT linux since 2004) objtool and
+> > > > > perf build fails with something like:
+> > > > > 
+> > > > >   In file included from exec-cmd.c:3:
+> > > > >   tools/include/linux/string.h:20:15: error: redundant redeclaration of ‘strlcpy’ [-Werror=redundant-decls]
+> > > > >      20 | extern size_t strlcpy(char *dest, const char *src, size_t size);
+> > > > > 	|               ^~~~~~~
+> > > > > 
+> > > > > It's very hard to produce a perfect fix for that since it is a header
+> > > > > file indirectly pulled from many sources from different Makefile builds.
+> > > > > 
+> > > > > Fixes: ce99091 ("perf tools: Move strlcpy() from perf to tools/lib/string.c")
+> > > > > Fixes: 0215d59 ("tools lib: Reinstate strlcpy() header guard with __UCLIBC__")
+> > > > > Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
+> > > > > Cc: Dmitry V. Levin <ldv@altlinux.org>
+> > > > > Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+> > > > > Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+> > > > > Cc: stable@vger.kernel.org
+> > > > > ---
+> > > > >  tools/include/linux/string.h | 3 +++
+> > > > >  1 file changed, 3 insertions(+)
+> > > > > 
+> > > > > diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
+> > > > > index 980cb9266718..99ede7f5dfb8 100644
+> > > > > --- a/tools/include/linux/string.h
+> > > > > +++ b/tools/include/linux/string.h
+> > > > > @@ -17,7 +17,10 @@ int strtobool(const char *s, bool *res);
+> > > > >   * However uClibc headers also define __GLIBC__ hence the hack below
+> > > > >   */
+> > > > >  #if defined(__GLIBC__) && !defined(__UCLIBC__)
+> > > > > +#pragma GCC diagnostic push
+> > > > > +#pragma GCC diagnostic ignored "-Wredundant-decls"
+> > > > >  extern size_t strlcpy(char *dest, const char *src, size_t size);
+> > > > > +#pragma GCC diagnostic pop
+> > > > >  #endif
+> > > > >  
+> > > > >  char *str_error_r(int errnum, char *buf, size_t buflen);
+> > > 
+> 
+> -- 
+> 
+> - Arnaldo
