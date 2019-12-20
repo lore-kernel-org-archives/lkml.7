@@ -2,94 +2,121 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5B0C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7042BC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08847218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:48:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576853332;
-	bh=JXTV5rA+VR9UgylwUbsmCMZjorEv2/sD5C3a50xkd4Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=13gKYFIGz1kjuBF0l5V2VRNA8jFh8FyvvejFfr5+qhljBbv5JTnBT8A7HOA4fZE/3
-	 ZWQY6p2qaT6AfLI052IwARMgNaBE7u3wDI64yzh91GAWL0/V3cWivmEn8kpSbu+Er1
-	 VNPVAjl76lYTMXcLR1RZ6a/MjYCD6HWToovZsLdU=
+	by mail.kernel.org (Postfix) with ESMTP id 4630521D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:50:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kw03c87j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfLTOrE (ORCPT
+        id S1727553AbfLTOun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:47:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45166 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727381AbfLTOrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:47:02 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33BDD2465E;
-        Fri, 20 Dec 2019 14:47:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576853222;
-        bh=JXTV5rA+VR9UgylwUbsmCMZjorEv2/sD5C3a50xkd4Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q2g2SlNF0cbRiANpB4trWQKWIdTGYRjt3yO1jJfZn78GuID5rASs1tuAIeEB2UX2r
-         /r+uCr60/wBu9SsKO7CXi8pFdfQLgRmDLdVegyGF+uLabfV8NEMfk8wJ7TNNul1azm
-         dkXe/ijTC8pUxshqa0x+ZbLj/8dIbk7v7XSvf6oQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Parav Pandit <parav@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 02/14] RDMA/cma: add missed unregister_pernet_subsys in init failure
-Date:   Fri, 20 Dec 2019 09:46:46 -0500
-Message-Id: <20191220144658.10414-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191220144658.10414-1-sashal@kernel.org>
-References: <20191220144658.10414-1-sashal@kernel.org>
+        Fri, 20 Dec 2019 09:50:43 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:52530 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727384AbfLTOum (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:50:42 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBKEoTm1004532;
+        Fri, 20 Dec 2019 08:50:29 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576853429;
+        bh=HySbb/5w1zvG6YvuW9/AmHG+LPi1aw1qydYFk77daCo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=kw03c87jQHs455VkiVj5u6aeSMl9kt8Jsi+12E99G4a+l2+Czhk23UQaVbRfL7seZ
+         +Fh2aaBLLxl+leNKV2nIL0WG4OtkO0sMUfHOsfYrdFWzZrZX+YJqiHIgGADyauhR1L
+         Ak4/HuigWtPRdR49YEmtt0rn89JGq8xdZOorD+p4=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBKEoSQr064466
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 20 Dec 2019 08:50:29 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
+ Dec 2019 08:50:28 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 20 Dec 2019 08:50:28 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBKEoQMa075755;
+        Fri, 20 Dec 2019 08:50:27 -0600
+Subject: Re: [PATCH] dmaengine: virt-dma: Fix access after free in
+ vcna_complete()
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>
+CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20191220131100.21804-1-peter.ujfalusi@ti.com>
+ <0303ceda023121d9048d2508e28c0306b1871561.camel@analog.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <486093bc-b1bf-1727-0402-f07606fffd1e@ti.com>
+Date:   Fri, 20 Dec 2019 16:50:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+In-Reply-To: <0303ceda023121d9048d2508e28c0306b1871561.camel@analog.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 44a7b6759000ac51b92715579a7bba9e3f9245c2 ]
 
-The driver forgets to call unregister_pernet_subsys() in the error path
-of cma_init().
-Add the missed call to fix it.
+On 20/12/2019 16.01, Ardelean, Alexandru wrote:
+> On Fri, 2019-12-20 at 15:11 +0200, Peter Ujfalusi wrote:
+>> [External]
+>>
+>> vchan_vdesc_fini() is freeing up 'vd' so the access to vd->tx_result is
+>> via already freed up memory.
+>>
+>> Move the vchan_vdesc_fini() after invoking the callback to avoid this.
+>>
+> 
+> Apologies for seeing this too late: typo in title vcna_complete() ->
+> vchan_complete()
 
-Fixes: 4be74b42a6d0 ("IB/cma: Separate port allocation to network namespaces")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Link: https://lore.kernel.org/r/20191206012426.12744-1-hslester96@gmail.com
-Signed-off-by: Doug Ledford <dledford@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/infiniband/core/cma.c | 1 +
- 1 file changed, 1 insertion(+)
+Yep, I also noticed after sending it, I hope Vinod is kind enough and
+fix it up when applying ;)
 
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index dcfbf326f45c9..27653aad8f218 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -4440,6 +4440,7 @@ static int __init cma_init(void)
- 	unregister_netdevice_notifier(&cma_nb);
- 	rdma_addr_unregister_client(&addr_client);
- 	ib_sa_unregister_client(&sa_client);
-+	unregister_pernet_subsys(&cma_pernet_operations);
- err_wq:
- 	destroy_workqueue(cma_wq);
- 	return ret;
--- 
-2.20.1
+- Péter
 
+>> Fixes: 09d5b702b0f97 ("dmaengine: virt-dma: store result on dma
+>> descriptor")
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> ---
+>>  drivers/dma/virt-dma.c | 3 +--
+>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/dma/virt-dma.c b/drivers/dma/virt-dma.c
+>> index ec4adf4260a0..256fc662c500 100644
+>> --- a/drivers/dma/virt-dma.c
+>> +++ b/drivers/dma/virt-dma.c
+>> @@ -104,9 +104,8 @@ static void vchan_complete(unsigned long arg)
+>>  		dmaengine_desc_get_callback(&vd->tx, &cb);
+>>  
+>>  		list_del(&vd->node);
+>> -		vchan_vdesc_fini(vd);
+>> -
+>>  		dmaengine_desc_callback_invoke(&cb, &vd->tx_result);
+>> +		vchan_vdesc_fini(vd);
+>>  	}
+>>  }
+>>  
+
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
