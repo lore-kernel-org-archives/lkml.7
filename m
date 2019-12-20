@@ -2,447 +2,149 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC9DC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5389C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 293B52467F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7D3E2467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:12:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IXrVnnTF"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="L1ZlN/vT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbfLTKLM (ORCPT
+        id S1727327AbfLTKMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 05:11:12 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:49076 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727129AbfLTKLL (ORCPT
+        Fri, 20 Dec 2019 05:12:41 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41091 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbfLTKMl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 05:11:11 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576836670; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=fJjQDBOVdREkukt2JdGRiwD2zFis/+LRqv1PRRBxv6M=;
- b=IXrVnnTF5OGieMdvwRZbTGN2a6X8FaE4TYUE0uygki2t6e52rMk6douxTPeUIHrxTut0Das9
- 7F8fZ8m8YsSUX6aupMqTq3IVRrqzPTkBplk+wdXc1ghKS9Fv/wOLH89Q3mPwWxXk7uPPYfMJ
- mxLJy9wPlsHnyCOXpWdnR67XdA8=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5dfc9e36.7f39eed20a08-smtp-out-n03;
- Fri, 20 Dec 2019 10:11:02 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B7988C4479C; Fri, 20 Dec 2019 10:11:01 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: smasetty)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F0310C433CB;
-        Fri, 20 Dec 2019 10:10:59 +0000 (UTC)
+        Fri, 20 Dec 2019 05:12:41 -0500
+Received: by mail-lj1-f193.google.com with SMTP id h23so9414378ljc.8
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 02:12:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5M+97VbPVz5fx10oR8PMt5OPdUW758AjR3+Ji1vzz5M=;
+        b=L1ZlN/vTOi3FuOhcVzlqz11rikUE109c0s2Si9hpwWNPLIKRQ/qB7kVRUO5Ak/dmSd
+         bT5nZME+i87t5vsXEhQazURlMkxIXy/krhexuF1BqmfAPw7fMSe/hRk8wdqn430egyv8
+         aIhAE4cOu1xPOxmBuNxyA/rygFdbDQuEfno2k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5M+97VbPVz5fx10oR8PMt5OPdUW758AjR3+Ji1vzz5M=;
+        b=s1keIMQzPhEFyWk40prgXqN9fzD28PaEWhGsKd7vV0Jva51Jhdul1I1r2vPp66sYu7
+         jC1huKiUc3Q0IWGXcocCRE0367iziVivAsyWdaBctpvsjrg9vFMicpy1krrOgdZPZPHb
+         0SC76ucPhms+pfZDNLTH5SR3kW6QebhscxXo2OLo182kxStB1fgtWdTfCUgunR8Q4eR8
+         CSKdhpUrrWqdzXejmywWMCHpfXKRJ/IiIsCuyP8RcCvHrN0yV4CqpLhqYHoGnsqFBLgV
+         dBXo45B31inHt/es/aYYQW2n5BAv5AlV2yqgLRXEF/EYifa7hO7PDUDtUINioXxeOPo8
+         Gurw==
+X-Gm-Message-State: APjAAAWMui2FWTKlmtfBVcNenF3GtaCquYLSB4v/+HcddIDNpdTgpQ99
+        3mcv/zknO6cOxTXHR6YB3MrUUg==
+X-Google-Smtp-Source: APXvYqz6J8xgcSHMRi83jJqJdmTY+U/Gz3RT9kImbqgEYi/DZzUvoSGgWa5Ogm82BJx+FJsV1hgVwA==
+X-Received: by 2002:a2e:5304:: with SMTP id h4mr9433917ljb.75.1576836759355;
+        Fri, 20 Dec 2019 02:12:39 -0800 (PST)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id i19sm3843910lfj.17.2019.12.20.02.12.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Dec 2019 02:12:38 -0800 (PST)
+Subject: Re: [RFC][PATCH 1/4] sched: Force the address order of each sched
+ class descriptor
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        Kirill Tkhai <tkhai@yandex.ru>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+        "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
+        "bsegall@google.com" <bsegall@google.com>,
+        "mgorman@suse.de" <mgorman@suse.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20191219214451.340746474@goodmis.org>
+ <20191219214558.510271353@goodmis.org>
+ <0a957e8d-7af8-613c-11ae-f51b9b241eb7@rasmusvillemoes.dk>
+ <20191220100033.GE2844@hirez.programming.kicks-ass.net>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <1ac359e8-fa7f-7ded-e2f2-9f7d0b23a4e1@rasmusvillemoes.dk>
+Date:   Fri, 20 Dec 2019 11:12:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20191220100033.GE2844@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 20 Dec 2019 15:40:59 +0530
-From:   smasetty@codeaurora.org
-To:     Sharat Masetty <smasetty@codeaurora.org>
-Cc:     freedreno@lists.freedesktop.org, dri-devel@freedesktop.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, robin.murphy@arm.com, joro@8bytes.org,
-        iommu@lists.linux-foundation.org, saiprakash.ranjan@codeaurora.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH 5/5] drm/msm/a6xx: Add support for using system cache(LLC)
-In-Reply-To: <20191219195814.GA23673@jcrouse1-lnx.qualcomm.com>
-References: <1576761286-20451-1-git-send-email-smasetty@codeaurora.org>
- <1576761286-20451-6-git-send-email-smasetty@codeaurora.org>
- <20191219195814.GA23673@jcrouse1-lnx.qualcomm.com>
-Message-ID: <9c32a63c7300cb68e459f58a1b6fe3f8@codeaurora.org>
-X-Sender: smasetty@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-20 01:28, Jordan Crouse wrote:
-> On Thu, Dec 19, 2019 at 06:44:46PM +0530, Sharat Masetty wrote:
->> The last level system cache can be partitioned to 32 different slices
->> of which GPU has two slices preallocated. One slice is used for 
->> caching GPU
->> buffers and the other slice is used for caching the GPU SMMU 
->> pagetables.
->> This patch talks to the core system cache driver to acquire the slice 
->> handles,
->> configure the SCID's to those slices and activates and deactivates the 
->> slices
->> upon GPU power collapse and restore.
->> 
->> Some support from the IOMMU driver is also needed to make use of the
->> system cache. IOMMU_QCOM_SYS_CACHE is a buffer protection flag which 
->> enables
->> caching GPU data buffers in the system cache with memory attributes 
->> such
->> as outer cacheable, read-allocate, write-allocate for buffers. The GPU
->> then has the ability to override a few cacheability parameters which 
->> it
->> does to override write-allocate to write-no-allocate as the GPU 
->> hardware
->> does not benefit much from it.
->> 
->> Similarly DOMAIN_ATTR_QCOM_SYS_CACHE is another domain level attribute
->> used by the IOMMU driver to set the right attributes to cache the 
->> hardware
->> pagetables into the system cache.
->> 
->> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
->> ---
->>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 122 
->> +++++++++++++++++++++++++++++++++-
->>  drivers/gpu/drm/msm/adreno/a6xx_gpu.h |   9 +++
->>  drivers/gpu/drm/msm/msm_iommu.c       |  13 ++++
->>  drivers/gpu/drm/msm/msm_mmu.h         |   3 +
->>  4 files changed, 146 insertions(+), 1 deletion(-)
->> 
->> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c 
->> b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
->> index faff6ff..0c7fdee 100644
->> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
->> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
->> @@ -9,6 +9,7 @@
->>  #include "a6xx_gmu.xml.h"
->> 
->>  #include <linux/devfreq.h>
->> +#include <linux/soc/qcom/llcc-qcom.h>
->> 
->>  #define GPU_PAS_ID 13
->> 
->> @@ -781,6 +782,117 @@ static void 
->> a6xx_bus_clear_pending_transactions(struct adreno_gpu *adreno_gpu)
->>  	gpu_write(gpu, REG_A6XX_GBIF_HALT, 0x0);
->>  }
->> 
->> +#define A6XX_LLC_NUM_GPU_SCIDS		5
->> +#define A6XX_GPU_LLC_SCID_NUM_BITS	5
+On 20/12/2019 11.00, Peter Zijlstra wrote:
+> On Fri, Dec 20, 2019 at 09:52:37AM +0100, Rasmus Villemoes wrote:
+>> On 19/12/2019 22.44, Steven Rostedt wrote:
+>>> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+>>>
+>>> In order to make a micro optimization in pick_next_task(), the order of the
+>>> sched class descriptor address must be in the same order as their priority
+>>> to each other. That is:
+>>>
+>>>  &idle_sched_class < &fair_sched_class < &rt_sched_class <
+>>>  &dl_sched_class < &stop_sched_class
+>>>
+>>> In order to guarantee this order of the sched class descriptors, add each
+>>> one into their own data section and force the order in the linker script.
+>>
+>> I think it would make the code simpler if one reverses these, see other
+>> reply.
 > 
-> As I mention below, I'm not sure if we need these
+> I started out agreeing, because of that mess around STOP_SCHED_CLASS and
+> that horrid BEFORE_CRUD thing.
 > 
->> +#define A6XX_GPU_LLC_SCID_MASK \
->> +	((1 << (A6XX_LLC_NUM_GPU_SCIDS * A6XX_GPU_LLC_SCID_NUM_BITS)) - 1)
->> +
->> +#define A6XX_GPUHTW_LLC_SCID_SHIFT	25
->> +#define A6XX_GPUHTW_LLC_SCID_MASK \
->> +	(((1 << A6XX_GPU_LLC_SCID_NUM_BITS) - 1) << 
->> A6XX_GPUHTW_LLC_SCID_SHIFT)
->> +
+> Then, when I fixed it all up, I saw what it did to Kyrill's patch (#4)
+> and that ends up looking like:
 > 
-> Normally these go into the envytools regmap but if we're going to do 
-> these guys
-> lets use the power of <linux/bitfield.h> for good.
+> -       if (likely((prev->sched_class == &idle_sched_class ||
+> -                   prev->sched_class == &fair_sched_class) &&
+> +       if (likely(prev->sched_class >= &fair_sched_class &&
 > 
-> #define A6XX_GPU_LLC_SCID GENMASK(24, 0)
-> #define A6XX_GPUHTW_LLC_SCID GENMASK(29, 25)
-> 
->> +static inline void a6xx_gpu_cx_rmw(struct a6xx_llc *llc,
-> 
-> Don't mark C functions as inline - let the compiler figure it out for 
-> you.
-> 
->> +	u32 reg, u32 mask, u32 or)
->> +{
->> +	msm_rmw(llc->mmio + (reg << 2), mask, or);
->> +}
->> +
->> +static void a6xx_llc_deactivate(struct a6xx_llc *llc)
->> +{
->> +	llcc_slice_deactivate(llc->gpu_llc_slice);
->> +	llcc_slice_deactivate(llc->gpuhtw_llc_slice);
->> +}
->> +
->> +static void a6xx_llc_activate(struct a6xx_llc *llc)
->> +{
->> +	if (!llc->mmio)
->> +		return;
->> +
->> +	/* Program the sub-cache ID for all GPU blocks */
->> +	if (!llcc_slice_activate(llc->gpu_llc_slice))
->> +		a6xx_gpu_cx_rmw(llc,
->> +				REG_A6XX_CX_MISC_SYSTEM_CACHE_CNTL_1,
->> +				A6XX_GPU_LLC_SCID_MASK,
->> +				(llc->cntl1_regval &
->> +				 A6XX_GPU_LLC_SCID_MASK));
-> 
-> This is out of order with the comments below, but if we store the slice 
-> id then
-> you could calculate regval here and not have to store it.
-> 
->> +
->> +	/* Program the sub-cache ID for the GPU pagetables */
->> +	if (!llcc_slice_activate(llc->gpuhtw_llc_slice))
-> 
-> val |= FIELD_SET(A6XX_GPUHTW_LLC_SCID, htw_llc_sliceid);
-> 
->> +		a6xx_gpu_cx_rmw(llc,
->> +				REG_A6XX_CX_MISC_SYSTEM_CACHE_CNTL_1,
->> +				A6XX_GPUHTW_LLC_SCID_MASK,
->> +				(llc->cntl1_regval &
->> +				 A6XX_GPUHTW_LLC_SCID_MASK));
-> 
-> And this could be FIELD_SET(A6XX_GPUHTW_LLC_SCID, sliceid);
-> 
-> In theory you could just calculate the u32 and write it directly 
-> without a rmw.
-> In fact, that might be preferable - if the slice activate failed, you 
-> don't want
-> to run the risk that the scid for htw is still populated.
-> 
->> +
->> +	/* Program cacheability overrides */
->> +	a6xx_gpu_cx_rmw(llc, REG_A6XX_CX_MISC_SYSTEM_CACHE_CNTL_0, 0xF,
->> +		llc->cntl0_regval);
-> 
-> As below, this could easily be a constant.
-> 
->> +}
->> +
->> +static void a6xx_llc_slices_destroy(struct a6xx_llc *llc)
->> +{
->> +	if (llc->mmio)
->> +		iounmap(llc->mmio);
-> 
-> msm_ioremap returns a devm_ managed resource, so do not use iounmap() 
-> to free
-> it. Bets to just leave it and let the gpu device handle it when it goes 
-> boom.
-> 
->> +
->> +	llcc_slice_putd(llc->gpu_llc_slice);
->> +	llcc_slice_putd(llc->gpuhtw_llc_slice);
->> +}
->> +
->> +static int a6xx_llc_slices_init(struct platform_device *pdev,
-> T
-> This can be void, I don't think we care if it passes or fails.
-> 
->> +		struct a6xx_llc *llc)
->> +{
->> +	llc->mmio = msm_ioremap(pdev, "cx_mem", "gpu_cx");
->> +	if (IS_ERR_OR_NULL(llc->mmio))
-> 
-> msm_ioremap can not return NULL.
-> 
->> +		return -ENODEV;
->> +
->> +	llc->gpu_llc_slice = llcc_slice_getd(LLCC_GPU);
->> +	llc->gpuhtw_llc_slice = llcc_slice_getd(LLCC_GPUHTW);
->> +	if (IS_ERR(llc->gpu_llc_slice) && IS_ERR(llc->gpuhtw_llc_slice))
->> +		return -ENODEV;
->> +
->> +	/*
->> +	 * CNTL0 provides options to override the settings for the
->> +	 * read and write allocation policies for the LLC. These
->> +	 * overrides are global for all memory transactions from
->> +	 * the GPU.
->> +	 *
->> +	 * 0x3: read-no-alloc-overridden = 0
->> +	 *      read-no-alloc = 0 - Allocate lines on read miss
->> +	 *      write-no-alloc-overridden = 1
->> +	 *      write-no-alloc = 1 - Do not allocates lines on write miss
->> +	 */
->> +	llc->cntl0_regval = 0x03;
-> 
-> This is a fixed value isn't it?  We should be able to get away with 
-> writing a
-> constant.
-> 
->> +
->> +	/*
->> +	 * CNTL1 is used to specify SCID for (CP, TP, VFD, CCU and UBWC
->> +	 * FLAG cache) GPU blocks. This value will be passed along with
->> +	 * the address for any memory transaction from GPU to identify
->> +	 * the sub-cache for that transaction.
->> +	 */
->> +	if (!IS_ERR(llc->gpu_llc_slice)) {
->> +		u32 gpu_scid = llcc_get_slice_id(llc->gpu_llc_slice);
->> +		int i;
->> +
->> +		for (i = 0; i < A6XX_LLC_NUM_GPU_SCIDS; i++)
->> +			llc->cntl1_regval |=
->> +				gpu_scid << (A6XX_GPU_LLC_SCID_NUM_BITS * i);
-> 
-> As above, i'm not sure a loop is better than just:
-> 
-> gpu_scid &= 0x1f;
-> 
-> llc->cntl1_regval = (gpu_scid << 0) || (gpu_scid << 5) | (gpu_scid << 
-> 10)
->  | (gpu_scid << 15) | (gpu_scid << 20);
-> 
-> And I'm not even sure we need do this math here in the first place.
-> 
->> +	}
->> +
->> +	/*
->> +	 * Set SCID for GPU IOMMU. This will be used to access
->> +	 * page tables that are cached in LLC.
->> +	 */
->> +	if (!IS_ERR(llc->gpuhtw_llc_slice)) {
->> +		u32 gpuhtw_scid = llcc_get_slice_id(llc->gpuhtw_llc_slice);
->> +
->> +		llc->cntl1_regval |=
->> +			gpuhtw_scid << A6XX_GPUHTW_LLC_SCID_SHIFT;
->> +	}
-> 
-> As above, I think storing the slice id could be more beneficial than 
-> calculating
-> a value, but if we do calculate a value, use 
-> FIELD_SET(A6XX_GPUHTW_LLC_SCID, )
-> 
->> +
->> +	return 0;
->> +}
->> +
->>  static int a6xx_pm_resume(struct msm_gpu *gpu)
->>  {
->>  	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
->> @@ -795,6 +907,8 @@ static int a6xx_pm_resume(struct msm_gpu *gpu)
->> 
->>  	msm_gpu_resume_devfreq(gpu);
->> 
->> +	a6xx_llc_activate(&a6xx_gpu->llc);
->> +
->>  	return 0;
->>  }
->> 
->> @@ -803,6 +917,8 @@ static int a6xx_pm_suspend(struct msm_gpu *gpu)
->>  	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
->>  	struct a6xx_gpu *a6xx_gpu = to_a6xx_gpu(adreno_gpu);
->> 
->> +	a6xx_llc_deactivate(&a6xx_gpu->llc);
->> +
->>  	devfreq_suspend_device(gpu->devfreq.devfreq);
->> 
->>  	/*
->> @@ -851,6 +967,7 @@ static void a6xx_destroy(struct msm_gpu *gpu)
->>  		drm_gem_object_put_unlocked(a6xx_gpu->sqe_bo);
->>  	}
->> 
->> +	a6xx_llc_slices_destroy(&a6xx_gpu->llc);
->>  	a6xx_gmu_remove(a6xx_gpu);
->> 
->>  	adreno_gpu_cleanup(adreno_gpu);
->> @@ -924,7 +1041,10 @@ struct msm_gpu *a6xx_gpu_init(struct drm_device 
->> *dev)
->>  	adreno_gpu->registers = NULL;
->>  	adreno_gpu->reg_offsets = a6xx_register_offsets;
->> 
->> -	ret = adreno_gpu_init(dev, pdev, adreno_gpu, &funcs, 1, 0);
->> +	ret = a6xx_llc_slices_init(pdev, &a6xx_gpu->llc);
->> +
-> 
-> Confirming we don't care if a6xx_llc_slices_init passes or fails.
+> And that's just weird.
 
-Are you suggesting to unconditionally set the memory attributes in 
-iommu(see the code below in msm_iommu.c).
-We probably wouldn't need this patch too in that case: 
-https://patchwork.freedesktop.org/patch/346097/
+I kind of agree, but if one can come up with good enough macro names, I
+think all that comparison logic should be in helpers either way the
+array is laid out. Something like
 
-The return code  is used in the line below to pass 
-MMU_FEATURE_USE_SYSTEM_CACHE. Am I missing something here?
+#define sched_class_lower_eq [something] /* perhaps comment on the array
+order */
+sched_class_lower_eq(prev->sched_class, &fair_sched_class)
 
+> Then I had a better look and now...
 > 
->> +	ret = adreno_gpu_init(dev, pdev, adreno_gpu, &funcs, 1,
->> +			ret ? 0 : MMU_FEATURE_USE_SYSTEM_CACHE);
->>  	if (ret) {
->>  		a6xx_destroy(&(a6xx_gpu->base.base));
->>  		return ERR_PTR(ret);
->> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h 
->> b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
->> index 7239b8b..09b9ad0 100644
->> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
->> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
->> @@ -12,6 +12,14 @@
->> 
->>  extern bool hang_debug;
->> 
->> +struct a6xx_llc {
->> +	void __iomem *mmio;
->> +	void *gpu_llc_slice;
->> +	void *gpuhtw_llc_slice;
->> +	u32 cntl0_regval;
+>>> +/*
+>>> + * The order of the sched class addresses are important, as they are
+>>> + * used to determine the order of the priority of each sched class in
+>>> + * relation to each other.
+>>> + */
+>>> +#define SCHED_DATA				\
+>>> +	*(__idle_sched_class)			\
+>>> +	*(__fair_sched_class)			\
+>>> +	*(__rt_sched_class)			\
+>>> +	*(__dl_sched_class)			\
+>>> +	STOP_SCHED_CLASS
 > 
-> As above, I'm not sure if cntl0 is needed.  Heck, I'm not even sure 
-> cntl1 is
-> needed - since we could store or query the ids at activate time.
-> 
->> +	u32 cntl1_regval;
->> +};
->> +
->>  struct a6xx_gpu {
->>  	struct adreno_gpu base;
->> 
->> @@ -21,6 +29,7 @@ struct a6xx_gpu {
->>  	struct msm_ringbuffer *cur_ring;
->> 
->>  	struct a6xx_gmu gmu;
->> +	struct a6xx_llc llc;
->>  };
->> 
->>  #define to_a6xx_gpu(x) container_of(x, struct a6xx_gpu, base)
->> diff --git a/drivers/gpu/drm/msm/msm_iommu.c 
->> b/drivers/gpu/drm/msm/msm_iommu.c
->> index 8c95c31..4699367 100644
->> --- a/drivers/gpu/drm/msm/msm_iommu.c
->> +++ b/drivers/gpu/drm/msm/msm_iommu.c
->> @@ -27,6 +27,16 @@ static int msm_iommu_attach(struct msm_mmu *mmu, 
->> const char * const *names,
->>  			    int cnt)
->>  {
->>  	struct msm_iommu *iommu = to_msm_iommu(mmu);
->> +	int gpu_htw_llc = 1;
->> +
->> +	/*
->> +	 * This allows GPU to set the bus attributes required
->> +	 * to use system cache on behalf of the iommu page table
->> +	 * walker.
->> +	 */
->> +	if (msm_mmu_has_feature(mmu, MMU_FEATURE_USE_SYSTEM_CACHE))
->> +		iommu_domain_set_attr(iommu->domain,
->> +				DOMAIN_ATTR_QCOM_SYS_CACHE, &gpu_htw_llc);
-> 
-> We're all okay if this fails?  No harm no foul?
-> 
->> 
->>  	return iommu_attach_device(iommu->domain, mmu->dev);
->>  }
->> @@ -45,6 +55,9 @@ static int msm_iommu_map(struct msm_mmu *mmu, 
->> uint64_t iova,
->>  	struct msm_iommu *iommu = to_msm_iommu(mmu);
->>  	size_t ret;
->> 
->> +	if (msm_mmu_has_feature(mmu, MMU_FEATURE_USE_SYSTEM_CACHE))
->> +		prot |= IOMMU_QCOM_SYS_CACHE;
->> +
->>  	ret = iommu_map_sg(iommu->domain, iova, sgt->sgl, sgt->nents, prot);
->>  	WARN_ON(!ret);
->> 
->> diff --git a/drivers/gpu/drm/msm/msm_mmu.h 
->> b/drivers/gpu/drm/msm/msm_mmu.h
->> index 1e4ac36d..3e6bdad 100644
->> --- a/drivers/gpu/drm/msm/msm_mmu.h
->> +++ b/drivers/gpu/drm/msm/msm_mmu.h
->> @@ -18,6 +18,9 @@ struct msm_mmu_funcs {
->>  	void (*destroy)(struct msm_mmu *mmu);
->>  };
->> 
->> +/* MMU features */
->> +#define MMU_FEATURE_USE_SYSTEM_CACHE (1 << 0)
->> +
->>  struct msm_mmu {
->>  	const struct msm_mmu_funcs *funcs;
->>  	struct device *dev;
->> --
->> 1.9.1
->> 
+> I'm confused, why does that STOP_SCHED_CLASS need magic here at all?
+> Doesn't the linker deal with empty sections already by making them 0
+> sized?
+
+Yes, but dropping the STOP_SCHED_CLASS define doesn't prevent one from
+needing some ifdeffery to define highest_sched_class if they are laid
+out in (higher sched class <-> higher address) order.
+
+Rasmus
