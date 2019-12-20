@@ -2,85 +2,103 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F37C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FD9C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03B262467F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:17:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576837079;
-	bh=WDlz/eaahcbrJ7H+D15Kf/SYPxCgh/g8ow8gZBeOjYM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2H9nWoKWFvJhOKj6CfgC0QMNfaej83WqXg/72Gr4ucDJA2Bs4YeN9TGnNqZWztgsm
-	 bSO5Tdq9Bv4bd7zazCBbiQjSoni7av82gPz08s84QWCX5hAUrjtkTpjzEXRifopBTi
-	 2GSejKwXA5ogMlepbd/FxniJtvlgW0B5jVAh64wA=
+	by mail.kernel.org (Postfix) with ESMTP id 01CC72467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:18:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727467AbfLTKR6 (ORCPT
+        id S1727456AbfLTKS2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 05:17:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53354 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727327AbfLTKR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 05:17:56 -0500
-Received: from localhost.localdomain (unknown [106.201.107.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3AEC24683;
-        Fri, 20 Dec 2019 10:17:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576837075;
-        bh=WDlz/eaahcbrJ7H+D15Kf/SYPxCgh/g8ow8gZBeOjYM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CKgzrY8lQJgst6jMMwjLnhJx/QOO63BykHJmIpDRSHgezSg5UJ+HZ44h9hQUB0RLj
-         rGzPL+MXbubTsausxdVAYQJ5Z/xDnqUPaf30y6Uow24kKY2pc2/jTOSNZF2Q9EsStK
-         qn0IF9kqEMc7+mGi40jmvLEAsShryp065uWyVSU8=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
-        Can Guo <cang@codeaurora.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/5] phy: qcom-qmp: remove no_pcs_sw_reset for sm8150
-Date:   Fri, 20 Dec 2019 15:47:19 +0530
-Message-Id: <20191220101719.3024693-6-vkoul@kernel.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191220101719.3024693-1-vkoul@kernel.org>
-References: <20191220101719.3024693-1-vkoul@kernel.org>
+        Fri, 20 Dec 2019 05:18:28 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:26312 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727184AbfLTKS1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 05:18:27 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id uk-mta-7-xsbhb676OPeybTliNzrcug-1;
+ Fri, 20 Dec 2019 10:18:24 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 20 Dec 2019 10:18:23 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 20 Dec 2019 10:18:23 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Aleksa Sarai' <cyphar@cyphar.com>
+CC:     Florian Weimer <fweimer@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Shuah Khan <shuah@kernel.org>,
+        "Christian Brauner" <christian.brauner@ubuntu.com>,
+        "dev@opencontainers.org" <dev@opencontainers.org>,
+        "containers@lists.linux-foundation.org" 
+        <containers@lists.linux-foundation.org>,
+        "libc-alpha@sourceware.org" <libc-alpha@sourceware.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Subject: RE: [PATCH 1/2] uapi: split openat2(2) definitions from fcntl.h
+Thread-Topic: [PATCH 1/2] uapi: split openat2(2) definitions from fcntl.h
+Thread-Index: AQHVtnKfNpps3AEjjUOZljxYP1VvUqfBfNKAgAFG6YCAAAuokA==
+Date:   Fri, 20 Dec 2019 10:18:23 +0000
+Message-ID: <85251686ad074be18db926f903497a45@AcuMS.aculab.com>
+References: <20191219105533.12508-1-cyphar@cyphar.com>
+ <20191219105533.12508-2-cyphar@cyphar.com>
+ <87a77oy3oe.fsf@oldenburg2.str.redhat.com>
+ <20191219134525.mgzmjbsp4wo5b2bw@yavin.dot.cyphar.com>
+ <845fc9e8b55e4868bb4d20655e674b50@AcuMS.aculab.com>
+ <20191220093153.v7jpzvch3lohabll@yavin.dot.cyphar.com>
+In-Reply-To: <20191220093153.v7jpzvch3lohabll@yavin.dot.cyphar.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MC-Unique: xsbhb676OPeybTliNzrcug-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SM8150 QMPY phy for UFS and onwards the PHY_SW_RESET is present in PHY's
-PCS register so we should not mark no_pcs_sw_reset for sm8150 and
-onwards
+From: Aleksa Sarai
+> Sent: 20 December 2019 09:32
+...
+> > I'm guessing that is just 64bit aligned on 32bit archs like x86?
+> 
+> Yeah,
+> 
+> #define __aligned_u64 __u64 __attribute__((aligned(8)))
+> 
+> > No need to enforce it provided the structure will have no padding on
+> > archs where the 64bit fields are 64bit aligned. A plain __u64 should
+> > be fine.
+> 
+> Will this cause problems for x86-on-x86_64 emulation? Requiring an
+> 8-byte alignment for 'struct open_how' really isn't that undue of a
+> burden IMHO. Then again, clone3 is a bit of an outlier since both
+> perf_event_open and sched_setattr just use __u64s.
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- drivers/phy/qualcomm/phy-qcom-qmp.c | 1 -
- 1 file changed, 1 deletion(-)
+Makes diddly-squit difference.
+The 64bit kernel will 64bit align the structure.
+The kernel must allow for the userspace structure having arbitrary alignment.
+So there is no reason to (try to) align the user structure.
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 2a12a0b3bd72..2696640ee3f9 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -1393,7 +1393,6 @@ static const struct qmp_phy_cfg sm8150_ufsphy_cfg = {
- 	.pwrdn_ctrl		= SW_PWRDN,
- 
- 	.is_dual_lane_phy	= true,
--	.no_pcs_sw_reset	= true,
- 	.has_sw_reset		= true,
- };
- 
--- 
-2.23.0
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
