@@ -2,372 +2,117 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 833BBC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC16C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 352682072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:58:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="h11w2mst"
+	by mail.kernel.org (Postfix) with ESMTP id CB56E2072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:59:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbfLTT6G (ORCPT
+        id S1727509AbfLTT7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 14:58:06 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:52374 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727394AbfLTT6F (ORCPT
+        Fri, 20 Dec 2019 14:59:14 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:34151 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727411AbfLTT7O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 14:58:05 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576871884; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=qqzsE6iE6h9c38qi8OJwL6QizKwmkcXr+epT82FyQ1U=; b=h11w2mstkMRABwXA5OU48/YzVwdH+j8wwFt2E15yDYAvdnXGQf79CC+ed2ywKCYsr8yUOd84
- L6Um257iCxkrrZa+6RwM5xaAHEnwu06VB6mWHJZQ+LV/2b7nTpZ2vwKmJ9bW7l+bIteUptI6
- iAj8vxCEpuDkbrLvckECMrzkBbQ=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5dfd27cb.7fc92c9f4068-smtp-out-n02;
- Fri, 20 Dec 2019 19:58:03 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2E6D7C433CB; Fri, 20 Dec 2019 19:58:03 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A3857C43383;
-        Fri, 20 Dec 2019 19:58:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A3857C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Fri, 20 Dec 2019 12:57:58 -0700
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     smasetty@codeaurora.org
-Cc:     freedreno@lists.freedesktop.org, saiprakash.ranjan@codeaurora.org,
-        will@kernel.org, linux-arm-msm@vger.kernel.org, joro@8bytes.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        dri-devel@freedesktop.org, robin.murphy@arm.com,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [Freedreno] [PATCH 5/5] drm/msm/a6xx: Add support for using
- system cache(LLC)
-Message-ID: <20191220195758.GA12730@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: smasetty@codeaurora.org, freedreno@lists.freedesktop.org,
-        saiprakash.ranjan@codeaurora.org, will@kernel.org,
-        linux-arm-msm@vger.kernel.org, joro@8bytes.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        dri-devel@freedesktop.org, robin.murphy@arm.com,
-        linux-arm-msm-owner@vger.kernel.org
-References: <1576761286-20451-1-git-send-email-smasetty@codeaurora.org>
- <1576761286-20451-6-git-send-email-smasetty@codeaurora.org>
- <20191219195814.GA23673@jcrouse1-lnx.qualcomm.com>
- <9c32a63c7300cb68e459f58a1b6fe3f8@codeaurora.org>
+        Fri, 20 Dec 2019 14:59:14 -0500
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iiOQU-00081G-OF; Fri, 20 Dec 2019 20:59:06 +0100
+Date:   Fri, 20 Dec 2019 20:59:06 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH] x86/fpu: Deacticate FPU state after failure during state load
+Message-ID: <20191220195906.plk6kpmsrikvbcfn@linutronix.de>
+References: <20191212210855.19260-1-yu-cheng.yu@intel.com>
+ <20191212210855.19260-4-yu-cheng.yu@intel.com>
+ <20191218155449.sk4gjabtynh67jqb@linutronix.de>
+ <587463c4e5fa82dff8748e5f753890ac390e993e.camel@intel.com>
+ <20191219142217.axgpqlb7zzluoxnf@linutronix.de>
+ <19a94f88f1bc66bb81dbf5dd72083d03ca5090e9.camel@intel.com>
+ <20191219171635.phdsfkvsyazwaq7s@linutronix.de>
+ <1607597639a6c6255127fef07704ee9193e33166.camel@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <9c32a63c7300cb68e459f58a1b6fe3f8@codeaurora.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1607597639a6c6255127fef07704ee9193e33166.camel@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 03:40:59PM +0530, smasetty@codeaurora.org wrote:
-> On 2019-12-20 01:28, Jordan Crouse wrote:
-> >On Thu, Dec 19, 2019 at 06:44:46PM +0530, Sharat Masetty wrote:
-> >>The last level system cache can be partitioned to 32 different slices
-> >>of which GPU has two slices preallocated. One slice is used for caching
-> >>GPU
-> >>buffers and the other slice is used for caching the GPU SMMU pagetables.
-> >>This patch talks to the core system cache driver to acquire the slice
-> >>handles,
-> >>configure the SCID's to those slices and activates and deactivates the
-> >>slices
-> >>upon GPU power collapse and restore.
-> >>
-> >>Some support from the IOMMU driver is also needed to make use of the
-> >>system cache. IOMMU_QCOM_SYS_CACHE is a buffer protection flag which
-> >>enables
-> >>caching GPU data buffers in the system cache with memory attributes such
-> >>as outer cacheable, read-allocate, write-allocate for buffers. The GPU
-> >>then has the ability to override a few cacheability parameters which it
-> >>does to override write-allocate to write-no-allocate as the GPU hardware
-> >>does not benefit much from it.
-> >>
-> >>Similarly DOMAIN_ATTR_QCOM_SYS_CACHE is another domain level attribute
-> >>used by the IOMMU driver to set the right attributes to cache the
-> >>hardware
-> >>pagetables into the system cache.
-> >>
-> >>Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-> >>---
-> >> drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 122
-> >>+++++++++++++++++++++++++++++++++-
-> >> drivers/gpu/drm/msm/adreno/a6xx_gpu.h |   9 +++
-> >> drivers/gpu/drm/msm/msm_iommu.c       |  13 ++++
-> >> drivers/gpu/drm/msm/msm_mmu.h         |   3 +
-> >> 4 files changed, 146 insertions(+), 1 deletion(-)
-> >>
-> >>diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> >>b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> >>index faff6ff..0c7fdee 100644
-> >>--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> >>+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> >>@@ -9,6 +9,7 @@
-> >> #include "a6xx_gmu.xml.h"
-> >>
-> >> #include <linux/devfreq.h>
-> >>+#include <linux/soc/qcom/llcc-qcom.h>
-> >>
-> >> #define GPU_PAS_ID 13
-> >>
-> >>@@ -781,6 +782,117 @@ static void
-> >>a6xx_bus_clear_pending_transactions(struct adreno_gpu *adreno_gpu)
-> >> 	gpu_write(gpu, REG_A6XX_GBIF_HALT, 0x0);
-> >> }
-> >>
-> >>+#define A6XX_LLC_NUM_GPU_SCIDS		5
-> >>+#define A6XX_GPU_LLC_SCID_NUM_BITS	5
-> >
-> >As I mention below, I'm not sure if we need these
-> >
-> >>+#define A6XX_GPU_LLC_SCID_MASK \
-> >>+	((1 << (A6XX_LLC_NUM_GPU_SCIDS * A6XX_GPU_LLC_SCID_NUM_BITS)) - 1)
-> >>+
-> >>+#define A6XX_GPUHTW_LLC_SCID_SHIFT	25
-> >>+#define A6XX_GPUHTW_LLC_SCID_MASK \
-> >>+	(((1 << A6XX_GPU_LLC_SCID_NUM_BITS) - 1) <<
-> >>A6XX_GPUHTW_LLC_SCID_SHIFT)
-> >>+
-> >
-> >Normally these go into the envytools regmap but if we're going to do these
-> >guys
-> >lets use the power of <linux/bitfield.h> for good.
-> >
-> >#define A6XX_GPU_LLC_SCID GENMASK(24, 0)
-> >#define A6XX_GPUHTW_LLC_SCID GENMASK(29, 25)
-> >
-> >>+static inline void a6xx_gpu_cx_rmw(struct a6xx_llc *llc,
-> >
-> >Don't mark C functions as inline - let the compiler figure it out for you.
-> >
-> >>+	u32 reg, u32 mask, u32 or)
-> >>+{
-> >>+	msm_rmw(llc->mmio + (reg << 2), mask, or);
-> >>+}
-> >>+
-> >>+static void a6xx_llc_deactivate(struct a6xx_llc *llc)
-> >>+{
-> >>+	llcc_slice_deactivate(llc->gpu_llc_slice);
-> >>+	llcc_slice_deactivate(llc->gpuhtw_llc_slice);
-> >>+}
-> >>+
-> >>+static void a6xx_llc_activate(struct a6xx_llc *llc)
-> >>+{
-> >>+	if (!llc->mmio)
-> >>+		return;
-> >>+
-> >>+	/* Program the sub-cache ID for all GPU blocks */
-> >>+	if (!llcc_slice_activate(llc->gpu_llc_slice))
-> >>+		a6xx_gpu_cx_rmw(llc,
-> >>+				REG_A6XX_CX_MISC_SYSTEM_CACHE_CNTL_1,
-> >>+				A6XX_GPU_LLC_SCID_MASK,
-> >>+				(llc->cntl1_regval &
-> >>+				 A6XX_GPU_LLC_SCID_MASK));
-> >
-> >This is out of order with the comments below, but if we store the slice id
-> >then
-> >you could calculate regval here and not have to store it.
-> >
-> >>+
-> >>+	/* Program the sub-cache ID for the GPU pagetables */
-> >>+	if (!llcc_slice_activate(llc->gpuhtw_llc_slice))
-> >
-> >val |= FIELD_SET(A6XX_GPUHTW_LLC_SCID, htw_llc_sliceid);
-> >
-> >>+		a6xx_gpu_cx_rmw(llc,
-> >>+				REG_A6XX_CX_MISC_SYSTEM_CACHE_CNTL_1,
-> >>+				A6XX_GPUHTW_LLC_SCID_MASK,
-> >>+				(llc->cntl1_regval &
-> >>+				 A6XX_GPUHTW_LLC_SCID_MASK));
-> >
-> >And this could be FIELD_SET(A6XX_GPUHTW_LLC_SCID, sliceid);
-> >
-> >In theory you could just calculate the u32 and write it directly without a
-> >rmw.
-> >In fact, that might be preferable - if the slice activate failed, you
-> >don't want
-> >to run the risk that the scid for htw is still populated.
-> >
-> >>+
-> >>+	/* Program cacheability overrides */
-> >>+	a6xx_gpu_cx_rmw(llc, REG_A6XX_CX_MISC_SYSTEM_CACHE_CNTL_0, 0xF,
-> >>+		llc->cntl0_regval);
-> >
-> >As below, this could easily be a constant.
-> >
-> >>+}
-> >>+
-> >>+static void a6xx_llc_slices_destroy(struct a6xx_llc *llc)
-> >>+{
-> >>+	if (llc->mmio)
-> >>+		iounmap(llc->mmio);
-> >
-> >msm_ioremap returns a devm_ managed resource, so do not use iounmap() to
-> >free
-> >it. Bets to just leave it and let the gpu device handle it when it goes
-> >boom.
-> >
-> >>+
-> >>+	llcc_slice_putd(llc->gpu_llc_slice);
-> >>+	llcc_slice_putd(llc->gpuhtw_llc_slice);
-> >>+}
-> >>+
-> >>+static int a6xx_llc_slices_init(struct platform_device *pdev,
-> >T
-> >This can be void, I don't think we care if it passes or fails.
-> >
-> >>+		struct a6xx_llc *llc)
-> >>+{
-> >>+	llc->mmio = msm_ioremap(pdev, "cx_mem", "gpu_cx");
-> >>+	if (IS_ERR_OR_NULL(llc->mmio))
-> >
-> >msm_ioremap can not return NULL.
-> >
-> >>+		return -ENODEV;
-> >>+
-> >>+	llc->gpu_llc_slice = llcc_slice_getd(LLCC_GPU);
-> >>+	llc->gpuhtw_llc_slice = llcc_slice_getd(LLCC_GPUHTW);
-> >>+	if (IS_ERR(llc->gpu_llc_slice) && IS_ERR(llc->gpuhtw_llc_slice))
-> >>+		return -ENODEV;
-> >>+
-> >>+	/*
-> >>+	 * CNTL0 provides options to override the settings for the
-> >>+	 * read and write allocation policies for the LLC. These
-> >>+	 * overrides are global for all memory transactions from
-> >>+	 * the GPU.
-> >>+	 *
-> >>+	 * 0x3: read-no-alloc-overridden = 0
-> >>+	 *      read-no-alloc = 0 - Allocate lines on read miss
-> >>+	 *      write-no-alloc-overridden = 1
-> >>+	 *      write-no-alloc = 1 - Do not allocates lines on write miss
-> >>+	 */
-> >>+	llc->cntl0_regval = 0x03;
-> >
-> >This is a fixed value isn't it?  We should be able to get away with
-> >writing a
-> >constant.
-> >
-> >>+
-> >>+	/*
-> >>+	 * CNTL1 is used to specify SCID for (CP, TP, VFD, CCU and UBWC
-> >>+	 * FLAG cache) GPU blocks. This value will be passed along with
-> >>+	 * the address for any memory transaction from GPU to identify
-> >>+	 * the sub-cache for that transaction.
-> >>+	 */
-> >>+	if (!IS_ERR(llc->gpu_llc_slice)) {
-> >>+		u32 gpu_scid = llcc_get_slice_id(llc->gpu_llc_slice);
-> >>+		int i;
-> >>+
-> >>+		for (i = 0; i < A6XX_LLC_NUM_GPU_SCIDS; i++)
-> >>+			llc->cntl1_regval |=
-> >>+				gpu_scid << (A6XX_GPU_LLC_SCID_NUM_BITS * i);
-> >
-> >As above, i'm not sure a loop is better than just:
-> >
-> >gpu_scid &= 0x1f;
-> >
-> >llc->cntl1_regval = (gpu_scid << 0) || (gpu_scid << 5) | (gpu_scid << 10)
-> > | (gpu_scid << 15) | (gpu_scid << 20);
-> >
-> >And I'm not even sure we need do this math here in the first place.
-> >
-> >>+	}
-> >>+
-> >>+	/*
-> >>+	 * Set SCID for GPU IOMMU. This will be used to access
-> >>+	 * page tables that are cached in LLC.
-> >>+	 */
-> >>+	if (!IS_ERR(llc->gpuhtw_llc_slice)) {
-> >>+		u32 gpuhtw_scid = llcc_get_slice_id(llc->gpuhtw_llc_slice);
-> >>+
-> >>+		llc->cntl1_regval |=
-> >>+			gpuhtw_scid << A6XX_GPUHTW_LLC_SCID_SHIFT;
-> >>+	}
-> >
-> >As above, I think storing the slice id could be more beneficial than
-> >calculating
-> >a value, but if we do calculate a value, use
-> >FIELD_SET(A6XX_GPUHTW_LLC_SCID, )
-> >
-> >>+
-> >>+	return 0;
-> >>+}
-> >>+
-> >> static int a6xx_pm_resume(struct msm_gpu *gpu)
-> >> {
-> >> 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
-> >>@@ -795,6 +907,8 @@ static int a6xx_pm_resume(struct msm_gpu *gpu)
-> >>
-> >> 	msm_gpu_resume_devfreq(gpu);
-> >>
-> >>+	a6xx_llc_activate(&a6xx_gpu->llc);
-> >>+
-> >> 	return 0;
-> >> }
-> >>
-> >>@@ -803,6 +917,8 @@ static int a6xx_pm_suspend(struct msm_gpu *gpu)
-> >> 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
-> >> 	struct a6xx_gpu *a6xx_gpu = to_a6xx_gpu(adreno_gpu);
-> >>
-> >>+	a6xx_llc_deactivate(&a6xx_gpu->llc);
-> >>+
-> >> 	devfreq_suspend_device(gpu->devfreq.devfreq);
-> >>
-> >> 	/*
-> >>@@ -851,6 +967,7 @@ static void a6xx_destroy(struct msm_gpu *gpu)
-> >> 		drm_gem_object_put_unlocked(a6xx_gpu->sqe_bo);
-> >> 	}
-> >>
-> >>+	a6xx_llc_slices_destroy(&a6xx_gpu->llc);
-> >> 	a6xx_gmu_remove(a6xx_gpu);
-> >>
-> >> 	adreno_gpu_cleanup(adreno_gpu);
-> >>@@ -924,7 +1041,10 @@ struct msm_gpu *a6xx_gpu_init(struct drm_device
-> >>*dev)
-> >> 	adreno_gpu->registers = NULL;
-> >> 	adreno_gpu->reg_offsets = a6xx_register_offsets;
-> >>
-> >>-	ret = adreno_gpu_init(dev, pdev, adreno_gpu, &funcs, 1, 0);
-> >>+	ret = a6xx_llc_slices_init(pdev, &a6xx_gpu->llc);
-> >>+
-> >
-> >Confirming we don't care if a6xx_llc_slices_init passes or fails.
-> 
-> Are you suggesting to unconditionally set the memory attributes in iommu(see
-> the code below in msm_iommu.c).
-> We probably wouldn't need this patch too in that case:
-> https://patchwork.freedesktop.org/patch/346097/
-> 
-> The return code  is used in the line below to pass
-> MMU_FEATURE_USE_SYSTEM_CACHE. Am I missing something here?
+In __fpu__restore_sig() we need to reset `fpu_fpregs_owner_ctx' if the
+FPU state was not fully restored. Otherwise the following may happen
+(on the same CPU):
 
-Oh, I see. Please don't do that. Set a separate flag if you need to.
+Task A                     Task B               fpu_fpregs_owner_ctx
+*active*                                        A.fpu
+__fpu__restore_sig()
+                           ctx switch           load B.fpu
+                           *active*             B.fpu
+fpregs_lock()
+copy_user_to_fpregs_zeroing()
+  copy_kernel_to_xregs() *modify*
+  copy_user_to_xregs() *fails*
+fpregs_unlock()
+                          ctx switch            skip loading B.fpu,
+                          *active*              B.fpu
 
-features = 0;
+In the succeess case we set `fpu_fpregs_owner_ctx' to the current task.
+In the failure case we *might* have modified the FPU state because we
+loaded the init state. In this case we need to reset
+`fpu_fpregs_owner_ctx' to ensure that the FPU state of the following
+task is loaded from saved state (and not skip because it was the
+previous state).
 
- if (a6xx_llc_slices_init(pdev, &a6xx_gpu->llc))
-    features = MMU_FEATURE_USE_SYSTEM_CACHE;
+Reset `fpu_fpregs_owner_ctx' after a failure during restore occured to
+ensure that the FPU state for the next task is always loaded.
 
-Hiding ret in a function that also sets ret has a tendency to confuse people
-like me.
+Fixes: 5f409e20b7945 ("x86/fpu: Defer FPU state load until return to userspace")
+Reported-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+Debugged-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ arch/x86/kernel/fpu/signal.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Jordan
-
+diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
+index 0071b794ed193..400a05e1c1c51 100644
+--- a/arch/x86/kernel/fpu/signal.c
++++ b/arch/x86/kernel/fpu/signal.c
+@@ -352,6 +352,7 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 			fpregs_unlock();
+ 			return 0;
+ 		}
++		fpregs_deactivate(fpu);
+ 		fpregs_unlock();
+ 	}
+ 
+@@ -403,6 +404,8 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 	}
+ 	if (!ret)
+ 		fpregs_mark_activate();
++	else
++		fpregs_deactivate(fpu);
+ 	fpregs_unlock();
+ 
+ err_out:
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.24.1
+
