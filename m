@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B640C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 944DAC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 031B32465E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B47C2465E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852496;
-	bh=0tGg4+AZJaHWkUwSGa+LofvkLvWtlVY6XMsyeejDtKo=;
+	s=default; t=1576852500;
+	bh=hLKkAJA0MADLi+XZUqwXidurJB29yAl5JBZNs/tjID0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YMa4dRQk5fjD/Usq66RhIkbm2xfdobC0QF5yJu9FqHJntkCJ8mkEwORNTWHKOfR3p
-	 a7kBs25x2mPSxkrv6EfVeKTsb9mJfGEn7LxONJQI6uJJKQqvNlVMT9ceEo8J7Bnj//
-	 iiZ1vwhg6lJy5VsssTc0nt3+qnhzf7fLR2xdKFLA=
+	b=OOhOfnWaFqP4qvWcm6yskYF9TnfMQDkuYyky/20YxvMvRyePmhHu3gjTFi4snZ4qD
+	 m2DcII3286q83dKWDuHpLyLo48ncczc33zlIFpj49XZYlzBPS6x3KIUu92XnziORns
+	 6eE0DpmHp6b8WKjvPUVnq7+eKynETI0Dakrb9+eY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbfLTOey (ORCPT
+        id S1728326AbfLTOe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:34:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39042 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:34:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727683AbfLTOeu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:34:50 -0500
+        id S1727921AbfLTOey (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:34:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B66E024680;
-        Fri, 20 Dec 2019 14:34:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89D5924687;
+        Fri, 20 Dec 2019 14:34:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852489;
-        bh=0tGg4+AZJaHWkUwSGa+LofvkLvWtlVY6XMsyeejDtKo=;
+        s=default; t=1576852493;
+        bh=hLKkAJA0MADLi+XZUqwXidurJB29yAl5JBZNs/tjID0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Ms6UJJ0vKvtGgfPWD0JG4NbA5PROHP5pUyRe+xLTrevb7bmVcx+//aQxX2m0IQQe
-         0ZubZfqv0i6XN/e8xc4fdG51UgCLhVCl7Ucptu4ydA2hnLdkyPuG/APmb0XX2OMT6X
-         QaxgQ7iV5fN5JvMuM+cS69K1Ex0OL6wqOXaz+Fm4=
+        b=dS2XVn58lirWK/RqvKWDaj96vujlVySWcVOs7U31OEUiblJa6UTrSUK1XL/2tEvs9
+         vVvsHdg6soB28sgC95dAnPI9/klS+uj2LYfrYSlUOpX9iv0/Go5QeTe8ZqF52ms3cD
+         x6cdeWZxeqlivzIy6yM2fk1mHSZRz2YoRQT6hWas=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Parav Pandit <parav@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 12/34] RDMA/cma: add missed unregister_pernet_subsys in init failure
-Date:   Fri, 20 Dec 2019 09:34:11 -0500
-Message-Id: <20191220143433.9922-12-sashal@kernel.org>
+Cc:     Roman Bolshakov <r.bolshakov@yadro.com>,
+        Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 15/34] scsi: qla2xxx: Drop superfluous INIT_WORK of del_work
+Date:   Fri, 20 Dec 2019 09:34:14 -0500
+Message-Id: <20191220143433.9922-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220143433.9922-1-sashal@kernel.org>
 References: <20191220143433.9922-1-sashal@kernel.org>
@@ -60,36 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Roman Bolshakov <r.bolshakov@yadro.com>
 
-[ Upstream commit 44a7b6759000ac51b92715579a7bba9e3f9245c2 ]
+[ Upstream commit 600954e6f2df695434887dfc6a99a098859990cf ]
 
-The driver forgets to call unregister_pernet_subsys() in the error path
-of cma_init().
-Add the missed call to fix it.
+del_work is already initialized inside qla2x00_alloc_fcport, there's no
+need to overwrite it. Indeed, it might prevent complete traversal of
+workqueue list.
 
-Fixes: 4be74b42a6d0 ("IB/cma: Separate port allocation to network namespaces")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Link: https://lore.kernel.org/r/20191206012426.12744-1-hslester96@gmail.com
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+Fixes: a01c77d2cbc45 ("scsi: qla2xxx: Move session delete to driver work queue")
+Cc: Quinn Tran <qutran@marvell.com>
+Link: https://lore.kernel.org/r/20191125165702.1013-5-r.bolshakov@yadro.com
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Tested-by: Hannes Reinecke <hare@suse.de>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/cma.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/qla2xxx/qla_target.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index 1f373ba573b6d..319bfef00a4a8 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -4658,6 +4658,7 @@ static int __init cma_init(void)
- err:
- 	unregister_netdevice_notifier(&cma_nb);
- 	ib_sa_unregister_client(&sa_client);
-+	unregister_pernet_subsys(&cma_pernet_operations);
- err_wq:
- 	destroy_workqueue(cma_wq);
- 	return ret;
+diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
+index 210ce294038df..8eda55e917e04 100644
+--- a/drivers/scsi/qla2xxx/qla_target.c
++++ b/drivers/scsi/qla2xxx/qla_target.c
+@@ -1261,7 +1261,6 @@ void qlt_schedule_sess_for_deletion(struct fc_port *sess)
+ 	    "Scheduling sess %p for deletion %8phC\n",
+ 	    sess, sess->port_name);
+ 
+-	INIT_WORK(&sess->del_work, qla24xx_delete_sess_fn);
+ 	WARN_ON(!queue_work(sess->vha->hw->wq, &sess->del_work));
+ }
+ 
 -- 
 2.20.1
 
