@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 263F4C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F5EC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF155206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:36:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63F08206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:36:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852562;
-	bh=JYQDwSi2AWrgkrokV5h7ry6f5YjebKQk2ZX05B8b/Ro=;
+	s=default; t=1576852567;
+	bh=ReBJzI1bblwfuxFxlTI6RjR8uIjmzEnXygv1ae5ILjM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hvKR0V8IJFsuNn29yGmBiloThcLYA0xL2D+mJ3nNAoxpReY6g/36vThNZnBAgirx/
-	 74j5X6LmfcwBIACxiwFmP7Z3A/eqkwnHB2or0hOeufUiymwMbsuheJmIccEtb4sp1D
-	 ZLmaNeXh7q5HFPwZe3IbyHMfjR9NYzaedSbUqJjA=
+	b=HYVGtggaPpX5uADUhCX88DS3L21NockEV7ZyTBgJJgTew1/+gQYiJiHlh8Q8tNKBK
+	 y8LOyQjP6KkRuJQ2kH/nl3JbYDyOUA1DurlOqWMakgaphB5EbCWnSp7ardYurUtlAi
+	 aLpwa3DXpuMCiEVkK5bN4cGTPOBEb0qIqVsBrxDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbfLTOgA (ORCPT
+        id S1727991AbfLTOgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:36:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39596 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:36:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728108AbfLTOfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:35:09 -0500
+        id S1727857AbfLTOfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:35:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 631652467F;
-        Fri, 20 Dec 2019 14:35:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB4372467F;
+        Fri, 20 Dec 2019 14:35:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852509;
-        bh=JYQDwSi2AWrgkrokV5h7ry6f5YjebKQk2ZX05B8b/Ro=;
+        s=default; t=1576852506;
+        bh=ReBJzI1bblwfuxFxlTI6RjR8uIjmzEnXygv1ae5ILjM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F95ITaHIL9O0dW7dtfO94GbCgIx9Myrm2/lHJVDHQ2rK2I2Q3om7VCDkIlmSvIEBy
-         /2hUDC2YnePC1QH8tQu8UMxq/8hhI+nWqOIJZ2N7SUvpv38iXwV+Quipd5YFP2AXLd
-         SDcXffJeYIUSahcflWHRseNUP1nwVzbhu5cscivo=
+        b=JPFzO381W84CSYKl98XFavIdEp5Y3nDJ85LIHs8aXcwOf8aPLn9eIpvTTvgy0IX7q
+         U9s6pX/IxKvTn1e5DHPlnFi9gtYBFL7xajJKEigCrsgA+RkWVmVjCYgJ79dYvgzmYe
+         sM490AkKgqz+ZKtMhP+6QPJponeyitOWwl478LOU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 27/34] md: raid1: check rdev before reference in raid1_sync_request func
-Date:   Fri, 20 Dec 2019 09:34:26 -0500
-Message-Id: <20191220143433.9922-27-sashal@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, netdev@vger.kernel.org,
+        David Miller <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 25/34] net: make socket read/write_iter() honor IOCB_NOWAIT
+Date:   Fri, 20 Dec 2019 09:34:24 -0500
+Message-Id: <20191220143433.9922-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220143433.9922-1-sashal@kernel.org>
 References: <20191220143433.9922-1-sashal@kernel.org>
@@ -59,32 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit 028288df635f5a9addd48ac4677b720192747944 ]
+[ Upstream commit ebfcd8955c0b52eb793bcbc9e71140e3d0cdb228 ]
 
-In raid1_sync_request func, rdev should be checked before reference.
+The socket read/write helpers only look at the file O_NONBLOCK. not
+the iocb IOCB_NOWAIT flag. This breaks users like preadv2/pwritev2
+and io_uring that rely on not having the file itself marked nonblocking,
+but rather the iocb itself.
 
-Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Cc: netdev@vger.kernel.org
+Acked-by: David Miller <davem@davemloft.net>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/raid1.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/socket.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 6800dcd50a11b..abcb4c3a76c18 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -2756,7 +2756,7 @@ static sector_t raid1_sync_request(struct mddev *mddev, sector_t sector_nr,
- 				write_targets++;
- 			}
- 		}
--		if (bio->bi_end_io) {
-+		if (rdev && bio->bi_end_io) {
- 			atomic_inc(&rdev->nr_pending);
- 			bio->bi_iter.bi_sector = sector_nr + rdev->data_offset;
- 			bio_set_dev(bio, rdev->bdev);
+diff --git a/net/socket.c b/net/socket.c
+index 18d27b8c25116..1290aad5d1c35 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -867,7 +867,7 @@ static ssize_t sock_read_iter(struct kiocb *iocb, struct iov_iter *to)
+ 			     .msg_iocb = iocb};
+ 	ssize_t res;
+ 
+-	if (file->f_flags & O_NONBLOCK)
++	if (file->f_flags & O_NONBLOCK || (iocb->ki_flags & IOCB_NOWAIT))
+ 		msg.msg_flags = MSG_DONTWAIT;
+ 
+ 	if (iocb->ki_pos != 0)
+@@ -892,7 +892,7 @@ static ssize_t sock_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 	if (iocb->ki_pos != 0)
+ 		return -ESPIPE;
+ 
+-	if (file->f_flags & O_NONBLOCK)
++	if (file->f_flags & O_NONBLOCK || (iocb->ki_flags & IOCB_NOWAIT))
+ 		msg.msg_flags = MSG_DONTWAIT;
+ 
+ 	if (sock->type == SOCK_SEQPACKET)
 -- 
 2.20.1
 
