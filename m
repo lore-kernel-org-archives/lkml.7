@@ -2,131 +2,138 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1CBC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E483CC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63BE824680
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:37:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576841870;
-	bh=PoKeYq0D9fvJVRVU8du99GUzDT7gpGmoweFFZtR/B6A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZpyAgyPOmuiYcv1slAPuwQ8f8l3QwvgJIUpzxfISVVgoqVlPMYCZ14KWDNEIjQrVe
-	 VLJXW9lns/wwtMQWlMaNq4cg6TgtdvJHkdmU1jGoVQWVzjB94g+XM9MtQRRSeEWFby
-	 S8QZlBGiWYiQo8vsn8rhKW5HNLcWDx5ii2vZsPfY=
+	by mail.kernel.org (Postfix) with ESMTP id B18AB24682
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:41:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="klB2/u4w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfLTLht (ORCPT
+        id S1727283AbfLTLlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 06:37:49 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53923 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727184AbfLTLht (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 06:37:49 -0500
-Received: by mail-wm1-f68.google.com with SMTP id m24so8595226wmc.3;
-        Fri, 20 Dec 2019 03:37:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=+xqrG/Fr+lk5K0m1pptDnTQOO1AdoG749ulUXApgoJo=;
-        b=PjsD4G79liFs7IK7ZIxgjW2sIjJcOIfF+7D7HWaxyXYhsvxdmoVfdm6JcF9Nx73Z1R
-         TyohPsE7Cu/VZJ6zF2X2we0ZT2jojRde9jJfztrNF1L9GVPHyFe3RYwUudRcgyekELW7
-         WWXZIM1jZeqvL8Yy6TCLojYuNcVEnswyssEMe20oFdgX42rcvIczqRv9XBzTHRxT83u5
-         hhIWjkdJM2TGxu0+lr6k7jao1sKPUuH89boBbj0Xkz65zGTtkIfasMH1zfZFFOYiPnhr
-         OoDuK7ugzv4yViuSre3YsmfCaAtgKUuU6yhXNxzqdhXHOoPZtudqwCZgY5BTrZQvfn/u
-         qm4w==
-X-Gm-Message-State: APjAAAVe85pwyqnDUtNdqIXch42djNI2d3K2fmoy/mJ61rsZto6pDFNk
-        HUWg7i/y0H0UrHFADaryFlc=
-X-Google-Smtp-Source: APXvYqxea3sQYL0zemf/BDfh/Fngl+lzOAoLU0x312PESG6f2yo0GmWBhUf3frSoVwbx7/PQps66Kg==
-X-Received: by 2002:a1c:638a:: with SMTP id x132mr16983341wmb.43.1576841866625;
-        Fri, 20 Dec 2019 03:37:46 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id f1sm9955905wrp.93.2019.12.20.03.37.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 03:37:45 -0800 (PST)
-Date:   Fri, 20 Dec 2019 12:37:44 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     =?utf-8?B?5b2t5b+X5Yia?= <zgpeng.linux@gmail.com>
-Cc:     akpm@linux-foundation.org, hannes@cmpxchg.org,
-        vdavydov.dev@gmail.com, Shakeel Butt <shakeelb@google.com>,
-        linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zgpeng <zgpeng@tencent.com>
-Subject: Re: [PATCH] oom: choose a more suitable process to kill while all
- processes are not killable
-Message-ID: <20191220113744.GF20332@dhcp22.suse.cz>
-References: <1576823172-25943-1-git-send-email-zgpeng.linux@gmail.com>
- <20191220071334.GB20332@dhcp22.suse.cz>
- <CAE5vP3mHjdM-PwjUURwXgZDfgQ0b2BbgHkWZCHe-ysSmZ58pFw@mail.gmail.com>
+        Fri, 20 Dec 2019 06:41:36 -0500
+Received: from mail-co1nam11on2059.outbound.protection.outlook.com ([40.107.220.59]:6934
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727191AbfLTLlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 06:41:36 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QkQdgF57NpciJ42Hstgstfps754/670MTDL4VjCyVqbBlXN3y3PrPcIWOacEqgN3xMB9J6uxS1pJ+ZZ0jWt2ZdJ40DOuA2qBYhYzYHkTZK1hDdsKJ3dZl3e25rQ5JGQMB89LqJ8VhXTjGIfzlLdY71lp7fVkvgNZPwfQl0mfMy5SuYbei3qxcDCxvlaOpsrdGtgHwNZ99S7KvaDY50EPN3eBVl5/FyPjCHCgyUk0737uBz9rth3sAkV2+dgHOQ3AeWWPVI5ixerpnYy2hz6fznOQwMeGk+FgwpwMAUqRqBDq3b/K7JwppJdtsfbyDag8ML+rURZAyGuo+hXLJTI8Wg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2m+bRm661WkXn0+cmEpzLTLtBRXIHj3hYIIqOOhGk/M=;
+ b=HqXyAd9TKIdPvtEgMpFGavFxGPpH3ut6JYddpcq/XNMVKh24vyjv4Xm62qkfVH8mVxNDMQjEIqHf5bpM+RM5x7MPulY0td0Q87u1eKAryyGVvZUZlPxKTRiW01Xasv7/wr8uAIG57NTPGYsnGJGDkKss+zea6rDGlo3K6ZZZtlcVb9v3KDuUcMvzM6VVsBqu6fGOC7JES8VDIGTEDrZv39ngL9nh0OwEYVkB1pdHs+9BDILWVGfUO2LC0UbrLeOB2fx3iPNTq8FaXm6yZulw0oQUFy4oQ1fmkEBj9rSXwB7cVHuUYmOW/GeaWC4c4UybPhr7Y/AwinUyLPuvLWjePA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=google.com smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2m+bRm661WkXn0+cmEpzLTLtBRXIHj3hYIIqOOhGk/M=;
+ b=klB2/u4wfvZE1k+6cp9Ujj1CNVBs/uANd/xlmSX0OiLx8AqG3BadBQMyjbcO2rcM+hGockZIJ6e9Uea0ODgoYL54BqqZnzWqQ9TJZNuEoMFMurLTWiwH3KrjdmTm1rRLffxq2HoXp7/5oWxwd42YYU4V0Pjzhj5pgJGrD/byQDE=
+Received: from BN6PR02CA0041.namprd02.prod.outlook.com (2603:10b6:404:5f::27)
+ by SN4PR0201MB3517.namprd02.prod.outlook.com (2603:10b6:803:4d::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.12; Fri, 20 Dec
+ 2019 11:41:32 +0000
+Received: from CY1NAM02FT031.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::207) by BN6PR02CA0041.outlook.office365.com
+ (2603:10b6:404:5f::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2559.14 via Frontend
+ Transport; Fri, 20 Dec 2019 11:41:32 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT031.mail.protection.outlook.com (10.152.75.180) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2559.14
+ via Frontend Transport; Fri, 20 Dec 2019 11:41:32 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <bharat.kumar.gogada@xilinx.com>)
+        id 1iiGex-0001Hg-P1; Fri, 20 Dec 2019 03:41:31 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <bharat.kumar.gogada@xilinx.com>)
+        id 1iiGes-0006Ne-Lt; Fri, 20 Dec 2019 03:41:26 -0800
+Received: from xsj-pvapsmtp01 (smtp2.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xBKBfHfe001558;
+        Fri, 20 Dec 2019 03:41:17 -0800
+Received: from [10.140.9.2] (helo=xhdbharatku40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <bharat.kumar.gogada@xilinx.com>)
+        id 1iiGei-0006LD-PT; Fri, 20 Dec 2019 03:41:17 -0800
+From:   Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     bhelgaas@google.com, rgummal@xilinx.com,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Subject: [PATCH 0/2] Adding support for versal CPM as Root Port driver.
+Date:   Fri, 20 Dec 2019 17:11:10 +0530
+Message-Id: <1576842072-32027-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(39860400002)(376002)(346002)(199004)(189003)(26005)(186003)(107886003)(2616005)(316002)(336012)(5660300002)(8936002)(4744005)(426003)(478600001)(9786002)(36756003)(81156014)(81166006)(8676002)(356004)(6666004)(4326008)(2906002)(7696005)(70206006)(70586007);DIR:OUT;SFP:1101;SCL:1;SRVR:SN4PR0201MB3517;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAE5vP3mHjdM-PwjUURwXgZDfgQ0b2BbgHkWZCHe-ysSmZ58pFw@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b266627e-ebb8-4df3-4760-08d785418f92
+X-MS-TrafficTypeDiagnostic: SN4PR0201MB3517:
+X-Microsoft-Antispam-PRVS: <SN4PR0201MB3517F65E6CD30517D0228925A52D0@SN4PR0201MB3517.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:3513;
+X-Forefront-PRVS: 025796F161
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: a3dCzOQYm7tqVc5A9tmB8o+UDZzjK2fwq/RxU2irzU+qTosKZ2jQbNYg15H+dAlE03yrBClGrkn0phceWKAH+hy74ZiqZ0NW1ly3xV1wJFcFts3wQtSCSXoqrHUvGFU2ZVuivOI4pjaXw+xb7qSn/ucYGR6BoA0L2BE1EXrjdm3RQkraeUuamB9LW2wNFVjwlL4KdpnUbwOvLJ3qV5P/gU+UzcmJktcXUr7+eq+8Te6Rd02hAr7qxlHKG4OejOGZQVTSFUaW1bjAA9bFmDt2Y+wpQqzG5rZRHRGj6SF+IqDqPxvzVKYaIP4wphMPQHX5vV3kk7YFb/dqemquIgIXwzaSfNUI0G9QasUm6il3Y4ul+oNztAsNdKQxg2i5lxOpm1PQmhDWetLpAxpSK0AacZP3EDFgacADCzBXWU61KKVl1bcMDP1/WojsBrxTIgUq
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Dec 2019 11:41:32.3030
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b266627e-ebb8-4df3-4760-08d785418f92
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0201MB3517
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Please do not top post]
+- Adding support for versal CPM as Root port.
+- The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
+  block for CPM along with the integrated bridge can function
+  as PCIe Root Port.
+- Versal CPM uses GICv3 ITS feature for assigning MSI/MSI-X
+  vectors and handling MSI/MSI-X interrupts.
+- Bridge error and legacy interrupts in versal CPM are handled using
+  versal CPM specific MISC interrupt line.
 
-On Fri 20-12-19 17:56:20, 彭志刚 wrote:
-> certainly.
-> 
-> Steps to reproduce:
-> (1)Create a mm cgroup and set memory.limit_in_bytes
-> (2)Move the bash process to the newly created cgroup, and set the
-> oom_score_adj of the  bash process to -998.
-> (3)In bash, start multiple processes, each process consumes different
-> memory until cgroup oom is triggered.
-> 
-> The triggered phenomenon is shown below. We can see that when cgroup oom
-> happened, process 23777 was killed, but in fact, 23772 consumes more memory;
-> 
-> [  591.000970] Tasks state (memory values in pages):
-> [  591.000970] [  pid  ]   uid  tgid total_vm      rss pgtables_bytes swapents oom_score_adj name
-> [  591.000973] [  23344]     0 23344     2863      923    61440        0        -998 bash
-> [  591.000975] [  23714]     0 23714    27522    25935   258048        0        -998 test
-> [  591.000976] [  23772]     0 23772   104622   103032   876544        0        -998 test
+Bharat Kumar Gogada (2):
+  PCI: Versal CPM: Add device tree binding forversal CPM host controller
+  PCI: Versal CPM: Add support for Versal CPM Root Port driver
 
-points = 103032 + 0 + 876544/4096 = 103246
+ .../devicetree/bindings/pci/xilinx-versal-cpm.txt  |  66 +++
+ drivers/pci/controller/Kconfig                     |   8 +
+ drivers/pci/controller/Makefile                    |   1 +
+ drivers/pci/controller/pcie-xilinx-cpm.c           | 511 +++++++++++++++++++++
+ 4 files changed, 586 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt
+ create mode 100644 drivers/pci/controller/pcie-xilinx-cpm.c
 
-> [  591.000978] [  23777]     0 23777    78922    77335   667648        0        -998 test
-
-points = 77335 + 0 + 667648/4096 = 77498
-
-It is not clear what is the actual hard limit but let's assume that
-rss+page_tables is the only charged memory (or at least the majority of
-it). That would be 207680 so the normalized oom_score_adj would be
--206586 which is way too big for both tasks so from the OOM killer
-perspective both tasks are equal.
-
-The question is whether this is a bug or a (mis)feature. The
-oom_score_adj je documented as follows:
-Documentation/filesystems/proc.txt
-: Consequently, it is very simple for userspace to define the amount of memory to
-: consider for each task.  Setting a /proc/<pid>/oom_score_adj value of +500, for
-: example, is roughly equivalent to allowing the remainder of tasks sharing the
-: same system, cpuset, mempolicy, or memory controller resources to use at least
-: 50% more memory.  A value of -500, on the other hand, would be roughly
-: equivalent to discounting 50% of the task's allowed memory from being considered
-: as scoring against the task.
-
-Which implies that we are talking about the budget based on a usable
-memory (aka hard limit in this case). I do agree that the semantic is
-awkward. I know there are usecases which try to use the existing scheme
-for oom_score_adj to fine tune oom decisions and I am worried your patch
-might break those.
-
-That being said, I am not sure this change is safe wrt. to backward
-compatibility. I would rather recommend to not using oom_score_adj for
-anything but OOM_SCORE_ADJ_MIN resp OOM_SCORE_ADJ_MAX.
 -- 
-Michal Hocko
-SUSE Labs
+2.7.4
+
