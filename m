@@ -2,172 +2,95 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49253C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 03:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A588C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 03:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09B2724680
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 03:31:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pApIbfdV"
+	by mail.kernel.org (Postfix) with ESMTP id 50A9E24685
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 03:31:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbfLTDbE (ORCPT
+        id S1727315AbfLTDbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 22:31:04 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:10496 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726986AbfLTDbE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 22:31:04 -0500
-X-UUID: e71a1f0a1b634d9eb7619bb951a3664f-20191220
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=ZTNoH+cktFna9TQBKbYJjzfy16IKAqSff1i5BENu8YA=;
-        b=pApIbfdVJQMUKkgSOt69P+4vtrYofeFVxMi/pBLioFMH6vqFvCM9VHAvhd3UdU8oABFhKnFm+2ViMVNQYCbnhWtugpQQOqmNYNtW+INbNzYs+VH7GIIgl1OyrFA6ikts5qLHFoxineS7EcQNBjbwl4DyGvpIww/3gKnX8ANCUzU=;
-X-UUID: e71a1f0a1b634d9eb7619bb951a3664f-20191220
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <weiyi.lu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 605503053; Fri, 20 Dec 2019 11:30:58 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 20 Dec 2019 11:30:23 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 20 Dec 2019 11:31:03 +0800
-Message-ID: <1576812656.8410.9.camel@mtksdaap41>
-Subject: Re: [PATCH v10 06/12] soc: mediatek: Use bp_table for all
- compatibles
-From:   Weiyi Lu <weiyi.lu@mediatek.com>
-To:     Nicolas Boichat <drinkcat@chromium.org>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        Fan Chen <fan.chen@mediatek.com>,
-        "linux-arm Mailing List" <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Date:   Fri, 20 Dec 2019 11:30:56 +0800
-In-Reply-To: <CANMq1KCbmwY_nZTfZcbxYQm27CXdADD48RWQOx0JuTmGBn=y=g@mail.gmail.com>
-References: <1576657848-14711-1-git-send-email-weiyi.lu@mediatek.com>
-         <1576657848-14711-7-git-send-email-weiyi.lu@mediatek.com>
-         <CANMq1KCbmwY_nZTfZcbxYQm27CXdADD48RWQOx0JuTmGBn=y=g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-TM-SNTS-SMTP: 95FF981DA9AF05C907E5ED72562D82C4AF1DF851F9A50997CA40046854A7CDD72000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Thu, 19 Dec 2019 22:31:13 -0500
+Received: from mga04.intel.com ([192.55.52.120]:65387 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726986AbfLTDbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 22:31:13 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Dec 2019 19:31:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,334,1571727600"; 
+   d="scan'208";a="222412899"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga001.fm.intel.com with ESMTP; 19 Dec 2019 19:31:10 -0800
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        yixin.zhu@linux.intel.com, qi-ming.wu@intel.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v2 0/2] clk: intel: Add a new driver for a new clock controller IP
+Date:   Fri, 20 Dec 2019 11:31:06 +0800
+Message-Id: <cover.1576811332.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTEyLTE5IGF0IDExOjU0ICswODAwLCBOaWNvbGFzIEJvaWNoYXQgd3JvdGU6
-DQo+IE9uIFdlZCwgRGVjIDE4LCAyMDE5IGF0IDQ6MzEgUE0gV2VpeWkgTHUgPHdlaXlpLmx1QG1l
-ZGlhdGVrLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBPbmx5IHVzZSBicF90YWJsZSBmb3IgYnVzIHBy
-b3RlY3Rpb24gb2YgYWxsIGNvbXBhdGlibGVzLA0KPiA+IGluc3RlYWQgb2YgbWl4aW5nIGJ1c19w
-cm90X21hc2sgYW5kIGJ1c19wcm90X3JlZ191cGRhdGUuDQo+IA0KPiBkaXR0bywgSSdkIGp1c3Qg
-c3F1YXNoIGluIHRoZSBwcmV2aW91cyBwYXRjaC4NCj4gDQoNCk9LLCBJJ2xsIHVwZGF0ZSBpbiBu
-ZXh0IHZlcnNpb24uDQoNCj4gPiBTaWduZWQtb2ZmLWJ5OiBXZWl5aSBMdSA8d2VpeWkubHVAbWVk
-aWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstc2Nwc3lz
-LmMgfCA5NCArKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiAgMSBm
-aWxlIGNoYW5nZWQsIDQ4IGluc2VydGlvbnMoKyksIDQ2IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1zY3BzeXMuYyBiL2RyaXZlcnMv
-c29jL21lZGlhdGVrL210ay1zY3BzeXMuYw0KPiA+IGluZGV4IDU2OTlkOWYuLmM0MzhjNTMgMTAw
-NjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXNjcHN5cy5jDQo+ID4gKysr
-IGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXNjcHN5cy5jDQo+ID4gQEAgLTExLDcgKzExLDYg
-QEANCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KPiA+ICAjaW5jbHVk
-ZSA8bGludXgvcG1fZG9tYWluLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9yZWd1bGF0b3IvY29u
-c3VtZXIuaD4NCj4gPiAtI2luY2x1ZGUgPGxpbnV4L3NvYy9tZWRpYXRlay9pbmZyYWNmZy5oPg0K
-PiA+ICAjaW5jbHVkZSA8bGludXgvc29jL21lZGlhdGVrL3NjcHN5cy1leHQuaD4NCj4gPg0KPiA+
-ICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvcG93ZXIvbXQyNzAxLXBvd2VyLmg+DQo+ID4gQEAgLTg4
-LDcgKzg3LDYgQEANCj4gPiAgICogQGN0bF9vZmZzOiBUaGUgb2Zmc2V0IGZvciBtYWluIHBvd2Vy
-IGNvbnRyb2wgcmVnaXN0ZXIuDQo+ID4gICAqIEBzcmFtX3Bkbl9iaXRzOiBUaGUgbWFzayBmb3Ig
-c3JhbSBwb3dlciBjb250cm9sIGJpdHMuDQo+ID4gICAqIEBzcmFtX3Bkbl9hY2tfYml0czogVGhl
-IG1hc2sgZm9yIHNyYW0gcG93ZXIgY29udHJvbCBhY2tlZCBiaXRzLg0KPiA+IC0gKiBAYnVzX3By
-b3RfbWFzazogVGhlIG1hc2sgZm9yIHNpbmdsZSBzdGVwIGJ1cyBwcm90ZWN0aW9uLg0KPiA+ICAg
-KiBAYmFzaWNfY2xrX25hbWU6IFRoZSBiYXNpYyBjbG9ja3MgcmVxdWlyZWQgYnkgdGhpcyBwb3dl
-ciBkb21haW4uDQo+ID4gICAqIEBjYXBzOiBUaGUgZmxhZyBmb3IgYWN0aXZlIHdha2UtdXAgYWN0
-aW9uLg0KPiA+ICAgKiBAYnBfdGFibGU6IFRoZSBtYXNrIHRhYmxlIGZvciBtdWx0aXBsZSBzdGVw
-IGJ1cyBwcm90ZWN0aW9uLg0KPiA+IEBAIC05OSw3ICs5Nyw2IEBAIHN0cnVjdCBzY3BfZG9tYWlu
-X2RhdGEgew0KPiA+ICAgICAgICAgaW50IGN0bF9vZmZzOw0KPiA+ICAgICAgICAgdTMyIHNyYW1f
-cGRuX2JpdHM7DQo+ID4gICAgICAgICB1MzIgc3JhbV9wZG5fYWNrX2JpdHM7DQo+ID4gLSAgICAg
-ICB1MzIgYnVzX3Byb3RfbWFzazsNCj4gPiAgICAgICAgIGNvbnN0IGNoYXIgKmJhc2ljX2Nsa19u
-YW1lW01BWF9DTEtTXTsNCj4gPiAgICAgICAgIHU4IGNhcHM7DQo+ID4gICAgICAgICBzdHJ1Y3Qg
-YnVzX3Byb3QgYnBfdGFibGVbTUFYX1NURVBTXTsNCj4gPiBAQCAtMTI4LDcgKzEyNSw2IEBAIHN0
-cnVjdCBzY3Agew0KPiA+ICAgICAgICAgc3RydWN0IHJlZ21hcCAqaW5mcmFjZmc7DQo+ID4gICAg
-ICAgICBzdHJ1Y3QgcmVnbWFwICpzbWlfY29tbW9uOw0KPiA+ICAgICAgICAgc3RydWN0IHNjcF9j
-dHJsX3JlZyBjdHJsX3JlZzsNCj4gPiAtICAgICAgIGJvb2wgYnVzX3Byb3RfcmVnX3VwZGF0ZTsN
-Cj4gPiAgfTsNCj4gPg0KPiA+ICBzdHJ1Y3Qgc2NwX3N1YmRvbWFpbiB7DQo+ID4gQEAgLTE0Miw3
-ICsxMzgsNiBAQCBzdHJ1Y3Qgc2NwX3NvY19kYXRhIHsNCj4gPiAgICAgICAgIGNvbnN0IHN0cnVj
-dCBzY3Bfc3ViZG9tYWluICpzdWJkb21haW5zOw0KPiA+ICAgICAgICAgaW50IG51bV9zdWJkb21h
-aW5zOw0KPiA+ICAgICAgICAgY29uc3Qgc3RydWN0IHNjcF9jdHJsX3JlZyByZWdzOw0KPiA+IC0g
-ICAgICAgYm9vbCBidXNfcHJvdF9yZWdfdXBkYXRlOw0KPiA+ICB9Ow0KPiA+DQo+ID4gIHN0YXRp
-YyBpbnQgc2Nwc3lzX2RvbWFpbl9pc19vbihzdHJ1Y3Qgc2NwX2RvbWFpbiAqc2NwZCkNCj4gPiBA
-QCAtMjU2LDEyICsyNTEsNiBAQCBzdGF0aWMgaW50IHNjcHN5c19idXNfcHJvdGVjdF9lbmFibGUo
-c3RydWN0IHNjcF9kb21haW4gKnNjcGQpDQo+ID4gIHsNCj4gPiAgICAgICAgIHN0cnVjdCBzY3Ag
-KnNjcCA9IHNjcGQtPnNjcDsNCj4gPg0KPiA+IC0gICAgICAgaWYgKHNjcGQtPmRhdGEtPmJ1c19w
-cm90X21hc2spIHsNCj4gPiAtICAgICAgICAgICAgICAgcmV0dXJuIG10a19pbmZyYWNmZ19zZXRf
-YnVzX3Byb3RlY3Rpb24oc2NwLT5pbmZyYWNmZywNCj4gPiAtICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHNjcGQtPmRhdGEtPmJ1c19wcm90X21hc2ssDQo+ID4gLSAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBzY3AtPmJ1c19wcm90X3JlZ191cGRhdGUpOw0KPiA+IC0gICAgICAg
-fQ0KPiA+IC0NCj4gPiAgICAgICAgIHJldHVybiBtdGtfc2Nwc3lzX2V4dF9zZXRfYnVzX3Byb3Rl
-Y3Rpb24oc2NwZC0+ZGF0YS0+YnBfdGFibGUsDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAg
-c2NwLT5pbmZyYWNmZywgc2NwLT5zbWlfY29tbW9uKTsNCj4gPiAgfQ0KPiA+IEBAIC0yNzAsMTIg
-KzI1OSw2IEBAIHN0YXRpYyBpbnQgc2Nwc3lzX2J1c19wcm90ZWN0X2Rpc2FibGUoc3RydWN0IHNj
-cF9kb21haW4gKnNjcGQpDQo+ID4gIHsNCj4gPiAgICAgICAgIHN0cnVjdCBzY3AgKnNjcCA9IHNj
-cGQtPnNjcDsNCj4gPg0KPiA+IC0gICAgICAgaWYgKHNjcGQtPmRhdGEtPmJ1c19wcm90X21hc2sp
-IHsNCj4gPiAtICAgICAgICAgICAgICAgcmV0dXJuIG10a19pbmZyYWNmZ19jbGVhcl9idXNfcHJv
-dGVjdGlvbihzY3AtPmluZnJhY2ZnLA0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgc2NwZC0+ZGF0YS0+YnVzX3Byb3RfbWFzaywNCj4gPiAtICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHNjcC0+YnVzX3Byb3RfcmVnX3VwZGF0ZSk7DQo+ID4gLSAgICAgICB9DQo+ID4g
-LQ0KPiA+ICAgICAgICAgcmV0dXJuIG10a19zY3BzeXNfZXh0X2NsZWFyX2J1c19wcm90ZWN0aW9u
-KHNjcGQtPmRhdGEtPmJwX3RhYmxlLA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIHNjcC0+
-aW5mcmFjZmcsIHNjcC0+c21pX2NvbW1vbik7DQo+ID4gIH0NCj4gPiBAQCAtNDEyLDggKzM5NSw3
-IEBAIHN0YXRpYyBpbnQgaW5pdF9iYXNpY19jbGtzKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBk
-ZXYsIHN0cnVjdCBjbGsgKipjbGssDQo+ID4NCj4gPiAgc3RhdGljIHN0cnVjdCBzY3AgKmluaXRf
-c2NwKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsDQo+ID4gICAgICAgICAgICAgICAgICAg
-ICAgICAgY29uc3Qgc3RydWN0IHNjcF9kb21haW5fZGF0YSAqc2NwX2RvbWFpbl9kYXRhLCBpbnQg
-bnVtLA0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgIGNvbnN0IHN0cnVjdCBzY3BfY3RybF9y
-ZWcgKnNjcF9jdHJsX3JlZywNCj4gPiAtICAgICAgICAgICAgICAgICAgICAgICBib29sIGJ1c19w
-cm90X3JlZ191cGRhdGUpDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgY29uc3Qgc3RydWN0
-IHNjcF9jdHJsX3JlZyAqc2NwX2N0cmxfcmVnKQ0KPiA+ICB7DQo+ID4gICAgICAgICBzdHJ1Y3Qg
-Z2VucGRfb25lY2VsbF9kYXRhICpwZF9kYXRhOw0KPiA+ICAgICAgICAgc3RydWN0IHJlc291cmNl
-ICpyZXM7DQo+ID4gQEAgLTQyNyw4ICs0MDksNiBAQCBzdGF0aWMgc3RydWN0IHNjcCAqaW5pdF9z
-Y3Aoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwNCj4gPiAgICAgICAgIHNjcC0+Y3RybF9y
-ZWcucHdyX3N0YV9vZmZzID0gc2NwX2N0cmxfcmVnLT5wd3Jfc3RhX29mZnM7DQo+ID4gICAgICAg
-ICBzY3AtPmN0cmxfcmVnLnB3cl9zdGEybmRfb2ZmcyA9IHNjcF9jdHJsX3JlZy0+cHdyX3N0YTJu
-ZF9vZmZzOw0KPiA+DQo+ID4gLSAgICAgICBzY3AtPmJ1c19wcm90X3JlZ191cGRhdGUgPSBidXNf
-cHJvdF9yZWdfdXBkYXRlOw0KPiA+IC0NCj4gPiAgICAgICAgIHNjcC0+ZGV2ID0gJnBkZXYtPmRl
-djsNCj4gPg0KPiA+ICAgICAgICAgcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElP
-UkVTT1VSQ0VfTUVNLCAwKTsNCj4gPiBAQCAtNTQ5LDggKzUyOSwxMCBAQCBzdGF0aWMgdm9pZCBt
-dGtfcmVnaXN0ZXJfcG93ZXJfZG9tYWlucyhzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LA0K
-PiA+ICAgICAgICAgICAgICAgICAubmFtZSA9ICJjb25uIiwNCj4gPiAgICAgICAgICAgICAgICAg
-LnN0YV9tYXNrID0gUFdSX1NUQVRVU19DT05OLA0KPiA+ICAgICAgICAgICAgICAgICAuY3RsX29m
-ZnMgPSBTUE1fQ09OTl9QV1JfQ09OLA0KPiA+IC0gICAgICAgICAgICAgICAuYnVzX3Byb3RfbWFz
-ayA9IE1UMjcwMV9UT1BfQVhJX1BST1RfRU5fQ09OTl9NIHwNCj4gPiAtICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBNVDI3MDFfVE9QX0FYSV9QUk9UX0VOX0NPTk5fUywNCj4gPiArICAg
-ICAgICAgICAgICAgLmJwX3RhYmxlID0gew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIEJV
-U19QUk9UKElGUl9UWVBFLCAwLCAwLCAweDIyMCwgMHgyMjgsDQo+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBCSVQoMikgfCBCSVQoOCksIEJJVCgyKSB8IEJJVCg4KSksDQo+ID4g
-KyAgICAgICAgICAgICAgIH0sDQo+IA0KPiBJJ20gYSBiaXQgc2FkIHdlIGxvc2UgdGhlIGluZm9y
-bWF0aW9uIGFib3V0IHRoZSBCSVQgbWVhbmluZy4NCj4gDQoNCkknbGwga2VlcCB0aG9zZSBpbmZv
-cm1hdGlvbiBpbiBuZXh0IHZlcnNpb24uDQoNCj4gT2YgY291cnNlIHRoaXMgbG9va3MgdWdseSBh
-bmQgdmVyYm9zZToNCj4gICAgICAgICAgICAgICAgICAgICAgIEJVU19QUk9UKElGUl9UWVBFLCAw
-LCAwLCAweDIyMCwgMHgyMjgsDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBNVDI3
-MDFfVE9QX0FYSV9QUk9UX0VOX0NPTk5fTSB8DQo+IE1UMjcwMV9UT1BfQVhJX1BST1RfRU5fQ09O
-Tl9TLA0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgTVQyNzAxX1RPUF9BWElfUFJP
-VF9FTl9DT05OX00gfA0KPiBNVDI3MDFfVE9QX0FYSV9QUk9UX0VOX0NPTk5fUyksDQo+IA0KPiBC
-dXQgaWYgeW91IG1ha2UgImNoZWNrX2Nscl9tYXNrIiBhIGJvb2xlYW4sIHlvdSB3b3VsZG4ndCBo
-YXZlIHRvDQo+IHJlcGVhdCB0aGUgbWFzayB0d2ljZSBhbmQgeW91IGNvdWxkIGtlZXAgdGhlIG5p
-Y2UgcmVnaXN0ZXIgYml0DQo+IGRlZmluaXRpb25zLg0KPiANCg0KVGhhbmtzIGZvciB0aGUgc3Vn
-Z2VzdGlvbiwgSSdsbCBhZGQgImlnbm9yZV9jbHJfYWNrIiBmb3IgaXQgaW4gbmV4dA0KdmVyc2lv
-bi4NCg0KPiBbc25pcCwgbWFueSBzaW1pbGFyIG9jY3VyZW5jZXMgYmVsb3ddDQoNCg==
+Hi,
+
+This series adds clock driver for Clock Generation Unit(CGU) of
+Lightning Mountain(LGM) SoC.
+
+Patch 1 adds common clock framework based clock driver for CGU.
+Patch 2 adds bindings document & include file for CGU.
+
+These patches are baselined upon Linux 5.5-rc1 at below Git link:
+git git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git
+
+v2:
+- Move the driver to x86 folder.
+- Remove syscon usage.
+- Remove regmap based access. Use direct readl()/write() instead. Add spinlocks.
+- Change all enum values to capitals.
+- Rename all data structures & functions from intel_* to lgm_*.
+- Remove multiple header files. Keep only one header file.
+- Make probe fail when any of the clk/pll registration fails.
+- Fix few bugs with clk_init_data assignement.
+- Address review concerns for code quality/style/convention.
+
+v1:
+- Initial version.
+
+Rahul Tanwar (1):
+  dt-bindings: clk: intel: Add bindings document & header file for CGU
+
+rtanwar (1):
+  clk: intel: Add CGU clock driver for a new SoC
+
+ .../devicetree/bindings/clock/intel,cgu-lgm.yaml   |  43 ++
+ drivers/clk/Kconfig                                |   8 +
+ drivers/clk/x86/Makefile                           |   1 +
+ drivers/clk/x86/clk-cgu-pll.c                      | 194 +++++++
+ drivers/clk/x86/clk-cgu.c                          | 559 +++++++++++++++++++++
+ drivers/clk/x86/clk-cgu.h                          | 296 +++++++++++
+ drivers/clk/x86/clk-lgm.c                          | 351 +++++++++++++
+ include/dt-bindings/clock/intel,lgm-clk.h          | 150 ++++++
+ 8 files changed, 1602 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
+ create mode 100644 drivers/clk/x86/clk-cgu-pll.c
+ create mode 100644 drivers/clk/x86/clk-cgu.c
+ create mode 100644 drivers/clk/x86/clk-cgu.h
+ create mode 100644 drivers/clk/x86/clk-lgm.c
+ create mode 100644 include/dt-bindings/clock/intel,lgm-clk.h
+
+-- 
+2.11.0
 
