@@ -2,57 +2,108 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5C4C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9912C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 987F42067C
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 12:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B95D62067C
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 13:00:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NcQOfR11"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727419AbfLTM71 (ORCPT
+        id S1727391AbfLTNA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 07:59:27 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55342 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727344AbfLTM71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 07:59:27 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D8CCDAB91;
-        Fri, 20 Dec 2019 12:59:25 +0000 (UTC)
-Subject: Re: [PATCH v2] xen/grant-table: remove multiple BUG_ON on
- gnttab_interface
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     kjlu@umn.edu, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-References: <20191217205356.29172-1-pakki001@umn.edu>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <1a59dbf6-5a14-da94-eb90-c2de90e0e191@suse.com>
-Date:   Fri, 20 Dec 2019 13:59:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Fri, 20 Dec 2019 08:00:57 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:42788 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727344AbfLTNA5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 08:00:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576846856;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xeUreLt6va9L8SCH3nGSjnsigirIJ1dymwMuYGQ0eIA=;
+        b=NcQOfR11QuPp6kxffQd2TfkSQYi9QxwyD2nT1CBQQ+srrqpbWhwkgA7Mzi1aIgLDEPBd+r
+        uWziCK+aXV8WSedAH/HDbcz9vyNuXXfcKbbiCu2VNNeLyfHDdCADOtnWLokzkLDR5LiMDx
+        Bv0XpxoWAy+b6unHePofHkrF7CJ2wOQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-322-x_iIbmquNkeT2-BPzY-dDA-1; Fri, 20 Dec 2019 08:00:45 -0500
+X-MC-Unique: x_iIbmquNkeT2-BPzY-dDA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF8728024DB;
+        Fri, 20 Dec 2019 13:00:43 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-98.ams2.redhat.com [10.36.116.98])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B59CE70383;
+        Fri, 20 Dec 2019 13:00:26 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 638F69DA5; Fri, 20 Dec 2019 14:00:25 +0100 (CET)
+Date:   Fri, 20 Dec 2019 14:00:25 +0100
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Frediano Ziglio <fziglio@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
+        <virtualization@lists.linux-foundation.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
+        <spice-devel@lists.freedesktop.org>,
+        Dave Airlie <airlied@redhat.com>
+Subject: Re: [Spice-devel] [PATCH 4/4] drm/qxl: add drm_driver.release
+ callback.
+Message-ID: <20191220130025.maasx7xfb7rtadgd@sirius.home.kraxel.org>
+References: <20191220115935.15152-1-kraxel@redhat.com>
+ <20191220115935.15152-5-kraxel@redhat.com>
+ <57755373.16738363.1576843760950.JavaMail.zimbra@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191217205356.29172-1-pakki001@umn.edu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <57755373.16738363.1576843760950.JavaMail.zimbra@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.12.19 21:53, Aditya Pakki wrote:
-> gnttab_request_version() always sets the gnttab_interface variable
-> and the assertions to check for empty gnttab_interface is unnecessary.
-> The patch eliminates multiple such assertions.
+On Fri, Dec 20, 2019 at 07:09:20AM -0500, Frediano Ziglio wrote:
+> > 
+> > Move final cleanups to qxl_drm_release() callback.
 > 
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> Can you explain in the commit why this is better or preferable?
 
-Pushed to xen/tip.git for-linus-5.5b
+It gets called when the drm device refcount goes down to zero.
+It's needed for a proper cleanup in the correct order.
 
+> > Add drm_atomic_helper_shutdown() call to qxl_pci_remove().
+> 
+> I suppose this is to replace the former manual cleanup calls,
+> which were moved to qxl_drm_release, I think this could be
+> added in the commit message ("why"), I don't see much value
+> in describing "how" this was done.
 
-Juergen
+The call is part of the shutdown sequence for atomic drm drivers
+and wasn't present in qxl for some reason.
+
+> > Reorder calls in qxl_device_fini().  Cleaning up gem & ttm
+> > might trigger qxl commands, so we should do that before
+> > releaseing command rings.
+> 
+> Typo: releaseing -> releasing
+> Why not putting this in a separate commit? Was this behaviour
+> changed? It does not seem so to me.
+
+Yes, I can make that a separate commit.
+
+No, behavior didn't change.  qxl_device_fini() is simply broken
+without this.
+
+cheers,
+  Gerd
+
