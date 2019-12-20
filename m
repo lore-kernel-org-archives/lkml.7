@@ -2,57 +2,57 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50811C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78326C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1399921655
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A02224682
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:42:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UnFHOJ8+"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WKw3HQHg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727692AbfLTPm1 (ORCPT
+        id S1727670AbfLTPmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 10:42:27 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:32934 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727656AbfLTPmY (ORCPT
+        Fri, 20 Dec 2019 10:42:23 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39829 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727652AbfLTPmW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 10:42:24 -0500
-Received: by mail-wr1-f66.google.com with SMTP id b6so9887181wrq.0
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 07:42:21 -0800 (PST)
+        Fri, 20 Dec 2019 10:42:22 -0500
+Received: by mail-wr1-f65.google.com with SMTP id y11so9847449wrt.6
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 07:42:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=E3KRI0OMvvIk1Vp8KAUHmCXVK/1yf6rawh5IXDd9ces=;
-        b=UnFHOJ8+GMLl+jOi6cH3hewYYZpM8CrAZz0SocrwHbHAJi5kJCGxdWoGBYNd56FKms
-         4iXoCWR0Y+JGIzj7lVun/7TKSmQCrI86eAVnrLNHcZl2fSFj/iOG2XC4x+bnuIvXMVkx
-         pA9LhZZrfM+iekDJ2f8ZjDb6LS4rmGE8qv4Ns=
+        bh=yc9ODbRkpfKhA+Bxs3/DUYVIlQWXjVZp723Z2EeGdZc=;
+        b=WKw3HQHg8X+hta1mRj20MRUciozMczPH5i128KkU11Y/6Nfc2CEQ+6Ypk95wkKHT7r
+         trfBNwxwBNf8iNEWqfH6SHFqHARVSDKiAIyucpNqWzGpe/cejc3LEOlUuUqu66H6ummD
+         1X6RfGF7NJWW0klqQLrlq2ImKsEQBIB5k4ojE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=E3KRI0OMvvIk1Vp8KAUHmCXVK/1yf6rawh5IXDd9ces=;
-        b=WySIkFKDBSOF+YfmADEvkv9A3HpY15TaWbbEbLpYWnNAulgXi03zCzW2WNp/uLInyC
-         LT2oeS+GfFUB0yfNwsS07gW9OBA3ccoPJDKD+51cK+M2paIMWvaTk/3l6SQSm3vmETPy
-         WNPzAJGElws8xY+XzUnZ92Pf3FMkCXPGHAmtP3shPuSOHCqTWfQ+dCjd5Gyx102pdIum
-         OdeXknJGLcfYkeoY5QdgvXsi2EESaqrRNYXkti3rnKM8oXB8pk0KZGT9Ob/Qrhhwn4ah
-         hp9dyrnZIwkROt+PVpyFVaqOa72skmxCRjC0wCrR2zsxvCSa5JTGQY6icpdEbCZBamdr
-         0Pow==
-X-Gm-Message-State: APjAAAUo4HAyGiuZj17/vOdLkXDcyF6DWg9dpZsxMA7XenYzT4UT9TdE
-        yZDPN2ywvrcXd0H9RQV55/Xl6O8x41I=
-X-Google-Smtp-Source: APXvYqy+NoYaSlhnrfxz+YqWELrNDqgsG8cS58xKXuhUA6jx2tHjZj6TMGrFdnsggisjjCwLLCdlkQ==
-X-Received: by 2002:adf:d184:: with SMTP id v4mr15936626wrc.76.1576856540672;
-        Fri, 20 Dec 2019 07:42:20 -0800 (PST)
+        bh=yc9ODbRkpfKhA+Bxs3/DUYVIlQWXjVZp723Z2EeGdZc=;
+        b=k6RXFuY5tR9biptYPQG4hvse4Mowg3YHJbNJm5d5dMwpmYyZq11SoOghMEG3ANCkxG
+         BwKxzchK/LFLZlU2U38Krm+ufmOH84F81XaWArj592UMWfsDEl7HBOk6yIPDp6NrzDIE
+         qaMY/UGLOSnadUkkcOhMqjR2FGGQnH5/bzr/HZGhdbEQvd3nkjQ02zRYX2hdG2uxM+9M
+         o4d9Ixe4oA3jwRmlTMC1kvL7KVEbSE4Y1Wl0IKU+Vfuj9b7YzWWU5zH5Vok/L0OWTTmm
+         uamQH38sJAE5WHRPyJxssz3I0I1oob2Kv09bToXfKrPuKtdGwEwcc6+UBZsD8cynkU2i
+         yZCA==
+X-Gm-Message-State: APjAAAUTdlXoNo5cnP85rek9M9dsy2c6SPBS0yyu6/QZJloqkX83aT4O
+        vrrASLUQAP0ZHu2sb73c1bE8xb7tgO8=
+X-Google-Smtp-Source: APXvYqzZ/HeRiZyZqrHoGSRsTXmhTrhLhDdpjhDTQVQ/O6PcFtqYk1+XLqNQTXzXh0J3Va+0rBVjAQ==
+X-Received: by 2002:a05:6000:11c3:: with SMTP id i3mr15758099wrx.244.1576856539446;
+        Fri, 20 Dec 2019 07:42:19 -0800 (PST)
 Received: from kpsingh-kernel.localdomain ([2a00:79e1:abc:308:c46b:b838:66cf:6204])
-        by smtp.gmail.com with ESMTPSA id x11sm10118062wmg.46.2019.12.20.07.42.19
+        by smtp.gmail.com with ESMTPSA id x11sm10118062wmg.46.2019.12.20.07.42.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 07:42:20 -0800 (PST)
+        Fri, 20 Dec 2019 07:42:18 -0800 (PST)
 From:   KP Singh <kpsingh@chromium.org>
 To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
         linux-security-module@vger.kernel.org
@@ -80,9 +80,9 @@ Cc:     Alexei Starovoitov <ast@kernel.org>,
         Stanislav Fomichev <sdf@google.com>,
         Quentin Monnet <quentin.monnet@netronome.com>,
         Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
-Subject: [PATCH bpf-next v1 13/13] bpf: lsm: Add Documentation
-Date:   Fri, 20 Dec 2019 16:42:08 +0100
-Message-Id: <20191220154208.15895-14-kpsingh@chromium.org>
+Subject: [PATCH bpf-next v1 12/13] bpf: lsm: Add selftests for BPF_PROG_TYPE_LSM
+Date:   Fri, 20 Dec 2019 16:42:07 +0100
+Message-Id: <20191220154208.15895-13-kpsingh@chromium.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220154208.15895-1-kpsingh@chromium.org>
 References: <20191220154208.15895-1-kpsingh@chromium.org>
@@ -95,211 +95,235 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: KP Singh <kpsingh@google.com>
 
-Document how eBPF programs (BPF_PROG_TYPE_LSM) can be loaded and
-attached (BPF_LSM_MAC) to the LSM hooks.
+* Load a BPF program that audits mprotect calls
+* Attach the program to the "file_mprotect" LSM hook
+* Verify if the program is actually loading by reading
+  securityfs
+* Initialize the perf events buffer and poll for audit events
+* Do an mprotect on some memory allocated on the heap
+* Verify if the audit event was received
 
 Signed-off-by: KP Singh <kpsingh@google.com>
 ---
- Documentation/security/bpf.rst   | 164 +++++++++++++++++++++++++++++++
- Documentation/security/index.rst |   1 +
- MAINTAINERS                      |   1 +
- 3 files changed, 166 insertions(+)
- create mode 100644 Documentation/security/bpf.rst
+ MAINTAINERS                                   |   2 +
+ .../bpf/prog_tests/lsm_mprotect_audit.c       | 129 ++++++++++++++++++
+ .../selftests/bpf/progs/lsm_mprotect_audit.c  |  58 ++++++++
+ 3 files changed, 189 insertions(+)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/lsm_mprotect_audit.c
+ create mode 100644 tools/testing/selftests/bpf/progs/lsm_mprotect_audit.c
 
-diff --git a/Documentation/security/bpf.rst b/Documentation/security/bpf.rst
-new file mode 100644
-index 000000000000..898b7de148a0
---- /dev/null
-+++ b/Documentation/security/bpf.rst
-@@ -0,0 +1,164 @@
-+.. SPDX-License-Identifier: GPL-2.0+
-+.. Copyright 2019 Google LLC.
-+
-+==========================
-+eBPF Linux Security Module
-+==========================
-+
-+This LSM allows runtime instrumentation of the LSM hooks by privileged users to
-+implement system-wide MAC (Mandatory Access Control) and Audit policies using
-+eBPF. The LSM is priveleged and stackable and requires both ``CAP_SYS_ADMIN``
-+and ``CAP_MAC_ADMIN`` for the loading of BPF programs and modification of MAC
-+policies respectively.
-+
-+eBPF Programs
-+==============
-+
-+`eBPF (extended BPF) <https://cilium.readthedocs.io/en/latest/bpf>`_ is a
-+virtual machine-like construct in the Linux Kernel allowing the execution of
-+verifiable, just-in-time compiled byte code at various points in the Kernel.
-+
-+The eBPF LSM adds a new type, ``BPF_PROG_TYPE_LSM``, of eBPF programs which
-+have the following characteristics:
-+
-+	* Multiple eBPF programs can be attached to the same LSM hook.
-+	* LSM hooks can return an ``-EPERM`` to indicate the decision of the
-+	  MAC policy being enforced or simply be used for auditing.
-+	* Allowing the eBPF programs to be attached to all the LSM hooks by
-+	  making :doc:`/bpf/btf` type information available for all LSM hooks
-+	  and allowing the BPF verifier to perform runtime relocations and
-+	  validation on the programs.
-+
-+Structure
-+---------
-+
-+The example shows an eBPF program that can be attached to the ``file_mprotect``
-+LSM hook:
-+
-+.. c:function:: int file_mprotect(struct vm_area_struct *vma, unsigned long reqprot, unsigned long prot);
-+
-+eBPF programs that use :doc:`/bpf/btf` do not need to include kernel headers
-+for accessing information from the attached eBPF program's context. They can
-+simply declare the structures in the eBPF program and only specify the fields
-+that need to be accessed.
-+
-+.. code-block:: c
-+
-+	struct mm_struct {
-+		unsigned long start_brk, brk, start_stack;
-+	};
-+
-+	struct vm_area_struct {
-+		unsigned long start_brk, brk, start_stack;
-+		unsigned long vm_start, vm_end;
-+		struct mm_struct *vm_mm;
-+	};
-+
-+
-+.. note:: Only the size and the names of the fields must match the type in the
-+	  kernel and the order of the fields is irrelevant.
-+
-+The eBPF programs can be declared using macros similar to the ``BPF_TRACE_<N>``
-+macros defined in `tools/testing/selftests/bpf/bpf_trace_helpers.h`_. In this
-+example:
-+
-+	* The LSM hook takes 3 args so we use ``BPF_TRACE_3``.
-+	* ``"lsm/file_mprotect"`` indicates the LSM hook that the program must
-+	  be attached to.
-+	* ``mprotect_audit`` is the name of the eBPF program.
-+
-+.. code-block:: c
-+
-+	BPF_TRACE_3("lsm/file_mprotect", mprotect_audit,
-+		    struct vm_area_struct *, vma,
-+		    unsigned long, reqprot, unsigned long, prot)
-+	{
-+		int is_heap = 0;
-+
-+		__builtin_preserve_access_index(({
-+			is_heap = (vma->vm_start >= vma->vm_mm->start_brk &&
-+				   vma->vm_end <= vma->vm_mm->brk);
-+		}));
-+
-+		/*
-+		 * Return an -EPERM or Write information to the perf events buffer
-+	 	 * for auditing
-+	 	 */
-+	}
-+
-+The ``__builtin_preserve_access_index`` is a clang primitive that allows the
-+BPF verifier to update the offsets for the access at runtime using the
-+:doc:`/bpf/btf` information. Since the BPF verifier is aware of the types, it
-+also validates all the accesses made to the various types in the eBPF program.
-+
-+Loading
-+-------
-+
-+eBPP programs can be loaded with the :manpage:`bpf(2)` syscall's
-+``BPF_PROG_LOAD`` operation or more simply by using the the libbpf helper
-+``bpf_prog_load_xattr``:
-+
-+
-+.. code-block:: c
-+
-+	struct bpf_prog_load_attr attr = {
-+		.file = "./prog.o",
-+	};
-+	struct bpf_object *prog_obj;
-+	struct bpf_program *prog;
-+	int prog_fd;
-+
-+	bpf_prog_load_xattr(&attr, &prog_obj, &prog_fd);
-+
-+Attachment to LSM Hooks
-+-----------------------
-+
-+The LSM creates a file in securityfs for each LSM hook to which eBPF programs
-+can be attached using :manpage:`bpf(2)` syscall's ``BPF_PROG_ATTACH`` operation
-+or more simply by using the libbpf helper ``bpf_program__attach_lsm``. In the
-+code shown below ``prog`` is the eBPF program loaded using ``BPF_PROG_LOAD``:
-+
-+
-+.. code-block:: c
-+
-+	struct bpf_link *link;
-+
-+	link = bpf_program__attach_lsm(prog);
-+
-+The attachment can be verified by:
-+
-+.. code-block:: console
-+
-+	# cat /sys/kernel/security/bpf/file_mprotect
-+	mprotect_audit
-+
-+If, when a program is attached, another program by the same name is already attached to the hook, that program is replaced.
-+
-+
-+.. note:: This requires that the ``BPF_F_ALLOW_OVERRIDE`` flag be passed to
-+	  the :manpage:`bpf(2)` syscall. If not, an ``-EEXIST`` error is returned instead.
-+
-+For conveniently versioning updating programs, program names are only compared up to the first ``"__"``. Thus if a program ``mprotect_audit__v1`` is attached and then ``mprotect_audit__v2`` is attached to the same hook, the latter will *replace* the former.
-+
-+The program can be detached from the LSM hook by *destroying* the ``link``
-+link returned by ``bpf_program__attach_lsm``:
-+
-+.. code-block:: c
-+
-+	link->destroy();
-+
-+Examples
-+--------
-+
-+An example eBPF program can be found in
-+`tools/testing/selftests/bpf/progs/lsm_mprotect_audit.c`_ and the corresponding
-+userspace code in
-+`tools/testing/selftests/bpf/prog_tests/lsm_mprotect_audit.c`_
-+
-+.. Links
-+.. _tools/testing/selftests/bpf/bpf_trace_helpers.h:
-+   https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/tools/testing/selftests/selftests/bpf/bpf_trace_helpers.h
-+.. _tools/testing/selftests/bpf/progs/lsm_mprotect_audit.c:
-+   https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/tools/testing/selftests/bpf/progs/lsm_mprotect_audit.c
-+.. _tools/testing/selftests/bpf/prog_tests/lsm_mprotect_audit.c:
-+   https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/tools/testing/selftests/bpf/prog_tests/lsm_mprotect_audit.c
-diff --git a/Documentation/security/index.rst b/Documentation/security/index.rst
-index fc503dd689a7..844463df4547 100644
---- a/Documentation/security/index.rst
-+++ b/Documentation/security/index.rst
-@@ -5,6 +5,7 @@ Security Documentation
- .. toctree::
-    :maxdepth: 1
- 
-+   bpf
-    credentials
-    IMA-templates
-    keys/index
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 652c93292ae9..6f34c24519ca 100644
+index 681ae39bb2f0..652c93292ae9 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3184,6 +3184,7 @@ F:	security/bpf/
+@@ -3182,6 +3182,8 @@ L:	bpf@vger.kernel.org
+ S:	Maintained
+ F:	security/bpf/
  F:	include/linux/bpf_lsm.h
- F:	tools/testing/selftests/bpf/progs/lsm_mprotect_audit.c
- F:	tools/testing/selftests/bpf/prog_tests/lsm_mprotect_audit.c
-+F:	Documentation/security/bpf.rst
++F:	tools/testing/selftests/bpf/progs/lsm_mprotect_audit.c
++F:	tools/testing/selftests/bpf/prog_tests/lsm_mprotect_audit.c
  
  BROADCOM B44 10/100 ETHERNET DRIVER
  M:	Michael Chan <michael.chan@broadcom.com>
+diff --git a/tools/testing/selftests/bpf/prog_tests/lsm_mprotect_audit.c b/tools/testing/selftests/bpf/prog_tests/lsm_mprotect_audit.c
+new file mode 100644
+index 000000000000..953531cec9fd
+--- /dev/null
++++ b/tools/testing/selftests/bpf/prog_tests/lsm_mprotect_audit.c
+@@ -0,0 +1,129 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * Copyright 2019 Google LLC.
++ */
++
++#include <test_progs.h>
++#include <sys/mman.h>
++#include <unistd.h>
++#include <malloc.h>
++
++#define EXPECTED_PROG_NAME "mprotect_audit"
++#define MPROTECT_AUDIT_MAGIC 0xDEAD
++
++struct mprotect_audit_log {
++	int is_heap, magic;
++};
++
++static void on_sample(void *ctx, int cpu, void *data, __u32 size)
++{
++	struct mprotect_audit_log *audit_log = data;
++	int duration = 0;
++
++	if (audit_log->magic != MPROTECT_AUDIT_MAGIC)
++		return;
++
++	if (CHECK(audit_log->is_heap != 1, "mprotect on heap",
++		  "is_heap = %d\n", audit_log->is_heap))
++		return;
++
++	*(bool *)ctx = true;
++}
++
++int heap_mprotect(void)
++{
++	void *buf;
++	long sz;
++
++	sz = sysconf(_SC_PAGESIZE);
++	if (sz < 0)
++		return sz;
++
++	buf = memalign(sz, 2 * sz);
++	if (buf == NULL)
++		return -ENOMEM;
++
++	return mprotect(buf, sz, PROT_READ | PROT_EXEC);
++}
++
++void test_lsm_mprotect_audit(void)
++{
++	struct bpf_prog_load_attr attr = {
++		.file = "./lsm_mprotect_audit.o",
++	};
++
++	struct perf_buffer_opts pb_opts = {};
++	struct perf_buffer *pb = NULL;
++	struct bpf_link *link = NULL;
++	struct bpf_map *perf_buf_map;
++	struct bpf_object *prog_obj;
++	struct bpf_program *prog;
++	int err, prog_fd, sfs_fd;
++	char sfs_buf[1024];
++	int duration = 0;
++	bool passed = false;
++
++	err = bpf_prog_load_xattr(&attr, &prog_obj, &prog_fd);
++	if (CHECK(err, "prog_load lsm/file_mprotect",
++		  "err %d errno %d\n", err, errno))
++		goto close_prog;
++
++	prog = bpf_object__find_program_by_title(prog_obj, "lsm/file_mprotect");
++	if (CHECK(!prog, "find_prog", "lsm/file_mprotect not found\n"))
++		goto close_prog;
++
++	link = bpf_program__attach_lsm(prog);
++	if (CHECK(IS_ERR(link), "attach_lsm file_mprotect",
++				 "err %ld\n", PTR_ERR(link)))
++		goto close_prog;
++
++	sfs_fd = open("/sys/kernel/security/bpf/file_mprotect", O_RDONLY);
++	if (CHECK(sfs_fd < 0, "sfs_open file_mprotect",
++		  "err %d errno %d\n", sfs_fd, errno))
++		goto close_prog;
++
++	err = read(sfs_fd, sfs_buf, sizeof(sfs_buf));
++	if (CHECK(err < 0, "sfs_read file_mprotect",
++		  "err %d errno %d\n", sfs_fd, errno))
++		goto close_prog;
++
++	err = strncmp(sfs_buf, EXPECTED_PROG_NAME, strlen(EXPECTED_PROG_NAME));
++	if (CHECK(err != 0,
++		  "sfs_read value", "want = %s, got = %s\n",
++		  EXPECTED_PROG_NAME, sfs_buf))
++		goto close_prog;
++
++	perf_buf_map = bpf_object__find_map_by_name(prog_obj, "perf_buf_map");
++	if (CHECK(!perf_buf_map, "find_perf_buf_map", "not found\n"))
++		goto close_prog;
++
++	/* set up perf buffer */
++	pb_opts.sample_cb = on_sample;
++	pb_opts.ctx = &passed;
++	pb = perf_buffer__new(bpf_map__fd(perf_buf_map), 1, &pb_opts);
++	if (CHECK(IS_ERR(pb), "perf_buf__new", "err %ld\n", PTR_ERR(pb)))
++		goto close_prog;
++
++	err = heap_mprotect();
++	if (CHECK(err < 0, "heap_mprotect",
++		  "err %d errno %d\n", err, errno))
++		goto close_prog;
++
++	/* read perf buffer */
++	err = perf_buffer__poll(pb, 100);
++	if (CHECK(err < 0, "perf_buffer__poll", "err %d\n", err))
++		goto close_prog;
++
++	/*
++	 * make sure mprotect_audit program was triggered
++	 * and detected an mprotect on the heap
++	 */
++	CHECK_FAIL(!passed);
++
++close_prog:
++	perf_buffer__free(pb);
++	if (!IS_ERR_OR_NULL(link))
++		bpf_link__destroy(link);
++	bpf_object__close(prog_obj);
++}
+diff --git a/tools/testing/selftests/bpf/progs/lsm_mprotect_audit.c b/tools/testing/selftests/bpf/progs/lsm_mprotect_audit.c
+new file mode 100644
+index 000000000000..85048315baae
+--- /dev/null
++++ b/tools/testing/selftests/bpf/progs/lsm_mprotect_audit.c
+@@ -0,0 +1,58 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * Copyright 2019 Google LLC.
++ */
++
++#include <linux/bpf.h>
++#include <stdbool.h>
++#include "bpf_helpers.h"
++#include "bpf_trace_helpers.h"
++
++char _license[] SEC("license") = "GPL";
++struct {
++	__uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
++	__uint(key_size, sizeof(int));
++	__uint(value_size, sizeof(int));
++} perf_buf_map SEC(".maps");
++
++#define MPROTECT_AUDIT_MAGIC 0xDEAD
++
++struct mprotect_audit_log {
++	int is_heap, magic;
++};
++
++/*
++ * Define some of the structs used in the BPF program.
++ * Only the field names and their sizes need to be the
++ * same as the kernel type, the order is irrelevant.
++ */
++struct mm_struct {
++	unsigned long start_brk, brk, start_stack;
++};
++
++struct vm_area_struct {
++	unsigned long start_brk, brk, start_stack;
++	unsigned long vm_start, vm_end;
++	struct mm_struct *vm_mm;
++	unsigned long vm_flags;
++};
++
++BPF_TRACE_3("lsm/file_mprotect", mprotect_audit,
++	    struct vm_area_struct *, vma,
++	    unsigned long, reqprot, unsigned long, prot)
++{
++	struct mprotect_audit_log audit_log = {};
++	int is_heap = 0;
++
++	__builtin_preserve_access_index(({
++		is_heap = (vma->vm_start >= vma->vm_mm->start_brk &&
++				     vma->vm_end <= vma->vm_mm->brk);
++	}));
++
++	audit_log.magic = MPROTECT_AUDIT_MAGIC;
++	audit_log.is_heap = is_heap;
++	bpf_lsm_event_output(&perf_buf_map, BPF_F_CURRENT_CPU, &audit_log,
++			     sizeof(audit_log));
++	return 0;
++}
 -- 
 2.20.1
 
