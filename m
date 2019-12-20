@@ -2,163 +2,198 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B529C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29288C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0CDE206D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E214F206D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:12:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mPeiQp9y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pbqu7Uup"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbfLTTLY (ORCPT
+        id S1727507AbfLTTM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 14:11:24 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:41334 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727394AbfLTTLX (ORCPT
+        Fri, 20 Dec 2019 14:12:56 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:32911 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727394AbfLTTM4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 14:11:23 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBKJAHoD177728;
-        Fri, 20 Dec 2019 19:11:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=8GZNBShQQ7V7PrA2Jhwg30hVOWFWIPLHm0EN5lU1Eu8=;
- b=mPeiQp9yK7rPQbnlM57whCzPPwFGWhjdmk33fMFd39X7bXX5KmyxbqzlImmNHgWyZegU
- w2/BaDaQbVjLp2KtL3lWEh8Axw+YkVqId93CtbxRDnG3Qlb+mbsrfCs3BUB/lEIVPXMv
- e43jw8VrixidUhz2BwT2V+vd5o0eeBsaRXy7qW0B1StKicT+0YrOg6eEHLVHDvECebPW
- wimz8t79xTJNgcfKqKA7zN+ReoGrKJw7hBJTNBIv/UR4lsXcMXRLfl24XOnwJSmhHGPG
- GpY0FJwupGjKq5VtIyVBZfwumEqBPZhvq+RDbeXwZKTn+gu4AqK1vweJoVvycXfrwPhq Xw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2x01kntfh5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Dec 2019 19:11:08 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBKJALLZ041856;
-        Fri, 20 Dec 2019 19:11:08 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2x13tjuuyh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Dec 2019 19:11:07 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBKJB4xp008032;
-        Fri, 20 Dec 2019 19:11:04 GMT
-Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 20 Dec 2019 11:11:04 -0800
-Subject: Re: [PATCH v2] xen-pciback: optionally allow interrupt enable flag
- writes
-To:     =?UTF-8?Q?Marek_Marczykowski-G=c3=b3recki?= 
-        <marmarek@invisiblethingslab.com>, xen-devel@lists.xenproject.org
-Cc:     =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
-        Simon Gaiser <simon@invisiblethingslab.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191219034941.19141-1-marmarek@invisiblethingslab.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Message-ID: <4ed998e1-c8e6-a2c3-031a-9104c912cb76@oracle.com>
-Date:   Fri, 20 Dec 2019 14:11:03 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Fri, 20 Dec 2019 14:12:56 -0500
+Received: by mail-ot1-f67.google.com with SMTP id b18so13074552otp.0
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 11:12:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AQWMjzoLCchFmkZQ8yhMwAYAhwyzEvr1a64rPKNFxB4=;
+        b=Pbqu7UupB2EYsZh+hTy7kjO/q1gxbSy1z2jY5c2oA/FCN4NNNczxu4DpmrWeKeQ7M2
+         m47dRxlQkR+JfBnoWta9zl1yjp27qUBQu/E/OrrNeRTfKv7qMrACl8wX4w9Bo+snpQ6R
+         rI5czGFV2gk52zy4thFvvo7db0W3Mut2foTYdiRJi/KAtrTqo/LmfI5gnO3gYadLGzJd
+         Wrht3XmP5dyX8EQmyfZZqBI6e1Ddlfw9r3/PsqZLAgYacA5v109DkMQW6ubB7EpI2Fmb
+         gj4eNSyxNmsF9OD2xc7WImUbij4Skh4CvPVM0ASOGL8odaC8nHAaKroQeaibpcjxWKZl
+         DVrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AQWMjzoLCchFmkZQ8yhMwAYAhwyzEvr1a64rPKNFxB4=;
+        b=Y+YJBffMzw3T3RTNYAzr1LItSpjJSy2z/DJpaMokTiq5tXgFpzUBuBGeMKyw2wiQxk
+         Y9/1QiU+Ad3EnJD8fylJqNDK2o7SKQQu7pLI0D8m6/KUJs8Imq7zVnNu2hVUikqYDa1u
+         gDitqOpx8e/s9e2+HOtDPm4JA3Q3jPLUWXkfO+zf3aVivXOgxlHqe9qKDbybMyC1fM84
+         BVnjY4x81QmgM45SHLa9cMcGe4hgLklOr2AOciMyhMJws48R5CfkhKpSKeK1Q7w8FHql
+         u+vCGq9x9ZnOssRsbWOGZP0E7FvfNlkhcilcoVkQL7SG1LvNU8EuKXLrBPK3Jmw68WUh
+         R7LA==
+X-Gm-Message-State: APjAAAXrLBdR5MLPliTM7X8iWwEMScWYFNQ4MyCX3UIMUW9QfAxDRlZK
+        FxgU21TxokNgw9EJOE2pvYk=
+X-Google-Smtp-Source: APXvYqzvqBWgRmI+JNnmPNeeTqJKiimiDqt7psCHtzLX1rf/V/psOhcKGJfowUH7wRpWSMB7u8K+Fg==
+X-Received: by 2002:a05:6830:11d2:: with SMTP id v18mr408027otq.151.1576869175365;
+        Fri, 20 Dec 2019 11:12:55 -0800 (PST)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id r23sm3476683oij.38.2019.12.20.11.12.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 20 Dec 2019 11:12:54 -0800 (PST)
+Date:   Fri, 20 Dec 2019 12:12:52 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] tty: synclink: Adjust indentation and style in several
+ functions
+Message-ID: <20191220191252.GA48729@ubuntu-m2-xlarge-x86>
+References: <20191218022758.53697-1-natechancellor@gmail.com>
+ <CAKwvOdnOYUy7M0upKsknwPJOa6iYwtaqZAafrxdb4z_=vDmuXw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191219034941.19141-1-marmarek@invisiblethingslab.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9477 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=994
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912200143
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9477 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912200143
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdnOYUy7M0upKsknwPJOa6iYwtaqZAafrxdb4z_=vDmuXw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Dec 20, 2019 at 10:04:02AM -0800, Nick Desaulniers wrote:
+> On Tue, Dec 17, 2019 at 6:28 PM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> >
+> > Clang warns:
+> >
+> > ../drivers/tty/synclink.c:1167:3: warning: misleading indentation;
+> > statement is not part of the previous 'if' [-Wmisleading-indentation]
+> >         if ( (status & RXSTATUS_ABORT_RECEIVED) &&
+> >         ^
+> > ../drivers/tty/synclink.c:1163:2: note: previous statement is here
+> >         if ( debug_level >= DEBUG_LEVEL_ISR )
+> >         ^
+> > ../drivers/tty/synclink.c:1973:3: warning: misleading indentation;
+> > statement is not part of the previous 'if' [-Wmisleading-indentation]
+> >         if (I_BRKINT(info->port.tty) || I_PARMRK(info->port.tty))
+> >         ^
+> > ../drivers/tty/synclink.c:1971:2: note: previous statement is here
+> >         if (I_INPCK(info->port.tty))
+> >         ^
+> > ../drivers/tty/synclink.c:3229:3: warning: misleading indentation;
+> > statement is not part of the previous 'else' [-Wmisleading-indentation]
+> >         usc_set_serial_signals(info);
+> >         ^
+> > ../drivers/tty/synclink.c:3227:2: note: previous statement is here
+> >         else
+> >         ^
+> > ../drivers/tty/synclink.c:4918:4: warning: misleading indentation;
+> > statement is not part of the previous 'else' [-Wmisleading-indentation]
+> >                 if ( info->params.clock_speed )
+> >                 ^
+> > ../drivers/tty/synclink.c:4901:3: note: previous statement is here
+> >                 else
+> >                 ^
+> > 4 warnings generated.
+> >
+> > The indentation on these lines is not at all consistent, tabs and spaces
+> > are mixed together. Convert to just using tabs to be consistent with the
+> > Linux kernel coding style and eliminate these warnings from clang.
+> >
+> > Additionally, clean up some of lines touched by the indentation shift to
+> > eliminate checkpatch warnings and leave this code in a better condition
+> > than when it was left.
+> 
+> Indeed, this file is kind of a mess.
+> 
+> >
+> > -:10: ERROR: trailing whitespace
+> > -:10: ERROR: that open brace { should be on the previous line
+> > -:10: ERROR: space prohibited after that open parenthesis '('
+> > -:14: ERROR: space prohibited before that close parenthesis ')'
+> > -:82: ERROR: trailing whitespace
+> > -:87: WARNING: Block comments use a trailing */ on a separate line
+> > -:88: ERROR: that open brace { should be on the previous line
+> > -:88: ERROR: space prohibited after that open parenthesis '('
+> > -:88: ERROR: space prohibited before that close parenthesis ')'
+> > -:99: ERROR: else should follow close brace '}'
+> >
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/821
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > ---
+> >  drivers/tty/synclink.c | 55 ++++++++++++++++++++----------------------
+> >  1 file changed, 26 insertions(+), 29 deletions(-)
+> >
+> > diff --git a/drivers/tty/synclink.c b/drivers/tty/synclink.c
+> > index 61dc6b4a43d0..586810defb21 100644
+> > --- a/drivers/tty/synclink.c
+> > +++ b/drivers/tty/synclink.c
+> > @@ -1164,21 +1164,20 @@ static void mgsl_isr_receive_status( struct mgsl_struct *info )
+> >                 printk("%s(%d):mgsl_isr_receive_status status=%04X\n",
+> >                         __FILE__,__LINE__,status);
+> >
+> > -       if ( (status & RXSTATUS_ABORT_RECEIVED) &&
+> > +       if ((status & RXSTATUS_ABORT_RECEIVED) &&
+> >                 info->loopmode_insert_requested &&
+> > -               usc_loopmode_active(info) )
+> > -       {
+> > +               usc_loopmode_active(info)) {
+> >                 ++info->icount.rxabort;
+> > -               info->loopmode_insert_requested = false;
+> > -
+> > -               /* clear CMR:13 to start echoing RxD to TxD */
+> > +               info->loopmode_insert_requested = false;
+> > +
+> > +               /* clear CMR:13 to start echoing RxD to TxD */
+> >                 info->cmr_value &= ~BIT13;
+> > -               usc_OutReg(info, CMR, info->cmr_value);
+> > -
+> > +               usc_OutReg(info, CMR, info->cmr_value);
+> > +
+> >                 /* disable received abort irq (no longer required) */
+> > -               usc_OutReg(info, RICR,
+> > -                       (usc_InReg(info, RICR) & ~RXSTATUS_ABORT_RECEIVED));
+> > -       }
+> > +               usc_OutReg(info, RICR,
+> > +                       (usc_InReg(info, RICR) & ~RXSTATUS_ABORT_RECEIVED));
+> > +       }
+> >
+> >         if (status & (RXSTATUS_EXITED_HUNT | RXSTATUS_IDLE_RECEIVED)) {
+> >                 if (status & RXSTATUS_EXITED_HUNT)
+> > @@ -1970,8 +1969,8 @@ static void mgsl_change_params(struct mgsl_struct *info)
+> 
+> I'm surprised the next hunk isn't mgsl_isr_transmit_status() in
+> L1211-L1268?  I don't mind reformatting this file, but would you mind:
+> 1. splitting the changes that fix the warning and reformatting the
+> rest of the file in two?  That way the warning fix is more likely to
+> merge back cleanly to LTS branches with less risk of merge conflict?
+> Warning fix first, then reformat.
+> 2. reformat the whole thing, not just most of it.
 
+Yes, I will go ahead and break down these three TTY commits into six
+(first three fixing the Clang warnings then the next three fixing all of
+the indentation and spacing warnings).
 
-On 12/18/19 10:49 PM, Marek Marczykowski-Górecki wrote:
-> ---
->   drivers/xen/xen-pciback/conf_space.c          | 35 ++++++++
->   drivers/xen/xen-pciback/conf_space.h          | 10 +++
->   .../xen/xen-pciback/conf_space_capability.c   | 88 +++++++++++++++++++
->   drivers/xen/xen-pciback/conf_space_header.c   | 19 ++++
->   drivers/xen/xen-pciback/pci_stub.c            | 66 ++++++++++++++
->   drivers/xen/xen-pciback/pciback.h             |  1 +
->   6 files changed, 219 insertions(+)
+I should be able to do this tonight or tomorrow at some point.
 
-This also needs an update to Documentation/ABI/testing/sysfs-driver-pciback.
-
-
-> @@ -64,6 +64,7 @@ static int command_write(struct pci_dev *dev, int offset, u16 value, void *data)
->   	int err;
->   	u16 val;
->   	struct pci_cmd_info *cmd = data;
-> +	u16 cap_value;
-
-What is this for?
-
-
->   
->   	dev_data = pci_get_drvdata(dev);
->   	if (!pci_is_enabled(dev) && is_enable_cmd(value)) {
-> @@ -117,6 +118,24 @@ static int command_write(struct pci_dev *dev, int offset, u16 value, void *data)
->   		pci_clear_mwi(dev);
->   	}
->   
-> +	if (dev_data && dev_data->allow_interrupt_control) {
-> +		if (!(cmd->val & PCI_COMMAND_INTX_DISABLE) &&
-> +		    (value & PCI_COMMAND_INTX_DISABLE)) {
-> +			pci_intx(dev, 0);
-> +		} else if ((cmd->val & PCI_COMMAND_INTX_DISABLE) &&
-> +		    !(value & PCI_COMMAND_INTX_DISABLE)) {
-> +			/* Do not allow enabling INTx together with MSI or MSI-X. */
-> +			switch (xen_pcibk_get_interrupt_type(dev)) {
-> +				case INTERRUPT_TYPE_NONE:
-> +				case INTERRUPT_TYPE_INTX:
-> +					pci_intx(dev, 1);
-> +					break;
-> +				default:
-> +					return PCIBIOS_SET_FAILED;
-> +			}
-> +		}
-
-
-Perhaps this is slightly easier to read:
-
-if (cmd->val ^ val)  &  PCI_COMMAND_INTX_DISABLE) {
-         if (value & PCI_COMMAND_INTX_DISABLE) {
-                 pci_intx(dev, 0);
-         } else {
-                 /* Do not allow enabling INTx together with MSI or 
-MSI-X. */
-             switch (xen_pcibk_get_interrupt_type(dev)) {
-                 case INTERRUPT_TYPE_NONE:
-                 case INTERRUPT_TYPE_INTX:
-                     pci_intx(dev, 1);
-                     break;
-                 default:
-                     return PCIBIOS_SET_FAILED;
-             }
-        }
-}
-
-And also, if INTERRUPT_TYPE_INTX, aren't you already enabled?
-
-
--boris
-
+Cheers,
+Nathan
