@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DAEC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A514C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C4E124689
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3DFD24687
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:35:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852512;
-	bh=3hwFr1ZSEJn7nMsQE8yZf0dKqDxpxdTJJtSZCV8O5bM=;
+	s=default; t=1576852514;
+	bh=poCgc+XuigasFh8jiFvh/hpav7KlF6IhwdhTZXEK/00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M5luy/tbUm9+APWPZ+B96XQcK0fZgeMfrQO2g0L3DuqxHEP3+Y5ZKELPadwEBJVVa
-	 4tCDt01QQikAUpFzq4mGJ7UCtZHX3PTPk4cAaRacL0FRnjJmx6n4TH+OrEGJmkDmar
-	 Rr1aifV0z2NqqXadLo/NDsdzeRDpIYTmU071xpBg=
+	b=TFROpmOMsFOgpetb/Q9IJO/7cBPmwp3GHdoZDkOKy/oHdvFj8LGafu+GouYEv2j67
+	 7XkOFTURVcdWyHQYSoKdyJO8NNAz58jfLCBLPw1Z57FFJBIpMOpqW4Q61CKsA90Haq
+	 z8jJXpv09NaPcPjaErx/bjLt51eXbV7KV3lPaev8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbfLTOfL (ORCPT
+        id S1728036AbfLTOfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:35:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39308 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:35:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727634AbfLTOfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:35:00 -0500
+        id S1728329AbfLTOfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:35:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 295AA21D7D;
-        Fri, 20 Dec 2019 14:34:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AE9224680;
+        Fri, 20 Dec 2019 14:34:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852499;
-        bh=3hwFr1ZSEJn7nMsQE8yZf0dKqDxpxdTJJtSZCV8O5bM=;
+        s=default; t=1576852500;
+        bh=poCgc+XuigasFh8jiFvh/hpav7KlF6IhwdhTZXEK/00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CvI5OGFlo0D8ne5FotStHecQMLeXNC5Z1rAE7uOAHJDp65Qr7lot5Wv6WIedjNu3U
-         QZDwQibCJVGT8k0nwAqIekE5Jh5xsy2PGBry2hjuVVKy883lmHHZmWN14F7nfZw47P
-         YLFtPp4whR60c0i4z0kA0CeIOGKntvYwgANEE35E=
+        b=qxTtwdmRBaHjzTwfbVfQf//aNHk/ZFVRomjqc0nLECU7JJd0wcJJDH+X2PpYsTYMe
+         a0SP1j6Nafo+rwplxhJKiJdBJfRQPL8EwS+T80RtdT1zDUzm3gFBonzN+ThZ5bATPz
+         XQPf/FcSsS84uU3tuQNX7DFygyeSGnc34cvgak8s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Roman Bolshakov <r.bolshakov@yadro.com>,
-        Krishna Kant <krishna.kant@purestorage.com>,
-        Alexei Potashnik <alexei@purestorage.com>,
         Quinn Tran <qutran@marvell.com>,
         Himanshu Madhani <hmadhani@marvell.com>,
         Hannes Reinecke <hare@suse.de>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 19/34] scsi: qla2xxx: Send Notify ACK after N2N PLOGI
-Date:   Fri, 20 Dec 2019 09:34:18 -0500
-Message-Id: <20191220143433.9922-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 20/34] scsi: qla2xxx: Ignore PORT UPDATE after N2N PLOGI
+Date:   Fri, 20 Dec 2019 09:34:19 -0500
+Message-Id: <20191220143433.9922-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220143433.9922-1-sashal@kernel.org>
 References: <20191220143433.9922-1-sashal@kernel.org>
@@ -66,20 +64,17 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Roman Bolshakov <r.bolshakov@yadro.com>
 
-[ Upstream commit 5e6b01d84b9d20bcd77fc7c4733a2a4149bf220a ]
+[ Upstream commit af22f0c7b052c5c203207f1e5ebd6aa65f87c538 ]
 
-qlt_handle_login schedules session for deletion even if a login is in
-progress. That causes login bouncing, i.e. a few logins are made before it
-settles down.
+PORT UPDATE asynchronous event is generated on the host that issues PLOGI
+ELS (in the case of higher WWPN). In that case, the event shouldn't be
+handled as it sets unwanted DPC flags (i.e. LOOP_RESYNC_NEEDED) that
+trigger link flap.
 
-Complete the first login by sending Notify Acknowledge IOCB via
-qlt_plogi_ack_unref if the session is pending login completion.
+Ignore the event if the host has higher WWPN, but handle otherwise.
 
-Fixes: 9cd883f07a54 ("scsi: qla2xxx: Fix session cleanup for N2N")
-Cc: Krishna Kant <krishna.kant@purestorage.com>
-Cc: Alexei Potashnik <alexei@purestorage.com>
-Link: https://lore.kernel.org/r/20191125165702.1013-11-r.bolshakov@yadro.com
-Acked-by: Quinn Tran <qutran@marvell.com>
+Cc: Quinn Tran <qutran@marvell.com>
+Link: https://lore.kernel.org/r/20191125165702.1013-13-r.bolshakov@yadro.com
 Acked-by: Himanshu Madhani <hmadhani@marvell.com>
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 Tested-by: Hannes Reinecke <hare@suse.de>
@@ -87,21 +82,37 @@ Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_target.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/qla2xxx/qla_mbx.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
-index 8eda55e917e04..e9545411ec5a9 100644
---- a/drivers/scsi/qla2xxx/qla_target.c
-+++ b/drivers/scsi/qla2xxx/qla_target.c
-@@ -4779,6 +4779,7 @@ static int qlt_handle_login(struct scsi_qla_host *vha,
+diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
+index b01f69dd4b283..abef3b29fa101 100644
+--- a/drivers/scsi/qla2xxx/qla_mbx.c
++++ b/drivers/scsi/qla2xxx/qla_mbx.c
+@@ -3871,6 +3871,7 @@ qla24xx_report_id_acquisition(scsi_qla_host_t *vha,
+ 					vha->d_id.b24 = 0;
+ 					vha->d_id.b.al_pa = 1;
+ 					ha->flags.n2n_bigger = 1;
++					ha->flags.n2n_ae = 0;
  
- 	switch (sess->disc_state) {
- 	case DSC_DELETED:
-+	case DSC_LOGIN_PEND:
- 		qlt_plogi_ack_unref(vha, pla);
- 		break;
+ 					id.b.al_pa = 2;
+ 					ql_dbg(ql_dbg_async, vha, 0x5075,
+@@ -3881,6 +3882,7 @@ qla24xx_report_id_acquisition(scsi_qla_host_t *vha,
+ 					    "Format 1: Remote login - Waiting for WWPN %8phC.\n",
+ 					    rptid_entry->u.f1.port_name);
+ 					ha->flags.n2n_bigger = 0;
++					ha->flags.n2n_ae = 1;
+ 				}
+ 				qla24xx_post_newsess_work(vha, &id,
+ 				    rptid_entry->u.f1.port_name,
+@@ -3892,7 +3894,6 @@ qla24xx_report_id_acquisition(scsi_qla_host_t *vha,
+ 			/* if our portname is higher then initiate N2N login */
  
+ 			set_bit(N2N_LOGIN_NEEDED, &vha->dpc_flags);
+-			ha->flags.n2n_ae = 1;
+ 			return;
+ 			break;
+ 		case TOPO_FL:
 -- 
 2.20.1
 
