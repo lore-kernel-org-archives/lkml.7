@@ -2,91 +2,176 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3331C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BAB2C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 902B92146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0469D21D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:35:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="JTq+wzXQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727462AbfLTPc7 (ORCPT
+        id S1727441AbfLTPfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 10:32:59 -0500
-Received: from foss.arm.com ([217.140.110.172]:52436 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727181AbfLTPc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 10:32:59 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F9F330E;
-        Fri, 20 Dec 2019 07:32:58 -0800 (PST)
-Received: from [10.0.2.15] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BC4F63F6CF;
-        Fri, 20 Dec 2019 07:32:56 -0800 (PST)
-Subject: Re: [PATCH] sched, fair: Allow a small degree of load imbalance
- between SD_NUMA domains v2
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, pauld@redhat.com,
-        srikar@linux.vnet.ibm.com, quentin.perret@arm.com,
-        dietmar.eggemann@arm.com, Morten.Rasmussen@arm.com,
-        hdanton@sina.com, parth@linux.ibm.com, riel@surriel.com,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191220084252.GL3178@techsingularity.net>
- <d44ae0ff-3bd7-fab1-66d0-71769c078918@arm.com>
- <20191220142239.GM3178@techsingularity.net>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <726b8216-6334-585e-3996-175e9a51df36@arm.com>
-Date:   Fri, 20 Dec 2019 15:32:53 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20191220142239.GM3178@techsingularity.net>
-Content-Type: text/plain; charset=iso-8859-15
+        Fri, 20 Dec 2019 10:35:19 -0500
+Received: from mail-eopbgr00058.outbound.protection.outlook.com ([40.107.0.58]:51687
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727344AbfLTPfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 10:35:19 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Si4byBMvxKpdaOsG23aONf6YTY/1QG6afEfkAKotd/lavTSrnyRyKnzLpZWfwdkcR7BsHRubuqer3+WD9ord/c0C7n+EjHIrbPTJJnJPVEC+GQkSO/S0wZd7GM8ySr6Vlo+KeJoNLW1FJlZUcbBiJ/YKXNrxY3RIe5z3yDy1rw78F6aIgk2UzdtNjzow3psd1yeQzDQOO1XoPkB/XZh67onoi7HKRaAZIR6WZN3Rn5rJh1OtxM98gGsy5hZZX1deYIg5Njg+ypWL69F2CsqPzP6MdgYsLUsI3yekZEm1GUmZ2oCkI7dnFwpvLAqNGAxOx1gE9VMDbiRG4gLpIZRtAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PApH7BUQX9YuflRaU+wSQh6Zv676ECVU2n9NaeUm004=;
+ b=ersGM/tbUZCXGSXh8VoSdIxGkzETvhFOy+I7K4cfZQxUV693LVRWoQsHoC6PKcrhZYeRxKPmtyEolZj8c/yEaup1z229WcxR5PV7LkinXr0OxEf6fk0mCheTzpS911JznxlfOqQjL7ZEWCQfkVChC76A33+Wkj6b+2PiPa/rTCOvrqTP4QcMAjIQof9MzN7UyjZvrONdy6VrC20U14J7TIDb9dXvxRO/9PZyKJr/Tc9np0efIz6ArZ96wmmHX2PZMplBFcKuSapJfD1n8Z39wzOmHeCwA4UueMa+F12dLjIMUsJYCtjt2ubwCG88JB+/JQFM0AZkJWCi0ndbwSL5Ug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PApH7BUQX9YuflRaU+wSQh6Zv676ECVU2n9NaeUm004=;
+ b=JTq+wzXQVauAQ+QzTm4QBVBj/CUFqdlk49RZCIwzDSIMXoWHh1QbRD0IspoH+H30ZkniDZvaKNq796HISm946FnQ9bKy5d4jqxkJnLVtjG3y1ypVhx3Twtdw7AHbkOeAGNc3B7Oo6rzMFZtGMmBCvdYZsV9WvOt9lhpn6m7ro1k=
+Received: from DB7PR04MB4618.eurprd04.prod.outlook.com (52.135.139.151) by
+ DB7PR04MB4092.eurprd04.prod.outlook.com (52.135.131.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.18; Fri, 20 Dec 2019 15:35:13 +0000
+Received: from DB7PR04MB4618.eurprd04.prod.outlook.com
+ ([fe80::b40b:46af:9458:f2df]) by DB7PR04MB4618.eurprd04.prod.outlook.com
+ ([fe80::b40b:46af:9458:f2df%6]) with mapi id 15.20.2559.016; Fri, 20 Dec 2019
+ 15:35:13 +0000
+From:   Joakim Zhang <qiangqing.zhang@nxp.com>
+To:     Marc Zyngier <maz@kernel.org>
+CC:     Lokesh Vutla <lokeshvutla@ti.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        Andy Duan <fugang.duan@nxp.com>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH V3 2/2] drivers/irqchip: add NXP INTMUX interrupt
+  multiplexer support
+Thread-Topic: [PATCH V3 2/2] drivers/irqchip: add NXP INTMUX interrupt
+  multiplexer support
+Thread-Index: AQHVt0CZN4VDSg4vrkOd54zakVbswKfDIpPAgAADdJA=
+Date:   Fri, 20 Dec 2019 15:35:13 +0000
+Message-ID: <DB7PR04MB4618AA66F59D5D99D81CC245E62D0@DB7PR04MB4618.eurprd04.prod.outlook.com>
+References: <1576827431-31942-1-git-send-email-qiangqing.zhang@nxp.com>
+ <1576827431-31942-3-git-send-email-qiangqing.zhang@nxp.com>
+ <ad5165ba-24d7-ceeb-8794-cdbe4e564bd5@ti.com>
+ <DB7PR04MB4618B9A227807CCF884910C6E62D0@DB7PR04MB4618.eurprd04.prod.outlook.com>
+ <8bc6bcf113cce13816c62c166f091785@www.loen.fr>
+ <DB7PR04MB4618A390C538DCD6929DE998E62D0@DB7PR04MB4618.eurprd04.prod.outlook.com>
+In-Reply-To: <DB7PR04MB4618A390C538DCD6929DE998E62D0@DB7PR04MB4618.eurprd04.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=qiangqing.zhang@nxp.com; 
+x-originating-ip: [117.81.222.152]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f72822e6-b633-4f9f-716e-08d785623490
+x-ms-traffictypediagnostic: DB7PR04MB4092:|DB7PR04MB4092:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB409245B79B7A9BBBAA5A1964E62D0@DB7PR04MB4092.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:229;
+x-forefront-prvs: 025796F161
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(136003)(346002)(39860400002)(376002)(13464003)(189003)(199004)(5660300002)(7696005)(6916009)(316002)(54906003)(186003)(66476007)(66446008)(66946007)(7416002)(4326008)(2906002)(86362001)(26005)(8676002)(52536014)(8936002)(81156014)(81166006)(66556008)(64756008)(55016002)(478600001)(71200400001)(76116006)(9686003)(53546011)(6506007)(4001150100001)(33656002)(2940100002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4092;H:DB7PR04MB4618.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5+1A22t6R9jKmrEespszsNryN5fPyCPvlgito1dyCh/Jr3E3GjM1L1T/+GHDfGvsZKA/IAPK47ALF9t5H3goMSYcnpIuZqbbBFVzO6VmoUNYoYBjdk9tEkHu+TY0CzzC9fpVyc2Gt32SNeyz0m+VtQvCKiuvyIaHSGBgJMgYJDsvuN24tVA/fk3iHPjwS2AQggKtXBSlZnJQaGpBCdeFuIAXAl/Zu1LWlrtgvU6KvVw0Vl/8BF89JvSvfKIryEQ3860YM1RVfBNRIabu3CQb8bvx1q6ofj33zrZg009k4YvRvvAc+b/3nUT0W4CgOHkQrEXbwGXbRf6LFogk8rpa6ynNm+oNSfG9wWWVRs2BmpIPsVwu9fjhL8tS+mUZ2LG/3QkYclqOLsPjGxAaQpi+3la4vftAIFoxDX6V676+cl24DEn9L5/4k+YplaGDNX54R31/xqO5gTG0e1iWcvBXUGeIVfnDBF8p1+QPSrEao4CUwpw8entpHd6g2NtneHdE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f72822e6-b633-4f9f-716e-08d785623490
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Dec 2019 15:35:13.0785
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HNnxWnnVVgquJsC2fHL5qiorgzrWer9pv7lMdX1qyfUwyh4W2wil7ziJ+ZyqXUrhG3m38F6J+x9mw8UrVCkq0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/12/2019 14:22, Mel Gorman wrote:
->> Now, I have to say I'm not sold on the idle_cpus thing, I'd much rather use
->> the number of runnable tasks. We are setting up a threshold for how far we
->> are willing to ignore imbalances; if we have overloaded CPUs we *really*
->> should try to solve this. Number of tasks is the safer option IMO: when we
->> do have one task per CPU, it'll be the same as if we had used idle_cpus, and
->> when we don't have one task per CPU we'll load-balance more often that we
->> would have with idle_cpus.
->>
-> 
-> I couldn't convince myself to really push back hard on the sum_nr_runnable
-> versus idle_cpus.  If the local group has spare capacity and the busiest
-> group has multiple tasks stacked on CPUs then it's most likely due to
-> CPU affinity.
-
-Not necessarily, for instance wakeup balancing (select_idle_sibling()) could
-end up packing stuff within a node if said node spans more than one LLC
-domain, which IIRC is the case on some AMD chips.
-
-Or, still with the same LLC < node topology, you could start with the node
-being completely utilized, then some tasks on some LLC domains terminate but
-there's an LLC that still has a bunch of tasks running, and then you're left
-with an imbalance between LLC domains that the wakeup balance cannot solve.
-
-> In that case, there is no guarantee tasks can move to the
-> local group either. In that case, the difference between sum_nr_running
-> and idle_cpus is almost moot.  There may be common use cases where the
-> distinction really matters but right now, I'm at the point where I think
-> such a change could be a separate patch with the use case included and
-> supporting data on why it must be sum_nr_running.  Right now, I feel it's
-> mostly a cosmetic issue given the context and intent of the patch.
-> 
-
-Let me spin it this way: do we need to push this ignoring of the imbalance
-as far as possible, or are we okay with it only happening when there's just a
-few tasks running? The latter is achieved with sum_nr_running and is the
-safer option IMO.
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEpvYWtpbSBaaGFuZw0KPiBT
+ZW50OiAyMDE55bm0MTLmnIgyMOaXpSAyMzoyNg0KPiBUbzogJ01hcmMgWnluZ2llcicgPG1hekBr
+ZXJuZWwub3JnPg0KPiBDYzogTG9rZXNoIFZ1dGxhIDxsb2tlc2h2dXRsYUB0aS5jb20+OyB0Z2x4
+QGxpbnV0cm9uaXguZGU7DQo+IGphc29uQGxha2VkYWVtb24ubmV0OyByb2JoK2R0QGtlcm5lbC5v
+cmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiBzaGF3bmd1b0BrZXJuZWwub3JnOyBzLmhhdWVy
+QHBlbmd1dHJvbml4LmRlOyBBbmR5IER1YW4NCj4gPGZ1Z2FuZy5kdWFuQG54cC5jb20+OyBTLmou
+IFdhbmcgPHNoZW5naml1LndhbmdAbnhwLmNvbT47DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
+bC5vcmc7IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+Ow0KPiBrZXJuZWxAcGVuZ3V0
+cm9uaXguZGU7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0
+OiBSRTogW1BBVENIIFYzIDIvMl0gZHJpdmVycy9pcnFjaGlwOiBhZGQgTlhQIElOVE1VWCBpbnRl
+cnJ1cHQNCj4gbXVsdGlwbGV4ZXIgc3VwcG9ydA0KPiANCj4gDQo+ID4gLS0tLS1PcmlnaW5hbCBN
+ZXNzYWdlLS0tLS0NCj4gPiBGcm9tOiBNYXJjIFp5bmdpZXIgPG1hekBrZXJuZWwub3JnPg0KPiA+
+IFNlbnQ6IDIwMTnlubQxMuaciDIw5pelIDIyOjIwDQo+ID4gVG86IEpvYWtpbSBaaGFuZyA8cWlh
+bmdxaW5nLnpoYW5nQG54cC5jb20+DQo+ID4gQ2M6IExva2VzaCBWdXRsYSA8bG9rZXNodnV0bGFA
+dGkuY29tPjsgdGdseEBsaW51dHJvbml4LmRlOw0KPiA+IGphc29uQGxha2VkYWVtb24ubmV0OyBy
+b2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiA+IHNoYXduZ3VvQGtl
+cm5lbC5vcmc7IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7IEFuZHkgRHVhbg0KPiA+IDxmdWdhbmcu
+ZHVhbkBueHAuY29tPjsgUy5qLiBXYW5nIDxzaGVuZ2ppdS53YW5nQG54cC5jb20+Ow0KPiA+IGxp
+bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5j
+b20+Ow0KPiA+IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
+bmZyYWRlYWQub3JnDQo+ID4gU3ViamVjdDogUkU6IFtQQVRDSCBWMyAyLzJdIGRyaXZlcnMvaXJx
+Y2hpcDogYWRkIE5YUCBJTlRNVVggaW50ZXJydXB0DQo+ID4gbXVsdGlwbGV4ZXIgc3VwcG9ydA0K
+PiA+DQo+ID4gT24gMjAxOS0xMi0yMCAxNDoxMCwgSm9ha2ltIFpoYW5nIHdyb3RlOg0KPiA+ID4+
+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPj4gRnJvbTogTG9rZXNoIFZ1dGxhIDxs
+b2tlc2h2dXRsYUB0aS5jb20+DQo+ID4NCj4gPiBbLi4uXQ0KPiA+DQo+ID4gPj4gRG9lcyB0aGUg
+dXNlciBjYXJlIHRvIHdoaWNoIGNoYW5uZWwgZG9lcyB0aGUgaW50ZXJydXB0IHNvdXJjZSBnb2Vz
+DQo+ID4gPj4gdG8/IElmIG5vdCwgaW50ZXJydXB0LWNlbGxzIGluIERUIGNhbiBqdXN0IGJlIGEg
+c2luZ2xlIGVudHJ5IGFuZA0KPiA+ID4+IHRoZSBjaGFubmVsIHNlbGVjdGlvbiBjYW4gYmUgY29u
+dHJvbGxlZCBieSB0aGUgZHJpdmVyIG5vPyBJIGFtDQo+ID4gPj4gdHJ5aW5nIHRvIHVuZGVyc3Rh
+bmQgd2h5IHVzZXIgc2hvdWxkIHNwZWNpZnkgdGhlIGNoYW5uZWwgbm8uDQo+ID4gPiBIaSBMb2tl
+c2gsDQo+ID4gPg0KPiA+ID4gSWYgYSBmaXhlZCBjaGFubmVsIGlzIHNwZWNpZmllZCBpbiB0aGUg
+ZHJpdmVyLCBhbGwgaW50ZXJydXB0IHNvdXJjZXMNCj4gPiA+IHdpbGwgYmUgY29ubmVjdGVkIHRv
+IHRoaXMgY2hhbm5lbCwgYWZmZWN0aW5nIHRoZSBpbnRlcnJ1cHQgcHJpb3JpdHkNCj4gPiA+IHRv
+IHNvbWUgZXh0ZW50Lg0KPiA+ID4NCj4gPiA+IEZyb20gbXkgcG9pbnQgb2YgdmlldywgYSBmaXhl
+ZCBjaGFubmVsIGNvdWxkIGJlIGVub3VnaCBpZiBkb24ndCBjYXJlDQo+ID4gPiBpbnRlcnJ1cHQg
+cHJpb3JpdHkuDQo+ID4NCj4gPiBIb2xkIG9uIGEgc2VjOg0KPiA+DQo+ID4gSXMgdGhlIGNoYW5u
+ZWwgdG8gd2hpY2ggYW4gaW50ZXJydXB0IGlzIHJvdXRlZCB0byBwcm9ncmFtbWFibGU/IFdoYXQN
+Cj4gPiBoYXMgdGhlIHByaW9yaXR5IG9mIHRoZSBpbnRlcnJ1cHQgdG8gZG8gd2l0aCB0aGlzPyBI
+b3cgZG9lcyB0aGlzDQo+ID4gYWZmZWN0IGludGVycnVwdCBkZWxpdmVyeT8NCj4gPg0KPiA+IEl0
+IGxvb2tzIGxpa2UgdGhpcyBIVyBkb2VzIG1vcmUgdGhhdCB5b3UgaW5pdGlhbGx5IGV4cGxhaW5l
+ZC4uLg0KPiBIaSBNYXJjLA0KPiANCj4gVGhlIGNoYW5uZWwgdG8gd2hpY2ggYW4gaW50ZXJydXB0
+IGlzIHJvdXRlZCB0byBpcyBub3QgcHJvZ3JhbW1hYmxlLiBFYWNoDQo+IGNoYW5uZWwgaGFzIHRo
+ZSBzYW1lIDMyIGludGVycnVwdCBzb3VyY2VzLg0KPiBFYWNoIGNoYW5uZWwgaGFzIG1hc2ssIHVu
+bWFzayBhbmQgc3RhdHVzIHJlZ2lzdGVyLg0KPiBJZiB1c2UgMSBjaGFubmVsLCAzMiBpbnRlcnJ1
+cHQgc291cmNlcyBpbnB1dCBhbmQgMSBpbnRlcnJ1cHQgb3V0cHV0Lg0KPiBJZiB1c2UgMiBjaGFu
+bmVscywgMzIgaW50ZXJydXB0IHNvdXJjZXMgaW5wdXQgYW5kIDIgaW50ZXJydXB0cyBvdXRwdXQu
+DQo+IEFuZCBzbyBvbi4gWW91IGNhbiBzZWUgYWJvdmUgSU5UTVVYIGJsb2NrIGRpYWdyYW0uIFRo
+aXMgaXMgaG93IEhXIHdvcmtzLg0KPiANCj4gRm9yIGV4YW1wbGU6DQo+IDEpIHVzZSAxIGNoYW5u
+ZWw6DQo+IFdlIGNhbiBlbmFibGUgMH4zMSBpbnRlcnJ1cHQgaW4gY2hhbm5lbCAwLiBBbmQgMSBp
+bnRlcnJ1cHQgb3V0cHV0LiBJZiBnZW5lcmF0ZQ0KPiBpbnRlcnJ1cHQsIHdlIGNhbm5vdCBmaWd1
+cmUgb3V0IHdoaWNoIGhhbGYgaGFwcGVuZWQgZmlyc3QuDQo+IDIpdXNlIDIgY2hhbm5lbHM6DQo+
+IFdlIGNhbiBlbmFibGUgMH4xNSBpbnRlcnJ1cHQgaW4gY2hhbm5lbCAwLCBhbmQgZW5hYmxlIDE2
+fjMxIGluIGNoYW5uZWwgMS4NCj4gQW5kIDIgaW50ZXJydXB0cyBvdXRwdXQuIElmIGdlbmVyYXRl
+IGludGVycnVwdCwgYXQgbGVhc3Qgd2UgY2FuIGZpbmQgY2hhbm5lbCAwIG9yDQo+IGNoYW5uZWwg
+MSBmaXJzdC4gVGhlbiBmaW5kIDB+MTUgb3IgMTZ+MzEgZmlyc3QuDQo+IA0KPiBUaGlzIGlzIG15
+IHVuZGVyc3RhbmRpbmcgb2YgdGhlIGludGVycnVwdCBwcmlvcml0eSBmcm9tIHRoaXMgaW50bXV4
+LCBJIGRvbid0DQo+IGtub3cgaWYgaXQgaXMgbXkgbWlzdW5kZXJzdGFuZGluZy4NCg0KU28gYXNz
+aWduIGludGVycnVwdCBzb3VyY2VzIHRvIG11bHRpLWNoYW5uZWxzIHdpbGwgZ2VuZXJhdGUgbXVs
+dGktaW50ZXJydXB0IG91dHB1dC4gQW5kIHRoZXNlIG91dHB1dCBpbnRlcnJ1cHRzIGFyZSBzZXF1
+ZW50aWFsLiBDb3VsZCB0aGlzIGJlIGludGVycHJldGVkIGFzIGludGVycnVwdCBwcmlvcml0eT8N
+Cg0KQmVzdCBSZWdhcmRzLA0KSm9ha2ltIFpoYW5nDQo+IEJlc3QgUmVnYXJkcywNCj4gSm9ha2lt
+IFpoYW5nDQo+ID4gICAgICAgICAgTS4NCj4gPiAtLQ0KPiA+IEphenogaXMgbm90IGRlYWQuIEl0
+IGp1c3Qgc21lbGxzIGZ1bm55Li4uDQo=
