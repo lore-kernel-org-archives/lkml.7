@@ -2,124 +2,112 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A188C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD502C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B37524684
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DF6B222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:39:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852743;
-	bh=34EkYqS0ICxQq59U7q2t4URHZdu/BDutoH3vqVslIpY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dKdaDR+Tu70zf7EN+xGv5CzV8FnJrCW2VQ/c+BPvz3XbFKd5vUH1pp60o1RVpi8nw
-	 76trfmK74cAEz07h44/ut0CpsOLaWFmRD/JQ+KMztbVIh2H9DXrAelTXGR+3YEBH0k
-	 AVz0iK/uQsSphHlJZQtzN4qdXPhgqGmP30NjxCsg=
+	s=default; t=1576852749;
+	bh=Q0oWbWwjhrJYvZiFi0omMIk0e9XmFnsXGySlMCDM7Po=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=b34cy+uaB+aC6Cyyp9I116FXXR9fhIPjoXpjybzszVgdZuY+KoXU4OYWH9PiixBPc
+	 mpy7zzzTDovTC3vanJMB7KtNWX4Ng6LEhhRPF+JBHQZ3GwGXjnv2Qf+Wuwq97Tg6uG
+	 MmXl0/S0aKFRYK5dRhUwtqXom3UiNRrVVWe0uajs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbfLTOjC (ORCPT
+        id S1728295AbfLTOjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:39:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41956 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:39:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728253AbfLTOhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:37:50 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727501AbfLTOi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:38:59 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10FBF24680;
-        Fri, 20 Dec 2019 14:37:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F53E222C2;
+        Fri, 20 Dec 2019 14:38:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852669;
-        bh=34EkYqS0ICxQq59U7q2t4URHZdu/BDutoH3vqVslIpY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KimHzt45yE3tcdLTA3JrIPbDihCmVexfbJjkqYKAR4bLRH5ggkly3bm+rXElv0uYy
-         xiF7LMZMI/rXgirrnthI6tGDGhF9vQqhWOksJrc/0mVxuzqtBkFqr6qf/lKiEyuiew
-         NwoL1CNl1+yPFu3eDAmiDPbC4V0sCucoZxSIWZQ0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bo Wu <wubo40@huawei.com>, Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        James Smart <james.smart@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 06/19] scsi: lpfc: Fix memory leak on lpfc_bsg_write_ebuf_set func
-Date:   Fri, 20 Dec 2019 09:37:27 -0500
-Message-Id: <20191220143741.10220-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191220143741.10220-1-sashal@kernel.org>
-References: <20191220143741.10220-1-sashal@kernel.org>
+        s=default; t=1576852738;
+        bh=Q0oWbWwjhrJYvZiFi0omMIk0e9XmFnsXGySlMCDM7Po=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=S34cSLnz12brD6nSM5Rwvixbj3fIdNLvk2cQmB4xCXmZqVEaPjAbPBX1kurbLh00D
+         4NIaxKUGoxQIx9HF316jcCLSslG/mXt8hOzpLFgv1/jjGodLeIhyiHu0RuDEHyQBod
+         VYNRotRitMSXsFa32ko6DYaBtMj6FZJsmiiP9a64=
+Date:   Fri, 20 Dec 2019 08:38:56 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [PATCH v12 0/4] PCI: Patch series to improve Thunderbolt
+ enumeration
+Message-ID: <20191220143856.GA92795@google.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PSXP216MB043888F94710A361E4D84DFF802D0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bo Wu <wubo40@huawei.com>
+On Fri, Dec 20, 2019 at 08:50:14AM +0000, Nicholas Johnson wrote:
+> On Thu, Dec 19, 2019 at 06:03:58PM -0600, Bjorn Helgaas wrote:
+> > On Wed, Dec 18, 2019 at 12:54:25AM +0000, Nicholas Johnson wrote:
+> > > On Tue, Dec 17, 2019 at 09:12:48AM -0600, Bjorn Helgaas wrote:
+> > > > On Mon, Dec 09, 2019 at 12:59:29PM +0000, Nicholas Johnson wrote:
 
-[ Upstream commit 9a1b0b9a6dab452fb0e39fe96880c4faf3878369 ]
+> > > > > Nicholas Johnson (4):
+> > > > >   PCI: Consider alignment of hot-added bridges when distributing
+> > > > >     available resources
+> Prevent failure to assign hot-added Thunderbolt PCI BARs with alignment >1M 
+> 
+> > > > >   PCI: In extend_bridge_window() change available to new_size
+> Change variable name in extend_bridge_window() to better reflect its 
+> purpose
+> 
+> ^ I would have preferred this not be its own commit. Is it too late to 
+> squash it back together with patch 3/4?
 
-When phba->mbox_ext_buf_ctx.seqNum != phba->mbox_ext_buf_ctx.numBuf,
-dd_data should be freed before return SLI_CONFIG_HANDLED.
+Not too late; it's trivial to squash it.  I consider these branches to
+be drafts, subject to revision until I ask Linus to pull them.
 
-When lpfc_sli_issue_mbox func return fails, pmboxq should be also freed in
-job_error tag.
+But ... why?  In general, the smaller the patch the better.
 
-Link: https://lore.kernel.org/r/EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915E7A966@DGGEML525-MBS.china.huawei.com
-Signed-off-by: Bo Wu <wubo40@huawei.com>
-Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Reviewed-by: James Smart <james.smart@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/scsi/lpfc/lpfc_bsg.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+> > Basically, I'm not comfortable asking Linus to pull material unless I
+> > can explain what the benefit is.  I'm still struggling to articulate
+> > the benefit in this case.  I think it makes hotplug work better in
+> > some cases where we need more alignment than we currently have, but
+> > that's pretty sketchy.
+>
+> In my opinion, fixing failure to assign is a clear reason to merge, 
+> especially when the failure will result in a user wondering why the 
+> device they plugged in does not work.
 
-diff --git a/drivers/scsi/lpfc/lpfc_bsg.c b/drivers/scsi/lpfc/lpfc_bsg.c
-index 6dde21dc82a3c..08ed27b0d4c66 100644
---- a/drivers/scsi/lpfc/lpfc_bsg.c
-+++ b/drivers/scsi/lpfc/lpfc_bsg.c
-@@ -4419,12 +4419,6 @@ lpfc_bsg_write_ebuf_set(struct lpfc_hba *phba, struct bsg_job *job,
- 	phba->mbox_ext_buf_ctx.seqNum++;
- 	nemb_tp = phba->mbox_ext_buf_ctx.nembType;
- 
--	dd_data = kmalloc(sizeof(struct bsg_job_data), GFP_KERNEL);
--	if (!dd_data) {
--		rc = -ENOMEM;
--		goto job_error;
--	}
--
- 	pbuf = (uint8_t *)dmabuf->virt;
- 	size = job->request_payload.payload_len;
- 	sg_copy_to_buffer(job->request_payload.sg_list,
-@@ -4461,6 +4455,13 @@ lpfc_bsg_write_ebuf_set(struct lpfc_hba *phba, struct bsg_job *job,
- 				"2968 SLI_CONFIG ext-buffer wr all %d "
- 				"ebuffers received\n",
- 				phba->mbox_ext_buf_ctx.numBuf);
-+
-+		dd_data = kmalloc(sizeof(struct bsg_job_data), GFP_KERNEL);
-+		if (!dd_data) {
-+			rc = -ENOMEM;
-+			goto job_error;
-+		}
-+
- 		/* mailbox command structure for base driver */
- 		pmboxq = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
- 		if (!pmboxq) {
-@@ -4509,6 +4510,8 @@ lpfc_bsg_write_ebuf_set(struct lpfc_hba *phba, struct bsg_job *job,
- 	return SLI_CONFIG_HANDLED;
- 
- job_error:
-+	if (pmboxq)
-+		mempool_free(pmboxq, phba->mbox_mem_pool);
- 	lpfc_bsg_dma_page_free(phba, dmabuf);
- 	kfree(dd_data);
- 
--- 
-2.20.1
+Sure.  But there's nothing specific in the commit logs about what the
+problem is and how these fix it.
 
+For example, I think the first patch ("PCI: Consider alignment of
+hot-added bridges when distributing available resources") is something
+to do with increasing the alignment of bridge windows to account for
+descendants that require greater alignment.
+
+But the log says "Rewrite pci_bus_distribute_available_resources to
+better handle bridges with different resource alignment requirements."
+That says nothing about what the problem was or how you fix it.
+
+Ideally that patch would very specifically change *alignment* details.
+It currently also contains a bunch of other changes (interface change,
+removing "b" in favor "dev->subordinate", etc).  These make the patch
+bigger and harder to understand and justify.  Some of these lead up to
+the alignment change but possibly could be split to separate patches.
+
+Bjorn
