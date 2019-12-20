@@ -2,133 +2,97 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D035CC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75616C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC35A2146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:36:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B59A206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:38:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RVQ9YD1h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbfLTTgp (ORCPT
+        id S1727507AbfLTTiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 14:36:45 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12142 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727413AbfLTTgp (ORCPT
+        Fri, 20 Dec 2019 14:38:18 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23076 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727411AbfLTTiS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 14:36:45 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBKJJI59131594
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 14:36:44 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2x0xccmvks-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 14:36:44 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Fri, 20 Dec 2019 19:36:41 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 20 Dec 2019 19:36:37 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBKJaaAV60620848
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Dec 2019 19:36:37 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DF5D511C05C;
-        Fri, 20 Dec 2019 19:36:36 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BC80A11C054;
-        Fri, 20 Dec 2019 19:36:35 +0000 (GMT)
-Received: from dhcp-9-31-103-79.watson.ibm.com (unknown [9.31.103.79])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 20 Dec 2019 19:36:35 +0000 (GMT)
-Subject: Re: [PATCH v5 0/2] IMA: Deferred measurement of keys
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        James.Bottomley@HansenPartnership.com,
-        linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Date:   Fri, 20 Dec 2019 14:36:35 -0500
-In-Reply-To: <589b893b-52e4-783c-0f32-608ed1cfd7f9@linux.microsoft.com>
-References: <20191218164434.2877-1-nramas@linux.microsoft.com>
-         <1576868506.5241.65.camel@linux.ibm.com>
-         <589b893b-52e4-783c-0f32-608ed1cfd7f9@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19122019-0020-0000-0000-0000039A55B5
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19122019-0021-0000-0000-000021F18521
-Message-Id: <1576870595.5241.83.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-20_05:2019-12-17,2019-12-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
- mlxlogscore=999 clxscore=1015 lowpriorityscore=0 priorityscore=1501
- impostorscore=0 suspectscore=11 spamscore=0 malwarescore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912200143
+        Fri, 20 Dec 2019 14:38:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576870696;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=4m6n6WhNnkhWj/1eh4TjxNNa0kMOTtKQHD7FO350FJI=;
+        b=RVQ9YD1hM/FsUA/UqpriiUzBXODGadIrqwEbznP1pU8PchNj+wnL7WT7EPXKmCOBDFSiBQ
+        mzAMf7DWnrGhJajjGCbtXiqJDZdfFCCFSvZ0drYywaDeBH2VssayQh9NMnDJ/bBK3cQ8+P
+        vDFR6P+JaQW/eLRu53WErI7lIozoVRI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-378-7zglLuqNMLGl7y7DsyH7EA-1; Fri, 20 Dec 2019 14:38:10 -0500
+X-MC-Unique: 7zglLuqNMLGl7y7DsyH7EA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A700385EE8C;
+        Fri, 20 Dec 2019 19:38:08 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (ovpn-204-70.brq.redhat.com [10.40.204.70])
+        by smtp.corp.redhat.com (Postfix) with SMTP id AD7F377644;
+        Fri, 20 Dec 2019 19:38:02 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri, 20 Dec 2019 20:38:08 +0100 (CET)
+Date:   Fri, 20 Dec 2019 20:38:00 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     qiwuchen55@gmail.com
+Cc:     christian.brauner@ubuntu.com, peterz@infradead.org,
+        mingo@kernel.org, prsood@codeaurora.org, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, chenqiwu@xiaomi.com
+Subject: Re: [PATCH v3] kernel/exit: do panic earlier to get coredump if
+ global init task exit
+Message-ID: <20191220193758.GE13464@redhat.com>
+References: <1576736993-10121-1-git-send-email-qiwuchen55@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576736993-10121-1-git-send-email-qiwuchen55@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-12-20 at 11:25 -0800, Lakshmi Ramasubramanian wrote:
-> On 12/20/2019 11:01 AM, Mimi Zohar wrote:
-> 
-> Hi Mimi,
-> 
-> >> If the kernel is built with both CONFIG_IMA and
-> >> CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE enabled then the IMA policy
-> >> must be applied as a custom policy. Not providing a custom policy
-> >> in the above configuration would result in asymmeteric keys being queued
-> >> until a custom policy is loaded. This is by design.
-> > 
-> > I didn't notice the "This is by design" here, referring to the memory
-> > never being freed.  "This is by design" was suppose to refer to
-> > requiring a custom policy for measuring keys.
-> > 
-> > For now, these two patches are queued in the next-integrity-testing
-> > branch, but I would appreciate your addressing not freeing the memory
-> > associated with the keys, if a custom policy is not loaded.
-> > 
-> > Please note that I truncated the 2/2 patch description, as it repeats
-> > the existing verification example in commit ("2b60c0ecedf8 IMA: Read
-> > keyrings= option from the IMA policy").
-> > 
-> > thanks,
-> > 
-> > Mimi
-> > 
-> 
-> Sure - I am fine with truncating the 2/2 patch description. Thanks for 
-> doing that.
-> 
-> Regarding "Freeing the queued keys if custom policy is not loaded":
-> 
-> Shall I create a new patch set to address that and have that be reviewed 
-> independent of this patch set?
+On 12/19, qiwuchen55@gmail.com wrote:
+>
+> @@ -517,10 +517,6 @@ static struct task_struct *find_child_reaper(struct task_struct *father,
+>  	}
+>  
+>  	write_unlock_irq(&tasklist_lock);
+> -	if (unlikely(pid_ns == &init_pid_ns)) {
+> -		panic("Attempted to kill init! exitcode=0x%08x\n",
+> -			father->signal->group_exit_code ?: father->exit_code);
+> -	}
+>  
+>  	list_for_each_entry_safe(p, n, dead, ptrace_entry) {
+>  		list_del_init(&p->ptrace_entry);
+> @@ -766,6 +762,15 @@ void __noreturn do_exit(long code)
+>  	acct_update_integrals(tsk);
+>  	group_dead = atomic_dec_and_test(&tsk->signal->live);
+>  	if (group_dead) {
+> +		/*
+> +		 * If the last thread of global init exit, do panic
+> +		 * immeddiately to get the coredump to find any clue
+> +		 * for init task in userspace.
+> +		 */
+> +		if (unlikely(is_global_init(tsk)))
+> +			panic("Attempted to kill init! exitcode=0x%08x\n",
+> +				tsk->signal->group_exit_code ?: (int)code);
+> +
 
-If it is just a single additional patch, feel free to post it without
-a cover letter.
-
-> 
-> Like you'd suggested earlier, we can wait for a certain time, after IMA 
-> is initialized, and free the queue if a custom policy was not loaded.
-
-Different types of systems vary in boot time, but perhaps a certain
-amount of time after IMA is initialized would be consistent.  This
-would need to work for IoT devices/sensors to servers.
-
-Mimi 
+Acked-by: Oleg Nesterov <oleg@redhat.com>
 
