@@ -2,79 +2,68 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBD4C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C96BC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 802082082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2881E21D7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 18:15:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576865713;
+	bh=lcRGPNpDf2zgoqD2r8PCWWBpNHG4ZZvTk5gpT8Nmw0k=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=hnFxVTromWlSxzriaqfvhG2mrPsJAYfZhqCozqM9mySnwcwan4a12HkYqt0M+kONr
+	 oDICNbrAAsThWJUnuRZdQCkHl9qroO6R8bUR3Kd9m49ch2HuEO0pZ4iMN8yAF9DEVH
+	 iW+MTzMRSbiFW0aUfMuyPoVYvvDQ1uHChUo2qJYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbfLTSPC (ORCPT
+        id S1727611AbfLTSPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 13:15:02 -0500
-Received: from foss.arm.com ([217.140.110.172]:53954 "EHLO foss.arm.com"
+        Fri, 20 Dec 2019 13:15:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727459AbfLTSPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 13:15:02 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8AE721FB;
-        Fri, 20 Dec 2019 10:15:01 -0800 (PST)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BDD5F3F67D;
-        Fri, 20 Dec 2019 10:15:00 -0800 (PST)
-Date:   Fri, 20 Dec 2019 18:14:58 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] arm64 fixes for 5.5-rc3
-Message-ID: <20191220181456.GA13898@arrakis.emea.arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1727471AbfLTSPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 13:15:11 -0500
+Subject: Re: [GIT PULL] USB fixes for 5.5-rc3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576865711;
+        bh=lcRGPNpDf2zgoqD2r8PCWWBpNHG4ZZvTk5gpT8Nmw0k=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=jgqsE1BCJ9c+bh8dqOS66ipOV+uHDrKDGrCgon169w1cmI0hz/X5+aYSsHDmJ4oJ/
+         WAmyYDldNqM+OAmZD15iHyxg815fGKnVOBN1RcYa6Z2XnMvulMd6/QHI1Q/G4Qjryo
+         ZdGeU4WVLGERJ84IBh5pTg4jbO7bTND5d3diuvls=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20191220070730.GA2190076@kroah.com>
+References: <20191220070730.GA2190076@kroah.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191220070730.GA2190076@kroah.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.5-rc3
+X-PR-Tracked-Commit-Id: 6056a0f8ede27b296d10ef46f7f677cc9d715371
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 7181aba1463909b99a7c5807e5eae40d93d36366
+Message-Id: <157686571119.29164.14383555882728834493.pr-tracker-bot@kernel.org>
+Date:   Fri, 20 Dec 2019 18:15:11 +0000
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+The pull request you sent on Fri, 20 Dec 2019 08:07:30 +0100:
 
-Please pull the arm64 fixes below. Thanks and Merry Christmas!
+> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.5-rc3
 
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/7181aba1463909b99a7c5807e5eae40d93d36366
 
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
-
-for you to fetch changes up to aa638cfe3e7358122a15cb1d295b622aae69e006:
-
-  arm64: cpu_errata: Add Hisilicon TSV110 to spectre-v2 safe list (2019-12-20 17:57:22 +0000)
-
-----------------------------------------------------------------
-arm64 fixes:
-
-- Leftover put_cpu() in the perf/smmuv3 error path.
-
-- Add Hisilicon TSV110 to spectre-v2 safe list
-
-----------------------------------------------------------------
-Hanjun Guo (1):
-      perf/smmuv3: Remove the leftover put_cpu() in error path
-
-Wei Li (1):
-      arm64: cpu_errata: Add Hisilicon TSV110 to spectre-v2 safe list
-
- arch/arm64/kernel/cpu_errata.c | 1 +
- drivers/perf/arm_smmuv3_pmu.c  | 4 +---
- 2 files changed, 2 insertions(+), 3 deletions(-)
+Thank you!
 
 -- 
-Catalin
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
