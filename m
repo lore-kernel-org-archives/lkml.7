@@ -2,211 +2,153 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE72AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 02:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC59C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 02:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB04C2467F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 02:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59FFD227BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 02:58:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbfLTC5I (ORCPT
+        id S1727176AbfLTC5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 21:57:08 -0500
-Received: from fieldses.org ([173.255.197.46]:38956 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726964AbfLTC5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 21:57:08 -0500
-Received: by fieldses.org (Postfix, from userid 2815)
-        id BCC801BE3; Thu, 19 Dec 2019 21:57:07 -0500 (EST)
-Date:   Thu, 19 Dec 2019 21:57:07 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, y2038@lists.linaro.org
-Subject: Re: [PATCH v2 10/12] nfsd: use boottime for lease expiry alculation
-Message-ID: <20191220025707.GH12026@fieldses.org>
-References: <20191213141046.1770441-1-arnd@arndb.de>
- <20191213141046.1770441-11-arnd@arndb.de>
+        Thu, 19 Dec 2019 21:57:19 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39719 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbfLTC5S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Dec 2019 21:57:18 -0500
+Received: by mail-pl1-f194.google.com with SMTP id g6so512664plp.6
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 18:57:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=K35O8SA1msu5IjgqIlxgzlqgP7XVF9FXgmoFVeNWZbg=;
+        b=PJxF/n/+5MJQFqTq0o32MZ8Lu8Tu4s8eRK60Iw20tudu3KOFPbze1LHjce8ywTaXl5
+         jYQVTqmr0tuA1PZsiqPhvzwDFrleKgOoyW4PS79ohE6SxzsqAVTvmuhwK7bx8p8ljFYT
+         kS+Pj6jTwtXs/fER2RNZ79Uo8Skf2JHExca2KVxJuVdrwE36T9dlB3/Dkz6eEMmhy2wx
+         FcoV9R95Inv1vI7WvwPmbf8oY4ySQpglGwvR5EAHz6PS9fpRLQk3gaLBa/+NmYaga4LH
+         V4RAbuMLJpMHZ7qhLCFh1CdI7Yj5S1pllRLIDomsSmZRSuWZFmk1s/oRSQ/eIBqiSWhG
+         lETQ==
+X-Gm-Message-State: APjAAAWbv5MEbizjrTyri1kkwZBF1blGmI8T8P5d9gECRHPrTydbmC0p
+        s4T1p+VEgD46iP9FCWE03SkR7yQv
+X-Google-Smtp-Source: APXvYqwXHoVr3P1IOwU5RHgS7/ZNe/Mzre69I1T6drEFTY08f64zcKfpDENlpripFkwXLw018g9JFA==
+X-Received: by 2002:a17:902:b78b:: with SMTP id e11mr12920137pls.129.1576810637129;
+        Thu, 19 Dec 2019 18:57:17 -0800 (PST)
+Received: from ?IPv6:2601:647:4000:1108:a155:f521:af71:d5a4? ([2601:647:4000:1108:a155:f521:af71:d5a4])
+        by smtp.gmail.com with ESMTPSA id z29sm9763651pge.21.2019.12.19.18.57.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Dec 2019 18:57:15 -0800 (PST)
+Subject: Re: [PATCH] locking/lockdep: Fix potential buffer overrun problem in
+ stack_trace[]
+To:     Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     linux-kernel@vger.kernel.org
+References: <20191219182812.20191-1-longman@redhat.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <0cdfb26d-7faa-9da0-05b9-79bb21703283@acm.org>
+Date:   Thu, 19 Dec 2019 18:57:13 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191213141046.1770441-11-arnd@arndb.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20191219182812.20191-1-longman@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 03:10:44PM +0100, Arnd Bergmann wrote:
-> @@ -5212,8 +5211,8 @@ nfs4_laundromat(struct nfsd_net *nn)
->  	struct nfs4_ol_stateid *stp;
->  	struct nfsd4_blocked_lock *nbl;
->  	struct list_head *pos, *next, reaplist;
-> -	time_t cutoff = get_seconds() - nn->nfsd4_lease;
-> -	time_t t, new_timeo = nn->nfsd4_lease;
-> +	time64_t cutoff = ktime_get_boottime_seconds() - nn->nfsd4_lease;
-
-For some reason the version I was testing still had this as
-get_seconds(), which was what was causing test failures.  I'm not quite
-sure what happened--I may have just typo'd something while fixing up a
-conflict.
-
---b.
-
-> +	time64_t t, new_timeo = nn->nfsd4_lease;
+On 2019-12-19 10:28, Waiman Long wrote:
+> If the lockdep code is really running out of the stack_trace entries,
+> there is a possiblity that buffer overrun can happen and corrupt the
+             ^^^^^^^^^^
+             possibility?
+> data immediately after stack_trace[].
+> 
+> If there is less than LOCK_TRACE_SIZE_IN_LONGS entries left before
+> the call to save_trace(), the max_entries computation will leave it
+> with a very large positive number because of its unsigned nature. The
+> subsequent call to stack_trace_save() will then corrupt the data after
+> stack_trace[]. Fix that by changing max_entries to a signed integer
+> and check for negative value before calling stack_trace_save().
+> 
+> Fixes: 12593b7467f9 ("locking/lockdep: Reduce space occupied by stack traces")
+> Signed-off-by: Waiman Long <longman@redhat.com>
+> ---
+>  kernel/locking/lockdep.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> index 32282e7112d3..56e260a7582f 100644
+> --- a/kernel/locking/lockdep.c
+> +++ b/kernel/locking/lockdep.c
+> @@ -482,7 +482,7 @@ static struct lock_trace *save_trace(void)
+>  	struct lock_trace *trace, *t2;
+>  	struct hlist_head *hash_head;
+>  	u32 hash;
+> -	unsigned int max_entries;
+> +	int max_entries;
 >  
->  	dprintk("NFSD: laundromat service - starting\n");
+>  	BUILD_BUG_ON_NOT_POWER_OF_2(STACK_TRACE_HASH_SIZE);
+>  	BUILD_BUG_ON(LOCK_TRACE_SIZE_IN_LONGS >= MAX_STACK_TRACE_ENTRIES);
+> @@ -490,10 +490,8 @@ static struct lock_trace *save_trace(void)
+>  	trace = (struct lock_trace *)(stack_trace + nr_stack_trace_entries);
+>  	max_entries = MAX_STACK_TRACE_ENTRIES - nr_stack_trace_entries -
+>  		LOCK_TRACE_SIZE_IN_LONGS;
+> -	trace->nr_entries = stack_trace_save(trace->entries, max_entries, 3);
 >  
-> @@ -5227,7 +5226,7 @@ nfs4_laundromat(struct nfsd_net *nn)
->  	spin_lock(&nn->client_lock);
->  	list_for_each_safe(pos, next, &nn->client_lru) {
->  		clp = list_entry(pos, struct nfs4_client, cl_lru);
-> -		if (time_after((unsigned long)clp->cl_time, (unsigned long)cutoff)) {
-> +		if (clp->cl_time > cutoff) {
->  			t = clp->cl_time - cutoff;
->  			new_timeo = min(new_timeo, t);
->  			break;
-> @@ -5250,7 +5249,7 @@ nfs4_laundromat(struct nfsd_net *nn)
->  	spin_lock(&state_lock);
->  	list_for_each_safe(pos, next, &nn->del_recall_lru) {
->  		dp = list_entry (pos, struct nfs4_delegation, dl_recall_lru);
-> -		if (time_after((unsigned long)dp->dl_time, (unsigned long)cutoff)) {
-> +		if (dp->dl_time > cutoff) {
->  			t = dp->dl_time - cutoff;
->  			new_timeo = min(new_timeo, t);
->  			break;
-> @@ -5270,8 +5269,7 @@ nfs4_laundromat(struct nfsd_net *nn)
->  	while (!list_empty(&nn->close_lru)) {
->  		oo = list_first_entry(&nn->close_lru, struct nfs4_openowner,
->  					oo_close_lru);
-> -		if (time_after((unsigned long)oo->oo_time,
-> -			       (unsigned long)cutoff)) {
-> +		if (oo->oo_time > cutoff) {
->  			t = oo->oo_time - cutoff;
->  			new_timeo = min(new_timeo, t);
->  			break;
-> @@ -5301,8 +5299,7 @@ nfs4_laundromat(struct nfsd_net *nn)
->  	while (!list_empty(&nn->blocked_locks_lru)) {
->  		nbl = list_first_entry(&nn->blocked_locks_lru,
->  					struct nfsd4_blocked_lock, nbl_lru);
-> -		if (time_after((unsigned long)nbl->nbl_time,
-> -			       (unsigned long)cutoff)) {
-> +		if (nbl->nbl_time > cutoff) {
->  			t = nbl->nbl_time - cutoff;
->  			new_timeo = min(new_timeo, t);
->  			break;
-> @@ -5319,7 +5316,7 @@ nfs4_laundromat(struct nfsd_net *nn)
->  		free_blocked_lock(nbl);
+> -	if (nr_stack_trace_entries >= MAX_STACK_TRACE_ENTRIES -
+> -	    LOCK_TRACE_SIZE_IN_LONGS - 1) {
+> +	if (max_entries < 0) {
+>  		if (!debug_locks_off_graph_unlock())
+>  			return NULL;
+>  
+> @@ -502,6 +500,7 @@ static struct lock_trace *save_trace(void)
+>  
+>  		return NULL;
 >  	}
->  out:
-> -	new_timeo = max_t(time_t, new_timeo, NFSD_LAUNDROMAT_MINTIMEOUT);
-> +	new_timeo = max_t(time64_t, new_timeo, NFSD_LAUNDROMAT_MINTIMEOUT);
->  	return new_timeo;
->  }
+> +	trace->nr_entries = stack_trace_save(trace->entries, max_entries, 3);
 >  
-> @@ -5329,13 +5326,13 @@ static void laundromat_main(struct work_struct *);
->  static void
->  laundromat_main(struct work_struct *laundry)
->  {
-> -	time_t t;
-> +	time64_t t;
->  	struct delayed_work *dwork = to_delayed_work(laundry);
->  	struct nfsd_net *nn = container_of(dwork, struct nfsd_net,
->  					   laundromat_work);
->  
->  	t = nfs4_laundromat(nn);
-> -	dprintk("NFSD: laundromat_main - sleeping for %ld seconds\n", t);
-> +	dprintk("NFSD: laundromat_main - sleeping for %lld seconds\n", t);
->  	queue_delayed_work(laundry_wq, &nn->laundromat_work, t*HZ);
->  }
->  
-> @@ -6549,7 +6546,7 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  	}
->  
->  	if (fl_flags & FL_SLEEP) {
-> -		nbl->nbl_time = get_seconds();
-> +		nbl->nbl_time = ktime_get_boottime_seconds();
->  		spin_lock(&nn->blocked_locks_lock);
->  		list_add_tail(&nbl->nbl_list, &lock_sop->lo_blocked);
->  		list_add_tail(&nbl->nbl_lru, &nn->blocked_locks_lru);
-> @@ -7709,7 +7706,7 @@ nfs4_state_start_net(struct net *net)
->  	nfsd4_client_tracking_init(net);
->  	if (nn->track_reclaim_completes && nn->reclaim_str_hashtbl_size == 0)
->  		goto skip_grace;
-> -	printk(KERN_INFO "NFSD: starting %ld-second grace period (net %x)\n",
-> +	printk(KERN_INFO "NFSD: starting %lld-second grace period (net %x)\n",
->  	       nn->nfsd4_grace, net->ns.inum);
->  	queue_delayed_work(laundry_wq, &nn->laundromat_work, nn->nfsd4_grace * HZ);
->  	return 0;
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index 11b42c523f04..aace740d5a92 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -956,7 +956,7 @@ static ssize_t write_maxconn(struct file *file, char *buf, size_t size)
->  
->  #ifdef CONFIG_NFSD_V4
->  static ssize_t __nfsd4_write_time(struct file *file, char *buf, size_t size,
-> -				  time_t *time, struct nfsd_net *nn)
-> +				  time64_t *time, struct nfsd_net *nn)
->  {
->  	char *mesg = buf;
->  	int rv, i;
-> @@ -984,11 +984,11 @@ static ssize_t __nfsd4_write_time(struct file *file, char *buf, size_t size,
->  		*time = i;
->  	}
->  
-> -	return scnprintf(buf, SIMPLE_TRANSACTION_LIMIT, "%ld\n", *time);
-> +	return scnprintf(buf, SIMPLE_TRANSACTION_LIMIT, "%lld\n", *time);
->  }
->  
->  static ssize_t nfsd4_write_time(struct file *file, char *buf, size_t size,
-> -				time_t *time, struct nfsd_net *nn)
-> +				time64_t *time, struct nfsd_net *nn)
->  {
->  	ssize_t rv;
->  
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index 03fc7b4380f9..e426b22b5028 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -132,7 +132,7 @@ struct nfs4_delegation {
->  	struct list_head	dl_recall_lru;  /* delegation recalled */
->  	struct nfs4_clnt_odstate *dl_clnt_odstate;
->  	u32			dl_type;
-> -	time_t			dl_time;
-> +	time64_t		dl_time;
->  /* For recall: */
->  	int			dl_retries;
->  	struct nfsd4_callback	dl_recall;
-> @@ -310,7 +310,7 @@ struct nfs4_client {
->  #endif
->  	struct xdr_netobj	cl_name; 	/* id generated by client */
->  	nfs4_verifier		cl_verifier; 	/* generated by client */
-> -	time_t                  cl_time;        /* time of last lease renewal */
-> +	time64_t		cl_time;	/* time of last lease renewal */
->  	struct sockaddr_storage	cl_addr; 	/* client ipaddress */
->  	bool			cl_mach_cred;	/* SP4_MACH_CRED in force */
->  	struct svc_cred		cl_cred; 	/* setclientid principal */
-> @@ -449,7 +449,7 @@ struct nfs4_openowner {
->  	 */
->  	struct list_head	oo_close_lru;
->  	struct nfs4_ol_stateid *oo_last_closed_stid;
-> -	time_t			oo_time; /* time of placement on so_close_lru */
-> +	time64_t		oo_time; /* time of placement on so_close_lru */
->  #define NFS4_OO_CONFIRMED   1
->  	unsigned char		oo_flags;
->  };
-> @@ -606,7 +606,7 @@ static inline bool nfsd4_stateid_generation_after(stateid_t *a, stateid_t *b)
->  struct nfsd4_blocked_lock {
->  	struct list_head	nbl_list;
->  	struct list_head	nbl_lru;
-> -	time_t			nbl_time;
-> +	time64_t		nbl_time;
->  	struct file_lock	nbl_lock;
->  	struct knfsd_fh		nbl_fh;
->  	struct nfsd4_callback	nbl_cb;
-> -- 
-> 2.20.0
+>  	hash = jhash(trace->entries, trace->nr_entries *
+>  		     sizeof(trace->entries[0]), 0);
+
+I'm not sure whether it is useful to call stack_trace_save() if
+max_entries == 0. How about changing the "max_entries < 0" test into
+"max_entries <= 0"?
+
+Thanks,
+
+Bart.
+
+
