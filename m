@@ -2,125 +2,80 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 844BBC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A58C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F2E22467F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D50422146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:35:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbfLTJfU (ORCPT
+        id S1727470AbfLTJf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 04:35:20 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:45391 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727205AbfLTJfT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 04:35:19 -0500
-Received: from 79.184.253.1.ipv4.supernova.orange.pl (79.184.253.1) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
- id 648bf26c0baafb8f; Fri, 20 Dec 2019 10:35:16 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Jonas Meurer <jonas@freesources.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Tim Dittler <tim.dittler@systemli.org>,
-        Yannik Sembritzki <yannik@sembritzki.me>
-Subject: Re: [PATCH 2/2] PM: CONFIG_SUSPEND_SKIP_SYNC sets default for, '/sys/power/sync_on_suspend'
-Date:   Fri, 20 Dec 2019 10:35:16 +0100
-Message-ID: <5078963.9SuZRVoKLz@kreacher>
-In-Reply-To: <5c3996e1-eee7-1b8f-51bf-a6401d229bff@freesources.org>
-References: <1ee5b9ef-f30e-3fde-2325-ba516a96ced5@freesources.org> <5c3996e1-eee7-1b8f-51bf-a6401d229bff@freesources.org>
+        Fri, 20 Dec 2019 04:35:27 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:52180 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727205AbfLTJf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 04:35:27 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7D9E1552C1D1377195F9;
+        Fri, 20 Dec 2019 17:35:21 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 20 Dec 2019 17:35:19 +0800
+From:   Ma Feng <mafeng.ma@huawei.com>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        <christian.koenig@amd.com>, <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] drm/amdgpu: Remove unneeded variable 'ret' in navi10_ih.c
+Date:   Fri, 20 Dec 2019 17:36:08 +0800
+Message-ID: <1576834568-82874-1-git-send-email-mafeng.ma@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, December 2, 2019 6:07:43 PM CET Jonas Meurer wrote:
-> Slightly change the behaviour of build-time switch CONFIG_SUSPEND_SKIP_SYNC:
-> Make it configure the default for '/sys/power/sync_on_suspend', now that we
-> have a run-time switch for it.
-> 
-> Signed-off-by: Jonas Meurer <jonas@freesources.org>
-> ---
->  Documentation/ABI/testing/sysfs-power | 7 ++++---
->  kernel/power/Kconfig                  | 5 ++++-
->  kernel/power/main.c                   | 2 +-
->  kernel/power/suspend.c                | 2 +-
->  4 files changed, 10 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-power b/Documentation/ABI/testing/sysfs-power
-> index f164a364e89a..783b3ce8eb06 100644
-> --- a/Documentation/ABI/testing/sysfs-power
-> +++ b/Documentation/ABI/testing/sysfs-power
-> @@ -418,6 +418,7 @@ Description:
->  		aware that you have to take care of sync() yourself before
->  		suspending the system if you disable it here.
->  
-> -		Writing a "1" (default) to this file enables the sync() and
-> -		writing a "0" disables it. Reads from the file return the
-> -		current value.
-> +		Writing a "1" to this file enables the sync() and writing a
-> +		"0" disables it. Reads from the file return the current value.
-> +		The default is "1" but can be configured with the build-time
-> +		config flag "SUSPEND_SKIP_SYNC".
-> diff --git a/kernel/power/Kconfig b/kernel/power/Kconfig
-> index d3667b4075c1..7cbfbeacd68a 100644
-> --- a/kernel/power/Kconfig
-> +++ b/kernel/power/Kconfig
-> @@ -27,7 +27,10 @@ config SUSPEND_SKIP_SYNC
->  	  Skip the kernel sys_sync() before freezing user processes.
->  	  Some systems prefer not to pay this cost on every invocation
->  	  of suspend, or they are content with invoking sync() from
-> -	  user-space before invoking suspend.  Say Y if that's your case.
-> +	  user-space before invoking suspend.  There's a run-time switch
-> +	  at '/sys/power/sync_on_suspend' to configure this behaviour.
-> +	  This setting changes the default for the run-tim switch. Say Y
-> +	  to change the default to disable the kernel sys_sync().
->  
->  config HIBERNATE_CALLBACKS
->  	bool
-> diff --git a/kernel/power/main.c b/kernel/power/main.c
-> index 7d9d579a8e6f..69b7a8aeca3b 100644
-> --- a/kernel/power/main.c
-> +++ b/kernel/power/main.c
-> @@ -197,7 +197,7 @@ power_attr(mem_sleep);
->   * show() returns whether ksys_sync_helper() is invoked before suspend.
->   * store() accepts 0 or 1.  0 disables ksys_sync_helper() and 1 enables it.
->   */
-> -bool sync_on_suspend_enabled = true;
-> +bool sync_on_suspend_enabled = !IS_ENABLED(CONFIG_SUSPEND_SKIP_SYNC);
->  
->  static ssize_t sync_on_suspend_show(struct kobject *kobj,
->  				   struct kobj_attribute *attr, char *buf)
-> diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
-> index 503d56419a69..2c47280fbfc7 100644
-> --- a/kernel/power/suspend.c
-> +++ b/kernel/power/suspend.c
-> @@ -564,7 +564,7 @@ static int enter_state(suspend_state_t state)
->  	if (state == PM_SUSPEND_TO_IDLE)
->  		s2idle_begin();
->  
-> -	if (!IS_ENABLED(CONFIG_SUSPEND_SKIP_SYNC) && sync_on_suspend_enabled) {
-> +	if (sync_on_suspend_enabled) {
->  		trace_suspend_resume(TPS("sync_filesystems"), 0, true);
->  		ksys_sync_helper();
->  		trace_suspend_resume(TPS("sync_filesystems"), 0, false);
-> 
+Fixes coccicheck warning:
 
-I don't see much value in splitting the changes into two patches.
-On the contrary, this patch is a logical part of the full change, so IMO
-it should be folded into the [1/2].
+drivers/gpu/drm/amd/amdgpu/navi10_ih.c:113:5-8: Unneeded variable: "ret". Return "0" on line 182
 
-Please do so and resubmit.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Ma Feng <mafeng.ma@huawei.com>
+---
+ drivers/gpu/drm/amd/amdgpu/navi10_ih.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Thanks!
+diff --git a/drivers/gpu/drm/amd/amdgpu/navi10_ih.c b/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
+index 9af7356..f737ce4 100644
+--- a/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
++++ b/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
+@@ -110,7 +110,6 @@ static uint32_t navi10_ih_rb_cntl(struct amdgpu_ih_ring *ih, uint32_t ih_rb_cntl
+ static int navi10_ih_irq_init(struct amdgpu_device *adev)
+ {
+ 	struct amdgpu_ih_ring *ih = &adev->irq.ih;
+-	int ret = 0;
+ 	u32 ih_rb_cntl, ih_doorbell_rtpr, ih_chicken;
+ 	u32 tmp;
 
+@@ -179,7 +178,7 @@ static int navi10_ih_irq_init(struct amdgpu_device *adev)
+ 	/* enable interrupts */
+ 	navi10_ih_enable_interrupts(adev);
 
+-	return ret;
++	return 0;
+ }
+
+ /**
+--
+2.6.2
 
