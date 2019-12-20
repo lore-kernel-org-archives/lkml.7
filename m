@@ -2,112 +2,108 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8641C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E25BC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 858F724679
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4AED2467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 07:08:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576825727;
+	bh=3ob1RaqJHOmqEgGvlMWw3bXiCPnw8pblxB/VDlM2ax4=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=irU5sRvt7b8HcchX2IJX84tcsHQf9NS/HyEu8rSFlf4Wprap1MRHhJvqNQfRvnNXX
+	 owPuigYHqu+F1m/uc5HeP3NNoE6NjNK/3xMW30UjmNIHmieim3XYr9DmiWlHiZyc4b
+	 kl+KPk8HRn4s21K4LwSHyPYBl5/7Mwgur9+vHhps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbfLTHI1 (ORCPT
+        id S1727434AbfLTHIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 02:08:27 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8158 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727110AbfLTHI1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 02:08:27 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B1E4FF35266EDFC729C5;
-        Fri, 20 Dec 2019 15:08:22 +0800 (CST)
-Received: from DESKTOP-9SCKDU9.china.huawei.com (10.67.102.224) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 20 Dec 2019 15:08:13 +0800
-From:   Huaijie Yi <yihuaijie@huawei.com>
-To:     <dwmw2@infradead.org>, <richard@nod.at>, <viro@zeniv.linux.org.uk>,
-        <dhowells@redhat.com>
-CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <yihuaijie@huawei.com>, Guohua Zhong <zhongguohua1@huawei.com>,
-        zhangyi <yi.zhang@huawei.com>, chenjie <chenjie6@huawei.com>,
-        fangxinwei <fangxinwei@huawei.com>
-Subject: [PATCH] jffs2: fix kfree uninitialized pointer in jffs2_i_callback
-Date:   Fri, 20 Dec 2019 15:07:24 +0800
-Message-ID: <20191220070724.27660-1-yihuaijie@huawei.com>
-X-Mailer: git-send-email 2.21.0.windows.1
+        Fri, 20 Dec 2019 02:08:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58714 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726428AbfLTHIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 02:08:46 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAF0F2467F;
+        Fri, 20 Dec 2019 07:08:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576825725;
+        bh=3ob1RaqJHOmqEgGvlMWw3bXiCPnw8pblxB/VDlM2ax4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=gpYGlX+7dgXiUsMDLkmaEREbx+klJdtAT9Pve3xR12bZNWQVxK3mkWXPWaXIMm5MP
+         IzNsvxlhetV+mYHwyfe71v6AueJR85Brqogrp6byHbEDPe6F2BuLXjBwntc8NgFgvV
+         0nrNLb56dY0eCVR7TYa/2IPwaowOKVjiVksjx768=
+Date:   Fri, 20 Dec 2019 08:08:43 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Char/Misc driver fixes for 5.5-rc3
+Message-ID: <20191220070843.GA2190439@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.102.224]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 4fdcfab5b553 ("jffs2: fix use-after-free on
-symlink traversal") move free operation of f->target
-to jffs2_i_callback().
+The following changes since commit d1eef1c619749b2a57e514a3fa67d9a516ffa919:
 
-But when destroy an jffs2 inode in iget_locked(), jffs2_inode_info
-was not initialized. which results in destroy_inode() calling
-jffs2_i_callback() to kfree the uninitialized pointer f->target
-and then BUG_ON. So move the initialization from jffs2_init_inode_info()
-to jffs2_alloc_inode().
+  Linux 5.5-rc2 (2019-12-15 15:16:08 -0800)
 
-The stack likes following:
-[19700101000004]kernel BUG at mm/slub.c:3824!
-[19700101000004]Internal error: Oops - BUG: 0 [#1] SMP ARM
-[19700101000004]CPU: 2 PID: 9 Comm: rcuos/0 Tainted: P O 4.4.185 #1
-[19700101000004]PC is at kfree+0xfc/0x264
-[19700101000004]LR is at jffs2_i_callback+0x10/0x28 [jffs2]
-......
-[20191219102226][<ffffff80083630a4>] kfree+0xd4/0x2ac
-[20191219102226][<ffffff80008a0ae4>] jffs2_i_callback+0x24/0x40 [jffs2]
-[20191219102226][<ffffff800828a908>] rcu_process_callbacks+0x524/0x61c
-[20191219102226][<ffffff8008229cf8>] __do_softirq+0x1e0/0x3bc
-[20191219102226][<ffffff800822a19c>] irq_exit+0xa0/0x124
-[20191219102226][<ffffff800825074c>] msa_irq_exit+0x138/0x1c4
-[20191219102226][<ffffff800827aaf8>] __handle_domain_irq+0xf0/0x1a4
-[20191219102226][<ffffff8008200944>] gic_handle_irq+0xac/0x140
+are available in the Git repository at:
 
-Reported-by: Guohua Zhong <zhongguohua1@huawei.com>
-Signed-off-by: Huaijie Yi <yihuaijie@huawei.com>
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: chenjie <chenjie6@huawei.com>
-Signed-off-by: fangxinwei <fangxinwei@huawei.com>
----
- fs/jffs2/os-linux.h | 1 -
- fs/jffs2/super.c    | 2 ++
- 2 files changed, 2 insertions(+), 1 deletion(-)
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-5.5-rc3
 
-diff --git a/fs/jffs2/os-linux.h b/fs/jffs2/os-linux.h
-index ef1cfa61549e..625c4da3246d 100644
---- a/fs/jffs2/os-linux.h
-+++ b/fs/jffs2/os-linux.h
-@@ -54,7 +54,6 @@ static inline void jffs2_init_inode_info(struct jffs2_inode_info *f)
- 	f->fragtree = RB_ROOT;
- 	f->metadata = NULL;
- 	f->dents = NULL;
--	f->target = NULL;
- 	f->flags = 0;
- 	f->usercompr = 0;
- }
-diff --git a/fs/jffs2/super.c b/fs/jffs2/super.c
-index 0e6406c4f362..d76ed98057a1 100644
---- a/fs/jffs2/super.c
-+++ b/fs/jffs2/super.c
-@@ -42,6 +42,8 @@ static struct inode *jffs2_alloc_inode(struct super_block *sb)
- 	f = kmem_cache_alloc(jffs2_inode_cachep, GFP_KERNEL);
- 	if (!f)
- 		return NULL;
-+	f->target = NULL;
-+
- 	return &f->vfs_inode;
- }
- 
--- 
-2.12.3
+for you to fetch changes up to 4aa37c463764052c68c5c430af2a67b5d784c1e0:
 
+  random: don't forget compat_ioctl on urandom (2019-12-17 19:19:24 +0100)
 
+----------------------------------------------------------------
+Char/misc driver fixes for 5.5-rc3
+
+Here are some small char and other driver fixes for 5.5-rc3.
+
+The most noticable one is a much-reported fix for a random driver issue
+that came up from 5.5-rc1 compat_ioctl cleanups.  The others are a chunk
+of habanalab driver fixes and intel_th driver fixes and new device ids.
+
+All have been in linux-next with no reported issues.
+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+----------------------------------------------------------------
+Alexander Shishkin (4):
+      intel_th: pci: Add Comet Lake PCH-V support
+      intel_th: pci: Add Elkhart Lake SOC support
+      intel_th: Fix freeing IRQs
+      intel_th: msu: Fix window switching without windows
+
+Chen Wandun (1):
+      habanalabs: remove variable 'val' set but not used
+
+Greg Kroah-Hartman (1):
+      Merge tag 'misc-habanalabs-fixes-2019-12-14' of git://people.freedesktop.org/~gabbayo/linux into char-misc-linus
+
+Jason A. Donenfeld (1):
+      random: don't forget compat_ioctl on urandom
+
+Oded Gabbay (1):
+      habanalabs: rate limit error msg on waiting for CS
+
+ drivers/char/random.c                        |  1 +
+ drivers/hwtracing/intel_th/core.c            |  7 ++++---
+ drivers/hwtracing/intel_th/intel_th.h        |  2 ++
+ drivers/hwtracing/intel_th/msu.c             | 14 +++++++++-----
+ drivers/hwtracing/intel_th/pci.c             | 10 ++++++++++
+ drivers/misc/habanalabs/command_submission.c |  5 +++--
+ drivers/misc/habanalabs/context.c            |  2 +-
+ drivers/misc/habanalabs/goya/goya.c          | 15 +++++++--------
+ 8 files changed, 37 insertions(+), 19 deletions(-)
