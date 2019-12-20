@@ -2,88 +2,138 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D782C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCD2C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0D0F227BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 845CA227BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 01:55:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V3HnJVXX"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TQC1fmet"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbfLTByR (ORCPT
+        id S1727231AbfLTBzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 20:54:17 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40420 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbfLTByR (ORCPT
+        Thu, 19 Dec 2019 20:55:22 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:34658 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbfLTBzW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 20:54:17 -0500
-Received: by mail-ot1-f66.google.com with SMTP id w21so1974525otj.7
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 17:54:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SrVCaXEfHvX+lnDggpjErS+G1Eq8p2H1vH06TCxns20=;
-        b=V3HnJVXX4pWRfYu8eVwKHnJhC9yVTxMJVJDqOKPc/P5GMqGPuWnmyn6WE9gBbIcvSl
-         3Fb8t/ruxD0vK7dFGq9zYBu2AKNZkVHkPygHtvAu4aR6CSPyEdBZFVeKxkKzOEKJOOE/
-         wbVZm5+o0FjVQI66ZX9AdYhU3jwXpTVqufrUrsdeGL7NSYRV3eB1IoV0S0SXHdvsiduk
-         I4nTBAetn8sNk6ZH4oY90YZ3VZZbu2k5yHcbN9KaJa1KTf79BCSbFJr4UkLpaaM4jVKM
-         /BO2c9SDbIy/e8UOFAVLVAUtSxorkSiZ1XyMA2ILg1yHHQfXv2SQQD1ladEEEgrHDo6W
-         ntYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SrVCaXEfHvX+lnDggpjErS+G1Eq8p2H1vH06TCxns20=;
-        b=QcZYoB+wGTQcH7KAG9RGvD14P+riHJNdlIsRi3tE4GJzmSICXxJqkEkvQX4XeiGg+V
-         0cVuWqplUVaHsDFOYoPVOG1NPsS+UIt2WHsVz9sbFNcwcHmg7QDo8iajOpGyc/rV3JwU
-         850jngIToLMBZv8Da7fexHyjaqUeZL+KZcwQE3mCnQ3ozRdtPeDPT//ir2p8ExUd9i+A
-         NYX2p0Kmzqpsb9kbEOEyVZLQWZhnCqUv1zEvkKWpILywAv3CwfGV0PDOr1jJBbjAXHLK
-         FjxUcaIgblovofIM8C2t+BwIE0SwiU1k1+vk8163q55YpYdvbU107laq2rv3mxJ0kWsG
-         txvA==
-X-Gm-Message-State: APjAAAX/kZGHGNH6azT4eztKHpPHAFmnmpUMX+qZzkRG3g+IaLQmIf/c
-        xA61pwu7eXkSLlMJwfPxBkFLjdKGpCwBCteSZp72xw==
-X-Google-Smtp-Source: APXvYqwF8LUcvERTD8QoVWU4AMTDQhIYbphG5FT7NUrQIS8O0ugVQZbqMOXtfj6JIBssVng0vq1ZBpif6Z9b794FiJE=
-X-Received: by 2002:a05:6830:10d5:: with SMTP id z21mr12550357oto.30.1576806856088;
- Thu, 19 Dec 2019 17:54:16 -0800 (PST)
+        Thu, 19 Dec 2019 20:55:22 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBK1YQvW178885;
+        Fri, 20 Dec 2019 01:54:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=yvWe495ldICiygqOjZaczcPhEGKNXC0rTc5IDLPnmg0=;
+ b=TQC1fmettNcpPG+K0+r5uCWd4QbxtaXxHbLeXWr6uYZR0w8qvXec9nz2V3nqd/rsA7G0
+ +840JBvsu6VKJK0saZjQckAjjnp3kM4dblPfYXGbEs6kOTqCsU7OW8wjY5CnXpL2LVer
+ Lmz0GdGblAcbt2Tlx9FAhFLBvNgeNw/RSenBOGDSPlfRZLnmki+NxIsW8YFZwIy6GZZK
+ hlPDQBNnE4+QSs86PfkG+PE3xqR9RW6pxgXerp5yENFxo/3DxiR0GA3F0q17n3+WbNMY
+ pqBf0lTcc0y/yuvaL051enyPxjy0h7i1rmPaa5WviRThLmxMKt2VRj5MnaWWhMKGJBst 2g== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2x01jae617-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Dec 2019 01:54:48 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBK1sfDV073498;
+        Fri, 20 Dec 2019 01:54:48 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2x04mst1n8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Dec 2019 01:54:47 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBK1rgwj030477;
+        Fri, 20 Dec 2019 01:53:44 GMT
+Received: from localhost (/10.145.178.64)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 19 Dec 2019 17:53:41 -0800
+Date:   Thu, 19 Dec 2019 17:53:39 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>, axboe@kernel.dk,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, tytso@mit.edu,
+        adilger.kernel@dilger.ca, ming.lei@redhat.com, osandov@fb.com,
+        jthumshirn@suse.de, minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
+        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
+        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
+        chaitanya.kulkarni@wdc.com, bvanassche@acm.org,
+        dhowells@redhat.com, asml.silence@gmail.com
+Subject: Re: [PATCH RFC 1/3] block: Add support for REQ_OP_ASSIGN_RANGE
+ operation
+Message-ID: <20191220015338.GB7473@magnolia>
+References: <157599668662.12112.10184894900037871860.stgit@localhost.localdomain>
+ <157599696813.12112.14140818972910110796.stgit@localhost.localdomain>
+ <yq1woatc8zd.fsf@oracle.com>
+ <3f2e341b-dea4-c5d0-8eb0-568b6ad2f17b@virtuozzo.com>
+ <yq1a77oc56s.fsf@oracle.com>
 MIME-Version: 1.0
-References: <20191219223834.233692-1-shakeelb@google.com> <1da649da-6527-d4c2-7d12-40126856ae75@intel.com>
-In-Reply-To: <1da649da-6527-d4c2-7d12-40126856ae75@intel.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Thu, 19 Dec 2019 17:54:05 -0800
-Message-ID: <CALvZod7zi+t9A=4_L-iiD3JhFpGU0Jt-=Q1_ee=7=7KAUMykVA@mail.gmail.com>
-Subject: Re: [PATCH] x86/resctrl: Fix potential memory leak
-To:     Reinette Chatre <reinette.chatre@intel.com>
-Cc:     Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yq1a77oc56s.fsf@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9476 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912200011
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9476 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912200010
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 3:27 PM Reinette Chatre
-<reinette.chatre@intel.com> wrote:
->
-> Hi Shakeel,
->
-> On 12/19/2019 2:38 PM, Shakeel Butt wrote:
-> > The set_cache_qos_cfg() is leaking memory when the given level is not
-> > RDT_RESOURCE_L3 or RDT_RESOURCE_L2. Fix that.
->
-> I think it would be valuable to those considering whether they need to
-> backport to know that RDT_RESOURCE_L3 and RDT_RESOURCE_L2 are currently
-> the only possible levels with which this function is called. It is thus
-> not currently possible for this leak to occur. Indeed a valuable safety
-> to add in case this code may change in the future. Thank you very much.
->
+On Thu, Dec 19, 2019 at 05:37:47PM -0500, Martin K. Petersen wrote:
+> 
+> Kirill,
+> 
+> > Hm. BLKDEV_ZERO_NOUNMAP is used in __blkdev_issue_write_zeroes() only.
+> > So, do I understand right that we should the below two?:
+> >
+> > 1) Introduce a new flag BLKDEV_ZERO_ALLOCATE for
+> > blkdev_issue_write_zeroes().
+> 
+> > 2) Introduce a new flag REQ_NOZERO in enum req_opf.
+> 
+> Something like that. If zeroing is a problem for you.
+> 
+> Right now we offer the following semantics:
+> 
+> 	Deallocate, no zeroing (discard)
+> 
+> 	Optionally deallocate, zeroing (zeroout)
+> 
+> 	Allocate, zeroing (zeroout + NOUNMAP)
+> 
+> Some devices also implement a fourth option which would be:
+> 
+> 	Anchor: Allocate, no zeroing
 
-Do you want me to add that info the commit and resend the v2 of the patch?
+What happens if you anchor and then try to read the results?  IO error?
+
+(Yeah, I'm being lazy and not digging through SBC-3, sorry...)
+
+--D
+
+> > Won't this confuse a reader that we have blkdev_issue_write_zeroes(),
+> > which does not write zeroes sometimes? Maybe we should rename
+> > blkdev_issue_write_zeroes() in some more generic name?
+> 
+> Maybe. The naming is what it is for hysterical raisins and reflects how
+> things are implemented in the storage protocols. I wouldn't worry too
+> much about that. We can rename things if need be but we shouldn't plumb
+> an essentially identical operation through the block stack just to
+> expose a different name at the top.
+> 
+> -- 
+> Martin K. Petersen	Oracle Linux Engineering
