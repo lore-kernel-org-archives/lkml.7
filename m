@@ -2,127 +2,257 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 602E2C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BC0C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 365FE2146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:27:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uH0KpIPu"
+	by mail.kernel.org (Postfix) with ESMTP id F386E2146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:31:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576834298;
+	bh=AA/sRQxL0Ymv2ZuaQASx2WXZLITkpG2sg7+oWe2z+7Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hBjAQi55CVTg6NcaDIl2o1bWfRRbKDEmOWu2wB/l7Qf3+ZLmJJqd1sYeVsOZvi/u/
+	 lXxdtU5S2GrLdtHZc1Oi113MMTcAeIPuhMtfaQf7KMqmB5Ob9A2fAZ4WrS4CZ9PHTo
+	 qDnsGcJ/tvbJnv36V2l/3B0k1SPpJsPwb36mYbi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfLTJ1V (ORCPT
+        id S1727277AbfLTJbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 04:27:21 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44449 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727167AbfLTJ1V (ORCPT
+        Fri, 20 Dec 2019 04:31:37 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42219 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727167AbfLTJbg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 04:27:21 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 195so4005454pfw.11;
-        Fri, 20 Dec 2019 01:27:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UNKiOniHzSKU3M0oT+PWGTepgoOHttWen9RJRN7cbpk=;
-        b=uH0KpIPuYsKhauy6uDQhR85oanHO0ONzdFK7YxazqR6sWO9AwuAefTRRLoK/BWBk6Q
-         CTt4LtkBoZ87Na9BXfi97V5YLBsPuD0UV9e5IcniNMOlKjjgRAJ+d2Lasbchk9lQSpSt
-         AAs2v73a9RCHWpbm9qz5q+3kgLG8l6T7DoF4juV+sEM2pwMN1MbyrcmK8cLDy7ApOcxg
-         MerYx4DlqEJ/0awwoKr2crZ/Y9G5pbv01mKyWL93w+w7UB3vKy7uu3CtBMQniuMNb5Qs
-         81tlO/0iXZy228ouq1IMN4VomlwZBhrAu4N546u3gCQjLb9g36UlQD7q5zBlUcd8URuY
-         fZrw==
+        Fri, 20 Dec 2019 04:31:36 -0500
+Received: by mail-wr1-f67.google.com with SMTP id q6so8695418wro.9;
+        Fri, 20 Dec 2019 01:31:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UNKiOniHzSKU3M0oT+PWGTepgoOHttWen9RJRN7cbpk=;
-        b=dFylgAAtfum9DdSMcEdO+1kB383jHG+bgnWGhhNo75iKCNIAjQKrkg8nVr2B6hSlXG
-         mH/szNVRzSzJOcJETrCq4aZZVaRaPjWDy2sDwrn8FKA579IxQzSKiU/R5oCWW5s0Cq3G
-         hYNFWhuBasXp4CxcZ8SV9P4hus8p8eATpvkhgMIqeDBqawjEiNFKsUVmtkyrotVSc9Tg
-         viLSvDBwbluKvRo3RAGD2l/mwVwFyoj6LsqfMOYJP0ioAg1yusmjUqTwY6cNlO0j37i2
-         7NzufRx6gzmDUPKOFT7vFmZ1lCPzJi7k9t9HL9beu8yQPkZZku9U12z6qinG1cx4W1Hy
-         DTvg==
-X-Gm-Message-State: APjAAAWn4nUxoNA4JOM/9x/ElUigqHaX03vLl/27EV5dddLk1+TVdzo6
-        4Hafqp+yU+UKOr58+365azh5gMcp3PtXmckjqfc=
-X-Google-Smtp-Source: APXvYqyh1hbkXRo8C51/PO5I/y84aZ4jUWZTawBw/0oDDbc5KxDjYVnkag2sPe7rExGKev7pFacrKd2Ne5qbnrqiDpA=
-X-Received: by 2002:a63:941:: with SMTP id 62mr14407335pgj.203.1576834040029;
- Fri, 20 Dec 2019 01:27:20 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yjyYjOnrqDHo7qcloYpTOLr7l2KlEKEKZwyOCe6u+kc=;
+        b=pEioDIqD0kGAz3rPvmf8sAw3Sz2VJUNvGP4UnGGgSSwpTwC1+X+fi/JPM7LOqVSRcH
+         vDYoK9CvKJAEd/eMn4PPwHbahzh8e738M//cQU5lgkAstFPhOBPcfhgxqEGrKkX3eLlG
+         qRlrVEwRJpzRlRCCBoYMOLs/ilK4Y9uBc1fKSOzE2DJCRWfBr/8wU0TdGEn29Aos40uk
+         nl8cF/CBoCThFiQ5azAzv+Y+1ArgPdRgQCr3XfXvsmUUUPD1ZEKIJ4YePDrytcM9uAYW
+         tEDCO8YcW3yz8wfjVK+RdvvIamtvlaCCEz8Sw0wrrEfl7PkH1139jbxcUb665TfOcFrn
+         To3w==
+X-Gm-Message-State: APjAAAVvTOiENtNo63YKysbMTSv0DRSfLhWtWS8Q7283z21D50k5So8r
+        NVH9KvLfejIQMeHL9Z3pjB4szIDP
+X-Google-Smtp-Source: APXvYqz7fkTSMvR6qqhNJe09fsxAg5JvrTa2VcG3vrWhxtjzIYmM95MBVI6yfzMBB18QzFKMHUWSow==
+X-Received: by 2002:a5d:6b88:: with SMTP id n8mr14687470wrx.288.1576834293321;
+        Fri, 20 Dec 2019 01:31:33 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id d8sm9079607wre.13.2019.12.20.01.31.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 01:31:32 -0800 (PST)
+Date:   Fri, 20 Dec 2019 10:31:32 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2] mm: memcg/slab: fix percpu slab vmstats flushing
+Message-ID: <20191220093132.GE20332@dhcp22.suse.cz>
+References: <20191220042728.1045881-1-guro@fb.com>
 MIME-Version: 1.0
-References: <20191219041039.23396-1-dan@dlrobertson.com> <20191219041039.23396-3-dan@dlrobertson.com>
- <CAHp75VdVmfAi5hSp23Gn8nm6LmX-Mr5Tnxcbus90DrRL+gVFRA@mail.gmail.com> <20191220043220.GA16415@nessie>
-In-Reply-To: <20191220043220.GA16415@nessie>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 20 Dec 2019 11:27:10 +0200
-Message-ID: <CAHp75Vec5ADoFH9KoTnU5+uEZvGqS2+NUN+MLTiwzofDtGG0+A@mail.gmail.com>
-Subject: Re: [PATCH v7 2/3] iio: (bma400) add driver for the BMA400
-To:     Dan Robertson <dan@dlrobertson.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        devicetree <devicetree@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Joe Perches <joe@perches.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191220042728.1045881-1-guro@fb.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 6:48 AM Dan Robertson <dan@dlrobertson.com> wrote:
-> On Thu, Dec 19, 2019 at 01:02:28PM +0200, Andy Shevchenko wrote:
-> > On Thu, Dec 19, 2019 at 6:27 AM Dan Robertson <dan@dlrobertson.com> wrote:
+On Thu 19-12-19 20:27:28, Roman Gushchin wrote:
+> Currently slab percpu vmstats are flushed twice: during the memcg
+> offlining and just before freeing the memcg structure. Each time
+> percpu counters are summed, added to the atomic counterparts and
+> propagated up by the cgroup tree.
+> 
+> The second flushing is required due to how recursive vmstats are
+> implemented: counters are batched in percpu variables on a local
+> level, and once a percpu value is crossing some predefined threshold,
+> it spills over to atomic values on the local and each ascendant
+> levels. It means that without flushing some numbers cached in percpu
+> variables will be dropped on floor each time a cgroup is destroyed.
+> And with uptime the error on upper levels might become noticeable.
+> 
+> The first flushing aims to make counters on ancestor levels more
+> precise. Dying cgroups may resume in the dying state for a long time.
+> After kmem_cache reparenting which is performed during the offlining
+> slab counters of the dying cgroup don't have any chances to be
+> updated, because any slab operations will be performed on the parent
+> level. It means that the inaccuracy caused by percpu batching
+> will not decrease up to the final destruction of the cgroup.
+> By the original idea flushing slab counters during the offlining
+> should minimize the visible inaccuracy of slab counters on the parent
+> level.
+> 
+> The problem is that percpu counters are not zeroed after the first
+> flushing. So every cached percpu value is summed twice. It creates
+> a small error (up to 32 pages per cpu, but usually less) which
+> accumulates on parent cgroup level. After creating and destroying
+> of thousands of child cgroups, slab counter on parent level can
+> be way off the real value.
+> 
+> For now, let's just stop flushing slab counters on memcg offlining.
+> It can't be done correctly without scheduling a work on each cpu:
+> reading and zeroing it during css offlining can race with an
+> asynchronous update, which doesn't expect values to be changed
+> underneath.
+> 
+> With this change, slab counters on parent level will become eventually
+> consistent. Once all dying children are gone, values are correct.
+> And if not, the error is capped by 32 * NR_CPUS pages per dying
+> cgroup.
+> 
+> It's not perfect, as slab are reparented, so any updates after
+> the reparenting will happen on the parent level. It means that
+> if a slab page was allocated, a counter on child level was bumped,
+> then the page was reparented and freed, the annihilation of positive
+> and negative counter values will not happen until the child cgroup is
+> released. It makes slab counters different from others, and it might
+> want us to implement flushing in a correct form again.
+> But it's also a question of performance: scheduling a work on each
+> cpu isn't free, and it's an open question if the benefit of having
+> more accurate counters is worth it.
+> 
+> We might also consider flushing all counters on offlining, not only
+> slab counters.
+> 
+> So let's fix the main problem now: make the slab counters eventually
+> consistent, so at least the error won't grow with uptime (or more
+> precisely the number of created and destroyed cgroups). And think
+> about the accuracy of counters separately.
 
-> > > +static int bma400_set_accel_output_data_rate(struct bma400_data *data,
-> > > +                                            int hz, int uhz)
-> > > +{
-> > > +       unsigned int idx;
-> > > +       unsigned int odr;
-> > > +       unsigned int val;
-> > > +       int ret;
-> > > +
-> > > +       if (hz >= BMA400_ACC_ODR_MIN_WHOLE_HZ) {
-> > > +               if (uhz || hz % BMA400_ACC_ODR_MIN_WHOLE_HZ)
-> > > +                       return -EINVAL;
-> > > +
-> > > +               val = hz / BMA400_ACC_ODR_MIN_WHOLE_HZ;
-> >
-> > Again, AFAICS division may be avoided in both cases (% and / above)
-> > because of is_power_of_2() check below.
-> > Can you revisit this?
->
-> Yeah I can update this in the next patchset, but I don't know if it is much more
-> readable this way.
+So this is essentially a revert, right? I have to say I was not a great
+fan of bee07b33db78 in the first place.
 
-You may describe the algo in the comment.
+> v2: added a note to the changelog, asked by Johannes. Thanks!
+> 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Fixes: bee07b33db78 ("mm: memcontrol: flush percpu slab vmstats on kmem offlining")
+> Cc: stable@vger.kernel.org
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 
-Let's see how it might look like
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-  if (uhz)
-    return -EINVAL;
-  idx = __ffs(val);
-  /* We're expecting value to be 2^n * ODR_MIN_WHOLE_HZ */
-  if ((val >> idx) != BMA400_ACC_ODR_MIN_WHOLE_HZ)
-    retutn -EINVAL;
-  idx += BMA400_ACC_ODR_MIN_RAW + 1;
-
-Would it work?
-
-> > > +               if (!is_power_of_2(val))
-> > > +                       return -EINVAL;
-> > > +
-> > > +               idx = __ffs(val) + BMA400_ACC_ODR_MIN_RAW + 1;
-
+> ---
+>  include/linux/mmzone.h |  5 ++---
+>  mm/memcontrol.c        | 37 +++++++++----------------------------
+>  2 files changed, 11 insertions(+), 31 deletions(-)
+> 
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index 89d8ff06c9ce..5334ad8fc7bd 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -215,9 +215,8 @@ enum node_stat_item {
+>  	NR_INACTIVE_FILE,	/*  "     "     "   "       "         */
+>  	NR_ACTIVE_FILE,		/*  "     "     "   "       "         */
+>  	NR_UNEVICTABLE,		/*  "     "     "   "       "         */
+> -	NR_SLAB_RECLAIMABLE,	/* Please do not reorder this item */
+> -	NR_SLAB_UNRECLAIMABLE,	/* and this one without looking at
+> -				 * memcg_flush_percpu_vmstats() first. */
+> +	NR_SLAB_RECLAIMABLE,
+> +	NR_SLAB_UNRECLAIMABLE,
+>  	NR_ISOLATED_ANON,	/* Temporary isolated pages from anon lru */
+>  	NR_ISOLATED_FILE,	/* Temporary isolated pages from file lru */
+>  	WORKINGSET_NODES,
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 601405b207fb..3165db39827a 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -3287,49 +3287,34 @@ static u64 mem_cgroup_read_u64(struct cgroup_subsys_state *css,
+>  	}
+>  }
+>  
+> -static void memcg_flush_percpu_vmstats(struct mem_cgroup *memcg, bool slab_only)
+> +static void memcg_flush_percpu_vmstats(struct mem_cgroup *memcg)
+>  {
+> -	unsigned long stat[MEMCG_NR_STAT];
+> +	unsigned long stat[MEMCG_NR_STAT] = {0};
+>  	struct mem_cgroup *mi;
+>  	int node, cpu, i;
+> -	int min_idx, max_idx;
+> -
+> -	if (slab_only) {
+> -		min_idx = NR_SLAB_RECLAIMABLE;
+> -		max_idx = NR_SLAB_UNRECLAIMABLE;
+> -	} else {
+> -		min_idx = 0;
+> -		max_idx = MEMCG_NR_STAT;
+> -	}
+> -
+> -	for (i = min_idx; i < max_idx; i++)
+> -		stat[i] = 0;
+>  
+>  	for_each_online_cpu(cpu)
+> -		for (i = min_idx; i < max_idx; i++)
+> +		for (i = 0; i < MEMCG_NR_STAT; i++)
+>  			stat[i] += per_cpu(memcg->vmstats_percpu->stat[i], cpu);
+>  
+>  	for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
+> -		for (i = min_idx; i < max_idx; i++)
+> +		for (i = 0; i < MEMCG_NR_STAT; i++)
+>  			atomic_long_add(stat[i], &mi->vmstats[i]);
+>  
+> -	if (!slab_only)
+> -		max_idx = NR_VM_NODE_STAT_ITEMS;
+> -
+>  	for_each_node(node) {
+>  		struct mem_cgroup_per_node *pn = memcg->nodeinfo[node];
+>  		struct mem_cgroup_per_node *pi;
+>  
+> -		for (i = min_idx; i < max_idx; i++)
+> +		for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
+>  			stat[i] = 0;
+>  
+>  		for_each_online_cpu(cpu)
+> -			for (i = min_idx; i < max_idx; i++)
+> +			for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
+>  				stat[i] += per_cpu(
+>  					pn->lruvec_stat_cpu->count[i], cpu);
+>  
+>  		for (pi = pn; pi; pi = parent_nodeinfo(pi, node))
+> -			for (i = min_idx; i < max_idx; i++)
+> +			for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
+>  				atomic_long_add(stat[i], &pi->lruvec_stat[i]);
+>  	}
+>  }
+> @@ -3403,13 +3388,9 @@ static void memcg_offline_kmem(struct mem_cgroup *memcg)
+>  		parent = root_mem_cgroup;
+>  
+>  	/*
+> -	 * Deactivate and reparent kmem_caches. Then flush percpu
+> -	 * slab statistics to have precise values at the parent and
+> -	 * all ancestor levels. It's required to keep slab stats
+> -	 * accurate after the reparenting of kmem_caches.
+> +	 * Deactivate and reparent kmem_caches.
+>  	 */
+>  	memcg_deactivate_kmem_caches(memcg, parent);
+> -	memcg_flush_percpu_vmstats(memcg, true);
+>  
+>  	kmemcg_id = memcg->kmemcg_id;
+>  	BUG_ON(kmemcg_id < 0);
+> @@ -4913,7 +4894,7 @@ static void mem_cgroup_free(struct mem_cgroup *memcg)
+>  	 * Flush percpu vmstats and vmevents to guarantee the value correctness
+>  	 * on parent's and all ancestor levels.
+>  	 */
+> -	memcg_flush_percpu_vmstats(memcg, false);
+> +	memcg_flush_percpu_vmstats(memcg);
+>  	memcg_flush_percpu_vmevents(memcg);
+>  	__mem_cgroup_free(memcg);
+>  }
+> -- 
+> 2.17.1
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Michal Hocko
+SUSE Labs
