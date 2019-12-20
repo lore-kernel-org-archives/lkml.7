@@ -2,165 +2,172 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB74C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 03:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49253C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 03:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 991B224684
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 03:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09B2724680
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 03:31:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wMaC+Wlp"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pApIbfdV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbfLTDaf (ORCPT
+        id S1727265AbfLTDbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Dec 2019 22:30:35 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:42328 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727202AbfLTDad (ORCPT
+        Thu, 19 Dec 2019 22:31:04 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:10496 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726986AbfLTDbE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Dec 2019 22:30:33 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBK3UVd7033627;
-        Thu, 19 Dec 2019 21:30:31 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576812631;
-        bh=CEiYEc8IsJ5R4mJMeLVcpxYuKd3Ehpap0xHTNXwuhQI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=wMaC+WlpekLzQuOmWkyXftoCOjCRk9STBk8Nz1v4zy37kK7NaYt1e3XstA1yOB7K0
-         HlbhV08jJobiL5UQEyw8A5GmI94+gVXQKHH9/HMJgipp81/no2OOHo7NDERwnaukfc
-         QZyNRwyvMGSd4SI3RiJHxGb5i6PluYdImxbyS0f8=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBK3UV8v048516
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Dec 2019 21:30:31 -0600
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
- Dec 2019 21:30:31 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 19 Dec 2019 21:30:31 -0600
-Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBK3UVVF001445;
-        Thu, 19 Dec 2019 21:30:31 -0600
-Subject: Re: [PATCH 02/17] remoteproc/omap: Switch to SPDX license identifiers
-To:     Tero Kristo <t-kristo@ti.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-CC:     <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>
-References: <20191028124238.19224-1-t-kristo@ti.com>
- <20191028124238.19224-3-t-kristo@ti.com> <20191109010348.GB5662@tuxbook-pro>
- <bed42f27-3a67-bfa7-fdcc-bf333233828f@ti.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <bd4fc14d-ce63-93d5-6f52-7a1def7c57c3@ti.com>
-Date:   Thu, 19 Dec 2019 21:30:31 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 19 Dec 2019 22:31:04 -0500
+X-UUID: e71a1f0a1b634d9eb7619bb951a3664f-20191220
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=ZTNoH+cktFna9TQBKbYJjzfy16IKAqSff1i5BENu8YA=;
+        b=pApIbfdVJQMUKkgSOt69P+4vtrYofeFVxMi/pBLioFMH6vqFvCM9VHAvhd3UdU8oABFhKnFm+2ViMVNQYCbnhWtugpQQOqmNYNtW+INbNzYs+VH7GIIgl1OyrFA6ikts5qLHFoxineS7EcQNBjbwl4DyGvpIww/3gKnX8ANCUzU=;
+X-UUID: e71a1f0a1b634d9eb7619bb951a3664f-20191220
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <weiyi.lu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 605503053; Fri, 20 Dec 2019 11:30:58 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 20 Dec 2019 11:30:23 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 20 Dec 2019 11:31:03 +0800
+Message-ID: <1576812656.8410.9.camel@mtksdaap41>
+Subject: Re: [PATCH v10 06/12] soc: mediatek: Use bp_table for all
+ compatibles
+From:   Weiyi Lu <weiyi.lu@mediatek.com>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        Fan Chen <fan.chen@mediatek.com>,
+        "linux-arm Mailing List" <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Date:   Fri, 20 Dec 2019 11:30:56 +0800
+In-Reply-To: <CANMq1KCbmwY_nZTfZcbxYQm27CXdADD48RWQOx0JuTmGBn=y=g@mail.gmail.com>
+References: <1576657848-14711-1-git-send-email-weiyi.lu@mediatek.com>
+         <1576657848-14711-7-git-send-email-weiyi.lu@mediatek.com>
+         <CANMq1KCbmwY_nZTfZcbxYQm27CXdADD48RWQOx0JuTmGBn=y=g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <bed42f27-3a67-bfa7-fdcc-bf333233828f@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-TM-SNTS-SMTP: 95FF981DA9AF05C907E5ED72562D82C4AF1DF851F9A50997CA40046854A7CDD72000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/12/19 2:16 AM, Tero Kristo wrote:
-> On 09/11/2019 03:03, Bjorn Andersson wrote:
->> On Mon 28 Oct 05:42 PDT 2019, Tero Kristo wrote:
->>
->>> From: Suman Anna <s-anna@ti.com>
->>>
->>> Use the appropriate SPDX license identifiers in various OMAP remoteproc
->>> source files and drop the previous boilerplate license text.
->>>
->>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->>> ---
->>>   drivers/remoteproc/omap_remoteproc.h | 27 +--------------------------
->>>   1 file changed, 1 insertion(+), 26 deletions(-)
->>>
->>> diff --git a/drivers/remoteproc/omap_remoteproc.h
->>> b/drivers/remoteproc/omap_remoteproc.h
->>> index f6d2036d383d..1e6fef753c4f 100644
->>> --- a/drivers/remoteproc/omap_remoteproc.h
->>> +++ b/drivers/remoteproc/omap_remoteproc.h
->>> @@ -1,35 +1,10 @@
->>> +/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
->>
->> Please confirm that you actually intend to change the license from BSD
->> to dual here.
-> 
-> That is a very good point. Let me try to get clarification to this
-> internally, this series is anyways too late for 5.5 so there is no rush
-> to get this done anytime soon. Worst case I just drop this patch and
-> keep the existing license in place.
-
-He he, even I can't seem to recall the reason why I used dual here.
-Let's stick with BSD-3-Clause which is the original license text below.
-
-regards
-Suman
-
-> 
-> -Tero
-> 
->>
->> Regards,
->> Bjorn
->>
->>>   /*
->>>    * Remote processor messaging
->>>    *
->>>    * Copyright (C) 2011 Texas Instruments, Inc.
->>>    * Copyright (C) 2011 Google, Inc.
->>>    * All rights reserved.
->>> - *
->>> - * Redistribution and use in source and binary forms, with or without
->>> - * modification, are permitted provided that the following conditions
->>> - * are met:
->>> - *
->>> - * * Redistributions of source code must retain the above copyright
->>> - *   notice, this list of conditions and the following disclaimer.
->>> - * * Redistributions in binary form must reproduce the above copyright
->>> - *   notice, this list of conditions and the following disclaimer in
->>> - *   the documentation and/or other materials provided with the
->>> - *   distribution.
->>> - * * Neither the name Texas Instruments nor the names of its
->>> - *   contributors may be used to endorse or promote products derived
->>> - *   from this software without specific prior written permission.
->>> - *
->>> - * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
->>> - * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
->>> - * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
->>> FOR
->>> - * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
->>> - * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
->>> INCIDENTAL,
->>> - * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
->>> - * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
->>> USE,
->>> - * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
->>> ANY
->>> - * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
->>> - * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
->>> USE
->>> - * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
->>>    */
->>>     #ifndef _OMAP_RPMSG_H
->>> -- 
->>> 2.17.1
->>>
->>> -- 
-> 
-> -- 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+T24gVGh1LCAyMDE5LTEyLTE5IGF0IDExOjU0ICswODAwLCBOaWNvbGFzIEJvaWNoYXQgd3JvdGU6
+DQo+IE9uIFdlZCwgRGVjIDE4LCAyMDE5IGF0IDQ6MzEgUE0gV2VpeWkgTHUgPHdlaXlpLmx1QG1l
+ZGlhdGVrLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBPbmx5IHVzZSBicF90YWJsZSBmb3IgYnVzIHBy
+b3RlY3Rpb24gb2YgYWxsIGNvbXBhdGlibGVzLA0KPiA+IGluc3RlYWQgb2YgbWl4aW5nIGJ1c19w
+cm90X21hc2sgYW5kIGJ1c19wcm90X3JlZ191cGRhdGUuDQo+IA0KPiBkaXR0bywgSSdkIGp1c3Qg
+c3F1YXNoIGluIHRoZSBwcmV2aW91cyBwYXRjaC4NCj4gDQoNCk9LLCBJJ2xsIHVwZGF0ZSBpbiBu
+ZXh0IHZlcnNpb24uDQoNCj4gPiBTaWduZWQtb2ZmLWJ5OiBXZWl5aSBMdSA8d2VpeWkubHVAbWVk
+aWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstc2Nwc3lz
+LmMgfCA5NCArKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiAgMSBm
+aWxlIGNoYW5nZWQsIDQ4IGluc2VydGlvbnMoKyksIDQ2IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1zY3BzeXMuYyBiL2RyaXZlcnMv
+c29jL21lZGlhdGVrL210ay1zY3BzeXMuYw0KPiA+IGluZGV4IDU2OTlkOWYuLmM0MzhjNTMgMTAw
+NjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXNjcHN5cy5jDQo+ID4gKysr
+IGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXNjcHN5cy5jDQo+ID4gQEAgLTExLDcgKzExLDYg
+QEANCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KPiA+ICAjaW5jbHVk
+ZSA8bGludXgvcG1fZG9tYWluLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9yZWd1bGF0b3IvY29u
+c3VtZXIuaD4NCj4gPiAtI2luY2x1ZGUgPGxpbnV4L3NvYy9tZWRpYXRlay9pbmZyYWNmZy5oPg0K
+PiA+ICAjaW5jbHVkZSA8bGludXgvc29jL21lZGlhdGVrL3NjcHN5cy1leHQuaD4NCj4gPg0KPiA+
+ICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvcG93ZXIvbXQyNzAxLXBvd2VyLmg+DQo+ID4gQEAgLTg4
+LDcgKzg3LDYgQEANCj4gPiAgICogQGN0bF9vZmZzOiBUaGUgb2Zmc2V0IGZvciBtYWluIHBvd2Vy
+IGNvbnRyb2wgcmVnaXN0ZXIuDQo+ID4gICAqIEBzcmFtX3Bkbl9iaXRzOiBUaGUgbWFzayBmb3Ig
+c3JhbSBwb3dlciBjb250cm9sIGJpdHMuDQo+ID4gICAqIEBzcmFtX3Bkbl9hY2tfYml0czogVGhl
+IG1hc2sgZm9yIHNyYW0gcG93ZXIgY29udHJvbCBhY2tlZCBiaXRzLg0KPiA+IC0gKiBAYnVzX3By
+b3RfbWFzazogVGhlIG1hc2sgZm9yIHNpbmdsZSBzdGVwIGJ1cyBwcm90ZWN0aW9uLg0KPiA+ICAg
+KiBAYmFzaWNfY2xrX25hbWU6IFRoZSBiYXNpYyBjbG9ja3MgcmVxdWlyZWQgYnkgdGhpcyBwb3dl
+ciBkb21haW4uDQo+ID4gICAqIEBjYXBzOiBUaGUgZmxhZyBmb3IgYWN0aXZlIHdha2UtdXAgYWN0
+aW9uLg0KPiA+ICAgKiBAYnBfdGFibGU6IFRoZSBtYXNrIHRhYmxlIGZvciBtdWx0aXBsZSBzdGVw
+IGJ1cyBwcm90ZWN0aW9uLg0KPiA+IEBAIC05OSw3ICs5Nyw2IEBAIHN0cnVjdCBzY3BfZG9tYWlu
+X2RhdGEgew0KPiA+ICAgICAgICAgaW50IGN0bF9vZmZzOw0KPiA+ICAgICAgICAgdTMyIHNyYW1f
+cGRuX2JpdHM7DQo+ID4gICAgICAgICB1MzIgc3JhbV9wZG5fYWNrX2JpdHM7DQo+ID4gLSAgICAg
+ICB1MzIgYnVzX3Byb3RfbWFzazsNCj4gPiAgICAgICAgIGNvbnN0IGNoYXIgKmJhc2ljX2Nsa19u
+YW1lW01BWF9DTEtTXTsNCj4gPiAgICAgICAgIHU4IGNhcHM7DQo+ID4gICAgICAgICBzdHJ1Y3Qg
+YnVzX3Byb3QgYnBfdGFibGVbTUFYX1NURVBTXTsNCj4gPiBAQCAtMTI4LDcgKzEyNSw2IEBAIHN0
+cnVjdCBzY3Agew0KPiA+ICAgICAgICAgc3RydWN0IHJlZ21hcCAqaW5mcmFjZmc7DQo+ID4gICAg
+ICAgICBzdHJ1Y3QgcmVnbWFwICpzbWlfY29tbW9uOw0KPiA+ICAgICAgICAgc3RydWN0IHNjcF9j
+dHJsX3JlZyBjdHJsX3JlZzsNCj4gPiAtICAgICAgIGJvb2wgYnVzX3Byb3RfcmVnX3VwZGF0ZTsN
+Cj4gPiAgfTsNCj4gPg0KPiA+ICBzdHJ1Y3Qgc2NwX3N1YmRvbWFpbiB7DQo+ID4gQEAgLTE0Miw3
+ICsxMzgsNiBAQCBzdHJ1Y3Qgc2NwX3NvY19kYXRhIHsNCj4gPiAgICAgICAgIGNvbnN0IHN0cnVj
+dCBzY3Bfc3ViZG9tYWluICpzdWJkb21haW5zOw0KPiA+ICAgICAgICAgaW50IG51bV9zdWJkb21h
+aW5zOw0KPiA+ICAgICAgICAgY29uc3Qgc3RydWN0IHNjcF9jdHJsX3JlZyByZWdzOw0KPiA+IC0g
+ICAgICAgYm9vbCBidXNfcHJvdF9yZWdfdXBkYXRlOw0KPiA+ICB9Ow0KPiA+DQo+ID4gIHN0YXRp
+YyBpbnQgc2Nwc3lzX2RvbWFpbl9pc19vbihzdHJ1Y3Qgc2NwX2RvbWFpbiAqc2NwZCkNCj4gPiBA
+QCAtMjU2LDEyICsyNTEsNiBAQCBzdGF0aWMgaW50IHNjcHN5c19idXNfcHJvdGVjdF9lbmFibGUo
+c3RydWN0IHNjcF9kb21haW4gKnNjcGQpDQo+ID4gIHsNCj4gPiAgICAgICAgIHN0cnVjdCBzY3Ag
+KnNjcCA9IHNjcGQtPnNjcDsNCj4gPg0KPiA+IC0gICAgICAgaWYgKHNjcGQtPmRhdGEtPmJ1c19w
+cm90X21hc2spIHsNCj4gPiAtICAgICAgICAgICAgICAgcmV0dXJuIG10a19pbmZyYWNmZ19zZXRf
+YnVzX3Byb3RlY3Rpb24oc2NwLT5pbmZyYWNmZywNCj4gPiAtICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIHNjcGQtPmRhdGEtPmJ1c19wcm90X21hc2ssDQo+ID4gLSAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBzY3AtPmJ1c19wcm90X3JlZ191cGRhdGUpOw0KPiA+IC0gICAgICAg
+fQ0KPiA+IC0NCj4gPiAgICAgICAgIHJldHVybiBtdGtfc2Nwc3lzX2V4dF9zZXRfYnVzX3Byb3Rl
+Y3Rpb24oc2NwZC0+ZGF0YS0+YnBfdGFibGUsDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAg
+c2NwLT5pbmZyYWNmZywgc2NwLT5zbWlfY29tbW9uKTsNCj4gPiAgfQ0KPiA+IEBAIC0yNzAsMTIg
+KzI1OSw2IEBAIHN0YXRpYyBpbnQgc2Nwc3lzX2J1c19wcm90ZWN0X2Rpc2FibGUoc3RydWN0IHNj
+cF9kb21haW4gKnNjcGQpDQo+ID4gIHsNCj4gPiAgICAgICAgIHN0cnVjdCBzY3AgKnNjcCA9IHNj
+cGQtPnNjcDsNCj4gPg0KPiA+IC0gICAgICAgaWYgKHNjcGQtPmRhdGEtPmJ1c19wcm90X21hc2sp
+IHsNCj4gPiAtICAgICAgICAgICAgICAgcmV0dXJuIG10a19pbmZyYWNmZ19jbGVhcl9idXNfcHJv
+dGVjdGlvbihzY3AtPmluZnJhY2ZnLA0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgc2NwZC0+ZGF0YS0+YnVzX3Byb3RfbWFzaywNCj4gPiAtICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIHNjcC0+YnVzX3Byb3RfcmVnX3VwZGF0ZSk7DQo+ID4gLSAgICAgICB9DQo+ID4g
+LQ0KPiA+ICAgICAgICAgcmV0dXJuIG10a19zY3BzeXNfZXh0X2NsZWFyX2J1c19wcm90ZWN0aW9u
+KHNjcGQtPmRhdGEtPmJwX3RhYmxlLA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIHNjcC0+
+aW5mcmFjZmcsIHNjcC0+c21pX2NvbW1vbik7DQo+ID4gIH0NCj4gPiBAQCAtNDEyLDggKzM5NSw3
+IEBAIHN0YXRpYyBpbnQgaW5pdF9iYXNpY19jbGtzKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBk
+ZXYsIHN0cnVjdCBjbGsgKipjbGssDQo+ID4NCj4gPiAgc3RhdGljIHN0cnVjdCBzY3AgKmluaXRf
+c2NwKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsDQo+ID4gICAgICAgICAgICAgICAgICAg
+ICAgICAgY29uc3Qgc3RydWN0IHNjcF9kb21haW5fZGF0YSAqc2NwX2RvbWFpbl9kYXRhLCBpbnQg
+bnVtLA0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgIGNvbnN0IHN0cnVjdCBzY3BfY3RybF9y
+ZWcgKnNjcF9jdHJsX3JlZywNCj4gPiAtICAgICAgICAgICAgICAgICAgICAgICBib29sIGJ1c19w
+cm90X3JlZ191cGRhdGUpDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgY29uc3Qgc3RydWN0
+IHNjcF9jdHJsX3JlZyAqc2NwX2N0cmxfcmVnKQ0KPiA+ICB7DQo+ID4gICAgICAgICBzdHJ1Y3Qg
+Z2VucGRfb25lY2VsbF9kYXRhICpwZF9kYXRhOw0KPiA+ICAgICAgICAgc3RydWN0IHJlc291cmNl
+ICpyZXM7DQo+ID4gQEAgLTQyNyw4ICs0MDksNiBAQCBzdGF0aWMgc3RydWN0IHNjcCAqaW5pdF9z
+Y3Aoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwNCj4gPiAgICAgICAgIHNjcC0+Y3RybF9y
+ZWcucHdyX3N0YV9vZmZzID0gc2NwX2N0cmxfcmVnLT5wd3Jfc3RhX29mZnM7DQo+ID4gICAgICAg
+ICBzY3AtPmN0cmxfcmVnLnB3cl9zdGEybmRfb2ZmcyA9IHNjcF9jdHJsX3JlZy0+cHdyX3N0YTJu
+ZF9vZmZzOw0KPiA+DQo+ID4gLSAgICAgICBzY3AtPmJ1c19wcm90X3JlZ191cGRhdGUgPSBidXNf
+cHJvdF9yZWdfdXBkYXRlOw0KPiA+IC0NCj4gPiAgICAgICAgIHNjcC0+ZGV2ID0gJnBkZXYtPmRl
+djsNCj4gPg0KPiA+ICAgICAgICAgcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElP
+UkVTT1VSQ0VfTUVNLCAwKTsNCj4gPiBAQCAtNTQ5LDggKzUyOSwxMCBAQCBzdGF0aWMgdm9pZCBt
+dGtfcmVnaXN0ZXJfcG93ZXJfZG9tYWlucyhzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LA0K
+PiA+ICAgICAgICAgICAgICAgICAubmFtZSA9ICJjb25uIiwNCj4gPiAgICAgICAgICAgICAgICAg
+LnN0YV9tYXNrID0gUFdSX1NUQVRVU19DT05OLA0KPiA+ICAgICAgICAgICAgICAgICAuY3RsX29m
+ZnMgPSBTUE1fQ09OTl9QV1JfQ09OLA0KPiA+IC0gICAgICAgICAgICAgICAuYnVzX3Byb3RfbWFz
+ayA9IE1UMjcwMV9UT1BfQVhJX1BST1RfRU5fQ09OTl9NIHwNCj4gPiAtICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBNVDI3MDFfVE9QX0FYSV9QUk9UX0VOX0NPTk5fUywNCj4gPiArICAg
+ICAgICAgICAgICAgLmJwX3RhYmxlID0gew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIEJV
+U19QUk9UKElGUl9UWVBFLCAwLCAwLCAweDIyMCwgMHgyMjgsDQo+ID4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBCSVQoMikgfCBCSVQoOCksIEJJVCgyKSB8IEJJVCg4KSksDQo+ID4g
+KyAgICAgICAgICAgICAgIH0sDQo+IA0KPiBJJ20gYSBiaXQgc2FkIHdlIGxvc2UgdGhlIGluZm9y
+bWF0aW9uIGFib3V0IHRoZSBCSVQgbWVhbmluZy4NCj4gDQoNCkknbGwga2VlcCB0aG9zZSBpbmZv
+cm1hdGlvbiBpbiBuZXh0IHZlcnNpb24uDQoNCj4gT2YgY291cnNlIHRoaXMgbG9va3MgdWdseSBh
+bmQgdmVyYm9zZToNCj4gICAgICAgICAgICAgICAgICAgICAgIEJVU19QUk9UKElGUl9UWVBFLCAw
+LCAwLCAweDIyMCwgMHgyMjgsDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBNVDI3
+MDFfVE9QX0FYSV9QUk9UX0VOX0NPTk5fTSB8DQo+IE1UMjcwMV9UT1BfQVhJX1BST1RfRU5fQ09O
+Tl9TLA0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgTVQyNzAxX1RPUF9BWElfUFJP
+VF9FTl9DT05OX00gfA0KPiBNVDI3MDFfVE9QX0FYSV9QUk9UX0VOX0NPTk5fUyksDQo+IA0KPiBC
+dXQgaWYgeW91IG1ha2UgImNoZWNrX2Nscl9tYXNrIiBhIGJvb2xlYW4sIHlvdSB3b3VsZG4ndCBo
+YXZlIHRvDQo+IHJlcGVhdCB0aGUgbWFzayB0d2ljZSBhbmQgeW91IGNvdWxkIGtlZXAgdGhlIG5p
+Y2UgcmVnaXN0ZXIgYml0DQo+IGRlZmluaXRpb25zLg0KPiANCg0KVGhhbmtzIGZvciB0aGUgc3Vn
+Z2VzdGlvbiwgSSdsbCBhZGQgImlnbm9yZV9jbHJfYWNrIiBmb3IgaXQgaW4gbmV4dA0KdmVyc2lv
+bi4NCg0KPiBbc25pcCwgbWFueSBzaW1pbGFyIG9jY3VyZW5jZXMgYmVsb3ddDQoNCg==
 
