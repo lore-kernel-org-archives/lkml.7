@@ -2,420 +2,161 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5FDC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6500C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EA6021655
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D25220866
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 19:10:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GMPezitu"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="VZQQNJhd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbfLTTGW (ORCPT
+        id S1727486AbfLTTKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 14:06:22 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:9936 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727394AbfLTTGW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 14:06:22 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dfd1ba10000>; Fri, 20 Dec 2019 11:06:09 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 20 Dec 2019 11:06:19 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 20 Dec 2019 11:06:19 -0800
-Received: from [10.2.169.197] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Dec
- 2019 19:06:18 +0000
-Subject: Re: [PATCH v4 06/19] soc: tegra: Add Tegra PMC clock registrations
- into PMC driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <mperttunen@nvidia.com>,
-        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <spujar@nvidia.com>, <josephl@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1576613046-17159-1-git-send-email-skomatineni@nvidia.com>
- <1576613046-17159-7-git-send-email-skomatineni@nvidia.com>
- <87b2b266-e4a9-9a7a-2336-6ec57d7c4d1d@gmail.com>
- <55a56c3d-3fac-cc77-46ae-acf5de77d262@gmail.com>
- <e11d2ea9-20f1-6920-7efc-ba8a50312f75@gmail.com>
- <c5bb3c25-1fae-3ca9-6bf3-c3d66be20e19@nvidia.com>
- <664f1a41-d539-36e8-092b-11d7e4555108@nvidia.com>
- <31020f6b-97bf-eb48-1150-0355c868eafc@gmail.com>
- <8fa81a47-63e5-d64d-7cc6-7fdd20ff89f0@nvidia.com>
- <42f39288-da11-e28d-2a0e-28f1b020e674@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <48142928-fc5b-a5d3-957d-075ae646db86@nvidia.com>
-Date:   Fri, 20 Dec 2019 11:06:16 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <42f39288-da11-e28d-2a0e-28f1b020e674@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576868769; bh=j7utwkS9lv1w8X1BSevFuF02qQdVExAt98TySGD8F6g=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=GMPezituzEnq2smyMslh6ScYmByS2OYEDPuUImQ2bKJ1IVX7BxN+b3eIph/9xNvc/
-         2nXrgFKtrGD7dbNO8XOkBSoSeTNGnCapslav760+gqowvnTQfkqCfLWSZbAfEK1K+k
-         AzFQtEDguNnkxUiFxa7RNu6dydawq1zMIItfrdhqkEMzANiwahOI5sVgoTBpZ/qaxG
-         BXRw5+Pi8QYLjcyP4P7ve9k/RLPIo4FEYttOcM8ueM9N7scfFJX+5Kx5LOO296SeEK
-         Mo0jphT22VhQzmugKTvLgh8qJR4oshJRJNmNP4AREJTCjn89UcIUT0eV2yETRs3rWH
-         FvbVhBDKxukEw==
+        Fri, 20 Dec 2019 14:10:01 -0500
+Received: from mout.web.de ([212.227.17.12]:52641 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727394AbfLTTKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 14:10:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1576868980;
+        bh=8mNUtczznW3ZSayhvMTQE2gzza06gaIgPWinSy/QvMQ=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=VZQQNJhdgJCitWAZBLWj7VvxMt8RDsquXwNLKMBkXa2VmgxU5XKT5j4rl+uyKdIkw
+         XSbnasL10l1dZucnpWsqhywSTFJYU55bRtgt0rLm+SyJOU/wphoiEOIWY2Q6E5BNDb
+         3TY+IsaNf8ngIGyOk2ozMHygq7h02ym45wHW+AJI=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from localhost.localdomain ([67.254.165.9]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LpO93-1i3Wef03dN-00fBzV; Fri, 20
+ Dec 2019 20:09:40 +0100
+From:   Malte Skarupke <malteskarupke@web.de>
+To:     tglx@linutronix.de, mingo@redhat.com
+Cc:     peterz@infradead.org, dvhart@infradead.org,
+        linux-kernel@vger.kernel.org, malteskarupke@fastmail.fm,
+        malteskarupke@web.de
+Subject: [PATCH] futex: Support smaller futexes of one byte or two byte size.
+Date:   Fri, 20 Dec 2019 14:08:59 -0500
+Message-Id: <20191220190901.23465-1-malteskarupke@web.de>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191204235238.10764-1-malteskarupke@web.de>
+References: <20191204235238.10764-1-malteskarupke@web.de>
+X-Provags-ID: V03:K1:RHkd5v7v2+t6iIvfFNn80NML3HdKhLzlGqr9evs+VT9o3H5HzHK
+ +vmf63Zq1FSLDfQja8ih/0nFhSj8y+SlRh7ZeDTbeUIi+wXtNGcuHOV6Erc/oNgF46VQanY
+ AqnX89wm9gVB+YkaO2Pwdfou9So5dXzAmRLQG56p0NDEJ4yAP+U1/Ho64TVi0vdXdKVYYzE
+ LGoJYMZK8Pp2q9UxnOajg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:KLYn4/4HruY=:mDKlq2ZqNkV3F+tPGJRLDO
+ ApNpENGrjw3jSH62NhGnYItCD04ldlQntMDY2lhIA0KnW+4XuzVA40zCtp/bFabJKMJY6SIGd
+ eSNtdebSfoARzVPOzjuMwTW1MCWKjjwvczlMrZ4x5ACWPg8vkEEZLxiulJkL4cuXjS+GYBfE9
+ 4yxLLoLL8cjQi/uYpmznekvwkj9+JrpBLJ7b8c27MaECaRLa5nL8h7Db4hVrwhVV69YlV8ym/
+ WQ3Pnqsb7MgNzvV98rkWSwJd44r6UOrh9mSt/P/Mrw7kyWgIz1uT1cxCGDXgjLUvQfL6GDgDo
+ RIcvsiJ4w0MmrpOfw76aO8DDcd3Bd9Pzjz7t2ZTWR0G/u9h6A6QtP6mqpj8+XgcR7wEp86kam
+ GlnIR2ft1N1reIsydxHn8G6kFnfH3E6BtLcZIsqqw2TlQ3n5VvuGiw7vrieoKUM7zTM/15vUC
+ irSmJhO1bj/A8OKmN45MxSOSJowiVu6TPO3ry30fExX2VYnRAURZtoSBPfKp2Ad6z7JMDBSKM
+ 9mlSOO1IrYCxhm3+9faGhPVMQHDJ4m0nldrIctE4P25s6FZqB5Pasqu3sGoXvgU22XFW/urnt
+ eqH65QbQtC35UWdSvs92Dbb+ZC/MJpzB7j656/0j9knxXfnC129BiFe1TMrTC4H/Qmy3TEcv0
+ 8+KAez+TVFOHLsLZFokbNIlPP6XeJ0BKaY+mOkNSucPODat5DqGJCUFzDEqtFfvJK4S3u/FV0
+ 6Vv+vdS0tJ3h1rS5pfCEOYvd1KR6xVZmmk3Q7Db/AfZsbVWrhYIp+tvnDhvCakQgoKkbvx5K3
+ gdNyzMsxR8UlG3y3Za7lNfeUwBoPgjmkeWFhczbevEAa20vxJ2/VHUUBmwR/oPL6MMAoUze+q
+ +druE7lU0+sbp4FfozQLD6/Y+h5pbEfwkR0z7oDhigu/ZqenULvR3BS9mKTFypA7XwIJor7en
+ 82CuRTlOhovSiEBMOt+TqMtz9UN7hZUNPC2pHnQBoSvs9P3UwfWmqwXHSjwIyWE/tWmEdmIh5
+ pvgQAur4JnjbEI87bwKM7pEa27S9IyDCA7Ptg230RqjgKzVgsJ4BIu2ie/pZ94/utguxID5su
+ GH464SeEBfYYWQydXAtRzaQ9oxhGSeiQRvCJLqHqYLB5RWvc7Kbpn4/2BLWbdvCqzkdEsFGV5
+ Z1hX20Lp9CO6Wq68QuyeJJQMa6aYiejQ1UOVN2H0ZerjQVRy8o5j1JKzyYGU/W1Dtv8mXEn7v
+ Vh2ym5if5mrfhyndrwmFWxDIZmeVwH8WCp/qu4AEC7gYe8lZm/GhAIRWVwm0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello again,
 
-On 12/19/19 8:34 PM, Dmitry Osipenko wrote:
-> 20.12.2019 07:13, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 12/19/19 5:39 PM, Dmitry Osipenko wrote:
->>> 20.12.2019 04:21, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> On 12/18/19 4:41 PM, Sowjanya Komatineni wrote:
->>>>> On 12/18/19 1:44 PM, Dmitry Osipenko wrote:
->>>>>> 18.12.2019 11:35, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>> 18.12.2019 11:30, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>>> 17.12.2019 23:03, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
-=82:
->>>>>>>>> Tegra PMC has clk_out_1, clk_out_2, and clk_out_3 clocks and
->>>>>>>>> currently
->>>>>>>>> these PMC clocks are registered by Tegra clock driver with each
->>>>>>>>> clock as
->>>>>>>>> separate mux and gate clocks using clk_register_mux and
->>>>>>>>> clk_register_gate
->>>>>>>>> by passing PMC base address and register offsets and PMC
->>>>>>>>> programming for
->>>>>>>>> these clocks happens through direct PMC access by the clock drive=
-r.
->>>>>>>>>
->>>>>>>>> With this, when PMC is in secure mode any direct PMC access from
->>>>>>>>> the
->>>>>>>>> non-secure world does not go through and these clocks will not be
->>>>>>>>> functional.
->>>>>>>>>
->>>>>>>>> This patch adds these PMC clocks registration to pmc driver with
->>>>>>>>> PMC as
->>>>>>>>> a clock provider and registers each clock as single clock.
->>>>>>>>>
->>>>>>>>> clk_ops callback implementations for these clocks uses
->>>>>>>>> tegra_pmc_readl and
->>>>>>>>> tegra_pmc_writel which supports PMC programming in both secure
->>>>>>>>> mode and
->>>>>>>>> non-secure mode.
->>>>>>>>>
->>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>>>> ---
->>>>>>>>>  =C2=A0=C2=A0 drivers/soc/tegra/pmc.c | 248
->>>>>>>>> ++++++++++++++++++++++++++++++++++++++++++++++++
->>>>>>>>>  =C2=A0=C2=A0 1 file changed, 248 insertions(+)
->>>>>>>>>
->>>>>>>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->>>>>>>>> index ea0e11a09c12..6d65194a6e71 100644
->>>>>>>>> --- a/drivers/soc/tegra/pmc.c
->>>>>>>>> +++ b/drivers/soc/tegra/pmc.c
->>>>>>>>> @@ -13,6 +13,9 @@
->>>>>>>>>  =C2=A0=C2=A0 =C2=A0 #include <linux/arm-smccc.h>
->>>>>>>>>  =C2=A0=C2=A0 #include <linux/clk.h>
->>>>>>>>> +#include <linux/clk-provider.h>
->>>>>>>>> +#include <linux/clkdev.h>
->>>>>>>>> +#include <linux/clk/clk-conf.h>
->>>>>>>>>  =C2=A0=C2=A0 #include <linux/clk/tegra.h>
->>>>>>>>>  =C2=A0=C2=A0 #include <linux/debugfs.h>
->>>>>>>>>  =C2=A0=C2=A0 #include <linux/delay.h>
->>>>>>>>> @@ -48,6 +51,7 @@
->>>>>>>>>  =C2=A0=C2=A0 #include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.=
-h>
->>>>>>>>>  =C2=A0=C2=A0 #include <dt-bindings/gpio/tegra186-gpio.h>
->>>>>>>>>  =C2=A0=C2=A0 #include <dt-bindings/gpio/tegra194-gpio.h>
->>>>>>>>> +#include <dt-bindings/soc/tegra-pmc.h>
->>>>>>>>>  =C2=A0=C2=A0 =C2=A0 #define PMC_CNTRL=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x0
->>>>>>>>>  =C2=A0=C2=A0 #define=C2=A0 PMC_CNTRL_INTR_POLARITY=C2=A0=C2=A0=
-=C2=A0 BIT(17) /* inverts INTR
->>>>>>>>> polarity */
->>>>>>>>> @@ -100,6 +104,7 @@
->>>>>>>>>  =C2=A0=C2=A0 #define PMC_WAKE2_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 0x168
->>>>>>>>>  =C2=A0=C2=A0 #define PMC_SW_WAKE2_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 0x16c
->>>>>>>>>  =C2=A0=C2=A0 +#define PMC_CLK_OUT_CNTRL=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 0x1a8
->>>>>>>>>  =C2=A0=C2=A0 #define PMC_SENSOR_CTRL=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1b0
->>>>>>>>>  =C2=A0=C2=A0 #define=C2=A0 PMC_SENSOR_CTRL_SCRATCH_WRITE=C2=A0=
-=C2=A0=C2=A0 BIT(2)
->>>>>>>>>  =C2=A0=C2=A0 #define=C2=A0 PMC_SENSOR_CTRL_ENABLE_RST=C2=A0=C2=
-=A0=C2=A0 BIT(1)
->>>>>>>>> @@ -155,6 +160,64 @@
->>>>>>>>>  =C2=A0=C2=A0 #define=C2=A0 TEGRA_SMC_PMC_READ=C2=A0=C2=A0=C2=A0 =
-0xaa
->>>>>>>>>  =C2=A0=C2=A0 #define=C2=A0 TEGRA_SMC_PMC_WRITE=C2=A0=C2=A0=C2=A0=
- 0xbb
->>>>>>>>>  =C2=A0=C2=A0 +struct pmc_clk {
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw=C2=A0=C2=A0=C2=A0 hw;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned long=C2=A0=C2=A0=C2=A0 offs;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- mux_mask;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- mux_shift;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- gate_shift;
->>>>>>>>> +};
->>>>>>>>> +
->>>>>>>>> +#define to_pmc_clk(_hw) container_of(_hw, struct pmc_clk, hw)
->>>>>>>>> +
->>>>>>>>> +struct pmc_clk_init_data {
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 char *name;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 const char *const *parents;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 int num_parents;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 int clk_id;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 u8 mux_shift;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 u8 gate_shift;
->>>>>>>>> +};
->>>>>>>>> +
->>>>>>>>> +static const char * const clk_out1_parents[] =3D { "osc",
->>>>>>>>> "osc_div2",
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 "osc_div4", "extern1",
->>>>>>>>> +};
->>>>>>>>> +
->>>>>>>>> +static const char * const clk_out2_parents[] =3D { "osc",
->>>>>>>>> "osc_div2",
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 "osc_div4", "extern2",
->>>>>>>>> +};
->>>>>>>>> +
->>>>>>>>> +static const char * const clk_out3_parents[] =3D { "osc",
->>>>>>>>> "osc_div2",
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 "osc_div4", "extern3",
->>>>>>>>> +};
->>>>>>>>> +
->>>>>>>>> +static const struct pmc_clk_init_data tegra_pmc_clks_data[] =3D =
-{
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 {
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .name =3D "clk_out_1"=
-,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .parents =3D clk_out1=
-_parents,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .num_parents =3D ARRA=
-Y_SIZE(clk_out1_parents),
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .clk_id =3D TEGRA_PMC=
-_CLK_OUT_1,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_shift =3D 6,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_shift =3D 2,
->>>>>>>> I'd replace these with a single .shift, given that mux_shift =3D
->>>>>>>> gate_shift + 4 for all clocks.
->>>>>>>>
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 },
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 {
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .name =3D "clk_out_2"=
-,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .parents =3D clk_out2=
-_parents,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .num_parents =3D ARRA=
-Y_SIZE(clk_out2_parents),
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .clk_id =3D TEGRA_PMC=
-_CLK_OUT_2,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_shift =3D 14,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_shift =3D 10,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 },
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 {
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .name =3D "clk_out_3"=
-,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .parents =3D clk_out3=
-_parents,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .num_parents =3D ARRA=
-Y_SIZE(clk_out3_parents),
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .clk_id =3D TEGRA_PMC=
-_CLK_OUT_3,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_shift =3D 22,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_shift =3D 18,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 },
->>>>>>>>> +};
->>>>>>>>> +
->>>>>>>>>  =C2=A0=C2=A0 struct tegra_powergate {
->>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct generic_pm_domain ge=
-npd;
->>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_pmc *pmc;
->>>>>>>>> @@ -254,6 +317,9 @@ struct tegra_pmc_soc {
->>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct tegra_wake_eve=
-nt *wake_events;
->>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int num_wake_event=
-s;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 const struct pmc_clk_init_data *pmc_clks_data=
-;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned int num_pmc_clks;
->>>>>>>>>  =C2=A0=C2=A0 };
->>>>>>>>>  =C2=A0=C2=A0 =C2=A0 static const char * const tegra186_reset_sou=
-rces[] =3D {
->>>>>>>>> @@ -2163,6 +2229,173 @@ static int tegra_pmc_clk_notify_cb(struct
->>>>>>>>> notifier_block *nb,
->>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return NOTIFY_OK;
->>>>>>>>>  =C2=A0=C2=A0 }
->>>>>>>>>  =C2=A0=C2=A0 +static void pmc_clk_fence_udelay(u32 offset)
->>>>>>>>> +{
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_readl(pmc, offset);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 /* pmc clk propagation delay 2 us */
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 udelay(2);
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static u8 pmc_clk_mux_get_parent(struct clk_hw *hw)
->>>>>>>>> +{
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk *clk =3D to_pmc_clk(hw);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 val;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 val =3D tegra_pmc_readl(pmc, clk->offs) >> cl=
-k->mux_shift;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 val &=3D clk->mux_mask;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 return val;
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static int pmc_clk_mux_set_parent(struct clk_hw *hw, u8 index)
->>>>>>>>> +{
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk *clk =3D to_pmc_clk(hw);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 val;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 val =3D tegra_pmc_readl(pmc, clk->offs);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 val &=3D ~(clk->mux_mask << clk->mux_shift);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 val |=3D index << clk->mux_shift;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, val, clk->offs);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 pmc_clk_fence_udelay(clk->offs);
->>> Is this fencing applies only to clock changes or maybe it won't hurt to
->>> move it into tegra_pmc_writel()?
-Only for clock changes
->>>
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static int pmc_clk_is_enabled(struct clk_hw *hw)
->>>>>>>>> +{
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk *clk =3D to_pmc_clk(hw);
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 return tegra_pmc_readl(pmc, clk->offs) & BIT(=
-clk->gate_shift)
->>>>>>>>> ? 1 : 0;
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static void pmc_clk_set_state(unsigned long offs, u32 shift, int
->>>>>>>>> state)
->>>>>>>>> +{
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 val;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 val =3D tegra_pmc_readl(pmc, offs);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 val =3D state ? (val | BIT(shift)) : (val & ~=
-BIT(shift));
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, val, offs);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 pmc_clk_fence_udelay(offs);
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static int pmc_clk_enable(struct clk_hw *hw)
->>>>>>>>> +{
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk *clk =3D to_pmc_clk(hw);
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 pmc_clk_set_state(clk->offs, clk->gate_shift,=
- 1);
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static void pmc_clk_disable(struct clk_hw *hw)
->>>>>>>>> +{
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk *clk =3D to_pmc_clk(hw);
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 pmc_clk_set_state(clk->offs, clk->gate_shift,=
- 0);
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static const struct clk_ops pmc_clk_ops =3D {
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 .get_parent =3D pmc_clk_mux_get_parent,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 .set_parent =3D pmc_clk_mux_set_parent,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 .determine_rate =3D __clk_mux_determine_rate,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 .is_enabled =3D pmc_clk_is_enabled,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 .enable =3D pmc_clk_enable,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 .disable =3D pmc_clk_disable,
->>>>>>>>> +};
->>>>>>>>> +
->>>>>>>>> +static struct clk *
->>>>>>>>> +tegra_pmc_clk_out_register(const struct pmc_clk_init_data *data,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 unsigned long offset)
->>>>>>>>> +{
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_init_data init;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk *pmc_clk;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 pmc_clk =3D kzalloc(sizeof(*pmc_clk), GFP_KER=
-NEL);
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!pmc_clk)
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ERR_PTR(-ENOME=
-M);
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.name =3D data->name;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.ops =3D &pmc_clk_ops;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.parent_names =3D data->parents;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.num_parents =3D data->num_parents;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 init.flags =3D CLK_SET_RATE_NO_REPARENT | CLK=
-_SET_RATE_PARENT |
->>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 CLK_SET_PARENT_GATE;
->>>>>>>>> +
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 pmc_clk->hw.init =3D &init;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 pmc_clk->offs =3D offset;
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 pmc_clk->mux_mask =3D 3;
->>>>>>>> If mux_mask is a constant value, perhaps will be better to
->>>>>>>> replace the
->>>>>>>> variable with a literal?
->>>>>>>>
->>>>>>>> #define PMC_CLK_OUT_MUX_MASK=C2=A0=C2=A0=C2=A0 GENMASK(1, 0)
->>>>>>> Maybe even:
->>>>>>>
->>>>>>> #define PMC_CLK_OUT_MUX_MASK(c)=C2=A0=C2=A0=C2=A0 GENMASK(c->shift =
-+ 1, c->shift)
->>>>> MUX Mask is used only here for PMC clock out and is same for all
->>>>> clk_out mux so will use
->>>>>
->>>>> #define PMC_CLK_OUT_MUX_MASK=C2=A0=C2=A0=C2=A0 GENMASK(1, 0)
->>>>>
->>>>>> I want to point out that may be a separated gate/mux shifts is a fin=
-e
->>>>>> variant, you should try and see whether another variants produce mor=
-e
->>>>>> concise result.
->>>>>>
->>>>>> [snip]
->>>> We can do mux_shift as gate_shift + 4 and that restricts this clk
->>>> register only for clk1/2/3 as well and there are no other clocks in pm=
-c
->>>> anyway.
->>>>
->>>> How about using bit shift define for CLK1, CLK2, and CLK3?
->>>>
->>>> .mux_shift =3D PMC_CLK1_SRC_SEL_SHIFT,
->>>>
->>>> .gate_shift =3D PMC_CLK1_FORCE_EN_SHIFT,
->>>>
->>>>
->>> I think that just renaming ".gate_shift" -> ".force_en_shift" should be
->>> good enough.
->> You meant to assign bit position directly instead of defines like what I
->> have now in v4 and use force_en_shift instead of gate_shift?
-> Yes
+here are two patches for sized futexes. Option 1 is the same behavior as my
+first patch, just with the fixes suggested above. Option 2 requires a size
+flag for WAKE and REQUEUE.
+
+The reason for sending two changelists is that after thinking about it for a
+while, and after implementing both options, I realized that I do care which
+option we pick. I still prefer option 1. I would also be OK with going with
+option 2, but let me try one final time to convince you with three reasons:
+
+1. The consistent API conversation. There were two reasons voiced for this:
+a) In a private email Thomas Gleixner voiced that just having two different
+   calls, WAIT and WAKE, where one takes the size and the other does not,
+   would be inconsistent. I would like to think about this in terms of another
+   popular API where one takes a size and the other does not: malloc() and
+   free(). Over the years many allocator implementers would have hoped that
+   free() also takes a size because it can save a few instructions, and the
+   user usually knows what they are freeing and could pass in the size. But
+   what if there was a version of free() that doesn't need the size, but it
+   still takes a size argument and only uses it to verify that the correct
+   size was passed in: If you pass an incorrect size it errors out and doesn't
+   actually free the memory. Would that be a better interface?
+
+   Because that's essentially what I'm implementing here: WAKE doesn't need
+   the size, and the only thing it uses the size for is to verify that it is
+   correct, and if it's not, WAKE errors out and doesn't actually wake. I
+   don't think that that makes it a better API.
+
+b) On this mailing list Peter Zijlstra voiced that my implementation does not
+   implement the MONITOR/MWAIT pattern. This wasn't a problem when there was
+   only one size of futex, but it is once you can have overlapping futexes of
+   different sizes. I can see that it might be nice to implement this pattern,
+   but I chose to not do it mainly because mutexes and condition variables
+   don't actually need it. They just need the same semantics we had before,
+   except for smaller types. There is no need to handle overlapping futexes,
+   so I propose a different mental model: Comparisons+hashtable lookup. Under
+   that mental model only an exact match on the address between WAIT and WAKE
+   will do anything, because otherwise you won't find anything in the
+   hashtable. And under that mental model the size only applies to the
+   comparison. That's what I implemented and what I prefer. Option 1 is a more
+   internally consistent implementation in that mental model.
+
+2. Precedent. When Windows added support for futexes, they supported different
+   sizes of futexes from the beginning. In their API WaitOnAddress() is the
+   equivalent to our FUTEX_WAIT, and WakeByAddressSingle() and
+   WakeByAddressAll() are the equivalents to our FUTEX_WAKE. In the Windows
+   API WaitOnAddress() takes a size, but the WakeByAddress calls do not take a
+   size. Obviously there may be reasons to do things differently from how
+   Windows does it, but it does show that at least some other programmers came
+   to the same conclusions that I did.
+
+3. Odd behavior. I made one change compared to what I wrote earlier in the
+   discussion. Earlier I said that calling WAIT with two different sizes on
+   the same address should probably not be allowed. The reason for that is
+   that it can lead to unexpected behavior. If you do a 8 bit WAIT followed by
+   a 16 bit WAIT on the same address, then call 8 bit WAKE on the same address
+   twice, the first WAKE call will work and return 1, but the second WAKE call
+   will return -EINVAL because of a size mismatch.
+
+   I thought that that's just a bit too weird so I said that I wouldn't allow
+   WAITs with different sizes. The reason why I changed my mind on that is
+   that I would have to change what WAIT does. Instead of just inserting
+   itself into a linked list, it would have to iterate through that linked
+   list to check if anybody else already went to sleep with a different size.
+   So a O(1) operation would turn into a O(n) operation. Since there can be
+   condition variables where many threads sleep on the same futex, this would
+   actually be fairly common. So I thought that that would be an unacceptable
+   change in behavior. (and a similar change would have to be made to REQUEUE)
+   So this does mean that in the version where WAKE verifies the size, you can
+   get weird behavior if WAIT was called with two different sizes. (or maybe
+   if somebody wasn't consistent with their usage of the flags in REQUEUE) I
+   don't think this is a huge concern because I don't expect people to have
+   different sized futexes on the same address, but it is a weird API quirk.
+   If this does cause bugs, they should also be fairly obvious and easy to
+   fix. But they would be bugs that you couldn't have with option 1.
+
+So now that I have tried to convince you one final time, you're free to choose
+whichever option that you like. And obviously if you have more feedback for
+the code, I would also implement those fixes. Also if you want a patch without
+the "option 1" or "option 2" text in the description, I can provide that.
+
+Thanks,
+
+Malte
+
+
+
