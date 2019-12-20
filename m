@@ -2,98 +2,147 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0FBC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F58C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 17:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8905520866
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:59:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576861152;
-	bh=YhOx7vHjL5MFGI+9Bd40FTXLwMa4kVWMFOswf4gxlz4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gYeBpmmv0/235ZNowf7NdKOtIAUZ2rMsXsFs/7n0wMA4g767HryfoegdTYFazQJMu
-	 v3gbsfq+7KMymhoWC0un2rrsTks1zaasybsBKvhmizIIZvo3whePWsB21nvz+HvarW
-	 ZpF0rsRIJd5QW4ycyur/W9fW9zTxr1lrpcBxXuLQ=
+	by mail.kernel.org (Postfix) with ESMTP id A9EC021655
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 17:01:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="B0P2kt8v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbfLTQ7L (ORCPT
+        id S1727421AbfLTRBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 11:59:11 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:41564 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727270AbfLTQ7L (ORCPT
+        Fri, 20 Dec 2019 12:01:23 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:40318 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727270AbfLTRBX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 11:59:11 -0500
-Received: by mail-qk1-f195.google.com with SMTP id x129so8165349qke.8;
-        Fri, 20 Dec 2019 08:59:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TFNV1NWSFuHpHDbvDJbGCGSFQdkbgmzuIkzgxcz14KU=;
-        b=L1Mxw7+ebCI/ROK7u570qmJ8bGHUsrG8/Iwh3dpXvWg1TfIpiGzBjILCSzJ6a6wAy0
-         3aVTsR0KbvVJopGVOTtaQvm8iAtt2bjr1nYkVdtTV+nq1R3XvGoQFDF7TCZnt39huZ+q
-         wELoGq/f5eCv12Rk1MldkTz6PaKz5w8VncaTrTKzUQAQCCocV2Rjzkrkvgx83Kqh55hV
-         4yD2EGEXPLmv6T2J8KKMbFcDtb6fDaxO5P4Na7MzaOhoGV1yZffam1dksQcIbxajbpuV
-         37SmUvMpzmeNvtQp6965SmYj+/3/h2l063bsfav5vEuM5eF5Hs5zm2SrPKW/6t36pyeY
-         XprQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TFNV1NWSFuHpHDbvDJbGCGSFQdkbgmzuIkzgxcz14KU=;
-        b=qZdr3Q1kxFChlRSGFhhMIwmWykND6pL3/SV5mz79y2DTPL1x51y6OKpF9lPA8Tj/Zg
-         uFgNS+pmQI8y336m8pkW5jsuflxdb5Mg6BkhGKfMdzUHyitlvIKLJT/kJiQSOKR/Z0og
-         CvEi3o7bLjcofXR7NtzsYinjh/AVPeHaf2ikmS8pkedlwBvQJ55F2m7nLr1qZGLSIZFX
-         zuweCYM6JPhR4YGzNSKmp28kDqYxpd7p3YkTCGSaA2lk/RNNmtG0FPHqAJzTDsVe8HUb
-         k8NaqC5GFUWNnzj1mpI7Sy7V8CA5HcCav7kUjfh5fxL+0dcyvCJJIgybj575HJMmuUVv
-         F1hA==
-X-Gm-Message-State: APjAAAWZx9sy/bOFpi69MMhSvwiNLO04pQX4f4SY4ww/ss/maQdBFV4F
-        JgrWwAWX0DRYg2IKTVmJJf4pAAhSKTI=
-X-Google-Smtp-Source: APXvYqz7aFmfMyObL+0ikFUH0+DkYP1GcmtMmTR601QkVR1ssJsY2OznXxNfcvKC2nobxj4PRGMXqA==
-X-Received: by 2002:a05:620a:133a:: with SMTP id p26mr14265229qkj.50.1576861149971;
-        Fri, 20 Dec 2019 08:59:09 -0800 (PST)
-Received: from localhost ([2620:10d:c091:480::11e7])
-        by smtp.gmail.com with ESMTPSA id t73sm3052987qke.71.2019.12.20.08.59.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Dec 2019 08:59:09 -0800 (PST)
-Date:   Fri, 20 Dec 2019 08:59:07 -0800
-From:   Tejun Heo <tj@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [PATCH 2/9] perf/core: Add PERF_SAMPLE_CGROUP feature
-Message-ID: <20191220165907.GI2914998@devbig004.ftw2.facebook.com>
-References: <20191220043253.3278951-1-namhyung@kernel.org>
- <20191220043253.3278951-3-namhyung@kernel.org>
- <20191220152324.GG2914998@devbig004.ftw2.facebook.com>
- <20191220164802.GO2827@hirez.programming.kicks-ass.net>
+        Fri, 20 Dec 2019 12:01:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1576861280; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IyTUY4pfT+BIS+zxQOA53iQ3MvcXiNswuStlkl4h5ms=;
+        b=B0P2kt8vK1OU7YP1ouJLUalZXVDRfFJJWEcw6L9ygaXSbNy5uHGDYbonK+kAK1IZoqhC1z
+        kRM5BghsdIZR4banHIy2CEioEcMR19QArlLiQhN2Of/80P8RQbHpqGsauoXX+3cszpKlxH
+        NZ1uB7vQkhxKYfj+7tbHUmbcTt4pTkg=
+Date:   Fri, 20 Dec 2019 18:01:16 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [BUG] CI20: interrupt-controller@10001000 didn't like hwirq-0x0
+ to VIRQ8 mapping (rc=-19)
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        MIPS Creator CI20 Development 
+        <mips-creator-ci20-dev@googlegroups.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Zhou Yanjie <zhouyanjie@zoho.com>
+Message-Id: <1576861276.3.1@crapouillou.net>
+In-Reply-To: <8BA39E30-53CB-47DB-8890-465ACB760402@goldelico.com>
+References: <8BA39E30-53CB-47DB-8890-465ACB760402@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191220164802.GO2827@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 05:48:02PM +0100, Peter Zijlstra wrote:
-> That assumes the cgroup is still in existence, which might not be the
-> case I presume.
+Hi Nikolaus,
 
-Yeah, if the cgroup is already gone by the time the first event is
-looked up, this wouldn't work.
+Try with this: https://lkml.org/lkml/2019/11/22/1831
 
--- 
-tejun
+And don't hesitate to add your Tested-by :)
+
+Cheers,
+-Paul
+
+
+Le ven., d=E9c. 20, 2019 at 17:49, H. Nikolaus Schaller=20
+<hns@goldelico.com> a =E9crit :
+> Hi Paul,
+> since v5.5-rc1 the boot log is flooded by a sequence of messages like:
+>=20
+> [    0.000000] NR_IRQS: 222
+> [    0.000000] irq: :interrupt-controller@10001000 didn't like=20
+> hwirq-0x0 to VIRQ8 mapping (rc=3D-19)
+> [    0.000000] irq: :interrupt-controller@10001000 didn't like=20
+> hwirq-0x1 to VIRQ9 mapping (rc=3D-19)
+> [    0.000000] irq: :interrupt-controller@10001000 didn't like=20
+> hwirq-0x2 to VIRQ10 mapping (rc=3D-19)
+> [    0.000000] irq: :interrupt-controller@10001000 didn't like=20
+> hwirq-0x3 to VIRQ11 mapping (rc=3D-19)
+> [    0.000000] irq: :interrupt-controller@10001000 didn't like=20
+> hwirq-0x4 to VIRQ12 mapping (rc=3D-19)
+> ...
+> [    0.000000] irq: :interrupt-controller@10001000 didn't like=20
+> hwirq-0x3e to VIRQ70 mapping (rc=3D-19)
+> [    0.000000] irq: :interrupt-controller@10001000 didn't like=20
+> hwirq-0x3f to VIRQ71 mapping (rc=3D-19)
+>=20
+> A handful of /proc/interrupts are nevertheless working.
+>=20
+> I have now analyzed the situation a little:
+>=20
+> * the message is printed by irq_domain_associate()
+> * call sequence is ingenic_intc_of_init() -> irq_domain_add_legacy()=20
+> -> irq_domain_associate_many() -> irq_domain_associate()
+> * the reason for the message is that
+>   domain->ops->map()
+>   called in irq_domain_associate() returns an error
+> * domain->ops is initialized to &irq_generic_chip_ops
+> * domain->ops->map is initialized to irq_map_generic_chip()
+> * irq_map_generic_chip() calls __irq_get_domain_generic_chip()
+> * which returns -ENODEV (-19) if d->gc =3D=3D NULL
+>=20
+> So the location, where the -19 comes from, is found.
+>=20
+> Now why is d->gc =3D=3D NULL in __irq_get_domain_generic_chip() ?
+>=20
+> This IMHO seems to be a bad initialization sequence:
+>=20
+> * ingenic_intc_of_init() calls firstly irq_domain_add_legacy()
+> * which does *not* initialize domain->gc but expects it to be !NULL=20
+> through irq_map_generic_chip()
+> * and would only irq_alloc_domain_generic_chips() which initializes=20
+> domain->gc if irq_domain_add_legacy() is successful
+> * irq_alloc_domain_generic_chips() would initialize domain->gc by=20
+> calling __irq_alloc_domain_generic_chips()
+>=20
+> There are indeed significant changes in drivers/irqchip/irq-ingenic.c
+> from v5.4to v5.5-rc1 which have introduced the use of=20
+> irq_domain_add_legacy()
+> and irq_alloc_domain_generic_chips() by
+>=20
+> 52ecc87642f2 irqchip: ingenic: Error out if IRQ domain creation failed
+> 208caadce5d4 irqchip: ingenic: Get virq number from IRQ domain
+> 8bc7464b5140 irqchip: ingenic: Alloc generic chips from IRQ domain
+> b8b0145f7d0e irqchip: Ingenic: Add process for more than one irq at=20
+> the same time.
+>=20
+> Most likely 52ecc87642f2 has changed the call sequence and therefore=20
+> always fails.
+>=20
+> Is there some essential patch missing to be upstreamed?
+> I have looked but not found anything related in linux-next.
+>=20
+> I have also tried reverting 52ecc87642f2 alone but it has conflicts.
+>=20
+> But I can revert all 4 commits with an otherwise unchanged setup and
+> the messages are gone for me.
+>=20
+> How would a fix look like?
+>=20
+> BR and thanks,
+> Nikolaus
+>=20
+
+=
+
