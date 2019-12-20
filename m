@@ -4,196 +4,123 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B86C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 844BBC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 208812146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F2E22467F
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:35:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfLTJfF convert rfc822-to-8bit (ORCPT
+        id S1727422AbfLTJfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 04:35:05 -0500
-Received: from smtp.h3c.com ([60.191.123.50]:28864 "EHLO h3cspam02-ex.h3c.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727233AbfLTJfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 04:35:04 -0500
-Received: from DAG2EX08-IDC.srv.huawei-3com.com ([10.8.0.71])
-        by h3cspam02-ex.h3c.com with ESMTPS id xBK9XmAw010530
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 20 Dec 2019 17:33:48 +0800 (GMT-8)
-        (envelope-from li.kai4@h3c.com)
-Received: from DAG2EX07-IDC.srv.huawei-3com.com (10.8.0.70) by
- DAG2EX08-IDC.srv.huawei-3com.com (10.8.0.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 20 Dec 2019 17:33:50 +0800
-Received: from DAG2EX07-IDC.srv.huawei-3com.com ([::1]) by
- DAG2EX07-IDC.srv.huawei-3com.com ([fe80::c439:37f7:8e24:31c4%9]) with mapi id
- 15.01.1713.004; Fri, 20 Dec 2019 17:33:50 +0800
-From:   Likai <li.kai4@h3c.com>
-To:     piaojun <piaojun@huawei.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        "mark@fasheh.com" <mark@fasheh.com>,
-        "jlbec@evilplan.org" <jlbec@evilplan.org>,
-        "chge@linux.alibaba.com" <chge@linux.alibaba.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>
-Subject: Re: [Ocfs2-devel] [PATCH v3] ocfs2: call journal flush to mark
- journal as empty after journal recovery when mount
-Thread-Topic: [Ocfs2-devel] [PATCH v3] ocfs2: call journal flush to mark
- journal as empty after journal recovery when mount
-Thread-Index: AQHVtH3735no2U4KqkqbYTsYHZS4qw==
-Date:   Fri, 20 Dec 2019 09:33:50 +0000
-Message-ID: <1faf04ac23384fb2a17a8a569f9fce8f@h3c.com>
-References: <20191217020140.2197-1-li.kai4@h3c.com>
- <5DFB860A.6020501@huawei.com>
- <05cf7457-31f2-0698-14ae-21a9e7b659cb@linux.alibaba.com>
- <5DFC90C0.7020704@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.125.108.72]
-x-sender-location: DAG2
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 20 Dec 2019 04:35:20 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:45391 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727205AbfLTJfT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 04:35:19 -0500
+Received: from 79.184.253.1.ipv4.supernova.orange.pl (79.184.253.1) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
+ id 648bf26c0baafb8f; Fri, 20 Dec 2019 10:35:16 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Jonas Meurer <jonas@freesources.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Tim Dittler <tim.dittler@systemli.org>,
+        Yannik Sembritzki <yannik@sembritzki.me>
+Subject: Re: [PATCH 2/2] PM: CONFIG_SUSPEND_SKIP_SYNC sets default for, '/sys/power/sync_on_suspend'
+Date:   Fri, 20 Dec 2019 10:35:16 +0100
+Message-ID: <5078963.9SuZRVoKLz@kreacher>
+In-Reply-To: <5c3996e1-eee7-1b8f-51bf-a6401d229bff@freesources.org>
+References: <1ee5b9ef-f30e-3fde-2325-ba516a96ced5@freesources.org> <5c3996e1-eee7-1b8f-51bf-a6401d229bff@freesources.org>
 MIME-Version: 1.0
-X-DNSRBL: 
-X-MAIL: h3cspam02-ex.h3c.com xBK9XmAw010530
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/12/20 17:14, piaojun wrote:
->
-> On 2019/12/20 9:11, Joseph Qi wrote:
->>
->> On 19/12/19 22:15, piaojun wrote:
->>>
->>> On 2019/12/17 10:01, Kai Li wrote:
->>>> If journal is dirty when mount, it will be replayed but jbd2 sb
->>>> log tail cannot be updated to mark a new start because
->>>> journal->j_flag has already been set with JBD2_ABORT first
->>>> in journal_init_common. When a new transaction is committed, it
->>>> will be recored in block 1 first(journal->j_tail is set to 1 in
->>>> journal_reset).If emergency restart happens again before journal
->>>> super block is updated unfortunately, the new recorded trans will
->>>> not be replayed in the next mount.
->>>>
->>>> The following steps describe this procedure in detail.
->>>> 1. mount and touch some files
->>>> 2. these transactions are committed to journal area but not checkpointed
->>>> 3. emergency restart
->>>> 4. mount again and its journals are replayed
->>>> 5. journal super block's first s_start is 1, but its s_seq is not updated
->>>> 6. touch a new file and its trans is committed but not checkpointed
->>>> 7. emergency restart again
->>>> 8. mount and journal is dirty, but trans committed in 6 will not be
->>>> replayed.
->>>>
->>>> This exception happens easily when this lun is used by only one node. If it
->>>> is used by multi-nodes, other node will replay its journal and its
->>>> journal super block will be updated after recovery like what this patch
->>>> does.
->>>>
->>>> ocfs2_recover_node->ocfs2_replay_journal.
->>>>
->>>> The following jbd2 journal can be generated by touching a new file after
->>>> journal is replayed, and seq 15 is the first valid commit, but first seq
->>>> is 13 in journal super block.
->>>> logdump:
->>>> Block 0: Journal Superblock
->>>> Seq: 0   Type: 4 (JBD2_SUPERBLOCK_V2)
->>>> Blocksize: 4096   Total Blocks: 32768   First Block: 1
->>>> First Commit ID: 13   Start Log Blknum: 1
->>>> Error: 0
->>>> Feature Compat: 0
->>>> Feature Incompat: 2 block64
->>>> Feature RO compat: 0
->>>> Journal UUID: 4ED3822C54294467A4F8E87D2BA4BC36
->>>> FS Share Cnt: 1   Dynamic Superblk Blknum: 0
->>>> Per Txn Block Limit    Journal: 0    Data: 0
->>>>
->>>> Block 1: Journal Commit Block
->>>> Seq: 14   Type: 2 (JBD2_COMMIT_BLOCK)
->>>>
->>>> Block 2: Journal Descriptor
->>>> Seq: 15   Type: 1 (JBD2_DESCRIPTOR_BLOCK)
->>>> No. Blocknum        Flags
->>>>  0. 587             none
->>>> UUID: 00000000000000000000000000000000
->>>>  1. 8257792         JBD2_FLAG_SAME_UUID
->>>>  2. 619             JBD2_FLAG_SAME_UUID
->>>>  3. 24772864        JBD2_FLAG_SAME_UUID
->>>>  4. 8257802         JBD2_FLAG_SAME_UUID
->>>>  5. 513             JBD2_FLAG_SAME_UUID JBD2_FLAG_LAST_TAG
->>>> ...
->>>> Block 7: Inode
->>>> Inode: 8257802   Mode: 0640   Generation: 57157641 (0x3682809)
->>>> FS Generation: 2839773110 (0xa9437fb6)
->>>> CRC32: 00000000   ECC: 0000
->>>> Type: Regular   Attr: 0x0   Flags: Valid
->>>> Dynamic Features: (0x1) InlineData
->>>> User: 0 (root)   Group: 0 (root)   Size: 7
->>>> Links: 1   Clusters: 0
->>>> ctime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
->>>> atime: 0x5de5d870 0x113181a1 -- Tue Dec  3 11:37:20.288457121 2019
->>>> mtime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
->>>> dtime: 0x0 -- Thu Jan  1 08:00:00 1970
->>>> ...
->>>> Block 9: Journal Commit Block
->>>> Seq: 15   Type: 2 (JBD2_COMMIT_BLOCK)
->>>>
->>>> The following is jouranl recovery log when recovering the upper jbd2
->>>> journal when mount again.
->>>> syslog:
->>>> [ 2265.648622] ocfs2: File system on device (252,1) was not unmounted cleanly, recovering it.
->>>> [ 2265.649695] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 0
->>>> [ 2265.650407] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 1
->>>> [ 2265.650409] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 2
->>>> [ 2265.650410] fs/jbd2/recovery.c:(jbd2_journal_recover, 278): JBD2: recovery, exit status 0, recovered transactions 13 to 13
->>>>
->>>> Due to first commit seq 13 recorded in journal super is not consistent
->>>> with the value recorded in block 1(seq is 14), journal recovery will be
->>>> terminated before seq 15 even though it is an unbroken commit, inode
->>>> 8257802 is a new file and it will be lost.
->>>>
->>>> Signed-off-by: Kai Li <li.kai4@h3c.com>
->>>> ---
->>>>  fs/ocfs2/journal.c | 8 ++++++++
->>>>  1 file changed, 8 insertions(+)
->>>>
->>>> diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
->>>> index 1afe57f425a0..68ba354cf361 100644
->>>> --- a/fs/ocfs2/journal.c
->>>> +++ b/fs/ocfs2/journal.c
->>>> @@ -1066,6 +1066,14 @@ int ocfs2_journal_load(struct ocfs2_journal *journal, int local, int replayed)
->>>>  
->>>>  	ocfs2_clear_journal_error(osb->sb, journal->j_journal, osb->slot_num);
->>>>  
->>>> +	if (replayed) {
->>>> +		jbd2_journal_lock_updates(journal->j_journal);
->>>> +		status = jbd2_journal_flush(journal->j_journal);
->>> What if jbd2_journal_flush gets failed? The 's_sequence' and 's_start'
->>> won't be reset, and I wonder if the problem still remains.
->>>
->> Yes, but we don't want this to fail the mount process, instead we just log
->> an error and system administrator should know the result.
->>
-> Thanks for your reply and I have another question about this issue. IMO
-> the second trans is not complete as jbd2 sb has not been updated, so we
-> do not need to replay it when mount again.
->
-> Jun
->
->
-I don't think so. The problem is that jbd2 sb should be updated to mark
-a new start after mount rather than whether trans committed later is
-complete or not.
+On Monday, December 2, 2019 6:07:43 PM CET Jonas Meurer wrote:
+> Slightly change the behaviour of build-time switch CONFIG_SUSPEND_SKIP_SYNC:
+> Make it configure the default for '/sys/power/sync_on_suspend', now that we
+> have a run-time switch for it.
+> 
+> Signed-off-by: Jonas Meurer <jonas@freesources.org>
+> ---
+>  Documentation/ABI/testing/sysfs-power | 7 ++++---
+>  kernel/power/Kconfig                  | 5 ++++-
+>  kernel/power/main.c                   | 2 +-
+>  kernel/power/suspend.c                | 2 +-
+>  4 files changed, 10 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-power b/Documentation/ABI/testing/sysfs-power
+> index f164a364e89a..783b3ce8eb06 100644
+> --- a/Documentation/ABI/testing/sysfs-power
+> +++ b/Documentation/ABI/testing/sysfs-power
+> @@ -418,6 +418,7 @@ Description:
+>  		aware that you have to take care of sync() yourself before
+>  		suspending the system if you disable it here.
+>  
+> -		Writing a "1" (default) to this file enables the sync() and
+> -		writing a "0" disables it. Reads from the file return the
+> -		current value.
+> +		Writing a "1" to this file enables the sync() and writing a
+> +		"0" disables it. Reads from the file return the current value.
+> +		The default is "1" but can be configured with the build-time
+> +		config flag "SUSPEND_SKIP_SYNC".
+> diff --git a/kernel/power/Kconfig b/kernel/power/Kconfig
+> index d3667b4075c1..7cbfbeacd68a 100644
+> --- a/kernel/power/Kconfig
+> +++ b/kernel/power/Kconfig
+> @@ -27,7 +27,10 @@ config SUSPEND_SKIP_SYNC
+>  	  Skip the kernel sys_sync() before freezing user processes.
+>  	  Some systems prefer not to pay this cost on every invocation
+>  	  of suspend, or they are content with invoking sync() from
+> -	  user-space before invoking suspend.  Say Y if that's your case.
+> +	  user-space before invoking suspend.  There's a run-time switch
+> +	  at '/sys/power/sync_on_suspend' to configure this behaviour.
+> +	  This setting changes the default for the run-tim switch. Say Y
+> +	  to change the default to disable the kernel sys_sync().
+>  
+>  config HIBERNATE_CALLBACKS
+>  	bool
+> diff --git a/kernel/power/main.c b/kernel/power/main.c
+> index 7d9d579a8e6f..69b7a8aeca3b 100644
+> --- a/kernel/power/main.c
+> +++ b/kernel/power/main.c
+> @@ -197,7 +197,7 @@ power_attr(mem_sleep);
+>   * show() returns whether ksys_sync_helper() is invoked before suspend.
+>   * store() accepts 0 or 1.  0 disables ksys_sync_helper() and 1 enables it.
+>   */
+> -bool sync_on_suspend_enabled = true;
+> +bool sync_on_suspend_enabled = !IS_ENABLED(CONFIG_SUSPEND_SKIP_SYNC);
+>  
+>  static ssize_t sync_on_suspend_show(struct kobject *kobj,
+>  				   struct kobj_attribute *attr, char *buf)
+> diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
+> index 503d56419a69..2c47280fbfc7 100644
+> --- a/kernel/power/suspend.c
+> +++ b/kernel/power/suspend.c
+> @@ -564,7 +564,7 @@ static int enter_state(suspend_state_t state)
+>  	if (state == PM_SUSPEND_TO_IDLE)
+>  		s2idle_begin();
+>  
+> -	if (!IS_ENABLED(CONFIG_SUSPEND_SKIP_SYNC) && sync_on_suspend_enabled) {
+> +	if (sync_on_suspend_enabled) {
+>  		trace_suspend_resume(TPS("sync_filesystems"), 0, true);
+>  		ksys_sync_helper();
+>  		trace_suspend_resume(TPS("sync_filesystems"), 0, false);
+> 
 
-In fact , the trans is complete too as the commit log described.
+I don't see much value in splitting the changes into two patches.
+On the contrary, this patch is a logical part of the full change, so IMO
+it should be folded into the [1/2].
 
-Thanks
+Please do so and resubmit.
+
+Thanks!
+
+
 
