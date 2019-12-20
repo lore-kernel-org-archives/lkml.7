@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A34C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A188C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B0762467F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:38:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B37524684
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:39:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852738;
-	bh=c2ZSCyHbGr/6e5lsFGfMaLvbVe5Lpb/tMm5OOcHm6eo=;
+	s=default; t=1576852743;
+	bh=34EkYqS0ICxQq59U7q2t4URHZdu/BDutoH3vqVslIpY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lqMfj3JvSW0Np1ZjRHRuool/3e6erjgs7SMjyA5RxW7UlN+IuGdLejuoXyMykbxFP
-	 bX2ME9eo9WN02Wo6rbLScNnmezprnS5pdr5XngnjJY/Pys7SAfyQ7vSzO37fluKMts
-	 kMdHH2sZ9xWlSghwUAOWh0FW3LvGKHfAaL3gS9kE=
+	b=dKdaDR+Tu70zf7EN+xGv5CzV8FnJrCW2VQ/c+BPvz3XbFKd5vUH1pp60o1RVpi8nw
+	 76trfmK74cAEz07h44/ut0CpsOLaWFmRD/JQ+KMztbVIh2H9DXrAelTXGR+3YEBH0k
+	 AVz0iK/uQsSphHlJZQtzN4qdXPhgqGmP30NjxCsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbfLTOi4 (ORCPT
+        id S1727790AbfLTOjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:38:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42010 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:39:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728280AbfLTOhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:37:52 -0500
+        id S1728253AbfLTOhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:37:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A29C24687;
-        Fri, 20 Dec 2019 14:37:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10FBF24680;
+        Fri, 20 Dec 2019 14:37:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852671;
-        bh=c2ZSCyHbGr/6e5lsFGfMaLvbVe5Lpb/tMm5OOcHm6eo=;
+        s=default; t=1576852669;
+        bh=34EkYqS0ICxQq59U7q2t4URHZdu/BDutoH3vqVslIpY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=abj9Kr9HJovGlSNqD2FvW9xKSVuSIlERmwPhV/J/n1KojtpvAxJU54PopperNy6e4
-         0zvkiCiGKkkDDQjylAfexcDq3ss+7gOobRBz+X9M7SokjTl8dTShwPpbjlYPtHOKcb
-         bEoEimG0kwEFiAINtNzikPtCJuVH8+vT2mPzgi+s=
+        b=KimHzt45yE3tcdLTA3JrIPbDihCmVexfbJjkqYKAR4bLRH5ggkly3bm+rXElv0uYy
+         xiF7LMZMI/rXgirrnthI6tGDGhF9vQqhWOksJrc/0mVxuzqtBkFqr6qf/lKiEyuiew
+         NwoL1CNl1+yPFu3eDAmiDPbC4V0sCucoZxSIWZQ0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Roman Bolshakov <r.bolshakov@yadro.com>,
-        Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvel.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Himanshu Madhani <hmadhani@marvell.com>,
+Cc:     Bo Wu <wubo40@huawei.com>, Zhiqiang Liu <liuzhiqiang26@huawei.com>,
+        James Smart <james.smart@broadcom.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 07/19] scsi: qla2xxx: Don't call qlt_async_event twice
-Date:   Fri, 20 Dec 2019 09:37:28 -0500
-Message-Id: <20191220143741.10220-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 06/19] scsi: lpfc: Fix memory leak on lpfc_bsg_write_ebuf_set func
+Date:   Fri, 20 Dec 2019 09:37:27 -0500
+Message-Id: <20191220143741.10220-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220143741.10220-1-sashal@kernel.org>
 References: <20191220143741.10220-1-sashal@kernel.org>
@@ -63,49 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Bolshakov <r.bolshakov@yadro.com>
+From: Bo Wu <wubo40@huawei.com>
 
-[ Upstream commit 2c2f4bed9b6299e6430a65a29b5d27b8763fdf25 ]
+[ Upstream commit 9a1b0b9a6dab452fb0e39fe96880c4faf3878369 ]
 
-MBA_PORT_UPDATE generates duplicate log lines in target mode because
-qlt_async_event is called twice. Drop the calls within the case as the
-function will be called right after the switch statement.
+When phba->mbox_ext_buf_ctx.seqNum != phba->mbox_ext_buf_ctx.numBuf,
+dd_data should be freed before return SLI_CONFIG_HANDLED.
 
-Cc: Quinn Tran <qutran@marvell.com>
-Link: https://lore.kernel.org/r/20191125165702.1013-8-r.bolshakov@yadro.com
-Acked-by: Himanshu Madhani <hmadhani@marvel.com>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Tested-by: Hannes Reinecke <hare@suse.de>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
+When lpfc_sli_issue_mbox func return fails, pmboxq should be also freed in
+job_error tag.
+
+Link: https://lore.kernel.org/r/EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915E7A966@DGGEML525-MBS.china.huawei.com
+Signed-off-by: Bo Wu <wubo40@huawei.com>
+Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Reviewed-by: James Smart <james.smart@broadcom.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_isr.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/scsi/lpfc/lpfc_bsg.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
-index ebca1a470e9bc..7f2da56274bdb 100644
---- a/drivers/scsi/qla2xxx/qla_isr.c
-+++ b/drivers/scsi/qla2xxx/qla_isr.c
-@@ -1046,8 +1046,6 @@ qla2x00_async_event(scsi_qla_host_t *vha, struct rsp_que *rsp, uint16_t *mb)
- 			ql_dbg(ql_dbg_async, vha, 0x5011,
- 			    "Asynchronous PORT UPDATE ignored %04x/%04x/%04x.\n",
- 			    mb[1], mb[2], mb[3]);
--
--			qlt_async_event(mb[0], vha, mb);
- 			break;
- 		}
+diff --git a/drivers/scsi/lpfc/lpfc_bsg.c b/drivers/scsi/lpfc/lpfc_bsg.c
+index 6dde21dc82a3c..08ed27b0d4c66 100644
+--- a/drivers/scsi/lpfc/lpfc_bsg.c
++++ b/drivers/scsi/lpfc/lpfc_bsg.c
+@@ -4419,12 +4419,6 @@ lpfc_bsg_write_ebuf_set(struct lpfc_hba *phba, struct bsg_job *job,
+ 	phba->mbox_ext_buf_ctx.seqNum++;
+ 	nemb_tp = phba->mbox_ext_buf_ctx.nembType;
  
-@@ -1065,8 +1063,6 @@ qla2x00_async_event(scsi_qla_host_t *vha, struct rsp_que *rsp, uint16_t *mb)
- 		set_bit(LOOP_RESYNC_NEEDED, &vha->dpc_flags);
- 		set_bit(LOCAL_LOOP_UPDATE, &vha->dpc_flags);
- 		set_bit(VP_CONFIG_OK, &vha->vp_flags);
+-	dd_data = kmalloc(sizeof(struct bsg_job_data), GFP_KERNEL);
+-	if (!dd_data) {
+-		rc = -ENOMEM;
+-		goto job_error;
+-	}
 -
--		qlt_async_event(mb[0], vha, mb);
- 		break;
+ 	pbuf = (uint8_t *)dmabuf->virt;
+ 	size = job->request_payload.payload_len;
+ 	sg_copy_to_buffer(job->request_payload.sg_list,
+@@ -4461,6 +4455,13 @@ lpfc_bsg_write_ebuf_set(struct lpfc_hba *phba, struct bsg_job *job,
+ 				"2968 SLI_CONFIG ext-buffer wr all %d "
+ 				"ebuffers received\n",
+ 				phba->mbox_ext_buf_ctx.numBuf);
++
++		dd_data = kmalloc(sizeof(struct bsg_job_data), GFP_KERNEL);
++		if (!dd_data) {
++			rc = -ENOMEM;
++			goto job_error;
++		}
++
+ 		/* mailbox command structure for base driver */
+ 		pmboxq = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
+ 		if (!pmboxq) {
+@@ -4509,6 +4510,8 @@ lpfc_bsg_write_ebuf_set(struct lpfc_hba *phba, struct bsg_job *job,
+ 	return SLI_CONFIG_HANDLED;
  
- 	case MBA_RSCN_UPDATE:		/* State Change Registration */
+ job_error:
++	if (pmboxq)
++		mempool_free(pmboxq, phba->mbox_mem_pool);
+ 	lpfc_bsg_dma_page_free(phba, dmabuf);
+ 	kfree(dd_data);
+ 
 -- 
 2.20.1
 
