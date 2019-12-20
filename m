@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39589C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F283C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02846218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23A82218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:38:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852697;
-	bh=UcV7Gb+OBxV6ZHwmz2TtZAk06MIKyAu8ifT5T6dHKFk=;
+	s=default; t=1576852703;
+	bh=0UoII2AumJokC/VfrLLHvpS8mLc3XhNoQs9cuTn6rEA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AkD1PaHwrRd/CXot8DaZXl1u90mT8Q9FKyHx9f2YUhx0ssOqPpHCHrhS3rvLN3Hdr
-	 mnhQd13Vom4u6ajRLLb6x4BN0E9AOWnc+TGYLduvum5DhCtTxGjprrYhzuainxhLsY
-	 NrIZ0ap0HWPCFEXH1DYvlU+nrOMnm6ZH4VffFdQs=
+	b=wXl4MwnPHU157OwSR6aBDGCMhiX30WyU67zgz1G2bY6vrLL4l4t7jK+lFE3LfYXoJ
+	 FAcHuKJ7j+izfNT6gGsA1eSj4oBZmyz6OyOvAO5jB72BbppnWXs9LRgnqbIQrMThdM
+	 jFS2BnGcV3F2Upv8Z2aXTEDX0eJvtedWeiWtqBRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbfLTOiH (ORCPT
+        id S1728213AbfLTOiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:38:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42122 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:38:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727996AbfLTOh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:37:58 -0500
+        id S1728383AbfLTOiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:38:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA1552468A;
-        Fri, 20 Dec 2019 14:37:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55C342467F;
+        Fri, 20 Dec 2019 14:38:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852678;
-        bh=UcV7Gb+OBxV6ZHwmz2TtZAk06MIKyAu8ifT5T6dHKFk=;
+        s=default; t=1576852683;
+        bh=0UoII2AumJokC/VfrLLHvpS8mLc3XhNoQs9cuTn6rEA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QZnPrYJ37vo9lY11HNbMwzayLT+LansLnO+jxRufoX5bSCNhamQALjhgJnvgPA46E
-         30wjVjLW9QOcOjpm5gwYqZmAWX49FvYax/+/LjnHqMhHqrxcK0E+HHVQfN1OJ5qH2a
-         pne8Pe77dHirVwgCCPWEaYEbIzVkic+HFnsiht5g=
+        b=04nUYxhNZoBHkCtoX71EIKnYzzOqQrZS6rVgbebhUTYse1JEIQJDsTDQry5cVIc8q
+         7Gy8RyZAN6MiHy0KMoSsH+pPLFIuMukoqGcVqCe5kawsM7sGbajiBKC/CHK3p0PHEe
+         WCZIIUcNkgiaoPq2RdHDD71esEaiaYGsrBuRTXWw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 13/19] md: raid1: check rdev before reference in raid1_sync_request func
-Date:   Fri, 20 Dec 2019 09:37:34 -0500
-Message-Id: <20191220143741.10220-13-sashal@kernel.org>
+Cc:     Paul Durrant <pdurrant@amazon.com>,
+        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
+        Juergen Gross <jgross@suse.com>,
+        Sasha Levin <sashal@kernel.org>,
+        xen-devel@lists.xenproject.org, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 17/19] xen-blkback: prevent premature module unload
+Date:   Fri, 20 Dec 2019 09:37:38 -0500
+Message-Id: <20191220143741.10220-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220143741.10220-1-sashal@kernel.org>
 References: <20191220143741.10220-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,32 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+From: Paul Durrant <pdurrant@amazon.com>
 
-[ Upstream commit 028288df635f5a9addd48ac4677b720192747944 ]
+[ Upstream commit fa2ac657f9783f0891b2935490afe9a7fd29d3fa ]
 
-In raid1_sync_request func, rdev should be checked before reference.
+Objects allocated by xen_blkif_alloc come from the 'blkif_cache' kmem
+cache. This cache is destoyed when xen-blkif is unloaded so it is
+necessary to wait for the deferred free routine used for such objects to
+complete. This necessity was missed in commit 14855954f636 "xen-blkback:
+allow module to be cleanly unloaded". This patch fixes the problem by
+taking/releasing extra module references in xen_blkif_alloc/free()
+respectively.
 
-Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Paul Durrant <pdurrant@amazon.com>
+Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/raid1.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/block/xen-blkback/xenbus.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index f46ac9db9edb2..0a9d623b13c27 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -2749,7 +2749,7 @@ static sector_t raid1_sync_request(struct mddev *mddev, sector_t sector_nr,
- 				write_targets++;
- 			}
- 		}
--		if (bio->bi_end_io) {
-+		if (rdev && bio->bi_end_io) {
- 			atomic_inc(&rdev->nr_pending);
- 			bio->bi_iter.bi_sector = sector_nr + rdev->data_offset;
- 			bio_set_dev(bio, rdev->bdev);
+diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
+index ed4e807791243..e9fa4a1fc7912 100644
+--- a/drivers/block/xen-blkback/xenbus.c
++++ b/drivers/block/xen-blkback/xenbus.c
+@@ -178,6 +178,15 @@ static struct xen_blkif *xen_blkif_alloc(domid_t domid)
+ 	blkif->domid = domid;
+ 	atomic_set(&blkif->refcnt, 1);
+ 	init_completion(&blkif->drain_complete);
++
++	/*
++	 * Because freeing back to the cache may be deferred, it is not
++	 * safe to unload the module (and hence destroy the cache) until
++	 * this has completed. To prevent premature unloading, take an
++	 * extra module reference here and release only when the object
++	 * has been freed back to the cache.
++	 */
++	__module_get(THIS_MODULE);
+ 	INIT_WORK(&blkif->free_work, xen_blkif_deferred_free);
+ 
+ 	return blkif;
+@@ -327,6 +336,7 @@ static void xen_blkif_free(struct xen_blkif *blkif)
+ 
+ 	/* Make sure everything is drained before shutting down */
+ 	kmem_cache_free(xen_blkif_cachep, blkif);
++	module_put(THIS_MODULE);
+ }
+ 
+ int __init xen_blkif_interface_init(void)
 -- 
 2.20.1
 
