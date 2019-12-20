@@ -2,174 +2,133 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 344A4C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 203F5C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F7AC24683
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEC662465E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:33:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="vJ9ZNkKc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727370AbfLTLas (ORCPT
+        id S1727315AbfLTLd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 06:30:48 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2211 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727192AbfLTLas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 06:30:48 -0500
-Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id B1ADF1CBF2C20DA4F7A8;
-        Fri, 20 Dec 2019 11:30:46 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML712-CAH.china.huawei.com (10.201.108.35) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 20 Dec 2019 11:30:46 +0000
-Received: from [127.0.0.1] (10.202.227.179) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Fri, 20 Dec
- 2019 11:30:46 +0000
-Subject: Re: [PATCH RFC 1/1] genirq: Make threaded handler use irq affinity
- for managed interrupt
-From:   John Garry <john.garry@huawei.com>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Ming Lei <ming.lei@redhat.com>, <tglx@linutronix.de>,
-        "chenxiang (M)" <chenxiang66@hisilicon.com>,
-        <bigeasy@linutronix.de>, <linux-kernel@vger.kernel.org>,
-        <hare@suse.com>, <hch@lst.de>, <axboe@kernel.dk>,
-        <bvanassche@acm.org>, <peterz@infradead.org>, <mingo@redhat.com>
-References: <1575642904-58295-1-git-send-email-john.garry@huawei.com>
- <1575642904-58295-2-git-send-email-john.garry@huawei.com>
- <20191207080335.GA6077@ming.t460p>
- <78a10958-fdc9-0576-0c39-6079b9749d39@huawei.com>
- <20191210014335.GA25022@ming.t460p>
- <0ad37515-c22d-6857-65a2-cc28256a8afa@huawei.com>
- <20191212223805.GA24463@ming.t460p>
- <d4b89ecf-7ced-d5d6-fc02-6d4257580465@huawei.com>
- <20191213131822.GA19876@ming.t460p>
- <b7f3bcea-84ec-f9f6-a3aa-007ae712415f@huawei.com>
- <20191214135641.5a817512@why>
- <7db89b97-1b9e-8dd1-684a-3eef1b1af244@huawei.com>
- <50d9ba606e1e3ee1665a0328ffac67ac@www.loen.fr>
- <a5f6a542-2dbc-62de-52e2-bd5413b5db51@huawei.com>
- <68058fd28c939b8e065524715494de95@www.loen.fr>
- <ac5b5a25-df2e-18e9-6b0f-60af8c7cec3b@huawei.com>
-Message-ID: <687cbcc4-89d9-63ea-a246-ce2abaae501a@huawei.com>
-Date:   Fri, 20 Dec 2019 11:30:44 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-MIME-Version: 1.0
-In-Reply-To: <ac5b5a25-df2e-18e9-6b0f-60af8c7cec3b@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.179]
-X-ClientProxiedBy: lhreml702-chm.china.huawei.com (10.201.108.51) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+        Fri, 20 Dec 2019 06:33:57 -0500
+Received: from conuserg-08.nifty.com ([210.131.2.75]:36546 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727198AbfLTLd4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 06:33:56 -0500
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id xBKBW2X0010984;
+        Fri, 20 Dec 2019 20:32:09 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com xBKBW2X0010984
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1576841529;
+        bh=FaE1Dy6PORZJLZr2fPoSaDCJ2/3nG0fTHRJYBhAtI20=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vJ9ZNkKccYowU4XwyMyk1kgJ+wlThcFKimxyMyfxqOs5uY6exrWz0FoCHerjFbbLW
+         39Dm0r+sC3zkRT2yGDJLLnwnN6qRFzDNm7NvgGGEv5LoDj3q5WbqsXQdUhQZs2piXI
+         HViI9D9pFxujyGfh70LFHdYUvPpKeG9UmtuaxdN9I/HUQsjbKXUYOwds2ig+ef/Ltk
+         tW9CzTGmWIJj+8GIsTswmHvcYoSdiYjNiV93VpDUvqljwt7guxUynFuDFzzIdyoeYh
+         HONq89bXg5O55aqmuGvaVOVJpuW9z4t35HgkeZBSLOXvcH3r8Z617ZuQUgEr12tZiN
+         olIjV5eQNagRw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-mtd@lists.infradead.org
+Cc:     Dinh Nguyen <dinguyen@kernel.org>, Marek Vasut <marex@denx.de>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 5/5] mtd: rawnand: denali: remove hard-coded DENALI_DEFAULT_OOB_SKIP_BYTES
+Date:   Fri, 20 Dec 2019 20:31:55 +0900
+Message-Id: <20191220113155.28177-6-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191220113155.28177-1-yamada.masahiro@socionext.com>
+References: <20191220113155.28177-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> So you enqueue requests from CPU0 only? It seems a bit odd...
-> 
-> No, but maybe I wasn't clear enough. I'll give an overview:
-> 
-> For D06 SAS controller - which is a multi-queue PCI device - we use 
-> managed interrupts. The HW has 16 submission/completion queues, so for 
-> 96 cores, we have an even spread of 6 CPUs assigned per queue; and this 
-> per-queue CPU mask is the interrupt affinity mask. So CPU0-5 would 
-> submit any IO on queue0, CPU6-11 on queue2, and so on. PCI NVMe is 
-> essentially the same.
-> 
-> These are the environments which we're trying to promote performance.
-> 
-> Then for D05 SAS controller - which is multi-queue platform device 
-> (mbigen) - we don't use managed interrupts. We still submit IO from any 
-> CPU, but we choose the queue to submit IO on a round-robin basis to 
-> promote some isolation, i.e. reduce inter-queue lock contention, so the 
-> queue chosen has nothing to do with the CPU.
-> 
-> And with your change we may submit on cpu4 but service the interrupt on 
-> cpu30, as an example. While previously we would always service on cpu0. 
-> The old way still isn't ideal, I'll admit.
-> 
-> For this env, we would just like to maintain the same performance. And 
-> it's here that we see the performance drop.
-> 
+As commit 0d55c668b218 (mtd: rawnand: denali: set SPARE_AREA_SKIP_BYTES
+register to 8 if unset") says, there were three solutions discussed:
 
-Hi Marc,
+  [1] Add a DT property to specify the skipped bytes in OOB
+  [2] Associate the preferred value with compatible
+  [3] Hard-code the default value in the driver
 
-We've got some more results and it looks promising.
+At that time, [3] was chosen because I did not have enough information
+about the other platforms than UniPhier.
 
-So with your patch we get a performance boost of 3180.1K -> 3294.9K IOPS 
-in the D06 SAS env. Then when we change the driver to use threaded 
-interrupt handler (mainline currently uses tasklet), we get a boost 
-again up to 3415K IOPS.
+That commit also says "The preferred value may vary by platform. If so,
+please trade up to a different solution." My intention was to replace
+[3] with [2], not keep both [2] and [3].
 
-Now this is essentially the same figure we had with using threaded 
-handler + the gen irq change in spreading the handler CPU affinity. We 
-did also test your patch + gen irq change and got a performance drop, to 
-3347K IOPS.
+Now that we have switched to [2] for SOCFPGA's SPARE_AREA_SKIP_BYTES=2,
+[3] should be removed. This should be OK because denali_pci.c just
+gets back to the original behavior.
 
-So tentatively I'd say your patch may be all we need.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-FYI, here is how the effective affinity is looking for both SAS 
-controllers with your patch:
+Changes in v3:
+  - New patch
 
-74:02.0
-irq 81, cpu list 24-29, effective list 24 cq
-irq 82, cpu list 30-35, effective list 30 cq
-irq 83, cpu list 36-41, effective list 36 cq
-irq 84, cpu list 42-47, effective list 42 cq
-irq 85, cpu list 48-53, effective list 48 cq
-irq 86, cpu list 54-59, effective list 56 cq
-irq 87, cpu list 60-65, effective list 60 cq
-irq 88, cpu list 66-71, effective list 66 cq
-irq 89, cpu list 72-77, effective list 72 cq
-irq 90, cpu list 78-83, effective list 78 cq
-irq 91, cpu list 84-89, effective list 84 cq
-irq 92, cpu list 90-95, effective list 90 cq
-irq 93, cpu list 0-5, effective list 0 cq
-irq 94, cpu list 6-11, effective list 6 cq
-irq 95, cpu list 12-17, effective list 12 cq
-irq 96, cpu list 18-23, effective list 18 cq
+Changes in v2: None
 
-74:04.0
-irq 113, cpu list 24-29, effective list 25 cq
-irq 114, cpu list 30-35, effective list 31 cq
-irq 115, cpu list 36-41, effective list 37 cq
-irq 116, cpu list 42-47, effective list 43 cq
-irq 117, cpu list 48-53, effective list 49 cq
-irq 118, cpu list 54-59, effective list 57 cq
-irq 119, cpu list 60-65, effective list 61 cq
-irq 120, cpu list 66-71, effective list 67 cq
-irq 121, cpu list 72-77, effective list 73 cq
-irq 122, cpu list 78-83, effective list 79 cq
-irq 123, cpu list 84-89, effective list 85 cq
-irq 124, cpu list 90-95, effective list 91 cq
-irq 125, cpu list 0-5, effective list 1 cq
-irq 126, cpu list 6-11, effective list 7 cq
-irq 127, cpu list 12-17, effective list 17 cq
-irq 128, cpu list 18-23, effective list 19 cq
+ drivers/mtd/nand/raw/denali.c | 21 +++++++--------------
+ 1 file changed, 7 insertions(+), 14 deletions(-)
 
-As for your patch itself, I'm still concerned of possible regressions if 
-we don't apply this effective interrupt affinity spread policy to only 
-managed interrupts.
-
-JFYI, about NVMe CPU lockup issue, there are 2 works on going here:
-https://lore.kernel.org/linux-nvme/20191209175622.1964-1-kbusch@kernel.org/T/#t
-https://lore.kernel.org/linux-block/20191218071942.22336-1-ming.lei@redhat.com/T/#t
-
-Cheers,
-John
-
-Ps. Thanks to Xiang Chen for all the work here in getting these results.
-
->>
->>>>>> Please give this new patch a shot on your system (my D05 doesn't have
->>>>>> any managed devices):
->>>>>
->>>>> We could consider supporting platform msi managed interrupts, but I 
+diff --git a/drivers/mtd/nand/raw/denali.c b/drivers/mtd/nand/raw/denali.c
+index b6c463d02167..fafd0a0aa8e2 100644
+--- a/drivers/mtd/nand/raw/denali.c
++++ b/drivers/mtd/nand/raw/denali.c
+@@ -21,7 +21,6 @@
+ #include "denali.h"
+ 
+ #define DENALI_NAND_NAME    "denali-nand"
+-#define DENALI_DEFAULT_OOB_SKIP_BYTES	8
+ 
+ /* for Indexed Addressing */
+ #define DENALI_INDEXED_CTRL	0x00
+@@ -1302,22 +1301,16 @@ int denali_init(struct denali_controller *denali)
+ 
+ 	/*
+ 	 * Set how many bytes should be skipped before writing data in OOB.
+-	 * If a non-zero value has already been configured, update it in HW.
+-	 * If a non-zero value has already been set (by firmware or something),
+-	 * just use it. Otherwise, set the driver's default.
++	 * If a platform requests a non-zero value, set it to the register.
++	 * Otherwise, read the value out, expecting it has already been set up
++	 * by firmware.
+ 	 */
+-	if (denali->oob_skip_bytes) {
++	if (denali->oob_skip_bytes)
+ 		iowrite32(denali->oob_skip_bytes,
+ 			  denali->reg + SPARE_AREA_SKIP_BYTES);
+-	} else {
+-		denali->oob_skip_bytes =
+-			ioread32(denali->reg + SPARE_AREA_SKIP_BYTES);
+-		if (!denali->oob_skip_bytes) {
+-			denali->oob_skip_bytes = DENALI_DEFAULT_OOB_SKIP_BYTES;
+-			iowrite32(denali->oob_skip_bytes,
+-				  denali->reg + SPARE_AREA_SKIP_BYTES);
+-		}
+-	}
++	else
++		denali->oob_skip_bytes = ioread32(denali->reg +
++						  SPARE_AREA_SKIP_BYTES);
+ 
+ 	iowrite32(0, denali->reg + TRANSFER_SPARE_REG);
+ 	iowrite32(GENMASK(denali->nbanks - 1, 0), denali->reg + RB_PIN_ENABLED);
+-- 
+2.17.1
 
