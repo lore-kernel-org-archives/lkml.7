@@ -4,57 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 250A1C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3193C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECB2121D7D
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B907921D7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:39:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852765;
-	bh=0uH/IchrsHYxfzfwr7jz2PTjjfJWnG8AXFV5wuLtNGY=;
+	s=default; t=1576852766;
+	bh=5NhTfVD2BU2utSLF0nj12wUSvdjKAOjc/YbRLNs8WuI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T+h02hemzZzif+tWvKFzE7b2z6osY8j4MS5XvalLUePncwUmkOaWFzju9y7c1nkFo
-	 u6d52W3ZDJM8C2Troijxicr+lo0gl8C/tqksXRVMYxE0lfrTM31qcfl5oZJOa7GvcW
-	 WmQGilS91r0bHHN4qe7tCHzAclbXOkPOsYwHlvL8=
+	b=BII/R3cBnFGuD0EfEI9vdr5HWI5titbZroOMFZ/97bZcT4Mrwg/GQa7zG4EX5Ui5X
+	 zIgTO7ngbHXzuKvAhdN0+LdzPKmg2NUqqvFgiXHx31GdZTL+OdSTquUdJxLaTDgMlh
+	 NPcPr8ti39dIQNbAqNyFxI6NEsVJ6AqMacA9w9F0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbfLTOjY (ORCPT
+        id S1728350AbfLTOjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:39:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33392 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:39:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727525AbfLTOaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:30:08 -0500
+        id S1727729AbfLTOhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:37:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 937D1206CB;
-        Fri, 20 Dec 2019 14:30:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F9CA24689;
+        Fri, 20 Dec 2019 14:37:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852207;
-        bh=0uH/IchrsHYxfzfwr7jz2PTjjfJWnG8AXFV5wuLtNGY=;
+        s=default; t=1576852665;
+        bh=5NhTfVD2BU2utSLF0nj12wUSvdjKAOjc/YbRLNs8WuI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AWD1vKuM/auhj8N5AHyuqkU0ymiwfQJJTljACht9louP2GJIUdj1/nicM3ebdnjiJ
-         S1K9T2i0BPFqS8d5/VbNOhmedYO6GBjWswhv5uKVVIZ1LcgYcQR3VCTTRgUIvXF9XP
-         xsxDkIbnOB1zjMI9Zbvdl4b8j8oKMKB6IC8IqRF4=
+        b=LfYQv1rlRI0CRuYuFNtA2t8ren7lO6z7PUgjB1aMIvhGVLc+cilYBotlZ8S49V0dN
+         GxejmBwznQnaBoVjtoIA+4JAJOXssXnIRsDrbz5cRfO+hC3GZzDfxakURbDozXzks1
+         QOgzl5bZjKK0IagKHDIsR7RpuLxjWj0AxXCDadZY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Leo (Hanghong) Ma" <hanghong.ma@amd.com>,
-        Harry Wentland <Harry.Wentland@amd.com>,
-        Nikola Cornij <Nikola.Cornij@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 09/52] drm/amd/display: Change the delay time before enabling FEC
-Date:   Fri, 20 Dec 2019 09:29:11 -0500
-Message-Id: <20191220142954.9500-9-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 02/19] iio: adc: max9611: Fix too short conversion time delay
+Date:   Fri, 20 Dec 2019 09:37:23 -0500
+Message-Id: <20191220143741.10220-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
-References: <20191220142954.9500-1-sashal@kernel.org>
+In-Reply-To: <20191220143741.10220-1-sashal@kernel.org>
+References: <20191220143741.10220-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,50 +62,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Leo (Hanghong) Ma" <hanghong.ma@amd.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 28fa24ad14e8f7d23c62283eaf9c79b4fd165c16 ]
+[ Upstream commit 9fd229c478fbf77c41c8528aa757ef14210365f6 ]
 
-[why]
-DP spec requires 1000 symbols delay between the end of link training
-and enabling FEC in the stream. Currently we are using 1 miliseconds
-delay which is not accurate.
+As of commit b9ddd5091160793e ("iio: adc: max9611: Fix temperature
+reading in probe"), max9611 initialization sometimes fails on the
+Salvator-X(S) development board with:
 
-[how]
-One lane RBR should have the maximum time for transmitting 1000 LL
-codes which is 6.173 us. So using 7 microseconds delay instead of
-1 miliseconds.
+    max9611 4-007f: Invalid value received from ADC 0x8000: aborting
+    max9611: probe of 4-007f failed with error -5
 
-Signed-off-by: Leo (Hanghong) Ma <hanghong.ma@amd.com>
-Reviewed-by: Harry Wentland <Harry.Wentland@amd.com>
-Reviewed-by: Nikola Cornij <Nikola.Cornij@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+The max9611 driver tests communications with the chip by reading the die
+temperature during the probe function, which returns an invalid value.
+
+According to the datasheet, the typical ADC conversion time is 2 ms, but
+no minimum or maximum values are provided.  Maxim Technical Support
+confirmed this was tested with temperature Ta=25 degreeC, and promised
+to inform me if a maximum/minimum value is available (they didn't get
+back to me, so I assume it is not).
+
+However, the driver assumes a 1 ms conversion time.  Usually the
+usleep_range() call returns after more than 1.8 ms, hence it succeeds.
+When it returns earlier, the data register may be read too early, and
+the previous measurement value will be returned.  After boot, this is
+the temperature POR (power-on reset) value, causing the failure above.
+
+Fix this by increasing the delay from 1000-2000 µs to 3000-3300 µs.
+
+Note that this issue has always been present, but it was exposed by the
+aformentioned commit.
+
+Fixes: 69780a3bbc0b1e7e ("iio: adc: Add Maxim max9611 ADC driver")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/iio/adc/max9611.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-index f5742719b5d9b..b6e68e9c81d11 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-@@ -3490,7 +3490,14 @@ void dp_set_fec_enable(struct dc_link *link, bool enable)
- 	if (link_enc->funcs->fec_set_enable &&
- 			link->dpcd_caps.fec_cap.bits.FEC_CAPABLE) {
- 		if (link->fec_state == dc_link_fec_ready && enable) {
--			msleep(1);
-+			/* Accord to DP spec, FEC enable sequence can first
-+			 * be transmitted anytime after 1000 LL codes have
-+			 * been transmitted on the link after link training
-+			 * completion. Using 1 lane RBR should have the maximum
-+			 * time for transmitting 1000 LL codes which is 6.173 us.
-+			 * So use 7 microseconds delay instead.
-+			 */
-+			udelay(7);
- 			link_enc->funcs->fec_set_enable(link_enc, true);
- 			link->fec_state = dc_link_fec_enabled;
- 		} else if (link->fec_state == dc_link_fec_enabled && !enable) {
+diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
+index 33be07c78b96f..8649a61c50bc3 100644
+--- a/drivers/iio/adc/max9611.c
++++ b/drivers/iio/adc/max9611.c
+@@ -92,6 +92,12 @@
+ #define MAX9611_TEMP_SCALE_NUM		1000000
+ #define MAX9611_TEMP_SCALE_DIV		2083
+ 
++/*
++ * Conversion time is 2 ms (typically) at Ta=25 degreeC
++ * No maximum value is known, so play it safe.
++ */
++#define MAX9611_CONV_TIME_US_RANGE	3000, 3300
++
+ struct max9611_dev {
+ 	struct device *dev;
+ 	struct i2c_client *i2c_client;
+@@ -239,11 +245,9 @@ static int max9611_read_single(struct max9611_dev *max9611,
+ 		return ret;
+ 	}
+ 
+-	/*
+-	 * need a delay here to make register configuration
+-	 * stabilize. 1 msec at least, from empirical testing.
+-	 */
+-	usleep_range(1000, 2000);
++	/* need a delay here to make register configuration stabilize. */
++
++	usleep_range(MAX9611_CONV_TIME_US_RANGE);
+ 
+ 	ret = i2c_smbus_read_word_swapped(max9611->i2c_client, reg_addr);
+ 	if (ret < 0) {
+@@ -511,7 +515,7 @@ static int max9611_init(struct max9611_dev *max9611)
+ 			MAX9611_REG_CTRL2, 0);
+ 		return ret;
+ 	}
+-	usleep_range(1000, 2000);
++	usleep_range(MAX9611_CONV_TIME_US_RANGE);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
