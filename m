@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEF0C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C12C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4FA324684
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F1BD21D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:38:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852706;
-	bh=zE+BRqmnKr+jbHG/Cga+KLRk6OY0s4FD3cgOwKOtbIE=;
+	s=default; t=1576852711;
+	bh=xM2oklz4FFAtArOB5pqVPEnxLppXiEvGloY3AoOlOlk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YnMg6P4K9YZc0ABiRHM/w8UymApo5TOzS+FkuB1T5+30JFNhSNunnMIb4E9tj36bm
-	 NxvnQyk+Aq4wIm6eOyYGVe1iaVof9/B1uxaU7ZITXqOKU7HurnHPlDfsLmqVX4YxeN
-	 0t3AzovyUWutLeh6CUbFLxVBWeHdsQGo93ooUypE=
+	b=a170Lr94D2hmwia0dMhC7CfvVTv9boltNctsCVVSlNOZ0tVRv/Hxn9pOGIFDmRV6Z
+	 2qWYMpxSgYc9t10h4vLHMKW6ECRdif5GNCSo2JqG2gxpOF3AHUcgKq7IBE+dfrjqiu
+	 Ke4zuWUluZggC2XIycIJWEeBIfT48aZfE49cPbP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbfLTOiZ (ORCPT
+        id S1728307AbfLTOiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:38:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42216 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728375AbfLTOiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 20 Dec 2019 09:38:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727847AbfLTOh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:37:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FDB224680;
-        Fri, 20 Dec 2019 14:38:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F25B24680;
+        Fri, 20 Dec 2019 14:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852682;
-        bh=zE+BRqmnKr+jbHG/Cga+KLRk6OY0s4FD3cgOwKOtbIE=;
+        s=default; t=1576852675;
+        bh=xM2oklz4FFAtArOB5pqVPEnxLppXiEvGloY3AoOlOlk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zgETLJ13tgwstPP/dgY7Jog+3DsS30k/oCS5s2dP5VW6a6SFcn1iiXocy8bBHZHRm
-         IH1NHVHv3eQbWrpQUgGUJwzCSZRGM0UWAMp4TXu3WO38EOTCrn1icIUDmJV/TaW3Sz
-         Ra8RSp/5irzbjBdezYMnXAXUkJbL8XD1PR3K+RB0=
+        b=CNMw1DZ2YsC+U7S9tZQMktGWuLTcs5qLnrlbfqS9oUVTt5iDjS+TCsXPsdrOqOrrl
+         GzNcRSImbTubCdJKthoNS6Uk8lDWF37tJUlyFbrFBrnmEfK6YwqFvHngT82VHht2k7
+         Bft+FoSc4G8KmqRP7vdRE+XewrQWz0AhOKBvK/mc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Parav Pandit <parav@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 16/19] IB/mlx4: Follow mirror sequence of device add during device removal
-Date:   Fri, 20 Dec 2019 09:37:37 -0500
-Message-Id: <20191220143741.10220-16-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, Lyude Paul <lyude@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 10/19] drm/nouveau: Move the declaration of struct nouveau_conn_atom up a bit
+Date:   Fri, 20 Dec 2019 09:37:31 -0500
+Message-Id: <20191220143741.10220-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220143741.10220-1-sashal@kernel.org>
 References: <20191220143741.10220-1-sashal@kernel.org>
@@ -61,64 +60,160 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 89f988d93c62384758b19323c886db917a80c371 ]
+[ Upstream commit 37a68eab4cd92b507c9e8afd760fdc18e4fecac6 ]
 
-Current code device add sequence is:
+Place the declaration of struct nouveau_conn_atom above that of
+struct nouveau_connector. This commit makes no changes to the moved
+block what so ever, it just moves it up a bit.
 
-ib_register_device()
-ib_mad_init()
-init_sriov_init()
-register_netdev_notifier()
+This is a preparation patch to fix some issues with connector handling
+on pre nv50 displays (which do not use atomic modesetting).
 
-Therefore, the remove sequence should be,
-
-unregister_netdev_notifier()
-close_sriov()
-mad_cleanup()
-ib_unregister_device()
-
-However it is not above.
-Hence, make do above remove sequence.
-
-Fixes: fa417f7b520ee ("IB/mlx4: Add support for IBoE")
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Link: https://lore.kernel.org/r/20191212091214.315005-3-leon@kernel.org
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx4/main.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_connector.h | 110 ++++++++++----------
+ 1 file changed, 55 insertions(+), 55 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx4/main.c b/drivers/infiniband/hw/mlx4/main.c
-index 0299c0642de81..7e73a1a6cb671 100644
---- a/drivers/infiniband/hw/mlx4/main.c
-+++ b/drivers/infiniband/hw/mlx4/main.c
-@@ -3073,16 +3073,17 @@ static void mlx4_ib_remove(struct mlx4_dev *dev, void *ibdev_ptr)
- 	ibdev->ib_active = false;
- 	flush_workqueue(wq);
+diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.h b/drivers/gpu/drm/nouveau/nouveau_connector.h
+index dc7454e7f19aa..b46e99f7641ed 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_connector.h
++++ b/drivers/gpu/drm/nouveau/nouveau_connector.h
+@@ -29,6 +29,7 @@
  
--	mlx4_ib_close_sriov(ibdev);
--	mlx4_ib_mad_cleanup(ibdev);
--	ib_unregister_device(&ibdev->ib_dev);
--	mlx4_ib_diag_cleanup(ibdev);
- 	if (ibdev->iboe.nb.notifier_call) {
- 		if (unregister_netdevice_notifier(&ibdev->iboe.nb))
- 			pr_warn("failure unregistering notifier\n");
- 		ibdev->iboe.nb.notifier_call = NULL;
- 	}
+ #include <nvif/notify.h>
  
-+	mlx4_ib_close_sriov(ibdev);
-+	mlx4_ib_mad_cleanup(ibdev);
-+	ib_unregister_device(&ibdev->ib_dev);
-+	mlx4_ib_diag_cleanup(ibdev);
++#include <drm/drm_crtc.h>
+ #include <drm/drm_edid.h>
+ #include <drm/drm_encoder.h>
+ #include <drm/drm_dp_helper.h>
+@@ -37,6 +38,60 @@
+ 
+ struct nvkm_i2c_port;
+ 
++#define nouveau_conn_atom(p)                                                   \
++	container_of((p), struct nouveau_conn_atom, state)
 +
- 	mlx4_qp_release_range(dev, ibdev->steer_qpn_base,
- 			      ibdev->steer_qpn_count);
- 	kfree(ibdev->ib_uc_qpns_bitmap);
++struct nouveau_conn_atom {
++	struct drm_connector_state state;
++
++	struct {
++		/* The enum values specifically defined here match nv50/gf119
++		 * hw values, and the code relies on this.
++		 */
++		enum {
++			DITHERING_MODE_OFF = 0x00,
++			DITHERING_MODE_ON = 0x01,
++			DITHERING_MODE_DYNAMIC2X2 = 0x10 | DITHERING_MODE_ON,
++			DITHERING_MODE_STATIC2X2 = 0x18 | DITHERING_MODE_ON,
++			DITHERING_MODE_TEMPORAL = 0x20 | DITHERING_MODE_ON,
++			DITHERING_MODE_AUTO
++		} mode;
++		enum {
++			DITHERING_DEPTH_6BPC = 0x00,
++			DITHERING_DEPTH_8BPC = 0x02,
++			DITHERING_DEPTH_AUTO
++		} depth;
++	} dither;
++
++	struct {
++		int mode;	/* DRM_MODE_SCALE_* */
++		struct {
++			enum {
++				UNDERSCAN_OFF,
++				UNDERSCAN_ON,
++				UNDERSCAN_AUTO,
++			} mode;
++			u32 hborder;
++			u32 vborder;
++		} underscan;
++		bool full;
++	} scaler;
++
++	struct {
++		int color_vibrance;
++		int vibrant_hue;
++	} procamp;
++
++	union {
++		struct {
++			bool dither:1;
++			bool scaler:1;
++			bool procamp:1;
++		};
++		u8 mask;
++	} set;
++};
++
+ struct nouveau_connector {
+ 	struct drm_connector base;
+ 	enum dcb_connector_type type;
+@@ -111,61 +166,6 @@ extern int nouveau_ignorelid;
+ extern int nouveau_duallink;
+ extern int nouveau_hdmimhz;
+ 
+-#include <drm/drm_crtc.h>
+-#define nouveau_conn_atom(p)                                                   \
+-	container_of((p), struct nouveau_conn_atom, state)
+-
+-struct nouveau_conn_atom {
+-	struct drm_connector_state state;
+-
+-	struct {
+-		/* The enum values specifically defined here match nv50/gf119
+-		 * hw values, and the code relies on this.
+-		 */
+-		enum {
+-			DITHERING_MODE_OFF = 0x00,
+-			DITHERING_MODE_ON = 0x01,
+-			DITHERING_MODE_DYNAMIC2X2 = 0x10 | DITHERING_MODE_ON,
+-			DITHERING_MODE_STATIC2X2 = 0x18 | DITHERING_MODE_ON,
+-			DITHERING_MODE_TEMPORAL = 0x20 | DITHERING_MODE_ON,
+-			DITHERING_MODE_AUTO
+-		} mode;
+-		enum {
+-			DITHERING_DEPTH_6BPC = 0x00,
+-			DITHERING_DEPTH_8BPC = 0x02,
+-			DITHERING_DEPTH_AUTO
+-		} depth;
+-	} dither;
+-
+-	struct {
+-		int mode;	/* DRM_MODE_SCALE_* */
+-		struct {
+-			enum {
+-				UNDERSCAN_OFF,
+-				UNDERSCAN_ON,
+-				UNDERSCAN_AUTO,
+-			} mode;
+-			u32 hborder;
+-			u32 vborder;
+-		} underscan;
+-		bool full;
+-	} scaler;
+-
+-	struct {
+-		int color_vibrance;
+-		int vibrant_hue;
+-	} procamp;
+-
+-	union {
+-		struct {
+-			bool dither:1;
+-			bool scaler:1;
+-			bool procamp:1;
+-		};
+-		u8 mask;
+-	} set;
+-};
+-
+ void nouveau_conn_attach_properties(struct drm_connector *);
+ void nouveau_conn_reset(struct drm_connector *);
+ struct drm_connector_state *
 -- 
 2.20.1
 
