@@ -2,111 +2,97 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E95F2C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C04C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6F3C24682
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9892124679
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:31:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="csjSvXve"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TSszHccR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727412AbfLTKaa (ORCPT
+        id S1727425AbfLTKbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 05:30:30 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10033 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727167AbfLTKaa (ORCPT
+        Fri, 20 Dec 2019 05:31:06 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46437 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727283AbfLTKbG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 05:30:30 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dfca2a70001>; Fri, 20 Dec 2019 02:29:59 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 20 Dec 2019 02:30:29 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 20 Dec 2019 02:30:29 -0800
-Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Dec
- 2019 10:30:26 +0000
-Subject: Re: [PATCH 5.4 00/80] 5.4.6-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20191219183031.278083125@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <ceff4a51-e936-7efb-1731-ef2afa340363@nvidia.com>
-Date:   Fri, 20 Dec 2019 10:30:24 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 20 Dec 2019 05:31:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576837865;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hXRURjDIno09T/7uerhfWk5aEa64vSqR0QJi3eOkKRg=;
+        b=TSszHccR7g0oCzCDbq75qFw7a5MPliVJf4rI8b+boVhOOKz5/nuQwDzFGU9Kydr4glXjzS
+        J+KavhpEbdQQuAG7pLLfvjNxWweEC+Nyap6CcSw4bD/8yyK16JzXv9PGruBekzE+JEWIRN
+        DuTrGA8OTBbc6sCpG9c29C9EwtRcP/k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-92-acyk5wgqMtGGRknL5kTE3g-1; Fri, 20 Dec 2019 05:30:58 -0500
+X-MC-Unique: acyk5wgqMtGGRknL5kTE3g-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 21A67107ACC4;
+        Fri, 20 Dec 2019 10:30:56 +0000 (UTC)
+Received: from gondolin (dhcp-192-245.str.redhat.com [10.33.192.245])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CA6FF26FC5;
+        Fri, 20 Dec 2019 10:30:49 +0000 (UTC)
+Date:   Fri, 20 Dec 2019 11:30:47 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kurz <groug@kaod.org>
+Subject: Re: [PATCH v2 45/45] KVM: Move vcpu->run page allocation out of
+ kvm_vcpu_init()
+Message-ID: <20191220113047.2865074a.cohuck@redhat.com>
+In-Reply-To: <20191218215530.2280-46-sean.j.christopherson@intel.com>
+References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
+        <20191218215530.2280-46-sean.j.christopherson@intel.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576837799; bh=BnRWQ/pU33IuQeg/NqaGlPJl62SJNEe6z4Zzl4QBEsU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=csjSvXvejU3CREfHRF/ErnJUgUlqglsqB6y0Y9NjPDH3CrGMJw2JjaWFvKAWmbRKe
-         lXx2b/QTrIqwzFQu0eN6z0w/JgLIn2zAMGKnj5SEUWWUp9Gt9k5yl4zhLjE5gzzFi1
-         9LDwGyAByzgFApFKaDoODBb6f1PWWMF3QbHkdNPDoqqcYR8A7mbUY+wkkeFfhrRt4w
-         WzIZvgIunf6anNJLkIfOuuxld9pBvNp+HlpA1i9tNKooEpOhEmWj2RDttR7aqbkUCV
-         De5gYJyG4W3+l5csmH+oWB+IIv6uFbteZME8ZxwbxrCYWVlDqQKIQLunf8bQgOvaP0
-         FATTfVtl4o82A==
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 18 Dec 2019 13:55:30 -0800
+Sean Christopherson <sean.j.christopherson@intel.com> wrote:
 
-On 19/12/2019 18:33, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.6 release.
-> There are 80 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> Open code the allocation and freeing of the vcpu->run page in
+> kvm_vm_ioctl_create_vcpu() and kvm_vcpu_destroy() respectively.  Doing
+> so allows kvm_vcpu_init() to be a pure init function and eliminates
+> kvm_vcpu_uninit() entirely.
 > 
-> Responses should be made by Sat, 21 Dec 2019 18:24:44 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.6-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
-> -------------
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  virt/kvm/kvm_main.c | 34 +++++++++++++---------------------
+>  1 file changed, 13 insertions(+), 21 deletions(-)
 
-All tests are passing for Tegra ...
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
-Test results for stable-v5.4:
-    13 builds:	13 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    38 tests:	38 pass, 0 fail
-
-Linux version:	5.4.6-rc1-g2929dbca18db
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
-
--- 
-nvpublic
