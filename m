@@ -2,273 +2,190 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5B7C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCF8C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB16A227BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6951D24682
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 06:04:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WKVqpmqw"
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="I8riZzVk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfLTGDl (ORCPT
+        id S1727276AbfLTGEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 01:03:41 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41295 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbfLTGDi (ORCPT
+        Fri, 20 Dec 2019 01:04:01 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41501 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbfLTGEA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 01:03:38 -0500
-Received: by mail-pg1-f193.google.com with SMTP id x8so4386124pgk.8
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 22:03:37 -0800 (PST)
+        Fri, 20 Dec 2019 01:04:00 -0500
+Received: by mail-pl1-f193.google.com with SMTP id bd4so3630311plb.8
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Dec 2019 22:04:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Kx7zoFAxcW22Q5cgq+RAIHtuejOgAZviUeCwllgrzzM=;
-        b=WKVqpmqwmzxQkvsczBylltiB0TjGGpHzo1CWxRvMXHIgEJRdmaPo/kt3Ov1IDkY7z/
-         hyD4TTc86MvlVYq6+u3dkM46xmgDiARvcDycv+a5PkDPQ/xkonMzYAJ83Qbwk0l8ZrtU
-         nyMsRg6fCxBN8N9x9K2DkasPs373y5i00VfGc1aZvX0NYlVB04fiMAtuRzoMvinIrA9U
-         Wu/W+BJxzZKfl6ZKF27jVy4x0GxFJgY1z+ZmoNaP+1BVqigJXGSW2yFOZGRAJCjv5p6V
-         uJMLWAqMc13uiCS/fQkUdIdE3EhQlsP5NAKyrdQOc0TjNxsHFiLXVwpCybHUXPuNAPLL
-         mG6A==
+        d=axtens.net; s=google;
+        h=from:to:subject:in-reply-to:references:date:message-id:mime-version;
+        bh=AMPB7ShRq26cjcwcJP9t45jKBX3IyVrTQyCL756tp90=;
+        b=I8riZzVk/K2+pnrgpWFE1uZQLo+TNx4sVlk/qjoiA4YqJLEt061dszIV+0U/r2TdWE
+         9k043b3Xrp4h8IexCbkjlDyqRhHz6PCBV2U2DrqfVto2v680PLjO2J/CiyKPL955+EEQ
+         B9b4DWKXAkj/aiOjOeN1zMKc7Ba77qz8ITRF8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Kx7zoFAxcW22Q5cgq+RAIHtuejOgAZviUeCwllgrzzM=;
-        b=sN+22U4xCxPLMWcDWpz6HtEw4BpKc2iCBrLgZ/ZzmMEq0a1aOVMOLXWjv2Xxjg+AEr
-         sARlOZT5O3WdVkd8/X5BZXk96ijwCITjoPrWAa2y6bZsQTbhNsf1Xg9EWfRfxqFGT/r6
-         /7I9oL+fjOiiBmsu5dYuRITwYrQypac35eSHRFb4x+qRMAC6QQ8zZ9zbJG4WsRCdIWTr
-         g1yuj5OOGzrkR4Zyk2m6dwT4bRCIO75G6K7mK5zAQtQK7tncJbMQQ7LBkZt7Or0QjJEa
-         OeSlXmtPr+5wrCo2NctNjf5bV7kLoLqwZqdoGjm75qAoLVphAFp+GzhO/E2OC1oqkNLb
-         gLpg==
-X-Gm-Message-State: APjAAAWfh2d9fJRMzlqD0SkopA7ciIjY2eesK1KubU7WEBcjwVJV+IKZ
-        3GtdOibhLj15HYhYHm7bCXuVvQ==
-X-Google-Smtp-Source: APXvYqzOpEIrYQ15SoMtvkSGOB3pMRjAMEzf/nrampPZ7eD2Cts6orG1PYbLJZV8A1Ioo9vB6bXGZw==
-X-Received: by 2002:a63:5b0a:: with SMTP id p10mr13018277pgb.228.1576821816672;
-        Thu, 19 Dec 2019 22:03:36 -0800 (PST)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id l15sm8835710pjl.24.2019.12.19.22.03.35
+        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=AMPB7ShRq26cjcwcJP9t45jKBX3IyVrTQyCL756tp90=;
+        b=Hwqem2/owWMAsk2mX+SdAxbwNmJoOJfZV4IkJhSck0D27D7juxknE8c1hO7DKzL2U6
+         O9DNMrUJh5BnMD9Uwro3v+eUP5CCpAYsQKzScMfARGeoi64vx1FpP+g4ny56BU/3mvvv
+         IH2vczvwkKscDRiM/uWY6CLtkQaq7Tiqcb/yM66+G1deKCObqSBRuSmHn7UDWl4BrICB
+         cWqwshqknvAfKy005aFdO/fUm1bT3pOnv1XI0EimYiUWf3z2JqEuk+eM16BD5nqEbRyx
+         PgilqJMDd5vZexa9ejHrQadbRnLdmH7JIyouHuI9PIWp41gZj/t1AMEDc13d1rdUSvE8
+         E/ZA==
+X-Gm-Message-State: APjAAAU6McAjJphvZsvu11eIA0Uv93+KeR8ZnQMf7k5JlCv9Y86XwbP7
+        27ulcTqQwzKxSSee168Gu35SCQ==
+X-Google-Smtp-Source: APXvYqxUrLwIm/01UvhThpcINxVbqFsuTmtTW9/Tide7dNhWID9p4Y5Ph9VZw/nVK8390ESYSEapVA==
+X-Received: by 2002:a17:90a:5ac4:: with SMTP id n62mr14478392pji.59.1576821839745;
+        Thu, 19 Dec 2019 22:03:59 -0800 (PST)
+Received: from localhost (2001-44b8-1113-6700-b05d-cbfe-b2ee-de17.static.ipv6.internode.on.net. [2001:44b8:1113:6700:b05d:cbfe:b2ee:de17])
+        by smtp.gmail.com with ESMTPSA id y38sm9527104pgk.33.2019.12.19.22.03.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 22:03:35 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 1/2] phy: qcom-qmp: Add MSM8996 UFS QMP support
-Date:   Thu, 19 Dec 2019 22:03:03 -0800
-Message-Id: <20191220060304.1867795-2-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191220060304.1867795-1-bjorn.andersson@linaro.org>
-References: <20191220060304.1867795-1-bjorn.andersson@linaro.org>
+        Thu, 19 Dec 2019 22:03:58 -0800 (PST)
+From:   Daniel Axtens <dja@axtens.net>
+To:     syzbot <syzbot+4722bf4c6393b73a792b@syzkaller.appspotmail.com>,
+        akpm@linux-foundation.org, allison.henderson@oracle.com,
+        aryabinin@virtuozzo.com, bfoster@redhat.com,
+        darrick.wong@oracle.com, dchinner@redhat.com, dvyukov@google.com,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        sandeen@redhat.com, syzkaller-bugs@googlegroups.com,
+        torvalds@linux-foundation.org
+Subject: Re: BUG: unable to handle kernel paging request in xfs_sb_quiet_read_verify
+In-Reply-To: <000000000000d99340059a100686@google.com>
+References: <000000000000d99340059a100686@google.com>
+Date:   Fri, 20 Dec 2019 17:03:55 +1100
+Message-ID: <874kxvttx0.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The support for the 14nm MSM8996 UFS PHY is currently handled by the
-UFS-specific 14nm QMP driver, due to the earlier need for additional
-operations beyond the standard PHY API.
+syzbot <syzbot+4722bf4c6393b73a792b@syzkaller.appspotmail.com> writes:
 
-Add support for this PHY to the common QMP driver, to allow us to remove
-the old driver.
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    2187f215 Merge tag 'for-5.5-rc2-tag' of git://git.kernel.o..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11059951e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=ab2ae0615387ef78
+> dashboard link: https://syzkaller.appspot.com/bug?extid=4722bf4c6393b73a792b
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12727c71e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12ff5151e00000
+>
+> The bug was bisected to:
+>
+> commit 0609ae011deb41c9629b7f5fd626dfa1ac9d16b0
+> Author: Daniel Axtens <dja@axtens.net>
+> Date:   Sun Dec 1 01:55:00 2019 +0000
+>
+>      x86/kasan: support KASAN_VMALLOC
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+Looking at the log, it's an access of fffff52000680000 that goes wrong.
 
-Changes since v1:
-- Dropped unecessary, duplicate, write to QPHY_POWER_DOWN_CONTROL
-- Picked up Rob's ack
+Reversing the shadow calculation, it looks like an attempted access of
+FFFFC90003400000, which is in vmalloc space. I'm not sure what that
+memory represents.
 
- .../devicetree/bindings/phy/qcom-qmp-phy.txt  |   5 +
- drivers/phy/qualcomm/phy-qcom-qmp.c           | 105 ++++++++++++++++++
- 2 files changed, 110 insertions(+)
+Looking at the instruction pointer, it seems like we're here:
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-index eac9ad3cbbc8..5b99cf081817 100644
---- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-@@ -8,6 +8,7 @@ Required properties:
-  - compatible: compatible list, contains:
- 	       "qcom,ipq8074-qmp-pcie-phy" for PCIe phy on IPQ8074
- 	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
-+	       "qcom,msm8996-qmp-ufs-phy" for 14nm UFS phy on msm8996,
- 	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
- 	       "qcom,msm8998-qmp-usb3-phy" for USB3 QMP V3 phy on msm8998,
- 	       "qcom,msm8998-qmp-ufs-phy" for UFS QMP phy on msm8998,
-@@ -44,6 +45,8 @@ Required properties:
- 		For "qcom,ipq8074-qmp-pcie-phy": no clocks are listed.
- 		For "qcom,msm8996-qmp-pcie-phy" must contain:
- 			"aux", "cfg_ahb", "ref".
-+		For "qcom,msm8996-qmp-ufs-phy" must contain:
-+			"ref".
- 		For "qcom,msm8996-qmp-usb3-phy" must contain:
- 			"aux", "cfg_ahb", "ref".
- 		For "qcom,msm8998-qmp-usb3-phy" must contain:
-@@ -72,6 +75,8 @@ Required properties:
- 			"phy", "common".
- 		For "qcom,msm8996-qmp-pcie-phy" must contain:
- 			"phy", "common", "cfg".
-+		For "qcom,msm8996-qmp-ufs-phy": must contain:
-+			"ufsphy".
- 		For "qcom,msm8996-qmp-usb3-phy" must contain
- 			"phy", "common".
- 		For "qcom,msm8998-qmp-usb3-phy" must contain
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 091e20303a14..e33f5cca41f7 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -121,6 +121,11 @@ enum qphy_reg_layout {
- 	QPHY_PCS_LFPS_RXTERM_IRQ_STATUS,
- };
- 
-+static const unsigned int msm8996_ufsphy_regs_layout[] = {
-+	[QPHY_START_CTRL]		= 0x00,
-+	[QPHY_PCS_READY_STATUS]		= 0x168,
-+};
-+
- static const unsigned int pciephy_regs_layout[] = {
- 	[QPHY_COM_SW_RESET]		= 0x400,
- 	[QPHY_COM_POWER_DOWN_CONTROL]	= 0x404,
-@@ -330,6 +335,74 @@ static const struct qmp_phy_init_tbl msm8998_pcie_pcs_tbl[] = {
- 	QMP_PHY_INIT_CFG(QPHY_V3_PCS_SIGDET_CNTRL, 0x03),
- };
- 
-+static const struct qmp_phy_init_tbl msm8996_ufs_serdes_tbl[] = {
-+	QMP_PHY_INIT_CFG(QSERDES_COM_CMN_CONFIG, 0x0e),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_SYSCLK_EN_SEL, 0xd7),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_CLK_SELECT, 0x30),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_SYS_CLK_CTRL, 0x06),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_BIAS_EN_CLKBUFLR_EN, 0x08),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_BG_TIMER, 0x0a),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_HSCLK_SEL, 0x05),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_CORECLK_DIV, 0x0a),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_CORECLK_DIV_MODE1, 0x0a),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP_EN, 0x01),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_CTRL, 0x10),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_RESETSM_CNTRL, 0x20),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_CORE_CLK_EN, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP_CFG, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_TIMER1, 0xff),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_TIMER2, 0x3f),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_MAP, 0x54),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_SVS_MODE_CLK_SEL, 0x05),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_DEC_START_MODE0, 0x82),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_DIV_FRAC_START1_MODE0, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_DIV_FRAC_START2_MODE0, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_DIV_FRAC_START3_MODE0, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_CP_CTRL_MODE0, 0x0b),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_PLL_RCTRL_MODE0, 0x16),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_PLL_CCTRL_MODE0, 0x28),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_INTEGLOOP_GAIN0_MODE0, 0x80),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_INTEGLOOP_GAIN1_MODE0, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE1_MODE0, 0x28),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE2_MODE0, 0x02),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP1_MODE0, 0xff),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP2_MODE0, 0x0c),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP3_MODE0, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_DEC_START_MODE1, 0x98),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_DIV_FRAC_START1_MODE1, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_DIV_FRAC_START2_MODE1, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_DIV_FRAC_START3_MODE1, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_CP_CTRL_MODE1, 0x0b),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_PLL_RCTRL_MODE1, 0x16),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_PLL_CCTRL_MODE1, 0x28),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_INTEGLOOP_GAIN0_MODE1, 0x80),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_INTEGLOOP_GAIN1_MODE1, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE1_MODE1, 0xd6),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE2_MODE1, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP1_MODE1, 0x32),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP2_MODE1, 0x0f),
-+	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP3_MODE1, 0x00),
-+};
-+
-+static const struct qmp_phy_init_tbl msm8996_ufs_tx_tbl[] = {
-+	QMP_PHY_INIT_CFG(QSERDES_TX_HIGHZ_TRANSCEIVEREN_BIAS_DRVR_EN, 0x45),
-+	QMP_PHY_INIT_CFG(QSERDES_TX_LANE_MODE, 0x02),
-+};
-+
-+static const struct qmp_phy_init_tbl msm8996_ufs_rx_tbl[] = {
-+	QMP_PHY_INIT_CFG(QSERDES_RX_SIGDET_LVL, 0x24),
-+	QMP_PHY_INIT_CFG(QSERDES_RX_SIGDET_CNTRL, 0x02),
-+	QMP_PHY_INIT_CFG(QSERDES_RX_RX_INTERFACE_MODE, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_RX_SIGDET_DEGLITCH_CNTRL, 0x18),
-+	QMP_PHY_INIT_CFG(QSERDES_RX_UCDR_FASTLOCK_FO_GAIN, 0x0B),
-+	QMP_PHY_INIT_CFG(QSERDES_RX_RX_TERM_BW, 0x5b),
-+	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQ_GAIN1_LSB, 0xff),
-+	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQ_GAIN1_MSB, 0x3f),
-+	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQ_GAIN2_LSB, 0xff),
-+	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQ_GAIN2_MSB, 0x0f),
-+	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQU_ADAPTOR_CNTRL2, 0x0E),
-+};
-+
- static const struct qmp_phy_init_tbl msm8996_usb3_serdes_tbl[] = {
- 	QMP_PHY_INIT_CFG(QSERDES_COM_SYSCLK_EN_SEL, 0x14),
- 	QMP_PHY_INIT_CFG(QSERDES_COM_BIAS_EN_CLKBUFLR_EN, 0x08),
-@@ -1122,6 +1195,10 @@ static const char * const msm8996_phy_clk_l[] = {
- 	"aux", "cfg_ahb", "ref",
- };
- 
-+static const char * const msm8996_ufs_phy_clk_l[] = {
-+	"ref",
-+};
-+
- static const char * const qmp_v3_phy_clk_l[] = {
- 	"aux", "cfg_ahb", "ref", "com_aux",
- };
-@@ -1175,6 +1252,31 @@ static const struct qmp_phy_cfg msm8996_pciephy_cfg = {
- 	.pwrdn_delay_max	= POWER_DOWN_DELAY_US_MAX,
- };
- 
-+static const struct qmp_phy_cfg msm8996_ufs_cfg = {
-+	.type			= PHY_TYPE_UFS,
-+	.nlanes			= 1,
-+
-+	.serdes_tbl		= msm8996_ufs_serdes_tbl,
-+	.serdes_tbl_num		= ARRAY_SIZE(msm8996_ufs_serdes_tbl),
-+	.tx_tbl			= msm8996_ufs_tx_tbl,
-+	.tx_tbl_num		= ARRAY_SIZE(msm8996_ufs_tx_tbl),
-+	.rx_tbl			= msm8996_ufs_rx_tbl,
-+	.rx_tbl_num		= ARRAY_SIZE(msm8996_ufs_rx_tbl),
-+
-+	.clk_list		= msm8996_ufs_phy_clk_l,
-+	.num_clks		= ARRAY_SIZE(msm8996_ufs_phy_clk_l),
-+
-+	.vreg_list		= qmp_phy_vreg_l,
-+	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
-+
-+	.regs			= msm8996_ufsphy_regs_layout,
-+
-+	.start_ctrl		= SERDES_START,
-+	.pwrdn_ctrl		= SW_PWRDN,
-+
-+	.no_pcs_sw_reset	= true,
-+};
-+
- static const struct qmp_phy_cfg msm8996_usb3phy_cfg = {
- 	.type			= PHY_TYPE_USB3,
- 	.nlanes			= 1,
-@@ -2091,6 +2193,9 @@ static const struct of_device_id qcom_qmp_phy_of_match_table[] = {
- 	{
- 		.compatible = "qcom,msm8996-qmp-pcie-phy",
- 		.data = &msm8996_pciephy_cfg,
-+	}, {
-+		.compatible = "qcom,msm8996-qmp-ufs-phy",
-+		.data = &msm8996_ufs_cfg,
- 	}, {
- 		.compatible = "qcom,msm8996-qmp-usb3-phy",
- 		.data = &msm8996_usb3phy_cfg,
--- 
-2.24.0
+static void
+xfs_sb_quiet_read_verify(
+	struct xfs_buf	*bp)
+{
+	struct xfs_dsb	*dsb = XFS_BUF_TO_SBP(bp);
 
+	if (dsb->sb_magicnum == cpu_to_be32(XFS_SB_MAGIC)) {     <<<< fault here
+		/* XFS filesystem, verify noisily! */
+		xfs_sb_read_verify(bp);
+
+
+Is it possible that dsb is junk?
+
+Regards,
+Daniel
+
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=161240aee00000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=151240aee00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=111240aee00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+4722bf4c6393b73a792b@syzkaller.appspotmail.com
+> Fixes: 0609ae011deb ("x86/kasan: support KASAN_VMALLOC")
+>
+> BUG: unable to handle page fault for address: fffff52000680000
+> #PF: supervisor read access in kernel mode
+> #PF: error_code(0x0000) - not-present page
+> PGD 21ffee067 P4D 21ffee067 PUD aa51c067 PMD a85e1067 PTE 0
+> Oops: 0000 [#1] PREEMPT SMP KASAN
+> CPU: 1 PID: 3088 Comm: kworker/1:2 Not tainted 5.5.0-rc2-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> Google 01/01/2011
+> Workqueue: xfs-buf/loop0 xfs_buf_ioend_work
+> RIP: 0010:xfs_sb_quiet_read_verify+0x47/0xc0 fs/xfs/libxfs/xfs_sb.c:735
+> Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 7f 49 8b 9c 24 30 01  
+> 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <0f> b6 04 02 84  
+> c0 74 04 3c 03 7e 50 8b 1b bf 58 46 53 42 89 de e8
+> RSP: 0018:ffffc90008187cc0 EFLAGS: 00010a06
+> RAX: dffffc0000000000 RBX: ffffc90003400000 RCX: ffffffff82ad3c26
+> RDX: 1ffff92000680000 RSI: ffffffff82aa0a0f RDI: ffff8880a2cdba70
+> RBP: ffffc90008187cd0 R08: ffff88809eb6c500 R09: ffffed1015d2703d
+> R10: ffffed1015d2703c R11: ffff8880ae9381e3 R12: ffff8880a2cdb940
+> R13: ffff8880a2cdb95c R14: ffff8880a2cdbb74 R15: 0000000000000000
+> FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: fffff52000680000 CR3: 000000009f5ab000 CR4: 00000000001406e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>   xfs_buf_ioend+0x3f9/0xde0 fs/xfs/xfs_buf.c:1162
+>   xfs_buf_ioend_work+0x19/0x20 fs/xfs/xfs_buf.c:1183
+>   process_one_work+0x9af/0x1740 kernel/workqueue.c:2264
+>   worker_thread+0x98/0xe40 kernel/workqueue.c:2410
+>   kthread+0x361/0x430 kernel/kthread.c:255
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> Modules linked in:
+> CR2: fffff52000680000
+> ---[ end trace 744ceb50d377bf94 ]---
+> RIP: 0010:xfs_sb_quiet_read_verify+0x47/0xc0 fs/xfs/libxfs/xfs_sb.c:735
+> Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 7f 49 8b 9c 24 30 01  
+> 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <0f> b6 04 02 84  
+> c0 74 04 3c 03 7e 50 8b 1b bf 58 46 53 42 89 de e8
+> RSP: 0018:ffffc90008187cc0 EFLAGS: 00010a06
+> RAX: dffffc0000000000 RBX: ffffc90003400000 RCX: ffffffff82ad3c26
+> RDX: 1ffff92000680000 RSI: ffffffff82aa0a0f RDI: ffff8880a2cdba70
+> RBP: ffffc90008187cd0 R08: ffff88809eb6c500 R09: ffffed1015d2703d
+> R10: ffffed1015d2703c R11: ffff8880ae9381e3 R12: ffff8880a2cdb940
+> R13: ffff8880a2cdb95c R14: ffff8880a2cdbb74 R15: 0000000000000000
+> FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: fffff52000680000 CR3: 000000009f5ab000 CR4: 00000000001406e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
