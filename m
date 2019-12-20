@@ -2,104 +2,180 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4756AC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7773C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1010B2146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE15D2146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 09:34:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wr73SsqL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TWfDrkro"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfLTJed (ORCPT
+        id S1727459AbfLTJeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 04:34:33 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:41192 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727279AbfLTJec (ORCPT
+        Fri, 20 Dec 2019 04:34:44 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:45496 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727279AbfLTJen (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 04:34:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576834471;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0/UxvPCeTXUKVldWIXLXTiQznfkGrThtTbge0OdQKe4=;
-        b=Wr73SsqLoUnzP0qsA+LNqwxJnV7UETTmNcjUAqU4jlb9W37Lxg5+FoBMBm472gBMnd9uN2
-        VWV55W3nT7fudccG0+budwK+SwkvapTznOG/+y0bhtsntmn+qAyJZ0wPdbxgrqmEWMhbzK
-        gRY3OGLXWMYiwaT3QSTEWxwUamAfBmo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-102--qmUq0DYNauUF-7U1HEAow-1; Fri, 20 Dec 2019 04:34:28 -0500
-X-MC-Unique: -qmUq0DYNauUF-7U1HEAow-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E9D3510054E3;
-        Fri, 20 Dec 2019 09:34:26 +0000 (UTC)
-Received: from carbon (ovpn-200-18.brq.redhat.com [10.40.200.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 42B5A67009;
-        Fri, 20 Dec 2019 09:34:21 +0000 (UTC)
-Date:   Fri, 20 Dec 2019 10:34:20 +0100
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
-Cc:     bpf <bpf@vger.kernel.org>, brouer@redhat.com,
-        LKML <linux-kernel@vger.kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>,
-        Dennis Zhou <dennis@kernel.org>
-Subject: Re: Percpu variables, benchmarking, and performance weirdness
-Message-ID: <20191220103420.6f9304ab@carbon>
-In-Reply-To: <CAJ+HfNgNAzvdBw7gBJTCDQsne-HnWm90H50zNvXBSp4izbwFTA@mail.gmail.com>
-References: <CAJ+HfNgNAzvdBw7gBJTCDQsne-HnWm90H50zNvXBSp4izbwFTA@mail.gmail.com>
+        Fri, 20 Dec 2019 04:34:43 -0500
+Received: by mail-ed1-f68.google.com with SMTP id v28so7590334edw.12
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 01:34:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NTB7wX7Yv4jCUuAve4vjjE5dVjsx/SPNfAjKddDNjGA=;
+        b=TWfDrkroJVL91zz3SzoGgEFWBV+3o/1TdQOazPMUiXOyF7Eg2eG4497kjHIBTG1wG1
+         Vtg9OucWHFlGksGjOf2Gt5/8N8d2H8mnaueXjfY4BwJ8gS9SywFmxOYLL9X7R8MOCXg7
+         EUQcKbGqPWiu4iWnvubdiHlsj+dKARxxammH8DECs4J2kuaU8ljFoXdWPuY2iSLayoZ/
+         jDf4IhT9dftLRZg0RrEKlzvh4KyVQoneyT5aQ0BIq3jUKdwXhK5l6Hn/rw8+czugI/EN
+         lmuAL9WNlTiIujJApVDuXzwdgFVQY9qrWcmVz7hinUyhZMPT3nUzecYMczWBaW1kL9UW
+         krJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NTB7wX7Yv4jCUuAve4vjjE5dVjsx/SPNfAjKddDNjGA=;
+        b=H4RiqPyuRfEhONk3umEkd14Qmee5MULWhso/8iCuLkx9dd77iYxUFkjc8qfsc2CL4f
+         DqjSDBqWsZGCRczovqvdZSeRmK0QHgqB8s+94OWE9kkYLt+RgvR0ozKm1qhC37OjQ3xm
+         4BBH68nzoLXKw1UCNDuwQUtItImlrqdF1/LN48GzfrRSzVkBNsvy66UdiB4fHfAILanW
+         7NWMPzzcDrHb7c9bfJ5NlAl2DW+y3IFLAqIgYG67G3Ur1jFgwKGYnJPSUZ2wcEEe+AoI
+         L+aKKUYwiakwOJvSailNKHSnL6xmlLa6lb8Jj8DnKmW017pzH0DqF0HoIzbsHNql91gS
+         znMw==
+X-Gm-Message-State: APjAAAVI6rP1kOh5iuQw6egS0nYmS46gNSI581RiA9JfPTrmzg+/ZRJy
+        4MhgcCSdzXjTimZqhyyQY0/+VA==
+X-Google-Smtp-Source: APXvYqwtedAE80TQ1voCP5xx8obcg7Jzf+08DPEo4f2WFFFbsiXKKauQR9XC8bMXaXk+7XM4CFAmiA==
+X-Received: by 2002:a05:6402:229a:: with SMTP id cw26mr7564061edb.69.1576834481632;
+        Fri, 20 Dec 2019 01:34:41 -0800 (PST)
+Received: from [192.168.27.209] ([37.157.136.193])
+        by smtp.googlemail.com with ESMTPSA id c20sm867853edt.67.2019.12.20.01.34.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Dec 2019 01:34:40 -0800 (PST)
+Subject: Re: [PATCH 1/3] arm64: dts: sc7180: Add Venus video codec DT node
+To:     Dikshita Agarwal <dikshita@codeaurora.org>,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, vgarodia@codeaurora.org
+References: <1576828760-13176-1-git-send-email-dikshita@codeaurora.org>
+ <1576828760-13176-2-git-send-email-dikshita@codeaurora.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <17a371c0-d73a-75eb-34f2-c9afb51d46f5@linaro.org>
+Date:   Fri, 20 Dec 2019 11:34:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <1576828760-13176-2-git-send-email-dikshita@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Dec 2019 09:25:43 +0100
-Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com> wrote:
+Hi Dikshita,
 
-> I've been doing some benchmarking with AF_XDP, and more specific the
-> bpf_xdp_redirect_map() helper and xdp_do_redirect(). One thing that
-> puzzles me is that the percpu-variable accesses stands out.
->=20
-> I did a horrible hack that just accesses a regular global variable,
-> instead of the percpu struct bpf_redirect_info, and got a performance
-> boost from 22.7 Mpps to 23.8 Mpps with the rxdrop scenario from
-> xdpsock.
+Thanks for the patch.
 
-Yes, this an 2 ns overhead, which is annoying in XDP context.
- (1/22.7-1/23.8)*1000 =3D 2 ns
+On 12/20/19 9:59 AM, Dikshita Agarwal wrote:
+> This adds Venus video codec DT node for sc7180.
+> 
+> Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 36 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 6876aae2..42c70f5 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -10,6 +10,7 @@
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/phy/phy-qcom-qusb2.h>
+>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+> +#include <dt-bindings/clock/qcom,videocc-sc7180.h>
+>  
+>  / {
+>  	interrupt-parent = <&intc>;
+> @@ -66,6 +67,11 @@
+>  			compatible = "qcom,cmd-db";
+>  			no-map;
+>  		};
+> +
+> +		venus_mem: memory@8F600000 {
+> +			reg = <0 0x8F600000 0 0x500000>;
 
-> Have anyone else seen this?
+Please use lower-case for hex numbers.
 
-Yes, I see it all the time...
+> +			no-map;
+> +		};
+>  	};
+>  
+>  	cpus {
+> @@ -1042,6 +1048,36 @@
+>  			};
+>  		};
+>  
+> +		venus: video-codec@aa00000 {
+> +			compatible = "qcom,sc7180-venus";
+> +			reg = <0 0x0aa00000 0 0xff000>;
+> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> +			power-domains = <&videocc VENUS_GDSC>,
+> +					<&videocc VCODEC0_GDSC>;
+> +			power-domain-names = "venus", "vcodec0";
+> +			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+> +				<&videocc VIDEO_CC_VENUS_AHB_CLK>,
+> +				<&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
+> +				<&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
+> +				<&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
 
-> So, my question to the uarch/percpu folks out there: Why are percpu
-> accesses (%gs segment register) more expensive than regular global
-> variables in this scenario.
+could you align those entries to the first one (you can use tabs and
+after that spaces to align)
 
-I'm also VERY interested in knowing the answer to above question!?
-(Adding LKML to reach more people)
+> +			clock-names = "core", "iface", "bus",
+> +					"vcodec0_core", "vcodec0_bus";
+> +			iommus = <&apps_smmu 0x0C00 0x60>;
 
+lower-case please
 
-> One way around that is changing BPF_PROG_RUN, and BPF_CALL_x to pass a
-> context (struct bpf_redirect_info) explicitly, and access that instead
-> of doing percpu access. That would be a pretty churny patch, and
-> before doing that it would be nice to understand why percpu stands out
-> performance-wise.
+> +			memory-region = <&venus_mem>;
+> +
+> +			video-core0 {
+> +					compatible = "venus-decoder";
 
---=20
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+something is wrong with the indentation?
 
+Please run checkpatch with --strict
+
+> +			};
+> +
+> +			video-core1 {
+> +					compatible = "venus-encoder";
+> +			};
+> +
+> +			video-firmware {
+> +					iommus = <&apps_smmu 0x0C42 0x0>;
+
+lower-case
+
+> +			};
+
+This subnode should be in sc7180-idp.dts, because we assume that by
+default the qcom platforms have TZ.
+
+> +		};
+> +
+>  		pdc: interrupt-controller@b220000 {
+>  			compatible = "qcom,sc7180-pdc", "qcom,pdc";
+>  			reg = <0 0x0b220000 0 0x30000>;
+> 
+
+-- 
+regards,
+Stan
