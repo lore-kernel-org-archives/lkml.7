@@ -2,103 +2,133 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F36C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 17:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 472AFC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 17:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5007C206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 17:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C130206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 17:55:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="mmDSDsCJ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ke0F3drZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727432AbfLTRx5 (ORCPT
+        id S1727462AbfLTRz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 12:53:57 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:11664 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727390AbfLTRx5 (ORCPT
+        Fri, 20 Dec 2019 12:55:26 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45513 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727421AbfLTRzW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 12:53:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1576864432;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=1s9X+rtXJnxaA4mRnY408QIKXl/OpEB6Wrj3+YsevTY=;
-        b=mmDSDsCJeB8ADsanGUHtFo6lnZipZuAkHKaWsM7ejFsWldYLTGaGNe+UbYTe/8anfD
-        UM+9h6qTEnl6plNGMnPZpUYFmCZMOVYyMV2c2ED9LDG9vXvgCzXpuUcUTuPC3xnN2vfv
-        OfzXWq+df5TW/QeDuLHVziT3cEDDpKXzQeG86jIXubyJGsm0awj5mOr8HchUStsrnzS7
-        IHeiBr2+0AbfZ+zhZIxQAuiNTIo0JnGH0KDc2tx0T6Zj6scVTxWRxVCzivxQntFI5Bps
-        xyYqoypqwkr3KIiXDtAF285MVUmm+zS7SQHIijgEO2V7nYnU1jm7cJkNnAv0OkahGSNU
-        erAg==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/vuwDOpExo="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.1.1 DYNA|AUTH)
-        with ESMTPSA id 4012cfvBKHrn99x
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Fri, 20 Dec 2019 18:53:49 +0100 (CET)
-Content-Type: text/plain; charset=iso-8859-1
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [BUG] CI20: interrupt-controller@10001000 didn't like hwirq-0x0  to VIRQ8 mapping (rc=-19)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <1576862814.3.2@crapouillou.net>
-Date:   Fri, 20 Dec 2019 18:53:48 +0100
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org,
-        MIPS Creator CI20 Development 
-        <mips-creator-ci20-dev@googlegroups.com>,
-        Zhou Yanjie <zhouyanjie@zoho.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D90B0805-EDD2-48A0-8DFC-FD3135B86787@goldelico.com>
-References: <8BA39E30-53CB-47DB-8890-465ACB760402@goldelico.com> <1576861276.3.1@crapouillou.net> <4ea8fd0952b940b37a174fded9b5ebda@www.loen.fr> <1576862814.3.2@crapouillou.net>
-To:     Paul Cercueil <paul@crapouillou.net>
-X-Mailer: Apple Mail (2.3124)
+        Fri, 20 Dec 2019 12:55:22 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b9so5276893pgk.12
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 09:55:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xoXHEXUCOBtDITY/XcLLcf4lJLLHDCF5oZRbMuonV/U=;
+        b=Ke0F3drZ3Jpd1lr7gPZpD/wYuUs+3JD06nHt+mn89KuV0JtSg1p5AoBawc9s5ahkLw
+         ftfFZu0PeaZx/eMQ3fpD3SU5JFKH2ix953eWB+GM5yls6Z1OkU14KuFwInjcCpNFACK0
+         xdjuXtxv+mHzq+2c1534zYifCHZ26vI5sPOpDs2NtCSiNuhpbLSOxuz4+Qc+X3tOD69m
+         HrDyGn5H+00VHAl71JokGv0FE8cJ0QGc17fUujyqQ9MyUKe8iB9qTwQXvsGQ9c1Zw1MV
+         JKdyZtOWayV9P8KNw5QoMNjgWCoEAKmHGt0OOeITOr49WKZJdRYOE3/ksL+IgTENSjy0
+         FRCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xoXHEXUCOBtDITY/XcLLcf4lJLLHDCF5oZRbMuonV/U=;
+        b=WEohDRcAOeRJF8h67Si6CLsMlewtTrrLBaOr2R0hSfoNOkPlfOJUAPeX3Y2c53GglH
+         lfOTGK0vI3rpIQEcJA11QEX3kitMUu8ZjFWkChXuXGpKswNlPyBRTWuExfhSqvZ5vcze
+         f1McF0OTdjyMEzdY2VbvOgDy8cIYM8Tutp49ZNkXTfvupeVjbGxAOJ/5GRr9Npwf7oSP
+         hPKZSI6HQju5M73dZqGn6TXit7mR2eQhlUxlLYwimTTQPucUG72AGhn0uvS9GA1yTPSS
+         g/PxjRsvwaOCnTb4MkBvsdf1GHS2K2EeAp8HRl/ohf7lA1jnj6/m/fq9aEqX7YzjviYU
+         Tiww==
+X-Gm-Message-State: APjAAAVWicPBdsOIQgh72J1dld9tr+kwSFpsP+GpkCnwL5UW2eHhoB/h
+        OH5n9DG5oyRBhV8OYNQoqT8t16iglDSmmhePGF2v1w==
+X-Google-Smtp-Source: APXvYqzv8FL4X96ovaTwjhjPCE3PhKMmXmXKR1EZP13tNuwsYvj6hY1pGNeEJQ6qzMGyi485e8uTgaZ6/55PPXKthP0=
+X-Received: by 2002:aa7:946a:: with SMTP id t10mr17562534pfq.165.1576864521638;
+ Fri, 20 Dec 2019 09:55:21 -0800 (PST)
+MIME-Version: 1.0
+References: <20191218011545.40557-1-natechancellor@gmail.com>
+In-Reply-To: <20191218011545.40557-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 20 Dec 2019 09:55:10 -0800
+Message-ID: <CAKwvOd=S6HBP5RTTgm=+1r51t9cSNt+sCHrwkK_fAVFqVcZ-1A@mail.gmail.com>
+Subject: Re: [PATCH] hostap: Adjust indentation in prism2_hostapd_add_sta
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>, linux-wireless@vger.kernel.org,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+On Tue, Dec 17, 2019 at 5:15 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Clang warns:
+>
+> ../drivers/net/wireless/intersil/hostap/hostap_ap.c:2511:3: warning:
+> misleading indentation; statement is not part of the previous 'if'
+> [-Wmisleading-indentation]
+>         if (sta->tx_supp_rates & WLAN_RATE_5M5)
+>         ^
+> ../drivers/net/wireless/intersil/hostap/hostap_ap.c:2509:2: note:
+> previous statement is here
+>         if (sta->tx_supp_rates & WLAN_RATE_2M)
+>         ^
+> 1 warning generated.
+>
+> This warning occurs because there is a space before the tab on this
+> line. Remove it so that the indentation is consistent with the Linux
+> kernel coding style and clang no longer warns.
+>
+> Fixes: ff1d2767d5a4 ("Add HostAP wireless driver.")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/813
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-> Am 20.12.2019 um 18:26 schrieb Paul Cercueil <paul@crapouillou.net>:
->=20
-> Hi Marc,
->=20
-> I wasn't aware of the bug, that's why there is no tag.
-> I can send a V2 with a fix tag (and Cc linux-stable) if Nikolaus =
-reports it working.
+Thanks for the patch!
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Yes it works! Messages are gone, CI20 still boots, and cat =
-/proc/interrupts shows them counting upwards.
+> ---
+>
+> Sorry for sending a patch for an "Obselete" driver (especially one as
+> trivial as this) but it is still a warning from clang and shows up on
+> all{yes,mod}config.
+>
+>  drivers/net/wireless/intersil/hostap/hostap_ap.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/net/wireless/intersil/hostap/hostap_ap.c b/drivers/net/wireless/intersil/hostap/hostap_ap.c
+> index 0094b1d2b577..3ec46f48cfde 100644
+> --- a/drivers/net/wireless/intersil/hostap/hostap_ap.c
+> +++ b/drivers/net/wireless/intersil/hostap/hostap_ap.c
+> @@ -2508,7 +2508,7 @@ static int prism2_hostapd_add_sta(struct ap_data *ap,
+>                 sta->supported_rates[0] = 2;
+>         if (sta->tx_supp_rates & WLAN_RATE_2M)
+>                 sta->supported_rates[1] = 4;
+> -       if (sta->tx_supp_rates & WLAN_RATE_5M5)
+> +       if (sta->tx_supp_rates & WLAN_RATE_5M5)
+>                 sta->supported_rates[2] = 11;
+>         if (sta->tx_supp_rates & WLAN_RATE_11M)
+>                 sta->supported_rates[3] = 22;
+> --
+> 2.24.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20191218011545.40557-1-natechancellor%40gmail.com.
 
-Unfortunately I can't answer to the original [PATCH], but please add my
-
-Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-
-to v2.
-
->=20
-> -Paul
->=20
->=20
-> Le ven., d=E9c. 20, 2019 at 17:09, Marc Zyngier <maz@kernel.org> a =
-=E9crit :
->> On 2019-12-20 17:01, Paul Cercueil wrote:
->>> Hi Nikolaus,
->>> Try with this: https://lkml.org/lkml/2019/11/22/1831
->>> And don't hesitate to add your Tested-by :)
->> Is that an actual fix? It wasn't tagged as such, which is why
->> I didn't send it right away... It'd  be good to find out.
 
 
-BR and thanks,
-Nikolaus
-
-
+-- 
+Thanks,
+~Nick Desaulniers
