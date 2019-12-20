@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E4AC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05518C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B347C2467F
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:38:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD2B5222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:38:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852685;
-	bh=ypZKQYyvYWF6PX/rd/ElPTo5DDilecVzz+PAaPIOE8M=;
+	s=default; t=1576852691;
+	bh=Jk/Fp54pKF09pvwjzon7f27VFJRrXW+Yq1xkymArVS4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k6Fi92TcrtPnsudGxtxgI943YbvMrrANO/hUM8xBncCo7fBUBjEYY1HxW0FVlZq36
-	 NnT900/M4W+5Wlkj5P79EHznnDX2qn6WUrvDyz2/P/qpFtR94b4Vk913tv/VNXcN3G
-	 i30ZdBg8KCHz+19ijaL4wDgSrBWPVWiEndjMQyi0=
+	b=MXE27AnG3YgH84L6Ez+neHR/NtdeqJGFaBH/+Z5dIj0owHO4HqOQHLdSG0tZFRS9h
+	 io3VsqdVs9zkHV+NmpjmlckzCQfelEZwl/vUbisXofrHws//xN89GShl853TU5IRSl
+	 MUBJWn0O97kkmXRmRy+AusUWuRbSSjvNXcMhgzXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbfLTOiE (ORCPT
+        id S1727909AbfLTOiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:38:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42086 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:38:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728103AbfLTOh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:37:57 -0500
+        id S1728415AbfLTOiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:38:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9644B24682;
-        Fri, 20 Dec 2019 14:37:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0AC424682;
+        Fri, 20 Dec 2019 14:38:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852676;
-        bh=ypZKQYyvYWF6PX/rd/ElPTo5DDilecVzz+PAaPIOE8M=;
+        s=default; t=1576852685;
+        bh=Jk/Fp54pKF09pvwjzon7f27VFJRrXW+Yq1xkymArVS4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AH3o8o99WSvNNHFWUyCOimUh1pAUZo6jIbiLo3nT2BI+YQTnJyIbRMitcSg29QE27
-         dIau+b/XmXM8AEljKKkUxfzlTCCORAFjW1aFgyLgtze2wZWC/n3oeftGJyz9acUJ+C
-         3q3OzhR9O4ZqykNqxKlejuTS7NHxqGmZ/zMiGHLA=
+        b=LLAMh5YKBCRIjHqZycNkB3e8f0Z+/wnFH3TIPfZkol5BPZdj5GHG3fO5QrwZ0RzKM
+         tPwfmSNRTBWDMRQyEAJ1Jv/ZAGwuo4o25qr1U/FczcSL+S67X/EpGoMGeR7o8ZduI4
+         nTn0wd3TyC/+PKBdJtD8Df2m7mUJBS99tn5nOmvg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     EJ Hsu <ejh@nvidia.com>, Peter Chen <peter.chen@nxp.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 11/19] usb: gadget: fix wrong endpoint desc
-Date:   Fri, 20 Dec 2019 09:37:32 -0500
-Message-Id: <20191220143741.10220-11-sashal@kernel.org>
+Cc:     Andy Whitcroft <apw@canonical.com>,
+        Andrea Righi <andrea.righi@canonical.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 19/19] PM / hibernate: memory_bm_find_bit(): Tighten node optimisation
+Date:   Fri, 20 Dec 2019 09:37:40 -0500
+Message-Id: <20191220143741.10220-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191220143741.10220-1-sashal@kernel.org>
 References: <20191220143741.10220-1-sashal@kernel.org>
@@ -59,59 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: EJ Hsu <ejh@nvidia.com>
+From: Andy Whitcroft <apw@canonical.com>
 
-[ Upstream commit e5b5da96da50ef30abb39cb9f694e99366404d24 ]
+[ Upstream commit da6043fe85eb5ec621e34a92540735dcebbea134 ]
 
-Gadget driver should always use config_ep_by_speed() to initialize
-usb_ep struct according to usb device's operating speed. Otherwise,
-usb_ep struct may be wrong if usb devcie's operating speed is changed.
+When looking for a bit by number we make use of the cached result from the
+preceding lookup to speed up operation.  Firstly we check if the requested
+pfn is within the cached zone and if not lookup the new zone.  We then
+check if the offset for that pfn falls within the existing cached node.
+This happens regardless of whether the node is within the zone we are
+now scanning.  With certain memory layouts it is possible for this to
+false trigger creating a temporary alias for the pfn to a different bit.
+This leads the hibernation code to free memory which it was never allocated
+with the expected fallout.
 
-The key point in this patch is that we want to make sure the desc pointer
-in usb_ep struct will be set to NULL when gadget is disconnected.
-This will force it to call config_ep_by_speed() to correctly initialize
-usb_ep struct based on the new operating speed when gadget is
-re-connected later.
+Ensure the zone we are scanning matches the cached zone before considering
+the cached node.
 
-Reviewed-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: EJ Hsu <ejh@nvidia.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Deep thanks go to Andrea for many, many, many hours of hacking and testing
+that went into cornering this bug.
+
+Reported-by: Andrea Righi <andrea.righi@canonical.com>
+Tested-by: Andrea Righi <andrea.righi@canonical.com>
+Signed-off-by: Andy Whitcroft <apw@canonical.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/f_ecm.c   | 6 +++++-
- drivers/usb/gadget/function/f_rndis.c | 1 +
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ kernel/power/snapshot.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/function/f_ecm.c b/drivers/usb/gadget/function/f_ecm.c
-index 4c488d15b6f6e..dc99ed94f03d2 100644
---- a/drivers/usb/gadget/function/f_ecm.c
-+++ b/drivers/usb/gadget/function/f_ecm.c
-@@ -625,8 +625,12 @@ static void ecm_disable(struct usb_function *f)
+diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
+index 0972a8e09d082..ff2aabb70de93 100644
+--- a/kernel/power/snapshot.c
++++ b/kernel/power/snapshot.c
+@@ -734,8 +734,15 @@ static int memory_bm_find_bit(struct memory_bitmap *bm, unsigned long pfn,
+ 	 * We have found the zone. Now walk the radix tree to find the leaf node
+ 	 * for our PFN.
+ 	 */
++
++	/*
++	 * If the zone we wish to scan is the the current zone and the
++	 * pfn falls into the current node then we do not need to walk
++	 * the tree.
++	 */
+ 	node = bm->cur.node;
+-	if (((pfn - zone->start_pfn) & ~BM_BLOCK_MASK) == bm->cur.node_pfn)
++	if (zone == bm->cur.zone &&
++	    ((pfn - zone->start_pfn) & ~BM_BLOCK_MASK) == bm->cur.node_pfn)
+ 		goto node_found;
  
- 	DBG(cdev, "ecm deactivated\n");
- 
--	if (ecm->port.in_ep->enabled)
-+	if (ecm->port.in_ep->enabled) {
- 		gether_disconnect(&ecm->port);
-+	} else {
-+		ecm->port.in_ep->desc = NULL;
-+		ecm->port.out_ep->desc = NULL;
-+	}
- 
- 	usb_ep_disable(ecm->notify);
- 	ecm->notify->desc = NULL;
-diff --git a/drivers/usb/gadget/function/f_rndis.c b/drivers/usb/gadget/function/f_rndis.c
-index c7c5b3ce1d988..2bde68f5d2463 100644
---- a/drivers/usb/gadget/function/f_rndis.c
-+++ b/drivers/usb/gadget/function/f_rndis.c
-@@ -622,6 +622,7 @@ static void rndis_disable(struct usb_function *f)
- 	gether_disconnect(&rndis->port);
- 
- 	usb_ep_disable(rndis->notify);
-+	rndis->notify->desc = NULL;
- }
- 
- /*-------------------------------------------------------------------------*/
+ 	node      = zone->rtree;
 -- 
 2.20.1
 
