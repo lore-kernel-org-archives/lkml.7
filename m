@@ -2,177 +2,369 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B802EC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B1AC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72F9724683
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFBEF24680
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 15:43:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="UUJm3XUx"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ne8IroHl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727767AbfLTPm7 (ORCPT
+        id S1727780AbfLTPnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 10:42:59 -0500
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:33433 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727499AbfLTPm6 (ORCPT
+        Fri, 20 Dec 2019 10:43:10 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37429 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727402AbfLTPmH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 10:42:58 -0500
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="Nicolas.Ferre@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: M0Hyt6PFH1+Hh5y5QpdAUVHBwX0oof4z6LFWlmER6HNSDEP8mDCut8z9HDHAKP0kQfJDu5mhx3
- If+qvGTRrQkobUQNqFLGWs7UxVKk8lZBGM78GvsidrYCyrFIwDZAdXJJ1RM459EowHhvxU9DHE
- 8RmQJ/MnqTvO77R41VzwmSSbclXT6ydQOHtAO+6L63oX+xeweopu2opNpGKULA5Z8QZmk5U5sI
- E+ZiHQIlG+DW9PQ1TuHVGYT46f1XI2m5RB/q02E/t57nvjURUGynHQqW/gHpT57IP9bbjfwd1O
- fhI=
-X-IronPort-AV: E=Sophos;i="5.69,336,1571727600"; 
-   d="scan'208";a="58491975"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Dec 2019 08:42:53 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 20 Dec 2019 08:42:53 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Fri, 20 Dec 2019 08:42:53 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C+fzk2VqJBhRr6AoklcN4GJyk1S6ZFSylj+2aTyJdDAE+V9yq5Mq3U6DNu7G9iOzBxi0CQIpnnf15ZQo+1FHAC6UPjyHdov+u3x3xG/tU1mB4/Kp0rmT+JFbuQVd7pgukkL7fdnsga3whu9W8ShS5Sg40CLYJumyPRUv92/rdlyX86LPROmxjpkQrbqdNd2rwJmtbnhgeWDDH8BgB4f7+acop0o0WiR3p67V4TuZqibdVsp5msrcScakwXpDevRhE0juT3+lH8mL+hlTTgdqQLK4AAow60jtDDnys/n1JkW0Qid8vR5gIYfaZXTjdDTaminGOIheKx3nZ9Su5/SLcg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CqlAQ468WIxJsojOaPe7rimIbfd61BbTcsTr3pv8f2c=;
- b=fOwtCfJMGMB0eaS7Wkv0abjANP9oSZ9k2uhBFq9r3UpEBFZ8w0P6m9aze9C//CnekKfURwvwY+P56gJf7vppnbx1HxVeY0FgxQkqYA8777nh9/5jCimCuLMl8euZWVKpdSa4NBcFwd8fP01AVegXXPUMskxbvjV7h5QRosCfH1dJlhDF/bFGu9n7GRlb9bThl96am/NcHGajR3BoXGkzdFwMeigSJlU+ZZfSQQWQvjK6Ji6BufxOMjjswtjeSq4VOK3nYy5nQncV5i++EAbVe4F2rm9tYfvK9UQsK8DukmpdxCAZCV2wIJmejFZXenpZ/r3i1kyFE4SUay4uSxI7PQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        Fri, 20 Dec 2019 10:42:07 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w15so9874775wru.4
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 07:42:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CqlAQ468WIxJsojOaPe7rimIbfd61BbTcsTr3pv8f2c=;
- b=UUJm3XUxpTfrRNsLzv87c9f2aSskZPQ3Gd3Ter6cDDJukzEUjKu9sZEX7PMyrGtxC+U/Dhs3dVQSnFxeT8rr/rcdmiRTvJZbsShEYjuG5tTuWBe4tbK74HgVmcZT6X6A2ufDYtWPw32VCV1aG3DiDSLR3k9Edn0gLChQ90gaVA0=
-Received: from SN6PR11MB2830.namprd11.prod.outlook.com (52.135.91.21) by
- SN6PR11MB2909.namprd11.prod.outlook.com (52.135.126.77) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.14; Fri, 20 Dec 2019 15:42:52 +0000
-Received: from SN6PR11MB2830.namprd11.prod.outlook.com
- ([fe80::9439:53a6:d896:d176]) by SN6PR11MB2830.namprd11.prod.outlook.com
- ([fe80::9439:53a6:d896:d176%7]) with mapi id 15.20.2559.012; Fri, 20 Dec 2019
- 15:42:52 +0000
-From:   <Nicolas.Ferre@microchip.com>
-To:     <Claudiu.Beznea@microchip.com>, <sre@kernel.org>,
-        <alexandre.belloni@bootlin.com>
-CC:     <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] power: reset: at91-poweroff: use proper master
- clock register offset
-Thread-Topic: [PATCH v2 2/2] power: reset: at91-poweroff: use proper master
- clock register offset
-Thread-Index: AQHVt0qPDKkOca/Pv0mQOG+YXJXpwKfDKa6A
-Date:   Fri, 20 Dec 2019 15:42:52 +0000
-Message-ID: <ccdb9e9163a37b25202412668a9cd4b4d1a51d16.camel@microchip.com>
-References: <1576855878-13213-1-git-send-email-claudiu.beznea@microchip.com>
-         <1576855878-13213-3-git-send-email-claudiu.beznea@microchip.com>
-In-Reply-To: <1576855878-13213-3-git-send-email-claudiu.beznea@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.41.198.74]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 69a0b734-e25f-4d3b-7ad6-08d78563461f
-x-ms-traffictypediagnostic: SN6PR11MB2909:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR11MB29090255E2055A07AA8B664CE02D0@SN6PR11MB2909.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-forefront-prvs: 025796F161
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(376002)(346002)(136003)(39860400002)(189003)(199004)(110136005)(5660300002)(186003)(54906003)(71200400001)(4326008)(316002)(86362001)(6486002)(76116006)(91956017)(66446008)(64756008)(66556008)(66476007)(66946007)(36756003)(81166006)(81156014)(8676002)(6512007)(2906002)(2616005)(26005)(8936002)(6506007)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR11MB2909;H:SN6PR11MB2830.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: QOuCCLLhKP4EQCschKKMcJzkeUqOn55aQVheJ4X/5JJ+XecN6eyPXMV7On7X8B1+4OGjgqxXmHp8zWczWz32ijP0IWqSuST+YYGIpM1S1xT9+69P6zg8jjcD09lslHzTOV+q/SS0r4Xg8+OLylIkrNCllLKvDDCUGS/X5ZBCw8pcESP/Igp80y1DhDgTC5R0QT0/DB7BBDx9c6qfe/1FWA/6ZJE1Ejn4gP6wR7EVQSpkin2vGujqh0f0QHaNsMH5avJFGSDQqTaJEze6zwxmPYGHy7DrgVsjg9b5RAeHWonkJZGMOgj9IfnqweVCNbTVoSSdv9yHiLa/riz+y6lAXbdXclonXQrCA+XNbNzmmWWKsTYI8BiHuv8qyFPK0a0dzP7HG+ff9XI8voG6DE48ky5S8mDLOzMohRSEA/UoXD8ax+z/hNca5BnYHapU0SqC
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <412D3FC4C7EB884CA77BD0D628E1725E@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Gv6ed/RNXWpXKeYlzavRv2LZUuk4Qf6gnKdHbjffBM0=;
+        b=ne8IroHlniObinE+E1v0pLdO+I3M/W/CCKpFiw4MpWjzvZAcpV4N+URDUMIJIYWcOq
+         inAZrUOMp7EpZgOFrCsIbK6H/dihFg2Yro15bgpzDsjjn4LTD7R7aaYuLZHzM6b+qHVB
+         DaKgsDZmE4nI3Rgnv2VGzoQslBq3mdcjday/g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Gv6ed/RNXWpXKeYlzavRv2LZUuk4Qf6gnKdHbjffBM0=;
+        b=f5sMojgTWi2vdyAQ7z3pBxqrSv1SlK4Pjze7ewDMWEUr4Lbe6SLZoHvWtHmv9t4xOA
+         scEpkxMPCLELZa8xIl5rO5utnyKyo30R7nVVdgV/h5906PC+7cYgeYIXamYbEv48MZOW
+         8HWjWYbcjXPlMuICZz65M18K4U38x+ItbSY01K6RBcwhtBUkpZCwXyJVJEnFu71P2SNk
+         cmSghxiRD0oTVdzdWo5VK6sOBMzgxzbDlbuZBbbAeh9lnoW42hp1B9rWgCEub42gZnPh
+         RSkfZx8kxVjPFzEfKLnSyF3jX/LCmGtMrwhtUo620cNGZ1IFaKadh6wy55pBuRMpPZm4
+         XBbA==
+X-Gm-Message-State: APjAAAW/Hg92R3j7P7Lz9ijTs683OUhJOIlyOqAlFGk9oXslWTgSvK7a
+        8YUfh8AvsiwACjZ2mpjEpsFBTEaVYWE=
+X-Google-Smtp-Source: APXvYqw3p7vLOBAAexsw0lNCMEUQ9phBGPxN9HQ+qbfV84T8n338o+r2HV+3JUdziiKF4C0dUHnV4A==
+X-Received: by 2002:a05:6000:f:: with SMTP id h15mr15238903wrx.90.1576856523444;
+        Fri, 20 Dec 2019 07:42:03 -0800 (PST)
+Received: from kpsingh-kernel.localdomain ([2a00:79e1:abc:308:c46b:b838:66cf:6204])
+        by smtp.gmail.com with ESMTPSA id x11sm10118062wmg.46.2019.12.20.07.42.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 07:42:02 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Subject: [PATCH bpf-next v1 00/13] MAC and Audit policy using eBPF (KRSI)
+Date:   Fri, 20 Dec 2019 16:41:55 +0100
+Message-Id: <20191220154208.15895-1-kpsingh@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 69a0b734-e25f-4d3b-7ad6-08d78563461f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Dec 2019 15:42:52.0279
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xPvLIQrIaO0umr9vgzbVGSgLGGk9NoUohzRiK8F8Xl3AnoBFBGIOhMhdDV/Xez7coItPVDVj+9xt/N0ZVoEw3QCYZ5kmK4qc2FOZAYuvCgg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB2909
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TGUgdmVuZHJlZGkgMjAgZMOpY2VtYnJlIDIwMTkgw6AgMTc6MzEgKzAyMDAsIENsYXVkaXUgQmV6
-bmVhIGEgw6ljcml0IDoNCj4gU0FNOVg2MCdzIFBNQyB1c2VzIGRpZmZlcmVudCBvZmZzZXQgZm9y
-IG1hc3RlciBjbG9jayByZWdpc3Rlci4NCj4gQWRkIGEgbWVtYmVyIG9mIHR5cGUgc3RydWN0IHBt
-Y19yZWdfY29uZmlnIGluIHN0cnVjdCByZWdfY29uZmlnLA0KPiBmaWxsIGl0IGNvcnJlc3BvbmRp
-bmdseSBmb3IgU0FNQTVEMiBhbmQgU0FNOVg2MCBhbmQgdXNlIGl0IGluDQo+IHBvd2Vyb2ZmKCkg
-ZnVuY3Rpb24uDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBDbGF1ZGl1IEJlem5lYSA8Y2xhdWRpdS5i
-ZXpuZWFAbWljcm9jaGlwLmNvbT4NCg0KQWNrZWQtYnk6IE5pY29sYXMgRmVycmUgPG5pY29sYXMu
-ZmVycmVAbWljcm9jaGlwLmNvbT4NCg0KPiAtLS0NCj4gIGRyaXZlcnMvcG93ZXIvcmVzZXQvYXQ5
-MS1zYW1hNWQyX3NoZHdjLmMgfCAxOCArKysrKysrKysrKysrKystLS0NCj4gIDEgZmlsZSBjaGFu
-Z2VkLCAxNSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvcG93ZXIvcmVzZXQvYXQ5MS1zYW1hNWQyX3NoZHdjLmMNCj4gYi9kcml2ZXJzL3Bv
-d2VyL3Jlc2V0L2F0OTEtc2FtYTVkMl9zaGR3Yy5jDQo+IGluZGV4IDg0ODA2ZDIwODQ2Yi4uMmZl
-M2E2MjdjYjUzIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3Bvd2VyL3Jlc2V0L2F0OTEtc2FtYTVk
-Ml9zaGR3Yy5jDQo+ICsrKyBiL2RyaXZlcnMvcG93ZXIvcmVzZXQvYXQ5MS1zYW1hNWQyX3NoZHdj
-LmMNCj4gQEAgLTc0LDggKzc0LDEzIEBAIHN0cnVjdCBzaGR3Y19yZWdfY29uZmlnIHsNCj4gIAl1
-OCBzcl9ydHR3a19zaGlmdDsNCj4gIH07DQo+ICANCj4gK3N0cnVjdCBwbWNfcmVnX2NvbmZpZyB7
-DQo+ICsJdTggbWNrcjsNCj4gK307DQo+ICsNCj4gIHN0cnVjdCByZWdfY29uZmlnIHsNCj4gIAlz
-dHJ1Y3Qgc2hkd2NfcmVnX2NvbmZpZyBzaGR3YzsNCj4gKwlzdHJ1Y3QgcG1jX3JlZ19jb25maWcg
-cG1jOw0KPiAgfTsNCj4gIA0KPiAgc3RydWN0IHNoZHdjIHsNCj4gQEAgLTEzNiw5ICsxNDEsOSBA
-QCBzdGF0aWMgdm9pZCBhdDkxX3Bvd2Vyb2ZmKHZvaWQpDQo+ICAJCSIJc3RyCSUxLCBbJTAsICMi
-IF9fc3RyaW5naWZ5KEFUOTFfRERSU0RSQ19MUFIpICJdXG5cdCINCj4gIA0KPiAgCQkvKiBTd2l0
-Y2ggdGhlIG1hc3RlciBjbG9jayBzb3VyY2UgdG8gc2xvdyBjbG9jay4gKi8NCj4gLQkJIjE6CWxk
-cglyNiwgWyU0LCAjIiBfX3N0cmluZ2lmeShBVDkxX1BNQ19NQ0tSKQ0KPiAiXVxuXHQiDQo+ICsJ
-CSIxOglsZHIJcjYsIFslNCwgJTVdXG5cdCINCj4gIAkJIgliaWMJcjYsIHI2LCAgIyIgX19zdHJp
-bmdpZnkoQVQ5MV9QTUNfQ1NTKSAiXG5cdCINCj4gLQkJIglzdHIJcjYsIFslNCwgIyIgX19zdHJp
-bmdpZnkoQVQ5MV9QTUNfTUNLUikgIl1cblx0Ig0KPiArCQkiCXN0cglyNiwgWyU0LCAlNV1cblx0
-Ig0KPiAgCQkvKiBXYWl0IGZvciBjbG9jayBzd2l0Y2guICovDQo+ICAJCSIyOglsZHIJcjYsIFsl
-NCwgIyIgX19zdHJpbmdpZnkoQVQ5MV9QTUNfU1IpICJdXG5cdCINCj4gIAkJIgl0c3QJcjYsICMi
-CSAgICBfX3N0cmluZ2lmeShBVDkxX1BNQ19NQ0tSRFkpICJcblx0Ig0KPiBAQCAtMTUzLDcgKzE1
-OCw4IEBAIHN0YXRpYyB2b2lkIGF0OTFfcG93ZXJvZmYodm9pZCkNCj4gIAkJICAiciIgY3B1X3Rv
-X2xlMzIoQVQ5MV9ERFJTRFJDX0xQRERSMl9QV09GRiksDQo+ICAJCSAgInIiIChhdDkxX3NoZHdj
-LT5zaGR3Y19iYXNlKSwNCj4gIAkJICAiciIgY3B1X3RvX2xlMzIoQVQ5MV9TSERXX0tFWSB8IEFU
-OTFfU0hEV19TSERXKSwNCj4gLQkJICAiciIgKGF0OTFfc2hkd2MtPnBtY19iYXNlKQ0KPiArCQkg
-ICJyIiAoYXQ5MV9zaGR3Yy0+cG1jX2Jhc2UpLA0KPiArCQkgICJyIiAoYXQ5MV9zaGR3Yy0+cmNm
-Zy0+cG1jLm1ja3IpDQo+ICAJCTogInI2Iik7DQo+ICB9DQo+ICANCj4gQEAgLTI1Myw2ICsyNTks
-OSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHJlZ19jb25maWcgc2FtYTVkMl9yZWdfY29uZmlnID0g
-ew0KPiAgCQkuc3JfcnRjd2tfc2hpZnQgPSA1LA0KPiAgCQkuc3JfcnR0d2tfc2hpZnQgPSBTSERX
-X0NGR19OT1RfVVNFRCwNCj4gIAl9LA0KPiArCS5wbWMgPSB7DQo+ICsJCS5tY2tyCQk9IDB4MzAs
-DQo+ICsJfSwNCj4gIH07DQo+ICANCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcmVnX2NvbmZpZyBz
-YW05eDYwX3JlZ19jb25maWcgPSB7DQo+IEBAIC0yNjMsNiArMjcyLDkgQEAgc3RhdGljIGNvbnN0
-IHN0cnVjdCByZWdfY29uZmlnIHNhbTl4NjBfcmVnX2NvbmZpZyA9IHsNCj4gIAkJLnNyX3J0Y3dr
-X3NoaWZ0ID0gNSwNCj4gIAkJLnNyX3J0dHdrX3NoaWZ0ID0gNCwNCj4gIAl9LA0KPiArCS5wbWMg
-PSB7DQo+ICsJCS5tY2tyCQk9IDB4MjgsDQo+ICsJfSwNCj4gIH07DQo+ICANCj4gIHN0YXRpYyBj
-b25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGF0OTFfc2hkd2Nfb2ZfbWF0Y2hbXSA9IHsNCg==
+From: KP Singh <kpsingh@google.com>
+
+This patch series is a continuation of the KRSI RFC
+(https://lore.kernel.org/bpf/20190910115527.5235-1-kpsingh@chromium.org/)
+
+# Motivation
+
+Google does rich analysis of runtime security data collected from
+internal Linux deployments (corporate devices and servers) to detect and
+thwart threats in real-time. Currently, this is done in custom kernel
+modules but we would like to replace this with something that's upstream
+and useful to others.
+
+The current kernel infrastructure for providing telemetry (Audit, Perf
+etc.) is disjoint from access enforcement (i.e. LSMs).  Augmenting the
+information provided by audit requires kernel changes to audit, its
+policy language and user-space components. Furthermore, building a MAC
+policy based on the newly added telemetry data requires changes to
+various LSMs and their respective policy languages.
+
+This patchset proposes a new stackable and privileged LSM which allows
+the LSM hooks to be implemented using eBPF. This facilitates a unified
+and dynamic (not requiring re-compilation of the kernel) audit and MAC
+policy.
+
+# Why an LSM?
+
+Linux Security Modules target security behaviours rather than the
+kernel's API. For example, it's easy to miss out a newly added system
+call for executing processes (eg. execve, execveat etc.) but the LSM
+framework ensures that all process executions trigger the relevant hooks
+irrespective of how the process was executed.
+
+Allowing users to implement LSM hooks at runtime also benefits the LSM
+eco-system by enabling a quick feedback loop from the security community
+about the kind of behaviours that the LSM Framework should be targeting.
+
+# How does it work?
+
+The LSM introduces a new eBPF (https://docs.cilium.io/en/v1.6/bpf/)
+program type, BPF_PROG_TYPE_LSM, which can only be attached to a LSM
+hook.  All LSM hooks are exposed as files in securityfs. Attachment
+requires CAP_SYS_ADMIN for loading eBPF programs and CAP_MAC_ADMIN for
+modifying MAC policies.
+
+The eBPF programs are passed the same arguments as the LSM hooks and
+executed in the body of the hook. If any of the eBPF programs returns an
+error (like ENOPERM), the behaviour represented by the hook is denied.
+
+Audit logs can be written using a format chosen by the eBPF program to
+the perf events buffer and can be further processed in user-space.
+
+# Limitations of RFC v1
+
+In the previous design
+(https://lore.kernel.org/bpf/20190910115527.5235-1-kpsingh@chromium.org/),
+the BPF programs received a context which could be queried to retrieve
+specific pieces of information using specific helpers.
+
+For example, a program that attaches to the file_mprotect LSM hook and
+queries the VMA region could have had the following context:
+
+// Special context for the hook.
+struct bpf_mprotect_ctx {
+	struct vm_area_struct *vma;
+};
+
+and accessed the fields using a hypothetical helper
+"bpf_mprotect_vma_get_start:
+
+SEC("lsm/file_mprotect")
+int mprotect_audit(bpf_mprotect_ctx *ctx)
+{
+	unsigned long vm_start = bpf_mprotect_vma_get_start(ctx);
+	return 0;
+}
+
+or directly read them from the context by updating the verifier to allow
+accessing the fields:
+
+int mprotect_audit(bpf_mprotect_ctx *ctx)
+{
+	unsigned long vm_start = ctx->vma->vm_start;
+	return 0;
+}
+
+As we prototyped policies based on this design, we realized that this
+approach is not general enough. Adding helpers or verifier code for all
+usages would imply a high maintenance cost while severely restricting
+the instrumentation capabilities which is the key value add of our
+eBPF-based LSM.
+
+Feedback from the BPF maintainers at Linux Plumbers also pushed us
+towards the following, more general, approach.
+
+# BTF Based Design
+
+The current design uses BTF
+(https://facebookmicrosites.github.io/bpf/blog/2018/11/14/btf-enhancement.html,
+https://lwn.net/Articles/803258/) which allows verifiable read-only
+structure accesses by field names rather than fixed offsets. This allows
+accessing the hook parameters using a dynamically created context which
+provides a certain degree of ABI stability:
+
+/* Clang builtin to handle field accesses. */
+#define _(P) (__builtin_preserve_access_index(P))
+
+// Only declare the structure and fields intended to be used
+// in the program
+struct vm_area_struct {
+	unsigned long vm_start;
+};
+
+// Declare the eBPF program mprotect_audit which attaches to
+// to the file_mprotect LSM hook and accepts three arguments.
+BPF_TRACE_3("lsm/file_mprotect", mprotect_audit,
+	    struct vm_area_struct *, vma,
+	    unsigned long, reqprot, unsigned long, prot
+{
+	unsigned long vm_start = _(vma->vm_start);
+	return 0;
+}
+
+By relocating field offsets, BTF makes a large portion of kernel data
+structures readily accessible across kernel versions without requiring a
+large corpus of BPF helper functions and requiring recompilation with
+every kernel version. The limitations of BTF compatibility are described
+in BPF Co-Re (http://vger.kernel.org/bpfconf2019_talks/bpf-core.pdf,
+i.e. field renames, #defines and changes to the signature of LSM hooks).
+
+This design imposes that the MAC policy (eBPF programs) be updated when
+the inspected kernel structures change outside of BTF compatibility
+guarantees. In practice, this is only required when a structure field
+used by a current policy is removed (or renamed) or when the used LSM
+hooks change. We expect the maintenance cost of these changes to be
+acceptable as compared to the previous design
+(https://lore.kernel.org/bpf/20190910115527.5235-1-kpsingh@chromium.org/).
+
+# Distinction from Landlock
+
+We believe there exist two distinct use-cases with distinct set of users:
+
+* Unprivileged processes voluntarily relinquishing privileges with the
+  primary users being software developers.
+
+* Flexible privileged (CAP_MAC_ADMIN, CAP_SYS_ADMIN) MAC and Audit with
+  the primary users being system policy admins.
+
+These use-cases imply different APIs and trade-offs:
+
+* The unprivileged use case requires defining more stable and custom APIs
+  (through opaque contexts and precise helpers).
+
+* Privileged Audit and MAC requires deeper introspection of the kernel
+  data structures to maximise the flexibility that can be achieved without
+  kernel modification.
+
+Landlock has demonstrated filesystem sandboxes and now Ptrace access
+control in its patches which are excellent use cases for an unprivileged
+process voluntarily relinquishing privileges.
+
+However, Landlock has expanded its original goal, "towards unprivileged
+sandboxing", to being a "low-level framework to build
+access-control/audit systems" (https://landlock.io). We feel that the
+design and implementation are still driven by the constraints and
+trade-offs of the former use-case, and do not provide a satisfactory
+solution to the latter.
+
+We also believe that our approach, direct access to common kernel data
+structures as with BTF, is inappropriate for unprivileged processes and
+probably not a good option for Landlock.
+
+In conclusion, we feel that the design for a privileged LSM and
+unprivileged LSM are mutually exclusive and that one cannot be built
+"on-top-of" the other. Doing so would limit the capabilities of what can
+be done for an LSM that provides flexible audit and MAC capabilities or
+provide in-appropriate access to kernel internals to an unprivileged
+process.
+
+Furthermore, the Landlock design supports its historical use-case only
+when unprivileged eBPF is allowed. This is something that warrants
+discussion before an unprivileged LSM that uses eBPF is upstreamed.
+
+# Why not tracepoints or kprobes?
+
+In order to do MAC with tracepoints or kprobes, we would need to
+override the return value of the security hook. This is not possible
+with tracepoints or call-site kprobes.
+
+Attaching to the return boundary (kretprobe) implies that BPF programs
+would always get called after all the other LSM hooks are called and
+clobber the pre-existing LSM semantics.
+
+Enforcing MAC policy with an actual LSM helps leverage the verified
+semantics of the framework.
+
+# Usage Examples
+
+A simple example and some documentation is included in the patchset.
+
+In order to better illustrate the capabilities of the framework some
+more advanced prototype code has also been published separately:
+
+* Logging execution events (including environment variables and arguments):
+https://github.com/sinkap/linux-krsi/blob/patch/v1/examples/samples/bpf/lsm_audit_env.c
+* Detecting deletion of running executables:
+https://github.com/sinkap/linux-krsi/blob/patch/v1/examples/samples/bpf/lsm_detect_exec_unlink.c
+* Detection of writes to /proc/<pid>/mem:
+https://github.com/sinkap/linux-krsi/blob/patch/v1/examples/samples/bpf/lsm_audit_env.c
+
+We have updated Google's internal telemetry infrastructure and have
+started deploying this LSM on our Linux Workstations. This gives us more
+confidence in the real-world applications of such a system.
+
+KP Singh (13):
+  bpf: Refactor BPF_EVENT context macros to its own header.
+  bpf: lsm: Add a skeleton and config options
+  bpf: lsm: Introduce types for eBPF based LSM
+  bpf: lsm: Allow btf_id based attachment for LSM hooks
+  tools/libbpf: Add support in libbpf for BPF_PROG_TYPE_LSM
+  bpf: lsm: Init Hooks and create files in securityfs
+  bpf: lsm: Implement attach, detach and execution.
+  bpf: lsm: Show attached program names in hook read handler.
+  bpf: lsm: Add a helper function bpf_lsm_event_output
+  bpf: lsm: Handle attachment of the same program
+  tools/libbpf: Add bpf_program__attach_lsm
+  bpf: lsm: Add selftests for BPF_PROG_TYPE_LSM
+  bpf: lsm: Add Documentation
+
+ Documentation/security/bpf.rst                |  164 +++
+ Documentation/security/index.rst              |    1 +
+ MAINTAINERS                                   |   11 +
+ include/linux/bpf_event.h                     |   78 ++
+ include/linux/bpf_lsm.h                       |   25 +
+ include/linux/bpf_types.h                     |    4 +
+ include/trace/bpf_probe.h                     |   30 +-
+ include/uapi/linux/bpf.h                      |   12 +-
+ kernel/bpf/syscall.c                          |   10 +
+ kernel/bpf/verifier.c                         |   84 +-
+ kernel/trace/bpf_trace.c                      |   24 +-
+ security/Kconfig                              |   11 +-
+ security/Makefile                             |    2 +
+ security/bpf/Kconfig                          |   25 +
+ security/bpf/Makefile                         |    7 +
+ security/bpf/include/bpf_lsm.h                |   63 +
+ security/bpf/include/fs.h                     |   23 +
+ security/bpf/include/hooks.h                  | 1015 +++++++++++++++++
+ security/bpf/lsm.c                            |  160 +++
+ security/bpf/lsm_fs.c                         |  176 +++
+ security/bpf/ops.c                            |  224 ++++
+ tools/include/uapi/linux/bpf.h                |   12 +-
+ tools/lib/bpf/bpf.c                           |    2 +-
+ tools/lib/bpf/bpf.h                           |    6 +
+ tools/lib/bpf/libbpf.c                        |  163 ++-
+ tools/lib/bpf/libbpf.h                        |    4 +
+ tools/lib/bpf/libbpf.map                      |    7 +
+ tools/lib/bpf/libbpf_probes.c                 |    1 +
+ .../bpf/prog_tests/lsm_mprotect_audit.c       |  129 +++
+ .../selftests/bpf/progs/lsm_mprotect_audit.c  |   58 +
+ 30 files changed, 2451 insertions(+), 80 deletions(-)
+ create mode 100644 Documentation/security/bpf.rst
+ create mode 100644 include/linux/bpf_event.h
+ create mode 100644 include/linux/bpf_lsm.h
+ create mode 100644 security/bpf/Kconfig
+ create mode 100644 security/bpf/Makefile
+ create mode 100644 security/bpf/include/bpf_lsm.h
+ create mode 100644 security/bpf/include/fs.h
+ create mode 100644 security/bpf/include/hooks.h
+ create mode 100644 security/bpf/lsm.c
+ create mode 100644 security/bpf/lsm_fs.c
+ create mode 100644 security/bpf/ops.c
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/lsm_mprotect_audit.c
+ create mode 100644 tools/testing/selftests/bpf/progs/lsm_mprotect_audit.c
+
+-- 
+2.20.1
+
