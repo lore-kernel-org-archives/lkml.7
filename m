@@ -2,88 +2,117 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60362C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E76DEC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3768E20716
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDF8220716
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 16:38:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fuTmNCiT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Opyl8zrW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbfLTQgF (ORCPT
+        id S1727403AbfLTQiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 11:36:05 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41313 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727403AbfLTQgE (ORCPT
+        Fri, 20 Dec 2019 11:38:52 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39162 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbfLTQiv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 11:36:04 -0500
-Received: by mail-lf1-f68.google.com with SMTP id m30so7504416lfp.8
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 08:36:03 -0800 (PST)
+        Fri, 20 Dec 2019 11:38:51 -0500
+Received: by mail-wm1-f66.google.com with SMTP id 20so9756146wmj.4
+        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 08:38:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jLa2dN/auoX5wIvaWIVrrYsMpSzoa4LfkaQLVViXRJU=;
-        b=fuTmNCiTKFxJDOBKOwXuPHN1WkPtp9111gau5tq95BiYFaa+9IkBEku2AS9IF8O9c4
-         Ql+JaTxqYS1ZPJiDEyzOJPaJFofEgFs7nuaCyueSOthWkXsR8GmMwuCj0Nb7mhx//Bab
-         Dp+xfI7PSYTXM7XxYDQ+1HwLE/enWpFL/uG5e+SPXedX+3LOhftZU62MGoJcA7CfrkJt
-         x93r9ttFh96VMbpw7GskVb3KTS6NuEhZ/SmftJ3v0f4UtGvomBxElx/UDczf6Wo0+eBT
-         uLV3QyuOERCIk3OUMfGc8ZpawGHK3EmvB/k9GZpnHILSdNwvwQB2jGxOjDVJVj3/fF33
-         5Dhg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kvxa0Xnr9nkcLaOalM1HckZFWjf459g2PFBnyA+1Iv4=;
+        b=Opyl8zrWxfG0T2eYgPBCYlAFhLgCFaTHdUTXn2LxdfuGNDC2GdzYXG1yF19O38Us6K
+         1AsYjkhAk42CChTlLYqNfHgAu+vSGaZm0yPEMw66FdJ2Yz0PmpKEAS0U5+gwOogm8goU
+         gPyZz+CLK0axB1A5WOPgA4tUa9IVt+ZxzhvvPKdxDGaiCUUMTl92dldhdPb79bYd+Q2R
+         ZjECpnvcx+cGrskEDW5EZ3HGjA7Do9m7fGzKCc8bL1CUgXZg5I61E14M3pAyNWlObYjj
+         4GQbyEq8NZBsuetsHAzqEVKR1RS4z8kEJ1rgAeZ+wI4ac6Gy4QXgGGrQ1aooDe55ympf
+         Wn0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jLa2dN/auoX5wIvaWIVrrYsMpSzoa4LfkaQLVViXRJU=;
-        b=Xy7dWnW5DRyI6S1T7QGzl1UW2vCsiLfBX1bI0TvIXToZh9Ly9kdRLat4g/YTptRqO4
-         xz4Rr1uzX9+LyZTi/IH8LGHgwy46uIBARX2Db40MxXBw/s49S99kRhw3OuL6+hCcKJqg
-         J3Qw++pX7+wpsMJ9Ppafk8U0tbvp9vrg3yFgrnDDeuUXlAf/6THR3qZbu2yBJqPK6STs
-         y5XQPB/G1lZvR6ahaU03+9/4YlxCNrqjx4mQrnHq0uCP/BsbhPV5+xPVthSVNuk7TTGU
-         9qZezL13fLRQycicjF4MZ3ZSx4XTYMdqcfhUZWxb+O2YFbSvDR3n8M6+/yVe9iTz12JP
-         +rcg==
-X-Gm-Message-State: APjAAAUJyF543VI04c6oGUcwVX1RQhPMOv2Bmf12tBmSPt/ijXMb5acp
-        a+fqYRegluwNgQdjF4Wh2jBZrphi0YBp/InZKHppeA==
-X-Google-Smtp-Source: APXvYqx4tffl12i/HGqRf4xn6+oXQ7x7HuEeGMpoti4TzYzcxieGNQFBYTjykMARXxnYBjdpgNmWxoJFilAlNgheiBM=
-X-Received: by 2002:a19:2389:: with SMTP id j131mr9202421lfj.86.1576859762615;
- Fri, 20 Dec 2019 08:36:02 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kvxa0Xnr9nkcLaOalM1HckZFWjf459g2PFBnyA+1Iv4=;
+        b=LtPwDbhqXg6jbQdr2sRbSuxY+upmalTffKSMf1kz1AmCRSc51Z4qWOxGJVm12PSE5f
+         zzQ+dfDRoDDJKYdZ7yLaUgaoDrPNi1C84U5MYaiFlZO7vloJSG0fjy2/FgXGBsUzP78n
+         hfzYoJuuaPxQdjiTrZ4mrHv5swCp9qNUCszjgB0RTAwS2+Dj2iqXHh5J0eQpQnQLaWpd
+         QJZMeSqEnb816Nsx5xEdXYRzuaUYopaapaghUfDkkBGWKksWkV3zTzBKPyeZWETw30jr
+         NU5OabkxgHY+fwWloBHPzMiovEyTRPTbrjqZHtnJe6nrXZTpmcYqJy+E1gPE7maiE6qE
+         p9qg==
+X-Gm-Message-State: APjAAAWhu1sTHxfCzR/YKTmSZ9TpG7zz4wKBSghLwkmukGvHZHwSdltp
+        1yA9vcMQGV39wS4hw+QXiHgg0A==
+X-Google-Smtp-Source: APXvYqxjax6hqfjHaodsvksvLvuP0wGDpdHU8lOPkcx5J9+yf6G8YILWdnEjGCWoHy1btGBX/sLMSw==
+X-Received: by 2002:a1c:740b:: with SMTP id p11mr18453304wmc.78.1576859929814;
+        Fri, 20 Dec 2019 08:38:49 -0800 (PST)
+Received: from localhost.localdomain ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id g23sm10225807wmk.14.2019.12.20.08.38.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 20 Dec 2019 08:38:49 -0800 (PST)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     linux-pm@vger.kernel.org
+Cc:     bjorn.andersson@linaro.org, evgreen@chromium.org,
+        daidavid1@codeaurora.org, okukatla@codeaurora.org,
+        georgi.djakov@linaro.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] interconnect: Print the tag in the debugfs summary
+Date:   Fri, 20 Dec 2019 18:38:46 +0200
+Message-Id: <20191220163846.6485-1-georgi.djakov@linaro.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <20191220160051.26321-1-dan@dlrobertson.com> <20191220160051.26321-4-dan@dlrobertson.com>
-In-Reply-To: <20191220160051.26321-4-dan@dlrobertson.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 20 Dec 2019 17:35:50 +0100
-Message-ID: <CACRpkdYVSGa4PHT9nHcV-YnVbhd7E3xK1FDhV+50SOMEk699Ww@mail.gmail.com>
-Subject: Re: [PATCH v8 3/3] iio: (bma400) basic regulator support
-To:     Dan Robertson <dan@dlrobertson.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Joe Perches <joe@perches.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 5:17 PM Dan Robertson <dan@dlrobertson.com> wrote:
+Now we can have a tag associated with the path. Add this information
+to the interconnect_summary file, as the current information in debugfs
+is incomplete.
 
-> Add support for the VDD and VDDIO regulators using the regulator
-> framework.
->
-> Signed-off-by: Dan Robertson <dan@dlrobertson.com>
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+---
+ drivers/interconnect/core.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+index 1867fad56c0f..ae80fbea5d2d 100644
+--- a/drivers/interconnect/core.c
++++ b/drivers/interconnect/core.c
+@@ -34,7 +34,7 @@ static void icc_summary_show_one(struct seq_file *s, struct icc_node *n)
+ 	if (!n)
+ 		return;
+ 
+-	seq_printf(s, "%-30s %12u %12u\n",
++	seq_printf(s, "%-42s %12u %12u\n",
+ 		   n->name, n->avg_bw, n->peak_bw);
+ }
+ 
+@@ -42,8 +42,8 @@ static int icc_summary_show(struct seq_file *s, void *data)
+ {
+ 	struct icc_provider *provider;
+ 
+-	seq_puts(s, " node                                   avg         peak\n");
+-	seq_puts(s, "--------------------------------------------------------\n");
++	seq_puts(s, " node                                  tag          avg         peak\n");
++	seq_puts(s, "--------------------------------------------------------------------\n");
+ 
+ 	mutex_lock(&icc_lock);
+ 
+@@ -58,8 +58,8 @@ static int icc_summary_show(struct seq_file *s, void *data)
+ 				if (!r->dev)
+ 					continue;
+ 
+-				seq_printf(s, "    %-26s %12u %12u\n",
+-					   dev_name(r->dev), r->avg_bw,
++				seq_printf(s, "  %-27s %12u %12u %12u\n",
++					   dev_name(r->dev), r->tag, r->avg_bw,
+ 					   r->peak_bw);
+ 			}
+ 		}
