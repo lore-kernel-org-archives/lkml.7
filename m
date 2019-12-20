@@ -2,149 +2,135 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E4AC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC7EC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3560A24680
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:42:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dHt2yfVj"
+	by mail.kernel.org (Postfix) with ESMTP id EF04F2465E
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 10:44:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbfLTKmF (ORCPT
+        id S1727233AbfLTKod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 05:42:05 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50870 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbfLTKmF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 05:42:05 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBKAfu1p061714;
-        Fri, 20 Dec 2019 04:41:56 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576838516;
-        bh=2v2z+FS+yA7LYnWwxztL6URPv5REOEKRsiKuUYtz5xE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=dHt2yfVjBXdDDHSnVV4JabkC8Wkx8sVLr0nA12+xfaxXlDn2MLtSHGdx6hxK474nB
-         dKIi6IGX6eLhZP/XKdwhe1ZG57BtZN1t5HwNlLUgc061NKIK5fnDOklWP0ZKopBg+J
-         S750CPw72EoWAfXbN9EwXBZsDZgrv+dgFxRlayPY=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBKAfuG1103346
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 20 Dec 2019 04:41:56 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
- Dec 2019 04:41:55 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 20 Dec 2019 04:41:55 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBKAfqQ1122772;
-        Fri, 20 Dec 2019 04:41:52 -0600
-Subject: Re: [PATCH v7 06/12] dmaengine: ti: Add cppi5 header for K3
- NAVSS/UDMA
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
-        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>,
-        <vigneshr@ti.com>
-References: <20191209094332.4047-1-peter.ujfalusi@ti.com>
- <20191209094332.4047-7-peter.ujfalusi@ti.com>
- <20191220095455.GM2536@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <d5bd6bcf-9c1e-8633-fdc4-ee787100b44c@ti.com>
-Date:   Fri, 20 Dec 2019 12:42:10 +0200
+        Fri, 20 Dec 2019 05:44:33 -0500
+Received: from relay.sw.ru ([185.231.240.75]:38738 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726210AbfLTKod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 05:44:33 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1iiFlN-0005vW-TS; Fri, 20 Dec 2019 13:44:06 +0300
+Subject: Re: [RFC][PATCH 1/4] sched: Force the address order of each sched
+ class descriptor
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        Kirill Tkhai <tkhai@yandex.ru>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+        "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
+        "bsegall@google.com" <bsegall@google.com>,
+        "mgorman@suse.de" <mgorman@suse.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20191219214451.340746474@goodmis.org>
+ <20191219214558.510271353@goodmis.org>
+ <0a957e8d-7af8-613c-11ae-f51b9b241eb7@rasmusvillemoes.dk>
+ <20191220100033.GE2844@hirez.programming.kicks-ass.net>
+ <1ac359e8-fa7f-7ded-e2f2-9f7d0b23a4e1@rasmusvillemoes.dk>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <5846dfc3-a7a8-25af-aec7-3e326cf54efd@virtuozzo.com>
+Date:   Fri, 20 Dec 2019 13:44:05 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191220095455.GM2536@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <1ac359e8-fa7f-7ded-e2f2-9f7d0b23a4e1@rasmusvillemoes.dk>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
-
-On 20/12/2019 11.54, Vinod Koul wrote:
-> On 09-12-19, 11:43, Peter Ujfalusi wrote:
+On 20.12.2019 13:12, Rasmus Villemoes wrote:
+> On 20/12/2019 11.00, Peter Zijlstra wrote:
+>> On Fri, Dec 20, 2019 at 09:52:37AM +0100, Rasmus Villemoes wrote:
+>>> On 19/12/2019 22.44, Steven Rostedt wrote:
+>>>> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+>>>>
+>>>> In order to make a micro optimization in pick_next_task(), the order of the
+>>>> sched class descriptor address must be in the same order as their priority
+>>>> to each other. That is:
+>>>>
+>>>>  &idle_sched_class < &fair_sched_class < &rt_sched_class <
+>>>>  &dl_sched_class < &stop_sched_class
+>>>>
+>>>> In order to guarantee this order of the sched class descriptors, add each
+>>>> one into their own data section and force the order in the linker script.
+>>>
+>>> I think it would make the code simpler if one reverses these, see other
+>>> reply.
+>>
+>> I started out agreeing, because of that mess around STOP_SCHED_CLASS and
+>> that horrid BEFORE_CRUD thing.
+>>
+>> Then, when I fixed it all up, I saw what it did to Kyrill's patch (#4)
+>> and that ends up looking like:
+>>
+>> -       if (likely((prev->sched_class == &idle_sched_class ||
+>> -                   prev->sched_class == &fair_sched_class) &&
+>> +       if (likely(prev->sched_class >= &fair_sched_class &&
+>>
+>> And that's just weird.
 > 
->> +#define CPPI5_INFO2_DESC_RETPUSHPOLICY		BIT(16)
->> +#define CPPI5_INFO2_DESC_RETP_MASK		GENMASK(18, 16)
->> +
->> +#define CPPI5_INFO2_DESC_RETQ_SHIFT		(0)
->> +#define CPPI5_INFO2_DESC_RETQ_MASK		GENMASK(15, 0)
->> +
->> +#define CPPI5_INFO3_DESC_SRCTAG_SHIFT		(16U)
->> +#define CPPI5_INFO3_DESC_SRCTAG_MASK		GENMASK(31, 16)
->> +#define CPPI5_INFO3_DESC_DSTTAG_SHIFT		(0)
->> +#define CPPI5_INFO3_DESC_DSTTAG_MASK		GENMASK(15, 0)
->> +
->> +#define CPPI5_BUFINFO1_HDESC_DATA_LEN_SHIFT	(0)
->> +#define CPPI5_BUFINFO1_HDESC_DATA_LEN_MASK	GENMASK(27, 0)
->> +
->> +#define CPPI5_OBUFINFO0_HDESC_BUF_LEN_SHIFT	(0)
->> +#define CPPI5_OBUFINFO0_HDESC_BUF_LEN_MASK	GENMASK(27, 0)
+> I kind of agree, but if one can come up with good enough macro names, I
+> think all that comparison logic should be in helpers either way the
+> array is laid out. Something like
 > 
-> I think you can remove the SHIFT defines and use ffs() to get the bit
-> position for shift
+> #define sched_class_lower_eq [something] /* perhaps comment on the array
+> order */
+> sched_class_lower_eq(prev->sched_class, &fair_sched_class)
 
-Right. I'll convert to use ffs()
+You started from making code simple argument. But in case of we make the code
+simple in this single place, the rest of code, which are the many places, will
+become wrapped over huge helpers, which make the readability worse IMO.
 
+After we have implemented a reliable sections order in lds file, we may use
+it for a long time without remembering the way they are organized. But in case
+of we introduce huge helpers, we always will bump into them during analyzing
+of difficult asynchronous code, and these helpers size will overflow internal
+buffers in our heads just by their excess symbols.
+
+My opinion is to better make some less beautiful thing in a single synchronous place,
+than to distribute the redundancy over all the code (especially, when it is asynchronous).
+
+>> Then I had a better look and now...
+>>
+>>>> +/*
+>>>> + * The order of the sched class addresses are important, as they are
+>>>> + * used to determine the order of the priority of each sched class in
+>>>> + * relation to each other.
+>>>> + */
+>>>> +#define SCHED_DATA				\
+>>>> +	*(__idle_sched_class)			\
+>>>> +	*(__fair_sched_class)			\
+>>>> +	*(__rt_sched_class)			\
+>>>> +	*(__dl_sched_class)			\
+>>>> +	STOP_SCHED_CLASS
+>>
+>> I'm confused, why does that STOP_SCHED_CLASS need magic here at all?
+>> Doesn't the linker deal with empty sections already by making them 0
+>> sized?
 > 
->> +static inline u32 cppi5_hdesc_calc_size(bool epib, u32 psdata_size,
->> +					u32 sw_data_size)
->> +{
->> +	u32 desc_size;
->> +
->> +	if (psdata_size > CPPI5_INFO0_HDESC_PSDATA_MAX_SIZE)
->> +		return 0;
->> +
->> +	desc_size = sizeof(struct cppi5_host_desc_t) + psdata_size +
->> +		    sw_data_size;
+> Yes, but dropping the STOP_SCHED_CLASS define doesn't prevent one from
+> needing some ifdeffery to define highest_sched_class if they are laid
+> out in (higher sched class <-> higher address) order.
 > 
-> I think there was an API for this kind of mem allocation of struct and
-> buffer attached...
-
-The returned size is not only used when allocating memory or setting up
-the dma_pool, but for UDMAP's fetch size parameter.
-
->> +static inline void cppi5_hdesc_reset_hbdesc(struct cppi5_host_desc_t *desc)
->> +{
->> +	desc->hdr = (struct cppi5_desc_hdr_t) { 0 };
->> +	desc->next_desc = 0;
+> Rasmus
 > 
-> would this not be superfluous? Or if you want a memset call?
 
-The intention is to reset the header and the next descriptor link but
-leave the backing buffer information intact. This allows the reuse of a
-descriptor+buffer and we only need to set the header bits + next
-descriptor pointer if any.
-
->> +static inline u32 *cppi5_hdesc_get_psdata32(struct cppi5_host_desc_t *desc)
->> +{
->> +	return (u32 *)cppi5_hdesc_get_psdata(desc);
-> 
-> you dont need casts away from void *
-
-Hrm, or just remove this, clients can use the cppi5_hdesc_get_psdata()
-directly.
-
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
