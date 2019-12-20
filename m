@@ -2,122 +2,111 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9CBC43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB9BC43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2EAA24680
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEFCD24680
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 11:50:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576842627;
+	bh=l79UIGYbHOBYEn3HqZvYxJ6FEzXMrthpQ2Vv5pmhKcs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FnUMKqBNrWRo06Xe26p8YP0lF3J+KEWurRg0WiX36VNnT1A70ZOMykqUFFYsw3B4n
+	 FuQLNSpyI/nZ5vk+d4nhN+4TTcxFq4qMfTSlj/XcmrNuwiER88H/qYkpvWuO8bytG9
+	 Py2A1tgYYFc1ukrAs4Y9i0u6nQ+nD8dZO9LIyDa0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbfLTLsh (ORCPT
+        id S1727335AbfLTLu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 06:48:37 -0500
-Received: from foss.arm.com ([217.140.110.172]:49838 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727177AbfLTLsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 06:48:37 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8487B30E;
-        Fri, 20 Dec 2019 03:48:36 -0800 (PST)
-Received: from [10.1.194.52] (e112269-lin.cambridge.arm.com [10.1.194.52])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D3F1C3F719;
-        Fri, 20 Dec 2019 03:48:33 -0800 (PST)
-Subject: Re: [PATCH v17 01/23] mm: Add generic p?d_leaf() macros
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
-Cc:     Mark Rutland <mark.rutland@arm.com>, x86@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        James Morse <james.morse@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-References: <20191218162402.45610-1-steven.price@arm.com>
- <20191218162402.45610-2-steven.price@arm.com>
- <878sn8mtgt.fsf@mpe.ellerman.id.au>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <0951d79f-919a-4a9d-00f7-b40be96af118@arm.com>
-Date:   Fri, 20 Dec 2019 11:48:32 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 20 Dec 2019 06:50:26 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50734 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727191AbfLTLu0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 06:50:26 -0500
+Received: by mail-wm1-f68.google.com with SMTP id a5so8644653wmb.0;
+        Fri, 20 Dec 2019 03:50:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=92LR36gpXm7ShzZDTdNYLttXLvXwqcN2ee2IcjUQJyM=;
+        b=IZT26ZKzg2Hr/KkZq+JBi3j/FhPzJmuT3AT0OVXNXqb/9kJ+/wpwGjXMBO6agqFIeq
+         U9l6xf/tZg4r+rIDGij16sMWamhM2iXd80L3CDn4pm63R0WrGwAj7J0uulUSM7q46UX+
+         LKWN3ZzHZSRRLPNU+ulw5TozWEEak3WrYFNx0dG2b/6VQo52D9bi+Hnixbk07Q488EMK
+         FQHdkMiMwOLib5IDMhBcBI6r+htGC8ZpOHqTTa3GrvbQ04Gyus185F2CBRpIMOvOlxLr
+         G5GZMEnFBsMfeQ57Zi2HPHfLws4YD139ZgUSE3NouSJyBJIwr3i3Dk8aBQa28LUOWXdF
+         n0XA==
+X-Gm-Message-State: APjAAAUolbl8LL4yiyhalZ/8GN5QPTBX0B0wQS5FaOjchFsCSwVraz6U
+        qTMKnyxelsnce+45dEzTPSi9YbZh6PGzu0/AWiA=
+X-Google-Smtp-Source: APXvYqwXu1RfMIH+/STpMCSROBDwUgoaYLin0OfVf0BNvlcLdLyv3fHSJKrnIC8EAi6bGEyaoNW4gsJn9qZelX+b0xg=
+X-Received: by 2002:a1c:7205:: with SMTP id n5mr16460206wmc.9.1576842624244;
+ Fri, 20 Dec 2019 03:50:24 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <878sn8mtgt.fsf@mpe.ellerman.id.au>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191220043253.3278951-1-namhyung@kernel.org> <20191220043253.3278951-2-namhyung@kernel.org>
+ <20191220093335.GC2844@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191220093335.GC2844@hirez.programming.kicks-ass.net>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 20 Dec 2019 20:50:12 +0900
+Message-ID: <CAM9d7cgdHSTf9fLJeHVoinLdkii+-hXXmy7+kbzaj1zVFa53Uw@mail.gmail.com>
+Subject: Re: [PATCH 1/9] perf/core: Add PERF_RECORD_CGROUP event
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephane Eranian <eranian@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/12/2019 11:43, Michael Ellerman wrote:
-> Steven Price <steven.price@arm.com> writes:
->> Exposing the pud/pgd levels of the page tables to walk_page_range() means
->> we may come across the exotic large mappings that come with large areas
->> of contiguous memory (such as the kernel's linear map).
->>
->> For architectures that don't provide all p?d_leaf() macros, provide
->> generic do nothing default that are suitable where there cannot be leaf
->> pages at that level. Futher patches will add implementations for
->> individual architectures.
->>
->> The name p?d_leaf() is chosen to minimize the confusion with existing
->> uses of "large" pages and "huge" pages which do not necessary mean that
->> the entry is a leaf (for example it may be a set of contiguous entries
->> that only take 1 TLB slot). For the purpose of walking the page tables
->> we don't need to know how it will be represented in the TLB, but we do
->> need to know for sure if it is a leaf of the tree.
->>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> Acked-by: Mark Rutland <mark.rutland@arm.com>
->> ---
->>  include/asm-generic/pgtable.h | 20 ++++++++++++++++++++
->>  1 file changed, 20 insertions(+)
->>
->> diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
->> index 798ea36a0549..e2e2bef07dd2 100644
->> --- a/include/asm-generic/pgtable.h
->> +++ b/include/asm-generic/pgtable.h
->> @@ -1238,4 +1238,24 @@ static inline bool arch_has_pfn_modify_check(void)
->>  #define mm_pmd_folded(mm)	__is_defined(__PAGETABLE_PMD_FOLDED)
->>  #endif
->>  
->> +/*
->> + * p?d_leaf() - true if this entry is a final mapping to a physical address.
->> + * This differs from p?d_huge() by the fact that they are always available (if
->> + * the architecture supports large pages at the appropriate level) even
->> + * if CONFIG_HUGETLB_PAGE is not defined.
->> + * Only meaningful when called on a valid entry.
->> + */
->> +#ifndef pgd_leaf
->> +#define pgd_leaf(x)	0
->> +#endif
->> +#ifndef p4d_leaf
->> +#define p4d_leaf(x)	0
->> +#endif
->> +#ifndef pud_leaf
->> +#define pud_leaf(x)	0
->> +#endif
->> +#ifndef pmd_leaf
->> +#define pmd_leaf(x)	0
->> +#endif
-> 
-> Any reason you made these #defines rather than static inlines?
+On Fri, Dec 20, 2019 at 6:33 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> > diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> > index 377d794d3105..7bae2d3380a6 100644
+> > --- a/include/uapi/linux/perf_event.h
+> > +++ b/include/uapi/linux/perf_event.h
+> > @@ -377,7 +377,8 @@ struct perf_event_attr {
+> >                               ksymbol        :  1, /* include ksymbol events */
+> >                               bpf_event      :  1, /* include bpf events */
+> >                               aux_output     :  1, /* generate AUX records instead of events */
+> > -                             __reserved_1   : 32;
+> > +                             cgroup         :  1, /* include cgroup events */
+> > +                             __reserved_1   : 31;
+> >
+> >       union {
+> >               __u32           wakeup_events;    /* wakeup every n events */
+> > @@ -1006,6 +1007,17 @@ enum perf_event_type {
+> >        */
+> >       PERF_RECORD_BPF_EVENT                   = 18,
+> >
+> > +     /*
+> > +      * struct {
+> > +      *      struct perf_event_header        header;
+> > +      *      u64                             id;
+> > +      *      u64                             path_len;
+>
+> You can leave out path_len (also u64 for a length field is silly).
 
-No strong reason - but these have to be #defines in the arch overrides
-so the #ifndef works, so I was being consistent here. I guess a static
-inline might avoid warnings although I haven't seen any.
+Right, will remove.
 
-Steve
+Thanks
+Namhyung
+
+
+>
+> > +      *      char                            path[];
+> > +      *      struct sample_id                sample_id;
+> > +      * };
+> > +      */
+> > +     PERF_RECORD_CGROUP                      = 19,
