@@ -2,203 +2,137 @@ Return-Path: <SRS0=w7sF=2K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD45C43603
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF05C43603
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EADF821D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576852244;
-	bh=xpZSiw1B0mh/r+4BRCtLUERbNLJsC67GmYMk1Woavl8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MpNPZ7Imj7C8f91OYAlOBX2HUx4fGhAddzr7b4UpvOdUoOgoJK1Igrdp1eZvqgII/
-	 mgz8huWZALcfUF0D+RbkENYael9oLn87/5XlpokMbZgw6V4NeQSDW1jFsxVNajY31D
-	 W161SdlHaVc2i9ihC9Qi3Y+krQJ4DxsRxNSl7E8o=
+	by mail.kernel.org (Postfix) with ESMTP id DEE2C2468B
+	for <linux-kernel@archiver.kernel.org>; Fri, 20 Dec 2019 14:30:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbfLTOan (ORCPT
+        id S1727866AbfLTOap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:30:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34406 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 09:30:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:51198 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727790AbfLTOak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:30:40 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 357292468C;
-        Fri, 20 Dec 2019 14:30:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576852240;
-        bh=xpZSiw1B0mh/r+4BRCtLUERbNLJsC67GmYMk1Woavl8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RLSVbv2KAkES+qYqETm/ik7UPEXjwhEnV7XZNVSFhA0aQogSFQRNWhUqheGt4+YMW
-         8AC6JagoVhWZZPvsAa4opN9yk9SL8zMchzAjkR+mclpkwpXdJ49cUyxN5GUeACxPcs
-         EUV2zthwn+9nA+KpzQ40cZ1J3T+vAhkumts7nIbQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Yan <yanaijie@huawei.com>, Gao Chuan <gaochuan4@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 33/52] scsi: libsas: stop discovering if oob mode is disconnected
-Date:   Fri, 20 Dec 2019 09:29:35 -0500
-Message-Id: <20191220142954.9500-33-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
-References: <20191220142954.9500-1-sashal@kernel.org>
+        id S1727809AbfLTOaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:30:39 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF45611D4;
+        Fri, 20 Dec 2019 06:30:38 -0800 (PST)
+Received: from e119886-lin.cambridge.arm.com (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1120D3F718;
+        Fri, 20 Dec 2019 06:30:36 -0800 (PST)
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH v2 03/18] arm64: KVM: define SPE data structure for each vcpu
+Date:   Fri, 20 Dec 2019 14:30:10 +0000
+Message-Id: <20191220143025.33853-4-andrew.murray@arm.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191220143025.33853-1-andrew.murray@arm.com>
+References: <20191220143025.33853-1-andrew.murray@arm.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Yan <yanaijie@huawei.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-[ Upstream commit f70267f379b5e5e11bdc5d72a56bf17e5feed01f ]
+In order to support virtual SPE for guest, so define some basic structs.
+This features depends on host having hardware with SPE support.
 
-The discovering of sas port is driven by workqueue in libsas. When libsas
-is processing port events or phy events in workqueue, new events may rise
-up and change the state of some structures such as asd_sas_phy.  This may
-cause some problems such as follows:
+Since we can support this only on ARM64, add a separate config symbol
+for the same.
 
-==>thread 1                       ==>thread 2
-
-                                  ==>phy up
-                                  ==>phy_up_v3_hw()
-                                    ==>oob_mode = SATA_OOB_MODE;
-                                  ==>phy down quickly
-                                  ==>hisi_sas_phy_down()
-                                    ==>sas_ha->notify_phy_event()
-                                    ==>sas_phy_disconnected()
-                                      ==>oob_mode = OOB_NOT_CONNECTED
-==>workqueue wakeup
-==>sas_form_port()
-  ==>sas_discover_domain()
-    ==>sas_get_port_device()
-      ==>oob_mode is OOB_NOT_CONNECTED and device
-         is wrongly taken as expander
-
-This at last lead to the panic when libsas trying to issue a command to
-discover the device.
-
-[183047.614035] Unable to handle kernel NULL pointer dereference at
-virtual address 0000000000000058
-[183047.622896] Mem abort info:
-[183047.625762]   ESR = 0x96000004
-[183047.628893]   Exception class = DABT (current EL), IL = 32 bits
-[183047.634888]   SET = 0, FnV = 0
-[183047.638015]   EA = 0, S1PTW = 0
-[183047.641232] Data abort info:
-[183047.644189]   ISV = 0, ISS = 0x00000004
-[183047.648100]   CM = 0, WnR = 0
-[183047.651145] user pgtable: 4k pages, 48-bit VAs, pgdp =
-00000000b7df67be
-[183047.657834] [0000000000000058] pgd=0000000000000000
-[183047.662789] Internal error: Oops: 96000004 [#1] SMP
-[183047.667740] Process kworker/u16:2 (pid: 31291, stack limit =
-0x00000000417c4974)
-[183047.675208] CPU: 0 PID: 3291 Comm: kworker/u16:2 Tainted: G
-W  OE 4.19.36-vhulk1907.1.0.h410.eulerosv2r8.aarch64 #1
-[183047.687015] Hardware name: N/A N/A/Kunpeng Desktop Board D920S10,
-BIOS 0.15 10/22/2019
-[183047.695007] Workqueue: 0000:74:02.0_disco_q sas_discover_domain
-[183047.700999] pstate: 20c00009 (nzCv daif +PAN +UAO)
-[183047.705864] pc : prep_ata_v3_hw+0xf8/0x230 [hisi_sas_v3_hw]
-[183047.711510] lr : prep_ata_v3_hw+0xb0/0x230 [hisi_sas_v3_hw]
-[183047.717153] sp : ffff00000f28ba60
-[183047.720541] x29: ffff00000f28ba60 x28: ffff8026852d7228
-[183047.725925] x27: ffff8027dba3e0a8 x26: ffff8027c05fc200
-[183047.731310] x25: 0000000000000000 x24: ffff8026bafa8dc0
-[183047.736695] x23: ffff8027c05fc218 x22: ffff8026852d7228
-[183047.742079] x21: ffff80007c2f2940 x20: ffff8027c05fc200
-[183047.747464] x19: 0000000000f80800 x18: 0000000000000010
-[183047.752848] x17: 0000000000000000 x16: 0000000000000000
-[183047.758232] x15: ffff000089a5a4ff x14: 0000000000000005
-[183047.763617] x13: ffff000009a5a50e x12: ffff8026bafa1e20
-[183047.769001] x11: ffff0000087453b8 x10: ffff00000f28b870
-[183047.774385] x9 : 0000000000000000 x8 : ffff80007e58f9b0
-[183047.779770] x7 : 0000000000000000 x6 : 000000000000003f
-[183047.785154] x5 : 0000000000000040 x4 : ffffffffffffffe0
-[183047.790538] x3 : 00000000000000f8 x2 : 0000000002000007
-[183047.795922] x1 : 0000000000000008 x0 : 0000000000000000
-[183047.801307] Call trace:
-[183047.803827]  prep_ata_v3_hw+0xf8/0x230 [hisi_sas_v3_hw]
-[183047.809127]  hisi_sas_task_prep+0x750/0x888 [hisi_sas_main]
-[183047.814773]  hisi_sas_task_exec.isra.7+0x88/0x1f0 [hisi_sas_main]
-[183047.820939]  hisi_sas_queue_command+0x28/0x38 [hisi_sas_main]
-[183047.826757]  smp_execute_task_sg+0xec/0x218
-[183047.831013]  smp_execute_task+0x74/0xa0
-[183047.834921]  sas_discover_expander.part.7+0x9c/0x5f8
-[183047.839959]  sas_discover_root_expander+0x90/0x160
-[183047.844822]  sas_discover_domain+0x1b8/0x1e8
-[183047.849164]  process_one_work+0x1b4/0x3f8
-[183047.853246]  worker_thread+0x54/0x470
-[183047.856981]  kthread+0x134/0x138
-[183047.860283]  ret_from_fork+0x10/0x18
-[183047.863931] Code: f9407a80 528000e2 39409281 72a04002 (b9405800)
-[183047.870097] kernel fault(0x1) notification starting on CPU 0
-[183047.875828] kernel fault(0x1) notification finished on CPU 0
-[183047.881559] Modules linked in: unibsp(OE) hns3(OE) hclge(OE)
-hnae3(OE) mem_drv(OE) hisi_sas_v3_hw(OE) hisi_sas_main(OE)
-[183047.892418] ---[ end trace 4cc26083fc11b783  ]---
-[183047.897107] Kernel panic - not syncing: Fatal exception
-[183047.902403] kernel fault(0x5) notification starting on CPU 0
-[183047.908134] kernel fault(0x5) notification finished on CPU 0
-[183047.913865] SMP: stopping secondary CPUs
-[183047.917861] Kernel Offset: disabled
-[183047.921422] CPU features: 0x2,a2a00a38
-[183047.925243] Memory Limit: none
-[183047.928372] kernel reboot(0x2) notification starting on CPU 0
-[183047.934190] kernel reboot(0x2) notification finished on CPU 0
-[183047.940008] ---[ end Kernel panic - not syncing: Fatal exception
-]---
-
-Fixes: 2908d778ab3e ("[SCSI] aic94xx: new driver")
-Link: https://lore.kernel.org/r/20191206011118.46909-1-yanaijie@huawei.com
-Reported-by: Gao Chuan <gaochuan4@huawei.com>
-Reviewed-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+[ Add irq_level, rename irq to irq_num for kvm_spe ]
+Signed-off-by: Andrew Murray <andrew.murray@arm.com>
 ---
- drivers/scsi/libsas/sas_discover.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/kvm_host.h |  2 ++
+ arch/arm64/kvm/Kconfig            |  7 +++++++
+ include/kvm/arm_spe.h             | 19 +++++++++++++++++++
+ 3 files changed, 28 insertions(+)
+ create mode 100644 include/kvm/arm_spe.h
 
-diff --git a/drivers/scsi/libsas/sas_discover.c b/drivers/scsi/libsas/sas_discover.c
-index f47b4b281b14a..d7302c2052f91 100644
---- a/drivers/scsi/libsas/sas_discover.c
-+++ b/drivers/scsi/libsas/sas_discover.c
-@@ -81,12 +81,21 @@ static int sas_get_port_device(struct asd_sas_port *port)
- 		else
- 			dev->dev_type = SAS_SATA_DEV;
- 		dev->tproto = SAS_PROTOCOL_SATA;
--	} else {
-+	} else if (port->oob_mode == SAS_OOB_MODE) {
- 		struct sas_identify_frame *id =
- 			(struct sas_identify_frame *) dev->frame_rcvd;
- 		dev->dev_type = id->dev_type;
- 		dev->iproto = id->initiator_bits;
- 		dev->tproto = id->target_bits;
-+	} else {
-+		/* If the oob mode is OOB_NOT_CONNECTED, the port is
-+		 * disconnected due to race with PHY down. We cannot
-+		 * continue to discover this port
-+		 */
-+		sas_put_device(dev);
-+		pr_warn("Port %016llx is disconnected when discovering\n",
-+			SAS_ADDR(port->attached_sas_addr));
-+		return -ENODEV;
- 	}
+diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+index c61260cf63c5..f5dcff912645 100644
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -35,6 +35,7 @@
+ #include <kvm/arm_vgic.h>
+ #include <kvm/arm_arch_timer.h>
+ #include <kvm/arm_pmu.h>
++#include <kvm/arm_spe.h>
  
- 	sas_init_dev(dev);
+ #define KVM_MAX_VCPUS VGIC_V3_MAX_CPUS
+ 
+@@ -302,6 +303,7 @@ struct kvm_vcpu_arch {
+ 	struct vgic_cpu vgic_cpu;
+ 	struct arch_timer_cpu timer_cpu;
+ 	struct kvm_pmu pmu;
++	struct kvm_spe spe;
+ 
+ 	/*
+ 	 * Anything that is not used directly from assembly code goes
+diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
+index a475c68cbfec..af5be2c57dcb 100644
+--- a/arch/arm64/kvm/Kconfig
++++ b/arch/arm64/kvm/Kconfig
+@@ -35,6 +35,7 @@ config KVM
+ 	select HAVE_KVM_EVENTFD
+ 	select HAVE_KVM_IRQFD
+ 	select KVM_ARM_PMU if HW_PERF_EVENTS
++	select KVM_ARM_SPE if (HW_PERF_EVENTS && ARM_SPE_PMU)
+ 	select HAVE_KVM_MSI
+ 	select HAVE_KVM_IRQCHIP
+ 	select HAVE_KVM_IRQ_ROUTING
+@@ -61,6 +62,12 @@ config KVM_ARM_PMU
+ 	  Adds support for a virtual Performance Monitoring Unit (PMU) in
+ 	  virtual machines.
+ 
++config KVM_ARM_SPE
++	bool
++	---help---
++	  Adds support for a virtual Statistical Profiling Extension(SPE) in
++	  virtual machines.
++
+ config KVM_INDIRECT_VECTORS
+        def_bool KVM && (HARDEN_BRANCH_PREDICTOR || HARDEN_EL2_VECTORS)
+ 
+diff --git a/include/kvm/arm_spe.h b/include/kvm/arm_spe.h
+new file mode 100644
+index 000000000000..48d118fdb174
+--- /dev/null
++++ b/include/kvm/arm_spe.h
+@@ -0,0 +1,19 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2019 ARM Ltd.
++ */
++
++#ifndef __ASM_ARM_KVM_SPE_H
++#define __ASM_ARM_KVM_SPE_H
++
++#include <uapi/linux/kvm.h>
++#include <linux/kvm_host.h>
++
++struct kvm_spe {
++	int irq_num;
++	bool ready; /* indicates that SPE KVM instance is ready for use */
++	bool created; /* SPE KVM instance is created, may not be ready yet */
++	bool irq_level;
++};
++
++#endif /* __ASM_ARM_KVM_SPE_H */
 -- 
-2.20.1
+2.21.0
 
