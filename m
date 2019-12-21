@@ -2,270 +2,189 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC48C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 20:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E38D8C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 20:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53C6520665
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 20:15:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576959347;
-	bh=5ebffvH8RjGUA/CqJXLR3seJ47MPgsm90kIrp/SYkC8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TcoSKj3uBeFv7aZw5MBnzWjn871zyZRx3KEuSa3p7tCnlMDv+0bym64EbaOwgEcL0
-	 s5KyK5KYwWZe2My/d4++axW0l2v/Ip85TPeLAf+hImqPccjZUOEoXuDYcUQCYAt1id
-	 hBr9dtLf6hh3y1I46aaH1dziAR0DMswRBmisS1VE=
+	by mail.kernel.org (Postfix) with ESMTP id ABF5620665
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 20:18:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MEZhPkj/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbfLUUPq (ORCPT
+        id S1727401AbfLUUSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 15:15:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726593AbfLUUPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 15:15:46 -0500
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 738AE206D8;
-        Sat, 21 Dec 2019 20:15:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576959344;
-        bh=5ebffvH8RjGUA/CqJXLR3seJ47MPgsm90kIrp/SYkC8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rRET7jGuQ9x3Bi6G6g9O1ZUsM1zX4zsiWIx1Nt2RxjGBVszQtqOvdsBF44Zl2BSMt
-         1/06vhY22BJ5Irc1JeHg41UBKX9WzhDW+rNMBK5x0tDO6y0e+Cza/GHqV8Sw63s/01
-         lpUg9+MvHXTQwpVg2VaK0P17ndrD+m0kBl/sU1CI=
-Received: by mail-lj1-f182.google.com with SMTP id a13so13616145ljm.10;
-        Sat, 21 Dec 2019 12:15:44 -0800 (PST)
-X-Gm-Message-State: APjAAAVY7MI3xsJU4gSDsvwvV8KoMBDiSSmJB1iMp9cB2mQtfgNLgyu5
-        IMnYJdjLvC6kiyRb8IfarSkHv2IKpwOOdf3KesQ=
-X-Google-Smtp-Source: APXvYqw/wOkj3/7bhV08O1Y2ozplefUJRTEti5Jg7xBvbgQ90EBzcMhD9yqJ5nlEbYLGWhZbqzIfqislmtInQwBiECg=
-X-Received: by 2002:a2e:9b05:: with SMTP id u5mr13652547lji.59.1576959342597;
- Sat, 21 Dec 2019 12:15:42 -0800 (PST)
+        Sat, 21 Dec 2019 15:18:00 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51535 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbfLUUSA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Dec 2019 15:18:00 -0500
+Received: by mail-wm1-f65.google.com with SMTP id d73so12198526wmd.1;
+        Sat, 21 Dec 2019 12:17:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2lLX3yIQeXXP7FLpx1+E5wtRT/tqet9QEfxDN9904Oo=;
+        b=MEZhPkj/kpS21k/jnelmsp0v4dF6KLG6qBF2x0C6nXH3lXw2DHF9v0iY6P2bMSj11g
+         SbMiOL8DwYoCmj/7k29a3ScIlq7I4bnFzgzJ30i4gSJtHG6NYNZS31X7dlzyS5QYfSow
+         pYXiHmfMa0nQGtwUwTeFblDUpJy0/bDzBRXEHRD0pDzvpfpdLVWJWHCdcliGsWYmDX0R
+         7aq2QWKBay1t1arpWQaf0yL2cu05yF5Pau7jlKZX6OQcGiRDmiDTjmZpiRI1oB7uVFAK
+         cbvueIPXwd5eZVd6R36HcV6QTXGvnm338KxYb4U28PpxNtlCXQ4s4llX9jeM0l0qIvzj
+         PGig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=2lLX3yIQeXXP7FLpx1+E5wtRT/tqet9QEfxDN9904Oo=;
+        b=AiAjxRvscIYGm7lcnTAe2JtkPDgOdb+7kViH+SgsMDbsiuBZhhE2IIYYffhHworzYF
+         lG+RXUukIPqf42i7SOrVo4S/iFrxQaM+JAEzPKrnl3ecGwuTj4fefGrlWuOAkLmqEWfF
+         lMOQnPub3EosdI9JROJREuOXFc3ae9Femf6xBGMiol6/jt4e2QrZmRjKp067QWIq2pT8
+         7WT4IU+fGmDPn2IYrJtPms+Y6Q+9iZJwkawhyedDAnP9CICrqbnrDw1kORjuJbemDmNC
+         cnheumjKDOoUTP3V/X3+wrjyk9iioX0xrJbHuFI8Io/jX+GyrBpR16KOCDRPqPXN2A0t
+         iqiw==
+X-Gm-Message-State: APjAAAUcjjUq+YALC96Snr+SMhhUFKK6ykTCQYDzsTy7ZTGBsvZ9poRk
+        ZrbwiZJD6UI+8me8mhsds4c=
+X-Google-Smtp-Source: APXvYqz7EsmjZdxdSBtmqsbRtpMCmy9Il3Yr8ClYwED3m8uo4SijuL7qk7m99EeG2oERpChroHcN+g==
+X-Received: by 2002:a1c:740b:: with SMTP id p11mr24627282wmc.78.1576959476997;
+        Sat, 21 Dec 2019 12:17:56 -0800 (PST)
+Received: from [192.168.1.19] (bfd180.neoplus.adsl.tpnet.pl. [83.28.41.180])
+        by smtp.gmail.com with ESMTPSA id n10sm14048030wrt.14.2019.12.21.12.17.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 21 Dec 2019 12:17:56 -0800 (PST)
+Subject: Re: [PATCH] leds: gpio: Fix uninitialized gpio label for fwnode based
+ probe
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Russell King <linux@armlinux.org.uk>
+References: <20191205212501.9163-1-jacek.anaszewski@gmail.com>
+ <20191221184957.GD32732@amd>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <7ff6e22f-537a-e205-db19-a75d33af8487@gmail.com>
+Date:   Sat, 21 Dec 2019 21:17:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <CGME20191220120146eucas1p22a7b0457be4f378b113f67dc25f2eba7@eucas1p2.samsung.com>
- <20191220115653.6487-1-a.swigon@samsung.com> <20191220115653.6487-8-a.swigon@samsung.com>
-In-Reply-To: <20191220115653.6487-8-a.swigon@samsung.com>
-From:   Chanwoo Choi <chanwoo@kernel.org>
-Date:   Sun, 22 Dec 2019 05:15:06 +0900
-X-Gmail-Original-Message-ID: <CAGTfZH0LKmBzAokgN+2K4-PS87gc2GnchYaHJi33nMQBCTNS-g@mail.gmail.com>
-Message-ID: <CAGTfZH0LKmBzAokgN+2K4-PS87gc2GnchYaHJi33nMQBCTNS-g@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 7/7] drm: exynos: mixer: Add interconnect support
-To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>, inki.dae@samsung.com,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191221184957.GD32732@amd>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 12/21/19 7:49 PM, Pavel Machek wrote:
+> Hi!
+> 
+>> When switching to using generic LED name composition mechanism via
+>> devm_led_classdev_register_ext() API the part of code initializing
+>> struct gpio_led's template name property was removed alongside.
+>> It was however overlooked that the property was also passed to
+>> devm_fwnode_get_gpiod_from_child() in place of "label" parameter,
+>> which when set to NULL, results in gpio label being initialized to '?'.
+>>
+>> It could be observed in debugfs and failed to properly identify
+>> gpio association with LED consumer.
+>>
+>> Fix this shortcoming by updating the GPIO label after the LED is
+>> registered and its final name is known.
+>>
+>> Fixes: d7235f5feaa0 ("leds: gpio: Use generic support for composing LED names")
+>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>> Cc: Pavel Machek <pavel@ucw.cz>
+>> Cc: Russell King <linux@armlinux.org.uk>
+>> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> 
+> Patch looks good, except:
+> 
+>> @@ -151,9 +151,14 @@ static struct gpio_leds_priv *gpio_leds_create(struct platform_device *pdev)
+>>  		struct gpio_led led = {};
+>>  		const char *state = NULL;
+>>  
+>> +		/**
+>> +		 * Acquire gpiod from DT with uninitialized label, which
+>> +		 * will be updated after LED class device is registered,
+>> +		 * Only then the final LED name is known.
+>> +		 */
+>>  		led.gpiod = devm_fwnode_get_gpiod_from_child(dev, NULL, child,
+>>  							     GPIOD_ASIS,
+>> -							     led.name);
+>> +							     NULL);
+> 
+> This is not linuxdoc, so comment should beging with /* AFAICT.
 
-On Fri, Dec 20, 2019 at 9:03 PM Artur =C5=9Awigo=C5=84 <a.swigon@samsung.co=
-m> wrote:
->
-> From: Marek Szyprowski <m.szyprowski@samsung.com>
->
-> This patch adds interconnect support to exynos-mixer. The mixer works
-> the same as before when CONFIG_INTERCONNECT is 'n'.
+Right.
 
-The patch description doesn't include why interconnect is required
-and what to do.
+> I'll probably hand-edit the patch.
 
->
-> Co-developed-by: Artur =C5=9Awigo=C5=84 <a.swigon@samsung.com>
-> Signed-off-by: Artur =C5=9Awigo=C5=84 <a.swigon@samsung.com>
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->  drivers/gpu/drm/exynos/exynos_mixer.c | 71 +++++++++++++++++++++++++--
->  1 file changed, 66 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpu/drm/exynos/exynos_mixer.c b/drivers/gpu/drm/exyn=
-os/exynos_mixer.c
-> index 6cfdb95fef2f..a7e7240a055f 100644
-> --- a/drivers/gpu/drm/exynos/exynos_mixer.c
-> +++ b/drivers/gpu/drm/exynos/exynos_mixer.c
-> @@ -13,6 +13,7 @@
->  #include <linux/component.h>
->  #include <linux/delay.h>
->  #include <linux/i2c.h>
-> +#include <linux/interconnect.h>
->  #include <linux/interrupt.h>
->  #include <linux/irq.h>
->  #include <linux/kernel.h>
-> @@ -97,6 +98,7 @@ struct mixer_context {
->         struct exynos_drm_crtc  *crtc;
->         struct exynos_drm_plane planes[MIXER_WIN_NR];
->         unsigned long           flags;
-> +       struct icc_path         *soc_path;
->
->         int                     irq;
->         void __iomem            *mixer_regs;
-> @@ -931,6 +933,40 @@ static void mixer_disable_vblank(struct exynos_drm_c=
-rtc *crtc)
->         mixer_reg_writemask(mixer_ctx, MXR_INT_EN, 0, MXR_INT_EN_VSYNC);
->  }
->
-> +static void mixer_set_memory_bandwidth(struct exynos_drm_crtc *crtc)
-> +{
-> +       struct drm_display_mode *mode =3D &crtc->base.state->adjusted_mod=
-e;
-> +       struct mixer_context *ctx =3D crtc->ctx;
-> +       unsigned long bw, bandwidth =3D 0;
-> +       int i, j, sub;
-> +
-> +       if (!ctx->soc_path)
-> +               return;
-> +
-> +       for (i =3D 0; i < MIXER_WIN_NR; i++) {
-> +               struct drm_plane *plane =3D &ctx->planes[i].base;
-> +               const struct drm_format_info *format;
-> +
-> +               if (plane->state && plane->state->crtc && plane->state->f=
-b) {
-> +                       format =3D plane->state->fb->format;
-> +                       bw =3D mode->hdisplay * mode->vdisplay *
-> +                                                       drm_mode_vrefresh=
-(mode);
-> +                       if (mode->flags & DRM_MODE_FLAG_INTERLACE)
-> +                               bw /=3D 2;
-> +                       for (j =3D 0; j < format->num_planes; j++) {
-> +                               sub =3D j ? (format->vsub * format->hsub)=
- : 1;
-> +                               bandwidth +=3D format->cpp[j] * bw / sub;
-> +                       }
-> +               }
-> +       }
-> +
-> +       /* add 20% safety margin */
-> +       bandwidth =3D bandwidth / 4 * 5;
-> +
-> +       dev_dbg(ctx->dev, "exynos-mixer: safe bandwidth %ld Bps\n", bandw=
-idth);
-> +       icc_set_bw(ctx->soc_path, Bps_to_icc(bandwidth), 0);
-> +}
+Sure, thanks.
 
-I recommend that add the role of this function in order to guarantee
-the minimum bandwidth to prevent performance drop or h/w issue.
-
-> +
->  static void mixer_atomic_begin(struct exynos_drm_crtc *crtc)
->  {
->         struct mixer_context *ctx =3D crtc->ctx;
-> @@ -982,6 +1018,7 @@ static void mixer_atomic_flush(struct exynos_drm_crt=
-c *crtc)
->         if (!test_bit(MXR_BIT_POWERED, &mixer_ctx->flags))
->                 return;
->
-> +       mixer_set_memory_bandwidth(crtc);
->         mixer_enable_sync(mixer_ctx);
->         exynos_crtc_handle_event(crtc);
->  }
-> @@ -1029,6 +1066,7 @@ static void mixer_disable(struct exynos_drm_crtc *c=
-rtc)
->         for (i =3D 0; i < MIXER_WIN_NR; i++)
->                 mixer_disable_plane(crtc, &ctx->planes[i]);
->
-> +       mixer_set_memory_bandwidth(crtc);
->         exynos_drm_pipe_clk_enable(crtc, false);
->
->         pm_runtime_put(ctx->dev);
-> @@ -1220,12 +1258,22 @@ static int mixer_probe(struct platform_device *pd=
-ev)
->         struct device *dev =3D &pdev->dev;
->         const struct mixer_drv_data *drv;
->         struct mixer_context *ctx;
-> +       struct icc_path *path;
->         int ret;
->
-> +       /*
-> +        * Returns NULL if CONFIG_INTERCONNECT is disabled.
-> +        * May return ERR_PTR(-EPROBE_DEFER).
-> +        */
-> +       path =3D of_icc_get(dev, NULL);
-> +       if (IS_ERR(path))
-> +               return PTR_ERR(path);
-> +
->         ctx =3D devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
->         if (!ctx) {
->                 DRM_DEV_ERROR(dev, "failed to alloc mixer context.\n");
-> -               return -ENOMEM;
-> +               ret =3D -ENOMEM;
-> +               goto err;
->         }
->
->         drv =3D of_device_get_match_data(dev);
-> @@ -1233,6 +1281,7 @@ static int mixer_probe(struct platform_device *pdev=
-)
->         ctx->pdev =3D pdev;
->         ctx->dev =3D dev;
->         ctx->mxr_ver =3D drv->version;
-> +       ctx->soc_path =3D path;
->
->         if (drv->is_vp_enabled)
->                 __set_bit(MXR_BIT_VP_ENABLED, &ctx->flags);
-> @@ -1242,17 +1291,29 @@ static int mixer_probe(struct platform_device *pd=
-ev)
->         platform_set_drvdata(pdev, ctx);
->
->         ret =3D component_add(&pdev->dev, &mixer_component_ops);
-> -       if (!ret)
-> -               pm_runtime_enable(dev);
-> +       if (ret < 0)
-> +               goto err;
-> +
-> +       pm_runtime_enable(dev);
-> +
-> +       return 0;
-> +
-> +err:
-> +       icc_put(path);
->
->         return ret;
->  }
->
->  static int mixer_remove(struct platform_device *pdev)
->  {
-> -       pm_runtime_disable(&pdev->dev);
-> +       struct device *dev =3D &pdev->dev;
-> +       struct mixer_context *ctx =3D dev_get_drvdata(dev);
-> +
-> +       pm_runtime_disable(dev);
-> +
-> +       component_del(dev, &mixer_component_ops);
->
-> -       component_del(&pdev->dev, &mixer_component_ops);
-> +       icc_put(ctx->soc_path);
->
->         return 0;
->  }
-> --
-> 2.17.1
->
-
-Basically, I agree this patch about using ICC feature
-to guarantee the minimum bandwidth. But, I don't have
-the knowledge of exynos-mixer.c. So, just I reviewed
-the part of ICC usage. After digging the exynos-mixer.c,
-I'll reply the reviewed tag. Thanks.
-
---=20
-Best Regards,
-Chanwoo Choi
+-- 
+Best regards,
+Jacek Anaszewski
