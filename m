@@ -2,104 +2,146 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B01FBC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 10:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF05C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 10:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74CC321655
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 10:02:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=living180.net header.i=@living180.net header.b="DsC4bf8v";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JlS6C2du"
+	by mail.kernel.org (Postfix) with ESMTP id C284121D7D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 10:08:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576922931;
+	bh=9acaA/8fKn1399pza9UZM74CCEP9IQOiAcwxAFB8uv0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=o98mCR9uJyCy1xEfJDOcc9DfyJVDjvNbB93VQ/gu5l2fB8/QRvWMDN3m6Il3vQTKH
+	 ybi4Z2IECwCNCL9mteZl3ih0jRiau3+M325x5KhoMw7dfKEpS9qJAxgF2ANVqqIW5/
+	 6iU5t9KZfVxiDjgk6cfSfUbmtJVlt2f5nCtyA1kg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbfLUKCk (ORCPT
+        id S1726650AbfLUKIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 05:02:40 -0500
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:39461 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725944AbfLUKCj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 05:02:39 -0500
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.west.internal (Postfix) with ESMTP id 3F66D681;
-        Sat, 21 Dec 2019 05:02:38 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Sat, 21 Dec 2019 05:02:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=living180.net;
-         h=from:subject:to:cc:message-id:date:mime-version:content-type
-        :content-transfer-encoding; s=fm1; bh=mf756YqPUpw9UW/+oFcO+1ckXv
-        2z+LXd4Xw3O6R0G5s=; b=DsC4bf8vmfRDgXGfVzYsW+QjpKWc+SqH4nCtcOEvRn
-        9QEwqkjvUtXiVm7iqOdCaEdNY7j3AadtSURm0uDVyZ4F6zgeX5JtaVXhXj5hFO97
-        5HyA1s9fffQTUA5YlZyoFJ5LQReux9GGegqSQfcYBjNB5xNGg/Ag7I6m8FMBc9TT
-        h4qrKryGg7v2irbiKT1LrCMSJVAlRN8vowSUBVDfHRPfb6z6qHSIuyHNNQcQbFZs
-        f4LKjJZDrv3QwmkkRTXy6IrhPIsAg5yIflR7xg/zNjrkpsIYP2Pt9T9iXTFMTq8C
-        3lLdL9Aknp0N5DUKuKNXF7YUxi1j3GD6Ufp1pY30G6YA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:message-id:mime-version:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=mf756Y
-        qPUpw9UW/+oFcO+1ckXv2z+LXd4Xw3O6R0G5s=; b=JlS6C2dum9PdULDRLAWokZ
-        V5vtHVnK/bJWNNUSF6T+2kmMI+CkvPM9hIzwvw0Ulkf3tNo+OhlL+/nPyBarK0J0
-        WgjTPGUHu10lBzvZmgvxjznWT8tpDFZTIPuyhOUraodMV4zpqnSjtCGH+5iFh38U
-        wnw8x+zIZZxBfcTwH7iwJJs/Wpq7enkf8a03gdSndIhm8+oR718pyKlKwvhaoLBe
-        YLETwZxuXqC0nmp3R9Q7tjzurvV+7wKLDSZ0dywN3PVYrpGb1SrrIseoJyyQH785
-        UKXzUR1yhASPTCowuxILnbbTic9R6w8EqM7KpXPLDIWwqPAvWMf/RQNXtzKEZzBQ
-        ==
-X-ME-Sender: <xms:ve39XT52BArQOBl0uR7NLQzah9aJuA-J_WcWQR1-BArC0Kpze5xmCw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdduhedgudduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffuvffkffgfgggtgfesthekredttdefjeenucfhrhhomhepffgrnhhivghl
-    ucfjrghrughinhhguceoughhrghrughinhhgsehlihhvihhnghdukedtrdhnvghtqeenuc
-    fkphepudejfedrudelledrudduhedrvdegjeenucfrrghrrghmpehmrghilhhfrhhomhep
-    ughhrghrughinhhgsehlihhvihhnghdukedtrdhnvghtnecuvehluhhsthgvrhfuihiivg
-    eptd
-X-ME-Proxy: <xmx:ve39XViU8MPTwiCvNGQvRQtrLvLDgrs-lNCorTEaIwKJBRXJ6E9NBw>
-    <xmx:ve39XeGTG_D1EhCNhwDoCxwE-ySzZh86yZHGS7B0H-z1YRAQmIqEFA>
-    <xmx:ve39XaSzBaS877-V6w89PohpkcHkOpuBS-z-FlDQoLh7IR9EF-sPkg>
-    <xmx:ve39XYzRCg6qWB820pMNg0EUTCs_-7ua-vOaSNwJ-gds-_HFtux3fw>
-Received: from [0.0.0.0] (unknown [173.199.115.247])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A6B0D8005C;
-        Sat, 21 Dec 2019 05:02:35 -0500 (EST)
-From:   Daniel Harding <dharding@living180.net>
-Subject: [5.3 Regression] x86/ioapic change causes suspend problem
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Message-ID: <6f3101a3-8404-2a6a-b2c1-d6b2e4179938@living180.net>
-Date:   Sat, 21 Dec 2019 12:02:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Sat, 21 Dec 2019 05:08:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726087AbfLUKIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Dec 2019 05:08:49 -0500
+Received: from localhost (unknown [5.29.147.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A0D0206EC;
+        Sat, 21 Dec 2019 10:08:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576922927;
+        bh=9acaA/8fKn1399pza9UZM74CCEP9IQOiAcwxAFB8uv0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=C5VL6ejrikwv/fPR/5hW1vC5g7ZxqQArLHZI9V0Acv45zpCoEu7KVSUG363aSOh1d
+         8mWTxU92Mkz/MNea4rOvwk4lPkm3QVmugiAJmAPtyzW4ix2JAMqI4I9mKaT4oTHqTx
+         danVQGmjzaX4h7HmaTFOuro/EjXVdeZW+yY0HmyE=
+Date:   Sat, 21 Dec 2019 12:08:43 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
+        Maor Gottlieb <maorg@mellanox.com>
+Subject: Re: [PATCH v11 00/25] mm/gup: track dma-pinned pages: FOLL_PIN
+Message-ID: <20191221100843.GB13335@unreal>
+References: <20191216222537.491123-1-jhubbard@nvidia.com>
+ <20191219132607.GA410823@unreal>
+ <a4849322-8e17-119e-a664-80d9f95d850b@nvidia.com>
+ <20191219210743.GN17227@ziepe.ca>
+ <20191220182939.GA10944@unreal>
+ <1001a5fc-a71d-9c0f-1090-546c4913d8a2@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1001a5fc-a71d-9c0f-1090-546c4913d8a2@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Over the past few weeks I've been experiencing problems with 
-suspend/hybrid sleep on my laptop (a Clevo N240BU, Intel Core 
-i7-7500U).  Instead of the suspend process completing normally, the 
-computer hangs with a blank screen and the CPU fan spinning above idle.  
-I have to forcibly power off the computer to get it to turn off.  If I 
-invoke hybrid sleep, the hibernation image is intact and I am able to 
-resume from that after powering the computer back on.
+On Fri, Dec 20, 2019 at 03:54:55PM -0800, John Hubbard wrote:
+> On 12/20/19 10:29 AM, Leon Romanovsky wrote:
+> ...
+> >> $ ./build.sh
+> >> $ build/bin/run_tests.py
+> >>
+> >> If you get things that far I think Leon can get a reproduction for you
+> >
+> > I'm not so optimistic about that.
+> >
+>
+> OK, I'm going to proceed for now on the assumption that I've got an overflow
+> problem that happens when huge pages are pinned. If I can get more information,
+> great, otherwise it's probably enough.
+>
+> One thing: for your repro, if you know the huge page size, and the system
+> page size for that case, that would really help. Also the number of pins per
+> page, more or less, that you'd expect. Because Jason says that only 2M huge
+> pages are used...
+>
+> Because the other possibility is that the refcount really is going negative,
+> likely due to a mismatched pin/unpin somehow.
+>
+> If there's not an obvious repro case available, but you do have one (is it easy
+> to repro, though?), then *if* you have the time, I could point you to a github
+> branch that reduces GUP_PIN_COUNTING_BIAS by, say, 4x, by applying this:
 
-I bisected the issue, and traced it to commit 
-dfe0cf8b51b07e56ded571e3de0a4a9382517231.  Before that commit, suspend 
-works reliably, but afterward it hangs most of the time.  I verified 
-that the problem still exists in version 5.4.5, but have not tested the 
-latest master.
+I'll see what I can do this Sunday.
 
-If there is any more information that would be useful or if I can help 
-to resolve this issue in any way, please let me know.
-
-Regards,
-
-Daniel Harding
+>
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index bb44c4d2ada7..8526fd03b978 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -1077,7 +1077,7 @@ static inline void put_page(struct page *page)
+>   * get_user_pages and page_mkclean and other calls that race to set up page
+>   * table entries.
+>   */
+> -#define GUP_PIN_COUNTING_BIAS (1U << 10)
+> +#define GUP_PIN_COUNTING_BIAS (1U << 8)
+>
+>  void unpin_user_page(struct page *page);
+>  void unpin_user_pages_dirty_lock(struct page **pages, unsigned long npages,
+>
+> If that fails to repro, then we would be zeroing in on the root cause.
+>
+> The branch is here (I just tested it and it seems healthy):
+>
+> git@github.com:johnhubbard/linux.git  pin_user_pages_tracking_v11_with_diags
+>
+>
+>
+> thanks,
+> --
+> John Hubbard
+> NVIDIA
