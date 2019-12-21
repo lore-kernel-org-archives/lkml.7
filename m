@@ -2,179 +2,102 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A67C43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 03:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAB8C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 03:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 634F12070C
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 03:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 967F120866
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 03:10:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TEx1Rffx"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DWwSVYGt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbfLUDJX (ORCPT
+        id S1726791AbfLUDKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 22:09:23 -0500
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:40677 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726537AbfLUDJX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 22:09:23 -0500
-Received: by mail-yb1-f195.google.com with SMTP id a2so4633477ybr.7
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 19:09:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/MmE0BSfA4eSxzEuFlBz4xmNmzslSl61ay4ol+tnyOA=;
-        b=TEx1RffxJNUfO5zCvGXV2kGnvATRM3bxjTmoJszwgn+7ib0f5VheMRk/Mx0lEK0hVJ
-         trrqdJlaJnSYnHtH7Pb9rcRCbUj+4L+eLaNYI1HZ1nHRPh8nmEnnxHmlDNelacoldHX1
-         CFsj67fEvP6E+A6WNCWlHB3WjkRhVekgHRc+/5tAkZAhlazDoCbYSiu0C2oYGgJOTtYq
-         EANAjmMeDWgD+XBZkaM19ohy+n7G9MInEJcn4Tl6vTzsu4ahnlRUyo4ZxXe/pRFNHRnV
-         pQwYVrt5O6Prsjup+irgjnbKUvvqvU2qDroFMWhXFXXoR5+IdC8lj2AbsVWAF0RJLS0r
-         Bcsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/MmE0BSfA4eSxzEuFlBz4xmNmzslSl61ay4ol+tnyOA=;
-        b=ENqAV47r3oWMfo7ET0amPkd8frrVLmfQLjRKMEnjG4kHuPm1bJQPXf1eCXNoeY6TZ3
-         P1MBeF0sPx86aEJ4IQPNttALPjE0/BfCXiMSoOCAG6B4JpPsLz+9y4K01JUN80ZUnydm
-         yuztaJXRa/mKKJE0aqO2DruZV0g1emTqWEjWyUSkyDgXzd4b1Zg6T8nAf8AOm0cI5bbr
-         silcJdYrq8A2CwI34q3QfKh+HCTp4bdN8SpTXhS/CpjaLBclD2LfUpnjJ+QIJrfT+qzR
-         L7uBdu1zHwtgl5qJfMBjKZ5MhNfGB1Dqai6oxiPdtwQMgDSzx0hc0lkcjKSRBOenmfYB
-         7blQ==
-X-Gm-Message-State: APjAAAXYd6ed0CYM0NxOG5LFaopbp3SJtun4OJKkWos44CLp6AFjljdf
-        x3bgIVj7r3CKS1wG7jKA77dpZYCr
-X-Google-Smtp-Source: APXvYqy0/dnSj47lUrsN+xQu3tsbbbVbtOcfAiKok++3tdk7C30BzA6S63w2n+4OWJtp+UKHjEAFWA==
-X-Received: by 2002:a25:dd04:: with SMTP id u4mr12777651ybg.419.1576897760724;
-        Fri, 20 Dec 2019 19:09:20 -0800 (PST)
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com. [209.85.219.171])
-        by smtp.gmail.com with ESMTPSA id q189sm4735962ywb.15.2019.12.20.19.09.18
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Dec 2019 19:09:19 -0800 (PST)
-Received: by mail-yb1-f171.google.com with SMTP id i3so4617431ybe.12
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Dec 2019 19:09:18 -0800 (PST)
-X-Received: by 2002:a5b:348:: with SMTP id q8mr13423111ybp.83.1576897758310;
- Fri, 20 Dec 2019 19:09:18 -0800 (PST)
+        Fri, 20 Dec 2019 22:10:33 -0500
+Received: from ozlabs.org ([203.11.71.1]:45603 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726736AbfLUDKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 22:10:32 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47frGD6szlz9sPV;
+        Sat, 21 Dec 2019 14:10:28 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1576897829;
+        bh=bIb/iLNeJrBgQtcc7XEvpTV4Uk42F9Zucml+Wj869GY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=DWwSVYGtYQ4mzhAVFWQCEHKgcjkJ8lOcMhr1OgzSVUpn1jy4wUt11SaF+U+22Ymu+
+         /oIggwdgVONGsvlZDVGhpe6UY+28WxmtO4QEJP2LANBigr3gywwrI1BqHA8pZdPwkM
+         BrjZPkyTf95gfJxi4JFO6cyzBe6v2W0KcpeYR9U9dnTg2I3zFv5LPwBR5wjyP3bY2g
+         2pBPSzPrVVp6m5n2wAF8smF9sObRDKxu3WUWecbOtJ6eg6omEurlx2SkF703UVMLrN
+         GR41XLSRc4YDR8hJUYIaGvZXVznrarTgz2YJab7Opcl5n2GBlKmKLJLxYuHrwgQcsP
+         29xJf5cgzHrmg==
+Date:   Sat, 21 Dec 2019 14:10:19 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Adamson <andros@netapp.com>,
+        Olga Kornievskaia <kolga@netapp.com>
+Subject: linux-next: Signed-off-by missing for commit in the nfsd tree
+Message-ID: <20191221141019.05f0f619@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20191220212207.76726-1-adelva@google.com>
-In-Reply-To: <20191220212207.76726-1-adelva@google.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Fri, 20 Dec 2019 22:08:41 -0500
-X-Gmail-Original-Message-ID: <CA+FuTSewMaRTe51jOJtD-VHcp4Ct+c=11-9SxenULHwQuokamw@mail.gmail.com>
-Message-ID: <CA+FuTSewMaRTe51jOJtD-VHcp4Ct+c=11-9SxenULHwQuokamw@mail.gmail.com>
-Subject: Re: [PATCH net] virtio-net: Skip set_features on non-cvq devices
-To:     Alistair Delva <adelva@google.com>
-Cc:     Network Development <netdev@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>, kernel-team@android.com,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/flwicFQfaG_QG6/j=T4e76X";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 4:22 PM Alistair Delva <adelva@google.com> wrote:
->
-> On devices without control virtqueue support, such as the virtio_net
-> implementation in crosvm[1], attempting to configure LRO will panic the
-> kernel:
->
-> kernel BUG at drivers/net/virtio_net.c:1591!
-> invalid opcode: 0000 [#1] PREEMPT SMP PTI
-> CPU: 1 PID: 483 Comm: Binder:330_1 Not tainted 5.4.5-01326-g19463e9acaac #1
-> Hardware name: ChromiumOS crosvm, BIOS 0
-> RIP: 0010:virtnet_send_command+0x15d/0x170 [virtio_net]
-> Code: d8 00 00 00 80 78 02 00 0f 94 c0 65 48 8b 0c 25 28 00 00 00 48 3b 4c 24 70 75 11 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 <0f> 0b e8 ec a4 12 c8 66 90 66 2e 0f 1f 84 00 00 00 00 00 55 48 89
-> RSP: 0018:ffffb97940e7bb50 EFLAGS: 00010246
-> RAX: ffffffffc0596020 RBX: ffffa0e1fc8ea840 RCX: 0000000000000017
-> RDX: ffffffffc0596110 RSI: 0000000000000011 RDI: 000000000000000d
-> RBP: ffffb97940e7bbf8 R08: ffffa0e1fc8ea0b0 R09: ffffa0e1fc8ea0b0
-> R10: ffffffffffffffff R11: ffffffffc0590940 R12: 0000000000000005
-> R13: ffffa0e1ffad2c00 R14: ffffb97940e7bc08 R15: 0000000000000000
-> FS:  0000000000000000(0000) GS:ffffa0e1fd100000(006b) knlGS:00000000e5ef7494
-> CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-> CR2: 00000000e5eeb82c CR3: 0000000079b06001 CR4: 0000000000360ee0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  ? preempt_count_add+0x58/0xb0
->  ? _raw_spin_lock_irqsave+0x36/0x70
->  ? _raw_spin_unlock_irqrestore+0x1a/0x40
->  ? __wake_up+0x70/0x190
->  virtnet_set_features+0x90/0xf0 [virtio_net]
->  __netdev_update_features+0x271/0x980
->  ? nlmsg_notify+0x5b/0xa0
->  dev_disable_lro+0x2b/0x190
->  ? inet_netconf_notify_devconf+0xe2/0x120
->  devinet_sysctl_forward+0x176/0x1e0
->  proc_sys_call_handler+0x1f0/0x250
->  proc_sys_write+0xf/0x20
->  __vfs_write+0x3e/0x190
->  ? __sb_start_write+0x6d/0xd0
->  vfs_write+0xd3/0x190
->  ksys_write+0x68/0xd0
->  __ia32_sys_write+0x14/0x20
->  do_fast_syscall_32+0x86/0xe0
->  entry_SYSENTER_compat+0x7c/0x8e
->
-> This happens because virtio_set_features() does not check the presence
-> of the control virtqueue feature, which is sanity checked by a BUG_ON
-> in virtnet_send_command().
->
-> Fix this by skipping any feature processing if the control virtqueue is
-> missing. This should be OK for any future feature that is added, as
-> presumably all of them would require control virtqueue support to notify
-> the endpoint that offload etc. should begin.
->
-> [1] https://chromium.googlesource.com/chromiumos/platform/crosvm/
->
-> Fixes: a02e8964eaf9 ("virtio-net: ethtool configurable LRO")
-> Cc: stable@vger.kernel.org [4.20+]
-> Cc: Michael S. Tsirkin <mst@redhat.com>
-> Cc: Jason Wang <jasowang@redhat.com>
-> Cc: David S. Miller <davem@davemloft.net>
-> Cc: kernel-team@android.com
-> Cc: virtualization@lists.linux-foundation.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Alistair Delva <adelva@google.com>
+--Sig_/flwicFQfaG_QG6/j=T4e76X
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for debugging this, Alistair.
+Hi all,
 
-> ---
->  drivers/net/virtio_net.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> index 4d7d5434cc5d..709bcd34e485 100644
-> --- a/drivers/net/virtio_net.c
-> +++ b/drivers/net/virtio_net.c
-> @@ -2560,6 +2560,9 @@ static int virtnet_set_features(struct net_device *dev,
->         u64 offloads;
->         int err;
->
-> +       if (!vi->has_cvq)
-> +               return 0;
-> +
+Commit
 
-Instead of checking for this in virtnet_set_features, how about we
-make configurability contingent on cvq in virtnet_probe:
+  51100d2b87cb ("NFSD generalize nfsd4_compound_state flag names")
 
--       if (virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS))
-+       if (virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS) &&
-+           virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_VQ))
-                dev->hw_features |= NETIF_F_LRO;
+is missing a Signed-off-by from its author.
 
-Based on this logic a little below in the same function
+Commits
 
-        if (virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_VQ))
-                vi->has_cvq = true;
+  ce0887ac96d3 ("NFSD add nfs4 inter ssc to nfsd4_copy")
+  b9e8638e3d9e ("NFSD: allow inter server COPY to have a STALE source serve=
+r fh")
+  51100d2b87cb ("NFSD generalize nfsd4_compound_state flag names")
+  b7342204253a ("NFSD check stateids against copy stateids")
+  624322f1adc5 ("NFSD add COPY_NOTIFY operation")
+  51911868fc62 ("NFSD COPY_NOTIFY xdr")
+  84e1b21d5ec4 ("NFSD add ca_source_server<> to COPY")
+  af76fc6c158d ("NFSD fill-in netloc4 structure")
+
+are missing a Signed-off-by from their committers.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/flwicFQfaG_QG6/j=T4e76X
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl39jRsACgkQAVBC80lX
+0GwwSgf/Yc43/i1yIQRAsDzsafHg44AkwO+VwQThcj0Ht0IDLoAJmCrDqGGDfboi
+qUysNIWEG1jwq9K6Y0MeoatCEi5HFaaam0QahIQjP0xE6GtCrDNwwSihJtl6CSg6
+EGXYV8bQCEFn5PSdyeid6+U3aywSU/0oY6f2HFvTzSRRlKfzY3Xc2JNZXcgu0FMO
+hRlxf3HaDkYAfB07ZrSUyp8VdOHBsHErrDFdolUaH5mSfPB6lvQfnvKxoBaGIxG8
+Xo9Zetkz4CdKq89tt4xWWrniOdhD3majAuRjGcU+p0pIo3pVotwvVXulAJhpauum
+iXR5PKCBc0zuH9b/fmW6gRaCbYZilA==
+=tEWG
+-----END PGP SIGNATURE-----
+
+--Sig_/flwicFQfaG_QG6/j=T4e76X--
