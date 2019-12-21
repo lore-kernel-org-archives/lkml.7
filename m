@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFB1C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 15:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E343BC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 15:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A16FC2253D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 15:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD0D52070C
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 15:04:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tcd-ie.20150623.gappssmtp.com header.i=@tcd-ie.20150623.gappssmtp.com header.b="WkrW4Y9g"
+	dkim=pass (2048-bit key) header.d=tcd-ie.20150623.gappssmtp.com header.i=@tcd-ie.20150623.gappssmtp.com header.b="1+ewonpp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbfLUPEs (ORCPT
+        id S1727490AbfLUPE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 10:04:48 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39441 "EHLO
+        Sat, 21 Dec 2019 10:04:56 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42952 "EHLO
         mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727425AbfLUPEr (ORCPT
+        with ESMTP id S1727442AbfLUPE4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 10:04:47 -0500
-Received: by mail-ed1-f67.google.com with SMTP id t17so11391818eds.6
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 07:04:46 -0800 (PST)
+        Sat, 21 Dec 2019 10:04:56 -0500
+Received: by mail-ed1-f67.google.com with SMTP id e10so11389907edv.9
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 07:04:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tcd-ie.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=i4dEmM8P1MkKKnNa6NcbuVyKrLsO9ZvL1WqSkd7MOXA=;
-        b=WkrW4Y9gFyG7Qyoell6pvhgdKX7JRReMnuuB9atJoZy04C/ONzngI9MJcZe1C52tLI
-         oAbpeUorXN0OuO/Eg0uTEPtK43geQL68lw4o7Ot8H5XsWGNoa1eKf/zWorwqA2LubWhP
-         ocpyZSMtNUbr1NWS3tmsbNFojfO0KFn4+WKore4fioT3aEQ4/J+J2uZcNnl0dckx4Wul
-         NRwfEfsYHCfN/A/PJf0LwxVas5fBCAxc6UJkeMBPTkWvH4AkfCBijNzpnj6o2cB8Gozf
-         5sLHCOhpM/FGuPL/eZWe8ySg2l+HsNgX8TbOePQbTkrzEKNWd/Ih3KEJxTQ88SBthjQ7
-         3K5A==
+        bh=I0JykHmW6XFDV2Vp/ugaZ7Nn7DA+ujFyMXFyqOzSTdU=;
+        b=1+ewonppiB9W8lYl08p7pr7gd0zz68oU69i75ATsgN+8WGxiWusi3bKC7mEUH2iUZT
+         r5uuxiRFx6OdSJyL1vDTT0ELk3P59Rbywd2YUr6MPFBAqDg9BLH08FlJLPwUNE6DLLTL
+         oBF6KagVp/BAfe3aaPxiclOamAqrOGT34nI75PzRaFRvXI3YHm865eNbfcU/BNc990SF
+         1jPGoBvfkIsGC/24dKPIs6QFcky/NgVLoTfYoW5PgQa7frPzYLKYkbDOR2yneEk5x2dH
+         NoI0/BPadpvBuQht5nq6M38jRRJC31jTXLFsMRDmEvCnLzHv55aGt7qQ04zM16VkFEtn
+         KxDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=i4dEmM8P1MkKKnNa6NcbuVyKrLsO9ZvL1WqSkd7MOXA=;
-        b=pj56d5N3u4n5BuCcFBuOPJ4ypdJ8zNqADIYTGT3JOJl9nP+TlPTstOqXq5ixa0W8Mg
-         AkiFXc/UWv0a98LFbJmBT5xCLkppolTKakfH/OEZt25WXcwxOrT8m0Rbq8u+MLYrDfp0
-         sYXIO6hiztDSZKna3oWixKN6+rqSW5Xr5EBLFfENIkbZdoM8JzVzXhWuHUMriKA30G7Z
-         FhDTf/qL8WXT/yzlJDx1N0Nrq4Vn0DCIqg9NNBaGpCfvzie0Jq2ycsrC9T9/vwDx252l
-         vz+7ukDhAHfJgvsz03bwHkQvuaNF8UjIMNmas3BpaHzR3hvfUnRNoIAWLaSUO42aVguH
-         kkGg==
-X-Gm-Message-State: APjAAAU+5IYoneskJzxE2S6bktiI5AhxbNTuIftJ5FL2dSziqkWAP/h4
-        UddB19X/7LWW7p2zW+I7ObGgVA==
-X-Google-Smtp-Source: APXvYqzXACa8CmCe+lm4PqHAgWDF0JjnrRxrrR2y7kN6n1yqsWvuOaXwCLqKegFsZD4yWY1Pcx2X8g==
-X-Received: by 2002:a05:6402:2c3:: with SMTP id b3mr22084523edx.207.1576940686355;
-        Sat, 21 Dec 2019 07:04:46 -0800 (PST)
+        bh=I0JykHmW6XFDV2Vp/ugaZ7Nn7DA+ujFyMXFyqOzSTdU=;
+        b=QlmUQGZbI9JnTQuSRFCHZU/JeO2w3faU6/DyORjWQllw+AbZToQopWSSecB6++FpoL
+         EYEbcftwbDiq17T8UnL84Oqt+ZEjiUv5nvnkOGcJgJKTMFja4jLZ+VRExIO7AJ5CoP5n
+         fOqJ3CSvqclSIR2KIAiXgZuoFk12tQ06qMNFJM5P9ztf+PaYG73s2RTOg71au4RDrbnh
+         DADe/X2mU7VBcmGnkZdIbkZCFtxqd6s04KjpdnCL3h3Oa3dAyeg7k+HQvabncoMHNpJ1
+         c/hDXbUDsCW8ppLKkVhHVgpm6CjnEtbSZH67Gz8ohR0LCD4ejwS3DbomiDmPi8Z8W1Qi
+         7BHw==
+X-Gm-Message-State: APjAAAX5vwbI+rV7rGh0H2DImQJJf1faF6njNSqRuNe/D2ooFeUag8Ia
+        YILqunn0ANifiFAAiWpsMcPYOw==
+X-Google-Smtp-Source: APXvYqycgCWhv0uGKFS1lUiWbcIQuToFD3SFHqFOMFhJaeY3cSmbPrLeHRVjV6Yu+VQxlly42u07SA==
+X-Received: by 2002:a05:6402:221c:: with SMTP id cq28mr22032517edb.110.1576940693185;
+        Sat, 21 Dec 2019 07:04:53 -0800 (PST)
 Received: from localhost.localdomain ([80.233.37.20])
-        by smtp.googlemail.com with ESMTPSA id u13sm1517639ejz.69.2019.12.21.07.04.42
+        by smtp.googlemail.com with ESMTPSA id u13sm1517639ejz.69.2019.12.21.07.04.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Dec 2019 07:04:45 -0800 (PST)
+        Sat, 21 Dec 2019 07:04:52 -0800 (PST)
 From:   Tom Murphy <murphyt7@tcd.ie>
 To:     iommu@lists.linux-foundation.org
 Cc:     Tom Murphy <murphyt7@tcd.ie>,
@@ -93,9 +93,9 @@ Cc:     Tom Murphy <murphyt7@tcd.ie>,
         linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
         linux-tegra@vger.kernel.org,
         virtualization@lists.linux-foundation.org, kvm@vger.kernel.org
-Subject: [PATCH 5/8] iommu: Add iommu_dma_free_cpu_cached_iovas function
-Date:   Sat, 21 Dec 2019 15:03:57 +0000
-Message-Id: <20191221150402.13868-6-murphyt7@tcd.ie>
+Subject: [PATCH 6/8] iommu: allow the dma-iommu api to use bounce buffers
+Date:   Sat, 21 Dec 2019 15:03:58 +0000
+Message-Id: <20191221150402.13868-7-murphyt7@tcd.ie>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191221150402.13868-1-murphyt7@tcd.ie>
 References: <20191221150402.13868-1-murphyt7@tcd.ie>
@@ -106,51 +106,257 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-to dma-iommu ops
-
-Add a iommu_dma_free_cpu_cached_iovas function to allow drivers which
-use the dma-iommu ops to free cached cpu iovas.
+Allow the dma-iommu api to use bounce buffers for untrusted devices.
+This is a copy of the intel bounce buffer code.
 
 Signed-off-by: Tom Murphy <murphyt7@tcd.ie>
 ---
- drivers/iommu/dma-iommu.c | 9 +++++++++
- include/linux/dma-iommu.h | 3 +++
- 2 files changed, 12 insertions(+)
+ drivers/iommu/dma-iommu.c | 93 ++++++++++++++++++++++++++++++++-------
+ drivers/iommu/iommu.c     | 10 +++++
+ include/linux/iommu.h     |  9 +++-
+ 3 files changed, 95 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index df28facdfb8b..4eac3cd35443 100644
+index 4eac3cd35443..cf778db7d84d 100644
 --- a/drivers/iommu/dma-iommu.c
 +++ b/drivers/iommu/dma-iommu.c
-@@ -50,6 +50,15 @@ struct iommu_dma_cookie {
- 	struct iommu_domain		*fq_domain;
- };
+@@ -20,9 +20,11 @@
+ #include <linux/irq.h>
+ #include <linux/mm.h>
+ #include <linux/pci.h>
++#include <linux/swiotlb.h>
+ #include <linux/scatterlist.h>
+ #include <linux/vmalloc.h>
+ #include <linux/crash_dump.h>
++#include <linux/dma-direct.h>
  
-+void iommu_dma_free_cpu_cached_iovas(unsigned int cpu,
-+		struct iommu_domain *domain)
+ struct iommu_dma_msi_page {
+ 	struct list_head	list;
+@@ -505,29 +507,89 @@ static void __iommu_dma_unmap(struct device *dev, dma_addr_t dma_addr,
+ 			iommu_tlb_sync(domain, &iotlb_gather);
+ 	}
+ 
++
+ 	iommu_dma_free_iova(cookie, dma_addr, size, freelist);
+ }
+ 
++static void __iommu_dma_unmap_swiotlb(struct device *dev, dma_addr_t dma_addr,
++		size_t size, enum dma_data_direction dir,
++		unsigned long attrs)
 +{
++	struct iommu_domain *domain = iommu_get_dma_domain(dev);
 +	struct iommu_dma_cookie *cookie = domain->iova_cookie;
 +	struct iova_domain *iovad = &cookie->iovad;
++	size_t iova_off = iova_offset(iovad, dma_addr);
++	size_t aligned_size = iova_align(iovad, size + iova_off);
++	phys_addr_t phys;
 +
-+	free_cpu_cached_iovas(cpu, iovad);
++	phys = iommu_iova_to_phys(domain, dma_addr);
++	if (WARN_ON(!phys))
++		return;
++
++	__iommu_dma_unmap(dev, dma_addr, size);
++
++#ifdef CONFIG_SWIOTLB
++	if (unlikely(is_swiotlb_buffer(phys)))
++		swiotlb_tbl_unmap_single(dev, phys, size,
++				aligned_size, dir, attrs);
++#endif
 +}
 +
- static void iommu_dma_entry_dtor(unsigned long data)
+ static dma_addr_t __iommu_dma_map(struct device *dev, phys_addr_t phys,
+-		size_t size, int prot, dma_addr_t dma_mask)
++		size_t org_size, dma_addr_t dma_mask, bool coherent,
++		enum dma_data_direction dir, unsigned long attrs)
  {
- 	struct page *freelist = (struct page *)data;
-diff --git a/include/linux/dma-iommu.h b/include/linux/dma-iommu.h
-index 2112f21f73d8..316d22a4a860 100644
---- a/include/linux/dma-iommu.h
-+++ b/include/linux/dma-iommu.h
-@@ -37,6 +37,9 @@ void iommu_dma_compose_msi_msg(struct msi_desc *desc,
++	int prot = dma_info_to_prot(dir, coherent, attrs);
+ 	struct iommu_domain *domain = iommu_get_dma_domain(dev);
+ 	struct iommu_dma_cookie *cookie = domain->iova_cookie;
+ 	struct iova_domain *iovad = &cookie->iovad;
+ 	size_t iova_off = iova_offset(iovad, phys);
++	size_t aligned_size = iova_align(iovad, org_size + iova_off);
+ 	dma_addr_t iova;
  
- void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list);
+ 	if (unlikely(iommu_dma_deferred_attach(dev, domain)))
+ 		return DMA_MAPPING_ERROR;
  
-+void iommu_dma_free_cpu_cached_iovas(unsigned int cpu,
-+		struct iommu_domain *domain);
+-	size = iova_align(iovad, size + iova_off);
++#ifdef CONFIG_SWIOTLB
++	/*
++	 * If both the physical buffer start address and size are
++	 * page aligned, we don't need to use a bounce page.
++	 */
++	if (iommu_needs_bounce_buffer(dev)
++			&& !iova_offset(iovad, phys | org_size)) {
++		phys = swiotlb_tbl_map_single(dev,
++				__phys_to_dma(dev, io_tlb_start),
++				phys, org_size, aligned_size, dir, attrs);
 +
- #else /* CONFIG_IOMMU_DMA */
++		if (phys == DMA_MAPPING_ERROR)
++			return DMA_MAPPING_ERROR;
++
++		/* Cleanup the padding area. */
++		void *padding_start = phys_to_virt(phys);
++		size_t padding_size = aligned_size;
++
++		if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
++		    (dir == DMA_TO_DEVICE ||
++		     dir == DMA_BIDIRECTIONAL)) {
++			padding_start += org_size;
++			padding_size -= org_size;
++		}
  
- struct iommu_domain;
+-	iova = iommu_dma_alloc_iova(domain, size, dma_mask, dev);
++		memset(padding_start, 0, padding_size);
++	}
++#endif
++
++	iova = iommu_dma_alloc_iova(domain, aligned_size, dma_mask, dev);
+ 	if (!iova)
+ 		return DMA_MAPPING_ERROR;
+ 
+-	if (iommu_map_atomic(domain, iova, phys - iova_off, size, prot)) {
+-		iommu_dma_free_iova(cookie, iova, size, NULL);
++	if (iommu_map_atomic(domain, iova, phys - iova_off, aligned_size,
++				prot)) {
++
++		if (unlikely(is_swiotlb_buffer(phys)))
++			swiotlb_tbl_unmap_single(dev, phys, aligned_size,
++					aligned_size, dir, attrs);
++		iommu_dma_free_iova(cookie, iova, aligned_size, NULL);
+ 		return DMA_MAPPING_ERROR;
+ 	}
+ 	return iova + iova_off;
+@@ -761,10 +823,10 @@ static dma_addr_t iommu_dma_map_page(struct device *dev, struct page *page,
+ {
+ 	phys_addr_t phys = page_to_phys(page) + offset;
+ 	bool coherent = dev_is_dma_coherent(dev);
+-	int prot = dma_info_to_prot(dir, coherent, attrs);
+ 	dma_addr_t dma_handle;
+ 
+-	dma_handle = __iommu_dma_map(dev, phys, size, prot, dma_get_mask(dev));
++	dma_handle = __iommu_dma_map(dev, phys, size, dma_get_mask(dev),
++			coherent, dir, attrs);
+ 	if (!coherent && !(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
+ 	    dma_handle != DMA_MAPPING_ERROR)
+ 		arch_sync_dma_for_device(phys, size, dir);
+@@ -776,7 +838,7 @@ static void iommu_dma_unmap_page(struct device *dev, dma_addr_t dma_handle,
+ {
+ 	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC))
+ 		iommu_dma_sync_single_for_cpu(dev, dma_handle, size, dir);
+-	__iommu_dma_unmap(dev, dma_handle, size);
++	__iommu_dma_unmap_swiotlb(dev, dma_handle, size, dir, attrs);
+ }
+ 
+ /*
+@@ -960,21 +1022,20 @@ static void iommu_dma_unmap_sg(struct device *dev, struct scatterlist *sg,
+ 		sg = tmp;
+ 	}
+ 	end = sg_dma_address(sg) + sg_dma_len(sg);
+-	__iommu_dma_unmap(dev, start, end - start);
++	__iommu_dma_unmap_swiotlb(dev, start, end - start, dir, attrs);
+ }
+ 
+ static dma_addr_t iommu_dma_map_resource(struct device *dev, phys_addr_t phys,
+ 		size_t size, enum dma_data_direction dir, unsigned long attrs)
+ {
+-	return __iommu_dma_map(dev, phys, size,
+-			dma_info_to_prot(dir, false, attrs) | IOMMU_MMIO,
+-			dma_get_mask(dev));
++	return __iommu_dma_map(dev, phys, size, dma_get_mask(dev), false, dir,
++			attrs);
+ }
+ 
+ static void iommu_dma_unmap_resource(struct device *dev, dma_addr_t handle,
+ 		size_t size, enum dma_data_direction dir, unsigned long attrs)
+ {
+-	__iommu_dma_unmap(dev, handle, size);
++	__iommu_dma_unmap_swiotlb(dev, handle, size, dir, attrs);
+ }
+ 
+ static void __iommu_dma_free(struct device *dev, size_t size, void *cpu_addr)
+@@ -1056,7 +1117,6 @@ static void *iommu_dma_alloc(struct device *dev, size_t size,
+ 		dma_addr_t *handle, gfp_t gfp, unsigned long attrs)
+ {
+ 	bool coherent = dev_is_dma_coherent(dev);
+-	int ioprot = dma_info_to_prot(DMA_BIDIRECTIONAL, coherent, attrs);
+ 	struct page *page = NULL;
+ 	void *cpu_addr;
+ 
+@@ -1074,8 +1134,9 @@ static void *iommu_dma_alloc(struct device *dev, size_t size,
+ 	if (!cpu_addr)
+ 		return NULL;
+ 
+-	*handle = __iommu_dma_map(dev, page_to_phys(page), size, ioprot,
+-			dev->coherent_dma_mask);
++	*handle = __iommu_dma_map(dev, page_to_phys(page), size,
++			dev->coherent_dma_mask, coherent, DMA_BIDIRECTIONAL,
++			attrs);
+ 	if (*handle == DMA_MAPPING_ERROR) {
+ 		__iommu_dma_free(dev, size, cpu_addr);
+ 		return NULL;
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index cec728f40d9c..e5653cb20c83 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -2236,6 +2236,16 @@ void iommu_get_resv_regions(struct device *dev, struct list_head *list)
+ 		ops->get_resv_regions(dev, list);
+ }
+ 
++int iommu_needs_bounce_buffer(struct device *dev)
++{
++	const struct iommu_ops *ops = dev->bus->iommu_ops;
++
++	if (ops && ops->needs_bounce_buffer)
++		return ops->needs_bounce_buffer(dev);
++
++	return 0;
++}
++
+ void iommu_put_resv_regions(struct device *dev, struct list_head *list)
+ {
+ 	const struct iommu_ops *ops = dev->bus->iommu_ops;
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 61cac25410b5..d377ffa362a7 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -280,6 +280,7 @@ struct iommu_ops {
+ 			       enum iommu_attr attr, void *data);
+ 	int (*domain_set_attr)(struct iommu_domain *domain,
+ 			       enum iommu_attr attr, void *data);
++	int (*needs_bounce_buffer)(struct device *dev);
+ 
+ 	/* Request/Free a list of reserved regions for a device */
+ 	void (*get_resv_regions)(struct device *dev, struct list_head *list);
+@@ -460,6 +461,7 @@ extern phys_addr_t iommu_iova_to_phys(struct iommu_domain *domain, dma_addr_t io
+ extern void iommu_set_fault_handler(struct iommu_domain *domain,
+ 			iommu_fault_handler_t handler, void *token);
+ 
++extern int iommu_needs_bounce_buffer(struct device *dev);
+ extern void iommu_get_resv_regions(struct device *dev, struct list_head *list);
+ extern void iommu_put_resv_regions(struct device *dev, struct list_head *list);
+ extern int iommu_request_dm_for_dev(struct device *dev);
+@@ -530,7 +532,7 @@ static inline void iommu_flush_iotlb_all(struct iommu_domain *domain)
+ 		domain->ops->flush_iotlb_all(domain);
+ }
+ 
+-static inline void flush_iotlb_range(struct iommu_domain *domain,
++static inline void iommu_flush_iotlb_range(struct iommu_domain *domain,
+ 			unsigned long iova, size_t size,
+ 			struct page *freelist)
+ {
+@@ -764,6 +766,11 @@ static inline void iommu_set_fault_handler(struct iommu_domain *domain,
+ {
+ }
+ 
++static inline int iommu_needs_bounce_buffer(struct device *dev)
++{
++	return 0;
++}
++
+ static inline void iommu_get_resv_regions(struct device *dev,
+ 					struct list_head *list)
+ {
 -- 
 2.20.1
 
