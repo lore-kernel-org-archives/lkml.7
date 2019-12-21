@@ -2,108 +2,142 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5BBC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 17:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEC1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 18:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE28E2070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 17:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0659C2070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 18:05:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=upb.ro header.i=@upb.ro header.b="dZumlSXG"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Pa4Kbdhv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbfLUR66 (ORCPT
+        id S1727287AbfLUSFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 12:58:58 -0500
-Received: from mail-sender240.upb.ro ([141.85.13.240]:34520 "EHLO mx.upb.ro"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726107AbfLUR66 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 12:58:58 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mx.upb.ro (Postfix) with ESMTP id 4D484B56279B;
-        Sat, 21 Dec 2019 19:58:55 +0200 (EET)
-Received: from mx.upb.ro ([127.0.0.1])
-        by localhost (mx.upb.ro [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id rS-wCd-Av3WE; Sat, 21 Dec 2019 19:58:53 +0200 (EET)
-Received: from localhost (localhost [127.0.0.1])
-        by mx.upb.ro (Postfix) with ESMTP id 89D7EB56279C;
-        Sat, 21 Dec 2019 19:58:53 +0200 (EET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mx.upb.ro 89D7EB56279C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=upb.ro;
-        s=96342B8A-77E4-11E5-BA93-D93D0963A2DF; t=1576951133;
-        bh=X+42fjabk+WLOB1bPd12eCpPGYMZu89kQtWGOPGu13I=;
-        h=Message-ID:From:To:Date:MIME-Version;
-        b=dZumlSXGZqk7S3vz0l3XH/E8QmWrWWByIdVC01rPRR7aoeOkRxc3uj07nRP6x9y7A
-         PmxsYJL7TXSM3eOnSIIgub/Fue2hFRpmw8e+EJ6S77WDFyNbt/WlDuMA//J0hlldMu
-         quytGl4caIT7zp5A4K1MSOTs2ONSdh17zC7RjTG0=
-X-Virus-Scanned: amavisd-new at upb.ro
-Received: from mx.upb.ro ([127.0.0.1])
-        by localhost (mx.upb.ro [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 5FG3taiS2m5M; Sat, 21 Dec 2019 19:58:53 +0200 (EET)
-Received: from sabertoorh (unknown [86.120.75.237])
-        by mx.upb.ro (Postfix) with ESMTPSA id ECE47B56279B;
-        Sat, 21 Dec 2019 19:58:52 +0200 (EET)
-Message-ID: <0a09d9ed5fc5ae6c651491dead5f81bfecdbca4b.camel@upb.ro>
-Subject: Re: [PATCH] i2c: cadence: Added slave support
-From:   Radu Nicolae Pirea <radu_nicolae.pirea@upb.ro>
-To:     Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>
-Date:   Sat, 21 Dec 2019 19:58:50 +0200
-In-Reply-To: <CAKfKVtFqbtovQGQuzgCYzTu4bHOmAOmTz-tZMD89iUkMPc8awA@mail.gmail.com>
-References: <20191219124120.53754-1-radu_nicolae.pirea@upb.ro>
-         <20191219130501.GA958@kunai>
-         <6504123809effc310ade02dbb8a63f10db6b6c92.camel@upb.ro>
-         <CAKfKVtFqbtovQGQuzgCYzTu4bHOmAOmTz-tZMD89iUkMPc8awA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.2 
+        Sat, 21 Dec 2019 13:05:47 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:36316 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbfLUSFq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Dec 2019 13:05:46 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBLHxZVS053757;
+        Sat, 21 Dec 2019 18:05:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=bSsms4JZc7GSfb/7ZqlmxUOjxKulnt8yMY4oSOeBWms=;
+ b=Pa4Kbdhv5i5rwSyMOYPq225nL+ikXs3EOtDxKOKKyPAnfk5PS1wLaMEdx8BvzxMbfd6A
+ +PQR/IpOAqpjocdsmDKFeFZhEfc/20RQ18Jq0nyjYO+kbNZ2YNIB4a2hpWQwXiNfOjAL
+ tMKeRyU2rzwvn4SQCjrjBggVkmlPajY+32lcHCJ7LlYZ4dTxwQN2/agOjd4cvxvf5XTu
+ 0Vl8sVHasSCLpgqsvmTQJqgXCQbahYzz4gZGLBEDRH7Jr/6bbSCrl4caNXUnjztoNf+u
+ K/Y0FgFTHBnOszzs3lQhOPA7YoJmy8r9dyePRmIsMHjJLweAOb4BHvn0sG8trrGEXvGW hg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2x1bbphgb3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 21 Dec 2019 18:05:37 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBLI3en2122288;
+        Sat, 21 Dec 2019 18:05:36 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2x1ar3hc3n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 21 Dec 2019 18:05:36 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBLI5XPX024764;
+        Sat, 21 Dec 2019 18:05:33 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 21 Dec 2019 10:05:32 -0800
+Date:   Sat, 21 Dec 2019 10:05:30 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Chris Down <chris@chrisdown.name>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com
+Subject: Re: [PATCH] fs: inode: Reduce volatile inode wraparound risk when
+ ino_t is 64 bit
+Message-ID: <20191221180530.GJ7497@magnolia>
+References: <20191220024936.GA380394@chrisdown.name>
+ <20191220213052.GB7476@magnolia>
+ <CAOQ4uxgoDHLnVb9=R2LpNqEFtjx=f5K8QXQnfiziBQ+jURLh=A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxgoDHLnVb9=R2LpNqEFtjx=f5K8QXQnfiziBQ+jURLh=A@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9478 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912210158
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9478 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912210158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-12-20 at 14:55 +0530, Shubhrajyoti Datta wrote:
-> Hi ,
+On Sat, Dec 21, 2019 at 10:43:05AM +0200, Amir Goldstein wrote:
+> On Fri, Dec 20, 2019 at 11:33 PM Darrick J. Wong
+> <darrick.wong@oracle.com> wrote:
+> >
+> > On Fri, Dec 20, 2019 at 02:49:36AM +0000, Chris Down wrote:
+> > > In Facebook production we are seeing heavy inode number wraparounds on
+> > > tmpfs. On affected tiers, in excess of 10% of hosts show multiple files
+> > > with different content and the same inode number, with some servers even
+> > > having as many as 150 duplicated inode numbers with differing file
+> > > content.
+> > >
+> > > This causes actual, tangible problems in production. For example, we
+> > > have complaints from those working on remote caches that their
+> > > application is reporting cache corruptions because it uses (device,
+> > > inodenum) to establish the identity of a particular cache object, but
+> >
+> > ...but you cannot delete the (dev, inum) tuple from the cache index when
+> > you remove a cache object??
+> >
+> > > because it's not unique any more, the application refuses to continue
+> > > and reports cache corruption. Even worse, sometimes applications may not
+> > > even detect the corruption but may continue anyway, causing phantom and
+> > > hard to debug behaviour.
+> > >
+> > > In general, userspace applications expect that (device, inodenum) should
+> > > be enough to be uniquely point to one inode, which seems fair enough.
+> >
+> > Except that it's not.  (dev, inum, generation) uniquely points to an
+> > instance of an inode from creation to the last unlink.
+> >
 > 
-> On Thu, Dec 19, 2019 at 7:00 PM Radu Pirea <radu_nicolae.pirea@upb.ro
-> > wrote:
-> > On Thu, 2019-12-19 at 14:05 +0100, Wolfram Sang wrote:
-> > > > +/**
-> > > > + * enum cdns_i2c_mode - I2C Controller current operating mode
-> > > > + *
-> > > > + * @CDNS_I2C_MODE_SLAVE:       I2C controller operating in
-> > > > slave
-> > > > mode
-> > > > + * @CDNS_I2C_MODE_MASTER:      I2C Controller operating in
-> > > > master
-> > > > mode
-> > > > + */
-> > > 
-> > > Can't the hardware operate as master and slave at the same time?
-> > > 
-> > 
-> > Of course, it can. If the driver has a slave registered wait and
-> > listens and if the subsystem needs to use the controller as master,
-> > the
-> > driver changes the state of the controller to master, sends and
-> > reads
-> > data from the bus and after this change the state of the controller
-> > to
-> > slave.
-> 
-> However that should be done only if no master is talking to the slave
-> right?
+> Yes, but also:
+> There should not exist two live inodes on the system with the same (dev, inum)
+> The problem is that ino 1 may still be alive when wraparound happens
+> and then two different inodes with ino 1 exist on same dev.
 
-Yes. The state of the slave must be IDLE, otherwise
-cdns_i2c_master_xfer will return -EAGAIN.
+*OH* that's different then.  Most sane filesystems <cough>btrfs<cough>
+should never have the same inode numbers for different files.  Sorry for
+the noise, I misunderstood what the issue was. :)
 
-> 
-> > In cdns_i2c_master_xfer is done all the magic.
+> Take the 'diff' utility for example, it will report that those files
+> are identical
+> if they have the same dev,ino,size,mtime. I suspect that 'mv' will not
+> let you move one over the other, assuming they are hardlinks.
+> generation is not even exposed to legacy application using stat(2).
 
+Yeah, I was surprised to see it's not even in statx. :/
+
+--D
+
+> Thanks,
+> Amir.
