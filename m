@@ -2,125 +2,96 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 729BFC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 21:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6232C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 21:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 474B0206D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 21:11:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89C60206D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 21:19:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="IofBVGqC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbfLUVLx (ORCPT
+        id S1727473AbfLUVTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 16:11:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36766 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726905AbfLUVLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 16:11:35 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19453206B7;
-        Sat, 21 Dec 2019 21:11:34 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.92.3)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1iim29-000o1O-5n; Sat, 21 Dec 2019 16:11:33 -0500
-Message-Id: <20191221211133.038093697@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Sat, 21 Dec 2019 16:11:07 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, stable@vger.kernel.org,
-        Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
-Subject: [for-linus][PATCH 1/5] tracing: Avoid memory leak in process_system_preds()
-References: <20191221211106.338673631@goodmis.org>
+        Sat, 21 Dec 2019 16:19:52 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:35445 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726905AbfLUVTw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Dec 2019 16:19:52 -0500
+Received: by mail-il1-f195.google.com with SMTP id g12so11034001ild.2
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 13:19:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ryiHDUuNAqP4QzqBSFVAqfWHx+GwcCe8K4qYuGFe+7I=;
+        b=IofBVGqCwyHx05OokV0/Mi+GsZfFqUWPEqHXlE8SD7ljZnKjNn33dyid4kaub9mkZW
+         Lh6gjQaG3b0cWchmJgUviTVtAwH/tp2kfExkrCyISdbITfud9qZ8MoOIJ4CupFu9B4QY
+         A7LU+eXgYy/ZTnxP5ZYSXCLIBo5iJmdxSQYbHTxmH2N/nlS5b/2D7e/72bvp6pBhF/eL
+         a5OuFiIu9F61BhYaMjmBov3wTOsqld80xy8q0OAxS3MS9tJxxureDAyiSOE02absgiUX
+         wgCfUAYXeQw9C4PXaKZ8bi7aJ8xo1j0ZKQd3TbXXdGnH91ZSX1hd5yfG13/qRZDISFMJ
+         JbPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ryiHDUuNAqP4QzqBSFVAqfWHx+GwcCe8K4qYuGFe+7I=;
+        b=m7bR6BBthkXfjvH81qGZ512xalcQc7k1ANlaGTECM+jv8B1PNdkBR2SdwHBY76EKY9
+         A8r4ehwQIbP0HmfeL9g8Pr3tyzaVhT81IfcwufONysVRXV/DR7CK+u9LEurQaArdfBM6
+         IfwkGsdbAj68Nxuj682DTXc0tmkdKeabQyFgLr8OXItvyRPAePFn+JR5zOqq1Qnn9YpA
+         zqnL+WI2UrZrnjJdjXjb3cvGvBcmVYJIyPiZbWWea2bhNl71YKBfSEHQNxJT1tjWFA5L
+         RfoF2bfTzkQ8fpP7ygZKp0dUnjWau+1gg9qyVCmejLA7ifdequXINpuGul2k+4NwQcYA
+         wStg==
+X-Gm-Message-State: APjAAAXK366kpUBklet+5vCbuUNM8akAzuIAgL7vV2hMumA/nsZ51Vn0
+        hMxsmLrvf9Z1IxfTtJP0s8Z5MuDiO+3VxfSwzFeY/g==
+X-Google-Smtp-Source: APXvYqyZE+QmAxWd9UXymtVOG+xl/oD9BEsoFWN9iahucCvKUbShAtJn3CxLUCBFxha+65qoTZX33gYHmhNnxPK2uuA=
+X-Received: by 2002:a92:afc5:: with SMTP id v66mr17505932ill.123.1576963191681;
+ Sat, 21 Dec 2019 13:19:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20191220001517.105297-1-olof@lixom.net> <ff6dc8997083c5d8968df48cc191e5b9e8797618.camel@perches.com>
+In-Reply-To: <ff6dc8997083c5d8968df48cc191e5b9e8797618.camel@perches.com>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Sat, 21 Dec 2019 13:19:40 -0800
+Message-ID: <CAOesGMgxHGBdkdVOoWYpqSF-13iP3itJksCRL8QSiS0diL26dA@mail.gmail.com>
+Subject: Re: [PATCH] net/mlx5e: Fix printk format warning
+To:     Joe Perches <joe@perches.com>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-rdma@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
+On Thu, Dec 19, 2019 at 6:07 PM Joe Perches <joe@perches.com> wrote:
+>
+> On Thu, 2019-12-19 at 16:15 -0800, Olof Johansson wrote:
+> > Use "%zu" for size_t. Seen on ARM allmodconfig:
+> []
+> > diff --git a/drivers/net/ethernet/mellanox/mlx5/core/wq.c b/drivers/net/ethernet/mellanox/mlx5/core/wq.c
+> []
+> > @@ -89,7 +89,7 @@ void mlx5_wq_cyc_wqe_dump(struct mlx5_wq_cyc *wq, u16 ix, u8 nstrides)
+> >       len = nstrides << wq->fbc.log_stride;
+> >       wqe = mlx5_wq_cyc_get_wqe(wq, ix);
+> >
+> > -     pr_info("WQE DUMP: WQ size %d WQ cur size %d, WQE index 0x%x, len: %ld\n",
+> > +     pr_info("WQE DUMP: WQ size %d WQ cur size %d, WQE index 0x%x, len: %zu\n",
+> >               mlx5_wq_cyc_get_size(wq), wq->cur_sz, ix, len);
+> >       print_hex_dump(KERN_WARNING, "", DUMP_PREFIX_OFFSET, 16, 1, wqe, len, false);
+> >  }
+>
+> One might expect these 2 outputs to be at the same KERN_<LEVEL> too.
+> One is KERN_INFO the other KERN_WARNING
 
-When failing in the allocation of filter_item, process_system_preds()
-goes to fail_mem, where the allocated filter is freed.
-
-However, this leads to memory leak of filter->filter_string and
-filter->prog, which is allocated before and in process_preds().
-This bug has been detected by kmemleak as well.
-
-Fix this by changing kfree to __free_fiter.
-
-unreferenced object 0xffff8880658007c0 (size 32):
-  comm "bash", pid 579, jiffies 4295096372 (age 17.752s)
-  hex dump (first 32 bytes):
-    63 6f 6d 6d 6f 6e 5f 70 69 64 20 20 3e 20 31 30  common_pid  > 10
-    00 00 00 00 00 00 00 00 65 73 00 00 00 00 00 00  ........es......
-  backtrace:
-    [<0000000067441602>] kstrdup+0x2d/0x60
-    [<00000000141cf7b7>] apply_subsystem_event_filter+0x378/0x932
-    [<000000009ca32334>] subsystem_filter_write+0x5a/0x90
-    [<0000000072da2bee>] vfs_write+0xe1/0x240
-    [<000000004f14f473>] ksys_write+0xb4/0x150
-    [<00000000a968b4a0>] do_syscall_64+0x6d/0x1e0
-    [<000000001a189f40>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-unreferenced object 0xffff888060c22d00 (size 64):
-  comm "bash", pid 579, jiffies 4295096372 (age 17.752s)
-  hex dump (first 32 bytes):
-    01 00 00 00 00 00 00 00 00 e8 d7 41 80 88 ff ff  ...........A....
-    01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000b8c1b109>] process_preds+0x243/0x1820
-    [<000000003972c7f0>] apply_subsystem_event_filter+0x3be/0x932
-    [<000000009ca32334>] subsystem_filter_write+0x5a/0x90
-    [<0000000072da2bee>] vfs_write+0xe1/0x240
-    [<000000004f14f473>] ksys_write+0xb4/0x150
-    [<00000000a968b4a0>] do_syscall_64+0x6d/0x1e0
-    [<000000001a189f40>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-unreferenced object 0xffff888041d7e800 (size 512):
-  comm "bash", pid 579, jiffies 4295096372 (age 17.752s)
-  hex dump (first 32 bytes):
-    70 bc 85 97 ff ff ff ff 0a 00 00 00 00 00 00 00  p...............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000001e04af34>] process_preds+0x71a/0x1820
-    [<000000003972c7f0>] apply_subsystem_event_filter+0x3be/0x932
-    [<000000009ca32334>] subsystem_filter_write+0x5a/0x90
-    [<0000000072da2bee>] vfs_write+0xe1/0x240
-    [<000000004f14f473>] ksys_write+0xb4/0x150
-    [<00000000a968b4a0>] do_syscall_64+0x6d/0x1e0
-    [<000000001a189f40>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Link: http://lkml.kernel.org/r/20191211091258.11310-1-keitasuzuki.park@sslab.ics.keio.ac.jp
-
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: 404a3add43c9c ("tracing: Only add filter list when needed")
-Signed-off-by: Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- kernel/trace/trace_events_filter.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index c9a74f82b14a..bf44f6bbd0c3 100644
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -1662,7 +1662,7 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
- 	parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
- 	return -EINVAL;
-  fail_mem:
--	kfree(filter);
-+	__free_filter(filter);
- 	/* If any call succeeded, we still need to sync */
- 	if (!fail)
- 		tracepoint_synchronize_unregister();
--- 
-2.24.0
+Sure, but I'll leave that up to the driver maintainers to decide/fix
+-- I'm just addressing the type warning here.
 
 
+-Olof
