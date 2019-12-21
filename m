@@ -2,108 +2,121 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08289C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 08:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D42C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 09:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE7F6206D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 08:49:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576918156;
-	bh=fK1OqlPP2BOyAoHVbXH8LIc2RflvNPU2fIk8Rn5JhV4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fxmajH8ZVqRlaTpFNrgx3hjHWbx2JxHIZIuyoTF1ARSspFg7QXa9xkVCQqXEeqF3w
-	 +ZMk4SoILxcpYXVrLHt+dWdSIFq9egfuKAqiUi4PISoKAw1oUcxgbwUi9NwTQnxLyv
-	 L3J2846ns2vpCFWTVWvhUjWDXWMFzszkUD7EAIDM=
+	by mail.kernel.org (Postfix) with ESMTP id 7C49521927
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 09:24:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbfLUItQ (ORCPT
+        id S1726115AbfLUJYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 03:49:16 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34503 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbfLUItP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 03:49:15 -0500
-Received: by mail-wr1-f66.google.com with SMTP id t2so11624203wrr.1;
-        Sat, 21 Dec 2019 00:49:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tH9GwKFKZoJ5vY+eHR+9ufhWpSkZJ1e+/MW4k6qXbI0=;
-        b=kcr6+h4oV2KqnboDSzxJL6INQW5FIdDEbFc5TKJJMZxRieNxFZEV2Htc8WQQyocBi+
-         zGp5kxbdKrqeZ1gbVvkO6W6wHNI1dVqkeO03gULRvTxrJRhC+87/WZlU4CMsPhqYct2W
-         Hz73b1W2cN5V60AMADk49fN0kFgKeGi57KyVlLkAtX5ZgfwPLTzxCA9mfRnWIza5wUQI
-         HkMqJyzC2PCmf6nvH3zzBsiIRlTOhbCxv9ALv98N8HMBOeeCw3HIS13w6V2/hmCPvwf2
-         FxHYIWKbpgB1KGxUqcZQu9IA+q4R3U6+qvBZweTU6B2WDG3yGbQJiu8TKS5J0s+EKqyu
-         veOw==
-X-Gm-Message-State: APjAAAUnFOFEeWYZWIHZwLF5FdIMv+BKkOpmtvMUJgqVJxMiMr9V359d
-        NbAX5yEz1ud2d3u2w3eERwvRUHLKy/h9diRTa38=
-X-Google-Smtp-Source: APXvYqy7FxDH4hiEyAUPYf/k0mhxN3xlRhCD7z369wlrPWIAePF0DnCXAlc7bX87tqddaoBVnmFvALfHz+vYZp34pbw=
-X-Received: by 2002:adf:ef10:: with SMTP id e16mr18725296wro.336.1576918153617;
- Sat, 21 Dec 2019 00:49:13 -0800 (PST)
+        Sat, 21 Dec 2019 04:24:06 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55324 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725845AbfLUJYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Dec 2019 04:24:06 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 60011AC23;
+        Sat, 21 Dec 2019 09:24:04 +0000 (UTC)
+Date:   Sat, 21 Dec 2019 10:23:53 +0100
+From:   Borislav Petkov <bp@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-edac <linux-edac@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] RAS urgent for 5.5
+Message-ID: <20191221092353.GA5832@zn.tnic>
 MIME-Version: 1.0
-References: <20191220043253.3278951-1-namhyung@kernel.org> <20191220043253.3278951-2-namhyung@kernel.org>
- <20191220093335.GC2844@hirez.programming.kicks-ass.net> <20191220151622.GF2914998@devbig004.ftw2.facebook.com>
-In-Reply-To: <20191220151622.GF2914998@devbig004.ftw2.facebook.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Sat, 21 Dec 2019 17:49:02 +0900
-Message-ID: <CAM9d7cjmrmyGnYQQ5qUFHYVi2M3kcxt+u+4WQ4PPkoaUgU+5=w@mail.gmail.com>
-Subject: Re: [PATCH 1/9] perf/core: Add PERF_RECORD_CGROUP event
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tejun,
+Hi Linus,
 
-On Sat, Dec 21, 2019 at 12:16 AM Tejun Heo <tj@kernel.org> wrote:
->
-> On Fri, Dec 20, 2019 at 10:33:35AM +0100, Peter Zijlstra wrote:
-> > On Fri, Dec 20, 2019 at 01:32:45PM +0900, Namhyung Kim wrote:
-> > > To support cgroup tracking, add CGROUP event to save a link between
-> > > cgroup path and inode number.  The attr.cgroup bit was also added to
-> > > enable cgroup tracking from userspace.
-> > >
-> > > This event will be generated when a new cgroup becomes active.
-> > > Userspace might need to synthesize those events for existing cgroups.
-> > >
-> > > Cc: Tejun Heo <tj@kernel.org>
-> > > Cc: Li Zefan <lizefan@huawei.com>
-> > > Cc: Johannes Weiner <hannes@cmpxchg.org>
-> > > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> >
-> > TJ, is this the right thing to do? ISTR you had concerns on this topic
-> > on the past.
->
-> Yeah, cgroup->id is now the same as ino (on 64bit ino matchines) and
-> fhandle and uniquely identifies a cgroup instance in that boot
-> instance.  That said, id -> path mapping can be done from userspace by
-> passing the cgroup id to open_by_handle_at(2) and then reading the
-> symlink in /proc/self/fd, so this event isn't necessary per-se if the
-> goal is mapping back ids to paths.
+please pull three urgent RAS fixes for the AMD side of things:
 
-But we should support offline report even on a different machine.
-Also cgroups might go away during the record. so I think we need it
-anyway.
+- initialize struct mce.bank so that calculated error severity on AMD
+SMCA machines is correct
 
-Thanks
-Namhyung
+- do not send IPIs early during bank initialization, when interrupts are
+disabled
+
+- a fix for when only a subset of MCA banks are enabled, which led to
+boot hangs on some new AMD CPUs.
+
+Thx.
+
+---
+The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+
+  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git ras-urgent-for-linus
+
+for you to fetch changes up to a3a57ddad061acc90bef39635caf2b2330ce8f21:
+
+  x86/mce: Fix possibly incorrect severity calculation on AMD (2019-12-17 09:39:53 +0100)
+
+----------------------------------------------------------------
+Jan H. Schönherr (1):
+      x86/mce: Fix possibly incorrect severity calculation on AMD
+
+Konstantin Khlebnikov (1):
+      x86/MCE/AMD: Do not use rdmsr_safe_on_cpu() in smca_configure()
+
+Yazen Ghannam (1):
+      x86/MCE/AMD: Allow Reserved types to be overwritten in smca_banks[]
+
+ arch/x86/kernel/cpu/mce/amd.c  | 4 ++--
+ arch/x86/kernel/cpu/mce/core.c | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
+index 5167bd2bb6b1..d6cf5c18a7e0 100644
+--- a/arch/x86/kernel/cpu/mce/amd.c
++++ b/arch/x86/kernel/cpu/mce/amd.c
+@@ -266,10 +266,10 @@ static void smca_configure(unsigned int bank, unsigned int cpu)
+ 	smca_set_misc_banks_map(bank, cpu);
+ 
+ 	/* Return early if this bank was already initialized. */
+-	if (smca_banks[bank].hwid)
++	if (smca_banks[bank].hwid && smca_banks[bank].hwid->hwid_mcatype != 0)
+ 		return;
+ 
+-	if (rdmsr_safe_on_cpu(cpu, MSR_AMD64_SMCA_MCx_IPID(bank), &low, &high)) {
++	if (rdmsr_safe(MSR_AMD64_SMCA_MCx_IPID(bank), &low, &high)) {
+ 		pr_warn("Failed to read MCA_IPID for bank %d\n", bank);
+ 		return;
+ 	}
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 5f42f25bac8f..2e2a421c8528 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -819,8 +819,8 @@ static int mce_no_way_out(struct mce *m, char **msg, unsigned long *validp,
+ 		if (quirk_no_way_out)
+ 			quirk_no_way_out(i, m, regs);
+ 
++		m->bank = i;
+ 		if (mce_severity(m, mca_cfg.tolerant, &tmp, true) >= MCE_PANIC_SEVERITY) {
+-			m->bank = i;
+ 			mce_read_aux(m, i);
+ 			*msg = tmp;
+ 			return 1;
+
+-- 
+Regards/Gruss,
+    Boris.
+
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
