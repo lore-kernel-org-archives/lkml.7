@@ -2,289 +2,133 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBEBC2D0D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 13:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC8CC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 13:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7A8621927
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 13:52:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EFP7EK7U"
+	by mail.kernel.org (Postfix) with ESMTP id E625821D7E
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 13:53:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbfLUNwC (ORCPT
+        id S1726909AbfLUNxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 08:52:02 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22419 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726583AbfLUNwC (ORCPT
+        Sat, 21 Dec 2019 08:53:52 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:34285 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbfLUNxv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 08:52:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576936320;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ou/s/3Qi+KNTbaTCh/HiHAyd6BgLstj9qp6oblRG7Vk=;
-        b=EFP7EK7UxY0bLOX2tIrZtCAvjv6d3N5Hm2IVHpX5Wzp7X7Psp3Cl5kJG2Lz3zboKnLh8qV
-        RVsDeQk6wGKeM6/Q7+koDHWR+z7r979p49u4qn9Twr83H7A6lFTrt97zPArdU0Ncl/qyHk
-        wg7wp1o+wBFpUu00MWFpq5vbIb0hULo=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-182-CM4UmmX6NueyVGoG9S5BnA-1; Sat, 21 Dec 2019 08:51:52 -0500
-X-MC-Unique: CM4UmmX6NueyVGoG9S5BnA-1
-Received: by mail-wr1-f72.google.com with SMTP id y7so5261465wrm.3
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 05:51:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ou/s/3Qi+KNTbaTCh/HiHAyd6BgLstj9qp6oblRG7Vk=;
-        b=URzqHBOim88K2BjdBW7xBZ/5ik/BQA6QC7JgYLAAgxDXSwJk4en/txTz5miRqsuPNZ
-         kafTj+GN8NMEypgUx+z/jOoVzTwhRzcz8019mksXeOxqzDjP3EdhltVUkgsVTNtkA38D
-         mKuZ9l+eY6cABwN4RPVHRLQJYjKLFZQDxN+3mvmdEelX0u16+9fB+CyxUm6sPe8zB2oZ
-         n/hz8hr+8atEL9jnWDUMuqgPaXhXV9xL++nYdxI3t5Ke86d2OuEnB6CBZx9y7xpSiREM
-         k90mQE1Mk0WdkPxvuEGulkX8b9SUJrQ0/AL39imnug2OQhMMZa5NZ1Si9g5J1Tjbyh/P
-         MYCA==
-X-Gm-Message-State: APjAAAVLV31esifAAPA9FyUmkqHB/JxVpgdqQVSsKxa1pg90pxGwUHRY
-        I6PIAP16CI5BmyL9aXDxnTYcJcdeJaHaCmfffMSPtWBBg4DHIRHC5qGwjLN+P3NY53g4BbFKY3l
-        oPttMhnaTNCFDzfIl3TrqhXzX
-X-Received: by 2002:adf:d850:: with SMTP id k16mr19969154wrl.96.1576936311105;
-        Sat, 21 Dec 2019 05:51:51 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxqgVwhREg2pxtdFbb+1WRH4sxeJtd0PcROh33qc36OVxJl32z4p4V+j8+mIOql2dt6TCOdeg==
-X-Received: by 2002:adf:d850:: with SMTP id k16mr19969133wrl.96.1576936310808;
-        Sat, 21 Dec 2019 05:51:50 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:ac09:bce1:1c26:264c? ([2001:b07:6468:f312:ac09:bce1:1c26:264c])
-        by smtp.gmail.com with ESMTPSA id w20sm13260670wmk.34.2019.12.21.05.51.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 21 Dec 2019 05:51:50 -0800 (PST)
-Subject: Re: [PATCH RESEND v2 03/17] KVM: X86: Don't track dirty for
- KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
-To:     Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-References: <20191221014938.58831-1-peterx@redhat.com>
- <20191221014938.58831-4-peterx@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <cf232ce8-bc07-0192-580f-d08736980273@redhat.com>
-Date:   Sat, 21 Dec 2019 14:51:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Sat, 21 Dec 2019 08:53:51 -0500
+Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MG90u-1iS9zd45cK-00GcBo; Sat, 21 Dec 2019 14:53:50 +0100
+Received: by mail-qk1-f182.google.com with SMTP id z14so8770952qkg.9;
+        Sat, 21 Dec 2019 05:53:49 -0800 (PST)
+X-Gm-Message-State: APjAAAWfxpQ8Ni+qs3L+IUdUwrTRHzu3mWhdoGW7koLU/Ww4oZjx4mXp
+        Pv4W022I6m7YZW8XzfEqOeJ5whABEWSq4ZbKby4=
+X-Google-Smtp-Source: APXvYqzdkKB4eWJLyIMGbY84AVCwTo394eD7uI1YKdpNDtFn1NdJbNSgdawpABz0czREJyOLKl+WVti5eWx7OSdPMjA=
+X-Received: by 2002:a37:a8d4:: with SMTP id r203mr18290266qke.394.1576936428655;
+ Sat, 21 Dec 2019 05:53:48 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191221014938.58831-4-peterx@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191218235459.GA17271@ircssh-2.c.rugged-nimbus-611.internal>
+ <CAK8P3a2eT=bHkUamyp-P3Y2adNq1KBk7UknCYBY5_aR4zJmYaQ@mail.gmail.com>
+ <20191219103525.yqb5f4pbd2dvztkb@wittgenstein> <CAMp4zn_z-CCQYMpT=GjZeGVLobjHBCSbmfha1rtWdmptOQ8JtA@mail.gmail.com>
+ <20191220043510.r5h6wvsp2p5glyjv@yavin.dot.cyphar.com>
+In-Reply-To: <20191220043510.r5h6wvsp2p5glyjv@yavin.dot.cyphar.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sat, 21 Dec 2019 13:53:32 +0000
+X-Gmail-Original-Message-ID: <CAK8P3a0X4UBE_q0mykor9fOqa4qFJHfAE61bgH_8_1GG6ih__g@mail.gmail.com>
+Message-ID: <CAK8P3a0X4UBE_q0mykor9fOqa4qFJHfAE61bgH_8_1GG6ih__g@mail.gmail.com>
+Subject: Re: [PATCH v4 2/5] pid: Add PIDFD_IOCTL_GETFD to fetch file
+ descriptors from processes
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Sargun Dhillon <sargun@sargun.me>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Gian-Carlo Pascutto <gpascutto@mozilla.com>,
+        =?UTF-8?Q?Emilio_Cobos_=C3=81lvarez?= <ealvarez@mozilla.com>,
+        Jed Davis <jld@mozilla.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:X8kFLzryBpbh2nWdfRj5h+/1qG5+N7nbLw/cmfzzvQLHYnAls2Q
+ d7j2+cIsRkKagtxMjLivXjhrxEVnGAoKGTQKqUFq+G50mobe0iGvLffdmhj3hkybOAPghmm
+ Lh2GF1BIKZwDw/wNGEpCIeRB0yFG17cFYrb6KsIF1ApGmVsU0uah6DG3mQyZsPj7D+9/RRw
+ emKlBwYnVM0VP/4+pIV4g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:WID3Qm7SKJs=:tBvWt3bGwwDfbxhLW4vA33
+ 6H3b6vNIHT2JSKV2JaTOUZVnQTXz0Sm2DNJEQXilnfpIIJLTS6DP/zoKvwT8Z+fSS5qU+oM1l
+ NFW3uEFBOzMHMZxR+xsP7WHbHx2Z28CjzNb/SJd2xwedBKKPTRb9hzr0YFFm37KH9g1fr0zLQ
+ aKS7hv5D5K0c7ai97gV2DFlUO67GhyPe+j1Otwol2BzzhccOrKuE2X2NFx+26n2ywYVx4BCl1
+ vTazP0iloGeb8yETb+TFgmjd1g+gV7ktLsCtCoM8l8VZjxC90Ey5FOJMst/FfCPDzjyYzRugn
+ L/UXiFtsmzJrRNhU1806BcPm1S6N/Rasgp5OwE0EkMlssqiDqhae/G1dxWrnZTEC6yZrCgSdz
+ vPqHi7QzeBisD7v5SesyiLKl9/Koz8LPawRj5fGF/U+mLQN70UvQ4egH6Z8ADfBsmW3GC1NSw
+ eIL9kg07vbhhnm36XELhbsj3dwIgZOrFPUb12Zd71pUiLorfaBThwJN5S9rplMDHMx5aZ1pGW
+ RI3irOewibSRX3ppsaTaBNFptfw1BdsING7XVreaY/9A0AH/cIef6cs9Qt3I+AT7qL30bEEt0
+ G2mApF7h8r9rcg0YMIjF6VxDtU/CogUP8p8DeRVtShEd1ZSTAqPNEC8y07RYz2jPlmc35/vUf
+ dc+shbuMXmQvU6MDNNMPVSpAke/+uRoZPTopjR9M3hSFlaRM6bLuqqIyeP+ieguqs+XyawgZY
+ TACRR32lKW2WFAr0d0jiV4eNuMZcMH5m2UNnuYcXPZb7GCLftJ3m/btRD9kDj7OsXFzOrfLyC
+ YbqTl4P0yib0iKqfF0+TXP+0B2FbxasRtU9gm/O2cXY12WmjFIV9gYSMmNefmdKUFaO9+d9rV
+ 5hjjLXdrVkUG81St/LuQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/12/19 02:49, Peter Xu wrote:
-> Originally, we have three code paths that can dirty a page without
-> vcpu context for X86:
-> 
->   - init_rmode_identity_map
->   - init_rmode_tss
->   - kvmgt_rw_gpa
-> 
-> init_rmode_identity_map and init_rmode_tss will be setup on
-> destination VM no matter what (and the guest cannot even see them), so
-> it does not make sense to track them at all.
-> 
-> To do this, a new parameter is added to kvm_[write|clear]_guest_page()
-> to show whether we would like to track dirty bits for the operations.
-> With that, pass in "false" to this new parameter for any guest memory
-> write of the ioctls (KVM_SET_TSS_ADDR, KVM_SET_IDENTITY_MAP_ADDR).
+On Fri, Dec 20, 2019 at 4:35 AM Aleksa Sarai <cyphar@cyphar.com> wrote:
+>
+> On 2019-12-19, Sargun Dhillon <sargun@sargun.me> wrote:
+> > On Thu, Dec 19, 2019 at 2:35 AM Christian Brauner
+> > <christian.brauner@ubuntu.com> wrote:
+> > > I guess this is the remaining question we should settle, i.e. what do we
+> > > prefer.
+> > > I still think that adding a new syscall for this seems a bit rich. On
+> > > the other hand it seems that a lot more people agree that using a
+> > > dedicated syscall instead of an ioctl is the correct way; especially
+> > > when it touches core kernel functionality. I mean that was one of the
+> > > takeaways from the pidfd API ioctl-vs-syscall discussion.
+> > >
+> > > A syscall is nicer especially for core-kernel code like this.
+> > > So I guess the only way to find out is to try the syscall approach and
+> > > either get yelled and switch to an ioctl() or have it accepted.
+> > >
+> > > What does everyone else think? Arnd, still in favor of a syscall I take
+> > > it. Oleg, you had suggested a syscall too, right? Florian, any
+> > > thoughts/worries on/about this from the glibc side?
+> > >
+> > > Christian
+> >
+> > My feelings towards this are that syscalls might pose a problem if we
+> > ever want to extend this API. Of course we can have a reserved
+> > "flags" field, and populate it later, but what if we turn out to need
+> > a proper struct? I already know we're going to want to add one
+> > around cgroup metadata (net_cls), and likely we'll want to add
+> > a "steal" flag as well. As Arnd mentioned earlier, this is trivial to
+> > fix in a traditional ioctl environment, as ioctls are "cheap". How
+> > do we feel about potentially adding a pidfd_getfd2? Or are we
+> > confident that reserved flags will save us?
+>
+> If we end up making this a syscall, then we can re-use the
+> copy_struct_from_user() API to make it both extensible and compatible in
+> both directions. I wasn't aware that this was frowned upon for ioctls
+> (sorry for the extra work) but there are several syscalls which use this
+> model for extendability (clone3, openat2, sched_setattr,
+> perf_events_open) so there shouldn't be any such complaints for a
+> syscall which is extensible.
 
-We can also return the hva from x86_set_memory_region and
-__x86_set_memory_region.
+I would still not do it for syscalls, although for other reasons:
 
-Paolo
+- in an ioctl, it's better to come up with a new command code if you
+  have a larger structure
 
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-> ---
->  arch/x86/kvm/vmx/vmx.c   | 18 ++++++++++--------
->  include/linux/kvm_host.h |  5 +++--
->  virt/kvm/kvm_main.c      | 25 ++++++++++++++++---------
->  3 files changed, 29 insertions(+), 19 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 04a8212704c1..1ff5a428f489 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -3452,24 +3452,24 @@ static int init_rmode_tss(struct kvm *kvm)
->  
->  	idx = srcu_read_lock(&kvm->srcu);
->  	fn = to_kvm_vmx(kvm)->tss_addr >> PAGE_SHIFT;
-> -	r = kvm_clear_guest_page(kvm, fn, 0, PAGE_SIZE);
-> +	r = kvm_clear_guest_page(kvm, fn, 0, PAGE_SIZE, false);
->  	if (r < 0)
->  		goto out;
->  	data = TSS_BASE_SIZE + TSS_REDIRECTION_SIZE;
->  	r = kvm_write_guest_page(kvm, fn++, &data,
-> -			TSS_IOPB_BASE_OFFSET, sizeof(u16));
-> +				 TSS_IOPB_BASE_OFFSET, sizeof(u16), false);
->  	if (r < 0)
->  		goto out;
-> -	r = kvm_clear_guest_page(kvm, fn++, 0, PAGE_SIZE);
-> +	r = kvm_clear_guest_page(kvm, fn++, 0, PAGE_SIZE, false);
->  	if (r < 0)
->  		goto out;
-> -	r = kvm_clear_guest_page(kvm, fn, 0, PAGE_SIZE);
-> +	r = kvm_clear_guest_page(kvm, fn, 0, PAGE_SIZE, false);
->  	if (r < 0)
->  		goto out;
->  	data = ~0;
->  	r = kvm_write_guest_page(kvm, fn, &data,
->  				 RMODE_TSS_SIZE - 2 * PAGE_SIZE - 1,
-> -				 sizeof(u8));
-> +				 sizeof(u8), false);
->  out:
->  	srcu_read_unlock(&kvm->srcu, idx);
->  	return r;
-> @@ -3498,7 +3498,7 @@ static int init_rmode_identity_map(struct kvm *kvm)
->  		goto out2;
->  
->  	idx = srcu_read_lock(&kvm->srcu);
-> -	r = kvm_clear_guest_page(kvm, identity_map_pfn, 0, PAGE_SIZE);
-> +	r = kvm_clear_guest_page(kvm, identity_map_pfn, 0, PAGE_SIZE, false);
->  	if (r < 0)
->  		goto out;
->  	/* Set up identity-mapping pagetable for EPT in real mode */
-> @@ -3506,7 +3506,8 @@ static int init_rmode_identity_map(struct kvm *kvm)
->  		tmp = (i << 22) + (_PAGE_PRESENT | _PAGE_RW | _PAGE_USER |
->  			_PAGE_ACCESSED | _PAGE_DIRTY | _PAGE_PSE);
->  		r = kvm_write_guest_page(kvm, identity_map_pfn,
-> -				&tmp, i * sizeof(tmp), sizeof(tmp));
-> +					 &tmp, i * sizeof(tmp),
-> +					 sizeof(tmp), false);
->  		if (r < 0)
->  			goto out;
->  	}
-> @@ -7265,7 +7266,8 @@ static int vmx_write_pml_buffer(struct kvm_vcpu *vcpu)
->  		dst = vmcs12->pml_address + sizeof(u64) * vmcs12->guest_pml_index;
->  
->  		if (kvm_write_guest_page(vcpu->kvm, gpa_to_gfn(dst), &gpa,
-> -					 offset_in_page(dst), sizeof(gpa)))
-> +					 offset_in_page(dst), sizeof(gpa),
-> +					 false))
->  			return 0;
->  
->  		vmcs12->guest_pml_index--;
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index 2ea1ea79befd..4e34cf97ca90 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -734,7 +734,7 @@ int kvm_read_guest(struct kvm *kvm, gpa_t gpa, void *data, unsigned long len);
->  int kvm_read_guest_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
->  			   void *data, unsigned long len);
->  int kvm_write_guest_page(struct kvm *kvm, gfn_t gfn, const void *data,
-> -			 int offset, int len);
-> +			 int offset, int len, bool track_dirty);
->  int kvm_write_guest(struct kvm *kvm, gpa_t gpa, const void *data,
->  		    unsigned long len);
->  int kvm_write_guest_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
-> @@ -744,7 +744,8 @@ int kvm_write_guest_offset_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
->  				  unsigned long len);
->  int kvm_gfn_to_hva_cache_init(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
->  			      gpa_t gpa, unsigned long len);
-> -int kvm_clear_guest_page(struct kvm *kvm, gfn_t gfn, int offset, int len);
-> +int kvm_clear_guest_page(struct kvm *kvm, gfn_t gfn, int offset, int len,
-> +			 bool track_dirty);
->  int kvm_clear_guest(struct kvm *kvm, gpa_t gpa, unsigned long len);
->  struct kvm_memory_slot *gfn_to_memslot(struct kvm *kvm, gfn_t gfn);
->  bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn);
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index 7ee28af9eb48..b1047173d78e 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -2051,7 +2051,8 @@ int kvm_vcpu_read_guest_atomic(struct kvm_vcpu *vcpu, gpa_t gpa,
->  EXPORT_SYMBOL_GPL(kvm_vcpu_read_guest_atomic);
->  
->  static int __kvm_write_guest_page(struct kvm_memory_slot *memslot, gfn_t gfn,
-> -			          const void *data, int offset, int len)
-> +			          const void *data, int offset, int len,
-> +				  bool track_dirty)
->  {
->  	int r;
->  	unsigned long addr;
-> @@ -2062,16 +2063,19 @@ static int __kvm_write_guest_page(struct kvm_memory_slot *memslot, gfn_t gfn,
->  	r = __copy_to_user((void __user *)addr + offset, data, len);
->  	if (r)
->  		return -EFAULT;
-> -	mark_page_dirty_in_slot(memslot, gfn);
-> +	if (track_dirty)
-> +		mark_page_dirty_in_slot(memslot, gfn);
->  	return 0;
->  }
->  
->  int kvm_write_guest_page(struct kvm *kvm, gfn_t gfn,
-> -			 const void *data, int offset, int len)
-> +			 const void *data, int offset, int len,
-> +			 bool track_dirty)
->  {
->  	struct kvm_memory_slot *slot = gfn_to_memslot(kvm, gfn);
->  
-> -	return __kvm_write_guest_page(slot, gfn, data, offset, len);
-> +	return __kvm_write_guest_page(slot, gfn, data, offset, len,
-> +				      track_dirty);
->  }
->  EXPORT_SYMBOL_GPL(kvm_write_guest_page);
->  
-> @@ -2080,7 +2084,8 @@ int kvm_vcpu_write_guest_page(struct kvm_vcpu *vcpu, gfn_t gfn,
->  {
->  	struct kvm_memory_slot *slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
->  
-> -	return __kvm_write_guest_page(slot, gfn, data, offset, len);
-> +	return __kvm_write_guest_page(slot, gfn, data, offset,
-> +				      len, true);
->  }
->  EXPORT_SYMBOL_GPL(kvm_vcpu_write_guest_page);
->  
-> @@ -2093,7 +2098,7 @@ int kvm_write_guest(struct kvm *kvm, gpa_t gpa, const void *data,
->  	int ret;
->  
->  	while ((seg = next_segment(len, offset)) != 0) {
-> -		ret = kvm_write_guest_page(kvm, gfn, data, offset, seg);
-> +		ret = kvm_write_guest_page(kvm, gfn, data, offset, seg, true);
->  		if (ret < 0)
->  			return ret;
->  		offset = 0;
-> @@ -2232,11 +2237,13 @@ int kvm_read_guest_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
->  }
->  EXPORT_SYMBOL_GPL(kvm_read_guest_cached);
->  
-> -int kvm_clear_guest_page(struct kvm *kvm, gfn_t gfn, int offset, int len)
-> +int kvm_clear_guest_page(struct kvm *kvm, gfn_t gfn, int offset, int len,
-> +			 bool track_dirty)
->  {
->  	const void *zero_page = (const void *) __va(page_to_phys(ZERO_PAGE(0)));
->  
-> -	return kvm_write_guest_page(kvm, gfn, zero_page, offset, len);
-> +	return kvm_write_guest_page(kvm, gfn, zero_page, offset, len,
-> +				    track_dirty);
->  }
->  EXPORT_SYMBOL_GPL(kvm_clear_guest_page);
->  
-> @@ -2248,7 +2255,7 @@ int kvm_clear_guest(struct kvm *kvm, gpa_t gpa, unsigned long len)
->  	int ret;
->  
->  	while ((seg = next_segment(len, offset)) != 0) {
-> -		ret = kvm_clear_guest_page(kvm, gfn, offset, seg);
-> +		ret = kvm_clear_guest_page(kvm, gfn, offset, seg, true);
->  		if (ret < 0)
->  			return ret;
->  		offset = 0;
-> 
+- in a system call, it's best to pass all arguments as individual
+  registers, the only time we use indirect data structures is when there
+  are more than six arguments.
 
+       Arnd
