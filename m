@@ -2,102 +2,219 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF6CC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 14:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3FAC2D0D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 14:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFF7421927
+	by mail.kernel.org (Postfix) with ESMTP id EA4C12072B
 	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 14:37:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="OpgTtrM2"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="A26Z6P2p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfLUOfy (ORCPT
+        id S1727101AbfLUOhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 09:35:54 -0500
-Received: from mout.gmx.net ([212.227.15.15]:37113 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726715AbfLUOfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 09:35:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1576938943;
-        bh=Tkb7joQstLAGu2IIOjJB8aYKaEv/nA6o+B4sSnBN9Ek=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject;
-        b=OpgTtrM2VMRAP/h12Fd71+07VYgZ9FrN1W/yWnNwC5lhjJRVyKnR/9LiaRk1q+D5A
-         fW6lDbRbxl03Dz+jkn7+atRU/+5bzlQM2jB0zQf0eIvwJvpkbLTjAUjdqmpnsScf2h
-         ZPtAf5HjFdFUHYBeruRg+qeLVEU2etSB2Mi5f1mk=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ls3530.fritz.box ([92.116.169.139]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MYvcA-1iDvZv0vVA-00UpMa; Sat, 21
- Dec 2019 15:35:43 +0100
-Date:   Sat, 21 Dec 2019 15:35:39 +0100
-From:   Helge Deller <deller@gmx.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        John David Anglin <dave.anglin@bell.net>
-Cc:     Sven Schnelle <svens@stackframe.org>
-Subject: [GIT PULL] parisc architecture fixes for kernel v5.5-rc3
-Message-ID: <20191221143539.GA29263@ls3530.fritz.box>
+        Sat, 21 Dec 2019 09:37:45 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:38225 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726715AbfLUOhp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Dec 2019 09:37:45 -0500
+Received: by mail-pj1-f67.google.com with SMTP id l35so5458893pje.3
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 06:37:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8RGBtvtHHzV2ZgorEAZr6sDT1wWVhAMNZuJXUzm1tOY=;
+        b=A26Z6P2pPXaprrDe/W1eYjHY2bnsdE5IhZcekXrNLLNzFqskCclrGgqVYguWy+WGlG
+         CtYeMxatmz1VfSd9BDGa3BS4+AO+rDEQDTDrbRUFruPEbk1gtHCYzCwBChcaQe7qVJfj
+         3DTJfK3Fm5reJWH6Uju4CKUpmDVVMEDLKSetIUx+4c+AOZBCMmxJNxQjc+t/PJ7257wZ
+         eWmAwnPWTm61iE+D2DwlM3xr1uF1FHGvrna7cuLvp37rX//WUyHRIJuqFHdIlRSHOnxz
+         awvRRE8Y936mdRNaOWN6lzuOEwHJgRF2yvr2VWiBf3FrC+8/4MJMatq4QQ/dwNEwF5uy
+         xrFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8RGBtvtHHzV2ZgorEAZr6sDT1wWVhAMNZuJXUzm1tOY=;
+        b=ti8Q6309b8I+l7vdBQqcFRJYqm/2gfYC0c8uz7cgkiSXx/UU/yLjiXTsdnDlvdNnJe
+         8Bw9s7Hy8AkUnMA03PSSN0gKEWsYz6knDajHuhuF8T7r4uMkDHskCLXdMsqKr1qp4ynL
+         x/AoFcBw4BVqbnDwHWvFAHA3kgw/tv7b3ixlgiVFebaFttiWNeMl39XuUddRZ3aibOu9
+         7aKP94XUXGrHajj5OCZ7lg4h6R7ZOYpL3HkpNipK9UOOe9lBoxIBoSUfz/EwnzjKrbiG
+         RYUUYk54pn6j5XTbXLYhD4UofZoODWXYee3ZeJyRqHoe6JHtc2ezHeZps34dK3BUjrBx
+         WNXw==
+X-Gm-Message-State: APjAAAU0kAQF9z4+hNf3l5PUtxY/H8GVIcl8fCknTirz7PM+fs8KqsUe
+        Yvm+KSDqJHV13pHBQnt/VqDndw==
+X-Google-Smtp-Source: APXvYqxahM9fGvd3bZ/I5SH8PVb4QRjhTSuRX59QEQlXXkrNFzVbeO5IgfKuWQAfjLy5x89rS8O31g==
+X-Received: by 2002:a17:902:fe8b:: with SMTP id x11mr12291987plm.83.1576939064297;
+        Sat, 21 Dec 2019 06:37:44 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id g18sm16495757pfi.80.2019.12.21.06.37.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 21 Dec 2019 06:37:43 -0800 (PST)
+Subject: Re: KASAN: use-after-free Read in io_wq_flush (2)
+To:     Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+8e7705a7ae1bdce77c07@syzkaller.appspotmail.com>
+Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+References: <20191221143036.1984-1-hdanton@sina.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <2a2e2299-310d-3e94-3c08-2d3b2c0c3751@kernel.dk>
+Date:   Sat, 21 Dec 2019 07:37:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Provags-ID: V03:K1:Eu1VqnZExhaM2p9mJ3lDYG25ZhP7zssG8jpDj9wAueBi1ee/QLB
- 4lvX2upPhcCbllIu5iJDIdYYzrqBKqPcLehSHwk0pVT8+lUrlDqh2l5YN0pMqVOwMypdsuQ
- 0/rb/odisXFnxcbvkQA6NIoZQefF/JgHW/R99dXoHpobZR7Fb91gWr8SdauG6NxUJEZ3eMY
- gyaoUxiT+5R0fbjNTPjDw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:VH+g+yyVafM=:BjCvHx8x0S+GnR/jjf+R2t
- AQD4e6O2YCPkkt2Lr2G+Y8R1gyiteNeQrTEobHf64U4AWhCwTknhJ/WStqedmPDv371BZGNFF
- 3+wr4K89RIQlKuSkcdNMWt1XONlILUUechwyCIvcLys5b1BSDkR9SLox1bfQA6Yuk+5kJZgrI
- mQk59cmKywS7cTMTyN4Z5gaI5awtWg6836hVTE8071xRnGRKtjelwzm+K6cOmq6DzXpc8gXci
- LTW6ekHk2duvQiT17aBCUZj9JGorOG3h+pkwpknm6kTpPaNSZCawq+q6GRg0syFzgnBdWJDql
- pg2NQvZbfJGk/Fhu1z+5jQEM7g8V6xaHNHkp999DuzCBlf5Q9H3WTnnROc+g6pNgPIqXH10CH
- bNPr65twNX5j27RTInvfkwhi5VwaTqaN//H4ZTfKk1dwg42C+waJ7w1xYYTmvnMkyKFf228jj
- DYbRyifWaPuNiBDmabgYxUcqvQHw1I8s7glPjYy+RU2bUmVGJv4rLDeluzuaXHvVu1DJVS8bV
- 97XQsCsoxpPrHkxtW7ApnRTQFILzwg6OWy6isI4FhAUQ9rQYWP4E6A8fY8P1aWk1AKsf8UpnI
- s0owKydFVNPQ59pzP227lgZQ3hTWwuuYC0DfJwA9l0TEA2TfxZUQECL8bvEJJ7OyKuHzS9okU
- OQE5jBEvihLFcback0PwDxQHzayl/uVWko8YxI9b/B7MQGtFekE4H4qlluuNvSFyr/xGgbA1S
- LnWNp40wkNM9Ln1azKKmlVUDvYbNZPJ+akiDDm16yxgKkcbqSMPl3wNrvDUDhfyKy4x1FiwTO
- zKijr1AIROP+aYpxXoiGK6YQTLGth9XnRhpF5wsKyP12mdQwaAk3uVqsIGUYrUbGK1CyuY7Gz
- urh9KKvkOJSgQLQQ4tBKZTpUOdKXCMofT+2VIeXlotd8XnXYgIB2NG+nCAk3J159O5CHk5Qn8
- NEjzBFyWJQPKIZyjilVQD4WVt9MDRR7OqisIKCvuFXNmJWmhswNTB3DPoQto1PtlKJ2URkeD2
- qttSy98sdVFcvfidLbtDoxpHmeJDOgIBI/5YJGJJQDFE6v43OG3pR67iL14BSUiM+n64fx4ou
- L5AcvPwzWWndKQtFUH7z6r/E515rjNjnxk2JUsSSo5QyXIp3hQUQchwEvrB75hJEGlm2Ji+BD
- vjN1xl9U/lJiWXPS/g3BYoep1AOx7GsT0EoD09d7aB8Unsm9sM+XreASDXwPyOkRiIt7vOXAh
- 6ui6sCE7CppXRAykUsAelOH1r1c8WAaUGpsWVPw==
+In-Reply-To: <20191221143036.1984-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 12/21/19 7:30 AM, Hillf Danton wrote:
+> 
+> On Fri, 20 Dec 2019 23:58:08 -0800
+>> Hello,
+>>
+>> syzbot found the following crash on:
+>>
+>> HEAD commit:    7ddd09fc Add linux-next specific files for 20191220
+>> git tree:       linux-next
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=12e1823ee00000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=f183b01c3088afc6
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=8e7705a7ae1bdce77c07
+>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>>
+>> Unfortunately, I don't have any reproducer for this crash yet.
+>>
+>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>> Reported-by: syzbot+8e7705a7ae1bdce77c07@syzkaller.appspotmail.com
+>>
+>> ==================================================================
+>> BUG: KASAN: use-after-free in io_wq_flush+0x1f7/0x210 fs/io-wq.c:1009
+>> Read of size 8 at addr ffff8880a8453d00 by task kworker/0:1/12
+>>
+>> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted  
+>> 5.5.0-rc2-next-20191220-syzkaller #0
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+>> Google 01/01/2011
+>> Workqueue: events io_ring_file_ref_switch
+>> Call Trace:
+>>   __dump_stack lib/dump_stack.c:77 [inline]
+>>   dump_stack+0x197/0x210 lib/dump_stack.c:118
+>>   print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+>>   __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+>>   kasan_report+0x12/0x20 mm/kasan/common.c:639
+>>   __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
+>>   io_wq_flush+0x1f7/0x210 fs/io-wq.c:1009
+>>   io_destruct_skb+0x8e/0xc0 fs/io_uring.c:4668
+>>   skb_release_head_state+0xeb/0x260 net/core/skbuff.c:652
+>>   skb_release_all+0x16/0x60 net/core/skbuff.c:663
+>>   __kfree_skb net/core/skbuff.c:679 [inline]
+>>   kfree_skb net/core/skbuff.c:697 [inline]
+>>   kfree_skb+0x101/0x420 net/core/skbuff.c:691
+>>   io_ring_file_put fs/io_uring.c:4836 [inline]
+>>   io_ring_file_ref_switch+0x68a/0xac0 fs/io_uring.c:4881
+>>   process_one_work+0x9af/0x1740 kernel/workqueue.c:2264
+>>   worker_thread+0x98/0xe40 kernel/workqueue.c:2410
+>>   kthread+0x361/0x430 kernel/kthread.c:255
+>>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>>
+>> Allocated by task 9937:
+>>   save_stack+0x23/0x90 mm/kasan/common.c:72
+>>   set_track mm/kasan/common.c:80 [inline]
+>>   __kasan_kmalloc mm/kasan/common.c:513 [inline]
+>>   __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:486
+>>   kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
+>>   kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3551
+>>   kmalloc include/linux/slab.h:555 [inline]
+>>   kzalloc include/linux/slab.h:669 [inline]
+>>   io_wq_create+0x52/0xa40 fs/io-wq.c:1024
+>>   io_sq_offload_start fs/io_uring.c:5244 [inline]
+>>   io_uring_create fs/io_uring.c:6002 [inline]
+>>   io_uring_setup+0xf4a/0x2080 fs/io_uring.c:6062
+>>   __do_sys_io_uring_setup fs/io_uring.c:6075 [inline]
+>>   __se_sys_io_uring_setup fs/io_uring.c:6072 [inline]
+>>   __x64_sys_io_uring_setup+0x54/0x80 fs/io_uring.c:6072
+>>   do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+>>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>>
+>> Freed by task 9935:
+>>   save_stack+0x23/0x90 mm/kasan/common.c:72
+>>   set_track mm/kasan/common.c:80 [inline]
+>>   kasan_set_free_info mm/kasan/common.c:335 [inline]
+>>   __kasan_slab_free+0x102/0x150 mm/kasan/common.c:474
+>>   kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
+>>   __cache_free mm/slab.c:3426 [inline]
+>>   kfree+0x10a/0x2c0 mm/slab.c:3757
+>>   io_wq_destroy+0x2ce/0x3c0 fs/io-wq.c:1116
+>>   io_finish_async+0x128/0x1b0 fs/io_uring.c:4657
+>>   io_ring_ctx_free fs/io_uring.c:5569 [inline]
+>>   io_ring_ctx_wait_and_kill+0x330/0x9a0 fs/io_uring.c:5644
+>>   io_uring_release+0x42/0x50 fs/io_uring.c:5652
+>>   __fput+0x2ff/0x890 fs/file_table.c:280
+>>   ____fput+0x16/0x20 fs/file_table.c:313
+>>   task_work_run+0x145/0x1c0 kernel/task_work.c:113
+>>   tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+>>   exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:164
+>>   prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+>>   syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+>>   do_syscall_64+0x676/0x790 arch/x86/entry/common.c:304
+>>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>>
+>> The buggy address belongs to the object at ffff8880a8453d00
+>>   which belongs to the cache kmalloc-192 of size 192
+>> The buggy address is located 0 bytes inside of
+>>   192-byte region [ffff8880a8453d00, ffff8880a8453dc0)
+>> The buggy address belongs to the page:
+>> page:ffffea0002a114c0 refcount:1 mapcount:0 mapping:ffff8880aa400000  
+>> index:0x0
+>> raw: 00fffe0000000200 ffffea0002644808 ffffea0002482f08 ffff8880aa400000
+>> raw: 0000000000000000 ffff8880a8453000 0000000100000010 0000000000000000
+>> page dumped because: kasan: bad access detected
+>>
+>> Memory state around the buggy address:
+>>   ffff8880a8453c00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>>   ffff8880a8453c80: 00 00 00 00 fc fc fc fc fc fc fc fc fc fc fc fc
+>>> ffff8880a8453d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>>                     ^
+>>   ffff8880a8453d80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+>>   ffff8880a8453e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>> ==================================================================
+> 
+> Erase ctx's io_wq before destroying.
+> 
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -4651,12 +4651,13 @@ static void io_sq_thread_stop(struct io_
+>  
+>  static void io_finish_async(struct io_ring_ctx *ctx)
+>  {
+> +	struct io_wq *io_wq;
+> +
+>  	io_sq_thread_stop(ctx);
+>  
+> -	if (ctx->io_wq) {
+> -		io_wq_destroy(ctx->io_wq);
+> -		ctx->io_wq = NULL;
+> -	}
+> +	io_wq = xchg(&ctx->io_wq, NULL);
+> +	if (io_wq)
+> +		io_wq_destroy(io_wq);
+>  }
+>  
+>  #if defined(CONFIG_UNIX)
 
-please pull a few small fixes for the parisc architecture for kernel 5.5-rc3 from:
+I actually think we can just kill the flush off the skb put path, it's
+not needed.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git parisc-5.5-2
+-- 
+Jens Axboe
 
-Two build error fixes, one for the soft_offline_page() parameter change and one
-for a specific KEXEC/KEXEC_FILE configuration, as well as a compiler and a
-linker warning fix.
-
-Thanks,
-Helge
-
-----------------------------------------------------------------
-Helge Deller (2):
-      parisc: soft_offline_page() now takes the pfn
-      parisc: Fix compiler warnings in debug_core.c
-
-Sven Schnelle (2):
-      parisc: fix compilation when KEXEC=n and KEXEC_FILE=y
-      parisc: add missing __init annotation
-
- arch/parisc/include/asm/cmpxchg.h | 10 ++++++++--
- arch/parisc/include/asm/kexec.h   |  4 ----
- arch/parisc/kernel/Makefile       |  2 +-
- arch/parisc/kernel/drivers.c      |  2 +-
- arch/parisc/kernel/pdt.c          |  3 +--
- 5 files changed, 11 insertions(+), 10 deletions(-)
