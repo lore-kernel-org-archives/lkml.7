@@ -2,131 +2,116 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAA3C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 15:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEAFC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 15:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 362562070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 15:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AFA721927
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 15:18:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YyXABD20"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rI/yCLRW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfLUPHM (ORCPT
+        id S1727097AbfLUPSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 10:07:12 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:37587 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbfLUPHM (ORCPT
+        Sat, 21 Dec 2019 10:18:53 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39591 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726716AbfLUPSx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 10:07:12 -0500
-Received: by mail-il1-f194.google.com with SMTP id t8so10572953iln.4;
-        Sat, 21 Dec 2019 07:07:11 -0800 (PST)
+        Sat, 21 Dec 2019 10:18:53 -0500
+Received: by mail-pf1-f195.google.com with SMTP id q10so6875291pfs.6
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 07:18:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LkyVqaGL8pSvqNm/GP/crRw2qKqaYhVFS2IL3esjjss=;
-        b=YyXABD20DXHsGL/j/uU2X9GW2vWtYA4/REvABc1SKH1P+gDQRaUgyfvrN7RNZLFcCr
-         FE3Ac/vjCvKi0GIE4tdWnfyEliulLr1lEucydp2qpyI7uSmil51FTU+YufrF/ol7cPYy
-         3jz+O/ZDGl2N1kwK12gqNbDo3O8rHDRgtO5Fe0DrbWNwIkgPjcy/2MowkPNut2ycdeuL
-         eqmZrYwjta8g6lG0nudReRNfMSQDnkAFG2qpH0rAbJh0rZcE6EcqVg6K1jJMoiAj3aN8
-         a8vlolsXPlaKOLYXNXOiYc3ufw2b1w12tDjhlMw09kGop1Ok33ZFy8Afo/1KDncRMmMH
-         bLlg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IalKy0cIDykcqIOovYMNggMAbyERadJBeyOCwn69dUI=;
+        b=rI/yCLRW1ThOuyKlWa7kZYOiWbm1zu6K68+an8IKhVLuNvGgnWfpgFnH4UDCGl3fYg
+         icPykowvK+rzcD5torv5jOkqTGxAvzA4IXkGKQcFBrP8RZ8VTPoxcBzZ7CmaVbOHF0hx
+         eqP3eLTp8TXwnYRDu23M7ytsmL5TXh12UbNjrSQaIb/4Ok3UBNjtTgAn5LSn00MNM6e+
+         VITjl3Er4YJM2hzPi9jay6JF58oel4H7eUHbxvPnE/ZKTNA9g8jiSZjVJSl+mqYHjQXC
+         7l6i6Al18JcyPrEIDjGmWCgLyBkLAD6uO+Wehnm2dspIL4AKMDDGg0KlIPec8WjrUK6F
+         n6Gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LkyVqaGL8pSvqNm/GP/crRw2qKqaYhVFS2IL3esjjss=;
-        b=fA3CYqN1NIuqfdvBWro1nTcZ9r8YB1nRuBk9kXfgp2aL/2Rx0Q9Yzn+yWmtzNgfa+a
-         YOKBOSWAnytiJEZERbK5ABD2rfRoDuEjpcIIp/J+HlOmeGk/kECEg0Glq1Q5NMQav64b
-         WQD9UcpmnLNv1E0IwkMxWpRb5SGFKh2/QTYqoUDNBGuojeUC5rx38xhZF8OrNgnn3YKZ
-         aYn6ktQU7ZbwSwrywmYInqomIOeAbhvJmPeB4rbYZsMFS5iRK0Zc2uN9Sg/5MtJ1Bg60
-         XEfh5B6kdxto/s1AwHuIenu2szPXolbIEe3eZk0wB8t7mrk+BoJHr141lVpt4tqACFjH
-         teBg==
-X-Gm-Message-State: APjAAAX+mz2k7vEas0QFGuLPdJaChRwlTAlJSeYxaslVxU+qEcaUnAqy
-        XTvO/KwI6virHS24X5VZEewqvY8VMHRBhkfLqQ3pPA==
-X-Google-Smtp-Source: APXvYqwvQf5cIvO4uRO1C7m1YDUP8Y4ctwyyWjl1EAYmu/rnU1BO5cqKngYGLE5EGBXHkD57AG4IlXjPHwoNstd3jeY=
-X-Received: by 2002:a92:1547:: with SMTP id v68mr16711743ilk.58.1576940831051;
- Sat, 21 Dec 2019 07:07:11 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IalKy0cIDykcqIOovYMNggMAbyERadJBeyOCwn69dUI=;
+        b=uASjPRi+NSg0a9bpBYGM2KzLaeKELZ/c/eK/8yxU6+7Mdmka3e4U3m1YEtMJlhBfRE
+         mNvbAK+1zfiWYBay03aOJQMXJLA6ybLG4pHSpbhh26L7uVZ2awXmzzgZY+cw6K8aQ9os
+         GMkCKi2DRWDcyRt/67WR8xCDuSAeR1sozYSLSIEtBwggknxjRCe7fPV3CKhNxoO7NmDb
+         U9oPytNOmM71N8arf3ha4h88pjnOgIboJK/4D67WQV68dtlJFhCaMJ6qBVHSNqs72tb0
+         /QurqQFibISEinfCQ4K67PS/8nkxM0kSdiijXE9/CwaNUvC6KifLBeK6pCU7vFaXF/DE
+         4uyQ==
+X-Gm-Message-State: APjAAAXNlMb3L0upk1+VQIjKBDNxpnq3VqWd5zwFIY+P1Ijqh587YFsc
+        o3fpU9Fqn/AHrEkElOu29ISRP4Kb7LU=
+X-Google-Smtp-Source: APXvYqzi7KYQSFIMqIKtWX1kLd2Lss+xS9iXkKxZBPunH9NrdSEXUw8xIlSuTMKau2Z9DHwCqLsItw==
+X-Received: by 2002:a63:181:: with SMTP id 123mr20844550pgb.36.1576941532049;
+        Sat, 21 Dec 2019 07:18:52 -0800 (PST)
+Received: from apollo.hsd1.ca.comcast.net ([2601:646:9200:4e0::36e9])
+        by smtp.gmail.com with ESMTPSA id t187sm17233646pfd.21.2019.12.21.07.18.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Dec 2019 07:18:51 -0800 (PST)
+From:   Khem Raj <raj.khem@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Khem Raj <raj.khem@gmail.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] x86/boot/compressed/64: Define __force_order only when CONFIG_RANDOMIZE_BASE is unset
+Date:   Sat, 21 Dec 2019 07:18:13 -0800
+Message-Id: <20191221151813.1573450-1-raj.khem@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <20191213160542.15757-1-aford173@gmail.com>
-In-Reply-To: <20191213160542.15757-1-aford173@gmail.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Sat, 21 Dec 2019 09:06:58 -0600
-Message-ID: <CAHCN7xKuVCGqgRpixa9UPkWq92Gg=dm4XxAczBKAZCoMzcBVJg@mail.gmail.com>
-Subject: Re: [PATCH V2 0/7] soc: imx: Enable additional functionality of
- i.MX8M Mini
-To:     arm-soc <linux-arm-kernel@lists.infradead.org>
-Cc:     Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 10:05 AM Adam Ford <aford173@gmail.com> wrote:
->
-> The GPCv2 controller on the i.MX8M Mini is compatible with the driver
-> used for the i.MX8MQ except for the register locations and names.
-> The GPCv2 controller is used to enable additional periperals currently
-> unavailable on the i.MX8M Mini.  In order to make them function,
-> the GPCv2 needs to be adapted so the drivers can associate their
-> power domain to the GPCv2 to enable them.
->
-> This series makes one include file slightly more generic,
-> adds the iMX8M Mini entries, updates the bindings, adds them
-> to the device tree, then associates the new power domain to
-> both the OTG and PCIe controllers.
->
-> Some peripherals may need additional power domain drivers in the future
-> due to limitations of the GPC driver, but the drivers for VPU and others are
-> not available yet.
+kaslr_64.c also defines the same variable, however when both files are
+included into final link, linker complains about multiple definition of
+`__force_order' which is coming from kaslr_64.o and pgtable_64.o, its
+possible that kaslr_64.o is disabled via CONFIG_RANDOMIZE_BASE config
+option, therefore define it conditionally only when
+CONFIG_RANDOMIZE_BASE is not set
 
-Before I do a V3 to address Rob's comments, I am thinking I'll drop
-the items on the GPC that Jacky suggested would not work, and we don't
-have drivers for those other peripherals (GPU, VPU, etc.) anyway.  My
-main goal here was to try and get the USB OTG ports working, so I'd
-like to enabled enough of the items on the GPC that are similar to the
-i.MX8MQ and leave the more challenging items until we have either a
-better driver available and/or actual peripheral support coming.  I
-haven't seen LCDIF or DSI drivers pushed upstream yet, so I doubt
-we'll see GPU or VPU yet until those are done.
+Since arch/x86/boot/compressed/Makefile overrides global CFLAGS it loses
+-fno-common option which would have caught this
 
-Does anyone from the NXP team have any other comments/concerns?
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/x86/boot/compressed/pgtable_64.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-adam
->
-> Adam Ford (7):
->   soc: imx: gpcv2: Rename imx8mq-power.h to imx8m-power.h
->   soc: imx: gpcv2: Update imx8m-power.h to include iMX8M Mini
->   soc: imx: gpcv2: add support for i.MX8M Mini SoC
->   dt-bindings: imx-gpcv2: Update bindings to support i.MX8M Mini
->   arm64: dts: imx8mm: add GPC power domains
->   ARM64: dts: imx8mm: Fix clocks and power domain for USB OTG
->   arm64: dts: imx8mm: Add PCIe support
->
->  .../bindings/power/fsl,imx-gpcv2.txt          |   6 +-
->  arch/arm64/boot/dts/freescale/imx8mm.dtsi     | 127 ++++++++-
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi     |   2 +-
->  drivers/soc/imx/gpcv2.c                       | 246 +++++++++++++++++-
->  .../power/{imx8mq-power.h => imx8m-power.h}   |  14 +
->  5 files changed, 387 insertions(+), 8 deletions(-)
->  rename include/dt-bindings/power/{imx8mq-power.h => imx8m-power.h} (57%)
->
-> --
-> 2.20.1
->
+diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
+index c8862696a47b..077d19268b0b 100644
+--- a/arch/x86/boot/compressed/pgtable_64.c
++++ b/arch/x86/boot/compressed/pgtable_64.c
+@@ -12,7 +12,9 @@
+  * It is not referenced from the code, but GCC < 5 with -fPIE would fail
+  * due to an undefined symbol. Define it to make these ancient GCCs work.
+  */
++#ifndef CONFIG_RANDOMIZE_BASE
+ unsigned long __force_order;
++#endif
+ 
+ #define BIOS_START_MIN		0x20000U	/* 128K, less than this is insane */
+ #define BIOS_START_MAX		0x9f000U	/* 640K, absolute maximum */
+-- 
+2.24.1
+
