@@ -2,117 +2,238 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C56F5C43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 07:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 088F8C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 07:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C485206EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 07:20:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576912818;
-	bh=CYQ95d7AMmkc5FnEaSa0zZLbZWgBm+ClohKa6vfk3EA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BhgQiAa3UF2g8RHlcBgkrdxHPqeOeo1PHP/Bco6efwGaURqg4FHIz4gmX0IwTY/t4
-	 497VxCWa8Pq1w2podgi7HhU5QBVVD/Hv8I1tRqAgEEnItjc/HNMUH4CqWSiwOHpT2a
-	 /5JHyZT/DsgDlxKxfOh+OaJOygB8xnxZI2k4B2o4=
+	by mail.kernel.org (Postfix) with ESMTP id CE3562070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 07:27:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbfLUHUR (ORCPT
+        id S1726074AbfLUH1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 02:20:17 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42925 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbfLUHUQ (ORCPT
+        Sat, 21 Dec 2019 02:27:14 -0500
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:37599 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725838AbfLUH1N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 02:20:16 -0500
-Received: by mail-wr1-f66.google.com with SMTP id q6so11447593wro.9;
-        Fri, 20 Dec 2019 23:20:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GywF7hpm0/dzsa2CyX8WxaKmTQoSpmQVCaCVcl0JsgY=;
-        b=m1rWjIm1zv+TPHVG5luAzjJ4XV994PqEzgp1o+fRrqoNfGwuoJOoKqQWUp/LVaNdIZ
-         y44qi/mmnpbQEnA3GNvbYjCoOVZVm6gkDdi3b/vF+bCzNOiPP3hV3ywvbTLds/NS9+np
-         SOG5iwDgUsAQVxTgO+JtD44UXE6B2wXMkneInhd3+FrVVwebBRLrVclIJkQg6hxoD6PG
-         0+2h+N+QT6BNqjWcwcBwwxeF4FuQ+XsQuqUbIgamIktaRPSWAqoapA9GoJkZdK1AHqeW
-         a+vtTGQjcHMvoTcEngI4WBzuwMr5xA0E9kKcsVXru9f57ulupg4+h7+jnWzJzqv8SB3i
-         ndzg==
-X-Gm-Message-State: APjAAAWmnfMGwQIiWtZYfVk8GeipKWGB+gvv0twf1azr9bEKiUMJexqa
-        OfXhNZ/rPRNI1VOknh174oZqaKvap3bB/tvDSyE=
-X-Google-Smtp-Source: APXvYqxKsrgYjxgKHC9sN3K8piDF335qujBGar5nGxOQZTS0N0vJixeEXt3FncEoWGWYBmM7jcMarwqNv2JCV+33ruc=
-X-Received: by 2002:adf:ef10:: with SMTP id e16mr18355776wro.336.1576912814619;
- Fri, 20 Dec 2019 23:20:14 -0800 (PST)
+        Sat, 21 Dec 2019 02:27:13 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R821e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=chge@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TlUIYY6_1576913094;
+Received: from IT-C02YD3Q7JG5H.local(mailfrom:chge@linux.alibaba.com fp:SMTPD_---0TlUIYY6_1576913094)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 21 Dec 2019 15:24:55 +0800
+Subject: Re: [Ocfs2-devel] [PATCH v3] ocfs2: call journal flush to mark
+ journal as empty after journal recovery when mount
+To:     Jiangyiwen <jiangyiwen@huawei.com>, Likai <li.kai4@h3c.com>,
+        piaojun <piaojun@huawei.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        "mark@fasheh.com" <mark@fasheh.com>,
+        "jlbec@evilplan.org" <jlbec@evilplan.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>
+References: <20191217020140.2197-1-li.kai4@h3c.com>
+ <5DFB860A.6020501@huawei.com>
+ <05cf7457-31f2-0698-14ae-21a9e7b659cb@linux.alibaba.com>
+ <5DFC90C0.7020704@huawei.com> <1faf04ac23384fb2a17a8a569f9fce8f@h3c.com>
+ <5DFCC3F5.7040702@huawei.com>
+From:   Changwei Ge <chge@linux.alibaba.com>
+Message-ID: <0ba92e81-5b7d-5d5e-172e-5b18bbee8909@linux.alibaba.com>
+Date:   Sat, 21 Dec 2019 15:24:55 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.1
 MIME-Version: 1.0
-References: <20191217144828.2460-1-acme@kernel.org> <20191217144828.2460-7-acme@kernel.org>
- <CAM9d7ciL-Qnm5v3Tn1rsrNzW3mTWx5HY6W5XBU1MKnLQ7YBdkw@mail.gmail.com> <20191220121723.GC2032@kernel.org>
-In-Reply-To: <20191220121723.GC2032@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Sat, 21 Dec 2019 16:20:02 +0900
-Message-ID: <CAM9d7cih8nwWcCd4Pwf+5oYS4jYy9U_=7hY0f6T2R3e1kYDGsA@mail.gmail.com>
-Subject: Re: [PATCH 06/12] perf report/top: Add 'k' hotkey to zoom directly
- into the kernel map
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5DFCC3F5.7040702@huawei.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 9:17 PM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Fri, Dec 20, 2019 at 03:48:23PM +0900, Namhyung Kim escreveu:
-> > On Tue, Dec 17, 2019 at 11:49 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > As a convenience, equivalent to pressing Enter in a line with a kernel
-> > > symbol and then selecting "Zoom" into the kernel DSO.
->
-> > We already have 'd' key for 'zoom into current dso'.
->
-> Right, current DSO, 'k' is equivalent to:
->
-> 1. Navigate to a kernel map entry
-> 2. Press 'd'
->
-> And also to:
->
-> 1. Navigate to a kernel map entry
-> 2. Press ENTER
-> 3. Navigate to "Zoom into Kernel DSO"
-> 4. Press ENTER
->
-> One key versus 2 or four.
->
-> > Do you really want 'k' for kernel specially?
->
-> I thought kernel hackers would like the convenience, doing:
->
->   perf top + k
->
-> To get the main kernel samples looks faster than:
->
->   perf top -e cycles:k
->
-> And those are not even equivalent, as cycles:k will show everything in
-> ring 0, while 'perf top + k' will show just what is in the kernel _and_
-> in the main kernel map.
 
-I'm fine with adding 'k' key itself, but I thought a bit strange when
-it suggests kernel even with user DSOs.
 
-Thanks
-Namhyung
+On 12/20/19 8:52 PM, Jiangyiwen wrote:
+> On 2019/12/20 17:33, Likai wrote:
+>> On 2019/12/20 17:14, piaojun wrote:
+>>> On 2019/12/20 9:11, Joseph Qi wrote:
+>>>> On 19/12/19 22:15, piaojun wrote:
+>>>>> On 2019/12/17 10:01, Kai Li wrote:
+>>>>>> If journal is dirty when mount, it will be replayed but jbd2 sb
+>>>>>> log tail cannot be updated to mark a new start because
+>>>>>> journal->j_flag has already been set with JBD2_ABORT first
+>>>>>> in journal_init_common. When a new transaction is committed, it
+>>>>>> will be recored in block 1 first(journal->j_tail is set to 1 in
+>>>>>> journal_reset).If emergency restart happens again before journal
+>>>>>> super block is updated unfortunately, the new recorded trans will
+>>>>>> not be replayed in the next mount.
+>>>>>>
+>>>>>> The following steps describe this procedure in detail.
+>>>>>> 1. mount and touch some files
+>>>>>> 2. these transactions are committed to journal area but not 
+>>>>>> checkpointed
+>>>>>> 3. emergency restart
+>>>>>> 4. mount again and its journals are replayed
+>>>>>> 5. journal super block's first s_start is 1, but its s_seq is not 
+>>>>>> updated
+>>>>>> 6. touch a new file and its trans is committed but not checkpointed
+> 
+> Hi,
+> 
+> I wonder that in this step, does the function 
+> jbd2_journal_commit_transaction() return?
+> I understand only jbd2_journal_commit_transaction() return it means the 
+> transaction
+> is committed completely, and the s_seq can be updated in
+> jbd2_journal_commit_transaction()->jbd2_update_log_tail(), so I don't 
+> know how
+> this scenario happened.
+> 
+> If emergency restart happens in before jbd2_journal_commit_transaction() 
+
+The trick is that jbd2 kernel thread even doesn't have a chance to to 
+update tail. Assuming that a timepoint sits between *mount completion* 
+and the *first iteration* of committing work that jbd2 thread.
+
+	-Changwei
+
+> return,
+> I think this transaction shouldn't be a valid transaction.
+> 
+> Can you explain where the specific function is executed?
+> 
+> Thanks,
+> Yiwen.
+> 
+>>>>>> 7. emergency restart again
+>>>>>> 8. mount and journal is dirty, but trans committed in 6 will not be
+>>>>>> replayed.
+>>>>>>
+>>>>>> This exception happens easily when this lun is used by only one 
+>>>>>> node. If it
+>>>>>> is used by multi-nodes, other node will replay its journal and its
+>>>>>> journal super block will be updated after recovery like what this 
+>>>>>> patch
+>>>>>> does.
+>>>>>>
+>>>>>> ocfs2_recover_node->ocfs2_replay_journal.
+>>>>>>
+>>>>>> The following jbd2 journal can be generated by touching a new file 
+>>>>>> after
+>>>>>> journal is replayed, and seq 15 is the first valid commit, but 
+>>>>>> first seq
+>>>>>> is 13 in journal super block.
+>>>>>> logdump:
+>>>>>> Block 0: Journal Superblock
+>>>>>> Seq: 0   Type: 4 (JBD2_SUPERBLOCK_V2)
+>>>>>> Blocksize: 4096   Total Blocks: 32768   First Block: 1
+>>>>>> First Commit ID: 13   Start Log Blknum: 1
+>>>>>> Error: 0
+>>>>>> Feature Compat: 0
+>>>>>> Feature Incompat: 2 block64
+>>>>>> Feature RO compat: 0
+>>>>>> Journal UUID: 4ED3822C54294467A4F8E87D2BA4BC36
+>>>>>> FS Share Cnt: 1   Dynamic Superblk Blknum: 0
+>>>>>> Per Txn Block Limit    Journal: 0    Data: 0
+>>>>>>
+>>>>>> Block 1: Journal Commit Block
+>>>>>> Seq: 14   Type: 2 (JBD2_COMMIT_BLOCK)
+>>>>>>
+>>>>>> Block 2: Journal Descriptor
+>>>>>> Seq: 15   Type: 1 (JBD2_DESCRIPTOR_BLOCK)
+>>>>>> No. Blocknum        Flags
+>>>>>>   0. 587             none
+>>>>>> UUID: 00000000000000000000000000000000
+>>>>>>   1. 8257792         JBD2_FLAG_SAME_UUID
+>>>>>>   2. 619             JBD2_FLAG_SAME_UUID
+>>>>>>   3. 24772864        JBD2_FLAG_SAME_UUID
+>>>>>>   4. 8257802         JBD2_FLAG_SAME_UUID
+>>>>>>   5. 513             JBD2_FLAG_SAME_UUID JBD2_FLAG_LAST_TAG
+>>>>>> ...
+>>>>>> Block 7: Inode
+>>>>>> Inode: 8257802   Mode: 0640   Generation: 57157641 (0x3682809)
+>>>>>> FS Generation: 2839773110 (0xa9437fb6)
+>>>>>> CRC32: 00000000   ECC: 0000
+>>>>>> Type: Regular   Attr: 0x0   Flags: Valid
+>>>>>> Dynamic Features: (0x1) InlineData
+>>>>>> User: 0 (root)   Group: 0 (root)   Size: 7
+>>>>>> Links: 1   Clusters: 0
+>>>>>> ctime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
+>>>>>> atime: 0x5de5d870 0x113181a1 -- Tue Dec  3 11:37:20.288457121 2019
+>>>>>> mtime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
+>>>>>> dtime: 0x0 -- Thu Jan  1 08:00:00 1970
+>>>>>> ...
+>>>>>> Block 9: Journal Commit Block
+>>>>>> Seq: 15   Type: 2 (JBD2_COMMIT_BLOCK)
+>>>>>>
+>>>>>> The following is jouranl recovery log when recovering the upper jbd2
+>>>>>> journal when mount again.
+>>>>>> syslog:
+>>>>>> [ 2265.648622] ocfs2: File system on device (252,1) was not 
+>>>>>> unmounted cleanly, recovering it.
+>>>>>> [ 2265.649695] fs/jbd2/recovery.c:(do_one_pass, 449): Starting 
+>>>>>> recovery pass 0
+>>>>>> [ 2265.650407] fs/jbd2/recovery.c:(do_one_pass, 449): Starting 
+>>>>>> recovery pass 1
+>>>>>> [ 2265.650409] fs/jbd2/recovery.c:(do_one_pass, 449): Starting 
+>>>>>> recovery pass 2
+>>>>>> [ 2265.650410] fs/jbd2/recovery.c:(jbd2_journal_recover, 278): 
+>>>>>> JBD2: recovery, exit status 0, recovered transactions 13 to 13
+>>>>>>
+>>>>>> Due to first commit seq 13 recorded in journal super is not 
+>>>>>> consistent
+>>>>>> with the value recorded in block 1(seq is 14), journal recovery 
+>>>>>> will be
+>>>>>> terminated before seq 15 even though it is an unbroken commit, inode
+>>>>>> 8257802 is a new file and it will be lost.
+>>>>>>
+>>>>>> Signed-off-by: Kai Li <li.kai4@h3c.com>
+>>>>>> ---
+>>>>>>   fs/ocfs2/journal.c | 8 ++++++++
+>>>>>>   1 file changed, 8 insertions(+)
+>>>>>>
+>>>>>> diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
+>>>>>> index 1afe57f425a0..68ba354cf361 100644
+>>>>>> --- a/fs/ocfs2/journal.c
+>>>>>> +++ b/fs/ocfs2/journal.c
+>>>>>> @@ -1066,6 +1066,14 @@ int ocfs2_journal_load(struct ocfs2_journal 
+>>>>>> *journal, int local, int replayed)
+>>>>>>       ocfs2_clear_journal_error(osb->sb, journal->j_journal, 
+>>>>>> osb->slot_num);
+>>>>>> +    if (replayed) {
+>>>>>> +        jbd2_journal_lock_updates(journal->j_journal);
+>>>>>> +        status = jbd2_journal_flush(journal->j_journal);
+>>>>> What if jbd2_journal_flush gets failed? The 's_sequence' and 's_start'
+>>>>> won't be reset, and I wonder if the problem still remains.
+>>>>>
+>>>> Yes, but we don't want this to fail the mount process, instead we 
+>>>> just log
+>>>> an error and system administrator should know the result.
+>>>>
+>>> Thanks for your reply and I have another question about this issue. IMO
+>>> the second trans is not complete as jbd2 sb has not been updated, so we
+>>> do not need to replay it when mount again.
+>>>
+>>> Jun
+>>>
+>>>
+>> I don't think so. The problem is that jbd2 sb should be updated to mark
+>> a new start after mount rather than whether trans committed later is
+>> complete or not.
+>>
+>> In fact , the trans is complete too as the commit log described.
+>>
+>> Thanks
+>>
+>>
+>> _______________________________________________
+>> Ocfs2-devel mailing list
+>> Ocfs2-devel@oss.oracle.com
+>> https://oss.oracle.com/mailman/listinfo/ocfs2-devel
+>>
+>> .
+>>
+> 
