@@ -2,322 +2,289 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F37DAC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 13:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBEBC2D0D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 13:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0B7621D7D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 13:38:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7A8621927
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 13:52:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="ZBTzbadN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EFP7EK7U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfLUNiE (ORCPT
+        id S1726867AbfLUNwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 08:38:04 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:33824 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726583AbfLUNiE (ORCPT
+        Sat, 21 Dec 2019 08:52:02 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22419 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726583AbfLUNwC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 08:38:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1576935479;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=6B5RSTdLBllg3Wh9jfns6Mh5N3XzmTsvmq/GB8cIWkQ=;
-        b=ZBTzbadN3J3ZjOceqyyDFGmtd74fFADZqkAKW0Oe9G1Ghiph+iwmF74aPvMkPLb9ur
-        X/IKaFMSLSBcJEkUmNBJSMG7exF/j0Er8qf59Pdv2PvRqcYVSZ73Gfhybu2C4UAL7t17
-        tNyxbIFRj1a3Dc9b3MM2Uei6eGbzyEyBcUceP8U3dMfsb6zq65yck6AwMYc74eMrq0Dq
-        Rj8eF2Pggin03eExtbFGx4riwfblOIKATx1SigIhEGtNvimBw+CNOCQALXlWEUc4Ls59
-        nBBVoTfi9qnZ88qjlFjOFq8zwaAafQ9mxA9ivfyNadCcKil01o6Oy6ptBWN0k0dJPocJ
-        ktZg==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAjw47t/c4="
-X-RZG-CLASS-ID: mo00
-Received: from mbp-13-nikolaus.fritz.box
-        by smtp.strato.de (RZmta 46.1.1 DYNA|AUTH)
-        with ESMTPSA id 4012cfvBLDbmBAm
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Sat, 21 Dec 2019 14:37:48 +0100 (CET)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH v4 1/8] dt-bindings: add img,pvrsgx.yaml for Imagination GPUs
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20191218211601.GA11411@bogus>
-Date:   Sat, 21 Dec 2019 14:37:47 +0100
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <FE3B09F2-D923-43E2-908B-C241E41F7031@goldelico.com>
-References: <cover.1576605726.git.hns@goldelico.com> <aedc895985d966cf709d153d5b0bed07f59bdcfd.1576605726.git.hns@goldelico.com> <20191218211601.GA11411@bogus>
-To:     Rob Herring <robh@kernel.org>
-X-Mailer: Apple Mail (2.3124)
+        Sat, 21 Dec 2019 08:52:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576936320;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ou/s/3Qi+KNTbaTCh/HiHAyd6BgLstj9qp6oblRG7Vk=;
+        b=EFP7EK7UxY0bLOX2tIrZtCAvjv6d3N5Hm2IVHpX5Wzp7X7Psp3Cl5kJG2Lz3zboKnLh8qV
+        RVsDeQk6wGKeM6/Q7+koDHWR+z7r979p49u4qn9Twr83H7A6lFTrt97zPArdU0Ncl/qyHk
+        wg7wp1o+wBFpUu00MWFpq5vbIb0hULo=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-182-CM4UmmX6NueyVGoG9S5BnA-1; Sat, 21 Dec 2019 08:51:52 -0500
+X-MC-Unique: CM4UmmX6NueyVGoG9S5BnA-1
+Received: by mail-wr1-f72.google.com with SMTP id y7so5261465wrm.3
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 05:51:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ou/s/3Qi+KNTbaTCh/HiHAyd6BgLstj9qp6oblRG7Vk=;
+        b=URzqHBOim88K2BjdBW7xBZ/5ik/BQA6QC7JgYLAAgxDXSwJk4en/txTz5miRqsuPNZ
+         kafTj+GN8NMEypgUx+z/jOoVzTwhRzcz8019mksXeOxqzDjP3EdhltVUkgsVTNtkA38D
+         mKuZ9l+eY6cABwN4RPVHRLQJYjKLFZQDxN+3mvmdEelX0u16+9fB+CyxUm6sPe8zB2oZ
+         n/hz8hr+8atEL9jnWDUMuqgPaXhXV9xL++nYdxI3t5Ke86d2OuEnB6CBZx9y7xpSiREM
+         k90mQE1Mk0WdkPxvuEGulkX8b9SUJrQ0/AL39imnug2OQhMMZa5NZ1Si9g5J1Tjbyh/P
+         MYCA==
+X-Gm-Message-State: APjAAAVLV31esifAAPA9FyUmkqHB/JxVpgdqQVSsKxa1pg90pxGwUHRY
+        I6PIAP16CI5BmyL9aXDxnTYcJcdeJaHaCmfffMSPtWBBg4DHIRHC5qGwjLN+P3NY53g4BbFKY3l
+        oPttMhnaTNCFDzfIl3TrqhXzX
+X-Received: by 2002:adf:d850:: with SMTP id k16mr19969154wrl.96.1576936311105;
+        Sat, 21 Dec 2019 05:51:51 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxqgVwhREg2pxtdFbb+1WRH4sxeJtd0PcROh33qc36OVxJl32z4p4V+j8+mIOql2dt6TCOdeg==
+X-Received: by 2002:adf:d850:: with SMTP id k16mr19969133wrl.96.1576936310808;
+        Sat, 21 Dec 2019 05:51:50 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:ac09:bce1:1c26:264c? ([2001:b07:6468:f312:ac09:bce1:1c26:264c])
+        by smtp.gmail.com with ESMTPSA id w20sm13260670wmk.34.2019.12.21.05.51.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 21 Dec 2019 05:51:50 -0800 (PST)
+Subject: Re: [PATCH RESEND v2 03/17] KVM: X86: Don't track dirty for
+ KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
+To:     Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+References: <20191221014938.58831-1-peterx@redhat.com>
+ <20191221014938.58831-4-peterx@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <cf232ce8-bc07-0192-580f-d08736980273@redhat.com>
+Date:   Sat, 21 Dec 2019 14:51:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <20191221014938.58831-4-peterx@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On 21/12/19 02:49, Peter Xu wrote:
+> Originally, we have three code paths that can dirty a page without
+> vcpu context for X86:
+> 
+>   - init_rmode_identity_map
+>   - init_rmode_tss
+>   - kvmgt_rw_gpa
+> 
+> init_rmode_identity_map and init_rmode_tss will be setup on
+> destination VM no matter what (and the guest cannot even see them), so
+> it does not make sense to track them at all.
+> 
+> To do this, a new parameter is added to kvm_[write|clear]_guest_page()
+> to show whether we would like to track dirty bits for the operations.
+> With that, pass in "false" to this new parameter for any guest memory
+> write of the ioctls (KVM_SET_TSS_ADDR, KVM_SET_IDENTITY_MAP_ADDR).
 
-> Am 18.12.2019 um 22:16 schrieb Rob Herring <robh@kernel.org>:
->=20
-> On Tue, Dec 17, 2019 at 07:01:59PM +0100, H. Nikolaus Schaller wrote:
->> The Imagination PVR/SGX GPU is part of several SoC from
->> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo
->> and others.
->>=20
->> With this binding, we describe how the SGX processor is
->> interfaced to the SoC (registers, interrupt etc.).
->>=20
->> In most cases, Clock, Reset and power management is handled
->> by a parent node or elsewhere.
->>=20
->> Tested by make dt_binding_check dtbs_check
->=20
-> I'm surprised that worked... (Not for long if it did).
+We can also return the hva from x86_set_memory_region and
+__x86_set_memory_region.
 
-AFAIR, it did not fail but emit thousands of warnings for other areas
-so I may have missed some warning but there was no error that did stop
-compilation.
+Paolo
 
->=20
->>=20
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->> .../devicetree/bindings/gpu/img,pvrsgx.yaml   | 80 =
-+++++++++++++++++++
->> 1 file changed, 80 insertions(+)
->> create mode 100644 =
-Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
->>=20
->> diff --git a/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml =
-b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
->> new file mode 100644
->> index 000000000000..44799774e34d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
->> @@ -0,0 +1,80 @@
->> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/gpu/img,pvrsgx.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Imagination PVR/SGX GPU
->> +
->> +maintainers:
->> +  - H. Nikolaus Schaller <hns@goldelico.com>
->> +
->> +description: |+
->> +  This binding describes the Imagination SGX5 series of 3D =
-accelerators which
->> +  are found in several different SoC like TI OMAP, Sitara, Ingenic =
-JZ4780,
->> +  Allwinner A83, and Intel Poulsbo and CedarView and more.
->> +
->> +  For an almost complete list see: =
-https://en.wikipedia.org/wiki/PowerVR#Implementations
->> + =20
->> +  Only the Imagination SGX530, SGX540 and SGX544 GPUs are currently =
-covered by
->> +  this binding but the extension of the pattern is straightforward.
->> + =20
->> +  The SGX node is usually a child node of some DT node belonging to =
-the SoC
->> +  which handles clocks, reset and general address space mapping of =
-the SGX
->> +  register area.
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +    # Example: BeagleBoard A/B/C, OpenPandora 600MHz
->> +      - ti,omap3-sgx530-121, img,sgx530-121, img,sgx530
->=20
-> Didn't I comment before this is not valid.
-
-Not that I am aware of. Your comment was:
-
-<<<
-> +properties:
-> +  compatible:
-> +    enum:
-> +    # BeagleBoard ABC, OpenPandora 600MHz
-
-I'd expect compatibles to be per SoC, not per board.
-
-> +      - ti,omap3-sgx530-121, img,sgx530-121, img,sgx530, img,sgx5
-
-4 compatibles is probably a bit much. Are there not any version or=20
-feature registers that some of this could be detected? If there are, I'd=20=
-
-assume the middle 2 strings could be dropped. If not, drop the last one=20=
-
-and just match on the 3rd string. It's not a long list.
->>>
-
-So I interpreted your comment is about the # comment focussing too much
-on boards instead of SoC and about dropping img,sgx5
-
-> You are defining the=20
-> compatible string is: 'ti,omap3-sgx530-121, img,sgx530-121, =
-img,sgx530'
-
-Yes.
-
->=20
-> You need:
->=20
-> compatible:
->  oneOf:
->    - description: BeagleBoard A/B/C, OpenPandora 600MHz
->      items:
->        - const: ti,omap3-sgx530-121
->        - const: img,sgx530-121
->        - const: img,sgx530
->=20
-> And so on for each of the rest.
-
-Hm. As far as I understand YAML, it has multiple ways to define the same
-structure but this manifold nature has its drawbacks.
-
-If it is wrong I have to admit that I still do not understand how to =
-write
-correct schemes... Why has it been made so difficult for us developers?=20=
-
-
->=20
->> +    # Example: BeagleBoard XM, GTA04, OpenPandora 1GHz
->> +      - ti,omap3-sgx530-125, img,sgx530-125, img,sgx530
->> +    # Example: BeagleBone Black
->> +      - ti,am3352-sgx530-125, img,sgx530-125, img,sgx530
->=20
-> These 2 could be combined using 'enum' for the first item. Basically,=20=
-
-> you can group ones where the last 2 strings are the same.
-
-Is this better readable?
-
-IMHO, this would be a nice coding trick that would make this
-even more unreadable and does not add any new information.
-
-Generally, in my opinion, a bindings document should not only
-satisfy the dtbs_check but should be human readable (and writeable!)
-so that a DTS developer can still understand and ideally copy&paste
-fragments. With such enum tricks and -items const: constructions
-this IMHO becomes more difficult.
-
-Therefore I think the linear list is better readable and
-can be directly copied. If the test rig has problems with
-that statement, I would suggest that the parser should be
-modified to understand what we can easily write and read.
-
-The same is for # comment vs. description: . The # comment
-is for a human reader of this document to get a hint what
-board the next line is intended for. It is not necessary
-(and IMHO impossible) to automatically test it. So I do not
-see any need to add a formal -description entry here.
-
->=20
->> +    # Example: Pandaboard, Pandaboard ES
->> +      - ti,omap4-sgx540-120, img,sgx540-120, img,sgx540
->> +      - ti,omap4-sgx544-112, img,sgx544-112, img,sgx544
->> +    # Example: OMAP5 UEVM, Pyra Handheld
->> +      - ti,omap5-sgx544-116, img,sgx544-116, img,sgx544
->> +      - ti,dra7-sgx544-116, img,sgx544-116, img,sgx544
->> +    # Example: CI20
->> +      - ingenic,jz4780-sgx540-120, img,sgx540-120, img,sgx540
->> +    # the following entries are not validated with real hardware
->=20
-> What am I supposed to do with that? You're just defining some strings.=20=
-
-> If you're not sure they are okay, then don't define them.
-
-I have a broader audience in mind than 'make dtbs_check'. IMHO, this
-document should help future developers to get an idea what to write for
-those SoC. Yes, it might not be 100% correct, but it is easier to =
-correct
-a 99% correct definition than inventing it from scratch after dropping
-partially correct information I already have.
-
-For example, we know from data sheets and public information that the
-allwinner a83 contains a sgx544 but it is not sure if it is the -116
-variant. Or, the poulsbo has a GPU called gma500 which is an sgx535. It
-is only that nobody has verified this so far by real hardware.
-
-If we leave it out and someone starts to adapt this to the poulsbo
-in let's say 2 years from now, that someone has to be lucky to find
-our discussion here and take that as a hint.
-
-I am not sure how you are developing contributions, but my first
-place to start with is the existing code and not the archives of
-LKML.
-
-That is my motivation adding these records right here even if they
-are not verified.
-
->=20
->> +    # more TI SoC
->> +      - ti,am3517-sgx530-125, img,sgx530-125, img,sgx530
->> +      - ti,am4-sgx530-125, img,sgx530-125, img,sgx530
->> +      - ti,ti81xx-sgx530-125, img,sgx530-125, img,sgx530
->> +    # Example: Banana-Pi-M3 (Allwinner A83T)
->> +      - allwinner,sun8i-a83t-sgx544-116, img,sgx544-116, img,sgx544
->> +    # Example: Atom Z5xx
->> +      - intel,poulsbo-gma500-sgx535, img,sgx535-116, img,sgx535
->> +    # Example: Atom Z24xx
->> +      - intel,medfield-gma-sgx540, img,sgx540-116, img,sgx540
->> +    # Example: Atom N2600, D2500
->> +      - intel,cedarview-gma3600-sgx545, img,sgx545-116, img,sgx545
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |+
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +
->> +    gpu@fe00 {
->> +      compatible =3D "ti,omap-omap5-sgx544-116", "img,sgx544-116", =
-"img,sgx544", "img,sgx5";
->=20
-> Doesn't match the schema.
-
-Ah, thanks. I missed that when reviewing the DTS patch set.
-Queued for a v5.
-
->=20
->> +      reg =3D <0xfe00 0x200>;
->> +      interrupts =3D <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
->> +    };
->> +
->> +...
->> --=20
->> 2.23.0
->>=20
-
-BR and thanks,
-Nikolaus
+> Signed-off-by: Peter Xu <peterx@redhat.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c   | 18 ++++++++++--------
+>  include/linux/kvm_host.h |  5 +++--
+>  virt/kvm/kvm_main.c      | 25 ++++++++++++++++---------
+>  3 files changed, 29 insertions(+), 19 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 04a8212704c1..1ff5a428f489 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -3452,24 +3452,24 @@ static int init_rmode_tss(struct kvm *kvm)
+>  
+>  	idx = srcu_read_lock(&kvm->srcu);
+>  	fn = to_kvm_vmx(kvm)->tss_addr >> PAGE_SHIFT;
+> -	r = kvm_clear_guest_page(kvm, fn, 0, PAGE_SIZE);
+> +	r = kvm_clear_guest_page(kvm, fn, 0, PAGE_SIZE, false);
+>  	if (r < 0)
+>  		goto out;
+>  	data = TSS_BASE_SIZE + TSS_REDIRECTION_SIZE;
+>  	r = kvm_write_guest_page(kvm, fn++, &data,
+> -			TSS_IOPB_BASE_OFFSET, sizeof(u16));
+> +				 TSS_IOPB_BASE_OFFSET, sizeof(u16), false);
+>  	if (r < 0)
+>  		goto out;
+> -	r = kvm_clear_guest_page(kvm, fn++, 0, PAGE_SIZE);
+> +	r = kvm_clear_guest_page(kvm, fn++, 0, PAGE_SIZE, false);
+>  	if (r < 0)
+>  		goto out;
+> -	r = kvm_clear_guest_page(kvm, fn, 0, PAGE_SIZE);
+> +	r = kvm_clear_guest_page(kvm, fn, 0, PAGE_SIZE, false);
+>  	if (r < 0)
+>  		goto out;
+>  	data = ~0;
+>  	r = kvm_write_guest_page(kvm, fn, &data,
+>  				 RMODE_TSS_SIZE - 2 * PAGE_SIZE - 1,
+> -				 sizeof(u8));
+> +				 sizeof(u8), false);
+>  out:
+>  	srcu_read_unlock(&kvm->srcu, idx);
+>  	return r;
+> @@ -3498,7 +3498,7 @@ static int init_rmode_identity_map(struct kvm *kvm)
+>  		goto out2;
+>  
+>  	idx = srcu_read_lock(&kvm->srcu);
+> -	r = kvm_clear_guest_page(kvm, identity_map_pfn, 0, PAGE_SIZE);
+> +	r = kvm_clear_guest_page(kvm, identity_map_pfn, 0, PAGE_SIZE, false);
+>  	if (r < 0)
+>  		goto out;
+>  	/* Set up identity-mapping pagetable for EPT in real mode */
+> @@ -3506,7 +3506,8 @@ static int init_rmode_identity_map(struct kvm *kvm)
+>  		tmp = (i << 22) + (_PAGE_PRESENT | _PAGE_RW | _PAGE_USER |
+>  			_PAGE_ACCESSED | _PAGE_DIRTY | _PAGE_PSE);
+>  		r = kvm_write_guest_page(kvm, identity_map_pfn,
+> -				&tmp, i * sizeof(tmp), sizeof(tmp));
+> +					 &tmp, i * sizeof(tmp),
+> +					 sizeof(tmp), false);
+>  		if (r < 0)
+>  			goto out;
+>  	}
+> @@ -7265,7 +7266,8 @@ static int vmx_write_pml_buffer(struct kvm_vcpu *vcpu)
+>  		dst = vmcs12->pml_address + sizeof(u64) * vmcs12->guest_pml_index;
+>  
+>  		if (kvm_write_guest_page(vcpu->kvm, gpa_to_gfn(dst), &gpa,
+> -					 offset_in_page(dst), sizeof(gpa)))
+> +					 offset_in_page(dst), sizeof(gpa),
+> +					 false))
+>  			return 0;
+>  
+>  		vmcs12->guest_pml_index--;
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 2ea1ea79befd..4e34cf97ca90 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -734,7 +734,7 @@ int kvm_read_guest(struct kvm *kvm, gpa_t gpa, void *data, unsigned long len);
+>  int kvm_read_guest_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
+>  			   void *data, unsigned long len);
+>  int kvm_write_guest_page(struct kvm *kvm, gfn_t gfn, const void *data,
+> -			 int offset, int len);
+> +			 int offset, int len, bool track_dirty);
+>  int kvm_write_guest(struct kvm *kvm, gpa_t gpa, const void *data,
+>  		    unsigned long len);
+>  int kvm_write_guest_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
+> @@ -744,7 +744,8 @@ int kvm_write_guest_offset_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
+>  				  unsigned long len);
+>  int kvm_gfn_to_hva_cache_init(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
+>  			      gpa_t gpa, unsigned long len);
+> -int kvm_clear_guest_page(struct kvm *kvm, gfn_t gfn, int offset, int len);
+> +int kvm_clear_guest_page(struct kvm *kvm, gfn_t gfn, int offset, int len,
+> +			 bool track_dirty);
+>  int kvm_clear_guest(struct kvm *kvm, gpa_t gpa, unsigned long len);
+>  struct kvm_memory_slot *gfn_to_memslot(struct kvm *kvm, gfn_t gfn);
+>  bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn);
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 7ee28af9eb48..b1047173d78e 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -2051,7 +2051,8 @@ int kvm_vcpu_read_guest_atomic(struct kvm_vcpu *vcpu, gpa_t gpa,
+>  EXPORT_SYMBOL_GPL(kvm_vcpu_read_guest_atomic);
+>  
+>  static int __kvm_write_guest_page(struct kvm_memory_slot *memslot, gfn_t gfn,
+> -			          const void *data, int offset, int len)
+> +			          const void *data, int offset, int len,
+> +				  bool track_dirty)
+>  {
+>  	int r;
+>  	unsigned long addr;
+> @@ -2062,16 +2063,19 @@ static int __kvm_write_guest_page(struct kvm_memory_slot *memslot, gfn_t gfn,
+>  	r = __copy_to_user((void __user *)addr + offset, data, len);
+>  	if (r)
+>  		return -EFAULT;
+> -	mark_page_dirty_in_slot(memslot, gfn);
+> +	if (track_dirty)
+> +		mark_page_dirty_in_slot(memslot, gfn);
+>  	return 0;
+>  }
+>  
+>  int kvm_write_guest_page(struct kvm *kvm, gfn_t gfn,
+> -			 const void *data, int offset, int len)
+> +			 const void *data, int offset, int len,
+> +			 bool track_dirty)
+>  {
+>  	struct kvm_memory_slot *slot = gfn_to_memslot(kvm, gfn);
+>  
+> -	return __kvm_write_guest_page(slot, gfn, data, offset, len);
+> +	return __kvm_write_guest_page(slot, gfn, data, offset, len,
+> +				      track_dirty);
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_write_guest_page);
+>  
+> @@ -2080,7 +2084,8 @@ int kvm_vcpu_write_guest_page(struct kvm_vcpu *vcpu, gfn_t gfn,
+>  {
+>  	struct kvm_memory_slot *slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
+>  
+> -	return __kvm_write_guest_page(slot, gfn, data, offset, len);
+> +	return __kvm_write_guest_page(slot, gfn, data, offset,
+> +				      len, true);
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_vcpu_write_guest_page);
+>  
+> @@ -2093,7 +2098,7 @@ int kvm_write_guest(struct kvm *kvm, gpa_t gpa, const void *data,
+>  	int ret;
+>  
+>  	while ((seg = next_segment(len, offset)) != 0) {
+> -		ret = kvm_write_guest_page(kvm, gfn, data, offset, seg);
+> +		ret = kvm_write_guest_page(kvm, gfn, data, offset, seg, true);
+>  		if (ret < 0)
+>  			return ret;
+>  		offset = 0;
+> @@ -2232,11 +2237,13 @@ int kvm_read_guest_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_read_guest_cached);
+>  
+> -int kvm_clear_guest_page(struct kvm *kvm, gfn_t gfn, int offset, int len)
+> +int kvm_clear_guest_page(struct kvm *kvm, gfn_t gfn, int offset, int len,
+> +			 bool track_dirty)
+>  {
+>  	const void *zero_page = (const void *) __va(page_to_phys(ZERO_PAGE(0)));
+>  
+> -	return kvm_write_guest_page(kvm, gfn, zero_page, offset, len);
+> +	return kvm_write_guest_page(kvm, gfn, zero_page, offset, len,
+> +				    track_dirty);
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_clear_guest_page);
+>  
+> @@ -2248,7 +2255,7 @@ int kvm_clear_guest(struct kvm *kvm, gpa_t gpa, unsigned long len)
+>  	int ret;
+>  
+>  	while ((seg = next_segment(len, offset)) != 0) {
+> -		ret = kvm_clear_guest_page(kvm, gfn, offset, seg);
+> +		ret = kvm_clear_guest_page(kvm, gfn, offset, seg, true);
+>  		if (ret < 0)
+>  			return ret;
+>  		offset = 0;
+> 
 
