@@ -2,142 +2,138 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEC1C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 18:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49169C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 18:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0659C2070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 18:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2027B2072B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 18:19:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Pa4Kbdhv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iafzJSRx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfLUSFr (ORCPT
+        id S1726877AbfLUSS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 13:05:47 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:36316 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726107AbfLUSFq (ORCPT
+        Sat, 21 Dec 2019 13:18:59 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35598 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbfLUSS7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 13:05:46 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBLHxZVS053757;
-        Sat, 21 Dec 2019 18:05:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=bSsms4JZc7GSfb/7ZqlmxUOjxKulnt8yMY4oSOeBWms=;
- b=Pa4Kbdhv5i5rwSyMOYPq225nL+ikXs3EOtDxKOKKyPAnfk5PS1wLaMEdx8BvzxMbfd6A
- +PQR/IpOAqpjocdsmDKFeFZhEfc/20RQ18Jq0nyjYO+kbNZ2YNIB4a2hpWQwXiNfOjAL
- tMKeRyU2rzwvn4SQCjrjBggVkmlPajY+32lcHCJ7LlYZ4dTxwQN2/agOjd4cvxvf5XTu
- 0Vl8sVHasSCLpgqsvmTQJqgXCQbahYzz4gZGLBEDRH7Jr/6bbSCrl4caNXUnjztoNf+u
- K/Y0FgFTHBnOszzs3lQhOPA7YoJmy8r9dyePRmIsMHjJLweAOb4BHvn0sG8trrGEXvGW hg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2x1bbphgb3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 21 Dec 2019 18:05:37 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBLI3en2122288;
-        Sat, 21 Dec 2019 18:05:36 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2x1ar3hc3n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 21 Dec 2019 18:05:36 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBLI5XPX024764;
-        Sat, 21 Dec 2019 18:05:33 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 21 Dec 2019 10:05:32 -0800
-Date:   Sat, 21 Dec 2019 10:05:30 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Chris Down <chris@chrisdown.name>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com
-Subject: Re: [PATCH] fs: inode: Reduce volatile inode wraparound risk when
- ino_t is 64 bit
-Message-ID: <20191221180530.GJ7497@magnolia>
-References: <20191220024936.GA380394@chrisdown.name>
- <20191220213052.GB7476@magnolia>
- <CAOQ4uxgoDHLnVb9=R2LpNqEFtjx=f5K8QXQnfiziBQ+jURLh=A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxgoDHLnVb9=R2LpNqEFtjx=f5K8QXQnfiziBQ+jURLh=A@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9478 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912210158
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9478 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912210158
+        Sat, 21 Dec 2019 13:18:59 -0500
+Received: by mail-pg1-f196.google.com with SMTP id l24so6660059pgk.2;
+        Sat, 21 Dec 2019 10:18:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=bwbzx/0lyuLyDgYjlpKZwdoDwlYToxmSNQqN2Jns3/U=;
+        b=iafzJSRx/Oh+GsjR2eJ4ZkqzB5Pw0i+xDji0iUrPwKNsBXCMR/h7rRSPzD0vZlMela
+         6/GMUqYS/4BARhHl0hNwVUAuXSKviN70XHxuqnmaSokLKcW9GMr20YleqNvxBuI05GMI
+         5zefIMIKTzIXxMx1KYw33LQnboH+Qj+LodgB1d/l5GsN91jedf/bt1b0T37ydml6moDG
+         6Rz/1uEp+h1r+qtjE2LEIwjE4ZCpMCGJmpVplFWbTp7QPtfj4vWS5X60x1xEP3Dcl4iG
+         iRzdyYLvTo1d6oXwKTshMXs/0+TZySPVTUTiCF5Weqvp/egm7AyJIzQplp8tvj1gIA9+
+         D+Ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=bwbzx/0lyuLyDgYjlpKZwdoDwlYToxmSNQqN2Jns3/U=;
+        b=kU714BccProNuH96ZlAgh9hMCBERV0W1FX5CRBIK26KuMoRJ36wxAjj8hXTqyOpU7x
+         UFmc8fxiNNaHDy1zrAze05U76YNgCqAVAc7EaS9np/iMd3nEAmTxSsd096WdW5H/aY0d
+         nHUr9HfhNLV13V0pP39tIBpV11vtV0GK1e4KTnsFRZNjTKQo4qdBtfW2Ym4cdJ3JAFzw
+         Y3jQ/HMMLj12MTirGVgGcEeW4fcu4hhRY9xQpxON0AZXO6OnN34ewzdHdag5TB39YJQv
+         ZuSJ+Fo8eG53hWbmuTuR5YpXJ2Lzqq4AAwCO6kOAmxjpXJjE7WNYalDLvgZAjOVg51cF
+         lZAg==
+X-Gm-Message-State: APjAAAUr9kxH6QxWG0amaf6lhNu/zWUQ2TmSD6rQ8NNWUkZozKyN7tx5
+        zHzV/ygucP1dwf23AgkOl6U=
+X-Google-Smtp-Source: APXvYqwCQ2pikuGus5t9NRDx8dicrxR/iMjGdpMtjiAyPYt4OsDp/uwZ/85qHhf7prm6ugOwlBoVNA==
+X-Received: by 2002:a65:488f:: with SMTP id n15mr23158105pgs.61.1576952338290;
+        Sat, 21 Dec 2019 10:18:58 -0800 (PST)
+Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
+        by smtp.gmail.com with ESMTPSA id m71sm17264906pje.0.2019.12.21.10.18.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 21 Dec 2019 10:18:57 -0800 (PST)
+From:   Yangtao Li <tiny.windzz@gmail.com>
+To:     cw00.choi@samsung.com, myungjoo.ham@samsung.com,
+        kyungmin.park@samsung.com, kgene@kernel.org, krzk@kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH 1/2] PM / devfreq: rk3399_dmc: Add missing devfreq_event_disable_edev
+Date:   Sat, 21 Dec 2019 18:18:54 +0000
+Message-Id: <20191221181855.31380-1-tiny.windzz@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 21, 2019 at 10:43:05AM +0200, Amir Goldstein wrote:
-> On Fri, Dec 20, 2019 at 11:33 PM Darrick J. Wong
-> <darrick.wong@oracle.com> wrote:
-> >
-> > On Fri, Dec 20, 2019 at 02:49:36AM +0000, Chris Down wrote:
-> > > In Facebook production we are seeing heavy inode number wraparounds on
-> > > tmpfs. On affected tiers, in excess of 10% of hosts show multiple files
-> > > with different content and the same inode number, with some servers even
-> > > having as many as 150 duplicated inode numbers with differing file
-> > > content.
-> > >
-> > > This causes actual, tangible problems in production. For example, we
-> > > have complaints from those working on remote caches that their
-> > > application is reporting cache corruptions because it uses (device,
-> > > inodenum) to establish the identity of a particular cache object, but
-> >
-> > ...but you cannot delete the (dev, inum) tuple from the cache index when
-> > you remove a cache object??
-> >
-> > > because it's not unique any more, the application refuses to continue
-> > > and reports cache corruption. Even worse, sometimes applications may not
-> > > even detect the corruption but may continue anyway, causing phantom and
-> > > hard to debug behaviour.
-> > >
-> > > In general, userspace applications expect that (device, inodenum) should
-> > > be enough to be uniquely point to one inode, which seems fair enough.
-> >
-> > Except that it's not.  (dev, inum, generation) uniquely points to an
-> > instance of an inode from creation to the last unlink.
-> >
-> 
-> Yes, but also:
-> There should not exist two live inodes on the system with the same (dev, inum)
-> The problem is that ino 1 may still be alive when wraparound happens
-> and then two different inodes with ino 1 exist on same dev.
+The probe process may fail, but the devfreq event device remains
+enabled. Call devfreq_event_disable_edev on the error return path.
 
-*OH* that's different then.  Most sane filesystems <cough>btrfs<cough>
-should never have the same inode numbers for different files.  Sorry for
-the noise, I misunderstood what the issue was. :)
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+---
+ drivers/devfreq/rk3399_dmc.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-> Take the 'diff' utility for example, it will report that those files
-> are identical
-> if they have the same dev,ino,size,mtime. I suspect that 'mv' will not
-> let you move one over the other, assuming they are hardlinks.
-> generation is not even exposed to legacy application using stat(2).
+diff --git a/drivers/devfreq/rk3399_dmc.c b/drivers/devfreq/rk3399_dmc.c
+index 2f1027c5b647..4f4e7c041888 100644
+--- a/drivers/devfreq/rk3399_dmc.c
++++ b/drivers/devfreq/rk3399_dmc.c
+@@ -364,7 +364,8 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
+ 			if (res.a0) {
+ 				dev_err(dev, "Failed to set dram param: %ld\n",
+ 					res.a0);
+-				return -EINVAL;
++				ret = -EINVAL;
++				goto err_disable_edev;
+ 			}
+ 		}
+ 	}
+@@ -373,8 +374,10 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
+ 	if (node) {
+ 		data->regmap_pmu = syscon_node_to_regmap(node);
+ 		of_node_put(node);
+-		if (IS_ERR(data->regmap_pmu))
+-			return PTR_ERR(data->regmap_pmu);
++		if (IS_ERR(data->regmap_pmu)) {
++			ret = PTR_ERR(data->regmap_pmu);
++			goto err_disable_edev;
++		}
+ 	}
+ 
+ 	regmap_read(data->regmap_pmu, RK3399_PMUGRF_OS_REG2, &val);
+@@ -392,7 +395,8 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
+ 		data->odt_dis_freq = data->timing.lpddr4_odt_dis_freq;
+ 		break;
+ 	default:
+-		return -EINVAL;
++		ret = -EINVAL;
++		goto err_disable_edev;
+ 	};
+ 
+ 	arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, 0, 0,
+@@ -426,7 +430,8 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
+ 	 */
+ 	if (dev_pm_opp_of_add_table(dev)) {
+ 		dev_err(dev, "Invalid operating-points in device tree.\n");
+-		return -EINVAL;
++		ret = -EINVAL;
++		goto err_disable_edev;
+ 	}
+ 
+ 	of_property_read_u32(np, "upthreshold",
+@@ -464,6 +469,8 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ 
++err_disable_edev:
++	devfreq_event_disable_edev(data->edev);
+ err_free_opp:
+ 	dev_pm_opp_of_remove_table(&pdev->dev);
+ 	return ret;
+-- 
+2.17.1
 
-Yeah, I was surprised to see it's not even in statx. :/
-
---D
-
-> Thanks,
-> Amir.
