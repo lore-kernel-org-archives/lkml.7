@@ -2,143 +2,67 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,GAPPY_SUBJECT,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A451CC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 15:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBA7C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 15:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BAA721D7D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 15:33:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576942410;
-	bh=zdoXt58X1r1gsHn2LLI5QiHIpJdL1X7t3v/hbXqgTWY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RbZsIvB0PHKYzFUmy1IR7ePh/UFbUbo45XP1WK0e29xrGPLJavESYAKwWllGpEZvu
-	 pA/cRjDOBG7DAGeVe+8olb6D7Mbo1yiMRU244U+qaJpNUlJDeJWh1463ckPhsfi3S7
-	 3vomyv7Q76YrU681+VrAYKG9UJApMx7Cj15BdK8k=
+	by mail.kernel.org (Postfix) with ESMTP id 4189D2072B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 15:36:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfLUPd3 (ORCPT
+        id S1726877AbfLUPg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 10:33:29 -0500
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:32604 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726114AbfLUPd3 (ORCPT
+        Sat, 21 Dec 2019 10:36:26 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:46567 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbfLUPgZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 10:33:29 -0500
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id xBLFXGSH025928;
-        Sun, 22 Dec 2019 00:33:17 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com xBLFXGSH025928
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1576942397;
-        bh=Q/Pi25U6wZzXySudemKHTKehy6ZVA3RmVQyI3kuCXqI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vkweo5dQVVb2IVK8a2c0QgGsEdI10Qsoq9eiCPENnmokW/0X7bFPZAZo3oJ7G8Mtr
-         ddw3kbMN2EPY6IEcGLbOqYfX0930cUAvslk/yt5j7C22DbhAdW729dfcxtuPopQz/T
-         YB/1KoAdxYs7IoRTIXVImi43RT2fx6gdviZ4Z84zIDzbIDg43F1RmbcGI5oK92Yoi8
-         icTSVQxqiGZc8MPBeXmtObx+X4CB1O2jHvr/xfQNrhHt2jFD2+cvAtEIS6yT1SPnXu
-         d9y846abwcNVT3cCf3MkbXbRWNGBdko06aPZxm+PXUPPQSG442HG1aCaf2Q2LKYbjD
-         qy5lohbg5yo0w==
-X-Nifty-SrcIP: [209.85.217.43]
-Received: by mail-vs1-f43.google.com with SMTP id x123so8027311vsc.2;
-        Sat, 21 Dec 2019 07:33:17 -0800 (PST)
-X-Gm-Message-State: APjAAAUehvma2VsDObd1LlbN0v7+dYEjd/9z6/GZ6HAX9rG/vO0sLkYC
-        whpVDw/FAVWDZ+v4M2u4C1s+fmr8ETcrtYi/byw=
-X-Google-Smtp-Source: APXvYqybYh+DGLDabsLVHn2MENs8kIxAwMehbZhNJo5bzv2fd+vymBCdQVmUrzSeb0ADMxUW5JBx0DyOJhF3CYDxIOM=
-X-Received: by 2002:a05:6102:48b:: with SMTP id n11mr1172403vsa.181.1576942396146;
- Sat, 21 Dec 2019 07:33:16 -0800 (PST)
+        Sat, 21 Dec 2019 10:36:25 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iignn-0006pG-GN; Sat, 21 Dec 2019 15:36:23 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Marek Behun <marek.behun@nic.cz>
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] firmware: turris-mox-rwtm: fix indentation issue
+Date:   Sat, 21 Dec 2019 15:36:23 +0000
+Message-Id: <20191221153623.32564-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20191219115100.958-1-masahiroy@kernel.org> <20191219164915.GS22665@localhost>
-In-Reply-To: <20191219164915.GS22665@localhost>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sun, 22 Dec 2019 00:32:40 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS-G6GQC=HTDdbgAAWx-YaL65LPhm1SfGsarZq-HtGJ8Q@mail.gmail.com>
-Message-ID: <CAK7LNAS-G6GQC=HTDdbgAAWx-YaL65LPhm1SfGsarZq-HtGJ8Q@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: clarify the difference between obj-y and obj-m
- w.r.t. descending
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 1:49 AM Johan Hovold <johan@kernel.org> wrote:
->
-> On Thu, Dec 19, 2019 at 08:51:00PM +0900, Masahiro Yamada wrote:
-> > Kbuild descends into a directory by either 'y' or 'm', but there is an
-> > important difference.
-> >
-> > Kbuild combines the built-in objects into built-in.a in each directory.
-> > The built-in.a in the directory visited by obj-y is merged into the
-> > built-in.a in the parent directory. This merge happens recursively when
-> > Kbuild is ascending back towards the top directory, so built-in objects
-> > are linked into vmlinux eventually. This works properly only when the
-> > Makefile that specifies obj-y is reachable by the chain of obj-y.
-> >
-> > On the other hand, Kbuild does not take built-in.a from the directory
-> > visited by obj-m. This it, all the objects in that directory are supposed
-> > to be modular. If Kbuild descends into a directory by obj-m, but the
-> > Makefile in the sub-directory specifies obj-y, those objects are just
-> > left orphan.
-> >
-> > The current statement "Kbuild only uses this information to decide that
-> > it needs to visit the directory" is misleading. Clarify the difference.
-> >
-> > Reported-by: Johan Hovold <johan@kernel.org>
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
->
-> Looks good! Thanks for fixing this.
->
-> Reviewed-by: Johan Hovold <johan@kernel.org>
+From: Colin Ian King <colin.king@canonical.com>
 
-Applied to linux-kbuild.
+There is a statement that is indented one level too deeply, remove
+the extraneous tab.
 
-> > ---
-> >
-> >  Documentation/kbuild/makefiles.rst | 16 +++++++++++++---
-> >  1 file changed, 13 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
-> > index b9b50553bfc5..d7e6534a8505 100644
-> > --- a/Documentation/kbuild/makefiles.rst
-> > +++ b/Documentation/kbuild/makefiles.rst
-> > @@ -297,9 +297,19 @@ more details, with real examples.
-> >       If CONFIG_EXT2_FS is set to either 'y' (built-in) or 'm' (modular)
-> >       the corresponding obj- variable will be set, and kbuild will descend
-> >       down in the ext2 directory.
-> > -     Kbuild only uses this information to decide that it needs to visit
-> > -     the directory, it is the Makefile in the subdirectory that
-> > -     specifies what is modular and what is built-in.
-> > +
-> > +     Kbuild uses this information not only to decide that it needs to visit
-> > +     the directory, but also to decide whether or not to link objects from
-> > +     the directory into vmlinux.
-> > +
-> > +     When Kbuild descends into the directory with 'y', all built-in objects
-> > +     from that directory are combined into the built-in.a, which will be
-> > +     eventually linked into vmlinux.
-> > +
-> > +     When Kbuild descends into the directory with 'm', in contrast, nothing
-> > +     from that directory will be linked into vmlinux. If the Makefile in
-> > +     that directory specifies obj-y, those objects will be left orphan.
-> > +     It is very likely a bug of the Makefile or of dependencies in Kconfig.
-> >
-> >       It is good practice to use a `CONFIG_` variable when assigning directory
-> >       names. This allows kbuild to totally skip the directory if the
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/firmware/turris-mox-rwtm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-
+diff --git a/drivers/firmware/turris-mox-rwtm.c b/drivers/firmware/turris-mox-rwtm.c
+index 72be58960e54..e27f68437b56 100644
+--- a/drivers/firmware/turris-mox-rwtm.c
++++ b/drivers/firmware/turris-mox-rwtm.c
+@@ -197,7 +197,7 @@ static int mox_get_board_info(struct mox_rwtm *rwtm)
+ 		rwtm->serial_number = reply->status[1];
+ 		rwtm->serial_number <<= 32;
+ 		rwtm->serial_number |= reply->status[0];
+-			rwtm->board_version = reply->status[2];
++		rwtm->board_version = reply->status[2];
+ 		rwtm->ram_size = reply->status[3];
+ 		reply_to_mac_addr(rwtm->mac_address1, reply->status[4],
+ 				  reply->status[5]);
 -- 
-Best Regards
-Masahiro Yamada
+2.24.0
+
