@@ -2,105 +2,131 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C48E9C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 21:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E19C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 21:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C14E206B7
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 21:07:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Qc99rLKJ"
+	by mail.kernel.org (Postfix) with ESMTP id D0AA1206B7
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 21:07:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727382AbfLUVHc (ORCPT
+        id S1727460AbfLUVHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 16:07:32 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38808 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbfLUVHc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 16:07:32 -0500
-Received: by mail-ot1-f68.google.com with SMTP id d7so12314304otf.5
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 13:07:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=IQDzCGNeAK5EBtUX/LCaBsUYMxFLJD3gX/4djK3YpRc=;
-        b=Qc99rLKJgNWmEo4aen5nEwhzg0Id7tJ25T7TMJzjSGBHrUlcLKVEARoCtwqqkbUWnx
-         uupcmM2Kbu4hbAw+axe5k9rWtzyRnSRh9NrhQFLqGNJUn/rIBg9PASLauLvb+vXYLhi0
-         SacpUI9vfda6grwUlYTSOaw6h8UCjDlPm3ZUzgCBW9io+sF2BOjtT52nu07Cp9Frd9fu
-         DjjItt4s6wdKeRzbzjKJa2v1ephnx7CZBesu0nHlod7IUS5zjBOa0gD/oVDl/rQquKGI
-         8nXANHDmPfeB6GH6iebGxM+Jrd+AWW14x7IYdBPfs5Q5sL6c3/uF860uGgO9MCuHJ8e7
-         v5aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=IQDzCGNeAK5EBtUX/LCaBsUYMxFLJD3gX/4djK3YpRc=;
-        b=PknJQ5rtnVlUglkHOTMes3XA3AywjISu3Z4YTYPxTcG6Ax4gzzDxypyogLYxRMYgy2
-         TOPyEIgJ+pXEYaqu5NdA41/Vzt7aMhVALuvMGbYa4vhS0PWkQMipz6Pr79BvlwJlwLuu
-         LZaJoo0uwR0U5CnpnQrAwOqYTPODNmBjSOYMdIkUTaJWNINbFD6kPdtXOmpxhfDvsyRR
-         KgFf907s21a3AQQQLXv4+oBMiv7qVDFOcY6WCXxdcUZHAJyjKz/8vz1Wx7jcO99OUtas
-         zwZwkE+hvrUjLsLlH/qisBpb9hVzcbBUWVFZaWyBy7M+7DqjHhcKzEsE1Sdfx9uQq7BP
-         cSRw==
-X-Gm-Message-State: APjAAAWieELcQMm+U7i9cX7j6typKIHP7YWxyLS9frFxKDwjXGcSTwvz
-        3745Ax0bWNgJ/jJYKsqXwSJuHjJ6uqNN0Q1ryoGD0kOH9do=
-X-Google-Smtp-Source: APXvYqzA75IgQS6VboqDPPddv0Nmm2P0sHQlEcSJ/8iJ0sdo9xLSQTvgYrEfrvkcQTYOnRoSpRzPnKHKGsvCcFyyDks=
-X-Received: by 2002:a05:6830:174c:: with SMTP id 12mr4748830otz.71.1576962451276;
- Sat, 21 Dec 2019 13:07:31 -0800 (PST)
+        Sat, 21 Dec 2019 16:07:49 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34610 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726763AbfLUVHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Dec 2019 16:07:49 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 2E76FACEC;
+        Sat, 21 Dec 2019 21:07:46 +0000 (UTC)
+Subject: Re: [RFC 00/25] arm64: realtek: Add Xnano X5 and implement
+ TM1628/FD628/AiP1618 LED controllers
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-realtek-soc@lists.infradead.org,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh@kernel.org>, Dan Murphy <dmurphy@ti.com>,
+        linux-leds@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+References: <20191212033952.5967-1-afaerber@suse.de>
+ <20191221182057.GA32732@amd>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <e26f985b-ceca-ca2c-a709-e7dc40c7fdd1@suse.de>
+Date:   Sat, 21 Dec 2019 22:07:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Sat, 21 Dec 2019 13:07:20 -0800
-Message-ID: <CAPcyv4gfbuttbdW0ea6EUzMihUK33cc0mBQmLjqZe1T_QCKF-Q@mail.gmail.com>
-Subject: [GIT PULL] libnvdimm fix for v5.5-rc3
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191221182057.GA32732@amd>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus, please pull from:
+Hi Pavel,
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
-tags/libnvdimm-fix-5.5-rc3
+[- Roc He, - chipset vendors]
 
-...to receive a minor regression fix. The libnvdimm unit tests were
-expecting to mock calls to ioremap_nocache() which disappeared in
-v5.5-rc1. This fix has appeared in -next and collided with some
-cleanups that Christoph has planned for v5.6, but he will fix up his
-branch once this goes in.
+Am 21.12.19 um 19:20 schrieb Pavel Machek:
+>> It goes on to add a "text" attribute to the driver that enables DT-configured
+>> seven-segment displays; I was expecting to find precedence in auxdisplay
+>> subsystem but came up empty. So my driver currently integrates its own
+>> generic (but incomplete) character-to-8-segments mapping, as well as in a
+>> second step a combined-characters-to-8-segments mapping, which then gets
+>> mapped to the chipset's available output lines. Doing this as sysfs
+>> device
+> 
+> I did not investigate this in great detail; but if it is displaying
+> characters, auxdisplay is probably right subsystem to handle that.
 
----
+ausdisplay does not have any common API AFAICS. Most of them are 
+high-level displays with some parallel interface to set text and 
+metadata. Half of them hardcode the text to Linux or maybe offer a 
+Kconfig option to override it; the other half implements their own 
+character device file with ABI specific to that driver.
 
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+> I
+> guess LEDs can still take the low-level parts...
 
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+I'd hope so, but I believe we're missing multiple things there:
 
-are available in the Git repository at:
+1) A bulk-update API for setting multiple LEDs at once. 
+.brightness_set[_blocking]() is all we have on the device side, which 
+here results in two SPI commands. led_set_brightness[_sync]() is all I 
+see on the API side. We'd need an API that takes an array of LEDs and 
+brightness values and allows a common driver rather than individual 
+devices to update the Display RAM via SPI from an internal buffer.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
-tags/libnvdimm-fix-5.5-rc3
+2) DT is currently limited to one node per LED device. We'd need 
+#led-cells, with current LED nodes defaulting to zero. That way we could 
+address LEDs from an external, e.g., auxdisplay driver via a two-cell 
+index for these LED controllers, without needing to have DT nodes for 
+each and every display segment.
 
-for you to fetch changes up to c1468554776229d0db69e74a9aaf6f7e7095fd51:
+3) Better LED device names. More "function" values, or a reversal of the 
+label deprecation. Or an alternative API to register LEDs with manual name.
 
-  tools/testing/nvdimm: Fix mock support for ioremap (2019-12-11 17:11:10 -0800)
+4) LED triggers controlling more than one LED. linux,default-trigger 
+seems to assign one per LED, so that two heartbeats are quickly out of 
+sync. Doing it from code would probably be simpler than finding a way to 
+model this in DT, but I don't yet see how.
 
-----------------------------------------------------------------
-libnvdimm fix 5.5-rc3
+Alternatively we could expose those LED output lines as a gpiochip, 
+which we can already index in DT, and consider the display GPIO-based, 
+but then we're in the situation again that GregKH was telling people to 
+either go screw themselves in userspace or move things into leds, which 
+now you're against.
 
-- Restore the operation of the libnvdimm unit tests after the removal of
-  ioremap_nocache().
+Also, if you don't allow displays in leds, then we can't have LED 
+triggers for them either.
 
-----------------------------------------------------------------
-Dan Williams (1):
-      tools/testing/nvdimm: Fix mock support for ioremap
+> 
+> Oh, and common dimming for many LEDs is seen on other hardware, too
+> (Turris routers). Not sure how to handle that, either :-(.
 
- tools/testing/nvdimm/Kbuild       | 1 +
- tools/testing/nvdimm/test/iomap.c | 6 ++++++
- 2 files changed, 7 insertions(+)
+That part I have indeed successfully solved with a backlight device.
+
+My current problem (WIP blocking a push) is the key input handling - not 
+sure how to model both LEDs and keys as DT child nodes - do we need a 
+compatible to distinguish between them? Unit addresses and reg values 
+would be in different ranges, making this awkward, not to mention the 
+problem of naming a compatible, given the incredible diverse chipsets.
+
+Regards,
+Andreas
+
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
