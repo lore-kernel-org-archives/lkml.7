@@ -2,132 +2,119 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F299C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 17:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F3CC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 17:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76A98206EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 17:01:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="kEG9PFRG"
+	by mail.kernel.org (Postfix) with ESMTP id 9BAB821D7D
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 17:21:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576948864;
+	bh=ygQ+LLKc6onkKQohUjB4VeER1S5nL8ISyedIw3igvFQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gq+G2/LXN4lcghYFHu66f3neD5kUar0QYzQrNRTc7XRUSNs+Oct0SQ7nhCeyQLDNg
+	 61EOhGMvrYhNfR7vprLe0XB1uMfR1JoAvOvSa/DztghQKCVMO87+jV1gxfnUBulAs7
+	 f3wOSm2uyKIrLXCuEt51OiU1LDGmeUTM2KFNYjHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbfLURBK (ORCPT
+        id S1726976AbfLURVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 12:01:10 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37995 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbfLURBK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 12:01:10 -0500
-Received: by mail-pf1-f193.google.com with SMTP id x185so6961854pfc.5
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 09:01:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EfhtVqbfRNchJXGKYNnjK189Wzr7z0ljLBenvVe83Bg=;
-        b=kEG9PFRG9Uvdbot3yMEjUmv3moIuUezSLDNHOAIixNkkHFJXpSNIRVmICZgWU8NZEv
-         nJDnkPrcfJejWqIJbxwZ7YrESHetwJa437nxiTD6E+tm1Gs47bmdGjfrZWHHnp9IZqrI
-         juv4rK7JUzqxpA9C9ls1wqFREP9WtcoqlZ3+h2H55xeTZ2vTvwoPhyy+MseCX7+R7/fS
-         a2MnX1cOJVbdUI78I52WllUVXcOxKrDqInDw/plgj2bORSNLbsxwzZuhh0QG3ayppOej
-         QXsocBfLfudKEZKmAGpvX5bhN8pb0j2zn8MBicJvXV2pk57flO5/uGqMi+rOrVwAcYQA
-         OhBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EfhtVqbfRNchJXGKYNnjK189Wzr7z0ljLBenvVe83Bg=;
-        b=Z/+tGGd9mBDpAIPKG/Dwot7gG4KRS7VQFho59hGJCkHp8A/9FapZ0F2Y/chMXgvJ7d
-         HBqGDd2s1iRVNNtdbIkwICG/022Ln0o89+rJxgf047UGHSDBGMjdZ29bkrN5Ge7rAVgq
-         M8oe0hAD+4GqbaFamNOGTs2q90cOGGZFu6CiBx9L0UmhTUvlfLNCWOQP9VbqZSwacBxA
-         eMoFqmYA9b9mmIY1dfX6Nmc0EU5QS/A3/5FROkqHQc1NATKUeP8CPoPFQtZ4YVDRTlhy
-         A7WbgFI9ktR1hjaksyjyDZipkf7R9JB/4Y6V3ErjYsbQyU18s/j7sNoKYzaOwIeYGNii
-         dwfg==
-X-Gm-Message-State: APjAAAWRlI7JwqfI0sTakqLAwPfnZBhB3Yotn8dvM0lpkeE0wJdFk3so
-        aG44a3gYB4vEC1yXZWZH3Bm4vw==
-X-Google-Smtp-Source: APXvYqzL9SlCQt49ptIpUkigX4FhPLwOhk0xJThIen+rDzELZJAXyqvGnAF3NxdNPB5zhtAaTGBeYw==
-X-Received: by 2002:aa7:85d3:: with SMTP id z19mr23130341pfn.62.1576947669033;
-        Sat, 21 Dec 2019 09:01:09 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id c199sm18140362pfb.126.2019.12.21.09.01.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 21 Dec 2019 09:01:08 -0800 (PST)
-Subject: Re: [PATCH RFC v2 3/3] io_uring: batch get(ctx->ref) across submits
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Tejun Heo <tj@kernel.org>, Dennis Zhou <dennis@kernel.org>,
-        Christoph Lameter <cl@linux.com>
-References: <cover.1576944502.git.asml.silence@gmail.com>
- <925d8fe5406779bbfa108caa3d1f9fd16e3434b5.1576944502.git.asml.silence@gmail.com>
- <da858877-0801-34c3-4508-dabead959410@gmail.com>
- <ff85b807-83e1-fd05-5f85-dcf465a50c11@kernel.dk>
- <fef4b765-338b-d3b0-7fd5-5672b92fd3e8@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <fef3a245-d2a2-23b3-ff03-3e05af19b752@kernel.dk>
-Date:   Sat, 21 Dec 2019 10:01:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Sat, 21 Dec 2019 12:21:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48028 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726319AbfLURVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Dec 2019 12:21:03 -0500
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9080521D7D;
+        Sat, 21 Dec 2019 17:21:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576948862;
+        bh=ygQ+LLKc6onkKQohUjB4VeER1S5nL8ISyedIw3igvFQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=x96NU+fxBzmg38mKk0TGitI2DkyJtAaQKY/5VTvgo818kI3m0Av9s6mvDML47ta94
+         P1eHg6Bp/jv5P0xoqarNn0EvL7tEDDphKBnvcv1WmbmRKyCHkjtqHCfJCQwI+86fG9
+         w1y42YhGVRdJIfTYdIwHvOCJNRQyDKTs2czaTwV0=
+Received: by mail-lj1-f169.google.com with SMTP id a13so13238963ljm.10;
+        Sat, 21 Dec 2019 09:21:02 -0800 (PST)
+X-Gm-Message-State: APjAAAXmnrWyTbJZoTZm1CArPqxhG91zVQlrxv5/ufx0j2uGkmkYZCYz
+        2uX8pAVJoTFlvnXkfXTppSEf+lpm6npC++VPFus=
+X-Google-Smtp-Source: APXvYqzxQbblDkSAhXsYJzBSq3hDVzSm7VnGs1SPM1HBdZJYbyVd5kmZbEvVMHb9JsKwPhMwlDsc1nNYruHS7j121S0=
+X-Received: by 2002:a2e:8551:: with SMTP id u17mr8218439ljj.165.1576948860712;
+ Sat, 21 Dec 2019 09:21:00 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <fef4b765-338b-d3b0-7fd5-5672b92fd3e8@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CGME20191220120142eucas1p1f43c7a862d9c0faa72e14b21d7d697e9@eucas1p1.samsung.com>
+ <20191220115653.6487-1-a.swigon@samsung.com> <20191220115653.6487-3-a.swigon@samsung.com>
+In-Reply-To: <20191220115653.6487-3-a.swigon@samsung.com>
+From:   Chanwoo Choi <chanwoo@kernel.org>
+Date:   Sun, 22 Dec 2019 02:20:24 +0900
+X-Gmail-Original-Message-ID: <CAGTfZH2mh4xcUUa+z=thdnrFsEgZ7NR5nmL4sK2ybARndhn01A@mail.gmail.com>
+Message-ID: <CAGTfZH2mh4xcUUa+z=thdnrFsEgZ7NR5nmL4sK2ybARndhn01A@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 2/7] interconnect: Relax requirement in of_icc_get_from_provider()
+To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>, inki.dae@samsung.com,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/21/19 9:48 AM, Pavel Begunkov wrote:
-> On 21/12/2019 19:38, Jens Axboe wrote:
->> On 12/21/19 9:20 AM, Pavel Begunkov wrote:
->>> On 21/12/2019 19:15, Pavel Begunkov wrote:
->>>> Double account ctx->refs keeping number of taken refs in ctx. As
->>>> io_uring gets per-request ctx->refs during submission, while holding
->>>> ctx->uring_lock, this allows in most of the time to bypass
->>>> percpu_ref_get*() and its overhead.
->>>
->>> Jens, could you please benchmark with this one? Especially for offloaded QD1
->>> case. I haven't got any difference for nops test and don't have a decent SSD
->>> at hands to test it myself. We could drop it, if there is no benefit.
->>>
->>> This rewrites that @extra_refs from the second one, so I left it for now.
->>
->> Sure, let me run a peak test, qd1 test, qd1+sqpoll test on
->> for-5.6/io_uring, same branch with 1-2, and same branch with 1-3. That
->> should give us a good comparison. One core used for all, and we're going
->> to be core speed bound for the performance in all cases on this setup.
->> So it'll be a good comparison.
->>
-> Great, thanks!
+Hi,
 
-For some reason, not seeing much of a change between for-5.6/io_uring
-and 1+2 and 1+2+3, it's about the same and results seem very stable.
-For reference, top of profile with 1-3 applied looks like this:
+On Fri, Dec 20, 2019 at 9:03 PM Artur =C5=9Awigo=C5=84 <a.swigon@samsung.co=
+m> wrote:
+>
+> This patch relaxes the condition in of_icc_get_from_provider() so that it
+> is no longer required to set #interconnect-cells =3D <1> in the DT. In ca=
+se
+> of the devfreq driver for exynos-bus, #interconnect-cells is always zero.
 
-+    3.92%  io_uring  [kernel.vmlinux]  [k] blkdev_direct_IO
-+    3.87%  io_uring  [kernel.vmlinux]  [k] blk_mq_get_request
-+    3.43%  io_uring  [kernel.vmlinux]  [k] io_iopoll_getevents
-+    3.03%  io_uring  [kernel.vmlinux]  [k] __slab_free
-+    2.87%  io_uring  io_uring          [.] submitter_fn
-+    2.79%  io_uring  [kernel.vmlinux]  [k] io_submit_sqes
-+    2.75%  io_uring  [kernel.vmlinux]  [k] bio_alloc_bioset
-+    2.70%  io_uring  [nvme_core]       [k] nvme_setup_cmd
-+    2.59%  io_uring  [kernel.vmlinux]  [k] blk_mq_make_request
-+    2.46%  io_uring  [kernel.vmlinux]  [k] io_prep_rw
-+    2.32%  io_uring  [kernel.vmlinux]  [k] io_read
-+    2.25%  io_uring  [kernel.vmlinux]  [k] blk_mq_free_request
-+    2.19%  io_uring  [kernel.vmlinux]  [k] io_put_req
-+    2.06%  io_uring  [kernel.vmlinux]  [k] kmem_cache_alloc
-+    2.01%  io_uring  [kernel.vmlinux]  [k] generic_make_request_checks
-+    1.90%  io_uring  [kernel.vmlinux]  [k] __sbitmap_get_word
-+    1.86%  io_uring  [kernel.vmlinux]  [k] sbitmap_queue_clear
-+    1.85%  io_uring  [kernel.vmlinux]  [k] io_issue_sqe
+It doesn't contain why don't need to require it. If you add more detailed
+description, it is better to understand.
+
+>
+> Signed-off-by: Artur =C5=9Awigo=C5=84 <a.swigon@samsung.com>
+> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/interconnect/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+> index e6035c199369..74c68898a350 100644
+> --- a/drivers/interconnect/core.c
+> +++ b/drivers/interconnect/core.c
+> @@ -335,7 +335,7 @@ struct icc_node *of_icc_get_from_provider(struct of_p=
+handle_args *spec)
+>         struct icc_node *node =3D ERR_PTR(-EPROBE_DEFER);
+>         struct icc_provider *provider;
+>
+> -       if (!spec || spec->args_count !=3D 1)
+> +       if (!spec)
+>                 return ERR_PTR(-EINVAL);
+>
+>         mutex_lock(&icc_lock);
+> --
+> 2.17.1
+>
 
 
--- 
-Jens Axboe
-
+--=20
+Best Regards,
+Chanwoo Choi
