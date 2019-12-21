@@ -2,118 +2,108 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADABC2D0D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 08:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08289C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 08:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8A0206D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 08:43:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h2L5Hfmv"
+	by mail.kernel.org (Postfix) with ESMTP id CE7F6206D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 08:49:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576918156;
+	bh=fK1OqlPP2BOyAoHVbXH8LIc2RflvNPU2fIk8Rn5JhV4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fxmajH8ZVqRlaTpFNrgx3hjHWbx2JxHIZIuyoTF1ARSspFg7QXa9xkVCQqXEeqF3w
+	 +ZMk4SoILxcpYXVrLHt+dWdSIFq9egfuKAqiUi4PISoKAw1oUcxgbwUi9NwTQnxLyv
+	 L3J2846ns2vpCFWTVWvhUjWDXWMFzszkUD7EAIDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbfLUInR (ORCPT
+        id S1726144AbfLUItQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 03:43:17 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:44061 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbfLUInR (ORCPT
+        Sat, 21 Dec 2019 03:49:16 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34503 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbfLUItP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 03:43:17 -0500
-Received: by mail-il1-f194.google.com with SMTP id z12so10016839iln.11;
-        Sat, 21 Dec 2019 00:43:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zOw1yXDHuAoD3Kc1PWQqOf8j8YrDutWX5kRyO7Mss4U=;
-        b=h2L5Hfmvy1e383vZXY/Uf95l/jjjw7B683GAwoSUYotqjNgmDAc2xOiOz9Fg5x1L+t
-         dF4kDHkoQH/8cBz9/I2Zk/J/zvL53i/sMpJDZ/7EQEw9UrcsgNx/dlVwHRLxcZAgExWG
-         wYNFyWL/aM1sBjKCLjG9nMybZbueHleyN9e2f7tboSWCX2OKLKtyOGRqxNlsY0N1iWBu
-         R0wtB3eomjuaKsX8uOxlc+CAdQ6HyRVYSrWGDlWYoRBqILJkJG/IojdWQqvqChLq/BCz
-         RKkGroylvhdoYNl7b3kqAKArBg3aoI0JMkTUnUziLXaCUF7bkvY8yly9wZGmKb8P7i1Y
-         MWwQ==
+        Sat, 21 Dec 2019 03:49:15 -0500
+Received: by mail-wr1-f66.google.com with SMTP id t2so11624203wrr.1;
+        Sat, 21 Dec 2019 00:49:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=zOw1yXDHuAoD3Kc1PWQqOf8j8YrDutWX5kRyO7Mss4U=;
-        b=sROY7dq1TQclU7ZyQjXqwSZJcWra45MDP6vm3Z076qMC9xXN2OVz0yH3JmoNcgfzfR
-         7/aEa5UC6I2DWcu6BjnEhhs5RbjYXz7AUGPkCOhqzFbP1KTkv3yO7kHVGRi62RV4AEXv
-         tw5ezeJUx+DqPzJTpqtkY9WS3gYNukrVeYLTtzRutFNrt28qV3iloDchu6DzdfMCGu0O
-         lKRAZ1xwnXXd6zF1mIL6adYguot3xUjMmXrLisTG5YawK/zlwQjCVK2iumiwEKc7j2Cs
-         y2RPUB2aGMKghcAImPuwfXDDrOE3r+pmybc02nTJBafa+lhsR11Sz/XWR/Lb5ih4B3Vx
-         bChA==
-X-Gm-Message-State: APjAAAVK4ojIRJsJ46fSjdIegwBy0pUI0uxqnanenckPRD99wET/bRJw
-        0FIYoUGBG5+gLPB4uM5q+ixrmhbBEkgJHiDc2gU=
-X-Google-Smtp-Source: APXvYqwd35DhfzZzrtc2is3XW8PsKNSv0oBL2VDDIHfgRt92VBWDck6ESuGSxoE3vMi76YY1g6Y5WYUB1BN1AC5tvwc=
-X-Received: by 2002:a92:d5c3:: with SMTP id d3mr15993083ilq.250.1576917796474;
- Sat, 21 Dec 2019 00:43:16 -0800 (PST)
+        bh=tH9GwKFKZoJ5vY+eHR+9ufhWpSkZJ1e+/MW4k6qXbI0=;
+        b=kcr6+h4oV2KqnboDSzxJL6INQW5FIdDEbFc5TKJJMZxRieNxFZEV2Htc8WQQyocBi+
+         zGp5kxbdKrqeZ1gbVvkO6W6wHNI1dVqkeO03gULRvTxrJRhC+87/WZlU4CMsPhqYct2W
+         Hz73b1W2cN5V60AMADk49fN0kFgKeGi57KyVlLkAtX5ZgfwPLTzxCA9mfRnWIza5wUQI
+         HkMqJyzC2PCmf6nvH3zzBsiIRlTOhbCxv9ALv98N8HMBOeeCw3HIS13w6V2/hmCPvwf2
+         FxHYIWKbpgB1KGxUqcZQu9IA+q4R3U6+qvBZweTU6B2WDG3yGbQJiu8TKS5J0s+EKqyu
+         veOw==
+X-Gm-Message-State: APjAAAUnFOFEeWYZWIHZwLF5FdIMv+BKkOpmtvMUJgqVJxMiMr9V359d
+        NbAX5yEz1ud2d3u2w3eERwvRUHLKy/h9diRTa38=
+X-Google-Smtp-Source: APXvYqy7FxDH4hiEyAUPYf/k0mhxN3xlRhCD7z369wlrPWIAePF0DnCXAlc7bX87tqddaoBVnmFvALfHz+vYZp34pbw=
+X-Received: by 2002:adf:ef10:: with SMTP id e16mr18725296wro.336.1576918153617;
+ Sat, 21 Dec 2019 00:49:13 -0800 (PST)
 MIME-Version: 1.0
-References: <20191220024936.GA380394@chrisdown.name> <20191220213052.GB7476@magnolia>
-In-Reply-To: <20191220213052.GB7476@magnolia>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Sat, 21 Dec 2019 10:43:05 +0200
-Message-ID: <CAOQ4uxgoDHLnVb9=R2LpNqEFtjx=f5K8QXQnfiziBQ+jURLh=A@mail.gmail.com>
-Subject: Re: [PATCH] fs: inode: Reduce volatile inode wraparound risk when
- ino_t is 64 bit
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Chris Down <chris@chrisdown.name>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
+References: <20191220043253.3278951-1-namhyung@kernel.org> <20191220043253.3278951-2-namhyung@kernel.org>
+ <20191220093335.GC2844@hirez.programming.kicks-ass.net> <20191220151622.GF2914998@devbig004.ftw2.facebook.com>
+In-Reply-To: <20191220151622.GF2914998@devbig004.ftw2.facebook.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Sat, 21 Dec 2019 17:49:02 +0900
+Message-ID: <CAM9d7cjmrmyGnYQQ5qUFHYVi2M3kcxt+u+4WQ4PPkoaUgU+5=w@mail.gmail.com>
+Subject: Re: [PATCH 1/9] perf/core: Add PERF_RECORD_CGROUP event
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephane Eranian <eranian@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Li Zefan <lizefan@huawei.com>,
         Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com
+        Adrian Hunter <adrian.hunter@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 11:33 PM Darrick J. Wong
-<darrick.wong@oracle.com> wrote:
+Hi Tejun,
+
+On Sat, Dec 21, 2019 at 12:16 AM Tejun Heo <tj@kernel.org> wrote:
 >
-> On Fri, Dec 20, 2019 at 02:49:36AM +0000, Chris Down wrote:
-> > In Facebook production we are seeing heavy inode number wraparounds on
-> > tmpfs. On affected tiers, in excess of 10% of hosts show multiple files
-> > with different content and the same inode number, with some servers even
-> > having as many as 150 duplicated inode numbers with differing file
-> > content.
+> On Fri, Dec 20, 2019 at 10:33:35AM +0100, Peter Zijlstra wrote:
+> > On Fri, Dec 20, 2019 at 01:32:45PM +0900, Namhyung Kim wrote:
+> > > To support cgroup tracking, add CGROUP event to save a link between
+> > > cgroup path and inode number.  The attr.cgroup bit was also added to
+> > > enable cgroup tracking from userspace.
+> > >
+> > > This event will be generated when a new cgroup becomes active.
+> > > Userspace might need to synthesize those events for existing cgroups.
+> > >
+> > > Cc: Tejun Heo <tj@kernel.org>
+> > > Cc: Li Zefan <lizefan@huawei.com>
+> > > Cc: Johannes Weiner <hannes@cmpxchg.org>
+> > > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > >
-> > This causes actual, tangible problems in production. For example, we
-> > have complaints from those working on remote caches that their
-> > application is reporting cache corruptions because it uses (device,
-> > inodenum) to establish the identity of a particular cache object, but
+> > TJ, is this the right thing to do? ISTR you had concerns on this topic
+> > on the past.
 >
-> ...but you cannot delete the (dev, inum) tuple from the cache index when
-> you remove a cache object??
->
-> > because it's not unique any more, the application refuses to continue
-> > and reports cache corruption. Even worse, sometimes applications may not
-> > even detect the corruption but may continue anyway, causing phantom and
-> > hard to debug behaviour.
-> >
-> > In general, userspace applications expect that (device, inodenum) should
-> > be enough to be uniquely point to one inode, which seems fair enough.
->
-> Except that it's not.  (dev, inum, generation) uniquely points to an
-> instance of an inode from creation to the last unlink.
->
+> Yeah, cgroup->id is now the same as ino (on 64bit ino matchines) and
+> fhandle and uniquely identifies a cgroup instance in that boot
+> instance.  That said, id -> path mapping can be done from userspace by
+> passing the cgroup id to open_by_handle_at(2) and then reading the
+> symlink in /proc/self/fd, so this event isn't necessary per-se if the
+> goal is mapping back ids to paths.
 
-Yes, but also:
-There should not exist two live inodes on the system with the same (dev, inum)
-The problem is that ino 1 may still be alive when wraparound happens
-and then two different inodes with ino 1 exist on same dev.
+But we should support offline report even on a different machine.
+Also cgroups might go away during the record. so I think we need it
+anyway.
 
-Take the 'diff' utility for example, it will report that those files
-are identical
-if they have the same dev,ino,size,mtime. I suspect that 'mv' will not
-let you move one over the other, assuming they are hardlinks.
-generation is not even exposed to legacy application using stat(2).
-
-Thanks,
-Amir.
+Thanks
+Namhyung
