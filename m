@@ -2,118 +2,94 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BD6C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 20:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A2CC2D0D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 20:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08C2220665
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 20:09:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576958975;
-	bh=JJfFCLhlkopmo4wVR32TZkulzHo1NE33kZtKC+jRwX8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kcI373SSl4mYAGDBZ4oMNb5UHkIF48zLLrLcZ1B7j4kd9HiydvG7Q6VmrkIUj/0B5
-	 0c/kDVs2/rjfQS8nkouXAkaMWi0OSXxjVgsHOKgShZsXwMBXvJ+dpG15N0hN4ovMXE
-	 I1i+cTqJeJN6RyocdTnLsZqbmUvEHY/alQRpHWCo=
+	by mail.kernel.org (Postfix) with ESMTP id 5B0F820665
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 20:13:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ITBJT26H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbfLUUJd (ORCPT
+        id S1727355AbfLUUN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 15:09:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43940 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726593AbfLUUJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 15:09:33 -0500
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D15F20700;
-        Sat, 21 Dec 2019 20:09:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576958972;
-        bh=JJfFCLhlkopmo4wVR32TZkulzHo1NE33kZtKC+jRwX8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qIoWyU9Fr2+SEGmnrTBoC8KenLJzObYZSJcO0wijT6vlmTRBYEiO5dzZQRjl+VHd5
-         VRpM6L82ePrlJkeAMd4p4LCyf3cD/yK+x0aK4lJBStBzSZmb8AIdOCgykLIAMNGoqD
-         fEsyPDsdBqn//ywd0oa6eArN22WlwhgAMi0cv+xU=
-Received: by mail-lj1-f179.google.com with SMTP id u71so13593500lje.11;
-        Sat, 21 Dec 2019 12:09:32 -0800 (PST)
-X-Gm-Message-State: APjAAAXefr3D2KV5cOU0OHcFyNQQrWED5x0F0S+nfR+oNHOMOp72eosH
-        Qmsv1lNfUpB8ETzCnDqhlrKUgE1SsysrhH1zXFo=
-X-Google-Smtp-Source: APXvYqz+9TaYpA9qazzKenl6SyuSjXpHqSa8zOU8/cwyY5DW/ALCHnPENo9DzSPsoKOg/6lqqFIb2RMTFQtQMDJRhJ0=
-X-Received: by 2002:a2e:a361:: with SMTP id i1mr13043160ljn.29.1576958970281;
- Sat, 21 Dec 2019 12:09:30 -0800 (PST)
+        Sat, 21 Dec 2019 15:13:28 -0500
+Received: from mail-wr1-f47.google.com ([209.85.221.47]:44706 "EHLO
+        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbfLUUN2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Dec 2019 15:13:28 -0500
+Received: by mail-wr1-f47.google.com with SMTP id q10so12656013wrm.11;
+        Sat, 21 Dec 2019 12:13:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=YewY49XOAwtgbRRM+dP5nVDRUmX/pUzxJlp1fUg5boo=;
+        b=ITBJT26HYgtPwbf6168Te/atLxFRAtSdNpkeflQI7gSTCyeH//PG6bJGBkCr45W43y
+         7ZmWCcR0MaLpOCcjIrxCwnKEPhonlLaYsuJCXS0WHtSOABKzmNEAtl+X5P220Oex2aAA
+         TQBICDi39CxAODjMzMQbpbg3L0ds3OAELwrCqFDv34JRwMvaDBkgcgyEPkXMkidk9qDt
+         4W8XQQNb9lCR+FFutyz+M67p+7/MEjHIOPf073M+trlgseC1ukA6ze6zAUlJ54YExinH
+         pzSBrfUJPSPnRVv7pYEeCbIT8mludl08xwbQEticqDpd5iDUiKT14gv6sSZySCAdagYD
+         0/Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=YewY49XOAwtgbRRM+dP5nVDRUmX/pUzxJlp1fUg5boo=;
+        b=MKJlLVFe0bu8ejjOyHhFwjPyraMVtQi1HSKNApoSQyBK6DnSVR7oMGg3nBCz9JLrYe
+         to5qz2u+KkQwQf5Ar8eQ845zuwRmvz+AOwYKeJhuzyc/YESqYn0EQFWhKr2e4ZwrZ0HM
+         HviMz/XzKHqpSh5lgDVxh/zl+TGzv4acchXdIz+9EKRuoSQ3uCbv3rDL5AdMRRMxCP/f
+         MUMNBm9j++S7Zp0o9l9IEr7IuScCTH2I0gUyWFytcKX55Ia1zM96FJ16h6K06/lbsOyy
+         ycY9So1XFbEU2EYf3yZHSV8+O+qvEigFgz7zHu/iUIfglLEmjml8JbOc0snteoWlgC5l
+         L7JQ==
+X-Gm-Message-State: APjAAAXjYjUZnfxwOCBHw6ghzGU6l62eenL/18WT1L2UsMp8qXw4vdCz
+        Q0Mj2xJsq7lkb/HIqlz08Oc=
+X-Google-Smtp-Source: APXvYqygGQW5SsTgWaiIi8noPMj5B8mAf3B2ZBWSegMJalCplWoLys/Gux5P+gVTlMf6TY6GgoNW6w==
+X-Received: by 2002:a5d:4b47:: with SMTP id w7mr22981832wrs.276.1576959205632;
+        Sat, 21 Dec 2019 12:13:25 -0800 (PST)
+Received: from localhost.localdomain ([109.126.149.134])
+        by smtp.gmail.com with ESMTPSA id l7sm14470821wrq.61.2019.12.21.12.13.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Dec 2019 12:13:25 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] optimise ctx's refs grabbing in io_uring
+Date:   Sat, 21 Dec 2019 23:12:52 +0300
+Message-Id: <cover.1576958402.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <925d8fe5406779bbfa108caa3d1f9fd16e3434b5.1576944502.git.asml.silence@gmail.com>
+References: <925d8fe5406779bbfa108caa3d1f9fd16e3434b5.1576944502.git.asml.silence@gmail.com>
 MIME-Version: 1.0
-References: <CGME20191220120146eucas1p25dada01c315215d18bb8a15e3173b52c@eucas1p2.samsung.com>
- <20191220115653.6487-1-a.swigon@samsung.com> <20191220115653.6487-7-a.swigon@samsung.com>
-In-Reply-To: <20191220115653.6487-7-a.swigon@samsung.com>
-From:   Chanwoo Choi <chanwoo@kernel.org>
-Date:   Sun, 22 Dec 2019 05:08:53 +0900
-X-Gmail-Original-Message-ID: <CAGTfZH0QC5ZgVcSvXAy5tkyprZxfnwtWRa5NkRVfNP6HLMimew@mail.gmail.com>
-Message-ID: <CAGTfZH0QC5ZgVcSvXAy5tkyprZxfnwtWRa5NkRVfNP6HLMimew@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 6/7] arm: dts: exynos: Add interconnects to
- Exynos4412 mixer
-To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>, inki.dae@samsung.com,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Optimise percpu_ref_tryget() by not calling it for each request, but
+batching it. This gave a measurable ~5% performance boost for large QD.
 
-On Fri, Dec 20, 2019 at 9:02 PM Artur =C5=9Awigo=C5=84 <a.swigon@samsung.co=
-m> wrote:
->
-> This patch adds an 'interconnects' property to Exynos4412 DTS in order to
-> declare the interconnect path used by the mixer. Please note that the
-> 'interconnect-names' property is not needed when there is only one path i=
-n
-> 'interconnects', in which case calling of_icc_get() with a NULL name simp=
-ly
-> returns the right path.
->
-> Signed-off-by: Artur =C5=9Awigo=C5=84 <a.swigon@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos4412.dtsi | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos=
-4412.dtsi
-> index 48868947373e..13a679a9a107 100644
-> --- a/arch/arm/boot/dts/exynos4412.dtsi
-> +++ b/arch/arm/boot/dts/exynos4412.dtsi
-> @@ -771,6 +771,7 @@
->         clock-names =3D "mixer", "hdmi", "sclk_hdmi", "vp";
->         clocks =3D <&clock CLK_MIXER>, <&clock CLK_HDMI>,
->                  <&clock CLK_SCLK_HDMI>, <&clock CLK_VP>;
-> +       interconnects =3D <&bus_display &bus_dmc>;
->  };
->
->  &pmu {
-> --
-> 2.17.1
->
+v2: fix uncommited plug (Jens Axboe)
+    better comments for percpu_ref_tryget_many (Dennis Zhou)
+    amortise across io_uring_enter() boundary
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+v3: drop "batching across syscalls"
+    remove error handling in io_submit_sqes() from common path
 
---=20
-Best Regards,
-Chanwoo Choi
+Pavel Begunkov (2):
+  pcpu_ref: add percpu_ref_tryget_many()
+  io_uring: batch getting pcpu references
+
+ fs/io_uring.c                   | 14 ++++++++++----
+ include/linux/percpu-refcount.h | 26 +++++++++++++++++++++-----
+ 2 files changed, 31 insertions(+), 9 deletions(-)
+
+-- 
+2.24.0
+
