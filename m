@@ -2,104 +2,213 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF52FC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 23:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0416C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 23:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8F76206C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 23:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6A81206D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 23:44:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576971873;
+	bh=/MbmDcTEwVowvKdcdYIrMJXZYMe8rRNFMqhcO4g8FG0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=I+1225etZUuW0V4eJwvOWCUMzVcQ+ksGAutc9yIqIH98yftZsg6oEKJMlb6Uwr4X7
+	 4di/3vJBQ33+2wdcu3XqXOAvc+GgpqSF0a7UtjRSHE+Wb+3EWKnqHqEwLcPe2OVT0K
+	 R5Vs5ZtK5Qa3A8nQaElAc6PO8zFLKan3iP3L/GW8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbfLUXlA (ORCPT
+        id S1726738AbfLUXoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 18:41:00 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31836 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726834AbfLUXkq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 18:40:46 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBLNb77Q128144
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 18:40:45 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2x1gf1xew6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 18:40:44 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Sat, 21 Dec 2019 23:40:43 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 21 Dec 2019 23:40:39 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBLNeclA30212178
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 21 Dec 2019 23:40:38 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 74882A404D;
-        Sat, 21 Dec 2019 23:40:38 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3EB19A4040;
-        Sat, 21 Dec 2019 23:40:37 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.234.212])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sat, 21 Dec 2019 23:40:37 +0000 (GMT)
-Subject: Re: [PATCH] IMA: Defined timer to process queued keys
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        James.Bottomley@HansenPartnership.com,
-        linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Date:   Sat, 21 Dec 2019 18:40:36 -0500
-In-Reply-To: <20191221015256.2775-1-nramas@linux.microsoft.com>
-References: <20191221015256.2775-1-nramas@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19122123-0028-0000-0000-000003CAF3A4
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19122123-0029-0000-0000-0000248E4B03
-Message-Id: <1576971636.5241.95.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-21_07:2019-12-17,2019-12-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
- mlxscore=0 lowpriorityscore=0 phishscore=0 suspectscore=0 mlxlogscore=888
- adultscore=0 bulkscore=0 malwarescore=0 clxscore=1015 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-1912210212
+        Sat, 21 Dec 2019 18:44:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58110 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726066AbfLUXoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Dec 2019 18:44:32 -0500
+Received: from zzz.localdomain (h75-100-12-111.burkwi.broadband.dynamic.tds.net [75.100.12.111])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D54C6206C3;
+        Sat, 21 Dec 2019 23:44:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576971871;
+        bh=/MbmDcTEwVowvKdcdYIrMJXZYMe8rRNFMqhcO4g8FG0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xXFAw8dwgY96VEuOfsyirRJGNvEHOYzNRor8af+MUeUJD3sMeqVicuIYD/9yk8B3M
+         1YLrJLAssviGzR0mbbbPGAO+47zJl4n4ubsQJ9+RdN5WazYSPVBdguVtcHbMFFXXrY
+         DGXOjPAVB5+D6jnBKDE+u5dc8cOrvnD0/KYcBxw0=
+Date:   Sat, 21 Dec 2019 17:44:28 -0600
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Chandan Rajendra <chandan@linux.vnet.ibm.com>,
+        linux-fscrypt@vger.kernel.org
+Subject: Re: [PATCH] fscrypt: Restore modular support
+Message-ID: <20191221234428.GA551@zzz.localdomain>
+References: <20191221143020.hbgeixvlmzt7nh54@gondor.apana.org.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191221143020.hbgeixvlmzt7nh54@gondor.apana.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-12-20 at 17:52 -0800, Lakshmi Ramasubramanian wrote:
-> keys queued for measurement should still be processed even if
-> a custom IMA policy was not loaded. Otherwise, the keys will
-> remain queued forever consuming kernel memory.
+On Sat, Dec 21, 2019 at 10:30:20PM +0800, Herbert Xu wrote:
+> The commit 643fa9612bf1 ("fscrypt: remove filesystem specific
+> build config option") removed modular support for fs/crypto.  This
+> causes the Crypto API to be built-in whenever fscrypt is enabled.
+> This makes it very difficult for me to test modular builds of
+> the Crypto API without disabling fscrypt which is a pain.
 > 
-> This patch defines a timer to handle the above scenario. The timer
-> is setup to expire 5 minutes after IMA initialization is completed.
+> AFAICS there is no reason why fscrypt has to be built-in.  The
+> commit above appears to have done this way purely for the sake of
+> simplicity.  In fact some simple Kconfig tweaking is sufficient
+> to retain a single FS_ENCRYPTION option while maintaining modularity.
 > 
-> If a custom IMA policy is loaded before the timer expires, the timer
-> is removed and any queued keys are processed. But if a custom policy
-> was not loaded, on timer expiration any queued keys are processed.
+> This patch restores modular support to fscrypt by adding a new
+> hidden FS_ENCRYPTION_TRI tristate option that is selected by all
+> the FS_ENCRYPTION users.
 > 
-> On timer expiration the keys are still processed. This will enable
-> keys to be measured in case the built-in IMA policy defines a key
-> measurement rule.
+> Subsequent to the above commit, some core code has been introduced
+> to fs/buffer.c that makes restoring modular support non-trivial.
+> This patch deals with this by adding a function pointer that defaults
+> to end_buffer_async_read function until fscrypt is loaded.  When
+> fscrypt is loaded it modifies the function pointer to its own
+> function which used to be end_buffer_async_read_io but now resides
+> in fscrypt.  When it is unloaded the function pointer is restored.
+> 
+> In order for this to be safe with respect to module removal, the
+> check for whether the host inode is encrypted has been moved into
+> mark_buffer_async_read.  The assumption is that as long as the
+> bh is alive the calling filesystem module will be resident.  The
+> calling filesystem would then guarantee that fscrypt is loaded.
+> 
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
-If there was a built-in policy rule for measuring the early boot keys,
-then there wouldn't be a need for queueing the "key" measurements.
- Just free the queued keys.
+I'm not sure this is a good idea, since there will probably need to be more
+places where built-in code calls into fs/crypto/ too.
 
-Mimi
+There's actually already fscrypt_sb_free(), which this patch forgets to handle:
 
+	void fscrypt_sb_free(struct super_block *sb)
+	{
+		key_put(sb->s_master_keys);
+		sb->s_master_keys = NULL;
+	}
+
+Though we could make that an inline function.
+
+But there's also a patch under review which adds inline encryption support to
+ext4 and f2fs, which requires calling into fs/crypto/ from fs/buffer.c in order
+to set an encryption context on bios:
+
+https://lkml.kernel.org/linux-fscrypt/20191218145136.172774-10-satyat@google.com/
+
+If we also add direct I/O support for inline encryption (which is planned), it
+would require calling into fs/crypto/ from fs/direct-io.c and
+fs/iomap/direct-io.c as well.
+
+Another thing I've been thinking about is adding decryption support to
+__block_write_begin(), which would allow us to delete ext4_block_write_begin(),
+which was copied from __block_write_begin() to add decryption support.
+
+So more broadly, the issue is that a lot of the filesystem I/O helpers
+(fs/buffer.c, fs/iomap/, fs/direct-io.c, fs/mpage.c) are already built-in, and
+it can be necessary to call into fs/crypto/ from such places.
+
+Is it really much of an issue to just disable CONFIG_FS_ENCRYPTION when you want
+to test building the crypto API as a module?
+
+> diff --git a/fs/crypto/crypto.c b/fs/crypto/crypto.c
+> index 3719efa546c6..6bf7f05120bd 100644
+> --- a/fs/crypto/crypto.c
+> +++ b/fs/crypto/crypto.c
+> @@ -20,6 +20,7 @@
+>   * Special Publication 800-38E and IEEE P1619/D16.
+>   */
+>  
+> +#include <linux/buffer_head.h>
+>  #include <linux/pagemap.h>
+>  #include <linux/mempool.h>
+>  #include <linux/module.h>
+> @@ -286,6 +287,41 @@ int fscrypt_decrypt_block_inplace(const struct inode *inode, struct page *page,
+>  }
+>  EXPORT_SYMBOL(fscrypt_decrypt_block_inplace);
+>  
+> +struct decrypt_bh_ctx {
+> +	struct work_struct work;
+> +	struct buffer_head *bh;
+> +};
+> +
+> +static void decrypt_bh(struct work_struct *work)
+> +{
+> +	struct decrypt_bh_ctx *ctx =
+> +		container_of(work, struct decrypt_bh_ctx, work);
+> +	struct buffer_head *bh = ctx->bh;
+> +	int err;
+> +
+> +	err = fscrypt_decrypt_pagecache_blocks(bh->b_page, bh->b_size,
+> +					       bh_offset(bh));
+> +	end_buffer_async_read(bh, err == 0);
+> +	kfree(ctx);
+> +}
+> +
+> +static void fscrypt_end_buffer_async_read(struct buffer_head *bh, int uptodate)
+> +{
+> +	/* Decrypt if needed */
+> +	if (uptodate) {
+> +		struct decrypt_bh_ctx *ctx = kmalloc(sizeof(*ctx), GFP_ATOMIC);
+> +
+> +		if (ctx) {
+> +			INIT_WORK(&ctx->work, decrypt_bh);
+> +			ctx->bh = bh;
+> +			fscrypt_enqueue_decrypt_work(&ctx->work);
+> +			return;
+> +		}
+> +		uptodate = 0;
+> +	}
+> +	end_buffer_async_read(bh, uptodate);
+> +}
+> +
+>  /*
+>   * Validate dentries in encrypted directories to make sure we aren't potentially
+>   * caching stale dentries after a key has been added.
+> @@ -418,6 +454,8 @@ static int __init fscrypt_init(void)
+>  	if (err)
+>  		goto fail_free_info;
+>  
+> +	end_buffer_async_read_io = fscrypt_end_buffer_async_read;
+> +
+>  	return 0;
+
+This code would actually need to go into fs/crypto/bio.c because it depends on
+CONFIG_BLOCK.  UBIFS uses fs/crypto/ without CONFIG_BLOCK necessarily being set.
+
+> +/**
+> + * fscrypt_exit() - Shutdown the fs encryption system
+> + */
+> +static void __exit fscrypt_exit(void)
+> +{
+> +	end_buffer_async_read_io = end_buffer_async_read;
+> +
+> +	kmem_cache_destroy(fscrypt_info_cachep);
+> +	destroy_workqueue(fscrypt_read_workqueue);
+> +}
+> +module_exit(fscrypt_exit);
+
+There's a bit more that would need to be done here:
+
+	mempool_destroy(fscrypt_bounce_page_pool);
+
+and
+
+	fscrypt_exit_keyring()
+		=> unregister_key_type(&key_type_fscrypt);
+		=> unregister_key_type(&key_type_fscrypt_user);
+
+- Eric
