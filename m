@@ -2,89 +2,169 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA24C43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 07:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 703B6C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 07:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B8AC206EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 07:17:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="cqqFjOcc"
+	by mail.kernel.org (Postfix) with ESMTP id 47378206EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 07:18:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbfLUHRN (ORCPT
+        id S1726162AbfLUHSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 02:17:13 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:64701 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725774AbfLUHRN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 02:17:13 -0500
-X-UUID: bbd62af5328e47f8bcbaee64d092f4f0-20191221
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=6a1RKfO0AH2bkibQkHqHEE9QU8OujxhL2WQH1gq5fq4=;
-        b=cqqFjOccVxh6YQ/wcKv4ytO37RDX6T1qtnzbbrv3V7O3rKPnpQcI1Wwk32mnJxB49Qz3O4gZYIPflkviRyX2WvBBIoACxK/WgHJqctcqBbid4Dl4I3/dJOR6HebBcJw3gNsar9+hRCGy/Gx+x9aQlDe7Pj4chpn1PdFERl06pLw=;
-X-UUID: bbd62af5328e47f8bcbaee64d092f4f0-20191221
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <ryder.lee@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 367908377; Sat, 21 Dec 2019 15:17:04 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sat, 21 Dec 2019 15:17:07 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 21 Dec 2019 15:16:20 +0800
-From:   Ryder Lee <ryder.lee@mediatek.com>
-To:     Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-CC:     <linux-wireless@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH] mt76: mt7615: fix MT7615_CFEND_RATE_DEFAULT value
-Date:   Sat, 21 Dec 2019 15:17:00 +0800
-Message-ID: <373ef6c1a4a0252cc21dde3f08e618a62629ba38.1576911997.git.ryder.lee@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Sat, 21 Dec 2019 02:18:00 -0500
+Received: from [167.172.186.51] ([167.172.186.51]:39844 "EHLO shell.v3.sk"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725774AbfLUHSA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Dec 2019 02:18:00 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 12B60DFCCD;
+        Sat, 21 Dec 2019 07:18:00 +0000 (UTC)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 9PF6KEseIP_b; Sat, 21 Dec 2019 07:17:59 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 6BF3FDFCCE;
+        Sat, 21 Dec 2019 07:17:59 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id pD3hHw7_mY0S; Sat, 21 Dec 2019 07:17:59 +0000 (UTC)
+Received: from furthur.lan (unknown [109.183.109.54])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 0DD0DDFCCD;
+        Sat, 21 Dec 2019 07:17:59 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH] power: supply: olpc_battery: fix the power supply name
+Date:   Sat, 21 Dec 2019 08:17:51 +0100
+Message-Id: <20191221071751.269025-1-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rml4IGRlZnVhbHQgQ0ZFTkRfUkFURSBhbmQgcmVwbGFjZSBoYXJkY29kZSB2YWx1ZXMuDQoNClNp
-Z25lZC1vZmYtYnk6IFJ5ZGVyIExlZSA8cnlkZXIubGVlQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRy
-aXZlcnMvbmV0L3dpcmVsZXNzL21lZGlhdGVrL210NzYvbXQ3NjE1L2luaXQuYyAgIHwgNCArKy0t
-DQogZHJpdmVycy9uZXQvd2lyZWxlc3MvbWVkaWF0ZWsvbXQ3Ni9tdDc2MTUvbXQ3NjE1LmggfCAz
-ICsrLQ0KIDIgZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0K
-DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvbWVkaWF0ZWsvbXQ3Ni9tdDc2MTUv
-aW5pdC5jIGIvZHJpdmVycy9uZXQvd2lyZWxlc3MvbWVkaWF0ZWsvbXQ3Ni9tdDc2MTUvaW5pdC5j
-DQppbmRleCA0NDI3MzZjZWFiZTUuLjk0YTBkYzhiZmEyOCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMv
-bmV0L3dpcmVsZXNzL21lZGlhdGVrL210NzYvbXQ3NjE1L2luaXQuYw0KKysrIGIvZHJpdmVycy9u
-ZXQvd2lyZWxlc3MvbWVkaWF0ZWsvbXQ3Ni9tdDc2MTUvaW5pdC5jDQpAQCAtMzUsOCArMzUsOCBA
-QCBzdGF0aWMgdm9pZCBtdDc2MTVfbWFjX2luaXQoc3RydWN0IG10NzYxNV9kZXYgKmRldikNCiAJ
-bXQ3Nl93cihkZXYsIE1UX1RNQUNfVFJDUjEsIHZhbCk7DQogDQogCXZhbCA9IE1UX0FHR19BQ1Jf
-UEtUX1RJTUVfRU4gfCBNVF9BR0dfQUNSX05PX0JBX0FSX1JVTEUgfA0KLQkgICAgICBGSUVMRF9Q
-UkVQKE1UX0FHR19BQ1JfQ0ZFTkRfUkFURSwgMHg0OSkgfCAvKiAyNE0gKi8NCi0JICAgICAgRklF
-TERfUFJFUChNVF9BR0dfQUNSX0JBUl9SQVRFLCAweDRiKTsgLyogNk0gKi8NCisJICAgICAgRklF
-TERfUFJFUChNVF9BR0dfQUNSX0NGRU5EX1JBVEUsIE1UNzYxNV9DRkVORF9SQVRFX0RFRkFVTFQp
-IHwNCisJICAgICAgRklFTERfUFJFUChNVF9BR0dfQUNSX0JBUl9SQVRFLCBNVDc2MTVfQkFSX1JB
-VEVfREVGQVVMVCk7DQogCW10NzZfd3IoZGV2LCBNVF9BR0dfQUNSMCwgdmFsKTsNCiAJbXQ3Nl93
-cihkZXYsIE1UX0FHR19BQ1IxLCB2YWwpOw0KIA0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L3dp
-cmVsZXNzL21lZGlhdGVrL210NzYvbXQ3NjE1L210NzYxNS5oIGIvZHJpdmVycy9uZXQvd2lyZWxl
-c3MvbWVkaWF0ZWsvbXQ3Ni9tdDc2MTUvbXQ3NjE1LmgNCmluZGV4IDU1NGJkMDRkNmQ4MS4uNDg4
-MTBlZGExY2Q2IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvbWVkaWF0ZWsvbXQ3
-Ni9tdDc2MTUvbXQ3NjE1LmgNCisrKyBiL2RyaXZlcnMvbmV0L3dpcmVsZXNzL21lZGlhdGVrL210
-NzYvbXQ3NjE1L210NzYxNS5oDQpAQCAtNDAsNyArNDAsOCBAQA0KICNkZWZpbmUgTVRfQ0hGUkVR
-X0RCRENfSURYCUJJVCg2KQ0KICNkZWZpbmUgTVRfQ0hGUkVRX1NFUQkJR0VOTUFTSyg1LCAwKQ0K
-IA0KLSNkZWZpbmUgTVQ3NjE1X0NGRU5EX1JBVEVfREVGQVVMVAkweDY5IC8qIGNoaXAgZGVmYXVs
-dCAoMjRNKSAqLw0KKyNkZWZpbmUgTVQ3NjE1X0JBUl9SQVRFX0RFRkFVTFQJCTB4NGIgLyogT0ZE
-TSA2TSAqLw0KKyNkZWZpbmUgTVQ3NjE1X0NGRU5EX1JBVEVfREVGQVVMVAkweDQ5IC8qIE9GRE0g
-MjRNICovDQogI2RlZmluZSBNVDc2MTVfQ0ZFTkRfUkFURV8xMUIJCTB4MDMgLyogMTFCIExQLCAx
-MU0gKi8NCiANCiBzdHJ1Y3QgbXQ3NjE1X3ZpZjsNCi0tIA0KMi4xOC4wDQo=
+The framework is unhappy about them, because it uses the names in sysfs
+attributes:
+
+  power_supply olpc-ac: hwmon: 'olpc-ac' is not a valid name attribute, p=
+lease fix
+  power_supply olpc-battery: hwmon: 'olpc-battery' is not a valid name at=
+tribute, please fix
+
+See also commit 648cd48c9e56 ("hwmon: Do not accept invalid name
+attributes") and commit 74d3b6419772 ("hwmon: Relax name attribute
+validation for new APIs").
+
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+ arch/x86/platform/olpc/olpc-xo1-sci.c  | 4 ++--
+ arch/x86/platform/olpc/olpc-xo15-sci.c | 4 ++--
+ drivers/platform/olpc/olpc-xo175-ec.c  | 4 ++--
+ drivers/power/supply/olpc_battery.c    | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/arch/x86/platform/olpc/olpc-xo1-sci.c b/arch/x86/platform/ol=
+pc/olpc-xo1-sci.c
+index 99a28ce2244c7..09bd195cc9012 100644
+--- a/arch/x86/platform/olpc/olpc-xo1-sci.c
++++ b/arch/x86/platform/olpc/olpc-xo1-sci.c
+@@ -53,7 +53,7 @@ static const char * const lid_wake_mode_names[] =3D {
+=20
+ static void battery_status_changed(void)
+ {
+-	struct power_supply *psy =3D power_supply_get_by_name("olpc-battery");
++	struct power_supply *psy =3D power_supply_get_by_name("olpc_battery");
+=20
+ 	if (psy) {
+ 		power_supply_changed(psy);
+@@ -63,7 +63,7 @@ static void battery_status_changed(void)
+=20
+ static void ac_status_changed(void)
+ {
+-	struct power_supply *psy =3D power_supply_get_by_name("olpc-ac");
++	struct power_supply *psy =3D power_supply_get_by_name("olpc_ac");
+=20
+ 	if (psy) {
+ 		power_supply_changed(psy);
+diff --git a/arch/x86/platform/olpc/olpc-xo15-sci.c b/arch/x86/platform/o=
+lpc/olpc-xo15-sci.c
+index 6d193bb36021b..7bc1ea6a47974 100644
+--- a/arch/x86/platform/olpc/olpc-xo15-sci.c
++++ b/arch/x86/platform/olpc/olpc-xo15-sci.c
+@@ -75,7 +75,7 @@ static struct kobj_attribute lid_wake_on_close_attr =3D
+=20
+ static void battery_status_changed(void)
+ {
+-	struct power_supply *psy =3D power_supply_get_by_name("olpc-battery");
++	struct power_supply *psy =3D power_supply_get_by_name("olpc_battery");
+=20
+ 	if (psy) {
+ 		power_supply_changed(psy);
+@@ -85,7 +85,7 @@ static void battery_status_changed(void)
+=20
+ static void ac_status_changed(void)
+ {
+-	struct power_supply *psy =3D power_supply_get_by_name("olpc-ac");
++	struct power_supply *psy =3D power_supply_get_by_name("olpc_ac");
+=20
+ 	if (psy) {
+ 		power_supply_changed(psy);
+diff --git a/drivers/platform/olpc/olpc-xo175-ec.c b/drivers/platform/olp=
+c/olpc-xo175-ec.c
+index 83ed1fbf73cfd..5e1d14e35f20b 100644
+--- a/drivers/platform/olpc/olpc-xo175-ec.c
++++ b/drivers/platform/olpc/olpc-xo175-ec.c
+@@ -410,7 +410,7 @@ static void olpc_xo175_ec_complete(void *arg)
+ 		dev_dbg(dev, "got event %.2x\n", byte);
+ 		switch (byte) {
+ 		case EVENT_AC_CHANGE:
+-			psy =3D power_supply_get_by_name("olpc-ac");
++			psy =3D power_supply_get_by_name("olpc_ac");
+ 			if (psy) {
+ 				power_supply_changed(psy);
+ 				power_supply_put(psy);
+@@ -420,7 +420,7 @@ static void olpc_xo175_ec_complete(void *arg)
+ 		case EVENT_BATTERY_CRITICAL:
+ 		case EVENT_BATTERY_SOC_CHANGE:
+ 		case EVENT_BATTERY_ERROR:
+-			psy =3D power_supply_get_by_name("olpc-battery");
++			psy =3D power_supply_get_by_name("olpc_battery");
+ 			if (psy) {
+ 				power_supply_changed(psy);
+ 				power_supply_put(psy);
+diff --git a/drivers/power/supply/olpc_battery.c b/drivers/power/supply/o=
+lpc_battery.c
+index ad0e9e0edb3f8..e0476ec06601d 100644
+--- a/drivers/power/supply/olpc_battery.c
++++ b/drivers/power/supply/olpc_battery.c
+@@ -88,7 +88,7 @@ static enum power_supply_property olpc_ac_props[] =3D {
+ };
+=20
+ static const struct power_supply_desc olpc_ac_desc =3D {
+-	.name =3D "olpc-ac",
++	.name =3D "olpc_ac",
+ 	.type =3D POWER_SUPPLY_TYPE_MAINS,
+ 	.properties =3D olpc_ac_props,
+ 	.num_properties =3D ARRAY_SIZE(olpc_ac_props),
+@@ -605,7 +605,7 @@ static const struct attribute_group *olpc_bat_sysfs_g=
+roups[] =3D {
+  *********************************************************************/
+=20
+ static struct power_supply_desc olpc_bat_desc =3D {
+-	.name =3D "olpc-battery",
++	.name =3D "olpc_battery",
+ 	.get_property =3D olpc_bat_get_property,
+ 	.use_for_apm =3D 1,
+ };
+--=20
+2.24.1
 
