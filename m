@@ -2,189 +2,233 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE308C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 16:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EC2C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 16:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C431F206EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 16:16:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HqIFY4ou"
+	by mail.kernel.org (Postfix) with ESMTP id 3AFE0206EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 16:16:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576944991;
+	bh=bEm+OWSq9nSvNz46o1zc2xuMxncpDHY/jJqVWqT5ZZc=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=KHfgj9oVnIul6AF5+0Jv3Vwf63buxQrvKb7Gw75zQi5dNcmKCeu+qyWDEPyu25UYp
+	 UfkysWy/ne2L0ZFUYTdMx5HmhNG4ZkwqFUqVdx/MqCcRrQZowQqWsUMMdMO5UAo4PI
+	 C57xhgpuk4okNeZkLYmt9ShC9Rv5zD/4wEKn2MZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfLUQP7 (ORCPT
+        id S1727250AbfLUQQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 11:15:59 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34844 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbfLUQP5 (ORCPT
+        Sat, 21 Dec 2019 11:16:30 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35333 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfLUQQ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 11:15:57 -0500
-Received: by mail-wr1-f65.google.com with SMTP id g17so12310633wro.2;
-        Sat, 21 Dec 2019 08:15:56 -0800 (PST)
+        Sat, 21 Dec 2019 11:16:29 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p17so12174264wmb.0
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 08:16:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7qK7z/osxTMjlAYWmRfKxKF3BffCQ9pFRuTHMR/mgMI=;
-        b=HqIFY4ouVENSqwnBhlI4Z/1Kltm0UvZldD1xButCUUW4E5RGzEFP91cMK/9Wgo/dO3
-         t3BnzpOu7nLo3UpcQap4aDsKJWZNoIdYXpF0JMh02GARDGQSa0RxfsBJh9ltMYZR99C7
-         NHv6cCESXnZWcRpZ/J2KeFC3DtUv3xZ7H2sHVPbKQxV1lg29U3cuyfhrqkNUSzbKT4A4
-         1iGWxG/pap3xqOG/TbWtndxEOhuedlQ6txCfwarBhzoD+03oycl6LouAzLSoFOTJw9GK
-         AmYYbZr/suA+x1ob+1PQvqQZkGY4Vs4plUXdysTOBXhBYPFtU5TFnsT7aqk0ip0qJbde
-         SM2Q==
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=xzexOq9mpJcjihe+DzmkoEqKGrCRdBe5Ig+OTv1Z7Xc=;
+        b=D9huYuQJRyZ6eG7IyVQBDpuaMmEO2gwgtQBQJSl8FUY+Q5xGYegQ+FRAA5pWgBNu9l
+         CATgepPcSS3jvekoxi8EnKGS9gh8+1SrlZ4cJLRDGrmpzCYQRFJFcNf52SPBd5zef1WW
+         ukapezqKUDCbn7557qGEU6AgcHg79e2Xg8QtPREvdj1hgxuQi/Wzdx1cQKbiqFiWsaCH
+         dwDwl5c0a5x6xjeqcwUWxieAyWkZ2Wn/lc5UrdVAYukQU84pCAynRDAs/XpMXvDNMiJM
+         k3e96tSc/inppRDVA6u0ULXsO4vNAG/U34MuGfzDWyHDcS/7yhB0o4GV38KHw3cagdD9
+         2ywg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7qK7z/osxTMjlAYWmRfKxKF3BffCQ9pFRuTHMR/mgMI=;
-        b=rf8jcAC/hNEVYH9U1fU8b0EWdwhcrUmVwcXBoDbsQSTA5M1OKj6upKEd9qdWRSoJDd
-         WO/QtooeBHQOKayQE9hlgIFbUTsS6MJV0YQQFDkD3KGALnePeW5tbsoWhSNlYhUywIbT
-         l+pXSaOYVXGK5ZG1xt3LK/bd217LZCn2dvuLeVVPcSJsMD8KfiARKex9VtYleBcoWlgo
-         6yDLus1Il5PyJCrjF9/6PrJDmha+VmskiqoAztdoHKaNKzjzCZ4PUIhajmI41hyiHGFx
-         whOjg/uZe5NsxO091pm1mRe9WheJPZ/vLWysXURVBWTooOhhfTwp3UxodO642wz7dbbh
-         gx9A==
-X-Gm-Message-State: APjAAAWLf0UWNHCGsefl/mw9LcgAC35WNJnEptupg6m7sIXts9eaC8wA
-        F/ENCrFcBduDy0i+MQV2dIU=
-X-Google-Smtp-Source: APXvYqzjPq+1eiV+yAX9vqlwL+9h4V0nioBRuH5Yiudxskhlghs7hUPft/D2SFysxQv3Isvct1nCXw==
-X-Received: by 2002:adf:eb0a:: with SMTP id s10mr22379309wrn.320.1576944955775;
-        Sat, 21 Dec 2019 08:15:55 -0800 (PST)
-Received: from localhost.localdomain ([109.126.149.134])
-        by smtp.gmail.com with ESMTPSA id o129sm13831260wmb.1.2019.12.21.08.15.54
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=xzexOq9mpJcjihe+DzmkoEqKGrCRdBe5Ig+OTv1Z7Xc=;
+        b=lT11uHX6rtkHNyj64ItbsC5tcnW5ymftzvLKUB9DSkj3G5q6QI9dfK7mH/t2QzLt1T
+         29Fd17ciT+Goi8Gkbd/gdVQrV9XqkCwuw246BArR5KjgQdEzcmfwEWSEy5r7dvwSRi8c
+         uIaQ9A7o8ANF01I1rRzoTqNj0WY+fGVDKDbwrJ6lhrUhj7gCJI/8CJNkptIJxfKTu1Sr
+         j7HEYZn1wJH4Jxli7OALmwPl2/FKwLUr8oU9IDyZI1T3qAdEEz58IWwpIVRqPsN48v2X
+         3a+FMfDTHhuHxRj2nmiJhA1yWseVTZAFrpmCgH9/vUr8DB2fy75CFto3hl7yM7YA9hkI
+         IU0A==
+X-Gm-Message-State: APjAAAWWTZ+v2wlZIMbOcExKQ8eInqHXsu+JTsCCHH6SUlK8IK6EWw3x
+        NLJqZ8wd/xvlV2q2KnPQwFY=
+X-Google-Smtp-Source: APXvYqytGWDZusg1vkeWu31wTXFZP3fq6kp4CERRivuKi9wgUOw8WCtQ1v3DYpcuKqSvGc3lmIZlLA==
+X-Received: by 2002:a05:600c:2509:: with SMTP id d9mr23174569wma.148.1576944986926;
+        Sat, 21 Dec 2019 08:16:26 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id z3sm13624668wrs.94.2019.12.21.08.16.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Dec 2019 08:15:55 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Tejun Heo <tj@kernel.org>, Dennis Zhou <dennis@kernel.org>,
-        Christoph Lameter <cl@linux.com>
-Subject: [PATCH RFC v2 3/3] io_uring: batch get(ctx->ref) across submits
-Date:   Sat, 21 Dec 2019 19:15:09 +0300
-Message-Id: <925d8fe5406779bbfa108caa3d1f9fd16e3434b5.1576944502.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1576944502.git.asml.silence@gmail.com>
-References: <cover.1576944502.git.asml.silence@gmail.com>
+        Sat, 21 Dec 2019 08:16:25 -0800 (PST)
+Date:   Sat, 21 Dec 2019 17:16:24 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] perf fixes
+Message-ID: <20191221161624.GA130017@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Double account ctx->refs keeping number of taken refs in ctx. As
-io_uring gets per-request ctx->refs during submission, while holding
-ctx->uring_lock, this allows in most of the time to bypass
-percpu_ref_get*() and its overhead.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io_uring.c | 32 +++++++++++++++++++++++++-------
- 1 file changed, 25 insertions(+), 7 deletions(-)
+Linus,
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 5392134f042f..eef09de94609 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -84,6 +84,9 @@
- #define IORING_MAX_ENTRIES	32768
- #define IORING_MAX_CQ_ENTRIES	(2 * IORING_MAX_ENTRIES)
+Please pull the latest perf-urgent-for-linus git tree from:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-for-linus
+
+   # HEAD: 9f0bff1180efc9ea988fed3fd93da7647151ac8b perf/core: Add SRCU annotation for pmus list walk
+
+Misc fixes: a BTS fix, a PT NMI handling fix, a PMU sysfs fix and an SRCU 
+annotation.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Alexander Shishkin (2):
+      perf/x86/intel/bts: Fix the use of page_private()
+      perf/x86/intel: Fix PT PMI handling
+
+Peter Zijlstra (1):
+      perf/x86: Fix potential out-of-bounds access
+
+Sebastian Andrzej Siewior (1):
+      perf/core: Add SRCU annotation for pmus list walk
+
+
+ arch/x86/events/core.c      | 19 +++++++++++++++----
+ arch/x86/events/intel/bts.c | 16 +++++++++++-----
+ kernel/events/core.c        |  2 +-
+ 3 files changed, 27 insertions(+), 10 deletions(-)
+
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 9a89d98c55bd..f118af9f0718 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -376,7 +376,7 @@ int x86_add_exclusive(unsigned int what)
+ 	 * LBR and BTS are still mutually exclusive.
+ 	 */
+ 	if (x86_pmu.lbr_pt_coexist && what == x86_lbr_exclusive_pt)
+-		return 0;
++		goto out;
  
-+/* Not less than IORING_MAX_ENTRIES, so can grab once per submission loop */
-+#define IORING_REFS_THRESHOLD	IORING_MAX_ENTRIES
-+
- /*
-  * Shift of 9 is 512 entries, or exactly one page on 64-bit archs
-  */
-@@ -197,6 +200,7 @@ struct fixed_file_data {
- struct io_ring_ctx {
- 	struct {
- 		struct percpu_ref	refs;
-+		unsigned long		taken_refs; /* used under @uring_lock */
- 	} ____cacheline_aligned_in_smp;
- 
- 	struct {
-@@ -690,6 +694,13 @@ static void io_ring_ctx_ref_free(struct percpu_ref *ref)
- 	complete(&ctx->completions[0]);
- }
- 
-+static void io_free_taken_refs(struct io_ring_ctx *ctx)
-+{
-+	if (ctx->taken_refs)
-+		percpu_ref_put_many(&ctx->refs, ctx->taken_refs);
-+	ctx->taken_refs = 0;
-+}
-+
- static struct io_ring_ctx *io_ring_ctx_alloc(struct io_uring_params *p)
- {
- 	struct io_ring_ctx *ctx;
-@@ -4388,7 +4399,6 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 	struct io_submit_state state, *statep = NULL;
- 	struct io_kiocb *link = NULL;
- 	int i, submitted = 0;
--	unsigned int extra_refs;
- 	bool mm_fault = false;
- 
- 	/* if we have a backlog and couldn't flush it all, return BUSY */
-@@ -4398,9 +4408,15 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 			return -EBUSY;
+ 	if (!atomic_inc_not_zero(&x86_pmu.lbr_exclusive[what])) {
+ 		mutex_lock(&pmc_reserve_mutex);
+@@ -388,6 +388,7 @@ int x86_add_exclusive(unsigned int what)
+ 		mutex_unlock(&pmc_reserve_mutex);
  	}
  
--	if (!percpu_ref_tryget_many(&ctx->refs, nr))
--		return -EAGAIN;
--	extra_refs = nr;
-+	if (ctx->taken_refs < IORING_REFS_THRESHOLD) {
-+		if (unlikely(percpu_ref_is_dying(&ctx->refs))) {
-+			io_free_taken_refs(ctx);
-+			return -ENXIO;
-+		}
-+		if (!percpu_ref_tryget_many(&ctx->refs, IORING_REFS_THRESHOLD))
-+			return -EAGAIN;
-+		ctx->taken_refs += IORING_REFS_THRESHOLD;
-+	}
++out:
+ 	atomic_inc(&active_events);
+ 	return 0;
  
- 	if (nr > IO_PLUG_THRESHOLD) {
- 		io_submit_state_start(&state, nr);
-@@ -4417,8 +4433,9 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 				submitted = -EAGAIN;
- 			break;
- 		}
--		--extra_refs;
- 		if (!io_get_sqring(ctx, req, &sqe)) {
-+			/* not submitted, but a ref is freed */
-+			ctx->taken_refs--;
- 			__io_free_req(req);
- 			break;
- 		}
-@@ -4454,8 +4471,7 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 		io_queue_link_head(link);
- 	if (statep)
- 		io_submit_state_end(&state);
--	if (extra_refs)
--		percpu_ref_put_many(&ctx->refs, extra_refs);
-+	ctx->taken_refs -= submitted;
+@@ -398,11 +399,15 @@ int x86_add_exclusive(unsigned int what)
  
- 	 /* Commit SQ ring head once we've consumed and submitted all SQEs */
- 	io_commit_sqring(ctx);
-@@ -5731,6 +5747,7 @@ static int io_uring_fasync(int fd, struct file *file, int on)
- static void io_ring_ctx_wait_and_kill(struct io_ring_ctx *ctx)
+ void x86_del_exclusive(unsigned int what)
  {
- 	mutex_lock(&ctx->uring_lock);
-+	io_free_taken_refs(ctx);
- 	percpu_ref_kill(&ctx->refs);
- 	mutex_unlock(&ctx->uring_lock);
++	atomic_dec(&active_events);
++
++	/*
++	 * See the comment in x86_add_exclusive().
++	 */
+ 	if (x86_pmu.lbr_pt_coexist && what == x86_lbr_exclusive_pt)
+ 		return;
  
-@@ -6196,6 +6213,7 @@ static int __io_uring_register(struct io_ring_ctx *ctx, unsigned opcode,
+ 	atomic_dec(&x86_pmu.lbr_exclusive[what]);
+-	atomic_dec(&active_events);
+ }
  
- 	if (opcode != IORING_UNREGISTER_FILES &&
- 	    opcode != IORING_REGISTER_FILES_UPDATE) {
-+		io_free_taken_refs(ctx);
- 		percpu_ref_kill(&ctx->refs);
+ int x86_setup_perfctr(struct perf_event *event)
+@@ -1642,9 +1647,12 @@ static struct attribute_group x86_pmu_format_group __ro_after_init = {
  
- 		/*
--- 
-2.24.0
-
+ ssize_t events_sysfs_show(struct device *dev, struct device_attribute *attr, char *page)
+ {
+-	struct perf_pmu_events_attr *pmu_attr = \
++	struct perf_pmu_events_attr *pmu_attr =
+ 		container_of(attr, struct perf_pmu_events_attr, attr);
+-	u64 config = x86_pmu.event_map(pmu_attr->id);
++	u64 config = 0;
++
++	if (pmu_attr->id < x86_pmu.max_events)
++		config = x86_pmu.event_map(pmu_attr->id);
+ 
+ 	/* string trumps id */
+ 	if (pmu_attr->event_str)
+@@ -1713,6 +1721,9 @@ is_visible(struct kobject *kobj, struct attribute *attr, int idx)
+ {
+ 	struct perf_pmu_events_attr *pmu_attr;
+ 
++	if (idx >= x86_pmu.max_events)
++		return 0;
++
+ 	pmu_attr = container_of(attr, struct perf_pmu_events_attr, attr.attr);
+ 	/* str trumps id */
+ 	return pmu_attr->event_str || x86_pmu.event_map(idx) ? attr->mode : 0;
+diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
+index 38de4a7f6752..6a3b599ee0fe 100644
+--- a/arch/x86/events/intel/bts.c
++++ b/arch/x86/events/intel/bts.c
+@@ -63,9 +63,17 @@ struct bts_buffer {
+ 
+ static struct pmu bts_pmu;
+ 
++static int buf_nr_pages(struct page *page)
++{
++	if (!PagePrivate(page))
++		return 1;
++
++	return 1 << page_private(page);
++}
++
+ static size_t buf_size(struct page *page)
+ {
+-	return 1 << (PAGE_SHIFT + page_private(page));
++	return buf_nr_pages(page) * PAGE_SIZE;
+ }
+ 
+ static void *
+@@ -83,9 +91,7 @@ bts_buffer_setup_aux(struct perf_event *event, void **pages,
+ 	/* count all the high order buffers */
+ 	for (pg = 0, nbuf = 0; pg < nr_pages;) {
+ 		page = virt_to_page(pages[pg]);
+-		if (WARN_ON_ONCE(!PagePrivate(page) && nr_pages > 1))
+-			return NULL;
+-		pg += 1 << page_private(page);
++		pg += buf_nr_pages(page);
+ 		nbuf++;
+ 	}
+ 
+@@ -109,7 +115,7 @@ bts_buffer_setup_aux(struct perf_event *event, void **pages,
+ 		unsigned int __nr_pages;
+ 
+ 		page = virt_to_page(pages[pg]);
+-		__nr_pages = PagePrivate(page) ? 1 << page_private(page) : 1;
++		__nr_pages = buf_nr_pages(page);
+ 		buf->buf[nbuf].page = page;
+ 		buf->buf[nbuf].offset = offset;
+ 		buf->buf[nbuf].displacement = (pad ? BTS_RECORD_SIZE - pad : 0);
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 4ff86d57f9e5..a1f8bde19b56 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -10523,7 +10523,7 @@ static struct pmu *perf_init_event(struct perf_event *event)
+ 		goto unlock;
+ 	}
+ 
+-	list_for_each_entry_rcu(pmu, &pmus, entry) {
++	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
+ 		ret = perf_try_init_event(pmu, event);
+ 		if (!ret)
+ 			goto unlock;
