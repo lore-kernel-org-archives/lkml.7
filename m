@@ -2,241 +2,113 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC38FC2D0D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 21:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5946CC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 22:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CBF8206B7
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 21:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA79206C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 22:58:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SEF5VMtL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l58kL1H9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbfLUV5N (ORCPT
+        id S1726709AbfLUW6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 16:57:13 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37986 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbfLUV5N (ORCPT
+        Sat, 21 Dec 2019 17:58:43 -0500
+Received: from mail-io1-f49.google.com ([209.85.166.49]:44007 "EHLO
+        mail-io1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbfLUW6m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 16:57:13 -0500
-Received: by mail-wm1-f68.google.com with SMTP id u2so12609878wmc.3;
-        Sat, 21 Dec 2019 13:57:10 -0800 (PST)
+        Sat, 21 Dec 2019 17:58:42 -0500
+Received: by mail-io1-f49.google.com with SMTP id n21so11349267ioo.10;
+        Sat, 21 Dec 2019 14:58:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:references:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=fqVltKKEroh5pSrzjv5Pvxa1NjRr/F+HSv/v+vj2DC0=;
-        b=SEF5VMtLZyjjswWOFjyEWnfWgY/Nhra2y0P32gYmZBWof+YlO7qE9bfaXS7AsXu8Sw
-         RQumNBbx0d3mfpFzmD2rWNS5k45thV4RWOTGu2jq1V44MrRW3QgEL1t2UgH1t2C204VL
-         emhVcIDXlxbDEnBdX4hN2ROGUHStHPvlxkhmNOQvgYkYMSYHDoSR/aUZ+kwMyvY2E9Vb
-         wKir/cG8MZh7xq/0YsOXa9rbgZ/rlfqM4m9T3EWNZna/J0KHGn2yhN46ehBkOl3NvdEi
-         u+C1eybLX8A8WmPHaWWCV0+Z++eUZ5hPlfG7qESv5EMwU0cg5mpwX0DoCwXOfIE9Zj0H
-         fhWA==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=2ZhCc0nXVz+eHUsJdbDzJJziYPwRlHUdb+178cJrsjg=;
+        b=l58kL1H9jmQRFKrLNF30maOoUXUHssWn5do/yLJGAybICin5XXMzvxsvjTpS2+t/0Z
+         guWLmFFYbeVQu5aggS3ihoM83PjzHsF2hdoO/OGU6hH8+00PLUfrEDzxzqFkIcNlbc+b
+         5JRDtmHCKzAgjK+aBCpwcHSzvXc8Rs/B3HglIq/uBcfg2NeH/9n7enW7yslmU2tY6RZn
+         J7TC5l8jMZtZBe2JuJgmxPawl4BwFjorO55LZYdiJMPtBgu3Vfl3M7tWR6t0f5G5gqlY
+         dylydKMCufAkDRiwIC9s7ExxorX/TMBgcSOQtPG0JNz5vnKdPMBnOmbUh0uYsViWFFWC
+         Bjnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to;
-        bh=fqVltKKEroh5pSrzjv5Pvxa1NjRr/F+HSv/v+vj2DC0=;
-        b=t6DDYiPq8WvJrQVG2bJqVhzKB1yPekNbIVQo1eYj2p/Aa2RSYHGxvxHVduDL990Pm+
-         QIOZqFOAUZ96PSjIZ8HhPwG5m7TlKckByrNDyYJ8wcbdN5l6+g6D+yxgVEIS4nBc23Hc
-         bUWRn4a2tZR5EGbCI1fjbrk4mRnf0dhR2up7VcA+8ZYLw2kWcEDAythrJ1LcDOQy27y/
-         dRMJVsC3iZmWnYBDVUa9GoJT5J/tsjb4YVA0zmHeop1Bp+CmRzmbb2q0bjeV/t3qOXuG
-         /g88n5CWQntCmWBcQcSsWyN6CbMqv0t/3VmnXh84KuGmRExVyAy2mIlwtUjkF5SlFn3K
-         RXfg==
-X-Gm-Message-State: APjAAAUHGXWbf+Z+DvtVfI5lLKzzEgDz7EdWX84ufrqsSQgm05ayj9ep
-        CmIffyQ+hTiNkFPfVCx7Hab9dvzU
-X-Google-Smtp-Source: APXvYqwgEapOmcrP/nvghP1KENeEfDkgq2hQFvvQcMa/UTv+maaPM8i1vUVijEfeQyVQrcuYyVFMGw==
-X-Received: by 2002:a1c:1f56:: with SMTP id f83mr23834599wmf.93.1576965429610;
-        Sat, 21 Dec 2019 13:57:09 -0800 (PST)
-Received: from [192.168.43.30] ([109.126.149.134])
-        by smtp.gmail.com with ESMTPSA id u14sm14947144wrm.51.2019.12.21.13.57.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 21 Dec 2019 13:57:09 -0800 (PST)
-Subject: Re: [PATCH v3 2/2] io_uring: batch getting pcpu references
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1576958402.git.asml.silence@gmail.com>
- <a458f9577c254d6e0587793e317ba69703c7400e.1576958402.git.asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Message-ID: <3ee072fe-e064-e1cf-cf50-a23bdfabd5d0@gmail.com>
-Date:   Sun, 22 Dec 2019 00:56:42 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=2ZhCc0nXVz+eHUsJdbDzJJziYPwRlHUdb+178cJrsjg=;
+        b=nYvYhMw4BJVa/XBB0JwHWRSD4d7/hXEDMjb3rrwlUkEqOKgHKxF/Z7CCub8p4fF0dt
+         p3h3odBTI44RmBsWr0Hvtg53RAzsXV5ejAF0EsKAJ98bZyc8fE4HtLmrdTEzIf3TkIcu
+         RP3cVS8dc9ZHdJrXUuwDosMfEvjs2X50KpdhxBxI+v1m1DvWtxodX5oc4k7KabKkRyWP
+         PBHVg9VqdLjjApSWTwPVnfoxef2Fi2PUCjWcsYhVLKymYWjsemNLrSgKBfXfXio4MAcp
+         jk3Vs6gH0zfJxfUIyidKxAfeIZUKAmwG8rJ1jwbS5igCjvSZkUC/XDY/dxPoamcLJA5j
+         c0SQ==
+X-Gm-Message-State: APjAAAXaD0t9hng9B+BZ7W6074UjADWA3RZrEyLIiVRBSwlAhz+qauLT
+        2BPxS5DKX875MmDCKLIShCQY4k+gGOFQJJkCV9Xbvg==
+X-Google-Smtp-Source: APXvYqyEY3v6lE+EJyMz9A26EHUhGhDOZZ5tanIW8pVJUktVMhtIqcAEivWOHGKtyjIjMFDVxHwq9aDnxAT6V37YpPA=
+X-Received: by 2002:a02:c951:: with SMTP id u17mr18924307jao.27.1576969121593;
+ Sat, 21 Dec 2019 14:58:41 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <a458f9577c254d6e0587793e317ba69703c7400e.1576958402.git.asml.silence@gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="AFsQ35gw8k5Dqp9A1HPcRIVJ6SEYmazaE"
+From:   Steve French <smfrench@gmail.com>
+Date:   Sat, 21 Dec 2019 16:58:30 -0600
+Message-ID: <CAH2r5mu5NC+QxAuECihhFdMgJjZVeoOqj1aQv+RR+kscHYH_hw@mail.gmail.com>
+Subject: Oops in ieee80211 driver on 5.5-rc2
+To:     linux-wireless@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---AFsQ35gw8k5Dqp9A1HPcRIVJ6SEYmazaE
-Content-Type: multipart/mixed; boundary="H0UgRVQY7rhdC8t0UlnI2pFOPRpGlAfK9";
- protected-headers="v1"
-From: Pavel Begunkov <asml.silence@gmail.com>
-To: Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-ID: <3ee072fe-e064-e1cf-cf50-a23bdfabd5d0@gmail.com>
-Subject: Re: [PATCH v3 2/2] io_uring: batch getting pcpu references
-References: <cover.1576958402.git.asml.silence@gmail.com>
- <a458f9577c254d6e0587793e317ba69703c7400e.1576958402.git.asml.silence@gmail.com>
-In-Reply-To: <a458f9577c254d6e0587793e317ba69703c7400e.1576958402.git.asml.silence@gmail.com>
+I saw this oops again in the ieee80211 driver again today when the
+laptop was started at a connecting to a new WiFi in different location
+(in a fast food restaurant instead of at home or work).  I hadn't seen
+it connecting to Wifi at home for a while.
 
---H0UgRVQY7rhdC8t0UlnI2pFOPRpGlAfK9
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-On 21/12/2019 23:12, Pavel Begunkov wrote:
-> percpu_ref_tryget() has its own overhead. Instead getting a reference
-> for each request, grab a bunch once per io_submit_sqes().
->=20
-> basic benchmark with submit and wait 128 non-linked nops showed ~5%
-> performance gain. (7044 KIOPS vs 7423)
->=20
-
-Hmm, this won't work. Please drop it.
-
-> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-> ---
->=20
-> It's just becoming more bulky with ret for me, and would love to hear,
-> hot to make it clearer. This version removes all error handling from
-> hot path, though with goto.
->=20
->  fs/io_uring.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
->=20
-> diff --git a/fs/io_uring.c b/fs/io_uring.c
-> index 513f1922ce6a..b89a8b975c69 100644
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -1045,9 +1045,6 @@ static struct io_kiocb *io_get_req(struct io_ring=
-_ctx *ctx,
->  	gfp_t gfp =3D GFP_KERNEL | __GFP_NOWARN;
->  	struct io_kiocb *req;
-> =20
-> -	if (!percpu_ref_tryget(&ctx->refs))
-> -		return NULL;
-> -
->  	if (!state) {
->  		req =3D kmem_cache_alloc(req_cachep, gfp);
->  		if (unlikely(!req))
-> @@ -4400,6 +4397,9 @@ static int io_submit_sqes(struct io_ring_ctx *ctx=
-, unsigned int nr,
->  			return -EBUSY;
->  	}
-> =20
-> +	if (!percpu_ref_tryget_many(&ctx->refs, nr))
-> +		return -EAGAIN;
-> +
->  	if (nr > IO_PLUG_THRESHOLD) {
->  		io_submit_state_start(&state, nr);
->  		statep =3D &state;
-> @@ -4408,16 +4408,22 @@ static int io_submit_sqes(struct io_ring_ctx *c=
-tx, unsigned int nr,
->  	for (i =3D 0; i < nr; i++) {
->  		const struct io_uring_sqe *sqe;
->  		struct io_kiocb *req;
-> +		unsigned int unused_refs;
-> =20
->  		req =3D io_get_req(ctx, statep);
->  		if (unlikely(!req)) {
-> +			unused_refs =3D nr - submitted;
->  			if (!submitted)
->  				submitted =3D -EAGAIN;
-> +put_refs:
-> +			percpu_ref_put_many(&ctx->refs, unused_refs);
->  			break;
->  		}
->  		if (!io_get_sqring(ctx, req, &sqe)) {
->  			__io_free_req(req);
-> -			break;
-> +			/* __io_free_req() puts a ref */
-> +			unused_refs =3D nr - submitted - 1;
-> +			goto put_refs;
->  		}
-> =20
->  		/* will complete beyond this point, count as submitted */
->=20
-
---=20
-Pavel Begunkov
+.x86_64 #1
+[   66.632041] Hardware name: LENOVO 20MAS08500/20MAS08500, BIOS
+N2CET48W (1.31 ) 11/04/2019
+[   66.632047] RIP:
+0010:ieee80211_sta_update_pending_airtime+0xed/0x120 [mac80211]
+[   66.632048] Code: 8b b2 90 01 00 00 48 85 f6 75 07 48 8b b2 40 01
+00 00 41 89 e8 89 c1 44 89 ea 48 c7 c7 58 3d 08 c1 89 44 24 04 e8 e5
+6c 0d ef <0f> 0b 8b 44 24 04 eb 9d 48 83 c6 40 41 89 e8 89 c1 48 c7 c7
+20 3d
+[   66.632049] RSP: 0018:ffffb0ef40c53ba8 EFLAGS: 00010286
+[   66.632049] RAX: 0000000000000000 RBX: 00000000ffffffb0 RCX: 0000000000000000
+[   66.632049] RDX: 000000000000003a RSI: ffffffffb215047a RDI: 0000000000000246
+[   66.632050] RBP: 0000000000000050 R08: 0000000f839398c6 R09: 000000000000003a
+[   66.632050] R10: 0000000000000001 R11: 00000000b2150446 R12: ffff9d76f2db87c0
+[   66.632051] R13: 0000000000000002 R14: ffff9d76a2c5a5c8 R15: ffff9d76f0833d00
+[   66.632051] FS:  0000000000000000(0000) GS:ffff9d76fbcc0000(0000)
+knlGS:0000000000000000
+[   66.632052] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   66.632052] CR2: 00001cab696ac008 CR3: 000000081492e006 CR4: 00000000003606e0
+[   66.632052] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   66.632053] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   66.632053] Call Trace:
+[   66.632060]  __ieee80211_tx_status+0x720/0x900 [mac80211]
+[   66.632066]  ieee80211_tx_status+0x6a/0x90 [mac80211]
+[   66.632070]  iwl_mvm_tx_reclaim+0x2a2/0x3c0 [iwlmvm]
+[   66.632074]  iwl_mvm_rx_ba_notif+0xff/0x2e0 [iwlmvm]
+[   66.632076]  ? __switch_to_asm+0x40/0x70
+[   66.632079]  iwl_mvm_rx_common+0xdd/0x2c0 [iwlmvm]
+[   66.632083]  iwl_pcie_rx_handle+0x3af/0x9c0 [iwlwifi]
+[   66.632085]  ? irq_finalize_oneshot.part.0+0xf0/0xf0
+[   66.632088]  iwl_pcie_irq_rx_msix_handler+0x45/0x80 [iwlwifi]
+[   66.632089]  irq_thread_fn+0x20/0x60
+[   66.632090]  irq_thread+0xdc/0x170
+[   66.632091]  ? irq_forced_thread_fn+0x80/0x80
+[   66.632092]  kthread+0xf9/0x130
+[   66.632093]  ? irq_thread_check_affinity+0xf0/0xf0
+[   66.632094]  ? kthread_park+0x90/0x90
+[   66.632095]  ret_from_fork+0x35/0x40
+[   66.632096] ---[ end trace 9f6b29cb2168e61f ]---
 
 
---H0UgRVQY7rhdC8t0UlnI2pFOPRpGlAfK9--
+--
+Thanks,
 
---AFsQ35gw8k5Dqp9A1HPcRIVJ6SEYmazaE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl3+lR4ACgkQWt5b1Glr
-+6Xg0A//axdZrsLce8D+dVKGEl51LTsWLHfo/t5UktU4oSgfWkitlvJFepAw5YnU
-7Xa/n40Y0EK4OWK9J2TpTSXQWK5V9wOtWOGnX/hw6FX0C/bnxu+ab+1fsoK23y46
-0wSm0eB7Ng+1B+w48UusReUs+eKDe2G55WZQOQPziy8Yg8VW8961SyfAN1gO6oNj
-CplmapaI4RvkxPfvBmhnkbBBwxELLOzLUMml66ATkGAh2vsWBc31ReKYTUlKHa4l
-bYM8ia4BY2YedpVmSAUzS26ARUnk1GqztnIxFpRNC736T19a8MLCfV9eEWIMcy72
-qb7OmAhR9r/fwv9Y0Q22jEVU1ekqaugwv8XzGmGKQRas44gMPCKcf1EsuLB/CyFN
-QO2rlHSoHRtmP2klX8B7T9JWR7VpfCBqXu4P5rdHOJbKQcrR8EUXYaiUC9EyeRTL
-wmYy3LYLk8cnRL/vpgbAohdLtlq4xlHZESHn5PKk29X5P/XfmDoS98PED4ReQehL
-RUrDMYLSArkz1j4N45VovFB0zVhhXDFv/g27IzjHXXiNKOxpIi1BWES8lDPmGTDX
-CxG6FY9dGncOE2hD6ll7u65g23KJulK2WbAu2J1RaywG9oO87FnYkmzd76ck+aQv
-yxmfaipUfZZldBGeonx4Lq31KMsGOYWgkVKqpfVUSL80L1T5H6c=
-=yMQO
------END PGP SIGNATURE-----
-
---AFsQ35gw8k5Dqp9A1HPcRIVJ6SEYmazaE--
+Steve
