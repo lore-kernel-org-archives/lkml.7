@@ -2,92 +2,72 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE9CC43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 01:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C91D1C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 01:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29F17206DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 01:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A84002070C
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 01:23:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbfLUBU0 (ORCPT
+        id S1726716AbfLUBXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 20:20:26 -0500
-Received: from mga02.intel.com ([134.134.136.20]:56884 "EHLO mga02.intel.com"
+        Fri, 20 Dec 2019 20:23:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726462AbfLUBU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 20:20:26 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Dec 2019 17:20:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,337,1571727600"; 
-   d="scan'208";a="213435628"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 20 Dec 2019 17:20:23 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iiTRO-000F5x-L7; Sat, 21 Dec 2019 09:20:22 +0800
-Date:   Sat, 21 Dec 2019 09:18:55 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] fix ptr_ret.cocci warnings
-Message-ID: <20191221011855.qmnf2jj5cetedtw6@4978f4969bb8>
-References: <201912210950.pcZYpwwW%lkp@intel.com>
+        id S1726462AbfLUBXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 20:23:23 -0500
+Received: from rorschach.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4ACCD2070C;
+        Sat, 21 Dec 2019 01:23:22 +0000 (UTC)
+Date:   Fri, 20 Dec 2019 20:23:20 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Sven Schnelle <svens@linux.ibm.com>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Shuah Khan <shuahkhan@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] selftests/ftrace: fix glob selftest
+Message-ID: <20191220202320.18e6c653@rorschach.local.home>
+In-Reply-To: <20191220073240.GA72310@tuxmaker.boeblingen.de.ibm.com>
+References: <20191218074427.96184-1-svens@linux.ibm.com>
+        <20191218074427.96184-2-svens@linux.ibm.com>
+        <20191219183151.58d81624@gandalf.local.home>
+        <20191220162746.d0889aeac721f8e4d400db64@kernel.org>
+        <20191220073240.GA72310@tuxmaker.boeblingen.de.ibm.com>
+X-Mailer: Claws Mail 3.17.4git76 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201912210950.pcZYpwwW%lkp@intel.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: kbuild test robot <lkp@intel.com>
+On Fri, 20 Dec 2019 08:32:40 +0100
+Sven Schnelle <svens@linux.ibm.com> wrote:
 
-drivers/pci/controller/pcie-rockchip-host.c:628:1-3: WARNING: PTR_ERR_OR_ZERO can be used
+
+> > Thanks Steve to CC to me.
+> > BTW, are there any reason why we use different symbols for different
+> > glob patterns?
+> > I mean we can use 'schedul*', '*chedule' and '*sch*ule' as test
+> > glob patterns.  
+> 
+> Don't know, but i don't see a reason why we should have different patterns. If
+> there's an agreement that we prefer a common pattern i can update the patch and
+> resend.
 
 
- Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
+I think I liked trying other functions just to make sure that it was
+working to add a bit of churn to the mix (for the unlikely case that
+schedule has some fluke case).
 
-Generated by: scripts/coccinelle/api/ptr_ret.cocci
+We could just switch it all to use schedule, or we can change "aw" to
+"spin".
 
-Fixes: 069ade5dfec9 ("Merge branch 'remotes/lorenzo/pci/rockchip'")
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   b371ddb94fae82b6565020639b7db31934043c65
-commit: 069ade5dfec93dd2916a85df8b1bab2d578857bd Merge branch 'remotes/lorenzo/pci/rockchip'
-
- pcie-rockchip-host.c |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
---- a/drivers/pci/controller/pcie-rockchip-host.c
-+++ b/drivers/pci/controller/pcie-rockchip-host.c
-@@ -625,10 +625,7 @@ static int rockchip_pcie_parse_host_dt(s
- 		return PTR_ERR(rockchip->vpcie1v8);
- 
- 	rockchip->vpcie0v9 = devm_regulator_get(dev, "vpcie0v9");
--	if (IS_ERR(rockchip->vpcie0v9))
--		return PTR_ERR(rockchip->vpcie0v9);
--
--	return 0;
-+	return PTR_ERR_OR_ZERO(rockchip->vpcie0v9);
- }
- 
- static int rockchip_pcie_set_vpcie(struct rockchip_pcie *rockchip)
+-- Steve
