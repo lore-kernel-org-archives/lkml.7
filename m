@@ -2,99 +2,104 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE95C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 09:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B01FBC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 10:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A72AB2070C
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 09:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74CC321655
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 10:02:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="XMzzV+DA"
+	dkim=pass (2048-bit key) header.d=living180.net header.i=@living180.net header.b="DsC4bf8v";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JlS6C2du"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbfLUJhD (ORCPT
+        id S1726182AbfLUKCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 04:37:03 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36481 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbfLUJhD (ORCPT
+        Sat, 21 Dec 2019 05:02:40 -0500
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:39461 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725944AbfLUKCj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 04:37:03 -0500
-Received: by mail-pg1-f194.google.com with SMTP id k3so6230280pgc.3
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 01:37:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=dBfbMWcFUNEKkT+XF2R9Nkkk9o+9oNJd+GfuwIs7Eqg=;
-        b=XMzzV+DAEvuYdFW2IfGN6hmRXpdab844QSY0A5VRxc+NobACDK2jR91Iwf4tibcBZu
-         xGCw3Iqamn9piWvtKPO5+3yJQTknEB4iv+eCNJNDqorqX87ZVEtEHHEfsE+N22QC5l95
-         ysoC/ddqlN8mV4ReuhgabiUGBi0/cIyX5olCFnn4A2+5K3HlVoY8ru+CwfodXcrYxnoz
-         xmlGkmK5ddr6bSMLlJSvwS5sSYOa4mf5UeYeJf+LsA4+LHAY/o9eJtaMiEpJGt6zka5J
-         3jVVHSMnXhtZVpeVOv6fqM6wbqcW96F3MTYHEkLyqWxQyesw4bhkMyalpeBDUekYfKK+
-         qSrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dBfbMWcFUNEKkT+XF2R9Nkkk9o+9oNJd+GfuwIs7Eqg=;
-        b=NWNiuf9RzVeOljY9CCWRmGxn8H7a0jE2M36mCJsMDom7iRBnmdly+H4eErRCz+/T44
-         dSJs/huqwG6X8+Qjj20JKRN/+tcjBPK8vJIDroyAOOYOUcIYnokayrXHNbVIwuz7dlY6
-         WmJusHw/a2LaAzkiaQ3G+T2q5qUsKzzKBnuG8S/ktRLnitZlZyssZEEvspH3c7Jj4bDZ
-         8f1Xai+q/FmG4BkAFY1dmPq/POb500BpR4RjRXyp+M/fFRYbljp0g5IQ6Xpjibb16hnS
-         1k2805RjtegJX8a4RmeUNs9xT6zsVJQf24jdzA5hJgp4CGi1Y/PcWDcBEEZd+E7FvwjE
-         yL/w==
-X-Gm-Message-State: APjAAAXokxqDuKz9R3UWrjNPUgD/e4GhBPEAmwLWeP1xalA1h5+mE53N
-        8JtH3bYJcTcv65qp0gBA1qti/w==
-X-Google-Smtp-Source: APXvYqwe52fEfg6Le59QSEbm8ez4P7w2lsQ8wg16M2bcDDfAtF9Q98KiRNqGdhKoyUWw/ShGp7iOzw==
-X-Received: by 2002:aa7:8007:: with SMTP id j7mr21326091pfi.73.1576921022600;
-        Sat, 21 Dec 2019 01:37:02 -0800 (PST)
-Received: from debian ([171.49.214.76])
-        by smtp.gmail.com with ESMTPSA id a17sm13182529pjv.6.2019.12.21.01.36.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Dec 2019 01:37:01 -0800 (PST)
-Date:   Sat, 21 Dec 2019 15:06:54 +0530
-From:   Jeffrin Jose <jeffrin@rajagiritech.edu.in>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        jeffrin@rajagiritech.edu.in
-Subject: Re: [PATCH 5.4 00/80] 5.4.6-stable review
-Message-ID: <20191221093654.GA2690@debian>
-References: <20191219183031.278083125@linuxfoundation.org>
+        Sat, 21 Dec 2019 05:02:39 -0500
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id 3F66D681;
+        Sat, 21 Dec 2019 05:02:38 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Sat, 21 Dec 2019 05:02:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=living180.net;
+         h=from:subject:to:cc:message-id:date:mime-version:content-type
+        :content-transfer-encoding; s=fm1; bh=mf756YqPUpw9UW/+oFcO+1ckXv
+        2z+LXd4Xw3O6R0G5s=; b=DsC4bf8vmfRDgXGfVzYsW+QjpKWc+SqH4nCtcOEvRn
+        9QEwqkjvUtXiVm7iqOdCaEdNY7j3AadtSURm0uDVyZ4F6zgeX5JtaVXhXj5hFO97
+        5HyA1s9fffQTUA5YlZyoFJ5LQReux9GGegqSQfcYBjNB5xNGg/Ag7I6m8FMBc9TT
+        h4qrKryGg7v2irbiKT1LrCMSJVAlRN8vowSUBVDfHRPfb6z6qHSIuyHNNQcQbFZs
+        f4LKjJZDrv3QwmkkRTXy6IrhPIsAg5yIflR7xg/zNjrkpsIYP2Pt9T9iXTFMTq8C
+        3lLdL9Aknp0N5DUKuKNXF7YUxi1j3GD6Ufp1pY30G6YA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:message-id:mime-version:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=mf756Y
+        qPUpw9UW/+oFcO+1ckXv2z+LXd4Xw3O6R0G5s=; b=JlS6C2dum9PdULDRLAWokZ
+        V5vtHVnK/bJWNNUSF6T+2kmMI+CkvPM9hIzwvw0Ulkf3tNo+OhlL+/nPyBarK0J0
+        WgjTPGUHu10lBzvZmgvxjznWT8tpDFZTIPuyhOUraodMV4zpqnSjtCGH+5iFh38U
+        wnw8x+zIZZxBfcTwH7iwJJs/Wpq7enkf8a03gdSndIhm8+oR718pyKlKwvhaoLBe
+        YLETwZxuXqC0nmp3R9Q7tjzurvV+7wKLDSZ0dywN3PVYrpGb1SrrIseoJyyQH785
+        UKXzUR1yhASPTCowuxILnbbTic9R6w8EqM7KpXPLDIWwqPAvWMf/RQNXtzKEZzBQ
+        ==
+X-ME-Sender: <xms:ve39XT52BArQOBl0uR7NLQzah9aJuA-J_WcWQR1-BArC0Kpze5xmCw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdduhedgudduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffuvffkffgfgggtgfesthekredttdefjeenucfhrhhomhepffgrnhhivghl
+    ucfjrghrughinhhguceoughhrghrughinhhgsehlihhvihhnghdukedtrdhnvghtqeenuc
+    fkphepudejfedrudelledrudduhedrvdegjeenucfrrghrrghmpehmrghilhhfrhhomhep
+    ughhrghrughinhhgsehlihhvihhnghdukedtrdhnvghtnecuvehluhhsthgvrhfuihiivg
+    eptd
+X-ME-Proxy: <xmx:ve39XViU8MPTwiCvNGQvRQtrLvLDgrs-lNCorTEaIwKJBRXJ6E9NBw>
+    <xmx:ve39XeGTG_D1EhCNhwDoCxwE-ySzZh86yZHGS7B0H-z1YRAQmIqEFA>
+    <xmx:ve39XaSzBaS877-V6w89PohpkcHkOpuBS-z-FlDQoLh7IR9EF-sPkg>
+    <xmx:ve39XYzRCg6qWB820pMNg0EUTCs_-7ua-vOaSNwJ-gds-_HFtux3fw>
+Received: from [0.0.0.0] (unknown [173.199.115.247])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A6B0D8005C;
+        Sat, 21 Dec 2019 05:02:35 -0500 (EST)
+From:   Daniel Harding <dharding@living180.net>
+Subject: [5.3 Regression] x86/ioapic change causes suspend problem
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Message-ID: <6f3101a3-8404-2a6a-b2c1-d6b2e4179938@living180.net>
+Date:   Sat, 21 Dec 2019 12:02:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191219183031.278083125@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 07:33:52PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.6 release.
-> There are 80 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 21 Dec 2019 18:24:44 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.6-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
+Over the past few weeks I've been experiencing problems with 
+suspend/hybrid sleep on my laptop (a Clevo N240BU, Intel Core 
+i7-7500U).  Instead of the suspend process completing normally, the 
+computer hangs with a blank screen and the CPU fan spinning above idle.  
+I have to forcibly power off the computer to get it to turn off.  If I 
+invoke hybrid sleep, the hibernation image is intact and I am able to 
+resume from that after powering the computer back on.
 
-hello ,
+I bisected the issue, and traced it to commit 
+dfe0cf8b51b07e56ded571e3de0a4a9382517231.  Before that commit, suspend 
+works reliably, but afterward it hangs most of the time.  I verified 
+that the problem still exists in version 5.4.5, but have not tested the 
+latest master.
 
-Typical kernel configuration on my laptop has no new errors from "dmesg -l err"
+If there is any more information that would be useful or if I can help 
+to resolve this issue in any way, please let me know.
 
---
-software engineer
-rajagiri school of engineering and technology
+Regards,
 
+Daniel Harding
