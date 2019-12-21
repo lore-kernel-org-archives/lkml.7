@@ -2,80 +2,118 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 244A8C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 08:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADABC2D0D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 08:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF013206D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 08:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E8A0206D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 08:43:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h2L5Hfmv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbfLUInE (ORCPT
+        id S1726323AbfLUInR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 03:43:04 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:41957 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbfLUInD (ORCPT
+        Sat, 21 Dec 2019 03:43:17 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:44061 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbfLUInR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 03:43:03 -0500
-Received: by mail-il1-f197.google.com with SMTP id k9so9582323ili.8
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 00:43:01 -0800 (PST)
+        Sat, 21 Dec 2019 03:43:17 -0500
+Received: by mail-il1-f194.google.com with SMTP id z12so10016839iln.11;
+        Sat, 21 Dec 2019 00:43:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zOw1yXDHuAoD3Kc1PWQqOf8j8YrDutWX5kRyO7Mss4U=;
+        b=h2L5Hfmvy1e383vZXY/Uf95l/jjjw7B683GAwoSUYotqjNgmDAc2xOiOz9Fg5x1L+t
+         dF4kDHkoQH/8cBz9/I2Zk/J/zvL53i/sMpJDZ/7EQEw9UrcsgNx/dlVwHRLxcZAgExWG
+         wYNFyWL/aM1sBjKCLjG9nMybZbueHleyN9e2f7tboSWCX2OKLKtyOGRqxNlsY0N1iWBu
+         R0wtB3eomjuaKsX8uOxlc+CAdQ6HyRVYSrWGDlWYoRBqILJkJG/IojdWQqvqChLq/BCz
+         RKkGroylvhdoYNl7b3kqAKArBg3aoI0JMkTUnUziLXaCUF7bkvY8yly9wZGmKb8P7i1Y
+         MWwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=xU44G83IDVYmN3c7FdaPJTALb5/aKinaCWXRoF+LTv0=;
-        b=r5bticAy9ok18NuN6bRoKxNZioXAoF/gguPjjZ15grIws5N2GGBRby6JptYpecK4W+
-         yR0BxZMe3p+8hiVic9WVJ/k7mVWxSAqNNTMjPiTZbxcF9043nOQE7o2IcGfWaoasWyZG
-         ESMrz+3goC4VK60zAoM8u5KTGuV6JNcTYKmQ+uD9B6AmNQ2ja5AVBGMRyEvcmiADnsT9
-         yWHhdzxBe7lc1oAyUi65JJZJmg90IXnRE3/rdrNMQMarMLytO2HHwIVRq/unx/A1IP2M
-         DtdrPkDmXXAVJmJIRjS2VtlryXhd+nHiAHsrB6oYVHckx/s9C6aMz8T86k2DjPQxFoUu
-         5RcQ==
-X-Gm-Message-State: APjAAAWbz3A9653racU994z4t0wMPwFM+6H7N7a1W8m3ddEQyyag3YCL
-        Av3+90CS0f2A56e8f4YfkMru7e0OEipHqPWOJylPcg/q6BIn
-X-Google-Smtp-Source: APXvYqyuTa0ejKszQhq4t1cDUBFdclRyWYWGgRzHUDUmQVrVTb5aXX9IU8liJ2nc0RY4emELLWHbwalTEI6xVDJ0PpVmRGT9Mtvt
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zOw1yXDHuAoD3Kc1PWQqOf8j8YrDutWX5kRyO7Mss4U=;
+        b=sROY7dq1TQclU7ZyQjXqwSZJcWra45MDP6vm3Z076qMC9xXN2OVz0yH3JmoNcgfzfR
+         7/aEa5UC6I2DWcu6BjnEhhs5RbjYXz7AUGPkCOhqzFbP1KTkv3yO7kHVGRi62RV4AEXv
+         tw5ezeJUx+DqPzJTpqtkY9WS3gYNukrVeYLTtzRutFNrt28qV3iloDchu6DzdfMCGu0O
+         lKRAZ1xwnXXd6zF1mIL6adYguot3xUjMmXrLisTG5YawK/zlwQjCVK2iumiwEKc7j2Cs
+         y2RPUB2aGMKghcAImPuwfXDDrOE3r+pmybc02nTJBafa+lhsR11Sz/XWR/Lb5ih4B3Vx
+         bChA==
+X-Gm-Message-State: APjAAAVK4ojIRJsJ46fSjdIegwBy0pUI0uxqnanenckPRD99wET/bRJw
+        0FIYoUGBG5+gLPB4uM5q+ixrmhbBEkgJHiDc2gU=
+X-Google-Smtp-Source: APXvYqwd35DhfzZzrtc2is3XW8PsKNSv0oBL2VDDIHfgRt92VBWDck6ESuGSxoE3vMi76YY1g6Y5WYUB1BN1AC5tvwc=
+X-Received: by 2002:a92:d5c3:: with SMTP id d3mr15993083ilq.250.1576917796474;
+ Sat, 21 Dec 2019 00:43:16 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:4407:: with SMTP id r7mr11525660ioa.160.1576917781568;
- Sat, 21 Dec 2019 00:43:01 -0800 (PST)
-Date:   Sat, 21 Dec 2019 00:43:01 -0800
-In-Reply-To: <000000000000b09d8c059a3240be@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000035eda1059a32c80f@google.com>
-Subject: Re: WARNING in percpu_ref_exit (2)
-From:   syzbot <syzbot+8c4a14856e657b43487c@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, io-uring@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20191220024936.GA380394@chrisdown.name> <20191220213052.GB7476@magnolia>
+In-Reply-To: <20191220213052.GB7476@magnolia>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Sat, 21 Dec 2019 10:43:05 +0200
+Message-ID: <CAOQ4uxgoDHLnVb9=R2LpNqEFtjx=f5K8QXQnfiziBQ+jURLh=A@mail.gmail.com>
+Subject: Re: [PATCH] fs: inode: Reduce volatile inode wraparound risk when
+ ino_t is 64 bit
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Chris Down <chris@chrisdown.name>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Fri, Dec 20, 2019 at 11:33 PM Darrick J. Wong
+<darrick.wong@oracle.com> wrote:
+>
+> On Fri, Dec 20, 2019 at 02:49:36AM +0000, Chris Down wrote:
+> > In Facebook production we are seeing heavy inode number wraparounds on
+> > tmpfs. On affected tiers, in excess of 10% of hosts show multiple files
+> > with different content and the same inode number, with some servers even
+> > having as many as 150 duplicated inode numbers with differing file
+> > content.
+> >
+> > This causes actual, tangible problems in production. For example, we
+> > have complaints from those working on remote caches that their
+> > application is reporting cache corruptions because it uses (device,
+> > inodenum) to establish the identity of a particular cache object, but
+>
+> ...but you cannot delete the (dev, inum) tuple from the cache index when
+> you remove a cache object??
+>
+> > because it's not unique any more, the application refuses to continue
+> > and reports cache corruption. Even worse, sometimes applications may not
+> > even detect the corruption but may continue anyway, causing phantom and
+> > hard to debug behaviour.
+> >
+> > In general, userspace applications expect that (device, inodenum) should
+> > be enough to be uniquely point to one inode, which seems fair enough.
+>
+> Except that it's not.  (dev, inum, generation) uniquely points to an
+> instance of an inode from creation to the last unlink.
+>
 
-commit cbb537634780172137459dead490d668d437ef4d
-Author: Jens Axboe <axboe@kernel.dk>
-Date:   Mon Dec 9 18:22:50 2019 +0000
+Yes, but also:
+There should not exist two live inodes on the system with the same (dev, inum)
+The problem is that ino 1 may still be alive when wraparound happens
+and then two different inodes with ino 1 exist on same dev.
 
-     io_uring: avoid ring quiesce for fixed file set unregister and update
+Take the 'diff' utility for example, it will report that those files
+are identical
+if they have the same dev,ino,size,mtime. I suspect that 'mv' will not
+let you move one over the other, assuming they are hardlinks.
+generation is not even exposed to legacy application using stat(2).
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1118aac1e00000
-start commit:   7ddd09fc Add linux-next specific files for 20191220
-git tree:       linux-next
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1318aac1e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1518aac1e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f183b01c3088afc6
-dashboard link: https://syzkaller.appspot.com/bug?extid=8c4a14856e657b43487c
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14b8f351e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14b51925e00000
-
-Reported-by: syzbot+8c4a14856e657b43487c@syzkaller.appspotmail.com
-Fixes: cbb537634780 ("io_uring: avoid ring quiesce for fixed file set  
-unregister and update")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Thanks,
+Amir.
