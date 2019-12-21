@@ -2,148 +2,105 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6677EC2D0D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 18:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F103AC2D0D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 18:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F92D2063A
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 18:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4FEF2063A
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 18:44:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BrE51O8d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbfLUSkv (ORCPT
+        id S1726976AbfLUSn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 13:40:51 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:39836 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726107AbfLUSkv (ORCPT
+        Sat, 21 Dec 2019 13:43:59 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:35022 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbfLUSn7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 13:40:51 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id E89261C24DF; Sat, 21 Dec 2019 19:40:48 +0100 (CET)
-Date:   Sat, 21 Dec 2019 19:40:47 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v5 3/3] leds: trigger: implement a tty trigger
-Message-ID: <20191221184047.GC32732@amd>
-References: <20191219093947.15502-1-u.kleine-koenig@pengutronix.de>
- <20191219093947.15502-4-u.kleine-koenig@pengutronix.de>
+        Sat, 21 Dec 2019 13:43:59 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBLIdSNh077229;
+        Sat, 21 Dec 2019 18:43:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=UfzN2UDX4fWPogNdGu4QDs5N7abpWGeCYkezLSfi6/Y=;
+ b=BrE51O8dUAvh/5SKWowqAGILbsV9MihD+NSfBPqA31XhBcnf5Yc9yBOG5kaC76/EcNc5
+ Od16kbO7p3MPy2f4BLbT8HEefJ8mljvOlOxS9f5f1w2F8/rQ8xRBFSpTKzfYE4YqlTag
+ uq2YEm5OhMWK134eJvUmHy5a40WyEZhPN+I5X/nW2/PGNaOLxG+rk7vPweUlL+G4PpVm
+ FJOsUbMiEhjNOIclUnOLHcnxXUoJsdbuQ3TfvAo/Sj8FO8NYuxyDKNgJYWselbnmCi1G
+ 0A3BuMZeR71S3IoqXZKWymACIglJcVTykOuQ8qoQPQBZFOiOmYRCXSMB9MHfXqcmou+X 6Q== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2x1bbphj7c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 21 Dec 2019 18:43:45 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBLIhhHr103190;
+        Sat, 21 Dec 2019 18:43:45 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2x19f5khjb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 21 Dec 2019 18:43:45 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBLIhgJ9006244;
+        Sat, 21 Dec 2019 18:43:42 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 21 Dec 2019 10:43:41 -0800
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>
+Subject: Re: linux-next: Fixes tag needs some work in the scsi-mkp tree
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20191220161908.10b18dcf@canb.auug.org.au>
+Date:   Sat, 21 Dec 2019 13:43:39 -0500
+In-Reply-To: <20191220161908.10b18dcf@canb.auug.org.au> (Stephen Rothwell's
+        message of "Fri, 20 Dec 2019 16:19:08 +1100")
+Message-ID: <yq1y2v57c4k.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="2JFBq9zoW8cOFH7v"
-Content-Disposition: inline
-In-Reply-To: <20191219093947.15502-4-u.kleine-koenig@pengutronix.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9478 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912210165
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9478 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912210164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---2JFBq9zoW8cOFH7v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Stephen,
 
-Hi!
+> Fixes tag
+>
+>   Fixes: 974950710e2a ("qla2xxx: Fix stuck login session")
+>
+> has these problem(s):
+>
+>   - Target SHA1 does not exist
+>
+> Did you mean
+>
+> Fixes: ce0ba496dccf ("scsi: qla2xxx: Fix stuck login session")
 
-> +++ b/Documentation/ABI/testing/sysfs-class-led-trigger-tty
-> @@ -0,0 +1,6 @@
-> +What:		/sys/class/leds/<led>/dev
-> +Date:		Dec 2019
-> +KernelVersion:	5.6
-> +Contact:	linux-leds@vger.kernel.org
-> +Description:
-> +		Specifies $major:$minor of the triggering tty
+Fixed, thanks!
 
-Ok, sounds reasonable.
-
-> +static ssize_t dev_store(struct device *dev,
-> +			 struct device_attribute *attr, const char *buf,
-> +			 size_t size)
-> +{
-> +	struct ledtrig_tty_data *trigger_data =3D led_trigger_get_drvdata(dev);
-> +	struct tty_struct *tty;
-> +	unsigned major, minor;
-> +	int ret;
-> +
-> +	if (size =3D=3D 0 || (size =3D=3D 1 && buf[0] =3D=3D '\n')) {
-> +		tty =3D NULL;
-> +	} else {
-> +		ret =3D sscanf(buf, "%u:%u", &major, &minor);
-> +		if (ret < 2)
-> +			return -EINVAL;
-
-If user writes 1:2:badparsingofdata into the file, it will pass, right?
-
-> +		tty =3D tty_kopen_shared(MKDEV(major, minor));
-> +		if (IS_ERR(tty))
-> +			return PTR_ERR(tty);
-> +	}
-
-Do you need to do some kind of tty_kclose()? What happens if the
-device disappears, for example because the USB modem is unplugged?
-
-> +static void ledtrig_tty_work(struct work_struct *work)
-> +{
-> +	struct ledtrig_tty_data *trigger_data =3D
-> +		container_of(work, struct ledtrig_tty_data, dwork.work);
-> +	struct serial_icounter_struct icount;
-> +	int ret;
-> +
-> +	if (!trigger_data->tty) {
-> +		led_set_brightness(trigger_data->led_cdev, LED_OFF);
-> +		return;
-> +	}
-> +
-> +	ret =3D tty_get_icount(trigger_data->tty, &icount);
-> +	if (ret)
-> +		return;
-> +
-> +	if (icount.rx !=3D trigger_data->rx ||
-> +	    icount.tx !=3D trigger_data->tx) {
-> +		unsigned long delay_on =3D 100, delay_off =3D 100;
-> +
-> +		led_blink_set_oneshot(trigger_data->led_cdev,
-> +				      &delay_on, &delay_off, 0);
-> +
-> +		trigger_data->rx =3D icount.rx;
-> +		trigger_data->tx =3D icount.tx;
-> +	}
-
-Since you are polling this, anyway, can you just manipulate brightness
-directly instead of using _oneshot()? _oneshot() will likely invoke
-another set of workqueues.
-
-LED triggers were meant to operate directly from the events, not based
-on statistics like this.
-
-Best regards,
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---2JFBq9zoW8cOFH7v
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl3+Zy8ACgkQMOfwapXb+vJ0dgCeLqD9SCu9m3syOgPa93HY9ffE
-mUEAoJY9gjrZcyazwvSyPr0hxWpq8WMN
-=ip+U
------END PGP SIGNATURE-----
-
---2JFBq9zoW8cOFH7v--
+-- 
+Martin K. Petersen	Oracle Linux Engineering
