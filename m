@@ -2,102 +2,78 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAB8C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 03:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7BAC43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 03:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 967F120866
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 03:10:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DWwSVYGt"
+	by mail.kernel.org (Postfix) with ESMTP id 75904206CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 03:14:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbfLUDKd (ORCPT
+        id S1726750AbfLUDOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 22:10:33 -0500
-Received: from ozlabs.org ([203.11.71.1]:45603 "EHLO ozlabs.org"
+        Fri, 20 Dec 2019 22:14:40 -0500
+Received: from mga18.intel.com ([134.134.136.126]:11326 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726736AbfLUDKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 22:10:32 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47frGD6szlz9sPV;
-        Sat, 21 Dec 2019 14:10:28 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1576897829;
-        bh=bIb/iLNeJrBgQtcc7XEvpTV4Uk42F9Zucml+Wj869GY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=DWwSVYGtYQ4mzhAVFWQCEHKgcjkJ8lOcMhr1OgzSVUpn1jy4wUt11SaF+U+22Ymu+
-         /oIggwdgVONGsvlZDVGhpe6UY+28WxmtO4QEJP2LANBigr3gywwrI1BqHA8pZdPwkM
-         BrjZPkyTf95gfJxi4JFO6cyzBe6v2W0KcpeYR9U9dnTg2I3zFv5LPwBR5wjyP3bY2g
-         2pBPSzPrVVp6m5n2wAF8smF9sObRDKxu3WUWecbOtJ6eg6omEurlx2SkF703UVMLrN
-         GR41XLSRc4YDR8hJUYIaGvZXVznrarTgz2YJab7Opcl5n2GBlKmKLJLxYuHrwgQcsP
-         29xJf5cgzHrmg==
-Date:   Sat, 21 Dec 2019 14:10:19 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Adamson <andros@netapp.com>,
-        Olga Kornievskaia <kolga@netapp.com>
-Subject: linux-next: Signed-off-by missing for commit in the nfsd tree
-Message-ID: <20191221141019.05f0f619@canb.auug.org.au>
+        id S1726537AbfLUDOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 22:14:39 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Dec 2019 19:14:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,338,1571727600"; 
+   d="scan'208";a="222611031"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.239.195.247]) ([10.239.195.247])
+  by fmsmga001.fm.intel.com with ESMTP; 20 Dec 2019 19:14:35 -0800
+Subject: Re: [PATCH v4 0/7] Use 1st-level for IOVA translation
+To:     "Liu, Yi L" <yi.l.liu@intel.com>, Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     "Raj, Ashok" <ashok.raj@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>, Peter Xu <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20191219031634.15168-1-baolu.lu@linux.intel.com>
+ <A2975661238FB949B60364EF0F2C25743A13A364@SHSMSX104.ccr.corp.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <434d7478-1ed3-1962-ff9d-1b37d0c44b9c@linux.intel.com>
+Date:   Sat, 21 Dec 2019 11:14:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/flwicFQfaG_QG6/j=T4e76X";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <A2975661238FB949B60364EF0F2C25743A13A364@SHSMSX104.ccr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/flwicFQfaG_QG6/j=T4e76X
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi again,
 
-Hi all,
+On 2019/12/20 19:50, Liu, Yi L wrote:
+> 3) Per VT-d spec, FLPT has canonical requirement to the input
+> addresses. So I'd suggest to add some enhance regards to it.
+> Please refer to chapter 3.6:-).
+> 
+> 3.6 First-Level Translation
+> First-level translation restricts the input-address to a canonical address (i.e., address bits 63:N have
+> the same value as address bit [N-1], where N is 48-bits with 4-level paging and 57-bits with 5-level
+> paging). Requests subject to first-level translation by remapping hardware are subject to canonical
+> address checking as a pre-condition for first-level translation, and a violation is treated as a
+> translation-fault.
 
-Commit
+It seems to be a conflict at bit 63. It should be the same as bit[N-1]
+according to the canonical address requirement; but it is also used as
+the XD control. Any thought?
 
-  51100d2b87cb ("NFSD generalize nfsd4_compound_state flag names")
-
-is missing a Signed-off-by from its author.
-
-Commits
-
-  ce0887ac96d3 ("NFSD add nfs4 inter ssc to nfsd4_copy")
-  b9e8638e3d9e ("NFSD: allow inter server COPY to have a STALE source serve=
-r fh")
-  51100d2b87cb ("NFSD generalize nfsd4_compound_state flag names")
-  b7342204253a ("NFSD check stateids against copy stateids")
-  624322f1adc5 ("NFSD add COPY_NOTIFY operation")
-  51911868fc62 ("NFSD COPY_NOTIFY xdr")
-  84e1b21d5ec4 ("NFSD add ca_source_server<> to COPY")
-  af76fc6c158d ("NFSD fill-in netloc4 structure")
-
-are missing a Signed-off-by from their committers.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/flwicFQfaG_QG6/j=T4e76X
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl39jRsACgkQAVBC80lX
-0GwwSgf/Yc43/i1yIQRAsDzsafHg44AkwO+VwQThcj0Ht0IDLoAJmCrDqGGDfboi
-qUysNIWEG1jwq9K6Y0MeoatCEi5HFaaam0QahIQjP0xE6GtCrDNwwSihJtl6CSg6
-EGXYV8bQCEFn5PSdyeid6+U3aywSU/0oY6f2HFvTzSRRlKfzY3Xc2JNZXcgu0FMO
-hRlxf3HaDkYAfB07ZrSUyp8VdOHBsHErrDFdolUaH5mSfPB6lvQfnvKxoBaGIxG8
-Xo9Zetkz4CdKq89tt4xWWrniOdhD3majAuRjGcU+p0pIo3pVotwvVXulAJhpauum
-iXR5PKCBc0zuH9b/fmW6gRaCbYZilA==
-=tEWG
------END PGP SIGNATURE-----
-
---Sig_/flwicFQfaG_QG6/j=T4e76X--
+Best regards,
+baolu
