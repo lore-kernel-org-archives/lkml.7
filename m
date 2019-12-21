@@ -2,119 +2,89 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCA3C43603
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 07:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA24C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 07:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14E5121927
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 07:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B8AC206EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 07:17:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="cqqFjOcc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726074AbfLUHKF (ORCPT
+        id S1726087AbfLUHRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 02:10:05 -0500
-Received: from [167.172.186.51] ([167.172.186.51]:39792 "EHLO shell.v3.sk"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725774AbfLUHKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 02:10:04 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 9D84DDFCD4;
-        Sat, 21 Dec 2019 07:10:05 +0000 (UTC)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id TKdS04iwZrAD; Sat, 21 Dec 2019 07:10:03 +0000 (UTC)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id C8622DFCD3;
-        Sat, 21 Dec 2019 07:10:03 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id iOjmmQTgDlxz; Sat, 21 Dec 2019 07:10:03 +0000 (UTC)
-Received: from furthur.lan (unknown [109.183.109.54])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 4F22EDFCD0;
-        Sat, 21 Dec 2019 07:10:03 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Konrad Rzeszutek Wilk <konrad@kernel.org>
-Cc:     Peter Jones <pjones@redhat.com>, linux-kernel@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: [RESEND PATCH] iscsi_ibft: Don't limits Targets and NICs to two
-Date:   Sat, 21 Dec 2019 08:09:56 +0100
-Message-Id: <20191221070956.268321-1-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.24.1
+        Sat, 21 Dec 2019 02:17:13 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:64701 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725774AbfLUHRN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Dec 2019 02:17:13 -0500
+X-UUID: bbd62af5328e47f8bcbaee64d092f4f0-20191221
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=6a1RKfO0AH2bkibQkHqHEE9QU8OujxhL2WQH1gq5fq4=;
+        b=cqqFjOccVxh6YQ/wcKv4ytO37RDX6T1qtnzbbrv3V7O3rKPnpQcI1Wwk32mnJxB49Qz3O4gZYIPflkviRyX2WvBBIoACxK/WgHJqctcqBbid4Dl4I3/dJOR6HebBcJw3gNsar9+hRCGy/Gx+x9aQlDe7Pj4chpn1PdFERl06pLw=;
+X-UUID: bbd62af5328e47f8bcbaee64d092f4f0-20191221
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <ryder.lee@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 367908377; Sat, 21 Dec 2019 15:17:04 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sat, 21 Dec 2019 15:17:07 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sat, 21 Dec 2019 15:16:20 +0800
+From:   Ryder Lee <ryder.lee@mediatek.com>
+To:     Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+CC:     <linux-wireless@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>
+Subject: [PATCH] mt76: mt7615: fix MT7615_CFEND_RATE_DEFAULT value
+Date:   Sat, 21 Dec 2019 15:17:00 +0800
+Message-ID: <373ef6c1a4a0252cc21dde3f08e618a62629ba38.1576911997.git.ryder.lee@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to iSCSI Boot Firmware Table Version 1.03 [1], the length of
-the control table is ">=3D 18", where the optional expansion structure
-pointer follow the mandatory ones. This allows for more than two NICs
-and Targets.
-
-[1] ftp://ftp.software.ibm.com/systems/support/bladecenter/iscsi_boot_fir=
-mware_table_v1.03.pdf
-
-Let's enforce the minimum length of the control structure instead
-instead of limiting it to the smallest allowed size.
-
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- drivers/firmware/iscsi_ibft.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/firmware/iscsi_ibft.c b/drivers/firmware/iscsi_ibft.=
-c
-index 7e12cbdf957cc..96758b71a8db8 100644
---- a/drivers/firmware/iscsi_ibft.c
-+++ b/drivers/firmware/iscsi_ibft.c
-@@ -104,6 +104,7 @@ struct ibft_control {
- 	u16 tgt0_off;
- 	u16 nic1_off;
- 	u16 tgt1_off;
-+	u16 expansion[0];
- } __attribute__((__packed__));
-=20
- struct ibft_initiator {
-@@ -235,7 +236,7 @@ static int ibft_verify_hdr(char *t, struct ibft_hdr *=
-hdr, int id, int length)
- 				"found %d instead!\n", t, id, hdr->id);
- 		return -ENODEV;
- 	}
--	if (hdr->length !=3D length) {
-+	if (length && hdr->length !=3D length) {
- 		printk(KERN_ERR "iBFT error: We expected the %s " \
- 				"field header.length to have %d but " \
- 				"found %d instead!\n", t, length, hdr->length);
-@@ -749,16 +750,16 @@ static int __init ibft_register_kobjects(struct acp=
-i_table_ibft *header)
- 	control =3D (void *)header + sizeof(*header);
- 	end =3D (void *)control + control->hdr.length;
- 	eot_offset =3D (void *)header + header->header.length - (void *)control=
-;
--	rc =3D ibft_verify_hdr("control", (struct ibft_hdr *)control, id_contro=
-l,
--			     sizeof(*control));
-+	rc =3D ibft_verify_hdr("control", (struct ibft_hdr *)control, id_contro=
-l, 0);
-=20
- 	/* iBFT table safety checking */
- 	rc |=3D ((control->hdr.index) ? -ENODEV : 0);
-+	rc |=3D ((control->hdr.length < sizeof(*control)) ? -ENODEV : 0);
- 	if (rc) {
- 		printk(KERN_ERR "iBFT error: Control header is invalid!\n");
- 		return rc;
- 	}
--	for (ptr =3D &control->initiator_off; ptr < end; ptr +=3D sizeof(u16)) =
-{
-+	for (ptr =3D &control->initiator_off; ptr + sizeof(u16) <=3D end; ptr +=
-=3D sizeof(u16)) {
- 		offset =3D *(u16 *)ptr;
- 		if (offset && offset < header->header.length &&
- 						offset < eot_offset) {
---=20
-2.24.1
+Rml4IGRlZnVhbHQgQ0ZFTkRfUkFURSBhbmQgcmVwbGFjZSBoYXJkY29kZSB2YWx1ZXMuDQoNClNp
+Z25lZC1vZmYtYnk6IFJ5ZGVyIExlZSA8cnlkZXIubGVlQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRy
+aXZlcnMvbmV0L3dpcmVsZXNzL21lZGlhdGVrL210NzYvbXQ3NjE1L2luaXQuYyAgIHwgNCArKy0t
+DQogZHJpdmVycy9uZXQvd2lyZWxlc3MvbWVkaWF0ZWsvbXQ3Ni9tdDc2MTUvbXQ3NjE1LmggfCAz
+ICsrLQ0KIDIgZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0K
+DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvbWVkaWF0ZWsvbXQ3Ni9tdDc2MTUv
+aW5pdC5jIGIvZHJpdmVycy9uZXQvd2lyZWxlc3MvbWVkaWF0ZWsvbXQ3Ni9tdDc2MTUvaW5pdC5j
+DQppbmRleCA0NDI3MzZjZWFiZTUuLjk0YTBkYzhiZmEyOCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMv
+bmV0L3dpcmVsZXNzL21lZGlhdGVrL210NzYvbXQ3NjE1L2luaXQuYw0KKysrIGIvZHJpdmVycy9u
+ZXQvd2lyZWxlc3MvbWVkaWF0ZWsvbXQ3Ni9tdDc2MTUvaW5pdC5jDQpAQCAtMzUsOCArMzUsOCBA
+QCBzdGF0aWMgdm9pZCBtdDc2MTVfbWFjX2luaXQoc3RydWN0IG10NzYxNV9kZXYgKmRldikNCiAJ
+bXQ3Nl93cihkZXYsIE1UX1RNQUNfVFJDUjEsIHZhbCk7DQogDQogCXZhbCA9IE1UX0FHR19BQ1Jf
+UEtUX1RJTUVfRU4gfCBNVF9BR0dfQUNSX05PX0JBX0FSX1JVTEUgfA0KLQkgICAgICBGSUVMRF9Q
+UkVQKE1UX0FHR19BQ1JfQ0ZFTkRfUkFURSwgMHg0OSkgfCAvKiAyNE0gKi8NCi0JICAgICAgRklF
+TERfUFJFUChNVF9BR0dfQUNSX0JBUl9SQVRFLCAweDRiKTsgLyogNk0gKi8NCisJICAgICAgRklF
+TERfUFJFUChNVF9BR0dfQUNSX0NGRU5EX1JBVEUsIE1UNzYxNV9DRkVORF9SQVRFX0RFRkFVTFQp
+IHwNCisJICAgICAgRklFTERfUFJFUChNVF9BR0dfQUNSX0JBUl9SQVRFLCBNVDc2MTVfQkFSX1JB
+VEVfREVGQVVMVCk7DQogCW10NzZfd3IoZGV2LCBNVF9BR0dfQUNSMCwgdmFsKTsNCiAJbXQ3Nl93
+cihkZXYsIE1UX0FHR19BQ1IxLCB2YWwpOw0KIA0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L3dp
+cmVsZXNzL21lZGlhdGVrL210NzYvbXQ3NjE1L210NzYxNS5oIGIvZHJpdmVycy9uZXQvd2lyZWxl
+c3MvbWVkaWF0ZWsvbXQ3Ni9tdDc2MTUvbXQ3NjE1LmgNCmluZGV4IDU1NGJkMDRkNmQ4MS4uNDg4
+MTBlZGExY2Q2IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvbWVkaWF0ZWsvbXQ3
+Ni9tdDc2MTUvbXQ3NjE1LmgNCisrKyBiL2RyaXZlcnMvbmV0L3dpcmVsZXNzL21lZGlhdGVrL210
+NzYvbXQ3NjE1L210NzYxNS5oDQpAQCAtNDAsNyArNDAsOCBAQA0KICNkZWZpbmUgTVRfQ0hGUkVR
+X0RCRENfSURYCUJJVCg2KQ0KICNkZWZpbmUgTVRfQ0hGUkVRX1NFUQkJR0VOTUFTSyg1LCAwKQ0K
+IA0KLSNkZWZpbmUgTVQ3NjE1X0NGRU5EX1JBVEVfREVGQVVMVAkweDY5IC8qIGNoaXAgZGVmYXVs
+dCAoMjRNKSAqLw0KKyNkZWZpbmUgTVQ3NjE1X0JBUl9SQVRFX0RFRkFVTFQJCTB4NGIgLyogT0ZE
+TSA2TSAqLw0KKyNkZWZpbmUgTVQ3NjE1X0NGRU5EX1JBVEVfREVGQVVMVAkweDQ5IC8qIE9GRE0g
+MjRNICovDQogI2RlZmluZSBNVDc2MTVfQ0ZFTkRfUkFURV8xMUIJCTB4MDMgLyogMTFCIExQLCAx
+MU0gKi8NCiANCiBzdHJ1Y3QgbXQ3NjE1X3ZpZjsNCi0tIA0KMi4xOC4wDQo=
 
