@@ -2,119 +2,79 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA015C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 17:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9744FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 17:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1B9820725
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 17:37:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sIalyB7F"
+	by mail.kernel.org (Postfix) with ESMTP id 701A92072B
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 17:49:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbfLURhm (ORCPT
+        id S1727278AbfLURtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 12:37:42 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43185 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726114AbfLURhl (ORCPT
+        Sat, 21 Dec 2019 12:49:03 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:55030 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727015AbfLURtD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 12:37:41 -0500
-Received: by mail-pf1-f196.google.com with SMTP id x6so5900090pfo.10;
-        Sat, 21 Dec 2019 09:37:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=L9fyvYyivbBa5nndc7noKKMmXslny54OD1MjJbuNarE=;
-        b=sIalyB7FZZ+F+NMXsRx+5f9uLho0AUi3hMtJnZ7fRMMWhNgEyhEgdxRhV8f2o5IWhI
-         WkEhCc4n0Oodbm1E6hpebzp8XQHZPX9eIKG7LyyHwkuRBHjbkcEgsmryYZLKWwHOppEH
-         oU80GxbureGkjaaHFfiTNdbqQhDDFAAsFg7lgRnof+fBtjqfCZbaUQA+EqFVa4sBsWl2
-         TvsDKI5OsKsW/suwXNoeJv3EXx8FvpUAA/BPRu2BABlx2UrkOAtvpvwoTq3Y22DaX+7q
-         LP18XD4PugQ5r+SgY01/vfkizSqnC2gNX6CWOY5kWMZSorfxNwa242M4YhsgK+dDQJiK
-         OvhQ==
+        Sat, 21 Dec 2019 12:49:03 -0500
+Received: by mail-il1-f198.google.com with SMTP id t4so10487135ili.21
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 09:49:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=L9fyvYyivbBa5nndc7noKKMmXslny54OD1MjJbuNarE=;
-        b=GEZ40a6QhZctilPBf9BFGaozgY49HZDijcx3Yrahrx3CaWzifjnysRENOgLgHTaQfN
-         jYHcx5hm/QXB4ZyARXHrlGZa42XOHVyLMXvvqXxbClscBGtJaMmhTiknRpnU23jzMoKk
-         +AYLw6TF8+udTXMBCUSIRh3A+5g1na74BWUN1aDIonX1uTMyite9I6fa3a/LjPhG2iDt
-         9d1jWbdA574lREeIzmKy583FoDEyGtcSH+XKB1EFfpccF0n7R02tQh8IieCxMWHS/9Cq
-         UWeWcXa6IOKsEbl8biVv0uSeshBCLHqaGuipmgFYh/oultjl5Kgxoyc/CKyXQ1Y4ZVi6
-         Niqw==
-X-Gm-Message-State: APjAAAWRhpxMWKpLYYDI1/Croy0Vb3YI6LRKsp5WhVCELRo7YWBu8qer
-        2RKl52EkZ26xyAgTtoKhblU=
-X-Google-Smtp-Source: APXvYqyXxyFHn14Ls5Uip9ujwcZ0DlZpOxupxXFamGQQljUfbdjRdLMbzW5ZmZ7jD9ApqYdXlPxIXw==
-X-Received: by 2002:a63:e545:: with SMTP id z5mr21608990pgj.209.1576949860845;
-        Sat, 21 Dec 2019 09:37:40 -0800 (PST)
-Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
-        by smtp.gmail.com with ESMTPSA id u5sm16826904pfm.115.2019.12.21.09.37.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 21 Dec 2019 09:37:40 -0800 (PST)
-From:   Yangtao Li <tiny.windzz@gmail.com>
-To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH] thermal: fix indentation in makefile
-Date:   Sat, 21 Dec 2019 17:37:37 +0000
-Message-Id: <20191221173737.30906-1-tiny.windzz@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=GshsWrdoEPyx2vd7d7UXajSCgogocC5OTxKPrWDtn2k=;
+        b=Ef5L888kkXV575so9vu0tN2nA/oIT2FT/Z0u51wGUvGoExeP3+AhW+kfTIcf1JL0+D
+         yc6y0UnvxoAhWE0H/AxUgDInsWhKi/JVZht+2xTGzduPICmjg2MMReAXVIFNPOaG8LVw
+         6UMNQx0+iurYRmJuCzD6MJB3RjLqx3+27FOgiDV3iFq6rEGe7pr0FxL0x3ykQtseFMbu
+         f1EyCOaFnZ8t4vPlvsKOXFIoimjSLXeRwhrofWrd53aBnhnJ2/bhi1uQwluo3OdO9gLq
+         CzasbyRshyraWcYbip+ZQZRShFEdX4srvgtEpFn/Q4lMIedxfTT2qqmJc7dJ/fVcAoPn
+         BKXA==
+X-Gm-Message-State: APjAAAWT3cTbPqd2LiQ9SrO0GKfltFyHYIEMtmmXx6Exqgwc5d+qvYdv
+        S45ygI1gWXNEr/a+St1a1NJYYcO8G89/JN78hfaRq7EOZgq4
+X-Google-Smtp-Source: APXvYqyCKPkUw/hvhEZzXqoyo1tTaKHhSZzOInzWI8gOHUFYW5HjZUeSJEoBRod5KvA94zqYvimn+I2NEHvJijo6waweNFndE35n
+MIME-Version: 1.0
+X-Received: by 2002:a92:d809:: with SMTP id y9mr18895833ilm.261.1576950541498;
+ Sat, 21 Dec 2019 09:49:01 -0800 (PST)
+Date:   Sat, 21 Dec 2019 09:49:01 -0800
+In-Reply-To: <00000000000031376f059a31f9fb@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000dac3b1059a3a684b@google.com>
+Subject: Re: WARNING: ODEBUG bug in io_sqe_files_unregister
+From:   syzbot <syzbot+6bf913476056cb0f8d13@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, io-uring@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To unify code style.
+syzbot has bisected this bug to:
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
----
- drivers/thermal/Makefile | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+commit cbb537634780172137459dead490d668d437ef4d
+Author: Jens Axboe <axboe@kernel.dk>
+Date:   Mon Dec 9 18:22:50 2019 +0000
 
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index baeb70bf0568..ab9389bc42b2 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -5,7 +5,7 @@
- 
- obj-$(CONFIG_THERMAL)		+= thermal_sys.o
- thermal_sys-y			+= thermal_core.o thermal_sysfs.o \
--					thermal_helpers.o
-+				   thermal_helpers.o
- 
- # interface to/from other layers providing sensors
- thermal_sys-$(CONFIG_THERMAL_HWMON)		+= thermal_hwmon.o
-@@ -25,11 +25,11 @@ thermal_sys-$(CONFIG_CPU_THERMAL)	+= cpu_cooling.o
- thermal_sys-$(CONFIG_CLOCK_THERMAL)	+= clock_cooling.o
- 
- # devfreq cooling
--thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
-+thermal_sys-$(CONFIG_DEVFREQ_THERMAL)	+= devfreq_cooling.o
- 
- # platform thermal drivers
- obj-y				+= broadcom/
--obj-$(CONFIG_THERMAL_MMIO)		+= thermal_mmio.o
-+obj-$(CONFIG_THERMAL_MMIO)	+= thermal_mmio.o
- obj-$(CONFIG_SPEAR_THERMAL)	+= spear_thermal.o
- obj-$(CONFIG_ROCKCHIP_THERMAL)	+= rockchip_thermal.o
- obj-$(CONFIG_RCAR_THERMAL)	+= rcar_thermal.o
-@@ -49,9 +49,9 @@ obj-$(CONFIG_TI_SOC_THERMAL)	+= ti-soc-thermal/
- obj-y				+= st/
- obj-$(CONFIG_QCOM_TSENS)	+= qcom/
- obj-y				+= tegra/
--obj-$(CONFIG_HISI_THERMAL)     += hisi_thermal.o
-+obj-$(CONFIG_HISI_THERMAL)	+= hisi_thermal.o
- obj-$(CONFIG_MTK_THERMAL)	+= mtk_thermal.o
- obj-$(CONFIG_GENERIC_ADC_THERMAL)	+= thermal-generic-adc.o
- obj-$(CONFIG_ZX2967_THERMAL)	+= zx2967_thermal.o
- obj-$(CONFIG_UNIPHIER_THERMAL)	+= uniphier_thermal.o
--obj-$(CONFIG_AMLOGIC_THERMAL)     += amlogic_thermal.o
-+obj-$(CONFIG_AMLOGIC_THERMAL)	+= amlogic_thermal.o
--- 
-2.17.1
+     io_uring: avoid ring quiesce for fixed file set unregister and update
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10eadc56e00000
+start commit:   7ddd09fc Add linux-next specific files for 20191220
+git tree:       linux-next
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=12eadc56e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=14eadc56e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f183b01c3088afc6
+dashboard link: https://syzkaller.appspot.com/bug?extid=6bf913476056cb0f8d13
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15653c3ee00000
+
+Reported-by: syzbot+6bf913476056cb0f8d13@syzkaller.appspotmail.com
+Fixes: cbb537634780 ("io_uring: avoid ring quiesce for fixed file set  
+unregister and update")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
