@@ -2,158 +2,102 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 836FAC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 16:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0768C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 16:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57D2420725
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 16:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9192D2070C
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 16:38:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AjOhXEJD"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="qc1zHw+V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbfLUQWE (ORCPT
+        id S1727130AbfLUQic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 11:22:04 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:55267 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbfLUQWD (ORCPT
+        Sat, 21 Dec 2019 11:38:32 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39444 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbfLUQib (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 11:22:03 -0500
-Received: by mail-pj1-f65.google.com with SMTP id kx11so1397234pjb.4;
-        Sat, 21 Dec 2019 08:22:03 -0800 (PST)
+        Sat, 21 Dec 2019 11:38:31 -0500
+Received: by mail-pl1-f194.google.com with SMTP id g6so2486217plp.6
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 08:38:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4R50o9Q/QVb/27CP47foPm4kgwdQXbgPWO/zyAUY+90=;
-        b=AjOhXEJDNPMP/wrgRNnptbTYHwGAK6hHnqpZJCxUZUfHOJoRLEOkJAImSBuoqAPxXn
-         /576D8uVSTB9a+V4T5xrMZnLRrJuK6+DKt1AY4J6STcwYbm4nmjiF4HTdUy/0Ps2ToB0
-         kvBCIvpWxigroo4sVJRABmLOrJYvddqQqoGFDe56LG1GcyPncAS9ux9ZNI85ja1pAsZs
-         2tjDGiE/bE4dhelGVdNYBWeCZIX3FR6p/xGnwcYzCS6oCSYZqCVmLjBgGh7txVIsH1+y
-         aFga20o+4oevoedsA0x9tIcLPm0kQppU3+0AxyxuqsO7F6cqkSIUGpkS2vhymAQjC6+g
-         sMnA==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FFdVAvdSfIfaMK6QeKBxjHAHUu1BybZ/Mc92Cm10RCM=;
+        b=qc1zHw+VW6fvtAdMa1rHvDqyDHNd7+Q+Y8y+wIrl7sk+MgQnejY+fIYMCUcSeTd7TC
+         KTJhjPoRPafvuFIwNcCRbVP5ljKF+ZjNubeTXRtUYK51TGUAze1oEf3lu8wW3o6G6j5G
+         +T/cnQFh042QJrG0cDWnoXEfqb6fi2LlSGso2e203JfGnk3Byl/lNlgBIZ22xbCSVoOV
+         bws01i7D+G1Ux8T5IxBEYuGLoquSF3r1CONYX1YA2/kfEfK2fuM49aJIknkZYHwSw04z
+         ZJMcMixdpg3Ms3It1fWIkBqo0lWRH9H1S50tulab9b9DycNFGC8bbBzCYPzXF31nByfA
+         VvTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4R50o9Q/QVb/27CP47foPm4kgwdQXbgPWO/zyAUY+90=;
-        b=KHmcP9NKr67odibXw9OoWGEM2VxvmTjiEXi7XJ9VRxhRlyg6SA7EWYA/YrVGpNmh9m
-         L9wySHpCSkwYuvFcTltUug7IFeJsvdhpYeE8eJJcEiq5BT4AJ9VAq0EG+1KFhRlkJMyh
-         bliVpK3OO9fglYw/P8+VKIdAVszEJnn1k8A5240PuTWu9R0syIg2I+6dlKZbEu+k4D01
-         4EFtj4EY6cxBvOiYkwafaygZ/J7t4C4LdKZ96G98qKndMOWz29MnKVxqjkqXGidIsnu8
-         i39iCULSvgyPXhscb9kLysF8J2sHTzmEzToZsXGjv5l06Dnz9BE8hIFmAqNofDW9bJTx
-         aung==
-X-Gm-Message-State: APjAAAWByIUU25h9JEWO1ZPtgMq/5sX7XjFnbF7A7QSApZQfk7ha1gjQ
-        xIUFPbcvagMEXbBkhIkZRbc=
-X-Google-Smtp-Source: APXvYqw2SMp+9K0gAxuviJ2DVsRsv2yXKZ3IIL5C8oC/k4t7sz+XNein9xActbMxq1yHVMhsMD7NlQ==
-X-Received: by 2002:a17:90a:b906:: with SMTP id p6mr22906744pjr.81.1576945322822;
-        Sat, 21 Dec 2019 08:22:02 -0800 (PST)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:180::a285])
-        by smtp.gmail.com with ESMTPSA id a69sm16879243pfa.129.2019.12.21.08.22.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 21 Dec 2019 08:22:02 -0800 (PST)
-Date:   Sat, 21 Dec 2019 08:22:00 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, bpf <bpf@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] libbpf: Fix build on read-only filesystems
-Message-ID: <20191221162158.rw6xqqktubozg6fg@ast-mbp.dhcp.thefacebook.com>
-References: <20191220032558.3259098-1-namhyung@kernel.org>
- <CAEf4BzaZBSRK2M4LD-c12_2-QLa8+jpPs1E4nA9BNeUDskOMBQ@mail.gmail.com>
- <CAM9d7cg0A0+Oq5uDS6ZJNzAgFsWc-Pd30GYC0+PxEXdcxAxBKg@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FFdVAvdSfIfaMK6QeKBxjHAHUu1BybZ/Mc92Cm10RCM=;
+        b=d0o4aZIiC9woWU2kGjRIcwudE6WqEmjPcpSoYD1MnhB3Aj8XL+4D6GGH/E8wK51fav
+         sfbgXKXDipKyTogCkHhVeUcU6shEU2XoTyVjCuLFjBsUGuDxosV3Wmd7kORG8BfYp55u
+         yGmfpqFVt+0TibdhCVfMaX3buqKFJRChWA625o/kVbOcn1OdcLB8Hyz19FrLiEvqibbP
+         0uHZaYW3YBI8v/H8bhTHcKk5QqW8HU39I6rph8O7Id98nYyHaaPYbDnP+ek+PInX12Ul
+         jmKsm3sFDZXAmm3tBQzHm0wauqeWx6lYjFLRk2+4m9mXD13FfIcI0QieZio1O4xn66i4
+         zgbw==
+X-Gm-Message-State: APjAAAWKP2y2OKzscLtW+gmRY+WesgIXt6Hez5U4YpuwxYzOoDTjWxJw
+        yKmDlBEcYpEqmzCyqGKegDADWg==
+X-Google-Smtp-Source: APXvYqx6B3d6J/kSeFQHWt0/J1oq+oxxSNrQ8Lt0sfC6I92uj8HWw2/xg8PZQ5Dl4KnrpNvtH+QXaQ==
+X-Received: by 2002:a17:902:8547:: with SMTP id d7mr22316607plo.44.1576946310927;
+        Sat, 21 Dec 2019 08:38:30 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id s11sm6925925pfd.157.2019.12.21.08.38.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 21 Dec 2019 08:38:30 -0800 (PST)
+Subject: Re: [PATCH RFC v2 3/3] io_uring: batch get(ctx->ref) across submits
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Tejun Heo <tj@kernel.org>, Dennis Zhou <dennis@kernel.org>,
+        Christoph Lameter <cl@linux.com>
+References: <cover.1576944502.git.asml.silence@gmail.com>
+ <925d8fe5406779bbfa108caa3d1f9fd16e3434b5.1576944502.git.asml.silence@gmail.com>
+ <da858877-0801-34c3-4508-dabead959410@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <ff85b807-83e1-fd05-5f85-dcf465a50c11@kernel.dk>
+Date:   Sat, 21 Dec 2019 09:38:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM9d7cg0A0+Oq5uDS6ZJNzAgFsWc-Pd30GYC0+PxEXdcxAxBKg@mail.gmail.com>
-User-Agent: NeoMutt/20180223
+In-Reply-To: <da858877-0801-34c3-4508-dabead959410@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 21, 2019 at 05:25:51PM +0900, Namhyung Kim wrote:
-> Hello,
+On 12/21/19 9:20 AM, Pavel Begunkov wrote:
+> On 21/12/2019 19:15, Pavel Begunkov wrote:
+>> Double account ctx->refs keeping number of taken refs in ctx. As
+>> io_uring gets per-request ctx->refs during submission, while holding
+>> ctx->uring_lock, this allows in most of the time to bypass
+>> percpu_ref_get*() and its overhead.
 > 
-> On Sat, Dec 21, 2019 at 5:29 AM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Thu, Dec 19, 2019 at 7:26 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > I got the following error when I tried to build perf on a read-only
-> > > filesystem with O=dir option.
-> > >
-> > >   $ cd /some/where/ro/linux/tools/perf
-> > >   $ make O=$HOME/build/perf
-> > >   ...
-> > >     CC       /home/namhyung/build/perf/lib.o
-> > >   /bin/sh: bpf_helper_defs.h: Read-only file system
-> > >   make[3]: *** [Makefile:184: bpf_helper_defs.h] Error 1
-> > >   make[2]: *** [Makefile.perf:778: /home/namhyung/build/perf/libbpf.a] Error 2
-> > >   make[2]: *** Waiting for unfinished jobs....
-> > >     LD       /home/namhyung/build/perf/libperf-in.o
-> > >     AR       /home/namhyung/build/perf/libperf.a
-> > >     PERF_VERSION = 5.4.0
-> > >   make[1]: *** [Makefile.perf:225: sub-make] Error 2
-> > >   make: *** [Makefile:70: all] Error 2
-> > >
-> > > It was becaused bpf_helper_defs.h was generated in current directory.
-> > > Move it to OUTPUT directory.
-> > >
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > ---
-> >
-> > Overall nothing is obviously broken, except you need to fix up
-> > selftests/bpf's Makefile as well.
+> Jens, could you please benchmark with this one? Especially for offloaded QD1
+> case. I haven't got any difference for nops test and don't have a decent SSD
+> at hands to test it myself. We could drop it, if there is no benefit.
 > 
-> Thanks for pointing this out.  It's because bpf selftest also needs the
-> bpf_helper_defs.h right?  But I'm currently having a problem with LLVM
-> when building the selftests.  Can you help me testing the patch below?
-> (It should be applied after this patch.  Are you ok with it?)
-> 
-> 
-> >
-> > BTW, this patch doesn't apply cleanly to latest bpf-next, so please rebase.
-> >
-> > Also subject prefix should look like [PATCH bpf-next] if it's meant to
-> > be applied against bpf-next.
-> 
-> Will do.
-> 
-> Thanks
-> Namhyung
-> 
-> -----------8<-------------
-> diff --git a/tools/testing/selftests/bpf/Makefile
-> b/tools/testing/selftests/bpf/Makefile
-> index 866fc1cadd7c..897877f7849b 100644
-> --- a/tools/testing/selftests/bpf/Makefile
-> +++ b/tools/testing/selftests/bpf/Makefile
-> @@ -151,9 +151,9 @@ $(DEFAULT_BPFTOOL): force
->  $(BPFOBJ): force
->         $(MAKE) -C $(BPFDIR) OUTPUT=$(OUTPUT)/
-> 
-> -BPF_HELPERS := $(BPFDIR)/bpf_helper_defs.h $(wildcard $(BPFDIR)/bpf_*.h)
-> -$(BPFDIR)/bpf_helper_defs.h:
-> -       $(MAKE) -C $(BPFDIR) OUTPUT=$(OUTPUT)/ bpf_helper_defs.h
-> +BPF_HELPERS := $(OUTPUT)/bpf_helper_defs.h $(wildcard $(BPFDIR)/bpf_*.h)
-> +$(OUTPUT)/bpf_helper_defs.h:
-> +       $(MAKE) -C $(BPFDIR) OUTPUT=$(OUTPUT)/ $(OUTPUT)/bpf_helper_defs.h
+> This rewrites that @extra_refs from the second one, so I left it for now.
 
-The fix makes sense, but you cannot break it down into two patches.
-The selftests/bpf are absolutely essential for everyone working on bpf.
-For both developers and maintainers. You cannot break them in one patch
-and then try to fix in another.
-Please resubmit as one patch and tag the subject as [PATCH bpf].
+Sure, let me run a peak test, qd1 test, qd1+sqpoll test on
+for-5.6/io_uring, same branch with 1-2, and same branch with 1-3. That
+should give us a good comparison. One core used for all, and we're going
+to be core speed bound for the performance in all cases on this setup.
+So it'll be a good comparison.
+
+-- 
+Jens Axboe
+
