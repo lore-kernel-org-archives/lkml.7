@@ -2,182 +2,169 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 075E1C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 15:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CFAC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 15:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7E902070C
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 15:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF1432070C
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 15:04:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="WQcVneRe"
+	dkim=pass (2048-bit key) header.d=tcd-ie.20150623.gappssmtp.com header.i=@tcd-ie.20150623.gappssmtp.com header.b="neV87FDz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfLUPCx (ORCPT
+        id S1727145AbfLUPEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 10:02:53 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35856 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbfLUPCw (ORCPT
+        Sat, 21 Dec 2019 10:04:16 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:42858 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726716AbfLUPEP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 10:02:52 -0500
-Received: by mail-lf1-f66.google.com with SMTP id n12so9271684lfe.3
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 07:02:50 -0800 (PST)
+        Sat, 21 Dec 2019 10:04:15 -0500
+Received: by mail-ed1-f66.google.com with SMTP id e10so11388790edv.9
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 07:04:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=O/OH/cOpJm4HcDQq3bqmVyhEerqk2hauMDOV8HxvEFM=;
-        b=WQcVneRe46p8ZR3uXZlv+0mgx79c6+8bv2J+3KXXGvigrTkm/6SMjUKUTaib0820gh
-         CXe7VZiXtAEWoK3ALHA7umeN2Ujuiwp8A1QjmM0xqp+pF/7IstWdK1/t7vg6gINss79m
-         4FZcEpaA+yAX3+oVBoiIKDkwcpfpfzzbimn6EmiNyzWcRyj7+ixGonE7oyrJK3tE5qEx
-         2V1XHcTXkSsYr5GbxYi943zvCWc2ZO/OXjtYLc0F6x6fJP52bFsNG0PLI7eo2K89R+NN
-         tFRulX1MdfFJoB0IPLfOC/tH085qD1e3l8L7eoQDRYk+6eM8r/EbhM4TukEZaHxtbhmO
-         +tVQ==
+        d=tcd-ie.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Wrv1jKXMHqqWHNzOL/6EYVPe/DHxphPiIOsjGB9s2BI=;
+        b=neV87FDzcGxEtXMGvHrtTmbUOLtYtU+7I9MOQqfdQ+hsUXA8p8rI9n+KxmtaOLCADC
+         oqzQwM+E41sGIEhE26+tkV5wTeVqusoqBdHCsFTHLhlkaDp++P9e9+/8rjVQr/Wsf9hN
+         kPbAbKsiSsT63+7OMPlwjagzVfM0swjA056jVZJc1EqBSggoujvgAZK6bAD1VYJYtXeD
+         ft7DHsq/EkMf9BhDvmD36g1hqGBWyqNIVG1DfNnWrfT4s1zi4GMzfbjEz0QIobV6kmY1
+         laD6eUJQwGoQ0UWRg2PHTAA5VDA0M3C2Amsc74c9QymUHI36GRshkavBOusZCLhvlyeT
+         csig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=O/OH/cOpJm4HcDQq3bqmVyhEerqk2hauMDOV8HxvEFM=;
-        b=We8z7kZ2WCqhzKfeouSg9/YvsgJzE8HIsHPhBYprKCJDCXFkiZOwRVC0l5oBl4WIye
-         d3fcgfkxVlecEqWhhtWgUH33BioSMfs20qYELkyxUxokkn5kPLKp9gMmNq/15BftpgkK
-         dxIQc/OeeG+sXNh2GmYyGzZgaLWNwTEoWGHKwaWopZnnLEhxf7AVZm4375IMOuyzwbF/
-         E1h50N9Y2yXLtmAKubfzo4lzRhasoEnU6OwB9Q7QL6sF8AN2GgboUzMmnFNrmW/hGkYx
-         0Wwfw2qjLMBavJQS6cuEFgaCwnbY3CKjPY0SiPHXavxL69gfL3i/8mwqmliJ2UirrFMt
-         U9Bw==
-X-Gm-Message-State: APjAAAVjm3NGkDsDJHKLM3wnTWGhp/fvEnMoDLs3yjK5jq2KlHZThf5O
-        J6Ip9CO/PL2h7+uRpcCVTfA0U3iwbA+X6+4lUhI+
-X-Google-Smtp-Source: APXvYqxF3bHZlJxTgnAriSMNJIrrldoDx20D7oRmOZsJO+lZyhrXidRm/cN/Ek3YvsCTMn2+x5pwlr0a80+WDjihV98=
-X-Received: by 2002:a19:f701:: with SMTP id z1mr12223027lfe.13.1576940569512;
- Sat, 21 Dec 2019 07:02:49 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Wrv1jKXMHqqWHNzOL/6EYVPe/DHxphPiIOsjGB9s2BI=;
+        b=P8xjwxqGFeg/gVG9vNxc9pIUtxnYHIH+zHBlbkxoh/yyOw0CrJE91rat4AjiJQM4nt
+         YRq6o2DDbAQVV/Yiw4Uz4OdPQYa0UiyW6M3A/7yQ+eqd4f1iMQ6gfnhVeztrq+i6Wt5H
+         xuDud9dRAIGzWDIGeflglHEKAkHnIq6niiz4Tb4PsxfvpQ614r+KoJiBjaXpu4CKDqmQ
+         LSAexQktOjiXngjm+yJrM1W0v4uYkeQOe02zPv3C4CvhsxQDZ6t5V93Tvt+BkV/I3KrF
+         Yl2BVq8f9LAgkYSzAIOBUhrvYy6elkbCCFhS6Tmex+s9D8CdGH0PmsAhy4GdYo8HQBjx
+         UAPQ==
+X-Gm-Message-State: APjAAAUkXn11PhmWDuLjlwYFWVHtci7Thyd7TZsp/LJvQg5u4cMfX0ze
+        wNU5dxsGHZ5YOlvKVyB/oPAuKA==
+X-Google-Smtp-Source: APXvYqzVFV+nAZt2efpFSBwn8fHDfarT+lNLK2u/m6P0Ib5tJlSKcUyhpXmrMgKd3Rdn4f4Yf8qeow==
+X-Received: by 2002:a17:906:2e53:: with SMTP id r19mr22235209eji.306.1576940652743;
+        Sat, 21 Dec 2019 07:04:12 -0800 (PST)
+Received: from localhost.localdomain ([80.233.37.20])
+        by smtp.googlemail.com with ESMTPSA id u13sm1517639ejz.69.2019.12.21.07.04.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Dec 2019 07:04:12 -0800 (PST)
+From:   Tom Murphy <murphyt7@tcd.ie>
+To:     iommu@lists.linux-foundation.org
+Cc:     Tom Murphy <murphyt7@tcd.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org
+Subject: [PATCH 0/8] Convert the intel iommu driver to the dma-iommu api
+Date:   Sat, 21 Dec 2019 15:03:52 +0000
+Message-Id: <20191221150402.13868-1-murphyt7@tcd.ie>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <1576836441-4140-1-git-send-email-yanghui.def@gmail.com>
- <CAHC9VhTup_3LnC+i77_bC93G0GUdh1xY7JM5fbRD5_oPO9=jMA@mail.gmail.com> <CA+wXOo0Hfvmht5he5eMNZFyHsSgVV_uvBYriqMXJzU5g0rkigw@mail.gmail.com>
-In-Reply-To: <CA+wXOo0Hfvmht5he5eMNZFyHsSgVV_uvBYriqMXJzU5g0rkigw@mail.gmail.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Sat, 21 Dec 2019 10:02:38 -0500
-Message-ID: <CAHC9VhQ3ybWPQdAebwk=hz=OJwzusYYK_A9eAEnSgUE1uyG3Gg@mail.gmail.com>
-Subject: Re: [PATCH] netnode.c : fix sel_netnode_hash be destroyed
-To:     hui yang <yanghui.def@gmail.com>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 9:37 PM hui yang <yanghui.def@gmail.com> wrote:
-> Dear Paul Moore :
->      When the phone is power on about 30 second. it happened kernel
-> panic . The probability of kerner panic is about 4/10000=E3=80=82
->       I used Android Q base kerner-4.9. I can't reproduce it, it
-> happened four times on  different phone. all message is Unable to
-> handle kernel paging request at virtual address fffffffffffffffc =EF=BC=
-=8C x0
-> : ffffffffffffffe8
->       In our code ,we  did not change the code in netnode.c.
->       sel_netnode_find code line is 114.
->       list_for_each_entry_rcu(node, &sel_netnode_hash[idx].list, list)  i=
-s 131.
->       if (node->nsec.family =3D=3D family) is 132 .
->       The backtrace is :
-> [   31.152983] [<00000000584f97e1>] sel_netnode_find+0x6c/0xf0
-> [   31.157670] [<00000000d1009c50>] sel_netnode_sid+0x3c/0x248
-> [   31.163225] [<00000000c6ff20a5>] selinux_socket_bind+0x204/0x230
-> [   31.168777] [<0000000080a7de33>] security_socket_bind+0x64/0x94
-> [   31.180679] [<00000000a01eb02b>] SyS_bind+0x10c/0x164
-> [   31.187269] [<00000000c7a460e5>] el0_svc_naked+0x34/0x38
->
-> please help to check more . I think there is a bug in netnode.c
-> Thank you so much.
+This patchset converts the intel iommu driver to the dma-iommu api.
 
-Looking at netnode.c again somewhat quickly I don't see anything
-obvious, but it sounds like this is an Android kernel, yes?  I don't
-have a copy of the Android kernel sources to inspect, but given that
-kernel v4.9 is quite old compared to upstream I suspect the Android
-kernel has a number of backports, making this difficult to diagnose.
+While converting the driver I exposed a bug in the intel i915 driver which causes a huge amount of artifacts on the screen of my laptop. You can see a picture of it here:
+https://github.com/pippy360/kernelPatches/blob/master/IMG_20191219_225922.jpg
 
-If this is an Android kernel, I would suggest talking with the Android
-kernel developers.
+This issue is most likely in the i915 driver and is most likely caused by the driver not respecting the return value of the dma_map_ops::map_sg function. You can see the driver ignoring the return value here:
+https://github.com/torvalds/linux/blob/7e0165b2f1a912a06e381e91f0f4e495f4ac3736/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c#L51
 
-> Paul Moore <paul@paul-moore.com> =E4=BA=8E2019=E5=B9=B412=E6=9C=8820=E6=
-=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=889:48=E5=86=99=E9=81=93=EF=BC=9A
-> >
-> > On Fri, Dec 20, 2019 at 5:07 AM hui yang <yanghui.def@gmail.com> wrote:
-> > > From: YangHui <yanghui.def@gmail.com>
-> > >
-> > > we often find below error :
-> > > [   30.729718] Unable to handle kernel paging request at virtual addr=
-ess fffffffffffffffc
-> > > [   30.747478] Kernel BUG at sel_netnode_find+0x6c/0xf0 [verbose debu=
-g info unavailable]
-> > > [   30.818858] PC is at sel_netnode_find+0x6c/0xf0
-> > > [   30.824671] LR is at sel_netnode_sid+0x3c/0x248
-> > > [   30.829170] pc : [<ffffff8008428094>] lr : [<ffffff8008428154>] ps=
-tate: a0400145
-> > > [   30.833701] sp : ffffffc026f27c50
-> > > [   30.841319] x29: ffffffc026f27c50 x28: ffffffc026f27e40
-> > > [   30.849634] x27: ffffff8009132000 x26: 0000000000000000
-> > > [   30.854932] x25: ffffffc016f0aa80 x24: 0000000000000000
-> > > [   30.860224] x23: ffffffc026f27e38 x22: ffffffc026f27d34
-> > > [   30.865520] x21: 000000000000000a x20: ffffffc026f27e40
-> > > [   30.870818] x19: 000000000000000a x18: 0000007a13b48000
-> > > [   30.876118] x17: 0000007a16ca93c0 x16: ffffff8008e56b2c
-> > > [   30.881406] x15: 0000000000000020 x14: 002dc6bffa5d9e00
-> > > [   30.886701] x13: 203a644974654e4c x12: 00000000000017c1
-> > > [   30.891997] x11: 0000000000000000 x10: 0000000000000001
-> > > [   30.897292] x9 : 0000000000000002 x8 : ffffff8009933090
-> > > [   30.902588] x7 : ffffffc0725fd090 x6 : 0000000004fd9f2c
-> > > [   30.907881] x5 : 0000000000000000 x4 : 0000000000000000
-> > > [   30.913176] x3 : 00000001ffffffff x2 : 0000000000000000
-> > > [   30.918475] x1 : ffffff800a10ca80 x0 : ffffffffffffffe8
-> > > some sel_netnode_hash[idx].list=3D=3DNULL,so happend this.
-> > > I add spin_lock_bh on sel_netnode_init.
-> > >
-> > > Signed-off-by: YangHui <yanghui.def@gmail.com>
-> > > ---
-> > >  security/selinux/netnode.c | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/security/selinux/netnode.c b/security/selinux/netnode.c
-> > > index 9ab84ef..aa0eeb7 100644
-> > > --- a/security/selinux/netnode.c
-> > > +++ b/security/selinux/netnode.c
-> > > @@ -293,11 +293,12 @@ static __init int sel_netnode_init(void)
-> > >
-> > >         if (!selinux_enabled)
-> > >                 return 0;
-> > > -
-> > > +       spin_lock_bh(&sel_netnode_lock);
-> > >         for (iter =3D 0; iter < SEL_NETNODE_HASH_SIZE; iter++) {
-> > >                 INIT_LIST_HEAD(&sel_netnode_hash[iter].list);
-> > >                 sel_netnode_hash[iter].size =3D 0;
-> > >         }
-> > > +       spin_unlock_bh(&sel_netnode_lock);
-> > >
-> > >         return 0;
-> > >  }
-> >
-> > I'm confused as to why this patch solved your problem.  The
-> > sel_netnode_init() function is only run once during early boot and
-> > there shouldn't be any other threads trying to access the netnode
-> > cache at this point.
-> >
-> > Can you explain the conditions under which you see this problem?  What
-> > kernel are you using (stock distro kernel?  upstream?  Android?)?  Can
-> > you reproduce this problem?  Can you provide source code line numbers
-> > associated with the func/offset lines in the backtrace above?
-> >
-> > --
-> > paul moore
-> > www.paul-moore.com
+Previously this didn’t cause issues because the intel map_sg always returned the same number of elements as the input scatter gather list but with the change to this dma-iommu api this is no longer the case. I wasn’t able to track the bug down to a specific line of code unfortunately.  
+
+Could someone from the intel team look at this?
 
 
+I have been testing on a lenovo x1 carbon 5th generation. Let me know if there’s any more information you need.
 
---=20
-paul moore
-www.paul-moore.com
+To allow my patch set to be tested I have added a patch (patch 8/8) in this series to disable combining sg segments in the dma-iommu api which fixes the bug but it doesn't fix the actual problem.
+
+As part of this patch series I copied the intel bounce buffer code to the dma-iommu path. The addition of the bounce buffer code took me by surprise. I did most of my development on this patch series before the bounce buffer code was added and my reimplementation in the dma-iommu path is very rushed and not properly tested but I’m running out of time to work on this patch set.
+
+On top of that I also didn’t port over the intel tracing code from this commit:
+https://github.com/torvalds/linux/commit/3b53034c268d550d9e8522e613a14ab53b8840d8#diff-6b3e7c4993f05e76331e463ab1fc87e1
+So all the work in that commit is now wasted. The code will need to be removed and reimplemented in the dma-iommu path. I would like to take the time to do this but I really don’t have the time at the moment and I want to get these changes out before the iommu code changes any more.
+
+
+Tom Murphy (8):
+  iommu/vt-d: clean up 32bit si_domain assignment
+  iommu/vt-d: Use default dma_direct_* mapping functions for direct
+    mapped devices
+  iommu/vt-d: Remove IOVA handling code from non-dma_ops path
+  iommu: Handle freelists when using deferred flushing in iommu drivers
+  iommu: Add iommu_dma_free_cpu_cached_iovas function
+  iommu: allow the dma-iommu api to use bounce buffers
+  iommu/vt-d: Convert intel iommu driver to the iommu ops
+  DO NOT MERGE: iommu: disable list appending in dma-iommu
+
+ drivers/iommu/Kconfig           |   1 +
+ drivers/iommu/amd_iommu.c       |  14 +-
+ drivers/iommu/arm-smmu-v3.c     |   3 +-
+ drivers/iommu/arm-smmu.c        |   3 +-
+ drivers/iommu/dma-iommu.c       | 183 +++++--
+ drivers/iommu/exynos-iommu.c    |   3 +-
+ drivers/iommu/intel-iommu.c     | 936 ++++----------------------------
+ drivers/iommu/iommu.c           |  39 +-
+ drivers/iommu/ipmmu-vmsa.c      |   3 +-
+ drivers/iommu/msm_iommu.c       |   3 +-
+ drivers/iommu/mtk_iommu.c       |   3 +-
+ drivers/iommu/mtk_iommu_v1.c    |   3 +-
+ drivers/iommu/omap-iommu.c      |   3 +-
+ drivers/iommu/qcom_iommu.c      |   3 +-
+ drivers/iommu/rockchip-iommu.c  |   3 +-
+ drivers/iommu/s390-iommu.c      |   3 +-
+ drivers/iommu/tegra-gart.c      |   3 +-
+ drivers/iommu/tegra-smmu.c      |   3 +-
+ drivers/iommu/virtio-iommu.c    |   3 +-
+ drivers/vfio/vfio_iommu_type1.c |   2 +-
+ include/linux/dma-iommu.h       |   3 +
+ include/linux/intel-iommu.h     |   1 -
+ include/linux/iommu.h           |  32 +-
+ 23 files changed, 345 insertions(+), 908 deletions(-)
+
+-- 
+2.20.1
+
