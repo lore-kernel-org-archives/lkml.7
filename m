@@ -2,134 +2,80 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDACC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 08:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 244A8C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 08:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 315F521655
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 08:33:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="X/CC3zVj"
+	by mail.kernel.org (Postfix) with ESMTP id EF013206D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 08:43:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbfLUIcZ (ORCPT
+        id S1726138AbfLUInE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 03:32:25 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:29373 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725845AbfLUIcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 03:32:25 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47fzPd2RhCz9v1Kt;
-        Sat, 21 Dec 2019 09:32:21 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=X/CC3zVj; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 9CZTJWpIb3oz; Sat, 21 Dec 2019 09:32:21 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47fzPd0n8yz9v1Ks;
-        Sat, 21 Dec 2019 09:32:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1576917141; bh=E9RKebUP1SppGa2SP1hXCPrAmxC2lQWVebR4woXcBx4=;
-        h=From:Subject:To:Cc:Date:From;
-        b=X/CC3zVji3J7DK/g7Rrz/AyTo0Y5CoJMc25c7ql5rHqSRlTGaSqbTh4XA6EWt4SON
-         g8dx7mQjw0IIqrUJTPNqMqOKZEn1YAyfja8qRjAHISFddOuN4hWvU9bO+610hzQw4x
-         lGCJEXigJhDEI6ZgPMcq/MuxAcrBh5X+DBf1P/2c=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 02CFC8B77C;
-        Sat, 21 Dec 2019 09:32:22 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id jxdAh1n2NAhk; Sat, 21 Dec 2019 09:32:21 +0100 (CET)
-Received: from localhost.localdomain (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id ACFFE8B752;
-        Sat, 21 Dec 2019 09:32:21 +0100 (CET)
-Received: by localhost.localdomain (Postfix, from userid 0)
-        id 4B883637B6; Sat, 21 Dec 2019 08:32:21 +0000 (UTC)
-Message-Id: <cover.1576916812.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v5 00/17] Enable CONFIG_VMAP_STACK on PPC32
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, dja@axtens.net
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org
-Date:   Sat, 21 Dec 2019 08:32:21 +0000 (UTC)
+        Sat, 21 Dec 2019 03:43:04 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:41957 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbfLUInD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Dec 2019 03:43:03 -0500
+Received: by mail-il1-f197.google.com with SMTP id k9so9582323ili.8
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 00:43:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=xU44G83IDVYmN3c7FdaPJTALb5/aKinaCWXRoF+LTv0=;
+        b=r5bticAy9ok18NuN6bRoKxNZioXAoF/gguPjjZ15grIws5N2GGBRby6JptYpecK4W+
+         yR0BxZMe3p+8hiVic9WVJ/k7mVWxSAqNNTMjPiTZbxcF9043nOQE7o2IcGfWaoasWyZG
+         ESMrz+3goC4VK60zAoM8u5KTGuV6JNcTYKmQ+uD9B6AmNQ2ja5AVBGMRyEvcmiADnsT9
+         yWHhdzxBe7lc1oAyUi65JJZJmg90IXnRE3/rdrNMQMarMLytO2HHwIVRq/unx/A1IP2M
+         DtdrPkDmXXAVJmJIRjS2VtlryXhd+nHiAHsrB6oYVHckx/s9C6aMz8T86k2DjPQxFoUu
+         5RcQ==
+X-Gm-Message-State: APjAAAWbz3A9653racU994z4t0wMPwFM+6H7N7a1W8m3ddEQyyag3YCL
+        Av3+90CS0f2A56e8f4YfkMru7e0OEipHqPWOJylPcg/q6BIn
+X-Google-Smtp-Source: APXvYqyuTa0ejKszQhq4t1cDUBFdclRyWYWGgRzHUDUmQVrVTb5aXX9IU8liJ2nc0RY4emELLWHbwalTEI6xVDJ0PpVmRGT9Mtvt
+MIME-Version: 1.0
+X-Received: by 2002:a6b:4407:: with SMTP id r7mr11525660ioa.160.1576917781568;
+ Sat, 21 Dec 2019 00:43:01 -0800 (PST)
+Date:   Sat, 21 Dec 2019 00:43:01 -0800
+In-Reply-To: <000000000000b09d8c059a3240be@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000035eda1059a32c80f@google.com>
+Subject: Re: WARNING in percpu_ref_exit (2)
+From:   syzbot <syzbot+8c4a14856e657b43487c@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, io-uring@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The purpose of this serie is to enable CONFIG_VMAP_STACK on PPC32.
+syzbot has bisected this bug to:
 
-rfc v1: initial support on 8xx
+commit cbb537634780172137459dead490d668d437ef4d
+Author: Jens Axboe <axboe@kernel.dk>
+Date:   Mon Dec 9 18:22:50 2019 +0000
 
-rfc v2: added stack overflow detection.
+     io_uring: avoid ring quiesce for fixed file set unregister and update
 
-v3:
-- Stack overflow detection works, tested with LKDTM STACK_EXHAUST test
-- Support for book3s32 added
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1118aac1e00000
+start commit:   7ddd09fc Add linux-next specific files for 20191220
+git tree:       linux-next
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1318aac1e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1518aac1e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f183b01c3088afc6
+dashboard link: https://syzkaller.appspot.com/bug?extid=8c4a14856e657b43487c
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14b8f351e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14b51925e00000
 
-v4:
-- Fixed build failure with CONFIG_KVM (patch 14)
-- Fixed boot failure with pmac32_defconfig+VMAP_STACK+KVM (new patch 15)
-- Fixed crash with altivec and fpu (patch 16)
+Reported-by: syzbot+8c4a14856e657b43487c@syzkaller.appspotmail.com
+Fixes: cbb537634780 ("io_uring: avoid ring quiesce for fixed file set  
+unregister and update")
 
-v5:
-- Reduced ifdefs around tophys/tovirt by using macros (patch 5)
-- Reorganised stack overflow handling, making it independent of the existing one which could go away in another series (patch 7)
-- Added vmapped stacks for interrupts (new patch 8)
-
-Christophe Leroy (17):
-  powerpc/32: replace MTMSRD() by mtmsr
-  powerpc/32: Add EXCEPTION_PROLOG_0 in head_32.h
-  powerpc/32: save DEAR/DAR before calling handle_page_fault
-  powerpc/32: move MSR_PR test into EXCEPTION_PROLOG_0
-  powerpc/32: add a macro to get and/or save DAR and DSISR on stack.
-  powerpc/32: prepare for CONFIG_VMAP_STACK
-  powerpc: align stack to 2 * THREAD_SIZE with VMAP_STACK
-  powerpc/32: Add early stack overflow detection with VMAP stack.
-  powerpc/32: Use vmapped stacks for interrupts
-  powerpc/8xx: Use alternative scratch registers in DTLB miss handler
-  powerpc/8xx: drop exception entries for non-existing exceptions
-  powerpc/8xx: move DataStoreTLBMiss perf handler
-  powerpc/8xx: split breakpoint exception
-  powerpc/8xx: Enable CONFIG_VMAP_STACK
-  powerpc/32s: reorganise DSI handler.
-  powerpc/32s: avoid crossing page boundary while changing SRR0/1.
-  powerpc/32s: Enable CONFIG_VMAP_STACK
-
- arch/powerpc/include/asm/processor.h   |   6 ++
- arch/powerpc/include/asm/thread_info.h |  18 ++++
- arch/powerpc/kernel/asm-offsets.c      |   6 ++
- arch/powerpc/kernel/entry_32.S         |  29 +++---
- arch/powerpc/kernel/fpu.S              |   3 +
- arch/powerpc/kernel/head_32.S          |  61 ++++++-----
- arch/powerpc/kernel/head_32.h          | 178 +++++++++++++++++++++++++++----
- arch/powerpc/kernel/head_40x.S         |   2 +
- arch/powerpc/kernel/head_8xx.S         | 184 +++++++++++++++------------------
- arch/powerpc/kernel/head_booke.h       |   2 +
- arch/powerpc/kernel/head_fsl_booke.S   |   1 +
- arch/powerpc/kernel/irq.c              |  22 ++++
- arch/powerpc/kernel/setup.h            |   2 +-
- arch/powerpc/kernel/setup_32.c         |  17 ++-
- arch/powerpc/kernel/setup_64.c         |   2 +-
- arch/powerpc/kernel/traps.c            |   9 ++
- arch/powerpc/kernel/vector.S           |   3 +
- arch/powerpc/kernel/vmlinux.lds.S      |   2 +-
- arch/powerpc/mm/book3s32/hash_low.S    |  46 ++++++---
- arch/powerpc/mm/book3s32/mmu.c         |   9 +-
- arch/powerpc/perf/8xx-pmu.c            |  12 ++-
- arch/powerpc/platforms/Kconfig.cputype |   3 +
- 22 files changed, 435 insertions(+), 182 deletions(-)
-
--- 
-2.13.3
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
