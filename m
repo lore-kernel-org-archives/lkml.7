@@ -2,204 +2,142 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 181CFC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 00:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2DBC43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 00:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8E0C20866
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 00:07:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576886852;
-	bh=DUTd9ZXnPeBkStx+DZbftMxjTkhEGCBmWttg8e+wCg0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=kNj1BwbT9CXtO8S6qTv+DtNnH829+q7D3va0pTq8D6iUsDjIDEgZ+hlZ0EUO7wjGI
-	 q4VDEZ0uBBnmP5Pz67j8IxI+FvB0NoA1XjoeUdsts0PnK7bVrDV25551YbnuV7S/OJ
-	 1OpvnK1b0HgtZRmps0LT3o1OI4ClktfJbivVwk7E=
+	by mail.kernel.org (Postfix) with ESMTP id 2C2872082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 00:15:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbfLUAHa (ORCPT
+        id S1726715AbfLUAPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 20 Dec 2019 19:07:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54838 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726462AbfLUAHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 20 Dec 2019 19:07:30 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74FF62082E;
-        Sat, 21 Dec 2019 00:07:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576886849;
-        bh=DUTd9ZXnPeBkStx+DZbftMxjTkhEGCBmWttg8e+wCg0=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=xae+YooODExpWO8UxwBTaVUN/Wv3bcLeOACU9OUer/dz6xshNqVd66g93jNUpKrLb
-         fHJ2p6HllOGr5Du6b024m2A95AlzJAa+3dwvvtIJR6Kl6qQcgKguCiwyxZ5IMBSK6W
-         PL2vvHtBisGw1lDsotEd70sY4gqWOAgdRHUrYeYs=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 4AE663522744; Fri, 20 Dec 2019 16:07:29 -0800 (PST)
-Date:   Fri, 20 Dec 2019 16:07:29 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, bristot@redhat.com,
-        frextrite@gmail.com, madhuparnabhowmik04@gmail.com,
-        urezki@gmail.com, Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v3 rcu-dev] rcuperf: Measure memory footprint during
- kfree_rcu() test
-Message-ID: <20191221000729.GH2889@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191219211349.235877-1-joel@joelfernandes.org>
+        Fri, 20 Dec 2019 19:15:50 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:59724 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfLUAPt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 20 Dec 2019 19:15:49 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iiSQq-0003Lv-B8; Sat, 21 Dec 2019 00:15:44 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
+        <jerome.pouiller@silabs.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] staging: wfx: check for memory allocation failures from wfx_alloc_hif
+Date:   Sat, 21 Dec 2019 00:15:43 +0000
+Message-Id: <20191221001543.15255-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191219211349.235877-1-joel@joelfernandes.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 04:13:49PM -0500, Joel Fernandes (Google) wrote:
-> During changes to kfree_rcu() code, we often check the amount of free
-> memory.  As an alternative to checking this manually, this commit adds a
-> measurement in the test itself.  It measures four times during the test
-> for available memory, digitally filters these measurements to produce a
-> running average with a weight of 0.5, and compares this digitally
-> filtered value with the amount of available memory at the beginning of
-> the test.
-> 
-> We apply the digital filter only once we are more than 25% into the
-> test. At the 25% mark, we just read available memory and don't apply any
-> filtering. This prevents the first sample from skewing the results
-> as we would not consider memory readings that were before memory was
-> allocated.
-> 
-> A sample run shows something like:
-> 
-> Total time taken by all kfree'ers: 6369738407 ns, loops: 10000, batches: 764, memory footprint: 216MB
-> 
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+From: Colin Ian King <colin.king@canonical.com>
 
-Much better!  A few comments below.
+Currently calls to wfx_alloc_hif are not checking for a null return
+when a memory allocation fails and this leads to null pointer
+dereferencing issues.  Fix this by adding null pointer checks and
+returning passing down -ENOMEM errors where necessary. The error
+checking in the current driver is a bit sparse, so this may need
+some extra attention later if required.
 
-							Thanx, Paul
+Fixes: f95a29d40782 ("staging: wfx: add HIF commands helpers")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/staging/wfx/hif_tx.c |  6 ++++++
+ drivers/staging/wfx/sta.c    | 13 +++++++------
+ 2 files changed, 13 insertions(+), 6 deletions(-)
 
-> ---
-> v1->v2: Minor corrections
-> v1->v3: Use long long to prevent 32-bit system's overflow
-> 	Handle case where some threads start later than others.
-> 	Start measuring only once 25% into the test. Slightly more accurate.
-> 
-> Cc: bristot@redhat.com
-> Cc: frextrite@gmail.com
-> Cc: madhuparnabhowmik04@gmail.com
-> Cc: urezki@gmail.com
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> 
->  kernel/rcu/rcuperf.c | 23 +++++++++++++++++++++--
->  1 file changed, 21 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
-> index da94b89cd531..67e0f804ea97 100644
-> --- a/kernel/rcu/rcuperf.c
-> +++ b/kernel/rcu/rcuperf.c
-> @@ -12,6 +12,7 @@
->  #include <linux/types.h>
->  #include <linux/kernel.h>
->  #include <linux/init.h>
-> +#include <linux/mm.h>
->  #include <linux/module.h>
->  #include <linux/kthread.h>
->  #include <linux/err.h>
-> @@ -604,6 +605,8 @@ struct kfree_obj {
->  	struct rcu_head rh;
->  };
->  
-> +long long mem_begin;
-> +
->  static int
->  kfree_perf_thread(void *arg)
->  {
-> @@ -611,6 +614,7 @@ kfree_perf_thread(void *arg)
->  	long me = (long)arg;
->  	struct kfree_obj *alloc_ptr;
->  	u64 start_time, end_time;
-> +	long long mem_during = si_mem_available();
+diff --git a/drivers/staging/wfx/hif_tx.c b/drivers/staging/wfx/hif_tx.c
+index 8a34a52dd5b9..d8e159670eae 100644
+--- a/drivers/staging/wfx/hif_tx.c
++++ b/drivers/staging/wfx/hif_tx.c
+@@ -366,6 +366,9 @@ int hif_set_edca_queue_params(struct wfx_vif *wvif, u16 queue,
+ 	struct hif_req_edca_queue_params *body = wfx_alloc_hif(sizeof(*body),
+ 							       &hif);
+ 
++	if (!body)
++		return -ENOMEM;
++
+ 	WARN_ON(arg->aifs > 255);
+ 	body->aifsn = arg->aifs;
+ 	body->cw_min = cpu_to_le16(arg->cw_min);
+@@ -390,6 +393,9 @@ int hif_set_pm(struct wfx_vif *wvif, bool ps, int dynamic_ps_timeout)
+ 	struct hif_msg *hif;
+ 	struct hif_req_set_pm_mode *body = wfx_alloc_hif(sizeof(*body), &hif);
+ 
++	if (!body)
++		return -ENOMEM;
++
+ 	if (ps) {
+ 		body->pm_mode.enter_psm = 1;
+ 		// Firmware does not support more than 128ms
+diff --git a/drivers/staging/wfx/sta.c b/drivers/staging/wfx/sta.c
+index 9a61478d98f8..c08d691fe870 100644
+--- a/drivers/staging/wfx/sta.c
++++ b/drivers/staging/wfx/sta.c
+@@ -316,6 +316,7 @@ int wfx_conf_tx(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
+ {
+ 	struct wfx_dev *wdev = hw->priv;
+ 	struct wfx_vif *wvif = (struct wfx_vif *) vif->drv_priv;
++	int ret = 0;
+ 
+ 	WARN_ON(queue >= hw->queues);
+ 
+@@ -326,10 +327,10 @@ int wfx_conf_tx(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
+ 	if (wvif->vif->type == NL80211_IFTYPE_STATION) {
+ 		hif_set_uapsd_info(wvif, wvif->uapsd_mask);
+ 		if (wvif->setbssparams_done && wvif->state == WFX_STATE_STA)
+-			wfx_update_pm(wvif);
++			ret = wfx_update_pm(wvif);
+ 	}
+ 	mutex_unlock(&wdev->conf_mutex);
+-	return 0;
++	return ret;
+ }
+ 
+ int wfx_set_rts_threshold(struct ieee80211_hw *hw, u32 value)
+@@ -1322,7 +1323,7 @@ int wfx_config(struct ieee80211_hw *hw, u32 changed)
+ 	if (changed & IEEE80211_CONF_CHANGE_PS) {
+ 		wvif = NULL;
+ 		while ((wvif = wvif_iterate(wdev, wvif)) != NULL)
+-			wfx_update_pm(wvif);
++			ret = wfx_update_pm(wvif);
+ 		wvif = wdev_to_wvif(wdev, 0);
+ 	}
+ 
+@@ -1333,7 +1334,7 @@ int wfx_config(struct ieee80211_hw *hw, u32 changed)
+ 
+ int wfx_add_interface(struct ieee80211_hw *hw, struct ieee80211_vif *vif)
+ {
+-	int i;
++	int i, ret = 0;
+ 	struct wfx_dev *wdev = hw->priv;
+ 	struct wfx_vif *wvif = (struct wfx_vif *) vif->drv_priv;
+ 
+@@ -1417,9 +1418,9 @@ int wfx_add_interface(struct ieee80211_hw *hw, struct ieee80211_vif *vif)
+ 		else
+ 			hif_set_block_ack_policy(wvif, 0x00, 0x00);
+ 		// Combo force powersave mode. We can re-enable it now
+-		wfx_update_pm(wvif);
++		ret = wfx_update_pm(wvif);
+ 	}
+-	return 0;
++	return ret;
+ }
+ 
+ void wfx_remove_interface(struct ieee80211_hw *hw,
+-- 
+2.24.0
 
-You initialize here, which makes quite a bit of sense...
-
->  	VERBOSE_PERFOUT_STRING("kfree_perf_thread task started");
->  	set_cpus_allowed_ptr(current, cpumask_of(me % nr_cpu_ids));
-> @@ -626,6 +630,15 @@ kfree_perf_thread(void *arg)
->  	}
->  
->  	do {
-> +		// Moving average of memory availability measurements.
-> +		// Start measuring only from when we are at least 25% into the test.
-> +		if (loop && kfree_loops > 3 && (loop % (kfree_loops / 4) == 0)) {
-> +			if (loop == (kfree_loops / 4))
-> +				mem_during = si_mem_available();
-
-But then you reinitialize here.  Perhaps to avoid the compiler being
-confused into complaining about uninitialized variables?  (But if so,
-please comment it.)
-
-The thing is that by the fourth measurement, the initial influence has
-been diluted by a factor of something like 16 or 32, correct?  I don't
-believe that your measurements are any more accurate than that, given the
-bursty nature of the RCU reclamation process.  So why not just initialize
-it and average it at each sample point?
-
-If you want more accuracy, you could increase the number of sample
-points, while changing the filter constants to more heavily weight
-past measurements.
-
-Actually, I strongly suggest recording frequent raw data, and applying
-various filtering techniques offline to see what works best.  I might
-be mistaken, but it feels like you are shooting in the dark here.
-
-> +			else
-> +				mem_during = (mem_during + si_mem_available()) / 2;
-> +		}
-> +
->  		for (i = 0; i < kfree_alloc_num; i++) {
->  			alloc_ptr = kmalloc(sizeof(struct kfree_obj), GFP_KERNEL);
->  			if (!alloc_ptr)
-> @@ -645,9 +658,13 @@ kfree_perf_thread(void *arg)
->  		else
->  			b_rcu_gp_test_finished = cur_ops->get_gp_seq();
->  
-> -		pr_alert("Total time taken by all kfree'ers: %llu ns, loops: %d, batches: %ld\n",
-> +		// The "memory footprint" field represents how much in-flight
-> +		// memory is allocated during the test and waiting to be freed.
-
-This added comment is much better, thank you!
-
-> +		pr_alert("Total time taken by all kfree'ers: %llu ns, loops: %d, batches: %ld, memory footprint: %lldMB\n",
->  		       (unsigned long long)(end_time - start_time), kfree_loops,
-> -		       rcuperf_seq_diff(b_rcu_gp_test_finished, b_rcu_gp_test_started));
-> +		       rcuperf_seq_diff(b_rcu_gp_test_finished, b_rcu_gp_test_started),
-> +		       (mem_begin - mem_during) >> (20 - PAGE_SHIFT));
-> +
->  		if (shutdown) {
->  			smp_mb(); /* Assign before wake. */
->  			wake_up(&shutdown_wq);
-> @@ -719,6 +736,8 @@ kfree_perf_init(void)
->  		goto unwind;
->  	}
->  
-> +	mem_begin = si_mem_available();
-> +
->  	for (i = 0; i < kfree_nrealthreads; i++) {
->  		firsterr = torture_create_kthread(kfree_perf_thread, (void *)i,
->  						  kfree_reader_tasks[i]);
-> -- 
-> 2.24.1.735.g03f4e72817-goog
