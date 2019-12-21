@@ -2,113 +2,143 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CCEC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 10:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 868DCC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 10:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 736E32072B
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 10:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54ADC2070C
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 10:36:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="Rq4LsVBw"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="ep41QhtA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbfLUKQ4 (ORCPT
+        id S1726633AbfLUKgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 05:16:56 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55190 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbfLUKQ4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 05:16:56 -0500
-Received: by mail-wm1-f68.google.com with SMTP id b19so11281648wmj.4
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 02:16:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=w7EMZsX1P6p24D8oxJ5lDhfZGtIC/1lVYlrnNXeuQH4=;
-        b=Rq4LsVBwxYKw74dI8FSDPQwHMWSyqhrfuDWib+CxcFiQE+kws197g+JzT+PxYDTmD5
-         FMcelA158Vpx3rW0QMRhO9CsMd4cyy1sKDhJe80scYqoBrsxroKFfwk1JZpGhXoa5apQ
-         MXFmF0Y3+qIxm+ClyYCqMHx9AnYAefTs7VmVg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=w7EMZsX1P6p24D8oxJ5lDhfZGtIC/1lVYlrnNXeuQH4=;
-        b=DK9xhUEAvuc3yYKSOuiN2C6SUGCS281zB7SLNFsvolu/D8J9dPjPvMWdi/g5SKtKzg
-         IqVJCTYQ3Kfs5mDLqKSbQ/2fFmH5Bhe62JtTeB2bADlAyQlmuo1YxWcUeqvjmUd/PDuY
-         572bpmRGoZmISj/mn75Gh/P7HBXYXyx6nu2fHvVVcrnTVttysrwTS9VVaVw7PfTYip6k
-         PWuNotIqIXCryNo/8jX7qFaxJvGYop4KI/6NITg+4Uf/VqcOTozb0ru3iqgV4ZTFnvMK
-         yuwobBgWD1m6O9izn/YH/YChhdxzfhERy5PdmcGcQiIX3YSx25hMsMFZB8KxVOZEw/Mq
-         1fIw==
-X-Gm-Message-State: APjAAAVJNYoVQauUGIXhhq/UW6UIvceoS8uFuE39qJd5jubJj//Uwb/t
-        P+82QDrcNzKFAMe/1Lf+X8hZHg==
-X-Google-Smtp-Source: APXvYqyL77witqgEbMqthpAjN1mJkW/ygtn87eZ9je+eLTRHWAOroHYyJnM+yA9gXhnLyAAobryETA==
-X-Received: by 2002:a1c:9d52:: with SMTP id g79mr21587689wme.148.1576923414062;
-        Sat, 21 Dec 2019 02:16:54 -0800 (PST)
-Received: from localhost ([185.69.145.42])
-        by smtp.gmail.com with ESMTPSA id f127sm11114118wma.4.2019.12.21.02.16.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Dec 2019 02:16:53 -0800 (PST)
-Date:   Sat, 21 Dec 2019 10:16:52 +0000
-From:   Chris Down <chris@chrisdown.name>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-fsdevel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH] fs: inode: Reduce volatile inode wraparound risk when
- ino_t is 64 bit
-Message-ID: <20191221101652.GA494948@chrisdown.name>
-References: <20191220024936.GA380394@chrisdown.name>
- <20191220213052.GB7476@magnolia>
+        Sat, 21 Dec 2019 05:36:07 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:57663 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726144AbfLUKgG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Dec 2019 05:36:06 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47g28K257Sz9sP3;
+        Sat, 21 Dec 2019 21:36:00 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1576924564;
+        bh=J7LUOTE/TlZOLs6A/wa+UANDkPEn7Eg1zFTj8wUajJI=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=ep41QhtAkIMLmb7QDcQVXIPZu6eWAkKvUoCMT0vcG19lbSzTpQrhOY0RxwufoQWlr
+         LQ1BmfV7J1TETBUuG4Zte4C+sy844RNzMmdObEjG1Hn78EWxQ6MrZ2BO6a2QJ7arOB
+         WNWwjt5PYt4vaCuR7fXbXeF/YzH0MXc6/DVIUe3pj3pV5riIbedpKaUKpriN7JhrAQ
+         jG/xg31T7EuVHMhRJNGQEhdDgK+H6xZ3tIc509ldRJQ6hcK7vKbpuSq9803rqVIGg1
+         qnNNuaS7Xhk8LN6WkdwrrJPegHM9vgRPBBTYCnI8MEDt3bBsz0Mrp4ILMK/QIYhWkn
+         FuaJbuiHRMeFg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Steven Price <steven.price@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+Cc:     Mark Rutland <mark.rutland@arm.com>, x86@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "Liang\, Kan" <kan.liang@linux.intel.com>
+Subject: Re: [PATCH v17 01/23] mm: Add generic p?d_leaf() macros
+In-Reply-To: <0951d79f-919a-4a9d-00f7-b40be96af118@arm.com>
+References: <20191218162402.45610-1-steven.price@arm.com> <20191218162402.45610-2-steven.price@arm.com> <878sn8mtgt.fsf@mpe.ellerman.id.au> <0951d79f-919a-4a9d-00f7-b40be96af118@arm.com>
+Date:   Sat, 21 Dec 2019 21:35:58 +1100
+Message-ID: <87v9qakltd.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191220213052.GB7476@magnolia>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Darrick J. Wong writes:
->On Fri, Dec 20, 2019 at 02:49:36AM +0000, Chris Down wrote:
->> In Facebook production we are seeing heavy inode number wraparounds on
->> tmpfs. On affected tiers, in excess of 10% of hosts show multiple files
->> with different content and the same inode number, with some servers even
->> having as many as 150 duplicated inode numbers with differing file
->> content.
->>
->> This causes actual, tangible problems in production. For example, we
->> have complaints from those working on remote caches that their
->> application is reporting cache corruptions because it uses (device,
->> inodenum) to establish the identity of a particular cache object, but
+Steven Price <steven.price@arm.com> writes:
+> On 19/12/2019 11:43, Michael Ellerman wrote:
+>> Steven Price <steven.price@arm.com> writes:
+>>> Exposing the pud/pgd levels of the page tables to walk_page_range() means
+>>> we may come across the exotic large mappings that come with large areas
+>>> of contiguous memory (such as the kernel's linear map).
+>>>
+>>> For architectures that don't provide all p?d_leaf() macros, provide
+>>> generic do nothing default that are suitable where there cannot be leaf
+>>> pages at that level. Futher patches will add implementations for
+>>> individual architectures.
+>>>
+>>> The name p?d_leaf() is chosen to minimize the confusion with existing
+>>> uses of "large" pages and "huge" pages which do not necessary mean that
+>>> the entry is a leaf (for example it may be a set of contiguous entries
+>>> that only take 1 TLB slot). For the purpose of walking the page tables
+>>> we don't need to know how it will be represented in the TLB, but we do
+>>> need to know for sure if it is a leaf of the tree.
+>>>
+>>> Signed-off-by: Steven Price <steven.price@arm.com>
+>>> Acked-by: Mark Rutland <mark.rutland@arm.com>
+>>> ---
+>>>  include/asm-generic/pgtable.h | 20 ++++++++++++++++++++
+>>>  1 file changed, 20 insertions(+)
+>>>
+>>> diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+>>> index 798ea36a0549..e2e2bef07dd2 100644
+>>> --- a/include/asm-generic/pgtable.h
+>>> +++ b/include/asm-generic/pgtable.h
+>>> @@ -1238,4 +1238,24 @@ static inline bool arch_has_pfn_modify_check(void)
+>>>  #define mm_pmd_folded(mm)	__is_defined(__PAGETABLE_PMD_FOLDED)
+>>>  #endif
+>>>  
+>>> +/*
+>>> + * p?d_leaf() - true if this entry is a final mapping to a physical address.
+>>> + * This differs from p?d_huge() by the fact that they are always available (if
+>>> + * the architecture supports large pages at the appropriate level) even
+>>> + * if CONFIG_HUGETLB_PAGE is not defined.
+>>> + * Only meaningful when called on a valid entry.
+>>> + */
+>>> +#ifndef pgd_leaf
+>>> +#define pgd_leaf(x)	0
+>>> +#endif
+>>> +#ifndef p4d_leaf
+>>> +#define p4d_leaf(x)	0
+>>> +#endif
+>>> +#ifndef pud_leaf
+>>> +#define pud_leaf(x)	0
+>>> +#endif
+>>> +#ifndef pmd_leaf
+>>> +#define pmd_leaf(x)	0
+>>> +#endif
+>> 
+>> Any reason you made these #defines rather than static inlines?
 >
->...but you cannot delete the (dev, inum) tuple from the cache index when
->you remove a cache object??
+> No strong reason - but these have to be #defines in the arch overrides
+> so the #ifndef works, so I was being consistent here.
 
-There are some cache objects which may be long-lived. In these kinds of cases, 
-the cache objects aren't removed until they're conclusively not needed.
+We handle that usually just with eg:
 
-Since tmpfs shares the i_ino counter with every other user of get_next_ino, 
-it's then entirely possible that we can thrash through 2^32 inodes within a 
-period that it's possible for a single cache file to exist.
+static inline bool pgd_leaf(pgd_t pgd)
+{
+	...
+}
+#define pgd_leaf pgd_leaf
 
->> because it's not unique any more, the application refuses to continue
->> and reports cache corruption. Even worse, sometimes applications may not
->> even detect the corruption but may continue anyway, causing phantom and
->> hard to debug behaviour.
->>
->> In general, userspace applications expect that (device, inodenum) should
->> be enough to be uniquely point to one inode, which seems fair enough.
->
->Except that it's not.  (dev, inum, generation) uniquely points to an
->instance of an inode from creation to the last unlink.
+> I guess a static inline might avoid warnings although I haven't seen
+> any.
 
-I didn't mention generation because, even though it's set on tmpfs (to 
-prandom_u32()), it's not possible to evaluate it from userspace since `ioctl` 
-returns ENOTTY. We can't ask userspace applications to introspect on an inode 
-attribute that they can't even access :-)
+If anything I'd expect it to cause warnings, for example if someone is
+doing pgd_leaf(pmd), but that would be good to catch.
+
+cheers
