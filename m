@@ -4,149 +4,190 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1343FC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 08:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FCFC2D0D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 08:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDC5C21D7D
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 08:32:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0451B21655
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 08:32:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="lI8r3u/l"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="NatS6Dex"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbfLUIc3 (ORCPT
+        id S1726763AbfLUIcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 03:32:29 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:13034 "EHLO pegase1.c-s.fr"
+        Sat, 21 Dec 2019 03:32:33 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:45061 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726086AbfLUIcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 03:32:25 -0500
+        id S1725907AbfLUIc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Dec 2019 03:32:28 -0500
 Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47fzPg01CFz9v1Kx;
-        Sat, 21 Dec 2019 09:32:23 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 47fzPj3fnSz9vBmM;
+        Sat, 21 Dec 2019 09:32:25 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=lI8r3u/l; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=NatS6Dex; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id syU9U0k6KFJy; Sat, 21 Dec 2019 09:32:22 +0100 (CET)
+        with ESMTP id Dggffs4KFPUH; Sat, 21 Dec 2019 09:32:25 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47fzPf5wbRz9v1Ks;
-        Sat, 21 Dec 2019 09:32:22 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47fzPj1k6Vz9v1Ks;
+        Sat, 21 Dec 2019 09:32:25 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1576917142; bh=EO9Qxk0hjLo3ieTea7LgHM8klTAmnyp7SMifgH/BhW0=;
+        t=1576917145; bh=OUysxTrW56fqmPw2U8c/5GTPg4n/j/VebyDLfYGLObA=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=lI8r3u/lJlY9+wzp0sU8VTWjYCezpFEwsqUisYwci/7n+CMETOh5Sq4rOoou3c2OB
-         fttMziM1EUe0UZ/1WZo/ozBMgxioDEz/bFkjOvYeCfnoyDF5CBW5ajDkx/FtUkbPSl
-         AmIFbLLpoDW+qcvYPIgCcn006qaZDU707pSBLez0=
+        b=NatS6DexWIVvbXqymishHyFstuxTJN7C4ggYJWbHKGYw7HAlIk+oEG4n+FQvLzkdm
+         H1Zg/kCWZPRL4v1HP/t4YRIgqeC7/4aW9K1+H05nnCGjlME1mT4JtJJJEtczOQBO7G
+         73bKHWy/bb17BKYakHIoX1c3bLVmvVhz4RqOCSZs=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id CA7888B77C;
-        Sat, 21 Dec 2019 09:32:23 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 10F1B8B77C;
+        Sat, 21 Dec 2019 09:32:26 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id iVjlbE3Yq_81; Sat, 21 Dec 2019 09:32:23 +0100 (CET)
+        with ESMTP id YxUsOIDQhelH; Sat, 21 Dec 2019 09:32:25 +0100 (CET)
 Received: from localhost.localdomain (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 950178B752;
-        Sat, 21 Dec 2019 09:32:23 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B066D8B752;
+        Sat, 21 Dec 2019 09:32:25 +0100 (CET)
 Received: by localhost.localdomain (Postfix, from userid 0)
-        id 5D134637B6; Sat, 21 Dec 2019 08:32:23 +0000 (UTC)
-Message-Id: <2249fe62f481121a180e9655ad2b998093f318f3.1576916812.git.christophe.leroy@c-s.fr>
+        id 76093637B6; Sat, 21 Dec 2019 08:32:25 +0000 (UTC)
+Message-Id: <5c8b5bba692b92654dbd363a229a1ba91db725bb.1576916812.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1576916812.git.christophe.leroy@c-s.fr>
 References: <cover.1576916812.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v5 02/17] powerpc/32: Add EXCEPTION_PROLOG_0 in head_32.h
+Subject: [PATCH v5 04/17] powerpc/32: move MSR_PR test into EXCEPTION_PROLOG_0
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, dja@axtens.net
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-mm@kvack.org
-Date:   Sat, 21 Dec 2019 08:32:23 +0000 (UTC)
+Date:   Sat, 21 Dec 2019 08:32:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch creates a macro for the very first part of
-exception prolog, this will help when implementing
-CONFIG_VMAP_STACK
+In order to simplify  VMAP stack implementation, move
+MSR_PR test into EXCEPTION_PROLOG_0.
+
+This requires to not modify cr0 between EXCEPTION_PROLOG_0
+and EXCEPTION_PROLOG_1.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/kernel/head_32.S  | 4 +---
- arch/powerpc/kernel/head_32.h  | 9 ++++++---
- arch/powerpc/kernel/head_8xx.S | 9 ++-------
- 3 files changed, 9 insertions(+), 13 deletions(-)
+ arch/powerpc/kernel/head_32.h  |  4 ++--
+ arch/powerpc/kernel/head_8xx.S | 39 ++++++++++++++++++++-------------------
+ 2 files changed, 22 insertions(+), 21 deletions(-)
 
-diff --git a/arch/powerpc/kernel/head_32.S b/arch/powerpc/kernel/head_32.S
-index 4a24f8f026c7..9e868567b716 100644
---- a/arch/powerpc/kernel/head_32.S
-+++ b/arch/powerpc/kernel/head_32.S
-@@ -272,9 +272,7 @@ __secondary_hold_acknowledge:
-  */
- 	. = 0x200
- 	DO_KVM  0x200
--	mtspr	SPRN_SPRG_SCRATCH0,r10
--	mtspr	SPRN_SPRG_SCRATCH1,r11
--	mfcr	r10
-+	EXCEPTION_PROLOG_0
- #ifdef CONFIG_PPC_CHRP
- 	mfspr	r11, SPRN_SPRG_THREAD
- 	lwz	r11, RTAS_SP(r11)
 diff --git a/arch/powerpc/kernel/head_32.h b/arch/powerpc/kernel/head_32.h
-index b2ca8c9ffd8b..8e345f8d4b0e 100644
+index 8e345f8d4b0e..436ffd862d2a 100644
 --- a/arch/powerpc/kernel/head_32.h
 +++ b/arch/powerpc/kernel/head_32.h
-@@ -10,13 +10,16 @@
-  * We assume sprg3 has the physical address of the current
-  * task's thread_struct.
-  */
--
- .macro EXCEPTION_PROLOG
-+	EXCEPTION_PROLOG_0
-+	EXCEPTION_PROLOG_1
-+	EXCEPTION_PROLOG_2
-+.endm
-+
-+.macro EXCEPTION_PROLOG_0
+@@ -19,12 +19,12 @@
+ .macro EXCEPTION_PROLOG_0
  	mtspr	SPRN_SPRG_SCRATCH0,r10
  	mtspr	SPRN_SPRG_SCRATCH1,r11
++	mfspr	r11, SPRN_SRR1		/* check whether user or kernel */
  	mfcr	r10
--	EXCEPTION_PROLOG_1
--	EXCEPTION_PROLOG_2
++	andi.	r11, r11, MSR_PR
  .endm
  
  .macro EXCEPTION_PROLOG_1
+-	mfspr	r11,SPRN_SRR1		/* check whether user or kernel */
+-	andi.	r11,r11,MSR_PR
+ 	tophys(r11,r1)			/* use tophys(r1) if kernel */
+ 	beq	1f
+ 	mfspr	r11,SPRN_SPRG_THREAD
 diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
-index 19f583e18402..dac7c0a34eea 100644
+index fb284d95c76a..175c3cfc8014 100644
 --- a/arch/powerpc/kernel/head_8xx.S
 +++ b/arch/powerpc/kernel/head_8xx.S
-@@ -494,10 +494,7 @@ InstructionTLBError:
-  */
- 	. = 0x1400
+@@ -497,8 +497,8 @@ InstructionTLBError:
  DataTLBError:
--	mtspr	SPRN_SPRG_SCRATCH0, r10
--	mtspr	SPRN_SPRG_SCRATCH1, r11
--	mfcr	r10
--
-+	EXCEPTION_PROLOG_0
+ 	EXCEPTION_PROLOG_0
  	mfspr	r11, SPRN_DAR
- 	cmpwi	cr0, r11, RPN_PATTERN
- 	beq-	FixupDAR	/* must be a buggy dcbX, icbi insn. */
-@@ -530,9 +527,7 @@ DARFixed:/* Return from dcbx instruction bug workaround */
-  */
- 	. = 0x1c00
+-	cmpwi	cr0, r11, RPN_PATTERN
+-	beq-	FixupDAR	/* must be a buggy dcbX, icbi insn. */
++	cmpwi	cr1, r11, RPN_PATTERN
++	beq-	cr1, FixupDAR	/* must be a buggy dcbX, icbi insn. */
+ DARFixed:/* Return from dcbx instruction bug workaround */
+ 	EXCEPTION_PROLOG_1
+ 	EXCEPTION_PROLOG_2
+@@ -531,9 +531,9 @@ DARFixed:/* Return from dcbx instruction bug workaround */
  DataBreakpoint:
--	mtspr	SPRN_SPRG_SCRATCH0, r10
--	mtspr	SPRN_SPRG_SCRATCH1, r11
--	mfcr	r10
-+	EXCEPTION_PROLOG_0
+ 	EXCEPTION_PROLOG_0
  	mfspr	r11, SPRN_SRR0
- 	cmplwi	cr0, r11, (.Ldtlbie - PAGE_OFFSET)@l
+-	cmplwi	cr0, r11, (.Ldtlbie - PAGE_OFFSET)@l
++	cmplwi	cr1, r11, (.Ldtlbie - PAGE_OFFSET)@l
  	cmplwi	cr7, r11, (.Litlbie - PAGE_OFFSET)@l
+-	beq-	cr0, 11f
++	beq-	cr1, 11f
+ 	beq-	cr7, 11f
+ 	EXCEPTION_PROLOG_1
+ 	EXCEPTION_PROLOG_2
+@@ -578,9 +578,9 @@ FixupDAR:/* Entry point for dcbx workaround. */
+ 	mfspr	r10, SPRN_SRR0
+ 	mtspr	SPRN_MD_EPN, r10
+ 	rlwinm	r11, r10, 16, 0xfff8
+-	cmpli	cr0, r11, PAGE_OFFSET@h
++	cmpli	cr1, r11, PAGE_OFFSET@h
+ 	mfspr	r11, SPRN_M_TWB	/* Get level 1 table */
+-	blt+	3f
++	blt+	cr1, 3f
+ 	rlwinm	r11, r10, 16, 0xfff8
+ 
+ 0:	cmpli	cr7, r11, (PAGE_OFFSET + 0x1800000)@h
+@@ -595,7 +595,7 @@ FixupDAR:/* Entry point for dcbx workaround. */
+ 3:
+ 	lwz	r11, (swapper_pg_dir-PAGE_OFFSET)@l(r11)	/* Get the level 1 entry */
+ 	mtspr	SPRN_MD_TWC, r11
+-	mtcr	r11
++	mtcrf	0x01, r11
+ 	mfspr	r11, SPRN_MD_TWC
+ 	lwz	r11, 0(r11)	/* Get the pte */
+ 	bt	28,200f		/* bit 28 = Large page (8M) */
+@@ -608,16 +608,16 @@ FixupDAR:/* Entry point for dcbx workaround. */
+  * no need to include them here */
+ 	xoris	r10, r11, 0x7c00	/* check if major OP code is 31 */
+ 	rlwinm	r10, r10, 0, 21, 5
+-	cmpwi	cr0, r10, 2028	/* Is dcbz? */
+-	beq+	142f
+-	cmpwi	cr0, r10, 940	/* Is dcbi? */
+-	beq+	142f
+-	cmpwi	cr0, r10, 108	/* Is dcbst? */
+-	beq+	144f		/* Fix up store bit! */
+-	cmpwi	cr0, r10, 172	/* Is dcbf? */
+-	beq+	142f
+-	cmpwi	cr0, r10, 1964	/* Is icbi? */
+-	beq+	142f
++	cmpwi	cr1, r10, 2028	/* Is dcbz? */
++	beq+	cr1, 142f
++	cmpwi	cr1, r10, 940	/* Is dcbi? */
++	beq+	cr1, 142f
++	cmpwi	cr1, r10, 108	/* Is dcbst? */
++	beq+	cr1, 144f		/* Fix up store bit! */
++	cmpwi	cr1, r10, 172	/* Is dcbf? */
++	beq+	cr1, 142f
++	cmpwi	cr1, r10, 1964	/* Is icbi? */
++	beq+	cr1, 142f
+ 141:	mfspr	r10,SPRN_M_TW
+ 	b	DARFixed	/* Nope, go back to normal TLB processing */
+ 
+@@ -676,8 +676,9 @@ FixupDAR:/* Entry point for dcbx workaround. */
+ 	add	r10, r10, r30	;b	151f
+ 	add	r10, r10, r31
+ 151:
+-	rlwinm. r11,r11,19,24,28	/* offset into jump table for reg RA */
+-	beq	152f			/* if reg RA is zero, don't add it */
++	rlwinm	r11,r11,19,24,28	/* offset into jump table for reg RA */
++	cmpwi	cr1, r11, 0
++	beq	cr1, 152f		/* if reg RA is zero, don't add it */
+ 	addi	r11, r11, 150b@l	/* add start of table */
+ 	mtctr	r11			/* load ctr with jump address */
+ 	rlwinm	r11,r11,0,16,10		/* make sure we don't execute this more than once */
 -- 
 2.13.3
 
