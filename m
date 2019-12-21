@@ -2,210 +2,163 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F099FC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 14:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03924C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 14:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB306206D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 14:13:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576937612;
-	bh=TDS0rdhdMbE38HDfbQjRB785F+PnKr1WPSRRmWyQ3Oo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=rA/jxDLVd+uG6F1f+ukExspiSNek3voWR1S1Z/RDbhHCPzVEzjOCKtyEyaM8el7Au
-	 /g9jKSitBKlBHj3MeYji6Bsr1BYbUDRuFg0/fmZo74cooBBpKGn8yXLlyDK25R3vxI
-	 lAbjDPtyoNtQir9QJTKKOYOI6YFPPn0Td7qsApno=
+	by mail.kernel.org (Postfix) with ESMTP id D84212070C
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 14:14:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbfLUONc (ORCPT
+        id S1727106AbfLUOO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 09:13:32 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:39526 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726650AbfLUONb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 09:13:31 -0500
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iifVX-0004U0-4h; Sat, 21 Dec 2019 15:13:27 +0100
-Date:   Sat, 21 Dec 2019 14:13:25 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Catalin Marinas <Catalin.Marinas@arm.com>,
-        Mark Rutland <Mark.Rutland@arm.com>, will@kernel.org,
-        Sudeep Holla <Sudeep.Holla@arm.com>, <kvm@vger.kernel.org>,
-        kvmarm <kvmarm@lists.cs.columbia.edu>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 09/18] arm64: KVM: enable conditional save/restore
- full SPE profiling buffer controls
-Message-ID: <20191221141325.5a177343@why>
-In-Reply-To: <20191220143025.33853-10-andrew.murray@arm.com>
-References: <20191220143025.33853-1-andrew.murray@arm.com>
- <20191220143025.33853-10-andrew.murray@arm.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 21 Dec 2019 09:14:57 -0500
+Received: from smtp7.web4u.cz ([81.91.87.87]:51144 "EHLO mx-8.mail.web4u.cz"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726339AbfLUOO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Dec 2019 09:14:56 -0500
+X-Greylist: delayed 430 seconds by postgrey-1.27 at vger.kernel.org; Sat, 21 Dec 2019 09:14:54 EST
+Received: from mx-8.mail.web4u.cz (localhost [127.0.0.1])
+        by mx-8.mail.web4u.cz (Postfix) with ESMTP id 3806920365D;
+        Sat, 21 Dec 2019 15:07:40 +0100 (CET)
+Received: from thor.pikron.com (unknown [89.102.8.6])
+        (Authenticated sender: ppisa@pikron.com)
+        by mx-8.mail.web4u.cz (Postfix) with ESMTPA id C31982028B9;
+        Sat, 21 Dec 2019 15:07:39 +0100 (CET)
+From:   pisa@cmp.felk.cvut.cz
+To:     devicetree@vger.kernel.org, mkl@pengutronix.de,
+        linux-can@vger.kernel.org, socketcan@hartkopp.net
+Cc:     wg@grandegger.com, davem@davemloft.net, robh+dt@kernel.org,
+        mark.rutland@arm.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, martin.jerabek01@gmail.com,
+        ondrej.ille@gmail.com, jnovak@fel.cvut.cz, jara.beran@gmail.com,
+        porazil@pikron.com, Pavel Pisa <pisa@cmp.felk.cvut.cz>
+Subject: [PATCH v3 0/6] CTU CAN FD open-source IP core SocketCAN driver, PCI, platform integration and documentation
+Date:   Sat, 21 Dec 2019 15:07:29 +0100
+Message-Id: <cover.1576922226.git.pisa@cmp.felk.cvut.cz>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: andrew.murray@arm.com, Catalin.Marinas@arm.com, Mark.Rutland@arm.com, will@kernel.org, Sudeep.Holla@arm.com, kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-W4U-Auth: 45b96b56ea6a80041d650a8b1a415143a1868872
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Dec 2019 14:30:16 +0000
-Andrew Murray <andrew.murray@arm.com> wrote:
+From: Pavel Pisa <pisa@cmp.felk.cvut.cz>
 
-[somehow managed not to do a reply all, re-sending]
+This driver adds support for the CTU CAN FD open-source IP core.
+More documentation and core sources at project page
+(https://gitlab.fel.cvut.cz/canbus/ctucanfd_ip_core).
+The core integration to Xilinx Zynq system as platform driver
+is available (https://gitlab.fel.cvut.cz/canbus/zynq/zynq-can-sja1000-top).
+Implementation on Intel FGA based PCI Express board is available
+from project (https://gitlab.fel.cvut.cz/canbus/pcie-ctu_can_fd).
+More about CAN related projects used and developed at the Faculty
+of the Electrical Engineering (http://www.fel.cvut.cz/en/)
+of Czech Technical University (https://www.cvut.cz/en)
+in at Prague http://canbus.pages.fel.cvut.cz/ .
 
-> From: Sudeep Holla <sudeep.holla@arm.com>
-> 
-> Now that we can save/restore the full SPE controls, we can enable it
-> if SPE is setup and ready to use in KVM. It's supported in KVM only if
-> all the CPUs in the system supports SPE.
-> 
-> However to support heterogenous systems, we need to move the check if
-> host supports SPE and do a partial save/restore.
+Martin Jerabek (1):
+  can: ctucanfd: add support for CTU CAN FD open-source IP core - bus
+    independent part.
 
-No. Let's just not go down that path. For now, KVM on heterogeneous
-systems do not get SPE. If SPE has been enabled on a guest and a CPU
-comes up without SPE, this CPU should fail to boot (same as exposing a
-feature to userspace).
+Pavel Pisa (5):
+  dt-bindings: vendor-prefix: add prefix for Czech Technical University
+    in Prague.
+  dt-bindings: net: can: binding for CTU CAN FD open-source IP core.
+  can: ctucanfd: CTU CAN FD open-source IP core - PCI bus support.
+  can: ctucanfd: CTU CAN FD open-source IP core - platform/SoC support.
+  docs: ctucanfd: CTU CAN FD open-source IP core documentation.
 
-> 
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> Signed-off-by: Andrew Murray <andrew.murray@arm.com>
-> ---
->  arch/arm64/kvm/hyp/debug-sr.c | 33 ++++++++++++++++-----------------
->  include/kvm/arm_spe.h         |  6 ++++++
->  2 files changed, 22 insertions(+), 17 deletions(-)
-> 
-> diff --git a/arch/arm64/kvm/hyp/debug-sr.c b/arch/arm64/kvm/hyp/debug-sr.c
-> index 12429b212a3a..d8d857067e6d 100644
-> --- a/arch/arm64/kvm/hyp/debug-sr.c
-> +++ b/arch/arm64/kvm/hyp/debug-sr.c
-> @@ -86,18 +86,13 @@
->  	}
->  
->  static void __hyp_text
-> -__debug_save_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
-> +__debug_save_spe_context(struct kvm_cpu_context *ctxt, bool full_ctxt)
->  {
->  	u64 reg;
->  
->  	/* Clear pmscr in case of early return */
->  	ctxt->sys_regs[PMSCR_EL1] = 0;
->  
-> -	/* SPE present on this CPU? */
-> -	if (!cpuid_feature_extract_unsigned_field(read_sysreg(id_aa64dfr0_el1),
-> -						  ID_AA64DFR0_PMSVER_SHIFT))
-> -		return;
-> -
->  	/* Yes; is it owned by higher EL? */
->  	reg = read_sysreg_s(SYS_PMBIDR_EL1);
->  	if (reg & BIT(SYS_PMBIDR_EL1_P_SHIFT))
-> @@ -142,7 +137,7 @@ __debug_save_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
->  }
->  
->  static void __hyp_text
-> -__debug_restore_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
-> +__debug_restore_spe_context(struct kvm_cpu_context *ctxt, bool full_ctxt)
->  {
->  	if (!ctxt->sys_regs[PMSCR_EL1])
->  		return;
-> @@ -210,11 +205,14 @@ void __hyp_text __debug_restore_guest_context(struct kvm_vcpu *vcpu)
->  	struct kvm_guest_debug_arch *host_dbg;
->  	struct kvm_guest_debug_arch *guest_dbg;
->  
-> +	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
-> +	guest_ctxt = &vcpu->arch.ctxt;
-> +
-> +	__debug_restore_spe_context(guest_ctxt, kvm_arm_spe_v1_ready(vcpu));
-> +
->  	if (!(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY))
->  		return;
->  
-> -	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
-> -	guest_ctxt = &vcpu->arch.ctxt;
->  	host_dbg = &vcpu->arch.host_debug_state.regs;
->  	guest_dbg = kern_hyp_va(vcpu->arch.debug_ptr);
->  
-> @@ -232,8 +230,7 @@ void __hyp_text __debug_restore_host_context(struct kvm_vcpu *vcpu)
->  	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
->  	guest_ctxt = &vcpu->arch.ctxt;
->  
-> -	if (!has_vhe())
-> -		__debug_restore_spe_nvhe(host_ctxt, false);
-> +	__debug_restore_spe_context(host_ctxt, kvm_arm_spe_v1_ready(vcpu));
+The version 3 chages:
+  - adapts device tree bindings documentation according to
+    Rob Herring suggestions.
+  - the driver has been separated to individual modules for core support,
+    PCI bus integration and platform, SoC integration.
+  - the FPGA design has been cleaned up and CAN protocol FSM redesigned
+    by Onrej Ille (the core redesign has been reason to pause attempts to driver
+    submission)
+  - the work from February 2019 on core, test framework and driver
+    1601 commits in total, 436 commits in the core sources, 144 commits
+    in the driver, 151 docuemnation, 502 in tests.
+  - not all continuos integration tests updated for latest design version yet
+    https://gitlab.fel.cvut.cz/canbus/ctucanfd_ip_core/pipelines
+  - Zynq hardware in the loop test show no issues for after driver PCI and platform
+    separation and latest VHDL sources updates.
+  - driver code has been periodically tested on 4.18.5-rt3 and 4.19 long term
+    stable kernels.
+  - test of the patches before submission is run on 5.4 kernel
+  - the core has been integrated by Jaroslav Beran <jara.beran@gmail.com>
+    into Intel FPGA based SoC used in the tester developed for Skoda auto
+    at Department of Measurement, Faculty of Electrical Engineering,
+    Czech Technical University https://meas.fel.cvut.cz/ . He has contributed
+    feedbak and fixes to the project.
 
-So you now do an unconditional save/restore on the exit path for VHE as
-well? Even if the host isn't using the SPE HW? That's not acceptable
-as, in most cases, only the host /or/ the guest will use SPE. Here, you
-put a measurable overhead on each exit.
+Ondrej Ille prepares the CTU CAN IP Core sources for new release now.
+It should happen in one or two months. Intention is to finalize
+review of the patches and updates according to the comments by that
+time, ideally to be on the way to mainline when IP is released.
 
-If the host is not using SPE, then the restore/save should happen in
-vcpu_load/vcpu_put. Only if the host is using SPE should you do
-something in the run loop. Of course, this only applies to VHE and
-non-VHE must switch eagerly.
+DKMS CTU CAN FD driver build by OpenBuildService to ease integration
+into Debian systems when driver is not provided by the distribution
 
->  
->  	if (!(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY))
->  		return;
-> @@ -249,19 +246,21 @@ void __hyp_text __debug_restore_host_context(struct kvm_vcpu *vcpu)
->  
->  void __hyp_text __debug_save_host_context(struct kvm_vcpu *vcpu)
->  {
-> -	/*
-> -	 * Non-VHE: Disable and flush SPE data generation
-> -	 * VHE: The vcpu can run, but it can't hide.
-> -	 */
->  	struct kvm_cpu_context *host_ctxt;
->  
->  	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
-> -	if (!has_vhe())
-> -		__debug_save_spe_nvhe(host_ctxt, false);
-> +	if (cpuid_feature_extract_unsigned_field(read_sysreg(id_aa64dfr0_el1),
-> +						 ID_AA64DFR0_PMSVER_SHIFT))
-> +		__debug_save_spe_context(host_ctxt, kvm_arm_spe_v1_ready(vcpu));
->  }
->  
->  void __hyp_text __debug_save_guest_context(struct kvm_vcpu *vcpu)
->  {
-> +	bool kvm_spe_ready = kvm_arm_spe_v1_ready(vcpu);
-> +
-> +	/* SPE present on this vCPU? */
-> +	if (kvm_spe_ready)
-> +		__debug_save_spe_context(&vcpu->arch.ctxt, kvm_spe_ready);
->  }
->  
->  u32 __hyp_text __kvm_get_mdcr_el2(void)
-> diff --git a/include/kvm/arm_spe.h b/include/kvm/arm_spe.h
-> index 48d118fdb174..30c40b1bc385 100644
-> --- a/include/kvm/arm_spe.h
-> +++ b/include/kvm/arm_spe.h
-> @@ -16,4 +16,10 @@ struct kvm_spe {
->  	bool irq_level;
->  };
->  
-> +#ifdef CONFIG_KVM_ARM_SPE
-> +#define kvm_arm_spe_v1_ready(v)		((v)->arch.spe.ready)
-> +#else
-> +#define kvm_arm_spe_v1_ready(v)		(false)
-> +#endif /* CONFIG_KVM_ARM_SPE */
-> +
->  #endif /* __ASM_ARM_KVM_SPE_H */
+https://build.opensuse.org/package/show/home:ppisa/ctu_can_fd
 
-Thanks,
+Jan Charvat <charvj10@fel.cvut.cz> started the work to extend
+our already mainlined QEMU SJA1000 and SocketCAN support
+to provide even CAN FD support and CTU CAN FD core support
 
-	M.
+https://gitlab.fel.cvut.cz/canbus/qemu-canbus/tree/charvj10-canfd
+
+Planned time of the thesis submission is the summer 2020.
+QEMU mainlining efforts should start in optimal case by that time.
+
+Thanks in advance to all who help us to deliver the project into public.
+
+Thanks to all colleagues, reviewers and other providing feedback,
+infrastructure and enthusiasm and motivation for open-source work.
+
+Build infrastructure and hardware is provided by
+  Department of Control Engineering,
+  Faculty of Electrical Engineering,
+  Czech Technical University in Prague
+  https://dce.fel.cvut.cz/en
+
+ .../devicetree/bindings/net/can/ctu,ctucanfd.txt   |   61 ++
+ .../devicetree/bindings/vendor-prefixes.yaml       |    2 +
+ .../device_drivers/ctu/FSM_TXT_Buffer_user.png     |  Bin 0 -> 174807 bytes
+ .../device_drivers/ctu/ctucanfd-driver.rst         |  613 +++++++++++
+ drivers/net/can/Kconfig                            |    1 +
+ drivers/net/can/Makefile                           |    1 +
+ drivers/net/can/ctucanfd/Kconfig                   |   38 +
+ drivers/net/can/ctucanfd/Makefile                  |   13 +
+ drivers/net/can/ctucanfd/ctu_can_fd.c              | 1116 ++++++++++++++++++++
+ drivers/net/can/ctucanfd/ctu_can_fd.h              |   88 ++
+ drivers/net/can/ctucanfd/ctu_can_fd_frame.h        |  190 ++++
+ drivers/net/can/ctucanfd/ctu_can_fd_hw.c           |  781 ++++++++++++++
+ drivers/net/can/ctucanfd/ctu_can_fd_hw.h           |  917 ++++++++++++++++
+ drivers/net/can/ctucanfd/ctu_can_fd_pci.c          |  316 ++++++
+ drivers/net/can/ctucanfd/ctu_can_fd_platform.c     |  145 +++
+ drivers/net/can/ctucanfd/ctu_can_fd_regs.h         |  965 +++++++++++++++++
+ 16 files changed, 5247 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/can/ctu,ctucanfd.txt
+ create mode 100644 Documentation/networking/device_drivers/ctu/FSM_TXT_Buffer_user.png
+ create mode 100644 Documentation/networking/device_drivers/ctu/ctucanfd-driver.rst
+ create mode 100644 drivers/net/can/ctucanfd/Kconfig
+ create mode 100644 drivers/net/can/ctucanfd/Makefile
+ create mode 100644 drivers/net/can/ctucanfd/ctu_can_fd.c
+ create mode 100644 drivers/net/can/ctucanfd/ctu_can_fd.h
+ create mode 100644 drivers/net/can/ctucanfd/ctu_can_fd_frame.h
+ create mode 100644 drivers/net/can/ctucanfd/ctu_can_fd_hw.c
+ create mode 100644 drivers/net/can/ctucanfd/ctu_can_fd_hw.h
+ create mode 100644 drivers/net/can/ctucanfd/ctu_can_fd_pci.c
+ create mode 100644 drivers/net/can/ctucanfd/ctu_can_fd_platform.c
+ create mode 100644 drivers/net/can/ctucanfd/ctu_can_fd_regs.h
+
 -- 
-Jazz is not dead. It just smells funny...
+2.11.0
+
