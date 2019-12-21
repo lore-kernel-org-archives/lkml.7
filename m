@@ -2,213 +2,148 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0416C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 23:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6BCC47409
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 23:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6A81206D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 23:44:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576971873;
-	bh=/MbmDcTEwVowvKdcdYIrMJXZYMe8rRNFMqhcO4g8FG0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=I+1225etZUuW0V4eJwvOWCUMzVcQ+ksGAutc9yIqIH98yftZsg6oEKJMlb6Uwr4X7
-	 4di/3vJBQ33+2wdcu3XqXOAvc+GgpqSF0a7UtjRSHE+Wb+3EWKnqHqEwLcPe2OVT0K
-	 R5Vs5ZtK5Qa3A8nQaElAc6PO8zFLKan3iP3L/GW8=
+	by mail.kernel.org (Postfix) with ESMTP id 4C667206C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 23:46:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K2F08+kb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbfLUXoc (ORCPT
+        id S1726804AbfLUXqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 18:44:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58110 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbfLUXoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 18:44:32 -0500
-Received: from zzz.localdomain (h75-100-12-111.burkwi.broadband.dynamic.tds.net [75.100.12.111])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D54C6206C3;
-        Sat, 21 Dec 2019 23:44:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576971871;
-        bh=/MbmDcTEwVowvKdcdYIrMJXZYMe8rRNFMqhcO4g8FG0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xXFAw8dwgY96VEuOfsyirRJGNvEHOYzNRor8af+MUeUJD3sMeqVicuIYD/9yk8B3M
-         1YLrJLAssviGzR0mbbbPGAO+47zJl4n4ubsQJ9+RdN5WazYSPVBdguVtcHbMFFXXrY
-         DGXOjPAVB5+D6jnBKDE+u5dc8cOrvnD0/KYcBxw0=
-Date:   Sat, 21 Dec 2019 17:44:28 -0600
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Chandan Rajendra <chandan@linux.vnet.ibm.com>,
-        linux-fscrypt@vger.kernel.org
-Subject: Re: [PATCH] fscrypt: Restore modular support
-Message-ID: <20191221234428.GA551@zzz.localdomain>
-References: <20191221143020.hbgeixvlmzt7nh54@gondor.apana.org.au>
+        Sat, 21 Dec 2019 18:46:42 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:34193 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbfLUXqm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Dec 2019 18:46:42 -0500
+Received: by mail-qv1-f65.google.com with SMTP id o18so5079840qvf.1;
+        Sat, 21 Dec 2019 15:46:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DZy1sByRbPp81Fc4unsIfUDkM1speXohHbJEFLa+79Y=;
+        b=K2F08+kbBOHpEb5GI2snEkwsgZNjaPXWMKDftdpnSDrNjdoFsaU7mJy1E8X+UN6pTF
+         CqMGQGTCVzkASTJTbCKGzwmcE+xGW9X9DoBShnHYBHrUjwA2y0thgfSaIDeXsAsxh80K
+         Lzsw/9ErY21ZUOic82HoE2snRWWJy1wLWDPwW7IWmh5yvrdgv4rUVX4xVE004OheL+PI
+         /8AUmTvOKwGIU5Ku/sIm9m5U0rOim/SPjYy3gzVxef0QWGwTj1JJt9SDEH83TWoChVOq
+         wLkEyhYrjgWcWjYym7iQAuL3qcxgGsX3JQNmgv7pU5p9IHVMooy6My1cg5SbonFnCmxX
+         Fqwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DZy1sByRbPp81Fc4unsIfUDkM1speXohHbJEFLa+79Y=;
+        b=cvV8272CjqKNjseP9IVVUXbbxKJ0slLx1WsbkDJHDoeN/3vHwuctTz95T3x5v8qef4
+         wfQuL7StZwZjPkgUDbtB+lwe/oMAwB9Xbdy10mk/u+2jQR3GNEe7D0D74q70kMq9arlb
+         PNhpmuqIUw/xbiPYSNl5/rUdu6ZFvqxccOvNBRozsvoS6a54JRTc/3sqU3aSAA/0JUGC
+         Y3VAraup61c7CsK8ZBh2M96ClkM7ofpaMh+1a0fD0joJM0iWn/CYvcAr53OIWtdMFcZl
+         FXh0enaSlbVfnKVaYH03LCc6yFScN4tbWLcZmnZySjUxro6ycPDJmnN/BrhaN27W9cjt
+         IMDw==
+X-Gm-Message-State: APjAAAXdYKo5LbSIyB+ksyGRkl7Fcg1OvKReFWcuR7hCwWAQBk3DWZYm
+        wG6m4ecW0EFirlb5YPryXQA=
+X-Google-Smtp-Source: APXvYqxZv5pvU+COa+Z57bqd7TVlj3AKMVnWrlNSwtaonBLRwl6oAVA7CbZzWjXYXul1zP2Wc7+ZAQ==
+X-Received: by 2002:a05:6214:14b3:: with SMTP id bo19mr18216129qvb.93.1576972000657;
+        Sat, 21 Dec 2019 15:46:40 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id b7sm4323472qkh.106.2019.12.21.15.46.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Dec 2019 15:46:40 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Sat, 21 Dec 2019 18:46:37 -0500
+To:     Tom Murphy <murphyt7@tcd.ie>
+Cc:     iommu@lists.linux-foundation.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org
+Subject: Re: [PATCH 1/8] iommu/vt-d: clean up 32bit si_domain assignment
+Message-ID: <20191221234635.GA99623@rani.riverdale.lan>
+References: <20191221150402.13868-1-murphyt7@tcd.ie>
+ <20191221150402.13868-2-murphyt7@tcd.ie>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191221143020.hbgeixvlmzt7nh54@gondor.apana.org.au>
+In-Reply-To: <20191221150402.13868-2-murphyt7@tcd.ie>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 21, 2019 at 10:30:20PM +0800, Herbert Xu wrote:
-> The commit 643fa9612bf1 ("fscrypt: remove filesystem specific
-> build config option") removed modular support for fs/crypto.  This
-> causes the Crypto API to be built-in whenever fscrypt is enabled.
-> This makes it very difficult for me to test modular builds of
-> the Crypto API without disabling fscrypt which is a pain.
+On Sat, Dec 21, 2019 at 03:03:53PM +0000, Tom Murphy wrote:
+> In the intel iommu driver devices which only support 32bit DMA can't be
+> direct mapped. The implementation of this is weird. Currently we assign
+> it a direct mapped domain and then remove the domain later and replace
+> it with a domain of type IOMMU_DOMAIN_IDENTITY. We should just assign it
+> a domain of type IOMMU_DOMAIN_IDENTITY from the begging rather than
+> needlessly swapping domains.
 > 
-> AFAICS there is no reason why fscrypt has to be built-in.  The
-> commit above appears to have done this way purely for the sake of
-> simplicity.  In fact some simple Kconfig tweaking is sufficient
-> to retain a single FS_ENCRYPTION option while maintaining modularity.
+> Signed-off-by: Tom Murphy <murphyt7@tcd.ie>
+> ---
+>  drivers/iommu/intel-iommu.c | 88 +++++++++++++------------------------
+>  1 file changed, 31 insertions(+), 57 deletions(-)
 > 
-> This patch restores modular support to fscrypt by adding a new
-> hidden FS_ENCRYPTION_TRI tristate option that is selected by all
-> the FS_ENCRYPTION users.
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 0c8d81f56a30..c1ea66467918 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -5640,7 +5609,12 @@ static int intel_iommu_add_device(struct device *dev)
+>  	domain = iommu_get_domain_for_dev(dev);
+>  	dmar_domain = to_dmar_domain(domain);
+>  	if (domain->type == IOMMU_DOMAIN_DMA) {
+> -		if (device_def_domain_type(dev) == IOMMU_DOMAIN_IDENTITY) {
+> +		/*
+> +		 * We check dma_mask >= dma_get_required_mask(dev) because
+> +		 * 32 bit DMA falls back to non-identity mapping.
+> +		 */
+> +		if (device_def_domain_type(dev) == IOMMU_DOMAIN_IDENTITY &&
+> +				dma_mask >= dma_get_required_mask(dev)) {
+>  			ret = iommu_request_dm_for_dev(dev);
+>  			if (ret) {
+>  				dmar_remove_one_dev_info(dev);
+> -- 
+> 2.20.1
 > 
-> Subsequent to the above commit, some core code has been introduced
-> to fs/buffer.c that makes restoring modular support non-trivial.
-> This patch deals with this by adding a function pointer that defaults
-> to end_buffer_async_read function until fscrypt is loaded.  When
-> fscrypt is loaded it modifies the function pointer to its own
-> function which used to be end_buffer_async_read_io but now resides
-> in fscrypt.  When it is unloaded the function pointer is restored.
-> 
-> In order for this to be safe with respect to module removal, the
-> check for whether the host inode is encrypted has been moved into
-> mark_buffer_async_read.  The assumption is that as long as the
-> bh is alive the calling filesystem module will be resident.  The
-> calling filesystem would then guarantee that fscrypt is loaded.
-> 
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
-I'm not sure this is a good idea, since there will probably need to be more
-places where built-in code calls into fs/crypto/ too.
-
-There's actually already fscrypt_sb_free(), which this patch forgets to handle:
-
-	void fscrypt_sb_free(struct super_block *sb)
-	{
-		key_put(sb->s_master_keys);
-		sb->s_master_keys = NULL;
-	}
-
-Though we could make that an inline function.
-
-But there's also a patch under review which adds inline encryption support to
-ext4 and f2fs, which requires calling into fs/crypto/ from fs/buffer.c in order
-to set an encryption context on bios:
-
-https://lkml.kernel.org/linux-fscrypt/20191218145136.172774-10-satyat@google.com/
-
-If we also add direct I/O support for inline encryption (which is planned), it
-would require calling into fs/crypto/ from fs/direct-io.c and
-fs/iomap/direct-io.c as well.
-
-Another thing I've been thinking about is adding decryption support to
-__block_write_begin(), which would allow us to delete ext4_block_write_begin(),
-which was copied from __block_write_begin() to add decryption support.
-
-So more broadly, the issue is that a lot of the filesystem I/O helpers
-(fs/buffer.c, fs/iomap/, fs/direct-io.c, fs/mpage.c) are already built-in, and
-it can be necessary to call into fs/crypto/ from such places.
-
-Is it really much of an issue to just disable CONFIG_FS_ENCRYPTION when you want
-to test building the crypto API as a module?
-
-> diff --git a/fs/crypto/crypto.c b/fs/crypto/crypto.c
-> index 3719efa546c6..6bf7f05120bd 100644
-> --- a/fs/crypto/crypto.c
-> +++ b/fs/crypto/crypto.c
-> @@ -20,6 +20,7 @@
->   * Special Publication 800-38E and IEEE P1619/D16.
->   */
->  
-> +#include <linux/buffer_head.h>
->  #include <linux/pagemap.h>
->  #include <linux/mempool.h>
->  #include <linux/module.h>
-> @@ -286,6 +287,41 @@ int fscrypt_decrypt_block_inplace(const struct inode *inode, struct page *page,
->  }
->  EXPORT_SYMBOL(fscrypt_decrypt_block_inplace);
->  
-> +struct decrypt_bh_ctx {
-> +	struct work_struct work;
-> +	struct buffer_head *bh;
-> +};
-> +
-> +static void decrypt_bh(struct work_struct *work)
-> +{
-> +	struct decrypt_bh_ctx *ctx =
-> +		container_of(work, struct decrypt_bh_ctx, work);
-> +	struct buffer_head *bh = ctx->bh;
-> +	int err;
-> +
-> +	err = fscrypt_decrypt_pagecache_blocks(bh->b_page, bh->b_size,
-> +					       bh_offset(bh));
-> +	end_buffer_async_read(bh, err == 0);
-> +	kfree(ctx);
-> +}
-> +
-> +static void fscrypt_end_buffer_async_read(struct buffer_head *bh, int uptodate)
-> +{
-> +	/* Decrypt if needed */
-> +	if (uptodate) {
-> +		struct decrypt_bh_ctx *ctx = kmalloc(sizeof(*ctx), GFP_ATOMIC);
-> +
-> +		if (ctx) {
-> +			INIT_WORK(&ctx->work, decrypt_bh);
-> +			ctx->bh = bh;
-> +			fscrypt_enqueue_decrypt_work(&ctx->work);
-> +			return;
-> +		}
-> +		uptodate = 0;
-> +	}
-> +	end_buffer_async_read(bh, uptodate);
-> +}
-> +
->  /*
->   * Validate dentries in encrypted directories to make sure we aren't potentially
->   * caching stale dentries after a key has been added.
-> @@ -418,6 +454,8 @@ static int __init fscrypt_init(void)
->  	if (err)
->  		goto fail_free_info;
->  
-> +	end_buffer_async_read_io = fscrypt_end_buffer_async_read;
-> +
->  	return 0;
-
-This code would actually need to go into fs/crypto/bio.c because it depends on
-CONFIG_BLOCK.  UBIFS uses fs/crypto/ without CONFIG_BLOCK necessarily being set.
-
-> +/**
-> + * fscrypt_exit() - Shutdown the fs encryption system
-> + */
-> +static void __exit fscrypt_exit(void)
-> +{
-> +	end_buffer_async_read_io = end_buffer_async_read;
-> +
-> +	kmem_cache_destroy(fscrypt_info_cachep);
-> +	destroy_workqueue(fscrypt_read_workqueue);
-> +}
-> +module_exit(fscrypt_exit);
-
-There's a bit more that would need to be done here:
-
-	mempool_destroy(fscrypt_bounce_page_pool);
-
-and
-
-	fscrypt_exit_keyring()
-		=> unregister_key_type(&key_type_fscrypt);
-		=> unregister_key_type(&key_type_fscrypt_user);
-
-- Eric
+Should this be dma_direct_get_required_mask? dma_get_required_mask may
+return DMA_BIT_MASK(32) -- it callbacks into intel_get_required_mask,
+but I'm not sure what iommu_no_mapping(dev) will do at this point?
