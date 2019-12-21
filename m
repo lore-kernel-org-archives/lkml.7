@@ -2,139 +2,107 @@ Return-Path: <SRS0=ztpy=2L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C89BDC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 08:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1D3C43603
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 08:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A823221927
-	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 08:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3BBB20663
+	for <linux-kernel@archiver.kernel.org>; Sat, 21 Dec 2019 08:11:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="k7E1pG+g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbfLUIFJ (ORCPT
+        id S1726138AbfLUIK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 03:05:09 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:44397 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbfLUIFI (ORCPT
+        Sat, 21 Dec 2019 03:10:59 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:37550 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbfLUIK7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 03:05:08 -0500
-Received: by mail-il1-f197.google.com with SMTP id h87so9558098ild.11
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 00:05:08 -0800 (PST)
+        Sat, 21 Dec 2019 03:10:59 -0500
+Received: by mail-pj1-f65.google.com with SMTP id m13so5188955pjb.2
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 00:10:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c2QmcthC509cj/Eli7yMbtVeL3DFFQon0cv5ps2fld8=;
+        b=k7E1pG+gptopsZpkb7xBs2FacvzybhT00CmylaWlJvb8S1IOU3DVUi6W+KcHWoV7Hn
+         3XrD+M8K+B1WM5GWNs+NBZJSia4qJfe04zXDx63bJSGLYCS3wIYEx/s9IMIjeFgesWjY
+         xeZdORgpL/Ot6bzrNc5Ei+AhSA1DUT3WtB+fKm8GcMQpO5pyiFGFaRSjhumjHS9qCYlP
+         GkByatqVKIvMDLrbFO3SaSLzMZ2Js0mrGuuCNdJ0J85WQ16NJy1gohDJuX3sQFjvQphD
+         wVNAtYn8erqHztFvyZmMqRPK6z+6HIYkuvKD/U6F6uQ3PALERWJ/Ms6KmZ9Vi9g6/WAX
+         JhKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=deYFK8ddtWh1jagx++4fGZM5W0SjiPRG6DK7H6PrJhc=;
-        b=dmgWgvvTerLhFZGQdG4jkGQyks92JpHgQyvh6ISpPPutzCasQ2F8DksO2G7T0gDuTh
-         387VC7n792YRs01AvH9iOORH2j8oDbIUh8/Y3IDF10X+w3upF6G8iJ1UJrENNUkKOKB6
-         +Qw02LEMFmj9kSxeJxu8alYXlBd0zT8W7Ecj/H8y5DYM9S9DuWFJukAlE13Jhiv6K2ul
-         Lq2fMhYTgrtVvEyW9Ra20u+YL7sfjYrsqTvPKpHKQR0dgCWwPHqixQMB9FsMB7xm98oV
-         hSrsXO07JZXvBwqZcntVGwg/HeR9fNQCRrXaB/RqN2VWwzM/4IkBVUlmWPoTQY8F21Xn
-         PSvQ==
-X-Gm-Message-State: APjAAAXilQRXosrwx7b5l18RBGhXNNHp6rWQxI9osxCJPt8rXOiZara9
-        4QlpaS6USTKhr8zC7Q0icKr2fzmq/nlH+7bMeBEyRXiAzUEI
-X-Google-Smtp-Source: APXvYqzhDnpMLztsh0UlrrdoM00CUjaZhiVYUYPccEAHhKGyarpAS/rqpAfitgprb+IaOAfl0N3+4vHIWUa3JSskvLWr8H67eDId
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c2QmcthC509cj/Eli7yMbtVeL3DFFQon0cv5ps2fld8=;
+        b=WO2LR51TCJ8e4PCm0kllKjE5dcq+CvLgKngPN84U+GB/Mx1gGQNFOCLjUL6G4zhB8r
+         z4bqQM/ctmsfaSzoVrUyoBEfGlM4EhLjxR4pgxRVgqLQ3G0eMwtoCf8DMMq250Xc44I0
+         Qg6k/y41xWaWuaH3cRcXfgBuVUuj898IH5DK6yMZd8/++1WytnR9tbBpciUXTX6r2GtX
+         RiN+lIOyWgyYeM/8Nud4DwnvqwDpjLZNPoxYhK258/XdKefY5kZmqEMmJUSSx1YCQer1
+         XACBSHpmlxYJeNCKhtVhnER/dz70fQZqyOt7mQuRt+jpX/60gSGagRzkRN/oUyuRrDVE
+         qcag==
+X-Gm-Message-State: APjAAAWsoqlGNRXxCWZs8J/XRioYR8bIE0aWzeBVQRqVQl25dPFcZSYW
+        5LFfKo97wmKVtQRFDUSQcnzysQ==
+X-Google-Smtp-Source: APXvYqwaTwLS3KQkICvTV3yz9Eozslv+UH1ExiXFjtRGKR7BnMLYsKGQt7clw5XBQyYV7DBk6uJFTw==
+X-Received: by 2002:a17:90a:ac0e:: with SMTP id o14mr21703816pjq.11.1576915858612;
+        Sat, 21 Dec 2019 00:10:58 -0800 (PST)
+Received: from localhost.localdomain (118-171-138-160.dynamic-ip.hinet.net. [118.171.138.160])
+        by smtp.gmail.com with ESMTPSA id k44sm2484425pjb.20.2019.12.21.00.10.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Dec 2019 00:10:57 -0800 (PST)
+From:   Axel Lin <axel.lin@ingics.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Olliver Schinagl <oliver@schinagl.nl>,
+        Priit Laes <plaes@plaes.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH] regulator: axp20x: Fix axp20x_set_ramp_delay
+Date:   Sat, 21 Dec 2019 16:10:49 +0800
+Message-Id: <20191221081049.32490-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Received: by 2002:a02:3409:: with SMTP id x9mr15588491jae.3.1576915507909;
- Sat, 21 Dec 2019 00:05:07 -0800 (PST)
-Date:   Sat, 21 Dec 2019 00:05:07 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b09d8c059a3240be@google.com>
-Subject: WARNING in percpu_ref_exit (2)
-From:   syzbot <syzbot+8c4a14856e657b43487c@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Current code set incorrect bits when set ramp_delay for AXP20X_DCDC2,
+fix it.
 
-syzbot found the following crash on:
-
-HEAD commit:    7ddd09fc Add linux-next specific files for 20191220
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=12a18cc6e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f183b01c3088afc6
-dashboard link: https://syzkaller.appspot.com/bug?extid=8c4a14856e657b43487c
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14b8f351e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14b51925e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+8c4a14856e657b43487c@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 11482 at lib/percpu-refcount.c:111  
-percpu_ref_exit+0xab/0xd0 lib/percpu-refcount.c:111
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 11482 Comm: syz-executor051 Not tainted  
-5.5.0-rc2-next-20191220-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  panic+0x2e3/0x75c kernel/panic.c:221
-  __warn.cold+0x2f/0x3e kernel/panic.c:582
-  report_bug+0x289/0x300 lib/bug.c:195
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  fixup_bug arch/x86/kernel/traps.c:169 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:percpu_ref_exit+0xab/0xd0 lib/percpu-refcount.c:111
-Code: 00 00 00 00 fc ff df 48 c1 ea 03 80 3c 02 00 75 1d 48 c7 43 08 03 00  
-00 00 e8 01 41 e5 fd 5b 41 5c 41 5d 5d c3 e8 f5 40 e5 fd <0f> 0b eb bf 4c  
-89 ef e8 29 2c 23 fe eb d9 e8 82 2b 23 fe eb a7 4c
-RSP: 0018:ffffc9000cb17968 EFLAGS: 00010293
-RAX: ffff8880a3390640 RBX: ffff8880a83a8010 RCX: ffffffff83901432
-RDX: 0000000000000000 RSI: ffffffff8390149b RDI: ffff8880a83a8028
-RBP: ffffc9000cb17980 R08: ffff8880a3390640 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000607f51435750
-R13: ffff8880a83a8018 R14: ffff888097b95000 R15: ffff888097b95228
-  io_sqe_files_unregister+0x7d/0x2f0 fs/io_uring.c:4623
-  io_ring_ctx_free fs/io_uring.c:5575 [inline]
-  io_ring_ctx_wait_and_kill+0x430/0x9a0 fs/io_uring.c:5644
-  io_uring_release+0x42/0x50 fs/io_uring.c:5652
-  __fput+0x2ff/0x890 fs/file_table.c:280
-  ____fput+0x16/0x20 fs/file_table.c:313
-  task_work_run+0x145/0x1c0 kernel/task_work.c:113
-  exit_task_work include/linux/task_work.h:22 [inline]
-  do_exit+0x909/0x2f20 kernel/exit.c:797
-  do_group_exit+0x135/0x360 kernel/exit.c:895
-  get_signal+0x47c/0x24f0 kernel/signal.c:2734
-  do_signal+0x87/0x1700 arch/x86/kernel/signal.c:815
-  exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:160
-  prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
-  do_syscall_64+0x676/0x790 arch/x86/entry/common.c:304
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4468f9
-Code: e8 0c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 5b 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f7ef700ddb8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-RAX: fffffffffffffe00 RBX: 00000000006dbc38 RCX: 00000000004468f9
-RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00000000006dbc38
-RBP: 00000000006dbc30 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc3c
-R13: 00007fff8371e42f R14: 00007f7ef700e9c0 R15: 0000000000000001
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
+Fixes: d29f54df8b16 ("regulator: axp20x: add support for set_ramp_delay for AXP209")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/regulator/axp20x-regulator.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
+index fe369cba34fb..16f0c8570036 100644
+--- a/drivers/regulator/axp20x-regulator.c
++++ b/drivers/regulator/axp20x-regulator.c
+@@ -413,10 +413,13 @@ static int axp20x_set_ramp_delay(struct regulator_dev *rdev, int ramp)
+ 		int i;
+ 
+ 		for (i = 0; i < rate_count; i++) {
+-			if (ramp <= slew_rates[i])
+-				cfg = AXP20X_DCDC2_LDO3_V_RAMP_LDO3_RATE(i);
+-			else
++			if (ramp > slew_rates[i])
+ 				break;
++
++			if (id == AXP20X_DCDC2)
++				cfg = AXP20X_DCDC2_LDO3_V_RAMP_DCDC2_RATE(i);
++			else
++				cfg = AXP20X_DCDC2_LDO3_V_RAMP_LDO3_RATE(i);
+ 		}
+ 
+ 		if (cfg == 0xff) {
+-- 
+2.20.1
+
