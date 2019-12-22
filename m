@@ -2,135 +2,124 @@ Return-Path: <SRS0=7h0X=2M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8606C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 20:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0407EC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 20:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79DFC206D3
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 20:11:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="i2+Bb54o"
+	by mail.kernel.org (Postfix) with ESMTP id BB35D20733
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 20:16:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbfLVULz (ORCPT
+        id S1726834AbfLVUQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 15:11:55 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:48471 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725951AbfLVULz (ORCPT
+        Sun, 22 Dec 2019 15:16:16 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:42128 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbfLVUQP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 15:11:55 -0500
-X-UUID: a72950ab0d3f4d32b3219b6bd3bea13e-20191223
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=snNLFpI6iD8KtzouGrFPprybGRM2xQ+mm0t3hSBGidE=;
-        b=i2+Bb54ojTGwYYLziYsEEQ7jKyUOoN5k1KZU2T8nMysfls3UjEDX3n5xjtwWqPR2+61FmJEjWd4N/dMjwlbEzijmo7kEyZb2Oqkghz1bb6BbvG6qn20hxiBr7w3PLbMJGM68qWsB/jlOF2M+GpCeEnotIY8MohTA2we8qFbLZic=;
-X-UUID: a72950ab0d3f4d32b3219b6bd3bea13e-20191223
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <ryder.lee@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2087857733; Mon, 23 Dec 2019 04:11:43 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 23 Dec 2019 04:11:16 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 23 Dec 2019 04:10:50 +0800
-From:   Ryder Lee <ryder.lee@mediatek.com>
-To:     Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-CC:     <linux-wireless@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH v1 1/2] mt76: mt7615: rework set_channel function
-Date:   Mon, 23 Dec 2019 04:11:38 +0800
-Message-ID: <9a37e1340cc8c546587d7cf99d6c4d92e12e1a7d.1577044827.git.ryder.lee@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Sun, 22 Dec 2019 15:16:15 -0500
+Received: from [172.58.30.161] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1ij7e6-0002dA-FH; Sun, 22 Dec 2019 20:16:11 +0000
+Date:   Sun, 22 Dec 2019 21:15:58 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     Emilio Cobos =?utf-8?Q?=C3=81lvarez?= <ealvarez@mozilla.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Gian-Carlo Pascutto <gpascutto@mozilla.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Jed Davis <jld@mozilla.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH v5 2/3] pid: Introduce pidfd_getfd syscall
+Message-ID: <20191222201556.zcjceuwpel26jo37@wittgenstein>
+References: <20191220232810.GA20233@ircssh-2.c.rugged-nimbus-611.internal>
+ <20191222124756.o2v2zofseypnqg3t@wittgenstein>
+ <CAMp4zn-x3wiYVgmoVfkA61Epfh7JoEHUn5QCpULERxLPkLoMYA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 61A9F353F740679A2FA70EC917627447E2E9DB04B5870975D8AE200DC81804D42000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMp4zn-x3wiYVgmoVfkA61Epfh7JoEHUn5QCpULERxLPkLoMYA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tm8gbmVlZCB0byBzZW5kIGJvdGggTUNVX0VYVF9DTURfU0VUX1JYX1BBVEggYW5kIE1DVV9FWFRf
-Q01EX0NIQU5ORUxfU1dJVENIDQp0b2dldGhlciB0byBNQ1UuDQoNClNwbGl0IHRoZW0gb3V0IGJ5
-IHBhc3NpbmcgdGhlIHByb3BlciBjb21tYW5kIGluIHRoZSBjb3JyZXNwb25kaW5nIGZsb3cuDQoN
-ClNpZ25lZC1vZmYtYnk6IFJ5ZGVyIExlZSA8cnlkZXIubGVlQG1lZGlhdGVrLmNvbT4NCi0tLQ0K
-Q2hhbmdlcyBzaW5jZSB2MToNCi0gYWRkIE1DVV9FWFRfQ01EX1NFVF9SWF9QQVRIIHRvIGF2b2lk
-IGNyZWF0aW5nIGEgcmVncmVzc2lvbg0KLS0tDQogLi4uL25ldC93aXJlbGVzcy9tZWRpYXRlay9t
-dDc2L210NzYxNS9tYWluLmMgICB8ICA1ICsrKystDQogLi4uL25ldC93aXJlbGVzcy9tZWRpYXRl
-ay9tdDc2L210NzYxNS9tY3UuYyAgICB8IDE4ICsrKystLS0tLS0tLS0tLS0tLQ0KIC4uLi9uZXQv
-d2lyZWxlc3MvbWVkaWF0ZWsvbXQ3Ni9tdDc2MTUvbXQ3NjE1LmggfCAgMiArLQ0KIDMgZmlsZXMg
-Y2hhbmdlZCwgOSBpbnNlcnRpb25zKCspLCAxNiBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvbmV0L3dpcmVsZXNzL21lZGlhdGVrL210NzYvbXQ3NjE1L21haW4uYyBiL2RyaXZl
-cnMvbmV0L3dpcmVsZXNzL21lZGlhdGVrL210NzYvbXQ3NjE1L21haW4uYw0KaW5kZXggNGZmYTky
-MGQ0ZjRkLi45MGM0ZTc4NWExYTMgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL25ldC93aXJlbGVzcy9t
-ZWRpYXRlay9tdDc2L210NzYxNS9tYWluLmMNCisrKyBiL2RyaXZlcnMvbmV0L3dpcmVsZXNzL21l
-ZGlhdGVrL210NzYvbXQ3NjE1L21haW4uYw0KQEAgLTExLDYgKzExLDcgQEANCiAjaW5jbHVkZSA8
-bGludXgvcGNpLmg+DQogI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KICNpbmNsdWRlICJtdDc2
-MTUuaCINCisjaW5jbHVkZSAibWN1LmgiDQogDQogc3RhdGljIGJvb2wgbXQ3NjE1X2Rldl9ydW5u
-aW5nKHN0cnVjdCBtdDc2MTVfZGV2ICpkZXYpDQogew0KQEAgLTQ3LDYgKzQ4LDggQEAgc3RhdGlj
-IGludCBtdDc2MTVfc3RhcnQoc3RydWN0IGllZWU4MDIxMV9odyAqaHcpDQogCQltdDc2MTVfbWN1
-X3NldF9tYWNfZW5hYmxlKGRldiwgMSwgdHJ1ZSk7DQogCX0NCiANCisJbXQ3NjE1X21jdV9zZXRf
-Y2hhbl9pbmZvKHBoeSwgTUNVX0VYVF9DTURfU0VUX1JYX1BBVEgpOw0KKw0KIAlzZXRfYml0KE1U
-NzZfU1RBVEVfUlVOTklORywgJnBoeS0+bXQ3Ni0+c3RhdGUpOw0KIA0KIAlpZiAocnVubmluZykN
-CkBAIC0yMjQsNyArMjI3LDcgQEAgc3RhdGljIGludCBtdDc2MTVfc2V0X2NoYW5uZWwoc3RydWN0
-IG10NzYxNV9waHkgKnBoeSkNCiAJcGh5LT5kZnNfc3RhdGUgPSAtMTsNCiAJbXQ3Nl9zZXRfY2hh
-bm5lbChwaHktPm10NzYpOw0KIA0KLQlyZXQgPSBtdDc2MTVfbWN1X3NldF9jaGFubmVsKHBoeSk7
-DQorCXJldCA9IG10NzYxNV9tY3Vfc2V0X2NoYW5faW5mbyhwaHksIE1DVV9FWFRfQ01EX0NIQU5O
-RUxfU1dJVENIKTsNCiAJaWYgKHJldCkNCiAJCWdvdG8gb3V0Ow0KIA0KZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvbmV0L3dpcmVsZXNzL21lZGlhdGVrL210NzYvbXQ3NjE1L21jdS5jIGIvZHJpdmVycy9u
-ZXQvd2lyZWxlc3MvbWVkaWF0ZWsvbXQ3Ni9tdDc2MTUvbWN1LmMNCmluZGV4IGZjMDkxMjc4ZDll
-NS4uZmZkMDljODY3MGQ0IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvbWVkaWF0
-ZWsvbXQ3Ni9tdDc2MTUvbWN1LmMNCisrKyBiL2RyaXZlcnMvbmV0L3dpcmVsZXNzL21lZGlhdGVr
-L210NzYvbXQ3NjE1L21jdS5jDQpAQCAtMTM2NCwxMiArMTM2NCwxMSBAQCBpbnQgbXQ3NjE1X21j
-dV9yZGRfc2VuZF9wYXR0ZXJuKHN0cnVjdCBtdDc2MTVfZGV2ICpkZXYpDQogCQkJCSAgICZyZXEs
-IHNpemVvZihyZXEpLCBmYWxzZSk7DQogfQ0KIA0KLWludCBtdDc2MTVfbWN1X3NldF9jaGFubmVs
-KHN0cnVjdCBtdDc2MTVfcGh5ICpwaHkpDQoraW50IG10NzYxNV9tY3Vfc2V0X2NoYW5faW5mbyhz
-dHJ1Y3QgbXQ3NjE1X3BoeSAqcGh5LCBpbnQgY21kKQ0KIHsNCiAJc3RydWN0IG10NzYxNV9kZXYg
-KmRldiA9IHBoeS0+ZGV2Ow0KIAlzdHJ1Y3QgY2ZnODAyMTFfY2hhbl9kZWYgKmNoYW5kZWYgPSAm
-cGh5LT5tdDc2LT5jaGFuZGVmOw0KIAlpbnQgZnJlcTEgPSBjaGFuZGVmLT5jZW50ZXJfZnJlcTEs
-IGZyZXEyID0gY2hhbmRlZi0+Y2VudGVyX2ZyZXEyOw0KLQl1OCBuX2NoYWlucyA9IGh3ZWlnaHQ4
-KHBoeS0+bXQ3Ni0+YW50ZW5uYV9tYXNrKTsNCiAJc3RydWN0IHsNCiAJCXU4IGNvbnRyb2xfY2hh
-bjsNCiAJCXU4IGNlbnRlcl9jaGFuOw0KQEAgLTEzOTEsMTEgKzEzOTAsMTAgQEAgaW50IG10NzYx
-NV9tY3Vfc2V0X2NoYW5uZWwoc3RydWN0IG10NzYxNV9waHkgKnBoeSkNCiAJfSByZXEgPSB7DQog
-CQkuY29udHJvbF9jaGFuID0gY2hhbmRlZi0+Y2hhbi0+aHdfdmFsdWUsDQogCQkuY2VudGVyX2No
-YW4gPSBpZWVlODAyMTFfZnJlcXVlbmN5X3RvX2NoYW5uZWwoZnJlcTEpLA0KLQkJLnR4X3N0cmVh
-bXMgPSBuX2NoYWlucywNCi0JCS5yeF9zdHJlYW1zX21hc2sgPSBuX2NoYWlucywNCisJCS50eF9z
-dHJlYW1zID0gaHdlaWdodDgocGh5LT5tdDc2LT5hbnRlbm5hX21hc2spLA0KKwkJLnJ4X3N0cmVh
-bXNfbWFzayA9IHBoeS0+Y2hhaW5tYXNrLA0KIAkJLmNlbnRlcl9jaGFuMiA9IGllZWU4MDIxMV9m
-cmVxdWVuY3lfdG9fY2hhbm5lbChmcmVxMiksDQogCX07DQotCWludCByZXQ7DQogDQogCWlmIChk
-ZXYtPm10NzYuaHctPmNvbmYuZmxhZ3MgJiBJRUVFODAyMTFfQ09ORl9PRkZDSEFOTkVMKQ0KIAkJ
-cmVxLnN3aXRjaF9yZWFzb24gPSBDSF9TV0lUQ0hfU0NBTl9CWVBBU1NfRFBEOw0KQEAgLTE0MzQs
-MTUgKzE0MzIsNyBAQCBpbnQgbXQ3NjE1X21jdV9zZXRfY2hhbm5lbChzdHJ1Y3QgbXQ3NjE1X3Bo
-eSAqcGh5KQ0KIAl9DQogCW1lbXNldChyZXEudHhwb3dlcl9za3UsIDB4M2YsIDQ5KTsNCiANCi0J
-cmV0ID0gX19tdDc2X21jdV9zZW5kX21zZygmZGV2LT5tdDc2LCBNQ1VfRVhUX0NNRF9DSEFOTkVM
-X1NXSVRDSCwNCi0JCQkJICAmcmVxLCBzaXplb2YocmVxKSwgdHJ1ZSk7DQotCWlmIChyZXQpDQot
-CQlyZXR1cm4gcmV0Ow0KLQ0KLQlyZXEucnhfc3RyZWFtc19tYXNrID0gcGh5LT5jaGFpbm1hc2s7
-DQotDQotCXJldHVybiBfX210NzZfbWN1X3NlbmRfbXNnKCZkZXYtPm10NzYsIE1DVV9FWFRfQ01E
-X1NFVF9SWF9QQVRILA0KLQkJCQkgICAmcmVxLCBzaXplb2YocmVxKSwgdHJ1ZSk7DQorCXJldHVy
-biBfX210NzZfbWN1X3NlbmRfbXNnKCZkZXYtPm10NzYsIGNtZCwgJnJlcSwgc2l6ZW9mKHJlcSks
-IHRydWUpOw0KIH0NCiANCiBpbnQgbXQ3NjE1X21jdV9zZXRfaHRfY2FwKHN0cnVjdCBtdDc2MTVf
-ZGV2ICpkZXYsIHN0cnVjdCBpZWVlODAyMTFfdmlmICp2aWYsDQpkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9uZXQvd2lyZWxlc3MvbWVkaWF0ZWsvbXQ3Ni9tdDc2MTUvbXQ3NjE1LmggYi9kcml2ZXJzL25l
-dC93aXJlbGVzcy9tZWRpYXRlay9tdDc2L210NzYxNS9tdDc2MTUuaA0KaW5kZXggNDg4MTBlZGEx
-Y2Q2Li5mYjQ2MWU3NjFkNTkgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL25ldC93aXJlbGVzcy9tZWRp
-YXRlay9tdDc2L210NzYxNS9tdDc2MTUuaA0KKysrIGIvZHJpdmVycy9uZXQvd2lyZWxlc3MvbWVk
-aWF0ZWsvbXQ3Ni9tdDc2MTUvbXQ3NjE1LmgNCkBAIC0yNTEsNyArMjUxLDcgQEAgaW50IG10NzYx
-NV9tY3Vfc2V0X3N0YV9yZWMoc3RydWN0IG10NzYxNV9kZXYgKmRldiwgc3RydWN0IGllZWU4MDIx
-MV92aWYgKnZpZiwNCiAJCQkgICBzdHJ1Y3QgaWVlZTgwMjExX3N0YSAqc3RhLCBib29sIGVuKTsN
-CiBpbnQgbXQ3NjE1X21jdV9zZXRfYmNuKHN0cnVjdCBpZWVlODAyMTFfaHcgKmh3LCBzdHJ1Y3Qg
-aWVlZTgwMjExX3ZpZiAqdmlmLA0KIAkJICAgICAgIGludCBlbik7DQotaW50IG10NzYxNV9tY3Vf
-c2V0X2NoYW5uZWwoc3RydWN0IG10NzYxNV9waHkgKnBoeSk7DQoraW50IG10NzYxNV9tY3Vfc2V0
-X2NoYW5faW5mbyhzdHJ1Y3QgbXQ3NjE1X3BoeSAqcGh5LCBpbnQgY21kKTsNCiBpbnQgbXQ3NjE1
-X21jdV9zZXRfd21tKHN0cnVjdCBtdDc2MTVfZGV2ICpkZXYsIHU4IHF1ZXVlLA0KIAkJICAgICAg
-IGNvbnN0IHN0cnVjdCBpZWVlODAyMTFfdHhfcXVldWVfcGFyYW1zICpwYXJhbXMpOw0KIGludCBt
-dDc2MTVfbWN1X3NldF90eF9iYShzdHJ1Y3QgbXQ3NjE1X2RldiAqZGV2LA0KLS0gDQoyLjE4LjAN
-Cg==
+On Sun, Dec 22, 2019 at 10:36:42AM -0800, Sargun Dhillon wrote:
+> , On Sun, Dec 22, 2019 at 4:48 AM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> >
+> > On Fri, Dec 20, 2019 at 11:28:13PM +0000, Sargun Dhillon wrote:
+> > > This syscall allows for the retrieval of file descriptors from other
+> > > processes, based on their pidfd. This is possible using ptrace, and
+> > > injection of parasitic code along with using SCM_RIGHTS to move
+> > > file descriptors between a tracee and a tracer. Unfortunately, ptrace
+> > > comes with a high cost of requiring the process to be stopped, and
+> > > breaks debuggers. This does not require stopping the process under
+> > > manipulation.
+> > >
+> > > One reason to use this is to allow sandboxers to take actions on file
+> > > descriptors on the behalf of another process. For example, this can be
+> > > combined with seccomp-bpf's user notification to do on-demand fd
+> > > extraction and take privileged actions. For example, it can be used
+> > > to bind a socket to a privileged port.
+> > >
+> > > /* prototype */
+> > >   /*
+> > >    * pidfd_getfd_options is an extensible struct which can have options
+> > >    * added to it. If options is NULL, size, and it will be ignored be
+> > >    * ignored, otherwise, size should be set to sizeof(*options). If
+> > >    * option is newer than the current kernel version, E2BIG will be
+> > >    * returned.
+> > >    */
+> > >   struct pidfd_getfd_options {};
+> > >   long pidfd_getfd(int pidfd, int fd, unsigned int flags,
+> > >                  struct pidfd_getfd_options *options, size_t size);
+> That's embarrassing. This was supposed to read:
+> long pidfd_getfd(int pidfd, int fd, struct pidfd_get_options *options,
+> size_t size);
+> 
+> >
+> > The prototype advertises a flags argument but the actual
+> >
+> > +SYSCALL_DEFINE4(pidfd_getfd, int, pidfd, int, fd,
+> > +               struct pidfd_getfd_options __user *, options, size_t, usize)
+> >
+> > does not have a flags argument...
+> >
+> > I think having a flags argument makes a lot of sense.
+> >
+> > I'm not sure what to think about the struct. I agree with Aleksa that
+> > having an empty struct is not a great idea. From a design perspective it
+> > seems very out of place. If we do a struct at all putting at least a
+> > single reserved field in there might makes more sense.
+> >
+> > In general, I think we need to have a _concrete_ reason why putting a
+> > struct versioned by size as arguments for this syscall.
+> > That means we need to have at least a concrete example for a new feature
+> > for this syscall where a flag would not convey enough information.
+> I can think of at least two reasons we need flags:
+> * Clearing cgroup flags
+> * Closing the process under manipulation's FD when we fetch it.
+> 
+> The original reason for wanting to have two places where we can put
+> flags was to have a different field for fd flags vs. call flags. I'm not sure
+> there's any flags you'd want to set.
+> 
+> Given this, if we want to go down the route of a syscall, we should just
+> leave it as a __u64 flags, and drop the pointer to the struct, if we're
 
+I think it needs to be an unsigned int. Having a 64bit register arg is
+really messy on 32bit and means you need to have a compat syscall
+implementation which handles this.
+
+Christian
