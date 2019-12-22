@@ -2,104 +2,109 @@ Return-Path: <SRS0=7h0X=2M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E7EC2D0D4
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 09:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D008C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 10:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0759F20733
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 09:39:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="n85fiOsG"
+	by mail.kernel.org (Postfix) with ESMTP id F2F3D2070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 10:34:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577010890;
+	bh=8mLWcC+lPFwoyj8oc2V0lIZ8hi8rjrhtfZxtSPNEOYA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=r1XAImlZnZBqS+U4/g4hZHbmsQKLFDmZ7BJhpM9xTbRAHr+jlps4YQkU1UCSZh4mQ
+	 aulmFxB4M1Sw2z+hYfGD17auchZTk+P1a+JOAXM6jecd7lA2KVxNHjNWXkXwlM/eAc
+	 o7p3JoPdaP7oog6AJiRYMi6lacl0qnNbfaqH3/40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726215AbfLVJi6 (ORCPT
+        id S1726829AbfLVKet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 04:38:58 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:55611 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725899AbfLVJi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 04:38:58 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47gcqy2GwPz9sP3;
-        Sun, 22 Dec 2019 20:38:54 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1577007536;
-        bh=RBJy1kWVsZo+T0mOhiHBES+O0CcNsNgVcU5WlbLQWmM=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=n85fiOsGjyE40GQx5qgQMAjJ72/x75ab6jJ4DhMaAzrWUnyr+knviOsVQYWWvUeMl
-         bHn/UM5iga7H2xrW3isgGyzFJ2kDrWl4hl9PpK6hAi1i30QEclv9W/83h+/ikyYGcN
-         /LZipv2d1vGWY1pd5WAPdJPrTpO5SDp0C/RgEs7x2GBRQQ+IJLrg42vyvIT9Gp5QC/
-         4Ev2BmWmHQDvhkJJUmOssgg/0djtJzZ8lZz7+JHSXf1miWf2ktntHvctMvDWmNPai8
-         MVZmetUU6J3dVXmvG6yAudqAtEpnYzIX+oC1oWl7dSLpfSS24vFo10AZzhJzyWksXU
-         n8W/qByHIWFkQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     yingjie_bai@126.com, Scott Wood <oss@buserror.net>,
-        Kumar Gala <galak@kernel.crashing.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Bai Yingjie <byj.tea@gmail.com>
-Subject: Re: [PATCH] powerpc/mpc85xx: also write addr_h to spin table for 64bit boot entry
-In-Reply-To: <1574694943-7883-1-git-send-email-yingjie_bai@126.com>
-References: <1574694943-7883-1-git-send-email-yingjie_bai@126.com>
-Date:   Sun, 22 Dec 2019 20:38:51 +1100
-Message-ID: <87pngglmxg.fsf@mpe.ellerman.id.au>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Sun, 22 Dec 2019 05:34:49 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:46535 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725977AbfLVKes (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Dec 2019 05:34:48 -0500
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=big-swifty.misterjones.org)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iiyZR-0005Mb-ML; Sun, 22 Dec 2019 11:34:45 +0100
+Date:   Sun, 22 Dec 2019 10:34:55 +0000
+Message-ID: <86d0cgir74.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 10/18] arm64: KVM/debug: use EL1&0 stage 1 translation regime
+In-Reply-To: <20191220143025.33853-11-andrew.murray@arm.com>
+References: <20191220143025.33853-1-andrew.murray@arm.com>
+        <20191220143025.33853-11-andrew.murray@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: andrew.murray@arm.com, catalin.marinas@arm.com, will@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-yingjie_bai@126.com writes:
-> From: Bai Yingjie <byj.tea@gmail.com>
->
-> CPU like P4080 has 36bit physical address, its DDR physical
-> start address can be configured above 4G by LAW registers.
->
-> For such systems in which their physical memory start address was
-> configured higher than 4G, we need also to write addr_h into the spin
-> table of the target secondary CPU, so that addr_h and addr_l together
-> represent a 64bit physical address.
-> Otherwise the secondary core can not get correct entry to start from.
->
-> This should do no harm for normal case where addr_h is all 0.
->
-> Signed-off-by: Bai Yingjie <byj.tea@gmail.com>
+On Fri, 20 Dec 2019 14:30:17 +0000,
+Andrew Murray <andrew.murray@arm.com> wrote:
+> 
+> From: Sudeep Holla <sudeep.holla@arm.com>
+> 
+> Now that we have all the save/restore mechanism in place, lets enable
+> the translation regime used by buffer from EL2 stage 1 to EL1 stage 1
+> on VHE systems.
+> 
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> [ Reword commit, don't trap to EL2 ]
+
+Not trapping to EL2 for the case where we don't allow SPE in the
+guest is not acceptable.
+
+> Signed-off-by: Andrew Murray <andrew.murray@arm.com>
 > ---
->  arch/powerpc/platforms/85xx/smp.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/arch/powerpc/platforms/85xx/smp.c b/arch/powerpc/platforms/85xx/smp.c
-> index 8c7ea2486bc0..f12cdd1e80ff 100644
-> --- a/arch/powerpc/platforms/85xx/smp.c
-> +++ b/arch/powerpc/platforms/85xx/smp.c
-> @@ -252,6 +252,14 @@ static int smp_85xx_start_cpu(int cpu)
->  	out_be64((u64 *)(&spin_table->addr_h),
->  		__pa(ppc_function_entry(generic_secondary_smp_init)));
->  #else
-> +	/*
-> +	 * We need also to write addr_h to spin table for systems
-> +	 * in which their physical memory start address was configured
-> +	 * to above 4G, otherwise the secondary core can not get
-> +	 * correct entry to start from.
-> +	 * This does no harm for normal case where addr_h is all 0.
-> +	 */
-> +	out_be32(&spin_table->addr_h, __pa(__early_start) >> 32);
->  	out_be32(&spin_table->addr_l, __pa(__early_start));
+>  arch/arm64/kvm/hyp/switch.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
+> index 67b7c160f65b..6c153b79829b 100644
+> --- a/arch/arm64/kvm/hyp/switch.c
+> +++ b/arch/arm64/kvm/hyp/switch.c
+> @@ -100,6 +100,7 @@ static void activate_traps_vhe(struct kvm_vcpu *vcpu)
+>  
+>  	write_sysreg(val, cpacr_el1);
+>  
+> +	write_sysreg(vcpu->arch.mdcr_el2 | 3 << MDCR_EL2_E2PB_SHIFT, mdcr_el2);
+>  	write_sysreg(kvm_get_hyp_vector(), vbar_el1);
+>  }
+>  NOKPROBE_SYMBOL(activate_traps_vhe);
+> @@ -117,6 +118,7 @@ static void __hyp_text __activate_traps_nvhe(struct kvm_vcpu *vcpu)
+>  		__activate_traps_fpsimd32(vcpu);
+>  	}
+>  
+> +	write_sysreg(vcpu->arch.mdcr_el2 | 3 << MDCR_EL2_E2PB_SHIFT, mdcr_el2);
 
-This breaks the corenet32_smp_defconfig build:
+There is a _MASK macro that can replace this '3', and is in keeping
+with the rest of the code.
 
-  /linux/arch/powerpc/platforms/85xx/smp.c: In function 'smp_85xx_start_cpu':
-  /linux/arch/powerpc/platforms/85xx/smp.c:262:52: error: right shift count >= width of type [-Werror=shift-count-overflow]
-    262 |  out_be32(&spin_table->addr_h, __pa(__early_start) >> 32);
-        |                                                    ^~
-  cc1: all warnings being treated as errors
+It still remains that it looks like the wrong place to do this, and
+vcpu_load seems much better. Why should you write to mdcr_el2 on each
+entry to the guest, since you know whether it has SPE enabled at the
+point where it gets scheduled?
 
-cheers
+	M.
+
+-- 
+Jazz is not dead, it just smells funny.
