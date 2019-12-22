@@ -2,224 +2,168 @@ Return-Path: <SRS0=7h0X=2M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E95C2D0D4
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 13:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFDF2C2D0D4
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 13:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4742214D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 13:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B97C020733
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 13:29:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TX7pOrAw"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="XcW78meM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbfLVNZF (ORCPT
+        id S1725791AbfLVN31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 08:25:05 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35851 "EHLO
+        Sun, 22 Dec 2019 08:29:27 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44712 "EHLO
         mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbfLVNZE (ORCPT
+        with ESMTP id S1725807AbfLVN31 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 08:25:04 -0500
-Received: by mail-pl1-f196.google.com with SMTP id a6so5376346plm.3;
-        Sun, 22 Dec 2019 05:25:04 -0800 (PST)
+        Sun, 22 Dec 2019 08:29:27 -0500
+Received: by mail-pl1-f196.google.com with SMTP id az3so6101398plb.11
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Dec 2019 05:29:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yAOtMUwD/qpfStPtispf3vk9JaKfKQUNKLcLxT26P+w=;
-        b=TX7pOrAwGAXN6pE7nq78PMMvdr4vJzLvqz44HqMKGqbQsNjK5i6RvG5WMB/hR6KGf6
-         4NPr2Qfy5CiPUykEyODKg8lqNrjqq0WnUFUfdnUyt6E5NnM8dPN+ydbjQJFH73UVuK16
-         XaupZPv3e96ASYNJlvURztvPFk85Ks1X68k+Fa+J7QyQIaAwqxYR/VRBesLb8DWm6dhg
-         5JaD48vFawlXW9c/3fe837M17MBHZR1+09CVwQA+qgVrNPv5QmJQ0dTv2uLH8ZNzbSgw
-         rF2icc//h7Vcn1FCO2KphtRVvZYL994ltq/Ldk9k7vltBl6/sPW6bumwtcgKXmI1/ZcK
-         x1Zw==
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LWZqcIgXzVjxh5QO9iqiielSvIWzDSYtzjB+sutWZrE=;
+        b=XcW78meMsHm0SpaX4VrEA6E4dieJGP37g5HDR1y6DPqGx8T31EVyv2759+sjQgyXBo
+         zKe5IZITHQmhWhUS1fJYiGKuBbLHTC+aTNrSnhGFPDyUBXtW44LDMvlK/r/+FOQE8M+R
+         XUFHsmUeMKxQlxxdHNGeBujV8sNd+fgHDD5No=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yAOtMUwD/qpfStPtispf3vk9JaKfKQUNKLcLxT26P+w=;
-        b=USBmtuLNzMuNCaYPVSu3roXvWe78C+Oz7OZCpMLUIyvBI2bnazBM13Kn/iz+0O+A5h
-         nmDZgTAaTubszY+3JIixzfF/HYmguEQFRbEf8/ZRsk4jiAEXP3opCtf+Hq16PhhVwrF+
-         9hoDM7OVBoDjAIkANmYmlzVA9RYjPAxgU0eqjaS5HD6tCxsHqwkg6dix0ZMQbgB/CbSs
-         VtXk2H2qMpapeOdBjsbT1rGqUpJNO1XpkbpnvKYstXRvBTufWJ5qn6s35K8ryOCznXZ1
-         ysH24bfPI/NEYuT441bnJfFwQENDT/gJcCp9J3QzCa3jAye2CDwpmlsUHxwdIHLjlpjG
-         wv/w==
-X-Gm-Message-State: APjAAAVfbjRGD7wYHfF5FKko/gdwthfRfS7OLxBTdzIviiLNL0fA2Qt3
-        rNPOK00lpoUhHNJ70EbSw8U=
-X-Google-Smtp-Source: APXvYqz7JAli1bhkUSt9KMgUJ/tuA/JNFlY9P88wOQBoqkeETc3LPCu0h3YXwDXQ7y2NnbxuZ+4qMg==
-X-Received: by 2002:a17:902:8207:: with SMTP id x7mr1160978pln.286.1577021103598;
-        Sun, 22 Dec 2019 05:25:03 -0800 (PST)
-Received: from localhost (64.64.229.47.16clouds.com. [64.64.229.47])
-        by smtp.gmail.com with ESMTPSA id b4sm20816190pfd.18.2019.12.22.05.25.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 22 Dec 2019 05:25:03 -0800 (PST)
-Date:   Sun, 22 Dec 2019 21:24:59 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Chen <Peter.Chen@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 08/10] usb: phy: tegra: Use u32 for hardware register
- variables
-Message-ID: <20191222132227.GA7096@nuc8i5>
-References: <20191220015238.9228-1-digetx@gmail.com>
- <20191220015238.9228-9-digetx@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LWZqcIgXzVjxh5QO9iqiielSvIWzDSYtzjB+sutWZrE=;
+        b=b/ZPsZcySgyX1AiidhpAvvq+9eCoyriVOX8Gm5sxOiGyJgwCt3UvF3OzmscxmJnNAP
+         k5eUEHhcIktw+YABCj5ltep8ib7q8UQtxzSG53niJ9yOEZEJbBsHMclMy3AP21fEEWFL
+         OyNRItPCWkzdHDwf3rDkGWhY95kjvXsxNZ7HyZQ7qvLgWVLkCXCcM8Hl3zYqf6s8QKnn
+         Adqfnot/MJxg8ORHVHmxLV9R1g8sFKmXMPvQZXCgWMBwKz3thcPWDSQso8WSjU0AVuf0
+         5FI/R9AgTf74QPkM1BnDD8eSubPTUq+i+kpEhA8gb8SlfdblXqLHAUbcZPHAu1dlI5YW
+         YOTg==
+X-Gm-Message-State: APjAAAUwsenNq8PLKhIeYYGq7FOGwmhQC52uKjJted2pBJG2bKYXpvVt
+        vEybnfWWtVcqWZX5d3xWW/fbsg==
+X-Google-Smtp-Source: APXvYqzcNJuWc8MTuhe7A8pH5TeATr3P+P2XEUlqmG+YPokbTDnm72De/WEtbLWj75YMaAAOnnqb+A==
+X-Received: by 2002:a17:902:ac97:: with SMTP id h23mr26261351plr.237.1577021365959;
+        Sun, 22 Dec 2019 05:29:25 -0800 (PST)
+Received: from localhost.localdomain ([49.206.202.16])
+        by smtp.gmail.com with ESMTPSA id o2sm12073058pjo.26.2019.12.22.05.29.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Dec 2019 05:29:25 -0800 (PST)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     michael@amarulasolutions.com, Icenowy Zheng <icenowy@aosc.io>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v14 0/7] drm/sun4i: Allwinner A64 MIPI-DSI support
+Date:   Sun, 22 Dec 2019 18:52:22 +0530
+Message-Id: <20191222132229.30276-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191220015238.9228-9-digetx@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 04:52:36AM +0300, Dmitry Osipenko wrote:
-> There is a mix of u32/ULONG usage in the driver's code. Let's switch to
-> u32 uniformly, for consistency.
-> 
-> Suggested-by: Thierry Reding <thierry.reding@gmail.com>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/usb/phy/phy-tegra-usb.c | 28 +++++++++++++++-------------
->  1 file changed, 15 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/usb/phy/phy-tegra-usb.c b/drivers/usb/phy/phy-tegra-usb.c
-> index d5739b6e0b6c..551c94e3877a 100644
-> --- a/drivers/usb/phy/phy-tegra-usb.c
-> +++ b/drivers/usb/phy/phy-tegra-usb.c
-> @@ -202,7 +202,7 @@ static inline struct tegra_usb_phy *to_tegra_usb_phy(struct usb_phy *u_phy)
->  static void set_pts(struct tegra_usb_phy *phy, u8 pts_val)
->  {
->  	void __iomem *base = phy->regs;
-> -	unsigned long val;
-> +	u32 val;
->  
->  	if (phy->soc_config->has_hostpc) {
->  		val = readl_relaxed(base + TEGRA_USB_HOSTPC1_DEVLC);
-> @@ -221,7 +221,7 @@ static void set_pts(struct tegra_usb_phy *phy, u8 pts_val)
->  static void set_phcd(struct tegra_usb_phy *phy, bool enable)
->  {
->  	void __iomem *base = phy->regs;
-> -	unsigned long val;
-> +	u32 val;
->  
->  	if (phy->soc_config->has_hostpc) {
->  		val = readl_relaxed(base + TEGRA_USB_HOSTPC1_DEVLC);
-> @@ -320,7 +320,8 @@ static int utmip_pad_power_on(struct tegra_usb_phy *phy)
->  {
->  	struct tegra_utmip_config *config = phy->config;
->  	void __iomem *base = phy->pad_regs;
-> -	unsigned long val, flags;
-> +	unsigned long flags;
-> +	u32 val;
-Why are you still using unsigned long here?
+This is v14 version for Allwinner A64 MIPI-DSI support
+and here is the previous version set[1]
 
->  	int err;
->  
->  	err = clk_prepare_enable(phy->pad_clk);
-> @@ -355,7 +356,8 @@ static int utmip_pad_power_on(struct tegra_usb_phy *phy)
->  static int utmip_pad_power_off(struct tegra_usb_phy *phy)
->  {
->  	void __iomem *base = phy->pad_regs;
-> -	unsigned long val, flags;
-> +	unsigned long flags;
-> +	u32 val;
-ditto
+Changes for v14:
+- drop explicit regmap_exit, clk_put
+Changes for v13:
+- update dt-bindings for A64
+- drop has_mod_clk variant
+- use regmap bus clock properly
+Changes for v12:
+- use enum insted of oneOf+const
+- handle bus clock using regmap attach clk
+- tested on A64, A33 boards.
+Changes for v11:
+- fix dt-bindings for dphy
+- fix dt-bindings for dsi controller
+- add bus clock handling code
+- tested on A64, A33 boards.
+Changes for v10:
+- updated dt-bindings as per .yaml format
+- rebased on drm-misc/for-linux-next
+Changes for v9:
+- moved dsi fixes in separate series on top of A33
+- rebase on linux-next
+Changes for v8:
+- rebased on drm-misc change along with linux-next
+- reworked video start delay patch
+- tested on 4 different dsi panels
+- reworked commit messages
+Changes for v7:
+- moved vcc-dsi binding to required filed.
+- drop quotes on fallback dphy bindings.
+- drop min_rate clock pll-mipi patches.
+- introduce dclk divider computation as like A64 BSP.
+- add A64 DSI quark patches.
+- fixed A64 DSI pipeline.
+- add proper commit messages.
+- collect Merlijn Wajer Tested-by credits.
+Changes for v6:
+- dropped unneeded changes, patches
+- fixed all burst mode patches as per previous version comments
+- rebase on master
+- update proper commit message
+- dropped unneeded comments
+- order the patches that make review easy
+Changes for v5:
+- collect Rob, Acked-by
+- droped "Fix VBP size calculation" patch
+- updated vblk timing calculation.
+- droped techstar, bananapi dsi panel drivers which may require
+  bridge or other setup. it's under discussion.
+Changes for v4:
+- droppoed untested CCU_FEATURE_FIXED_POSTDIV check code in
+  nkm min, max rate patches
+- create two patches for "Add Allwinner A64 MIPI DSI support"
+  one for has_mod_clk quirk and other one for A64 support
+- use existing driver code construct for hblk computation
+- dropped "Increase hfp packet overhead" patch [2], though BSP added
+  this but we have no issues as of now.
+  (no issues on panel side w/o this change)
+- create separate function for vblk computation 
+- enable vcc-dsi regulator in dsi_runtime_resume
+- collect Rob, Acked-by
+- update MAINTAINERS file for panel drivers
+- cleanup commit messages
+- fixed checkpatch warnings/errors
 
->  	int err;
->  
->  	if (!utmip_pad_count) {
-> @@ -393,7 +395,7 @@ static int utmi_wait_register(void __iomem *reg, u32 mask, u32 result)
->  static void utmi_phy_clk_disable(struct tegra_usb_phy *phy)
->  {
->  	void __iomem *base = phy->regs;
-> -	unsigned long val;
-> +	u32 val;
->  
->  	/*
->  	 * The USB driver may have already initiated the phy clock
-> @@ -425,7 +427,7 @@ static void utmi_phy_clk_disable(struct tegra_usb_phy *phy)
->  static void utmi_phy_clk_enable(struct tegra_usb_phy *phy)
->  {
->  	void __iomem *base = phy->regs;
-> -	unsigned long val;
-> +	u32 val;
->  
->  	/*
->  	 * The USB driver may have already initiated the phy clock
-> @@ -460,7 +462,7 @@ static int utmi_phy_power_on(struct tegra_usb_phy *phy)
->  {
->  	struct tegra_utmip_config *config = phy->config;
->  	void __iomem *base = phy->regs;
-> -	unsigned long val;
-> +	u32 val;
->  	int err;
->  
->  	val = readl_relaxed(base + USB_SUSP_CTRL);
-> @@ -611,7 +613,7 @@ static int utmi_phy_power_on(struct tegra_usb_phy *phy)
->  static int utmi_phy_power_off(struct tegra_usb_phy *phy)
->  {
->  	void __iomem *base = phy->regs;
-> -	unsigned long val;
-> +	u32 val;
->  
->  	utmi_phy_clk_disable(phy);
->  
-> @@ -646,7 +648,7 @@ static int utmi_phy_power_off(struct tegra_usb_phy *phy)
->  static void utmi_phy_preresume(struct tegra_usb_phy *phy)
->  {
->  	void __iomem *base = phy->regs;
-> -	unsigned long val;
-> +	u32 val;
->  
->  	val = readl_relaxed(base + UTMIP_TX_CFG0);
->  	val |= UTMIP_HS_DISCON_DISABLE;
-> @@ -656,7 +658,7 @@ static void utmi_phy_preresume(struct tegra_usb_phy *phy)
->  static void utmi_phy_postresume(struct tegra_usb_phy *phy)
->  {
->  	void __iomem *base = phy->regs;
-> -	unsigned long val;
-> +	u32 val;
->  
->  	val = readl_relaxed(base + UTMIP_TX_CFG0);
->  	val &= ~UTMIP_HS_DISCON_DISABLE;
-> @@ -667,7 +669,7 @@ static void utmi_phy_restore_start(struct tegra_usb_phy *phy,
->  				   enum tegra_usb_phy_port_speed port_speed)
->  {
->  	void __iomem *base = phy->regs;
-> -	unsigned long val;
-> +	u32 val;
->  
->  	val = readl_relaxed(base + UTMIP_MISC_CFG0);
->  	val &= ~UTMIP_DPDM_OBSERVE_SEL(~0);
-> @@ -687,7 +689,7 @@ static void utmi_phy_restore_start(struct tegra_usb_phy *phy,
->  static void utmi_phy_restore_end(struct tegra_usb_phy *phy)
->  {
->  	void __iomem *base = phy->regs;
-> -	unsigned long val;
-> +	u32 val;
->  
->  	val = readl_relaxed(base + UTMIP_MISC_CFG0);
->  	val &= ~UTMIP_DPDM_OBSERVE;
-> @@ -698,7 +700,7 @@ static void utmi_phy_restore_end(struct tegra_usb_phy *phy)
->  static int ulpi_phy_power_on(struct tegra_usb_phy *phy)
->  {
->  	void __iomem *base = phy->regs;
-> -	unsigned long val;
-> +	u32 val;
->  	int err;
->  
->  	err = gpio_direction_output(phy->reset_gpio, 0);
-> -- 
-> 2.24.0
-> 
+[1] https://patchwork.freedesktop.org/series/71131/
+
+Any inputs?
+Jagan.
+
+Jagan Teki (7):
+  dt-bindings: sun6i-dsi: Document A64 MIPI-DSI controller
+  dt-bindings: sun6i-dsi: Add A64 DPHY compatible (w/ A31 fallback)
+  drm/sun4i: dsi: Get the mod clock for A31
+  drm/sun4i: dsi: Handle bus clock via regmap_mmio_attach_clk
+  drm/sun4i: dsi: Add Allwinner A64 MIPI DSI support
+  arm64: dts: allwinner: a64: Add MIPI DSI pipeline
+  [DO NOT MERGE] arm64: dts: allwinner: bananapi-m64: Enable Bananapi S070WV20-CT16 DSI
+    panel
+
+ .../display/allwinner,sun6i-a31-mipi-dsi.yaml | 33 ++++++++++++-
+ .../phy/allwinner,sun6i-a31-mipi-dphy.yaml    |  6 ++-
+ .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 31 ++++++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 37 +++++++++++++++
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c        | 47 ++++++++++++++-----
+ 5 files changed, 140 insertions(+), 14 deletions(-)
+
+-- 
+2.18.0.321.gffc6fa0e3
+
