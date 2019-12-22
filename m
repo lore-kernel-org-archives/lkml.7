@@ -2,113 +2,87 @@ Return-Path: <SRS0=7h0X=2M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36951C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 05:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2B0C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 07:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA1D42067C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 05:47:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QbGggnc4"
+	by mail.kernel.org (Postfix) with ESMTP id 204BB2070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 07:01:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfLVFrc (ORCPT
+        id S1725997AbfLVHBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 00:47:32 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44996 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfLVFrc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 00:47:32 -0500
-Received: by mail-pg1-f195.google.com with SMTP id x7so7099393pgl.11;
-        Sat, 21 Dec 2019 21:47:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=XjcArXgAKvyfXDBzvMFPB+lHDAxL1AfHT3DO6M8M8pE=;
-        b=QbGggnc4rIBvP1w2ApBWds25yNBz7SrOcuLl9VlQJCYjcADux3y+UglVZooSW4SdPa
-         aASLnMYWp9ViF6BO87ILXkqQ31ecI/dJ95aVsHGvEf4an7NFGG9VRRWXv0GlSWwXiOhe
-         SEeX6HvJncwtqsBCqvOYraM0XN9E025eXKDhV8/HP/yceXDtqY/XfKq96TJsCB7wbQ9d
-         3bzPdDFtPFSX5gh70p2FbaXB1nYNmUvODQkfOB6Z5yltAub3uX+1v4SlAssElHprNXV+
-         JSJ6elEQfi+pGIitKDnzijKqhSpQRTpGbLIcWcwB+FnKXRmNQHosDOEAxyQ6CR3uP7/A
-         7aXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XjcArXgAKvyfXDBzvMFPB+lHDAxL1AfHT3DO6M8M8pE=;
-        b=IyxwoT9i00bVRfWcdNIlSZbr7HwA9l8iV74/6bxObFOkfZegRZ+TB8VyMWAQFNSrEt
-         gmwCnfWmYTnC5iA6+OSgmlQm9+F5ZR8c7/k4MHjOxx4MV+60tRaXskfC1wYSf50zH7mI
-         Dg4Ua3ARt9VIzqr3Ry1j5SSUzrF3jBDAyN+3m9kdsw5xIO2zwpzk6SrYxbqK4i1aOecm
-         FCoJDMkruyUapWbLj6ZVsvpm32aSdnJTbF783ZdNyKk7rqpMAOTT9pbb4EhGdsdHFCgA
-         8Rh24sV7a7eK3Sep/TxgqQC3MZiF4nmDti4TmrclaIkZ9A5TOMbK5mfibjChowl8HJ87
-         vKCQ==
-X-Gm-Message-State: APjAAAVhI2B88yfDOTg9UwP9P/2VwZjBmEzWbnHiDz315b77Z1hQ9x0K
-        3hKZIae3W7x385CfbQxBVHM=
-X-Google-Smtp-Source: APXvYqx/CXunbtTsMsCA0OTUahlAsoQ/vNvrN9YML3yeUrMBpoBnwEnYlPtdizk64BmU3JLJ3C6eAQ==
-X-Received: by 2002:a63:d017:: with SMTP id z23mr24720347pgf.110.1576993651284;
-        Sat, 21 Dec 2019 21:47:31 -0800 (PST)
-Received: from debian.net.fpt ([2405:4800:58f7:229b:e8c2:8912:129c:d0d])
-        by smtp.gmail.com with ESMTPSA id o2sm10880285pjo.26.2019.12.21.21.47.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Dec 2019 21:47:30 -0800 (PST)
-From:   Phong Tran <tranmanphong@gmail.com>
-To:     syzbot+514595412b80dc817633@syzkaller.appspotmail.com,
-        davem@davemloft.net, gregkh@linuxfoundation.org, oneukum@suse.com
-Cc:     allison@lohutok.net, andreyknvl@google.com,
-        kstewart@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-        swinslow@gmail.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, tranmanphong@gmail.com, zhang.run@zte.com.cn
-Subject: [PATCH] ax88172a: fix wrong reading MAC malicious device
-Date:   Sun, 22 Dec 2019 12:47:13 +0700
-Message-Id: <20191222054713.14887-1-tranmanphong@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <000000000000ab9d07059a410fae@google.com>
-References: <000000000000ab9d07059a410fae@google.com>
+        Sun, 22 Dec 2019 02:01:37 -0500
+Received: from mga12.intel.com ([192.55.52.136]:45872 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725775AbfLVHBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Dec 2019 02:01:36 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Dec 2019 23:01:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,342,1571727600"; 
+   d="scan'208";a="416946691"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga005.fm.intel.com with ESMTP; 21 Dec 2019 23:01:33 -0800
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>
+Subject: Re: [PATCH v4 0/7] Use 1st-level for IOVA translation
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+To:     "Liu, Yi L" <yi.l.liu@intel.com>, Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+References: <20191219031634.15168-1-baolu.lu@linux.intel.com>
+ <A2975661238FB949B60364EF0F2C25743A13A364@SHSMSX104.ccr.corp.intel.com>
+ <434d7478-1ed3-1962-ff9d-1b37d0c44b9c@linux.intel.com>
+Message-ID: <46169833-6fae-d37e-89c3-c3abcdd31d79@linux.intel.com>
+Date:   Sun, 22 Dec 2019 15:00:38 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <434d7478-1ed3-1962-ff9d-1b37d0c44b9c@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Crash log KASAN: use-after-free Read in asix_suspend
+Hi Yi,
 
-https://syzkaller.appspot.com/text?tag=CrashLog&x=1330a2c6e00000
-(unnamed net_device) (uninitialized): Failed to read MAC address: 0
+On 12/21/19 11:14 AM, Lu Baolu wrote:
+> Hi again,
+> 
+> On 2019/12/20 19:50, Liu, Yi L wrote:
+>> 3) Per VT-d spec, FLPT has canonical requirement to the input
+>> addresses. So I'd suggest to add some enhance regards to it.
+>> Please refer to chapter 3.6:-).
+>>
+>> 3.6 First-Level Translation
+>> First-level translation restricts the input-address to a canonical 
+>> address (i.e., address bits 63:N have
+>> the same value as address bit [N-1], where N is 48-bits with 4-level 
+>> paging and 57-bits with 5-level
+>> paging). Requests subject to first-level translation by remapping 
+>> hardware are subject to canonical
+>> address checking as a pre-condition for first-level translation, and a 
+>> violation is treated as a
+>> translation-fault.
+> 
+> It seems to be a conflict at bit 63. It should be the same as bit[N-1]
+> according to the canonical address requirement; but it is also used as
+> the XD control. Any thought?
 
-asix_read_cmd() with ret = 0 but this is a error. Fix the checking
-return value condition.
+Ignore this please. It makes no sense. :-) I confused.
 
-Reported-by: syzbot+514595412b80dc817633@syzkaller.appspotmail.com
-
-Tested by:
-https://groups.google.com/d/msg/syzkaller-bugs/0hHExZ030LI/yge-2Q_9BAAJ
-
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
----
- drivers/net/usb/ax88172a.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/net/usb/ax88172a.c b/drivers/net/usb/ax88172a.c
-index af3994e0853b..525900896ce0 100644
---- a/drivers/net/usb/ax88172a.c
-+++ b/drivers/net/usb/ax88172a.c
-@@ -197,6 +197,8 @@ static int ax88172a_bind(struct usbnet *dev, struct usb_interface *intf)
- 	/* Get the MAC address */
- 	ret = asix_read_cmd(dev, AX_CMD_READ_NODE_ID, 0, 0, ETH_ALEN, buf, 0);
- 	if (ret < ETH_ALEN) {
-+		if (ret >= 0)
-+			ret = -ENXIO;
- 		netdev_err(dev->net, "Failed to read MAC address: %d\n", ret);
- 		goto free;
- 	}
--- 
-2.20.1
-
+Best regards,
+baolu
