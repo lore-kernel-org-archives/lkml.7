@@ -4,63 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6855C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 19:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3CBC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 19:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABE1F206CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 19:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 693FB206CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 19:10:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577041814;
-	bh=sWzONr3qKC6qgg10Sb+Bn9JI8FPF3i2gvsdC80RQ/NE=;
+	s=default; t=1577041817;
+	bh=1jSit8CQeOHrXtfDi5X5qF0E8hZqEJBF1s2hOuJ13Ko=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Ex7EXrKJjGnaQJ+TmpM/xRb1MgJ52MEBQRCnLpGxYjF1SEN+AzUhg7EZjD1aQcbM7
-	 8XnuFMruhpD/RvsZ4o2dAccg3KaQ9rnmMGxfFLvZJkK0DIaZhOTHQrVt5jC7Sj3vt+
-	 RrmmwrDAvmbBz+HJyLSBqxWXMnpAZV/syrRhNWTo=
+	b=UTLmgCEkvyRKM5bHJZv4WgHkkyh6Q6GbD3sWngpQINYFtfubJYoBv1pFk8/Fi0jZq
+	 nE8KN1NrmIh0faZmQhbeMT7GCK0EdDSigPihmmOOPjC0898biRc2aLO0uY033h7wet
+	 0Z+dHVLdYoosfg9RL2DLQ3ywwCFu62k2/+Jly9fc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbfLVTKN (ORCPT
+        id S1727467AbfLVTKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 14:10:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32778 "EHLO mail.kernel.org"
+        Sun, 22 Dec 2019 14:10:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726726AbfLVTKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 14:10:12 -0500
-Subject: Re: [GIT PULL] KVM patches for 5.5-rc3
+        id S1726726AbfLVTKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Dec 2019 14:10:14 -0500
+Subject: Re: [GIT PULL] ext4 fixes for 5.5-rc3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577041812;
-        bh=sWzONr3qKC6qgg10Sb+Bn9JI8FPF3i2gvsdC80RQ/NE=;
+        s=default; t=1577041813;
+        bh=1jSit8CQeOHrXtfDi5X5qF0E8hZqEJBF1s2hOuJ13Ko=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=cS8FXONXU3VpA2crffLZs7vCSV7ik09fT+SJqGIZ5nZTN8LeSny8K1hh+0sc1JqsI
-         1Xustuqs7FDbVN+wLup/zoh3XnckfuF+6ObGR2hltDtaf/vQhf1q6l0V4zWK5Bsx7l
-         wytdxLVmqa/ldcHP0EOGqGb17dqCy4NcQkZ15SxE=
+        b=OxJJQAmRYxkz0yadqGu9dkEXuMJ03EVfOP+zUhWgFb31mbt1QGEHomU96gF698x8F
+         81Fb7U08sntbcAW6SZ+TSGjaGGc5LSCPxOlmiECfyaNNGnopg3XBZBeS+WL74S81bF
+         QrbckfzFg9iprEdXb/pALNrTbB7fK9lH0jLV+zaU=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <1577023254-13034-1-git-send-email-pbonzini@redhat.com>
-References: <1577023254-13034-1-git-send-email-pbonzini@redhat.com>
+In-Reply-To: <20191222142603.GA357248@mit.edu>
+References: <20191222142603.GA357248@mit.edu>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <1577023254-13034-1-git-send-email-pbonzini@redhat.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/virt/kvm/kvm.git
- tags/for-linus
-X-PR-Tracked-Commit-Id: d68321dec1b2234fb32f423e32c3af5915eae36c
+X-PR-Tracked-Message-Id: <20191222142603.GA357248@mit.edu>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git
+ tags/ext4_for_linus_stable
+X-PR-Tracked-Commit-Id: 23f6b02405343103791c6a9533d73716cdf0c672
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a313c8e056f86d13ae95a4aef30715918efff20f
-Message-Id: <157704181215.1067.14583320724918228605.pr-tracker-bot@kernel.org>
-Date:   Sun, 22 Dec 2019 19:10:12 +0000
-To:     Paolo Bonzini <pbonzini@redhat.com>
+X-PR-Merge-Commit-Id: a396560706d457058b9f54f184b6f5973c82032c
+Message-Id: <157704181392.1067.2996457268147875057.pr-tracker-bot@kernel.org>
+Date:   Sun, 22 Dec 2019 19:10:13 +0000
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
 Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
+        linux-ext4@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 22 Dec 2019 15:00:54 +0100:
+The pull request you sent on Sun, 22 Dec 2019 09:26:03 -0500:
 
-> https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git tags/ext4_for_linus_stable
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a313c8e056f86d13ae95a4aef30715918efff20f
+https://git.kernel.org/torvalds/c/a396560706d457058b9f54f184b6f5973c82032c
 
 Thank you!
 
