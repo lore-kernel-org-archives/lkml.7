@@ -2,175 +2,120 @@ Return-Path: <SRS0=7h0X=2M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E659C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 16:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 300EBC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 16:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 459A1206D3
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 16:49:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577033381;
-	bh=zNwV6UcRWYyXPEtNmmpVjDoWHyX7Z1gcx8eFJmze8mg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0901+S0CvJG7ByQC8Snj5nF/2+9skdMo99WNS5F3wg9iuojYNoRSq2PAHfXAtCvdG
-	 x6CTzAnMN1ooz9U/cDYHC1M1h6f+9L67p4K0bAdIBnIVGbxCyr9ZoATa8qCCwSojdz
-	 QM4bytwYmiX+sfj5wy5hPTKosabwJfNhWZicWkB0=
+	by mail.kernel.org (Postfix) with ESMTP id 02A79206CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 16:56:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfLVQtk (ORCPT
+        id S1726291AbfLVQ4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 11:49:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38814 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbfLVQtj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 11:49:39 -0500
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BDC22070A;
-        Sun, 22 Dec 2019 16:49:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577033378;
-        bh=zNwV6UcRWYyXPEtNmmpVjDoWHyX7Z1gcx8eFJmze8mg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WdS5yxPmd7RX9ltaK4Oge25rmUk44wOe0yd4V6/7qk1BRZTYlcDg8xn+6N8wdvQPr
-         NlEMcuioxl8QWiP2mVUD69EIrOPzovxEMSWP3lpa4eeORQjsOJJlQijZbDZpthIXmx
-         FgdRE6YjBFTm2YXH1k4O+oylhv0x15M9UYwnjH1o=
-Received: by mail-lj1-f174.google.com with SMTP id l2so15505686lja.6;
-        Sun, 22 Dec 2019 08:49:38 -0800 (PST)
-X-Gm-Message-State: APjAAAU52rjvYOA6fm91y9A/g2X/bGQd+9PaEZbo5dpHnfWOfXMqNU0z
-        xQ7SEbI37+yc77dciduA10zmAmMtCJurImLed4k=
-X-Google-Smtp-Source: APXvYqw+7LsTvhfr17gQzvZhmz8/LnvcJbjWww+1BqNZBdSt5pyypiA6KMl3+4MaQAGBhgU3LpIiXqsY+ypdKUkPeTo=
-X-Received: by 2002:a2e:8551:: with SMTP id u17mr10521487ljj.165.1577033376732;
- Sun, 22 Dec 2019 08:49:36 -0800 (PST)
+        Sun, 22 Dec 2019 11:56:44 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:39808 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfLVQ4o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Dec 2019 11:56:44 -0500
+Received: from [172.58.30.161] (helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1ij4Wz-0007EQ-LL; Sun, 22 Dec 2019 16:56:38 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     christian.brauner@ubuntu.com
+Cc:     chenqiwu@xiaomi.com, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, mingo@kernel.org, oleg@redhat.com,
+        peterz@infradead.org, prsood@codeaurora.org, qiwuchen55@gmail.com
+Subject: Applied patch "exit: panic before exit_mm() on global init exit"
+Date:   Sun, 22 Dec 2019 17:56:11 +0100
+Message-Id: <20191222165610.17637-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <1211FB6C-ECD6-4D4A-8353-4D103C1C5054@ubuntu.com>
+References: <1211FB6C-ECD6-4D4A-8353-4D103C1C5054@ubuntu.com>
 MIME-Version: 1.0
-References: <20191221181855.31380-1-tiny.windzz@gmail.com>
-In-Reply-To: <20191221181855.31380-1-tiny.windzz@gmail.com>
-From:   Chanwoo Choi <chanwoo@kernel.org>
-Date:   Mon, 23 Dec 2019 01:49:00 +0900
-X-Gmail-Original-Message-ID: <CAGTfZH1aObSb5oWnVzp_WaGALFfC9VQpRKQ+AWTauPVL7VPOSg@mail.gmail.com>
-Message-ID: <CAGTfZH1aObSb5oWnVzp_WaGALFfC9VQpRKQ+AWTauPVL7VPOSg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] PM / devfreq: rk3399_dmc: Add missing devfreq_event_disable_edev
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+I've added the patch:
 
-2019=EB=85=84 12=EC=9B=94 22=EC=9D=BC (=EC=9D=BC) =EC=98=A4=EC=A0=84 3:21, =
-Yangtao Li <tiny.windzz@gmail.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> The probe process may fail, but the devfreq event device remains
-> enabled. Call devfreq_event_disable_edev on the error return path.
->
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->  drivers/devfreq/rk3399_dmc.c | 17 ++++++++++++-----
->  1 file changed, 12 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/devfreq/rk3399_dmc.c b/drivers/devfreq/rk3399_dmc.c
-> index 2f1027c5b647..4f4e7c041888 100644
-> --- a/drivers/devfreq/rk3399_dmc.c
-> +++ b/drivers/devfreq/rk3399_dmc.c
-> @@ -364,7 +364,8 @@ static int rk3399_dmcfreq_probe(struct platform_devic=
-e *pdev)
->                         if (res.a0) {
->                                 dev_err(dev, "Failed to set dram param: %=
-ld\n",
->                                         res.a0);
-> -                               return -EINVAL;
-> +                               ret =3D -EINVAL;
-> +                               goto err_disable_edev;
+  exit: panic before exit_mm() on global init exit
 
-After jumping err_disable_edev, it calls the dev_pm_opp_of_remove_table().
-it is wrong. It doesn't need to remove the table.
+to
+  https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/log/?h=fixes
 
->                         }
->                 }
->         }
-> @@ -373,8 +374,10 @@ static int rk3399_dmcfreq_probe(struct platform_devi=
-ce *pdev)
->         if (node) {
->                 data->regmap_pmu =3D syscon_node_to_regmap(node);
->                 of_node_put(node);
-> -               if (IS_ERR(data->regmap_pmu))
-> -                       return PTR_ERR(data->regmap_pmu);
-> +               if (IS_ERR(data->regmap_pmu)) {
-> +                       ret =3D PTR_ERR(data->regmap_pmu);
-> +                       goto err_disable_edev;
+I've rewritten the commit message and fixed a typo in the comment.
 
-ditto.
+If noone objects this will be part of the threads-fixes pr early next week.
 
-After jumping err_disable_edev, it calls the dev_pm_opp_of_remove_table().
-it is wrong. It doesn't need to remove the table.
+Thanks!
+Christian
 
-> +               }
->         }
->
->         regmap_read(data->regmap_pmu, RK3399_PMUGRF_OS_REG2, &val);
-> @@ -392,7 +395,8 @@ static int rk3399_dmcfreq_probe(struct platform_devic=
-e *pdev)
->                 data->odt_dis_freq =3D data->timing.lpddr4_odt_dis_freq;
->                 break;
->         default:
-> -               return -EINVAL;
-> +               ret =3D -EINVAL;
-> +               goto err_disable_edev;
+From 43cf75d96409a20ef06b756877a2e72b10a026fc Mon Sep 17 00:00:00 2001
+From: chenqiwu <chenqiwu@xiaomi.com>
+Date: Thu, 19 Dec 2019 14:29:53 +0800
+Subject: [PATCH] exit: panic before exit_mm() on global init exit
 
-ditto.
+Currently, when global init and all threads in its thread-group have exited
+we panic via:
+do_exit()
+-> exit_notify()
+   -> forget_original_parent()
+      -> find_child_reaper()
+This makes it hard to extract a useable coredump for global init from a
+kernel crashdump because by the time we panic exit_mm() will have already
+released global init's mm.
+This patch moves the panic futher up before exit_mm() is called. As was the
+case previously, we only panic when global init and all its threads in the
+thread-group have exited.
 
->         };
->
->         arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, 0, 0,
-> @@ -426,7 +430,8 @@ static int rk3399_dmcfreq_probe(struct platform_devic=
-e *pdev)
->          */
->         if (dev_pm_opp_of_add_table(dev)) {
->                 dev_err(dev, "Invalid operating-points in device tree.\n"=
-);
-> -               return -EINVAL;
-> +               ret =3D -EINVAL;
-> +               goto err_disable_edev;
+Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+[christian.brauner@ubuntu.com: fix typo, rewrite commit message]
+Link: https://lore.kernel.org/r/1576736993-10121-1-git-send-email-qiwuchen55@gmail.com
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+ kernel/exit.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-ditto.
+diff --git a/kernel/exit.c b/kernel/exit.c
+index a46a50d67002..fc364272759d 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -517,10 +517,6 @@ static struct task_struct *find_child_reaper(struct task_struct *father,
+ 	}
+ 
+ 	write_unlock_irq(&tasklist_lock);
+-	if (unlikely(pid_ns == &init_pid_ns)) {
+-		panic("Attempted to kill init! exitcode=0x%08x\n",
+-			father->signal->group_exit_code ?: father->exit_code);
+-	}
+ 
+ 	list_for_each_entry_safe(p, n, dead, ptrace_entry) {
+ 		list_del_init(&p->ptrace_entry);
+@@ -786,6 +782,14 @@ void __noreturn do_exit(long code)
+ 	acct_update_integrals(tsk);
+ 	group_dead = atomic_dec_and_test(&tsk->signal->live);
+ 	if (group_dead) {
++		/*
++		 * If the last thread of global init has exited, panic
++		 * immediately to get a useable coredump.
++		 */
++		if (unlikely(is_global_init(tsk)))
++			panic("Attempted to kill init! exitcode=0x%08x\n",
++				tsk->signal->group_exit_code ?: (int)code);
++
+ #ifdef CONFIG_POSIX_TIMERS
+ 		hrtimer_cancel(&tsk->signal->real_timer);
+ 		exit_itimers(tsk->signal);
+-- 
+2.24.0
 
->         }
->
->         of_property_read_u32(np, "upthreshold",
-> @@ -464,6 +469,8 @@ static int rk3399_dmcfreq_probe(struct platform_devic=
-e *pdev)
->
->         return 0;
->
-> +err_disable_edev:
-> +       devfreq_event_disable_edev(data->edev);
-
-It is wrong. It have to be called under dev_pm_opp_of_remove_table().
-It ignores the sequence of exception handling.
-
->  err_free_opp:
->         dev_pm_opp_of_remove_table(&pdev->dev);
->         return ret;
-> --
-> 2.17.1
->
-
-
---=20
-Best Regards,
-Chanwoo Choi
