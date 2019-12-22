@@ -2,226 +2,90 @@ Return-Path: <SRS0=7h0X=2M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6680AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 16:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D4FC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 16:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3804220733
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 16:06:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577030770;
-	bh=Sl2yx+lIrkKRhlpPMiDC1rjSdFHftcpX7mfEQyeZ20I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=JO5AMOMIhL9HDOlrkLxldIWJaI/dT4fMHU+v/j3y+xRNOhcuT8OqnPNR6sP5zMTP3
-	 IyNcEUHbiJQ8TJSRdVtLeLIfBTmx3/lpdiq0n0qMjBi6AgUcdQKHnkNI5RlkB3UxNH
-	 QMI5vMTFG4AH8GY5Jf72XafbGxhuT3RZ1ogiSnpA=
+	by mail.kernel.org (Postfix) with ESMTP id 329172070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 16:32:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="tAU8nMI+";
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="QgPaewRv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbfLVQGJ (ORCPT
+        id S1726215AbfLVQ0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 11:06:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49006 "EHLO mail.kernel.org"
+        Sun, 22 Dec 2019 11:26:53 -0500
+Received: from node.akkea.ca ([192.155.83.177]:36884 "EHLO node.akkea.ca"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbfLVQGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 11:06:09 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FF262070A;
-        Sun, 22 Dec 2019 16:06:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577030767;
-        bh=Sl2yx+lIrkKRhlpPMiDC1rjSdFHftcpX7mfEQyeZ20I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=RhCO6G/MA3S/IylOiCv75UeAaV3VxlWxDc469AEtXzrcsJ9/JS+kRl0a81BMCOtFd
-         ba/9oua7Rci6Jcnl93sfy4SzPdm3wsnuA0PJZun+WGiDA5hlMUi2akK00cvDUD5U2e
-         FV0vndPp7uscHyRBUhSC6IuJpKuTCaWFLqXLZzBE=
-Date:   Sun, 22 Dec 2019 16:06:02 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Dan Robertson <dan@dlrobertson.com>
-Cc:     linux-iio@vger.kernel.org,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Joe Perches <joe@perches.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v8 3/3] iio: (bma400) basic regulator support
-Message-ID: <20191222160602.0f889650@archlinux>
-In-Reply-To: <20191220160051.26321-4-dan@dlrobertson.com>
-References: <20191220160051.26321-1-dan@dlrobertson.com>
-        <20191220160051.26321-4-dan@dlrobertson.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725903AbfLVQ0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Dec 2019 11:26:52 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by node.akkea.ca (Postfix) with ESMTP id 5997E4E2006;
+        Sun, 22 Dec 2019 16:26:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1577032012; bh=lk9n/H5OSRh/eNco0XIFOxKBT6v9JzTnq1Z23DQmHEE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=tAU8nMI+A66/QdQwZA2pwNdrzATWia4EeolinMMU1jAcyZL+fglcCS3oUTOFy+ThO
+         BGUxVDCD4QE3O5/vd3sDUj5mNF02iipVrkvGsT87SqV/G8oNmONgVtvh7ye/sGR8Nu
+         gEt3+0Ji/GvnlH5411c40PApaFQoL3h86FH5ujiM=
+X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
+Received: from node.akkea.ca ([127.0.0.1])
+        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id c0Ju1VJTmglr; Sun, 22 Dec 2019 16:26:51 +0000 (UTC)
+Received: from www.akkea.ca (node.akkea.ca [192.155.83.177])
+        by node.akkea.ca (Postfix) with ESMTPSA id C44C94E2003;
+        Sun, 22 Dec 2019 16:26:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1577032011; bh=lk9n/H5OSRh/eNco0XIFOxKBT6v9JzTnq1Z23DQmHEE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=QgPaewRv2sRM8fKVBqjqVQMZPUjRwmFsgBADtmiybFwygb8QbDiI/kUQWSWvB/XZA
+         cIRz2yK0Dvi14pAikoDCg2Ce3M32fPvZ2cij7clvJ2AEbU+sl/EnPVxGiO+PHIiCSV
+         0qhPvkRdE2TJ7NYLfESfcIno9oy1y7X0YnDBUWYc=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Sun, 22 Dec 2019 08:26:51 -0800
+From:   Angus Ainslie <angus@akkea.ca>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     kernel@puri.sm, Liam Girdwood <lgirdwood@gmail.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] ASoC: gtm601: add Broadmobi bm818 sound profile
+In-Reply-To: <20191220130143.GF4790@sirena.org.uk>
+References: <20191219210944.18256-1-angus@akkea.ca>
+ <20191219210944.18256-2-angus@akkea.ca>
+ <20191220130143.GF4790@sirena.org.uk>
+Message-ID: <499dffad51cb7819bd118ad15048816c@akkea.ca>
+X-Sender: angus@akkea.ca
+User-Agent: Roundcube Webmail/1.3.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Dec 2019 16:00:51 +0000
-Dan Robertson <dan@dlrobertson.com> wrote:
-
-> Add support for the VDD and VDDIO regulators using the regulator
-> framework.
+On 2019-12-20 05:01, Mark Brown wrote:
+> On Thu, Dec 19, 2019 at 01:09:43PM -0800, Angus Ainslie (Purism) wrote:
 > 
-> Signed-off-by: Dan Robertson <dan@dlrobertson.com>
-I tweaked a little bit below to drop the select for REGULATOR.
-That should be unnecessary.
-
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/accel/Kconfig       |  1 +
->  drivers/iio/accel/bma400.h      |  4 ++++
->  drivers/iio/accel/bma400_core.c | 39 ++++++++++++++++++++++++++++-----
->  3 files changed, 39 insertions(+), 5 deletions(-)
+>>  static int gtm601_platform_probe(struct platform_device *pdev)
+>>  {
+>> +	struct snd_soc_dai_driver *dai_driver;
+>> +
+>> +	dai_driver = of_device_get_match_data(&pdev->dev);
+>> +
 > 
-> diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
-> index 670e60568033..9cfe9c790190 100644
-> --- a/drivers/iio/accel/Kconfig
-> +++ b/drivers/iio/accel/Kconfig
-> @@ -116,6 +116,7 @@ config BMA400
->  	tristate "Bosch BMA400 3-Axis Accelerometer Driver"
->  	select REGMAP
->  	select BMA400_I2C if I2C
-> +	select REGULATOR
-You shouldn't need to select REGULATOR. There are stub functions such
-that I believe this code should still work fine without it.
-
-This assumes the regulators are always on, but that is valid for
-some platforms.
-
-
->  	help
->  	  Say Y here if you want to build a driver for the Bosch BMA400
->  	  triaxial acceleration sensor.
-> diff --git a/drivers/iio/accel/bma400.h b/drivers/iio/accel/bma400.h
-> index 15c0e307d2c4..5ad10db9819f 100644
-> --- a/drivers/iio/accel/bma400.h
-> +++ b/drivers/iio/accel/bma400.h
-> @@ -86,6 +86,10 @@
->  #define BMA400_SCALE_MIN            38357
->  #define BMA400_SCALE_MAX            306864
->  
-> +#define BMA400_NUM_REGULATORS       2
-> +#define BMA400_VDD_REGULATOR        0
-> +#define BMA400_VDDIO_REGULATOR      1
-> +
->  extern const struct regmap_config bma400_regmap_config;
->  
->  int bma400_probe(struct device *dev, struct regmap *regmap, const char *name);
-> diff --git a/drivers/iio/accel/bma400_core.c b/drivers/iio/accel/bma400_core.c
-> index e7ba01e79d2c..61eb676e46be 100644
-> --- a/drivers/iio/accel/bma400_core.c
-> +++ b/drivers/iio/accel/bma400_core.c
-> @@ -19,6 +19,7 @@
->  #include <linux/module.h>
->  #include <linux/mutex.h>
->  #include <linux/regmap.h>
-> +#include <linux/regulator/consumer.h>
->  
->  #include "bma400.h"
->  
-> @@ -53,6 +54,7 @@ struct bma400_sample_freq {
->  struct bma400_data {
->  	struct device *dev;
->  	struct regmap *regmap;
-> +	struct regulator_bulk_data regulators[BMA400_NUM_REGULATORS];
->  	struct mutex mutex; /* data register lock */
->  	struct iio_mount_matrix orientation;
->  	enum bma400_power_mode power_mode;
-> @@ -573,17 +575,38 @@ static int bma400_init(struct bma400_data *data)
->  		goto out;
->  	}
->  
-> +	data->regulators[BMA400_VDD_REGULATOR].supply = "vdd";
-> +	data->regulators[BMA400_VDDIO_REGULATOR].supply = "vddio";
-> +	ret = devm_regulator_bulk_get(data->dev,
-> +				      ARRAY_SIZE(data->regulators),
-> +				      data->regulators);
-> +	if (ret) {
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(data->dev,
-> +				"Failed to get regulators: %d\n",
-> +				ret);
-> +
-> +		goto out;
-> +	}
-> +	ret = regulator_bulk_enable(ARRAY_SIZE(data->regulators),
-> +				    data->regulators);
-> +	if (ret) {
-> +		dev_err(data->dev, "Failed to enable regulators: %d\n",
-> +			ret);
-> +		goto out;
-> +	}
-> +
->  	ret = bma400_get_power_mode(data);
->  	if (ret) {
->  		dev_err(data->dev, "Failed to get the initial power-mode\n");
-> -		goto out;
-> +		goto err_reg_disable;
->  	}
->  
->  	if (data->power_mode != POWER_MODE_NORMAL) {
->  		ret = bma400_set_power_mode(data, POWER_MODE_NORMAL);
->  		if (ret) {
->  			dev_err(data->dev, "Failed to wake up the device\n");
-> -			goto out;
-> +			goto err_reg_disable;
->  		}
->  		/*
->  		 * TODO: The datasheet waits 1500us here in the example, but
-> @@ -596,15 +619,15 @@ static int bma400_init(struct bma400_data *data)
->  
->  	ret = bma400_get_accel_output_data_rate(data);
->  	if (ret)
-> -		goto out;
-> +		goto err_reg_disable;
->  
->  	ret = bma400_get_accel_oversampling_ratio(data);
->  	if (ret)
-> -		goto out;
-> +		goto err_reg_disable;
->  
->  	ret = bma400_get_accel_scale(data);
->  	if (ret)
-> -		goto out;
-> +		goto err_reg_disable;
->  
->  	/*
->  	 * Once the interrupt engine is supported we might use the
-> @@ -614,6 +637,9 @@ static int bma400_init(struct bma400_data *data)
->  	 */
->  	return regmap_write(data->regmap, BMA400_ACC_CONFIG2_REG, 0x00);
->  
-> +err_reg_disable:
-> +	regulator_bulk_disable(ARRAY_SIZE(data->regulators),
-> +			       data->regulators);
->  out:
->  	return ret;
->  }
-> @@ -809,6 +835,9 @@ int bma400_remove(struct device *dev)
->  	ret = bma400_set_power_mode(data, POWER_MODE_SLEEP);
->  	mutex_unlock(&data->mutex);
->  
-> +	regulator_bulk_disable(ARRAY_SIZE(data->regulators),
-> +			       data->regulators);
-> +
->  	iio_device_unregister(indio_dev);
->  
->  	return ret;
+> I was going to apply this but it causes build warnings:
 > 
-> 
+> sound/soc/codecs/gtm601.c: In function ‘gtm601_platform_probe’:
+> sound/soc/codecs/gtm601.c:83:13: warning: assignment discards ‘const’
+> qualifier from pointer target type [-Wdiscarded-qualifiers]
+>   dai_driver = of_device_get_match_data(&pdev->dev);
+>              ^
 
+Sorry, missed that.
+
+New version inbound.
+
+Angus
