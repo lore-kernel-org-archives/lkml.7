@@ -2,78 +2,126 @@ Return-Path: <SRS0=7h0X=2M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 080BBC2D0C0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA6AC2D0D3
 	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 15:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4587206D3
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 15:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FDFC20733
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 15:51:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VzgGk7ER"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbfLVPtT (ORCPT
+        id S1726189AbfLVPvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 10:49:19 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:42566 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbfLVPtT (ORCPT
+        Sun, 22 Dec 2019 10:51:41 -0500
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:7899 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbfLVPvk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 10:49:19 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id E1C4E1C2461; Sun, 22 Dec 2019 16:49:17 +0100 (CET)
-Date:   Sun, 22 Dec 2019 16:49:17 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     jaegeuk@kernel.org, yuchao0@huawei.com,
-        linux-f2fs-devel@lists.sourceforge.net,
-        kernel list <linux-kernel@vger.kernel.org>,
-        sfr@canb.auug.org.au
-Subject: f2fs compile problem in next-20191220 on x86-32
-Message-ID: <20191222154917.GA22964@amd>
+        Sun, 22 Dec 2019 10:51:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1577029900; x=1608565900;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=/Fh7HdunH+kE47+Fy1RMY3WL0/mbaLdbtzbtulqhoOs=;
+  b=VzgGk7ERfwni99rvbzeCTE1pBnr6jy2/yxS/ibfkhvyu4zbyiLuBdviX
+   vTKd/Aqk8mIDQxEZN/MJ4IHaOU7KrhqrAmzAdVfOgCWRxQ0t5PDetGs+b
+   iE4ctlM0oPHUUQGeU8SKK3cJXvG52BCg0vWASz6vRRa/3ZLL0TypM6acH
+   I=;
+IronPort-SDR: cDmNsvmmyVGLKi6byOCZzQpzL4F3WKIVtDwB5Nvwru6K2bJb+csg6zC/JfJ8sv1EFBxkva5B0m
+ +Bwpp2AqvLjg==
+X-IronPort-AV: E=Sophos;i="5.69,344,1571702400"; 
+   d="scan'208";a="9682117"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-baacba05.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 22 Dec 2019 15:51:37 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-baacba05.us-west-2.amazon.com (Postfix) with ESMTPS id 2D062A1F5A;
+        Sun, 22 Dec 2019 15:51:36 +0000 (UTC)
+Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Sun, 22 Dec 2019 15:51:35 +0000
+Received: from u8a88181e7b2355.ant.amazon.com (10.43.162.9) by
+ EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Sun, 22 Dec 2019 15:51:24 +0000
+From:   Hanna Hawa <hhhawa@amazon.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <tsahee@annapurnalabs.com>, <antoine.tenart@bootlin.com>,
+        <hhhawa@amazon.com>, <mchehab+samsung@kernel.org>,
+        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
+        <Jonathan.Cameron@huawei.com>, <tglx@linutronix.de>,
+        <xuwei5@hisilicon.com>, <scott.branden@broadcom.com>,
+        <dinguyen@kernel.org>, <zhang.lyra@gmail.com>, <treding@nvidia.com>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <dwmw@amazon.co.uk>,
+        <benh@amazon.com>, <ronenk@amazon.com>, <talel@amazon.com>,
+        <jonnyc@amazon.com>, <hanochu@amazon.com>, <barakw@amazon.com>
+Subject: [PATCH v3 0/6] Amazon's Annapurna Labs Alpine v3 device-tree
+Date:   Sun, 22 Dec 2019 17:50:32 +0200
+Message-ID: <20191222155038.30633-1-hhhawa@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="fUYQa+Pmc3FrFX/N"
-Content-Disposition: inline
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.9]
+X-ClientProxiedBy: EX13D19UWA002.ant.amazon.com (10.43.160.204) To
+ EX13D19EUB003.ant.amazon.com (10.43.166.69)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This series organize the Amazon's Annapurna Labs Alpine device tree
+bindings, device tree folder and adds new device tree for Alpine v3.
 
---fUYQa+Pmc3FrFX/N
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changes since v2:
+-----------------
+- Move up a level for DT node without mmio regs.
+- Drop device_type from serial@fd883000 node.
+- Minor change name of PCIe node to: pcie@fbd00000
 
-Hi!
+Changes since v1:
+-----------------
+- Rename al,alpine DT binding to amazon,alpine
+- Rename al folder to be amazon
+- Update maintainers of amazon,alpine DT
+- Add missing alpine-v2 DT binding
+- Fix yaml schemas for alpine-v3-evp.dts:
+	- #size-cells:0:0: 0 is not one of [1, 2]
+	- arch-timer: interrupts: [[1, 13, 8, 1, 14, 8, 1, 11, 8, 1, 10,
+	8]] is too short
+- Change compatible string of alpine-v3-evp to amazon,al
 
-I'm getting this:
+Hanna Hawa (5):
+  dt-bindings: arm: amazon: rename al,alpine DT binding to amazon,al
+  arm64: dts: amazon: rename al folder to be amazon
+  dt-bindings: arm: amazon: update maintainers of amazon,al DT bindings
+  dt-bindings: arm: amazon: add missing alpine-v2 DT binding
+  dt-bindings: arm: amazon: add Amazon Annapurna Labs Alpine V3
 
-  LD      .tmp_vmlinux1
-  ld: fs/f2fs/file.o: in function `f2fs_truncate_blocks':
-  file.c:(.text+0x2968): undefined reference to `__udivdi3'
-  make: *** [Makefile:1079: vmlinux] Error 1
+Ronen Krupnik (1):
+  arm64: dts: amazon: add Amazon's Annapurna Labs Alpine v3 support
 
-when attempting to compile kernel for x86-32.
+ .../devicetree/bindings/arm/al,alpine.yaml    |  21 -
+ .../devicetree/bindings/arm/amazon,al.yaml    |  33 ++
+ MAINTAINERS                                   |   2 +-
+ arch/arm64/boot/dts/Makefile                  |   2 +-
+ arch/arm64/boot/dts/{al => amazon}/Makefile   |   1 +
+ .../boot/dts/{al => amazon}/alpine-v2-evp.dts |   0
+ .../boot/dts/{al => amazon}/alpine-v2.dtsi    |   0
+ arch/arm64/boot/dts/amazon/alpine-v3-evp.dts  |  23 ++
+ arch/arm64/boot/dts/amazon/alpine-v3.dtsi     | 371 ++++++++++++++++++
+ 9 files changed, 430 insertions(+), 23 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/al,alpine.yaml
+ create mode 100644 Documentation/devicetree/bindings/arm/amazon,al.yaml
+ rename arch/arm64/boot/dts/{al => amazon}/Makefile (64%)
+ rename arch/arm64/boot/dts/{al => amazon}/alpine-v2-evp.dts (100%)
+ rename arch/arm64/boot/dts/{al => amazon}/alpine-v2.dtsi (100%)
+ create mode 100644 arch/arm64/boot/dts/amazon/alpine-v3-evp.dts
+ create mode 100644 arch/arm64/boot/dts/amazon/alpine-v3.dtsi
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+-- 
+2.17.1
 
---fUYQa+Pmc3FrFX/N
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl3/kHwACgkQMOfwapXb+vLa4wCgimod+RHLfKgfWf5luFTBhNad
-yhsAnjHq4RGS/OfqHn75OENnR9nXvmiY
-=p0yC
------END PGP SIGNATURE-----
-
---fUYQa+Pmc3FrFX/N--
