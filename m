@@ -2,125 +2,173 @@ Return-Path: <SRS0=7h0X=2M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 143BCC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 16:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F4AC2D0D3
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 16:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E08E2207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 16:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D5F8206D3
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 16:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577032343;
-	bh=5SW2T5Nijt/qrSRhZFyckkiMkH+dLeo4Zi67LBsr0f4=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=EBhKfWkfaBXYwjysDKmlLwmQAeTZ6jFCOTNvGoWq0FRn1fWb3yCDUy1O1k1ZCJk3K
-	 /E3dROWDfu5qCodnGLib12yzhZ9WNwktx4mGAFaVQs3DBnahSyIUK15ltaY5dbnMcI
-	 Z/2iaRzlACur/2UMf65tD718xcOHmMcjldI8m/As=
+	s=default; t=1577033151;
+	bh=Jb1ShKcDyr+7GrlrbaN9KEkTJcpeAmVUdwzduV45FxU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w32SlnYw5c8wjk2pA2387TYnUic26sDGWf1cG05leM8r9QrZeOcsvCpgLFJ1KNDFU
+	 gNIgEIsAEwlQGls3jF0U3IlEYgOSDilEuzS6JRHY7430aaljk+EZU6PNCegiv2nHac
+	 wbhLV2pfOHEwao0S5rwZbnr2oUuo34x4YjCSKQjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbfLVQcU (ORCPT
+        id S1726139AbfLVQpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 11:32:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60852 "EHLO mail.kernel.org"
+        Sun, 22 Dec 2019 11:45:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725919AbfLVQcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 11:32:19 -0500
-Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+        id S1725903AbfLVQpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Dec 2019 11:45:49 -0500
+Received: from zzz.localdomain (h75-100-12-111.burkwi.broadband.dynamic.tds.net [75.100.12.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2394420684;
-        Sun, 22 Dec 2019 16:32:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD96F206D3;
+        Sun, 22 Dec 2019 16:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577032339;
-        bh=5SW2T5Nijt/qrSRhZFyckkiMkH+dLeo4Zi67LBsr0f4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=NJkL977ZRx9WCtyHT3E9czhX/VOPXFAu8NmnyX0V9FI04+SV0DIP0BMFa9o59lzxX
-         0UrJL72ytloM63TWWcx2NkymUCN25IVXBNjS89BhcykFJ8BB6MNh/lGliQSasX4dPD
-         Q7cU5gaMbFRNJgMZ+5hP5MP+85X3MrvB9J8wSlss=
-Date:   Sun, 22 Dec 2019 08:32:18 -0800
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de
-Subject: [GIT PULL] xfs: fixes for 5.5-rc3
-Message-ID: <20191222163218.GR7489@magnolia>
+        s=default; t=1577033148;
+        bh=Jb1ShKcDyr+7GrlrbaN9KEkTJcpeAmVUdwzduV45FxU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pQqH0q+VSvb0A1sObtgdoYDMaCSuPoZqLqLcrXc35C8aQmYF9tq838Fm1Q5utPKSV
+         QFGERRKCU6E+r6wdghLv4HmbsFqjccLpWC2I27t2Ae9bKEbiVuMxA7c7UhZhnlVMi0
+         k7Fyu7QswYPxjAfxA1LHlpCa1dNuqcW0NdFXleuc=
+Date:   Sun, 22 Dec 2019 10:45:45 -0600
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Chandan Rajendra <chandan@linux.vnet.ibm.com>,
+        linux-fscrypt@vger.kernel.org
+Subject: Re: [v2 PATCH] fscrypt: Allow modular crypto algorithms
+Message-ID: <20191222164545.GA157733@zzz.localdomain>
+References: <20191221143020.hbgeixvlmzt7nh54@gondor.apana.org.au>
+ <20191221234428.GA551@zzz.localdomain>
+ <20191222084155.n4mbomsw6pl4c7kv@gondor.apana.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191222084155.n4mbomsw6pl4c7kv@gondor.apana.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Sun, Dec 22, 2019 at 04:41:55PM +0800, Herbert Xu wrote:
+> On Sat, Dec 21, 2019 at 05:44:28PM -0600, Eric Biggers wrote:
+> >
+> > I'm not sure this is a good idea, since there will probably need to be more
+> > places where built-in code calls into fs/crypto/ too.
+> 
+> Clearly it's going to be too much trouble for now.  I may revisit
+> this once the fscrypt code has settled down a little.
+> 
+> However, we can at least build the algorithms as modules, like this:
+> 
+> ---8<---
+> The commit 643fa9612bf1 ("fscrypt: remove filesystem specific
+> build config option") removed modular support for fs/crypto.  This
+> causes the Crypto API to be built-in whenever fscrypt is enabled.
+> This makes it very difficult for me to test modular builds of
+> the Crypto API without disabling fscrypt which is a pain.
+> 
+> As fscrypt is still evolving and it's developing new ties with the
+> fs layer, it's hard to build it as a module for now.
+> 
+> However, the actual algorithms are not required until a filesystem
+> is mounted.  Therefore we can allow them to be built as modules.
+> 
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+> 
+> diff --git a/fs/crypto/Kconfig b/fs/crypto/Kconfig
+> index ff5a1746cbae..ae929fbc0f29 100644
+> --- a/fs/crypto/Kconfig
+> +++ b/fs/crypto/Kconfig
+> @@ -1,7 +1,19 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  config FS_ENCRYPTION
+>  	bool "FS Encryption (Per-file encryption)"
+> +	select KEYS
+>  	select CRYPTO
+> +	select CRYPTO_SKCIPHER
+> +	select CRYPTO_HASH
+> +	help
+> +	  Enable encryption of files and directories.  This
+> +	  feature is similar to ecryptfs, but it is more memory
+> +	  efficient since it avoids caching the encrypted and
+> +	  decrypted pages in the page cache.  Currently Ext4,
+> +	  F2FS and UBIFS make use of this feature.
+> +
+> +config FS_ENCRYPTION_TRI
+> +	tristate
+>  	select CRYPTO_AES
+>  	select CRYPTO_CBC
+>  	select CRYPTO_ECB
+> @@ -9,10 +21,3 @@ config FS_ENCRYPTION
+>  	select CRYPTO_CTS
+>  	select CRYPTO_SHA512
+>  	select CRYPTO_HMAC
+> -	select KEYS
+> -	help
+> -	  Enable encryption of files and directories.  This
+> -	  feature is similar to ecryptfs, but it is more memory
+> -	  efficient since it avoids caching the encrypted and
+> -	  decrypted pages in the page cache.  Currently Ext4,
+> -	  F2FS and UBIFS make use of this feature.
+> diff --git a/fs/ext4/Kconfig b/fs/ext4/Kconfig
+> index ef42ab040905..5de0bcc50d37 100644
+> --- a/fs/ext4/Kconfig
+> +++ b/fs/ext4/Kconfig
+> @@ -10,6 +10,7 @@ config EXT3_FS
+>  	select CRC16
+>  	select CRYPTO
+>  	select CRYPTO_CRC32C
+> +	select FS_ENCRYPTION_TRI if FS_ENCRYPTION
+>  	help
+>  	  This config option is here only for backward compatibility. ext3
+>  	  filesystem is now handled by the ext4 driver.
+> diff --git a/fs/f2fs/Kconfig b/fs/f2fs/Kconfig
+> index 652fd2e2b23d..9ccaec60af47 100644
+> --- a/fs/f2fs/Kconfig
+> +++ b/fs/f2fs/Kconfig
+> @@ -6,6 +6,7 @@ config F2FS_FS
+>  	select CRYPTO
+>  	select CRYPTO_CRC32
+>  	select F2FS_FS_XATTR if FS_ENCRYPTION
+> +	select FS_ENCRYPTION_TRI if FS_ENCRYPTION
+>  	help
+>  	  F2FS is based on Log-structured File System (LFS), which supports
+>  	  versatile "flash-friendly" features. The design has been focused on
+> diff --git a/fs/ubifs/Kconfig b/fs/ubifs/Kconfig
+> index 69932bcfa920..ea2d43829c18 100644
+> --- a/fs/ubifs/Kconfig
+> +++ b/fs/ubifs/Kconfig
+> @@ -12,6 +12,7 @@ config UBIFS_FS
+>  	select CRYPTO_ZSTD if UBIFS_FS_ZSTD
+>  	select CRYPTO_HASH_INFO
+>  	select UBIFS_FS_XATTR if FS_ENCRYPTION
+> +	select FS_ENCRYPTION_TRI if FS_ENCRYPTION
+>  	depends on MTD_UBI
+>  	help
+>  	  UBIFS is a file system for flash devices which works on top of UBI.
 
-Please pull these bug fixes for 5.5-rc3, which fix a few bugs that could
-lead to corrupt files, fsck complaints, and filesystem crashes.
+Okay, this approach looks fine.  But can you rename the option to something more
+self-explanatory like FS_ENCRYPTION_ALGS, and add a comment?  Like:
 
-The branch has survived a couple of days of xfstests runs and merges
-cleanly with this morning's master.  Please let me know if anything
-strange happens.
-
---D
-
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
-
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.5-fixes-2
-
-for you to fetch changes up to 5084bf6b2006fcd46f1e44e3c51b687507b362e2:
-
-  xfs: Make the symbol 'xfs_rtalloc_log_count' static (2019-12-20 08:07:31 -0800)
-
-----------------------------------------------------------------
-Fixes for 5.5:
-- Minor documentation fixes
-- Fix a file corruption due to read racing with an insert range
-operation.
-- Fix log reservation overflows when allocating large rt extents
-- Fix a buffer log item flags check
-- Don't allow administrators to mount with sunit= options that will
-cause later xfs_repair complaints about the root directory being
-suspicious because the fs geometry appeared inconsistent
-- Fix a non-static helper that should have been static
-
-----------------------------------------------------------------
-Brian Foster (2):
-      xfs: stabilize insert range start boundary to avoid COW writeback race
-      xfs: use bitops interface for buf log item AIL flag check
-
-Chen Wandun (1):
-      xfs: Make the symbol 'xfs_rtalloc_log_count' static
-
-Darrick J. Wong (5):
-      xfs: fix log reservation overflows when allocating large rt extents
-      libxfs: resync with the userspace libxfs
-      xfs: refactor agfl length computation function
-      xfs: split the sunit parameter update into two parts
-      xfs: don't commit sunit/swidth updates to disk if that would cause repair failures
-
-Randy Dunlap (1):
-      xfs: fix Sphinx documentation warning
-
- Documentation/admin-guide/xfs.rst |   2 +-
- fs/xfs/libxfs/xfs_alloc.c         |  18 ++--
- fs/xfs/libxfs/xfs_bmap.c          |   5 +-
- fs/xfs/libxfs/xfs_dir2.c          |  21 +++++
- fs/xfs/libxfs/xfs_dir2_priv.h     |  29 ++-----
- fs/xfs/libxfs/xfs_dir2_sf.c       |   6 +-
- fs/xfs/libxfs/xfs_ialloc.c        |  64 +++++++++++++++
- fs/xfs/libxfs/xfs_ialloc.h        |   1 +
- fs/xfs/libxfs/xfs_trans_resv.c    |  96 +++++++++++++++++-----
- fs/xfs/xfs_bmap_util.c            |  12 +++
- fs/xfs/xfs_buf_item.c             |   2 +-
- fs/xfs/xfs_mount.c                | 168 ++++++++++++++++++++++++++------------
- fs/xfs/xfs_trace.h                |  21 +++++
- 13 files changed, 341 insertions(+), 104 deletions(-)
+# Filesystems supporting encryption must select this if FS_ENCRYPTION.  This
+# allows the algorithms to be built as modules when all the filesystems are.
+config FS_ENCRYPTION_ALGS
+	tristate
+	select CRYPTO_AES
+	select CRYPTO_CBC
+	select CRYPTO_ECB
+	select CRYPTO_XTS
+	select CRYPTO_CTS
+	select CRYPTO_SHA512
+	select CRYPTO_HMAC
