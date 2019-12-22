@@ -2,79 +2,283 @@ Return-Path: <SRS0=7h0X=2M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C1D5C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 22:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F54C2D0D4
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 23:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 192BA2067C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 22:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3156206CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 23:14:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YhUq0yc5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfLVWW2 (ORCPT
+        id S1726787AbfLVXO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 17:22:28 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:43448 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbfLVWW2 (ORCPT
+        Sun, 22 Dec 2019 18:14:57 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34232 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726557AbfLVXO5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 17:22:28 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1ij9cH-0003Sn-FC; Sun, 22 Dec 2019 22:22:25 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] misc: pti: remove redundant assignments to retval
-Date:   Sun, 22 Dec 2019 22:22:24 +0000
-Message-Id: <20191222222224.732340-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.24.0
+        Sun, 22 Dec 2019 18:14:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577056494;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oacqaIqkVqhvmYjRIHRg1RTNOe+DCAG/JEc5cTwcxTs=;
+        b=YhUq0yc50aQ4KAHkEDFTQXzTO561ruB12etAJI2gF7Jq6Nsgt1K27PpsfVAoEvwYidFmQ1
+        /de+h+LL0ucwaX46we6jyd/4xlHwh8hTbb9wJSnyIwfnanAXlffXOQVaACRn+IiZsZ9+ON
+        74FnAKMv+7oeDbEjcw6uzRalw9J1lB0=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-201-Uy-GaHHQMqKTiYvrgLhOpg-1; Sun, 22 Dec 2019 18:14:53 -0500
+X-MC-Unique: Uy-GaHHQMqKTiYvrgLhOpg-1
+Received: by mail-qv1-f69.google.com with SMTP id ce17so10354207qvb.5
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Dec 2019 15:14:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oacqaIqkVqhvmYjRIHRg1RTNOe+DCAG/JEc5cTwcxTs=;
+        b=LaiaR9zkpq0MqQjhz73qDUEG2zpzycSdJfLRWMKkyz6ZwFzTLY11Vpkm1aHof45eYz
+         5eEbHteGjoORV/6yOX/wzqzF6FPdorbrszgt+NUGM/zsf+vPuWDWOV6eeqEjyW3Wzs/6
+         xn1374riQLkk/71esS6Q9p28g8xc+PwugsDBtKMbj+laGpnCHuvSghffpuCnA1Df6XBc
+         A4C74aZcFB0cw8t+x+kodk05ot3DkgEXVZavsS5kIbticUve1ieHHlUkmLj7sWE1qXYB
+         2ug4hKj9fjwb4W9G/7hV0bbqUTxaIXDIhVa0KHNWu9U7IYEyu7994cLuqBdWae6+k+t/
+         S5LQ==
+X-Gm-Message-State: APjAAAWWVrWoLbF29o7i/q3gIcgkhSethfU07rbJVM52WrsVfCQLF7Sp
+        SfRszCe773G/myjTw4SQMYGyk3aD9bLq89CfpsqODLAfNJZhD2tMLKjjkYjYuWUiOo9IvAGuvB/
+        NWihM6XPqlt2mLcZ0rl8llwY+
+X-Received: by 2002:ac8:3946:: with SMTP id t6mr21041540qtb.278.1577056492057;
+        Sun, 22 Dec 2019 15:14:52 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxs81afcv9O3ZCF9nqLaJj5XXKZoOJCYrgwMPzMSLIGEEKLPHmVO8N3ATJGdBb252/7DG1Ydw==
+X-Received: by 2002:ac8:3946:: with SMTP id t6mr21041528qtb.278.1577056491818;
+        Sun, 22 Dec 2019 15:14:51 -0800 (PST)
+Received: from redhat.com (bzq-79-181-48-215.red.bezeqint.net. [79.181.48.215])
+        by smtp.gmail.com with ESMTPSA id a144sm5339061qkc.30.2019.12.22.15.14.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Dec 2019 15:14:51 -0800 (PST)
+Date:   Sun, 22 Dec 2019 18:14:45 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc:     Alistair Delva <adelva@google.com>,
+        Network Development <netdev@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>, kernel-team@android.com,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net] virtio-net: Skip set_features on non-cvq devices
+Message-ID: <20191222181341-mutt-send-email-mst@kernel.org>
+References: <20191220212207.76726-1-adelva@google.com>
+ <CA+FuTSewMaRTe51jOJtD-VHcp4Ct+c=11-9SxenULHwQuokamw@mail.gmail.com>
+ <20191222080754-mutt-send-email-mst@kernel.org>
+ <CA+FuTSd4vd9wS0sHmAk=Ys2-OwZarAHT3TNFzg7c7+2Dsott=g@mail.gmail.com>
+ <20191222095141-mutt-send-email-mst@kernel.org>
+ <CA+FuTScTcMqU4dKXNKCbjYJ8A-eVGp5eDNihAkq106YKTvTqDw@mail.gmail.com>
+ <20191222160850-mutt-send-email-mst@kernel.org>
+ <CA+FuTSerJ1Xhsmo2bFvTDohzmLsY5foOartO8ZjZEaK1vTTOcw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+FuTSerJ1Xhsmo2bFvTDohzmLsY5foOartO8ZjZEaK1vTTOcw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Sun, Dec 22, 2019 at 04:44:31PM -0500, Willem de Bruijn wrote:
+> On Sun, Dec 22, 2019 at 4:12 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> >
+> > On Sun, Dec 22, 2019 at 10:54:23AM -0500, Willem de Bruijn wrote:
+> > > On Sun, Dec 22, 2019 at 9:57 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > >
+> > > > On Sun, Dec 22, 2019 at 09:21:43AM -0500, Willem de Bruijn wrote:
+> > > > > On Sun, Dec 22, 2019 at 8:11 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > > > >
+> > > > > > On Fri, Dec 20, 2019 at 10:08:41PM -0500, Willem de Bruijn wrote:
+> > > > > > > On Fri, Dec 20, 2019 at 4:22 PM Alistair Delva <adelva@google.com> wrote:
+> > > > > > > >
+> > > > > > > > On devices without control virtqueue support, such as the virtio_net
+> > > > > > > > implementation in crosvm[1], attempting to configure LRO will panic the
+> > > > > > > > kernel:
+> > > > > > > >
+> > > > > > > > kernel BUG at drivers/net/virtio_net.c:1591!
+> > > > > > > > invalid opcode: 0000 [#1] PREEMPT SMP PTI
+> > > > > > > > CPU: 1 PID: 483 Comm: Binder:330_1 Not tainted 5.4.5-01326-g19463e9acaac #1
+> > > > > > > > Hardware name: ChromiumOS crosvm, BIOS 0
+> > > > > > > > RIP: 0010:virtnet_send_command+0x15d/0x170 [virtio_net]
+> > > > > > > > Code: d8 00 00 00 80 78 02 00 0f 94 c0 65 48 8b 0c 25 28 00 00 00 48 3b 4c 24 70 75 11 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 <0f> 0b e8 ec a4 12 c8 66 90 66 2e 0f 1f 84 00 00 00 00 00 55 48 89
+> > > > > > > > RSP: 0018:ffffb97940e7bb50 EFLAGS: 00010246
+> > > > > > > > RAX: ffffffffc0596020 RBX: ffffa0e1fc8ea840 RCX: 0000000000000017
+> > > > > > > > RDX: ffffffffc0596110 RSI: 0000000000000011 RDI: 000000000000000d
+> > > > > > > > RBP: ffffb97940e7bbf8 R08: ffffa0e1fc8ea0b0 R09: ffffa0e1fc8ea0b0
+> > > > > > > > R10: ffffffffffffffff R11: ffffffffc0590940 R12: 0000000000000005
+> > > > > > > > R13: ffffa0e1ffad2c00 R14: ffffb97940e7bc08 R15: 0000000000000000
+> > > > > > > > FS:  0000000000000000(0000) GS:ffffa0e1fd100000(006b) knlGS:00000000e5ef7494
+> > > > > > > > CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+> > > > > > > > CR2: 00000000e5eeb82c CR3: 0000000079b06001 CR4: 0000000000360ee0
+> > > > > > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > > > > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > > > > > > Call Trace:
+> > > > > > > >  ? preempt_count_add+0x58/0xb0
+> > > > > > > >  ? _raw_spin_lock_irqsave+0x36/0x70
+> > > > > > > >  ? _raw_spin_unlock_irqrestore+0x1a/0x40
+> > > > > > > >  ? __wake_up+0x70/0x190
+> > > > > > > >  virtnet_set_features+0x90/0xf0 [virtio_net]
+> > > > > > > >  __netdev_update_features+0x271/0x980
+> > > > > > > >  ? nlmsg_notify+0x5b/0xa0
+> > > > > > > >  dev_disable_lro+0x2b/0x190
+> > > > > > > >  ? inet_netconf_notify_devconf+0xe2/0x120
+> > > > > > > >  devinet_sysctl_forward+0x176/0x1e0
+> > > > > > > >  proc_sys_call_handler+0x1f0/0x250
+> > > > > > > >  proc_sys_write+0xf/0x20
+> > > > > > > >  __vfs_write+0x3e/0x190
+> > > > > > > >  ? __sb_start_write+0x6d/0xd0
+> > > > > > > >  vfs_write+0xd3/0x190
+> > > > > > > >  ksys_write+0x68/0xd0
+> > > > > > > >  __ia32_sys_write+0x14/0x20
+> > > > > > > >  do_fast_syscall_32+0x86/0xe0
+> > > > > > > >  entry_SYSENTER_compat+0x7c/0x8e
+> > > > > > > >
+> > > > > > > > This happens because virtio_set_features() does not check the presence
+> > > > > > > > of the control virtqueue feature, which is sanity checked by a BUG_ON
+> > > > > > > > in virtnet_send_command().
+> > > > > > > >
+> > > > > > > > Fix this by skipping any feature processing if the control virtqueue is
+> > > > > > > > missing. This should be OK for any future feature that is added, as
+> > > > > > > > presumably all of them would require control virtqueue support to notify
+> > > > > > > > the endpoint that offload etc. should begin.
+> > > > > > > >
+> > > > > > > > [1] https://chromium.googlesource.com/chromiumos/platform/crosvm/
+> > > > > > > >
+> > > > > > > > Fixes: a02e8964eaf9 ("virtio-net: ethtool configurable LRO")
+> > > > > > > > Cc: stable@vger.kernel.org [4.20+]
+> > > > > > > > Cc: Michael S. Tsirkin <mst@redhat.com>
+> > > > > > > > Cc: Jason Wang <jasowang@redhat.com>
+> > > > > > > > Cc: David S. Miller <davem@davemloft.net>
+> > > > > > > > Cc: kernel-team@android.com
+> > > > > > > > Cc: virtualization@lists.linux-foundation.org
+> > > > > > > > Cc: linux-kernel@vger.kernel.org
+> > > > > > > > Signed-off-by: Alistair Delva <adelva@google.com>
+> > > > > > >
+> > > > > > > Thanks for debugging this, Alistair.
+> > > > > > >
+> > > > > > > > ---
+> > > > > > > >  drivers/net/virtio_net.c | 3 +++
+> > > > > > > >  1 file changed, 3 insertions(+)
+> > > > > > > >
+> > > > > > > > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> > > > > > > > index 4d7d5434cc5d..709bcd34e485 100644
+> > > > > > > > --- a/drivers/net/virtio_net.c
+> > > > > > > > +++ b/drivers/net/virtio_net.c
+> > > > > > > > @@ -2560,6 +2560,9 @@ static int virtnet_set_features(struct net_device *dev,
+> > > > > > > >         u64 offloads;
+> > > > > > > >         int err;
+> > > > > > > >
+> > > > > > > > +       if (!vi->has_cvq)
+> > > > > > > > +               return 0;
+> > > > > > > > +
+> > > > > > >
+> > > > > > > Instead of checking for this in virtnet_set_features, how about we
+> > > > > > > make configurability contingent on cvq in virtnet_probe:
+> > > > > > >
+> > > > > > > -       if (virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS))
+> > > > > > > +       if (virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS) &&
+> > > > > > > +           virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_VQ))
+> > > > > > >                 dev->hw_features |= NETIF_F_LRO;
+> > > > > > >
+> > > > > > > Based on this logic a little below in the same function
+> > > > > > >
+> > > > > > >         if (virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_VQ))
+> > > > > > >                 vi->has_cvq = true;
+> > > > > >
+> > > > > >
+> > > > > > This would be a regression on old hypervisors which didn't have
+> > > > > > CTL VQ - suddenly they will lose offloads.
+> > > > >
+> > > > > dev->features still correctly displays whether offloads are enabled.
+> > > > > Removing it from dev->hw_features just renders it non-configurable.
+> > > >
+> > > > Oh you are right. I confused it with dev->features.
+> > > >
+> > > > > Note that before the patch that is being fixed the offloads were
+> > > > > enabled, but ethtool would show them as off.
+> > > >
+> > > > So the bug is in spec, it should have said
+> > > > VIRTIO_NET_F_CTRL_GUEST_OFFLOADS depends on VIRTIO_NET_F_CTRL_VQ, but we
+> > > > missed that part. We can and I guess should add this as a recommendation
+> > > > but it's too late to make it a MUST.
+> > > >
+> > > > Meanwhile I would say it's cleanest to work around
+> > > > this in virtnet_validate by clearing VIRTIO_NET_F_CTRL_GUEST_OFFLOADS
+> > > > if VIRTIO_NET_F_CTRL_VQ is off, with a big comment explaining
+> > > > it's a spec bug.
+> > >
+> > > Wouldn't that cause precisely the regression you were concerned about?
+> >
+> > Not sure how do you mean.  VIRTIO_NET_F_CTRL_GUEST_OFFLOADS simply can't
+> > work without a ctrl vq. What's the point of keeping it on?
+> 
+> Ah, now I was mistaken. I thought that
+> 
+>     dev->features |= NETIF_F_LRO
+> 
+> was also contingent on VIRTIO_NET_F_CTRL_GUEST_OFFLOADS. But that's
+> another (pair of) flag(s), of course
+> 
+>         if (virtio_has_feature(vdev, VIRTIO_NET_F_GUEST_TSO4) ||
+>             virtio_has_feature(vdev, VIRTIO_NET_F_GUEST_TSO6))
+>                 dev->features |= NETIF_F_LRO;
+> 
+> I wonder if this bug is then also triggered when enabling XDP, through
+> virtnet_clear_guest_offloads. That predates LRO, so would deserve
+> another Fixes tag.
 
-The variable retval is assigned with a value that is never read and
-it is re-assigned a new value later on.  The assignment is redundant
-and can be removed.  Clean up multiple occurrances of this pattern.
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/misc/pti.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Are you sure? I thought LRO has been there before xdp...
 
-diff --git a/drivers/misc/pti.c b/drivers/misc/pti.c
-index 063e4419cd7e..b7f510676cd6 100644
---- a/drivers/misc/pti.c
-+++ b/drivers/misc/pti.c
-@@ -792,7 +792,7 @@ static int pti_pci_probe(struct pci_dev *pdev,
- 		const struct pci_device_id *ent)
- {
- 	unsigned int a;
--	int retval = -EINVAL;
-+	int retval;
- 	int pci_bar = 1;
- 
- 	dev_dbg(&pdev->dev, "%s %s(%d): PTI PCI ID %04x:%04x\n", __FILE__,
-@@ -910,7 +910,7 @@ static struct pci_driver pti_pci_driver = {
-  */
- static int __init pti_init(void)
- {
--	int retval = -EINVAL;
-+	int retval;
- 
- 	/* First register module as tty device */
- 
+> 
+> > > Workloads may now depend on LRO for cycle efficiency. Reverting to
+> > > behavior before this patch (though now displaying the offload state
+> > > correctly) is more conservative in that regard.
+> >
+> > Do you see a problem with the following (untested):
+> >
+> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> >
+> >
+> > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> > index 4d7d5434cc5d..7b8805b47f0d 100644
+> > --- a/drivers/net/virtio_net.c
+> > +++ b/drivers/net/virtio_net.c
+> > @@ -2971,6 +2971,15 @@ static int virtnet_validate(struct virtio_device *vdev)
+> >         if (!virtnet_validate_features(vdev))
+> >                 return -EINVAL;
+> >
+> > +       /* VIRTIO_NET_F_CTRL_GUEST_OFFLOADS does not work without
+> > +        * VIRTIO_NET_F_CTRL_VQ. Unfortunately spec forgot to
+> > +        * specify that VIRTIO_NET_F_CTRL_GUEST_OFFLOADS depends
+> > +        * on VIRTIO_NET_F_CTRL_VQ so devices can set the later but
+> > +        * not the former.
+> > +        */
+> > +       if (!virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_VQ))
+> > +                       __virtio_clear_bit(vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS);
+> > +
+> >         if (virtio_has_feature(vdev, VIRTIO_NET_F_MTU)) {
+> >                 int mtu = virtio_cread16(vdev,
+> >                                          offsetof(struct virtio_net_config,
+> >
+> 
+> Looks good to me!
+
+Alstair could you pls try this patch and report?
+
+Thanks!
+
 -- 
-2.24.0
+MST
 
