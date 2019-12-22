@@ -2,509 +2,216 @@ Return-Path: <SRS0=7h0X=2M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A92C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 15:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 975C0C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 15:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B34C2070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 15:52:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BED7206D3
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 15:55:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="rh6v16Fp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eUiuLpb4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbfLVPw6 (ORCPT
+        id S1726613AbfLVPzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 10:52:58 -0500
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:20294 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbfLVPw6 (ORCPT
+        Sun, 22 Dec 2019 10:55:07 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:42474 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbfLVPzF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 10:52:58 -0500
+        Sun, 22 Dec 2019 10:55:05 -0500
+Received: by mail-yw1-f68.google.com with SMTP id x138so6210028ywd.9
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Dec 2019 07:55:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1577029977; x=1608565977;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=BReDFj4znSJDnc9QwmAdMr9LzlcWLj74YwLWLarLP4g=;
-  b=rh6v16Fp9tz4jXdQjE5S2efWavvj4MooD+j6QHwVQ5uwo6rJK0uPEx6r
-   nkzAy+Pdz8qw4dYUMrzI4j+2oHbeb1hh8wbdSnIRJVTXR+ZXDomcCBOGX
-   OJuLZFtk1p2cP5qkOGuVThm2WgtJM7nJvW+h8w5Ii3DANiyHFsDzM+Zlr
-   Q=;
-IronPort-SDR: QlzRbxXQz6+Xmm0Rht3Cg5/dumPD7gt9ZBG37Y4cLrugiLybVX6pnE9wkIcMg5FgyXxRJfqFXj
- XRI9qL0UUzHA==
-X-IronPort-AV: E=Sophos;i="5.69,344,1571702400"; 
-   d="scan'208";a="16394046"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-859fe132.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 22 Dec 2019 15:52:46 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-859fe132.us-west-2.amazon.com (Postfix) with ESMTPS id 44A1B223D8A;
-        Sun, 22 Dec 2019 15:52:39 +0000 (UTC)
-Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Sun, 22 Dec 2019 15:52:39 +0000
-Received: from u8a88181e7b2355.ant.amazon.com (10.43.162.9) by
- EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Sun, 22 Dec 2019 15:52:27 +0000
-From:   Hanna Hawa <hhhawa@amazon.com>
-To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <tsahee@annapurnalabs.com>, <antoine.tenart@bootlin.com>,
-        <hhhawa@amazon.com>, <mchehab+samsung@kernel.org>,
-        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
-        <Jonathan.Cameron@huawei.com>, <tglx@linutronix.de>,
-        <xuwei5@hisilicon.com>, <scott.branden@broadcom.com>,
-        <dinguyen@kernel.org>, <zhang.lyra@gmail.com>, <treding@nvidia.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <dwmw@amazon.co.uk>,
-        <benh@amazon.com>, <ronenk@amazon.com>, <talel@amazon.com>,
-        <jonnyc@amazon.com>, <hanochu@amazon.com>, <barakw@amazon.com>
-Subject: [PATCH v3 6/6] arm64: dts: amazon: add Amazon's Annapurna Labs Alpine v3 support
-Date:   Sun, 22 Dec 2019 17:50:38 +0200
-Message-ID: <20191222155038.30633-7-hhhawa@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191222155038.30633-1-hhhawa@amazon.com>
-References: <20191222155038.30633-1-hhhawa@amazon.com>
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lAVicwNWaDkMag3xmq3Dz6+zXkkUHKTRx2/quvHKtCQ=;
+        b=eUiuLpb48u5geqeZKhmXtXQw/MZxjPsB+J02ZrNeBn2iERhvThqjw4H7A7GXNonEMw
+         eiyEYElCkysnzhyVmRKGeOZjZLVkclq3htf99rskR4Y3Jj+JzDYDBEfnlrNskKWKrX7S
+         RI+LKtgp7NjeB5gwUEBny35lX6+QqwVJlPf8+8StkKpTv1arkZoBorZNorF9NB9xuJny
+         wARQIIlLwzunkm/a6Ge5EAaCNnYQtyDQOjqyxQUxeRB63pisvZEAfRvM8yx0LhQtWT1K
+         /XYGB7nc+knQw4dtgBRFsDJx4gCBUW0v/HrILqjGDpZcVzIoxjf4jAmG6rCuVuDpCEBB
+         UV5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lAVicwNWaDkMag3xmq3Dz6+zXkkUHKTRx2/quvHKtCQ=;
+        b=EdsSo/JuPQ5R5VbAt15/MS0SS/NCG4xWEkjVY/L5v2HB0p+j/WHQVcyxNllspDq5Zc
+         udfPFcJeIswXU7wlMVS9ePVACMajkQ0yB1tNrbYsrtYMAdCWllPrmdCnB3TShPljQCXn
+         5hzhPBA9PpwyS7eMcgiaA8Tp92NvJL2SBwUQC8tkyDj1ySespf48Of5C5R17UdXxy05v
+         7JZwCDLGwgOXi70tm+7SV9EKlfEdwF+KtR+1seRrIo3UtYQpjpQNwkbu09jjl+vyx2NZ
+         NJpEMJa+oV2RQH7ZJktircoCaoxBqy07LVoFswEv08L6COAMLhxzRgheYIV6P6HkPcwZ
+         pO8A==
+X-Gm-Message-State: APjAAAXpR7UlZoX52zViQ0XNExJ8dR1Y6do0u/S6Za8nIQqxG2X7vO4g
+        J0enie1Q48UVTBQ3N9nzemjtoZkR
+X-Google-Smtp-Source: APXvYqz27oGxxiVk/eLJBXLmzxncP8o9oqNDxKalt+nXAm87l8Zww9jIG8Q3ZlTWoX0Mvq7uU+LZLQ==
+X-Received: by 2002:a81:de4f:: with SMTP id o15mr19362845ywl.204.1577030102845;
+        Sun, 22 Dec 2019 07:55:02 -0800 (PST)
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
+        by smtp.gmail.com with ESMTPSA id x184sm6530702ywg.4.2019.12.22.07.55.01
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 22 Dec 2019 07:55:01 -0800 (PST)
+Received: by mail-yb1-f179.google.com with SMTP id v15so6155491ybp.13
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Dec 2019 07:55:01 -0800 (PST)
+X-Received: by 2002:a25:c444:: with SMTP id u65mr18090159ybf.443.1577030100686;
+ Sun, 22 Dec 2019 07:55:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.9]
-X-ClientProxiedBy: EX13D19UWA002.ant.amazon.com (10.43.160.204) To
- EX13D19EUB003.ant.amazon.com (10.43.166.69)
+References: <20191220212207.76726-1-adelva@google.com> <CA+FuTSewMaRTe51jOJtD-VHcp4Ct+c=11-9SxenULHwQuokamw@mail.gmail.com>
+ <20191222080754-mutt-send-email-mst@kernel.org> <CA+FuTSd4vd9wS0sHmAk=Ys2-OwZarAHT3TNFzg7c7+2Dsott=g@mail.gmail.com>
+ <20191222095141-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20191222095141-mutt-send-email-mst@kernel.org>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Sun, 22 Dec 2019 10:54:23 -0500
+X-Gmail-Original-Message-ID: <CA+FuTScTcMqU4dKXNKCbjYJ8A-eVGp5eDNihAkq106YKTvTqDw@mail.gmail.com>
+Message-ID: <CA+FuTScTcMqU4dKXNKCbjYJ8A-eVGp5eDNihAkq106YKTvTqDw@mail.gmail.com>
+Subject: Re: [PATCH net] virtio-net: Skip set_features on non-cvq devices
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Alistair Delva <adelva@google.com>,
+        Network Development <netdev@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>, kernel-team@android.com,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronen Krupnik <ronenk@amazon.com>
+On Sun, Dec 22, 2019 at 9:57 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Sun, Dec 22, 2019 at 09:21:43AM -0500, Willem de Bruijn wrote:
+> > On Sun, Dec 22, 2019 at 8:11 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > >
+> > > On Fri, Dec 20, 2019 at 10:08:41PM -0500, Willem de Bruijn wrote:
+> > > > On Fri, Dec 20, 2019 at 4:22 PM Alistair Delva <adelva@google.com> wrote:
+> > > > >
+> > > > > On devices without control virtqueue support, such as the virtio_net
+> > > > > implementation in crosvm[1], attempting to configure LRO will panic the
+> > > > > kernel:
+> > > > >
+> > > > > kernel BUG at drivers/net/virtio_net.c:1591!
+> > > > > invalid opcode: 0000 [#1] PREEMPT SMP PTI
+> > > > > CPU: 1 PID: 483 Comm: Binder:330_1 Not tainted 5.4.5-01326-g19463e9acaac #1
+> > > > > Hardware name: ChromiumOS crosvm, BIOS 0
+> > > > > RIP: 0010:virtnet_send_command+0x15d/0x170 [virtio_net]
+> > > > > Code: d8 00 00 00 80 78 02 00 0f 94 c0 65 48 8b 0c 25 28 00 00 00 48 3b 4c 24 70 75 11 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 <0f> 0b e8 ec a4 12 c8 66 90 66 2e 0f 1f 84 00 00 00 00 00 55 48 89
+> > > > > RSP: 0018:ffffb97940e7bb50 EFLAGS: 00010246
+> > > > > RAX: ffffffffc0596020 RBX: ffffa0e1fc8ea840 RCX: 0000000000000017
+> > > > > RDX: ffffffffc0596110 RSI: 0000000000000011 RDI: 000000000000000d
+> > > > > RBP: ffffb97940e7bbf8 R08: ffffa0e1fc8ea0b0 R09: ffffa0e1fc8ea0b0
+> > > > > R10: ffffffffffffffff R11: ffffffffc0590940 R12: 0000000000000005
+> > > > > R13: ffffa0e1ffad2c00 R14: ffffb97940e7bc08 R15: 0000000000000000
+> > > > > FS:  0000000000000000(0000) GS:ffffa0e1fd100000(006b) knlGS:00000000e5ef7494
+> > > > > CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+> > > > > CR2: 00000000e5eeb82c CR3: 0000000079b06001 CR4: 0000000000360ee0
+> > > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > > > Call Trace:
+> > > > >  ? preempt_count_add+0x58/0xb0
+> > > > >  ? _raw_spin_lock_irqsave+0x36/0x70
+> > > > >  ? _raw_spin_unlock_irqrestore+0x1a/0x40
+> > > > >  ? __wake_up+0x70/0x190
+> > > > >  virtnet_set_features+0x90/0xf0 [virtio_net]
+> > > > >  __netdev_update_features+0x271/0x980
+> > > > >  ? nlmsg_notify+0x5b/0xa0
+> > > > >  dev_disable_lro+0x2b/0x190
+> > > > >  ? inet_netconf_notify_devconf+0xe2/0x120
+> > > > >  devinet_sysctl_forward+0x176/0x1e0
+> > > > >  proc_sys_call_handler+0x1f0/0x250
+> > > > >  proc_sys_write+0xf/0x20
+> > > > >  __vfs_write+0x3e/0x190
+> > > > >  ? __sb_start_write+0x6d/0xd0
+> > > > >  vfs_write+0xd3/0x190
+> > > > >  ksys_write+0x68/0xd0
+> > > > >  __ia32_sys_write+0x14/0x20
+> > > > >  do_fast_syscall_32+0x86/0xe0
+> > > > >  entry_SYSENTER_compat+0x7c/0x8e
+> > > > >
+> > > > > This happens because virtio_set_features() does not check the presence
+> > > > > of the control virtqueue feature, which is sanity checked by a BUG_ON
+> > > > > in virtnet_send_command().
+> > > > >
+> > > > > Fix this by skipping any feature processing if the control virtqueue is
+> > > > > missing. This should be OK for any future feature that is added, as
+> > > > > presumably all of them would require control virtqueue support to notify
+> > > > > the endpoint that offload etc. should begin.
+> > > > >
+> > > > > [1] https://chromium.googlesource.com/chromiumos/platform/crosvm/
+> > > > >
+> > > > > Fixes: a02e8964eaf9 ("virtio-net: ethtool configurable LRO")
+> > > > > Cc: stable@vger.kernel.org [4.20+]
+> > > > > Cc: Michael S. Tsirkin <mst@redhat.com>
+> > > > > Cc: Jason Wang <jasowang@redhat.com>
+> > > > > Cc: David S. Miller <davem@davemloft.net>
+> > > > > Cc: kernel-team@android.com
+> > > > > Cc: virtualization@lists.linux-foundation.org
+> > > > > Cc: linux-kernel@vger.kernel.org
+> > > > > Signed-off-by: Alistair Delva <adelva@google.com>
+> > > >
+> > > > Thanks for debugging this, Alistair.
+> > > >
+> > > > > ---
+> > > > >  drivers/net/virtio_net.c | 3 +++
+> > > > >  1 file changed, 3 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> > > > > index 4d7d5434cc5d..709bcd34e485 100644
+> > > > > --- a/drivers/net/virtio_net.c
+> > > > > +++ b/drivers/net/virtio_net.c
+> > > > > @@ -2560,6 +2560,9 @@ static int virtnet_set_features(struct net_device *dev,
+> > > > >         u64 offloads;
+> > > > >         int err;
+> > > > >
+> > > > > +       if (!vi->has_cvq)
+> > > > > +               return 0;
+> > > > > +
+> > > >
+> > > > Instead of checking for this in virtnet_set_features, how about we
+> > > > make configurability contingent on cvq in virtnet_probe:
+> > > >
+> > > > -       if (virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS))
+> > > > +       if (virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS) &&
+> > > > +           virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_VQ))
+> > > >                 dev->hw_features |= NETIF_F_LRO;
+> > > >
+> > > > Based on this logic a little below in the same function
+> > > >
+> > > >         if (virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_VQ))
+> > > >                 vi->has_cvq = true;
+> > >
+> > >
+> > > This would be a regression on old hypervisors which didn't have
+> > > CTL VQ - suddenly they will lose offloads.
+> >
+> > dev->features still correctly displays whether offloads are enabled.
+> > Removing it from dev->hw_features just renders it non-configurable.
+>
+> Oh you are right. I confused it with dev->features.
+>
+> > Note that before the patch that is being fixed the offloads were
+> > enabled, but ethtool would show them as off.
+>
+> So the bug is in spec, it should have said
+> VIRTIO_NET_F_CTRL_GUEST_OFFLOADS depends on VIRTIO_NET_F_CTRL_VQ, but we
+> missed that part. We can and I guess should add this as a recommendation
+> but it's too late to make it a MUST.
+>
+> Meanwhile I would say it's cleanest to work around
+> this in virtnet_validate by clearing VIRTIO_NET_F_CTRL_GUEST_OFFLOADS
+> if VIRTIO_NET_F_CTRL_VQ is off, with a big comment explaining
+> it's a spec bug.
 
-This patch adds the initial support for the Amazon's Annapurna Labs
-Alpine v3 Soc and Evaluation Platform (EVP).
+Wouldn't that cause precisely the regression you were concerned about?
 
-Signed-off-by: Ronen Krupnik <ronenk@amazon.com>
-Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
----
- arch/arm64/boot/dts/amazon/Makefile          |   1 +
- arch/arm64/boot/dts/amazon/alpine-v3-evp.dts |  23 ++
- arch/arm64/boot/dts/amazon/alpine-v3.dtsi    | 371 +++++++++++++++++++
- 3 files changed, 395 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amazon/alpine-v3-evp.dts
- create mode 100644 arch/arm64/boot/dts/amazon/alpine-v3.dtsi
-
-diff --git a/arch/arm64/boot/dts/amazon/Makefile b/arch/arm64/boot/dts/amazon/Makefile
-index d79822dc30cd..ba9e11544905 100644
---- a/arch/arm64/boot/dts/amazon/Makefile
-+++ b/arch/arm64/boot/dts/amazon/Makefile
-@@ -1,2 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0-only
- dtb-$(CONFIG_ARCH_ALPINE)	+= alpine-v2-evp.dtb
-+dtb-$(CONFIG_ARCH_ALPINE)	+= alpine-v3-evp.dtb
-diff --git a/arch/arm64/boot/dts/amazon/alpine-v3-evp.dts b/arch/arm64/boot/dts/amazon/alpine-v3-evp.dts
-new file mode 100644
-index 000000000000..8c1e11cf5855
---- /dev/null
-+++ b/arch/arm64/boot/dts/amazon/alpine-v3-evp.dts
-@@ -0,0 +1,23 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-+ */
-+
-+#include "alpine-v3.dtsi"
-+
-+/ {
-+	model = "Amazon's Annapurna Labs Alpine v3 Evaluation Platform (EVP)";
-+	compatible = "amazon,al-alpine-v3-evp", "amazon,al-alpine-v3";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/amazon/alpine-v3.dtsi b/arch/arm64/boot/dts/amazon/alpine-v3.dtsi
-new file mode 100644
-index 000000000000..5e6657ef7588
---- /dev/null
-+++ b/arch/arm64/boot/dts/amazon/alpine-v3.dtsi
-@@ -0,0 +1,371 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019, Amazon.com, Inc. or its affiliates. All Rights Reserved
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	model = "Amazon's Annapurna Labs Alpine v3";
-+	compatible = "amazon,al-alpine-v3";
-+
-+	interrupt-parent = <&gic>;
-+
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x0>;
-+			enable-method = "psci";
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
-+			i-cache-size = <0xc000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			next-level-cache = <&cluster0_l2>;
-+		};
-+
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x1>;
-+			enable-method = "psci";
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
-+			i-cache-size = <0xc000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			next-level-cache = <&cluster0_l2>;
-+		};
-+
-+		cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x2>;
-+			enable-method = "psci";
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
-+			i-cache-size = <0xc000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			next-level-cache = <&cluster0_l2>;
-+		};
-+
-+		cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x3>;
-+			enable-method = "psci";
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
-+			i-cache-size = <0xc000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			next-level-cache = <&cluster0_l2>;
-+		};
-+
-+		cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x100>;
-+			enable-method = "psci";
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
-+			i-cache-size = <0xc000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			next-level-cache = <&cluster1_l2>;
-+		};
-+
-+		cpu@101 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x101>;
-+			enable-method = "psci";
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
-+			i-cache-size = <0xc000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			next-level-cache = <&cluster1_l2>;
-+		};
-+
-+		cpu@102 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x102>;
-+			enable-method = "psci";
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
-+			i-cache-size = <0xc000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			next-level-cache = <&cluster1_l2>;
-+		};
-+
-+		cpu@103 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x103>;
-+			enable-method = "psci";
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
-+			i-cache-size = <0xc000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			next-level-cache = <&cluster1_l2>;
-+		};
-+
-+		cpu@200 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x200>;
-+			enable-method = "psci";
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
-+			i-cache-size = <0xc000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			next-level-cache = <&cluster2_l2>;
-+		};
-+
-+		cpu@201 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x201>;
-+			enable-method = "psci";
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
-+			i-cache-size = <0xc000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			next-level-cache = <&cluster2_l2>;
-+		};
-+
-+		cpu@202 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x202>;
-+			enable-method = "psci";
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
-+			i-cache-size = <0xc000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			next-level-cache = <&cluster2_l2>;
-+		};
-+
-+		cpu@203 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x203>;
-+			enable-method = "psci";
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
-+			i-cache-size = <0xc000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			next-level-cache = <&cluster2_l2>;
-+		};
-+
-+		cpu@300 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x300>;
-+			enable-method = "psci";
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
-+			i-cache-size = <0xc000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			next-level-cache = <&cluster3_l2>;
-+		};
-+
-+		cpu@301 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x301>;
-+			enable-method = "psci";
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
-+			i-cache-size = <0xc000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			next-level-cache = <&cluster3_l2>;
-+		};
-+
-+		cpu@302 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x302>;
-+			enable-method = "psci";
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
-+			i-cache-size = <0xc000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			next-level-cache = <&cluster3_l2>;
-+		};
-+
-+		cpu@303 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x303>;
-+			enable-method = "psci";
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
-+			i-cache-size = <0xc000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			next-level-cache = <&cluster3_l2>;
-+		};
-+
-+		cluster0_l2: cache@0 {
-+			compatible = "cache";
-+			cache-size = <0x200000>;
-+			cache-line-size = <64>;
-+			cache-sets = <2048>;
-+			cache-level = <2>;
-+		};
-+
-+		cluster1_l2: cache@100 {
-+			compatible = "cache";
-+			cache-size = <0x200000>;
-+			cache-line-size = <64>;
-+			cache-sets = <2048>;
-+			cache-level = <2>;
-+		};
-+
-+		cluster2_l2: cache@200 {
-+			compatible = "cache";
-+			cache-size = <0x200000>;
-+			cache-line-size = <64>;
-+			cache-sets = <2048>;
-+			cache-level = <2>;
-+		};
-+
-+		cluster3_l2: cache@300 {
-+			compatible = "cache";
-+			cache-size = <0x200000>;
-+			cache-line-size = <64>;
-+			cache-sets = <2048>;
-+			cache-level = <2>;
-+		};
-+
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		secmon@0 {
-+			reg = <0x0 0x0 0x0 0x100000>;
-+			no-map;
-+		};
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
-+	arch-timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 0xd IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 0xe IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 0xb IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 0xa IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+	pmu {
-+		compatible = "arm,cortex-a72-pmu";
-+		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		gic: interrupt-controller@f0000000 {
-+			compatible = "arm,gic-v3";
-+			#interrupt-cells = <3>;
-+			#address-cells = <0>;
-+			interrupt-controller;
-+			reg = <0x0 0xf0800000 0 0x10000>,
-+			      <0x0 0xf0a00000 0 0x200000>,
-+			      <0x0 0xf0000000 0 0x2000>,
-+			      <0x0 0xf0010000 0 0x1000>,
-+			      <0x0 0xf0020000 0 0x2000>;
-+			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		msix: msix@fbe00000 {
-+			compatible = "al,alpine-msix";
-+			reg = <0x0 0xfbe00000 0x0 0x100000>;
-+			interrupt-controller;
-+			msi-controller;
-+			al,msi-base-spi = <160>;
-+			al,msi-num-spis = <800>;
-+			interrupt-parent = <&gic>;
-+		};
-+
-+		uart0: serial@fd883000 {
-+			compatible = "ns16550a";
-+			reg = <0x0 0xfd883000 0x0 0x1000>;
-+			clock-frequency = <0>;
-+			interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+		};
-+
-+		pcie@fbd00000 {
-+			compatible = "pci-host-ecam-generic";
-+			device_type = "pci";
-+			#size-cells = <2>;
-+			#address-cells = <3>;
-+			#interrupt-cells = <1>;
-+			reg = <0x0 0xfbd00000 0x0 0x100000>;
-+			interrupt-map-mask = <0xf800 0 0 7>;
-+			/* 8 x legacy interrupts for SATA only */
-+			interrupt-map = <0x4000 0 0 1 &gic 0 57 IRQ_TYPE_LEVEL_HIGH>,
-+					<0x4800 0 0 1 &gic 0 58 IRQ_TYPE_LEVEL_HIGH>,
-+					<0x5000 0 0 1 &gic 0 59 IRQ_TYPE_LEVEL_HIGH>,
-+					<0x5800 0 0 1 &gic 0 60 IRQ_TYPE_LEVEL_HIGH>,
-+					<0x6000 0 0 1 &gic 0 61 IRQ_TYPE_LEVEL_HIGH>,
-+					<0x6800 0 0 1 &gic 0 62 IRQ_TYPE_LEVEL_HIGH>,
-+					<0x7000 0 0 1 &gic 0 63 IRQ_TYPE_LEVEL_HIGH>,
-+					<0x7800 0 0 1 &gic 0 64 IRQ_TYPE_LEVEL_HIGH>;
-+			ranges = <0x02000000 0x0 0xfe000000 0x0 0xfe000000 0x0 0x1000000>;
-+			bus-range = <0x00 0x00>;
-+			msi-parent = <&msix>;
-+		};
-+	};
-+};
--- 
-2.17.1
-
+Workloads may now depend on LRO for cycle efficiency. Reverting to
+behavior before this patch (though now displaying the offload state
+correctly) is more conservative in that regard.
