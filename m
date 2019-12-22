@@ -2,69 +2,94 @@ Return-Path: <SRS0=7h0X=2M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF814C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 23:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4F2C2D0D4
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 23:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC61120684
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 23:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7109F20684
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 23:34:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577057651;
+	bh=3eyYclPbCGqZCwou47b/jYWXUoSokit0w14n9LfpkgA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Y/4KkQ63GmUfrPOBbSqOpx5JQn6gXn/pPuB+E1aqHB/dPViv06pmzJvFQFSh4F05f
+	 qYsBz81u0SB2WRbGXdxFqw7On+piZApSuwxR/hw15Vy20MFKaN05C/qUZYoxfOXMBl
+	 LYzzWIFdmgvAwv3+0gGT+u77tIIhZQ+zdFSePhvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbfLVXXH (ORCPT
+        id S1726393AbfLVXeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 18:23:07 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:48068 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbfLVXXG (ORCPT
+        Sun, 22 Dec 2019 18:34:10 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34968 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfLVXeK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 18:23:06 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ijAYy-000643-9g; Sun, 22 Dec 2019 23:23:04 +0000
-Date:   Sun, 22 Dec 2019 23:23:04 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [git pull] vfs.git assorted fixes
-Message-ID: <20191222232304.GN4203@ZenIV.linux.org.uk>
+        Sun, 22 Dec 2019 18:34:10 -0500
+Received: by mail-wr1-f66.google.com with SMTP id g17so14894606wro.2;
+        Sun, 22 Dec 2019 15:34:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CmAdU1+t0rrC9yhPW4EHpZghbRMZgiJzFFYu/Pk/EW8=;
+        b=CJuMk4rPKQBkEwO5uqKc0dsL4LCN8+kQm3mvnpOsEpjhulp7afic8cfXKbnhoxRKCI
+         3P4IOc08TGyVTm2jk+JSWGJKqhDsuLIEPq1NcW/VaoI9VCuxIQUk3itNcoEpBtu6rPM3
+         Tqt9AUPdT+6dBvjzwB17WyRwITujiMdxp72ZY/EHnO5oE0J+BW5b975tC+NBJEmkKp7V
+         9hcSTus3s+MAkEEI9gTXmWDGKC955mEVJya/5cH71wpIYt05HwcHBh1PQARD4/NLULio
+         hR8abIrt+TdSUtJMYIoS71nOa3SoH358kekqAUxiZSjBIYyh0WFPzYp4F09n1bHelm1F
+         IiPA==
+X-Gm-Message-State: APjAAAVmJ6rSF+QYuq4U9ZymBhbjVLHGOLAovrdNLSBDQ4ha0Ywfb6II
+        TDiYXwRxJw2Bn0qXL+lb+zk19P0d
+X-Google-Smtp-Source: APXvYqzZJo8d8swBtgmxqYXFx0pHAZLmiJO4/3AHvVP3SqUQdqDmF6fgvCQzKeptgSzR05bwrXqmIQ==
+X-Received: by 2002:a05:6000:50:: with SMTP id k16mr26440468wrx.145.1577057647790;
+        Sun, 22 Dec 2019 15:34:07 -0800 (PST)
+Received: from debian.mshome.net (38.163.200.146.dyn.plus.net. [146.200.163.38])
+        by smtp.gmail.com with ESMTPSA id p7sm17555395wmp.31.2019.12.22.15.34.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Dec 2019 15:34:07 -0800 (PST)
+From:   Wei Liu <wei.liu@kernel.org>
+To:     linux-hyperv@vger.kernel.org
+Cc:     sashal@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, x86@kernel.org, mikelley@microsoft.com,
+        linux-kernel@vger.kernel.org, Wei Liu <wei.liu@kernel.org>
+Subject: [PATCH] x86/hyper-v: add "polling" bit to hv_synic_sint
+Date:   Sun, 22 Dec 2019 23:34:04 +0000
+Message-Id: <20191222233404.1629-1-wei.liu@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	Eric's s_inodes softlockup fixes + Jan's fix for recent regression
-from pipe rework.
+That bit is documented in TLFS 5.0c as follows:
 
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+  Setting the polling bit will have the effect of unmasking an
+  interrupt source, except that an actual interrupt is not generated.
 
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+---
+ arch/x86/include/asm/hyperv-tlfs.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-are available in the git repository at:
+diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+index 5f10f7f2098d..92abc1e42bfc 100644
+--- a/arch/x86/include/asm/hyperv-tlfs.h
++++ b/arch/x86/include/asm/hyperv-tlfs.h
+@@ -809,7 +809,8 @@ union hv_synic_sint {
+ 		u64 reserved1:8;
+ 		u64 masked:1;
+ 		u64 auto_eoi:1;
+-		u64 reserved2:46;
++		u64 polling:1;
++		u64 reserved2:45;
+ 	} __packed;
+ };
+ 
+-- 
+2.20.1
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
-
-for you to fetch changes up to 1edc8eb2e93130e36ac74ac9c80913815a57d413:
-
-  fs: call fsnotify_sb_delete after evict_inodes (2019-12-18 00:03:01 -0500)
-
-----------------------------------------------------------------
-Eric Sandeen (2):
-      fs: avoid softlockups in s_inodes iterators
-      fs: call fsnotify_sb_delete after evict_inodes
-
-Jan Kara (1):
-      pipe: Fix bogus dereference in iov_iter_alignment()
-
- fs/drop_caches.c     | 2 +-
- fs/inode.c           | 7 +++++++
- fs/notify/fsnotify.c | 4 ++++
- fs/quota/dquot.c     | 1 +
- fs/super.c           | 4 +++-
- lib/iov_iter.c       | 3 ++-
- 6 files changed, 18 insertions(+), 3 deletions(-)
