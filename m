@@ -2,219 +2,80 @@ Return-Path: <SRS0=7h0X=2M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5024C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 01:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4774C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 02:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A0DF206D3
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 01:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B055B206C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 02:01:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfLVBpL (ORCPT
+        id S1726705AbfLVCBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 20:45:11 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:46836 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfLVBpK (ORCPT
+        Sat, 21 Dec 2019 21:01:06 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:48635 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726086AbfLVCBF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 20:45:10 -0500
-Received: by mail-il1-f199.google.com with SMTP id s85so11204111ild.13
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 17:45:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=sm4+wUXkTCs2OOGVPDQmx501pVx6yNRgLcoZ5Pu14A4=;
-        b=ac14w90XvLyQ+5MmAUV7VZ4WdlNpeMrwAM4+UH0vvX8OgYdyFldjd78p2fqeP0RJib
-         qCja5J2/GguBR/VolvY6F7fx1ajO3T5YR1X0mWrt6rxkRK8d2K2kEqAXM4CsttUR1p7G
-         jtPnfMftWHN5N6dh6Wu70HrZfD4YR1eXJcwqGGI6d0ol8NzwbbQhCCulLYO+Vx89U2oD
-         MRSax8ENamMqA74u4yQp4gY+79cn+/fk4zZxT/Ha2zJOIQPEsgWIc7MKuw3a9achPWif
-         XgYLdOu+9PdmWhYSUyuFQ0pycle4NX6+k7hrYTDBTPAVk418EcsPCWjQS4HUOu7Do5F6
-         Hu9Q==
-X-Gm-Message-State: APjAAAU6lR1oMY/O1Cg+gvDIzdsmFeIIu5+IwcIGsou3Z4ctsOQidgnN
-        3ceq4JLbx9j6PN2TbLSC8V2mDTuDtX66wPJEKIFW9k3/bH20
-X-Google-Smtp-Source: APXvYqygoTjVFuJd25kMYRH4C0iFAS6PHc6Nhy1XXiM0GWbRWTuOShGf7ZGDm7R8+z3qwRGDTTEPXcRUNie+0UQJK3BPVyCS+Yf/
+        Sat, 21 Dec 2019 21:01:05 -0500
+Received: from callcc.thunk.org (pool-72-93-95-157.bstnma.fios.verizon.net [72.93.95.157])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id xBM1xvSc030406
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 21 Dec 2019 20:59:57 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id DA5AB420822; Sat, 21 Dec 2019 20:59:56 -0500 (EST)
+Date:   Sat, 21 Dec 2019 20:59:56 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-xfs@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        Artem Bityutskiy <dedekind1@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-mtd@lists.infradead.org, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH v3] fs: Fix page_mkwrite off-by-one errors
+Message-ID: <20191222015956.GA63378@mit.edu>
+References: <20191218130935.32402-1-agruenba@redhat.com>
+ <20191218185216.GA7497@magnolia>
+ <CAHc6FU7vuiN4iCB3TthLaow+7c41UUS0MYEeiJ5b1iPStT=+sA@mail.gmail.com>
+ <20191218192331.GA7473@magnolia>
 MIME-Version: 1.0
-X-Received: by 2002:a92:d151:: with SMTP id t17mr3292865ilg.175.1576979110007;
- Sat, 21 Dec 2019 17:45:10 -0800 (PST)
-Date:   Sat, 21 Dec 2019 17:45:10 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ab9d07059a410fae@google.com>
-Subject: KASAN: use-after-free Read in asix_suspend
-From:   syzbot <syzbot+514595412b80dc817633@syzkaller.appspotmail.com>
-To:     allison@lohutok.net, andreyknvl@google.com, davem@davemloft.net,
-        kstewart@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-        swinslow@gmail.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, tranmanphong@gmail.com, zhang.run@zte.com.cn
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218192331.GA7473@magnolia>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Dec 18, 2019 at 11:23:31AM -0800, Darrick J. Wong wrote:
+> *OH*, because we're stuffing the value in ret2, not ret.  Ok, that makes
+> more sense.  Er, I guess I don't mind pushing via iomap tree, but could
+> we get some acks from Ted and any of the ceph maintainers?
 
-syzbot found the following crash on:
+Acked-by: Theodore Ts'o <tytso@mit.edu>
 
-HEAD commit:    ecdf2214 usb: gadget: add raw-gadget interface
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=1330a2c6e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b06a019075333661
-dashboard link: https://syzkaller.appspot.com/bug?extid=514595412b80dc817633
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=108f9ac1e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=152dc6c1e00000
+My only nit is the same one Jan raised, which is should
+page_mkwrite_check_truncate() be an inline function?
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+514595412b80dc817633@syzkaller.appspotmail.com
-
-usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-usb 1-1: config 0 descriptor??
-hub 1-1:0.138: bad descriptor, ignoring hub
-hub: probe of 1-1:0.138 failed with error -5
-asix 1-1:0.138 (unnamed net_device) (uninitialized): Failed to read MAC  
-address: 0
-asix 1-1:0.138 eth1: register 'asix' at usb-dummy_hcd.0-1, ASIX AX88172A  
-USB 2.0 Ethernet, 76:16:76:e7:25:cd
-==================================================================
-BUG: KASAN: use-after-free in asix_suspend+0xb9/0xc0  
-drivers/net/usb/asix_devices.c:617
-Read of size 8 at addr ffff8881d1984288 by task kworker/0:1/12
-
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.5.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xef/0x16e lib/dump_stack.c:118
-  print_address_description.constprop.0+0x16/0x200 mm/kasan/report.c:374
-  __kasan_report.cold+0x37/0x7f mm/kasan/report.c:506
-  kasan_report+0xe/0x20 mm/kasan/common.c:639
-  asix_suspend+0xb9/0xc0 drivers/net/usb/asix_devices.c:617
-  usb_suspend_interface drivers/usb/core/driver.c:1203 [inline]
-  usb_suspend_both+0x260/0x7b0 drivers/usb/core/driver.c:1308
-  usb_runtime_suspend+0x46/0x120 drivers/usb/core/driver.c:1846
-  __rpm_callback+0x27e/0x3c0 drivers/base/power/runtime.c:357
-  rpm_callback+0x105/0x230 drivers/base/power/runtime.c:484
-  rpm_suspend+0x37a/0x1300 drivers/base/power/runtime.c:629
-  __pm_runtime_suspend+0xbb/0x150 drivers/base/power/runtime.c:1048
-  pm_runtime_put_sync_autosuspend include/linux/pm_runtime.h:252 [inline]
-  usb_new_device.cold+0xaee/0xe79 drivers/usb/core/hub.c:2567
-  hub_port_connect drivers/usb/core/hub.c:5184 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
-  port_event drivers/usb/core/hub.c:5470 [inline]
-  hub_event+0x1e59/0x3860 drivers/usb/core/hub.c:5552
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2264
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2410
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Allocated by task 12:
-  save_stack+0x1b/0x80 mm/kasan/common.c:72
-  set_track mm/kasan/common.c:80 [inline]
-  __kasan_kmalloc mm/kasan/common.c:513 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:486
-  kmalloc include/linux/slab.h:556 [inline]
-  kzalloc include/linux/slab.h:670 [inline]
-  ax88172a_bind+0x9f/0x7a2 drivers/net/usb/ax88172a.c:191
-  usbnet_probe+0xb43/0x2470 drivers/net/usb/usbnet.c:1737
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0x1480/0x1c20 drivers/base/core.c:2487
-  usb_set_configuration+0xe67/0x1740 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0x1480/0x1c20 drivers/base/core.c:2487
-  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2537
-  hub_port_connect drivers/usb/core/hub.c:5184 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
-  port_event drivers/usb/core/hub.c:5470 [inline]
-  hub_event+0x1e59/0x3860 drivers/usb/core/hub.c:5552
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2264
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2410
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Freed by task 12:
-  save_stack+0x1b/0x80 mm/kasan/common.c:72
-  set_track mm/kasan/common.c:80 [inline]
-  kasan_set_free_info mm/kasan/common.c:335 [inline]
-  __kasan_slab_free+0x129/0x170 mm/kasan/common.c:474
-  slab_free_hook mm/slub.c:1425 [inline]
-  slab_free_freelist_hook mm/slub.c:1458 [inline]
-  slab_free mm/slub.c:3005 [inline]
-  kfree+0xda/0x310 mm/slub.c:3957
-  ax88172a_bind.cold+0x4d/0x1e8 drivers/net/usb/ax88172a.c:250
-  usbnet_probe+0xb43/0x2470 drivers/net/usb/usbnet.c:1737
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0x1480/0x1c20 drivers/base/core.c:2487
-  usb_set_configuration+0xe67/0x1740 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0x1480/0x1c20 drivers/base/core.c:2487
-  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2537
-  hub_port_connect drivers/usb/core/hub.c:5184 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
-  port_event drivers/usb/core/hub.c:5470 [inline]
-  hub_event+0x1e59/0x3860 drivers/usb/core/hub.c:5552
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2264
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2410
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff8881d1984280
-  which belongs to the cache kmalloc-64 of size 64
-The buggy address is located 8 bytes inside of
-  64-byte region [ffff8881d1984280, ffff8881d19842c0)
-The buggy address belongs to the page:
-page:ffffea0007466100 refcount:1 mapcount:0 mapping:ffff8881da003180  
-index:0x0
-raw: 0200000000000200 ffffea00074c2100 0000000a0000000a ffff8881da003180
-raw: 0000000000000000 0000000080200020 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8881d1984180: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-  ffff8881d1984200: 00 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc
-> ffff8881d1984280: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-                       ^
-  ffff8881d1984300: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-  ffff8881d
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+			      	    - Ted
