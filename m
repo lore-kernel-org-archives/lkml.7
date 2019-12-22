@@ -2,243 +2,172 @@ Return-Path: <SRS0=7h0X=2M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D48C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 18:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7850C2D0D4
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 18:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65FC92070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 18:07:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577038077;
-	bh=AXO3IG0scX/owDhFJ2EPWEb/thMP3sqao2HJei/CAzc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=zsA5zHGR3v7GVaWmfHy3JtUBuiaVciGwYyh++VU+j8Accs62Y+kDmsSTeaDfGmWAa
-	 jS7YeguySeCPs4Cb+7JrBcuABstiOiLchpbYN5fCWnxLxpEZVQ5XM6leQ8WTo63kb+
-	 sbOf6pDb0LnzQfKat0vyR+b3bqOFhwtEDj3gU/Ag=
+	by mail.kernel.org (Postfix) with ESMTP id 895542070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 18:17:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbfLVSH4 (ORCPT
+        id S1726709AbfLVSRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 13:07:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43772 "EHLO mail.kernel.org"
+        Sun, 22 Dec 2019 13:17:20 -0500
+Received: from muru.com ([72.249.23.125]:49330 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725951AbfLVSH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 13:07:56 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EE0F206D3;
-        Sun, 22 Dec 2019 18:07:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577038074;
-        bh=AXO3IG0scX/owDhFJ2EPWEb/thMP3sqao2HJei/CAzc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=o8qsTO6uyPeA0tG362Hu/HzXq37yTAu6ytXeCbFzGZt6Zgs6CScuaOoqydSfTJt25
-         KCyhR3cgoe9WOiahsqK16E2Iu8SqTgmI382nqu7/8u7RivHx/xisjRY3W3lcG5ELq9
-         WGnYvm84bN5VEtuIs1fMaDpohhGZOWM7dR3bpFJM=
-Date:   Sun, 22 Dec 2019 18:07:49 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Mircea Caprioru <mircea.caprioru@analog.com>
-Cc:     <Michael.Hennerich@analog.com>, <alexandru.ardelean@analog.com>,
-        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: iio: frequency: Add docs for LTC6952
-Message-ID: <20191222180749.4ad0a939@archlinux>
-In-Reply-To: <20191219134810.6677-1-mircea.caprioru@analog.com>
-References: <20191219134810.6677-1-mircea.caprioru@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725919AbfLVSRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Dec 2019 13:17:19 -0500
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 086C08188;
+        Sun, 22 Dec 2019 18:17:58 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-omap@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
+Subject: [PATCH 2/3] phy: cpcap-usb: Improve host vs docked mode detection
+Date:   Sun, 22 Dec 2019 10:17:03 -0800
+Message-Id: <20191222181704.61511-2-tony@atomide.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191222181704.61511-1-tony@atomide.com>
+References: <20191222181704.61511-1-tony@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Dec 2019 15:48:08 +0200
-Mircea Caprioru <mircea.caprioru@analog.com> wrote:
+When docked to a Motorola lapdock or media dock, we're in USB A-host mode
+with VBUS provided by the dock. When in regular USB A-host mode, we're
+providing the VBUS. And in regular USB A-host mode we must also keep
+kicking the VBUS to keep it active.
 
-> Document support for Analog Devices LTC6952 ultralow jitter, 4.5GHz PLL
-> with 11 outputs and JESD204B/C support.
-> 
-> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-I''m far from sure if we have the right balance of clock and IIO specific
-+ device specific bindings in here.
+Let's wait a bit before configuring the USB PHY to allow some time between
+the ID and VBUS changes. And let's add vbus_provider flag so we can detect
+docked mode and regularo USB A-host mode better.
 
-For example should the divider only be controlled by whatever the clock
-consumer requests?
+With better USB A-host mode detection, we can now also just kick the
+VBUS to keep it enabled and leave out the unnecessary line muxing.
 
-Definitely want some review of this from the clock side of things.
+We only need to set and clear vbus_provider in the delayed work so no
+locking is needed for it currently.
 
-Thanks,
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ drivers/phy/motorola/phy-cpcap-usb.c | 73 ++++++++++++++++++++++------
+ 1 file changed, 58 insertions(+), 15 deletions(-)
 
-Jonathan
-
-
-> ---
->  .../bindings/iio/frequency/adi,ltc6952.yaml   | 127 ++++++++++++++++++
->  1 file changed, 127 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/frequency/adi,ltc6952.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/frequency/adi,ltc6952.yaml b/Documentation/devicetree/bindings/iio/frequency/adi,ltc6952.yaml
-> new file mode 100644
-> index 000000000000..a28c773c3948
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/frequency/adi,ltc6952.yaml
-> @@ -0,0 +1,127 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright 2019 Analog Devices Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/iio/frequency/adi,ltc6952.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices LTC6952 ultralow jitter, JESD204B/C clock generation IC.
-> +
-> +maintainers:
-> +  - Mircea Caprioru <mircea.caprioru@analog.com>
-> +
-> +description: |
-> +  Analog Devices LTC6952 ultralow jitter, JESD204B/C clock generation IC.
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ltc6952.pdf 
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ltc6952
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clock-output-names:
-> +    description: |
-> +      Clock output signal names indexed by the first cell in the clock
-> +      specifier (see clock/clock-bindings.txt)
-> +    maxItems: 1
-> +
-> +  adi,vco-frequency-hz:
-> +    description: |
-> +      VCO input frequency. This is fed to the internal distribution path and
-> +      feedback dividers.
-
-Superficially this feels like it should be a established via the requested
-output frequencies and some idea of a 'best' value to satisfy them?
-
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    maxItems: 1
-> +
-> +  adi,ref-frequency-hz:
-> +    description: |
-> +      Reference input frequency. This is fed in the reference divider.
-
-Is this not just an upstream clock? 
-
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clock-output-names
-> +
-> +patternProperties:
-> +  "^channel@[0-9]$":
-> +    type: object
-> +    description: Represents the external channels which are connected to the device.
-> +
-> +    properties:
-> +      reg:
-> +        description: |
-> +          The channel number. It can have up to 11 channels numbered from 0 to 10.
-> +        maxItems: 1
-> +
-> +      adi,extended-name:
-> +        description: Descriptive channel name.
-I mention in review of patch 2 this is a definite no.   A separate
-out_chanX_label type attribute could provide this an use standard "label" dt
-binding.  I think we currently have that for the IIO device but not yet its channels.
-
-> +        maxItems: 1
-> +
-> +      adi,divider:
-> +        description: |
-> +          Channel divider. This divides the incoming VCO frequency.
-Fundamental thing here is the output frequency required by any consumer.
-Feels like this should be done through the clock framework bindings rather than
-explicit controls here..
-
-
-> +        maxItems: 1
-> +
-> +      adi,digital-delay:
-
-So I'm assuming there is no binding for this level of fine control in normal
-clock bindings?  I would like some input from people more knowledgeable on
-that framework though.
-
-> +        description: |
-> +          Each output divider can have the start time of the output delayed by
-> +          integer multiples of half of the VCO period after a synchronization
-> +          event.
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32
-> +          - minimum: 0
-> +          - maximum: 4095
-> +        maxItems: 1
-> +
-> +      adi,analog-delay:
-> +        description: |
-> +          Each output has a fine analog delay feature to further adjust its
-> +          output delay time (tADELx) in small steps.
-
-Umm. Can we do better than 'small steps' for the units of this?
-
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32
-> +          - minimum: 0
-> +          - maximum: 63
-> +        maxItems: 1
-> +
-> +    required:
-> +      - reg
-> +
-> +examples:
-> +   - |
-> +     ltc6952@0 {
-> +       compatible = "adi,ltc6952";
-> +       reg = <0>;
-> +
-> +       #address-cells = <1>;
-> +       #size-cells = <0>;
-> +
-> +       spi-max-frequency = <10000000>;
-> +
-> +       clock-output-names = "ltc6952_out0", "ltc6952_out1", "ltc6952_out2",
-> +         "ltc6952_out3", "ltc6952_out4", "ltc6952_out5", "ltc6952_out6",
-> +         "ltc6952_out7", "ltc6952_out8", "ltc6952_out9", "ltc6952_out10";
-> +       #clock-cells = <1>;
-> +
-> +       adi,vco-frequency-hz = <4000000000>;
-> +       adi,ref-frequency-hz = <100000000>;
-> +
-> +       ltc6952_c0: channel@0 {
-> +         reg = <0>;
-> +         adi,extended-name = "REF_CLK";
-> +         adi,divider = <10>;
-> +         adi,digital-delay = <100>;
-> +         adi,analog-delay = <0>;
-> +       };
-> +
-> +       ltc6952_c1: channel@1 {
-> +         reg = <1>;
-> +         adi,extended-name = "TEST_CLK";
-> +         adi,divider = <10>;
-> +       };
-> +     };
-
+diff --git a/drivers/phy/motorola/phy-cpcap-usb.c b/drivers/phy/motorola/phy-cpcap-usb.c
+--- a/drivers/phy/motorola/phy-cpcap-usb.c
++++ b/drivers/phy/motorola/phy-cpcap-usb.c
+@@ -134,6 +134,8 @@ struct cpcap_phy_ddata {
+ 	struct iio_channel *id;
+ 	struct regulator *vusb;
+ 	atomic_t active;
++	unsigned int vbus_provider:1;
++	unsigned int docked:1;
+ };
+ 
+ static bool cpcap_usb_vbus_valid(struct cpcap_phy_ddata *ddata)
+@@ -233,8 +235,60 @@ static void cpcap_usb_detect(struct work_struct *work)
+ 	if (error)
+ 		return;
+ 
+-	if (s.id_ground) {
++	vbus = cpcap_usb_vbus_valid(ddata);
++
++	/* We need to kick the VBUS as USB A-host */
++	if (s.id_ground && ddata->vbus_provider) {
++		dev_dbg(ddata->dev, "still in USB A-host mode, kicking VBUS\n");
++
++		cpcap_usb_try_musb_mailbox(ddata, MUSB_ID_GROUND);
++
++		error = regmap_update_bits(ddata->reg, CPCAP_REG_USBC3,
++					   CPCAP_BIT_VBUSSTBY_EN |
++					   CPCAP_BIT_VBUSEN_SPI,
++					   CPCAP_BIT_VBUSEN_SPI);
++		if (error)
++			goto out_err;
++
++		return;
++	}
++
++	if (vbus && s.id_ground && ddata->docked) {
++		dev_dbg(ddata->dev, "still docked as A-host, signal ID down\n");
++
++		cpcap_usb_try_musb_mailbox(ddata, MUSB_ID_GROUND);
++
++		return;
++	}
++
++	/* No VBUS needed with docks */
++	if (vbus && s.id_ground && !ddata->vbus_provider) {
++		dev_dbg(ddata->dev, "connected to a dock\n");
++
++		ddata->docked = true;
++
++		error = cpcap_usb_set_usb_mode(ddata);
++		if (error)
++			goto out_err;
++
++		cpcap_usb_try_musb_mailbox(ddata, MUSB_ID_GROUND);
++
++		/*
++		 * Force check state again after musb has reoriented,
++		 * otherwise devices won't enumerate after loading PHY
++		 * driver.
++		 */
++		schedule_delayed_work(&ddata->detect_work,
++				      msecs_to_jiffies(1000));
++
++		return;
++	}
++
++	if (s.id_ground && !ddata->docked) {
+ 		dev_dbg(ddata->dev, "id ground, USB host mode\n");
++
++		ddata->vbus_provider = true;
++
+ 		error = cpcap_usb_set_usb_mode(ddata);
+ 		if (error)
+ 			goto out_err;
+@@ -259,21 +313,8 @@ static void cpcap_usb_detect(struct work_struct *work)
+ 
+ 	vbus = cpcap_usb_vbus_valid(ddata);
+ 
++	/* Otherwise assume we're connected to a USB host */
+ 	if (vbus) {
+-		/* Are we connected to a docking station with vbus? */
+-		if (s.id_ground) {
+-			dev_dbg(ddata->dev, "connected to a dock\n");
+-
+-			/* No VBUS needed with docks */
+-			error = cpcap_usb_set_usb_mode(ddata);
+-			if (error)
+-				goto out_err;
+-			cpcap_usb_try_musb_mailbox(ddata, MUSB_ID_GROUND);
+-
+-			return;
+-		}
+-
+-		/* Otherwise assume we're connected to a USB host */
+ 		dev_dbg(ddata->dev, "connected to USB host\n");
+ 		error = cpcap_usb_set_usb_mode(ddata);
+ 		if (error)
+@@ -283,6 +324,8 @@ static void cpcap_usb_detect(struct work_struct *work)
+ 		return;
+ 	}
+ 
++	ddata->vbus_provider = false;
++	ddata->docked = false;
+ 	cpcap_usb_try_musb_mailbox(ddata, MUSB_VBUS_OFF);
+ 
+ 	/* Default to debug UART mode */
+-- 
+2.24.1
