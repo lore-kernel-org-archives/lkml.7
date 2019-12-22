@@ -2,606 +2,249 @@ Return-Path: <SRS0=7h0X=2M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CE3C2D0D4
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 20:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E14C2D0D4
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 21:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2F13206D3
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 20:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C81012063A
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 21:12:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QUxVFQcM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D2PQosLY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfLVUp2 (ORCPT
+        id S1726613AbfLVVMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 15:45:28 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46551 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbfLVUpZ (ORCPT
+        Sun, 22 Dec 2019 16:12:36 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41456 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725997AbfLVVMg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 15:45:25 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z7so14555990wrl.13;
-        Sun, 22 Dec 2019 12:45:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=hLsbnnzlTO9fP2lxLp1fcHp//8px4IcUwu23brt8CZI=;
-        b=QUxVFQcMYE7jPMznF1lb4TI7n4w8MkUpTXkKzTLHL2k2wgGY7faaKgfwMwLl4d3Zwz
-         Yp7uICAWqlt1sgjC9Gi7Yr4QXF4c6vNO7QW8Ux6zcXjgepDe1jjevvZgt+95gKPRowBH
-         0L8J8SpMLseq4AQ9SC+QvS8cZ4HOU7nPa/nHLrRGaOw0vJsK1CiliyCslSPzavdJy3tT
-         AvAEmTdKwOTecFNc8y6kIuyVjF1DZ86nIvHj5/I4QtgCraSwQj4IG3cTmhg89VmTDezq
-         2JuL8FSM2NSPpIfcfBHf8PnAyi8BSImKVODZ9NUZOuJ5Ft72O8lfSn0lq7jN77xMr9/O
-         0NQQ==
+        Sun, 22 Dec 2019 16:12:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577049155;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=81SBuCurUKDda2T3riG+gGj1L6z+mCbC0XqMo/gy184=;
+        b=D2PQosLYWMtlH27amjSdvAVh17q9f2eVAeW6l+R3dCGoy1XPd62YmTtwK0DinM3+Xh4zmN
+        xrLXl6kH7fYhCl0Sor+TAD3X2/HWORvLimDMPUGoR1Ch13MZ/hnRF6+/Zp/qqE+8EZnbMU
+        al5+oPRCxf4RkVlZbdycnfkhMhd/bVQ=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-25-lEvglsVfNQGos3KyQAVGVg-1; Sun, 22 Dec 2019 16:12:31 -0500
+X-MC-Unique: lEvglsVfNQGos3KyQAVGVg-1
+Received: by mail-qt1-f199.google.com with SMTP id l1so9976814qtp.21
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Dec 2019 13:12:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=hLsbnnzlTO9fP2lxLp1fcHp//8px4IcUwu23brt8CZI=;
-        b=n2/cly895G0emGrTecFdqkkZm0yeOinura/0E58yIPlUkDFj2/G1l2rzU5+y3rD9OG
-         7wH2Dvsh4H7qi4KhiyPu+bJOvgqTfP/n9X/a9uOPj9FHByDAeV33XFF2aHZIxmBXT6mW
-         QgqNdEN7bDs4+AzCsLGoBsaAT7ymJePahZOYCgC6dsyE/NaSSBNWOoM5zbhafWO2UdVn
-         AIjJ2xptWw79oudseScnPCnvAU6QhHSHH8ZmePJbtD0+cZDBAPgJjKooF1SX7116KzRe
-         DEeUVRdilI4SlR4iQ99dp+wV0NLjzYb6F3+Siwh0QqX+o4K5nNH52DGNN4pBNw/m8ms+
-         xQLA==
-X-Gm-Message-State: APjAAAXPFivUmDcVGo2YV/1RMhLO+N31LxwnISjkQhLbjJp8a4nu+saf
-        PThmrb17ejnWijBxlSY0n3c=
-X-Google-Smtp-Source: APXvYqy2DC7ZcY7VCyMT9UgHC0jGvDvzZfLgRt/q90r89CxUn/6bJMZqnRemulodKryCxRgI3XhaDw==
-X-Received: by 2002:a5d:4ec2:: with SMTP id s2mr25729680wrv.291.1577047522500;
-        Sun, 22 Dec 2019 12:45:22 -0800 (PST)
-Received: from localhost.localdomain (p5B3F6AB6.dip0.t-ipconnect.de. [91.63.106.182])
-        by smtp.gmail.com with ESMTPSA id o4sm17603792wrx.25.2019.12.22.12.45.21
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=81SBuCurUKDda2T3riG+gGj1L6z+mCbC0XqMo/gy184=;
+        b=OKdx/UT1uhzud7bfCwRiS6h2CEhcQXize6sudrpUtpAylBQ3/DB+S2b5K9nBFjkJyI
+         KXdpT8PyRj2uvMzA4ZFmWGheF1yO+QSJRxWeR+3dXdpNOKn6eXuM/0rAGL9/lGV+xQfq
+         PSkHAXFZ6nTQY+MED9xUwJ25DE3SW6QtAqPhWg4IO+PwXRb43Ywthdj/J09c5Laphvye
+         dBdLUJbJUIt7y33XH0z6fKFr8uE0DO4pChY8nJDh/sStudFZlCCg4Edj9nON1C2sBWMH
+         z5wWKJqLaGh21wAu3s/8Nzq8p1y8yD5Q2GwWNn7GOYwV4j1tnzfwZ5JPIR5zCGzV+/3I
+         iwig==
+X-Gm-Message-State: APjAAAW0TYa2b3rWFBLEcxNKiVjgk/QVYFtBaTMO3l9fzdzWIR5fO8XA
+        2CKBhuz8qBOPy1NxQ1Ud2R4+WetRO9P18ojfacq/I6ooUcnh6dM90pTUgvLiytae11IQORYX9Vi
+        EYPx0X2W3sMgsLMC1LiY0OamK
+X-Received: by 2002:a37:9f94:: with SMTP id i142mr23653862qke.244.1577049150849;
+        Sun, 22 Dec 2019 13:12:30 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyee3TDUK2xiV+RGjhrO597mucerzvzO/mbJz+IvyD1eg//weY86y+Ev3OUQISI61t6u1ufJg==
+X-Received: by 2002:a37:9f94:: with SMTP id i142mr23653830qke.244.1577049150486;
+        Sun, 22 Dec 2019 13:12:30 -0800 (PST)
+Received: from redhat.com (bzq-79-181-48-215.red.bezeqint.net. [79.181.48.215])
+        by smtp.gmail.com with ESMTPSA id k73sm5182459qke.36.2019.12.22.13.12.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Dec 2019 12:45:21 -0800 (PST)
-From:   Saravanan Sekar <sravanhome@gmail.com>
-To:     sravanhome@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, mripard@kernel.org,
-        shawnguo@kernel.org, heiko@sntech.de, sam@ravnborg.org,
-        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
-        davem@davemloft.net, mchehab+samsung@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/4] regulator: mpq7920: add mpq7920 regulator driver
-Date:   Sun, 22 Dec 2019 21:45:06 +0100
-Message-Id: <20191222204507.32413-4-sravanhome@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191222204507.32413-1-sravanhome@gmail.com>
-References: <20191222204507.32413-1-sravanhome@gmail.com>
+        Sun, 22 Dec 2019 13:12:29 -0800 (PST)
+Date:   Sun, 22 Dec 2019 16:12:24 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc:     Alistair Delva <adelva@google.com>,
+        Network Development <netdev@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>, kernel-team@android.com,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net] virtio-net: Skip set_features on non-cvq devices
+Message-ID: <20191222160850-mutt-send-email-mst@kernel.org>
+References: <20191220212207.76726-1-adelva@google.com>
+ <CA+FuTSewMaRTe51jOJtD-VHcp4Ct+c=11-9SxenULHwQuokamw@mail.gmail.com>
+ <20191222080754-mutt-send-email-mst@kernel.org>
+ <CA+FuTSd4vd9wS0sHmAk=Ys2-OwZarAHT3TNFzg7c7+2Dsott=g@mail.gmail.com>
+ <20191222095141-mutt-send-email-mst@kernel.org>
+ <CA+FuTScTcMqU4dKXNKCbjYJ8A-eVGp5eDNihAkq106YKTvTqDw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+FuTScTcMqU4dKXNKCbjYJ8A-eVGp5eDNihAkq106YKTvTqDw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding regulator driver for the device mpq7920.
-The MPQ7920 PMIC device contains four DC-DC buck converters and
-five regulators, is designed for automotive and accessed over I2C.
+On Sun, Dec 22, 2019 at 10:54:23AM -0500, Willem de Bruijn wrote:
+> On Sun, Dec 22, 2019 at 9:57 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+> >
+> > On Sun, Dec 22, 2019 at 09:21:43AM -0500, Willem de Bruijn wrote:
+> > > On Sun, Dec 22, 2019 at 8:11 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > >
+> > > > On Fri, Dec 20, 2019 at 10:08:41PM -0500, Willem de Bruijn wrote:
+> > > > > On Fri, Dec 20, 2019 at 4:22 PM Alistair Delva <adelva@google.com> wrote:
+> > > > > >
+> > > > > > On devices without control virtqueue support, such as the virtio_net
+> > > > > > implementation in crosvm[1], attempting to configure LRO will panic the
+> > > > > > kernel:
+> > > > > >
+> > > > > > kernel BUG at drivers/net/virtio_net.c:1591!
+> > > > > > invalid opcode: 0000 [#1] PREEMPT SMP PTI
+> > > > > > CPU: 1 PID: 483 Comm: Binder:330_1 Not tainted 5.4.5-01326-g19463e9acaac #1
+> > > > > > Hardware name: ChromiumOS crosvm, BIOS 0
+> > > > > > RIP: 0010:virtnet_send_command+0x15d/0x170 [virtio_net]
+> > > > > > Code: d8 00 00 00 80 78 02 00 0f 94 c0 65 48 8b 0c 25 28 00 00 00 48 3b 4c 24 70 75 11 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 <0f> 0b e8 ec a4 12 c8 66 90 66 2e 0f 1f 84 00 00 00 00 00 55 48 89
+> > > > > > RSP: 0018:ffffb97940e7bb50 EFLAGS: 00010246
+> > > > > > RAX: ffffffffc0596020 RBX: ffffa0e1fc8ea840 RCX: 0000000000000017
+> > > > > > RDX: ffffffffc0596110 RSI: 0000000000000011 RDI: 000000000000000d
+> > > > > > RBP: ffffb97940e7bbf8 R08: ffffa0e1fc8ea0b0 R09: ffffa0e1fc8ea0b0
+> > > > > > R10: ffffffffffffffff R11: ffffffffc0590940 R12: 0000000000000005
+> > > > > > R13: ffffa0e1ffad2c00 R14: ffffb97940e7bc08 R15: 0000000000000000
+> > > > > > FS:  0000000000000000(0000) GS:ffffa0e1fd100000(006b) knlGS:00000000e5ef7494
+> > > > > > CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+> > > > > > CR2: 00000000e5eeb82c CR3: 0000000079b06001 CR4: 0000000000360ee0
+> > > > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > > > > Call Trace:
+> > > > > >  ? preempt_count_add+0x58/0xb0
+> > > > > >  ? _raw_spin_lock_irqsave+0x36/0x70
+> > > > > >  ? _raw_spin_unlock_irqrestore+0x1a/0x40
+> > > > > >  ? __wake_up+0x70/0x190
+> > > > > >  virtnet_set_features+0x90/0xf0 [virtio_net]
+> > > > > >  __netdev_update_features+0x271/0x980
+> > > > > >  ? nlmsg_notify+0x5b/0xa0
+> > > > > >  dev_disable_lro+0x2b/0x190
+> > > > > >  ? inet_netconf_notify_devconf+0xe2/0x120
+> > > > > >  devinet_sysctl_forward+0x176/0x1e0
+> > > > > >  proc_sys_call_handler+0x1f0/0x250
+> > > > > >  proc_sys_write+0xf/0x20
+> > > > > >  __vfs_write+0x3e/0x190
+> > > > > >  ? __sb_start_write+0x6d/0xd0
+> > > > > >  vfs_write+0xd3/0x190
+> > > > > >  ksys_write+0x68/0xd0
+> > > > > >  __ia32_sys_write+0x14/0x20
+> > > > > >  do_fast_syscall_32+0x86/0xe0
+> > > > > >  entry_SYSENTER_compat+0x7c/0x8e
+> > > > > >
+> > > > > > This happens because virtio_set_features() does not check the presence
+> > > > > > of the control virtqueue feature, which is sanity checked by a BUG_ON
+> > > > > > in virtnet_send_command().
+> > > > > >
+> > > > > > Fix this by skipping any feature processing if the control virtqueue is
+> > > > > > missing. This should be OK for any future feature that is added, as
+> > > > > > presumably all of them would require control virtqueue support to notify
+> > > > > > the endpoint that offload etc. should begin.
+> > > > > >
+> > > > > > [1] https://chromium.googlesource.com/chromiumos/platform/crosvm/
+> > > > > >
+> > > > > > Fixes: a02e8964eaf9 ("virtio-net: ethtool configurable LRO")
+> > > > > > Cc: stable@vger.kernel.org [4.20+]
+> > > > > > Cc: Michael S. Tsirkin <mst@redhat.com>
+> > > > > > Cc: Jason Wang <jasowang@redhat.com>
+> > > > > > Cc: David S. Miller <davem@davemloft.net>
+> > > > > > Cc: kernel-team@android.com
+> > > > > > Cc: virtualization@lists.linux-foundation.org
+> > > > > > Cc: linux-kernel@vger.kernel.org
+> > > > > > Signed-off-by: Alistair Delva <adelva@google.com>
+> > > > >
+> > > > > Thanks for debugging this, Alistair.
+> > > > >
+> > > > > > ---
+> > > > > >  drivers/net/virtio_net.c | 3 +++
+> > > > > >  1 file changed, 3 insertions(+)
+> > > > > >
+> > > > > > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> > > > > > index 4d7d5434cc5d..709bcd34e485 100644
+> > > > > > --- a/drivers/net/virtio_net.c
+> > > > > > +++ b/drivers/net/virtio_net.c
+> > > > > > @@ -2560,6 +2560,9 @@ static int virtnet_set_features(struct net_device *dev,
+> > > > > >         u64 offloads;
+> > > > > >         int err;
+> > > > > >
+> > > > > > +       if (!vi->has_cvq)
+> > > > > > +               return 0;
+> > > > > > +
+> > > > >
+> > > > > Instead of checking for this in virtnet_set_features, how about we
+> > > > > make configurability contingent on cvq in virtnet_probe:
+> > > > >
+> > > > > -       if (virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS))
+> > > > > +       if (virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS) &&
+> > > > > +           virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_VQ))
+> > > > >                 dev->hw_features |= NETIF_F_LRO;
+> > > > >
+> > > > > Based on this logic a little below in the same function
+> > > > >
+> > > > >         if (virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_VQ))
+> > > > >                 vi->has_cvq = true;
+> > > >
+> > > >
+> > > > This would be a regression on old hypervisors which didn't have
+> > > > CTL VQ - suddenly they will lose offloads.
+> > >
+> > > dev->features still correctly displays whether offloads are enabled.
+> > > Removing it from dev->hw_features just renders it non-configurable.
+> >
+> > Oh you are right. I confused it with dev->features.
+> >
+> > > Note that before the patch that is being fixed the offloads were
+> > > enabled, but ethtool would show them as off.
+> >
+> > So the bug is in spec, it should have said
+> > VIRTIO_NET_F_CTRL_GUEST_OFFLOADS depends on VIRTIO_NET_F_CTRL_VQ, but we
+> > missed that part. We can and I guess should add this as a recommendation
+> > but it's too late to make it a MUST.
+> >
+> > Meanwhile I would say it's cleanest to work around
+> > this in virtnet_validate by clearing VIRTIO_NET_F_CTRL_GUEST_OFFLOADS
+> > if VIRTIO_NET_F_CTRL_VQ is off, with a big comment explaining
+> > it's a spec bug.
+> 
+> Wouldn't that cause precisely the regression you were concerned about?
 
-Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
----
- drivers/regulator/Kconfig   |  10 +
- drivers/regulator/Makefile  |   1 +
- drivers/regulator/mpq7920.c | 396 ++++++++++++++++++++++++++++++++++++
- drivers/regulator/mpq7920.h |  72 +++++++
- 4 files changed, 479 insertions(+)
- create mode 100644 drivers/regulator/mpq7920.c
- create mode 100644 drivers/regulator/mpq7920.h
+Not sure how do you mean.  VIRTIO_NET_F_CTRL_GUEST_OFFLOADS simply can't
+work without a ctrl vq. What's the point of keeping it on?
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 74eb5af7295f..e10adc2e57da 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -600,6 +600,16 @@ config REGULATOR_MCP16502
- 	  through the regulator interface. In addition it enables
- 	  suspend-to-ram/standby transition.
+> Workloads may now depend on LRO for cycle efficiency. Reverting to
+> behavior before this patch (though now displaying the offload state
+> correctly) is more conservative in that regard.
+
+Do you see a problem with the following (untested):
+
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+
+
+diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+index 4d7d5434cc5d..7b8805b47f0d 100644
+--- a/drivers/net/virtio_net.c
++++ b/drivers/net/virtio_net.c
+@@ -2971,6 +2971,15 @@ static int virtnet_validate(struct virtio_device *vdev)
+ 	if (!virtnet_validate_features(vdev))
+ 		return -EINVAL;
  
-+config REGULATOR_MPQ7920
-+	tristate "Monolithic MPQ7920 PMIC"
-+	depends on I2C && OF
-+	select REGMAP_I2C
-+	help
-+	  Say y here to support the MPQ7920 PMIC. This will enable supports
-+	  the software controllable 4 buck and 5 LDO regulators.
-+	  This driver supports the control of different power rails of device
-+	  through regulator interface.
++	/* VIRTIO_NET_F_CTRL_GUEST_OFFLOADS does not work without
++	 * VIRTIO_NET_F_CTRL_VQ. Unfortunately spec forgot to
++	 * specify that VIRTIO_NET_F_CTRL_GUEST_OFFLOADS depends
++	 * on VIRTIO_NET_F_CTRL_VQ so devices can set the later but
++	 * not the former.
++	 */
++	if (!virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_VQ))
++			__virtio_clear_bit(vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS);
 +
- config REGULATOR_MT6311
- 	tristate "MediaTek MT6311 PMIC"
- 	depends on I2C
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index 2210ba56f9bd..fd11002507e4 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -77,6 +77,7 @@ obj-$(CONFIG_REGULATOR_MC13783) += mc13783-regulator.o
- obj-$(CONFIG_REGULATOR_MC13892) += mc13892-regulator.o
- obj-$(CONFIG_REGULATOR_MC13XXX_CORE) +=  mc13xxx-regulator-core.o
- obj-$(CONFIG_REGULATOR_MCP16502) += mcp16502.o
-+obj-$(CONFIG_REGULATOR_MPQ7920) += mpq7920.o
- obj-$(CONFIG_REGULATOR_MT6311) += mt6311-regulator.o
- obj-$(CONFIG_REGULATOR_MT6323)	+= mt6323-regulator.o
- obj-$(CONFIG_REGULATOR_MT6358)	+= mt6358-regulator.o
-diff --git a/drivers/regulator/mpq7920.c b/drivers/regulator/mpq7920.c
-new file mode 100644
-index 000000000000..04ec563661e4
---- /dev/null
-+++ b/drivers/regulator/mpq7920.c
-@@ -0,0 +1,396 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+//
-+// mpq7920.c  - regulator driver for mps mpq7920
-+//
-+// Copyright 2019 Monolithic Power Systems, Inc
-+//
-+// Author: Saravanan Sekar <sravanhome@gmail.com>
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/err.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/of_regulator.h>
-+#include <linux/i2c.h>
-+#include <linux/regmap.h>
-+#include "mpq7920.h"
-+
-+#define MPQ7920_BUCK_VOLT_RANGE \
-+	((MPQ7920_VOLT_MAX - MPQ7920_BUCK_VOLT_MIN)/MPQ7920_VOLT_STEP + 1)
-+#define MPQ7920_LDO_VOLT_RANGE \
-+	((MPQ7920_VOLT_MAX - MPQ7920_LDO_VOLT_MIN)/MPQ7920_VOLT_STEP + 1)
-+
-+#define MPQ7920BUCK(_name, _id, _ilim)					\
-+	[MPQ7920_BUCK ## _id] = {					\
-+		.id = MPQ7920_BUCK ## _id,				\
-+		.name = _name,						\
-+		.ops = &mpq7920_buck_ops,				\
-+		.min_uV = MPQ7920_BUCK_VOLT_MIN,			\
-+		.uV_step = MPQ7920_VOLT_STEP,				\
-+		.n_voltages = MPQ7920_BUCK_VOLT_RANGE,			\
-+		.curr_table = _ilim,					\
-+		.n_current_limits = ARRAY_SIZE(_ilim),			\
-+		.csel_reg = MPQ7920_BUCK ##_id## _REG_C,		\
-+		.csel_mask = MPQ7920_MASK_BUCK_ILIM,			\
-+		.enable_reg = MPQ7920_REG_REGULATOR_EN,			\
-+		.enable_mask = BIT(MPQ7920_REGULATOR_EN_OFFSET -	\
-+					 MPQ7920_BUCK ## _id),		\
-+		.vsel_reg = MPQ7920_BUCK ##_id## _REG_A,		\
-+		.vsel_mask = MPQ7920_MASK_VREF,				\
-+		.active_discharge_on	= MPQ7920_DISCHARGE_ON,		\
-+		.active_discharge_reg	= MPQ7920_BUCK ##_id## _REG_B,	\
-+		.active_discharge_mask	= MPQ7920_MASK_DISCHARGE,	\
-+		.soft_start_reg		= MPQ7920_BUCK ##_id## _REG_C,	\
-+		.soft_start_mask	= MPQ7920_MASK_SOFTSTART,	\
-+		.owner			= THIS_MODULE,			\
-+	}
-+
-+#define MPQ7920LDO(_name, _id, _ops, _ilim, _ilim_sz, _creg, _cmask)	\
-+	[MPQ7920_LDO ## _id] = {					\
-+		.id = MPQ7920_LDO ## _id,				\
-+		.name = _name,						\
-+		.ops = _ops,						\
-+		.min_uV = MPQ7920_LDO_VOLT_MIN,				\
-+		.uV_step = MPQ7920_VOLT_STEP,				\
-+		.n_voltages = MPQ7920_LDO_VOLT_RANGE,			\
-+		.vsel_reg = MPQ7920_LDO ##_id## _REG_A,			\
-+		.vsel_mask = MPQ7920_MASK_VREF,				\
-+		.curr_table = _ilim,					\
-+		.n_current_limits = _ilim_sz,				\
-+		.csel_reg = _creg,					\
-+		.csel_mask = _cmask,					\
-+		.enable_reg = (_id == 1) ? 0 : MPQ7920_REG_REGULATOR_EN,\
-+		.enable_mask = BIT(MPQ7920_REGULATOR_EN_OFFSET -	\
-+					MPQ7920_LDO ##_id + 1),		\
-+		.active_discharge_on	= MPQ7920_DISCHARGE_ON,		\
-+		.active_discharge_mask	= MPQ7920_MASK_DISCHARGE,	\
-+		.active_discharge_reg	= MPQ7920_LDO ##_id## _REG_B,	\
-+		.type			= REGULATOR_VOLTAGE,		\
-+		.owner			= THIS_MODULE,			\
-+	}
-+
-+enum mpq7920_regulators {
-+	MPQ7920_BUCK1,
-+	MPQ7920_BUCK2,
-+	MPQ7920_BUCK3,
-+	MPQ7920_BUCK4,
-+	MPQ7920_LDO1, /* LDORTC */
-+	MPQ7920_LDO2,
-+	MPQ7920_LDO3,
-+	MPQ7920_LDO4,
-+	MPQ7920_LDO5,
-+	MPQ7920_MAX_REGULATORS,
-+};
-+
-+struct mpq7920_regulator_info {
-+	struct device *dev;
-+	struct regmap *regmap;
-+	struct regulator_dev *rdev[MPQ7920_MAX_REGULATORS];
-+	struct regulator_desc *rdesc;
-+};
-+
-+static const struct regmap_config mpq7920_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = 0x25,
-+};
-+
-+/* Current limits array (in uA)
-+ * ILIM1 & ILIM3
-+ */
-+static const unsigned int mpq7920_I_limits1[] = {
-+	4600000, 6600000, 7600000, 9300000
-+};
-+
-+/* ILIM2 & ILIM4 */
-+static const unsigned int mpq7920_I_limits2[] = {
-+	2700000, 3900000, 5100000, 6100000
-+};
-+
-+/* LDO4 & LDO5 */
-+static const unsigned int mpq7920_I_limits3[] = {
-+	300000, 700000
-+};
-+
-+static int mpq7920_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay);
-+
-+/* RTCLDO not controllable, always ON */
-+static const struct regulator_ops mpq7920_ldortc_ops = {
-+	.list_voltage		= regulator_list_voltage_linear,
-+	.map_voltage		= regulator_map_voltage_linear,
-+	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
-+	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
-+};
-+
-+static const struct regulator_ops mpq7920_ldo_wo_current_ops = {
-+	.enable			= regulator_enable_regmap,
-+	.disable		= regulator_disable_regmap,
-+	.is_enabled		= regulator_is_enabled_regmap,
-+	.list_voltage		= regulator_list_voltage_linear,
-+	.map_voltage		= regulator_map_voltage_linear,
-+	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
-+	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
-+	.set_active_discharge	= regulator_set_active_discharge_regmap,
-+};
-+
-+static const struct regulator_ops mpq7920_ldo_ops = {
-+	.enable			= regulator_enable_regmap,
-+	.disable		= regulator_disable_regmap,
-+	.is_enabled		= regulator_is_enabled_regmap,
-+	.list_voltage		= regulator_list_voltage_linear,
-+	.map_voltage		= regulator_map_voltage_linear,
-+	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
-+	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
-+	.set_active_discharge	= regulator_set_active_discharge_regmap,
-+	.get_current_limit	= regulator_get_current_limit_regmap,
-+	.set_current_limit	= regulator_set_current_limit_regmap,
-+};
-+
-+static const struct regulator_ops mpq7920_buck_ops = {
-+	.enable			= regulator_enable_regmap,
-+	.disable		= regulator_disable_regmap,
-+	.is_enabled		= regulator_is_enabled_regmap,
-+	.list_voltage		= regulator_list_voltage_linear,
-+	.map_voltage		= regulator_map_voltage_linear,
-+	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
-+	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
-+	.set_active_discharge	= regulator_set_active_discharge_regmap,
-+	.set_soft_start		= regulator_set_soft_start_regmap,
-+	.set_ramp_delay		= mpq7920_set_ramp_delay,
-+};
-+
-+static struct regulator_desc mpq7920_regulators_desc[MPQ7920_MAX_REGULATORS] = {
-+	MPQ7920BUCK("buck1", 1, mpq7920_I_limits1),
-+	MPQ7920BUCK("buck2", 2, mpq7920_I_limits2),
-+	MPQ7920BUCK("buck3", 3, mpq7920_I_limits1),
-+	MPQ7920BUCK("buck4", 4, mpq7920_I_limits2),
-+	MPQ7920LDO("ldortc", 1, &mpq7920_ldortc_ops, NULL, 0, 0, 0),
-+	MPQ7920LDO("ldo2", 2, &mpq7920_ldo_wo_current_ops, NULL, 0, 0, 0),
-+	MPQ7920LDO("ldo3", 3, &mpq7920_ldo_wo_current_ops, NULL, 0, 0, 0),
-+	MPQ7920LDO("ldo4", 4, &mpq7920_ldo_ops, mpq7920_I_limits3,
-+			ARRAY_SIZE(mpq7920_I_limits3), MPQ7920_LDO4_REG_B,
-+			MPQ7920_MASK_LDO_ILIM),
-+	MPQ7920LDO("ldo5", 5, &mpq7920_ldo_ops, mpq7920_I_limits3,
-+			ARRAY_SIZE(mpq7920_I_limits3), MPQ7920_LDO5_REG_B,
-+			MPQ7920_MASK_LDO_ILIM),
-+};
-+
-+/*
-+ * DVS ramp rate BUCK1 to BUCK4
-+ * 00-01: Reserved
-+ * 10: 8mV/us
-+ * 11: 4mV/us
-+ */
-+static int mpq7920_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
-+{
-+	unsigned int ramp_val;
-+
-+	if (ramp_delay > 8000 || ramp_delay < 0)
-+		return -EINVAL;
-+
-+	if (ramp_delay <= 4000)
-+		ramp_val = 3;
-+	else
-+		ramp_val = 2;
-+
-+	return regmap_update_bits(rdev->regmap, MPQ7920_REG_CTL0,
-+				  MPQ7920_MASK_DVS_SLEWRATE, ramp_val << 6);
-+}
-+
-+static void mpq7920_parse_dt(struct device *dev,
-+			 struct mpq7920_regulator_info *info)
-+{
-+	int ret, i;
-+	struct device_node *np = dev->of_node;
-+	uint8_t freq;
-+	uint8_t time_slot;
-+	uint8_t val[MPQ7920_BUCK4 + 1];
-+	uint8_t var_time[MPQ7920_LDO5];
-+	bool is_fixed_on_time = 0;
-+	bool is_fixed_off_time = 0;
-+
-+	is_fixed_on_time = of_property_read_bool(np, "mps,fixed-on-time");
-+	is_fixed_off_time = of_property_read_bool(np, "mps,fixed-off-time");
-+	if (is_fixed_on_time || is_fixed_off_time) {
-+		regmap_update_bits(info->regmap, MPQ7920_REG_CTL2,
-+				MPQ7920_MASK_FIXED_TIME_SLOT,
-+				~(is_fixed_on_time << 1 | is_fixed_off_time));
-+	}
-+
-+	ret = of_property_read_u8(np, "mps,time-slot", &time_slot);
-+	if (!ret) {
-+		regmap_update_bits(info->regmap, MPQ7920_REG_CTL2,
-+					MPQ7920_MASK_TIME_SLOT,
-+					(time_slot & 3) << 2);
-+	}
-+
-+	if (!is_fixed_on_time &&
-+	    !of_property_read_u8_array(np, "mps,inc-on-time", var_time,
-+					ARRAY_SIZE(var_time))) {
-+
-+		for (i = 0; i < MPQ7920_LDO5; i++) {
-+			if (i <= MPQ7920_BUCK4) {
-+				regmap_update_bits(info->regmap,
-+					MPQ7920_BUCK1_REG_D + (i * 4),
-+					MPQ7920_MASK_ON_TIME_SLOT,
-+					var_time[i] & 0xF);
-+			} else {
-+				regmap_update_bits(info->regmap,
-+					(MPQ7920_LDO2_REG_C +
-+						((i - MPQ7920_LDO1) * 3)),
-+					MPQ7920_MASK_ON_TIME_SLOT,
-+					var_time[i] & 0xF);
-+			}
-+		}
-+	}
-+
-+	if (!is_fixed_off_time &&
-+	    !of_property_read_u8_array(np, "mps,inc-off-time", var_time,
-+					ARRAY_SIZE(var_time))) {
-+
-+		for (i = 0; i < MPQ7920_LDO5; i++) {
-+			if (i <= MPQ7920_BUCK4) {
-+				regmap_update_bits(info->regmap,
-+					MPQ7920_BUCK1_REG_D + (i * 4),
-+					MPQ7920_MASK_OFF_TIME_SLOT,
-+					(var_time[i] & 0xF) << 4);
-+			} else {
-+				regmap_update_bits(info->regmap,
-+					(MPQ7920_LDO2_REG_C +
-+						((i - MPQ7920_LDO1) * 3)),
-+					MPQ7920_MASK_OFF_TIME_SLOT,
-+					(var_time[i] & 0xF) << 4);
-+			}
-+		}
-+	}
-+
-+	ret = of_property_read_u8_array(np, "mps,buck-softstart", val,
-+					ARRAY_SIZE(val));
-+	if (!ret) {
-+		for (i = 0; i < ARRAY_SIZE(val); i++)
-+			info->rdesc[i].soft_start_val_on = (val[i] & 3) << 2;
-+	}
-+
-+	ret = of_property_read_u8_array(np, "mps,buck-ovp", val,
-+					ARRAY_SIZE(val));
-+	if (!ret) {
-+		for (i = 0; i <= MPQ7920_BUCK4; i++) {
-+			regmap_update_bits(info->regmap,
-+					MPQ7920_BUCK1_REG_B + (i * 4),
-+					BIT(6), val[i] << 6);
-+		}
-+	}
-+
-+	ret = of_property_read_u8_array(np, "mps,buck-phase-delay", val,
-+					ARRAY_SIZE(val));
-+	if (!ret) {
-+		for (i = 0; i <= MPQ7920_BUCK4; i++) {
-+			regmap_update_bits(info->regmap,
-+					MPQ7920_BUCK1_REG_C + (i * 4),
-+					MPQ7920_MASK_BUCK_PHASE_DEALY,
-+					(val[i] & 3) << 4);
-+		}
-+	}
-+
-+	ret = of_property_read_u8(np, "mps,switch-freq", &freq);
-+	if (!ret) {
-+		regmap_update_bits(info->regmap, MPQ7920_REG_CTL0,
-+					MPQ7920_MASK_SWITCH_FREQ,
-+					(freq & 3) << 4);
-+	}
-+}
-+
-+static inline int mpq7920_regulator_register(
-+				struct mpq7920_regulator_info *info,
-+				struct regulator_config *config)
-+{
-+	int i;
-+	struct regulator_desc *rdesc;
-+	struct regulator_ops *ops;
-+
-+	for (i = 0; i < MPQ7920_MAX_REGULATORS; i++) {
-+		rdesc = &info->rdesc[i];
-+		ops = rdesc->ops;
-+		if (rdesc->curr_table) {
-+			ops->get_current_limit =
-+				regulator_get_current_limit_regmap;
-+			ops->set_current_limit =
-+				regulator_set_current_limit_regmap;
-+		}
-+
-+		info->rdev[i] = devm_regulator_register(info->dev, rdesc,
-+					 config);
-+		if (IS_ERR(info->rdev))
-+			return PTR_ERR(info->rdev);
-+	}
-+
-+	return 0;
-+}
-+
-+static int mpq7920_i2c_probe(struct i2c_client *client,
-+				    const struct i2c_device_id *id)
-+{
-+	struct device *dev = &client->dev;
-+	struct mpq7920_regulator_info *info;
-+	struct regulator_config config = { 0 };
-+	struct regmap *regmap;
-+	int ret;
-+
-+	info = devm_kzalloc(dev, sizeof(struct mpq7920_regulator_info),
-+				GFP_KERNEL);
-+	if (!info)
-+		return -ENOMEM;
-+
-+	info->dev = dev;
-+	info->rdesc = mpq7920_regulators_desc;
-+	regmap = devm_regmap_init_i2c(client, &mpq7920_regmap_config);
-+	if (IS_ERR(regmap)) {
-+		dev_err(dev, "Failed to allocate regmap!\n");
-+		return PTR_ERR(regmap);
-+	}
-+
-+	i2c_set_clientdata(client, info);
-+	info->regmap = regmap;
-+	if (client->dev.of_node)
-+		mpq7920_parse_dt(&client->dev, info);
-+
-+	config.dev = info->dev;
-+	config.regmap = regmap;
-+	config.driver_data = info;
-+
-+	ret = mpq7920_regulator_register(info, &config);
-+	if (ret < 0)
-+		dev_err(dev, "Failed to register regulator!\n");
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id mpq7920_of_match[] = {
-+	{ .compatible = "mps,mpq7920"},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, mpq7920_of_match);
-+
-+static const struct i2c_device_id mpq7920_id[] = {
-+	{ "mpq7920", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(i2c, mpq7920_id);
-+
-+static struct i2c_driver mpq7920_regulator_driver = {
-+	.driver = {
-+		.name = "mpq7920",
-+		.of_match_table = of_match_ptr(mpq7920_of_match),
-+	},
-+	.probe = mpq7920_i2c_probe,
-+	.id_table = mpq7920_id,
-+};
-+module_i2c_driver(mpq7920_regulator_driver);
-+
-+MODULE_AUTHOR("Saravanan Sekar <sravanhome@gmail.com>");
-+MODULE_DESCRIPTION("MPQ7920 PMIC regulator driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/regulator/mpq7920.h b/drivers/regulator/mpq7920.h
-new file mode 100644
-index 000000000000..58c64e708f2e
---- /dev/null
-+++ b/drivers/regulator/mpq7920.h
-@@ -0,0 +1,72 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * mpq7920.h  -  Regulator definitions for mpq7920
-+ *
-+ * Copyright 2019 Monolithic Power Systems, Inc
-+ *
-+ */
-+
-+#ifndef __MPQ7920_H__
-+#define __MPQ7920_H__
-+
-+#define MPQ7920_REG_CTL0		0x00
-+#define MPQ7920_REG_CTL1		0x01
-+#define MPQ7920_REG_CTL2		0x02
-+#define MPQ7920_BUCK1_REG_A		0x03
-+#define MPQ7920_BUCK1_REG_B		0x04
-+#define MPQ7920_BUCK1_REG_C		0x05
-+#define MPQ7920_BUCK1_REG_D		0x06
-+#define MPQ7920_BUCK2_REG_A		0x07
-+#define MPQ7920_BUCK2_REG_B		0x08
-+#define MPQ7920_BUCK2_REG_C		0x09
-+#define MPQ7920_BUCK2_REG_D		0x0a
-+#define MPQ7920_BUCK3_REG_A		0x0b
-+#define MPQ7920_BUCK3_REG_B		0x0c
-+#define MPQ7920_BUCK3_REG_C		0x0d
-+#define MPQ7920_BUCK3_REG_D		0x0e
-+#define MPQ7920_BUCK4_REG_A		0x0f
-+#define MPQ7920_BUCK4_REG_B		0x10
-+#define MPQ7920_BUCK4_REG_C		0x11
-+#define MPQ7920_BUCK4_REG_D		0x12
-+#define MPQ7920_LDO1_REG_A		0x13
-+#define MPQ7920_LDO1_REG_B		0x0
-+#define MPQ7920_LDO2_REG_A		0x14
-+#define MPQ7920_LDO2_REG_B		0x15
-+#define MPQ7920_LDO2_REG_C		0x16
-+#define MPQ7920_LDO3_REG_A		0x17
-+#define MPQ7920_LDO3_REG_B		0x18
-+#define MPQ7920_LDO3_REG_C		0x19
-+#define MPQ7920_LDO4_REG_A		0x1a
-+#define MPQ7920_LDO4_REG_B		0x1b
-+#define MPQ7920_LDO4_REG_C		0x1c
-+#define MPQ7920_LDO5_REG_A		0x1d
-+#define MPQ7920_LDO5_REG_B		0x1e
-+#define MPQ7920_LDO5_REG_C		0x1f
-+#define MPQ7920_REG_MODE		0x20
-+#define MPQ7920_REG_REGULATOR_EN1	0x22
-+#define MPQ7920_REG_REGULATOR_EN	0x22
-+
-+#define MPQ7920_MASK_VREF		0x7f
-+#define MPQ7920_MASK_BUCK_ILIM		0xd0
-+#define MPQ7920_MASK_LDO_ILIM		BIT(6)
-+#define MPQ7920_MASK_DISCHARGE		BIT(5)
-+#define MPQ7920_MASK_MODE		0xc0
-+#define MPQ7920_MASK_SOFTSTART		0x0c
-+#define MPQ7920_MASK_SWITCH_FREQ	0x30
-+#define MPQ7920_MASK_BUCK_PHASE_DEALY	0x30
-+#define MPQ7920_MASK_DVS_SLEWRATE	0xc0
-+#define MPQ7920_MASK_TIME_SLOT		0x06
-+#define MPQ7920_MASK_FIXED_TIME_SLOT	0x03
-+#define MPQ7920_MASK_ON_TIME_SLOT	0x0F
-+#define MPQ7920_MASK_OFF_TIME_SLOT	0xF0
-+#define MPQ7920_DISCHARGE_ON		0x1
-+
-+#define MPQ7920_REGULATOR_EN_OFFSET	7
-+
-+/* values in mV */
-+#define MPQ7920_BUCK_VOLT_MIN		400000
-+#define MPQ7920_LDO_VOLT_MIN		650000
-+#define MPQ7920_VOLT_MAX		3587500
-+#define MPQ7920_VOLT_STEP		12500
-+
-+#endif /* __MPQ7920_H__ */
--- 
-2.17.1
+ 	if (virtio_has_feature(vdev, VIRTIO_NET_F_MTU)) {
+ 		int mtu = virtio_cread16(vdev,
+ 					 offsetof(struct virtio_net_config,
 
