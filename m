@@ -8,108 +8,111 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B8FC2D0D4
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 18:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41E7C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 19:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1773520733
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 18:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BA86206CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 19:08:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LkGP531X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eK3u6NGT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbfLVSuq (ORCPT
+        id S1727400AbfLVTIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 13:50:46 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43695 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbfLVSun (ORCPT
+        Sun, 22 Dec 2019 14:08:43 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46077 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726729AbfLVTIm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 13:50:43 -0500
-Received: by mail-pf1-f195.google.com with SMTP id x6so6994125pfo.10;
-        Sun, 22 Dec 2019 10:50:42 -0800 (PST)
+        Sun, 22 Dec 2019 14:08:42 -0500
+Received: by mail-pl1-f196.google.com with SMTP id b22so6322173pls.12
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Dec 2019 11:08:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=T2D+rZhLHzhPfVvf+7jno9xAtOV3Jp4ift9l+qrE9Ys=;
-        b=LkGP531X5gDnvg3YLvStNo2Anp2FTAWZs+KrmtshWJS51Ttx9jLOMBVt48E3uoyh/2
-         4EeIz2hZfntIkS3VG766gehaapy++8prA0MiOdE8pZ3HF4v+ys/0qXzGuO+o7xhMABKb
-         OBhOFDhYKscNgmBcpvmzxK5wJEO2gNcqQSDeDul6y7a7IHcTM9U6bg85ZwL96SD0BC/W
-         e6U64/iA6ZLdu0HcpKcFCyh+zUUfzNJHo6NORfFAIuY7LVTDbh9hpiowx0TPltMIjq9G
-         +WzelQC+/Y2ht+i2RdnVapYbeiEB8LQL5GTbRbJ7WlEvIP4Kuk2tozIffHXzWm9RAvW3
-         U3tQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=t2pcE/zB/zRFa+D+0DGOcMCSuy9rY9vAk3qxszJwLvo=;
+        b=eK3u6NGTjCt3W6n8+0kujic7kEYU+S23lpnUv4W0WBuW1drRdllW/DFgThMGZVF8/Z
+         w6PtNPkCPEpyp7kEn/OIqwWI7FlvrHh7pbKWdlUpDP4qMfOB8p8NvSyVkaC9CmlENc5m
+         9HbwVrK+GgovJWWsH7G4QJID9V00e9WIpcGVgNblJx+/tGXFWKpQVfV+xZEzUV8ZN1bk
+         tfUV2NjuIcskaaBE7v8wywg9z2+BUYgsrCq8xfnfsYfZTO9uu1/7KDQsPsQgs21EObjo
+         knHrkV3QDFsg7oToxZ/iVXjdN1R/TNuA4FmrJzpZhkuEWx0De3Lnp8Q1XFcuuWvV9ets
+         dCYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=T2D+rZhLHzhPfVvf+7jno9xAtOV3Jp4ift9l+qrE9Ys=;
-        b=E5x8DClDKC8Bbqx1MON5Cj4W9ocE38CmJw+9lNU32TFSiT57rmlHAb4Ud/NQCHVT0N
-         GzB7UTlAbLteIVDr0HUgLpLHOTK4Jd2RTH+qEHiOpW+jfostTeCu6neQidzLLHu4MvIt
-         hzqI3BrVE5G2mpVRdE1NCnmD03+yYWfsPpkqJYKSCOq7fDFzjvVbTA6oB7es4osEqu7r
-         DSsgiDS4U97Uqkyda1C/331qSyX3jq1B5cknfVVm5autWAZgVzFYzLpFfGCi0CDkuXDO
-         Y1G5TPDfRGkpIvDXGQKGqjGhGQg1r7n70nXZlzrQZlp0BfnyMWGbXfMK4kE+NrrmjdRr
-         qOwQ==
-X-Gm-Message-State: APjAAAUm3MPSOgNuVoX2G2wredQIupYvGG6ZIxrQXX/8tc0SOr3IMIrG
-        QoZqueCGWVsr8IOPqspNtiY=
-X-Google-Smtp-Source: APXvYqx7+WwBdDmKMRn7IPzVdGaGjqVOSqHcY5smgx72jF1ROSO1rTBtd04VYHH+mMeVbGzx5CwrWw==
-X-Received: by 2002:a62:1944:: with SMTP id 65mr29356374pfz.151.1577040642355;
-        Sun, 22 Dec 2019 10:50:42 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=t2pcE/zB/zRFa+D+0DGOcMCSuy9rY9vAk3qxszJwLvo=;
+        b=AIvbyU02EYh6vHfbNunXZYqdMD7+6cO6hFaxWAz6UFJ6pS87jVitp1RY1bIQUvj1Fu
+         5Lu9lEJuitP39cNyEZNMbEpelfCJYlFDFV2UMyfihgKVFRXFHCH6Fvt6Py0GhDjrI435
+         i7OpqC2ENMwZKpis4vehkfrhQkc1jq6oAbtMQamX+1xvkvv8dmGwzLltL+TZ0EICY3zH
+         9xcilFBEEM4zIVRBq0xRPBtzcMpmRFUUghisBtP4OeIyswlReKpWQMdGE+2qqbWPG2IU
+         vxF7YJtk1W8Uzv8mg2GGVBgfU9DQP0mObnadb+PfHxfjIDfJRQGdIHucr3ahuQKsjAH4
+         7YPQ==
+X-Gm-Message-State: APjAAAXzTdse5N1tiuv4AL2ijRACobP4/eItgDQKmQdMrCQDXO6bhmLZ
+        9bCaACdPovVQPPUuyRm7z2g=
+X-Google-Smtp-Source: APXvYqz39Vp0a6zPzR6fPNDFQyU57GdaiKA8kXCxB1r5wua09/6D53xwbX3AciCIHG6yNWbyBak+nw==
+X-Received: by 2002:a17:90a:bb0c:: with SMTP id u12mr13130220pjr.100.1577041722010;
+        Sun, 22 Dec 2019 11:08:42 -0800 (PST)
 Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
-        by smtp.gmail.com with ESMTPSA id e4sm10449812pfa.44.2019.12.22.10.50.41
+        by smtp.gmail.com with ESMTPSA id p28sm19181262pgb.93.2019.12.22.11.08.41
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 22 Dec 2019 10:50:41 -0800 (PST)
+        Sun, 22 Dec 2019 11:08:41 -0800 (PST)
 From:   Yangtao Li <tiny.windzz@gmail.com>
-To:     ssantosh@kernel.org, paul@crapouillou.net, matthias.bgg@gmail.com,
-        rogerq@ti.com, tony@atomide.com, lukasz.luba@arm.com,
-        kgene@kernel.org, krzk@kernel.org, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, allison@lohutok.net, tglx@linutronix.de,
-        yong.wu@mediatek.com, jroedel@suse.de, evgreen@chromium.org,
-        rfontana@redhat.com, digetx@gmail.com, pdeschrijver@nvidia.com,
-        john@phrozen.org, alexios.zavras@intel.com, sboyd@kernel.org,
-        kstewart@linuxfoundation.org, info@metux.net,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Cc:     Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 3/9] memory: mvebu-devbus: convert to devm_platform_ioremap_resource
-Date:   Sun, 22 Dec 2019 18:50:28 +0000
-Message-Id: <20191222185034.4665-3-tiny.windzz@gmail.com>
+To:     mst@redhat.com, jasowang@redhat.com
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH] virtio-mmio: convert to devm_platform_ioremap_resource
+Date:   Sun, 22 Dec 2019 19:08:39 +0000
+Message-Id: <20191222190839.4863-1-tiny.windzz@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191222185034.4665-1-tiny.windzz@gmail.com>
-References: <20191222185034.4665-1-tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify code.
+Use devm_platform_ioremap_resource() to simplify code, which
+contains platform_get_resource, devm_request_mem_region and
+devm_ioremap.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/memory/mvebu-devbus.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/virtio/virtio_mmio.c | 15 +++------------
+ 1 file changed, 3 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/memory/mvebu-devbus.c b/drivers/memory/mvebu-devbus.c
-index 095f8a3b2cfc..886aea587276 100644
---- a/drivers/memory/mvebu-devbus.c
-+++ b/drivers/memory/mvebu-devbus.c
-@@ -267,7 +267,6 @@ static int mvebu_devbus_probe(struct platform_device *pdev)
- 	struct devbus_read_params r;
- 	struct devbus_write_params w;
- 	struct devbus *devbus;
--	struct resource *res;
- 	struct clk *clk;
- 	unsigned long rate;
- 	int err;
-@@ -277,8 +276,7 @@ static int mvebu_devbus_probe(struct platform_device *pdev)
+diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
+index e09edb5c5e06..97d5725fd9a2 100644
+--- a/drivers/virtio/virtio_mmio.c
++++ b/drivers/virtio/virtio_mmio.c
+@@ -531,18 +531,9 @@ static void virtio_mmio_release_dev(struct device *_d)
+ static int virtio_mmio_probe(struct platform_device *pdev)
+ {
+ 	struct virtio_mmio_device *vm_dev;
+-	struct resource *mem;
+ 	unsigned long magic;
+ 	int rc;
+ 
+-	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!mem)
+-		return -EINVAL;
+-
+-	if (!devm_request_mem_region(&pdev->dev, mem->start,
+-			resource_size(mem), pdev->name))
+-		return -EBUSY;
+-
+ 	vm_dev = devm_kzalloc(&pdev->dev, sizeof(*vm_dev), GFP_KERNEL);
+ 	if (!vm_dev)
  		return -ENOMEM;
+@@ -554,9 +545,9 @@ static int virtio_mmio_probe(struct platform_device *pdev)
+ 	INIT_LIST_HEAD(&vm_dev->virtqueues);
+ 	spin_lock_init(&vm_dev->lock);
  
- 	devbus->dev = dev;
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	devbus->base = devm_ioremap_resource(&pdev->dev, res);
-+	devbus->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(devbus->base))
- 		return PTR_ERR(devbus->base);
+-	vm_dev->base = devm_ioremap(&pdev->dev, mem->start, resource_size(mem));
+-	if (vm_dev->base == NULL)
+-		return -EFAULT;
++	vm_dev->base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(vm_dev->base))
++		return PTR_ERR(vm_dev->base);
  
+ 	/* Check magic value */
+ 	magic = readl(vm_dev->base + VIRTIO_MMIO_MAGIC_VALUE);
 -- 
 2.17.1
 
