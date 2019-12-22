@@ -2,173 +2,153 @@ Return-Path: <SRS0=7h0X=2M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFF6C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 17:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D36DAC2D0D4
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 17:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04BE720733
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 17:09:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577034563;
-	bh=geqtjwNhYhPjKOQTr6T9PrwqzqjPWdQ7WW0r3/weydI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QZreJei3hLItxiY83p2/fPWXoFTkxeYr/PlaYBZ5GFLjyI53hpgCxJL4vKqrcu4Ow
-	 BqYv9bDM4O/9d8OXW2aAFYUxQj1UvWyqAbYuS40vCh1AtAGKlYj1BBJNF7MZ2MYWlJ
-	 9+hyclF+e1n+c+z2QwDAnuFn0ksVNnvfnzV9aF8Q=
+	by mail.kernel.org (Postfix) with ESMTP id 9EB5B206D3
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 17:23:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="SRiSd19k";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="TjctS2oo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbfLVRJV (ORCPT
+        id S1726521AbfLVRXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 12:09:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54142 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725919AbfLVRJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 12:09:21 -0500
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46063206B7;
-        Sun, 22 Dec 2019 17:09:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577034559;
-        bh=geqtjwNhYhPjKOQTr6T9PrwqzqjPWdQ7WW0r3/weydI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=07BQMQ6Hi57dx/JRXrxf2u1oNEjJQB034YRiconHLdRB0lLKc4Hwfe97RW05Uv/tq
-         AKKDhe6nGpWcF/9npYiw5Fq7zftXQnLc13UPWdC0kF0ifrclA2+d+VZlDC8Ya5r7E8
-         tfwfwll4JDkG/JDZSwUMYCfglmEytTVVBzC+tQJE=
-Received: by mail-lf1-f52.google.com with SMTP id 15so10942870lfr.2;
-        Sun, 22 Dec 2019 09:09:19 -0800 (PST)
-X-Gm-Message-State: APjAAAWdkqqIfYX1GDzTIc5509s+wbpIH7AjL2VBEL49BBdSNBNLGv7+
-        va06MXGAiwGHQMgbCtUlsZzis6+27yCosBJMzwk=
-X-Google-Smtp-Source: APXvYqwBbqcf1Pd8XBumubRFDeYehrjcMzLoDXNvGe/zro6dSDNnXlMk5m00bIDMFtqyXV44zbdUED/i0ZPagGGw2/Y=
-X-Received: by 2002:ac2:5444:: with SMTP id d4mr15264932lfn.49.1577034557468;
- Sun, 22 Dec 2019 09:09:17 -0800 (PST)
-MIME-Version: 1.0
-References: <CGME20191220120143eucas1p1c9b01ae8c2e4ecd70423ef9d8001536f@eucas1p1.samsung.com>
- <20191220115653.6487-1-a.swigon@samsung.com> <20191220115653.6487-4-a.swigon@samsung.com>
-In-Reply-To: <20191220115653.6487-4-a.swigon@samsung.com>
-From:   Chanwoo Choi <chanwoo@kernel.org>
-Date:   Mon, 23 Dec 2019 02:08:41 +0900
-X-Gmail-Original-Message-ID: <CAGTfZH0zfvPYtTv6v+5nq99Gd2PVtg+O20dwf2nbV2j1U0nxCQ@mail.gmail.com>
-Message-ID: <CAGTfZH0zfvPYtTv6v+5nq99Gd2PVtg+O20dwf2nbV2j1U0nxCQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 3/7] interconnect: Allow inter-provider pairs to be configured
-To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>, inki.dae@samsung.com,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 22 Dec 2019 12:23:11 -0500
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:64344 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725932AbfLVRXL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Dec 2019 12:23:11 -0500
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBMHIKJE012803;
+        Sun, 22 Dec 2019 09:22:52 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=8lEftprU8rA/Mu5kS3t3a31/iUZFMagezPXUP95m+5E=;
+ b=SRiSd19kcPASHd6W2iVnQNrwVoKcEYy03ufo52eRKvWW0RPcXEvQGuYd6y2XzSyMEAFM
+ Q4QWIBeWRX8p6gvfEC1CzS0iJeL0N7gCX2NXUXN8jQ3UGP0F+6VAdvFpXb644fO/VjTi
+ FjrXqLv1BniH5OwEMWoITlBf4pyRB73o3bqizS5mtWY3PTxOstRD0tOgtAyFpywrl77D
+ 0k1R42qgHzqRVnHO61FHw2AgleNMpq3Z4h5mC7g0fuXYAh0zRCGzazE3t0QD4V7xofuc
+ B0Q3UVotwOXBP1y/saf1P2/vw34n25S5QqifDcXNM3xtMFVmC8199VkyA/yUbF01nsW3 WA== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2x1hmv2uab-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Sun, 22 Dec 2019 09:22:52 -0800
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sun, 22 Dec
+ 2019 09:22:50 -0800
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (104.47.38.57) by
+ SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Sun, 22 Dec 2019 09:22:50 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bd1yjgWz9ptKOI5MCZBjMRD3tcDYQxLoSA7R+1DBzCb181d6lipHLpF++iKjE7gvvyBXC3aM1jPe2eOzBQl43/gszadgp9fkaGHxxXZZc3wMSv3vNOq1ZrJ9/HxUHtB7DMN7MnL/Rao9lzavLnnEMi+Alx97HvF6bUpUdavQy6hWYxX9ifGPKvb6UpxRIfi60Tuyaa/UjE2vW2w4gPCLpj80QS8IdbK331JA3AXXUgDlj1VQ7zyyXsyBDvbRDVOnlQee7tnEZ4UfvaAJykbxq9+tllm/ngjnWeXhNLlpCVu3w9Q8V3CplRRSPexZzRudNHGJtUWaI99Yl1N3Ky8Bfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8lEftprU8rA/Mu5kS3t3a31/iUZFMagezPXUP95m+5E=;
+ b=SPKVNw45pO13pZKPHWmGvzZG/rKH08ttFt0NumDC2r/jr1PD7KT7C3wyWW6S+aWpNkOLqKLT8090YGyY/+ejPr1ZqViY84yo3UqyUdCICA793v69kT/AgEgwmaws9UT6VgU0Eix8x6NftgpVIcTqhAS38hkcUAnl5v72S9rg+EpcFqf/8RAzgld/4NI9hkFFjSJBmiknUchsTr5FwVDVa/IHY5gfLIRG97Lx+m4QWVwAo/wAoOg5Cn6tKNRqM8hvjYUJ8AMmPkLzCTjbAj1SlmNJ8P/A9DyM9IfyM+CIsGMkMKnX0AMGCsffUitbfe2RI0+XPdsweDJZAtEsvfWVIQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8lEftprU8rA/Mu5kS3t3a31/iUZFMagezPXUP95m+5E=;
+ b=TjctS2oo6YxSv8vwQcPjFSucGTsZe0GLuKXWX4GY1t51vmpU8QGR5uVF9rHSyfkqJjSwVpTbiQ0FJ9G1/fWleQAypo6uL5NiqVjI8L0cLW66zPvM+cw/Fm4pDLa8AWhaEoP+TjNSr0MwVvJfgeDzVXcVyodnDXo2tMAUaRYzQ00=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.237.10) by
+ MN2PR18MB3053.namprd18.prod.outlook.com (20.179.20.216) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.15; Sun, 22 Dec 2019 17:22:48 +0000
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::b96d:5663:6402:82ea]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::b96d:5663:6402:82ea%7]) with mapi id 15.20.2559.017; Sun, 22 Dec 2019
+ 17:22:48 +0000
+Received: from rric.localdomain (31.208.96.227) by HE1PR05CA0194.eurprd05.prod.outlook.com (2603:10a6:3:f9::18) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Sun, 22 Dec 2019 17:22:47 +0000
+From:   Robert Richter <rrichter@marvell.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH] EDAC/mc: Fix use-after-free and memleaks during device
+ removal
+Thread-Topic: [PATCH] EDAC/mc: Fix use-after-free and memleaks during device
+ removal
+Thread-Index: AQHVuOxuJoJ1JfG4w0+V86tO1SdYHQ==
+Date:   Sun, 22 Dec 2019 17:22:48 +0000
+Message-ID: <20191222172241.t7kquivbvawlbhx6@rric.localdomain>
+References: <20191218062129.7400-1-rrichter@marvell.com>
+ <20191222121500.GA5485@zn.tnic>
+In-Reply-To: <20191222121500.GA5485@zn.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR05CA0194.eurprd05.prod.outlook.com
+ (2603:10a6:3:f9::18) To MN2PR18MB3408.namprd18.prod.outlook.com
+ (2603:10b6:208:165::10)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [31.208.96.227]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f9af29b9-e10c-4b68-835a-08d7870390ec
+x-ms-traffictypediagnostic: MN2PR18MB3053:
+x-microsoft-antispam-prvs: <MN2PR18MB3053AAE7DA23AA72172A4032D92F0@MN2PR18MB3053.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:299;
+x-forefront-prvs: 02596AB7DA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(396003)(39850400004)(136003)(376002)(199004)(189003)(7696005)(66476007)(186003)(4326008)(16526019)(66446008)(956004)(66556008)(53546011)(6506007)(2906002)(52116002)(66946007)(26005)(1076003)(8936002)(81166006)(81156014)(478600001)(8676002)(64756008)(9686003)(55016002)(71200400001)(54906003)(5660300002)(86362001)(6916009)(316002)(4744005);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3053;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: VArvd1k289xw9n35Le4vKd3/LgLqBGOZSd2ZC50FYwqBSuWmDLrL+CO+a7yYPPJ+VG7pKacKSoK7LhP3z3OkaCOhJNxVrlbdPDy/mjITZaTruzVlbXUHZKGwwhJnwbyIXudhH+SUjGh7y+BUTTYdvuGHoIr64WW2Kx1KHIdTvb5bU1V+Xw0Q5PbcurbTg5v3oTe6l56zIOP8O12Q3S2MpSuKazIk5yHc35XZ+e2UwES5tqpeeBQhxLheEbCdBI0K6phBhAA79pUq6Qfx7qmifXVOfSOBgKuWY0XlGxWUQqhXIj84xreZYTXll19/zV32lLMMYHMSNlFKyY+u8rIPfXxr+CD6jx3WKeW8+JRxrZDGQLoqShVCtMW6kJ8fjTbws/auWNpQlQc7zR4mrbvTcbdEhwOzTZrFTt3uyU2WB5nn9LaSaVIqDgfnxDE0cmPm
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <20F1B25B9BDFAD44B45069263AE244F6@namprd18.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: f9af29b9-e10c-4b68-835a-08d7870390ec
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Dec 2019 17:22:48.4234
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xljggWMNcyetclzThlHSmSUAxf/ZgAvsjiiljO6wz5X/K3e5KVByfPlYyq0hIZqL0NvKbCUTK8ViBe4TASpCSg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3053
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-22_03:2019-12-17,2019-12-22 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 22.12.19 13:15:00, Borislav Petkov wrote:
+> On Wed, Dec 18, 2019 at 06:22:08AM +0000, Robert Richter wrote:
 
-On Fri, Dec 20, 2019 at 9:03 PM Artur =C5=9Awigo=C5=84 <a.swigon@samsung.co=
-m> wrote:
->
-> In the exynos-bus devfreq driver every bus is probed separately and is
+> > 1) Use-after-free:
+> >=20
+> > On 27.11.19 17:07:33, John Garry wrote:
+> > > [   22.104498] BUG: KASAN: use-after-free in
+> > > edac_remove_sysfs_mci_device+0x148/0x180
+> >=20
+> > The use-after-free is triggered in edac_remove_sysfs_mci_device(). It
+> > became an issue with commit c498afaf7df8 ("EDAC: Introduce an
+> > mci_for_each_dimm() iterator").
+>=20
+> ... which means:
+>=20
+> Fixes: c498afaf7df8 ("EDAC: Introduce an mci_for_each_dimm() iterator")
+>=20
+> ?
 
-IMHO, the patch description should specify the more general cause
-why have to be changed. Actually, almost people might not know
-the 'exynos-bus'. So, firstly, you have to specify the general cause
-why this patch is necessary without 'exynos-bus' word and then
-add the real use-case with 'exynos-bus' example.
+Wouldn't say c498afaf7df8 is broken, it is the release code itself.
+This patch reveals it. But for patch logistics use the above tag.
 
-> assigned a separate interconnect provider. However, the interconnect
-> framework does not call the '->set' callback for pairs of nodes which
-> belong to different providers.
->
-> This patch adds support for a new boolean 'inter_set' field in struct
-> icc_provider. Setting it to 'true' enables calling '->set' for
-> inter-provider node pairs. All existing users of the interconnect
-> framework allocate this structure with kzalloc, and are therefore
-> unaffected.
->
-> Signed-off-by: Artur =C5=9Awigo=C5=84 <a.swigon@samsung.com>
-> ---
->  drivers/interconnect/core.c           | 11 +++++------
->  include/linux/interconnect-provider.h |  2 ++
->  2 files changed, 7 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-> index 74c68898a350..a28bd0f8a497 100644
-> --- a/drivers/interconnect/core.c
-> +++ b/drivers/interconnect/core.c
-> @@ -259,23 +259,22 @@ static int aggregate_requests(struct icc_node *node=
-)
->  static int apply_constraints(struct icc_path *path)
->  {
->         struct icc_node *next, *prev =3D NULL;
-> +       struct icc_provider *p;
->         int ret =3D -EINVAL;
->         int i;
->
->         for (i =3D 0; i < path->num_nodes; i++) {
->                 next =3D path->reqs[i].node;
-> +               p =3D next->provider;
->
-> -               /*
-> -                * Both endpoints should be valid master-slave pairs of t=
-he
-> -                * same interconnect provider that will be configured.
-> -                */
-> -               if (!prev || next->provider !=3D prev->provider) {
-> +               /* both endpoints should be valid master-slave pairs */
-> +               if (!prev || (p !=3D prev->provider && !p->inter_set)) {
->                         prev =3D next;
->                         continue;
->                 }
->
->                 /* set the constraints */
-> -               ret =3D next->provider->set(prev, next);
-> +               ret =3D p->set(prev, next);
->                 if (ret)
->                         goto out;
->
-> diff --git a/include/linux/interconnect-provider.h b/include/linux/interc=
-onnect-provider.h
-> index cc965b8fab53..b6ae0ee686c5 100644
-> --- a/include/linux/interconnect-provider.h
-> +++ b/include/linux/interconnect-provider.h
-> @@ -41,6 +41,7 @@ struct icc_node *of_icc_xlate_onecell(struct of_phandle=
-_args *spec,
->   * @xlate: provider-specific callback for mapping nodes from phandle arg=
-uments
->   * @dev: the device this interconnect provider belongs to
->   * @users: count of active users
-> + * @inter_set: whether inter-provider pairs will be configured with @set
->   * @data: pointer to private data
->   */
->  struct icc_provider {
-> @@ -53,6 +54,7 @@ struct icc_provider {
->         struct icc_node* (*xlate)(struct of_phandle_args *spec, void *dat=
-a);
->         struct device           *dev;
->         int                     users;
-> +       bool                    inter_set;
->         void                    *data;
->  };
->
-> --
-> 2.17.1
->
-
-
---=20
-Best Regards,
-Chanwoo Choi
+-Robert
