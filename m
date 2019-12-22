@@ -2,116 +2,111 @@ Return-Path: <SRS0=7h0X=2M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7BCC2D0D4
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 18:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F0AC2D0D4
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 18:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85A1A20733
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 18:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB9FC20733
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 18:50:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sysophe.eu header.i=@sysophe.eu header.b="T0nPyxi4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bnPRKiD/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfLVSo4 (ORCPT
+        id S1726754AbfLVSuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 13:44:56 -0500
-Received: from hygieia.sysophe.eu ([138.201.91.14]:33275 "EHLO
-        hygieia.sysophe.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfLVSo4 (ORCPT
+        Sun, 22 Dec 2019 13:50:39 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42610 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbfLVSui (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 13:44:56 -0500
-X-Greylist: delayed 410 seconds by postgrey-1.27 at vger.kernel.org; Sun, 22 Dec 2019 13:44:55 EST
-Received: from hemera.lan.sysophe.eu (unknown [IPv6:2a06:4944:bfe:5600:fa75:a4ff:fe28:fe3a])
-        by smtp.sysophe.eu (Postfix) with ESMTPSA id 9717210360441;
-        Sun, 22 Dec 2019 19:31:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=sysophe.eu; s=201205;
-        t=1577039503; x=1577125903;
-        bh=7gBx+VSPddS7vCOze4HplGbV+LwhkjaL63c8//6KUU8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=T0nPyxi4l4eY8Sz5BnuTOgILD5uy2O19/REHKR2sgedyWg3bga7JsA4sLDCO46qu4
-         C+hZnfNqm4xy9lkgMGug5RqC9GFgwTcez93WPWDikJ0SBJ4NNLtZCimW8mQqqFOkUg
-         YDgcnI11VMeX2bO6bOhsMG2/USGAEClU4ra1aCZI=
-Date:   Sun, 22 Dec 2019 19:37:39 +0100
-From:   Bruno =?UTF-8?B?UHLDqW1vbnQ=?= <bonbons@sysophe.eu>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     Bruno =?UTF-8?B?UHLDqW1vbnQ=?= <bonbons@linux-vserver.org>,
-        jikos@kernel.org, benjamin.tissoires@redhat.com,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hid: hid-picolcd: fix possible sleep-in-atomic-context
- bug
-Message-ID: <20191222193739.76123ce7@hemera.lan.sysophe.eu>
-In-Reply-To: <e36ad913-c498-4d5a-0a5a-bec016d49a16@gmail.com>
-References: <20191218080201.2508-1-baijiaju1990@gmail.com>
-        <20191218094141.785d8e31@pluto.restena.lu>
-        <e36ad913-c498-4d5a-0a5a-bec016d49a16@gmail.com>
-X-Mailer: Claws Mail 3.16.0git897 (GTK+ 3.24.11; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Sun, 22 Dec 2019 13:50:38 -0500
+Received: by mail-pg1-f193.google.com with SMTP id s64so7691303pgb.9;
+        Sun, 22 Dec 2019 10:50:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=1MMK/7Lq6Q5MHtrU9nSWhUsHgp2FaIobPnqB6i1bmvU=;
+        b=bnPRKiD/QwgUAYoz9VJpDVZ/p49jbueKzMRH23UoBCumqWMJaoMPQ6dZKsx2LUpLwd
+         6qLyEJnGymgKxrVXAQeUZyzLjfPstF428bDfW7u4w83ytM7jXae42VT7aKfH8v9Ojho9
+         ZSeJZpy8feXZePbc8zB0MwLGIxxFHWStinLBTA8nmHI456Nx8CLH5QDFlb6qaKkxsi/t
+         Ik/qjSa8zXDnH7xdgx+rQp5xifmJLeqiEKxY/Lg7e7u82xnxV7U9847OOQQ0ks/JX05+
+         5WxkfOP9ggtKlWEpQ4xuDMToMznSBf61l3CgigFqEoUnTL4tC7tWGNmrbXdOGihgMBOJ
+         kJaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=1MMK/7Lq6Q5MHtrU9nSWhUsHgp2FaIobPnqB6i1bmvU=;
+        b=RR/L2BCKk6FmmJam92YFG00oIAClCtloxxPF2mpUA0qANMlwAdXrhdxZZ6di76BW30
+         QY5E+j4rW98e8wlHo+d45MJ7mVoAVG46j8bPvJX2kv+VMlXGpBbt73bfqJvtVDjVQOOz
+         IimUa50HDgxiDZx/+4jB7VRbAXYqQjy9WA8qLLponoM6acG6DJmOjKYLfhn9DhVXddTD
+         UK1cZkiMnJf/rIIJm9E6WxOcqyEB7JTl4IBVSkGqA9lVXSM0ti3l88wjWYAIHmCKVS3M
+         74hA2IZ9q4zWxZJNMBYDbfFyKInflmqbI9+nPB5vCOFSejFaP/uEin/Qj/Xhtcs6oGg7
+         aJyA==
+X-Gm-Message-State: APjAAAW4P81dYvVWj1lXeYIl9clVh8VC3q4JT9r/zErEOv/Jqma3hZM4
+        jGhhCpMDAF5Vr/MDavqBWzc=
+X-Google-Smtp-Source: APXvYqylTRiXM3UuNPaW1PQbCJGvvGrSq2F3X2MYO9m7QdlL5O965z+77yHko+WYYeaRM/Y4Tq4vxQ==
+X-Received: by 2002:a65:4381:: with SMTP id m1mr27847656pgp.68.1577040637744;
+        Sun, 22 Dec 2019 10:50:37 -0800 (PST)
+Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
+        by smtp.gmail.com with ESMTPSA id t63sm21401643pfb.70.2019.12.22.10.50.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 22 Dec 2019 10:50:37 -0800 (PST)
+From:   Yangtao Li <tiny.windzz@gmail.com>
+To:     ssantosh@kernel.org, paul@crapouillou.net, matthias.bgg@gmail.com,
+        rogerq@ti.com, tony@atomide.com, lukasz.luba@arm.com,
+        kgene@kernel.org, krzk@kernel.org, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, allison@lohutok.net, tglx@linutronix.de,
+        yong.wu@mediatek.com, jroedel@suse.de, evgreen@chromium.org,
+        rfontana@redhat.com, digetx@gmail.com, pdeschrijver@nvidia.com,
+        john@phrozen.org, alexios.zavras@intel.com, sboyd@kernel.org,
+        kstewart@linuxfoundation.org, info@metux.net,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Cc:     Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH 1/9] memory: emif: convert to devm_platform_ioremap_resource
+Date:   Sun, 22 Dec 2019 18:50:26 +0000
+Message-Id: <20191222185034.4665-1-tiny.windzz@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jia-Ju,
+Use devm_platform_ioremap_resource() to simplify code.
 
-I've had a deeper look at the code (possibly also applies to hid-lg4ff).
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+---
+ drivers/memory/emif.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-
-The hdev->ll_driver->request (at least on USB bus which is the only one
-that matters for hid-picolcd) points to:
-  usbhid_request() from drivers/hid/usbhid/hid-core.c
-
-This one directly calls usbhid_submit_report() which then directly calls
-__usbhid_submit_report() under spinlock.
-
-Thus for USB bus there is no possible sleep left.
-
-
-Just moving the hid_hw_request() calls out of the spinlock is
-incorrect though as it would introduce the possibility of unexpected
-concurrent initialization/submissions of reports from the distinct
-sub-drivers. The report pointer used is not call-private but comes from
-feature description and is filled with data on each call within the
-spinlock.
-
-
-The question could be whether the generic fallback in hid_hw_request()
-should be adjusted to be non-sleeping.
-It has been introduced rather more recently than both drivers you
-detected.
-
-
-Best regards,
-Bruno Pr=C3=A9mont
-
-On Wed, 18 Dec 2019 20:11:47 Jia-Ju Bai wrote:
-> Thanks for the reply.
->=20
-> On 2019/12/18 16:41, Bruno Pr=C3=A9mont wrote:
-> > Hi Jia-Ju,
-> >
-> > Your checker has been looking at fallback implementation for
-> > the might-sleep hid_alloc_report_buf(GFP_KERNEL).
-> >
-> > Did you have a look at the low-lever bus-driver implementations:
-> >    hdev->ll_driver->request
-> >                     ^^^^^^^
-> >
-> > Are those all sleeping as well or maybe they don't sleep?\ =20
->=20
-> In fact, I find that a function possibly-related to this function=20
-> pointer can sleep:
->=20
-> drivers/hid/intel-ish-hid/ishtp-hid.c, 97:
->  =C2=A0=C2=A0=C2=A0 kzalloc(GFP_KERNEL) in ishtp_hid_request
->=20
-> But I am not quite sure whether this function is really referenced by=20
-> the function pointer, so I did not report it.
->=20
->=20
-> Best wishes,
-> Jia-Ju Bai
+diff --git a/drivers/memory/emif.c b/drivers/memory/emif.c
+index 9d9127bf2a59..9a8463716a54 100644
+--- a/drivers/memory/emif.c
++++ b/drivers/memory/emif.c
+@@ -1537,7 +1537,6 @@ static struct emif_data *__init_or_module get_device_details(
+ static int __init_or_module emif_probe(struct platform_device *pdev)
+ {
+ 	struct emif_data	*emif;
+-	struct resource		*res;
+ 	int			irq;
+ 
+ 	if (pdev->dev.of_node)
+@@ -1557,8 +1556,7 @@ static int __init_or_module emif_probe(struct platform_device *pdev)
+ 	emif->dev = &pdev->dev;
+ 	platform_set_drvdata(pdev, emif);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	emif->base = devm_ioremap_resource(emif->dev, res);
++	emif->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(emif->base))
+ 		goto error;
+ 
+-- 
+2.17.1
 
