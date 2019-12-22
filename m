@@ -2,175 +2,143 @@ Return-Path: <SRS0=7h0X=2M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD624C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 02:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB384C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 03:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5D220725
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 02:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82E2C20663
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 03:02:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="W6JHmwRV"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="XXsesugG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbfLVCrW (ORCPT
+        id S1726716AbfLVC54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 21:47:22 -0500
-Received: from mail-bn8nam12on2108.outbound.protection.outlook.com ([40.107.237.108]:48080
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726086AbfLVCrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 21:47:22 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aW7Feh02JrNmZ4ciTF6Q09uREpy5bhUT+nqDKCjeP/8XURTGh7M10TqmR86Vo6h1cgqJIoGITVIYRsjeyBxmWZNgo5atehOEOSGC26UCL+QU4p3cSgZg8GhySAvGYVfjIx2QRkgNWHwhOpPQbbXrh5+0wrzj4OsmTDPvwbHS9y+LswQJSMUxTtYBsg/EfKlKQNyPy0BrNTeD7KvaCdWGmLLUqq8U3Kib1o5eY/hjA8qORtvUhuoDSGB9zmPyg1stXHlijUJmAgGayDOXT2XJR41k6DZBpaxlZRBDodHObWPOSFre46bKuo/MF1SNSuVazi5lUf2f1r+VWzyH/gQSCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ryWy730AfZJEmX9DTlZkXvUgjg0wzfiJYX4DSym2QXM=;
- b=jx0DOZX0mQch/ICbLsXoCZ7RyPBWQnXPPtjuj291otNRhIbDkeFSHK1twfCnUR/NZaBwE+vkD2OfdZIOsVVLnlykKhEHYl5DWrEquOrFCVbDHx+IxUGgcb3TGkoDd9AfkpJxdg4NPpzkQf1m7t4PJB4sQl4X1GoBWlwo6LFN63QlDgO4zRPcNUaTVT/Vx3fpg+JTGyviRkLRMDXdtp4Og3RFJklbr2PKDtk8gIpqwj6qNvPeKppxV32hYS9VTSMEsK2uTwl5S+8v0g3t/Aqut6I1JLuyoPDa7FsrOwn37YJsK8lK94yMkPq3Yk2XXOyI4AXtZ72yYyrJ4fg4QtdB7g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ryWy730AfZJEmX9DTlZkXvUgjg0wzfiJYX4DSym2QXM=;
- b=W6JHmwRVBJpgxxQ9kA6jbtdWJfZKxe2uqVnMX7gH5Yh4193VkzhoBGyu8okojdD33jZDLCX7jhHvKulVuDbqueyq4m2cqsD1i+WAhhHNgtAThSz8gbrXWVQKR9qQHazNF+nez3ZWrBi/4SFjp6F6ADc6e9eeBQIoNNGD5229sFQ=
-Received: from BL0PR2101MB1123.namprd21.prod.outlook.com (52.132.20.151) by
- BL0PR2101MB1121.namprd21.prod.outlook.com (52.132.18.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2581.10; Sun, 22 Dec 2019 02:47:19 +0000
-Received: from BL0PR2101MB1123.namprd21.prod.outlook.com
- ([fe80::602f:c781:a5ff:39f3]) by BL0PR2101MB1123.namprd21.prod.outlook.com
- ([fe80::602f:c781:a5ff:39f3%3]) with mapi id 15.20.2581.007; Sun, 22 Dec 2019
- 02:47:19 +0000
-From:   Long Li <longli@microsoft.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [Patch v2 1/2] PCI: hv: decouple the func definition in
- hv_dr_state from VSP message
-Thread-Topic: [Patch v2 1/2] PCI: hv: decouple the func definition in
- hv_dr_state from VSP message
-Thread-Index: AQHVqk4NWoi5w81JaEWb3p6WSpwllqe0Fc8AgBF5lAA=
-Date:   Sun, 22 Dec 2019 02:47:18 +0000
-Message-ID: <BL0PR2101MB11232C53CC44A092F7B0C7C9CE2F0@BL0PR2101MB1123.namprd21.prod.outlook.com>
-References: <1575428017-87914-1-git-send-email-longli@linuxonhyperv.com>
- <20191210235450.GA177105@google.com>
-In-Reply-To: <20191210235450.GA177105@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=longli@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:a:ede4:db5c:c6fe:798]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 737faf64-1d2f-43fe-7d9f-08d786894341
-x-ms-traffictypediagnostic: BL0PR2101MB1121:|BL0PR2101MB1121:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BL0PR2101MB1121144FB621CE331A3B9186CE2F0@BL0PR2101MB1121.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 02596AB7DA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(39860400002)(396003)(376002)(346002)(199004)(189003)(15650500001)(66476007)(66446008)(64756008)(66556008)(81166006)(4326008)(316002)(52536014)(76116006)(10290500003)(5660300002)(2906002)(71200400001)(478600001)(66946007)(7696005)(54906003)(186003)(33656002)(9686003)(8990500004)(110136005)(8676002)(55016002)(6506007)(81156014)(8936002)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR2101MB1121;H:BL0PR2101MB1123.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: szbOQH+QB/ebmk0xWe37Et7uE0z2HtQyXudLlB1iNGKj8tpW+w5yVfgW2Q4X0reRzV+KZADTbZzP+7sFmehM2woQcWZAyF9LcIrzNVcIawLjyL9ELIKA9JmDQV163D8X0MSSwjcr6UEjUzk9hJjdYKkhEXSmz2QZlEE4aiUAWyDguR5xNBD6imIBgEcMRhw3P7n1jIHtpPj1qiIoaKzd2ZVo92dhI6UnElZzGKHXH643o/hFH11okFdlNvArQxYdFojAMG5jxxx3F1zvEPZ2ijy9WEkbA/0ZvEZzFrnx5Hka4/o7hu79djZKaPRdrfYxtmUM0g3d/l3kH/ybMqDM/rUxv/1mLO085edMnxohLozJqnJsxQS6dQLGZuQwbDtkePyxTldU0XQcacsVY0ME9tNyqsNBzfIET4DTvz2dWnHZLaTSnpC9MOUUxy8/Iapf
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sat, 21 Dec 2019 21:57:56 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45128 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbfLVC54 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 21 Dec 2019 21:57:56 -0500
+Received: by mail-io1-f68.google.com with SMTP id i11so13134273ioi.12
+        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 18:57:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=kJK8dnMKjhx1jwfX9hU56RSfsCTRfjhHTaELgQDlsSQ=;
+        b=XXsesugG1x9YVhsNiK9YkzVHTmcJ9uQ983eWZ98FGa9Y4BqeEaLJ6CaKovW8HSqe01
+         QJLPmd3yt/KBXpFMG04ypLWnijz5OYhr0c4n1u3vcPVbXbfsxY8LWibyJALHbGUBTTEI
+         X1sY1SibRLZ32JouPOEBBoR2dHOdTKyBWx5OwxAT6LP2uLSByHALFTu0Y93czgyNO+bI
+         vmXy5Kc3wX71FAUNNULLNj5WMj88O9uMbXxy3nnoBYPSUkHCQ/PSCxSYebxyDG9XNVG1
+         YH4YansJeKIEeEop/IXLSdzKg/ykoHa/5PYxxJIWxgCisHesjLjpBkAGaVHbsPLjYuRT
+         vCDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=kJK8dnMKjhx1jwfX9hU56RSfsCTRfjhHTaELgQDlsSQ=;
+        b=SmBE6iBJeEQXaQZNV7BjbbCV2zfmS0k3Gf1wHeycnZcl+ppwH24m1LgKVeNyF1v67v
+         iz3u7YGncjORGvEJLjhb53ElbAeXs8Qw7yv4eN7pU7ZjuLaIOc88N0NEPQAo89dFWKrN
+         6gVK+SH48FqlAyBMtu2336HHiCTybOiMD0f821gKv1MPEV6UM+MlvfD9LqgECS4NwJbz
+         VOBxHYNuZtQMdXCAnlVJiZwgbqdZLoSF+fA3ANNCe2khpDuoNc0UiY4crPBxOk7Png3m
+         ac6MrSaqrUBkqwyxzw9nOCFygS2yg/aEpK9PzOm5rdiSIXIh6ytX5sgQDw+5qy1IJ7UD
+         NeLw==
+X-Gm-Message-State: APjAAAWjVLPcnqQz4WpBbCK/OwYos4RrDFG5iIj/2x/6Odct+FDJGLvP
+        P9g/acejVWhAwb4Odd+FVMaAdaDScIY=
+X-Google-Smtp-Source: APXvYqyCCL5PzwujEJ64y01MQfpVGe4nNzyo2C8eL7WmMhFBH9ygIqUJm/ywM4JHZq7hCUPuJ8pmgg==
+X-Received: by 2002:a05:6638:a99:: with SMTP id 25mr19380662jas.37.1576983475483;
+        Sat, 21 Dec 2019 18:57:55 -0800 (PST)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id d7sm4927940ioo.68.2019.12.21.18.57.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Dec 2019 18:57:54 -0800 (PST)
+Date:   Sat, 21 Dec 2019 18:57:50 -0800 (PST)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     torvalds@linux-foundation.org
+cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] RISC-V updates for v5.5-rc3
+Message-ID: <alpine.DEB.2.21.9999.1912211854440.57866@viisi.sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 737faf64-1d2f-43fe-7d9f-08d786894341
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Dec 2019 02:47:19.1372
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: B4Lvb3LOKSznFqWMXXatHHApKEigtMSL1m+FTGA4Pr3ykJWpOT7eGMrJnMTL/MtBIfXXmZ/6FW+kxlSGe+R5TQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB1121
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->Subject: Re: [Patch v2 1/2] PCI: hv: decouple the func definition in
->hv_dr_state from VSP message
->
->Run "git log --oneline drivers/pci/controller/pci-hyperv.c" and make yours
->match.  Capitalize the first word, etc.
->
->On Tue, Dec 03, 2019 at 06:53:36PM -0800, longli@linuxonhyperv.com wrote:
->> From: Long Li <longli@microsoft.com>
->>
->> hv_dr_state is used to find present PCI devices on the bus. The
->> structure reuses struct pci_function_description from VSP message to
->describe a device.
->>
->> To prepare support for pci_function_description v2, we need to
->> decouple this dependence in hv_dr_state so it can work with both v1 and =
-v2
->VSP messages.
->>
->> There is no functionality change.
->>
->> Signed-off-by: Long Li <longli@microsoft.com>
->
->> + * hv_pci_devices_present() - Handles list of new children
->> + * @hbus:	Root PCI bus, as understood by this driver
->> + * @relations:	Packet from host listing children
->> + *
->> + * This function is invoked whenever a new list of devices for
->> + * this bus appears.
->
->The comment should tell us what the function *does*, not when it is called=
-.
+Linus,
 
-I will send v3 to address the comments.
+The following changes since commit 7e0165b2f1a912a06e381e91f0f4e495f4ac3736:
 
-Thanks
+  Merge branch 'akpm' (patches from Andrew) (2019-12-19 08:13:04 -0800)
 
-Long
+are available in the Git repository at:
 
->
->> + */
->> +static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
->> +				   struct pci_bus_relations *relations) {
->> +	struct hv_dr_state *dr;
->> +	int i;
->> +
->> +	dr =3D kzalloc(offsetof(struct hv_dr_state, func) +
->> +		     (sizeof(struct hv_pcidev_description) *
->> +		      (relations->device_count)), GFP_NOWAIT);
->> +
->> +	if (!dr)
->> +		return;
->> +
->> +	dr->device_count =3D relations->device_count;
->> +	for (i =3D 0; i < dr->device_count; i++) {
->> +		dr->func[i].v_id =3D relations->func[i].v_id;
->> +		dr->func[i].d_id =3D relations->func[i].d_id;
->> +		dr->func[i].rev =3D relations->func[i].rev;
->> +		dr->func[i].prog_intf =3D relations->func[i].prog_intf;
->> +		dr->func[i].subclass =3D relations->func[i].subclass;
->> +		dr->func[i].base_class =3D relations->func[i].base_class;
->> +		dr->func[i].subsystem_id =3D relations->func[i].subsystem_id;
->> +		dr->func[i].win_slot =3D relations->func[i].win_slot;
->> +		dr->func[i].ser =3D relations->func[i].ser;
->> +	}
->> +
->> +	if (hv_pci_start_relations_work(hbus, dr))
->> +		kfree(dr);
->>  }
+  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv/for-v5.5-rc3
+
+for you to fetch changes up to 9209fb51896fe0eef8dfac85afe1f357e9265c0d:
+
+  riscv: move sifive_l2_cache.c to drivers/soc (2019-12-20 03:40:24 -0800)
+
+----------------------------------------------------------------
+RISC-V updates for v5.5-rc3
+
+Several fixes, and one cleanup, for RISC-V.
+
+Fixes:
+
+- Fix an error in a Kconfig file that resulted in an undefined Kconfig
+  option "CONFIG_CONFIG_MMU"
+
+- Fix undefined Kconfig option "CONFIG_CONFIG_MMU"
+
+- Fix scratch register clearing in M-mode (affects nommu users)
+
+- Fix a mismerge on my part that broke the build for
+  CONFIG_SPARSEMEM_VMEMMAP users
+
+Cleanups:
+
+- Move SiFive L2 cache-related code to drivers/soc, per request
+
+----------------------------------------------------------------
+Andreas Schwab (1):
+      riscv: Fix use of undefined config option CONFIG_CONFIG_MMU
+
+Christoph Hellwig (1):
+      riscv: move sifive_l2_cache.c to drivers/soc
+
+David Abdurachmanov (1):
+      riscv: define vmemmap before pfn_to_page calls
+
+Greentime Hu (1):
+      riscv: fix scratch register clearing in M-mode.
+
+ MAINTAINERS                                        |  1 +
+ arch/riscv/Kconfig                                 |  2 +-
+ arch/riscv/include/asm/pgtable.h                   | 38 ++++++++++++----------
+ arch/riscv/kernel/head.S                           |  2 +-
+ arch/riscv/mm/Makefile                             |  1 -
+ drivers/edac/Kconfig                               |  2 +-
+ drivers/soc/Kconfig                                |  1 +
+ drivers/soc/Makefile                               |  1 +
+ drivers/soc/sifive/Kconfig                         | 10 ++++++
+ drivers/soc/sifive/Makefile                        |  3 ++
+ .../mm => drivers/soc/sifive}/sifive_l2_cache.c    |  0
+ 11 files changed, 40 insertions(+), 21 deletions(-)
+ create mode 100644 drivers/soc/sifive/Kconfig
+ create mode 100644 drivers/soc/sifive/Makefile
+ rename {arch/riscv/mm => drivers/soc/sifive}/sifive_l2_cache.c (100%)
+
+Kernel object size difference:
+   text	   data	    bss	    dec	    hex	filename
+6895393	2330852	 313920	9540165	 919245	vmlinux.rv64.orig
+6894347	2329588	 313920	9537855	 91893f	vmlinux.rv64.patched
+6656178	1939832	 257640	8853650	 871892	vmlinux.rv32.orig
+6655130	1938688	 257576	8851394	 870fc2	vmlinux.rv32.patched
+1172240	 354256	 130024	1656520	 1946c8	vmlinux.nommu_virt.orig
+1171538	 353368	 130024	1654930	 194092	vmlinux.nommu_virt.patched
