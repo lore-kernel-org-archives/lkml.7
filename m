@@ -2,250 +2,115 @@ Return-Path: <SRS0=7h0X=2M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C60A9C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 05:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 221A8C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 05:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 867FD2070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 05:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBA5A2070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 05:29:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vO3AvY1W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbfLVFZO (ORCPT
+        id S1726716AbfLVF3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 00:25:14 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:50248 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbfLVFZO (ORCPT
+        Sun, 22 Dec 2019 00:29:24 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38096 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbfLVF3Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 00:25:14 -0500
-Received: by mail-io1-f72.google.com with SMTP id e13so2763973iob.17
-        for <linux-kernel@vger.kernel.org>; Sat, 21 Dec 2019 21:25:12 -0800 (PST)
+        Sun, 22 Dec 2019 00:29:24 -0500
+Received: by mail-ot1-f66.google.com with SMTP id d7so13221029otf.5;
+        Sat, 21 Dec 2019 21:29:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZkuKQsKverFFdadZsvM9+HOpPLDV24DoMiHwcyD+pjA=;
+        b=vO3AvY1Wy25ZYHDFrrr+VCcNh2SfEdYzq0Dv8f6jj3qpOcTsyFVfpV29OzOhXE9Xeb
+         2LQv6yIV1IeWF6jOKDEcFPLXeH2Rz9JeGw6k9ftcHb9gyyOuDzhk3JxUYGmdrJBCXm0y
+         MI6t5/SBa8UekMrEkYZPNUZAs+XUz0gIDcaoTsokFtorXH/vPERgNkCTu86DK/NOUxcq
+         F+e91xbiT3BrYF0bZoTPHkZb/A/eVmHrY7xMHQPZjyp32yPoK2pJt2Qrga49NV9XUj5f
+         4m9jr5RhzFlGNex2hWDW9PEK3GaRfukKT+lnTgzDAZzGDYWqHW4v3KWjFJHA0FNhMlOY
+         6RAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=AFm7Jz/eVFNWkb4n7J7yHxipQIM/+LkqpF/SP+ZddII=;
-        b=orG8Qi4YmLAw8kPCER/D1YL6qKzq8WVV6wYhzXXgX8zDyrJTocqOme+tdiz0/ps8us
-         Z7JEzaEO4zhZlCEwH14jcPWJtUSQvXt/vRKq/Xgfxi1Ir6EHbqo1co06kxy7IjEm1sFc
-         3Ivy4rd+w7NyW1xIqL1eCDZFap1gDlgpcHg/tnDlJSvWpA9kuepSxJ7w0TNrIsvAhDs9
-         wUQSQpsViyPE6+fNEGbV2EygOOEQcYDNc7W6L8BzxPDiBD99MFmxPGJRD1K+ZXzXM0dg
-         uZYZbox6affSusmdCJYC6QSIZfYfZnDKqyyfTw2OWxXWzVE0ZDCODcIE8+aujjRtjhX0
-         pXWQ==
-X-Gm-Message-State: APjAAAUY+h2pcau/TxlCQCT5St35mFiPsnUhNA5knl/XNivICgxgUgeb
-        F9cFQUs7/bN+skz7dbwB2Vi+YECqv1jTMAgekvAMfuBhUJ7I
-X-Google-Smtp-Source: APXvYqz66jvT2VKHq/SJVnxGZwOM3fUg5K3mY5EL4Bxl7HRcKo4UK0W3SG8n3r9diDz6OgBmp0vQiIdIz+IYHrVeCQq8v+U5Ef0E
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZkuKQsKverFFdadZsvM9+HOpPLDV24DoMiHwcyD+pjA=;
+        b=BNZDNrTRtRJMKgZ8Sdxo1akM6CFGxLY0Y6i13wXzsWZM2Ah8tuV5u7J5oZ+orRMA9T
+         j0qllI8p+9wxm8y55wFUdhqA3b2Pc5hE5BcrB7f4Bmx+kzsyjm7YJRezFfrNKgCm8kj2
+         O95zkO+kfvbCWQW7KR26oIIifBBgX4lAHh3A89ucjx1XvY9Am6FnSWn6qR+SgQVktV1u
+         yLWmlLv7JkEYf6VEDGBbQiAVq7Bq4v3PhfPPY5WnEk+8crPaKXx9pFCEocOu8MT2Bf02
+         /mfa0BnegAf5R38dg+cOoUXE282RjvikyBXcgNsga9s6AQwx9vdZd1Hg4Gbg9Q34VvaY
+         6f6g==
+X-Gm-Message-State: APjAAAVsZhSqZKQs3aSmEFcCUZ0mNfib7dab8LZbtx8Uapx5OvFTJtDI
+        NG6eP+DPZtK1/+UIQV+cZ7zRxRpL
+X-Google-Smtp-Source: APXvYqyj7IQPWsm9jvv6GHVdWS1aTMAFVZcxVcIMp4BPeMvRSvVlO3eflF3UejP7lGtM9ycZZoO61A==
+X-Received: by 2002:a9d:5786:: with SMTP id q6mr7758153oth.164.1576992563606;
+        Sat, 21 Dec 2019 21:29:23 -0800 (PST)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id e65sm5579838otb.62.2019.12.21.21.29.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 21 Dec 2019 21:29:22 -0800 (PST)
+Date:   Sat, 21 Dec 2019 22:29:21 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     David Sterba <dsterba@suse.com>
+Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND] fs: use UB-safe check for signed addition
+ overflow in remap_verify_area
+Message-ID: <20191222052921.GA30288@ubuntu-m2-xlarge-x86>
+References: <20190808123942.19592-1-dsterba@suse.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8b96:: with SMTP id p22mr15548721iol.93.1576992311685;
- Sat, 21 Dec 2019 21:25:11 -0800 (PST)
-Date:   Sat, 21 Dec 2019 21:25:11 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008d3aa7059a442293@google.com>
-Subject: memory leak in genl_family_rcv_msg_attrs_parse
-From:   syzbot <syzbot+4d763213368ad8d5a49f@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jiri@mellanox.com, johannes.berg@intel.com,
-        linux-kernel@vger.kernel.org, mkubecek@suse.cz,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808123942.19592-1-dsterba@suse.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Aug 08, 2019 at 02:39:42PM +0200, David Sterba wrote:
+> The following warning pops up with enabled UBSAN in tests fstests/generic/303:
+> 
+>   [23127.529395] UBSAN: Undefined behaviour in fs/read_write.c:1725:7
+>   [23127.529400] signed integer overflow:
+>   [23127.529403] 4611686018427322368 + 9223372036854775807 cannot be represented in type 'long long int'
+>   [23127.529412] CPU: 4 PID: 26180 Comm: xfs_io Not tainted 5.2.0-rc2-1.ge195904-vanilla+ #450
+>   [23127.556999] Hardware name: empty empty/S3993, BIOS PAQEX0-3 02/24/2008
+>   [23127.557001] Call Trace:
+>   [23127.557060]  dump_stack+0x67/0x9b
+>   [23127.557070]  ubsan_epilogue+0x9/0x40
+>   [23127.573496]  handle_overflow+0xb3/0xc0
+>   [23127.573514]  do_clone_file_range+0x28f/0x2a0
+>   [23127.573547]  vfs_clone_file_range+0x35/0xb0
+>   [23127.573564]  ioctl_file_clone+0x8d/0xc0
+>   [23127.590144]  do_vfs_ioctl+0x300/0x700
+>   [23127.590160]  ksys_ioctl+0x70/0x80
+>   [23127.590203]  ? trace_hardirqs_off_thunk+0x1a/0x1c
+>   [23127.590210]  __x64_sys_ioctl+0x16/0x20
+>   [23127.590215]  do_syscall_64+0x5c/0x1d0
+>   [23127.590224]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>   [23127.590231] RIP: 0033:0x7ff6d7250327
+>   [23127.590241] RSP: 002b:00007ffe3a38f1d8 EFLAGS: 00000206 ORIG_RAX: 0000000000000010
+>   [23127.590246] RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00007ff6d7250327
+>   [23127.590249] RDX: 00007ffe3a38f220 RSI: 000000004020940d RDI: 0000000000000003
+>   [23127.590252] RBP: 0000000000000000 R08: 00007ffe3a3c80a0 R09: 00007ffe3a3c8080
+>   [23127.590255] R10: 000000000fa99fa0 R11: 0000000000000206 R12: 0000000000000000
+>   [23127.590260] R13: 0000000000000000 R14: 3fffffffffff0000 R15: 00007ff6d750a20c
+> 
+> As loff_t is a signed type, we should use the safe overflow checks
+> instead of relying on compiler implementation.
+> 
+> The bogus values are intentional and the test is supposed to verify the
+> boundary conditions.
+> 
+> Signed-off-by: David Sterba <dsterba@suse.com>
 
-syzbot found the following crash on:
-
-HEAD commit:    f1fd1610 Merge tag 'devicetree-fixes-for-5.5-2' of git://g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10b51e71e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7e6526c42b4ad7df
-dashboard link: https://syzkaller.appspot.com/bug?extid=4d763213368ad8d5a49f
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16a224aee00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4d763213368ad8d5a49f@syzkaller.appspotmail.com
-
-2019/12/21 18:57:43 executed programs: 1
-BUG: memory leak
-unreferenced object 0xffff888122a69800 (size 2048):
-   comm "syz-executor.0", pid 7220, jiffies 4295041795 (age 12.350s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000ea56780b>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000ea56780b>] slab_post_alloc_hook mm/slab.h:586 [inline]
-     [<00000000ea56780b>] slab_alloc mm/slab.c:3320 [inline]
-     [<00000000ea56780b>] __do_kmalloc mm/slab.c:3654 [inline]
-     [<00000000ea56780b>] __kmalloc+0x169/0x300 mm/slab.c:3665
-     [<000000005867ad5d>] kmalloc_array include/linux/slab.h:598 [inline]
-     [<000000005867ad5d>] genl_family_rcv_msg_attrs_parse+0x12a/0x160  
-net/netlink/genetlink.c:490
-     [<00000000b300803a>] genl_family_rcv_msg_dumpit  
-net/netlink/genetlink.c:588 [inline]
-     [<00000000b300803a>] genl_family_rcv_msg net/netlink/genetlink.c:714  
-[inline]
-     [<00000000b300803a>] genl_rcv_msg+0x356/0x580  
-net/netlink/genetlink.c:734
-     [<000000007aa7803c>] netlink_rcv_skb+0x61/0x170  
-net/netlink/af_netlink.c:2477
-     [<00000000cf0291ee>] genl_rcv+0x29/0x40 net/netlink/genetlink.c:745
-     [<00000000d9eda8cf>] netlink_unicast_kernel  
-net/netlink/af_netlink.c:1302 [inline]
-     [<00000000d9eda8cf>] netlink_unicast+0x223/0x310  
-net/netlink/af_netlink.c:1328
-     [<00000000d87050ed>] netlink_sendmsg+0x2c0/0x570  
-net/netlink/af_netlink.c:1917
-     [<0000000073d32856>] sock_sendmsg_nosec net/socket.c:639 [inline]
-     [<0000000073d32856>] sock_sendmsg+0x54/0x70 net/socket.c:659
-     [<00000000c88230c3>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2330
-     [<00000000119fa4e9>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2384
-     [<00000000196367bc>] __sys_sendmsg+0x80/0xf0 net/socket.c:2417
-     [<0000000022242f1e>] __do_sys_sendmsg net/socket.c:2426 [inline]
-     [<0000000022242f1e>] __se_sys_sendmsg net/socket.c:2424 [inline]
-     [<0000000022242f1e>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2424
-     [<000000007b63ee83>] do_syscall_64+0x73/0x220  
-arch/x86/entry/common.c:294
-     [<00000000447890a9>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811cf4a1c0 (size 32):
-   comm "syz-executor.0", pid 7220, jiffies 4295041795 (age 12.350s)
-   hex dump (first 32 bytes):
-     c0 a7 16 84 ff ff ff ff 30 0c b2 83 ff ff ff ff  ........0.......
-     00 98 a6 22 81 88 ff ff 00 00 00 00 00 00 00 00  ..."............
-   backtrace:
-     [<00000000e670bd2f>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000e670bd2f>] slab_post_alloc_hook mm/slab.h:586 [inline]
-     [<00000000e670bd2f>] slab_alloc mm/slab.c:3320 [inline]
-     [<00000000e670bd2f>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3549
-     [<000000000f637ea3>] kmalloc include/linux/slab.h:556 [inline]
-     [<000000000f637ea3>] genl_dumpit_info_alloc net/netlink/genetlink.c:463  
-[inline]
-     [<000000000f637ea3>] genl_family_rcv_msg_dumpit  
-net/netlink/genetlink.c:597 [inline]
-     [<000000000f637ea3>] genl_family_rcv_msg net/netlink/genetlink.c:714  
-[inline]
-     [<000000000f637ea3>] genl_rcv_msg+0x385/0x580  
-net/netlink/genetlink.c:734
-     [<000000007aa7803c>] netlink_rcv_skb+0x61/0x170  
-net/netlink/af_netlink.c:2477
-     [<00000000cf0291ee>] genl_rcv+0x29/0x40 net/netlink/genetlink.c:745
-     [<00000000d9eda8cf>] netlink_unicast_kernel  
-net/netlink/af_netlink.c:1302 [inline]
-     [<00000000d9eda8cf>] netlink_unicast+0x223/0x310  
-net/netlink/af_netlink.c:1328
-     [<00000000d87050ed>] netlink_sendmsg+0x2c0/0x570  
-net/netlink/af_netlink.c:1917
-     [<0000000073d32856>] sock_sendmsg_nosec net/socket.c:639 [inline]
-     [<0000000073d32856>] sock_sendmsg+0x54/0x70 net/socket.c:659
-     [<00000000c88230c3>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2330
-     [<00000000119fa4e9>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2384
-     [<00000000196367bc>] __sys_sendmsg+0x80/0xf0 net/socket.c:2417
-     [<0000000022242f1e>] __do_sys_sendmsg net/socket.c:2426 [inline]
-     [<0000000022242f1e>] __se_sys_sendmsg net/socket.c:2424 [inline]
-     [<0000000022242f1e>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2424
-     [<000000007b63ee83>] do_syscall_64+0x73/0x220  
-arch/x86/entry/common.c:294
-     [<00000000447890a9>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811cc193c0 (size 32):
-   comm "syz-executor.0", pid 7225, jiffies 4295042308 (age 7.220s)
-   hex dump (first 32 bytes):
-     c0 a7 16 84 ff ff ff ff 30 0c b2 83 ff ff ff ff  ........0.......
-     00 30 fc 0e 81 88 ff ff 00 00 00 00 00 00 00 00  .0..............
-   backtrace:
-     [<00000000e670bd2f>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000e670bd2f>] slab_post_alloc_hook mm/slab.h:586 [inline]
-     [<00000000e670bd2f>] slab_alloc mm/slab.c:3320 [inline]
-     [<00000000e670bd2f>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3549
-     [<000000000f637ea3>] kmalloc include/linux/slab.h:556 [inline]
-     [<000000000f637ea3>] genl_dumpit_info_alloc net/netlink/genetlink.c:463  
-[inline]
-     [<000000000f637ea3>] genl_family_rcv_msg_dumpit  
-net/netlink/genetlink.c:597 [inline]
-     [<000000000f637ea3>] genl_family_rcv_msg net/netlink/genetlink.c:714  
-[inline]
-     [<000000000f637ea3>] genl_rcv_msg+0x385/0x580  
-net/netlink/genetlink.c:734
-     [<000000007aa7803c>] netlink_rcv_skb+0x61/0x170  
-net/netlink/af_netlink.c:2477
-     [<00000000cf0291ee>] genl_rcv+0x29/0x40 net/netlink/genetlink.c:745
-     [<00000000d9eda8cf>] netlink_unicast_kernel  
-net/netlink/af_netlink.c:1302 [inline]
-     [<00000000d9eda8cf>] netlink_unicast+0x223/0x310  
-net/netlink/af_netlink.c:1328
-     [<00000000d87050ed>] netlink_sendmsg+0x2c0/0x570  
-net/netlink/af_netlink.c:1917
-     [<0000000073d32856>] sock_sendmsg_nosec net/socket.c:639 [inline]
-     [<0000000073d32856>] sock_sendmsg+0x54/0x70 net/socket.c:659
-     [<00000000c88230c3>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2330
-     [<00000000119fa4e9>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2384
-     [<00000000196367bc>] __sys_sendmsg+0x80/0xf0 net/socket.c:2417
-     [<0000000022242f1e>] __do_sys_sendmsg net/socket.c:2426 [inline]
-     [<0000000022242f1e>] __se_sys_sendmsg net/socket.c:2424 [inline]
-     [<0000000022242f1e>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2424
-     [<000000007b63ee83>] do_syscall_64+0x73/0x220  
-arch/x86/entry/common.c:294
-     [<00000000447890a9>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88812a2966e0 (size 32):
-   comm "syz-executor.0", pid 7229, jiffies 4295042309 (age 7.210s)
-   hex dump (first 32 bytes):
-     c0 a7 16 84 ff ff ff ff 30 0c b2 83 ff ff ff ff  ........0.......
-     00 40 2d 22 81 88 ff ff 00 00 00 00 00 00 00 00  .@-"............
-   backtrace:
-     [<00000000e670bd2f>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000e670bd2f>] slab_post_alloc_hook mm/slab.h:586 [inline]
-     [<00000000e670bd2f>] slab_alloc mm/slab.c:3320 [inline]
-     [<00000000e670bd2f>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3549
-     [<000000000f637ea3>] kmalloc include/linux/slab.h:556 [inline]
-     [<000000000f637ea3>] genl_dumpit_info_alloc net/netlink/genetlink.c:463  
-[inline]
-     [<000000000f637ea3>] genl_family_rcv_msg_dumpit  
-net/netlink/genetlink.c:597 [inline]
-     [<000000000f637ea3>] genl_family_rcv_msg net/netlink/genetlink.c:714  
-[inline]
-     [<000000000f637ea3>] genl_rcv_msg+0x385/0x580  
-net/netlink/genetlink.c:734
-     [<000000007aa7803c>] netlink_rcv_skb+0x61/0x170  
-net/netlink/af_netlink.c:2477
-     [<00000000cf0291ee>] genl_rcv+0x29/0x40 net/netlink/genetlink.c:745
-     [<00000000d9eda8cf>] netlink_unicast_kernel  
-net/netlink/af_netlink.c:1302 [inline]
-     [<00000000d9eda8cf>] netlink_unicast+0x223/0x310  
-net/netlink/af_netlink.c:1328
-     [<00000000d87050ed>] netlink_sendmsg+0x2c0/0x570  
-net/netlink/af_netlink.c:1917
-     [<0000000073d32856>] sock_sendmsg_nosec net/socket.c:639 [inline]
-     [<0000000073d32856>] sock_sendmsg+0x54/0x70 net/socket.c:659
-     [<00000000c88230c3>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2330
-     [<00000000119fa4e9>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2384
-     [<00000000196367bc>] __sys_sendmsg+0x80/0xf0 net/socket.c:2417
-     [<0000000022242f1e>] __do_sys_sendmsg net/socket.c:2426 [inline]
-     [<0000000022242f1e>] __se_sys_sendmsg net/socket.c:2424 [inline]
-     [<0000000022242f1e>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2424
-     [<000000007b63ee83>] do_syscall_64+0x73/0x220  
-arch/x86/entry/common.c:294
-     [<00000000447890a9>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
