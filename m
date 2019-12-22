@@ -2,189 +2,154 @@ Return-Path: <SRS0=7h0X=2M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF60DC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 13:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD064C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 13:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C5102067C
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 13:11:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eFW56aRl"
+	by mail.kernel.org (Postfix) with ESMTP id 76BAE21655
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 13:12:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577020377;
+	bh=7fo1Bsez53qvaIMcnnp2p8h4Fw2pDtHMMLmgtCx+WjE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GMwaI1UunER0Rskc7ceYxwUfD+4vLFAHmaVYWT/tCxmpIFcKDUfD1iVhDtQVGItNR
+	 Vm/mXEJxXx1ppAd1+wXpAyV1UXBJwnqwxt8lyhgpstbJW4fRYhXzTRSV/Tq4pBM8Az
+	 GL256R3U2JHIQvTJa9171oAlrmMKoRk2ccxt9CX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfLVNLa (ORCPT
+        id S1726604AbfLVNM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 08:11:30 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34982 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725840AbfLVNL3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 08:11:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577020287;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=7gCpuLlUP9MlgLBoutsCmLPmUqjnC7xAMqI1v5Bo+1w=;
-        b=eFW56aRlDtYw8KN20qT/5ZtAuzrxmc9MI9Sw8fXFJYBUo9Qxbdsrqxj17wuIS6bUFz/I3Q
-        Sbm0korOniwfHQihm7DDVJyMkCgVDLhrjR77+oBP05wY6IW1naTEldGp6XMMzTDCc9MZr4
-        +HHJ/8VYIr8ozDnzf9RoDv1Ba9yOcoA=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-108-hKbIeLJ1OVGm1IOAbeUFnA-1; Sun, 22 Dec 2019 08:11:24 -0500
-X-MC-Unique: hKbIeLJ1OVGm1IOAbeUFnA-1
-Received: by mail-qt1-f200.google.com with SMTP id k27so9380861qtu.12
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Dec 2019 05:11:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7gCpuLlUP9MlgLBoutsCmLPmUqjnC7xAMqI1v5Bo+1w=;
-        b=F+eCLz9IX7sPdCYFuJNKnLTRtb9T+FyrmpNE5Q+Uhw/ogX/tlcGJwIkBrIQqrZ41Uy
-         LFBflvzegdj0jBJ+pgZ61qC3Qd8kie/OtMJAVn1XNexCCgdqruF+IK0nYxQsaH3n9sL6
-         P+Ibjh/cJddloK+TnG723ByqkqAIm/hxBSM9TmAxdQgD+ay0SulRGpRzm/CwD46yxVVA
-         X9S/xXRzPIfHBZ6INOPXDeotwyYcy/RfRc1I9ut5l5rSepzRZ5sm60pvyEEti6d/bCVf
-         FbAbvyYoUWgEs1KGVyyLEobbU0NS3ldv5eQ2DTUcaZf0kgehGGsyd4VvxHKW7B+t7tf5
-         dcyA==
-X-Gm-Message-State: APjAAAVp+4ObvFeNEUnIQodc3yQVlL65ONcqLkmStyoA/0NrG1LVUdlW
-        r/B3lgUpijvLAF6pbh0RTDWBR3XN5lAfS/Xrs+1IeN+J3RkRn554gw2yokCR9Egei8gsaBXVjXL
-        WtVLkc/qLooySeL94KoDmLYc6
-X-Received: by 2002:a05:6214:10c1:: with SMTP id r1mr20617246qvs.70.1577020282492;
-        Sun, 22 Dec 2019 05:11:22 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyCAU9CXtW80vVj3OFrSpP2mW5I9KhywcWXV5k/a4ppQvGMJznMPni9g9ftzf6gofObYt4oXA==
-X-Received: by 2002:a05:6214:10c1:: with SMTP id r1mr20617225qvs.70.1577020282261;
-        Sun, 22 Dec 2019 05:11:22 -0800 (PST)
-Received: from redhat.com (bzq-79-181-48-215.red.bezeqint.net. [79.181.48.215])
-        by smtp.gmail.com with ESMTPSA id t38sm5308551qta.78.2019.12.22.05.11.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Dec 2019 05:11:21 -0800 (PST)
-Date:   Sun, 22 Dec 2019 08:11:15 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc:     Alistair Delva <adelva@google.com>,
-        Network Development <netdev@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>, kernel-team@android.com,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net] virtio-net: Skip set_features on non-cvq devices
-Message-ID: <20191222080754-mutt-send-email-mst@kernel.org>
-References: <20191220212207.76726-1-adelva@google.com>
- <CA+FuTSewMaRTe51jOJtD-VHcp4Ct+c=11-9SxenULHwQuokamw@mail.gmail.com>
+        Sun, 22 Dec 2019 08:12:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725791AbfLVNM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Dec 2019 08:12:56 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC48C2067C;
+        Sun, 22 Dec 2019 13:12:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577020375;
+        bh=7fo1Bsez53qvaIMcnnp2p8h4Fw2pDtHMMLmgtCx+WjE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=O6NmTRWamrm8T248gsebwRoVAUQ4JGuFBFiY2kHQlWxmaJl5qGcz5/BicZryms7QH
+         2DmFNJc20vV/EBi2z5ekGq5N9NnmAJr1jHC5iBNvWcPoFuJA1zNqsiuQZ38tI2bF84
+         rW1dEo6GWyIMR/+uu1+SFDuH5YxfxV8tHq86AD8w=
+Date:   Sun, 22 Dec 2019 14:12:52 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, heiko@sntech.de,
+        sam@ravnborg.org, icenowy@aosc.io,
+        laurent.pinchart@ideasonboard.com, gregkh@linuxfoundation.org,
+        Jonathan.Cameron@huawei.com, davem@davemloft.net,
+        mchehab+samsung@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] dt-bindings: regulator: add document bindings for
+ mpq7920
+Message-ID: <20191222131252.ajrat2kxcyvozzia@gilmour.lan>
+References: <20191221234029.7796-1-sravanhome@gmail.com>
+ <20191221234029.7796-3-sravanhome@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="q43gh6v3wj5ad5fi"
 Content-Disposition: inline
-In-Reply-To: <CA+FuTSewMaRTe51jOJtD-VHcp4Ct+c=11-9SxenULHwQuokamw@mail.gmail.com>
+In-Reply-To: <20191221234029.7796-3-sravanhome@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 10:08:41PM -0500, Willem de Bruijn wrote:
-> On Fri, Dec 20, 2019 at 4:22 PM Alistair Delva <adelva@google.com> wrote:
-> >
-> > On devices without control virtqueue support, such as the virtio_net
-> > implementation in crosvm[1], attempting to configure LRO will panic the
-> > kernel:
-> >
-> > kernel BUG at drivers/net/virtio_net.c:1591!
-> > invalid opcode: 0000 [#1] PREEMPT SMP PTI
-> > CPU: 1 PID: 483 Comm: Binder:330_1 Not tainted 5.4.5-01326-g19463e9acaac #1
-> > Hardware name: ChromiumOS crosvm, BIOS 0
-> > RIP: 0010:virtnet_send_command+0x15d/0x170 [virtio_net]
-> > Code: d8 00 00 00 80 78 02 00 0f 94 c0 65 48 8b 0c 25 28 00 00 00 48 3b 4c 24 70 75 11 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 <0f> 0b e8 ec a4 12 c8 66 90 66 2e 0f 1f 84 00 00 00 00 00 55 48 89
-> > RSP: 0018:ffffb97940e7bb50 EFLAGS: 00010246
-> > RAX: ffffffffc0596020 RBX: ffffa0e1fc8ea840 RCX: 0000000000000017
-> > RDX: ffffffffc0596110 RSI: 0000000000000011 RDI: 000000000000000d
-> > RBP: ffffb97940e7bbf8 R08: ffffa0e1fc8ea0b0 R09: ffffa0e1fc8ea0b0
-> > R10: ffffffffffffffff R11: ffffffffc0590940 R12: 0000000000000005
-> > R13: ffffa0e1ffad2c00 R14: ffffb97940e7bc08 R15: 0000000000000000
-> > FS:  0000000000000000(0000) GS:ffffa0e1fd100000(006b) knlGS:00000000e5ef7494
-> > CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-> > CR2: 00000000e5eeb82c CR3: 0000000079b06001 CR4: 0000000000360ee0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > Call Trace:
-> >  ? preempt_count_add+0x58/0xb0
-> >  ? _raw_spin_lock_irqsave+0x36/0x70
-> >  ? _raw_spin_unlock_irqrestore+0x1a/0x40
-> >  ? __wake_up+0x70/0x190
-> >  virtnet_set_features+0x90/0xf0 [virtio_net]
-> >  __netdev_update_features+0x271/0x980
-> >  ? nlmsg_notify+0x5b/0xa0
-> >  dev_disable_lro+0x2b/0x190
-> >  ? inet_netconf_notify_devconf+0xe2/0x120
-> >  devinet_sysctl_forward+0x176/0x1e0
-> >  proc_sys_call_handler+0x1f0/0x250
-> >  proc_sys_write+0xf/0x20
-> >  __vfs_write+0x3e/0x190
-> >  ? __sb_start_write+0x6d/0xd0
-> >  vfs_write+0xd3/0x190
-> >  ksys_write+0x68/0xd0
-> >  __ia32_sys_write+0x14/0x20
-> >  do_fast_syscall_32+0x86/0xe0
-> >  entry_SYSENTER_compat+0x7c/0x8e
-> >
-> > This happens because virtio_set_features() does not check the presence
-> > of the control virtqueue feature, which is sanity checked by a BUG_ON
-> > in virtnet_send_command().
-> >
-> > Fix this by skipping any feature processing if the control virtqueue is
-> > missing. This should be OK for any future feature that is added, as
-> > presumably all of them would require control virtqueue support to notify
-> > the endpoint that offload etc. should begin.
-> >
-> > [1] https://chromium.googlesource.com/chromiumos/platform/crosvm/
-> >
-> > Fixes: a02e8964eaf9 ("virtio-net: ethtool configurable LRO")
-> > Cc: stable@vger.kernel.org [4.20+]
-> > Cc: Michael S. Tsirkin <mst@redhat.com>
-> > Cc: Jason Wang <jasowang@redhat.com>
-> > Cc: David S. Miller <davem@davemloft.net>
-> > Cc: kernel-team@android.com
-> > Cc: virtualization@lists.linux-foundation.org
-> > Cc: linux-kernel@vger.kernel.org
-> > Signed-off-by: Alistair Delva <adelva@google.com>
-> 
-> Thanks for debugging this, Alistair.
-> 
-> > ---
-> >  drivers/net/virtio_net.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> > index 4d7d5434cc5d..709bcd34e485 100644
-> > --- a/drivers/net/virtio_net.c
-> > +++ b/drivers/net/virtio_net.c
-> > @@ -2560,6 +2560,9 @@ static int virtnet_set_features(struct net_device *dev,
-> >         u64 offloads;
-> >         int err;
-> >
-> > +       if (!vi->has_cvq)
-> > +               return 0;
-> > +
-> 
-> Instead of checking for this in virtnet_set_features, how about we
-> make configurability contingent on cvq in virtnet_probe:
-> 
-> -       if (virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS))
-> +       if (virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS) &&
-> +           virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_VQ))
->                 dev->hw_features |= NETIF_F_LRO;
-> 
-> Based on this logic a little below in the same function
-> 
->         if (virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_VQ))
->                 vi->has_cvq = true;
 
+--q43gh6v3wj5ad5fi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This would be a regression on old hypervisors which didn't have
-CTL VQ - suddenly they will lose offloads.
+On Sun, Dec 22, 2019 at 12:40:27AM +0100, Saravanan Sekar wrote:
+> Add device tree binding information for mpq7920 regulator driver.
+> Example bindings for mpq7920 are added.
+>
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> ---
+>  .../bindings/regulator/mpq7920.yaml           | 135 ++++++++++++++++++
+>  1 file changed, 135 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/mpq7920.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/regulator/mpq7920.yaml b/Documentation/devicetree/bindings/regulator/mpq7920.yaml
+> new file mode 100644
+> index 000000000000..a60d3ef04c05
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/mpq7920.yaml
+> @@ -0,0 +1,135 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/regulator/mpq7920.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Monolithic Power System MPQ7920 PMIC
+> +
+> +maintainers:
+> +  - Saravanan Sekar <sravanhome@gmail.com>
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "mpq@[0-9a-f]{1,2}"
 
--- 
-MST
+This is still not a valid node name
 
+> +  compatible:
+> +    enum:
+> +	- mps,mpq7920
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  regulators:
+> +    type: object
+> +    description: |
+> +      list of regulators provided by this controller, must be named
+> +      after their hardware counterparts BUCK[1-4], one LDORTC, and LDO[2-5]
+> +      The valid names for regulators are
+> +      buck1, buck2, buck3, buck4, ldortc, ldo2, ldo3, ldo4, ldo5
+
+These should be validated.
+
+> +  properties:
+
+If it's properties under the regulators node, it should be at one more
+indentation level.
+
+> +       mps,time-slot:
+
+This should have an allOf here
+
+> +         - $ref: "/schemas/types.yaml#/definitions/uint8"
+> +         - enum: [ 0, 1, 2, 3 ]
+> +         - default: 0
+> +       description: |
+> +         each regulator output shall be delayed during power on/off sequence which
+> +         based on configurable time slot value, must be one of following corresponding
+> +         value 0.5ms, 2ms, 8ms, 16ms
+
+And this should be under the property, not at the same level.
+
+Did you run dt_bindings_check?
+
+Maxime
+
+--q43gh6v3wj5ad5fi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXf9r1AAKCRDj7w1vZxhR
+xdfAAP9LE45bHHScx2Iw015hPBYVCLIwpqkV7lG2MenTX2mDWAEArKgGeyv9CeSj
+BlqZDlA5FtX5YfPaFGRnSu0wTnoNYAs=
+=y9bw
+-----END PGP SIGNATURE-----
+
+--q43gh6v3wj5ad5fi--
