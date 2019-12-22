@@ -2,68 +2,96 @@ Return-Path: <SRS0=7h0X=2M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EE4C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 19:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 340A2C2D0D4
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 20:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52FC1206CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 19:10:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577041823;
-	bh=YfWTIYVK56PIbIPGF3Bmjaep887Bz+cN6kG0zc76fUk=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=yVp4gM709kkttQXQPwxGNEhoGxpIy/UrCVR9rHaZSAmxpIDsdUKAEhRUInHCPuwDS
-	 sPQB3ddNChatNh61cXwy99/KH3mWeqxTIDRAyyzry5lXWb4KDEnEezdMvlAC1jbGRX
-	 41J22/a1qKmL1Teg6LDvVsoQSyqh/pYTvxIjQXMY=
+	by mail.kernel.org (Postfix) with ESMTP id CF96C206D3
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 20:11:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XzBePS2o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbfLVTKL (ORCPT
+        id S1726716AbfLVULv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 14:10:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60950 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726557AbfLVTKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 14:10:10 -0500
-Subject: Re: [GIT] Networking
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577041810;
-        bh=YfWTIYVK56PIbIPGF3Bmjaep887Bz+cN6kG0zc76fUk=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=y5kJylr3GC6pE9akhHFz5iy681LBzim/zyo7744doxAj2rF7lBU1feBt/fM1G338H
-         UONURQCTi1JLp4mTG3t4wZ9iRm7sAhY3KbhI18ngNHOv2a5C5YRitN7SIPjdns1Kgg
-         3gkWezhBTHuFYMXOPzLfLufh+K09BimqYDAprCUY=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191221.180914.601367701836089009.davem@davemloft.net>
-References: <20191221.180914.601367701836089009.davem@davemloft.net>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191221.180914.601367701836089009.davem@davemloft.net>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
- refs/heads/master
-X-PR-Tracked-Commit-Id: 4bfeadfc0712bbc8a6556eef6d47cbae1099dea3
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 78bac77b521b032f96077c21241cc5d5668482c5
-Message-Id: <157704181018.1067.8027416307442100041.pr-tracker-bot@kernel.org>
-Date:   Sun, 22 Dec 2019 19:10:10 +0000
-To:     David Miller <davem@davemloft.net>
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+        Sun, 22 Dec 2019 15:11:51 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:12127 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725951AbfLVULv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Dec 2019 15:11:51 -0500
+X-UUID: c62fb3d6d6864253a7bdd0b2cbb2ac63-20191223
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=qwrFGFIz+QsHDpFfg3vjjA8jTU7ruwsFDOyFkQxVOwo=;
+        b=XzBePS2oWDOW/O8HlRnO/pinGEhEHV/Ur8WBdG10D7nscXA9/HQPcIhx+SiTTIa2a1ktxji36EEXUHXsJOSy119x+SW9IxtOW1SCDCYuv3FlGchhq0a6RZFx1hQ/Ejbyucs3Pi7NBJLtFIMIql/P82jXj6t6JV3imQZQvZTdW2Y=;
+X-UUID: c62fb3d6d6864253a7bdd0b2cbb2ac63-20191223
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <ryder.lee@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 958929746; Mon, 23 Dec 2019 04:11:44 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 23 Dec 2019 04:11:42 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 23 Dec 2019 04:10:52 +0800
+From:   Ryder Lee <ryder.lee@mediatek.com>
+To:     Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+CC:     <linux-wireless@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>,
+        Shayne Chen <shayne.chen@mediatek.com>
+Subject: [PATCH v1 2/2] mt76: mt7615: add set_antenna callback
+Date:   Mon, 23 Dec 2019 04:11:39 +0800
+Message-ID: <965287b3917a6cb0cfd2acbf91dbbd0b9db9b085.1577044827.git.ryder.lee@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <9a37e1340cc8c546587d7cf99d6c4d92e12e1a7d.1577044827.git.ryder.lee@mediatek.com>
+References: <9a37e1340cc8c546587d7cf99d6c4d92e12e1a7d.1577044827.git.ryder.lee@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 8FD17A3244B10A2B92653ADE44844F4B5FF4EAB66C010A873F8A6619B11B88FE2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 21 Dec 2019 18:09:14 -0800 (PST):
+QWRkIGEgc2V0X2FudGVubmEgY2FsbGJhY2sgdG8gc2V0dXAgcGVyIHBoeSB0eC9yeCBzdHJlYW1z
+Lg0KDQpTaWduZWQtb2ZmLWJ5OiBTaGF5bmUgQ2hlbiA8c2hheW5lLmNoZW5AbWVkaWF0ZWsuY29t
+Pg0KU2lnbmVkLW9mZi1ieTogUnlkZXIgTGVlIDxyeWRlci5sZWVAbWVkaWF0ZWsuY29tPg0KLS0t
+DQpDaGFuZ2VzIHNpbmNlIHYxOg0KLSByZW1vdmUgdW5uZWNlc3NhcnkgY2FsbCByZWdhcmQgdG8g
+YW50ZW5uYSBzZXR0aW5ncy4NCi0tLQ0KIC4uLi9uZXQvd2lyZWxlc3MvbWVkaWF0ZWsvbXQ3Ni9t
+dDc2MTUvbWFpbi5jICB8IDI3ICsrKysrKysrKysrKysrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwg
+MjcgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvbWVk
+aWF0ZWsvbXQ3Ni9tdDc2MTUvbWFpbi5jIGIvZHJpdmVycy9uZXQvd2lyZWxlc3MvbWVkaWF0ZWsv
+bXQ3Ni9tdDc2MTUvbWFpbi5jDQppbmRleCA5MGM0ZTc4NWExYTMuLjViODM1MjhmNzdhMCAxMDA2
+NDQNCi0tLSBhL2RyaXZlcnMvbmV0L3dpcmVsZXNzL21lZGlhdGVrL210NzYvbXQ3NjE1L21haW4u
+Yw0KKysrIGIvZHJpdmVycy9uZXQvd2lyZWxlc3MvbWVkaWF0ZWsvbXQ3Ni9tdDc2MTUvbWFpbi5j
+DQpAQCAtNjM3LDYgKzYzNywzMiBAQCBtdDc2MTVfc2V0X2NvdmVyYWdlX2NsYXNzKHN0cnVjdCBp
+ZWVlODAyMTFfaHcgKmh3LCBzMTYgY292ZXJhZ2VfY2xhc3MpDQogCW10NzYxNV9tYWNfc2V0X3Rp
+bWluZyhwaHkpOw0KIH0NCiANCitzdGF0aWMgaW50DQorbXQ3NjE1X3NldF9hbnRlbm5hKHN0cnVj
+dCBpZWVlODAyMTFfaHcgKmh3LCB1MzIgdHhfYW50LCB1MzIgcnhfYW50KQ0KK3sNCisJc3RydWN0
+IG10NzYxNV9kZXYgKmRldiA9IG10NzYxNV9od19kZXYoaHcpOw0KKwlzdHJ1Y3QgbXQ3NjE1X3Bo
+eSAqcGh5ID0gbXQ3NjE1X2h3X3BoeShodyk7DQorCWludCBtYXhfbnNzID0gaHdlaWdodDgoaHct
+PndpcGh5LT5hdmFpbGFibGVfYW50ZW5uYXNfdHgpOw0KKwlib29sIGV4dF9waHkgPSBwaHkgIT0g
+JmRldi0+cGh5Ow0KKw0KKwlpZiAoIXR4X2FudCB8fCB0eF9hbnQgIT0gcnhfYW50IHx8IGZmcyh0
+eF9hbnQpID4gbWF4X25zcykNCisJCXJldHVybiAtRUlOVkFMOw0KKw0KKwlpZiAoKEJJVChod2Vp
+Z2h0OCh0eF9hbnQpKSAtIDEpICE9IHR4X2FudCkNCisJCXR4X2FudCA9IEJJVChmZnModHhfYW50
+KSAtIDEpIC0gMTsNCisNCisJbXV0ZXhfbG9jaygmZGV2LT5tdDc2Lm11dGV4KTsNCisNCisJcGh5
+LT5tdDc2LT5hbnRlbm5hX21hc2sgPSB0eF9hbnQ7DQorCXBoeS0+Y2hhaW5tYXNrID0gZXh0X3Bo
+eSA/IHR4X2FudCA8PCAyIDogdHhfYW50Ow0KKw0KKwltdDc2X3NldF9zdHJlYW1fY2FwcygmZGV2
+LT5tdDc2LCB0cnVlKTsNCisNCisJbXV0ZXhfdW5sb2NrKCZkZXYtPm10NzYubXV0ZXgpOw0KKw0K
+KwlyZXR1cm4gMDsNCit9DQorDQogY29uc3Qgc3RydWN0IGllZWU4MDIxMV9vcHMgbXQ3NjE1X29w
+cyA9IHsNCiAJLnR4ID0gbXQ3NjE1X3R4LA0KIAkuc3RhcnQgPSBtdDc2MTVfc3RhcnQsDQpAQCAt
+NjYxLDUgKzY4Nyw2IEBAIGNvbnN0IHN0cnVjdCBpZWVlODAyMTFfb3BzIG10NzYxNV9vcHMgPSB7
+DQogCS5jaGFubmVsX3N3aXRjaF9iZWFjb24gPSBtdDc2MTVfY2hhbm5lbF9zd2l0Y2hfYmVhY29u
+LA0KIAkuZ2V0X3N1cnZleSA9IG10NzZfZ2V0X3N1cnZleSwNCiAJLmdldF9hbnRlbm5hID0gbXQ3
+Nl9nZXRfYW50ZW5uYSwNCisJLnNldF9hbnRlbm5hID0gbXQ3NjE1X3NldF9hbnRlbm5hLA0KIAku
+c2V0X2NvdmVyYWdlX2NsYXNzID0gbXQ3NjE1X3NldF9jb3ZlcmFnZV9jbGFzcywNCiB9Ow0KLS0g
+DQoyLjE4LjANCg==
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net refs/heads/master
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/78bac77b521b032f96077c21241cc5d5668482c5
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
