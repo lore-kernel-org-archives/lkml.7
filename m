@@ -2,160 +2,131 @@ Return-Path: <SRS0=7h0X=2M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C288C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 12:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B46C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 12:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7E1820733
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 12:15:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Mm0r9Uc0"
+	by mail.kernel.org (Postfix) with ESMTP id 9992220665
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 12:22:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577017336;
+	bh=yPQ2iDk8i9fBF7Ai66tYzKFmHDWSebI55CQ4nG1i2k4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=FYemlo6SmmEKsfy8R1T3JBFF1GNq9+2fuHFW7TwDt7cBMFNT1TmX0lKKt7abJOIs4
+	 ZjABxoWw+TcVr0Xg6SO+mB6s6gu20nXY6u+TiNYPJqGkvteuBh8+gPIsh3j2GtQdKb
+	 Galc9FCpBv3tyvnDKQmbuMrVLcEvKB+UcJcf1zwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfLVMPP (ORCPT
+        id S1726709AbfLVMWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 07:15:15 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:42446 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726189AbfLVMPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 07:15:15 -0500
-Received: from zn.tnic (p200300EC2F0ED600400AE6D5F72017D0.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:d600:400a:e6d5:f720:17d0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 151981EC0985;
-        Sun, 22 Dec 2019 13:15:13 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1577016913;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=5rKqrB8hrZ40tpd1/keewAhz5uKnVB4+kjIFyrWnvyo=;
-        b=Mm0r9Uc0UVTsTeLDpK9wrcPfeJ/WrFa3dMKSZHP0j7ebRFAmkdrRURFQPqdDc/Epf+Qirw
-        OuxwIUFRntZLUx9AWRcupRKh3jOHtyKyscQn7MFc4L/x0pIp6+SaRSjg/AIjVKKhNjXz6Y
-        a8ni0nOFSCeYvwb+Iy7WDpYmg2/JYPA=
-Date:   Sun, 22 Dec 2019 13:15:00 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH] EDAC/mc: Fix use-after-free and memleaks during device
- removal
-Message-ID: <20191222121500.GA5485@zn.tnic>
-References: <20191218062129.7400-1-rrichter@marvell.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191218062129.7400-1-rrichter@marvell.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 22 Dec 2019 07:22:15 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:44611 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726267AbfLVMWP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Dec 2019 07:22:15 -0500
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=big-swifty.misterjones.org)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1ij0FP-00083P-Rq; Sun, 22 Dec 2019 13:22:12 +0100
+Date:   Sun, 22 Dec 2019 12:22:10 +0000
+Message-ID: <864kxsim8d.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     kvm@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+        linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
+        will@kernel.org, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 00/18] arm64: KVM: add SPE profiling support
+In-Reply-To: <f023f5529361cc1e2d799daa70f196c2@www.loen.fr>
+References: <20191220143025.33853-1-andrew.murray@arm.com>
+        <f023f5529361cc1e2d799daa70f196c2@www.loen.fr>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: andrew.murray@arm.com, kvm@vger.kernel.org, catalin.marinas@arm.com, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, will@kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 06:22:08AM +0000, Robert Richter wrote:
-> A test kernel with the options set below revealed several issues when
-> removing a mci device:
+On Sat, 21 Dec 2019 10:48:16 +0000,
+Marc Zyngier <maz@kernel.org> wrote:
 > 
->  DEBUG_TEST_DRIVER_REMOVE
->  KASAN
->  DEBUG_KMEMLEAK
+> [fixing email addresses]
 > 
-> Issues seen:
+> Hi Andrew,
 > 
-> 1) Use-after-free:
+> On 2019-12-20 14:30, Andrew Murray wrote:
+> > This series implements support for allowing KVM guests to use the Arm
+> > Statistical Profiling Extension (SPE).
 > 
-> On 27.11.19 17:07:33, John Garry wrote:
-> > [   22.104498] BUG: KASAN: use-after-free in
-> > edac_remove_sysfs_mci_device+0x148/0x180
+> Thanks for this. In future, please Cc me and Will on email addresses
+> we can actually read.
 > 
-> The use-after-free is triggered in edac_remove_sysfs_mci_device(). It
-> became an issue with commit c498afaf7df8 ("EDAC: Introduce an
-> mci_for_each_dimm() iterator").
+> > It has been tested on a model to ensure that both host and guest can
+> > simultaneously use SPE with valid data. E.g.
+> > 
+> > $ perf record -e arm_spe/ts_enable=1,pa_enable=1,pct_enable=1/ \
+> >         dd if=/dev/zero of=/dev/null count=1000
+> > $ perf report --dump-raw-trace > spe_buf.txt
+> > 
+> > As we save and restore the SPE context, the guest can access the SPE
+> > registers directly, thus in this version of the series we remove the
+> > trapping and emulation.
+> > 
+> > In the previous series of this support, when KVM SPE isn't
+> > supported (e.g. via CONFIG_KVM_ARM_SPE) we were able to return a
+> > value of 0 to all reads of the SPE registers - as we can no longer
+> > do this there isn't a mechanism to prevent the guest from using
+> > SPE - thus I'm keen for feedback on the best way of resolving
+> > this.
+> 
+> Surely there is a way to conditionally trap SPE registers, right? You
+> should still be able to do this if SPE is not configured for a given
+> guest (as we do for other feature such as PtrAuth).
+> 
+> > It appears necessary to pin the entire guest memory in order to
+> > provide guest SPE access - otherwise it is possible for the guest
+> > to receive Stage-2 faults.
+> 
+> Really? How can the guest receive a stage-2 fault? This doesn't fit
+> what I understand of the ARMv8 exception model. Or do you mean a SPE
+> interrupt describing a S2 fault?
+> 
+> And this is not just pinning the memory either. You have to ensure that
+> all S2 page tables are created ahead of SPE being able to DMA to guest
+> memory. This may have some impacts on the THP code...
+> 
+> I'll have a look at the actual series ASAP (but that's not very soon).
 
-... which means:
+I found some time to go through the series, and there is clearly a lot
+of work left to do:
 
-Fixes: c498afaf7df8 ("EDAC: Introduce an mci_for_each_dimm() iterator")
+- There so nothing here to handle memory pinning whatsoever. If it
+  works, it is only thanks to some side effect.
 
-?
+- The missing trapping is deeply worrying. Given that this is an
+  optional feature, you cannot just let the guest do whatever it wants
+  in an uncontrolled manner.
 
-> The reason for it is that device_unregister(&dimm->dev) not only
-> removes the sysfs entry, it also frees the dimm struct in
-> dimm_attr_release(). When incrementing the loop in
-> mci_for_each_dimm(), the dimm struct is accessed again by the loop
-> iterator which causes the use-after-free.
-> 
-> In function edac_remove_sysfs_mci_device() all the mci device's
-> subsequent dimm and csrow objects are removed. When unregistering from
-> sysfs, instead of removing that data it should be kept until it is
-> removed together with the mci device. This keeps the data structures
-> intact and the mci device can be fully used until it will be removed.
-> 
-> 2) Memory leaks:
-> 
-> Following memory leaks have been detected:
-> 
->  # grep edac /sys/kernel/debug/kmemleak | sort | uniq -c
->        1     [<000000003c0f58f9>] edac_mc_alloc+0x3bc/0x9d0      # mci->csrows
->       16     [<00000000bb932dc0>] edac_mc_alloc+0x49c/0x9d0      # csr->channels
->       16     [<00000000e2734dba>] edac_mc_alloc+0x518/0x9d0      # csr->channels[chn]
->        1     [<00000000eb040168>] edac_mc_alloc+0x5c8/0x9d0      # mci->dimms
->       34     [<00000000ef737c29>] ghes_edac_register+0x1c8/0x3f8 # see edac_mc_alloc()
-> 
-> There are two implementions for device removal in the driver.
+- The interrupt handling is busted. You mix concepts picked from both
+  the PMU and the timer code, while the SPE device doesn't behave like
+  any of these two (it is neither a fully emulated device, nor a
+  device that is exclusively owned by a guest at any given time).
 
-Which driver? ghes_edac?
+I expect some level of discussion on the list including at least Will
+and myself before you respin this.
 
-> One is
-> used before edac_mc_add_mc(), the other afterwards after the device
-> had been registered in sysfs. The later lacks the removal of some data
-> allocated in edac_mc_alloc(). All the above issues are fixed as
-> follows:
-
-This paragraph needs clarification as I have no clue what you mean here.
-
-> 
-> Unify release code in a single mci_release() function and use this one
-
-I think you mean s/single/separate/
-
-> together with put_device() to release the struct mci once there are no
-> users. Free all subsequent data structures of the children devices in
-> that release function too. An effect of this is that no data is freed
-> in edac_mc_sysfs.c (except the "mc" sysfs root node). All sysfs
-> entries have the mci device as a parent, so its refcount will keep the
-> struct from being removed as long as sysfs entries exist. Before
-> freeing struct mci, all sysfs entries are removed now in edac_remove_
-> sysfs_mci_device(). With the changes made the mci_for_each_dimm() loop
-> is now save to remove dimm devices from sysfs.
-> 
-> The patch has been tested with the above kernel options, no issues
-> seen any longer.
-> 
-> This patch should be marked as stable.
-> 
-> Reported-by: John Garry <john.garry@huawei.com>
-> Signed-off-by: Robert Richter <rrichter@marvell.com>
-> ---
->  drivers/edac/edac_mc.c       |  20 +++----
->  drivers/edac/edac_mc_sysfs.c | 100 +++++++++++++----------------------
->  drivers/edac/edac_module.h   |   1 -
->  3 files changed, 49 insertions(+), 72 deletions(-)
-
-Other than that, I don't see anything out of the ordinary with it and it
-passes some smoke testing on boxes here so I'll queue v2 and expose it
-in linux-next for wider testing...
-
-Thx.
+	M.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Jazz is not dead, it just smells funny.
