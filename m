@@ -2,517 +2,189 @@ Return-Path: <SRS0=7h0X=2M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1779FC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 12:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF60DC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 13:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0FEF206D3
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 12:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C5102067C
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 13:11:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eFW56aRl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfLVMsR (ORCPT
+        id S1726539AbfLVNLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 07:48:17 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:37079 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfLVMsQ (ORCPT
+        Sun, 22 Dec 2019 08:11:30 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34982 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725840AbfLVNL3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 07:48:16 -0500
-Received: from [172.58.30.161] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1ij0eZ-0002E7-CH; Sun, 22 Dec 2019 12:48:12 +0000
-Date:   Sun, 22 Dec 2019 13:47:58 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     linux-kernel@vger.kernel.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, tycho@tycho.ws, jannh@google.com,
-        cyphar@cyphar.com, oleg@redhat.com, luto@amacapital.net,
-        viro@zeniv.linux.org.uk, gpascutto@mozilla.com,
-        ealvarez@mozilla.com, fweimer@redhat.com, jld@mozilla.com,
-        arnd@arndb.de
-Subject: Re: [PATCH v5 2/3] pid: Introduce pidfd_getfd syscall
-Message-ID: <20191222124756.o2v2zofseypnqg3t@wittgenstein>
-References: <20191220232810.GA20233@ircssh-2.c.rugged-nimbus-611.internal>
+        Sun, 22 Dec 2019 08:11:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577020287;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7gCpuLlUP9MlgLBoutsCmLPmUqjnC7xAMqI1v5Bo+1w=;
+        b=eFW56aRlDtYw8KN20qT/5ZtAuzrxmc9MI9Sw8fXFJYBUo9Qxbdsrqxj17wuIS6bUFz/I3Q
+        Sbm0korOniwfHQihm7DDVJyMkCgVDLhrjR77+oBP05wY6IW1naTEldGp6XMMzTDCc9MZr4
+        +HHJ/8VYIr8ozDnzf9RoDv1Ba9yOcoA=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-108-hKbIeLJ1OVGm1IOAbeUFnA-1; Sun, 22 Dec 2019 08:11:24 -0500
+X-MC-Unique: hKbIeLJ1OVGm1IOAbeUFnA-1
+Received: by mail-qt1-f200.google.com with SMTP id k27so9380861qtu.12
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Dec 2019 05:11:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7gCpuLlUP9MlgLBoutsCmLPmUqjnC7xAMqI1v5Bo+1w=;
+        b=F+eCLz9IX7sPdCYFuJNKnLTRtb9T+FyrmpNE5Q+Uhw/ogX/tlcGJwIkBrIQqrZ41Uy
+         LFBflvzegdj0jBJ+pgZ61qC3Qd8kie/OtMJAVn1XNexCCgdqruF+IK0nYxQsaH3n9sL6
+         P+Ibjh/cJddloK+TnG723ByqkqAIm/hxBSM9TmAxdQgD+ay0SulRGpRzm/CwD46yxVVA
+         X9S/xXRzPIfHBZ6INOPXDeotwyYcy/RfRc1I9ut5l5rSepzRZ5sm60pvyEEti6d/bCVf
+         FbAbvyYoUWgEs1KGVyyLEobbU0NS3ldv5eQ2DTUcaZf0kgehGGsyd4VvxHKW7B+t7tf5
+         dcyA==
+X-Gm-Message-State: APjAAAVp+4ObvFeNEUnIQodc3yQVlL65ONcqLkmStyoA/0NrG1LVUdlW
+        r/B3lgUpijvLAF6pbh0RTDWBR3XN5lAfS/Xrs+1IeN+J3RkRn554gw2yokCR9Egei8gsaBXVjXL
+        WtVLkc/qLooySeL94KoDmLYc6
+X-Received: by 2002:a05:6214:10c1:: with SMTP id r1mr20617246qvs.70.1577020282492;
+        Sun, 22 Dec 2019 05:11:22 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyCAU9CXtW80vVj3OFrSpP2mW5I9KhywcWXV5k/a4ppQvGMJznMPni9g9ftzf6gofObYt4oXA==
+X-Received: by 2002:a05:6214:10c1:: with SMTP id r1mr20617225qvs.70.1577020282261;
+        Sun, 22 Dec 2019 05:11:22 -0800 (PST)
+Received: from redhat.com (bzq-79-181-48-215.red.bezeqint.net. [79.181.48.215])
+        by smtp.gmail.com with ESMTPSA id t38sm5308551qta.78.2019.12.22.05.11.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Dec 2019 05:11:21 -0800 (PST)
+Date:   Sun, 22 Dec 2019 08:11:15 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc:     Alistair Delva <adelva@google.com>,
+        Network Development <netdev@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>, kernel-team@android.com,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net] virtio-net: Skip set_features on non-cvq devices
+Message-ID: <20191222080754-mutt-send-email-mst@kernel.org>
+References: <20191220212207.76726-1-adelva@google.com>
+ <CA+FuTSewMaRTe51jOJtD-VHcp4Ct+c=11-9SxenULHwQuokamw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191220232810.GA20233@ircssh-2.c.rugged-nimbus-611.internal>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CA+FuTSewMaRTe51jOJtD-VHcp4Ct+c=11-9SxenULHwQuokamw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 11:28:13PM +0000, Sargun Dhillon wrote:
-> This syscall allows for the retrieval of file descriptors from other
-> processes, based on their pidfd. This is possible using ptrace, and
-> injection of parasitic code along with using SCM_RIGHTS to move
-> file descriptors between a tracee and a tracer. Unfortunately, ptrace
-> comes with a high cost of requiring the process to be stopped, and
-> breaks debuggers. This does not require stopping the process under
-> manipulation.
+On Fri, Dec 20, 2019 at 10:08:41PM -0500, Willem de Bruijn wrote:
+> On Fri, Dec 20, 2019 at 4:22 PM Alistair Delva <adelva@google.com> wrote:
+> >
+> > On devices without control virtqueue support, such as the virtio_net
+> > implementation in crosvm[1], attempting to configure LRO will panic the
+> > kernel:
+> >
+> > kernel BUG at drivers/net/virtio_net.c:1591!
+> > invalid opcode: 0000 [#1] PREEMPT SMP PTI
+> > CPU: 1 PID: 483 Comm: Binder:330_1 Not tainted 5.4.5-01326-g19463e9acaac #1
+> > Hardware name: ChromiumOS crosvm, BIOS 0
+> > RIP: 0010:virtnet_send_command+0x15d/0x170 [virtio_net]
+> > Code: d8 00 00 00 80 78 02 00 0f 94 c0 65 48 8b 0c 25 28 00 00 00 48 3b 4c 24 70 75 11 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 <0f> 0b e8 ec a4 12 c8 66 90 66 2e 0f 1f 84 00 00 00 00 00 55 48 89
+> > RSP: 0018:ffffb97940e7bb50 EFLAGS: 00010246
+> > RAX: ffffffffc0596020 RBX: ffffa0e1fc8ea840 RCX: 0000000000000017
+> > RDX: ffffffffc0596110 RSI: 0000000000000011 RDI: 000000000000000d
+> > RBP: ffffb97940e7bbf8 R08: ffffa0e1fc8ea0b0 R09: ffffa0e1fc8ea0b0
+> > R10: ffffffffffffffff R11: ffffffffc0590940 R12: 0000000000000005
+> > R13: ffffa0e1ffad2c00 R14: ffffb97940e7bc08 R15: 0000000000000000
+> > FS:  0000000000000000(0000) GS:ffffa0e1fd100000(006b) knlGS:00000000e5ef7494
+> > CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+> > CR2: 00000000e5eeb82c CR3: 0000000079b06001 CR4: 0000000000360ee0
+> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > Call Trace:
+> >  ? preempt_count_add+0x58/0xb0
+> >  ? _raw_spin_lock_irqsave+0x36/0x70
+> >  ? _raw_spin_unlock_irqrestore+0x1a/0x40
+> >  ? __wake_up+0x70/0x190
+> >  virtnet_set_features+0x90/0xf0 [virtio_net]
+> >  __netdev_update_features+0x271/0x980
+> >  ? nlmsg_notify+0x5b/0xa0
+> >  dev_disable_lro+0x2b/0x190
+> >  ? inet_netconf_notify_devconf+0xe2/0x120
+> >  devinet_sysctl_forward+0x176/0x1e0
+> >  proc_sys_call_handler+0x1f0/0x250
+> >  proc_sys_write+0xf/0x20
+> >  __vfs_write+0x3e/0x190
+> >  ? __sb_start_write+0x6d/0xd0
+> >  vfs_write+0xd3/0x190
+> >  ksys_write+0x68/0xd0
+> >  __ia32_sys_write+0x14/0x20
+> >  do_fast_syscall_32+0x86/0xe0
+> >  entry_SYSENTER_compat+0x7c/0x8e
+> >
+> > This happens because virtio_set_features() does not check the presence
+> > of the control virtqueue feature, which is sanity checked by a BUG_ON
+> > in virtnet_send_command().
+> >
+> > Fix this by skipping any feature processing if the control virtqueue is
+> > missing. This should be OK for any future feature that is added, as
+> > presumably all of them would require control virtqueue support to notify
+> > the endpoint that offload etc. should begin.
+> >
+> > [1] https://chromium.googlesource.com/chromiumos/platform/crosvm/
+> >
+> > Fixes: a02e8964eaf9 ("virtio-net: ethtool configurable LRO")
+> > Cc: stable@vger.kernel.org [4.20+]
+> > Cc: Michael S. Tsirkin <mst@redhat.com>
+> > Cc: Jason Wang <jasowang@redhat.com>
+> > Cc: David S. Miller <davem@davemloft.net>
+> > Cc: kernel-team@android.com
+> > Cc: virtualization@lists.linux-foundation.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Signed-off-by: Alistair Delva <adelva@google.com>
 > 
-> One reason to use this is to allow sandboxers to take actions on file
-> descriptors on the behalf of another process. For example, this can be
-> combined with seccomp-bpf's user notification to do on-demand fd
-> extraction and take privileged actions. For example, it can be used
-> to bind a socket to a privileged port.
+> Thanks for debugging this, Alistair.
 > 
-> /* prototype */
->   /*
->    * pidfd_getfd_options is an extensible struct which can have options
->    * added to it. If options is NULL, size, and it will be ignored be
->    * ignored, otherwise, size should be set to sizeof(*options). If
->    * option is newer than the current kernel version, E2BIG will be
->    * returned.
->    */
->   struct pidfd_getfd_options {};
->   long pidfd_getfd(int pidfd, int fd, unsigned int flags,
-> 		   struct pidfd_getfd_options *options, size_t size);
-
-The prototype advertises a flags argument but the actual 
-
-+SYSCALL_DEFINE4(pidfd_getfd, int, pidfd, int, fd,
-+		struct pidfd_getfd_options __user *, options, size_t, usize)
-
-does not have a flags argument...
-
-I think having a flags argument makes a lot of sense.
-
-I'm not sure what to think about the struct. I agree with Aleksa that
-having an empty struct is not a great idea. From a design perspective it
-seems very out of place. If we do a struct at all putting at least a
-single reserved field in there might makes more sense.
-
-In general, I think we need to have a _concrete_ reason why putting a
-struct versioned by size as arguments for this syscall.
-That means we need to have at least a concrete example for a new feature
-for this syscall where a flag would not convey enough information.
-
-And I'm not sure that there is a good one... I guess one thing I can
-think of is that a caller might want dup-like semantics, i.e. a caller
-might want to say:
-
-pidfd_getfd(<pidfd>, <fd-to-get>, <fd-number-to-want>, <flags>, ...)
-
-such that after pidfd_getfd() returns <fd-to-get> corresponds to
-<fd-number-to-want> in the caller. But that can also be achieved via:
-int fd = pidfd_getfd(<pidfd>, <fd-to-get>, <flags>, ...)
-int final_fd = dup3(fd, <newfd>, O_CLOEXEC)
-
+> > ---
+> >  drivers/net/virtio_net.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> > index 4d7d5434cc5d..709bcd34e485 100644
+> > --- a/drivers/net/virtio_net.c
+> > +++ b/drivers/net/virtio_net.c
+> > @@ -2560,6 +2560,9 @@ static int virtnet_set_features(struct net_device *dev,
+> >         u64 offloads;
+> >         int err;
+> >
+> > +       if (!vi->has_cvq)
+> > +               return 0;
+> > +
 > 
-> /* testing */
-> Ran self-test suite on x86_64
-
-+1
-
+> Instead of checking for this in virtnet_set_features, how about we
+> make configurability contingent on cvq in virtnet_probe:
 > 
-> Signed-off-by: Sargun Dhillon <sargun@sargun.me>
-> ---
->  MAINTAINERS                                 |   1 +
->  arch/alpha/kernel/syscalls/syscall.tbl      |   1 +
->  arch/arm/tools/syscall.tbl                  |   1 +
->  arch/arm64/include/asm/unistd.h             |   2 +-
->  arch/arm64/include/asm/unistd32.h           |   2 +
->  arch/ia64/kernel/syscalls/syscall.tbl       |   1 +
->  arch/m68k/kernel/syscalls/syscall.tbl       |   1 +
->  arch/microblaze/kernel/syscalls/syscall.tbl |   1 +
->  arch/mips/kernel/syscalls/syscall_n32.tbl   |   1 +
->  arch/mips/kernel/syscalls/syscall_n64.tbl   |   1 +
->  arch/mips/kernel/syscalls/syscall_o32.tbl   |   1 +
->  arch/parisc/kernel/syscalls/syscall.tbl     |   1 +
->  arch/powerpc/kernel/syscalls/syscall.tbl    |   1 +
->  arch/s390/kernel/syscalls/syscall.tbl       |   1 +
->  arch/sh/kernel/syscalls/syscall.tbl         |   1 +
->  arch/sparc/kernel/syscalls/syscall.tbl      |   1 +
->  arch/x86/entry/syscalls/syscall_32.tbl      |   1 +
->  arch/x86/entry/syscalls/syscall_64.tbl      |   1 +
->  arch/xtensa/kernel/syscalls/syscall.tbl     |   1 +
->  include/linux/syscalls.h                    |   4 +
->  include/uapi/asm-generic/unistd.h           |   3 +-
->  include/uapi/linux/pidfd.h                  |  10 ++
->  kernel/pid.c                                | 115 ++++++++++++++++++++
->  23 files changed, 151 insertions(+), 2 deletions(-)
->  create mode 100644 include/uapi/linux/pidfd.h
+> -       if (virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS))
+> +       if (virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS) &&
+> +           virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_VQ))
+>                 dev->hw_features |= NETIF_F_LRO;
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index cc0a4a8ae06a..bc370ff59dbf 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13014,6 +13014,7 @@ M:	Christian Brauner <christian@brauner.io>
->  L:	linux-kernel@vger.kernel.org
->  S:	Maintained
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git
-> +F:	include/uapi/linux/pidfd.h
->  F:	samples/pidfd/
->  F:	tools/testing/selftests/pidfd/
->  F:	tools/testing/selftests/clone3/
-> diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
-> index 8e13b0b2928d..d1cac0d657b7 100644
-> --- a/arch/alpha/kernel/syscalls/syscall.tbl
-> +++ b/arch/alpha/kernel/syscalls/syscall.tbl
-> @@ -475,3 +475,4 @@
->  543	common	fspick				sys_fspick
->  544	common	pidfd_open			sys_pidfd_open
->  # 545 reserved for clone3
-> +548	common	pidfd_getfd			sys_pidfd
-> diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-> index 6da7dc4d79cc..ba045e2f3a60 100644
-> --- a/arch/arm/tools/syscall.tbl
-> +++ b/arch/arm/tools/syscall.tbl
-> @@ -449,3 +449,4 @@
->  433	common	fspick				sys_fspick
->  434	common	pidfd_open			sys_pidfd_open
->  435	common	clone3				sys_clone3
-> +438	common	pidfd_getfd			sys_pidfd_getfd
-> diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
-> index 2629a68b8724..b722e47377a5 100644
-> --- a/arch/arm64/include/asm/unistd.h
-> +++ b/arch/arm64/include/asm/unistd.h
-> @@ -38,7 +38,7 @@
->  #define __ARM_NR_compat_set_tls		(__ARM_NR_COMPAT_BASE + 5)
->  #define __ARM_NR_COMPAT_END		(__ARM_NR_COMPAT_BASE + 0x800)
->  
-> -#define __NR_compat_syscalls		436
-> +#define __NR_compat_syscalls		439
->  #endif
->  
->  #define __ARCH_WANT_SYS_CLONE
-> diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
-> index 94ab29cf4f00..a8da97a2de41 100644
-> --- a/arch/arm64/include/asm/unistd32.h
-> +++ b/arch/arm64/include/asm/unistd32.h
-> @@ -879,6 +879,8 @@ __SYSCALL(__NR_fspick, sys_fspick)
->  __SYSCALL(__NR_pidfd_open, sys_pidfd_open)
->  #define __NR_clone3 435
->  __SYSCALL(__NR_clone3, sys_clone3)
-> +#define __NR_pidfd_getfd 438
-> +__SYSCALL(__NR_pidfd_getfd, sys_pidfd_getfd)
->  
->  /*
->   * Please add new compat syscalls above this comment and update
-> diff --git a/arch/ia64/kernel/syscalls/syscall.tbl b/arch/ia64/kernel/syscalls/syscall.tbl
-> index 36d5faf4c86c..2b11adfc860c 100644
-> --- a/arch/ia64/kernel/syscalls/syscall.tbl
-> +++ b/arch/ia64/kernel/syscalls/syscall.tbl
-> @@ -356,3 +356,4 @@
->  433	common	fspick				sys_fspick
->  434	common	pidfd_open			sys_pidfd_open
->  # 435 reserved for clone3
-> +438	common	pidfd_getfd			sys_pidfd_getfd
-> diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
-> index a88a285a0e5f..44e879e98459 100644
-> --- a/arch/m68k/kernel/syscalls/syscall.tbl
-> +++ b/arch/m68k/kernel/syscalls/syscall.tbl
-> @@ -435,3 +435,4 @@
->  433	common	fspick				sys_fspick
->  434	common	pidfd_open			sys_pidfd_open
->  # 435 reserved for clone3
-> +438	common	pidfd_getfd			sys_pidfd_getfd
-> diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
-> index 09b0cd7dab0a..7afa00125cc4 100644
-> --- a/arch/microblaze/kernel/syscalls/syscall.tbl
-> +++ b/arch/microblaze/kernel/syscalls/syscall.tbl
-> @@ -441,3 +441,4 @@
->  433	common	fspick				sys_fspick
->  434	common	pidfd_open			sys_pidfd_open
->  435	common	clone3				sys_clone3
-> +438	common	pidfd_getfd			sys_pidfd_getfd
-> diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
-> index e7c5ab38e403..856d5ba34461 100644
-> --- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-> +++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-> @@ -374,3 +374,4 @@
->  433	n32	fspick				sys_fspick
->  434	n32	pidfd_open			sys_pidfd_open
->  435	n32	clone3				__sys_clone3
-> +438	n32	pidfd_getfd			sys_pidfd_getfd
-> diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
-> index 13cd66581f3b..2db6075352f3 100644
-> --- a/arch/mips/kernel/syscalls/syscall_n64.tbl
-> +++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
-> @@ -350,3 +350,4 @@
->  433	n64	fspick				sys_fspick
->  434	n64	pidfd_open			sys_pidfd_open
->  435	n64	clone3				__sys_clone3
-> +438	n64	pidfd_getfd			sys_pidfd_getfd
-> diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
-> index 353539ea4140..e9f9d4a9b105 100644
-> --- a/arch/mips/kernel/syscalls/syscall_o32.tbl
-> +++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-> @@ -423,3 +423,4 @@
->  433	o32	fspick				sys_fspick
->  434	o32	pidfd_open			sys_pidfd_open
->  435	o32	clone3				__sys_clone3
-> +438	o32	pidfd_getfd			sys_pidfd_getfd
-> diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
-> index 285ff516150c..c58c7eb144ca 100644
-> --- a/arch/parisc/kernel/syscalls/syscall.tbl
-> +++ b/arch/parisc/kernel/syscalls/syscall.tbl
-> @@ -433,3 +433,4 @@
->  433	common	fspick				sys_fspick
->  434	common	pidfd_open			sys_pidfd_open
->  435	common	clone3				sys_clone3_wrapper
-> +438	common	pidfd_getfd			sys_pidfd_getfd
-> diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-> index 43f736ed47f2..707609bfe3ea 100644
-> --- a/arch/powerpc/kernel/syscalls/syscall.tbl
-> +++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-> @@ -517,3 +517,4 @@
->  433	common	fspick				sys_fspick
->  434	common	pidfd_open			sys_pidfd_open
->  435	nospu	clone3				ppc_clone3
-> +438	common	pidfd_getfd			sys_pidfd_getfd
-> diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
-> index 3054e9c035a3..185cd624face 100644
-> --- a/arch/s390/kernel/syscalls/syscall.tbl
-> +++ b/arch/s390/kernel/syscalls/syscall.tbl
-> @@ -438,3 +438,4 @@
->  433  common	fspick			sys_fspick			sys_fspick
->  434  common	pidfd_open		sys_pidfd_open			sys_pidfd_open
->  435  common	clone3			sys_clone3			sys_clone3
-> +438  common	pidfd_getfd		sys_pidfd_getfd			sys_pidfd_getfd
-> diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
-> index b5ed26c4c005..88f90895aad8 100644
-> --- a/arch/sh/kernel/syscalls/syscall.tbl
-> +++ b/arch/sh/kernel/syscalls/syscall.tbl
-> @@ -438,3 +438,4 @@
->  433	common	fspick				sys_fspick
->  434	common	pidfd_open			sys_pidfd_open
->  # 435 reserved for clone3
-> +438	common	pidfd_getfd			sys_pidfd_getfd
-> diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
-> index 8c8cc7537fb2..218df6a2326e 100644
-> --- a/arch/sparc/kernel/syscalls/syscall.tbl
-> +++ b/arch/sparc/kernel/syscalls/syscall.tbl
-> @@ -481,3 +481,4 @@
->  433	common	fspick				sys_fspick
->  434	common	pidfd_open			sys_pidfd_open
->  # 435 reserved for clone3
-> +438	common	pidfd_getfd			sys_pidfd_getfd
-> diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-> index 15908eb9b17e..9c3101b65e0f 100644
-> --- a/arch/x86/entry/syscalls/syscall_32.tbl
-> +++ b/arch/x86/entry/syscalls/syscall_32.tbl
-> @@ -440,3 +440,4 @@
->  433	i386	fspick			sys_fspick			__ia32_sys_fspick
->  434	i386	pidfd_open		sys_pidfd_open			__ia32_sys_pidfd_open
->  435	i386	clone3			sys_clone3			__ia32_sys_clone3
-> +438	i386	pidfd_getfd		sys_pidfd_getfd			__ia32_sys_pidfd_getfd
-> diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-> index c29976eca4a8..cef85db75a62 100644
-> --- a/arch/x86/entry/syscalls/syscall_64.tbl
-> +++ b/arch/x86/entry/syscalls/syscall_64.tbl
-> @@ -357,6 +357,7 @@
->  433	common	fspick			__x64_sys_fspick
->  434	common	pidfd_open		__x64_sys_pidfd_open
->  435	common	clone3			__x64_sys_clone3/ptregs
-> +438	common	pidfd_getfd		__x64_sys_pidfd_getfd
->  
->  #
->  # x32-specific system call numbers start at 512 to avoid cache impact
-> diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
-> index 25f4de729a6d..ae15183def12 100644
-> --- a/arch/xtensa/kernel/syscalls/syscall.tbl
-> +++ b/arch/xtensa/kernel/syscalls/syscall.tbl
-> @@ -406,3 +406,4 @@
->  433	common	fspick				sys_fspick
->  434	common	pidfd_open			sys_pidfd_open
->  435	common	clone3				sys_clone3
-> +438	common	pidfd_getfd			sys_pidfd_getfd
-> diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-> index 2960dedcfde8..62fe706329d1 100644
-> --- a/include/linux/syscalls.h
-> +++ b/include/linux/syscalls.h
-> @@ -69,6 +69,7 @@ struct rseq;
->  union bpf_attr;
->  struct io_uring_params;
->  struct clone_args;
-> +struct pidfd_getfd_options;
->  
->  #include <linux/types.h>
->  #include <linux/aio_abi.h>
-> @@ -1000,6 +1001,9 @@ asmlinkage long sys_fspick(int dfd, const char __user *path, unsigned int flags)
->  asmlinkage long sys_pidfd_send_signal(int pidfd, int sig,
->  				       siginfo_t __user *info,
->  				       unsigned int flags);
-> +asmlinkage long sys_pidfd_getfd(int pidfd, int fd,
-> +				struct pidfd_getfd_options __user *options,
-> +				size_t, usize);
->  
->  /*
->   * Architecture-specific system calls
-> diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-> index 1fc8faa6e973..f358488366f6 100644
-> --- a/include/uapi/asm-generic/unistd.h
-> +++ b/include/uapi/asm-generic/unistd.h
-> @@ -850,9 +850,10 @@ __SYSCALL(__NR_pidfd_open, sys_pidfd_open)
->  #define __NR_clone3 435
->  __SYSCALL(__NR_clone3, sys_clone3)
->  #endif
-> +#define __NR_pidfd_getfd 438
->  
->  #undef __NR_syscalls
-> -#define __NR_syscalls 436
-> +#define __NR_syscalls 439
->  
->  /*
->   * 32 bit systems traditionally used different
-> diff --git a/include/uapi/linux/pidfd.h b/include/uapi/linux/pidfd.h
-> new file mode 100644
-> index 000000000000..0a3fc922661d
-> --- /dev/null
-> +++ b/include/uapi/linux/pidfd.h
-> @@ -0,0 +1,10 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +#ifndef _UAPI_LINUX_PIDFD_H
-> +#define _UAPI_LINUX_PIDFD_H
-> +
-> +struct pidfd_getfd_options {};
-> +
-> +#define PIDFD_GETFD_OPTIONS_SIZE_VER0	0
-> +#define PIDFD_GETFD_OPTIONS_SIZE_LATEST	PIDFD_GETFD_OPTIONS_SIZE_VER0
-> +
-> +#endif /* _UAPI_LINUX_PIDFD_H */
-> diff --git a/kernel/pid.c b/kernel/pid.c
-> index 2278e249141d..2a9cb4be383f 100644
-> --- a/kernel/pid.c
-> +++ b/kernel/pid.c
-> @@ -42,6 +42,7 @@
->  #include <linux/sched/signal.h>
->  #include <linux/sched/task.h>
->  #include <linux/idr.h>
-> +#include <uapi/linux/pidfd.h>
->  
->  struct pid init_struct_pid = {
->  	.count		= REFCOUNT_INIT(1),
-> @@ -578,3 +579,117 @@ void __init pid_idr_init(void)
->  	init_pid_ns.pid_cachep = KMEM_CACHE(pid,
->  			SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_ACCOUNT);
->  }
-> +
-> +static struct file *__pidfd_getfd_fget_task(struct task_struct *task, u32 fd)
-> +{
-> +	struct file *file;
-> +	int ret;
-> +
-> +	ret = mutex_lock_killable(&task->signal->cred_guard_mutex);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	if (!ptrace_may_access(task, PTRACE_MODE_ATTACH_REALCREDS)) {
-> +		file = ERR_PTR(-EPERM);
-> +		goto out;
-> +	}
-> +
-> +	file = fget_task(task, fd);
-> +	if (!file)
-> +		file = ERR_PTR(-EBADF);
-> +
-> +out:
-> +	mutex_unlock(&task->signal->cred_guard_mutex);
-> +	return file;
-> +}
-> +
-> +static long pidfd_getfd(struct pid *pid, u32 fd)
-> +{
-> +	struct task_struct *task;
-> +	struct file *file;
-> +	int ret, retfd;
-> +
-> +	task = get_pid_task(pid, PIDTYPE_PID);
-> +	if (!task)
-> +		return -ESRCH;
-> +
-> +	file = __pidfd_getfd_fget_task(task, fd);
-> +	put_task_struct(task);
-> +	if (IS_ERR(file))
-> +		return PTR_ERR(file);
-> +
-> +	retfd = get_unused_fd_flags(O_CLOEXEC);
-> +	if (retfd < 0) {
-> +		ret = retfd;
-> +		goto out;
-> +	}
-> +
-> +	/*
-> +	 * security_file_receive must come last since it may have side effects
-> +	 * and cannot be reversed.
-> +	 */
-> +	ret = security_file_receive(file);
-> +	if (ret)
-> +		goto out_put_fd;
-> +
-> +	fd_install(retfd, file);
-> +	return retfd;
-> +
-> +out_put_fd:
-> +	put_unused_fd(retfd);
-> +out:
-> +	fput(file);
-> +	return ret;
-> +}
-> +
-> +/**
-> + * sys_pidfd_getfd() - Get a file descriptor from another process
-> + *
-> + * @pidfd:	file descriptor of the process
-> + * @fd:		the file descriptor number to get
-> + * @options:	options on how to get the fd
-> + * @usize:	the size of options
-> + *
-> + * This syscall requires that the process has the ability to ptrace the
-> + * process represented by the pidfd. It will return a duplicated version
-> + * of the file descriptor on success. The process who which is having
-
-s/who which/which/
-
-> + * its file descriptor taken is otherwise unaffected. If options is NULL
-> + * it is ignored along with usize.
-> + *
-> + * Return: On success, a file descriptor with cloexec is returned.
-> + *         On error, a negative errno number will be returned.
-> + */
-> +SYSCALL_DEFINE4(pidfd_getfd, int, pidfd, int, fd,
-> +		struct pidfd_getfd_options __user *, options, size_t, usize)
-> +{
-> +	struct pid *pid;
-> +	struct fd f;
-> +	int ret;
-> +
-> +	BUILD_BUG_ON(sizeof(struct pidfd_getfd_options) != PIDFD_GETFD_OPTIONS_SIZE_LATEST);
-> +
-> +	/*
-> +	 * options is currently unused, verify it's unset or if it is set,
-> +	 * ensure that size is 0.
-> +	 *
-> +	 * In the future, this will need to adopt copy_struct_from_user.
-> +	 */
-> +	if (options && usize > PIDFD_GETFD_OPTIONS_SIZE_VER0)
-> +		return -E2BIG;
-> +
-> +	f = fdget(pidfd);
-> +	if (!f.file)
-> +		return -EBADF;
-> +
-> +	pid = pidfd_pid(f.file);
-> +	if (IS_ERR(pid)) {
-> +		ret = PTR_ERR(pid);
-> +		goto out;
-> +	}
-> +
-> +	ret = pidfd_getfd(pid, fd);
-> +
-> +out:
-> +	fdput(f);
-> +	return ret;
-> +}
-> -- 
-> 2.20.1
+> Based on this logic a little below in the same function
 > 
+>         if (virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_VQ))
+>                 vi->has_cvq = true;
+
+
+This would be a regression on old hypervisors which didn't have
+CTL VQ - suddenly they will lose offloads.
+
+-- 
+MST
+
