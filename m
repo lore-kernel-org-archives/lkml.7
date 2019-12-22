@@ -2,120 +2,162 @@ Return-Path: <SRS0=7h0X=2M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D036CC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 03:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B45C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 04:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99064206D3
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 03:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C5B02084D
+	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 04:22:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tAevvl82"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SxAsuvoK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbfLVDQj (ORCPT
+        id S1726786AbfLVEWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 21 Dec 2019 22:16:39 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37639 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbfLVDQj (ORCPT
+        Sat, 21 Dec 2019 23:22:35 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43721 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbfLVEWf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 21 Dec 2019 22:16:39 -0500
-Received: by mail-ot1-f68.google.com with SMTP id k14so17390741otn.4;
-        Sat, 21 Dec 2019 19:16:39 -0800 (PST)
+        Sat, 21 Dec 2019 23:22:35 -0500
+Received: by mail-pg1-f193.google.com with SMTP id k197so7052654pga.10;
+        Sat, 21 Dec 2019 20:22:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qXe+XyghJ3jT79+ErouNH+8TEIPALo+7YH6r7qsLX7A=;
-        b=tAevvl82/1W9hAGST3vIDtDD8gUUXIE4j/27y1nsFwbE739ec0YF6BdaL88IJE8akI
-         XbtA2Dq111LZLJLJCfgMWlP6AJYD7fofJEus6AuKq7OgCMNa/Xib5rKdTJxkRaNHghDS
-         GRBcdewHT2K2+1shGnOVi8hnFajstQphYnMWcEP6bJcWwJHbnGnybRFglZDFp81NuEJT
-         yF3Yn+ekfu7D3Vi2C0eS82GKfomovvHsu/PPlBLIRDSIalPMO4QVrdR7jA9XhNyxTe1V
-         vg2Qu8QUGieBXQHxtpUoPxHioU25C0731/NcEuMVku5kxLQCYm8ysph+wvTygBE6EIMZ
-         5lJg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Dx98QsdZUoPzKbdbcrNZ5JQNRpmDDBptX5vZGqpjMls=;
+        b=SxAsuvoK0bYVbcU6YyB5YD6nJXtB2qrM+4hSxDX0tdZ8Rg+SsI1fVumMtiqOy8Mj3r
+         6KYXVUm1poFU1C77NNBxWnA73JkL3Y8fuZnws/P8+8Eqxc4qn1kn9k9d0WIBzkjDInhQ
+         3iTX2NPSn7kLd6A46EaYxWpjEMsBh6jvmlsermbsyYFOmrr81OeW6FsFLlkrUgmCC3Fk
+         tBOLUU4j3XUWByetV2Az9NRP14ggCgvm1UE56rjoPh9JLTAmsNoTx6kYgVc38JrD37Hd
+         W47wZ0pDBGP3f2kORGygZLry7fIHtdZO+Ko8it0CtiXWUipraChmzagi0g6nOIXkx8ky
+         LmEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qXe+XyghJ3jT79+ErouNH+8TEIPALo+7YH6r7qsLX7A=;
-        b=pWLDbkAvLorc9LatKv+/iKDW6M5kuttXOjqO5PEGCpfWPve5I69vWbLJ9xzxS8KMQ6
-         32rpKKFXecJlToFK1xouAnPFdnKGgqbtW/FV8hnkULZPPmCmHDKWLjmZGa/+rWdRF66h
-         Kt+Ms7MkA2JowiemVuy9wDmJbi736K3znU8vF14CrAYmV2wF+kngVpmS90KLSVaIXZJQ
-         e9nx0Hse34lvSYfCDl4sN0siJhSqwJRq6h57Mb76q+QXGAW8nrP85zN9IZ6vBrUdh/cd
-         8s7UnycvocTdVuIJGtPxeOCShbBChkZLRUML0jYyUvyQbwDVUuLQLUHZLzPWrYhALcOP
-         Zdcw==
-X-Gm-Message-State: APjAAAWSb4D/nRIRxUM0SQGWf1v+lgMM7L9HkyaP5UNj9iXRLqDZ7mV1
-        X27GJifv9M23FMC2RqN4xrE=
-X-Google-Smtp-Source: APXvYqzrV5dFrDR2jbG5W6MU+wuzXi7CrjpVDIQyWd65CW4mv/3c3JhRkwmevhphHpHnJgiMY9/Elw==
-X-Received: by 2002:a05:6830:3cb:: with SMTP id p11mr1304242otc.160.1576984598569;
-        Sat, 21 Dec 2019 19:16:38 -0800 (PST)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id r25sm5470695otk.2.2019.12.21.19.16.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 21 Dec 2019 19:16:37 -0800 (PST)
-Date:   Sat, 21 Dec 2019 20:16:36 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     David Sterba <dsterba@suse.cz>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v2] vfs: Adjust indentation in remap_verify_area
-Message-ID: <20191222031636.GA43673@ubuntu-m2-xlarge-x86>
-References: <20191218035055.GG4203@ZenIV.linux.org.uk>
- <20191218051635.38347-1-natechancellor@gmail.com>
- <20191218110437.GJ3929@twin.jikos.cz>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Dx98QsdZUoPzKbdbcrNZ5JQNRpmDDBptX5vZGqpjMls=;
+        b=PPCqhPD2C12sVfpVI0K5ua5QPYemYrLfHBVLYRjAi+BCY3OJzbbrFPrrV9p8QO0pf2
+         JUaEUcjS9ZpglYmfvwLCjqzOrFXr2NZWJHYjubNmZWdcgYmiKzYxAgRirOzYVG3e0a4M
+         A3At6PjVnAmxgL2PRcx4c2PUi8yeycrSObXiB4ul54c7fLNlbdtyIILGvVNDcQjgZGML
+         Hl+I61sa+2LQ3cBU4BVxqzFCnQwTG2gBmyeIIvvBwcHg4NZRVsqxxUzuq/idJGOFvkqM
+         A7J8/k9oMAIE6rI1J6vG/B/drrIQuQKdvUuWL5bepFfAb4mF4FYMxBpjGLdzOhr5iId1
+         pQdw==
+X-Gm-Message-State: APjAAAWd4QXyirsUQaOwZbKHfrQa70b2ZvptHI5u4B+GpaWrYwMqRNWm
+        R3zTxC/73vONakr6Pdv/33ZVdWTznOWDsA==
+X-Google-Smtp-Source: APXvYqwgqiGWHpsUh2KR2DFGXC1Uy+Dxa84lh+WNDlwwXHRuvOoqwK7GiaCrL7jVVD/6ZY+hsxT0EQ==
+X-Received: by 2002:a63:cd06:: with SMTP id i6mr24831048pgg.48.1576988553961;
+        Sat, 21 Dec 2019 20:22:33 -0800 (PST)
+Received: from ?IPv6:2408:84e4:550:379:806:12ee:39a4:bde? ([2408:84e4:550:379:806:12ee:39a4:bde])
+        by smtp.gmail.com with ESMTPSA id m6sm10066370pjn.21.2019.12.21.20.22.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 21 Dec 2019 20:22:33 -0800 (PST)
+Subject: Re: [PATCH] sctp: do trace_sctp_probe after SACK validation and check
+To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com, davem@davemloft.net,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191220044703.88-1-qdkevin.kou@gmail.com>
+ <20191220161756.GE5058@localhost.localdomain>
+From:   Kevin Kou <qdkevin.kou@gmail.com>
+Message-ID: <1ec267f2-1172-32c0-baee-0d4ebcbfb380@gmail.com>
+Date:   Sun, 22 Dec 2019 12:22:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:72.0) Gecko/20100101
+ Thunderbird/72.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191218110437.GJ3929@twin.jikos.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191220161756.GE5058@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 12:04:37PM +0100, David Sterba wrote:
-> On Tue, Dec 17, 2019 at 10:16:35PM -0700, Nathan Chancellor wrote:
-> > Clang's -Wmisleading-indentation caught an instance in remap_verify_area
-> > where there was a trailing space after a tab. Remove it to get rid of
-> > the warning.
-> > 
-> > Fixes: 04b38d601239 ("vfs: pull btrfs clone API to vfs layer")
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/828
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > ---
-> > 
-> > v1 -> v2:
-> > 
-> > * Trim warning and simplify patch explanation.
-> > 
-> >  fs/read_write.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/read_write.c b/fs/read_write.c
-> > index 5bbf587f5bc1..c71e863163bd 100644
-> > --- a/fs/read_write.c
-> > +++ b/fs/read_write.c
-> > @@ -1757,7 +1757,7 @@ static int remap_verify_area(struct file *file, loff_t pos, loff_t len,
-> >  	if (unlikely(pos < 0 || len < 0))
-> >  		return -EINVAL;
-> >  
-> > -	 if (unlikely((loff_t) (pos + len) < 0))
-> > +	if (unlikely((loff_t) (pos + len) < 0))
-> 
-> Instead of just fixing whitespace, can we please fix the undefined
-> behaviour on this line? pos and len are signed types, there's a helper
-> to do that in a way that's UB-safe.
-> 
-> And btw here's a patch:
-> 
-> https://lore.kernel.org/linux-fsdevel/20190808123942.19592-1-dsterba@suse.com/
 
-I do not particularly care how this warning gets fixed, just that it
-does. I will review that patch like Nick did.
 
-Cheers,
-Nathan
+On 2019/12/21 0:17, Marcelo Ricardo Leitner wrote:
+> On Fri, Dec 20, 2019 at 04:47:03AM +0000, Kevin Kou wrote:
+>> The function sctp_sf_eat_sack_6_2 now performs
+>> the Verification Tag validation, Chunk length validation, Bogu check,
+>> and also the detection of out-of-order SACK based on the RFC2960
+>> Section 6.2 at the beginning, and finally performs the further
+>> processing of SACK. The trace_sctp_probe now triggered before
+>> the above necessary validation and check.
+>>
+>> This patch is to do the trace_sctp_probe after the necessary check
+>> and validation to SACK.
+>>
+>> Signed-off-by: Kevin Kou <qdkevin.kou@gmail.com>
+>> ---
+>>   net/sctp/sm_statefuns.c | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/net/sctp/sm_statefuns.c b/net/sctp/sm_statefuns.c
+>> index 42558fa..b4a54df 100644
+>> --- a/net/sctp/sm_statefuns.c
+>> +++ b/net/sctp/sm_statefuns.c
+>> @@ -3281,7 +3281,6 @@ enum sctp_disposition sctp_sf_eat_sack_6_2(struct net *net,
+>>   	struct sctp_sackhdr *sackh;
+>>   	__u32 ctsn;
+>>   
+>> -	trace_sctp_probe(ep, asoc, chunk);
+>>   
+>>   	if (!sctp_vtag_verify(chunk, asoc))
+>>   		return sctp_sf_pdiscard(net, ep, asoc, type, arg, commands);
+>> @@ -3319,6 +3318,8 @@ enum sctp_disposition sctp_sf_eat_sack_6_2(struct net *net,
+>>   	if (!TSN_lt(ctsn, asoc->next_tsn))
+>>   		return sctp_sf_violation_ctsn(net, ep, asoc, type, arg, commands);
+>>   
+>> +	trace_sctp_probe(ep, asoc, chunk);
+>> +
+> 
+> Moving it here will be after the check against ctsn_ack_point, which
+> could cause duplicated SACKs to be missed from the log.
+
+
+As this SCTP trace used to trace the changes of SCTP association state 
+in response to incoming packets(SACK). It is used for debugging SCTP 
+congestion control algorithms, so according to the code in 
+include/trace/events/sctp.h, the trace event mainly focus on congestion 
+related information, and there is no SACK Chunk related information 
+printed. So it is hard to point out whether the SACK is duplicate one or 
+not based on this trace event.
+
+include/trace/events/sctp.h
+1. TRACE_EVENT(sctp_probe,
+
+TP_printk("asoc=%#llx mark=%#x bind_port=%d peer_port=%d pathmtu=%d "
+		  "rwnd=%u unack_data=%d",
+		  __entry->asoc, __entry->mark, __entry->bind_port,
+		  __entry->peer_port, __entry->pathmtu, __entry->rwnd,
+		  __entry->unack_data)
+
+2. TRACE_EVENT(sctp_probe_path,
+
+TP_printk("asoc=%#llx%s ipaddr=%pISpc state=%u cwnd=%u ssthresh=%u "
+		  "flight_size=%u partial_bytes_acked=%u pathmtu=%u",
+		  __entry->asoc, __entry->primary ? "(*)" : "",
+		  __entry->ipaddr, __entry->state, __entry->cwnd,
+		  __entry->ssthresh, __entry->flight_size,
+		  __entry->partial_bytes_acked, __entry->pathmtu)
+
+> 
+> Yes, from the sender-side CC we don't care about it (yet), but it
+> helps to spot probably avoidable retransmissions.
+> 
+> I think this is cleaning up the noise too much. I can agree with
+> moving it to after the chunk sanity tests, though.
+> 
+>>   	/* Return this SACK for further processing.  */
+>>   	sctp_add_cmd_sf(commands, SCTP_CMD_PROCESS_SACK, SCTP_CHUNK(chunk));
+>>   
+>> -- 
+>> 1.8.3.1
+>>
