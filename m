@@ -2,132 +2,91 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24358C2D0D2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 540FCC2D0D0
 	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 21:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECBED20709
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 21:59:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pzWn7xR9"
+	by mail.kernel.org (Postfix) with ESMTP id 23644206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 21:59:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbfLWV7I (ORCPT
+        id S1726887AbfLWV7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 16:59:08 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:60986 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbfLWV7H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 16:59:07 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBNLwtxn036585;
-        Mon, 23 Dec 2019 15:58:55 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1577138335;
-        bh=9TpDm7eS6HN2w04yodlknk3nngqfWC6wufnnQos0dn8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=pzWn7xR9jggLLSJ1p74hAr0iXOs8Z4PWDBDA5hQk78buN009lG4KyBOoU6xKYt8yn
-         d+0z9vhv8dOAi7x7y8b+duDf0cs5ZlgVr/4PJf8TnWvrH+E7Q92bXZh37VG/Lf1Wv0
-         FOu4kuLIFczvflXWPFn9qhvvZAqKc0lrNG0uhvOU=
-Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBNLwtAl096172;
-        Mon, 23 Dec 2019 15:58:55 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 23
- Dec 2019 15:58:53 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 23 Dec 2019 15:58:53 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBNLwpqH086181;
-        Mon, 23 Dec 2019 15:58:52 -0600
-Subject: Re: [PATCH] iio: adc: stm32-dfsdm: Use dma_request_chan() instead
- dma_request_slave_channel()
-To:     Jonathan Cameron <jic23@kernel.org>
-CC:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <vkoul@kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20191217075221.23895-1-peter.ujfalusi@ti.com>
- <20191223154538.74a76f94@archlinux>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <66c0d161-007f-5c92-01c8-d73ebca9f2cc@ti.com>
-Date:   Tue, 24 Dec 2019 00:00:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 23 Dec 2019 16:59:17 -0500
+Received: from mga02.intel.com ([134.134.136.20]:7875 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726817AbfLWV7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 16:59:16 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 13:59:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,349,1571727600"; 
+   d="scan'208";a="207395090"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga007.jf.intel.com with ESMTP; 23 Dec 2019 13:59:15 -0800
+Date:   Tue, 24 Dec 2019 05:59:14 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com
+Subject: Re: [PATCH] mm/rmap.c: split huge pmd when it really is
+Message-ID: <20191223215914.GA5156@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20191223022435.30653-1-richardw.yang@linux.intel.com>
+ <20191223171653.xy2ri52xymkwm3ov@box>
 MIME-Version: 1.0
-In-Reply-To: <20191223154538.74a76f94@archlinux>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191223171653.xy2ri52xymkwm3ov@box>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
+On Mon, Dec 23, 2019 at 08:16:53PM +0300, Kirill A. Shutemov wrote:
+>On Mon, Dec 23, 2019 at 10:24:35AM +0800, Wei Yang wrote:
+>> There are two cases to call try_to_unmap_one() with TTU_SPLIT_HUGE_PMD
+>> set:
+>> 
+>>   * unmap_page()
+>>   * shrink_page_list()
+>> 
+>> In both case, the page passed to try_to_unmap_one() is PageHead() of the
+>> THP. If this page's mapping address in process is not HPAGE_PMD_SIZE
+>> aligned, this means the THP is not mapped as PMD THP in this process.
+>> This could happen when we do mremap() a PMD size range to an un-aligned
+>> address.
+>> 
+>> Currently, this case is handled by following check in __split_huge_pmd()
+>> luckily.
+>> 
+>>   page != pmd_page(*pmd)
+>> 
+>> This patch checks the address to skip some hard work.
+>
+>Do you see some measurable performance improvement? rmap is heavy enough
+>and I expect this kind of overhead to be within noise level.
+>
+>I don't have anything agains the check, but it complicates the picture.
+>
+>And if we are going this path, it worth also check if the vma is long
+>enough to hold huge page.
+>
+>And I don't see why the check cannot be done inside split_huge_pmd_address().
+>
 
-On 12/23/19 5:45 PM, Jonathan Cameron wrote:
-> On Tue, 17 Dec 2019 09:52:21 +0200
-> Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> 
->> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
->> eating up the error code.
->>
->> By using dma_request_chan() directly the driver can support deferred
->> probing against DMA.
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> I don't think this one goes far enough.  
-> 
-> One of the paths does:
-> 
-> 	/* Optionally request DMA */
-> 	if (stm32_dfsdm_dma_request(indio_dev)) {
-> 		dev_dbg(&indio_dev->dev, "No DMA support\n");
-> 		return 0;
-> 	}
-> 
-> That needs specific handling for deferred probing.
+Ok, let me put the check into split_huge_pmd_address().
 
-Right, I have checked the stm32_dfsdm_audio_init() path, via that the
-error is propagated correctly.
+>-- 
+> Kirill A. Shutemov
 
-I'll send an update next year ;)
-
-> 
->> ---
->>  drivers/iio/adc/stm32-dfsdm-adc.c | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
->> index e493242c266e..3aac1a21f9d0 100644
->> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
->> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
->> @@ -1383,9 +1383,9 @@ static int stm32_dfsdm_dma_request(struct iio_dev *indio_dev)
->>  {
->>  	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
->>  
->> -	adc->dma_chan = dma_request_slave_channel(&indio_dev->dev, "rx");
->> -	if (!adc->dma_chan)
->> -		return -EINVAL;
->> +	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
->> +	if (IS_ERR(adc->dma_chan))
->> +		return PTR_ERR(adc->dma_chan);
->>  
->>  	adc->rx_buf = dma_alloc_coherent(adc->dma_chan->device->dev,
->>  					 DFSDM_DMA_BUFFER_SIZE,
-> 
-
-- Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+-- 
+Wei Yang
+Help you, Help me
