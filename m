@@ -2,93 +2,217 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE5BC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 09:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1041C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 09:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81C4020715
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 09:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75D072053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 09:59:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VzL6NakN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbfLWJ7C (ORCPT
+        id S1726879AbfLWJ7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 04:59:02 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:45141 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbfLWJ7C (ORCPT
+        Mon, 23 Dec 2019 04:59:41 -0500
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:29281 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbfLWJ7l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 04:59:02 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ijKUJ-0006Lz-Tc; Mon, 23 Dec 2019 10:58:55 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ijKUH-0002TQ-PJ; Mon, 23 Dec 2019 10:58:53 +0100
-Date:   Mon, 23 Dec 2019 10:58:53 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, Jiri Slaby <jslaby@suse.com>,
-        kernel@pengutronix.de, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v4 0/3] tty/leds: implement a trigger for ttys
-Message-ID: <20191223095853.yomqrkx2epa273oh@pengutronix.de>
-References: <20191217165816.19324-1-u.kleine-koenig@pengutronix.de>
- <20191217172232.GC3829986@kroah.com>
- <20191221183611.GB32732@amd>
+        Mon, 23 Dec 2019 04:59:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1577095180; x=1608631180;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=AXLA4oTaOxQEJPJrsHXELfBXcoU1aXhP5KDiSUct76c=;
+  b=VzL6NakNmD7eUUuwec2teTcTV3pzRvnG4sYu9d5XcxZaRi9ohDDveBMp
+   4HHovW5EyjTmzWbDzns/2rhCv49qR6uW+Ubian6jzgYpzwf2cMqSPIp2W
+   ODhDzsfyOWCtK9QDJb2dtBqiBEsXKcVfDFN4CiSNJKqZ5w558Dj+luVb3
+   g=;
+IronPort-SDR: rLgT1+3QwmMpnM5bGo0ssD6aR/h2FMREnjuVxYeVCxnfm9Ui3zS68hR6AN9C/j+TMaPe1k5tmu
+ bj8hhWJJy1zw==
+X-IronPort-AV: E=Sophos;i="5.69,347,1571702400"; 
+   d="scan'208";a="16521924"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-a70de69e.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 23 Dec 2019 09:59:29 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-a70de69e.us-east-1.amazon.com (Postfix) with ESMTPS id 769FAA119C;
+        Mon, 23 Dec 2019 09:59:27 +0000 (UTC)
+Received: from EX13D32EUB002.ant.amazon.com (10.43.166.114) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Mon, 23 Dec 2019 09:59:27 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
+ EX13D32EUB002.ant.amazon.com (10.43.166.114) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 23 Dec 2019 09:59:26 +0000
+Received: from u2f063a87eabd5f.cbg10.amazon.com (10.125.106.135) by
+ mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP Server id
+ 15.0.1367.3 via Frontend Transport; Mon, 23 Dec 2019 09:59:24 +0000
+From:   Paul Durrant <pdurrant@amazon.com>
+To:     <xen-devel@lists.xenproject.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Paul Durrant <pdurrant@amazon.com>, Wei Liu <wei.liu@kernel.org>,
+        "Paul Durrant" <paul@xen.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH net-next] xen-netback: support dynamic unbind/bind
+Date:   Mon, 23 Dec 2019 09:59:23 +0000
+Message-ID: <20191223095923.2458-1-pdurrant@amazon.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191221183611.GB32732@amd>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 21, 2019 at 07:36:11PM +0100, Pavel Machek wrote:
-> On Tue 2019-12-17 18:22:32, Greg Kroah-Hartman wrote:
-> > On Tue, Dec 17, 2019 at 05:58:13PM +0100, Uwe Kleine-König wrote:
-> > > Hello,
-> > > 
-> > > v3 of this series was sent earlier today starting with Message-Id:
-> > > 20191217150736.1479-1-u.kleine-koenig@pengutronix.de.
-> > > 
-> > > v4 only changes patch 3 dropping a few printks, fixing the show callback
-> > > for the dev attribute to match its store function. And I moved
-> > > ledtrig_tty_restart() into the already existing if (tty) {...} block in
-> > > dev_store and dropped the same check from the former function.
-> > > 
-> > 
-> > All looks good to me, so if the LED developers give their ack, I can
-> > take it in my tty tree.
-> 
-> Nothing obviously wrong in 1 and 2 of the series. Feel free to take
-> them.
-> 
-> I fear conflicts if you take 3/ through your tree, so perhaps I can
-> take it through the LEDs?
-> 
-> But I'll have some comments there.
+By re-attaching RX, TX, and CTL rings during connect() rather than
+assuming they are freshly allocated (i.e. assuming the counters are zero),
+and avoiding forcing state to Closed in netback_remove() it is possible
+for vif instances to be unbound and re-bound from and to (respectively) a
+running guest.
 
-If the feedback implies that using statistics is not the right thing,
-the tty patches are not needed however, so I suggest to wait until the
-discussion is closed before taking them.
+Dynamic unbind/bind is a highly useful feature for a backend module as it
+allows it to be unloaded and re-loaded (i.e. updated) without requiring
+domUs to be halted.
 
-Best regards
-Uwe
+This has been tested by running iperf as a server in the test VM and
+then running a client against it in a continuous loop, whilst also
+running:
 
+while true;
+  do echo vif-$DOMID-$VIF >unbind;
+  echo down;
+  rmmod xen-netback;
+  echo unloaded;
+  modprobe xen-netback;
+  cd $(pwd);
+  brctl addif xenbr0 vif$DOMID.$VIF;
+  ip link set vif$DOMID.$VIF up;
+  echo up;
+  sleep 5;
+  done
+
+in dom0 from /sys/bus/xen-backend/drivers/vif to continuously unbind,
+unload, re-load, re-bind and re-plumb the backend.
+
+Clearly a performance drop was seen but no TCP connection resets were
+observed during this test and moreover a parallel SSH connection into the
+guest remained perfectly usable throughout.
+
+Signed-off-by: Paul Durrant <pdurrant@amazon.com>
+---
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: Paul Durrant <paul@xen.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+---
+ drivers/net/xen-netback/interface.c | 10 +++++++++-
+ drivers/net/xen-netback/netback.c   | 20 +++++++++++++++++---
+ drivers/net/xen-netback/xenbus.c    |  5 ++---
+ 3 files changed, 28 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/xen-netback/interface.c b/drivers/net/xen-netback/interface.c
+index f15ba3de6195..0c8a02a1ead7 100644
+--- a/drivers/net/xen-netback/interface.c
++++ b/drivers/net/xen-netback/interface.c
+@@ -585,6 +585,7 @@ int xenvif_connect_ctrl(struct xenvif *vif, grant_ref_t ring_ref,
+ 	struct net_device *dev = vif->dev;
+ 	void *addr;
+ 	struct xen_netif_ctrl_sring *shared;
++	RING_IDX rsp_prod, req_prod;
+ 	int err;
+ 
+ 	err = xenbus_map_ring_valloc(xenvif_to_xenbus_device(vif),
+@@ -593,7 +594,14 @@ int xenvif_connect_ctrl(struct xenvif *vif, grant_ref_t ring_ref,
+ 		goto err;
+ 
+ 	shared = (struct xen_netif_ctrl_sring *)addr;
+-	BACK_RING_INIT(&vif->ctrl, shared, XEN_PAGE_SIZE);
++	rsp_prod = READ_ONCE(shared->rsp_prod);
++	req_prod = READ_ONCE(shared->req_prod);
++
++	BACK_RING_ATTACH(&vif->ctrl, shared, rsp_prod, XEN_PAGE_SIZE);
++
++	err = -EIO;
++	if (req_prod - rsp_prod > RING_SIZE(&vif->ctrl))
++		goto err_unmap;
+ 
+ 	err = bind_interdomain_evtchn_to_irq(vif->domid, evtchn);
+ 	if (err < 0)
+diff --git a/drivers/net/xen-netback/netback.c b/drivers/net/xen-netback/netback.c
+index 0020b2e8c279..315dfc6ea297 100644
+--- a/drivers/net/xen-netback/netback.c
++++ b/drivers/net/xen-netback/netback.c
+@@ -1453,7 +1453,7 @@ int xenvif_map_frontend_data_rings(struct xenvif_queue *queue,
+ 	void *addr;
+ 	struct xen_netif_tx_sring *txs;
+ 	struct xen_netif_rx_sring *rxs;
+-
++	RING_IDX rsp_prod, req_prod;
+ 	int err = -ENOMEM;
+ 
+ 	err = xenbus_map_ring_valloc(xenvif_to_xenbus_device(queue->vif),
+@@ -1462,7 +1462,14 @@ int xenvif_map_frontend_data_rings(struct xenvif_queue *queue,
+ 		goto err;
+ 
+ 	txs = (struct xen_netif_tx_sring *)addr;
+-	BACK_RING_INIT(&queue->tx, txs, XEN_PAGE_SIZE);
++	rsp_prod = READ_ONCE(txs->rsp_prod);
++	req_prod = READ_ONCE(txs->req_prod);
++
++	BACK_RING_ATTACH(&queue->tx, txs, rsp_prod, XEN_PAGE_SIZE);
++
++	err = -EIO;
++	if (req_prod - rsp_prod > RING_SIZE(&queue->tx))
++		goto err;
+ 
+ 	err = xenbus_map_ring_valloc(xenvif_to_xenbus_device(queue->vif),
+ 				     &rx_ring_ref, 1, &addr);
+@@ -1470,7 +1477,14 @@ int xenvif_map_frontend_data_rings(struct xenvif_queue *queue,
+ 		goto err;
+ 
+ 	rxs = (struct xen_netif_rx_sring *)addr;
+-	BACK_RING_INIT(&queue->rx, rxs, XEN_PAGE_SIZE);
++	rsp_prod = READ_ONCE(rxs->rsp_prod);
++	req_prod = READ_ONCE(rxs->req_prod);
++
++	BACK_RING_ATTACH(&queue->rx, rxs, rsp_prod, XEN_PAGE_SIZE);
++
++	err = -EIO;
++	if (req_prod - rsp_prod > RING_SIZE(&queue->rx))
++		goto err;
+ 
+ 	return 0;
+ 
+diff --git a/drivers/net/xen-netback/xenbus.c b/drivers/net/xen-netback/xenbus.c
+index 17b4950ec051..286054b60d47 100644
+--- a/drivers/net/xen-netback/xenbus.c
++++ b/drivers/net/xen-netback/xenbus.c
+@@ -954,12 +954,10 @@ static int netback_remove(struct xenbus_device *dev)
+ {
+ 	struct backend_info *be = dev_get_drvdata(&dev->dev);
+ 
+-	set_backend_state(be, XenbusStateClosed);
+-
+ 	unregister_hotplug_status_watch(be);
+ 	if (be->vif) {
+ 		kobject_uevent(&dev->dev.kobj, KOBJ_OFFLINE);
+-		xen_unregister_watchers(be->vif);
++		backend_disconnect(be);
+ 		xenvif_free(be->vif);
+ 		be->vif = NULL;
+ 	}
+@@ -1131,6 +1129,7 @@ static struct xenbus_driver netback_driver = {
+ 	.remove = netback_remove,
+ 	.uevent = netback_uevent,
+ 	.otherend_changed = frontend_changed,
++	.allow_rebind = true,
+ };
+ 
+ int xenvif_xenbus_init(void)
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.20.1
+
