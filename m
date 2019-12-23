@@ -2,82 +2,120 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C755C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 02:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEF1C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 03:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C91E420684
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 02:25:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DF0hO7Ku"
+	by mail.kernel.org (Postfix) with ESMTP id 1F1D6207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 03:01:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfLWCZ6 (ORCPT
+        id S1726705AbfLWDBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 21:25:58 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26267 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726291AbfLWCZ6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 21:25:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577067957;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=i8/u9Ju6Fy8iBdXdwrlY6oE1+XkJvdBR0HuedlqPOIU=;
-        b=DF0hO7KuaJV8dl2rX0R0XMSrdGA/5CGL19/NKXXvBTgN9obyUdxGkSAzPHnJtSx3qtRoX7
-        +yDAL0jCMMwBO4FEkjGiGl+6B5OSRxYRm5x5RxuOFBOdqQ3i4r1GJ2KmRwW58Ko1QifiD2
-        CkZICbVW8hpkj+pzVbnnyvrTR6w2XnU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-299-UWRXfYPKMNmuG-7q4Vkp0Q-1; Sun, 22 Dec 2019 21:25:53 -0500
-X-MC-Unique: UWRXfYPKMNmuG-7q4Vkp0Q-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A6048184B442;
-        Mon, 23 Dec 2019 02:25:52 +0000 (UTC)
-Received: from llong.com (ovpn-120-70.rdu2.redhat.com [10.10.120.70])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B3C7376FE2;
-        Mon, 23 Dec 2019 02:25:47 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     linux-kernel@vger.kernel.org, Waiman Long <longman@redhat.com>
-Subject: [PATCH] locking/qspinlock: Fix inaccessible URL of MCS lock paper
-Date:   Sun, 22 Dec 2019 21:25:32 -0500
-Message-Id: <20191223022532.14864-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        Sun, 22 Dec 2019 22:01:53 -0500
+Received: from mga14.intel.com ([192.55.52.115]:30684 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726393AbfLWDBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Dec 2019 22:01:53 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Dec 2019 19:01:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,346,1571727600"; 
+   d="scan'208";a="417121170"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga005.fm.intel.com with ESMTP; 22 Dec 2019 19:01:43 -0800
+Cc:     baolu.lu@linux.intel.com,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org
+Subject: Re: [PATCH 1/8] iommu/vt-d: clean up 32bit si_domain assignment
+To:     Tom Murphy <murphyt7@tcd.ie>, iommu@lists.linux-foundation.org
+References: <20191221150402.13868-1-murphyt7@tcd.ie>
+ <20191221150402.13868-2-murphyt7@tcd.ie>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <e569e246-11a1-e8bd-9347-310284e96885@linux.intel.com>
+Date:   Mon, 23 Dec 2019 11:00:47 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20191221150402.13868-2-murphyt7@tcd.ie>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It turns out that the URL of the MCS lock paper listed in the source
-code is no longer accessible. I did got question about where the paper
-was. This patch updates the URL to one that is still accessible.
+Hi,
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- kernel/locking/qspinlock.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 12/21/19 11:03 PM, Tom Murphy wrote:
+> @@ -5618,9 +5583,13 @@ static int intel_iommu_add_device(struct device *dev)
+>   	struct iommu_domain *domain;
+>   	struct intel_iommu *iommu;
+>   	struct iommu_group *group;
+> +	u64 dma_mask = *dev->dma_mask;
+>   	u8 bus, devfn;
+>   	int ret;
+>   
+> +	if (dev->coherent_dma_mask && dev->coherent_dma_mask < dma_mask)
+> +		dma_mask = dev->coherent_dma_mask;
+> +
+>   	iommu = device_to_iommu(dev, &bus, &devfn);
+>   	if (!iommu)
+>   		return -ENODEV;
+> @@ -5640,7 +5609,12 @@ static int intel_iommu_add_device(struct device *dev)
+>   	domain = iommu_get_domain_for_dev(dev);
+>   	dmar_domain = to_dmar_domain(domain);
+>   	if (domain->type == IOMMU_DOMAIN_DMA) {
+> -		if (device_def_domain_type(dev) == IOMMU_DOMAIN_IDENTITY) {
+> +		/*
+> +		 * We check dma_mask >= dma_get_required_mask(dev) because
+> +		 * 32 bit DMA falls back to non-identity mapping.
+> +		 */
+> +		if (device_def_domain_type(dev) == IOMMU_DOMAIN_IDENTITY &&
+> +				dma_mask >= dma_get_required_mask(dev)) {
+>   			ret = iommu_request_dm_for_dev(dev);
+>   			if (ret) {
+>   				dmar_remove_one_dev_info(dev);
 
-diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
-index 2473f10c6956..1d008d2333c0 100644
---- a/kernel/locking/qspinlock.c
-+++ b/kernel/locking/qspinlock.c
-@@ -34,7 +34,7 @@
-  * MCS lock. The paper below provides a good description for this kind
-  * of lock.
-  *
-- * http://www.cise.ufl.edu/tr/DOC/REP-1992-71.pdf
-+ * https://www.cs.rochester.edu/u/scott/papers/1991_TOCS_synch.pdf
-  *
-  * This queued spinlock implementation is based on the MCS lock, however to make
-  * it fit the 4 bytes we assume spinlock_t to be, and preserve its existing
--- 
-2.18.1
+dev->dma_mask is set to 32bit by default. During loading driver, it sets
+the real dma_mask with dma_set_mask() according to the real capability.
+Here you will always see 32bit dma_mask for each device.
 
+Best regards,
+baolu
