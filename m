@@ -2,112 +2,195 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E81C2D0D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81360C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEACD20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:42:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577115756;
-	bh=W7dVTbz3atfdVAhEErfOc/0Hk/lMKKZVb4bYQnWDj2A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=FFAvf2Ngxp7/ONSCjYeU8nLQEybrFnvjPnmXnbh54M3he+cdmKgZ3tFO9AlSSuDqa
-	 IUoVN59U7E5GxP25IumPHbHCwQ2BnF+80n0+N8S2BAUf3Z4AvN7lNcUG6RftmFEogP
-	 XqdbrN7g6b5MbgvOpJ+/mxw5FrmUYUtMb7ur9KsU=
+	by mail.kernel.org (Postfix) with ESMTP id 4A40F20409
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:42:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JcX2oVN3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfLWPmg (ORCPT
+        id S1726911AbfLWPmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 10:42:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42416 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726795AbfLWPmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 10:42:35 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BE0520409;
-        Mon, 23 Dec 2019 15:42:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577115754;
-        bh=W7dVTbz3atfdVAhEErfOc/0Hk/lMKKZVb4bYQnWDj2A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=s//tC+nTdBusmIDHh3w/JHuWKUr8WZVN0KLC+5/wqYR78n9MAxMnp6XKUU4AC657c
-         U14znr1zujKNxf6wQUO+8FMnp7RkFlmi3LhRux36l3jmUeE1S5MfamQvscwQPE3N9f
-         V1cD1j/T75J6/4t7OPNogFXjcHgnMBW3Nc+c3bpQ=
-Date:   Mon, 23 Dec 2019 15:42:30 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <vkoul@kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [PATCH] iio: adc: stm32-adc: Use dma_request_chan() instead
- dma_request_slave_channel()
-Message-ID: <20191223154230.7fb2a988@archlinux>
-In-Reply-To: <20191217075153.23766-1-peter.ujfalusi@ti.com>
-References: <20191217075153.23766-1-peter.ujfalusi@ti.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 23 Dec 2019 10:42:43 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40955 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726795AbfLWPmm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 10:42:42 -0500
+Received: by mail-lj1-f194.google.com with SMTP id u1so18130243ljk.7;
+        Mon, 23 Dec 2019 07:42:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=UfH6R7URisIBJYt/MBDGH5nz2k2vfj6ZWJ4j+/k+CPY=;
+        b=JcX2oVN3ptxY2GpvfCvva21mMZF0U/9nHZiLNdZES054N4kY1FycncMmQ/rwOj/BkL
+         1nIsIm4YqetOO5Lwr+SmkxRUlFh4evXomIl404VOhD/aG3IjcR3LdiS2ZzLgaDcaphJW
+         7Gr0EtkE+aGI7XhN7mYycGl+HUSFvNYWTucr+Vx7bQ/v0Jpbeg+BUT7BvFd104gzVdCt
+         T7fX0U9LACPJVbsdN4XKGh178cNa2spcOyu8cN9bGdJ84vYjTZr56AVRQlnoTSV96LB7
+         LjkolJ7dzOnp1NcKwdpm3w1o/wsuxNUroOQUGnQQvLgTyA4fH39pCbFC+wrnaH8IMLEE
+         s4GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UfH6R7URisIBJYt/MBDGH5nz2k2vfj6ZWJ4j+/k+CPY=;
+        b=Adf+c3MDYzApuTL6L+Y/xYBz+vKyDNG44MJV36rN5eZLkMEAKfxwW7Xyr8FZnjqwZ4
+         YUAPHanpeJyzH4WNPeCHgwRc/OxSanHWKZwsHcALV1MnGxHC6ZiHCjaQD8jR04UHOsH5
+         NrO/y4UWqZGRlqcsXwfn6kkzE+T1myIAEk1QyMKxYG+4IHdSjYiwWt4gMTp38ricxwvf
+         JXf5UYxldC/0pqa/EFO8PolSPQxXkl0abucRg1OeXm2SqgctQZQ6LbXk9u+233FF544A
+         Qj58WgxrAJUJ88oWKdOkmwMm8vERa1fAJP6fbykLn2/wAd1zKaKSMjuxJoD0cgMtqrdx
+         uy4Q==
+X-Gm-Message-State: APjAAAXWqbeoSuuG+wMdlbWISZOraHezQLmIdEyOz5tnt3zDykRH4aja
+        QN22lkLNyzbsdiKRqszlDsLRVdnz
+X-Google-Smtp-Source: APXvYqxPpddbnO1oaHYjYKe79636XT0Af+JvtDZqrCXBmTftfr8pcshxfnvAxMJy3qrn5gr9oinTbQ==
+X-Received: by 2002:a2e:974b:: with SMTP id f11mr18478200ljj.173.1577115759073;
+        Mon, 23 Dec 2019 07:42:39 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id 21sm6953071ljv.19.2019.12.23.07.42.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Dec 2019 07:42:38 -0800 (PST)
+Subject: Re: [PATCH 4/9] memory: tegra: convert to
+ devm_platform_ioremap_resource
+To:     Yangtao Li <tiny.windzz@gmail.com>, ssantosh@kernel.org,
+        paul@crapouillou.net, matthias.bgg@gmail.com, rogerq@ti.com,
+        tony@atomide.com, lukasz.luba@arm.com, kgene@kernel.org,
+        krzk@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com,
+        allison@lohutok.net, tglx@linutronix.de, yong.wu@mediatek.com,
+        jroedel@suse.de, evgreen@chromium.org, rfontana@redhat.com,
+        pdeschrijver@nvidia.com, john@phrozen.org,
+        alexios.zavras@intel.com, sboyd@kernel.org,
+        kstewart@linuxfoundation.org, info@metux.net,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+References: <20191222185034.4665-1-tiny.windzz@gmail.com>
+ <20191222185034.4665-4-tiny.windzz@gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <04758814-8e22-79b9-8ed1-ac0c31762d21@gmail.com>
+Date:   Mon, 23 Dec 2019 18:42:36 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191222185034.4665-4-tiny.windzz@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Dec 2019 09:51:53 +0200
-Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-
-> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
-> eating up the error code.
+22.12.2019 21:50, Yangtao Li пишет:
+> Use devm_platform_ioremap_resource() to simplify code.
 > 
-> By using dma_request_chan() directly the driver can support deferred
-> probing against DMA.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Hi Peter,
-
-Change looks sensible to me, but I'd like to leave a little longer
-for others to look at this.
-
-Give me a poke if I seem to have lost it by the end of the first
-week in Jan.
-
-Thanks,
-
-Jonathan
-
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 > ---
->  drivers/iio/adc/stm32-adc.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
+>  drivers/memory/tegra/mc.c           | 4 +---
+>  drivers/memory/tegra/tegra124-emc.c | 4 +---
+>  drivers/memory/tegra/tegra186.c     | 4 +---
+>  drivers/memory/tegra/tegra20-emc.c  | 4 +---
+>  4 files changed, 4 insertions(+), 12 deletions(-)
 > 
-> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-> index 3b291d72701c..5dab23f1fdee 100644
-> --- a/drivers/iio/adc/stm32-adc.c
-> +++ b/drivers/iio/adc/stm32-adc.c
-> @@ -1746,9 +1746,15 @@ static int stm32_adc_dma_request(struct iio_dev *indio_dev)
->  	struct dma_slave_config config;
->  	int ret;
+> diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
+> index ec8403557ed4..71390d4ad809 100644
+> --- a/drivers/memory/tegra/mc.c
+> +++ b/drivers/memory/tegra/mc.c
+> @@ -593,7 +593,6 @@ static __maybe_unused irqreturn_t tegra20_mc_irq(int irq, void *data)
 >  
-> -	adc->dma_chan = dma_request_slave_channel(&indio_dev->dev, "rx");
-> -	if (!adc->dma_chan)
-> +	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
-> +	if (IS_ERR(adc->dma_chan)) {
-> +		if (PTR_ERR(adc->dma_chan) == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +
-> +		/* Ignore errors to fall back to IRQ mode */
-> +		adc->dma_chan = NULL;
->  		return 0;
-> +	}
+>  static int tegra_mc_probe(struct platform_device *pdev)
+>  {
+> -	struct resource *res;
+>  	struct tegra_mc *mc;
+>  	void *isr;
+>  	u64 mask;
+> @@ -619,8 +618,7 @@ static int tegra_mc_probe(struct platform_device *pdev)
+>  	/* length of MC tick in nanoseconds */
+>  	mc->tick = 30;
 >  
->  	adc->rx_buf = dma_alloc_coherent(adc->dma_chan->device->dev,
->  					 STM32_DMA_BUFFER_SIZE,
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	mc->regs = devm_ioremap_resource(&pdev->dev, res);
+> +	mc->regs = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(mc->regs))
+>  		return PTR_ERR(mc->regs);
+>  
+> diff --git a/drivers/memory/tegra/tegra124-emc.c b/drivers/memory/tegra/tegra124-emc.c
+> index 464f0ceaee63..2c73260654ba 100644
+> --- a/drivers/memory/tegra/tegra124-emc.c
+> +++ b/drivers/memory/tegra/tegra124-emc.c
+> @@ -1085,7 +1085,6 @@ static int tegra_emc_probe(struct platform_device *pdev)
+>  	struct platform_device *mc;
+>  	struct device_node *np;
+>  	struct tegra_emc *emc;
+> -	struct resource *res;
+>  	u32 ram_code;
+>  	int err;
+>  
+> @@ -1095,8 +1094,7 @@ static int tegra_emc_probe(struct platform_device *pdev)
+>  
+>  	emc->dev = &pdev->dev;
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	emc->regs = devm_ioremap_resource(&pdev->dev, res);
+> +	emc->regs = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(emc->regs))
+>  		return PTR_ERR(emc->regs);
+>  
+> diff --git a/drivers/memory/tegra/tegra186.c b/drivers/memory/tegra/tegra186.c
+> index 441213a35930..226d2b16036d 100644
+> --- a/drivers/memory/tegra/tegra186.c
+> +++ b/drivers/memory/tegra/tegra186.c
+> @@ -534,7 +534,6 @@ static const struct tegra_mc_client tegra186_mc_clients[] = {
+>  
+>  static int tegra186_mc_probe(struct platform_device *pdev)
+>  {
+> -	struct resource *res;
+>  	struct tegra_mc *mc;
+>  	unsigned int i;
+>  	int err = 0;
+> @@ -543,8 +542,7 @@ static int tegra186_mc_probe(struct platform_device *pdev)
+>  	if (!mc)
+>  		return -ENOMEM;
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	mc->regs = devm_ioremap_resource(&pdev->dev, res);
+> +	mc->regs = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(mc->regs))
+>  		return PTR_ERR(mc->regs);
+>  
+> diff --git a/drivers/memory/tegra/tegra20-emc.c b/drivers/memory/tegra/tegra20-emc.c
+> index 1b23b1c34476..d2efd0c658c0 100644
+> --- a/drivers/memory/tegra/tegra20-emc.c
+> +++ b/drivers/memory/tegra/tegra20-emc.c
+> @@ -482,7 +482,6 @@ static int tegra_emc_probe(struct platform_device *pdev)
+>  {
+>  	struct device_node *np;
+>  	struct tegra_emc *emc;
+> -	struct resource *res;
+>  	int irq, err;
+>  
+>  	/* driver has nothing to do in a case of memory timing absence */
+> @@ -518,8 +517,7 @@ static int tegra_emc_probe(struct platform_device *pdev)
+>  	if (err)
+>  		return err;
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	emc->regs = devm_ioremap_resource(&pdev->dev, res);
+> +	emc->regs = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(emc->regs))
+>  		return PTR_ERR(emc->regs);
+>  
+> 
 
+Looks good, thanks!
+
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
