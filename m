@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E578FC2D0CF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A78C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:18:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B954521775
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6B6C21775
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:18:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727395AbfLWOSB (ORCPT
+        id S1727450AbfLWOSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 09:18:01 -0500
-Received: from mga03.intel.com ([134.134.136.65]:47094 "EHLO mga03.intel.com"
+        Mon, 23 Dec 2019 09:18:16 -0500
+Received: from mga18.intel.com ([134.134.136.126]:47650 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727138AbfLWORa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727105AbfLWORa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 23 Dec 2019 09:17:30 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 06:17:29 -0800
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 06:17:29 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,347,1571727600"; 
-   d="scan'208";a="417276272"
+   d="scan'208";a="418688580"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 23 Dec 2019 06:17:26 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 23 Dec 2019 06:17:25 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 8A0851666; Mon, 23 Dec 2019 16:17:18 +0200 (EET)
+        id 5C1021419; Mon, 23 Dec 2019 16:17:18 +0200 (EET)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -43,9 +43,9 @@ Cc:     Zha Qipeng <qipeng.zha@intel.com>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 32/37] platform/x86: intel_pmc_ipc: Move PCI IDs to intel_scu_pcidrv.c
-Date:   Mon, 23 Dec 2019 17:17:11 +0300
-Message-Id: <20191223141716.13727-33-mika.westerberg@linux.intel.com>
+Subject: [PATCH 27/37] mfd: intel_soc_pmic_bxtwc: Convert to use new SCU IPC API
+Date:   Mon, 23 Dec 2019 17:17:06 +0300
+Message-Id: <20191223141716.13727-28-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191223141716.13727-1-mika.westerberg@linux.intel.com>
 References: <20191223141716.13727-1-mika.westerberg@linux.intel.com>
@@ -56,202 +56,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PCI probe driver in intel_pmc_ipc.c is a duplicate of what we
-already have in intel_scu_pcidrv.c with the exception that the later also
-creates SCU specific devices. Move the PCI IDs from the intel_pmc_ipc.c
-to intel_scu.c and use driver_data to detect whether SCU devices need to
-be created or not.
+Convert the Intel Broxton Whiskey Cover PMIC driver to use the new SCU
+IPC API. This allows us to get rid of the PMC IPC implementation which
+is now covered in SCU IPC driver.
 
-Also update Kconfig entry to mention all platforms supported by the
-Intel SCU PCI driver.
+Also move PMIC specific IPC message constants to the PMIC driver from
+the intel_pmc_ipc.h header.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/platform/x86/Kconfig            | 13 +++--
- drivers/platform/x86/intel_pmc_ipc.c    | 73 +------------------------
- drivers/platform/x86/intel_scu_pcidrv.c | 21 +++++--
- 3 files changed, 27 insertions(+), 80 deletions(-)
+ arch/x86/include/asm/intel_pmc_ipc.h |  3 ---
+ drivers/mfd/intel_soc_pmic_bxtwc.c   | 22 +++++++++++++++-------
+ 2 files changed, 15 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 797683c5d005..1c5afb9e4965 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -994,13 +994,18 @@ config INTEL_SCU
+diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
+index e6da1ce26256..b438a488f613 100644
+--- a/arch/x86/include/asm/intel_pmc_ipc.h
++++ b/arch/x86/include/asm/intel_pmc_ipc.h
+@@ -3,9 +3,6 @@
+ #define  _ASM_X86_INTEL_PMC_IPC_H_
  
- config INTEL_SCU_PCI
- 	bool "Intel SCU PCI driver"
--	depends on X86_INTEL_MID
-+	depends on X86_INTEL_MID || PCI
- 	select INTEL_SCU
- 	help
- 	  SCU is used to bridge the communications between kernel and
- 	  SCU on some embedded Intel x86 platforms. It also creates
--	  devices that are connected to the SoC through the SCU. This is
--	  not needed for PC-type machines.
-+	  devices that are connected to the SoC through the SCU.
-+	  Platforms supported:
-+	    Medfield
-+	    Clovertrail
-+	    Merrifield
-+	    Broxton
-+	    Apollo Lake
- 
- config INTEL_SCU_IPC_UTIL
- 	tristate "Intel SCU IPC utility driver"
-@@ -1192,7 +1197,7 @@ config INTEL_SMARTCONNECT
- 
- config INTEL_PMC_IPC
- 	tristate "Intel PMC IPC Driver"
--	depends on ACPI && PCI
-+	depends on ACPI
- 	select INTEL_SCU_IPC
- 	---help---
- 	This driver provides support for PMC control on some Intel platforms.
-diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 241bce603183..acec1c6d2069 100644
---- a/drivers/platform/x86/intel_pmc_ipc.c
-+++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -17,7 +17,6 @@
- #include <linux/interrupt.h>
- #include <linux/io-64-nonatomic-lo-hi.h>
+ /* Commands */
+-#define PMC_IPC_PMIC_ACCESS		0xFF
+-#define		PMC_IPC_PMIC_ACCESS_READ	0x0
+-#define		PMC_IPC_PMIC_ACCESS_WRITE	0x1
+ #define PMC_IPC_USB_PWR_CTRL		0xF0
+ #define PMC_IPC_PMIC_BLACKLIST_SEL	0xEF
+ #define PMC_IPC_PHY_CONFIG		0xEE
+diff --git a/drivers/mfd/intel_soc_pmic_bxtwc.c b/drivers/mfd/intel_soc_pmic_bxtwc.c
+index 739cfb5b69fe..60aba2a1561c 100644
+--- a/drivers/mfd/intel_soc_pmic_bxtwc.c
++++ b/drivers/mfd/intel_soc_pmic_bxtwc.c
+@@ -15,7 +15,7 @@
+ #include <linux/mfd/intel_soc_pmic_bxtwc.h>
  #include <linux/module.h>
--#include <linux/pci.h>
- #include <linux/platform_device.h>
  
- #include <asm/intel_pmc_ipc.h>
-@@ -194,62 +193,6 @@ static int update_no_reboot_bit(void *priv, bool set)
- 				    PMC_CFG_NO_REBOOT_MASK, value);
- }
+-#include <asm/intel_pmc_ipc.h>
++#include <asm/intel_scu_ipc.h>
  
--static int ipc_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
--{
--	struct intel_pmc_ipc_dev *pmc = &ipcdev;
--	struct intel_scu_ipc_pdata pdata;
--	struct intel_scu_ipc_dev *scu;
--	int ret;
--
--	/* Only one PMC is supported */
--	if (pmc->dev)
--		return -EBUSY;
--
--	memset(&pdata, 0, sizeof(pdata));
--	spin_lock_init(&ipcdev.gcr_lock);
--
--	ret = pcim_enable_device(pdev);
--	if (ret)
--		return ret;
--
--	ret = pcim_iomap_regions(pdev, 1 << 0, pci_name(pdev));
--	if (ret)
--		return ret;
--
--	pdata.ipc_regs = pcim_iomap_table(pdev)[0];
--
--	scu = intel_scu_ipc_probe(&pdev->dev, &pdata);
--	if (IS_ERR(scu))
--		return PTR_ERR(scu);
--
--	pmc->dev = &pdev->dev;
--
--	pci_set_drvdata(pdev, scu);
--
--	return 0;
--}
--
--static void ipc_pci_remove(struct pci_dev *pdev)
--{
--	intel_scu_ipc_remove(pci_get_drvdata(pdev));
--	ipcdev.dev = NULL;
--}
--
--static const struct pci_device_id ipc_pci_ids[] = {
--	{PCI_VDEVICE(INTEL, 0x0a94), 0},
--	{PCI_VDEVICE(INTEL, 0x1a94), 0},
--	{PCI_VDEVICE(INTEL, 0x5a94), 0},
--	{ 0,}
--};
--MODULE_DEVICE_TABLE(pci, ipc_pci_ids);
--
--static struct pci_driver ipc_pci_driver = {
--	.name = "intel_pmc_ipc",
--	.id_table = ipc_pci_ids,
--	.probe = ipc_pci_probe,
--	.remove = ipc_pci_remove,
--};
--
- static ssize_t intel_pmc_ipc_simple_cmd_store(struct device *dev,
- 					      struct device_attribute *attr,
- 					      const char *buf, size_t count)
-@@ -697,25 +640,11 @@ static struct platform_driver ipc_plat_driver = {
+ /* PMIC device registers */
+ #define REG_ADDR_MASK		0xFF00
+@@ -58,6 +58,10 @@
+ /* Whiskey Cove PMIC share same ACPI ID between different platforms */
+ #define BROXTON_PMIC_WC_HRV	4
  
- static int __init intel_pmc_ipc_init(void)
- {
--	int ret;
--
--	ret = platform_driver_register(&ipc_plat_driver);
--	if (ret) {
--		pr_err("Failed to register PMC ipc platform driver\n");
--		return ret;
--	}
--	ret = pci_register_driver(&ipc_pci_driver);
--	if (ret) {
--		pr_err("Failed to register PMC ipc pci driver\n");
--		platform_driver_unregister(&ipc_plat_driver);
--		return ret;
--	}
--	return ret;
-+	return platform_driver_register(&ipc_plat_driver);
- }
- 
- static void __exit intel_pmc_ipc_exit(void)
- {
--	pci_unregister_driver(&ipc_pci_driver);
- 	platform_driver_unregister(&ipc_plat_driver);
- }
- 
-diff --git a/drivers/platform/x86/intel_scu_pcidrv.c b/drivers/platform/x86/intel_scu_pcidrv.c
-index 43bcebf01374..dedf1ef311d2 100644
---- a/drivers/platform/x86/intel_scu_pcidrv.c
-+++ b/drivers/platform/x86/intel_scu_pcidrv.c
-@@ -17,6 +17,7 @@
- static int intel_scu_pci_probe(struct pci_dev *pdev,
- 			       const struct pci_device_id *id)
- {
-+	void (*setup_fn)(void) = (void (*)(void))id->driver_data;
- 	struct intel_scu_ipc_pdata *pdata;
- 	struct intel_scu_ipc_dev *scu;
- 	int ret;
-@@ -40,14 +41,26 @@ static int intel_scu_pci_probe(struct pci_dev *pdev,
- 	if (IS_ERR(scu))
- 		return PTR_ERR(scu);
- 
--	intel_scu_devices_create();
-+	if (setup_fn)
-+		setup_fn();
- 	return 0;
- }
- 
-+static void intel_mid_scu_setup(void)
-+{
-+	intel_scu_devices_create();
-+}
++#define PMC_PMIC_ACCESS		0xFF
++#define PMC_PMIC_READ		0x0
++#define PMC_PMIC_WRITE		0x1
 +
- static const struct pci_device_id pci_ids[] = {
--	{ PCI_VDEVICE(INTEL, 0x080e) },
--	{ PCI_VDEVICE(INTEL, 0x08ea) },
--	{ PCI_VDEVICE(INTEL, 0x11a0) },
-+	{ PCI_VDEVICE(INTEL, 0x080e),
-+	  .driver_data = (kernel_ulong_t)intel_mid_scu_setup },
-+	{ PCI_VDEVICE(INTEL, 0x08ea),
-+	  .driver_data = (kernel_ulong_t)intel_mid_scu_setup },
-+	{ PCI_VDEVICE(INTEL, 0x0a94) },
-+	{ PCI_VDEVICE(INTEL, 0x11a0),
-+	  .driver_data = (kernel_ulong_t)intel_mid_scu_setup },
-+	{ PCI_VDEVICE(INTEL, 0x1a94) },
-+	{ PCI_VDEVICE(INTEL, 0x5a94) },
- 	{}
- };
+ enum bxtwc_irqs {
+ 	BXTWC_PWRBTN_LVL1_IRQ = 0,
+ 	BXTWC_TMU_LVL1_IRQ,
+@@ -288,9 +292,9 @@ static int regmap_ipc_byte_reg_read(void *context, unsigned int reg,
  
+ 	ipc_in[0] = reg;
+ 	ipc_in[1] = i2c_addr;
+-	ret = intel_pmc_ipc_command(PMC_IPC_PMIC_ACCESS,
+-			PMC_IPC_PMIC_ACCESS_READ,
+-			ipc_in, sizeof(ipc_in), (u32 *)ipc_out, 1);
++	ret = intel_scu_ipc_dev_command(pmic->scu, PMC_PMIC_ACCESS,
++					PMC_PMIC_READ, ipc_in, sizeof(ipc_in),
++					ipc_out, sizeof(ipc_out));
+ 	if (ret) {
+ 		dev_err(pmic->dev, "Failed to read from PMIC\n");
+ 		return ret;
+@@ -321,9 +325,9 @@ static int regmap_ipc_byte_reg_write(void *context, unsigned int reg,
+ 	ipc_in[0] = reg;
+ 	ipc_in[1] = i2c_addr;
+ 	ipc_in[2] = val;
+-	ret = intel_pmc_ipc_command(PMC_IPC_PMIC_ACCESS,
+-			PMC_IPC_PMIC_ACCESS_WRITE,
+-			ipc_in, sizeof(ipc_in), NULL, 0);
++	ret = intel_scu_ipc_dev_command(pmic->scu, PMC_PMIC_ACCESS,
++					PMC_PMIC_WRITE, ipc_in, sizeof(ipc_in),
++					NULL, 0);
+ 	if (ret) {
+ 		dev_err(pmic->dev, "Failed to write to PMIC\n");
+ 		return ret;
+@@ -457,6 +461,10 @@ static int bxtwc_probe(struct platform_device *pdev)
+ 	dev_set_drvdata(&pdev->dev, pmic);
+ 	pmic->dev = &pdev->dev;
+ 
++	pmic->scu = devm_intel_scu_ipc_dev_get(&pdev->dev);
++	if (!pmic->scu)
++		return -EPROBE_DEFER;
++
+ 	pmic->regmap = devm_regmap_init(&pdev->dev, NULL, pmic,
+ 					&bxtwc_regmap_config);
+ 	if (IS_ERR(pmic->regmap)) {
 -- 
 2.24.0
 
