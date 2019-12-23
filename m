@@ -2,131 +2,128 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFC6C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C01C2D0D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27DE02053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:58:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEF7A20828
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:00:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dDAyIimi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h2lDY9R8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbfLWN6o (ORCPT
+        id S1726889AbfLWOAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 08:58:44 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36641 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726676AbfLWN6n (ORCPT
+        Mon, 23 Dec 2019 09:00:23 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40779 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726676AbfLWOAX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 08:58:43 -0500
-Received: by mail-io1-f67.google.com with SMTP id r13so6169596ioa.3;
-        Mon, 23 Dec 2019 05:58:43 -0800 (PST)
+        Mon, 23 Dec 2019 09:00:23 -0500
+Received: by mail-io1-f66.google.com with SMTP id x1so16222735iop.7;
+        Mon, 23 Dec 2019 06:00:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3PKfJo7e/F8iYmHNlUC4kcHL5CKe5kHebcIO1c7mfek=;
-        b=dDAyIimizk4oR9NYXHcsKtFz27JZds8feHchTbuhSFGETI/pNbAsciKDI4kkOO1IfW
-         nd1fJJu8DGsZTzaO48gK39ip/2Y7RXR64/zH5QtItx5EMlpR/syeXSe2R4uiULrRrwOF
-         DGIaEEckCcWI0jeY0KKBgvwVAilBeRgkNhrBI9GEFTr+z77vSDBRAysEiLX9O5JQ+sl8
-         89Bv2ne5VAOHZasFhbr5n/1sqBzJ+m2+PDv7/foH36JVYk+2N6zc0oY2wVDAx/ELxRVJ
-         9/Hjh8GLcGbiqL84jnvkKy46ND/X9Enf9+4wn4alAT5qQoGvuaru7lZB96gaBN10o4jB
-         T7/A==
+        bh=OFxMEwkfjVDC+roxVZgSMk80KpDttjYT+pCn9s4WeAQ=;
+        b=h2lDY9R8ghEfdafvt7lgQO0ZE8x2YMbw0d7+Z/BtuD1hKFVUJuybKhmfvmtAM/TB5M
+         a4jqmvyY5cQgIm7oZEWO3dIsgpSWstkvQlYUWbokJgx7kzRVvhaaYDLSm3pwL/MEO2ly
+         61JMGvrYku5h8Gsgaoh1/C+Kmz6rlTOIAggxV/JDIPLhdxSW4qlVF7Hg61Bf56j5tsgK
+         uf1jQ2wxnUhiWiEutsQsRmogjX2xwawCuVtCka9ZW1o/X/wYeUwMkrK+M8RApO6PJ4LU
+         u6Oipxwl0RME3YoYqhto8smEuF5+X+mG9crkfKGmMJN/fHvdFQNkh60aKqoBFU4cNock
+         uS8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3PKfJo7e/F8iYmHNlUC4kcHL5CKe5kHebcIO1c7mfek=;
-        b=qO52ApdHUP6nHcLJT8UtBz284YenKPidOAI42S4sELqaZAHSwB0KDURhmr8Xip5CCy
-         WxQ/HS2wLEkh28wPfdqD8WcHGlLq2HUXZcPtEMCzSxl2t+MJFCivoVEo7nbaBb6dEEc0
-         iiT+/A/1AKwqpKDe4QoIxg6M8hWTQaw2jiAmWVtVgzU1l4U3cfwwISs0ELQq7bJu0kLT
-         sCtf37MMX8/I1DFnJH6Wj3Joi1AU0fZ7HLZ16H9GDCW+/icsQ3P/op8CNJe+Ffb6Nk+W
-         N02hhYQEN0NbCwUpljx20qzTfWBfdkkTkt6MWmqRiBOTnW2+muXmQ3YHmN4fPf5asM21
-         90UA==
-X-Gm-Message-State: APjAAAVIUF9M9oorJiHExJL2s1T/Q8h2dRzLqYXhF+NbgkfBypdsSpvG
-        XtQzgL+vSeIupTSuPTbZ93hMqOGZsmVYhMwWAK8=
-X-Google-Smtp-Source: APXvYqzUM8YJ6tRj448hYxFlxEOEtyUsp/J3wkALdJo8nymUv20lta/KuUBHcl5Mm/Nxt1SgHLy1Br5zccJrGGPCy8E=
-X-Received: by 2002:a02:ca56:: with SMTP id i22mr22510644jal.140.1577109523001;
- Mon, 23 Dec 2019 05:58:43 -0800 (PST)
+        bh=OFxMEwkfjVDC+roxVZgSMk80KpDttjYT+pCn9s4WeAQ=;
+        b=WGIa25qNYowMPRzpCCxHrScKasZAcBBnnIzWJYzVQWFpy8EHMKLXenhl2VzOsaJm3W
+         qFIt+hwZZJxbEqFLTmWoXHaG+sLGCB96wj6uJcGA7fS1QYMablJx2y1L0Rsmcl2gpgoL
+         mB6ILiJJD2N5qR6WPiQVWA9qN/Fm9h3vbvrRuvqbC9yDLV0WjQbfTVOicFxHW7E/Z1qe
+         vLQkfIEio020b8Sx+eo9uZfKb0AZ5spm4fp9puQ2P8MharcLRTekhkTOlPTwBLEvF+5h
+         LY0aXOsyTDENeCj2dNzSEHJimXs6xnIoup8I1wVQA8cy8m9y73pdTAR+8rB5QhRtVwpl
+         6cXw==
+X-Gm-Message-State: APjAAAXMSWiEoxY+I6nru1OwCut5mqx0QoJxBuhFEOsN2D6mbzFAZQnv
+        8bDFicOrX3W2FGScbC6GAblYuqCZvcFNCw+Wt8Y+88Px
+X-Google-Smtp-Source: APXvYqwmTB1oVJxXgF8yMmyaeU3BCiL7+q8HErDzR5EA/WvDWbMk12ae12kb02VCvlQ93ycZujvPTBFMHZjwPOCSyRI=
+X-Received: by 2002:a02:a38a:: with SMTP id y10mr23491227jak.55.1577109621904;
+ Mon, 23 Dec 2019 06:00:21 -0800 (PST)
 MIME-Version: 1.0
-References: <1577096361-8381-1-git-send-email-harigovi@codeaurora.org>
-In-Reply-To: <1577096361-8381-1-git-send-email-harigovi@codeaurora.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Mon, 23 Dec 2019 06:58:32 -0700
-Message-ID: <CAOCk7NoDsjGWV=ddZO2yVG_n2N-mhdhfeaNML=kTTr2Mg88q0Q@mail.gmail.com>
-Subject: Re: [Freedreno] [v1] drm/msm: update LANE_CTRL register value from
- default value
-To:     Harigovindan P <harigovi@codeaurora.org>
-Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>, nganji@codeaurora.org,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>
+References: <lsq.1576543534.33060804@decadent.org.uk> <lsq.1576543535.242452079@decadent.org.uk>
+In-Reply-To: <lsq.1576543535.242452079@decadent.org.uk>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Mon, 23 Dec 2019 08:00:11 -0600
+Message-ID: <CAHCN7xKJE1_pNn_psm4zsLWp==55v6u+N7GoJwOWOKd9=AG6mA@mail.gmail.com>
+Subject: Re: [PATCH 3.16 013/136] drm/omap: fix max fclk divider for omap36xx
+To:     Ben Hutchings <ben@decadent.org.uk>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Denis Kirjanov <kda@linux-powerpc.org>,
+        Jyri Sarha <jsarha@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 3:19 AM Harigovindan P <harigovi@codeaurora.org> wrote:
+On Mon, Dec 16, 2019 at 6:51 PM Ben Hutchings <ben@decadent.org.uk> wrote:
 >
-> Updating REG_DSI_LANE_CTRL register value by reading default
-> register value and writing it back using bitwise OR with
-> DSI_LANE_CTRL_CLKLN_HS_FORCE_REQUEST. This works for all panels.
-
-Why?
-You explain what the code does, which I can tell from reading the
-code.  The commit text should tell me why this change is necessary.
-Why would I care if this change is in my tree or not?  What feature
-does it provide or what issue does it fix?
-
+> 3.16.80-rc1 review patch.  If anyone has any objections, please let me know.
 >
-> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+> ------------------
+
+I tried to do the same for 4.4, 4.9 and 4.14, but I haven't seen
+anything applied yet.
+
+I just looked at the upstream fbdev driver for the dss, and it's still
+showing 32 and the value.
+
+Even though the fbdev driver isn't enabled by default any more, I
+wonder if it should be fixed as part of the justification for the
+backports.
+
+adam
+>
+> From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+>
+> commit e2c4ed148cf3ec8669a1d90dc66966028e5fad70 upstream.
+>
+> The OMAP36xx and AM/DM37x TRMs say that the maximum divider for DSS fclk
+> (in CM_CLKSEL_DSS) is 32. Experimentation shows that this is not
+> correct, and using divider of 32 breaks DSS with a flood or underflows
+> and sync losts. Dividers up to 31 seem to work fine.
+>
+> There is another patch to the DT files to limit the divider correctly,
+> but as the DSS driver also needs to know the maximum divider to be able
+> to iteratively find good rates, we also need to do the fix in the DSS
+> driver.
+>
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Cc: Adam Ford <aford173@gmail.com>
+> Link: https://patchwork.freedesktop.org/patch/msgid/20191002122542.8449-1-tomi.valkeinen@ti.com
+> Tested-by: Adam Ford <aford173@gmail.com>
+> Reviewed-by: Jyri Sarha <jsarha@ti.com>
+> [bwh: Backported to 3.16: adjust filename, context]
+> Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 > ---
->  drivers/gpu/drm/msm/dsi/dsi_host.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
+>  drivers/video/fbdev/omap2/dss/dss.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-> index e6289a3..d3c5233 100644
-> --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-> +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-> @@ -816,7 +816,7 @@ static void dsi_ctrl_config(struct msm_dsi_host *msm_host, bool enable,
->         u32 flags = msm_host->mode_flags;
->         enum mipi_dsi_pixel_format mipi_fmt = msm_host->format;
->         const struct msm_dsi_cfg_handler *cfg_hnd = msm_host->cfg_hnd;
-> -       u32 data = 0;
-> +       u32 data = 0, lane_ctrl = 0;
+> --- a/drivers/video/fbdev/omap2/dss/dss.c
+> +++ b/drivers/video/fbdev/omap2/dss/dss.c
+> @@ -708,7 +708,7 @@ static const struct dss_features omap34x
+>  };
 >
->         if (!enable) {
->                 dsi_write(msm_host, REG_DSI_CTRL, 0);
-> @@ -904,9 +904,11 @@ static void dsi_ctrl_config(struct msm_dsi_host *msm_host, bool enable,
->         dsi_write(msm_host, REG_DSI_LANE_SWAP_CTRL,
->                   DSI_LANE_SWAP_CTRL_DLN_SWAP_SEL(msm_host->dlane_swap));
+>  static const struct dss_features omap3630_dss_feats __initconst = {
+> -       .fck_div_max            =       32,
+> +       .fck_div_max            =       31,
+>         .dss_fck_multiplier     =       1,
+>         .parent_clk_name        =       "dpll4_ck",
+>         .dpi_select_source      =       &dss_dpi_select_source_omap2_omap3,
 >
-> -       if (!(flags & MIPI_DSI_CLOCK_NON_CONTINUOUS))
-> +       if (!(flags & MIPI_DSI_CLOCK_NON_CONTINUOUS)) {
-> +               lane_ctrl = dsi_read(msm_host, REG_DSI_LANE_CTRL);
->                 dsi_write(msm_host, REG_DSI_LANE_CTRL,
-> -                       DSI_LANE_CTRL_CLKLN_HS_FORCE_REQUEST);
-> +                       lane_ctrl | DSI_LANE_CTRL_CLKLN_HS_FORCE_REQUEST);
-> +       }
->
->         data |= DSI_CTRL_ENABLE;
->
-> --
-> 2.7.4
->
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
