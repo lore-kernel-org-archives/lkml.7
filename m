@@ -2,132 +2,115 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE34C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 898F4C2D0D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33CBB2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:48:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="OQheLzYK";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="OQheLzYK"
+	by mail.kernel.org (Postfix) with ESMTP id 577E42073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:50:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577116208;
+	bh=RMoTjXwZcjIZ4sWdkpbd+CDNN2WUkeQnAYsgLbSVu54=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=odGWOjz59ylnCasUqcJWy7sZpyfY71VCQ8n1QwGJMjQgBDLKn9xUmmhNISBv12Zx1
+	 SR+fEYu83W5uAi/SwKwlR8RYZOE4L9dQsFp86skRi8RTS7R8J2KV9sYJjnuzbRSU9y
+	 zqhIkgVl52zoE4uRW+w0RAc0TuqvzWSHqZ0v8rG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfLWPsC (ORCPT
+        id S1726834AbfLWPuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 10:48:02 -0500
-Received: from node.akkea.ca ([192.155.83.177]:38992 "EHLO node.akkea.ca"
+        Mon, 23 Dec 2019 10:50:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726717AbfLWPrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 10:47:55 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id A26024E201A;
-        Mon, 23 Dec 2019 15:47:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1577116074; bh=WqmvSpCpKdfEKGMrhNPJ7uiAMSHmxyw8X3Se1/YVDR4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=OQheLzYKE9s1TnbenSYyXx03UE/6UOn2CCyMI4T/mbVfdzkd4u2rjMOV+MKqt5yim
-         AtPEgyto7OeFqdkjr3306FXxQM4C1MA5bYZqjerTPr6qBo08H+Gm2IQrObiBWt8Q3k
-         TMec4N1J32ByymT/QeeBi/Enptz8ZX+61ABIr32E=
-X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
-Received: from node.akkea.ca ([127.0.0.1])
-        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id W_oXF-J36k12; Mon, 23 Dec 2019 15:47:54 +0000 (UTC)
-Received: from midas.localdomain (S0106788a2041785e.gv.shawcable.net [70.66.86.75])
-        by node.akkea.ca (Postfix) with ESMTPSA id 1AD9E4E2006;
-        Mon, 23 Dec 2019 15:47:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1577116074; bh=WqmvSpCpKdfEKGMrhNPJ7uiAMSHmxyw8X3Se1/YVDR4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=OQheLzYKE9s1TnbenSYyXx03UE/6UOn2CCyMI4T/mbVfdzkd4u2rjMOV+MKqt5yim
-         AtPEgyto7OeFqdkjr3306FXxQM4C1MA5bYZqjerTPr6qBo08H+Gm2IQrObiBWt8Q3k
-         TMec4N1J32ByymT/QeeBi/Enptz8ZX+61ABIr32E=
-From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
-To:     broonie@kernel.org
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, kernel@puri.sm, robh@kernel.org,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH v4 1/2] ASoC: gtm601: add Broadmobi bm818 sound profile
-Date:   Mon, 23 Dec 2019 07:47:11 -0800
-Message-Id: <20191223154712.18581-2-angus@akkea.ca>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191223154712.18581-1-angus@akkea.ca>
-References: <20191223154712.18581-1-angus@akkea.ca>
+        id S1725912AbfLWPuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 10:50:07 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBEEE20663;
+        Mon, 23 Dec 2019 15:50:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577116206;
+        bh=RMoTjXwZcjIZ4sWdkpbd+CDNN2WUkeQnAYsgLbSVu54=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FDm6HjWvnEvmXVY0d+ZFGhVyJKlxV+7EhJpQtv6xEMM41psUFVFCb57loxIJZgKiJ
+         8ESQcAoSB6lRrFp44fsrTaQP6YSbeMkKuLIiIstmeTo2dJg78X7g2ywMc2LZiExtCp
+         /Ukdrs/au3+oxV4Rfu/LE4M+uEPDymjU8xXO+It8=
+Date:   Mon, 23 Dec 2019 15:50:01 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     <vkoul@kernel.org>, <ludovic.desroches@microchip.com>,
+        <eugen.hristev@microchip.com>, <linux-iio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] iio: adc: at91-sama5d2_adc: Use dma_request_chan()
+ instead dma_request_slave_channel()
+Message-ID: <20191223155001.3c4c7261@archlinux>
+In-Reply-To: <20191217103100.21737-1-peter.ujfalusi@ti.com>
+References: <20191217103100.21737-1-peter.ujfalusi@ti.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Broadmobi bm818 uses stereo sound at 48Khz sample rate
+On Tue, 17 Dec 2019 12:31:00 +0200
+Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
----
- sound/soc/codecs/gtm601.c | 30 +++++++++++++++++++++++++++---
- 1 file changed, 27 insertions(+), 3 deletions(-)
+> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+> eating up the error code.
+> 
+> By using dma_request_chan() directly the driver can support deferred
+> probing against DMA.
+Unfortunately that doesn't seem to be true.
+The function in question returns void...
 
-diff --git a/sound/soc/codecs/gtm601.c b/sound/soc/codecs/gtm601.c
-index d454294c8d06..7f05ebcb88d1 100644
---- a/sound/soc/codecs/gtm601.c
-+++ b/sound/soc/codecs/gtm601.c
-@@ -13,7 +13,7 @@
- #include <linux/slab.h>
- #include <linux/module.h>
- #include <linux/kernel.h>
--#include <linux/device.h>
-+#include <linux/of_device.h>
- #include <sound/core.h>
- #include <sound/pcm.h>
- #include <sound/initval.h>
-@@ -47,6 +47,24 @@ static struct snd_soc_dai_driver gtm601_dai = {
- 	},
- };
- 
-+static struct snd_soc_dai_driver bm818_dai = {
-+	.name = "bm818",
-+	.playback = {
-+		.stream_name = "Playback",
-+		.channels_min = 2,
-+		.channels_max = 2,
-+		.rates = SNDRV_PCM_RATE_48000,
-+		.formats = SNDRV_PCM_FMTBIT_S16_LE,
-+	},
-+	.capture = {
-+		.stream_name = "Capture",
-+		.channels_min = 2,
-+		.channels_max = 2,
-+		.rates = SNDRV_PCM_RATE_48000,
-+		.formats = SNDRV_PCM_FMTBIT_S16_LE,
-+	},
-+};
-+
- static const struct snd_soc_component_driver soc_component_dev_gtm601 = {
- 	.dapm_widgets		= gtm601_dapm_widgets,
- 	.num_dapm_widgets	= ARRAY_SIZE(gtm601_dapm_widgets),
-@@ -60,13 +78,19 @@ static const struct snd_soc_component_driver soc_component_dev_gtm601 = {
- 
- static int gtm601_platform_probe(struct platform_device *pdev)
- {
-+	const struct snd_soc_dai_driver *dai_driver;
-+
-+	dai_driver = of_device_get_match_data(&pdev->dev);
-+
- 	return devm_snd_soc_register_component(&pdev->dev,
--			&soc_component_dev_gtm601, &gtm601_dai, 1);
-+			&soc_component_dev_gtm601,
-+			(struct snd_soc_dai_driver *)dai_driver, 1);
- }
- 
- #if defined(CONFIG_OF)
- static const struct of_device_id gtm601_codec_of_match[] = {
--	{ .compatible = "option,gtm601", },
-+	{ .compatible = "option,gtm601", .data = (void *)&gtm601_dai },
-+	{ .compatible = "broadmobi,bm818", .data = (void *)&bm818_dai },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, gtm601_codec_of_match);
--- 
-2.17.1
+And for that matter is called only from the set_watermark callback which
+doesn't run at probe time.
+
+So if we were to get a deferred response at runtime there isn't a whole
+lot we could do with it.
+
+Jonathan
+
+
+
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+> Hi,
+> 
+> Changes since v1:
+> - Subject prefix is corrected to "iio: adc: at91-sama5d2_adc:"
+> 
+> Regards,
+> Peter
+> 
+>  drivers/iio/adc/at91-sama5d2_adc.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
+> index e1850f3d5cf3..a5c7771227d5 100644
+> --- a/drivers/iio/adc/at91-sama5d2_adc.c
+> +++ b/drivers/iio/adc/at91-sama5d2_adc.c
+> @@ -1444,10 +1444,10 @@ static void at91_adc_dma_init(struct platform_device *pdev)
+>  	if (st->dma_st.dma_chan)
+>  		return;
+>  
+> -	st->dma_st.dma_chan = dma_request_slave_channel(&pdev->dev, "rx");
+> -
+> -	if (!st->dma_st.dma_chan)  {
+> +	st->dma_st.dma_chan = dma_request_chan(&pdev->dev, "rx");
+> +	if (IS_ERR(st->dma_st.dma_chan))  {
+>  		dev_info(&pdev->dev, "can't get DMA channel\n");
+> +		st->dma_st.dma_chan = NULL;
+>  		goto dma_exit;
+>  	}
+>  
 
