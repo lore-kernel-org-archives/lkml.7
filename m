@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5E6C2D0D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1164AC2D0D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 414A82073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD70420715
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:36:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577115326;
-	bh=2Jh0dISSDe2QoB33eSLMydJsq/0U3Z7o/AyumMVclwY=;
+	s=default; t=1577115385;
+	bh=hzPoQ1fvvaQxsqmLyBqPFPkPlBBrXBsg0roCFv+pqOs=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jgpD8PUsNg63vBjs42FPCPiQSkKciv6oGXoAbsqOvQ2rJUp53eqXOvmMrXik4yTRj
-	 mjm3f2uAdBJGSvyrH0IgKSmKBxlbU5fkCT/ytrb0qS1EpDvKdHqlfjt5kdX13wSyRo
-	 5CHQVSLTFRDDUfjdlletLWrE+yUwgxuxx7GFH98E=
+	b=GD5IK9ux5s60DHMN1O79c35r1K2cDJigIYyhWL+SGScPL9Voo/VLqqLoh0hM3CEf7
+	 Lz3x0hIlIApnfg8iokaXVR6kTm9lJcUGF0Xr+lYZnYJupuxR8UZLbUp8PxvhpwYECi
+	 cTx/husiwMp7ztGP2CSYxtS3SY8N2PhYuZsNi36M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbfLWPfZ (ORCPT
+        id S1726884AbfLWPgZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 10:35:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38520 "EHLO mail.kernel.org"
+        Mon, 23 Dec 2019 10:36:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726756AbfLWPfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 10:35:25 -0500
+        id S1726718AbfLWPgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 10:36:24 -0500
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A210B20709;
-        Mon, 23 Dec 2019 15:35:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DAA420709;
+        Mon, 23 Dec 2019 15:36:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577115324;
-        bh=2Jh0dISSDe2QoB33eSLMydJsq/0U3Z7o/AyumMVclwY=;
+        s=default; t=1577115383;
+        bh=hzPoQ1fvvaQxsqmLyBqPFPkPlBBrXBsg0roCFv+pqOs=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ExXdx2Q2nHPZ9ULQTDREGE/IL/rEDmTqfR8h6zTDeGdq5ofho36I7ccTx/HmhQAXZ
-         S1zE/BgjsB4DxMEF++Dk04WFQyuysExjf7Wzk3H4lUDN/M9dsT47k0lW/20FeWQUDW
-         KgRDTJ0SBc7bw9Y3fwH2pxlDbyKLnAQcLgedq/w0=
-Date:   Mon, 23 Dec 2019 15:35:18 +0000
+        b=s4MSQy2xmhUVo8/AbEh0aCKi1q4LwtYsKJO4iAXF4ZSJ/enbaPVSONUXcL+pc1/dA
+         aovhls2gAlH9TNRo4SZeYIxvODZjtbaY7vMf768DkL8faFhnveOIBlMEVd9Lecs0TW
+         cntyTLkgwyffKMSduHFWeDDUb9NpN77AynMqT+4E=
+Date:   Mon, 23 Dec 2019 15:36:18 +0000
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
 Cc:     "lkcamp@lists.libreplanetbr.org" <lkcamp@lists.libreplanetbr.org>,
@@ -51,12 +51,12 @@ Cc:     "lkcamp@lists.libreplanetbr.org" <lkcamp@lists.libreplanetbr.org>,
         "Hennerich, Michael" <Michael.Hennerich@analog.com>,
         "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/4] iio: adc: ad7923: Fix checkpatch warning
-Message-ID: <20191223153518.5ae7cb6e@archlinux>
-In-Reply-To: <d2d3c5ce9015d00c5b3c82bfffd3f3e03b4246b7.camel@analog.com>
+Subject: Re: [PATCH v3 3/4] iio: adc: ad7923: Add of_device_id table
+Message-ID: <20191223153618.234c29cd@archlinux>
+In-Reply-To: <daf1148cb29129023ebd1c11f2b0fba86c9446f3.camel@analog.com>
 References: <20191217111158.30888-1-djunho@gmail.com>
-        <20191217111158.30888-3-djunho@gmail.com>
-        <d2d3c5ce9015d00c5b3c82bfffd3f3e03b4246b7.camel@analog.com>
+        <20191217111158.30888-4-djunho@gmail.com>
+        <daf1148cb29129023ebd1c11f2b0fba86c9446f3.camel@analog.com>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -66,18 +66,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Dec 2019 11:30:09 +0000
+On Tue, 17 Dec 2019 11:30:56 +0000
 "Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
 
 > On Tue, 2019-12-17 at 08:11 -0300, Daniel Junho wrote:
-> > Fix checkpatch warning:
-> > WARNING: Prefer 'unsigned int' to bare use of 'unsigned'
-> > +static int ad7923_scan_direct(struct ad7923_state *st, unsigned ch)
+> > Accomplish device tree compatibility to driver AD7923
+> > by adding of_device_id table and making a subsequent call to
+> > MODULE_DEVICE_TABLE.
 > >   
 > 
 > Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-
-Applied,
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
 
 Thanks,
 
@@ -86,21 +86,31 @@ Jonathan
 > 
 > > Signed-off-by: Daniel Junho <djunho@gmail.com>
 > > ---
-> >  drivers/iio/adc/ad7923.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >  drivers/iio/adc/ad7923.c | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
 > > 
 > > diff --git a/drivers/iio/adc/ad7923.c b/drivers/iio/adc/ad7923.c
-> > index 969c06b7d2b7..e535cec9fc02 100644
+> > index e535cec9fc02..6d56fa0b9e30 100644
 > > --- a/drivers/iio/adc/ad7923.c
 > > +++ b/drivers/iio/adc/ad7923.c
-> > @@ -184,7 +184,7 @@ static irqreturn_t ad7923_trigger_handler(int irq,
-> > void *p)
-> >  	return IRQ_HANDLED;
-> >  }
+> > @@ -348,9 +348,19 @@ static const struct spi_device_id ad7923_id[] = {
+> >  };
+> >  MODULE_DEVICE_TABLE(spi, ad7923_id);
 > >  
-> > -static int ad7923_scan_direct(struct ad7923_state *st, unsigned ch)
-> > +static int ad7923_scan_direct(struct ad7923_state *st, unsigned int ch)
-> >  {
-> >  	int ret, cmd;
-> >    
+> > +static const struct of_device_id ad7923_of_match[] = {
+> > +	{ .compatible = "adi,ad7904", },
+> > +	{ .compatible = "adi,ad7914", },
+> > +	{ .compatible = "adi,ad7923", },
+> > +	{ .compatible = "adi,ad7924", },
+> > +	{ },
+> > +};
+> > +MODULE_DEVICE_TABLE(of, ad7923_of_match);
+> > +
+> >  static struct spi_driver ad7923_driver = {
+> >  	.driver = {
+> >  		.name	= "ad7923",
+> > +		.of_match_table = ad7923_of_match,
+> >  	},
+> >  	.probe		= ad7923_probe,
+> >  	.remove		= ad7923_remove,  
 
