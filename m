@@ -2,60 +2,179 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D37CFC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 20:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00351C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 20:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEE2C20709
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 20:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2BB2206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 20:22:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jFotFt+k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbfLWUSL (ORCPT
+        id S1727030AbfLWUWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 15:18:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50452 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726787AbfLWUSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 15:18:11 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77136206D3;
-        Mon, 23 Dec 2019 20:18:10 +0000 (UTC)
-Date:   Mon, 23 Dec 2019 15:18:09 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Antonio Borneo <antonio.borneo@st.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH] tracing: Fix printing ptrs in preempt/irq
- enable/disable events
-Message-ID: <20191223151809.3db1d86a@gandalf.local.home>
-In-Reply-To: <20191223151301.20be63f7@gandalf.local.home>
-References: <20191127154428.191095-1-antonio.borneo@st.com>
-        <20191204092115.30ef75c9@gandalf.local.home>
-        <20191221234741.GA116648@google.com>
-        <20191223151301.20be63f7@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 23 Dec 2019 15:22:10 -0500
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:37163 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbfLWUWJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 15:22:09 -0500
+Received: by mail-ua1-f66.google.com with SMTP id f9so6083040ual.4
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 12:22:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yA4u7gp9B/6NRMaekhn2PBnz5CQhfso1HFtJ7dePbwg=;
+        b=jFotFt+ki8Cm57pYfqclAl00IYjzHjFBGCLJXAwFIEkF8SyuB0w4m8uQOsHxXP7frc
+         mvuODyXcXZjeZ7XgC6CvZ10vupf9kLRjW/kN/iWDhJpUfim46K4/T0QU+vgJN6RakAxX
+         0yKjYAwfDNqntkkanBu8eJDxDMdFHLnUpYbYyMvqoiEGOLYD+wf0dCHJY0NxMvg7LMkL
+         Iwr7UuCHuaaB/ddl+Z8ia1ueQIkspJNomczBL75wno+6nStfN3BuZenDW/ncPzPWepXV
+         eT/mlEthNec1nHdz8Y19p8Fzg6Sexszg0khyoUFxoquoKOdk50EIhE+fn4rFKo/nEIss
+         3pCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yA4u7gp9B/6NRMaekhn2PBnz5CQhfso1HFtJ7dePbwg=;
+        b=NOoIwedvnXPHPFCAsIOxHV7DeCDiVoY3032Bwe94QmpUgn3KwIKhYc2I2uYtDRJN7O
+         pBMLPShvFmncd/IAZUMK0dmCzvqwKGC2OFtVdUkfTRoISDjNkZDrhApf41E6/6QkXVMn
+         fBnnRxKWRgSYru8dhZBJquxIe1LlzkcP/Muurnsue1PKir9M5dg8dZ1r/YsFxjlMe8yj
+         YtTkKofkknI9CbAaYinA9LWPWB/TDsavTpxds7qvfjW/Gzfi83o90VcC4tZOBjV0rHbt
+         MzxWiZX08G6p9zuHYPkuhxgAagwiqRc4MFUKXKLQKOvRGoaSAPLGnFSVjDvJ04xVltBu
+         bpTw==
+X-Gm-Message-State: APjAAAUXoPXl0RdhA6xsyouzTyzGM4dQSN5ZbfX7H9ZpYfN5fbRGYTIS
+        fcqaOsSPsv3WQ41o+/9bNo9VqlftIUWJ1vSJLUr1+A==
+X-Google-Smtp-Source: APXvYqyuI83QwyFNxns5DVfH/XuFb1gn4xwX1leW2xqvloPp9zajO/40ovNU+0rLGyFcofQLZrj01xD1H1VgXw9OTzE=
+X-Received: by 2002:ab0:1101:: with SMTP id e1mr17083200uab.123.1577132527752;
+ Mon, 23 Dec 2019 12:22:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20191223140322.20013-1-mst@redhat.com> <CANDihLHPk5khpv-f-M+qhkzgTkygAts38GGb-HChg-VL2bo+Uw@mail.gmail.com>
+ <CA+FuTSfq5v3-0VYmTG7YFFUqT8uG53eXXhqc8WvVvMbp3s0nvA@mail.gmail.com> <CA+FuTScwwajN2ny2w8EBkBQd191Eb1ZsrRhbh3=5eQervArnEA@mail.gmail.com>
+In-Reply-To: <CA+FuTScwwajN2ny2w8EBkBQd191Eb1ZsrRhbh3=5eQervArnEA@mail.gmail.com>
+From:   Alistair Delva <adelva@google.com>
+Date:   Mon, 23 Dec 2019 12:21:56 -0800
+Message-ID: <CANDihLFv+DJYOD1m_Z3CKuxoXG-z4zPy_Tc2eoggq1KRo+GeWw@mail.gmail.com>
+Subject: Re: [PATCH net] virtio_net: CTRL_GUEST_OFFLOADS depends on CTRL_VQ
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org,
+        Network Development <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Dec 2019 15:13:01 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, Dec 23, 2019 at 12:12 PM Willem de Bruijn
+<willemdebruijn.kernel@gmail.com> wrote:
+>
+> On Mon, Dec 23, 2019 at 2:56 PM Willem de Bruijn
+> <willemdebruijn.kernel@gmail.com> wrote:
+> >
+> > 00fffe0ff0 DR7: 0000000000000400
+> > > > Call Trace:
+> > > >  ? preempt_count_add+0x58/0xb0
+> > > >  ? _raw_spin_lock_irqsave+0x36/0x70
+> > > >  ? _raw_spin_unlock_irqrestore+0x1a/0x40
+> > > >  ? __wake_up+0x70/0x190
+> > > >  virtnet_set_features+0x90/0xf0 [virtio_net]
+> > > >  __netdev_update_features+0x271/0x980
+> > > >  ? nlmsg_notify+0x5b/0xa0
+> > > >  dev_disable_lro+0x2b/0x190
+> > > >  ? inet_netconf_notify_devconf+0xe2/0x120
+> > > >  devinet_sysctl_forward+0x176/0x1e0
+> > > >  proc_sys_call_handler+0x1f0/0x250
+> > > >  proc_sys_write+0xf/0x20
+> > > >  __vfs_write+0x3e/0x190
+> > > >  ? __sb_start_write+0x6d/0xd0
+> > > >  vfs_write+0xd3/0x190
+> > > >  ksys_write+0x68/0xd0
+> > > >  __ia32_sys_write+0x14/0x20
+> > > >  do_fast_syscall_32+0x86/0xe0
+> > > >  entry_SYSENTER_compat+0x7c/0x8e
+> > > >
+> > > > A similar crash will likely trigger when enabling XDP.
+> > > >
+> > > > Reported-by: Alistair Delva <adelva@google.com>
+> > > > Reported-by: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+> > > > Fixes: 3f93522ffab2 ("virtio-net: switch off offloads on demand if possible on XDP set")
+> > > > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> > > > ---
+> > > >
+> > > > Lightly tested.
+> > > >
+> > > > Alistair, could you please test and confirm that this resolves the
+> > > > crash for you?
+> > >
+> > > This patch doesn't work. The reason is that NETIF_F_LRO is also turned
+> > > on by TSO4/TSO6, which your patch didn't check for. So it ends up
+> > > going through the same path and crashing in the same way.
+> > >
+> > >         if (virtio_has_feature(vdev, VIRTIO_NET_F_GUEST_TSO4) ||
+> > >             virtio_has_feature(vdev, VIRTIO_NET_F_GUEST_TSO6))
+> > >                 dev->features |= NETIF_F_LRO;
+> > >
+> > > It sounds like this patch is fixing something slightly differently to
+> > > my patch fixed. virtnet_set_features() doesn't care about
+> > > GUEST_OFFLOADS, it only tests against NETIF_F_LRO. Even if "offloads"
+> > > is zero, it will call virtnet_set_guest_offloads(), which triggers the
+> > > crash.
+> >
+> >
+> > Interesting. It's surprising that it is trying to configure a flag
+> > that is not configurable, i.e., absent from dev->hw_features
+> > after Michael's change.
+> >
+> > > So either we need to ensure NETIF_F_LRO is never set, or
+> >
+> > LRO might be available, just not configurable. Indeed this was what I
+> > observed in the past.
+>
+> dev_disable_lro expects that NETIF_F_LRO is always configurable. Which
+> I guess is a reasonable assumption, just not necessarily the case in
+> virtio_net.
+>
+> So I think we need both patches. Correctly mark the feature as fixed
+> by removing from dev->hw_features and also ignore the request from
+> dev_disable_lro, which does not check for this.
 
-> Does this fix it for you?
+Something like this maybe:
 
-I created this BZ so it does not get forgotten about over the New Year
-break.
+diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+index 4d7d5434cc5d..0556f42b0fb5 100644
+--- a/drivers/net/virtio_net.c
++++ b/drivers/net/virtio_net.c
+@@ -2560,6 +2560,9 @@ static int virtnet_set_features(struct net_device *dev,
+        u64 offloads;
+        int err;
 
-  https://bugzilla.kernel.org/show_bug.cgi?id=205953
++       if (!virtio_has_feature(vi->vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS))
++               return 0;
++
+        if ((dev->features ^ features) & NETIF_F_LRO) {
+                if (vi->xdp_queue_pairs)
+                        return -EBUSY;
+@@ -2971,6 +2974,15 @@ static int virtnet_validate(struct virtio_device *vdev)
+        if (!virtnet_validate_features(vdev))
+                return -EINVAL;
 
--- Steve
-
++       /* VIRTIO_NET_F_CTRL_GUEST_OFFLOADS does not work without
++        * VIRTIO_NET_F_CTRL_VQ. However the virtio spec does not
++        * specify that VIRTIO_NET_F_CTRL_GUEST_OFFLOADS depends
++        * on VIRTIO_NET_F_CTRL_VQ so devices can set the later but
++        * not the former.
++        */
++       if (!virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_VQ))
++               __virtio_clear_bit(vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS);
++
+        if (virtio_has_feature(vdev, VIRTIO_NET_F_MTU)) {
+                int mtu = virtio_cread16(vdev,
+                                         offsetof(struct virtio_net_config,
