@@ -7,186 +7,189 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05453C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D664C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF85220709
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 518C120709
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:26:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="p/lJ6slh"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="TpqudzOM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbfLWP0Y (ORCPT
+        id S1727140AbfLWP0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 10:26:24 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:16327 "EHLO pegase1.c-s.fr"
+        Mon, 23 Dec 2019 10:26:23 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:4385 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727029AbfLWP0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726903AbfLWP0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 23 Dec 2019 10:26:20 -0500
 Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47hNVG0qbvz9vK00;
-        Mon, 23 Dec 2019 16:26:14 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 47hNVF12djz9vJyy;
+        Mon, 23 Dec 2019 16:26:13 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=p/lJ6slh; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=TpqudzOM; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id XkJv_v2azCC5; Mon, 23 Dec 2019 16:26:14 +0100 (CET)
+        with ESMTP id zIN-liUu8jfd; Mon, 23 Dec 2019 16:26:13 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47hNVF6vjQz9vJyp;
-        Mon, 23 Dec 2019 16:26:13 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47hNVD6zPtz9vJyw;
+        Mon, 23 Dec 2019 16:26:12 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1577114774; bh=FCKhahnB2DcGBLIsfEPWwuR4+4T2VbdbTyFb5L+i344=;
+        t=1577114773; bh=CGg5lFjG79+f3AndFF6HVcEwxv4O9U6o4GFVGWYCcUM=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=p/lJ6slhl5G1wz9T1C2GCTbpFWzQaz091UqU3lib2ahPzDBLE0PBamXCso5OIRMFm
-         irMdtJhn8w5pwZxl0IMXrg7yNRjO8A+Krjs66QU24fwnpBw7hOBdQuUHUb7qNCA/ba
-         WEJCfDAlZJsNTdnzQDaKPI+y8nQPKJCAuJMBAoDU=
+        b=TpqudzOMTrzBq6NdKEoT6ie4xE8cDofbv/TXPN8mm3jpmcvS9HGZ9rmIJDf8H2qn4
+         AlcfawkPHFYVGYFzJ0lHOyy94MW4kWjGWoHlrl2TsuNML9KyNvCGtrA0bg+DrYFqkE
+         reBWPEeuMk/xDhJf2lp/RErt9oRP4/+nb9DD/jzE=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2585B8B7AB;
-        Mon, 23 Dec 2019 16:26:19 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2120E8B7D1;
+        Mon, 23 Dec 2019 16:26:18 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id VtsEhvNyVv-W; Mon, 23 Dec 2019 16:26:19 +0100 (CET)
+        with ESMTP id vWNFPbebVhiN; Mon, 23 Dec 2019 16:26:18 +0100 (CET)
 Received: from po16098vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.100])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0295E8B7A1;
-        Mon, 23 Dec 2019 16:26:19 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id EFBDF8B7A1;
+        Mon, 23 Dec 2019 16:26:17 +0100 (CET)
 Received: by po16098vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 0C59D637D8; Mon, 23 Dec 2019 15:26:19 +0000 (UTC)
-Message-Id: <64e40c302d81b17e567d57fa2cb3b6a7f96271f2.1577114567.git.christophe.leroy@c-s.fr>
+        id 05519637D8; Mon, 23 Dec 2019 15:26:17 +0000 (UTC)
+Message-Id: <af0bff368b4f65b5c96695385b9f4c0dd162ea7a.1577114567.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1577114567.git.christophe.leroy@c-s.fr>
 References: <cover.1577114567.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [RFC PATCH 8/8] powerpc/irq: drop softirq stack
+Subject: [RFC PATCH 7/8] powerpc/32: use IRQ stack immediately on IRQ
+ exception
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 23 Dec 2019 15:26:19 +0000 (UTC)
+Date:   Mon, 23 Dec 2019 15:26:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two IRQ stacks: softirq_ctx and hardirq_ctx
+Exception entries run of kernel thread stack, then do_IRQ()
+switches to the IRQ stack.
 
-do_softirq_own_stack() switches stack to softirq_ctx
-do_IRQ() switches stack to hardirq_ctx
+Instead of doing a first step of the thread stack, increasing the
+risk of stack overflow and spending time switch stacks two times when
+coming from userspace, set the stack to IRQ stack immediately in the
+EXCEPTION entry.
 
-However, when soft and hard IRQs are nested, only one of the two
-stacks is used:
-- When on softirq stack, do_IRQ() doesn't switch to hardirq stack.
-- irq_exit() runs softirqs on hardirq stack.
-
-There is no added value in having two IRQ stacks as only one is
-used when hard and soft irqs are nested. Remove softirq_ctx and
-use hardirq_ctx for both hard and soft IRQs.
+In the same way as ARM64, consider that when the stack pointer is not
+within the kernel thread stack, it means it is already on IRQ stack.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/include/asm/irq.h | 1 -
- arch/powerpc/kernel/irq.c      | 8 +++-----
- arch/powerpc/kernel/process.c  | 4 ----
- arch/powerpc/kernel/setup_32.c | 4 +---
- arch/powerpc/kernel/setup_64.c | 4 +---
- 5 files changed, 5 insertions(+), 16 deletions(-)
+ arch/powerpc/kernel/head_32.S  |  2 +-
+ arch/powerpc/kernel/head_32.h  | 32 +++++++++++++++++++++++++++++---
+ arch/powerpc/kernel/head_40x.S |  2 +-
+ arch/powerpc/kernel/head_8xx.S |  2 +-
+ 4 files changed, 32 insertions(+), 6 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/irq.h b/arch/powerpc/include/asm/irq.h
-index e4a92f0b4ad4..7cb2c76aa3ed 100644
---- a/arch/powerpc/include/asm/irq.h
-+++ b/arch/powerpc/include/asm/irq.h
-@@ -54,7 +54,6 @@ extern void *mcheckirq_ctx[NR_CPUS];
-  * Per-cpu stacks for handling hard and soft interrupts.
+diff --git a/arch/powerpc/kernel/head_32.S b/arch/powerpc/kernel/head_32.S
+index 4a24f8f026c7..0c36fba5b861 100644
+--- a/arch/powerpc/kernel/head_32.S
++++ b/arch/powerpc/kernel/head_32.S
+@@ -332,7 +332,7 @@ END_MMU_FTR_SECTION_IFSET(MMU_FTR_HPTE_TABLE)
+ 	EXC_XFER_LITE(0x400, handle_page_fault)
+ 
+ /* External interrupt */
+-	EXCEPTION(0x500, HardwareInterrupt, do_IRQ, EXC_XFER_LITE)
++	EXCEPTION_IRQ(0x500, HardwareInterrupt, __do_irq, EXC_XFER_LITE)
+ 
+ /* Alignment exception */
+ 	. = 0x600
+diff --git a/arch/powerpc/kernel/head_32.h b/arch/powerpc/kernel/head_32.h
+index 8abc7783dbe5..f9e77e51723e 100644
+--- a/arch/powerpc/kernel/head_32.h
++++ b/arch/powerpc/kernel/head_32.h
+@@ -11,21 +11,41 @@
+  * task's thread_struct.
   */
- extern void *hardirq_ctx[NR_CPUS];
--extern void *softirq_ctx[NR_CPUS];
  
- #ifdef CONFIG_PPC64
- void call_do_softirq(void *sp);
-diff --git a/arch/powerpc/kernel/irq.c b/arch/powerpc/kernel/irq.c
-index a1122ef4a16c..3af0d1897354 100644
---- a/arch/powerpc/kernel/irq.c
-+++ b/arch/powerpc/kernel/irq.c
-@@ -680,15 +680,14 @@ void __do_irq(struct pt_regs *regs)
+-.macro EXCEPTION_PROLOG
++.macro EXCEPTION_PROLOG is_irq=0
+ 	mtspr	SPRN_SPRG_SCRATCH0,r10
+ 	mtspr	SPRN_SPRG_SCRATCH1,r11
+ 	mfcr	r10
+-	EXCEPTION_PROLOG_1
++	EXCEPTION_PROLOG_1 is_irq=\is_irq
+ 	EXCEPTION_PROLOG_2
+ .endm
  
- void do_IRQ(struct pt_regs *regs)
- {
--	void *cursp, *irqsp, *sirqsp;
-+	void *cursp, *irqsp;
+-.macro EXCEPTION_PROLOG_1
++.macro EXCEPTION_PROLOG_1 is_irq=0
+ 	mfspr	r11,SPRN_SRR1		/* check whether user or kernel */
+ 	andi.	r11,r11,MSR_PR
++	.if \is_irq
++	bne	2f
++	mfspr	r11, SPRN_SPRG_THREAD
++	lwz	r11, TASK_STACK - THREAD(r11)
++	xor	r11, r11, r1
++	cmplwi	cr7, r11, THREAD_SIZE - 1
++	tophys(r11, r1)			/* use tophys(r1) if not thread stack */
++	bgt	cr7, 1f
++2:
++#ifdef CONFIG_SMP
++	mfspr	r11, SPRN_SPRG_THREAD
++	lwz	r11, TASK_CPU - THREAD(r11)
++	slwi	r11, r11, 3
++	addis	r11, r11, (hardirq_ctx - PAGE_OFFSET)@ha
++#else
++	lis	r11, (hardirq_ctx - PAGE_OFFSET)@ha
++#endif
++	lwz	r11, (hardirq_ctx - PAGE_OFFSET)@l(r11)
++	.else
+ 	tophys(r11,r1)			/* use tophys(r1) if kernel */
+ 	beq	1f
+ 	mfspr	r11,SPRN_SPRG_THREAD
+ 	lwz	r11,TASK_STACK-THREAD(r11)
++	.endif
+ 	addi	r11,r11,THREAD_SIZE
+ 	tophys(r11,r11)
+ 1:	subi	r11,r11,INT_FRAME_SIZE	/* alloc exc. frame */
+@@ -171,6 +191,12 @@
+ 	addi	r3,r1,STACK_FRAME_OVERHEAD;	\
+ 	xfer(n, hdlr)
  
- 	/* Switch to the irq stack to handle this */
- 	cursp = (void *)(stack_pointer() & ~(THREAD_SIZE - 1));
- 	irqsp = hardirq_ctx[raw_smp_processor_id()];
--	sirqsp = softirq_ctx[raw_smp_processor_id()];
++#define EXCEPTION_IRQ(n, label, hdlr, xfer)	\
++	START_EXCEPTION(n, label)		\
++	EXCEPTION_PROLOG is_irq=1;		\
++	addi	r3,r1,STACK_FRAME_OVERHEAD;	\
++	xfer(n, hdlr)
++
+ #define EXC_XFER_TEMPLATE(hdlr, trap, msr, tfer, ret)		\
+ 	li	r10,trap;					\
+ 	stw	r10,_TRAP(r11);					\
+diff --git a/arch/powerpc/kernel/head_40x.S b/arch/powerpc/kernel/head_40x.S
+index 4511fc1549f7..dd236f596c0b 100644
+--- a/arch/powerpc/kernel/head_40x.S
++++ b/arch/powerpc/kernel/head_40x.S
+@@ -315,7 +315,7 @@ _ENTRY(crit_srr1)
+ 	EXC_XFER_LITE(0x400, handle_page_fault)
  
- 	/* Already there ? Otherwise switch stack and call */
--	if (unlikely(cursp == irqsp || cursp == sirqsp))
-+	if (unlikely(cursp == irqsp))
- 		__do_irq(regs);
- 	else
- 		call_do_irq(regs, irqsp);
-@@ -706,12 +705,11 @@ void    *dbgirq_ctx[NR_CPUS] __read_mostly;
- void *mcheckirq_ctx[NR_CPUS] __read_mostly;
- #endif
+ /* 0x0500 - External Interrupt Exception */
+-	EXCEPTION(0x0500, HardwareInterrupt, do_IRQ, EXC_XFER_LITE)
++	EXCEPTION_IRQ(0x0500, HardwareInterrupt, __do_irq, EXC_XFER_LITE)
  
--void *softirq_ctx[NR_CPUS] __read_mostly;
- void *hardirq_ctx[NR_CPUS] __read_mostly;
+ /* 0x0600 - Alignment Exception */
+ 	START_EXCEPTION(0x0600, Alignment)
+diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
+index 19f583e18402..5a6cdbc89e26 100644
+--- a/arch/powerpc/kernel/head_8xx.S
++++ b/arch/powerpc/kernel/head_8xx.S
+@@ -150,7 +150,7 @@ DataAccess:
+ InstructionAccess:
  
- void do_softirq_own_stack(void)
- {
--	call_do_softirq(softirq_ctx[smp_processor_id()]);
-+	call_do_softirq(hardirq_ctx[smp_processor_id()]);
- }
+ /* External interrupt */
+-	EXCEPTION(0x500, HardwareInterrupt, do_IRQ, EXC_XFER_LITE)
++	EXCEPTION_IRQ(0x500, HardwareInterrupt, __do_irq, EXC_XFER_LITE)
  
- irq_hw_number_t virq_to_hw(unsigned int virq)
-diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-index 49d0ebf28ab9..be3e64cf28b4 100644
---- a/arch/powerpc/kernel/process.c
-+++ b/arch/powerpc/kernel/process.c
-@@ -1963,10 +1963,6 @@ static inline int valid_irq_stack(unsigned long sp, struct task_struct *p,
- 	if (sp >= stack_page && sp <= stack_page + THREAD_SIZE - nbytes)
- 		return 1;
- 
--	stack_page = (unsigned long)softirq_ctx[cpu];
--	if (sp >= stack_page && sp <= stack_page + THREAD_SIZE - nbytes)
--		return 1;
--
- 	return 0;
- }
- 
-diff --git a/arch/powerpc/kernel/setup_32.c b/arch/powerpc/kernel/setup_32.c
-index dcffe927f5b9..8752aae06177 100644
---- a/arch/powerpc/kernel/setup_32.c
-+++ b/arch/powerpc/kernel/setup_32.c
-@@ -155,10 +155,8 @@ void __init irqstack_early_init(void)
- 
- 	/* interrupt stacks must be in lowmem, we get that for free on ppc32
- 	 * as the memblock is limited to lowmem by default */
--	for_each_possible_cpu(i) {
--		softirq_ctx[i] = alloc_stack();
-+	for_each_possible_cpu(i)
- 		hardirq_ctx[i] = alloc_stack();
--	}
- }
- 
- #if defined(CONFIG_BOOKE) || defined(CONFIG_40x)
-diff --git a/arch/powerpc/kernel/setup_64.c b/arch/powerpc/kernel/setup_64.c
-index 6104917a282d..96ee7627eda6 100644
---- a/arch/powerpc/kernel/setup_64.c
-+++ b/arch/powerpc/kernel/setup_64.c
-@@ -652,10 +652,8 @@ void __init irqstack_early_init(void)
- 	 * cannot afford to take SLB misses on them. They are not
- 	 * accessed in realmode.
- 	 */
--	for_each_possible_cpu(i) {
--		softirq_ctx[i] = alloc_stack(limit, i);
-+	for_each_possible_cpu(i)
- 		hardirq_ctx[i] = alloc_stack(limit, i);
--	}
- }
- 
- #ifdef CONFIG_PPC_BOOK3E
+ /* Alignment exception */
+ 	. = 0x600
 -- 
 2.13.3
 
