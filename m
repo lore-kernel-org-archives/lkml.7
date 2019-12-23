@@ -2,254 +2,141 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 394F9C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 04:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C286DC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 04:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0737120709
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 04:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96949206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 04:29:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbfLWEAo (ORCPT
+        id S1726679AbfLWE3v convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 23:00:44 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8162 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726539AbfLWEAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 23:00:44 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 136DC6E380EB7F9F8274;
-        Mon, 23 Dec 2019 12:00:39 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 23 Dec 2019 12:00:31 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: introduce DEFAULT_IO_TIMEOUT_JIFFIES
-Date:   Mon, 23 Dec 2019 12:00:20 +0800
-Message-ID: <20191223040020.109570-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Sun, 22 Dec 2019 23:29:51 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:47818 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbfLWE3v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Dec 2019 23:29:51 -0500
+Received: from mail-wr1-f70.google.com ([209.85.221.70])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <chia-lin.kao@canonical.com>)
+        id 1ijFLo-0007Pe-R3
+        for linux-kernel@vger.kernel.org; Mon, 23 Dec 2019 04:29:48 +0000
+Received: by mail-wr1-f70.google.com with SMTP id 90so7371595wrq.6
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Dec 2019 20:29:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dpoHWFqcQ1TpfseO0Nokc21cLrtit4YIE7VtBBHccsA=;
+        b=JEH56UsIE4wHOcKO0UARt8wrad8pV1JJqmxaiMDtuI0dQdMrwq8lt8ICOtko6GRU74
+         6l6QZCHtcuCB9REos0DzR1XduI18JhtDn0mVVTeD8bnVzsFj9EE4w8eECj8SQOvM01cL
+         GcYRn0I+qsIVNCvlnwKpHoX8GCqD6xBP7aNIZ6E4PNc/5vabzuV1I9OjUtOHYatfzVQs
+         taRGLbKOgpPtV3dwtAXlv4Oqd8BTK3FLpNCtvyrfZnqb1DfPXW4si6R2NRyAyoaHCRTG
+         Pg1bcnkUkdPRed46kCCp9Q/QYT7GkbBxAmT/+JMpT2MPZqHy2zP3J+3XtjDAcmqjqTIm
+         JX6w==
+X-Gm-Message-State: APjAAAUqW0MEAoHZ18SBoOrXcPmC6zvRbpfftWdXYcBL+HtqsEstyaBj
+        9IdHZuiw4tb+wfv6uei1EKFF50JC9u9UGf4pHTO8YOBPU1PCwoDonzqPD7gj0G5yZByhxmIA0mM
+        r5bOMm/3PqVh/HUOHjAhxxkUFAq4DR+m/w8OZW/6+Pfp5dlDrt3GNspQyyw==
+X-Received: by 2002:a1c:80d4:: with SMTP id b203mr28533289wmd.102.1577075388553;
+        Sun, 22 Dec 2019 20:29:48 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzXUVi+UA1DavsCkDJBWIA4JcWT51MR9k+QDkiXMWpluAHzH7/yMod/quGq56oywTJgiXzqZ6cyOPbczgqW8Mk=
+X-Received: by 2002:a1c:80d4:: with SMTP id b203mr28533284wmd.102.1577075388321;
+ Sun, 22 Dec 2019 20:29:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+References: <20191220025917.11886-1-acelan.kao@canonical.com> <Pine.LNX.4.44L0.1912201040000.2513-100000@netrider.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1912201040000.2513-100000@netrider.rowland.org>
+From:   AceLan Kao <acelan.kao@canonical.com>
+Date:   Mon, 23 Dec 2019 12:29:37 +0800
+Message-ID: <CAFv23Qn9h=pwaHkiMB2ci-OaR54gY6fdc1Q_7ZMz5mH7wHr9+w@mail.gmail.com>
+Subject: Re: [PATCH] usb: hub: move resume delay at the head of all USB access functions
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Harry Pan <harry.pan@intel.com>,
+        David Heinzelmann <heinzelmann.david@gmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Mathieu Malaterre <malat@debian.org>,
+        linux-usb@vger.kernel.org,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As Geert Uytterhoeven reported:
+Alan Stern <stern@rowland.harvard.edu> 於 2019年12月20日 週五 下午11:48寫道：
+>
+> On Fri, 20 Dec 2019, AceLan Kao wrote:
+>
+> > usb_control_msg() function should be called after the resume delay, or
+>
+> Which usb_control_msg() call are you referring to?  Is it the call
+> under hub_port_status()?
+usb_port_resume() -> hub_port_status() -> hub_ext_port_status()
+-> get_port_status() -> usb_control_msg()
 
-for parameter HZ/50 in congestion_wait(BLK_RW_ASYNC, HZ/50);
+>
+> > you'll encounter the below errors sometime.
+> > After the issue happens, have to re-plug the USB cable to recover.
+> >
+> > [ 837.483573] hub 2-3:1.0: hub_ext_port_status failed (err = -71)
+> > [ 837.490889] hub 2-3:1.0: hub_ext_port_status failed (err = -71)
+> > [ 837.506780] usb 2-3-port4: cannot disable (err = -71)
+>
+> You need to do a better job of figuring out why these errors occur.  It
+> is not connected to the resume delay; there must be a different reason.
+> Hint: This is the sort of error you would expect to see if the kernel
+> tried to resume a device while its parent hub was still suspended.
+Once this error shows, the USB port doesn't work until re-plug the cable.
+I have no idea what else I can do to this, do you have any idea that I
+could try?
+Thanks.
 
-On some platforms, HZ can be less than 50, then unexpected 0 timeout
-jiffies will be set in congestion_wait().
-
-This patch introduces a macro DEFAULT_IO_TIMEOUT_JIFFIES to limit
-mininum value of timeout jiffies.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/compress.c |  3 ++-
- fs/f2fs/data.c     |  5 +++--
- fs/f2fs/f2fs.h     |  2 ++
- fs/f2fs/gc.c       |  3 ++-
- fs/f2fs/inode.c    |  3 ++-
- fs/f2fs/node.c     |  3 ++-
- fs/f2fs/recovery.c |  6 ++++--
- fs/f2fs/segment.c  | 12 ++++++++----
- fs/f2fs/super.c    |  6 ++++--
- 9 files changed, 29 insertions(+), 14 deletions(-)
-
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index 1bc86a54ad71..ee4fe8e644aa 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -945,7 +945,8 @@ static int f2fs_write_raw_pages(struct compress_ctx *cc,
- 			} else if (ret == -EAGAIN) {
- 				ret = 0;
- 				cond_resched();
--				congestion_wait(BLK_RW_ASYNC, HZ/50);
-+				congestion_wait(BLK_RW_ASYNC,
-+					DEFAULT_IO_TIMEOUT_JIFFIES);
- 				lock_page(cc->rpages[i]);
- 				clear_page_dirty_for_io(cc->rpages[i]);
- 				goto retry_write;
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index f1f5c701228d..78b5c0b0287e 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -2320,7 +2320,8 @@ int f2fs_encrypt_one_page(struct f2fs_io_info *fio)
- 		/* flush pending IOs and wait for a while in the ENOMEM case */
- 		if (PTR_ERR(fio->encrypted_page) == -ENOMEM) {
- 			f2fs_flush_merged_writes(fio->sbi);
--			congestion_wait(BLK_RW_ASYNC, HZ/50);
-+			congestion_wait(BLK_RW_ASYNC,
-+					DEFAULT_IO_TIMEOUT_JIFFIES);
- 			gfp_flags |= __GFP_NOFAIL;
- 			goto retry_encrypt;
- 		}
-@@ -2900,7 +2901,7 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
- 					if (wbc->sync_mode == WB_SYNC_ALL) {
- 						cond_resched();
- 						congestion_wait(BLK_RW_ASYNC,
--								HZ/50);
-+							DEFAULT_IO_TIMEOUT_JIFFIES);
- 						goto retry_write;
- 					}
- 					goto next;
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 16edbf4e05e8..4bdc20a94185 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -559,6 +559,8 @@ enum {
- 
- #define DEFAULT_RETRY_IO_COUNT	8	/* maximum retry read IO count */
- 
-+#define	DEFAULT_IO_TIMEOUT_JIFFIES	(max_t(long, HZ/50, 1))
-+
- /* maximum retry quota flush count */
- #define DEFAULT_RETRY_QUOTA_FLUSH_COUNT		8
- 
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index b3d399623290..c9523c4e4001 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -970,7 +970,8 @@ static int move_data_page(struct inode *inode, block_t bidx, int gc_type,
- 		if (err) {
- 			clear_cold_data(page);
- 			if (err == -ENOMEM) {
--				congestion_wait(BLK_RW_ASYNC, HZ/50);
-+				congestion_wait(BLK_RW_ASYNC,
-+						DEFAULT_IO_TIMEOUT_JIFFIES);
- 				goto retry;
- 			}
- 			if (is_dirty)
-diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index 3fa728f40c2a..1646b4e7a79f 100644
---- a/fs/f2fs/inode.c
-+++ b/fs/f2fs/inode.c
-@@ -519,7 +519,8 @@ struct inode *f2fs_iget_retry(struct super_block *sb, unsigned long ino)
- 	inode = f2fs_iget(sb, ino);
- 	if (IS_ERR(inode)) {
- 		if (PTR_ERR(inode) == -ENOMEM) {
--			congestion_wait(BLK_RW_ASYNC, HZ/50);
-+			congestion_wait(BLK_RW_ASYNC,
-+					DEFAULT_IO_TIMEOUT_JIFFIES);
- 			goto retry;
- 		}
- 	}
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index 3314a0f3405e..94c2fa5811df 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -2602,7 +2602,8 @@ int f2fs_recover_inode_page(struct f2fs_sb_info *sbi, struct page *page)
- retry:
- 	ipage = f2fs_grab_cache_page(NODE_MAPPING(sbi), ino, false);
- 	if (!ipage) {
--		congestion_wait(BLK_RW_ASYNC, HZ/50);
-+		congestion_wait(BLK_RW_ASYNC,
-+				DEFAULT_IO_TIMEOUT_JIFFIES);
- 		goto retry;
- 	}
- 
-diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
-index 763d5c0951d1..72e0f30b7d99 100644
---- a/fs/f2fs/recovery.c
-+++ b/fs/f2fs/recovery.c
-@@ -535,7 +535,8 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
- 	err = f2fs_get_dnode_of_data(&dn, start, ALLOC_NODE);
- 	if (err) {
- 		if (err == -ENOMEM) {
--			congestion_wait(BLK_RW_ASYNC, HZ/50);
-+			congestion_wait(BLK_RW_ASYNC,
-+					DEFAULT_IO_TIMEOUT_JIFFIES);
- 			goto retry_dn;
- 		}
- 		goto out;
-@@ -618,7 +619,8 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
- 			err = check_index_in_prev_nodes(sbi, dest, &dn);
- 			if (err) {
- 				if (err == -ENOMEM) {
--					congestion_wait(BLK_RW_ASYNC, HZ/50);
-+					congestion_wait(BLK_RW_ASYNC,
-+						DEFAULT_IO_TIMEOUT_JIFFIES);
- 					goto retry_prev;
- 				}
- 				goto err;
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index a9519532c029..7cf2817bd83e 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -245,7 +245,8 @@ static int __revoke_inmem_pages(struct inode *inode,
- 								LOOKUP_NODE);
- 			if (err) {
- 				if (err == -ENOMEM) {
--					congestion_wait(BLK_RW_ASYNC, HZ/50);
-+					congestion_wait(BLK_RW_ASYNC,
-+						DEFAULT_IO_TIMEOUT_JIFFIES);
- 					cond_resched();
- 					goto retry;
- 				}
-@@ -312,7 +313,8 @@ void f2fs_drop_inmem_pages_all(struct f2fs_sb_info *sbi, bool gc_failure)
- skip:
- 		iput(inode);
- 	}
--	congestion_wait(BLK_RW_ASYNC, HZ/50);
-+	congestion_wait(BLK_RW_ASYNC,
-+			DEFAULT_IO_TIMEOUT_JIFFIES);
- 	cond_resched();
- 	if (gc_failure) {
- 		if (++looped >= count)
-@@ -415,7 +417,8 @@ static int __f2fs_commit_inmem_pages(struct inode *inode)
- 			err = f2fs_do_write_data_page(&fio);
- 			if (err) {
- 				if (err == -ENOMEM) {
--					congestion_wait(BLK_RW_ASYNC, HZ/50);
-+					congestion_wait(BLK_RW_ASYNC,
-+						DEFAULT_IO_TIMEOUT_JIFFIES);
- 					cond_resched();
- 					goto retry;
- 				}
-@@ -2801,7 +2804,8 @@ static unsigned int __issue_discard_cmd_range(struct f2fs_sb_info *sbi,
- 			blk_finish_plug(&plug);
- 			mutex_unlock(&dcc->cmd_lock);
- 			trimmed += __wait_all_discard_cmd(sbi, NULL);
--			congestion_wait(BLK_RW_ASYNC, HZ/50);
-+			congestion_wait(BLK_RW_ASYNC,
-+					DEFAULT_IO_TIMEOUT_JIFFIES);
- 			goto next;
- 		}
- skip:
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 9d491f8fad4f..eff95e6d5641 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1891,7 +1891,8 @@ static ssize_t f2fs_quota_read(struct super_block *sb, int type, char *data,
- 		page = read_cache_page_gfp(mapping, blkidx, GFP_NOFS);
- 		if (IS_ERR(page)) {
- 			if (PTR_ERR(page) == -ENOMEM) {
--				congestion_wait(BLK_RW_ASYNC, HZ/50);
-+				congestion_wait(BLK_RW_ASYNC,
-+						DEFAULT_IO_TIMEOUT_JIFFIES);
- 				goto repeat;
- 			}
- 			set_sbi_flag(F2FS_SB(sb), SBI_QUOTA_NEED_REPAIR);
-@@ -1945,7 +1946,8 @@ static ssize_t f2fs_quota_write(struct super_block *sb, int type,
- 							&page, NULL);
- 		if (unlikely(err)) {
- 			if (err == -ENOMEM) {
--				congestion_wait(BLK_RW_ASYNC, HZ/50);
-+				congestion_wait(BLK_RW_ASYNC,
-+					DEFAULT_IO_TIMEOUT_JIFFIES);
- 				goto retry;
- 			}
- 			set_sbi_flag(F2FS_SB(sb), SBI_QUOTA_NEED_REPAIR);
--- 
-2.18.0.rc1
-
+>
+> > Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
+> > ---
+> >  drivers/usb/core/hub.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+> > index f229ad6952c0..2fb2816b0d38 100644
+> > --- a/drivers/usb/core/hub.c
+> > +++ b/drivers/usb/core/hub.c
+> > @@ -3522,6 +3522,7 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
+> >               }
+> >       }
+> >
+> > +     msleep(USB_RESUME_TIMEOUT);
+>
+> This makes no sense at all.  At this point we haven't even started to
+> do the resume signalling, so there's no reason to wait for it to
+> finish.
+I thought the h/w need some time to be back to stable status when resuming.
+>
+> >       usb_lock_port(port_dev);
+> >
+> >       /* Skip the initial Clear-Suspend step for a remote wakeup */
+> > @@ -3544,7 +3545,6 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
+> >               /* drive resume for USB_RESUME_TIMEOUT msec */
+> >               dev_dbg(&udev->dev, "usb %sresume\n",
+> >                               (PMSG_IS_AUTO(msg) ? "auto-" : ""));
+> > -             msleep(USB_RESUME_TIMEOUT);
+>
+> This is wrong also.  At this point the resume signal _is_ being sent,
+> and the USB spec requires that we wait a minimum amount of time for the
+> device to fully resume.
+I don't see the difference that after the delay, it calls hub_port_status(), but
+in the beginning of usb_port_resume() it call the same function, too.
+So, I think it should be good to move the delay before the first
+hub_port_status()
+>
+> Alan Stern
+>
