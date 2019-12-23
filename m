@@ -2,153 +2,133 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4114C2D0D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE56BC2D0CF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC0FD21569
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:26:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577100389;
-	bh=U674jlYACjQhhGCy4e3+CzEaPgiSjsEmvjKCwhbFzqw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=owmHKgoN4zDkp27Ib1A0Jkdrmq3RLEDFi08ot0mzDSDsXfRs/hOJfbJBx5lB2PwMe
-	 bK2Ww6qRGlX7bhaONC2KyjbMO9Xb3Be3PLugjkdwpouWoz5gCkbPrZTye2vuI1yz7S
-	 M4xIv0NsHz51hnOXzu1wFkGr9SlSihXbBXc4gsU4=
+	by mail.kernel.org (Postfix) with ESMTP id 8B16A207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:29:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbfLWL03 (ORCPT
+        id S1726828AbfLWL3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 06:26:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45654 "EHLO mail.kernel.org"
+        Mon, 23 Dec 2019 06:29:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:43030 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbfLWL02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 06:26:28 -0500
-Received: from localhost (unknown [223.226.34.186])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83040207FF;
-        Mon, 23 Dec 2019 11:26:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577100387;
-        bh=U674jlYACjQhhGCy4e3+CzEaPgiSjsEmvjKCwhbFzqw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eroF/x42FAFqJKFuiVMDn5gYmfp+YgrmPRGgnjhd4c9dKvwJB7A1iMuS5bamcLlIk
-         HL+DKo0W06Yey+iPDZ+l97Ca4a9P+7vi679IhZ4hpHK7VfFnZH0qIxJFFHZ0ydILBj
-         9puTCrdym62yreuoQBN3bvWGm7HublXnyBDANolg=
-Date:   Mon, 23 Dec 2019 16:56:23 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
-        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
-        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
-        j-keerthy@ti.com, vigneshr@ti.com
-Subject: Re: [PATCH v7 09/12] dmaengine: ti: New driver for K3 UDMA
-Message-ID: <20191223112623.GF2536@vkoul-mobl>
-References: <20191209094332.4047-1-peter.ujfalusi@ti.com>
- <20191209094332.4047-10-peter.ujfalusi@ti.com>
- <20191223073425.GV2536@vkoul-mobl>
- <ea473fed-276f-6b71-070b-02ab1f51ed89@ti.com>
+        id S1726679AbfLWL3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 06:29:32 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F7EC328;
+        Mon, 23 Dec 2019 03:29:31 -0800 (PST)
+Received: from [192.168.1.123] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE2493F68F;
+        Mon, 23 Dec 2019 03:29:25 -0800 (PST)
+Subject: Re: [PATCH 0/8] Convert the intel iommu driver to the dma-iommu api
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Tom Murphy <murphyt7@tcd.ie>, iommu@lists.linux-foundation.org
+Cc:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org
+References: <20191221150402.13868-1-murphyt7@tcd.ie>
+ <87blrzwcn8.fsf@intel.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <432d306c-fe9f-75b2-f0f7-27698f1467ad@arm.com>
+Date:   Mon, 23 Dec 2019 11:29:17 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ea473fed-276f-6b71-070b-02ab1f51ed89@ti.com>
+In-Reply-To: <87blrzwcn8.fsf@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23-12-19, 10:59, Peter Ujfalusi wrote:
-
-> >> +static void udma_reset_counters(struct udma_chan *uc)
-> >> +{
-> >> +	u32 val;
-> >> +
-> >> +	if (uc->tchan) {
-> >> +		val = udma_tchanrt_read(uc->tchan, UDMA_TCHAN_RT_BCNT_REG);
-> >> +		udma_tchanrt_write(uc->tchan, UDMA_TCHAN_RT_BCNT_REG, val);
-> > 
-> > so you read back from UDMA_TCHAN_RT_BCNT_REG and write same value to
-> > it??
+On 2019-12-23 10:37 am, Jani Nikula wrote:
+> On Sat, 21 Dec 2019, Tom Murphy <murphyt7@tcd.ie> wrote:
+>> This patchset converts the intel iommu driver to the dma-iommu api.
+>>
+>> While converting the driver I exposed a bug in the intel i915 driver
+>> which causes a huge amount of artifacts on the screen of my
+>> laptop. You can see a picture of it here:
+>> https://github.com/pippy360/kernelPatches/blob/master/IMG_20191219_225922.jpg
+>>
+>> This issue is most likely in the i915 driver and is most likely caused
+>> by the driver not respecting the return value of the
+>> dma_map_ops::map_sg function. You can see the driver ignoring the
+>> return value here:
+>> https://github.com/torvalds/linux/blob/7e0165b2f1a912a06e381e91f0f4e495f4ac3736/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c#L51
+>>
+>> Previously this didn’t cause issues because the intel map_sg always
+>> returned the same number of elements as the input scatter gather list
+>> but with the change to this dma-iommu api this is no longer the
+>> case. I wasn’t able to track the bug down to a specific line of code
+>> unfortunately.
+>>
+>> Could someone from the intel team look at this?
 > 
-> Yes, that's correct. This is how we can reset it. The counter is
-> decremented with the value you have written to the register.
+> Let me get this straight. There is current API that on success always
+> returns the same number of elements as the input scatter gather
+> list. You propose to change the API so that this is no longer the case?
 
-aha, with so many read+write back I would have added a helper.. Not a
-big deal though can be updated later
+No, the API for dma_map_sg() has always been that it may return fewer 
+DMA segments than nents - see Documentation/DMA-API.txt (and otherwise, 
+the return value would surely be a simple success/fail condition). 
+Relying on a particular implementation behaviour has never been strictly 
+correct, even if it does happen to be a very common behaviour.
 
-> >> +static struct udma_desc *udma_alloc_tr_desc(struct udma_chan *uc,
-> >> +					    size_t tr_size, int tr_count,
-> >> +					    enum dma_transfer_direction dir)
-> >> +{
-> >> +	struct udma_hwdesc *hwdesc;
-> >> +	struct cppi5_desc_hdr_t *tr_desc;
-> >> +	struct udma_desc *d;
-> >> +	u32 reload_count = 0;
-> >> +	u32 ring_id;
-> >> +
-> >> +	switch (tr_size) {
-> >> +	case 16:
-> >> +	case 32:
-> >> +	case 64:
-> >> +	case 128:
-> >> +		break;
-> >> +	default:
-> >> +		dev_err(uc->ud->dev, "Unsupported TR size of %zu\n", tr_size);
-> >> +		return NULL;
-> >> +	}
-> >> +
-> >> +	/* We have only one descriptor containing multiple TRs */
-> >> +	d = kzalloc(sizeof(*d) + sizeof(d->hwdesc[0]), GFP_ATOMIC);
-> > 
-> > this is invoked from prep_ so should use GFP_NOWAIT, we dont use
-> > GFP_ATOMIC :)
+> A quick check of various dma_map_sg() calls in the kernel seems to
+> indicate checking for 0 for errors and then ignoring the non-zero return
+> is a common pattern. Are you sure it's okay to make the change you're
+> proposing?
+
+Various code uses tricks like just iterating the mapped list until the 
+first segment with zero sg_dma_len(). Others may well simply have bugs.
+
+Robin.
+
+> Anyway, due to the time of year and all, I'd like to ask you to file a
+> bug against i915 at [1] so this is not forgotten, and please let's not
+> merge the changes before this is resolved.
 > 
-> Ok. btw: EDMA and sDMA driver is using GFP_ATOMIC :o
-
-heh, we made sure to document this bit :)
-
-> >> +static int udma_configure_statictr(struct udma_chan *uc, struct udma_desc *d,
-> >> +				   enum dma_slave_buswidth dev_width,
-> >> +				   u16 elcnt)
-> >> +{
-> >> +	if (uc->ep_type != PSIL_EP_PDMA_XY)
-> >> +		return 0;
-> >> +
-> >> +	/* Bus width translates to the element size (ES) */
-> >> +	switch (dev_width) {
-> >> +	case DMA_SLAVE_BUSWIDTH_1_BYTE:
-> >> +		d->static_tr.elsize = 0;
-> >> +		break;
-> >> +	case DMA_SLAVE_BUSWIDTH_2_BYTES:
-> >> +		d->static_tr.elsize = 1;
-> >> +		break;
-> >> +	case DMA_SLAVE_BUSWIDTH_3_BYTES:
-> >> +		d->static_tr.elsize = 2;
-> >> +		break;
-> >> +	case DMA_SLAVE_BUSWIDTH_4_BYTES:
-> >> +		d->static_tr.elsize = 3;
-> >> +		break;
-> >> +	case DMA_SLAVE_BUSWIDTH_8_BYTES:
-> >> +		d->static_tr.elsize = 4;
-> > 
-> > seems like ffs(dev_width) to me?
 > 
-> Not really:
-> ffs(DMA_SLAVE_BUSWIDTH_1_BYTE) = 1
-> ffs(DMA_SLAVE_BUSWIDTH_2_BYTES) = 2
-> ffs(DMA_SLAVE_BUSWIDTH_3_BYTES) = 1
-
-I missed this!
-
-> ffs(DMA_SLAVE_BUSWIDTH_4_BYTES) = 3
-> ffs(DMA_SLAVE_BUSWIDTH_8_BYTES) = 4
-
-Otherwise you are ffs() - 1
-
--- 
-~Vinod
+> Thanks,
+> Jani.
+> 
+> 
+> [1] https://gitlab.freedesktop.org/drm/intel/issues/new
+> 
+> 
