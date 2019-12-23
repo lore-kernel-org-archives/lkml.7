@@ -2,93 +2,134 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A5CC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 18:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17948C2D0D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 18:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25C9F20709
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 18:02:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577124124;
-	bh=MLg4g5Ofa/wkZ1A5nGhyBam3JNTaXHswT+qU5Xu90d0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=YblcFrLE58uay9vojxqDYw8dHdVCaX6jSicmj8JUvCXaHlqDVb2HQHF756fp29w0m
-	 6RmcwYnrdVL5WqF1WQ7+JvbkWlTOliUsF2SIsdz/cxWtSPiAUnvbxrlIXbCKvqRoJq
-	 sp5N9KaEd6wjOIdgafjfNzaaV3S6WFP4tnu/8phw=
+	by mail.kernel.org (Postfix) with ESMTP id EB459206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 18:24:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="FctYOOrJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbfLWSCD (ORCPT
+        id S1726910AbfLWSYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 13:02:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36720 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726824AbfLWSCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 13:02:03 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2627420643;
-        Mon, 23 Dec 2019 18:02:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577124122;
-        bh=MLg4g5Ofa/wkZ1A5nGhyBam3JNTaXHswT+qU5Xu90d0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DDBWmD15tYJKGCh8E1rW4nr88u8YLoROxnQz5Hv9+/1+xNjhYJjDOn83dhC0u4ZBs
-         AYk2iSXaNzDmzIaq9FQ7GEgiIVseqIC2eL8oWQnldtz7b9MFCYkFdyKc++VLcg0qFO
-         FiFmvLk4Iu2v3KVty5JNpy2O76CjLGGcWbEKCmB0=
-Date:   Mon, 23 Dec 2019 18:01:57 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Olivier Moysan <olivier.moysan@st.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lars@metafoo.de,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de,
-        fabrice.gasnier@st.com, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] dt-bindings: iio: adc: convert sd modulator to
- json-schema
-Message-ID: <20191223180157.49b971f0@archlinux>
-In-Reply-To: <20191218223032.GA8641@bogus>
-References: <20191206100058.26767-1-olivier.moysan@st.com>
-        <20191218223032.GA8641@bogus>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 23 Dec 2019 13:24:52 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:39168 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726846AbfLWSYv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 13:24:51 -0500
+Received: by mail-qv1-f68.google.com with SMTP id y8so6662613qvk.6
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 10:24:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KNSp0xKzXXca6h2YP8X3emLAqK9GuJuCbstCZTI5ulI=;
+        b=FctYOOrJ074bGu2erxfD+ggi+amf34vJ2+/SB/OaLs8ZFEcoEOPSKxrX7J7vfW72iX
+         iaD1ph6XI9oWEr/nnku4Pr+MbBh9He5Xr+rBPzoju6TBhM7n5pqaYtl/oqkKFK9Nr8fH
+         Us04jbJ3zTX0WDIVdGhJyQO5EPn2JUvIhBvTug4ZRXtCzaFxharK0qUYwO9ZIkwiEqhS
+         c9Aa/tUvtqh3RdzKBnkDvwefmOBkVu9RUXlbwmdawA3jtTcA8wQCgHrvBfiWYN8r7VQg
+         T/hlkSjI6vXJcCVxYIXrbbrRmfsaCa4t09oEgSwlogc3AYXQW7LtDW06LM/jq8bAmut6
+         WCJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KNSp0xKzXXca6h2YP8X3emLAqK9GuJuCbstCZTI5ulI=;
+        b=QYAq6YVeNDB+IwDzU4CbeFJph/qeMXi1Ok3RTTAYT6b4odUJppPTzu/Nu+hh5w+PFc
+         DhAriN9VVnABLmsaQu7F7o73UeNUrUVcbZoDRJYo33lkS6mXtvadmJR3L6evGCCmGbUh
+         DwjcrBGlf/g2+pOEtDM1Rby7GVJRpuUN09QoMXtJ40GM3ac9s3Glafc8R4EH5QY/0AJ2
+         M51c3JXtMgL3YWzm+6JVDBYkkO8IQbBYPUFIEPifLpBceJb7le1BGSnU4u2m0J2h4Vqx
+         NN+a80B533onTvv+WwW+W/UPtaloFou5WGN3KQbK3qv/VZlk8vK4Zog8gFVqqFZ1/uez
+         Kfqw==
+X-Gm-Message-State: APjAAAVKvFTXYrSg0Gkjb04FoBAZjgvtvuu+6lNwTIvI5GuB9T/SRMFA
+        TB7SCtx0C3LTGhUZSfRaz/2/bw==
+X-Google-Smtp-Source: APXvYqyOJm+HA/OOXOk1TxOLC8pk6pJEfZhfUy8M7as0rtMhyNSoNfAsriRZZomXf9eRLN7qDrjm+A==
+X-Received: by 2002:a0c:e150:: with SMTP id c16mr25637620qvl.51.1577125488455;
+        Mon, 23 Dec 2019 10:24:48 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id b7sm6449933qtj.15.2019.12.23.10.24.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 23 Dec 2019 10:24:47 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1ijSNq-0007Pv-LV; Mon, 23 Dec 2019 14:24:46 -0400
+Date:   Mon, 23 Dec 2019 14:24:46 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, KVM list <kvm@vger.kernel.org>,
+        linux-block@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Netdev <netdev@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maor Gottlieb <maorg@mellanox.com>
+Subject: Re: [PATCH v11 00/25] mm/gup: track dma-pinned pages: FOLL_PIN
+Message-ID: <20191223182446.GA28321@ziepe.ca>
+References: <20191216222537.491123-1-jhubbard@nvidia.com>
+ <20191219132607.GA410823@unreal>
+ <a4849322-8e17-119e-a664-80d9f95d850b@nvidia.com>
+ <20191219210743.GN17227@ziepe.ca>
+ <42a3e5c1-6301-db0b-5d09-212edf5ecf2a@nvidia.com>
+ <20191220133423.GA13506@ziepe.ca>
+ <CAPcyv4hX9TsTMjsv2hnbEM-TpkC9abtWGSVskr9nPwpR8c5E1Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4hX9TsTMjsv2hnbEM-TpkC9abtWGSVskr9nPwpR8c5E1Q@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Dec 2019 16:30:32 -0600
-Rob Herring <robh@kernel.org> wrote:
+On Fri, Dec 20, 2019 at 04:32:13PM -0800, Dan Williams wrote:
 
-> On Fri, 6 Dec 2019 11:00:58 +0100, Olivier Moysan wrote:
-> > Convert the sigma delta modulator bindings
-> > to DT schema format using json-schema.
-> > 
-> > Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-> > ---
-> > Changes since v1:
-> > - add additionalProperties
-> > - remove unit-address in example
-> > ---
-> >  .../iio/adc/sigma-delta-modulator.txt         | 13 -------
-> >  .../iio/adc/sigma-delta-modulator.yaml        | 37 +++++++++++++++++++
-> >  2 files changed, 37 insertions(+), 13 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml
-> >   
+> > > There's already a limit, it's just a much larger one. :) What does "no limit"
+> > > really mean, numerically, to you in this case?
+> >
+> > I guess I mean 'hidden limit' - hitting the limit and failing would
+> > be managable.
+> >
+> > I think 7 is probably too low though, but we are not using 1GB huge
+> > pages, only 2M..
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-Applied to the togreg branch of iio.git and pushed out as testing for the
-autobuilders to play with it.
+> What about RDMA to 1GB-hugetlbfs and 1GB-device-dax mappings?
 
-Thanks,
+I don't think the failing testing is doing that.
 
-Jonathan
+It is also less likely that 1GB regions will need multi-mapping, IMHO.
 
-
+Jason
