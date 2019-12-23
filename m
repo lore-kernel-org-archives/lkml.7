@@ -2,50 +2,51 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E29C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 09:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E610C2D0D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 09:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A43AF206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 09:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54E18206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 09:03:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sVXt+/mi"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wJJnerOj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbfLWJAp (ORCPT
+        id S1726239AbfLWJDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 04:00:45 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:32466 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725947AbfLWJAp (ORCPT
+        Mon, 23 Dec 2019 04:03:07 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:46645 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726027AbfLWJDH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 04:00:45 -0500
+        Mon, 23 Dec 2019 04:03:07 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1577091645; h=Content-Transfer-Encoding: Content-Type:
+ s=smtp; t=1577091785; h=Content-Transfer-Encoding: Content-Type:
  In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=LpD/XIXRR/PLw8GkamJbjUiErErlWN3nv/jfxUf1yzw=; b=sVXt+/miTxWiu9AngYlt0x1pPxHveikiWN8O3+8QFM5BwN7UsckFrnIaUIN+iNSNP3ZuGEjA
- RL9xbNZjWxzlv6qp/D9bN2ir31ArPT3OdGHz5kmo0M8ZMO0G62didE3g3AlUkHa2UJs7c6d/
- /Gyodqg52EQucyGpGm6SwV7QTtM=
-X-Mailgun-Sending-Ip: 104.130.122.25
+ Subject: Sender; bh=Bm/9NWmrJfIW6bpIJ0JZdnYU7Rre2hwxn3Yk3TswvDc=; b=wJJnerOjcxdQju+Eaj4f/ZigFUPzOtmVtt/GBrknQ1uDkZ34QiaBdtUs2NaXjae3rjwdtDp2
+ Dcdcn91MlIRESp7Q0ktyXufZq8QMWzgJyWr5QNLdZim4wyv8bnL856nYWqf7AIhKo6VI/HMk
+ mKMG+rmgr0dXpbVRZU3hIMV98to=
+X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e008233.7efbe1f80768-smtp-out-n01;
- Mon, 23 Dec 2019 09:00:35 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e0082c8.7f6247b65ca8-smtp-out-n03;
+ Mon, 23 Dec 2019 09:03:04 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1C8E3C433A2; Mon, 23 Dec 2019 09:00:34 +0000 (UTC)
+        id CAD2FC4479F; Mon, 23 Dec 2019 09:03:03 +0000 (UTC)
 Received: from [10.206.24.214] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mgautam)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DBB02C43383;
-        Mon, 23 Dec 2019 09:00:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DBB02C43383
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3C3A1C433CB;
+        Mon, 23 Dec 2019 09:02:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3C3A1C433CB
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mgautam@codeaurora.org
 Subject: Re: [PATCH 3/4] phy: qcom-qmp: Add optional SW reset
-To:     Vinod Koul <vkoul@kernel.org>, Can Guo <cang@codeaurora.org>
+To:     cang@codeaurora.org, Vinod Koul <vkoul@kernel.org>
 Cc:     Asutosh Das <asutoshd@codeaurora.org>,
         Kishon Vijay Abraham I <kishon@ti.com>,
         linux-arm-msm@vger.kernel.org,
@@ -57,20 +58,15 @@ References: <20191219150433.2785427-1-vkoul@kernel.org>
  <20191219150433.2785427-4-vkoul@kernel.org>
  <ff83ac1f0ec6bca1379e8b873fd30aa2@codeaurora.org>
  <9ef99dcac59dbdc59c7e5eb1a8724ea2@codeaurora.org>
- <20191220042427.GE2536@vkoul-mobl>
- <e55185eda9d7dcbce80a671e630449ea@codeaurora.org>
- <20191220071015.GF2536@vkoul-mobl>
- <b54f1f3a8938587b85aec74f7094006d@codeaurora.org>
- <20191220075338.GG2536@vkoul-mobl>
 From:   Manu Gautam <mgautam@codeaurora.org>
-Message-ID: <cef4c737-0b4c-000c-93e1-0eb2d24a0065@codeaurora.org>
-Date:   Mon, 23 Dec 2019 14:30:27 +0530
+Message-ID: <9535bad2-4870-ce6b-fe51-2a24a6e922c7@codeaurora.org>
+Date:   Mon, 23 Dec 2019 14:32:57 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <20191220075338.GG2536@vkoul-mobl>
+In-Reply-To: <9ef99dcac59dbdc59c7e5eb1a8724ea2@codeaurora.org>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -78,40 +74,117 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 12/20/2019 1:23 PM, Vinod Koul wrote:
-> On 20-12-19, 15:41, Can Guo wrote:
->> On 2019-12-20 15:10, Vinod Koul wrote:
->>> On 20-12-19, 14:00, Can Guo wrote:
->> Hi Vinod
+On 12/20/2019 6:19 AM, cang@codeaurora.org wrote:
+> On 2019-12-20 08:22, cang@codeaurora.org wrote:
+>> On 2019-12-19 23:04, Vinod Koul wrote:
+>>> For V4 QMP UFS Phy, we need to assert reset bits, configure the phy and
+>>> then deassert it, so add optional has_sw_reset flag and use that to
+>>> configure the QPHY_SW_RESET register.
+>>>
+>>> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+>>> ---
+>>>  drivers/phy/qualcomm/phy-qcom-qmp.c | 10 ++++++++++
+>>>  1 file changed, 10 insertions(+)
+>>>
+>>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c
+>>> b/drivers/phy/qualcomm/phy-qcom-qmp.c
+>>> index 06f971ca518e..80304b7cd895 100644
+>>> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+>>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+>>> @@ -1023,6 +1023,9 @@ struct qmp_phy_cfg {
+>>>
+>>>      /* true, if PCS block has no separate SW_RESET register */
+>>>      bool no_pcs_sw_reset;
+>>> +
+>>> +    /* true if sw reset needs to be invoked */
+>>> +    bool has_sw_reset;
+>>>  };
+>>>
+>>>  /**
+>>> @@ -1391,6 +1394,7 @@ static const struct qmp_phy_cfg sm8150_ufsphy_cfg = {
+>>>
+>>>      .is_dual_lane_phy    = true,
+>>>      .no_pcs_sw_reset    = true,
+>>> +    .has_sw_reset        = true,
+>>>  };
+>>>
+>>>  static void qcom_qmp_phy_configure(void __iomem *base,
+>>> @@ -1475,6 +1479,9 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
+>>>                   SW_USB3PHY_RESET_MUX | SW_USB3PHY_RESET);
+>>>      }
+>>>
+>>> +    if (cfg->has_sw_reset)
+>>> +        qphy_setbits(serdes, cfg->regs[QPHY_SW_RESET], SW_RESET);
+>>> +
 >>
->> We are just removing the no_pcs_sw_reset for 8150, right? Why is it
->> possibly impacting 845 or older paltforms?
+>> Are you sure you want to set this in the serdes register? QPHY_SW_RESET
+>> is in its pcs register.
 >>
->> In future, we will no longer need no_pcs_sw_reset for any newer QCOM UFS
->> PHY designs, as it is only for 845 and older platforms.
+>>>      if (cfg->has_phy_com_ctrl)
+>>>          qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
+>>>                   SW_PWRDN);
+>>> @@ -1651,6 +1658,9 @@ static int qcom_qmp_phy_enable(struct phy *phy)
+>>>      if (cfg->has_phy_dp_com_ctrl)
+>>>          qphy_clrbits(dp_com, QPHY_V3_DP_COM_SW_RESET, SW_RESET);
+>>>
+>>> +    if (cfg->has_sw_reset)
+>>> +        qphy_clrbits(pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
+>>> +
 >>
->> I am sure QPHY_SW_RESET will be within PHY's address space since 8150.
->> Otherwise, it will be a regression in UFS PHY design. We had a lot of
->> discussion about this on 845 years ago, then design team decided to add
->> it on later platforms, so I don't see a reason to remove it again. :)
+>> Yet you are clearing it from pcs register.
 >>
->> I am not sure about the other qmp phys, but so long as UFS PHY needs the
->> reset, we need to keep it, as phy-qcom-qmp.c is a common driver. I am
->> not sure if I get your point here. Please correct me I am wrong.
-> The argument here is that we are making this UFS specific and we do not
-> know if this will be true in future as QMP is a common phy, so adding a
-> separate flag helps to keep it independent and to be used in other
-> situations.
+>> Regards,
+>> Can Guo
+>>
+>>>      /* start SerDes and Phy-Coding-Sublayer */
+>>>      qphy_setbits(pcs, cfg->regs[QPHY_START_CTRL], cfg->start_ctrl);
 >
-> Thanks
+> I thought your change would be like this
+>
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index 8e642a6..a4ab4b7 100755
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> @@ -166,6 +166,7 @@ static const unsigned int sdm845_ufsphy_regs_layout[] = {
+>  };
+>
+>  static const unsigned int sm8150_ufsphy_regs_layout[] = {
+> +       [QPHY_SW_RESET]                 = 0x08,
+>         [QPHY_START_CTRL]               = 0x00,
+>         [QPHY_PCS_READY_STATUS]         = 0x180,
+>  };
+> @@ -1390,7 +1391,6 @@ static const struct qmp_phy_cfg sm8150_ufsphy_cfg = {
+>         .pwrdn_ctrl             = SW_PWRDN,
+>
+>         .is_dual_lane_phy       = true,
+> -       .no_pcs_sw_reset        = true,
 
-We should just remove no_pcs_sw_reset and let existing code take care
-of PHY reset for UFS.
-QMP PHY reset for UFS was differently handled earlier compared to USB/PCie
-and relied on core for PHY reset. That is not the case with addition of
-PCS based sw_reset and this won't change in future. There is no need to
-have UFS specific flag in this driver.
 
+This makes sense to me.
+
+>  };
+>
+>  static void qcom_qmp_phy_configure(void __iomem *base,
+> @@ -1475,6 +1475,9 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
+>                              SW_USB3PHY_RESET_MUX | SW_USB3PHY_RESET);
+>         }
+>
+> +       if ((cfg->type == PHY_TYPE_UFS) && (!cfg->no_pcs_sw_reset))
+> +               qphy_setbits(pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
+> +
+
+
+This change is not needed as POR value of SW_RESET bit is '1' which will be
+set as part of GCC or clk_reset.
+We just need to clear this bit which code already takes care of.
+
+
+>         if (cfg->has_phy_com_ctrl)
+>                 qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
+>                              SW_PWRDN);
+>
+> Regards,
+> Can Guo.
 
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
