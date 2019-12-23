@@ -2,101 +2,215 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B05FC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 16:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A050AC2D0D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 16:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42EF2206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 16:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 778C520715
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 16:02:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbfLWQBY (ORCPT
+        id S1726840AbfLWQC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 11:01:24 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:37989 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbfLWQBY (ORCPT
+        Mon, 23 Dec 2019 11:02:56 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:13214 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725912AbfLWQC4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 11:01:24 -0500
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1ijQ8k-0004jA-Bx; Mon, 23 Dec 2019 17:01:02 +0100
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        kexec@lists.infradead.org
-Subject: Re: [RFC PATCH v5 1/3] printk-rb: new printk ringbuffer implementation (writer)
-References: <20191128015235.12940-1-john.ogness@linutronix.de>
-        <20191128015235.12940-2-john.ogness@linutronix.de>
-        <20191221142235.GA7824@andrea>
-Date:   Mon, 23 Dec 2019 17:01:00 +0100
-Message-ID: <87imm7820z.fsf@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Mon, 23 Dec 2019 11:02:56 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBNFvE8m113194
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 11:02:55 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2x21r50yan-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 11:02:55 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 23 Dec 2019 16:02:52 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 23 Dec 2019 16:02:49 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBNG2mlV40435772
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Dec 2019 16:02:48 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 408A542047;
+        Mon, 23 Dec 2019 16:02:48 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E92D142041;
+        Mon, 23 Dec 2019 16:02:46 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.238.12])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 23 Dec 2019 16:02:46 +0000 (GMT)
+Subject: Re: [PATCH v1] IMA: Defined timer to free queued keys
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        James.Bottomley@HansenPartnership.com,
+        linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+Date:   Mon, 23 Dec 2019 11:02:46 -0500
+In-Reply-To: <20191223032454.2797-1-nramas@linux.microsoft.com>
+References: <20191223032454.2797-1-nramas@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19122316-0012-0000-0000-000003779FA5
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19122316-0013-0000-0000-000021B39D1C
+Message-Id: <1577116966.5241.116.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-23_07:2019-12-23,2019-12-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 phishscore=0 mlxscore=0 malwarescore=0 mlxlogscore=999
+ clxscore=1015 impostorscore=0 priorityscore=1501 adultscore=0
+ suspectscore=2 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912230135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrea,
+On Sun, 2019-12-22 at 19:24 -0800, Lakshmi Ramasubramanian wrote:
+> keys queued for measurement should still be processed even if
+> a custom IMA policy was not loaded. Otherwise, the keys will
+> remain queued forever consuming kernel memory.
+> 
+> This patch defines a timer to handle the above scenario. The timer
+> is setup to expire 5 minutes after IMA initialization is completed.
+> 
+> If a custom IMA policy is loaded before the timer expires, the timer
+> is removed and any queued keys are processed for measurement.
+> But if a custom policy was not loaded, on timer expiration
+> any queued keys are just freed.
+> 
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 
-On 2019-12-21, Andrea Parri <parri.andrea@gmail.com> wrote:
->> +	*desc_out = READ_ONCE(*desc);
->> +
->> +	/* Load data before re-checking state. */
->> +	smp_rmb(); /* matches LMM_REF(desc_reserve:A) */
->
-> I looked for a matching WRITE_ONCE() or some other type of marked write,
-> but I could not find it.  What is the rationale?  Or what did I miss?
+This patch description, and the comments below, read as though the
+queued keys are measured based on policy.  The queued keys should be
+removed, not "processed".  Please rewrite this patch description and
+update the comments below.
 
-This smp_rmb() matches LMM_TAG(desc_reserve:A).
+> ---
+>  security/integrity/ima/ima.h                 |  2 +
+>  security/integrity/ima/ima_asymmetric_keys.c | 46 ++++++++++++++++++--
+>  security/integrity/ima/ima_init.c            |  8 +++-
+>  3 files changed, 52 insertions(+), 4 deletions(-)
+> 
+> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+> index 97f8a4078483..c483215a9ee5 100644
+> --- a/security/integrity/ima/ima.h
+> +++ b/security/integrity/ima/ima.h
+> @@ -216,8 +216,10 @@ struct ima_key_entry {
+>  	char *keyring_name;
+>  };
+>  void ima_process_queued_keys(void);
+> +void ima_init_key_queue(void);
+>  #else
+>  static inline void ima_process_queued_keys(void) {}
+> +static inline void ima_init_key_queue(void) {}
+>  #endif /* CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE */
+>  
+>  /* LIM API function definitions */
+> diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
+> index 4124f10ff0c2..e1c4e1e7d9a1 100644
+> --- a/security/integrity/ima/ima_asymmetric_keys.c
+> +++ b/security/integrity/ima/ima_asymmetric_keys.c
+> @@ -11,6 +11,7 @@
+>  
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  
+> +#include <linux/timer.h>
+>  #include <keys/asymmetric-type.h>
+>  #include "ima.h"
+>  
+> @@ -26,6 +27,34 @@ static bool ima_process_keys;
+>  static DEFINE_MUTEX(ima_keys_mutex);
+>  static LIST_HEAD(ima_keys);
+>  
+> +/*
+> + * If custom IMA policy is not loaded then keys queued up
+> + * for measurement should be freed. This timer is used
+> + * for handling this scenario.
+> + */
+> +static long ima_key_queue_timeout = 300000; /* 5 Minutes */
+> +static struct timer_list ima_key_queue_timer;
+> +
+> +/*
+> + * This timer callback function processes keys that may still be
+> + * queued up in case custom IMA policy was not loaded.
+> + */
 
->> +	do {
->> +		next_lpos = get_next_lpos(data_ring, begin_lpos, size);
->> +
->> +		if (!data_push_tail(rb, data_ring,
->> +				    next_lpos - DATA_SIZE(data_ring))) {
->> +			/* Failed to allocate, specify a data-less block. */
->> +			blk_lpos->begin = INVALID_LPOS;
->> +			blk_lpos->next = INVALID_LPOS;
->> +			return NULL;
->> +		}
->> +	} while (!atomic_long_try_cmpxchg(&data_ring->head_lpos, &begin_lpos,
->> +					  next_lpos));
->> +
->> +	/*
->> +	 * No barrier is needed here. The data validity is defined by
->> +	 * the state of the associated descriptor. They are marked as
->> +	 * invalid at the moment. And only the winner of the above
->> +	 * cmpxchg() could write here.
->> +	 */
->
-> The (successful) CMPXCHG provides a full barrier.  This comment suggests
-> that that could be somehow relaxed?  Or the comment could be improved?
+"processes keys" implies measuring keys based on policy.  Please
+update this and the comment below.
 
-You are correct. There is no need for the full barrier here. This code
-is based on Petr's POC. I focussed on making sure needed barriers are in
-place, but did not try to eliminate excessive barriers.
+> +static void ima_timer_handler(struct timer_list *timer)
+> +{
+> +	ima_process_queued_keys();
+> +}
+> +
+> +/*
+> + * This function sets up a timer to process queued keys in case
+> + * custom IMA policy was never loaded.
+> + */
+> +void ima_init_key_queue(void)
+> +{
+> +	timer_setup(&ima_key_queue_timer, ima_timer_handler, 0);
+> +	mod_timer(&ima_key_queue_timer,
+> +		  jiffies + msecs_to_jiffies(ima_key_queue_timeout));
+> +}
+> +
+>  static void ima_free_key_entry(struct ima_key_entry *entry)
+>  {
+>  	if (entry) {
+> @@ -100,6 +129,7 @@ void ima_process_queued_keys(void)
+>  {
+>  	struct ima_key_entry *entry, *tmp;
+>  	bool process = false;
+> +	int timer_removed;
+>  
+>  	if (ima_process_keys)
+>  		return;
+> @@ -120,10 +150,20 @@ void ima_process_queued_keys(void)
+>  	if (!process)
+>  		return;
+>  
+> +	/*
+> +	 * Timer is no longer needed. If the timer was removed
+> +	 * (i.e., the timer had not expired) the queued keys are
+> +	 * processed for measurement. Else, the keys are just freed.
+> +	 */
+> +	timer_removed = del_timer(&ima_key_queue_timer);
 
-> (The patch introduces a number of CMPXCHG: similar questions would
-> apply to those other instances...)
+Interesting, but wouldn't it be simpler to define a static variable
+named timer_expired and set it in ima_timer_handler()?  With that
+change, the code would be easier to read and this comment would be
+superfluous.
 
-LMM_TAG(data_push_tail:A) is the only CMPXCHG that requires its full
-barrier. All others can be relaxed. I will make this change for the next
-series.
+Mimi
 
-Thanks for taking time for this.
+> +
+>  	list_for_each_entry_safe(entry, tmp, &ima_keys, list) {
+> -		process_buffer_measurement(entry->payload, entry->payload_len,
+> -					   entry->keyring_name, KEY_CHECK, 0,
+> -					   entry->keyring_name);
+> +		if (timer_removed)
+> +			process_buffer_measurement(entry->payload,
+> +						   entry->payload_len,
+> +						   entry->keyring_name,
+> +						   KEY_CHECK, 0,
+> +						   entry->keyring_name);
+>  		list_del(&entry->list);
+>  		ima_free_key_entry(entry);
+>  	}
 
-John Ogness
