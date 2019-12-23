@@ -2,137 +2,135 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FAAC2D0D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 23:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E7AC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 23:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE160206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 23:27:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577143664;
-	bh=hmXUFX5cu5/17gTRPztmAJvmHQhPXOWqMBOKGfbT114=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RbPKenefvoPUgScwZ9XQ6UxPvzXzTxYw8f5LNdXJ24LobRg1RYftG4kmeA+jlmZUW
-	 1xlTcs+pjQFQv9XtPPGXGUtZpWZCaR1J1428tj0mGBEyfb5fj82jaACMcdW/djpXkw
-	 YoosmNJOeJdAnYXrz6MBCGbI5/T6KRBxzlF+hwJo=
+	by mail.kernel.org (Postfix) with ESMTP id BA02F20709
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 23:54:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FRFXswF/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfLWX1n (ORCPT
+        id S1726960AbfLWXyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 18:27:43 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43773 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726512AbfLWX1m (ORCPT
+        Mon, 23 Dec 2019 18:54:51 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:44608 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726512AbfLWXyu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 18:27:42 -0500
-Received: by mail-pf1-f193.google.com with SMTP id x6so8785455pfo.10;
-        Mon, 23 Dec 2019 15:27:42 -0800 (PST)
+        Mon, 23 Dec 2019 18:54:50 -0500
+Received: by mail-qk1-f193.google.com with SMTP id w127so14811575qkb.11;
+        Mon, 23 Dec 2019 15:54:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4mcgnDmPaOUoLIo0q5+kI3GIAi8x1GQTnol/ySjLHyE=;
+        b=FRFXswF/v13KOQuIwVYTxNTuGoVL6iMSFUHCyGFWqLJmS29MmU+GRjSCqQtUiC7Qlp
+         wOwdYFiyJB1iP1z5Nz+UEwMBoEYfQSy1xiZFUKwqNz3ZbTXSDPWdyE2+M5yPDaqwFO54
+         s9Q+JuPFGb9EQUNsekfAWw2LZnjT6Ni8Ky/9MI1EDkqj24plXBhZGmzRcd62qZpjTdL0
+         dy7QeOjUxnIyfMz+aovabcwp30JUqbBiFkJ+YW9ZKnPfNJh6AsUJEXEjvVhSgWdhXt8m
+         dspuXqTA/6BaFJjVSTw0xhwQNUXNfMkNs1t+eFyrmblbOwOrzBxPnf7RVpV5v1+O3kI+
+         qp0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=C9C43i064jE8DQuh0depOW1E1odJCjHM5eu4z4wzqqI=;
-        b=kRCbVR2h01Qrp6LAK0ggQk1RyOT9n46FSszleDI2rv797Aya2G5hNTIxdiLQoZ4ZTC
-         PwdlSVjNZYOkXgPjEHt1gM4/x1sPsxxrFm0fQQFBOhH7XnF6WaDYRqFY9YgTdW4oDBI1
-         MSrs6JsJVZCt9IsvZVSO2dLEEDjTZyFx/HbrX+69fxfz4Z12bPWRlDCRKrb50AcZBabu
-         9+C9SwS6v5mBTYsVThVHC7JN1ZVCv4jlrwBnZk0gfKCJQjae1K3uyJL9zNsGUxvOVQI5
-         djuk3dByBThIMCNVKTzvDYYuQ1qg1aYFtXU8LkwoY2pG96NjUURqhfvmNqNuJtmg/zzV
-         /OLg==
-X-Gm-Message-State: APjAAAUtwrnKM5WPlH2a78WuC6HPgWZadxgB3sqQkakhm9Y+HNcOy8xH
-        2Va9QACZ1HimxbzAFYgaCj48KesA
-X-Google-Smtp-Source: APXvYqwbtqLliLNQvBcnQUMGQEGz3U/peJ5o0cMIFDcBYdUhkpwO/bDl+9w1vVlzVn8Qf1jqUE2mmw==
-X-Received: by 2002:aa7:9ec9:: with SMTP id r9mr34763625pfq.85.1577143661726;
-        Mon, 23 Dec 2019 15:27:41 -0800 (PST)
-Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
-        by smtp.gmail.com with ESMTPSA id 13sm25326945pfi.78.2019.12.23.15.27.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Dec 2019 15:27:41 -0800 (PST)
-Date:   Mon, 23 Dec 2019 15:29:45 -0800
-From:   Paul Burton <paulburton@kernel.org>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        arnd@arndb.de, Vincenzo Frascino <vincenzo.frascino@arm.com>
-Subject: Re: vdso-related userspace crashes on 5.5 mips64
-Message-ID: <20191223232945.a3sbzfj6uw2sokba@lantea.localdomain>
-References: <20191223130834.GA102399@zx2c4.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4mcgnDmPaOUoLIo0q5+kI3GIAi8x1GQTnol/ySjLHyE=;
+        b=MQCGeUfh5T+Y+IIkEfEvmRxd5GuOEFEoOWFPK2Xyanz3h56fWCX1ulLOvuK7oqynZz
+         lP9yI7l2J7SV+i5A/dLvaqJBHSxYKttlVpX8ixwnGjKex8+ezqhiBIMqn8tJ94AeVipq
+         jJw3ME7ElREGDDcVcKbRZ/0EqdLntgArc8fAWjWg9Bo2uTLJoU+CgbhPfZIGlfHVuh+K
+         ZBIavtRcvV4I72AwYvhbLMt4GsIPvtWLKJDfnSEBUYOQz3gFaOdMQ4kMgugiuJjOs5qZ
+         0ZPg36BohRpbAv9zGdgJmAlo+5h25VAjuVdO5GixNbOyZlOqgFf92ZxpQ7ZgzBqHmQRq
+         G/RA==
+X-Gm-Message-State: APjAAAVHiX9XqmAzDsYep4s4RtPGZ647EesKHA+xLdpQDCRXvdtUtU9m
+        r6Qt/gibxVKfltu/wqKLCKQNGER/1N6XgBjQETA=
+X-Google-Smtp-Source: APXvYqwQQXFsQONALOZNkTw2z4Oc5KDvM+ffjotivmCsWXmQnukgR5wiABHNoua5elFzRC2emLu2PSfIFIdC78Zy0Dw=
+X-Received: by 2002:a05:620a:14a2:: with SMTP id x2mr29062753qkj.36.1577145289375;
+ Mon, 23 Dec 2019 15:54:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191223130834.GA102399@zx2c4.com>
+References: <20191220154208.15895-1-kpsingh@chromium.org> <20191220154208.15895-5-kpsingh@chromium.org>
+In-Reply-To: <20191220154208.15895-5-kpsingh@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 23 Dec 2019 15:54:38 -0800
+Message-ID: <CAEf4BzaJ7YdSofV9-_D5zGC4GrwRvdPY3xyx7p+1rPD=Km2aXQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v1 04/13] bpf: lsm: Allow btf_id based attachment
+ for LSM hooks
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason,
+On Fri, Dec 20, 2019 at 7:42 AM KP Singh <kpsingh@chromium.org> wrote:
+>
+> From: KP Singh <kpsingh@google.com>
+>
+> Refactor and re-use most of the logic for BPF_PROG_TYPE_TRACING with a few
+> changes.
+>
+> - The LSM hook BTF types are prefixed with "lsm_btf_"
 
-Copying Vincenzo.
+btf_trace_ and btf_struct_ops all have btf_ first, let's keep this consistent.
 
-On Mon, Dec 23, 2019 at 02:08:34PM +0100, Jason A. Donenfeld wrote:
-> I'm experiencing VDSO-related crashes on 5.5 with MIPS64. The MIPS64
-> builders on build.wireguard.com are all red at the moment.
-> 
-> It looks like libc is crashing with a null pointer dereference when
-> doing any work after returning from clock_gettime. This manifests
-> itself, for me, with calls to clock_gettime(CLOCK_PROCESS_CPUTIME_ID),
-> because CLOCK_PROCESS_CPUTIME_ID is not in the VDSO. It looks in the
-> VDSO, doesn't find it, and then proceeds to make the real syscall, when
-> it crashes. I can simulate the same crash by simply adding a printf
-> after a successful call to the vdso before returning. For example:
-> 
-> int __clock_gettime(clockid_t clk, struct timespec *ts)
-> {
->   int r;
-> 
-> #ifdef VDSO_CGT_SYM
->   int (*f)(clockid_t, struct timespec *) =
->     (int (*)(clockid_t, struct timespec *))vdso_func;
->   printf("vdso %p\n", f); // <-- this line does NOT crash.
->   if (f) {
->     r = f(clk, ts);
->     if (!r) {
->       printf("ret %d\n", r); // <-- this line DOES crash.
->       return r;
->     }
->     if (r == -EINVAL)
->       return __syscall_ret(r);
->   }
-> #endif
->   printf("falling through\n"); // <--- this line DOES crash.
->   r = __syscall(SYS_clock_gettime, clk, ts); // <-- also, this line will crash too
->   if (r == -ENOSYS) {
->     if (clk == CLOCK_REALTIME) {
->       __syscall(SYS_gettimeofday, ts, 0);
->       ts->tv_nsec = (int)ts->tv_nsec * 1000;
->       return 0;
->     }
->     r = -EINVAL;
->   }
->   return __syscall_ret(r);
-> }
-> 
-> It seems like somehow the stack frame is corrupted/unusable after a call
-> to the vdso. But, returning immediately from clock_gettime after a call
-> to the vdso allows the program to continue. Thus, this problem only
-> manifests itself when using clocks that aren't handled by the vdso.
-> 
-> It's possible this is due to some compiler ABI mismatch situation
-> between userspace and kernelspace. However, I've only started seeing
-> this happen with 5.5 and not on 5.4.
-> 
-> Does the above description immediately point to some recognizable
-> change? If not, I'll keep debugging.
+> - These types do not need the first (void *) pointer argument. The verifier
+>   only looks for this argument if prod->aux->attach_btf_trace is set.
+>
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> ---
+>  kernel/bpf/syscall.c  |  1 +
+>  kernel/bpf/verifier.c | 83 ++++++++++++++++++++++++++++++++++++++++---
+>  2 files changed, 80 insertions(+), 4 deletions(-)
+>
 
-There is one pending fix for the VDSO in mips-fixes, commit 7d2aa4bb90f5
-("mips: Fix gettimeofday() in the vdso library") but your symptoms sound
-different to the problem fixed there...
+[...]
 
-Could you share your kernel config & tell us which platform you're
-running on? (QEMU Malta?)
+> +
+> +       t = btf_type_by_id(btf_vmlinux, btf_id);
+> +       if (!t) {
+> +               verbose(env, "attach_btf_id %u is invalid\n", btf_id);
+> +               return -EINVAL;
+> +       }
+> +
+> +       tname = btf_name_by_offset(btf_vmlinux, t->name_off);
+> +       if (!tname) {
 
-Thanks,
-    Paul
+it can be empty, so better: !tname || !tname[0]
+
+> +               verbose(env, "attach_btf_id %u doesn't have a name\n", btf_id);
+> +               return -EINVAL;
+> +       }
+> +
+
+[...]
