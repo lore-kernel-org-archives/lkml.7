@@ -2,99 +2,112 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E1CC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B129C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A74D420CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7281F21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:21:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577089279;
+	bh=ikpSlqoCM76TUjA3pD9Z0hpXBk9zItSJFElxa1lvb98=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BzGhA1uX93PfTt9ifhCBEUBHuhzbSPnf7dkCJ08bUH23z+PfsjljZxa1CghEkRj8R
+	 sHtqM5aUUxLeUW4SS52IrYzQutqlBO4WgUkKds+Aaw4PTzSE1C/sodZp5PZtEzNIgb
+	 suHbTyg9BidAatwOmZy1uCBE1HInETS1GIwM9xoc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbfLWIVP (ORCPT
+        id S1726866AbfLWIVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 03:21:15 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35798 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726691AbfLWIVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 03:21:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38878 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726764AbfLWIVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 23 Dec 2019 03:21:12 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 76E6D5F1FED0821E5F97;
-        Mon, 23 Dec 2019 16:21:06 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.24) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 23 Dec 2019 16:20:59 +0800
-From:   z00214469 <prime.zeng@hisilicon.com>
-To:     <sudeep.holla@arm.com>
-CC:     <linuxarm@huawei.com>, z00214469 <prime.zeng@hisilicon.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] cpu-topology: warn if NUMA configurations conflicts with lower layer
-Date:   Mon, 23 Dec 2019 16:16:19 +0800
-Message-ID: <1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com>
-X-Mailer: git-send-email 2.8.1
+Received: from localhost (36-236-5-169.dynamic-ip.hinet.net [36.236.5.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BD60207FF;
+        Mon, 23 Dec 2019 08:21:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577089272;
+        bh=ikpSlqoCM76TUjA3pD9Z0hpXBk9zItSJFElxa1lvb98=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oZkepFCOD4sOJfU2XzVn5e0qLiEhofXGJpToN9JRaWa6gztJRCCIzoLSP7JZTcwjG
+         1/2zVUO+rXgNYD9D1cOLB10URUxkuls7yOHA8RVkZDJKtm67hqF2bF5uChx+keeBvG
+         iyEwICwjZLDqvk/wQSwKqyu+NA4yxRiRjyyhW6D4=
+From:   Andy Lutomirski <luto@kernel.org>
+To:     Ted Ts'o <tytso@mit.edu>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>,
+        Stephan Mueller <smueller@chronox.de>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH v3 4/8] random: Ignore GRND_RANDOM in getentropy(2)
+Date:   Mon, 23 Dec 2019 00:20:47 -0800
+Message-Id: <705c5a091b63cc5da70c99304bb97e0109be0a26.1577088521.git.luto@kernel.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1577088521.git.luto@kernel.org>
+References: <cover.1577088521.git.luto@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.165.24]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As we know, from sched domain's perspective, the DIE layer should be
-larger than or at least equal to the MC layer, and in some cases, MC
-is defined by the arch specified hardware, MPIDR for example, but NUMA
-can be defined by users, with the following system configrations:
-*************************************
-NUMA:      	 0-2,  3-7
-core_siblings:   0-3,  4-7
-*************************************
-Per the current code, for core 3, its MC cpu map fallbacks to 3~7(its
-core_sibings is 0~3 while its numa node map is 3~7).
+The separate blocking pool is going away.  Start by ignoring
+GRND_RANDOM in getentropy(2).
 
-For the sched MC, when we are build sched groups:
-step1. core3 's sched groups chain is built like this: 3->4->5->6->7->3
-step2. core4's sched groups chain is built like this: 4->5->6->7->4
-so after step2, core3's sched groups for MC level is overlapped, more
-importantly, it will fall to dead loop if while(sg != sg->groups)
+This should not materially break any API.  Any code that worked
+without this change should work at least as well with this change.
 
-Obviously, the NUMA node with cpu 3-7 conflict with the MC level cpu
-map, but unfortunately, there is no way even detect such cases.
-
-In this patch, prompt a warning message to help with the above cases.
-
-Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
 ---
- drivers/base/arch_topology.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/char/random.c       | 3 ---
+ include/uapi/linux/random.h | 2 +-
+ 2 files changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-index 1eb81f11..5fe44b3 100644
---- a/drivers/base/arch_topology.c
-+++ b/drivers/base/arch_topology.c
-@@ -439,10 +439,18 @@ const struct cpumask *cpu_coregroup_mask(int cpu)
- 	if (cpumask_subset(&cpu_topology[cpu].core_sibling, core_mask)) {
- 		/* not numa in package, lets use the package siblings */
- 		core_mask = &cpu_topology[cpu].core_sibling;
--	}
-+	} else
-+		pr_warn_once("Warning: suspicous broken topology: cpu:[%d]'s core_sibling:[%*pbl] not a subset of numa node:[%*pbl]\n",
-+			cpu, cpumask_pr_args(&cpu_topology[cpu].core_sibling),
-+			cpumask_pr_args(core_mask));
-+
- 	if (cpu_topology[cpu].llc_id != -1) {
- 		if (cpumask_subset(&cpu_topology[cpu].llc_sibling, core_mask))
- 			core_mask = &cpu_topology[cpu].llc_sibling;
-+		else
-+			pr_warn_once("Warning: suspicous broken topology: cpu:[%d]'s llc_sibling:[%*pbl] not a subset of numa node:[%*pbl]\n",
-+				cpu, cpumask_pr_args(&cpu_topology[cpu].llc_sibling),
-+				cpumask_pr_args(core_mask));
- 	}
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index 675b8a48e18a..c0a3032b30ca 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -2206,9 +2206,6 @@ SYSCALL_DEFINE3(getrandom, char __user *, buf, size_t, count,
+ 	if (count > INT_MAX)
+ 		count = INT_MAX;
  
- 	return core_mask;
+-	if (flags & GRND_RANDOM)
+-		return _random_read(flags & GRND_NONBLOCK, buf, count);
+-
+ 	if (!(flags & GRND_INSECURE) && !crng_ready()) {
+ 		if (flags & GRND_NONBLOCK)
+ 			return -EAGAIN;
+diff --git a/include/uapi/linux/random.h b/include/uapi/linux/random.h
+index c092d20088d3..dcc1b3e6106f 100644
+--- a/include/uapi/linux/random.h
++++ b/include/uapi/linux/random.h
+@@ -48,7 +48,7 @@ struct rand_pool_info {
+  * Flags for getrandom(2)
+  *
+  * GRND_NONBLOCK	Don't block and return EAGAIN instead
+- * GRND_RANDOM		Use the /dev/random pool instead of /dev/urandom
++ * GRND_RANDOM		No effect
+  * GRND_INSECURE	Return non-cryptographic random bytes
+  */
+ #define GRND_NONBLOCK	0x0001
 -- 
-2.8.1
+2.23.0
 
