@@ -2,243 +2,243 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D51D2C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A05E9C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4F5B206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:25:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VzwQpbXw"
+	by mail.kernel.org (Postfix) with ESMTP id 6AE6920715
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:28:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfLWMZc (ORCPT
+        id S1726798AbfLWM2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 07:25:32 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:60238 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbfLWMZc (ORCPT
+        Mon, 23 Dec 2019 07:28:42 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:37620 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726257AbfLWM2l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 07:25:32 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBNCPPIi090169;
-        Mon, 23 Dec 2019 06:25:25 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1577103925;
-        bh=BtkxdKoVlELObOipWXUNWLs/4X4+SFpidrRuF6Imn5k=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=VzwQpbXwZFjIClz0nbGKLU8Ts9VCaUU/mo/YfDmAMfogsx0rJAx1UKuf73GMtOEvs
-         r9F4ATkzMOHGAnrN119B1dpKeTBxk7M3gUQRbZCQw4DlBKYEcZ4CcH9jmMEEwdwpHH
-         vlBQANm52xvc1hDY3B+qX9rGVJzwnVp8VS5DhBs8=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBNCPPFt015911
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 23 Dec 2019 06:25:25 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 23
- Dec 2019 06:25:25 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 23 Dec 2019 06:25:25 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBNCPMHS023446;
-        Mon, 23 Dec 2019 06:25:22 -0600
-Subject: Re: [PATCH v1] phy: Add DisplayPort configuration options
-To:     Yuti Amonkar <yamonkar@cadence.com>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-CC:     <praneeth@ti.com>, <tomi.valkeinen@ti.com>, <jsarha@ti.com>,
-        <mparab@cadence.com>, <sjakhade@cadence.com>
-References: <1577084071-5332-1-git-send-email-yamonkar@cadence.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <ca6d9a16-0cba-cde7-f60c-75305f88bf33@ti.com>
-Date:   Mon, 23 Dec 2019 17:57:17 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 23 Dec 2019 07:28:41 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1ijMou-0002FA-Ui; Mon, 23 Dec 2019 13:28:21 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 76C311C0105;
+        Mon, 23 Dec 2019 13:28:20 +0100 (CET)
+Date:   Mon, 23 Dec 2019 12:28:20 -0000
+From:   "tip-bot2 for Omar Sandoval" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/kdump] x86/crash: Define arch_crash_save_vmcoreinfo() if
+ CONFIG_CRASH_CORE=y
+Cc:     Omar Sandoval <osandov@fb.com>, Borislav Petkov <bp@suse.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Kairui Song <kasong@redhat.com>,
+        Lianbo Jiang <lijiang@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "x86-ml" <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <0589961254102cca23e3618b96541b89f2b249e2.1576858905.git.osandov@fb.com>
+References: <0589961254102cca23e3618b96541b89f2b249e2.1576858905.git.osandov@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <1577084071-5332-1-git-send-email-yamonkar@cadence.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Message-ID: <157710410032.30329.7180720417870538436.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Maxime
+The following commit has been merged into the x86/kdump branch of tip:
 
-Hi,
+Commit-ID:     8757dc970f550dc399f899be0e7a2c00b7e82e8f
+Gitweb:        https://git.kernel.org/tip/8757dc970f550dc399f899be0e7a2c00b7e82e8f
+Author:        Omar Sandoval <osandov@fb.com>
+AuthorDate:    Fri, 20 Dec 2019 08:22:49 -08:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Mon, 23 Dec 2019 12:58:41 +01:00
 
-On 23/12/19 12:24 PM, Yuti Amonkar wrote:
-> Allow DisplayPort PHYs to be configured through the generic
-> functions through a custom structure added to the generic union.
-> The configuration structure is used for reconfiguration of
-> DisplayPort PHYs during link training operation.
-> 
-> The parameters added here are the ones defined in the DisplayPort
-> spec which include link rate, number of lanes, voltage swing
-> and pre-emphasis.
+x86/crash: Define arch_crash_save_vmcoreinfo() if CONFIG_CRASH_CORE=y
 
-Which version of display port specification?
+On x86 kernels configured with CONFIG_PROC_KCORE=y and
+CONFIG_KEXEC_CORE=n, the vmcoreinfo note in /proc/kcore is incomplete.
 
-Rest of commit log should move below the "---"
+Specifically, it is missing arch-specific information like the KASLR
+offset and whether 5-level page tables are enabled. This breaks
+applications like drgn [1] and crash [2], which need this information
+for live debugging via /proc/kcore.
 
+This happens because:
 
-> 
-> This patch was a part of [1] series earlier but we think that it needs
-> to have a separate attention of the reviewers. Also as both [1] & [2] are
-> dependent on this patch, our sincere request to reviewers to have a
-> faster review of this patch.
-> 
-> [1]
-> 
-> https://lkml.org/lkml/2019/12/11/455
-> 
-> [2]
-> 
-> https://patchwork.kernel.org/cover/11271191/
+1. CONFIG_PROC_KCORE selects CONFIG_CRASH_CORE.
+2. kernel/crash_core.c (compiled if CONFIG_CRASH_CORE=y) calls
+   arch_crash_save_vmcoreinfo() to get the arch-specific parts of
+   vmcoreinfo. If it is not defined, then it uses a no-op fallback.
+3. x86 defines arch_crash_save_vmcoreinfo() in
+   arch/x86/kernel/machine_kexec_*.c, which is only compiled if
+   CONFIG_KEXEC_CORE=y.
 
-Thanks
-Kishon
+Therefore, an x86 kernel with CONFIG_CRASH_CORE=y and
+CONFIG_KEXEC_CORE=n uses the no-op fallback and gets incomplete
+vmcoreinfo data. This isn't relevant to kdump, which requires
+CONFIG_KEXEC_CORE. It only affects applications which read vmcoreinfo at
+runtime, like the ones mentioned above.
 
-> 
-> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
-> ---
->   include/linux/phy/phy-dp.h | 95 ++++++++++++++++++++++++++++++++++++++++++++++
->   include/linux/phy/phy.h    |  4 ++
->   2 files changed, 99 insertions(+)
->   create mode 100644 include/linux/phy/phy-dp.h
-> 
-> diff --git a/include/linux/phy/phy-dp.h b/include/linux/phy/phy-dp.h
-> new file mode 100644
-> index 0000000..18cad23
-> --- /dev/null
-> +++ b/include/linux/phy/phy-dp.h
-> @@ -0,0 +1,95 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2019 Cadence Design Systems Inc.
-> + */
-> +
-> +#ifndef __PHY_DP_H_
-> +#define __PHY_DP_H_
-> +
-> +#include <linux/types.h>
-> +
-> +/**
-> + * struct phy_configure_opts_dp - DisplayPort PHY configuration set
-> + *
-> + * This structure is used to represent the configuration state of a
-> + * DisplayPort phy.
-> + */
-> +struct phy_configure_opts_dp {
-> +	/**
-> +	 * @link_rate:
-> +	 *
-> +	 * Link Rate, in Mb/s, of the main link.
-> +	 *
-> +	 * Allowed values: 1620, 2160, 2430, 2700, 3240, 4320, 5400, 8100 Mb/s
-> +	 */
-> +	unsigned int link_rate;
-> +
-> +	/**
-> +	 * @lanes:
-> +	 *
-> +	 * Number of active, consecutive, data lanes, starting from
-> +	 * lane 0, used for the transmissions on main link.
-> +	 *
-> +	 * Allowed values: 1, 2, 4
-> +	 */
-> +	unsigned int lanes;
-> +
-> +	/**
-> +	 * @voltage:
-> +	 *
-> +	 * Voltage swing levels, as specified by DisplayPort specification,
-> +	 * to be used by particular lanes. One value per lane.
-> +	 * voltage[0] is for lane 0, voltage[1] is for lane 1, etc.
-> +	 *
-> +	 * Maximum value: 3
-> +	 */
-> +	unsigned int voltage[4];
-> +
-> +	/**
-> +	 * @pre:
-> +	 *
-> +	 * Pre-emphasis levels, as specified by DisplayPort specification, to be
-> +	 * used by particular lanes. One value per lane.
-> +	 *
-> +	 * Maximum value: 3
-> +	 */
-> +	unsigned int pre[4];
-> +
-> +	/**
-> +	 * @ssc:
-> +	 *
-> +	 * Flag indicating, whether or not to enable spread-spectrum clocking.
-> +	 *
-> +	 */
-> +	u8 ssc : 1;
-> +
-> +	/**
-> +	 * @set_rate:
-> +	 *
-> +	 * Flag indicating, whether or not reconfigure link rate and SSC to
-> +	 * requested values.
-> +	 *
-> +	 */
-> +	u8 set_rate : 1;
-> +
-> +	/**
-> +	 * @set_lanes:
-> +	 *
-> +	 * Flag indicating, whether or not reconfigure lane count to
-> +	 * requested value.
-> +	 *
-> +	 */
-> +	u8 set_lanes : 1;
-> +
-> +	/**
-> +	 * @set_voltages:
-> +	 *
-> +	 * Flag indicating, whether or not reconfigure voltage swing
-> +	 * and pre-emphasis to requested values. Only lanes specified
-> +	 * by "lanes" parameter will be affected.
-> +	 *
-> +	 */
-> +	u8 set_voltages : 1;
-> +};
-> +
-> +#endif /* __PHY_DP_H_ */
-> diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-> index 15032f14..ba0aab5 100644
-> --- a/include/linux/phy/phy.h
-> +++ b/include/linux/phy/phy.h
-> @@ -16,6 +16,7 @@
->   #include <linux/pm_runtime.h>
->   #include <linux/regulator/consumer.h>
->   
-> +#include <linux/phy/phy-dp.h>
->   #include <linux/phy/phy-mipi-dphy.h>
->   
->   struct phy;
-> @@ -46,9 +47,12 @@ enum phy_mode {
->    *
->    * @mipi_dphy:	Configuration set applicable for phys supporting
->    *		the MIPI_DPHY phy mode.
-> + * @dp:		Configuration set applicable for phys supporting
-> + *		the DisplayPort protocol.
->    */
->   union phy_configure_opts {
->   	struct phy_configure_opts_mipi_dphy	mipi_dphy;
-> +	struct phy_configure_opts_dp		dp;
->   };
->   
->   /**
-> 
+Fix it by moving arch_crash_save_vmcoreinfo() into two new
+arch/x86/kernel/crash_core_*.c files, which are gated behind
+CONFIG_CRASH_CORE.
+
+1: https://github.com/osandov/drgn/blob/73dd7def1217e24cc83d8ca95c995decbd9ba24c/libdrgn/program.c#L385
+2: https://github.com/crash-utility/crash/commit/60a42d709280cdf38ab06327a5b4fa9d9208ef86
+
+Signed-off-by: Omar Sandoval <osandov@fb.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Kairui Song <kasong@redhat.com>
+Cc: Lianbo Jiang <lijiang@redhat.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/0589961254102cca23e3618b96541b89f2b249e2.1576858905.git.osandov@fb.com
+---
+ arch/x86/kernel/Makefile           |  1 +
+ arch/x86/kernel/crash_core_32.c    | 17 +++++++++++++++++
+ arch/x86/kernel/crash_core_64.c    | 24 ++++++++++++++++++++++++
+ arch/x86/kernel/machine_kexec_32.c | 12 ------------
+ arch/x86/kernel/machine_kexec_64.c | 19 -------------------
+ 5 files changed, 42 insertions(+), 31 deletions(-)
+ create mode 100644 arch/x86/kernel/crash_core_32.c
+ create mode 100644 arch/x86/kernel/crash_core_64.c
+
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index 6175e37..9b294c1 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -94,6 +94,7 @@ obj-$(CONFIG_FUNCTION_TRACER)	+= ftrace_$(BITS).o
+ obj-$(CONFIG_FUNCTION_GRAPH_TRACER) += ftrace.o
+ obj-$(CONFIG_FTRACE_SYSCALLS)	+= ftrace.o
+ obj-$(CONFIG_X86_TSC)		+= trace_clock.o
++obj-$(CONFIG_CRASH_CORE)	+= crash_core_$(BITS).o
+ obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec_$(BITS).o
+ obj-$(CONFIG_KEXEC_CORE)	+= relocate_kernel_$(BITS).o crash.o
+ obj-$(CONFIG_KEXEC_FILE)	+= kexec-bzimage64.o
+diff --git a/arch/x86/kernel/crash_core_32.c b/arch/x86/kernel/crash_core_32.c
+new file mode 100644
+index 0000000..c0159a7
+--- /dev/null
++++ b/arch/x86/kernel/crash_core_32.c
+@@ -0,0 +1,17 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++#include <linux/crash_core.h>
++
++#include <asm/pgtable.h>
++#include <asm/setup.h>
++
++void arch_crash_save_vmcoreinfo(void)
++{
++#ifdef CONFIG_NUMA
++	VMCOREINFO_SYMBOL(node_data);
++	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
++#endif
++#ifdef CONFIG_X86_PAE
++	VMCOREINFO_CONFIG(X86_PAE);
++#endif
++}
+diff --git a/arch/x86/kernel/crash_core_64.c b/arch/x86/kernel/crash_core_64.c
+new file mode 100644
+index 0000000..845a57e
+--- /dev/null
++++ b/arch/x86/kernel/crash_core_64.c
+@@ -0,0 +1,24 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++#include <linux/crash_core.h>
++
++#include <asm/pgtable.h>
++#include <asm/setup.h>
++
++void arch_crash_save_vmcoreinfo(void)
++{
++	u64 sme_mask = sme_me_mask;
++
++	VMCOREINFO_NUMBER(phys_base);
++	VMCOREINFO_SYMBOL(init_top_pgt);
++	vmcoreinfo_append_str("NUMBER(pgtable_l5_enabled)=%d\n",
++			      pgtable_l5_enabled());
++
++#ifdef CONFIG_NUMA
++	VMCOREINFO_SYMBOL(node_data);
++	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
++#endif
++	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
++	VMCOREINFO_NUMBER(KERNEL_IMAGE_SIZE);
++	VMCOREINFO_NUMBER(sme_mask);
++}
+diff --git a/arch/x86/kernel/machine_kexec_32.c b/arch/x86/kernel/machine_kexec_32.c
+index 7b45e8d..02bddfc 100644
+--- a/arch/x86/kernel/machine_kexec_32.c
++++ b/arch/x86/kernel/machine_kexec_32.c
+@@ -250,15 +250,3 @@ void machine_kexec(struct kimage *image)
+ 
+ 	__ftrace_enabled_restore(save_ftrace_enabled);
+ }
+-
+-void arch_crash_save_vmcoreinfo(void)
+-{
+-#ifdef CONFIG_NUMA
+-	VMCOREINFO_SYMBOL(node_data);
+-	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
+-#endif
+-#ifdef CONFIG_X86_PAE
+-	VMCOREINFO_CONFIG(X86_PAE);
+-#endif
+-}
+-
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 16e125a..ad5cdd6 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -398,25 +398,6 @@ void machine_kexec(struct kimage *image)
+ 	__ftrace_enabled_restore(save_ftrace_enabled);
+ }
+ 
+-void arch_crash_save_vmcoreinfo(void)
+-{
+-	u64 sme_mask = sme_me_mask;
+-
+-	VMCOREINFO_NUMBER(phys_base);
+-	VMCOREINFO_SYMBOL(init_top_pgt);
+-	vmcoreinfo_append_str("NUMBER(pgtable_l5_enabled)=%d\n",
+-			pgtable_l5_enabled());
+-
+-#ifdef CONFIG_NUMA
+-	VMCOREINFO_SYMBOL(node_data);
+-	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
+-#endif
+-	vmcoreinfo_append_str("KERNELOFFSET=%lx\n",
+-			      kaslr_offset());
+-	VMCOREINFO_NUMBER(KERNEL_IMAGE_SIZE);
+-	VMCOREINFO_NUMBER(sme_mask);
+-}
+-
+ /* arch-dependent functionality related to kexec file-based syscall */
+ 
+ #ifdef CONFIG_KEXEC_FILE
