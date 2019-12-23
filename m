@@ -2,133 +2,162 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDBDBC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 20:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FB7C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 20:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4521206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 20:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0945320709
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 20:30:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WdhTbqUD"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jf6MM9zR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbfLWU17 (ORCPT
+        id S1727066AbfLWUaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 15:27:59 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:54079 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbfLWU16 (ORCPT
+        Mon, 23 Dec 2019 15:30:13 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35138 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726787AbfLWUaM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 15:27:58 -0500
-Received: by mail-pj1-f67.google.com with SMTP id n96so233732pjc.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 12:27:58 -0800 (PST)
+        Mon, 23 Dec 2019 15:30:12 -0500
+Received: by mail-qt1-f194.google.com with SMTP id e12so16383549qto.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 12:30:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0CpDSOHl4OB3Bl/8MPwGobF9HXf9d9LqUIFLz9HC5Pg=;
-        b=WdhTbqUDds7nyFaC9p71RME7G0VwPZ9ZDH6V0nR6o0rqKzuerooiAls4fT/9Ui5t4x
-         wqS8AZCEr60/tsFY+EP6KnlDlbpM7Ye/QWsI9YZ2CDiGa/AhTR2lk6KjF0FkwJu6EiA8
-         tn7W8fxAFagZMlpEKbUVSCsIJdos/MnZvsA78QX1wer/aITw7vIE6qxGUvq9gJpG8zk3
-         OYykfoWDypbvlEn6Uq6U9DLEGtUwaWcwEHgFXUeNq9klbkCGfpHGfazk+qeJESdOTu3A
-         RilDvmQCO+nmvJ0BDvSyQvvqP7kPvmF3uKs8It21GkuvazsDqx+h6uHJoESP1noQXx8d
-         3bEw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=co5KhQ977eCC6PUYj9c8NZCajqUFhxNywpk98AxfIDc=;
+        b=jf6MM9zRJJMu7L53ECQByr3Ut5N4kmVCXx9vPA/2tdx4FWfDKqSrDI+FJNgvM2Pd1E
+         cIFVB3mWdgjPzIdJC8qLsfFiuk2lrs8kZh/LfpGKqqWP+R5ao1Km3r3k0drx5S8cUSJR
+         EVofGEylzJTdhKxYHLQfD7xbSxfHlbBa4i7KY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0CpDSOHl4OB3Bl/8MPwGobF9HXf9d9LqUIFLz9HC5Pg=;
-        b=DCjXiUfRjP75ufd1U5+0WuYsUqSFYPH6/jJQbrk6nQRJDj1+LtIqqWe/PL+uw+o5+z
-         tdbm/v3mYTHG1/VH5Q6xnK73RT7LhiB2G0edoYu0xuIiode1TYst/3JF36Wr9xYYCYbb
-         w474jJueoW3rM+3GYY0rZq5qzCJ0d0geMOik4d+Vc+oQvMILkUEO0OQ1p/UFCcUVG34x
-         naiHBp68hGjHh6GcgH+HjeCYHow9CcFmref9AjQ117KvMHPgp4xMPVX74/W3YTb4omdb
-         o0JXPQAcxN8Zug2t2p9mF7L/3d1ELz130ZaPx2X54Tsc9izWwXgtGVyRSGQe5cCsg+yM
-         Bb+Q==
-X-Gm-Message-State: APjAAAWh2kXrBHb27B4G8U0OjbZXdZYF6Us4wFfQYF7J0cU3ZNRSaQfD
-        pGuKorhxaIeW/ag/j3v/quYj+Q==
-X-Google-Smtp-Source: APXvYqxbImqtxcivG20ioyyeelsS5eDCA5kPWmfhNdOu+pRVWG/5srb/+ywEPdeZXOlh7WPZS+T52Q==
-X-Received: by 2002:a17:90b:3115:: with SMTP id gc21mr1095410pjb.54.1577132877922;
-        Mon, 23 Dec 2019 12:27:57 -0800 (PST)
-Received: from gnomeregan.cam.corp.google.com ([2620:15c:6:14:ad22:1cbb:d8fa:7d55])
-        by smtp.googlemail.com with ESMTPSA id m6sm328478pjv.23.2019.12.23.12.27.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Dec 2019 12:27:57 -0800 (PST)
-Subject: Re: [PATCH 1/3] iommu/vt-d: skip RMRR entries that fail the sanity
- check
-To:     "Chen, Yian" <yian.chen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Sohil Mehta <sohil.mehta@intel.com>
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        x86@kernel.org
-References: <20191211194606.87940-1-brho@google.com>
- <20191211194606.87940-2-brho@google.com>
- <99a294a0-444e-81f9-19a2-216aef03f356@intel.com>
- <93820c21-8a37-d8f0-dacb-29cee694a91d@google.com>
- <4c24f2d2-03fd-a6cb-f950-391f3f7837cb@intel.com>
-From:   Barret Rhoden <brho@google.com>
-Message-ID: <14ccbc00-7451-bd2e-d861-01c422cad53a@google.com>
-Date:   Mon, 23 Dec 2019 15:27:54 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=co5KhQ977eCC6PUYj9c8NZCajqUFhxNywpk98AxfIDc=;
+        b=SWgYpeUoptnn3pHGD57/TO/4V32/Og2lt+mggC+ACwyymyriww1qW/CvYDTAyUh/xB
+         dXXpFovKKD6PQIWiQE7mZdUAKJlL8RRHOr/T+qxIo2xlpHfmV9aEDo3AWWa4ZmJ2oFOQ
+         p7/qKVsO23GL3SZvtndA1Md3Vj5gOOFyNTgdtr0ZhN2duxeH4Ed2K1fDfxqbc/7lqTF5
+         PHeoTpi36jGu6vu7cGmkItOsBZsRmAQkr6WbhpAK/VmBY3w2a7DjLVlyCsW3W1+XjDrq
+         YuvnXbRYUxof7PnADfWUy3BOvuRH/15Z52tKNtSPxP9/uysqiiMSVlfKH1jDXKgcC6/8
+         Hnwg==
+X-Gm-Message-State: APjAAAWIoDIvxB4r+gQsOA2vNLRtvC7jGcD1Ia4TLAC5oQbSvb/rjgbR
+        W4PCdLfM11PRsLIzAJy1ucaWye+ENXPXsODgN6jVKd8l
+X-Google-Smtp-Source: APXvYqygOJV0364tnt6qXgJFq4GT59e1VPJqNnK+l8JnaN7J7esoCwbHohwkWsOTmWeTngCmUZygvAn0t6oq5piYgYU=
+X-Received: by 2002:ac8:7b29:: with SMTP id l9mr23800266qtu.141.1577133011811;
+ Mon, 23 Dec 2019 12:30:11 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <4c24f2d2-03fd-a6cb-f950-391f3f7837cb@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191220193843.47182-1-pmalani@chromium.org> <20191220193843.47182-2-pmalani@chromium.org>
+ <7eecafb2-4686-b448-2837-4181188365b1@collabora.com>
+In-Reply-To: <7eecafb2-4686-b448-2837-4181188365b1@collabora.com>
+From:   Prashant Malani <pmalani@chromium.org>
+Date:   Mon, 23 Dec 2019 12:29:59 -0800
+Message-ID: <CACeCKadFKWUNHHT-vs686Sz2-CcD0kNeUgqkJT5Q2ATji4L58w@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] mfd: cros_ec: Add cros-usbpd-notify subdevice
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/17/19 2:19 PM, Chen, Yian wrote:
->> Regardless, I have two other patches in this series that could resolve 
->> the problem for me and probably other people.  I'd just like at least 
->> one of the three patches to get merged so that my machine boots when 
->> the original commit f036c7fa0ab6 ("iommu/vt-d: Check VT-d RMRR region 
->> in BIOS is reported as reserved") gets released.
->>
-> when a firmware bug appears, the potential problem may beyond the scope 
-> of its visible impacts so that introducing a workaround in official 
-> implementation should be considered very carefully.
+Hi Enric,
 
-Agreed.  I think that in the RMRR case, it wouldn't surprise me if these 
-problems are already occurring, and we just didn't know about it, so I'd 
-like to think about sane workarounds.  I only noticed it on a kexec. 
-Not sure how many people with similarly-broken firmware are kexecing 
-kernels on linus/master kernels yet.
+On Sun, Dec 22, 2019 at 11:25 PM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+>
+> Hi Prashant,
+>
+> On 20/12/19 20:38, Prashant Malani wrote:
+> > Add the cros-usbpd-notify driver as a subdevice on non-ACPI platforms
+> > that support the EC_FEATURE_USB_PD EC feature flag.
+> >
+> > This driver allows other cros-ec devices to receive PD event
+> > notifications from the Chrome OS Embedded Controller (EC) via a
+> > notification chain.
+> >
+> > Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> > ---
+> >
+> > Changes in v4:
+> > - Removed #ifndef usage; instead, moved cros-usbpd-notify to a separate
+> >   mfd_cell and used an IS_ENABLED() check.
+> > - Changed commit title and description slightly to reflect change in
+> >   code.
+> >
+> >  drivers/mfd/cros_ec_dev.c | 21 +++++++++++++++++++++
+> >  1 file changed, 21 insertions(+)
+> >
+> > diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+> > index c4b977a5dd966..da198abe2b0a6 100644
+> > --- a/drivers/mfd/cros_ec_dev.c
+> > +++ b/drivers/mfd/cros_ec_dev.c
+> > @@ -5,6 +5,7 @@
+> >   * Copyright (C) 2014 Google, Inc.
+> >   */
+> >
+> > +#include <linux/kconfig.h>
+> >  #include <linux/mfd/core.h>
+> >  #include <linux/mfd/cros_ec.h>
+> >  #include <linux/module.h>
+> > @@ -87,6 +88,10 @@ static const struct mfd_cell cros_usbpd_charger_cells[] = {
+> >       { .name = "cros-usbpd-logger", },
+> >  };
+> >
+> > +static const struct mfd_cell cros_usbpd_notify_cells[] = {
+> > +     { .name = "cros-usbpd-notify", },
+> > +};
+> > +
+> >  static const struct cros_feature_to_cells cros_subdevices[] = {
+> >       {
+> >               .id             = EC_FEATURE_CEC,
+> > @@ -202,6 +207,22 @@ static int ec_device_probe(struct platform_device *pdev)
+> >               }
+> >       }
+> >
+> > +     /*
+> > +      * The PD notifier driver cell is separate since it only needs to be
+> > +      * explicitly added on non-ACPI platforms.
+>
+>
+> Sorry to not catch this before, but a worry arose. Is non-ACPI platforms or
+> non-X86 platforms or on OF platforms?
+>
+> ARM64 for example has the CONFIG_ACPI symbol set to yes, with the below
+> condition condition will not work on Kevin for example and IIUC this is not what
+> we want, I think we want IS_ENABLED(CONFIG_OF)?
+Thanks for noting this. I will check with a kevin, and with the
+internal build flags to verify whether there are ARM64 which have the
+GOOG0003 PD notification device.
+I'll update this thread with my findings.
 
-Specifically, my firmware reports an RMRR with start == 0 and end == 0 
-(end should be page-aligned-minus-one).  The only reason commit 
-f036c7fa0ab6 didn't catch it on a full reboot is that trim_bios_range() 
-reserved the first page, assuming that the BIOS meant to reserve it but 
-just didn't tell us in the e820 map.  My firmware didn't mark that first 
-page E820_RESERVED.  On a kexec, the range that got trimmed was 
-0x100-0xfff instead of 0x000-0xfff.  In both cases, the kernel won't use 
-the region the broken RMRR points to, but in the kexec case, it wasn't 
-E820_RESERVED, so the new commit aborted the DMAR setup.
+Best,
 
-> If the workaround is really needed at this point, I would recommend 
-> adding a WARN_TAINT with TAINT_FIRMWARE_WORKAROUND, to tell the 
-> workaround is in the place.
-
-Sounds good.  I can rework the patchset so that whenever I skip an RMRR 
-entry or whatnot, I'll put in a WARN_TAINT.  I see a few other examples 
-in dmar.c to work from.
-
-If any of the three changes are too aggressive, I'm OK with you all 
-taking just one of them.  I'd like to be able to kexec with the new 
-kernel.  I'm likely not the only one with bad firmware, and any bug that 
-only shows up on a kexec often a pain to detect.
-
-Thanks,
-
-Barret
-
+>
+> Thanks,
+>  Enric
+>
+> > +      */
+> > +     if (!IS_ENABLED(CONFIG_ACPI)) {
+> > +             if (cros_ec_check_features(ec, EC_FEATURE_USB_PD)) {
+> > +                     retval = mfd_add_hotplug_devices(ec->dev,
+> > +                                     cros_usbpd_notify_cells,
+> > +                                     ARRAY_SIZE(cros_usbpd_notify_cells));
+> > +                     if (retval)
+> > +                             dev_err(ec->dev,
+> > +                                     "failed to add PD notify devices: %d\n",
+> > +                                     retval);
+> > +             }
+> > +     }
+> > +
+> >       /*
+> >        * The following subdevices cannot be detected by sending the
+> >        * EC_FEATURE_GET_CMD to the Embedded Controller device.
+> >
