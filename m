@@ -2,142 +2,191 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D24C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 19:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B6FC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 20:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F13206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 19:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD8E320643
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 20:07:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yl084XD6"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="uL3/M8VW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfLWT52 (ORCPT
+        id S1726949AbfLWUHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 14:57:28 -0500
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:45448 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726787AbfLWT50 (ORCPT
+        Mon, 23 Dec 2019 15:07:18 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33674 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726787AbfLWUHR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 14:57:26 -0500
-Received: by mail-yb1-f196.google.com with SMTP id i3so7438647ybe.12
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 11:57:25 -0800 (PST)
+        Mon, 23 Dec 2019 15:07:17 -0500
+Received: by mail-lj1-f194.google.com with SMTP id y6so10833373lji.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 12:07:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bb0+CNEtJ6KzyS3XvioZczGP2IemYKNu32wQAAEeIB8=;
-        b=Yl084XD682EiZs1AIWmB7fpotrIpfWyb7NpNE13yI5PFnb6G9qiBMQnkvnnH9x60pn
-         /4pB4HLcZ4d4nXqAs1Ln570UVdpINIwDpJllGfkvgbjKOIFf+gH0LQn7m/r6QKgg3tLe
-         thKS93BdFAkhh8yrejEu0K4eIkb6wW3XiiVUpx1oq1JA3fhRwHgATHTrqdUKLbW2i+F3
-         e54zL1rdaOl7Mf8m3jqLcqnpx03vch9VBhKB7bYfeX4qIsoQlGK0zHIoH90Eole8B2sz
-         JXC4jRWnxQhG1QO6Sup1fSYaGzVSQpLknqZSWct0a8yWswXmvV8wA/BSiVKsFBFLLgGU
-         akNw==
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jlswyEc6xIGtbVUwHi52dwuY4ajQKEt5NuNVOiiskgw=;
+        b=uL3/M8VWDFlVkz/n3D6NfSRboQct3/dGTYUJkfrsxjqaSw+powfOuZNJS8Yisdolf3
+         W7IdrXrcukkSoUTcbrjnTjyzvK3o32XmMoRRaBsXYUZEKO77cMrZyWnhupiTXMTkBU9k
+         RonZlzpJd09zJbBr+QvizRpPOxIC5B3UTBFDz5NoI3PVi4CxnhnzcS5A9s8y3fBpCgqE
+         rHP/9xDBTHCHsiRYa+8tweT2HmhoBWCfTHwA2a1tDrV6gybMJDoeixrLXigLp1U5LKRT
+         RB3L2xh97Av0TbaI/9N3wkT2tJitiCzqLpiRuwEunA+jLbSKTOEozf2WVXdVB0cVrLAw
+         R2oA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bb0+CNEtJ6KzyS3XvioZczGP2IemYKNu32wQAAEeIB8=;
-        b=FRICnuOOBFHy+CC0EExSVvCjbe0gEt7gGCNQPqe4iQSlJ/QulVk51hK/TcHdhHWN5g
-         q7xEZtIrVPB1Wsshe6fI121wdRp/dDC4+Avxj9uRLGBlpxBKa1Sw1q+0NuCxuIMqP05a
-         4ZGyUP8PpAyJoV/IY10w4zWWsde52cFyUWvKqoITTf/EJMZbWs4xkq9gHG2Vbs4C7d+D
-         +wRnQe4R51+QSUeJvcImjasRcC/naZCx55boZH7puP3vXukWVktGB7Pd6Ge/zCmodgDB
-         YqdCwk+qS1zcoTsSIcPtA8ccDkJ7WDrySUmOQk3kXR5d6JG2relOZpbxM2ZlNYw+XSXk
-         Q1dA==
-X-Gm-Message-State: APjAAAXGH3UoTNRgQArxk2nMKhT+OgGwgqDvlF6iw7ToDX5DAEn1IIP0
-        M+1wrPIOZeXJoPAwiO0XEnFHBJrj
-X-Google-Smtp-Source: APXvYqwxez0jcpJoYCJNX1Y5Oh+9t0BMKlpD2B2WQFr85aeeTiou/JR8vfBmibnyYnF2V+F373z1iA==
-X-Received: by 2002:a25:b108:: with SMTP id g8mr22630130ybj.518.1577131044696;
-        Mon, 23 Dec 2019 11:57:24 -0800 (PST)
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com. [209.85.219.171])
-        by smtp.gmail.com with ESMTPSA id o4sm8456459ywd.5.2019.12.23.11.57.23
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Dec 2019 11:57:24 -0800 (PST)
-Received: by mail-yb1-f171.google.com with SMTP id f136so4326149ybg.11
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 11:57:23 -0800 (PST)
-X-Received: by 2002:a25:d117:: with SMTP id i23mr16560523ybg.139.1577131043349;
- Mon, 23 Dec 2019 11:57:23 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=jlswyEc6xIGtbVUwHi52dwuY4ajQKEt5NuNVOiiskgw=;
+        b=GxEa+sqhRtG3G35lY34hcyGfRZRHrgAt62F8jDJWShQZsvWhVGOeIdBij9c2480DTL
+         sZKJdOAbFlrdLPj8boE/CTGPVwGXwu6Ck61qn5sJZPGgE2nKEZRsbJ1U3v04c8Rd6KXw
+         tRNxOlepdkc8MwdxRgUpPedyxVOyDnCWtr8tIws60BAitb6CYjDDQJGab78L9tEGcVGC
+         99qJP7nsQU+uEdM3BsiIlkdA34lXQxl1CF04hSuhd0Ty6co8IE/BDmFpubLJ1Grwh676
+         5PnfP+JeOVFaa0lnT2olQGkrm40Db1yalI47Xdk+VSJ6G5A+HVV/HsgHm0dyHan9gVoq
+         fT8g==
+X-Gm-Message-State: APjAAAV1QMGbGpSMMikfH3ObrRnfADIsMmgdWp+1q/PyKEZEBLU8F4kV
+        0Udiq/N8P6UoXgguvioJMG2zNA==
+X-Google-Smtp-Source: APXvYqx5g4M0uhRd+Jgki+03Npwwmd4lXlZjXrbkgxQkR/xuSqUXP1tnYgb7OvSuShD1VKlGh6Jykw==
+X-Received: by 2002:a2e:a486:: with SMTP id h6mr11540184lji.235.1577131635009;
+        Mon, 23 Dec 2019 12:07:15 -0800 (PST)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:855:9d36:483b:5fb3:f1dd:f0d5])
+        by smtp.gmail.com with ESMTPSA id i19sm8915307lfj.17.2019.12.23.12.07.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 23 Dec 2019 12:07:14 -0800 (PST)
+Subject: Re: [PATCH v17 1/2] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller
+ driver
+To:     Mason Yang <masonccyang@mxic.com.tw>, broonie@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        devicetree@vger.kernel.org
+Cc:     juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>,
+        lee.jones@linaro.org, marek.vasut@gmail.com,
+        miquel.raynal@bootlin.com
+References: <1565060061-11588-1-git-send-email-masonccyang@mxic.com.tw>
+ <1565060061-11588-2-git-send-email-masonccyang@mxic.com.tw>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <0e65db61-00e5-73cc-347a-023abfd138ba@cogentembedded.com>
+Date:   Mon, 23 Dec 2019 23:07:12 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-References: <20191223140322.20013-1-mst@redhat.com> <CANDihLHPk5khpv-f-M+qhkzgTkygAts38GGb-HChg-VL2bo+Uw@mail.gmail.com>
-In-Reply-To: <CANDihLHPk5khpv-f-M+qhkzgTkygAts38GGb-HChg-VL2bo+Uw@mail.gmail.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Mon, 23 Dec 2019 14:56:47 -0500
-X-Gmail-Original-Message-ID: <CA+FuTSfq5v3-0VYmTG7YFFUqT8uG53eXXhqc8WvVvMbp3s0nvA@mail.gmail.com>
-Message-ID: <CA+FuTSfq5v3-0VYmTG7YFFUqT8uG53eXXhqc8WvVvMbp3s0nvA@mail.gmail.com>
-Subject: Re: [PATCH net] virtio_net: CTRL_GUEST_OFFLOADS depends on CTRL_VQ
-To:     Alistair Delva <adelva@google.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        Network Development <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1565060061-11588-2-git-send-email-masonccyang@mxic.com.tw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-00fffe0ff0 DR7: 0000000000000400
-> > Call Trace:
-> >  ? preempt_count_add+0x58/0xb0
-> >  ? _raw_spin_lock_irqsave+0x36/0x70
-> >  ? _raw_spin_unlock_irqrestore+0x1a/0x40
-> >  ? __wake_up+0x70/0x190
-> >  virtnet_set_features+0x90/0xf0 [virtio_net]
-> >  __netdev_update_features+0x271/0x980
-> >  ? nlmsg_notify+0x5b/0xa0
-> >  dev_disable_lro+0x2b/0x190
-> >  ? inet_netconf_notify_devconf+0xe2/0x120
-> >  devinet_sysctl_forward+0x176/0x1e0
-> >  proc_sys_call_handler+0x1f0/0x250
-> >  proc_sys_write+0xf/0x20
-> >  __vfs_write+0x3e/0x190
-> >  ? __sb_start_write+0x6d/0xd0
-> >  vfs_write+0xd3/0x190
-> >  ksys_write+0x68/0xd0
-> >  __ia32_sys_write+0x14/0x20
-> >  do_fast_syscall_32+0x86/0xe0
-> >  entry_SYSENTER_compat+0x7c/0x8e
-> >
-> > A similar crash will likely trigger when enabling XDP.
-> >
-> > Reported-by: Alistair Delva <adelva@google.com>
-> > Reported-by: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-> > Fixes: 3f93522ffab2 ("virtio-net: switch off offloads on demand if possible on XDP set")
-> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > ---
-> >
-> > Lightly tested.
-> >
-> > Alistair, could you please test and confirm that this resolves the
-> > crash for you?
->
-> This patch doesn't work. The reason is that NETIF_F_LRO is also turned
-> on by TSO4/TSO6, which your patch didn't check for. So it ends up
-> going through the same path and crashing in the same way.
->
->         if (virtio_has_feature(vdev, VIRTIO_NET_F_GUEST_TSO4) ||
->             virtio_has_feature(vdev, VIRTIO_NET_F_GUEST_TSO6))
->                 dev->features |= NETIF_F_LRO;
->
-> It sounds like this patch is fixing something slightly differently to
-> my patch fixed. virtnet_set_features() doesn't care about
-> GUEST_OFFLOADS, it only tests against NETIF_F_LRO. Even if "offloads"
-> is zero, it will call virtnet_set_guest_offloads(), which triggers the
-> crash.
+Hello!
 
+On 08/06/2019 05:54 AM, Mason Yang wrote:
 
-Interesting. It's surprising that it is trying to configure a flag
-that is not configurable, i.e., absent from dev->hw_features
-after Michael's change.
+> Add a driver for Renesas R-Car Gen3 RPC-IF SPI controller.
+> 
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-> So either we need to ensure NETIF_F_LRO is never set, or
+   Mark Brown did have some comments to my variant of the RPC-IF SPI driver,
+which didn't get addressed in your SPI driver... Relaying his comments to you,
+I'd appreciate if you could reply to them...
 
-LRO might be available, just not configurable. Indeed this was what I
-observed in the past.
+[...]
+> diff --git a/drivers/spi/spi-renesas-rpc.c b/drivers/spi/spi-renesas-rpc.c
+> new file mode 100644
+> index 0000000..52537b7
+> --- /dev/null
+> +++ b/drivers/spi/spi-renesas-rpc.c
+> @@ -0,0 +1,756 @@
+[...]
+> +static void rpc_spi_transfer_setup(struct rpc_spi *rpc,
+> +				   struct spi_message *msg)
+> +{
+> +	struct spi_transfer *t, xfer[4] = { };
+
+Don't mix initialized and non-initialized declarations in a single line
+(as per coding style).
+
+> +	u32 i, xfercnt, xferpos = 0;
+> +
+> +	rpc->totalxferlen = 0;
+> +	rpc->xfer_dir = SPI_MEM_NO_DATA;
+> +
+> +	list_for_each_entry(t, &msg->transfers, transfer_list) {
+> +		if (t->tx_buf) {
+> +			xfer[xferpos].tx_buf = t->tx_buf;
+> +			xfer[xferpos].tx_nbits = t->tx_nbits;
+
+xfer is hard coded to 4 elements but I'm not seeing any validation that
+we don't have more transfers than that in the message, and there's lots
+of assumptions later on about the number of transfers.
+
+[...]
+> +		if (list_is_last(&t->transfer_list, &msg->transfers)) {
+> +			if (xferpos > 1) {
+> +				if (t->rx_buf) {
+> +					rpc->xfer_dir = SPI_MEM_DATA_IN;
+> +					rpc->smcr = RPC_SMCR_SPIRE;
+> +				} else if (t->tx_buf) {
+> +					rpc->xfer_dir = SPI_MEM_DATA_OUT;
+> +					rpc->smcr = RPC_SMCR_SPIWE;
+> +				}
+> +			}
+
+Transfers can be bidirectional...  if the device can't support that it
+should set SPI_CONTROLLER_HALF_DUPLEX.
+
+[...]
+> +static inline int rpc_spi_xfer_message(struct rpc_spi *rpc,
+> +				       struct spi_transfer *data_xfer)
+
+This has exactly one caller and contains a single statement - why have a
+separate function?
+
+> +{
+> +	int ret;
+> +
+> +	ret = rpc_spi_set_freq(rpc, data_xfer->speed_hz);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = rpc_spi_io_xfer(rpc,
+> +			      rpc->xfer_dir == SPI_MEM_DATA_OUT ?
+> +			      data_xfer->tx_buf : NULL,
+> +			      rpc->xfer_dir == SPI_MEM_DATA_IN ?
+> +			      data_xfer->rx_buf : NULL);
+
+This is really hard to read.  Why are we abusing the ternery operator
+here, especially when there's other places where we already set things
+up based on the direction?
+
+[...]
+[...]
+> +static int rpc_spi_remove(struct platform_device *pdev)
+> +{
+> +	struct spi_controller *ctlr = platform_get_drvdata(pdev);
+> +
+> +	pm_runtime_disable(&pdev->dev);
+> +	spi_unregister_controller(ctlr);
+> +
+> +	return 0;
+> +}
+> +
+
+Shouldn't we unregister the controller before we disable the RPM?  The
+probe was the other way around and this means that we might still be
+processing messages while the hardware is disabled which doesn't seem
+good.
+
+[...]
+
+MBR, Sergei
