@@ -4,24 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 222CEC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 19:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D854C2D0D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 19:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00F81206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 19:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43D942253D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 19:43:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbfLWTnJ (ORCPT
+        id S1727102AbfLWTnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 14:43:09 -0500
-Received: from [66.170.99.2] ([66.170.99.2]:38724 "EHLO
+        Mon, 23 Dec 2019 14:43:08 -0500
+Received: from [66.170.99.2] ([66.170.99.2]:60216 "EHLO
         sid-build-box.eng.vmware.com" rhost-flags-FAIL-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726890AbfLWTm5 (ORCPT
+        by vger.kernel.org with ESMTP id S1726954AbfLWTm5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 23 Dec 2019 14:42:57 -0500
 Received: by sid-build-box.eng.vmware.com (Postfix, from userid 1000)
-        id F3DACBA17B5; Tue, 24 Dec 2019 01:07:14 +0530 (IST)
+        id 15DF7BA17C8; Tue, 24 Dec 2019 01:07:15 +0530 (IST)
 From:   Siddharth Chandrasekaran <csiddharth@vmware.com>
 To:     torvalds@linux-foundation.org
 Cc:     gregkh@linuxfoundation.org, sashal@kernel.org, jannh@google.com,
@@ -30,14 +30,14 @@ Cc:     gregkh@linuxfoundation.org, sashal@kernel.org, jannh@google.com,
         Alexander Viro <viro@zeniv.linux.org.uk>,
         "Eric W . Biederman" <ebiederm@xmission.com>,
         Siddharth Chandrasekaran <csiddharth@vmware.com>
-Subject: [PATCH 4.14 1/2] Make filldir[64]() verify the directory entry filename is valid
-Date:   Tue, 24 Dec 2019 01:06:26 +0530
-Message-Id: <812143da77eb3b1376b91d1bef837ccf65e87a2e.1577128778.git.csiddharth@vmware.com>
+Subject: [PATCH 4.9 1/2] Make filldir[64]() verify the directory entry filename is valid
+Date:   Tue, 24 Dec 2019 01:06:35 +0530
+Message-Id: <94c00b47d01ce912db0b66324a70d258afec7ede.1577128417.git.csiddharth@vmware.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1577128778.git.csiddharth@vmware.com>
 References: <cover.1577128778.git.csiddharth@vmware.com>
-In-Reply-To: <cover.1577128778.git.csiddharth@vmware.com>
-References: <cover.1577128778.git.csiddharth@vmware.com>
+In-Reply-To: <cover.1577128417.git.csiddharth@vmware.com>
+References: <cover.1577128417.git.csiddharth@vmware.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -116,10 +116,10 @@ Signed-off-by: Siddharth Chandrasekaran <csiddharth@vmware.com>
  1 file changed, 40 insertions(+)
 
 diff --git a/fs/readdir.c b/fs/readdir.c
-index d336db6..9a3dc66 100644
+index 9d0212c..ace19d9 100644
 --- a/fs/readdir.c
 +++ b/fs/readdir.c
-@@ -66,6 +66,40 @@ int iterate_dir(struct file *file, struct dir_context *ctx)
+@@ -64,6 +64,40 @@ int iterate_dir(struct file *file, struct dir_context *ctx)
  EXPORT_SYMBOL(iterate_dir);
  
  /*
@@ -160,7 +160,7 @@ index d336db6..9a3dc66 100644
   * Traditional linux readdir() handling..
   *
   * "count=1" is a special case, meaning that the buffer is one
-@@ -174,6 +208,9 @@ static int filldir(struct dir_context *ctx, const char *name, int namlen,
+@@ -172,6 +206,9 @@ static int filldir(struct dir_context *ctx, const char *name, int namlen,
  	int reclen = ALIGN(offsetof(struct linux_dirent, d_name) + namlen + 2,
  		sizeof(long));
  
@@ -170,7 +170,7 @@ index d336db6..9a3dc66 100644
  	buf->error = -EINVAL;	/* only used if we fail.. */
  	if (reclen > buf->count)
  		return -EINVAL;
-@@ -260,6 +297,9 @@ static int filldir64(struct dir_context *ctx, const char *name, int namlen,
+@@ -258,6 +295,9 @@ static int filldir64(struct dir_context *ctx, const char *name, int namlen,
  	int reclen = ALIGN(offsetof(struct linux_dirent64, d_name) + namlen + 1,
  		sizeof(u64));
  
