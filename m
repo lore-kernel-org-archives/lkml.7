@@ -2,316 +2,134 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F02A0C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 07:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD21C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 07:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B082C206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 07:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A792206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 07:18:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NznDysF8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725963AbfLWHSH (ORCPT
+        id S1726096AbfLWHSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 02:18:07 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:56658 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbfLWHSH (ORCPT
+        Mon, 23 Dec 2019 02:18:12 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23564 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725810AbfLWHSL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 02:18:07 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 0EF93283E6C
-Subject: Re: [PATCH v4 1/2] platform: chrome: Add cros-usbpd-notify driver
-To:     Prashant Malani <pmalani@chromium.org>, groeck@chromium.org,
-        bleung@chromium.org, lee.jones@linaro.org
-Cc:     linux-kernel@vger.kernel.org, Jon Flatley <jflat@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>
-References: <20191220193843.47182-1-pmalani@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <9bcb4671-f421-c639-f8c8-a02f62bfc7ee@collabora.com>
-Date:   Mon, 23 Dec 2019 08:18:00 +0100
+        Mon, 23 Dec 2019 02:18:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577085489;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XrZFkYYJptZsmxyAq9UkEXBJmk/eEjdSUd1aUCGeQuQ=;
+        b=NznDysF8lg6ySf+hroxoS/r8n5IEpLTaTjZc2OUcmkB3F4HkoGUeje3rjhAXKVnTmghgyJ
+        k5qETkO2zq/m+J81sIpUIGmlhyhaWK9zsqfSiBJAaI/Mf23Lh2DAIkC7X2VDOiYjXZsfB4
+        VTJVZkSbvFmj0qFbIt2wvXBFT1dUHiA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-147-rUqu22B6OWmAb62Zm5x5DA-1; Mon, 23 Dec 2019 02:18:06 -0500
+X-MC-Unique: rUqu22B6OWmAb62Zm5x5DA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2B034800C7F;
+        Mon, 23 Dec 2019 07:18:05 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-12-202.pek2.redhat.com [10.72.12.202])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7452775754;
+        Mon, 23 Dec 2019 07:17:56 +0000 (UTC)
+Subject: Re: [v2] drm/i915: Assume 100% brightness when not in DPCD control
+ mode
+To:     Lyude Paul <lyude@redhat.com>, intel-gfx@lists.freedesktop.org
+Cc:     David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+References: <20191203224236.230930-1-lyude@redhat.com>
+From:   Perr Yuan <pyuan@redhat.com>
+Message-ID: <690de0cf-362b-c826-e607-e12fc403aca9@redhat.com>
+Date:   Mon, 23 Dec 2019 02:17:54 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <20191220193843.47182-1-pmalani@chromium.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191203224236.230930-1-lyude@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prashant,
-
-On 20/12/19 20:38, Prashant Malani wrote:
-> From: Jon Flatley <jflat@chromium.org>
+On 12/3/19 5:42 PM, Lyude Paul wrote:
+> Currently we always determine the initial panel brightness level by
+> simply reading the value from DP_EDP_BACKLIGHT_BRIGHTNESS_MSB/LSB. This
+> seems wrong though, because if the panel is not currently in DPCD
+> control mode there's not really any reason why there would be any
+> brightness value programmed in the first place.
 > 
-> ChromiumOS uses ACPI device with HID "GOOG0003" for power delivery
-> related events. The existing cros-usbpd-charger driver relies on these
-> events without ever actually receiving them on ACPI platforms. This is
-> because in the ChromeOS kernel trees, the GOOG0003 device is owned by an
-> ACPI driver that offers firmware updates to USB-C chargers.
+> This appears to be the case on the Lenovo ThinkPad X1 Extreme 2nd
+> Generation, where the default value in these registers is always 0 on
+> boot despite the fact the panel runs at max brightness by default.
+> Getting the initial brightness value correct here is important as well,
+> since the panel on this laptop doesn't behave well if it's ever put into
+> DPCD control mode while the brightness level is programmed to 0.
 > 
-> Introduce a new platform driver under cros-ec, the ChromeOS embedded
-> controller, that handles these PD events and dispatches them
-> appropriately over a notifier chain to all drivers that use them.
+> So, let's fix this by checking what the current backlight control mode
+> is before reading the brightness level. If it's in DPCD control mode, we
+> return the programmed brightness level. Otherwise we assume 100%
+> brightness and return the highest possible brightness level. This also
+> prevents us from accidentally programming a brightness level of 0.
 > 
-> On non-ACPI platforms, the driver gets instantiated for ECs which
-> support the EC_FEATURE_USB_PD feature bit, and on such platforms, the
-> notification events will get delivered using the MKBP event handling
-> mechanism.
+> This is one of the many fixes that gets backlight controls working on
+> the ThinkPad X1 Extreme 2nd Generation with optional 4K AMOLED screen.
 > 
-> Co-Developed-by: Prashant Malani <pmalani@chromium.org>
-> Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-> Signed-off-by: Jon Flatley <jflat@chromium.org>
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-
-For my own reference:
-
-Acked-for-chrome-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-
+> Changes since v1:
+> * s/DP_EDP_DISPLAY_CONTROL_REGISTER/DP_EDP_BACKLIGHT_MODE_SET_REGISTER/
+>    - Jani
+> 
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
 > ---
+>   .../drm/i915/display/intel_dp_aux_backlight.c   | 17 +++++++++++++++++
+>   1 file changed, 17 insertions(+)
 > 
-> Changes in v4(pmalani@chromium.org):
-> - No code changes, but added new version so that versioning is
->   consistent with the next patch in the series.
-> 
-> Changes in v3 (pmalani@chromium.org):
-> - Renamed driver and files from "cros_ec_pd_notify" to
->   "cros_usbpd_notify" to be more consistent with other naming.
-> - Moved the change to include cros-usbpd-notify in the charger MFD into
->   a separate follow-on patch.
-> 
-> Changes in v2 (pmalani@chromium.org):
-> - Removed dependency on DT entry; instead, we will instantiate the
->   driver on detecting EC_FEATURE_USB_PD for non-ACPI platforms.
-> - Modified the cros-ec-pd-notify device to be an mfd_cell under
->   usbpdcharger for non-ACPI platforms. Altered the platform_probe() call
->   to derive the cros EC structs appropriately.
-> - Replaced "usbpd_notify" with "pd_notify" in functions and structures.
-> - Addressed comments from upstream maintainer.
-> 
->  drivers/platform/chrome/Kconfig               |   9 ++
->  drivers/platform/chrome/Makefile              |   1 +
->  drivers/platform/chrome/cros_usbpd_notify.c   | 151 ++++++++++++++++++
->  .../linux/platform_data/cros_usbpd_notify.h   |  17 ++
->  4 files changed, 178 insertions(+)
->  create mode 100644 drivers/platform/chrome/cros_usbpd_notify.c
->  create mode 100644 include/linux/platform_data/cros_usbpd_notify.h
-> 
-> diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-> index 5f57282a28da0..3a8a98f2fb4d1 100644
-> --- a/drivers/platform/chrome/Kconfig
-> +++ b/drivers/platform/chrome/Kconfig
-> @@ -226,6 +226,15 @@ config CROS_USBPD_LOGGER
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called cros_usbpd_logger.
->  
-> +config CROS_USBPD_NOTIFY
-> +	tristate "ChromeOS Type-C power delivery event notifier"
-> +	depends on CROS_EC
-> +	help
-> +	  If you say Y here, you get support for Type-C PD event notifications
-> +	  from the ChromeOS EC. On ACPI platorms this driver will bind to the
-> +	  GOOG0003 ACPI device, and on non-ACPI platforms this driver will get
-> +	  initialized on ECs which support the feature EC_FEATURE_USB_PD.
-> +
->  source "drivers/platform/chrome/wilco_ec/Kconfig"
->  
->  endif # CHROMEOS_PLATFORMS
-> diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
-> index aacd5920d8a18..f6465f8ef0b5e 100644
-> --- a/drivers/platform/chrome/Makefile
-> +++ b/drivers/platform/chrome/Makefile
-> @@ -22,5 +22,6 @@ obj-$(CONFIG_CROS_EC_DEBUGFS)		+= cros_ec_debugfs.o
->  obj-$(CONFIG_CROS_EC_SENSORHUB)		+= cros_ec_sensorhub.o
->  obj-$(CONFIG_CROS_EC_SYSFS)		+= cros_ec_sysfs.o
->  obj-$(CONFIG_CROS_USBPD_LOGGER)		+= cros_usbpd_logger.o
-> +obj-$(CONFIG_CROS_USBPD_NOTIFY)		+= cros_usbpd_notify.o
->  
->  obj-$(CONFIG_WILCO_EC)			+= wilco_ec/
-> diff --git a/drivers/platform/chrome/cros_usbpd_notify.c b/drivers/platform/chrome/cros_usbpd_notify.c
-> new file mode 100644
-> index 0000000000000..05a7db834d2e0
-> --- /dev/null
-> +++ b/drivers/platform/chrome/cros_usbpd_notify.c
-> @@ -0,0 +1,151 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright 2019 Google LLC
-> + *
-> + * This driver serves as the receiver of cros_ec PD host events.
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/module.h>
-> +#include <linux/mfd/cros_ec.h>
-> +#include <linux/platform_data/cros_ec_commands.h>
-> +#include <linux/platform_data/cros_usbpd_notify.h>
-> +#include <linux/platform_data/cros_ec_proto.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define DRV_NAME "cros-usbpd-notify"
-> +#define ACPI_DRV_NAME "GOOG0003"
-> +
-> +static BLOCKING_NOTIFIER_HEAD(cros_usbpd_notifier_list);
-> +
-> +/**
-> + * cros_usbpd_register_notify - Register a notifier callback for PD events.
-> + * @nb: Notifier block pointer to register
-> + *
-> + * On ACPI platforms this corresponds to host events on the ECPD
-> + * "GOOG0003" ACPI device. On non-ACPI platforms this will filter mkbp events
-> + * for USB PD events.
-> + *
-> + * Return: 0 on success or negative error code.
-> + */
-> +int cros_usbpd_register_notify(struct notifier_block *nb)
-> +{
-> +	return blocking_notifier_chain_register(
-> +			&cros_usbpd_notifier_list, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(cros_usbpd_register_notify);
-> +
-> +
-> +/**
-> + * cros_usbpd_unregister_notify - Unregister notifier callback for PD events.
-> + * @nb: Notifier block pointer to unregister
-> + *
-> + * Unregister a notifier callback that was previously registered with
-> + * cros_usbpd_register_notify().
-> + */
-> +void cros_usbpd_unregister_notify(struct notifier_block *nb)
-> +{
-> +	blocking_notifier_chain_unregister(&cros_usbpd_notifier_list, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(cros_usbpd_unregister_notify);
-> +
-> +#ifdef CONFIG_ACPI
-> +
-> +static int cros_usbpd_notify_add_acpi(struct acpi_device *adev)
-> +{
-> +	return 0;
-> +}
-> +
-> +static void cros_usbpd_notify_acpi(struct acpi_device *adev, u32 event)
-> +{
-> +	blocking_notifier_call_chain(&cros_usbpd_notifier_list, event, NULL);
-> +}
-> +
-> +static const struct acpi_device_id cros_usbpd_notify_acpi_device_ids[] = {
-> +	{ ACPI_DRV_NAME, 0 },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(acpi, cros_usbpd_acpi_device_ids);
-> +
-> +static struct acpi_driver cros_usbpd_notify_driver = {
-> +	.name = DRV_NAME,
-> +	.class = DRV_NAME,
-> +	.ids = cros_usbpd_notify_acpi_device_ids,
-> +	.ops = {
-> +		.add = cros_usbpd_notify_add_acpi,
-> +		.notify = cros_usbpd_notify_acpi,
-> +	},
-> +};
-> +module_acpi_driver(cros_usbpd_notify_driver);
-> +
-> +#else /* CONFIG_ACPI */
-> +
-> +static int cros_usbpd_notify_plat(struct notifier_block *nb,
-> +		unsigned long queued_during_suspend, void *data)
-> +{
-> +	struct cros_ec_device *ec_dev = (struct cros_ec_device *)data;
-> +	u32 host_event = cros_ec_get_host_event(ec_dev);
-> +
-> +	if (!host_event)
-> +		return NOTIFY_BAD;
-> +
-> +	if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_PD_MCU)) {
-> +		blocking_notifier_call_chain(&cros_usbpd_notifier_list,
-> +				host_event, NULL);
-> +		return NOTIFY_OK;
-> +	}
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static int cros_usbpd_notify_probe_plat(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct cros_ec_dev *ecdev = dev_get_drvdata(dev->parent);
-> +	struct notifier_block *nb;
-> +	int ret;
-> +
-> +	nb = devm_kzalloc(dev, sizeof(*nb), GFP_KERNEL);
-> +	if (!nb)
-> +		return -ENOMEM;
-> +
-> +	nb->notifier_call = cros_usbpd_notify_plat;
-> +	dev_set_drvdata(dev, nb);
-> +
-> +	ret = blocking_notifier_chain_register(&ecdev->ec_dev->event_notifier,
-> +						nb);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to register notifier\n");
-> +		return ret;
+> diff --git a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+> index fad470553cf9..4d467e7d29eb 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+> +++ b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+> @@ -59,8 +59,25 @@ static u32 intel_dp_aux_get_backlight(struct intel_connector *connector)
+>   {
+>   	struct intel_dp *intel_dp = enc_to_intel_dp(&connector->encoder->base);
+>   	u8 read_val[2] = { 0x0 };
+> +	u8 mode_reg;
+>   	u16 level = 0;
+>   
+> +	if (drm_dp_dpcd_readb(&intel_dp->aux,
+> +			      DP_EDP_BACKLIGHT_MODE_SET_REGISTER,
+> +			      &mode_reg) != 1) {
+> +		DRM_DEBUG_KMS("Failed to read the DPCD register 0x%x\n",
+> +			      DP_EDP_BACKLIGHT_MODE_SET_REGISTER);
+> +		return 0;
 > +	}
 > +
-> +	return 0;
-> +}
+> +	/*
+> +	 * If we're not in DPCD control mode yet, the programmed brightness
+> +	 * value is meaningless and we should assume max brightness
+> +	 */
+> +	if ((mode_reg & DP_EDP_BACKLIGHT_CONTROL_MODE_MASK) !=
+> +	    DP_EDP_BACKLIGHT_CONTROL_MODE_DPCD)
+> +		return connector->panel.backlight.max;
 > +
-> +static int cros_usbpd_notify_remove_plat(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct cros_ec_dev *ecdev = dev_get_drvdata(dev->parent);
-> +	struct notifier_block *nb =
-> +		(struct notifier_block *)dev_get_drvdata(dev);
-> +
-> +	blocking_notifier_chain_unregister(&ecdev->ec_dev->event_notifier,
-> +			nb);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver cros_usbpd_notify_driver = {
-> +	.driver = {
-> +		.name = DRV_NAME,
-> +	},
-> +	.probe = cros_usbpd_notify_probe_plat,
-> +	.remove = cros_usbpd_notify_remove_plat,
-> +};
-> +module_platform_driver(cros_usbpd_notify_driver);
-> +
-> +#endif /* CONFIG_ACPI */
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("ChromeOS power delivery notifier device");
-> +MODULE_AUTHOR("Jon Flatley <jflat@chromium.org>");
-> +MODULE_ALIAS("platform:" DRV_NAME);
-> diff --git a/include/linux/platform_data/cros_usbpd_notify.h b/include/linux/platform_data/cros_usbpd_notify.h
-> new file mode 100644
-> index 0000000000000..cd7c7bebf18da
-> --- /dev/null
-> +++ b/include/linux/platform_data/cros_usbpd_notify.h
-> @@ -0,0 +1,17 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * ChromeOS EC Power Delivery Notifier Driver
-> + *
-> + * Copyright 2019 Google LLC
-> + */
-> +
-> +#ifndef __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H
-> +#define __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H
-> +
-> +#include <linux/notifier.h>
-> +
-> +int cros_usbpd_register_notify(struct notifier_block *nb);
-> +
-> +void cros_usbpd_unregister_notify(struct notifier_block *nb);
-> +
-> +#endif  /* __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H */
+>   	if (drm_dp_dpcd_read(&intel_dp->aux, DP_EDP_BACKLIGHT_BRIGHTNESS_MSB,
+>   			     &read_val, sizeof(read_val)) < 0) {
+>   		DRM_DEBUG_KMS("Failed to read DPCD register 0x%x\n",
 > 
+
+Tested-by:Perry Yuan <pyuan@redhat.com>
+
