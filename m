@@ -2,297 +2,359 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F40C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 03:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40885C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 03:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E695C206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 03:44:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BNbCnBMI"
+	by mail.kernel.org (Postfix) with ESMTP id 0B9D7206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 03:45:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbfLWDoZ (ORCPT
+        id S1726799AbfLWDpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 22:44:25 -0500
-Received: from mail-eopbgr70074.outbound.protection.outlook.com ([40.107.7.74]:11910
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726539AbfLWDoY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 22:44:24 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YYegHxSD6hEo6KIOY6udSxSNn3SQotHmvywitP/7QJcLnOXwRmmKMBBbkgqIViWcNRlbt81gTTIOd45OTcuQgxnrHIc8NOUW5ezTbyk63BRNtkw3sGueJ63Xo1ZpLpWTnwJ/2PHdCeyGIyHx4OZ6MqukucQuS6UoBNQ95S+cMgAlzC5HS51ZpQCK/FTNV+F2T2jF/p515eDRLlFmyzOYySLr1SD0+XqudxPOTYjWJZw8dx2LW6QGJVuT7R0VvLPTCtz294gGIxz1Yi5RpOzb0ZGeH6aE8Usfx/PFn01WXgZut+PbkXnm28JwcRBktqS0CZhrU3aIAFM0cudonW5WAA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j5mf9LUL8MhQ1DvdHmy/b2UIQuDY61HBF9LYonzTcYk=;
- b=WfnCjHeahLrnQmCqslzmxWNMB0MslHb0bVVRPt3i88i2pYk+fEaUCvhvyOpuzSNAnJZXoqgJzc9yChLK46gdCx9WiwbfNwdpB0/u1YuZAZ2Gi0KPLq2dHToU8LSW6AlrKT8Iq4Wq6oxWTlFmB+nk0t9oSrY5lHC0C08QgyhYNaUc6ND6yXINDt1/07XHpVKLRzSjlnju5eJkBakTGQQFOHVNMD6GwvcmFwRkRIiKjReQb6AKHhW6Moj7E0hVucorrjquwcy1Qlvi1qYtJ88Z3ET/hZyFFfXqROuElpjobhmpxobMtl4dXQ6ufPFGBEEVd8lQ2tmqKZ7jSYv7MKeaIA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j5mf9LUL8MhQ1DvdHmy/b2UIQuDY61HBF9LYonzTcYk=;
- b=BNbCnBMIxHhsWTiS3oyRl7pOOVl/xOeoZ1kAJVIyhAIhGUgTACCVfw3AXNLAPHgRFSyKfqTyVvD20I+Y6diZlZwqZrwvnrnWZBS1m4x6cc1TMesSTniBZX1acotEy7tIuCuYIlpZflkFrZdsMQmFleVXVG2koFRJ+VqoxmnmfUY=
-Received: from VE1PR04MB6496.eurprd04.prod.outlook.com (20.179.232.221) by
- VE1PR04MB6672.eurprd04.prod.outlook.com (20.179.235.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.13; Mon, 23 Dec 2019 03:42:39 +0000
-Received: from VE1PR04MB6496.eurprd04.prod.outlook.com
- ([fe80::b870:829f:748a:4bc]) by VE1PR04MB6496.eurprd04.prod.outlook.com
- ([fe80::b870:829f:748a:4bc%3]) with mapi id 15.20.2559.017; Mon, 23 Dec 2019
- 03:42:39 +0000
-From:   Po Liu <po.liu@nxp.com>
-To:     "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
-        Po Liu <po.liu@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>,
-        "ivan.khoronzhuk@linaro.org" <ivan.khoronzhuk@linaro.org>,
-        Po Liu <po.liu@nxp.com>
-Subject: [net-next] enetc: add support time specific departure base on the qos
- etf
-Thread-Topic: [net-next] enetc: add support time specific departure base on
- the qos etf
-Thread-Index: AQHVuUMFGbRcJW58xE+CKKbOYElKEg==
-Date:   Mon, 23 Dec 2019 03:42:39 +0000
-Message-ID: <20191223032618.18205-1-Po.Liu@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.17.1
-x-clientproxiedby: SN4PR0201CA0025.namprd02.prod.outlook.com
- (2603:10b6:803:2e::11) To VE1PR04MB6496.eurprd04.prod.outlook.com
- (2603:10a6:803:11c::29)
-authentication-results: spf=none (sender IP is ) smtp.mailfrom=po.liu@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 32d2a83c-2f0d-4709-a006-08d7875a2828
-x-ms-traffictypediagnostic: VE1PR04MB6672:|VE1PR04MB6672:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6672AF8A90C1E3773E9731FD922E0@VE1PR04MB6672.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0260457E99
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(136003)(366004)(39860400002)(396003)(189003)(199004)(66446008)(2616005)(36756003)(71200400001)(6486002)(66946007)(66476007)(1076003)(64756008)(110136005)(66556008)(54906003)(6512007)(316002)(4326008)(52116002)(5660300002)(2906002)(81166006)(478600001)(81156014)(8676002)(6506007)(8936002)(26005)(86362001)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6672;H:VE1PR04MB6496.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3J9dm6mzCIjIP2IT6asxhuXKwww296t1l8f+Pwr+DRPRcCAE2ys/8t5SwNlL36uL+l7hemRw4576eY+F6UAwcbgw+6LumEDNq89rWFhCyurG6wHpNGTgwZsnCT09zwmTUKT0BxMXgRQE1l0Nq3sfE6AQ5Vnr1f76t7RbOXnGH8v6WmEFxSo7PpPsbefjp0LletNLE7+K7O3eKl6nyQZvBiI37ecCITXTFJy2CeEFXjNgu08ErH77NxxBu4vA08St3GnMkJBluGuEM864RhbUpCW8E1mEGA1a8LdsSIERjbgoBSxHGOnIGajvusPOU+Lka6jJQTojzIYR/gktCelNWuayDHsGUT66r4ToRlEVeUbJiS3fV5rUzL0LY8pRFtEPTbJvoWFLblKyKpJsSl9RTQc6JJTuu+idANwpcIHf42cTWrti3fQDdm/g3wTNCp3H
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 22 Dec 2019 22:45:10 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:57069 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726539AbfLWDpJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Dec 2019 22:45:09 -0500
+Received: by mail-il1-f199.google.com with SMTP id i68so1921135ill.23
+        for <linux-kernel@vger.kernel.org>; Sun, 22 Dec 2019 19:45:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=tzr3nghpf6kWQQZ/PAGUJqsJ+ILRqECGoVyVL+dKgnM=;
+        b=RhQ///Dx1JvQeMCrwlPyUxLkNJMtMonDMjP7/enTh3/Wy+3znm/WgDzNDlWajdS0yJ
+         ipuZgxViOfkFouxVtuztnZDjGv4toFN4wIX92YXp4vwnZSB0tYJ82ikrrss6v4+yaSNL
+         tyaFkFMp7EQBxeNGeLcPuHakdJ35cPpq8mAr1M6sdfv2H4svOx3cEDMGd4ZaBmD1mj73
+         a3UZ0T/sNsOwNqOP6inPZktYyDT3xg5Ld9rssatVnXWNQ4LFgEnc79up/0wRUgcJI4f+
+         nPBGh1TNzSYlTS//cO9gZtF6KcnY0OfezonQY/ZZZmvtfXoQGQqOkZGVUQipVZM19b2Z
+         qWpg==
+X-Gm-Message-State: APjAAAV5TEUi534OIO3iQcZw0LRjHjNSObnX3bL16dwvgQV1PTXljefz
+        eC8/Z0bY1f4TwVpnWYZ5OK8QQZTNYdxBpCkPTXNhSX+UHq/G
+X-Google-Smtp-Source: APXvYqzF0QU5Tc8CA6vlaFgaAJUB+z3ZTDKD3TEVnoEiGGRGxYqwx+kovehI0/78zt/KuL1OksCdpuyBO5x2kAr1jrVtft02zz4z
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 32d2a83c-2f0d-4709-a006-08d7875a2828
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Dec 2019 03:42:39.1669
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kDQFwrf6xTFIYyQ77Zk3B0N5GqHRudfbZ5FsZBo+z077QPy5P+83+KAM9QOjuQKT
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6672
+X-Received: by 2002:a02:c611:: with SMTP id i17mr22737487jan.28.1577072707415;
+ Sun, 22 Dec 2019 19:45:07 -0800 (PST)
+Date:   Sun, 22 Dec 2019 19:45:07 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000082b80f059a56da1f@google.com>
+Subject: INFO: task hung in fb_release
+From:   syzbot <syzbot+d130c4a0890561cfac5b@syzkaller.appspotmail.com>
+To:     b.zolnierkie@samsung.com, daniel.vetter@ffwll.ch,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, maarten.lankhorst@linux.intel.com,
+        sam@ravnborg.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ENETC implement time specific departure capability, which enables
-the user to specify when a frame can be transmitted. When this
-capability is enabled, the device will delay the transmission of
-the frame so that it can be transmitted at the precisely specified time.
-The delay departure time up to 0.5 seconds in the future. If the
-departure time in the transmit BD has not yet been reached, based
-on the current time, the packet will not be transmitted.
+Hello,
 
-This driver was loaded by Qos driver ETF. User could load it by tc
-commands. Here are the example commands:
+syzbot found the following crash on:
 
-tc qdisc add dev eth0 root handle 1: mqprio \
-	   num_tc 8 map 0 1 2 3 4 5 6 7 hw 1
-tc qdisc replace dev eth0 parent 1:8 etf \
-	   clockid CLOCK_TAI delta 30000  offload
+HEAD commit:    c6017471 Merge tag 'xfs-5.5-fixes-2' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=127d0799e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7f6119e2e3675a73
+dashboard link: https://syzkaller.appspot.com/bug?extid=d130c4a0890561cfac5b
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=169b1925e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12b9623ee00000
 
-These example try to set queue mapping first and then set queue 7
-with 30us ahead dequeue time.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+d130c4a0890561cfac5b@syzkaller.appspotmail.com
 
-Then user send test frame should set SO_TXTIME feature for socket.
+INFO: task syz-executor500:14993 blocked for more than 143 seconds.
+       Not tainted 5.5.0-rc2-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor500 D28160 14993   9196 0x00004004
+Call Trace:
+  context_switch kernel/sched/core.c:3385 [inline]
+  __schedule+0x934/0x1f90 kernel/sched/core.c:4081
+  schedule+0xdc/0x2b0 kernel/sched/core.c:4155
+  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:4214
+  __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
+  __mutex_lock+0x7ab/0x13c0 kernel/locking/mutex.c:1103
+  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
+  lock_fb_info include/linux/fb.h:637 [inline]
+  fb_release+0x55/0x150 drivers/video/fbdev/core/fbmem.c:1435
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:164
+  prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+  do_syscall_64+0x676/0x790 arch/x86/entry/common.c:304
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4095e1
+Code: Bad RIP value.
+RSP: 002b:00007fff7e1c4910 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 00000000004095e1
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 00000000006e7a1c R08: 00000000004b3370 R09: 00000000004b3370
+R10: 00007fff7e1c4940 R11: 0000000000000293 R12: 00000000006e7a10
+R13: 0000000000000001 R14: 000000000000002d R15: 20c49ba5e353f7cf
+INFO: task syz-executor500:15000 blocked for more than 143 seconds.
+       Not tainted 5.5.0-rc2-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor500 D28536 15000   9197 0x00000004
+Call Trace:
+  context_switch kernel/sched/core.c:3385 [inline]
+  __schedule+0x934/0x1f90 kernel/sched/core.c:4081
+  schedule+0xdc/0x2b0 kernel/sched/core.c:4155
+  schedule_timeout+0x717/0xc50 kernel/time/timer.c:1871
+  __down_common kernel/locking/semaphore.c:220 [inline]
+  __down+0x176/0x2c0 kernel/locking/semaphore.c:237
+  down+0x64/0x90 kernel/locking/semaphore.c:61
+  console_lock+0x29/0x80 kernel/printk/printk.c:2289
+  do_fb_ioctl+0x335/0x7d0 drivers/video/fbdev/core/fbmem.c:1101
+  fb_ioctl+0xe6/0x130 drivers/video/fbdev/core/fbmem.c:1180
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:545 [inline]
+  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+  __do_sys_ioctl fs/ioctl.c:756 [inline]
+  __se_sys_ioctl fs/ioctl.c:754 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x44aac9
+Code: Bad RIP value.
+RSP: 002b:00007f2e4eaddce8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000006e7a08 RCX: 000000000044aac9
+RDX: 0000000020000000 RSI: 0000000000004601 RDI: 0000000000000003
+RBP: 00000000006e7a00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006e7a0c
+R13: 00007fff7e1c489f R14: 00007f2e4eade9c0 R15: 20c49ba5e353f7cf
+INFO: task syz-executor500:15002 blocked for more than 143 seconds.
+       Not tainted 5.5.0-rc2-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor500 D27856 15002   9200 0x00000004
+Call Trace:
+  context_switch kernel/sched/core.c:3385 [inline]
+  __schedule+0x934/0x1f90 kernel/sched/core.c:4081
+  schedule+0xdc/0x2b0 kernel/sched/core.c:4155
+  schedule_timeout+0x717/0xc50 kernel/time/timer.c:1871
+  __down_common kernel/locking/semaphore.c:220 [inline]
+  __down+0x176/0x2c0 kernel/locking/semaphore.c:237
+  down+0x64/0x90 kernel/locking/semaphore.c:61
+  console_lock+0x29/0x80 kernel/printk/printk.c:2289
+  do_fb_ioctl+0x335/0x7d0 drivers/video/fbdev/core/fbmem.c:1101
+  fb_ioctl+0xe6/0x130 drivers/video/fbdev/core/fbmem.c:1180
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:545 [inline]
+  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+  __do_sys_ioctl fs/ioctl.c:756 [inline]
+  __se_sys_ioctl fs/ioctl.c:754 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x44aac9
+Code: Bad RIP value.
+RSP: 002b:00007f2e4eaddce8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000006e7a08 RCX: 000000000044aac9
+RDX: 0000000020000000 RSI: 0000000000004601 RDI: 0000000000000003
+RBP: 00000000006e7a00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006e7a0c
+R13: 00007fff7e1c489f R14: 00007f2e4eade9c0 R15: 20c49ba5e353f7cf
+INFO: task syz-executor500:15003 blocked for more than 143 seconds.
+       Not tainted 5.5.0-rc2-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor500 D28536 15003   9201 0x00000004
+Call Trace:
+  context_switch kernel/sched/core.c:3385 [inline]
+  __schedule+0x934/0x1f90 kernel/sched/core.c:4081
+  schedule+0xdc/0x2b0 kernel/sched/core.c:4155
+  schedule_timeout+0x717/0xc50 kernel/time/timer.c:1871
+  __down_common kernel/locking/semaphore.c:220 [inline]
+  __down+0x176/0x2c0 kernel/locking/semaphore.c:237
+  down+0x64/0x90 kernel/locking/semaphore.c:61
+  console_lock+0x29/0x80 kernel/printk/printk.c:2289
+  do_fb_ioctl+0x335/0x7d0 drivers/video/fbdev/core/fbmem.c:1101
+  fb_ioctl+0xe6/0x130 drivers/video/fbdev/core/fbmem.c:1180
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:545 [inline]
+  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+  __do_sys_ioctl fs/ioctl.c:756 [inline]
+  __se_sys_ioctl fs/ioctl.c:754 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x44aac9
+Code: Bad RIP value.
+RSP: 002b:00007f2e4eaddce8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000006e7a08 RCX: 000000000044aac9
+RDX: 0000000020000000 RSI: 0000000000004601 RDI: 0000000000000003
+RBP: 00000000006e7a00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006e7a0c
+R13: 00007fff7e1c489f R14: 00007f2e4eade9c0 R15: 20c49ba5e353f7cf
+INFO: task syz-executor500:15001 blocked for more than 143 seconds.
+       Not tainted 5.5.0-rc2-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor500 D28536 15001   9198 0x00000004
+Call Trace:
+  context_switch kernel/sched/core.c:3385 [inline]
+  __schedule+0x934/0x1f90 kernel/sched/core.c:4081
+  schedule+0xdc/0x2b0 kernel/sched/core.c:4155
+  schedule_timeout+0x717/0xc50 kernel/time/timer.c:1871
+  __down_common kernel/locking/semaphore.c:220 [inline]
+  __down+0x176/0x2c0 kernel/locking/semaphore.c:237
+  down+0x64/0x90 kernel/locking/semaphore.c:61
+  console_lock+0x29/0x80 kernel/printk/printk.c:2289
+  do_fb_ioctl+0x335/0x7d0 drivers/video/fbdev/core/fbmem.c:1101
+  fb_ioctl+0xe6/0x130 drivers/video/fbdev/core/fbmem.c:1180
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:545 [inline]
+  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+  __do_sys_ioctl fs/ioctl.c:756 [inline]
+  __se_sys_ioctl fs/ioctl.c:754 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x44aac9
+Code: Bad RIP value.
+RSP: 002b:00007f2e4eaddce8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000006e7a08 RCX: 000000000044aac9
+RDX: 0000000020000000 RSI: 0000000000004601 RDI: 0000000000000003
+RBP: 00000000006e7a00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006e7a0c
+R13: 00007fff7e1c489f R14: 00007f2e4eade9c0 R15: 20c49ba5e353f7cf
 
-There are also some limitations for this feature in hardware:
-- Transmit checksum offloads and time specific departure operation
-are mutually exclusive.
-- Time Aware Shaper feature (Qbv) offload and time specific departure
-operation are mutually exclusive.
+Showing all locks held in the system:
+1 lock held by khungtaskd/1114:
+  #0: ffffffff899a5680 (rcu_read_lock){....}, at:  
+debug_show_all_locks+0x5f/0x279 kernel/locking/lockdep.c:5334
+1 lock held by rsyslogd/9076:
+  #0: ffff888094bf2420 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0xee/0x110  
+fs/file.c:801
+2 locks held by getty/9166:
+  #0: ffff8880a06d2090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc9000169b2e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/9167:
+  #0: ffff8880938e1090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc900016cb2e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/9168:
+  #0: ffff8880a9a6f090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc900016ab2e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/9169:
+  #0: ffff8880961a0090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc900016d72e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/9170:
+  #0: ffff88809d854090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc9000170b2e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/9171:
+  #0: ffff8880a71ed090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc9000171b2e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/9172:
+  #0: ffff88809841e090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc900011102e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by syz-executor500/14992:
+1 lock held by syz-executor500/14993:
+  #0: ffff888218c7b070 (&fb_info->lock){+.+.}, at: lock_fb_info  
+include/linux/fb.h:637 [inline]
+  #0: ffff888218c7b070 (&fb_info->lock){+.+.}, at: fb_release+0x55/0x150  
+drivers/video/fbdev/core/fbmem.c:1435
 
-Signed-off-by: Po Liu <Po.Liu@nxp.com>
-Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+=============================================
+
+NMI backtrace for cpu 1
+CPU: 1 PID: 1114 Comm: khungtaskd Not tainted 5.5.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
+  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
+  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
+  check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
+  watchdog+0xb11/0x10c0 kernel/hung_task.c:289
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Sending NMI from CPU 1 to CPUs 0:
+NMI backtrace for cpu 0
+CPU: 0 PID: 14992 Comm: syz-executor500 Not tainted 5.5.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:cfb_fillrect+0x3f7/0x7c0  
+drivers/video/fbdev/core/cfbfillrect.c:325
+Code: 48 b8 00 00 00 00 00 fc ff df 89 7d b8 48 c1 ea 03 44 89 7d c0 48 01  
+d0 48 89 45 b0 eb 03 4d 89 fe e8 0d 44 c0 fd 0f b6 4d b8 <89> d8 83 e3 3f  
+6a 00 44 8b 45 c0 41 b9 40 00 00 00 89 da 4c 89 e7
+RSP: 0018:ffffc90005c3f330 EFLAGS: 00000293
+RAX: ffff8880a8bbe400 RBX: 0000000000000000 RCX: 0000000000000006
+RDX: 0000000000000000 RSI: ffffffff83b4e9e3 RDI: 0000000000000007
+RBP: ffffc90005c3f398 R08: ffff8880a8bbe400 R09: 0000000000000040
+R10: ffffed104319ae43 R11: ffff888218cd721f R12: ffff888218c7b000
+R13: ffff8880000a0000 R14: 00000000b01f701f R15: 00000000b01f701f
+FS:  00007f2e4eade700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000006e00a0 CR3: 000000008cf8d000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  vga16fb_fillrect+0x6ce/0x19b0 drivers/video/fbdev/vga16fb.c:951
+  bit_clear_margins+0x30b/0x530 drivers/video/fbdev/core/bitblit.c:232
+  fbcon_clear_margins+0x1e9/0x250 drivers/video/fbdev/core/fbcon.c:1372
+  fbcon_switch+0xd7f/0x17f0 drivers/video/fbdev/core/fbcon.c:2354
+  redraw_screen+0x2b6/0x7d0 drivers/tty/vt/vt.c:997
+  fbcon_modechanged+0x5c3/0x790 drivers/video/fbdev/core/fbcon.c:2991
+  fbcon_update_vcs+0x42/0x50 drivers/video/fbdev/core/fbcon.c:3038
+  fb_set_var+0xb32/0xdd0 drivers/video/fbdev/core/fbmem.c:1051
+  do_fb_ioctl+0x390/0x7d0 drivers/video/fbdev/core/fbmem.c:1104
+  fb_ioctl+0xe6/0x130 drivers/video/fbdev/core/fbmem.c:1180
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:545 [inline]
+  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+  __do_sys_ioctl fs/ioctl.c:756 [inline]
+  __se_sys_ioctl fs/ioctl.c:754 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x44aac9
+Code: e8 7c e6 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 1b 05 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f2e4eaddce8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000006e7a08 RCX: 000000000044aac9
+RDX: 0000000020000000 RSI: 0000000000004601 RDI: 0000000000000003
+RBP: 00000000006e7a00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006e7a0c
+R13: 00007fff7e1c489f R14: 00007f2e4eade9c0 R15: 20c49ba5e353f7cf
+
+
 ---
- drivers/net/ethernet/freescale/enetc/enetc.c  | 12 +++++++
- drivers/net/ethernet/freescale/enetc/enetc.h  |  3 ++
- .../net/ethernet/freescale/enetc/enetc_hw.h   | 10 +++++-
- .../net/ethernet/freescale/enetc/enetc_qos.c  | 31 +++++++++++++++++++
- 4 files changed, 55 insertions(+), 1 deletion(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c b/drivers/net/eth=
-ernet/freescale/enetc/enetc.c
-index 2ee4a2cd4780..1f79e36116a3 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc.c
-@@ -149,11 +149,21 @@ static int enetc_map_tx_buffs(struct enetc_bdr *tx_ri=
-ng, struct sk_buff *skb,
-=20
- 	if (enetc_tx_csum(skb, &temp_bd))
- 		flags |=3D ENETC_TXBD_FLAGS_CSUM | ENETC_TXBD_FLAGS_L4CS;
-+	else if (tx_ring->tsd_enable)
-+		flags |=3D ENETC_TXBD_FLAGS_TSE | ENETC_TXBD_FLAGS_TXSTART;
-=20
- 	/* first BD needs frm_len and offload flags set */
- 	temp_bd.frm_len =3D cpu_to_le16(skb->len);
- 	temp_bd.flags =3D flags;
-=20
-+	if (flags & ENETC_TXBD_FLAGS_TSE) {
-+		u32 temp;
-+
-+		temp =3D (skb->skb_mstamp_ns >> 5 & ENETC_TXBD_TXSTART_MASK)
-+			| (flags << ENETC_TXBD_FLAGS_OFFSET);
-+		temp_bd.txstart =3D cpu_to_le32(temp);
-+	}
-+
- 	if (flags & ENETC_TXBD_FLAGS_EX) {
- 		u8 e_flags =3D 0;
- 		*txbd =3D temp_bd;
-@@ -1505,6 +1515,8 @@ int enetc_setup_tc(struct net_device *ndev, enum tc_s=
-etup_type type,
- 		return enetc_setup_tc_taprio(ndev, type_data);
- 	case TC_SETUP_QDISC_CBS:
- 		return enetc_setup_tc_cbs(ndev, type_data);
-+	case TC_SETUP_QDISC_ETF:
-+		return enetc_setup_tc_txtime(ndev, type_data);
- 	default:
- 		return -EOPNOTSUPP;
- 	}
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc.h b/drivers/net/eth=
-ernet/freescale/enetc/enetc.h
-index 7ee0da6d0015..dd4a227ffc7a 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc.h
-+++ b/drivers/net/ethernet/freescale/enetc/enetc.h
-@@ -72,6 +72,7 @@ struct enetc_bdr {
- 	struct enetc_ring_stats stats;
-=20
- 	dma_addr_t bd_dma_base;
-+	u8 tsd_enable; /* Time specific departure */
- } ____cacheline_aligned_in_smp;
-=20
- static inline void enetc_bdr_idx_inc(struct enetc_bdr *bdr, int *i)
-@@ -256,8 +257,10 @@ int enetc_send_cmd(struct enetc_si *si, struct enetc_c=
-bd *cbd);
- int enetc_setup_tc_taprio(struct net_device *ndev, void *type_data);
- void enetc_sched_speed_set(struct net_device *ndev);
- int enetc_setup_tc_cbs(struct net_device *ndev, void *type_data);
-+int enetc_setup_tc_txtime(struct net_device *ndev, void *type_data);
- #else
- #define enetc_setup_tc_taprio(ndev, type_data) -EOPNOTSUPP
- #define enetc_sched_speed_set(ndev) (void)0
- #define enetc_setup_tc_cbs(ndev, type_data) -EOPNOTSUPP
-+#define enetc_setup_tc_txtime(ndev, type_data) -EOPNOTSUPP
- #endif
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_hw.h b/drivers/net/=
-ethernet/freescale/enetc/enetc_hw.h
-index 51f543ef37a8..8375cd886dba 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_hw.h
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_hw.h
-@@ -358,6 +358,7 @@ union enetc_tx_bd {
- 				u8 l4_csoff;
- 				u8 flags;
- 			}; /* default layout */
-+			__le32 txstart;
- 			__le32 lstatus;
- 		};
- 	};
-@@ -378,11 +379,14 @@ union enetc_tx_bd {
- };
-=20
- #define ENETC_TXBD_FLAGS_L4CS	BIT(0)
-+#define ENETC_TXBD_FLAGS_TSE	BIT(1)
- #define ENETC_TXBD_FLAGS_W	BIT(2)
- #define ENETC_TXBD_FLAGS_CSUM	BIT(3)
-+#define ENETC_TXBD_FLAGS_TXSTART BIT(4)
- #define ENETC_TXBD_FLAGS_EX	BIT(6)
- #define ENETC_TXBD_FLAGS_F	BIT(7)
--
-+#define ENETC_TXBD_TXSTART_MASK GENMASK(24, 0)
-+#define ENETC_TXBD_FLAGS_OFFSET 24
- static inline void enetc_clear_tx_bd(union enetc_tx_bd *txbd)
- {
- 	memset(txbd, 0, sizeof(*txbd));
-@@ -615,3 +619,7 @@ struct enetc_cbd {
- /* Port time gating capability register */
- #define ENETC_QBV_PTGCAPR_OFFSET	0x11a08
- #define ENETC_QBV_MAX_GCL_LEN_MASK	GENMASK(15, 0)
-+
-+/* Port time specific departure */
-+#define ENETC_PTCTSDR(n)	(0x1210 + 4 * (n))
-+#define ENETC_TSDE		BIT(31)
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_qos.c b/drivers/net=
-/ethernet/freescale/enetc/enetc_qos.c
-index 9190ffc9f6b2..049f0fb40ac7 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_qos.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_qos.c
-@@ -156,6 +156,11 @@ int enetc_setup_tc_taprio(struct net_device *ndev, voi=
-d *type_data)
- 	int err;
- 	int i;
-=20
-+	/* TSD and Qbv are mutually exclusive in hardware */
-+	for (i =3D 0; i < priv->num_tx_rings; i++)
-+		if (priv->tx_ring[i]->tsd_enable)
-+			return -EBUSY;
-+
- 	for (i =3D 0; i < priv->num_tx_rings; i++)
- 		enetc_set_bdr_prio(&priv->si->hw,
- 				   priv->tx_ring[i]->index,
-@@ -297,3 +302,29 @@ int enetc_setup_tc_cbs(struct net_device *ndev, void *=
-type_data)
-=20
- 	return 0;
- }
-+
-+int enetc_setup_tc_txtime(struct net_device *ndev, void *type_data)
-+{
-+	struct enetc_ndev_priv *priv =3D netdev_priv(ndev);
-+	struct tc_etf_qopt_offload *qopt =3D type_data;
-+	u8 tc_nums =3D netdev_get_num_tc(ndev);
-+	int tc;
-+
-+	if (!tc_nums)
-+		return -EOPNOTSUPP;
-+
-+	tc =3D qopt->queue;
-+
-+	if (tc < 0 || tc > priv->num_tx_rings)
-+		return -EINVAL;
-+
-+	/* TSD and Qbv are mutually exclusive in hardware */
-+	if (enetc_rd(&priv->si->hw, ENETC_QBV_PTGCR_OFFSET) & ENETC_QBV_TGE)
-+		return -EBUSY;
-+
-+	priv->tx_ring[tc]->tsd_enable =3D qopt->enable;
-+	enetc_port_wr(&priv->si->hw, ENETC_PTCTSDR(tc),
-+		      qopt->enable ? ENETC_TSDE : 0);
-+
-+	return 0;
-+}
---=20
-2.17.1
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
