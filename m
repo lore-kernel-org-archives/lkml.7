@@ -2,195 +2,109 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A78C2D0D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 18:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C36DC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 18:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46B3D206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 18:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38C032073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 18:59:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=unipv-it.20150623.gappssmtp.com header.i=@unipv-it.20150623.gappssmtp.com header.b="1xfOpsDe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eb4L4pil"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfLWSqF (ORCPT
+        id S1726911AbfLWS7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 13:46:05 -0500
-Received: from mail-wr1-f45.google.com ([209.85.221.45]:41376 "EHLO
-        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbfLWSqD (ORCPT
+        Mon, 23 Dec 2019 13:59:22 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:56050 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726756AbfLWS7W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 13:46:03 -0500
-Received: by mail-wr1-f45.google.com with SMTP id c9so17606390wrw.8
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 10:46:00 -0800 (PST)
+        Mon, 23 Dec 2019 13:59:22 -0500
+Received: by mail-pj1-f67.google.com with SMTP id d5so139163pjz.5;
+        Mon, 23 Dec 2019 10:59:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=unipv-it.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version;
-        bh=w5CMUkOgI9O50Lpl1QlGs5TpfGYKinCiTcdt0eBfYEo=;
-        b=1xfOpsDewZMEL8VURraPRYQC54Kr6g5gmBmvHkk+Wa4T+65VVoUvl5uQUYkQUlfjER
-         RTOMeycBczuwQiFOj0Ndy053ltaRrVXZzEIGIJmTL0hltq3d1RAUcf46EZ0KTlVG8mRI
-         oxVE2yNmnimz+Rw6yr4DtRKQtvSesKe7g8O628dbIs9zx8M6NPoZCXzYc01paKsZEcKK
-         5byZFlT947iY2xIYKNNORSOlMd4y+GDvuk7gaRasO0Gyh0Qr1ZKTtDmGGoMWC5t3oziu
-         gry34a4C+QIeIieVjX33VL8TUBlXws33je4Byo03PMQSLfqMB2VT0NdLTjWpWUazkg6z
-         Wm4A==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=TCR4AR5ucUHlq9yNJFguI2NxlI68W/tsOUZcT+YMNl0=;
+        b=eb4L4pil+JCG+cmdA0+Y497EM/NtrHh8JtUYUrydX0icSwue7g/LT7YybIYtTTcV/M
+         MDaDFzfK3rGsshR2RJN/EE3X86kt4E4btFV3briwaxtCutIASq/3rWfK0hgKIeBr+pCL
+         1DrjLmswrvXHxs3IvDOhgMcK+NehUow+N4Tv6eZIfMecsqBWCVjOwfJB/B9FMksOPQ/b
+         fk3OA/ihwGFJVxTedK7BuI7EMQMK1YysKr8bZUBHso5sGbkgqhpLR2KssbBPoVEOEyug
+         qB+K4Y29piISqu3qBMy6P1HWvW8dFPImPXFO3HIM7wgp0lRloRUfgj2KHzIbucnt9eu/
+         uC1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version;
-        bh=w5CMUkOgI9O50Lpl1QlGs5TpfGYKinCiTcdt0eBfYEo=;
-        b=lXXOBlbbMZBdW1G7eyJORcm7V8fmktTBBrUhklR5uniyqkhKXhG5uSeXMVyggQMMAq
-         zXGr1BcFSmWGL300n25NdsAKI/tb3HVEwlizZJ35EHIfaq84JbtgiVj7tBfa+k035Uyx
-         lW/Vi0H6z6HziEc5fGM33gWIsmbvhoRAik7PuVctG9veh6uEqbtH2ePzbP+hbZTjwFxg
-         Z6YHnqY5eQ59himDWr71T6x0wRCcXempPMdRHMbNQYPboVuRFVQNXqVFVwbTMOAVluPg
-         FWgjK3cAXxsISpfI40sK/K489KCJFkWZqse16KwV+QTfEh47hLxDkdPn328+tVLK9+Wm
-         aHYQ==
-X-Gm-Message-State: APjAAAU9kvrwVlBMpwE5yLuOqLguO/yQ0rDI5Krdx4S7z2eiKSceuqC+
-        ZMCj1tJJ3JTDfFOJuEExLLaZNw==
-X-Google-Smtp-Source: APXvYqyNnBk0/fE1k94km79FHzdxuXoFKLWnVDf7fsGDlDpvpLkztIYGych+tWyoVBZAKZfzOmxCSQ==
-X-Received: by 2002:a05:6000:1241:: with SMTP id j1mr33177089wrx.26.1577126759640;
-        Mon, 23 Dec 2019 10:45:59 -0800 (PST)
-Received: from angus.unipv.it (angus.unipv.it. [193.206.67.163])
-        by smtp.gmail.com with ESMTPSA id k8sm21275041wrl.3.2019.12.23.10.45.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Dec 2019 10:45:58 -0800 (PST)
-Message-ID: <bb5d395fe47f033be0b8ed96cbebf8867d2416c4.camel@unipv.it>
-Subject: Re: AW: Slow I/O on USB media after commit
- f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
-From:   Andrea Vai <andrea.vai@unipv.it>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Ming Lei <ming.lei@redhat.com>,
-        "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jens Axboe <axboe@kernel.dk>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        USB list <linux-usb@vger.kernel.org>,
-        SCSI development list <linux-scsi@vger.kernel.org>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Date:   Mon, 23 Dec 2019 19:45:57 +0100
-In-Reply-To: <20191223172257.GB3282@mit.edu>
-References: <20191211024137.GB61323@mit.edu>
-         <20191211040058.GC6864@ming.t460p> <20191211160745.GA129186@mit.edu>
-         <20191211213316.GA14983@ming.t460p>
-         <f38db337cf26390f7c7488a0bc2076633737775b.camel@unipv.it>
-         <20191218094830.GB30602@ming.t460p>
-         <b1b6a0e9d690ecd9432025acd2db4ac09f834040.camel@unipv.it>
-         <20191223130828.GA25948@ming.t460p> <20191223162619.GA3282@mit.edu>
-         <4c85fd3f2ec58694cc1ff7ab5c88d6e11ab6efec.camel@unipv.it>
-         <20191223172257.GB3282@mit.edu>
-Content-Type: multipart/mixed; boundary="=-weAblMnQ5amPpzK4jcZ1"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
-MIME-Version: 1.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=TCR4AR5ucUHlq9yNJFguI2NxlI68W/tsOUZcT+YMNl0=;
+        b=U9Y7nV/SY6xQBlPC97tb8MnkxZBWS/o/pECUDfaZsMimPjH/nsM+yqMC37TtxKupIR
+         9eQ/GbPAV0Dw9x89c9P8dOXn6XX0ivvCPoz+m/UvHCiKJEiPQR0BubuPo0i0cysTOzTi
+         Ia9Zra1B2+Y9Km5gAbIY+kRhAFj3FSUBkz5fEkx+PjC8ghagmq9Oa3Dw1aCOHG8IHamw
+         DhCO1m7+Bp9zjJfCV2562B27bKamL/jwpcJ3/7JdFbTs/ESfjB9NasJsIsprpnpBKGKV
+         aWUBrB8IybDOCgmVbnH5MvqrbK8YUj4oBNbev4nwcJEU1OUXMqI99EuVvFPKITmYIwlU
+         JTyA==
+X-Gm-Message-State: APjAAAWTJDrYvrL3cUck96A+WT7Fp25g6raGd/twJqqIQBVDCySF7+SL
+        Dz+VVyvUkXArOw51PFjV9x4=
+X-Google-Smtp-Source: APXvYqz84TR8y+QXxgUTlt23B6h//l3KypRdsMB1YXrNQMBidJsu/m2w0mjr/wrZCM0wu9iBN7SuOQ==
+X-Received: by 2002:a17:902:b186:: with SMTP id s6mr32565870plr.333.1577127561141;
+        Mon, 23 Dec 2019 10:59:21 -0800 (PST)
+Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
+        by smtp.gmail.com with ESMTPSA id r62sm25858012pfc.89.2019.12.23.10.59.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 23 Dec 2019 10:59:20 -0800 (PST)
+From:   Yangtao Li <tiny.windzz@gmail.com>
+To:     m.szyprowski@samsung.com, joro@8bytes.org, kgene@kernel.org,
+        krzk@kernel.org, matthias.bgg@gmail.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, robdclark@gmail.com, heiko@sntech.de,
+        mst@redhat.com, jasowang@redhat.com,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        virtualization@lists.linux-foundation.org
+Cc:     Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH 1/6] iommu/omap: convert to devm_platform_ioremap_resource
+Date:   Mon, 23 Dec 2019 18:59:12 +0000
+Message-Id: <20191223185918.9877-1-tiny.windzz@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Use devm_platform_ioremap_resource() to simplify code.
 
---=-weAblMnQ5amPpzK4jcZ1
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+---
+ drivers/iommu/omap-iommu.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Il giorno lun, 23/12/2019 alle 12.22 -0500, Theodore Y. Ts'o ha
-scritto:
-> On Mon, Dec 23, 2019 at 05:29:27PM +0100, Andrea Vai wrote:
-> > I run the cp command from a bash script, or from a bash shell. I
-> don't
-> > know if this answer your question, otherwise feel free to tell me
-> a
-> > way to find the answer to give you.
-> 
-> What distro are you using, and/or what package is the cp command
-> coming from, and what is the package name and version?
-
-Fedora 30
-
-$ rpm -qf `which cp`
-coreutils-8.31-6.fc30.x86_64
-
-> 
-> Also, can you remind me what the bash script is and how many files
-> you are copying?
-
-basically, it's:
-
-  mount UUID=$uuid /mnt/pendrive
-  SECONDS=0
-  cp $testfile /mnt/pendrive
-  umount /mnt/pendrive
-  tempo=$SECONDS
-
-and it copies one file only. Anyway, you can find the whole script
-attached.
-
-
-> 
-> Can you change the script so that the cp command is prefixed by:
-> 
-> "strace -tTf -o /tmp/st "
-> 
-> e.g.,
-> 
-> 	strace -tTf -o /tmp/st cp <args>
-> 
-> And then send me
-btw, please tell me if "me" means only you or I cc: all the
-recipients, as usual
-
->  the /tmp/st file.  This will significantly change the
-> time, so don't do this for measuring performance.  I just want to
-> see
-> what the /bin/cp command is *doing*.
-
-I will do it, but I have a doubt. Since the problem doesn't happen
-every time, is it useful to give you a trace of a "fast" run? And, if
-it's not, I think I should measure performance with the trace command
-prefix, to identify a "slow" run to report you. Does it make sense?
-
-Thanks,
-Andrea
-
---=-weAblMnQ5amPpzK4jcZ1
-Content-Type: application/x-shellscript; name="test"
-Content-Disposition: attachment; filename="test"
-Content-Transfer-Encoding: base64
-
-IyEvYmluL2Jhc2gKCnRlc3RmaWxlPS9Ob0JhY2t1cC90ZXN0ZmlsZQpsb2dmaWxlPS9ob21lL2Fu
-ZHJlYS90cm91Ymxlc2hvb3RpbmcvMjAxOTA0MThfbGVudGV6emFEYXIvMjAxOTA0MThfbGVudGV6
-emFEYXIudHh0Cm5Ucmllcz0kMSAjIE51bWJlciBvZiB0cmllcyB3ZSBkbwoKIyB1dWlkPSI2YTlk
-M2MwNS02NzU4LTQ5YzAtYTQ2ZS02Y2UyMjE0NzhlYjMiICNPREQKIyB1dWlkPSI2OGNiYzQxMi1l
-N2MzLTQwN2MtODNjMS1jNzE4NTgwZTkzMGQiICNFVkVOCiMgdXVpZD0iNTcxNjM2ODAtYWI4NS00
-YzQzLWE5ZGEtODYxMzMyNjJmODE1IiAjIEVWRU4gYnRyZnMKdXVpZD0iYWE3ZWVjNTItY2I5NS00
-YWIzLTg1NTctZjBjZWNiYzFjMTBmIiAjIEVWRU4geGZzCiMgdXVpZD0iY2NiN2VlNmMtY2Y4ZC00
-Yjg3LWFlOWYtYTJlMTNmNWMwMGU4IiAjIFNTRAojIHV1aWQ9ImY4NzU0MWYwLWZjNzItNDU0NC05
-ZjFjLWUzZWU1MjEyZGFmOSIgI0czIGJpYW5jYQoKZWNobyAiU3RhcnRpbmcgJG5UcmllcyB0cmll
-cyB3aXRoOiIgfCB0ZWUgLWEgJGxvZ2ZpbGUKdW5hbWUgLWEgfCB0ZWUgLWEgJGxvZ2ZpbGUKbHMg
-LWxoICR0ZXN0ZmlsZSAyPiYxIHwgdGVlIC1hICRsb2dmaWxlCmJsa2lkIDI+JjEgfCB0ZWUgLWEg
-JGxvZ2ZpbGUKZWNobyAidXVpZD0kdXVpZCIKZWNobyAtbiAiY2F0IC9zeXMvYmxvY2svc2RmL3F1
-ZXVlL3NjaGVkdWxlciAtLT4gIiB8IHRlZSAtYSAkbG9nZmlsZQpjYXQgL3N5cy9ibG9jay9zZGYv
-cXVldWUvc2NoZWR1bGVyIDI+JjEgfCB0ZWUgLWEgJGxvZ2ZpbGUKZm9yICgoIGs9MTsgazw9JG5U
-cmllczsgaysrICkpOyBkbyAKICBlY2hvIC1uICJJbml6aW86ICIgfCB0ZWUgLWEgJGxvZ2ZpbGUK
-ICBkYXRlIHwgdHIgLWQgIlxuIiB8IHRlZSAtYSAkbG9nZmlsZQogIHRvdWNoIGluaXppbyAyPiYx
-IHx0ZWUgLWEgJGxvZ2ZpbGUKICBtb3VudCBVVUlEPSR1dWlkIC9tbnQvcGVuZHJpdmUgMj4mMSB8
-dGVlIC1hICRsb2dmaWxlCiAgU0VDT05EUz0wCiAgY3AgJHRlc3RmaWxlIC9tbnQvcGVuZHJpdmUg
-Mj4mMSB8dGVlIC1hICRsb2dmaWxlCiMgIGRkIGlmPSR0ZXN0ZmlsZSBvZj0vbW50L3BlbmRyaXZl
-L3Rlc3RmaWxlIGJzPTFNIG9mbGFnPWRpcmVjdAojICBkZCBpZj0kdGVzdGZpbGUgb2Y9L21udC9w
-ZW5kcml2ZS90ZXN0ZmlsZSBicz0xTQogIHVtb3VudCAvbW50L3BlbmRyaXZlIDI+JjEgfHRlZSAt
-YSAkbG9nZmlsZQogIHRlbXBvPSRTRUNPTkRTCiAgdG91Y2ggZmluZSAyPiYxIHx0ZWUgLWEgJGxv
-Z2ZpbGUKICBlY2hvIC1uICIuLi5maW5lOiAiIHwgdGVlIC1hICRsb2dmaWxlCiAgZGF0ZSB8IHRy
-IC1kICJcbiIgfCB0ZWUgLWEgJGxvZ2ZpbGUKICBlY2hvICIgLS0+IGNpIGhvIG1lc3NvICR0ZW1w
-byBzZWNvbmRpISIgfCB0ZWUgLWEgJGxvZ2ZpbGUKZG9uZQo=
-
-
---=-weAblMnQ5amPpzK4jcZ1--
+diff --git a/drivers/iommu/omap-iommu.c b/drivers/iommu/omap-iommu.c
+index be551cc34be4..297c1be7ecb0 100644
+--- a/drivers/iommu/omap-iommu.c
++++ b/drivers/iommu/omap-iommu.c
+@@ -1175,7 +1175,6 @@ static int omap_iommu_probe(struct platform_device *pdev)
+ 	int err = -ENODEV;
+ 	int irq;
+ 	struct omap_iommu *obj;
+-	struct resource *res;
+ 	struct device_node *of = pdev->dev.of_node;
+ 	struct orphan_dev *orphan_dev, *tmp;
+ 
+@@ -1218,8 +1217,7 @@ static int omap_iommu_probe(struct platform_device *pdev)
+ 	spin_lock_init(&obj->iommu_lock);
+ 	spin_lock_init(&obj->page_table_lock);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	obj->regbase = devm_ioremap_resource(obj->dev, res);
++	obj->regbase = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(obj->regbase))
+ 		return PTR_ERR(obj->regbase);
+ 
+-- 
+2.17.1
 
