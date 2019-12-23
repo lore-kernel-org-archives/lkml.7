@@ -2,165 +2,183 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BB3C2D0D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41ABBC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B7302073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:20:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577103634;
-	bh=TpJfXPgSRuwL/c72Cja8P/w1/cM3OuXHaibAaaqw+ew=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ApdJoztN0U+iMx7/IL8SAk74odvmvqQ9PDP44PnQ/dqoe3/AhqhGDv7HL/WDTo8p4
-	 pRzoG4JxHw9aP5sziDd0KrTtFaJn4sUGYtrrvBr9LSFbnssHkaigggnt6hM/8sFqdR
-	 1KaspCCHfDqAs5nV46SLchmcpa78pKtR/8A44km0=
+	by mail.kernel.org (Postfix) with ESMTP id 18657206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:23:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfLWMUd (ORCPT
+        id S1726802AbfLWMXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 07:20:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43052 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726729AbfLWMUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 07:20:33 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1CCF20715;
-        Mon, 23 Dec 2019 12:20:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577103631;
-        bh=TpJfXPgSRuwL/c72Cja8P/w1/cM3OuXHaibAaaqw+ew=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JomMEZzZX6YYsBuIV6KFhA+Ml0w6SRPZKm+UDwaHVOcfrNwQnfS+TqmTl2ewx7dX+
-         WjL5ldoyqZ7vC+WdWQVkIky/GioooqdTN28UN6Kir0guVZTC7dw78Sz7tUxXJd5jY6
-         BEN6u+u3FBfvyI+Qvh6ZUzJxXVnhMJUgJJ2SLTOQ=
-Date:   Mon, 23 Dec 2019 12:20:27 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     <Eugen.Hristev@microchip.com>
-Cc:     <robh+dt@kernel.org>, <alexandre.belloni@bootlin.com>,
-        <Nicolas.Ferre@microchip.com>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        <a.zummo@towertech.it>, <Ludovic.Desroches@microchip.com>
-Subject: Re: [PATCH 06/10] iio: adc: at91-sama5d2_adc: handle unfinished
- conversions
-Message-ID: <20191223122027.7b93129f@archlinux>
-In-Reply-To: <1576686157-11939-7-git-send-email-eugen.hristev@microchip.com>
-References: <1576686157-11939-1-git-send-email-eugen.hristev@microchip.com>
-        <1576686157-11939-7-git-send-email-eugen.hristev@microchip.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 23 Dec 2019 07:23:42 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50154 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726257AbfLWMXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 07:23:42 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id AAB932A3EF2B827604A9;
+        Mon, 23 Dec 2019 20:23:38 +0800 (CST)
+Received: from huawei.com (10.175.104.193) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Mon, 23 Dec 2019
+ 20:23:28 +0800
+From:   Cheng Jian <cj.chengjian@huawei.com>
+To:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <will@kernel.org>, <catalin.marinas@arm.com>,
+        <mhiramat@kernel.org>, <naveen.n.rao@linux.ibm.com>,
+        <sandeepa.s.prabhu@gmail.com>, <cj.chengjian@huawei.com>,
+        <bobo.shaobowang@huawei.com>
+Subject: [PATCH] arm64/kprobe: add support for KPROBES_ON_FTRACE
+Date:   Mon, 23 Dec 2019 12:38:28 +0000
+Message-ID: <20191223123828.39543-1-cj.chengjian@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.104.193]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Dec 2019 16:24:01 +0000
-<Eugen.Hristev@microchip.com> wrote:
+Allow KPROBES to use the ftrace infrastructure.
+This depends on HAVE_DYNAMIC_FTRACE_WITH_REGS
+which introduce by :
+        commit 3b23e4991fb6 ("arm64: implement ftrace with regs")
 
-> From: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> It can happen that on IRQ trigger, not all conversions are done if
-> we are enabling multiple channels.
-> The IRQ is triggered on first EOC (end of channel), but it can happen
-> that not all channels are done. This leads into erroneous reports to
-> userspace (zero values or previous values).
+Based on the x86 code by Masami.
 
-Ouch. That's an unfortunate hardware design.
+With:
+        # cd /sys/kernel/debug/tracing
+        # echo 'p _do_fork+0x4' > kprobe_events
 
-> To solve this, in trigger handler, check if the mask of done channels
-> is the same as the mask of active scan channels.
-> If it's the same, proceed and push to buffers. Otherwise, to avoid sleeping
-> in trigger handler, start a workq that will wait until all channels are
-> ready.
+before patch:
+	# cat ../kprobes/list
+        sh: write error: Invalid argument
 
-You are fine sleeping in that handler. It's an interrupt thread ;)
+after patch:
+	# cat ../kprobes/list
+        ffffa00016aa9d4c  k  _do_fork+0x4    [FTRACE]
 
-> Normally, it should happen that in a short time fashion, all channels are
-> ready, since the first IRQ triggered.
-> The workq can stall in a loop if a hardware fault happens (for example
-> the clock suddently dissappears), but if it's a hardware fault then
-> even exiting the workq won't fix the hardware.
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> ---
->  drivers/iio/adc/at91-sama5d2_adc.c | 23 ++++++++++++++++++++++-
->  1 file changed, 22 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
-> index c575970..a6b4dff 100644
-> --- a/drivers/iio/adc/at91-sama5d2_adc.c
-> +++ b/drivers/iio/adc/at91-sama5d2_adc.c
-> @@ -8,6 +8,7 @@
->  
->  #include <linux/bitops.h>
->  #include <linux/clk.h>
-> +#include <linux/delay.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/dmaengine.h>
->  #include <linux/interrupt.h>
-> @@ -487,6 +488,21 @@ static inline int at91_adc_of_xlate(struct iio_dev *indio_dev,
->  	return at91_adc_chan_xlate(indio_dev, iiospec->args[0]);
->  }
->  
-> +static unsigned int at91_adc_active_scan_mask_to_reg(struct iio_dev *indio_dev)
-> +{
-> +	u32 mask = 0;
-> +	u8 bit;
-> +
-> +	for_each_set_bit(bit, indio_dev->active_scan_mask,
-> +			 indio_dev->num_channels) {
-> +		struct iio_chan_spec const *chan =
-> +			 at91_adc_chan_get(indio_dev, bit);
-> +		mask |= BIT(chan->channel);
-> +	}
-> +
-> +	return mask & GENMASK(11, 0);
-> +}
-> +
->  static void at91_adc_config_emr(struct at91_adc_state *st)
->  {
->  	/* configure the extended mode register */
-> @@ -1044,12 +1060,13 @@ static int at91_adc_trigger_handler_nodma(struct iio_dev *indio_dev,
->  					  struct iio_poll_func *pf)
->  {
->  	struct at91_adc_state *st = iio_priv(indio_dev);
-> +	u32 mask = at91_adc_active_scan_mask_to_reg(indio_dev);
->  
->  	/*
->  	 * Check if the conversion is ready. If not, schedule a work to
->  	 * check again later.
->  	 */
-> -	if (!(at91_adc_readl(st, AT91_SAMA5D2_ISR) & GENMASK(11, 0))) {
-> +	if ((at91_adc_readl(st, AT91_SAMA5D2_ISR) & mask) != mask) {
->  		schedule_work(&st->workq);
->  		return -EINPROGRESS;
->  	}
-> @@ -1269,9 +1286,13 @@ static void at91_adc_workq_handler(struct work_struct *workq)
->  	struct at91_adc_state *st = container_of(workq,
->  					struct at91_adc_state, workq);
->  	struct iio_dev *indio_dev = iio_priv_to_dev(st);
-> +	u32 mask = at91_adc_active_scan_mask_to_reg(indio_dev);
->  
->  	if ((indio_dev->currentmode & INDIO_ALL_TRIGGERED_MODES) &&
->  	    iio_trigger_validate_own_device(indio_dev->trig, indio_dev)) {
-> +		while ((at91_adc_readl(st, AT91_SAMA5D2_ISR) & mask) != mask)
-> +			udelay(1);
-> +
-ok. This fixes the issue raised earlier.  Please reorganize the series
-so we never introduce this code in a broken fashion.  + look at doing it
-in the interrupt thread anyway.
+Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
+---
+ .../debug/kprobes-on-ftrace/arch-support.txt  |  2 +-
+ arch/arm64/Kconfig                            |  1 +
+ arch/arm64/kernel/probes/Makefile             |  2 +
+ arch/arm64/kernel/probes/ftrace.c             | 65 +++++++++++++++++++
+ 4 files changed, 69 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/kernel/probes/ftrace.c
 
-Jonathan
->  		at91_adc_read_and_push_channels(indio_dev, st->timestamp);
->  		iio_trigger_notify_done(indio_dev->trig);
->  	} else {
+diff --git a/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt b/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt
+index 4fae0464ddff..f9dd9dd91e0c 100644
+--- a/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt
++++ b/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt
+@@ -9,7 +9,7 @@
+     |       alpha: | TODO |
+     |         arc: | TODO |
+     |         arm: | TODO |
+-    |       arm64: | TODO |
++    |       arm64: |  ok  |
+     |         c6x: | TODO |
+     |        csky: | TODO |
+     |       h8300: | TODO |
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index b1b4476ddb83..d613be9c2346 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -144,6 +144,7 @@ config ARM64
+ 	select HAVE_DYNAMIC_FTRACE
+ 	select HAVE_DYNAMIC_FTRACE_WITH_REGS \
+ 		if $(cc-option,-fpatchable-function-entry=2)
++	select HAVE_KPROBES_ON_FTRACE if HAVE_DYNAMIC_FTRACE_WITH_REGS
+ 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
+ 	select HAVE_FAST_GUP
+ 	select HAVE_FTRACE_MCOUNT_RECORD
+diff --git a/arch/arm64/kernel/probes/Makefile b/arch/arm64/kernel/probes/Makefile
+index 8e4be92e25b1..45a9d916a47d 100644
+--- a/arch/arm64/kernel/probes/Makefile
++++ b/arch/arm64/kernel/probes/Makefile
+@@ -4,3 +4,5 @@ obj-$(CONFIG_KPROBES)		+= kprobes.o decode-insn.o	\
+ 				   simulate-insn.o
+ obj-$(CONFIG_UPROBES)		+= uprobes.o decode-insn.o	\
+ 				   simulate-insn.o
++
++obj-$(CONFIG_KPROBES_ON_FTRACE)	+= ftrace.o
+diff --git a/arch/arm64/kernel/probes/ftrace.c b/arch/arm64/kernel/probes/ftrace.c
+new file mode 100644
+index 000000000000..f89bfaa3e5f3
+--- /dev/null
++++ b/arch/arm64/kernel/probes/ftrace.c
+@@ -0,0 +1,65 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Dynamic Ftrace based Kprobes Optimization
++ *
++ * Copyright (C) Hitachi Ltd., 2012
++ * Copyright (C) 2019 Huawei Inc.
++ * Copyright 2019 Cheng Jian <cj.chengjian@huawei.com>
++ */
++#include <linux/kprobes.h>
++#include <linux/ptrace.h>
++#include <linux/hardirq.h>
++#include <linux/preempt.h>
++#include <linux/ftrace.h>
++
++
++/* Ftrace callback handler for kprobes -- called under preepmt disabed */
++void kprobe_ftrace_handler(unsigned long pc, unsigned long parent_pc,
++			   struct ftrace_ops *ops, struct pt_regs *regs)
++{
++	struct kprobe *p;
++	struct kprobe_ctlblk *kcb;
++
++	/* Preempt is disabled by ftrace */
++	p = get_kprobe((kprobe_opcode_t *)pc);
++	if (unlikely(!p) || kprobe_disabled(p))
++		return;
++
++	kcb = get_kprobe_ctlblk();
++	if (kprobe_running()) {
++		kprobes_inc_nmissed_count(p);
++	} else {
++		/*
++		 * On ARM64, recg->pc is *before* this instruction for the
++		 * pre handler.
++		 */
++		regs->pc -= MCOUNT_INSN_SIZE;
++
++		__this_cpu_write(current_kprobe, p);
++		kcb->kprobe_status = KPROBE_HIT_ACTIVE;
++		if (!p->pre_handler || !p->pre_handler(p, regs)) {
++			/*
++			 * Emulate singlestep (and also recover regs->ip)
++			 * as if there is a nop
++			 */
++			regs->pc += MCOUNT_INSN_SIZE;
++			if (unlikely(p->post_handler)) {
++				kcb->kprobe_status = KPROBE_HIT_SSDONE;
++				p->post_handler(p, regs, 0);
++			}
++		}
++		/*
++		 * If pre_handler returns !0, it changes regs->ip. We have to
++		 * skip emulating post_handler.
++		 */
++		__this_cpu_write(current_kprobe, NULL);
++	}
++}
++NOKPROBE_SYMBOL(kprobe_ftrace_handler);
++
++int arch_prepare_kprobe_ftrace(struct kprobe *p)
++{
++	p->ainsn.api.insn = NULL;
++
++	return 0;
++}
+-- 
+2.17.1
 
