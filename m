@@ -2,92 +2,129 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E45BC2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A30B2C2D0D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D78C3207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77DC1206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:36:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R2kX3Wsq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k9SUps3b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbfLWGbv (ORCPT
+        id S1726217AbfLWGgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 01:31:51 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:37290 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbfLWGbu (ORCPT
+        Mon, 23 Dec 2019 01:36:00 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40646 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbfLWGgA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 01:31:50 -0500
-Received: by mail-qv1-f68.google.com with SMTP id f16so6000988qvi.4;
-        Sun, 22 Dec 2019 22:31:50 -0800 (PST)
+        Mon, 23 Dec 2019 01:36:00 -0500
+Received: by mail-qk1-f194.google.com with SMTP id c17so12781493qkg.7;
+        Sun, 22 Dec 2019 22:35:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0u/selZHRAKMuMtzGRibhyFzFMFVLvQHBitgdz4nJrU=;
-        b=R2kX3WsqB86AVthCGDGDTrzyS04TAiQG8EjCB/UBe/6MhGxm2pBvDR0gTx3BGX/uXW
-         icxQeUlD/OWETOnGTC6SUeEM0nvEqkxPNeyZ68SQXgnSAbKnpMVId9pCbOr01/+j0aXP
-         P7u1rbrrdLjndYyubbfvfZbfXOo76X7/Qyj8VjPy7/QoYJ/djrdqkqPNMOc4DqFOSIzJ
-         zNHwiCsmrRnPB/PQ7dzILJw+cdv97CDHQaq2v7jITmP7U9CEdhfxu7ynG83KUuNKF6TQ
-         CKVaPPjLvHU3prr3I7UlbPkD5qcxTCO5I7wip0DavtSSjKLe4ok2ZCphXyCx6CYeKExO
-         yQOA==
+        bh=0DzjFSTk4GUARqFpDM4bTgDw2bbAI+/uJbZ7VnbMQBM=;
+        b=k9SUps3bztjSi0wnFJmvXha09GFyi7e/mLC2GiTwovXmG3H8TZn49UpjMv4QPBsmYM
+         v4Aw/1e2M00sEQwIQA00KtPxxwhD5mFNbisb/6cfhtxL5PmbwbWNqLv5P4Wzs2Rnmd4Q
+         79jJV316crdBAsLkoons6YqYHwgXPteVrP6HjpwmlKPRW7fc1kVVJ80b6wDu5ijXk3r1
+         Uzkj3Ju15esmX7j4q8CpYupcHO7LlYyrbfiiQeybklpjUJVO2LpNQbeD7b9LAQO1g5PI
+         qJLLAu1tWyo18Z7RrT82q+v8dfDf8f/KUdI2GkgU9hNwpAinQpdYcsNrqFtRt6bRBwfL
+         F+Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0u/selZHRAKMuMtzGRibhyFzFMFVLvQHBitgdz4nJrU=;
-        b=L1Z2CgyKeo5Zer7utATjVY2IvQTohrd2LCs3rQiNKLcCm03ZDc1MNMoish0Pjlfo+5
-         lkinYmuRb0k/jlJXzYv4fwgDHacpFaeXxbCFjy6ekkroEJEiVWwFPTYpqgReZjztydA7
-         4Ib34dfiXTvcmy/589dLccDcnydb5BngJUegrAPINiEVSiYlBvcwA4wAD0SrAdKMVBfq
-         DqOEcUM+WlKuayIrdZHMa3Zf8ziLTj57Kp9FJuoIPd/KEgMFqfkpLhn3/YhQZA8XTY77
-         eZyIsc5Ghypg+3nrfUTmTkNcRMfcadB/EP/qpZ7aEfr/6NrJ5x/sJG5QV+0MSzYu92O2
-         Q4dA==
-X-Gm-Message-State: APjAAAWSvvxed4OoOY6h+hWCb45gAOhWAgjRz5H1n0IYzIobZ8fgsfea
-        k0sQgvd9qEybmuMrtBItgjDZ20Jv/eG82f69YSA=
-X-Google-Smtp-Source: APXvYqy1c4lNMwEtojGH+rLqPbtcCpn+VduJPdBVPkitGnArJIEH+fjJPYrO2+Sgu47HBZMq4G2MZS/Jf4PkSHrZbdk=
-X-Received: by 2002:a0c:9e6d:: with SMTP id z45mr23429005qve.65.1577082709618;
- Sun, 22 Dec 2019 22:31:49 -0800 (PST)
+        bh=0DzjFSTk4GUARqFpDM4bTgDw2bbAI+/uJbZ7VnbMQBM=;
+        b=VRAMhfmwxbytMK69Yx1haUyymPbNxq75v559MhTNtyzgNPR8dTidSo9rD8/sl80WLA
+         Mu6iL3H0oxjgJvLdl7Ro/gGN+0RK1X2ZrRN1KE609/mdiCk8zIjLRB0URUdvrp6QN5b+
+         dsLDgzI7Bu6g2Tw2QpH12sCcfeIhVTencBoLgKwWLn8XRWojpg+byRSoStAMmHDmBhWp
+         mtvNGgugHIrIW7rgiZd4NeperrBpkUefg7TRWHoDdoUNvAapq4oEDuVQ8V1XEWNlykcq
+         pb99I2wrvWLnm+Hs4pxs70eqGaGPBMjv+pNpgJ4GgcOhFNJFv88Vha9JHajKOTF5SAAW
+         +JGg==
+X-Gm-Message-State: APjAAAVC/KFzqR9fPqUfSObJHvzbIqKvznYRQc+9N6iLGYJaDgb504Fm
+        rAusfD05sWjTjFG0t3nR13vQzrqhSsJdWEh9Os0hvKy+
+X-Google-Smtp-Source: APXvYqztFGJq3WP4/JkaL+PY/hOKDdmLZ/j+qBS59+0z43ikGnU6aLOKmC/NbEcSCFwrzAJ+i9jkTknQ50oZNYlOvvE=
+X-Received: by 2002:a37:e408:: with SMTP id y8mr24666444qkf.39.1577082558207;
+ Sun, 22 Dec 2019 22:29:18 -0800 (PST)
 MIME-Version: 1.0
-References: <8d5358a67746b2aff5f6995cabd11d0d7c9e579e.1575978484.git.baolin.wang7@gmail.com>
- <dd3303a956e7dd5c065ac2b92b1dea7ee5d1df17.1575978484.git.baolin.wang7@gmail.com>
-In-Reply-To: <dd3303a956e7dd5c065ac2b92b1dea7ee5d1df17.1575978484.git.baolin.wang7@gmail.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Mon, 23 Dec 2019 14:31:38 +0800
-Message-ID: <CADBw62o3vW_hdFwcMdQFJqx2HpNhCEHOxADQO9LztzpqCVQBpg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] thermal: sprd: Add Spreadtrum thermal driver support
-To:     rui.zhang@intel.com, edubezval@gmail.com,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        amit.kucheria@verdurent.com, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linaro.org>, freeman.liu@unisoc.com,
-        Chunyan Zhang <zhang.lyra@gmail.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <CAM9d7ch1=pmgkFbgGr2YignQwdNjke2QeOAFLCFYu8L8J-Z8vw@mail.gmail.com>
+ <20191223061326.843366-1-namhyung@kernel.org>
+In-Reply-To: <20191223061326.843366-1-namhyung@kernel.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Sun, 22 Dec 2019 22:29:07 -0800
+Message-ID: <CAEf4BzY1HvhkPzR1HE7-reGhfZnfySe-LxQ-5MS7Nx-Uv4oVug@mail.gmail.com>
+Subject: Re: [PATCH bpf v3] libbpf: Fix build on read-only filesystems
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        bpf <bpf@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rui and Daniel,
-
-On Tue, Dec 10, 2019 at 8:08 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
+On Sun, Dec 22, 2019 at 10:14 PM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> From: Freeman Liu <freeman.liu@unisoc.com>
+> I got the following error when I tried to build perf on a read-only
+> filesystem with O=dir option.
 >
-> This patch adds the support for Spreadtrum thermal sensor controller,
-> which can support maximum 8 sensors.
+>   $ cd /some/where/ro/linux/tools/perf
+>   $ make O=$HOME/build/perf
+>   ...
+>     CC       /home/namhyung/build/perf/lib.o
+>   /bin/sh: bpf_helper_defs.h: Read-only file system
+>   make[3]: *** [Makefile:184: bpf_helper_defs.h] Error 1
+>   make[2]: *** [Makefile.perf:778: /home/namhyung/build/perf/libbpf.a] Error 2
+>   make[2]: *** Waiting for unfinished jobs....
+>     LD       /home/namhyung/build/perf/libperf-in.o
+>     AR       /home/namhyung/build/perf/libperf.a
+>     PERF_VERSION = 5.4.0
+>   make[1]: *** [Makefile.perf:225: sub-make] Error 2
+>   make: *** [Makefile:70: all] Error 2
 >
-> Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
-> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> It was becaused bpf_helper_defs.h was generated in current directory.
+> Move it to OUTPUT directory.
+>
+> Tested-by: Andrii Nakryiko <andriin@fb.com>
+> Acked-by: Andrii Nakryiko <andriin@fb.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
-> Changes from v1:
->  - None.
-> ---
+>  tools/lib/bpf/Makefile                 | 15 ++++++++-------
+>  tools/testing/selftests/bpf/.gitignore |  1 +
+>  tools/testing/selftests/bpf/Makefile   |  6 +++---
+>  3 files changed, 12 insertions(+), 10 deletions(-)
+>
 
-Any comments for this patch? Thanks.
+[...]
+
+> diff --git a/tools/testing/selftests/bpf/.gitignore b/tools/testing/selftests/bpf/.gitignore
+> index 419652458da4..1ff0a9f49c01 100644
+> --- a/tools/testing/selftests/bpf/.gitignore
+> +++ b/tools/testing/selftests/bpf/.gitignore
+> @@ -40,3 +40,4 @@ xdping
+>  test_cpp
+>  /no_alu32
+>  /bpf_gcc
+> +bpf_helper_defs.h
+
+looks good, thanks!
+
+[...]
