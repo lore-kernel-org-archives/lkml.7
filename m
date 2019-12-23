@@ -2,67 +2,86 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D15EC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA14C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02712206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE544206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:46:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2m/Z4Evo"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Ze9JlQ/R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfLWIpJ (ORCPT
+        id S1726233AbfLWIqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 03:45:09 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:37844 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725926AbfLWIpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 03:45:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=uECD/WnbinkFvBaF7utqX1qebxGBe2kWJTnjn2zM/c4=; b=2m/Z4EvoLtJTby7jwic0DoEpmP
-        iVAXI1psNbzwrTVyXc/AOs+++a9d3ZJbtfzK/BVQvXuy7IzENXAxpWMqqH/BjOtuQtVcsOAnsGXf6
-        ikCarapVcz5dHbhvJ9UT526d8x9rDOvaj7QpATd1HBN4JI1zB6ccrYiujVLoDdJmv0MI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ijJKq-00008A-Jt; Mon, 23 Dec 2019 09:45:04 +0100
-Date:   Mon, 23 Dec 2019 09:45:04 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chris Healy <cphealy@gmail.com>
-Subject: Re: [PATCH] mv88e6xxx: Add serdes Rx statistics
-Message-ID: <20191223084504.GB32356@lunn.ch>
-References: <20191223055324.26396-1-nikita.yoush@cogentembedded.com>
+        Mon, 23 Dec 2019 03:46:36 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45550 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfLWIqg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 03:46:36 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 2so8824141pfg.12
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 00:46:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yiv0iJZzGCkc28ztTp8qOF1V1VWNsfhmC5dV3q1Te6c=;
+        b=Ze9JlQ/RyzgyMQOPYRGDFwiIEUBmtJcvRBWoEFPZyXwyP7w7fAHadXoJcLjkm8bhUH
+         IIk2X8PQ7fl6hpIc8t9Ji2KXMLQSL6bk0hf5Y2h4L+rC+6rlV2RCUelriUAnLoeag8ic
+         XXiEg5dUjLdXq0p6Ro0qqig87W8ig71VBwvTJw0wbGjuAcpsuKTvN4wfUIq0C8Z+2tlS
+         UQYPyZNA8b+zw6b7QEl7wrOrtJ7WGXgYG1j/sfzOCJ74dw/5w/Lxwul2Qqbu2zz5pAbY
+         vRalr8LpOy43j67GCFlH6/fjn/ok/YZnurf+kQONegSAUDvJK6ZvMootjqB6zO53q0ZU
+         87TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yiv0iJZzGCkc28ztTp8qOF1V1VWNsfhmC5dV3q1Te6c=;
+        b=gdKagMWFKjS5QnQK6COkGEP6I8hGX9S3Z3SaWhauEjI7aXI+7UHgtLXzLOAMdhZxn8
+         8H8BKawZ1h2/ALoyDe5Yvr2lhs5XY8jmDZmmoi2uEHnoOyuOii5gwgB9hX9ERyxV/9dS
+         psQomlHzTpBG349+NMC2hujXbTAtBaCAN+ojzO+tOuL3/Qae/UcgOazrxHsvEvoiviUS
+         OnzPHF2y8JTl8eUO3EjqBPOPVDDeXrXiXm7RvN7cTLkXwS4Eop8DM4vV42yDi30fHhEw
+         sb/vJc7vjola71/aqav/0jUbo41KYk0OE4ak8XhiDIop1XHFppNGAuImfwAhwxNI5XCV
+         A/uQ==
+X-Gm-Message-State: APjAAAVVCvtudsxPEVyeLGOnDaDug21i18hdtEdJTe2e7D45rzeCcFCX
+        K/Rp5oENopt81BY+eOOAN+ViDGaQkvM=
+X-Google-Smtp-Source: APXvYqwtYQRnD1PE+F0K9hRtH2R1S/5XtTDwUPlezFEYsg0OKGW/HTWm3vfnSZtJ+uraXjbJB/FKPw==
+X-Received: by 2002:a63:6507:: with SMTP id z7mr30920986pgb.322.1577090795638;
+        Mon, 23 Dec 2019 00:46:35 -0800 (PST)
+Received: from hsinchu02.internal.sifive.com (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
+        by smtp.gmail.com with ESMTPSA id m71sm22000516pje.0.2019.12.23.00.46.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Dec 2019 00:46:35 -0800 (PST)
+From:   Zong Li <zong.li@sifive.com>
+To:     paul.walmsley@sifive.com, palmer@dabbelt.com, rostedt@goodmis.org,
+        anup@brainfault.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Cc:     Zong Li <zong.li@sifive.com>
+Subject: [PATCH 0/2] RISC-V: fixes issues of ftrace graph tracer
+Date:   Mon, 23 Dec 2019 16:46:12 +0800
+Message-Id: <20191223084614.67126-1-zong.li@sifive.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191223055324.26396-1-nikita.yoush@cogentembedded.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 08:53:24AM +0300, Nikita Yushchenko wrote:
-> If packet checker is enabled in the serdes, then Rx counter registers
-> start working, and no side effects have been detected.
-> 
-> This patch enables packet checker automatically when powering serdes on,
-> and exposes Rx counter registers via ethtool statistics interface.
-> 
-> Code partially basded by older attempt by Andrew Lunn.
-> 
-> Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Ftrace graph tracer is broken now, these patches fix the problem of ftrace graph
+tracer and tested on QEMU and HiFive Unleashed board.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Zong Li (2):
+  riscv: ftrace: correct the condition logic in function graph tracer
+  clocksource/drivers/riscv: add notrace to riscv_sched_clock
 
-    Andrew
+ arch/riscv/kernel/ftrace.c        | 2 +-
+ drivers/clocksource/timer-riscv.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+-- 
+2.24.1
+
