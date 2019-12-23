@@ -2,239 +2,111 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9778EC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 21:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B9BC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 21:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67C0A206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 21:25:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wl5+xrlK"
+	by mail.kernel.org (Postfix) with ESMTP id 11260206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 21:26:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbfLWVZH (ORCPT
+        id S1726893AbfLWV0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 16:25:07 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44610 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbfLWVZH (ORCPT
+        Mon, 23 Dec 2019 16:26:51 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:40144 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbfLWV0v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 16:25:07 -0500
-Received: by mail-io1-f68.google.com with SMTP id b10so17405267iof.11;
-        Mon, 23 Dec 2019 13:25:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Z+IJjZvvHtC9PAvUtdm8hS7l9OXtbifWK1RLCc5V4WY=;
-        b=Wl5+xrlKbGFGYnthfIO9SHO5ApUh8vQWBXmcGMpRRvVuB6gs6PqMQFBVIm/g2t8AzK
-         HXEUiMYnxZvIvcWroHkNpZbP87mF3AKa3F4dhAArDILGclHkus2foICoVsnnjdh9kQ0B
-         Kvz4YAX6d4C0RphuDrTUinbVZ4jU52oiEiOIHnouP7JhNx7+sjzKP5MqUsf26z4RimwC
-         5EsvlIzce1ZdPtelTNqBjkePl3sfxY3jGXhcSxmkKAmFii5W/+iMZRxHXE8qIzSn+cdx
-         bvqr8UtVQQulT9sVH3v7URDcYRxkJ0iGZfPHWRxnwVaSgNVCC0d3KbvaYepi9LxUY3Ix
-         tf+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Z+IJjZvvHtC9PAvUtdm8hS7l9OXtbifWK1RLCc5V4WY=;
-        b=bWxt29DAd8ntnjA5GRNBGE4MrLxjInfx9DOjNTAuvjCoG9uZgICpRIeFEYxox7/bj/
-         Nw2XJ9eNsfWMxL5pBrui89mHPFxZuRATlFlAAhSkjSyR70cF2cgwnqdOfYOMGStK3vYR
-         6veKbT/7CtKEZGn4HYJ6FVSrjn+4saBBnVDrYwQHrnL+d1DJ3zXOYvwkAFfxkrydNFMZ
-         gX/dq4qLBdS5GXLoRzQ7wDyry5LRd4YWBOfzKthUMGtYNZWuVAydM3NkITYLiGskn8oJ
-         AuQk4JUujmfNnbRjykidKKVlqc2xCebzlet+SV9xsEUh0o4ahZzotCbZE4QMLpoJvZke
-         PLXQ==
-X-Gm-Message-State: APjAAAU7FK/9Bwr0qBkIwT7bYJCRicaFBV1doeZAw2+fZwDOZDDPrfC6
-        G3w0z0p0TWbwVx/ElWtblIfxcp9PQ4/1nPllFXY=
-X-Google-Smtp-Source: APXvYqzKyI9ZqbATSTk7ykfFNhYpDDFOPlSEMmy0+nFSKVR+kGNuoVrsnD6uD8iSavnFvFP9qEXLqW4RaQHmQQfaGKM=
-X-Received: by 2002:a6b:b20a:: with SMTP id b10mr21990461iof.87.1577136306071;
- Mon, 23 Dec 2019 13:25:06 -0800 (PST)
+        Mon, 23 Dec 2019 16:26:51 -0500
+Received: from p5b2a6d78.dip0.t-ipconnect.de ([91.42.109.120] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1ijVDz-0003a4-Q4; Mon, 23 Dec 2019 21:26:47 +0000
+Date:   Mon, 23 Dec 2019 22:26:46 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     linux-kernel@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, tycho@tycho.ws, jannh@google.com,
+        cyphar@cyphar.com, oleg@redhat.com, luto@amacapital.net,
+        viro@zeniv.linux.org.uk, gpascutto@mozilla.com,
+        ealvarez@mozilla.com, fweimer@redhat.com, jld@mozilla.com,
+        arnd@arndb.de
+Subject: Re: [PATCH v6 1/3] vfs, fdtable: Add get_task_file helper
+Message-ID: <20191223212645.3qw7my4u4rjihxjf@wittgenstein>
+References: <20191223210852.GA25101@ircssh-2.c.rugged-nimbus-611.internal>
 MIME-Version: 1.0
-References: <20191210003135.32427-1-jassisinghbrar@gmail.com> <87eexclkj0.fsf@gmail.com>
-In-Reply-To: <87eexclkj0.fsf@gmail.com>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Mon, 23 Dec 2019 15:24:54 -0600
-Message-ID: <CABb+yY00xOZw2uw6oK3N6RBcOurJjhiPXHs0ShCSVauwZn6TNw@mail.gmail.com>
-Subject: Re: [PATCHv1 2/2] usb: gadget: add udc driver for max3420
-To:     Felipe Balbi <balbi@kernel.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-usb@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191223210852.GA25101@ircssh-2.c.rugged-nimbus-611.internal>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Felipe,
+On Mon, Dec 23, 2019 at 09:08:55PM +0000, Sargun Dhillon wrote:
+> This introduces a function which can be used to fetch a file, given an
+> arbitrary task. As long as the user holds a reference (refcnt) to the
+> task_struct it is safe to call, and will either return NULL on failure,
+> or a pointer to the file, with a refcnt.
+> 
+> Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+> ---
+>  fs/file.c            | 22 ++++++++++++++++++++--
+>  include/linux/file.h |  2 ++
+>  2 files changed, 22 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/file.c b/fs/file.c
+> index 2f4fcf985079..0ceeb046f4f3 100644
+> --- a/fs/file.c
+> +++ b/fs/file.c
+> @@ -706,9 +706,9 @@ void do_close_on_exec(struct files_struct *files)
+>  	spin_unlock(&files->file_lock);
+>  }
+>  
+> -static struct file *__fget(unsigned int fd, fmode_t mask, unsigned int refs)
+> +static struct file *__fget_files(struct files_struct *files, unsigned int fd,
+> +				 fmode_t mask, unsigned int refs)
+>  {
+> -	struct files_struct *files = current->files;
+>  	struct file *file;
+>  
+>  	rcu_read_lock();
+> @@ -729,6 +729,11 @@ static struct file *__fget(unsigned int fd, fmode_t mask, unsigned int refs)
+>  	return file;
+>  }
+>  
+> +static struct file *__fget(unsigned int fd, fmode_t mask, unsigned int refs)
+> +{
+> +	return __fget_files(current->files, fd, mask, refs);
+> +}
+> +
+>  struct file *fget_many(unsigned int fd, unsigned int refs)
+>  {
+>  	return __fget(fd, FMODE_PATH, refs);
+> @@ -746,6 +751,19 @@ struct file *fget_raw(unsigned int fd)
+>  }
+>  EXPORT_SYMBOL(fget_raw);
+>  
+> +struct file *fget_task(struct task_struct *task, unsigned int fd)
+> +{
+> +	struct file *file = NULL;
+> +
+> +	task_lock(task);
+> +	if (task->files)
+> +		file = __fget_files(task->files, fd, 0, 1);
+> +
+> +	task_unlock(task);
 
-On Tue, Dec 10, 2019 at 1:13 AM Felipe Balbi <balbi@kernel.org> wrote:
+Nit: remove the \n:
 
-> > +#define MAX3420_MAX_EPS              4
-> > +#define EP_MAX_PACKET                64  /* Same for all Endpoints */
-> > +#define EPNAME_SIZE          16  /* Buffer size for endpoint name */
-> > +
-> > +#define ACKSTAT              BIT(0)
->
-> Let's prepend everything with MAX3420_.
->
-OK
+task_lock(task);
+if (task->files)
+	file = __fget_files(task->files, fd, 0, 1);
+task_unlock(task);
 
-> > +
-> > +#define MAX3420_REG_EPSTALLS 9
-> > +     #define bACKSTAT        BIT(6)
->
-> let's avoid CaMeLcAsE :-)
->
-ok
-
-> > +#define field(val, bit)      ((val) << (bit))
->
-> The kernel has a bunch of helpers for this. Look at BIT() and GENMASK()
-> for example.
->
-ok
-
-> > +struct max3420_req {
-> > +     struct usb_request usb_req;
-> > +     struct list_head queue;
-> > +     struct max3420_ep *ep;
-> > +};
-> > +
-> > +struct max3420_ep {
-> > +     struct max3420_udc *udc;
-> > +     struct list_head queue;
-> > +     char name[EPNAME_SIZE];
-> > +     unsigned int maxpacket;
-> > +     struct usb_ep ep_usb;
->
-> considering you'll run container_of() on this ep_usb field, it's wise to
-> put it as the first field in the struct. That way, compiler can optimize
-> container_of() into a simple type cast.
->
-ok
-
-> > +struct max3420_udc {
-> > +     struct max3420_ep ep[MAX3420_MAX_EPS];
-> > +     struct usb_gadget_driver *driver;
-> > +     struct task_struct *thread_task;
-> > +     int remote_wkp, is_selfpowered;
-> > +     bool vbus_active, softconnect;
-> > +     struct usb_ctrlrequest setup;
-> > +     struct mutex spi_bus_mutex;
-> > +     struct max3420_req ep0req;
-> > +     struct usb_gadget gadget;
->
-> likewise with gadget field.
->
-ok
-
->> +     spi_message_add_tail(&transfer, &msg);
->> +     spi_sync(spi, &msg);
-> Not checking return code?
-ok.
-
-> > +     if (todo == ENABLE) {
-> > +             epdis &= ~BIT(ep->id + 4);
-> > +             epien |= BIT(ep->id + 1);
-> > +     } else {
-> > +             epdis |= BIT(ep->id + 4);
-> > +             epien &= ~BIT(ep->id + 1);
-> > +     }
-> > +
-> > +     spi_wr8(udc, MAX3420_REG_CLRTOGS, epdis);
-> > +     spi_wr8(udc, MAX3420_REG_EPIEN, epien);
-> > +
-> > +     return 1;
->
-> Usually we return 0 on success and a negative errno on failure. What do
-> you mean here by return 1?
->
-ok
-
-
-> > +             ep->halted = 0;
-> > +             epstalls &= ~BIT(ep->id + 1);
-> > +             clrtogs = spi_rd8(udc, MAX3420_REG_CLRTOGS);
-> > +             clrtogs |= BIT(ep->id + 1);
-> > +             spi_wr8(udc, MAX3420_REG_CLRTOGS, clrtogs);
-> > +     }
-> > +     spi_wr8(udc, MAX3420_REG_EPSTALLS, epstalls | bACKSTAT);
-> > +
-> > +     return 1;
->
-> and here?
->
-ok
-
-
-> > +
-> > +     /* Clear Remote-WkUp Signal*/
-> > +     usbctl = spi_rd8(udc, MAX3420_REG_USBCTL);
-> > +     usbctl &= ~bSIGRWU;
-> > +     spi_wr8(udc, MAX3420_REG_USBCTL, usbctl);
-> > +
-> > +     udc->suspended = false;
-> > +
-> > +     return 1;
->
-> here?
->
-ok
-
-
-> > +
-> > +static void __max3420_start(struct max3420_udc *udc)
-> > +{
-> > +     u8 val;
-> > +
-> > +     /* Need this delay if bus-powered */
-> > +     msleep_interruptible(250);
->
-> should you check if you're bus powered?
->
-for some reason, even for self-powered, it helped reliability.
-
-
-> > +
-> > +static int do_data(struct max3420_udc *udc, int ep_id, int in)
->
-> add a max3420_ prefix like all other functions
->
-ok
-
-
-> > +
-> > +static int max3420_thread(void *dev_id)
->
-> Why do you need this thread? Sure you can't live without it?
->
-All the slow spi-bus transfers are handled at one place here without
-blocking any api call. IMO it is cleaner and easier to manage.
-
-
-> > +static struct usb_request *max3420_alloc_request(struct usb_ep *_ep,
-> > +                                                 gfp_t gfp_flags)
-> > +{
-> > +     struct max3420_ep *ep = to_max3420_ep(_ep);
-> > +     struct max3420_req *req;
-> > +
-> > +     req = kzalloc(sizeof(*req), gfp_flags);
-> > +     if (!req)
-> > +             return NULL;
-> > +
-> > +     req->ep = ep;
-> > +     INIT_LIST_HEAD(&req->queue);
->
-> unnecessary list initialization
->
-ok.
-
-Thank you!
+Christian
