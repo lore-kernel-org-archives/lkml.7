@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B13AC2D0D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 19:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E64C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 19:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F932206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 19:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC4B0206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 19:43:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbfLWTnQ (ORCPT
+        id S1727183AbfLWTnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 14:43:16 -0500
-Received: from [66.170.99.2] ([66.170.99.2]:12320 "EHLO
+        Mon, 23 Dec 2019 14:43:20 -0500
+Received: from [66.170.99.2] ([66.170.99.2]:26805 "EHLO
         sid-build-box.eng.vmware.com" rhost-flags-FAIL-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726934AbfLWTm5 (ORCPT
+        by vger.kernel.org with ESMTP id S1726933AbfLWTm5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 23 Dec 2019 14:42:57 -0500
 Received: by sid-build-box.eng.vmware.com (Postfix, from userid 1000)
-        id 10F2ABA17BE; Tue, 24 Dec 2019 01:07:15 +0530 (IST)
+        id 1826DBA17CA; Tue, 24 Dec 2019 01:07:15 +0530 (IST)
 From:   Siddharth Chandrasekaran <csiddharth@vmware.com>
 To:     torvalds@linux-foundation.org
 Cc:     gregkh@linuxfoundation.org, sashal@kernel.org, jannh@google.com,
         linux-kernel@vger.kernel.org, stable@vger.kernel.org,
         siddharth@embedjournal.com,
         Siddharth Chandrasekaran <csiddharth@vmware.com>
-Subject: [PATCH 4.4 2/2] filldir[64]: remove WARN_ON_ONCE() for bad directory entries
-Date:   Tue, 24 Dec 2019 01:06:33 +0530
-Message-Id: <a8c33067f36778068cc82be311d5df7adceec27a.1577129050.git.csiddharth@vmware.com>
+Subject: [PATCH 4.9 2/2] filldir[64]: remove WARN_ON_ONCE() for bad directory entries
+Date:   Tue, 24 Dec 2019 01:06:36 +0530
+Message-Id: <511b6865db743cceba4949e7633c80f48306c5b4.1577128417.git.csiddharth@vmware.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1577128778.git.csiddharth@vmware.com>
 References: <cover.1577128778.git.csiddharth@vmware.com>
-In-Reply-To: <cover.1577129050.git.csiddharth@vmware.com>
-References: <cover.1577129050.git.csiddharth@vmware.com>
+In-Reply-To: <cover.1577128417.git.csiddharth@vmware.com>
+References: <cover.1577128417.git.csiddharth@vmware.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,10 +62,10 @@ Signed-off-by: Siddharth Chandrasekaran <csiddharth@vmware.com>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/fs/readdir.c b/fs/readdir.c
-index 4c6ffe3..3494d7a 100644
+index ace19d9..1059f2a 100644
 --- a/fs/readdir.c
 +++ b/fs/readdir.c
-@@ -77,9 +77,9 @@ EXPORT_SYMBOL(iterate_dir);
+@@ -90,9 +90,9 @@ EXPORT_SYMBOL(iterate_dir);
   */
  static int verify_dirent_name(const char *name, int len)
  {
