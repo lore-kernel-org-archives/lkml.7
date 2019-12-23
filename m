@@ -2,122 +2,103 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9E6C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 22:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43EE0C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 22:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DDD320709
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 22:01:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577138514;
-	bh=cvBxc4WmSagTT1y4VAUM0/tpLY90rFtmuzPh60X44l0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=EL7sLYECrWg5iWnuFWReAzseBfzy88Tf0cYG4Im83rOd7eTA1C2Z7dfvNhsfRVBGi
-	 EcxuviZKwi4pP2dr7wQIeG1rSiXE5YelJ4Fjj+RaAsaKMaR6rAthixU/JQy8zhaxN/
-	 bNVRN7hrrZYZBACtGj3lWtGXglMP+IQT9QC+qwrQ=
+	by mail.kernel.org (Postfix) with ESMTP id 117CA206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 22:05:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbfLWWBx (ORCPT
+        id S1726882AbfLWWF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 17:01:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33156 "EHLO mail.kernel.org"
+        Mon, 23 Dec 2019 17:05:26 -0500
+Received: from mx2.suse.de ([195.135.220.15]:48238 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726817AbfLWWBw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 17:01:52 -0500
-Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A6D4206B7;
-        Mon, 23 Dec 2019 22:01:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577138512;
-        bh=cvBxc4WmSagTT1y4VAUM0/tpLY90rFtmuzPh60X44l0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dUQyymDZpS8ieDiLpX7hkhz6mBdQuLmrcPET7KIRfHOhXojpwj0s0BlzgLCJpWaj2
-         E2oPEZcZqqs4seNr/Mu0YH/rkQXPgdtJN03vRggrcdL7QWwnRzd8IAOxWfdZZ9GSjA
-         37rmBkc5T3XJVAHC7iLWSs0+PEpIHWksAKbeBCvA=
-Date:   Mon, 23 Dec 2019 14:01:51 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: linux-next: manual merge of the akpm-current tree with the
- generic-ioremap tree
-Message-Id: <20191223140151.7aceb059297338f5912b0f35@linux-foundation.org>
-In-Reply-To: <20191221083211.GA3465@lst.de>
-References: <20191218133025.15356802@canb.auug.org.au>
-        <20191221083211.GA3465@lst.de>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726832AbfLWWFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 17:05:25 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 7728CACEF;
+        Mon, 23 Dec 2019 22:05:23 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id EEAC3E008B; Mon, 23 Dec 2019 23:05:16 +0100 (CET)
+Date:   Mon, 23 Dec 2019 23:05:16 +0100
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v8 00/14] ethtool netlink interface, part 1
+Message-ID: <20191223220516.GI21614@unicorn.suse.cz>
+References: <cover.1577052887.git.mkubecek@suse.cz>
+ <884c1d40-c0ca-37f2-4149-8c7189dbca3b@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <884c1d40-c0ca-37f2-4149-8c7189dbca3b@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 21 Dec 2019 09:32:11 +0100 Christoph Hellwig <hch@lst.de> wrote:
-
-> Andrew,
+On Mon, Dec 23, 2019 at 08:52:01AM -0800, Florian Fainelli wrote:
+> Hi Michal,
 > 
-> do you plan to send this to Linus for 5.5 to fix the warning from the
-> new devm_ioremap_uc addition in this cycle?  If so I can rebase the
-> ioremap tree one more time.
+> On 12/22/2019 3:45 PM, Michal Kubecek wrote:
+> > This is first part of netlink based alternative userspace interface for
+> > ethtool. It aims to address some long known issues with the ioctl
+> > interface, mainly lack of extensibility, raciness, limited error reporting
+> > and absence of notifications. The goal is to allow userspace ethtool
+> > utility to provide all features it currently does but without using the
+> > ioctl interface. However, some features provided by ethtool ioctl API will
+> > be available through other netlink interfaces (rtnetlink, devlink) if it's
+> > more appropriate.
+> > 
+> > The interface uses generic netlink family "ethtool" and provides multicast
+> > group "monitor" which is used for notifications. Documentation for the
+> > interface is in Documentation/networking/ethtool-netlink.rst file. The
+> > netlink interface is optional, it is built when CONFIG_ETHTOOL_NETLINK
+> > (bool) option is enabled.
+> > 
+> > There are three types of request messages distinguished by suffix "_GET"
+> > (query for information), "_SET" (modify parameters) and "_ACT" (perform an
+> > action). Kernel reply messages have name with additional suffix "_REPLY"
+> > (e.g. ETHTOOL_MSG_SETTINGS_GET_REPLY). Most "_SET" and "_ACT" message types
+> > do not have matching reply type as only some of them need additional reply
+> > data beyond numeric error code and extack. Kernel also broadcasts
+> > notification messages ("_NTF" suffix) on changes.
+> 
+> Thanks for re-posting these patches again, would you have ethtool and
+> iproute2 branches with your latest ethnl patches applied? I did find
+> your ethnl directory on your github, but it applies to a slightly oldish
+> ethtool version. If you could maintain forks with an "ethnl" branch
+> there, that would help greatly.
 
-I'm not sure what to do about this because of
-https://lore.kernel.org/lkml/CAMuHMdUO=cZMsFx4t_uULNRuwnGLjbRYOJAo7j5gC-iSV3wy5w@mail.gmail.com/
+The iproute2 patch (adding display of permanent hardware address) is in
+iproute2 "next" tree. As for (userspace) ethtool code, at the moment
+it's not in a presentable state. As I wanted on getting v8 out as soon
+as possible, I focused on making it work somehow so that I can test the
+kernel patchset. So at the moment, the userspace series is still in the
+form of an older one (implementing older UAPI) plus one bit "work in
+progress" patch adapting it to current UAPI.
 
-I'd rather just drop the patch.  Can you please take care of it all?  
+The userspace code also still doesn't look the way I would like it to.
+I would like to spend some more time on it in second half of this week
+and then I plan to also update the repository on github.
 
+Michal 
 
-From: Nick Desaulniers <ndesaulniers@google.com>
-Subject: hexagon: define ioremap_uc
-
-Similar to commit 38e45d81d14e ("sparc64: implement ioremap_uc") define
-ioremap_uc for hexagon to avoid errors from
--Wimplicit-function-definition.
-
-Link: http://lkml.kernel.org/r/20191209222956.239798-2-ndesaulniers@google.com
-Link: https://github.com/ClangBuiltLinux/linux/issues/797
-Fixes: e537654b7039 ("lib: devres: add a helper function for ioremap_uc")
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Brian Cain <bcain@codeaurora.org>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Tuowen Zhao <ztuowen@gmail.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alexios Zavras <alexios.zavras@intel.com>
-Cc: Allison Randal <allison@lohutok.net>
-Cc: Will Deacon <will@kernel.org>
-Cc: Richard Fontana <rfontana@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- arch/hexagon/include/asm/io.h |    1 +
- 1 file changed, 1 insertion(+)
-
---- a/arch/hexagon/include/asm/io.h~hexagon-define-ioremap_uc
-+++ a/arch/hexagon/include/asm/io.h
-@@ -173,6 +173,7 @@ static inline void writel(u32 data, vola
- 
- void __iomem *ioremap(unsigned long phys_addr, unsigned long size);
- #define ioremap_nocache ioremap
-+#define ioremap_uc(X, Y) ioremap((X), (Y))
- 
- 
- #define __raw_writel writel
-_
-
+> I will continue reviewing from there on, but also wanted to give it a
+> spin to get a feel.
+> 
+> Thanks!
+> -- 
+> Florian
