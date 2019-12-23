@@ -2,112 +2,140 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D151C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D93B4C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E961220663
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8910206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:46:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="jX9LJcjW"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="RZW9Py3q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbfLWLoj (ORCPT
+        id S1726853AbfLWLqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 06:44:39 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:47076 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbfLWLoj (ORCPT
+        Mon, 23 Dec 2019 06:46:34 -0500
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:18754 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726257AbfLWLqe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 06:44:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1577101475; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uVdlO9cJhU3uZR9PsalU+9sk35dl6Zqn8751jyDz6hE=;
-        b=jX9LJcjWIqPnnuyZly5BdZOoj2/inQqbVjiES4HFwhniV6JNaGO+ALAE433xhQmOf7hoHr
-        74R9G8HAr3LeKzr0sbxjFJVOggyg28MPxpD0DHH9YfttM3lvpC+gmVq6n3+Ac/2Iy0eHBk
-        VXMTWUiAs8EHGfFQgFmRp6lvylZSZUE=
-Date:   Mon, 23 Dec 2019 12:44:26 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 2/9] memory: jz4780_nemc: convert to
- devm_platform_ioremap_resource
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     ssantosh@kernel.org, matthias.bgg@gmail.com, rogerq@ti.com,
-        tony@atomide.com, lukasz.luba@arm.com, kgene@kernel.org,
-        krzk@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com,
-        allison@lohutok.net, tglx@linutronix.de, yong.wu@mediatek.com,
-        jroedel@suse.de, evgreen@chromium.org, rfontana@redhat.com,
-        digetx@gmail.com, pdeschrijver@nvidia.com, john@phrozen.org,
-        alexios.zavras@intel.com, sboyd@kernel.org,
-        kstewart@linuxfoundation.org, info@metux.net,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Message-Id: <1577101466.3.0@crapouillou.net>
-In-Reply-To: <20191222185034.4665-2-tiny.windzz@gmail.com>
-References: <20191222185034.4665-1-tiny.windzz@gmail.com>
-        <20191222185034.4665-2-tiny.windzz@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
+        Mon, 23 Dec 2019 06:46:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1577101593; x=1608637593;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=vvmp92KNUpBEgXRjRfQ+MICqzu1qMXT+80kMSZKetok=;
+  b=RZW9Py3q1sMRx2fvzBMpOvftnXSo81qErb5ABgPl+oRDP9t8NhXWApz2
+   Q8F6t/xTfHT8SxKkqfDJRWZoSSj73vHx32YEca4m+MMyUEsRnrM/4+ANe
+   SN5o3jTi/ySnfJgxaverB1KgHnaH33qGUMj4Hv18UGO9ayXEc3vcUGlPk
+   8=;
+IronPort-SDR: bYFdawsqLJaf///3+Xmev8apsMjp4iYZk+WyLjr5J5nVgZ60Q04Yv7ot07mFMeKy50f3Bvfqg2
+ YdpJMNxOkl2g==
+X-IronPort-AV: E=Sophos;i="5.69,347,1571702400"; 
+   d="scan'208";a="9790850"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 23 Dec 2019 11:46:31 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS id 6C2C1A27B1;
+        Mon, 23 Dec 2019 11:46:31 +0000 (UTC)
+Received: from EX13D32EUC002.ant.amazon.com (10.43.164.94) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Mon, 23 Dec 2019 11:46:30 +0000
+Received: from EX13D32EUC003.ant.amazon.com (10.43.164.24) by
+ EX13D32EUC002.ant.amazon.com (10.43.164.94) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 23 Dec 2019 11:46:29 +0000
+Received: from EX13D32EUC003.ant.amazon.com ([10.43.164.24]) by
+ EX13D32EUC003.ant.amazon.com ([10.43.164.24]) with mapi id 15.00.1367.000;
+ Mon, 23 Dec 2019 11:46:29 +0000
+From:   "Durrant, Paul" <pdurrant@amazon.com>
+To:     Wei Liu <wei.liu@kernel.org>
+CC:     "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Paul Durrant <paul@xen.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: RE: [PATCH net-next] xen-netback: support dynamic unbind/bind
+Thread-Topic: [PATCH net-next] xen-netback: support dynamic unbind/bind
+Thread-Index: AQHVuXeo48GmlxuNH0abtWhDKbfEbafHl0uAgAACIOA=
+Date:   Mon, 23 Dec 2019 11:46:29 +0000
+Message-ID: <1d1189a3acd8473fadc420d902fd4692@EX13D32EUC003.ant.amazon.com>
+References: <20191223095923.2458-1-pdurrant@amazon.com>
+ <20191223113545.nwugg7lsorttunuu@debian>
+In-Reply-To: <20191223113545.nwugg7lsorttunuu@debian>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.165.29]
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-
-Le dim., d=E9c. 22, 2019 at 18:50, Yangtao Li <tiny.windzz@gmail.com> a=20
-=E9crit :
-> Use devm_platform_ioremap_resource() to simplify code.
+> -----Original Message-----
+> From: Wei Liu <wei.liu@kernel.org>
+> Sent: 23 December 2019 11:36
+> To: Durrant, Paul <pdurrant@amazon.com>
+> Cc: xen-devel@lists.xenproject.org; netdev@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Wei Liu <wei.liu@kernel.org>; Paul Durrant
+> <paul@xen.org>; David S. Miller <davem@davemloft.net>
+> Subject: Re: [PATCH net-next] xen-netback: support dynamic unbind/bind
 >=20
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-
-Acked-by: Paul Cercueil <paul@crapouillou.net>
-
-Cheers,
--Paul
-
-
-> ---
->  drivers/memory/jz4780-nemc.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+> On Mon, Dec 23, 2019 at 09:59:23AM +0000, Paul Durrant wrote:
+> [...]
+> > diff --git a/drivers/net/xen-netback/interface.c b/drivers/net/xen-
+> netback/interface.c
+> > index f15ba3de6195..0c8a02a1ead7 100644
+> > --- a/drivers/net/xen-netback/interface.c
+> > +++ b/drivers/net/xen-netback/interface.c
+> > @@ -585,6 +585,7 @@ int xenvif_connect_ctrl(struct xenvif *vif,
+> grant_ref_t ring_ref,
+> >  	struct net_device *dev =3D vif->dev;
+> >  	void *addr;
+> >  	struct xen_netif_ctrl_sring *shared;
+> > +	RING_IDX rsp_prod, req_prod;
+> >  	int err;
+> >
+> >  	err =3D xenbus_map_ring_valloc(xenvif_to_xenbus_device(vif),
+> > @@ -593,7 +594,14 @@ int xenvif_connect_ctrl(struct xenvif *vif,
+> grant_ref_t ring_ref,
+> >  		goto err;
+> >
+> >  	shared =3D (struct xen_netif_ctrl_sring *)addr;
+> > -	BACK_RING_INIT(&vif->ctrl, shared, XEN_PAGE_SIZE);
+> > +	rsp_prod =3D READ_ONCE(shared->rsp_prod);
+> > +	req_prod =3D READ_ONCE(shared->req_prod);
+> > +
+> > +	BACK_RING_ATTACH(&vif->ctrl, shared, rsp_prod, XEN_PAGE_SIZE);
+> > +
+> > +	err =3D -EIO;
+> > +	if (req_prod - rsp_prod > RING_SIZE(&vif->ctrl))
+> > +		goto err_unmap;
 >=20
-> diff --git a/drivers/memory/jz4780-nemc.c=20
-> b/drivers/memory/jz4780-nemc.c
-> index b232ed279fc3..857a9fa5cba5 100644
-> --- a/drivers/memory/jz4780-nemc.c
-> +++ b/drivers/memory/jz4780-nemc.c
-> @@ -269,7 +269,6 @@ static int jz4780_nemc_probe(struct=20
-> platform_device *pdev)
->  {
->  	struct device *dev =3D &pdev->dev;
->  	struct jz4780_nemc *nemc;
-> -	struct resource *res;
->  	struct device_node *child;
->  	const __be32 *prop;
->  	unsigned int bank;
-> @@ -287,8 +286,7 @@ static int jz4780_nemc_probe(struct=20
-> platform_device *pdev)
->  	spin_lock_init(&nemc->lock);
->  	nemc->dev =3D dev;
->=20
-> -	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	nemc->base =3D devm_ioremap_resource(dev, res);
-> +	nemc->base =3D devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(nemc->base)) {
->  		dev_err(dev, "failed to get I/O memory\n");
->  		return PTR_ERR(nemc->base);
-> --
-> 2.17.1
->=20
+> I think it makes more sense to attach the ring after this check has been
+> done, but I can see you want to structure code like this to reuse the
+> unmap error path.
 
-=
+Looks a little odd, agreed. The reason I did it this way is so that I can u=
+se RING_SIZE() rather than having to use __RING_SIZE(); makes the code just=
+ a little bit shorter... which reminds me I ought to neaten up blkback simi=
+larly.
 
+>=20
+> So:
+>=20
+> Reviewed-by: Wei Liu <wei.liu@kernel.org>
+>=20
+> Nice work btw.
+
+Thanks :-)
+
+  Paul
