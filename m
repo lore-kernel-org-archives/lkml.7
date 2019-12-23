@@ -2,217 +2,139 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1041C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 09:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B6CC2D0D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75D072053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 09:59:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VzL6NakN"
+	by mail.kernel.org (Postfix) with ESMTP id 013A72053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:01:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfLWJ7l (ORCPT
+        id S1726786AbfLWKBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 04:59:41 -0500
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:29281 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbfLWJ7l (ORCPT
+        Mon, 23 Dec 2019 05:01:15 -0500
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:43469 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbfLWKBP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 04:59:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1577095180; x=1608631180;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=AXLA4oTaOxQEJPJrsHXELfBXcoU1aXhP5KDiSUct76c=;
-  b=VzL6NakNmD7eUUuwec2teTcTV3pzRvnG4sYu9d5XcxZaRi9ohDDveBMp
-   4HHovW5EyjTmzWbDzns/2rhCv49qR6uW+Ubian6jzgYpzwf2cMqSPIp2W
-   ODhDzsfyOWCtK9QDJb2dtBqiBEsXKcVfDFN4CiSNJKqZ5w558Dj+luVb3
-   g=;
-IronPort-SDR: rLgT1+3QwmMpnM5bGo0ssD6aR/h2FMREnjuVxYeVCxnfm9Ui3zS68hR6AN9C/j+TMaPe1k5tmu
- bj8hhWJJy1zw==
-X-IronPort-AV: E=Sophos;i="5.69,347,1571702400"; 
-   d="scan'208";a="16521924"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-a70de69e.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 23 Dec 2019 09:59:29 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-a70de69e.us-east-1.amazon.com (Postfix) with ESMTPS id 769FAA119C;
-        Mon, 23 Dec 2019 09:59:27 +0000 (UTC)
-Received: from EX13D32EUB002.ant.amazon.com (10.43.166.114) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Mon, 23 Dec 2019 09:59:27 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D32EUB002.ant.amazon.com (10.43.166.114) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 23 Dec 2019 09:59:26 +0000
-Received: from u2f063a87eabd5f.cbg10.amazon.com (10.125.106.135) by
- mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Mon, 23 Dec 2019 09:59:24 +0000
-From:   Paul Durrant <pdurrant@amazon.com>
-To:     <xen-devel@lists.xenproject.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Paul Durrant <pdurrant@amazon.com>, Wei Liu <wei.liu@kernel.org>,
-        "Paul Durrant" <paul@xen.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH net-next] xen-netback: support dynamic unbind/bind
-Date:   Mon, 23 Dec 2019 09:59:23 +0000
-Message-ID: <20191223095923.2458-1-pdurrant@amazon.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 23 Dec 2019 05:01:15 -0500
+X-Originating-IP: 176.184.22.51
+Received: from localhost (did75-h03-176-184-22-51.dsl.sta.abo.bbox.fr [176.184.22.51])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id AEEF1C000F;
+        Mon, 23 Dec 2019 10:01:12 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     linux-rtc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v2] rtc: rv3029: remove useless error messages
+Date:   Mon, 23 Dec 2019 11:01:08 +0100
+Message-Id: <20191223100108.1083078-1-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By re-attaching RX, TX, and CTL rings during connect() rather than
-assuming they are freshly allocated (i.e. assuming the counters are zero),
-and avoiding forcing state to Closed in netback_remove() it is possible
-for vif instances to be unbound and re-bound from and to (respectively) a
-running guest.
+Remove redundant messages or messages that would not add any value because
+the information is already conveyed properly using errno.
 
-Dynamic unbind/bind is a highly useful feature for a backend module as it
-allows it to be unloaded and re-loaded (i.e. updated) without requiring
-domUs to be halted.
-
-This has been tested by running iperf as a server in the test VM and
-then running a client against it in a continuous loop, whilst also
-running:
-
-while true;
-  do echo vif-$DOMID-$VIF >unbind;
-  echo down;
-  rmmod xen-netback;
-  echo unloaded;
-  modprobe xen-netback;
-  cd $(pwd);
-  brctl addif xenbr0 vif$DOMID.$VIF;
-  ip link set vif$DOMID.$VIF up;
-  echo up;
-  sleep 5;
-  done
-
-in dom0 from /sys/bus/xen-backend/drivers/vif to continuously unbind,
-unload, re-load, re-bind and re-plumb the backend.
-
-Clearly a performance drop was seen but no TCP connection resets were
-observed during this test and moreover a parallel SSH connection into the
-guest remained perfectly usable throughout.
-
-Signed-off-by: Paul Durrant <pdurrant@amazon.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
-Cc: Wei Liu <wei.liu@kernel.org>
-Cc: Paul Durrant <paul@xen.org>
-Cc: "David S. Miller" <davem@davemloft.net>
----
- drivers/net/xen-netback/interface.c | 10 +++++++++-
- drivers/net/xen-netback/netback.c   | 20 +++++++++++++++++---
- drivers/net/xen-netback/xenbus.c    |  5 ++---
- 3 files changed, 28 insertions(+), 7 deletions(-)
+ drivers/rtc/rtc-rv3029c2.c | 35 +++++++++--------------------------
+ 1 file changed, 9 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/net/xen-netback/interface.c b/drivers/net/xen-netback/interface.c
-index f15ba3de6195..0c8a02a1ead7 100644
---- a/drivers/net/xen-netback/interface.c
-+++ b/drivers/net/xen-netback/interface.c
-@@ -585,6 +585,7 @@ int xenvif_connect_ctrl(struct xenvif *vif, grant_ref_t ring_ref,
- 	struct net_device *dev = vif->dev;
- 	void *addr;
- 	struct xen_netif_ctrl_sring *shared;
-+	RING_IDX rsp_prod, req_prod;
- 	int err;
+diff --git a/drivers/rtc/rtc-rv3029c2.c b/drivers/rtc/rtc-rv3029c2.c
+index 6f1c7790a6a2..483faa4f66d4 100644
+--- a/drivers/rtc/rtc-rv3029c2.c
++++ b/drivers/rtc/rtc-rv3029c2.c
+@@ -318,10 +318,8 @@ static int rv3029_read_time(struct device *dev, struct rtc_time *tm)
  
- 	err = xenbus_map_ring_valloc(xenvif_to_xenbus_device(vif),
-@@ -593,7 +594,14 @@ int xenvif_connect_ctrl(struct xenvif *vif, grant_ref_t ring_ref,
- 		goto err;
+ 	ret = regmap_bulk_read(rv3029->regmap, RV3029_W_SEC, regs,
+ 			       RV3029_WATCH_SECTION_LEN);
+-	if (ret < 0) {
+-		dev_err(dev, "%s: reading RTC section failed\n", __func__);
++	if (ret < 0)
+ 		return ret;
+-	}
  
- 	shared = (struct xen_netif_ctrl_sring *)addr;
--	BACK_RING_INIT(&vif->ctrl, shared, XEN_PAGE_SIZE);
-+	rsp_prod = READ_ONCE(shared->rsp_prod);
-+	req_prod = READ_ONCE(shared->req_prod);
+ 	tm->tm_sec = bcd2bin(regs[RV3029_W_SEC - RV3029_W_SEC]);
+ 	tm->tm_min = bcd2bin(regs[RV3029_W_MINUTES - RV3029_W_SEC]);
+@@ -357,21 +355,16 @@ static int rv3029_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
+ 
+ 	ret = regmap_bulk_read(rv3029->regmap, RV3029_A_SC, regs,
+ 			       RV3029_ALARM_SECTION_LEN);
+-	if (ret < 0) {
+-		dev_err(dev, "%s: reading alarm section failed\n", __func__);
++	if (ret < 0)
+ 		return ret;
+-	}
+ 
+ 	ret = regmap_read(rv3029->regmap, RV3029_IRQ_CTRL, &controls);
+-	if (ret) {
+-		dev_err(dev, "Read IRQ Control Register error %d\n", ret);
++	if (ret)
+ 		return ret;
+-	}
 +
-+	BACK_RING_ATTACH(&vif->ctrl, shared, rsp_prod, XEN_PAGE_SIZE);
-+
-+	err = -EIO;
-+	if (req_prod - rsp_prod > RING_SIZE(&vif->ctrl))
-+		goto err_unmap;
+ 	ret = regmap_read(rv3029->regmap, RV3029_IRQ_FLAGS, &flags);
+-	if (ret < 0) {
+-		dev_err(dev, "Read IRQ Flags Register error %d\n", ret);
++	if (ret < 0)
+ 		return ret;
+-	}
  
- 	err = bind_interdomain_evtchn_to_irq(vif->domid, evtchn);
- 	if (err < 0)
-diff --git a/drivers/net/xen-netback/netback.c b/drivers/net/xen-netback/netback.c
-index 0020b2e8c279..315dfc6ea297 100644
---- a/drivers/net/xen-netback/netback.c
-+++ b/drivers/net/xen-netback/netback.c
-@@ -1453,7 +1453,7 @@ int xenvif_map_frontend_data_rings(struct xenvif_queue *queue,
- 	void *addr;
- 	struct xen_netif_tx_sring *txs;
- 	struct xen_netif_rx_sring *rxs;
--
-+	RING_IDX rsp_prod, req_prod;
- 	int err = -ENOMEM;
- 
- 	err = xenbus_map_ring_valloc(xenvif_to_xenbus_device(queue->vif),
-@@ -1462,7 +1462,14 @@ int xenvif_map_frontend_data_rings(struct xenvif_queue *queue,
- 		goto err;
- 
- 	txs = (struct xen_netif_tx_sring *)addr;
--	BACK_RING_INIT(&queue->tx, txs, XEN_PAGE_SIZE);
-+	rsp_prod = READ_ONCE(txs->rsp_prod);
-+	req_prod = READ_ONCE(txs->req_prod);
-+
-+	BACK_RING_ATTACH(&queue->tx, txs, rsp_prod, XEN_PAGE_SIZE);
-+
-+	err = -EIO;
-+	if (req_prod - rsp_prod > RING_SIZE(&queue->tx))
-+		goto err;
- 
- 	err = xenbus_map_ring_valloc(xenvif_to_xenbus_device(queue->vif),
- 				     &rx_ring_ref, 1, &addr);
-@@ -1470,7 +1477,14 @@ int xenvif_map_frontend_data_rings(struct xenvif_queue *queue,
- 		goto err;
- 
- 	rxs = (struct xen_netif_rx_sring *)addr;
--	BACK_RING_INIT(&queue->rx, rxs, XEN_PAGE_SIZE);
-+	rsp_prod = READ_ONCE(rxs->rsp_prod);
-+	req_prod = READ_ONCE(rxs->req_prod);
-+
-+	BACK_RING_ATTACH(&queue->rx, rxs, rsp_prod, XEN_PAGE_SIZE);
-+
-+	err = -EIO;
-+	if (req_prod - rsp_prod > RING_SIZE(&queue->rx))
-+		goto err;
- 
- 	return 0;
- 
-diff --git a/drivers/net/xen-netback/xenbus.c b/drivers/net/xen-netback/xenbus.c
-index 17b4950ec051..286054b60d47 100644
---- a/drivers/net/xen-netback/xenbus.c
-+++ b/drivers/net/xen-netback/xenbus.c
-@@ -954,12 +954,10 @@ static int netback_remove(struct xenbus_device *dev)
- {
- 	struct backend_info *be = dev_get_drvdata(&dev->dev);
- 
--	set_backend_state(be, XenbusStateClosed);
--
- 	unregister_hotplug_status_watch(be);
- 	if (be->vif) {
- 		kobject_uevent(&dev->dev.kobj, KOBJ_OFFLINE);
--		xen_unregister_watchers(be->vif);
-+		backend_disconnect(be);
- 		xenvif_free(be->vif);
- 		be->vif = NULL;
+ 	tm->tm_sec = bcd2bin(regs[RV3029_A_SC - RV3029_A_SC] & 0x7f);
+ 	tm->tm_min = bcd2bin(regs[RV3029_A_MN - RV3029_A_SC] & 0x7f);
+@@ -802,11 +795,8 @@ static int rv3029_i2c_probe(struct i2c_client *client,
  	}
-@@ -1131,6 +1129,7 @@ static struct xenbus_driver netback_driver = {
- 	.remove = netback_remove,
- 	.uevent = netback_uevent,
- 	.otherend_changed = frontend_changed,
-+	.allow_rebind = true,
- };
  
- int xenvif_xenbus_init(void)
+ 	regmap = devm_regmap_init_i2c(client, &config);
+-	if (IS_ERR(regmap)) {
+-		dev_err(&client->dev, "%s: regmap allocation failed: %ld\n",
+-			__func__, PTR_ERR(regmap));
++	if (IS_ERR(regmap))
+ 		return PTR_ERR(regmap);
+-	}
+ 
+ 	return rv3029_probe(&client->dev, regmap, client->irq, client->name);
+ }
+@@ -863,11 +853,8 @@ static int rv3049_probe(struct spi_device *spi)
+ 	struct regmap *regmap;
+ 
+ 	regmap = devm_regmap_init_spi(spi, &config);
+-	if (IS_ERR(regmap)) {
+-		dev_err(&spi->dev, "%s: regmap allocation failed: %ld\n",
+-			__func__, PTR_ERR(regmap));
++	if (IS_ERR(regmap))
+ 		return PTR_ERR(regmap);
+-	}
+ 
+ 	return rv3029_probe(&spi->dev, regmap, spi->irq, "rv3049");
+ }
+@@ -907,16 +894,12 @@ static int __init rv30x9_init(void)
+ 	int ret;
+ 
+ 	ret = rv3029_register_driver();
+-	if (ret) {
+-		pr_err("Failed to register rv3029 driver: %d\n", ret);
++	if (ret)
+ 		return ret;
+-	}
+ 
+ 	ret = rv3049_register_driver();
+-	if (ret) {
+-		pr_err("Failed to register rv3049 driver: %d\n", ret);
++	if (ret)
+ 		rv3029_unregister_driver();
+-	}
+ 
+ 	return ret;
+ }
 -- 
-2.20.1
+2.23.0
 
