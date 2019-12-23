@@ -1,364 +1,91 @@
-Return-Path: <SRS0=7h0X=2M=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DAAC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 23:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE65C2D0D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 00:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 441B3206CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 22 Dec 2019 23:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DA74206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 00:10:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="rC+8/udN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbfLVXq3 (ORCPT
+        id S1726604AbfLWAKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 18:46:29 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55828 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727230AbfLVXq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 18:46:27 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B24B5ADBB;
-        Sun, 22 Dec 2019 23:46:24 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 5F343E03A8; Mon, 23 Dec 2019 00:46:24 +0100 (CET)
-Message-Id: <7a6c4161fc6d29620bdc95a919e03f8be8b91e48.1577052887.git.mkubecek@suse.cz>
-In-Reply-To: <cover.1577052887.git.mkubecek@suse.cz>
-References: <cover.1577052887.git.mkubecek@suse.cz>
-From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next v8 14/14] ethtool: provide link state with
- LINKSTATE_GET request
-To:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 23 Dec 2019 00:46:24 +0100 (CET)
+        Sun, 22 Dec 2019 19:10:23 -0500
+Received: from vulcan.natalenko.name ([104.207.131.136]:39474 "EHLO
+        vulcan.natalenko.name" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbfLWAKX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Dec 2019 19:10:23 -0500
+Received: from mail.natalenko.name (vulcan.natalenko.name [IPv6:fe80::5400:ff:fe0c:dfa0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by vulcan.natalenko.name (Postfix) with ESMTPSA id A17CB66A2C3;
+        Mon, 23 Dec 2019 01:10:20 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+        s=dkim-20170712; t=1577059820;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4nuc1AoyG636k7YM3XrC/oDbYE0mXjxK+LkO7UE/R7g=;
+        b=rC+8/udNxj1AKXwCy4zpbuZBGwDe69x2NVua5uDpde2nu2jnucbjQ4R2PaFph7S4pQWTHe
+        v3v7N+uwBriOz51Yf8BWdL9NnE5q47iIPZmdKas96L3v72TqOy1u04X19IbMjpjb9P8ruy
+        fptiLJaqSFKrFhiW8dVqWqX2OTRrrQU=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 23 Dec 2019 01:10:20 +0100
+From:   Oleksandr Natalenko <oleksandr@natalenko.name>
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        SIMONE RICHETTI <206161@studenti.unimore.it>, tytso@mit.edu
+Subject: Re: Injecting delays into block layer
+In-Reply-To: <942604AE-5A91-4E05-869F-74A7EAC5A247@linaro.org>
+References: <d7ee69fc368db16fa96a05643083674a@natalenko.name>
+ <3D695D19-B226-4093-9C27-CE561ED08CB7@linaro.org>
+ <942604AE-5A91-4E05-869F-74A7EAC5A247@linaro.org>
+User-Agent: Roundcube Webmail/1.4.1
+Message-ID: <21d34f9558a286c60352b5634f291f71@natalenko.name>
+X-Sender: oleksandr@natalenko.name
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement LINKSTATE_GET netlink request to get link state information.
+Hi.
 
-At the moment, only link up flag as provided by ETHTOOL_GLINK ioctl command
-is returned.
+On 06.12.2019 17:17, Paolo Valente wrote:
+> Simone (in CC) and I have worked a little bit on reproducing the I/O
+> freeze you report.  Simone made a small change in SCSI_debug, which
+> makes the latter serve I/O with a highly varying random delay (100ms -
+> 1s), about twice a second.
+> 
+> Then, to generate some fluctuating and heavy I/O, he ran the
+> comm_startup_lat.sh script of my S suite with SCSI_debug a few times.
+> Unfortunately, he didn't succeed in reproducing the problem.  If you
+> want, we can send you a patch with his change for SCSI_debug.
+> 
+> Any news on your side?
 
-LINKSTATE_GET request can be used with NLM_F_DUMP (without device
-identification) to request the information for all devices in current
-network namespace providing the data.
+FWIW, I guess I'm safe to exclude BFQ at the moment since I've 
+encountered a very similar issue without having BFQ enabled.
 
-Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
----
- Documentation/networking/ethtool-netlink.rst | 33 ++++++++-
- include/uapi/linux/ethtool_netlink.h         | 14 ++++
- net/ethtool/Makefile                         |  3 +-
- net/ethtool/common.c                         |  8 +++
- net/ethtool/common.h                         |  3 +
- net/ethtool/ioctl.c                          |  8 +--
- net/ethtool/linkstate.c                      | 74 ++++++++++++++++++++
- net/ethtool/netlink.c                        |  8 +++
- net/ethtool/netlink.h                        |  1 +
- 9 files changed, 146 insertions(+), 6 deletions(-)
- create mode 100644 net/ethtool/linkstate.c
+Also, I think this might be unrelated to the block layer at all. I 
+suspect there's some race between MADV_MERGEABLE and MADV_DONTNEED since 
+this is what's hammering the affected tasks and what I see from the call 
+traces.
 
-diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation/networking/ethtool-netlink.rst
-index 03aee9f3c0c5..45ccee940306 100644
---- a/Documentation/networking/ethtool-netlink.rst
-+++ b/Documentation/networking/ethtool-netlink.rst
-@@ -174,6 +174,7 @@ Userspace to kernel:
-   ``ETHTOOL_MSG_LINKINFO_SET``          set link settings
-   ``ETHTOOL_MSG_LINKMODES_GET``         get link modes info
-   ``ETHTOOL_MSG_LINKMODES_SET``         set link modes info
-+  ``ETHTOOL_MSG_LINKSTATE_GET``         get link state
-   ===================================== ================================
- 
- Kernel to userspace:
-@@ -184,6 +185,7 @@ Kernel to userspace:
-   ``ETHTOOL_MSG_LINKINFO_NTF``          link settings notification
-   ``ETHTOOL_MSG_LINKMODES_GET_REPLY``   link modes info
-   ``ETHTOOL_MSG_LINKMODES_NTF``         link modes notification
-+  ``ETHTOOL_MSG_LINKSTATE_GET_REPLY``   link state info
-   ===================================== ================================
- 
- ``GET`` requests are sent by userspace applications to retrieve device
-@@ -382,6 +384,35 @@ is supposed to allow requesting changes without knowing what exactly kernel
- supports.
- 
- 
-+LINKSTATE_GET
-+=============
-+
-+Requests link state information. At the moment, only link up/down flag (as
-+provided by ``ETHTOOL_GLINK`` ioctl command) is provided but some future
-+extensions are planned (e.g. link down reason). This request does not have any
-+attributes.
-+
-+Request contents:
-+
-+  ====================================  ======  ==========================
-+  ``ETHTOOL_A_LINKSTATE_HEADER``        nested  request header
-+  ====================================  ======  ==========================
-+
-+Kernel response contents:
-+
-+  ====================================  ======  ==========================
-+  ``ETHTOOL_A_LINKSTATE_HEADER``        nested  reply header
-+  ``ETHTOOL_A_LINKSTATE_LINK``          u8      autonegotiation status
-+  ====================================  ======  ==========================
-+
-+For most NIC drivers, the value of ``ETHTOOL_A_LINKSTATE_LINK`` returns
-+carrier flag provided by ``netif_carrier_ok()`` but there are drivers which
-+define their own handler.
-+
-+``LINKSTATE_GET`` allows dump requests (kernel returns reply messages for all
-+devices supporting the request).
-+
-+
- Request translation
- ===================
- 
-@@ -403,7 +434,7 @@ have their netlink replacement yet.
-   ``ETHTOOL_GMSGLVL``                 n/a
-   ``ETHTOOL_SMSGLVL``                 n/a
-   ``ETHTOOL_NWAY_RST``                n/a
--  ``ETHTOOL_GLINK``                   n/a
-+  ``ETHTOOL_GLINK``                   ``ETHTOOL_MSG_LINKSTATE_GET``
-   ``ETHTOOL_GEEPROM``                 n/a
-   ``ETHTOOL_SEEPROM``                 n/a
-   ``ETHTOOL_GCOALESCE``               n/a
-diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
-index 35948df6d6e3..02f82f42a889 100644
---- a/include/uapi/linux/ethtool_netlink.h
-+++ b/include/uapi/linux/ethtool_netlink.h
-@@ -19,6 +19,7 @@ enum {
- 	ETHTOOL_MSG_LINKINFO_SET,
- 	ETHTOOL_MSG_LINKMODES_GET,
- 	ETHTOOL_MSG_LINKMODES_SET,
-+	ETHTOOL_MSG_LINKSTATE_GET,
- 
- 	/* add new constants above here */
- 	__ETHTOOL_MSG_USER_CNT,
-@@ -33,6 +34,7 @@ enum {
- 	ETHTOOL_MSG_LINKINFO_NTF,
- 	ETHTOOL_MSG_LINKMODES_GET_REPLY,
- 	ETHTOOL_MSG_LINKMODES_NTF,
-+	ETHTOOL_MSG_LINKSTATE_GET_REPLY,
- 
- 	/* add new constants above here */
- 	__ETHTOOL_MSG_KERNEL_CNT,
-@@ -181,6 +183,18 @@ enum {
- 	ETHTOOL_A_LINKMODES_MAX = __ETHTOOL_A_LINKMODES_CNT - 1
- };
- 
-+/* LINKSTATE */
-+
-+enum {
-+	ETHTOOL_A_LINKSTATE_UNSPEC,
-+	ETHTOOL_A_LINKSTATE_HEADER,		/* nest - _A_HEADER_* */
-+	ETHTOOL_A_LINKSTATE_LINK,		/* u8 */
-+
-+	/* add new constants above here */
-+	__ETHTOOL_A_LINKSTATE_CNT,
-+	ETHTOOL_A_LINKSTATE_MAX = __ETHTOOL_A_LINKSTATE_CNT - 1
-+};
-+
- /* generic netlink info */
- #define ETHTOOL_GENL_NAME "ethtool"
- #define ETHTOOL_GENL_VERSION 1
-diff --git a/net/ethtool/Makefile b/net/ethtool/Makefile
-index 8023da6672ce..9a1332fb0cc6 100644
---- a/net/ethtool/Makefile
-+++ b/net/ethtool/Makefile
-@@ -4,4 +4,5 @@ obj-y				+= ioctl.o common.o
- 
- obj-$(CONFIG_ETHTOOL_NETLINK)	+= ethtool_nl.o
- 
--ethtool_nl-y	:= netlink.o bitset.o strset.o linkinfo.o linkmodes.o
-+ethtool_nl-y	:= netlink.o bitset.o strset.o linkinfo.o linkmodes.o \
-+		   linkstate.o
-diff --git a/net/ethtool/common.c b/net/ethtool/common.c
-index 1d4a0aeff2cb..e621b1694d2f 100644
---- a/net/ethtool/common.c
-+++ b/net/ethtool/common.c
-@@ -217,3 +217,11 @@ convert_legacy_settings_to_link_ksettings(
- 		= legacy_settings->eth_tp_mdix_ctrl;
- 	return retval;
- }
-+
-+int __ethtool_get_link(struct net_device *dev)
-+{
-+	if (!dev->ethtool_ops->get_link)
-+		return -EOPNOTSUPP;
-+
-+	return netif_running(dev) && dev->ethtool_ops->get_link(dev);
-+}
-diff --git a/net/ethtool/common.h b/net/ethtool/common.h
-index c8a237402729..5c5f7dc90cd4 100644
---- a/net/ethtool/common.h
-+++ b/net/ethtool/common.h
-@@ -3,6 +3,7 @@
- #ifndef _ETHTOOL_COMMON_H
- #define _ETHTOOL_COMMON_H
- 
-+#include <linux/netdevice.h>
- #include <linux/ethtool.h>
- 
- /* compose link mode index from speed, type and duplex */
-@@ -19,6 +20,8 @@ extern const char
- phy_tunable_strings[__ETHTOOL_PHY_TUNABLE_COUNT][ETH_GSTRING_LEN];
- extern const char link_mode_names[][ETH_GSTRING_LEN];
- 
-+int __ethtool_get_link(struct net_device *dev);
-+
- bool convert_legacy_settings_to_link_ksettings(
- 	struct ethtool_link_ksettings *link_ksettings,
- 	const struct ethtool_cmd *legacy_settings);
-diff --git a/net/ethtool/ioctl.c b/net/ethtool/ioctl.c
-index 65aaa7db17d5..b11037bb245d 100644
---- a/net/ethtool/ioctl.c
-+++ b/net/ethtool/ioctl.c
-@@ -1365,12 +1365,12 @@ static int ethtool_nway_reset(struct net_device *dev)
- static int ethtool_get_link(struct net_device *dev, char __user *useraddr)
- {
- 	struct ethtool_value edata = { .cmd = ETHTOOL_GLINK };
-+	int link = __ethtool_get_link(dev);
- 
--	if (!dev->ethtool_ops->get_link)
--		return -EOPNOTSUPP;
--
--	edata.data = netif_running(dev) && dev->ethtool_ops->get_link(dev);
-+	if (link < 0)
-+		return link;
- 
-+	edata.data = link;
- 	if (copy_to_user(useraddr, &edata, sizeof(edata)))
- 		return -EFAULT;
- 	return 0;
-diff --git a/net/ethtool/linkstate.c b/net/ethtool/linkstate.c
-new file mode 100644
-index 000000000000..2740cde0a182
---- /dev/null
-+++ b/net/ethtool/linkstate.c
-@@ -0,0 +1,74 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include "netlink.h"
-+#include "common.h"
-+
-+struct linkstate_req_info {
-+	struct ethnl_req_info		base;
-+};
-+
-+struct linkstate_reply_data {
-+	struct ethnl_reply_data		base;
-+	int				link;
-+};
-+
-+#define LINKSTATE_REPDATA(__reply_base) \
-+	container_of(__reply_base, struct linkstate_reply_data, base)
-+
-+static const struct nla_policy
-+linkstate_get_policy[ETHTOOL_A_LINKSTATE_MAX + 1] = {
-+	[ETHTOOL_A_LINKSTATE_UNSPEC]		= { .type = NLA_REJECT },
-+	[ETHTOOL_A_LINKSTATE_HEADER]		= { .type = NLA_NESTED },
-+	[ETHTOOL_A_LINKSTATE_LINK]		= { .type = NLA_REJECT },
-+};
-+
-+static int linkstate_prepare_data(const struct ethnl_req_info *req_base,
-+				  struct ethnl_reply_data *reply_base,
-+				  struct genl_info *info)
-+{
-+	struct linkstate_reply_data *data = LINKSTATE_REPDATA(reply_base);
-+	struct net_device *dev = reply_base->dev;
-+	int ret;
-+
-+	ret = ethnl_ops_begin(dev);
-+	if (ret < 0)
-+		return ret;
-+	data->link = __ethtool_get_link(dev);
-+	ethnl_ops_complete(dev);
-+
-+	return 0;
-+}
-+
-+static int linkstate_reply_size(const struct ethnl_req_info *req_base,
-+				const struct ethnl_reply_data *reply_base)
-+{
-+	return nla_total_size(sizeof(u8)) /* LINKSTATE_LINK */
-+		+ 0;
-+}
-+
-+static int linkstate_fill_reply(struct sk_buff *skb,
-+				const struct ethnl_req_info *req_base,
-+				const struct ethnl_reply_data *reply_base)
-+{
-+	struct linkstate_reply_data *data = LINKSTATE_REPDATA(reply_base);
-+
-+	if (data->link >= 0 &&
-+	    nla_put_u8(skb, ETHTOOL_A_LINKSTATE_LINK, !!data->link))
-+		return -EMSGSIZE;
-+
-+	return 0;
-+}
-+
-+const struct ethnl_request_ops ethnl_linkstate_request_ops = {
-+	.request_cmd		= ETHTOOL_MSG_LINKSTATE_GET,
-+	.reply_cmd		= ETHTOOL_MSG_LINKSTATE_GET_REPLY,
-+	.hdr_attr		= ETHTOOL_A_LINKSTATE_HEADER,
-+	.max_attr		= ETHTOOL_A_LINKSTATE_MAX,
-+	.req_info_size		= sizeof(struct linkstate_req_info),
-+	.reply_data_size	= sizeof(struct linkstate_reply_data),
-+	.request_policy		= linkstate_get_policy,
-+
-+	.prepare_data		= linkstate_prepare_data,
-+	.reply_size		= linkstate_reply_size,
-+	.fill_reply		= linkstate_fill_reply,
-+};
-diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
-index 1b5e1bd26504..4ca96c7b86b3 100644
---- a/net/ethtool/netlink.c
-+++ b/net/ethtool/netlink.c
-@@ -210,6 +210,7 @@ ethnl_default_requests[__ETHTOOL_MSG_USER_CNT] = {
- 	[ETHTOOL_MSG_STRSET_GET]	= &ethnl_strset_request_ops,
- 	[ETHTOOL_MSG_LINKINFO_GET]	= &ethnl_linkinfo_request_ops,
- 	[ETHTOOL_MSG_LINKMODES_GET]	= &ethnl_linkmodes_request_ops,
-+	[ETHTOOL_MSG_LINKSTATE_GET]	= &ethnl_linkstate_request_ops,
- };
- 
- static struct ethnl_dump_ctx *ethnl_dump_context(struct netlink_callback *cb)
-@@ -645,6 +646,13 @@ static const struct genl_ops ethtool_genl_ops[] = {
- 		.flags	= GENL_UNS_ADMIN_PERM,
- 		.doit	= ethnl_set_linkmodes,
- 	},
-+	{
-+		.cmd	= ETHTOOL_MSG_LINKSTATE_GET,
-+		.doit	= ethnl_default_doit,
-+		.start	= ethnl_default_start,
-+		.dumpit	= ethnl_default_dumpit,
-+		.done	= ethnl_default_done,
-+	},
- };
- 
- static const struct genl_multicast_group ethtool_nl_mcgrps[] = {
-diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
-index c9faf983b54d..6b9bed30ee47 100644
---- a/net/ethtool/netlink.h
-+++ b/net/ethtool/netlink.h
-@@ -333,6 +333,7 @@ struct ethnl_request_ops {
- extern const struct ethnl_request_ops ethnl_strset_request_ops;
- extern const struct ethnl_request_ops ethnl_linkinfo_request_ops;
- extern const struct ethnl_request_ops ethnl_linkmodes_request_ops;
-+extern const struct ethnl_request_ops ethnl_linkstate_request_ops;
- 
- int ethnl_set_linkinfo(struct sk_buff *skb, struct genl_info *info);
- int ethnl_set_linkmodes(struct sk_buff *skb, struct genl_info *info);
+I'll investigate further and probably talk to MM people instead. Sorry 
+for the noise.
+
 -- 
-2.24.1
-
+   Oleksandr Natalenko (post-factum)
