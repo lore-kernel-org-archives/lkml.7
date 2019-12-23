@@ -2,143 +2,197 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AF5C2D0D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B27D5C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2013B206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A4B820709
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:52:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbfLWItY convert rfc822-to-8bit (ORCPT
+        id S1726059AbfLWIwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 03:49:24 -0500
-Received: from mail-vi1eur05olkn2031.outbound.protection.outlook.com ([40.92.90.31]:22401
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725905AbfLWItX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 03:49:23 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OXnvOfvablAmxf+4uV85RCrowxcvtrrmUllw4yPOPq/hwp70RLh+83XfXxHNxU5/QiaK504mGskTCFxV6s2zujaBK+phOP9iy1AfdEKueijbApuDl1VTbye6pNvNiQ1FbhOQDhoPSX9T7FPwKZTjBLiF8TQ89RycoJF0wQC9uWpDTFIhbvgxK1ZDC+A36q6a6gTkL6UK0uP3XB7sa/13/qM3a4EHc3WrdYEDFyLXoMhIma2SJ77XhIbPgWSkdnTGpUJmMf8cU6rPnW6YvxlTmgDkJgUDqjSeRRWtLf4iy9xpPEyevC/JL9FVUr31mEoQftTCMhoVVnB1lm43fNqa7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ggNN5hHqqS0M9a/BcgQlW6i8OVSrLyXQ/RZ7q96LmtI=;
- b=YzbWIrDLKeKqJ4H89LYr3gPEfkn5U461AS8aM/h18GnHu8eVAmF15rfA1oIVnREthdCnkIDLnVlbyZetRLdH0+ckMb+awSBOsIss4AblnyNB8J1NdbE/N22OQg004SZnA4vRIhq6s2pjggV93AnCvQfguAhVGCEFwv/t89oxomukMJhsOE42TpHw5SvxvDvCa73SBH38NQuwW70m45veoKEYyLEVTw0KgYoEZZlyq6QKcrjHABe5TIN+Kh+uYNfgzlOXYkkSiE5OXAhJwiMOw5bzdBdmSC4M8hA7sDIJBS/bZ2pvltJrt0lQdByHcxs3M/CwooHrYMrpH3bcMcEqSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from VI1EUR05FT054.eop-eur05.prod.protection.outlook.com
- (10.233.242.58) by VI1EUR05HT106.eop-eur05.prod.protection.outlook.com
- (10.233.242.186) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2559.14; Mon, 23 Dec
- 2019 08:49:20 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.233.242.51) by
- VI1EUR05FT054.mail.protection.outlook.com (10.233.242.144) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.14 via Frontend Transport; Mon, 23 Dec 2019 08:49:19 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::b957:6908:9f62:c28b]) by HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::b957:6908:9f62:c28b%5]) with mapi id 15.20.2559.017; Mon, 23 Dec 2019
- 08:49:19 +0000
-From:   Jonas Karlman <jonas@kwiboo.se>
-To:     Heiko Stuebner <heiko@sntech.de>
-CC:     Jonas Karlman <jonas@kwiboo.se>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH for 5.5] phy/rockchip: inno-hdmi: round clock rate down to
- closest 1000 Hz
-Thread-Topic: [PATCH for 5.5] phy/rockchip: inno-hdmi: round clock rate down
- to closest 1000 Hz
-Thread-Index: AQHVuW3dv4pef+0ne06IvIotxw0jCA==
-Date:   Mon, 23 Dec 2019 08:49:19 +0000
-Message-ID: <HE1PR06MB40118544456FC5461F49DDE8AC2E0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-Accept-Language: sv-SE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM6P192CA0108.EURP192.PROD.OUTLOOK.COM
- (2603:10a6:209:8d::49) To HE1PR06MB4011.eurprd06.prod.outlook.com
- (2603:10a6:7:9c::32)
-x-incomingtopheadermarker: OriginalChecksum:6C3EE6F5AD577A424FB4288D17BA7A3F48AD02ABDD3C1430651048F62472266F;UpperCasedChecksum:500C981098FB2F2D34FA996127DBECA1CE3F3CD3924556430468F49047C09246;SizeAsReceived:7595;Count:48
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-tmn:  [qdWhVPRHQCXkaBlG15syyqeszHln1RBF]
-x-microsoft-original-message-id: <20191223084905.13456-1-jonas@kwiboo.se>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 48
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: a0b0c36f-80a2-4e4d-07f9-08d78784ffa8
-x-ms-traffictypediagnostic: VI1EUR05HT106:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: gdltd54stm2KXiAN3WqUrtIAVGGOUTPQM4GPtnUUnAr1YejmqL30T6IbICh/1eVmE7QPKlIn4gUiV9Ekut2QPCXbMO3BSNez62KWxGA9/VZvfcoYBD9UKlRuAtwLUc8cGdyPhGuawemv5uLRy/SCPxuCprQsHl+3FZe5yVaidMaKjuIDuwWtffX8rE3oW6eK
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Mon, 23 Dec 2019 03:52:47 -0500
+Received: from relay.sw.ru ([185.231.240.75]:58934 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725901AbfLWIwq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 03:52:46 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1ijJR8-00019p-L7; Mon, 23 Dec 2019 11:51:34 +0300
+Subject: Re: [PATCH RFC 1/3] block: Add support for REQ_OP_ASSIGN_RANGE
+ operation
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        tytso@mit.edu, adilger.kernel@dilger.ca, ming.lei@redhat.com,
+        osandov@fb.com, jthumshirn@suse.de, minwoo.im.dev@gmail.com,
+        damien.lemoal@wdc.com, andrea.parri@amarulasolutions.com,
+        hare@suse.com, tj@kernel.org, ajay.joshi@wdc.com, sagi@grimberg.me,
+        dsterba@suse.com, chaitanya.kulkarni@wdc.com, bvanassche@acm.org,
+        dhowells@redhat.com, asml.silence@gmail.com
+References: <157599668662.12112.10184894900037871860.stgit@localhost.localdomain>
+ <157599696813.12112.14140818972910110796.stgit@localhost.localdomain>
+ <yq1woatc8zd.fsf@oracle.com>
+ <3f2e341b-dea4-c5d0-8eb0-568b6ad2f17b@virtuozzo.com>
+ <yq1a77oc56s.fsf@oracle.com>
+ <625c9ee4-bedb-ff60-845e-2d440c4f58aa@virtuozzo.com>
+ <yq1pngh7blx.fsf@oracle.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <405b9106-0a97-0821-c41d-58ab8d0e2d09@virtuozzo.com>
+Date:   Mon, 23 Dec 2019 11:51:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: a0b0c36f-80a2-4e4d-07f9-08d78784ffa8
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Dec 2019 08:49:19.9563
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1EUR05HT106
+In-Reply-To: <yq1pngh7blx.fsf@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 287422a95fe2 ("drm/rockchip: Round up _before_ giving to the clock framework")
-changed what rate clk_round_rate() is called with, an additional 999 Hz
-added to the requsted mode clock. This has caused a regression on RK3328
-and presumably also on RK3228 because the inno-hdmi-phy clock requires an
-exact match of the requested rate in the pre pll config table.
+On 21.12.2019 21:54, Martin K. Petersen wrote:
+> 
+> Kirill,
+> 
+>> One more thing to discuss. The new REQ_NOZERO flag won't be supported
+>> by many block devices (their number will be even less, than number of
+>> REQ_OP_WRITE_ZEROES supporters). Will this be a good thing, in case of
+>> we will be completing BLKDEV_ZERO_ALLOCATE bios in
+>> __blkdev_issue_write_zeroes() before splitting? I mean introduction of
+>> some flag in struct request_queue::limits.  Completion of them with
+>> -EOPNOTSUPP in block devices drivers looks suboptimal for me.
+> 
+> We already have the NOFALLBACK flag to let the user make that decision.
+> 
+> If that flag is not specified, and I receive an allocate request for a
+> SCSI device that does not support ANCHOR, my expectation would be that I
+> would do a regular write same.
+>
+> If it's a filesystem that is the recipient of the operation and not a
+> SCSI device, how to react would depend on how the filesystem handles
+> unwritten extents, etc.
 
-When an exact match is not found the parent clock rate (24MHz) is returned
-to the clk_round_rate() caller. This cause wrong pixel clock to be used and
-result in no-signal when configuring a mode on RK3328.
+Ok, this case is clear for me, thanks.
 
-Fix this by rounding the rate down to closest 1000 Hz in round_rate func,
-this allows an exact match to be found in pre pll config table.
+But I also worry about NOFALLBACK case. There are possible block devices,
+which support write zeroes, but they can't allocate blocks (block allocation
+are just not appliable for them, say, these are all ordinary hdd).
 
-Fixes: 287422a95fe2 ("drm/rockchip: Round up _before_ giving to the clock framework")
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Let's say, a user called fallocate(), and filesystem allocated range of blocks.
+Then filesystem propagates the range to block device, and calls zeroout:
+
+blkdev_issue_zeroout(bdev, start >> 9, len >> 9,
+		     GFP_NOIO, BLKDEV_ZERO_ALLOCATE|BLKDEV_ZERO_NOFALLBACK);
+
+This case filesystem does not want zeroing blocks, it just wants to send a hint
+to block device. So, in case of block device supports allocation, everything is OK.
+
+But won't it be a good thing to return EOPNOTSUPP right from __blkdev_issue_write_zeroes()
+in case of block device can't allocate blocks (q->limits.write_zeroes_can_allocate
+in the patch below)? Here is just a way to underline block devices, which support
+write zeroes, but allocation of blocks is meant nothing for them (wasting of time).
+
+What do you think about the below?
+
+Thanks
 ---
- drivers/phy/rockchip/phy-rockchip-inno-hdmi.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
-index 2b97fb1185a0..9ca20c947283 100644
---- a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
-+++ b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
-@@ -603,6 +603,8 @@ static long inno_hdmi_phy_rk3228_clk_round_rate(struct clk_hw *hw,
+diff --git a/block/blk-lib.c b/block/blk-lib.c
+index 5f2c429d4378..524b47905fd5 100644
+--- a/block/blk-lib.c
++++ b/block/blk-lib.c
+@@ -214,7 +214,7 @@ static int __blkdev_issue_write_zeroes(struct block_device *bdev,
+ 		struct bio **biop, unsigned flags)
  {
- 	const struct pre_pll_config *cfg = pre_pll_cfg_table;
+ 	struct bio *bio = *biop;
+-	unsigned int max_write_zeroes_sectors;
++	unsigned int max_write_zeroes_sectors, req_flags = 0;
+ 	struct request_queue *q = bdev_get_queue(bdev);
  
-+	rate = (rate / 1000) * 1000;
-+
- 	for (; cfg->pixclock != 0; cfg++)
- 		if (cfg->pixclock == rate && !cfg->fracdiv)
- 			break;
-@@ -755,6 +757,8 @@ static long inno_hdmi_phy_rk3328_clk_round_rate(struct clk_hw *hw,
- {
- 	const struct pre_pll_config *cfg = pre_pll_cfg_table;
+ 	if (!q)
+@@ -229,13 +229,19 @@ static int __blkdev_issue_write_zeroes(struct block_device *bdev,
+ 	if (max_write_zeroes_sectors == 0)
+ 		return -EOPNOTSUPP;
  
-+	rate = (rate / 1000) * 1000;
++	if (flags & BLKDEV_ZERO_NOUNMAP)
++		req_flags |= REQ_NOUNMAP;
++	if (flags & BLKDEV_ZERO_ALLOCATE) {
++		if (!q->limits.write_zeroes_can_allocate)
++			return -EOPNOTSUPP;
++		req_flags |= REQ_NOZERO|REQ_NOUNMAP;
++	}
 +
- 	for (; cfg->pixclock != 0; cfg++)
- 		if (cfg->pixclock == rate)
- 			break;
--- 
-2.17.1
-
+ 	while (nr_sects) {
+ 		bio = blk_next_bio(bio, 0, gfp_mask);
+ 		bio->bi_iter.bi_sector = sector;
+ 		bio_set_dev(bio, bdev);
+-		bio->bi_opf = REQ_OP_WRITE_ZEROES;
+-		if (flags & BLKDEV_ZERO_NOUNMAP)
+-			bio->bi_opf |= REQ_NOUNMAP;
++		bio->bi_opf = REQ_OP_WRITE_ZEROES | req_flags;
+ 
+ 		if (nr_sects > max_write_zeroes_sectors) {
+ 			bio->bi_iter.bi_size = max_write_zeroes_sectors << 9;
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index 69bf2fb6f7cd..1ffef894b3bd 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -2122,6 +2122,10 @@ static long blkdev_fallocate(struct file *file, int mode, loff_t start,
+ 		error = blkdev_issue_zeroout(bdev, start >> 9, len >> 9,
+ 					     GFP_KERNEL, BLKDEV_ZERO_NOFALLBACK);
+ 		break;
++	case FALLOC_FL_KEEP_SIZE:
++		error = blkdev_issue_zeroout(bdev, start >> 9, len >> 9,
++			GFP_KERNEL, BLKDEV_ZERO_ALLOCATE | BLKDEV_ZERO_NOFALLBACK);
++		break;
+ 	case FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE | FALLOC_FL_NO_HIDE_STALE:
+ 		error = blkdev_issue_discard(bdev, start >> 9, len >> 9,
+ 					     GFP_KERNEL, 0);
+diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
+index 70254ae11769..9ed166860099 100644
+--- a/include/linux/blk_types.h
++++ b/include/linux/blk_types.h
+@@ -335,7 +335,9 @@ enum req_flag_bits {
+ 
+ 	/* command specific flags for REQ_OP_WRITE_ZEROES: */
+ 	__REQ_NOUNMAP,		/* do not free blocks when zeroing */
+-
++	__REQ_NOZERO,		/* only notify about allocated blocks,
++				 * and do not actual zero them
++				 */
+ 	__REQ_HIPRI,
+ 
+ 	/* for driver use */
+@@ -362,6 +364,7 @@ enum req_flag_bits {
+ #define REQ_CGROUP_PUNT		(1ULL << __REQ_CGROUP_PUNT)
+ 
+ #define REQ_NOUNMAP		(1ULL << __REQ_NOUNMAP)
++#define REQ_NOZERO		(1ULL << __REQ_NOZERO)
+ #define REQ_HIPRI		(1ULL << __REQ_HIPRI)
+ 
+ #define REQ_DRV			(1ULL << __REQ_DRV)
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index c45779f00cbd..9e3cd3394dd6 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -347,6 +347,7 @@ struct queue_limits {
+ 	unsigned char		misaligned;
+ 	unsigned char		discard_misaligned;
+ 	unsigned char		raid_partial_stripes_expensive;
++	bool			write_zeroes_can_allocate;
+ 	enum blk_zoned_model	zoned;
+ };
+ 
+@@ -1219,6 +1220,7 @@ extern int __blkdev_issue_discard(struct block_device *bdev, sector_t sector,
+ 
+ #define BLKDEV_ZERO_NOUNMAP	(1 << 0)  /* do not free blocks */
+ #define BLKDEV_ZERO_NOFALLBACK	(1 << 1)  /* don't write explicit zeroes */
++#define BLKDEV_ZERO_ALLOCATE	(1 << 2)  /* allocate range of blocks */
+ 
+ extern int __blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
+ 		sector_t nr_sects, gfp_t gfp_mask, struct bio **biop,
