@@ -2,162 +2,162 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FB7C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 20:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B33CC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 20:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0945320709
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 20:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B88C2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 20:47:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jf6MM9zR"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="nIF/rtU2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbfLWUaN (ORCPT
+        id S1727015AbfLWUp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 15:30:13 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35138 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726787AbfLWUaM (ORCPT
+        Mon, 23 Dec 2019 15:45:56 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36618 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbfLWUp4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 15:30:12 -0500
-Received: by mail-qt1-f194.google.com with SMTP id e12so16383549qto.2
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 12:30:12 -0800 (PST)
+        Mon, 23 Dec 2019 15:45:56 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z3so17963953wru.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 12:45:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=co5KhQ977eCC6PUYj9c8NZCajqUFhxNywpk98AxfIDc=;
-        b=jf6MM9zRJJMu7L53ECQByr3Ut5N4kmVCXx9vPA/2tdx4FWfDKqSrDI+FJNgvM2Pd1E
-         cIFVB3mWdgjPzIdJC8qLsfFiuk2lrs8kZh/LfpGKqqWP+R5ao1Km3r3k0drx5S8cUSJR
-         EVofGEylzJTdhKxYHLQfD7xbSxfHlbBa4i7KY=
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RfB76wwaEX/78cbszFlEp1zzCnUTfDY/Sh7gy/S4Lbo=;
+        b=nIF/rtU2CboWVUUhYtDjyEwhh2pLvmBwpXRDenb7QB+hciZC4vK0N69+PUkjMN7aDK
+         RRlAU40oBB+K9zy7rIki+yoYkvykfYmfp98ExrjDAXen7Q4WBr44moYjTmVm13NhpzXp
+         KrmGxTN3IeAgaWFHuzcn/KNRF7a/w2CjQMWoQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=co5KhQ977eCC6PUYj9c8NZCajqUFhxNywpk98AxfIDc=;
-        b=SWgYpeUoptnn3pHGD57/TO/4V32/Og2lt+mggC+ACwyymyriww1qW/CvYDTAyUh/xB
-         dXXpFovKKD6PQIWiQE7mZdUAKJlL8RRHOr/T+qxIo2xlpHfmV9aEDo3AWWa4ZmJ2oFOQ
-         p7/qKVsO23GL3SZvtndA1Md3Vj5gOOFyNTgdtr0ZhN2duxeH4Ed2K1fDfxqbc/7lqTF5
-         PHeoTpi36jGu6vu7cGmkItOsBZsRmAQkr6WbhpAK/VmBY3w2a7DjLVlyCsW3W1+XjDrq
-         YuvnXbRYUxof7PnADfWUy3BOvuRH/15Z52tKNtSPxP9/uysqiiMSVlfKH1jDXKgcC6/8
-         Hnwg==
-X-Gm-Message-State: APjAAAWIoDIvxB4r+gQsOA2vNLRtvC7jGcD1Ia4TLAC5oQbSvb/rjgbR
-        W4PCdLfM11PRsLIzAJy1ucaWye+ENXPXsODgN6jVKd8l
-X-Google-Smtp-Source: APXvYqygOJV0364tnt6qXgJFq4GT59e1VPJqNnK+l8JnaN7J7esoCwbHohwkWsOTmWeTngCmUZygvAn0t6oq5piYgYU=
-X-Received: by 2002:ac8:7b29:: with SMTP id l9mr23800266qtu.141.1577133011811;
- Mon, 23 Dec 2019 12:30:11 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RfB76wwaEX/78cbszFlEp1zzCnUTfDY/Sh7gy/S4Lbo=;
+        b=CnvaczDNSZfA//D5+mRE3ol9RmNfLSyYnhVNh5QIHrvEaXkU1hp8nf1/rF1oHIanL8
+         +jy80OnPi1hMH6LUY5fXDQpBC0eplsmVqPcH8t3WsuyniP8hM/Rl3d7TgKeeXGn6rfOn
+         RdsLdPVyHaLvJWH9Zf9HKOHX3sUPFGhsiNblSmMgiZoCY63tyQTVk8oaD1EQ8hj3OE7E
+         NPRamlcljbP2CPXpARoGDhdjFTl3n02OBzb6Ua2iTWKHPWed5ILqV2ROlqgIAHMKETMk
+         XbQHRuzTZfOPii9X7DV9O2DNo/zj3jkmcBfEctLUC/5SrpdKYmyhx7NTz6WGr113ZbOL
+         /5XA==
+X-Gm-Message-State: APjAAAWMRAW3zACIeXKeJnnscEoEtFI8QVOZmBiVYXugn0ma10aEJq51
+        p5Lu6v3LN2Zarb8XmHEL/KJOlg==
+X-Google-Smtp-Source: APXvYqx0rT7XFoKtJISTWdjiz/59q0aYkCoY6+XhmuAF4uBKOfMLvzlxtpIE9vJ0+tKDjKe9Ordrow==
+X-Received: by 2002:adf:df03:: with SMTP id y3mr34226407wrl.260.1577133954181;
+        Mon, 23 Dec 2019 12:45:54 -0800 (PST)
+Received: from localhost ([2620:10d:c092:180::1:94bc])
+        by smtp.gmail.com with ESMTPSA id b10sm22304212wrt.90.2019.12.23.12.45.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Dec 2019 12:45:53 -0800 (PST)
+Date:   Mon, 23 Dec 2019 20:45:51 +0000
+From:   Chris Down <chris@chrisdown.name>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Amir Goldstein <amir73il@gmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com,
+        Hugh Dickins <hughd@google.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        "zhengbin (A)" <zhengbin13@huawei.com>,
+        Roman Gushchin <guro@fb.com>
+Subject: Re: [PATCH] fs: inode: Reduce volatile inode wraparound risk when
+ ino_t is 64 bit
+Message-ID: <20191223204551.GA272672@chrisdown.name>
+References: <20191220024936.GA380394@chrisdown.name>
+ <CAOQ4uxjqSWcrA1reiyit9DRt+aq2tXBxLdPE31RrYw1yr=4hjg@mail.gmail.com>
+ <20191220121615.GB388018@chrisdown.name>
+ <CAOQ4uxgo_kAttnB4N1+om5gScYSDn3FXAr+_GUiqNy_79iiLXQ@mail.gmail.com>
+ <20191220164632.GA26902@bombadil.infradead.org>
+ <CAOQ4uxhYY9Ep1ncpU+E3bWg4ZpR8pjvLJMA5vj+7frEJ2KTwsg@mail.gmail.com>
+ <20191220195025.GA9469@bombadil.infradead.org>
 MIME-Version: 1.0
-References: <20191220193843.47182-1-pmalani@chromium.org> <20191220193843.47182-2-pmalani@chromium.org>
- <7eecafb2-4686-b448-2837-4181188365b1@collabora.com>
-In-Reply-To: <7eecafb2-4686-b448-2837-4181188365b1@collabora.com>
-From:   Prashant Malani <pmalani@chromium.org>
-Date:   Mon, 23 Dec 2019 12:29:59 -0800
-Message-ID: <CACeCKadFKWUNHHT-vs686Sz2-CcD0kNeUgqkJT5Q2ATji4L58w@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] mfd: cros_ec: Add cros-usbpd-notify subdevice
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191220195025.GA9469@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Enric,
+Matthew Wilcox writes:
+>On Fri, Dec 20, 2019 at 07:35:38PM +0200, Amir Goldstein wrote:
+>> On Fri, Dec 20, 2019 at 6:46 PM Matthew Wilcox <willy@infradead.org> wrote:
+>> >
+>> > On Fri, Dec 20, 2019 at 03:41:11PM +0200, Amir Goldstein wrote:
+>> > > Suggestion:
+>> > > 1. Extend the kmem_cache API to let the ctor() know if it is
+>> > > initializing an object
+>> > >     for the first time (new page) or recycling an object.
+>> >
+>> > Uh, what?  The ctor is _only_ called when new pages are allocated.
+>> > Part of the contract with the slab user is that objects are returned to
+>> > the slab in an initialised state.
+>>
+>> Right. I mixed up the ctor() with alloc_inode().
+>> So is there anything stopping us from reusing an existing non-zero
+>> value of  i_ino in shmem_get_inode()? for recycling shmem ino
+>> numbers?
+>
+>I think that would be an excellent solution to the problem!  At least,
+>I can't think of any problems with it.
 
-On Sun, Dec 22, 2019 at 11:25 PM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> Hi Prashant,
->
-> On 20/12/19 20:38, Prashant Malani wrote:
-> > Add the cros-usbpd-notify driver as a subdevice on non-ACPI platforms
-> > that support the EC_FEATURE_USB_PD EC feature flag.
-> >
-> > This driver allows other cros-ec devices to receive PD event
-> > notifications from the Chrome OS Embedded Controller (EC) via a
-> > notification chain.
-> >
-> > Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> > ---
-> >
-> > Changes in v4:
-> > - Removed #ifndef usage; instead, moved cros-usbpd-notify to a separate
-> >   mfd_cell and used an IS_ENABLED() check.
-> > - Changed commit title and description slightly to reflect change in
-> >   code.
-> >
-> >  drivers/mfd/cros_ec_dev.c | 21 +++++++++++++++++++++
-> >  1 file changed, 21 insertions(+)
-> >
-> > diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-> > index c4b977a5dd966..da198abe2b0a6 100644
-> > --- a/drivers/mfd/cros_ec_dev.c
-> > +++ b/drivers/mfd/cros_ec_dev.c
-> > @@ -5,6 +5,7 @@
-> >   * Copyright (C) 2014 Google, Inc.
-> >   */
-> >
-> > +#include <linux/kconfig.h>
-> >  #include <linux/mfd/core.h>
-> >  #include <linux/mfd/cros_ec.h>
-> >  #include <linux/module.h>
-> > @@ -87,6 +88,10 @@ static const struct mfd_cell cros_usbpd_charger_cells[] = {
-> >       { .name = "cros-usbpd-logger", },
-> >  };
-> >
-> > +static const struct mfd_cell cros_usbpd_notify_cells[] = {
-> > +     { .name = "cros-usbpd-notify", },
-> > +};
-> > +
-> >  static const struct cros_feature_to_cells cros_subdevices[] = {
-> >       {
-> >               .id             = EC_FEATURE_CEC,
-> > @@ -202,6 +207,22 @@ static int ec_device_probe(struct platform_device *pdev)
-> >               }
-> >       }
-> >
-> > +     /*
-> > +      * The PD notifier driver cell is separate since it only needs to be
-> > +      * explicitly added on non-ACPI platforms.
->
->
-> Sorry to not catch this before, but a worry arose. Is non-ACPI platforms or
-> non-X86 platforms or on OF platforms?
->
-> ARM64 for example has the CONFIG_ACPI symbol set to yes, with the below
-> condition condition will not work on Kevin for example and IIUC this is not what
-> we want, I think we want IS_ENABLED(CONFIG_OF)?
-Thanks for noting this. I will check with a kevin, and with the
-internal build flags to verify whether there are ARM64 which have the
-GOOG0003 PD notification device.
-I'll update this thread with my findings.
+Thanks for the suggestions and feedback, Amir and Matthew :-)
 
-Best,
+The slab i_ino recycling approach works somewhat, but is unfortunately neutered 
+quite a lot by the fact that slab recycling is per-memcg. That is, replacing 
+with recycle_or_get_next_ino(old_ino)[0] for shmfs and a few other trivial 
+callsites only leads to about 10% slab reuse, which doesn't really stem the 
+bleeding of 32-bit inums on an affected workload:
 
->
-> Thanks,
->  Enric
->
-> > +      */
-> > +     if (!IS_ENABLED(CONFIG_ACPI)) {
-> > +             if (cros_ec_check_features(ec, EC_FEATURE_USB_PD)) {
-> > +                     retval = mfd_add_hotplug_devices(ec->dev,
-> > +                                     cros_usbpd_notify_cells,
-> > +                                     ARRAY_SIZE(cros_usbpd_notify_cells));
-> > +                     if (retval)
-> > +                             dev_err(ec->dev,
-> > +                                     "failed to add PD notify devices: %d\n",
-> > +                                     retval);
-> > +             }
-> > +     }
-> > +
-> >       /*
-> >        * The following subdevices cannot be detected by sending the
-> >        * EC_FEATURE_GET_CMD to the Embedded Controller device.
-> >
+     # tail -5000 /sys/kernel/debug/tracing/trace | grep -o 'recycle_or_get_next_ino:.*' | sort | uniq -c
+         4454 recycle_or_get_next_ino: not recycled
+          546 recycle_or_get_next_ino: recycled
+
+Roman (who I've just added to cc) tells me that currently we only have 
+per-memcg slab reuse instead of global when using CONFIG_MEMCG. This 
+contributes fairly significantly here since there are multiple tasks across 
+multiple cgroups which are contributing to the get_next_ino() thrash.
+
+I think this is a good start, but we need something of a different magnitude in 
+order to actually solve this problem with the current slab infrastructure. How 
+about something like the following?
+
+1. Add get_next_ino_full, which uses whatever the full width of ino_t is
+2. Use get_next_ino_full in tmpfs (et al.)
+3. Add a mount option to tmpfs (et al.), say `32bit-inums`, which people can 
+    pass if they want the 32-bit inode numbers back. This would still allow 
+    people who want to make this tradeoff to use xino.
+4. (If you like) Also add a CONFIG option to disable this at compile time.
+
+I'd appreciate your thoughts on that approach or others you have ideas about. 
+Thanks! :-)
+
+0:
+
+unsigned int recycle_or_get_next_ino(ino_t old_ino)
+{
+	/*
+	 * get_next_ino returns unsigned int. If this fires then i_ino must be
+	 * >32 bits and have been changed later, so the caller shouldn't be
+	 * recycling inode numbers
+	 */
+	WARN_ONCE(old_ino >> (sizeof(unsigned int) * 8),
+		  "Recyclable i_ino uses more bits than unsigned int: %llu",
+		  (u64)old_ino);
+
+	if (old_ino) {
+		if (prandom_u32() % 100 == 0)
+			trace_printk("recycled\n");
+		return old_ino;
+	} else {
+		if (prandom_u32() % 100 == 0)
+			trace_printk("not recycled\n");
+		return get_next_ino();
+	}
+}
