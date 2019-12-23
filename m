@@ -2,84 +2,176 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E696C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC78C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72EB62053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1D642053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:04:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hnsstUYZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfLWKD1 (ORCPT
+        id S1726829AbfLWKEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 05:03:27 -0500
-Received: from xavier.telenet-ops.be ([195.130.132.52]:51944 "EHLO
-        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbfLWKD1 (ORCPT
+        Mon, 23 Dec 2019 05:04:48 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:52829 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726150AbfLWKEs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 05:03:27 -0500
-Received: from ramsan ([84.195.182.253])
-        by xavier.telenet-ops.be with bizsmtp
-        id hN3N2100P5USYZQ01N3N9r; Mon, 23 Dec 2019 11:03:24 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ijKYc-0000eh-Kh; Mon, 23 Dec 2019 11:03:22 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ijKYc-0001vV-I6; Mon, 23 Dec 2019 11:03:22 +0100
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] of: mdio: Add missing inline to of_mdiobus_child_is_phy() dummy
-Date:   Mon, 23 Dec 2019 11:03:21 +0100
-Message-Id: <20191223100321.7364-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 23 Dec 2019 05:04:48 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1577095487; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=O5mBrUc9Gs8AbX+fg0tFlrKjAwTzQVOduOeFrwJqWhk=;
+ b=hnsstUYZm1dEXNwEi6e5tXmm1g2sPS/eCCDuu/zii286PKyNIkfxxdTMtlCAwQlKxWIL3C25
+ a7IwPAAkgVgCOt/UL/lbMM7tCpZv5k7g++kh7oCARuwDlqT2LYcci7v5h0NEicoUtpzOJ5sG
+ 0gBrB0JtSqznxr2BOeJ7kjHzrLM=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e00913e.7f13296c1b90-smtp-out-n01;
+ Mon, 23 Dec 2019 10:04:46 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 30003C433A2; Mon, 23 Dec 2019 10:04:46 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: dikshita)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7BEB0C43383;
+        Mon, 23 Dec 2019 10:04:45 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 23 Dec 2019 15:34:45 +0530
+From:   dikshita@codeaurora.org
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vgarodia@codeaurora.org
+Subject: Re: [PATCH 3/3] venus: core: add sc7180 DT compatible and resource
+ struct
+In-Reply-To: <b1b5ee06-bc39-cfc0-b2c8-8073f8857fde@linaro.org>
+References: <1576828760-13176-1-git-send-email-dikshita@codeaurora.org>
+ <1576828760-13176-4-git-send-email-dikshita@codeaurora.org>
+ <b1b5ee06-bc39-cfc0-b2c8-8073f8857fde@linaro.org>
+Message-ID: <98c83352cae3a5e38a3711f81dc28df5@codeaurora.org>
+X-Sender: dikshita@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_OF_MDIO=n:
+Hi Stan,
 
-    drivers/net/phy/mdio_bus.c:23:
-    include/linux/of_mdio.h:58:13: warning: ‘of_mdiobus_child_is_phy’ defined but not used [-Wunused-function]
-     static bool of_mdiobus_child_is_phy(struct device_node *child)
-		 ^~~~~~~~~~~~~~~~~~~~~~~
+Thanks for the review!
 
-Fix this by adding the missing "inline" keyword.
+On 2019-12-20 15:03, Stanimir Varbanov wrote:
+> Hi Dikshita,
+> 
+> Thanks for the patch!
+> 
+> On 12/20/19 9:59 AM, Dikshita Agarwal wrote:
+>> This add DT compatible string and resource structure for sc7180.
+>> 
+>> Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
+>> ---
+>>  drivers/media/platform/qcom/venus/core.c | 58 
+>> +++++++++++++++++++++++++++++++-
+>>  1 file changed, 57 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/media/platform/qcom/venus/core.c 
+>> b/drivers/media/platform/qcom/venus/core.c
+>> index c7525d9..e8c8b28 100644
+>> --- a/drivers/media/platform/qcom/venus/core.c
+>> +++ b/drivers/media/platform/qcom/venus/core.c
+>> @@ -469,7 +469,7 @@ static __maybe_unused int 
+>> venus_runtime_resume(struct device *dev)
+>>  	{ 2073600, 3929000, 0, 5551000, 0 },	/* 4096x2160@60 */
+>>  	{ 1036800, 1987000, 0, 2797000, 0 },	/* 4096x2160@30 */
+>>  	{  489600, 1040000, 0, 1298000, 0 },	/* 1920x1080@60 */
+>> -	{  244800,  530000, 0,  659000, 0 },	/* 1920x1080@30 */
+>> +	{  244800,  442000, 0,  659000, 0 },	/* 1920x1080@30 */
+> 
+> unrelated change, please drop it
+Sure, I will address this in next version.
+> 
+>>  };
+>> 
+>>  static const struct venus_resources sdm845_res = {
+>> @@ -521,11 +521,67 @@ static __maybe_unused int 
+>> venus_runtime_resume(struct device *dev)
+>>  	.fwname = "qcom/venus-5.2/venus.mdt",
+>>  };
+>> 
+>> +static const struct freq_tbl sc7180_freq_table[] = {
+>> +	{  0, 380000000 },
+>> +	{  0, 340000000 },
+>> +	{  0, 270000000 },
+>> +	{  0, 150000000 },
+> 
+> why .load is zero?
+.load is not being used any longer to calculate load and is a dummy 
+value.
+So keeping it 0.
 
-Fixes: 0aa4d016c043d16a ("of: mdio: export of_mdiobus_child_is_phy")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
- include/linux/of_mdio.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+>> +};
+>> +
+>> +static struct codec_freq_data sc7180_codec_freq_data[] =  {
+>> +	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675, 10 },
+>> +	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_ENC, 675, 10 },
+>> +	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_ENC, 675, 10 },
+>> +	{ V4L2_PIX_FMT_MPEG2, VIDC_SESSION_TYPE_DEC, 200, 10 },
+>> +	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_DEC, 200, 10 },
+>> +	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_DEC, 200, 10 },
+>> +	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_DEC, 200, 10 },
+>> +	{ V4L2_PIX_FMT_VP9, VIDC_SESSION_TYPE_DEC, 200, 10 },
+>> +};
+> 
+> the table is exactly the same as sdm845 one, please reuse it.
+Sure, I will address this in next version.
+> 
+>> +
+>> +static const struct bw_tbl sc7180_bw_table_enc[] = {
+>> +	{  972000,  750000, 0, 0, 0 },	/* 3840x2160@30 */
+>> +	{  489600,  451000, 0, 0, 0 },	/* 1920x1080@60 */
+>> +	{  244800,  234000, 0, 0, 0 },	/* 1920x1080@30 */
+>> +};
+>> +
+>> +static const struct bw_tbl sc7180_bw_table_dec[] = {
+>> +	{ 1036800, 1386000, 0, 1875000, 0 },	/* 4096x2160@30 */
+>> +	{  489600,  865000, 0, 1146000, 0 },	/* 1920x1080@60 */
+>> +	{  244800,  530000, 0,  583000, 0 },	/* 1920x1080@30 */
+>> +};
+>> +
+>> +static const struct venus_resources sc7180_res = {
+>> +	.freq_tbl = sc7180_freq_table,
+>> +	.freq_tbl_size = ARRAY_SIZE(sc7180_freq_table),
+>> +	.bw_tbl_enc = sc7180_bw_table_enc,
+>> +	.bw_tbl_enc_size = ARRAY_SIZE(sc7180_bw_table_enc),
+>> +	.bw_tbl_dec = sc7180_bw_table_dec,
+>> +	.bw_tbl_dec_size = ARRAY_SIZE(sc7180_bw_table_dec),
+>> +	.codec_freq_data = sc7180_codec_freq_data,
+>> +	.codec_freq_data_size = ARRAY_SIZE(sc7180_codec_freq_data),
+>> +	.clks = {"core", "iface", "bus" },
+>> +	.clks_num = 3,
+>> +	.vcodec0_clks = { "vcodec0_core", "vcodec0_bus" },
+>> +	.vcodec_clks_num = 2,
+>> +	.vcodec_pmdomains = { "venus", "vcodec0" },
+>> +	.vcodec_pmdomains_num = 2,
+>> +	.vcodec_num = 1,
+>> +	.max_load = 3110400,	/* 4096x2160@90 */
+> 
+> Looking into above bandwidth tables I can guess that the maximimum load
+> is reached at 4096x2160@30? If so you have to change it here.
 
-diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
-index 79bc82e30c02333d..491a2b7e77c1e906 100644
---- a/include/linux/of_mdio.h
-+++ b/include/linux/of_mdio.h
-@@ -55,7 +55,7 @@ static inline int of_mdio_parse_addr(struct device *dev,
- }
- 
- #else /* CONFIG_OF_MDIO */
--static bool of_mdiobus_child_is_phy(struct device_node *child)
-+static inline bool of_mdiobus_child_is_phy(struct device_node *child)
- {
- 	return false;
- }
--- 
-2.17.1
-
+After checking further on this I see that max_load can be removed since
+it is not being used now to determine if H/W is overloaded or not.
+What do you suggest?
+> 
+> <cut>
