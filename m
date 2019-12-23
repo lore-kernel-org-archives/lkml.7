@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7BDC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C83C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BAE82084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECEBC208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:08:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577081316;
-	bh=Z5rWV4hV6bEwCXatGsT5dVByS23+NQ/VgU/2hEMQDzo=;
+	s=default; t=1577081321;
+	bh=YmXCrgCwEwY8/QrWk0sPDC4MZVmbjP+WKJ3cPBUsN08=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nWne8Wl0HOW1J6usYGbVo656yQPX0R1grSyUIJkHMfFacKu1Kax9f9dJs96DGF8ZY
-	 ZnmjC5DrpR9UdWEMEBHMix5ntVQMOVopiAQW+SnysWOF7QgxPlXKe5PzI/Zfhcv2oj
-	 LPm0JtjtdlQww9NbGaC4ATk+pgVCaebceSbd3LJs=
+	b=q6hml83wPkjTs+U2ob4lja/sSbPfDgBTO3DTiOstXOu7mmKc2EvFwqj06UIDbE//G
+	 Ge0qJovcWWDP9hMFDsGE6BZ3Cxbuq43IstydQxg+sU9pHY4CAMC/rZCtXLggd+efcf
+	 1BIbg8Z2Fm8tJgIhm4elObGvrmADhvUdRH8QrakY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfLWGIf (ORCPT
+        id S1726905AbfLWGIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 01:08:35 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40007 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbfLWGIa (ORCPT
+        Mon, 23 Dec 2019 01:08:39 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:39844 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726826AbfLWGIg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 01:08:30 -0500
-Received: by mail-pg1-f193.google.com with SMTP id k25so8265399pgt.7;
-        Sun, 22 Dec 2019 22:08:30 -0800 (PST)
+        Mon, 23 Dec 2019 01:08:36 -0500
+Received: by mail-pj1-f67.google.com with SMTP id t101so7013487pjb.4;
+        Sun, 22 Dec 2019 22:08:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=jthIhZ/r78EEFW0yb2Oe43SaYjMNvPNHJLyoREGgoNw=;
-        b=rjeyYEkoE474aRbY+AaEhfKgpVhxx8bZpf9h+IgXUqQhbue8aWcGuAK1sXdx/gxLUc
-         W/K3OQj/RjTT2nEryrr5vMFiE+aadtFZIS5FOH72F68s6hz9a5W1cKdTkE+fY7IPujdD
-         9dX3XDkfTmeanA3+MbmpwEw117kjKGaCEXwOSyINPVLuKe3vOfTyxA3NB9j6WOapSYKC
-         Ll3b4fYGf9kExrJceITQWNB/MAnXayIaq1cNOzCUwK1XPy8s6Ftl2MtT+E3BLI66hbij
-         lnGo6jvSblr14zPr6HYpIsIJElXVPH+CIlQtaE6dteWxhz4YGqvYvZqnWXUaRQ16pJ+B
-         OcSQ==
+        bh=0xnigVaaCqW8/KBuzAXnuhlbsCoW2U384fK9hdVaYC0=;
+        b=ngvZThXXSJf6z7N4LgY5xftRi5MmZ64sWtiQoBWr64nJbVMqw6h9KlIvgtfnBy4rZh
+         T5LmycSdz4/zi/Z4cHg2IvGWhHljeO0h2y8/B99LQOTCrBddhMRqfy/h8dJJrDiOr70S
+         joV1327Z4kGYl0ucpjNMwnQL1oD3qoDEGb/9kS2/A7ZlPYqTdHzWHdoWVs+c+65uQwlY
+         5D6PBkc0+Tbee+qjc7WT27cml6jWqhqpMeDjLJnemuOGYeX7Cc1bokfhfixlgx2vxyxi
+         0Vg8ZsUzU8q6wUdhXG4W9Bbyy0O/8l7JGXZySc8I79O70pOq/L2Rte11AnQe6q3fE4eZ
+         abBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=jthIhZ/r78EEFW0yb2Oe43SaYjMNvPNHJLyoREGgoNw=;
-        b=c7yo9hAIJq8TYG3hMZE/bQWTM+xiNX5641k3KU2vi5azqRrMxTwKAZlxVkyrgVRecU
-         BNO1OtgTo5Upnzppc/Kxwwh6Ob251DKrRKgfZEcX1oV9wmGo8hnMe0tEolnnyoXPlicj
-         R7ojEXajvRe7IC1D3vIwTXjfSNHp3nMa40DEjLs5iGY/skoINli3MJcIQ2MY/hpLlXT5
-         iufqaeTYKQC8Er5BSpKj65d2nL1J5L5b/kN4NQYvarCXxJzEtZ0k9zT6ah6zRjJ3KAku
-         IOX2EWVn/OKz+SLYeY7ikkYq1es3uinB10VTJU7fOTSdLZ8qO7Pf8M1Vx4U6yMmWD8NU
-         1E/Q==
-X-Gm-Message-State: APjAAAXQ+mVmLHwXdEUVgV7fUFwxR09J1qHUuTHdxYD9oHY9d9xcXVdg
-        1YtPb/v8bQs0WbtTADyfao0=
-X-Google-Smtp-Source: APXvYqxtJMlxwyDf/RCWXmGf2RNEdg7oUtRmObX2wYDC1kAKuR582pg06zrjXkfg7I56jG/lIkps2Q==
-X-Received: by 2002:a63:7045:: with SMTP id a5mr30296820pgn.49.1577081309574;
-        Sun, 22 Dec 2019 22:08:29 -0800 (PST)
+        bh=0xnigVaaCqW8/KBuzAXnuhlbsCoW2U384fK9hdVaYC0=;
+        b=tFTuYLY5CHtCGmH0rCcJxeftjhK8/bIqpHowAZ9b1zF44/OgMvuak6p9xVzqzJLvhy
+         W/y27qnmiwv0kLJT8jcGpl+6nZeRYByajX1SXLMiTIPqtgHwTnMo+xHjPBT+yMGU7Ilk
+         nBRGAl7tu84Vd8FsA6XkKePPgjm+6p8HPLaRi3J4mFnT/kFwvZRoAyPu/Niv99op+S3W
+         qMol4+w5pfJZhZBdCYGHAoXsjt1OJUJECpbIJCDMog15EE+9kfL3+SrTo6zSMJHRuujs
+         eihNnnxDd776VqWBlA9s7nfBEuEq04s6YNN7WeeKVUKZN9i0tPoeNp/EdpS6ZM3v+u4R
+         nZzA==
+X-Gm-Message-State: APjAAAXZC5JPs9twQ4m+FIHHV8XbX8tYxDa1UaEBjNp1e7SHR3PUjtoh
+        APKCwk4ewPHFVL7njTUtD30=
+X-Google-Smtp-Source: APXvYqySX+D81sqvnx2YRx4HAYR5b0v2HlJp9aSRAbfEoKsxVl64O+Dy6jg19bm441Fw0yz8gMbAZg==
+X-Received: by 2002:a17:902:d705:: with SMTP id w5mr19997106ply.68.1577081315569;
+        Sun, 22 Dec 2019 22:08:35 -0800 (PST)
 Received: from gaurie.seo.corp.google.com ([2401:fa00:d:1:4eb0:a5ef:3975:7440])
-        by smtp.gmail.com with ESMTPSA id p185sm22978212pfg.61.2019.12.22.22.08.26
+        by smtp.gmail.com with ESMTPSA id p185sm22978212pfg.61.2019.12.22.22.08.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Dec 2019 22:08:29 -0800 (PST)
+        Sun, 22 Dec 2019 22:08:34 -0800 (PST)
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
@@ -71,9 +71,9 @@ Cc:     Jiri Olsa <jolsa@redhat.com>,
         Stephane Eranian <eranian@google.com>,
         LKML <linux-kernel@vger.kernel.org>,
         linux-perf-users@vger.kernel.org
-Subject: [PATCH 6/9] perf record: Support synthesizing cgroup events
-Date:   Mon, 23 Dec 2019 15:07:56 +0900
-Message-Id: <20191223060759.841176-7-namhyung@kernel.org>
+Subject: [PATCH 8/9] perf top: Add --all-cgroups option
+Date:   Mon, 23 Dec 2019 15:07:58 +0900
+Message-Id: <20191223060759.841176-9-namhyung@kernel.org>
 X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
 In-Reply-To: <20191223060759.841176-1-namhyung@kernel.org>
 References: <20191223060759.841176-1-namhyung@kernel.org>
@@ -84,236 +84,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Synthesize cgroup events by iterating cgroup filesystem directories.
-The cgroup event only saves the portion of cgroup path after the mount
-point and the cgroup id (which actually is a file handle).
+The --all-cgroups option is to enable cgroup profiling support.  It
+tells kernel to record CGROUP events in the ring buffer so that perf
+report can identify task/cgroup association later.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-record.c        |   5 ++
- tools/perf/util/cgroup.c           |   3 +-
- tools/perf/util/cgroup.h           |   1 +
- tools/perf/util/event.c            |   1 +
- tools/perf/util/synthetic-events.c | 119 +++++++++++++++++++++++++++++
- tools/perf/util/synthetic-events.h |   1 +
- tools/perf/util/tool.h             |   1 +
- 7 files changed, 129 insertions(+), 2 deletions(-)
+ tools/perf/Documentation/perf-top.txt | 4 ++++
+ tools/perf/builtin-top.c              | 9 +++++++++
+ 2 files changed, 13 insertions(+)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 4c301466101b..2802de9538ff 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1397,6 +1397,11 @@ static int record__synthesize(struct record *rec, bool tail)
- 	if (err < 0)
- 		pr_warning("Couldn't synthesize bpf events.\n");
+diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
+index 5596129a71cf..c75507f50071 100644
+--- a/tools/perf/Documentation/perf-top.txt
++++ b/tools/perf/Documentation/perf-top.txt
+@@ -266,6 +266,10 @@ Default is to monitor all CPUS.
+ 	Record events of type PERF_RECORD_NAMESPACES and display it with the
+ 	'cgroup_id' sort key.
  
-+	err = perf_event__synthesize_cgroups(tool, process_synthesized_event,
-+					     machine);
-+	if (err < 0)
-+		pr_warning("Couldn't synthesize cgroup events.\n");
++--cgroup::
++	Record events of type PERF_RECORD_CGROUP and display it with the
++	'cgroup' sort key.
 +
- 	err = __machine__synthesize_threads(machine, tool, &opts->target, rec->evlist->core.threads,
- 					    process_synthesized_event, opts->sample_address,
- 					    1);
-diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
-index 4e8ef1db0c94..5147d22b3bda 100644
---- a/tools/perf/util/cgroup.c
-+++ b/tools/perf/util/cgroup.c
-@@ -15,8 +15,7 @@ int nr_cgroups;
+ --switch-on EVENT_NAME::
+ 	Only consider events after this event is found.
  
- static struct rb_root cgroup_tree = RB_ROOT;
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index dc80044bc46f..1aaa1b34feca 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1244,6 +1244,8 @@ static int __cmd_top(struct perf_top *top)
  
--static int
--cgroupfs_find_mountpoint(char *buf, size_t maxlen)
-+int cgroupfs_find_mountpoint(char *buf, size_t maxlen)
- {
- 	FILE *fp;
- 	char mountpoint[PATH_MAX + 1], tokens[PATH_MAX + 1], type[PATH_MAX + 1];
-diff --git a/tools/perf/util/cgroup.h b/tools/perf/util/cgroup.h
-index 381583df27c7..9a67060723fa 100644
---- a/tools/perf/util/cgroup.h
-+++ b/tools/perf/util/cgroup.h
-@@ -17,6 +17,7 @@ struct cgroup {
+ 	if (opts->record_namespaces)
+ 		top->tool.namespace_events = true;
++	if (opts->record_cgroup)
++		top->tool.cgroup_events = true;
  
- extern int nr_cgroups; /* number of explicit cgroups defined */
+ 	ret = perf_event__synthesize_bpf_events(top->session, perf_event__process,
+ 						&top->session->machines.host,
+@@ -1251,6 +1253,11 @@ static int __cmd_top(struct perf_top *top)
+ 	if (ret < 0)
+ 		pr_debug("Couldn't synthesize BPF events: Pre-existing BPF programs won't have symbols resolved.\n");
  
-+int cgroupfs_find_mountpoint(char *buf, size_t maxlen);
- struct cgroup *cgroup__get(struct cgroup *cgroup);
- void cgroup__put(struct cgroup *cgroup);
- 
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index 824c038e5c33..28801c867f39 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -33,6 +33,7 @@
- #include "bpf-event.h"
- #include "tool.h"
- #include "../perf.h"
-+#include "cgroup.h"
- 
- static const char *perf_event__names[] = {
- 	[0]					= "TOTAL",
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index c423298fe62d..cfc850efa318 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -16,6 +16,7 @@
- #include "util/synthetic-events.h"
- #include "util/target.h"
- #include "util/time-utils.h"
-+#include "util/cgroup.h"
- #include <linux/bitops.h>
- #include <linux/kernel.h>
- #include <linux/string.h>
-@@ -413,6 +414,124 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 	return rc;
- }
- 
-+static int perf_event__synthesize_cgroup(struct perf_tool *tool,
-+					 union perf_event *event,
-+					 char *path, size_t mount_len,
-+					 perf_event__handler_t process,
-+					 struct machine *machine)
-+{
-+	size_t event_size = sizeof(event->cgroup) - sizeof(event->cgroup.path);
-+	size_t path_len = strlen(path) - mount_len + 1;
-+	struct {
-+		struct file_handle fh;
-+		uint64_t cgroup_id;
-+	} handle;
-+	int mount_id;
++	ret = perf_event__synthesize_cgroups(&top->tool, perf_event__process,
++					     &top->session->machines.host);
++	if (ret < 0)
++		pr_debug("Couldn't synthesize cgroup events.\n");
 +
-+	while (path_len % sizeof(u64))
-+		path[mount_len + path_len++] = '\0';
-+
-+	memset(&event->cgroup, 0, event_size);
-+
-+	event->cgroup.header.type = PERF_RECORD_CGROUP;
-+	event->cgroup.header.size = event_size + path_len + machine->id_hdr_size;
-+
-+	handle.fh.handle_bytes = sizeof(handle.cgroup_id);
-+	if (name_to_handle_at(AT_FDCWD, path, &handle.fh, &mount_id, 0) < 0) {
-+		pr_debug("stat failed: %s\n", path);
-+		return -1;
-+	}
-+
-+	event->cgroup.id = handle.cgroup_id;
-+	strncpy(event->cgroup.path, path + mount_len, path_len);
-+	memset(event->cgroup.path + path_len, 0, machine->id_hdr_size);
-+
-+	if (perf_tool__process_synth_event(tool, event, machine, process) < 0) {
-+		pr_debug("process synth event failed\n");
-+		return -1;
-+	}
-+
-+	return 0;
-+}
-+
-+static int perf_event__walk_cgroup_tree(struct perf_tool *tool,
-+					union perf_event *event,
-+					char *path, size_t mount_len,
-+					perf_event__handler_t process,
-+					struct machine *machine)
-+{
-+	size_t pos = strlen(path);
-+	DIR *d;
-+	struct dirent *dent;
-+	int ret = 0;
-+
-+	if (perf_event__synthesize_cgroup(tool, event, path, mount_len,
-+					  process, machine) < 0)
-+		return -1;
-+
-+	d = opendir(path);
-+	if (d == NULL) {
-+		pr_debug("failed to open directory: %s\n", path);
-+		return -1;
-+	}
-+
-+	while ((dent = readdir(d)) != NULL) {
-+		if (dent->d_type != DT_DIR)
-+			continue;
-+		if (!strcmp(dent->d_name, ".") ||
-+		    !strcmp(dent->d_name, ".."))
-+			continue;
-+
-+		if (path[pos - 1] != '/')
-+			strcat(path, "/");
-+		strcat(path, dent->d_name);
-+
-+		ret = perf_event__walk_cgroup_tree(tool, event, path,
-+						   mount_len, process, machine);
-+		if (ret < 0)
-+			break;
-+
-+		path[pos] = '\0';
-+	}
-+
-+	closedir(d);
-+	return ret;
-+}
-+
-+int perf_event__synthesize_cgroups(struct perf_tool *tool,
-+				   perf_event__handler_t process,
-+				   struct machine *machine)
-+{
-+	union perf_event event;
-+	char *cgrp_root;
-+	size_t mount_len;  /* length of mount point in the path */
-+	int ret = -1;
-+
-+	cgrp_root = malloc(PATH_MAX);
-+	if (cgrp_root == NULL)
-+		return -1;
-+
-+	if (cgroupfs_find_mountpoint(cgrp_root, PATH_MAX) < 0) {
-+		pr_debug("cannot find cgroup mount point\n");
-+		goto out;
-+	}
-+
-+	mount_len = strlen(cgrp_root);
-+	/* make sure the path starts with a slash (after mount point) */
-+	strcat(cgrp_root, "/");
-+
-+	if (perf_event__walk_cgroup_tree(tool, &event, cgrp_root, mount_len,
-+					 process, machine) < 0)
-+		goto out;
-+
-+	ret = 0;
-+
-+out:
-+	free(cgrp_root);
-+
-+	return ret;
-+}
-+
- int perf_event__synthesize_modules(struct perf_tool *tool, perf_event__handler_t process,
- 				   struct machine *machine)
- {
-diff --git a/tools/perf/util/synthetic-events.h b/tools/perf/util/synthetic-events.h
-index baead0cdc381..e7a3e9589738 100644
---- a/tools/perf/util/synthetic-events.h
-+++ b/tools/perf/util/synthetic-events.h
-@@ -45,6 +45,7 @@ int perf_event__synthesize_kernel_mmap(struct perf_tool *tool, perf_event__handl
- int perf_event__synthesize_mmap_events(struct perf_tool *tool, union perf_event *event, pid_t pid, pid_t tgid, perf_event__handler_t process, struct machine *machine, bool mmap_data);
- int perf_event__synthesize_modules(struct perf_tool *tool, perf_event__handler_t process, struct machine *machine);
- int perf_event__synthesize_namespaces(struct perf_tool *tool, union perf_event *event, pid_t pid, pid_t tgid, perf_event__handler_t process, struct machine *machine);
-+int perf_event__synthesize_cgroups(struct perf_tool *tool, perf_event__handler_t process, struct machine *machine);
- int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_format, const struct perf_sample *sample);
- int perf_event__synthesize_stat_config(struct perf_tool *tool, struct perf_stat_config *config, perf_event__handler_t process, struct machine *machine);
- int perf_event__synthesize_stat_events(struct perf_stat_config *config, struct perf_tool *tool, struct evlist *evlist, perf_event__handler_t process, bool attrs);
-diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
-index 472ef5eb4068..3fb67bd31e4a 100644
---- a/tools/perf/util/tool.h
-+++ b/tools/perf/util/tool.h
-@@ -79,6 +79,7 @@ struct perf_tool {
- 	bool		ordered_events;
- 	bool		ordering_requires_timestamps;
- 	bool		namespace_events;
-+	bool		cgroup_events;
- 	bool		no_warn;
- 	enum show_feature_header show_feat_hdr;
- };
+ 	machine__synthesize_threads(&top->session->machines.host, &opts->target,
+ 				    top->evlist->core.threads, false,
+ 				    top->nr_threads_synthesize);
+@@ -1539,6 +1546,8 @@ int cmd_top(int argc, const char **argv)
+ 			"number of thread to run event synthesize"),
+ 	OPT_BOOLEAN(0, "namespaces", &opts->record_namespaces,
+ 		    "Record namespaces events"),
++	OPT_BOOLEAN(0, "all-cgroups", &opts->record_cgroup,
++		    "Record cgroup events"),
+ 	OPTS_EVSWITCH(&top.evswitch),
+ 	OPT_END()
+ 	};
 -- 
 2.24.1.735.g03f4e72817-goog
 
