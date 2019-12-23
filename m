@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC0FC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBB1C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A14F20828
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E99A21569
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:19:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727580AbfLWOTP (ORCPT
+        id S1727570AbfLWOTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 09:19:15 -0500
-Received: from mga07.intel.com ([134.134.136.100]:18203 "EHLO mga07.intel.com"
+        Mon, 23 Dec 2019 09:19:14 -0500
+Received: from mga03.intel.com ([134.134.136.65]:47069 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726907AbfLWORZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 09:17:25 -0500
+        id S1726920AbfLWOR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 09:17:26 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 06:17:24 -0800
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 06:17:25 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,347,1571727600"; 
-   d="scan'208";a="268164216"
+   d="scan'208";a="417276259"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 23 Dec 2019 06:17:22 -0800
+  by fmsmga005.fm.intel.com with ESMTP; 23 Dec 2019 06:17:21 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id A7E03A07; Mon, 23 Dec 2019 16:17:17 +0200 (EET)
+        id 6C6E6685; Mon, 23 Dec 2019 16:17:17 +0200 (EET)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -43,9 +43,9 @@ Cc:     Zha Qipeng <qipeng.zha@intel.com>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 11/37] platform/x86: intel_scu_ipc: Drop intel_scu_ipc_raw_command()
-Date:   Mon, 23 Dec 2019 17:16:50 +0300
-Message-Id: <20191223141716.13727-12-mika.westerberg@linux.intel.com>
+Subject: [PATCH 06/37] platform/x86: intel_scu_ipc: Fix interrupt support
+Date:   Mon, 23 Dec 2019 17:16:45 +0300
+Message-Id: <20191223141716.13727-7-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191223141716.13727-1-mika.westerberg@linux.intel.com>
 References: <20191223141716.13727-1-mika.westerberg@linux.intel.com>
@@ -56,101 +56,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no user for this function so we can drop it from the driver.
+Currently the driver has disabled interrupt support for Tangier but
+actually interrupt works just fine if the command is not written twice
+in a row. Also we need to ack the interrupt in the handler.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- arch/x86/include/asm/intel_scu_ipc.h |  2 -
- drivers/platform/x86/intel_scu_ipc.c | 63 ----------------------------
- 2 files changed, 65 deletions(-)
+ drivers/platform/x86/intel_scu_ipc.c | 48 ++++++----------------------
+ 1 file changed, 10 insertions(+), 38 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
-index b59afa59a4cb..2a1442ba6e78 100644
---- a/arch/x86/include/asm/intel_scu_ipc.h
-+++ b/arch/x86/include/asm/intel_scu_ipc.h
-@@ -38,8 +38,6 @@ int intel_scu_ipc_update_register(u16 addr, u8 data, u8 mask);
- int intel_scu_ipc_simple_command(int cmd, int sub);
- int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
- 			  u32 *out, int outlen);
--int intel_scu_ipc_raw_command(int cmd, int sub, u8 *in, int inlen,
--			      u32 *out, int outlen, u32 dptr, u32 sptr);
- 
- extern struct blocking_notifier_head intel_scu_notifier;
- 
 diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index ba857e54800b..93a810fa6c8a 100644
+index b39680b53387..43eaf9400c67 100644
 --- a/drivers/platform/x86/intel_scu_ipc.c
 +++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -383,69 +383,6 @@ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
- }
- EXPORT_SYMBOL(intel_scu_ipc_command);
+@@ -58,24 +58,6 @@
+ #define IPC_RWBUF_SIZE    20		/* IPC Read buffer Size */
+ #define IPC_IOC	          0x100		/* IPC command register IOC bit */
  
--#define IPC_SPTR		0x08
--#define IPC_DPTR		0x0C
+-#define PCI_DEVICE_ID_PENWELL		0x080e
+-#define PCI_DEVICE_ID_CLOVERVIEW	0x08ea
+-#define PCI_DEVICE_ID_TANGIER		0x11a0
 -
--/**
-- * intel_scu_ipc_raw_command() - IPC command with data and pointers
-- * @cmd:	IPC command code.
-- * @sub:	IPC command sub type.
-- * @in:		input data of this IPC command.
-- * @inlen:	input data length in dwords.
-- * @out:	output data of this IPC command.
-- * @outlen:	output data length in dwords.
-- * @sptr:	data writing to SPTR register.
-- * @dptr:	data writing to DPTR register.
-- *
-- * Send an IPC command to SCU with input/output data and source/dest pointers.
-- *
-- * Return:	an IPC error code or 0 on success.
-- */
--int intel_scu_ipc_raw_command(int cmd, int sub, u8 *in, int inlen,
--			      u32 *out, int outlen, u32 dptr, u32 sptr)
--{
--	struct intel_scu_ipc_dev *scu = &ipcdev;
--	int inbuflen = DIV_ROUND_UP(inlen, 4);
--	u32 inbuf[4];
--	int i, err;
+-/* intel scu ipc driver data */
+-struct intel_scu_ipc_pdata_t {
+-	u8 irq_mode;
+-};
 -
--	/* Up to 16 bytes */
--	if (inbuflen > 4)
--		return -EINVAL;
+-/* Penwell and Cloverview */
+-static const struct intel_scu_ipc_pdata_t intel_scu_ipc_penwell_pdata = {
+-	.irq_mode = 1,
+-};
 -
--	mutex_lock(&ipclock);
--	if (scu->dev == NULL) {
--		mutex_unlock(&ipclock);
--		return -ENODEV;
+-static const struct intel_scu_ipc_pdata_t intel_scu_ipc_tangier_pdata = {
+-	.irq_mode = 0,
+-};
+-
+ struct intel_scu_ipc_dev {
+ 	struct device *dev;
+ 	void __iomem *ipc_base;
+@@ -86,6 +68,7 @@ struct intel_scu_ipc_dev {
+ static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
+ 
+ #define IPC_STATUS		0x04
++#define IPC_STATUS_IRQ		BIT(2)
+ #define IPC_STATUS_ERR		BIT(1)
+ #define IPC_STATUS_BUSY		BIT(0)
+ 
+@@ -107,11 +90,8 @@ static DEFINE_MUTEX(ipclock); /* lock used to prevent multiple call to SCU */
+  */
+ static inline void ipc_command(struct intel_scu_ipc_dev *scu, u32 cmd)
+ {
+-	if (scu->irq_mode) {
+-		reinit_completion(&scu->cmd_complete);
+-		writel(cmd | IPC_IOC, scu->ipc_base);
 -	}
--
--	writel(dptr, scu->ipc_base + IPC_DPTR);
--	writel(sptr, scu->ipc_base + IPC_SPTR);
--
--	/*
--	 * SRAM controller doesn't support 8-bit writes, it only
--	 * supports 32-bit writes, so we have to copy input data into
--	 * the temporary buffer, and SCU FW will use the inlen to
--	 * determine the actual input data length in the temporary
--	 * buffer.
--	 */
--	memcpy(inbuf, in, inlen);
--
--	for (i = 0; i < inbuflen; i++)
--		ipc_data_writel(scu, inbuf[i], 4 * i);
--
--	ipc_command(scu, (inlen << 16) | (sub << 12) | cmd);
--	err = intel_scu_ipc_check_status(scu);
--	if (!err) {
--		for (i = 0; i < outlen; i++)
--			*out++ = ipc_data_readl(scu, 4 * i);
--	}
--
--	mutex_unlock(&ipclock);
--	return err;
--}
--EXPORT_SYMBOL_GPL(intel_scu_ipc_raw_command);
--
+-	writel(cmd, scu->ipc_base);
++	reinit_completion(&scu->cmd_complete);
++	writel(cmd | IPC_IOC, scu->ipc_base);
+ }
+ 
  /*
-  * Interrupt handler gets called when ioc bit of IPC_COMMAND_REG set to 1
-  * When ioc bit is set to 1, caller api must wait for interrupt handler called
+@@ -549,9 +529,10 @@ EXPORT_SYMBOL_GPL(intel_scu_ipc_raw_command);
+ static irqreturn_t ioc(int irq, void *dev_id)
+ {
+ 	struct intel_scu_ipc_dev *scu = dev_id;
++	int status = ipc_read_status(scu);
+ 
+-	if (scu->irq_mode)
+-		complete(&scu->cmd_complete);
++	writel(status | IPC_STATUS_IRQ, scu->ipc_base + IPC_STATUS);
++	complete(&scu->cmd_complete);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -568,17 +549,10 @@ static int ipc_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ {
+ 	int err;
+ 	struct intel_scu_ipc_dev *scu = &ipcdev;
+-	struct intel_scu_ipc_pdata_t *pdata;
+ 
+ 	if (scu->dev)		/* We support only one SCU */
+ 		return -EBUSY;
+ 
+-	pdata = (struct intel_scu_ipc_pdata_t *)id->driver_data;
+-	if (!pdata)
+-		return -ENODEV;
+-
+-	scu->irq_mode = pdata->irq_mode;
+-
+ 	err = pcim_enable_device(pdev);
+ 	if (err)
+ 		return err;
+@@ -605,13 +579,11 @@ static int ipc_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	return 0;
+ }
+ 
+-#define SCU_DEVICE(id, pdata)	{PCI_VDEVICE(INTEL, id), (kernel_ulong_t)&pdata}
+-
+ static const struct pci_device_id pci_ids[] = {
+-	SCU_DEVICE(PCI_DEVICE_ID_PENWELL,	intel_scu_ipc_penwell_pdata),
+-	SCU_DEVICE(PCI_DEVICE_ID_CLOVERVIEW,	intel_scu_ipc_penwell_pdata),
+-	SCU_DEVICE(PCI_DEVICE_ID_TANGIER,	intel_scu_ipc_tangier_pdata),
+-	{}
++	{ PCI_VDEVICE(INTEL, 0x080e) },
++	{ PCI_VDEVICE(INTEL, 0x08ea) },
++	{ PCI_VDEVICE(INTEL, 0x11a0) },
++	{ }
+ };
+ 
+ static struct pci_driver ipc_driver = {
 -- 
 2.24.0
 
