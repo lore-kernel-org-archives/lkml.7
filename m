@@ -2,503 +2,162 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7437C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 07:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66028C2D0D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 07:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 874DE208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 07:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 326112073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 07:11:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lftrXC8/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725926AbfLWHKF (ORCPT
+        id S1726063AbfLWHLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 02:10:05 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:56570 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbfLWHKF (ORCPT
+        Mon, 23 Dec 2019 02:11:18 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:40650 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbfLWHLR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 02:10:05 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 79C76283E20
-Subject: Re: [PATCH v22 2/2] drm/bridge: Add I2C based driver for ps8640
- bridge
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Jitao Shi <jitao.shi@mediatek.com>,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        Ulrich Hecht <uli@fpond.eu>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        dri-devel@lists.freedesktop.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        David Airlie <airlied@linux.ie>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-References: <20191220081738.1895-1-enric.balletbo@collabora.com>
- <20191220081738.1895-3-enric.balletbo@collabora.com>
- <CANMq1KBHsc8oqcjWnjLPCpRToyOm16X6EcQqmqPjZf=D7wA2-Q@mail.gmail.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <05db638b-02a6-0e3a-43ed-44a0a1458d87@collabora.com>
-Date:   Mon, 23 Dec 2019 08:09:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 23 Dec 2019 02:11:17 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBN7B4Cf088308;
+        Mon, 23 Dec 2019 01:11:04 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1577085064;
+        bh=02Y5bx6iWO9Ds4+8bjzc1aI2WrawgyCHLyU/VpC8TA4=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=lftrXC8/DpJwn4Aso0DNv9JYSikjp4xa+4lEDZ8K4mMS3sGTr4XSiQvYnp4pLYSuH
+         emlLOLHPhfy9CXMN3gbQHLrlYWlz0dKcfUx2YOIpr0ipSzjmm7F6/lJoztW2mLuZba
+         7J0/QvgAdr1EpLS7GrofRWhCtadHOEZFbvjK/uV8=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBN7B4JB086044
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 23 Dec 2019 01:11:04 -0600
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 23
+ Dec 2019 01:11:02 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 23 Dec 2019 01:11:02 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBN7AxHw061310;
+        Mon, 23 Dec 2019 01:10:59 -0600
+Subject: Re: [PATCH v7 06/12] dmaengine: ti: Add cppi5 header for K3
+ NAVSS/UDMA
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
+        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>,
+        <vigneshr@ti.com>
+References: <20191209094332.4047-1-peter.ujfalusi@ti.com>
+ <20191209094332.4047-7-peter.ujfalusi@ti.com>
+ <20191220095455.GM2536@vkoul-mobl>
+ <d5bd6bcf-9c1e-8633-fdc4-ee787100b44c@ti.com>
+Message-ID: <dc251d90-2e1f-ae3e-2a29-4191e8eefb7a@ti.com>
+Date:   Mon, 23 Dec 2019 09:11:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CANMq1KBHsc8oqcjWnjLPCpRToyOm16X6EcQqmqPjZf=D7wA2-Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <d5bd6bcf-9c1e-8633-fdc4-ee787100b44c@ti.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nicolas,
+Hi Vinod,
 
-Many thanks for you review. Just preparing a new version with your comments
-addressed.
-
-On 20/12/19 9:44, Nicolas Boichat wrote:
-> On Fri, Dec 20, 2019 at 4:17 PM Enric Balletbo i Serra
-> <enric.balletbo@collabora.com> wrote:
+On 20/12/2019 12.42, Peter Ujfalusi wrote:
+> Hi Vinod,
+> 
+> On 20/12/2019 11.54, Vinod Koul wrote:
+>> On 09-12-19, 11:43, Peter Ujfalusi wrote:
 >>
->> From: Jitao Shi <jitao.shi@mediatek.com>
+>>> +#define CPPI5_INFO2_DESC_RETPUSHPOLICY		BIT(16)
+>>> +#define CPPI5_INFO2_DESC_RETP_MASK		GENMASK(18, 16)
+>>> +
+>>> +#define CPPI5_INFO2_DESC_RETQ_SHIFT		(0)
+>>> +#define CPPI5_INFO2_DESC_RETQ_MASK		GENMASK(15, 0)
+>>> +
+>>> +#define CPPI5_INFO3_DESC_SRCTAG_SHIFT		(16U)
+>>> +#define CPPI5_INFO3_DESC_SRCTAG_MASK		GENMASK(31, 16)
+>>> +#define CPPI5_INFO3_DESC_DSTTAG_SHIFT		(0)
+>>> +#define CPPI5_INFO3_DESC_DSTTAG_MASK		GENMASK(15, 0)
+>>> +
+>>> +#define CPPI5_BUFINFO1_HDESC_DATA_LEN_SHIFT	(0)
+>>> +#define CPPI5_BUFINFO1_HDESC_DATA_LEN_MASK	GENMASK(27, 0)
+>>> +
+>>> +#define CPPI5_OBUFINFO0_HDESC_BUF_LEN_SHIFT	(0)
+>>> +#define CPPI5_OBUFINFO0_HDESC_BUF_LEN_MASK	GENMASK(27, 0)
 >>
->> This patch adds drm_bridge driver for parade DSI to eDP bridge chip.
+>> I think you can remove the SHIFT defines and use ffs() to get the bit
+>> position for shift
+> 
+> Right. I'll convert to use ffs()
+
+I rather keep the defines.
+While ffs() is simple, it is going to have effect in speeds gigabit or
+beyond.
+
+>>> +static inline u32 cppi5_hdesc_calc_size(bool epib, u32 psdata_size,
+>>> +					u32 sw_data_size)
+>>> +{
+>>> +	u32 desc_size;
+>>> +
+>>> +	if (psdata_size > CPPI5_INFO0_HDESC_PSDATA_MAX_SIZE)
+>>> +		return 0;
+>>> +
+>>> +	desc_size = sizeof(struct cppi5_host_desc_t) + psdata_size +
+>>> +		    sw_data_size;
 >>
->> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
->> Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
->> Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->> [uli: followed API changes, removed FW update feature]
->> Signed-off-by: Ulrich Hecht <uli@fpond.eu>
->> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->> ---
->> [snip]
+>> I think there was an API for this kind of mem allocation of struct and
+>> buffer attached...
+> 
+> The returned size is not only used when allocating memory or setting up
+> the dma_pool, but for UDMAP's fetch size parameter.
+> 
+>>> +static inline void cppi5_hdesc_reset_hbdesc(struct cppi5_host_desc_t *desc)
+>>> +{
+>>> +	desc->hdr = (struct cppi5_desc_hdr_t) { 0 };
+>>> +	desc->next_desc = 0;
 >>
->>  drivers/gpu/drm/bridge/Kconfig         |  11 +
->>  drivers/gpu/drm/bridge/Makefile        |   1 +
->>  drivers/gpu/drm/bridge/parade-ps8640.c | 354 +++++++++++++++++++++++++
+>> would this not be superfluous? Or if you want a memset call?
 > 
-> Half the size! Sounds great.
+> The intention is to reset the header and the next descriptor link but
+> leave the backing buffer information intact. This allows the reuse of a
+> descriptor+buffer and we only need to set the header bits + next
+> descriptor pointer if any.
 > 
-> Mostly nits below.
-> 
->>  3 files changed, 366 insertions(+)
->>  create mode 100644 drivers/gpu/drm/bridge/parade-ps8640.c
+>>> +static inline u32 *cppi5_hdesc_get_psdata32(struct cppi5_host_desc_t *desc)
+>>> +{
+>>> +	return (u32 *)cppi5_hdesc_get_psdata(desc);
 >>
->> diff --git a/drivers/gpu/drm/bridge/parade-ps8640.c b/drivers/gpu/drm/bridge/parade-ps8640.c
->> new file mode 100644
->> index 000000000000..aa0045037f44
->> --- /dev/null
->> +++ b/drivers/gpu/drm/bridge/parade-ps8640.c
->> @@ -0,0 +1,354 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Copyright (c) 2016 MediaTek Inc.
->> + */
->> +
->> +#include <linux/delay.h>
->> +#include <linux/err.h>
->> +#include <linux/gpio/consumer.h>
->> +#include <linux/i2c.h>
->> +#include <linux/module.h>
->> +#include <linux/of_graph.h>
->> +#include <linux/regulator/consumer.h>
->> +
->> +#include <drm/drm_bridge.h>
->> +#include <drm/drm_mipi_dsi.h>
->> +#include <drm/drm_of.h>
->> +#include <drm/drm_panel.h>
->> +#include <drm/drm_print.h>
->> +
->> +#define PAGE2_GPIO_H           0xa7
->> +#define PS_GPIO9               BIT(1)
->> +#define PAGE2_I2C_BYPASS       0xea
->> +#define I2C_BYPASS_EN          0xd0
->> +#define PAGE2_MCS_EN           0xf3
->> +#define MCS_EN                 BIT(0)
->> +#define PAGE3_SET_ADD          0xfe
->> +#define VDO_CTL_ADD            0x13
->> +#define VDO_DIS                        0x18
->> +#define VDO_EN                 0x1c
->> +
->> +/*
->> + * PS8640 uses multiple addresses:
->> + * page[0]: for DP control
->> + * page[1]: for VIDEO Bridge
->> + * page[2]: for control top
->> + * page[3]: for DSI Link Control1
->> + * page[4]: for MIPI Phy
->> + * page[5]: for VPLL
->> + * page[6]: for DSI Link Control2
->> + * page[7]: for SPI ROM mapping
->> + */
->> +enum page_addr_offset {
->> +       PAGE0_DP_CNTL = 0,
->> +       PAGE1_VDO_BDG,
->> +       PAGE2_TOP_CNTL,
->> +       PAGE3_DSI_CNTL1,
->> +       PAGE4_MIPI_PHY,
->> +       PAGE5_VPLL,
->> +       PAGE6_DSI_CNTL2,
->> +       PAGE7_SPI_CNTL,
->> +       MAX_DEVS
->> +};
->> +
->> +struct ps8640 {
->> +       struct drm_bridge bridge;
->> +       struct drm_bridge *panel_bridge;
->> +       struct mipi_dsi_device *dsi;
->> +       struct i2c_client *page[MAX_DEVS];
->> +       struct regulator_bulk_data supplies[2];
->> +       struct gpio_desc *gpio_reset;
->> +       struct gpio_desc *gpio_powerdown;
->> +};
->> +
->> +static inline struct ps8640 *bridge_to_ps8640(struct drm_bridge *e)
->> +{
->> +       return container_of(e, struct ps8640, bridge);
->> +}
->> +
->> +static int ps8640_bridge_unmute(struct ps8640 *ps_bridge)
->> +{
->> +       struct i2c_client *client = ps_bridge->page[PAGE3_DSI_CNTL1];
->> +       u8 vdo_ctrl_buf[] = { VDO_CTL_ADD, VDO_EN };
+>> you dont need casts away from void *
 > 
-> nit: const?
+> Hrm, or just remove this, clients can use the cppi5_hdesc_get_psdata()
+> directly.
 > 
->> +       int ret;
->> +
->> +       ret = i2c_smbus_write_i2c_block_data(client, PAGE3_SET_ADD,
->> +                                            sizeof(vdo_ctrl_buf),
->> +                                            vdo_ctrl_buf);
->> +       if (ret < 0)
->> +               return ret;
->> +
->> +       return 0;
->> +}
->> +
->> +static int ps8640_bridge_mute(struct ps8640 *ps_bridge)
->> +{
->> +       struct i2c_client *client = ps_bridge->page[PAGE3_DSI_CNTL1];
->> +       u8 vdo_ctrl_buf[] = { VDO_CTL_ADD, VDO_DIS };
 > 
-> ditto
+> - Péter
 > 
->> +       int ret;
->> +
->> +       ret = i2c_smbus_write_i2c_block_data(client, PAGE3_SET_ADD,
->> +                                            sizeof(vdo_ctrl_buf),
->> +                                            vdo_ctrl_buf);
->> +       if (ret < 0)
->> +               return ret;
->> +
->> +       return 0;
->> +}
-> 
-> Since the 2 functions are almost the same, you could shrink the driver
-> a bit further by merging them into one with a boolean parameter? (then
-> maybe give up on the const u8 comment).
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 > 
 
-I decided to merge the two functions and use and enum instead of a boolean
-parameter, so the "bool" value is more understandable.
+- Péter
 
->> +
->> +static void ps8640_pre_enable(struct drm_bridge *bridge)
->> +{
->> +       struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
->> +       struct i2c_client *client = ps_bridge->page[PAGE2_TOP_CNTL];
->> +       unsigned long timeout;
->> +       int ret, status;
->> +
->> +       ret = regulator_bulk_enable(ARRAY_SIZE(ps_bridge->supplies),
->> +                                   ps_bridge->supplies);
->> +       if (ret < 0) {
->> +               DRM_ERROR("cannot enable regulators %d\n", ret);
->> +               return;
->> +       }
->> +
->> +       gpiod_set_value(ps_bridge->gpio_powerdown, 1);
->> +       gpiod_set_value(ps_bridge->gpio_reset, 0);
->> +       usleep_range(2000, 2500);
->> +       gpiod_set_value(ps_bridge->gpio_reset, 1);
->> +
->> +       /*
->> +        * Wait for the ps8640 embedded MCU to be ready
->> +        * First wait 200ms and then check the MCU ready flag every 20ms
->> +        */
->> +       msleep(200);
->> +
->> +       timeout = jiffies + msecs_to_jiffies(200) + 1;
->> +
->> +       while (time_is_after_jiffies(timeout)) {
->> +               status = i2c_smbus_read_byte_data(client, PAGE2_GPIO_H);
->> +               if (status < 0) {
->> +                       DRM_ERROR("failed read PAGE2_GPIO_H: %d\n", status);
->> +                       goto err_regulators_disable;
->> +               }
->> +               if ((status & PS_GPIO9) == PS_GPIO9)
->> +                       break;
->> +
->> +               msleep(20);
->> +       }
->> +
->> +       msleep(50);
->> +
->> +       /*
->> +        * The Manufacturer Command Set (MCS) is a device dependent interface
->> +        * intended for factory programming of the display module default
->> +        * parameters. Once the display module is configured, the MCS shall be
->> +        * disabled by the manufacturer. Once disabled, all MCS commands are
->> +        * ignored by the display interface.
->> +        */
->> +       status = i2c_smbus_read_byte_data(client, PAGE2_MCS_EN);
->> +       if (status < 0) {
->> +               DRM_ERROR("failed read PAGE2_MCS_EN: %d\n", status);
->> +               goto err_regulators_disable;
->> +       }
->> +
->> +       ret = i2c_smbus_write_byte_data(client, PAGE2_MCS_EN,
->> +                                       status & ~MCS_EN);
->> +       if (ret < 0) {
->> +               DRM_ERROR("failed write PAGE2_MCS_EN: %d\n", ret);
->> +               goto err_regulators_disable;
->> +       }
->> +
->> +       ret = ps8640_bridge_unmute(ps_bridge);
->> +       if (ret)
->> +               DRM_ERROR("failed to enable unmutevideo: %d\n", ret);
-> 
-> failed to unmute? Or failed to enable?
-> 
-
-failed to unmute sound more clear to me.
-
->> +
->> +       /* Switch access edp panel's edid through i2c */
->> +       ret = i2c_smbus_write_byte_data(client, PAGE2_I2C_BYPASS,
->> +                                       I2C_BYPASS_EN);
->> +       if (ret < 0) {
->> +               DRM_ERROR("failed write PAGE2_I2C_BYPASS: %d\n", ret);
->> +               goto err_regulators_disable;
->> +       }
->> +
->> +       return;
->> +
->> +err_regulators_disable:
->> +       regulator_bulk_disable(ARRAY_SIZE(ps_bridge->supplies),
->> +                              ps_bridge->supplies);
->> +}
->> +
->> +static void ps8640_post_disable(struct drm_bridge *bridge)
->> +{
->> +       struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
->> +       int ret;
->> +
->> +       ret = ps8640_bridge_mute(ps_bridge);
->> +       if (ret < 0)
->> +               DRM_ERROR("failed to unmutevideo: %d\n", ret);
-> 
-> ditto
-> 
-
-Done.
-
->> +
->> +       gpiod_set_value(ps_bridge->gpio_reset, 0);
->> +       gpiod_set_value(ps_bridge->gpio_powerdown, 0);
->> +       ret = regulator_bulk_disable(ARRAY_SIZE(ps_bridge->supplies),
->> +                                    ps_bridge->supplies);
->> +       if (ret < 0)
->> +               DRM_ERROR("cannot disable regulators %d\n", ret);
->> +}
->> +
->> +int ps8640_bridge_attach(struct drm_bridge *bridge)
->> +{
->> +       struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
->> +       struct device *dev = &ps_bridge->page[0]->dev;
->> +       struct device_node *in_ep, *dsi_node;
->> +       struct mipi_dsi_device *dsi;
->> +       struct mipi_dsi_host *host;
->> +       int ret;
->> +       const struct mipi_dsi_device_info info = { .type = "ps8640",
->> +                                                  .channel = 0,
->> +                                                  .node = NULL,
->> +                                                };
->> +       /* port@0 is ps8640 dsi input port */
->> +       in_ep = of_graph_get_endpoint_by_regs(dev->of_node, 0, -1);
->> +       if (!in_ep)
->> +               return -ENODEV;
->> +
->> +       dsi_node = of_graph_get_remote_port_parent(in_ep);
->> +       of_node_put(in_ep);
->> +       if (!dsi_node)
->> +               return -ENODEV;
->> +
->> +       host = of_find_mipi_dsi_host_by_node(dsi_node);
->> +       of_node_put(dsi_node);
->> +       if (!host)
->> +               return -ENODEV;
->> +
->> +       dsi = mipi_dsi_device_register_full(host, &info);
->> +       if (IS_ERR(dsi)) {
->> +               dev_err(dev, "failed to create dsi device\n");
->> +               ret = PTR_ERR(dsi);
->> +               return ret;
->> +       }
->> +
->> +       ps_bridge->dsi = dsi;
->> +
->> +       dsi->host = host;
->> +       dsi->mode_flags = MIPI_DSI_MODE_VIDEO |
->> +                         MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
->> +       dsi->format = MIPI_DSI_FMT_RGB888;
->> +       dsi->lanes = 4;
->> +       ret = mipi_dsi_attach(dsi);
->> +       if (ret)
->> +               goto err_dsi_attach;
->> +
->> +       /* Attach the panel-bridge to the dsi bridge */
->> +       return drm_bridge_attach(bridge->encoder, ps_bridge->panel_bridge,
->> +                                &ps_bridge->bridge);
->> +
->> +err_dsi_attach:
->> +       mipi_dsi_device_unregister(dsi);
->> +       return ret;
->> +}
->> +
->> +static const struct drm_bridge_funcs ps8640_bridge_funcs = {
->> +       .attach = ps8640_bridge_attach,
->> +       .post_disable = ps8640_post_disable,
->> +       .pre_enable = ps8640_pre_enable,
->> +};
->> +
->> +static int ps8640_probe(struct i2c_client *client)
->> +{
->> +       struct device *dev = &client->dev;
->> +       struct device_node *np = dev->of_node;
->> +       struct ps8640 *ps_bridge;
->> +       struct drm_panel *panel;
->> +       int ret;
->> +       u32 i;
->> +
->> +       ps_bridge = devm_kzalloc(dev, sizeof(*ps_bridge), GFP_KERNEL);
->> +       if (!ps_bridge)
->> +               return -ENOMEM;
->> +
->> +       /* port@1 is ps8640 output port */
->> +       ret = drm_of_find_panel_or_bridge(np, 1, 0, &panel, NULL);
->> +       if (ret < 0)
->> +               return ret;
->> +       if (!panel)
->> +               return -ENODEV;
->> +
->> +       panel->connector_type = DRM_MODE_CONNECTOR_eDP;
->> +
->> +       ps_bridge->panel_bridge = devm_drm_panel_bridge_add(dev, panel);
->> +       if (IS_ERR(ps_bridge->panel_bridge))
->> +               return PTR_ERR(ps_bridge->panel_bridge);
->> +
->> +       ps_bridge->supplies[0].supply = "vdd33";
->> +       ps_bridge->supplies[1].supply = "vdd12";
->> +       ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ps_bridge->supplies),
->> +                                     ps_bridge->supplies);
->> +       if (ret)
->> +               return ret;
->> +
->> +       ps_bridge->gpio_powerdown = devm_gpiod_get(&client->dev, "powerdown",
->> +                                                  GPIOD_OUT_LOW);
->> +       if (IS_ERR(ps_bridge->gpio_powerdown))
->> +               return PTR_ERR(ps_bridge->gpio_powerdown);
->> +
->> +       /*
->> +        * Request the reset pin low to avoid the bridge being
->> +        * initialized prematurely
->> +        */
->> +       ps_bridge->gpio_reset = devm_gpiod_get(&client->dev, "reset",
->> +                                              GPIOD_OUT_LOW);
->> +       if (IS_ERR(ps_bridge->gpio_reset))
->> +               return PTR_ERR(ps_bridge->gpio_reset);
->> +
->> +       ps_bridge->bridge.funcs = &ps8640_bridge_funcs;
->> +       ps_bridge->bridge.of_node = dev->of_node;
->> +
->> +       ps_bridge->page[PAGE0_DP_CNTL] = client;
->> +
->> +       for (i = 1; i < ARRAY_SIZE(ps_bridge->page); i++) {
->> +               ps_bridge->page[i] = devm_i2c_new_dummy_device(&client->dev,
->> +                                                            client->adapter,
->> +                                                            client->addr + i);
->> +               if (IS_ERR(ps_bridge->page[i])) {
->> +                       dev_err(dev, "failed i2c dummy device, address%02x\n",
-> 
-> Space after address?
-> 
-
-Ack and done.
-
->> +                               client->addr + i);
->> +                       return PTR_ERR(ps_bridge->page[i]);
->> +               }
->> +       }
->> +
->> +       i2c_set_clientdata(client, ps_bridge);
->> +
->> +       drm_bridge_add(&ps_bridge->bridge);
->> +
->> +       return 0;
->> +}
->> +
->> +static int ps8640_remove(struct i2c_client *client)
->> +{
->> +       struct ps8640 *ps_bridge = i2c_get_clientdata(client);
->> +
->> +       drm_bridge_remove(&ps_bridge->bridge);
->> +
->> +       return 0;
->> +}
->> +
->> +static const struct of_device_id ps8640_match[] = {
->> +       { .compatible = "parade,ps8640" },
->> +       { }
->> +};
->> +MODULE_DEVICE_TABLE(of, ps8640_match);
->> +
->> +static struct i2c_driver ps8640_driver = {
->> +       .probe_new = ps8640_probe,
->> +       .remove = ps8640_remove,
->> +       .driver = {
->> +               .name = "ps8640",
->> +               .of_match_table = ps8640_match,
->> +       },
->> +};
->> +module_i2c_driver(ps8640_driver);
->> +
->> +MODULE_AUTHOR("Jitao Shi <jitao.shi@mediatek.com>");
->> +MODULE_AUTHOR("CK Hu <ck.hu@mediatek.com>");
-> 
-> Since you just did a major refactor, do you want to add your name here?
-> 
-
-Sure.
-
-Thanks,
- Enric
-
->> +MODULE_DESCRIPTION("PARADE ps8640 DSI-eDP converter driver");
->> +MODULE_LICENSE("GPL v2");
->> --
->> 2.20.1
->>
-> 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
