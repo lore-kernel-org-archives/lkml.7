@@ -7,124 +7,195 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E29C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB476C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2731E2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4D2020709
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:26:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="SVJZ6Mlz"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="W7SgfJGU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbfLWP0d (ORCPT
+        id S1727230AbfLWP0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 10:26:33 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:13491 "EHLO pegase1.c-s.fr"
+        Mon, 23 Dec 2019 10:26:37 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:49052 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726934AbfLWP0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 10:26:18 -0500
+        id S1726890AbfLWP0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 10:26:14 -0500
 Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47hNVC08mlz9vJyn;
-        Mon, 23 Dec 2019 16:26:11 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 47hNV76KKKz9vJyr;
+        Mon, 23 Dec 2019 16:26:07 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=SVJZ6Mlz; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=W7SgfJGU; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id NMduw6uLKHzc; Mon, 23 Dec 2019 16:26:10 +0100 (CET)
+        with ESMTP id uBkPgpjjLKGe; Mon, 23 Dec 2019 16:26:07 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47hNVB65gtz9vJyx;
-        Mon, 23 Dec 2019 16:26:10 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47hNV75JZfz9vJyn;
+        Mon, 23 Dec 2019 16:26:07 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1577114770; bh=D3+VKZJ3hPYAS69Fkh6Xu5UkefnPwZgOHwwzmESq47E=;
+        t=1577114767; bh=KTrdL1MpYjw3SKZf3TvRf76WtXnCC4CV0j92AK8y8Fw=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=SVJZ6MlzwisGMPUrmb7zjVPn5E8ioInBlKV63cjaMHP359fiVDCGeCtBL5c7Aj4ga
-         AF6Jo0GLl1l0ZXQGUUjJidH0sEXKC9h1uHvPP2AbupP4aEkLAv03ie8lEC2Q8n6j+j
-         aIV0/BOVpK5WBNpgm9FZ5rrlbf92caXOOrUkX52s=
+        b=W7SgfJGUE7yQSHzMgsEsSUtqMKrXmHkBCaqW6J/B/xJIOCdNaqLywiSricvj4mFOG
+         kuH0PmX7ZWEwg+nlUxqzoLDznH7mAiEA+LcrlmKCGyK6/ks0C0J6gFdh/4k1cenCI6
+         mNMi4Drzj2gc5Titv5ApxeCxRzHwnZyUwuPXDDKQ=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0ADF38B7AB;
-        Mon, 23 Dec 2019 16:26:16 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E555C8B7AB;
+        Mon, 23 Dec 2019 16:26:12 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id nedWeDvJrad3; Mon, 23 Dec 2019 16:26:15 +0100 (CET)
+        with ESMTP id dxyHmnVTVHn5; Mon, 23 Dec 2019 16:26:12 +0100 (CET)
 Received: from po16098vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.100])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E0D5B8B7A1;
-        Mon, 23 Dec 2019 16:26:15 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C104C8B7A1;
+        Mon, 23 Dec 2019 16:26:12 +0100 (CET)
 Received: by po16098vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id E4733637D8; Mon, 23 Dec 2019 15:26:15 +0000 (UTC)
-Message-Id: <ca37c53561e4023315499ee3a35816bad01e4964.1577114567.git.christophe.leroy@c-s.fr>
+        id CBAD2637D8; Mon, 23 Dec 2019 15:26:12 +0000 (UTC)
+Message-Id: <075b56d1ef9ff0556916684029e8006123a1ca09.1577114567.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1577114567.git.christophe.leroy@c-s.fr>
 References: <cover.1577114567.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [RFC PATCH 5/8] powerpc/irq: move stack overflow verification
+Subject: [RFC PATCH 2/8] powerpc/irq: inline call_do_irq() and
+ call_do_softirq() on PPC32
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 23 Dec 2019 15:26:15 +0000 (UTC)
+Date:   Mon, 23 Dec 2019 15:26:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As we are going to switch to IRQ stack immediately in the exception
-handler, it won't be possible anymore to check stack overflow by
-reading stack pointer.
+call_do_irq() and call_do_softirq() are simple enough to be
+worth inlining.
 
-Do the verification on regs->gpr[1] which contains the stack pointer
-at the time the IRQ happended, and move it to __do_irq() so that the
-verification is also done when calling __do_irq() directly once the
-exception entry does the stack switch.
+Inlining them avoids an mflr/mtlr pair plus a save/reload on stack.
+It also allows GCC to keep the saved ksp_limit in an nonvolatile reg.
+
+This is inspired from S390 arch. Several other arches do more or
+less the same. The way sparc arch does seems odd thought.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/kernel/irq.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+Reviewed-by: Segher Boessenkool <segher@kernel.crashing.org>
 
+---
+v2: no change.
+v3: no change.
+v4:
+- comment reminding the purpose of the inline asm block.
+- added r2 as clobbered reg
+v5:
+- Limiting the change to PPC32 for now.
+- removed r2 from the clobbered regs list (on PPC32 r2 points to current all the time)
+- Removed patch 1 and merged ksp_limit handling in here.
+v6:
+- rebased after removal of ksp_limit
+---
+ arch/powerpc/include/asm/irq.h |  2 ++
+ arch/powerpc/kernel/irq.c      | 34 ++++++++++++++++++++++++++++++++++
+ arch/powerpc/kernel/misc_32.S  | 25 -------------------------
+ 3 files changed, 36 insertions(+), 25 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/irq.h b/arch/powerpc/include/asm/irq.h
+index 814dfab7e392..e4a92f0b4ad4 100644
+--- a/arch/powerpc/include/asm/irq.h
++++ b/arch/powerpc/include/asm/irq.h
+@@ -56,8 +56,10 @@ extern void *mcheckirq_ctx[NR_CPUS];
+ extern void *hardirq_ctx[NR_CPUS];
+ extern void *softirq_ctx[NR_CPUS];
+ 
++#ifdef CONFIG_PPC64
+ void call_do_softirq(void *sp);
+ void call_do_irq(struct pt_regs *regs, void *sp);
++#endif
+ extern void do_IRQ(struct pt_regs *regs);
+ extern void __init init_IRQ(void);
+ extern void __do_irq(struct pt_regs *regs);
 diff --git a/arch/powerpc/kernel/irq.c b/arch/powerpc/kernel/irq.c
-index 28414c6665cc..4df49f6e9987 100644
+index add67498c126..4690e5270806 100644
 --- a/arch/powerpc/kernel/irq.c
 +++ b/arch/powerpc/kernel/irq.c
-@@ -596,15 +596,16 @@ u64 arch_irq_stat_cpu(unsigned int cpu)
- 	return sum;
+@@ -611,6 +611,40 @@ static inline void check_stack_overflow(void)
+ #endif
  }
  
--static inline void check_stack_overflow(void)
-+static inline void check_stack_overflow(struct pt_regs *regs)
- {
- #ifdef CONFIG_DEBUG_STACKOVERFLOW
-+	bool is_user = user_mode(regs);
- 	long sp;
- 
--	sp = current_stack_pointer() & (THREAD_SIZE-1);
-+	sp = regs->gpr[1] & (THREAD_SIZE - 1);
- 
- 	/* check for stack overflow: is there less than 2KB free? */
--	if (unlikely(sp < 2048)) {
-+	if (unlikely(!is_user && sp < 2048)) {
- 		pr_err("do_IRQ: stack overflow: %ld\n", sp);
- 		dump_stack();
- 	}
-@@ -654,6 +655,8 @@ void __do_irq(struct pt_regs *regs)
- 
- 	trace_irq_entry(regs);
- 
-+	check_stack_overflow(regs);
++#ifdef CONFIG_PPC32
++static inline void call_do_softirq(const void *sp)
++{
++	register unsigned long ret asm("r3");
 +
- 	/*
- 	 * Query the platform PIC for the interrupt & ack it.
- 	 *
-@@ -685,8 +688,6 @@ void do_IRQ(struct pt_regs *regs)
- 	irqsp = hardirq_ctx[raw_smp_processor_id()];
- 	sirqsp = softirq_ctx[raw_smp_processor_id()];
++	/* Temporarily switch r1 to sp, call __do_softirq() then restore r1. */
++	asm volatile(
++		"	"PPC_STLU"	1, %2(%1);\n"
++		"	mr		1, %1;\n"
++		"	bl		%3;\n"
++		"	"PPC_LL"	1, 0(1);\n" :
++		"=r"(ret) :
++		"b"(sp), "i"(THREAD_SIZE - STACK_FRAME_OVERHEAD), "i"(__do_softirq) :
++		"lr", "xer", "ctr", "memory", "cr0", "cr1", "cr5", "cr6", "cr7",
++		"r0", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12");
++}
++
++static inline void call_do_irq(struct pt_regs *regs, void *sp)
++{
++	register unsigned long r3 asm("r3") = (unsigned long)regs;
++
++	/* Temporarily switch r1 to sp, call __do_irq() then restore r1 */
++	asm volatile(
++		"	"PPC_STLU"	1, %2(%1);\n"
++		"	mr		1, %1;\n"
++		"	bl		%3;\n"
++		"	"PPC_LL"	1, 0(1);\n" :
++		"+r"(r3) :
++		"b"(sp), "i"(THREAD_SIZE - STACK_FRAME_OVERHEAD), "i"(__do_irq) :
++		"lr", "xer", "ctr", "memory", "cr0", "cr1", "cr5", "cr6", "cr7",
++		"r0", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12");
++}
++#endif
++
+ void __do_irq(struct pt_regs *regs)
+ {
+ 	unsigned int irq;
+diff --git a/arch/powerpc/kernel/misc_32.S b/arch/powerpc/kernel/misc_32.S
+index bb5995fa6884..341a3cd199cb 100644
+--- a/arch/powerpc/kernel/misc_32.S
++++ b/arch/powerpc/kernel/misc_32.S
+@@ -27,31 +27,6 @@
  
--	check_stack_overflow();
+ 	.text
+ 
+-_GLOBAL(call_do_softirq)
+-	mflr	r0
+-	stw	r0,4(r1)
+-	stwu	r1,THREAD_SIZE-STACK_FRAME_OVERHEAD(r3)
+-	mr	r1,r3
+-	bl	__do_softirq
+-	lwz	r1,0(r1)
+-	lwz	r0,4(r1)
+-	mtlr	r0
+-	blr
 -
- 	/* Already there ? Otherwise switch stack and call */
- 	if (unlikely(cursp == irqsp || cursp == sirqsp))
- 		__do_irq(regs);
+-/*
+- * void call_do_irq(struct pt_regs *regs, void *sp);
+- */
+-_GLOBAL(call_do_irq)
+-	mflr	r0
+-	stw	r0,4(r1)
+-	stwu	r1,THREAD_SIZE-STACK_FRAME_OVERHEAD(r4)
+-	mr	r1,r4
+-	bl	__do_irq
+-	lwz	r1,0(r1)
+-	lwz	r0,4(r1)
+-	mtlr	r0
+-	blr
+-
+ /*
+  * This returns the high 64 bits of the product of two 64-bit numbers.
+  */
 -- 
 2.13.3
 
