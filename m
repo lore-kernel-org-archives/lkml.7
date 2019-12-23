@@ -2,212 +2,213 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F086DC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 16:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FE2C2D0D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9D1820709
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 16:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93A9020709
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:03:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e61pZwn3"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="dV283hFt";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="WqKgDWNw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbfLWQxN (ORCPT
+        id S1726877AbfLWRDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 11:53:13 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46086 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726717AbfLWQxN (ORCPT
+        Mon, 23 Dec 2019 12:03:43 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:4852 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726718AbfLWRDm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 11:53:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577119991;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0I/TmtKmaCoCn2cmkchViISfqupPgahWP/OoSgDPUdw=;
-        b=e61pZwn3264gchyUYHZCewAawIrmfbMuHMQDLOpAeRy7FnHleCHI74+ZZ1Bj/DkBtiiAzJ
-        GSEmmSVSDlWz9bHm2ZyzC6z/sryr9n3DuCOL9kmmhzZS1yGR2S2KAS2AmkACt81Z903t0F
-        Bnw7ugmpYisSdhB0hezOB1p40OOOsRw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-178-qolTNmXSM8idDpfAwBwgRA-1; Mon, 23 Dec 2019 11:53:07 -0500
-X-MC-Unique: qolTNmXSM8idDpfAwBwgRA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4681A107ACC5;
-        Mon, 23 Dec 2019 16:53:06 +0000 (UTC)
-Received: from carbon (ovpn-200-18.brq.redhat.com [10.40.200.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A597860BE2;
-        Mon, 23 Dec 2019 16:52:59 +0000 (UTC)
-Date:   Mon, 23 Dec 2019 17:52:57 +0100
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Cc:     netdev@vger.kernel.org, lirongqing@baidu.com,
-        linyunsheng@huawei.com, Saeed Mahameed <saeedm@mellanox.com>,
-        mhocko@kernel.org, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, brouer@redhat.com
-Subject: Re: [net-next v5 PATCH] page_pool: handle page recycle for
- NUMA_NO_NODE condition
-Message-ID: <20191223175257.164557cd@carbon>
-In-Reply-To: <20191223075700.GA5333@apalos.home>
-References: <20191218084437.6db92d32@carbon>
-        <157676523108.200893.4571988797174399927.stgit@firesoul>
-        <20191220102314.GB14269@apalos.home>
-        <20191220114116.59d86ff6@carbon>
-        <20191220104937.GA15487@apalos.home>
-        <20191220162254.0138263e@carbon>
-        <20191220160649.GA26788@apalos.home>
-        <20191223075700.GA5333@apalos.home>
+        Mon, 23 Dec 2019 12:03:42 -0500
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBNGuLdf009060;
+        Mon, 23 Dec 2019 09:03:37 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=kheSxJkWd07gX1DrmjGRY8ShW53Y3gQpJMqi2hsBwVo=;
+ b=dV283hFt11mn1kaM0JKXZbjpwY6XIADw/pMN/QC82SUgcm9gNUKyKTICOQewMsz/J/u+
+ XkGg//0S60NDUwfa6b4A0e4yuB90IHwpHzpVWtEY7G7evRdlkzWYEolCjG42pA7J5v2r
+ VM+uVbZ24jP+9p9v8DZdnbYjwZxjWkhiEmA= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2x2410d4a4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 23 Dec 2019 09:03:37 -0800
+Received: from prn-hub04.TheFacebook.com (2620:10d:c081:35::128) by
+ prn-hub01.TheFacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Mon, 23 Dec 2019 09:03:36 -0800
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.28) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Mon, 23 Dec 2019 09:03:36 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RShTFKaCUlkSsDiDBgbr39VYTO+3vdsUFMNcLmGrBXluUU1tfz6ZNiGj6xTH/g8ZeuHlgmx78BLkQG/dKHI9XIilpGoSrhhy3B/fAKHp5DplQgrQL4ZSP88phbAaNGRwCEkT8vCzJDQbvLHqEj9AzwPUlnATqTnIgPQrb067VtElB8shatkeD2/Vf66rMi6CcAhFY4Nj5pKwXLPG04EfZu3bgsrrjlEIJ2MwqgBeOUZwEwp11+clbFghk635P60RDQfw1N3tJxVM1UESlKPber4I0s9lZ7vK7xeCNoaI+vpqxJoqJdkc950FK5/Vms/AeIV4Zzzmp5NLslK8+uTt+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kheSxJkWd07gX1DrmjGRY8ShW53Y3gQpJMqi2hsBwVo=;
+ b=L6hadTYmmJuJ/NV1YYQslXsgs4r+1fCAs3/7gbfz+PwqzEMwIwdu50QcnoiK1aQ9n0xwCnzFsOLJpFXALVmbA+47GmJGmQaPO5ND4zgJgiwxi0PX5Op+fnmlhxFMvMtQktnZaq/3gdnw+4ftX8S1lbPAOZ7jOyZz3vFaB0C3sCUs/+lOAcmvtP8DhuvxAZVy0Yq+KhwXioPCIkKv+LogRUFuswGhabFKNnS1T+RUuf0MIGCU4d2iyz4t4fZPEsskn1euw1P17LlvKbSDEaqZ0YZEptCqeCD5dlSu54dWdoW9MLaFX24R1uD0Nc9hIRGN9MN5T4thbA77x7kqb1ArDg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kheSxJkWd07gX1DrmjGRY8ShW53Y3gQpJMqi2hsBwVo=;
+ b=WqKgDWNwo2alTKIftw9Vn/Krh0J//LkChKYP4yzRjWhut/tT0VZKk0DtLx/Dvj3buc8RfuGo18wrlwQkoBASGmacqJJlK715xLPNHy/FGQNUG0RrKNha9fed/XB0WVGyFvUv6jIZArmFb1zB21/xEpr8Ox8XWGSZkBNOdYt23NA=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.155.147) by
+ BYAPR15MB3110.namprd15.prod.outlook.com (20.178.239.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.14; Mon, 23 Dec 2019 17:03:34 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::8cc8:bdb1:a9c7:7f60]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::8cc8:bdb1:a9c7:7f60%3]) with mapi id 15.20.2559.017; Mon, 23 Dec 2019
+ 17:03:34 +0000
+Received: from localhost.localdomain (2620:10d:c090:180::902) by CO2PR07CA0071.namprd07.prod.outlook.com (2603:10b6:100::39) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2559.14 via Frontend Transport; Mon, 23 Dec 2019 17:03:33 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] mm: memcg/slab: fix percpu slab vmstats flushing
+Thread-Topic: [PATCH v2] mm: memcg/slab: fix percpu slab vmstats flushing
+Thread-Index: AQHVtu3MQmrM9ps/eE+CZL/MYRsSm6fCwqsAgAU1RAA=
+Date:   Mon, 23 Dec 2019 17:03:34 +0000
+Message-ID: <20191223170328.GA18255@localhost.localdomain>
+References: <20191220042728.1045881-1-guro@fb.com>
+ <20191220093132.GE20332@dhcp22.suse.cz>
+In-Reply-To: <20191220093132.GE20332@dhcp22.suse.cz>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: CO2PR07CA0071.namprd07.prod.outlook.com (2603:10b6:100::39)
+ To BYAPR15MB2631.namprd15.prod.outlook.com (2603:10b6:a03:150::19)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:180::902]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2fdc4be1-1674-4217-4499-08d787ca0b80
+x-ms-traffictypediagnostic: BYAPR15MB3110:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR15MB3110E1157FED2FC2BB5C2EAEBE2E0@BYAPR15MB3110.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0260457E99
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(39860400002)(396003)(366004)(136003)(54534003)(189003)(199004)(81166006)(8936002)(81156014)(16526019)(54906003)(316002)(69590400006)(478600001)(8676002)(9686003)(71200400001)(55016002)(52116002)(186003)(4326008)(7696005)(86362001)(6506007)(1076003)(33656002)(66556008)(66446008)(66476007)(64756008)(5660300002)(2906002)(66946007)(6916009);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3110;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: C3nPxflh1AD8CtK+yINHtbD2vX415+ntJYQ7q4PAV+lUtYqdd37Kqn5qeB45FSUC/76a5YRW3tzKlw+0RRknyD6GCeeuqXQcQG0gU8Kt8m+EsDC2N3+S5S4dkj170T9fOh4WJMnVAalc19qID1g1q+IkH4dgpSTHGeUstdUzfRbXWEOvn+VigTsi1lScKjZFLcG4uI3wDUwDZGyIAAxcuhyj0Su5umtmbIDGOEWaracNIIXqfknXNZG/f0539OrFI9yT91h5nCBxjxikrP+IZA3+H0rnL1gJN05ICdwvyBBSwy7fcf95I0MhZLnaPOxbX0ei/lKfslfihFCvIgeAvfsY70qW26SAmNomvABw4EfeS/UsgnmSToHNfaav3ZmPUwu4bEDYAf2w7Bs37sGO6zptp+scpJIYqtiXZ8E7uw+7TXEsFXwkzeCi6egpeflSvtnnH9H5vgj9FcMP22JjLQKwU1g7khu1p4OHxDLyniDApN1dSYTqTw+0LgYzOtgFqMTIjM8D8u1UzpEIvlQkfQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <0EE3877AA754E24AA00CF60212B78338@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2fdc4be1-1674-4217-4499-08d787ca0b80
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Dec 2019 17:03:34.5042
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qlIMBVOifG59+MJrITN8XiSlWhax+0Oqo0DCaOnd07420Biz1+OvuYfW0WVQ8Bep
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3110
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-23_07:2019-12-23,2019-12-23 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0 phishscore=0
+ mlxlogscore=999 mlxscore=0 bulkscore=0 suspectscore=0 clxscore=1015
+ spamscore=0 impostorscore=0 malwarescore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912230144
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Dec 2019 09:57:00 +0200
-Ilias Apalodimas <ilias.apalodimas@linaro.org> wrote:
+On Fri, Dec 20, 2019 at 10:31:32AM +0100, Michal Hocko wrote:
+> On Thu 19-12-19 20:27:28, Roman Gushchin wrote:
+> > Currently slab percpu vmstats are flushed twice: during the memcg
+> > offlining and just before freeing the memcg structure. Each time
+> > percpu counters are summed, added to the atomic counterparts and
+> > propagated up by the cgroup tree.
+> >=20
+> > The second flushing is required due to how recursive vmstats are
+> > implemented: counters are batched in percpu variables on a local
+> > level, and once a percpu value is crossing some predefined threshold,
+> > it spills over to atomic values on the local and each ascendant
+> > levels. It means that without flushing some numbers cached in percpu
+> > variables will be dropped on floor each time a cgroup is destroyed.
+> > And with uptime the error on upper levels might become noticeable.
+> >=20
+> > The first flushing aims to make counters on ancestor levels more
+> > precise. Dying cgroups may resume in the dying state for a long time.
+> > After kmem_cache reparenting which is performed during the offlining
+> > slab counters of the dying cgroup don't have any chances to be
+> > updated, because any slab operations will be performed on the parent
+> > level. It means that the inaccuracy caused by percpu batching
+> > will not decrease up to the final destruction of the cgroup.
+> > By the original idea flushing slab counters during the offlining
+> > should minimize the visible inaccuracy of slab counters on the parent
+> > level.
+> >=20
+> > The problem is that percpu counters are not zeroed after the first
+> > flushing. So every cached percpu value is summed twice. It creates
+> > a small error (up to 32 pages per cpu, but usually less) which
+> > accumulates on parent cgroup level. After creating and destroying
+> > of thousands of child cgroups, slab counter on parent level can
+> > be way off the real value.
+> >=20
+> > For now, let's just stop flushing slab counters on memcg offlining.
+> > It can't be done correctly without scheduling a work on each cpu:
+> > reading and zeroing it during css offlining can race with an
+> > asynchronous update, which doesn't expect values to be changed
+> > underneath.
+> >=20
+> > With this change, slab counters on parent level will become eventually
+> > consistent. Once all dying children are gone, values are correct.
+> > And if not, the error is capped by 32 * NR_CPUS pages per dying
+> > cgroup.
+> >=20
+> > It's not perfect, as slab are reparented, so any updates after
+> > the reparenting will happen on the parent level. It means that
+> > if a slab page was allocated, a counter on child level was bumped,
+> > then the page was reparented and freed, the annihilation of positive
+> > and negative counter values will not happen until the child cgroup is
+> > released. It makes slab counters different from others, and it might
+> > want us to implement flushing in a correct form again.
+> > But it's also a question of performance: scheduling a work on each
+> > cpu isn't free, and it's an open question if the benefit of having
+> > more accurate counters is worth it.
+> >=20
+> > We might also consider flushing all counters on offlining, not only
+> > slab counters.
+> >=20
+> > So let's fix the main problem now: make the slab counters eventually
+> > consistent, so at least the error won't grow with uptime (or more
+> > precisely the number of created and destroyed cgroups). And think
+> > about the accuracy of counters separately.
+>=20
+> So this is essentially a revert, right? I have to say I was not a great
+> fan of bee07b33db78 in the first place.
 
-> Hi Jesper,
-> 
-> Looking at the overall path again, i still need we need to reconsider 
-> pool->p.nid semantics.
-> 
-> As i said i like the patch and the whole functionality and code seems fine,
-> but here's the current situation.
+I have to admit, you were right!
 
-> If a user sets pool->p.nid == NUMA_NO_NODE and wants to use
-> page_pool_update_nid() the whole behavior feels a liitle odd.
+>=20
+> > v2: added a note to the changelog, asked by Johannes. Thanks!
+> >=20
+> > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > Fixes: bee07b33db78 ("mm: memcontrol: flush percpu slab vmstats on kmem=
+ offlining")
+> > Cc: stable@vger.kernel.org
+> > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+>=20
+> Acked-by: Michal Hocko <mhocko@suse.com>
 
-As soon as driver uses page_pool_update_nid() than means they want to
-control the NUMA placement explicitly.  As soon as that happens, it is
-the drivers responsibility and choice, and page_pool API must respect
-that (and not automatically change that behind drivers back).
-
-
-> page_pool_update_nid() first check will always be true since .nid =
-> NUMA_NO_NODE). Then we'll update this to a real nid. So we end up
-> overwriting what the user initially coded in.
->
-> This is close to what i proposed in the previous mails on this
-> thread. Always store a real nid even if the user explicitly requests
-> NUMA_NO_NODE.
-> 
-> So  semantics is still a problem. I'll stick to what we initially
-> suggested.
->  1. We either *always* store a real nid
-> or 
->  2. If NUMA_NO_NODE is present ignore every other check and recycle
->  the memory blindly. 
-> 
-
-Hmm... I actually disagree with both 1 and 2.
-
-My semantics proposal:
-If driver configures page_pool with NUMA_NO_NODE, then page_pool tried
-to help get the best default performance. (Which according to
-performance measurements is to have RX-pages belong to the NUMA node
-RX-processing runs on).
-
-The reason I want this behavior is that during driver init/boot, it can
-easily happen that a driver allocates RX-pages from wrong NUMA node.
-This will cause a performance slowdown, that normally doesn't happen,
-because without a cache (like page_pool) RX-pages would fairly quickly
-transition over to the RX NUMA node (instead we keep recycling these,
-in your case #2, where you suggest recycle blindly in case of
-NUMA_NO_NODE). IMHO page_pool should hide this border-line case from
-driver developers.
-
---Jesper
-
-
-> On Fri, Dec 20, 2019 at 06:06:49PM +0200, Ilias Apalodimas wrote:
-> > On Fri, Dec 20, 2019 at 04:22:54PM +0100, Jesper Dangaard Brouer
-> > wrote:  
-> > > On Fri, 20 Dec 2019 12:49:37 +0200
-> > > Ilias Apalodimas <ilias.apalodimas@linaro.org> wrote:
-> > >   
-> > > > On Fri, Dec 20, 2019 at 11:41:16AM +0100, Jesper Dangaard
-> > > > Brouer wrote:  
-> > > > > On Fri, 20 Dec 2019 12:23:14 +0200
-> > > > > Ilias Apalodimas <ilias.apalodimas@linaro.org> wrote:
-> > > > >     
-> > > > > > Hi Jesper, 
-> > > > > > 
-> > > > > > I like the overall approach since this moves the check out
-> > > > > > of  the hotpath. @Saeed, since i got no hardware to test
-> > > > > > this on, would it be possible to check that it still works
-> > > > > > fine for mlx5?
-> > > > > > 
-> > > > > > [...]    
-> > > > > > > +	struct ptr_ring *r = &pool->ring;
-> > > > > > > +	struct page *page;
-> > > > > > > +	int pref_nid; /* preferred NUMA node */
-> > > > > > > +
-> > > > > > > +	/* Quicker fallback, avoid locks when ring is
-> > > > > > > empty */
-> > > > > > > +	if (__ptr_ring_empty(r))
-> > > > > > > +		return NULL;
-> > > > > > > +
-> > > > > > > +	/* Softirq guarantee CPU and thus NUMA node is
-> > > > > > > stable. This,
-> > > > > > > +	 * assumes CPU refilling driver RX-ring will
-> > > > > > > also run RX-NAPI.
-> > > > > > > +	 */
-> > > > > > > +	pref_nid = (pool->p.nid == NUMA_NO_NODE) ?
-> > > > > > > numa_mem_id() : pool->p.nid;      
-> > > > > > 
-> > > > > > One of the use cases for this is that during the allocation
-> > > > > > we are not guaranteed to pick up the correct NUMA node. 
-> > > > > > This will get automatically fixed once the driver starts
-> > > > > > recycling packets. 
-> > > > > > 
-> > > > > > I don't feel strongly about this, since i don't usually
-> > > > > > like hiding value changes from the user but, would it make
-> > > > > > sense to move this into __page_pool_alloc_pages_slow() and
-> > > > > > change the pool->p.nid?
-> > > > > > 
-> > > > > > Since alloc_pages_node() will replace NUMA_NO_NODE with
-> > > > > > numa_mem_id() regardless, why not store the actual node in
-> > > > > > our page pool information? You can then skip this and check
-> > > > > > pool->p.nid == numa_mem_id(), regardless of what's
-> > > > > > configured.     
-> > > > > 
-> > > > > This single code line helps support that drivers can control
-> > > > > the nid themselves.  This is a feature that is only used my
-> > > > > mlx5 AFAIK.
-> > > > > 
-> > > > > I do think that is useful to allow the driver to "control"
-> > > > > the nid, as pinning/preferring the pages to come from the
-> > > > > NUMA node that matches the PCI-e controller hardware is
-> > > > > installed in does have benefits.    
-> > > > 
-> > > > Sure you can keep the if statement as-is, it won't break
-> > > > anything. Would we want to store the actual numa id in
-> > > > pool->p.nid if the user selects 'NUMA_NO_NODE'?  
-> > >  
-> > > No. pool->p.nid should stay as NUMA_NO_NODE, because that makes it
-> > > dynamic.  If someone moves an RX IRQ to another CPU on another
-> > > NUMA node, then this 'NUMA_NO_NODE' setting makes pages
-> > > transitioned automatically.  
-> > Ok this assumed that drivers were going to use
-> > page_pool_nid_changed(), but with the current code we don't have to
-> > force them to do that. Let's keep this as-is.
-> > 
-> > I'll be running a few more tests  and wait in case Saeed gets a
-> > chance to test it and send my reviewed-by
-
-
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
-
+Thanks!
