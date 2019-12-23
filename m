@@ -2,121 +2,131 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F77C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 068D1C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A5D2053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:46:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF6EA2053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:47:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577098035;
+	bh=i7fYnmXckECnC8vV13fsMheUMaMlpGW1QvAlNeQfcsk=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=wG0Ek4Y9JvOkiMY2TQlRZXuy/DLcgmNgI8QaNMrbqe7LFVw8p6jMHqvk3coxPH0Wz
+	 R4NCiSF/2pQWo27pM9nr4YYOu5mElESODJclMEBYcLfyqDzULHF6EeLWHWBsR5M9tN
+	 ukfx26WH4EYFZeFGgfLD+Ae/aP7AyxtVOzBzANcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfLWKq2 (ORCPT
+        id S1726861AbfLWKrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 05:46:28 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:39904 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725799AbfLWKq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 05:46:27 -0500
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 218214BBEA90FFFFFDB1;
-        Mon, 23 Dec 2019 18:46:25 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 23 Dec 2019 18:46:16 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <davem@davemloft.net>, <edumazet@google.com>, <willemb@google.com>,
-        <maximmi@mellanox.com>, <maowenan@huawei.com>, <pabeni@redhat.com>,
-        <yuehaibing@huawei.com>, <nhorman@tuxdriver.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>,
-        <willemdebruijn.kernel@gmail.com>
-Subject: [PATCH net-next v2] af_packet: refactoring code for prb_calc_retire_blk_tmo
-Date:   Mon, 23 Dec 2019 18:42:57 +0800
-Message-ID: <20191223104257.132354-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <CA+FuTScgWi905_NhGNsRzpwaQ+OPwahj6NtKgPjLZRjuqJvhXQ@mail.gmail.com>
-References: <CA+FuTScgWi905_NhGNsRzpwaQ+OPwahj6NtKgPjLZRjuqJvhXQ@mail.gmail.com>
+        Mon, 23 Dec 2019 05:47:15 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:51272 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725799AbfLWKrO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 05:47:14 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1ijLEx-0001Wa-69; Mon, 23 Dec 2019 11:47:07 +0100
+To:     John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH RFC 1/1] genirq: Make threaded handler use irq affinity  for managed interrupt
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 23 Dec 2019 10:47:07 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     Ming Lei <ming.lei@redhat.com>, <tglx@linutronix.de>,
+        "chenxiang (M)" <chenxiang66@hisilicon.com>,
+        <bigeasy@linutronix.de>, <linux-kernel@vger.kernel.org>,
+        <hare@suse.com>, <hch@lst.de>, <axboe@kernel.dk>,
+        <bvanassche@acm.org>, <peterz@infradead.org>, <mingo@redhat.com>
+In-Reply-To: <d5774e2f-bb60-c27c-bf00-267b88400a12@huawei.com>
+References: <b7f3bcea-84ec-f9f6-a3aa-007ae712415f@huawei.com>
+ <20191214135641.5a817512@why>
+ <7db89b97-1b9e-8dd1-684a-3eef1b1af244@huawei.com>
+ <50d9ba606e1e3ee1665a0328ffac67ac@www.loen.fr>
+ <a5f6a542-2dbc-62de-52e2-bd5413b5db51@huawei.com>
+ <68058fd28c939b8e065524715494de95@www.loen.fr>
+ <ac5b5a25-df2e-18e9-6b0f-60af8c7cec3b@huawei.com>
+ <687cbcc4-89d9-63ea-a246-ce2abaae501a@huawei.com>
+ <0fd543f8ffd90f90deb691aea1c275b4@www.loen.fr>
+ <a5154365-59c5-429b-559e-94ad6dffcdb0@huawei.com>
+ <20191220233138.GB12403@ming.t460p>
+ <fffcd23dd8286615b6e2c99620836cb1@www.loen.fr>
+ <d5774e2f-bb60-c27c-bf00-267b88400a12@huawei.com>
+Message-ID: <e815b5451ea86e99d42045f7067f455a@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: john.garry@huawei.com, ming.lei@redhat.com, tglx@linutronix.de, chenxiang66@hisilicon.com, bigeasy@linutronix.de, linux-kernel@vger.kernel.org, hare@suse.com, hch@lst.de, axboe@kernel.dk, bvanassche@acm.org, peterz@infradead.org, mingo@redhat.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If __ethtool_get_link_ksettings() is failed and with
-non-zero value, prb_calc_retire_blk_tmo() should return
-DEFAULT_PRB_RETIRE_TOV firstly. 
+On 2019-12-23 10:26, John Garry wrote:
+>>>> > I've also managed to trigger some of them now that I have access 
+>>>> to
+>>>> > a decent box with nvme storage.
+>>>>
+>>>> I only have 2x NVMe SSDs when this occurs - I should not be 
+>>>> hitting this...
+>>>>
+>>>> Out of curiosity, have you tried
+>>>> > with the SMMU disabled? I'm wondering whether we hit some 
+>>>> livelock
+>>>> > condition on unmapping buffers...
+>>>>
+>>>> No, but I can give it a try. Doing that should lower the CPU 
+>>>> usage, though,
+>>>> so maybe masks the issue - probably not.
+>>>
+>>> Lots of CPU lockup can is performance issue if there isn't obvious 
+>>> bug.
+>>>
+>>> I am wondering if you may explain it a bit why enabling SMMU may 
+>>> save
+>>> CPU a it?
+>> The other way around. mapping/unmapping IOVAs doesn't comes for 
+>> free.
+>> I'm trying to find out whether the NVMe map/unmap patterns trigger
+>> something unexpected in the SMMU driver, but that's a very long 
+>> shot.
+>
+> So I tested v5.5-rc3 with and without the SMMU enabled, and without
+> the SMMU enabled I don't get the lockup.
 
-This patch is to refactory code and make it more readable.
+OK, so my hunch wasn't completely off... At least we have something
+to look into.
 
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
----
- v2: delete 'Fixes' tag, do not initialize some variable, 
- and delete two variable as Willem de Bruijn proposal.
- net/packet/af_packet.c | 30 ++++++++++++------------------
- 1 file changed, 12 insertions(+), 18 deletions(-)
+[...]
 
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index 118cd66b7516..3bec515ccde3 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -520,7 +520,7 @@ static int prb_calc_retire_blk_tmo(struct packet_sock *po,
- 				int blk_size_in_bytes)
- {
- 	struct net_device *dev;
--	unsigned int mbits = 0, msec = 0, div = 0, tmo = 0;
-+	unsigned int mbits, div;
- 	struct ethtool_link_ksettings ecmd;
- 	int err;
- 
-@@ -532,31 +532,25 @@ static int prb_calc_retire_blk_tmo(struct packet_sock *po,
- 	}
- 	err = __ethtool_get_link_ksettings(dev, &ecmd);
- 	rtnl_unlock();
--	if (!err) {
--		/*
--		 * If the link speed is so slow you don't really
--		 * need to worry about perf anyways
--		 */
--		if (ecmd.base.speed < SPEED_1000 ||
--		    ecmd.base.speed == SPEED_UNKNOWN) {
--			return DEFAULT_PRB_RETIRE_TOV;
--		} else {
--			msec = 1;
--			div = ecmd.base.speed / 1000;
--		}
--	} else
-+	if (err)
- 		return DEFAULT_PRB_RETIRE_TOV;
- 
-+	/* If the link speed is so slow you don't really
-+	 * need to worry about perf anyways
-+	 */
-+	if (ecmd.base.speed < SPEED_1000 ||
-+	    ecmd.base.speed == SPEED_UNKNOWN)
-+		return DEFAULT_PRB_RETIRE_TOV;
-+
-+	div = ecmd.base.speed / 1000;
- 	mbits = (blk_size_in_bytes * 8) / (1024 * 1024);
- 
- 	if (div)
- 		mbits /= div;
- 
--	tmo = mbits * msec;
--
- 	if (div)
--		return tmo+1;
--	return tmo;
-+		return mbits + 1;
-+	return mbits;
- }
- 
- static void prb_init_ft_ops(struct tpacket_kbdq_core *p1,
+> Obviously this is not conclusive, especially with such limited
+> testing - 5 minute runs each. The CPU load goes up when disabling the
+> SMMU, but that could be attributed to extra throughput (1183K ->
+> 1539K) loading.
+>
+> I do notice that since we complete the NVMe request in irq context,
+> we also do the DMA unmap, i.e. talk to the SMMU, in the same context,
+> which is less than ideal.
+
+It depends on how much overhead invalidating the TLB adds to the
+equation, but we should be able to do some tracing and find out.
+
+> I need to finish for the Christmas break today, so can't check this
+> much further ATM.
+
+No worries. May I suggest creating a new thread in the new year, maybe
+involving Robin and Will as well?
+
+Thanks,
+
+         M.
 -- 
-2.20.1
-
+Jazz is not dead. It just smells funny...
