@@ -2,135 +2,102 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3DFC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF78C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFDC220715
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:43:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y6kMDUZy"
+	by mail.kernel.org (Postfix) with ESMTP id F339F206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:44:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfLWNnB (ORCPT
+        id S1726873AbfLWNoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 08:43:01 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39203 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726676AbfLWNnB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 08:43:01 -0500
-Received: by mail-pf1-f196.google.com with SMTP id q10so9211070pfs.6
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 05:43:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=wVTAxAkLybU/XzL/opvLLffdVLtU7bgXnpcg4bd91o4=;
-        b=Y6kMDUZyIpXUhY/6S6BGldJrLa3Be3lQw1aP1BG6W+6jpQs0H94u4738rszDgOEhev
-         yj1YEU5Dhi+0a5z+R8dlTKCFEuU7NWGPTiCqZMIE80senDFfhVqi6pcyZbipej4nkQ1d
-         V6tESjmrSWYreiBea6tmcV267sBT5fNb09WlZ1BUoaTGrqGyrgi8V+t4P7pGb2ZnYemn
-         JQiamP8GzVdx2hTRs/mV/QNsjP6r2E86kVtm2jS0pSsqEyoL0hwlTM8OUhoWzQLioUq1
-         qo3tKYhZjjwuv5Wwu/PXS8Oo+fqbuCWVUjnmzjEaSEIUUYY3m7TB7K6FLeQseWDqYeP9
-         DSyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=wVTAxAkLybU/XzL/opvLLffdVLtU7bgXnpcg4bd91o4=;
-        b=DfoT6asEq7LY4ia5ixTJfqy0/O+SvWM0enIk8lqyUxKSwHvAMYG1AHUWzp56fUJTX2
-         zq72D0JVsmnQBqWazNXDh4NQ+h1fFEXeHgbFjhcFUgmMEAamHe+qghDQQ9bmF0Hlq+Kl
-         m5oxjnnqn1FUPBe/8/8qjAMegHq0gB2abHhyEIkBCuQeRUsAZfolpxi/k4iyu9rxnie1
-         ZamgO/qqSBlpM0UF793wz/jpgQnc7I/yZKE1uFEfeFf3ojslTTbsexvujEBPSOPZidQ2
-         QdziXcFa0j1ryHuZ9MeCpmGJAQYr1Z/nuJjwsjMHXo98+ugKuuPgTRy0EN0DZkazVf7d
-         QXUA==
-X-Gm-Message-State: APjAAAXILw1NLv7aDXP3DTOMKEb+deANNdGbX1/Ol2DcJeWn4fudvnNC
-        M2QQpF2ze8f5S04ckli6VQ3Lnw==
-X-Google-Smtp-Source: APXvYqwmupBlYBUO32XRngGKnjqX9G8UnI7c7rx2T5XTS3rPO/gmjyWX42Do7N5EQcg90Wl/OdkwDQ==
-X-Received: by 2002:a63:89c2:: with SMTP id v185mr30692540pgd.135.1577108580760;
-        Mon, 23 Dec 2019 05:43:00 -0800 (PST)
-Received: from [192.168.11.202] (li1566-229.members.linode.com. [139.162.86.229])
-        by smtp.gmail.com with ESMTPSA id z4sm21121512pjn.29.2019.12.23.05.42.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 23 Dec 2019 05:43:00 -0800 (PST)
-Subject: Re: [PATCH v10 0/4] Add uacce module for Accelerator
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        jonathan.cameron@huawei.com, grant.likely@arm.com,
-        jean-philippe <jean-philippe@linaro.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        "haojian . zhuang" <haojian.zhuang@linaro.org>,
-        guodong.xu@linaro.org
-Cc:     linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org
-References: <1576465697-27946-1-git-send-email-zhangfei.gao@linaro.org>
-From:   zhangfei <zhangfei.gao@linaro.org>
-Message-ID: <0e7f16b7-938b-402a-e3e3-2a0bed6fb708@linaro.org>
-Date:   Mon, 23 Dec 2019 21:41:31 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 23 Dec 2019 08:44:01 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:46090 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726676AbfLWNoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 08:44:00 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 1E959C499F930DB2F9D9;
+        Mon, 23 Dec 2019 21:43:54 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Mon, 23 Dec 2019
+ 21:43:44 +0800
+Subject: Re: [PATCH] KVM: arm/arm64: vgic: Handle GICR_PENDBASER.PTZ filed as
+ RAZ
+To:     <maz@kernel.org>
+CC:     <andre.przywara@arm.com>, <eric.auger@redhat.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
+        <wanghaibin.wang@huawei.com>
+References: <20191220111833.1422-1-yuzenghui@huawei.com>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <3a729559-d0eb-e042-d6bd-b69bacb0dd23@huawei.com>
+Date:   Mon, 23 Dec 2019 21:43:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <1576465697-27946-1-git-send-email-zhangfei.gao@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191220111833.1422-1-yuzenghui@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Greg
+On 2019/12/20 19:18, Zenghui Yu wrote:
+> Although guest will hardly read and use the PTZ (Pending Table Zero)
+> bit in GICR_PENDBASER, let us emulate the architecture strictly.
+> As per IHI 0069E 9.11.30, PTZ field is WO, and reads as 0.
+> 
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+> ---
+> 
+> Noticed when checking all fields of GICR_PENDBASER register.
+> But _not_ sure whether it's worth a fix, as Linux never sets
+> the PTZ bit before enabling LPI (set GICR_CTLR_ENABLE_LPIS).
+> 
+> And I wonder under which scenarios can this bit be written as 1.
+> It seems difficult for software to determine whether the pending
+> table contains all zeros when writing this bit.
+> 
+>   virt/kvm/arm/vgic/vgic-mmio-v3.c | 5 ++++-
+>   1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> index 7dfd15dbb308..ebc218840fc2 100644
+> --- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> +++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> @@ -414,8 +414,11 @@ static unsigned long vgic_mmio_read_pendbase(struct kvm_vcpu *vcpu,
+>   					     gpa_t addr, unsigned int len)
+>   {
+>   	struct vgic_cpu *vgic_cpu = &vcpu->arch.vgic_cpu;
+> +	u64 value = vgic_cpu->pendbaser;
+>   
+> -	return extract_bytes(vgic_cpu->pendbaser, addr & 7, len);
+> +	value &= ~GICR_PENDBASER_PTZ;
+> +
+> +	return extract_bytes(value, addr & 7, len);
+>   }
+>   
+>   static void vgic_mmio_write_pendbase(struct kvm_vcpu *vcpu,
+> 
 
-On 2019/12/16 上午11:08, Zhangfei Gao wrote:
-> Uacce (Unified/User-space-access-intended Accelerator Framework) targets to
-> provide Shared Virtual Addressing (SVA) between accelerators and processes.
-> So accelerator can access any data structure of the main cpu.
-> This differs from the data sharing between cpu and io device, which share
-> data content rather than address.
-> Because of unified address, hardware and user space of process can share
-> the same virtual address in the communication.
->
-> Uacce is intended to be used with Jean Philippe Brucker's SVA
-> patchset[1], which enables IO side page fault and PASID support.
-> We have keep verifying with Jean's sva patchset [2]
-> We also keep verifying with Eric's SMMUv3 Nested Stage patches [3]
->
-> This series and related zip & qm driver
-> https://github.com/Linaro/linux-kernel-warpdrive/tree/v5.5-rc1-uacce-v10
->
-> The library and user application:
-> https://github.com/Linaro/warpdrive/tree/wdprd-upstream-v10
->
-> References:
-> [1] http://jpbrucker.net/sva/
-> [2] http://jpbrucker.net/git/linux/log/?h=sva/zip-devel
-> [3] https://github.com/eauger/linux/tree/v5.3.0-rc0-2stage-v9
->
-> Change History:
-> v10:
-> Modify the include header to fix kbuild test erorr in other arch.
->
->
-> Kenneth Lee (2):
->    uacce: Add documents for uacce
->    uacce: add uacce driver
->
-> Zhangfei Gao (2):
->    crypto: hisilicon - Remove module_param uacce_mode
->    crypto: hisilicon - register zip engine to uacce
->
->
+I noticed there is no userspace access callbacks for GICR_PENDBASER,
+so this patch will make the PTZ field also 'Read As Zero' by userspace.
+Should we consider adding a uaccess_read callback for GICR_PENDBASER
+which just returns the unchanged vgic_cpu->pendbaser to userspace?
+(Though this is really not a big deal. We now always emulate the PTZ
+field to guest as RAZ. And 'vgic_cpu->pendbaser & GICR_PENDBASER_PTZ'
+only indicates whether KVM will optimize the LPI enabling process,
+where Read As Zero indicates never optimize..)
 
-Would you mind take a look at the patch set?
 
-The patches are also used for verifying the sva feature.
-https://lore.kernel.org/linux-iommu/20191219163033.2608177-1-jean-philippe@linaro.org/
+Thanks,
+Zenghui
 
-Thanks
