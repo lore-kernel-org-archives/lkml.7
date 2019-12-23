@@ -2,162 +2,156 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B33CC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 20:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCADC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 21:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B88C2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 20:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31B2D206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 21:08:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="nIF/rtU2"
+	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="KYeJkAS8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbfLWUp4 (ORCPT
+        id S1726873AbfLWVIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 15:45:56 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36618 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbfLWUp4 (ORCPT
+        Mon, 23 Dec 2019 16:08:30 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43978 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbfLWVIa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 15:45:56 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z3so17963953wru.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 12:45:54 -0800 (PST)
+        Mon, 23 Dec 2019 16:08:30 -0500
+Received: by mail-io1-f67.google.com with SMTP id n21so15810148ioo.10
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 13:08:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RfB76wwaEX/78cbszFlEp1zzCnUTfDY/Sh7gy/S4Lbo=;
-        b=nIF/rtU2CboWVUUhYtDjyEwhh2pLvmBwpXRDenb7QB+hciZC4vK0N69+PUkjMN7aDK
-         RRlAU40oBB+K9zy7rIki+yoYkvykfYmfp98ExrjDAXen7Q4WBr44moYjTmVm13NhpzXp
-         KrmGxTN3IeAgaWFHuzcn/KNRF7a/w2CjQMWoQ=
+        d=sargun.me; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=2PRppcZj4QQV2bYtw/LlSv6wKSsTQE8fDROQNhRtfik=;
+        b=KYeJkAS8Z8H02AKtkskQnaPjMQKy1JBE6L0dadg7nnYeXthIYm+RIEc1R1faHZtU5u
+         MIdgJ/Xtp9suaQ5iEwrIhl2BQxuuGQbQQZaAZqM8ct1CqqMnb2EUv8wgHl2ctlR2q2NO
+         n5Kaeqj2vKcwmb4jpqSxGUW2aR/UOANVHXTuM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RfB76wwaEX/78cbszFlEp1zzCnUTfDY/Sh7gy/S4Lbo=;
-        b=CnvaczDNSZfA//D5+mRE3ol9RmNfLSyYnhVNh5QIHrvEaXkU1hp8nf1/rF1oHIanL8
-         +jy80OnPi1hMH6LUY5fXDQpBC0eplsmVqPcH8t3WsuyniP8hM/Rl3d7TgKeeXGn6rfOn
-         RdsLdPVyHaLvJWH9Zf9HKOHX3sUPFGhsiNblSmMgiZoCY63tyQTVk8oaD1EQ8hj3OE7E
-         NPRamlcljbP2CPXpARoGDhdjFTl3n02OBzb6Ua2iTWKHPWed5ILqV2ROlqgIAHMKETMk
-         XbQHRuzTZfOPii9X7DV9O2DNo/zj3jkmcBfEctLUC/5SrpdKYmyhx7NTz6WGr113ZbOL
-         /5XA==
-X-Gm-Message-State: APjAAAWMRAW3zACIeXKeJnnscEoEtFI8QVOZmBiVYXugn0ma10aEJq51
-        p5Lu6v3LN2Zarb8XmHEL/KJOlg==
-X-Google-Smtp-Source: APXvYqx0rT7XFoKtJISTWdjiz/59q0aYkCoY6+XhmuAF4uBKOfMLvzlxtpIE9vJ0+tKDjKe9Ordrow==
-X-Received: by 2002:adf:df03:: with SMTP id y3mr34226407wrl.260.1577133954181;
-        Mon, 23 Dec 2019 12:45:54 -0800 (PST)
-Received: from localhost ([2620:10d:c092:180::1:94bc])
-        by smtp.gmail.com with ESMTPSA id b10sm22304212wrt.90.2019.12.23.12.45.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Dec 2019 12:45:53 -0800 (PST)
-Date:   Mon, 23 Dec 2019 20:45:51 +0000
-From:   Chris Down <chris@chrisdown.name>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com,
-        Hugh Dickins <hughd@google.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        "zhengbin (A)" <zhengbin13@huawei.com>,
-        Roman Gushchin <guro@fb.com>
-Subject: Re: [PATCH] fs: inode: Reduce volatile inode wraparound risk when
- ino_t is 64 bit
-Message-ID: <20191223204551.GA272672@chrisdown.name>
-References: <20191220024936.GA380394@chrisdown.name>
- <CAOQ4uxjqSWcrA1reiyit9DRt+aq2tXBxLdPE31RrYw1yr=4hjg@mail.gmail.com>
- <20191220121615.GB388018@chrisdown.name>
- <CAOQ4uxgo_kAttnB4N1+om5gScYSDn3FXAr+_GUiqNy_79iiLXQ@mail.gmail.com>
- <20191220164632.GA26902@bombadil.infradead.org>
- <CAOQ4uxhYY9Ep1ncpU+E3bWg4ZpR8pjvLJMA5vj+7frEJ2KTwsg@mail.gmail.com>
- <20191220195025.GA9469@bombadil.infradead.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=2PRppcZj4QQV2bYtw/LlSv6wKSsTQE8fDROQNhRtfik=;
+        b=qLtP++O7e/UpDZmbwURBbtLeK8ugDSM4xuwjg9tQdI0tXQudcSc9JpVFQffZ0lhhdw
+         a/nVCpVUGsTFq2mMB4qMTqX5g5O7/IWOKQtMWT+bwpejePfvTnFWpITYjgUFx1eQapFB
+         BL/exLu913Nz3nmYrAwAyYqMc38+Dptl29tOaQ988xg0hw5CLALzT9H/cjLfum1FniXR
+         q4lOCZSDi2LhzyDhEoE/bTaHC3VQ6PU2II9tCo3mNmLmqSaV5ddiwq2iJlqvStvFjAPZ
+         JRMBao7oX8CMjxIdCny5QA2K20AR83BFRJw3HsqFsgLFk3fDsXOxvscW3Vogiq61Kf64
+         Ye8A==
+X-Gm-Message-State: APjAAAVp9MmthhV0Yx5GuI5YVEoPy2VrcFSYmw5Cy9/+zil1fupYJEnT
+        1OrjY07JaFf3jVfM2+1Hs5F5ZIIpTd8YDQ==
+X-Google-Smtp-Source: APXvYqxWC8XJxbsYgVo33DCabCchrWq0s88ACsLTW88a+abxzD48tfSdHvrYrnPPlxNtsXSoraUiww==
+X-Received: by 2002:a02:b893:: with SMTP id p19mr24549440jam.103.1577135308072;
+        Mon, 23 Dec 2019 13:08:28 -0800 (PST)
+Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
+        by smtp.gmail.com with ESMTPSA id p5sm9312687ilg.69.2019.12.23.13.08.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 23 Dec 2019 13:08:27 -0800 (PST)
+Date:   Mon, 23 Dec 2019 21:08:26 +0000
+From:   Sargun Dhillon <sargun@sargun.me>
+To:     linux-kernel@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     tycho@tycho.ws, jannh@google.com, cyphar@cyphar.com,
+        christian.brauner@ubuntu.com, oleg@redhat.com, luto@amacapital.net,
+        viro@zeniv.linux.org.uk, gpascutto@mozilla.com,
+        ealvarez@mozilla.com, fweimer@redhat.com, jld@mozilla.com,
+        arnd@arndb.de
+Subject: [PATCH v6 0/3] Add pidfd_getfd syscall
+Message-ID: <20191223210823.GA25083@ircssh-2.c.rugged-nimbus-611.internal>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191220195025.GA9469@bombadil.infradead.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Matthew Wilcox writes:
->On Fri, Dec 20, 2019 at 07:35:38PM +0200, Amir Goldstein wrote:
->> On Fri, Dec 20, 2019 at 6:46 PM Matthew Wilcox <willy@infradead.org> wrote:
->> >
->> > On Fri, Dec 20, 2019 at 03:41:11PM +0200, Amir Goldstein wrote:
->> > > Suggestion:
->> > > 1. Extend the kmem_cache API to let the ctor() know if it is
->> > > initializing an object
->> > >     for the first time (new page) or recycling an object.
->> >
->> > Uh, what?  The ctor is _only_ called when new pages are allocated.
->> > Part of the contract with the slab user is that objects are returned to
->> > the slab in an initialised state.
->>
->> Right. I mixed up the ctor() with alloc_inode().
->> So is there anything stopping us from reusing an existing non-zero
->> value of  i_ino in shmem_get_inode()? for recycling shmem ino
->> numbers?
->
->I think that would be an excellent solution to the problem!  At least,
->I can't think of any problems with it.
+This patchset introduces a mechanism (pidfd_getfd syscall) to get file
+descriptors from other processes via pidfd. Although this can be achieved
+using SCM_RIGHTS, and parasitic code injection, this offers a more
+straightforward mechanism, with less overhead and complexity. The process
+under manipulation's fd still remains valid, and unmodified by the
+copy operation.
 
-Thanks for the suggestions and feedback, Amir and Matthew :-)
+It introduces a flags field. The flags field is reserved a the moment,
+but the intent is to extend it with the following capabilities:
+ * Close the remote FD when copying it
+ * Drop the cgroup data if it's a fd pointing a socket when copying it
 
-The slab i_ino recycling approach works somewhat, but is unfortunately neutered 
-quite a lot by the fact that slab recycling is per-memcg. That is, replacing 
-with recycle_or_get_next_ino(old_ino)[0] for shmfs and a few other trivial 
-callsites only leads to about 10% slab reuse, which doesn't really stem the 
-bleeding of 32-bit inums on an affected workload:
+The syscall numbers were chosen to be one greater than openat2.
 
-     # tail -5000 /sys/kernel/debug/tracing/trace | grep -o 'recycle_or_get_next_ino:.*' | sort | uniq -c
-         4454 recycle_or_get_next_ino: not recycled
-          546 recycle_or_get_next_ino: recycled
+Summary of history:
+This initially started as a ptrace command. It did not require the process
+to be stopped, and felt like kind of an awkward fit for ptrace. After that,
+it moved to an ioctl on the pidfd. Given functionality, it made sense to
+make it a syscall which did not require the process to be stopped.
 
-Roman (who I've just added to cc) tells me that currently we only have 
-per-memcg slab reuse instead of global when using CONFIG_MEMCG. This 
-contributes fairly significantly here since there are multiple tasks across 
-multiple cgroups which are contributing to the get_next_ino() thrash.
+Changes since v5:
+ * Drop pidfd_getfd_options struct and replace with a flags field
 
-I think this is a good start, but we need something of a different magnitude in 
-order to actually solve this problem with the current slab infrastructure. How 
-about something like the following?
+Changes since v4:
+ * Turn into a syscall
+ * Move to PTRACE_MODE_ATTACH_REALCREDS from PTRACE_MODE_READ_REALCREDS
+ * Remove the sample code. This will come in another patchset, as the
+   new self-tests cover all the functionality.
 
-1. Add get_next_ino_full, which uses whatever the full width of ino_t is
-2. Use get_next_ino_full in tmpfs (et al.)
-3. Add a mount option to tmpfs (et al.), say `32bit-inums`, which people can 
-    pass if they want the 32-bit inode numbers back. This would still allow 
-    people who want to make this tradeoff to use xino.
-4. (If you like) Also add a CONFIG option to disable this at compile time.
+Changes since v3:
+ * Add self-test
+ * Move to ioctl passing fd directly, versus args struct
+ * Shuffle around include files
 
-I'd appreciate your thoughts on that approach or others you have ideas about. 
-Thanks! :-)
+Changes since v2:
+ * Move to ioctl on pidfd instead of ptrace function
+ * Add security check before moving file descriptor
 
-0:
+Changes since the RFC v1:
+ * Introduce a new helper to fs/file.c to fetch a file descriptor from
+   any process. It largely uses the code suggested by Oleg, with a few
+   changes to fix locking
+ * It uses an extensible options struct to supply the FD, and option.
+ * I added a sample, using the code from the user-ptrace sample
 
-unsigned int recycle_or_get_next_ino(ino_t old_ino)
-{
-	/*
-	 * get_next_ino returns unsigned int. If this fires then i_ino must be
-	 * >32 bits and have been changed later, so the caller shouldn't be
-	 * recycling inode numbers
-	 */
-	WARN_ONCE(old_ino >> (sizeof(unsigned int) * 8),
-		  "Recyclable i_ino uses more bits than unsigned int: %llu",
-		  (u64)old_ino);
+Sargun Dhillon (3):
+  vfs, fdtable: Add get_task_file helper
+  pid: Introduce pidfd_getfd syscall
+  test: Add test for pidfd getfd
 
-	if (old_ino) {
-		if (prandom_u32() % 100 == 0)
-			trace_printk("recycled\n");
-		return old_ino;
-	} else {
-		if (prandom_u32() % 100 == 0)
-			trace_printk("not recycled\n");
-		return get_next_ino();
-	}
-}
+ arch/alpha/kernel/syscalls/syscall.tbl        |   1 +
+ arch/arm/tools/syscall.tbl                    |   1 +
+ arch/arm64/include/asm/unistd.h               |   2 +-
+ arch/arm64/include/asm/unistd32.h             |   2 +
+ arch/ia64/kernel/syscalls/syscall.tbl         |   1 +
+ arch/m68k/kernel/syscalls/syscall.tbl         |   1 +
+ arch/microblaze/kernel/syscalls/syscall.tbl   |   1 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl     |   1 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl     |   1 +
+ arch/mips/kernel/syscalls/syscall_o32.tbl     |   1 +
+ arch/parisc/kernel/syscalls/syscall.tbl       |   1 +
+ arch/powerpc/kernel/syscalls/syscall.tbl      |   1 +
+ arch/s390/kernel/syscalls/syscall.tbl         |   1 +
+ arch/sh/kernel/syscalls/syscall.tbl           |   1 +
+ arch/sparc/kernel/syscalls/syscall.tbl        |   1 +
+ arch/x86/entry/syscalls/syscall_32.tbl        |   1 +
+ arch/x86/entry/syscalls/syscall_64.tbl        |   1 +
+ arch/xtensa/kernel/syscalls/syscall.tbl       |   1 +
+ fs/file.c                                     |  22 +-
+ include/linux/file.h                          |   2 +
+ include/linux/syscalls.h                      |   1 +
+ include/uapi/asm-generic/unistd.h             |   3 +-
+ kernel/pid.c                                  | 106 ++++++++
+ tools/testing/selftests/pidfd/.gitignore      |   1 +
+ tools/testing/selftests/pidfd/Makefile        |   2 +-
+ .../selftests/pidfd/pidfd_getfd_test.c        | 253 ++++++++++++++++++
+ 26 files changed, 405 insertions(+), 5 deletions(-)
+ create mode 100644 tools/testing/selftests/pidfd/pidfd_getfd_test.c
+
+-- 
+2.20.1
+
