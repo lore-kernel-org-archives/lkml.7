@@ -2,162 +2,59 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66028C2D0D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 07:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8FCC2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 07:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 326112073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 07:11:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lftrXC8/"
+	by mail.kernel.org (Postfix) with ESMTP id 2CBD0206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 07:13:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726063AbfLWHLS (ORCPT
+        id S1726108AbfLWHNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 02:11:18 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:40650 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbfLWHLR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 02:11:17 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBN7B4Cf088308;
-        Mon, 23 Dec 2019 01:11:04 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1577085064;
-        bh=02Y5bx6iWO9Ds4+8bjzc1aI2WrawgyCHLyU/VpC8TA4=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=lftrXC8/DpJwn4Aso0DNv9JYSikjp4xa+4lEDZ8K4mMS3sGTr4XSiQvYnp4pLYSuH
-         emlLOLHPhfy9CXMN3gbQHLrlYWlz0dKcfUx2YOIpr0ipSzjmm7F6/lJoztW2mLuZba
-         7J0/QvgAdr1EpLS7GrofRWhCtadHOEZFbvjK/uV8=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBN7B4JB086044
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 23 Dec 2019 01:11:04 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 23
- Dec 2019 01:11:02 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 23 Dec 2019 01:11:02 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBN7AxHw061310;
-        Mon, 23 Dec 2019 01:10:59 -0600
-Subject: Re: [PATCH v7 06/12] dmaengine: ti: Add cppi5 header for K3
- NAVSS/UDMA
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
-        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>,
-        <vigneshr@ti.com>
-References: <20191209094332.4047-1-peter.ujfalusi@ti.com>
- <20191209094332.4047-7-peter.ujfalusi@ti.com>
- <20191220095455.GM2536@vkoul-mobl>
- <d5bd6bcf-9c1e-8633-fdc4-ee787100b44c@ti.com>
-Message-ID: <dc251d90-2e1f-ae3e-2a29-4191e8eefb7a@ti.com>
-Date:   Mon, 23 Dec 2019 09:11:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <d5bd6bcf-9c1e-8633-fdc4-ee787100b44c@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Mon, 23 Dec 2019 02:13:38 -0500
+Received: from mail.sysgo.com ([176.9.12.79]:53700 "EHLO mail.sysgo.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725810AbfLWHNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 02:13:37 -0500
+From:   David Engraf <david.engraf@sysgo.com>
+To:     linux@roeck-us.net, wim@linux-watchdog.org
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Engraf <david.engraf@sysgo.com>
+Subject: [PATCH RESEND] watchdog: max77620_wdt: fix potential build errors
+Date:   Mon, 23 Dec 2019 08:13:11 +0100
+Message-Id: <20191223071311.5650-1-david.engraf@sysgo.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <7325c440-aa55-92ce-ec74-b420fd90a24b@roeck-us.net>
+References: <7325c440-aa55-92ce-ec74-b420fd90a24b@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
+max77620_wdt uses watchdog core functions. Enable CONFIG_WATCHDOG_CORE
+to fix potential build errors.
 
-On 20/12/2019 12.42, Peter Ujfalusi wrote:
-> Hi Vinod,
-> 
-> On 20/12/2019 11.54, Vinod Koul wrote:
->> On 09-12-19, 11:43, Peter Ujfalusi wrote:
->>
->>> +#define CPPI5_INFO2_DESC_RETPUSHPOLICY		BIT(16)
->>> +#define CPPI5_INFO2_DESC_RETP_MASK		GENMASK(18, 16)
->>> +
->>> +#define CPPI5_INFO2_DESC_RETQ_SHIFT		(0)
->>> +#define CPPI5_INFO2_DESC_RETQ_MASK		GENMASK(15, 0)
->>> +
->>> +#define CPPI5_INFO3_DESC_SRCTAG_SHIFT		(16U)
->>> +#define CPPI5_INFO3_DESC_SRCTAG_MASK		GENMASK(31, 16)
->>> +#define CPPI5_INFO3_DESC_DSTTAG_SHIFT		(0)
->>> +#define CPPI5_INFO3_DESC_DSTTAG_MASK		GENMASK(15, 0)
->>> +
->>> +#define CPPI5_BUFINFO1_HDESC_DATA_LEN_SHIFT	(0)
->>> +#define CPPI5_BUFINFO1_HDESC_DATA_LEN_MASK	GENMASK(27, 0)
->>> +
->>> +#define CPPI5_OBUFINFO0_HDESC_BUF_LEN_SHIFT	(0)
->>> +#define CPPI5_OBUFINFO0_HDESC_BUF_LEN_MASK	GENMASK(27, 0)
->>
->> I think you can remove the SHIFT defines and use ffs() to get the bit
->> position for shift
-> 
-> Right. I'll convert to use ffs()
+Signed-off-by: David Engraf <david.engraf@sysgo.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+---
+ drivers/watchdog/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-I rather keep the defines.
-While ffs() is simple, it is going to have effect in speeds gigabit or
-beyond.
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index 58e7c100b6ad..c9cc34f4e541 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -687,6 +687,7 @@ config MAX63XX_WATCHDOG
+ config MAX77620_WATCHDOG
+ 	tristate "Maxim Max77620 Watchdog Timer"
+ 	depends on MFD_MAX77620 || COMPILE_TEST
++	select WATCHDOG_CORE
+ 	help
+ 	 This is the driver for the Max77620 watchdog timer.
+ 	 Say 'Y' here to enable the watchdog timer support for
+-- 
+2.17.1
 
->>> +static inline u32 cppi5_hdesc_calc_size(bool epib, u32 psdata_size,
->>> +					u32 sw_data_size)
->>> +{
->>> +	u32 desc_size;
->>> +
->>> +	if (psdata_size > CPPI5_INFO0_HDESC_PSDATA_MAX_SIZE)
->>> +		return 0;
->>> +
->>> +	desc_size = sizeof(struct cppi5_host_desc_t) + psdata_size +
->>> +		    sw_data_size;
->>
->> I think there was an API for this kind of mem allocation of struct and
->> buffer attached...
-> 
-> The returned size is not only used when allocating memory or setting up
-> the dma_pool, but for UDMAP's fetch size parameter.
-> 
->>> +static inline void cppi5_hdesc_reset_hbdesc(struct cppi5_host_desc_t *desc)
->>> +{
->>> +	desc->hdr = (struct cppi5_desc_hdr_t) { 0 };
->>> +	desc->next_desc = 0;
->>
->> would this not be superfluous? Or if you want a memset call?
-> 
-> The intention is to reset the header and the next descriptor link but
-> leave the backing buffer information intact. This allows the reuse of a
-> descriptor+buffer and we only need to set the header bits + next
-> descriptor pointer if any.
-> 
->>> +static inline u32 *cppi5_hdesc_get_psdata32(struct cppi5_host_desc_t *desc)
->>> +{
->>> +	return (u32 *)cppi5_hdesc_get_psdata(desc);
->>
->> you dont need casts away from void *
-> 
-> Hrm, or just remove this, clients can use the cppi5_hdesc_get_psdata()
-> directly.
-> 
-> 
-> - Péter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
