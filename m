@@ -2,159 +2,269 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42598C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E322BC2D0CF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB8D20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B075220715
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:59:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=flawful.org header.i=@flawful.org header.b="typ7neJr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbfLWOzM (ORCPT
+        id S1726884AbfLWO7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 09:55:12 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:41282 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726795AbfLWOzM (ORCPT
+        Mon, 23 Dec 2019 09:59:06 -0500
+Received: from pio-pvt-msa1.bahnhof.se ([79.136.2.40]:35640 "EHLO
+        pio-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726733AbfLWO7G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 09:55:12 -0500
-Received: by mail-il1-f198.google.com with SMTP id k9so14372549ili.8
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 06:55:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=MXAH+5x0CIJYi1dDiKEIBiQX1//cGwDTkc0vcfTXCXg=;
-        b=FTOKa0EEMnLtIVLCxKaRLVuq5qusKzAwRV3QuiwhZhT0fo6NA6OO1fKCT6hiVVOQFY
-         UF3rKg8PbCQLuComW/vwd3UsBVl7S3MWo+R2BxSds4cFgEPGgZjNTWyxxxVrbevuuSpn
-         r4EsrbwKnjMQV0RdE3sur/7xxj3l4pMvRks3NLeAEWk9OOzkX9cToIi4mAeTUKC9na1h
-         ZEFFTZ5IOMalyH5cehZkaxQvmJ8E0y+Gc4aSFiXx1oOcIyUoAwnLBmqYp4Q+w5hI8dob
-         6QGiWh2jw6X5dDTD32736PGnGbrz+Q9TXxxRZ8V6Dn+sy4T9ptjyw3Mt4F7k7FQwLs/S
-         1/YQ==
-X-Gm-Message-State: APjAAAVcxPPhiUWTTw7/dEGyqL33up8IZNMSu3ldKiNHzIjGjbM/WsqT
-        AnPz8M1JoIrGVdc3LLmhvNomwAMly9nAM9jkdonhpmcRlfwx
-X-Google-Smtp-Source: APXvYqwUUAZkCTx3Y/w41e4629jcASn6MZ/pjHu7YCvdy6jphpuZwSXnpXcXKz5Re9Uxmp9cm9FBiCUyidvwd9WsYSY5RsQ9iSh2
+        Mon, 23 Dec 2019 09:59:06 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 1BB1640735;
+        Mon, 23 Dec 2019 15:59:01 +0100 (CET)
+Authentication-Results: pio-pvt-msa1.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=flawful.org header.i=@flawful.org header.b="typ7neJr";
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id iL9FOQN669re; Mon, 23 Dec 2019 15:58:58 +0100 (CET)
+Received: from flawful.org (ua-84-217-220-205.bbcust.telenor.se [84.217.220.205])
+        (Authenticated sender: mb274189)
+        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 89A694071F;
+        Mon, 23 Dec 2019 15:58:55 +0100 (CET)
+Received: by flawful.org (Postfix, from userid 1001)
+        id B16761451; Mon, 23 Dec 2019 15:58:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flawful.org; s=mail;
+        t=1577113133; bh=PJZqQ9ZL1BQ0WM0bKMnF161ozdrug0XMBQ43BZdidcE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=typ7neJrcWsg+AlhaXvwYvGu0B07MJ4VwlFr/TgfknnKp24QvzUVlCIxs8lWZtdCa
+         uDotbdbsrIDcKupr5/AZ6qRaaAGxarzcOefmeopR8U/qYZ/Y15Qrg0wVKOO2ljeSZ4
+         uQ5ydnWBCKLRBxa3HXjoYLBC9CTpx6wl+0Tdvuzc=
+Date:   Mon, 23 Dec 2019 15:58:53 +0100
+From:   Niklas Cassel <nks@flawful.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Niklas Cassel <niklas.cassel@linaro.org>,
+        linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org,
+        sboyd@kernel.org, vireshk@kernel.org, bjorn.andersson@linaro.org,
+        ulf.hansson@linaro.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/5] dt-bindings: power: avs: Add support for CPR
+ (Core Power Reduction)
+Message-ID: <20191223145853.eaw23k2c5oyh7j44@flawful.org>
+References: <20191129213917.1301110-1-niklas.cassel@linaro.org>
+ <20191129213917.1301110-2-niklas.cassel@linaro.org>
+ <121319954.uyNvbQYpoT@kreacher>
+ <20191220143356.cprp55jmuhtcx7wr@flawful.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:d80f:: with SMTP id y15mr26195608ilm.225.1577112911058;
- Mon, 23 Dec 2019 06:55:11 -0800 (PST)
-Date:   Mon, 23 Dec 2019 06:55:11 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d5a039059a6036a3@google.com>
-Subject: KASAN: use-after-free Read in eth_type_trans
-From:   syzbot <syzbot+6745e272378d071cac7f@syzkaller.appspotmail.com>
-To:     arnd@arndb.de, daniel@iogearbox.net, davej@redhat.com,
-        davem@davemloft.net, dhowells@redhat.com, edumazet@google.com,
-        hkallweit1@gmail.com, jasowang@redhat.com,
-        linux-kernel@vger.kernel.org, maximmi@mellanox.com, mst@redhat.com,
-        mtk.manpages@gmail.com, netdev@vger.kernel.org,
-        peterpenkov96@gmail.com, sdf@google.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191220143356.cprp55jmuhtcx7wr@flawful.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, Dec 20, 2019 at 03:33:56PM +0100, Niklas Cassel wrote:
+> On Fri, Dec 20, 2019 at 10:31:53AM +0100, Rafael J. Wysocki wrote:
+> > On Friday, November 29, 2019 10:39:11 PM CET Niklas Cassel wrote:
+> > > Add DT bindings to describe the CPR HW found on certain Qualcomm SoCs.
+> > > 
+> > > Co-developed-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> > > Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> > > Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> > > ---
+> > > Changes since v6:
+> > > -Picked up Bjorn's and Ulf's Reviewed-by.
+> > > 
+> > >  .../bindings/power/avs/qcom,cpr.txt           | 130 ++++++++++++++++++
+> > >  1 file changed, 130 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt b/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
+> > > new file mode 100644
+> > > index 000000000000..ab0d5ebbad4e
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
+> > > @@ -0,0 +1,130 @@
+> > > +QCOM CPR (Core Power Reduction)
+> > > +
+> > > +CPR (Core Power Reduction) is a technology to reduce core power on a CPU
+> > > +or other device. Each OPP of a device corresponds to a "corner" that has
+> > > +a range of valid voltages for a particular frequency. While the device is
+> > > +running at a particular frequency, CPR monitors dynamic factors such as
+> > > +temperature, etc. and suggests adjustments to the voltage to save power
+> > > +and meet silicon characteristic requirements.
+> > > +
+> > > +- compatible:
+> > > +	Usage: required
+> > > +	Value type: <string>
+> > > +	Definition: should be "qcom,qcs404-cpr", "qcom,cpr" for qcs404
+> > > +
+> > > +- reg:
+> > > +	Usage: required
+> > > +	Value type: <prop-encoded-array>
+> > > +	Definition: base address and size of the rbcpr register region
+> > > +
+> > > +- interrupts:
+> > > +	Usage: required
+> > > +	Value type: <prop-encoded-array>
+> > > +	Definition: should specify the CPR interrupt
+> > > +
+> > > +- clocks:
+> > > +	Usage: required
+> > > +	Value type: <prop-encoded-array>
+> > > +	Definition: phandle to the reference clock
+> > > +
+> > > +- clock-names:
+> > > +	Usage: required
+> > > +	Value type: <stringlist>
+> > > +	Definition: must be "ref"
+> > > +
+> > > +- vdd-apc-supply:
+> > > +	Usage: required
+> > > +	Value type: <phandle>
+> > > +	Definition: phandle to the vdd-apc-supply regulator
+> > > +
+> > > +- #power-domain-cells:
+> > > +	Usage: required
+> > > +	Value type: <u32>
+> > > +	Definition: should be 0
+> > > +
+> > > +- operating-points-v2:
+> > > +	Usage: required
+> > > +	Value type: <phandle>
+> > > +	Definition: A phandle to the OPP table containing the
+> > > +		    performance states supported by the CPR
+> > > +		    power domain
+> > > +
+> > > +- acc-syscon:
+> > > +	Usage: optional
+> > > +	Value type: <phandle>
+> > > +	Definition: phandle to syscon for writing ACC settings
+> > > +
+> > > +- nvmem-cells:
+> > > +	Usage: required
+> > > +	Value type: <phandle>
+> > > +	Definition: phandle to nvmem cells containing the data
+> > > +		    that makes up a fuse corner, for each fuse corner.
+> > > +		    As well as the CPR fuse revision.
+> > > +
+> > > +- nvmem-cell-names:
+> > > +	Usage: required
+> > > +	Value type: <stringlist>
+> > > +	Definition: should be "cpr_quotient_offset1", "cpr_quotient_offset2",
+> > > +		    "cpr_quotient_offset3", "cpr_init_voltage1",
+> > > +		    "cpr_init_voltage2", "cpr_init_voltage3", "cpr_quotient1",
+> > > +		    "cpr_quotient2", "cpr_quotient3", "cpr_ring_osc1",
+> > > +		    "cpr_ring_osc2", "cpr_ring_osc3", "cpr_fuse_revision"
+> > > +		    for qcs404.
+> > > +
+> > > +Example:
+> > > +
+> > > +	cpr_opp_table: cpr-opp-table {
+> > > +		compatible = "operating-points-v2-qcom-level";
+> > > +
+> > > +		cpr_opp1: opp1 {
+> > > +			opp-level = <1>;
+> > > +			qcom,opp-fuse-level = <1>;
+> > > +		};
+> > > +		cpr_opp2: opp2 {
+> > > +			opp-level = <2>;
+> > > +			qcom,opp-fuse-level = <2>;
+> > > +		};
+> > > +		cpr_opp3: opp3 {
+> > > +			opp-level = <3>;
+> > > +			qcom,opp-fuse-level = <3>;
+> > > +		};
+> > > +	};
+> > > +
+> > > +	power-controller@b018000 {
+> > > +		compatible = "qcom,qcs404-cpr", "qcom,cpr";
+> > > +		reg = <0x0b018000 0x1000>;
+> > > +		interrupts = <0 15 IRQ_TYPE_EDGE_RISING>;
+> > > +		clocks = <&xo_board>;
+> > > +		clock-names = "ref";
+> > > +		vdd-apc-supply = <&pms405_s3>;
+> > > +		#power-domain-cells = <0>;
+> > > +		operating-points-v2 = <&cpr_opp_table>;
+> > > +		acc-syscon = <&tcsr>;
+> > > +
+> > > +		nvmem-cells = <&cpr_efuse_quot_offset1>,
+> > > +			<&cpr_efuse_quot_offset2>,
+> > > +			<&cpr_efuse_quot_offset3>,
+> > > +			<&cpr_efuse_init_voltage1>,
+> > > +			<&cpr_efuse_init_voltage2>,
+> > > +			<&cpr_efuse_init_voltage3>,
+> > > +			<&cpr_efuse_quot1>,
+> > > +			<&cpr_efuse_quot2>,
+> > > +			<&cpr_efuse_quot3>,
+> > > +			<&cpr_efuse_ring1>,
+> > > +			<&cpr_efuse_ring2>,
+> > > +			<&cpr_efuse_ring3>,
+> > > +			<&cpr_efuse_revision>;
+> > > +		nvmem-cell-names = "cpr_quotient_offset1",
+> > > +			"cpr_quotient_offset2",
+> > > +			"cpr_quotient_offset3",
+> > > +			"cpr_init_voltage1",
+> > > +			"cpr_init_voltage2",
+> > > +			"cpr_init_voltage3",
+> > > +			"cpr_quotient1",
+> > > +			"cpr_quotient2",
+> > > +			"cpr_quotient3",
+> > > +			"cpr_ring_osc1",
+> > > +			"cpr_ring_osc2",
+> > > +			"cpr_ring_osc3",
+> > > +			"cpr_fuse_revision";
+> > > +	};
+> > > 
+> > 
+> > I have queued up this one and the [2/5] for 5.6, but if you'd rather want them
+> > to go in via a different patch, please let me know and I'll drop them.
+> > 
+> 
+> Thanks a lot Rafael!
+> 
+> I would very much prefer them to go via your tree.
+> 
+> Unfortunately it seems like kbuild test robot
+> found an incorrect printk format specifier in
+> one of the debug prints.
+> 
+> Line 838
+> dev_dbg(dev, "efuse read(%s) = %x, bytes %ld\n", cname, *data, len);
+> 
+> should be
+> dev_dbg(dev, "efuse read(%s) = %x, bytes %zd\n", cname, *data, len);
+> 
+> So %zd rather than %ld.
+> 
+> This was obviously an error, but didn't show when
+> compiling on arm64 or x86_64.
+> 
+> Sorry for this inconvenience.
+> 
+> Could you fix up the commit or do I need to do a respin?
 
-syzbot found the following crash on:
+Hello Rafael,
 
-HEAD commit:    4a94c433 Merge tag 'tpmdd-next-20191219' of git://git.infr..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15e240aee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=745a1e367d8abf39
-dashboard link: https://syzkaller.appspot.com/bug?extid=6745e272378d071cac7f
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1351eb1ee00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11911f2ee00000
+Since the intel test robot found another problem,
+I decided to cook up a series that can be applied
+(or squashed) on top of your bleeding-edge branch
+here instead:
 
-The bug was bisected to:
+https://patchwork.kernel.org/project/linux-pm/list/?series=220955
 
-commit 90e33d45940793def6f773b2d528e9f3c84ffdc7
-Author: Petar Penkov <peterpenkov96@gmail.com>
-Date:   Fri Sep 22 20:49:15 2017 +0000
+Again, sorry for the inconvenience.
 
-     tun: enable napi_gro_frags() for TUN/TAP driver
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=114ebf2ee00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=134ebf2ee00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=154ebf2ee00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6745e272378d071cac7f@syzkaller.appspotmail.com
-Fixes: 90e33d459407 ("tun: enable napi_gro_frags() for TUN/TAP driver")
-
-==================================================================
-BUG: KASAN: use-after-free in ether_addr_equal_64bits  
-include/linux/etherdevice.h:348 [inline]
-BUG: KASAN: use-after-free in eth_type_trans+0x6ce/0x760  
-net/ethernet/eth.c:167
-Read of size 8 at addr ffff888084bf0040 by task syz-executor336/10162
-
-CPU: 1 PID: 10162 Comm: syz-executor336 Not tainted 5.5.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
-  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:639
-  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
-  ether_addr_equal_64bits include/linux/etherdevice.h:348 [inline]
-  eth_type_trans+0x6ce/0x760 net/ethernet/eth.c:167
-  napi_frags_finish net/core/dev.c:5924 [inline]
-  napi_gro_frags+0x8c2/0xd00 net/core/dev.c:5999
-  tun_get_user+0x2e7f/0x3fc0 drivers/net/tun.c:1976
-  tun_chr_write_iter+0xbd/0x156 drivers/net/tun.c:2022
-  call_write_iter include/linux/fs.h:1902 [inline]
-  do_iter_readv_writev+0x5f8/0x8f0 fs/read_write.c:693
-  do_iter_write fs/read_write.c:970 [inline]
-  do_iter_write+0x184/0x610 fs/read_write.c:951
-  vfs_writev+0x1b3/0x2f0 fs/read_write.c:1015
-  do_writev+0x15b/0x330 fs/read_write.c:1058
-  __do_sys_writev fs/read_write.c:1131 [inline]
-  __se_sys_writev fs/read_write.c:1128 [inline]
-  __x64_sys_writev+0x75/0xb0 fs/read_write.c:1128
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x441800
-Code: 05 48 3d 01 f0 ff ff 0f 83 fd 0e fc ff c3 66 2e 0f 1f 84 00 00 00 00  
-00 66 90 83 3d 51 9c 29 00 00 75 14 b8 14 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 d4 0e fc ff c3 48 83 ec 08 e8 9a 2b 00 00
-RSP: 002b:00007ffe7bc617c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000014
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000441800
-RDX: 0000000000000001 RSI: 00007ffe7bc61820 RDI: 00000000000000f0
-RBP: 00007ffe7bc617f0 R08: 0000000000000000 R09: 0000000000000020
-R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000000003
-R13: 0000000000000004 R14: 00007ffe7bc61870 R15: 0000000000000000
-
-The buggy address belongs to the page:
-page:ffffea000212fc00 refcount:0 mapcount:0 mapping:0000000000000000  
-index:0x0
-raw: 00fffe0000000000 ffffea000212fc08 ffffea000212fc08 0000000000000000
-raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff888084beff00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-  ffff888084beff80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> ffff888084bf0000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-                                            ^
-  ffff888084bf0080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-  ffff888084bf0100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Kind regards,
+Niklas
