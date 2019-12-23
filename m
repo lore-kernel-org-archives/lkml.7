@@ -2,268 +2,80 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C93C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 01:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1AAC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 01:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59E8B206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 01:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 784D3206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 01:55:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbfLWByz (ORCPT
+        id S1726876AbfLWBz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 20:54:55 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57304 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726633AbfLWByz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 20:54:55 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2DF6E866E5FE96ED3F30;
-        Mon, 23 Dec 2019 09:54:52 +0800 (CST)
-Received: from [127.0.0.1] (10.133.205.88) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Mon, 23 Dec 2019
- 09:54:45 +0800
-Subject: Re: [Ocfs2-devel] [PATCH v3] ocfs2: call journal flush to mark
- journal as empty after journal recovery when mount
-To:     Changwei Ge <chge@linux.alibaba.com>, Likai <li.kai4@h3c.com>,
-        piaojun <piaojun@huawei.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        "mark@fasheh.com" <mark@fasheh.com>,
-        "jlbec@evilplan.org" <jlbec@evilplan.org>
-References: <20191217020140.2197-1-li.kai4@h3c.com>
- <5DFB860A.6020501@huawei.com>
- <05cf7457-31f2-0698-14ae-21a9e7b659cb@linux.alibaba.com>
- <5DFC90C0.7020704@huawei.com> <1faf04ac23384fb2a17a8a569f9fce8f@h3c.com>
- <5DFCC3F5.7040702@huawei.com>
- <0ba92e81-5b7d-5d5e-172e-5b18bbee8909@linux.alibaba.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>
-From:   Jiangyiwen <jiangyiwen@huawei.com>
-Message-ID: <5E001E64.7010806@huawei.com>
-Date:   Mon, 23 Dec 2019 09:54:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.1.0
-MIME-Version: 1.0
-In-Reply-To: <0ba92e81-5b7d-5d5e-172e-5b18bbee8909@linux.alibaba.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.205.88]
-X-CFilter-Loop: Reflected
+        Sun, 22 Dec 2019 20:55:26 -0500
+Received: from out1.zte.com.cn ([202.103.147.172]:45643 "EHLO mxct.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726215AbfLWBz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Dec 2019 20:55:26 -0500
+Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
+        by Forcepoint Email with ESMTPS id B0F03628B6642F5D2DA1;
+        Mon, 23 Dec 2019 09:55:21 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notes_smtp.zte.com.cn [10.30.1.239])
+        by mse-fl2.zte.com.cn with ESMTP id xBN1r3cI034081;
+        Mon, 23 Dec 2019 09:53:03 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019122309530535-1467765 ;
+          Mon, 23 Dec 2019 09:53:05 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     steffen.klassert@secunet.com
+Cc:     herbert@gondor.apana.org.au, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn, up2wing@gmail.com,
+        wang.liang82@zte.com.cn, Huang Zijiang <huang.zijiang@zte.com.cn>
+Subject: [PATCH] xfrm: Use kmem_cache_zalloc() instead of kmem_cache_alloc() with flag GFP_ZERO.
+Date:   Mon, 23 Dec 2019 09:53:02 +0800
+Message-Id: <1577065982-25751-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-12-23 09:53:05,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-12-23 09:53:04,
+        Serialize complete at 2019-12-23 09:53:04
+X-MAIL: mse-fl2.zte.com.cn xBN1r3cI034081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Huang Zijiang <huang.zijiang@zte.com.cn>
 
+Use kmem_cache_zalloc instead of manually setting kmem_cache_alloc
+with flag GFP_ZERO since kzalloc sets allocated memory
+to zero.
 
-On 2019/12/21 15:24, Changwei Ge wrote:
->
->
-> On 12/20/19 8:52 PM, Jiangyiwen wrote:
->> On 2019/12/20 17:33, Likai wrote:
->>> On 2019/12/20 17:14, piaojun wrote:
->>>> On 2019/12/20 9:11, Joseph Qi wrote:
->>>>> On 19/12/19 22:15, piaojun wrote:
->>>>>> On 2019/12/17 10:01, Kai Li wrote:
->>>>>>> If journal is dirty when mount, it will be replayed but jbd2 sb
->>>>>>> log tail cannot be updated to mark a new start because
->>>>>>> journal->j_flag has already been set with JBD2_ABORT first
->>>>>>> in journal_init_common. When a new transaction is committed, it
->>>>>>> will be recored in block 1 first(journal->j_tail is set to 1 in
->>>>>>> journal_reset).If emergency restart happens again before journal
->>>>>>> super block is updated unfortunately, the new recorded trans will
->>>>>>> not be replayed in the next mount.
->>>>>>>
->>>>>>> The following steps describe this procedure in detail.
->>>>>>> 1. mount and touch some files
->>>>>>> 2. these transactions are committed to journal area but not 
->>>>>>> checkpointed
->>>>>>> 3. emergency restart
->>>>>>> 4. mount again and its journals are replayed
->>>>>>> 5. journal super block's first s_start is 1, but its s_seq is 
->>>>>>> not updated
->>>>>>> 6. touch a new file and its trans is committed but not checkpointed
->>
->> Hi,
->>
->> I wonder that in this step, does the function 
->> jbd2_journal_commit_transaction() return?
->> I understand only jbd2_journal_commit_transaction() return it means 
->> the transaction
->> is committed completely, and the s_seq can be updated in
->> jbd2_journal_commit_transaction()->jbd2_update_log_tail(), so I don't 
->> know how
->> this scenario happened.
->>
->> If emergency restart happens in before jbd2_journal_commit_transaction() 
->
-> The trick is that jbd2 kernel thread even doesn't have a chance to to 
-> update tail. Assuming that a timepoint sits between *mount completion* 
-> and the *first iteration* of committing work that jbd2 thread.
->
+Signed-off-by: Huang Zijiang <huang.zijiang@zte.com.cn>
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+---
+ net/xfrm/xfrm_state.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hi Changwei,
-
-So I think if *first iteration* of committing work in jbd2 kernel thread 
-is not
-completed, and then the transaction should not be considered a valid
-transaction.
-
-In addition, since we use ordered mode in jbd2, filesystem only ensure
-metadata consistency not data consistency. In above scenario, the filesystem
-is still normal without any damage.
-
-Thanks,
-Yiwen.
-
->     -Changwei
->
->> return,
->> I think this transaction shouldn't be a valid transaction.
->>
->> Can you explain where the specific function is executed?
->>
->> Thanks,
->> Yiwen.
->>
->>>>>>> 7. emergency restart again
->>>>>>> 8. mount and journal is dirty, but trans committed in 6 will not be
->>>>>>> replayed.
->>>>>>>
->>>>>>> This exception happens easily when this lun is used by only one 
->>>>>>> node. If it
->>>>>>> is used by multi-nodes, other node will replay its journal and its
->>>>>>> journal super block will be updated after recovery like what 
->>>>>>> this patch
->>>>>>> does.
->>>>>>>
->>>>>>> ocfs2_recover_node->ocfs2_replay_journal.
->>>>>>>
->>>>>>> The following jbd2 journal can be generated by touching a new 
->>>>>>> file after
->>>>>>> journal is replayed, and seq 15 is the first valid commit, but 
->>>>>>> first seq
->>>>>>> is 13 in journal super block.
->>>>>>> logdump:
->>>>>>> Block 0: Journal Superblock
->>>>>>> Seq: 0   Type: 4 (JBD2_SUPERBLOCK_V2)
->>>>>>> Blocksize: 4096   Total Blocks: 32768   First Block: 1
->>>>>>> First Commit ID: 13   Start Log Blknum: 1
->>>>>>> Error: 0
->>>>>>> Feature Compat: 0
->>>>>>> Feature Incompat: 2 block64
->>>>>>> Feature RO compat: 0
->>>>>>> Journal UUID: 4ED3822C54294467A4F8E87D2BA4BC36
->>>>>>> FS Share Cnt: 1   Dynamic Superblk Blknum: 0
->>>>>>> Per Txn Block Limit    Journal: 0    Data: 0
->>>>>>>
->>>>>>> Block 1: Journal Commit Block
->>>>>>> Seq: 14   Type: 2 (JBD2_COMMIT_BLOCK)
->>>>>>>
->>>>>>> Block 2: Journal Descriptor
->>>>>>> Seq: 15   Type: 1 (JBD2_DESCRIPTOR_BLOCK)
->>>>>>> No. Blocknum        Flags
->>>>>>>   0. 587             none
->>>>>>> UUID: 00000000000000000000000000000000
->>>>>>>   1. 8257792         JBD2_FLAG_SAME_UUID
->>>>>>>   2. 619             JBD2_FLAG_SAME_UUID
->>>>>>>   3. 24772864        JBD2_FLAG_SAME_UUID
->>>>>>>   4. 8257802         JBD2_FLAG_SAME_UUID
->>>>>>>   5. 513             JBD2_FLAG_SAME_UUID JBD2_FLAG_LAST_TAG
->>>>>>> ...
->>>>>>> Block 7: Inode
->>>>>>> Inode: 8257802   Mode: 0640   Generation: 57157641 (0x3682809)
->>>>>>> FS Generation: 2839773110 (0xa9437fb6)
->>>>>>> CRC32: 00000000   ECC: 0000
->>>>>>> Type: Regular   Attr: 0x0   Flags: Valid
->>>>>>> Dynamic Features: (0x1) InlineData
->>>>>>> User: 0 (root)   Group: 0 (root)   Size: 7
->>>>>>> Links: 1   Clusters: 0
->>>>>>> ctime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
->>>>>>> atime: 0x5de5d870 0x113181a1 -- Tue Dec  3 11:37:20.288457121 2019
->>>>>>> mtime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
->>>>>>> dtime: 0x0 -- Thu Jan  1 08:00:00 1970
->>>>>>> ...
->>>>>>> Block 9: Journal Commit Block
->>>>>>> Seq: 15   Type: 2 (JBD2_COMMIT_BLOCK)
->>>>>>>
->>>>>>> The following is jouranl recovery log when recovering the upper 
->>>>>>> jbd2
->>>>>>> journal when mount again.
->>>>>>> syslog:
->>>>>>> [ 2265.648622] ocfs2: File system on device (252,1) was not 
->>>>>>> unmounted cleanly, recovering it.
->>>>>>> [ 2265.649695] fs/jbd2/recovery.c:(do_one_pass, 449): Starting 
->>>>>>> recovery pass 0
->>>>>>> [ 2265.650407] fs/jbd2/recovery.c:(do_one_pass, 449): Starting 
->>>>>>> recovery pass 1
->>>>>>> [ 2265.650409] fs/jbd2/recovery.c:(do_one_pass, 449): Starting 
->>>>>>> recovery pass 2
->>>>>>> [ 2265.650410] fs/jbd2/recovery.c:(jbd2_journal_recover, 278): 
->>>>>>> JBD2: recovery, exit status 0, recovered transactions 13 to 13
->>>>>>>
->>>>>>> Due to first commit seq 13 recorded in journal super is not 
->>>>>>> consistent
->>>>>>> with the value recorded in block 1(seq is 14), journal recovery 
->>>>>>> will be
->>>>>>> terminated before seq 15 even though it is an unbroken commit, 
->>>>>>> inode
->>>>>>> 8257802 is a new file and it will be lost.
->>>>>>>
->>>>>>> Signed-off-by: Kai Li <li.kai4@h3c.com>
->>>>>>> ---
->>>>>>>   fs/ocfs2/journal.c | 8 ++++++++
->>>>>>>   1 file changed, 8 insertions(+)
->>>>>>>
->>>>>>> diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
->>>>>>> index 1afe57f425a0..68ba354cf361 100644
->>>>>>> --- a/fs/ocfs2/journal.c
->>>>>>> +++ b/fs/ocfs2/journal.c
->>>>>>> @@ -1066,6 +1066,14 @@ int ocfs2_journal_load(struct 
->>>>>>> ocfs2_journal *journal, int local, int replayed)
->>>>>>>       ocfs2_clear_journal_error(osb->sb, journal->j_journal, 
->>>>>>> osb->slot_num);
->>>>>>> +    if (replayed) {
->>>>>>> + jbd2_journal_lock_updates(journal->j_journal);
->>>>>>> +        status = jbd2_journal_flush(journal->j_journal);
->>>>>> What if jbd2_journal_flush gets failed? The 's_sequence' and 
->>>>>> 's_start'
->>>>>> won't be reset, and I wonder if the problem still remains.
->>>>>>
->>>>> Yes, but we don't want this to fail the mount process, instead we 
->>>>> just log
->>>>> an error and system administrator should know the result.
->>>>>
->>>> Thanks for your reply and I have another question about this issue. 
->>>> IMO
->>>> the second trans is not complete as jbd2 sb has not been updated, 
->>>> so we
->>>> do not need to replay it when mount again.
->>>>
->>>> Jun
->>>>
->>>>
->>> I don't think so. The problem is that jbd2 sb should be updated to mark
->>> a new start after mount rather than whether trans committed later is
->>> complete or not.
->>>
->>> In fact , the trans is complete too as the commit log described.
->>>
->>> Thanks
->>>
->>>
->>> _______________________________________________
->>> Ocfs2-devel mailing list
->>> Ocfs2-devel@oss.oracle.com
->>> https://oss.oracle.com/mailman/listinfo/ocfs2-devel
->>>
->>> .
->>>
->>
->
-> .
->
-
+diff --git a/net/xfrm/xfrm_state.c b/net/xfrm/xfrm_state.c
+index a5dc319..adfa279 100644
+--- a/net/xfrm/xfrm_state.c
++++ b/net/xfrm/xfrm_state.c
+@@ -612,7 +612,7 @@ struct xfrm_state *xfrm_state_alloc(struct net *net)
+ {
+     struct xfrm_state *x;
+ 
+-    x = kmem_cache_alloc(xfrm_state_cache, GFP_ATOMIC | __GFP_ZERO);
++x = kmem_cache_zalloc(xfrm_state_cache, GFP_ATOMIC);
+ 
+     if (x) {
+         write_pnet(&x->xs_net, net);
+-- 
+1.9.1
 
