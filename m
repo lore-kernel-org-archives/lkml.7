@@ -2,267 +2,145 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 756E3C2D0D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1399C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4125E206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D268206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:21:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="fUFDNsBJ";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="ZaF8OW9I"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="1cOJA4IJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfLWPRi (ORCPT
+        id S1726867AbfLWPVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 10:17:38 -0500
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:38890 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726860AbfLWPR0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 10:17:26 -0500
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBNFEpQm001038;
-        Mon, 23 Dec 2019 07:17:02 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=proofpoint;
- bh=YgyksHBAPeIEoz+j7AlhT4e/+oQ0oeeSvmEI9Cej+2w=;
- b=fUFDNsBJK0OR4vcC2NZpz2A2B123O8DFF+Br7ZBIGk70KDxnqe2R1XUN0PP09ra/HAYG
- x69eZvFrOOFbmcWxEJcaWrdJiGZ6iZHBEzNiG72BBO91eP7p7Efg4aM2J/GgKOafUGbX
- ta6jaCjv+hN4vhoK2iDb/gTZqfnrKgUbHZeKjLT5YNDd+a/WeMs+JNCilMjkvLJ2/JcS
- 1yo63KP9mMlqENmn6h8Jm1ewLntFx0hoxc+Mvtf7Q/vwscRMwqy8eH0KeoEOu85Kkfox
- 6llrbL3LAYtv0iuMdNoAGn180GqE7nzH5LP2MBBBiSjNM0HCyWW2bDr/W3aem4eq2+uy Bg== 
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2044.outbound.protection.outlook.com [104.47.66.44])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 2x1gu4wau1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 23 Dec 2019 07:17:02 -0800
+        Mon, 23 Dec 2019 10:21:12 -0500
+Received: from mail-bn8nam11on2042.outbound.protection.outlook.com ([40.107.236.42]:12768
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726756AbfLWPVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 10:21:12 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PzeCpDorlB4QijypPW8U1OzZ0/ukyrNdZY5uZS0vcBNN3DW+aWO1/aKRJ4GBhw5qX9W0x01jJKGlAudAK314/kO0PEfo3LkKfVQh8GP2AseNCSeicAXGqWSO21ONtH0bWb2Bp32YbIhdZhxW/5zVtXg3FFm6BqITgil5U5xQYg+xT6K27axA7vEvTK6Ku3mumAW7NBmwQi1nQzPTpmVtM8/YVrJT2B9yZX+tNY7cd9/jOB4c0Xz3Yu4cpxePD4IapQseIfY6tTwDMMzAYBVaSX9Iq/cRISGejc/PBpnUWjPJNsK5h/G3byGw289RSc8m+Kg5zrIHxnZb8OdU1RK1Mg==
+ b=cHAqdQcuHicAY+KtxbTq3SrCeZq8T3+HobN8hWxj0vDac2MbRvJkQVFbZiCwQRw8WEBvXp6vQnd5zIOz0kygZdxhMLJrEF7RJfL1o9e9/zKhZIcZhzF6jW2/nsvUzaRDM2bcYkVcKUi/0Y3Y7rpGsGM82iCo/x3hRu4/T+MkkxvTkvqIJpXU/PTH7PyHsoM9M22g0BbcCwgQjNAZaAsZ0vCwPpnZ6BM0dIIiYfz4VVgBMsVwnDFFUM/Gac1SYImuq/Cu99WOoym4jIYk+6jaAPmF6mZeLOS52uHT23A71N72li1uFCAVZpbhoLpBje++QuOkDIgYRdiUAqFUCbuARA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YgyksHBAPeIEoz+j7AlhT4e/+oQ0oeeSvmEI9Cej+2w=;
- b=OnlsvIcWh1q7whaTUgOBStcTXsGnKRBTdSYzRI9SWG0Lrb9LiRaOUNRucDOCkWQQJq8j/gIJy7+C5lDAbryzNUYGcS+EJQb+B/xgGgXpa6k53NeOkRBmbhqIW+xiJzsgVwExjmqUnmzpQ2sffHqyJuw/Qs/hz9UoXAyEni+PteqUOk19GKxxM1U6pTEWThXYLjGHmmWZg8kSFUSyaI3djnVATo7FOipgpE161zC0SEtnc1yNmzoStVNolN6MZNVgsOoICaALd1MW9Ry0R9i2VBart31r0b/FnM5Oomg5bOQTvZ1y4d8D1fOKj98sCNjGi/+7ggk55ZC9ztbwdRrrlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 199.43.4.28) smtp.rcpttodomain=linux.ie smtp.mailfrom=cadence.com; dmarc=pass
- (p=none sp=none pct=100) action=none header.from=cadence.com; dkim=none
- (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
+ bh=ywsaGFQA2l+JgPu9IxjrMFuQJlwSywu92r2Xka+v0Jg=;
+ b=gMG8V1ef2VjXQTSPKqi+Pa+5Pd/H3qMRVtIWoVQciIZyFxpenSC4WQm/jULHesh6gmX801eFxHvG0iqCdeiNQD8+/40uDFanOEBVg6bN0E0UXSw5onbg0FQ202BQD1FIzEqvWc+hHrkEucDVkbN7M299w/M504iZNCAcYA698l12FGFkHqn0xtxpsPcSWfScZfIfM3TJFlfTdtsd2qAlFtZMGHFM29VSut0VImmm9ZhfsvMjA2Zy+jO+wv7wsRQK/JJSwRSTXLmbAlhumjn1rB++LlGKEMf4FwEAxMiToTHqNJ9WD2hD8DgKH6RTTG9CgkNDqNA+Fy410kPliw2Vzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YgyksHBAPeIEoz+j7AlhT4e/+oQ0oeeSvmEI9Cej+2w=;
- b=ZaF8OW9IwjgEATxCu2BTepGhjLluMQ5F6rkooMbOAHwQAoS84O8NFIYXBynLFFO0FRR/jRJsEcMGDGnFQg+vCpzqgyg+O4D/ujRACPRtMqcGzC4nfoFyRh2nh00Hqm6KmxHj/46sKvdPQlFK5/0fBAAf51MRqWwCm79VCAFpvNs=
-Received: from DM5PR07CA0105.namprd07.prod.outlook.com (2603:10b6:4:ae::34) by
- BL0PR07MB3908.namprd07.prod.outlook.com (2603:10b6:207:3f::14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.14; Mon, 23 Dec 2019 15:16:57 +0000
-Received: from DM6NAM12FT068.eop-nam12.prod.protection.outlook.com
- (2a01:111:f400:fe59::202) by DM5PR07CA0105.outlook.office365.com
- (2603:10b6:4:ae::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.12 via Frontend
- Transport; Mon, 23 Dec 2019 15:16:57 +0000
-Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
- 199.43.4.28 as permitted sender) receiver=protection.outlook.com;
- client-ip=199.43.4.28; helo=rmmaillnx1.cadence.com;
-Received: from rmmaillnx1.cadence.com (199.43.4.28) by
- DM6NAM12FT068.mail.protection.outlook.com (10.13.179.117) with Microsoft SMTP
+ bh=ywsaGFQA2l+JgPu9IxjrMFuQJlwSywu92r2Xka+v0Jg=;
+ b=1cOJA4IJTWwBvWahlS2aWIVvrScxzTDawyh9tOcscixceg2vVNCKAH+EprL+ZXh7e8G2ytYdgR7lc8/ndXQJeutYTscfllZbCVGMZScTuvVn2wkRuu7dqwCajkGyWq/0JSYLUQTTgtR5QpDla71URNWUThdJ5yIVTlVwJ7xj2Gw=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=John.Allen@amd.com; 
+Received: from MN2PR12MB3136.namprd12.prod.outlook.com (20.178.244.89) by
+ MN2PR12MB3823.namprd12.prod.outlook.com (10.255.237.218) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.16 via Frontend Transport; Mon, 23 Dec 2019 15:16:57 +0000
-Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id xBNFGkVP020918
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Mon, 23 Dec 2019 10:16:55 -0500
-X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
-Received: from maileu3.global.cadence.com (10.160.88.99) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Mon, 23 Dec 2019 16:16:46 +0100
-Received: from vleu-orange.cadence.com (10.160.88.83) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Mon, 23 Dec 2019 16:16:46 +0100
-Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
-        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id xBNFGkYf016103;
-        Mon, 23 Dec 2019 16:16:46 +0100
-Received: (from yamonkar@localhost)
-        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id xBNFGjDM016100;
-        Mon, 23 Dec 2019 16:16:45 +0100
-From:   Yuti Amonkar <yamonkar@cadence.com>
-To:     <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
-        <maxime@cerno.tech>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <mark.rutland@arm.com>, <a.hajda@samsung.com>,
-        <narmstrong@baylibre.com>, <Laurent.pinchart@ideasonboard.com>,
-        <jonas@kwiboo.se>, <jernej.skrabec@siol.net>
-CC:     <praneeth@ti.com>, <jsarha@ti.com>, <tomi.valkeinen@ti.com>,
-        <mparab@cadence.com>, <sjakhade@cadence.com>,
-        <yamonkar@cadence.com>
-Subject: [PATCH v2 1/3] dt-bindings: drm/bridge: Document Cadence MHDP bridge bindings in yaml format
-Date:   Mon, 23 Dec 2019 16:16:40 +0100
-Message-ID: <1577114202-15970-2-git-send-email-yamonkar@cadence.com>
-X-Mailer: git-send-email 2.4.5
-In-Reply-To: <1577114202-15970-1-git-send-email-yamonkar@cadence.com>
-References: <1577114202-15970-1-git-send-email-yamonkar@cadence.com>
+ 15.20.2559.17; Mon, 23 Dec 2019 15:21:09 +0000
+Received: from MN2PR12MB3136.namprd12.prod.outlook.com
+ ([fe80::24f3:323d:e57a:1f76]) by MN2PR12MB3136.namprd12.prod.outlook.com
+ ([fe80::24f3:323d:e57a:1f76%3]) with mapi id 15.20.2559.017; Mon, 23 Dec 2019
+ 15:21:09 +0000
+Date:   Mon, 23 Dec 2019 09:21:02 -0600
+From:   John Allen <john.allen@amd.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rkrcmar@redhat.com, vkuznets@redhat.com
+Subject: Re: [PATCH v2] kvm/svm: PKU not currently supported
+Message-ID: <20191223152102.7wy5fxmxhkpooa7y@mojo.amd.com>
+References: <20191219201759.21860-1-john.allen@amd.com>
+ <20191219203214.GC6439@linux.intel.com>
+ <8a77e3b9-049e-e622-9332-9bebb829bc3d@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8a77e3b9-049e-e622-9332-9bebb829bc3d@redhat.com>
+X-ClientProxiedBy: SN4PR0201CA0040.namprd02.prod.outlook.com
+ (2603:10b6:803:2e::26) To MN2PR12MB3136.namprd12.prod.outlook.com
+ (2603:10b6:208:d1::25)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-OrganizationHeadersPreserved: maileu3.global.cadence.com
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:199.43.4.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(39860400002)(346002)(376002)(199004)(189003)(36092001)(6666004)(356004)(336012)(426003)(2906002)(5660300002)(70206006)(70586007)(2616005)(478600001)(316002)(26826003)(8676002)(42186006)(7416002)(110136005)(8936002)(36756003)(86362001)(186003)(26005)(107886003)(4326008)(54906003)(81166006)(81156014)(76130400001)(21314003)(921003)(83996005)(2101003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR07MB3908;H:rmmaillnx1.cadence.com;FPR:;SPF:Pass;LANG:en;PTR:InfoDomainNonexistent;A:1;MX:1;
+Received: from mojo.amd.com (165.204.77.1) by SN4PR0201CA0040.namprd02.prod.outlook.com (2603:10b6:803:2e::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2559.14 via Frontend Transport; Mon, 23 Dec 2019 15:21:08 +0000
+X-Originating-IP: [165.204.77.1]
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 313a05a0-445e-4b48-9dd8-08d787bb2693
-X-MS-TrafficTypeDiagnostic: BL0PR07MB3908:
-X-Microsoft-Antispam-PRVS: <BL0PR07MB39081A908B28D6279550AC77D22E0@BL0PR07MB3908.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: bcdc8f55-a699-401b-7b3d-08d787bbbcb8
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3823:
+X-Microsoft-Antispam-PRVS: <MN2PR12MB382366EE8891ACCE8CE7D2A49A2E0@MN2PR12MB3823.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
 X-Forefront-PRVS: 0260457E99
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(376002)(366004)(136003)(396003)(189003)(199004)(53546011)(6666004)(956004)(44832011)(478600001)(1076003)(55016002)(5660300002)(8936002)(6916009)(2906002)(26005)(16526019)(186003)(8676002)(66946007)(4326008)(316002)(66556008)(81166006)(81156014)(7696005)(52116002)(66476007)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3823;H:MN2PR12MB3136.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: DgGDlvInjQ3C8wq/kE+5B/7helziTGwUiPUDl7Jusxg9uB2fEvnZ+P3n2l4YwUPRt2hasVbgDJlrqFsAMl27g7Odxoh3XwGi6fehY47VYJ06rogLZH4NqGaLxj5zjfZdXTEQpI+tzTMy5ML8eTJgLCc1ywkqlgL4VrAWEIJQZ4j/B/4BwmglQ5CVzfLACv9OZvq6C8ZFbUXgHqnAe6yQnH6q/J2I6GdrXhSq5UDyyaezx2sTUWhHgzc0etDYHWI7S4oSaQwtzBLL8uyjZxSMbPDrmquXWQ+X+PIiDbkUvzITiPN1N38jksFQ1pV3q8w+pOTGz+mKrYR4JeeHx/KdbR4clDIU2iqZCwFJjBqO6x7CdJyxHTU6vj4nUXAFSLYUezR5Tzeecmv1z6NKxfSMC2RkeT17rIWQLiZoMedCQJyM9q3HOp7akWO6qvrjtb/Oj7U4NFdQuo40vmxTaY9htoy5ZxVjq1Ye9w39NO7jCo5JPtcGiT1uIefBRAOE6pc1p+9YyUvj8o4QGJ2FQMlrRBwtc5VAD+k56gImiUSALArpbsHAjkJesEPXPpUdHqNIKdV3wIXCst9jS4axxhlqN3UH8DOC3fn7YwbG0pRPovP1UKzRTjcUXTTMWkCfECAyYKUSKdXE/lqYa9qciVWxzg==
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Dec 2019 15:16:57.1336
+X-Microsoft-Antispam-Message-Info: vl94IgEFEuhNwZAbVQ80LJWVcnTELOcGzuFDZvKs7gXRfhKVauhYL5nXQy6D4BIAVUT89Bw5y4RiAtZyz0XR7fDk6uaVodRo3Vlsqpc1m3q6i4Naafxa9HOBdUt/Jw7Q2wDQAsA9d1z9o9rV0P+IX590eAepqO3N+JfsAokUSyTj4cNJg4mRmtYPWQdqlFRH3A/bps+jRNkB6STi2v20fm1GyjdHKcZkBgk5wsFEGIHXFIKjOMwcb1ybnmBJoWZI0SU/JfZZs5bSgdCqU1SEuRAtzlZlsPzQz+0TcvXSyl9+5LIUdsOyj6xXgadkArKeAVU+fKypCWnSSg9uQ0K99PGIICGQ92Kyi88WCjDXPs4ArHbgMI+5UOXoCpsNO/MJdDs4wMYTdk2taXGVzWannqDUy9QtRdmx5zFDE2+2PSabEeYw8AIS5oftURVgFgox
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bcdc8f55-a699-401b-7b3d-08d787bbbcb8
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Dec 2019 15:21:09.3344
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 313a05a0-445e-4b48-9dd8-08d787bb2693
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[199.43.4.28];Helo=[rmmaillnx1.cadence.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR07MB3908
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-23_06:2019-12-23,2019-12-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 spamscore=0
- impostorscore=0 mlxscore=0 lowpriorityscore=0 malwarescore=0 bulkscore=0
- clxscore=1015 suspectscore=0 phishscore=0 mlxlogscore=999
- priorityscore=1501 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-1912230129
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: E2Hyz1a+qtWl7N2uEppM485QEoxuMOKqNx4SexsaSJB00Ln4Tgvxip+I6vjOuNvT9HdmjF1qKL5N0Llu1ZxRGw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3823
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the bindings used for the Cadence MHDP DPI/DP bridge in
-yaml format.
+On Fri, Dec 20, 2019 at 10:25:16AM +0100, Paolo Bonzini wrote:
+> On 19/12/19 21:32, Sean Christopherson wrote:
+> > On Thu, Dec 19, 2019 at 02:17:59PM -0600, John Allen wrote:
+> >> Current SVM implementation does not have support for handling PKU. Guests
+> >> running on a host with future AMD cpus that support the feature will read
+> >> garbage from the PKRU register and will hit segmentation faults on boot as
+> >> memory is getting marked as protected that should not be. Ensure that cpuid
+> >> from SVM does not advertise the feature.
+> >>
+> >> Signed-off-by: John Allen <john.allen@amd.com>
+> >> ---
+> >> v2:
+> >>   -Introduce kvm_x86_ops->pku_supported()
+> > 
+> > I like the v1 approach better, it's less code to unwind when SVM gains
+> > support for virtualizaing PKU.
+> > 
+> > The existing cases of kvm_x86_ops->*_supported() in __do_cpuid_func() are
+> > necessary to handle cases where it may not be possible to expose a feature
+> > even though it's supported in hardware, host and KVM, e.g. VMX's separate
+> > MSR-based features and PT's software control to hide it from guest.  In
+> > this case, hiding PKU is purely due to lack of support in KVM.  The SVM
+> > series to enable PKU can then delete a single line of SVM code instead of
+> > having to go back in and do surgery on x86 and VMX.
+> > 
+> 
+> I sort of liked the V1 approach better, in that I liked using
+> set_supported_cpuid but I didn't like *removing* features from it.
+> 
+> I think all *_supported() should be removed, and the code moved from
+> __do_cpuid_func() to set_supported_cpuid.
+> 
+> For now, however, this one is consistent with other features so I am
+> applying it.
 
-Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
----
- .../bindings/display/bridge/cdns,mhdp.yaml         | 109 +++++++++++++++++++++
- 1 file changed, 109 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
+Hey Paolo,
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
-new file mode 100644
-index 0000000..aed6224
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
-@@ -0,0 +1,109 @@
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/display/bridge/cdns,mhdp.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Cadence MHDP bridge
-+
-+maintainers:
-+  - Swapnil Jakhade <sjakhade@cadence.com>
-+  - Yuti Amonkar <yamonkar@cadence.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - cdns,mhdp8546
-+      - ti,j721e-mhdp8546
-+
-+  clocks:
-+    maxItems: 1
-+    description:
-+      DP bridge clock, it's used by the IP to know how to translate a number of
-+      clock cycles into a time (which is used to comply with DP standard timings
-+      and delays).
-+
-+  reg:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - description:
-+          Register block of mhdptx apb registers upto PHY mapped area(AUX_CONFIG_P).
-+          The AUX and PMA registers are mapped to associated phy driver.
-+      - description:
-+          Register block for DSS_EDP0_INTG_CFG_VP registers in case of TI J7 SoCs.
-+
-+  reg-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: mhdptx
-+      - const: j721e-intg
-+
-+  phys:
-+    description: see the Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
-+
-+  phy-names:
-+    const: dpphy
-+
-+  ports:
-+    type: object
-+    description:
-+      Ports as described in Documentation/devicetree/bindings/graph.txt
-+    properties:
-+       '#address-cells':
-+         const: 1
-+       '#size-cells':
-+         const: 0
-+       port@0:
-+         description:
-+           input port representing the DP bridge input
-+
-+       port@1:
-+         description:
-+           output port representing the DP bridge output
-+    required:
-+      - port@0
-+      - port@1
-+      - '#address-cells'
-+      - '#size-cells'
-+
-+required:
-+  - compatible
-+  - clocks
-+  - reg
-+  - phys
-+  - phy-names
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    mhdp: dp-bridge@f0fb000000 {
-+        compatible = "cdns,mhdp8546";
-+        reg = <0xf0 0xfb000000 0x0 0x1000000>,
-+              <0xf0 0xfc000000 0x0 0x2000000>;
-+        clocks = <&mhdp_clock>;
-+        phys = <&dp_phy>;
-+        phy-names = "dpphy";
-+
-+        ports {
-+              #address-cells = <1>;
-+              #size-cells = <0>;
-+
-+              port@0 {
-+                     reg = <0>;
-+                     dp_bridge_input: endpoint {
-+                                    remote-endpoint = <&xxx_dpi_output>;
-+                     };
-+              };
-+
-+              port@1 {
-+                     reg = <1>;
-+                     dp_bridge_output: endpoint {
-+                                     remote-endpoint = <&xxx_dp_connector_input>;
-+                     };
-+              };
-+      };
-+    };
-+...
--- 
-2.7.4
+If you haven't already applied this, would it be too much trouble to add a
+fixes tag? If it's already applied, don't worry about it.
 
+...
+Fixes: 0556cbdc2fbc ("x86/pkeys: Don't check if PKRU is zero before writing it")
+
+Thanks,
+John
+
+> 
+> Paolo
+> 
