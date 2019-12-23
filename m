@@ -6,77 +6,67 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41ED5C2D0D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D830C2D0D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 236E720715
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E078A21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:13:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726034AbfLWINE (ORCPT
+        id S1726233AbfLWINI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 03:13:04 -0500
-Received: from comms.puri.sm ([159.203.221.185]:48756 "EHLO comms.puri.sm"
+        Mon, 23 Dec 2019 03:13:08 -0500
+Received: from comms.puri.sm ([159.203.221.185]:48782 "EHLO comms.puri.sm"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725855AbfLWINE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 03:13:04 -0500
+        id S1725855AbfLWINH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 03:13:07 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id AE636DF754;
-        Mon, 23 Dec 2019 00:13:03 -0800 (PST)
+        by comms.puri.sm (Postfix) with ESMTP id AC59CDF30C;
+        Mon, 23 Dec 2019 00:13:06 -0800 (PST)
 Received: from comms.puri.sm ([127.0.0.1])
         by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 4uDTf511eGyR; Mon, 23 Dec 2019 00:13:02 -0800 (PST)
+        with ESMTP id cyX3Vz4KZq4B; Mon, 23 Dec 2019 00:13:06 -0800 (PST)
 From:   Martin Kepplinger <martin.kepplinger@puri.sm>
 To:     shawnguo@kernel.org, robh@kernel.org, mark.rutland@arm.com,
         s.hauer@pengutronix.de
 Cc:     kernel@pengutronix.de, devicetree@vger.kernel.org, kernel@puri.sm,
         linux-kernel@vger.kernel.org, linux-imx@nxp.com,
         linux-arm-kernel@lists.infradead.org,
-        Martin Kepplinger <martin.kepplinger@puri.sm>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-Subject: [PATCH v2 1/2] arm64: dts: imx8mq-librem5-devkit: add accelerometer and gyro sensor
-Date:   Mon, 23 Dec 2019 09:12:52 +0100
-Message-Id: <20191223081253.27516-1-martin.kepplinger@puri.sm>
-Content-Type: text/plain; charset=UTF-8
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Martin Kepplinger <martin.kepplinger@puri.sm>
+Subject: [PATCH v2 2/2] arm64: dts: imx8mq-librem5-devkit: use correct interrupt for the magnetometer
+Date:   Mon, 23 Dec 2019 09:12:53 +0100
+Message-Id: <20191223081253.27516-2-martin.kepplinger@puri.sm>
+In-Reply-To: <20191223081253.27516-1-martin.kepplinger@puri.sm>
+References: <20191223081253.27516-1-martin.kepplinger@puri.sm>
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that there is driver support, describe the accel and gyro sensor parts
-of the LSM9DS1 IMU.
+From: "Angus Ainslie (Purism)" <angus@akkea.ca>
 
+The LSM9DS1 uses a high level interrupt.
+
+Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-Reviewed-by: Guido Günther <agx@sigxcpu.org>
 ---
-
-revision history
-----------------
-v2: use hyphen in node name and reorder (thanks Shawn)
-    add Guido's review tag
-
-
- arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-index 523e5f2ce873..379510886e3e 100644
+index 379510886e3e..b025b9a73e5e 100644
 --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
 +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-@@ -449,6 +449,13 @@
- 		AVDD28-supply = <&reg_2v8_p>;
- 		VDDIO-supply = <&reg_1v8_p>;
+@@ -430,7 +430,7 @@
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_imu>;
+ 		interrupt-parent = <&gpio3>;
+-		interrupts = <19 IRQ_TYPE_LEVEL_LOW>;
++		interrupts = <19 IRQ_TYPE_LEVEL_HIGH>;
+ 		vdd-supply = <&reg_3v3_p>;
+ 		vddio-supply = <&reg_3v3_p>;
  	};
-+
-+	accel-gyro@6a {
-+		compatible = "st,lsm9ds1-imu";
-+		reg = <0x6a>;
-+		vdd-supply = <&reg_3v3_p>;
-+		vddio-supply = <&reg_3v3_p>;
-+	};
- };
- 
- &iomuxc {
 -- 
 2.20.1
 
