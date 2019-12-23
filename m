@@ -2,142 +2,128 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9B8C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 615B8C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CDE720715
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:29:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577122173;
-	bh=OhBJDQuvvBQRwwpX9+apVAcfuyIsDuFNSzitpLw6gDg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=TqTkZAT2PzTEDA2BRrmNfA6lPrCmtptjWWYMS1UbJVIq3SGX2Z+SZrQFk8P+uxrDY
-	 O5xL0GpUaOS1Qg9IK0b1CjHdffnRttT2fONgcd4TJEDX8WGYpstsCHdWEkIHIbjE0u
-	 1CwiJae95vtSp2/RAenFr4JYti1gzQfkskC0zXsQ=
+	by mail.kernel.org (Postfix) with ESMTP id 39B5220715
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:29:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BBcyJOJP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbfLWR3c (ORCPT
+        id S1726924AbfLWR3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 12:29:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55926 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726783AbfLWR3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 12:29:32 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE559206CB;
-        Mon, 23 Dec 2019 17:29:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577122171;
-        bh=OhBJDQuvvBQRwwpX9+apVAcfuyIsDuFNSzitpLw6gDg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hGjGa7kn159KcoYs07EoVhDAvpjg/dCbpae9Snkz0JnwzGXuIfM5dXtQcHYK9IJtt
-         pMRghJK2u/9o9OEeA2OESfb5tQ/ZLw2tIXWNlLUrCxDRMeGCWkSh4hixly/aRDw10v
-         u2ey43L3MYnQm7acFUNXavlKy44Ap1/3k7jM0omg=
-Date:   Mon, 23 Dec 2019 17:29:27 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>
-Subject: Re: [PATCH] iio: core: use debugfs_remove_recursive() on IIO unload
-Message-ID: <20191223172927.1d7eee6f@archlinux>
-In-Reply-To: <4728487938a37207f20cc5d4cb6fbbdd04f56358.camel@analog.com>
-References: <20191211145903.22395-1-alexandru.ardelean@analog.com>
-        <20191215162525.56516ce4@archlinux>
-        <4728487938a37207f20cc5d4cb6fbbdd04f56358.camel@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 23 Dec 2019 12:29:42 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:39114 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726783AbfLWR3l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 12:29:41 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBNHP2ZJ102801;
+        Mon, 23 Dec 2019 17:28:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=moISOd56NtpVL8zRNki9zqtAXCaGXiRk1XLrhSHfLvs=;
+ b=BBcyJOJPQagl7ysF/j32lf9kxfKEgIyXcZzjMPLh1GKqCzvsGEB/IRv74rJEBfHvhcHM
+ ciQrU4F2pV1ZF7WpdnyEN2w6wnLPVVN0BcYJfvrLL23DwBqdjpQU524Gp6fNqQHEPFK6
+ xRB9lGdneIDu3ooYOw+m7RSId6JgldxnOrfAb0obapR6Pc62nnjYQPLUXWuhnmoXU92p
+ 5eSRNm2pkn9NBHI+ilRjJ/uDtHJi0JXY2sXeTlJZSKJNMAlK66vaLLaW6ANs6W0ttx+7
+ 6LopLaf3rw2RXKz2pnbFEbNgra4RC7jDgvL5EjL8sYwaRn+8SRTc8ehv/65N/mjGXA+k cg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2x1bbpr09v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Dec 2019 17:28:20 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBNHJNR1150573;
+        Mon, 23 Dec 2019 17:28:20 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2x1wh3ku86-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Dec 2019 17:28:19 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBNHSINB031195;
+        Mon, 23 Dec 2019 17:28:18 GMT
+Received: from [192.168.14.112] (/109.64.214.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 23 Dec 2019 09:28:18 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [RESEND RFC 0/2] Paravirtualized Control Register pinning
+From:   Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <15b57d6b-0f46-01f5-1f75-b9b55db0611a@redhat.com>
+Date:   Mon, 23 Dec 2019 19:28:13 +0200
+Cc:     John Andersen <john.s.andersen@intel.com>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <03F5FE31-E769-4497-922B-C8613F0951FA@oracle.com>
+References: <20191220192701.23415-1-john.s.andersen@intel.com>
+ <1EBCD42E-9109-47A1-B959-6363A509D48D@oracle.com>
+ <15b57d6b-0f46-01f5-1f75-b9b55db0611a@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9479 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912230147
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9480 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912230148
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Dec 2019 07:43:30 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
 
-> On Sun, 2019-12-15 at 16:25 +0000, Jonathan Cameron wrote:
-> > [External]
-> > 
-> > On Wed, 11 Dec 2019 16:59:03 +0200
-> > Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-> >   
-> > > From: Lars-Peter Clausen <lars@metafoo.de>
-> > > 
-> > > The debugfs dir may have multiple files/dirs attached to it. Use
-> > > debugfs_remove_recursive() to clean it up when the IIO module unloads.
-> > > 
-> > > Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > > ---
-> > > 
-> > > Note: note sure if this needs a Fixes tag. It's been in here for ages
-> > > now,
-> > >       so it may not be a big issue.  
-> > 
-> > There is some argument in favour of doing this as a defensive measure,
-> > but
-> > in current IIO debugfs directories are only created by drivers that call
-> > (indirectly) iio_device_register_debugfs and those must call
-> > (again indirectly) iio_device_unregister_debugfs which has called
-> > the recursive free on everything in their directories.  So unless
-> > something
-> > very odd is going on this isn't a bug.
-> > 
-> > Am I missing something?  
-> 
-> So, I admit my note is open for interpretation.
-> [ Rergarding the "Fixes" tag, I'm still not super-clear on when/why/how
-> it's needed. I'll get there soon though. ]
-> 
-> This patch has been in our tree since 2012, and I'm not sure why it's using
-> debugfs_remove_recursive() vs plain debugfs_remove().
-> 
-> I sometimes take a look at these old patches, try to make some sense of
-> them and upstream them, or override them with the version of upstream code.
-> My intent is to sync ADI code [for IIO] closer to upstream. Which would
-> make it easier to track any divergence.
-> 
-> We're not seeing any bug with/without this.
-> I guess my note about the "Fixes" tag may be a bit clumsy.
-> 
-> From my side, both debugfs_remove_recursive() & plain debugfs_remove() are
-> fine.
-I'd rather leave it be as it kind of avoids people thinking they can get away
-without cleaning up properly at the higher levels.
 
-Thanks,
+> On 23 Dec 2019, at 19:09, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>=20
+> On 23/12/19 15:48, Liran Alon wrote:
+>>> Should userspace expose the CR pining CPUID feature bit, it must =
+zero CR
+>>> pinned MSRs on reboot. If it does not, it runs the risk of having =
+the
+>>> guest enable pinning and subsequently cause general protection =
+faults on
+>>> next boot due to early boot code setting control registers to values
+>>> which do not contain the pinned bits.
+>>=20
+>> Why reset CR pinned MSRs by userspace instead of KVM INIT handling?
+>=20
+> Most MSRs are not reset by INIT, are they?
+>=20
+> Paolo
+>=20
 
-Jonathan
+MSR_KVM_SYSTEM_TIME saved in vcpu->arch.time is reset at =
+kvmclock_reset() which is called by kvm_vcpu_reset() (KVM INIT handler).
+In addition, vmx_vcpu_reset(), called from kvm_vcpu_reset(), also resets =
+multiple MSRs such as: MSR_IA32_SPEC_CTRL (vmx->spec_ctrl) and =
+MSR_IA32_UMWAIT_CONTROL (msr_ia32_umwait_control).
 
-> 
-> Thanks
-> Alex
-> 
-> > 
-> >   
-> > >  drivers/iio/industrialio-core.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/iio/industrialio-core.c
-> > > b/drivers/iio/industrialio-core.c
-> > > index 9a3579943574..dab67cb69fe6 100644
-> > > --- a/drivers/iio/industrialio-core.c
-> > > +++ b/drivers/iio/industrialio-core.c
-> > > @@ -292,7 +292,7 @@ static void __exit iio_exit(void)
-> > >  	if (iio_devt)
-> > >  		unregister_chrdev_region(iio_devt, IIO_DEV_MAX);
-> > >  	bus_unregister(&iio_bus_type);
-> > > -	debugfs_remove(iio_debugfs_dentry);
-> > > +	debugfs_remove_recursive(iio_debugfs_dentry);
-> > >  }
-> > >  
-> > >  #if defined(CONFIG_DEBUG_FS)  
+Having said that, I see indeed that most of MSRs are being set by QEMU =
+in kvm_put_msrs() when level >=3D KVM_PUT_RESET_STATE.
+When is triggered by qemu_system_reset() -> =
+cpu_synchronize_all_post_reset -> cpu_synchronize_post_reset() -> =
+kvm_cpu_synchronize_post_reset().
 
+So given current design, OK I agree with you that CR pinned MSRs should =
+be zeroed by userspace VMM.
+
+It does though seems kinda weird to me that part of CPU state is =
+initialised on KVM INIT handler and part of it in userspace VMM.
+It could lead to inconsistent (i.e. diverging from spec) CPU behaviour.
+
+-Liran=
