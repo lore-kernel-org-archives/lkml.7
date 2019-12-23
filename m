@@ -2,119 +2,148 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D969C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4E1C2D0D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 462BF2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06B652146E
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:53:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577084029;
+	bh=E9GtJEv5/Wg7wYSZvBrnuOFI6hszhwu0cq6AppC+9qw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JVpdOEvbRkmlFayHa8ng6Imta0cygviHB2/PR8bsMNyQiULR4QJFo0FctCOV94Jf0
+	 TyklteCmEMVGh88r1uXGMA7u5gWczthcNAXZbWR4QSRG4qpL/jPSYij4CabMWE7Wuj
+	 RgMqRlj7Jd5at1XhUQrUPPO7h9lXhVRYQ9zyj0qg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726198AbfLWGvC (ORCPT
+        id S1726028AbfLWGxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 01:51:02 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7728 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725810AbfLWGvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 01:51:02 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 48FF52AF828E5AFB0898;
-        Mon, 23 Dec 2019 14:51:00 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Mon, 23 Dec 2019
- 14:50:53 +0800
-Subject: Re: [PATCH] KVM: arm/arm64: vgic: Handle GICR_PENDBASER.PTZ filed as
- RAZ
-To:     Marc Zyngier <maz@kernel.org>, <eric.auger@redhat.com>
-CC:     <andre.przywara@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
-        <wanghaibin.wang@huawei.com>
-References: <20191220111833.1422-1-yuzenghui@huawei.com>
- <71e3dcc00ad5ab8dffd732bfe7381705@www.loen.fr>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <5f5f499a-d025-cc9f-66f3-37fe958df246@huawei.com>
-Date:   Mon, 23 Dec 2019 14:50:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Mon, 23 Dec 2019 01:53:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57872 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725810AbfLWGxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 01:53:48 -0500
+Received: from localhost (unknown [223.226.34.186])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 074DA20663;
+        Mon, 23 Dec 2019 06:53:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577084027;
+        bh=E9GtJEv5/Wg7wYSZvBrnuOFI6hszhwu0cq6AppC+9qw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=j+LXOHERLq+MKBHwX9oReM+7sdw6pEx/s6vS7PyfqPzKYep06rK5pIlC4m4Gducuq
+         mfX/7Cw8wMCBSF3tMP0UEiWULBiZ9nz6f8dnC78zuo278yvLszzyY+2EtyXWQLq6Jg
+         n5kwc14VXmG8ht7j0M596/8/bNi+j4Ai7rEbaEIw=
+Date:   Mon, 23 Dec 2019 12:23:40 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
+        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
+        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
+        j-keerthy@ti.com, vigneshr@ti.com
+Subject: Re: [PATCH v7 08/12] dt-bindings: dma: ti: Add document for K3 UDMA
+Message-ID: <20191223065340.GU2536@vkoul-mobl>
+References: <20191209094332.4047-1-peter.ujfalusi@ti.com>
+ <20191209094332.4047-9-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <71e3dcc00ad5ab8dffd732bfe7381705@www.loen.fr>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20191209094332.4047-9-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc, Eric,
-
-On 2019/12/20 21:07, Marc Zyngier wrote:
-> On 2019-12-20 11:18, Zenghui Yu wrote:
->> Although guest will hardly read and use the PTZ (Pending Table Zero)
->> bit in GICR_PENDBASER, let us emulate the architecture strictly.
->> As per IHI 0069E 9.11.30, PTZ field is WO, and reads as 0.
->>
->> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
->> ---
->>
->> Noticed when checking all fields of GICR_PENDBASER register.
->> But _not_ sure whether it's worth a fix, as Linux never sets
->> the PTZ bit before enabling LPI (set GICR_CTLR_ENABLE_LPIS).
->>
->> And I wonder under which scenarios can this bit be written as 1.
->> It seems difficult for software to determine whether the pending
->> table contains all zeros when writing this bit.
+On 09-12-19, 11:43, Peter Ujfalusi wrote:
+> New binding document for
+> Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P).
 > 
-> This is a useless HW optimization, where it can avoid reading the
-> pending table the very first time you write to this register if
-> it is told that it is all zero. A decent ITS implementation
-> already has a mechanism to find out about the pending bits by
-> looking into the IMPDEF area (the first 1kB) of the pending table.
-
-Yeah, AFAICT this is what Hisilicon has already implemented today.
-
-> PTZ is just yet another way to do the same thing.
+> UDMA-P is introduced as part of the K3 architecture and can be found in
+> AM654 and j721e.
 > 
-> This can only happen once in the lifetime of the system (when allocating
-> the table), and Linux doesn't really care.
-
-I now get it, thanks for teaching me that!
-
-> As usual, the GIC is setting
-> the level of useless complexity pretty high...
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/dma/ti/k3-udma.yaml   | 185 ++++++++++++++++++
+>  1 file changed, 185 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
 > 
->>
->>  virt/kvm/arm/vgic/vgic-mmio-v3.c | 5 ++++-
->>  1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c
->> b/virt/kvm/arm/vgic/vgic-mmio-v3.c
->> index 7dfd15dbb308..ebc218840fc2 100644
->> --- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
->> +++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
->> @@ -414,8 +414,11 @@ static unsigned long
->> vgic_mmio_read_pendbase(struct kvm_vcpu *vcpu,
->>                           gpa_t addr, unsigned int len)
->>  {
->>      struct vgic_cpu *vgic_cpu = &vcpu->arch.vgic_cpu;
->> +    u64 value = vgic_cpu->pendbaser;
->>
->> -    return extract_bytes(vgic_cpu->pendbaser, addr & 7, len);
->> +    value &= ~GICR_PENDBASER_PTZ;
->> +
->> +    return extract_bytes(value, addr & 7, len);
->>  }
->>
->>  static void vgic_mmio_write_pendbase(struct kvm_vcpu *vcpu,
-> 
-> Otherwise looks good. I'll queue it with Eric's correction
-> to the subject line.
+> diff --git a/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml b/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
+> new file mode 100644
+> index 000000000000..77aef4a4abce
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
+> @@ -0,0 +1,185 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/ti/k3-udma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Texas Instruments K3 NAVSS Unified DMA Device Tree Bindings
+> +
+> +maintainers:
+> +  - Peter Ujfalusi <peter.ujfalusi@ti.com>
+> +
+> +description: |
+> +  The UDMA-P is intended to perform similar (but significantly upgraded)
+> +  functions as the packet-oriented DMA used on previous SoC devices. The UDMA-P
+> +  module supports the transmission and reception of various packet types.
+> +  The UDMA-P is architected to facilitate the segmentation and reassembly of
 
-Thanks both and Merry Christmas!
+How about:
 
-Zenghui
+The UDMA-P architecture facilitates the segmentation...
 
+> +  SoC DMA data structure compliant packets to/from smaller data blocks that are
+> +  natively compatible with the specific requirements of each connected
+> +  peripheral.
+> +  Multiple Tx and Rx channels are provided within the DMA which allow multiple
+> +  segmentation or reassembly operations to be ongoing. The DMA controller
+> +  maintains state information for each of the channels which allows packet
+> +  segmentation and reassembly operations to be time division multiplexed between
+> +  channels in order to share the underlying DMA hardware. An external DMA
+> +  scheduler is used to control the ordering and rate at which this multiplexing
+> +  occurs for Transmit operations. The ordering and rate of Receive operations
+> +  is indirectly controlled by the order in which blocks are pushed into the DMA
+> +  on the Rx PSI-L interface.
+> +
+> +  The UDMA-P also supports acting as both a UTC and UDMA-C for its internal
+> +  channels. Channels in the UDMA-P can be configured to be either Packet-Based
+> +  or Third-Party channels on a channel by channel basis.
+> +
+> +  All transfers within NAVSS is done between PSI-L source and destination
+> +  threads.
+> +  The peripherals serviced by UDMA can be PSI-L native (sa2ul, cpsw, etc) or
+> +  legacy, non PSI-L native peripherals. In the later case a special, small PDMA
+> +  is tasked to act as a bridge between the PSI-L fabric and the legacy
+> +  peripheral.
+> +
+> +  PDMAs can be configured via UDMAP peer registers to match with the
+> +  configuration of the legacy peripheral.
+> +
+> +allOf:
+> +  - $ref: "../dma-controller.yaml#"
+> +
+> +properties:
+> +  "#dma-cells":
+> +    const: 1
+> +    description: |
+> +      The cell is the PSI-L  thread ID of the remote (to UDMAP) end.
+> +      Valid ranges for thread ID depends on the data movement direction:
+> +      for source thread IDs (rx): 0 - 0x7fff
+> +      for destination thread IDs (tx): 0x8000 - 0xffff
+> +
+> +      PLease refer to the device documentation for the PSI-L thread map and also
+
+s/PLease/Please
+
+-- 
+~Vinod
