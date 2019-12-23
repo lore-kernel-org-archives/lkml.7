@@ -2,167 +2,102 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF495C2D0D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4088DC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA16D207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:53:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577123618;
-	bh=VOI+cU6VEbOCWsLd0qZ7LaCPaalpOyC+SxcnzLJU7+s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=W2EW1uRTKCwzqcKjEuSfUxGA4vQXLk6avQChAF+Kewo5eY06riY0xA6ZImDf7zHMW
-	 cQxYAtWK/+npd12nBlD4CJRmKAUlBns9yf0jjQBkyhZ8YMN8NpsgYxtj3jI2GY157e
-	 f/QwbpfziMT57FFzo92sdaHAfF6vXGDB6ahr1xPs=
+	by mail.kernel.org (Postfix) with ESMTP id 2850620663
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:55:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfLWRxi (ORCPT
+        id S1726846AbfLWRzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 12:53:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34472 "EHLO mail.kernel.org"
+        Mon, 23 Dec 2019 12:55:01 -0500
+Received: from foss.arm.com ([217.140.110.172]:47528 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726754AbfLWRxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 12:53:37 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCF8F20663;
-        Mon, 23 Dec 2019 17:53:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577123616;
-        bh=VOI+cU6VEbOCWsLd0qZ7LaCPaalpOyC+SxcnzLJU7+s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JNS0O+Fs8s47C5wTjt2RPsiPt+fKoC0Haokgo6XB3YDEZNdXkSFw2G7cti7ZqWnBt
-         9clHk+lJ6cgEsxjQanBmAmCKEYm8qxkoKilXv/C5dOWRiRAMAda3eL9b/EDPo/yMqp
-         F+r7dyDkNHislAhnfDcb+uNTcg+/sfgjcPbcN6Z0=
-Date:   Mon, 23 Dec 2019 17:53:32 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH] iio: buffer-dmaengine: Report buffer length
- requirements
-Message-ID: <20191223175332.4638562e@archlinux>
-In-Reply-To: <20191211115615.9660-1-alexandru.ardelean@analog.com>
-References: <20191211115615.9660-1-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726754AbfLWRzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 12:55:00 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC0D3328;
+        Mon, 23 Dec 2019 09:54:59 -0800 (PST)
+Received: from localhost (e108754-lin.cambridge.arm.com [10.1.198.81])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7DA573F68F;
+        Mon, 23 Dec 2019 09:54:59 -0800 (PST)
+Date:   Mon, 23 Dec 2019 17:54:58 +0000
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org,
+        rui.zhang@intel.com, qperret@google.com, daniel.lezcano@linaro.org,
+        viresh.kumar@linaro.org, linux-kernel@vger.kernel.org,
+        amit.kachhap@gmail.com, javi.merino@kernel.org,
+        amit.kucheria@verdurent.com
+Subject: Re: [Patch v6 6/7] thermal/cpu-cooling: Update thermal pressure in
+ case of a maximum frequency capping
+Message-ID: <20191223175458.GC31446@arm.com>
+References: <1576123908-12105-1-git-send-email-thara.gopinath@linaro.org>
+ <1576123908-12105-7-git-send-email-thara.gopinath@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576123908-12105-7-git-send-email-thara.gopinath@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Dec 2019 13:56:15 +0200
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-
-> From: Lars-Peter Clausen <lars@metafoo.de>
-> 
-> The dmaengine buffer has some length alignment requirements that can differ
-> from platform to platform. If the length alignment requirements are not met
-> unexpected behavior like dropping of samples can occur.
-> 
-> Currently these requirements are not reported and applications need to know
-> the requirements of the platform by some out-of-band means.
-> 
-> Add a new buffer attribute that reports the length alignment requirements
-> called `length_align_bytes`. The reported length alignment is in bytes that
-> means the buffer length alignment in sample sets depends on the number of
-> enabled channels and the bytes per channel. Applications using this
-> attribute to determine the buffer size requirements need to consider this.
-> 
-> Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-
-Seems like a sensible and well defined change to me, so applied to the togreg
-branch of iio.git with the minor tweak mentioned below.
-
-
-> ---
->  .../ABI/testing/sysfs-bus-iio-dma-buffer      | 19 +++++++++++++++++
->  .../buffer/industrialio-buffer-dmaengine.c    | 21 +++++++++++++++++++
->  2 files changed, 40 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-dma-buffer
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-dma-buffer b/Documentation/ABI/testing/sysfs-bus-iio-dma-buffer
-> new file mode 100644
-> index 000000000000..999de481de82
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio-dma-buffer
-> @@ -0,0 +1,19 @@
-> +What:		/sys/bus/iio/devices/iio:deviceX/buffer/length_align_bytes
-> +KernelVersion:	5.4
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		DMA buffers tend to have a alignment requirement for the
-> +		buffers. If this alignment requirement is not met samples might
-> +		be dropped from the buffer.
-> +
-> +		This property reports the alignment requirements in bytes. This means
-> +		that the buffer size in bytes needs to be a integer multiple of the
-> +		number reported by this file.
-> +
-> +		The alignment requirements in number of sample sets will depend on the
-> +		enabled channels and the bytes per channel. This means that the
-> +		alignment requirement in samples sets might change depending on which
-> +		and how many channels are enabled. Whereas the alignment requirement
-> +		reported in bytes by this property will remain static and does not
-> +		depend on which channels are
-
-Odd line wrapping. I'll fix that.  Whole block is a bit wide, so I'll rewrap it.
-
-Jonathan
-
-> +		enabled.
-> diff --git a/drivers/iio/buffer/industrialio-buffer-dmaengine.c b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-> index 7d298aaff1f0..b129693af0fd 100644
-> --- a/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-> +++ b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-> @@ -13,6 +13,7 @@
->  #include <linux/module.h>
+On Wednesday 11 Dec 2019 at 23:11:47 (-0500), Thara Gopinath wrote:
+[...]
+> @@ -430,6 +430,10 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
+>  				 unsigned long state)
+>  {
+>  	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
+> +	struct cpumask *cpus;
+> +	unsigned int frequency;
+> +	unsigned long capacity;
+> +	int ret;
 >  
->  #include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
->  #include <linux/iio/buffer.h>
->  #include <linux/iio/buffer_impl.h>
->  #include <linux/iio/buffer-dma.h>
-> @@ -126,6 +127,24 @@ static const struct iio_dma_buffer_ops iio_dmaengine_default_ops = {
->  	.abort = iio_dmaengine_buffer_abort,
->  };
+>  	/* Request state should be less than max_level */
+>  	if (WARN_ON(state > cpufreq_cdev->max_level))
+> @@ -441,8 +445,19 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
 >  
-> +static ssize_t iio_dmaengine_buffer_get_length_align(struct device *dev,
-> +	struct device_attribute *attr, char *buf)
-> +{
-> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-> +	struct dmaengine_buffer *dmaengine_buffer =
-> +		iio_buffer_to_dmaengine_buffer(indio_dev->buffer);
-> +
-> +	return sprintf(buf, "%u\n", dmaengine_buffer->align);
-> +}
-> +
-> +static IIO_DEVICE_ATTR(length_align_bytes, 0444,
-> +		       iio_dmaengine_buffer_get_length_align, NULL, 0);
-> +
-> +static const struct attribute *iio_dmaengine_buffer_attrs[] = {
-> +	&iio_dev_attr_length_align_bytes.dev_attr.attr,
-> +	NULL,
-> +};
-> +
->  /**
->   * iio_dmaengine_buffer_alloc() - Allocate new buffer which uses DMAengine
->   * @dev: Parent device for the buffer
-> @@ -179,6 +198,8 @@ struct iio_buffer *iio_dmaengine_buffer_alloc(struct device *dev,
+>  	cpufreq_cdev->cpufreq_state = state;
 >  
->  	iio_dma_buffer_init(&dmaengine_buffer->queue, chan->device->dev,
->  		&iio_dmaengine_default_ops);
-> +	iio_buffer_set_attrs(&dmaengine_buffer->queue.buffer,
-> +		iio_dmaengine_buffer_attrs);
->  
->  	dmaengine_buffer->queue.buffer.access = &iio_dmaengine_buffer_ops;
->  
+> -	return freq_qos_update_request(&cpufreq_cdev->qos_req,
+> -				get_state_freq(cpufreq_cdev, state));
+> +	frequency = get_state_freq(cpufreq_cdev, state);
+> +
+> +	ret = freq_qos_update_request(&cpufreq_cdev->qos_req, frequency);
+> +
+> +	if (ret > 0) {
+> +		cpus = cpufreq_cdev->policy->cpus;
+> +		capacity = frequency *
+> +				arch_scale_cpu_capacity(cpumask_first(cpus));
+> +		capacity /= cpufreq_cdev->policy->cpuinfo.max_freq;
+> +		arch_set_thermal_pressure(cpus, capacity);
 
+Given that you already get a CPU's capacity (orig) here, why don't
+you pass thermal pressure directly to arch_set_thermal_pressure,
+rather than passing the capped capacity and subtracting it later from
+the same CPU capacity (arch_scale_cpu_capacity)?
+
+If my math is correct this would work nicely:
+                pressure = cpufreq_cdev->policy->cpuinfo.max_freq;
+		pressure -= frequency;
+		pressure *= arch_scale_cpu_capacity(cpumask_first(cpus);
+		pressure /= cpufreq_cdev->policy->cpuinfo.max_freq;
+
+Thanks,
+Ionela.
+
+> +	}
+> +
+> +	return ret;
+>  }
+>  
+>  /* Bind cpufreq callbacks to thermal cooling device ops */
+> -- 
+> 2.1.4
+> 
