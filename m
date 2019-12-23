@@ -2,164 +2,116 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DAAC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 05:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE720C2D0D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 05:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ADDC20409
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 05:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93DB7206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 05:45:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IgEth4J4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="thXcged9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbfLWFax (ORCPT
+        id S1726034AbfLWFpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 00:30:53 -0500
-Received: from mailout2.samsung.com ([203.254.224.25]:50619 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725855AbfLWFax (ORCPT
+        Mon, 23 Dec 2019 00:45:42 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:45929 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbfLWFpm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 00:30:53 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191223053049epoutp02ca2f7eb01e1e13d025fe442fced28606~i6Qo6uAN91245412454epoutp02E
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 05:30:49 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191223053049epoutp02ca2f7eb01e1e13d025fe442fced28606~i6Qo6uAN91245412454epoutp02E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1577079049;
-        bh=c3/GFKm5pcWHV0q5AiyUNnvGU6F/U8B4ahNnH34AUcs=;
-        h=To:Cc:From:Subject:Date:References:From;
-        b=IgEth4J49UxN4XJUWB/zlp+uJ8+LpYgV0mQMgOM3NdYpcFN6OQfyta/IDusbF1crE
-         o20M9VLSmTVRKy7fFo/smTqKqyJu8aQKeBkhUaAiFeAtmOMmdG1DBykztTUuRMmDAh
-         QiPY8usupYzqHgCpCVbx3kXBPFG+Wxp2AbVWgfeo=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20191223053049epcas1p441d014fe532ca54b3ec9cd98ce7ccc98~i6QogTXq-3151831518epcas1p4j;
-        Mon, 23 Dec 2019 05:30:49 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.152]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 47h7HB3bNyzMqYkt; Mon, 23 Dec
-        2019 05:30:46 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        3E.86.51241.601500E5; Mon, 23 Dec 2019 14:30:46 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20191223053045epcas1p4bbe1dac8d04e2fbc8fa4a50d42177c2c~i6QlFBrb20720507205epcas1p4J;
-        Mon, 23 Dec 2019 05:30:45 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191223053045epsmtrp2b2f97cf196da3fa5cbc70217c3b1e23a~i6QlEUo2u0505805058epsmtrp2L;
-        Mon, 23 Dec 2019 05:30:45 +0000 (GMT)
-X-AuditID: b6c32a39-14bff7000001c829-2d-5e005106e120
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        27.25.06569.501500E5; Mon, 23 Dec 2019 14:30:45 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191223053045epsmtip2be2d39cb8ded509d592dbe242a16a372~i6Qk50Smt0933309333epsmtip2k;
-        Mon, 23 Dec 2019 05:30:45 +0000 (GMT)
-To:     "Rafael J. Wysocki <rjw@rjwysocki.net>" <rjw@rjwysocki.net>
-Cc:     "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?7ZWo66qF7KO8?= <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        "Chanwoo Choi (samsung.com)" <cw00.choi@samsung.c>
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [GIT PULL] devfreq fixes for v5.5-rc4
-Organization: Samsung Electronics
-Message-ID: <3400e92c-80bd-b2ac-dba0-dfe61d26b1d0@samsung.com>
-Date:   Mon, 23 Dec 2019 14:37:30 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Mon, 23 Dec 2019 00:45:42 -0500
+Received: by mail-qt1-f193.google.com with SMTP id l12so14486847qtq.12;
+        Sun, 22 Dec 2019 21:45:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=14r7Jxv6ILUGdSVz71xwC9kfft75l4E8nJpVYH9WWxY=;
+        b=thXcged9wpzyNLdEezN6APmldUIlcRCNCGUSymSV8otBk2BGTYwQErN8YLse95uzYg
+         s7mJJE3P8vraOtSpyaq9JooUQ3XWtI5cOWzwjHnVamWRyvqPxObuHYaujDnNrzrHRHSN
+         BbsazzCsd50bAaSDuawk58uuzu9YNPAl3DkUVKC3KgT7u4X+xkQ58apLnTrq5w1PyulD
+         dJ3frOdqI+tq2gz3OxssF+xecN91WoTnu1EiZFUQTdDJkmUfJW0YjAZObLTh8Qa4uVye
+         JIFwszmSNRtihloTOJOB/wFtKoM0k1DO7Nh4j7FRy6ak+XeQVo8Pvg/oMou8IYYNP0j2
+         4A2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=14r7Jxv6ILUGdSVz71xwC9kfft75l4E8nJpVYH9WWxY=;
+        b=TG9/bMMdY683QOy/V5eNEhwUYcZrG4gCVvKjabCSi1ZMc3ydz+O15F0GVEo2sTqqyq
+         yIIB7pp0Mr/ZDWJhXpYpstSqD6X3E6YI+sdtrA/zehCXWNXRr3zh3RVxQhfJcnR61L/E
+         og/RMIOWDwKkMt4xePBl4x0SAq0EUbqJ2yrGEHtizhrEJqhzTlCcxz2r+CEQi8rKKaGy
+         Y6aTLQAgQVWeh4ape1cmIsLHMR6ItoKWLZ4g7nL7A5GhkdzALVhbHbUX+3sethiLN4kI
+         nQMgcQJBMrNJwOvlIzcyTy1ni/amSOx/IhG5XKPo2ph4wfuvQjO9p7G6HCN+bORuG4zB
+         3AAQ==
+X-Gm-Message-State: APjAAAUH1glcZ1abjW/x6DyBZlOSg0RrZkxpZCoSwhGe16YIFJG2TNto
+        yMyXpAzML9Hwti1Kq3vdSFkjEd0AxiY5f6UgsUg=
+X-Google-Smtp-Source: APXvYqyPEUEUrr706xHAfV1kYlxYzwLwd7Fy0OA702gi2MXx8GsObRDvS+UA6Gron41iv9e9QbpsvPm0TPBQtlPfyAI=
+X-Received: by 2002:ac8:4050:: with SMTP id j16mr21075945qtl.171.1577079941253;
+ Sun, 22 Dec 2019 21:45:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNJsWRmVeSWpSXmKPExsWy7bCmgS5bIEOcwe5PMhZ9O/+zWpxtesNu
-        cXnXHDaLz71HGC1uN65gszhz+hKrA5vHlqvtLB4LF79j9ejbsorR4/MmuQCWqGybjNTElNQi
-        hdS85PyUzLx0WyXv4HjneFMzA0NdQ0sLcyWFvMTcVFslF58AXbfMHKDlSgpliTmlQKGAxOJi
-        JX07m6L80pJUhYz84hJbpdSClJwCywK94sTc4tK8dL3k/FwrQwMDI1OgwoTsjD8Tn7MWPOWp
-        6Fndz9jAeI6ri5GTQ0LARGLhnF3MXYxcHEICOxglzsx7yQjhfGKUuLz4JxuE8w0os6uLDaZl
-        zrmlUIm9jBJfn6yDct4zSmyddB9oGAeHiIC9RMeHTJA4s8AUJokjiw8zgnSzCWhJ7H9xA2yS
-        sICexNIzK5lAbH4BRYmrPx6D1fAK2EmsufaCEWQOi4CqxJeOCJCwqECYxMltLVAlghInZz5h
-        AbGZBcQlbj2ZzwRhy0tsfzsH7B8JgRNsErcP3maBuNpFoqf3BzuELSzx6vgWKFtK4vO7vVCf
-        VUusPHmEDaK5g1Fiy/4LrBAJY4n9SyczgRzELKApsX6XPkRYUWLn77mMEIv5JN597WEFKZEQ
-        4JXoaBOCKFGWuPzgLhOELSmxuL0TapWHxIQL55kmMCrOQvLOLCTvzELyziyExQsYWVYxiqUW
-        FOempxYbFpgix/YmRnDC1LLcwXjsnM8hRgEORiUe3oQ5/2OFWBPLiitzDzFKcDArifDurv0b
-        K8SbklhZlVqUH19UmpNafIjRFBjYE5mlRJPzgck8ryTe0NTI2NjYwsTQzNTQUEmcl+PHxVgh
-        gfTEktTs1NSC1CKYPiYOTqkGxphmxzVdT/fvOXfCIWJfAFeQ0oH5eg6JUTFfFi1Qf39wP2Pb
-        Il7DuFtGV/TuhPBd13/vH1ZQa+We+NZ+ov61N9q1CoeV3l5LXZB5IzKx93/OtdKk/7ZfFUTU
-        fTZ8OPPLpMewwfH9yZ8v3GcYa6474bw7cOLm5I3cMkpZpofrNHnsDvF7fknQV2Ipzkg01GIu
-        Kk4EAGYhd9+uAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDLMWRmVeSWpSXmKPExsWy7bCSvC5rIEOcQcdzeYu+nf9ZLc42vWG3
-        uLxrDpvF594jjBa3G1ewWZw5fYnVgc1jy9V2Fo+Fi9+xevRtWcXo8XmTXABLFJdNSmpOZllq
-        kb5dAlfGn4nPWQue8lT0rO5nbGA8x9XFyMkhIWAiMefcUrYuRi4OIYHdjBLbbnYyQyQkJaZd
-        PApkcwDZwhKHDxdD1LxllNj38gorSFxEwF6i40MmSJxZYAqTxOJpH1hAetkEtCT2v7jBBmIL
-        C+hJLD2zkgnE5hdQlLj64zEjiM0rYCex5toLRpA5LAKqEl86IkDCogJhEjuXPGaCKBGUODnz
-        CdhIZgF1iT/zLjFD2OISt57MZ4Kw5SW2v53DPIFRcBaSlllIWmYhaZmFpGUBI8sqRsnUguLc
-        9NxiwwKjvNRyveLE3OLSvHS95PzcTYzgONDS2sF44kT8IUYBDkYlHl6OWf9jhVgTy4orcw8x
-        SnAwK4nw7q79GyvEm5JYWZValB9fVJqTWnyIUZqDRUmcVz7/WKSQQHpiSWp2ampBahFMlomD
-        U6qBsdjEoM3Z+Ufmnu8lss2XW6Lm/fNffEZd+FD2x+4f7ouak7cunFww6/WelBrhF0+TfyXZ
-        Cty9obNLWHndr5DDUVbz382sTD9u4r6/pnOvagzDI6er08+lLznrZyB36pawRMHPX6HTps71
-        ObGLw3LvuaDa6ZrCYgkncjjjJ9ySM5383VL6aoV4phJLcUaioRZzUXEiAHvQ0m1/AgAA
-X-CMS-MailID: 20191223053045epcas1p4bbe1dac8d04e2fbc8fa4a50d42177c2c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191223053045epcas1p4bbe1dac8d04e2fbc8fa4a50d42177c2c
-References: <CGME20191223053045epcas1p4bbe1dac8d04e2fbc8fa4a50d42177c2c@epcas1p4.samsung.com>
+References: <20191221162158.rw6xqqktubozg6fg@ast-mbp.dhcp.thefacebook.com> <20191223030530.725937-1-namhyung@kernel.org>
+In-Reply-To: <20191223030530.725937-1-namhyung@kernel.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Sun, 22 Dec 2019 21:45:30 -0800
+Message-ID: <CAEf4BzaGfsF352kWu1zZe+yXSRm4c9LQ0U57VnRq2EdtjeQutw@mail.gmail.com>
+Subject: Re: [PATCH bpf] libbpf: Fix build on read-only filesystems
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, bpf <bpf@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Rafael,
+On Sun, Dec 22, 2019 at 7:05 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> I got the following error when I tried to build perf on a read-only
+> filesystem with O=dir option.
+>
+>   $ cd /some/where/ro/linux/tools/perf
+>   $ make O=$HOME/build/perf
+>   ...
+>     CC       /home/namhyung/build/perf/lib.o
+>   /bin/sh: bpf_helper_defs.h: Read-only file system
+>   make[3]: *** [Makefile:184: bpf_helper_defs.h] Error 1
+>   make[2]: *** [Makefile.perf:778: /home/namhyung/build/perf/libbpf.a] Error 2
+>   make[2]: *** Waiting for unfinished jobs....
+>     LD       /home/namhyung/build/perf/libperf-in.o
+>     AR       /home/namhyung/build/perf/libperf.a
+>     PERF_VERSION = 5.4.0
+>   make[1]: *** [Makefile.perf:225: sub-make] Error 2
+>   make: *** [Makefile:70: all] Error 2
+>
+> It was becaused bpf_helper_defs.h was generated in current directory.
+> Move it to OUTPUT directory.
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
 
-This is devfreq-fixes pull request for v5.5-rc4. I add detailed description of
-this pull request on the following tag. Please pull devfreq with following updates.
-- tag name : devfreq-fixes-for-5.5-rc4
+Looks good, thanks!
 
-Actually, this pull request doesn't need to contain the patch[1]
-because patch[1] is not critical and urgent. But, build-fix patch[2]
-depends on patch[1]. So, this pull request contains two patches.
-If you think that it is not reasonable, please let me know.
-[1] PM / devfreq: Drop explicit selection of PM_OPP
-[2] PM / devfreq: tegra: Add COMMON_CLK dependency
+Tested-by: Andrii Nakryiko <andriin@fb.com>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-Regards,
-Chanwoo Choi
+>  tools/lib/bpf/Makefile               | 15 ++++++++-------
+>  tools/testing/selftests/bpf/Makefile |  6 +++---
+>  2 files changed, 11 insertions(+), 10 deletions(-)
+>
 
-The following changes since commit 46cf053efec6a3a5f343fead837777efe8252a46:
-
-  Linux 5.5-rc3 (2019-12-22 17:02:23 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git tags/devfreq-fixes-for-5.5-rc4
-
-for you to fetch changes up to 5fdb0684b5b0f41402161f068d3d84bf6ed1c3f4:
-
-  PM / devfreq: tegra: Add COMMON_CLK dependency (2019-12-23 10:42:58 +0900)
-
-----------------------------------------------------------------
-
-Update devfreq for 5.5-rc4
-
-Detailed description for this pull request:
-1. Fix the build error of tegra*-devfreq.c when COMPILE_TEST is enableda
-2. Drop unneeded PM_OPP dependency from each driver in Kconfig.
-
-----------------------------------------------------------------
-
-Arnd Bergmann (1):
-      PM / devfreq: tegra: Add COMMON_CLK dependency
-
-Leonard Crestez (1):
-      PM / devfreq: Drop explicit selection of PM_OPP
-
- drivers/devfreq/Kconfig | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+[...]
