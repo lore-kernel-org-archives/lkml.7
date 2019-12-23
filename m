@@ -2,134 +2,170 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5B8C2D0D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 09:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA10C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 09:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A440420709
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 09:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B482206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 09:50:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="fTMpOfmt"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XW09JBhd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbfLWJqY (ORCPT
+        id S1726867AbfLWJuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 04:46:24 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:36658 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726632AbfLWJqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 04:46:24 -0500
-Received: from zn.tnic (p200300EC2F0ED600ADBBD4693F09EE6A.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:d600:adbb:d469:3f09:ee6a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 23 Dec 2019 04:50:21 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:14215 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726826AbfLWJuV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 04:50:21 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1577094620; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=KJ1U0ZRQgXwWQsUptcXeQV98BEoXo5TChpOyayX6HDw=;
+ b=XW09JBhdnxp9/uVQbbOWIAvS3igP0/dkb9MdIV0sCCq7uuty8B0PBcX1x3HNi+4t8SNBCNxR
+ yg0+etJwyKT/eZ+y8WPQz5Sqsu7V8hgXhTfE1xmMM/VzCLwRUW32XcuUVeLMaulx6E3b7OyU
+ VCGFFsmQdLtu1ikFslLpxMNZPyI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e008dd8.7f5b105241f0-smtp-out-n01;
+ Mon, 23 Dec 2019 09:50:16 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D4C58C433A2; Mon, 23 Dec 2019 09:50:14 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BA7541EC0391;
-        Mon, 23 Dec 2019 10:46:22 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1577094382;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=e00xLS3wvMXuUpar8VvqyPvkT9aL3MNsXz6CAS0DPiU=;
-        b=fTMpOfmtWjlC7dDCmoRgPup2HzK38xsqvsy/5QT3+29JHaRNRmig2ExPdwLOJ7/iSLGYV4
-        nworLXMnrzytNjpcQ/EMMvOPnCbfL4J7PQJj2AeARGgHRNJaRz9w7rGuo2X/mWcHtMjzTo
-        m0doIrPahHJ3I9RcnAeSR5woS/229wE=
-Date:   Mon, 23 Dec 2019 10:46:14 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        puiterwijk@redhat.com
-Subject: Re: [PATCH v24 07/24] x86/cpu/intel: Detect SGX supprt
-Message-ID: <20191223094614.GB16710@zn.tnic>
-References: <20191129231326.18076-1-jarkko.sakkinen@linux.intel.com>
- <20191129231326.18076-8-jarkko.sakkinen@linux.intel.com>
+        (Authenticated sender: dikshita)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 805B0C43383;
+        Mon, 23 Dec 2019 09:50:14 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191129231326.18076-8-jarkko.sakkinen@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 23 Dec 2019 15:20:14 +0530
+From:   dikshita@codeaurora.org
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vgarodia@codeaurora.org, linux-media-owner@vger.kernel.org
+Subject: Re: [PATCH 1/3] arm64: dts: sc7180: Add Venus video codec DT node
+In-Reply-To: <17a371c0-d73a-75eb-34f2-c9afb51d46f5@linaro.org>
+References: <1576828760-13176-1-git-send-email-dikshita@codeaurora.org>
+ <1576828760-13176-2-git-send-email-dikshita@codeaurora.org>
+ <17a371c0-d73a-75eb-34f2-c9afb51d46f5@linaro.org>
+Message-ID: <3f41daa245ed9df52a513c99ee6c0749@codeaurora.org>
+X-Sender: dikshita@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 30, 2019 at 01:13:09AM +0200, Jarkko Sakkinen wrote:
-> From: Sean Christopherson <sean.j.christopherson@intel.com>
-> 
-> When the CPU supports SGX, check that the BIOS has enabled SGX and SGX1
-> opcodes are available. Otherwise, all the SGX related capabilities.
-> 
-> In addition, clear X86_FEATURE_SGX_LC also in the case when the launch
-> enclave are read-only. This way the feature bit reflects the level that
-> Linux supports the launch control.
-> 
-> The check is done for every CPU, not just BSP, in order to verify that
-> MSR_IA32_FEATURE_CONTROL is correctly configured on all CPUs. The other
-> parts of the kernel, like the enclave driver, expect the same
-> configuration from all CPUs.
-> 
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Co-developed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
->  arch/x86/kernel/cpu/intel.c | 41 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> index c2fdc00df163..89a71367716c 100644
-> --- a/arch/x86/kernel/cpu/intel.c
-> +++ b/arch/x86/kernel/cpu/intel.c
-> @@ -624,6 +624,42 @@ static void detect_tme(struct cpuinfo_x86 *c)
->  	c->x86_phys_bits -= keyid_bits;
->  }
->  
-> +static void __maybe_unused detect_sgx(struct cpuinfo_x86 *c)
-> +{
-> +	unsigned long long fc;
-> +
-> +	rdmsrl(MSR_IA32_FEATURE_CONTROL, fc);
-> +	if (!(fc & FEATURE_CONTROL_LOCKED)) {
-> +		pr_err_once("sgx: The feature control MSR is not locked\n");
-> +		goto err_unsupported;
-> +	}
-> +
-> +	if (!(fc & FEATURE_CONTROL_SGX_ENABLE)) {
-> +		pr_err_once("sgx: SGX is not enabled in IA32_FEATURE_CONTROL MSR\n");
-> +		goto err_unsupported;
-> +	}
-> +
-> +	if (!cpu_has(c, X86_FEATURE_SGX1)) {
-> +		pr_err_once("sgx: SGX1 instruction set is not supported\n");
-> +		goto err_unsupported;
-> +	}
-> +
-> +	if (!(fc & FEATURE_CONTROL_SGX_LE_WR)) {
-> +		pr_info_once("sgx: The launch control MSRs are not writable\n");
-> +		goto err_msrs_rdonly;
-> +	}
+Hi Stan,
 
-One more thing - and we talked about this already - when the hash
-MSRs are not writable, the kernel needs to disable all SGX support by
-default. Basically, no SGX support is present.
+Thanks for the review!
+I will address all the comments in the next version.
 
-If the user wants to run KVM guests with SGX enclaves, then she should
-probably boot with a special kvm param or so. Details on how can exactly
-control that can be discussed later - just making sure you guys are not
-forgetting this use angle.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+On 2019-12-20 15:04, Stanimir Varbanov wrote:
+> Hi Dikshita,
+> 
+> Thanks for the patch.
+> 
+> On 12/20/19 9:59 AM, Dikshita Agarwal wrote:
+>> This adds Venus video codec DT node for sc7180.
+>> 
+>> Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 36 
+>> ++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 36 insertions(+)
+>> 
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi 
+>> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> index 6876aae2..42c70f5 100644
+>> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> @@ -10,6 +10,7 @@
+>>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>  #include <dt-bindings/phy/phy-qcom-qusb2.h>
+>>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+>> +#include <dt-bindings/clock/qcom,videocc-sc7180.h>
+>> 
+>>  / {
+>>  	interrupt-parent = <&intc>;
+>> @@ -66,6 +67,11 @@
+>>  			compatible = "qcom,cmd-db";
+>>  			no-map;
+>>  		};
+>> +
+>> +		venus_mem: memory@8F600000 {
+>> +			reg = <0 0x8F600000 0 0x500000>;
+> 
+> Please use lower-case for hex numbers.
+> 
+>> +			no-map;
+>> +		};
+>>  	};
+>> 
+>>  	cpus {
+>> @@ -1042,6 +1048,36 @@
+>>  			};
+>>  		};
+>> 
+>> +		venus: video-codec@aa00000 {
+>> +			compatible = "qcom,sc7180-venus";
+>> +			reg = <0 0x0aa00000 0 0xff000>;
+>> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+>> +			power-domains = <&videocc VENUS_GDSC>,
+>> +					<&videocc VCODEC0_GDSC>;
+>> +			power-domain-names = "venus", "vcodec0";
+>> +			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+>> +				<&videocc VIDEO_CC_VENUS_AHB_CLK>,
+>> +				<&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
+>> +				<&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
+>> +				<&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
+> 
+> could you align those entries to the first one (you can use tabs and
+> after that spaces to align)
+> 
+>> +			clock-names = "core", "iface", "bus",
+>> +					"vcodec0_core", "vcodec0_bus";
+>> +			iommus = <&apps_smmu 0x0C00 0x60>;
+> 
+> lower-case please
+> 
+>> +			memory-region = <&venus_mem>;
+>> +
+>> +			video-core0 {
+>> +					compatible = "venus-decoder";
+> 
+> something is wrong with the indentation?
+> 
+> Please run checkpatch with --strict
+> 
+>> +			};
+>> +
+>> +			video-core1 {
+>> +					compatible = "venus-encoder";
+>> +			};
+>> +
+>> +			video-firmware {
+>> +					iommus = <&apps_smmu 0x0C42 0x0>;
+> 
+> lower-case
+> 
+>> +			};
+> 
+> This subnode should be in sc7180-idp.dts, because we assume that by
+> default the qcom platforms have TZ.
+> 
+>> +		};
+>> +
+>>  		pdc: interrupt-controller@b220000 {
+>>  			compatible = "qcom,sc7180-pdc", "qcom,pdc";
+>>  			reg = <0 0x0b220000 0 0x30000>;
+>> 
