@@ -2,91 +2,144 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 540FCC2D0D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 21:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3871C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 22:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23644206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 21:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B913C206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 22:00:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Tt9GcZna"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfLWV7R (ORCPT
+        id S1726933AbfLWWAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 16:59:17 -0500
-Received: from mga02.intel.com ([134.134.136.20]:7875 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726817AbfLWV7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 16:59:16 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 13:59:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,349,1571727600"; 
-   d="scan'208";a="207395090"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by orsmga007.jf.intel.com with ESMTP; 23 Dec 2019 13:59:15 -0800
-Date:   Tue, 24 Dec 2019 05:59:14 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com
-Subject: Re: [PATCH] mm/rmap.c: split huge pmd when it really is
-Message-ID: <20191223215914.GA5156@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20191223022435.30653-1-richardw.yang@linux.intel.com>
- <20191223171653.xy2ri52xymkwm3ov@box>
+        Mon, 23 Dec 2019 17:00:54 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:51934 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbfLWWAx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 17:00:53 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBNM0jjW087485;
+        Mon, 23 Dec 2019 16:00:45 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1577138445;
+        bh=w7aPOs42Swzrz+lvTvKsdRSio+cXajK+pj+QxGcZEvk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Tt9GcZnae883S9o242HcAwe1PmEivctbuoFAK8dxgrLMPe5P5FjzD/q+CbqYfk5EY
+         HBixkahpgVgTIJE5Am7lE0jiAuSEyp5QqnD+S+kCY2FW2AoEXuY/CrR85vm/XwAqFi
+         J8tUzE3jXUaWxgDn4KI4r534iXJtBMDT3dE15yUs=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBNM0jT0098889;
+        Mon, 23 Dec 2019 16:00:45 -0600
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 23
+ Dec 2019 16:00:43 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 23 Dec 2019 16:00:43 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBNM0fme062348;
+        Mon, 23 Dec 2019 16:00:42 -0600
+Subject: Re: [PATCH v2] iio: adc: at91-sama5d2_adc: Use dma_request_chan()
+ instead dma_request_slave_channel()
+To:     Jonathan Cameron <jic23@kernel.org>
+CC:     <vkoul@kernel.org>, <ludovic.desroches@microchip.com>,
+        <eugen.hristev@microchip.com>, <linux-iio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20191217103100.21737-1-peter.ujfalusi@ti.com>
+ <20191223155001.3c4c7261@archlinux>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <4b05c6b4-e70a-67ac-8a7e-d5310c6f8ef0@ti.com>
+Date:   Tue, 24 Dec 2019 00:02:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191223171653.xy2ri52xymkwm3ov@box>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191223155001.3c4c7261@archlinux>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 08:16:53PM +0300, Kirill A. Shutemov wrote:
->On Mon, Dec 23, 2019 at 10:24:35AM +0800, Wei Yang wrote:
->> There are two cases to call try_to_unmap_one() with TTU_SPLIT_HUGE_PMD
->> set:
->> 
->>   * unmap_page()
->>   * shrink_page_list()
->> 
->> In both case, the page passed to try_to_unmap_one() is PageHead() of the
->> THP. If this page's mapping address in process is not HPAGE_PMD_SIZE
->> aligned, this means the THP is not mapped as PMD THP in this process.
->> This could happen when we do mremap() a PMD size range to an un-aligned
->> address.
->> 
->> Currently, this case is handled by following check in __split_huge_pmd()
->> luckily.
->> 
->>   page != pmd_page(*pmd)
->> 
->> This patch checks the address to skip some hard work.
->
->Do you see some measurable performance improvement? rmap is heavy enough
->and I expect this kind of overhead to be within noise level.
->
->I don't have anything agains the check, but it complicates the picture.
->
->And if we are going this path, it worth also check if the vma is long
->enough to hold huge page.
->
->And I don't see why the check cannot be done inside split_huge_pmd_address().
->
+Hi Jonathan,
 
-Ok, let me put the check into split_huge_pmd_address().
+On 12/23/19 5:50 PM, Jonathan Cameron wrote:
+> On Tue, 17 Dec 2019 12:31:00 +0200
+> Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> 
+>> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+>> eating up the error code.
+>>
+>> By using dma_request_chan() directly the driver can support deferred
+>> probing against DMA.
+> Unfortunately that doesn't seem to be true.
+> The function in question returns void...
+> 
+> And for that matter is called only from the set_watermark callback which
+> doesn't run at probe time.
+> 
+> So if we were to get a deferred response at runtime there isn't a whole
+> lot we could do with it.
 
->-- 
-> Kirill A. Shutemov
+With dma_request_chan() drivers can support deferred probing ;)
+I forgot to remove the section which does not apply to this driver.
 
--- 
-Wei Yang
-Help you, Help me
+The main reason for this change is to retire the old APIs for requesting
+DMA channel and keep one, consistently named set.
+
+I'll send v3 in in about two weeks with updated commit message.
+
+> 
+> Jonathan
+> 
+> 
+> 
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> ---
+>> Hi,
+>>
+>> Changes since v1:
+>> - Subject prefix is corrected to "iio: adc: at91-sama5d2_adc:"
+>>
+>> Regards,
+>> Peter
+>>
+>>  drivers/iio/adc/at91-sama5d2_adc.c | 6 +++---
+>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
+>> index e1850f3d5cf3..a5c7771227d5 100644
+>> --- a/drivers/iio/adc/at91-sama5d2_adc.c
+>> +++ b/drivers/iio/adc/at91-sama5d2_adc.c
+>> @@ -1444,10 +1444,10 @@ static void at91_adc_dma_init(struct platform_device *pdev)
+>>  	if (st->dma_st.dma_chan)
+>>  		return;
+>>  
+>> -	st->dma_st.dma_chan = dma_request_slave_channel(&pdev->dev, "rx");
+>> -
+>> -	if (!st->dma_st.dma_chan)  {
+>> +	st->dma_st.dma_chan = dma_request_chan(&pdev->dev, "rx");
+>> +	if (IS_ERR(st->dma_st.dma_chan))  {
+>>  		dev_info(&pdev->dev, "can't get DMA channel\n");
+>> +		st->dma_st.dma_chan = NULL;
+>>  		goto dma_exit;
+>>  	}
+>>  
+> 
+
+- Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
