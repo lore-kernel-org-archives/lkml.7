@@ -2,576 +2,165 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8847BC2D0D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 16:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDD5C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 16:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4924020715
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 16:07:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577117241;
-	bh=dclOm5X7tzyxFdFo5/QU7uQRdeh+d6aim3T0acYaJdU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=pgqOyAUxk0jiSffVQuWsVrwPEiY9fKkbAUFgCtSwlELzHuX9cwB1maWM9wIMt44xM
-	 Qe5Ph+3BLlG79YrYqnBjWqZCBbZSxWi09JvXmFvVd11F9dNo6EpApxnQACDUYOSeHd
-	 Zq8rNuffOPkbWP1n3RjhUbD2Ub2jCYkSeDOBw3J0=
+	by mail.kernel.org (Postfix) with ESMTP id A795220709
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 16:09:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Ntqb31N+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbfLWQHU (ORCPT
+        id S1726846AbfLWQJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 11:07:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52654 "EHLO mail.kernel.org"
+        Mon, 23 Dec 2019 11:09:03 -0500
+Received: from mout.web.de ([212.227.17.12]:46981 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbfLWQHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 11:07:20 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF1B720709;
-        Mon, 23 Dec 2019 16:07:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577117238;
-        bh=dclOm5X7tzyxFdFo5/QU7uQRdeh+d6aim3T0acYaJdU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lir79hHoSwGIzPxe4h6+GqqVzwCnEiFd8ErHY3fYMJm2ChvmMN5KMlILPCPiy9UFc
-         prl67wJxcfvNTdXrfUIRH2oBjSzm4UnFvkij1Mxa/d7ckNw5U+eMdHRWPvuCRLoIUl
-         1efDyzhwE1i78u7RQ3oDKF5MjI3JD4ht4RTj/rNg=
-Date:   Mon, 23 Dec 2019 16:07:12 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Matt Ranostay <matt.ranostay@konsulko.com>
-Cc:     ruantu <mtwget@gmail.com>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Tomasz Duszynski <tduszyns@gmail.com>, mike.looijmans@topic.nl,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] iio: chemical: add support for Dynament Premier
- series single gas sensor
-Message-ID: <20191223160712.1e1cfcde@archlinux>
-In-Reply-To: <FA803BE2-2715-4F63-8F5B-3A57F700AB1B@konsulko.com>
-References: <3a17c9e1-f916-0cde-3296-70066dccb2b3@gmail.com>
-        <FA803BE2-2715-4F63-8F5B-3A57F700AB1B@konsulko.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725912AbfLWQJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 11:09:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1577117273;
+        bh=9YMBNcB/MerfA3aFKIx0vO2X3UMH82iLUaeuatZAT2Q=;
+        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
+        b=Ntqb31N+EjieIVCesFBBUQs4PzKLD8U+0Ih+QZABXyKToLuG2JbTaSyl16z0jE2B3
+         OVMwMs8UGTYUUewvMJnnXhn1bvOz9NkmK9/ykS9cd1+uh7dN0pVeuWW/ubU7QsytLA
+         XajN9Jn4R4wu2SbOaK+Xnyz6Ic06Xw4PVaOe3EJc=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.136.132]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LaTid-1jVNOI1kX1-00mHXL; Mon, 23
+ Dec 2019 17:07:53 +0100
+To:     Yi Wang <wang.yi59@zte.com.cn>,
+        Huang Zijiang <huang.zijiang@zte.com.cn>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org, Ben Segall <bsegall@google.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>, up2wing@gmail.com,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Wang Liang <wang.liang82@zte.com.cn>,
+        Xue Zhihong <xue.zhihong@zte.com.cn>
+References: <1577065949-25631-1-git-send-email-wang.yi59@zte.com.cn>
+Subject: Re: [PATCH] sched: Use kmem_cache_zalloc() instead of
+ kmem_cache_alloc() with flag GFP_ZERO.
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <e880ee66-2d7f-be97-5600-a8a459a39feb@web.de>
+Date:   Mon, 23 Dec 2019 17:07:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <1577065949-25631-1-git-send-email-wang.yi59@zte.com.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:fqHgrmnrTggCEpx4e2qn3OP9D9dGm8bqvt4wfExRqaK8KPyMaV9
+ N6yEKl8yrKFz598TMBc2jb6dMvHmN3QRSa16ofVxbEqBmOwWBsBODnaPATpjKFW99DmlFNc
+ WpRReNbmUq06qAYBiNzIUcQDPufGNTRJ4X6xVpPL+nHDzrWZxLU6O5GuOhg2ypRsI+QWnIP
+ uKrhssU4x8PF2PCjrTccg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:TXV8vRi3JIM=:9mOymmhjF5ZirLwnoH68Ls
+ ioVX94JDhpurW9x6zHccq/tbdk9jiozhyPG1sMetcRaWR9Q5hjyrEEyIoUirc/qXOH1FSfUXw
+ iX2wShbXjGN41pnyvtnzVI+jHQ5mFWPGviSDGr4xMnloiBywsTVd0eOGZf5bu+vEMgLnu6Zb8
+ qnqZAz7/oKnV2LhWI4SVS8qVArwBK1f3+wOPaWlAWblerwja8FN9tWutLD0QaXHs6cCFOgoly
+ KPa0oBHe2l/nWVWigltDO2MXpEdFxshs+Hb1pjVrdYNnoUjawV+7u8U/13WDc+VHoMM6f/o9r
+ LWCPPhOSxhl2/CNOGRj34U7ZncEsbxkFc6YliJGN625ZvXylYkD2K+45gK/vyYM0SQe8Elssc
+ nS20C1ReD3acidwKcpAPYbhvs3hxU0mQdigJcdnCOvJKqk11jLQNspI+aV0bPWEPeosPjy7lX
+ 50M7QO9R1EWJ+IUulKXAup/XLw5q3AP8e8YDh0C0iWsUHfgQxite5cNbTy43lbu+xMQxVRvPK
+ BKiabtHmjzmuqjnsBdRvkj0TfWxN7sCA1C+hG9PvUZhASggn96X8hbRfjbc8ror9fiIP5EMsU
+ ydlmVh9xM7tzKXRsUd1uXNq/52ejr5PKp3JURaHmU9phvZfzz3OYR0T45iDx9ZKlFTcmGM5+g
+ RHNYrTELemnwVFmmypGcZNLEXEVbjI7K4hOn5D89NczuoiaxoBERR4IzRyylREiM5TudO3doK
+ NmF6ZmBexVHd3tGOEApjIK57eWheAkaB45zG5UPjybCDNuiO4kJ8w6/594hK9S6Swne+e0Gqk
+ cx7wuK4CEHO+ONYNwqbUuXVOtnhDQ42VUBEBB0b/vqYH9VAfqa9LiVuflaD2qAqFD1oZrC7YD
+ C4Ai5pJhtehokQi0T9EWiaZg44xe8q/Q/5IlmelFLdDrYReD2t97Sr0GLoYaz/Elho8ltbpCv
+ RDuoio8CRzhhY5v9Z0jdJkK5JIvaQIuDIpXL9cc7EuD4Ku0p5epqj1fL1ltpMk5GyZlboYv3s
+ DYAxJH2gdfAUzyA5XVAmDbDpQ8uy1iIfsyyILk4BIrANLMb0Q8sXZhM4NUdKEMFlUs3IuFFyb
+ tINhrGnIUUb4zZcI14G7x6YbYPZFBwCTPdRfI0CGfIN/IXPzaIb9sNug6CP0nvcMZQrIw2p2/
+ il6XdVI/EisLqnKMeK2m5u8rZZPMflJogS8Pz0hWK+vLKQHzyLCKxnxgqgUYBaye/XDr0S2Lh
+ /9p9VX1Kxz7Z+3OSgONTRPrXMT08QtGfHiEQQpbltOCXI6hw9gPnJWJNyu+E=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Dec 2019 21:17:43 -0800
-Matt Ranostay <matt.ranostay@konsulko.com> wrote:
+=E2=80=A6
+> +++ b/kernel/sched/core.c
+> @@ -6939,7 +6939,7 @@ struct task_group *sched_create_group(struct task_=
+group *parent)
+=E2=80=A6
+> -    tg =3D kmem_cache_alloc(task_group_cache, GFP_KERNEL | __GFP_ZERO);
+> +tg =3D kmem_cache_zalloc(task_group_cache, GFP_KERNEL);
+>      if (!tg)
+=E2=80=A6
 
-> > On Dec 17, 2019, at 17:52, ruantu <mtwget@gmail.com> wrote:
-> >=20
-> > =EF=BB=BFOn Tue, Dec 17, 2019 at 2:24 AM YuDong Zhang <mtwget@gmail.com=
-> wrote: =20
-> >>> Add support for Dynament Premier series single gas sensor.
-> >>>  =20
-> >> Just looking the Dynament site and I assume this is for the OEM-1
-> >> Development kit? If so you probably should
-> >> note that in the documentation because the sensors themselves are
-> >> likely to be used in other end products (and not
-> >> always the dev kit)
-> >>=20
-> >> Also bit of silly question this is an UART device so why not do
-> >> processing in userspace? :)
-> >>=20
-> >> - Matt =20
+Please fix the indentation.
 
-> > This is a driver implemented according to the <Dynamization Sensor
-> > Communications protocol>. I think the protocol is standard. This is
-> > the idea that emerged after the iio subsystem used serial_bus. =20
->=20
-> Well egg on my face since only got recently back on this mailing
-> list.... looks good over all but the floating point to fixed point
-> stuff maybe has some comments. Also I am on holiday till the New Year
-> but please CC on future changes!
+Would you like to apply a script for the semantic patch language
+like the following?
 
-The question about whether to allow serial bus drivers in IIO wasn't
-entirely obvious so reasonable to raise it.  There is a long tradition
-of doing serial bus drivers only in userspace.  However, there is
-nothing fundamentally different about them from spi or i2c drivers.
-
-Sometimes we have the addition of interrupts or gpio signals (not
-true for this one though!).
-
-Basically it's nicer to have all sensors use a common interface.
-We could do that the next level up in a userspace library but I'm not
-sure there is stronger reason to do that in this case than for simple i2c
-/ spi devices.
-
-So I saw no reason to block serdev devices in IIO.  Not many there
-yet though!
-
-Thanks,
-
-Jonathan
+@replacement@
+expression gfp, x;
+@@
+ x =3D
+(
+-    kmalloc
++    kzalloc
+|
+-    kmem_cache_alloc
++    kmem_cache_zalloc
+)
+            (...,
+             gfp
+-            | __GFP_ZERO
+            )
 
 
->=20
-> >>> Signed-off-by: YuDong Zhang <mtwget@gmail.com>
-> >>> ---
-> >>>  MAINTAINERS                    |   5 +
-> >>>  drivers/iio/chemical/Kconfig   |  10 +
-> >>>  drivers/iio/chemical/Makefile  |   1 +
-> >>>  drivers/iio/chemical/premier.c | 366 +++++++++++++++++++++++++++++++=
-++
-> >>>  4 files changed, 382 insertions(+)
-> >>>  create mode 100644 drivers/iio/chemical/premier.c
-> >>>=20
-> >>> diff --git a/MAINTAINERS b/MAINTAINERS
-> >>> index a049abccaa26..ae228ac7adc9 100644
-> >>> --- a/MAINTAINERS
-> >>> +++ b/MAINTAINERS
-> >>> @@ -5792,6 +5792,11 @@ S:       Maintained
-> >>>  F:     drivers/media/usb/dvb-usb-v2/dvb_usb*
-> >>>  F:     drivers/media/usb/dvb-usb-v2/usb_urb.c
-> >>>=20
-> >>> +DYNAMENT PREMIER SERIES SINGLE GAS SENSOR DRIVER
-> >>> +M:     YuDong Zhang <mtwget@gmail.com>
-> >>> +S:     Maintained
-> >>> +F:     drivers/iio/chemical/premier.c
-> >>> +
-> >>>  DYNAMIC DEBUG
-> >>>  M:     Jason Baron <jbaron@akamai.com>
-> >>>  S:     Maintained
-> >>> diff --git a/drivers/iio/chemical/Kconfig b/drivers/iio/chemical/Kcon=
-fig
-> >>> index fa4586037bb8..93c0c108245b 100644
-> >>> --- a/drivers/iio/chemical/Kconfig
-> >>> +++ b/drivers/iio/chemical/Kconfig
-> >>> @@ -62,6 +62,16 @@ config IAQCORE
-> >>>           iAQ-Core Continuous/Pulsed VOC (Volatile Organic Compounds)
-> >>>           sensors
-> >>>=20
-> >>> +config PREMIER
-> >>> +       tristate "Dynament Premier series sensor"
-> >>> +       depends on SERIAL_DEV_BUS
-> >>> +       help
-> >>> +         Say Y here to build support for the Dynament Premier
-> >>> +         series sensor.
-> >>> +
-> >>> +         To compile this driver as a module, choose M here: the modu=
-le will
-> >>> +         be called premier.
-> >>> +
-> >>>  config PMS7003
-> >>>         tristate "Plantower PMS7003 particulate matter sensor"
-> >>>         depends on SERIAL_DEV_BUS
-> >>> diff --git a/drivers/iio/chemical/Makefile b/drivers/iio/chemical/Mak=
-efile
-> >>> index f97270bc4034..c8e779d7cf4a 100644
-> >>> --- a/drivers/iio/chemical/Makefile
-> >>> +++ b/drivers/iio/chemical/Makefile
-> >>> @@ -10,6 +10,7 @@ obj-$(CONFIG_BME680_I2C) +=3D bme680_i2c.o
-> >>>  obj-$(CONFIG_BME680_SPI) +=3D bme680_spi.o
-> >>>  obj-$(CONFIG_CCS811)           +=3D ccs811.o
-> >>>  obj-$(CONFIG_IAQCORE)          +=3D ams-iaq-core.o
-> >>> +obj-$(CONFIG_PREMIER)          +=3D premier.o
-> >>>  obj-$(CONFIG_PMS7003) +=3D pms7003.o
-> >>>  obj-$(CONFIG_SENSIRION_SGP30)  +=3D sgp30.o
-> >>>  obj-$(CONFIG_SPS30) +=3D sps30.o
-> >>> diff --git a/drivers/iio/chemical/premier.c b/drivers/iio/chemical/pr=
-emier.c
-> >>> new file mode 100644
-> >>> index 000000000000..a226dd9d78cb
-> >>> --- /dev/null
-> >>> +++ b/drivers/iio/chemical/premier.c
-> >>> @@ -0,0 +1,366 @@
-> >>> +// SPDX-License-Identifier: GPL-2.0
-> >>> +/*
-> >>> + * Dynament Premier series single gas sensor driver
-> >>> + *
-> >>> + * Copyright (c) YuDong Zhang <mtwget@gmail.com>
-> >>> + */
-> >>> +
-> >>> +#include <asm/unaligned.h>
-> >>> +#include <linux/completion.h>
-> >>> +#include <linux/device.h>
-> >>> +#include <linux/errno.h>
-> >>> +#include <linux/iio/iio.h>
-> >>> +#include <linux/jiffies.h>
-> >>> +#include <linux/kernel.h>
-> >>> +#include <linux/mod_devicetable.h>
-> >>> +#include <linux/module.h>
-> >>> +#include <linux/mutex.h>
-> >>> +#include <linux/of.h>
-> >>> +#include <linux/regulator/consumer.h>
-> >>> +#include <linux/serdev.h>
-> >>> +
-> >>> +#define PREMIER_DRIVER_NAME "dynament-premier"
-> >>> +
-> >>> +#define PREMIER_DLE (0x10)
-> >>> +#define PREMIER_CMD_RD (0x13)
-> >>> +#define PREMIER_CMD_NAK (0x19)
-> >>> +#define PREMIER_CMD_DAT (0x1a)
-> >>> +#define PREMIER_EOF (0x1f)
-> >>> +
-> >>> +#define PREMIER_TIMEOUT msecs_to_jiffies(6000)
-> >>> +
-> >>> +/*
-> >>> + * commands have following format:
-> >>> + *
-> >>> + * +-----+-----+---------+-----+-----+-----------+-----------+
-> >>> + * | DLE | CMD | PAYLOAD | DLE | EOF | CKSUM MSB | CKSUM LSB |
-> >>> + * +-----+-----+---------+-----+-----+-----------+-----------+
-> >>> + */
-> >>> +static const u8 premier_cmd_read_live_data_simple[] =3D { 0x10, 0x13=
-, 0x06, 0x10,
-> >>> +                                                       0x1F, 0x00, 0=
-x58 };
-> >>> +
-> >>> +struct premier_frame {
-> >>> +       u8 state;
-> >>> +       u8 is_dat;
-> >>> +       u8 is_nak;
-> >>> +       u8 data_len;
-> >>> +       u8 vi, si, gi, gj;
-> >>> +       u8 gas[4];
-> >>> +       u8 byte_stuffing;
-> >>> +       u8 checksum_received[2];
-> >>> +       u16 checksum_calculated;
-> >>> +};
-> >>> +
-> >>> +struct premier_data {
-> >>> +       struct serdev_device *serdev;
-> >>> +       struct premier_frame frame;
-> >>> +       struct completion frame_ready;
-> >>> +       struct mutex lock; /* must be held whenever state gets touche=
-d */
-> >>> +       struct regulator *vcc;
-> >>> +};
-> >>> +
-> >>> +static int premier_do_cmd_read_live_data(struct premier_data *state)
-> >>> +{
-> >>> +       int ret;
-> >>> +
-> >>> +       ret =3D serdev_device_write(state->serdev,
-> >>> +                                 premier_cmd_read_live_data_simple,
-> >>> +                                 sizeof(premier_cmd_read_live_data_s=
-imple),
-> >>> +                                 PREMIER_TIMEOUT);
-> >>> +       if (ret < sizeof(premier_cmd_read_live_data_simple))
-> >>> +               return ret < 0 ? ret : -EIO;
-> >>> +
-> >>> +       ret =3D wait_for_completion_interruptible_timeout(&state->fra=
-me_ready,
-> >>> +                                                       PREMIER_TIMEO=
-UT);
-> >>> +
-> >>> +       if (!ret)
-> >>> +               ret =3D -ETIMEDOUT;
-> >>> +
-> >>> +       return ret < 0 ? ret : 0;
-> >>> +}
-> >>> +
-> >>> +static s32 premier_float_to_int_clamped(const u8 *fp)
-> >>> +{
-> >>> +       int val =3D get_unaligned_le32(fp);
-> >>> +       int mantissa =3D val & GENMASK(22, 0);
-> >>> +       /* this is fine since passed float is always non-negative */
-> >>> +       int exp =3D val >> 23;
-> >>> +       int fraction, shift;
-> >>> +
-> >>> +       /* special case 0 */
-> >>> +       if (!exp && !mantissa)
-> >>> +               return 0;
-> >>> +
-> >>> +       exp -=3D 127;
-> >>> +       if (exp < 0) {
-> >>> +               /* return values ranging from 1 to 99 */
-> >>> +               return ((((1 << 23) + mantissa) * 100) >> 23) >> (-ex=
-p);
-> >>> +       }
-> >>> +
-> >>> +       /* return values ranging from 100 to int_max */
-> >>> +       shift =3D 23 - exp;
-> >>> +       val =3D (1 << exp) + (mantissa >> shift);
-> >>> +
-> >>> +       fraction =3D mantissa & GENMASK(shift - 1, 0);
-> >>> +
-> >>> +       return val * 100 + ((fraction * 100) >> shift);
-> >>> +}
-> >>> +
-> >>> +static int premier_read_raw(struct iio_dev *indio_dev,
-> >>> +                           struct iio_chan_spec const *chan, int *va=
-l,
-> >>> +                           int *val2, long mask)
-> >>> +{
-> >>> +       struct premier_data *state =3D iio_priv(indio_dev);
-> >>> +       struct premier_frame *frame =3D &state->frame;
-> >>> +       int ret;
-> >>> +       s32 val_tmp;
-> >>> +
-> >>> +       switch (mask) {
-> >>> +       case IIO_CHAN_INFO_PROCESSED:
-> >>> +
-> >>> +               mutex_lock(&state->lock);
-> >>> +               ret =3D premier_do_cmd_read_live_data(state);
-> >>> +               if (ret) {
-> >>> +                       mutex_unlock(&state->lock);
-> >>> +                       return ret;
-> >>> +               }
-> >>> +               val_tmp =3D premier_float_to_int_clamped(frame->gas);
-> >>> +               mutex_unlock(&state->lock);
-> >>> +
-> >>> +               *val =3D val_tmp / 100;
-> >>> +               *val2 =3D (val_tmp % 100) * 10000;
-> >>> +               return IIO_VAL_INT_PLUS_MICRO;
-> >>> +       default:
-> >>> +               return -EINVAL;
-> >>> +       }
-> >>> +
-> >>> +       return -EINVAL;
-> >>> +}
-> >>> +
-> >>> +static const struct iio_info premier_info =3D {
-> >>> +       .read_raw =3D premier_read_raw,
-> >>> +};
-> >>> +
-> >>> +static const struct iio_chan_spec premier_channels[] =3D {
-> >>> +       {
-> >>> +               .type =3D IIO_MASSCONCENTRATION,
-> >>> +               .channel =3D 1,
-> >>> +               .channel2 =3D IIO_MOD_CO2,
-> >>> +               .scan_index =3D -1,
-> >>> +               .info_mask_separate =3D BIT(IIO_CHAN_INFO_PROCESSED),
-> >>> +               .modified =3D 1,
-> >>> +       },
-> >>> +       IIO_CHAN_SOFT_TIMESTAMP(0),
-> >>> +};
-> >>> +
-> >>> +static int premier_receive_buf(struct serdev_device *serdev,
-> >>> +                              const unsigned char *buf, size_t size)
-> >>> +{
-> >>> +       struct iio_dev *indio_dev =3D serdev_device_get_drvdata(serde=
-v);
-> >>> +       struct premier_data *state =3D iio_priv(indio_dev);
-> >>> +       struct premier_frame *frame =3D &state->frame;
-> >>> +       int i;
-> >>> +
-> >>> +       for (i =3D 0; i < size; i++) {
-> >>> +               if (frame->state > 0 && frame->state <=3D 7)
-> >>> +                       frame->checksum_calculated +=3D buf[i];
-> >>> +
-> >>> +               switch (frame->state) {
-> >>> +               case 0:
-> >>> +                       if (buf[i] =3D=3D PREMIER_DLE) {
-> >>> +                               frame->is_dat =3D 0;
-> >>> +                               frame->is_nak =3D 0;
-> >>> +                               frame->checksum_calculated =3D buf[i];
-> >>> +                               /* We don't initialize checksum_calcu=
-lated in
-> >>> +                                * the last state in case we didn't go
-> >>> +                                * there because of noise
-> >>> +                                */
-> >>> +                               frame->state++;
-> >>> +                       }
-> >>> +                       break;
-> >>> +               case 1:
-> >>> +                       /*
-> >>> +                        * If noise corrupts a byte in the FSM sequen=
-ce,
-> >>> +                        * we loop between state 0 and 1,
-> >>> +                        * until we have a valid sequence of DLE&DAT =
-or DLE&NAK
-> >>> +                        */
-> >>> +                       if (buf[i] =3D=3D PREMIER_CMD_DAT) {
-> >>> +                               frame->is_dat =3D 1;
-> >>> +                               frame->state++;
-> >>> +                       } else if (buf[i] =3D=3D PREMIER_CMD_NAK) {
-> >>> +                               frame->is_nak =3D 1;
-> >>> +                               frame->state++;
-> >>> +                       } else
-> >>> +                               frame->state =3D 0;
-> >>> +                       break;
-> >>> +               case 2:
-> >>> +                       if (frame->is_nak)
-> >>> +                               frame->state =3D 0;
-> >>> +                       else if (frame->is_dat) {
-> >>> +                               frame->data_len =3D buf[i] - 4;
-> >>> +                               /* remove version and status bytes fr=
-om count */
-> >>> +                               if (frame->data_len < 4)
-> >>> +                                       frame->state =3D 0;
-> >>> +                               /* we check for the upper limit in st=
-ate 5 */
-> >>> +                               else
-> >>> +                                       frame->state++;
-> >>> +                       } else
-> >>> +                               frame->state =3D 0;
-> >>> +                       break;
-> >>> +               case 3:
-> >>> +                       /* Just do nothing for 2 rounds to bypass
-> >>> +                        * the 2 version bytes
-> >>> +                        */
-> >>> +                       if (frame->vi < 2 - 1)
-> >>> +                               frame->vi++;
-> >>> +                       else {
-> >>> +                               frame->vi =3D 0;
-> >>> +                               frame->state++;
-> >>> +                       }
-> >>> +                       break;
-> >>> +               case 4:
-> >>> +                       if (frame->si < 2 - 1)
-> >>> +                               frame->si++;
-> >>> +                       else {
-> >>> +                               frame->si =3D 0;
-> >>> +                               frame->state++;
-> >>> +                       }
-> >>> +                       break;
-> >>> +               case 5:
-> >>> +                       if (frame->gi < frame->data_len - 1) {
-> >>> +                               if (buf[i] !=3D PREMIER_DLE ||
-> >>> +                                   frame->byte_stuffing) {
-> >>> +                                       frame->gas[frame->gj] =3D buf=
-[i];
-> >>> +                                       frame->byte_stuffing =3D 0;
-> >>> +                                       frame->gj++;
-> >>> +                                       if (frame->gj >=3D 4)
-> >>> +                                               frame->state =3D 0;
-> >>> +                                       /* Don't violate array limits
-> >>> +                                        * if data_len corrupt
-> >>> +                                        */
-> >>> +                               } else
-> >>> +                                       frame->byte_stuffing =3D 1;
-> >>> +                               frame->gi++;
-> >>> +                       } else {
-> >>> +                               frame->gas[frame->gj] =3D buf[i];
-> >>> +                               frame->byte_stuffing =3D 0;
-> >>> +                               frame->gi =3D 0;
-> >>> +                               frame->gj =3D 0;
-> >>> +                               frame->state++;
-> >>> +                       }
-> >>> +                       break;
-> >>> +               case 6:
-> >>> +                       if (buf[i] =3D=3D PREMIER_DLE)
-> >>> +                               frame->state++;
-> >>> +                       else
-> >>> +                               frame->state =3D 0;
-> >>> +                       break;
-> >>> +               case 7:
-> >>> +                       if (buf[i] =3D=3D PREMIER_EOF)
-> >>> +                               frame->state++;
-> >>> +                       else
-> >>> +                               frame->state =3D 0;
-> >>> +                       break;
-> >>> +               case 8:
-> >>> +                       frame->checksum_received[1] =3D buf[i];
-> >>> +
-> >>> +                       frame->state++;
-> >>> +                       break;
-> >>> +               case 9:
-> >>> +                       frame->checksum_received[0] =3D buf[i];
-> >>> +
-> >>> +                       if (frame->checksum_calculated =3D=3D
-> >>> +                           get_unaligned_le16(frame->checksum_receiv=
-ed))
-> >>> +                               complete(&state->frame_ready);
-> >>> +
-> >>> +                       frame->state =3D 0;
-> >>> +                       break;
-> >>> +               }
-> >>> +       }
-> >>> +
-> >>> +       return size;
-> >>> +}
-> >>> +
-> >>> +static const struct serdev_device_ops premier_serdev_ops =3D {
-> >>> +       .receive_buf =3D premier_receive_buf,
-> >>> +       .write_wakeup =3D serdev_device_write_wakeup,
-> >>> +};
-> >>> +
-> >>> +static int premier_probe(struct serdev_device *serdev)
-> >>> +{
-> >>> +       struct premier_data *state;
-> >>> +       struct iio_dev *indio_dev;
-> >>> +       int ret;
-> >>> +
-> >>> +       indio_dev =3D devm_iio_device_alloc(&serdev->dev, sizeof(*sta=
-te));
-> >>> +       if (!indio_dev)
-> >>> +               return -ENOMEM;
-> >>> +
-> >>> +       state =3D iio_priv(indio_dev);
-> >>> +       serdev_device_set_drvdata(serdev, indio_dev);
-> >>> +       state->serdev =3D serdev;
-> >>> +       indio_dev->dev.parent =3D &serdev->dev;
-> >>> +       indio_dev->info =3D &premier_info;
-> >>> +       indio_dev->name =3D PREMIER_DRIVER_NAME;
-> >>> +       indio_dev->channels =3D premier_channels;
-> >>> +       indio_dev->num_channels =3D ARRAY_SIZE(premier_channels);
-> >>> +       indio_dev->modes =3D INDIO_DIRECT_MODE;
-> >>> +
-> >>> +       mutex_init(&state->lock);
-> >>> +       init_completion(&state->frame_ready);
-> >>> +
-> >>> +       state->vcc =3D devm_regulator_get(&serdev->dev, "vcc");
-> >>> +       if (IS_ERR(state->vcc)) {
-> >>> +               ret =3D PTR_ERR(state->vcc);
-> >>> +               return ret;
-> >>> +       }
-> >>> +
-> >>> +       serdev_device_set_client_ops(serdev, &premier_serdev_ops);
-> >>> +       ret =3D devm_serdev_device_open(&serdev->dev, serdev);
-> >>> +       if (ret)
-> >>> +               return ret;
-> >>> +
-> >>> +       serdev_device_set_baudrate(serdev, 9600);
-> >>> +       serdev_device_set_flow_control(serdev, false);
-> >>> +
-> >>> +       ret =3D serdev_device_set_parity(serdev, SERDEV_PARITY_NONE);
-> >>> +       if (ret)
-> >>> +               return ret;
-> >>> +
-> >>> +       if (state->vcc) {
-> >>> +               ret =3D regulator_enable(state->vcc);
-> >>> +               if (ret)
-> >>> +                       return ret;
-> >>> +       }
-> >>> +
-> >>> +       return devm_iio_device_register(&serdev->dev, indio_dev);
-> >>> +}
-> >>> +
-> >>> +static void premier_remove(struct serdev_device *serdev)
-> >>> +{
-> >>> +       struct iio_dev *indio_dev =3D serdev_device_get_drvdata(serde=
-v);
-> >>> +       struct premier_data *state =3D iio_priv(indio_dev);
-> >>> +
-> >>> +       if (state->vcc)
-> >>> +               regulator_disable(state->vcc);
-> >>> +}
-> >>> +
-> >>> +static const struct of_device_id premier_of_match[] =3D {
-> >>> +       { .compatible =3D "dynament,premier" },
-> >>> +       {}
-> >>> +};
-> >>> +MODULE_DEVICE_TABLE(of, premier_of_match);
-> >>> +
-> >>> +static struct serdev_device_driver premier_driver =3D {
-> >>> +       .driver =3D {
-> >>> +               .name =3D PREMIER_DRIVER_NAME,
-> >>> +               .of_match_table =3D premier_of_match,
-> >>> +       },
-> >>> +       .probe =3D premier_probe,
-> >>> +       .remove =3D premier_remove,
-> >>> +};
-> >>> +module_serdev_device_driver(premier_driver);
-> >>> +
-> >>> +MODULE_AUTHOR("YuDong Zhang <mtwget@gmail.com>");
-> >>> +MODULE_DESCRIPTION("Dynament Premier series single gas sensor driver=
-");
-> >>> +MODULE_LICENSE("GPL v2");
-> >>> --
-> >>> 2.24.1
-> >>>  =20
-
+Regards,
+Markus
