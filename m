@@ -2,141 +2,63 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F28C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC534C2D0D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D8820409
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:09:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=asmblr.net header.i=@asmblr.net header.b="m30fxQF2"
+	by mail.kernel.org (Postfix) with ESMTP id AB538207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:16:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfLWNJ7 (ORCPT
+        id S1726834AbfLWNQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 08:09:59 -0500
-Received: from srv2.anyservers.com ([77.79.239.202]:56280 "EHLO
-        srv2.anyservers.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbfLWNJ5 (ORCPT
+        Mon, 23 Dec 2019 08:16:45 -0500
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:64670 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726676AbfLWNQo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 08:09:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=asmblr.net;
-         s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:
-        In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=4oPJuIsGgNT5J6VN2iFLZeUglptfXQOvDAfOfpBc9gg=; b=m30fxQF2uAFw4z/PjI3+gEiLEz
-        MAxut7+Q/rKfNptJFBFDcTQ/Mo9VCOZmoljnVpF1YMcbmZv948M7DA3FlV27pF5DmdRAg/wE0v628
-        tI5kqUxSiP5K5tC7agppfu+lcVBm1o0C0a+o3CDHpyEu6IIZbe3kwnBpyNvV4zWT2qSs9/C7gmHyD
-        rV8E6Raid3xyvEBz6J6l6abYjcMUzKGZfW1ax9kAQxrVrBhdCkbJdgVqVnzJcE9zXXazRpTxjZBjF
-        8sWcARHGoig0GGLukI8/DOdXO6zakAFCWNvtdD8HHmY0B7WcRpHM11zdrHjNAIZm7RqF62x0OJRRJ
-        5hIwGHxA==;
-Received: from 89-64-37-27.dynamic.chello.pl ([89.64.37.27]:49046 helo=milkyway.galaxy)
-        by srv2.anyservers.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <amade@asmblr.net>)
-        id 1ijMxR-00Gi5o-0c; Mon, 23 Dec 2019 13:37:09 +0100
-From:   =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= <amade@asmblr.net>
-To:     Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org,
-        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= <amade@asmblr.net>
-Subject: [PATCH 8/9] rtlwifi: rtl8723be: Make functions static & rm sw.h
-Date:   Mon, 23 Dec 2019 13:37:14 +0100
-Message-Id: <20191223123715.7177-9-amade@asmblr.net>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191223123715.7177-1-amade@asmblr.net>
-References: <20191223123715.7177-1-amade@asmblr.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - srv2.anyservers.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - asmblr.net
-X-Get-Message-Sender-Via: srv2.anyservers.com: authenticated_id: amade@asmblr.net
-X-Authenticated-Sender: srv2.anyservers.com: amade@asmblr.net
+        Mon, 23 Dec 2019 08:16:44 -0500
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 23 Dec 2019 18:45:12 +0530
+Received: from c-rkambl-linux1.qualcomm.com ([10.242.50.190])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 23 Dec 2019 18:44:46 +0530
+Received: by c-rkambl-linux1.qualcomm.com (Postfix, from userid 2344811)
+        id B6463121E; Mon, 23 Dec 2019 18:44:45 +0530 (IST)
+From:   Rajeshwari <rkambl@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sanm@codeaurora.org, sivaa@codeaurora.org, manafm@codeaurora.org,
+        Rajeshwari <rkambl@codeaurora.org>
+Subject: [PATCH 0/2] Add critical interrupt and cooling maps for TSENS in SC7180
+Date:   Mon, 23 Dec 2019 18:44:29 +0530
+Message-Id: <1577106871-19863-1-git-send-email-rkambl@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some of functions which were exposed in sw.h, are only used in sw.c, so
-just make them static. This makes sw.h unnecessary, so remove it.
+Added critical interrupt support cooling maps support in SC7180 changed sensors 
+name under thermal-zones and added configuration for SC7180 in yaml.
 
-Signed-off-by: Amadeusz Sławiński <amade@asmblr.net>
----
- drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.c |  7 +++----
- drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.h | 13 -------------
- 2 files changed, 3 insertions(+), 17 deletions(-)
- delete mode 100644 drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.h
+Rajeshwari (2):
+  arm64: dts: qcom: sc7180:  Add critical interrupt and cooling maps for
+    TSENS in SC7180.
+  dt-bindings: thermal: tsens: Add configuration for sc7180 in yaml
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.c
-index 3c8528f0ecb3..36209ac5b208 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.c
-@@ -13,7 +13,6 @@
- #include "hw.h"
- #include "fw.h"
- #include "../rtl8723com/fw_common.h"
--#include "sw.h"
- #include "trx.h"
- #include "led.h"
- #include "table.h"
-@@ -64,7 +63,7 @@ static void rtl8723be_init_aspm_vars(struct ieee80211_hw *hw)
- 	rtlpci->const_support_pciaspm = rtlpriv->cfg->mod_params->aspm_support;
- }
- 
--int rtl8723be_init_sw_vars(struct ieee80211_hw *hw)
-+static int rtl8723be_init_sw_vars(struct ieee80211_hw *hw)
- {
- 	int err = 0;
- 	struct rtl_priv *rtlpriv = rtl_priv(hw);
-@@ -170,7 +169,7 @@ int rtl8723be_init_sw_vars(struct ieee80211_hw *hw)
- 	return 0;
- }
- 
--void rtl8723be_deinit_sw_vars(struct ieee80211_hw *hw)
-+static void rtl8723be_deinit_sw_vars(struct ieee80211_hw *hw)
- {
- 	struct rtl_priv *rtlpriv = rtl_priv(hw);
- 
-@@ -181,7 +180,7 @@ void rtl8723be_deinit_sw_vars(struct ieee80211_hw *hw)
- }
- 
- /* get bt coexist status */
--bool rtl8723be_get_btc_status(void)
-+static bool rtl8723be_get_btc_status(void)
- {
- 	return true;
- }
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.h b/drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.h
-deleted file mode 100644
-index 6ecacf9fbfd7..000000000000
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.h
-+++ /dev/null
-@@ -1,13 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/* Copyright(c) 2009-2014  Realtek Corporation.*/
--
--#ifndef __RTL8723BE_SW_H__
--#define __RTL8723BE_SW_H__
--
--int rtl8723be_init_sw_vars(struct ieee80211_hw *hw);
--void rtl8723be_deinit_sw_vars(struct ieee80211_hw *hw);
--void rtl8723be_init_var_map(struct ieee80211_hw *hw);
--bool rtl8723be_get_btc_status(void);
--
--
--#endif
+ .../devicetree/bindings/thermal/qcom-tsens.yaml    |   1 +
+ arch/arm64/boot/dts/qcom/sc7180.dtsi               | 289 +++++++++++++++++----
+ 2 files changed, 240 insertions(+), 50 deletions(-)
+
 -- 
-2.24.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
+of Code Aurora Forum, hosted by The Linux Foundation
 
