@@ -2,113 +2,200 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BB6C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 19:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DF8C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 19:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74C05206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 19:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD9A0206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 19:19:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NcmL1Iix"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbfLWTKU (ORCPT
+        id S1726889AbfLWTTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 14:10:20 -0500
-Received: from foss.arm.com ([217.140.110.172]:47954 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726787AbfLWTKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 14:10:20 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4498F328;
-        Mon, 23 Dec 2019 11:10:19 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CE89F3F68F;
-        Mon, 23 Dec 2019 11:10:16 -0800 (PST)
-Date:   Mon, 23 Dec 2019 19:10:14 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Doug Smythies <dsmythies@telus.net>
-Cc:     'Giovanni Gherdovich' <ggherdovich@suse.cz>, x86@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        'Mel Gorman' <mgorman@techsingularity.net>,
-        'Matt Fleming' <matt@codeblueprint.co.uk>,
-        'Viresh Kumar' <viresh.kumar@linaro.org>,
-        'Juri Lelli' <juri.lelli@redhat.com>,
-        'Paul Turner' <pjt@google.com>,
-        'Peter Zijlstra' <peterz@infradead.org>,
-        'Vincent Guittot' <vincent.guittot@linaro.org>,
-        'Quentin Perret' <qperret@qperret.net>,
-        'Dietmar Eggemann' <dietmar.eggemann@arm.com>,
-        'Srinivas Pandruvada' <srinivas.pandruvada@linux.intel.com>,
-        'Thomas Gleixner' <tglx@linutronix.de>,
-        'Ingo Molnar' <mingo@redhat.com>,
-        'Borislav Petkov' <bp@suse.de>, 'Len Brown' <lenb@kernel.org>,
-        "'Rafael J . Wysocki'" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v4 1/6] x86,sched: Add support for frequency invariance
-Message-ID: <20191223191014.g7lnxafuadwtcqub@e107158-lin.cambridge.arm.com>
-References: <1574697961.16378.5.camel@suse.cz>
- <000801d5a41e$a7fce2c0$f7f6a840$@net>
- <1574781600.7677.2.camel@suse.cz>
- <001d01d5a4f4$d96b21b0$8c416510$@net>
- <003d01d5a63d$f6ab3950$e401abf0$@net>
- <20191219104813.6fr34qavpaplecoz@e107158-lin>
- <000701d5b965$361b6c60$a2524520$@net>
- <20191223140743.o2wfoqtf56g4yrk5@e107158-lin.cambridge.arm.com>
- <20191223144043.ticfxfgbolsqk74i@e107158-lin.cambridge.arm.com>
- <000301d5b9ae$cd8f5b30$68ae1190$@net>
+        Mon, 23 Dec 2019 14:19:00 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:50156 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726787AbfLWTS6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 14:18:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577128736;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Mzx7EajUgz38eFycZmsM7uAu4xER5dc8+eCa4aPC7kM=;
+        b=NcmL1IixcM1nsKpeU/H8v8m1dJVkSwN88p4jCmeeIh0wlsCuxG3Wpnbd9l7t0dAL29TgUR
+        b+S0oUCKj+dei0Sl8u4u5JTJkBIygY65NjafHJRQEAZ3yAm3xNcVc/cgZa9uqQyKtP8BLS
+        xz1fJ7SEPs/igBCMGohG5scCBAM4RuU=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-166-6ao2L9F3Nh2Re3TxSj_Iiw-1; Mon, 23 Dec 2019 14:18:54 -0500
+X-MC-Unique: 6ao2L9F3Nh2Re3TxSj_Iiw-1
+Received: by mail-qk1-f198.google.com with SMTP id 143so11690994qkg.12
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 11:18:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Mzx7EajUgz38eFycZmsM7uAu4xER5dc8+eCa4aPC7kM=;
+        b=ib0diZ5gMf2bKKB78wClt+So3OFqfeAvGf27bQoi3P2CjkdT9gvXVCSo2xnjwB8nMJ
+         2zCRUoCSEgRNFsoap1iTwwLaGY3cZRLc3+7LahFbYo5rDR1xejaO11j8lxSqNbrQqEyg
+         lAULSFao6vnNstBSPI8u4Kl4E+BQsAWSwpGJAcuGoivyQqRM3O6oLGAMjzPw68YKwGOp
+         8kpLOD2TNueeaPm5RPKJNe91T2Glqibwr3yvHdCG80hYqv4xAxrxhbtCVL78RRv6wv6q
+         Dh+MQ1KTLqctScfBMFWRuMZjjOscUOaVf8+C5xaFhOfWo7Gdw7vb93ihYQduW9kLCvZW
+         kBfg==
+X-Gm-Message-State: APjAAAWL2rXY7yE0VsRJf+Tozj4En8K+H4fYBBhB41eokt4d/Sd465QZ
+        5dcA1xpbnxzlO/BjrxdAz5xiswp5cxD8EXTBweZ2kmvN56+J37jHmnOhyEUa74ETz3e2iaENYCW
+        9QtrSORqKLUUhJDHCiuCYH8nd
+X-Received: by 2002:ac8:7501:: with SMTP id u1mr24486593qtq.149.1577128734120;
+        Mon, 23 Dec 2019 11:18:54 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzm9a4lxMK6LF7QqNyD0QLlhLiSQOueiUSxA++dap0npGYGI52Q+yT1gDgURMuOXGsSQdSk6Q==
+X-Received: by 2002:ac8:7501:: with SMTP id u1mr24486575qtq.149.1577128733847;
+        Mon, 23 Dec 2019 11:18:53 -0800 (PST)
+Received: from xz-x1 ([104.156.64.74])
+        by smtp.gmail.com with ESMTPSA id g4sm6639888qtg.35.2019.12.23.11.18.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Dec 2019 11:18:52 -0800 (PST)
+Date:   Mon, 23 Dec 2019 14:18:51 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Ming Lei <minlei@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Kernel-managed IRQ affinity (cont)
+Message-ID: <20191223191851.GA90172@xz-x1>
+References: <20191216195712.GA161272@xz-x1>
+ <20191219082819.GB15731@ming.t460p>
+ <20191219143214.GA50561@xz-x1>
+ <20191219161115.GA18672@ming.t460p>
+ <20191219180917.GA7031@xz-x1>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <000301d5b9ae$cd8f5b30$68ae1190$@net>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20191219180917.GA7031@xz-x1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/23/19 08:34, Doug Smythies wrote:
-> On 2019.12.23 06:41 Qais Yousef wrote:
-> > On 12/23/19 14:07, Qais Yousef wrote:
-> >>> Re-boot to the nocgv1 (stock + cgroup_no_v1=all) kernel.
-> >>> set the schedutil governor.
-> >>> launch test 2 and related monitoring tools.
-> >>> verify performance governor like behavior.
-> >> 
-> >> So as stated above, by default uclamp_{min, max} = (0, 1024). So it wouldn't
-> >> act as performance governor by default unless you explicitly write 1024 to
-> >> uclamp.min.
-> >> 
-> >> Let me go find Ubuntu mainline tree to see if they applied anything extra in
-> >> there. If they modified the default behavior that could explain what you see.
-> >
-> > Actually I see what you were saying now that you copy the config. So I think
-> >  I misunderstood and you are running Linus' 5.5-rc2 + Ubuntu PPA config.
+On Thu, Dec 19, 2019 at 01:09:17PM -0500, Peter Xu wrote:
+> On Fri, Dec 20, 2019 at 12:11:15AM +0800, Ming Lei wrote:
+> > OK, please try the following patch:
+> > 
+> > 
+> > diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isolation.h
+> > index 6c8512d3be88..0fbcbacd1b29 100644
+> > --- a/include/linux/sched/isolation.h
+> > +++ b/include/linux/sched/isolation.h
+> > @@ -13,6 +13,7 @@ enum hk_flags {
+> >  	HK_FLAG_TICK		= (1 << 4),
+> >  	HK_FLAG_DOMAIN		= (1 << 5),
+> >  	HK_FLAG_WQ		= (1 << 6),
+> > +	HK_FLAG_MANAGED_IRQ	= (1 << 7),
+> >  };
+> >  
+> >  #ifdef CONFIG_CPU_ISOLATION
+> > diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+> > index 1753486b440c..0a75a09cc4e8 100644
+> > --- a/kernel/irq/manage.c
+> > +++ b/kernel/irq/manage.c
+> > @@ -20,6 +20,7 @@
+> >  #include <linux/sched/task.h>
+> >  #include <uapi/linux/sched/types.h>
+> >  #include <linux/task_work.h>
+> > +#include <linux/sched/isolation.h>
+> >  
+> >  #include "internals.h"
+> >  
+> > @@ -212,12 +213,33 @@ int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask,
+> >  {
+> >  	struct irq_desc *desc = irq_data_to_desc(data);
+> >  	struct irq_chip *chip = irq_data_get_irq_chip(data);
+> > +	const struct cpumask *housekeeping_mask =
+> > +		housekeeping_cpumask(HK_FLAG_MANAGED_IRQ);
+> >  	int ret;
+> > +	cpumask_var_t tmp_mask;
+> >  
+> >  	if (!chip || !chip->irq_set_affinity)
+> >  		return -EINVAL;
+> >  
+> > -	ret = chip->irq_set_affinity(data, mask, force);
+> > +	if (!zalloc_cpumask_var(&tmp_mask, GFP_KERNEL))
+> > +		return -EINVAL;
+> > +
+> > +	/*
+> > +	 * Userspace can't change managed irq's affinity, make sure
+> > +	 * that isolated CPU won't be selected as the effective CPU
+> > +	 * if this irq's affinity includes both isolated CPU and
+> > +	 * housekeeping CPU.
+> > +	 *
+> > +	 * This way guarantees that isolated CPU won't be interrupted
+> > +	 * by IO submitted from housekeeping CPU.
+> > +	 */
+> > +	if (irqd_affinity_is_managed(data) &&
+> > +			cpumask_intersects(mask, housekeeping_mask))
+> > +		cpumask_and(tmp_mask, mask, housekeeping_mask);
+> > +	else
+> > +		cpumask_copy(tmp_mask, mask);
+> > +
+> > +	ret = chip->irq_set_affinity(data, tmp_mask, force);
+> >  	switch (ret) {
+> >  	case IRQ_SET_MASK_OK:
+> >  	case IRQ_SET_MASK_OK_DONE:
+> > @@ -229,6 +251,8 @@ int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask,
+> >  		ret = 0;
+> >  	}
+> >  
+> > +	free_cpumask_var(tmp_mask);
+> > +
+> >  	return ret;
+> >  }
+> >  
+> > diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+> > index 9fcb2a695a41..008d6ac2342b 100644
+> > --- a/kernel/sched/isolation.c
+> > +++ b/kernel/sched/isolation.c
+> > @@ -163,6 +163,12 @@ static int __init housekeeping_isolcpus_setup(char *str)
+> >  			continue;
+> >  		}
+> >  
+> > +		if (!strncmp(str, "managed_irq,", 12)) {
+> > +			str += 12;
+> > +			flags |= HK_FLAG_MANAGED_IRQ;
+> > +			continue;
+> > +		}
+> > +
+> >  		pr_warn("isolcpus: Error, unknown flag\n");
+> >  		return 0;
+> >  	}
 > 
-> Yes, exactly.
-> I have a clone of the main Linus git branch, but steal the kernel
-> configuration from the Ubuntu mainline PPA.
+> Thanks for the quick patch.  I'll test after my current round of tests
+> finish and update.  I'll probably believe this will work for us as
+> long as it "functionally" works :) (after all it won't even need a RT
+> environment because it's really about where to put some IRQs).  So
+> IMHO the more important thing is whether such a solution could be
+> acceptable by the upstream.
 
-I think I managed to reproduce it. The below seems to fix it for me, can you
-try it out please?
+I've tested this patch, it works for us.  "isolcpus=managed_irq,2-9"
+gives me:
 
-I think what's going on is that the child group default util_min value isn't
-propagated correctly after it's created, so we end up using the root_task_group
-values which is 1024 for both min and max.
+[root@rt-vm 32]# pwd
+/proc/irq/32
+[root@rt-vm 32]# cat smp_affinity
+003
+[root@rt-vm 32]# cat effective_affinity
+001
 
----
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 90e4b00ace89..cf9d9106d1b5 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -7100,6 +7100,11 @@ static int cpu_cgroup_css_online(struct cgroup_subsys_state *css)
+Thomas, do you think Ming's solution could be accepted?
 
-        if (parent)
-                sched_online_group(tg, parent);
-+
-+#ifdef CONFIG_UCLAMP_TASK_GROUP
-+       cpu_util_update_eff(css);
-+#endif
-+
-        return 0;
- }
+Thanks,
+
+-- 
+Peter Xu
 
