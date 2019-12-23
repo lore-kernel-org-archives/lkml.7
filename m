@@ -2,303 +2,127 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACA4C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76510C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B89FD206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:46:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="S9MDjxmH";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="i1AA2Gg/"
+	by mail.kernel.org (Postfix) with ESMTP id 523552053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:52:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbfLWNqS (ORCPT
+        id S1726885AbfLWNwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 08:46:18 -0500
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:7192 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726676AbfLWNqS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 08:46:18 -0500
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBNDXodg018349;
-        Mon, 23 Dec 2019 05:46:08 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=proofpoint;
- bh=lSH7p09kHW4vctMm+S9pd+srxbw3VpWwoBPIRLizTSU=;
- b=S9MDjxmHB5eff+jqZhXTczng/p5lYTqZhgjyrC64FLFer7Pj9OE8OOz/PeN3hZZgMNWz
- kH8bbmDOeW9setKLVmDMvC3vKaHjp6M2tVJMnAgWTAGghjePPUbQD7RYo5bOC4s/Cyk1
- CfqQm+szaldIXxNR9wpc80E+8RarhfBdoJsHGXNN7b5h3ZqNTxtXWGgZH/TmCDyXcKG/
- lxdr5Bg/A6io0ZB45MhgBjBF+lclGsWoEHGezG18ktLjTKbfA6ku1iPf/k8HpOEVYDPO
- +LjFhmIxeLg7TJQgZ6+dwKMpzGyUpy/M5sGABZWvrbc5TXHTINSpvqrgbiA/7W3c6VtS tA== 
-Received: from nam04-sn1-obe.outbound.protection.outlook.com (mail-sn1nam04lp2053.outbound.protection.outlook.com [104.47.44.53])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 2x1gu4w3rv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 23 Dec 2019 05:46:08 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oNaMtBv6YWOoeUzTiJN2U6z/vysfcRQE1Bs3nTkKrU/U1AIkC6gpS/Rus8BI4bWrqEeQowlZnUp3v1VwKcqXR7AF5fjjOXJkF4My1Ol0EUey2wTo8hdhRTs7/sXWxYxdVPkh0lxyTW8auuRUqqP/XkBId87ZK15D6gPmS5RWQ8C7Crc7yeAXUKgCNyo7Am2ylKt2NRUjr0GUW8fSzK7rIeCudFOrAxh3uWWTaBHmN9vBrLib+BqbTefH8orFkkOU5sEbqQpjygoF+8Pm2uTW2ZAsUZQYoqZ+gaDCmwXXd3SUpELMZv7rzuehypkSiUNjoW8SizYdgvqU89SfRSnAbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lSH7p09kHW4vctMm+S9pd+srxbw3VpWwoBPIRLizTSU=;
- b=nsq8HamGuAn0MXaCah4PrKWDVtat2dPwblrvDlrAjU1JELFpUQXxWVZqNx0mi1LRafuORKtydqFBWSCpb1Z+Xp1C5D4i5myKIb57YZ5dNLwklfhHer5yPEZi/zH2sP4JjkNLeWnHMDDqqSyL9Rov5UmEtkJFqJDymzglEuWOBjJzk3SC+4Luob3ah4ZgQJ19KAa6xGa3Quvm5t7SJna0Kqfs379scfDFz8vGnhQPTCIq/slldJhbpMnxW4xXhlcmlhNMTpzMHH9ncYx7ruMo8sKY8pgH7hEBCMxCIWdFzfFSZucC8pGhjuOd4IMWzK4/Qlk/TM1AyTHLDuhaxwTjaQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
- dkim=pass header.d=cadence.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lSH7p09kHW4vctMm+S9pd+srxbw3VpWwoBPIRLizTSU=;
- b=i1AA2Gg/TA66l2eclMhuTk95CHyrWnnQHqwLT/r1RsfQkWKTKCfZo0XA++GZysiU53iyX3ngzXRNYN5mBLicRsw0hyzi6BLUncyAe4kGiljjAOlJD55hKlr81EH1R304veISx16nRxtLKNni+eYA2sLDhuwr3xfbXIWOh/X4pvI=
-Received: from BYAPR07MB5110.namprd07.prod.outlook.com (20.176.255.14) by
- BYAPR07MB6213.namprd07.prod.outlook.com (20.179.62.218) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.14; Mon, 23 Dec 2019 13:46:06 +0000
-Received: from BYAPR07MB5110.namprd07.prod.outlook.com
- ([fe80::e4c9:23b3:78c1:acdd]) by BYAPR07MB5110.namprd07.prod.outlook.com
- ([fe80::e4c9:23b3:78c1:acdd%6]) with mapi id 15.20.2559.017; Mon, 23 Dec 2019
- 13:46:06 +0000
-From:   Yuti Suresh Amonkar <yamonkar@cadence.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "maxime@cerno.tech" <maxime@cerno.tech>,
-        "kishon@ti.com" <kishon@ti.com>
-CC:     "praneeth@ti.com" <praneeth@ti.com>,
-        "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>,
-        "jsarha@ti.com" <jsarha@ti.com>, Milind Parab <mparab@cadence.com>,
-        Swapnil Kashinath Jakhade <sjakhade@cadence.com>
-Subject: RE: [PATCH v2] phy: Add DisplayPort configuration options
-Thread-Topic: [PATCH v2] phy: Add DisplayPort configuration options
-Thread-Index: AQHVuZarlyuLHgdLs0ymbXdtACZzt6fHuuug
-Date:   Mon, 23 Dec 2019 13:46:05 +0000
-Message-ID: <BYAPR07MB511039939973065EA4D7D85AD22E0@BYAPR07MB5110.namprd07.prod.outlook.com>
-References: <1577108473-29294-1-git-send-email-yamonkar@cadence.com>
-In-Reply-To: <1577108473-29294-1-git-send-email-yamonkar@cadence.com>
-Accept-Language: en-IN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [14.143.9.161]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5fbfda6b-414e-40e9-69bf-08d787ae7569
-x-ms-traffictypediagnostic: BYAPR07MB6213:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR07MB62134711F640AD37D1A440F8D22E0@BYAPR07MB6213.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 0260457E99
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(39860400002)(376002)(396003)(346002)(36092001)(189003)(199004)(13464003)(966005)(52536014)(26005)(64756008)(9686003)(186003)(66946007)(66446008)(33656002)(66476007)(66556008)(76116006)(55016002)(110136005)(81156014)(54906003)(81166006)(53546011)(6506007)(5660300002)(316002)(4326008)(8676002)(2906002)(7696005)(55236004)(8936002)(86362001)(71200400001)(478600001)(107886003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR07MB6213;H:BYAPR07MB5110.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: cadence.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 4mAi3tQCAAjFrf0Oxo9TLXD3pvP1PN52FKGhgXvo6E2jnDmH3howLQEA74ATXtZxfGzK6IwxOjX2xFDhmRnNa7kjeLruS+P7HmzynJberrXoevJGXNwei2KLJGxQmX1rETBncR5ksbL6CtVoa3AwWkAb1Tk7TnDd80Ek27Tqz0v27PVAFe73I+jV4FUepbEcSM93ypxXXBVpHmYDGDDPW0j1RfB9pa/L1w50/XoxRY9Afl342EsKR3CVPvExEhOst01CGzXfYzuyegSI0x/FgZ3Xbhc/MM9WaH7VSbDa47QTL+zT7TCvi/2g+2MN8ejAlmgBBudjuzi7DSSbavOTsnlg14K0oRT0Vpmo40t8WYtRMBrTrlcbf+mwsG0JJKNvR0EkQpwtTbKHwwdkxXKQuudqGaNUCYmPw/nBpDyOkGmWun/CaP0WiLkk8s3pbHe8Fv1rzzRuSA74l6FkLFOZfrjqmbu0Ks6mOkyPUfW2/vgscswh6DTdxbKDvbdXrjpXIcem9LTMcKHSLBTCVtErE6ZzuH9lYok6psh1osxBMM5gZDqgwxPVz2i/GWHxIRli
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 23 Dec 2019 08:52:49 -0500
+Received: from mga07.intel.com ([134.134.136.100]:16790 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726676AbfLWNwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 08:52:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 05:52:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,347,1571727600"; 
+   d="scan'208";a="214245229"
+Received: from tblake-mobl2.ger.corp.intel.com ([10.252.4.201])
+  by fmsmga008.fm.intel.com with ESMTP; 23 Dec 2019 05:52:44 -0800
+Message-ID: <88b9ffdc51ae5e11341332d7f5efed07320251c6.camel@intel.com>
+Subject: Re: [PATCH] Revert "iwlwifi: mvm: fix scan config command size"
+From:   Luciano Coelho <luciano.coelho@intel.com>
+To:     Thomas Backlund <tmb@mageia.org>, Roman Gilg <subdiff@gmail.com>,
+        Mehmet Akif Tasova <makiftasova@gmail.com>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
+        Tova Mussai <tova.mussai@intel.com>,
+        Ayala Beker <ayala.beker@intel.com>,
+        Sara Sharon <sara.sharon@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 23 Dec 2019 15:52:43 +0200
+In-Reply-To: <946da821-9e54-4508-e3ab-f2cdc19c8084@mageia.org>
+References: <20191213203512.8250-1-makiftasova@gmail.com>
+         <CAJcyoyusgtw0++KsEHK-t=EFGx2v9GKv7+BSViUCaB3nyDr2Jw@mail.gmail.com>
+         <946da821-9e54-4508-e3ab-f2cdc19c8084@mageia.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2+b1 
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5fbfda6b-414e-40e9-69bf-08d787ae7569
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Dec 2019 13:46:05.8957
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Zo1kvrKHKo7ERzmOjPfnxGoYLn7dqekkST5yGFfjEopqTL2keJlvc4PmiEbvBKKIdbm4iFbdXWQ3oqpcpE4Vl/wZ8d9GtjCpwD1LYGB8L3I=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR07MB6213
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-23_06:2019-12-23,2019-12-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 spamscore=0
- impostorscore=0 mlxscore=0 lowpriorityscore=0 malwarescore=0 bulkscore=0
- clxscore=1015 suspectscore=0 phishscore=0 mlxlogscore=999
- priorityscore=1501 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-1912230118
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Kishon
+On Mon, 2019-12-23 at 14:24 +0200, Thomas Backlund wrote:
+> Den 18-12-2019 kl. 21:12, skrev Roman Gilg:
+> > On Fri, Dec 13, 2019 at 9:36 PM Mehmet Akif Tasova
+> > <makiftasova@gmail.com> wrote:
+> > > Since Linux 5.4.1 released, iwlwifi could not initialize Intel(R) Dual Band
+> > > Wireless AC 9462 firmware, failing with following error in dmesg:
+> > > 
+> > > iwlwifi 0000:00:14.3: FW error in SYNC CMD SCAN_CFG_CMD
+> > > 
+> > > whole dmesg output of error can be found at:
+> > > https://gist.github.com/makiftasova/354e46439338f4ab3fba0b77ad5c19ec
+> > > 
+> > > also bug report from ArchLinux bug tracker (contains more info):
+> > > https://bugs.archlinux.org/task/64703
+> > 
+> > Since this bug report is about the Dell XPS 13 2-in1: I tested your
+> > revert with this device, but the issue persists at least on this
+> > device. So these might be two different issues, one for your device
+> > and another one for the XPS.
+> 
+> Yeah, to get iwlwifi to work somewhat nicely you need this revert
 
-Thanks & Regards,
-Yuti Amonkar
+Indeed the revert is correct.  I'm going to apply it in our internal
+tree and send it out for v5.5-rc* (with stable in CC so it goes to
+v5.4).  Thanks Mehmet!
 
-> -----Original Message-----
-> From: Yuti Amonkar <yamonkar@cadence.com>
-> Sent: Monday, December 23, 2019 19:11
-> To: linux-kernel@vger.kernel.org; dri-devel@lists.freedesktop.org;
-> maxime@cerno.tech
-> Cc: praneeth@ti.com; tomi.valkeinen@ti.com; jsarha@ti.com; Milind Parab
-> <mparab@cadence.com>; Swapnil Kashinath Jakhade
-> <sjakhade@cadence.com>; Yuti Suresh Amonkar <yamonkar@cadence.com>
-> Subject: [PATCH v2] phy: Add DisplayPort configuration options
->=20
-> Allow DisplayPort PHYs to be configured through the generic functions
-> through a custom structure added to the generic union.
-> The configuration structure is used for reconfiguration of DisplayPort PH=
-Ys
-> during link training operation.
->=20
-> The parameters added here are the ones defined in the DisplayPort spec 1.=
-4
-> which include link rate, number of lanes, voltage swing and pre-emphasis.
->=20
-> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
-> ---
->=20
-> This patch was a part of [1] series earlier but we think that it needs to=
- have a
-> separate attention of the reviewers. Also as both [1] & [2] are dependent=
- on
-> this patch, our sincere request to reviewers to have a faster review of t=
-his
-> patch.
->=20
-> [1]
->=20
-> https://lkml.org/lkml/2019/12/11/455
->=20
-> [2]
->=20
-> https://patchwork.kernel.org/cover/11271191/
->=20
->  include/linux/phy/phy-dp.h | 95
-> ++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/phy/phy.h    |  4 ++
->  2 files changed, 99 insertions(+)
->  create mode 100644 include/linux/phy/phy-dp.h
->=20
-> diff --git a/include/linux/phy/phy-dp.h b/include/linux/phy/phy-dp.h new
-> file mode 100644 index 0000000..18cad23
-> --- /dev/null
-> +++ b/include/linux/phy/phy-dp.h
-> @@ -0,0 +1,95 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2019 Cadence Design Systems Inc.
-> + */
-> +
-> +#ifndef __PHY_DP_H_
-> +#define __PHY_DP_H_
-> +
-> +#include <linux/types.h>
-> +
-> +/**
-> + * struct phy_configure_opts_dp - DisplayPort PHY configuration set
-> + *
-> + * This structure is used to represent the configuration state of a
-> + * DisplayPort phy.
-> + */
-> +struct phy_configure_opts_dp {
-> +	/**
-> +	 * @link_rate:
-> +	 *
-> +	 * Link Rate, in Mb/s, of the main link.
-> +	 *
-> +	 * Allowed values: 1620, 2160, 2430, 2700, 3240, 4320, 5400, 8100
-> Mb/s
-> +	 */
-> +	unsigned int link_rate;
-> +
-> +	/**
-> +	 * @lanes:
-> +	 *
-> +	 * Number of active, consecutive, data lanes, starting from
-> +	 * lane 0, used for the transmissions on main link.
-> +	 *
-> +	 * Allowed values: 1, 2, 4
-> +	 */
-> +	unsigned int lanes;
-> +
-> +	/**
-> +	 * @voltage:
-> +	 *
-> +	 * Voltage swing levels, as specified by DisplayPort specification,
-> +	 * to be used by particular lanes. One value per lane.
-> +	 * voltage[0] is for lane 0, voltage[1] is for lane 1, etc.
-> +	 *
-> +	 * Maximum value: 3
-> +	 */
-> +	unsigned int voltage[4];
-> +
-> +	/**
-> +	 * @pre:
-> +	 *
-> +	 * Pre-emphasis levels, as specified by DisplayPort specification, to b=
-e
-> +	 * used by particular lanes. One value per lane.
-> +	 *
-> +	 * Maximum value: 3
-> +	 */
-> +	unsigned int pre[4];
-> +
-> +	/**
-> +	 * @ssc:
-> +	 *
-> +	 * Flag indicating, whether or not to enable spread-spectrum
-> clocking.
-> +	 *
-> +	 */
-> +	u8 ssc : 1;
-> +
-> +	/**
-> +	 * @set_rate:
-> +	 *
-> +	 * Flag indicating, whether or not reconfigure link rate and SSC to
-> +	 * requested values.
-> +	 *
-> +	 */
-> +	u8 set_rate : 1;
-> +
-> +	/**
-> +	 * @set_lanes:
-> +	 *
-> +	 * Flag indicating, whether or not reconfigure lane count to
-> +	 * requested value.
-> +	 *
-> +	 */
-> +	u8 set_lanes : 1;
-> +
-> +	/**
-> +	 * @set_voltages:
-> +	 *
-> +	 * Flag indicating, whether or not reconfigure voltage swing
-> +	 * and pre-emphasis to requested values. Only lanes specified
-> +	 * by "lanes" parameter will be affected.
-> +	 *
-> +	 */
-> +	u8 set_voltages : 1;
-> +};
-> +
-> +#endif /* __PHY_DP_H_ */
-> diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h index
-> 15032f14..ba0aab5 100644
-> --- a/include/linux/phy/phy.h
-> +++ b/include/linux/phy/phy.h
-> @@ -16,6 +16,7 @@
->  #include <linux/pm_runtime.h>
->  #include <linux/regulator/consumer.h>
->=20
-> +#include <linux/phy/phy-dp.h>
->  #include <linux/phy/phy-mipi-dphy.h>
->=20
->  struct phy;
-> @@ -46,9 +47,12 @@ enum phy_mode {
->   *
->   * @mipi_dphy:	Configuration set applicable for phys supporting
->   *		the MIPI_DPHY phy mode.
-> + * @dp:		Configuration set applicable for phys supporting
-> + *		the DisplayPort protocol.
->   */
->  union phy_configure_opts {
->  	struct phy_configure_opts_mipi_dphy	mipi_dphy;
-> +	struct phy_configure_opts_dp		dp;
->  };
->=20
->  /**
-> --
-> 2.7.4
+
+> [...]and also theese on top of 5.4.6:
+> 
+>  From db5cce1afc8d2475d2c1c37c2a8267dd0e151526 Mon Sep 17 00:00:00 2001
+> From: Anders Kaseorg <andersk@mit.edu>
+> Date: Mon, 2 Dec 2019 17:09:20 -0500
+> Subject: Revert "iwlwifi: assign directly to iwl_trans->cfg in QuZ 
+> detection"
+> 
+>  From 0df36b90c47d93295b7e393da2d961b2f3b6cde4 Mon Sep 17 00:00:00 2001
+> From: Luca Coelho <luciano.coelho@intel.com>
+> Date: Thu, 5 Dec 2019 09:03:54 +0200
+> Subject: iwlwifi: pcie: move power gating workaround earlier in the flow
+
+The fixes for these two are already in v5.5-rc3, [1] and [2]
+respectively.  They are both marked for v5.4, hopefully they'll be
+included in v5.4.7.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=db5cce1afc8d2475d2c1c37c2a8267dd0e151526
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0df36b90c47d93295b7e393da2d961b2f3b6cde4
+
+
+> and atleast v2 of the "iwlwifi: mvm: don't send the 
+> IWL_MVM_RXQ_NSSN_SYNC notif to Rx queues" patch that is being debated on 
+> this list.
+
+Kalle is on vacation, but when he gets, back we'll decide what to do
+with this.  If he really doesn't like our v4, I'll send out a new
+version that satisfies him so we can finally fix this bug.
+
+
+> With theese in place, we seem to have it behaving properly again for 
+> Mageia users reporting various problems / firmware crashes / ...
+
+Thanks, Thomas, for the comprehensive list of fixes needed here!
+
+
+--
+Cheers,
+Luca.
 
