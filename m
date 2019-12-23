@@ -2,143 +2,159 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A41C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42598C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED38720715
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:53:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FBDmb6ak"
+	by mail.kernel.org (Postfix) with ESMTP id 1CB8D20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:55:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbfLWOxP (ORCPT
+        id S1726920AbfLWOzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 09:53:15 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:38042 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726682AbfLWOxP (ORCPT
+        Mon, 23 Dec 2019 09:55:12 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:41282 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726795AbfLWOzM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 09:53:15 -0500
-Received: by mail-pj1-f68.google.com with SMTP id l35so7603289pje.3;
-        Mon, 23 Dec 2019 06:53:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=3HYYz4nX1W0aJ3i8Yqd286kyh4DuRONRoG/BRh5FLZM=;
-        b=FBDmb6akcXnRiy4gGu86k3JBWheD7EF8ZJShoGDQKnd3gH9eVeNeCLS+juVOdYYUeg
-         ekcNjKvoqGR/iKqvpVI5Ba8BIJBqBQETnGcgBo/+I7yrkgJSbAZwDcLnGRRBCNA8DXJJ
-         YfuTY+j/6oYNlDceqx4BTi7rf8PQZcqeUKu0jbhhAFiF1QaqXwp72vLZ145sZ46vO6et
-         5Pnini8/3ndy41lpqZuJFA8M8drxuawVrfQ5xAfOfO5m+9YVnyDROoTsjXH8zmWzS5oI
-         PgxXThJ8xlzK9gCPE0i+YP1I4ZPgXqgd4e49VJuJhtQSus03DHvOUVFML/6gImeLZlOv
-         GgXw==
+        Mon, 23 Dec 2019 09:55:12 -0500
+Received: by mail-il1-f198.google.com with SMTP id k9so14372549ili.8
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 06:55:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=3HYYz4nX1W0aJ3i8Yqd286kyh4DuRONRoG/BRh5FLZM=;
-        b=eb+sKqrByP9qFsTgyJ4HtFq/KKvqgOFOMC0CwFZBCIJhVoWKrEi7XhyFaWBAdep1JT
-         tINJqx406dFO0REo72VqWoQyskzer6imKSR+P7QI8y3rfLQuhdNUyG6v3lbSbBseg3O9
-         DT+ni3NBt3gx3DwaXcHgej79azBuqzSKpmJy5FEnHHyPsbBfdG1P50FVZMhVgMsaAeTf
-         Q/6UnmGtl7GZgLguCmbkGtF0pGMW06gJgmerySZ5mBTk77Pop3cOHCWuJmpEwGgmSMOf
-         LUm7f3HOWnKEjLQcOahVqWnlRdD5UMIzyqQ8U0C82jntMdsCUS80qZ1GlcgRXiYhqNFv
-         zc7w==
-X-Gm-Message-State: APjAAAWIWQ9Elxrz+H2uUOdgTVwJs88HrAn36FxbXESvcZGJdmIJhSD1
-        K/iGW5sMrokd3NecWVGORcQ=
-X-Google-Smtp-Source: APXvYqxcDbt12KSYdO549nYw+DSqKGA6Tdn3bVL7y1mSg9juQo+yboExHfaY7Nv7BuzAG8wiOUqI7w==
-X-Received: by 2002:a17:902:8d8c:: with SMTP id v12mr9725188plo.336.1577112794685;
-        Mon, 23 Dec 2019 06:53:14 -0800 (PST)
-Received: from localhost (64.64.229.47.16clouds.com. [64.64.229.47])
-        by smtp.gmail.com with ESMTPSA id 100sm20590383pjo.17.2019.12.23.06.53.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 23 Dec 2019 06:53:14 -0800 (PST)
-Date:   Mon, 23 Dec 2019 22:53:11 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Chen <Peter.Chen@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 08/10] usb: phy: tegra: Use u32 for hardware register
- variables
-Message-ID: <20191223145311.GA9183@nuc8i5>
-References: <20191220015238.9228-1-digetx@gmail.com>
- <20191220015238.9228-9-digetx@gmail.com>
- <20191222132227.GA7096@nuc8i5>
- <6c0fbeb2-3db2-f331-fc0a-a900241a32f5@gmail.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=MXAH+5x0CIJYi1dDiKEIBiQX1//cGwDTkc0vcfTXCXg=;
+        b=FTOKa0EEMnLtIVLCxKaRLVuq5qusKzAwRV3QuiwhZhT0fo6NA6OO1fKCT6hiVVOQFY
+         UF3rKg8PbCQLuComW/vwd3UsBVl7S3MWo+R2BxSds4cFgEPGgZjNTWyxxxVrbevuuSpn
+         r4EsrbwKnjMQV0RdE3sur/7xxj3l4pMvRks3NLeAEWk9OOzkX9cToIi4mAeTUKC9na1h
+         ZEFFTZ5IOMalyH5cehZkaxQvmJ8E0y+Gc4aSFiXx1oOcIyUoAwnLBmqYp4Q+w5hI8dob
+         6QGiWh2jw6X5dDTD32736PGnGbrz+Q9TXxxRZ8V6Dn+sy4T9ptjyw3Mt4F7k7FQwLs/S
+         1/YQ==
+X-Gm-Message-State: APjAAAVcxPPhiUWTTw7/dEGyqL33up8IZNMSu3ldKiNHzIjGjbM/WsqT
+        AnPz8M1JoIrGVdc3LLmhvNomwAMly9nAM9jkdonhpmcRlfwx
+X-Google-Smtp-Source: APXvYqwUUAZkCTx3Y/w41e4629jcASn6MZ/pjHu7YCvdy6jphpuZwSXnpXcXKz5Re9Uxmp9cm9FBiCUyidvwd9WsYSY5RsQ9iSh2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6c0fbeb2-3db2-f331-fc0a-a900241a32f5@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Received: by 2002:a92:d80f:: with SMTP id y15mr26195608ilm.225.1577112911058;
+ Mon, 23 Dec 2019 06:55:11 -0800 (PST)
+Date:   Mon, 23 Dec 2019 06:55:11 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d5a039059a6036a3@google.com>
+Subject: KASAN: use-after-free Read in eth_type_trans
+From:   syzbot <syzbot+6745e272378d071cac7f@syzkaller.appspotmail.com>
+To:     arnd@arndb.de, daniel@iogearbox.net, davej@redhat.com,
+        davem@davemloft.net, dhowells@redhat.com, edumazet@google.com,
+        hkallweit1@gmail.com, jasowang@redhat.com,
+        linux-kernel@vger.kernel.org, maximmi@mellanox.com, mst@redhat.com,
+        mtk.manpages@gmail.com, netdev@vger.kernel.org,
+        peterpenkov96@gmail.com, sdf@google.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 12:48:09AM +0300, Dmitry Osipenko wrote:
-> 22.12.2019 16:24, Dejin Zheng пишет:
-> > On Fri, Dec 20, 2019 at 04:52:36AM +0300, Dmitry Osipenko wrote:
-> >> There is a mix of u32/ULONG usage in the driver's code. Let's switch to
-> >> u32 uniformly, for consistency.
-> >>
-> >> Suggested-by: Thierry Reding <thierry.reding@gmail.com>
-> >> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> >> ---
-> >>  drivers/usb/phy/phy-tegra-usb.c | 28 +++++++++++++++-------------
-> >>  1 file changed, 15 insertions(+), 13 deletions(-)
-> >>
-> >> diff --git a/drivers/usb/phy/phy-tegra-usb.c b/drivers/usb/phy/phy-tegra-usb.c
-> >> index d5739b6e0b6c..551c94e3877a 100644
-> >> --- a/drivers/usb/phy/phy-tegra-usb.c
-> >> +++ b/drivers/usb/phy/phy-tegra-usb.c
-> >> @@ -202,7 +202,7 @@ static inline struct tegra_usb_phy *to_tegra_usb_phy(struct usb_phy *u_phy)
-> >>  static void set_pts(struct tegra_usb_phy *phy, u8 pts_val)
-> >>  {
-> >>  	void __iomem *base = phy->regs;
-> >> -	unsigned long val;
-> >> +	u32 val;
-> >>  
-> >>  	if (phy->soc_config->has_hostpc) {
-> >>  		val = readl_relaxed(base + TEGRA_USB_HOSTPC1_DEVLC);
-> >> @@ -221,7 +221,7 @@ static void set_pts(struct tegra_usb_phy *phy, u8 pts_val)
-> >>  static void set_phcd(struct tegra_usb_phy *phy, bool enable)
-> >>  {
-> >>  	void __iomem *base = phy->regs;
-> >> -	unsigned long val;
-> >> +	u32 val;
-> >>  
-> >>  	if (phy->soc_config->has_hostpc) {
-> >>  		val = readl_relaxed(base + TEGRA_USB_HOSTPC1_DEVLC);
-> >> @@ -320,7 +320,8 @@ static int utmip_pad_power_on(struct tegra_usb_phy *phy)
-> >>  {
-> >>  	struct tegra_utmip_config *config = phy->config;
-> >>  	void __iomem *base = phy->pad_regs;
-> >> -	unsigned long val, flags;
-> >> +	unsigned long flags;
-> >> +	u32 val;
-> > Why are you still using unsigned long here?
-> 
-> Please take a look at [1][2], the types are matching callees.
-> 
-> [1]
-> https://elixir.bootlin.com/linux/v5.5-rc2/source/include/linux/spinlock.h#L249
-> 
-> [2]
-> https://elixir.bootlin.com/linux/v5.5-rc2/source/include/asm-generic/io.h#L297
+Hello,
 
-Okay, thanks for your explanation.
+syzbot found the following crash on:
 
-Dejin
+HEAD commit:    4a94c433 Merge tag 'tpmdd-next-20191219' of git://git.infr..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15e240aee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=745a1e367d8abf39
+dashboard link: https://syzkaller.appspot.com/bug?extid=6745e272378d071cac7f
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1351eb1ee00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11911f2ee00000
+
+The bug was bisected to:
+
+commit 90e33d45940793def6f773b2d528e9f3c84ffdc7
+Author: Petar Penkov <peterpenkov96@gmail.com>
+Date:   Fri Sep 22 20:49:15 2017 +0000
+
+     tun: enable napi_gro_frags() for TUN/TAP driver
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=114ebf2ee00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=134ebf2ee00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=154ebf2ee00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+6745e272378d071cac7f@syzkaller.appspotmail.com
+Fixes: 90e33d459407 ("tun: enable napi_gro_frags() for TUN/TAP driver")
+
+==================================================================
+BUG: KASAN: use-after-free in ether_addr_equal_64bits  
+include/linux/etherdevice.h:348 [inline]
+BUG: KASAN: use-after-free in eth_type_trans+0x6ce/0x760  
+net/ethernet/eth.c:167
+Read of size 8 at addr ffff888084bf0040 by task syz-executor336/10162
+
+CPU: 1 PID: 10162 Comm: syz-executor336 Not tainted 5.5.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:639
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
+  ether_addr_equal_64bits include/linux/etherdevice.h:348 [inline]
+  eth_type_trans+0x6ce/0x760 net/ethernet/eth.c:167
+  napi_frags_finish net/core/dev.c:5924 [inline]
+  napi_gro_frags+0x8c2/0xd00 net/core/dev.c:5999
+  tun_get_user+0x2e7f/0x3fc0 drivers/net/tun.c:1976
+  tun_chr_write_iter+0xbd/0x156 drivers/net/tun.c:2022
+  call_write_iter include/linux/fs.h:1902 [inline]
+  do_iter_readv_writev+0x5f8/0x8f0 fs/read_write.c:693
+  do_iter_write fs/read_write.c:970 [inline]
+  do_iter_write+0x184/0x610 fs/read_write.c:951
+  vfs_writev+0x1b3/0x2f0 fs/read_write.c:1015
+  do_writev+0x15b/0x330 fs/read_write.c:1058
+  __do_sys_writev fs/read_write.c:1131 [inline]
+  __se_sys_writev fs/read_write.c:1128 [inline]
+  __x64_sys_writev+0x75/0xb0 fs/read_write.c:1128
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x441800
+Code: 05 48 3d 01 f0 ff ff 0f 83 fd 0e fc ff c3 66 2e 0f 1f 84 00 00 00 00  
+00 66 90 83 3d 51 9c 29 00 00 75 14 b8 14 00 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 d4 0e fc ff c3 48 83 ec 08 e8 9a 2b 00 00
+RSP: 002b:00007ffe7bc617c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000014
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000441800
+RDX: 0000000000000001 RSI: 00007ffe7bc61820 RDI: 00000000000000f0
+RBP: 00007ffe7bc617f0 R08: 0000000000000000 R09: 0000000000000020
+R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000000003
+R13: 0000000000000004 R14: 00007ffe7bc61870 R15: 0000000000000000
+
+The buggy address belongs to the page:
+page:ffffea000212fc00 refcount:0 mapcount:0 mapping:0000000000000000  
+index:0x0
+raw: 00fffe0000000000 ffffea000212fc08 ffffea000212fc08 0000000000000000
+raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff888084beff00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+  ffff888084beff80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> ffff888084bf0000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                                            ^
+  ffff888084bf0080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+  ffff888084bf0100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
