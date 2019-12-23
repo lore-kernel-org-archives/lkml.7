@@ -2,186 +2,137 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D95C8C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DFB3C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4363206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44F65206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:46:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A6UZvDMZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H6YcPugo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfLWRkY (ORCPT
+        id S1726873AbfLWRqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 12:40:24 -0500
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:44791 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbfLWRkY (ORCPT
+        Mon, 23 Dec 2019 12:46:06 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31659 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726754AbfLWRqF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 12:40:24 -0500
-Received: by mail-ua1-f68.google.com with SMTP id c14so4713770uaq.11
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 09:40:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eNFLSoQe0lR2iyKnAuV1NRMQR96oeCjWqMmsqcgP9RM=;
-        b=A6UZvDMZ6PHfMyRnfDW7eocx2YHhfaaGFDnHpYc5aIuoxJebfqe33MkLZGMMFzCLYM
-         ez/SoCKJ9NkLWwppNKcKGJDwR4SIVI//JKriCLqben34vI7aTZurMV5CZBTYlThU+RBi
-         Q0JfMrnt2fRB985Fp4l/iNrZgu6FygN8LSwiel7gKnFpeh6ZB2NvKeUgIa7AVz3ipXxF
-         6Xb9ZEw15NVPDsVR3sQJFPyYGziFG2zrXpimZmQst9z9MQ8jem8GaUdNZKCIxV5dsOYB
-         BMhQHF5+WkTtVFyA+WzeSpfEFj9VAi/Wr+QYB2MFGqvrei9MemphVg4bfl62O5np62Jm
-         8LQg==
+        Mon, 23 Dec 2019 12:46:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577123164;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=NyxEGXEk4VTpodZFpXSFYVpF4fMlWUtWZMOhYuzQAMg=;
+        b=H6YcPugoPc5I8Ua5GS0EdWVcg3H4gSEfyb3npKn+kN92hR3WV6cl1J1/pH4CkAYGnYSvpi
+        m4c9enjYVZdzCWajJzac7SMxDw0kfD6JP0qXCQYc6J8IRAEHo82ppwkFULi/TSO/2Ja5hp
+        mMlQrFYrK1NSJMbVXuW640KZFRUIbCo=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-254-_cGaeSlrMemfSCO1gM3Kwg-1; Mon, 23 Dec 2019 12:46:03 -0500
+X-MC-Unique: _cGaeSlrMemfSCO1gM3Kwg-1
+Received: by mail-wr1-f71.google.com with SMTP id w6so7152285wrm.16
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 09:46:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eNFLSoQe0lR2iyKnAuV1NRMQR96oeCjWqMmsqcgP9RM=;
-        b=VoIijX8AGeBGz5dprtYL6SHCDcH/fzodaxmd5ESqd4VGEzeoOPD1dJqSkcu5oVbVgA
-         984yXohIQ967zr6GjVkw4OnDjP1WmRM8I/sdQTc/ymneq6YPN1Gey0YkERuasusx5a9m
-         aWtgbH9Ftn1HlyJNhw/hKedsiZTbxTPE14BxLogKN5SfpV4GfUhe8umeY3VxfGldXGpS
-         QMKPXH6EWx7zmuB0oIYPHI8BVIH3t3yvmg+S+Tlz+mTKctOIjmks7Lxdv+3TKb+o2GRQ
-         IDXnZVTZdMXe3XfqQ5WYay56CZIdqm+pgvTVtFW5UO7GgSPLz/60EyaEOn9ylkqX0WTL
-         KvVw==
-X-Gm-Message-State: APjAAAVAmHhF376ay8FfzTIP2CxFoKbIoDDnJz0enxQyvEZewh6pImzr
-        0QASoHB/omVdKMzjH0LQZE3DDBxzKMHue0AUYU1FMQ==
-X-Google-Smtp-Source: APXvYqwxEUH2cKhilppKOCZIO1DWi/dnAPFMoG4mOkjIhWmwfct1/UmOrS1+43btm9Xr+ttnzRHWjiOvTVsC9lefHcM=
-X-Received: by 2002:a9f:36ca:: with SMTP id p68mr17497306uap.112.1577122822284;
- Mon, 23 Dec 2019 09:40:22 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NyxEGXEk4VTpodZFpXSFYVpF4fMlWUtWZMOhYuzQAMg=;
+        b=MlwbWg/HbJgkipoDhzjPicjq9DEC8IXBQhcz/euzY0drS8W36uuIVGNAQCwRrUWAUy
+         /paw3OkIq0FLrf2TS/6HeVCCLAX4Du/jPj+G5GXxUrjdFaVFKWKTLhXxr1g9cYDEEuiX
+         p+4eSmsRJRtHTsqVtpWwCw1vZQQSI9JZILFm/KgB5cV9HYRnllcF4ZNYfH3l0QW3JrBt
+         zNfZglqZa3yJH9x3K9xiEN4ysPgGuWbPF8uCAJQdaXX7sNMtsxK99JjXDslckdPaeGkB
+         RusqM8ag/G+FYp/A7+vTDY2A57Ox8O0dIGtbkcuL0mIFiqiyqFS//tcAIf2PtXaZgsgf
+         flbg==
+X-Gm-Message-State: APjAAAUFNvXVQBU9A9aZiHXXyyUVORPpFR581BR2Z/zX2GD6RdR127rS
+        WCT9Q34Dlk63c7mMf75rbynPSEV3sMLp+MP289c7kQm0KpVlZJfUT37mClwPZYVphRUJM9slH8G
+        LrTTvRZteXOklKTqiQUCyvtVG
+X-Received: by 2002:adf:81e3:: with SMTP id 90mr30839591wra.23.1577123162145;
+        Mon, 23 Dec 2019 09:46:02 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyZUjyHS0g/ecWSSGHeVn7Xac4ocH5nlnwcKETpadWsN+v9wPYW7uWyeK4z2lEr812dsaBq4A==
+X-Received: by 2002:adf:81e3:: with SMTP id 90mr30839577wra.23.1577123161885;
+        Mon, 23 Dec 2019 09:46:01 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:ac09:bce1:1c26:264c? ([2001:b07:6468:f312:ac09:bce1:1c26:264c])
+        by smtp.gmail.com with ESMTPSA id u24sm124844wml.10.2019.12.23.09.46.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Dec 2019 09:46:01 -0800 (PST)
+Subject: Re: [RESEND RFC 0/2] Paravirtualized Control Register pinning
+To:     Liran Alon <liran.alon@oracle.com>
+Cc:     John Andersen <john.s.andersen@intel.com>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <20191220192701.23415-1-john.s.andersen@intel.com>
+ <1EBCD42E-9109-47A1-B959-6363A509D48D@oracle.com>
+ <15b57d6b-0f46-01f5-1f75-b9b55db0611a@redhat.com>
+ <03F5FE31-E769-4497-922B-C8613F0951FA@oracle.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <f4d3d392-8edf-54b2-1b90-417447240e22@redhat.com>
+Date:   Mon, 23 Dec 2019 18:46:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <20191223140322.20013-1-mst@redhat.com>
-In-Reply-To: <20191223140322.20013-1-mst@redhat.com>
-From:   Alistair Delva <adelva@google.com>
-Date:   Mon, 23 Dec 2019 09:40:11 -0800
-Message-ID: <CANDihLHPk5khpv-f-M+qhkzgTkygAts38GGb-HChg-VL2bo+Uw@mail.gmail.com>
-Subject: Re: [PATCH net] virtio_net: CTRL_GUEST_OFFLOADS depends on CTRL_VQ
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <03F5FE31-E769-4497-922B-C8613F0951FA@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
+On 23/12/19 18:28, Liran Alon wrote:
+>>> Why reset CR pinned MSRs by userspace instead of KVM INIT
+>>> handling?
+>> Most MSRs are not reset by INIT, are they?
+>> 
+>> Paolo
+>> 
+> MSR_KVM_SYSTEM_TIME saved in vcpu->arch.time is reset at
+> kvmclock_reset() which is called by kvm_vcpu_reset() (KVM INIT
+> handler). In addition, vmx_vcpu_reset(), called from
+> kvm_vcpu_reset(), also resets multiple MSRs such as:
+> MSR_IA32_SPEC_CTRL (vmx->spec_ctrl) and MSR_IA32_UMWAIT_CONTROL
+> (msr_ia32_umwait_control).
 
-On Mon, Dec 23, 2019 at 6:09 AM Michael S. Tsirkin <mst@redhat.com> wrote:
->
-> The only way for guest to control offloads (as enabled by
-> VIRTIO_NET_F_CTRL_GUEST_OFFLOADS) is by sending commands
-> through CTRL_VQ. So it does not make sense to
-> acknowledge VIRTIO_NET_F_CTRL_GUEST_OFFLOADS without
-> VIRTIO_NET_F_CTRL_VQ.
->
-> The spec does not outlaw devices with such a configuration,
-> but Linux assumed that with VIRTIO_NET_F_CTRL_GUEST_OFFLOADS
-> control vq is always there, resulting in the following crash
-> when configuring LRO:
->
-> kernel BUG at drivers/net/virtio_net.c:1591!
-> invalid opcode: 0000 [#1] PREEMPT SMP PTI
-> CPU: 1 PID: 483 Comm: Binder:330_1 Not tainted 5.4.5-01326-g19463e9acaac #1
-> Hardware name: ChromiumOS crosvm, BIOS 0
-> RIP: 0010:virtnet_send_command+0x15d/0x170 [virtio_net]
-> Code: d8 00 00 00 80 78 02 00 0f 94 c0 65 48 8b 0c 25 28 00 00 00 48 3b 4c 24 70 75 11 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d
-> +c3 <0f> 0b e8 ec a4 12 c8 66 90 66 2e 0f 1f 84 00 00 00 00 00 55 48 89
-> RSP: 0018:ffffb97940e7bb50 EFLAGS: 00010246
-> RAX: ffffffffc0596020 RBX: ffffa0e1fc8ea840 RCX: 0000000000000017
-> RDX: ffffffffc0596110 RSI: 0000000000000011 RDI: 000000000000000d
-> RBP: ffffb97940e7bbf8 R08: ffffa0e1fc8ea0b0 R09: ffffa0e1fc8ea0b0
-> R10: ffffffffffffffff R11: ffffffffc0590940 R12: 0000000000000005
-> R13: ffffa0e1ffad2c00 R14: ffffb97940e7bc08 R15: 0000000000000000
-> FS:  0000000000000000(0000) GS:ffffa0e1fd100000(006b) knlGS:00000000e5ef7494
-> CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-> CR2: 00000000e5eeb82c CR3: 0000000079b06001 CR4: 0000000000360ee0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  ? preempt_count_add+0x58/0xb0
->  ? _raw_spin_lock_irqsave+0x36/0x70
->  ? _raw_spin_unlock_irqrestore+0x1a/0x40
->  ? __wake_up+0x70/0x190
->  virtnet_set_features+0x90/0xf0 [virtio_net]
->  __netdev_update_features+0x271/0x980
->  ? nlmsg_notify+0x5b/0xa0
->  dev_disable_lro+0x2b/0x190
->  ? inet_netconf_notify_devconf+0xe2/0x120
->  devinet_sysctl_forward+0x176/0x1e0
->  proc_sys_call_handler+0x1f0/0x250
->  proc_sys_write+0xf/0x20
->  __vfs_write+0x3e/0x190
->  ? __sb_start_write+0x6d/0xd0
->  vfs_write+0xd3/0x190
->  ksys_write+0x68/0xd0
->  __ia32_sys_write+0x14/0x20
->  do_fast_syscall_32+0x86/0xe0
->  entry_SYSENTER_compat+0x7c/0x8e
->
-> A similar crash will likely trigger when enabling XDP.
->
-> Reported-by: Alistair Delva <adelva@google.com>
-> Reported-by: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-> Fixes: 3f93522ffab2 ("virtio-net: switch off offloads on demand if possible on XDP set")
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->
-> Lightly tested.
->
-> Alistair, could you please test and confirm that this resolves the
-> crash for you?
+These probably can be removed, since they are zero at startup and at
+least SPEC_CTRL is documented[1] to be unaffected by INIT.  However, I
+couldn't find information about UMWAIT_CONTROL.
 
-This patch doesn't work. The reason is that NETIF_F_LRO is also turned
-on by TSO4/TSO6, which your patch didn't check for. So it ends up
-going through the same path and crashing in the same way.
+> Having said that, I see indeed that most of MSRs are being set by
+> QEMU in kvm_put_msrs() when level >= KVM_PUT_RESET_STATE. When is
+> triggered by qemu_system_reset() -> cpu_synchronize_all_post_reset ->
+> cpu_synchronize_post_reset() -> kvm_cpu_synchronize_post_reset().
+> 
+> So given current design, OK I agree with you that CR pinned MSRs
+> should be zeroed by userspace VMM.
+> 
+> It does though seems kinda weird to me that part of CPU state is
+> initialised on KVM INIT handler and part of it in userspace VMM. It
+> could lead to inconsistent (i.e. diverging from spec) CPU behaviour.
 
-        if (virtio_has_feature(vdev, VIRTIO_NET_F_GUEST_TSO4) ||
-            virtio_has_feature(vdev, VIRTIO_NET_F_GUEST_TSO6))
-                dev->features |= NETIF_F_LRO;
+The reason for that is the even on real hardware INIT does not touch
+most MSRs:
 
-It sounds like this patch is fixing something slightly differently to
-my patch fixed. virtnet_set_features() doesn't care about
-GUEST_OFFLOADS, it only tests against NETIF_F_LRO. Even if "offloads"
-is zero, it will call virtnet_set_guest_offloads(), which triggers the
-crash.
+  9.1 Initialization overview
 
-So either we need to ensure NETIF_F_LRO is never set, or
-virtnet_set_features needs to be updated to check for GUEST_OFFLOADS,
-right?
+  Asserting the INIT# pin on the processor invokes a similar response to
+  a hardware reset. The major difference is that during an INIT, the
+  internal caches, MSRs, MTRRs, and x87 FPU state are left unchanged
+  (although, the TLBs and BTB are invalidated as with a hardware reset).
+  An INIT provides a method for switching from protected to real-address
+  mode while maintaining the contents of the internal caches.
 
-> Dave, after testing confirms the fix, pls queue up for stable.
->
->
->  drivers/net/virtio_net.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> index 4d7d5434cc5d..7b8805b47f0d 100644
-> --- a/drivers/net/virtio_net.c
-> +++ b/drivers/net/virtio_net.c
-> @@ -2971,6 +2971,15 @@ static int virtnet_validate(struct virtio_device *vdev)
->         if (!virtnet_validate_features(vdev))
->                 return -EINVAL;
->
-> +       /* VIRTIO_NET_F_CTRL_GUEST_OFFLOADS does not work without
-> +        * VIRTIO_NET_F_CTRL_VQ. However the virtio spec does not
-> +        * specify that VIRTIO_NET_F_CTRL_GUEST_OFFLOADS depends
-> +        * on VIRTIO_NET_F_CTRL_VQ so devices can set the later but
-> +        * not the former.
-> +        */
-> +       if (!virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_VQ))
-> +                       __virtio_clear_bit(vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS);
-> +
->         if (virtio_has_feature(vdev, VIRTIO_NET_F_MTU)) {
->                 int mtu = virtio_cread16(vdev,
->                                          offsetof(struct virtio_net_config,
-> --
-> MST
->
+Paolo
+
+[1]
+https://software.intel.com/security-software-guidance/api-app/sites/default/files/336996-Speculative-Execution-Side-Channel-Mitigations.pdf
+
